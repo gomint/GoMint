@@ -9,6 +9,7 @@ package io.gomint.server.network;
 
 import io.gomint.entity.Player;
 import io.gomint.event.PlayerChatEvent;
+import io.gomint.event.PlayerJoinEvent;
 import io.gomint.jraknet.Connection;
 import io.gomint.jraknet.PacketBuffer;
 import io.gomint.jraknet.PacketReliability;
@@ -422,6 +423,8 @@ public class PlayerConnection {
         this.state = PlayerConnectionState.LOGIN;
         this.lastPerformance = System.currentTimeMillis();
 
+        //Call OnPlayerLoginEvent
+
         this.sendPlayState( PacketPlayState.PlayState.HANDSHAKE );
 
         // Create entity:
@@ -439,6 +442,11 @@ public class PlayerConnection {
 
         // Send Crafting recipes:
         this.send( PacketReliability.RELIABLE_ORDERED, 0, this.networkManager.getServer().getRecipeManager().getCraftingRecipesBatch() );
+
+        // Send PlayerJoinEvent
+        PlayerJoinEvent playerJoinEvent = new PlayerJoinEvent( getPlayer(), packet.getUsername() + " joined the game." );
+        this.networkManager.getServer().getPluginManager().callEvent( playerJoinEvent );
+        this.networkManager.broadcastPacket( new PacketText( playerJoinEvent.getJoinMessage() ) );
     }
 
     // ====================================== PACKET SENDERS ====================================== //

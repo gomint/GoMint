@@ -90,7 +90,6 @@ public class EntityPlayer extends Entity implements Player {
 
 	@Override
 	public long getEntityId ( ) {
-		//TODO Replace with the actual entity id
-		return 0L;
+		return super.getId();
 	}
 }

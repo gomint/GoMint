@@ -7,6 +7,8 @@
 
 package io.gomint.server.network;
 
+import com.sun.javafx.UnmodifiableArrayList;
+import io.gomint.entity.Player;
 import io.gomint.jraknet.Connection;
 import io.gomint.jraknet.PacketBuffer;
 import io.gomint.jraknet.ServerSocket;
@@ -31,7 +33,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.SocketException;
-import java.util.Queue;
+import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
@@ -217,6 +219,18 @@ public class NetworkManager {
                 }
             }
         }
+    }
+
+    public Collection<Player> getPlayers() {
+        List<Player> playerList = new ArrayList<>();
+
+        synchronized ( this.playersByGuid ) {
+            for ( PlayerConnection playerConnection : this.playersByGuid.values() ) {
+                playerList.add( playerConnection.getEntity() );
+            }
+        }
+
+        return Collections.unmodifiableCollection( playerList );
     }
 
     // ======================================== SOCKET HANDLERS ======================================== //

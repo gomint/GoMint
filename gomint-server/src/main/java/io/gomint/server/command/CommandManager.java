@@ -21,6 +21,23 @@ public class CommandManager {
     public CommandManager (){
         this.registeredCommands = new HashSet<>();
         this.logger = LoggerFactory.getLogger( CommandManager.class );
+
+        //Help command
+        this.registerCommand( new Command("help", "Shows this help") {
+            @Override
+            public void execute ( CommandSender sender, String[] args ) {
+                sender.sendMessage( " --- Server Help --- " );
+
+                synchronized ( CommandManager.this.registeredCommands ) {
+                    for ( Command registeredCommand : CommandManager.this.registeredCommands ) {
+                        //TODO Check for permissions (don't show commands that the sender doesn't have permissions for)
+                        sender.sendMessage( "> " + registeredCommand.toString() );
+                    }
+                }
+
+                sender.sendMessage( " ------------------" );
+            }
+        } );
     }
 
     public void registerCommand( Command command ) {
@@ -37,9 +54,11 @@ public class CommandManager {
                 }
                 else {
                     //Check for aliases
-                    for ( String s : command.getAliases() ) {
-                        if( nameOrAlias.equalsIgnoreCase( s ) ) {
-                            return command;
+                    if( command.getAliases() != null ) {
+                        for ( String s : command.getAliases() ) {
+                            if( nameOrAlias.equalsIgnoreCase( s ) ) {
+                                return command;
+                            }
                         }
                     }
                 }
@@ -54,6 +73,7 @@ public class CommandManager {
 
         if(command == null) {
             this.logger.info( sender.getName() + " issued unknown server command '" + name + "'" );
+            sender.sendMessage( "Unknown server command. Type /help!" );
             return;
         }
 

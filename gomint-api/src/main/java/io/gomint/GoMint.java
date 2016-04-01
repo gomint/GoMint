@@ -7,6 +7,10 @@
 
 package io.gomint;
 
+import io.gomint.entity.Player;
+
+import java.util.Collection;
+
 /**
  * @author BlackyPaw
  * @author geNAZt
@@ -27,5 +31,12 @@ public interface GoMint {
      * @param motd The MOTD to be set
      */
     void setMotd( String motd );
+
+    /**
+     * Get's a collection of all online players on the server
+     *
+     * @return the collection
+     */
+    Collection<Player> getPlayers();
 
 }
