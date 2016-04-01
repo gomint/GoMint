@@ -7,21 +7,7 @@
 
 package io.gomint.server.network;
 
-import io.gomint.server.network.packet.Packet;
-import io.gomint.server.network.packet.PacketA8;
-import io.gomint.server.network.packet.PacketB9;
-import io.gomint.server.network.packet.PacketBatch;
-import io.gomint.server.network.packet.PacketCraftingRecipes;
-import io.gomint.server.network.packet.PacketEntityMetadata;
-import io.gomint.server.network.packet.PacketEntityMotion;
-import io.gomint.server.network.packet.PacketEntityMovement;
-import io.gomint.server.network.packet.PacketLogin;
-import io.gomint.server.network.packet.PacketMovePlayer;
-import io.gomint.server.network.packet.PacketPlayState;
-import io.gomint.server.network.packet.PacketSetChunkRadius;
-import io.gomint.server.network.packet.PacketWorldChunk;
-import io.gomint.server.network.packet.PacketWorldInitialization;
-import io.gomint.server.network.packet.PacketWorldTime;
+import io.gomint.server.network.packet.*;
 
 /**
  * @author BlackyPaw
@@ -47,6 +33,7 @@ public final class Protocol {
 	public static final byte PACKET_WORLD_CHUNK          = (byte) 0xBF;
 	public static final byte PACKET_SET_CHUNK_RADIUS     = (byte) 0xC8;
 	public static final byte PACKET_CONFIRM_CHUNK_RADIUS = (byte) 0xC9;
+	public static final byte PACKET_TEXT				 = (byte) 0x93;
 	// CHECKSTYLE:ON
 
 	// ========================================= PACKET METHODS ========================================= //
@@ -102,6 +89,9 @@ public final class Protocol {
 
 			case PACKET_SET_CHUNK_RADIUS:
 				return new PacketSetChunkRadius();
+
+			case PACKET_TEXT:
+				return new PacketText();
 
 			default:
 				return null;

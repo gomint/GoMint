@@ -8,6 +8,7 @@
 package io.gomint.server;
 
 import io.gomint.GoMint;
+import io.gomint.entity.Player;
 import io.gomint.inventory.ItemStack;
 import io.gomint.plugin.PluginManager;
 import io.gomint.server.assets.AssetsLibrary;
@@ -32,6 +33,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.net.SocketException;
 import java.nio.ByteOrder;
+import java.util.Collection;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
@@ -66,6 +68,7 @@ public class GoMintServer implements GoMint {
 	private RecipeManager       recipeManager;
 
 	// Plugin Management
+	@Getter
 	private PluginManager       pluginManager;
 
 	// Task Scheduling
@@ -84,6 +87,7 @@ public class GoMintServer implements GoMint {
 	 * @param args which should have been given over from the static Bootstrap
 	 */
 	public GoMintServer( String[] args ) {
+		long startMilliseconds = System.currentTimeMillis();
 		Thread.currentThread().setName( "GoMint Main Thread" );
 
 		// ------------------------------------ //
@@ -155,8 +159,15 @@ public class GoMintServer implements GoMint {
 		}
 
 		// ------------------------------------ //
+		// Load plugins
+		// ------------------------------------ //
+		this.logger.info( "Loading plugins..." );
+		this.pluginManager.loadPlugins();
+
+		// ------------------------------------ //
 		// Main Loop
 		// ------------------------------------ //
+		this.logger.info( "Done! Server start took " + ( System.currentTimeMillis() - startMilliseconds ) + "ms" );
 
 		// Debug output for system usage
 		this.syncTaskManager.addTask( new SyncScheduledTask( this.syncTaskManager, new Runnable() {
@@ -221,6 +232,11 @@ public class GoMintServer implements GoMint {
 		}
 
 		return true;
+	}
+
+	@Override
+	public Collection<Player> getPlayers () {
+		return this.networkManager.getPlayers();
 	}
 
 	public WorldAdapter getDefaultWorld() {

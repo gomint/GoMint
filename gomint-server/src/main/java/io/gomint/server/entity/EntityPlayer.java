@@ -7,8 +7,10 @@
 
 package io.gomint.server.entity;
 
+import io.gomint.entity.Player;
 import io.gomint.server.entity.metadata.MetadataContainer;
 import io.gomint.server.network.PlayerConnection;
+import io.gomint.server.network.packet.PacketText;
 import io.gomint.server.player.PlayerSkin;
 import io.gomint.server.world.WorldAdapter;
 
@@ -19,11 +21,12 @@ import java.util.UUID;
 
 /**
  * @author BlackyPaw
+ * @author Digot
  * @version 1.0
  */
 @Data
 @EqualsAndHashCode( callSuper = false )
-public class EntityPlayer extends Entity {
+public class EntityPlayer extends Entity implements Player {
 
 	private final PlayerConnection connection;
     private int viewDistance;
@@ -70,4 +73,23 @@ public class EntityPlayer extends Entity {
 		return metadata;
 	}
 
+	@Override
+	public String getName ( ) {
+		return this.getUsername();
+	}
+
+	@Override
+	public UUID getUUID ( ) {
+		return uuid;
+	}
+
+	@Override
+	public void sendMessage ( String message ) {
+		this.connection.send( new PacketText( message ) );
+	}
+
+	@Override
+	public long getEntityId ( ) {
+		return super.getId();
+	}
 }

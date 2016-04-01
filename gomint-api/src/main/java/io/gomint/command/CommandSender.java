@@ -8,9 +8,12 @@
 package io.gomint.command;
 
 /**
- * Created by Markus on 21.10.2015.
+ * @author Digot
+ * @version 1.0
  */
 public interface CommandSender {
+
+    String getName();
 
     //TODO Add something like a message builder instead of sending a single string message
     void sendMessage(String message);

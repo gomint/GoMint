@@ -32,9 +32,11 @@ public interface Player extends Entity, CommandSender {
 	 * @return The player's UUID.
 	 */
 	UUID getUUID();
+
+
     
-    void sendPopup(String message);
-    void sendPopup(String message, String submessage);
-    void sendTip(String message);
+    //void sendPopup(String message);
+    //void sendPopup(String message, String submessage);
+    //void sendTip(String message);
     
 }

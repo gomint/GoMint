@@ -41,7 +41,7 @@ public class EventHandlerList {
      * @param handler The handler which should be added
      */
 	public void addHandler( EventHandlerMethod handler ) {
-        Preconditions.checkArgument( this.handlers.contains( handler ), "EventHandler can't be registered twice" );
+        Preconditions.checkArgument( !this.handlers.contains( handler ), "EventHandler can't be registered twice" );
 
 		this.handlers.add( handler );
 		this.dirty = true;
@@ -69,18 +69,16 @@ public class EventHandlerList {
 
 		if ( event instanceof CancelableEvent ) {
 			CancelableEvent cancelableEvent = (CancelableEvent) event;
-			Object[] args = new Object[] { event };
 			for ( EventHandlerMethod handler : this.handlers ) {
 				if ( cancelableEvent.isCancelled() && handler.ignoreCancelled() ) {
 					continue;
 				}
 
-				handler.invoke( args );
+				handler.invoke( event );
 			}
 		} else {
-			Object[] args = new Object[] { event };
 			for ( EventHandlerMethod handler : this.handlers ) {
-				handler.invoke( args );
+				handler.invoke( event );
 			}
 		}
 	}

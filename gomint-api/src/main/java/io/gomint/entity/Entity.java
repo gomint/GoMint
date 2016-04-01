@@ -38,4 +38,5 @@ public interface Entity {
 	 */
 	Location getLocation();
 
+
 }

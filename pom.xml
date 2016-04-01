@@ -19,6 +19,7 @@
     <modules>
         <module>gomint-api</module>
         <module>gomint-server</module>
+        <module>sample-plugin</module>
     </modules>
 
     <properties>
