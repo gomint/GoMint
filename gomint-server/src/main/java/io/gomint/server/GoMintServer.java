@@ -66,6 +66,7 @@ public class GoMintServer implements GoMint {
 	private RecipeManager       recipeManager;
 
 	// Plugin Management
+	@Getter
 	private PluginManager       pluginManager;
 
 	// Task Scheduling
@@ -84,6 +85,7 @@ public class GoMintServer implements GoMint {
 	 * @param args which should have been given over from the static Bootstrap
 	 */
 	public GoMintServer( String[] args ) {
+		long startMilliseconds = System.currentTimeMillis();
 		Thread.currentThread().setName( "GoMint Main Thread" );
 
 		// ------------------------------------ //
@@ -155,8 +157,15 @@ public class GoMintServer implements GoMint {
 		}
 
 		// ------------------------------------ //
+		// Load plugins
+		// ------------------------------------ //
+		this.logger.info( "Loading plugins..." );
+		this.pluginManager.loadPlugins();
+
+		// ------------------------------------ //
 		// Main Loop
 		// ------------------------------------ //
+		this.logger.info( "Done! Server start took " + ( System.currentTimeMillis() - startMilliseconds ) + "ms" );
 
 		// Debug output for system usage
 		this.syncTaskManager.addTask( new SyncScheduledTask( this.syncTaskManager, new Runnable() {

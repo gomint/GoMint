@@ -13,6 +13,8 @@ import lombok.RequiredArgsConstructor;
 import java.io.File;
 
 /**
+ * Provides meta information about a plugin during the DETECTION phase.
+ *
  * @author BlackyPaw
  * @version 1.0
  */

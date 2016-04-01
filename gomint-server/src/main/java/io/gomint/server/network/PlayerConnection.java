@@ -7,6 +7,8 @@
 
 package io.gomint.server.network;
 
+import io.gomint.entity.Player;
+import io.gomint.event.PlayerChatEvent;
 import io.gomint.jraknet.Connection;
 import io.gomint.jraknet.PacketBuffer;
 import io.gomint.jraknet.PacketReliability;
@@ -24,10 +26,7 @@ import net.openhft.koloboke.collect.set.hash.HashLongSets;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.Arrays;
 import java.util.zip.DataFormatException;
 import java.util.zip.Inflater;
 
@@ -313,7 +312,45 @@ public class PlayerConnection {
             case PACKET_SET_CHUNK_RADIUS:
                 this.handleSetChunkRadius( (PacketSetChunkRadius) packet );
                 break;
+            case PACKET_TEXT:
+                this.handleChatPacket( (PacketText ) packet );
+                break;
         }
+    }
+
+    private void handleChatPacket ( PacketText packet ) {
+        //Check if it's a command
+        String message = packet.getMessage();
+
+        if( message.startsWith( "/" ) ) {
+            //It's a command - check for args
+            if( message.contains( " " ) ) {
+                //Has atleast one argument
+                String rawInput = message.substring( 1, message.length() );
+                String[] splittedInput = rawInput.split( " " );
+
+                String commandName = splittedInput[0];
+                //TODO Check for permissions
+                String[] args = Arrays.copyOfRange( splittedInput, 1, splittedInput.length );
+                this.networkManager.getServer().getPluginManager().executeCommand( entity, commandName, args );
+            }
+            else{
+                String commandName = message.substring( 1, message.length() );
+                this.networkManager.getServer().getPluginManager().executeCommand( entity, commandName );
+            }
+        }
+        else{
+            //It's a chat message
+            PlayerChatEvent chatEvent = new PlayerChatEvent( getPlayer(), packet.getMessage() );
+            this.networkManager.getServer().getPluginManager().callEvent( chatEvent );
+
+            if( !chatEvent.isCancelled() ) {
+                PlayerConnection.logger.info( packet.getSource() + ": " + packet.getMessage() );
+                this.networkManager.broadcastPacket( packet );
+            }
+        }
+
+
     }
 
     private void handleSetChunkRadius( PacketSetChunkRadius packet ) {
@@ -479,5 +516,12 @@ public class PlayerConnection {
         if ( this.entity.getWorld() != null ) {
             ( (WorldAdapter) this.entity.getWorld() ).removePlayer( this.entity );
         }
+    }
+
+    /**
+     * Casts the entity to a {@link Player} for events
+     */
+    private Player getPlayer(){
+        return (Player)entity;
     }
 }

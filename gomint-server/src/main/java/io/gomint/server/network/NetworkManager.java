@@ -14,6 +14,7 @@ import io.gomint.jraknet.Socket;
 import io.gomint.jraknet.SocketEvent;
 import io.gomint.jraknet.SocketEventHandler;
 import io.gomint.server.GoMintServer;
+import io.gomint.server.network.packet.Packet;
 import net.openhft.koloboke.collect.LongCursor;
 import net.openhft.koloboke.collect.ObjCursor;
 import net.openhft.koloboke.collect.map.LongObjMap;
@@ -30,7 +31,6 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.SocketException;
-import java.util.LinkedList;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
@@ -209,6 +209,16 @@ public class NetworkManager {
         }
     }
 
+    public void broadcastPacket( Packet packet ) {
+        if( packet != null ){
+            for ( PlayerConnection playerConnection : this.playersByGuid.values() ) {
+                if( playerConnection.getState() == PlayerConnectionState.PLAYING ) {
+                    playerConnection.send( packet );
+                }
+            }
+        }
+    }
+
     // ======================================== SOCKET HANDLERS ======================================== //
 
     /**
@@ -250,7 +260,7 @@ public class NetworkManager {
     }
 
     private void dumpPacket( byte packetId, PacketBuffer buffer ) {
-        this.logger.info( "Dumping packet " + Integer.toHexString( ( (int) packetId ) & 0xFF ) );
+        this.logger.info( "Dumping packet 0x" + Integer.toHexString( ( (int) packetId ) & 0xFF ) );
 
         String filename = Integer.toHexString( ( (int) packetId ) & 0xFF );
         while ( filename.length() < 2 ) {

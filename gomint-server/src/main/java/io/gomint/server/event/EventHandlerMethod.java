@@ -7,6 +7,7 @@
 
 package io.gomint.server.event;
 
+import io.gomint.event.Event;
 import io.gomint.event.EventHandler;
 import io.gomint.event.EventListener;
 import lombok.EqualsAndHashCode;
@@ -41,11 +42,11 @@ class EventHandlerMethod implements Comparable<EventHandlerMethod> {
     /**
      * Invoke this Eventhandler.
      *
-     * @param args First element in this Array is the Event
+     * @param event The event to invoke
      */
-	public void invoke( Object[] args ) {
+	public void invoke( Event event ) {
 		try {
-			this.method.invoke( this.instance, args );
+			this.method.invoke( this.instance, event );
 		} catch ( Throwable cause ) {
 			cause.printStackTrace();
 		}

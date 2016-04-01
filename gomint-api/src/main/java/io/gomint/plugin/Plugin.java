@@ -79,12 +79,12 @@ public class Plugin {
     @Getter Scheduler scheduler;
 
     /**
-     * Implementation hook. This hook is invoked once the plugin is being installed.
+     * Implementation hook. This hook is invoked once the plugin enters the runtime stage.
      */
     public void onStartup() {}
 
     /**
-     * Implementation hook. This hook is invoked once the plugin enters the runtime stage.
+     * Implementation hook. This hook is invoked once the plugin is being installed.
      */
     public void onInstall() {}
 
@@ -120,5 +120,25 @@ public class Plugin {
      */
     public final File getDataFolder() {
         return new File( getPluginManager().getBaseDirectory(), getName() );
+    }
+
+    /**
+     * Sets meta information about the plugin.
+     *
+     * @param pluginMeta that contains all the information
+     */
+    public void loadMetaData( PluginMeta pluginMeta ) {
+        this.name = pluginMeta.getName();
+        this.version = pluginMeta.getVersion();
+    }
+
+    @Override
+    public String toString ( ) {
+        if(this.name == null || this.version == null){
+            //In case the toString method is called before the metadata is set
+            return super.toString();
+        }
+
+        return this.name + " " + this.version.toString();
     }
 }
