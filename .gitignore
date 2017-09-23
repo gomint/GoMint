@@ -17,7 +17,6 @@ hs_err_pid*
 
 # ignore compiled stuff
 **/target
-**/dependency-reduced-pom.xml
 
 ### OS X
 
