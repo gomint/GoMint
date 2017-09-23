@@ -66,7 +66,6 @@ public class BlockItemGenerator {
                             "}\n";
 
                     Files.write( Paths.get( "generated/impl/Item" + info.getSimpleName() + ".java" ), implementation.getBytes(), StandardOpenOption.CREATE );*/
-
                     System.out.println( info.getName() );
                 }
             }
