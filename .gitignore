@@ -13,6 +13,14 @@
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
 
+### Maven
+
+# ignore compiled stuff
+**/target
+
+### OS X
+
+**/.DS_Store
 
 ### JetBrains template
 # Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm, CLion
