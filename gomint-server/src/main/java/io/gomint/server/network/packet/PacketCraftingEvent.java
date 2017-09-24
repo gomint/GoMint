@@ -1,12 +1,10 @@
 package io.gomint.server.network.packet;
 
-import io.gomint.inventory.ItemStack;
 import io.gomint.jraknet.PacketBuffer;
+import io.gomint.inventory.item.ItemStack;
 import io.gomint.server.network.Protocol;
-import io.gomint.server.util.DumpUtil;
 import lombok.Data;
 
-import java.util.List;
 import java.util.UUID;
 
 /**
@@ -19,8 +17,8 @@ public class PacketCraftingEvent extends Packet {
     private byte windowId;
     private int recipeType;
     private UUID recipeId;
-    private List<ItemStack> input;
-    private List<ItemStack> output;
+    private ItemStack[] input;
+    private ItemStack[] output;
 
     public PacketCraftingEvent() {
         super( Protocol.PACKET_CRAFTING_EVENT );

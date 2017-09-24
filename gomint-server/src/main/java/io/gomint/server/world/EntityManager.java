@@ -10,17 +10,17 @@ package io.gomint.server.world;
 import io.gomint.entity.Player;
 import io.gomint.server.entity.Entity;
 import io.gomint.server.entity.EntityPlayer;
-import io.gomint.server.network.packet.Packet;
-import io.gomint.server.network.packet.PacketDespawnEntity;
-import io.gomint.server.network.packet.PacketEntityMovement;
+import io.gomint.server.network.packet.*;
 import io.gomint.world.Chunk;
-import net.openhft.koloboke.collect.map.LongObjCursor;
-import net.openhft.koloboke.collect.map.LongObjMap;
-import net.openhft.koloboke.collect.map.hash.HashLongObjMaps;
+import com.koloboke.collect.map.LongObjCursor;
+import com.koloboke.collect.map.LongObjMap;
+import com.koloboke.collect.map.hash.HashLongObjMaps;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -60,25 +60,32 @@ public class EntityManager {
         // --------------------------------------
         // Update all entities:
         Set<Entity> movedEntities = null;
+        Set<Entity> metadataChangedEntities = null;
         this.currentlyTicking = true;
 
         LongObjCursor<Entity> cursor = this.entitiesById.cursor();
         while ( cursor.moveNext() ) {
             Entity entity = cursor.value();
             if ( !entity.isDead() ) {
-                Chunk current = entity.getChunk();
+                ChunkAdapter current = (ChunkAdapter) entity.getChunk();
                 entity.update( currentTimeMS, dT );
 
                 if ( !entity.isDead() ) {
+                    if ( entity.getMetadata().isDirty() ) {
+                        if ( metadataChangedEntities == null ) {
+                            metadataChangedEntities = new HashSet<>();
+                        }
+
+                        metadataChangedEntities.add( entity );
+                    }
+
                     if ( entity.getTransform().isDirty() ) {
                         if ( movedEntities == null ) {
                             movedEntities = new HashSet<>();
                         }
 
-                        if ( !current.equals( entity.getChunk() ) ) {
-                            if ( current instanceof ChunkAdapter ) {
-                                ( (ChunkAdapter) current ).removeEntity( entity );
-                            }
+                        if ( !( entity instanceof EntityPlayer ) && !current.equals( entity.getChunk() ) ) {
+                            current.removeEntity( entity );
                         }
 
                         movedEntities.add( entity );
@@ -96,6 +103,35 @@ public class EntityManager {
         // Merge created entities
         this.entitiesById.putAll( this.spawnedInThisTick );
         this.spawnedInThisTick.clear();
+
+        // --------------------------------------
+        // Metadata batches:
+        if ( metadataChangedEntities != null && metadataChangedEntities.size() >  0 ) {
+            for ( Entity entity : metadataChangedEntities ) {
+                int chunkX = CoordinateUtils.fromBlockToChunk( (int) entity.getPositionX() );
+                int chunkZ = CoordinateUtils.fromBlockToChunk( (int) entity.getPositionZ() );
+
+                // Create PacketEntityMetadata
+                PacketEntityMetadata packetEntityMetadata = new PacketEntityMetadata();
+                packetEntityMetadata.setEntityId( entity.getEntityId() );
+                packetEntityMetadata.setMetadata( entity.getMetadata() );
+
+                // Send to all players
+                for ( EntityPlayer entityPlayer : this.world.getPlayers0().keySet() ) {
+                    if ( entity instanceof EntityPlayer ) {
+                        if ( entityPlayer.isHidden( (Player) entity ) ) {
+                            continue;
+                        }
+                    }
+
+                    Chunk playerChunk = entityPlayer.getChunk();
+                    if ( Math.abs( playerChunk.getX() - chunkX ) <= entityPlayer.getViewDistance() &&
+                            Math.abs( playerChunk.getZ() - chunkZ ) <= entityPlayer.getViewDistance() ) {
+                        entityPlayer.getConnection().addToSendQueue( packetEntityMetadata );
+                    }
+                }
+            }
+        }
 
         // --------------------------------------
         // Create movement batches:
@@ -141,7 +177,7 @@ public class EntityManager {
                 }
 
                 // Set the new entity
-                if ( chunk instanceof ChunkAdapter ) {
+                if ( !( movedEntity instanceof EntityPlayer ) && chunk instanceof ChunkAdapter ) {
                     ChunkAdapter castedChunk = (ChunkAdapter) chunk;
                     if ( !castedChunk.knowsEntity( movedEntity ) ) {
                         castedChunk.addEntity( movedEntity );
@@ -160,6 +196,11 @@ public class EntityManager {
                 packetEntityMovement.setHeadYaw( movedEntity.getHeadYaw() );
                 packetEntityMovement.setPitch( movedEntity.getPitch() );
 
+                // Prepare motion packet
+                PacketEntityMotion packetEntityMotion = new PacketEntityMotion();
+                packetEntityMotion.setEntityId( movedEntity.getEntityId() );
+                packetEntityMotion.setVelocity( movedEntity.getVelocity() );
+
                 // Check which player we need to inform about this movement
                 for ( EntityPlayer entityPlayer : this.world.getPlayers0().keySet() ) {
                     if ( movedEntity instanceof EntityPlayer ) {
@@ -172,6 +213,7 @@ public class EntityManager {
                     if ( Math.abs( playerChunk.getX() - chunk.getX() ) <= entityPlayer.getViewDistance() &&
                             Math.abs( playerChunk.getZ() - chunk.getZ() ) <= entityPlayer.getViewDistance() ) {
                         entityPlayer.getConnection().addToSendQueue( packetEntityMovement );
+                        entityPlayer.getConnection().addToSendQueue( packetEntityMotion );
                     }
                 }
             }
@@ -216,6 +258,9 @@ public class EntityManager {
      * @param pitch     The pitch value of the entity
      */
     public void spawnEntityAt( Entity entity, float positionX, float positionY, float positionZ, float yaw, float pitch ) {
+        // TODO: Entity spawn event
+
+
         // Set the position and yaw
         entity.setPosition( positionX, positionY, positionZ );
         entity.setYaw( yaw );
@@ -254,6 +299,49 @@ public class EntityManager {
             }
         }
 
+        // If this is a player send full playerlist
+        if ( entity instanceof EntityPlayer ) {
+            EntityPlayer entityPlayer = (EntityPlayer) entity;
+            PacketPlayerlist playerlist = null;
+
+            // Remap all current living entities
+            List<PacketPlayerlist.Entry> listEntry = null;
+            for ( Player player : entityPlayer.getWorld().getServer().getPlayers() ) {
+                if ( !player.isHidden( entityPlayer ) && !player.equals( entityPlayer ) ) {
+                    if ( playerlist == null ) {
+                        playerlist = new PacketPlayerlist();
+                        playerlist.setMode( (byte) 0 );
+                        playerlist.setEntries( new ArrayList<PacketPlayerlist.Entry>() {{
+                            add( new PacketPlayerlist.Entry( entityPlayer.getUUID(),
+                                    entityPlayer.getEntityId(),
+                                    entityPlayer.getName(),
+                                    entityPlayer.getXboxID(),
+                                    entityPlayer.getSkin() ) );
+                        }} );
+                    }
+
+                    ( (EntityPlayer) player ).getConnection().send( playerlist );
+                }
+
+                if ( !entityPlayer.isHidden( player ) && !entityPlayer.equals( player ) ) {
+                    if ( listEntry == null ) {
+                        listEntry = new ArrayList<>();
+                    }
+
+                    listEntry.add( new PacketPlayerlist.Entry( player.getUUID(), player.getEntityId(),
+                            player.getName(), player.getXboxID(), player.getSkin() ) );
+                }
+            }
+
+            if ( listEntry != null ) {
+                // Send player list
+                PacketPlayerlist packetPlayerlist = new PacketPlayerlist();
+                packetPlayerlist.setMode( (byte) 0 );
+                packetPlayerlist.setEntries( listEntry );
+                entityPlayer.getConnection().send( packetPlayerlist );
+            }
+        }
+
         Packet spawnPacket = entity.createSpawnPacket();
 
         // Check which player we need to inform about this movement
@@ -277,7 +365,6 @@ public class EntityManager {
      *
      * @param entity The entity which should be despawned
      */
-
     public void despawnEntity( Entity entity ) {
         // Remove from chunk
         Chunk chunk = entity.getChunk();

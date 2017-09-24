@@ -8,6 +8,7 @@
 package io.gomint.plugin;
 
 import io.gomint.GoMint;
+import io.gomint.command.Command;
 import io.gomint.event.EventListener;
 import io.gomint.scheduler.Scheduler;
 import lombok.Getter;
@@ -99,6 +100,11 @@ public class Plugin {
     private List<EventListener> listeners = new ArrayList<>();
 
     /**
+     * List which contains all registered commands for this plugin
+     */
+    private List<Command> commands = new ArrayList<>();
+
+    /**
      * Implementation hook. This hook is invoked once the plugin is being installed.
      */
     public void onStartup() {
@@ -117,6 +123,15 @@ public class Plugin {
     }
 
     /**
+     * Register a new command to this plugin
+     *
+     * @param command which should be registered
+     */
+    public void registerCommand( Command command ) {
+        this.pluginManager.registerCommand( this, command );
+    }
+
+    /**
      * Register a new listener to this plugin
      *
      * @param listener The listener which should be registered
@@ -126,6 +141,11 @@ public class Plugin {
         this.listeners.add( listener );
     }
 
+    /**
+     * Unregister a listener
+     *
+     * @param listener which should be unregistered
+     */
     public void unregisterListener( EventListener listener ) {
         if ( this.listeners.remove( listener ) ) {
             this.pluginManager.unregisterListener( this, listener );

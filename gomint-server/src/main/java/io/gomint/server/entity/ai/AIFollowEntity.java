@@ -1,10 +1,7 @@
 package io.gomint.server.entity.ai;
 
-import io.gomint.inventory.ItemStack;
-import io.gomint.inventory.Material;
 import io.gomint.math.Vector;
 import io.gomint.server.entity.Entity;
-import io.gomint.server.entity.passive.EntityItem;
 import io.gomint.server.entity.pathfinding.PathfindingEngine;
 import io.gomint.server.util.IntTriple;
 import io.gomint.server.world.WorldAdapter;
@@ -13,7 +10,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 /**
  * @author geNAZt
@@ -95,10 +91,10 @@ public class AIFollowEntity extends AIState {
 
             LOGGER.debug( "Path to follow entity " + this.followEntity );
             for ( IntTriple intTriple : this.path ) {
-                EntityItem item = new EntityItem( new ItemStack( Material.BRICK ), this.world );
+                /*EntityItem item = new EntityItem( new ItemStack( Material.BRICK ), this.world );
                 this.world.spawnEntityAt( item, intTriple.toVector() );
 
-                LOGGER.debug( intTriple.toString() );
+                LOGGER.debug( intTriple.toString() );*/
             }
         }
     }

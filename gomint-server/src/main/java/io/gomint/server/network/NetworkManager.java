@@ -8,18 +8,19 @@
 package io.gomint.server.network;
 
 import io.gomint.event.network.PingEvent;
+import io.gomint.event.player.PlayerPreLoginEvent;
 import io.gomint.jraknet.*;
 import io.gomint.server.GoMintServer;
 import io.gomint.server.network.packet.Packet;
 import lombok.Getter;
 import lombok.Setter;
-import net.openhft.koloboke.collect.LongCursor;
-import net.openhft.koloboke.collect.map.LongObjCursor;
-import net.openhft.koloboke.collect.map.LongObjMap;
-import net.openhft.koloboke.collect.map.hash.HashLongObjMaps;
-import net.openhft.koloboke.collect.set.LongSet;
-import net.openhft.koloboke.collect.set.hash.HashLongSets;
-import net.openhft.koloboke.function.LongObjConsumer;
+import com.koloboke.collect.LongCursor;
+import com.koloboke.collect.map.LongObjCursor;
+import com.koloboke.collect.map.LongObjMap;
+import com.koloboke.collect.map.hash.HashLongObjMaps;
+import com.koloboke.collect.set.LongSet;
+import com.koloboke.collect.set.hash.HashLongSets;
+import com.koloboke.function.LongObjConsumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -56,10 +57,11 @@ public class NetworkManager {
 
     // Internal ticking
     private long currentTickMillis;
+    private float lastTickTime;
     private final LongObjConsumer<PlayerConnection> connectionConsumer = new LongObjConsumer<PlayerConnection>() {
         @Override
         public void accept( long l, PlayerConnection connection ) {
-            connection.update( currentTickMillis );
+            connection.update( currentTickMillis, lastTickTime );
         }
     };
 
@@ -87,7 +89,7 @@ public class NetworkManager {
             throw new IllegalStateException( "Cannot re-initialize network manager" );
         }
 
-        this.socket = new ServerSocket( maxConnections );
+        this.socket = new ServerSocket( maxConnections < 0 ? 20 : maxConnections );
         this.socket.setEventLoopFactory( this.server.getThreadFactory() );
         this.socket.setEventHandler( new SocketEventHandler() {
             @Override
@@ -150,6 +152,7 @@ public class NetworkManager {
 
         // Tick all player connections in order to receive all incoming packets:
         this.currentTickMillis = currentMillis;
+        this.lastTickTime = lastTickTime;
         this.playersByGuid.forEach( this.connectionConsumer );
     }
 
@@ -231,6 +234,17 @@ public class NetworkManager {
     private void handleSocketEvent( SocketEvent event ) {
         switch ( event.getType() ) {
             case NEW_INCOMING_CONNECTION:
+                PlayerPreLoginEvent playerPreLoginEvent = this.getServer().getPluginManager().callEvent(
+                        new PlayerPreLoginEvent( event.getConnection().getAddress() )
+                );
+
+                if ( playerPreLoginEvent.isCancelled() ) {
+                    // Since the user has not gotten any packets we are not able to be sure if we can send him a disconnect notification
+                    // so we decide to close the raknet connection without any notice
+                    event.getConnection().disconnect( null );
+                    return;
+                }
+
                 this.handleNewConnection( event.getConnection() );
                 break;
 

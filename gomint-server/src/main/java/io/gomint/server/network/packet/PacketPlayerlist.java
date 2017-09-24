@@ -35,8 +35,28 @@ public class PacketPlayerlist extends Packet {
                 buffer.writeString( entry.getName() );
 
                 buffer.writeString( entry.getSkin().getName() );
+
+                // Raw skin data
                 buffer.writeUnsignedVarInt( entry.getSkin().getRawData().length );
                 buffer.writeBytes( entry.getSkin().getRawData() );
+
+                // Cape data
+                if ( entry.skin.getCapeData() != null ) {
+                    buffer.writeUnsignedVarInt( entry.skin.getCapeData().length );
+                    buffer.writeBytes( entry.skin.getCapeData() );
+                } else {
+                    buffer.writeUnsignedVarInt( 0 );
+                }
+
+                // Geometry name
+                buffer.writeString( entry.skin.getGeometryName() );
+
+                // Geometry data
+                buffer.writeUnsignedVarInt( entry.skin.getGeometryData().length );
+                buffer.writeBytes( entry.skin.getGeometryData() );
+
+                // xbox user id
+                buffer.writeString( entry.xboxId );
             }
         } else {
             for ( Entry entry : this.entries ) {
@@ -56,6 +76,7 @@ public class PacketPlayerlist extends Packet {
         private final UUID uuid;
         private long entityId = 0;
         private String name = "";
+        private String xboxId = "";
         private PlayerSkin skin;
     }
 

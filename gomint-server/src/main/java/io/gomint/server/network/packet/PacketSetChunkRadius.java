@@ -36,9 +36,4 @@ public class PacketSetChunkRadius extends Packet {
         this.chunkRadius = buffer.readSignedVarInt();
     }
 
-    @Override
-    public int estimateLength() {
-        return predictSignedVarInt( this.chunkRadius );
-    }
-
 }

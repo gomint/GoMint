@@ -14,7 +14,7 @@ public class PacketMobAnimation extends Packet {
     private long entityId;
 
     public PacketMobAnimation() {
-        super( Protocol.PACKET_MOB_ANIMATION );
+        super( (byte) -1 );
     }
 
     @Override

@@ -7,6 +7,7 @@
 
 package io.gomint.server.world;
 
+import io.gomint.math.BlockPosition;
 import io.gomint.math.Vector;
 
 /**
@@ -109,14 +110,14 @@ public final class CoordinateUtils {
      * Get the vector which has been encoded into the long
      *
      * @param hash The encoded long
-     * @return the decoded vector
+     * @return the decoded BlockPosition
      */
-    public static Vector fromLong( long hash ) {
+    public static BlockPosition fromLong( long hash ) {
         int x = (int) ( hash >> 38 );
         int y = (int) ( hash >> 26 ) & 0xFFF;
         int z = (int) ( hash );
 
-        return new Vector( x, y, z );
+        return new BlockPosition( x, y, z );
     }
 
 }

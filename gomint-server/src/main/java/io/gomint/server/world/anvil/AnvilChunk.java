@@ -10,13 +10,11 @@ package io.gomint.server.world.anvil;
 import io.gomint.server.entity.tileentity.TileEntity;
 import io.gomint.server.util.Pair;
 import io.gomint.server.world.ChunkAdapter;
-import io.gomint.server.world.CoordinateUtils;
 import io.gomint.server.world.NibbleArray;
 import io.gomint.taglib.NBTStream;
 import io.gomint.taglib.NBTStreamListener;
 import io.gomint.taglib.NBTTagCompound;
-import net.openhft.koloboke.collect.map.hash.HashIntObjMaps;
-import net.openhft.koloboke.collect.map.hash.HashLongObjMaps;
+import com.koloboke.collect.map.hash.HashLongObjMaps;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -77,8 +75,6 @@ class AnvilChunk extends ChunkAdapter {
         for ( int sectionY = 0; sectionY < 16; ++sectionY ) {
             byte[] blocks = new byte[4096];
             NibbleArray data = new NibbleArray( 4096 );
-            NibbleArray blockLight = new NibbleArray( 4096 );
-            NibbleArray skyLight = new NibbleArray( 4096 );
             int baseIndex = sectionY * 16;
 
             for ( int y = baseIndex; y < baseIndex + 16; ++y ) {
@@ -91,8 +87,6 @@ class AnvilChunk extends ChunkAdapter {
 
                         blocks[blockIndex] = blockId;
                         data.set( blockIndex, blockData );
-                        blockLight.set( blockIndex, this.getBlockLight( x, y, z ) );
-                        skyLight.set( blockIndex, this.getSkyLight( x, y, z ) );
                     }
                 }
             }
@@ -101,8 +95,6 @@ class AnvilChunk extends ChunkAdapter {
             section.addValue( "Y", (byte) sectionY );
             section.addValue( "Blocks", blocks );
             section.addValue( "Data", data.raw() );
-            section.addValue( "BlockLight", blockLight.raw() );
-            section.addValue( "SkyLight", skyLight.raw() );
             sections.add( section );
         }
 
@@ -189,14 +181,7 @@ class AnvilChunk extends ChunkAdapter {
                                 case "Data":
                                     currentSectionCache[0].setData( new NibbleArray( (byte[]) object ) );
                                     break;
-                                case "BlockLight":
-                                    currentSectionCache[0].setBlockLight( new NibbleArray( (byte[]) object ) );
-                                    break;
-                                case "SkyLight":
-                                    currentSectionCache[0].setSkyLight( new NibbleArray( (byte[]) object ) );
-                                    break;
                                 default:
-                                    System.out.println( split[4] );
                                     break;
                             }
                         } else if ( path.startsWith( ".Level.TileEntities" ) ) {
@@ -342,10 +327,8 @@ class AnvilChunk extends ChunkAdapter {
         byte[] blocks = section.getBlocks();
         NibbleArray add = section.getAdd();
         NibbleArray data = section.getData();
-        NibbleArray blockLight = section.getBlockLight();
-        NibbleArray skyLight = section.getSkyLight();
 
-        if ( blocks == null || data == null || blockLight == null || skyLight == null ) {
+        if ( blocks == null || data == null ) {
             throw new IllegalArgumentException( "Corrupt chunk: Section is missing obligatory compounds" );
         }
 
@@ -385,9 +368,6 @@ class AnvilChunk extends ChunkAdapter {
                     if ( blockData != 0 ) {
                         this.setData( i, y, k, blockData );
                     }
-
-                    this.setBlockLight( i, y, k, blockLight.get( blockIndex ) );
-                    this.setSkyLight( i, y, k, skyLight.get( blockIndex ) );
                 }
             }
         }

@@ -161,4 +161,7 @@ public class Vector implements Cloneable {
         return Numbers.square( x - position.x ) + Numbers.square( y - position.y ) + Numbers.square( z - position.z );
     }
 
+    public BlockPosition toBlockPosition() {
+        return new BlockPosition( Numbers.fastFloor( x ), Numbers.fastFloor( y ), Numbers.fastFloor( z ) );
+    }
 }

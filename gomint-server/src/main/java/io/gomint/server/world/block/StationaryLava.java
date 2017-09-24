@@ -1,10 +1,13 @@
 package io.gomint.server.world.block;
 
+import io.gomint.server.registry.RegisterInfo;
+
 /**
  * @author geNAZt
  * @version 1.0
  */
-public class StationaryLava extends Block {
+@RegisterInfo( id = 11 )
+public class StationaryLava extends Liquid {
 
     @Override
     public int getBlockId() {
@@ -26,4 +29,9 @@ public class StationaryLava extends Block {
         return false;
     }
 
+    @Override
+    public float getFillHeight() {
+        return 1f;
+    }
+    
 }

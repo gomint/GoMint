@@ -42,11 +42,6 @@ public class PacketWorldChunk extends Packet {
     }
 
     @Override
-    public int estimateLength() {
-        return 13 + this.data.length;
-    }
-
-    @Override
     public String toString() {
         return "PacketWorldChunk(x=" + x + ";z=" + z + ";dataHash=" + hashPayload( data ) + ")";
     }

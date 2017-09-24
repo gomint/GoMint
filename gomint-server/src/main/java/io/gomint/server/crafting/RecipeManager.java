@@ -7,13 +7,11 @@
 
 package io.gomint.server.crafting;
 
-import io.gomint.inventory.ItemStack;
 import io.gomint.server.GoMintServer;
-import io.gomint.server.network.packet.Packet;
+import io.gomint.inventory.item.ItemStack;
 import io.gomint.server.network.packet.PacketBatch;
 import io.gomint.server.network.packet.PacketCraftingRecipes;
 import io.gomint.server.util.BatchUtil;
-import io.gomint.server.util.EnumConnectors;
 
 import java.util.*;
 
@@ -79,8 +77,7 @@ public class RecipeManager {
             this.lookup.put( recipe.getUUID(), recipe );
         }
 
-        // TODO: Due to a MC:PE Bug there is c chance the wrong recipe UUID has been sent. To get rid of it
-        // we need to do a expensive output search
+        // TODO: Due to a MC:PE Bug there is chance the wrong recipe UUID has been sent. To get rid of it we need to do a expensive output search
         List<ItemStack> sortedOutput = new ArrayList<>( recipe.createResult() );
         sortOutput( sortedOutput );
         this.outputLookup.put( sortedOutput, recipe );
@@ -89,17 +86,17 @@ public class RecipeManager {
     }
 
     private void sortOutput( List<ItemStack> sortedOutput ) {
-        Collections.sort( sortedOutput, new Comparator<ItemStack>() {
+        sortedOutput.sort( new Comparator<ItemStack>() {
             @Override
             public int compare( ItemStack o1, ItemStack o2 ) {
-                int itemId1 = EnumConnectors.MATERIAL_CONNECTOR.convert( o1.getMaterial() ).getOldId();
-                int itemId2 = EnumConnectors.MATERIAL_CONNECTOR.convert( o2.getMaterial() ).getOldId();
+                int mat1 = ((io.gomint.server.inventory.item.ItemStack) o1).getMaterial();
+                int mat2 = ((io.gomint.server.inventory.item.ItemStack) o2).getMaterial();
 
-                if ( itemId1 == itemId2 ) {
+                if ( mat1 == mat2 ) {
                     return Short.compare( o1.getData(), o2.getData() );
                 }
 
-                return Integer.compare( itemId1, itemId2 );
+                return Integer.compare( mat1, mat2 );
             }
         } );
     }

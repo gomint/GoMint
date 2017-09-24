@@ -26,7 +26,7 @@ public class MojangChainValidator {
 
     private String username;
     private UUID uuid;
-    private String xboxId;
+    private String xboxId = "";
     private ECPublicKey clientPublicKey;
 
     private Map<String, Key> trustedKeys;

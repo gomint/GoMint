@@ -30,14 +30,15 @@ public class PacketEntityMetadata extends Packet {
 
     @Override
     public void serialize( PacketBuffer buffer ) {
-        buffer.writeLong( this.entityId );
+        buffer.writeUnsignedVarLong( this.entityId );
         this.metadata.serialize( buffer );
     }
 
     @Override
     public void deserialize( PacketBuffer buffer ) {
-        this.entityId = buffer.readLong();
+        this.entityId = buffer.readUnsignedVarLong();
         this.metadata = new MetadataContainer();
         this.metadata.deserialize( buffer );
     }
+
 }

@@ -8,7 +8,10 @@
 package io.gomint.world;
 
 import io.gomint.entity.Player;
+import io.gomint.entity.passive.EntityItemDrop;
+import io.gomint.inventory.item.ItemStack;
 import io.gomint.math.AxisAlignedBB;
+import io.gomint.math.BlockPosition;
 import io.gomint.math.Location;
 import io.gomint.math.Vector;
 import io.gomint.world.block.Block;
@@ -47,10 +50,10 @@ public interface World {
     /**
      * Get the block at that position or null if the position is not loaded in the world.
      *
-     * @param vector of the position
+     * @param pos of the position
      * @return block which has been found at that position or null
      */
-    <T extends Block> T getBlockAt( Vector vector );
+    <T extends Block> T getBlockAt( BlockPosition pos );
 
     /**
      * Get the block at that position or null if the position is not loaded in the world.
@@ -106,5 +109,7 @@ public interface World {
      * @return either a list of collisions or null
      */
     List<AxisAlignedBB> getCollisionCubes( io.gomint.entity.Entity entity, AxisAlignedBB bb, boolean includeEntities );
+
+    EntityItemDrop createItemDrop( Location location, ItemStack itemStack );
 
 }

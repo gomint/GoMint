@@ -29,9 +29,4 @@ public class PacketPickupItemEntity extends Packet {
 
     }
 
-    @Override
-    public int estimateLength() {
-        return predictVarLongSize( this.itemEntityId ) + predictVarLongSize( this.playerEntityId );
-    }
-
 }

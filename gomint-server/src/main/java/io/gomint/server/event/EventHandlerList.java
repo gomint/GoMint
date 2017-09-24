@@ -19,7 +19,7 @@ import java.util.*;
  * @author BlackyPaw
  * @version 1.0
  */
-public class EventHandlerList {
+class EventHandlerList {
 
     // If the handler list is dirty we need to sort it by the event handler priorities:
     private boolean dirty;
@@ -29,7 +29,7 @@ public class EventHandlerList {
     /**
      * Construct a new EventHandlerList
      */
-    public EventHandlerList() {
+    EventHandlerList() {
 
     }
 
@@ -39,7 +39,7 @@ public class EventHandlerList {
      * @param key     The key which should be used to store this handler
      * @param handler The handler which should be added
      */
-    public void addHandler( String key, EventHandlerMethod handler ) {
+    void addHandler( String key, EventHandlerMethod handler ) {
         Preconditions.checkArgument( !this.handlers.containsKey( key ), "EventHandler can't be registered twice" );
 
         this.handlers.put( key, handler );
@@ -52,7 +52,7 @@ public class EventHandlerList {
      *
      * @param key The key which has been used to store this handler
      */
-    public void removeHandler( String key ) {
+    void removeHandler( String key ) {
         EventHandlerMethod method = this.handlers.remove( key );
         if ( method != null ) {
             this.sortedHandlerList.remove( method );
@@ -65,7 +65,7 @@ public class EventHandlerList {
      *
      * @param event The event which gets passed to all handlers
      */
-    public void triggerEvent( Event event ) {
+    void triggerEvent( Event event ) {
         if ( this.dirty ) {
             Collections.sort( this.sortedHandlerList );
         }

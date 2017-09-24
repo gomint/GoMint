@@ -1,6 +1,7 @@
 package io.gomint.server.inventory.transaction;
 
-import io.gomint.inventory.ItemStack;
+import io.gomint.inventory.item.ItemStack;
+import io.gomint.server.entity.EntityPlayer;
 import io.gomint.server.inventory.Inventory;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -15,6 +16,7 @@ import lombok.ToString;
 @ToString
 public class InventoryTransaction implements Transaction {
 
+    private final EntityPlayer owner;
     private final Inventory inventory;
     private final int slot;
     private final ItemStack sourceItem;
@@ -24,6 +26,16 @@ public class InventoryTransaction implements Transaction {
     @Override
     public boolean hasInventory() {
         return true;
+    }
+
+    @Override
+    public void commit() {
+        this.inventory.setItem( this.slot, this.targetItem );
+    }
+
+    @Override
+    public void revert() {
+        this.inventory.sendContents( this.owner.getConnection() );
     }
 
 }

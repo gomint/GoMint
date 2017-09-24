@@ -7,6 +7,7 @@
 
 package io.gomint.entity;
 
+import io.gomint.inventory.Inventory;
 import io.gomint.math.Location;
 import io.gomint.player.PlayerSkin;
 import io.gomint.world.Gamemode;
@@ -93,5 +94,56 @@ public interface Player extends Entity {
      * @param to The location where the player should be teleported to
      */
     void teleport( Location to );
+
+    /**
+     * Get the players inventory
+     *
+     * @return players inventory
+     */
+    Inventory getInventory();
+
+    /**
+     * Opens a inventory for the player
+     *
+     * @param inventory which should be opened
+     */
+    void openInventory( Inventory inventory );
+
+    /**
+     * Get the unique XBOX live id. Is empty string if not in xbox live mode
+     *
+     * @return xbox live id or empty string
+     */
+    String getXboxID();
+
+    /**
+     * Send a message to the client, this uses the normal {@link ChatType} enum.
+     *
+     * @param message which should be send to the client
+     */
+    void sendMessage( String message );
+
+    /**
+     * Send a message with a given type to the client
+     *
+     * @param message which should be send
+     * @param type of the message
+     */
+    void sendMessage( ChatType type, String ... message );
+
+    /**
+     * Check if player has a specific permission
+     *
+     * @param permission which should be checked for
+     * @return true if the player has this permission, false if not
+     */
+    boolean hasPermission( String permission );
+
+    /**
+     * Get the view distance of this player
+     *
+     * @return radius of chunks this player can see
+     */
+    int getViewDistance();
 
 }

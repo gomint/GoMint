@@ -1,5 +1,6 @@
 package io.gomint.server.network.handler;
 
+import io.gomint.event.player.PlayerInteractEvent;
 import io.gomint.server.network.PlayerConnection;
 import io.gomint.server.network.packet.PacketPlayerAction;
 import org.slf4j.Logger;
@@ -17,9 +18,18 @@ public class PacketPlayerActionHandler implements PacketHandler<PacketPlayerActi
     public void handle( PacketPlayerAction packet, long currentTimeMillis, PlayerConnection connection ) {
         switch ( packet.getAction() ) {
             case START_BREAK:
-                if ( connection.getEntity().getStartBreak() == 0 ) {
-                    connection.getEntity().setBreakVector( packet.getPosition() );
-                    connection.getEntity().setStartBreak( currentTimeMillis );
+                // Sanity checks (against crashes)
+                if ( connection.getEntity().canInteract( packet.getPosition().toVector().add( .5f, .5f, .5f ), 13 ) ) {
+                    PlayerInteractEvent event = connection.getServer()
+                            .getPluginManager().callEvent( new PlayerInteractEvent( connection.getEntity(),
+                                    PlayerInteractEvent.ClickType.LEFT, connection.getEntity().getWorld().getBlockAt( packet.getPosition() ) ) );
+
+                    if ( !event.isCancelled() ) {
+                        if ( connection.getEntity().getStartBreak() == 0 ) {
+                            connection.getEntity().setBreakVector( packet.getPosition() );
+                            connection.getEntity().setStartBreak( currentTimeMillis );
+                        }
+                    }
                 }
 
                 break;
@@ -37,6 +47,15 @@ public class PacketPlayerActionHandler implements PacketHandler<PacketPlayerActi
 
                 connection.getEntity().setBreakTime( ( currentTimeMillis - connection.getEntity().getStartBreak() ) );
                 connection.getEntity().setStartBreak( 0 );
+                break;
+            case START_SNEAK:
+                connection.getEntity().setSneaking( true );
+                break;
+            case STOP_SNEAK:
+                connection.getEntity().setSneaking( false );
+                break;
+            case JUMP:
+                // TODO: Decide what todo with this information
                 break;
             default:
                 LOGGER.warn( "Unhandled action: " + packet );

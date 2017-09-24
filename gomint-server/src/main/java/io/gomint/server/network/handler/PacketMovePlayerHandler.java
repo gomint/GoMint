@@ -1,23 +1,16 @@
 package io.gomint.server.network.handler;
 
 import io.gomint.event.player.PlayerMoveEvent;
-import io.gomint.inventory.ItemStack;
-import io.gomint.inventory.Material;
 import io.gomint.math.Location;
-import io.gomint.math.Vector;
-import io.gomint.server.entity.passive.EntityItem;
 import io.gomint.server.network.PlayerConnection;
 import io.gomint.server.network.packet.PacketMovePlayer;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import io.gomint.server.world.block.Block;
 
 /**
  * @author geNAZt
  * @version 1.0
  */
 public class PacketMovePlayerHandler implements PacketHandler<PacketMovePlayer> {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger( PacketMovePlayerHandler.class );
 
     @Override
     public void handle( PacketMovePlayer packet, long currentTimeMillis, PlayerConnection connection ) {
@@ -45,8 +38,6 @@ public class PacketMovePlayerHandler implements PacketHandler<PacketMovePlayer> 
                 new PlayerMoveEvent( connection.getEntity(), from, to )
         );
 
-        // LOGGER.debug( "Moving " + ( Math.abs( Math.sqrt( from.distanceSquared( to ) ) ) * 20 ) + " blocks/s" );
-
         if ( playerMoveEvent.isCancelled() ) {
             playerMoveEvent.setTo( playerMoveEvent.getFrom() );
         }
@@ -66,7 +57,14 @@ public class PacketMovePlayerHandler implements PacketHandler<PacketMovePlayer> 
         if ( (int) from.getX() != (int) to.getX() ||
                 (int) from.getZ() != (int) to.getZ() ||
                 !to.getWorld().equals( from.getWorld() ) ) {
-            connection.checkForNewChunks();
+            connection.checkForNewChunks( from );
+
+            // Check for interaction
+            Block block = from.getWorld().getBlockAt( from.toBlockPosition() );
+            block.gotOff( connection.getEntity() );
+
+            block = to.getWorld().getBlockAt( to.toBlockPosition() );
+            block.stepOn( connection.getEntity() );
         }
     }
 

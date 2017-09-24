@@ -27,4 +27,25 @@ public interface PlayerSkin {
      */
     byte[] getRawData();
 
+    /**
+     * Get cape data
+     *
+     * @return cape data or null
+     */
+    byte[] getCapeData();
+
+    /**
+     * Get the name of the geometry used
+     *
+     * @return geometry name
+     */
+    String getGeometryName();
+
+    /**
+     * Data used for geometry of the skin
+     *
+     * @return geometry data
+     */
+    byte[] getGeometryData();
+
 }

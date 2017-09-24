@@ -1,10 +1,9 @@
 package io.gomint.server.entity.metadata;
 
-import io.gomint.inventory.ItemStack;
 import io.gomint.jraknet.PacketBuffer;
-import io.gomint.server.inventory.MaterialMagicNumbers;
+import io.gomint.server.inventory.item.ItemStack;
+import io.gomint.server.inventory.item.Items;
 import io.gomint.server.network.packet.Packet;
-import io.gomint.server.util.EnumConnectors;
 
 /**
  * @author geNAZt
@@ -56,7 +55,11 @@ public class MetadataItem extends MetadataValue {
 
     @Override
     void deserialize( PacketBuffer buffer ) {
-        this.value = new ItemStack( EnumConnectors.MATERIAL_CONNECTOR.revert( MaterialMagicNumbers.valueOfWithId( buffer.readLShort() ) ), buffer.readByte(), buffer.readLShort() );
+        int id = buffer.readLShort();
+        byte amount = buffer.readByte();
+        short data = buffer.readLShort();
+
+        this.value = Items.create( id, data, amount, null );
     }
 
     @Override

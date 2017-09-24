@@ -8,11 +8,13 @@
 package io.gomint.server.entity.metadata;
 
 import io.gomint.jraknet.PacketBuffer;
+import lombok.ToString;
 
 /**
  * @author BlackyPaw
  * @version 1.0
  */
+@ToString
 public class MetadataLong extends MetadataValue {
 
     private long value;
@@ -60,7 +62,7 @@ public class MetadataLong extends MetadataValue {
 
     @Override
     void deserialize( PacketBuffer buffer ) {
-        this.value = buffer.readInt();
+        this.value = buffer.readSignedVarLong().longValue();
     }
 
     @Override

@@ -7,6 +7,11 @@ import java.net.InetSocketAddress;
 /**
  * @author geNAZt
  * @version 1.0
+ *
+ * This event is fired when RakNet (the networking) decided to accept a connection. This is before any MC:PE packets
+ * will be handled (event before login). This can be used to create IP Bans / Proxy detections. Please notice: Since this
+ * is a network level operation you can't provide a reason which is printed in the client. If this is needed please use
+ * the {@link PlayerLoginEvent}.
  */
 public class PlayerPreLoginEvent extends CancellableEvent {
 

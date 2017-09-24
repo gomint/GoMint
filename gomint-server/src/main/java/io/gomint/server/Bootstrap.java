@@ -7,18 +7,13 @@
 
 package io.gomint.server;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.nio.file.Files;
-import java.nio.file.StandardCopyOption;
 
 /**
  * This Bootstrap downloads all Libraries given inside of the "libs.dep" File in the Root
@@ -50,9 +45,7 @@ public class Bootstrap {
             System.exit( -1 );
         }
 
-        // Check the libs (versions and artifacts)
-        checkLibs( libsFolder );
-
+        // Load all libs found
         File[] files = libsFolder.listFiles();
         if ( files == null ) {
             System.out.println( "Library Directory is corrupted" );
@@ -77,59 +70,6 @@ public class Bootstrap {
             Constructor constructor = coreClass.getDeclaredConstructor( String[].class );
             constructor.newInstance( new Object[]{ args } );
         } catch ( ClassNotFoundException | NoSuchMethodException | IllegalAccessException | InvocationTargetException | InstantiationException e ) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * Download needed Libs from the central Maven repository or any other Repo (can be any url in the libs.dep file)
-     *
-     * @param libsFolder in which the downloads should be stored
-     */
-    private static void checkLibs( File libsFolder ) {
-        // Check if we are able to skip this
-        if ( System.getProperty( "skip.libcheck", "false" ).equals( "true" ) ) {
-            return;
-        }
-
-        // Load the dependency list
-        try ( BufferedReader reader = new BufferedReader( new FileReader( new File( "libs.dep" ) ) ) ) {
-            String libURL;
-            while ( ( libURL = reader.readLine() ) != null ) {
-                // Check for comment
-                if ( libURL.isEmpty() || libURL.equals( System.getProperty( "line.separator" ) ) || libURL.startsWith( "#" ) ) {
-                    continue;
-                }
-
-                // Head first to get informations about the file
-                URL url = new URL( libURL );
-                HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-                urlConnection.setRequestMethod( "HEAD" );
-
-                // Filter out non java archive content types
-                if ( !"application/java-archive".equals( urlConnection.getHeaderField( "Content-Type" ) ) ) {
-                    System.out.println( "Skipping the download of " + libURL + " because its not a Java Archive" );
-                    continue;
-                }
-
-                // We need the contentLength to compare
-                int contentLength = Integer.parseInt( urlConnection.getHeaderField( "Content-Length" ) );
-
-                String[] tempSplit = url.getPath().split( "/" );
-                String fileName = tempSplit[tempSplit.length - 1];
-
-                // Check if we have a file with the same length
-                File libFile = new File( libsFolder, fileName );
-                if ( libFile.exists() && libFile.length() == contentLength ) {
-                    System.out.println( "Skipping the download of " + libURL + " because there already is a correct sized copy" );
-                    continue;
-                }
-
-                // Download the file from the Server
-                Files.copy( url.openStream(), libFile.toPath(), StandardCopyOption.REPLACE_EXISTING );
-                System.out.println( "Downloading library: " + fileName );
-            }
-        } catch ( IOException e ) {
             e.printStackTrace();
         }
     }

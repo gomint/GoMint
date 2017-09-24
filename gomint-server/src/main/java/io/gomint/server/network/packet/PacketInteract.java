@@ -1,8 +1,10 @@
 package io.gomint.server.network.packet;
 
 import io.gomint.jraknet.PacketBuffer;
+import io.gomint.math.Vector;
 import io.gomint.server.network.Protocol;
 import lombok.Data;
+import lombok.Getter;
 
 /**
  * @author geNAZt
@@ -12,9 +14,15 @@ import lombok.Data;
 public class PacketInteract extends Packet {
 
     public enum InteractAction {
-        INTERACT,
-        ATTACK,
-        MOUSEOVER;
+        INTERACT(1),
+        ATTACK(2),
+        MOUSEOVER(4);
+
+        @Getter
+        private final byte id;
+        InteractAction( int id ) {
+            this.id = (byte) id;
+        }
 
         public static InteractAction valueOf( byte actionId ) {
             switch ( actionId ) {
@@ -28,23 +36,11 @@ public class PacketInteract extends Packet {
                     return MOUSEOVER;
             }
         }
-
-        public static byte getId( InteractAction action ) {
-            switch ( action ) {
-                case INTERACT:
-                    return 1;
-                case ATTACK:
-                    return 2;
-                case MOUSEOVER:
-                    return 4;
-            }
-
-            return 4;
-        }
     }
 
     private InteractAction action;
     private long entityId;
+    private Vector position;
 
     public PacketInteract() {
         super( Protocol.PACKET_INTERACT );
@@ -52,14 +48,22 @@ public class PacketInteract extends Packet {
 
     @Override
     public void serialize( PacketBuffer buffer ) {
-        buffer.writeByte( InteractAction.getId( this.action ) );
+        buffer.writeByte( this.action.getId() );
         buffer.writeUnsignedVarLong( this.entityId );
+
+        if ( this.action == InteractAction.MOUSEOVER ) {
+            writeVector( this.position, buffer );
+        }
     }
 
     @Override
     public void deserialize( PacketBuffer buffer ) {
         this.action = InteractAction.valueOf( buffer.readByte() );
         this.entityId = buffer.readUnsignedVarLong();
+
+        if ( this.action == InteractAction.MOUSEOVER ) {
+            this.position = readVector( buffer );
+        }
     }
 
 }

@@ -42,7 +42,17 @@ public class PacketUpdateAttributes extends Packet {
 
     @Override
     public void deserialize( PacketBuffer buffer ) {
+        this.entityId = buffer.readUnsignedVarLong();
+        int amountOfAttributes = buffer.readUnsignedVarInt();
+        for ( int i = 0; i < amountOfAttributes; i++ ) {
+            float minValue = buffer.readLFloat();
+            float maxValue = buffer.readLFloat();
+            float value = buffer.readLFloat();
+            float defaultValue = buffer.readLFloat();
+            String key = buffer.readString();
 
+            System.out.println( key + ": min(" + minValue + ") max(" + maxValue + ") value(" + value + ") default(" + defaultValue + ")");
+        }
     }
 
     public void addAttributeInstance( AttributeInstance instance ) {

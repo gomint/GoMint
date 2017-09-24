@@ -7,6 +7,7 @@
 
 package io.gomint.server.plugin;
 
+import io.gomint.command.Command;
 import io.gomint.event.Event;
 import io.gomint.event.EventListener;
 import io.gomint.plugin.Plugin;
@@ -14,6 +15,7 @@ import io.gomint.plugin.PluginManager;
 import io.gomint.plugin.PluginVersion;
 import io.gomint.plugin.StartupPriority;
 import io.gomint.server.GoMintServer;
+import io.gomint.server.command.CommandManager;
 import io.gomint.server.event.EventManager;
 import io.gomint.server.scheduler.CoreScheduler;
 import io.gomint.server.scheduler.PluginScheduler;
@@ -21,6 +23,7 @@ import io.gomint.server.util.CallerDetectorUtil;
 import javassist.bytecode.AnnotationsAttribute;
 import javassist.bytecode.ClassFile;
 import javassist.bytecode.annotation.*;
+import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -53,6 +56,7 @@ public class SimplePluginManager implements PluginManager {
     private final Map<String, PluginMeta> metadata = new HashMap<>();
 
     private final EventManager eventManager = new EventManager();
+    @Getter private final CommandManager commandManager = new CommandManager();
 
     private Field loggerField;
     private Field nameField;
@@ -60,6 +64,7 @@ public class SimplePluginManager implements PluginManager {
     private Field versionField;
     private Field schedulerField;
     private Field serverField;
+    private Field listenerListField;
 
     public SimplePluginManager( GoMintServer server ) {
         this.server = server;
@@ -89,6 +94,9 @@ public class SimplePluginManager implements PluginManager {
 
             this.serverField = Plugin.class.getDeclaredField( "server" );
             this.serverField.setAccessible( true );
+
+            this.listenerListField = Plugin.class.getDeclaredField( "listeners" );
+            this.listenerListField.setAccessible( true );
         } catch ( NoSuchFieldException e ) {
             e.printStackTrace();
         }
@@ -331,6 +339,17 @@ public class SimplePluginManager implements PluginManager {
             }
         } );
 
+        // Unregister listeners
+        try {
+            List<EventListener> listeners = (List<EventListener>) this.listenerListField.get( plugin );
+            for ( EventListener listener : listeners ) {
+                this.eventManager.unregisterListener( listener );
+            }
+        } catch ( IllegalAccessException e ) {
+            e.printStackTrace();
+        }
+
+        // Cancel all tasks and cleanup scheduler
         try {
             PluginScheduler scheduler = (PluginScheduler) this.schedulerField.get( plugin );
             scheduler.cleanup();
@@ -388,6 +407,24 @@ public class SimplePluginManager implements PluginManager {
         }
 
         this.eventManager.unregisterListener( listener );
+    }
+
+    @Override
+    public void registerCommand( Plugin plugin, Command command ) {
+        if ( !CallerDetectorUtil.getCallerPlugin().equals( plugin.getClass() ) ) {
+            throw new SecurityException( "Wanted to register command for another plugin" );
+        }
+
+        this.commandManager.register( plugin, command );
+    }
+
+    /**
+     * Cleanup / uninstall all plugins
+     */
+    public void close() {
+        for ( Plugin plugin : new ArrayList<>( this.loadedPlugins.values() ) ) {
+            uninstallPlugin0( plugin );
+        }
     }
 
 }

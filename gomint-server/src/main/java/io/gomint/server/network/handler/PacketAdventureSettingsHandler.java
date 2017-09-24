@@ -13,7 +13,7 @@ public class PacketAdventureSettingsHandler implements PacketHandler<PacketAdven
     @Override
     public void handle( PacketAdventureSettings packet, long currentTimeMillis, PlayerConnection connection ) {
         // This is sent when the client wants a change to its flying status
-        AdventureSettings adventureSettings = new AdventureSettings( packet.getFlags() );
+        AdventureSettings adventureSettings = new AdventureSettings( packet.getFlags(), packet.getFlags2() );
 
         if ( connection.getEntity().getAdventureSettings().isCanFly() ) {
             if ( connection.getEntity().getAdventureSettings().isFlying() != adventureSettings.isFlying() ) {

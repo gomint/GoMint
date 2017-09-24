@@ -37,9 +37,4 @@ public class PacketBatch extends Packet {
         buffer.readBytes( this.payload );
     }
 
-    @Override
-    public int estimateLength() {
-        return this.payload.length;
-    }
-
 }

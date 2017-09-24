@@ -1,6 +1,7 @@
 package io.gomint.server.network.packet;
 
 import io.gomint.jraknet.PacketBuffer;
+import io.gomint.math.BlockPosition;
 import io.gomint.math.Vector;
 import io.gomint.server.network.Protocol;
 import lombok.Data;
@@ -12,10 +13,10 @@ import lombok.Data;
 @Data
 public class PacketRemoveBlock extends Packet {
 
-    private Vector position;
+    private BlockPosition position;
 
     public PacketRemoveBlock() {
-        super( Protocol.PACKET_REMOVE_BLOCK );
+        super( (byte) -1 );
     }
 
     @Override
@@ -27,7 +28,7 @@ public class PacketRemoveBlock extends Packet {
 
     @Override
     public void deserialize( PacketBuffer buffer ) {
-        this.position = new Vector( buffer.readSignedVarInt(), buffer.readUnsignedVarInt(), buffer.readSignedVarInt() );
+        this.position = readBlockPosition( buffer );
     }
 
 }

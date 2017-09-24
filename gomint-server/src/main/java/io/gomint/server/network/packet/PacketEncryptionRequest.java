@@ -11,8 +11,7 @@ import lombok.Data;
 @Data
 public class PacketEncryptionRequest extends Packet {
 
-    private String serverKey;
-    private byte[] clientSalt;
+    private String jwt;
 
     public PacketEncryptionRequest() {
         super( Protocol.PACKET_ENCRYPTION_REQUEST );
@@ -20,14 +19,12 @@ public class PacketEncryptionRequest extends Packet {
 
     @Override
     public void serialize( PacketBuffer buffer ) {
-        buffer.writeString( this.serverKey );
-        buffer.writeUnsignedVarInt( this.clientSalt.length );
-        buffer.writeBytes( this.clientSalt );
+        buffer.writeString( this.jwt );
     }
 
     @Override
     public void deserialize( PacketBuffer buffer ) {
-
+        this.jwt = buffer.readString();
     }
 
 }

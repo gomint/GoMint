@@ -12,7 +12,11 @@ import lombok.Data;
 public class PacketAdventureSettings extends Packet {
 
     private int flags;
-    private int userPermission;
+    private int commandPermission;
+    private int flags2;
+    private int playerPermission;
+    private int customFlags;
+    private long entityId;
 
     public PacketAdventureSettings() {
         super( Protocol.PACKET_ADVENTURE_SETTINGS );
@@ -21,13 +25,21 @@ public class PacketAdventureSettings extends Packet {
     @Override
     public void serialize( PacketBuffer buffer ) {
         buffer.writeUnsignedVarInt( this.flags );
-        buffer.writeUnsignedVarInt( this.userPermission );
+        buffer.writeUnsignedVarInt( this.commandPermission );
+        buffer.writeUnsignedVarInt( this.flags2 );
+        buffer.writeUnsignedVarInt( this.playerPermission );
+        buffer.writeUnsignedVarInt( this.customFlags );
+        buffer.writeLLong( this.entityId );
     }
 
     @Override
     public void deserialize( PacketBuffer buffer ) {
         this.flags = buffer.readUnsignedVarInt();
-        this.userPermission = buffer.readUnsignedVarInt();
+        this.commandPermission = buffer.readUnsignedVarInt();
+        this.flags2 = buffer.readUnsignedVarInt();
+        this.playerPermission = buffer.readUnsignedVarInt();
+        this.customFlags = buffer.readUnsignedVarInt();
+        this.entityId = buffer.readLLong();
     }
 
 }

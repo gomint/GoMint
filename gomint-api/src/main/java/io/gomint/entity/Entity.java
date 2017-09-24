@@ -7,6 +7,7 @@
 
 package io.gomint.entity;
 
+import io.gomint.inventory.Inventory;
 import io.gomint.math.AxisAlignedBB;
 import io.gomint.math.Location;
 import io.gomint.math.Vector;
@@ -53,4 +54,5 @@ public interface Entity {
     AxisAlignedBB getBoundingBox();
 
     boolean isOnGround();
+
 }

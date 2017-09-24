@@ -11,7 +11,7 @@ import io.gomint.server.world.ChunkAdapter;
 import io.gomint.server.world.NibbleArray;
 import io.gomint.server.world.WorldAdapter;
 import io.gomint.taglib.NBTTagCompound;
-import net.openhft.koloboke.collect.map.hash.HashLongObjMaps;
+import com.koloboke.collect.map.hash.HashLongObjMaps;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -72,16 +72,6 @@ public class LevelDBChunk extends ChunkAdapter {
         buf.get( metaData );
         NibbleArray meta = new NibbleArray( metaData );
 
-        // Next 2048 bytes are sky light
-        byte[] skyLight = new byte[2048];
-        buf.get( skyLight );
-        NibbleArray sky = new NibbleArray( skyLight );
-
-        // Final 2048 bytes are block light
-        byte[] blockLight = new byte[2048];
-        buf.get( blockLight );
-        NibbleArray block = new NibbleArray( blockLight );
-
         for ( int j = 0; j < 16; ++j ) {
             for ( int i = 0; i < 16; ++i ) {
                 for ( int k = 0; k < 16; ++k ) {
@@ -94,9 +84,6 @@ public class LevelDBChunk extends ChunkAdapter {
                     if ( meta.get( blockIndex ) != 0 ) {
                         this.setData( k, y, i, meta.get( blockIndex ) );
                     }
-
-                    this.setSkyLight( k, y, i, sky.get( blockIndex ) );
-                    this.setBlockLight( k, y, i, block.get( blockIndex ) );
                 }
             }
         }

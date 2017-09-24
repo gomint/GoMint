@@ -26,16 +26,33 @@
             <version>1.1.0-SNAPSHOT</version>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-slf4j-impl -->
         <dependency>
-            <groupId>net.openhft</groupId>
-            <artifactId>koloboke-api-jdk8</artifactId>
-            <version>0.6.8</version>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-slf4j-impl</artifactId>
+            <version>2.9.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-api</artifactId>
+            <version>2.9.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
+            <version>2.9.0</version>
         </dependency>
 
         <dependency>
-            <groupId>net.openhft</groupId>
+            <groupId>com.koloboke</groupId>
+            <artifactId>koloboke-api-jdk8</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.koloboke</groupId>
             <artifactId>koloboke-impl-jdk8</artifactId>
-            <version>0.6.8</version>
+            <version>1.0.0</version>
             <scope>runtime</scope>
         </dependency>
 
@@ -48,7 +65,7 @@
         <dependency>
             <groupId>io.gomint</groupId>
             <artifactId>jraknet</artifactId>
-            <version>4.0.0-SNAPSHOT</version>
+            <version>4.0.1-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
 
@@ -56,12 +73,6 @@
             <groupId>org.bouncycastle</groupId>
             <artifactId>bcprov-jdk15on</artifactId>
             <version>1.54</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
-            <version>2.7.0</version>
         </dependency>
 
         <dependency>
@@ -73,7 +84,14 @@
         <dependency>
             <groupId>org.iq80.leveldb</groupId>
             <artifactId>leveldb</artifactId>
-            <version>0.10-SNAPSHOT</version>
+            <version>0.10-GOMINT</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.iq80.leveldb/leveldb-api -->
+        <dependency>
+            <groupId>org.iq80.leveldb</groupId>
+            <artifactId>leveldb-api</artifactId>
+            <version>0.9</version>
         </dependency>
 
         <dependency>
@@ -113,7 +131,7 @@
                         <configuration>
                             <artifactSet>
                                 <includes>
-                                    <include>io.gomint:gomint-api:*</include>
+                                    <include>*:*</include>
                                 </includes>
                             </artifactSet>
                         </configuration>

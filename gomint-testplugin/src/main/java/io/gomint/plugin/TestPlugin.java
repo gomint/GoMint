@@ -19,7 +19,7 @@ public class TestPlugin extends Plugin {
     @Override
     public void onInstall() {
         registerListener( new PlayerMoveListener() );
-        registerListener( new PlayerJoinListener( this ) );
+        registerListener( new PlayerJoinListener() );
     }
 
     @Override

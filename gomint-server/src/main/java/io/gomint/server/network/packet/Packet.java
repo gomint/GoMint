@@ -7,20 +7,21 @@
 
 package io.gomint.server.network.packet;
 
-import io.gomint.inventory.ItemStack;
-import io.gomint.inventory.Material;
+import io.gomint.inventory.item.ItemAir;
+import io.gomint.inventory.item.ItemStack;
 import io.gomint.jraknet.PacketBuffer;
-import io.gomint.server.inventory.MaterialMagicNumbers;
-import io.gomint.server.util.EnumConnectors;
+import io.gomint.math.BlockPosition;
+import io.gomint.math.Vector;
+import io.gomint.server.entity.EntityLink;
+import io.gomint.server.inventory.item.Items;
+import io.gomint.server.network.type.CommandOrigin;
 import io.gomint.taglib.NBTTagCompound;
 import io.gomint.world.Gamerule;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.math.BigInteger;
 import java.nio.ByteOrder;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BiConsumer;
@@ -31,13 +32,16 @@ import java.util.function.BiConsumer;
  */
 public abstract class Packet {
 
-    private static final BigInteger UNSIGNED_LONG_MAX_VALUE = new BigInteger("FFFFFFFFFFFFFFFF", 16);
-
     /**
      * Internal MC:PE id of this packet
      */
     protected final byte id;
 
+    /**
+     * Construct a new packet
+     *
+     * @param id of the packet
+     */
     protected Packet( byte id ) {
         this.id = id;
     }
@@ -66,15 +70,6 @@ public abstract class Packet {
     public abstract void deserialize( PacketBuffer buffer );
 
     /**
-     * Returns an estimate length of the packet (used for pre-allocation).
-     *
-     * @return The estimate length of the packet or -1 if unknown
-     */
-    public int estimateLength() {
-        return -1;
-    }
-
-    /**
      * Returns the ordering channel to send the packet on.
      *
      * @return The ordering channel of the packet
@@ -83,10 +78,16 @@ public abstract class Packet {
         return 0;
     }
 
-    public static ItemStack readItemStack( PacketBuffer buffer ) {
+    /**
+     * Read a item stack from the packet buffer
+     *
+     * @param buffer from the packet
+     * @return read item stack
+     */
+    static ItemStack readItemStack( PacketBuffer buffer ) {
         int id = buffer.readSignedVarInt();
         if ( id == 0 ) {
-            return new ItemStack( Material.AIR, (short) 0, 0, null );
+            return ItemAir.create( 0 );
         }
 
         int temp = buffer.readSignedVarInt();
@@ -117,16 +118,22 @@ public abstract class Packet {
             buffer.readString();    // TODO: Implement proper support once we know the string values
         }
 
-        return new ItemStack( EnumConnectors.MATERIAL_CONNECTOR.revert( MaterialMagicNumbers.valueOfWithId( id ) ), data, amount, nbt );
+        return Items.create( id, data, amount, nbt );
     }
 
+    /**
+     * Write a item stack to the packet buffer
+     *
+     * @param itemStack which should be written
+     * @param buffer    which should be used to write to
+     */
     public static void writeItemStack( ItemStack itemStack, PacketBuffer buffer ) {
-        if ( itemStack == null || itemStack.getMaterial() == Material.AIR ) {
+        if ( itemStack == null || itemStack instanceof ItemAir ) {
             buffer.writeSignedVarInt( 0 );
             return;
         }
 
-        buffer.writeSignedVarInt( EnumConnectors.MATERIAL_CONNECTOR.convert( itemStack.getMaterial() ).getOldId() );
+        buffer.writeSignedVarInt( ( (io.gomint.server.inventory.item.ItemStack) itemStack ).getMaterial() );
         buffer.writeSignedVarInt( ( itemStack.getData() << 8 ) + ( itemStack.getAmount() & 0xff ) );
 
         NBTTagCompound compound = itemStack.getNbtData();
@@ -149,7 +156,13 @@ public abstract class Packet {
         buffer.writeSignedVarInt( 0 );
     }
 
-    public static void writeItemStacks( ItemStack[] itemStacks, PacketBuffer buffer ) {
+    /**
+     * Write a array of item stacks to the buffer
+     *
+     * @param itemStacks which should be written to the buffer
+     * @param buffer     which should be written to
+     */
+    void writeItemStacks( ItemStack[] itemStacks, PacketBuffer buffer ) {
         if ( itemStacks == null || itemStacks.length == 0 ) {
             buffer.writeUnsignedVarInt( 0 );
             return;
@@ -166,20 +179,26 @@ public abstract class Packet {
      * Read in a variable amount of itemstacks
      *
      * @param buffer The buffer to read from
-     * @return a list of itemstacks
+     * @return a list of item stacks
      */
-    public static List<ItemStack> readItemStacks( PacketBuffer buffer ) {
+    ItemStack[] readItemStacks( PacketBuffer buffer ) {
         int count = buffer.readUnsignedVarInt();
-        List<ItemStack> itemStacks = new ArrayList<>( count );
+        ItemStack[] itemStacks = new ItemStack[count];
 
         for ( int i = 0; i < count; i++ ) {
-            itemStacks.add( readItemStack( buffer ) );
+            itemStacks[i] = readItemStack( buffer );
         }
 
         return itemStacks;
     }
 
-    public static void writeIntList( int[] integers, PacketBuffer buffer ) {
+    /**
+     * Write a array of integers to the buffer
+     *
+     * @param integers which should be written to the buffer
+     * @param buffer   which should be written to
+     */
+    void writeIntList( int[] integers, PacketBuffer buffer ) {
         if ( integers == null || integers.length == 0 ) {
             buffer.writeUnsignedVarInt( 0 );
             return;
@@ -189,92 +208,6 @@ public abstract class Packet {
 
         for ( Integer integer : integers ) {
             buffer.writeSignedVarInt( integer );
-        }
-    }
-
-    public static int predictItemStack( ItemStack itemStack ) {
-        if ( itemStack == null || itemStack.getMaterial() == Material.AIR ) {
-            return predictSignedVarInt( 0 );
-        }
-
-        int idSize = predictSignedVarInt( EnumConnectors.MATERIAL_CONNECTOR.convert( itemStack.getMaterial() ).getOldId() );
-        int dataSize = predictSignedVarInt( ( itemStack.getData() << 8 ) + ( itemStack.getAmount() & 0xff ) );
-
-        NBTTagCompound compound = itemStack.getNbtData();
-        if ( compound == null ) {
-            return idSize + dataSize + 2;
-        } else {
-            try {
-                ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-                compound.writeTo( byteArrayOutputStream, false, ByteOrder.LITTLE_ENDIAN );
-
-                return idSize + dataSize + 2 + byteArrayOutputStream.size();
-            } catch ( IOException e ) {
-                return idSize + dataSize + 2;
-            }
-        }
-    }
-
-    public static int predictSignedVarInt( int v ) {
-        long val = (long) ( v << 1 ^ v >> 31 );
-        return predictVarLongSize( val );
-    }
-
-    /**
-     * Predict the byte size of the variable number representation
-     *
-     * @param input the number to predict
-     * @return the amount of bytes
-     */
-    public static int predictVarIntSize( int input ) {
-        int size = 1;
-        int value = input;
-
-        while ( ( value & -128 ) != 0 ) {
-            value >>>= 7;
-            size++;
-        }
-
-        return size;
-    }
-
-    /**
-     * Predict the byte size of the variable number representation
-     *
-     * @param input the number to predict
-     * @return the amount of bytes
-     */
-    public static int predictVarLongSize( long input ) {
-        int size = 1;
-        long value = input;
-
-        while ( ( value & -128 ) != 0 ) {
-            value >>>= 7;
-            size++;
-        }
-
-        return size;
-    }
-
-    public static int predictSignedVarLong( long input ) {
-        BigInteger origin = BigInteger.valueOf( input );
-        BigInteger left = origin.shiftLeft( 1 );
-        BigInteger right = origin.shiftRight( 63 );
-        BigInteger val = left.xor( right );
-
-        if(val.compareTo(UNSIGNED_LONG_MAX_VALUE) > 0) {
-            throw new IllegalArgumentException("The value is too big");
-        } else {
-            int size = 1;
-
-            val = val.and(UNSIGNED_LONG_MAX_VALUE);
-            BigInteger i = BigInteger.valueOf(-128L);
-
-            for(; !val.and(i).equals(BigInteger.ZERO); val = val.shiftRight(7)) {
-                size++;
-            }
-
-            return size + 1;
         }
     }
 
@@ -302,6 +235,52 @@ public abstract class Packet {
                 }
             }
         } );
+    }
+
+    public BlockPosition readBlockPosition( PacketBuffer buffer ) {
+        return new BlockPosition( buffer.readSignedVarInt(), buffer.readUnsignedVarInt(), buffer.readSignedVarInt() );
+    }
+
+    public void writeBlockPosition( BlockPosition position, PacketBuffer buffer ) {
+        buffer.writeSignedVarInt( position.getX() );
+        buffer.writeUnsignedVarInt( position.getY() );
+        buffer.writeSignedVarInt( position.getZ() );
+    }
+
+    public void writeEntityLinks( List<EntityLink> links, PacketBuffer buffer ) {
+        if ( links == null ) {
+            buffer.writeUnsignedVarInt( 0 );
+        } else {
+            buffer.writeUnsignedVarInt( links.size() );
+            for ( EntityLink link : links ) {
+                buffer.writeUnsignedVarLong( link.getFrom() );
+                buffer.writeUnsignedVarLong( link.getTo() );
+                buffer.writeByte( link.getUnknown1() );
+                buffer.writeByte( link.getUnknown2() );
+            }
+        }
+    }
+
+    void writeVector( Vector vector, PacketBuffer buffer ) {
+        buffer.writeLFloat( vector.getX() );
+        buffer.writeLFloat( vector.getY() );
+        buffer.writeLFloat( vector.getZ() );
+    }
+
+    Vector readVector( PacketBuffer buffer ) {
+        return new Vector( buffer.readLFloat(), buffer.readLFloat(), buffer.readLFloat() );
+    }
+
+    CommandOrigin readCommandOrigin( PacketBuffer buffer ) {
+        // I currently don't know what the data looks like
+        // All stuff i have seen is 3 0 bytes and 0x0 0x0 0x03 when the server responds
+        return new CommandOrigin( buffer.readByte(), buffer.readByte(), buffer.readByte() );
+    }
+
+    void writeCommandOrigin( CommandOrigin commandOrigin, PacketBuffer buffer ) {
+        buffer.writeByte( commandOrigin.getUnknown1() );
+        buffer.writeByte( commandOrigin.getUnknown2() );
+        buffer.writeByte( commandOrigin.getType() );
     }
 
 }

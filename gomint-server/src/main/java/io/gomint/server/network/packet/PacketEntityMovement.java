@@ -53,9 +53,4 @@ public class PacketEntityMovement extends Packet {
 
     }
 
-    @Override
-    public int estimateLength() {
-        return predictVarLongSize( this.entityId ) + 4 + 4 + 4 + 3;
-    }
-
 }

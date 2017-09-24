@@ -3,6 +3,7 @@ package io.gomint.server.network.packet;
 import io.gomint.jraknet.PacketBuffer;
 import io.gomint.server.network.Protocol;
 import io.gomint.server.resource.ResourcePack;
+import lombok.Data;
 
 import java.util.List;
 
@@ -10,6 +11,7 @@ import java.util.List;
  * @author geNAZt
  * @version 1.0
  */
+@Data
 public class PacketResourcePacksInfo extends Packet {
 
     private boolean mustAccept;
@@ -48,11 +50,6 @@ public class PacketResourcePacksInfo extends Packet {
     @Override
     public void deserialize( PacketBuffer buffer ) {
 
-    }
-
-    @Override
-    public int estimateLength() {
-        return 1 + 4;
     }
 
 }

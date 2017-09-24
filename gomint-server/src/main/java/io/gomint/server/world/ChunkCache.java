@@ -8,11 +8,11 @@
 package io.gomint.server.world;
 
 import io.gomint.server.entity.EntityPlayer;
-import net.openhft.koloboke.collect.LongCursor;
-import net.openhft.koloboke.collect.map.LongObjMap;
-import net.openhft.koloboke.collect.map.hash.HashLongObjMaps;
-import net.openhft.koloboke.collect.set.LongSet;
-import net.openhft.koloboke.collect.set.hash.HashLongSets;
+import com.koloboke.collect.LongCursor;
+import com.koloboke.collect.map.LongObjMap;
+import com.koloboke.collect.map.hash.HashLongObjMaps;
+import com.koloboke.collect.set.LongSet;
+import com.koloboke.collect.set.hash.HashLongSets;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -193,9 +193,9 @@ public class ChunkCache {
     /**
      * Get stored chunk hashes
      *
-     * @return
+     * @return array of chunk hashes
      */
-    public long[] getChunkHashes() {
+    long[] getChunkHashes() {
         synchronized ( this.cachedChunks ) {
             return this.cachedChunks.keySet().toLongArray();
         }

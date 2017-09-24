@@ -1,0 +1,6 @@
+language: java
+sudo: false
+branches:
+  except:
+    - legacy
+    - experimental

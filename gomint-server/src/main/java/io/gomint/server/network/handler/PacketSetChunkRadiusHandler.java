@@ -1,6 +1,7 @@
 package io.gomint.server.network.handler;
 
 import io.gomint.server.network.PlayerConnection;
+import io.gomint.server.network.PlayerConnectionState;
 import io.gomint.server.network.packet.PacketConfirmChunkRadius;
 import io.gomint.server.network.packet.PacketSetChunkRadius;
 
@@ -13,13 +14,16 @@ public class PacketSetChunkRadiusHandler implements PacketHandler<PacketSetChunk
     @Override
     public void handle( PacketSetChunkRadius packet, long currentTimeMillis, PlayerConnection connection ) {
         // Check if the wanted View distance is under the servers setting
-        int oldViewdistance = connection.getEntity().getViewDistance();
         connection.getEntity().setViewDistance( packet.getChunkRadius() );
-        if ( oldViewdistance != connection.getEntity().getViewDistance() ) {
-            // Got to send confirmation anyways:
-            PacketConfirmChunkRadius packetConfirmChunkRadius = new PacketConfirmChunkRadius();
-            packetConfirmChunkRadius.setChunkRadius( connection.getEntity().getViewDistance() );
-            connection.send( packetConfirmChunkRadius );
+        if ( connection.getState() != PlayerConnectionState.PLAYING ) {
+            // Always confirm
+            PacketConfirmChunkRadius confirmChunkRadius = new PacketConfirmChunkRadius();
+            confirmChunkRadius.setChunkRadius( connection.getEntity().getViewDistance() );
+            connection.send( confirmChunkRadius );
+
+            // Start sending chunks
+            connection.getEntity().getWorld().addPlayer( connection.getEntity() );
+            connection.setNeededChunksSent( connection.getEntity().getChunkSendQueue().size() );
         }
     }
 

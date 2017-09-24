@@ -7,7 +7,7 @@
 
 package io.gomint.server.crafting;
 
-import io.gomint.inventory.ItemStack;
+import io.gomint.inventory.item.ItemStack;
 
 import java.util.*;
 
@@ -30,11 +30,11 @@ public abstract class CraftingRecipe extends Recipe {
     @Override
     public Collection<ItemStack> createResult() {
         if ( this.outcome.length == 1 ) {
-            return Collections.singletonList( this.outcome[0].clone() );
+            return Collections.singletonList( ( (io.gomint.server.inventory.item.ItemStack) this.outcome[0] ).clone() );
         } else {
             List<ItemStack> list = new ArrayList<>();
             for ( ItemStack stack : this.outcome ) {
-                list.add( stack.clone() );
+                list.add( ( (io.gomint.server.inventory.item.ItemStack) stack ).clone() );
             }
             return list;
         }

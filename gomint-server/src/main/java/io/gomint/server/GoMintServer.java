@@ -8,18 +8,26 @@
 package io.gomint.server;
 
 import io.gomint.GoMint;
+import io.gomint.GoMintInstanceHolder;
 import io.gomint.entity.Player;
+import io.gomint.inventory.item.ItemStack;
+import io.gomint.jraknet.PacketBuffer;
 import io.gomint.plugin.StartupPriority;
 import io.gomint.server.assets.AssetsLibrary;
 import io.gomint.server.config.ServerConfig;
 import io.gomint.server.crafting.Recipe;
 import io.gomint.server.crafting.RecipeManager;
 import io.gomint.server.entity.EntityCow;
+import io.gomint.server.inventory.CreativeInventory;
+import io.gomint.server.inventory.InventoryHolder;
+import io.gomint.server.inventory.MaterialMagicNumbers;
+import io.gomint.server.inventory.item.Items;
 import io.gomint.server.network.EncryptionKeyFactory;
 import io.gomint.server.network.NetworkManager;
 import io.gomint.server.network.Protocol;
 import io.gomint.server.plugin.SimplePluginManager;
 import io.gomint.server.scheduler.SyncTaskManager;
+import io.gomint.server.util.DumpUtil;
 import io.gomint.server.world.WorldAdapter;
 import io.gomint.server.world.WorldManager;
 import io.gomint.world.World;
@@ -46,7 +54,7 @@ import java.util.function.Consumer;
  * @author geNAZt
  * @version 1.1
  */
-public class GoMintServer implements GoMint {
+public class GoMintServer implements GoMint, InventoryHolder {
 
     private final Logger logger = LoggerFactory.getLogger( GoMintServer.class );
 
@@ -64,6 +72,7 @@ public class GoMintServer implements GoMint {
 
     // Game Information
     private RecipeManager recipeManager;
+    private CreativeInventory creativeInventory;
 
     // Plugin Management
     @Getter
@@ -84,6 +93,7 @@ public class GoMintServer implements GoMint {
      * @param args which should have been given over from the static Bootstrap
      */
     public GoMintServer( String[] args ) {
+        GoMintInstanceHolder.setInstance( this );
         logger.info( "Starting " + getVersion() );
         Thread.currentThread().setName( "GoMint Main Thread" );
 
@@ -147,6 +157,8 @@ public class GoMintServer implements GoMint {
             this.recipeManager.registerRecipe( recipe );
         }
 
+        this.creativeInventory = new CreativeInventory( this );
+
         // ------------------------------------ //
         // World Initialization
         // ------------------------------------ //
@@ -177,8 +189,8 @@ public class GoMintServer implements GoMint {
         // ------------------------------------ //
 
         // Spawn one cow for AI testing
-        EntityCow cow = new EntityCow( this.worldManager.getWorld( "world" ) );
-        this.worldManager.getWorld( "world" ).spawnEntityAt( cow, this.worldManager.getWorld( "world" ).getSpawnLocation() );
+        // EntityCow cow = new EntityCow( this.worldManager.getWorld( "world" ) );
+        // this.worldManager.getWorld( "world" ).spawnEntityAt( cow, this.worldManager.getWorld( "world" ).getSpawnLocation() );
 
         // Tick loop
         float lastTickTime = Float.MIN_NORMAL;
@@ -212,6 +224,20 @@ public class GoMintServer implements GoMint {
             } finally {
                 tickLock.unlock();
             }
+        }
+
+        // Safe shutdown
+        this.networkManager.close();
+        this.pluginManager.close();
+        this.worldManager.close();
+
+        this.executorService.shutdown();
+
+        try {
+            this.executorService.awaitTermination( 5, TimeUnit.SECONDS );
+            this.executorService.shutdownNow();
+        } catch ( InterruptedException e ) {
+            e.printStackTrace();
         }
     }
 
@@ -296,6 +322,11 @@ public class GoMintServer implements GoMint {
         return world;
     }
 
+    @Override
+    public <T extends ItemStack> T createItemStack( Class<T> itemClass, int amount ) {
+        return Items.create( itemClass, (byte) amount );
+    }
+
     /**
      * Nice shutdown pls
      */
@@ -343,6 +374,10 @@ public class GoMintServer implements GoMint {
         }
 
         return amount;
+    }
+
+    public CreativeInventory getCreativeInventory() {
+        return this.creativeInventory;
     }
 
 }

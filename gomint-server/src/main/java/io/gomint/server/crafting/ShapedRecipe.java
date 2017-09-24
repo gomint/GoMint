@@ -7,8 +7,8 @@
 
 package io.gomint.server.crafting;
 
-import io.gomint.inventory.ItemStack;
-import io.gomint.inventory.Material;
+import io.gomint.inventory.item.ItemAir;
+import io.gomint.inventory.item.ItemStack;
 import io.gomint.jraknet.PacketBuffer;
 import io.gomint.server.network.packet.Packet;
 
@@ -80,7 +80,7 @@ public class ShapedRecipe extends CraftingRecipe {
             for ( int j = 0; j < this.height; ++j ) {
                 for ( int i = 0; i < this.width; ++i ) {
                     ItemStack stack = this.arrangement[j * this.width + i];
-                    if ( stack.getMaterial() != Material.AIR ) {
+                    if ( !(stack instanceof ItemAir) ) {
                         this.ingredients.add( stack );
                     }
                 }

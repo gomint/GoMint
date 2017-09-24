@@ -7,10 +7,9 @@
 
 package io.gomint.server.crafting;
 
-import io.gomint.inventory.ItemStack;
+import io.gomint.inventory.item.ItemStack;
 import io.gomint.jraknet.PacketBuffer;
 import io.gomint.server.network.packet.Packet;
-import io.gomint.server.util.EnumConnectors;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -27,6 +26,13 @@ public class SmeltingRecipe extends Recipe {
     private ItemStack input;
     private ItemStack outcome;
 
+    /**
+     * Create new smelting recipe
+     *
+     * @param input for this recipe
+     * @param outcome of this recipe
+     * @param uuid of the recipe
+     */
     public SmeltingRecipe( ItemStack input, ItemStack outcome, UUID uuid ) {
         super( uuid );
         this.input = input;
@@ -40,7 +46,7 @@ public class SmeltingRecipe extends Recipe {
 
     @Override
     public Collection<ItemStack> createResult() {
-        return Collections.singletonList( this.outcome.clone() );
+        return Collections.singletonList( ( (io.gomint.server.inventory.item.ItemStack) this.outcome ).clone() );
     }
 
     @Override
@@ -49,7 +55,7 @@ public class SmeltingRecipe extends Recipe {
         buffer.writeSignedVarInt( this.input.getData() == 0 ? 2 : 3 );
 
         // We need to custom write items
-        buffer.writeSignedVarInt( EnumConnectors.MATERIAL_CONNECTOR.convert( this.input.getMaterial() ).getOldId() );
+        buffer.writeSignedVarInt( ( (io.gomint.server.inventory.item.ItemStack) this.input ).getMaterial() );
         if ( this.input.getData() != 0 ) buffer.writeSignedVarInt( this.input.getData() );
 
         Packet.writeItemStack( this.outcome, buffer );

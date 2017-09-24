@@ -18,7 +18,7 @@ public class PacketRemoveBlockHandler implements PacketHandler<PacketRemoveBlock
         if ( block != null ) {
             // Check for special break rights (creative)
             if ( connection.getEntity().getGamemode() == Gamemode.CREATIVE ) {
-                block.setType( Air.class );
+                block.setType( Air.class, (byte) 0 );
                 return;
             }
 
@@ -32,7 +32,7 @@ public class PacketRemoveBlockHandler implements PacketHandler<PacketRemoveBlock
             } else {
                 // TODO: Add drops
 
-                block.setType( Air.class );
+                block.setType( Air.class, (byte) 0 );
             }
         }
     }

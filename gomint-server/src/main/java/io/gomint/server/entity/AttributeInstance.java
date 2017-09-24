@@ -1,11 +1,13 @@
 package io.gomint.server.entity;
 
 import lombok.Getter;
+import lombok.ToString;
 
 /**
  * @author geNAZt
  * @version 1.0
  */
+@ToString
 @Getter
 public class AttributeInstance {
 

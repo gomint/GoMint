@@ -25,7 +25,7 @@ public class DataConverter {
         addConverter( 167, 167, ( b, m ) -> (byte) ( ( ( m & 0x04 ) << 1 ) | ( ( m & 0x08 ) >> 1 ) | ( 3 - ( m & 0x03 ) ) ) );  // Iron trapdoor
         addConverter( 125, 157, ( b, m ) -> m );                                                                                // Double wooden slab
         addConverter( 126, 158, ( b, m ) -> m );                                                                                // Wooden slab
-        addConverter( 137, 0, ( b, m ) -> (byte) 0 );                                                                           // Command block
+        addConverter( 137, 0, ( b, m ) -> (byte) 0 );                                                                           // CommandExecutor block
         addConverter( 143, 143, ( b, m ) -> {                                                                                   // Wooden button
             switch ( m & 0x7f ) {
                 case 0:

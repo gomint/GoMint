@@ -16,13 +16,17 @@ import io.gomint.server.entity.tileentity.TileEntity;
 import io.gomint.server.network.packet.Packet;
 import io.gomint.server.network.packet.PacketBatch;
 import io.gomint.server.network.packet.PacketWorldChunk;
+import io.gomint.server.world.storage.TemporaryStorage;
 import io.gomint.taglib.NBTTagCompound;
 import io.gomint.taglib.NBTWriter;
 import io.gomint.world.Biome;
 import io.gomint.world.Chunk;
 import io.gomint.world.block.Block;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import net.openhft.koloboke.collect.map.LongObjMap;
+import com.koloboke.collect.map.LongObjMap;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -35,7 +39,10 @@ import java.util.concurrent.TimeUnit;
  * @author BlackyPaw
  * @version 1.0
  */
+@EqualsAndHashCode( callSuper = false, of = { "x", "z" } )
 public abstract class ChunkAdapter implements Chunk {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger( ChunkAdapter.class );
 
     // CHECKSTYLE:OFF
     // World
@@ -54,7 +61,8 @@ public abstract class ChunkAdapter implements Chunk {
     protected byte[] biomes = new byte[16 * 16];
 
     // Blocks
-    @Getter protected ChunkSlice[] chunkSlices = new ChunkSlice[16];
+    @Getter
+    protected ChunkSlice[] chunkSlices = new ChunkSlice[16];
     protected byte[] height = new byte[16 * 16 * 2];
 
     // Players / Chunk GC
@@ -85,6 +93,7 @@ public abstract class ChunkAdapter implements Chunk {
      */
     public void addPlayer( EntityPlayer player ) {
         this.players.add( player );
+        this.entities.put( player.getEntityId(), player );
     }
 
     /**
@@ -95,6 +104,7 @@ public abstract class ChunkAdapter implements Chunk {
     public void removePlayer( EntityPlayer player ) {
         this.players.remove( player );
         this.lastPlayerOnThisChunk = System.currentTimeMillis();
+        this.entities.remove( player.getEntityId() );
     }
 
     /**
@@ -103,6 +113,7 @@ public abstract class ChunkAdapter implements Chunk {
      * @param entity The entity which should be added
      */
     public void addEntity( Entity entity ) {
+        LOGGER.debug( "Adding entity " + entity + " to chunk " + x + ", " + z );
         this.entities.put( entity.getEntityId(), entity );
     }
 
@@ -112,6 +123,7 @@ public abstract class ChunkAdapter implements Chunk {
      * @param entity The entity which should be removed
      */
     public void removeEntity( Entity entity ) {
+        LOGGER.debug( "Removing entity " + entity + " from chunk " + x + ", " + z );
         this.entities.remove( entity.getEntityId() );
     }
 
@@ -307,60 +319,6 @@ public abstract class ChunkAdapter implements Chunk {
     }
 
     /**
-     * Sets the lighting value of the specified block
-     *
-     * @param x     The x-coordinate of the block
-     * @param y     The y-coordinate of the block
-     * @param z     The z-coordinate of the block
-     * @param value The lighting value
-     */
-    protected void setBlockLight( int x, int y, int z, byte value ) {
-        ChunkSlice slice = ensureSlice( y >> 4 );
-        slice.setBlockLight( x, y - 16 * ( y >> 4 ), z, value );
-        this.dirty = true;
-    }
-
-    /**
-     * Gets the lighting value of the specified block
-     *
-     * @param x The x-coordinate of the block
-     * @param y The y-coordinate of the block
-     * @param z The z-coordinate of the block
-     * @return The block's lighting value
-     */
-    public byte getBlockLight( int x, int y, int z ) {
-        ChunkSlice slice = ensureSlice( y >> 4 );
-        return slice.getBlockLight( x, y - 16 * ( y >> 4 ), z );
-    }
-
-    /**
-     * Sets the skylight value of the specified block
-     *
-     * @param x     The x-coordinate of the block
-     * @param y     The y-coordinate of the block
-     * @param z     The z-coordinate of the block
-     * @param value The lighting value
-     */
-    protected void setSkyLight( int x, int y, int z, byte value ) {
-        ChunkSlice slice = ensureSlice( y >> 4 );
-        slice.setSkyLight( x, y - 16 * ( y >> 4 ), z, value );
-        this.dirty = true;
-    }
-
-    /**
-     * Gets the skylight value of the specified block
-     *
-     * @param x The x-coordinate of the block
-     * @param y The y-coordinate of the block
-     * @param z The z-coordinate of the block
-     * @return The block's lighting value
-     */
-    public byte getSkyLight( int x, int y, int z ) {
-        ChunkSlice slice = ensureSlice( y >> 4 );
-        return slice.getSkyLight( x, y - 16 * ( y >> 4 ), z );
-    }
-
-    /**
      * Sets a block column's biome.
      *
      * @param x     The x-coordinate of the block column
@@ -387,6 +345,11 @@ public abstract class ChunkAdapter implements Chunk {
     public <T extends Block> T getBlockAt( int x, int y, int z ) {
         ChunkSlice slice = ensureSlice( y >> 4 );
         return slice.getBlockInstance( x, y & 0x000000F, z );
+    }
+
+    public TemporaryStorage getTemporaryStorage( int x, int y, int z ) {
+        ChunkSlice slice = ensureSlice( y >> 4 );
+        return slice.getTemporaryStorage( x, y - 16 * ( y >> 4 ), z );
     }
 
     // ==================================== MISCELLANEOUS ==================================== //
@@ -497,9 +460,8 @@ public abstract class ChunkAdapter implements Chunk {
         return this.entities.size() == 0 ? null : this.entities.values();
     }
 
-    @Override
-    public boolean equals( Object obj ) {
-        return obj instanceof ChunkAdapter && ( (ChunkAdapter) obj ).getX() == getX() && ( (ChunkAdapter) obj ).getZ() == getZ();
+    public PacketBatch getCachedPacket() {
+        return cachedPacket.get();
     }
 
 }

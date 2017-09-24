@@ -7,10 +7,13 @@ import lombok.ToString;
 /**
  * @author geNAZt
  * @version 1.0
+ *
+ * This event is fired when the login stage begins, way before any data will be sent to the client. If you cancel
+ * this event to kick someone the player will have no impact on performance, chunk loading, etc.
  */
 @EqualsAndHashCode( callSuper = false )
 @ToString( callSuper = true )
-public class PlayerLoginEvent extends PlayerEvent {
+public class PlayerLoginEvent extends CancellablePlayerEvent {
 
     private String kickMessage;
 

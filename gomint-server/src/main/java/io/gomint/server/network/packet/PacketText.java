@@ -8,6 +8,7 @@
 package io.gomint.server.network.packet;
 
 import io.gomint.jraknet.PacketBuffer;
+import io.gomint.server.network.Protocol;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -23,21 +24,10 @@ public class PacketText extends Packet {
     private String sender;
     private String message;
     private String[] arguments;
-    public PacketText() {
-        super( (byte) 0x09 );
-    }
+    private String xuid;
 
-    /**
-     * Shorthand constructor for PLAYER_CHAT messages.
-     *
-     * @param sender  The sender of the chat message
-     * @param message The actual chat message
-     */
-    public PacketText( String sender, String message ) {
-        this();
-        this.type = Type.PLAYER_CHAT;
-        this.sender = sender;
-        this.message = message;
+    public PacketText() {
+        super( Protocol.PACKET_TEXT );
     }
 
     public String getSubtitle() {
@@ -51,6 +41,7 @@ public class PacketText extends Packet {
     @Override
     public void serialize( PacketBuffer buffer ) {
         buffer.writeByte( this.type.getId() );
+        buffer.writeBoolean( false );
         switch ( this.type ) {
             case CLIENT_MESSAGE:
             case TIP_MESSAGE:
@@ -61,14 +52,16 @@ public class PacketText extends Packet {
             case PLAYER_CHAT:
                 buffer.writeString( this.sender );
                 buffer.writeString( this.message );
+                buffer.writeString( this.xuid );
                 break;
 
             case LOCALIZABLE_MESSAGE:
                 buffer.writeString( this.message );
                 buffer.writeByte( (byte) this.arguments.length );
-                for ( int i = 0; i < this.arguments.length; ++i ) {
-                    buffer.writeString( this.arguments[i] );
+                for ( String argument : this.arguments ) {
+                    buffer.writeString( argument );
                 }
+
                 break;
 
             case POPUP_NOTICE:
@@ -81,6 +74,7 @@ public class PacketText extends Packet {
     @Override
     public void deserialize( PacketBuffer buffer ) {
         this.type = Type.getById( buffer.readByte() );
+        buffer.readBoolean();
         switch ( this.type ) {
             case CLIENT_MESSAGE:
             case TIP_MESSAGE:
@@ -91,6 +85,7 @@ public class PacketText extends Packet {
             case PLAYER_CHAT:
                 this.sender = buffer.readString();
                 this.message = buffer.readString();
+                this.xuid = buffer.readString();
                 break;
 
             case LOCALIZABLE_MESSAGE:
@@ -98,8 +93,9 @@ public class PacketText extends Packet {
                 byte count = buffer.readByte();
                 this.arguments = new String[count];
                 for ( byte i = 0; i < count; ++i ) {
-                    arguments[i] = buffer.readString();
+                    this.arguments[i] = buffer.readString();
                 }
+
                 break;
 
             case POPUP_NOTICE:

@@ -1,7 +1,7 @@
 package io.gomint.server.inventory.transaction;
 
 
-import io.gomint.inventory.ItemStack;
+import io.gomint.inventory.item.ItemStack;
 import io.gomint.server.inventory.Inventory;
 
 /**
@@ -47,10 +47,13 @@ public interface Transaction {
     int getSlot();
 
     /**
-     * The time when this transaction was created
-     *
-     * @return time in millis of the creation of this transaction
+     * Called when the transaction has been a success
      */
-    long getCreationTime();
+    void commit();
+
+    /**
+     * Called when a transaction failed
+     */
+    void revert();
 
 }

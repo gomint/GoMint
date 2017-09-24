@@ -1,6 +1,7 @@
 package io.gomint.server.network.packet;
 
 import io.gomint.jraknet.PacketBuffer;
+import io.gomint.math.BlockPosition;
 import io.gomint.math.Vector;
 import io.gomint.server.network.Protocol;
 import lombok.Data;
@@ -15,7 +16,7 @@ public class PacketPlayerAction extends Packet {
     private long entityId;
 
     private PlayerAction action;
-    private Vector position;
+    private BlockPosition position;
 
     private int face;
 
@@ -34,7 +35,7 @@ public class PacketPlayerAction extends Packet {
     public void deserialize( PacketBuffer buffer ) {
         this.entityId = buffer.readUnsignedVarLong();
         this.action = PlayerAction.valueOf( buffer.readSignedVarInt() );
-        this.position = new Vector( buffer.readSignedVarInt(), buffer.readUnsignedVarInt(), buffer.readSignedVarInt() );
+        this.position = readBlockPosition( buffer );
         this.face = buffer.readSignedVarInt();
     }
 

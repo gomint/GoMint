@@ -29,9 +29,7 @@ import java.util.zip.Deflater;
 public class BatchUtil {
 
     private static final Logger LOGGER = LoggerFactory.getLogger( BatchUtil.class );
-
-    private static final ObjectBuffer<BatchStreamHolder> STREAM_BUFFER = new ObjectBuffer<>( 5 );
-    private static long lastChecked = System.currentTimeMillis();
+    private static final BatchStreamHolder HOLDER = new BatchStreamHolder();
 
     /**
      * Batch multiple packets together and zlib compress them
@@ -41,43 +39,28 @@ public class BatchUtil {
      * @return the completely ready to be sent batch packet
      */
     public static PacketBatch batch( EncryptionHandler encryptionHandler, Collection<Packet> packets ) {
-        if ( System.currentTimeMillis() - lastChecked >= TimeUnit.SECONDS.toMillis( 10 ) ) {
-            STREAM_BUFFER.recalc();
-        }
-
-        BatchStreamHolder batchStreamHolder = STREAM_BUFFER.get();
-        if ( batchStreamHolder == null ) {
-            batchStreamHolder = new BatchStreamHolder();
-        }
-
         for ( Packet packet : packets ) {
-            int estimate = packet.estimateLength();
-            if ( estimate == -1 ) {
-                LOGGER.warn( "Packet " + packet.getClass().getSimpleName() + " has returned negative estimation" );
-            }
-
-            PacketBuffer buffer = new PacketBuffer( estimate == -1 ? 64 : estimate );
+            PacketBuffer buffer = new PacketBuffer( 64 );
             buffer.writeByte( packet.getId() );
+            buffer.writeShort( (short) 0 );
             packet.serialize( buffer );
 
             try {
-                writeVarInt( buffer.getPosition(), batchStreamHolder.getOutputStream() );
-                batchStreamHolder.getOutputStream().write( buffer.getBuffer(), buffer.getBufferOffset(), buffer.getPosition() - buffer.getBufferOffset() );
+                writeVarInt( buffer.getPosition(), HOLDER.getOutputStream() );
+                HOLDER.getOutputStream().write( buffer.getBuffer(), buffer.getBufferOffset(), buffer.getPosition() - buffer.getBufferOffset() );
             } catch ( IOException e ) {
                 e.printStackTrace();
             }
         }
 
         PacketBatch batch = new PacketBatch();
-        batch.setPayload( batchStreamHolder.getBytes() );
+        batch.setPayload( HOLDER.getBytes() );
 
         if ( encryptionHandler != null ) {
             batch.setPayload( encryptionHandler.encryptInputForClient( batch.getPayload() ) );
         }
 
-        batchStreamHolder.reset();
-        STREAM_BUFFER.push( batchStreamHolder );
-
+        HOLDER.reset();
         return batch;
     }
 

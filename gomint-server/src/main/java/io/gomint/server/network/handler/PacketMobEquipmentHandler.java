@@ -1,9 +1,8 @@
 package io.gomint.server.network.handler;
 
+import io.gomint.inventory.item.ItemStack;
 import io.gomint.server.network.PlayerConnection;
 import io.gomint.server.network.packet.PacketMobEquipment;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * @author geNAZt
@@ -11,11 +10,19 @@ import org.slf4j.LoggerFactory;
  */
 public class PacketMobEquipmentHandler implements PacketHandler<PacketMobEquipment> {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger( PacketMobEquipmentHandler.class );
-
     @Override
     public void handle( PacketMobEquipment packet, long currentTimeMillis, PlayerConnection connection ) {
-        LOGGER.debug( packet.toString() );
+        // Anti crash checks
+        if ( packet.getSelectedSlot() > 8 ) {
+            return;
+        }
+
+        // Ok the client wants to switch hotbar slot (itemInHand)
+        ItemStack wanted = connection.getEntity().getInventory().getItem( packet.getSelectedSlot() );
+        if ( wanted != null && wanted.equals( packet.getStack() ) && wanted.getAmount() == packet.getStack().getAmount() ) {
+            // Set item in hand index
+            connection.getEntity().getInventory().setItemInHand( packet.getSelectedSlot() );
+        }
     }
 
 }

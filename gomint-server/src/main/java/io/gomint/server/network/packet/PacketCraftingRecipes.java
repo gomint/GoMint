@@ -7,15 +7,14 @@
 
 package io.gomint.server.network.packet;
 
-import io.gomint.inventory.ItemStack;
+import io.gomint.inventory.item.ItemStack;
 import io.gomint.jraknet.PacketBuffer;
 import io.gomint.server.crafting.Recipe;
 import io.gomint.server.crafting.ShapedRecipe;
 import io.gomint.server.crafting.ShapelessRecipe;
 import io.gomint.server.crafting.SmeltingRecipe;
-import io.gomint.server.inventory.MaterialMagicNumbers;
+import io.gomint.server.inventory.item.Items;
 import io.gomint.server.network.Protocol;
-import io.gomint.server.util.EnumConnectors;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -33,6 +32,9 @@ public class PacketCraftingRecipes extends Packet {
 
     private Collection<Recipe> recipes;
 
+    /**
+     * Construct new crafting recipe packet
+     */
     public PacketCraftingRecipes() {
         super( Protocol.PACKET_CRAFTING_RECIPES );
     }
@@ -92,7 +94,7 @@ public class PacketCraftingRecipes extends Packet {
                     input = new ItemStack[width * height];
                     for ( int w = 0; w < width; w++ ) {
                         for ( int h = 0; h < height; h++ ) {
-                            input[ h * width + w] = Packet.readItemStack( buffer );
+                            input[h * width + w] = Packet.readItemStack( buffer );
                         }
                     }
 
@@ -115,7 +117,7 @@ public class PacketCraftingRecipes extends Packet {
                     short data = (short) buffer.readSignedVarInt();
                     ItemStack result = Packet.readItemStack( buffer );
 
-                    this.recipes.add( new SmeltingRecipe( new ItemStack( EnumConnectors.MATERIAL_CONNECTOR.revert( MaterialMagicNumbers.valueOfWithId( id ) ), data, -1 ), result, null ) );
+                    this.recipes.add( new SmeltingRecipe( Items.create( id, data, (byte) -1, null ), result, null ) );
                     break;
 
                 case 3:
@@ -124,7 +126,7 @@ public class PacketCraftingRecipes extends Packet {
                     id = buffer.readSignedVarInt();
                     result = Packet.readItemStack( buffer );
 
-                    this.recipes.add( new SmeltingRecipe( new ItemStack( EnumConnectors.MATERIAL_CONNECTOR.revert( MaterialMagicNumbers.valueOfWithId( id ) ), -1 ), result, null ) );
+                    this.recipes.add( new SmeltingRecipe( Items.create( id, (short) 0, (byte) -1, null ), result, null ) );
                     break;
             }
         }

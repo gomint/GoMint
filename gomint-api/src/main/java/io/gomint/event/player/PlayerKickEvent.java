@@ -5,6 +5,8 @@ import io.gomint.entity.Player;
 /**
  * @author geNAZt
  * @version 1.0
+ *
+ * This event is fired when the server decides to disconnect a player.
  */
 public class PlayerKickEvent extends PlayerEvent {
 

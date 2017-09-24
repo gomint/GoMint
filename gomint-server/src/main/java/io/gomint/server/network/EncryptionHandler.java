@@ -87,7 +87,7 @@ public class EncryptionHandler {
 
         // Generate a random salt:
         SecureRandom secureRandom = new SecureRandom();
-        this.clientSalt = secureRandom.generateSeed( 128 );
+        this.clientSalt = secureRandom.generateSeed( 16 );
 
         // Generate shared secret from ECDH keys:
         byte[] secret = this.generateECDHSecret( this.keyFactory.getKeyPair().getPrivate(), this.clientPublicKey );
@@ -155,6 +155,15 @@ public class EncryptionHandler {
      */
     public String getServerPublic() {
         return Base64.getEncoder().encodeToString( this.keyFactory.getKeyPair().getPublic().getEncoded() );
+    }
+
+    /**
+     * Return the private key of the server. This should only be used to sign JWT content
+     *
+     * @return the private key
+     */
+    public Key getServerPrivate() {
+        return this.keyFactory.getKeyPair().getPrivate();
     }
 
     private byte[] calcHash( byte[] input, AtomicLong counter ) {

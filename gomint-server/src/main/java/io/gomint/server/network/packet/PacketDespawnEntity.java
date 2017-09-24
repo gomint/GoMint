@@ -36,9 +36,4 @@ public class PacketDespawnEntity extends Packet {
         this.entityId = buffer.readSignedVarLong().longValue();
     }
 
-    @Override
-    public int estimateLength() {
-        return predictSignedVarLong( this.entityId );
-    }
-
 }

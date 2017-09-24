@@ -12,10 +12,10 @@ public class PacketMobArmorEquipmentHandler implements PacketHandler<PacketMobAr
     @Override
     public void handle( PacketMobArmorEquipment packet, long currentTimeMillis, PlayerConnection connection ) {
         // TODO implement checks if the client says something correct
-        connection.getEntity().getInventory().setBoots( packet.getBoots() );
-        connection.getEntity().getInventory().setChestplate( packet.getChestplate() );
-        connection.getEntity().getInventory().setHelmet( packet.getHelmet() );
-        connection.getEntity().getInventory().setLeggings( packet.getLeggings() );
+        connection.getEntity().getArmorInventory().setBoots( packet.getBoots() );
+        connection.getEntity().getArmorInventory().setChestplate( packet.getChestplate() );
+        connection.getEntity().getArmorInventory().setHelmet( packet.getHelmet() );
+        connection.getEntity().getArmorInventory().setLeggings( packet.getLeggings() );
     }
 
 }

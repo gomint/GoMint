@@ -21,7 +21,6 @@ import lombok.EqualsAndHashCode;
 public class PacketWorldTime extends Packet {
 
     private int ticks;
-    private boolean counting;
 
     public PacketWorldTime() {
         super( Protocol.PACKET_WORLD_TIME );
@@ -30,17 +29,11 @@ public class PacketWorldTime extends Packet {
     @Override
     public void serialize( PacketBuffer buffer ) {
         buffer.writeSignedVarInt( this.ticks );
-        buffer.writeBoolean( this.counting );
     }
 
     @Override
     public void deserialize( PacketBuffer buffer ) {
         this.ticks = buffer.readSignedVarInt();
-        this.counting = buffer.readBoolean();
     }
 
-    @Override
-    public int estimateLength() {
-        return 5;
-    }
 }

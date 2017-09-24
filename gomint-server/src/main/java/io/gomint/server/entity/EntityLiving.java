@@ -2,12 +2,16 @@ package io.gomint.server.entity;
 
 import io.gomint.entity.DamageCause;
 import io.gomint.server.entity.component.AIBehaviourComponent;
+import io.gomint.server.entity.metadata.MetadataContainer;
 import io.gomint.server.entity.pathfinding.PathfindingEngine;
 import io.gomint.server.inventory.InventoryHolder;
 import io.gomint.server.network.packet.Packet;
 import io.gomint.server.network.packet.PacketSpawnEntity;
+import io.gomint.server.util.Values;
 import io.gomint.server.world.WorldAdapter;
 import io.gomint.util.Numbers;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -22,12 +26,16 @@ import java.util.Map;
  */
 public abstract class EntityLiving extends Entity implements InventoryHolder {
 
+    private static Logger LOGGER = LoggerFactory.getLogger( EntityLiving.class );
+
     // AI of the entity:
     protected AIBehaviourComponent behaviour;
     // Pathfinding engine of the entity:
     protected PathfindingEngine pathfinding;
 
     protected Map<String, AttributeInstance> attributes = new HashMap<>();
+
+    private float lastUpdateDT = 0;
 
     /**
      * Constructs a new EntityLiving
@@ -79,8 +87,19 @@ public abstract class EntityLiving extends Entity implements InventoryHolder {
 
     @Override
     public void update( long currentTimeMS, float dT ) {
-        super.update( currentTimeMS, dT );
-        this.behaviour.update( currentTimeMS, dT );
+        if ( !( this instanceof EntityHuman ) ) {
+            super.update( currentTimeMS, dT );
+            this.behaviour.update( currentTimeMS, dT );
+        }
+
+        // Check for client tick stuff
+        this.lastUpdateDT += dT;
+        if ( this.lastUpdateDT >= Values.CLIENT_TICK_RATE ) {
+            // Check for block stuff
+            this.metadataContainer.setDataFlag( MetadataContainer.DATA_INDEX, EntityFlag.BREATHING, !this.isInsideLiquid() );
+
+            this.lastUpdateDT = 0;
+        }
     }
 
     /**

@@ -1,7 +1,7 @@
 package io.gomint.server.inventory.transaction;
 
-import io.gomint.inventory.ItemStack;
-import io.gomint.inventory.Material;
+import io.gomint.inventory.item.ItemAir;
+import io.gomint.inventory.item.ItemStack;
 import io.gomint.server.entity.EntityPlayer;
 import io.gomint.server.inventory.Inventory;
 import lombok.Getter;
@@ -17,12 +17,7 @@ import java.util.Set;
  */
 public class TransactionGroup {
 
-    private final EntityPlayer player;
-    @Getter private final long creationTime;
-
-    @Getter private boolean hasExecuted = false;
-    @Getter private final Set<Inventory> inventories = new HashSet<>();
-    private final Set<Transaction> transactions = new HashSet<>();
+    private final List<Transaction> transactions = new ArrayList<>();
 
     // Need / have for this transactions
     @Getter private List<ItemStack> haveItems = new ArrayList<>();
@@ -30,16 +25,6 @@ public class TransactionGroup {
 
     // Matched
     private boolean matchItems;
-
-    /**
-     * Generate a new transaction group
-     *
-     * @param player The player for which those transactions are
-     */
-    public TransactionGroup( EntityPlayer player ) {
-        this.player = player;
-        this.creationTime = System.currentTimeMillis();
-    }
 
     /**
      * Add a new transaction to this group
@@ -52,22 +37,8 @@ public class TransactionGroup {
             return;
         }
 
-        // Check if we have a older transaction which this should replace
-        for ( Transaction tx : new HashSet<>( this.transactions ) ) {
-            if ( tx.hasInventory() && tx.getInventory().equals( transaction.getInventory() ) && tx.getSlot() == transaction.getSlot() ) {
-                if ( transaction.getCreationTime() >= tx.getCreationTime() ) {
-                    this.transactions.remove( tx );
-                } else {
-                    return;
-                }
-            }
-        }
-
         // Add this transaction and also the inventory
         this.transactions.add( transaction );
-        if ( transaction.hasInventory() ) {
-            this.inventories.add( transaction.getInventory() );
-        }
     }
 
     private void calcMatchItems() {
@@ -77,22 +48,36 @@ public class TransactionGroup {
 
         // Check all transactions for needed and having items
         for ( Transaction ts : this.transactions ) {
-            if ( ts.getTargetItem().getMaterial() != Material.AIR ) {
-                this.needItems.add( ts.getTargetItem().clone() );
+            if ( !( ts.getTargetItem() instanceof ItemAir ) ) {
+                this.needItems.add( ( (io.gomint.server.inventory.item.ItemStack) ts.getTargetItem() ).clone() );
             }
 
-            ItemStack sourceItem = ts.getSourceItem() != null ? ts.getSourceItem().clone() : null;
+            ItemStack sourceItem = ts.getSourceItem() != null ? ( (io.gomint.server.inventory.item.ItemStack) ts.getSourceItem() ).clone() : null;
             if ( ts.hasInventory() && sourceItem != null ) {
                 ItemStack checkSourceItem = ts.getInventory().getItem( ts.getSlot() );
 
                 // Check if source inventory changed during transaction
                 if ( !checkSourceItem.equals( sourceItem ) || sourceItem.getAmount() != checkSourceItem.getAmount() ) {
-                    this.matchItems = false;
-                    return;
+                    // Check if there was a transaction before which changed this slot
+                    boolean foundOtherTransaction = false;
+                    for ( Transaction transaction : this.transactions ) {
+                        if ( transaction.hasInventory()
+                                && transaction.getTargetItem().equals( checkSourceItem )
+                                && transaction.getSlot() == ts.getSlot() ) {
+                            // This is ok, another transaction in this group changed the item
+                            foundOtherTransaction = true;
+                            break;
+                        }
+                    }
+
+                    if ( !foundOtherTransaction ) {
+                        this.matchItems = false;
+                        return;
+                    }
                 }
             }
 
-            if ( sourceItem != null && sourceItem.getMaterial() != Material.AIR ) {
+            if ( sourceItem != null && !( sourceItem instanceof ItemAir ) ) {
                 this.haveItems.add( sourceItem );
             }
         }
@@ -125,7 +110,7 @@ public class TransactionGroup {
      *
      * @return true if the transaction is complete and can be executed
      */
-    public boolean canExecute() {
+    private boolean canExecute() {
         this.calcMatchItems();
         return this.matchItems && this.haveItems.isEmpty() && this.needItems.isEmpty() && !this.transactions.isEmpty();
     }
@@ -133,50 +118,17 @@ public class TransactionGroup {
     /**
      * Try to execute the transaction
      *
-     * @param currentTimeMillis The time where the tick started
-     * @return true on success, false otherwise
+     * If it fails
      */
-    private boolean execute( long currentTimeMillis ) {
-        if ( this.hasExecuted || !this.canExecute() ) {
-            return false;
-        }
-
-        // TODO: Add a inventory event here
-
-        for ( Transaction transaction : this.transactions ) {
-            if ( transaction.hasInventory() ) {
-                transaction.getInventory().setItem( transaction.getSlot(), transaction.getTargetItem() );
-            } else if ( transaction instanceof DropItemTransaction ) {
-                ( (DropItemTransaction) transaction ).getItemDrop().unlock( currentTimeMillis );
-            }
-        }
-
-        this.hasExecuted = true;
-        return true;
-    }
-
-    /**
-     * Try to execute this transaction. If it tails it reverts itself
-     *
-     * @param currentTimeMillis The time where the tick started
-     */
-    public void tryExecute( long currentTimeMillis ) {
+    public void execute() {
         if ( this.canExecute() ) {
-            if ( !this.execute( currentTimeMillis ) ) {
-                // Revert inventory
-                for ( Inventory inventory : this.getInventories() ) {
-                    inventory.sendContents( this.player.getConnection() );
-                }
-
-                // Revert dropped items
-                for ( Transaction transaction : this.transactions ) {
-                    if ( transaction instanceof DropItemTransaction ) {
-                        ( (DropItemTransaction) transaction ).getItemDrop().despawn();
-                    }
-                }
+            for ( Transaction transaction : this.transactions ) {
+                transaction.commit();
             }
-
-            this.player.setTransactions( null );
+        } else {
+            for ( Transaction transaction : this.transactions ) {
+                transaction.revert();
+            }
         }
     }
 

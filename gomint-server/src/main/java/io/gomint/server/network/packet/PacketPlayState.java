@@ -36,11 +36,6 @@ public class PacketPlayState extends Packet {
         this.state = PlayState.fromValue( buffer.readInt() );
     }
 
-    @Override
-    public int estimateLength() {
-        return 4;
-    }
-
     /**
      * Enumeration of play states observed to be sent inside certain packets.
      */

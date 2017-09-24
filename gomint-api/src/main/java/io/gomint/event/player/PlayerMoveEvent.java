@@ -7,7 +7,7 @@ import io.gomint.math.Location;
  * @author geNAZt
  * @version 1.0
  */
-public class PlayerMoveEvent extends PlayerEvent {
+public class PlayerMoveEvent extends CancellablePlayerEvent {
 
     private final Location from;
     private Location to;

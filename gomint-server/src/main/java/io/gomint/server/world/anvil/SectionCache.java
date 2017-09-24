@@ -21,7 +21,5 @@ public class SectionCache {
     private byte[] blocks;
     private NibbleArray add;
     private NibbleArray data;
-    private NibbleArray blockLight;
-    private NibbleArray skyLight;
 
 }

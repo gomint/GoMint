@@ -1,10 +1,13 @@
 package io.gomint.server.world.block;
 
+import io.gomint.server.registry.RegisterInfo;
+
 /**
  * @author geNAZt
  * @version 1.0
  */
-public class Lava extends Block {
+@RegisterInfo( id = 10 )
+public class Lava extends Liquid {
 
     @Override
     public int getBlockId() {

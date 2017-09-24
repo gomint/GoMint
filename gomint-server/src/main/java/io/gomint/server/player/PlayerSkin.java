@@ -18,14 +18,20 @@ public class PlayerSkin implements io.gomint.player.PlayerSkin {
 
     private String name;
     private byte[] data;
+    private byte[] capeData;
+    private String geometryName;
+    private byte[] geometryData;
 
-    public PlayerSkin( String name, byte[] data ) {
+    public PlayerSkin( String name, byte[] data, byte[] capeData, String geometryName, byte[] geometryData ) {
         if ( data.length != SKIN_DATA_SIZE_STEVE && data.length != SKIN_DATA_SIZE_ALEX ) {
             throw new IllegalArgumentException( "Invalid skin data buffer length" );
         }
 
         this.name = name;
         this.data = data;
+        this.capeData = capeData;
+        this.geometryName = geometryName;
+        this.geometryData = geometryData;
     }
 
     @Override
@@ -37,4 +43,20 @@ public class PlayerSkin implements io.gomint.player.PlayerSkin {
     public byte[] getRawData() {
         return this.data;
     }
+
+    @Override
+    public byte[] getCapeData() {
+        return this.capeData;
+    }
+
+    @Override
+    public String getGeometryName() {
+        return this.geometryName;
+    }
+
+    @Override
+    public byte[] getGeometryData() {
+        return this.geometryData;
+    }
+
 }

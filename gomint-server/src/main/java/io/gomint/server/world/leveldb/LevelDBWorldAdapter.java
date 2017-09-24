@@ -8,15 +8,14 @@
 package io.gomint.server.world.leveldb;
 
 import io.gomint.jraknet.PacketBuffer;
+import io.gomint.math.BlockPosition;
 import io.gomint.math.Location;
-import io.gomint.math.Vector;
 import io.gomint.server.GoMintServer;
 import io.gomint.server.world.ChunkAdapter;
 import io.gomint.server.world.ChunkCache;
 import io.gomint.server.world.WorldAdapter;
-import io.gomint.server.world.block.Blocks;
 import io.gomint.taglib.NBTStream;
-import io.gomint.taglib.NBTStreamListener;
+import io.gomint.world.block.Air;
 import org.iq80.leveldb.DB;
 import org.iq80.leveldb.Options;
 import org.iq80.leveldb.WriteBatch;
@@ -42,7 +41,7 @@ public class LevelDBWorldAdapter extends WorldAdapter {
      * @param server   which has requested to load this world
      * @param worldDir the folder where the world should be in
      */
-    LevelDBWorldAdapter( GoMintServer server, File worldDir ) {
+    private LevelDBWorldAdapter( GoMintServer server, File worldDir ) {
         super( server, worldDir );
         this.chunkCache = new ChunkCache( this );
 
@@ -57,7 +56,7 @@ public class LevelDBWorldAdapter extends WorldAdapter {
             int spawnZ = (int) this.spawn.getZ();
             int y = 255;
 
-            while ( getBlockAt( new Vector( spawnX, y, spawnZ ) ).equals( Blocks.AIR ) ) {
+            while ( getBlockAt( new BlockPosition( spawnX, y, spawnZ ) ) instanceof Air ) {
                 y--;
             }
 
@@ -120,27 +119,24 @@ public class LevelDBWorldAdapter extends WorldAdapter {
             stream.skip( 8 );
 
             NBTStream nbtStream = new NBTStream( stream, ByteOrder.LITTLE_ENDIAN );
-            nbtStream.addListener( new NBTStreamListener() {
-                @Override
-                public void onNBTValue( String path, Object value ) throws Exception {
-                    System.out.println( path + " -> " + value + "(" + value.getClass() + ")" );
+            nbtStream.addListener( ( path, value ) -> {
+                System.out.println( path + " -> " + value + "(" + value.getClass() + ")" );
 
-                    switch ( path ) {
-                        case ".LevelName":
-                            LevelDBWorldAdapter.this.levelName = (String) value;
-                            break;
-                        case ".SpawnX":
-                            LevelDBWorldAdapter.this.spawn.setX( (int) value );
-                            break;
-                        case ".SpawnY":
-                            LevelDBWorldAdapter.this.spawn.setY( (int) value );
-                            break;
-                        case ".SpawnZ":
-                            LevelDBWorldAdapter.this.spawn.setZ( (int) value );
-                            break;
-                        default:
-                            break;
-                    }
+                switch ( path ) {
+                    case ".LevelName":
+                        LevelDBWorldAdapter.this.levelName = (String) value;
+                        break;
+                    case ".SpawnX":
+                        LevelDBWorldAdapter.this.spawn.setX( (int) value );
+                        break;
+                    case ".SpawnY":
+                        LevelDBWorldAdapter.this.spawn.setY( (int) value );
+                        break;
+                    case ".SpawnZ":
+                        LevelDBWorldAdapter.this.spawn.setZ( (int) value );
+                        break;
+                    default:
+                        break;
                 }
             } );
             nbtStream.parse();

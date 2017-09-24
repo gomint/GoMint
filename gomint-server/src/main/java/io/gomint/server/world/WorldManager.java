@@ -150,4 +150,10 @@ public class WorldManager {
         return world;
     }
 
+    public void close() {
+        for ( WorldAdapter loadedWorld : this.loadedWorlds ) {
+            loadedWorld.close();
+        }
+    }
+
 }

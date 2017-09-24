@@ -12,8 +12,7 @@ public enum BlockFace {
     EAST( 2 ),
     WEST( 3 ),
     NORTH( 4 ),
-    SOUTH( 5 ),
-    NONE( 255 );
+    SOUTH( 5 );
 
     @Getter
     private final int value;

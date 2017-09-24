@@ -18,7 +18,7 @@ public class PacketWorldSoundEvent extends Packet {
     private int extraData = -1;
     private int pitch = -1;
     private boolean unknownBool;
-    private boolean unknownBool2;
+    private boolean disableRelativeVolume;
 
     public PacketWorldSoundEvent() {
         super( Protocol.PACKET_WORLD_SOUND_EVENT );
@@ -27,13 +27,13 @@ public class PacketWorldSoundEvent extends Packet {
     @Override
     public void serialize( PacketBuffer buffer ) {
         buffer.writeByte( this.type.getSoundId() );
-        buffer.writeLFloat( (float) this.position.getX() );
-        buffer.writeLFloat( (float) this.position.getY() );
-        buffer.writeLFloat( (float) this.position.getZ() );
+        buffer.writeLFloat( this.position.getX() );
+        buffer.writeLFloat( this.position.getY() );
+        buffer.writeLFloat( this.position.getZ() );
         buffer.writeSignedVarInt( this.extraData );
         buffer.writeSignedVarInt( this.pitch );
         buffer.writeBoolean( this.unknownBool );
-        buffer.writeBoolean( this.unknownBool2 );
+        buffer.writeBoolean( this.disableRelativeVolume );
     }
 
     @Override
@@ -43,11 +43,7 @@ public class PacketWorldSoundEvent extends Packet {
         this.extraData = buffer.readSignedVarInt();
         this.pitch = buffer.readSignedVarInt();
         this.unknownBool = buffer.readBoolean();
-        this.unknownBool2 = buffer.readBoolean();
+        this.disableRelativeVolume = buffer.readBoolean();
     }
 
-    @Override
-    public int estimateLength() {
-        return 1 + 4 + 4 + 4 + predictSignedVarInt( this.extraData ) + predictSignedVarInt( this.pitch ) + 2;
-    }
 }

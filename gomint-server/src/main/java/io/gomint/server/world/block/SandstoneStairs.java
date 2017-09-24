@@ -1,10 +1,13 @@
 package io.gomint.server.world.block;
 
+import io.gomint.server.registry.RegisterInfo;
+
 /**
  * @author geNAZt
  * @version 1.0
  */
-public class SandstoneStairs extends Block {
+@RegisterInfo( id = 128 )
+public class SandstoneStairs extends Stairs {
 
     @Override
     public int getBlockId() {
@@ -14,11 +17,6 @@ public class SandstoneStairs extends Block {
     @Override
     public long getBreakTime() {
         return 1200;
-    }
-
-    @Override
-    public boolean isTransparent() {
-        return true;
     }
 
 }

@@ -7,7 +7,7 @@
 
 package io.gomint.server.crafting;
 
-import io.gomint.inventory.ItemStack;
+import io.gomint.inventory.item.ItemStack;
 import io.gomint.jraknet.PacketBuffer;
 
 import java.util.Collection;
@@ -24,6 +24,11 @@ public abstract class Recipe {
 
     private final UUID uuid;
 
+    /**
+     * Construct new recipe
+     *
+     * @param uuid of the recipe
+     */
     protected Recipe( UUID uuid ) {
         this.uuid = ( uuid != null ? uuid : UUID.randomUUID() );
     }

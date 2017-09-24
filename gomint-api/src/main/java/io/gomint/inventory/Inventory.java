@@ -7,6 +7,8 @@
 
 package io.gomint.inventory;
 
+import io.gomint.inventory.item.ItemStack;
+
 /**
  * @author geNAZt
  * @version 1.0
@@ -17,9 +19,9 @@ public interface Inventory {
      * Gets the item out of this inventory
      *
      * @param slot The slot which we want to lookup
-     * @return The itemstack or null if the slot is empty
+     * @return The item stack or null if the slot is empty
      */
-    ItemStack getContent( int slot );
+    ItemStack getItem( int slot );
 
     /**
      * Set the item into the slot of this inventory
@@ -27,7 +29,15 @@ public interface Inventory {
      * @param slot      The slot in which we want to set this item
      * @param itemStack The item which we want to set into that slot
      */
-    void setContent( int slot, ItemStack itemStack );
+    void setItem( int slot, ItemStack itemStack );
+
+    /**
+     * Add a item to the next free slot in this inventory
+     *
+     * @param itemStack which should be added to the inventory
+     * @return true if it was stored, false when not
+     */
+    boolean addItem( ItemStack itemStack );
 
     /**
      * Get the size of this inventory

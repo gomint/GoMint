@@ -19,7 +19,6 @@ import lombok.Getter;
 public class PacketLogin extends Packet {
 
     private int protocol;
-    private byte gameEdition;
     private byte[] payload;
 
     /**
@@ -37,7 +36,6 @@ public class PacketLogin extends Packet {
     @Override
     public void deserialize( PacketBuffer buffer ) {
         this.protocol = buffer.readInt();
-        this.gameEdition = buffer.readByte();
 
         // Decompress inner data (i don't know why you compress inside of a Batched Packet but hey)
         this.payload = new byte[buffer.readUnsignedVarInt()];

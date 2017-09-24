@@ -7,6 +7,7 @@
 
 package io.gomint.plugin;
 
+import io.gomint.command.Command;
 import io.gomint.event.Event;
 import io.gomint.event.EventListener;
 
@@ -51,7 +52,7 @@ public interface PluginManager {
     <T extends Event> T callEvent( T event );
 
     /**
-     * Register a new event listener for the given plugin. This only works when you call it from a Plugin Class.
+     * Register a new event listener for the given plugin. This only works when you call it from a plugin class.
      *
      * @param plugin   The plugin which wants to register this listener
      * @param listener The listener which we want to register
@@ -67,5 +68,13 @@ public interface PluginManager {
      * @throws SecurityException when somebody else except the plugin unregisters the listener
      */
     void unregisterListener( Plugin plugin, EventListener listener );
+
+    /**
+     * Register a new command for the given plugin. This only works when you call it from a plugin class.
+     *
+     * @param plugin
+     * @param command
+     */
+    void registerCommand( Plugin plugin, Command command );
 
 }

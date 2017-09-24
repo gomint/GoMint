@@ -1,11 +1,13 @@
 package io.gomint.server.network.packet;
 
-import io.gomint.inventory.ItemStack;
+import io.gomint.inventory.item.ItemStack;
 import io.gomint.jraknet.PacketBuffer;
+import io.gomint.server.entity.EntityLink;
 import io.gomint.server.entity.metadata.MetadataContainer;
 import io.gomint.server.network.Protocol;
 import lombok.Data;
 
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -35,6 +37,15 @@ public class PacketSpawnPlayer extends Packet {
     private ItemStack itemInHand;
     private MetadataContainer metadataContainer;
 
+    // Some adventure stuff? Yep this is adventure setting stuff
+    private int flags;
+    private int commandPermission;
+    private int flags2;
+    private int playerPermission;
+    private int customFlags;
+
+    private List<EntityLink> links;
+
     public PacketSpawnPlayer() {
         super( Protocol.PACKET_SPAWN_PLAYER );
     }
@@ -60,6 +71,16 @@ public class PacketSpawnPlayer extends Packet {
 
         writeItemStack( this.itemInHand, buffer );
         this.metadataContainer.serialize( buffer );
+
+        buffer.writeUnsignedVarInt( this.flags );
+        buffer.writeUnsignedVarInt( this.commandPermission );
+        buffer.writeUnsignedVarInt( this.flags2 );
+        buffer.writeUnsignedVarInt( this.playerPermission );
+        buffer.writeUnsignedVarInt( this.customFlags );
+
+        buffer.writeLLong( this.entityId );
+
+        writeEntityLinks( this.links, buffer );
     }
 
     @Override

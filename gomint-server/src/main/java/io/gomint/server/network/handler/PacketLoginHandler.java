@@ -10,10 +10,7 @@ package io.gomint.server.network.handler;
 import io.gomint.event.player.PlayerLoginEvent;
 import io.gomint.event.player.PlayerPreLoginEvent;
 import io.gomint.server.entity.EntityPlayer;
-import io.gomint.server.jwt.JwtAlgorithm;
-import io.gomint.server.jwt.JwtSignatureException;
-import io.gomint.server.jwt.JwtToken;
-import io.gomint.server.jwt.MojangChainValidator;
+import io.gomint.server.jwt.*;
 import io.gomint.server.network.EncryptionHandler;
 import io.gomint.server.network.PlayerConnection;
 import io.gomint.server.network.PlayerConnectionState;
@@ -41,20 +38,10 @@ import java.util.Base64;
 public class PacketLoginHandler implements PacketHandler<PacketLogin> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger( PacketLoginHandler.class );
+    private static final EncryptionRequestForger FORGER = new EncryptionRequestForger();
 
     @Override
     public void handle( PacketLogin packet, long currentTimeMillis, PlayerConnection connection ) {
-        PlayerPreLoginEvent playerPreLoginEvent = connection.getNetworkManager().getServer().getPluginManager().callEvent(
-                new PlayerPreLoginEvent( connection.getConnection().getAddress() )
-        );
-
-        if ( playerPreLoginEvent.isCancelled() ) {
-            // Since the user has not gotten any packets we are not able to be sure if we can send him a disconnect notification
-            // so we decide to close the raknet connection without any notice
-            connection.disconnect( null );
-            return;
-        }
-
         // Check versions
         LOGGER.debug( "Trying to login with protocol version: " + packet.getProtocol() );
         if ( packet.getProtocol() != Protocol.MINECRAFT_PE_PROTOCOL_VERSION ) {
@@ -94,15 +81,13 @@ public class PacketLoginHandler implements PacketHandler<PacketLogin> {
 
         MojangChainValidator chainValidator = new MojangChainValidator( connection.getServer().getEncryptionKeyFactory() );
         JSONArray jsonChain = (JSONArray) jsonChainRaw;
-        for ( int i = 0; i < jsonChain.size(); ++i ) {
-            Object jsonTokenRaw = jsonChain.get( i );
+        for ( Object jsonTokenRaw : jsonChain ) {
             if ( jsonTokenRaw instanceof String ) {
                 try {
                     JwtToken token = JwtToken.parse( (String) jsonTokenRaw );
                     chainValidator.addToken( token );
                 } catch ( IllegalArgumentException e ) {
                     e.printStackTrace();
-                    continue;
                 }
             }
         }
@@ -130,11 +115,19 @@ public class PacketLoginHandler implements PacketHandler<PacketLogin> {
         }
 
         // Create additional data wrappers
-        PlayerSkin playerSkin = new PlayerSkin( skinToken.getClaim( "SkinId" ), Base64.getDecoder().decode( (String) skinToken.getClaim( "SkinData" ) ) );
+        String capeData = skinToken.getClaim( "CapeData" );
+        PlayerSkin playerSkin = new PlayerSkin(
+                skinToken.getClaim( "SkinId" ),
+                Base64.getDecoder().decode( (String) skinToken.getClaim( "SkinData" ) ),
+                capeData.isEmpty() ? null : Base64.getDecoder().decode( capeData ),
+                skinToken.getClaim( "SkinGeometryName" ),
+                Base64.getDecoder().decode( (String) skinToken.getClaim( "SkinGeometry" ) )
+        );
 
         // Create entity:
         WorldAdapter world = connection.getNetworkManager().getServer().getDefaultWorld();
-        connection.setEntity( new EntityPlayer( world, connection, chainValidator.getUsername(), chainValidator.getUuid() ) );
+        connection.setEntity( new EntityPlayer( world, connection, chainValidator.getUsername(),
+                chainValidator.getXboxId(), chainValidator.getUuid() ) );
         connection.getEntity().setSkin( playerSkin );
         connection.getEntity().setNameTagVisible( true );
         connection.getEntity().setNameTagAlwaysVisible( true );
@@ -157,15 +150,14 @@ public class PacketLoginHandler implements PacketHandler<PacketLogin> {
             encryptionHandler.supplyClientKey( chainValidator.getClientPublicKey() );
             if ( encryptionHandler.beginClientsideEncryption() ) {
                 // Get the needed data for the encryption start
-                byte[] salt = encryptionHandler.getClientSalt();
-                String serverPublic = encryptionHandler.getServerPublic();
-
                 connection.setState( PlayerConnectionState.ENCRPYTION_INIT );
                 connection.setEncryptionHandler( encryptionHandler );
 
+                // Forge a JWT
+                String encryptionRequestJWT = FORGER.forge( encryptionHandler.getServerPublic(), encryptionHandler.getServerPrivate(), encryptionHandler.getClientSalt() );
+
                 PacketEncryptionRequest packetEncryptionRequest = new PacketEncryptionRequest();
-                packetEncryptionRequest.setServerKey( serverPublic );
-                packetEncryptionRequest.setClientSalt( salt );
+                packetEncryptionRequest.setJwt( encryptionRequestJWT );
                 connection.send( packetEncryptionRequest );
             }
         }

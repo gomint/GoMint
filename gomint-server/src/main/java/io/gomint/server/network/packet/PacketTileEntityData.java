@@ -1,6 +1,7 @@
 package io.gomint.server.network.packet;
 
 import io.gomint.jraknet.PacketBuffer;
+import io.gomint.math.BlockPosition;
 import io.gomint.math.Location;
 import io.gomint.math.Vector;
 import io.gomint.server.entity.tileentity.TileEntity;
@@ -20,7 +21,7 @@ import java.nio.ByteOrder;
 @Data
 public class PacketTileEntityData extends Packet {
 
-    private Vector position;
+    private BlockPosition position;
     private TileEntity tileEntity;
 
     public PacketTileEntityData() {
@@ -30,9 +31,7 @@ public class PacketTileEntityData extends Packet {
     @Override
     public void serialize( PacketBuffer buffer ) {
         // Block position
-        buffer.writeSignedVarInt( (int) this.position.getX() );
-        buffer.writeUnsignedVarInt( (int) this.position.getY() );
-        buffer.writeSignedVarInt( (int) this.position.getZ() );
+        writeBlockPosition( this.position, buffer );
 
         // NBT Tag
         NBTTagCompound compound = new NBTTagCompound( "" );

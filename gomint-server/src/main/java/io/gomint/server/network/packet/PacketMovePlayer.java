@@ -47,6 +47,11 @@ public class PacketMovePlayer extends Packet {
         buffer.writeByte( this.mode );
         buffer.writeBoolean( this.onGround );
         buffer.writeUnsignedVarLong( this.ridingEntityId );
+
+        if ( this.mode == 2 ) {
+            buffer.writeLInt( 0 );
+            buffer.writeLInt( 0 );
+        }
     }
 
     @Override
@@ -63,8 +68,4 @@ public class PacketMovePlayer extends Packet {
         this.ridingEntityId = buffer.readUnsignedVarLong();
     }
 
-    @Override
-    public int estimateLength() {
-        return 34;
-    }
 }

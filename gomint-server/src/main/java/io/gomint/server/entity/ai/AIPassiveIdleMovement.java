@@ -5,9 +5,7 @@ import io.gomint.math.Vector;
 import io.gomint.server.entity.pathfinding.PathfindingEngine;
 import io.gomint.server.util.IntTriple;
 import io.gomint.server.world.WorldAdapter;
-import io.gomint.server.world.block.Block;
 import io.gomint.util.Numbers;
-import io.gomint.world.block.Air;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

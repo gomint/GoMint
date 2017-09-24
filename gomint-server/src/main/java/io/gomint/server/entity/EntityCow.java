@@ -6,6 +6,7 @@ import io.gomint.server.world.WorldAdapter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -45,7 +46,7 @@ public class EntityCow extends EntityLiving {
         super.update( currentTimeMS, dT );
 
         // Check if we can switch the AI state
-        List<io.gomint.entity.Entity> nearby = this.world.getNearbyEntities( this.boundingBox.grow( 10, 5, 10 ), this );
+        Collection<Entity> nearby = this.world.getNearbyEntities( this.boundingBox.grow( 10, 5, 10 ), this );
         if ( nearby != null ) {
             for ( Entity entity : nearby ) {
                 if ( entity instanceof EntityPlayer ) {
