@@ -18,6 +18,11 @@ public class TestPlugin extends Plugin {
 
     @Override
     public void onInstall() {
+        // Register Events
+        registerEvents();
+    }
+
+    private void registerEvents() {
         registerListener( new PlayerMoveListener() );
         registerListener( new PlayerJoinListener() );
     }

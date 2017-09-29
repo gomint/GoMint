@@ -75,6 +75,7 @@ public class EntityPlayer extends EntityHuman implements Player, InventoryHolder
     @Getter private AdventureSettings adventureSettings;
     @Getter @Setter private Entity hoverEntity;
     @Getter @Setter private boolean sneaking;
+    @Getter @Setter private boolean sprinting;
 
     // Hidden players
     private LongSet hiddenPlayers;
