@@ -153,14 +153,14 @@ public class EntityPlayer extends EntityHuman implements Player, InventoryHolder
         String address = inetSocketAddress.getAddress().getHostAddress();
         int port = inetSocketAddress.getPort();
         PacketTransfer packetTransfer = new PacketTransfer();
-        packetTransfer.address = address;
-        packetTransfer.port = port;
+        packetTransfer.setAddress( address );
+        packetTransfer.setPort( port );
         this.connection.send( packetTransfer );
     }
 
     @Override
     public void setHealth( double amount ) {
-        if(amount < 1){
+        if( amount < 1 ) {
             amount = 0;
         }
 
@@ -169,8 +169,6 @@ public class EntityPlayer extends EntityHuman implements Player, InventoryHolder
         PacketUpdateAttributes updateAttributes = new PacketUpdateAttributes();
         updateAttributes.setEntityId( this.getEntityId() );
         updateAttributes.addAttributeInstance( attributeInstance );
-
-        this.connection.send( updateAttributes );
     }
 
     /**

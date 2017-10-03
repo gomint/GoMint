@@ -2,11 +2,15 @@ package io.gomint.server.network.packet;
 
 import io.gomint.jraknet.PacketBuffer;
 import io.gomint.server.network.Protocol;
+import lombok.Getter;
+import lombok.Setter;
 
 public class PacketTransfer extends Packet {
 
-    public String address;
-    public int port = 19132;
+    @Getter@Setter
+    private String address;
+    @Getter@Setter
+    private int port = 19132;
 
     public PacketTransfer() {
         super( Protocol.PACKET_TRANSFER );
@@ -15,7 +19,7 @@ public class PacketTransfer extends Packet {
     @Override
     public void serialize( PacketBuffer buffer ) {
         buffer.writeString( address );
-        buffer.writeLShort( (byte) port );
+        buffer.writeLShort( (short) port );
     }
 
     @Override
