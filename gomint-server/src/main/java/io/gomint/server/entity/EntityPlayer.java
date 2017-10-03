@@ -8,10 +8,8 @@
 package io.gomint.server.entity;
 
 import com.koloboke.collect.map.ByteObjMap;
-import com.koloboke.collect.map.IntObjMap;
 import com.koloboke.collect.map.ObjByteMap;
 import com.koloboke.collect.map.hash.HashByteObjMaps;
-import com.koloboke.collect.map.hash.HashIntObjMaps;
 import com.koloboke.collect.map.hash.HashObjByteMaps;
 import com.koloboke.collect.set.LongSet;
 import com.koloboke.collect.set.hash.HashLongSets;
@@ -30,7 +28,6 @@ import io.gomint.server.inventory.*;
 import io.gomint.server.inventory.transaction.TransactionGroup;
 import io.gomint.server.network.PlayerConnection;
 import io.gomint.server.network.packet.*;
-import io.gomint.server.network.type.WindowType;
 import io.gomint.server.player.PlayerSkin;
 import io.gomint.server.util.EnumConnectors;
 import io.gomint.server.world.ChunkAdapter;
@@ -155,7 +152,6 @@ public class EntityPlayer extends EntityHuman implements Player, InventoryHolder
     public void transfer( InetSocketAddress inetSocketAddress ) {
         String address = inetSocketAddress.getAddress().getHostAddress();
         int port = inetSocketAddress.getPort();
-
         PacketTransfer packetTransfer = new PacketTransfer();
         packetTransfer.address = address;
         packetTransfer.port = port;
