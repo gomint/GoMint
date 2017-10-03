@@ -158,6 +158,21 @@ public class EntityPlayer extends EntityHuman implements Player, InventoryHolder
         this.connection.send( packetTransfer );
     }
 
+    @Override
+    public void setHealth( double amount ) {
+        if(amount < 1){
+            amount = 0;
+        }
+
+        AttributeInstance attributeInstance = this.attributes.get( Attribute.HEALTH.getKey() );
+        attributeInstance.setValue( (float) amount );
+        PacketUpdateAttributes updateAttributes = new PacketUpdateAttributes();
+        updateAttributes.setEntityId( this.getEntityId() );
+        updateAttributes.addAttributeInstance( attributeInstance );
+
+        this.connection.send( updateAttributes );
+    }
+
     /**
      * Sets the view distance used to calculate the chunk to be sent to the player.
      *

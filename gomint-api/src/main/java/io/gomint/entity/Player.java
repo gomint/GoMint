@@ -155,4 +155,12 @@ public interface Player extends Entity {
 
     void transfer( InetSocketAddress inetSocketAddress);
 
+    /**
+     * Set player health
+     *
+     * @param amount
+     */
+
+    void setHealth( double amount );
+
 }
