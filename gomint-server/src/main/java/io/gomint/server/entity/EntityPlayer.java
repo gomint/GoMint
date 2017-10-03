@@ -166,9 +166,6 @@ public class EntityPlayer extends EntityHuman implements Player, InventoryHolder
 
         AttributeInstance attributeInstance = this.attributes.get( Attribute.HEALTH.getKey() );
         attributeInstance.setValue( (float) amount );
-        PacketUpdateAttributes updateAttributes = new PacketUpdateAttributes();
-        updateAttributes.setEntityId( this.getEntityId() );
-        updateAttributes.addAttributeInstance( attributeInstance );
     }
 
     /**
