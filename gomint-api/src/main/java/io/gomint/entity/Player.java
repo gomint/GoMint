@@ -147,6 +147,12 @@ public interface Player extends Entity {
      */
     int getViewDistance();
 
+    /**
+     * Transfer player to another server
+     *
+     * @param inetSocketAddress
+     */
+
     void transfer( InetSocketAddress inetSocketAddress);
 
 }
