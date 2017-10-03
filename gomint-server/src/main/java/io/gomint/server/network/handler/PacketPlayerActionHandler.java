@@ -72,6 +72,12 @@ public class PacketPlayerActionHandler implements PacketHandler<PacketPlayerActi
             case STOP_SNEAK:
                 connection.getEntity().setSneaking( false );
                 break;
+            case START_SPRINT:
+                connection.getEntity().setSprinting( true );
+                break;
+            case STOP_SPRINT:
+                connection.getEntity().setSprinting( false );
+                break;
             case JUMP:
             case CONTINUE_BREAK:
                 // TODO: Decide what todo with this information
