@@ -74,6 +74,7 @@ public final class Protocol {
     public static final byte PACKET_AVAILABLE_COMMANDS = (byte) 0x4c;
     public static final byte PACKET_COMMAND_REQUEST = (byte) 0x4d;
     public static final byte PACKET_COMMAND_OUTPUT = (byte) 0x4f;
+    public static final byte PACKET_TRANSFER = (byte) 0x55;
 
     public static final byte PACKET_SET_COMPASS_TARGET = (byte) 0xB1;
     // CHECKSTYLE:ON

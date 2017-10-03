@@ -44,6 +44,7 @@ import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.net.InetSocketAddress;
 import java.util.*;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -148,6 +149,17 @@ public class EntityPlayer extends EntityHuman implements Player, InventoryHolder
      */
     public int getViewDistance() {
         return this.viewDistance;
+    }
+
+    @Override
+    public void transfer( InetSocketAddress inetSocketAddress ) {
+        String address = inetSocketAddress.getAddress().getHostAddress();
+        int port = inetSocketAddress.getPort();
+
+        PacketTransfer packetTransfer = new PacketTransfer();
+        packetTransfer.address = address;
+        packetTransfer.port = port;
+        this.connection.send( packetTransfer );
     }
 
     /**
