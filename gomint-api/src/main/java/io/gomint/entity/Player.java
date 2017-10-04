@@ -166,19 +166,19 @@ public interface Player extends Entity {
     /**
      * Get Health from player
      *
-     * @param amout
+     * @param amount
      * @return
      */
 
-    double getHealth( double amout);
+    double getHealth( double amount);
 
     /**
      * Set player foodlevel
      *
-     * @param amout
+     * @param amount
      */
 
-    void setFoodLevel( double amout );
+    void setFoodLevel( double amount );
 
     /**
      * Get foodlevel from player
@@ -187,4 +187,36 @@ public interface Player extends Entity {
      */
 
     double getFoodLevel();
+
+    /**
+     * Set player experience level
+     *
+     * @param amount
+     */
+
+    void setLevel( int  amount );
+
+    /**
+     * Get experience level from player
+     *
+     * @return
+     */
+
+    int getLevel();
+
+    /**
+     * Set player experience
+     *
+     * @param amount
+     */
+
+    void setExperience( double amount );
+
+    /**
+     * Get experience from player
+     *
+     * @return
+     */
+
+    double getExperience();
 }
