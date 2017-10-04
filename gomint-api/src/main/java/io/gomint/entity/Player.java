@@ -163,4 +163,28 @@ public interface Player extends Entity {
 
     void setHealth( double amount );
 
+    /**
+     * Get Health from player
+     *
+     * @param amout
+     * @return
+     */
+
+    double getHealth( double amout);
+
+    /**
+     * Set player foodlevel
+     *
+     * @param amout
+     */
+
+    void setFoodLevel( double amout );
+
+    /**
+     * Get foodlevel from player
+     *
+     * @return amout
+     */
+
+    double getFoodLevel();
 }

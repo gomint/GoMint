@@ -168,6 +168,27 @@ public class EntityPlayer extends EntityHuman implements Player, InventoryHolder
         attributeInstance.setValue( (float) amount );
     }
 
+    @Override
+    public double getHealth( double amount ) {
+        return this.attributes.get( Attribute.HEALTH.getKey() ).getValue();
+    }
+
+    @Override
+    public void setFoodLevel( double amount ) {
+        if( amount < 1 ) {
+            amount = 0;
+        }
+
+        AttributeInstance attributeInstance = this.attributes.get( Attribute.HUNGER.getKey() );
+        attributeInstance.setValue( (float) amount );
+    }
+
+    @Override
+    public double getFoodLevel() {
+        return this.attributes.get( Attribute.HUNGER.getKey() ).getValue();
+    }
+
+
     /**
      * Sets the view distance used to calculate the chunk to be sent to the player.
      *
