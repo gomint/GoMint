@@ -8,6 +8,8 @@
 package io.gomint.server.network;
 
 import io.gomint.server.network.packet.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author BlackyPaw
@@ -15,10 +17,13 @@ import io.gomint.server.network.packet.*;
  */
 public final class Protocol {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger( Protocol.class );
+
     // CHECKSTYLE:OFF
     // MC:PE Protocol ID
+    public static final int MINECRAFT_PE_BETA_PROTOCOL_VERSION = 141;
     public static final int MINECRAFT_PE_PROTOCOL_VERSION = 137;
-    public static final String MINECRAFT_PE_NETWORK_VERSION = "1.2.0.81";
+    public static final String MINECRAFT_PE_NETWORK_VERSION = "1.2.5.15";
 
     // ========================================= PACKET IDS ========================================= //
     public static final byte PACKET_BATCH = (byte) 0xfe;
@@ -42,20 +47,23 @@ public final class Protocol {
     public static final byte PACKET_ENTITY_MOVEMENT = (byte) 0x12;
     public static final byte PACKET_MOVE_PLAYER = (byte) 0x13;
     public static final byte PACKET_UPDATE_BLOCK = (byte) 0x15;
+    public static final byte PACKET_EXPLODE = (byte) 0x17;
     public static final byte PACKET_WORLD_SOUND_EVENT = (byte) 0x18;
     public static final byte PACKET_WORLD_EVENT = (byte) 0x19;
+    public static final byte PACKET_BLOCK_EVENT = (byte) 0x1A;
     public static final byte PACKET_ENTITY_EVENT = (byte) 0x1B;
+    public static final byte PACKET_MOB_EFFECT = (byte) 0x1C;
     public static final byte PACKET_UPDATE_ATTRIBUTES = (byte) 0x1D;
     public static final byte PACKET_INVENTORY_TRANSACTION = (byte) 0x1E;
     public static final byte PACKET_MOB_EQUIPMENT = (byte) 0x1F;
     public static final byte PACKET_MOB_ARMOR_EQUIPMENT = (byte) 0x20;
     public static final byte PACKET_INTERACT = (byte) 0x21;
-   // public static final byte PACKET_USE_ITEM = (byte) 0x23;
     public static final byte PACKET_PLAYER_ACTION = (byte) 0x24;
     public static final byte PACKET_HURT_ARMOR = (byte) 0x26;
     public static final byte PACKET_ENTITY_METADATA = (byte) 0x27;
     public static final byte PACKET_ENTITY_MOTION = (byte) 0x28;
     public static final byte PACKET_ANIMATE = (byte) 0x2C;
+    public static final byte PACKET_RESPAWN_POSITION = (byte) 0x2D;
     public static final byte PACKET_CONTAINER_OPEN = (byte) 0x2E;
     public static final byte PACKET_CONTAINER_CLOSE = (byte) 0x2F;
     public static final byte PACKET_HOTBAR = (byte) 0x30;
@@ -77,6 +85,8 @@ public final class Protocol {
     public static final byte PACKET_COMMAND_REQUEST = (byte) 0x4d;
     public static final byte PACKET_COMMAND_OUTPUT = (byte) 0x4f;
     public static final byte PACKET_TRANSFER = (byte) 0x55;
+    public static final byte PACKET_MODAL_REQUEST = (byte) 0x64;
+    public static final byte PACKET_MODAL_RESPONSE = (byte) 0x65;
 
     public static final byte PACKET_SET_COMPASS_TARGET = (byte) 0xB1;
     // CHECKSTYLE:ON
@@ -96,6 +106,12 @@ public final class Protocol {
      */
     public static Packet createPacket( byte id ) {
         switch ( id ) {
+            case PACKET_MODAL_RESPONSE:
+                return new PacketModalResponse();
+
+            case PACKET_ENTITY_EVENT:
+                return new PacketEntityEvent();
+
             case PACKET_COMMAND_REQUEST:
                 return new PacketCommandRequest();
 
@@ -199,6 +215,7 @@ public final class Protocol {
                 return new PacketSetChunkRadius();
 
             default:
+                LOGGER.warn( "Unknown client side packetId: {}", Integer.toHexString( id & 0xFF ) );
                 return null;
         }
     }

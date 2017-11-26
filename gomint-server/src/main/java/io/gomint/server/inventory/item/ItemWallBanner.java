@@ -1,5 +1,8 @@
 package io.gomint.server.inventory.item;
 
+import io.gomint.inventory.item.ItemBanner;
+import io.gomint.inventory.item.ItemType;
+
 import io.gomint.server.registry.RegisterInfo;
 import io.gomint.taglib.NBTTagCompound;
 
@@ -8,7 +11,7 @@ import io.gomint.taglib.NBTTagCompound;
  * @version 1.0
  */
 @RegisterInfo( id = 177 )
-public class ItemWallBanner extends ItemBanner {
+public class ItemWallBanner extends ItemStack implements ItemBanner {
 
     // CHECKSTYLE:OFF
     public ItemWallBanner( short data, int amount ) {
@@ -19,5 +22,10 @@ public class ItemWallBanner extends ItemBanner {
         super( 177, data, amount, nbt );
     }
     // CHECKSTYLE:ON
+
+    @Override
+    public ItemType getType() {
+        return ItemType.WALL_BANNER;
+    }
 
 }

@@ -1,5 +1,6 @@
 package io.gomint.server.world.block;
 
+import io.gomint.entity.potion.PotionEffect;
 import io.gomint.inventory.item.ItemReduceBreaktime;
 import io.gomint.inventory.item.ItemStack;
 import io.gomint.inventory.item.ItemSword;
@@ -8,6 +9,8 @@ import io.gomint.math.BlockPosition;
 import io.gomint.math.Location;
 import io.gomint.math.Vector;
 import io.gomint.server.entity.Entity;
+import io.gomint.server.entity.EntityLiving;
+import io.gomint.server.entity.EntityPlayer;
 import io.gomint.server.entity.tileentity.TileEntity;
 import io.gomint.server.inventory.item.Items;
 import io.gomint.server.network.PlayerConnection;
@@ -18,6 +21,7 @@ import io.gomint.server.world.UpdateReason;
 import io.gomint.server.world.WorldAdapter;
 import io.gomint.server.world.storage.TemporaryStorage;
 import io.gomint.taglib.NBTTagCompound;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -29,15 +33,23 @@ import java.util.function.Function;
  * @author geNAZt
  * @version 1.0
  */
+@EqualsAndHashCode( of = { "location" } )
 public abstract class Block implements io.gomint.world.block.Block {
 
     // CHECKSTYLE:OFF
-    @Setter protected WorldAdapter world;
-    @Setter @Getter protected Location location;
-    @Getter private byte blockData = -1;
-    @Setter private TileEntity tileEntity;
-    @Getter private byte skyLightLevel;
-    @Getter private byte blockLightLevel;
+    @Setter
+    protected WorldAdapter world;
+    @Setter
+    @Getter
+    protected Location location;
+    @Getter
+    private byte blockData = -1;
+    @Setter
+    private TileEntity tileEntity;
+    @Getter
+    private byte skyLightLevel;
+    @Getter
+    private byte blockLightLevel;
 
     // Set all needed data
     public void setData( byte blockData, TileEntity tileEntity, WorldAdapter worldAdapter, Location location, byte skyLightLevel, byte blockLightLevel ) {
@@ -49,6 +61,13 @@ public abstract class Block implements io.gomint.world.block.Block {
         this.blockLightLevel = blockLightLevel;
     }
     // CHECKSTYLE:ON
+
+    /**
+     * Get the internal ID of this block
+     *
+     * @return id for networking and saving
+     */
+    public abstract int getBlockId();
 
     /**
      * Called when a normal block update should be done
@@ -197,13 +216,13 @@ public abstract class Block implements io.gomint.world.block.Block {
     }
 
     @Override
-    public <T extends io.gomint.world.block.Block> T setType( Class<T> blockType, byte data ) {
+    public <T extends io.gomint.world.block.Block> T setType( Class<T> blockType ) {
         BlockPosition pos = this.location.toBlockPosition();
         Block instance = Blocks.get( blockType );
         if ( instance != null ) {
             WorldAdapter worldAdapter = (WorldAdapter) this.location.getWorld();
             worldAdapter.setBlockId( pos, instance.getBlockId() );
-            worldAdapter.setBlockData( pos, data );
+            worldAdapter.setBlockData( pos, (byte) 0 );
             worldAdapter.resetTemporaryStorage( pos );
 
             instance.setWorld( worldAdapter );
@@ -262,17 +281,6 @@ public abstract class Block implements io.gomint.world.block.Block {
 
     @Override
     public boolean canPassThrough() {
-        return false;
-    }
-
-    @Override
-    public boolean equals( Object obj ) {
-        if ( obj instanceof Block ) {
-            if ( ( (Block) obj ).getBlockId() == getBlockId() ) {
-                return true;
-            }
-        }
-
         return false;
     }
 
@@ -341,7 +349,15 @@ public abstract class Block implements io.gomint.world.block.Block {
         return new PlacementData( (byte) item.getData(), null );
     }
 
-    public long getFinalBreakTime( ItemStack item ) {
+    /**
+     * Get the final break time of a block in milliseconds. This applies all sorts of enchantments and effects which
+     * needs to be used.
+     *
+     * @param item   with which the block should be destroyed
+     * @param player which should destroy the block
+     * @return break time in milliseconds
+     */
+    public long getFinalBreakTime( ItemStack item, EntityPlayer player ) {
         // Get basis break time ( breaking with right tool )
         double base = getBreakTime();
 
@@ -350,23 +366,67 @@ public abstract class Block implements io.gomint.world.block.Block {
             return 0;
         }
 
+        boolean foundInterface = false;
+
         Class<? extends ItemStack>[] interfacez = getToolInterfaces();
         if ( interfacez != null ) {
             for ( Class<? extends ItemStack> aClass : interfacez ) {
                 if ( aClass.isAssignableFrom( item.getClass() ) ) {
                     double divisor = ( (ItemReduceBreaktime) item ).getDivisor();
-                    return (long) ( base / divisor );
+                    base = (long) ( base / divisor );
+                    foundInterface = true;
                 }
             }
         }
 
-        if ( !canBeBrokenWithHand() ) {
-            base *= 3.33;
+        if ( !foundInterface ) {
+            if ( !canBeBrokenWithHand() ) {
+                base *= 3.33;
+            }
+
+            // Check if item is sword
+            if ( item instanceof ItemSword ) {
+                base *= 0.675;
+            }
         }
 
-        // Check if item is sword
-        if ( item instanceof ItemSword ) {
-            base *= 0.5;
+        // Haste effect
+        int hasteAmplifier = player.getEffectAmplifier( PotionEffect.HASTE );
+        if ( hasteAmplifier != -1 ) {
+            base *= 1f + ( hasteAmplifier + 1 ) * 0.2f;
+        }
+
+        // Mining fatigue effect
+        int miningFatigueAmplifier = player.getEffectAmplifier( PotionEffect.MINING_FATIGUE );
+        if ( miningFatigueAmplifier != -1 ) {
+            switch ( miningFatigueAmplifier ) {
+                case 0:
+                    base *= 0.3f;
+                    break;
+
+                case 1:
+                    base *= 0.09f;
+                    break;
+
+                case 2:
+                    base *= 0.0027F;
+                    break;
+
+                case 3:
+                default:
+                    base *= 8.1E-4F;
+                    break;
+            }
+        }
+
+        // When in water
+        if ( player.isInsideLiquid() ) {
+            base *= 5.0f;
+        }
+
+        // When not onground
+        if ( !player.isOnGround() ) {
+            base *= 5.0f;
         }
 
         return (long) base;
@@ -387,9 +447,10 @@ public abstract class Block implements io.gomint.world.block.Block {
     /**
      * Get drops from the block when it broke
      *
+     * @param itemInHand which was used to destroy this block
      * @return a list of drops
      */
-    public List<ItemStack> getDrops() {
+    public List<ItemStack> getDrops( ItemStack itemInHand ) {
         return new ArrayList<ItemStack>() {{
             add( Items.create( getBlockId(), getBlockData(), (byte) 1, null ) );
         }};
@@ -408,5 +469,26 @@ public abstract class Block implements io.gomint.world.block.Block {
 
         this.blockData = blockData;
     }
+
+    public void onEntityCollision( EntityLiving entity ) {
+
+    }
+
+    public void onEntityStanding( EntityLiving entityLiving ) {
+
+    }
+
+
+    boolean isCorrectTool( ItemStack itemInHand ) {
+        for ( Class<? extends ItemStack> aClass : getToolInterfaces() ) {
+            if ( aClass.isAssignableFrom( itemInHand.getClass() ) ) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public abstract float getBlastResistance();
 
 }

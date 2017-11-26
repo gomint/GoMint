@@ -7,12 +7,18 @@
 
 package io.gomint;
 
+import io.gomint.entity.Entity;
 import io.gomint.entity.EntityPlayer;
+import io.gomint.gui.ButtonList;
+import io.gomint.gui.CustomForm;
+import io.gomint.gui.Modal;
 import io.gomint.inventory.item.ItemStack;
 import io.gomint.permission.GroupManager;
+import io.gomint.plugin.PluginManager;
 import io.gomint.world.World;
 
 import java.util.Collection;
+import java.util.UUID;
 
 /**
  * @author BlackyPaw
@@ -54,6 +60,15 @@ public interface GoMint {
     <T extends ItemStack> T createItemStack( Class<T> itemClass, int amount );
 
     /**
+     * Create a new entity
+     *
+     * @param entityClass which should be created
+     * @param <T> generic type of the entity
+     * @return fresh generated entity
+     */
+    <T extends Entity> T createEntity( Class<T> entityClass );
+
+    /**
      * Get a collection of all players on this server
      *
      * @return collection of online players
@@ -83,5 +98,78 @@ public interface GoMint {
      * @return the player or null if not found
      */
     EntityPlayer findPlayerByName( String target );
+
+    /**
+     * Find a player by its uuid
+     *
+     * @param target which we want to search
+     * @return the player or null if not found
+     */
+    EntityPlayer findPlayerByUUID( UUID target );
+
+    /**
+     * Get the plugin manager
+     *
+     * @return the plugin manager
+     */
+    PluginManager getPluginManager();
+
+    /**
+     * Get the port this server has bound to
+     *
+     * @return port of this server
+     */
+    int getPort();
+
+    /**
+     * Get the amount of player which will fit on this server before it start declining logins
+     *
+     * @return amount of maximum players
+     */
+    int getMaxPlayers();
+
+    /**
+     * Get current tickrate
+     *
+     * @return tickrate of this server
+     */
+    double getTPS();
+
+    /**
+     * Shutdown this server
+     */
+    void shutdown();
+
+    /**
+     * Create new button list for form display
+     *
+     * @param title of the button list
+     * @return button list implementation
+     */
+    ButtonList createButtonList( String title );
+
+    /**
+     * Create a new modal for form display
+     *
+     * @param title of the modal
+     * @param question for the client
+     * @return modal implementation
+     */
+    Modal createModal( String title, String question );
+
+    /**
+     * Create new custom form for form display
+     *
+     * @param title of the custom form
+     * @return custom form implementation
+     */
+    CustomForm createCustomForm( String title );
+
+    /**
+     * Check if current thread is GoMints main thread
+     *
+     * @return true if main thread, false if not
+     */
+    boolean isMainThread();
 
 }

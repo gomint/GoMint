@@ -145,4 +145,8 @@ public class WorldManager {
         }
     }
 
+    public void unloadWorld( WorldAdapter worldAdapter ) {
+        this.loadedWorlds.remove( worldAdapter );
+    }
+
 }

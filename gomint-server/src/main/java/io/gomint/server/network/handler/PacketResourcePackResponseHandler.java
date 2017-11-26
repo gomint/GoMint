@@ -1,5 +1,6 @@
 package io.gomint.server.network.handler;
 
+import io.gomint.event.player.PlayerPreJoinEvent;
 import io.gomint.server.network.PlayerConnection;
 import io.gomint.server.network.PlayerConnectionState;
 import io.gomint.server.network.packet.PacketResourcePackResponse;
@@ -33,9 +34,16 @@ public class PacketResourcePackResponseHandler implements PacketHandler<PacketRe
                 connection.setState( PlayerConnectionState.LOGIN );
                 LOGGER.info( "Logging in as " + connection.getEntity().getName() );
 
-                connection.sendWorldInitialization();
-                connection.sendWorldTime( 0 );
-                connection.getEntity().updateAttributes();
+                PlayerPreJoinEvent playerPreJoinEvent = new PlayerPreJoinEvent( connection.getEntity() );
+                connection.getServer().getPluginManager().callEvent( playerPreJoinEvent );
+                if ( !playerPreJoinEvent.isCancelled() ) {
+                    connection.sendWorldInitialization();
+                    connection.sendWorldTime( 0 );
+                    connection.getEntity().updateAttributes();
+
+                    // Start sending chunks
+                    connection.getEntity().getWorld().addPlayer( connection.getEntity() );
+                }
 
                 break;
         }

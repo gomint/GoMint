@@ -7,16 +7,19 @@
 
 package io.gomint.world;
 
+import io.gomint.entity.Entity;
 import io.gomint.entity.EntityPlayer;
 import io.gomint.entity.passive.EntityItemDrop;
 import io.gomint.inventory.item.ItemStack;
 import io.gomint.math.AxisAlignedBB;
 import io.gomint.math.BlockPosition;
 import io.gomint.math.Location;
+import io.gomint.math.Vector;
 import io.gomint.world.block.Block;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * @author geNAZt
@@ -92,12 +95,21 @@ public interface World {
     /**
      * Play a sound at the location given
      *
-     * @param location  The location where the sound should be played
-     * @param sound     The sound which should be played
-     * @param pitch     The pitch at which the sound should be played
-     * @param extraData Any extra data for the client to select the correct sound
+     * @param location The location where the sound should be played
+     * @param sound    The sound which should be played
+     * @param pitch    The pitch at which the sound should be played
+     * @param data     additional data for the sound
      */
-    void playSound( Location location, Sound sound, byte pitch, int extraData );
+    void playSound( Vector location, Sound sound, byte pitch, SoundData data );
+
+    /**
+     * Play a sound at the location given
+     *
+     * @param location The location where the sound should be played
+     * @param sound    The sound which should be played
+     * @param pitch    The pitch at which the sound should be played
+     */
+    void playSound( Vector location, Sound sound, byte pitch );
 
     /**
      * Get a list of bounding boxes which collide with the given box
@@ -107,8 +119,22 @@ public interface World {
      * @param includeEntities Should we return blocks only or also entities? True for entities, false without entities
      * @return either a list of collisions or null
      */
-    List<AxisAlignedBB> getCollisionCubes( io.gomint.entity.Entity entity, AxisAlignedBB bb, boolean includeEntities );
+    List<AxisAlignedBB> getCollisionCubes( Entity entity, AxisAlignedBB bb, boolean includeEntities );
 
+    /**
+     * Create a entity drop in the given world
+     *
+     * @param location  for the item drop
+     * @param itemStack which is stored inside the drop
+     * @return the created and spawned entity
+     */
     EntityItemDrop createItemDrop( Location location, ItemStack itemStack );
+
+    /**
+     * Unload this world. All remaining players in this world get called through the consumer
+     *
+     * @param playerConsumer which gets alled for every player in this world
+     */
+    void unload( Consumer<EntityPlayer> playerConsumer );
 
 }

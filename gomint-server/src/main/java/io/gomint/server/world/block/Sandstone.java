@@ -1,5 +1,8 @@
 package io.gomint.server.world.block;
 
+import io.gomint.world.block.BlockType;
+
+import io.gomint.inventory.item.*;
 import io.gomint.server.registry.RegisterInfo;
 
 /**
@@ -7,7 +10,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( id = 24 )
-public class Sandstone extends Block {
+public class Sandstone extends Block implements io.gomint.world.block.BlockSandstone {
 
     @Override
     public int getBlockId() {
@@ -17,6 +20,27 @@ public class Sandstone extends Block {
     @Override
     public long getBreakTime() {
         return 1200;
+    }
+
+    @Override
+    public Class<? extends ItemStack>[] getToolInterfaces() {
+        return new Class[]{
+            ItemWoodenPickaxe.class,
+            ItemStonePickaxe.class,
+            ItemGoldenPickaxe.class,
+            ItemIronPickaxe.class,
+            ItemDiamondPickaxe.class
+        };
+    }
+
+    @Override
+    public float getBlastResistance() {
+        return 4.0f;
+    }
+
+    @Override
+    public BlockType getType() {
+        return BlockType.SANDSTONE;
     }
 
 }

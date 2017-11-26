@@ -2,14 +2,20 @@ package io.gomint.server.inventory;
 
 import io.gomint.math.BlockPosition;
 import io.gomint.server.entity.EntityPlayer;
+import io.gomint.server.entity.tileentity.TileEntity;
 import io.gomint.server.network.packet.PacketContainerOpen;
 import io.gomint.server.network.type.WindowType;
+import io.gomint.server.world.WorldAdapter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author geNAZt
  * @version 1.0
  */
 public abstract class ContainerInventory extends Inventory {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger( ContainerInventory.class );
 
     public ContainerInventory( InventoryHolder owner, int size ) {
         super( owner, size );
@@ -27,7 +33,15 @@ public abstract class ContainerInventory extends Inventory {
      *
      * @return block position of the container
      */
-    public abstract BlockPosition getContainerPosition();
+    public BlockPosition getContainerPosition() {
+        TileEntity tileEntity = (TileEntity) this.owner;
+        return tileEntity.getLocation().toBlockPosition();
+    }
+
+    public WorldAdapter getWorld() {
+        TileEntity tileEntity = (TileEntity) this.owner;
+        return (WorldAdapter) tileEntity.getLocation().getWorld();
+    }
 
     /**
      * Called when a container has been opened
@@ -55,7 +69,7 @@ public abstract class ContainerInventory extends Inventory {
         containerOpen.setWindowId( windowId );
         containerOpen.setType( this.getType().getId() );
         containerOpen.setLocation( this.getContainerPosition() );
-        player.getConnection().send( containerOpen );
+        player.getConnection().addToSendQueue( containerOpen );
 
         // Add viewer and send contents
         super.addViewer( player );
@@ -72,4 +86,5 @@ public abstract class ContainerInventory extends Inventory {
         // Remove from view
         super.removeViewer( player );
     }
+
 }

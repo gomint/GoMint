@@ -67,8 +67,6 @@ public class SyncTaskManager {
                     return;
                 }
 
-                LOGGER.debug( "Found task: " + task );
-
                 // Check for abort value ( -1 )
                 if ( task.getNextExecution() == -1 ) {
                     continue;

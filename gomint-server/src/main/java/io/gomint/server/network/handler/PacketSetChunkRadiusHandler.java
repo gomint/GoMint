@@ -20,9 +20,6 @@ public class PacketSetChunkRadiusHandler implements PacketHandler<PacketSetChunk
             PacketConfirmChunkRadius confirmChunkRadius = new PacketConfirmChunkRadius();
             confirmChunkRadius.setChunkRadius( connection.getEntity().getViewDistance() );
             connection.send( confirmChunkRadius );
-
-            // Start sending chunks
-            connection.getEntity().getWorld().addPlayer( connection.getEntity() );
         }
     }
 

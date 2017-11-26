@@ -7,9 +7,11 @@
 
 package io.gomint.server.world.leveldb;
 
+import io.gomint.math.BlockPosition;
 import io.gomint.server.world.ChunkAdapter;
 import io.gomint.server.world.NibbleArray;
 import io.gomint.server.world.WorldAdapter;
+import io.gomint.server.world.postprocessor.PistonPostProcessor;
 import io.gomint.taglib.NBTReader;
 import io.gomint.taglib.NBTTagCompound;
 
@@ -81,10 +83,19 @@ public class LevelDBChunkAdapter extends ChunkAdapter {
                 for ( int k = 0; k < 16; ++k ) {
                     int y = ( sectionY << 4 ) + j;
                     short blockIndex = (short) ( k << 8 | i << 4 | j ); // j k i - k j i - i k j -
-                    this.setBlock( k, y, i, blockData[blockIndex] );
+                    byte blockId = blockData[blockIndex];
+                    this.setBlock( k, y, i, blockId );
 
                     if ( meta.get( blockIndex ) != 0 ) {
                         this.setData( k, y, i, meta.get( blockIndex ) );
+                    }
+
+                    switch ( blockId ) {
+                        case 29:
+                        case 33: // Piston head
+                            BlockPosition position = new BlockPosition( ( this.x << 4 ) + k, y , ( this.z << 4 ) + i );
+                            this.postProcessors.offer( new PistonPostProcessor( this.world, position ) );
+                            break;
                     }
                 }
             }

@@ -30,7 +30,7 @@ public class CreativeInventory extends Inventory {
         int i = 0;
         for ( Integer id : itemIds ) {
             if ( id != 0 ) {
-                itemStacks[i++] = new ItemStack( id, (short) 0, 1, null );
+                itemStacks[i++] = Items.create( id, (short) 0, (byte) 1, null );
             }
         }
 

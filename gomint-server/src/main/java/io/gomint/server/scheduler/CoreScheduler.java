@@ -53,7 +53,7 @@ public class CoreScheduler implements Scheduler {
 
     @Override
     public Task schedule( Runnable runnable, long delay, long period, TimeUnit timeUnit ) {
-        SyncScheduledTask task = new SyncScheduledTask( runnable, delay, period, timeUnit );
+        SyncScheduledTask task = new SyncScheduledTask( this.syncTaskManager, runnable, delay, period, timeUnit );
         this.syncTaskManager.addTask( task );
         return task;
     }

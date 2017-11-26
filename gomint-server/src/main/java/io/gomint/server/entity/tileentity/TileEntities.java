@@ -57,6 +57,11 @@ public enum TileEntities {
     COMMAND_BLOCK( "CommandBlock", CommandBlockTileEntity.class ),
 
     /**
+     * Represents a command block. Contains data like command string, output etc.
+     */
+    COMMAND_BLOCK_ANVIL( "Control", CommandBlockTileEntity.class ),
+
+    /**
      * Represents a item frame. It holds a item and rotation states
      */
     ITEM_FRAME( "ItemFrame", ItemFrameTileEntity.class ),
@@ -74,7 +79,17 @@ public enum TileEntities {
     /**
      * More or less a cooler chest
      */
-    SHULKER_BOX( "ShulkerBox", ShulkerBoxTileEntity.class );
+    SHULKER_BOX( "ShulkerBox", ShulkerBoxTileEntity.class ),
+
+    /**
+     * Data for the piston extension
+     */
+    PISTON_ARM( "PistonArm", PistonArmTileEntity.class ),
+
+    /**
+     * Data for a furnace
+     */
+    FURNACE( "Furnace", FurnaceTileEntity.class );
 
     private static final Logger LOGGER = LoggerFactory.getLogger( TileEntities.class );
     private final String nbtID;
@@ -124,7 +139,7 @@ public enum TileEntities {
             }
         }
 
-        // LOGGER.warn( "Unknown tile entity found: " + id );
+        LOGGER.warn( "Unknown tile entity found: " + id );
         return null;
     }
 

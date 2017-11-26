@@ -1,9 +1,11 @@
 package io.gomint.server.world.block;
 
+import io.gomint.world.block.BlockType;
+
 import io.gomint.inventory.item.ItemStack;
 import io.gomint.server.inventory.item.Items;
 import io.gomint.server.registry.RegisterInfo;
-import io.gomint.server.util.random.WeightedRandom;
+import io.gomint.world.block.BlockBeetroot;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,16 +15,7 @@ import java.util.List;
  * @version 1.0
  */
 @RegisterInfo( id = 244 )
-public class Beetroot extends Growable {
-
-    private static final WeightedRandom<Integer> SEED_RANDOMIZER = new WeightedRandom<>();
-
-    static {
-        SEED_RANDOMIZER.add( 0.15, 0 );
-        SEED_RANDOMIZER.add( 0.35, 1 );
-        SEED_RANDOMIZER.add( 0.35, 2 );
-        SEED_RANDOMIZER.add( 0.15, 3 );
-    }
+public class Beetroot extends Growable implements BlockBeetroot {
 
     @Override
     public int getBlockId() {
@@ -40,12 +33,17 @@ public class Beetroot extends Growable {
     }
 
     @Override
+    public boolean canPassThrough() {
+        return true;
+    }
+
+    @Override
     public long getBreakTime() {
         return 0;
     }
 
     @Override
-    public List<ItemStack> getDrops() {
+    public List<ItemStack> getDrops( ItemStack itemInHand ) {
         if ( getBlockData() >= 0x07 ) {
             List<ItemStack> drops = new ArrayList<ItemStack>() {{
                 add( Items.create( 457, (short) 0, (byte) 1, null ) ); // Beetroot
@@ -63,6 +61,16 @@ public class Beetroot extends Growable {
                 add( Items.create( 458, (short) 0, (byte) 1, null ) ); // Seeds
             }};
         }
+    }
+
+    @Override
+    public float getBlastResistance() {
+        return 0.0f;
+    }
+
+    @Override
+    public BlockType getType() {
+        return BlockType.BEETROOT;
     }
 
 }

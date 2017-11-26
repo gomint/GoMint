@@ -16,6 +16,7 @@ public class PacketInteract extends Packet {
     public enum InteractAction {
         INTERACT(1),
         ATTACK(2),
+        LEAVE_VEHICLE(3),
         MOUSEOVER(4);
 
         @Getter
@@ -30,6 +31,8 @@ public class PacketInteract extends Packet {
                     return INTERACT;
                 case 2:
                     return ATTACK;
+                case 3:
+                    return LEAVE_VEHICLE;
                 case 4:
                     return MOUSEOVER;
                 default:

@@ -1,8 +1,12 @@
 package io.gomint.server.plugin;
 
 import io.gomint.GoMint;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.Set;
@@ -14,7 +18,8 @@ import java.util.concurrent.CopyOnWriteArraySet;
  */
 public class PluginClassloader extends URLClassLoader {
 
-    private static final Set<PluginClassloader> allLoaders = new CopyOnWriteArraySet<>();
+    private static final Logger LOGGER = LoggerFactory.getLogger( PluginClassloader.class );
+    private static final Set<PluginClassloader> ALL_LOADERS = new CopyOnWriteArraySet<>();
     private static ClassLoader applicationClassloader;
 
     static {
@@ -23,9 +28,15 @@ public class PluginClassloader extends URLClassLoader {
         applicationClassloader = GoMint.class.getClassLoader();
     }
 
-    public PluginClassloader( URL[] urls ) {
-        super( urls );
-        allLoaders.add( this );
+    /**
+     * Create a new plugin class loader
+     *
+     * @param pluginFile which holds all classes of a plugin
+     * @throws MalformedURLException when the file is incorrectly labeled
+     */
+    PluginClassloader( File pluginFile ) throws MalformedURLException {
+        super( new URL[]{ pluginFile.toURI().toURL() } );
+        ALL_LOADERS.add( this );
     }
 
     @Override
@@ -41,7 +52,7 @@ public class PluginClassloader extends URLClassLoader {
         }
 
         if ( checkOther ) {
-            for ( PluginClassloader loader : allLoaders ) {
+            for ( PluginClassloader loader : ALL_LOADERS ) {
                 if ( loader != this ) {
                     try {
                         return loader.loadClass0( name, resolve, false );
@@ -61,13 +72,16 @@ public class PluginClassloader extends URLClassLoader {
         throw new ClassNotFoundException( name );
     }
 
+    /**
+     * Remove the loader and free the resources loaded with it
+     */
     public void remove() {
-        allLoaders.remove( this );
+        ALL_LOADERS.remove( this );
 
         try {
             super.close();
         } catch ( IOException e ) {
-            e.printStackTrace();
+            LOGGER.warn( "Could not close plugin classloader", e );
         }
     }
 

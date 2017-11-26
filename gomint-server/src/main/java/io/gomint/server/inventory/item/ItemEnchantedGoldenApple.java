@@ -1,5 +1,7 @@
 package io.gomint.server.inventory.item;
 
+import io.gomint.inventory.item.ItemType;
+
 import io.gomint.server.registry.RegisterInfo;
 import io.gomint.taglib.NBTTagCompound;
 
@@ -28,6 +30,11 @@ public class ItemEnchantedGoldenApple extends ItemFood implements io.gomint.inve
     @Override
     public float getHunger() {
         return 4;
+    }
+
+    @Override
+    public ItemType getType() {
+        return ItemType.ENCHANTED_GOLDEN_APPLE;
     }
 
 }

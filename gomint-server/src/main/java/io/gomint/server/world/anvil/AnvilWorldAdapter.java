@@ -159,6 +159,7 @@ public final class AnvilWorldAdapter extends WorldAdapter {
 
                 if ( chunk != null ) {
                     this.chunkCache.putChunk( chunk );
+                    chunk.runPostProcessors();
                 } else if ( generate ) {
                     return this.generate( x, z );
                 }

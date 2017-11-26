@@ -9,6 +9,9 @@ import javassist.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Collection;
 
 /**
@@ -18,45 +21,14 @@ import java.util.Collection;
 public class Items {
 
     private static final Logger LOGGER = LoggerFactory.getLogger( Items.class );
-    private static final Registry<ItemGenerator> GENERATORS = new Registry<>( new GeneratorCallback<ItemGenerator>() {
-        private ClassPool pool = ClassPool.getDefault();
-        private CtClass inter;
-
-        @Override
-        public ItemGenerator generate( int id, Class<?> clazz ) {
-            if ( this.inter == null ) {
-                try {
-                    this.inter = pool.get( "io.gomint.server.inventory.item.generator.ItemGenerator" );
-                } catch ( NotFoundException e ) {
-                    e.printStackTrace();
-                }
-            }
-
-            CtClass generatorClass = this.pool.makeClass( "io.gomint.server.inventory.item.generator." + clazz.getSimpleName() );
-            generatorClass.addInterface( this.inter );
-
-            // Generate the generation method
-            try {
-                generatorClass.addMethod( CtNewMethod.make( "public io.gomint.inventory.item.ItemStack generate( short data, byte amount, io.gomint.taglib.NBTTagCompound nbt ) {" +
-                    "return new " + clazz.getName() + "(data, amount, nbt);" +
-                    "}", generatorClass ) );
-
-                generatorClass.addMethod( CtNewMethod.make( "public io.gomint.inventory.item.ItemStack generate( short data, byte amount ) {" +
-                    "return new " + clazz.getName() + "(data, amount);" +
-                    "}", generatorClass ) );
-            } catch ( CannotCompileException e ) {
-                e.printStackTrace();
-                return null;
-            }
-
-            try {
-                return (ItemGenerator) generatorClass.toClass().newInstance();
-            } catch ( InstantiationException | IllegalAccessException | CannotCompileException e ) {
-                e.printStackTrace();
-            }
-
-            return null;
+    private static final Registry<ItemGenerator> GENERATORS = new Registry<>( ( id, clazz ) -> {
+        try {
+            return (ItemGenerator) Class.forName( "io.gomint.server.inventory.item.generator." + clazz.getSimpleName() + "Generator" ).newInstance();
+        } catch ( ClassNotFoundException | IllegalAccessException | InstantiationException e1 ) {
+            LOGGER.error( "Could not use pre generated generator: ", e1 );
         }
+
+        return null;
     } );
 
     static {
@@ -76,7 +48,7 @@ public class Items {
     public static <T extends ItemStack> T create( int id, short data, byte amount, NBTTagCompound nbt ) {
         ItemGenerator itemGenerator = GENERATORS.getGenerator( id );
         if ( itemGenerator == null ) {
-            LOGGER.warn( "Unknown item " + id );
+            LOGGER.warn( "Unknown item {}", id );
             return null;
         }
 

@@ -93,6 +93,7 @@ public class MetadataContainer {
     public static final int DATA_PLAYER_INDEX = 27;
     public static final int DATA_SCALE = 39;
     public static final int DATA_MAX_AIRDATA_MAX_AIR = 43;
+    public static final int DATA_FUSE_LENGTH = 56;
 
     private MetadataMap entries;
     private boolean dirty;

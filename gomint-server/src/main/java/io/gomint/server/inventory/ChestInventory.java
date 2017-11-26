@@ -7,14 +7,18 @@
 
 package io.gomint.server.inventory;
 
+import io.gomint.entity.Entity;
 import io.gomint.math.BlockPosition;
 import io.gomint.server.entity.EntityPlayer;
-import io.gomint.server.entity.tileentity.ChestTileEntity;
-import io.gomint.server.entity.tileentity.TileEntity;
 import io.gomint.server.network.PlayerConnection;
+import io.gomint.server.network.packet.PacketBlockEvent;
 import io.gomint.server.network.packet.PacketInventoryContent;
 import io.gomint.server.network.packet.PacketInventorySetSlot;
 import io.gomint.server.network.type.WindowType;
+import io.gomint.server.world.WorldAdapter;
+import io.gomint.world.Sound;
+
+import java.util.function.Predicate;
 
 /**
  * @author geNAZt
@@ -22,6 +26,11 @@ import io.gomint.server.network.type.WindowType;
  */
 public class ChestInventory extends ContainerInventory {
 
+    /**
+     * Create new chest inventory
+     *
+     * @param owner tile entity of the chest
+     */
     public ChestInventory( InventoryHolder owner ) {
         super( owner, 27 );
     }
@@ -33,7 +42,7 @@ public class ChestInventory extends ContainerInventory {
         PacketInventoryContent inventoryContent = new PacketInventoryContent();
         inventoryContent.setWindowId( windowId );
         inventoryContent.setItems( this.getContents() );
-        playerConnection.send( inventoryContent );
+        playerConnection.addToSendQueue( inventoryContent );
     }
 
     @Override
@@ -44,7 +53,7 @@ public class ChestInventory extends ContainerInventory {
         inventorySetSlot.setWindowId( windowId );
         inventorySetSlot.setSlot( slot );
         inventorySetSlot.setItemStack( this.getItem( slot ) );
-        playerConnection.send( inventorySetSlot );
+        playerConnection.addToSendQueue( inventorySetSlot );
     }
 
     @Override
@@ -53,19 +62,49 @@ public class ChestInventory extends ContainerInventory {
     }
 
     @Override
-    public BlockPosition getContainerPosition() {
-        TileEntity tileEntity = (TileEntity) this.owner;
-        return tileEntity.getLocation().toBlockPosition();
-    }
-
-    @Override
     public void onOpen( EntityPlayer player ) {
         // Sound and open animation
+        if ( this.viewer.size() == 1 ) {
+            BlockPosition position = this.getContainerPosition();
+            WorldAdapter world = this.getWorld();
+
+            PacketBlockEvent blockEvent = new PacketBlockEvent();
+            blockEvent.setPosition( position );
+            blockEvent.setData1( 1 );
+            blockEvent.setData2( 2 );
+
+            world.sendToVisible( position, blockEvent, new Predicate<Entity>() {
+                @Override
+                public boolean test( Entity entity ) {
+                    return true;
+                }
+            } );
+
+            world.playSound( position.toVector().add( 0.5f, 0.5f, 0.5f ), Sound.CHEST_OPEN, (byte) 1 );
+        }
     }
 
     @Override
     public void onClose( EntityPlayer player ) {
         // Sound and close animation
+        if ( this.viewer.size() == 1 ) {
+            BlockPosition position = this.getContainerPosition();
+            WorldAdapter world = this.getWorld();
+
+            PacketBlockEvent blockEvent = new PacketBlockEvent();
+            blockEvent.setPosition( position );
+            blockEvent.setData1( 1 );
+            blockEvent.setData2( 0 );
+
+            world.sendToVisible( position, blockEvent, new Predicate<Entity>() {
+                @Override
+                public boolean test( Entity entity ) {
+                    return true;
+                }
+            } );
+
+            world.playSound( position.toVector().add( 0.5f, 0.5f, 0.5f ), Sound.CHEST_CLOSED, (byte) 1 );
+        }
     }
 
 }

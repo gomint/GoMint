@@ -11,6 +11,7 @@ public class PacketMobArmorEquipmentHandler implements PacketHandler<PacketMobAr
 
     @Override
     public void handle( PacketMobArmorEquipment packet, long currentTimeMillis, PlayerConnection connection ) {
+
         // TODO implement checks if the client says something correct
         connection.getEntity().getArmorInventory().setBoots( packet.getBoots() );
         connection.getEntity().getArmorInventory().setChestplate( packet.getChestplate() );

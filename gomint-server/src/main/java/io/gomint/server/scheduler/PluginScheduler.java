@@ -13,10 +13,11 @@ import io.gomint.scheduler.Task;
 import io.gomint.util.CompleteHandler;
 import io.gomint.util.ExceptionHandler;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * @author geNAZt
@@ -27,9 +28,14 @@ public class PluginScheduler implements Scheduler {
     private Plugin plugin;
     private CoreScheduler coreScheduler;
 
-    private Set<Task> runningTasks = new HashSet<>();
-    private ReentrantLock lock = new ReentrantLock( true );
+    private Set<Task> runningTasks = Collections.synchronizedSet( new HashSet<>() );
 
+    /**
+     * Create a new scheduler for the given plugin
+     *
+     * @param plugin        for which this scheduler is
+     * @param coreScheduler which schedules tasks inside gomint
+     */
     public PluginScheduler( Plugin plugin, CoreScheduler coreScheduler ) {
         this.plugin = plugin;
         this.coreScheduler = coreScheduler;
@@ -41,35 +47,24 @@ public class PluginScheduler implements Scheduler {
             throw new IllegalStateException( "This PluginScheduler has been cleaned and closed. No new Tasks can be scheduled" );
         }
 
-        lock.lock();
+        Task task = coreScheduler.executeAsync( runnable );
+        task.onException( new ExceptionHandler() {
+            @Override
+            public boolean onException( Exception e ) {
+                plugin.getLogger().warn( "A task thrown a Exception", e );
+                return true;
+            }
+        } );
 
-        try {
-            Task task = coreScheduler.executeAsync( runnable );
-            task.onException( new ExceptionHandler() {
-                @Override
-                public boolean onException( Exception e ) {
-                    plugin.getLogger().warn( "A task thrown a Exception", e );
-                    return true;
-                }
-            } );
+        task.onComplete( new CompleteHandler() {
+            @Override
+            public void onComplete() {
+                runningTasks.remove( task );
+            }
+        } );
 
-            task.onComplete( new CompleteHandler() {
-                @Override
-                public void onComplete() {
-                    lock.lock();
-                    try {
-                        runningTasks.remove( task );
-                    } finally {
-                        lock.unlock();
-                    }
-                }
-            } );
-
-            this.runningTasks.add( task );
-            return task;
-        } finally {
-            lock.unlock();
-        }
+        this.runningTasks.add( task );
+        return task;
     }
 
     @Override
@@ -78,35 +73,24 @@ public class PluginScheduler implements Scheduler {
             throw new IllegalStateException( "This PluginScheduler has been cleaned and closed. No new Tasks can be scheduled" );
         }
 
-        lock.lock();
+        Task task = coreScheduler.scheduleAsync( runnable, delay, timeUnit );
+        task.onException( new ExceptionHandler() {
+            @Override
+            public boolean onException( Exception e ) {
+                plugin.getLogger().warn( "A task thrown a Exception", e );
+                return true;
+            }
+        } );
 
-        try {
-            Task task = coreScheduler.scheduleAsync( runnable, delay, timeUnit );
-            task.onException( new ExceptionHandler() {
-                @Override
-                public boolean onException( Exception e ) {
-                    plugin.getLogger().warn( "A task thrown a Exception", e );
-                    return true;
-                }
-            } );
+        task.onComplete( new CompleteHandler() {
+            @Override
+            public void onComplete() {
+                runningTasks.remove( task );
+            }
+        } );
 
-            task.onComplete( new CompleteHandler() {
-                @Override
-                public void onComplete() {
-                    lock.lock();
-                    try {
-                        runningTasks.remove( task );
-                    } finally {
-                        lock.unlock();
-                    }
-                }
-            } );
-
-            this.runningTasks.add( task );
-            return task;
-        } finally {
-            lock.unlock();
-        }
+        this.runningTasks.add( task );
+        return task;
     }
 
     @Override
@@ -115,35 +99,24 @@ public class PluginScheduler implements Scheduler {
             throw new IllegalStateException( "This PluginScheduler has been cleaned and closed. No new Tasks can be scheduled" );
         }
 
-        lock.lock();
+        Task task = coreScheduler.scheduleAsync( runnable, delay, period, timeUnit );
+        task.onException( new ExceptionHandler() {
+            @Override
+            public boolean onException( Exception e ) {
+                plugin.getLogger().warn( "A task thrown a Exception", e );
+                return true;
+            }
+        } );
 
-        try {
-            Task task = coreScheduler.scheduleAsync( runnable, delay, period, timeUnit );
-            task.onException( new ExceptionHandler() {
-                @Override
-                public boolean onException( Exception e ) {
-                    plugin.getLogger().warn( "A task thrown a Exception", e );
-                    return true;
-                }
-            } );
+        task.onComplete( new CompleteHandler() {
+            @Override
+            public void onComplete() {
+                runningTasks.remove( task );
+            }
+        } );
 
-            task.onComplete( new CompleteHandler() {
-                @Override
-                public void onComplete() {
-                    lock.lock();
-                    try {
-                        runningTasks.remove( task );
-                    } finally {
-                        lock.unlock();
-                    }
-                }
-            } );
-
-            this.runningTasks.add( task );
-            return task;
-        } finally {
-            lock.unlock();
-        }
+        this.runningTasks.add( task );
+        return task;
     }
 
     @Override
@@ -152,35 +125,24 @@ public class PluginScheduler implements Scheduler {
             throw new IllegalStateException( "This PluginScheduler has been cleaned and closed. No new Tasks can be scheduled" );
         }
 
-        lock.lock();
+        Task task = coreScheduler.execute( runnable );
+        task.onException( new ExceptionHandler() {
+            @Override
+            public boolean onException( Exception e ) {
+                plugin.getLogger().warn( "A task thrown a Exception", e );
+                return true;
+            }
+        } );
 
-        try {
-            Task task = coreScheduler.execute( runnable );
-            task.onException( new ExceptionHandler() {
-                @Override
-                public boolean onException( Exception e ) {
-                    plugin.getLogger().warn( "A task thrown a Exception", e );
-                    return true;
-                }
-            } );
+        task.onComplete( new CompleteHandler() {
+            @Override
+            public void onComplete() {
+                runningTasks.remove( task );
+            }
+        } );
 
-            task.onComplete( new CompleteHandler() {
-                @Override
-                public void onComplete() {
-                    lock.lock();
-                    try {
-                        runningTasks.remove( task );
-                    } finally {
-                        lock.unlock();
-                    }
-                }
-            } );
-
-            this.runningTasks.add( task );
-            return task;
-        } finally {
-            lock.unlock();
-        }
+        this.runningTasks.add( task );
+        return task;
     }
 
     @Override
@@ -189,35 +151,24 @@ public class PluginScheduler implements Scheduler {
             throw new IllegalStateException( "This PluginScheduler has been cleaned and closed. No new Tasks can be scheduled" );
         }
 
-        lock.lock();
+        Task task = coreScheduler.schedule( runnable, delay, timeUnit );
+        task.onException( new ExceptionHandler() {
+            @Override
+            public boolean onException( Exception e ) {
+                plugin.getLogger().warn( "A task thrown a Exception", e );
+                return true;
+            }
+        } );
 
-        try {
-            Task task = coreScheduler.schedule( runnable, delay, timeUnit );
-            task.onException( new ExceptionHandler() {
-                @Override
-                public boolean onException( Exception e ) {
-                    plugin.getLogger().warn( "A task thrown a Exception", e );
-                    return true;
-                }
-            } );
+        task.onComplete( new CompleteHandler() {
+            @Override
+            public void onComplete() {
+                runningTasks.remove( task );
+            }
+        } );
 
-            task.onComplete( new CompleteHandler() {
-                @Override
-                public void onComplete() {
-                    lock.lock();
-                    try {
-                        runningTasks.remove( task );
-                    } finally {
-                        lock.unlock();
-                    }
-                }
-            } );
-
-            this.runningTasks.add( task );
-            return task;
-        } finally {
-            lock.unlock();
-        }
+        this.runningTasks.add( task );
+        return task;
     }
 
     @Override
@@ -226,42 +177,32 @@ public class PluginScheduler implements Scheduler {
             throw new IllegalStateException( "This PluginScheduler has been cleaned and closed. No new Tasks can be scheduled" );
         }
 
-        lock.lock();
+        Task task = coreScheduler.schedule( runnable, delay, period, timeUnit );
+        task.onException( new ExceptionHandler() {
+            @Override
+            public boolean onException( Exception e ) {
+                plugin.getLogger().warn( "A task thrown a Exception", e );
+                return true;
+            }
+        } );
 
-        try {
-            Task task = coreScheduler.schedule( runnable, delay, period, timeUnit );
-            task.onException( new ExceptionHandler() {
-                @Override
-                public boolean onException( Exception e ) {
-                    plugin.getLogger().warn( "A task thrown a Exception", e );
-                    return true;
-                }
-            } );
+        task.onComplete( new CompleteHandler() {
+            @Override
+            public void onComplete() {
 
-            task.onComplete( new CompleteHandler() {
-                @Override
-                public void onComplete() {
-                    lock.lock();
-                    try {
-                        runningTasks.remove( task );
-                    } finally {
-                        lock.unlock();
-                    }
-                }
-            } );
+                runningTasks.remove( task );
+            }
+        } );
 
-            this.runningTasks.add( task );
-            return task;
-        } finally {
-            lock.unlock();
-        }
+        this.runningTasks.add( task );
+        return task;
     }
 
     /**
      * Internal Method for cleaning up all Tasks
      */
     public void cleanup() {
-        for ( Task runningTask : this.runningTasks ) {
+        for ( Task runningTask : new ArrayList<>( this.runningTasks ) ) {
             runningTask.cancel();
         }
 

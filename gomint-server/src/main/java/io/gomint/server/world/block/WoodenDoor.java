@@ -1,5 +1,7 @@
 package io.gomint.server.world.block;
 
+import io.gomint.world.block.BlockType;
+
 import io.gomint.math.BlockPosition;
 import io.gomint.server.registry.RegisterInfo;
 
@@ -19,7 +21,18 @@ public class WoodenDoor extends Door {
     public void afterPlacement() {
         // Set the top part
         Block above = location.getWorld().getBlockAt( location.toBlockPosition().add( BlockPosition.UP ) );
-        above.setType( WoodenDoor.class, (byte) 0x08 );
+        Door door = above.setType( WoodenDoor.class );
+        door.setTopPart();
+    }
+
+    @Override
+    public float getBlastResistance() {
+        return 15.0f;
+    }
+
+    @Override
+    public BlockType getType() {
+        return BlockType.WOODEN_DOOR;
     }
 
 }

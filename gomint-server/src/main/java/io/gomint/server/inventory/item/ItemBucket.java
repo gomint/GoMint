@@ -1,7 +1,14 @@
 package io.gomint.server.inventory.item;
 
+import io.gomint.inventory.item.ItemType;
+
+import io.gomint.math.Vector;
+import io.gomint.server.entity.EntityPlayer;
 import io.gomint.server.registry.RegisterInfo;
+import io.gomint.world.block.*;
 import io.gomint.taglib.NBTTagCompound;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author geNAZt
@@ -9,6 +16,8 @@ import io.gomint.taglib.NBTTagCompound;
  */
 @RegisterInfo( id = 325 )
 public class ItemBucket extends ItemStack implements io.gomint.inventory.item.ItemBucket {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger( ItemBucket.class );
 
     // CHECKSTYLE:OFF
     public ItemBucket( short data, int amount ) {
@@ -19,6 +28,11 @@ public class ItemBucket extends ItemStack implements io.gomint.inventory.item.It
         super( 325, data, amount, nbt );
     }
     // CHECKSTYLE:ON
+
+    @Override
+    public byte getMaximumAmount() {
+        return 1;
+    }
 
     @Override
     public void setContent( Content type ) {
@@ -66,9 +80,33 @@ public class ItemBucket extends ItemStack implements io.gomint.inventory.item.It
     }
 
     @Override
-    public void afterPlacement() {
+    public boolean afterPlacement() {
         // We transform into an empty bucket
         this.setData( (short) 0 );
+        return false;
+    }
+
+    @Override
+    public boolean interact( EntityPlayer entity, int face, Vector clickPosition, Block clickedBlock ) {
+        if ( clickedBlock != null ) {
+            Block liquidBlock = clickedBlock.getSide( face );
+            if ( liquidBlock instanceof BlockLiquid ) {
+                if ( ( (BlockLiquid) liquidBlock ).getFillHeight() > 0.9f ) {
+                    this.setContent( liquidBlock instanceof BlockFlowingWater || liquidBlock instanceof BlockStationaryWater ?
+                        Content.WATER : Content.LAVA );
+                    entity.getInventory().setItem( entity.getInventory().getItemInHandSlot(), this );
+                    liquidBlock.setType( BlockAir.class );
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    @Override
+    public ItemType getType() {
+        return ItemType.BUCKET;
     }
 
 }

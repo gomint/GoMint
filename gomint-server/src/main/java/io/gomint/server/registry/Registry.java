@@ -1,6 +1,7 @@
 package io.gomint.server.registry;
 
 import com.google.common.reflect.ClassPath;
+import io.gomint.server.GoMintServer;
 import io.gomint.server.util.collection.GeneratorAPIClassMap;
 import io.gomint.server.util.collection.GeneratorMap;
 import org.slf4j.Logger;
@@ -36,16 +37,23 @@ public class Registry<R> {
      * @param classPath which should be searched
      */
     public void register( String classPath ) {
-        LOGGER.debug( "Going to scan: " + classPath );
+        LOGGER.debug( "Going to scan: {}", classPath );
 
-        // Search io.gomint.server.inventory.item
-        try {
-            for ( ClassPath.ClassInfo classInfo : ClassPath.from( ClassLoader.getSystemClassLoader() )
-                .getTopLevelClasses( classPath ) ) {
-                register( classInfo.load() );
-            }
-        } catch ( IOException e ) {
-            e.printStackTrace();
+        for ( ClassPath.ClassInfo classInfo : GoMintServer.getClassPath().getTopLevelClasses( classPath ) ) {
+            register( classInfo.load() );
+        }
+    }
+
+    /**
+     * Register all classes which can be found in given path
+     *
+     * @param classPath which should be searched
+     */
+    public void registerRecursive( String classPath ) {
+        LOGGER.debug( "Going to scan: {}", classPath );
+
+        for ( ClassPath.ClassInfo classInfo : GoMintServer.getClassPath().getTopLevelClassesRecursive( classPath ) ) {
+            register( classInfo.load() );
         }
     }
 
@@ -57,21 +65,19 @@ public class Registry<R> {
         }
 
         int id = clazz.getAnnotation( RegisterInfo.class ).id();
-        R oldGen = this.generators.get( id );
-        if ( oldGen != null ) {
-            LOGGER.debug( "Duplicated register info for id: " + id + " -> " + clazz.getName() + "; old: " + oldGen.getClass().getName() );
-        }
-
         R generator = this.generatorCallback.generate( id, clazz );
         if ( generator != null ) {
-            this.generators.put( id, generator );
+            R oldGen = this.generators.put( id, generator );
+            if ( oldGen != null ) {
+                LOGGER.debug( "Duplicated register info for id: {} -> {}; old: {}", id, clazz.getName(), oldGen.getClass().getName() );
+            }
 
             // Check for API interfaces
             for ( Class<?> apiInter : clazz.getInterfaces() ) {
-                apiReferences.put( apiInter, id );
+                this.apiReferences.put( apiInter, id );
             }
 
-            apiReferences.put( clazz, id );
+            this.apiReferences.put( clazz, id );
         }
     }
 
@@ -91,6 +97,10 @@ public class Registry<R> {
 
     public Collection<Integer> getAll() {
         return generators.keySet();
+    }
+
+    public int getId( Class<?> clazz ) {
+        return apiReferences.getOrDefault( clazz, -1 );
     }
 
 }

@@ -97,4 +97,13 @@ public class ChestTileEntity extends ContainerTileEntity implements InventoryHol
         compound.addValue( "Items", nbtTagCompounds );
     }
 
+    /**
+     * Get this chests inventory
+     *
+     * @return inventory of this tile
+     */
+    public ChestInventory getInventory() {
+        return this.inventory;
+    }
+
 }

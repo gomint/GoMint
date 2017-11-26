@@ -123,6 +123,11 @@ class ChunkSlice {
             }
         }
 
+        // All air and we want to set block data? How about no!
+        if ( this.data == null ) {
+            return;
+        }
+
         this.data.set( index, data );
     }
 

@@ -10,7 +10,7 @@ import io.gomint.server.network.packet.PacketInventorySetSlot;
  * @author geNAZt
  * @version 1.0
  */
-public class PlayerInventory extends Inventory {
+public class PlayerInventory extends Inventory implements io.gomint.inventory.PlayerInventory {
 
     private byte itemInHandSlot;
 
@@ -36,7 +36,7 @@ public class PlayerInventory extends Inventory {
     public void sendContents( int slot, PlayerConnection playerConnection ) {
         PacketInventorySetSlot setSlot = new PacketInventorySetSlot();
         setSlot.setSlot( slot );
-        setSlot.setWindowId( (byte) WindowMagicNumbers.PLAYER.getId() );
+        setSlot.setWindowId( WindowMagicNumbers.PLAYER.getId() );
         setSlot.setItemStack( this.contents[slot] );
         playerConnection.addToSendQueue( setSlot );
     }
@@ -44,9 +44,9 @@ public class PlayerInventory extends Inventory {
     @Override
     public void sendContents( PlayerConnection playerConnection ) {
         PacketInventoryContent inventory = new PacketInventoryContent();
-        inventory.setWindowId( (byte) WindowMagicNumbers.PLAYER.getId() );
+        inventory.setWindowId( WindowMagicNumbers.PLAYER.getId() );
         inventory.setItems( getContents() );
-        playerConnection.send( inventory );
+        playerConnection.addToSendQueue( inventory );
     }
 
     /**

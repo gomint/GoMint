@@ -7,12 +7,18 @@
 
 package io.gomint.entity;
 
+import io.gomint.gui.Form;
+import io.gomint.gui.FormListener;
 import io.gomint.inventory.Inventory;
-import io.gomint.math.Location;
+import io.gomint.inventory.PlayerInventory;
+import io.gomint.math.Vector;
+import io.gomint.permission.PermissionManager;
 import io.gomint.player.PlayerSkin;
 import io.gomint.world.Gamemode;
+import io.gomint.world.Sound;
+import io.gomint.world.SoundData;
 
-import java.net.InetSocketAddress;
+import java.util.Locale;
 import java.util.UUID;
 
 /**
@@ -20,7 +26,7 @@ import java.util.UUID;
  * @author Digot
  * @version 1.0
  */
-public interface EntityPlayer extends EntityLiving {
+public interface EntityPlayer extends EntityCreature {
 
     /**
      * Gets the name of the player. It is NOT globally unique since the
@@ -90,18 +96,11 @@ public interface EntityPlayer extends EntityLiving {
     PlayerSkin getSkin();
 
     /**
-     * Teleport to the given location
-     *
-     * @param to The location where the player should be teleported to
-     */
-    void teleport( Location to );
-
-    /**
      * Get the players inventory
      *
      * @return players inventory
      */
-    Inventory getInventory();
+    PlayerInventory getInventory();
 
     /**
      * Opens a inventory for the player
@@ -128,9 +127,9 @@ public interface EntityPlayer extends EntityLiving {
      * Send a message with a given type to the client
      *
      * @param message which should be send
-     * @param type of the message
+     * @param type    of the message
      */
-    void sendMessage( ChatType type, String ... message );
+    void sendMessage( ChatType type, String... message );
 
     /**
      * Check if player has a specific permission
@@ -150,9 +149,10 @@ public interface EntityPlayer extends EntityLiving {
     /**
      * Transfer player to another server
      *
-     * @param inetSocketAddress
+     * @param host IP or Hostname for the user to connect to
+     * @param port Of the new Server
      */
-    void transfer( InetSocketAddress inetSocketAddress);
+    void transfer( String host, int port );
 
     /**
      * Return the network latency
@@ -160,5 +160,110 @@ public interface EntityPlayer extends EntityLiving {
      * @return
      */
     int getPing();
+
+    /**
+     * Display new form and get a listener for the response
+     *
+     * @param form which should be shown
+     * @param <T>  type of return value from the response
+     * @return form listener to attaching for response
+     */
+    <T> FormListener<T> showForm( Form form );
+
+    /**
+     * Get the players permission manager
+     *
+     * @return permission manager
+     */
+    PermissionManager getPermissionManager();
+
+    /**
+     * Get the name which is listed in the tablist (displayName)
+     *
+     * @return display name
+     */
+    String getDisplayName();
+
+    /**
+     * Set a new display name
+     *
+     * @param displayName which should be used
+     */
+    void setDisplayName( String displayName );
+
+    /**
+     * Is this player still online?
+     *
+     * @return true if online, false if not
+     */
+    boolean isOnline();
+
+    /**
+     * Locale of this player
+     *
+     * @return locale of the players client
+     */
+    Locale getLocale();
+
+    /**
+     * Disconnect a player for the given reason
+     *
+     * @param reason for disconnect
+     */
+    void disconnect( String reason );
+
+    /**
+     * Get absolute amount of xp in this entity
+     *
+     * @return absolute amount of xp
+     */
+    int getXP();
+
+    /**
+     * Percentage of xp for next level
+     *
+     * @return percentage of next level
+     */
+    float getXPPercentage();
+
+    /**
+     * Set the amount of xp this entity has
+     *
+     * @param xp of this entity
+     */
+    void setXP( int xp );
+
+    /**
+     * Get exp level of this entity
+     *
+     * @return exp level
+     */
+    int getLevel();
+
+    /**
+     * Set the level of the exp bar
+     *
+     * @param level of this entity
+     */
+    void setLevel( int level );
+
+    /**
+     * Play a sound for this player
+     *
+     * @param location of the sound in the client
+     * @param sound    The sound which should be played
+     * @param pitch    The pitch at which the sound should be played
+     * @param data     additional data for the sound
+     */
+    void playSound( Vector location, Sound sound, byte pitch, SoundData data );
+
+    /**
+     * Play a sound for this player
+     *
+     * @param location of the sound in the client
+     * @param sound    The sound which should be played
+     * @param pitch    The pitch at which the sound should be played
+     */
+    void playSound( Vector location, Sound sound, byte pitch );
 
 }

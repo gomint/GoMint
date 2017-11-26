@@ -1,5 +1,7 @@
 package io.gomint.server.world.block;
 
+import io.gomint.world.block.BlockType;
+
 import io.gomint.server.registry.RegisterInfo;
 
 /**
@@ -7,7 +9,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( id = 89 )
-public class Glowstone extends Block {
+public class Glowstone extends Block implements io.gomint.world.block.BlockGlowstone {
 
     @Override
     public int getBlockId() {
@@ -22,6 +24,16 @@ public class Glowstone extends Block {
     @Override
     public boolean isTransparent() {
         return true;
+    }
+
+    @Override
+    public float getBlastResistance() {
+        return 1.5f;
+    }
+
+    @Override
+    public BlockType getType() {
+        return BlockType.GLOWSTONE;
     }
 
 }

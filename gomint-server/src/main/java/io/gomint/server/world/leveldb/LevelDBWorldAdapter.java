@@ -269,6 +269,10 @@ public class LevelDBWorldAdapter extends WorldAdapter {
             }
 
             this.chunkCache.putChunk( loadingChunk );
+
+            // Run post processors
+            loadingChunk.runPostProcessors();
+
             return loadingChunk;
         }
 

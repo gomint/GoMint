@@ -1,5 +1,7 @@
 package io.gomint.server.inventory.item;
 
+import io.gomint.inventory.item.ItemType;
+
 import io.gomint.server.registry.RegisterInfo;
 import io.gomint.taglib.NBTTagCompound;
 
@@ -24,4 +26,9 @@ import io.gomint.taglib.NBTTagCompound;
     public int getBlockId() {
         return 196;
     }
+    @Override
+    public ItemType getType() {
+        return ItemType.ACACIA_DOOR;
+    }
+
 }

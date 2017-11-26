@@ -7,7 +7,15 @@
 
 package io.gomint.server;
 
-import java.io.*;
+import joptsimple.OptionParser;
+import joptsimple.OptionSet;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -26,6 +34,10 @@ import java.nio.file.StandardCopyOption;
  * @version 1.0
  */
 public class Bootstrap {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger( Bootstrap.class );
+
+
     /**
      * Main entry point. May be used for custom dependency injection, dynamic
      * library class loaders and other experiments which need to be done before
@@ -40,6 +52,14 @@ public class Bootstrap {
             System.exit( -1 );
         }
 
+        // Parse options first
+        OptionParser parser = new OptionParser();
+        parser.accepts( "lp" ).withRequiredArg().ofType( Integer.class );
+        parser.accepts( "lh" ).withRequiredArg();
+        parser.accepts( "slc" );
+
+        OptionSet options = parser.parse( args );
+
         // Check if we need to create the libs Folder
         File libsFolder = new File( "libs/" );
         if ( !libsFolder.exists() && !libsFolder.mkdirs() ) {
@@ -48,7 +68,10 @@ public class Bootstrap {
         }
 
         // Check the libs (versions and artifacts)
-        checkLibs( libsFolder );
+        if ( !options.has( "slc" ) ) // -slc (skip lib checking)
+        {
+            checkLibs( libsFolder );
+        }
 
         File[] files = libsFolder.listFiles();
         if ( files == null ) {
@@ -71,10 +94,10 @@ public class Bootstrap {
         // Load the Class entrypoint
         try {
             Class<?> coreClass = ClassLoader.getSystemClassLoader().loadClass( "io.gomint.server.GoMintServer" );
-            Constructor constructor = coreClass.getDeclaredConstructor( String[].class );
-            constructor.newInstance( new Object[]{ args } );
-        } catch ( ClassNotFoundException | NoSuchMethodException | IllegalAccessException | InvocationTargetException | InstantiationException e ) {
-            e.printStackTrace();
+            Constructor constructor = coreClass.getDeclaredConstructor( OptionSet.class );
+            constructor.newInstance( new Object[]{ options } );
+        } catch ( Throwable t ) {
+            LOGGER.error( "GoMint crashed: ", t );
         }
     }
 

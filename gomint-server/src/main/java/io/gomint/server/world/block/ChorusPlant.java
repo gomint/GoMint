@@ -1,5 +1,8 @@
 package io.gomint.server.world.block;
 
+import io.gomint.world.block.BlockType;
+
+import io.gomint.inventory.item.*;
 import io.gomint.server.registry.RegisterInfo;
 
 /**
@@ -7,7 +10,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( id = 240 )
-public class ChorusPlant extends Block {
+public class ChorusPlant extends Block implements io.gomint.world.block.BlockChorusPlant {
 
     @Override
     public int getBlockId() {
@@ -22,6 +25,31 @@ public class ChorusPlant extends Block {
     @Override
     public boolean isTransparent() {
         return true;
+    }
+
+    @Override
+    public float getBlastResistance() {
+        return 2.0f;
+    }
+
+    @Override
+    public Class<? extends ItemStack>[] getToolInterfaces() {
+        return new Class[]{
+            ItemWoodenAxe.class,
+            ItemStoneAxe.class,
+            ItemGoldenAxe.class,
+            ItemIronAxe.class,
+            ItemDiamondAxe.class
+        };
+    }
+
+    @Override
+    public boolean canBeBrokenWithHand() {
+        return true;
+    }
+    @Override
+    public BlockType getType() {
+        return BlockType.CHORUS_PLANT;
     }
 
 }
