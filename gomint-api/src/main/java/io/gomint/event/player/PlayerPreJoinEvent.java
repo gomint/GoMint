@@ -1,0 +1,50 @@
+/*
+ * Copyright (c) 2017, GoMint, BlackyPaw and geNAZt
+ *
+ * This code is licensed under the BSD license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+package io.gomint.event.player;
+
+import io.gomint.entity.EntityPlayer;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
+
+/**
+ * @author geNAZt
+ * @version 1.0
+ *
+ * This event gets called when the login has been completed and the server decides to start loading world data
+ * into the client. This event can be used when you need to be sure the play status has been reched (like redirecting
+ * a player to another server without ever touching this one)
+ */
+@EqualsAndHashCode( callSuper = false )
+@ToString( callSuper = true )
+public class PlayerPreJoinEvent extends CancellablePlayerEvent {
+
+    private String kickReason;
+
+    public PlayerPreJoinEvent( EntityPlayer player ) {
+        super( player );
+    }
+
+    /**
+     * Set the reason which will be used to disconnect the player when this event has been cancelled
+     *
+     * @param kickReason which is used to kick the player
+     */
+    public void setKickReason( String kickReason ) {
+        this.kickReason = kickReason;
+    }
+
+    /**
+     * Get the reason which the player will get then this event has been cancelled
+     *
+     * @return reason for kick
+     */
+    public String getKickReason() {
+        return kickReason;
+    }
+
+}

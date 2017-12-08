@@ -10,7 +10,9 @@ package io.gomint.server.crafting;
 import io.gomint.inventory.item.ItemAir;
 import io.gomint.inventory.item.ItemStack;
 import io.gomint.jraknet.PacketBuffer;
+import io.gomint.server.inventory.CraftingInputInventory;
 import io.gomint.server.network.packet.Packet;
+import javafx.scene.paint.Material;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -116,71 +118,5 @@ public class ShapedRecipe extends CraftingRecipe {
         // Write recipe UUID
         buffer.writeUUID( this.getUUID() );
     }
-
-    /*
-    @Override
-	public boolean applies( CraftingContainer container, boolean consume ) {
-		// Early out:
-		if ( this.width > container.getWidth() || this.height > container.getHeight() ) {
-			return false;
-		}
-
-		for ( int j = 0; j <= ( container.getHeight() - this.height ); ++j ) {
-			for ( int i = 0; i <= ( container.getWidth() - this.width ); ++i ) {
-				// i, j <=> Offset into container
-
-				boolean applies = true;
-				for ( int l = 0; l < this.height; ++l ) {
-					for ( int k = 0; k < this.width; ++k ) {
-						// k, l <=> Offset into recipe
-
-						ItemStack required = this.arrangement[l * this.width + k];
-						ItemStack found    = container.getCraftingSlot( i + k, j + l );
-
-						if ( found != null ) {
-							if ( required.getMaterial() != found.getMaterial() ||
-							     required.getAmount() > found.getAmount() ||
-							     ( required.getData() != (short) 0xFFFF && required.getData() != found.getData() ) ) {
-								applies = false;
-								break;
-							}
-						} else if ( required.getMaterial() != Material.AIR ) {
-							applies = false;
-							break;
-						}
-					}
-
-					if ( !applies ) {
-						break;
-					}
-				}
-
-				if ( applies ) {
-					for ( int l = 0; l < this.height; ++l ) {
-						for ( int k = 0; k < this.width; ++k ) {
-							// k, l <=> Offset into recipe
-							ItemStack required = this.arrangement[l * this.width + k];
-							ItemStack found    = container.getCraftingSlot( i + k, j + l );
-
-							// Consume item:
-							if ( found != null ) {
-								found.setAmount( found.getAmount() - required.getAmount() );
-
-								if ( found.getAmount() <= 0 ) {
-									// Clear out slot:
-									container.setCraftingSlot( i + k, j + l, null );
-								}
-							}
-						}
-					}
-
-					return true;
-				}
-			}
-		}
-
-		return false;
-	}
-	*/
 
 }

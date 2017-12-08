@@ -23,15 +23,15 @@ public abstract class EventHandlerMap {
         return new KolobokeEventHandlerMap( expectedSize );
     }
 
-    public final synchronized EventHandlerList getEventHandler( int key ) {
+    public final EventHandlerList getEventHandler( int key ) {
         return subGet( key );
     }
 
-    public final synchronized void storeEventHandler( int key, EventHandlerList value ) {
+    public final void storeEventHandler( int key, EventHandlerList value ) {
         subJustPut( key, value );
     }
 
-    public final synchronized boolean removeEventHandler( long key ) {
+    public final boolean removeEventHandler( long key ) {
         return subRemove( key );
     }
 

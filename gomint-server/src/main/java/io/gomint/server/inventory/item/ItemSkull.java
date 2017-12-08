@@ -1,5 +1,7 @@
 package io.gomint.server.inventory.item;
 
+import io.gomint.inventory.item.ItemType;
+
 import io.gomint.server.registry.RegisterInfo;
 import io.gomint.taglib.NBTTagCompound;
 
@@ -24,6 +26,11 @@ public class ItemSkull extends ItemStack implements io.gomint.inventory.item.Ite
     @Override
     public int getBlockId() {
         return 144;
+    }
+
+    @Override
+    public ItemType getType() {
+        return ItemType.SKULL;
     }
 
 }

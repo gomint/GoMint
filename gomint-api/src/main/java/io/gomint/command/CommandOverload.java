@@ -1,8 +1,9 @@
 package io.gomint.command;
 
+import io.gomint.command.validator.CommandValidator;
 import lombok.Getter;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -24,7 +25,12 @@ public class CommandOverload {
      */
     public CommandOverload param( String name, ParamValidator validator ) {
         if ( this.parameters == null ) {
-            this.parameters = new HashMap<>();
+            this.parameters = new LinkedHashMap<>();
+        }
+
+        // Special case CommandValidator
+        if ( validator instanceof CommandValidator ) {
+            validator.values().add( name );
         }
 
         this.parameters.put( name, validator );
@@ -42,7 +48,12 @@ public class CommandOverload {
      */
     public CommandOverload param( String name, ParamValidator validator, boolean optional ) {
         if ( this.parameters == null ) {
-            this.parameters = new HashMap<>();
+            this.parameters = new LinkedHashMap<>();
+        }
+
+        // Special case CommandValidator
+        if ( validator instanceof CommandValidator ) {
+            validator.values().add( name );
         }
 
         validator.setOptional( optional );

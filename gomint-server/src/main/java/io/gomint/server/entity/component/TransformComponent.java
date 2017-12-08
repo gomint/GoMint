@@ -5,6 +5,8 @@ import io.gomint.math.Vector;
 import io.gomint.server.entity.Transformable;
 import io.gomint.server.world.WorldAdapter;
 import lombok.Setter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A component that provides a solid implementation of Transformable and may be added to entities.
@@ -13,6 +15,8 @@ import lombok.Setter;
  * @version 1.0
  */
 public class TransformComponent implements EntityComponent, Transformable {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger( TransformComponent.class );
 
     private float posX;
     private float posY;

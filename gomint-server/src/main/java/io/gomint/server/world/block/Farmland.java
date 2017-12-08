@@ -1,5 +1,7 @@
 package io.gomint.server.world.block;
 
+import io.gomint.world.block.BlockType;
+
 import io.gomint.math.BlockPosition;
 import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.util.StatefulBlockSearcher;
@@ -15,7 +17,7 @@ import java.util.function.Predicate;
  * @version 1.0
  */
 @RegisterInfo( id = 60 )
-public class Farmland extends Block {
+public class Farmland extends Block implements io.gomint.world.block.BlockFarmland {
 
     private static final Logger LOGGER = LoggerFactory.getLogger( Farmland.class );
 
@@ -37,7 +39,7 @@ public class Farmland extends Block {
     @Override
     public long update( UpdateReason updateReason, long currentTimeMS, float dT ) {
         // Check water state when random ticked
-        if ( updateReason == UpdateReason.RANDOM ) {
+        if ( updateReason == UpdateReason.RANDOM || updateReason == UpdateReason.EXPLOSION ) {
             // Do we have a stored block searcher?
             StatefulBlockSearcher blockSearcher = getFromTemporaryStorage( "blockSearcher" );
             if ( blockSearcher != null ) {
@@ -87,6 +89,16 @@ public class Farmland extends Block {
         }
 
         return false;
+    }
+
+    @Override
+    public float getBlastResistance() {
+        return 3.0f;
+    }
+
+    @Override
+    public BlockType getType() {
+        return BlockType.FARMLAND;
     }
 
 }

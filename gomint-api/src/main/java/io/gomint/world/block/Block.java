@@ -7,8 +7,11 @@
 
 package io.gomint.world.block;
 
+import io.gomint.inventory.item.ItemStack;
 import io.gomint.math.AxisAlignedBB;
 import io.gomint.math.Location;
+
+import java.util.List;
 
 /**
  * @author geNAZt
@@ -18,11 +21,11 @@ import io.gomint.math.Location;
 public interface Block {
 
     /**
-     * Gets the ID of the block.
+     * Get the type of this block. This is only recommended when using switch tables.
      *
-     * @return The ID of the block
+     * @return type of this block
      */
-    int getBlockId();
+    BlockType getType();
 
     /**
      * Gets the block's data value (0 - 15)
@@ -71,10 +74,9 @@ public interface Block {
      *
      * @param <T>       block generic type
      * @param blockType the new material of this block
-     * @param data      optional data for the block
      * @return the new placed block
      */
-    <T extends Block> T setType( Class<T> blockType, byte data );
+    <T extends Block> T setType( Class<T> blockType );
 
     /**
      * Can a bounding box pass through this block?
@@ -97,6 +99,20 @@ public interface Block {
      */
     float getFrictionFactor();
 
+    /**
+     * Get the block attached to the given side
+     *
+     * @param face for which we want the block
+     * @return attached block
+     */
     Block getSide( int face );
+
+    /**
+     * Get a list of drops which will be dropped when using the given tool
+     *
+     * @param toolItem which will be used to generate the drops
+     * @return list of item stacks which can be used as drops
+     */
+    List<ItemStack> getDrops( ItemStack toolItem );
 
 }

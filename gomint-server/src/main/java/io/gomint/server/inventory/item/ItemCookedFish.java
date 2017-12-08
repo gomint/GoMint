@@ -1,5 +1,7 @@
 package io.gomint.server.inventory.item;
 
+import io.gomint.inventory.item.ItemType;
+
 import io.gomint.server.registry.RegisterInfo;
 import io.gomint.taglib.NBTTagCompound;
 
@@ -28,6 +30,11 @@ public class ItemCookedFish extends ItemFood implements io.gomint.inventory.item
     @Override
     public float getHunger() {
         return 5;
+    }
+
+    @Override
+    public ItemType getType() {
+        return ItemType.COOKED_FISH;
     }
 
 }

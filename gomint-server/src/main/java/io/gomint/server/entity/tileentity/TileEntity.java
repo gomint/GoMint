@@ -24,8 +24,8 @@ import lombok.Getter;
 public abstract class TileEntity {
 
     // CHECKSTYLE:OFF
-    @Getter
-    protected Location location;
+    @Getter protected Location location;
+    private byte moveable;
     // CHECKSTYLE:ON
 
     /**
@@ -41,6 +41,8 @@ public abstract class TileEntity {
             tagCompound.getInteger( "y", -1 ),
             tagCompound.getInteger( "z", 0 )
         );
+
+        this.moveable = tagCompound.getByte( "isMoveable", (byte) 1 );
     }
 
     io.gomint.server.inventory.item.ItemStack getItemStack( NBTTagCompound compound ) {
@@ -98,6 +100,7 @@ public abstract class TileEntity {
         compound.addValue( "x", (int) this.location.getX() );
         compound.addValue( "y", (int) this.location.getY() );
         compound.addValue( "z", (int) this.location.getZ() );
+        compound.addValue( "isMoveable", this.moveable );
     }
 
 }

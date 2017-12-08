@@ -1,5 +1,7 @@
 package io.gomint.server.world.block;
 
+import io.gomint.world.block.BlockType;
+
 import io.gomint.server.registry.RegisterInfo;
 
 /**
@@ -12,6 +14,11 @@ public class WallBanner extends Banner {
     @Override
     public int getBlockId() {
         return 177;
+    }
+
+    @Override
+    public BlockType getType() {
+        return BlockType.WALL_BANNER;
     }
 
 }

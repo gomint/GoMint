@@ -1,0 +1,30 @@
+package io.gomint.gui;
+
+/**
+ * @author geNAZt
+ * @version 1.0
+ */
+public interface Form {
+
+    /**
+     * Get the title of this form
+     *
+     * @return title of this form
+     */
+    String getTitle();
+
+    /**
+     * Get the current configured icon
+     *
+     * @return path of the icon or null when none has been set
+     */
+    String getIcon();
+
+    /**
+     * Set new icon for this
+     *
+     * @param icon which should be used ( can be http / https )
+     */
+    void setIcon( String icon );
+
+}

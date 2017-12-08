@@ -8,6 +8,7 @@
 package io.gomint.server.world;
 
 import io.gomint.server.async.Delegate;
+import lombok.Setter;
 
 /**
  * @author BlackyPaw
@@ -17,8 +18,8 @@ public class AsyncChunkLoadTask extends AsyncChunkTask {
 
     private int x;
     private int z;
-    private boolean generate;
-    private Delegate<ChunkAdapter> callback;
+    @Setter private boolean generate;
+    @Setter private Delegate<ChunkAdapter> callback;
 
     /**
      * Construct a new loading task

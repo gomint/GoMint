@@ -8,6 +8,7 @@
 package io.gomint.server.world;
 
 import io.gomint.jraknet.PacketBuffer;
+import io.gomint.math.BlockPosition;
 import io.gomint.math.Location;
 import io.gomint.server.async.Delegate2;
 import io.gomint.server.entity.Entity;
@@ -17,10 +18,10 @@ import io.gomint.server.entity.tileentity.TileEntities;
 import io.gomint.server.entity.tileentity.TileEntity;
 import io.gomint.server.network.packet.Packet;
 import io.gomint.server.network.packet.PacketWorldChunk;
-import io.gomint.server.util.Values;
 import io.gomint.server.util.collection.EntityIDMap;
-import io.gomint.server.util.random.FastRandom;
+import io.gomint.server.world.postprocessor.PostProcessor;
 import io.gomint.server.world.storage.TemporaryStorage;
+import io.gomint.taglib.NBTReader;
 import io.gomint.taglib.NBTTagCompound;
 import io.gomint.taglib.NBTWriter;
 import io.gomint.world.Biome;
@@ -32,6 +33,7 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.lang.ref.SoftReference;
@@ -47,11 +49,9 @@ import java.util.concurrent.TimeUnit;
 @EqualsAndHashCode( callSuper = false, of = { "x", "z" } )
 public class ChunkAdapter implements Chunk {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger( ChunkAdapter.class );
-
     // CHECKSTYLE:OFF
     // World
-    protected final WorldAdapter world;
+    @Getter protected final WorldAdapter world;
 
     // Networking
     boolean dirty;
@@ -79,8 +79,8 @@ public class ChunkAdapter implements Chunk {
     // Entities
     protected EntityIDMap entities = EntityIDMap.withExpectedSize( 20 );
 
-    // Ticking
-    private float lastUpdateDT = 0;
+    // Post loading processing
+    protected Queue<PostProcessor> postProcessors = new LinkedList<>();
 
     // CHECKSTYLE:ON
 
@@ -91,64 +91,61 @@ public class ChunkAdapter implements Chunk {
      * @param dT            The delta from the full second which has been calculated in the last tick
      */
     public void update( long currentTimeMS, float dT ) {
-        this.lastUpdateDT += dT;
-        if ( this.lastUpdateDT >= Values.CLIENT_TICK_RATE ) {
-            for ( ChunkSlice chunkSlice : this.chunkSlices ) {
-                // When we hit a nulled slice there is only air left
-                if ( chunkSlice == null ) {
-                    break;
-                }
-
-                // Skip for only air chunk slices
-                if ( chunkSlice.isAllAir() ) {
-                    continue;
-                }
-
-                this.world.randomUpdateNumber = ( ( this.world.randomUpdateNumber << 2 ) - this.world.randomUpdateNumber ) + 1013904223;
-                int blockHash = this.world.randomUpdateNumber >> 2;
-                for ( int i = 0; i < 3; ++i, blockHash >>= 10 ) {
-                    short index = (short) ( blockHash & 0xfff );
-                    byte blockId = chunkSlice.getBlockInternal( index );
-                    switch ( blockId ) {
-                        case (byte) 244:    // Beetroot
-                        case 2:             // Grass
-                        case 60:            // Farmland
-                        case 110:           // Mycelium
-                        case 6:             // Sapling
-                        case 16:            // Leaves
-                        case (byte) 161:    // Acacia leaves
-                        case 78:            // Top snow
-                        case 79:            // Ice
-                        case 11:            // Stationary lava
-                        case 10:            // FlowingLava
-                        case 9:             // Stationary water
-                        case 8:             // FlowingWater
-                            int blockX = ( blockHash >> 8 ) & 0x0f;
-                            int blockY = ( blockHash ) & 0x0f;
-                            int blockZ = ( blockHash >> 4 ) & 0x0f;
-
-                            Block block = chunkSlice.getBlockInstance( blockX, blockY, blockZ );
-                            if ( block instanceof io.gomint.server.world.block.Block ) {
-                                long next = ( (io.gomint.server.world.block.Block) block )
-                                    .update( UpdateReason.RANDOM, currentTimeMS, dT );
-
-                                if ( next > currentTimeMS ) {
-                                    Location location = block.getLocation();
-                                    this.world.tickQueue.add( next,
-                                        CoordinateUtils.toLong( (int) location.getX(),
-                                            (int) location.getY(),
-                                            (int) location.getZ() )
-                                    );
-                                }
-                            }
-
-                        default:
-                            break;
-                    }
-                }
+        for ( ChunkSlice chunkSlice : this.chunkSlices ) {
+            // When we hit a nulled slice there is only air left
+            if ( chunkSlice == null ) {
+                break;
             }
 
-            this.lastUpdateDT = 0;
+            // Skip for only air chunk slices
+            if ( chunkSlice.isAllAir() ) {
+                continue;
+            }
+
+            this.world.randomUpdateNumber = ( ( this.world.randomUpdateNumber << 2 ) - this.world.randomUpdateNumber ) + 1013904223;
+            int blockHash = this.world.randomUpdateNumber >> 2;
+            for ( int i = 0; i < 3; ++i, blockHash >>= 10 ) {
+                short index = (short) ( blockHash & 0xfff );
+                byte blockId = chunkSlice.getBlockInternal( index );
+                switch ( blockId ) {
+                    case (byte) 244:    // Beetroot
+                    case 2:             // Grass
+                    case 60:            // Farmland
+                    case 110:           // Mycelium
+                    case 6:             // Sapling
+                    case 16:            // Leaves
+                    case (byte) 161:    // Acacia leaves
+                    case 78:            // Top snow
+                    case 79:            // Ice
+                    case 11:            // Stationary lava
+                    case 10:            // FlowingLava
+                    case 9:             // Stationary water
+                    case 8:             // FlowingWater
+                        int blockX = ( blockHash >> 8 ) & 0x0f;
+                        int blockY = ( blockHash ) & 0x0f;
+                        int blockZ = ( blockHash >> 4 ) & 0x0f;
+
+                        Block block = chunkSlice.getBlockInstance( blockX, blockY, blockZ );
+                        if ( block instanceof io.gomint.server.world.block.Block ) {
+                            long next = ( (io.gomint.server.world.block.Block) block )
+                                .update( UpdateReason.RANDOM, currentTimeMS, dT );
+
+                            if ( next > currentTimeMS ) {
+                                Location location = block.getLocation();
+                                this.world.tickQueue.add( next,
+                                    CoordinateUtils.toLong( (int) location.getX(),
+                                        (int) location.getY(),
+                                        (int) location.getZ() )
+                                );
+                            }
+                        }
+
+                        break;
+
+                    default:
+                        break;
+                }
+            }
         }
     }
 
@@ -189,7 +186,6 @@ public class ChunkAdapter implements Chunk {
      * @param entity The entity which should be added
      */
     void addEntity( Entity entity ) {
-        LOGGER.debug( "Adding entity " + entity + " to chunk " + x + ", " + z );
         this.entities.justPut( entity.getEntityId(), entity );
     }
 
@@ -199,7 +195,6 @@ public class ChunkAdapter implements Chunk {
      * @param entity The entity which should be removed
      */
     void removeEntity( Entity entity ) {
-        LOGGER.debug( "Removing entity " + entity + " from chunk " + x + ", " + z );
         this.entities.justRemove( entity.getEntityId() );
     }
 
@@ -263,8 +258,8 @@ public class ChunkAdapter implements Chunk {
      * @return true when it can be gced, false when not
      */
     boolean canBeGCed( long currentTimeMillis ) {
-        int secondsAfterLeft = this.world.getServer().getServerConfig().getSecondsUntilGCAfterLastPlayerLeft();
-        int waitAfterLoad = this.world.getServer().getServerConfig().getWaitAfterLoadForGCSeconds();
+        int secondsAfterLeft = this.world.getConfig().getSecondsUntilGCAfterLastPlayerLeft();
+        int waitAfterLoad = this.world.getConfig().getWaitAfterLoadForGCSeconds();
 
         return currentTimeMillis - this.loadedTime > TimeUnit.SECONDS.toMillis( waitAfterLoad ) &&
             this.players.isEmpty() &&
@@ -310,10 +305,6 @@ public class ChunkAdapter implements Chunk {
 
         TileEntity tileEntity1 = TileEntities.construct( tileEntity, this.world );
         if ( tileEntity1 != null ) {
-            if ( tileEntity1 instanceof CommandBlockTileEntity ) {
-                LOGGER.debug( "Custom name: " + ( (CommandBlockTileEntity) tileEntity1 ).getCustomName() );
-            }
-
             ChunkSlice slice = ensureSlice( y >> 4 );
             slice.addTileEntity( x, y - slice.getSectionY() * 16, z, tileEntity1 );
         }
@@ -489,12 +480,13 @@ public class ChunkAdapter implements Chunk {
         Collection<TileEntity> tileEntities = this.getTileEntities();
         if ( tileEntities.size() > 0 ) {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            NBTWriter nbtWriter = new NBTWriter( baos, ByteOrder.LITTLE_ENDIAN );
+            nbtWriter.setUseVarint( true );
+
             for ( TileEntity tileEntity : tileEntities ) {
                 NBTTagCompound compound = new NBTTagCompound( "" );
                 tileEntity.toCompound( compound );
 
-                NBTWriter nbtWriter = new NBTWriter( baos, ByteOrder.LITTLE_ENDIAN );
-                nbtWriter.setUseVarint( true );
                 try {
                     nbtWriter.write( compound );
                 } catch ( IOException e ) {
@@ -545,12 +537,25 @@ public class ChunkAdapter implements Chunk {
     }
 
     public PacketWorldChunk getCachedPacket() {
-        return cachedPacket.get();
+        if ( this.dirty ) {
+            this.cachedPacket.clear();
+            this.cachedPacket = new SoftReference<>( createPackagedData() );
+            this.dirty = false;
+        }
+
+        return this.cachedPacket.get();
     }
 
     public void setTileEntity( int x, int y, int z, TileEntity tileEntity ) {
         ChunkSlice slice = ensureSlice( y >> 4 );
         slice.addTileEntity( x, y - 16 * ( y >> 4 ), z, tileEntity );
+        this.dirty = true;
+    }
+
+    public void runPostProcessors() {
+        while ( !this.postProcessors.isEmpty() ) {
+            this.postProcessors.poll().process();
+        }
     }
 
 }

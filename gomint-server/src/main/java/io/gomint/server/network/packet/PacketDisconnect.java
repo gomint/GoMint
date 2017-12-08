@@ -10,6 +10,7 @@ import lombok.Data;
  */
 @Data
 public class PacketDisconnect extends Packet {
+
     private boolean hideDisconnectionScreen = false;
     private String message;
 
@@ -27,4 +28,5 @@ public class PacketDisconnect extends Packet {
     public void deserialize( PacketBuffer buffer ) {
 
     }
+
 }

@@ -110,7 +110,7 @@ public class PacketCraftingRecipes extends Packet {
                     this.recipes.add( new ShapedRecipe( width, height, input, output, uuid ) );
                     break;
 
-                case 2:
+                case 3:
                     // Smelting with metadata
 
                     int id = buffer.readSignedVarInt();
@@ -120,7 +120,7 @@ public class PacketCraftingRecipes extends Packet {
                     this.recipes.add( new SmeltingRecipe( Items.create( id, data, (byte) -1, null ), result, null ) );
                     break;
 
-                case 3:
+                case 2:
                     // Smelting without metadata
 
                     id = buffer.readSignedVarInt();

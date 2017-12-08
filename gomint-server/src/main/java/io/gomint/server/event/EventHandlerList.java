@@ -11,7 +11,9 @@ import com.google.common.base.Preconditions;
 import io.gomint.event.CancellableEvent;
 import io.gomint.event.Event;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * This list sorts and triggers all EventHandlerMethods which have been registered for a event.
@@ -24,7 +26,8 @@ public class EventHandlerList {
     // If the handler list is dirty we need to sort it by the event handler priorities:
     private boolean dirty;
     private Map<String, EventHandlerMethod> handlers = new HashMap<>();
-    private List<EventHandlerMethod> sortedHandlerList = new ArrayList<>();
+    private EventHandlerMethod[] sortedHandlerList = new EventHandlerMethod[0];
+    private int insertIndex = 0;
 
     /**
      * Construct a new EventHandlerList
@@ -43,7 +46,15 @@ public class EventHandlerList {
         Preconditions.checkArgument( !this.handlers.containsKey( key ), "EventHandler can't be registered twice" );
 
         this.handlers.put( key, handler );
-        this.sortedHandlerList.add( handler );
+
+        // Array copy to bigger array
+        EventHandlerMethod[] newArray = new EventHandlerMethod[this.insertIndex + 1];
+        if ( this.sortedHandlerList.length > 0 ) {
+            System.arraycopy( this.sortedHandlerList, 0, newArray, 0, this.sortedHandlerList.length );
+        }
+
+        newArray[this.insertIndex++] = handler;
+        this.sortedHandlerList = newArray;
         this.dirty = true;
     }
 
@@ -55,7 +66,35 @@ public class EventHandlerList {
     void removeHandler( String key ) {
         EventHandlerMethod method = this.handlers.remove( key );
         if ( method != null ) {
-            this.sortedHandlerList.remove( method );
+            // Search for the handler method
+            int removed = 0;
+            for ( int i = 0; i < this.sortedHandlerList.length; i++ ) {
+                EventHandlerMethod method1 = this.sortedHandlerList[i];
+                if ( method.equals( method1 ) ) {
+                    this.sortedHandlerList[i] = null;
+                    removed++;
+                }
+            }
+
+            // Merge array to remove null
+            if ( removed > 0 ) {
+                EventHandlerMethod[] newArr = new EventHandlerMethod[this.sortedHandlerList.length - removed];
+                int index = 0;
+                for ( EventHandlerMethod eventHandlerMethod : this.sortedHandlerList ) {
+                    if ( eventHandlerMethod != null ) {
+                        newArr[index++] = eventHandlerMethod;
+                    }
+                }
+
+                this.sortedHandlerList = newArr;
+                if ( this.sortedHandlerList.length > 0 ) {
+                    this.insertIndex = this.sortedHandlerList.length - 1;
+                } else {
+                    this.insertIndex = 0;
+                }
+
+                this.dirty = true;
+            }
         }
     }
 
@@ -67,7 +106,8 @@ public class EventHandlerList {
      */
     void triggerEvent( Event event ) {
         if ( this.dirty ) {
-            Collections.sort( this.sortedHandlerList );
+            Arrays.sort( this.sortedHandlerList );
+            this.dirty = false;
         }
 
         if ( event instanceof CancellableEvent ) {

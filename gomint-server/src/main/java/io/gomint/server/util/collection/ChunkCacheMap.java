@@ -1,6 +1,5 @@
 package io.gomint.server.util.collection;
 
-import com.koloboke.compile.ConcurrentModificationUnchecked;
 import com.koloboke.compile.KolobokeMap;
 import com.koloboke.compile.MethodForm;
 import io.gomint.server.world.ChunkAdapter;
@@ -10,7 +9,6 @@ import io.gomint.server.world.ChunkAdapter;
  * @version 1.0
  */
 @KolobokeMap
-@ConcurrentModificationUnchecked
 public abstract class ChunkCacheMap {
 
     /**

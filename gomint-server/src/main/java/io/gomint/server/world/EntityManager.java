@@ -79,7 +79,7 @@ public class EntityManager {
                             movedEntities = new HashSet<>();
                         }
 
-                        if ( !( entity instanceof io.gomint.server.entity.EntityPlayer ) && !current.equals( entity.getChunk() ) ) {
+                        if ( !( entity instanceof io.gomint.server.entity.EntityPlayer ) && current != null && !current.equals( entity.getChunk() ) ) {
                             current.removeEntity( entity );
                         }
 
@@ -177,9 +177,8 @@ public class EntityManager {
                         }
                     }
 
-                    Chunk playerChunk = entityPlayer.getChunk();
-                    if ( Math.abs( playerChunk.getX() - chunk.getX() ) <= entityPlayer.getViewDistance() &&
-                        Math.abs( playerChunk.getZ() - chunk.getZ() ) <= entityPlayer.getViewDistance() ) {
+                    entityPlayer.getEntityVisibilityManager().updateEntity( movedEntity, chunk );
+                    if ( entityPlayer.getEntityVisibilityManager().isVisible( movedEntity ) ) {
                         entityPlayer.getConnection().addToSendQueue( packetEntityMovement );
                     }
                 }
@@ -279,16 +278,6 @@ public class EntityManager {
         cEntity.setHeadYaw( yaw );
         cEntity.setPitch( pitch );
 
-        // Update bounding box
-        entity.getBoundingBox().setBounds(
-            cEntity.getPositionX() - ( cEntity.getWidth() / 2 ),
-            cEntity.getPositionY(),
-            cEntity.getPositionZ() - ( cEntity.getWidth() / 2 ),
-            cEntity.getPositionX() + ( cEntity.getWidth() / 2 ),
-            cEntity.getPositionY() + cEntity.getHeight(),
-            cEntity.getPositionZ() + ( cEntity.getWidth() / 2 )
-        );
-
         if ( this.currentlyTicking ) {
             this.spawnedInThisTick.justPut( entity.getEntityId(), entity );
         } else {
@@ -326,7 +315,7 @@ public class EntityManager {
                         playerlist.setEntries( new ArrayList<PacketPlayerlist.Entry>() {{
                             add( new PacketPlayerlist.Entry( entityPlayer.getUUID(),
                                 entityPlayer.getEntityId(),
-                                entityPlayer.getName(),
+                                entityPlayer.getDisplayName(),
                                 entityPlayer.getXboxID(),
                                 entityPlayer.getSkin() ) );
                         }} );
@@ -341,7 +330,7 @@ public class EntityManager {
                     }
 
                     listEntry.add( new PacketPlayerlist.Entry( player.getUUID(), player.getEntityId(),
-                        player.getName(), player.getXboxID(), player.getSkin() ) );
+                        player.getDisplayName(), player.getXboxID(), player.getSkin() ) );
                 }
             }
 
@@ -354,8 +343,6 @@ public class EntityManager {
             }
         }
 
-        Packet spawnPacket = cEntity.createSpawnPacket();
-
         // Check which player we need to inform about this movement
         for ( io.gomint.server.entity.EntityPlayer entityPlayer : this.world.getPlayers0().keySet() ) {
             if ( entity instanceof io.gomint.server.entity.EntityPlayer ) {
@@ -367,7 +354,7 @@ public class EntityManager {
             Chunk playerChunk = entityPlayer.getChunk();
             if ( Math.abs( playerChunk.getX() - chunk.getX() ) <= entityPlayer.getViewDistance() &&
                 Math.abs( playerChunk.getZ() - chunk.getZ() ) <= entityPlayer.getViewDistance() ) {
-                entityPlayer.getConnection().send( spawnPacket );
+                entityPlayer.getEntityVisibilityManager().addEntity( entity );
             }
         }
     }
@@ -391,15 +378,16 @@ public class EntityManager {
             ( (ChunkAdapter) chunk ).removeEntity( cEntity );
         }
 
-        // Broadcast despawn entity packet:
-        PacketDespawnEntity packet = new PacketDespawnEntity();
-        packet.setEntityId( entity.getEntityId() );
-
+        // Broadcast entity despawn
         for ( EntityPlayer player : this.world.getPlayers() ) {
             if ( player instanceof io.gomint.server.entity.EntityPlayer ) {
-                ( (io.gomint.server.entity.EntityPlayer) player ).getConnection().addToSendQueue( packet );
+                ( (io.gomint.server.entity.EntityPlayer) player ).getEntityVisibilityManager().removeEntity( entity );
             }
         }
+
+        // Remove from maps
+        this.entitiesById.justRemove( entity.getEntityId() );
+        this.spawnedInThisTick.justRemove( entity.getEntityId() );
     }
 
 }

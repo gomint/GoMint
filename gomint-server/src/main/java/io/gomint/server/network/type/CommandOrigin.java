@@ -2,6 +2,10 @@ package io.gomint.server.network.type;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
+import java.util.UUID;
 
 /**
  * @author geNAZt
@@ -9,10 +13,12 @@ import lombok.Getter;
  */
 @AllArgsConstructor
 @Getter
+@ToString
 public class CommandOrigin {
 
     private byte unknown1;
+    private UUID uuid;
     private byte unknown2;
-    private byte type; // 0x00 player, 0x03 server
+    @Setter private byte type; // 0x00 player, 0x03 server
 
 }

@@ -41,7 +41,7 @@ public class FlowerPotTileEntity extends TileEntity implements InventoryHolder {
              material = tagCompound.getShort( "item", (short) 0 );
         } else {
             try {
-                material = tagCompound.getShort( "Item", (short) 0 );
+                material = tagCompound.getInteger( "Item", 0 );
             } catch ( ClassCastException e ) {
                 material = MaterialMagicNumbers.valueOfWithId( tagCompound.getString( "Item", "minecraft:air" ) );
             }

@@ -167,14 +167,12 @@ public class AdventureSettings {
             flags2 |= TELEPORT;
         }
 
-        LOGGER.debug( "Adventure settings flags: " + flags + " | " + flags2 );
-
         adventureSettingsPacket.setFlags( flags );
         adventureSettingsPacket.setFlags2( flags2 );
         adventureSettingsPacket.setCommandPermission( this.commandPermission.getId() );
         adventureSettingsPacket.setPlayerPermission( this.playerPermission.getId() );
         adventureSettingsPacket.setEntityId( this.player.getEntityId() );
-        this.player.getConnection().send( adventureSettingsPacket );
+        this.player.getConnection().addToSendQueue( adventureSettingsPacket );
     }
 
 }

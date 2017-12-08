@@ -166,9 +166,7 @@ public enum SoundMagicNumbers {
     IMITATE_WOLF( 157 ),
     IMITATE_ZOMBIE( 158 ),
     IMITATE_ZOMBIE_PIGMAN( 159 ),
-    IMITATE_ZOMBIE_VILLAGER( 160 ),
-    DEFAULT( 161 ),
-    UNDEFINED( 162 );
+    IMITATE_ZOMBIE_VILLAGER( 160 );
 
     @Getter
     private final byte soundId;

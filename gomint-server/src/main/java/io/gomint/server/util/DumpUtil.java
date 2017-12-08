@@ -21,13 +21,10 @@ import java.util.Map;
 public class DumpUtil {
 
     public static void dumpPacketbuffer( PacketBuffer buffer ) {
-        // Header
-
-
         StringBuilder lineBuilder = new StringBuilder();
         StringBuilder stringRepBuilder = new StringBuilder();
         while ( buffer.getRemaining() > 0 ) {
-            for ( int i = 0; i < 32 && buffer.getRemaining() > 0; ++i ) {
+            for ( int i = 0; i < 64 && buffer.getRemaining() > 0; ++i ) {
                 byte b = buffer.readByte();
                 String hex = Integer.toHexString( ( (int) b ) & 0xFF );
                 if ( hex.length() < 2 ) {
@@ -36,7 +33,7 @@ public class DumpUtil {
 
                 stringRepBuilder.append( (char) (b & 0xFF) );
                 lineBuilder.append( hex );
-                if ( i + 1 < 32 && buffer.getRemaining() > 0 ) {
+                if ( i + 1 < 64 && buffer.getRemaining() > 0 ) {
                     lineBuilder.append( " " );
                 }
             }

@@ -38,6 +38,9 @@ public class PacketEntityEvent extends Packet {
 
     @Override
     public void deserialize( PacketBuffer buffer ) {
-
+        this.entityId = buffer.readUnsignedVarLong();
+        this.eventId = buffer.readByte();
+        this.eventData = buffer.readSignedVarInt();
     }
+
 }

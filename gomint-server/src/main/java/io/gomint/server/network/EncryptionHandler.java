@@ -7,7 +7,6 @@
 
 package io.gomint.server.network;
 
-import io.gomint.server.util.DumpUtil;
 import lombok.Getter;
 import org.bouncycastle.crypto.BufferedBlockCipher;
 import org.bouncycastle.crypto.InvalidCipherTextException;

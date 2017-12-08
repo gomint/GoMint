@@ -15,15 +15,6 @@ public class PacketSetChunkRadiusHandler implements PacketHandler<PacketSetChunk
     public void handle( PacketSetChunkRadius packet, long currentTimeMillis, PlayerConnection connection ) {
         // Check if the wanted View distance is under the servers setting
         connection.getEntity().setViewDistance( packet.getChunkRadius() );
-        if ( connection.getState() != PlayerConnectionState.PLAYING ) {
-            // Always confirm
-            PacketConfirmChunkRadius confirmChunkRadius = new PacketConfirmChunkRadius();
-            confirmChunkRadius.setChunkRadius( connection.getEntity().getViewDistance() );
-            connection.send( confirmChunkRadius );
-
-            // Start sending chunks
-            connection.getEntity().getWorld().addPlayer( connection.getEntity() );
-        }
     }
 
 }

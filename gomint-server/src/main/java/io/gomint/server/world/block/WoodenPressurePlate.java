@@ -1,5 +1,7 @@
 package io.gomint.server.world.block;
 
+import io.gomint.world.block.BlockType;
+
 import io.gomint.math.AxisAlignedBB;
 import io.gomint.server.entity.Entity;
 import io.gomint.server.registry.RegisterInfo;
@@ -11,7 +13,7 @@ import java.util.function.Function;
  * @version 1.0
  */
 @RegisterInfo( id = 72 )
-public class WoodenPressurePlate extends Block {
+public class WoodenPressurePlate extends Block implements io.gomint.world.block.BlockWoodenPressurePlate {
 
     @Override
     public int getBlockId() {
@@ -80,4 +82,14 @@ public class WoodenPressurePlate extends Block {
                 this.location.getZ() + 1
         );
     }
+    @Override
+    public float getBlastResistance() {
+        return 2.5f;
+    }
+
+    @Override
+    public BlockType getType() {
+        return BlockType.WOODEN_PRESSURE_PLATE;
+    }
+
 }

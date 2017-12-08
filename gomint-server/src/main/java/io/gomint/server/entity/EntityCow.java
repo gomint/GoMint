@@ -58,4 +58,9 @@ public class EntityCow extends EntityLiving {
         }
     }
 
+    @Override
+    protected void kill() {
+
+    }
+
 }

@@ -1,5 +1,7 @@
 package io.gomint.server.world.block;
 
+import io.gomint.world.block.BlockType;
+
 import io.gomint.server.registry.RegisterInfo;
 
 /**
@@ -7,7 +9,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( id = 77 )
-public class StoneButton extends Block {
+public class StoneButton extends Block implements io.gomint.world.block.BlockStoneButton {
 
     @Override
     public int getBlockId() {
@@ -32,6 +34,16 @@ public class StoneButton extends Block {
     @Override
     public boolean canBeBrokenWithHand() {
         return !true;
+    }
+
+    @Override
+    public float getBlastResistance() {
+        return 2.5f;
+    }
+
+    @Override
+    public BlockType getType() {
+        return BlockType.STONE_BUTTON;
     }
 
 }

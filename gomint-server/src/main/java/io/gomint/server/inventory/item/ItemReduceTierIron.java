@@ -7,7 +7,7 @@ import io.gomint.taglib.NBTTagCompound;
  * @author geNAZt
  * @version 1.0
  */
-public class ItemReduceTierIron extends ItemStack implements ItemReduceBreaktime {
+public abstract class ItemReduceTierIron extends ItemStack implements ItemReduceBreaktime {
 
     // CHECKSTYLE:OFF
     ItemReduceTierIron( int material, short data, int amount ) {
@@ -18,6 +18,11 @@ public class ItemReduceTierIron extends ItemStack implements ItemReduceBreaktime
         super( material, data, amount, nbt );
     }
     // CHECKSTYLE:ON
+
+    @Override
+    public byte getMaximumAmount() {
+        return 1;
+    }
 
     @Override
     public double getDivisor() {

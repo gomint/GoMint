@@ -10,6 +10,7 @@ package io.gomint.server.permission;
 import com.koloboke.collect.map.ObjObjCursor;
 import io.gomint.permission.Group;
 import io.gomint.server.util.collection.PermissionMap;
+import lombok.Getter;
 
 /**
  * @author geNAZt
@@ -17,16 +18,22 @@ import io.gomint.server.util.collection.PermissionMap;
  */
 public class PermissionGroup implements Group {
 
-    private String name;
+    private final PermissionGroupManager manager;
+    private final String name;
+
+    @Getter
+    private boolean dirty;
     private PermissionMap permissions;
 
     /**
      * Create a new permission group. This needs to be configured via
      *
-     * @param name of the group
+     * @param manager which created this group
+     * @param name    of the group
      */
-    PermissionGroup( String name ) {
+    PermissionGroup( PermissionGroupManager manager, String name ) {
         this.name = name;
+        this.manager = manager;
     }
 
     @Override
@@ -41,6 +48,8 @@ public class PermissionGroup implements Group {
         }
 
         this.permissions.justPut( permission.intern(), value );
+        this.dirty = true;
+        this.manager.setDirty( true );
     }
 
     @Override
@@ -48,6 +57,9 @@ public class PermissionGroup implements Group {
         if ( this.permissions != null ) {
             this.permissions.justRemove( permission.intern() );
         }
+
+        this.dirty = true;
+        this.manager.setDirty( true );
     }
 
     @Override
@@ -59,6 +71,19 @@ public class PermissionGroup implements Group {
         return this.permissions.cursor();
     }
 
+    /**
+     * Reset dirty state
+     */
+    void resetDirty() {
+        this.dirty = false;
+    }
+
+    /**
+     * Get a permission setting of this group
+     *
+     * @param permission which we need the setting for
+     * @return true or false
+     */
     public Boolean get( String permission ) {
         return this.permissions.get( permission );
     }

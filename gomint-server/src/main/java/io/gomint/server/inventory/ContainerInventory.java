@@ -2,16 +2,24 @@ package io.gomint.server.inventory;
 
 import io.gomint.math.BlockPosition;
 import io.gomint.server.entity.EntityPlayer;
+import io.gomint.server.entity.tileentity.TileEntity;
 import io.gomint.server.network.packet.PacketContainerOpen;
 import io.gomint.server.network.type.WindowType;
+import io.gomint.server.world.WorldAdapter;
 
 /**
  * @author geNAZt
  * @version 1.0
  */
-public abstract class ContainerInventory extends Inventory {
+public abstract class ContainerInventory extends Inventory implements io.gomint.inventory.ContainerInventory {
 
-    public ContainerInventory( InventoryHolder owner, int size ) {
+    /**
+     * Construct a new container inventory
+     *
+     * @param owner of the container (mostly a tile or normal entity)
+     * @param size  of the entity
+     */
+    ContainerInventory( InventoryHolder owner, int size ) {
         super( owner, size );
     }
 
@@ -22,12 +30,16 @@ public abstract class ContainerInventory extends Inventory {
      */
     public abstract WindowType getType();
 
-    /**
-     * Get the position of this container
-     *
-     * @return block position of the container
-     */
-    public abstract BlockPosition getContainerPosition();
+    @Override
+    public BlockPosition getContainerPosition() {
+        TileEntity tileEntity = (TileEntity) this.owner;
+        return tileEntity.getLocation().toBlockPosition();
+    }
+
+    public WorldAdapter getWorld() {
+        TileEntity tileEntity = (TileEntity) this.owner;
+        return (WorldAdapter) tileEntity.getLocation().getWorld();
+    }
 
     /**
      * Called when a container has been opened
@@ -55,7 +67,7 @@ public abstract class ContainerInventory extends Inventory {
         containerOpen.setWindowId( windowId );
         containerOpen.setType( this.getType().getId() );
         containerOpen.setLocation( this.getContainerPosition() );
-        player.getConnection().send( containerOpen );
+        player.getConnection().addToSendQueue( containerOpen );
 
         // Add viewer and send contents
         super.addViewer( player );
@@ -72,4 +84,5 @@ public abstract class ContainerInventory extends Inventory {
         // Remove from view
         super.removeViewer( player );
     }
+
 }

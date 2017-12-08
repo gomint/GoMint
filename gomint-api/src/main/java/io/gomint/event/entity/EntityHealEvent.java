@@ -32,6 +32,15 @@ public class EntityHealEvent extends CancellableEntityEvent {
     }
 
     /**
+     * Get the cause of this healing
+     *
+     * @return cause of this healing
+     */
+    public Cause getCause() {
+        return this.cause;
+    }
+
+    /**
      * Get the amount of health this entity would get due to this event
      *
      * @return amount of heal
@@ -55,6 +64,16 @@ public class EntityHealEvent extends CancellableEntityEvent {
          * Heal based on hunger
          */
         SATURATION,
+
+        /**
+         * Heal based on regeneration effect
+         */
+        REGENERATION_EFFECT,
+
+        /**
+         * Heal based on instant healing effect
+         */
+        HEALING_EFFECT,
 
     }
 
