@@ -8,13 +8,15 @@
 package io.gomint.server.world;
 
 import com.koloboke.collect.LongCursor;
-import io.gomint.server.GoMintServer;
+import io.gomint.math.MathUtils;
 import io.gomint.server.entity.EntityPlayer;
+import io.gomint.server.util.Values;
 import io.gomint.server.util.collection.ChunkCacheMap;
 import io.gomint.server.util.collection.ChunkHashSet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Arrays;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -53,12 +55,16 @@ public class ChunkCache {
     private int currentX;
     private int currentZ;
 
+    // Ticking helper
+    private float lastFullTickDT = 0;
+    private ChunkHashSet alreadyTicked = ChunkHashSet.withExpectedSize( 500 );
+
     public ChunkCache( WorldAdapter world ) {
         this.world = world;
         this.cachedChunks = ChunkCacheMap.withExpectedSize( 200 );
         this.concurrentCachedChunks = new ConcurrentHashMap<>();
-        this.enableAutoSave = world.getServer().getServerConfig().isAutoSave();
-        this.autoSaveInterval = world.getServer().getServerConfig().getAutoSaveInterval();
+        this.enableAutoSave = world.getConfig().isAutoSave();
+        this.autoSaveInterval = world.getConfig().getAutoSaveInterval();
     }
     // CHECKSTYLE:ON
 
@@ -74,75 +80,75 @@ public class ChunkCache {
 
             for ( Map.Entry<Long, ChunkAdapter> entry : this.concurrentCachedChunks.entrySet() ) {
                 copied.add( entry.getKey() );
-                this.cachedChunks.storeChunk( entry.getKey(), entry.getValue() );
+                synchronized ( this ) {
+                    this.cachedChunks.storeChunk( entry.getKey(), entry.getValue() );
+                }
             }
 
-            copied.cursor().forEachForward( new LongConsumer() {
-                @Override
-                public void accept( long value ) {
-                    concurrentCachedChunks.remove( value );
-                }
-            } );
+            copied.cursor().forEachForward( this.concurrentCachedChunks::remove );
         }
 
         // Check for gc
         int spawnXChunk = CoordinateUtils.fromBlockToChunk( (int) this.world.getSpawnLocation().getX() );
         int spawnZChunk = CoordinateUtils.fromBlockToChunk( (int) this.world.getSpawnLocation().getZ() );
 
-        int spawnAreaSize = this.world.getServer().getServerConfig().getAmountOfChunksForSpawnArea();
+        int spawnAreaSize = this.world.getConfig().getAmountOfChunksForSpawnArea();
 
-        // Copy over the current loaded chunk hashes
-        ChunkHashSet toRemoveHashes = null;
-        long[] keys = this.cachedChunks.keys();
+        synchronized ( this ) {
+            // Copy over the current loaded chunk hashes
+            ChunkHashSet toRemoveHashes = null;
+            long[] keys = this.cachedChunks.keys();
 
-        for ( long chunkHash : keys ) {
-            ChunkAdapter chunk = this.cachedChunks.getChunk( chunkHash );
-            if ( chunk == null ) {
-                continue;
-            }
-
-            this.currentX = (int) ( chunkHash >> 32 );
-            this.currentZ = (int) ( chunkHash ) + Integer.MIN_VALUE;
-
-            // Check if this is part of the spawn
-            if ( spawnAreaSize > 0 ) {
-                if ( this.currentX >= spawnXChunk - spawnAreaSize && this.currentX <= spawnXChunk + spawnAreaSize &&
-                    this.currentZ >= spawnZChunk - spawnAreaSize && this.currentZ <= spawnZChunk + spawnAreaSize ) {
+            for ( long chunkHash : keys ) {
+                ChunkAdapter chunk = this.cachedChunks.getChunk( chunkHash );
+                if ( chunk == null ) {
                     continue;
                 }
+
+                // Check if we need to save
+                if ( this.autoSaveInterval > 0 && chunk.getLastSavedTimestamp() + this.autoSaveInterval < currentTimeMS ) {
+                    this.world.saveChunkAsynchronously( chunk );
+                    chunk.setLastSavedTimestamp( currentTimeMS );
+                }
+
+                this.currentX = (int) ( chunkHash >> 32 );
+                this.currentZ = (int) ( chunkHash ) + Integer.MIN_VALUE;
+
+                // Check if this is part of the spawn
+                if ( spawnAreaSize > 0 ) {
+                    if ( this.currentX >= spawnXChunk - spawnAreaSize && this.currentX <= spawnXChunk + spawnAreaSize &&
+                        this.currentZ >= spawnZChunk - spawnAreaSize && this.currentZ <= spawnZChunk + spawnAreaSize ) {
+                        continue;
+                    }
+                }
+
+                // Ask this chunk if he wants to be gced
+                if ( !chunk.canBeGCed( currentTimeMS ) ) {
+                    continue;
+                }
+
+                // Calculate the hashes which are used by players view distances
+                this.world.getPlayers0().forEach( this.viewDistanceConsumer );
+                if ( skip.get() ) {
+                    skip.set( false );
+                    continue;
+                }
+
+                LOGGER.debug( "Cleaning up chunk @ " + this.currentX + " " + this.currentZ );
+
+                // Ask this chunk if he wants to be gced
+                if ( toRemoveHashes == null ) {
+                    toRemoveHashes = ChunkHashSet.withExpectedSize( 10 );
+                }
+
+                toRemoveHashes.add( chunkHash );
             }
 
-            // Ask this chunk if he wants to be gced
-            if ( !chunk.canBeGCed( currentTimeMS ) ) {
-                continue;
-            }
-
-            // Calculate the hashes which are used by players view distances
-            this.world.getPlayers0().forEach( viewDistanceConsumer );
-            if ( skip.get() ) {
-                skip.set( false );
-                continue;
-            }
-
-            LOGGER.debug( "Cleaning up chunk @ " + this.currentX + " " + this.currentZ );
-
-            if ( chunk.getLastSavedTimestamp() + this.autoSaveInterval < currentTimeMS ) {
-                this.world.saveChunkAsynchronously( chunk );
-                chunk.setLastSavedTimestamp( currentTimeMS );
-            }
-
-            // Ask this chunk if he wants to be gced
-            if ( toRemoveHashes == null ) {
-                toRemoveHashes = ChunkHashSet.withExpectedSize( 10 );
-            }
-
-            toRemoveHashes.add( chunkHash );
-        }
-
-        if ( toRemoveHashes != null ) {
-            LongCursor toRemoveCursor = toRemoveHashes.cursor();
-            while ( toRemoveCursor.moveNext() ) {
-                this.cachedChunks.removeChunk( toRemoveCursor.elem() );
+            if ( toRemoveHashes != null ) {
+                LongCursor toRemoveCursor = toRemoveHashes.cursor();
+                while ( toRemoveCursor.moveNext() ) {
+                    this.cachedChunks.removeChunk( toRemoveCursor.elem() );
+                }
             }
         }
     }
@@ -168,9 +174,7 @@ public class ChunkCache {
      */
     public void putChunk( ChunkAdapter chunk ) {
         long key = CoordinateUtils.toLong( chunk.getX(), chunk.getZ() );
-        if ( !GoMintServer.isMainThread() ) {
-            this.concurrentCachedChunks.put( key, chunk );
-        } else {
+        synchronized ( this ) {
             this.cachedChunks.storeChunk( key, chunk );
         }
     }
@@ -196,28 +200,80 @@ public class ChunkCache {
     }
 
     /**
-     * Get stored chunk hashes
-     *
-     * @return array of chunk hashes
-     */
-    long[] getChunkHashes() {
-        return this.cachedChunks.keys();
-    }
-
-    /**
      * Get a chunk based on his hash
      *
      * @param chunkHash which should be get
      * @return chunk adapter for the given hash or null when the hash has no chunk attached
      */
     ChunkAdapter getChunkInternal( long chunkHash ) {
-        ChunkAdapter chunkAdapter = this.cachedChunks.getChunk( chunkHash );
-        if ( chunkAdapter == null ) {
-            // Check slow concurrent map
-            return this.concurrentCachedChunks.get( chunkHash );
+        synchronized ( this ) {
+            return this.cachedChunks.getChunk( chunkHash );
         }
+    }
 
-        return chunkAdapter;
+    long[] getTickingChunks( float dT ) {
+        synchronized ( this ) {
+            this.lastFullTickDT += dT;
+            if ( this.lastFullTickDT >= Values.CLIENT_TICK_RATE ) {
+                // We need to tick all chunks which haven't been ticked until now
+                long[] returnVal = new long[this.cachedChunks.size()];
+                int index = 0;
+
+                for ( long l : this.cachedChunks.keys() ) {
+                    if ( l != 0 && !this.alreadyTicked.contains( l ) ) {
+                        returnVal[index++] = l;
+                    }
+                }
+
+                this.lastFullTickDT = 0;
+                this.alreadyTicked.clear();
+                return Arrays.copyOf( returnVal, index );
+            } else {
+                // Check how many chunks we need to tick
+                int max = this.cachedChunks.size();
+
+                float currentTPS = 1 / dT;
+                int needCurrent = MathUtils.fastFloor( max * ( 20F / currentTPS ) );
+
+                // This only happens on first tick though
+                if ( needCurrent == 0 ) {
+                    return new long[0];
+                }
+
+                long[] returnVal = new long[needCurrent];
+                int index = 0;
+
+                for ( long l : this.cachedChunks.keys() ) {
+                    if ( l != 0 && !this.alreadyTicked.contains( l ) ) {
+                        returnVal[index++] = l;
+                        this.alreadyTicked.add( l );
+
+                        if ( index == needCurrent ) {
+                            break;
+                        }
+                    }
+                }
+
+                if ( index == needCurrent ) {
+                    return returnVal;
+                }
+
+                return Arrays.copyOf( returnVal, index );
+            }
+        }
+    }
+
+    /**
+     * Save all chunks and persist them to disk
+     */
+    void saveAll() {
+        for ( long l : this.cachedChunks.keys() ) {
+            if ( l != 0 ) {
+                ChunkAdapter chunkAdapter = this.cachedChunks.getChunk( l );
+                this.world.saveChunk( chunkAdapter );
+                chunkAdapter.setLastSavedTimestamp( this.world.getServer().getCurrentTickTime() );
+            }
+        }
     }
 
 }

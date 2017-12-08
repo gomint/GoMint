@@ -1,5 +1,7 @@
 package io.gomint.server.inventory.item;
 
+import io.gomint.inventory.item.ItemType;
+
 import io.gomint.server.registry.RegisterInfo;
 import io.gomint.taglib.NBTTagCompound;
 
@@ -20,10 +22,19 @@ public class ItemCake extends ItemStack implements io.gomint.inventory.item.Item
     }
     // CHECKSTYLE:ON
 
+    @Override
+    public byte getMaximumAmount() {
+        return 1;
+    }
 
     @Override
     public int getBlockId() {
         return 92;
+    }
+
+    @Override
+    public ItemType getType() {
+        return ItemType.CAKE;
     }
 
 }

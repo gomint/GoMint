@@ -23,8 +23,8 @@ public class PacketText extends Packet {
     private Type type;
     private String sender;
     private String message;
-    private String[] arguments;
-    private String xuid;
+    private String[] arguments = new String[0];
+    private String xuid = "";
 
     public PacketText() {
         super( Protocol.PACKET_TEXT );
@@ -42,19 +42,24 @@ public class PacketText extends Packet {
     public void serialize( PacketBuffer buffer ) {
         buffer.writeByte( this.type.getId() );
         buffer.writeBoolean( false );
+
         switch ( this.type ) {
+            case POPUP_NOTICE:
+                buffer.writeString( this.message );
+                buffer.writeString( this.sender );
+                break;
+
+            case PLAYER_CHAT:
+            case WHISPER:
+            case ANNOUNCEMENT:
+                buffer.writeString( this.sender );
             case CLIENT_MESSAGE:
             case TIP_MESSAGE:
             case SYSTEM_MESSAGE:
                 buffer.writeString( this.message );
                 break;
 
-            case PLAYER_CHAT:
-                buffer.writeString( this.sender );
-                buffer.writeString( this.message );
-                buffer.writeString( this.xuid );
-                break;
-
+            case JUKEBOX_POPUP:
             case LOCALIZABLE_MESSAGE:
                 buffer.writeString( this.message );
                 buffer.writeByte( (byte) this.arguments.length );
@@ -63,12 +68,9 @@ public class PacketText extends Packet {
                 }
 
                 break;
-
-            case POPUP_NOTICE:
-                buffer.writeString( this.message );
-                buffer.writeString( this.sender );
-                break;
         }
+
+        buffer.writeString( this.xuid );
     }
 
     @Override
@@ -76,18 +78,22 @@ public class PacketText extends Packet {
         this.type = Type.getById( buffer.readByte() );
         buffer.readBoolean();
         switch ( this.type ) {
+            case POPUP_NOTICE:
+                this.message = buffer.readString();
+                this.sender = buffer.readString();
+                break;
+
+            case PLAYER_CHAT:
+            case WHISPER:
+            case ANNOUNCEMENT:
+                this.sender = buffer.readString();
             case CLIENT_MESSAGE:
             case TIP_MESSAGE:
             case SYSTEM_MESSAGE:
                 this.message = buffer.readString();
                 break;
 
-            case PLAYER_CHAT:
-                this.sender = buffer.readString();
-                this.message = buffer.readString();
-                this.xuid = buffer.readString();
-                break;
-
+            case JUKEBOX_POPUP:
             case LOCALIZABLE_MESSAGE:
                 this.message = buffer.readString();
                 byte count = buffer.readByte();
@@ -97,12 +103,11 @@ public class PacketText extends Packet {
                 }
 
                 break;
-
-            case POPUP_NOTICE:
-                this.message = buffer.readString();
-                this.sender = buffer.readString();
+            default:
                 break;
         }
+
+        this.xuid = buffer.readString();
     }
 
     public enum Type {
@@ -128,15 +133,30 @@ public class PacketText extends Packet {
         POPUP_NOTICE( (byte) 3 ),
 
         /**
+         * Type value for showing a single line of text above a player's action bar and the popup (so you can have a 3 high popup message).
+         */
+        JUKEBOX_POPUP( (byte) 4 ),
+
+        /**
          * Type value for displaying text slightly below the center of the screen (similar to title
          * text of PC edition).
          */
-        TIP_MESSAGE( (byte) 4 ),
+        TIP_MESSAGE( (byte) 5 ),
 
         /**
          * Type value for unformatted messages. Actual use unknown, same as system, apparently.
          */
-        SYSTEM_MESSAGE( (byte) 5 );
+        SYSTEM_MESSAGE( (byte) 6 ),
+
+        /**
+         * This applies the whisper text in the client to the arguments sender and message
+         */
+        WHISPER( (byte) 7 ),
+
+        /**
+         * Seems to work like a normal client message. Maybe there is something to it (like they stay longer) but i couldn't find whats different for now
+         */
+        ANNOUNCEMENT( (byte) 8 );
 
         private final byte id;
 
@@ -155,9 +175,15 @@ public class PacketText extends Packet {
                 case 3:
                     return POPUP_NOTICE;
                 case 4:
-                    return TIP_MESSAGE;
+                    return JUKEBOX_POPUP;
                 case 5:
+                    return TIP_MESSAGE;
+                case 6:
                     return SYSTEM_MESSAGE;
+                case 7:
+                    return WHISPER;
+                case 8:
+                    return ANNOUNCEMENT;
                 default:
                     return null;
             }

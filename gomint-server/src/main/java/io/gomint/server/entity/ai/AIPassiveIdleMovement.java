@@ -1,11 +1,11 @@
 package io.gomint.server.entity.ai;
 
 import io.gomint.math.Location;
+import io.gomint.math.MathUtils;
 import io.gomint.math.Vector;
 import io.gomint.server.entity.pathfinding.PathfindingEngine;
 import io.gomint.server.util.IntTriple;
 import io.gomint.server.world.WorldAdapter;
-import io.gomint.util.Numbers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -50,9 +50,9 @@ public class AIPassiveIdleMovement extends AIState {
             Vector position = this.pathfinding.getTransform().getPosition();
 
             IntTriple blockPosition = new IntTriple(
-                    Numbers.fastFloor( position.getX() ),
-                    Numbers.fastFloor( position.getY() ),
-                    Numbers.fastFloor( position.getZ() )
+                MathUtils.fastFloor( position.getX() ),
+                MathUtils.fastFloor( position.getY() ),
+                MathUtils.fastFloor( position.getZ() )
             );
 
             IntTriple node = this.path.get( this.currentPathNode );

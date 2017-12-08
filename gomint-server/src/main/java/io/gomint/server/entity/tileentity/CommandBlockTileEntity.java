@@ -57,7 +57,7 @@ public class CommandBlockTileEntity extends ContainerTileEntity {
         this.powered = tagCompound.getByte( "powered", (byte) 0 ) != 0;
 
         //
-        this.redstoneMode = tagCompound.getByte( "LPRedstoneMode", (byte) 0 ) != 0;
+        this.redstoneMode = tagCompound.getByte( "LPRedstoneMode", (byte) 1 ) != 0;
         this.conditionalMode = tagCompound.getByte( "LPCondionalMode", (byte) 0 ) != 0;
         this.commandMode = tagCompound.getInteger( "LPCommandMode", 0 );
 
@@ -74,16 +74,16 @@ public class CommandBlockTileEntity extends ContainerTileEntity {
     public void toCompound( NBTTagCompound compound ) {
         super.toCompound( compound );
 
-        compound.addValue( "id", "CommandBlockTileEntity" );
-        compound.addValue( "isMovable", (byte) 1 );
+        compound.addValue( "id", "CommandBlock" );
         compound.addValue( "conditionMet", (byte) 1 );
 
         compound.addValue( "Command", this.command );
         compound.addValue( "SuccessCount", this.successCount );
 
+        compound.addValue( "TrackOutput", (byte) ( this.trackOutput ? 1 : 0 ) );
+
         if ( this.trackOutput ) {
             compound.addValue( "LastOutput", this.output );
-            compound.addValue( "TrackOutput", (byte) ( this.trackOutput ? 1 : 0 ) );
         }
 
         compound.addValue( "LastOutputParams", this.parameter );

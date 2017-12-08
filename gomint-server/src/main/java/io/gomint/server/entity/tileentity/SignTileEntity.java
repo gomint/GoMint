@@ -10,6 +10,9 @@ package io.gomint.server.entity.tileentity;
 import com.google.common.base.Joiner;
 import io.gomint.server.world.WorldAdapter;
 import io.gomint.taglib.NBTTagCompound;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -19,8 +22,9 @@ import java.util.List;
  * @author geNAZt
  * @version 1.0
  */
-class SignTileEntity extends TileEntity {
+public class SignTileEntity extends TileEntity {
 
+    private static final JSONParser JSON_PARSER = new JSONParser();
     private List<String> lines = new ArrayList<>( 4 );
 
     /**
@@ -37,10 +41,24 @@ class SignTileEntity extends TileEntity {
             this.lines.addAll( Arrays.asList( text.split( "\n" ) ) );
         } else {
             // This is the Anvil version
-            this.lines.add( tagCompound.getString( "Text1", "" ) );
-            this.lines.add( tagCompound.getString( "Text2", "" ) );
-            this.lines.add( tagCompound.getString( "Text3", "" ) );
-            this.lines.add( tagCompound.getString( "Text4", "" ) );
+            for ( int i = 0; i < 4; i++ ) {
+                String line = tagCompound.getString( "Text" + ( i + 1 ), "" );
+                if ( line.length() > 0 && line.charAt( 0 ) == '{' ) {
+                    // Parse JSON (yes this is expensive)
+                    try {
+                        JSONObject jsonObject = (JSONObject) JSON_PARSER.parse( line );
+                        this.lines.add( (String) jsonObject.get( "text" ) );
+                    } catch ( ParseException e ) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    if ( line.length() == 2 && line.equals( "\"\"" ) ) {
+                        continue;
+                    }
+
+                    this.lines.add( line );
+                }
+            }
         }
     }
 
@@ -55,6 +73,10 @@ class SignTileEntity extends TileEntity {
 
         compound.addValue( "id", "Sign" );
         compound.addValue( "Text", Joiner.on( "\n" ).join( this.lines ) );
+    }
+
+    public List<String> getLines() {
+        return this.lines;
     }
 
 }

@@ -1,9 +1,11 @@
 package io.gomint.server.world.block;
 
+import io.gomint.inventory.item.ItemAir;
 import io.gomint.inventory.item.ItemStack;
 import io.gomint.math.BlockPosition;
 import io.gomint.math.Location;
 import io.gomint.server.util.random.FastRandom;
+import io.gomint.server.util.random.WeightedRandom;
 import io.gomint.server.world.UpdateReason;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,6 +20,18 @@ public abstract class Growable extends Block {
 
     private static final Logger LOGGER = LoggerFactory.getLogger( Growable.class );
 
+    /**
+     * Randomizer for seed drop output
+     */
+    protected static final WeightedRandom<Integer> SEED_RANDOMIZER = new WeightedRandom<>();
+
+    static {
+        SEED_RANDOMIZER.add( 0.15, 0 );
+        SEED_RANDOMIZER.add( 0.35, 1 );
+        SEED_RANDOMIZER.add( 0.35, 2 );
+        SEED_RANDOMIZER.add( 0.15, 3 );
+    }
+
     @Override
     public boolean beforePlacement( ItemStack item, Location location ) {
         // Check if we place on farmland
@@ -29,7 +43,7 @@ public abstract class Growable extends Block {
         if ( updateReason == UpdateReason.NEIGHBOUR_UPDATE ) {
             // Check if farmland is still under us
             if ( !( this.world.getBlockAt( this.location.toBlockPosition().add( BlockPosition.DOWN ) ) instanceof Farmland ) ) {
-                this.world.breakBlock( this.location.toBlockPosition(), false );
+                this.world.breakBlock( this.location.toBlockPosition(), false, ItemAir.create( 0 ) );
             }
         } else if ( updateReason == UpdateReason.RANDOM ) {
             // Check for growth state
@@ -79,14 +93,14 @@ public abstract class Growable extends Block {
         // Check if there are similar crops around (slow down bigger farms)
         // We check in a pattern which goes up and clockwise around
         BlockPosition start = this.location.toBlockPosition().add( BlockPosition.NORTH );
-        if ( this.world.getBlockAt( start ).getBlockId() == getBlockId() ||
-            this.world.getBlockAt( start.add( BlockPosition.EAST ) ).getBlockId() == getBlockId() ||
-            this.world.getBlockAt( start.add( BlockPosition.SOUTH ) ).getBlockId() == getBlockId() ||
-            this.world.getBlockAt( start.add( BlockPosition.SOUTH ) ).getBlockId() == getBlockId() ||
-            this.world.getBlockAt( start.add( BlockPosition.WEST ) ).getBlockId() == getBlockId() ||
-            this.world.getBlockAt( start.add( BlockPosition.WEST ) ).getBlockId() == getBlockId() ||
-            this.world.getBlockAt( start.add( BlockPosition.NORTH ) ).getBlockId() == getBlockId() ||
-            this.world.getBlockAt( start.add( BlockPosition.NORTH ) ).getBlockId() == getBlockId() ) {
+        if ( this.world.getBlockAt( start ).getType() == getType() ||
+            this.world.getBlockAt( start.add( BlockPosition.EAST ) ).getType() == getType() ||
+            this.world.getBlockAt( start.add( BlockPosition.SOUTH ) ).getType() == getType() ||
+            this.world.getBlockAt( start.add( BlockPosition.SOUTH ) ).getType() == getType() ||
+            this.world.getBlockAt( start.add( BlockPosition.WEST ) ).getType() == getType() ||
+            this.world.getBlockAt( start.add( BlockPosition.WEST ) ).getType() == getType() ||
+            this.world.getBlockAt( start.add( BlockPosition.NORTH ) ).getType() == getType() ||
+            this.world.getBlockAt( start.add( BlockPosition.NORTH ) ).getType() == getType() ) {
             divider /= 2f;
         }
 

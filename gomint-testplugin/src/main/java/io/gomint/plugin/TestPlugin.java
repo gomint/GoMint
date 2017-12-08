@@ -7,7 +7,7 @@ import io.gomint.plugin.listener.PlayerMoveListener;
  * @author geNAZt
  * @version 1.0
  */
-@Name( "TestPlugin" )
+@PluginName( "TestPlugin" )
 @Version( major = 1, minor = 0 )
 public class TestPlugin extends Plugin {
 
@@ -20,7 +20,7 @@ public class TestPlugin extends Plugin {
     public void onInstall() {
         // Register listener
         registerListener( new PlayerMoveListener() );
-        registerListener( new PlayerJoinListener() );
+        registerListener( new PlayerJoinListener( this ) );
     }
 
     @Override

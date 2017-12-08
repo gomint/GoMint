@@ -1,5 +1,7 @@
 package io.gomint.server.world.block;
 
+import io.gomint.world.block.BlockType;
+
 import io.gomint.server.registry.RegisterInfo;
 
 /**
@@ -22,6 +24,16 @@ public class StoneSlab extends Slab {
     @Override
     public boolean isTransparent() {
         return true;
+    }
+
+    @Override
+    public float getBlastResistance() {
+        return 30.0f;
+    }
+
+    @Override
+    public BlockType getType() {
+        return BlockType.STONE_SLAB;
     }
 
 }

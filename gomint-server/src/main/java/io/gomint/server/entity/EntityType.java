@@ -16,6 +16,21 @@ package io.gomint.server.entity;
 public enum EntityType {
 
     /**
+     * Entity type value for a xp orb.
+     */
+    XP_ORB( 69 ),
+
+    /**
+     * Entity type value for a exp potion projectile.
+     */
+    EXP_BOTTLE_PROJECTILE( 68 ),
+
+    /**
+     * Entity type value for a primed tnt.
+     */
+    PRIMED_TNT( 65 ),
+
+    /**
      * Entity Type value for a item drop.
      */
     ITEM_DROP( 64 ),
@@ -158,12 +173,12 @@ public enum EntityType {
     /**
      * Entity Type value for a fishing hook floating on water.
      */
-    FISHING_HOOK( 0x00004D ),
+    FISHING_HOOK( 77 ),
 
     /**
      * Entity Type value for an arrow.
      */
-    ARROW( 0x000050 ),
+    ARROW( 80 ),
 
     /**
      * Entity Type value for a snowball which has been thrown.

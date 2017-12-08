@@ -1,5 +1,7 @@
 package io.gomint.server.world.block;
 
+import io.gomint.world.block.BlockType;
+
 import io.gomint.server.registry.RegisterInfo;
 
 /**
@@ -17,6 +19,16 @@ public class StoneBrickStairs extends Stairs {
     @Override
     public long getBreakTime() {
         return 2250;
+    }
+
+    @Override
+    public float getBlastResistance() {
+        return 30.0f;
+    }
+
+    @Override
+    public BlockType getType() {
+        return BlockType.STONE_BRICK_STAIRS;
     }
 
 }

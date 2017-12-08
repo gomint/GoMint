@@ -5,6 +5,7 @@ import io.gomint.server.entity.EntityPlayer;
 import io.gomint.server.entity.tileentity.EnderChestTileEntity;
 import io.gomint.server.network.PlayerConnection;
 import io.gomint.server.network.type.WindowType;
+import io.gomint.server.world.WorldAdapter;
 
 /**
  * @author geNAZt
@@ -31,6 +32,11 @@ public class EnderChestInventory extends ContainerInventory {
     @Override
     public BlockPosition getContainerPosition() {
         return ( (EnderChestTileEntity) this.owner ).getLocation().toBlockPosition();
+    }
+
+    @Override
+    public WorldAdapter getWorld() {
+        return (WorldAdapter) ( (EnderChestTileEntity) this.owner ).getLocation().getWorld();
     }
 
     @Override

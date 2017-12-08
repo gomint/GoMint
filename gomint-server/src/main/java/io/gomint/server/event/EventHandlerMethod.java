@@ -15,8 +15,11 @@ import lombok.EqualsAndHashCode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.DataOutputStream;
+import java.io.FileOutputStream;
 import java.lang.reflect.Method;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * @author BlackyPaw
@@ -26,7 +29,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 class EventHandlerMethod implements Comparable<EventHandlerMethod> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger( EventHandlerMethod.class );
-    private static final AtomicInteger PROXY_COUNT = new AtomicInteger( 0 );
+    private static final AtomicLong PROXY_COUNT = new AtomicLong( 0 );
+
     private final EventHandler annotation;
     private EventProxy proxy;
 
@@ -37,7 +41,7 @@ class EventHandlerMethod implements Comparable<EventHandlerMethod> {
      * @param method     The method which should be invoked when the event arrives
      * @param annotation The annotation which holds additional information about this EventHandler Method
      */
-    public EventHandlerMethod( final EventListener instance, final Method method, final EventHandler annotation ) {
+    EventHandlerMethod( final EventListener instance, final Method method, final EventHandler annotation ) {
         this.annotation = annotation;
 
         // Build up proxy
@@ -59,7 +63,7 @@ class EventHandlerMethod implements Comparable<EventHandlerMethod> {
     }
 
     /**
-     * Invoke this Eventhandler.
+     * Invoke this Event handler.
      *
      * @param event Event which should be handled in this handler
      */
@@ -67,7 +71,7 @@ class EventHandlerMethod implements Comparable<EventHandlerMethod> {
         try {
             this.proxy.call( event );
         } catch ( Throwable cause ) {
-            cause.printStackTrace();
+            LOGGER.warn( "Event handler has thrown a exception: ", cause );
         }
     }
 
@@ -76,7 +80,7 @@ class EventHandlerMethod implements Comparable<EventHandlerMethod> {
      *
      * @return true when it wants to accept events when cancelled, false if not
      */
-    public boolean ignoreCancelled() {
+    boolean ignoreCancelled() {
         return this.annotation.ignoreCancelled();
     }
 

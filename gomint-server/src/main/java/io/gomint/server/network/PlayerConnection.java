@@ -8,18 +8,21 @@
 package io.gomint.server.network;
 
 import com.koloboke.collect.LongCursor;
-import io.gomint.entity.Entity;
+import io.gomint.event.player.PlayerCleanedupEvent;
 import io.gomint.event.player.PlayerKickEvent;
 import io.gomint.event.player.PlayerQuitEvent;
 import io.gomint.jraknet.Connection;
 import io.gomint.jraknet.EncapsulatedPacket;
 import io.gomint.jraknet.PacketBuffer;
 import io.gomint.jraknet.PacketReliability;
+import io.gomint.math.BlockPosition;
 import io.gomint.math.Location;
 import io.gomint.server.GoMintServer;
 import io.gomint.server.entity.EntityPlayer;
 import io.gomint.server.network.handler.*;
 import io.gomint.server.network.packet.*;
+import io.gomint.server.network.tcp.ConnectionHandler;
+import io.gomint.server.network.tcp.protocol.WrappedMCPEPacket;
 import io.gomint.server.player.DeviceInfo;
 import io.gomint.server.util.EnumConnectors;
 import io.gomint.server.util.Pair;
@@ -67,59 +70,97 @@ public class PlayerConnection {
         PACKET_HANDLERS[Protocol.PACKET_INTERACT & 0xff] = new PacketInteractHandler();
         PACKET_HANDLERS[Protocol.PACKET_ENCRYPTION_RESPONSE & 0xff] = new PacketEncryptionResponseHandler();
         PACKET_HANDLERS[Protocol.PACKET_INVENTORY_TRANSACTION & 0xff] = new PacketInventoryTransactionHandler();
-        PACKET_HANDLERS[Protocol.PACKET_CONTAINER_OPEN & 0xff] = new PacketContainerOpenHandler();
         PACKET_HANDLERS[Protocol.PACKET_CONTAINER_CLOSE & 0xff] = new PacketContainerCloseHandler();
         PACKET_HANDLERS[Protocol.PACKET_HOTBAR & 0xff] = new PacketHotbarHandler();
         PACKET_HANDLERS[Protocol.PACKET_TEXT & 0xff] = new PacketTextHandler();
         PACKET_HANDLERS[Protocol.PACKET_COMMAND_REQUEST & 0xff] = new PacketCommandRequestHandler();
         PACKET_HANDLERS[Protocol.PACKET_WORLD_SOUND_EVENT & 0xff] = new PacketWorldSoundEventHandler();
         PACKET_HANDLERS[Protocol.PACKET_ANIMATE & 0xff] = new PacketAnimateHandler();
+        PACKET_HANDLERS[Protocol.PACKET_ENTITY_EVENT & 0xff] = new PacketEntityEventHandler();
+        PACKET_HANDLERS[Protocol.PACKET_MODAL_RESPONSE & 0xFF] = new PacketModalResponseHandler();
+        PACKET_HANDLERS[Protocol.PACKET_SERVER_SETTINGS_REQUEST & 0xFF] = new PacketServerSettingsRequestHandler();
     }
 
     // Network manager that created this connection:
-    @Getter private final NetworkManager networkManager;
-    @Getter @Setter private EncryptionHandler encryptionHandler;
-    @Getter private final GoMintServer server;
+    @Getter
+    private final NetworkManager networkManager;
+    @Getter
+    @Setter
+    private EncryptionHandler encryptionHandler;
+    @Getter
+    private GoMintServer server;
 
     // Actual connection for wire transfer:
-    @Getter private final Connection connection;
-    @Getter private final PostProcessWorker postProcessWorker;
+    @Getter
+    private final Connection connection;
+    @Getter
+    private final ConnectionHandler connectionHandler;
+    @Setter
+    private long tcpId;
+    @Setter
+    private int tcpPing;
 
     // World data
+    @Getter
     private final ChunkHashSet playerChunks;
 
     // Connection State:
-    @Getter @Setter private PlayerConnectionState state;
+    @Getter
+    @Setter
+    private PlayerConnectionState state;
     private int sentChunks;
     private BlockingQueue<Packet> sendQueue;
 
     // Entity
-    @Getter @Setter private EntityPlayer entity;
-    private ChunkHashSet currentlySendingPlayerChunks;
+    @Getter
+    @Setter
+    private EntityPlayer entity;
     private long sentInClientTick;
 
     // Additional data
-    @Getter @Setter private DeviceInfo deviceInfo;
+    @Getter
+    @Setter
+    private DeviceInfo deviceInfo;
     private float lastUpdateDT = 0;
-    private boolean firstSpawn;
 
     /**
      * Constructs a new player connection.
      *
      * @param networkManager The network manager creating this instance
      * @param connection     The jRakNet connection for actual wire-transfer
+     * @param tcpConnection  TCP connection for low latency communication with proxies
      * @param initialState   The player connection's initial state
      */
-    PlayerConnection( NetworkManager networkManager, Connection connection, PlayerConnectionState initialState ) {
+    PlayerConnection( NetworkManager networkManager, Connection connection, ConnectionHandler tcpConnection, PlayerConnectionState initialState ) {
         this.networkManager = networkManager;
         this.connection = connection;
-        this.postProcessWorker = new PostProcessWorker( this );
+        this.connectionHandler = tcpConnection;
         this.state = initialState;
         this.server = networkManager.getServer();
-        this.server.getExecutorService().execute( this.postProcessWorker );
-
         this.playerChunks = ChunkHashSet.withExpectedSize( 100 );
-        this.currentlySendingPlayerChunks = ChunkHashSet.withExpectedSize( 100 );
+
+        // Attach data processor if needed
+        if ( this.connection != null ) {
+            this.connection.addDataProcessor( packetData -> {
+                PacketBuffer buffer = new PacketBuffer( packetData.getPacketData(), 0 );
+                if ( buffer.getRemaining() <= 0 ) {
+                    // Malformed packet:
+                    return packetData;
+                }
+
+                // Check if packet is batched
+                byte packetId = buffer.readByte();
+                if ( packetId == Protocol.PACKET_BATCH ) {
+                    // Decompress and decrypt
+                    byte[] pureData = handleBatchPacket( buffer );
+                    EncapsulatedPacket newPacket = new EncapsulatedPacket();
+                    newPacket.setPacketData( pureData );
+                    return newPacket;
+                }
+
+                return packetData;
+            } );
+        }
     }
 
     /**
@@ -132,7 +173,9 @@ public class PlayerConnection {
             this.sendQueue = new LinkedBlockingQueue<>();
         }
 
-        this.sendQueue.offer( packet );
+        if ( !this.sendQueue.offer( packet ) ) {
+            LOGGER.warn( "Could not add packet {} to the send queue", packet );
+        }
     }
 
     /**
@@ -140,7 +183,7 @@ public class PlayerConnection {
      * result in several packets and chunks to be sent in order to account for the change.
      */
     public void onViewDistanceChanged() {
-        LOGGER.debug( "View distance changed to " + this.getEntity().getViewDistance() );
+        LOGGER.debug( "View distance changed to {}", this.getEntity().getViewDistance() );
         this.checkForNewChunks( null );
         this.sendChunkRadiusUpdate();
     }
@@ -153,17 +196,14 @@ public class PlayerConnection {
      * @param dT            The delta from the full second which has been calculated in the last tick
      */
     public void update( long currentMillis, float dT ) {
-        // Receive all waiting packets:
-        EncapsulatedPacket packetData;
-        while ( ( packetData = this.connection.receive() ) != null ) {
-            this.handleSocketData( currentMillis, new PacketBuffer( packetData.getPacketData(), 0 ), false );
-        }
+        // Update networking first
+        this.updateNetwork( currentMillis );
 
         // Check if we need to send chunks
         if ( this.entity != null ) {
-            if ( this.entity.getChunkSendQueue().size() > 0 ) {
-                int maximumInTick = deviceInfo.getOs() == DeviceInfo.DeviceOS.WINDOWS ? 5 : 2;
-                int maximumInClientTick = deviceInfo.getOs() == DeviceInfo.DeviceOS.WINDOWS ? 12 : 3;
+            if ( !this.entity.getChunkSendQueue().isEmpty() ) {
+                int maximumInTick = deviceInfo.getOs() == DeviceInfo.DeviceOS.WINDOWS ? 2 : 1;
+                int maximumInClientTick = deviceInfo.getOs() == DeviceInfo.DeviceOS.WINDOWS ? 10 : 4;
                 int alreadySent = 0;
 
                 int currentX = CoordinateUtils.fromBlockToChunk( (int) this.entity.getPositionX() );
@@ -171,52 +211,98 @@ public class PlayerConnection {
 
                 // Check if we have a slot
                 Queue<ChunkAdapter> queue = this.entity.getChunkSendQueue();
-                while ( queue.size() > 0 && alreadySent < maximumInTick && this.sentInClientTick < maximumInClientTick ) {
+                while ( !queue.isEmpty() && alreadySent < maximumInTick && this.sentInClientTick < maximumInClientTick ) {
                     ChunkAdapter chunk = queue.poll();
-                    if ( chunk == null ) continue;
-
-                    if ( Math.abs( chunk.getX() - currentX ) > this.entity.getViewDistance() ||
-                        Math.abs( chunk.getZ() - currentZ ) > this.entity.getViewDistance() ) {
+                    if ( chunk == null ||
+                        Math.abs( chunk.getX() - currentX ) > this.entity.getViewDistance() ||
+                        Math.abs( chunk.getZ() - currentZ ) > this.entity.getViewDistance() ||
+                        !chunk.getWorld().equals( this.entity.getWorld() ) ) {
                         continue;
                     }
 
                     this.sendWorldChunk( CoordinateUtils.toLong( chunk.getX(), chunk.getZ() ), chunk.getCachedPacket() );
 
-                    // Send all spawned entities
-                    Collection<Entity> entities = chunk.getEntities();
-                    if ( entities != null ) {
-                        for ( io.gomint.entity.Entity entity : entities ) {
-                            if ( entity instanceof io.gomint.server.entity.Entity ) {
-                                this.addToSendQueue( ( (io.gomint.server.entity.Entity) entity ).createSpawnPacket() );
-                            }
-                        }
-                    }
-
                     alreadySent++;
                     this.sentInClientTick++;
                 }
             }
+
+            while ( !this.entity.getBlockUpdates().isEmpty() ) {
+                BlockPosition position = this.entity.getBlockUpdates().poll();
+                int chunkX = CoordinateUtils.fromBlockToChunk( position.getX() );
+                int chunkZ = CoordinateUtils.fromBlockToChunk( position.getZ() );
+                long chunkHash = CoordinateUtils.toLong( chunkX, chunkZ );
+                if ( this.playerChunks.contains( chunkHash ) ) {
+                    this.entity.getWorld().appendUpdatePackets( this, position );
+                }
+            }
         }
 
-        // Send all queued packets
-        if ( this.sendQueue != null && this.sendQueue.size() > 0 ) {
-            Packet[] packets = new Packet[this.sendQueue.size()];
-            this.sendQueue.toArray( packets );
-            this.postProcessWorker.getQueuedPacketBatches().add( packets );
-            this.sendQueue.clear();
+        if ( this.connection == null ) {
+            this.releaseSendQueue();
+        } else {
+            if ( this.deviceInfo != null && this.deviceInfo.getOs() == DeviceInfo.DeviceOS.WINDOWS ) {
+                this.releaseSendQueue();
+            }
         }
 
         // Reset sentInClientTick
         this.lastUpdateDT += dT;
         if ( this.lastUpdateDT >= Values.CLIENT_TICK_RATE ) {
-            if ( this.firstSpawn ) {
-                // Send missing chunks to fill view distance
-                this.checkForNewChunks( null );
-                this.firstSpawn = false;
+            if ( this.connection != null && ( this.deviceInfo == null || this.deviceInfo.getOs() != DeviceInfo.DeviceOS.WINDOWS ) ) {
+                this.releaseSendQueue();
             }
 
             this.sentInClientTick = 0;
             this.lastUpdateDT = 0;
+        }
+    }
+
+    private void releaseSendQueue() {
+        // Send all queued packets
+        if ( this.sendQueue != null && !this.sendQueue.isEmpty() ) {
+            if ( this.connection != null ) {
+                Packet[] packets = new Packet[this.sendQueue.size()];
+                this.sendQueue.toArray( packets );
+                this.networkManager.getPostProcessService().execute( new PostProcessWorker( this, packets ) );
+                this.sendQueue.clear();
+            } else {
+                for ( Packet packet : this.sendQueue ) {
+                    PacketBuffer buffer = new PacketBuffer( 64 );
+                    buffer.writeByte( packet.getId() );
+                    buffer.writeShort( (short) 0 );
+                    packet.serialize( buffer );
+
+                    WrappedMCPEPacket mcpePacket = new WrappedMCPEPacket();
+                    mcpePacket.setBuffer( buffer );
+                    this.connectionHandler.send( mcpePacket );
+                }
+
+                this.sendQueue.clear();
+            }
+        }
+    }
+
+    private void updateNetwork( long currentMillis ) {
+        // Receive all waiting packets:
+        if ( this.connection != null ) {
+            EncapsulatedPacket packetData;
+            while ( ( packetData = this.connection.receive() ) != null ) {
+                try {
+                    this.handleSocketData( currentMillis, new PacketBuffer( packetData.getPacketData(), 0 ) );
+                } catch ( Exception e ) {
+                    LOGGER.error( "Error whilst processing packet: ", e );
+                }
+            }
+        } else {
+            while ( !this.connectionHandler.getData().isEmpty() ) {
+                PacketBuffer buffer = this.connectionHandler.getData().poll();
+                try {
+                    this.handleSocketData( currentMillis, buffer );
+                } catch ( Exception e ) {
+                    LOGGER.error( "Error whilst processing packet: ", e );
+                }
+            }
         }
     }
 
@@ -226,14 +312,25 @@ public class PlayerConnection {
      * @param packet The packet which should be send to the player
      */
     public void send( Packet packet ) {
-        if ( !( packet instanceof PacketBatch ) ) {
-            this.postProcessWorker.getQueuedPacketBatches().add( new Packet[]{ packet } );
+        if ( this.connection != null ) {
+            if ( !( packet instanceof PacketBatch ) ) {
+                this.networkManager.getPostProcessService().execute( new PostProcessWorker( this, new Packet[]{ packet } ) );
+            } else {
+                PacketBuffer buffer = new PacketBuffer( 64 );
+                buffer.writeByte( packet.getId() );
+                packet.serialize( buffer );
+
+                this.connection.send( PacketReliability.RELIABLE_ORDERED, packet.orderingChannel(), buffer.getBuffer(), 0, buffer.getPosition() );
+            }
         } else {
             PacketBuffer buffer = new PacketBuffer( 64 );
             buffer.writeByte( packet.getId() );
+            buffer.writeShort( (short) 0 );
             packet.serialize( buffer );
 
-            this.connection.send( PacketReliability.RELIABLE_ORDERED, packet.orderingChannel(), buffer.getBuffer(), 0, buffer.getPosition() );
+            WrappedMCPEPacket mcpePacket = new WrappedMCPEPacket();
+            mcpePacket.setBuffer( buffer );
+            this.connectionHandler.send( mcpePacket );
         }
     }
 
@@ -245,14 +342,25 @@ public class PlayerConnection {
      * @param packet          The packet to send to the player
      */
     public void send( PacketReliability reliability, int orderingChannel, Packet packet ) {
-        if ( !( packet instanceof PacketBatch ) ) {
-            this.postProcessWorker.getQueuedPacketBatches().add( new Packet[]{ packet } );
+        if ( this.connection != null ) {
+            if ( !( packet instanceof PacketBatch ) ) {
+                this.networkManager.getPostProcessService().execute( new PostProcessWorker( this, new Packet[]{ packet } ) );
+            } else {
+                PacketBuffer buffer = new PacketBuffer( 64 );
+                buffer.writeByte( packet.getId() );
+                packet.serialize( buffer );
+
+                this.connection.send( reliability, orderingChannel, buffer.getBuffer(), 0, buffer.getPosition() );
+            }
         } else {
             PacketBuffer buffer = new PacketBuffer( 64 );
             buffer.writeByte( packet.getId() );
+            buffer.writeShort( (short) 0 );
             packet.serialize( buffer );
 
-            this.connection.send( reliability, orderingChannel, buffer.getBuffer(), 0, buffer.getPosition() );
+            WrappedMCPEPacket mcpePacket = new WrappedMCPEPacket();
+            mcpePacket.setBuffer( buffer );
+            this.connectionHandler.send( mcpePacket );
         }
     }
 
@@ -264,26 +372,28 @@ public class PlayerConnection {
      * @param chunkData The chunk data packet to send to the player
      */
     private void sendWorldChunk( long chunkHash, PacketWorldChunk chunkData ) {
-        this.send( chunkData );
-
-        synchronized ( this.playerChunks ) {
-            this.currentlySendingPlayerChunks.removeLong( chunkHash );
-            this.playerChunks.add( chunkHash );
+        ChunkAdapter chunkAdapter = null;
+        if ( ( chunkAdapter = this.entity.getWorld().getChunk( chunkData.getX(), chunkData.getZ() ) ) == null ) {
+            return;
         }
+
+        this.playerChunks.add( chunkHash );
+        this.addToSendQueue( chunkData );
+        this.entity.getEntityVisibilityManager().updateAddedChunk( chunkAdapter );
 
         if ( this.state == PlayerConnectionState.LOGIN ) {
             this.sentChunks++;
-            if ( this.sentChunks >= 81 ) {
+            if ( this.sentChunks >= this.entity.getNeededChunksForSpawn() ) {
                 int spawnXChunk = CoordinateUtils.fromBlockToChunk( (int) this.entity.getLocation().getX() );
                 int spawnZChunk = CoordinateUtils.fromBlockToChunk( (int) this.entity.getLocation().getZ() );
 
                 WorldAdapter worldAdapter = this.entity.getWorld();
                 worldAdapter.movePlayerToChunk( spawnXChunk, spawnZChunk, this.entity );
 
-                this.getEntity().fullyInit();
+                this.getEntity().firstSpawn();
 
                 this.state = PlayerConnectionState.PLAYING;
-                this.firstSpawn = true;
+                this.checkForNewChunks( null );
             }
         }
     }
@@ -295,30 +405,48 @@ public class PlayerConnection {
      *
      * @param currentTimeMillis The time in millis of this tick
      * @param buffer            The buffer containing the received data
-     * @param batch             Does this packet come out of a batch
      */
-    private void handleSocketData( long currentTimeMillis, PacketBuffer buffer, boolean batch ) {
+    private void handleSocketData( long currentTimeMillis, PacketBuffer buffer ) {
         if ( buffer.getRemaining() <= 0 ) {
             // Malformed packet:
             return;
         }
 
+        if ( this.connection != null ) {
+            while ( buffer.getRemaining() > 0 ) {
+                int packetLength = buffer.readUnsignedVarInt();
+
+                byte[] payData = new byte[packetLength];
+                buffer.readBytes( payData );
+                PacketBuffer pktBuf = new PacketBuffer( payData, 0 );
+                this.handleBufferData( currentTimeMillis, pktBuf );
+
+                if ( pktBuf.getRemaining() > 0 ) {
+                    LOGGER.error( "Malformed batch packet payload: Could not read enclosed packet data correctly: 0x{} remaining {} bytes", Integer.toHexString( payData[0] ), pktBuf.getRemaining() );
+                    return;
+                }
+            }
+        } else {
+            this.handleBufferData( currentTimeMillis, buffer );
+        }
+    }
+
+    private void handleBufferData( long currentTimeMillis, PacketBuffer buffer ) {
+
         // Grab the packet ID from the packet's data
         byte packetId = buffer.readByte();
 
         // There is some data behind the packet id when non batched packets (2 bytes)
-        // TODO: Find out if MCPE uses triads as packetnumbers now
-        if ( packetId != PACKET_BATCH ) {
-            buffer.readShort();
+        if ( packetId == PACKET_BATCH ) {
+            LOGGER.error( "Malformed batch packet payload: Batch packets are not allowed to contain further batch packets" );
         }
 
-        // LOGGER.debug( "Got packet with ID: " + Integer.toHexString( packetId & 0xff ) );
+        // TODO: Proper implement sending subclient and target subclient (two bytes)
+        buffer.readShort();
 
         // If we are still in handshake we only accept certain packets:
         if ( this.state == PlayerConnectionState.HANDSHAKE ) {
-            if ( packetId == PACKET_BATCH ) {
-                this.handleBatchPacket( currentTimeMillis, buffer, batch );
-            } else if ( packetId == PACKET_LOGIN ) {
+            if ( packetId == PACKET_LOGIN ) {
                 PacketLogin packet = new PacketLogin();
                 packet.deserialize( buffer );
                 this.handlePacket( currentTimeMillis, packet );
@@ -332,9 +460,7 @@ public class PlayerConnection {
 
         // When we are in encryption init state
         if ( this.state == PlayerConnectionState.ENCRPYTION_INIT ) {
-            if ( packetId == PACKET_BATCH ) {
-                this.handleBatchPacket( currentTimeMillis, buffer, batch );
-            } else if ( packetId == PACKET_ENCRYPTION_RESPONSE ) {
+            if ( packetId == PACKET_ENCRYPTION_RESPONSE ) {
                 this.handlePacket( currentTimeMillis, new PacketEncryptionResponse() );
             } else {
                 LOGGER.error( "Received odd packet" );
@@ -346,9 +472,7 @@ public class PlayerConnection {
 
         // When we are in resource pack state
         if ( this.state == PlayerConnectionState.RESOURCE_PACK ) {
-            if ( packetId == PACKET_BATCH ) {
-                this.handleBatchPacket( currentTimeMillis, buffer, batch );
-            } else if ( packetId == PACKET_RESOURCEPACK_RESPONSE ) {
+            if ( packetId == PACKET_RESOURCEPACK_RESPONSE ) {
                 PacketResourcePackResponse packet = new PacketResourcePackResponse();
                 packet.deserialize( buffer );
                 this.handlePacket( currentTimeMillis, packet );
@@ -360,34 +484,27 @@ public class PlayerConnection {
             return;
         }
 
-        if ( packetId == PACKET_BATCH ) {
-            this.handleBatchPacket( currentTimeMillis, buffer, batch );
-        } else {
-            Packet packet = Protocol.createPacket( packetId );
-            if ( packet == null ) {
-                this.networkManager.notifyUnknownPacket( packetId, buffer );
 
-                // Got to skip
-                buffer.skip( buffer.getRemaining() );
-                return;
-            }
+        Packet packet = Protocol.createPacket( packetId );
+        if ( packet == null ) {
+            this.networkManager.notifyUnknownPacket( packetId, buffer );
 
-            packet.deserialize( buffer );
-            this.handlePacket( currentTimeMillis, packet );
+            // Got to skip
+            buffer.skip( buffer.getRemaining() );
+            return;
         }
+
+        packet.deserialize( buffer );
+        this.handlePacket( currentTimeMillis, packet );
     }
 
     /**
      * Handles compressed batch packets directly by decoding their payload.
      *
      * @param buffer The buffer containing the batch packet's data (except packet ID)
+     * @return decompressed and decrypted data
      */
-    private void handleBatchPacket( long currentTimeMillis, PacketBuffer buffer, boolean batch ) {
-        if ( batch ) {
-            LOGGER.error( "Malformed batch packet payload: Batch packets are not allowed to contain further batch packets" );
-            return;
-        }
-
+    private byte[] handleBatchPacket( PacketBuffer buffer ) {
         // Encrypted?
         byte[] input = new byte[buffer.getRemaining()];
         System.arraycopy( buffer.getBuffer(), buffer.getPosition(), input, 0, input.length );
@@ -396,7 +513,7 @@ public class PlayerConnection {
             if ( input == null ) {
                 // Decryption error
                 disconnect( "Checksum of encrypted packet was wrong" );
-                return;
+                return null;
             }
         }
 
@@ -412,26 +529,10 @@ public class PlayerConnection {
             }
         } catch ( IOException e ) {
             LOGGER.error( "Failed to decompress batch packet", e );
-            return;
+            return null;
         }
 
-        byte[] payload = bout.toByteArray();
-
-        PacketBuffer payloadBuffer = new PacketBuffer( payload, 0 );
-        while ( payloadBuffer.getRemaining() > 0 ) {
-            int packetLength = payloadBuffer.readUnsignedVarInt();
-
-            byte[] payData = new byte[packetLength];
-            payloadBuffer.readBytes( payData );
-            PacketBuffer pktBuf = new PacketBuffer( payData, 0 );
-            this.handleSocketData( currentTimeMillis, pktBuf, true );
-
-            if ( pktBuf.getRemaining() > 0 ) {
-                LOGGER.error( "Malformed batch packet payload: Could not read enclosed packet data correctly: 0x" +
-                    Integer.toHexString( payData[0] ) + " reamining " + pktBuf.getRemaining() + " bytes" );
-                return;
-            }
-        }
+        return bout.toByteArray();
     }
 
     /**
@@ -440,16 +541,16 @@ public class PlayerConnection {
      * @param currentTimeMillis The time this packet arrived at the network manager
      * @param packet            The packet to handle
      */
-    @SuppressWarnings("unchecked")  // Needed for generic types not matching
+    @SuppressWarnings( "unchecked" )  // Needed for generic types not matching
     private void handlePacket( long currentTimeMillis, Packet packet ) {
         PacketHandler handler = PACKET_HANDLERS[packet.getId() & 0xff];
         if ( handler != null ) {
-            LOGGER.debug( "Handle packet: " + packet );
+            LOGGER.debug( "Packet: {}", packet );
             handler.handle( packet, currentTimeMillis, this );
             return;
         }
 
-        LOGGER.warn( "No handler for " + packet );
+        LOGGER.warn( "No handler for {}", packet );
     }
 
     /**
@@ -458,57 +559,46 @@ public class PlayerConnection {
      * @param from which location the entity moved
      */
     public void checkForNewChunks( Location from ) {
-        // Don't check until we are fully spawned
-        if ( this.state != PlayerConnectionState.PLAYING ) {
-            return;
-        }
-
         WorldAdapter worldAdapter = this.entity.getWorld();
 
         int currentXChunk = CoordinateUtils.fromBlockToChunk( (int) this.entity.getLocation().getX() );
         int currentZChunk = CoordinateUtils.fromBlockToChunk( (int) this.entity.getLocation().getZ() );
 
         int viewDistance = this.entity.getViewDistance();
-        synchronized ( this.playerChunks ) {
-            List<Pair<Integer, Integer>> toSendChunks = new ArrayList<>();
-            for ( int sendXChunk = currentXChunk - viewDistance; sendXChunk < currentXChunk + viewDistance; sendXChunk++ ) {
-                for ( int sendZChunk = currentZChunk - viewDistance; sendZChunk < currentZChunk + viewDistance; sendZChunk++ ) {
-                    toSendChunks.add( new Pair<>( sendXChunk, sendZChunk ) );
-                }
+
+        List<Pair<Integer, Integer>> toSendChunks = new ArrayList<>();
+        for ( int sendXChunk = currentXChunk - viewDistance; sendXChunk < currentXChunk + viewDistance; sendXChunk++ ) {
+            for ( int sendZChunk = currentZChunk - viewDistance; sendZChunk < currentZChunk + viewDistance; sendZChunk++ ) {
+                toSendChunks.add( new Pair<>( sendXChunk, sendZChunk ) );
+            }
+        }
+
+        toSendChunks.sort( ( o1, o2 ) -> {
+            if ( Objects.equals( o1.getFirst(), o2.getFirst() ) &&
+                Objects.equals( o1.getSecond(), o2.getSecond() ) ) {
+                return 0;
             }
 
-            toSendChunks.sort( new Comparator<Pair<Integer, Integer>>() {
-                @Override
-                public int compare( Pair<Integer, Integer> o1, Pair<Integer, Integer> o2 ) {
-                    if ( Objects.equals( o1.getFirst(), o2.getFirst() ) &&
-                        Objects.equals( o1.getSecond(), o2.getSecond() ) ) {
-                        return 0;
-                    }
+            int distXFirst = Math.abs( o1.getFirst() - currentXChunk );
+            int distXSecond = Math.abs( o2.getFirst() - currentXChunk );
 
-                    int distXFirst = Math.abs( o1.getFirst() - currentXChunk );
-                    int distXSecond = Math.abs( o2.getFirst() - currentXChunk );
+            int distZFirst = Math.abs( o1.getSecond() - currentZChunk );
+            int distZSecond = Math.abs( o2.getSecond() - currentZChunk );
 
-                    int distZFirst = Math.abs( o1.getSecond() - currentZChunk );
-                    int distZSecond = Math.abs( o2.getSecond() - currentZChunk );
+            if ( distXFirst + distZFirst > distXSecond + distZSecond ) {
+                return 1;
+            } else if ( distXFirst + distZFirst < distXSecond + distZSecond ) {
+                return -1;
+            }
 
-                    if ( distXFirst + distZFirst > distXSecond + distZSecond ) {
-                        return 1;
-                    } else if ( distXFirst + distZFirst < distXSecond + distZSecond ) {
-                        return -1;
-                    }
+            return 0;
+        } );
 
-                    return 0;
-                }
-            } );
+        for ( Pair<Integer, Integer> chunk : toSendChunks ) {
+            long hash = CoordinateUtils.toLong( chunk.getFirst(), chunk.getSecond() );
 
-            for ( Pair<Integer, Integer> chunk : toSendChunks ) {
-                long hash = CoordinateUtils.toLong( chunk.getFirst(), chunk.getSecond() );
-
-                if ( !this.playerChunks.contains( hash ) &&
-                    !this.currentlySendingPlayerChunks.contains( hash ) ) {
-                    this.currentlySendingPlayerChunks.add( hash );
-                    worldAdapter.sendChunk( chunk.getFirst(), chunk.getSecond(), this.entity, false );
-                }
+            if ( !this.playerChunks.contains( hash ) ) {
+                worldAdapter.sendChunk( chunk.getFirst(), chunk.getSecond(), this.entity, false );
             }
         }
 
@@ -522,19 +612,18 @@ public class PlayerConnection {
         }
 
         // Check for unloading chunks
-        synchronized ( this.playerChunks ) {
-            LongCursor longCursor = this.playerChunks.cursor();
-            while ( longCursor.moveNext() ) {
-                int x = (int) ( longCursor.elem() >> 32 );
-                int z = (int) ( longCursor.elem() ) + Integer.MIN_VALUE;
+        LongCursor longCursor = this.playerChunks.cursor();
+        while ( longCursor.moveNext() ) {
+            int x = (int) ( longCursor.elem() >> 32 );
+            int z = (int) ( longCursor.elem() ) + Integer.MIN_VALUE;
 
-                if ( x > currentXChunk + viewDistance ||
-                    x < currentXChunk - viewDistance ||
-                    z > currentZChunk + viewDistance ||
-                    z < currentZChunk - viewDistance ) {
-                    // TODO: Check for Packets to send to the client to unload the chunk?
-                    longCursor.remove();
-                }
+            if ( x > currentXChunk + viewDistance ||
+                x < currentXChunk - viewDistance ||
+                z > currentZChunk + viewDistance ||
+                z < currentZChunk - viewDistance ) {
+                // TODO: Check for Packets to send to the client to unload the chunk?
+                this.entity.getEntityVisibilityManager().updateRemoveChunk( this.entity.getWorld().getChunk( x, z ) );
+                longCursor.remove();
             }
         }
     }
@@ -542,7 +631,7 @@ public class PlayerConnection {
     /**
      * Send resource packs
      */
-    public void sendResourcePacks() {
+    public void initWorldAndResourceSend() {
         // We have the chance of forcing resource and behaviour packs here
         PacketResourcePacksInfo packetResourcePacksInfo = new PacketResourcePacksInfo();
         this.send( packetResourcePacksInfo );
@@ -563,7 +652,25 @@ public class PlayerConnection {
      * @param message The message with which the player is going to be kicked
      */
     public void disconnect( String message ) {
-        if ( this.connection.isConnected() && !this.connection.isDisconnecting() ) {
+        if ( this.connection != null ) {
+            if ( this.connection.isConnected() && !this.connection.isDisconnecting() ) {
+                this.networkManager.getServer().getPluginManager().callEvent( new PlayerKickEvent( this.entity, message ) );
+
+                if ( message != null && message.length() > 0 ) {
+                    PacketDisconnect packet = new PacketDisconnect();
+                    packet.setMessage( message );
+                    this.send( packet );
+                }
+
+                if ( this.entity != null ) {
+                    LOGGER.info( "EntityPlayer " + this.entity.getName() + " left the game: " + message );
+                } else {
+                    LOGGER.info( "EntityPlayer has been disconnected whilst logging in: " + message );
+                }
+
+                this.connection.disconnect( message );
+            }
+        } else {
             this.networkManager.getServer().getPluginManager().callEvent( new PlayerKickEvent( this.entity, message ) );
 
             if ( message != null && message.length() > 0 ) {
@@ -578,7 +685,7 @@ public class PlayerConnection {
                 LOGGER.info( "EntityPlayer has been disconnected whilst logging in: " + message );
             }
 
-            this.connection.disconnect( message );
+            this.connectionHandler.disconnect();
         }
     }
 
@@ -607,12 +714,13 @@ public class PlayerConnection {
         move.setX( location.getX() );
         move.setY( (float) ( location.getY() + 1.62 ) );
         move.setZ( location.getZ() );
+        move.setHeadYaw( location.getYaw() );
         move.setYaw( location.getYaw() );
         move.setPitch( location.getPitch() );
-        move.setMode( (byte) 1 );
+        move.setMode( (byte) 2 );
         move.setOnGround( this.getEntity().isOnGround() );
         move.setRidingEntityId( 0 );    // TODO: Implement riding entities correctly
-        this.send( move );
+        this.addToSendQueue( move );
     }
 
     /**
@@ -625,7 +733,7 @@ public class PlayerConnection {
     public void sendWorldTime( int ticks ) {
         PacketWorldTime time = new PacketWorldTime();
         time.setTicks( ticks );
-        this.send( time );
+        this.addToSendQueue( time );
     }
 
     /**
@@ -656,7 +764,7 @@ public class PlayerConnection {
         packet.setCommandsEnabled( true );
 
         this.entity.setPosition( world.getSpawnLocation() );
-        this.send( packet );
+        this.addToSendQueue( packet );
     }
 
     /**
@@ -667,11 +775,10 @@ public class PlayerConnection {
             this.networkManager.getServer().getPluginManager().callEvent( new PlayerQuitEvent( this.entity ) );
             this.entity.getWorld().removePlayer( this.entity );
             this.entity.cleanup();
-            this.entity.despawn();
+            this.entity.setDead( true );
+            this.networkManager.getServer().getPluginManager().callEvent( new PlayerCleanedupEvent( this.entity ) );
             this.entity = null;
         }
-
-        this.postProcessWorker.close();
     }
 
     /**
@@ -679,6 +786,45 @@ public class PlayerConnection {
      */
     public void resetPlayerChunks() {
         this.playerChunks.clear();
+        this.entity.getChunkSendQueue().clear();
+    }
+
+    /**
+     * Get this connection ping
+     *
+     * @return ping of UDP connection or 0 when TCP is used
+     */
+    public int getPing() {
+        return ( this.connection != null ) ? (int) this.connection.getPing() : this.tcpPing;
+    }
+
+    public long getId() {
+        return ( this.connection != null ) ? this.connection.getGuid() : this.tcpId;
+    }
+
+    @Override
+    public String toString() {
+        return this.entity != null ? this.entity.getName() : ( this.connection != null ) ? String.valueOf( this.connection.getGuid() ) : "unknown";
+    }
+
+    public void sendSpawnPosition() {
+        PacketSetSpawnPosition spawnPosition = new PacketSetSpawnPosition();
+        spawnPosition.setSpawnType( 1 );
+        spawnPosition.setForce( false );
+        spawnPosition.setPosition( this.getEntity().getWorld().getSpawnLocation().toBlockPosition() );
+        addToSendQueue( spawnPosition );
+    }
+
+    public void sendDifficulty() {
+        PacketSetDifficulty setDifficulty = new PacketSetDifficulty();
+        setDifficulty.setDifficulty( this.entity.getWorld().getDifficulty().getDifficultyDegree() );
+        addToSendQueue( setDifficulty );
+    }
+
+    public void sendCommandsEnabled() {
+        PacketSetCommandsEnabled setCommandsEnabled = new PacketSetCommandsEnabled();
+        setCommandsEnabled.setEnabled( true );
+        addToSendQueue( setCommandsEnabled );
     }
 
 }

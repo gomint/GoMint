@@ -46,4 +46,9 @@ public interface Inventory {
      */
     int size();
 
+    /**
+     * Set all items in this inventory to air
+     */
+    void clear();
+
 }

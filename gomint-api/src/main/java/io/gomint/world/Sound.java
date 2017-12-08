@@ -13,6 +13,7 @@ package io.gomint.world;
  */
 public enum Sound {
 
+    // CHECKSTYLE:OFF
     ITEM_USE_ON,
     HIT,
     STEP,
@@ -172,7 +173,5 @@ public enum Sound {
     IMITATE_ZOMBIE,
     IMITATE_ZOMBIE_PIGMAN,
     IMITATE_ZOMBIE_VILLAGER,
-    DEFAULT,
-    UNDEFINED,
 
 }

@@ -15,7 +15,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -27,7 +26,7 @@ import java.util.List;
  */
 public class WorldManager {
 
-    private static final Logger logger = LoggerFactory.getLogger( WorldManager.class );
+    private static final Logger LOGGER = LoggerFactory.getLogger( WorldManager.class );
     private final GoMintServer server;
     private List<WorldAdapter> loadedWorlds;
 
@@ -85,7 +84,7 @@ public class WorldManager {
      *
      * @param world The world to be added
      */
-    public void addWorld( WorldAdapter world ) {
+    private void addWorld( WorldAdapter world ) {
         this.loadedWorlds.add( world );
     }
 
@@ -96,53 +95,65 @@ public class WorldManager {
      *
      * @param path The path of the world
      * @return the world which has been loaded
-     * @throws Exception Thrown in case the world could not be loaded
+     * @throws WorldLoadException Thrown in case the world could not be loaded
      */
-    public World loadWorld( String path ) throws Exception {
-        logger.info( "Attempting to load world '" + path + "'" );
+    public World loadWorld( String path ) throws WorldLoadException {
+        LOGGER.info( "Attempting to load world '{}'", path );
 
         File file = new File( path );
         if ( !file.exists() ) {
-            throw new IOException( "World does not exist" );
+            throw new WorldLoadException( "World does not exist" );
         }
 
         if ( file.isDirectory() ) {
             // Anvil world:
             File regionFolder = new File( file, "region" );
             if ( regionFolder.exists() && regionFolder.isDirectory() ) {
-                logger.info( "Detected anvil world '" + path + "'" );
+                LOGGER.info( "Detected anvil world '{}'", path );
                 return this.loadAnvilWorld( file );
             }
 
             // LevelDB world:
             File dbFolder = new File( file, "db" );
             if ( dbFolder.exists() && dbFolder.isDirectory() ) {
-                logger.info( "Detected leveldb world '" + path + "'" );
+                LOGGER.info( "Detected leveldb world '{}'", path );
                 return this.loadLevelDBWorld( file );
             }
         }
 
-        throw new IOException( "Could not detect world format" );
+        throw new WorldLoadException( "Could not detect world format" );
     }
 
-    private World loadLevelDBWorld( File path ) throws Exception {
+    private World loadLevelDBWorld( File path ) throws WorldLoadException {
         LevelDBWorldAdapter world = LevelDBWorldAdapter.load( this.server, path );
         this.addWorld( world );
-        logger.info( "Successfully loaded world '" + path.getName() + "'" );
+        LOGGER.info( "Successfully loaded world '" + path.getName() + "'" );
         return world;
     }
 
-    private World loadAnvilWorld( File path ) throws Exception {
+    private World loadAnvilWorld( File path ) throws WorldLoadException {
         AnvilWorldAdapter world = AnvilWorldAdapter.load( this.server, path );
         this.addWorld( world );
-        logger.info( "Successfully loaded world '" + path.getName() + "'" );
+        LOGGER.info( "Successfully loaded world '" + path.getName() + "'" );
         return world;
     }
 
+    /**
+     * Close and save all worlds
+     */
     public void close() {
         for ( WorldAdapter loadedWorld : this.loadedWorlds ) {
             loadedWorld.close();
         }
+    }
+
+    /**
+     * Unload given world from RAM
+     *
+     * @param worldAdapter which should be unloaded
+     */
+    void unloadWorld( WorldAdapter worldAdapter ) {
+        this.loadedWorlds.remove( worldAdapter );
     }
 
 }

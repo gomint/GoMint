@@ -21,7 +21,7 @@ import java.util.Map;
  */
 @Name( "stop" )
 @Description( "Stops the GoMint server" )
-@Permission( "gomint.commands.stop" )
+@Permission( "gomint.command.stop" )
 public class StopCommand extends Command implements SystemCommand {
 
     private static final Logger LOGGER = LoggerFactory.getLogger( StopCommand.class );
@@ -29,7 +29,7 @@ public class StopCommand extends Command implements SystemCommand {
     // Player execution
     @Override
     public CommandOutput execute( EntityPlayer player, String alias, Map<String, Object> arguments ) {
-        ( (GoMintServer) GoMint.instance() ).shutdown();
+        GoMint.instance().shutdown();
         return new CommandOutput().success( "§7[§aSYSTEM§7] §fServer will be stopped" );
     }
 

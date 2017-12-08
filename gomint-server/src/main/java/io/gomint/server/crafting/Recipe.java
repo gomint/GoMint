@@ -20,7 +20,7 @@ import java.util.UUID;
  * @author BlackyPaw
  * @version 1.0
  */
-public abstract class Recipe {
+public abstract class Recipe implements io.gomint.crafting.Recipe {
 
     private final UUID uuid;
 
@@ -29,24 +29,16 @@ public abstract class Recipe {
      *
      * @param uuid of the recipe
      */
-    protected Recipe( UUID uuid ) {
+    Recipe( UUID uuid ) {
         this.uuid = ( uuid != null ? uuid : UUID.randomUUID() );
     }
 
-    /**
-     * Gets the UUID of this recipe.
-     *
-     * @return The UUID of this recipe
-     */
+    @Override
     public UUID getUUID() {
         return this.uuid;
     }
 
-    /**
-     * Returns a list of ingredients required by this recipe.
-     *
-     * @return The list of ingredients required by this recipe
-     */
+    @Override
     public abstract Collection<ItemStack> getIngredients();
 
     /**

@@ -1,5 +1,6 @@
 package io.gomint.server.inventory.item;
 
+import io.gomint.inventory.item.ItemType;
 import io.gomint.server.registry.RegisterInfo;
 import io.gomint.taglib.NBTTagCompound;
 
@@ -8,7 +9,7 @@ import io.gomint.taglib.NBTTagCompound;
  * @version 1.0
  */
 @RegisterInfo( id = 62 )
- public class ItemBurningFurnace extends ItemStack implements io.gomint.inventory.item.ItemBurningFurnace {
+public class ItemBurningFurnace extends ItemStack implements io.gomint.inventory.item.ItemBurningFurnace {
 
     // CHECKSTYLE:OFF
     public ItemBurningFurnace( short data, int amount ) {
@@ -19,5 +20,10 @@ import io.gomint.taglib.NBTTagCompound;
         super( 62, data, amount, nbt );
     }
     // CHECKSTYLE:ON
+
+    @Override
+    public ItemType getType() {
+        return ItemType.BURNING_FURNACE;
+    }
 
 }

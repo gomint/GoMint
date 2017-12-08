@@ -25,5 +25,6 @@ public class ListenerConfig extends SimpleConfig {
 
     private String ip = "0.0.0.0";
     private int port = 19132;
+    private boolean useTCP = false;
 
 }

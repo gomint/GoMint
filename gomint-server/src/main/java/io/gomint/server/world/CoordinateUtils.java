@@ -115,7 +115,7 @@ public final class CoordinateUtils {
     public static BlockPosition fromLong( long hash ) {
         int x = (int) ( hash >> 38 );
         int y = (int) ( hash >> 26 ) & 0xFFF;
-        int z = (int) ( hash );
+        int z = (int) ( hash ) & 0x3FFFFFF;
 
         return new BlockPosition( x, y, z );
     }

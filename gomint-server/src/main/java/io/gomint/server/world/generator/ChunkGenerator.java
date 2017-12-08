@@ -36,7 +36,7 @@ public abstract class ChunkGenerator {
         if ( this.worldAdapter instanceof LevelDBWorldAdapter ) {
             return new LevelDBChunkAdapter( this.worldAdapter, x, z );
         } else if ( this.worldAdapter instanceof AnvilWorldAdapter ) {
-            return new AnvilChunkAdapter( this.worldAdapter, x, z );
+            return new AnvilChunkAdapter( (AnvilWorldAdapter) this.worldAdapter, x, z );
         }
 
         LOGGER.warn( "Creating temporary in memory chunk since the world adapter is from unknown implementation" );

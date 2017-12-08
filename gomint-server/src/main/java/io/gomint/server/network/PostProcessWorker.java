@@ -3,77 +3,70 @@ package io.gomint.server.network;
 import io.gomint.jraknet.PacketBuffer;
 import io.gomint.server.network.packet.Packet;
 import io.gomint.server.network.packet.PacketBatch;
-import io.gomint.server.util.DumpUtil;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.zip.Deflater;
 
 /**
  * @author geNAZt
  * @version 1.0
  */
-@RequiredArgsConstructor
 public class PostProcessWorker implements Runnable {
 
     private static final Logger LOGGER = LoggerFactory.getLogger( PostProcessWorker.class );
 
-    private AtomicBoolean running = new AtomicBoolean( true );
-    @Getter private BlockingQueue<Packet[]> queuedPacketBatches = new LinkedBlockingQueue<>();
-    private final BatchStreamHolder batchHolder = new BatchStreamHolder();
+    private static final ThreadLocal<BatchStreamHolder> BATCH_HOLDER = new ThreadLocal<>();
     private final PlayerConnection connection;
-    @Setter private EncryptionHandler encryptionHandler;
+    private final Packet[] packets;
+
+    public PostProcessWorker( PlayerConnection connection, Packet[] packets ) {
+        this.connection = connection;
+        this.packets = packets;
+    }
+
+    private BatchStreamHolder getHolder() {
+        if ( BATCH_HOLDER.get() == null ) {
+            BatchStreamHolder holder = new BatchStreamHolder();
+            BATCH_HOLDER.set( holder );
+            return holder;
+        }
+
+        return BATCH_HOLDER.get();
+    }
 
     @Override
     public void run() {
-        Thread.currentThread().setName( "Connection-PostProcessor#" + this.connection.getConnection().getGuid() );
+        BatchStreamHolder holder = this.getHolder();
 
-        // This runnable does zip and encrypt data and send it to the raknet connection
-        while ( running.get() ) {
+        // Batch them first
+        for ( Packet packet : this.packets ) {
+            PacketBuffer buffer = new PacketBuffer( 64 );
+            buffer.writeByte( packet.getId() );
+            buffer.writeShort( (short) 0 );
+            packet.serialize( buffer );
+
             try {
-                Packet[] packetBatch = this.queuedPacketBatches.poll( 50, TimeUnit.MILLISECONDS );
-                if ( packetBatch != null ) {
-                    // Batch them first
-                    for ( Packet packet : packetBatch ) {
-                        LOGGER.debug( "Sending " + packet );
-
-                        PacketBuffer buffer = new PacketBuffer( 64 );
-                        buffer.writeByte( packet.getId() );
-                        buffer.writeShort( (short) 0 );
-                        packet.serialize( buffer );
-
-                        try {
-                            writeVarInt( buffer.getPosition(), this.batchHolder.getOutputStream() );
-                            this.batchHolder.getOutputStream().write( buffer.getBuffer(), buffer.getBufferOffset(), buffer.getPosition() - buffer.getBufferOffset() );
-                        } catch ( IOException e ) {
-                            e.printStackTrace();
-                        }
-                    }
-
-                    PacketBatch batch = new PacketBatch();
-                    batch.setPayload( this.batchHolder.getBytes() );
-
-                    if ( this.encryptionHandler != null ) {
-                        batch.setPayload( this.encryptionHandler.encryptInputForClient( batch.getPayload() ) );
-                    }
-
-                    this.batchHolder.reset();
-                    this.connection.send( batch );
-                }
-            } catch ( InterruptedException e ) {
-                // Ignored
+                writeVarInt( buffer.getPosition(), holder.getOutputStream() );
+                holder.getOutputStream().write( buffer.getBuffer(), buffer.getBufferOffset(), buffer.getPosition() - buffer.getBufferOffset() );
+            } catch ( IOException e ) {
+                LOGGER.error( "Could not write packet data into batch: ", e );
             }
         }
+
+        PacketBatch batch = new PacketBatch();
+        batch.setPayload( holder.getBytes() );
+
+        EncryptionHandler encryptionHandler = this.connection.getEncryptionHandler();
+        if ( encryptionHandler != null && ( this.connection.getState() == PlayerConnectionState.LOGIN || this.connection.getState() == PlayerConnectionState.PLAYING ) ) {
+            batch.setPayload( encryptionHandler.encryptInputForClient( batch.getPayload() ) );
+        }
+
+        holder.reset();
+        this.connection.send( batch );
     }
 
     private void writeVarInt( int value, OutputStream stream ) throws IOException {
@@ -85,13 +78,6 @@ public class PostProcessWorker implements Runnable {
         }
 
         stream.write( copyValue );
-    }
-
-    /**
-     * Close this worker and let it stop working
-     */
-    public void close() {
-        this.running.set( false );
     }
 
     private final class BatchStreamHolder {

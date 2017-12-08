@@ -1,8 +1,11 @@
 package io.gomint.server.inventory.transaction;
 
+import io.gomint.event.inventory.InventoryTransactionEvent;
 import io.gomint.inventory.item.ItemAir;
 import io.gomint.inventory.item.ItemStack;
+import io.gomint.server.entity.EntityPlayer;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,8 +14,10 @@ import java.util.List;
  * @author geNAZt
  * @version 1.0
  */
+@RequiredArgsConstructor
 public class TransactionGroup {
 
+    private final EntityPlayer player;
     private final List<Transaction> transactions = new ArrayList<>();
 
     // Need / have for this transactions
@@ -108,16 +113,24 @@ public class TransactionGroup {
      */
     private boolean canExecute() {
         this.calcMatchItems();
-        return this.matchItems && this.haveItems.isEmpty() && this.needItems.isEmpty() && !this.transactions.isEmpty();
+        boolean matched = this.matchItems && this.haveItems.isEmpty() && this.needItems.isEmpty() && !this.transactions.isEmpty();
+        if ( matched ) {
+            List<io.gomint.inventory.transaction.Transaction> transactionList = new ArrayList<>( this.transactions );
+            InventoryTransactionEvent transactionEvent = new InventoryTransactionEvent( this.player, transactionList );
+            this.player.getWorld().getServer().getPluginManager().callEvent( transactionEvent );
+            return !transactionEvent.isCancelled();
+        }
+
+        return false;
     }
 
     /**
      * Try to execute the transaction
      *
-     * If it fails
+     * @param forceExecute to force execution (like creative mode does)
      */
-    public void execute() {
-        if ( this.canExecute() ) {
+    public void execute( boolean forceExecute ) {
+        if ( this.canExecute() || forceExecute ) {
             for ( Transaction transaction : this.transactions ) {
                 transaction.commit();
             }

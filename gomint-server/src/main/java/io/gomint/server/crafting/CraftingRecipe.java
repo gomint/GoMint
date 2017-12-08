@@ -20,9 +20,9 @@ import java.util.*;
  */
 public abstract class CraftingRecipe extends Recipe {
 
-    protected ItemStack[] outcome;
+    private ItemStack[] outcome;
 
-    protected CraftingRecipe( ItemStack[] outcome, UUID uuid ) {
+    CraftingRecipe( ItemStack[] outcome, UUID uuid ) {
         super( uuid );
         this.outcome = outcome;
     }
@@ -36,6 +36,7 @@ public abstract class CraftingRecipe extends Recipe {
             for ( ItemStack stack : this.outcome ) {
                 list.add( ( (io.gomint.server.inventory.item.ItemStack) stack ).clone() );
             }
+
             return list;
         }
     }

@@ -1,10 +1,13 @@
 package io.gomint.server.network.handler;
 
 import io.gomint.event.player.PlayerInteractEvent;
+import io.gomint.event.world.BlockBreakEvent;
 import io.gomint.server.network.PlayerConnection;
 import io.gomint.server.network.packet.PacketPlayerAction;
 import io.gomint.server.world.LevelEvent;
+import io.gomint.server.world.block.Air;
 import io.gomint.server.world.block.Block;
+import io.gomint.server.world.block.Fire;
 import io.gomint.world.Gamemode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,7 +37,7 @@ public class PacketPlayerActionHandler implements PacketHandler<PacketPlayerActi
 
                             io.gomint.server.world.block.Block block = connection.getEntity().getWorld().getBlockAt( packet.getPosition() );
 
-                            long breakTime = block.getFinalBreakTime( connection.getEntity().getInventory().getItemInHand() );
+                            long breakTime = block.getFinalBreakTime( connection.getEntity().getInventory().getItemInHand(), connection.getEntity() );
                             LOGGER.debug( "Sending break time: " + breakTime );
 
                             // Tell the client which break time we want
@@ -42,6 +45,17 @@ public class PacketPlayerActionHandler implements PacketHandler<PacketPlayerActi
                                 connection.getEntity().getWorld().sendLevelEvent( packet.getPosition().toVector(),
                                     LevelEvent.BLOCK_START_BREAK, (int) ( 65536 / ( breakTime / 50 ) ) );
                             }
+                        }
+                    }
+
+                    // Nasty hack for fire
+                    io.gomint.server.world.block.Block block = connection.getEntity().getWorld().getBlockAt( packet.getPosition() );
+                    Block faced = (Block) block.getSide( packet.getFace() );
+                    if ( faced instanceof Fire ) {
+                        BlockBreakEvent event1 = new BlockBreakEvent( connection.getEntity(), faced );
+                        connection.getServer().getPluginManager().callEvent( event1 );
+                        if ( !event1.isCancelled() ) {
+                            faced.setType( Air.class );
                         }
                     }
                 }
@@ -87,12 +101,6 @@ public class PacketPlayerActionHandler implements PacketHandler<PacketPlayerActi
                 break;
 
             case CONTINUE_BREAK:
-                // When the player is in creative this is the only way to get needed data since it doesn't send a
-                // START_BREAK
-                if ( connection.getEntity().getGamemode() == Gamemode.CREATIVE && connection.getEntity().getBreakVector() == null ) {
-                    connection.getEntity().setBreakVector( packet.getPosition() );
-                }
-
                 // Broadcast break effects
                 if ( connection.getEntity().getBreakVector() != null ) {
                     Block block = connection.getEntity().getWorld().getBlockAt( connection.getEntity().getBreakVector() );
@@ -106,6 +114,11 @@ public class PacketPlayerActionHandler implements PacketHandler<PacketPlayerActi
 
             case JUMP:
                 connection.getEntity().jump();
+                break;
+
+            case RESPAWN:
+                connection.getEntity().respawn();
+
                 break;
 
             default:

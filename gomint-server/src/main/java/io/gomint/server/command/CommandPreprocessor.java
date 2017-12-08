@@ -6,6 +6,8 @@ import io.gomint.server.network.packet.PacketAvailableCommands;
 import io.gomint.server.network.type.CommandData;
 import io.gomint.server.util.collection.IndexedHashMap;
 import lombok.Getter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -18,6 +20,8 @@ import java.util.function.Function;
  * @version 1.0
  */
 public class CommandPreprocessor {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger( CommandPreprocessor.class );
 
     // Those a static values which are used for PE to identify the type
     /**
@@ -127,30 +131,46 @@ public class CommandPreprocessor {
                     if ( overload.getParameters() != null ) {
                         for ( Map.Entry<String, ParamValidator> entry : overload.getParameters().entrySet() ) {
                             // Build together type
-                            int paramType = ARG_FLAG_VALID; // We don't support postfixes yet
+                            int paramType = 0; // We don't support postfixes yet
 
                             switch ( entry.getValue().getType() ) {
                                 case INT:
+                                    paramType |= ARG_FLAG_VALID;
                                     paramType |= ARG_TYPE_INT;
                                     break;
                                 case BOOL:
                                 case STRING_ENUM:
                                     paramType |= ARG_FLAG_ENUM;
+                                    paramType |= ARG_FLAG_VALID;
                                     paramType |= this.enumIndexes.get( command.getName() + "#" + entry.getKey() );
                                     break;
                                 case TARGET:
+                                    paramType |= ARG_FLAG_VALID;
                                     paramType |= ARG_TYPE_TARGET;
                                     break;
                                 case STRING:
+                                    paramType |= ARG_FLAG_VALID;
                                     paramType |= ARG_TYPE_STRING;
                                     break;
                                 case BLOCK_POS:
+                                    paramType |= ARG_FLAG_VALID;
                                     paramType |= ARG_TYPE_POSITION;
                                     break;
                                 case TEXT:
+                                    paramType |= ARG_FLAG_VALID;
                                     paramType |= ARG_TYPE_TEXT;
                                     break;
+                                case FLOAT:
+                                    paramType |= ARG_FLAG_VALID;
+                                    paramType |= ARG_TYPE_FLOAT;
+                                    break;
+                                case COMMAND:
+                                    paramType |= ARG_FLAG_ENUM;
+                                    paramType |= ARG_FLAG_VALID;
+                                    paramType |= this.enumIndexes.get( command.getName() + "#" + entry.getKey() );
+                                    break;
                                 default:
+                                    paramType |= ARG_FLAG_VALID;
                                     paramType |= ARG_TYPE_VALUE;
                             }
 
@@ -181,12 +201,13 @@ public class CommandPreprocessor {
         }
 
         // Create / add this value to the enum
-        this.enums.computeIfAbsent( name, new Function<String, List<Integer>>() {
-            @Override
-            public List<Integer> apply( String s ) {
-                return new ArrayList<>();
-            }
-        } ).add( enumValueIndex );
+        List<Integer> old = this.enums.get( name );
+        if ( old == null ) {
+            old = new ArrayList<>();
+            this.enums.put( name, old );
+        }
+
+        old.add( enumValueIndex );
     }
 
 }

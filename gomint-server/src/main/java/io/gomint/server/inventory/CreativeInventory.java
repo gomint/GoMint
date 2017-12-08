@@ -17,27 +17,18 @@ public class CreativeInventory extends Inventory {
      * Construct new creative inventory
      *
      * @param owner of this inventory, should be the server in this case
+     * @param size  of the inventory
      */
-    public CreativeInventory( InventoryHolder owner ) {
-        super( owner, 0 );
+    public CreativeInventory( InventoryHolder owner, int size ) {
+        super( owner, size );
     }
 
     @Override
     public void sendContents( PlayerConnection playerConnection ) {
-        Collection<Integer> itemIds = Items.getAll();
-        ItemStack[] itemStacks = new ItemStack[itemIds.size() - 1];
-
-        int i = 0;
-        for ( Integer id : itemIds ) {
-            if ( id != 0 ) {
-                itemStacks[i++] = new ItemStack( id, (short) 0, 1, null );
-            }
-        }
-
         PacketInventoryContent inventoryContent = new PacketInventoryContent();
-        inventoryContent.setItems( itemStacks );
+        inventoryContent.setItems( getContents() );
         inventoryContent.setWindowId( WindowMagicNumbers.CREATIVE.getId() );
-        playerConnection.send( inventoryContent );
+        playerConnection.addToSendQueue( inventoryContent );
     }
 
     @Override

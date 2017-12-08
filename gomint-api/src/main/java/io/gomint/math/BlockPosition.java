@@ -32,6 +32,13 @@ public class BlockPosition implements Cloneable {
         return this;
     }
 
+    public BlockPosition add( int x, int y, int z ) {
+        this.x += x;
+        this.y += y;
+        this.z += z;
+        return this;
+    }
+
     @Override
     public BlockPosition clone() {
         try {

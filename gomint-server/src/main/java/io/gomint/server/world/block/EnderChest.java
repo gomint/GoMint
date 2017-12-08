@@ -1,5 +1,7 @@
 package io.gomint.server.world.block;
 
+import io.gomint.world.block.BlockType;
+
 import io.gomint.inventory.item.ItemStack;
 import io.gomint.math.Vector;
 import io.gomint.server.entity.Entity;
@@ -11,7 +13,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( id = 130 )
-public class EnderChest extends Block {
+public class EnderChest extends Block implements io.gomint.world.block.BlockEnderChest {
 
     @Override
     public int getBlockId() {
@@ -37,6 +39,16 @@ public class EnderChest extends Block {
         }
 
         return false;
+    }
+
+    @Override
+    public float getBlastResistance() {
+        return 3000.0f;
+    }
+
+    @Override
+    public BlockType getType() {
+        return BlockType.ENDER_CHEST;
     }
 
 }

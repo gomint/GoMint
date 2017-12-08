@@ -17,8 +17,11 @@ public class PacketMobEquipment extends Packet {
     private ItemStack stack;
     private byte slot;
     private byte selectedSlot;
-    private byte unknown; // TODO: Find out what this is
+    private byte windowId;
 
+    /**
+     * Create new packet
+     */
     public PacketMobEquipment() {
         super( Protocol.PACKET_MOB_EQUIPMENT );
     }
@@ -29,7 +32,7 @@ public class PacketMobEquipment extends Packet {
         writeItemStack( this.stack, buffer );
         buffer.writeByte( this.slot );
         buffer.writeByte( this.selectedSlot );
-        buffer.writeByte( this.unknown );
+        buffer.writeByte( this.windowId );
     }
 
     @Override
@@ -38,7 +41,7 @@ public class PacketMobEquipment extends Packet {
         this.stack = readItemStack( buffer );
         this.slot = buffer.readByte();
         this.selectedSlot = buffer.readByte();
-        this.unknown = buffer.readByte();
+        this.windowId = buffer.readByte();
     }
 
 }

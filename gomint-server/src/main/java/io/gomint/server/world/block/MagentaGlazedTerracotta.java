@@ -1,5 +1,7 @@
 package io.gomint.server.world.block;
 
+import io.gomint.world.block.BlockType;
+
 import io.gomint.server.registry.RegisterInfo;
 
 /**
@@ -7,7 +9,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( id = 222 )
-public class MagentaGlazedTerracotta extends Block {
+public class MagentaGlazedTerracotta extends Block implements io.gomint.world.block.BlockMagentaGlazedTerracotta {
 
     @Override
     public int getBlockId() {
@@ -17,6 +19,16 @@ public class MagentaGlazedTerracotta extends Block {
     @Override
     public long getBreakTime() {
         return 2100;
+    }
+
+    @Override
+    public float getBlastResistance() {
+        return 7.0f;
+    }
+
+    @Override
+    public BlockType getType() {
+        return BlockType.MAGENTA_GLAZED_TERRACOTTA;
     }
 
 }

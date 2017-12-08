@@ -1,13 +1,16 @@
 package io.gomint.server.registry;
 
 import com.google.common.reflect.ClassPath;
+import io.gomint.server.GoMintServer;
 import io.gomint.server.util.collection.GeneratorAPIClassMap;
 import io.gomint.server.util.collection.GeneratorMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 /**
  * @author geNAZt
@@ -17,6 +20,7 @@ public class Registry<R> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger( Registry.class );
 
+    private final List<Integer> registered = new ArrayList<>();
     private final GeneratorCallback<R> generatorCallback;
     private final GeneratorMap<R> generators = GeneratorMap.withExpectedSize( 250 );
     private final GeneratorAPIClassMap<Class<?>> apiReferences = GeneratorAPIClassMap.withExpectedSize( 250 );
@@ -36,16 +40,23 @@ public class Registry<R> {
      * @param classPath which should be searched
      */
     public void register( String classPath ) {
-        LOGGER.debug( "Going to scan: " + classPath );
+        LOGGER.debug( "Going to scan: {}", classPath );
 
-        // Search io.gomint.server.inventory.item
-        try {
-            for ( ClassPath.ClassInfo classInfo : ClassPath.from( ClassLoader.getSystemClassLoader() )
-                .getTopLevelClasses( classPath ) ) {
-                register( classInfo.load() );
-            }
-        } catch ( IOException e ) {
-            e.printStackTrace();
+        for ( ClassPath.ClassInfo classInfo : GoMintServer.getClassPath().getTopLevelClasses( classPath ) ) {
+            register( classInfo.load() );
+        }
+    }
+
+    /**
+     * Register all classes which can be found in given path
+     *
+     * @param classPath which should be searched
+     */
+    public void registerRecursive( String classPath ) {
+        LOGGER.debug( "Going to scan: {}", classPath );
+
+        for ( ClassPath.ClassInfo classInfo : GoMintServer.getClassPath().getTopLevelClassesRecursive( classPath ) ) {
+            register( classInfo.load() );
         }
     }
 
@@ -57,21 +68,21 @@ public class Registry<R> {
         }
 
         int id = clazz.getAnnotation( RegisterInfo.class ).id();
-        R oldGen = this.generators.get( id );
-        if ( oldGen != null ) {
-            LOGGER.debug( "Duplicated register info for id: " + id + " -> " + clazz.getName() + "; old: " + oldGen.getClass().getName() );
-        }
-
         R generator = this.generatorCallback.generate( id, clazz );
         if ( generator != null ) {
-            this.generators.put( id, generator );
+            R oldGen = this.generators.put( id, generator );
+            if ( oldGen != null ) {
+                LOGGER.debug( "Duplicated register info for id: {} -> {}; old: {}", id, clazz.getName(), oldGen.getClass().getName() );
+            }
+
+            this.registered.add( id );
 
             // Check for API interfaces
             for ( Class<?> apiInter : clazz.getInterfaces() ) {
-                apiReferences.put( apiInter, id );
+                this.apiReferences.put( apiInter, id );
             }
 
-            apiReferences.put( clazz, id );
+            this.apiReferences.put( clazz, id );
         }
     }
 
@@ -91,6 +102,23 @@ public class Registry<R> {
 
     public Collection<Integer> getAll() {
         return generators.keySet();
+    }
+
+    public int getId( Class<?> clazz ) {
+        return apiReferences.getOrDefault( clazz, -1 );
+    }
+
+    public void debugPrint() {
+        this.registered.sort( Integer::compareTo );
+        int beforeID = -1;
+        for ( Integer id : this.registered ) {
+            LOGGER.info( "Registered ID: {} - {}", id, getGenerator( id ).getClass().getSimpleName() );
+
+            if ( id != ++beforeID ) {
+                LOGGER.warn( "Missing ID {} ?", id - 1 );
+                beforeID = id;
+            }
+        }
     }
 
 }

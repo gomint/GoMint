@@ -1,5 +1,7 @@
 package io.gomint.server.world.block;
 
+import io.gomint.world.block.BlockType;
+
 import io.gomint.math.AxisAlignedBB;
 import io.gomint.server.registry.RegisterInfo;
 
@@ -8,7 +10,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( id = 171 )
-public class Carpet extends Block {
+public class Carpet extends Block implements io.gomint.world.block.BlockCarpet {
 
     @Override
     public int getBlockId() {
@@ -31,4 +33,14 @@ public class Carpet extends Block {
             this.location.getZ() + 1
         );
     }
+    @Override
+    public float getBlastResistance() {
+        return 0.5f;
+    }
+
+    @Override
+    public BlockType getType() {
+        return BlockType.CARPET;
+    }
+
 }

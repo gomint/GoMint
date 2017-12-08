@@ -9,6 +9,7 @@ import io.gomint.server.command.CommandHolder;
 import io.gomint.server.network.PlayerConnection;
 import io.gomint.server.network.packet.PacketCommandOutput;
 import io.gomint.server.network.packet.PacketCommandRequest;
+import io.gomint.server.network.type.CommandOrigin;
 import io.gomint.server.network.type.OutputMessage;
 
 import java.util.*;
@@ -28,19 +29,29 @@ public class PacketCommandRequestHandler implements PacketHandler<PacketCommandR
 
         // Search for correct command holder
         String removedFirstChar = packet.getInputCommand().substring( 1 );
+        String[] commandParts = removedFirstChar.split( " " );
+        int consumed = 0;
+
+        String commandName = commandParts[consumed++];
+
         CommandHolder selected = null;
-        for ( CommandHolder commandHolder : connection.getServer().getPluginManager().getCommandManager().getCommands() ) {
-            if ( removedFirstChar.startsWith( commandHolder.getName() ) ) {
-                if ( selected == null || selected.getName().length() < commandHolder.getName().length() ) {
+        while ( selected == null && commandParts.length >= consumed ) {
+            for ( CommandHolder commandHolder : connection.getServer().getPluginManager().getCommandManager().getCommands() ) {
+                if ( commandName.equalsIgnoreCase( commandHolder.getName() ) ) {
                     selected = commandHolder;
+                    break;
                 }
+            }
+
+            if ( selected == null ) {
+                commandName += " " + commandParts[consumed++];
             }
         }
 
         // Check if we selected a command
         if ( selected == null ) {
             // Send CommandOutput with failure
-            sendFailure( connection, new ArrayList<OutputMessage>() {{
+            sendFailure( packet.getCommandOrigin(), connection, new ArrayList<OutputMessage>() {{
                 add( new OutputMessage( "Command for input '%%s' could not be found", false, new ArrayList<String>() {{
                     add( packet.getInputCommand() );
                 }} ) );
@@ -48,22 +59,22 @@ public class PacketCommandRequestHandler implements PacketHandler<PacketCommandR
         } else {
             // Check for permission
             if ( selected.getPermission() != null && !connection.getEntity().hasPermission( selected.getPermission() ) ) {
-                sendFailure( connection, new ArrayList<OutputMessage>() {{
+                sendFailure( packet.getCommandOrigin(), connection, new ArrayList<OutputMessage>() {{
                     add( new OutputMessage( "No permission for this command", false, new ArrayList<>() ) );
                 }} );
             } else {
-
                 // Now we need to parse all additional parameters
-                String restData;
-                if ( removedFirstChar.length() > selected.getName().length() ) {
-                    restData = removedFirstChar.substring( selected.getName().length() + 1 );
+                String[] params;
+                if ( commandParts.length > consumed ) {
+                    params = new String[commandParts.length - consumed];
+                    System.arraycopy( commandParts, consumed, params, 0, commandParts.length - consumed );
                 } else {
-                    restData = "";
+                    params = new String[0];
                 }
 
-                String[] params = !restData.isEmpty() ? restData.split( " " ) : new String[0];
-
                 PacketCommandOutput output = new PacketCommandOutput();
+                packet.getCommandOrigin().setType( (byte) 3 );
+                output.setOrigin( packet.getCommandOrigin() );
                 CommandOutput commandOutput = null;
 
                 if ( selected.getOverload() != null ) {
@@ -120,8 +131,10 @@ public class PacketCommandRequestHandler implements PacketHandler<PacketCommandR
                                 }
                             }
 
-                            commandOutput = selected.getExecutor().execute( connection.getEntity(), selected.getName(), commandInput );
-                            break;
+                            if ( !paramIterator.hasNext() ) {
+                                commandOutput = selected.getExecutor().execute( connection.getEntity(), selected.getName(), commandInput );
+                                break;
+                            }
                         }
                     }
 
@@ -149,8 +162,10 @@ public class PacketCommandRequestHandler implements PacketHandler<PacketCommandR
         }
     }
 
-    private void sendFailure( PlayerConnection connection, List<OutputMessage> messages ) {
+    private void sendFailure( CommandOrigin origin, PlayerConnection connection, List<OutputMessage> messages ) {
         PacketCommandOutput output = new PacketCommandOutput();
+        origin.setType( (byte) 3 );
+        output.setOrigin( origin );
         output.setSuccess( false );
         output.setOutputs( messages );
         connection.addToSendQueue( output );

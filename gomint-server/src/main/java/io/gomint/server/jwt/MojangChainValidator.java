@@ -164,6 +164,7 @@ public class MojangChainValidator {
         Object usernameRaw = extraData.get( "displayName" );
         Object uuidRaw = extraData.get( "identity" );
         Object xuidRaw = extraData.get( "XUID" );
+        Object xuidSniffed = extraData.get( "proxprox.xuid" );
 
         if ( usernameRaw != null && usernameRaw instanceof String ) {
             this.username = (String) usernameRaw;
@@ -179,6 +180,10 @@ public class MojangChainValidator {
 
         if ( !unsafe && xuidRaw != null && xuidRaw instanceof String ) {
             this.xboxId = (String) xuidRaw;
+        }
+
+        if ( unsafe && xuidSniffed != null && xuidSniffed instanceof String ) {
+            this.xboxId = (String) xuidSniffed;
         }
     }
 

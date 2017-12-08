@@ -1,5 +1,7 @@
 package io.gomint.server.world.block;
 
+import io.gomint.world.block.BlockType;
+
 import io.gomint.server.registry.RegisterInfo;
 
 /**
@@ -7,7 +9,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( id = 150 )
-public class RedstoneComparatorPowered extends Block {
+public class RedstoneComparatorPowered extends Block implements io.gomint.world.block.BlockRedstoneComparatorPowered {
 
     @Override
     public int getBlockId() {
@@ -17,6 +19,16 @@ public class RedstoneComparatorPowered extends Block {
     @Override
     public boolean isTransparent() {
         return true;
+    }
+
+    @Override
+    public float getBlastResistance() {
+        return 0.0f;
+    }
+
+    @Override
+    public BlockType getType() {
+        return BlockType.REDSTONE_COMPARATOR_POWERED;
     }
 
 }

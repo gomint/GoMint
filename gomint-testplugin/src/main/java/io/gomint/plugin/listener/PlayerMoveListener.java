@@ -5,10 +5,7 @@ import io.gomint.event.EventHandler;
 import io.gomint.event.EventListener;
 import io.gomint.event.player.PlayerMoveEvent;
 import io.gomint.math.BlockPosition;
-import io.gomint.math.Vector;
-import io.gomint.world.Gamemode;
 import io.gomint.world.block.Block;
-import io.gomint.world.block.Dirt;
 
 /**
  * @author geNAZt
@@ -24,10 +21,6 @@ public class PlayerMoveListener implements EventListener {
         event.getPlayer().sendMessage( ChatType.POPUP,
                 "§fX: §a" + toBlock.getX() + " §e- §fY: §a" + toBlock.getY() + " §e- §fZ: §a" + toBlock.getZ() + " | " + event.getPlayer().getPing() + " ms",
                 "§fWalking on block: §a" + block.getClass() );
-
-        if ( block instanceof Dirt ) {
-            event.getPlayer().setVelocity( new Vector( 0.5f, 2.0f, 0.5f ) );
-        }
     }
 
 }

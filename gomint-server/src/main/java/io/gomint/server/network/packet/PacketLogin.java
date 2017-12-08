@@ -36,8 +36,6 @@ public class PacketLogin extends Packet {
     @Override
     public void deserialize( PacketBuffer buffer ) {
         this.protocol = buffer.readInt();
-
-        // Decompress inner data (i don't know why you compress inside of a Batched Packet but hey)
         this.payload = new byte[buffer.readUnsignedVarInt()];
         buffer.readBytes( this.payload );
     }
