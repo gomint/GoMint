@@ -7,6 +7,7 @@ import io.gomint.command.CommandOutput;
 import io.gomint.command.annotation.*;
 import io.gomint.command.validator.IntegerValidator;
 import io.gomint.command.validator.StringValidator;
+import io.gomint.command.validator.TargetValidator;
 import io.gomint.entity.EntityPlayer;
 import io.gomint.world.Gamemode;
 
@@ -20,10 +21,11 @@ import java.util.Map;
 @Description( "Sets a player's game mode" )
 @Permission( "gomint.command.gamemode" )
 @Overload( {
-    @Parameter( name = "gameMode", validator = IntegerValidator.class)
+    @Parameter( name = "gameMode", validator = IntegerValidator.class),
+    @Parameter( name = "gameMode", validator = StringValidator.class, arguments = { "[a-zA-Z0-9ß\\-]+" })
 } )
 @Overload( {
-    @Parameter( name = "target", validator = StringValidator.class, arguments = { "[a-zA-Z0-9ß\\-]+" } ),
+    @Parameter( name = "target", validator = TargetValidator.class),
 } )
 public class GamemodeCommand extends Command {
 
@@ -37,30 +39,30 @@ public class GamemodeCommand extends Command {
         // Spectator gamemode wasn't in showed commands, so i don't added it.
         if (arguments.get( "gameMode" ) == "s") {
             player.setGamemode(Gamemode.SURVIVAL);
-            output.success("Set own game mode to " + player.getGamemode());
+            output.success("Set own game mode to %%s" + player.getGamemode());
         } else if (arguments.get( "gameMode" ) == "c") {
             player.setGamemode(Gamemode.CREATIVE);
-            output.success("Set own game mode to " + player.getGamemode());
+            output.success("Set own game mode to %%s" + player.getGamemode());
         } else if (arguments.get( "gameMode" ) == "a") {
             player.setGamemode(Gamemode.ADVENTURE);
-            output.success("Set own game mode to " + player.getGamemode());
+            output.success("Set own game mode to %%s" + player.getGamemode());
         } else if (entityPlayer == null || arguments.get( "target" ) == "@s") {
             player.setGamemode(gamemode);
-            output.success( "Set own game mode to " + player.getGamemode());
+            output.success( "Set own game mode to %%s" + player.getGamemode());
         } else if (arguments.get( "target" ) == "@a") {
             for (EntityPlayer players : GoMint.instance().getPlayers()) {
                 players.setGamemode(gamemode);
-                output.success("Set own game mode to " + player.getGamemode());
+                output.success("Set own game mode to %%s" + player.getGamemode());
             }
         } else if (arguments.get( "target" ) == "@e") {
             output.success(ChatColor.RED + "Select must be player-type" );
         } else if (arguments.get( "target") == "@p") {
             // I understand from Client was OFFLINE PLAYERS, yeah, but i get message again.
-            output.success("Set own game mode to " + player.getGamemode());
+            output.success("Set own game mode to %%s" + player.getGamemode());
         }
 
         entityPlayer.setGamemode(gamemode);
-        output.success( "Gamemode was changed succesfully to " + entityPlayer.getGamemode());
+        output.success( "Gamemode was changed succesfully to %%s" + entityPlayer.getGamemode());
         return output;
     }
 
