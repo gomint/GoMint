@@ -7,7 +7,6 @@ import io.gomint.command.CommandOutput;
 import io.gomint.command.annotation.*;
 import io.gomint.command.validator.IntegerValidator;
 import io.gomint.command.validator.StringValidator;
-import io.gomint.entity.EntityCreature;
 import io.gomint.entity.EntityPlayer;
 import io.gomint.world.Gamemode;
 
