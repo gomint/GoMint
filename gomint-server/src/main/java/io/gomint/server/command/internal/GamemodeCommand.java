@@ -1,4 +1,4 @@
-package io.gomint.plugin.command;
+package io.gomint.server.command.internal;
 
 import io.gomint.ChatColor;
 import io.gomint.GoMint;
