@@ -78,7 +78,7 @@ public class GamemodeCommand extends Command {
                 case "@s":
                     return new CommandOutput().success("Set own game mode to %s", gamemode.name().toLowerCase());
                 default:
-                    throw new AssertionError(ChatColor.RED + "Syntax error: Unexpected specialTarget.")
+                    throw new AssertionError(ChatColor.RED + "Syntax error: Unexpected specialTarget.");
             }
         }
         target.setGamemode(gamemode);
