@@ -1,69 +1,90 @@
-package io.gomint.server.command.internal;
+package io.gomint.plugin.command;
 
 import io.gomint.ChatColor;
 import io.gomint.GoMint;
 import io.gomint.command.Command;
 import io.gomint.command.CommandOutput;
-import io.gomint.command.annotation.*;
-import io.gomint.command.validator.IntegerValidator;
-import io.gomint.command.validator.StringValidator;
+import io.gomint.command.annotation.Description;
+import io.gomint.command.annotation.Name;
+import io.gomint.command.annotation.Overload;
+import io.gomint.command.annotation.Parameter;
+import io.gomint.command.annotation.Permission;
+import io.gomint.command.validator.EnumValidator;
 import io.gomint.command.validator.TargetValidator;
 import io.gomint.entity.EntityPlayer;
 import io.gomint.world.Gamemode;
 
 import java.util.Map;
+import java.util.Random;
 
-/**
- * @author NycuRO
- * @version 1.0
- */
-@Name( "gamemode" )
-@Description( "Sets a player's game mode" )
-@Permission( "gomint.command.gamemode" )
-@Overload( {
-    @Parameter( name = "gameMode", validator = IntegerValidator.class),
-    @Parameter( name = "gameMode", validator = StringValidator.class, arguments = { "[a-zA-Z0-9ß\\-]+" })
-} )
-@Overload( {
-    @Parameter( name = "target", validator = TargetValidator.class),
-} )
+@Name("gamemode")
+@Description("Sets a player's game mode")
+@Permission("gomint.gommands.gamemode")
+@Overload({
+    @Parameter(name = "gameMode", validator = EnumValidator.class, arguments = {"0", "s", "survival", "1", "c", "creative", "2", "a", "adventure"}),
+    @Parameter(name = "target", validator = TargetValidator.class, optional = true)
+})
+@Overload({
+    @Parameter(name = "gameMode", validator = EnumValidator.class, arguments = {"0", "s", "survival", "1", "c", "creative", "2", "a", "adventure"}),
+    @Parameter(name = "specialTarget", validator = EnumValidator.class, arguments = {"@a", "@e", "@p", "@r", "@s"})
+})
 public class GamemodeCommand extends Command {
 
     @Override
-    public CommandOutput execute( EntityPlayer player, String alias, Map<String, Object> arguments ) {
-        CommandOutput output = new CommandOutput();
-
-        Gamemode gamemode = (Gamemode) arguments.get( "gameMode");
-        EntityPlayer entityPlayer = (EntityPlayer) arguments.get( "target" );
-
-        // Spectator gamemode wasn't in showed commands, so i don't added it.
-        if (arguments.get( "gameMode" ) == "s") {
-            player.setGamemode(Gamemode.SURVIVAL);
-            output.success("Set own game mode to %%s" + player.getGamemode());
-        } else if (arguments.get( "gameMode" ) == "c") {
-            player.setGamemode(Gamemode.CREATIVE);
-            output.success("Set own game mode to %%s" + player.getGamemode());
-        } else if (arguments.get( "gameMode" ) == "a") {
-            player.setGamemode(Gamemode.ADVENTURE);
-            output.success("Set own game mode to %%s" + player.getGamemode());
-        } else if (entityPlayer == null || arguments.get( "target" ) == "@s") {
-            player.setGamemode(gamemode);
-            output.success( "Set own game mode to %%s" + player.getGamemode());
-        } else if (arguments.get( "target" ) == "@a") {
-            for (EntityPlayer players : GoMint.instance().getPlayers()) {
-                players.setGamemode(gamemode);
-                output.success("Set own game mode to %%s" + player.getGamemode());
-            }
-        } else if (arguments.get( "target" ) == "@e") {
-            output.success(ChatColor.RED + "Select must be player-type" );
-        } else if (arguments.get( "target") == "@p") {
-            // I understand from Client was OFFLINE PLAYERS, yeah, but i get message again.
-            output.success("Set own game mode to %%s" + player.getGamemode());
+    public CommandOutput execute(EntityPlayer player, String alias, Map<String, Object> arguments) {
+        String mode = (String) arguments.get("gameMode");
+        mode = mode.toLowerCase();
+        Gamemode gamemode;
+        switch (mode) {
+            case "0":
+            case "s":
+            case "survival":
+                gamemode = Gamemode.SURVIVAL;
+                break;
+            case "1":
+            case "c":
+            case "creative":
+                gamemode = Gamemode.CREATIVE;
+                break;
+            case "2":
+            case "a":
+            case "adventure":
+                gamemode = Gamemode.ADVENTURE;
+                break;
+            default:
+                throw new AssertionError(ChatColor.RED + "Unknown gamemode accepted by EnumValidator");
         }
-
-        entityPlayer.setGamemode(gamemode);
-        output.success( "Gamemode was changed succesfully to %%s" + entityPlayer.getGamemode());
-        return output;
+        EntityPlayer target = (EntityPlayer) arguments.getOrDefault("target", player);
+        if (arguments.containsKey("specialTarget")) {
+            String specialtarget = (String) arguments.get("specialTarget");
+            specialtarget = specialtarget.toLowerCase();
+            switch (specialtarget) {
+                case "@a":
+                    for (EntityPlayer p : GoMint.instance().getPlayers()) {
+                        p.setGamemode(gamemode);
+                    }
+                    return new CommandOutput().success("Set own game mode to %s", gamemode.name().toLowerCase());
+                case  "@e":
+                    //nothing to do, this option was for entities.
+                    break;
+                case "@p":
+                    //nothing to do, the command executor is the default target
+                    break;
+                case "@r":
+                    int random = new Random().nextInt(GoMint.instance().getPlayers().toArray().length);
+                    EntityPlayer p = (EntityPlayer) GoMint.instance().getPlayers().toArray()[random];
+                    p.setGamemode(gamemode);
+                    return new CommandOutput().success("Set own game mode to %s", gamemode.name().toLowerCase());
+                case "@s":
+                    return new CommandOutput().success("Set own game mode to %s", gamemode.name().toLowerCase());
+                default:
+                    throw new AssertionError(ChatColor.RED + "Syntax error: Unexpected specialTarget.")
+            }
+        }
+        target.setGamemode(gamemode);
+        if (target == player) {
+            return new CommandOutput().success("Your game mode has been updated to %s", gamemode.name().toLowerCase());
+        }
+        return new CommandOutput().success("%s's game mode is now %s", target.getDisplayName(), gamemode.name().toLowerCase());
     }
-
 }
