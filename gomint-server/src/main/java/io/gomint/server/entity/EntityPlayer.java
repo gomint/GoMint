@@ -1276,6 +1276,22 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
         this.sendTitle( title, subtitle, 1, 1, (long) 0.5, TimeUnit.SECONDS );
     }
 
+    @Override
+    public void sendActionbar( String message, long fadein, long duration, long fadeout, TimeUnit unit ) {
+        PacketSetTitle titlePacket = new PacketSetTitle();
+        titlePacket.setType( PacketSetTitle.TitleType.TYPE_ACTION_BAR.getId() );
+        titlePacket.setText( message );
+        titlePacket.setFadeInTime( (int) unit.toMillis( fadein ) / 50 );
+        titlePacket.setStayTime( (int) unit.toMillis( duration ) / 50 );
+        titlePacket.setFadeOutTime( (int) unit.toMillis( fadeout ) / 50 );
+        this.getConnection().addToSendQueue( titlePacket );
+    }
+
+    @Override
+    public void sendActionbar( String message ) {
+        this.sendActionbar( message, 1, 1, (long) 0.5, TimeUnit.SECONDS );
+    }
+
     public void firstSpawn() {
         this.connection.sendPlayState( PacketPlayState.PlayState.SPAWN );
         this.getConnection().sendMovePlayer( this.getLocation() );

@@ -280,6 +280,17 @@ public interface EntityPlayer extends EntityHuman {
     void sendTitle( String title, String subtitle, long fadein, long duration, long fadeout, TimeUnit unit );
 
     /**
+     * Send a text above the hotbar to the user's screen.
+     *
+     * @param message  Small text displayed above the hotbar
+     * @param fadein   duration for the fade in effect
+     * @param duration which is used for how long the title should be shown
+     * @param fadeout  duration for the fade out effect
+     * @param unit     of duration multiplier
+     */
+    void sendActionbar( String message, long fadein, long duration, long fadeout, TimeUnit unit );
+
+    /**
      * Send a title without subtitle.
      *
      * @param title Big text displayed in the middle of the screen
@@ -295,6 +306,8 @@ public interface EntityPlayer extends EntityHuman {
      *                 Default time for fadein and duration is 1 second
      */
     void sendTitle( String title, String subtitle );
+
+    void sendActionbar(String message);
 
     /**
      * Toggle gliding status of the player
