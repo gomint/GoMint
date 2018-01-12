@@ -98,7 +98,7 @@ public abstract class Entity implements io.gomint.entity.Entity {
      * Since MC:PE movements are eye instead of foot based we need to offset by this amount
      */
 
-    private float eyeHeight;
+    protected float eyeHeight;
 
     @Getter
     protected float offsetY;
