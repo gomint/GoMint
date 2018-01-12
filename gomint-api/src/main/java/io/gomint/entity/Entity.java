@@ -233,4 +233,12 @@ public interface Entity {
      */
     void hideFor( EntityPlayer player );
 
+    /**
+     * Get eye height of entity
+     *
+     * @return eye height
+     *
+     */
+    float getEyeHeight();
+
 }
