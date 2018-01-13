@@ -15,8 +15,8 @@ public class EntityVex extends EntityLiving implements io.gomint.entity.monster.
      * @param world The world in which this entity is in
      */
 
-    public EntityVex( EntityType type, WorldAdapter world ) {
-        super( type, world );
+    public EntityVex( WorldAdapter world ) {
+        super( EntityType.VEX, world );
         this.initEntity();
     }
 
