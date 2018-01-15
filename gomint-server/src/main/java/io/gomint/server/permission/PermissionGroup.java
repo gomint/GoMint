@@ -10,12 +10,16 @@ package io.gomint.server.permission;
 import com.koloboke.collect.map.ObjObjCursor;
 import io.gomint.permission.Group;
 import io.gomint.server.util.collection.PermissionMap;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.ToString;
 
 /**
  * @author geNAZt
  * @version 1.0
  */
+@ToString(of = {"name", "permissions"})
+@EqualsAndHashCode(of = "name")
 public class PermissionGroup implements Group {
 
     private final PermissionGroupManager manager;
