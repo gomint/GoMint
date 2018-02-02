@@ -55,6 +55,7 @@ class EventHandlerMethod implements Comparable<EventHandlerMethod> {
             // Prepare class pool for this plugin
             ClassPool pool = new ClassPool( ClassPool.getDefault() );
             pool.appendClassPath( new LoaderClassPath( instance.getClass().getClassLoader() ) );
+            pool.appendClassPath( new LoaderClassPath( method.getParameterTypes()[0].getClassLoader() ) );
 
             CtClass ctClass = pool.makeClass( "io.gomint.server.event.Proxy" + PROXY_COUNT.incrementAndGet() );
             ctClass.addInterface( pool.get( "io.gomint.server.event.EventProxy" ) );
