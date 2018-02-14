@@ -14,7 +14,6 @@ pipeline {
     }
     stage('Build') {
       steps {
-        echo "Running ${env.BUILD_ID} on ${env.JENKINS_URL}"
         sh 'mvn -U -B -DskipTests clean install'
       }
     }
