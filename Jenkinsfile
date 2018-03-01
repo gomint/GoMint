@@ -1,15 +1,17 @@
 pipeline {
   agent {
     docker {
-      image 'maven:3'
+      image 'maven:alpine'
       args '-v /root/.m2:/root/.m2 -u root'
     }
   }
   stages {
     stage('Depends') {
       steps {
-        sh 'apt-get update'
-        sh 'apt-get install -y openjfx'
+        sh 'apk --no-cache add ca-certificates wget'
+        sh 'wget --quiet --output-document=/etc/apk/keys/sgerrand.rsa.pub https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub'
+        sh 'wget https://github.com/sgerrand/alpine-pkg-java-openjfx/releases/download/8.151.12-r0/java-openjfx-8.151.12-r0.apk'
+        sh 'apk add --no-cache java-openjfx-8.151.12-r0.apk'
       }
     }
     stage('Build') {
