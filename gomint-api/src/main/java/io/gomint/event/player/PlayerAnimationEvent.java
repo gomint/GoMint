@@ -8,12 +8,18 @@ import io.gomint.entity.EntityPlayer;
  */
 public class PlayerAnimationEvent extends CancellablePlayerEvent {
 
-    private int actionId;
+    private Animation animation;
 
-    public PlayerAnimationEvent( EntityPlayer player, int actionId ) {
-        super(player);
-        this.actionId = actionId;
+    public PlayerAnimationEvent( EntityPlayer player, Animation animation ) {
+        super( player );
+        this.animation = animation;
     }
 
-    public int getActionId() { return actionId; }
+    public Animation getActionId() { return animation; }
+
+    public enum Animation {
+
+        SWING
+
+    }
 }

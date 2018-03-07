@@ -18,7 +18,7 @@ public class PacketAnimateHandler implements PacketHandler<PacketAnimate> {
     @Override
     public void handle( PacketAnimate packet, long currentTimeMillis, PlayerConnection connection ) {
         ObjCursor<Entity> entityObjCursor = connection.getEntity().getAttachedEntities().cursor();
-        PlayerAnimationEvent playerAnimationEvent = new PlayerAnimationEvent( connection.getEntity(), packet.getActionId() );
+        PlayerAnimationEvent playerAnimationEvent = new PlayerAnimationEvent( connection.getEntity(), PlayerAnimationEvent.Animation.SWING );
         connection.getServer().getPluginManager().callEvent( playerAnimationEvent );
 
         if( !playerAnimationEvent.isCancelled() ) {
