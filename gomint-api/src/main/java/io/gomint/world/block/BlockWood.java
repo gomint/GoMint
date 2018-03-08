@@ -12,4 +12,27 @@ package io.gomint.world.block;
  * @version 1.0
  */
 public interface BlockWood extends Block {
+
+    /**
+     * Set the type of wood
+     *
+     * @param type of wood
+     */
+    void setWoodType( BlockWood.Type type );
+
+    /**
+     * Get the type of this wood
+     *
+     * @return type of wood
+     */
+    BlockWood.Type getWoodType();
+
+    enum Type {
+        OAK,
+        SPRUCE,
+        BIRCH,
+        JUNGLE,
+        ACACIA,
+        DARK_OAK
+    }
 }

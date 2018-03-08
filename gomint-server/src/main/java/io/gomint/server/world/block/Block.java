@@ -576,7 +576,7 @@ public abstract class Block implements io.gomint.world.block.Block {
         return (long) ( ( 1F / result ) * 50F );
     }
 
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class[] getToolInterfaces() {
         return null;
     }
 

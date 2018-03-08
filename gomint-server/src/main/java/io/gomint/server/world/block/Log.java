@@ -65,6 +65,10 @@ public class Log extends Block implements BlockLog {
             case JUNGLE:
                 newData |= 3;
                 break;
+            case ACACIA:
+                newData |= 4;
+            case DARK_OAK:
+                newData |= 5;
             default:
                 break;
         }
@@ -85,6 +89,10 @@ public class Log extends Block implements BlockLog {
                 return Type.BIRCH;
             case 3:
                 return Type.JUNGLE;
+            case 4:
+                return Type.ACACIA;
+            case 5:
+                return Type.DARK_OAK;
             default:
                 return Type.OAK;
         }

@@ -45,7 +45,9 @@ public interface BlockLog extends Block {
         OAK,
         SPRUCE,
         BIRCH,
-        JUNGLE
+        JUNGLE,
+        ACACIA,
+        DARK_OAK
     }
 
     enum Direction {
