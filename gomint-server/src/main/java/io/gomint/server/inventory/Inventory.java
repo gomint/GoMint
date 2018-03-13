@@ -193,4 +193,13 @@ public abstract class Inventory implements io.gomint.inventory.Inventory {
         this.clear();
     }
 
+    @Override
+    public boolean containsItem( ItemStack itemStack ) {
+        for(int i = 0; i < size(); i++){
+            if(getItem( i ).equals( itemStack )){
+                return true;
+            }
+        }
+        return false;
+    }
 }

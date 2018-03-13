@@ -51,4 +51,13 @@ public interface Inventory {
      */
     void clear();
 
+    /**
+     * Check if the item is in the inventory
+     *
+     * @param itemStack which checked if a item is in the inventory
+     * @return true if the item is in the inventory
+     */
+
+    boolean containsItem( ItemStack itemStack );
+
 }
