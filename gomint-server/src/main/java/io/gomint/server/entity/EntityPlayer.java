@@ -665,6 +665,9 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
         if ( containerInventory != null ) {
             containerInventory.removeViewer( this );
             this.containerIds.justRemove( containerInventory );
+            PacketContainerClose packetContainerClose = new PacketContainerClose();
+            packetContainerClose.setWindowId( windowId );
+            this.connection.addToSendQueue( packetContainerClose );
         }
     }
 
