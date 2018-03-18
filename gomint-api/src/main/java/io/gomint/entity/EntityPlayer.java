@@ -77,6 +77,13 @@ public interface EntityPlayer extends EntityHuman {
     void openInventory( Inventory inventory );
 
     /**
+     * Close a container inventory
+     *
+     * @param windowId which should be closed
+     */
+    void closeInventory( byte windowId );
+
+    /**
      * Send a message to the client, this uses the normal {@link ChatType} enum.
      *
      * @param message which should be send to the client
