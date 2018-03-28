@@ -233,116 +233,102 @@ public enum EntityType {
     /**
      * Entity Type value for a donkey.
      */
-
     DONKEY( 24 ),
 
     /**
      * Entity Type value for a horse.
      */
-
     HORSE( 23 ),
 
     /**
      * Entity Type value for a lama.
      */
-
     LAMA( 29 ),
 
     /**
      * Entity Type value for a mule.
      */
-
     MULE( 25 ),
 
     /**
      * Entity Type value for a ocelot.
      */
-
     OCELOT( 22 ),
 
     /**
      * Entity Type value for a polar bear.
      */
-
     POLAR_BEAR( 28 ),
 
     /**
      * Entity Type value for a skeleton horse.
      */
-
     SKELETON_HORSE( 26 ),
 
     /**
      * Entity Type value for a zombie horse.
      */
-
     ZOMBIE_HORSE( 27 ),
 
     /**
      * Entity Type value for a elder guardian.
      */
-
     ELDER_GUARDIAN( 50 ),
 
     /**
      * Entity Type value for a ender dragon.
      */
-
     ENDER_DRAGON( 53 ),
 
     /**
      * Entity Type value for a endermite.
      */
-
     ENDERMITE( 55 ),
 
     /**
      * Entity Type value for a guardian.
      */
-
     GUARDIAN( 49 ),
 
     /**
      * Entity Type value for a husk.
      */
-
     HUSK( 47 ),
 
     /**
      * Entity Type value for a magma cube.
      */
-
     MAGMA_CUBE( 42 ),
 
     /**
      * Entity Type value for a shulker.
      */
-
     SHULKER( 54 ),
 
     /**
      * Entity Type value for a stray.
      */
-
     STRAY( 46 ),
 
     /**
      * Entity Type value for a wither.
      */
-
     WITHER( 52 ),
 
     /**
      * Entity Type value for a wither skeleton.
      */
-
     WITHER_SKELETON( 48 ),
 
     /**
      * Entity Type value for a vex.
      */
+    VEX( 105 ),
 
-    VEX( 105 );
+    /**
+     * Entity Type value for a armor stand.
+     */
+    ARMOR_STAND( 61 );
 
     private final int id;
 
