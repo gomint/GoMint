@@ -41,7 +41,9 @@ import io.gomint.server.command.CommandCanidate;
 import io.gomint.server.command.CommandHolder;
 import io.gomint.server.enchant.EnchantmentProcessor;
 import io.gomint.server.entity.metadata.MetadataContainer;
+import io.gomint.server.entity.passive.EntityArmorStand;
 import io.gomint.server.entity.passive.EntityHuman;
+import io.gomint.server.entity.passive.EntityItem;
 import io.gomint.server.entity.projectile.EntityFishingHook;
 import io.gomint.server.inventory.ArmorInventory;
 import io.gomint.server.inventory.ContainerInventory;
@@ -54,6 +56,7 @@ import io.gomint.server.inventory.OffhandInventory;
 import io.gomint.server.inventory.PlayerInventory;
 import io.gomint.server.inventory.WindowMagicNumbers;
 import io.gomint.server.inventory.item.ItemAir;
+import io.gomint.server.inventory.item.ItemArmorStand;
 import io.gomint.server.inventory.item.ItemStack;
 import io.gomint.server.network.PlayerConnection;
 import io.gomint.server.network.packet.PacketAvailableCommands;
@@ -858,7 +861,33 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
      * @return true when damage has been dealt, false when not
      */
     public boolean attackWithItemInHand( Entity target ) {
-        if ( target instanceof io.gomint.server.entity.Entity ) {
+        if ( target instanceof io.gomint.server.entity.passive.EntityArmorStand ) {
+            EntityDamageByEntityEvent entityDamageByEntityEvent = new EntityDamageByEntityEvent( target, this, EntityDamageEvent.DamageSource.ENTITY_ATTACK, 20 );
+
+            this.getConnection().getServer().getPluginManager().callEvent( entityDamageByEntityEvent );
+
+            if( entityDamageByEntityEvent.isCancelled() )
+                return false;
+
+            EntityArmorStand targetArmorStand = (EntityArmorStand) target;
+
+            io.gomint.inventory.item.ItemStack[] drops = targetArmorStand.getArmorInventory().getContents();
+
+            if ( drops.length != 0 ) {
+                for ( io.gomint.inventory.item.ItemStack itemStack : drops ) {
+                    EntityItem item = this.world.createItemDrop( target.getLocation(), itemStack );
+                    item.setVelocity( new Vector( 0.1f, 0.3f, 0.1f ) );
+                }
+            }
+
+            EntityItem item = this.world.createItemDrop( target.getLocation(), io.gomint.inventory.item.ItemArmorStand.create(1) );
+            item.setVelocity( new Vector( 0.1f, 0.3f, 0.1f ) );
+
+            targetArmorStand.kill();
+            targetArmorStand.despawn();
+
+            return true;
+        } else if ( target instanceof io.gomint.server.entity.Entity ) {
             io.gomint.server.entity.Entity targetEntity = (io.gomint.server.entity.Entity) target;
 
             // Check if the target can be attacked

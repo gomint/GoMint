@@ -1,8 +1,10 @@
 package io.gomint.server.entity.passive;
 
+import io.gomint.event.entity.EntityDamageEvent;
 import io.gomint.server.entity.Attribute;
 import io.gomint.server.entity.EntityCreature;
 import io.gomint.server.entity.EntityType;
+import io.gomint.server.inventory.ArmorInventory;
 import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.world.WorldAdapter;
 
@@ -20,7 +22,7 @@ public class EntityArmorStand extends EntityCreature implements io.gomint.entity
     }
 
     /**
-     * Create new entity chicken for API
+     * Create new entity armor stand for API
      */
     public EntityArmorStand() {
         super( EntityType.ARMOR_STAND, null );
@@ -32,6 +34,7 @@ public class EntityArmorStand extends EntityCreature implements io.gomint.entity
         this.addAttribute( Attribute.HEALTH );
         this.setMaxHealth( 20 );
         this.setHealth( 20 );
+        this.armorInventory = new ArmorInventory(this);
     }
 
     @Override
