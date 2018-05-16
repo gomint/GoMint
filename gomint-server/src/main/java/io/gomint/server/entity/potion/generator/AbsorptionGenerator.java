@@ -7,14 +7,17 @@
 
 package io.gomint.server.entity.potion.generator;
 
+import io.gomint.server.entity.potion.effect.Absorption;
+import io.gomint.server.player.EffectManager;
+
 /**
  * @author generated
  * @version 2.0
  */
 public class AbsorptionGenerator implements EffectGenerator {
 
-    public io.gomint.server.entity.potion.effect.Effect generate( int amplifier, long lengthInMS ) {
-        return new io.gomint.server.entity.potion.effect.Absorption( amplifier, lengthInMS );
+    public Absorption generate( EffectManager manager, int amplifier, long lengthInMS ) {
+        return new Absorption( manager, amplifier, lengthInMS );
     }
 
 }

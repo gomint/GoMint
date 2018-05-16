@@ -1,5 +1,6 @@
 package io.gomint.server.inventory;
 
+import io.gomint.inventory.InventoryType;
 import io.gomint.server.network.PlayerConnection;
 import io.gomint.server.network.packet.PacketInventoryContent;
 
@@ -30,6 +31,11 @@ public class CreativeInventory extends Inventory {
     @Override
     public void sendContents( int slot, PlayerConnection playerConnection ) {
         // This is a virtual inventory, only sendContents is used
+    }
+
+    @Override
+    public InventoryType getInventoryType() {
+        return InventoryType.CREATIVE;
     }
 
 }

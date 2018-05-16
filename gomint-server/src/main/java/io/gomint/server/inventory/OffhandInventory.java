@@ -7,6 +7,7 @@
 
 package io.gomint.server.inventory;
 
+import io.gomint.inventory.InventoryType;
 import io.gomint.server.network.PlayerConnection;
 import io.gomint.server.network.packet.PacketInventoryContent;
 import io.gomint.server.network.packet.PacketInventorySetSlot;
@@ -36,6 +37,11 @@ public class OffhandInventory extends Inventory {
         setSlot.setWindowId( WindowMagicNumbers.OFFHAND.getId() );
         setSlot.setItemStack( this.contents[slot] );
         playerConnection.addToSendQueue( setSlot );
+    }
+
+    @Override
+    public InventoryType getInventoryType() {
+        return InventoryType.OFFHAND;
     }
 
 }

@@ -4,6 +4,7 @@ import io.gomint.jraknet.PacketBuffer;
 import io.gomint.math.Location;
 import io.gomint.server.network.Protocol;
 import io.gomint.server.player.PlayerPermission;
+import io.gomint.server.util.DumpUtil;
 import io.gomint.world.Gamerule;
 import lombok.Data;
 
@@ -86,7 +87,7 @@ public class PacketStartGame extends Packet {
         buffer.writeSignedVarInt( this.worldGamemode );
         buffer.writeSignedVarInt( this.difficulty );
         buffer.writeSignedVarInt( (int) this.spawn.getX() );
-        buffer.writeSignedVarInt( (int) this.spawn.getY() );
+        buffer.writeUnsignedVarInt( (int) this.spawn.getY() );
         buffer.writeSignedVarInt( (int) this.spawn.getZ() );
         buffer.writeBoolean( this.hasAchievementsDisabled );
         buffer.writeSignedVarInt( this.dayCycleStopTime );
@@ -104,6 +105,7 @@ public class PacketStartGame extends Packet {
         buffer.writeBoolean( this.hasTrustPlayersEnabled );
         buffer.writeSignedVarInt( this.defaultPlayerPermission );
         buffer.writeSignedVarInt( this.xboxLiveBroadcastMode );
+        buffer.writeInt( 32 );
         buffer.writeBoolean( this.hasPlatformBroadcast );
         buffer.writeUnsignedVarInt( this.platformBroadcastMode );
         buffer.writeBoolean( this.xboxLiveBroadcastIntent );
@@ -113,7 +115,7 @@ public class PacketStartGame extends Packet {
         buffer.writeString( this.templateName );
         buffer.writeBoolean( this.unknown1 );
         buffer.writeLLong( this.currentTick );
-        buffer.writeSignedVarInt( this.enchantmentSeed );
+        buffer.writeSignedVarInt( 11 );
     }
 
     @Override

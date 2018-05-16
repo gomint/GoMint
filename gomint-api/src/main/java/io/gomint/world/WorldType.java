@@ -18,4 +18,9 @@ public enum WorldType {
      */
     LEVELDB,
 
+    /**
+     *
+     */
+    GOMINT,
+
 }

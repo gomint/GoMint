@@ -34,6 +34,8 @@ public class InternalConverter {
             addConverter( io.gomint.config.converter.Map.class );
             addConverter( io.gomint.config.converter.Array.class );
             addConverter( io.gomint.config.converter.Set.class );
+            addConverter( io.gomint.config.converter.Location.class );
+            addConverter( io.gomint.config.converter.BlockPosition.class );
         } catch ( InvalidConverterException e ) {
             throw new IllegalStateException( e );
         }

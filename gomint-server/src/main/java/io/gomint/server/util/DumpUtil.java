@@ -43,7 +43,6 @@ public class DumpUtil {
             }
 
             lineBuilder.append( " " ).append( stringRepBuilder );
-            lineBuilder.append( "\n" );
 
             LOGGER.info( lineBuilder.toString() );
             lineBuilder = new StringBuilder();

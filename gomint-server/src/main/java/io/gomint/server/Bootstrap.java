@@ -7,8 +7,11 @@
 
 package io.gomint.server;
 
+import io.gomint.server.maintenance.ReportUploader;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.core.config.Configurator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -46,6 +49,11 @@ public class Bootstrap {
      * @param args The command-line arguments to be passed to the entryClass
      */
     public static void main( String[] args ) {
+        // Setup additional debug
+        if ( "true".equals( System.getProperty( "gomint.debug_events" ) ) ) {
+            Configurator.setLevel( "io.gomint.server.event.EventHandlerList", Level.DEBUG );
+        }
+
         // User agent
         System.setProperty( "http.agent", "GoMint/1.0" );
 
@@ -95,6 +103,7 @@ public class Bootstrap {
             Constructor constructor = coreClass.getDeclaredConstructor( OptionSet.class );
             constructor.newInstance( new Object[]{ options } );
         } catch ( Throwable t ) {
+            ReportUploader.create().exception( t ).property( "crash", "true" ).upload();
             LOGGER.error( "GoMint crashed: ", t );
         }
     }

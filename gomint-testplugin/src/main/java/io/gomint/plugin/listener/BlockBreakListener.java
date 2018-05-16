@@ -9,8 +9,8 @@ package io.gomint.plugin.listener;
 
 import io.gomint.event.EventHandler;
 import io.gomint.event.EventListener;
+import io.gomint.event.entity.EntityDamageEvent;
 import io.gomint.event.world.BlockBreakEvent;
-import io.gomint.world.block.BlockType;
 
 /**
  * @author geNAZt
@@ -20,9 +20,7 @@ public class BlockBreakListener implements EventListener {
 
     @EventHandler
     public void onBlockBreak( BlockBreakEvent event ) {
-        /*if ( event.getBreakBlock().getType() == BlockType.BED ) {
-            event.setCancelled( true );
-        }*/
+        event.getPlayer().attack( 2f, EntityDamageEvent.DamageSource.ENTITY_ATTACK );
     }
 
 }

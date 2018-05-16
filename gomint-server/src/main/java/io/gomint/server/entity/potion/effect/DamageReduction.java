@@ -8,6 +8,7 @@
 package io.gomint.server.entity.potion.effect;
 
 import io.gomint.server.entity.EntityLiving;
+import io.gomint.server.player.EffectManager;
 import io.gomint.server.registry.RegisterInfo;
 
 /**
@@ -17,8 +18,13 @@ import io.gomint.server.registry.RegisterInfo;
 @RegisterInfo( id = 11 )
 public class DamageReduction extends Effect {
 
-    public DamageReduction( int amplifier, long runoutTimer ) {
-        super( amplifier, runoutTimer );
+    public DamageReduction( EffectManager manager, int amplifier, long runoutTimer ) {
+        super( manager, amplifier, runoutTimer );
+    }
+
+    @Override
+    public byte getId() {
+        return 11;
     }
 
     @Override

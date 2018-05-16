@@ -478,7 +478,9 @@ public final class AnvilWorldAdapter extends WorldAdapter {
                     chunk = regionFile.loadChunk( x, z );
 
                     // Register entities
-                    this.registerEntitiesFromChunk( chunk );
+                    if ( chunk != null ) {
+                        this.registerEntitiesFromChunk( chunk );
+                    }
                 } catch ( WorldLoadException e ) {
                     // This means the chunk is corrupted, generate a new one?
                     this.logger.error( "Found corrupted chunk in %s, generating a new one if needed", String.format( REGION_FILE_FORMAT, File.separator, regionX, regionZ ) );
@@ -493,6 +495,8 @@ public final class AnvilWorldAdapter extends WorldAdapter {
 
                 return chunk;
             } catch ( IOException | ExecutionException e ) {
+                logger.error( "Could not load chunk {}, {}", x, z, e );
+
                 if ( generate ) {
                     return this.generate( x, z );
                 } else {

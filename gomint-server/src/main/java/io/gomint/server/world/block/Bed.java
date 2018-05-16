@@ -21,6 +21,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -133,8 +134,18 @@ public class Bed extends Block implements io.gomint.world.block.BlockBed {
         return null;
     }
 
+    @Override
     public boolean isHeadPart() {
         return ( this.getBlockData() & Bed.HEAD ) == Bed.HEAD;
+    }
+
+    @Override
+    public void setHeadPart( boolean value ) {
+        if ( !value && isHeadPart() ) {
+            this.setBlockData( (byte) ( this.getBlockData() - Bed.HEAD ) );
+        } else if ( value && !isHeadPart() ) {
+            this.setBlockData( (byte) ( this.getBlockData() + Bed.HEAD ) );
+        }
     }
 
     @Override
@@ -248,15 +259,15 @@ public class Bed extends Block implements io.gomint.world.block.BlockBed {
     }
 
     @Override
-    public AxisAlignedBB getBoundingBox() {
-        return new AxisAlignedBB(
+    public List<AxisAlignedBB> getBoundingBox() {
+        return Collections.singletonList( new AxisAlignedBB(
             this.location.getX(),
             this.location.getY(),
             this.location.getZ(),
             this.location.getX() + 1,
             this.location.getY() + 0.5625f,
             this.location.getZ() + 1
-        );
+        ) );
     }
 
 }

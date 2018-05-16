@@ -11,6 +11,7 @@ import io.gomint.config.YamlConfig;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 /**
  * Configuration for jRaknet. This is used to bind to a specific IP and port.
@@ -21,6 +22,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
+@ToString
 public class ListenerConfig extends YamlConfig {
 
     private String ip = "0.0.0.0";

@@ -8,6 +8,7 @@
 package io.gomint.server.entity.potion.effect;
 
 import io.gomint.server.entity.EntityLiving;
+import io.gomint.server.player.EffectManager;
 import io.gomint.server.registry.RegisterInfo;
 
 /**
@@ -17,8 +18,13 @@ import io.gomint.server.registry.RegisterInfo;
 @RegisterInfo( id = 22 )
 public class Absorption extends Effect {
 
-    public Absorption( int amplifier, long runoutTimer ) {
-        super( amplifier, runoutTimer );
+    public Absorption( EffectManager manager, int amplifier, long runoutTimer ) {
+        super( manager, amplifier, runoutTimer );
+    }
+
+    @Override
+    public byte getId() {
+        return 22;
     }
 
     @Override

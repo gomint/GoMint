@@ -7,14 +7,17 @@
 
 package io.gomint.server.entity.potion.generator;
 
+import io.gomint.server.entity.potion.effect.WaterBreathing;
+import io.gomint.server.player.EffectManager;
+
 /**
  * @author generated
  * @version 2.0
  */
 public class WaterBreathingGenerator implements EffectGenerator {
 
-    public io.gomint.server.entity.potion.effect.Effect generate( int amplifier, long lengthInMS ) {
-        return new io.gomint.server.entity.potion.effect.WaterBreathing( amplifier, lengthInMS );
+    public WaterBreathing generate( EffectManager manager, int amplifier, long lengthInMS ) {
+        return new WaterBreathing( manager, amplifier, lengthInMS );
     }
 
 }

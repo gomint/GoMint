@@ -99,9 +99,17 @@ public interface Block {
     /**
      * Get the bounding box of this block
      *
-     * @return the bounding box of this block
+     * @return the bounding boxes of this block (can be multiple for stairs etc.)
      */
-    AxisAlignedBB getBoundingBox();
+    List<AxisAlignedBB> getBoundingBox();
+
+    /**
+     * Check if the block intersects with the given bounding box
+     *
+     * @param bb bounding box to check
+     * @return true when it intersects, false when not
+     */
+    boolean intersectsWith( AxisAlignedBB bb );
 
     /**
      * Describes how slippery a block is

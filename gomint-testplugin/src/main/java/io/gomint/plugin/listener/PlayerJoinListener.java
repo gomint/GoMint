@@ -4,8 +4,7 @@ import io.gomint.GoMint;
 import io.gomint.event.EventHandler;
 import io.gomint.event.EventListener;
 import io.gomint.event.player.PlayerJoinEvent;
-import io.gomint.inventory.item.ItemBow;
-import io.gomint.inventory.item.ItemFishingRod;
+import io.gomint.inventory.item.*;
 import io.gomint.plugin.TestPlugin;
 import lombok.RequiredArgsConstructor;
 
@@ -24,7 +23,15 @@ public class PlayerJoinListener implements EventListener {
         event.getPlayer().teleport( GoMint.instance().getDefaultWorld().getSpawnLocation().clone().add( 0, 1, 0 ) );
 
         event.getPlayer().getInventory().setItem( 0, ItemFishingRod.create( 1 ) );
-        event.getPlayer().getInventory().setItem( 1, ItemBow.create( 1 ) );
+        event.getPlayer().getInventory().setItem( 1, ItemSandstone.create( 64 ) );
+
+        event.getPlayer().getInventory().setItem( 2, ItemIronPickaxe.create( 1 ) );
+
+        ItemBucket bucket = ItemBucket.create( 1 );
+        bucket.setContent( ItemBucket.Content.LAVA );
+        event.getPlayer().getInventory().setItem( 3, bucket );
+
+        event.getPlayer().getInventory().setItem( 4, ItemEnderPearl.create( 1 ) );
     }
 
 }

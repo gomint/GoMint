@@ -11,6 +11,7 @@ import io.gomint.math.BlockPosition;
 import io.gomint.server.entity.Entity;
 import io.gomint.server.entity.tileentity.TileEntity;
 import io.gomint.server.util.Pair;
+import io.gomint.server.util.StringUtil;
 import io.gomint.server.world.ChunkAdapter;
 import io.gomint.server.world.NibbleArray;
 import io.gomint.server.world.WorldLoadException;
@@ -151,7 +152,7 @@ public class AnvilChunkAdapter extends ChunkAdapter {
         // Allow for compound return for given paths
         nbtStream.addCompountAcceptor( path -> path.equals( ".Level.Entities" ) ||
             path.equals( ".Level.TileEntities" ) ||
-            path.startsWith( ".Level.Sections." ) );
+            StringUtil.startsWith( path, ".Level.Sections." ) );
 
         // Attach listener for NBT objects
         nbtStream.addListener( ( path, object ) -> {
@@ -204,7 +205,7 @@ public class AnvilChunkAdapter extends ChunkAdapter {
                     AnvilChunkAdapter.this.version = (int) object;
                     break;
                 default:
-                    if ( path.startsWith( ".Level.Sections" ) ) {
+                    if ( StringUtil.startsWith( path, ".Level.Sections" ) ) {
                         // Sections are always read from bottom to top
                         NBTTagCompound compound = (NBTTagCompound) object;
                         if ( AnvilChunkAdapter.this.sections == null ) {
@@ -312,14 +313,10 @@ public class AnvilChunkAdapter extends ChunkAdapter {
             for ( int i = 0; i < 16; ++i ) {
                 for ( int k = 0; k < 16; ++k ) {
                     int y = sectionY + j;
-                    short blockIndex = (short) ( j << 8 | k << 4 | i );
+                    int blockIndex = ( j << 8 | k << 4 | i );
 
                     int blockId = ( ( ( add != null ? add.get( blockIndex ) << 8 : 0 ) | blocks[blockIndex] ) & 0xFF );
                     byte blockData = data.get( blockIndex );
-
-                    if ( j == 0 && k == 0 && i == 3 && blockData == 11 ) {
-                        System.out.println( "Chunk data: " + blockId );
-                    }
 
                     if ( !this.converted ) {
                         Pair<Integer, Byte> convertedData = CONVERTER.convert( blockId, blockData );
@@ -330,10 +327,10 @@ public class AnvilChunkAdapter extends ChunkAdapter {
 
                         // Block data converter
                         if ( blockId == 3 && blockData == 1 ) {
-                            blockId = (byte) 198;
+                            blockId = 198;
                             blockData = 0;
                         } else if ( blockId == 3 && blockData == 2 ) {
-                            blockId = (byte) 243;
+                            blockId = 243;
                             blockData = 0;
                         }
 
@@ -363,11 +360,6 @@ public class AnvilChunkAdapter extends ChunkAdapter {
                 }
             }
         }
-    }
-
-    @Override
-    public boolean equals( Object o ) {
-        return super.equals( o );
     }
 
     @Override

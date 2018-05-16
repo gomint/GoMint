@@ -75,7 +75,7 @@ public abstract class Entity implements io.gomint.entity.Entity {
     @Getter
     private float width;
     @Getter
-    private float height;
+    protected float height;
 
     /**
      * How high can this entity "climb" in one movement?
@@ -159,6 +159,8 @@ public abstract class Entity implements io.gomint.entity.Entity {
         this.setHasCollision( true );
         this.setAffectedByGravity( true );
         this.setNameTagVisible( true );
+
+        LOGGER.info( "Spawned {} with ID {}", this.getClass().getName(), this.id );
     }
 
     // ==================================== ACCESSORS ==================================== //
@@ -265,23 +267,7 @@ public abstract class Entity implements io.gomint.entity.Entity {
             }
 
             // Check for block collision
-            List<io.gomint.world.block.Block> blockList = this.world.getCollisionBlocks( this, true );
-            if ( blockList != null ) {
-                Vector pushedByBlocks = new Vector( 0, 0, 0 );
-
-                for ( io.gomint.world.block.Block block : blockList ) {
-                    io.gomint.server.world.block.Block implBlock = (io.gomint.server.world.block.Block) block;
-                    implBlock.onEntityCollision( this );
-                    implBlock.addVelocity( this, pushedByBlocks );
-                }
-
-                if ( pushedByBlocks.length() > 0 ) {
-                    pushedByBlocks.normalize().multiply( 0.014f );
-                    Vector newMotion = this.transform.getMotion().add( pushedByBlocks );
-                    this.transform.setMotion( newMotion.getX(), newMotion.getY(), newMotion.getZ() );
-                    this.broadCastMotion();
-                }
-            }
+            this.checkBlockCollisions();
 
             // Check for void damage
             if ( this.getPositionY() < -16.0f ) {
@@ -303,6 +289,26 @@ public abstract class Entity implements io.gomint.entity.Entity {
             );
 
             this.transform.move( 0, 0, 0 );
+        }
+    }
+
+    protected void checkBlockCollisions() {
+        List<io.gomint.world.block.Block> blockList = this.world.getCollisionBlocks( this, true );
+        if ( blockList != null ) {
+            Vector pushedByBlocks = new Vector( 0, 0, 0 );
+
+            for ( io.gomint.world.block.Block block : blockList ) {
+                io.gomint.server.world.block.Block implBlock = (io.gomint.server.world.block.Block) block;
+                implBlock.onEntityCollision( this );
+                implBlock.addVelocity( this, pushedByBlocks );
+            }
+
+            if ( pushedByBlocks.length() > 0 ) {
+                pushedByBlocks.normalize().multiply( 0.014f );
+                Vector newMotion = this.transform.getMotion().add( pushedByBlocks );
+                this.transform.setMotion( newMotion.getX(), newMotion.getY(), newMotion.getZ() );
+                this.broadCastMotion();
+            }
         }
     }
 
@@ -496,7 +502,7 @@ public abstract class Entity implements io.gomint.entity.Entity {
 
         // Are we stuck inside a block?
         Block block = this.world.getBlockAt( fullBlockX, fullBlockY, fullBlockZ );
-        if ( block.isSolid() && block.getBoundingBox().intersectsWith( this.boundingBox ) ) {
+        if ( block.isSolid() && block.intersectsWith( this.boundingBox ) ) {
             // We need to check for "smooth" movement when its a player (it climbs .5 steps in .3 -> .420 -> .468 .487 .495 .498 .499 steps
             if ( this instanceof EntityPlayer && ( this.stuckInBlockTicks++ <= 20 || ( (EntityPlayer) this ).getAdventureSettings().isNoClip() ) ) { // Yes we can "smooth" for up to 20 ticks, thanks mojang :D
                 return;

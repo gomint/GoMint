@@ -14,6 +14,33 @@ package io.gomint.server.util;
 public class StringUtil {
 
     /**
+     * Check if string a starts with b
+     *
+     * @param a to check
+     * @param b to check against
+     * @return true when string a starts with b, false when not
+     */
+    public static boolean startsWith( String a, String b ) {
+        // Get length of both strings
+        int al = a.length();
+        int bl = b.length();
+
+        // Check if a is even long enough to contain b
+        if ( al < bl ) {
+            return false;
+        }
+
+        // We try a sneak peak first
+        while ( --bl >= 0 ) {
+            if ( a.charAt( bl ) != b.charAt( bl ) ) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
      * Get byte encoding from UTF8 string
      *
      * @param input string which should be converted to its byte representation

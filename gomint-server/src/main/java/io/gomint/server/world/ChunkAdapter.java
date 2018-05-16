@@ -9,7 +9,6 @@ package io.gomint.server.world;
 
 import io.gomint.jraknet.PacketBuffer;
 import io.gomint.math.BlockPosition;
-import io.gomint.server.SelfInstrumentation;
 import io.gomint.server.async.Delegate2;
 import io.gomint.server.entity.Entity;
 import io.gomint.server.entity.EntityPlayer;
@@ -18,6 +17,7 @@ import io.gomint.server.entity.tileentity.TileEntity;
 import io.gomint.server.network.Protocol;
 import io.gomint.server.network.packet.Packet;
 import io.gomint.server.network.packet.PacketWorldChunk;
+import io.gomint.server.util.PerformanceHacks;
 import io.gomint.server.world.postprocessor.PostProcessor;
 import io.gomint.server.world.storage.TemporaryStorage;
 import io.gomint.taglib.NBTTagCompound;
@@ -92,6 +92,10 @@ public class ChunkAdapter implements Chunk {
     // Post loading processing
     protected Queue<PostProcessor> postProcessors = new LinkedList<>();
 
+    // State saving flag
+    @Getter
+    private boolean needsPersistance;
+
     // CHECKSTYLE:ON
 
     /**
@@ -100,54 +104,67 @@ public class ChunkAdapter implements Chunk {
      * @param currentTimeMS The current time in milliseconds. Used to reduce the number of calls to System#currentTimeMillis()
      * @param dT            The delta from the full second which has been calculated in the last tick
      */
-    public void update( long currentTimeMS, float dT ) {
+    final void tickRandomBlocks( long currentTimeMS, float dT ) {
         for ( ChunkSlice chunkSlice : this.chunkSlices ) {
-            // When we hit a nulled slice there is only air left
-            if ( chunkSlice == null ) {
-                break;
-            }
-
-            // Skip for only air chunk slices
-            if ( chunkSlice.isAllAir() ) {
-                continue;
-            }
-
-            this.world.randomUpdateNumber = ( ( this.world.randomUpdateNumber << 2 ) - this.world.randomUpdateNumber ) + 1013904223;
-            int blockHash = this.world.randomUpdateNumber >> 2;
-            for ( int i = 0; i < 3; ++i, blockHash >>= 10 ) {
-                short index = (short) ( blockHash & 0xfff );
-                int blockId = chunkSlice.getBlockInternal( 0, index );
-                switch ( blockId ) {
-                    case (byte) 244:    // Beetroot
-                    case 2:             // Grass
-                    case 60:            // Farmland
-                    case 110:           // Mycelium
-                    case 6:             // Sapling
-                    case 16:            // Leaves
-                    case (byte) 161:    // Acacia leaves
-                    case 78:            // Top snow
-                    case 79:            // Ice
-                        int blockX = ( blockHash >> 8 ) & 0x0f;
-                        int blockY = ( blockHash ) & 0x0f;
-                        int blockZ = ( blockHash >> 4 ) & 0x0f;
-
-                        Block block = chunkSlice.getBlockInstance( blockX, blockY, blockZ, 0 );
-                        if ( block instanceof io.gomint.server.world.block.Block ) {
-                            long next = ( (io.gomint.server.world.block.Block) block )
-                                .update( UpdateReason.RANDOM, currentTimeMS, dT );
-
-                            if ( next > currentTimeMS ) {
-                                this.world.addTickingBlock( next, block.getLocation().toBlockPosition() );
-                            }
-                        }
-
-                        break;
-
-                    default:
-                        break;
-                }
+            if ( chunkSlice != null && !chunkSlice.isAllAir() ) {
+                this.tickRandomBlocksForSlice( chunkSlice, currentTimeMS, dT );
             }
         }
+    }
+
+    private void tickRandomBlocksForSlice( ChunkSlice chunkSlice, long currentTimeMS, float dT ) {
+        int blockHash = this.getRandomBlockHash();
+        this.iterateRandomBlocks( chunkSlice, currentTimeMS, dT, blockHash, 0, this.world.getConfig().getRandomUpdatesPerTick() );
+    }
+
+    private void iterateRandomBlocks( ChunkSlice chunkSlice, long currentTimeMS, float dT, int blockHash, int i, int randomUpdatesPerTick ) {
+        if ( i < randomUpdatesPerTick ) {
+            blockHash >>= 10;
+            int index = blockHash & 0xfff;
+            int blockId = chunkSlice.getBlockInternal( 0, index );
+            this.tickRandomBlock( blockHash, blockId, chunkSlice, currentTimeMS, dT );
+            this.iterateRandomBlocks( chunkSlice, currentTimeMS, dT, blockHash, i + 1, randomUpdatesPerTick );
+        }
+    }
+
+    private void tickRandomBlock( int blockHash, int blockId, ChunkSlice chunkSlice, long currentTimeMS, float dT ) {
+        switch ( blockId ) {
+            case 244:           // Beetroot
+            case 2:             // Grass
+            case 60:            // Farmland
+            case 110:           // Mycelium
+            case 6:             // Sapling
+            case 16:            // Leaves
+            case 161:           // Acacia leaves
+            case 78:            // Top snow
+            case 79:            // Ice
+                this.updateRandomBlock( chunkSlice, blockHash, currentTimeMS, dT );
+                break;
+
+            default:
+                break;
+        }
+    }
+
+    private void updateRandomBlock( ChunkSlice chunkSlice, int blockHash, long currentTimeMS, float dT ) {
+        int blockX = ( blockHash >> 8 ) & 0x0f;
+        int blockY = ( blockHash ) & 0x0f;
+        int blockZ = ( blockHash >> 4 ) & 0x0f;
+
+        Block block = chunkSlice.getBlockInstance( blockX, blockY, blockZ, 0 );
+        if ( block instanceof io.gomint.server.world.block.Block ) {
+            long next = ( (io.gomint.server.world.block.Block) block )
+                .update( UpdateReason.RANDOM, currentTimeMS, dT );
+
+            if ( next > currentTimeMS ) {
+                this.world.addTickingBlock( next, block.getLocation().toBlockPosition() );
+            }
+        }
+    }
+
+    private int getRandomBlockHash() {
+        this.world.randomUpdateNumber = ( ( this.world.randomUpdateNumber << 2 ) - this.world.randomUpdateNumber ) + 1013904223;
+        return this.world.randomUpdateNumber >> 2;
     }
 
     private ChunkSlice ensureSlice( int y ) {
@@ -155,7 +172,7 @@ public class ChunkAdapter implements Chunk {
         if ( slice != null ) {
             return slice;
         } else {
-            this.chunkSlices[y] = new ChunkSlice( this, y );
+            this.chunkSlices[y] = PerformanceHacks.isUnsafeEnabled() ? new UnsafeChunkSlice( this, y ) : new ChunkSlice( this, y );
             return this.chunkSlices[y];
         }
     }
@@ -252,6 +269,7 @@ public class ChunkAdapter implements Chunk {
      */
     void setLastSavedTimestamp( long timestamp ) {
         this.lastSavedTimestamp = timestamp;
+        this.needsPersistance = false;
     }
 
     // ==================================== MANIPULATION ==================================== //
@@ -350,6 +368,7 @@ public class ChunkAdapter implements Chunk {
         ChunkSlice slice = ensureSlice( ySection );
         slice.setBlock( x, y - 16 * ySection, z, layer, id );
         this.dirty = true;
+        this.needsPersistance = true;
     }
 
     /**
@@ -379,6 +398,7 @@ public class ChunkAdapter implements Chunk {
         ChunkSlice slice = ensureSlice( y >> 4 );
         slice.setData( x, y - 16 * ( y >> 4 ), z, layer, data );
         this.dirty = true;
+        this.needsPersistance = true;
     }
 
     /**
@@ -502,7 +522,7 @@ public class ChunkAdapter implements Chunk {
         PacketBuffer buffer = new PacketBuffer( 512 );
 
         // Detect how much data we can skip
-        int topEmpty = 16;
+        int topEmpty = 15;
         for ( int i = 15; i >= 0; i-- ) {
             ChunkSlice slice = chunkSlices[i];
             if ( slice == null || slice.isAllAir() ) {
@@ -666,6 +686,7 @@ public class ChunkAdapter implements Chunk {
         ChunkSlice slice = ensureSlice( y >> 4 );
         slice.addTileEntity( x, y - 16 * ( y >> 4 ), z, tileEntity );
         this.dirty = true;
+        this.needsPersistance = true;
     }
 
     public void runPostProcessors() {
@@ -682,17 +703,22 @@ public class ChunkAdapter implements Chunk {
         return this.entities;
     }
 
-    public long getMemorySize() {
-        long size = SelfInstrumentation.getObjectSize( this.chunkSlices );
+    public void tickTiles( long currentTimeMS, float dT ) {
+        for ( ChunkSlice chunkSlice : this.chunkSlices ) {
+            if ( chunkSlice != null ) {
+                for ( TileEntity tileEntity : chunkSlice.getTileEntities() ) {
+                    tileEntity.update( currentTimeMS, dT );
 
-        for ( ChunkSlice slice : this.chunkSlices ) {
-            if ( slice != null ) {
-                size += SelfInstrumentation.getObjectSize( slice );
-                size += slice.getMemorySize();
+                    if ( tileEntity.isNeedsPersistance() ) {
+                        this.needsPersistance = true;
+                    }
+                }
             }
         }
+    }
 
-        return size;
+    public void flagNeedsPersistance() {
+        this.needsPersistance = true;
     }
 
 }

@@ -4,6 +4,7 @@ import io.gomint.config.Comment;
 import io.gomint.config.YamlConfig;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 /**
  * @author geNAZt
@@ -11,6 +12,7 @@ import lombok.NoArgsConstructor;
  */
 @NoArgsConstructor
 @Getter
+@ToString
 public class WorldConfig extends YamlConfig {
 
     @Comment( "Name of the world this affects" )

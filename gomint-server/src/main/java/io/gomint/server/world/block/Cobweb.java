@@ -1,5 +1,6 @@
 package io.gomint.server.world.block;
 
+import io.gomint.server.entity.Entity;
 import io.gomint.world.block.BlockType;
 
 import io.gomint.inventory.item.*;
@@ -71,6 +72,12 @@ public class Cobweb extends Block implements BlockCobweb {
     @Override
     public boolean canBeBrokenWithHand() {
         return true;
+    }
+
+    @Override
+    public void stepOn( Entity entity ) {
+        // Reset fall distance
+        entity.resetFallDistance();
     }
 
 }

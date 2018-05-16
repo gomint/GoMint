@@ -7,14 +7,17 @@
 
 package io.gomint.server.entity.potion.generator;
 
+import io.gomint.server.entity.potion.effect.Regeneration;
+import io.gomint.server.player.EffectManager;
+
 /**
  * @author generated
  * @version 2.0
  */
 public class RegenerationGenerator implements EffectGenerator {
 
-    public io.gomint.server.entity.potion.effect.Effect generate( int amplifier, long lengthInMS ) {
-        return new io.gomint.server.entity.potion.effect.Regeneration( amplifier, lengthInMS );
+    public Regeneration generate( EffectManager manager, int amplifier, long lengthInMS ) {
+        return new Regeneration( manager, amplifier, lengthInMS );
     }
 
 }

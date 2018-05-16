@@ -16,6 +16,7 @@ import io.gomint.server.entity.EntityPlayer;
 import io.gomint.server.entity.tileentity.TileEntities;
 import io.gomint.server.entity.tileentity.TileEntity;
 import io.gomint.server.network.PlayerConnection;
+import io.gomint.server.network.packet.Packet;
 import io.gomint.server.network.packet.PacketTileEntityData;
 import io.gomint.server.network.packet.PacketUpdateBlock;
 import io.gomint.server.world.BlockRuntimeIDs;
@@ -33,6 +34,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
 
@@ -75,8 +77,17 @@ public abstract class Block implements io.gomint.world.block.Block {
         this.skyLightLevel = skyLightLevel;
         this.blockLightLevel = blockLightLevel;
         this.layer = layer;
+        this.generateBlockStates();
     }
     // CHECKSTYLE:ON
+
+    /**
+     * Hook for blocks which have custom block states. This should be used to convert data from the block to the state
+     * objects
+     */
+    public void generateBlockStates() {
+
+    }
 
     /**
      * Check if a block update is scheduled for this block
@@ -203,6 +214,7 @@ public abstract class Block implements io.gomint.world.block.Block {
         BlockPosition pos = this.location.toBlockPosition();
         WorldAdapter worldAdapter = (WorldAdapter) this.location.getWorld();
         worldAdapter.updateBlock( pos );
+        worldAdapter.flagNeedsPersistance( pos );
     }
 
     @Override
@@ -391,15 +403,15 @@ public abstract class Block implements io.gomint.world.block.Block {
     }
 
     @Override
-    public AxisAlignedBB getBoundingBox() {
-        return new AxisAlignedBB(
+    public List<AxisAlignedBB> getBoundingBox() {
+        return Collections.singletonList( new AxisAlignedBB(
             this.location.getX(),
             this.location.getY(),
             this.location.getZ(),
             this.location.getX() + 1,
             this.location.getY() + 1,
             this.location.getZ() + 1
-        );
+        ) );
     }
 
     @Override
@@ -470,7 +482,7 @@ public abstract class Block implements io.gomint.world.block.Block {
     /**
      * Send all block packets needed to display this block
      *
-     * @param connection which should get the block data
+     * @param connection  which should get the block data
      */
     public void send( PlayerConnection connection ) {
         if ( !isPlaced() ) {
@@ -491,6 +503,7 @@ public abstract class Block implements io.gomint.world.block.Block {
             PacketTileEntityData tileEntityData = new PacketTileEntityData();
             tileEntityData.setPosition( position );
             tileEntityData.setTileEntity( this.getTileEntity() );
+
             connection.addToSendQueue( tileEntityData );
         }
     }
@@ -523,7 +536,7 @@ public abstract class Block implements io.gomint.world.block.Block {
 
         // Instant break
         if ( base <= 0 ) {
-            return 0;
+            return 50;
         }
 
         // Check if we need a tool
@@ -599,7 +612,12 @@ public abstract class Block implements io.gomint.world.block.Block {
             result = toolStrength / base / 30F;
         }
 
-        return (long) ( ( 1F / result ) * 50F );
+        long time = (long) ( ( 1F / result ) * 50F );
+        if ( time < 50 ) {
+            time = 50;
+        }
+
+        return time;
     }
 
     public Class<? extends ItemStack>[] getToolInterfaces() {
@@ -673,6 +691,25 @@ public abstract class Block implements io.gomint.world.block.Block {
 
     public void addVelocity( Entity entity, Vector pushedByBlocks ) {
 
+    }
+
+    public boolean intersectsWith( AxisAlignedBB boundingBox ) {
+        for ( AxisAlignedBB axisAlignedBB : getBoundingBox() ) {
+            if ( axisAlignedBB.intersectsWith( boundingBox ) ) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Only usable for other repair strats like post process runners
+     *
+     * @return the raw tile entity or null if there is none
+     */
+    public TileEntity getRawTileEntity() {
+        return this.tileEntity;
     }
 
 }

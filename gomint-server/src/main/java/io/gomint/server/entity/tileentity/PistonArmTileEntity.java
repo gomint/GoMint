@@ -8,10 +8,17 @@
 package io.gomint.server.entity.tileentity;
 
 import io.gomint.math.BlockPosition;
-import io.gomint.server.util.DumpUtil;
+import io.gomint.server.util.Things;
 import io.gomint.server.world.WorldAdapter;
+import io.gomint.server.world.block.Air;
+import io.gomint.server.world.block.Block;
+import io.gomint.server.world.block.PistonHead;
 import io.gomint.taglib.NBTTagCompound;
+import io.gomint.world.block.BlockFace;
+import io.gomint.world.block.BlockType;
 import lombok.ToString;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +29,8 @@ import java.util.List;
  */
 @ToString
 public class PistonArmTileEntity extends TileEntity {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger( PistonArmTileEntity.class );
 
     // States
     private byte state;
@@ -61,7 +70,24 @@ public class PistonArmTileEntity extends TileEntity {
 
     @Override
     public void update( long currentMillis, float dF ) {
-
+        // TODO: MJ BUG / 1.2.13 / It seems they removed the technical block from persistent storage. Also they removed the hitbox on data value 0, so we now need to orientate the head correctly
+        BlockPosition pos = this.location.toBlockPosition();
+        Block piston = this.location.getWorld().getBlockAt( pos );
+        BlockFace facing = Things.convertFromDataToBlockFace( piston.getBlockData() );
+        if ( this.isExtended() ) {
+            // We need a PistonHead
+            Block above = piston.getSide( facing );
+            if ( above.getType() != BlockType.PISTON_HEAD ) {
+                PistonHead head = above.setType( PistonHead.class );
+                head.setBlockData( piston.getBlockData() );
+            }
+        } else if ( !this.isExtended() ) {
+            // We need air above
+            Block above = piston.getSide( facing );
+            if ( above.getType() == BlockType.PISTON_HEAD ) {
+                above.setType( Air.class );
+            }
+        }
     }
 
     @Override
@@ -88,6 +114,22 @@ public class PistonArmTileEntity extends TileEntity {
         if ( this.attachedBlocks != null ) {
             compound.addValue( "AttachedBlocks", this.attachedBlocks );
         }
+    }
+
+    /**
+     * Check if this piston is extended
+     *
+     * @return true when extended, false when not
+     */
+    public boolean isExtended() {
+        return this.state > 0;
+    }
+
+    public void setExtended( boolean state ) {
+        this.state = (byte) ( state ? 2 : 0 );
+        this.newState = this.state;
+        this.progess = state ? 1.0f : 0.0f;
+        this.lastProgress = this.progess;
     }
 
 }

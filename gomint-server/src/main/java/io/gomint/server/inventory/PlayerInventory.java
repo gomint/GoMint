@@ -1,6 +1,7 @@
 package io.gomint.server.inventory;
 
 import io.gomint.entity.Entity;
+import io.gomint.inventory.InventoryType;
 import io.gomint.inventory.item.ItemStack;
 import io.gomint.server.entity.EntityPlayer;
 import io.gomint.server.entity.passive.EntityHuman;
@@ -153,6 +154,11 @@ public class PlayerInventory extends Inventory implements io.gomint.inventory.Pl
             io.gomint.server.inventory.item.ItemStack oldItemInHand = (io.gomint.server.inventory.item.ItemStack) this.getItem( slot );
             oldItemInHand.removeFromHand( (EntityPlayer) this.owner );
         }
+    }
+
+    @Override
+    public InventoryType getInventoryType() {
+        return InventoryType.PLAYER;
     }
 
 }

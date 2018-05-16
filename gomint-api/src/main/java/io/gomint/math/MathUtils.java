@@ -18,6 +18,7 @@ public final class MathUtils {
     private static final double BIG_ENOUGH_ROUND = BIG_ENOUGH_INT + 0.5;
 
     public static final double SQRT_3 = Math.sqrt( 3 );
+    public static final float EPSILON = 0.00001f;
 
     private MathUtils() {
         throw new AssertionError( "Cannot instantiate MathUtils!" );
@@ -63,7 +64,7 @@ public final class MathUtils {
         return in * in;
     }
 
-    public static int fastFloor( float x ) {
+    public static final int fastFloor( float x ) {
         return (int) ( x + BIG_ENOUGH_FLOOR ) - BIG_ENOUGH_INT;
     }
 
@@ -71,7 +72,7 @@ public final class MathUtils {
         return (int) ( x + BIG_ENOUGH_ROUND ) - BIG_ENOUGH_INT;
     }
 
-    public static int fastCeil( float x ) {
+    public static final int fastCeil( float x ) {
         return BIG_ENOUGH_INT - (int) ( BIG_ENOUGH_FLOOR - x );
     }
 

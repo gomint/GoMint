@@ -85,13 +85,12 @@ public class ItemBucket extends ItemStack implements io.gomint.inventory.item.It
     @Override
     public boolean interact( EntityPlayer entity, BlockFace face, Vector clickPosition, Block clickedBlock ) {
         if ( clickedBlock != null ) {
-            Block liquidBlock = clickedBlock.getSide( face );
-            if ( liquidBlock instanceof BlockLiquid ) {
-                if ( ( (BlockLiquid) liquidBlock ).getFillHeight() > 0.9f ) {
-                    this.setContent( liquidBlock instanceof BlockFlowingWater || liquidBlock instanceof BlockStationaryWater ?
+            if ( clickedBlock instanceof BlockLiquid ) {
+                if ( ( (BlockLiquid) clickedBlock ).getFillHeight() > 0.9f ) {
+                    this.setContent( clickedBlock instanceof BlockFlowingWater || clickedBlock instanceof BlockStationaryWater ?
                         Content.WATER : Content.LAVA );
                     entity.getInventory().setItem( entity.getInventory().getItemInHandSlot(), this );
-                    liquidBlock.setType( BlockAir.class );
+                    clickedBlock.setType( BlockAir.class );
                     return true;
                 }
             }

@@ -7,7 +7,6 @@
 
 package io.gomint.server.world;
 
-import io.gomint.GoMint;
 import io.gomint.entity.Entity;
 import io.gomint.entity.EntityPlayer;
 import io.gomint.server.entity.passive.EntityHuman;
@@ -22,8 +21,10 @@ import it.unimi.dsi.fastutil.longs.LongSet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Helper class that manages all entities inside a world.
@@ -385,12 +386,16 @@ public class EntityManager {
         // Check which player we need to inform about this movement
         for ( io.gomint.server.entity.EntityPlayer entityPlayer : this.world.getPlayers0().keySet() ) {
             if ( entity instanceof io.gomint.server.entity.EntityPlayer && ( entityPlayer.isHidden( (EntityPlayer) entity ) || entityPlayer.equals( entity ) ) ) {
+                LOGGER.debug( "Skipping spawning of {} for {} (is hidden or same entity)", entity, entityPlayer.getName() );
                 continue;
             }
 
             Chunk playerChunk = entityPlayer.getChunk();
             if ( Math.abs( playerChunk.getX() - chunk.getX() ) <= entityPlayer.getViewDistance() &&
                 Math.abs( playerChunk.getZ() - chunk.getZ() ) <= entityPlayer.getViewDistance() ) {
+
+                LOGGER.debug( "Spawning {} would be in distance for {}", entity, entityPlayer.getName() );
+
                 if ( ( (io.gomint.server.entity.Entity) entity ).canSee( entityPlayer ) ) {
                     entityPlayer.getEntityVisibilityManager().addEntity( entity );
                 }

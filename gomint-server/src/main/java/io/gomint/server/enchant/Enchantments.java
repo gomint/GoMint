@@ -10,6 +10,7 @@ package io.gomint.server.enchant;
 import io.gomint.server.GoMintServer;
 import io.gomint.server.enchant.generator.EnchantmentGenerator;
 import io.gomint.server.registry.Registry;
+import io.gomint.server.enchant.generator.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,6 +25,8 @@ public class Enchantments {
 
     public Enchantments( GoMintServer server ) {
         this.generators =  new Registry<>( server, clazz -> {
+            System.out.println( "this.generators.register( " + clazz.getSimpleName() + ".class, new " + clazz.getSimpleName() + "Generator() );");
+
             try {
                 return (EnchantmentGenerator)ClassLoader.getSystemClassLoader().loadClass( "io.gomint.server.enchant.generator." + clazz.getSimpleName() + "Generator" ).newInstance();
             } catch ( ClassNotFoundException | IllegalAccessException | InstantiationException e1 ) {
@@ -33,7 +36,35 @@ public class Enchantments {
             return null;
         } );
 
-        this.generators.register( "io.gomint.server.enchant" );
+        // this.generators.register( "io.gomint.server.enchant" );
+
+        this.generators.register( EnchantmentAquaAffinity.class, new EnchantmentAquaAffinityGenerator() );
+        this.generators.register( EnchantmentBaneOfArthopods.class, new EnchantmentBaneOfArthopodsGenerator() );
+        this.generators.register( EnchantmentBlastProtection.class, new EnchantmentBlastProtectionGenerator() );
+        this.generators.register( EnchantmentDepthStrider.class, new EnchantmentDepthStriderGenerator() );
+        this.generators.register( EnchantmentEfficiency.class, new EnchantmentEfficiencyGenerator() );
+        this.generators.register( EnchantmentFeatherfalling.class, new EnchantmentFeatherfallingGenerator() );
+        this.generators.register( EnchantmentFireAspect.class, new EnchantmentFireAspectGenerator() );
+        this.generators.register( EnchantmentFireProtection.class, new EnchantmentFireProtectionGenerator() );
+        this.generators.register( EnchantmentFlame.class, new EnchantmentFlameGenerator() );
+        this.generators.register( EnchantmentFortune.class, new EnchantmentFortuneGenerator() );
+        this.generators.register( EnchantmentFrostWalker.class, new EnchantmentFrostWalkerGenerator() );
+        this.generators.register( EnchantmentInfinity.class, new EnchantmentInfinityGenerator() );
+        this.generators.register( EnchantmentKnockback.class, new EnchantmentKnockbackGenerator() );
+        this.generators.register( EnchantmentLooting.class, new EnchantmentLootingGenerator() );
+        this.generators.register( EnchantmentLuckOfTheSea.class, new EnchantmentLuckOfTheSeaGenerator() );
+        this.generators.register( EnchantmentLure.class, new EnchantmentLureGenerator() );
+        this.generators.register( EnchantmentMending.class, new EnchantmentMendingGenerator() );
+        this.generators.register( EnchantmentPower.class, new EnchantmentPowerGenerator() );
+        this.generators.register( EnchantmentProjectileProtection.class, new EnchantmentProjectileProtectionGenerator() );
+        this.generators.register( EnchantmentProtection.class, new EnchantmentProtectionGenerator() );
+        this.generators.register( EnchantmentPunch.class, new EnchantmentPunchGenerator() );
+        this.generators.register( EnchantmentRespiration.class, new EnchantmentRespirationGenerator() );
+        this.generators.register( EnchantmentSharpness.class, new EnchantmentSharpnessGenerator() );
+        this.generators.register( EnchantmentSilkTouch.class, new EnchantmentSilkTouchGenerator() );
+        this.generators.register( EnchantmentSmite.class, new EnchantmentSmiteGenerator() );
+        this.generators.register( EnchantmentThorns.class, new EnchantmentThornsGenerator() );
+        this.generators.register( EnchantmentUnbreaking.class, new EnchantmentUnbreakingGenerator() );
     }
 
     /**

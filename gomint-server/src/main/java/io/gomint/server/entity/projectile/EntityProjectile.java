@@ -75,7 +75,7 @@ public abstract class EntityProjectile extends Entity implements io.gomint.entit
                 Vector position = this.getPosition();
                 Vector nextTickMovement = new Vector( this.getPositionX() + this.getMotionX(), this.getPositionY() + this.getMotionY(), this.getPositionZ() + this.getMotionZ() );
                 AxisAlignedBB bb = this.boundingBox.addCoordinates( this.getMotionX(), this.getMotionY(), this.getMotionZ() ).grow( 1, 1, 1 );
-                Collection<io.gomint.entity.Entity> collidedEntities = this.world.getNearbyEntities( bb, this );
+                Collection<io.gomint.entity.Entity> collidedEntities = this.world.getNearbyEntities( bb, this, null );
                 if ( collidedEntities != null ) {
                     double savedDistance = 0.0D;
                     Entity hitEntity = null;

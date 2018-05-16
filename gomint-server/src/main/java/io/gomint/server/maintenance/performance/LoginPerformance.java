@@ -1,4 +1,4 @@
-package io.gomint.server.performance;
+package io.gomint.server.maintenance.performance;
 
 import lombok.Setter;
 import org.slf4j.Logger;

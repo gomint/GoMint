@@ -71,8 +71,8 @@ public class EffectManager {
         if ( old != null ) {
             old.remove( this.living );
 
-            sendPacket( PacketMobEffect.EVENT_MODIFY, id, effect.getAmplifier(),
-                false, MathUtils.fastFloor( ( effect.getRunoutTimer() - this.living.getWorld().getServer().getCurrentTickTime() ) / 50f ) );
+            sendPacket( PacketMobEffect.EVENT_MODIFY, id, effect.getAmplifier(), effect.isVisible(),
+                MathUtils.fastFloor( ( effect.getRunoutTimer() - this.living.getWorld().getServer().getCurrentTickTime() ) / 50f ) );
         } else {
             sendPacket( PacketMobEffect.EVENT_ADD, id, effect.getAmplifier(),
                 effect.isVisible(), MathUtils.fastFloor( ( effect.getRunoutTimer() - this.living.getWorld().getServer().getCurrentTickTime() ) / 50f ) );
@@ -130,11 +130,9 @@ public class EffectManager {
             ( (EntityPlayer) this.living ).getConnection().addToSendQueue( mobEffect );
         }
 
-        if ( visible ) {
-            for ( Entity entity : this.living.getAttachedEntities() ) {
-                if ( entity instanceof EntityPlayer ) {
-                    ( (EntityPlayer) entity ).getConnection().addToSendQueue( mobEffect );
-                }
+        for ( Entity entity : this.living.getAttachedEntities() ) {
+            if ( entity instanceof EntityPlayer ) {
+                ( (EntityPlayer) entity ).getConnection().addToSendQueue( mobEffect );
             }
         }
     }
@@ -156,11 +154,16 @@ public class EffectManager {
                 mobEffect.setAction( PacketMobEffect.EVENT_ADD );
                 mobEffect.setEffectId( entry.getByteKey() );
                 mobEffect.setAmplifier( entry.getValue().getAmplifier() );
-                mobEffect.setVisible( true );
+                mobEffect.setVisible( entry.getValue().isVisible() );
                 mobEffect.setDuration( MathUtils.fastFloor( ( entry.getValue().getRunoutTimer() - this.living.getWorld().getServer().getCurrentTickTime() ) / 50f ) );
                 player.getConnection().addToSendQueue( mobEffect );
             }
         }
+    }
+
+    public void updateEffect( Effect effect ) {
+        sendPacket( PacketMobEffect.EVENT_MODIFY, effect.getId(), effect.getAmplifier(), effect.isVisible(),
+            MathUtils.fastFloor( ( effect.getRunoutTimer() - this.living.getWorld().getServer().getCurrentTickTime() ) / 50f ) );
     }
 
 }

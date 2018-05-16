@@ -34,17 +34,14 @@ public class Watchdog {
         this.watchdogMap = new Long2LongOpenHashMap();
         this.removed = new Long2LongOpenHashMap();
 
-        server.getExecutorService().submit( new Runnable() {
-            @Override
-            public void run() {
-                while ( server.isRunning() ) {
-                    check();
+        server.getExecutorService().submit( () -> {
+            while ( server.isRunning() ) {
+                check();
 
-                    try {
-                        Thread.sleep( 10 );
-                    } catch ( InterruptedException e ) {
-                        // Ignored .-.
-                    }
+                try {
+                    Thread.sleep( 10 );
+                } catch ( InterruptedException e ) {
+                    return;
                 }
             }
         } );

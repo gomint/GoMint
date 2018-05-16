@@ -1,18 +1,18 @@
 package io.gomint.server.command;
 
-import com.google.common.reflect.ClassPath;
 import io.gomint.command.Command;
 import io.gomint.command.SystemCommand;
 import io.gomint.command.annotation.Name;
 import io.gomint.plugin.Plugin;
-import io.gomint.server.GoMintServer;
+import io.gomint.server.command.internal.ListCommand;
+import io.gomint.server.command.internal.StopCommand;
+import io.gomint.server.command.internal.TPCommand;
 import io.gomint.server.entity.CommandPermission;
 import io.gomint.server.entity.EntityPlayer;
 import io.gomint.server.network.packet.PacketAvailableCommands;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.function.Function;
@@ -32,15 +32,16 @@ public class CommandManager {
 
     /**
      * Create a new command manager
-     *
-     * @param server which started
      */
-    public CommandManager( GoMintServer server ) {
+    public CommandManager() {
         // Register all internal commands
         try {
-            for ( ClassPath.ClassInfo classInfo : server.getClassPath().getTopLevelClasses( "io.gomint.server.command.internal" ) ) {
+            for ( Class cmdClass : new Class[]{
+                ListCommand.class,
+                StopCommand.class,
+                TPCommand.class
+            } ) {
                 // Check for system only commands
-                Class<?> cmdClass = classInfo.load();
                 Object commandObject = null;
 
                 boolean foundSystemInterface = false;
@@ -231,7 +232,7 @@ public class CommandManager {
         for ( CommandHolder holder : this.commands.values() ) {
             if ( !holder.getName().contains( " " ) &&
                 ( holder.getPermission() == null ||
-                player.hasPermission( holder.getPermission() ) ) ) {
+                    player.hasPermission( holder.getPermission() ) ) ) {
                 holders.add( holder );
             }
         }

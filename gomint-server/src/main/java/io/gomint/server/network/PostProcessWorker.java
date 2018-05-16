@@ -1,16 +1,19 @@
 package io.gomint.server.network;
 
 import io.gomint.jraknet.PacketBuffer;
+import io.gomint.server.jni.NativeCode;
+import io.gomint.server.jni.zlib.JavaZLib;
+import io.gomint.server.jni.zlib.NativeZLib;
+import io.gomint.server.jni.zlib.ZLib;
 import io.gomint.server.network.packet.Packet;
 import io.gomint.server.network.packet.PacketBatch;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.PooledByteBufAllocator;
+import io.netty.buffer.Unpooled;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
 import java.util.concurrent.TimeUnit;
-import java.util.zip.Deflater;
 
 /**
  * @author geNAZt
@@ -19,8 +22,13 @@ import java.util.zip.Deflater;
 public class PostProcessWorker implements Runnable {
 
     private static final Logger LOGGER = LoggerFactory.getLogger( PostProcessWorker.class );
+    private static final NativeCode<ZLib> ZLIB = new NativeCode<>( "zlib", JavaZLib.class, NativeZLib.class );
+    private static final ThreadLocal<ZLib> COMPRESSOR = new ThreadLocal<>();
 
-    private static final ThreadLocal<BatchStreamHolder> BATCH_HOLDER = new ThreadLocal<>();
+    static {
+        ZLIB.load();
+    }
+
     private final PlayerConnection connection;
     private final Packet[] packets;
 
@@ -29,99 +37,75 @@ public class PostProcessWorker implements Runnable {
         this.packets = packets;
     }
 
-    private BatchStreamHolder getHolder() {
-        if ( BATCH_HOLDER.get() == null ) {
-            BatchStreamHolder holder = new BatchStreamHolder();
-            BATCH_HOLDER.set( holder );
-            return holder;
+    private ZLib getCompressor() {
+        if ( COMPRESSOR.get() == null ) {
+            ZLib zLib = ZLIB.newInstance();
+            zLib.init( true, this.connection.getServer().getServerConfig().getConnection().getCompressionLevel() );
+            COMPRESSOR.set( zLib );
+            return zLib;
         }
 
-        return BATCH_HOLDER.get();
+        return COMPRESSOR.get();
     }
 
     @Override
     public void run() {
         this.connection.getServer().getWatchdog().add( 1, TimeUnit.SECONDS );
 
-        BatchStreamHolder holder = this.getHolder();
+        ZLib compressor = this.getCompressor();
+        ByteBuf inBuf = PooledByteBufAllocator.DEFAULT.directBuffer();
 
-        // Batch them first
+        // Write all packets into the inBuf for compression
         for ( Packet packet : this.packets ) {
             PacketBuffer buffer = new PacketBuffer( 64 );
             buffer.writeByte( packet.getId() );
             buffer.writeShort( (short) 0 );
             packet.serialize( buffer, this.connection.getProtocolID() );
 
-            LOGGER.debug( "Writing packet data to client {}", Integer.toHexString( packet.getId() & 0xFF ) );
-
-            try {
-                writeVarInt( buffer.getPosition(), holder.getOutputStream() );
-                holder.getOutputStream().write( buffer.getBuffer(), buffer.getBufferOffset(), buffer.getPosition() - buffer.getBufferOffset() );
-            } catch ( IOException e ) {
-                LOGGER.error( "Could not write packet data into batch: ", e );
-            }
+            writeVarInt( buffer.getPosition(), inBuf );
+            inBuf.writeBytes( buffer.getBuffer(), buffer.getBufferOffset(), buffer.getPosition() - buffer.getBufferOffset() );
         }
 
+        // Create the output buffer
+        ByteBuf outBuf = PooledByteBufAllocator.DEFAULT.directBuffer( 8192 ); // We will write at least once so ensureWrite will realloc to 8192 so or so
+
+        LOGGER.debug( "Compressing {} bytes", inBuf.readableBytes() );
+
+        try {
+            compressor.process( inBuf, outBuf );
+        } catch ( Exception e ) {
+            LOGGER.error( "Could not compress data for network", e );
+            outBuf.release();
+            return;
+        } finally {
+            inBuf.release();
+        }
+
+        byte[] data = new byte[outBuf.writerIndex()];
+        outBuf.readBytes( data );
+        outBuf.release();
+
         PacketBatch batch = new PacketBatch();
-        batch.setPayload( holder.getBytes() );
+        batch.setPayload( data );
 
         EncryptionHandler encryptionHandler = this.connection.getEncryptionHandler();
         if ( encryptionHandler != null && ( this.connection.getState() == PlayerConnectionState.LOGIN || this.connection.getState() == PlayerConnectionState.PLAYING ) ) {
             batch.setPayload( encryptionHandler.encryptInputForClient( batch.getPayload() ) );
         }
 
-        holder.reset();
-
         this.connection.getServer().getWatchdog().done();
         this.connection.send( batch );
     }
 
-    private void writeVarInt( int value, OutputStream stream ) throws IOException {
+    private void writeVarInt( int value, ByteBuf stream ) {
         int copyValue = value;
 
         while ( ( copyValue & -128 ) != 0 ) {
-            stream.write( copyValue & 127 | 128 );
+            stream.writeByte( copyValue & 127 | 128 );
             copyValue >>>= 7;
         }
 
-        stream.write( copyValue );
-    }
-
-    private final class BatchStreamHolder {
-
-        private ByteArrayOutputStream bout;
-        private final Deflater deflater;
-
-        private BatchStreamHolder() {
-            this.bout = new ByteArrayOutputStream();
-            this.deflater = new Deflater();
-        }
-
-        private void reset() {
-            this.bout = new ByteArrayOutputStream();
-            this.deflater.reset();
-            this.deflater.setInput( new byte[0] );
-        }
-
-        private OutputStream getOutputStream() {
-            return this.bout;
-        }
-
-        private byte[] getBytes() {
-            byte[] input = this.bout.toByteArray();
-            this.deflater.setInput( input );
-            this.deflater.finish();
-
-            this.bout.reset();
-            byte[] intermediate = new byte[1024];
-            while ( !this.deflater.finished() ) {
-                int read = this.deflater.deflate( intermediate );
-                this.bout.write( intermediate, 0, read );
-            }
-
-            return this.bout.toByteArray();
-        }
-
+        stream.writeByte( copyValue );
     }
 
 }

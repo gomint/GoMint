@@ -1,4 +1,4 @@
-package io.gomint.server.performance;
+package io.gomint.server.maintenance.performance;
 
 /**
  * @author geNAZt
@@ -17,6 +17,11 @@ public class PeformanceReport {
         this.enabled = enabled;
     }
 
+    /**
+     * Start a new tick
+     *
+     * @param currentTimeMillis when the tick started
+     */
     public void startTick( long currentTimeMillis ) {
         // Fast out
         if ( !this.enabled ) {

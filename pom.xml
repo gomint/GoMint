@@ -31,6 +31,7 @@
         <module>gomint-server</module>
         <module>gomint-testplugin</module>
         <module>gomint-performanceviewer</module>
+        <module>gomint-native</module>
     </modules>
 
     <properties>
@@ -42,12 +43,6 @@
             <id>gomint-repo</id>
             <name>GoMint Public Repository</name>
             <url>https://repo.gomint.io/content/groups/public/</url>
-        </repository>
-
-        <repository>
-            <id>blackypaw-repo</id>
-            <name>SimpleConfig repository</name>
-            <url>http://repo.blackypaw.com/content/groups/public/</url>
         </repository>
     </repositories>
 

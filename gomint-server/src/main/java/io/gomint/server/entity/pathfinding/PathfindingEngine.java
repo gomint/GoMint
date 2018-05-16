@@ -5,7 +5,6 @@ import io.gomint.math.Location;
 import io.gomint.math.Vector;
 import io.gomint.server.entity.Transformable;
 import io.gomint.server.util.IntTriple;
-import io.gomint.server.world.WorldAdapter;
 import io.gomint.server.world.block.Block;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -152,7 +151,7 @@ public class PathfindingEngine {
 
             // Examine neighbour nodes:
             for ( int i = node.getBlockPosition().getX() - 1; i <= node.getBlockPosition().getX() + 1; ++i ) {
-                for ( int k = node.getBlockPosition().getZ() - 1; k <= node.getBlockPosition().getZ() + 1; ++k ) {
+                out: for ( int k = node.getBlockPosition().getZ() - 1; k <= node.getBlockPosition().getZ() + 1; ++k ) {
                     IntTriple neighbourTriple = new IntTriple( i, node.getBlockPosition().getY(), k );
                     if ( closedMap.containsKey( neighbourTriple ) ) {
                         continue;
@@ -162,12 +161,14 @@ public class PathfindingEngine {
                     // Check if the block is walkable or jumpable
                     Block block = this.getGoal().getWorld().getBlockAt( neighbourTriple.getX(), neighbourTriple.getY(), neighbourTriple.getZ() );
                     if ( !block.canPassThrough() ) {
-                        AxisAlignedBB bb = block.getBoundingBox();
-                        double diff = bb.getMaxY() - neighbourTriple.getY();
-                        if ( diff > 0 && diff <= 0.5F ) {
-                            neighbourTriple = new IntTriple( neighbourTriple.getX(), neighbourTriple.getY() + 1, neighbourTriple.getZ() );
-                        } else {
-                            continue;
+                        for ( AxisAlignedBB bb : block.getBoundingBox() ) {
+                            double diff = bb.getMaxY() - neighbourTriple.getY();
+                            if ( diff > 0 && diff <= 0.5F ) {
+                                neighbourTriple = new IntTriple( neighbourTriple.getX(), neighbourTriple.getY() + 1, neighbourTriple.getZ() );
+                                break;
+                            } else {
+                                continue out;
+                            }
                         }
                     }
 

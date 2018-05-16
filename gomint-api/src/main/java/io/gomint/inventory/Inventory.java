@@ -61,4 +61,11 @@ public interface Inventory {
      */
     Collection<Entity> getViewers();
 
+    /**
+     * Get the type of this inventory
+     *
+     * @return type of inventory
+     */
+    InventoryType getInventoryType();
+
 }

@@ -62,7 +62,7 @@ public class MetadataShort extends MetadataValue {
 
     @Override
     void deserialize( PacketBuffer buffer ) {
-        this.value = buffer.readShort();
+        this.value = buffer.readLShort();
     }
 
     @Override

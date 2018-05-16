@@ -16,6 +16,7 @@ import io.gomint.math.Vector;
 import io.gomint.server.GoMintServer;
 import io.gomint.server.entity.EntityLink;
 import io.gomint.server.network.type.CommandOrigin;
+import io.gomint.server.util.Things;
 import io.gomint.taglib.NBTReader;
 import io.gomint.taglib.NBTTagCompound;
 import io.gomint.world.Gamerule;
@@ -275,43 +276,19 @@ public abstract class Packet {
 
     CommandOrigin readCommandOrigin( PacketBuffer buffer ) {
         // Seems to be 0, request uuid, 0, type (0 for player, 3 for server)
-        if ( buffer.getRemaining() > 3 ) { // 141 / 140 change
-            return new CommandOrigin( buffer.readByte(), buffer.readUUID(), buffer.readByte(), buffer.readByte() );
-        } else {
-            return new CommandOrigin( buffer.readByte(), null, buffer.readByte(), buffer.readByte() );
-        }
+        return new CommandOrigin( buffer.readByte(), buffer.readUUID(), buffer.readByte(), buffer.readByte() );
     }
 
     void writeCommandOrigin( CommandOrigin commandOrigin, PacketBuffer buffer ) {
         buffer.writeByte( commandOrigin.getUnknown1() );
-
-        // 141 / 140 change
-        if ( commandOrigin.getUuid() != null ) {
-            buffer.writeUUID( commandOrigin.getUuid() );
-        }
-
+        buffer.writeUUID( commandOrigin.getUuid() );
         buffer.writeByte( commandOrigin.getUnknown2() );
         buffer.writeByte( commandOrigin.getType() );
     }
 
     BlockFace readBlockFace( PacketBuffer buffer ) {
         int value = buffer.readSignedVarInt();
-        switch ( value ) {
-            case 0:
-                return BlockFace.DOWN;
-            case 1:
-                return BlockFace.UP;
-            case 2:
-                return BlockFace.NORTH;
-            case 3:
-                return BlockFace.SOUTH;
-            case 4:
-                return BlockFace.WEST;
-            case 5:
-                return BlockFace.EAST;
-        }
-
-        return null;
+        return Things.convertFromDataToBlockFace( (byte) value );
     }
 
 }

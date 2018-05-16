@@ -167,7 +167,7 @@ public class Explosion {
         float maxZ = MathUtils.fastCeil( this.source.getPositionZ() + explosionDiameter + 1 );
 
         AxisAlignedBB explosionBox = new AxisAlignedBB( minX, minY, minZ, maxX, maxY, maxZ );
-        Collection<io.gomint.entity.Entity> entities = this.source.getWorld().getNearbyEntities( explosionBox, this.source );
+        Collection<io.gomint.entity.Entity> entities = this.source.getWorld().getNearbyEntities( explosionBox, this.source, null );
         if ( entities != null ) {
             for ( io.gomint.entity.Entity entity : entities ) {
                 Location entityLocation = entity.getLocation();

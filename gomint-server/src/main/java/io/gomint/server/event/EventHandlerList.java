@@ -10,6 +10,8 @@ package io.gomint.server.event;
 import com.google.common.base.Preconditions;
 import io.gomint.event.CancellableEvent;
 import io.gomint.event.Event;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -22,6 +24,8 @@ import java.util.Map;
  * @version 1.0
  */
 public class EventHandlerList {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger( EventHandlerList.class );
 
     // If the handler list is dirty we need to sort it by the event handler priorities:
     private boolean dirty;
@@ -46,6 +50,8 @@ public class EventHandlerList {
         Preconditions.checkArgument( !this.handlers.containsKey( key ), "EventHandler can't be registered twice. Other instance: " + this.handlers.get( key ) );
 
         this.handlers.put( key, handler );
+
+        LOGGER.debug( "Registering handler {} -> {}", key, handler );
 
         // Array copy to bigger array
         EventHandlerMethod[] newArray = new EventHandlerMethod[this.insertIndex + 1];
@@ -110,18 +116,25 @@ public class EventHandlerList {
             this.dirty = false;
         }
 
+        LOGGER.debug( "Starting to handle event: {}", event );
+
         if ( event instanceof CancellableEvent ) {
             CancellableEvent cancelableEvent = (CancellableEvent) event;
             for ( EventHandlerMethod handler : this.sortedHandlerList ) {
+                LOGGER.debug( "Checking handler {} with event {}", handler, cancelableEvent );
                 if ( cancelableEvent.isCancelled() && handler.ignoreCancelled() ) {
+                    LOGGER.debug( "Handler wants to ignore cancelled events", handler, cancelableEvent );
                     continue;
                 }
 
                 handler.invoke( event );
+                LOGGER.debug( "Event after handler {}: {}", handler, cancelableEvent );
             }
         } else {
             for ( EventHandlerMethod handler : this.sortedHandlerList ) {
+                LOGGER.debug( "Checking handler {} with event {}", handler, event );
                 handler.invoke( event );
+                LOGGER.debug( "Event after handler {}: {}", handler, event );
             }
         }
     }

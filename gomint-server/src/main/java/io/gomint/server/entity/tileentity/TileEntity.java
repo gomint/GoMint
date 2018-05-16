@@ -27,6 +27,7 @@ public abstract class TileEntity {
     @Getter
     protected Location location;
     private byte moveable;
+    protected boolean needsPersistance;
     // CHECKSTYLE:ON
 
     /**
@@ -113,6 +114,12 @@ public abstract class TileEntity {
         compound.addValue( "y", (int) this.location.getY() );
         compound.addValue( "z", (int) this.location.getZ() );
         compound.addValue( "isMovable", this.moveable );
+    }
+
+    public boolean isNeedsPersistance() {
+        boolean ne = this.needsPersistance;
+        this.needsPersistance = false;
+        return ne;
     }
 
 }

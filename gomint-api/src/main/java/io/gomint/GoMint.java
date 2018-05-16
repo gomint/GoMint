@@ -225,4 +225,11 @@ public interface GoMint {
      */
     World createWorld( String name, CreateOptions options );
 
+    /**
+     * Get the internal version of this server. This contains a git hash so its different on each build
+     *
+     * @return version of this server
+     */
+    String getVersion();
+
 }

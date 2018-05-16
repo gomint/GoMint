@@ -9,6 +9,7 @@ package io.gomint.server.entity.potion.effect;
 
 import io.gomint.event.entity.EntityDamageEvent;
 import io.gomint.server.entity.EntityLiving;
+import io.gomint.server.player.EffectManager;
 import io.gomint.server.registry.RegisterInfo;
 
 /**
@@ -18,9 +19,14 @@ import io.gomint.server.registry.RegisterInfo;
 @RegisterInfo( id = 7 )
 public class Harm extends Effect {
 
-    public Harm( int amplifier, long runoutTimer ) {
-        super( amplifier, runoutTimer );
+    public Harm( EffectManager manager, int amplifier, long runoutTimer ) {
+        super( manager, amplifier, runoutTimer );
         this.visible = false;
+    }
+
+    @Override
+    public byte getId() {
+        return 7;
     }
 
     @Override

@@ -9,6 +9,7 @@ package io.gomint.server.entity.potion.effect;
 
 import io.gomint.event.entity.EntityHealEvent;
 import io.gomint.server.entity.EntityLiving;
+import io.gomint.server.player.EffectManager;
 import io.gomint.server.registry.RegisterInfo;
 
 /**
@@ -18,9 +19,14 @@ import io.gomint.server.registry.RegisterInfo;
 @RegisterInfo( id = 6 )
 public class Healing extends Effect {
 
-    public Healing( int amplifier, long runoutTimer ) {
-        super( amplifier, runoutTimer );
+    public Healing( EffectManager manager, int amplifier, long runoutTimer ) {
+        super( manager, amplifier, runoutTimer );
         this.visible = false;
+    }
+
+    @Override
+    public byte getId() {
+        return 6;
     }
 
     @Override

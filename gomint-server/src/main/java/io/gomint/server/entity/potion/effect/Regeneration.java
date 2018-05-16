@@ -9,6 +9,7 @@ package io.gomint.server.entity.potion.effect;
 
 import io.gomint.event.entity.EntityHealEvent;
 import io.gomint.server.entity.EntityLiving;
+import io.gomint.server.player.EffectManager;
 import io.gomint.server.registry.RegisterInfo;
 
 /**
@@ -22,9 +23,14 @@ public class Regeneration extends Effect {
     private float addHealthEvery;
     private float lastUpdatedT;
 
-    public Regeneration( int amplifier, long runoutTimer ) {
-        super( amplifier, runoutTimer );
+    public Regeneration( EffectManager manager, int amplifier, long runoutTimer ) {
+        super( manager, amplifier, runoutTimer );
         this.addHealthEvery = ( 50 >> amplifier ) / 20f;
+    }
+
+    @Override
+    public byte getId() {
+        return 10;
     }
 
     @Override

@@ -76,7 +76,7 @@ public class SimplePluginManager implements PluginManager {
         this.server = server;
         this.scheduler = new CoreScheduler( server.getExecutorService(), server.getSyncTaskManager() );
         this.pluginFolder = new File( "plugins" );
-        this.commandManager = new CommandManager( this.server );
+        this.commandManager = new CommandManager();
 
         if ( !this.pluginFolder.exists() && !this.pluginFolder.mkdirs() ) {
             LOGGER.warn( "Plugin folder was not there and could not be created, plugins will not be available" );
@@ -147,6 +147,11 @@ public class SimplePluginManager implements PluginManager {
                 }
 
                 loadPlugin( pluginMeta );
+
+                // Check if the plugin did shutdown the server
+                if ( !this.server.isRunning() ) {
+                    return;
+                }
             }
         }
     }
@@ -169,6 +174,12 @@ public class SimplePluginManager implements PluginManager {
                 for ( PluginMeta detectedPlugin : new ArrayList<>( this.detectedPlugins ) ) {
                     if ( detectedPlugin.getName().equals( dependPlugin ) ) {
                         loadPlugin( detectedPlugin );
+
+                        // Check if the plugin did shutdown the server
+                        if ( !this.server.isRunning() ) {
+                            return;
+                        }
+
                         found = true;
                         break;
                     }
@@ -194,6 +205,12 @@ public class SimplePluginManager implements PluginManager {
                 for ( PluginMeta detectedPlugin : new ArrayList<>( this.detectedPlugins ) ) {
                     if ( detectedPlugin.getName().equals( dependPlugin ) ) {
                         loadPlugin( pluginMeta );
+
+                        // Check if the plugin did shutdown the server
+                        if ( !this.server.isRunning() ) {
+                            return;
+                        }
+
                         break;
                     }
                 }
@@ -286,15 +303,23 @@ public class SimplePluginManager implements PluginManager {
     }
 
     public void installPlugins() {
-        this.loadedPlugins.forEach( ( name, plugin ) -> {
+        for ( Map.Entry<String, Plugin> entry : this.loadedPlugins.entrySet() ) {
+            Plugin plugin = entry.getValue();
+            String name = entry.getKey();
+
             try {
                 plugin.onInstall();
-                installedPlugins.put( name, plugin );
+                this.installedPlugins.put( name, plugin );
             } catch ( Exception e ) {
                 LOGGER.error( "Plugin did startup but could not be installed: " + name, e );
-                metadata.remove( plugin.getName() );
+                this.metadata.remove( plugin.getName() );
             }
-        } );
+
+            // Check if the plugin did shutdown the server
+            if ( !this.server.isRunning() ) {
+                return;
+            }
+        }
 
         this.loadedPlugins.clear();
     }

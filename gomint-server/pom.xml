@@ -31,6 +31,18 @@
     <dependencies>
         <dependency>
             <groupId>io.gomint</groupId>
+            <artifactId>gomint-native</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.github.oshi</groupId>
+            <artifactId>oshi-core</artifactId>
+            <version>3.5.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.gomint</groupId>
             <artifactId>gomint-api</artifactId>
             <version>1.0.0-SNAPSHOT</version>
         </dependency>
@@ -75,19 +87,13 @@
         <dependency>
             <groupId>io.gomint</groupId>
             <artifactId>jraknet</artifactId>
-            <version>5.0.8-SNAPSHOT</version>
+            <version>5.1.0-SNAPSHOT</version>
         </dependency>
 
         <dependency>
             <groupId>org.bouncycastle</groupId>
             <artifactId>bcprov-jdk15on</artifactId>
             <version>1.59</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.googlecode.json-simple</groupId>
-            <artifactId>json-simple</artifactId>
-            <version>1.1.1</version>
         </dependency>
 
         <dependency>
@@ -115,6 +121,12 @@
             <groupId>net.java.dev.jna</groupId>
             <artifactId>jna-platform</artifactId>
             <version>4.5.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.lz4</groupId>
+            <artifactId>lz4-java</artifactId>
+            <version>1.4.1</version>
         </dependency>
     </dependencies>
 

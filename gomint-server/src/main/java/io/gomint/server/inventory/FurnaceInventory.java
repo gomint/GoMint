@@ -7,16 +7,33 @@
 
 package io.gomint.server.inventory;
 
+import io.gomint.server.entity.EntityPlayer;
 import io.gomint.server.network.PlayerConnection;
+import io.gomint.server.network.type.WindowType;
 
 /**
  * @author geNAZt
  * @version 1.0
  */
-public class FurnaceInventory extends Inventory {
+public class FurnaceInventory extends ContainerInventory {
 
     public FurnaceInventory( InventoryHolder owner ) {
         super( owner, 3 );
+    }
+
+    @Override
+    public WindowType getType() {
+        return WindowType.FURNACE;
+    }
+
+    @Override
+    public void onOpen( EntityPlayer player ) {
+
+    }
+
+    @Override
+    public void onClose( EntityPlayer player ) {
+
     }
 
     @Override

@@ -23,6 +23,7 @@ import io.gomint.server.inventory.item.ItemStack;
 import io.gomint.server.network.handler.*;
 import io.gomint.server.network.packet.*;
 import io.gomint.server.network.tcp.ConnectionHandler;
+import io.gomint.server.network.tcp.protocol.FlushTickPacket;
 import io.gomint.server.network.tcp.protocol.WrappedMCPEPacket;
 import io.gomint.server.scheduler.AsyncScheduledTask;
 import io.gomint.server.util.EnumConnectors;
@@ -108,6 +109,7 @@ public class PlayerConnection {
     private long tcpId;
     @Setter
     private int tcpPing;
+    private PostProcessExecutor postProcessorExecutor;
 
     // World data
     @Getter
@@ -126,7 +128,6 @@ public class PlayerConnection {
     @Getter
     @Setter
     private EntityPlayer entity;
-    private long sentInClientTick;
 
     // Additional data
     @Getter
@@ -135,9 +136,14 @@ public class PlayerConnection {
     private float lastUpdateDT = 0;
 
     // Anti spam because mojang likes to send data
-    @Setter @Getter
-    private long lastBreakAction;
-    @Setter @Getter
+    @Setter
+    @Getter
+    private boolean hadStartBreak;
+    @Setter
+    @Getter
+    private boolean startBreakResult;
+    @Setter
+    @Getter
     private ItemStack lastInteraction;
 
     /**
@@ -159,6 +165,7 @@ public class PlayerConnection {
 
         // Attach data processor if needed
         if ( this.connection != null ) {
+            this.postProcessorExecutor = networkManager.getPostProcessService().getExecutor();
             this.connection.addDataProcessor( packetData -> {
                 PacketBuffer buffer = new PacketBuffer( packetData.getPacketData(), 0 );
                 if ( buffer.getRemaining() <= 0 ) {
@@ -187,12 +194,24 @@ public class PlayerConnection {
      * @param packet The packet which should be queued
      */
     public void addToSendQueue( Packet packet ) {
-        if ( this.sendQueue == null ) {
-            this.sendQueue = new LinkedBlockingQueue<>();
-        }
+        // We send directly to the proxy if needed
+        if ( this.connectionHandler != null ) {
+            PacketBuffer buffer = new PacketBuffer( 2 );
+            buffer.writeByte( packet.getId() );
+            buffer.writeShort( (short) 0 );
+            packet.serialize( buffer, this.protocolID );
 
-        if ( !this.sendQueue.offer( packet ) ) {
-            LOGGER.warn( "Could not add packet {} to the send queue", packet );
+            WrappedMCPEPacket mcpePacket = new WrappedMCPEPacket();
+            mcpePacket.setBuffer( buffer );
+            this.connectionHandler.send( mcpePacket );
+        } else {
+            if ( this.sendQueue == null ) {
+                this.sendQueue = new LinkedBlockingQueue<>();
+            }
+
+            if ( !this.sendQueue.offer( packet ) ) {
+                LOGGER.warn( "Could not add packet {} to the send queue", packet );
+            }
         }
     }
 
@@ -202,7 +221,7 @@ public class PlayerConnection {
      */
     public void onViewDistanceChanged() {
         LOGGER.debug( "View distance changed to {}", this.getEntity().getViewDistance() );
-        this.checkForNewChunks( null );
+        this.checkForNewChunks( null, false );
         this.sendChunkRadiusUpdate();
     }
 
@@ -218,20 +237,24 @@ public class PlayerConnection {
         this.updateNetwork( currentMillis );
 
         // Clear spam stuff
+        this.startBreakResult = false;
+        this.hadStartBreak = false;
         this.lastInteraction = null;
 
-        // Check if we need to send chunks
-        if ( this.entity != null ) {
-            if ( !this.entity.getChunkSendQueue().isEmpty() ) {
-                int maximumInClientTick = 4; // Everything oer this seems to cause issues in all clients like not displaying
-                // the chunks correctly or even crashing the client
+        // Reset sentInClientTick
+        this.lastUpdateDT += dT;
+        if ( this.lastUpdateDT >= Values.CLIENT_TICK_RATE ) {
+            // Check if we need to send chunks
+            if ( this.entity != null && !this.entity.getChunkSendQueue().isEmpty() ) {
+                int maximumInClientTick = this.server.getServerConfig().getSendChunksPerTick();
+                int currentChunks = 0;
 
                 int currentX = CoordinateUtils.fromBlockToChunk( (int) this.entity.getPositionX() );
                 int currentZ = CoordinateUtils.fromBlockToChunk( (int) this.entity.getPositionZ() );
 
                 // Check if we have a slot
                 Queue<ChunkAdapter> queue = this.entity.getChunkSendQueue();
-                while ( !queue.isEmpty() && this.sentInClientTick < maximumInClientTick ) {
+                while ( !queue.isEmpty() && currentChunks < maximumInClientTick ) {
                     ChunkAdapter chunk = queue.poll();
                     if ( chunk == null ||
                         Math.abs( chunk.getX() - currentX ) > this.entity.getViewDistance() ||
@@ -241,11 +264,11 @@ public class PlayerConnection {
                     }
 
                     this.sendWorldChunk( chunk );
-                    this.sentInClientTick++;
+                    currentChunks++;
                 }
             }
 
-            if ( !this.entity.getBlockUpdates().isEmpty() ) {
+            if ( this.entity != null && !this.entity.getBlockUpdates().isEmpty() ) {
                 for ( BlockPosition position : this.entity.getBlockUpdates() ) {
                     int chunkX = CoordinateUtils.fromBlockToChunk( position.getX() );
                     int chunkZ = CoordinateUtils.fromBlockToChunk( position.getZ() );
@@ -257,59 +280,54 @@ public class PlayerConnection {
 
                 this.entity.getBlockUpdates().clear();
             }
-        }
 
-        // Reset sentInClientTick
-        this.lastUpdateDT += dT;
-        if ( this.lastUpdateDT >= Values.CLIENT_TICK_RATE ) {
             this.releaseSendQueue();
-
-            this.sentInClientTick = 0;
             this.lastUpdateDT = 0;
         }
     }
 
     private void releaseSendQueue() {
         // Send all queued packets
-        if ( this.sendQueue != null && !this.sendQueue.isEmpty() ) {
-            if ( this.connection != null ) {
+        if ( this.connection != null ) {
+            if ( this.sendQueue != null && !this.sendQueue.isEmpty() ) {
                 Packet[] packets = new Packet[this.sendQueue.size()];
                 this.sendQueue.toArray( packets );
-                this.networkManager.getPostProcessService().execute( new PostProcessWorker( this, packets ) );
-                this.sendQueue.clear();
-            } else {
-                for ( Packet packet : this.sendQueue ) {
-                    PacketBuffer buffer = new PacketBuffer( 64 );
-                    buffer.writeByte( packet.getId() );
-                    buffer.writeShort( (short) 0 );
-                    packet.serialize( buffer, this.protocolID );
-
-                    WrappedMCPEPacket mcpePacket = new WrappedMCPEPacket();
-                    mcpePacket.setBuffer( buffer );
-                    this.connectionHandler.send( mcpePacket );
-                }
-
+                this.postProcessorExecutor.addWork( this, packets );
                 this.sendQueue.clear();
             }
+        } else {
+            this.connectionHandler.send( new FlushTickPacket() ); // Tell proxprox to flush this tick
         }
     }
 
     private void updateNetwork( long currentMillis ) {
+        // It seems that movement is sent last, but we need it first to check if player position of other packets align
+        List<PacketBuffer> packetBuffers = null;
+
         // Receive all waiting packets:
         if ( this.connection != null ) {
             EncapsulatedPacket packetData;
             while ( ( packetData = this.connection.receive() ) != null ) {
-                // CHECKSTYLE:OFF
-                try {
-                    this.handleSocketData( currentMillis, new PacketBuffer( packetData.getPacketData(), 0 ) );
-                } catch ( Exception e ) {
-                    LOGGER.error( "Error whilst processing packet: ", e );
+                if ( packetBuffers == null ) {
+                    packetBuffers = new ArrayList<>();
                 }
-                // CHECKSTYLE:ON
+
+                packetBuffers.add( new PacketBuffer( packetData.getPacketData(), 0 ) );
             }
         } else {
             while ( !this.connectionHandler.getData().isEmpty() ) {
                 PacketBuffer buffer = this.connectionHandler.getData().poll();
+
+                if ( packetBuffers == null ) {
+                    packetBuffers = new ArrayList<>();
+                }
+
+                packetBuffers.add( buffer );
+            }
+        }
+
+        if ( packetBuffers != null ) {
+            for ( PacketBuffer buffer : packetBuffers ) {
                 // CHECKSTYLE:OFF
                 try {
                     this.handleSocketData( currentMillis, buffer );
@@ -329,7 +347,7 @@ public class PlayerConnection {
     public void send( Packet packet ) {
         if ( this.connection != null ) {
             if ( !( packet instanceof PacketBatch ) ) {
-                this.networkManager.getPostProcessService().execute( new PostProcessWorker( this, new Packet[]{ packet } ) );
+                this.postProcessorExecutor.addWork( this, new Packet[]{ packet } );
             } else {
                 PacketBuffer buffer = new PacketBuffer( 64 );
                 buffer.writeByte( packet.getId() );
@@ -340,36 +358,6 @@ public class PlayerConnection {
         } else {
             LOGGER.debug( "Writing packet {} to client", Integer.toHexString( packet.getId() & 0xFF ) );
 
-            PacketBuffer buffer = new PacketBuffer( 64 );
-            buffer.writeByte( packet.getId() );
-            buffer.writeShort( (short) 0 );
-            packet.serialize( buffer, this.protocolID );
-
-            WrappedMCPEPacket mcpePacket = new WrappedMCPEPacket();
-            mcpePacket.setBuffer( buffer );
-            this.connectionHandler.send( mcpePacket );
-        }
-    }
-
-    /**
-     * Sends the given packet to the player.
-     *
-     * @param reliability     The reliability to send the packet with
-     * @param orderingChannel The ordering channel to send the packet on
-     * @param packet          The packet to send to the player
-     */
-    public void send( PacketReliability reliability, int orderingChannel, Packet packet ) {
-        if ( this.connection != null ) {
-            if ( !( packet instanceof PacketBatch ) ) {
-                this.networkManager.getPostProcessService().execute( new PostProcessWorker( this, new Packet[]{ packet } ) );
-            } else {
-                PacketBuffer buffer = new PacketBuffer( 64 );
-                buffer.writeByte( packet.getId() );
-                packet.serialize( buffer, this.protocolID );
-
-                this.connection.send( reliability, orderingChannel, buffer.getBuffer(), 0, buffer.getPosition() );
-            }
-        } else {
             PacketBuffer buffer = new PacketBuffer( 64 );
             buffer.writeByte( packet.getId() );
             buffer.writeShort( (short) 0 );
@@ -406,7 +394,7 @@ public class PlayerConnection {
                 this.getEntity().firstSpawn();
 
                 this.state = PlayerConnectionState.PLAYING;
-                this.checkForNewChunks( null );
+                this.checkForNewChunks( null, false );
 
                 this.entity.getLoginPerformance().setChunkEnd( this.entity.getWorld().getServer().getCurrentTickTime() );
                 this.entity.getLoginPerformance().print();
@@ -575,9 +563,10 @@ public class PlayerConnection {
     /**
      * Check if we need to send new chunks to the player
      *
-     * @param from which location the entity moved
+     * @param from                which location the entity moved
+     * @param forceResendEntities should we resend all entities known?
      */
-    public void checkForNewChunks( Location from ) {
+    public void checkForNewChunks( Location from, boolean forceResendEntities ) {
         WorldAdapter worldAdapter = this.entity.getWorld();
 
         int currentXChunk = CoordinateUtils.fromBlockToChunk( (int) this.entity.getLocation().getX() );
@@ -614,13 +603,31 @@ public class PlayerConnection {
             return 0;
         } );
 
+        if ( forceResendEntities ) {
+            this.entity.getEntityVisibilityManager().clear();
+        }
+
         for ( Pair<Integer, Integer> chunk : toSendChunks ) {
             long hash = CoordinateUtils.toLong( chunk.getFirst(), chunk.getSecond() );
 
             if ( !this.playerChunks.contains( hash ) && !this.loadingChunks.contains( hash ) ) {
                 this.loadingChunks.add( hash );
+
                 LOGGER.debug( "Requesting chunk {} {} for {}", chunk.getFirst(), chunk.getSecond(), this.entity );
-                worldAdapter.sendChunk( chunk.getFirst(), chunk.getSecond(), this.entity, false );
+                worldAdapter.sendChunk( chunk.getFirst(), chunk.getSecond(), this.entity,
+                    false, ( chunkHash, loadedChunk ) -> {
+                        if ( this.entity != null ) { // It can happen that the server loads longer and the client has disconnected
+                            this.entity.getChunkSendQueue().offer( loadedChunk );
+                        }
+                    } );
+            } else if ( forceResendEntities ) {
+                // We already know this chunk but maybe forceResend is enabled
+                worldAdapter.sendChunk( chunk.getFirst(), chunk.getSecond(), this.entity,
+                    false, ( chunkHash, loadedChunk ) -> {
+                        if ( this.entity != null ) { // It can happen that the server loads longer and the client has disconnected
+                            this.entity.getEntityVisibilityManager().updateAddedChunk( loadedChunk );
+                        }
+                    } );
             }
         }
 
@@ -803,6 +810,10 @@ public class PlayerConnection {
             this.entity.setDead( true );
             this.networkManager.getServer().getPluginManager().callEvent( new PlayerCleanedupEvent( this.entity ) );
             this.entity = null;
+        }
+
+        if ( this.postProcessorExecutor != null ) {
+            this.networkManager.getPostProcessService().releaseExecutor( this.postProcessorExecutor );
         }
     }
 

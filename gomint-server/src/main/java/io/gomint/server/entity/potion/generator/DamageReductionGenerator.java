@@ -7,14 +7,17 @@
 
 package io.gomint.server.entity.potion.generator;
 
+import io.gomint.server.entity.potion.effect.DamageReduction;
+import io.gomint.server.player.EffectManager;
+
 /**
  * @author generated
  * @version 2.0
  */
 public class DamageReductionGenerator implements EffectGenerator {
 
-    public io.gomint.server.entity.potion.effect.Effect generate( int amplifier, long lengthInMS ) {
-        return new io.gomint.server.entity.potion.effect.DamageReduction( amplifier, lengthInMS );
+    public DamageReduction generate( EffectManager manager, int amplifier, long lengthInMS ) {
+        return new DamageReduction( manager, amplifier, lengthInMS );
     }
 
 }

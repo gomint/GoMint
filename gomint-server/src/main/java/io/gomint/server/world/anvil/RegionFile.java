@@ -91,8 +91,8 @@ class RegionFile {
      *
      * @param x The x-coordinate of the chunk
      * @param z The z-coordinate of the chunk
-     * @return The chunk if found
-     * @throws IOException        Thrown in case an I/O error occurs or the chunk was not found
+     * @return The chunk if found or null
+     * @throws IOException        Thrown in case an I/O error occurs
      * @throws WorldLoadException Thrown in the case that the chunk loaded was corrupted
      */
     AnvilChunkAdapter loadChunk( int x, int z ) throws IOException, WorldLoadException {
@@ -107,7 +107,7 @@ class RegionFile {
             int length = lookup[1];
 
             if ( offset == 0 || length == 0 ) {
-                throw new IOException( "Chunk not found inside region" );
+                return null;
             }
 
             long fileOffset = (long) offset << 12;
@@ -259,7 +259,13 @@ class RegionFile {
     }
 
     public void closeFDs() {
-
+        for ( RandomAccessFile fd : this.openFDs ) {
+            try {
+                fd.close();
+            } catch ( IOException e ) {
+                // Ignore
+            }
+        }
     }
 
 }

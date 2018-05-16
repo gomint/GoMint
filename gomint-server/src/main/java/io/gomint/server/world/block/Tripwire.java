@@ -1,8 +1,12 @@
 package io.gomint.server.world.block;
 
+import io.gomint.math.AxisAlignedBB;
 import io.gomint.world.block.BlockType;
 
 import io.gomint.server.registry.RegisterInfo;
+
+import java.util.Collections;
+import java.util.List;
 
 /**
  * @author geNAZt
@@ -32,6 +36,11 @@ public class Tripwire extends Block implements io.gomint.world.block.BlockTripwi
     }
 
     @Override
+    public long getBreakTime() {
+        return 0;
+    }
+
+    @Override
     public BlockType getType() {
         return BlockType.TRIPWIRE;
     }
@@ -39,6 +48,18 @@ public class Tripwire extends Block implements io.gomint.world.block.BlockTripwi
     @Override
     public boolean canBeBrokenWithHand() {
         return true;
+    }
+
+    @Override
+    public List<AxisAlignedBB> getBoundingBox() {
+        return Collections.singletonList( new AxisAlignedBB(
+            this.location.getX(),
+            this.location.getY(),
+            this.location.getZ(),
+            this.location.getX() + 1,
+            this.location.getY() + 0.15625f,
+            this.location.getZ() + 1
+        ) );
     }
 
 }

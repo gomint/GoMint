@@ -10,12 +10,13 @@ package io.gomint.server.world.postprocessor;
 import io.gomint.math.BlockPosition;
 import io.gomint.server.entity.tileentity.PistonArmTileEntity;
 import io.gomint.server.entity.tileentity.TileEntity;
+import io.gomint.server.util.Things;
 import io.gomint.server.world.WorldAdapter;
+import io.gomint.server.world.block.Air;
 import io.gomint.server.world.block.Block;
 import io.gomint.server.world.block.StickyPiston;
 import io.gomint.taglib.NBTTagCompound;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import io.gomint.world.block.BlockFace;
 
 /**
  * @author geNAZt
@@ -23,8 +24,12 @@ import org.slf4j.LoggerFactory;
  */
 public class PistonPostProcessor extends PostProcessor {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger( PistonPostProcessor.class );
-
+    /**
+     * Create a new piston fix processor
+     *
+     * @param worldAdapter in which world the piston is
+     * @param position     of the corrupted piston
+     */
     public PistonPostProcessor( WorldAdapter worldAdapter, BlockPosition position ) {
         super( worldAdapter, position );
     }
@@ -33,9 +38,8 @@ public class PistonPostProcessor extends PostProcessor {
     public void process() {
         // Check if we have a tile entity
         Block block = getBlock();
-        if ( block.getTileEntity() == null ) {
+        if ( block.getRawTileEntity() == null ) {
             BlockPosition position = block.getLocation().toBlockPosition();
-            LOGGER.warn( "We need to fix piston head @ {}", position );
 
             NBTTagCompound compound = new NBTTagCompound( "" );
 
@@ -58,9 +62,30 @@ public class PistonPostProcessor extends PostProcessor {
                 block.setBlockData( (byte) ( block.getBlockData() - 8 ) );
             }
 
+            // Store the new tile
             TileEntity tileEntity = new PistonArmTileEntity( compound, this.worldAdapter );
             this.worldAdapter.storeTileEntity( position, tileEntity );
+        } else {
+            // Is expanded
+            if ( ( block.getBlockData() & 8 ) > 0 ) {
+                PistonArmTileEntity tileEntity = block.getTileEntity();
+                if ( !tileEntity.isExtended() ) {
+                    tileEntity.setExtended( true );
+                }
+
+                block.setBlockData( (byte) ( block.getBlockData() - 8 ) );
+            }
         }
+
+        // We need to remove old piston head
+        byte facing = block.getBlockData();
+        if ( facing > 5 ) { // 6 sided piston lol
+            block.setBlockData( (byte) 0 );
+            facing = 0;
+        }
+
+        BlockFace face = Things.convertFromDataToBlockFace( facing );
+        block.getSide( face ).setType( Air.class );
     }
 
 }

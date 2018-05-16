@@ -8,6 +8,7 @@
 package io.gomint.server.entity.potion.generator;
 
 import io.gomint.server.entity.potion.effect.Effect;
+import io.gomint.server.player.EffectManager;
 
 /**
  * @author geNAZt
@@ -18,10 +19,11 @@ public interface EffectGenerator {
     /**
      * Create a new effect
      *
+     * @param manager    which manages this effect
      * @param amplifier  strength of the effect
      * @param lengthInMS length of the effect given in milliseconds
      * @param <T>        type of effect
      */
-    <T extends Effect> T generate( int amplifier, long lengthInMS );
+    <T extends Effect> T generate( EffectManager manager, int amplifier, long lengthInMS );
 
 }

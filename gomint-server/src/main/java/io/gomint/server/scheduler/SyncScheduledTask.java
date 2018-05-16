@@ -27,10 +27,9 @@ import java.util.concurrent.TimeUnit;
 public class SyncScheduledTask implements Task, Runnable {
 
     private static final Logger LOGGER = LoggerFactory.getLogger( SyncScheduledTask.class );
-    private final Runnable task;
+    @Getter private final Runnable task;
     private long period;          // -1 means no reschedule
-    @Getter
-    private long nextExecution; // -1 is cancelled
+    @Getter private long nextExecution; // -1 is cancelled
     private ExceptionHandler exceptionHandler;
     private List<CompleteHandler> completeHandlerList;
     private SyncTaskManager manager;

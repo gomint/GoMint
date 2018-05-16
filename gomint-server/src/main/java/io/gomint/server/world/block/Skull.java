@@ -13,6 +13,7 @@ import io.gomint.taglib.NBTTagCompound;
 import io.gomint.world.block.BlockType;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -33,15 +34,15 @@ public class Skull extends Block implements io.gomint.world.block.BlockSkull {
     }
 
     @Override
-    public AxisAlignedBB getBoundingBox() {
-        return new AxisAlignedBB(
+    public List<AxisAlignedBB> getBoundingBox() {
+        return Collections.singletonList( new AxisAlignedBB(
             this.location.getX() + 0.25f,
             this.location.getY(),
             this.location.getZ() + 0.25f,
             this.location.getX() + 0.75f,
             this.location.getY() + 0.5f,
             this.location.getZ() + 0.75f
-        );
+        ) );
     }
 
     @Override

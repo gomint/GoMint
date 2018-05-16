@@ -60,6 +60,7 @@ public class PacketLoginHandler implements PacketHandler<PacketLogin> {
             } else {
                 message = "disconnectionScreen.outdatedServer";
                 connection.sendPlayState( PacketPlayState.PlayState.LOGIN_FAILED_SERVER );
+                LOGGER.info( "Player did try to login with protocol version {}", packet.getProtocol() );
             }
 
             connection.disconnect( message );
@@ -158,13 +159,17 @@ public class PacketLoginHandler implements PacketHandler<PacketLogin> {
                 }
 
                 // Create additional data wrappers
+                String skinGeometry = skinToken.getClaim( "SkinGeometry" ) != null ?
+                    new String( Base64.getDecoder().decode( (String) skinToken.getClaim( "SkinGeometry" ) ) ) :
+                    PlayerSkin.getGEOMETRY_CACHE().get( "geometry.humanoid.custom" );
+
                 String capeData = skinToken.getClaim( "CapeData" );
                 PlayerSkin playerSkin = new PlayerSkin(
                     skinToken.getClaim( "SkinId" ),
                     Base64.getDecoder().decode( (String) skinToken.getClaim( "SkinData" ) ),
                     capeData.isEmpty() ? null : Base64.getDecoder().decode( capeData ),
-                    skinToken.getClaim( "SkinGeometryName" ),
-                    new String( Base64.getDecoder().decode( (String) skinToken.getClaim( "SkinGeometry" ) ) )
+                    skinToken.getClaim( "SkinGeometryName" ) == null ? "standard_custom" : skinToken.getClaim( "SkinGeometryName" ),
+                    skinGeometry
                 );
 
                 // Create needed device info

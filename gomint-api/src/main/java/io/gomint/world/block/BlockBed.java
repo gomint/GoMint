@@ -43,4 +43,11 @@ public interface BlockBed extends Block {
      */
     boolean isHeadPart();
 
+    /**
+     * Set this as top part of the multi block
+     *
+     * @param value if the block is head or not
+     */
+    void setHeadPart( boolean value );
+
 }

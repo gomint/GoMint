@@ -218,7 +218,7 @@ public class LevelDBWorldAdapter extends WorldAdapter {
                         LevelDBWorldAdapter.this.difficulty = Difficulty.valueOf( (int) value );
                         break;
                     default:
-                        LevelDBWorldAdapter.this.logger.debug( "Found unknown path: " + path + " with value " + value );
+                        LevelDBWorldAdapter.this.logger.info( "Found unknown path: " + path + " with value " + value );
                         break;
                 }
             } );

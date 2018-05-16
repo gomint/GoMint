@@ -40,7 +40,7 @@ import io.gomint.server.network.PlayerConnection;
 import io.gomint.server.network.PlayerConnectionState;
 import io.gomint.server.network.packet.*;
 import io.gomint.server.network.tcp.protocol.SendPlayerToServerPacket;
-import io.gomint.server.performance.LoginPerformance;
+import io.gomint.server.maintenance.performance.LoginPerformance;
 import io.gomint.server.permission.PermissionManager;
 import io.gomint.server.player.EntityVisibilityManager;
 import io.gomint.server.util.EnumConnectors;
@@ -54,6 +54,7 @@ import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2ByteMap;
 import it.unimi.dsi.fastutil.objects.Object2ByteOpenHashMap;
+import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import lombok.Getter;
 import lombok.Setter;
 import org.slf4j.Logger;
@@ -331,10 +332,10 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
 
         this.hiddenPlayers.add( other.getEntityId() );
 
+        LOGGER.debug( "Player {} hides {} from now on", this.getName(), player.getName() );
+
         // Remove the entity clientside
-        PacketDespawnEntity packetDespawnEntity = new PacketDespawnEntity();
-        packetDespawnEntity.setEntityId( other.getEntityId() );
-        getConnection().addToSendQueue( packetDespawnEntity );
+        this.entityVisibilityManager.removeEntity( other );
 
         // Remove from player list
         PacketPlayerlist packetPlayerlist = new PacketPlayerlist();
@@ -352,6 +353,8 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
         }
 
         if ( this.hiddenPlayers.remove( player.getEntityId() ) ) {
+            LOGGER.debug( "Player {} shows {} from now on", this.getName(), player.getName() );
+
             EntityPlayer other = (EntityPlayer) player;
 
             // Send tablist and spawn packet
@@ -361,7 +364,14 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
                 add( new PacketPlayerlist.Entry( other ) );
             }} );
             getConnection().addToSendQueue( packetPlayerlist );
-            getConnection().addToSendQueue( other.createSpawnPacket() );
+
+            // Check bounds
+            Chunk playerChunk = this.getChunk();
+            Chunk chunk = other.getChunk();
+            if ( Math.abs( playerChunk.getX() - chunk.getX() ) <= this.getViewDistance() &&
+                Math.abs( playerChunk.getZ() - chunk.getZ() ) <= this.getViewDistance() ) {
+                this.entityVisibilityManager.addEntity( other );
+            }
         }
     }
 
@@ -396,6 +406,21 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
             this.connection.resetPlayerChunks();
         }
 
+        // Check for attached entities
+        if ( !this.getAttachedEntities().isEmpty() ) {
+            Chunk chunk = this.getChunk();
+            for ( Entity entity : new ObjectOpenHashSet<>( this.getAttachedEntities() ) ) {
+                if ( entity instanceof EntityPlayer ) {
+                    EntityPlayer player = (EntityPlayer) entity;
+                    Chunk playerChunk = player.getChunk();
+                    if ( Math.abs( playerChunk.getX() - chunk.getX() ) > player.getViewDistance() &&
+                        Math.abs( playerChunk.getZ() - chunk.getZ() ) > player.getViewDistance() ) {
+                        player.getEntityVisibilityManager().removeEntity( this );
+                    }
+                }
+            }
+        }
+
         // Set the new location
         this.setAndRecalcPosition( to );
 
@@ -406,7 +431,7 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
         this.connection.sendMovePlayer( to );
 
         // Send chunks to the client
-        this.connection.checkForNewChunks( from );
+        this.connection.checkForNewChunks( from, true );
         this.fallDistance = 0;
 
         // Tell the movement handler to force this position to the client
@@ -450,7 +475,7 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
         }
 
         // Look around
-        Collection<Entity> nearbyEntities = this.world.getNearbyEntities( this.boundingBox.grow( 1, 0.5f, 1 ), this );
+        Collection<Entity> nearbyEntities = this.world.getNearbyEntities( this.boundingBox.grow( 1, 0.5f, 1 ), this, null );
         if ( nearbyEntities != null ) {
             for ( Entity nearbyEntity : nearbyEntities ) {
                 io.gomint.server.entity.Entity implEntity = (io.gomint.server.entity.Entity) nearbyEntity;
@@ -872,7 +897,10 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
                             ownVelo.setX( ownVelo.getX() * 0.6F );
                             ownVelo.setZ( ownVelo.getZ() * 0.6F );
                             this.setVelocity( ownVelo );
-                            this.setSprinting( false );
+
+                            if ( !this.world.getServer().getServerConfig().getVanilla().isDisableSprintReset() ) {
+                                this.setSprinting( false );
+                            }
                         }
 
                         targetEntity.broadCastMotion();
@@ -1197,7 +1225,7 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
 
     @Override
     public void despawn() {
-        for ( Entity entity : this.getAttachedEntities() ) {
+        for ( Entity entity : new HashSet<>( this.getAttachedEntities() ) ) {
             if ( entity instanceof EntityPlayer ) {
                 ( (EntityPlayer) entity ).getEntityVisibilityManager().removeEntity( this );
             }
@@ -1316,7 +1344,12 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
 
     @Override
     public void sendTitle( String title, String subtitle, long fadein, long duration, long fadeout, TimeUnit unit ) {
-        if ( !subtitle.equals( "" ) ) {
+        // NPE check
+        if ( title == null ) {
+            title = "";
+        }
+
+        if ( subtitle != null && !Objects.equals( subtitle, "" ) ) {
             PacketSetTitle subtitlePacket = new PacketSetTitle();
             subtitlePacket.setType( PacketSetTitle.TitleType.TYPE_SUBTITLE.getId() );
             subtitlePacket.setText( subtitle );
@@ -1562,6 +1595,21 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
             this.actionStart = -1;
             this.metadataContainer.setDataFlag( MetadataContainer.DATA_INDEX, EntityFlag.ACTION, false );
         }
+    }
+
+    @Override
+    protected void checkBlockCollisions() {
+        List<io.gomint.world.block.Block> blockList = this.world.getCollisionBlocks( this, true );
+        if ( blockList != null ) {
+            for ( io.gomint.world.block.Block block : blockList ) {
+                io.gomint.server.world.block.Block implBlock = (io.gomint.server.world.block.Block) block;
+                implBlock.onEntityCollision( this );
+            }
+        }
+    }
+
+    public Collection<ContainerInventory> getOpenInventories() {
+        return this.windowIds.values();
     }
 
 }

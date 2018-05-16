@@ -372,6 +372,11 @@ public class EntityHuman extends EntityCreature implements io.gomint.entity.pass
     public void setSneaking( boolean value ) {
         if ( value != isSneaking() ) {
             this.metadataContainer.setDataFlag( MetadataContainer.DATA_INDEX, EntityFlag.SNEAKING, value );
+            if ( value ) {
+                this.height = 1.62f;
+            } else {
+                this.height = 1.8f;
+            }
         }
     }
 

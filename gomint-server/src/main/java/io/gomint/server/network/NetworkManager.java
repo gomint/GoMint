@@ -77,7 +77,7 @@ public class NetworkManager {
 
     // Post process service
     @Getter
-    private ExecutorService postProcessService = Executors.newSingleThreadExecutor();
+    private PostProcessExecutorService postProcessService = new PostProcessExecutorService();
 
     /**
      * Init a new NetworkManager for accepting new connections and read incoming data
@@ -168,6 +168,7 @@ public class NetworkManager {
         // Handle updates to player map:
         while ( !this.incomingConnections.isEmpty() ) {
             PlayerConnection connection = this.incomingConnections.poll();
+            LOGGER.debug( "Adding new connection to the server: {}", connection );
             this.playersByGuid.put( connection.getId(), connection );
         }
 

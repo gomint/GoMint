@@ -332,9 +332,11 @@ public class AxisAlignedBB implements Cloneable {
      * @return true when the given Bounding Box intersects with this one, false when not
      */
     public boolean intersectsWith( AxisAlignedBB bb ) {
-        if ( bb.maxX > this.minX && bb.minX < this.maxX ) {
-            if ( bb.maxY > this.minY && bb.minY < this.maxY ) {
-                return bb.maxZ > this.minZ && bb.minZ < this.maxZ;
+        if ( bb.maxX - this.minX > MathUtils.EPSILON && this.maxX - bb.minX > MathUtils.EPSILON ) {
+            if ( bb.maxY - this.minY > MathUtils.EPSILON && this.maxY - bb.minY > MathUtils.EPSILON ) {
+                if ( bb.maxZ - this.minZ > MathUtils.EPSILON && this.maxZ - bb.minZ > MathUtils.EPSILON ) {
+                    return true;
+                }
             }
         }
 

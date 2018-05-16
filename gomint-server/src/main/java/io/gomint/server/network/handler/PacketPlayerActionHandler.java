@@ -40,12 +40,14 @@ public class PacketPlayerActionHandler implements PacketHandler<PacketPlayerActi
                 break;
 
             case START_BREAK:
-                // TODO: Mojang BUG: Prevent spam from 1.2.13 windows clients
-                if ( connection.getLastBreakAction() + 50 > currentTimeMillis ) {
+                // TODO: MJ BUG / 1.2.13 / Client sends multiple START_BREAK -> ABORT_BREAK -> START_BREAK in the same tick
+                if ( alreadyFired( connection ) ) {
+                    if ( connection.isStartBreakResult() ) {
+                        handleBreakStart( connection, currentTimeMillis, packet );
+                    }
+
                     return;
                 }
-
-                connection.setLastBreakAction( currentTimeMillis );
 
                 // Sanity checks (against crashes)
                 if ( connection.getEntity().canInteract( packet.getPosition().toVector().add( .5f, .5f, .5f ), 13 ) ) {
@@ -53,20 +55,10 @@ public class PacketPlayerActionHandler implements PacketHandler<PacketPlayerActi
                         .getPluginManager().callEvent( new PlayerInteractEvent( connection.getEntity(),
                             PlayerInteractEvent.ClickType.LEFT, connection.getEntity().getWorld().getBlockAt( packet.getPosition() ) ) );
 
+                    connection.setStartBreakResult( !event.isCancelled() && connection.getEntity().getStartBreak() == 0 );
+
                     if ( !event.isCancelled() && connection.getEntity().getStartBreak() == 0 ) {
-                        connection.getEntity().setBreakVector( packet.getPosition() );
-                        connection.getEntity().setStartBreak( currentTimeMillis );
-
-                        io.gomint.server.world.block.Block block = connection.getEntity().getWorld().getBlockAt( packet.getPosition() );
-
-                        long breakTime = block.getFinalBreakTime( connection.getEntity().getInventory().getItemInHand(), connection.getEntity() );
-                        LOGGER.debug( "Sending break time {} ms", breakTime );
-
-                        // Tell the client which break time we want
-                        if ( breakTime > 0 ) {
-                            connection.getEntity().getWorld().sendLevelEvent( packet.getPosition().toVector(),
-                                LevelEvent.BLOCK_START_BREAK, (int) ( 65536 / ( breakTime / 50 ) ) );
-                        }
+                        handleBreakStart( connection, currentTimeMillis, packet );
                     }
 
                     // Nasty hack for fire
@@ -79,6 +71,8 @@ public class PacketPlayerActionHandler implements PacketHandler<PacketPlayerActi
                             faced.setType( Air.class );
                         }
                     }
+                } else {
+                    connection.setStartBreakResult( false );
                 }
 
                 break;
@@ -107,49 +101,53 @@ public class PacketPlayerActionHandler implements PacketHandler<PacketPlayerActi
 
                 break;
             case START_SNEAK:
-                if(!connection.getEntity().isSneaking()){
+                if ( !connection.getEntity().isSneaking() ) {
                     PlayerToggleSneakEvent playerToggleSneakEvent = new PlayerToggleSneakEvent( connection.getEntity(), true );
                     connection.getServer().getPluginManager().callEvent( playerToggleSneakEvent );
-                    if( playerToggleSneakEvent.isCancelled() ){
+                    if ( playerToggleSneakEvent.isCancelled() ) {
                         connection.getEntity().sendData( connection.getEntity() );
-                    }else{
+                    } else {
                         connection.getEntity().setSneaking( true );
                     }
                 }
+
                 break;
             case STOP_SNEAK:
-                if(connection.getEntity().isSneaking()) {
+                if ( connection.getEntity().isSneaking() ) {
                     PlayerToggleSneakEvent playerToggleSneakEvent = new PlayerToggleSneakEvent( connection.getEntity(), false );
                     connection.getServer().getPluginManager().callEvent( playerToggleSneakEvent );
-                    if( playerToggleSneakEvent.isCancelled() ) {
+                    if ( playerToggleSneakEvent.isCancelled() ) {
                         connection.getEntity().sendData( connection.getEntity() );
-                    }else{
+                    } else {
                         connection.getEntity().setSneaking( false );
                     }
                 }
+
                 break;
             case START_SPRINT:
-                if(!connection.getEntity().isSprinting()) {
+                if ( !connection.getEntity().isSprinting() ) {
                     PlayerToggleSprintEvent playerToggleSprintEvent = new PlayerToggleSprintEvent( connection.getEntity(), true );
                     connection.getServer().getPluginManager().callEvent( playerToggleSprintEvent );
-                    if( playerToggleSprintEvent.isCancelled() ) {
+                    if ( playerToggleSprintEvent.isCancelled() ) {
                         connection.getEntity().sendData( connection.getEntity() );
-                    }else{
+                    } else {
                         connection.getEntity().setSprinting( true );
                     }
                 }
+
                 break;
 
             case STOP_SPRINT:
-                if(connection.getEntity().isSprinting()) {
+                if ( connection.getEntity().isSprinting() ) {
                     PlayerToggleSprintEvent playerToggleSprintEvent = new PlayerToggleSprintEvent( connection.getEntity(), false );
                     connection.getServer().getPluginManager().callEvent( playerToggleSprintEvent );
-                    if( playerToggleSprintEvent.isCancelled() ) {
+                    if ( playerToggleSprintEvent.isCancelled() ) {
                         connection.getEntity().sendData( connection.getEntity() );
-                    }else{
+                    } else {
                         connection.getEntity().setSprinting( false );
                     }
                 }
+
                 break;
 
             case CONTINUE_BREAK:
@@ -204,6 +202,31 @@ public class PacketPlayerActionHandler implements PacketHandler<PacketPlayerActi
                 LOGGER.warn( "Unhandled action: " + packet );
                 break;
         }
+    }
+
+    private void handleBreakStart( PlayerConnection connection, long currentTimeMillis, PacketPlayerAction packet ) {
+        connection.getEntity().setBreakVector( packet.getPosition() );
+        connection.getEntity().setStartBreak( currentTimeMillis );
+
+        io.gomint.server.world.block.Block block = connection.getEntity().getWorld().getBlockAt( packet.getPosition() );
+
+        long breakTime = block.getFinalBreakTime( connection.getEntity().getInventory().getItemInHand(), connection.getEntity() );
+        LOGGER.debug( "Sending break time {} ms", breakTime );
+
+        // Tell the client which break time we want
+        if ( breakTime > 0 ) {
+            connection.getEntity().getWorld().sendLevelEvent( packet.getPosition().toVector(),
+                LevelEvent.BLOCK_START_BREAK, (int) ( 65536 / ( breakTime / 50 ) ) );
+        }
+    }
+
+    private boolean alreadyFired( PlayerConnection connection ) {
+        if ( connection.isHadStartBreak() ) {
+            return true;
+        }
+
+        connection.setHadStartBreak( true );
+        return false;
     }
 
 }

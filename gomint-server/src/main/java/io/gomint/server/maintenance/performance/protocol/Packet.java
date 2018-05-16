@@ -1,4 +1,4 @@
-package io.gomint.server.performance.protocol;
+package io.gomint.server.maintenance.performance.protocol;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;

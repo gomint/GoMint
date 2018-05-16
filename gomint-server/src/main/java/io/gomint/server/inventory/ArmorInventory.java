@@ -1,6 +1,7 @@
 package io.gomint.server.inventory;
 
 import io.gomint.entity.Entity;
+import io.gomint.inventory.InventoryType;
 import io.gomint.inventory.item.ItemStack;
 import io.gomint.server.inventory.item.ItemArmor;
 import io.gomint.server.network.PlayerConnection;
@@ -86,6 +87,11 @@ public class ArmorInventory extends Inventory implements io.gomint.inventory.Arm
         } else {
             this.sendMobArmor( playerConnection );
         }
+    }
+
+    @Override
+    public InventoryType getInventoryType() {
+        return InventoryType.ARMOR;
     }
 
     private void sendMobArmor( PlayerConnection playerConnection ) {

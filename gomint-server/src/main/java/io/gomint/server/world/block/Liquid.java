@@ -40,7 +40,11 @@ public abstract class Liquid extends Block implements BlockLiquid {
             data = 8;
         }
 
-        return ( ( data + 1 ) / 9f );
+        if ( data == 0 ) {
+            return 1f;
+        }
+
+        return ( ( data ) / 8f );
     }
 
     private byte getEffectiveFlowDecay( Block block ) {

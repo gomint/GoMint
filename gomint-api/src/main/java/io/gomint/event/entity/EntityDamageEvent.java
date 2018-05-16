@@ -8,11 +8,13 @@
 package io.gomint.event.entity;
 
 import io.gomint.entity.Entity;
+import lombok.ToString;
 
 /**
  * @author geNAZt
  * @version 1.0
  */
+@ToString
 public class EntityDamageEvent extends CancellableEntityEvent {
 
     private final DamageSource damageSource;

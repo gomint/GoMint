@@ -7,6 +7,8 @@
 
 package io.gomint.server.player;
 
+import lombok.Getter;
+
 import javax.imageio.ImageIO;
 import javax.imageio.stream.ImageInputStream;
 import java.awt.image.BufferedImage;
@@ -20,6 +22,7 @@ import java.io.OutputStream;
  */
 public class PlayerSkin implements io.gomint.player.PlayerSkin {
 
+    @Getter
     private static final GeometryCache GEOMETRY_CACHE = new GeometryCache();
     private static final int SKIN_DATA_SIZE_STEVE = 8192;
     private static final int SKIN_DATA_SIZE_ALEX = 16384;

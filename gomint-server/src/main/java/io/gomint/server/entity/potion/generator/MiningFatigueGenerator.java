@@ -7,14 +7,17 @@
 
 package io.gomint.server.entity.potion.generator;
 
+import io.gomint.server.entity.potion.effect.MiningFatigue;
+import io.gomint.server.player.EffectManager;
+
 /**
  * @author generated
  * @version 2.0
  */
 public class MiningFatigueGenerator implements EffectGenerator {
 
-    public io.gomint.server.entity.potion.effect.Effect generate( int amplifier, long lengthInMS ) {
-        return new io.gomint.server.entity.potion.effect.MiningFatigue( amplifier, lengthInMS );
+    public MiningFatigue generate( EffectManager manager, int amplifier, long lengthInMS ) {
+        return new MiningFatigue( manager, amplifier, lengthInMS );
     }
 
 }

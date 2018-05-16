@@ -10,6 +10,8 @@ package io.gomint.server.world.block;
 import io.gomint.math.AxisAlignedBB;
 import io.gomint.server.entity.Entity;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.function.Function;
 
 /**
@@ -55,15 +57,15 @@ public abstract class BasePressurePlate extends Block {
     }
 
     @Override
-    public AxisAlignedBB getBoundingBox() {
-        return new AxisAlignedBB(
+    public List<AxisAlignedBB> getBoundingBox() {
+        return Collections.singletonList( new AxisAlignedBB(
             this.location.getX() + 0.0625f,
             this.location.getY(),
             this.location.getZ() + 0.0625f,
             this.location.getX() + 0.9375f,
             this.location.getY() + 0.0625f,
             this.location.getZ() + 0.9375f
-        );
+        ) );
     }
 
 }

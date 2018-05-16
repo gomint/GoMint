@@ -1,5 +1,8 @@
 package io.gomint.world.generator;
 
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -50,4 +53,10 @@ public class GeneratorContext {
     public Map<String, Object> asMap() {
         return new HashMap<>( this.contextData );
     }
+
+    @Override
+    public String toString() {
+        return JSONObject.toJSONString( this.contextData );
+    }
+
 }

@@ -7,9 +7,9 @@
 
 package io.gomint.entity;
 
+import io.gomint.entity.potion.Effect;
 import io.gomint.entity.potion.PotionEffect;
 import io.gomint.event.entity.EntityDamageEvent;
-import io.gomint.math.Location;
 
 import java.util.concurrent.TimeUnit;
 
@@ -79,12 +79,13 @@ public interface EntityLiving extends Entity {
     /**
      * Add a new effect to the player. If the player already has a effect active the newer one gets taken.
      *
-     * @param effect which should be applied
+     * @param effect    which should be applied
      * @param amplifier with which this effect should be calculated
-     * @param duration of the effect, will be used in combination with the time unit
-     * @param timeUnit which should be used in combination with the duration
+     * @param duration  of the effect, will be used in combination with the time unit
+     * @param timeUnit  which should be used in combination with the duration
+     * @return the added effect
      */
-    void addEffect( PotionEffect effect, int amplifier, long duration, TimeUnit timeUnit );
+    Effect addEffect( PotionEffect effect, int amplifier, long duration, TimeUnit timeUnit );
 
     /**
      * Does a player have the given effect?

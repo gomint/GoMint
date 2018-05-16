@@ -37,12 +37,9 @@ public class EntityVisibilityManager {
         LOGGER.debug( "Checking chunk {}, {}", chunk.getX(), chunk.getZ() );
 
         // Check if we should be able to see this entity
-        chunk.iterateEntities( Entity.class, new Consumer<Entity>() {
-            @Override
-            public void accept( Entity entity ) {
-                if ( ( (io.gomint.server.entity.Entity) entity ).shouldBeSeen( EntityVisibilityManager.this.player ) ) {
-                    EntityVisibilityManager.this.addEntity( entity );
-                }
+        chunk.iterateEntities( Entity.class, entity -> {
+            if ( ( (io.gomint.server.entity.Entity) entity ).shouldBeSeen( EntityVisibilityManager.this.player ) ) {
+                EntityVisibilityManager.this.addEntity( entity );
             }
         } );
     }
@@ -65,12 +62,7 @@ public class EntityVisibilityManager {
 
     public void updateRemoveChunk( ChunkAdapter chunk ) {
         // Check for removing entities
-        chunk.iterateEntities( Entity.class, new Consumer<Entity>() {
-            @Override
-            public void accept( Entity entity ) {
-                EntityVisibilityManager.this.removeEntity( entity );
-            }
-        } );
+        chunk.iterateEntities( Entity.class, EntityVisibilityManager.this::removeEntity );
     }
 
     public void removeEntity( Entity entity ) {
@@ -81,6 +73,7 @@ public class EntityVisibilityManager {
     }
 
     private void despawnEntity( io.gomint.server.entity.Entity entity ) {
+        LOGGER.debug( "Removing entity {} for {}", entity, this.player.getName() );
         entity.detach( this.player );
 
         PacketDespawnEntity despawnEntity = new PacketDespawnEntity();
@@ -90,7 +83,7 @@ public class EntityVisibilityManager {
 
     public void addEntity( Entity entity ) {
         if ( !this.visible.contains( entity ) && !this.player.equals( entity ) ) {
-            LOGGER.debug( "Showing entity {} for player", entity );
+            LOGGER.debug( "Spawning entity {} for {}", entity, this.player.getName() );
             io.gomint.server.entity.Entity implEntity = (io.gomint.server.entity.Entity) entity;
 
             implEntity.preSpawn( this.player.getConnection() );

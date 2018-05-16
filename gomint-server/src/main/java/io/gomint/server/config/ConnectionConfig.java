@@ -5,6 +5,7 @@ import io.gomint.config.YamlConfig;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 /**
  * @author geNAZt
@@ -13,6 +14,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
+@ToString
 public class ConnectionConfig extends YamlConfig {
 
     @Comment("Enable connection encryption. It uses AES-128 so it costs a bit of CPU power")

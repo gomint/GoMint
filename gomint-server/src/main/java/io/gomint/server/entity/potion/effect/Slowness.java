@@ -11,6 +11,7 @@ import io.gomint.server.entity.Attribute;
 import io.gomint.server.entity.AttributeModifier;
 import io.gomint.server.entity.EntityLiving;
 import io.gomint.server.entity.EntityPlayer;
+import io.gomint.server.player.EffectManager;
 import io.gomint.server.registry.RegisterInfo;
 
 /**
@@ -20,8 +21,13 @@ import io.gomint.server.registry.RegisterInfo;
 @RegisterInfo( id = 2 )
 public class Slowness extends Effect {
 
-    public Slowness( int amplifier, long runoutTimer ) {
-        super( amplifier, runoutTimer );
+    public Slowness( EffectManager manager, int amplifier, long runoutTimer ) {
+        super( manager, amplifier, runoutTimer );
+    }
+
+    @Override
+    public byte getId() {
+        return 2;
     }
 
     @Override

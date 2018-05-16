@@ -31,9 +31,9 @@ public class PluginClassloader extends URLClassLoader {
     public static Class<?> find( String name ) throws ClassNotFoundException {
         for ( PluginClassloader loader : ALL_LOADERS ) {
             try {
-                return loader.loadClass( name, false );
+                return loader.loadClass( name, true );
             } catch ( ClassNotFoundException e ) {
-                LOGGER.debug( "Could not find class in plugin", e );
+                LOGGER.info( "Could not find class in plugin" );
             }
         }
 

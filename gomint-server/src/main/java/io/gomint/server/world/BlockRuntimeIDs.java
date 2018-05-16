@@ -36,7 +36,7 @@ public class BlockRuntimeIDs {
 
         // Get the correct resource
         loadFile( "/temp_runtimeids.json", RUNTIME_IDS );
-        loadFile( "/temp_runtimeids_260.json", RUNTIME_IDS_BETA );
+        loadFile( "/temp_runtimeids_270.json", RUNTIME_IDS_BETA );
     }
 
     public static void loadFile( String file, Long2IntMap runtime ) {

@@ -93,7 +93,7 @@ public class PacketMovePlayerHandler implements PacketHandler<PacketMovePlayer> 
 
         if ( changeWorld || changeXZ || changeY ) {
             if ( changeWorld || changeXZ ) {
-                connection.checkForNewChunks( from );
+                connection.checkForNewChunks( from, false );
             }
 
             // Check for interaction
