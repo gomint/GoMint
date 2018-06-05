@@ -1126,7 +1126,7 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
     }
 
     @Override
-    public void disconnect( String reason ) {
+    public void kick( String reason ) {
         this.connection.disconnect( reason );
     }
 
