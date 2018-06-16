@@ -30,6 +30,11 @@ public class PlayerJoinListener implements EventListener {
         event.getPlayer().setLevel( 60 );
 
         event.getPlayer().getInventory().setItem( 2, ItemDiamondSword.create( 1 ) );
+        
+        for( EntityPlayer players : GoMint.instance().getPlayers() ) {
+            if( CommandVanish.vanish.contains( players.getUUID().toString() ) ) {
+                event.getPlayer().hidePlayer( players );
+            }
+        }
     }
-
 }
