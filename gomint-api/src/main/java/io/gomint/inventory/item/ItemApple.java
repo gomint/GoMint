@@ -6,7 +6,7 @@ import io.gomint.GoMint;
  * @author geNAZt
  * @version 1.0
  */
-public interface ItemApple extends ItemStack {
+public interface ItemApple extends ItemFood {
 
     /**
      * Create a new item stack with given class and amount

@@ -4,8 +4,10 @@ import io.gomint.command.CommandOverload;
 import io.gomint.command.ParamValidator;
 import io.gomint.server.network.packet.PacketAvailableCommands;
 import io.gomint.server.network.type.CommandData;
-import io.gomint.server.util.IndexedHashMap;
+import io.gomint.server.util.collection.IndexedHashMap;
 import lombok.Getter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -18,6 +20,8 @@ import java.util.function.Function;
  * @version 1.0
  */
 public class CommandPreprocessor {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger( CommandPreprocessor.class );
 
     // Those a static values which are used for PE to identify the type
     /**
@@ -33,13 +37,15 @@ public class CommandPreprocessor {
     private static final int ARG_TYPE_INT = 0x01;
     private static final int ARG_TYPE_FLOAT = 0x02;
     private static final int ARG_TYPE_VALUE = 0x03;
-    private static final int ARG_TYPE_TARGET = 0x04;
-    private static final int ARG_TYPE_STRING = 0x0d;
-    private static final int ARG_TYPE_POSITION = 0x0e;
-    private static final int ARG_TYPE_RAWTEXT = 0x11;
-    private static final int ARG_TYPE_TEXT = 0x13;
-    private static final int ARG_TYPE_JSON = 0x16;
-    private static final int ARG_TYPE_COMMAND = 0x1d;
+    // WILDCARD_INT
+    private static final int ARG_TYPE_TARGET = 0x05;
+    // WILDCARD_TARGET
+    private static final int ARG_TYPE_STRING = 0x0e;
+    private static final int ARG_TYPE_POSITION = 0x0f;
+    private static final int ARG_TYPE_RAWTEXT = 0x13;
+    private static final int ARG_TYPE_TEXT = 0x15;
+    private static final int ARG_TYPE_JSON = 0x18;
+    private static final int ARG_TYPE_COMMAND = 0x1f;
     /**
      * Enums are a little different: they are composed as follows:
      * ARG_FLAG_ENUM | ARG_FLAG_VALID | (enum index)
@@ -54,7 +60,7 @@ public class CommandPreprocessor {
     // a integer list reflecting the index inside enumValues
     private List<String> enumValues = new ArrayList<>();
     private IndexedHashMap<String, List<Integer>> enums = new IndexedHashMap<>();
-    private Map<CommandHolder, Integer> aliasIndex = new HashMap<>();
+    // private Map<CommandHolder, Integer> aliasIndex = new HashMap<>();
     private Map<String, Integer> enumIndexes = new HashMap<>();
 
     // Cached commands packet
@@ -70,7 +76,7 @@ public class CommandPreprocessor {
         this.commandsPacket = new PacketAvailableCommands();
 
         // First we should scan all commands for aliases
-        for ( CommandHolder command : commands ) {
+        /*for ( CommandHolder command : commands ) {
             if ( command.getAlias() != null ) {
                 for ( String s : command.getAlias() ) {
                     this.addEnum( command.getName() + "CommandAlias", s );
@@ -78,7 +84,7 @@ public class CommandPreprocessor {
 
                 this.aliasIndex.put( command, this.enums.getIndex( command.getName() + "CommandAlias" ) );
             }
-        }
+        }*/
 
         this.commandsPacket.setEnumValues( this.enumValues );
 
@@ -90,10 +96,10 @@ public class CommandPreprocessor {
                         for ( Map.Entry<String, ParamValidator> entry : overload.getParameters().entrySet() ) {
                             if ( entry.getValue().hasValues() ) {
                                 for ( String s : entry.getValue().values() ) {
-                                    this.addEnum( entry.getKey(), s );
+                                    this.addEnum( command.getName() + "#" + entry.getKey(), s );
                                 }
 
-                                this.enumIndexes.put( command.getName() + "#" + entry.getKey(), this.enums.getIndex( entry.getKey() ) );
+                                this.enumIndexes.put( command.getName() + "#" + entry.getKey(), this.enums.getIndex( command.getName() + "#" + entry.getKey() ) );
                             }
                         }
                     }
@@ -112,11 +118,11 @@ public class CommandPreprocessor {
             commandData.setPermission( (byte) command.getCommandPermission().getId() );
 
             // Put in alias index
-            if ( command.getAlias() != null ) {
+            /*if ( command.getAlias() != null ) {
                 commandData.setAliasIndex( this.aliasIndex.get( command ) );
             } else {
                 commandData.setAliasIndex( -1 );
-            }
+            }*/
 
             // Do we need to hack a bit here?
             List<List<CommandData.Parameter>> overloads = new ArrayList<>();
@@ -127,30 +133,46 @@ public class CommandPreprocessor {
                     if ( overload.getParameters() != null ) {
                         for ( Map.Entry<String, ParamValidator> entry : overload.getParameters().entrySet() ) {
                             // Build together type
-                            int paramType = ARG_FLAG_VALID; // We don't support postfixes yet
+                            int paramType = 0; // We don't support postfixes yet
 
                             switch ( entry.getValue().getType() ) {
                                 case INT:
+                                    paramType |= ARG_FLAG_VALID;
                                     paramType |= ARG_TYPE_INT;
                                     break;
                                 case BOOL:
                                 case STRING_ENUM:
                                     paramType |= ARG_FLAG_ENUM;
+                                    paramType |= ARG_FLAG_VALID;
                                     paramType |= this.enumIndexes.get( command.getName() + "#" + entry.getKey() );
                                     break;
                                 case TARGET:
+                                    paramType |= ARG_FLAG_VALID;
                                     paramType |= ARG_TYPE_TARGET;
                                     break;
                                 case STRING:
+                                    paramType |= ARG_FLAG_VALID;
                                     paramType |= ARG_TYPE_STRING;
                                     break;
                                 case BLOCK_POS:
+                                    paramType |= ARG_FLAG_VALID;
                                     paramType |= ARG_TYPE_POSITION;
                                     break;
                                 case TEXT:
+                                    paramType |= ARG_FLAG_VALID;
                                     paramType |= ARG_TYPE_TEXT;
                                     break;
+                                case FLOAT:
+                                    paramType |= ARG_FLAG_VALID;
+                                    paramType |= ARG_TYPE_FLOAT;
+                                    break;
+                                case COMMAND:
+                                    paramType |= ARG_FLAG_ENUM;
+                                    paramType |= ARG_FLAG_VALID;
+                                    paramType |= this.enumIndexes.get( command.getName() + "#" + entry.getKey() );
+                                    break;
                                 default:
+                                    paramType |= ARG_FLAG_VALID;
                                     paramType |= ARG_TYPE_VALUE;
                             }
 
@@ -181,12 +203,13 @@ public class CommandPreprocessor {
         }
 
         // Create / add this value to the enum
-        this.enums.computeIfAbsent( name, new Function<String, List<Integer>>() {
-            @Override
-            public List<Integer> apply( String s ) {
-                return new ArrayList<>();
-            }
-        } ).add( enumValueIndex );
+        List<Integer> old = this.enums.get( name );
+        if ( old == null ) {    // DONT use computeIfAbsent, the index won't show up
+            old = new ArrayList<>();
+            this.enums.put( name, old );
+        }
+
+        old.add( enumValueIndex );
     }
 
 }

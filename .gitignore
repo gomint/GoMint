@@ -72,3 +72,5 @@ crashlytics-build.properties
 
 # Lib folder
 libs/
+
+**/dependency-reduced-pom.xml

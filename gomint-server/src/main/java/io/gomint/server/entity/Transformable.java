@@ -226,4 +226,16 @@ public interface Transformable {
      */
     Vector getMotion();
 
+    /**
+     * Check if the motion has been sent to the clients
+     *
+     * @return true when it has been sent, false when not
+     */
+    boolean hasMotionBeenSent();
+
+    /**
+     * Mark the motion as sent
+     */
+    void markMotionSent();
+
 }

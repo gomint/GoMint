@@ -44,6 +44,11 @@ public enum ParamType {
     /**
      * 4 byte decimal with normal precision
      */
-    FLOAT
+    FLOAT,
+
+    /**
+     * Command
+     */
+    COMMAND,
 
 }

@@ -1,5 +1,6 @@
 package io.gomint.server.jwt;
 
+import io.gomint.server.util.StringUtil;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -44,7 +45,7 @@ public class JwtToken {
         JwtToken token = new JwtToken();
         token.header = new JwtHeader( (JSONObject) jwtHeaderRaw );
         token.claims = (JSONObject) jwtClaimsRaw;
-        token.signatureBytes = ( split[0] + '.' + split[1] ).getBytes( StandardCharsets.US_ASCII );
+        token.signatureBytes = StringUtil.getUTF8Bytes( split[0] + '.' + split[1] );
         token.signatureDigest = Base64.getUrlDecoder().decode( split[2] );
 
         return token;

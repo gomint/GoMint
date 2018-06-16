@@ -9,6 +9,7 @@ package io.gomint.server.crafting;
 
 import io.gomint.inventory.item.ItemStack;
 import io.gomint.jraknet.PacketBuffer;
+import io.gomint.server.inventory.Inventory;
 import io.gomint.server.network.packet.Packet;
 
 import java.util.Collection;
@@ -29,9 +30,9 @@ public class SmeltingRecipe extends Recipe {
     /**
      * Create new smelting recipe
      *
-     * @param input for this recipe
+     * @param input   for this recipe
      * @param outcome of this recipe
-     * @param uuid of the recipe
+     * @param uuid    of the recipe
      */
     public SmeltingRecipe( ItemStack input, ItemStack outcome, UUID uuid ) {
         super( uuid );
@@ -40,8 +41,8 @@ public class SmeltingRecipe extends Recipe {
     }
 
     @Override
-    public Collection<ItemStack> getIngredients() {
-        return Collections.singleton( this.input );
+    public ItemStack[] getIngredients() {
+        return new ItemStack[]{ this.input };
     }
 
     @Override
@@ -59,6 +60,11 @@ public class SmeltingRecipe extends Recipe {
         if ( this.input.getData() != 0 ) buffer.writeSignedVarInt( this.input.getData() );
 
         Packet.writeItemStack( this.outcome, buffer );
+    }
+
+    @Override
+    public int[] isCraftable( Inventory inputInventory ) {
+        return new int[0];
     }
 
 }

@@ -1,5 +1,7 @@
 package io.gomint.server.world.block;
 
+import io.gomint.world.block.BlockType;
+
 import io.gomint.server.registry.RegisterInfo;
 
 /**
@@ -7,7 +9,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( id = 91 )
-public class JackOLantern extends Block {
+public class JackOLantern extends Block implements io.gomint.world.block.BlockJackOLantern {
 
     @Override
     public int getBlockId() {
@@ -21,6 +23,21 @@ public class JackOLantern extends Block {
 
     @Override
     public boolean isTransparent() {
+        return true;
+    }
+
+    @Override
+    public float getBlastResistance() {
+        return 5.0f;
+    }
+
+    @Override
+    public BlockType getType() {
+        return BlockType.JACK_O_LANTERN;
+    }
+
+    @Override
+    public boolean canBeBrokenWithHand() {
         return true;
     }
 

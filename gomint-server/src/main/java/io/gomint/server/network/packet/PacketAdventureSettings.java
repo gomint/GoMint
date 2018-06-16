@@ -23,7 +23,7 @@ public class PacketAdventureSettings extends Packet {
     }
 
     @Override
-    public void serialize( PacketBuffer buffer ) {
+    public void serialize( PacketBuffer buffer, int protocolID ) {
         buffer.writeUnsignedVarInt( this.flags );
         buffer.writeUnsignedVarInt( this.commandPermission );
         buffer.writeUnsignedVarInt( this.flags2 );
@@ -33,7 +33,7 @@ public class PacketAdventureSettings extends Packet {
     }
 
     @Override
-    public void deserialize( PacketBuffer buffer ) {
+    public void deserialize( PacketBuffer buffer, int protocolID ) {
         this.flags = buffer.readUnsignedVarInt();
         this.commandPermission = buffer.readUnsignedVarInt();
         this.flags2 = buffer.readUnsignedVarInt();

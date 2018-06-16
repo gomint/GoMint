@@ -19,7 +19,7 @@ public class CommandData {
     private final String description;
     private byte flags;
     private byte permission;
-    private int aliasIndex = -1;
+    private int aliasIndex = -1; // TODO: Unused due to 1.2 alias bug
     private List<List<Parameter>> parameters;
 
     @AllArgsConstructor

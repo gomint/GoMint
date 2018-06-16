@@ -7,9 +7,8 @@
 
 package io.gomint.event.player;
 
-import io.gomint.entity.Player;
+import io.gomint.entity.EntityPlayer;
 import io.gomint.event.CancellableEvent;
-import io.gomint.event.Event;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
@@ -17,13 +16,13 @@ import lombok.ToString;
  * @author geNAZt
  * @version 1.0
  */
-@EqualsAndHashCode( callSuper = false )
+@EqualsAndHashCode( callSuper = true )
 @ToString( callSuper = true )
 public class CancellablePlayerEvent extends CancellableEvent {
 
-    private final Player player;
+    private final EntityPlayer player;
 
-    public CancellablePlayerEvent( Player player ) {
+    public CancellablePlayerEvent( EntityPlayer player ) {
         this.player = player;
     }
 
@@ -32,7 +31,7 @@ public class CancellablePlayerEvent extends CancellableEvent {
      *
      * @return the player which is affected by this event
      */
-    public Player getPlayer() {
+    public EntityPlayer getPlayer() {
         return this.player;
     }
 

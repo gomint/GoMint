@@ -1,13 +1,9 @@
 package io.gomint.server.inventory;
 
-import com.koloboke.collect.map.ObjIntMap;
-import com.koloboke.collect.map.hash.HashObjIntMaps;
-
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
+import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
+import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.objects.Object2IntMap;
+import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 
 /**
  * @author geNAZt
@@ -15,13 +11,14 @@ import java.nio.file.StandardOpenOption;
  */
 public class MaterialMagicNumbers {
 
-    private static final ObjIntMap<String> NEW_ID_MAPPING = HashObjIntMaps.newMutableMap();
+    private static final Object2IntMap<String> NEW_ID_MAPPING = new Object2IntOpenHashMap<>();
+    private static final Int2ObjectMap<String> OLD_ID_MAPPING = new Int2ObjectOpenHashMap<>();
 
     static {
         // CHECKSTYLE:OFF
         register( 0, "minecraft:air" );
         register( 1, "minecraft:stone" );
-        register( 2, "minecraft:grass_block" );
+        register( 2, "minecraft:grass" );
         register( 3, "minecraft:dirt" );
         register( 4, "minecraft:cobblestone" );
         register( 5, "minecraft:wood_planks" );
@@ -393,91 +390,15 @@ public class MaterialMagicNumbers {
 
     public static void register( int id, String newId ) {
         NEW_ID_MAPPING.put( newId, id );
-
-        // TODO: Remove this
-        String[] split = newId.split( ":" );
-        String mcName = split[1];
-        StringBuilder className = new StringBuilder();
-        boolean upperCase = true;
-
-        for ( int i = 0; i < mcName.length(); i++ ) {
-            char current = mcName.charAt( i );
-            if ( upperCase ) {
-                className.append( Character.toUpperCase( current ) );
-                upperCase = false;
-            } else if ( current == '_' ) {
-                upperCase = true;
-            } else {
-                className.append( current );
-            }
-        }
-
-        String simpleName = className.toString();
-        String finalClassName = "Item" + className.toString();
-
-        File implFile = new File( "gomint-server/src/main/java/io/gomint/server/inventory/item/" + finalClassName + ".java" );
-        if ( !implFile.exists() ) {
-            // API first
-            String apiInterface = "package io.gomint.inventory.item;\n\n" +
-                    "import io.gomint.GoMint;\n\n" +
-                    "/**\n" +
-                    " * @author geNAZt\n" +
-                    " * @version 1.0\n" +
-                    " */\n" +
-                    "public interface Item" + simpleName + " extends ItemStack {\n\n" +
-                    "    /**\n" +
-                    "     * Create a new item stack with given class and amount\n" +
-                    "     *\n" +
-                    "     * @param amount which is used for the creation\n" +
-                    "     */\n" +
-                    "    static Item" + simpleName + " create( int amount ) {\n" +
-                    "        return GoMint.instance().createItemStack( Item" + simpleName + ".class, amount );\n" +
-                    "    }\n\n" +
-                    "}";
-
-            try {
-                Files.write( Paths.get( "generated/api/Item" + simpleName + ".java" ), apiInterface.getBytes(), StandardOpenOption.CREATE );
-            } catch ( IOException e ) {
-                e.printStackTrace();
-            }
-
-            // Implementation
-            String implementation = "package io.gomint.server.inventory.item;\n" +
-                    "\n" +
-                    "import io.gomint.server.registry.RegisterInfo;\n" +
-                    "import io.gomint.taglib.NBTTagCompound;\n" +
-                    "\n" +
-                    "/**\n" +
-                    " * @author geNAZt\n" +
-                    " * @version 1.0\n" +
-                    " */\n" +
-                    "@RegisterInfo( id = " + id + " )\n " +
-                    "public class Item" + simpleName + " extends ItemStack implements io.gomint.inventory.item.Item" + simpleName + " {\n" +
-                    "\n" +
-                    "    // CHECKSTYLE:OFF\n" +
-                    "    public Item" + simpleName + "( short data, int amount ) {\n" +
-                    "        super( " + id + ", data, amount );\n" +
-                    "    }\n" +
-                    "\n" +
-                    "    public Item" + simpleName + "( short data, int amount, NBTTagCompound nbt ) {\n" +
-                    "        super( " + id + ", data, amount, nbt );\n" +
-                    "    }\n" +
-                    "    // CHECKSTYLE:ON\n" +
-                    "\n" +
-                    "}\n";
-
-            try {
-                Files.write( Paths.get( "generated/impl/Item" + simpleName + ".java" ), implementation.getBytes(), StandardOpenOption.CREATE );
-            } catch ( IOException e ) {
-                e.printStackTrace();
-            }
-
-            System.out.println( finalClassName );
-        }
+        OLD_ID_MAPPING.put( id, newId );
     }
 
     public static int valueOfWithId( String newId ) {
         return NEW_ID_MAPPING.getOrDefault( newId, 0 );
+    }
+
+    public static String newIdFromValue( int id ) {
+        return OLD_ID_MAPPING.getOrDefault( id, "minecraft:air" );
     }
 
 }

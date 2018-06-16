@@ -1,5 +1,6 @@
 package io.gomint.command.validator;
 
+import io.gomint.command.CommandSender;
 import io.gomint.command.ParamType;
 import io.gomint.command.ParamValidator;
 import io.gomint.entity.Entity;
@@ -9,6 +10,7 @@ import java.util.regex.Pattern;
 
 /**
  * @author geNAZt
+ * @version 1.0
  */
 public class StringValidator extends ParamValidator {
 
@@ -34,7 +36,7 @@ public class StringValidator extends ParamValidator {
     }
 
     @Override
-    public Object validate( List<String> input, Entity entity ) {
+    public Object validate( List<String> input, CommandSender commandSender ) {
         String toCheck = input.get( 0 );
         if ( this.pattern.matcher( toCheck ).matches() ) {
             return toCheck;
@@ -46,6 +48,11 @@ public class StringValidator extends ParamValidator {
     @Override
     public int consumesParts() {
         return 1;
+    }
+
+    @Override
+    public String getHelpText() {
+        return "string:" + this.pattern.pattern();
     }
 
 }

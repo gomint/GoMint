@@ -10,53 +10,21 @@ package io.gomint.server.event;
 import io.gomint.event.Event;
 import io.gomint.event.EventHandler;
 import io.gomint.event.EventListener;
-import com.koloboke.collect.map.IntObjMap;
-import com.koloboke.collect.map.hash.HashIntObjMaps;
+import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
+import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.locks.ReentrantLock;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
  * @author BlackyPaw
- * @version 1.0
+ * @author geNAZt
+ * @version 2.0
  */
 public class EventManager {
 
-    // Fair-Mode reentrant R/W lock used for synchronizing access to the event handler map:
-    private final ReentrantReadWriteLock collectionLock = new ReentrantReadWriteLock( true );
-    private final ReentrantLock queueLock = new ReentrantLock( true );
-
     // All event handlers that have been registered
-    private final IntObjMap<EventHandlerList> eventHandlers = HashIntObjMaps.newMutableMap();
-
-    // Not actually a queue, but used for the sake of cache efficiency provided by array lists over
-    // actual queue implementations such as LinkedList
-    private final List<Event> eventQueue = new ArrayList<>();
-
-    /**
-     * Constructs a new EventManager.
-     */
-    public EventManager() {
-
-    }
-
-    /**
-     * Queues the event. It will be triggered as soon as the event manager flushes its internal event queue.
-     *
-     * @param event The event to be enqueued
-     */
-    public void queueEvent( Event event ) {
-        this.queueLock.lock();
-        try {
-            this.eventQueue.add( event );
-        } finally {
-            this.queueLock.unlock();
-        }
-    }
+    private final Int2ObjectMap<EventHandlerList> eventHandlers = new Int2ObjectOpenHashMap<>();
 
     /**
      * Triggers the event. It will be dispatched to all interested listeners immediately.
@@ -64,30 +32,14 @@ public class EventManager {
      * @param event The event to be triggered
      */
     public void triggerEvent( Event event ) {
-        this.collectionLock.readLock().lock();
-        try {
-            this.triggerEvent0( event );
-        } finally {
-            this.collectionLock.readLock().unlock();
+        // Assume we already acquired a readLock:
+        int eventHash = event.getClass().getName().hashCode();
+        EventHandlerList eventHandlerList = this.eventHandlers.get( eventHash );
+        if ( eventHandlerList == null ) {
+            return;
         }
-    }
 
-    /**
-     * Flushes the internal event queue of the EventManager by triggering all enqueued events at once.
-     */
-    public void flush() {
-        this.collectionLock.readLock().lock();
-        this.queueLock.lock();
-        try {
-            for ( Event event : this.eventQueue ) {
-                this.triggerEvent0( event );
-            }
-
-            this.eventQueue.clear();
-        } finally {
-            this.queueLock.unlock();
-            this.collectionLock.writeLock().unlock();
-        }
+        eventHandlerList.triggerEvent( event );
     }
 
     /**
@@ -100,9 +52,9 @@ public class EventManager {
         Class<? extends EventListener> listenerClass = listener.getClass();
         for ( Method listenerMethod : listenerClass.getDeclaredMethods() ) {
             if ( !listenerMethod.isAnnotationPresent( EventHandler.class ) ||
-                    listenerMethod.getParameterCount() != 1 ||
-                    !Event.class.isAssignableFrom( listenerMethod.getParameterTypes()[0] ) ||
-                    Modifier.isStatic( listenerMethod.getModifiers() ) ) {
+                listenerMethod.getParameterCount() != 1 ||
+                !Event.class.isAssignableFrom( listenerMethod.getParameterTypes()[0] ) ||
+                Modifier.isStatic( listenerMethod.getModifiers() ) ) {
                 continue;
             }
 
@@ -121,9 +73,9 @@ public class EventManager {
         Class<? extends EventListener> listenerClass = listener.getClass();
         for ( Method listenerMethod : listenerClass.getDeclaredMethods() ) {
             if ( !listenerMethod.isAnnotationPresent( EventHandler.class ) ||
-                    listenerMethod.getParameterCount() != 1 ||
-                    !Event.class.isAssignableFrom( listenerMethod.getParameterTypes()[0] ) ||
-                    Modifier.isStatic( listenerMethod.getModifiers() ) ) {
+                listenerMethod.getParameterCount() != 1 ||
+                !Event.class.isAssignableFrom( listenerMethod.getParameterTypes()[0] ) ||
+                Modifier.isStatic( listenerMethod.getModifiers() ) ) {
                 continue;
             }
 
@@ -131,47 +83,27 @@ public class EventManager {
         }
     }
 
-    private void triggerEvent0( Event event ) {
-        // Assume we already acquired a readLock:
-        int eventHash = event.getClass().hashCode();
+    private <T extends EventListener> void registerListener0( T listener, Method listenerMethod ) {
+        int eventHash = listenerMethod.getParameterTypes()[0].getName().hashCode();
+        EventHandler annotation = listenerMethod.getAnnotation( EventHandler.class );
+        EventHandlerList eventHandlerList = this.eventHandlers.get( eventHash );
+        if ( eventHandlerList == null ) {
+            eventHandlerList = new EventHandlerList();
+            this.eventHandlers.put( eventHash, eventHandlerList );
+        }
+
+        eventHandlerList.addHandler( listener.getClass().getName() + "#" + listenerMethod.getName() + "_" + eventHash,
+            new EventHandlerMethod( listener, listenerMethod, annotation ) );
+    }
+
+    private <T extends EventListener> void unregisterListener0( T listener, Method listenerMethod ) {
+        int eventHash = listenerMethod.getParameterTypes()[0].getName().hashCode();
         EventHandlerList eventHandlerList = this.eventHandlers.get( eventHash );
         if ( eventHandlerList == null ) {
             return;
         }
 
-        eventHandlerList.triggerEvent( event );
-    }
-
-    private <T extends EventListener> void registerListener0( T listener, Method listenerMethod ) {
-        this.collectionLock.writeLock().lock();
-        try {
-            int eventHash = listenerMethod.getParameterTypes()[0].hashCode();
-            EventHandler annotation = listenerMethod.getAnnotation( EventHandler.class );
-            EventHandlerList eventHandlerList = this.eventHandlers.get( eventHash );
-            if ( eventHandlerList == null ) {
-                eventHandlerList = new EventHandlerList();
-                this.eventHandlers.put( eventHash, eventHandlerList );
-            }
-
-            eventHandlerList.addHandler( listener.getClass().getName() + "#" + listenerMethod.getName() + "_" + eventHash, new EventHandlerMethod( listener, listenerMethod, annotation ) );
-        } finally {
-            this.collectionLock.writeLock().unlock();
-        }
-    }
-
-    private <T extends EventListener> void unregisterListener0( T listener, Method listenerMethod ) {
-        this.collectionLock.writeLock().lock();
-        try {
-            int eventHash = listenerMethod.getParameterTypes()[0].hashCode();
-            EventHandlerList eventHandlerList = this.eventHandlers.get( eventHash );
-            if ( eventHandlerList == null ) {
-                return;
-            }
-
-            eventHandlerList.removeHandler( listener.getClass().getName() + "#" + listenerMethod.getName() + "_" + eventHash );
-        } finally {
-            this.collectionLock.writeLock().unlock();
-        }
+        eventHandlerList.removeHandler( listener.getClass().getName() + "#" + listenerMethod.getName() + "_" + eventHash );
     }
 
 }

@@ -8,6 +8,7 @@
 package io.gomint.math;
 
 import io.gomint.world.World;
+import io.gomint.world.block.Block;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -22,17 +23,24 @@ import lombok.ToString;
  * @author Digot
  * @author geNAZt
  * @author BlackyPaw
- * @version 1.2
+ * @version 2.0
  */
 @EqualsAndHashCode( callSuper = true )
-@ToString
-public class Location extends Vector implements Cloneable {
+@ToString( callSuper = true )
+public class Location extends Vector {
 
-    @Getter private World world;
+    @Getter
+    private World world;
 
-    @Getter @Setter private float yaw;
-    @Getter @Setter private float headYaw;
-    @Getter @Setter private float pitch;
+    @Getter
+    @Setter
+    private float yaw;
+    @Getter
+    @Setter
+    private float headYaw;
+    @Getter
+    @Setter
+    private float pitch;
 
     public Location( World world ) {
         this.setWorld( world );
@@ -40,12 +48,12 @@ public class Location extends Vector implements Cloneable {
 
     public Location( World world, float x, float y, float z ) {
         super( x, y, z );
-        this.setWorld( world );
+        this.world = world;
     }
 
     public Location( World world, Vector vector ) {
         super( vector.getX(), vector.getY(), vector.getZ() );
-        this.setWorld( world );
+        this.world = world;
     }
 
     public Location( World world, float x, float y, float z, float yaw, float pitch ) {
@@ -68,82 +76,56 @@ public class Location extends Vector implements Cloneable {
     }
 
     public void setWorld( World world ) {
-        if ( world == null ) {
-            throw new NullPointerException( "Cannot set world of location to null!" );
-        }
         this.world = world;
     }
 
     @Override
     public Location add( float x, float y, float z ) {
-        super.add( x, y, z );
-        return this;
+        return new Location( this.world, this.x + x, this.y + y, this.z + z, this.yaw, this.pitch );
     }
 
     @Override
     public Location add( Vector v ) {
-        super.add( v );
-        return this;
+        return this.add( v.x, v.y, v.z );
     }
 
     @Override
     public Location subtract( float x, float y, float z ) {
-        super.subtract( x, y, z );
-        return this;
+        return new Location( this.world, this.x - x, this.y - y, this.z - z, this.yaw, this.pitch );
     }
 
     @Override
     public Location subtract( Vector v ) {
-        super.subtract( v );
-        return this;
+        return this.subtract( v.x, v.y, v.z );
     }
 
     @Override
     public Location multiply( float x, float y, float z ) {
-        super.multiply( x, y, z );
-        return this;
+        return new Location( this.world, this.x * x, this.y * y, this.z * z, this.yaw, this.pitch );
     }
 
     @Override
     public Location multiply( Vector v ) {
-        super.multiply( v );
-        return this;
+        return this.multiply( v.x, v.y, v.z );
     }
 
     @Override
     public Location divide( float x, float y, float z ) {
-        super.divide( x, y, z );
-        return this;
+        return new Location( this.world, this.x / x, this.y / y, this.z / z, this.yaw, this.pitch );
     }
 
     @Override
     public Location divide( Vector v ) {
-        super.divide( v );
-        return this;
+        return this.divide( v.x, v.y, v.z );
     }
 
     @Override
     public Location multiply( float scalar ) {
-        super.multiply( scalar );
-        return this;
+        return this.multiply( scalar, scalar, scalar );
     }
 
-    @Override
-    public String toString() {
-        return String.format( "[world=%s, x=%.3f, y=%.3f, z=%.3f, yaw=%.3f, pitch=%.3f]", world.getLevelName(), x, y, z, yaw, pitch );
-    }
-
-    @Override
-    public Location clone() {
-        Location location = (Location) super.clone();
-        location.world = this.world;
-        location.yaw = this.yaw;
-        location.pitch = this.pitch;
-        return location;
-    }
-
-    public Vector toVector() {
-        return new Vector( this.x, this.y, this.z );
+    public <T extends Block> T getBlock() {
+        return this.world.getBlockAt( MathUtils.fastFloor( this.x ), MathUtils.fastFloor( this.y ), MathUtils.fastFloor( this.z ) );
     }
 
 }

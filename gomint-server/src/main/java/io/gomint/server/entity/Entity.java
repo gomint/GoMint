@@ -7,28 +7,34 @@
 
 package io.gomint.server.entity;
 
-import io.gomint.math.AxisAlignedBB;
-import io.gomint.math.Location;
-import io.gomint.math.Vector;
-import io.gomint.math.Vector2;
+import io.gomint.entity.BossBar;
+import io.gomint.event.entity.EntityDamageEvent;
+import io.gomint.event.entity.EntityTeleportEvent;
+import io.gomint.math.*;
 import io.gomint.server.entity.component.TransformComponent;
 import io.gomint.server.entity.metadata.MetadataContainer;
+import io.gomint.server.network.PlayerConnection;
 import io.gomint.server.network.packet.Packet;
 import io.gomint.server.network.packet.PacketEntityMetadata;
+import io.gomint.server.network.packet.PacketEntityMotion;
+import io.gomint.server.network.packet.PacketSpawnEntity;
 import io.gomint.server.util.Values;
 import io.gomint.server.world.CoordinateUtils;
 import io.gomint.server.world.WorldAdapter;
-import io.gomint.server.world.block.Block;
-import io.gomint.server.world.block.Liquid;
-import io.gomint.util.Numbers;
+import io.gomint.server.world.block.*;
+import io.gomint.taglib.NBTTagCompound;
 import io.gomint.world.Chunk;
 import lombok.Getter;
 import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.function.Predicate;
 
 /**
  * Base class for all entities. Defines accessors to attributes and components that are
@@ -42,8 +48,8 @@ public abstract class Entity implements io.gomint.entity.Entity {
     private static final Logger LOGGER = LoggerFactory.getLogger( Entity.class );
 
     // Useful stuff for movement. Those are values for per client tick
-    protected static final float GRAVITY = 0.04f;
-    protected static final float DRAG = 0.02f;
+    protected float GRAVITY = 0.08f;
+    protected float DRAG = 0.02f;
 
     private static final AtomicLong ENTITY_ID = new AtomicLong( 0 );
 
@@ -69,22 +75,24 @@ public abstract class Entity implements io.gomint.entity.Entity {
     @Getter
     private float width;
     @Getter
-    private float height;
+    protected float height;
 
     /**
      * How high can this entity "climb" in one movement?
      */
     protected float stepHeight = 0;
-
     protected boolean onGround;
-    private float yOffset; // This offset is needed for jumping blocks up
 
     /**
      * Collision states
      */
-    private boolean isCollidedVertically;
-    private boolean isCollidedHorizontally;
-    private boolean isCollided;
+    // CHECKSTYLE:OFF
+    protected boolean isCollidedVertically;
+    protected boolean isCollidedHorizontally;
+    protected boolean isCollided;
+    protected Set<Block> collidedWith = new HashSet<>();
+    private boolean stuckInBlock = false;
+    // CHECKSTYLE:ON
 
     /**
      * Fall distance tracking
@@ -96,12 +104,16 @@ public abstract class Entity implements io.gomint.entity.Entity {
      */
     @Getter
     protected float eyeHeight;
+    @Getter
+    protected float offsetY;
 
     /**
      * Dead status
      */
     @Getter
+    @Setter
     private boolean dead;
+    protected int age;
 
     @Setter
     protected WorldAdapter world;
@@ -109,6 +121,27 @@ public abstract class Entity implements io.gomint.entity.Entity {
     private float lastUpdateDt;
     @Getter
     private List<EntityLink> links;
+
+    @Setter
+    @Getter
+    protected boolean ticking = true;
+
+    // Some tracker for "smooth" movement
+    private int stuckInBlockTicks = 0;
+
+    private io.gomint.server.entity.BossBar bossBar;
+
+    /**
+     * Hidden status
+     */
+    private boolean hideByDefault;
+    private Set<EntityPlayer> shownFor;
+
+    /**
+     * Movement status
+     */
+    private int nextFullMovement = 20;
+    @Getter private Location oldPosition;
 
     /**
      * Construct a new Entity
@@ -124,10 +157,12 @@ public abstract class Entity implements io.gomint.entity.Entity {
         this.metadataContainer.putLong( MetadataContainer.DATA_INDEX, 0 );
         this.metadataContainer.putInt( MetadataContainer.DATA_VARIANT, 0 );
         this.metadataContainer.putInt( MetadataContainer.DATA_POTION_COLOR, 0 );
+        this.setScale( 1.0f );
         this.transform = new TransformComponent();
         this.boundingBox = new AxisAlignedBB( 0, 0, 0, 0, 0, 0 );
 
         // Set some default stuff
+        this.setHasCollision( true );
         this.setAffectedByGravity( true );
         this.setNameTagVisible( true );
     }
@@ -178,35 +213,202 @@ public abstract class Entity implements io.gomint.entity.Entity {
      * @param dT            The time that has passed since the last tick in 1/s
      */
     public void update( long currentTimeMS, float dT ) {
+        if ( this.dead ) {
+            return;
+        }
+
         this.transform.update( currentTimeMS, dT );
 
-        // Check if we need to calc motion
         this.lastUpdateDt += dT;
         if ( this.lastUpdateDt >= Values.CLIENT_TICK_RATE ) {
-            // Calc motion
-            this.transform.manipulateMotion( 0, -Entity.GRAVITY, 0 );
+            this.age++;
 
-            // Check if we are stuck in a block
-            this.checkInsideBlock();
+            if ( !isImmobile() ) {
+                float movX = this.getMotionX();
+                float movY = this.getMotionY();
+                float movZ = this.getMotionZ();
 
-            // Move by motion amount
-            float movX = this.transform.getMotionX();
-            float movY = this.transform.getMotionY();
-            float movZ = this.transform.getMotionZ();
+                Vector moved = null;
+                if ( this.shouldMove() ) {
+                    moved = this.safeMove( movX, movY, movZ );
+                }
 
-            // Security check so we don't move and collect bounding boxes like crazy
-            if ( Math.abs( movX ) > 20 || Math.abs( movZ ) > 20 || Math.abs( movY ) > 20 ) {
-                return;
+                if ( this.isAffectedByGravity() ) {
+                    // Calc motion
+                    this.transform.manipulateMotion( 0, -this.GRAVITY, 0 );
+
+                    // Calculate friction
+                    float friction = 1 - DRAG;
+                    if ( this.onGround && ( Math.abs( this.getMotionX() ) > 0.00001 || Math.abs( this.getMotionZ() ) > 0.00001 ) ) {
+                        friction = this.world.getBlockAt( (int) this.getPositionX(),
+                            (int) ( this.getPositionY() - 1 ),
+                            (int) this.getPositionZ() ).getFrictionFactor() * 0.91f;
+                    }
+
+                    // Calculate new motion
+                    float newMovX = this.transform.getMotionX() * friction;
+                    float newMovY = this.transform.getMotionY() * ( 1 - DRAG );
+                    float newMovZ = this.transform.getMotionZ() * friction;
+
+                    this.transform.setMotion( newMovX, newMovY, newMovZ );
+                    this.checkAfterGravity();
+                }
+
+                if ( moved != null ) {
+                    // We did not move so we collided, set motion to 0 to escape hell
+                    if ( movX != moved.getX() ) {
+                        this.transform.setMotionX( 0 );
+                    }
+
+                    if ( movY != moved.getY() ) {
+                        this.transform.setMotionY( 0 );
+                    }
+
+                    if ( movZ != moved.getZ() ) {
+                        this.transform.setMotionZ( 0 );
+                    }
+                }
             }
 
-            float dX = this.transform.getMotionX();
-            float dY = this.transform.getMotionY();
-            float dZ = this.transform.getMotionZ();
+            // Check for block collision
+            this.checkBlockCollisions();
 
-            AxisAlignedBB oldBoundingBox = this.boundingBox.clone();
+            // Check for void damage
+            if ( this.getPositionY() < -16.0f ) {
+                this.dealVoidDamage();
+            }
 
-            // Check if we collide with some blocks when we would move that fast
-            List<AxisAlignedBB> collisionList = this.world.getCollisionCubes( this, this.boundingBox.getOffsetBoundingBox( dX, dY, dZ ), false );
+            this.lastUpdateDt = 0;
+        }
+
+        // Check if we need to update the bounding box
+        if ( this.transform.isDirty() ) {
+            this.boundingBox.setBounds(
+                this.getPositionX() - ( this.width / 2 ),
+                this.getPositionY(),
+                this.getPositionZ() - ( this.width / 2 ),
+                this.getPositionX() + ( this.width / 2 ),
+                this.getPositionY() + this.height,
+                this.getPositionZ() + ( this.width / 2 )
+            );
+
+            this.transform.move( 0, 0, 0 );
+        }
+    }
+
+    protected void checkBlockCollisions() {
+        List<io.gomint.world.block.Block> blockList = this.world.getCollisionBlocks( this, true );
+        if ( blockList != null ) {
+            Vector pushedByBlocks = new Vector( 0, 0, 0 );
+
+            for ( io.gomint.world.block.Block block : blockList ) {
+                io.gomint.server.world.block.Block implBlock = (io.gomint.server.world.block.Block) block;
+                implBlock.onEntityCollision( this );
+                implBlock.addVelocity( this, pushedByBlocks );
+            }
+
+            if ( pushedByBlocks.length() > 0 ) {
+                pushedByBlocks.normalize().multiply( 0.014f );
+                Vector newMotion = this.transform.getMotion().add( pushedByBlocks );
+                this.transform.setMotion( newMotion.getX(), newMotion.getY(), newMotion.getZ() );
+                this.broadCastMotion();
+            }
+        }
+    }
+
+    /**
+     * Allow for custom capping of gravity
+     */
+    protected void checkAfterGravity() {
+
+    }
+
+    protected boolean shouldMove() {
+        return true;
+    }
+
+    /**
+     * Move by given motion. This check for block collisions and pushes entity out of blocks when needed
+     *
+     * @param movX x axis movement
+     * @param movY y axis movement
+     * @param movZ z axis movement
+     * @return vector with the actual done movement
+     */
+    public Vector safeMove( float movX, float movY, float movZ ) {
+        // Security check so we don't move and collect bounding boxes like crazy
+        if ( Math.abs( movX ) > 20 || Math.abs( movZ ) > 20 || Math.abs( movY ) > 20 ) {
+            return Vector.ZERO;
+        }
+
+        float dX = movX;
+        float dY = movY;
+        float dZ = movZ;
+
+        AxisAlignedBB oldBoundingBox = this.boundingBox.clone();
+
+        // Check if we collide with some blocks when we would move that fast
+        List<AxisAlignedBB> collisionList = this.world.getCollisionCubes( this, this.boundingBox.getOffsetBoundingBox( dX, dY, dZ ), false );
+        if ( collisionList != null && !this.stuckInBlock ) {
+            // Check if we would hit a y border block
+            for ( AxisAlignedBB axisAlignedBB : collisionList ) {
+                dY = axisAlignedBB.calculateYOffset( this.boundingBox, dY );
+                if ( dY != movY ) {
+                    Block block = this.world.getBlockAt( (int) axisAlignedBB.getMinX(), (int) axisAlignedBB.getMinY(), (int) axisAlignedBB.getMinZ() );
+                    LOGGER.debug( "Entity {} collided with {}", this, block );
+
+                    this.collidedWith.add( block );
+                }
+            }
+
+            this.boundingBox.offset( 0, dY, 0 );
+
+            // Check if we would hit a x border block
+            for ( AxisAlignedBB axisAlignedBB : collisionList ) {
+                dX = axisAlignedBB.calculateXOffset( this.boundingBox, dX );
+                if ( dX != movX ) {
+                    Block block = this.world.getBlockAt( (int) axisAlignedBB.getMinX(), (int) axisAlignedBB.getMinY(), (int) axisAlignedBB.getMinZ() );
+                    LOGGER.debug( "Entity {} collided with {}", this, block );
+
+                    this.collidedWith.add( block );
+                }
+            }
+
+            this.boundingBox.offset( dX, 0, 0 );
+
+            // Check if we would hit a z border block
+            for ( AxisAlignedBB axisAlignedBB : collisionList ) {
+                dZ = axisAlignedBB.calculateZOffset( this.boundingBox, dZ );
+                if ( dZ != movZ ) {
+                    Block block = this.world.getBlockAt( (int) axisAlignedBB.getMinX(), (int) axisAlignedBB.getMinY(), (int) axisAlignedBB.getMinZ() );
+                    LOGGER.debug( "Entity {} collided with {}", this, block );
+
+                    this.collidedWith.add( block );
+                }
+            }
+
+            this.boundingBox.offset( 0, 0, dZ );
+        } else {
+            this.boundingBox.offset( dX, dY, dZ );
+        }
+
+        // Check if we can jump
+        boolean notFallingFlag = ( this.onGround || ( dY != movY && movY < 0 ) );
+        if ( this.stepHeight > 0 && notFallingFlag && ( movX != dX || movZ != dZ ) ) {
+            float oldDX = dX;
+            float oldDY = dY;
+            float oldDZ = dZ;
+
+            dX = movX;
+            dY = this.stepHeight;
+            dZ = movZ;
+
+            // Save and restore old bounding box
+            AxisAlignedBB oldBoundingBox1 = this.boundingBox.clone();
+            this.boundingBox.setBounds( oldBoundingBox );
+
+            // Check for collision
+            collisionList = this.world.getCollisionCubes( this, this.boundingBox.addCoordinates( dX, dY, dZ ), false );
             if ( collisionList != null ) {
                 // Check if we would hit a y border block
                 for ( AxisAlignedBB axisAlignedBB : collisionList ) {
@@ -228,106 +430,46 @@ public abstract class Entity implements io.gomint.entity.Entity {
                 }
 
                 this.boundingBox.offset( 0, 0, dZ );
-            } else {
-                this.boundingBox.offset( dX, dY, dZ );
             }
 
-            // Check if we can jump
-            boolean notFallingFlag = ( this.onGround || ( dY != movY && movY < 0 ) );
-            if ( this.stepHeight > 0 && notFallingFlag && this.yOffset < 0.05 && ( movX != dX || movZ != dZ ) ) {
-                float oldDX = dX;
-                float oldDY = dY;
-                float oldDZ = dZ;
-
-                dX = movX;
-                dY = this.stepHeight;
-                dZ = movZ;
-
-                // Save and restore old bounding box
-                AxisAlignedBB oldBoundingBox1 = this.boundingBox.clone();
-                this.boundingBox.setBounds( oldBoundingBox );
-
-                // Check for collision
-                collisionList = this.world.getCollisionCubes( this, this.boundingBox.addCoordinates( dX, dY, dZ ), false );
-                if ( collisionList != null ) {
-                    // Check if we would hit a y border block
-                    for ( AxisAlignedBB axisAlignedBB : collisionList ) {
-                        dY = axisAlignedBB.calculateYOffset( this.boundingBox, dY );
-                    }
-
-                    this.boundingBox.offset( 0, dY, 0 );
-
-                    // Check if we would hit a x border block
-                    for ( AxisAlignedBB axisAlignedBB : collisionList ) {
-                        dX = axisAlignedBB.calculateXOffset( this.boundingBox, dX );
-                    }
-
-                    this.boundingBox.offset( dX, 0, 0 );
-
-                    // Check if we would hit a z border block
-                    for ( AxisAlignedBB axisAlignedBB : collisionList ) {
-                        dZ = axisAlignedBB.calculateZOffset( this.boundingBox, dZ );
-                    }
-
-                    this.boundingBox.offset( 0, 0, dZ );
-                }
-
-                // Check if we moved left or right
-                if ( Numbers.square( oldDX ) + Numbers.square( oldDZ ) >= Numbers.square( dX ) + Numbers.square( dZ ) ) {
-                    // Revert this decision of moving the bounding box up
-                    dX = oldDX;
-                    dY = oldDY;
-                    dZ = oldDZ;
-                    this.boundingBox.setBounds( oldBoundingBox1 );
-                } else {
-                    // Move the bounding box up by .5
-                    this.yOffset += 0.5;
-                }
+            // Check if we moved left or right
+            if ( MathUtils.square( oldDX ) + MathUtils.square( oldDZ ) >= MathUtils.square( dX ) + MathUtils.square( dZ ) ) {
+                // Revert this decision of moving the bounding box up
+                dX = oldDX;
+                dY = oldDY;
+                dZ = oldDZ;
+                this.boundingBox.setBounds( oldBoundingBox1 );
             }
+        }
 
+        if ( dX != 0 || dY != 0 || dZ != 0 ) {
             // Move by new bounding box
-            if ( dX != 0.0 || dY != 0.0 || dZ != 0.0 ) {
-                this.transform.setPosition(
-                        ( this.boundingBox.getMinX() + this.boundingBox.getMaxX() ) / 2,
-                        this.boundingBox.getMinY() + this.yOffset,
-                        ( this.boundingBox.getMinZ() + this.boundingBox.getMaxZ() ) / 2
-                );
-            }
-
-            // Check for grounding states
-            this.checkIfCollided( movX, movY, movZ, dX, dY, dZ );
-            this.updateFallState( dY );
-
-            // We did not move so we collided, set motion to 0 to escape hell
-            if ( movX != dX ) {
-                this.transform.setMotionX( 0 );
-            }
-
-            if ( movY != dY ) {
-                this.transform.setMotionY( 0 );
-            }
-
-            if ( movZ != dZ ) {
-                this.transform.setMotionZ( 0 );
-            }
-
-            // Reset last update
-            this.lastUpdateDt = 0;
-        }
-
-        // Check if we need to update the bounding box
-        if ( this.transform.isDirty() ) {
-            this.boundingBox.setBounds(
-                    this.getPositionX() - ( this.width / 2 ),
-                    this.getPositionY(),
-                    this.getPositionZ() - ( this.width / 2 ),
-                    this.getPositionX() + ( this.width / 2 ),
-                    this.getPositionY() + this.height,
-                    this.getPositionZ() + ( this.width / 2 )
+            this.transform.setPosition(
+                ( this.boundingBox.getMinX() + this.boundingBox.getMaxX() ) / 2,
+                this.boundingBox.getMinY(),
+                ( this.boundingBox.getMinZ() + this.boundingBox.getMaxZ() ) / 2
             );
-
-            this.transform.move( 0, 0, 0 );
         }
+
+        // Check for grounding states
+        this.checkIfCollided( movX, movY, movZ, dX, dY, dZ );
+        this.updateFallState( dY );
+
+        // Check if we are stuck in a block
+        if ( this.needsToBePushedOutOfBlocks() ) {
+            this.checkInsideBlock();
+        }
+
+        return new Vector( dX, dY, dZ );
+    }
+
+    /**
+     * Does this entity needs to be pushed out of blocks when stuck?
+     *
+     * @return true or false, depending of it needing to be pushed
+     */
+    protected boolean needsToBePushedOutOfBlocks() {
+        return true;
     }
 
     private void updateFallState( float dY ) {
@@ -348,7 +490,7 @@ public abstract class Entity implements io.gomint.entity.Entity {
      */
     protected abstract void fall();
 
-    private void checkIfCollided( float movX, float movY, float movZ, float dX, float dY, float dZ ) {
+    protected void checkIfCollided( float movX, float movY, float movZ, float dX, float dY, float dZ ) {
         // Check if we collided with something
         this.isCollidedVertically = movY != dY;
         this.isCollidedHorizontally = ( movX != dX || movZ != dZ );
@@ -358,15 +500,20 @@ public abstract class Entity implements io.gomint.entity.Entity {
 
     private void checkInsideBlock() {
         // Check in which block we are
-        int fullBlockX = Numbers.fastFloor( this.transform.getPositionX() );
-        int fullBlockY = Numbers.fastFloor( this.transform.getPositionY() );
-        int fullBlockZ = Numbers.fastFloor( this.transform.getPositionZ() );
+        int fullBlockX = MathUtils.fastFloor( this.transform.getPositionX() );
+        int fullBlockY = MathUtils.fastFloor( this.transform.getPositionY() );
+        int fullBlockZ = MathUtils.fastFloor( this.transform.getPositionZ() );
 
         // Are we stuck inside a block?
-        Block block;
-        if ( ( block = this.world.getBlockAt( fullBlockX, fullBlockY, fullBlockZ ) ).isSolid() &&
-                block.getBoundingBox().intersectsWith( this.boundingBox ) ) {
-            LOGGER.debug( "Entity " + this.getClass().getSimpleName() + "(" + getEntityId() + ") @" + getLocation().toVector() + " is stuck in a block " + block.getClass().getSimpleName() + "@" + block.getLocation().toVector() + " -> " + block.getBoundingBox() );
+        Block block = this.world.getBlockAt( fullBlockX, fullBlockY, fullBlockZ );
+        if ( block.isSolid() && block.intersectsWith( this.boundingBox ) ) {
+            // We need to check for "smooth" movement when its a player (it climbs .5 steps in .3 -> .420 -> .468 .487 .495 .498 .499 steps
+            if ( this instanceof EntityPlayer && ( this.stuckInBlockTicks++ <= 20 || ( (EntityPlayer) this ).getAdventureSettings().isNoClip() ) ) { // Yes we can "smooth" for up to 20 ticks, thanks mojang :D
+                return;
+            }
+
+            LOGGER.debug( "Entity {}({}) [{}] @ {} is stuck in a block {} @ {} -> {}",
+                this.getClass().getSimpleName(), this.getEntityId(), this.stuckInBlockTicks, this.getLocation(), block.getClass().getSimpleName(), block.getLocation(), block.getBoundingBox() );
 
             // Calc with how much force we can get out of here, this depends on how far we are in
             float diffX = this.transform.getPositionX() - fullBlockX;
@@ -424,34 +571,32 @@ public abstract class Entity implements io.gomint.entity.Entity {
             }
 
             // Push to the side we selected
-            if ( direction == 0 ) {
-                this.transform.manipulateMotion( (float) -force, 0, 0 );
-                return;
+            switch ( direction ) {
+                case 0:
+                    this.transform.setMotion( (float) -force, 0, 0 );
+                    break;
+                case 1:
+                    this.transform.setMotion( (float) force, 0, 0 );
+                    break;
+                case 2:
+                    this.transform.setMotion( 0, (float) -force, 0 );
+                    break;
+                case 3:
+                    this.transform.setMotion( 0, (float) force, 0 );
+                    break;
+                case 4:
+                    this.transform.setMotion( 0, 0, (float) -force );
+                    break;
+                case 5:
+                    this.transform.setMotion( 0, 0, (float) force );
+                    break;
             }
 
-            if ( direction == 1 ) {
-                this.transform.manipulateMotion( (float) force, 0, 0 );
-                return;
-            }
-
-            if ( direction == 2 ) {
-                this.transform.manipulateMotion( 0, (float) -force, 0 );
-                return;
-            }
-
-            if ( direction == 3 ) {
-                this.transform.manipulateMotion( 0, (float) force, 0 );
-                return;
-            }
-
-            if ( direction == 4 ) {
-                this.transform.manipulateMotion( 0, 0, (float) -force );
-                return;
-            }
-
-            if ( direction == 5 ) {
-                this.transform.manipulateMotion( 0, 0, (float) force );
-            }
+            this.stuckInBlock = true;
+            this.broadCastMotion();
+        } else {
+            this.stuckInBlock = false;
+            this.stuckInBlockTicks = 0;
         }
     }
 
@@ -473,7 +618,30 @@ public abstract class Entity implements io.gomint.entity.Entity {
 
     @Override
     public void setVelocity( Vector velocity ) {
+        this.setVelocity( velocity, true );
+    }
+
+    public void setVelocity( Vector velocity, boolean send ) {
+        LOGGER.debug( "New motion for {}: {}", this, velocity );
         this.transform.setMotion( velocity.getX(), velocity.getY(), velocity.getZ() );
+        this.fallDistance = 0;
+
+        if ( send ) {
+            this.broadCastMotion();
+        }
+    }
+
+    public void broadCastMotion() {
+        PacketEntityMotion motion = new PacketEntityMotion();
+        motion.setEntityId( this.getEntityId() );
+        motion.setVelocity( this.transform.getMotion() );
+
+        this.world.sendToVisible( this.transform.getPosition().toBlockPosition(), motion, new Predicate<io.gomint.entity.Entity>() {
+            @Override
+            public boolean test( io.gomint.entity.Entity entity ) {
+                return entity instanceof EntityPlayer && ( (EntityPlayer) entity ).getEntityVisibilityManager().isVisible( Entity.this );
+            }
+        } );
     }
 
     /**
@@ -546,6 +714,7 @@ public abstract class Entity implements io.gomint.entity.Entity {
      */
     public void setPosition( Vector position ) {
         this.transform.setPosition( position );
+        this.recalcBoundingBox();
     }
 
     /**
@@ -602,25 +771,15 @@ public abstract class Entity implements io.gomint.entity.Entity {
         this.transform.setPitch( pitch );
     }
 
-    /**
-     * Gets the direction the entity's body is facing as a normalized vector.
-     * Note, though, that pitch rotation is considered to be part of the entity's
-     * head and is thus not included inside the vector returned by this function.
-     *
-     * @return The direction vector the entity's body is facing
-     */
+    @Override
     public Vector getDirection() {
         return this.transform.getDirection();
     }
 
-    /**
-     * Get a 2D view of the current direction
-     *
-     * @return The direction in which this entity looks
-     */
+    @Override
     public Vector2 getDirectionPlane() {
         return ( new Vector2( (float) -Math.cos( Math.toRadians( this.transform.getYaw() ) - ( Math.PI / 2 ) ),
-                (float) -Math.sin( Math.toRadians( this.transform.getYaw() ) - ( Math.PI / 2 ) ) ) ).normalize();
+            (float) -Math.sin( Math.toRadians( this.transform.getYaw() ) - ( Math.PI / 2 ) ) ) ).normalize();
     }
 
     /**
@@ -641,6 +800,7 @@ public abstract class Entity implements io.gomint.entity.Entity {
      */
     public void setPosition( float positionX, float positionY, float positionZ ) {
         this.transform.setPosition( positionX, positionY, positionZ );
+        this.recalcBoundingBox();
     }
 
     /**
@@ -709,7 +869,7 @@ public abstract class Entity implements io.gomint.entity.Entity {
         int chunkX = CoordinateUtils.fromBlockToChunk( (int) this.getPositionX() );
         int chunkZ = CoordinateUtils.fromBlockToChunk( (int) this.getPositionZ() );
 
-        return this.world.getChunk( chunkX, chunkZ );
+        return this.world.loadChunk( chunkX, chunkZ, true );
     }
 
     /**
@@ -731,14 +891,53 @@ public abstract class Entity implements io.gomint.entity.Entity {
         this.width = width;
         this.height = height;
         this.eyeHeight = (float) ( height / 2 + 0.1 );
+        this.recalcBoundingBox();
     }
 
+    /**
+     * Does this entity has a active collision box?
+     *
+     * @param value true when collision is active, false when not
+     */
     public void setHasCollision( boolean value ) {
         this.metadataContainer.setDataFlag( MetadataContainer.DATA_INDEX, EntityFlag.HAS_COLLISION, value );
     }
 
+    /**
+     * Does this entity has a active collision box?
+     *
+     * @return true when collisions are active, false when not
+     */
+    public boolean hasCollision() {
+        return this.metadataContainer.getDataFlag( MetadataContainer.DATA_INDEX, EntityFlag.HAS_COLLISION );
+    }
+
+    @Override
+    public void setImmobile( boolean value ) {
+        this.metadataContainer.setDataFlag( MetadataContainer.DATA_INDEX, EntityFlag.IMMOBILE, value );
+    }
+
+    @Override
+    public boolean isImmobile() {
+        return this.metadataContainer.getDataFlag( MetadataContainer.DATA_INDEX, EntityFlag.IMMOBILE );
+    }
+
     public void setAffectedByGravity( boolean value ) {
         this.metadataContainer.setDataFlag( MetadataContainer.DATA_INDEX, EntityFlag.AFFECTED_BY_GRAVITY, value );
+    }
+
+    public boolean isAffectedByGravity() {
+        return this.metadataContainer.getDataFlag( MetadataContainer.DATA_INDEX, EntityFlag.AFFECTED_BY_GRAVITY );
+    }
+
+    @Override
+    public String getNameTag() {
+        return this.metadataContainer.getString( MetadataContainer.DATA_NAMETAG );
+    }
+
+    @Override
+    public void setNameTag( String nameTag ) {
+        this.metadataContainer.putString( MetadataContainer.DATA_NAMETAG, nameTag );
     }
 
     @Override
@@ -761,13 +960,52 @@ public abstract class Entity implements io.gomint.entity.Entity {
         return this.metadataContainer.getDataFlag( MetadataContainer.DATA_INDEX, EntityFlag.CAN_SHOW_NAMETAG );
     }
 
-    public abstract Packet createSpawnPacket();
+    @Override
+    public void setOnFire( boolean value ) {
+        this.metadataContainer.setDataFlag( MetadataContainer.DATA_INDEX, EntityFlag.ONFIRE, value );
+    }
+
+    @Override
+    public boolean isOnFire() {
+        return this.metadataContainer.getDataFlag( MetadataContainer.DATA_INDEX, EntityFlag.ONFIRE );
+    }
+
+    @Override
+    public void setInvisible( boolean value ) {
+        this.metadataContainer.setDataFlag( MetadataContainer.DATA_INDEX, EntityFlag.INVISIBLE, value );
+    }
+
+    @Override
+    public boolean isInvisible() {
+        return this.metadataContainer.getDataFlag( MetadataContainer.DATA_INDEX, EntityFlag.INVISIBLE );
+    }
+
+    /**
+     * Create the packet for display in the client
+     *
+     * @return packet for spawning this entity
+     */
+    public Packet createSpawnPacket() {
+        PacketSpawnEntity spawnEntity = new PacketSpawnEntity();
+        spawnEntity.setEntityId( this.getEntityId() );
+        spawnEntity.setMetadata( this.metadataContainer );
+        spawnEntity.setX( this.transform.getPositionX() );
+        spawnEntity.setY( this.transform.getPositionY() + this.eyeHeight );
+        spawnEntity.setZ( this.transform.getPositionZ() );
+        spawnEntity.setEntityType( this.getType() );
+        spawnEntity.setVelocityX( this.transform.getMotionX() );
+        spawnEntity.setVelocityY( this.transform.getMotionY() );
+        spawnEntity.setVelocityZ( this.transform.getMotionZ() );
+        spawnEntity.setYaw( this.transform.getYaw() );
+        spawnEntity.setPitch( this.transform.getPitch() );
+        return spawnEntity;
+    }
 
     public void sendData( EntityPlayer player ) {
         PacketEntityMetadata metadataPacket = new PacketEntityMetadata();
         metadataPacket.setEntityId( this.getEntityId() );
         metadataPacket.setMetadata( this.metadataContainer );
-        player.getConnection().send( metadataPacket );
+        player.getConnection().addToSendQueue( metadataPacket );
     }
 
     @Override
@@ -783,15 +1021,294 @@ public abstract class Entity implements io.gomint.entity.Entity {
         return this.transform.getMotion();
     }
 
-    protected boolean isInsideLiquid() {
-        Location eyeLocation = this.getLocation().clone().add( 0, this.eyeHeight, 0 );
+    protected boolean isOnLadder() {
+        Location location = this.getLocation();
+        Block block = location.getWorld().getBlockAt( location.toBlockPosition() );
+        return block instanceof Ladder || block instanceof Vines;
+    }
+
+    public boolean isInsideLiquid() {
+        Location eyeLocation = this.getLocation().add( 0, this.eyeHeight, 0 );
         Block block = eyeLocation.getWorld().getBlockAt( eyeLocation.toBlockPosition() );
-        if ( block instanceof Liquid ) {
+        if ( block instanceof StationaryWater || block instanceof FlowingWater ) {
             float yLiquid = (float) ( block.getLocation().getY() + 1 + ( ( ( (Liquid) block ).getFillHeight() - 0.12 ) ) );
             return eyeLocation.getY() < yLiquid;
         }
 
         return false;
+    }
+
+    /**
+     * Decides if an entity can be attacked with an item (normal player attack)
+     *
+     * @return true if this entity can be attacked with an item, false if not
+     */
+    boolean canBeAttackedWithAnItem() {
+        return true;
+    }
+
+    /**
+     * Decides if this entity can get attacked by the given entity.
+     *
+     * @param entity which wants to attack
+     * @return true when it can't be attacked from the entity given, false if it can
+     */
+    boolean isInvulnerableFrom( Entity entity ) {
+        return false;
+    }
+
+    /**
+     * Deal damage to this entity
+     *
+     * @param damageEvent which holds all data needed for damaging this entity
+     * @return true if the entity took damage, false if not
+     */
+    public boolean damage( EntityDamageEvent damageEvent ) {
+        // Don't damage dead entities
+        if ( this.dead ) {
+            return false;
+        }
+
+        // First of all we call the event
+        this.world.getServer().getPluginManager().callEvent( damageEvent );
+        return !damageEvent.isCancelled();
+    }
+
+    public void attach( EntityPlayer player ) {
+
+    }
+
+    public void detach( EntityPlayer player ) {
+
+    }
+
+    private void recalcBoundingBox() {
+        // Only recalc on spawned entities
+        if ( this.world == null ) {
+            return;
+        }
+
+        // Update bounding box
+        Location location = this.getLocation();
+        getBoundingBox().setBounds(
+            location.getX() - ( this.getWidth() / 2 ),
+            location.getY(),
+            location.getZ() - ( this.getWidth() / 2 ),
+            location.getX() + ( this.getWidth() / 2 ),
+            location.getY() + this.getHeight(),
+            location.getZ() + ( this.getWidth() / 2 )
+        );
+    }
+
+    public void setAndRecalcPosition( Location to ) {
+        setPosition( to );
+        setPitch( to.getPitch() );
+        setYaw( to.getYaw() );
+        setHeadYaw( to.getHeadYaw() );
+        this.recalcBoundingBox();
+    }
+
+    void dealVoidDamage() {
+        despawn();
+    }
+
+    public void onCollideWithPlayer( EntityPlayer player ) {
+
+    }
+
+    public void resetFallDistance() {
+        this.fallDistance = 0;
+    }
+
+    public void multiplyFallDistance( float v ) {
+        this.fallDistance *= v;
+    }
+
+    @Override
+    public void spawn( Location location ) {
+        // Check if already spawned
+        if ( this.world != null ) {
+            throw new IllegalStateException( "Entity already spawned" );
+        }
+
+        this.world = (WorldAdapter) location.getWorld();
+        this.world.spawnEntityAt( this, location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch() );
+    }
+
+    public void teleport( Location to, EntityTeleportEvent.Cause cause ) {
+        EntityTeleportEvent entityTeleportEvent = new EntityTeleportEvent( this, this.getLocation(), to, cause );
+        this.world.getServer().getPluginManager().callEvent( entityTeleportEvent );
+        if ( entityTeleportEvent.isCancelled() ) {
+            return;
+        }
+
+        WorldAdapter actualWorld = this.getWorld();
+
+        this.setAndRecalcPosition( to );
+
+        if ( !to.getWorld().equals( actualWorld ) ) {
+            actualWorld.removeEntity( this );
+            this.setWorld( (WorldAdapter) to.getWorld() );
+            ( (WorldAdapter) to.getWorld() ).spawnEntityAt( this, to.getX(), to.getY(), to.getZ(), to.getYaw(), to.getPitch() );
+        }
+
+        this.fallDistance = 0;
+    }
+
+    @Override
+    public void teleport( Location to ) {
+        this.teleport( to, EntityTeleportEvent.Cause.CUSTOM );
+    }
+
+    @Override
+    public void setAge( long duration, TimeUnit unit ) {
+        this.age = MathUtils.fastFloor( unit.toMillis( duration ) / 50f );
+    }
+
+    @Override
+    public BossBar getBossBar() {
+        return this.bossBar != null ? this.bossBar : ( this.bossBar = new io.gomint.server.entity.BossBar( this ) );
+    }
+
+    /**
+     * Pre spawn packets when needed
+     *
+     * @param connection which is used to spawn this entity to
+     */
+    public void preSpawn( PlayerConnection connection ) {
+
+    }
+
+    /**
+     * Post spawn packets when needed
+     *
+     * @param connection which is used to spawn this entity to
+     */
+    public void postSpawn( PlayerConnection connection ) {
+
+    }
+
+    @Override
+    public void setScale( float scale ) {
+        this.metadataContainer.putFloat( MetadataContainer.DATA_SCALE, scale );
+    }
+
+    @Override
+    public float getScale() {
+        return this.metadataContainer.getFloat( MetadataContainer.DATA_SCALE );
+    }
+
+    @Override
+    public void setHiddenByDefault( boolean value ) {
+        if ( this instanceof EntityPlayer ) {
+            return;
+        }
+
+        if ( !this.hideByDefault && value && this.world != null ) {
+            // Despawn
+            for ( io.gomint.entity.EntityPlayer entityPlayer : this.world.getPlayers() ) {
+                EntityPlayer entityPlayer1 = (EntityPlayer) entityPlayer;
+                entityPlayer1.getEntityVisibilityManager().removeEntity( this );
+            }
+        }
+
+        this.shownFor = new HashSet<>();
+        this.hideByDefault = value;
+    }
+
+    @Override
+    public void showFor( io.gomint.entity.EntityPlayer player ) {
+        ( (EntityPlayer) player ).getEntityVisibilityManager().addEntity( this );
+
+        if ( this.shownFor != null ) {
+            this.shownFor.add( (EntityPlayer) player );
+        }
+    }
+
+    @Override
+    public void hideFor( io.gomint.entity.EntityPlayer player ) {
+        ( (EntityPlayer) player ).getEntityVisibilityManager().removeEntity( this );
+
+        if ( this.shownFor != null ) {
+            this.shownFor.remove( player );
+        }
+    }
+
+    /**
+     * Check if a player can see this entity
+     *
+     * @param player for which we check
+     * @return true when visible, false when not
+     */
+    public boolean canSee( EntityPlayer player ) {
+        return !this.hideByDefault || player.getEntityVisibilityManager().isVisible( this );
+    }
+
+    /**
+     * Check if a player should be able to see this entity
+     *
+     * @param player for which we check
+     * @return true when it should be visible, false when not
+     */
+    public boolean shouldBeSeen( EntityPlayer player ) {
+        return !this.hideByDefault || this.shownFor.contains( player );
+    }
+
+    /**
+     * Take over configuration from the given compound
+     *
+     * @param compound which holds entity data
+     */
+    public void initFromNBT( NBTTagCompound compound ) {
+        // Read position
+        List<Object> pos = compound.getList( "Pos", false );
+        if ( pos != null ) {
+            // Data in the array are three floats (x, y, z)
+            float x = (float) pos.get( 0 );
+            float y = (float) pos.get( 1 );
+            float z = (float) pos.get( 2 );
+
+            this.setPosition( x, y, z );
+        }
+
+        // Now we read motion
+        List<Object> motion = compound.getList( "Motion", false );
+        if ( motion != null ) {
+            // Data in the array are three floats (x, y, z)
+            float x = (float) motion.get( 0 );
+            float y = (float) motion.get( 1 );
+            float z = (float) motion.get( 2 );
+
+            this.transform.setMotion( x, y, z );
+        }
+
+        // Read rotation
+        List<Object> rotation = compound.getList( "Rotation", false );
+        if ( rotation != null ) {
+            float yaw = (float) rotation.get( 0 );
+            float pitch = (float) rotation.get( 1 );
+
+            this.setYaw( yaw );
+            this.setPitch( pitch );
+        }
+    }
+
+    public boolean isMotionSendingEnabled() {
+        return false;
+    }
+
+    public boolean needsFullMovement() {
+        if ( this.nextFullMovement-- == 0 || this.oldPosition == null ||
+            this.oldPosition.subtract( this.getPosition() ).length() > 20 ) {
+            this.nextFullMovement = 20;
+            return true;
+        }
+
+        return false;
+    }
+
+    public void updateOldPosition() {
+        this.oldPosition = this.getLocation();
     }
 
 }

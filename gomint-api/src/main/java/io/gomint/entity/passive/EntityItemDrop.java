@@ -1,5 +1,8 @@
 package io.gomint.entity.passive;
 
+import io.gomint.GoMint;
+import io.gomint.entity.Entity;
+import io.gomint.entity.active.EntityPrimedTNT;
 import io.gomint.inventory.item.ItemStack;
 
 import java.util.concurrent.TimeUnit;
@@ -8,7 +11,16 @@ import java.util.concurrent.TimeUnit;
  * @author geNAZt
  * @version 1.0
  */
-public interface EntityItemDrop {
+public interface EntityItemDrop extends Entity {
+
+    /**
+     * Create a new EntityItemDrop without any configuration. It will use default values when not configured and spawned
+     *
+     * @return new entity
+     */
+    static EntityItemDrop create() {
+        return GoMint.instance().createEntity( EntityItemDrop.class );
+    }
 
     /**
      * Get the ItemStack which has been stored in this entity. You can modify it but it won't update
@@ -18,6 +30,13 @@ public interface EntityItemDrop {
      * @return the ItemStack which has been stored
      */
     <T extends ItemStack> T getItemStack();
+
+    /**
+     * Item stack which should be used by this entity. This will silenty fail when the entity is already spawned
+     *
+     * @param itemStack which should be used in this entity
+     */
+    void setItemStack( ItemStack itemStack );
 
     /**
      * Set a new pickup delay

@@ -8,6 +8,8 @@
 package io.gomint.server.network;
 
 import io.gomint.server.network.packet.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author BlackyPaw
@@ -15,10 +17,13 @@ import io.gomint.server.network.packet.*;
  */
 public final class Protocol {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger( Protocol.class );
+
     // CHECKSTYLE:OFF
     // MC:PE Protocol ID
-    public static final int MINECRAFT_PE_PROTOCOL_VERSION = 137;
-    public static final String MINECRAFT_PE_NETWORK_VERSION = "1.2.0.81";
+    public static final int MINECRAFT_PE_BETA_PROTOCOL_VERSION = 274;
+    public static final int MINECRAFT_PE_PROTOCOL_VERSION = 261;
+    public static final String MINECRAFT_PE_NETWORK_VERSION = "1.4.0";
 
     // ========================================= PACKET IDS ========================================= //
     public static final byte PACKET_BATCH = (byte) 0xfe;
@@ -42,18 +47,25 @@ public final class Protocol {
     public static final byte PACKET_ENTITY_MOVEMENT = (byte) 0x12;
     public static final byte PACKET_MOVE_PLAYER = (byte) 0x13;
     public static final byte PACKET_UPDATE_BLOCK = (byte) 0x15;
+    public static final byte PACKET_EXPLODE = (byte) 0x17;
     public static final byte PACKET_WORLD_SOUND_EVENT = (byte) 0x18;
-
+    public static final byte PACKET_WORLD_EVENT = (byte) 0x19;
+    public static final byte PACKET_BLOCK_EVENT = (byte) 0x1A;
+    public static final byte PACKET_ENTITY_EVENT = (byte) 0x1B;
+    public static final byte PACKET_MOB_EFFECT = (byte) 0x1C;
     public static final byte PACKET_UPDATE_ATTRIBUTES = (byte) 0x1D;
     public static final byte PACKET_INVENTORY_TRANSACTION = (byte) 0x1E;
     public static final byte PACKET_MOB_EQUIPMENT = (byte) 0x1F;
     public static final byte PACKET_MOB_ARMOR_EQUIPMENT = (byte) 0x20;
     public static final byte PACKET_INTERACT = (byte) 0x21;
-   // public static final byte PACKET_USE_ITEM = (byte) 0x23;
     public static final byte PACKET_PLAYER_ACTION = (byte) 0x24;
+    public static final byte PACKET_ENTITY_FALL = (byte) 0x25;
+    public static final byte PACKET_HURT_ARMOR = (byte) 0x26;
     public static final byte PACKET_ENTITY_METADATA = (byte) 0x27;
     public static final byte PACKET_ENTITY_MOTION = (byte) 0x28;
+    public static final byte PACKET_SET_SPAWN_POSITION = (byte) 0x2B;
     public static final byte PACKET_ANIMATE = (byte) 0x2C;
+    public static final byte PACKET_RESPAWN_POSITION = (byte) 0x2D;
     public static final byte PACKET_CONTAINER_OPEN = (byte) 0x2E;
     public static final byte PACKET_CONTAINER_CLOSE = (byte) 0x2F;
     public static final byte PACKET_HOTBAR = (byte) 0x30;
@@ -67,13 +79,27 @@ public final class Protocol {
     public static final byte PACKET_WORLD_CHUNK = (byte) 0x3A;
     public static final byte PACKET_SET_COMMANDS_ENABLED = (byte) 0x3B;
     public static final byte PACKET_SET_DIFFICULTY = (byte) 0x3C;
-    public static final byte PACKET_SET_GAMEMODE = (byte) 0x3D;
+    public static final byte PACKET_SET_GAMEMODE = (byte) 0x3E;
     public static final byte PACKET_PLAYER_LIST = (byte) 0x3F;
     public static final byte PACKET_SET_CHUNK_RADIUS = (byte) 0x45;
     public static final byte PACKET_CONFIRM_CHUNK_RADIUS = (byte) 0x46;
+    public static final byte PACKET_BOSS_BAR = (byte) 0x4a;
     public static final byte PACKET_AVAILABLE_COMMANDS = (byte) 0x4c;
     public static final byte PACKET_COMMAND_REQUEST = (byte) 0x4d;
     public static final byte PACKET_COMMAND_OUTPUT = (byte) 0x4f;
+    public static final byte PACKET_TRANSFER = (byte) 0x55;
+    public static final byte PACKET_BOOK_EDIT = (byte) 0x61;
+    public static final byte PACKET_MODAL_REQUEST = (byte) 0x64;
+    public static final byte PACKET_MODAL_RESPONSE = (byte) 0x65;
+    public static final byte PACKET_SERVER_SETTINGS_REQUEST = (byte) 0x66;
+    public static final byte PACKET_SERVER_SETTINGS_RESPONSE = (byte) 0x67;
+    public static final byte PACKET_REMOVE_OBJECTIVE = (byte) 0x6a;
+    public static final byte PACKET_SET_OBJECTIVE = (byte) 0x6b;
+    public static final byte PACKET_SET_SCORE = (byte) 0x6c;
+    public static final byte PACKET_UPDATE_BLOCK_SYNCHED = (byte) 0x6e;
+    public static final byte PACKET_ENTITY_RELATIVE_MOVEMENT = (byte) 0x6f;
+    public static final byte PACKET_SET_LOCAL_PLAYER_INITIALIZED = (byte) 0x70;
+    public static final byte PACKET_SET_TITLE = (byte) 0x58;
 
     public static final byte PACKET_SET_COMPASS_TARGET = (byte) 0xB1;
     // CHECKSTYLE:ON
@@ -93,6 +119,30 @@ public final class Protocol {
      */
     public static Packet createPacket( byte id ) {
         switch ( id ) {
+            case PACKET_SET_LOCAL_PLAYER_INITIALIZED:
+                return new PacketSetLocalPlayerAsInitialized();
+
+            case PACKET_BOOK_EDIT:
+                return new PacketBookEdit();
+
+            case PACKET_ENTITY_FALL:
+                return new PacketEntityFall();
+
+            case PACKET_BOSS_BAR:
+                return new PacketBossBar();
+
+            case PACKET_SERVER_SETTINGS_REQUEST:
+                return new PacketServerSettingsRequest();
+
+            case PACKET_MOB_EQUIPMENT:
+                return new PacketMobEquipment();
+
+            case PACKET_MODAL_RESPONSE:
+                return new PacketModalResponse();
+
+            case PACKET_ENTITY_EVENT:
+                return new PacketEntityEvent();
+
             case PACKET_COMMAND_REQUEST:
                 return new PacketCommandRequest();
 
@@ -123,20 +173,8 @@ public final class Protocol {
             case PACKET_RESOURCEPACK_INFO:
                 return new PacketResourcePacksInfo();
 
-            case PACKET_WORLD_TIME:
-                return new PacketWorldTime();
-
             case PACKET_RESOURCEPACK_RESPONSE:
                 return new PacketResourcePackResponse();
-
-            case PACKET_SPAWN_ENTITY:
-                return new PacketSpawnEntity();
-
-            case PACKET_DESPAWN_ENTITY:
-                return new PacketDespawnEntity();
-
-            case PACKET_ENTITY_MOVEMENT:
-                return new PacketEntityMovement();
 
             case PACKET_WORLD_SOUND_EVENT:
                 return new PacketWorldSoundEvent();
@@ -150,14 +188,8 @@ public final class Protocol {
             case PACKET_ANIMATE:
                 return new PacketAnimate();
 
-            case PACKET_CONTAINER_OPEN:
-                return new PacketContainerOpen();
-
             case PACKET_CONTAINER_CLOSE:
                 return new PacketContainerClose();
-
-            case PACKET_INVENTORY_SET_SLOT:
-                return new PacketInventorySetSlot();
 
             case PACKET_CRAFTING_EVENT:
                 return new PacketCraftingEvent();
@@ -165,37 +197,17 @@ public final class Protocol {
             case PACKET_ADVENTURE_SETTINGS:
                 return new PacketAdventureSettings();
 
-            case PACKET_MOB_EQUIPMENT:
-                return new PacketMobEquipment();
-
             case PACKET_INTERACT:
                 return new PacketInteract();
 
-            case PACKET_MOB_ARMOR_EQUIPMENT:
-                return new PacketMobArmorEquipment();
-
             case PACKET_ENTITY_METADATA:
                 return new PacketEntityMetadata();
-
-            case PACKET_ENTITY_MOTION:
-                return new PacketEntityMotion();
-
-            case PACKET_CRAFTING_RECIPES:
-                return new PacketCraftingRecipes();
-
-            case PACKET_WORLD_CHUNK:
-                return new PacketWorldChunk();
-
-            case PACKET_SET_COMMANDS_ENABLED:
-                return new PacketSetCommandsEnabled();
-
-            case PACKET_SET_DIFFICULTY:
-                return new PacketSetDifficulty();
 
             case PACKET_SET_CHUNK_RADIUS:
                 return new PacketSetChunkRadius();
 
             default:
+                // LOGGER.warn( "Unknown client side packetId: {}", Integer.toHexString( id & 0xFF ) );
                 return null;
         }
     }

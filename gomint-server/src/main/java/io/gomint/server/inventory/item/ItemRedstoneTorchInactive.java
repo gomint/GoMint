@@ -1,5 +1,7 @@
 package io.gomint.server.inventory.item;
 
+import io.gomint.inventory.item.ItemType;
+
 import io.gomint.server.registry.RegisterInfo;
 import io.gomint.taglib.NBTTagCompound;
 
@@ -8,7 +10,7 @@ import io.gomint.taglib.NBTTagCompound;
  * @version 1.0
  */
 @RegisterInfo( id = 75 )
- public class ItemRedstoneTorchInactive extends ItemStack implements io.gomint.inventory.item.ItemRedstoneTorchInactive {
+ public class ItemRedstoneTorchInactive extends ItemStack {
 
     // CHECKSTYLE:OFF
     public ItemRedstoneTorchInactive( short data, int amount ) {
@@ -19,5 +21,10 @@ import io.gomint.taglib.NBTTagCompound;
         super( 75, data, amount, nbt );
     }
     // CHECKSTYLE:ON
+
+    @Override
+    public ItemType getType() {
+        return ItemType.REDSTONE_TORCH_INACTIVE;
+    }
 
 }

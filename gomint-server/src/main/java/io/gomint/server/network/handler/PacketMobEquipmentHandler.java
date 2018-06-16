@@ -20,8 +20,8 @@ public class PacketMobEquipmentHandler implements PacketHandler<PacketMobEquipme
         // Ok the client wants to switch hotbar slot (itemInHand)
         ItemStack wanted = connection.getEntity().getInventory().getItem( packet.getSelectedSlot() );
         if ( wanted != null && wanted.equals( packet.getStack() ) && wanted.getAmount() == packet.getStack().getAmount() ) {
-            // Set item in hand index
             connection.getEntity().getInventory().setItemInHand( packet.getSelectedSlot() );
+            connection.getEntity().setUsingItem( false );
         }
     }
 

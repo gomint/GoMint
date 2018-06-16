@@ -1,18 +1,27 @@
 package io.gomint.event.player;
 
-import io.gomint.entity.Player;
+import io.gomint.entity.EntityPlayer;
 import io.gomint.world.block.Block;
+import lombok.ToString;
 
 /**
  * @author geNAZt
  * @version 1.0
  */
+@ToString
 public class PlayerInteractEvent extends CancellablePlayerEvent {
 
     private ClickType clickType;
     private Block block;
 
-    public PlayerInteractEvent( Player player, ClickType clickType, Block block ) {
+    /**
+     * Create a new interaction event
+     *
+     * @param player    which interacted with something
+     * @param clickType which has been used
+     * @param block     on which the player interacted
+     */
+    public PlayerInteractEvent( EntityPlayer player, ClickType clickType, Block block ) {
         super( player );
         this.clickType = clickType;
         this.block = block;

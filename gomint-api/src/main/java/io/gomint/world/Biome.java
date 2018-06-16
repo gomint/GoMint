@@ -7,10 +7,19 @@
 
 package io.gomint.world;
 
+import io.gomint.GoMint;
 import io.gomint.math.MathUtils;
+import io.gomint.world.block.Block;
+import io.gomint.world.block.BlockDirt;
+import io.gomint.world.block.BlockGrassBlock;
+import io.gomint.world.block.BlockGravel;
+import io.gomint.world.generator.object.BirchTree;
+import io.gomint.world.generator.object.OakTree;
+import io.gomint.world.generator.populator.Populator;
+import io.gomint.world.generator.populator.TallGrassPopulator;
+import io.gomint.world.generator.populator.TreePopulator;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author BlackyPaw
@@ -19,11 +28,68 @@ import java.util.Map;
 public enum Biome {
 
     // ==================================== BIOMES ==================================== //
-    OCEAN( 0, "Ocean", 0.5D, 0.5D ),
-    PLAINS( 1, "Plains", 0.8D, 0.4D ),
+    OCEAN( 0, "Ocean", 0.5D, 0.5D, 46, 58 ) {
+        @Override
+        public List<Block> getGround() {
+            return Collections.unmodifiableList( Arrays.asList(
+                GoMint.instance().createBlock( BlockGravel.class ),
+                GoMint.instance().createBlock( BlockGravel.class ),
+                GoMint.instance().createBlock( BlockGravel.class ),
+                GoMint.instance().createBlock( BlockGravel.class ),
+                GoMint.instance().createBlock( BlockGravel.class )
+            ) );
+        }
+
+        @Override
+        public List<Populator> getPopulators() {
+            TallGrassPopulator populator = new TallGrassPopulator();
+            populator.setBaseAmount( 5 );
+            return Collections.singletonList( populator );
+        }
+    },
+    PLAINS( 1, "Plains", 0.8D, 0.4D, 63, 68 ) {
+        @Override
+        public List<Block> getGround() {
+            return Collections.unmodifiableList( Arrays.asList(
+                GoMint.instance().createBlock( BlockGrassBlock.class ),
+                GoMint.instance().createBlock( BlockDirt.class ),
+                GoMint.instance().createBlock( BlockDirt.class ),
+                GoMint.instance().createBlock( BlockDirt.class ),
+                GoMint.instance().createBlock( BlockDirt.class )
+            ) );
+        }
+
+        @Override
+        public List<Populator> getPopulators() {
+            TallGrassPopulator populator = new TallGrassPopulator();
+            populator.setBaseAmount( 12 );
+            return Collections.singletonList( populator );
+        }
+    },
     DESERT( 2, "Desert", 2.0D, 0.0D ),
     EXTREME_HILLS( 3, "Extreme Hills", 0.2D, 0.3D ),
-    FOREST( 4, "Forest", 0.7D, 0.8D ),
+    FOREST( 4, "Forest", 0.7D, 0.8D, 63, 81 ) {
+        @Override
+        public List<Block> getGround() {
+            return Collections.unmodifiableList( Arrays.asList(
+                GoMint.instance().createBlock( BlockGrassBlock.class ),
+                GoMint.instance().createBlock( BlockDirt.class ),
+                GoMint.instance().createBlock( BlockDirt.class ),
+                GoMint.instance().createBlock( BlockDirt.class ),
+                GoMint.instance().createBlock( BlockDirt.class )
+            ) );
+        }
+
+        @Override
+        public List<Populator> getPopulators() {
+            TallGrassPopulator populator = new TallGrassPopulator();
+            populator.setBaseAmount( 3 );
+
+            TreePopulator treePopulator = new TreePopulator( new OakTree() );
+            treePopulator.setBaseAmount( 5 );
+            return Collections.unmodifiableList( Arrays.asList( populator, treePopulator ) );
+        }
+    },
     TAIGA( 5, "Taiga", 0.05D, 0.8D ),
     SWAMPLAND( 6, "Swampland", 0.8D, 0.9D ) {
         @Override
@@ -32,7 +98,25 @@ public enum Biome {
             return 0x4C763C;
         }
     },
-    RIVER( 7, "River", 0.5D, 0.5D ),
+    RIVER( 7, "River", 0.5D, 0.5D, 58, 62 ) {
+        @Override
+        public List<Block> getGround() {
+            return Collections.unmodifiableList( Arrays.asList(
+                GoMint.instance().createBlock( BlockDirt.class ),
+                GoMint.instance().createBlock( BlockDirt.class ),
+                GoMint.instance().createBlock( BlockDirt.class ),
+                GoMint.instance().createBlock( BlockDirt.class ),
+                GoMint.instance().createBlock( BlockDirt.class )
+            ) );
+        }
+
+        @Override
+        public List<Populator> getPopulators() {
+            TallGrassPopulator populator = new TallGrassPopulator();
+            populator.setBaseAmount( 5 );
+            return Collections.singletonList( populator );
+        }
+    },
     NETHER( 8, "Nether", 2.0D, 0.0D ),
     END( 9, "End", 0.5D, 0.5D ),
     FROZEN_OCEAN( 10, "Frozen Ocean", 0.0D, 0.5D ),
@@ -52,7 +136,28 @@ public enum Biome {
     DEEP_OCEAN( 24, "Deep Ocean", 0.5D, 0.5D ),
     STONE_BEACH( 25, "Stone Beach", 0.2D, 0.3D ),
     COLD_BEACH( 26, "Cold Beach", 0.5D, 0.3D ),
-    BIRCH_FOREST( 27, "Birch Forest", 0.6D, 0.6D ),
+    BIRCH_FOREST( 27, "Birch Forest", 0.6D, 0.6D, 63, 81 ) {
+        @Override
+        public List<Block> getGround() {
+            return Collections.unmodifiableList( Arrays.asList(
+                GoMint.instance().createBlock( BlockGrassBlock.class ),
+                GoMint.instance().createBlock( BlockDirt.class ),
+                GoMint.instance().createBlock( BlockDirt.class ),
+                GoMint.instance().createBlock( BlockDirt.class ),
+                GoMint.instance().createBlock( BlockDirt.class )
+            ) );
+        }
+
+        @Override
+        public List<Populator> getPopulators() {
+            TallGrassPopulator populator = new TallGrassPopulator();
+            populator.setBaseAmount( 3 );
+
+            TreePopulator treePopulator = new TreePopulator( new BirchTree() );
+            treePopulator.setBaseAmount( 5 );
+            return Collections.unmodifiableList( Arrays.asList( populator, treePopulator ) );
+        }
+    },
     BIRCH_FOREST_HILLS( 28, "Birch Forest Hills", 0.6D, 0.6D ),
     ROOFED_FOREST( 29, "Roofed Forest", 0.7D, 0.8D ) {
         @Override
@@ -149,21 +254,21 @@ public enum Biome {
     public static final int MESA_FOLIAGE_COLOR = 0x9E814D;
 
     private static final double[] GRASS_INTERPOLATION_COLORS = new double[]{ 0.5D, 0.703125D, 0.58984375D,               // Bottom right corner
-            0.74609375D, 0.71484375D, 0.33203125D,      // Bottom left corner
-            0.27734375D, 0.80078125D, 0.19921875D       // Upper left corner
+        0.74609375D, 0.71484375D, 0.33203125D,      // Bottom left corner
+        0.27734375D, 0.80078125D, 0.19921875D       // Upper left corner
     };
 
     private static final double[] FOLIAGE_INTERPOLATION_COLORS = new double[]{ 0.375D, 0.62890625D, 0.48046875D,           // Bottom right corner
-            0.6796875D, 0.640625D, 0.1640625D,          // Bottom left corner
-            0.1015625D, 0.74609375D, 0.0D               // Upper left corner
+        0.6796875D, 0.640625D, 0.1640625D,          // Bottom left corner
+        0.1015625D, 0.74609375D, 0.0D               // Upper left corner
     };
 
     // ==================================== FIELDS ==================================== //
-    private static final Map<Integer, Biome> biomesById = new HashMap<>();
+    private static final Map<Integer, Biome> BIOMES_BY_ID = new HashMap<>();
 
     static {
         for ( Biome biome : Biome.values() ) {
-            biomesById.put( biome.getId(), biome );
+            BIOMES_BY_ID.put( biome.getId(), biome );
         }
     }
 
@@ -172,12 +277,21 @@ public enum Biome {
     private final double temperature;
     private final double downfall;
 
+    private final int minElevation;
+    private final int maxElevation;
+
 
     Biome( int id, String name, double temperature, double downfall ) {
+        this( id, name, temperature, downfall, 58, 74 );
+    }
+
+    Biome( int id, String name, double temperature, double downfall, int minElevation, int maxElevation ) {
         this.id = id;
         this.name = name;
         this.temperature = temperature;
         this.downfall = MathUtils.clamp( downfall, 0.0D, 1.0D );
+        this.minElevation = minElevation;
+        this.maxElevation = maxElevation;
     }
 
     /**
@@ -187,7 +301,7 @@ public enum Biome {
      * @return The biome if found or null otherwise
      */
     public static Biome getBiomeById( int id ) {
-        return biomesById.get( id );
+        return BIOMES_BY_ID.get( id );
     }
 
     /**
@@ -265,6 +379,22 @@ public enum Biome {
         int gi = MathUtils.clamp( (int) ( g * 255.0D ), 0, 255 );
         int bi = MathUtils.clamp( (int) ( b * 255.0D ), 0, 255 );
         return ( ri << 16 ) | ( gi << 8 ) | bi;
+    }
+
+    public int getMinElevation() {
+        return this.minElevation;
+    }
+
+    public int getMaxElevation() {
+        return this.maxElevation;
+    }
+
+    public List<Block> getGround() {
+        return null;
+    }
+
+    public List<Populator> getPopulators() {
+        return null;
     }
 
 }

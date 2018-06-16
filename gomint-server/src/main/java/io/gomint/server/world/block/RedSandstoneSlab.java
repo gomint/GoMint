@@ -1,5 +1,9 @@
 package io.gomint.server.world.block;
 
+import io.gomint.inventory.item.ItemStack;
+import io.gomint.server.world.block.helper.ToolPresets;
+import io.gomint.world.block.BlockType;
+
 import io.gomint.server.registry.RegisterInfo;
 
 /**
@@ -7,7 +11,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( id = 182 )
-public class RedSandstoneSlab extends Block {
+public class RedSandstoneSlab extends Block implements io.gomint.world.block.BlockRedSandstoneSlab {
 
     @Override
     public int getBlockId() {
@@ -23,5 +27,26 @@ public class RedSandstoneSlab extends Block {
     public boolean isTransparent() {
         return true;
     }
+
+    @Override
+    public float getBlastResistance() {
+        return 30.0f;
+    }
+
+    @Override
+    public BlockType getType() {
+        return BlockType.RED_SANDSTONE_SLAB;
+    }
+
+    @Override
+    public boolean canBeBrokenWithHand() {
+        return true;
+    }
+
+    @Override
+    public Class<? extends ItemStack>[] getToolInterfaces() {
+        return ToolPresets.PICKAXE;
+    }
+
 
 }

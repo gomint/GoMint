@@ -17,4 +17,40 @@ public interface ItemBucket extends ItemStack {
         return GoMint.instance().createItemStack( ItemBucket.class, amount );
     }
 
+    /**
+     * Set content of the bucket
+     *
+     * @param type of the content
+     */
+    void setContent( Content type );
+
+    /**
+     * Get the content from this bucket
+     *
+     * @return content of bucket
+     */
+    Content getContent();
+
+    enum Content {
+        /**
+         * Water content
+         */
+        WATER,
+
+        /**
+         * Lava content
+         */
+        LAVA,
+
+        /**
+         * Milk content
+         */
+        MILK,
+
+        /**
+         * No content
+         */
+        EMPTY
+    }
+
 }

@@ -9,7 +9,9 @@ package io.gomint.server.crafting;
 
 import io.gomint.inventory.item.ItemAir;
 import io.gomint.inventory.item.ItemStack;
+import io.gomint.inventory.item.ItemType;
 import io.gomint.jraknet.PacketBuffer;
+import io.gomint.server.inventory.Inventory;
 import io.gomint.server.network.packet.Packet;
 
 import java.util.ArrayList;
@@ -72,7 +74,7 @@ public class ShapedRecipe extends CraftingRecipe {
     }
 
     @Override
-    public Collection<ItemStack> getIngredients() {
+    public ItemStack[] getIngredients() {
         if ( this.ingredients == null ) {
             // Got to sort out possible AIR slots and combine types:
             this.ingredients = new ArrayList<>();
@@ -80,14 +82,14 @@ public class ShapedRecipe extends CraftingRecipe {
             for ( int j = 0; j < this.height; ++j ) {
                 for ( int i = 0; i < this.width; ++i ) {
                     ItemStack stack = this.arrangement[j * this.width + i];
-                    if ( !(stack instanceof ItemAir) ) {
+                    if ( !( stack instanceof ItemAir ) ) {
                         this.ingredients.add( stack );
                     }
                 }
             }
         }
 
-        return this.ingredients;
+        return this.ingredients.toArray( new ItemStack[0] );
     }
 
     @Override
@@ -117,70 +119,69 @@ public class ShapedRecipe extends CraftingRecipe {
         buffer.writeUUID( this.getUUID() );
     }
 
-    /*
     @Override
-	public boolean applies( CraftingContainer container, boolean consume ) {
-		// Early out:
-		if ( this.width > container.getWidth() || this.height > container.getHeight() ) {
-			return false;
-		}
+    public int[] isCraftable( Inventory inputInventory ) {
+        // Order the input so the recipe is in the upper left corner
+        int xSpace = 0;
+        int zSpace = 0;
 
-		for ( int j = 0; j <= ( container.getHeight() - this.height ); ++j ) {
-			for ( int i = 0; i <= ( container.getWidth() - this.width ); ++i ) {
-				// i, j <=> Offset into container
+        int x;
+        int z = x = inputInventory.size() == 4 ? 2 : 3;
 
-				boolean applies = true;
-				for ( int l = 0; l < this.height; ++l ) {
-					for ( int k = 0; k < this.width; ++k ) {
-						// k, l <=> Offset into recipe
+        // Default order is:
+        // 0 1 2
+        // 3 4 5
+        // 6 7 8
+        for ( int i = 0; i < z; i++ ) {
+            boolean freeX = true;
+            for ( int i2 = 0; i2 < x; i2++ ) {
+                ItemStack itemStack = inputInventory.getItem( ( i * z ) + i2 );
+                if ( itemStack.getType() != ItemType.AIR ) {
+                    freeX = false;
+                    break;
+                }
+            }
 
-						ItemStack required = this.arrangement[l * this.width + k];
-						ItemStack found    = container.getCraftingSlot( i + k, j + l );
+            if ( !freeX ) {
+                break;
+            } else {
+                xSpace++;
+            }
+        }
 
-						if ( found != null ) {
-							if ( required.getMaterial() != found.getMaterial() ||
-							     required.getAmount() > found.getAmount() ||
-							     ( required.getData() != (short) 0xFFFF && required.getData() != found.getData() ) ) {
-								applies = false;
-								break;
-							}
-						} else if ( required.getMaterial() != Material.AIR ) {
-							applies = false;
-							break;
-						}
-					}
+        for ( int i = 0; i < x; i++ ) {
+            boolean freeZ = true;
+            for ( int i2 = 0; i2 < z; i2++ ) {
+                ItemStack itemStack = inputInventory.getItem( ( i2 * z ) + i );
+                if ( itemStack.getType() != ItemType.AIR ) {
+                    freeZ = false;
+                    break;
+                }
+            }
 
-					if ( !applies ) {
-						break;
-					}
-				}
+            if ( !freeZ ) {
+                break;
+            } else {
+                zSpace++;
+            }
+        }
 
-				if ( applies ) {
-					for ( int l = 0; l < this.height; ++l ) {
-						for ( int k = 0; k < this.width; ++k ) {
-							// k, l <=> Offset into recipe
-							ItemStack required = this.arrangement[l * this.width + k];
-							ItemStack found    = container.getCraftingSlot( i + k, j + l );
+        int[] consumeItems = new int[this.width * this.height];
+        for ( int i = 0; i < this.height; i++ ) {
+            for ( int j = 0; j < this.width; j++ ) {
+                int itemSlot = ( ( i + xSpace ) * x ) + ( j + zSpace );
+                ItemStack invItem = inputInventory.getItem( itemSlot );
+                ItemStack recipeItem = this.arrangement[j + ( this.width * i )];
 
-							// Consume item:
-							if ( found != null ) {
-								found.setAmount( found.getAmount() - required.getAmount() );
+                if ( !canBeUsedForCrafting( recipeItem, invItem ) ) {
+                    return null;
+                }
 
-								if ( found.getAmount() <= 0 ) {
-									// Clear out slot:
-									container.setCraftingSlot( i + k, j + l, null );
-								}
-							}
-						}
-					}
+                consumeItems[j + ( this.width * i )] = itemSlot;
+            }
+        }
 
-					return true;
-				}
-			}
-		}
-
-		return false;
-	}
-	*/
+        return consumeItems;
+    }
 
 }

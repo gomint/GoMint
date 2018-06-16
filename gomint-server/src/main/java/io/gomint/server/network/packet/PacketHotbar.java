@@ -24,20 +24,14 @@ public class PacketHotbar extends Packet {
     }
 
     @Override
-    public void serialize( PacketBuffer buffer ) {
+    public void serialize( PacketBuffer buffer, int protocolID ) {
 
     }
 
     @Override
-    public void deserialize( PacketBuffer buffer ) {
+    public void deserialize( PacketBuffer buffer, int protocolID ) {
         this.selectedHotbarSlot = buffer.readUnsignedVarInt();
         this.windowId = buffer.readByte();
-
-        this.slots = new int[buffer.readUnsignedVarInt()];
-        for ( int i = 0; i < this.slots.length; i++ ) {
-            this.slots[i] = buffer.readUnsignedVarInt();
-        }
-
         this.selectHotbarSlot = buffer.readBoolean();
     }
 

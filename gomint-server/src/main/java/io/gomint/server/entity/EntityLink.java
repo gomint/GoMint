@@ -4,6 +4,7 @@ import lombok.Data;
 
 /**
  * @author geNAZt
+ * @version 1.0
  */
 @Data
 public class EntityLink {

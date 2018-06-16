@@ -1,5 +1,6 @@
 package io.gomint.server.network.handler;
 
+import io.gomint.event.player.PlayerToggleFlyEvent;
 import io.gomint.server.entity.AdventureSettings;
 import io.gomint.server.network.PlayerConnection;
 import io.gomint.server.network.packet.PacketAdventureSettings;
@@ -15,12 +16,14 @@ public class PacketAdventureSettingsHandler implements PacketHandler<PacketAdven
         // This is sent when the client wants a change to its flying status
         AdventureSettings adventureSettings = new AdventureSettings( packet.getFlags(), packet.getFlags2() );
 
-        if ( connection.getEntity().getAdventureSettings().isCanFly() ) {
-            if ( connection.getEntity().getAdventureSettings().isFlying() != adventureSettings.isFlying() ) {
-                // Just accept what the client tells
-                connection.getEntity().getAdventureSettings().setFlying( adventureSettings.isFlying() );
-                connection.getEntity().getAdventureSettings().update();
-            }
+        if ( connection.getEntity().getAdventureSettings().isFlying() != adventureSettings.isFlying() ) {
+            // Fire event
+            PlayerToggleFlyEvent playerToggleFlyEvent = new PlayerToggleFlyEvent( connection.getEntity(), adventureSettings.isFlying() );
+            playerToggleFlyEvent.setCancelled( !connection.getEntity().getAdventureSettings().isCanFly() );
+            connection.getEntity().getWorld().getServer().getPluginManager().callEvent( playerToggleFlyEvent );
+
+            connection.getEntity().getAdventureSettings().setFlying( playerToggleFlyEvent.isCancelled() ? connection.getEntity().getAdventureSettings().isFlying() : adventureSettings.isFlying() );
+            connection.getEntity().getAdventureSettings().update();
         }
     }
     

@@ -1,14 +1,16 @@
 package io.gomint.command.validator;
 
+import com.google.common.base.Joiner;
+import io.gomint.command.CommandSender;
 import io.gomint.command.ParamType;
 import io.gomint.command.ParamValidator;
-import io.gomint.entity.Entity;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * @author geNAZt
+ * @version 1.0
  */
 public class EnumValidator extends ParamValidator {
 
@@ -36,7 +38,7 @@ public class EnumValidator extends ParamValidator {
     }
 
     @Override
-    public Object validate( List<String> input, Entity entity ) {
+    public Object validate( List<String> input, CommandSender commandSender ) {
         String toCheck = input.get( 0 );
         if ( this.values.contains( toCheck ) ) {
             return toCheck;
@@ -48,6 +50,11 @@ public class EnumValidator extends ParamValidator {
     @Override
     public int consumesParts() {
         return 1;
+    }
+
+    @Override
+    public String getHelpText() {
+        return Joiner.on( " | " ).join( this.values );
     }
 
 }

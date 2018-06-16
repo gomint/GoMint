@@ -1,9 +1,9 @@
 package io.gomint.command.validator;
 
 import com.google.common.base.Joiner;
+import io.gomint.command.CommandSender;
 import io.gomint.command.ParamType;
 import io.gomint.command.ParamValidator;
-import io.gomint.entity.Entity;
 
 import java.util.List;
 
@@ -29,13 +29,18 @@ public class TextValidator extends ParamValidator {
     }
 
     @Override
-    public Object validate( List<String> input, Entity entity ) {
+    public Object validate( List<String> input, CommandSender commandSender ) {
         return Joiner.on( " " ).join( input );
     }
 
     @Override
     public int consumesParts() {
         return -1;
+    }
+
+    @Override
+    public String getHelpText() {
+        return "text";
     }
 
 }

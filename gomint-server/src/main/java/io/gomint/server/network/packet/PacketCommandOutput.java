@@ -15,7 +15,7 @@ import java.util.List;
 @Data
 public class PacketCommandOutput extends Packet {
 
-    private CommandOrigin origin = new CommandOrigin( (byte) 0, (byte) 0, (byte) 3 ); // This is always type 3 (server)
+    private CommandOrigin origin;
     private boolean success = true;
     private List<OutputMessage> outputs;
 
@@ -27,7 +27,7 @@ public class PacketCommandOutput extends Packet {
     }
 
     @Override
-    public void serialize( PacketBuffer buffer ) {
+    public void serialize( PacketBuffer buffer, int protocolID ) {
         writeCommandOrigin( this.origin, buffer );
         buffer.writeBoolean( this.success );
         buffer.writeUnsignedVarInt( this.outputs.size() );
@@ -43,7 +43,7 @@ public class PacketCommandOutput extends Packet {
     }
 
     @Override
-    public void deserialize( PacketBuffer buffer ) {
+    public void deserialize( PacketBuffer buffer, int protocolID ) {
 
     }
 

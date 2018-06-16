@@ -8,7 +8,6 @@
 package io.gomint.server.world;
 
 import io.gomint.server.async.Delegate2;
-import io.gomint.server.network.packet.Packet;
 import lombok.Getter;
 
 /**

@@ -1,9 +1,6 @@
 package io.gomint.server.registry;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.lang.annotation.*;
 
 /**
  * @author geNAZt
@@ -11,8 +8,10 @@ import java.lang.annotation.Target;
  */
 @Retention( RetentionPolicy.RUNTIME )
 @Target( ElementType.TYPE )
+@Repeatable( value = RegisterInfos.class )
 public @interface RegisterInfo {
 
     int id();
+    int itemId() default -1;
 
 }

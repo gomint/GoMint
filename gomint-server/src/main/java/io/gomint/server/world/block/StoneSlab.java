@@ -1,6 +1,9 @@
 package io.gomint.server.world.block;
 
-import io.gomint.math.AxisAlignedBB;
+import io.gomint.inventory.item.ItemStack;
+import io.gomint.server.world.block.helper.ToolPresets;
+import io.gomint.world.block.BlockType;
+
 import io.gomint.server.registry.RegisterInfo;
 
 /**
@@ -8,7 +11,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( id = 44 )
-public class StoneSlab extends Block {
+public class StoneSlab extends Slab {
 
     @Override
     public int getBlockId() {
@@ -26,15 +29,25 @@ public class StoneSlab extends Block {
     }
 
     @Override
-    public AxisAlignedBB getBoundingBox() {
-        return new AxisAlignedBB(
-                this.location.getX(),
-                this.location.getY(),
-                this.location.getZ(),
-                this.location.getX() + 1,
-                this.location.getY() + 0.5f,
-                this.location.getZ() + 1
-        );
+    public float getBlastResistance() {
+        return 30.0f;
     }
+
+    @Override
+    public BlockType getType() {
+        return BlockType.STONE_SLAB;
+    }
+
+    @Override
+    public boolean canBeBrokenWithHand() {
+        return true;
+    }
+
+    @Override
+    public Class<? extends ItemStack>[] getToolInterfaces() {
+        return ToolPresets.PICKAXE;
+    }
+
+
 
 }

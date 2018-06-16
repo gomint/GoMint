@@ -1,5 +1,9 @@
 package io.gomint.server.world.block;
 
+import io.gomint.inventory.item.ItemStack;
+import io.gomint.server.world.block.helper.ToolPresets;
+import io.gomint.world.block.BlockType;
+
 import io.gomint.server.registry.RegisterInfo;
 
 /**
@@ -7,7 +11,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( id = 126 )
-public class ActivatorRail extends Block {
+public class ActivatorRail extends Block implements io.gomint.world.block.BlockActivatorRail {
 
     @Override
     public int getBlockId() {
@@ -29,4 +33,23 @@ public class ActivatorRail extends Block {
         return false;
     }
 
+    @Override
+    public boolean canBeBrokenWithHand() {
+        return true;
+    }
+
+    @Override
+    public float getBlastResistance() {
+        return 3.5f;
+    }
+
+    @Override
+    public BlockType getType() {
+        return BlockType.ACTIVATOR_RAIL;
+    }
+
+    @Override
+    public Class<? extends ItemStack>[] getToolInterfaces() {
+        return ToolPresets.PICKAXE;
+    }
 }

@@ -20,13 +20,14 @@ public class PacketAddItemEntity extends Packet {
     private float motionX;
     private float motionY;
     private float motionZ;
+    private boolean unknown;    // TODO: Maybe fishing flag?
 
     public PacketAddItemEntity() {
         super( Protocol.PACKET_ADD_ITEM_ENTITY );
     }
 
     @Override
-    public void serialize( PacketBuffer buffer ) {
+    public void serialize( PacketBuffer buffer, int protocolID ) {
         // PE has a system of runtime entity ids
         buffer.writeSignedVarLong( this.entityId );
         buffer.writeUnsignedVarLong( this.entityId );
@@ -43,10 +44,13 @@ public class PacketAddItemEntity extends Packet {
         buffer.writeLFloat( this.motionX );
         buffer.writeLFloat( this.motionY );
         buffer.writeLFloat( this.motionZ );
+
+        // Write unknown flag
+        buffer.writeBoolean( this.unknown );
     }
 
     @Override
-    public void deserialize( PacketBuffer buffer ) {
+    public void deserialize( PacketBuffer buffer, int protocolID ) {
 
     }
 

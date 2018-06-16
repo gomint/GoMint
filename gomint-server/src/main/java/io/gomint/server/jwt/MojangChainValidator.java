@@ -164,12 +164,13 @@ public class MojangChainValidator {
         Object usernameRaw = extraData.get( "displayName" );
         Object uuidRaw = extraData.get( "identity" );
         Object xuidRaw = extraData.get( "XUID" );
+        Object xuidSniffed = extraData.get( "proxprox.xuid" );
 
-        if ( usernameRaw != null && usernameRaw instanceof String ) {
+        if ( usernameRaw instanceof String ) {
             this.username = (String) usernameRaw;
         }
 
-        if ( uuidRaw != null && uuidRaw instanceof String ) {
+        if ( uuidRaw instanceof String ) {
             try {
                 this.uuid = UUID.fromString( (String) uuidRaw );
             } catch ( IllegalArgumentException ignored ) {
@@ -177,8 +178,12 @@ public class MojangChainValidator {
             }
         }
 
-        if ( !unsafe && xuidRaw != null && xuidRaw instanceof String ) {
+        if ( !unsafe && xuidRaw instanceof String ) {
             this.xboxId = (String) xuidRaw;
+        }
+
+        if ( unsafe && xuidSniffed instanceof String ) {
+            this.xboxId = (String) xuidSniffed;
         }
     }
 

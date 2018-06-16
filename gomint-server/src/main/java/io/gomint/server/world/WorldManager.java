@@ -7,19 +7,22 @@
 
 package io.gomint.server.world;
 
+import io.gomint.GoMint;
 import io.gomint.server.GoMintServer;
 import io.gomint.server.world.anvil.AnvilWorldAdapter;
+import io.gomint.server.world.gomint.GomintWorldAdapter;
 import io.gomint.server.world.leveldb.LevelDBWorldAdapter;
+import io.gomint.server.world.leveldb.ZippedLevelDBWorldAdapter;
 import io.gomint.world.World;
+import io.gomint.world.generator.CreateOptions;
+import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
-import java.util.function.Consumer;
 
 /**
  * @author BlackyPaw
@@ -28,19 +31,9 @@ import java.util.function.Consumer;
  */
 public class WorldManager {
 
-    private static final Logger logger = LoggerFactory.getLogger( WorldManager.class );
+    private static final Logger LOGGER = LoggerFactory.getLogger( WorldManager.class );
     private final GoMintServer server;
-    private List<WorldAdapter> loadedWorlds;
-
-    // Internal ticking
-    private long currentTickTime;
-    private float lastTickDiff;
-    private final Consumer<WorldAdapter> worldAdapterConsumer = new Consumer<WorldAdapter>() {
-        @Override
-        public void accept( WorldAdapter worldAdapter ) {
-            worldAdapter.update( currentTickTime, lastTickDiff );
-        }
-    };
+    private Object2ObjectMap<String, WorldAdapter> loadedWorlds;
 
     /**
      * Constructs a new world manager that does not yet hold any worlds.
@@ -49,7 +42,7 @@ public class WorldManager {
      */
     public WorldManager( GoMintServer server ) {
         this.server = server;
-        this.loadedWorlds = new ArrayList<>();
+        this.loadedWorlds = new Object2ObjectOpenHashMap<>();
     }
 
     /**
@@ -59,9 +52,9 @@ public class WorldManager {
      * @param dT            The delta from the full second which has been calculated in the last tick
      */
     public void update( long currentTimeMS, float dT ) {
-        this.currentTickTime = currentTimeMS;
-        this.lastTickDiff = dT;
-        this.loadedWorlds.forEach( this.worldAdapterConsumer );
+        for ( WorldAdapter world : this.getWorlds() ) {
+            world.update( currentTimeMS, dT );
+        }
     }
 
     /**
@@ -70,7 +63,11 @@ public class WorldManager {
      * @return A collection of all worlds held by the world manager
      */
     public Collection<WorldAdapter> getWorlds() {
-        return this.loadedWorlds;
+        if ( !GoMint.instance().isMainThread() ) {
+            LOGGER.warn( "Getting worlds from an async thread. This is not safe and can lead to CME", new Exception() );
+        }
+
+        return this.loadedWorlds.values();
     }
 
     /**
@@ -81,13 +78,11 @@ public class WorldManager {
      * @return The world if found or null otherwise
      */
     public WorldAdapter getWorld( String name ) {
-        for ( WorldAdapter world : this.loadedWorlds ) {
-            if ( world.getWorldName().equals( name ) ) {
-                return world;
-            }
+        if ( !GoMint.instance().isMainThread() ) {
+            LOGGER.warn( "Getting a world from an async thread. This is not safe and can lead to CME", new Exception() );
         }
 
-        return null;
+        return this.loadedWorlds.get( name );
     }
 
     /**
@@ -96,8 +91,8 @@ public class WorldManager {
      *
      * @param world The world to be added
      */
-    public void addWorld( WorldAdapter world ) {
-        this.loadedWorlds.add( world );
+    private void addWorld( WorldAdapter world ) {
+        this.loadedWorlds.put( world.getWorldName(), world );
     }
 
     /**
@@ -107,53 +102,145 @@ public class WorldManager {
      *
      * @param path The path of the world
      * @return the world which has been loaded
-     * @throws Exception Thrown in case the world could not be loaded
+     * @throws WorldLoadException Thrown in case the world could not be loaded
      */
-    public World loadWorld( String path ) throws Exception {
-        logger.info( "Attempting to load world '" + path + "'" );
+    public World loadWorld( String path ) throws WorldLoadException {
+        if ( !GoMint.instance().isMainThread() ) {
+            LOGGER.warn( "Loading worlds from an async thread. This is not safe and can lead to CME", new Exception() );
+        }
+
+        LOGGER.info( "Attempting to load world '{}'", path );
 
         File file = new File( path );
-        if ( !file.exists() ) {
-            throw new IOException( "World does not exist" );
+        if ( file.exists() ) {
+            if ( file.isDirectory() ) {
+                // Anvil world:
+                File regionFolder = new File( file, "region" );
+                if ( regionFolder.exists() && regionFolder.isDirectory() ) {
+                    LOGGER.info( "Detected anvil world '{}'", path );
+                    return this.loadAnvilWorld( file );
+                }
+
+                // LevelDB world:
+                File dbFolder = new File( file, "db" );
+                if ( dbFolder.exists() && dbFolder.isDirectory() ) {
+                    LOGGER.info( "Detected leveldb world '{}'", path );
+                    return this.loadLevelDBWorld( file );
+                }
+
+                // Gomint world
+                File worldIndex = new File( file, "world.index" );
+                if ( worldIndex.exists() ) {
+                    LOGGER.info( "Detected gomint world '{}'", path );
+                    return this.loadGomintWorld( file );
+                }
+            } else {
+                throw new WorldLoadException( "World does not exist" );
+            }
+        } else {
+            File mcWorldFile = new File( file + ".mcworld" );
+            if ( mcWorldFile.exists() ) {
+                LOGGER.info( "Detected zipped leveldb world '{}'", path );
+                return this.loadZippedLevelDBWorld( mcWorldFile, path );
+            } else {
+                throw new WorldLoadException( "World does not exist" );
+            }
         }
 
-        if ( file.isDirectory() ) {
-            // Anvil world:
-            File regionFolder = new File( file, "region" );
-            if ( regionFolder.exists() && regionFolder.isDirectory() ) {
-                logger.info( "Detected anvil world '" + path + "'" );
-                return this.loadAnvilWorld( file );
-            }
-
-            // LevelDB world:
-            File dbFolder = new File( file, "db" );
-            if ( dbFolder.exists() && dbFolder.isDirectory() ) {
-                logger.info( "Detected leveldb world '" + path + "'" );
-                return this.loadLevelDBWorld( file );
-            }
-        }
-
-        throw new IOException( "Could not detect world format" );
+        throw new WorldLoadException( "Could not detect world format" );
     }
 
-    private World loadLevelDBWorld( File path ) throws Exception {
+    private World loadGomintWorld( File path ) throws WorldLoadException {
+        GomintWorldAdapter world = GomintWorldAdapter.load( this.server, path );
+        this.addWorld( world );
+        LOGGER.info( "Successfully loaded world '{}'", path.getName() );
+        return world;
+    }
+
+    private World loadZippedLevelDBWorld( File path, String name ) throws WorldLoadException {
+        LevelDBWorldAdapter world = ZippedLevelDBWorldAdapter.load( this.server, path, name );
+        this.addWorld( world );
+        LOGGER.info( "Successfully loaded world '{}'", name );
+        return world;
+    }
+
+    private World loadLevelDBWorld( File path ) throws WorldLoadException {
         LevelDBWorldAdapter world = LevelDBWorldAdapter.load( this.server, path );
         this.addWorld( world );
-        logger.info( "Successfully loaded world '" + path.getName() + "'" );
+        LOGGER.info( "Successfully loaded world '{}'", path.getName() );
         return world;
     }
 
-    private World loadAnvilWorld( File path ) throws Exception {
+    private World loadAnvilWorld( File path ) throws WorldLoadException {
         AnvilWorldAdapter world = AnvilWorldAdapter.load( this.server, path );
         this.addWorld( world );
-        logger.info( "Successfully loaded world '" + path.getName() + "'" );
+        LOGGER.info( "Successfully loaded world '{}'", path.getName() );
         return world;
     }
 
+    /**
+     * Close and save all worlds
+     */
     public void close() {
-        for ( WorldAdapter loadedWorld : this.loadedWorlds ) {
-            loadedWorld.close();
+        if ( !GoMint.instance().isMainThread() ) {
+            LOGGER.warn( "Closing worlds from an async thread. This is not safe and can lead to CME", new Exception() );
         }
+
+        for ( WorldAdapter loadedWorld : new ArrayList<>( this.getWorlds() ) ) {
+            loadedWorld.unload( null );
+        }
+    }
+
+    /**
+     * Unload given world from RAM
+     *
+     * @param worldAdapter which should be unloaded
+     */
+    void unloadWorld( WorldAdapter worldAdapter ) {
+        this.loadedWorlds.remove( worldAdapter.getWorldName() );
+    }
+
+    /**
+     * Create a new world
+     *
+     * @param name    of the new world
+     * @param options with which this world should be generated
+     * @return generated world
+     */
+    public World createWorld( String name, CreateOptions options ) {
+        if ( !GoMint.instance().isMainThread() ) {
+            LOGGER.warn( "Creating worlds from an async thread. This is not safe and can lead to CME", new Exception() );
+        }
+
+        // Check which type of world we want to create
+        WorldAdapter world;
+        switch ( options.worldType() ) {
+            case ANVIL:
+                try {
+                    world = AnvilWorldAdapter.create( this.server, name, options.generator() );
+                } catch ( WorldCreateException e ) {
+                    LOGGER.error( "Could not create new world", e );
+                    return null;
+                }
+
+                break;
+
+            case GOMINT:
+                try {
+                    world = GomintWorldAdapter.create( this.server, name, options.generator() );
+                } catch ( WorldCreateException e ) {
+                    LOGGER.error( "Could not create new world", e );
+                    return null;
+                }
+
+                break;
+
+            default:
+                return null;
+        }
+
+        this.loadedWorlds.put( world.getWorldName(), world );
+        return world;
     }
 
 }

@@ -1,29 +1,77 @@
 package io.gomint.command;
 
+import io.gomint.command.annotation.*;
+import io.gomint.entity.EntityPlayer;
 import lombok.Getter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
 /**
  * @author geNAZt
  * @version 1.0
- *          <p>
- *          This class builds up a command. A command can have defined parameters and permissions
- *          <p>
- *          Quick notes on the API design idea:
- *          <p>
- *          Command cmd = new Command( "test" );
- *          cmd.description("This is just a test command");
+ * <p>
+ * This class builds up a command. A command can have defined parameters and permissions
+ * <p>
+ * Quick notes on the API design idea:
+ * <p>
+ * Command cmd = new Command( "test" );
+ * cmd.description("This is just a test command");
  */
 @Getter
-public class Command {
+public abstract class Command {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger( Command.class );
 
     private final String name;
     private String description;
     private List<CommandOverload> overload;
-    private final Set<String> alias = new HashSet<>();
+    private Set<String> alias;
     private String permission;
-    private CommandExecutor executor;
+
+    /**
+     * Constructor for loading commands from annotations like {@link Name}.
+     */
+    public Command() {
+        // Search for Name and Description annotation
+        Class<? extends Command> clazz = getClass();
+        if ( !clazz.isAnnotationPresent( Name.class ) ||
+            !clazz.isAnnotationPresent( Description.class ) ) {
+            throw new IllegalArgumentException( "Command needs to be annotated with at least @Name and @Description: " +
+                clazz.isAnnotationPresent( Name.class ) + " - " + clazz.isAnnotationPresent( Description.class ) );
+        }
+
+        this.name = clazz.getAnnotation( Name.class ).value();
+        this.description = clazz.getAnnotation( Description.class ).value();
+
+        // Setup permission
+        if ( clazz.isAnnotationPresent( Permission.class ) ) {
+            this.permission = clazz.getAnnotation( Permission.class ).value();
+        }
+
+        // Setup alias
+        if ( clazz.isAnnotationPresent( Aliases.class ) ) {
+            Alias[] aliases = clazz.getAnnotation( Aliases.class ).value();
+            for ( Alias alias1 : aliases ) {
+                alias( alias1.value() );
+            }
+        } else if ( clazz.isAnnotationPresent( Alias.class ) ) {
+            alias( clazz.getAnnotation( Alias.class ).value() );
+        }
+
+        // Setup overload
+        if ( clazz.isAnnotationPresent( Overloads.class ) ) {
+            Overload[] overloads = clazz.getAnnotation( Overloads.class ).value();
+            for ( Overload overload1 : overloads ) {
+                registerOverloadAnnotation( overload1 );
+            }
+        } else if ( clazz.isAnnotationPresent( Overload.class ) ) {
+            registerOverloadAnnotation( clazz.getAnnotation( Overload.class ) );
+        }
+    }
 
     /**
      * Construct a new command builder for a command name
@@ -32,6 +80,77 @@ public class Command {
      */
     public Command( String name ) {
         this.name = name;
+    }
+
+    private void registerOverloadAnnotation( Overload annotation ) {
+        CommandOverload overloadHolder = this.overload();
+
+        for ( Parameter parameter : annotation.value() ) {
+            // Search for either a no arg, string or a list<string> constructor
+            Constructor<? extends ParamValidator> constructor;
+            boolean needsList = false;
+            boolean needsString = false;
+
+            try {
+                constructor = parameter.validator().getConstructor();
+            } catch ( NoSuchMethodException e ) {
+                // No args not present
+                try {
+                    constructor = parameter.validator().getConstructor( String.class );
+                    needsString = true;
+                } catch ( NoSuchMethodException e1 ) {
+                    try {
+                        constructor = parameter.validator().getConstructor( List.class );
+                        needsList = true;
+                    } catch ( NoSuchMethodException e2 ) {
+                        throw new IllegalArgumentException( "Validator does not have a no args, string or list constructor." );
+                    }
+                }
+            }
+
+            String argumentString = null;
+            List<String> argumentList = null;
+
+            // Prepare constructor
+            for ( String arg : parameter.arguments() ) {
+                if ( needsString ) {
+                    argumentString = arg;
+                    break;
+                } else if ( needsList ) {
+                    if ( argumentList == null ) {
+                        argumentList = new ArrayList<>();
+                    }
+
+                    argumentList.add( arg );
+                }
+            }
+
+            // Construct the validator
+            ParamValidator validator = null;
+            if ( needsString ) {
+                try {
+                    validator = constructor.newInstance( argumentString );
+                } catch ( InstantiationException | IllegalAccessException | InvocationTargetException e ) {
+                    LOGGER.error( "Could not build command", e );
+                }
+            } else if ( needsList ) {
+                try {
+                    validator = constructor.newInstance( argumentList );
+                } catch ( InstantiationException | IllegalAccessException | InvocationTargetException e ) {
+                    LOGGER.error( "Could not build command", e );
+                }
+            } else {
+                try {
+                    validator = constructor.newInstance();
+                } catch ( InstantiationException | IllegalAccessException | InvocationTargetException e ) {
+                    LOGGER.error( "Could not build command", e );
+                }
+            }
+
+            if ( validator != null ) {
+                overloadHolder.param( parameter.name(), validator, parameter.optional() );
+            }
+        }
     }
 
     /**
@@ -63,26 +182,43 @@ public class Command {
      * @return the command currently build
      */
     public Command alias( String alias ) {
+        if ( this.alias == null ) {
+            this.alias = new HashSet<>();
+        }
+
         this.alias.add( alias );
         return this;
     }
 
+
     /**
-     * Set the executor which should handle the execution of this command
+     * Execute a command for a command sender
      *
-     * @param executor of this command
-     * @return this command currently build
+     * @param commandSender which has executed the command
+     * @param alias         which the user used to execute this command
+     * @param arguments     which the player has given, optional parameters may be missing
+     * @return CommandOutput which has been generated by the execution
      */
-    public Command executor( CommandExecutor executor ) {
-        this.executor = executor;
-        return this;
+    public CommandOutput execute( CommandSender commandSender, String alias, Map<String, Object> arguments ) {
+        if ( commandSender instanceof PlayerCommandSender ) {
+            return this.execute( (EntityPlayer) commandSender, alias, arguments );
+        }
+
+        return new CommandOutput().fail( "Command does not support running as console" );
     }
 
     /**
-     * Finally register the command
+     * Execute a command for a player
+     *
+     * @param player    which has executed the command
+     * @param alias     which the user used to execute this command
+     * @param arguments which the player has given, optional parameters may be missing
+     * @deprecated Use {@link #execute(CommandSender, String, Map)} for overriding
+     * @return CommandOutput which has been generated by the execution
      */
-    public void build() {
-
+    @Deprecated
+    public CommandOutput execute( EntityPlayer player, String alias, Map<String, Object> arguments ) {
+        return this.execute( (CommandSender) player, alias, arguments );
     }
 
     /**

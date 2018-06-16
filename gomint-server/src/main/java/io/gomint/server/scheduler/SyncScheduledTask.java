@@ -11,6 +11,9 @@ import io.gomint.scheduler.Task;
 import io.gomint.util.CompleteHandler;
 import io.gomint.util.ExceptionHandler;
 import lombok.Getter;
+import lombok.ToString;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,27 +23,31 @@ import java.util.concurrent.TimeUnit;
  * @author geNAZt
  * @version 1.0
  */
+@ToString( of = { "task", "period", "nextExecution" } )
 public class SyncScheduledTask implements Task, Runnable {
 
-    private final Runnable task;
-    private final long period;          // -1 means no reschedule
-    @Getter
-    private long nextExecution; // -1 is cancelled
+    private static final Logger LOGGER = LoggerFactory.getLogger( SyncScheduledTask.class );
+    @Getter private final Runnable task;
+    private long period;          // -1 means no reschedule
+    @Getter private long nextExecution; // -1 is cancelled
     private ExceptionHandler exceptionHandler;
     private List<CompleteHandler> completeHandlerList;
+    private SyncTaskManager manager;
 
     /**
      * Constructs a new SyncScheduledTask. It needs to be executed via a normal {@link java.util.concurrent.ExecutorService}
      *
-     * @param task   The runnable which should be executed
-     * @param delay  Amount of time units to wait until the invocation of this execution
-     * @param period Amount of time units for the delay after execution to run the runnable again
-     * @param unit   of time
+     * @param manager which schedules this task
+     * @param task    The runnable which should be executed
+     * @param delay   Amount of time units to wait until the invocation of this execution
+     * @param period  Amount of time units for the delay after execution to run the runnable again
+     * @param unit    of time
      */
-    public SyncScheduledTask( Runnable task, long delay, long period, TimeUnit unit ) {
+    public SyncScheduledTask( SyncTaskManager manager, Runnable task, long delay, long period, TimeUnit unit ) {
         this.task = task;
         this.period = ( period >= 0 ) ? unit.toMillis( period ) : -1;
         this.nextExecution = ( delay >= 0 ) ? System.currentTimeMillis() + unit.toMillis( delay ) : -1;
+        this.manager = manager;
     }
 
     @Override
@@ -54,7 +61,7 @@ public class SyncScheduledTask implements Task, Runnable {
                     this.cancel();
                 }
             } else {
-                e.printStackTrace();
+                LOGGER.warn( "Error in executing task: ", e );
             }
         }
         // CHECKSTYLE:ON
@@ -68,8 +75,10 @@ public class SyncScheduledTask implements Task, Runnable {
 
     @Override
     public void cancel() {
+        this.period = -1;
         this.nextExecution = -1;
         this.fireCompleteHandlers();
+        this.manager.removeTask( this );
     }
 
     @Override

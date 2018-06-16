@@ -1,5 +1,7 @@
 package io.gomint.server.inventory.item;
 
+import io.gomint.inventory.item.ItemType;
+
 import io.gomint.server.registry.RegisterInfo;
 import io.gomint.taglib.NBTTagCompound;
 
@@ -8,7 +10,7 @@ import io.gomint.taglib.NBTTagCompound;
  * @version 1.0
  */
 @RegisterInfo( id = 287 )
- public class ItemString extends ItemStack implements io.gomint.inventory.item.ItemString {
+public class ItemString extends ItemStack implements io.gomint.inventory.item.ItemString {
 
     // CHECKSTYLE:OFF
     public ItemString( short data, int amount ) {
@@ -19,5 +21,10 @@ import io.gomint.taglib.NBTTagCompound;
         super( 287, data, amount, nbt );
     }
     // CHECKSTYLE:ON
+
+    @Override
+    public ItemType getType() {
+        return ItemType.STRING;
+    }
 
 }

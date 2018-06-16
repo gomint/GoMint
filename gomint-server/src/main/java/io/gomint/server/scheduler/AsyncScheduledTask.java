@@ -40,7 +40,7 @@ public class AsyncScheduledTask implements Task, Runnable {
      * @param period delay after execution to run the runnable again
      * @param unit   of time
      */
-    AsyncScheduledTask( Runnable task, long delay, long period, TimeUnit unit ) {
+    public AsyncScheduledTask( Runnable task, long delay, long period, TimeUnit unit ) {
         this.task = task;
         this.delay = ( delay >= 0 ) ? unit.toMillis( delay ) : -1;
         this.period = ( period >= 0 ) ? unit.toMillis( period ) : -1;

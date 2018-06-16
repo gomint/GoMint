@@ -9,10 +9,10 @@ package io.gomint.server.crafting;
 
 import io.gomint.inventory.item.ItemStack;
 import io.gomint.jraknet.PacketBuffer;
+import io.gomint.server.inventory.Inventory;
 import io.gomint.server.network.packet.Packet;
 
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.UUID;
 
 /**
@@ -36,8 +36,8 @@ public class ShapelessRecipe extends CraftingRecipe {
     }
 
     @Override
-    public Collection<ItemStack> getIngredients() {
-        return Arrays.asList( this.ingredients );
+    public ItemStack[] getIngredients() {
+        return this.ingredients;
     }
 
     @Override
@@ -57,60 +57,43 @@ public class ShapelessRecipe extends CraftingRecipe {
         buffer.writeUUID( this.getUUID() );
     }
 
-	/*                      Left in here for later reference
     @Override
-	public boolean applies( CraftingContainer container, boolean consume ) {
-		long[] matches = new long[this.ingredients.length];
-		Arrays.fill( matches, -1L );
-		int numStacks = 0;
+    public int[] isCraftable( Inventory inputInventory ) {
+        ItemStack[] inputItems = inputInventory.getContentsArray();
+        ItemStack[] ingredients = getIngredients();
+        int[] consumeSlots = new int[ingredients.length];
+        Arrays.fill( consumeSlots, -1 );
 
-		for ( int j = 0; j < container.getHeight(); ++j ) {
-			for ( int i = 0; i < container.getWidth(); ++i ) {
-				ItemStack found = container.getCraftingSlot( i, j );
+        for ( int rI = 0; rI < ingredients.length; rI++ ) {
+            ItemStack recipeWanted = ingredients[rI];
+            boolean found = false;
 
-				if ( found != null ) {
-					++numStacks;
-					if ( numStacks > this.ingredients.length ) {
-						// Does not apply -> too many item stacks
-						return false;
-					}
+            for ( int i = 0; i < inputItems.length; i++ ) {
+                ItemStack input = inputItems[i];
 
-					// Check if this item stack matches any ingredient:
-					for ( int k = 0; k < this.ingredients.length; ++k ) {
-						if ( matches[k] != -1L ) {
-							continue;
-						}
+                if ( canBeUsedForCrafting( recipeWanted, input ) ) {
+                    // Check if we already consumed this
+                    int alreadyConsumed = 0;
+                    for ( int consumeSlot : consumeSlots ) {
+                        if ( consumeSlot == i ) {
+                            alreadyConsumed++;
+                        }
+                    }
 
-						ItemStack required = this.ingredients[k];
-						if ( required.getId() == found.getId() &&
-						     required.getAmount() <= found.getAmount() &&
-						     ( required.getData() == (short) 0xFFFF || required.getData() == found.getData() ) ) {
-							matches[k] = ( (long) j << 32 | i );
-						}
-					}
-				}
-			}
-		}
+                    if ( input.getAmount() >= alreadyConsumed + 1 ) {
+                        consumeSlots[rI] = i;
+                        found = true;
+                        break;
+                    }
+                }
+            }
 
-		for ( int i = 0; i < this.ingredients.length; ++i ) {
-			if ( matches[i] == -1L ) {
-				return false;
-			}
+            if ( !found ) {
+                return null;
+            }
+        }
 
-			if ( consume ) {
-				int x = (int) matches[i];
-				int y = (int) ( matches[i] >>> 32 );
+        return consumeSlots;
+    }
 
-				// Consume item:
-				ItemStack found = container.getCraftingSlot( x, y );
-				found.setAmount( found.getAmount() - this.ingredients[i].getAmount() );
-				if ( found.getAmount() <= 0 ) {
-					// Clear out slot:
-					container.setCraftingSlot( x, y, null );
-				}
-			}
-		}
-		return true;
-	}
-	*/
 }

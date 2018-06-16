@@ -23,7 +23,7 @@ public class PacketMobArmorEquipment extends Packet {
     }
 
     @Override
-    public void serialize( PacketBuffer buffer ) {
+    public void serialize( PacketBuffer buffer, int protocolID ) {
         buffer.writeUnsignedVarLong( this.entityId );
         writeItemStack( this.helmet, buffer );
         writeItemStack( this.chestplate, buffer );
@@ -32,7 +32,7 @@ public class PacketMobArmorEquipment extends Packet {
     }
 
     @Override
-    public void deserialize( PacketBuffer buffer ) {
+    public void deserialize( PacketBuffer buffer, int protocolID ) {
         this.entityId = buffer.readUnsignedVarLong();
         this.helmet = readItemStack( buffer );
         this.chestplate = readItemStack( buffer );

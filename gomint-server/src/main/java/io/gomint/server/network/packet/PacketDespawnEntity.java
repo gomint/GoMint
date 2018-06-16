@@ -27,12 +27,12 @@ public class PacketDespawnEntity extends Packet {
     }
 
     @Override
-    public void serialize( PacketBuffer buffer ) {
+    public void serialize( PacketBuffer buffer, int protocolID ) {
         buffer.writeSignedVarLong( this.entityId );
     }
 
     @Override
-    public void deserialize( PacketBuffer buffer ) {
+    public void deserialize( PacketBuffer buffer, int protocolID ) {
         this.entityId = buffer.readSignedVarLong().longValue();
     }
 

@@ -3,6 +3,7 @@ package io.gomint.server.network.packet;
 import io.gomint.jraknet.PacketBuffer;
 import io.gomint.server.network.Protocol;
 import io.gomint.server.network.type.CommandData;
+import io.gomint.server.util.collection.IndexedHashMap;
 import lombok.Data;
 
 import java.util.List;
@@ -17,7 +18,7 @@ public class PacketAvailableCommands extends Packet {
 
     private List<String> enumValues;
     private List<String> postFixes;
-    private Map<String, List<Integer>> enums;
+    private IndexedHashMap<String, List<Integer>> enums;
     private List<CommandData> commandData;
 
     /**
@@ -28,7 +29,7 @@ public class PacketAvailableCommands extends Packet {
     }
 
     @Override
-    public void serialize( PacketBuffer buffer ) {
+    public void serialize( PacketBuffer buffer, int protocolID ) {
         // First we need to write all enum values
         buffer.writeUnsignedVarInt( this.enumValues.size() );
         for ( String enumValue : this.enumValues ) {
@@ -63,7 +64,7 @@ public class PacketAvailableCommands extends Packet {
             buffer.writeByte( data.getPermission() );
 
             // Alias enum index
-            buffer.writeLInt( data.getAliasIndex() );
+            buffer.writeLInt( -1 );     // TODO: Aliases are broken in 1.2, we fix this by taking each alias as seperate command
 
             // Write parameters and overload
             buffer.writeUnsignedVarInt( data.getParameters().size() );
@@ -89,7 +90,7 @@ public class PacketAvailableCommands extends Packet {
     }
 
     @Override
-    public void deserialize( PacketBuffer buffer ) {
+    public void deserialize( PacketBuffer buffer, int protocolID ) {
 
     }
 

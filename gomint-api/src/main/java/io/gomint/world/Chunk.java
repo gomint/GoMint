@@ -10,8 +10,7 @@ package io.gomint.world;
 import io.gomint.entity.Entity;
 import io.gomint.world.block.Block;
 
-import java.util.Collection;
-import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * @author geNAZt
@@ -45,10 +44,64 @@ public interface Chunk {
     <T extends Block> T getBlockAt( int x, int y, int z );
 
     /**
-     * Get a list of all entities which are located in this chunk
+     * Gets the block at the specified position.
      *
-     * @return either null if there are not entities in this chunk or a list of entities
+     * @param x     The x-coordinate of the block
+     * @param y     The y-coordinate of the block
+     * @param z     The z-coordinate of the block
+     * @param layer on which the block is
+     * @return The block itself or null if the given coordinates lie not within this chunk
      */
-    Collection<Entity> getEntities();
+    <T extends Block> T getBlockAt( int x, int y, int z, WorldLayer layer );
+
+    /**
+     * Iterate over all entities in this chunk and run entityConsumer on every correct one.
+     *
+     * @param entityClass    for which we search
+     * @param entityConsumer which gets called for every found entity
+     * @param <T>            type of entity
+     */
+    <T extends Entity> void iterateEntities( Class<T> entityClass, Consumer<T> entityConsumer );
+
+    /**
+     * Set the block at the position to the one given in this method call. Please only use this in
+     * {@link io.gomint.world.generator.ChunkGenerator} instances.
+     *
+     * @param x     coordinate in the chunk (0-15) of the block to replace
+     * @param y     coordinate in the chunk (0-255) of the block to replace
+     * @param z     coordinate in the chunk (0-15) of the block to replace
+     * @param block which should be used to replace selected block
+     */
+    void setBlock( int x, int y, int z, Block block );
+
+    /**
+     * Set the block at the position to the one given in this method call. Please only use this in
+     * {@link io.gomint.world.generator.ChunkGenerator} instances.
+     *
+     * @param x     coordinate in the chunk (0-15) of the block to replace
+     * @param y     coordinate in the chunk (0-255) of the block to replace
+     * @param z     coordinate in the chunk (0-15) of the block to replace
+     * @param layer on which the block should be placed
+     * @param block which should be used to replace selected block
+     */
+    void setBlock( int x, int y, int z, WorldLayer layer, Block block );
+
+    /**
+     * Sets a block column's biome.
+     *
+     * @param x     The x-coordinate of the block column
+     * @param z     The z-coordinate of the block column
+     * @param biome The biome to set
+     */
+    void setBiome( int x, int z, Biome biome );
+
+    /**
+     * Gets a block column's biome.
+     *
+     * @param x The x-coordinate of the block column
+     * @param z The z-coordinate of the block column
+     * @return The block column's biome
+     */
+    Biome getBiome( int x, int z );
 
 }

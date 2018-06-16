@@ -23,29 +23,45 @@ public class PacketResourcePackStack extends Packet {
     }
 
     @Override
-    public void serialize( PacketBuffer buffer ) {
+    public void serialize( PacketBuffer buffer, int protocolID ) {
         buffer.writeBoolean( this.mustAccept );
 
-        buffer.writeLShort( (short) ( this.behaviourPackEntries == null ? 0 : this.behaviourPackEntries.size() ) );
+        buffer.writeUnsignedVarInt( ( this.behaviourPackEntries == null ? 0 : this.behaviourPackEntries.size() ) );
         if ( this.behaviourPackEntries != null ) {
             for ( ResourcePack entry : this.behaviourPackEntries ) {
                 buffer.writeString( entry.getVersion().getId().toString() );
                 buffer.writeString( entry.getVersion().getVersion() );
+                buffer.writeString( "" );
             }
         }
 
-        buffer.writeLShort( (short) ( this.resourcePackEntries == null ? 0 : this.resourcePackEntries.size() ) );
+        buffer.writeUnsignedVarInt( (short) ( this.resourcePackEntries == null ? 0 : this.resourcePackEntries.size() ) );
         if ( this.resourcePackEntries != null ) {
             for ( ResourcePack entry : this.resourcePackEntries ) {
                 buffer.writeString( entry.getVersion().getId().toString() );
                 buffer.writeString( entry.getVersion().getVersion() );
+                buffer.writeString( "" );
             }
         }
     }
 
     @Override
-    public void deserialize( PacketBuffer buffer ) {
+    public void deserialize( PacketBuffer buffer, int protocolID ) {
+        buffer.readBoolean();
 
+        int amount = buffer.readUnsignedVarInt();
+        for ( int i = 0; i < amount; i++ ) {
+            buffer.readString();
+            buffer.readString();
+            buffer.readString();
+        }
+
+        amount = buffer.readUnsignedVarInt();
+        for ( int i = 0; i < amount; i++ ) {
+            buffer.readString();
+            buffer.readString();
+            buffer.readString();
+        }
     }
 
 }

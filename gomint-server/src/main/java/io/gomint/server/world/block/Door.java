@@ -1,17 +1,21 @@
 package io.gomint.server.world.block;
 
-import io.gomint.math.BlockPosition;
-import io.gomint.server.entity.Entity;
 import io.gomint.inventory.item.ItemStack;
+import io.gomint.math.BlockPosition;
 import io.gomint.math.Location;
 import io.gomint.math.Vector;
 import io.gomint.math.Vector2;
+import io.gomint.server.entity.Entity;
+import io.gomint.server.world.PlacementData;
+import io.gomint.server.world.block.helper.ToolPresets;
+import io.gomint.world.block.BlockAir;
+import io.gomint.world.block.BlockFace;
 
 /**
  * @author geNAZt
  * @version 1.0
  */
-public abstract class Door extends Block implements io.gomint.world.block.Door {
+public abstract class Door extends Block implements io.gomint.world.block.BlockDoor {
 
     @Override
     public boolean isTop() {
@@ -41,7 +45,7 @@ public abstract class Door extends Block implements io.gomint.world.block.Door {
     }
 
     @Override
-    public boolean interact( Entity entity, int face, Vector facePos, ItemStack item ) {
+    public boolean interact( Entity entity, BlockFace face, Vector facePos, ItemStack item ) {
         // Open / Close the door
         // TODO: Door events
         toggle();
@@ -50,16 +54,14 @@ public abstract class Door extends Block implements io.gomint.world.block.Door {
     }
 
     @Override
-    public boolean beforePlacement( ItemStack item, Location location ) {
+    public boolean beforePlacement( Entity entity, ItemStack item, Location location ) {
         Block above = location.getWorld().getBlockAt( location.toBlockPosition().add( BlockPosition.UP ) );
         return above.canBeReplaced( item );
     }
 
     @Override
-    public byte calculatePlacementData( Entity entity, ItemStack item, Vector clickVector ) {
-        if ( entity == null ) {
-            return super.calculatePlacementData( null, item, clickVector );
-        }
+    public PlacementData calculatePlacementData( Entity entity, ItemStack item, Vector clickVector ) {
+        PlacementData data = super.calculatePlacementData( entity, item, clickVector );
 
         Vector2 directionPlane = entity.getDirectionPlane();
         double xAbs = Math.abs( directionPlane.getX() );
@@ -67,15 +69,15 @@ public abstract class Door extends Block implements io.gomint.world.block.Door {
 
         if ( zAbs > xAbs ) {
             if ( directionPlane.getZ() > 0 ) {
-                return (byte) 1;
+                return data.setMetaData( (byte) 3 );
             } else {
-                return (byte) 3;
+                return data.setMetaData( (byte) 2 );
             }
         } else {
             if ( directionPlane.getX() > 0 ) {
-                return (byte) 2;
+                return data.setMetaData( (byte) 0 );
             } else {
-                return (byte) 4;
+                return data.setMetaData( (byte) 1 );
             }
         }
     }
@@ -90,4 +92,39 @@ public abstract class Door extends Block implements io.gomint.world.block.Door {
         return 4500;
     }
 
+    @Override
+    public boolean onBreak( boolean creative ) {
+        if ( isTop() ) {
+            Block otherPart = getLocation().getWorld().getBlockAt( getLocation().toBlockPosition().add( BlockPosition.DOWN ) );
+            otherPart.setType( BlockAir.class );
+        } else {
+            Block otherPart = getLocation().getWorld().getBlockAt( getLocation().toBlockPosition().add( BlockPosition.UP ) );
+            otherPart.setType( BlockAir.class );
+        }
+
+        return true;
+    }
+
+    public void setTopPart() {
+        this.setBlockData( (byte) 0x08 );
+        this.updateBlock();
+    }
+
+    @Override
+    public boolean canBeBrokenWithHand() {
+        return true;
+    }
+
+    @Override
+    public void afterPlacement( PlacementData data ) {
+        data.setMetaData( (byte) 0x08 );
+
+        Block above = this.location.getWorld().getBlockAt( this.location.toBlockPosition().add( BlockPosition.UP ) );
+        above.setBlockFromPlacementData( data );
+    }
+
+    @Override
+    public Class<? extends ItemStack>[] getToolInterfaces() {
+        return ToolPresets.AXE;
+    }
 }

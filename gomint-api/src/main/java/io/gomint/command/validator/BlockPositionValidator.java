@@ -1,8 +1,10 @@
 package io.gomint.command.validator;
 
+import io.gomint.command.CommandSender;
 import io.gomint.command.ParamType;
 import io.gomint.command.ParamValidator;
-import io.gomint.entity.Entity;
+import io.gomint.command.PlayerCommandSender;
+import io.gomint.entity.EntityPlayer;
 import io.gomint.math.BlockPosition;
 
 import java.util.List;
@@ -29,13 +31,16 @@ public class BlockPositionValidator extends ParamValidator {
     }
 
     @Override
-    public Object validate( List<String> input, Entity entity ) {
+    public Object validate( List<String> input, CommandSender sender ) {
         // 0 -> x
         // 1 -> y
         // 2 -> z
 
-        // Mojang decided that ~ is the current entity position
-        BlockPosition entityPosition = entity.getLocation().toBlockPosition();
+        BlockPosition entityPosition = null;
+        if ( sender instanceof PlayerCommandSender ) {
+            // Mojang decided that ~ is the current entity position
+            entityPosition = ( (EntityPlayer) sender ).getLocation().toBlockPosition();
+        }
 
         // Parse x
         Integer xInt = parsePos( entityPosition, input.get( 0 ) );
@@ -57,7 +62,7 @@ public class BlockPositionValidator extends ParamValidator {
     }
 
     private Integer parsePos( BlockPosition entityPosition, String in ) {
-        if ( in.startsWith( "~" ) ) {
+        if ( in.startsWith( "~" ) && entityPosition != null ) {
             int xInt = entityPosition.getX();
 
             // Do we have additional data (+/-)?
@@ -94,6 +99,11 @@ public class BlockPositionValidator extends ParamValidator {
     @Override
     public int consumesParts() {
         return 3;
+    }
+
+    @Override
+    public String getHelpText() {
+        return "blockpos:x y z";
     }
 
 }

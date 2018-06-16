@@ -21,14 +21,14 @@ public class PacketInventorySetSlot extends Packet {
     }
 
     @Override
-    public void serialize( PacketBuffer buffer ) {
+    public void serialize( PacketBuffer buffer, int protocolID ) {
         buffer.writeUnsignedVarInt( this.windowId );
         buffer.writeUnsignedVarInt( this.slot );
         writeItemStack( this.itemStack, buffer );
     }
 
     @Override
-    public void deserialize( PacketBuffer buffer ) {
+    public void deserialize( PacketBuffer buffer, int protocolID ) {
         this.windowId = buffer.readUnsignedVarInt();
         this.slot = buffer.readUnsignedVarInt();
         this.itemStack = readItemStack( buffer );

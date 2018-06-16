@@ -1,5 +1,7 @@
 package io.gomint.server.inventory.item;
 
+import io.gomint.inventory.item.ItemType;
+
 import io.gomint.server.registry.RegisterInfo;
 import io.gomint.taglib.NBTTagCompound;
 
@@ -8,7 +10,7 @@ import io.gomint.taglib.NBTTagCompound;
  * @version 1.0
  */
 @RegisterInfo( id = 270 )
-public class ItemWoodenPickaxe extends ItemTool implements io.gomint.inventory.item.ItemWoodenPickaxe {
+public class ItemWoodenPickaxe extends ItemReduceTierWooden implements io.gomint.inventory.item.ItemWoodenPickaxe {
 
     // CHECKSTYLE:OFF
     public ItemWoodenPickaxe( short data, int amount ) {
@@ -19,5 +21,10 @@ public class ItemWoodenPickaxe extends ItemTool implements io.gomint.inventory.i
         super( 270, data, amount, nbt );
     }
     // CHECKSTYLE:ON
+
+    @Override
+    public ItemType getType() {
+        return ItemType.WOODEN_PICKAXE;
+    }
 
 }

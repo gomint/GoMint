@@ -7,16 +7,20 @@
 
 package io.gomint.server.network.packet;
 
+import io.gomint.GoMint;
 import io.gomint.inventory.item.ItemAir;
 import io.gomint.inventory.item.ItemStack;
 import io.gomint.jraknet.PacketBuffer;
 import io.gomint.math.BlockPosition;
 import io.gomint.math.Vector;
+import io.gomint.server.GoMintServer;
 import io.gomint.server.entity.EntityLink;
-import io.gomint.server.inventory.item.Items;
 import io.gomint.server.network.type.CommandOrigin;
+import io.gomint.server.util.Things;
+import io.gomint.taglib.NBTReader;
 import io.gomint.taglib.NBTTagCompound;
 import io.gomint.world.Gamerule;
+import io.gomint.world.block.BlockFace;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -24,13 +28,14 @@ import java.io.IOException;
 import java.nio.ByteOrder;
 import java.util.List;
 import java.util.Map;
-import java.util.function.BiConsumer;
 
 /**
  * @author BlackyPaw
  * @version 1.0
  */
 public abstract class Packet {
+
+    private static final float BYTE_ROTATION_DIVIDOR = 360f / 256f;
 
     /**
      * Internal MC:PE id of this packet
@@ -58,16 +63,18 @@ public abstract class Packet {
     /**
      * Serializes this packet into the given buffer.
      *
-     * @param buffer The buffer to serialize this packet into
+     * @param buffer     The buffer to serialize this packet into
+     * @param protocolID Protocol for which we request the serialization
      */
-    public abstract void serialize( PacketBuffer buffer );
+    public abstract void serialize( PacketBuffer buffer, int protocolID );
 
     /**
      * Deserializes this packet from the given buffer.
      *
-     * @param buffer The buffer to deserialize this packet from
+     * @param buffer     The buffer to deserialize this packet from
+     * @param protocolID Protocol for which we request deserialization
      */
-    public abstract void deserialize( PacketBuffer buffer );
+    public abstract void deserialize( PacketBuffer buffer, int protocolID );
 
     /**
      * Returns the ordering channel to send the packet on.
@@ -99,7 +106,9 @@ public abstract class Packet {
         if ( extraLen > 0 ) {
             ByteArrayInputStream bin = new ByteArrayInputStream( buffer.getBuffer(), buffer.getPosition(), extraLen );
             try {
-                nbt = NBTTagCompound.readFrom( bin, false, ByteOrder.LITTLE_ENDIAN );
+                NBTReader nbtReader = new NBTReader( bin, ByteOrder.LITTLE_ENDIAN );
+                // nbtReader.setUseVarint( true );
+                nbt = nbtReader.parse();
             } catch ( IOException e ) {
                 e.printStackTrace();
             }
@@ -118,7 +127,7 @@ public abstract class Packet {
             buffer.readString();    // TODO: Implement proper support once we know the string values
         }
 
-        return Items.create( id, data, amount, nbt );
+        return GoMint.instance() == null ? null : ( (GoMintServer) GoMint.instance() ).getItems().create( id, data, amount, nbt );
     }
 
     /**
@@ -146,7 +155,6 @@ public abstract class Packet {
                 buffer.writeLShort( (short) byteArrayOutputStream.size() );
                 buffer.writeBytes( byteArrayOutputStream.toByteArray() );
             } catch ( IOException e ) {
-                e.printStackTrace();
                 buffer.writeLShort( (short) 0 );
             }
         }
@@ -218,21 +226,18 @@ public abstract class Packet {
         }
 
         buffer.writeUnsignedVarInt( gamerules.size() );
-        gamerules.forEach( new BiConsumer<Gamerule, Object>() {
-            @Override
-            public void accept( Gamerule gamerule, Object value ) {
-                buffer.writeString( gamerule.getNbtName().toLowerCase() );
+        gamerules.forEach( ( gamerule, value ) -> {
+            buffer.writeString( gamerule.getNbtName().toLowerCase() );
 
-                if ( gamerule.getValueType() == Boolean.class ) {
-                    buffer.writeByte( (byte) 1 );
-                    buffer.writeBoolean( (Boolean) value );
-                } else if ( gamerule.getValueType() == Integer.class ) {
-                    buffer.writeByte( (byte) 2 );
-                    buffer.writeUnsignedVarInt( (Integer) value );
-                } else if ( gamerule.getValueType() == Float.class ) {
-                    buffer.writeByte( (byte) 3 );
-                    buffer.writeLFloat( (Float) value );
-                }
+            if ( gamerule.getValueType() == Boolean.class ) {
+                buffer.writeByte( (byte) 1 );
+                buffer.writeBoolean( (Boolean) value );
+            } else if ( gamerule.getValueType() == Integer.class ) {
+                buffer.writeByte( (byte) 2 );
+                buffer.writeUnsignedVarInt( (Integer) value );
+            } else if ( gamerule.getValueType() == Float.class ) {
+                buffer.writeByte( (byte) 3 );
+                buffer.writeLFloat( (Float) value );
             }
         } );
     }
@@ -272,15 +277,28 @@ public abstract class Packet {
     }
 
     CommandOrigin readCommandOrigin( PacketBuffer buffer ) {
-        // I currently don't know what the data looks like
-        // All stuff i have seen is 3 0 bytes and 0x0 0x0 0x03 when the server responds
-        return new CommandOrigin( buffer.readByte(), buffer.readByte(), buffer.readByte() );
+        // Seems to be 0, request uuid, 0, type (0 for player, 3 for server)
+        return new CommandOrigin( buffer.readByte(), buffer.readUUID(), buffer.readByte(), buffer.readByte() );
     }
 
     void writeCommandOrigin( CommandOrigin commandOrigin, PacketBuffer buffer ) {
         buffer.writeByte( commandOrigin.getUnknown1() );
+        buffer.writeUUID( commandOrigin.getUuid() );
         buffer.writeByte( commandOrigin.getUnknown2() );
         buffer.writeByte( commandOrigin.getType() );
+    }
+
+    BlockFace readBlockFace( PacketBuffer buffer ) {
+        int value = buffer.readSignedVarInt();
+        return Things.convertFromDataToBlockFace( (byte) value );
+    }
+
+    void writeByteRotation( float rotation, PacketBuffer buffer ) {
+        buffer.writeByte( (byte) ( rotation / BYTE_ROTATION_DIVIDOR ) );
+    }
+
+    float readByteRotation( PacketBuffer buffer ) {
+        return buffer.readByte() * BYTE_ROTATION_DIVIDOR;
     }
 
 }

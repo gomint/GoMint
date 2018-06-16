@@ -29,14 +29,14 @@ public class PacketSetCompassTarget extends Packet {
     }
 
     @Override
-    public void serialize( PacketBuffer buffer ) {
+    public void serialize( PacketBuffer buffer, int protocolID ) {
         buffer.writeInt( this.x );
         buffer.writeInt( this.y );
         buffer.writeInt( this.z );
     }
 
     @Override
-    public void deserialize( PacketBuffer buffer ) {
+    public void deserialize( PacketBuffer buffer, int protocolID ) {
         this.x = buffer.readInt();
         this.y = buffer.readInt();
         this.z = buffer.readInt();

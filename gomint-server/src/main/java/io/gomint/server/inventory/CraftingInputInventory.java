@@ -1,5 +1,6 @@
 package io.gomint.server.inventory;
 
+import io.gomint.inventory.InventoryType;
 import io.gomint.server.network.PlayerConnection;
 
 /**
@@ -20,6 +21,11 @@ public class CraftingInputInventory extends Inventory {
     @Override
     public void sendContents( int slot, PlayerConnection playerConnection ) {
 
+    }
+
+    @Override
+    public InventoryType getInventoryType() {
+        return InventoryType.CRAFTING;
     }
 
 }

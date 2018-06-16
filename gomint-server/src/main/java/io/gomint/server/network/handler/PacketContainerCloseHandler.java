@@ -1,6 +1,6 @@
 package io.gomint.server.network.handler;
 
-import io.gomint.server.entity.EntityPlayer;
+import io.gomint.event.inventory.InventoryCloseEvent;
 import io.gomint.server.network.PlayerConnection;
 import io.gomint.server.network.packet.PacketContainerClose;
 
@@ -13,6 +13,9 @@ public class PacketContainerCloseHandler implements PacketHandler<PacketContaine
     @Override
     public void handle( PacketContainerClose packet, long currentTimeMillis, PlayerConnection connection ) {
         if ( packet.getWindowId() == -1 ) {
+            InventoryCloseEvent inventoryCloseEvent = new InventoryCloseEvent( connection.getEntity(), connection.getEntity().getInventory() );
+            connection.getServer().getPluginManager().callEvent( inventoryCloseEvent );
+
             // Client closed its crafting view
             connection.getEntity().getCraftingInventory().resizeAndClear( 4 );
             connection.getEntity().getCraftingResultInventory().resizeAndClear( 4 );

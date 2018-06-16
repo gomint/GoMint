@@ -5,22 +5,29 @@ import io.gomint.jraknet.PacketBuffer;
 import io.gomint.server.entity.EntityLink;
 import io.gomint.server.entity.metadata.MetadataContainer;
 import io.gomint.server.network.Protocol;
+import io.gomint.server.util.DumpUtil;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.util.List;
 import java.util.UUID;
 
 /**
  * @author geNAZt
- * @version 1.0
+ * @version 1.1
  */
+@EqualsAndHashCode( callSuper = false )
 @Data
 public class PacketSpawnPlayer extends Packet {
 
     private UUID uuid;
     private String name;
+    private String thirdPartyName = "";  // TODO: Find out if this is some sort of nickname function
+    private int platformID;         // TODO: The heck is this? (I guess the servers platform?)
     private long entityId;
     private long runtimeEntityId;
+
+    private String unknown = "";    // TODO: What is this?
 
     private float x;
     private float y;
@@ -46,16 +53,25 @@ public class PacketSpawnPlayer extends Packet {
 
     private List<EntityLink> links;
 
+    /**
+     * Create a new spawn player packet
+     */
     public PacketSpawnPlayer() {
         super( Protocol.PACKET_SPAWN_PLAYER );
     }
 
     @Override
-    public void serialize( PacketBuffer buffer ) {
+    public void serialize( PacketBuffer buffer, int protocolID ) {
         buffer.writeUUID( this.uuid );
         buffer.writeString( this.name );
+
+        buffer.writeString( this.thirdPartyName );
+        buffer.writeSignedVarInt( this.platformID );
+
         buffer.writeSignedVarLong( this.entityId );
         buffer.writeUnsignedVarLong( this.runtimeEntityId );
+
+        buffer.writeString( this.uuid.toString() );
 
         buffer.writeLFloat( this.x );
         buffer.writeLFloat( this.y );
@@ -84,8 +100,9 @@ public class PacketSpawnPlayer extends Packet {
     }
 
     @Override
-    public void deserialize( PacketBuffer buffer ) {
-
+    public void deserialize( PacketBuffer buffer, int protocolID ) {
+        System.out.println( buffer.readUnsignedVarLong() );
+        System.out.println( buffer.readUnsignedVarLong() );
     }
 
 }

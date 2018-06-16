@@ -9,13 +9,14 @@ package io.gomint.server.network.packet;
 
 import io.gomint.jraknet.PacketBuffer;
 import io.gomint.server.network.Protocol;
+import lombok.Data;
 import lombok.Getter;
 
 /**
  * @author geNAZt
  * @version 1.0
  */
-@Getter
+@Data
 public class PacketLogin extends Packet {
 
     private int protocol;
@@ -29,15 +30,15 @@ public class PacketLogin extends Packet {
     }
 
     @Override
-    public void serialize( PacketBuffer buffer ) {
-
+    public void serialize( PacketBuffer buffer, int protocolID ) {
+        buffer.writeInt( this.protocol );
+        buffer.writeUnsignedVarInt( this.payload.length );
+        buffer.writeBytes( this.payload );
     }
 
     @Override
-    public void deserialize( PacketBuffer buffer ) {
+    public void deserialize( PacketBuffer buffer, int protocolID ) {
         this.protocol = buffer.readInt();
-
-        // Decompress inner data (i don't know why you compress inside of a Batched Packet but hey)
         this.payload = new byte[buffer.readUnsignedVarInt()];
         buffer.readBytes( this.payload );
     }

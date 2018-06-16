@@ -54,7 +54,7 @@
         <!-- Checks the number of parameters of a method or constructor. !-->
         <!-- See http://checkstyle.sf.net/config_sizes.html !-->
         <module name="ParameterNumber">
-            <property name="max" value="7"/>
+            <property name="max" value="10"/>
             <property name="tokens" value="METHOD_DEF, CTOR_DEF"/>
         </module>
 

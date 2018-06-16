@@ -1,9 +1,7 @@
 package io.gomint.server.entity;
 
-import io.gomint.command.CommandPermission;
-import io.gomint.player.PlayerPermission;
 import io.gomint.server.network.packet.PacketAdventureSettings;
-import io.gomint.server.util.EnumConnectors;
+import io.gomint.server.player.PlayerPermission;
 import lombok.Data;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -72,6 +70,12 @@ public class AdventureSettings {
         this.player = entityPlayer;
     }
 
+    /**
+     * Adventure setting build up from a Packet
+     *
+     * @param flags  from the packet
+     * @param flags2 from the packet
+     */
     public AdventureSettings( int flags, int flags2 ) {
         // Flag 1
         this.worldImmutable = ( flags & WORLD_IMMUTABLE ) != 0;
@@ -121,7 +125,7 @@ public class AdventureSettings {
             flags |= NO_CLIP;              // No clip
         }
 
-        if ( this.worldBuilder ) {      // TODO: Find out what world builder is
+        if ( this.worldBuilder ) {          // TODO: Find out what world builder is
             flags |= WORLD_BUILDER;
         }
 
@@ -163,14 +167,12 @@ public class AdventureSettings {
             flags2 |= TELEPORT;
         }
 
-        LOGGER.debug( "Adventure settings flags: " + flags + " | " + flags2 );
-
         adventureSettingsPacket.setFlags( flags );
         adventureSettingsPacket.setFlags2( flags2 );
-        adventureSettingsPacket.setCommandPermission( EnumConnectors.COMMANDPERMISSION_CONNECTOR.convert( this.commandPermission ).getId() );
-        adventureSettingsPacket.setPlayerPermission( EnumConnectors.PLAYERPERMISSION_CONNECTOR.convert( this.playerPermission ).getId() );
+        adventureSettingsPacket.setCommandPermission( this.commandPermission.getId() );
+        adventureSettingsPacket.setPlayerPermission( this.playerPermission.getId() );
         adventureSettingsPacket.setEntityId( this.player.getEntityId() );
-        this.player.getConnection().send( adventureSettingsPacket );
+        this.player.getConnection().addToSendQueue( adventureSettingsPacket );
     }
 
 }

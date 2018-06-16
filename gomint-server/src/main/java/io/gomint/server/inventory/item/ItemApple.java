@@ -1,5 +1,7 @@
 package io.gomint.server.inventory.item;
 
+import io.gomint.inventory.item.ItemType;
+
 import io.gomint.server.registry.RegisterInfo;
 import io.gomint.taglib.NBTTagCompound;
 
@@ -8,7 +10,7 @@ import io.gomint.taglib.NBTTagCompound;
  * @version 1.0
  */
 @RegisterInfo( id = 260 )
- public class ItemApple extends ItemStack implements io.gomint.inventory.item.ItemApple {
+public class ItemApple extends ItemFood implements io.gomint.inventory.item.ItemApple {
 
     // CHECKSTYLE:OFF
     public ItemApple( short data, int amount ) {
@@ -19,5 +21,20 @@ import io.gomint.taglib.NBTTagCompound;
         super( 260, data, amount, nbt );
     }
     // CHECKSTYLE:ON
+
+    @Override
+    public float getSaturation() {
+        return 0.3f;
+    }
+
+    @Override
+    public float getHunger() {
+        return 4;
+    }
+
+    @Override
+    public ItemType getType() {
+        return ItemType.APPLE;
+    }
 
 }

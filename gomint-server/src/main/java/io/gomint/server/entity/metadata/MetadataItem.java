@@ -1,8 +1,9 @@
 package io.gomint.server.entity.metadata;
 
+import io.gomint.GoMint;
 import io.gomint.jraknet.PacketBuffer;
+import io.gomint.server.GoMintServer;
 import io.gomint.server.inventory.item.ItemStack;
-import io.gomint.server.inventory.item.Items;
 import io.gomint.server.network.packet.Packet;
 
 /**
@@ -59,7 +60,7 @@ public class MetadataItem extends MetadataValue {
         byte amount = buffer.readByte();
         short data = buffer.readLShort();
 
-        this.value = Items.create( id, data, amount, null );
+        this.value = ( (GoMintServer) GoMint.instance() ).getItems().create( id, data, amount, null );
     }
 
     @Override

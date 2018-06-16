@@ -2,6 +2,8 @@ package io.gomint.math;
 
 import lombok.Getter;
 import lombok.ToString;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author geNAZt
@@ -10,6 +12,8 @@ import lombok.ToString;
 @Getter
 @ToString
 public class AxisAlignedBB implements Cloneable {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger( AxisAlignedBB.class );
 
     private float minX;
     private float minY;
@@ -328,9 +332,11 @@ public class AxisAlignedBB implements Cloneable {
      * @return true when the given Bounding Box intersects with this one, false when not
      */
     public boolean intersectsWith( AxisAlignedBB bb ) {
-        if ( bb.maxX > this.minX && bb.minX < this.maxX ) {
-            if ( bb.maxY > this.minY && bb.minY < this.maxY ) {
-                return bb.maxZ > this.minZ && bb.minZ < this.maxZ;
+        if ( bb.maxX - this.minX > MathUtils.EPSILON && this.maxX - bb.minX > MathUtils.EPSILON ) {
+            if ( bb.maxY - this.minY > MathUtils.EPSILON && this.maxY - bb.minY > MathUtils.EPSILON ) {
+                if ( bb.maxZ - this.minZ > MathUtils.EPSILON && this.maxZ - bb.minZ > MathUtils.EPSILON ) {
+                    return true;
+                }
             }
         }
 
@@ -345,8 +351,8 @@ public class AxisAlignedBB implements Cloneable {
      */
     public boolean isVectorInside( Vector vector ) {
         return !( vector.x <= this.minX || vector.x >= this.maxX ) &&
-                !( vector.y <= this.minY || vector.y >= this.maxY ) &&
-                ( vector.z > this.minZ || vector.z < this.maxZ );
+            !( vector.y <= this.minY || vector.y >= this.maxY ) &&
+            ( vector.z > this.minZ || vector.z < this.maxZ );
     }
 
     /**
@@ -356,6 +362,69 @@ public class AxisAlignedBB implements Cloneable {
      */
     public float getAverageEdgeLength() {
         return ( this.maxX - this.minX + this.maxY - this.minY + this.maxZ - this.minZ ) / 3;
+    }
+
+    public boolean isVectorInYZ( Vector vector ) {
+        return vector.y >= this.minY && vector.y <= this.maxY && vector.z >= this.minZ && vector.z <= this.maxZ;
+    }
+
+    public boolean isVectorInXZ( Vector vector ) {
+        return vector.x >= this.minX && vector.x <= this.maxX && vector.z >= this.minZ && vector.z <= this.maxZ;
+    }
+
+    public boolean isVectorInXY( Vector vector ) {
+        return vector.x >= this.minX && vector.x <= this.maxX && vector.y >= this.minY && vector.y <= this.maxY;
+    }
+
+    /**
+     * Calculate the vector which is in line with this bounding box.
+     * <p>
+     * |---------x----------|
+     * pos1    this bb     pos2
+     *
+     * @param pos1 from the start
+     * @param pos2 from the end
+     * @return null when not on line or vector we found
+     */
+    public Vector calculateIntercept( Vector pos1, Vector pos2 ) {
+        Vector v1 = pos1.getVectorWhenXIsOnLine( pos2, this.minX );
+        Vector v2 = pos1.getVectorWhenXIsOnLine( pos2, this.maxX );
+        Vector v3 = pos1.getVectorWhenYIsOnLine( pos2, this.minY );
+        Vector v4 = pos1.getVectorWhenYIsOnLine( pos2, this.maxY );
+        Vector v5 = pos1.getVectorWhenZIsOnLine( pos2, this.minZ );
+        Vector v6 = pos1.getVectorWhenZIsOnLine( pos2, this.maxZ );
+
+        Vector resultVector = null;
+        if ( v1 != null && this.isVectorInYZ( v1 ) ) {
+            resultVector = v1;
+        }
+
+        if ( v2 != null && this.isVectorInYZ( v2 ) &&
+            ( resultVector == null || pos1.distanceSquared( v2 ) < pos1.distanceSquared( resultVector ) ) ) {
+            resultVector = v2;
+        }
+
+        if ( v3 != null && this.isVectorInXZ( v3 ) &&
+            ( resultVector == null || pos1.distanceSquared( v3 ) < pos1.distanceSquared( resultVector ) ) ) {
+            resultVector = v3;
+        }
+
+        if ( v4 != null && this.isVectorInXZ( v4 ) &&
+            ( resultVector == null || pos1.distanceSquared( v4 ) < pos1.distanceSquared( resultVector ) ) ) {
+            resultVector = v4;
+        }
+
+        if ( v5 != null && this.isVectorInXY( v5 ) &&
+            ( resultVector == null || pos1.distanceSquared( v5 ) < pos1.distanceSquared( resultVector ) ) ) {
+            resultVector = v5;
+        }
+
+        if ( v6 != null && this.isVectorInXY( v6 ) &&
+            ( resultVector == null || pos1.distanceSquared( v6 ) < pos1.distanceSquared( resultVector ) ) ) {
+            resultVector = v6;
+        }
+
+        return resultVector;
     }
 
     @Override

@@ -1,0 +1,61 @@
+package io.gomint.permission;
+
+/**
+ * @author geNAZt
+ * @version 1.0
+ */
+public interface PermissionManager {
+
+    /**
+     * Check if this permission manager has the permission. Permissions are sorted this way:
+     * <p>
+     * - EntityPlayer permission
+     * - Group permission (reversed insert order)
+     * <p>
+     * For example you have a player with group A and group B, group A has set permission "testpermission" to true
+     * group B has set "testpermission" to false. You inserted it with {@link PermissionManager#addGroup(Group)}
+     * A first, second B you will get false as result.
+     * <p>
+     * When you insert A second you will get true as result, same when you use {@link PermissionManager#setPermission(String, boolean)}
+     * which adds a player based override.
+     * <p>
+     * This manager also supports basic usage of the astrix wildcard (*). In the case of wildcard checking, all full
+     * written permissions will be checked first when there is a result wildcards will be skipped. When colliding wildcard
+     * permissions has been found (like "test.*": true, "test.command.*": false, testing for "test.command.test") the
+     * wildcard with the greater length will be used.
+     *
+     * @param permission asked for
+     * @return true if this manager has the permission, false if not
+     */
+    boolean hasPermission( String permission );
+
+    /**
+     * Add a new permission group to this manager
+     *
+     * @param group which should be added
+     */
+    void addGroup( Group group );
+
+    /**
+     * Remove a group from the manager
+     *
+     * @param group which should be removed
+     */
+    void removeGroup( Group group );
+
+    /**
+     * Add a manager permission. This is the highest override level you can get
+     *
+     * @param permission which should be set
+     * @param value      for the permission, true for grant, false for revoke
+     */
+    void setPermission( String permission, boolean value );
+
+    /**
+     * Remove permission from this manager
+     *
+     * @param permission which should be removed
+     */
+    void removePermission( String permission );
+
+}

@@ -6,7 +6,7 @@ import io.gomint.GoMint;
  * @author geNAZt
  * @version 1.0
  */
-public interface ItemIronPickaxe extends ItemStack {
+public interface ItemIronPickaxe extends ItemReduceBreaktime {
 
     /**
      * Create a new item stack with given class and amount

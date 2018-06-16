@@ -1,6 +1,6 @@
 package io.gomint.event.player;
 
-import io.gomint.entity.Player;
+import io.gomint.entity.EntityPlayer;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
@@ -17,7 +17,7 @@ public class PlayerLoginEvent extends CancellablePlayerEvent {
 
     private String kickMessage;
 
-    public PlayerLoginEvent( Player player ) {
+    public PlayerLoginEvent( EntityPlayer player ) {
         super( player );
     }
 

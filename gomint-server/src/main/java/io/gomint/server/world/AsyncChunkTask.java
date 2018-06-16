@@ -49,7 +49,12 @@ public abstract class AsyncChunkTask {
          * This async chunk task is about packaging a chunk into a network ready
          * batch packet.
          */
-        PACKAGE;
+        PACKAGE,
+
+        /**
+         * Populate a chunk with additional objects
+         */
+        POPULATE
 
     }
 

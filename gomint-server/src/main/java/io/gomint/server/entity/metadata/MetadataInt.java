@@ -8,11 +8,13 @@
 package io.gomint.server.entity.metadata;
 
 import io.gomint.jraknet.PacketBuffer;
+import lombok.ToString;
 
 /**
  * @author BlackyPaw
  * @version 1.0
  */
+@ToString
 public class MetadataInt extends MetadataValue {
 
     private int value;

@@ -7,11 +7,23 @@
 
 package io.gomint;
 
-import io.gomint.entity.Player;
+import io.gomint.entity.Entity;
+import io.gomint.entity.EntityPlayer;
+import io.gomint.gui.ButtonList;
+import io.gomint.gui.CustomForm;
+import io.gomint.gui.Modal;
 import io.gomint.inventory.item.ItemStack;
+import io.gomint.permission.GroupManager;
+import io.gomint.player.PlayerSkin;
+import io.gomint.plugin.PluginManager;
 import io.gomint.world.World;
+import io.gomint.world.block.Block;
+import io.gomint.world.block.BlockBedrock;
+import io.gomint.world.generator.CreateOptions;
 
+import java.io.InputStream;
 import java.util.Collection;
+import java.util.UUID;
 
 /**
  * @author BlackyPaw
@@ -53,11 +65,27 @@ public interface GoMint {
     <T extends ItemStack> T createItemStack( Class<T> itemClass, int amount );
 
     /**
+     * Create a new entity
+     *
+     * @param entityClass which should be created
+     * @param <T> generic type of the entity
+     * @return fresh generated entity
+     */
+    <T extends Entity> T createEntity( Class<T> entityClass );
+
+    /**
      * Get a collection of all players on this server
      *
      * @return collection of online players
      */
-    Collection<Player> getPlayers();
+    Collection<EntityPlayer> getPlayers();
+
+    /**
+     * Get the manager which manages permission groups
+     *
+     * @return permission group manager
+     */
+    GroupManager getGroupManager();
 
     /**
      * Get the GoMint server instance currently running
@@ -68,5 +96,147 @@ public interface GoMint {
         return GoMintInstanceHolder.instance;
     }
 
+    /**
+     * Find a player by its name
+     *
+     * @param target which we want to search
+     * @return the player or null if not found
+     */
+    EntityPlayer findPlayerByName( String target );
+
+    /**
+     * Find a player by its uuid
+     *
+     * @param target which we want to search
+     * @return the player or null if not found
+     */
+    EntityPlayer findPlayerByUUID( UUID target );
+
+    /**
+     * Get the plugin manager
+     *
+     * @return the plugin manager
+     */
+    PluginManager getPluginManager();
+
+    /**
+     * Get the port this server has bound to
+     *
+     * @return port of this server
+     */
+    int getPort();
+
+    /**
+     * Get the amount of player which will fit on this server before it start declining logins
+     *
+     * @return amount of maximum players
+     */
+    int getMaxPlayers();
+
+    /**
+     * Get current tickrate
+     *
+     * @return tickrate of this server
+     */
+    double getTPS();
+
+    /**
+     * Shutdown this server
+     */
+    void shutdown();
+
+    /**
+     * Create new button list for form display
+     *
+     * @param title of the button list
+     * @return button list implementation
+     */
+    ButtonList createButtonList( String title );
+
+    /**
+     * Create a new modal for form display
+     *
+     * @param title of the modal
+     * @param question for the client
+     * @return modal implementation
+     */
+    Modal createModal( String title, String question );
+
+    /**
+     * Create new custom form for form display
+     *
+     * @param title of the custom form
+     * @return custom form implementation
+     */
+    CustomForm createCustomForm( String title );
+
+    /**
+     * Check if current thread is GoMints main thread
+     *
+     * @return true if main thread, false if not
+     */
+    boolean isMainThread();
+
+    /**
+     * Create a player skin from the given input stream
+     *
+     * @param inputStream which should be read
+     * @return skin or null on error
+     */
+    PlayerSkin createPlayerSkin( InputStream inputStream );
+
+    /**
+     * Get the empty player skin
+     *
+     * @return empty player skin
+     */
+    PlayerSkin getEmptyPlayerSkin();
+
+    /**
+     * Get the default world of this server
+     *
+     * @return default world
+     */
+    World getDefaultWorld();
+
+    /**
+     * Set a new default world for this server
+     *
+     * @param world which should be used as default one
+     */
+    void setDefaultWorld( World world );
+
+    /**
+     * Create a empty block to be placed into the world with {@link Block#copyFromBlock(Block)} or
+     * {@link io.gomint.world.Chunk#setBlock(int, int, int, Block)}
+     *
+     * @param blockClass class of the block we want to create
+     * @param <T> type of block which the target object should have
+     * @return empty, not configured block
+     */
+    <T extends Block> T createBlock( Class<T> blockClass );
+
+    /**
+     * Create a new world with the given options
+     *
+     * @param name of the new world
+     * @param options which should be used to generate the world
+     * @return new world
+     */
+    World createWorld( String name, CreateOptions options );
+
+    /**
+     * Get the internal version of this server. This contains a git hash so its different on each build
+     *
+     * @return version of this server
+     */
+    String getVersion();
+
+    /**
+     * Dispatch a command as console
+     *
+     * @param line which should be executed (without the /)
+     */
+    void dispatchCommand( String line );
 
 }

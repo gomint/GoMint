@@ -7,11 +7,15 @@
 
 package io.gomint.server.world;
 
-import io.gomint.server.util.LongList;
+import io.gomint.math.BlockPosition;
+import io.gomint.server.util.collection.LongList;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
-import java.util.concurrent.locks.ReentrantLock;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
 
 /**
  * @author geNAZt
@@ -27,10 +31,10 @@ public class TickList {
      * @param key     which should be used to sort the element
      * @param element which should be stored
      */
-    public synchronized void add( long key, long element ) {
+    public synchronized void add( long key, BlockPosition element ) {
         // Check if we have a head state
         if ( this.head == null ) {
-            this.head = new LongElement( key, null, new LongList() {{
+            this.head = new LongElement( key, null, new LinkedList<BlockPosition>() {{
                 add( element );
             }} );
         } else {
@@ -45,13 +49,13 @@ public class TickList {
 
             // We are at the end of the chain
             if ( longElement == null ) {
-                previousLongElement.setNext( new LongElement( key, null, new LongList() {{
+                previousLongElement.setNext( new LongElement( key, null, new LinkedList<BlockPosition>() {{
                     add( element );
                 }} ) );
             } else {
                 // Check if we need to insert a element
                 if ( longElement.getKey() != key ) {
-                    LongElement newLongElement = new LongElement( key, longElement, new LongList() {{
+                    LongElement newLongElement = new LongElement( key, longElement, new LinkedList<BlockPosition>() {{
                         add( element );
                     }} );
 
@@ -77,23 +81,13 @@ public class TickList {
     }
 
     /**
-     * Check if the current head key is the key we want to check against
-     *
-     * @param key to check against
-     * @return true when the next key is the key given, false when not
-     */
-    public synchronized boolean checkNextKey( long key ) {
-        return this.head != null && this.head.getKey() == key && this.head.getValues().size() > 0;
-    }
-
-    /**
      * Gets the next element in this List. The Element will be removed from the list
      *
      * @return next element out of this list or null when there is none
      */
-    public synchronized long getNextElement() {
+    public synchronized BlockPosition getNextElement() {
         // There is nothing we can reach
-        if ( this.head == null ) return Long.MIN_VALUE;
+        if ( this.head == null ) return null;
 
         // Check if we have a head node
         while ( this.head != null && this.head.getValues().size() == 0 ) {
@@ -102,10 +96,10 @@ public class TickList {
         }
 
         // This list has reached its end
-        if ( this.head == null ) return Long.MIN_VALUE;
+        if ( this.head == null ) return null;
 
         // Extract the element
-        long element = this.head.getValues().remove();
+        BlockPosition element = this.head.getValues().poll();
         while ( this.head.getValues().size() == 0 ) {
             this.head = this.head.getNext();
             if ( this.head == null ) break;
@@ -114,7 +108,7 @@ public class TickList {
         return element;
     }
 
-    public int size( long key ) {
+    public synchronized int size( long key ) {
         LongElement element = this.head;
         if ( element == null ) {
             return 0;
@@ -129,12 +123,27 @@ public class TickList {
         return 0;
     }
 
+    public synchronized boolean contains( BlockPosition hash ) {
+        LongElement element = this.head;
+        if ( element == null ) {
+            return false;
+        }
+
+        do {
+            if ( element.getValues().contains( hash ) ) {
+                return true;
+            }
+        } while ( ( element = element.getNext() ) != null );
+
+        return false;
+    }
+
     @AllArgsConstructor
     @Data
     private final class LongElement {
         private long key;
         private LongElement next;
-        private LongList values;
+        private Queue<BlockPosition> values;
     }
 
 }

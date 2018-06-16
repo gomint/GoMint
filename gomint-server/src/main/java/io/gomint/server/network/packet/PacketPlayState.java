@@ -27,12 +27,12 @@ public class PacketPlayState extends Packet {
     }
 
     @Override
-    public void serialize( PacketBuffer buffer ) {
+    public void serialize( PacketBuffer buffer, int protocolID ) {
         buffer.writeInt( this.state.getValue() );
     }
 
     @Override
-    public void deserialize( PacketBuffer buffer ) {
+    public void deserialize( PacketBuffer buffer, int protocolID ) {
         this.state = PlayState.fromValue( buffer.readInt() );
     }
 

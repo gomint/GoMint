@@ -10,6 +10,7 @@ import lombok.Data;
  */
 @Data
 public class PacketDisconnect extends Packet {
+
     private boolean hideDisconnectionScreen = false;
     private String message;
 
@@ -18,13 +19,14 @@ public class PacketDisconnect extends Packet {
     }
 
     @Override
-    public void serialize( PacketBuffer buffer ) {
+    public void serialize( PacketBuffer buffer, int protocolID ) {
         buffer.writeBoolean( this.hideDisconnectionScreen );
         buffer.writeString( this.message );
     }
 
     @Override
-    public void deserialize( PacketBuffer buffer ) {
+    public void deserialize( PacketBuffer buffer, int protocolID ) {
 
     }
+
 }

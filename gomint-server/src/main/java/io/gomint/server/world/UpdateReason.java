@@ -14,6 +14,21 @@ public enum UpdateReason {
     /**
      * This reason means that the block wanted to
      */
-    SCHEDULED;
+    SCHEDULED,
+
+    /**
+     * This reason mean that any of the surrounding blocks did update
+     */
+    NEIGHBOUR_UPDATE,
+
+    /**
+     * A neighbour block exploded
+     */
+    EXPLOSION,
+
+    /**
+     * A block has been placed
+     */
+    BLOCK_ADDED
 
 }

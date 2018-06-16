@@ -2,7 +2,6 @@ package io.gomint.server.network.packet;
 
 import io.gomint.jraknet.PacketBuffer;
 import io.gomint.math.BlockPosition;
-import io.gomint.math.Vector;
 import io.gomint.server.network.Protocol;
 import lombok.Data;
 
@@ -26,7 +25,7 @@ public class PacketContainerOpen extends Packet {
     }
 
     @Override
-    public void serialize( PacketBuffer buffer ) {
+    public void serialize( PacketBuffer buffer, int protocolID ) {
         buffer.writeByte( this.windowId );
         buffer.writeByte( this.type );
         writeBlockPosition( this.location, buffer );
@@ -34,7 +33,7 @@ public class PacketContainerOpen extends Packet {
     }
 
     @Override
-    public void deserialize( PacketBuffer buffer ) {
+    public void deserialize( PacketBuffer buffer, int protocolID ) {
         this.windowId = buffer.readByte();
         this.type = buffer.readByte();
         this.location = readBlockPosition( buffer );

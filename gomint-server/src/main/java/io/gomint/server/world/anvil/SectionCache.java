@@ -22,4 +22,14 @@ public class SectionCache {
     private NibbleArray add;
     private NibbleArray data;
 
+    public boolean isAllAir() {
+        for ( byte block : blocks ) {
+            if ( block != 0 ) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
 }

@@ -23,7 +23,7 @@ public class PacketUpdateAttributes extends Packet {
     }
 
     @Override
-    public void serialize( PacketBuffer buffer ) {
+    public void serialize( PacketBuffer buffer, int protocolID ) {
         buffer.writeUnsignedVarLong( this.entityId );
 
         if ( this.entries == null ) {
@@ -41,7 +41,7 @@ public class PacketUpdateAttributes extends Packet {
     }
 
     @Override
-    public void deserialize( PacketBuffer buffer ) {
+    public void deserialize( PacketBuffer buffer, int protocolID ) {
         this.entityId = buffer.readUnsignedVarLong();
         int amountOfAttributes = buffer.readUnsignedVarInt();
         for ( int i = 0; i < amountOfAttributes; i++ ) {

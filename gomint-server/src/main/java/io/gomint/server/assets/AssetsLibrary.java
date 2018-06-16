@@ -9,13 +9,15 @@ package io.gomint.server.assets;
 
 import io.gomint.inventory.item.ItemAir;
 import io.gomint.jraknet.PacketBuffer;
+import io.gomint.server.GoMintServer;
 import io.gomint.server.crafting.Recipe;
 import io.gomint.server.crafting.ShapedRecipe;
 import io.gomint.server.crafting.ShapelessRecipe;
 import io.gomint.server.crafting.SmeltingRecipe;
+import io.gomint.server.inventory.CreativeInventory;
 import io.gomint.server.inventory.item.ItemStack;
-import io.gomint.server.inventory.item.Items;
 import io.gomint.taglib.NBTTagCompound;
+import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,10 +25,10 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteOrder;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 /**
  * A wrapper class around any suitable file format (currently NBT) that allows
@@ -39,12 +41,25 @@ import java.util.Set;
 public class AssetsLibrary {
 
     private static final Logger LOGGER = LoggerFactory.getLogger( AssetsLibrary.class );
-    private Set<Recipe> recipes;
+
+    @Getter private CreativeInventory creativeInventory;
+    @Getter private Set<Recipe> recipes;
 
     // Statistics
     private int shapelessRecipes;
     private int shapedRecipes;
     private int smeltingRecipes;
+
+    private final GoMintServer server;
+
+    /**
+     * Create new asset library
+     *
+     * @param server which has been started
+     */
+    public AssetsLibrary( GoMintServer server ) {
+        this.server = server;
+    }
 
     /**
      * Loads the assets library from the given file.
@@ -56,15 +71,21 @@ public class AssetsLibrary {
     public void load( InputStream input ) throws IOException {
         NBTTagCompound root = NBTTagCompound.readFrom( input, false, ByteOrder.BIG_ENDIAN );
         this.loadRecipes( (List<NBTTagCompound>) ( (List) root.getList( "recipes", false ) ) );
+        this.loadCreativeInventory( (List<byte[]>) ( (List) root.getList( "creativeInventory", false ) ) );
     }
 
-    /**
-     * Gets the set of recipes stored inside the library.
-     *
-     * @return The set of recipes stored inside the library
-     */
-    public Collection<Recipe> getRecipes() {
-        return this.recipes;
+    private void loadCreativeInventory( List<byte[]> raw ) {
+        this.creativeInventory = new CreativeInventory( null, raw.size() );
+
+        for ( byte[] bytes : raw ) {
+            try {
+                this.creativeInventory.addItem( this.loadItemStack( new PacketBuffer( bytes, 0 ) ) );
+            } catch ( IOException e ) {
+                LOGGER.error( "Could not load creative item: ", e );
+            }
+        }
+
+        LOGGER.info( "Loaded {} items into creative inventory", raw.size() );
     }
 
     private void loadRecipes( List<NBTTagCompound> raw ) throws IOException {
@@ -101,28 +122,20 @@ public class AssetsLibrary {
             this.recipes.add( recipe );
         }
 
-        LOGGER.info( String.format( "Loaded %d shapeless, %d shaped and %d smelting recipes", this.shapelessRecipes, this.shapedRecipes, this.smeltingRecipes ) );
+        LOGGER.info( "Loaded {} shapeless, {} shaped and {} smelting recipes", this.shapelessRecipes, this.shapedRecipes, this.smeltingRecipes );
     }
 
     private ShapelessRecipe loadShapelessRecipe( NBTTagCompound data ) throws IOException {
-        int count = data.getInteger( "c", 0 );
-
-        byte[] ingredientData = data.getByteArray( "i", new byte[0] );
-        PacketBuffer buffer = new PacketBuffer( ingredientData, 0 );
-
-        ItemStack[] ingredients = new ItemStack[count];
-        for ( int i = 0; i < count; ++i ) {
-            ingredients[i] = this.loadItemStack( buffer );
+        List<Object> inputItems = data.getList( "i", false );
+        ItemStack[] ingredients = new ItemStack[inputItems.size()];
+        for ( int i = 0; i < ingredients.length; ++i ) {
+            ingredients[i] = this.loadItemStack( new PacketBuffer( (byte[]) inputItems.get( i ), 0 ) );
         }
 
-        count = data.getInteger( "r", 0 );
-
-        byte[] outcomeData = data.getByteArray( "o", new byte[0] );
-        buffer = new PacketBuffer( outcomeData, 0 );
-
-        ItemStack[] outcome = new ItemStack[count];
-        for ( int i = 0; i < count; ++i ) {
-            outcome[i] = this.loadItemStack( buffer );
+        List<Object> outputItems = data.getList( "o", false );
+        ItemStack[] outcome = new ItemStack[outputItems.size()];
+        for ( int i = 0; i < outcome.length; ++i ) {
+            outcome[i] = this.loadItemStack( new PacketBuffer( (byte[]) outputItems.get( i ), 0 ) );
         }
 
         this.shapelessRecipes++;
@@ -133,39 +146,37 @@ public class AssetsLibrary {
         int width = data.getInteger( "w", 0 );
         int height = data.getInteger( "h", 0 );
 
-        byte[] arrangementData = data.getByteArray( "a", new byte[0] );
-        PacketBuffer buffer = new PacketBuffer( arrangementData, 0 );
+        List<Object> inputItems = data.getList( "i", false );
 
         ItemStack[] arrangement = new ItemStack[width * height];
         for ( int j = 0; j < height; ++j ) {
             for ( int i = 0; i < width; ++i ) {
-                arrangement[j * width + i] = this.loadItemStack( buffer );
+                arrangement[j * width + i] = this.loadItemStack( new PacketBuffer( (byte[]) inputItems.get( j * width + i ), 0 ) );
             }
         }
 
-        int count = data.getInteger( "r", 0 );
+        List<Object> outputItems = data.getList( "o", false );
 
-        byte[] outcomeData = data.getByteArray( "o", new byte[0] );
-        buffer = new PacketBuffer( outcomeData, 0 );
-
-        ItemStack[] outcome = new ItemStack[count];
-        for ( int i = 0; i < count; ++i ) {
-            outcome[i] = this.loadItemStack( buffer );
+        ItemStack[] outcome = new ItemStack[outputItems.size()];
+        for ( int i = 0; i < outcome.length; ++i ) {
+            outcome[i] = this.loadItemStack( new PacketBuffer( (byte[]) outputItems.get( i ), 0 ) );
         }
 
         this.shapedRecipes++;
-        return new ShapedRecipe( width, height, arrangement, outcome, null );
+        return new ShapedRecipe( width, height, arrangement, outcome, UUID.fromString( data.getString( "u", UUID.randomUUID().toString() ) ) );
     }
 
     private SmeltingRecipe loadSmeltingRecipe( NBTTagCompound data ) throws IOException {
-        byte[] inputData = data.getByteArray( "i", new byte[0] );
+        List<Object> inputList = data.getList( "i", false );
+        byte[] inputData = (byte[]) inputList.get( 0 );
         ItemStack input = this.loadItemStack( new PacketBuffer( inputData, 0 ) );
 
-        byte[] outcomeData = data.getByteArray( "o", new byte[0] );
+        List<Object> outputList = data.getList( "o", false );
+        byte[] outcomeData = (byte[]) outputList.get( 0 );
         ItemStack outcome = this.loadItemStack( new PacketBuffer( outcomeData, 0 ) );
 
         this.smeltingRecipes++;
-        return new SmeltingRecipe( input, outcome, null );
+        return new SmeltingRecipe( input, outcome, UUID.fromString( data.getString( "u", UUID.randomUUID().toString() ) ) );
     }
 
     private ItemStack loadItemStack( PacketBuffer buffer ) throws IOException {
@@ -185,7 +196,7 @@ public class AssetsLibrary {
             bin.close();
         }
 
-        return Items.create( id, data, amount, compound );
+        return this.server.getItems().create( id, data, amount, compound );
     }
 
 }

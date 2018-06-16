@@ -1,5 +1,6 @@
 package io.gomint.server.network.handler;
 
+import io.gomint.event.player.PlayerPreJoinEvent;
 import io.gomint.server.network.PlayerConnection;
 import io.gomint.server.network.PlayerConnectionState;
 import io.gomint.server.network.packet.PacketResourcePackResponse;
@@ -20,22 +21,34 @@ public class PacketResourcePackResponseHandler implements PacketHandler<PacketRe
         // TODO: Implement resource pack sending
         switch ( packet.getStatus() ) {
             case HAVE_ALL_PACKS:
+                LOGGER.debug( "Login state: HAVE_ALL_PACKS reached" );
+
                 PacketResourcePackStack packetResourcePackStack = new PacketResourcePackStack();
                 connection.send( packetResourcePackStack );
                 break;
 
             case COMPLETED:
-                // Proceed with login
-                connection.setState( PlayerConnectionState.LOGIN );
-                LOGGER.info( "Logging in as " + connection.getEntity().getName() );
+                LOGGER.debug( "Login state: COMPLETED reached" );
 
-                connection.sendWorldInitialization();
-                connection.sendWorldTime( 0 );
-                connection.getEntity().updateAttributes();
-                connection.sendCommandsEnabled();
+                // Proceed with login
+                this.switchToLogin( connection, currentTimeMillis );
 
                 break;
         }
     }
-    
+
+    private void switchToLogin( PlayerConnection connection, long currentTimeMillis ) {
+        // Proceed with login
+        connection.setState( PlayerConnectionState.LOGIN );
+        LOGGER.info( "Logging in as " + connection.getEntity().getName() + " with id " + connection.getEntity().getEntityId() );
+
+        connection.getEntity().getLoginPerformance().setResourceEnd( currentTimeMillis );
+
+        PlayerPreJoinEvent playerPreJoinEvent = new PlayerPreJoinEvent( connection.getEntity() );
+        connection.getServer().getPluginManager().callEvent( playerPreJoinEvent );
+        if ( !playerPreJoinEvent.isCancelled() ) {
+            connection.getEntity().prepareEntity();
+        }
+    }
+
 }

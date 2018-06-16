@@ -7,6 +7,8 @@ import io.gomint.math.Vector;
  *
  * @author BlackyPaw
  * @version 1.0
+ *
+ * @deprecated Use {@link io.gomint.math.BlockPosition} instead
  */
 public class IntTriple implements Cloneable {
 

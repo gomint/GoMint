@@ -1,147 +1,291 @@
 package io.gomint.server.world;
 
-import com.koloboke.collect.map.ShortObjMap;
-import com.koloboke.collect.map.hash.HashShortObjMaps;
+import io.gomint.jraknet.PacketBuffer;
 import io.gomint.math.Location;
+import io.gomint.math.MathUtils;
 import io.gomint.server.entity.tileentity.TileEntity;
-import io.gomint.server.world.block.Blocks;
+import io.gomint.server.util.Palette;
 import io.gomint.server.world.storage.TemporaryStorage;
+import io.gomint.world.block.Block;
+import it.unimi.dsi.fastutil.longs.Long2IntArrayMap;
+import it.unimi.dsi.fastutil.longs.Long2IntMap;
+import it.unimi.dsi.fastutil.objects.ObjectIterator;
+import it.unimi.dsi.fastutil.shorts.Short2ObjectOpenHashMap;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 
-import java.io.ByteArrayOutputStream;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
-import java.util.function.Consumer;
 
 /**
  * @author geNAZt
  * @version 1.0
  */
-@RequiredArgsConstructor
-class ChunkSlice {
+public class ChunkSlice {
 
-    @Getter private final ChunkAdapter chunk;
-    @Getter private final int sectionY;
+    @Getter
+    private final ChunkAdapter chunk;
+    @Getter
+    private final int sectionY;
 
-    private boolean isAllAir = true;
+    // Cache
+    private int shiftedMinX;
+    private int shiftedMinY;
+    private int shiftedMinZ;
 
-    private byte[] blocks = null;
-    private NibbleArray data = null;
-    private NibbleArray blockLight = new NibbleArray( 4096 );
-    private NibbleArray skyLight = new NibbleArray( 4096 );
+    protected boolean isAllAir = true;
 
-    private ShortObjMap<TileEntity> tileEntities = HashShortObjMaps.newMutableMap();
-    private ShortObjMap<TemporaryStorage> temporaryStorages = HashShortObjMaps.newMutableMap();
+    private short[][] blocks = new short[2][]; // MC currently supports two layers, we init them as we need
+    private NibbleArray[] data = new NibbleArray[2]; // MC currently supports two layers, we init them as we need
 
-    private int getIndex( int x, int y, int z ) {
-        return ( x << 8 ) + ( z << 4 ) + y;
+    private NibbleArray blockLight = new NibbleArray( (short) 4096 );
+    private NibbleArray skyLight = new NibbleArray( (short) 4096 );
+
+    private Short2ObjectOpenHashMap<TileEntity> tileEntities = new Short2ObjectOpenHashMap<>();
+    private Short2ObjectOpenHashMap[] temporaryStorages = new Short2ObjectOpenHashMap[2];   // MC currently supports two layers, we init them as we need
+
+    public ChunkSlice( ChunkAdapter chunkAdapter, int sectionY ) {
+        this.chunk = chunkAdapter;
+        this.sectionY = sectionY;
+
+        // Calc shifted values for inline getter
+        this.shiftedMinX = this.chunk.x << 4;
+        this.shiftedMinY = this.sectionY << 4;
+        this.shiftedMinZ = this.chunk.z << 4;
     }
 
-    byte getBlock( int x, int y, int z ) {
+    private short getIndex( int x, int y, int z ) {
+        return (short) ( ( x << 8 ) + ( z << 4 ) + y );
+    }
+
+    /**
+     * Get the ID of the specific block in question
+     *
+     * @param x     coordinate in this slice (capped to 16)
+     * @param y     coordinate in this slice (capped to 16)
+     * @param z     coordinate in this slice (capped to 16)
+     * @param layer on which the block is
+     * @return id of the block
+     */
+    int getBlock( int x, int y, int z, int layer ) {
+        return this.getBlockInternal( layer, getIndex( x, y, z ) );
+    }
+
+    /**
+     * Get a block by its index
+     *
+     * @param layer on which the block is
+     * @param index which should be looked up
+     * @return block id of the index
+     */
+    public int getBlockInternal( int layer, int index ) {
         if ( this.isAllAir ) {
             return 0;
         }
 
-        return this.blocks[getIndex( x, y, z )];
-    }
-
-    <T extends io.gomint.world.block.Block> T getBlockInstance( int x, int y, int z ) {
-        int index = getIndex( x, y, z );
-
-        int fullX = CoordinateUtils.getChunkMin( this.chunk.getX() ) + x;
-        int fullY = CoordinateUtils.getChunkMin( this.sectionY ) + y;
-        int fullZ = CoordinateUtils.getChunkMin( this.chunk.getZ() ) + z;
-
-        if ( isAllAir ) {
-            return (T) Blocks.get( 0, (byte) 0, this.skyLight.get( index ), this.blockLight.get( index ), null, new Location( this.chunk.world, fullX, fullY, fullZ ) );
-        }
-
-        return (T) Blocks.get( this.blocks[index] & 0xFF, this.data == null ? 0 : this.data.get( index ), this.skyLight.get( index ),
-                this.blockLight.get( index ), this.tileEntities.get( (short) index ), new Location( this.chunk.world, fullX, fullY, fullZ ) );
-    }
-
-    Collection<TileEntity> getTileEntities() {
-        List<TileEntity> tileEntities = new ArrayList<>();
-
-        this.tileEntities.values().cursor().forEachForward( new Consumer<TileEntity>() {
-            @Override
-            public void accept( TileEntity tileEntity ) {
-                tileEntities.add( tileEntity );
-            }
-        } );
-
-        return tileEntities;
-    }
-
-    void addTileEntity( int x, int y, int z, TileEntity tileEntity ) {
-        int index = getIndex( x, y, z );
-        this.tileEntities.put( (short) index, tileEntity );
-    }
-
-    void setBlock( int x, int y, int z, byte blockId ) {
-        int index = getIndex( x, y, z );
-
-        if ( blockId != 0 ) {
-            if ( this.blocks == null ) {
-                this.blocks = new byte[4096];
-                this.isAllAir = false;
-            }
-        }
-
-        if ( this.blocks != null ) {
-            this.blocks[index] = blockId;
-        }
-    }
-
-    void setData( int x, int y, int z, byte data ) {
-        int index = getIndex( x, y, z );
-
-        if ( !this.isAllAir ) {
-            if ( this.data == null ) {
-                this.data = new NibbleArray( 4096 );
-            }
-        }
-
-        this.data.set( index, data );
-    }
-
-    byte getData( int x, int y, int z ) {
-        if ( this.data == null ) {
+        short[] blockStorage = this.blocks[layer];
+        if ( blockStorage == null ) {
             return 0;
         }
 
-        return this.data.get( getIndex( x, y, z ) );
+        return blockStorage[index];
+    }
+
+    <T extends io.gomint.world.block.Block> T getBlockInstance( int x, int y, int z, int layer ) {
+        short index = getIndex( x, y, z );
+
+        Location blockLocation = this.getBlockLocation( x, y, z );
+        NibbleArray dataStorage = this.data[layer];
+
+        int blockId = this.getBlockInternal( layer, index );
+        if ( this.isAllAir || blockId == 0 ) {
+            return this.getAirBlockInstance( blockLocation );
+        }
+
+        return (T) this.chunk.getWorld().getServer().getBlocks().get( blockId, dataStorage == null ? 0 : dataStorage.get( index ), this.skyLight.get( index ),
+            this.blockLight.get( index ), this.tileEntities.get( index ), blockLocation, layer );
+    }
+
+    private <T extends Block> T getAirBlockInstance( Location location ) {
+        return (T) this.chunk.getWorld().getServer().getBlocks().get( 0, (byte) 0, (byte) 15, (byte) 15, null, location, 0 );
+    }
+
+    private Location getBlockLocation( int x, int y, int z ) {
+        return new Location( this.chunk.world, this.shiftedMinX + x, this.shiftedMinY + y, this.shiftedMinZ + z );
+    }
+
+    Collection<TileEntity> getTileEntities() {
+        return this.tileEntities.values();
+    }
+
+    void addTileEntity( int x, int y, int z, TileEntity tileEntity ) {
+        this.addTileEntityInternal( getIndex( x, y, z ), tileEntity );
+    }
+
+    public void addTileEntityInternal( short index, TileEntity tileEntity ) {
+        this.tileEntities.put( index, tileEntity );
+    }
+
+    void setBlock( int x, int y, int z, int layer, int blockId ) {
+        short index = getIndex( x, y, z );
+        this.setBlockInternal( index, layer, blockId );
+    }
+
+    public void setBlockInternal( short index, int layer, int blockId ) {
+        if ( blockId != 0 && this.blocks[layer] == null ) {
+            this.blocks[layer] = new short[4096];
+            this.isAllAir = false;
+        }
+
+        if ( this.blocks[layer] != null ) {
+            this.blocks[layer][index] = (short) blockId;
+        }
+    }
+
+    void setData( int x, int y, int z, int layer, byte data ) {
+        short index = getIndex( x, y, z );
+        this.setDataInternal( index, layer, data );
+    }
+
+    public void setDataInternal( short index, int layer, byte data ) {
+        // Check if we need to set new nibble array
+        if ( !this.isAllAir && this.data[layer] == null ) {
+            this.data[layer] = new NibbleArray( (short) 4096 );
+        }
+
+        // All air and we want to set block data? How about no!
+        if ( this.data[layer] == null ) {
+            return;
+        }
+
+        this.data[layer].set( index, data );
+    }
+
+    byte getData( int x, int y, int z, int layer ) {
+        return this.getDataInternal( layer, getIndex( x, y, z ) );
+    }
+
+    public byte getDataInternal( int layer, short index ) {
+        if ( this.data[layer] == null ) {
+            return 0;
+        }
+
+        return this.data[layer].get( index );
     }
 
     boolean isAllAir() {
         return this.isAllAir;
     }
 
-    byte[] getBytes() {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+    byte[] getBytes( int protocolID ) {
+        // Check how many layers we have
+        int amountOfLayers = this.getAmountOfLayers();
 
-        try {
-            baos.write( this.blocks == null ? new byte[4096] : this.blocks );
-            baos.write( this.data == null ? new byte[2048] : this.data.raw() );
-        } catch ( Exception ignored ) {
+        PacketBuffer buffer = new PacketBuffer( Short.MAX_VALUE );
+        buffer.writeByte( (byte) amountOfLayers );
 
+        for ( int i = 0; i < amountOfLayers; i++ ) {
+            // Count how many unique blocks we have in this chunk
+            int index = 0;
+            Long2IntMap ids = new Long2IntArrayMap();
+            Long2IntMap runtimeIndex = new Long2IntArrayMap();
+            ids.defaultReturnValue( -1 );
+            int[] indexIDs = new int[4096];
+
+            for ( int x = 0; x < 16; x++ ) {
+                for ( int z = 0; z < 16; z++ ) {
+                    for ( int y = 0; y < 16; y++ ) {
+                        short blockIndex = (short) ( ( x << 8 ) + ( z << 4 ) + y );
+                        int blockId = this.getBlockInternal( i, blockIndex );
+                        byte blockData = this.data[i] == null ? 0 : this.data[i].get( blockIndex );
+
+                        long hashId = ( (long) blockId ) << 32 | ( blockData & 0xffffffffL );
+                        int foundIndex = ids.get( hashId );
+                        if ( foundIndex == -1 ) {
+                            int runtimeId = BlockRuntimeIDs.fromLegacy( blockId, blockData, protocolID );
+                            runtimeIndex.put( index, runtimeId );
+                            ids.put( hashId, index );
+                            foundIndex = index;
+                            index++;
+                        }
+
+                        indexIDs[blockIndex] = foundIndex;
+                    }
+                }
+            }
+
+            // Get correct wordsize
+            int value = ids.size();
+            int numberOfBits = MathUtils.fastFloor( log2( value ) ) + 1;
+
+            // Prepare palette
+            int amountOfBlocks = MathUtils.fastFloor( 32f / (float) numberOfBits );
+
+            Palette palette = new Palette( buffer, amountOfBlocks, false );
+
+            byte paletteWord = (byte) ( (byte) ( palette.getPaletteVersion().getVersionId() << 1 ) | 1 );
+            buffer.writeByte( paletteWord );
+
+            for ( Integer id : indexIDs ) {
+                palette.addIndex( id );
+            }
+
+            palette.finish();
+
+            // Write runtimeIDs
+            buffer.writeSignedVarInt( ids.size() );
+
+            Long2IntMap.FastEntrySet entrySet = (Long2IntMap.FastEntrySet) runtimeIndex.long2IntEntrySet();
+            ObjectIterator<Long2IntMap.Entry> iterator = entrySet.fastIterator();
+            while ( iterator.hasNext() ) {
+                buffer.writeSignedVarInt( iterator.next().getIntValue() );
+            }
         }
 
-        return baos.toByteArray();
+        // Copy result
+        byte[] outputData = new byte[buffer.getPosition()];
+        System.arraycopy( buffer.getBuffer(), buffer.getBufferOffset(), outputData, 0, buffer.getPosition() );
+        return outputData;
     }
 
-    public TemporaryStorage getTemporaryStorage( int x, int y, int z ) {
-        int index = getIndex( x, y, z );
+    protected int getAmountOfLayers() {
+        return this.blocks[1] != null ? 2 : 1;
+    }
 
-        TemporaryStorage storage = this.temporaryStorages.get( (short) index );
+    private int log2( int n ) {
+        if ( n <= 0 ) throw new IllegalArgumentException();
+        return 31 - Integer.numberOfLeadingZeros( n );
+    }
+
+    public TemporaryStorage getTemporaryStorage( int x, int y, int z, int layer ) {
+        short index = getIndex( x, y, z );
+
+        // Select correct layer
+        Short2ObjectOpenHashMap<TemporaryStorage> storage = this.temporaryStorages[layer];
         if ( storage == null ) {
-            storage = new TemporaryStorage();
-            this.temporaryStorages.put( (short) index, storage );
+            storage = new Short2ObjectOpenHashMap<>();
+            this.temporaryStorages[layer] = storage;
         }
 
-        return storage;
+        TemporaryStorage blockStorage = storage.get( index );
+        if ( blockStorage == null ) {
+            blockStorage = new TemporaryStorage();
+            storage.put( index, blockStorage );
+        }
+
+        return blockStorage;
+    }
+
+    public void resetTemporaryStorage( int x, int y, int z, int layer ) {
+        Short2ObjectOpenHashMap<TemporaryStorage> storage = this.temporaryStorages[layer];
+        if ( storage == null ) {
+            return;
+        }
+
+        short index = getIndex( x, y, z );
+        storage.remove( index );
+    }
+
+    public TileEntity getTileInternal( short i ) {
+        return this.tileEntities.get( i );
     }
 
 }

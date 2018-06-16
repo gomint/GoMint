@@ -1,8 +1,8 @@
 package io.gomint.server.jwt;
 
+import io.gomint.server.util.StringUtil;
 import org.json.simple.JSONObject;
 
-import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.Base64;
 
@@ -35,13 +35,14 @@ public class EncryptionRequestForger {
 
         // Build it together
         StringBuilder builder = new StringBuilder();
-        builder.append( Base64.getUrlEncoder().encodeToString( header.toJSONString().getBytes( StandardCharsets.UTF_8 ) ) );
+        builder.append( Base64.getUrlEncoder().encodeToString( StringUtil.getUTF8Bytes( header.toJSONString() ) ) );
         builder.append( '.' );
-        builder.append( Base64.getUrlEncoder().encodeToString( claims.toJSONString().getBytes( StandardCharsets.UTF_8 ) ) );
+        builder.append( Base64.getUrlEncoder().encodeToString( StringUtil.getUTF8Bytes( claims.toJSONString() ) ) );
 
         // Sign the token:
-        byte[] signatureBytes = builder.toString().getBytes( StandardCharsets.US_ASCII );
+        byte[] signatureBytes = StringUtil.getUTF8Bytes( builder.toString() );
         byte[] signatureDigest;
+
         try {
             signatureDigest = algorithm.getSignature().sign( serverPrivate, signatureBytes );
         } catch ( JwtSignatureException e ) {

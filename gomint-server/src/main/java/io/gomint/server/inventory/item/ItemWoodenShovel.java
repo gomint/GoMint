@@ -1,5 +1,7 @@
 package io.gomint.server.inventory.item;
 
+import io.gomint.inventory.item.ItemType;
+
 import io.gomint.server.registry.RegisterInfo;
 import io.gomint.taglib.NBTTagCompound;
 
@@ -8,7 +10,7 @@ import io.gomint.taglib.NBTTagCompound;
  * @version 1.0
  */
 @RegisterInfo( id = 269 )
-public class ItemWoodenShovel extends ItemTool implements io.gomint.inventory.item.ItemWoodenShovel {
+public class ItemWoodenShovel extends ItemReduceTierWooden implements io.gomint.inventory.item.ItemWoodenShovel {
 
     // CHECKSTYLE:OFF
     public ItemWoodenShovel( short data, int amount ) {
@@ -19,5 +21,10 @@ public class ItemWoodenShovel extends ItemTool implements io.gomint.inventory.it
         super( 269, data, amount, nbt );
     }
     // CHECKSTYLE:ON
+
+    @Override
+    public ItemType getType() {
+        return ItemType.WOODEN_SHOVEL;
+    }
 
 }

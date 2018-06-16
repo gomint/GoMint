@@ -11,8 +11,10 @@ import io.gomint.entity.Entity;
 import io.gomint.inventory.item.ItemStack;
 import io.gomint.math.Location;
 import io.gomint.math.Vector;
+import io.gomint.server.inventory.MaterialMagicNumbers;
 import io.gomint.server.world.WorldAdapter;
 import io.gomint.taglib.NBTTagCompound;
+import io.gomint.world.block.BlockFace;
 import lombok.Getter;
 
 /**
@@ -24,7 +26,19 @@ public abstract class TileEntity {
     // CHECKSTYLE:OFF
     @Getter
     protected Location location;
+    private byte moveable;
+    protected boolean needsPersistance;
     // CHECKSTYLE:ON
+
+    /**
+     * Construct new tile entity from position and world data
+     *
+     * @param location where the new tile should be located
+     */
+    TileEntity( Location location ) {
+        this.location = location;
+        this.moveable = 1;
+    }
 
     /**
      * Construct new TileEntity from TagCompound
@@ -34,11 +48,48 @@ public abstract class TileEntity {
      */
     TileEntity( NBTTagCompound tagCompound, WorldAdapter world ) {
         this.location = new Location(
-                world,
-                tagCompound.getInteger( "x", 0 ),
-                tagCompound.getInteger( "y", -1 ),
-                tagCompound.getInteger( "z", 0 )
+            world,
+            tagCompound.getInteger( "x", 0 ),
+            tagCompound.getInteger( "y", -1 ),
+            tagCompound.getInteger( "z", 0 )
         );
+
+        this.moveable = tagCompound.getByte( "isMovable", (byte) 1 );
+    }
+
+    io.gomint.server.inventory.item.ItemStack getItemStack( NBTTagCompound compound ) {
+        // Check for correct ids
+        WorldAdapter worldAdapter = (WorldAdapter) this.location.getWorld();
+
+        // This is needed since minecraft changed from storing raw ids to string keys somewhere in 1.7 / 1.8
+        int material;
+        try {
+            material = compound.getShort( "id", (short) 0 );
+        } catch ( ClassCastException e ) {
+            material = MaterialMagicNumbers.valueOfWithId( compound.getString( "id", "minecraft:air" ) );
+        }
+
+        // Skip non existent items for PE
+        if ( material == 0 ) {
+            return worldAdapter.getServer().getItems().create( 0, (short) 0, (byte) 0, null );
+        }
+
+        short data = compound.getShort( "Damage", (short) 0 );
+        byte amount = compound.getByte( "Count", (byte) 1 );
+
+        return worldAdapter.getServer().getItems().create( material, data, amount, compound.getCompound( "tag", false ) );
+    }
+
+
+    void putItemStack( io.gomint.server.inventory.item.ItemStack itemStack, NBTTagCompound compound ) {
+        compound.addValue( "id", (short) itemStack.getMaterial() );
+        compound.addValue( "Damage", itemStack.getData() );
+        compound.addValue( "Count", itemStack.getAmount() );
+
+        if ( itemStack.getNbtData() != null ) {
+            NBTTagCompound itemTag = itemStack.getNbtData().deepClone( "tag" );
+            compound.addValue( "tag", itemTag );
+        }
     }
 
     /**
@@ -49,7 +100,7 @@ public abstract class TileEntity {
      */
     public abstract void update( long currentMillis, float dF );
 
-    public void interact( Entity entity, int face, Vector facePos, ItemStack item ) {
+    public void interact( Entity entity, BlockFace face, Vector facePos, ItemStack item ) {
 
     }
 
@@ -62,6 +113,13 @@ public abstract class TileEntity {
         compound.addValue( "x", (int) this.location.getX() );
         compound.addValue( "y", (int) this.location.getY() );
         compound.addValue( "z", (int) this.location.getZ() );
+        compound.addValue( "isMovable", this.moveable );
+    }
+
+    public boolean isNeedsPersistance() {
+        boolean ne = this.needsPersistance;
+        this.needsPersistance = false;
+        return ne;
     }
 
 }

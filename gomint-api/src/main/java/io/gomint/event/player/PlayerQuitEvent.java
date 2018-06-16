@@ -1,6 +1,6 @@
 package io.gomint.event.player;
 
-import io.gomint.entity.Player;
+import io.gomint.entity.EntityPlayer;
 
 /**
  * @author geNAZt
@@ -16,7 +16,7 @@ public class PlayerQuitEvent extends PlayerEvent {
      *
      * @param player The player which disconnected
      */
-    public PlayerQuitEvent( Player player ) {
+    public PlayerQuitEvent( EntityPlayer player ) {
         super( player );
     }
 

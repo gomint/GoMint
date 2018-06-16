@@ -7,11 +7,49 @@
 
 package io.gomint.player;
 
+import io.gomint.GoMint;
+
+import java.io.IOError;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
+
 /**
  * @author BlackyPaw
  * @version 1.0
  */
 public interface PlayerSkin {
+
+    /**
+     * Get the skin from an url
+     *
+     * @param url which we should fetch
+     * @return skin or null on error
+     */
+    static PlayerSkin fromURL( String url ) {
+        try {
+            URL urlObj = new URL( url );
+            URLConnection connection = urlObj.openConnection();
+            try ( InputStream inputStream = connection.getInputStream() ) {
+                return GoMint.instance().createPlayerSkin( inputStream );
+            }
+        } catch ( IOException e ) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    /**
+     * Create a empty skin
+     *
+     * @return
+     */
+    static PlayerSkin empty() {
+        return GoMint.instance().getEmptyPlayerSkin();
+    }
 
     /**
      * Gets the name of the player's skin.
@@ -46,6 +84,14 @@ public interface PlayerSkin {
      *
      * @return geometry data
      */
-    byte[] getGeometryData();
+    String getGeometryData();
+
+    /**
+     * Save the skin to a given file in PNG format
+     *
+     * @param out stream to which the image should be saved
+     * @throws IOException which can be thrown in case of errors while saving
+     */
+    void saveSkinTo( OutputStream out ) throws IOException;
 
 }

@@ -34,6 +34,7 @@ public class PacketSpawnEntity extends Packet {
     private float velocityY;
     private float velocityZ;
     private float pitch;
+    private float headYaw;
     private float yaw;
     private Collection<AttributeInstance> attributes;
     private MetadataContainer metadata;
@@ -43,7 +44,7 @@ public class PacketSpawnEntity extends Packet {
     }
 
     @Override
-    public void serialize( PacketBuffer buffer ) {
+    public void serialize( PacketBuffer buffer, int protocolID ) {
         buffer.writeSignedVarLong( this.entityId );
         buffer.writeUnsignedVarLong( this.entityId );
         buffer.writeUnsignedVarInt( this.entityType.getId() );
@@ -55,6 +56,11 @@ public class PacketSpawnEntity extends Packet {
         buffer.writeLFloat( this.velocityZ );
         buffer.writeLFloat( this.pitch );
         buffer.writeLFloat( this.yaw );
+
+        // TODO: PRTCL 274
+        if ( protocolID == Protocol.MINECRAFT_PE_BETA_PROTOCOL_VERSION ) {
+            buffer.writeLFloat( this.headYaw );
+        }
 
         if ( this.attributes == null ) {
             buffer.writeUnsignedVarInt( 0 );
@@ -73,7 +79,20 @@ public class PacketSpawnEntity extends Packet {
     }
 
     @Override
-    public void deserialize( PacketBuffer buffer ) {
+    public void deserialize( PacketBuffer buffer, int protocolID ) {
+        this.entityId = buffer.readSignedVarLong().longValue();
+        buffer.readUnsignedVarLong();
 
+        int typeId = buffer.readUnsignedVarInt();
+        System.out.println( typeId );
+        for ( EntityType type : EntityType.values() ) {
+            if ( typeId == type.getId() ) {
+                this.entityType = type;
+                break;
+            }
+        }
+
+        buffer.skip( buffer.getRemaining() );
     }
+
 }

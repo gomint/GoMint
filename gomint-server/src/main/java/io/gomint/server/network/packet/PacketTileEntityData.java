@@ -6,10 +6,13 @@ import io.gomint.math.Location;
 import io.gomint.math.Vector;
 import io.gomint.server.entity.tileentity.TileEntity;
 import io.gomint.server.network.Protocol;
+import io.gomint.server.util.DumpUtil;
+import io.gomint.taglib.NBTReaderNoBuffer;
 import io.gomint.taglib.NBTTagCompound;
 import io.gomint.taglib.NBTWriter;
 import lombok.Data;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.ByteOrder;
@@ -29,7 +32,7 @@ public class PacketTileEntityData extends Packet {
     }
 
     @Override
-    public void serialize( PacketBuffer buffer ) {
+    public void serialize( PacketBuffer buffer, int protocolID ) {
         // Block position
         writeBlockPosition( this.position, buffer );
 
@@ -50,8 +53,19 @@ public class PacketTileEntityData extends Packet {
     }
 
     @Override
-    public void deserialize( PacketBuffer buffer ) {
+    public void deserialize( PacketBuffer buffer, int protocolID ) {
+        this.position = readBlockPosition( buffer );
 
+        byte[] data = new byte[buffer.getRemaining()];
+        buffer.readBytes( data );
+
+        NBTReaderNoBuffer reader = new NBTReaderNoBuffer( new ByteArrayInputStream( data ), ByteOrder.LITTLE_ENDIAN );
+        reader.setUseVarint( true );
+        try {
+            DumpUtil.dumpNBTCompund( reader.parse() );
+        } catch ( IOException e ) {
+            e.printStackTrace();
+        }
     }
 
 }

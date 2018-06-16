@@ -7,10 +7,14 @@
 
 package io.gomint.server.config;
 
-import com.blackypaw.simpleconfig.SimpleConfig;
-import com.blackypaw.simpleconfig.annotation.Comment;
+import io.gomint.config.Comment;
+import io.gomint.config.YamlConfig;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Global configuration for the whole GoMint Server.
@@ -21,7 +25,8 @@ import lombok.NoArgsConstructor;
  */
 @NoArgsConstructor
 @Getter
-public class ServerConfig extends SimpleConfig {
+@ToString
+public class ServerConfig extends YamlConfig {
 
     // ------------------------ General
     @Comment( "The host and port to bind the server to" )
@@ -48,35 +53,31 @@ public class ServerConfig extends SimpleConfig {
 
     // ------------------------ World
     @Comment( "Name of the world to load on startup" )
-    private String world = "world";
+    private String defaultWorld = "world";
 
-    @Comment( "Amount of Chunks which will always be loaded and stay loaded around the spawn area.\n" +
-            "You can set this to 0 if you don't want to hold any Chunks in Memory but this also means\n" +
-            "that you have to load the Chunks from disk everytime someone joins and the Chunk GC has cleared\n" +
-            "the chunks. USE 0 WITH CAUTION!!!" )
-    private int amountOfChunksForSpawnArea = 16;
+    @Comment( "Load all worlds found at the start" )
+    private boolean loadAllWorldsAtStart = false;
 
-    @Comment( "View distance of a player. This defines the amount of chunks sent to a player when he moves or spawns.\n" +
-            "This is measured in Chunks." )
-    private int viewDistance = 6;
+    @Comment( "Configure each world like you need to" )
+    private List<WorldConfig> worlds = new ArrayList<WorldConfig>() {{
+        add( new WorldConfig() );
+    }};
 
-    @Comment( "After how many seconds should a chunk be marked to be gced after the last player left the chunk." )
-    private int secondsUntilGCAfterLastPlayerLeft = 10;
-
-    @Comment( "Amount of seconds to wait after the chunk has come into the cache before we can select it for gc." )
-    private int waitAfterLoadForGCSeconds = 30;
-
-    @Comment( "Whether or not the world should be saved automatically on a regular basis" )
-    private boolean autoSave = true;
-
-    @Comment( "The auto-save interval in which chunks should be saved automatically in milliseconds" )
-    private int autoSaveInterval = 300000;
+    // ------------------------ Vanilla stuff
+    @Comment( "Configure vanilla features. If you configure this to something else than default you are on your own. I will not support/solve issues when something has been changed here.")
+    private VanillaConfig vanilla = new VanillaConfig();
 
     // ------------------------ Advanced Performance Settings
     @Comment( "Amount of Ticks per second which should be used to drive this server. 20 TPS is recommended for normal Servers. If you want PvP or Minigames you can set it higher but be sure to disable entities to have a stable TPS." )
     private int targetTPS = 20;
 
+    @Comment( "Gomint has a automatic report system for bugs. This system collects data like player names and world names, cpu information and memory usage. You can disable collecting this data with this config")
+    private boolean disableGomintReports = false;
+
     @Comment( "Control whether we want to load chunks when entities step over borders or not." )
     private boolean loadChunksForEntities = true;
+
+    @Comment( "How much chunks do you want to send to the client per client tick (50ms). Vanilla defaults to 4, but i tested its more or less save to up to 1024 per tick for Windows 10 Client and Android on a LG G2")
+    private int sendChunksPerTick = 4;
 
 }

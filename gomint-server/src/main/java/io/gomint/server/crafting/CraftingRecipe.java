@@ -20,9 +20,9 @@ import java.util.*;
  */
 public abstract class CraftingRecipe extends Recipe {
 
-    protected ItemStack[] outcome;
+    private ItemStack[] outcome;
 
-    protected CraftingRecipe( ItemStack[] outcome, UUID uuid ) {
+    CraftingRecipe( ItemStack[] outcome, UUID uuid ) {
         super( uuid );
         this.outcome = outcome;
     }
@@ -36,8 +36,27 @@ public abstract class CraftingRecipe extends Recipe {
             for ( ItemStack stack : this.outcome ) {
                 list.add( ( (io.gomint.server.inventory.item.ItemStack) stack ).clone() );
             }
+
             return list;
         }
+    }
+
+    /**
+     * Check if the two given items are equal enough to be used as crafting input
+     *
+     * @param recipeItem of the recipe
+     * @param invItem of the inventory
+     * @return
+     */
+    protected boolean canBeUsedForCrafting( ItemStack recipeItem, ItemStack invItem ) {
+        io.gomint.server.inventory.item.ItemStack rI = (io.gomint.server.inventory.item.ItemStack) recipeItem;
+        io.gomint.server.inventory.item.ItemStack iI = (io.gomint.server.inventory.item.ItemStack) invItem;
+
+        int recipeMaterial = rI.getMaterial();
+        int inputMaterial = iI.getMaterial();
+
+        return recipeMaterial == inputMaterial &&
+            ( recipeItem.getData() == 32767 || recipeItem.getData() == invItem.getData() );
     }
 
 }

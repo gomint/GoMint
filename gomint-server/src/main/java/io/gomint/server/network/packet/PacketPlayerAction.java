@@ -4,6 +4,7 @@ import io.gomint.jraknet.PacketBuffer;
 import io.gomint.math.BlockPosition;
 import io.gomint.math.Vector;
 import io.gomint.server.network.Protocol;
+import io.gomint.world.block.BlockFace;
 import lombok.Data;
 
 /**
@@ -18,7 +19,7 @@ public class PacketPlayerAction extends Packet {
     private PlayerAction action;
     private BlockPosition position;
 
-    private int face;
+    private BlockFace face;
 
     // There is more data but who knows what that could be
 
@@ -27,16 +28,16 @@ public class PacketPlayerAction extends Packet {
     }
 
     @Override
-    public void serialize( PacketBuffer buffer ) {
+    public void serialize( PacketBuffer buffer, int protocolID ) {
 
     }
 
     @Override
-    public void deserialize( PacketBuffer buffer ) {
+    public void deserialize( PacketBuffer buffer, int protocolID ) {
         this.entityId = buffer.readUnsignedVarLong();
         this.action = PlayerAction.valueOf( buffer.readSignedVarInt() );
         this.position = readBlockPosition( buffer );
-        this.face = buffer.readSignedVarInt();
+        this.face = readBlockFace( buffer );
     }
 
     public enum PlayerAction {
@@ -58,7 +59,15 @@ public class PacketPlayerAction extends Packet {
         DIMENSION_CHANGE,
         ABORT_DIMENSION_CHANGE,
 
-        INTERACT_BLOCK;
+        START_GLIDE,
+        STOP_GLIDE,
+
+        START_SWIMMING,
+        STOP_SWIMMING,
+
+        INTERACT_BLOCK,
+
+        SET_ENCHANT_SEED;
 
         public static PlayerAction valueOf( int actionId ) {
             switch ( actionId ) {
@@ -88,10 +97,20 @@ public class PacketPlayerAction extends Packet {
                     return DIMENSION_CHANGE;
                 case 14:
                     return ABORT_DIMENSION_CHANGE;
+                case 15:
+                    return START_GLIDE;
+                case 16:
+                    return STOP_GLIDE;
                 case 17:
                     return INTERACT_BLOCK;
                 case 18:
                     return CONTINUE_BREAK;
+                case 20:
+                    return SET_ENCHANT_SEED;
+                case 21:
+                    return START_SWIMMING;
+                case 22:
+                    return STOP_SWIMMING;
             }
 
             System.out.println( "Unknown action id: " + actionId );

@@ -7,15 +7,13 @@
 
 package io.gomint.server.entity.metadata;
 
-import io.gomint.server.entity.EntityFlag;
-import io.gomint.server.inventory.item.ItemStack;
 import io.gomint.jraknet.PacketBuffer;
 import io.gomint.math.Vector;
-import lombok.Getter;
+import io.gomint.server.entity.EntityFlag;
+import io.gomint.server.inventory.item.ItemStack;
+import it.unimi.dsi.fastutil.bytes.Byte2ObjectMap;
+import it.unimi.dsi.fastutil.bytes.Byte2ObjectOpenHashMap;
 import lombok.ToString;
-import com.koloboke.collect.map.ByteObjMap;
-import com.koloboke.collect.map.hash.HashByteObjMaps;
-import com.koloboke.function.ByteObjConsumer;
 
 /**
  * @author BlackyPaw
@@ -89,11 +87,12 @@ public class MetadataContainer {
     public static final int DATA_MINECART_DISPLAY_BLOCK = 16; //int (id | (data << 16))
     public static final int DATA_MINECART_DISPLAY_OFFSET = 17; //int
     public static final int DATA_MINECART_HAS_DISPLAY = 18; //byte (must be 1 for minecart to show block inside)
-    public static final int DATA_PLAYER_INDEX = 27;
-    public static final int DATA_SCALE = 39;
-    public static final int DATA_MAX_AIRDATA_MAX_AIR = 43;
+    public static final int DATA_PLAYER_INDEX = 26;
+    public static final int DATA_SCALE = 38;
+    public static final int DATA_MAX_AIRDATA_MAX_AIR = 42;
+    public static final int DATA_FUSE_LENGTH = 55;
 
-    private ByteObjMap<MetadataValue> entries;
+    private Byte2ObjectMap<MetadataValue> entries;
     private boolean dirty;
 
     /**
@@ -110,7 +109,7 @@ public class MetadataContainer {
      * @param capacity The capacity to pre-allocate
      */
     public MetadataContainer( int capacity ) {
-        this.entries = HashByteObjMaps.newMutableMap( ( capacity > 32 ? 32 : capacity ) );
+        this.entries = new Byte2ObjectOpenHashMap<>( ( capacity > 32 ? 32 : capacity ) );
     }
 
     /**
@@ -477,12 +476,9 @@ public class MetadataContainer {
      */
     public void serialize( PacketBuffer buffer ) {
         buffer.writeUnsignedVarInt( this.entries.size() );
-        this.entries.forEach( new ByteObjConsumer<MetadataValue>() {
-            @Override
-            public void accept( byte id, MetadataValue metadataValue ) {
-                metadataValue.serialize( buffer, id );
-            }
-        } );
+        for ( Byte2ObjectMap.Entry<MetadataValue> entry : this.entries.byte2ObjectEntrySet() ) {
+            entry.getValue().serialize( buffer, entry.getByteKey() );
+        }
     }
 
     /**

@@ -1,5 +1,9 @@
 package io.gomint.server.world.block;
 
+import io.gomint.server.world.block.helper.ToolPresets;
+import io.gomint.world.block.BlockFace;
+import io.gomint.world.block.BlockType;
+
 import io.gomint.server.entity.Entity;
 import io.gomint.inventory.item.ItemStack;
 import io.gomint.math.Vector;
@@ -13,7 +17,7 @@ import org.slf4j.LoggerFactory;
  * @version 1.0
  */
 @RegisterInfo( id = 58 )
-public class CraftingTable extends Block {
+public class CraftingTable extends Block implements io.gomint.world.block.BlockCraftingTable {
 
     private static final Logger LOGGER = LoggerFactory.getLogger( CraftingTable.class );
 
@@ -28,7 +32,7 @@ public class CraftingTable extends Block {
     }
 
     @Override
-    public boolean interact( Entity entity, int face, Vector facePos, ItemStack item ) {
+    public boolean interact( Entity entity, BlockFace face, Vector facePos, ItemStack item ) {
         if ( entity instanceof EntityPlayer ) {
             // This should be a container open
             LOGGER.debug( "Changing to 3x3 crafting grid for player " + ( (EntityPlayer) entity ).getName() );
@@ -37,6 +41,26 @@ public class CraftingTable extends Block {
         }
 
         return true;
+    }
+
+    @Override
+    public float getBlastResistance() {
+        return 15.0f;
+    }
+
+    @Override
+    public BlockType getType() {
+        return BlockType.CRAFTING_TABLE;
+    }
+
+    @Override
+    public boolean canBeBrokenWithHand() {
+        return true;
+    }
+
+    @Override
+    public Class<? extends ItemStack>[] getToolInterfaces() {
+        return ToolPresets.AXE;
     }
 
 }

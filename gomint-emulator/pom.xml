@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (c) 2017, GoMint, BlackyPaw and geNAZt
+  ~
+  ~ This code is licensed under the BSD license found in the
+  ~ LICENSE file in the root directory of this source tree.
+  -->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>gomint</artifactId>
+        <groupId>io.gomint</groupId>
+        <version>1.0.0-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>io.gomint</groupId>
+    <artifactId>emulator</artifactId>
+
+    <dependencies>
+        <dependency>
+            <groupId>io.gomint</groupId>
+            <artifactId>gomint-server</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
+
+
+</project>

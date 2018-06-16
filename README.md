@@ -8,12 +8,29 @@
 [![Current Version](https://img.shields.io/badge/version-1.0.5-green.svg)](https://github.com/GoMint/GoMint) 
 [![License](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause)
 
+Deprecation Warnings
+--
+Currently Gomint is in "fast" development "mode". This means that the API is not stable in all corners. The goal is to
+develop the API with the implementation problems we face. Due to that approach we will break API from time to time. To keep
+impact minimal we deprecate old methods and provide better alternatives to switch to. 
+
+**Deprecated methods will be deleted after 2 weeks of deprecation**
+
+Current deprecated methods:
+
+`io.gomint.command.Command#execute(EntityPlayer, String, List<String>)`<br />
+`io.gomint.command.ParamValidator#validate(List<String>, Entity)`<br />
+`io.gomint.command.SystemCommand`<br />
+
+Project
+--
+
 Build Version | Build Result
 ------------ | -------------
-Feature Build 1.2 | [![Build Status](https://travis-ci.org/GoMint/GoMint.svg?branch=1.2)](https://travis-ci.org/GoMint/GoMint)
+Feature Build "genazt" | [![Build Status](https://travis-ci.org/GoMint/GoMint.svg?branch=genazt)](https://travis-ci.org/GoMint/GoMint)
 Master Build | [![Build Status](https://travis-ci.org/GoMint/GoMint.svg?branch=master)](https://travis-ci.org/GoMint/GoMint)
 
-GoMint is a Minecraft PocketEdition server implementation that is still work in progress.
+GoMint is a Minecraft Bedrock Edition server software implementation that is still work in progress.
 The goal is to provide a full, modifiable server with plugin support for Java.
 The project is divided into four modules:
 
@@ -37,15 +54,13 @@ A plugin to test and see the API design.
 [![Twitter](http://puu.sh/v9V9H/ad70c8acf7.png)](https://twitter.com/GomintPe)
 
 ## Todo
-* Implement all Tile Entity types
-* Implement all block interfaces for the API
-* Implement basic events for Movement and join / leave
+Join Discord for more information about the current tasks we do
 
 ## Testing
 
 As the project is still work in progress the only way to launch the application currently is to set up
 your respective IDE and provide a working directory that contains a regular Minecraft PC Anvil World.
-Afterwards you may join the server using your version of MC:PE.
+Afterwards you may join the server using your version of MC:BE.
 
 ## License
 

@@ -7,9 +7,6 @@
 
 package io.gomint.server.world;
 
-import io.gomint.math.BlockPosition;
-import io.gomint.math.Vector;
-
 /**
  * @author BlackyPaw
  * @version 1.0
@@ -64,26 +61,6 @@ public final class CoordinateUtils {
     }
 
     /**
-     * Gets the minimum chunk contained in the region.
-     *
-     * @param v The x- or z-coordinate of the region
-     * @return The minimum chunk contained in the region
-     */
-    public static int getRegionMin( int v ) {
-        return v << 5;
-    }
-
-    /**
-     * Gets the maximum chunk contained in the region.
-     *
-     * @param v The x- or z-coordinate of the region
-     * @return The maximum chunk contained in the region
-     */
-    public static int getRegionMax( int v ) {
-        return ( ( v + 1 ) << 5 ) - 1;
-    }
-
-    /**
      * Shift two int's together to form a compound key
      *
      * @param x value of key
@@ -92,32 +69,6 @@ public final class CoordinateUtils {
      */
     public static long toLong( int x, int z ) {
         return ( (long) x << 32 ) + z - Integer.MIN_VALUE;
-    }
-
-    /**
-     * Shift three int's together to form a compound key
-     *
-     * @param x value of key
-     * @param y value of the key
-     * @param z value of key
-     * @return long compound of the three int's
-     */
-    public static long toLong( int x, int y, int z ) {
-        return ( ( (long) x & 0x3FFFFFF ) << 38 ) | ( ( (long) y & 0xFFF ) << 26 ) | ( (long) z & 0x3FFFFFF );
-    }
-
-    /**
-     * Get the vector which has been encoded into the long
-     *
-     * @param hash The encoded long
-     * @return the decoded BlockPosition
-     */
-    public static BlockPosition fromLong( long hash ) {
-        int x = (int) ( hash >> 38 );
-        int y = (int) ( hash >> 26 ) & 0xFFF;
-        int z = (int) ( hash );
-
-        return new BlockPosition( x, y, z );
     }
 
 }

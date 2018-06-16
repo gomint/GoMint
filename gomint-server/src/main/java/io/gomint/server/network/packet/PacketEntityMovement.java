@@ -21,7 +21,8 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode( callSuper = false )
 public class PacketEntityMovement extends Packet {
 
-    private static final float DIVIDOR = 256f / 360f;
+    private static final byte FLAG_ON_GROUND = 0x1;
+    private static final byte FLAG_TELEPORTED = 0x2;
 
     private long entityId;
     private float x;
@@ -30,26 +31,44 @@ public class PacketEntityMovement extends Packet {
     private float yaw;
     private float headYaw;
     private float pitch;
+    private boolean onGround;
+    private boolean teleported;
 
     public PacketEntityMovement() {
         super( Protocol.PACKET_ENTITY_MOVEMENT );
     }
 
     @Override
-    public void serialize( PacketBuffer buffer ) {
+    public void serialize( PacketBuffer buffer, int protocolID ) {
         buffer.writeUnsignedVarLong( this.entityId );
+
+        // TODO: PRTCL 274
+        if ( protocolID == Protocol.MINECRAFT_PE_BETA_PROTOCOL_VERSION ) {
+            byte flags = this.onGround ? FLAG_ON_GROUND : 0;
+            if ( this.teleported ) {
+                flags |= FLAG_TELEPORTED;
+            }
+
+            buffer.writeByte( flags );
+        }
 
         buffer.writeLFloat( this.x );
         buffer.writeLFloat( this.y );
         buffer.writeLFloat( this.z );
 
-        buffer.writeByte( (byte) Math.round( this.pitch * DIVIDOR ) );
-        buffer.writeByte( (byte) Math.round( this.headYaw * DIVIDOR ) );
-        buffer.writeByte( (byte) Math.round( this.yaw * DIVIDOR ) );
+        writeByteRotation( this.pitch, buffer );
+        writeByteRotation( this.headYaw, buffer );
+        writeByteRotation( this.yaw, buffer );
+
+        // TODO: PRTCL 261
+        if ( protocolID == Protocol.MINECRAFT_PE_PROTOCOL_VERSION ) {
+            buffer.writeBoolean( this.onGround );
+            buffer.writeBoolean( this.teleported );
+        }
     }
 
     @Override
-    public void deserialize( PacketBuffer buffer ) {
+    public void deserialize( PacketBuffer buffer, int protocolID ) {
 
     }
 

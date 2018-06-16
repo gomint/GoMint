@@ -7,7 +7,8 @@
 
 package io.gomint.world;
 
-import io.gomint.entity.Player;
+import io.gomint.entity.Entity;
+import io.gomint.entity.EntityPlayer;
 import io.gomint.entity.passive.EntityItemDrop;
 import io.gomint.inventory.item.ItemStack;
 import io.gomint.math.AxisAlignedBB;
@@ -18,6 +19,7 @@ import io.gomint.world.block.Block;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * @author geNAZt
@@ -56,14 +58,25 @@ public interface World {
     <T extends Block> T getBlockAt( BlockPosition pos );
 
     /**
-     * Get the block at that position or null if the position is not loaded in the world.
+     * Get the block at that position or air if the position is not loaded in the world.
      *
      * @param x x coordinate
      * @param y y coordinate
      * @param z z coordinate
-     * @return block which has been found at that position or null
+     * @return block which has been found at that position or air (when chunk has not been loaded)
      */
     <T extends Block> T getBlockAt( int x, int y, int z );
+
+    /**
+     * Get the block at that position or air if the position is not loaded in the world.
+     *
+     * @param x     x coordinate
+     * @param y     y coordinate
+     * @param z     z coordinate
+     * @param layer on which layer is this block
+     * @return block which has been found at that position or air (when chunk has not been loaded)
+     */
+    <T extends Block> T getBlockAt( int x, int y, int z, WorldLayer layer );
 
     /**
      * Gets the value of the given gamerule set for this world.
@@ -88,17 +101,45 @@ public interface World {
      *
      * @return Collection of players online on this world
      */
-    Collection<Player> getPlayers();
+    Collection<EntityPlayer> getPlayers();
 
     /**
      * Play a sound at the location given
      *
-     * @param location  The location where the sound should be played
-     * @param sound     The sound which should be played
-     * @param pitch     The pitch at which the sound should be played
-     * @param extraData Any extra data for the client to select the correct sound
+     * @param location The location where the sound should be played
+     * @param sound    The sound which should be played
+     * @param pitch    The pitch at which the sound should be played
+     * @param data     additional data for the sound
+     * @throws IllegalArgumentException when the sound data given is incorrect for the sound wanted to play
      */
-    void playSound( Location location, Sound sound, byte pitch, int extraData );
+    void playSound( Vector location, Sound sound, byte pitch, SoundData data );
+
+    /**
+     * Play a sound at the location given
+     *
+     * @param location The location where the sound should be played
+     * @param sound    The sound which should be played
+     * @param pitch    The pitch at which the sound should be played
+     */
+    void playSound( Vector location, Sound sound, byte pitch );
+
+    /**
+     * Send a particle to this world
+     *
+     * @param location of the particle in the client
+     * @param particle which should be send
+     */
+    void sendParticle( Vector location, Particle particle );
+
+    /**
+     * Send a particle to this world
+     *
+     * @param location of the particle in the client
+     * @param particle which should be send
+     * @param data     data with which this particle should be send
+     * @throws IllegalArgumentException when the particle data is incorrect for the particle which should be send
+     */
+    void sendParticle( Vector location, Particle particle, ParticleData data );
 
     /**
      * Get a list of bounding boxes which collide with the given box
@@ -108,8 +149,65 @@ public interface World {
      * @param includeEntities Should we return blocks only or also entities? True for entities, false without entities
      * @return either a list of collisions or null
      */
-    List<AxisAlignedBB> getCollisionCubes( io.gomint.entity.Entity entity, AxisAlignedBB bb, boolean includeEntities );
+    List<AxisAlignedBB> getCollisionCubes( Entity entity, AxisAlignedBB bb, boolean includeEntities );
 
+    /**
+     * Create a entity drop in the given world
+     *
+     * @param location  for the item drop
+     * @param itemStack which is stored inside the drop
+     * @return the created and spawned entity
+     */
     EntityItemDrop createItemDrop( Location location, ItemStack itemStack );
+
+    /**
+     * Unload this world. All remaining players in this world get called through the consumer
+     *
+     * @param playerConsumer which gets called for every player in this world
+     */
+    void unload( Consumer<EntityPlayer> playerConsumer );
+
+    /**
+     * Iterate over all loaded chunks and find the blocks specified for the blockClass.
+     * This method is very expensive since it fully blocks the server until the search operation has
+     * been completed.
+     *
+     * @param blockClass    for which we search
+     * @param blockConsumer which gets called for every found block
+     * @param <T>           type of block
+     */
+    <T extends Block> void iterateBlocks( Class<T> blockClass, Consumer<T> blockConsumer );
+
+    /**
+     * Iterate over all loaded chunks and find the entities specified for the entityClass.
+     *
+     * @param entityClass    for which we search
+     * @param entityConsumer which gets called for every found entity
+     * @param <T>            type of entity
+     */
+    <T extends Entity> void iterateEntities( Class<T> entityClass, Consumer<T> entityConsumer );
+
+    /**
+     * Generate a empty chunk
+     *
+     * @param x coordinate of the chunk
+     * @param z coordinate of the chunk
+     * @return chunk with only air in it
+     */
+    Chunk generateEmptyChunk( int x, int z );
+
+    /**
+     * Get the chunk which has been asked
+     *
+     * @param x coordinate of the chunk
+     * @param z coordinate of the chunk
+     * @return chunk or null when not generated
+     */
+    Chunk getChunk( int x, int z );
+
+    /**
+     * Save all data to disk
+     */
+    void save();
 
 }

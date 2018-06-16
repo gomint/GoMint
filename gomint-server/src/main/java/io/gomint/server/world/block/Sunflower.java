@@ -1,5 +1,7 @@
 package io.gomint.server.world.block;
 
+import io.gomint.world.block.BlockType;
+
 import io.gomint.server.registry.RegisterInfo;
 
 /**
@@ -7,7 +9,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( id = 175 )
-public class Sunflower extends Block {
+public class Sunflower extends Block implements io.gomint.world.block.BlockSunflower {
 
     @Override
     public int getBlockId() {
@@ -22,6 +24,21 @@ public class Sunflower extends Block {
     @Override
     public boolean isSolid() {
         return false;
+    }
+
+    @Override
+    public float getBlastResistance() {
+        return 0.0f;
+    }
+
+    @Override
+    public BlockType getType() {
+        return BlockType.SUNFLOWER;
+    }
+
+    @Override
+    public boolean canBeBrokenWithHand() {
+        return true;
     }
 
 }

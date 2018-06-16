@@ -36,7 +36,7 @@ public class PacketMovePlayer extends Packet {
     }
 
     @Override
-    public void serialize( PacketBuffer buffer ) {
+    public void serialize( PacketBuffer buffer, int protocolID ) {
         buffer.writeUnsignedVarLong( this.entityId );
         buffer.writeLFloat( this.x );
         buffer.writeLFloat( this.y );
@@ -55,7 +55,7 @@ public class PacketMovePlayer extends Packet {
     }
 
     @Override
-    public void deserialize( PacketBuffer buffer ) {
+    public void deserialize( PacketBuffer buffer, int protocolID ) {
         this.entityId = buffer.readUnsignedVarLong();
         this.x = buffer.readLFloat();
         this.y = buffer.readLFloat();

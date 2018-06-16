@@ -7,13 +7,14 @@
 
 package io.gomint.server.network.packet;
 
+import io.gomint.GoMint;
 import io.gomint.inventory.item.ItemStack;
 import io.gomint.jraknet.PacketBuffer;
+import io.gomint.server.GoMintServer;
 import io.gomint.server.crafting.Recipe;
 import io.gomint.server.crafting.ShapedRecipe;
 import io.gomint.server.crafting.ShapelessRecipe;
 import io.gomint.server.crafting.SmeltingRecipe;
-import io.gomint.server.inventory.item.Items;
 import io.gomint.server.network.Protocol;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -40,7 +41,7 @@ public class PacketCraftingRecipes extends Packet {
     }
 
     @Override
-    public void serialize( PacketBuffer buffer ) {
+    public void serialize( PacketBuffer buffer, int protocolID ) {
         buffer.writeUnsignedVarInt( this.recipes.size() );
 
         for ( Recipe recipe : this.recipes ) {
@@ -51,7 +52,7 @@ public class PacketCraftingRecipes extends Packet {
     }
 
     @Override
-    public void deserialize( PacketBuffer buffer ) {
+    public void deserialize( PacketBuffer buffer, int protocolID ) {
         this.recipes = new ArrayList<>();
 
         int count = buffer.readUnsignedVarInt();
@@ -110,36 +111,24 @@ public class PacketCraftingRecipes extends Packet {
                     this.recipes.add( new ShapedRecipe( width, height, input, output, uuid ) );
                     break;
 
-                case 2:
+                case 3:
                     // Smelting with metadata
 
                     int id = buffer.readSignedVarInt();
                     short data = (short) buffer.readSignedVarInt();
                     ItemStack result = Packet.readItemStack( buffer );
 
-                    this.recipes.add( new SmeltingRecipe( Items.create( id, data, (byte) -1, null ), result, null ) );
+                    this.recipes.add( new SmeltingRecipe( ( (GoMintServer) GoMint.instance() ).getItems().create( id, data, (byte) -1, null ), result, null ) );
                     break;
 
-                case 3:
+                case 2:
                     // Smelting without metadata
 
                     id = buffer.readSignedVarInt();
                     result = Packet.readItemStack( buffer );
 
-                    this.recipes.add( new SmeltingRecipe( Items.create( id, (short) 0, (byte) -1, null ), result, null ) );
+                    this.recipes.add( new SmeltingRecipe( ( (GoMintServer) GoMint.instance() ).getItems().create( id, (short) 0, (byte) -1, null ), result, null ) );
                     break;
-            }
-        }
-
-        for ( Recipe recipe : this.recipes ) {
-            System.out.println( "Input" );
-            for ( ItemStack itemStack : recipe.getIngredients() ) {
-                System.out.println( itemStack );
-            }
-
-            System.out.println( "Output" );
-            for ( ItemStack itemStack : recipe.createResult() ) {
-                System.out.println( itemStack );
             }
         }
     }

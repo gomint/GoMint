@@ -9,6 +9,7 @@ package io.gomint.server.plugin;
 
 import io.gomint.plugin.PluginVersion;
 import io.gomint.plugin.StartupPriority;
+import lombok.Data;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
@@ -20,17 +21,21 @@ import java.util.Set;
  * @author BlackyPaw
  * @version 1.0
  */
-@Getter
 @RequiredArgsConstructor
 @ToString
+@Data
 public class PluginMeta {
 
-    private final String name;
-    private final PluginVersion version;
-    private final StartupPriority priority;
-    private final Set<String> depends;
-    private final Set<String> softDepends;
-    private final String mainClass;
+    // Plugin basics
     private final File pluginFile;
+    private String name;
+    private PluginVersion version;
+    private StartupPriority priority;
+    private Set<String> depends;
+    private Set<String> softDepends;
+    private String mainClass;
+
+    // Injection stuff
+    private Set<String> injectionCommands;
 
 }

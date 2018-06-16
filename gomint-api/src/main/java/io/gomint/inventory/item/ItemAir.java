@@ -14,7 +14,7 @@ public interface ItemAir extends ItemStack {
      * @param amount which is used for the creation
      */
     static ItemAir create( int amount ) {
-        return GoMint.instance().createItemStack( ItemAir.class, amount );
+        return GoMint.instance().createItemStack( ItemAir.class, 0 );
     }
 
 }

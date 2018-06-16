@@ -6,6 +6,7 @@ import io.gomint.math.Vector;
 import io.gomint.server.world.WorldAdapter;
 import io.gomint.taglib.NBTTagCompound;
 import io.gomint.world.Sound;
+import io.gomint.world.block.BlockFace;
 
 /**
  * @author geNAZt
@@ -33,7 +34,7 @@ public class NoteblockTileEntity extends TileEntity {
     }
 
     @Override
-    public void interact( Entity entity, int face, Vector facePos, ItemStack item ) {
+    public void interact( Entity entity, BlockFace face, Vector facePos, ItemStack item ) {
         if ( this.note == 24 ) {
             this.note = 0;
         } else {
@@ -51,8 +52,11 @@ public class NoteblockTileEntity extends TileEntity {
         compound.addValue( "note", this.note );
     }
 
-    private void playSound() {
-        this.location.getWorld().playSound( this.location, Sound.NOTE, this.note, 1 );
+    /**
+     * Play the sound which this note block has stored
+     */
+    public void playSound() {
+        this.location.getWorld().playSound( this.location, Sound.NOTE, this.note );
     }
 
 }
