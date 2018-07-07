@@ -2,20 +2,12 @@ language: java
 sudo: false
 install: true
 
-addons:
-  sonarcloud:
-    organization: "gomint-github" # the key of the org you chose at step #3
-    branches:
-      - genazt
-      - master
-
 jdk:
   - oraclejdk8
 
 script:
-  - mvn -U clean org.jacoco:jacoco-maven-plugin:prepare-agent install sonar:sonar
+  - mvn clean install
 
 cache:
   directories:
     - '$HOME/.m2/repository'
-    - '$HOME/.sonar/cache'
