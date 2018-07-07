@@ -30,7 +30,7 @@
         <module>gomint-api</module>
         <module>gomint-server</module>
         <module>gomint-test-plugin</module>
-        <!--<module>gomint-performance-viewer</module>-->
+        <module>gomint-performance-viewer</module>
         <module>gomint-native</module>
         <module>gomint-emulator</module>
     </modules>
