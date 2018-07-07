@@ -1,12 +1,14 @@
 package io.gomint.inventory.item;
 
 import io.gomint.GoMint;
+import io.gomint.entity.EntityPlayer;
+import io.gomint.math.Vector;
 
 /**
  * @author geNAZt
  * @version 1.0
  */
-public interface ItemIronShovel extends ItemStack {
+public interface ItemIronShovel extends ItemShovel {
 
     /**
      * Create a new item stack with given class and amount

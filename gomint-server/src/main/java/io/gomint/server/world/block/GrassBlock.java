@@ -3,6 +3,10 @@ package io.gomint.server.world.block;
 import io.gomint.inventory.item.ItemDirt;
 import io.gomint.inventory.item.ItemShears;
 import io.gomint.inventory.item.ItemStack;
+import io.gomint.math.Vector;
+import io.gomint.server.entity.Entity;
+import io.gomint.server.entity.EntityPlayer;
+import io.gomint.world.block.BlockFace;
 import io.gomint.world.block.BlockType;
 
 import io.gomint.math.BlockPosition;

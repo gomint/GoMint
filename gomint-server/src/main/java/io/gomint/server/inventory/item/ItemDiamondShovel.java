@@ -2,11 +2,16 @@ package io.gomint.server.inventory.item;
 
 import io.gomint.inventory.item.ItemType;
 
+import io.gomint.math.Vector;
 import io.gomint.server.entity.Attribute;
 import io.gomint.server.entity.AttributeModifier;
 import io.gomint.server.entity.EntityPlayer;
 import io.gomint.server.registry.RegisterInfo;
+import io.gomint.server.world.block.GrassBlock;
+import io.gomint.server.world.block.GrassPath;
 import io.gomint.taglib.NBTTagCompound;
+import io.gomint.world.block.Block;
+import io.gomint.world.block.BlockFace;
 
 /**
  * @author geNAZt
@@ -25,6 +30,14 @@ public class ItemDiamondShovel extends ItemReduceTierDiamond implements io.gomin
     }
     // CHECKSTYLE:ON
 
+    public boolean interact ( EntityPlayer entity, BlockFace face, Vector clickPosition, Block clickedBlock ) {
+        if( entity instanceof EntityPlayer && clickedBlock instanceof GrassBlock ) {
+            clickedBlock.setType( GrassPath.class );
+            return true;
+        }
+
+        return false;
+    }
 
     @Override
     public void gotInHand( EntityPlayer player ) {
