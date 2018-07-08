@@ -1,8 +1,6 @@
 package io.gomint.inventory.item;
 
 import io.gomint.GoMint;
-import io.gomint.entity.EntityPlayer;
-import io.gomint.math.Vector;
 
 /**
  * @author geNAZt
