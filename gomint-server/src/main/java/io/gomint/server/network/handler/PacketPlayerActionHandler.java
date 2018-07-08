@@ -30,8 +30,11 @@ public class PacketPlayerActionHandler implements PacketHandler<PacketPlayerActi
     @Override
     public void handle( PacketPlayerAction packet, long currentTimeMillis, PlayerConnection connection ) {
         switch ( packet.getAction() ) {
+            case START_SWIMMING:
+                connection.getEntity().setSwimming(true);
+                break;
             case STOP_SWIMMING:
-                // Apart from this being spammed we currently don't allow swimming
+                connection.getEntity().setSwimming(false);
                 break;
 
             case SET_ENCHANT_SEED:

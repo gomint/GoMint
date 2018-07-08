@@ -144,4 +144,18 @@ public interface EntityHuman extends EntityCreature {
      */
     boolean isSprinting();
 
+    /**
+     * Set player swimming or not
+     *
+     * @param value true for swimming, false for not swimming
+     */
+    void setSwimming( boolean value );
+
+    /**
+     * Check if entity is swimming
+     *
+     * @return true when swimming, false when not
+     */
+    boolean isSwimming();
+
 }

@@ -383,6 +383,18 @@ public class EntityHuman extends EntityCreature implements io.gomint.entity.pass
     }
 
     @Override
+    public void setSwimming( boolean value ) {
+        if( value != isSwimming() ) {
+            this.metadataContainer.setDataFlag( MetadataContainer.DATA_INDEX, EntityFlag.SWIMMING, value );
+        }
+    }
+
+    @Override
+    public boolean isSwimming() {
+        return this.metadataContainer.getDataFlag( MetadataContainer.DATA_INDEX, EntityFlag.SWIMMING );
+    }
+
+    @Override
     protected void kill() {
         super.kill();
     }
