@@ -4,6 +4,7 @@ import io.gomint.event.player.PlayerInteractEvent;
 import io.gomint.event.player.PlayerToggleGlideEvent;
 import io.gomint.event.player.PlayerToggleSneakEvent;
 import io.gomint.event.player.PlayerToggleSprintEvent;
+import io.gomint.event.player.PlayerSwimEvent;
 import io.gomint.event.world.BlockBreakEvent;
 import io.gomint.server.enchant.EnchantmentProcessor;
 import io.gomint.server.network.PlayerConnection;
@@ -31,10 +32,28 @@ public class PacketPlayerActionHandler implements PacketHandler<PacketPlayerActi
     public void handle( PacketPlayerAction packet, long currentTimeMillis, PlayerConnection connection ) {
         switch ( packet.getAction() ) {
             case START_SWIMMING:
-                connection.getEntity().setSwimming(true);
+                if( !connection.getEntity().isSwimming() ) {
+                    PlayerSwimEvent playerSwimEvent = new PlayerSwimEvent( connection.getEntity(), true );
+                    connection.getServer().getPluginManager().callEvent( playerSwimEvent );
+                    if ( playerSwimEvent.isCancelled() ) {
+                        connection.getEntity().sendData( connection.getEntity() );
+                    } else {
+                        connection.getEntity().setSwimming( true );
+                    }
+                }
+
                 break;
             case STOP_SWIMMING:
-                connection.getEntity().setSwimming(false);
+                if( connection.getEntity().isSwimming() ) {
+                    PlayerSwimEvent playerSwimEvent = new PlayerSwimEvent( connection.getEntity(), false );
+                    connection.getServer().getPluginManager().callEvent( playerSwimEvent );
+                    if ( playerSwimEvent.isCancelled() ) {
+                        connection.getEntity().sendData( connection.getEntity() );
+                    } else {
+                        connection.getEntity().setSwimming( false );
+                    }
+                }
+
                 break;
 
             case SET_ENCHANT_SEED:
