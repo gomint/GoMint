@@ -49,6 +49,7 @@ public abstract class Block implements io.gomint.world.block.Block {
     private static final Logger LOGGER = LoggerFactory.getLogger( Block.class );
 
     // CHECKSTYLE:OFF
+
     @Getter
     private int blockId;
     @Setter

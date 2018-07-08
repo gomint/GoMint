@@ -31,6 +31,7 @@ import io.gomint.server.network.handler.PacketEntityFallHandler;
 import io.gomint.server.network.handler.PacketHandler;
 import io.gomint.server.network.handler.PacketHotbarHandler;
 import io.gomint.server.network.handler.PacketInteractHandler;
+import io.gomint.server.network.handler.PacketBlockPickRequestHandler;
 import io.gomint.server.network.handler.PacketInventoryTransactionHandler;
 import io.gomint.server.network.handler.PacketLoginHandler;
 import io.gomint.server.network.handler.PacketMobArmorEquipmentHandler;
@@ -123,6 +124,7 @@ public class PlayerConnection {
         PACKET_HANDLERS[Protocol.PACKET_LOGIN & 0xff] = new PacketLoginHandler();
         PACKET_HANDLERS[Protocol.PACKET_MOB_EQUIPMENT & 0xff] = new PacketMobEquipmentHandler();
         PACKET_HANDLERS[Protocol.PACKET_INTERACT & 0xff] = new PacketInteractHandler();
+        PACKET_HANDLERS[Protocol.PACKET_BLOCK_PICK_REQUEST & 0xff] = new PacketBlockPickRequestHandler();
         PACKET_HANDLERS[Protocol.PACKET_ENCRYPTION_RESPONSE & 0xff] = new PacketEncryptionResponseHandler();
         PACKET_HANDLERS[Protocol.PACKET_INVENTORY_TRANSACTION & 0xff] = new PacketInventoryTransactionHandler();
         PACKET_HANDLERS[Protocol.PACKET_CONTAINER_CLOSE & 0xff] = new PacketContainerCloseHandler();

@@ -58,6 +58,7 @@ public final class Protocol {
     public static final byte PACKET_MOB_EQUIPMENT = (byte) 0x1F;
     public static final byte PACKET_MOB_ARMOR_EQUIPMENT = (byte) 0x20;
     public static final byte PACKET_INTERACT = (byte) 0x21;
+    public static final byte PACKET_BLOCK_PICK_REQUEST = (byte) 0x22;
     public static final byte PACKET_PLAYER_ACTION = (byte) 0x24;
     public static final byte PACKET_ENTITY_FALL = (byte) 0x25;
     public static final byte PACKET_HURT_ARMOR = (byte) 0x26;
@@ -199,6 +200,9 @@ public final class Protocol {
 
             case PACKET_INTERACT:
                 return new PacketInteract();
+
+            case PACKET_BLOCK_PICK_REQUEST:
+                return new PacketBlockPickRequest();
 
             case PACKET_ENTITY_METADATA:
                 return new PacketEntityMetadata();
