@@ -30,8 +30,9 @@ import io.gomint.server.entity.EntityPlayer;
     // CHECKSTYLE:ON
 
     public boolean interact ( EntityPlayer entity, BlockFace face, Vector clickPosition, Block clickedBlock ) {
-        if( entity instanceof EntityPlayer && (clickedBlock instanceof Dirt || clickedBlock instanceof GrassBlock) ) {
+        if( clickedBlock instanceof Dirt || clickedBlock instanceof GrassBlock ) {
             clickedBlock.setType( Farmland.class );
+            this.damage( 1 );
             return true;
         }
 

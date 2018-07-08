@@ -7,6 +7,7 @@ import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.world.block.GrassBlock;
 import io.gomint.server.world.block.GrassPath;
 import io.gomint.taglib.NBTTagCompound;
+import io.gomint.world.Sound;
 import io.gomint.world.block.Block;
 import io.gomint.world.block.BlockFace;
 import io.gomint.server.entity.EntityPlayer;
@@ -29,8 +30,9 @@ public class ItemWoodenShovel extends ItemReduceTierWooden implements io.gomint.
     // CHECKSTYLE:ON
 
     public boolean interact ( EntityPlayer entity, BlockFace face, Vector clickPosition, Block clickedBlock ) {
-        if( entity instanceof EntityPlayer && clickedBlock instanceof GrassBlock ) {
+        if( clickedBlock instanceof GrassBlock ) {
             clickedBlock.setType( GrassPath.class );
+            this.damage( 1 );
             return true;
         }
 
