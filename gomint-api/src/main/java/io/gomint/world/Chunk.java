@@ -104,4 +104,14 @@ public interface Chunk {
      */
     Biome getBiome( int x, int z );
 
+    /**
+     * Gets the highestblock at the specified position.
+     *
+     * @param x The x-coordinate of the block
+     * @param z The z-coordinate of the block
+     * @return The highest block
+     */
+
+    int getHighestBlockAt( int x, int z );
+
 }
