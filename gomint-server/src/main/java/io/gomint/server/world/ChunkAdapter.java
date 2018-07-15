@@ -459,6 +459,11 @@ public class ChunkAdapter implements Chunk {
     }
 
     @Override
+    public int getHighestBlockAt( int x, int z ) {
+        return this.getWorld().getChunk( x >> 4, z >> 4 ).getHighestBlockAt( x & 0x0f, z & 0x0f );
+    }
+
+    @Override
     public <T extends Block> T getBlockAt( int x, int y, int z ) {
         return getBlockAt( x, y, z, WorldLayer.NORMAL );
     }
