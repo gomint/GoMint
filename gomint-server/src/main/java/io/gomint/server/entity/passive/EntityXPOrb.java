@@ -31,8 +31,11 @@ import java.util.concurrent.TimeUnit;
 @RegisterInfo( id = 69 )
 public class EntityXPOrb extends Entity implements io.gomint.entity.passive.EntityXPOrb {
 
-    @Setter @Getter private int xpAmount;
-    @Getter private long pickupTime;
+    @Setter
+    @Getter
+    private int xpAmount;
+    @Getter
+    private long pickupTime;
 
     // Since xp orbs can travel a bit
     private EntityPlayer closestPlayer;
@@ -94,7 +97,7 @@ public class EntityXPOrb extends Entity implements io.gomint.entity.passive.Enti
                 this.closestPlayer.getLocation().distanceSquared( this.getLocation() ) > 64 ) {
                 this.closestPlayer = null;
 
-                for ( io.gomint.entity.EntityPlayer p : this.world.getPlayers() ) {
+                for ( io.gomint.entity.EntityPlayer p: this.world.getPlayers() ) {
                     if ( p.getGamemode() != Gamemode.SPECTATOR && p.getLocation().distanceSquared( this.getLocation() ) <= 64 ) {
                         this.closestPlayer = (EntityPlayer) p;
                         break;
@@ -114,12 +117,11 @@ public class EntityXPOrb extends Entity implements io.gomint.entity.passive.Enti
                     diff = diff * diff;
 
                     Vector motion = this.getVelocity();
-                    motion.add(
+                    this.setVelocity( motion.add(
                         dX / distance * diff * 0.1f,
                         dY / distance * diff * 0.1f,
                         dZ / distance * diff * 0.1f
-                    );
-                    this.setVelocity( motion );
+                    ) );
                 }
             }
 

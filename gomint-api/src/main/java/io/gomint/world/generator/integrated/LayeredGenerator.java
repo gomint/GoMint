@@ -79,4 +79,9 @@ public class LayeredGenerator extends ChunkGenerator {
         return new BlockPosition( (int) ( Math.random() * 2000 ), this.layers.size(), (int) ( Math.random() * 2000 ) );
     }
 
+    @Override
+    public void populate( Chunk chunk ) {
+
+    }
+
 }

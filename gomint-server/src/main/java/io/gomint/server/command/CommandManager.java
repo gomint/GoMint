@@ -138,37 +138,39 @@ public class CommandManager {
                             boolean completed = true;
                             boolean completedOptionals = true;
 
-                            for ( Map.Entry<String, ParamValidator> entry : overload.getParameters().entrySet() ) {
-                                List<String> input = new ArrayList<>();
-                                ParamValidator validator = entry.getValue();
+                            if ( overload.getParameters() != null ) {
+                                for ( Map.Entry<String, ParamValidator> entry : overload.getParameters().entrySet() ) {
+                                    List<String> input = new ArrayList<>();
+                                    ParamValidator validator = entry.getValue();
 
-                                if ( validator.consumesParts() > 0 ) {
-                                    for ( int i = 0; i < validator.consumesParts(); i++ ) {
-                                        if ( !paramIterator.hasNext() ) {
-                                            if ( !validator.isOptional() ) {
-                                                completed = false;
-                                                break;
+                                    if ( validator.consumesParts() > 0 ) {
+                                        for ( int i = 0; i < validator.consumesParts(); i++ ) {
+                                            if ( !paramIterator.hasNext() ) {
+                                                if ( !validator.isOptional() ) {
+                                                    completed = false;
+                                                    break;
+                                                } else {
+                                                    completedOptionals = false;
+                                                }
                                             } else {
-                                                completedOptionals = false;
+                                                input.add( paramIterator.next() );
                                             }
-                                        } else {
+                                        }
+                                    } else {
+                                        // Consume as much as possible for thing like TEXT, RAWTEXT
+                                        while ( paramIterator.hasNext() ) {
                                             input.add( paramIterator.next() );
                                         }
                                     }
-                                } else {
-                                    // Consume as much as possible for thing like TEXT, RAWTEXT
-                                    while ( paramIterator.hasNext() ) {
-                                        input.add( paramIterator.next() );
-                                    }
-                                }
 
-                                if ( input.size() == validator.consumesParts() || validator.consumesParts() < 0 ) {
-                                    Object result = validator.validate( input, sender );
-                                    if ( result == null ) {
-                                        completed = false;
-                                    }
+                                    if ( input.size() == validator.consumesParts() || validator.consumesParts() < 0 ) {
+                                        Object result = validator.validate( input, sender );
+                                        if ( result == null ) {
+                                            completed = false;
+                                        }
 
-                                    commandInput.put( entry.getKey(), result );
+                                        commandInput.put( entry.getKey(), result );
+                                    }
                                 }
                             }
 
@@ -366,7 +368,7 @@ public class CommandManager {
             }
         }
 
-        // Normal commands
+        // NormalGenerator commands
         for ( CommandHolder holder : this.commands.values() ) {
             if ( !holder.getName().contains( " " ) &&
                 ( holder.getPermission() == null ||

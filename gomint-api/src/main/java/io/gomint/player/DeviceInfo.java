@@ -1,8 +1,6 @@
 package io.gomint.player;
 
 import lombok.Getter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * @author geNAZt
@@ -13,16 +11,19 @@ public class DeviceInfo {
 
     private final String deviceName;
     private final DeviceOS os;
+    private final UI ui;
 
     /**
      * Information about the device of the player
      *
-     * @param deviceOS which the player is using
+     * @param deviceOS   which the player is using
      * @param deviceName which the player is using
+     * @param ui         which the player is using
      */
-    public DeviceInfo( DeviceOS deviceOS, String deviceName ) {
+    public DeviceInfo( DeviceOS deviceOS, String deviceName, UI ui ) {
         this.os = deviceOS;
         this.deviceName = deviceName;
+        this.ui = ui;
     }
 
     public enum DeviceOS {
@@ -40,6 +41,18 @@ public class DeviceInfo {
          * Windows. What else?
          */
         WINDOWS
+    }
+
+    public enum UI {
+        /**
+         * Classic UI with fixed sized chest inventories
+         */
+        CLASSIC,
+
+        /**
+         * Pocket UI which has a size flowed chest inventory
+         */
+        POCKET
     }
 
 }

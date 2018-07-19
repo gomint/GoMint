@@ -1,5 +1,6 @@
 package io.gomint.server.world.block;
 
+import com.google.common.collect.Lists;
 import io.gomint.enchant.EnchantmentAquaAffinity;
 import io.gomint.enchant.EnchantmentEfficiency;
 import io.gomint.entity.potion.PotionEffect;
@@ -16,7 +17,6 @@ import io.gomint.server.entity.EntityPlayer;
 import io.gomint.server.entity.tileentity.TileEntities;
 import io.gomint.server.entity.tileentity.TileEntity;
 import io.gomint.server.network.PlayerConnection;
-import io.gomint.server.network.packet.Packet;
 import io.gomint.server.network.packet.PacketTileEntityData;
 import io.gomint.server.network.packet.PacketUpdateBlock;
 import io.gomint.server.world.BlockRuntimeIDs;
@@ -25,6 +25,7 @@ import io.gomint.server.world.UpdateReason;
 import io.gomint.server.world.WorldAdapter;
 import io.gomint.server.world.storage.TemporaryStorage;
 import io.gomint.taglib.NBTTagCompound;
+import io.gomint.world.Biome;
 import io.gomint.world.block.BlockFace;
 import io.gomint.world.block.data.Facing;
 import lombok.EqualsAndHashCode;
@@ -48,6 +49,7 @@ public abstract class Block implements io.gomint.world.block.Block {
     private static final Logger LOGGER = LoggerFactory.getLogger( Block.class );
 
     // CHECKSTYLE:OFF
+
     @Getter
     private int blockId;
     @Setter
@@ -211,10 +213,20 @@ public abstract class Block implements io.gomint.world.block.Block {
      * Update the block for the client
      */
     void updateBlock() {
+        this.calculateBlockData();
+
+        if ( this.location == null ) {
+            // No need to update
+            return;
+        }
+
         BlockPosition pos = this.location.toBlockPosition();
         WorldAdapter worldAdapter = (WorldAdapter) this.location.getWorld();
         worldAdapter.updateBlock( pos );
         worldAdapter.flagNeedsPersistance( pos );
+    }
+
+    public void calculateBlockData() {
     }
 
     @Override
@@ -225,6 +237,16 @@ public abstract class Block implements io.gomint.world.block.Block {
 
         WorldAdapter worldAdapter = (WorldAdapter) this.location.getWorld();
         return worldAdapter.getBlockId( this.location.toBlockPosition(), this.layer ) == this.getBlockId();
+    }
+
+    @Override
+    public Biome getBiome() {
+        if ( this.location == null ) {
+            return null;
+        }
+
+        WorldAdapter worldAdapter = (WorldAdapter) this.location.getWorld();
+        return worldAdapter.getBiome( this.location.toBlockPosition() );
     }
 
     /**
@@ -482,7 +504,7 @@ public abstract class Block implements io.gomint.world.block.Block {
     /**
      * Send all block packets needed to display this block
      *
-     * @param connection  which should get the block data
+     * @param connection which should get the block data
      */
     public void send( PlayerConnection connection ) {
         if ( !isPlaced() ) {
@@ -639,9 +661,8 @@ public abstract class Block implements io.gomint.world.block.Block {
      * @return a list of drops
      */
     public List<ItemStack> getDrops( ItemStack itemInHand ) {
-        return new ArrayList<ItemStack>() {{
-            add( world.getServer().getItems().create( getBlockId() & 0xFF, getBlockData(), (byte) 1, null ) );
-        }};
+        ItemStack drop = this.world.getServer().getItems().create( getBlockId(), getBlockData(), (byte) 1, null );
+        return Lists.newArrayList( drop );
     }
 
     /**
@@ -689,8 +710,8 @@ public abstract class Block implements io.gomint.world.block.Block {
         return false;
     }
 
-    public void addVelocity( Entity entity, Vector pushedByBlocks ) {
-
+    public Vector addVelocity( Entity entity, Vector pushedByBlocks ) {
+        return pushedByBlocks;
     }
 
     public boolean intersectsWith( AxisAlignedBB boundingBox ) {
@@ -710,6 +731,14 @@ public abstract class Block implements io.gomint.world.block.Block {
      */
     public TileEntity getRawTileEntity() {
         return this.tileEntity;
+    }
+
+    protected void resetBlockData() {
+        this.blockData = 0;
+    }
+
+    protected void addToBlockData( byte dataValue ) {
+        this.setBlockData( (byte) ( this.getBlockData() + dataValue ) );
     }
 
 }

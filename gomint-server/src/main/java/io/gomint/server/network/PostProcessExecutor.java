@@ -11,6 +11,7 @@ import io.gomint.server.network.packet.Packet;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
+import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -25,7 +26,7 @@ public class PostProcessExecutor {
     @Getter private AtomicInteger connectionsInUse = new AtomicInteger( 0 );
     private Executor executor = Executors.newSingleThreadExecutor();
 
-    public void addWork( PlayerConnection connection, Packet[] packets ) {
+    public void addWork( PlayerConnection connection, List<Packet> packets ) {
         this.executor.execute( new PostProcessWorker( connection, packets ) );
     }
 

@@ -11,10 +11,12 @@ import io.gomint.entity.Entity;
 import io.gomint.entity.EntityPlayer;
 import io.gomint.event.entity.EntitySpawnEvent;
 import io.gomint.math.Location;
-import io.gomint.server.entity.passive.EntityHuman;
 import io.gomint.server.network.PlayerConnectionState;
-import io.gomint.server.network.Protocol;
-import io.gomint.server.network.packet.*;
+import io.gomint.server.network.packet.PacketEntityMetadata;
+import io.gomint.server.network.packet.PacketEntityMotion;
+import io.gomint.server.network.packet.PacketEntityMovement;
+import io.gomint.server.network.packet.PacketEntityRelativeMovement;
+import io.gomint.server.network.packet.PacketPlayerlist;
 import io.gomint.world.Chunk;
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
@@ -25,7 +27,6 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -257,21 +258,16 @@ public class EntityManager {
                 for ( io.gomint.server.entity.EntityPlayer player : this.world.getPlayers0().keySet() ) {
                     if ( player.getConnection().getState() != PlayerConnectionState.PLAYING ||
                         ( movedEntity instanceof io.gomint.server.entity.EntityPlayer &&
-                        ( player.isHidden( (EntityPlayer) movedEntity ) || player.equals( movedEntity ) ) ) ) {
+                            ( player.isHidden( (EntityPlayer) movedEntity ) || player.equals( movedEntity ) ) ) ) {
                         continue;
                     }
 
                     player.getEntityVisibilityManager().updateEntity( movedEntity, chunk );
                     if ( player.getEntityVisibilityManager().isVisible( movedEntity ) ) {
-                        // TODO: PTRCL 274
-                        if ( player.getConnection().getProtocolID() == Protocol.MINECRAFT_PE_BETA_PROTOCOL_VERSION ) {
-                            if ( needsFullMovement ) {
-                                player.getConnection().addToSendQueue( packetEntityMovement );
-                            } else {
-                                player.getConnection().addToSendQueue( relativeMovement );
-                            }
-                        } else {
+                        if ( true || needsFullMovement ) {
                             player.getConnection().addToSendQueue( packetEntityMovement );
+                        } else {
+                            player.getConnection().addToSendQueue( relativeMovement );
                         }
 
                         if ( entityMotion != null ) {
@@ -406,7 +402,6 @@ public class EntityManager {
             PacketPlayerlist playerlist = null;
 
             // Remap all current living entities
-            List<PacketPlayerlist.Entry> listEntry = null;
             for ( EntityPlayer player : entityPlayer.getWorld().getServer().getPlayers() ) {
                 if ( !player.isHidden( entityPlayer ) && !player.equals( entityPlayer ) ) {
                     if ( playerlist == null ) {

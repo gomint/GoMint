@@ -8,6 +8,7 @@
 package io.gomint.server.entity;
 
 import io.gomint.entity.BossBar;
+import io.gomint.entity.passive.EntityVillager;
 import io.gomint.event.entity.EntityDamageEvent;
 import io.gomint.event.entity.EntityTeleportEvent;
 import io.gomint.math.*;
@@ -24,11 +25,13 @@ import io.gomint.server.world.WorldAdapter;
 import io.gomint.server.world.block.*;
 import io.gomint.taglib.NBTTagCompound;
 import io.gomint.world.Chunk;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -43,6 +46,7 @@ import java.util.function.Predicate;
  * @author BlackyPaw
  * @version 1.1
  */
+@EqualsAndHashCode( of = { "id" } )
 public abstract class Entity implements io.gomint.entity.Entity {
 
     private static final Logger LOGGER = LoggerFactory.getLogger( Entity.class );
@@ -81,6 +85,7 @@ public abstract class Entity implements io.gomint.entity.Entity {
      * How high can this entity "climb" in one movement?
      */
     protected float stepHeight = 0;
+    @Setter
     protected boolean onGround;
 
     /**
@@ -97,6 +102,7 @@ public abstract class Entity implements io.gomint.entity.Entity {
     /**
      * Fall distance tracking
      */
+    @Getter @Setter
     protected float fallDistance = 0;
 
     /**
@@ -304,11 +310,11 @@ public abstract class Entity implements io.gomint.entity.Entity {
             for ( io.gomint.world.block.Block block : blockList ) {
                 io.gomint.server.world.block.Block implBlock = (io.gomint.server.world.block.Block) block;
                 implBlock.onEntityCollision( this );
-                implBlock.addVelocity( this, pushedByBlocks );
+                pushedByBlocks = implBlock.addVelocity( this, pushedByBlocks );
             }
 
             if ( pushedByBlocks.length() > 0 ) {
-                pushedByBlocks.normalize().multiply( 0.014f );
+                pushedByBlocks = pushedByBlocks.normalize().multiply( 0.014f );
                 Vector newMotion = this.transform.getMotion().add( pushedByBlocks );
                 this.transform.setMotion( newMotion.getX(), newMotion.getY(), newMotion.getZ() );
                 this.broadCastMotion();
@@ -891,6 +897,10 @@ public abstract class Entity implements io.gomint.entity.Entity {
         this.width = width;
         this.height = height;
         this.eyeHeight = (float) ( height / 2 + 0.1 );
+
+        this.metadataContainer.putFloat( MetadataContainer.DATA_BOUNDINGBOX_WIDTH, width );
+        this.metadataContainer.putFloat( MetadataContainer.DATA_BOUNDINGBOX_HEIGHT, height );
+
         this.recalcBoundingBox();
     }
 
@@ -1031,7 +1041,7 @@ public abstract class Entity implements io.gomint.entity.Entity {
         Location eyeLocation = this.getLocation().add( 0, this.eyeHeight, 0 );
         Block block = eyeLocation.getWorld().getBlockAt( eyeLocation.toBlockPosition() );
         if ( block instanceof StationaryWater || block instanceof FlowingWater ) {
-            float yLiquid = (float) ( block.getLocation().getY() + 1 + ( ( ( (Liquid) block ).getFillHeight() - 0.12 ) ) );
+            float yLiquid = (float) ( block.getLocation().getY() + 1 + ( ( (Liquid) block ).getFillHeight() - 0.12 ) );
             return eyeLocation.getY() < yLiquid;
         }
 
@@ -1291,6 +1301,42 @@ public abstract class Entity implements io.gomint.entity.Entity {
             this.setYaw( yaw );
             this.setPitch( pitch );
         }
+
+        // Fall distance
+        this.fallDistance = compound.getFloat( "FallDistance", 0f );
+        this.setAffectedByGravity( compound.getByte( "NoGravity", (byte) 0 ) == 0 );
+        this.onGround = compound.getByte( "OnGround", (byte) 1 ) == 1;
+    }
+
+    public NBTTagCompound persistToNBT() {
+        NBTTagCompound compound = new NBTTagCompound( "" );
+
+        // Store position
+        List<Float> pos = new ArrayList<>();
+        pos.add( this.getPositionX() );
+        pos.add( this.getPositionY() );
+        pos.add( this.getPositionZ() );
+        compound.addValue( "Pos", pos );
+
+        // Store motion
+        List<Float> motion = new ArrayList<>();
+        motion.add( this.getMotionX() );
+        motion.add( this.getMotionY() );
+        motion.add( this.getMotionZ() );
+        compound.addValue( "Motion", motion );
+
+        // Store rotation
+        List<Float> rotation = new ArrayList<>();
+        rotation.add( this.getYaw() );
+        rotation.add( this.getPitch() );
+        compound.addValue( "Rotation", rotation );
+
+        // Fall distance
+        compound.addValue( "FallDistance", this.fallDistance );
+        compound.addValue( "NoGravity", (byte) ( this.isAffectedByGravity() ? 0 : 1 ) );
+        compound.addValue( "OnGround", (byte) ( this.isOnGround() ? 1 : 0 ) );
+
+        return compound;
     }
 
     public boolean isMotionSendingEnabled() {

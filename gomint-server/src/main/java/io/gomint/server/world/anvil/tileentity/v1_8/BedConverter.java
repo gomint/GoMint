@@ -9,7 +9,6 @@ package io.gomint.server.world.anvil.tileentity.v1_8;
 
 import io.gomint.math.Location;
 import io.gomint.server.entity.tileentity.BedTileEntity;
-import io.gomint.server.entity.tileentity.EnchantTableTileEntity;
 import io.gomint.server.world.WorldAdapter;
 import io.gomint.taglib.NBTTagCompound;
 import io.gomint.world.block.data.BlockColor;

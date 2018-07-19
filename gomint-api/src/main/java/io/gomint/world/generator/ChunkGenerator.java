@@ -44,4 +44,11 @@ public abstract class ChunkGenerator {
      */
     public abstract BlockPosition getSpawnPoint();
 
+    /**
+     * Populate (generate additional objects) for the given chunk
+     *
+     * @param chunk which should be populated
+     */
+    public abstract void populate( Chunk chunk );
+
 }

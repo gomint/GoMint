@@ -16,13 +16,13 @@ public class EntityVillagerConverter extends BaseConverter<EntityVillager> {
     private final WorldAdapter world;
 
     @Override
-    public EntityVillager readFrom( NBTTagCompound compound ) {
-        EntityVillager entityVillager = this.world.getServer().createEntity( EntityVillager.class );
+    public EntityVillager create() {
+        return this.world.getServer().createEntity( EntityVillager.class );
+    }
 
-        // Basic entity stuff
-        this.setPosition( compound, entityVillager );
-        this.setMotion( compound, entityVillager );
-        this.setRotation( compound, entityVillager );
+    @Override
+    public EntityVillager readFrom( NBTTagCompound compound ) {
+        EntityVillager entityVillager = super.readFrom( compound );
 
         // Set profession
         int profession = compound.getInteger( "Profession", 0 );

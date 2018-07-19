@@ -1,5 +1,7 @@
 package io.gomint.inventory.item;
 
+import io.gomint.inventory.item.data.DyeType;
+
 import java.awt.Color;
 
 /**
@@ -21,5 +23,12 @@ public interface ItemColoredArmor extends ItemStack {
      * @param color which should be used to color this item
      */
     void setColor( Color color );
+
+    /**
+     * Set the color based on the dye type used
+     *
+     * @param dyeColor which should be used to calculate the color
+     */
+    void setDyeColor( DyeType dyeColor );
 
 }

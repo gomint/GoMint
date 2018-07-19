@@ -8,6 +8,9 @@ import io.gomint.server.network.PlayerConnection;
 import io.gomint.server.network.packet.PacketInventoryContent;
 import io.gomint.server.network.packet.PacketInventorySetSlot;
 import io.gomint.server.network.packet.PacketMobArmorEquipment;
+import io.gomint.taglib.NBTTagCompound;
+
+import java.util.List;
 
 /**
  * @author geNAZt
@@ -134,6 +137,20 @@ public class ArmorInventory extends Inventory implements io.gomint.inventory.Arm
                 itemStack.setData( (short) ( itemStack.getData() + damage ) );
                 this.setItem( i, itemStack );
             }
+        }
+    }
+
+    public void initFromNBT( NBTTagCompound compound ) {
+        List<Object> armorItems = compound.getList( "ArmorItems", false );
+        if ( armorItems != null ) {
+            //this.setBoots(  );
+            for ( Object armorItem : armorItems ) {
+
+            }
+        }
+
+        if ( compound.containsKey( "ArmorItems" ) ) {
+
         }
     }
 

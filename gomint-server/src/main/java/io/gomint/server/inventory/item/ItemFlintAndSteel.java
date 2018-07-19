@@ -2,6 +2,7 @@ package io.gomint.server.inventory.item;
 
 import io.gomint.inventory.item.ItemType;
 
+import io.gomint.server.inventory.item.annotation.UseDataAsDamage;
 import io.gomint.server.registry.RegisterInfo;
 import io.gomint.taglib.NBTTagCompound;
 
@@ -9,6 +10,7 @@ import io.gomint.taglib.NBTTagCompound;
  * @author geNAZt
  * @version 1.0
  */
+@UseDataAsDamage
 @RegisterInfo( id = 259 )
 public class ItemFlintAndSteel extends ItemStack implements io.gomint.inventory.item.ItemFlintAndSteel {
 
@@ -28,16 +30,6 @@ public class ItemFlintAndSteel extends ItemStack implements io.gomint.inventory.
     }
 
     @Override
-    public boolean usesDamage() {
-        return true;
-    }
-
-    @Override
-    public boolean useDamageAsData() {
-        return false;
-    }
-
-    @Override
     public byte getMaximumAmount() {
         return 1;
     }
@@ -45,11 +37,6 @@ public class ItemFlintAndSteel extends ItemStack implements io.gomint.inventory.
     @Override
     public int getBlockId() {
         return 51;
-    }
-
-    @Override
-    public boolean afterPlacement() {
-        return this.damage( 1 );
     }
 
     @Override

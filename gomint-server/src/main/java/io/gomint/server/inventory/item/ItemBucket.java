@@ -76,10 +76,10 @@ public class ItemBucket extends ItemStack implements io.gomint.inventory.item.It
     }
 
     @Override
-    public boolean afterPlacement() {
+    public void afterPlacement() {
         // We transform into an empty bucket
         this.setData( (short) 0 );
-        return false;
+        this.updateInventories( false );
     }
 
     @Override

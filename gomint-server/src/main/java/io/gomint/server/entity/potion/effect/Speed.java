@@ -32,7 +32,7 @@ public class Speed extends Effect {
 
     @Override
     public void apply( EntityLiving player ) {
-        player.getAttributeInstance( Attribute.MOVEMENT_SPEED ).setMultiplyModifier( AttributeModifier.SPEED_EFFECT, 1 + ( ( this.amplifier + 1 ) * 0.2f ) );
+        player.getAttributeInstance( Attribute.MOVEMENT_SPEED ).setMultiplyModifier( AttributeModifier.SPEED_EFFECT, ( ( this.amplifier + 1 ) * 0.2f ) );
     }
 
     @Override

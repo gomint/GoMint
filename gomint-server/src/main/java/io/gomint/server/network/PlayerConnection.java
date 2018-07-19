@@ -19,9 +19,50 @@ import io.gomint.math.Location;
 import io.gomint.player.DeviceInfo;
 import io.gomint.server.GoMintServer;
 import io.gomint.server.entity.EntityPlayer;
-import io.gomint.server.inventory.item.ItemStack;
-import io.gomint.server.network.handler.*;
-import io.gomint.server.network.packet.*;
+import io.gomint.server.entity.passive.EntityHuman;
+import io.gomint.server.network.handler.PacketAdventureSettingsHandler;
+import io.gomint.server.network.handler.PacketAnimateHandler;
+import io.gomint.server.network.handler.PacketBlockPickRequestHandler;
+import io.gomint.server.network.handler.PacketBookEditHandler;
+import io.gomint.server.network.handler.PacketCommandRequestHandler;
+import io.gomint.server.network.handler.PacketContainerCloseHandler;
+import io.gomint.server.network.handler.PacketCraftingEventHandler;
+import io.gomint.server.network.handler.PacketEncryptionResponseHandler;
+import io.gomint.server.network.handler.PacketEntityEventHandler;
+import io.gomint.server.network.handler.PacketEntityFallHandler;
+import io.gomint.server.network.handler.PacketHandler;
+import io.gomint.server.network.handler.PacketHotbarHandler;
+import io.gomint.server.network.handler.PacketInteractHandler;
+import io.gomint.server.network.handler.PacketInventoryTransactionHandler;
+import io.gomint.server.network.handler.PacketLoginHandler;
+import io.gomint.server.network.handler.PacketMobArmorEquipmentHandler;
+import io.gomint.server.network.handler.PacketMobEquipmentHandler;
+import io.gomint.server.network.handler.PacketModalResponseHandler;
+import io.gomint.server.network.handler.PacketMovePlayerHandler;
+import io.gomint.server.network.handler.PacketPlayerActionHandler;
+import io.gomint.server.network.handler.PacketResourcePackResponseHandler;
+import io.gomint.server.network.handler.PacketServerSettingsRequestHandler;
+import io.gomint.server.network.handler.PacketSetChunkRadiusHandler;
+import io.gomint.server.network.handler.PacketSetLocalPlayerAsInitializedHandler;
+import io.gomint.server.network.handler.PacketTextHandler;
+import io.gomint.server.network.handler.PacketWorldSoundEventHandler;
+import io.gomint.server.network.packet.Packet;
+import io.gomint.server.network.packet.PacketBatch;
+import io.gomint.server.network.packet.PacketConfirmChunkRadius;
+import io.gomint.server.network.packet.PacketDisconnect;
+import io.gomint.server.network.packet.PacketEncryptionResponse;
+import io.gomint.server.network.packet.PacketInventoryTransaction;
+import io.gomint.server.network.packet.PacketLogin;
+import io.gomint.server.network.packet.PacketMovePlayer;
+import io.gomint.server.network.packet.PacketPlayState;
+import io.gomint.server.network.packet.PacketPlayerlist;
+import io.gomint.server.network.packet.PacketResourcePackResponse;
+import io.gomint.server.network.packet.PacketResourcePacksInfo;
+import io.gomint.server.network.packet.PacketSetCommandsEnabled;
+import io.gomint.server.network.packet.PacketSetDifficulty;
+import io.gomint.server.network.packet.PacketSetSpawnPosition;
+import io.gomint.server.network.packet.PacketStartGame;
+import io.gomint.server.network.packet.PacketWorldTime;
 import io.gomint.server.network.tcp.ConnectionHandler;
 import io.gomint.server.network.tcp.protocol.FlushTickPacket;
 import io.gomint.server.network.tcp.protocol.WrappedMCPEPacket;
@@ -30,10 +71,10 @@ import io.gomint.server.util.EnumConnectors;
 import io.gomint.server.util.Pair;
 import io.gomint.server.util.StringUtil;
 import io.gomint.server.util.Values;
-import io.gomint.server.util.random.FastRandom;
 import io.gomint.server.world.ChunkAdapter;
 import io.gomint.server.world.CoordinateUtils;
 import io.gomint.server.world.WorldAdapter;
+import io.gomint.util.random.FastRandom;
 import it.unimi.dsi.fastutil.longs.LongIterator;
 import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
 import it.unimi.dsi.fastutil.longs.LongSet;
@@ -45,13 +86,24 @@ import org.slf4j.LoggerFactory;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Base64;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Objects;
+import java.util.Queue;
+import java.util.Set;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.zip.InflaterInputStream;
 
-import static io.gomint.server.network.Protocol.*;
+import static io.gomint.server.network.Protocol.PACKET_BATCH;
+import static io.gomint.server.network.Protocol.PACKET_ENCRYPTION_RESPONSE;
+import static io.gomint.server.network.Protocol.PACKET_LOGIN;
+import static io.gomint.server.network.Protocol.PACKET_RESOURCEPACK_RESPONSE;
 
 /**
  * @author BlackyPaw
@@ -74,6 +126,7 @@ public class PlayerConnection {
         PACKET_HANDLERS[Protocol.PACKET_LOGIN & 0xff] = new PacketLoginHandler();
         PACKET_HANDLERS[Protocol.PACKET_MOB_EQUIPMENT & 0xff] = new PacketMobEquipmentHandler();
         PACKET_HANDLERS[Protocol.PACKET_INTERACT & 0xff] = new PacketInteractHandler();
+        PACKET_HANDLERS[Protocol.PACKET_BLOCK_PICK_REQUEST & 0xff] = new PacketBlockPickRequestHandler();
         PACKET_HANDLERS[Protocol.PACKET_ENCRYPTION_RESPONSE & 0xff] = new PacketEncryptionResponseHandler();
         PACKET_HANDLERS[Protocol.PACKET_INVENTORY_TRANSACTION & 0xff] = new PacketInventoryTransactionHandler();
         PACKET_HANDLERS[Protocol.PACKET_CONTAINER_CLOSE & 0xff] = new PacketContainerCloseHandler();
@@ -123,7 +176,6 @@ public class PlayerConnection {
     @Getter
     @Setter
     private PlayerConnectionState state;
-    private int sentChunks;
     private BlockingQueue<Packet> sendQueue;
 
     // Entity
@@ -144,9 +196,12 @@ public class PlayerConnection {
     @Setter
     @Getter
     private boolean startBreakResult;
-    @Setter
     @Getter
-    private ItemStack lastInteraction;
+    private Set<PacketInventoryTransaction> transactionsHandled = new HashSet<>();
+
+    // Debug stuff
+    @Getter
+    private AtomicInteger responseChunks = new AtomicInteger( 0 );
 
     /**
      * Constructs a new player connection.
@@ -210,7 +265,7 @@ public class PlayerConnection {
      * result in several packets and chunks to be sent in order to account for the change.
      */
     public void onViewDistanceChanged() {
-        LOGGER.debug( "View distance changed to {}", this.getEntity().getViewDistance() );
+        LOGGER.info( "View distance changed to {}", this.getEntity().getViewDistance() );
         this.checkForNewChunks( null, false );
         this.sendChunkRadiusUpdate();
     }
@@ -229,32 +284,47 @@ public class PlayerConnection {
         // Clear spam stuff
         this.startBreakResult = false;
         this.hadStartBreak = false;
-        this.lastInteraction = null;
+        this.transactionsHandled.clear();
 
         // Reset sentInClientTick
         this.lastUpdateDT += dT;
         if ( this.lastUpdateDT >= Values.CLIENT_TICK_RATE ) {
             // Check if we need to send chunks
             if ( this.entity != null && !this.entity.getChunkSendQueue().isEmpty() ) {
-                int maximumInClientTick = this.server.getServerConfig().getSendChunksPerTick();
-                int currentChunks = 0;
-
                 int currentX = CoordinateUtils.fromBlockToChunk( (int) this.entity.getPositionX() );
                 int currentZ = CoordinateUtils.fromBlockToChunk( (int) this.entity.getPositionZ() );
 
                 // Check if we have a slot
                 Queue<ChunkAdapter> queue = this.entity.getChunkSendQueue();
-                while ( !queue.isEmpty() && currentChunks < maximumInClientTick ) {
+                List<ChunkAdapter> recheck = null;
+
+                while ( !queue.isEmpty() ) {
                     ChunkAdapter chunk = queue.poll();
                     if ( chunk == null ||
                         Math.abs( chunk.getX() - currentX ) > this.entity.getViewDistance() ||
                         Math.abs( chunk.getZ() - currentZ ) > this.entity.getViewDistance() ||
                         !chunk.getWorld().equals( this.entity.getWorld() ) ) {
+                        LOGGER.debug( "Removed chunk from sending due to out of scope" );
+                        continue;
+                    }
+
+                    // Check if chunk has been populated
+                    if ( !chunk.isPopulated() ) {
+                        if ( recheck == null ) {
+                            recheck = new ArrayList<>();
+                        }
+
+                        recheck.add( chunk );
                         continue;
                     }
 
                     this.sendWorldChunk( chunk );
-                    currentChunks++;
+                }
+
+                if ( recheck != null ) {
+                    for ( ChunkAdapter adapter : recheck ) {
+                        queue.offer( adapter );
+                    }
                 }
             }
 
@@ -280,23 +350,21 @@ public class PlayerConnection {
         // Send all queued packets
         if ( this.connection != null ) {
             if ( this.sendQueue != null && !this.sendQueue.isEmpty() ) {
-                Packet[] packets = new Packet[this.sendQueue.size()];
-                this.sendQueue.toArray( packets );
-                this.postProcessorExecutor.addWork( this, packets );
-                this.sendQueue.clear();
+                List<Packet> drainedQueue = new ArrayList<>();
+                this.sendQueue.drainTo( drainedQueue );
+                this.postProcessorExecutor.addWork( this, drainedQueue );
             }
         } else {
             if ( this.sendQueue != null && !this.sendQueue.isEmpty() ) {
-                Packet[] packets = new Packet[this.sendQueue.size()];
-                this.sendQueue.toArray( packets );
-                this.sendQueue.clear();
+                List<Packet> drainedQueue = new ArrayList<>();
+                this.sendQueue.drainTo( drainedQueue );
 
-                PacketBuffer[] packetBuffers = new PacketBuffer[packets.length];
-                for ( int i = 0; i < packets.length; i++ ) {
+                PacketBuffer[] packetBuffers = new PacketBuffer[drainedQueue.size()];
+                for ( int i = 0; i < drainedQueue.size(); i++ ) {
                     packetBuffers[i] = new PacketBuffer( 2 );
-                    packetBuffers[i].writeByte( packets[i].getId() );
+                    packetBuffers[i].writeByte( drainedQueue.get( i ).getId() );
                     packetBuffers[i].writeShort( (short) 0 );
-                    packets[i].serialize( packetBuffers[i], this.protocolID );
+                    drainedQueue.get( i ).serialize( packetBuffers[i], this.protocolID );
                 }
 
                 WrappedMCPEPacket mcpePacket = new WrappedMCPEPacket();
@@ -355,7 +423,7 @@ public class PlayerConnection {
     public void send( Packet packet ) {
         if ( this.connection != null ) {
             if ( !( packet instanceof PacketBatch ) ) {
-                this.postProcessorExecutor.addWork( this, new Packet[]{ packet } );
+                this.postProcessorExecutor.addWork( this, Collections.singletonList( packet ) );
             } else {
                 PacketBuffer buffer = new PacketBuffer( 64 );
                 buffer.writeByte( packet.getId() );
@@ -390,23 +458,19 @@ public class PlayerConnection {
         this.addToSendQueue( chunkAdapter.getCachedPacket( this.protocolID ) );
         this.entity.getEntityVisibilityManager().updateAddedChunk( chunkAdapter );
 
-        if ( this.state == PlayerConnectionState.LOGIN ) {
-            this.sentChunks++;
-            if ( this.sentChunks >= 81 ) {
-                int spawnXChunk = CoordinateUtils.fromBlockToChunk( (int) this.entity.getLocation().getX() );
-                int spawnZChunk = CoordinateUtils.fromBlockToChunk( (int) this.entity.getLocation().getZ() );
+        if ( this.state == PlayerConnectionState.LOGIN && this.loadingChunks.isEmpty() ) {
+            int spawnXChunk = CoordinateUtils.fromBlockToChunk( (int) this.entity.getLocation().getX() );
+            int spawnZChunk = CoordinateUtils.fromBlockToChunk( (int) this.entity.getLocation().getZ() );
 
-                WorldAdapter worldAdapter = this.entity.getWorld();
-                worldAdapter.movePlayerToChunk( spawnXChunk, spawnZChunk, this.entity );
+            WorldAdapter worldAdapter = this.entity.getWorld();
+            worldAdapter.movePlayerToChunk( spawnXChunk, spawnZChunk, this.entity );
 
-                this.getEntity().firstSpawn();
+            this.getEntity().firstSpawn();
 
-                this.state = PlayerConnectionState.PLAYING;
-                this.checkForNewChunks( null, false );
+            this.state = PlayerConnectionState.PLAYING;
 
-                this.entity.getLoginPerformance().setChunkEnd( this.entity.getWorld().getServer().getCurrentTickTime() );
-                this.entity.getLoginPerformance().print();
-            }
+            this.entity.getLoginPerformance().setChunkEnd( this.entity.getWorld().getServer().getCurrentTickTime() );
+            this.entity.getLoginPerformance().print();
         }
 
         return true;
@@ -584,9 +648,16 @@ public class PlayerConnection {
 
         List<Pair<Integer, Integer>> toSendChunks = new ArrayList<>();
 
-        for ( int sendXChunk = currentXChunk - viewDistance; sendXChunk < currentXChunk + viewDistance; sendXChunk++ ) {
-            for ( int sendZChunk = currentZChunk - viewDistance; sendZChunk < currentZChunk + viewDistance; sendZChunk++ ) {
-                toSendChunks.add( new Pair<>( sendXChunk, sendZChunk ) );
+        for ( int sendXChunk = currentXChunk - viewDistance; sendXChunk <= currentXChunk + viewDistance; sendXChunk++ ) {
+            for ( int sendZChunk = currentZChunk - viewDistance; sendZChunk <= currentZChunk + viewDistance; sendZChunk++ ) {
+                if ( forceResendEntities ) {
+                    toSendChunks.add( new Pair<>( sendXChunk, sendZChunk ) );
+                } else {
+                    long hash = CoordinateUtils.toLong( sendXChunk, sendZChunk );
+                    if ( !this.playerChunks.contains( hash ) && !this.loadingChunks.contains( hash ) ) {
+                        toSendChunks.add( new Pair<>( sendXChunk, sendZChunk ) );
+                    }
+                }
             }
         }
 
@@ -616,26 +687,21 @@ public class PlayerConnection {
         }
 
         for ( Pair<Integer, Integer> chunk : toSendChunks ) {
-            long hash = CoordinateUtils.toLong( chunk.getFirst(), chunk.getSecond() );
-
-            if ( !this.playerChunks.contains( hash ) && !this.loadingChunks.contains( hash ) ) {
-                this.loadingChunks.add( hash );
-
-                LOGGER.debug( "Requesting chunk {} {} for {}", chunk.getFirst(), chunk.getSecond(), this.entity );
-                worldAdapter.sendChunk( chunk.getFirst(), chunk.getSecond(), this.entity,
-                    false, ( chunkHash, loadedChunk ) -> {
-                        if ( this.entity != null ) { // It can happen that the server loads longer and the client has disconnected
-                            this.entity.getChunkSendQueue().offer( loadedChunk );
-                        }
-                    } );
-            } else if ( forceResendEntities ) {
-                // We already know this chunk but maybe forceResend is enabled
-                worldAdapter.sendChunk( chunk.getFirst(), chunk.getSecond(), this.entity,
-                    false, ( chunkHash, loadedChunk ) -> {
-                        if ( this.entity != null ) { // It can happen that the server loads longer and the client has disconnected
-                            this.entity.getEntityVisibilityManager().updateAddedChunk( loadedChunk );
-                        }
-                    } );
+            if ( forceResendEntities ) {
+                long hash = CoordinateUtils.toLong( chunk.getFirst(), chunk.getSecond() );
+                if ( !this.playerChunks.contains( hash ) && !this.loadingChunks.contains( hash ) ) {
+                    this.requestChunk( chunk.getFirst(), chunk.getSecond() );
+                } else {
+                    // We already know this chunk but maybe forceResend is enabled
+                    worldAdapter.sendChunk( chunk.getFirst(), chunk.getSecond(), this.entity,
+                        false, ( chunkHash, loadedChunk ) -> {
+                            if ( this.entity != null ) { // It can happen that the server loads longer and the client has disconnected
+                                this.entity.getEntityVisibilityManager().updateAddedChunk( loadedChunk );
+                            }
+                        } );
+                }
+            } else {
+                this.requestChunk( chunk.getFirst(), chunk.getSecond() );
             }
         }
 
@@ -668,6 +734,16 @@ public class PlayerConnection {
                 longCursor.remove();
             }
         }
+    }
+
+    private void requestChunk( Integer x, Integer z ) {
+        LOGGER.debug( "Requesting chunk {} {} for {}", x, z, this.entity );
+        this.entity.getWorld().sendChunk( x, z, this.entity,
+            false, ( chunkHash, loadedChunk ) -> {
+                if ( this.entity != null ) { // It can happen that the server loads longer and the client has disconnected
+                    this.entity.getChunkSendQueue().offer( loadedChunk );
+                }
+            } );
     }
 
     /**
@@ -751,7 +827,7 @@ public class PlayerConnection {
         move.setX( location.getX() );
         move.setY( (float) ( location.getY() + 1.62 ) );
         move.setZ( location.getZ() );
-        move.setHeadYaw( location.getYaw() );
+        move.setHeadYaw( location.getHeadYaw() );
         move.setYaw( location.getYaw() );
         move.setPitch( location.getPitch() );
         move.setMode( (byte) 2 );
@@ -810,7 +886,8 @@ public class PlayerConnection {
         packet.setCommandsEnabled( true );
         packet.setEnchantmentSeed( FastRandom.current().nextInt() );
 
-        this.entity.setPosition( this.entity.getSpawnLocation() != null ? this.entity.getSpawnLocation() : world.getSpawnLocation() );
+        // Set the new location
+        this.entity.setAndRecalcPosition( this.entity.getSpawnLocation() != null ? this.entity.getSpawnLocation() : world.getSpawnLocation() );
         this.addToSendQueue( packet );
     }
 
@@ -900,7 +977,40 @@ public class PlayerConnection {
     }
 
     public void spawnPlayerEntities() {
+        // Now its ok to send players
+        this.entity.setSpawnPlayers( true );
 
+        // Send player list for all online players
+        List<PacketPlayerlist.Entry> listEntry = null;
+        for ( io.gomint.entity.EntityPlayer player : this.getServer().getPlayers() ) {
+            if ( !this.entity.isHidden( player ) && !this.entity.equals( player ) ) {
+                if ( listEntry == null ) {
+                    listEntry = new ArrayList<>();
+                }
+
+                listEntry.add( new PacketPlayerlist.Entry( (EntityHuman) player ) );
+            }
+        }
+
+        if ( listEntry != null ) {
+            // Send player list
+            PacketPlayerlist packetPlayerlist = new PacketPlayerlist();
+            packetPlayerlist.setMode( (byte) 0 );
+            packetPlayerlist.setEntries( listEntry );
+            this.send( packetPlayerlist );
+        }
+
+        // Show all players
+        LongIterator playerChunksIterator = this.playerChunks.iterator();
+        while ( playerChunksIterator.hasNext() ) {
+            long chunkHash = playerChunksIterator.nextLong();
+
+            int currentX = (int) ( chunkHash >> 32 );
+            int currentZ = (int) ( chunkHash ) + Integer.MIN_VALUE;
+
+            ChunkAdapter chunk = this.entity.getWorld().getChunk( currentX, currentZ );
+            this.entity.getEntityVisibilityManager().updateAddedChunk( chunk );
+        }
     }
 
 }

@@ -12,4 +12,25 @@ package io.gomint.world.block;
  * @version 1.0
  */
 public interface BlockTallGrass extends Block {
+
+    public enum Type {
+        DEAD_BUSH,
+        GRASS,
+        FERN,
+    }
+
+    /**
+     * Set the grass type of this tall grass block
+     *
+     * @param type of this block
+     */
+    void setGrassType( Type type );
+
+    /**
+     * Get the type of this tall grass block
+     *
+     * @return type of this block
+     */
+    Type getGrassType();
+
 }

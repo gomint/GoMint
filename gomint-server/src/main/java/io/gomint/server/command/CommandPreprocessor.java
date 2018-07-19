@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
 
 /**
  * @author geNAZt
@@ -40,10 +39,9 @@ public class CommandPreprocessor {
     // WILDCARD_INT
     private static final int ARG_TYPE_TARGET = 0x05;
     // WILDCARD_TARGET
-    private static final int ARG_TYPE_STRING = 0x0e;
-    private static final int ARG_TYPE_POSITION = 0x0f;
-    private static final int ARG_TYPE_RAWTEXT = 0x13;
-    private static final int ARG_TYPE_TEXT = 0x15;
+    private static final int ARG_TYPE_STRING = 0x0f;
+    private static final int ARG_TYPE_POSITION = 0x10;
+    private static final int ARG_TYPE_RAWTEXT = 0x15;
     private static final int ARG_TYPE_JSON = 0x18;
     private static final int ARG_TYPE_COMMAND = 0x1f;
     /**
@@ -160,7 +158,7 @@ public class CommandPreprocessor {
                                     break;
                                 case TEXT:
                                     paramType |= ARG_FLAG_VALID;
-                                    paramType |= ARG_TYPE_TEXT;
+                                    paramType |= ARG_TYPE_RAWTEXT;
                                     break;
                                 case FLOAT:
                                     paramType |= ARG_FLAG_VALID;

@@ -22,9 +22,12 @@ public class TransformComponent implements EntityComponent, Transformable {
     private float posY;
     private float posZ;
 
-    @Setter private float motionX;
-    @Setter private float motionY;
-    @Setter private float motionZ;
+    @Setter
+    private float motionX;
+    @Setter
+    private float motionY;
+    @Setter
+    private float motionZ;
 
     private float yaw;
     private float headYaw;
@@ -129,8 +132,8 @@ public class TransformComponent implements EntityComponent, Transformable {
         float y = (float) -Math.sin( rP );
         double cosP = Math.cos( rP );
 
-        float x = (float) (-cosP * Math.sin( rY ));
-        float z = (float) (cosP * Math.cos( rY ));
+        float x = (float) ( -cosP * Math.sin( rY ) );
+        float z = (float) ( cosP * Math.cos( rY ) );
 
         return new Vector( x, y, z );
     }

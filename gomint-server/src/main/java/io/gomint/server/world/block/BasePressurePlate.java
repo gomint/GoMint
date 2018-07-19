@@ -9,6 +9,7 @@ package io.gomint.server.world.block;
 
 import io.gomint.math.AxisAlignedBB;
 import io.gomint.server.entity.Entity;
+import io.gomint.server.world.block.state.BooleanBlockState;
 
 import java.util.Collections;
 import java.util.List;
@@ -20,38 +21,34 @@ import java.util.function.Function;
  */
 public abstract class BasePressurePlate extends Block {
 
+    private BooleanBlockState activated = new BooleanBlockState();
+
     @Override
     public void stepOn( Entity entity ) {
         // Check for additional temporary data
-        Integer amountOfEntitiesOn = this.storeInTemporaryStorage( "amountOfEntitiesOn", new Function<Integer, Integer>() {
-            @Override
-            public Integer apply( Integer old ) {
-                if ( old == null ) return 1;
-                return old + 1;
-            }
+        Integer amountOfEntitiesOn = this.storeInTemporaryStorage( "amountOfEntitiesOn", (Function<Integer, Integer>) old -> {
+            if ( old == null ) return 1;
+            return old + 1;
         } );
 
         if ( amountOfEntitiesOn > 0 && this.getBlockData() != 1 ) {
-            this.setBlockData( (byte) 1 );
+            this.activated.setState( true );
             this.updateBlock();
         }
     }
 
     @Override
     public void gotOff( Entity entity ) {
-        Integer amountOfEntitiesOn = this.storeInTemporaryStorage( "amountOfEntitiesOn", new Function<Integer, Integer>() {
-            @Override
-            public Integer apply( Integer old ) {
-                // For some weird reason a player can enter and leave a block in the same tick
-                if ( old == null ) return null;
+        Integer amountOfEntitiesOn = this.storeInTemporaryStorage( "amountOfEntitiesOn", (Function<Integer, Integer>) old -> {
+            // For some weird reason a player can enter and leave a block in the same tick
+            if ( old == null ) return null;
 
-                if ( old - 1 == 0 ) return null;
-                return old - 1;
-            }
+            if ( old - 1 == 0 ) return null;
+            return old - 1;
         } );
 
         if ( amountOfEntitiesOn == null && this.getBlockData() == 1 ) {
-            this.setBlockData( (byte) 0 );
+            this.activated.setState( false );
             this.updateBlock();
         }
     }
@@ -66,6 +63,17 @@ public abstract class BasePressurePlate extends Block {
             this.location.getY() + 0.0625f,
             this.location.getZ() + 0.9375f
         ) );
+    }
+
+    @Override
+    public void generateBlockStates() {
+        this.activated.fromData( (byte) ( this.getBlockData() & 0x01 ) );
+    }
+
+    @Override
+    public void calculateBlockData() {
+        this.resetBlockData();
+        this.addToBlockData( this.activated.toData() );
     }
 
 }

@@ -54,24 +54,28 @@ public class JavaZLib implements ZLib {
         in.readBytes( inData );
 
         if ( compress ) {
-            deflater.setInput( inData );
-            deflater.finish();
+            try {
+                deflater.setInput( inData );
+                deflater.finish();
 
-            while ( !deflater.finished() ) {
-                int count = deflater.deflate( buffer );
-                out.writeBytes( buffer, 0, count );
+                while ( !deflater.finished() ) {
+                    int count = deflater.deflate( buffer );
+                    out.writeBytes( buffer, 0, count );
+                }
+            } finally {
+                deflater.reset();
             }
-
-            deflater.reset();
         } else {
-            inflater.setInput( inData );
+            try {
+                inflater.setInput( inData );
 
-            while ( !inflater.finished() && inflater.getTotalIn() < inData.length ) {
-                int count = inflater.inflate( buffer );
-                out.writeBytes( buffer, 0, count );
+                while ( !inflater.finished() && inflater.getTotalIn() < inData.length ) {
+                    int count = inflater.inflate( buffer );
+                    out.writeBytes( buffer, 0, count );
+                }
+            } finally {
+                inflater.reset();
             }
-
-            inflater.reset();
         }
     }
 

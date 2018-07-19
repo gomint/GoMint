@@ -1,16 +1,13 @@
 package io.gomint.server.world.block;
 
-import io.gomint.inventory.item.ItemDiamondPickaxe;
-import io.gomint.inventory.item.ItemGoldenPickaxe;
-import io.gomint.inventory.item.ItemIronPickaxe;
 import io.gomint.inventory.item.ItemStack;
-import io.gomint.inventory.item.ItemStonePickaxe;
-import io.gomint.inventory.item.ItemWoodenPickaxe;
 import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.world.block.helper.ToolPresets;
+import io.gomint.server.world.block.state.EnumBlockState;
 import io.gomint.world.block.BlockType;
+import lombok.EqualsAndHashCode;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -18,7 +15,10 @@ import java.util.List;
  * @version 1.0
  */
 @RegisterInfo( id = 155 )
+@EqualsAndHashCode( callSuper = true )
 public class BlockOfQuartz extends Block implements io.gomint.world.block.BlockBlockOfQuartz {
+
+    private EnumBlockState<Variant> variant = new EnumBlockState<>( Variant.values() );
 
     @Override
     public int getBlockId() {
@@ -42,40 +42,12 @@ public class BlockOfQuartz extends Block implements io.gomint.world.block.BlockB
 
     @Override
     public Variant getVariant() {
-        switch ( this.getBlockData() ) {
-            case 0:
-                return Variant.NORMAL;
-            case 1:
-                return Variant.CHISELED;
-            case 2:
-                return Variant.VERTICAL_PILLAR;
-            case 3:
-                return Variant.NORTH_SOUTH_PILLAR;
-            case 4:
-            default:
-                return Variant.EAST_WEST_PILLAR;
-        }
+        return this.variant.getState();
     }
 
     @Override
     public void setVariant( Variant variant ) {
-        switch ( variant ) {
-            case CHISELED:
-                this.setBlockData( (byte) 1 );
-                break;
-            case VERTICAL_PILLAR:
-                this.setBlockData( (byte) 2 );
-                break;
-            case NORTH_SOUTH_PILLAR:
-                this.setBlockData( (byte) 3 );
-                break;
-            case EAST_WEST_PILLAR:
-                this.setBlockData( (byte) 4 );
-                break;
-            case NORMAL:
-            default:
-                this.setBlockData( (byte) 0 );
-        }
+        this.variant.setState( variant );
     }
 
     @Override
@@ -86,12 +58,21 @@ public class BlockOfQuartz extends Block implements io.gomint.world.block.BlockB
     @Override
     public List<ItemStack> getDrops( ItemStack itemInHand ) {
         if ( isCorrectTool( itemInHand ) ) {
-            return new ArrayList<ItemStack>() {{
-                add( world.getServer().getItems().create( getBlockId() & 0xFF, getBlockData(), (byte) 1, null ) );
-            }};
+            return super.getDrops( itemInHand );
         }
 
-        return new ArrayList<>();
+        return Collections.emptyList();
+    }
+
+    @Override
+    public void generateBlockStates() {
+        this.variant.fromData( this.getBlockData() );
+    }
+
+    @Override
+    public void calculateBlockData() {
+        this.resetBlockData();
+        this.addToBlockData( this.variant.toData() );
     }
 
 }

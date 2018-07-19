@@ -72,11 +72,39 @@ public interface Entity {
     float getPitch();
 
     /**
+     * Set the entity pitch
+     *
+     * @param pitch which should be set
+     */
+    void setPitch( float pitch );
+
+    /**
      * Get current yaw
      *
      * @return current yaw
      */
     float getYaw();
+
+    /**
+     * Set yaw of the entity
+     *
+     * @param yaw which should be set
+     */
+    void setYaw( float yaw );
+
+    /**
+     * Get current head yaw
+     *
+     * @return current head yaw
+     */
+    float getHeadYaw();
+
+    /**
+     * Set head yaw of the entity
+     *
+     * @param yaw of the entity
+     */
+    void setHeadYaw( float yaw );
 
     /**
      * Set a entities velocity
@@ -94,7 +122,7 @@ public interface Entity {
 
     /**
      * Get the name tag of this entity
-     *
+     * <p>
      * The name tag is shown above the entity in the client
      *
      * @return The name tag of the entity
@@ -103,7 +131,7 @@ public interface Entity {
 
     /**
      * Set the name tag of this entity
-     *
+     * <p>
      * The name tag is shown above the entity in the client
      *
      * @param nameTag The new name tag of this entity
@@ -173,7 +201,7 @@ public interface Entity {
      * Set the age of this entity. This can be used to control automatic despawning.
      *
      * @param duration which will be multiplied with the given unit
-     * @param unit of time
+     * @param unit     of time
      */
     void setAge( long duration, TimeUnit unit );
 
@@ -246,7 +274,6 @@ public interface Entity {
      * Get eye height of entity
      *
      * @return eye height
-     *
      */
     float getEyeHeight();
 

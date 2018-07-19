@@ -7,11 +7,13 @@ import io.gomint.server.jni.zlib.NativeZLib;
 import io.gomint.server.jni.zlib.ZLib;
 import io.gomint.server.network.packet.Packet;
 import io.gomint.server.network.packet.PacketBatch;
+import io.gomint.server.network.packet.PacketWorldChunk;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.PooledByteBufAllocator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -20,7 +22,6 @@ import java.util.concurrent.TimeUnit;
  */
 public class PostProcessWorker implements Runnable {
 
-    private static final int ADLER_BASE = 65521;
     private static final Logger LOGGER = LoggerFactory.getLogger( PostProcessWorker.class );
     private static final NativeCode<ZLib> ZLIB = new NativeCode<>( "zlib", JavaZLib.class, NativeZLib.class );
     private static final ThreadLocal<ZLib> COMPRESSOR = new ThreadLocal<>();
@@ -30,9 +31,9 @@ public class PostProcessWorker implements Runnable {
     }
 
     private final PlayerConnection connection;
-    private final Packet[] packets;
+    private final List<Packet> packets;
 
-    public PostProcessWorker( PlayerConnection connection, Packet[] packets ) {
+    public PostProcessWorker( PlayerConnection connection, List<Packet> packets ) {
         this.connection = connection;
         this.packets = packets;
     }
@@ -107,70 +108,6 @@ public class PostProcessWorker implements Runnable {
         }
 
         stream.writeByte( copyValue );
-    }
-
-    private long chop( long a ) {
-        long tmp = a >> 16;
-        a &= 0xffffL;
-        a += ( tmp << 4 ) - tmp;
-        return a;
-    }
-
-    private long mod28( long a ) {
-        a = chop( a );
-        if ( a >= ADLER_BASE ) {
-            a -= ADLER_BASE;
-        }
-
-        return a;
-    }
-
-    private int adler( byte[] data, int offset, int length ) {
-        int s1 = 1;
-        int s2 = 0;
-
-        // Fast out
-        if ( length == 1 ) {
-            s1 += data[offset];
-            s2 += s1;
-            return s2 << 16 | s1;
-        }
-
-        // Use faster modulo
-        if ( length < 16 ) {
-            for ( int i = 0; i < length; i++ ) {
-                s1 += data[offset + i];
-                s2 += s1;
-            }
-
-            if ( s1 >= ADLER_BASE ) {
-                s1 -= ADLER_BASE;
-            }
-
-            s2 = (int) mod28( s2 );
-            return s2 << 16 | s1;
-        }
-
-        short counter = 0;
-
-        for ( int i = 0; i < length; i++ ) {
-            s1 += data[offset + i];
-            s2 += s1;
-
-            counter++;
-            if ( counter == 5552 ) {
-                s1 %= ADLER_BASE;
-                s2 %= ADLER_BASE;
-                counter = 0;
-            }
-        }
-
-        if ( counter > 0 ) {
-            s1 %= ADLER_BASE;
-            s2 %= ADLER_BASE;
-        }
-
-        return s2 << 16 | s1;
     }
 
 }

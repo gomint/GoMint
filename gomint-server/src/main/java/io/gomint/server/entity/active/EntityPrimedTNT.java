@@ -89,8 +89,7 @@ public class EntityPrimedTNT extends Entity implements io.gomint.entity.active.E
 
             if ( this.onGround ) {
                 Vector motion = this.getVelocity();
-                motion.multiply( new Vector( 0.7f, -0.5f, 0.7f ) );
-                this.setVelocity( motion );
+                this.setVelocity( motion.multiply( new Vector( 0.7f, -0.5f, 0.7f ) ) );
             }
 
             this.fuse--;

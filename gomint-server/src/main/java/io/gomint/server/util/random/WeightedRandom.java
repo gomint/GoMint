@@ -1,5 +1,7 @@
 package io.gomint.server.util.random;
 
+import io.gomint.util.random.FastRandom;
+
 import java.util.NavigableMap;
 import java.util.TreeMap;
 

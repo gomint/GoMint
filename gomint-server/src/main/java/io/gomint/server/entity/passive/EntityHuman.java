@@ -13,7 +13,14 @@ import io.gomint.event.entity.EntityHealEvent;
 import io.gomint.event.player.PlayerExhaustEvent;
 import io.gomint.event.player.PlayerFoodLevelChangeEvent;
 import io.gomint.math.MathUtils;
-import io.gomint.server.entity.*;
+import io.gomint.player.PlayerSkin;
+import io.gomint.server.entity.Attribute;
+import io.gomint.server.entity.AttributeInstance;
+import io.gomint.server.entity.AttributeModifier;
+import io.gomint.server.entity.EntityCreature;
+import io.gomint.server.entity.EntityFlag;
+import io.gomint.server.entity.EntityPlayer;
+import io.gomint.server.entity.EntityType;
 import io.gomint.server.entity.metadata.MetadataContainer;
 import io.gomint.server.inventory.ArmorInventory;
 import io.gomint.server.inventory.PlayerInventory;
@@ -22,15 +29,18 @@ import io.gomint.server.network.packet.Packet;
 import io.gomint.server.network.packet.PacketEntityMetadata;
 import io.gomint.server.network.packet.PacketPlayerlist;
 import io.gomint.server.network.packet.PacketSpawnPlayer;
-import io.gomint.server.player.PlayerSkin;
 import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.util.Values;
 import io.gomint.server.world.WorldAdapter;
+import io.gomint.taglib.NBTTagCompound;
 import io.gomint.world.Difficulty;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Observable;
+import java.util.Observer;
 import java.util.UUID;
 
 /**
@@ -89,9 +99,17 @@ public class EntityHuman extends EntityCreature implements io.gomint.entity.pass
         this.metadataContainer.putString( MetadataContainer.DATA_NAMETAG, this.username );
     }
 
+    @Override
+    protected void setSize( float width, float height ) {
+        super.setSize( width, height );
+
+        if ( height > 1.61f ) {
+            this.eyeHeight = 1.62f;
+        }
+    }
+
     private void initEntity() {
         this.setSize( 0.6f, 1.8f );
-        this.eyeHeight = 1.62f;
         this.offsetY = this.eyeHeight + 0.0001f;
         this.stepHeight = 0.6f;
 
@@ -114,6 +132,26 @@ public class EntityHuman extends EntityCreature implements io.gomint.entity.pass
 
         this.setNameTagAlwaysVisible( true );
         this.setCanClimb( true );
+
+        // TODO: MJ BUG / 1.5.0.14 / Nametags don't change according to metadata index 4 (nametag) anymore, the client uses the name set in the spawn player packet
+        this.metadataContainer.addObserver( new Observer() {
+            @Override
+            public void update( Observable o, Object arg ) {
+                if ( arg instanceof Integer ) {
+                    // A key changed
+                    int key = (int) arg;
+                    if ( key == MetadataContainer.DATA_NAMETAG ) {
+                        // We despawn this for everyone and respawn it
+                        for ( io.gomint.entity.Entity entity : new HashSet<>( getAttachedEntities() ) ) {
+                            if ( entity instanceof EntityPlayer ) {
+                                ( (EntityPlayer) entity ).getEntityVisibilityManager().removeEntity( EntityHuman.this );
+                                ( (EntityPlayer) entity ).getEntityVisibilityManager().addEntity( EntityHuman.this );
+                            }
+                        }
+                    }
+                }
+            }
+        } );
     }
 
     @Override
@@ -209,11 +247,6 @@ public class EntityHuman extends EntityCreature implements io.gomint.entity.pass
             }
 
             this.lastUpdateDT = 0;
-        }
-
-        // Check for sprint
-        if ( this.getHunger() <= 6 && this.isSprinting() ) {
-            this.setSprinting( false );
         }
     }
 
@@ -356,7 +389,7 @@ public class EntityHuman extends EntityCreature implements io.gomint.entity.pass
             this.metadataContainer.setDataFlag( MetadataContainer.DATA_INDEX, EntityFlag.SPRINTING, value );
             AttributeInstance movementSpeed = this.getAttributeInstance( Attribute.MOVEMENT_SPEED );
             if ( value ) {
-                movementSpeed.setMultiplyModifier( AttributeModifier.SPRINT_MULTIPLY, 1.3f );
+                movementSpeed.setMultiplyModifier( AttributeModifier.SPRINT_MULTIPLY, 0.3f );
             } else {
                 movementSpeed.removeMultiplyModifier( AttributeModifier.SPRINT_MULTIPLY );
             }
@@ -373,9 +406,9 @@ public class EntityHuman extends EntityCreature implements io.gomint.entity.pass
         if ( value != isSneaking() ) {
             this.metadataContainer.setDataFlag( MetadataContainer.DATA_INDEX, EntityFlag.SNEAKING, value );
             if ( value ) {
-                this.height = 1.62f;
+                this.setSize( 0.6f, 1.62f );
             } else {
-                this.height = 1.8f;
+                this.setSize( 0.6f, 1.8f );
             }
         }
     }
@@ -383,6 +416,24 @@ public class EntityHuman extends EntityCreature implements io.gomint.entity.pass
     @Override
     public boolean isSneaking() {
         return this.metadataContainer.getDataFlag( MetadataContainer.DATA_INDEX, EntityFlag.SNEAKING );
+    }
+
+    @Override
+    public void setSwimming( boolean value ) {
+        if ( value != isSwimming() ) {
+            if ( value ) {
+                this.setSize( 0.6f, 0.6f );
+            } else {
+                this.setSize( 0.6f, 1.8f );
+            }
+
+            this.metadataContainer.setDataFlag( MetadataContainer.DATA_INDEX, EntityFlag.SWIMMING, value );
+        }
+    }
+
+    @Override
+    public boolean isSwimming() {
+        return this.metadataContainer.getDataFlag( MetadataContainer.DATA_INDEX, EntityFlag.SWIMMING );
     }
 
     @Override
@@ -415,12 +466,12 @@ public class EntityHuman extends EntityCreature implements io.gomint.entity.pass
     }
 
     @Override
-    public void setSkin( io.gomint.player.PlayerSkin skin ) {
+    public void setSkin( PlayerSkin skin ) {
         if ( this.skin != null ) {
-            this.skin = (PlayerSkin) skin;
+            this.skin = skin;
             this.updatePlayerList();
         } else {
-            this.skin = (PlayerSkin) skin;
+            this.skin = skin;
         }
     }
 
@@ -462,7 +513,7 @@ public class EntityHuman extends EntityCreature implements io.gomint.entity.pass
     public Packet createSpawnPacket() {
         PacketSpawnPlayer packetSpawnPlayer = new PacketSpawnPlayer();
         packetSpawnPlayer.setUuid( this.getUUID() );
-        packetSpawnPlayer.setName( this.getName() );
+        packetSpawnPlayer.setName( this.getNameTag() ); // TODO: MJ BUG / 1.5.0.14 / Nametags don't change according to metadata index 4 (nametag) anymore, the client uses the name set in the spawn player packet
         packetSpawnPlayer.setEntityId( this.getEntityId() );
         packetSpawnPlayer.setRuntimeEntityId( this.getEntityId() );
 
@@ -509,6 +560,25 @@ public class EntityHuman extends EntityCreature implements io.gomint.entity.pass
         }} );
 
         connection.addToSendQueue( packetPlayerlist );
+    }
+
+    @Override
+    public void initFromNBT( NBTTagCompound compound ) {
+        super.initFromNBT( compound );
+    }
+
+    @Override
+    public NBTTagCompound persistToNBT() {
+        NBTTagCompound compound = super.persistToNBT();
+
+        // Food
+        compound.addValue( "foodLevel", (int) this.getHunger() );
+        compound.addValue( "foodExhaustionLevel", this.getExhaustion() );
+        compound.addValue( "foodSaturationLevel", this.getSaturation() );
+        compound.addValue( "foodTickTimer", this.foodTicks );
+
+        // Player inventory
+        return compound;
     }
 
 }

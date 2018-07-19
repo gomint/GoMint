@@ -1,7 +1,6 @@
 package io.gomint.server.inventory;
 
 import io.gomint.entity.Entity;
-import io.gomint.inventory.InventoryType;
 import io.gomint.inventory.item.ItemAir;
 import io.gomint.inventory.item.ItemStack;
 import io.gomint.server.entity.EntityPlayer;
@@ -60,7 +59,15 @@ public abstract class Inventory implements io.gomint.inventory.Inventory {
             item = ItemAir.create( 0 );
         }
 
+        // Get old item
+        io.gomint.server.inventory.item.ItemStack oldItemStack = (io.gomint.server.inventory.item.ItemStack) this.contents[index];
+        if ( oldItemStack != null ) {
+            oldItemStack.removePlace( this, index );
+        }
+
+        // Set new item
         this.contents[index] = item;
+        ( (io.gomint.server.inventory.item.ItemStack) item ).addPlace( this, index );
 
         for ( PlayerConnection playerConnection : this.viewer ) {
             this.sendContents( index, playerConnection );
@@ -197,7 +204,7 @@ public abstract class Inventory implements io.gomint.inventory.Inventory {
         if ( this.contents != null ) {
             for ( int i = 0; i < this.contents.length; i++ ) {
                 if ( this.contents[i] != null ) {
-                     onRemove( i );
+                    onRemove( i );
                 }
             }
         }
@@ -212,7 +219,8 @@ public abstract class Inventory implements io.gomint.inventory.Inventory {
     }
 
     protected void onRemove( int slot ) {
-
+        io.gomint.server.inventory.item.ItemStack itemStack = (io.gomint.server.inventory.item.ItemStack) this.getItem( slot );
+        itemStack.removePlace( this, slot );
     }
 
     public void resizeAndClear( int newSize ) {
@@ -231,6 +239,19 @@ public abstract class Inventory implements io.gomint.inventory.Inventory {
         return viewers;
     }
 
-    public abstract InventoryType getInventoryType();
+    @Override
+    public boolean contains( ItemStack itemStack ) {
+        if ( itemStack == null ) {
+            return false;
+        }
+
+        for ( ItemStack content : this.contents ) {
+            if ( itemStack.equals( content ) ) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 
 }

@@ -66,9 +66,9 @@ public class MojangLoginForger {
         claims.put( "identityPublicKey", publicKeyBase64 );
 
         StringBuilder builder = new StringBuilder();
-        builder.append( Base64.getUrlEncoder().encodeToString( header.toJSONString().getBytes( StandardCharsets.UTF_8 ) ) );
+        builder.append( Base64.getUrlEncoder().withoutPadding().encodeToString( header.toJSONString().getBytes( StandardCharsets.UTF_8 ) ) );
         builder.append( '.' );
-        builder.append( Base64.getUrlEncoder().encodeToString( claims.toJSONString().getBytes( StandardCharsets.UTF_8 ) ) );
+        builder.append( Base64.getUrlEncoder().withoutPadding().encodeToString( claims.toJSONString().getBytes( StandardCharsets.UTF_8 ) ) );
 
         // Sign the token:
         byte[] signatureBytes = builder.toString().getBytes( StandardCharsets.US_ASCII );
@@ -81,7 +81,7 @@ public class MojangLoginForger {
         }
 
         builder.append( '.' );
-        builder.append( Base64.getUrlEncoder().encodeToString( signatureDigest ) );
+        builder.append( Base64.getUrlEncoder().withoutPadding().encodeToString( signatureDigest ) );
 
         return builder.toString();
     }

@@ -80,14 +80,14 @@ public abstract class Liquid extends Block implements BlockLiquid {
                 blockDecay = this.getEffectiveFlowDecay( this.world.getBlockAt( other.getLocation().toBlockPosition().add( 0, -1, 0 ) ) );
                 if ( blockDecay >= 0 ) {
                     byte realDecay = (byte) ( blockDecay - ( decay - 8 ) );
-                    vector.add( ( other.getLocation().getX() - this.getLocation().getX() ) * (float) realDecay,
+                   vector = vector.add( ( other.getLocation().getX() - this.getLocation().getX() ) * (float) realDecay,
                         ( other.getLocation().getY() - this.getLocation().getY() ) * (float) realDecay,
                         ( other.getLocation().getZ() - this.getLocation().getZ() ) * (float) realDecay );
                 }
             } else {
                 // Check if we need to update the other blocks decay
                 byte realDecay = (byte) ( blockDecay - decay );
-                vector.add( ( other.getLocation().getX() - this.getLocation().getX() ) * (float) realDecay,
+                vector = vector.add( ( other.getLocation().getX() - this.getLocation().getX() ) * (float) realDecay,
                     ( other.getLocation().getY() - this.getLocation().getY() ) * (float) realDecay,
                     ( other.getLocation().getZ() - this.getLocation().getZ() ) * (float) realDecay );
             }
@@ -397,8 +397,8 @@ public abstract class Liquid extends Block implements BlockLiquid {
     }
 
     @Override
-    public void addVelocity( Entity entity, Vector pushedByBlocks ) {
-        pushedByBlocks.add( this.getFlowVector() );
+    public Vector addVelocity( Entity entity, Vector pushedByBlocks ) {
+        return pushedByBlocks.add( this.getFlowVector() );
     }
 
     /**

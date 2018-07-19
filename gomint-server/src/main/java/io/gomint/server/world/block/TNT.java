@@ -1,6 +1,5 @@
 package io.gomint.server.world.block;
 
-import io.gomint.inventory.item.ItemAir;
 import io.gomint.inventory.item.ItemFlintAndSteel;
 import io.gomint.inventory.item.ItemStack;
 import io.gomint.math.Vector;
@@ -32,13 +31,8 @@ public class TNT extends Block implements BlockTNT {
     @Override
     public boolean interact( Entity entity, BlockFace face, Vector facePos, ItemStack item ) {
         if ( entity instanceof EntityPlayer && item instanceof ItemFlintAndSteel ) {
-            EntityPlayer player = (EntityPlayer) entity;
             io.gomint.server.inventory.item.ItemStack itemStack = (io.gomint.server.inventory.item.ItemStack) item;
-            if ( itemStack.damage( 1 ) ) {
-                player.getInventory().setItem( player.getInventory().getItemInHandSlot(), ItemAir.create( 0 ) );
-            } else {
-                player.getInventory().setItem( player.getInventory().getItemInHandSlot(), item );
-            }
+            itemStack.afterPlacement();
 
             prime( 4 );
             return true;

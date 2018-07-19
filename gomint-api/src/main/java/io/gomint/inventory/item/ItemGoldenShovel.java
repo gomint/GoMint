@@ -6,7 +6,7 @@ import io.gomint.GoMint;
  * @author geNAZt
  * @version 1.0
  */
-public interface ItemGoldenShovel extends ItemStack {
+public interface ItemGoldenShovel extends ItemShovel {
 
     /**
      * Create a new item stack with given class and amount

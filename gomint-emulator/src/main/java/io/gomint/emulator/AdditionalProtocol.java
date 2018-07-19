@@ -34,6 +34,9 @@ public class AdditionalProtocol {
      */
     public static Packet createPacket( byte id ) {
         switch ( id ) {
+            case PACKET_WORLD_CHUNK:
+                return new PacketWorldChunk();
+
             case PACKET_START_GAME:
                 return new PacketStartGame();
 

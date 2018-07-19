@@ -56,11 +56,7 @@ public class PacketSpawnEntity extends Packet {
         buffer.writeLFloat( this.velocityZ );
         buffer.writeLFloat( this.pitch );
         buffer.writeLFloat( this.yaw );
-
-        // TODO: PRTCL 274
-        if ( protocolID == Protocol.MINECRAFT_PE_BETA_PROTOCOL_VERSION ) {
-            buffer.writeLFloat( this.headYaw );
-        }
+        buffer.writeLFloat( this.headYaw );
 
         if ( this.attributes == null ) {
             buffer.writeUnsignedVarInt( 0 );

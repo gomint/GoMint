@@ -1,7 +1,14 @@
 package io.gomint.config;
 
+import io.gomint.config.converter.ArrayConverter;
+import io.gomint.config.converter.BlockPositionConverter;
+import io.gomint.config.converter.ConfigConverter;
 import io.gomint.config.converter.Converter;
-import io.gomint.config.converter.Primitive;
+import io.gomint.config.converter.ListConverter;
+import io.gomint.config.converter.LocationConverter;
+import io.gomint.config.converter.MapConverter;
+import io.gomint.config.converter.PrimitiveConverter;
+import io.gomint.config.converter.SetConverter;
 import lombok.Getter;
 
 import java.lang.reflect.Field;
@@ -28,14 +35,14 @@ public class InternalConverter {
         this.config = config;
 
         try {
-            addConverter( Primitive.class );
-            addConverter( io.gomint.config.converter.Config.class );
-            addConverter( io.gomint.config.converter.List.class );
-            addConverter( io.gomint.config.converter.Map.class );
-            addConverter( io.gomint.config.converter.Array.class );
-            addConverter( io.gomint.config.converter.Set.class );
-            addConverter( io.gomint.config.converter.Location.class );
-            addConverter( io.gomint.config.converter.BlockPosition.class );
+            addConverter( PrimitiveConverter.class );
+            addConverter( ConfigConverter.class );
+            addConverter( ListConverter.class );
+            addConverter( MapConverter.class );
+            addConverter( ArrayConverter.class );
+            addConverter( SetConverter.class );
+            addConverter( LocationConverter.class );
+            addConverter( BlockPositionConverter.class );
         } catch ( InvalidConverterException e ) {
             throw new IllegalStateException( e );
         }
@@ -95,7 +102,7 @@ public class InternalConverter {
                         return;
                     }
 
-                    if ( converter instanceof Primitive && val == null ) {
+                    if ( converter instanceof PrimitiveConverter && val == null ) {
                         return;
                     }
 
@@ -103,7 +110,7 @@ public class InternalConverter {
                     return;
                 }
 
-                if ( converter instanceof Primitive && val == null ) {
+                if ( converter instanceof PrimitiveConverter && val == null ) {
                     return;
                 }
 
@@ -128,7 +135,7 @@ public class InternalConverter {
                             return;
                         }
 
-                        if ( converter instanceof Primitive && val == null ) {
+                        if ( converter instanceof PrimitiveConverter && val == null ) {
                             return;
                         }
 
@@ -136,7 +143,7 @@ public class InternalConverter {
                         return;
                     }
 
-                    if ( converter instanceof Primitive && val == null ) {
+                    if ( converter instanceof PrimitiveConverter && val == null ) {
                         return;
                     }
 
@@ -164,7 +171,7 @@ public class InternalConverter {
                         return;
                     }
 
-                    if ( converter instanceof Primitive && val == null ) {
+                    if ( converter instanceof PrimitiveConverter && val == null ) {
                         return;
                     }
 
@@ -172,7 +179,7 @@ public class InternalConverter {
                     return;
                 }
 
-                if ( converter instanceof Primitive && val == null ) {
+                if ( converter instanceof PrimitiveConverter && val == null ) {
                     return;
                 }
 

@@ -10,7 +10,11 @@ package io.gomint.server.network.handler;
 import io.gomint.event.player.PlayerLoginEvent;
 import io.gomint.player.DeviceInfo;
 import io.gomint.server.entity.EntityPlayer;
-import io.gomint.server.jwt.*;
+import io.gomint.server.jwt.EncryptionRequestForger;
+import io.gomint.server.jwt.JwtAlgorithm;
+import io.gomint.server.jwt.JwtSignatureException;
+import io.gomint.server.jwt.JwtToken;
+import io.gomint.server.jwt.MojangChainValidator;
 import io.gomint.server.network.EncryptionHandler;
 import io.gomint.server.network.PlayerConnection;
 import io.gomint.server.network.PlayerConnectionState;
@@ -35,7 +39,9 @@ import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 
-import static io.gomint.player.DeviceInfo.DeviceOS.*;
+import static io.gomint.player.DeviceInfo.DeviceOS.ANDROID;
+import static io.gomint.player.DeviceInfo.DeviceOS.IOS;
+import static io.gomint.player.DeviceInfo.DeviceOS.WINDOWS;
 
 /**
  * @author geNAZt
@@ -175,7 +181,8 @@ public class PacketLoginHandler implements PacketHandler<PacketLogin> {
                 // Create needed device info
                 DeviceInfo deviceInfo = new DeviceInfo(
                     getDeviceOSFrom( Math.toIntExact( skinToken.getClaim( "DeviceOS" ) ) ),
-                    skinToken.getClaim( "DeviceModel" ) );
+                    skinToken.getClaim( "DeviceModel" ),
+                    getUIFrom( Math.toIntExact( skinToken.getClaim( "UIProfile" ) ) ) );
                 connection.setDeviceInfo( deviceInfo );
 
                 // Detect language
@@ -247,6 +254,10 @@ public class PacketLoginHandler implements PacketHandler<PacketLogin> {
                 }
             }, 1, -1, TimeUnit.MILLISECONDS ) );
         } );
+    }
+
+    private DeviceInfo.UI getUIFrom( int uiProfile ) {
+        return uiProfile == 0 ? DeviceInfo.UI.CLASSIC : DeviceInfo.UI.POCKET;
     }
 
     /**

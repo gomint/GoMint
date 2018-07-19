@@ -7,7 +7,8 @@
 
 package io.gomint.server;
 
-import com.google.common.util.concurrent.*;
+import com.google.common.util.concurrent.ListeningExecutorService;
+import com.google.common.util.concurrent.MoreExecutors;
 import io.gomint.GoMint;
 import io.gomint.GoMintInstanceHolder;
 import io.gomint.config.InvalidConfigurationException;
@@ -38,18 +39,23 @@ import io.gomint.server.network.Protocol;
 import io.gomint.server.permission.PermissionGroupManager;
 import io.gomint.server.plugin.SimplePluginManager;
 import io.gomint.server.scheduler.SyncTaskManager;
+import io.gomint.server.util.PerformanceHacks;
 import io.gomint.server.util.Watchdog;
+import io.gomint.server.util.performance.UnsafeAllocator;
 import io.gomint.server.world.WorldAdapter;
 import io.gomint.server.world.WorldLoadException;
 import io.gomint.server.world.WorldManager;
 import io.gomint.server.world.block.Blocks;
 import io.gomint.world.World;
+import io.gomint.world.WorldType;
 import io.gomint.world.block.Block;
 import io.gomint.world.generator.CreateOptions;
-import io.gomint.world.generator.integrated.LayeredGenerator;
+import io.gomint.world.generator.integrated.NormalGenerator;
 import joptsimple.OptionSet;
 import lombok.Getter;
-import org.jline.reader.*;
+import org.jline.reader.LineReader;
+import org.jline.reader.LineReaderBuilder;
+import org.jline.reader.UserInterruptException;
 import org.jline.terminal.Terminal;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -58,8 +64,21 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.util.*;
-import java.util.concurrent.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.Executors;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.SynchronousQueue;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.locks.Condition;
@@ -107,6 +126,7 @@ public class GoMintServer implements GoMint, InventoryHolder {
     @Getter
     private SyncTaskManager syncTaskManager;
     private AtomicBoolean running = new AtomicBoolean( true );
+    private AtomicBoolean init = new AtomicBoolean( true );
     @Getter
     private ListeningExecutorService executorService;
     private Thread readerThread;
@@ -132,6 +152,8 @@ public class GoMintServer implements GoMint, InventoryHolder {
     private Effects effects;
 
     private String gitHash;
+
+    private BlockingQueue<Runnable> mainThreadWork = new LinkedBlockingQueue<>();
 
     /**
      * Starts the GoMint server
@@ -183,6 +205,20 @@ public class GoMintServer implements GoMint, InventoryHolder {
         this.executorService = MoreExecutors.listeningDecorator( new ThreadPoolExecutor( 3, 512, 60L,
             TimeUnit.SECONDS, new SynchronousQueue<>(), threadFactory ) );
 
+        if ( PerformanceHacks.isUnsafeEnabled() ) {
+            this.executorService.submit( () -> {
+                while ( init.get() ) {
+                    UnsafeAllocator.printUsage();
+
+                    try {
+                        Thread.sleep( 10000 );
+                    } catch ( InterruptedException e ) {
+                        e.printStackTrace();
+                    }
+                }
+            } );
+        }
+
         this.watchdog = new Watchdog( this );
 
         LOGGER.info( "Loading block, item and entity registers" );
@@ -190,39 +226,11 @@ public class GoMintServer implements GoMint, InventoryHolder {
         // ------------------------------------ //
         // Build up registries
         // ------------------------------------ //
-        List<ListenableFuture<?>> registryLoader = new ArrayList<>();
-        registryLoader.add( this.executorService.submit( () -> {
-            try {
-                this.blocks = new Blocks( this );
-            } catch ( Throwable t ) {
-                t.printStackTrace();
-            }
-        } ) );
-        registryLoader.add( this.executorService.submit( () -> {
-            try {
-                this.items = new Items( this );
-            } catch ( Throwable t ) {
-                t.printStackTrace();
-            }
-        } ) );
-        registryLoader.add( this.executorService.submit( () -> {
-            try {
-                this.entities = new Entities( this );
-                this.effects = new Effects( this );
-                this.enchantments = new Enchantments( this );
-            } catch ( Throwable t ) {
-                t.printStackTrace();
-            }
-        } ) );
-
-        SettableFuture<Void> completed = SettableFuture.create();
-        Futures.whenAllSucceed( registryLoader ).run( () -> completed.set( null ), MoreExecutors.directExecutor() );
-
-        try {
-            completed.get();
-        } catch ( InterruptedException | ExecutionException e ) {
-            // There is no timeout
-        }
+        this.blocks = new Blocks( this );
+        this.items = new Items( this );
+        this.entities = new Entities( this );
+        this.effects = new Effects( this );
+        this.enchantments = new Enchantments( this );
 
         startAfterRegistryInit( args, start );
     }
@@ -268,8 +276,8 @@ public class GoMintServer implements GoMint, InventoryHolder {
                         inputLines.offer( line );
                     } catch ( UserInterruptException e ) {
                         GoMintServer.this.shutdown();
-                    } catch ( EndOfFileException e ) {
-                        e.printStackTrace();
+                    } catch ( Exception e ) {
+                        LOGGER.error( "jLine failed with following exception", e );
                     }
                 }
             } );
@@ -351,7 +359,7 @@ public class GoMintServer implements GoMint, InventoryHolder {
             this.worldManager.loadWorld( this.serverConfig.getDefaultWorld() );
         } catch ( WorldLoadException e ) {
             // Try to generate world
-            if ( this.worldManager.createWorld( this.serverConfig.getDefaultWorld(), new CreateOptions().generator( LayeredGenerator.class ) ) == null ) {
+            if ( this.worldManager.createWorld( this.serverConfig.getDefaultWorld(), new CreateOptions().generator( NormalGenerator.class ).worldType( WorldType.ANVIL ) ) == null ) {
                 LOGGER.error( "Failed to load or generate default world", e );
                 this.internalShutdown();
                 return;
@@ -389,7 +397,12 @@ public class GoMintServer implements GoMint, InventoryHolder {
             return;
         }
 
-        LOGGER.info( "Done in " + ( System.currentTimeMillis() - start ) + " ms" );
+        init.set( false );
+        LOGGER.info( "Done in {} ms", ( System.currentTimeMillis() - start ) );
+
+        if ( PerformanceHacks.isUnsafeEnabled() ) {
+            UnsafeAllocator.printUsage();
+        }
 
         // ------------------------------------ //
         // Main Loop
@@ -414,6 +427,16 @@ public class GoMintServer implements GoMint, InventoryHolder {
                 while ( !inputLines.isEmpty() ) {
                     String line = inputLines.take();
                     this.pluginManager.getCommandManager().executeSystem( line );
+                }
+
+                // Tick remaining work
+                if ( !this.mainThreadWork.isEmpty() ) {
+                    Runnable[] work = this.mainThreadWork.toArray( new Runnable[0] );
+                    this.mainThreadWork.clear();
+
+                    for ( Runnable runnable : work ) {
+                        runnable.run();
+                    }
                 }
 
                 // Tick networking at every tick
@@ -665,6 +688,11 @@ public class GoMintServer implements GoMint, InventoryHolder {
         this.pluginManager.getCommandManager().executeSystem( line );
     }
 
+    @Override
+    public Collection<World> getWorlds() {
+        return Collections.unmodifiableCollection( this.worldManager.getWorlds() );
+    }
+
     /**
      * Get all online players
      *
@@ -787,6 +815,10 @@ public class GoMintServer implements GoMint, InventoryHolder {
 
     public boolean isRunning() {
         return this.running.get();
+    }
+
+    public void addToMainThread( Runnable runnable ) {
+        this.mainThreadWork.offer( runnable );
     }
 
 }

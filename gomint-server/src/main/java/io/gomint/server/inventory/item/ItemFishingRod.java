@@ -7,6 +7,7 @@ import io.gomint.inventory.item.ItemAir;
 import io.gomint.math.Vector;
 import io.gomint.server.entity.EntityPlayer;
 import io.gomint.server.entity.projectile.EntityFishingHook;
+import io.gomint.server.inventory.item.annotation.UseDataAsDamage;
 import io.gomint.server.registry.RegisterInfo;
 import io.gomint.taglib.NBTTagCompound;
 import io.gomint.world.block.Block;
@@ -16,6 +17,7 @@ import io.gomint.world.block.BlockFace;
  * @author geNAZt
  * @version 1.0
  */
+@UseDataAsDamage
 @RegisterInfo( id = 346 )
 public class ItemFishingRod extends ItemStack implements io.gomint.inventory.item.ItemFishingRod {
 
@@ -40,16 +42,6 @@ public class ItemFishingRod extends ItemStack implements io.gomint.inventory.ite
     }
 
     @Override
-    public boolean useDamageAsData() {
-        return false;
-    }
-
-    @Override
-    public boolean usesDamage() {
-        return true;
-    }
-
-    @Override
     public boolean interact( EntityPlayer entity, BlockFace face, Vector clickPosition, Block clickedBlock ) {
         if ( entity.getFishingHook() == null ) {
             EntityFishingHook hook = new EntityFishingHook( entity, entity.getWorld() );
@@ -64,11 +56,7 @@ public class ItemFishingRod extends ItemStack implements io.gomint.inventory.ite
             int damage = entity.getFishingHook().retract();
             entity.setFishingHook( null );
 
-            if ( this.damage( damage ) ) {
-                entity.getInventory().setItem( entity.getInventory().getItemInHandSlot(), ItemAir.create( 0 ) );
-            } else {
-                entity.getInventory().setItem( entity.getInventory().getItemInHandSlot(), this );
-            }
+            this.calculateUsageAndUpdate( damage );
         }
 
         return true;
@@ -80,12 +68,7 @@ public class ItemFishingRod extends ItemStack implements io.gomint.inventory.ite
             int damage = entity.getFishingHook().retract();
             this.setData( (short) ( this.getData() + damage ) );
             entity.setFishingHook( null );
-
-            if ( this.damage( damage ) ) {
-                entity.getInventory().setItem( entity.getInventory().getItemInHandSlot(), ItemAir.create( 0 ) );
-            } else {
-                entity.getInventory().sendContents( entity.getInventory().getItemInHandSlot(), entity.getConnection() );
-            }
+            this.calculateUsageAndUpdate( damage );
         }
     }
 

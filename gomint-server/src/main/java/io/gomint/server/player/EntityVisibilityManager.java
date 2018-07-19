@@ -9,6 +9,7 @@ package io.gomint.server.player;
 
 import io.gomint.entity.Entity;
 import io.gomint.server.entity.EntityPlayer;
+import io.gomint.server.entity.passive.EntityVillager;
 import io.gomint.server.network.packet.PacketDespawnEntity;
 import io.gomint.server.world.ChunkAdapter;
 import io.gomint.server.world.CoordinateUtils;
@@ -31,13 +32,15 @@ public class EntityVisibilityManager {
 
     private static final Logger LOGGER = LoggerFactory.getLogger( EntityVisibilityManager.class );
     private final EntityPlayer player;
-    private ObjectSet<Entity> visible = new ObjectOpenHashSet<>();
+    private final ObjectSet<Entity> visible = new ObjectOpenHashSet<>();
 
     public void updateAddedChunk( ChunkAdapter chunk ) {
         LOGGER.debug( "Checking chunk {}, {}", chunk.getX(), chunk.getZ() );
 
         // Check if we should be able to see this entity
         chunk.iterateEntities( Entity.class, entity -> {
+            LOGGER.debug( "Found entity {}", entity );
+
             if ( ( (io.gomint.server.entity.Entity) entity ).shouldBeSeen( EntityVisibilityManager.this.player ) ) {
                 EntityVisibilityManager.this.addEntity( entity );
             }

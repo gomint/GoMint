@@ -16,6 +16,7 @@ import com.google.common.io.Files;
 import io.gomint.math.BlockPosition;
 import io.gomint.math.Location;
 import io.gomint.server.GoMintServer;
+import io.gomint.server.entity.EntityPlayer;
 import io.gomint.server.inventory.MaterialMagicNumbers;
 import io.gomint.server.plugin.PluginClassloader;
 import io.gomint.server.util.Pair;
@@ -527,6 +528,20 @@ public final class AnvilWorldAdapter extends WorldAdapter {
     @Override
     protected void closeFDs() {
         this.openFileCache.invalidateAll();
+    }
+
+    @Override
+    public boolean persistPlayer( EntityPlayer player ) {
+        // We need the playerdata folder
+        File playerDataFolder = new File( this.worldDir, "playerdata" );
+        if ( !playerDataFolder.exists() ) {
+            playerDataFolder.mkdirs();
+        }
+
+        // We need to store basically everything
+        NBTTagCompound persistCompound = player.persistToNBT();
+
+        return false;
     }
 
     @Override

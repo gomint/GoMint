@@ -2,7 +2,7 @@ package io.gomint.server.world.block;
 
 import io.gomint.inventory.item.ItemStack;
 import io.gomint.server.registry.RegisterInfo;
-import io.gomint.server.util.random.FastRandom;
+import io.gomint.util.random.FastRandom;
 import io.gomint.world.block.BlockPotato;
 import io.gomint.world.block.BlockType;
 

@@ -56,11 +56,16 @@ public final class TerminalConsoleAppender extends AbstractAppender {
     public void append( LogEvent event ) {
         if ( terminal != null ) {
             if ( reader != null ) {
-                // Clear, write and redraw prompt again so the prompt is always at the bottom
-                reader.callWidget( LineReader.CLEAR );
-                terminal.writer().print( getLayout().toSerializable( event ) );
-                reader.callWidget( LineReader.REDRAW_LINE );
-                reader.callWidget( LineReader.REDISPLAY );
+                try {
+                    // Clear, write and redraw prompt again so the prompt is always at the bottom
+                    reader.callWidget( LineReader.CLEAR );
+                    terminal.writer().print( getLayout().toSerializable( event ) );
+                    reader.callWidget( LineReader.REDRAW_LINE );
+                    reader.callWidget( LineReader.REDISPLAY );
+                } catch ( Exception e ) {
+                    // There was an error (we did not really read from terminal)
+                    terminal.writer().print( getLayout().toSerializable( event ) );
+                }
             } else {
                 // There is no reader, no need to redraw prompt
                 terminal.writer().print( getLayout().toSerializable( event ) );

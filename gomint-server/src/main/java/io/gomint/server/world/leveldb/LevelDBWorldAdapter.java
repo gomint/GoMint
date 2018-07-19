@@ -9,6 +9,7 @@ package io.gomint.server.world.leveldb;
 
 import io.gomint.math.Location;
 import io.gomint.server.GoMintServer;
+import io.gomint.server.entity.EntityPlayer;
 import io.gomint.server.util.DumpUtil;
 import io.gomint.server.world.ChunkAdapter;
 import io.gomint.server.world.ChunkCache;
@@ -331,6 +332,11 @@ public class LevelDBWorldAdapter extends WorldAdapter {
         } catch ( IOException e ) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public boolean persistPlayer( EntityPlayer player ) {
+        return false;
     }
 
     @Override

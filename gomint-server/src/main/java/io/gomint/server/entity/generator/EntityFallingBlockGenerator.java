@@ -7,13 +7,14 @@
 
 package io.gomint.server.entity.generator;
 
+import io.gomint.server.entity.Entity;
 import io.gomint.server.entity.passive.EntityFallingBlock;
 
 /**
  * @author generated
  * @version 2.0
  */
-public class EntityFallingBlockGenerator implements EntityGenerator {
+public class EntityFallingBlockGenerator implements EntityGenerator<Entity> {
 
     public io.gomint.entity.Entity generate() {
         return new EntityFallingBlock();

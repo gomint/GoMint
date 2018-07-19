@@ -13,11 +13,15 @@ import io.gomint.server.entity.EntityLiving;
 import io.gomint.server.entity.EntityPlayer;
 import io.gomint.server.entity.potion.effect.Effect;
 import io.gomint.server.network.packet.PacketMobEffect;
+import io.gomint.taglib.NBTTagCompound;
 import it.unimi.dsi.fastutil.bytes.Byte2ObjectMap;
 import it.unimi.dsi.fastutil.bytes.Byte2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.bytes.ByteOpenHashSet;
 import it.unimi.dsi.fastutil.bytes.ByteSet;
 import lombok.RequiredArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author geNAZt
@@ -39,7 +43,7 @@ public class EffectManager {
         if ( !this.effects.isEmpty() ) {
             ByteSet removeEffects = null;
 
-            for ( Byte2ObjectMap.Entry<Effect> entry : this.effects.byte2ObjectEntrySet() ) {
+            for ( Byte2ObjectMap.Entry<Effect> entry: this.effects.byte2ObjectEntrySet() ) {
                 if ( currentTimeMillis >= entry.getValue().getRunoutTimer() ) {
                     if ( removeEffects == null ) {
                         removeEffects = new ByteOpenHashSet();
@@ -52,7 +56,7 @@ public class EffectManager {
             }
 
             if ( removeEffects != null ) {
-                for ( Byte removeEffect : removeEffects ) {
+                for ( Byte removeEffect: removeEffects ) {
                     removeEffect( removeEffect );
                 }
             }
@@ -102,7 +106,7 @@ public class EffectManager {
     public void removeAll() {
         ByteSet removeEffects = null;
 
-        for ( Byte2ObjectMap.Entry<Effect> entry : this.effects.byte2ObjectEntrySet() ) {
+        for ( Byte2ObjectMap.Entry<Effect> entry: this.effects.byte2ObjectEntrySet() ) {
             if ( removeEffects == null ) {
                 removeEffects = new ByteOpenHashSet();
             }
@@ -111,7 +115,7 @@ public class EffectManager {
         }
 
         if ( removeEffects != null ) {
-            for ( Byte removeEffect : removeEffects ) {
+            for ( Byte removeEffect: removeEffects ) {
                 removeEffect( removeEffect );
             }
         }
@@ -130,7 +134,7 @@ public class EffectManager {
             ( (EntityPlayer) this.living ).getConnection().addToSendQueue( mobEffect );
         }
 
-        for ( Entity entity : this.living.getAttachedEntities() ) {
+        for ( Entity entity: this.living.getAttachedEntities() ) {
             if ( entity instanceof EntityPlayer ) {
                 ( (EntityPlayer) entity ).getConnection().addToSendQueue( mobEffect );
             }
@@ -147,7 +151,7 @@ public class EffectManager {
     }
 
     public void sendForPlayer( EntityPlayer player ) {
-        for ( Byte2ObjectMap.Entry<Effect> entry : this.effects.byte2ObjectEntrySet() ) {
+        for ( Byte2ObjectMap.Entry<Effect> entry: this.effects.byte2ObjectEntrySet() ) {
             if ( entry.getValue().isVisible() ) {
                 PacketMobEffect mobEffect = new PacketMobEffect();
                 mobEffect.setEntityId( this.living.getEntityId() );
@@ -164,6 +168,45 @@ public class EffectManager {
     public void updateEffect( Effect effect ) {
         sendPacket( PacketMobEffect.EVENT_MODIFY, effect.getId(), effect.getAmplifier(), effect.isVisible(),
             MathUtils.fastFloor( ( effect.getRunoutTimer() - this.living.getWorld().getServer().getCurrentTickTime() ) / 50f ) );
+    }
+
+    public boolean hasActiveEffect() {
+        return !this.effects.isEmpty();
+    }
+
+    public void persistToNBT( NBTTagCompound compound ) {
+        List<NBTTagCompound> nbtEffects = new ArrayList<>();
+        for ( Byte2ObjectMap.Entry<Effect> entry: this.effects.byte2ObjectEntrySet() ) {
+            NBTTagCompound effect = new NBTTagCompound( "" );
+            effect.addValue( "Amplifier", (byte) entry.getValue().getAmplifier() );
+            effect.addValue( "Duration", (int) ( entry.getValue().getRunoutTimer() - this.living.getWorld().getServer().getCurrentTickTime() ) / 50 );
+            effect.addValue( "Id", entry.getByteKey() );
+            effect.addValue( "ShowParticles", (byte) ( entry.getValue().isVisible() ? 1 : 0 ) );
+            nbtEffects.add( effect );
+        }
+
+        compound.addValue( "ActiveEffects", nbtEffects );
+    }
+
+    public void initFromNBT( NBTTagCompound compound ) {
+        List<Object> nbtEffects = compound.getList( "ActiveEffects", false );
+        if ( nbtEffects != null ) {
+            for ( Object nbtEffect: nbtEffects ) {
+                NBTTagCompound effect = (NBTTagCompound) nbtEffect;
+
+                byte effectId = effect.getByte( "Id", (byte) -1 );
+                if ( effectId > -1 ) {
+                    Effect effectInstance = this.living.getWorld().getServer().getEffects().generate( effectId, effect.getByte( "Amplifier", (byte) 0 ),
+                        effect.getInteger( "Duration", 1 ) * 50, this );
+
+                    if ( effect.getByte( "ShowParticles", (byte) 1 ) == 0 ) {
+                        effectInstance.setVisible( false );
+                    }
+
+                    this.addEffect( effectId, effectInstance );
+                }
+            }
+        }
     }
 
 }

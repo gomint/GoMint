@@ -1,62 +1,45 @@
 # Created by .ignore support plugin (hsz.mobi)
-### Java template
+### Java START ############################# 
 *.class
+### Java END #############################
 
-# Mobile Tools for Java (J2ME)
+
+### Mobile Tools for Java (J2ME) START #############################
 .mtj.tmp/
+### Mobile Tools for Java (J2ME) END #############################
 
-# Package Files #
+
+### Package Files START #############################
 *.jar
 *.war
 *.ear
+### Package Files END #############################
 
-# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
+
+### Virtual machine crash logs START #############################
 hs_err_pid*
+### Virtual machine crash logs END #############################
 
-### Maven
 
-# ignore compiled stuff
+### Maven START #############################
 **/target
+**/dependency-reduced-pom.xml
+### Maven END #############################
 
-### OS X
 
+### OS X START #############################
 **/.DS_Store
+### OS X END #############################
 
-### JetBrains template
+
+### JetBrains IDEs START #############################
 # Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm, CLion
-
 *.iml
-
-## Directory-based project format:
 .idea/
-# if you remove the above rule, at least ignore the following:
-
-# User-specific stuff:
-# .idea/workspace.xml
-# .idea/tasks.xml
-# .idea/dictionaries
-
-# Sensitive or high-churn files:
-# .idea/dataSources.ids
-# .idea/dataSources.xml
-# .idea/sqlDataSources.xml
-# .idea/dynamic.xml
-# .idea/uiDesigner.xml
-
-# Gradle:
-# .idea/gradle.xml
-# .idea/libraries
-
-# Mongo Explorer plugin:
-# .idea/mongoSettings.xml
-
-## File-based project format:
 *.ipr
 *.iws
 
-## Plugin-specific files:
-
-# IntelliJ
+#IntelliJ
 /out/
 
 # mpeltonen/sbt-idea plugin
@@ -69,8 +52,35 @@ atlassian-ide-plugin.xml
 com_crashlytics_export_strings.xml
 crashlytics.properties
 crashlytics-build.properties
+### JetBrains IDEs END #############################
 
-# Lib folder
+
+### Lib folder START #############################
 libs/
+### Lib folder END #############################
 
-**/dependency-reduced-pom.xml
+
+### Eclipse START #############################
+.metadata
+bin/
+tmp/
+*.tmp
+*.bak
+*.swp
+*~.nib
+local.properties
+**/.classpath
+**/.project
+.settings/
+.loadpath
+.recommenders
+.recommenders/
+.apt_generated/
+.factorypath
+.externalToolBuilders/
+*.launch
+.target
+.cache-main
+.scala_dependencies
+.worksheet
+### Eclipse END #############################

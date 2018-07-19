@@ -346,4 +346,11 @@ public interface EntityPlayer extends EntityHuman {
      */
     void setSpawnLocation( Location spawnLocation );
 
+    /**
+     * Get the location of the spawn
+     *
+     * @return location of spawn
+     */
+    Location getSpawnLocation();
+
 }

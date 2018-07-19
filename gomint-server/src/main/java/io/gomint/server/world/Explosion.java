@@ -16,8 +16,8 @@ import io.gomint.math.*;
 import io.gomint.math.Vector;
 import io.gomint.server.entity.Entity;
 import io.gomint.server.network.packet.PacketExplode;
-import io.gomint.server.util.random.FastRandom;
 import io.gomint.server.world.block.Air;
+import io.gomint.util.random.FastRandom;
 import io.gomint.world.Particle;
 import io.gomint.world.block.Block;
 import io.gomint.world.block.BlockFace;
@@ -27,7 +27,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.*;
-import java.util.function.Predicate;
 
 /**
  * @author geNAZt

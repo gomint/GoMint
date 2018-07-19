@@ -54,7 +54,8 @@ public class DumpUtil {
 
     public static void dumpByteArray( byte[] bytes, int skip ) {
         int count = 0;
-        StringBuilder stringBuilder = new StringBuilder();
+        int total = 0;
+        StringBuilder stringBuilder = new StringBuilder( "\n 00000000: " );
 
         int skipped = 0;
         for ( byte aByte : bytes ) {
@@ -68,8 +69,16 @@ public class DumpUtil {
             }
 
             stringBuilder.append( hex ).append( " " );
-            if ( count++ == 32 ) {
-                stringBuilder.append( "\n" );
+            total++;
+
+            if ( ++count == 32 ) {
+                StringBuilder intDisplay = new StringBuilder( Integer.toString( total ) );
+                int missingTrailing = 8 - intDisplay.length();
+                for ( int i = 0; i < missingTrailing; i++ ) {
+                    intDisplay.insert( 0, "0" );
+                }
+
+                stringBuilder.append( " " ).append( "\n " ).append( intDisplay ).append( ": " );
                 count = 0;
             }
         }

@@ -34,15 +34,15 @@ public class BlockRuntimeIDs {
     // private static final long[] RUNTIME_TO_BLOCK_DATA = new long[0];
 
     // Beta channel tables
-    private static int[][] BLOCK_DATA_TO_RUNTIME_BETA = new int[0][0];
+    //private static int[][] BLOCK_DATA_TO_RUNTIME_BETA = new int[0][0];
 
     private static final Long2IntMap RUNTIME_IDS = new Long2IntOpenHashMap();       // HashMaps are fine for multithreaded reading
-    private static final Long2IntMap RUNTIME_IDS_BETA = new Long2IntOpenHashMap();  // HashMaps are fine for multithreaded reading
+    //private static final Long2IntMap RUNTIME_IDS_BETA = new Long2IntOpenHashMap();  // HashMaps are fine for multithreaded reading
 
     static {
         // Get the correct resource
         loadFile( "/temp_runtimeids.json", false );
-        loadFile( "/temp_runtimeids_271.json", true );
+        // loadFile( "/temp_runtimeids_271.json", true );
     }
 
     public static void loadFile( String file, boolean beta ) {
@@ -86,7 +86,7 @@ public class BlockRuntimeIDs {
 
             // Init array
             if ( beta ) {
-                BLOCK_DATA_TO_RUNTIME_BETA = new int[highestBlockID + 1][];
+                //BLOCK_DATA_TO_RUNTIME_BETA = new int[highestBlockID + 1][];
             } else {
                 BLOCK_DATA_TO_RUNTIME = new int[highestBlockID + 1][];
             }
@@ -98,7 +98,7 @@ public class BlockRuntimeIDs {
 
                 int[] dataValues = null;
                 if ( beta ) {
-                    dataValues = BLOCK_DATA_TO_RUNTIME_BETA[blockId];
+                    //dataValues = BLOCK_DATA_TO_RUNTIME_BETA[blockId];
                 } else {
                     dataValues = BLOCK_DATA_TO_RUNTIME[blockId];
                 }
@@ -110,7 +110,7 @@ public class BlockRuntimeIDs {
                 dataValues[dataValue] = ( (Long) idObj.get( "runtimeID" ) ).intValue();
 
                 if ( beta ) {
-                    BLOCK_DATA_TO_RUNTIME_BETA[blockId] = dataValues;
+                    //BLOCK_DATA_TO_RUNTIME_BETA[blockId] = dataValues;
                 } else {
                     BLOCK_DATA_TO_RUNTIME[blockId] = dataValues;
                 }
@@ -130,7 +130,7 @@ public class BlockRuntimeIDs {
         // Get lookup array
         int[][] lookup = BLOCK_DATA_TO_RUNTIME;
         if ( protocolID == Protocol.MINECRAFT_PE_BETA_PROTOCOL_VERSION ) {
-            lookup = BLOCK_DATA_TO_RUNTIME_BETA;
+            //lookup = BLOCK_DATA_TO_RUNTIME_BETA;
         }
 
         // We first lookup the wanted values
@@ -144,27 +144,6 @@ public class BlockRuntimeIDs {
         }
 
         return runtimeID;
-
-        /*// The nukkit/PC data corruption seems to go further, now single sandstone blocks where found corrupted
-        // I simply assume that every block could be corrupted and try to use data value 0 as fallback when the
-        // original combination could not be found
-        long hashId = ( (long) blockId ) << 32 | ( dataValue & 0xffffffffL );
-
-        Long2IntMap runtimeIDs = RUNTIME_IDS;
-        if ( protocolID == Protocol.MINECRAFT_PE_BETA_PROTOCOL_VERSION ) {
-            runtimeIDs = RUNTIME_IDS_BETA;
-        }
-
-        int runtimeId = runtimeIDs.get( hashId );
-        if ( runtimeId == runtimeIDs.defaultReturnValue() ) {
-            hashId = ( (long) blockId ) << 32;
-            runtimeId = runtimeIDs.get( hashId );
-            if ( runtimeId == runtimeIDs.defaultReturnValue() ) {
-                return 0;
-            }
-        }
-
-        return runtimeId;*/
     }
 
     private static int lookup( int blockId, byte dataValue, int[][] lookup ) {

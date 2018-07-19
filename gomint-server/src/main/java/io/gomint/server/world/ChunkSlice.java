@@ -7,13 +7,14 @@ import io.gomint.server.entity.tileentity.TileEntity;
 import io.gomint.server.util.Palette;
 import io.gomint.server.world.storage.TemporaryStorage;
 import io.gomint.world.block.Block;
-import it.unimi.dsi.fastutil.longs.Long2IntArrayMap;
-import it.unimi.dsi.fastutil.longs.Long2IntMap;
-import it.unimi.dsi.fastutil.objects.ObjectIterator;
+import it.unimi.dsi.fastutil.ints.IntArrayList;
+import it.unimi.dsi.fastutil.ints.IntList;
+import it.unimi.dsi.fastutil.longs.LongArrayList;
+import it.unimi.dsi.fastutil.longs.LongList;
 import it.unimi.dsi.fastutil.shorts.Short2ObjectOpenHashMap;
 import lombok.Getter;
 
-import java.util.Collection;
+import java.util.function.IntConsumer;
 
 /**
  * @author geNAZt
@@ -36,9 +37,10 @@ public class ChunkSlice {
     private short[][] blocks = new short[2][]; // MC currently supports two layers, we init them as we need
     private NibbleArray[] data = new NibbleArray[2]; // MC currently supports two layers, we init them as we need
 
-    private NibbleArray blockLight = new NibbleArray( (short) 4096 );
-    private NibbleArray skyLight = new NibbleArray( (short) 4096 );
+    private NibbleArray blockLight = NibbleArray.create( (short) 4096 );
+    private NibbleArray skyLight = NibbleArray.create( (short) 4096 );
 
+    @Getter
     private Short2ObjectOpenHashMap<TileEntity> tileEntities = new Short2ObjectOpenHashMap<>();
     private Short2ObjectOpenHashMap[] temporaryStorages = new Short2ObjectOpenHashMap[2];   // MC currently supports two layers, we init them as we need
 
@@ -112,10 +114,6 @@ public class ChunkSlice {
         return new Location( this.chunk.world, this.shiftedMinX + x, this.shiftedMinY + y, this.shiftedMinZ + z );
     }
 
-    Collection<TileEntity> getTileEntities() {
-        return this.tileEntities.values();
-    }
-
     void addTileEntity( int x, int y, int z, TileEntity tileEntity ) {
         this.addTileEntityInternal( getIndex( x, y, z ), tileEntity );
     }
@@ -148,7 +146,7 @@ public class ChunkSlice {
     public void setDataInternal( short index, int layer, byte data ) {
         // Check if we need to set new nibble array
         if ( !this.isAllAir && this.data[layer] == null ) {
-            this.data[layer] = new NibbleArray( (short) 4096 );
+            this.data[layer] = NibbleArray.create( (short) 4096 );
         }
 
         // All air and we want to set block data? How about no!
@@ -175,7 +173,7 @@ public class ChunkSlice {
         return this.isAllAir;
     }
 
-    byte[] getBytes( int protocolID ) {
+    /*byte[] getBytes( int protocolID ) {
         // Check how many layers we have
         int amountOfLayers = this.getAmountOfLayers();
 
@@ -244,7 +242,7 @@ public class ChunkSlice {
         byte[] outputData = new byte[buffer.getPosition()];
         System.arraycopy( buffer.getBuffer(), buffer.getBufferOffset(), outputData, 0, buffer.getPosition() );
         return outputData;
-    }
+    }*/
 
     protected int getAmountOfLayers() {
         return this.blocks[1] != null ? 2 : 1;
@@ -286,6 +284,65 @@ public class ChunkSlice {
 
     public TileEntity getTileInternal( short i ) {
         return this.tileEntities.get( i );
+    }
+
+    public void writeToNetwork( PacketBuffer buffer, int protocolID ) {
+        buffer.writeByte( (byte) 8 );
+
+        // Check how many layers we have
+        int amountOfLayers = this.getAmountOfLayers();
+        buffer.writeByte( (byte) amountOfLayers );
+
+        for ( int i = 0; i < amountOfLayers; i++ ) {
+            // Count how many unique blocks we have in this chunk
+            int[] indexIDs = new int[4096];
+            LongList indexList = new LongArrayList();
+            IntList runtimeIndex = new IntArrayList();
+
+            int foundIndex = 0;
+            long lastHash = -1;
+
+            for ( int x = 0; x < 16; x++ ) {
+                for ( int z = 0; z < 16; z++ ) {
+                    for ( int y = 0; y < 16; y++ ) {
+                        short blockIndex = (short) ( ( x << 8 ) + ( z << 4 ) + y );
+                        int blockId = this.getBlockInternal( i, blockIndex );
+                        byte blockData = blockId == 0 || this.data[i] == null ? 0 : this.data[i].get( blockIndex );
+
+                        long hashId = ( (long) blockId ) << 32 | ( blockData & 0xffffffffL );
+                        if ( hashId != lastHash ) {
+                            foundIndex = indexList.indexOf( hashId );
+                            if ( foundIndex == -1 ) {
+                                int runtimeId = BlockRuntimeIDs.fromLegacy( blockId, blockData, protocolID );
+                                runtimeIndex.add( runtimeId );
+                                indexList.add( hashId );
+                                foundIndex = indexList.size() - 1;
+                            }
+                        }
+
+                        indexIDs[blockIndex] = foundIndex;
+                    }
+                }
+            }
+
+            // Get correct wordsize
+            int value = indexList.size();
+            int numberOfBits = MathUtils.fastFloor( log2( value ) ) + 1;
+
+            // Prepare palette
+            int amountOfBlocks = MathUtils.fastFloor( 32f / (float) numberOfBits );
+
+            Palette palette = new Palette( buffer, amountOfBlocks, false );
+
+            byte paletteWord = (byte) ( (byte) ( palette.getPaletteVersion().getVersionId() << 1 ) | 1 );
+            buffer.writeByte( paletteWord );
+            palette.addIndexIDs( indexIDs );
+            palette.finish();
+
+            // Write runtimeIDs
+            buffer.writeSignedVarInt( indexList.size() );
+            runtimeIndex.forEach( (IntConsumer) buffer::writeSignedVarInt );
+        }
     }
 
 }

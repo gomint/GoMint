@@ -4,12 +4,10 @@ import io.gomint.inventory.item.ItemStack;
 import io.gomint.math.BlockPosition;
 import io.gomint.math.Location;
 import io.gomint.server.entity.Entity;
-import io.gomint.server.util.random.FastRandom;
 import io.gomint.server.util.random.WeightedRandom;
 import io.gomint.server.world.UpdateReason;
+import io.gomint.util.random.FastRandom;
 import io.gomint.world.block.BlockType;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 
@@ -20,8 +18,6 @@ import java.util.ArrayList;
  * This is a generic class for anything that can grow with metadata like crops, beetroot etc.
  */
 public abstract class Growable extends Block {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger( Growable.class );
 
     /**
      * Randomizer for seed drop output

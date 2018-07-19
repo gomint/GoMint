@@ -1,8 +1,5 @@
 package io.gomint.command;
 
-import io.gomint.entity.Entity;
-import io.gomint.entity.EntityPlayer;
-
 import java.util.List;
 
 /**
@@ -38,30 +35,11 @@ public abstract class ParamValidator {
     /**
      * Validates given input
      *
-     * @param input  from the command
+     * @param input         from the command
      * @param commandSender which submitted the command
      * @return non null object of validation on success (string for example) or null when validation failed
      */
-    public Object validate( List<String> input, CommandSender commandSender ) {
-        if ( commandSender instanceof PlayerCommandSender ) {
-            return this.validate( input, (EntityPlayer) commandSender );
-        }
-
-        return null;
-    }
-
-    /**
-     * Validates given input
-     *
-     * @param input  from the command
-     * @param entity which submitted the command
-     * @deprecated Use {@link #validate(List, CommandSender)}
-     * @return non null object of validation on success (string for example) or null when validation failed
-     */
-    @Deprecated
-    public Object validate( List<String> input, Entity entity ) {
-        return null;
-    }
+    public abstract Object validate( List<String> input, CommandSender commandSender );
 
     /**
      * Is this param optional?

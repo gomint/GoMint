@@ -1,5 +1,6 @@
 package io.gomint.server.entity;
 
+import io.gomint.GoMint;
 import io.gomint.entity.potion.PotionEffect;
 import io.gomint.event.entity.EntityDamageByEntityEvent;
 import io.gomint.event.entity.EntityDamageEvent;
@@ -18,12 +19,15 @@ import io.gomint.server.player.EffectManager;
 import io.gomint.server.util.EnumConnectors;
 import io.gomint.server.util.Values;
 import io.gomint.server.world.WorldAdapter;
+import io.gomint.taglib.NBTTagCompound;
 import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
@@ -156,9 +160,9 @@ public abstract class EntityLiving extends Entity implements InventoryHolder, io
         if ( this.lastUpdateDT >= Values.CLIENT_TICK_RATE ) {
             // Calc death stuff
             if ( this.getHealth() <= 0 ) {
-                if ( this.deadTimer != -1 && this.deadTimer++ >= 20 ) {
+                if ( this.deadTimer > 0 && this.deadTimer-- > 1 ) {
                     despawn();
-                    this.deadTimer = -1;
+                    this.deadTimer = 0;
                 }
             } else {
                 this.deadTimer = 0;
@@ -327,6 +331,10 @@ public abstract class EntityLiving extends Entity implements InventoryHolder, io
         float health = MathUtils.fastCeil( this.getHealth() - damageToBeDealt );
 
         // Set health
+        if ( health <= 0 ) {
+            this.deadTimer = 20;
+        }
+
         this.setHealth( health <= 0 ? 0 : health );
 
         // Send animation
@@ -352,8 +360,8 @@ public abstract class EntityLiving extends Entity implements InventoryHolder, io
                 distance = 1 / distance;
 
                 Vector motion = this.getVelocity();
-                motion.divide( 2f, 2f, 2f );
-                motion.add(
+                motion = motion.divide( 2f, 2f, 2f );
+                motion = motion.add(
                     ( diffX * distance * baseModifier ),
                     baseModifier,
                     ( diffZ * distance * baseModifier )
@@ -426,12 +434,20 @@ public abstract class EntityLiving extends Entity implements InventoryHolder, io
 
     @Override
     public void attach( EntityPlayer player ) {
+        if ( !GoMint.instance().isMainThread() ) {
+            LOGGER.warn( "Attaching entities from another thread than the main one can cause crashes", new Exception() );
+        }
+
         this.attachedEntities.add( player );
         this.effectManager.sendForPlayer( player );
     }
 
     @Override
     public void detach( EntityPlayer player ) {
+        if ( !GoMint.instance().isMainThread() ) {
+            LOGGER.warn( "Detaching entities from another thread than the main one can cause crashes", new Exception() );
+        }
+
         this.attachedEntities.remove( player );
     }
 
@@ -509,6 +525,68 @@ public abstract class EntityLiving extends Entity implements InventoryHolder, io
     @Override
     public void setMovementSpeed( float value ) {
         this.setAttribute( Attribute.MOVEMENT_SPEED, value );
+    }
+
+    @Override
+    public void initFromNBT( NBTTagCompound compound ) {
+        super.initFromNBT( compound );
+
+        if ( compound.containsKey( "AbsorptionAmount" ) ) {
+            this.setAbsorptionHearts( compound.getFloat( "AbsorptionAmount", 0.0f ) );
+        }
+
+        this.effectManager.initFromNBT( compound );
+
+        List<Object> nbtAttributes = compound.getList( "Attributes", false );
+        if ( nbtAttributes != null ) {
+            for ( Object attribute : nbtAttributes ) {
+                NBTTagCompound nbtAttribute = (NBTTagCompound) attribute;
+                String name = nbtAttribute.getString( "Name", null );
+                if ( name != null ) {
+                    AttributeInstance instance = null;
+
+                    for ( Attribute value : Attribute.values() ) {
+                        if ( value.getKey().equals( name ) ) {
+                            instance = value.create();
+                        }
+                    }
+
+                    if ( instance != null ) {
+                        instance.initFromNBT( nbtAttribute );
+                        this.attributes.put( name, instance );
+                    }
+                }
+            }
+        }
+
+        this.deadTimer = compound.getShort( "DeathTime", (short) 0 );
+        this.setHealth( compound.getFloat( "Health", 20f ) );
+        this.attackCoolDown = compound.getShort( "HurtTime", (short) 0 ).byteValue();
+    }
+
+    @Override
+    public NBTTagCompound persistToNBT() {
+        NBTTagCompound compound = super.persistToNBT();
+
+        if ( this.getAbsorptionHearts() > 0 ) {
+            compound.addValue( "AbsorptionAmount", this.getAbsorptionHearts() );
+        }
+
+        if ( this.effectManager.hasActiveEffect() ) {
+            this.effectManager.persistToNBT( compound );
+        }
+
+        List<NBTTagCompound> nbtAttributes = new ArrayList<>();
+        for ( Map.Entry<String, AttributeInstance> entry : this.attributes.entrySet() ) {
+            nbtAttributes.add( entry.getValue().persistToNBT() );
+        }
+
+        compound.addValue( "Attributes", nbtAttributes );
+        compound.addValue( "DeathTime", (short) this.deadTimer );
+        compound.addValue( "Health", this.getHealth() );
+        compound.addValue( "HurtTime", (short) this.attackCoolDown );
+
+        return compound;
     }
 
 }

@@ -246,9 +246,19 @@ public abstract class Packet {
         return new BlockPosition( buffer.readSignedVarInt(), buffer.readUnsignedVarInt(), buffer.readSignedVarInt() );
     }
 
+    public BlockPosition readSignedBlockPosition( PacketBuffer buffer ) {
+        return new BlockPosition( buffer.readSignedVarInt(), buffer.readSignedVarInt(), buffer.readSignedVarInt() );
+    }
+
     public void writeBlockPosition( BlockPosition position, PacketBuffer buffer ) {
         buffer.writeSignedVarInt( position.getX() );
         buffer.writeUnsignedVarInt( position.getY() );
+        buffer.writeSignedVarInt( position.getZ() );
+    }
+
+    public void writeSignedBlockPosition( BlockPosition position, PacketBuffer buffer ) {
+        buffer.writeSignedVarInt( position.getX() );
+        buffer.writeSignedVarInt( position.getY() );
         buffer.writeSignedVarInt( position.getZ() );
     }
 

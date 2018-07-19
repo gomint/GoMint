@@ -10,6 +10,7 @@ package io.gomint.world.block;
 import io.gomint.inventory.item.ItemStack;
 import io.gomint.math.AxisAlignedBB;
 import io.gomint.math.Location;
+import io.gomint.world.Biome;
 
 import java.util.List;
 
@@ -141,5 +142,12 @@ public interface Block {
      * @return true when the block has been placed in the world, false when not
      */
     boolean isPlaced();
+
+    /**
+     * Get the biome of this block
+     *
+     * @return biome of the block
+     */
+    Biome getBiome();
 
 }

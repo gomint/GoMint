@@ -42,15 +42,12 @@ public class PacketEntityMovement extends Packet {
     public void serialize( PacketBuffer buffer, int protocolID ) {
         buffer.writeUnsignedVarLong( this.entityId );
 
-        // TODO: PRTCL 274
-        if ( protocolID == Protocol.MINECRAFT_PE_BETA_PROTOCOL_VERSION ) {
-            byte flags = this.onGround ? FLAG_ON_GROUND : 0;
-            if ( this.teleported ) {
-                flags |= FLAG_TELEPORTED;
-            }
-
-            buffer.writeByte( flags );
+        byte flags = this.onGround ? FLAG_ON_GROUND : 0;
+        if ( this.teleported ) {
+            flags |= FLAG_TELEPORTED;
         }
+
+        buffer.writeByte( flags );
 
         buffer.writeLFloat( this.x );
         buffer.writeLFloat( this.y );
@@ -59,12 +56,6 @@ public class PacketEntityMovement extends Packet {
         writeByteRotation( this.pitch, buffer );
         writeByteRotation( this.headYaw, buffer );
         writeByteRotation( this.yaw, buffer );
-
-        // TODO: PRTCL 261
-        if ( protocolID == Protocol.MINECRAFT_PE_PROTOCOL_VERSION ) {
-            buffer.writeBoolean( this.onGround );
-            buffer.writeBoolean( this.teleported );
-        }
     }
 
     @Override

@@ -53,56 +53,7 @@ public class PacketMovePlayerHandler implements PacketHandler<PacketMovePlayer> 
             return;
         }
 
-        PlayerMoveEvent playerMoveEvent = connection.getNetworkManager().getServer().getPluginManager().callEvent(
-            new PlayerMoveEvent( entity, from, to )
-        );
-
-        if ( playerMoveEvent.isCancelled() ) {
-            playerMoveEvent.setTo( playerMoveEvent.getFrom() );
-        }
-
-        to = playerMoveEvent.getTo();
-        if ( to.getX() != packet.getX() || to.getY() != packet.getY() - entity.getEyeHeight() || to.getZ() != packet.getZ() ||
-            !to.getWorld().equals( entity.getWorld() ) || to.getYaw() != packet.getYaw() ||
-            to.getPitch() != packet.getPitch() || to.getHeadYaw() != packet.getHeadYaw() ) {
-            entity.teleport( to );
-        } else {
-            float moveX = to.getX() - from.getX();
-            float moveY = to.getY() - from.getY();
-            float moveZ = to.getZ() - from.getZ();
-
-            // Try to at least move the gravitation down
-            Vector moved = entity.safeMove( moveX, moveY, moveZ );
-
-            // Exhaustion
-            double distance = Math.abs( moved.getX() ) + Math.abs( moved.getY() ) + Math.abs( moved.getZ() );
-            if ( entity.isSprinting() ) {
-                entity.exhaust( (float) ( 0.1 * distance ), PlayerExhaustEvent.Cause.SPRINTING );
-            } else {
-                entity.exhaust( (float) ( 0.01 * distance ), PlayerExhaustEvent.Cause.WALKING );
-            }
-
-            entity.setPitch( to.getPitch() );
-            entity.setYaw( to.getYaw() );
-            entity.setHeadYaw( to.getHeadYaw() );
-        }
-
-        boolean changeWorld = !to.getWorld().equals( from.getWorld() );
-        boolean changeXZ = (int) from.getX() != (int) to.getX() || (int) from.getZ() != (int) to.getZ();
-        boolean changeY = (int) from.getY() != (int) to.getY();
-
-        if ( changeWorld || changeXZ || changeY ) {
-            if ( changeWorld || changeXZ ) {
-                connection.checkForNewChunks( from, false );
-            }
-
-            // Check for interaction
-            Block block = from.getWorld().getBlockAt( from.toBlockPosition() );
-            block.gotOff( entity );
-
-            block = to.getWorld().getBlockAt( to.toBlockPosition() );
-            block.stepOn( entity );
-        }
+        connection.getEntity().setNextMovement( to );
     }
 
 }

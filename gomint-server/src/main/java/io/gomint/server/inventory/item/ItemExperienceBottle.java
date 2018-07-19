@@ -1,9 +1,7 @@
 package io.gomint.server.inventory.item;
 
-import io.gomint.inventory.item.ItemType;
-
 import io.gomint.event.entity.projectile.ProjectileLaunchEvent;
-import io.gomint.inventory.item.ItemAir;
+import io.gomint.inventory.item.ItemType;
 import io.gomint.math.Vector;
 import io.gomint.server.entity.EntityPlayer;
 import io.gomint.server.entity.projectile.EntityExpBottle;
@@ -38,12 +36,7 @@ public class ItemExperienceBottle extends ItemStack implements io.gomint.invento
 
             if ( !event.isCancelled() ) {
                 entity.getWorld().spawnEntityAt( expBottle, expBottle.getPositionX(), expBottle.getPositionY(), expBottle.getPositionZ(), expBottle.getYaw(), expBottle.getPitch() );
-
-                if ( this.afterPlacement() ) {
-                    entity.getInventory().setItem( entity.getInventory().getItemInHandSlot(), ItemAir.create( 0 ) );
-                } else {
-                    entity.getInventory().setItem( entity.getInventory().getItemInHandSlot(), this );
-                }
+                this.afterPlacement();
             }
 
             return true;

@@ -28,19 +28,28 @@ import io.gomint.world.WorldLayer;
 import io.gomint.world.block.Block;
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.objects.ObjectIterator;
+import it.unimi.dsi.fastutil.shorts.Short2ObjectMap;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.lang.ref.SoftReference;
 import java.nio.ByteOrder;
 import java.text.NumberFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Consumer;
@@ -94,6 +103,9 @@ public class ChunkAdapter implements Chunk {
     // State saving flag
     @Getter
     private boolean needsPersistance;
+    @Getter
+    @Setter
+    private boolean populated;
 
     // CHECKSTYLE:ON
 
@@ -243,7 +255,7 @@ public class ChunkAdapter implements Chunk {
      * Remove the dirty state for the chunk and set the batched packet to the
      * cache.
      *
-     * @param batch     The batch which has been generated to be sent to the clients
+     * @param batch The batch which has been generated to be sent to the clients
      */
     void setCachedPacket( PacketWorldChunk batch ) {
         this.dirty = false;
@@ -363,7 +375,7 @@ public class ChunkAdapter implements Chunk {
     public void setBlock( int x, int y, int z, int layer, int id ) {
         int ySection = y >> 4;
         ChunkSlice slice = ensureSlice( ySection );
-        slice.setBlock( x, y - 16 * ySection, z, layer, id );
+        slice.setBlock( x, y - ( ySection << 4 ), z, layer, id );
         this.dirty = true;
         this.needsPersistance = true;
     }
@@ -432,29 +444,17 @@ public class ChunkAdapter implements Chunk {
      * @param z The z-coordinate relative to the chunk
      * @return The maximum block height
      */
-    public byte getHeight( int x, int z ) {
-        return this.height[( z << 4 ) + x];
+    public int getHeight( int x, int z ) {
+        return this.height[( z << 4 ) + x] & 0xFF;
     }
 
-    /**
-     * Sets a block column's biome.
-     *
-     * @param x     The x-coordinate of the block column
-     * @param z     The z-coordinate of the block column
-     * @param biome The biome to set
-     */
-    protected void setBiome( int x, int z, Biome biome ) {
+    @Override
+    public void setBiome( int x, int z, Biome biome ) {
         this.biomes[( x << 4 ) + z] = (byte) biome.getId();
         this.dirty = true;
     }
 
-    /**
-     * Gets a block column's biome.
-     *
-     * @param x The x-coordinate of the block column
-     * @param z The z-coordinate of the block column
-     * @return The block column's biome
-     */
+    @Override
     public Biome getBiome( int x, int z ) {
         return Biome.getBiomeById( this.biomes[( x << 4 ) + z] );
     }
@@ -516,12 +516,12 @@ public class ChunkAdapter implements Chunk {
      * @return The world chunk packet that is to be sent
      */
     PacketWorldChunk createPackagedData( int protocolId ) {
-        PacketBuffer buffer = new PacketBuffer( 512 );
+        PacketBuffer buffer = new PacketBuffer( 16 );
 
         // Detect how much data we can skip
         int topEmpty = 15;
         for ( int i = 15; i >= 0; i-- ) {
-            ChunkSlice slice = chunkSlices[i];
+            ChunkSlice slice = this.chunkSlices[i];
             if ( slice == null || slice.isAllAir() ) {
                 topEmpty = i;
             } else {
@@ -531,8 +531,7 @@ public class ChunkAdapter implements Chunk {
 
         buffer.writeByte( (byte) topEmpty );
         for ( int i = 0; i < topEmpty; i++ ) {
-            buffer.writeByte( (byte) 8 );
-            buffer.writeBytes( ensureSlice( i ).getBytes( protocolId ) );
+            ensureSlice( i ).writeToNetwork( buffer, protocolId );
         }
 
         buffer.writeBytes( this.height );
@@ -543,8 +542,12 @@ public class ChunkAdapter implements Chunk {
         // Write tile entity data
         Collection<TileEntity> tileEntities = this.getTileEntities();
         if ( !tileEntities.isEmpty() ) {
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            NBTWriter nbtWriter = new NBTWriter( baos, ByteOrder.LITTLE_ENDIAN );
+            NBTWriter nbtWriter = new NBTWriter( new OutputStream() {
+                @Override
+                public void write( int b ) throws IOException {
+                    buffer.writeByte( (byte) b );
+                }
+            }, ByteOrder.LITTLE_ENDIAN );
             nbtWriter.setUseVarint( true );
 
             for ( TileEntity tileEntity : tileEntities ) {
@@ -557,8 +560,6 @@ public class ChunkAdapter implements Chunk {
                     e.printStackTrace();
                 }
             }
-
-            buffer.writeBytes( baos.toByteArray() );
         }
 
         PacketWorldChunk packet = new PacketWorldChunk();
@@ -578,7 +579,7 @@ public class ChunkAdapter implements Chunk {
 
         for ( ChunkSlice chunkSlice : this.chunkSlices ) {
             if ( chunkSlice != null ) {
-                tileEntities.addAll( chunkSlice.getTileEntities() );
+                tileEntities.addAll( chunkSlice.getTileEntities().values() );
             }
         }
 
@@ -697,7 +698,9 @@ public class ChunkAdapter implements Chunk {
     public void tickTiles( long currentTimeMS, float dT ) {
         for ( ChunkSlice chunkSlice : this.chunkSlices ) {
             if ( chunkSlice != null ) {
-                for ( TileEntity tileEntity : chunkSlice.getTileEntities() ) {
+                ObjectIterator<Short2ObjectMap.Entry<TileEntity>> iterator = chunkSlice.getTileEntities().short2ObjectEntrySet().fastIterator();
+                while ( iterator.hasNext() ) {
+                    TileEntity tileEntity = iterator.next().getValue();
                     tileEntity.update( currentTimeMS, dT );
 
                     if ( tileEntity.isNeedsPersistance() ) {

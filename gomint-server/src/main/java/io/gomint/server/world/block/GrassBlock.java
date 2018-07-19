@@ -4,7 +4,6 @@ import io.gomint.inventory.item.ItemDirt;
 import io.gomint.inventory.item.ItemShears;
 import io.gomint.inventory.item.ItemStack;
 import io.gomint.world.block.BlockType;
-
 import io.gomint.math.BlockPosition;
 import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.world.UpdateReason;
@@ -69,4 +68,5 @@ public class GrassBlock extends Block implements io.gomint.world.block.BlockGras
             ItemShears.class
         };
     }
+
 }

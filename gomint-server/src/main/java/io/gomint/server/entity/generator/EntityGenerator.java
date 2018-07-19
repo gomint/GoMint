@@ -13,7 +13,7 @@ import io.gomint.entity.Entity;
  * @author geNAZt
  * @version 1.0
  */
-public interface EntityGenerator {
+public interface EntityGenerator<E extends io.gomint.server.entity.Entity> {
 
     /**
      * Create a new entity

@@ -24,4 +24,12 @@ public interface EntityConverters {
      */
     Entity read( NBTTagCompound compound );
 
+    /**
+     * Write a entity to a nbt compound
+     *
+     * @param entity which should be serialized
+     * @return nbt compound which holds all data which is needed to restore the entity
+     */
+    NBTTagCompound write( Entity entity );
+
 }

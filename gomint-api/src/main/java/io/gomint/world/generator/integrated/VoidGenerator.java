@@ -32,4 +32,9 @@ public class VoidGenerator extends ChunkGenerator {
         return new BlockPosition( 0, 20, 0 );
     }
 
+    @Override
+    public void populate( Chunk chunk ) {
+
+    }
+
 }

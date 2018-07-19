@@ -58,26 +58,25 @@ public interface World {
     <T extends Block> T getBlockAt( BlockPosition pos );
 
     /**
-     * Get the block at that position or null if the position is not loaded in the world.
+     * Get the block at that position or air if the position is not loaded in the world.
      *
      * @param x x coordinate
      * @param y y coordinate
      * @param z z coordinate
-     * @return block which has been found at that position or null
+     * @return block which has been found at that position or air (when chunk has not been loaded)
      */
     <T extends Block> T getBlockAt( int x, int y, int z );
 
     /**
-     * Get the block at that position or null if the position is not loaded in the world.
+     * Get the block at that position or air if the position is not loaded in the world.
      *
      * @param x     x coordinate
      * @param y     y coordinate
      * @param z     z coordinate
      * @param layer on which layer is this block
-     * @return block which has been found at that position or null
+     * @return block which has been found at that position or air (when chunk has not been loaded)
      */
     <T extends Block> T getBlockAt( int x, int y, int z, WorldLayer layer );
-
 
     /**
      * Gets the value of the given gamerule set for this world.
@@ -198,8 +197,38 @@ public interface World {
     Chunk generateEmptyChunk( int x, int z );
 
     /**
+     * Get the chunk which has been asked
+     *
+     * @param x coordinate of the chunk
+     * @param z coordinate of the chunk
+     * @return chunk or null when not generated
+     */
+    Chunk getChunk( int x, int z );
+
+    /**
      * Save all data to disk
      */
     void save();
+
+    /**
+     * Get the highest block at the given coordinates
+     *
+     * @param x coordinate
+     * @param z coordinate
+     * @return highest block at the normal layer
+     */
+    Block getHighestBlockAt( int x, int z );
+
+    /**
+     * Get the highest block at the given coordinates. Please care this can be wrong, height calculations
+     * are always done on the normal layer. So the highest block on the underwater layer may be wrong at all
+     * times.
+     *
+     * @param x coordinate
+     * @param z coordinate
+     * @param layer on which we want to lookup
+     * @return highest block at the normal layer
+     */
+    Block getHighestBlockAt( int x, int z, WorldLayer layer );
 
 }

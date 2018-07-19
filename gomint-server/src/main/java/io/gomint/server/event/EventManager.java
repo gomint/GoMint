@@ -33,7 +33,9 @@ public class EventManager {
      */
     public void triggerEvent( Event event ) {
         // Assume we already acquired a readLock:
-        int eventHash = event.getClass().getName().hashCode();
+        Class<? extends Event> eventClass = event.getClass();
+        int eventHash = eventClass.getName().hashCode();
+
         EventHandlerList eventHandlerList = this.eventHandlers.get( eventHash );
         if ( eventHandlerList == null ) {
             return;
@@ -50,7 +52,7 @@ public class EventManager {
      */
     public <T extends EventListener> void registerListener( T listener ) {
         Class<? extends EventListener> listenerClass = listener.getClass();
-        for ( Method listenerMethod : listenerClass.getDeclaredMethods() ) {
+        for ( Method listenerMethod: listenerClass.getDeclaredMethods() ) {
             if ( !listenerMethod.isAnnotationPresent( EventHandler.class ) ||
                 listenerMethod.getParameterCount() != 1 ||
                 !Event.class.isAssignableFrom( listenerMethod.getParameterTypes()[0] ) ||
@@ -71,7 +73,7 @@ public class EventManager {
      */
     public <T extends EventListener> void unregisterListener( T listener ) {
         Class<? extends EventListener> listenerClass = listener.getClass();
-        for ( Method listenerMethod : listenerClass.getDeclaredMethods() ) {
+        for ( Method listenerMethod: listenerClass.getDeclaredMethods() ) {
             if ( !listenerMethod.isAnnotationPresent( EventHandler.class ) ||
                 listenerMethod.getParameterCount() != 1 ||
                 !Event.class.isAssignableFrom( listenerMethod.getParameterTypes()[0] ) ||

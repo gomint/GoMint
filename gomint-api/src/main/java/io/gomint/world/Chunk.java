@@ -86,4 +86,22 @@ public interface Chunk {
      */
     void setBlock( int x, int y, int z, WorldLayer layer, Block block );
 
+    /**
+     * Sets a block column's biome.
+     *
+     * @param x     The x-coordinate of the block column
+     * @param z     The z-coordinate of the block column
+     * @param biome The biome to set
+     */
+    void setBiome( int x, int z, Biome biome );
+
+    /**
+     * Gets a block column's biome.
+     *
+     * @param x The x-coordinate of the block column
+     * @param z The z-coordinate of the block column
+     * @return The block column's biome
+     */
+    Biome getBiome( int x, int z );
+
 }

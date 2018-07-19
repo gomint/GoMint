@@ -22,6 +22,10 @@ public class Vector2 {
         this.z = z;
     }
 
+    public static Vector2 getDirection2D( double angle ) {
+        return new Vector2( (float) Math.cos( angle ), (float) Math.sin( angle ) );
+    }
+
     public Vector2 add( float x, float z ) {
         return new Vector2( this.x + x, this.z + z );
     }

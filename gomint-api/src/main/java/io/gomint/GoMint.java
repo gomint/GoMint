@@ -18,7 +18,6 @@ import io.gomint.player.PlayerSkin;
 import io.gomint.plugin.PluginManager;
 import io.gomint.world.World;
 import io.gomint.world.block.Block;
-import io.gomint.world.block.BlockBedrock;
 import io.gomint.world.generator.CreateOptions;
 
 import java.io.InputStream;
@@ -68,7 +67,7 @@ public interface GoMint {
      * Create a new entity
      *
      * @param entityClass which should be created
-     * @param <T> generic type of the entity
+     * @param <T>         generic type of the entity
      * @return fresh generated entity
      */
     <T extends Entity> T createEntity( Class<T> entityClass );
@@ -156,7 +155,7 @@ public interface GoMint {
     /**
      * Create a new modal for form display
      *
-     * @param title of the modal
+     * @param title    of the modal
      * @param question for the client
      * @return modal implementation
      */
@@ -211,7 +210,7 @@ public interface GoMint {
      * {@link io.gomint.world.Chunk#setBlock(int, int, int, Block)}
      *
      * @param blockClass class of the block we want to create
-     * @param <T> type of block which the target object should have
+     * @param <T>        type of block which the target object should have
      * @return empty, not configured block
      */
     <T extends Block> T createBlock( Class<T> blockClass );
@@ -219,7 +218,7 @@ public interface GoMint {
     /**
      * Create a new world with the given options
      *
-     * @param name of the new world
+     * @param name    of the new world
      * @param options which should be used to generate the world
      * @return new world
      */
@@ -239,4 +238,10 @@ public interface GoMint {
      */
     void dispatchCommand( String line );
 
+    /**
+     * Get a collection of all worlds on this server
+     *
+     * @return collection of worlds
+     */
+    Collection<World> getWorlds();
 }

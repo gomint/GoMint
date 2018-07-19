@@ -23,7 +23,12 @@ import io.gomint.server.scheduler.PluginScheduler;
 import io.gomint.server.util.CallerDetectorUtil;
 import javassist.bytecode.AnnotationsAttribute;
 import javassist.bytecode.ClassFile;
-import javassist.bytecode.annotation.*;
+import javassist.bytecode.annotation.Annotation;
+import javassist.bytecode.annotation.ArrayMemberValue;
+import javassist.bytecode.annotation.EnumMemberValue;
+import javassist.bytecode.annotation.IntegerMemberValue;
+import javassist.bytecode.annotation.MemberValue;
+import javassist.bytecode.annotation.StringMemberValue;
 import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,8 +38,14 @@ import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
 import java.lang.reflect.Field;
-import java.util.*;
-import java.util.function.BiConsumer;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
@@ -142,9 +153,7 @@ public class SimplePluginManager implements PluginManager {
             }
 
             if ( pluginMeta.getPriority() == prio ) {
-                if ( LOGGER.isDebugEnabled() ) {
-                    LOGGER.debug( "Loading plugin {}", pluginMeta.getName() );
-                }
+                LOGGER.info( "Loading plugin {}", pluginMeta.getName() );
 
                 loadPlugin( pluginMeta );
 
@@ -165,9 +174,7 @@ public class SimplePluginManager implements PluginManager {
                     continue;
                 }
 
-                if ( LOGGER.isDebugEnabled() ) {
-                    LOGGER.debug( "Searching depend for {}: {}", pluginMeta.getName(), dependPlugin );
-                }
+                LOGGER.info( "Searching depend for {}: {}", pluginMeta.getName(), dependPlugin );
 
                 // We need to check if the depend plugin is detected
                 boolean found = false;
@@ -220,6 +227,7 @@ public class SimplePluginManager implements PluginManager {
         // Ok everything is fine now, load the plugin
         PluginClassloader loader = null;
         try {
+            LOGGER.info( "Starting to load plugin {}", pluginMeta.getName() );
             loader = new PluginClassloader( pluginMeta.getPluginFile() );
             Plugin clazz = (Plugin) constructAndInject( pluginMeta.getMainClass(), loader );
             if ( clazz == null ) {
@@ -308,6 +316,7 @@ public class SimplePluginManager implements PluginManager {
             String name = entry.getKey();
 
             try {
+                LOGGER.info( "Installing plugin {}", name );
                 plugin.onInstall();
                 this.installedPlugins.put( name, plugin );
             } catch ( Exception e ) {
@@ -505,7 +514,7 @@ public class SimplePluginManager implements PluginManager {
 
         // CHECKSTYLE:OFF
         try {
-            LOGGER.debug( "Starting to shutdown {}", plugin.getName() );
+            LOGGER.info( "Starting to shutdown {}", plugin.getName() );
             plugin.onUninstall();
         } catch ( Exception e ) {
             LOGGER.warn( "Plugin throw an exception whilst uninstalling: " + plugin.getName(), e );

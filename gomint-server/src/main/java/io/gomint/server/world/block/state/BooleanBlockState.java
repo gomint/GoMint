@@ -13,6 +13,13 @@ package io.gomint.server.world.block.state;
  */
 public class BooleanBlockState extends BlockState<Boolean> {
 
+    /**
+     * Set default state in constructor so we don't NPE per default
+     */
+    public BooleanBlockState() {
+        this.setState( false );
+    }
+
     @Override
     public byte toData() {
         return (byte) ( this.getState() ? 1 : 0 );

@@ -13,8 +13,11 @@ import io.gomint.server.entity.EntityType;
 import io.gomint.server.network.packet.Packet;
 import io.gomint.server.network.packet.PacketAddItemEntity;
 import io.gomint.server.network.packet.PacketPickupItemEntity;
+import io.gomint.server.registry.RegisterInfo;
+import io.gomint.server.util.DumpUtil;
 import io.gomint.server.util.Values;
 import io.gomint.server.world.WorldAdapter;
+import io.gomint.taglib.NBTTagCompound;
 import io.gomint.world.Gamemode;
 import lombok.Getter;
 import lombok.ToString;
@@ -25,6 +28,7 @@ import java.util.concurrent.TimeUnit;
  * @author geNAZt
  * @version 1.0
  */
+@RegisterInfo( id = 64 )
 @ToString
 public class EntityItem extends Entity implements EntityItemDrop {
 
@@ -170,6 +174,14 @@ public class EntityItem extends Entity implements EntityItemDrop {
     @Override
     public boolean isMotionSendingEnabled() {
         return true;
+    }
+
+    @Override
+    public void initFromNBT( NBTTagCompound compound ) {
+        super.initFromNBT( compound );
+
+
+        DumpUtil.dumpNBTCompund( compound );
     }
 
 }

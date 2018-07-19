@@ -1,20 +1,24 @@
 package io.gomint.server.world.block;
 
-import io.gomint.world.block.BlockFace;
-import io.gomint.world.block.BlockType;
-
 import io.gomint.inventory.item.ItemStack;
 import io.gomint.math.Vector;
 import io.gomint.server.entity.Entity;
 import io.gomint.server.entity.EntityPlayer;
 import io.gomint.server.registry.RegisterInfo;
+import io.gomint.server.world.block.state.ProgressBlockState;
+import io.gomint.world.block.BlockFace;
+import io.gomint.world.block.BlockType;
+import lombok.EqualsAndHashCode;
 
 /**
  * @author geNAZt
  * @version 1.0
  */
 @RegisterInfo( id = 92 )
+@EqualsAndHashCode( callSuper = true )
 public class Cake extends Block implements io.gomint.world.block.BlockCake {
+
+    private ProgressBlockState cakeEaten = new ProgressBlockState( 5, aVoid -> Cake.this.setType( Air.class ) );
 
     @Override
     public int getBlockId() {
@@ -46,11 +50,8 @@ public class Cake extends Block implements io.gomint.world.block.BlockCake {
                 float saturation = Math.min( player.getSaturation() + ( 2 * 0.1f * 2.0f ), player.getHunger() );
                 player.setSaturation( saturation );
 
-                byte newData = (byte) ( this.getBlockData() + 1 );
-                if ( newData < 6 ) {
-                    this.setBlockData( newData );
-                } else {
-                    this.setType( Air.class );
+                if ( this.cakeEaten.progress() ) {
+                    this.updateBlock();
                 }
             }
         }

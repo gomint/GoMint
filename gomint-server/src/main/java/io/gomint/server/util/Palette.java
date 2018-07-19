@@ -10,6 +10,8 @@ package io.gomint.server.util;
 import io.gomint.jraknet.PacketBuffer;
 import io.gomint.math.MathUtils;
 import lombok.Getter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.BitSet;
 
@@ -68,7 +70,7 @@ public class Palette {
     public Palette( PacketBuffer data, int version, boolean read ) {
         this.data = data;
 
-        for ( PaletteVersion paletteVersionCanidate : PaletteVersion.values() ) {
+        for ( PaletteVersion paletteVersionCanidate: PaletteVersion.values() ) {
             if ( ( !read && paletteVersionCanidate.getAmountOfWords() <= version ) ||
                 ( read && paletteVersionCanidate.getVersionId() == version ) ) {
                 this.paletteVersion = paletteVersionCanidate;
@@ -81,39 +83,43 @@ public class Palette {
         }
     }
 
-    public void addIndex( Integer id ) {
-        // Do we need new input?
-        if ( this.input == null ) {
-            this.input = new BitSet( 32 );
-            this.inputIndex = 0;
-        }
+    public void addIndexIDs( int[] indexIDs ) {
+        for ( int i = 0; i < indexIDs.length; i++ ) {
+            int id = indexIDs[i];
 
-        // Check if old input is full and we need a new one
-        if ( this.wordsWritten == this.paletteVersion.getAmountOfWords() ) {
-            // Write to output
-            this.data.writeLInt( this.convert( this.input ) );
-
-            // New input
-            this.input.set( 0, 32, false );
-            this.inputIndex = 0;
-            this.wordsWritten = 0;
-        }
-
-        // Write id
-        while ( id != 0L ) {
-            if ( id % 2L != 0 ) {
-                this.input.set( this.inputIndex );
+            // Do we need new input?
+            if ( this.input == null ) {
+                this.input = new BitSet( 32 );
+                this.inputIndex = 0;
             }
 
-            ++this.inputIndex;
-            id = id >>> 1;
+            // Check if old input is full and we need a new one
+            if ( this.wordsWritten == this.paletteVersion.getAmountOfWords() ) {
+                // Write to output
+                this.data.writeLInt( this.convert( this.input ) );
+
+                // New input
+                this.input.set( 0, 32, false );
+                this.inputIndex = 0;
+                this.wordsWritten = 0;
+            }
+
+            // Write id
+            while ( id != 0L ) {
+                if ( id % 2L != 0 ) {
+                    this.input.set( this.inputIndex );
+                }
+
+                ++this.inputIndex;
+                id = id >>> 1;
+            }
+
+            // Increment written words
+            this.wordsWritten++;
+
+            // Set the index correct
+            this.inputIndex = this.wordsWritten * this.paletteVersion.getVersionId();
         }
-
-        // Increment written words
-        this.wordsWritten++;
-
-        // Set the index correct
-        this.inputIndex = this.wordsWritten * this.paletteVersion.getVersionId();
     }
 
     public void finish() {
@@ -153,10 +159,6 @@ public class Palette {
         }
 
         return this.output;
-    }
-
-    public boolean isPadded() {
-        return this.paletteVersion.getAmountOfPadding() > 0;
     }
 
     private int convert( BitSet bs ) {

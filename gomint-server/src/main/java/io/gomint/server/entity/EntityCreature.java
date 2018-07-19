@@ -9,6 +9,7 @@ package io.gomint.server.entity;
 
 import io.gomint.server.inventory.ArmorInventory;
 import io.gomint.server.world.WorldAdapter;
+import io.gomint.taglib.NBTTagCompound;
 
 /**
  * @author geNAZt
@@ -36,6 +37,20 @@ public class EntityCreature extends EntityLiving implements io.gomint.entity.Ent
     @Override
     public ArmorInventory getArmorInventory() {
         return this.armorInventory;
+    }
+
+    @Override
+    public void initFromNBT( NBTTagCompound compound ) {
+        super.initFromNBT( compound );
+
+        if ( this.armorInventory != null ) {
+            this.armorInventory.initFromNBT( compound );
+        }
+    }
+
+    @Override
+    public NBTTagCompound persistToNBT() {
+        return super.persistToNBT();
     }
 
 }

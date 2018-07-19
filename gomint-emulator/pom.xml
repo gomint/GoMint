@@ -16,8 +16,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>io.gomint</groupId>
-    <artifactId>emulator</artifactId>
+    <artifactId>gomint-emulator</artifactId>
 
     <dependencies>
         <dependency>

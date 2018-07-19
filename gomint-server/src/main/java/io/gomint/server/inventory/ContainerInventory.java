@@ -23,7 +23,7 @@ public abstract class ContainerInventory extends Inventory implements io.gomint.
      * @param owner of the container (mostly a tile or normal entity)
      * @param size  of the entity
      */
-    ContainerInventory( InventoryHolder owner, int size ) {
+    public ContainerInventory( InventoryHolder owner, int size ) {
         super( owner, size );
     }
 

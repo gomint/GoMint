@@ -75,4 +75,12 @@ public interface Inventory {
      */
     ItemStack[] getContents();
 
+    /**
+     * Check if the inventory holds an instance of the asked item stack
+     *
+     * @param itemStack which should be checked against
+     * @return true if inventory contains, false if not
+     */
+    boolean contains( ItemStack itemStack );
+
 }

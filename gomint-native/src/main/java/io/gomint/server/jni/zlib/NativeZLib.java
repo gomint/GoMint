@@ -49,17 +49,20 @@ public class NativeZLib implements ZLib {
         out.memoryAddress();
         Preconditions.checkState( ctx != 0, "Invalid pointer to compress!" );
 
-        while ( !nativeCompress.finished && ( compress || in.isReadable() ) ) {
-            out.ensureWritable( 8192 );
+        try {
+            while ( !nativeCompress.finished && ( compress || in.isReadable() ) ) {
+                out.ensureWritable( 8192 );
 
-            int processed = nativeCompress.process( ctx, in.memoryAddress() + in.readerIndex(), in.readableBytes(), out.memoryAddress() + out.writerIndex(), out.writableBytes(), compress );
+                int processed = nativeCompress.process( ctx, in.memoryAddress() + in.readerIndex(), in.readableBytes(), out.memoryAddress() + out.writerIndex(), out.writableBytes(), compress );
 
-            in.readerIndex( in.readerIndex() + nativeCompress.consumed );
-            out.writerIndex( out.writerIndex() + processed );
+                in.readerIndex( in.readerIndex() + nativeCompress.consumed );
+                out.writerIndex( out.writerIndex() + processed );
+            }
+        } finally {
+            nativeCompress.reset( ctx, compress );
+            nativeCompress.consumed = 0;
+            nativeCompress.finished = false;
         }
-
-        nativeCompress.reset( ctx, compress );
-        nativeCompress.consumed = 0;
-        nativeCompress.finished = false;
     }
+
 }

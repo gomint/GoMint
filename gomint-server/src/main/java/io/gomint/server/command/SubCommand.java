@@ -7,9 +7,12 @@
 
 package io.gomint.server.command;
 
-import io.gomint.command.*;
+import io.gomint.command.Command;
+import io.gomint.command.CommandOutput;
+import io.gomint.command.CommandOverload;
+import io.gomint.command.CommandSender;
+import io.gomint.command.ParamValidator;
 import io.gomint.command.validator.CommandValidator;
-import io.gomint.entity.EntityPlayer;
 import io.gomint.plugin.Plugin;
 import io.gomint.server.entity.CommandPermission;
 
@@ -45,18 +48,18 @@ public class SubCommand extends Command {
     }
 
     @Override
-    public CommandOutput execute( EntityPlayer player, String alias, Map<String, Object> arguments ) {
+    public CommandOutput execute( CommandSender sender, String alias, Map<String, Object> arguments ) {
         // Look out for subCmd# keys
         for ( Map.Entry<String, Object> entry : arguments.entrySet() ) {
             if ( entry.getKey().equals( entry.getValue() ) && this.subCommands.containsKey( entry.getKey() ) ) {
                 String subCommand = (String) entry.getValue();
                 CommandHolder commandHolder = this.subCommands.get( subCommand );
                 if ( commandHolder != null ) {
-                    if ( commandHolder.getPermission() == null || player.hasPermission( commandHolder.getPermission() ) ) {
+                    if ( commandHolder.getPermission() == null || sender.hasPermission( commandHolder.getPermission() ) ) {
                         Map<String, Object> arg = new HashMap<>( arguments );
                         arg.remove( entry.getKey() );
 
-                        return commandHolder.getExecutor().execute( (CommandSender) player, alias + " " + entry.getValue(), arg );
+                        return commandHolder.getExecutor().execute( sender, alias + " " + entry.getValue(), arg );
                     } else {
                         CommandOutput commandOutput = new CommandOutput();
                         commandOutput.fail( "No permission for this command" );

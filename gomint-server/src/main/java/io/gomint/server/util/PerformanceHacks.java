@@ -7,6 +7,9 @@
 
 package io.gomint.server.util;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.lang.reflect.Field;
 
 /**
@@ -15,6 +18,7 @@ import java.lang.reflect.Field;
  */
 public class PerformanceHacks {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger( PerformanceHacks.class );
     private static Object unsafe;
 
     static {
@@ -26,6 +30,7 @@ public class PerformanceHacks {
                 Field f = unsafeClass.getDeclaredField( "theUnsafe" );
                 f.setAccessible( true );
                 unsafe = f.get( null );
+                LOGGER.info( "Got unsafe memory access" );
             } catch ( Exception e ) {
                 // Ignore this, this is optional unsafe getting stuff
             }

@@ -38,7 +38,12 @@ public class PacketWorldChunk extends Packet {
 
     @Override
     public void deserialize( PacketBuffer buffer, int protocolID ) {
+        this.x = buffer.readSignedVarInt();
+        this.z = buffer.readSignedVarInt();
 
+        int amount = buffer.readUnsignedVarInt();
+        byte[] data = new byte[amount];
+        buffer.readBytes( data );
     }
 
     @Override

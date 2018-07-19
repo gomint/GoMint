@@ -7,8 +7,14 @@
 
 package io.gomint.server.world.anvil;
 
+import io.gomint.server.jni.NativeCode;
+import io.gomint.server.jni.zlib.JavaZLib;
+import io.gomint.server.jni.zlib.NativeZLib;
+import io.gomint.server.jni.zlib.ZLib;
 import io.gomint.server.world.WorldLoadException;
 import io.gomint.taglib.NBTStream;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.PooledByteBufAllocator;
 
 import java.io.*;
 import java.nio.ByteOrder;
@@ -28,12 +34,20 @@ import java.util.zip.Inflater;
  */
 class RegionFile {
 
+    private static final NativeCode<ZLib> ZLIB = new NativeCode<>( "zlib", JavaZLib.class, NativeZLib.class );
+    private static final ThreadLocal<ZLib> COMPRESSOR = new ThreadLocal<>();
+    private static final ThreadLocal<ZLib> DECOMPRESSOR = new ThreadLocal<>();
+
+    static {
+        ZLIB.load();
+    }
+
     private final File regionFile;
     private final AnvilWorldAdapter world;
     private final ThreadLocal<RandomAccessFile> file;
     private final List<RandomAccessFile> openFDs = Collections.synchronizedList( new ArrayList<>() );
-    private final int[][] lookupCache = new int[4096][];
-    private final int[] lastSaveTimes = new int[4096];
+    private final int[][] lookupCache = new int[1024][];
+    private final int[] lastSaveTimes = new int[1024];
 
     // Lock for caches
     private final ReadWriteLock lock = new ReentrantReadWriteLock( true );
@@ -76,6 +90,28 @@ class RegionFile {
                 this.lastSaveTimes[i] = randomFile.readInt();
             }
         }
+    }
+
+    private ZLib getCompressor() {
+        if ( COMPRESSOR.get() == null ) {
+            ZLib zLib = ZLIB.newInstance();
+            zLib.init( true,7 );
+            COMPRESSOR.set( zLib );
+            return zLib;
+        }
+
+        return COMPRESSOR.get();
+    }
+
+    private ZLib getDecompressor() {
+        if ( DECOMPRESSOR.get() == null ) {
+            ZLib zLib = ZLIB.newInstance();
+            zLib.init( false, 7 );
+            DECOMPRESSOR.set( zLib );
+            return zLib;
+        }
+
+        return DECOMPRESSOR.get();
     }
 
     private RandomAccessFile getRandomAccessFile() throws FileNotFoundException {
@@ -147,22 +183,28 @@ class RegionFile {
                     break;
 
                 case 2:
-                    Inflater inflater = new Inflater();
-                    inflater.setInput( nbtBuffer );
+                    ByteBuf inBuf = PooledByteBufAllocator.DEFAULT.directBuffer();
+                    inBuf.writeBytes( nbtBuffer );
 
-                    decompressOutput = new ByteArrayOutputStream();
-                    decompressBuffer = new byte[16 * 1024];
+                    ByteBuf outBuf = PooledByteBufAllocator.DEFAULT.directBuffer( 8192 ); // We will write at least once so ensureWrite will realloc to 8192 so or so
+
+                    ZLib decompressor = this.getDecompressor();
 
                     try {
-                        int amountOfBytesDecompressed = -1;
-                        while ( ( amountOfBytesDecompressed = inflater.inflate( decompressBuffer ) ) > 0 ) {
-                            decompressOutput.write( decompressBuffer, 0, amountOfBytesDecompressed );
-                        }
-                    } catch ( DataFormatException e ) {
-                        throw new IOException( "Could not decompress data due to zlib error: ", e );
+                        decompressor.process( inBuf, outBuf );
+                    } catch ( Exception e ) {
+                        this.world.getLogger().error( "Could not read anvil chunk from region", e );
+                        outBuf.release();
+                        return null;
+                    } finally {
+                        inBuf.release();
                     }
 
-                    input = new ByteArrayInputStream( decompressOutput.toByteArray() );
+                    byte[] data = new byte[outBuf.readableBytes()];
+                    outBuf.readBytes( data );
+                    outBuf.release();
+
+                    input = new ByteArrayInputStream( data );
                     break;
 
                 default:
@@ -172,6 +214,11 @@ class RegionFile {
             NBTStream nbtStream = new NBTStream( input, ByteOrder.BIG_ENDIAN );
             AnvilChunkAdapter chunkAdapter = new AnvilChunkAdapter( this.world, x, z, TimeUnit.SECONDS.toMillis( this.lastSaveTimes[chunkIndex] ) );
             chunkAdapter.loadFromNBT( nbtStream );
+
+            if ( !chunkAdapter.isPopulated() ) {
+                this.world.addPopulateTask( chunkAdapter );
+            }
+
             return chunkAdapter;
         } finally {
             this.lock.readLock().unlock();

@@ -20,8 +20,8 @@ import io.gomint.server.entity.EntityLiving;
 import io.gomint.server.entity.EntityPlayer;
 import io.gomint.server.entity.EntityType;
 import io.gomint.server.util.Values;
-import io.gomint.server.util.random.FastRandom;
 import io.gomint.server.world.WorldAdapter;
+import io.gomint.util.random.FastRandom;
 
 import java.util.Collection;
 
@@ -138,7 +138,10 @@ public abstract class EntityProjectile extends Entity implements io.gomint.entit
                             }
 
                             EntityDamageByEntityEvent event = new EntityDamageByEntityEvent( hitEntity, this, EntityDamageEvent.DamageSource.PROJECTILE, damage );
-                            hitEntity.damage( event );
+                            if ( hitEntity.damage( event ) ) {
+                                this.applyCustomKnockback( hitEntity );
+                                this.applyCustomDamageEffects( hitEntity );
+                            }
 
                             // Store entity
                             this.hitEntity = hitEntity;
@@ -149,6 +152,24 @@ public abstract class EntityProjectile extends Entity implements io.gomint.entit
 
             this.lastUpdatedT = 0;
         }
+    }
+
+    /**
+     * Apply custom effects for a entity which has been hit by the projectile
+     *
+     * @param hitEntity which has been hit
+     */
+    protected void applyCustomDamageEffects( Entity hitEntity ) {
+
+    }
+
+    /**
+     * This method should be overwritten by projectiles which can alter the hit entities motion (like punch arrows)
+     *
+     * @param hitEntity which has been hit
+     */
+    protected void applyCustomKnockback( Entity hitEntity ) {
+
     }
 
     @Override
@@ -171,13 +192,13 @@ public abstract class EntityProjectile extends Entity implements io.gomint.entit
     Location setPositionFromShooter() {
         // Calculate starting position
         Location position = this.shooter.getLocation();
-        position.add(
+
+        this.setPosition( position.add(
             -(float) ( Math.cos( position.getYaw() / 180 * Math.PI ) * 0.16f ),
             this.shooter.getEyeHeight() - 0.1f,
             -(float) ( Math.sin( position.getYaw() / 180 * Math.PI ) * 0.16f )
-        );
+        ) );
 
-        this.setPosition( position );
         this.setYaw( position.getYaw() );
         this.setPitch( position.getPitch() );
 

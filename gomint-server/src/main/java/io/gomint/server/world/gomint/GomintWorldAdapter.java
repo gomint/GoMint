@@ -12,6 +12,7 @@ import io.gomint.math.BlockPosition;
 import io.gomint.math.Location;
 import io.gomint.math.MathUtils;
 import io.gomint.server.GoMintServer;
+import io.gomint.server.entity.EntityPlayer;
 import io.gomint.server.plugin.PluginClassloader;
 import io.gomint.server.world.*;
 import io.gomint.server.world.gomint.io.Section;
@@ -232,6 +233,11 @@ public final class GomintWorldAdapter extends WorldAdapter {
     @Override
     protected void closeFDs() {
 
+    }
+
+    @Override
+    public boolean persistPlayer( EntityPlayer player ) {
+        return false;
     }
 
     @Override

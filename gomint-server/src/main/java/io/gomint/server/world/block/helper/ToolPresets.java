@@ -6,9 +6,13 @@ import io.gomint.inventory.item.*;
  * @author geNAZt
  * @version 1.0
  */
-public class ToolPresets {
+public final class ToolPresets {
 
-    public static final Class[] AXE = new Class[]{
+    private ToolPresets() {
+
+    }
+
+    public static final Class<? extends ItemStack>[] AXE = new Class[]{
         ItemDiamondAxe.class,
         ItemGoldenAxe.class,
         ItemIronAxe.class,
@@ -16,7 +20,7 @@ public class ToolPresets {
         ItemWoodenAxe.class
     };
 
-    public static final Class[] PICKAXE = new Class[]{
+    public static final Class<? extends ItemStack>[] PICKAXE = new Class[]{
         ItemDiamondPickaxe.class,
         ItemGoldenPickaxe.class,
         ItemIronPickaxe.class,
@@ -24,7 +28,7 @@ public class ToolPresets {
         ItemWoodenPickaxe.class
     };
 
-    public static final Class[] SHOVEL = new Class[]{
+    public static final Class<? extends ItemStack>[] SHOVEL = new Class[]{
         ItemWoodenShovel.class,
         ItemIronShovel.class,
         ItemDiamondShovel.class,
@@ -32,11 +36,12 @@ public class ToolPresets {
         ItemStoneShovel.class
     };
 
-    public static final Class[] SWORD = new Class[]{
+    public static final Class<? extends ItemStack>[] SWORD = new Class[]{
         ItemDiamondSword.class,
         ItemIronSword.class,
         ItemGoldenSword.class,
         ItemStoneSword.class,
         ItemWoodenSword.class
     };
+
 }

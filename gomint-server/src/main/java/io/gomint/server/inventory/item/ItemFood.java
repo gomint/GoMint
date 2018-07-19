@@ -7,7 +7,6 @@
 
 package io.gomint.server.inventory.item;
 
-import io.gomint.inventory.item.ItemAir;
 import io.gomint.server.entity.EntityPlayer;
 import io.gomint.server.inventory.item.category.ItemConsumable;
 import io.gomint.taglib.NBTTagCompound;
@@ -36,13 +35,7 @@ public abstract class ItemFood extends ItemStack implements io.gomint.inventory.
         player.setSaturation( saturation );
 
         // Default manipulation
-        if ( afterPlacement() ) {
-            player.getInventory().setItem( player.getInventory().getItemInHandSlot(), ItemAir.create( 0 ) );
-        } else {
-            player.getInventory().setItem( player.getInventory().getItemInHandSlot(), this );
-        }
+        this.afterPlacement();
     }
-
-
 
 }

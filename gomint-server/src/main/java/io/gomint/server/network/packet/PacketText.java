@@ -117,6 +117,7 @@ public class PacketText extends Packet {
         }
 
         this.xuid = buffer.readString();
+        buffer.readString();
     }
 
     public enum Type {

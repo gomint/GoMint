@@ -7,11 +7,13 @@
 
 package io.gomint.server.entity.generator;
 
+import io.gomint.server.entity.Entity;
+
 /**
  * @author generated
  * @version 2.0
  */
-public class EntitySquidGenerator implements EntityGenerator {
+public class EntitySquidGenerator implements EntityGenerator<Entity> {
 
     public io.gomint.entity.Entity generate() {
          return new io.gomint.server.entity.passive.EntitySquid();

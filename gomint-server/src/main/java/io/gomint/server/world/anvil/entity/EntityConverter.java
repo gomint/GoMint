@@ -14,7 +14,14 @@ import io.gomint.taglib.NBTTagCompound;
  * @version 1.0
  * @param <T> type of entity which this converter should generate
  */
-public abstract class EntityConverter<T> {
+public interface EntityConverter<T> {
+
+    /**
+     * Create a empty entity
+     *
+     * @return new entity
+     */
+    T create();
 
     /**
      * Construct and read a entity from the given compound
@@ -22,6 +29,14 @@ public abstract class EntityConverter<T> {
      * @param compound which should be read
      * @return entity with config found in the compound
      */
-    public abstract T readFrom( NBTTagCompound compound );
+    T readFrom( NBTTagCompound compound );
+
+    /**
+     * Write all data which is needed to reconstruct this entity into a new nbt tag compound
+     *
+     * @param entity which should be saved
+     * @return nbt tag compound with all data needed to reconstruct
+     */
+    NBTTagCompound writeTo( T entity );
 
 }

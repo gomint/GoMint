@@ -72,6 +72,11 @@ public class Entities implements EntityConverters {
         return null;
     }
 
+    @Override
+    public NBTTagCompound write( Entity entity ) {
+        return null;
+    }
+
     private String convertToUnderScoreLower( String id ) {
         // New value
         StringBuilder builder = new StringBuilder();

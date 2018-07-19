@@ -23,17 +23,17 @@ import org.slf4j.LoggerFactory;
 public class Entities {
 
     private static final Logger LOGGER = LoggerFactory.getLogger( Entities.class );
-    private final Registry<EntityGenerator> generators;
+    private final Registry<EntityGenerator<io.gomint.server.entity.Entity>> generators;
 
     public Entities( GoMintServer server ) {
-        this.generators = new Registry<>( server, new GeneratorCallback<EntityGenerator>() {
+        this.generators = new Registry<>( server, new GeneratorCallback<EntityGenerator<io.gomint.server.entity.Entity>>() {
             @Override
-            public EntityGenerator generate( Class<?> clazz ) {
+            public EntityGenerator<io.gomint.server.entity.Entity> generate( Class<?> clazz ) {
                 System.out.println( "this.generators.register( " + clazz.getName() + ".class, new " + clazz.getSimpleName() + "Generator() );");
 
 
                 try {
-                    return (EntityGenerator) ClassLoader.getSystemClassLoader().loadClass( "io.gomint.server.entity.generator." + clazz.getSimpleName() + "Generator" ).newInstance();
+                    return (EntityGenerator<io.gomint.server.entity.Entity>) ClassLoader.getSystemClassLoader().loadClass( "io.gomint.server.entity.generator." + clazz.getSimpleName() + "Generator" ).newInstance();
                 } catch ( InstantiationException | IllegalAccessException | ClassNotFoundException e ) {
                     e.printStackTrace();
                 }
@@ -83,6 +83,7 @@ public class Entities {
         this.generators.register( io.gomint.server.entity.passive.EntityHorse.class, new EntityHorseGenerator() );
         this.generators.register( io.gomint.server.entity.passive.EntityHuman.class, new EntityHumanGenerator() );
         this.generators.register( io.gomint.server.entity.passive.EntityLama.class, new EntityLamaGenerator() );
+        this.generators.register( io.gomint.server.entity.passive.EntityItem.class, new EntityItemGenerator() );
         this.generators.register( io.gomint.server.entity.passive.EntityMooshroom.class, new EntityMooshroomGenerator() );
         this.generators.register( io.gomint.server.entity.passive.EntityMule.class, new EntityMuleGenerator() );
         this.generators.register( io.gomint.server.entity.passive.EntityOcelot.class, new EntityOcelotGenerator() );
@@ -99,7 +100,7 @@ public class Entities {
     }
 
     public <T extends Entity> T create( Class<T> entityClass ) {
-        EntityGenerator entityGenerator = this.generators.getGenerator( entityClass );
+        EntityGenerator<io.gomint.server.entity.Entity> entityGenerator = this.generators.getGenerator( entityClass );
         if ( entityGenerator == null ) {
             return null;
         }
@@ -108,7 +109,7 @@ public class Entities {
     }
 
     public <T extends Entity> T create( int entityId ) {
-        EntityGenerator entityGenerator = this.generators.getGenerator( entityId );
+        EntityGenerator<io.gomint.server.entity.Entity> entityGenerator = this.generators.getGenerator( entityId );
         if ( entityGenerator == null ) {
             LOGGER.warn( "Could not find entity generator for id {}", entityId );
             return null;

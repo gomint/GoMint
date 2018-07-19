@@ -2,10 +2,8 @@ package io.gomint.server.world.block;
 
 import io.gomint.inventory.item.ItemShears;
 import io.gomint.inventory.item.ItemStack;
-import io.gomint.server.world.block.helper.ToolPresets;
-import io.gomint.world.block.BlockType;
-
 import io.gomint.server.registry.RegisterInfo;
+import io.gomint.world.block.BlockType;
 
 /**
  * @author geNAZt
@@ -59,6 +57,37 @@ public class TallGrass extends Block implements io.gomint.world.block.BlockTallG
         return new Class[]{
             ItemShears.class
         };
+    }
+
+    @Override
+    public void setGrassType( Type type ) {
+        switch ( type ) {
+            case DEAD_BUSH:
+                this.setBlockData( (byte) 0 );
+                break;
+            case GRASS:
+                this.setBlockData( (byte) 1 );
+                break;
+            case FERN:
+                this.setBlockData( (byte) 2 );
+                break;
+        }
+
+        this.updateBlock();
+    }
+
+    @Override
+    public Type getGrassType() {
+        switch ( this.getBlockData() ) {
+            case 0:
+                return Type.DEAD_BUSH;
+            case 1:
+                return Type.GRASS;
+            case 2:
+                return Type.FERN;
+        }
+
+        return null;
     }
 
 }

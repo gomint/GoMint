@@ -16,8 +16,8 @@ import io.gomint.math.Vector;
 import io.gomint.server.entity.EntityPlayer;
 import io.gomint.server.entity.EntityType;
 import io.gomint.server.util.Values;
-import io.gomint.server.util.random.FastRandom;
 import io.gomint.server.world.WorldAdapter;
+import io.gomint.util.random.FastRandom;
 import io.gomint.world.block.Block;
 
 import java.util.HashSet;
