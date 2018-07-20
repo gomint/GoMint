@@ -158,7 +158,7 @@ public class EffectCommand extends Command {
 
         if( clear.equals( "clear" ) ) {
             player.removeAllEffects();
-            output.success( "All effects was successfully removed from " + player );
+            output.success( "All effects was successfully removed from " + player.getName() );
         }
         return output;
     }
