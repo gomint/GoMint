@@ -3,8 +3,10 @@ package io.gomint.server.entity.monster;
 import io.gomint.server.entity.Attribute;
 import io.gomint.server.entity.EntityLiving;
 import io.gomint.server.entity.EntityType;
+import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.world.WorldAdapter;
 
+@RegisterInfo( id = 112 )
 public class EntityCod extends EntityLiving implements io.gomint.entity.monster.EntityCod {
 
     /**
