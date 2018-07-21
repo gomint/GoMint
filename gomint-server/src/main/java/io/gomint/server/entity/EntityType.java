@@ -183,7 +183,7 @@ public enum EntityType {
     /**
      * Entity Type value for a snowball which has been thrown.
      */
-    SNOWBALL( 0x000051 ),
+    SNOWBALL( 81 ),
 
     /**
      * Entity Type value for an egg which has been thrown.
