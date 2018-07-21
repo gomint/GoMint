@@ -331,9 +331,44 @@ public enum EntityType {
     ARMOR_STAND( 61 ),
 
     /**
-     * Entity type value for a falling block
+     * Entity type value for a falling block.
      */
-    FALLING_BLOCK( 66 );
+    FALLING_BLOCK( 66 ),
+
+    /**
+     * Entity type value for a drowned.
+     */
+    DROWNED( 110 ),
+
+    /**
+     * Entity type value for a vindicator.
+     */
+    VINDICATOR( 57 ),
+
+    /**
+     * Entity type value for a evoker.
+     */
+    EVOKER( 104 ),
+
+    /**
+     * Entity type value for a pufferfish.
+     */
+    PUFFERFISH( 108 ),
+
+    /**
+     * Entity type value for a salmon.
+     */
+    SALMON( 109 ),
+
+    /**
+     * Entity type value for a tropcial fish.
+     */
+    TROPICALFISH( 111 ),
+
+    /**
+     * Entity type value for a cod.
+     */
+    COD( 112 );
 
     private final int id;
 

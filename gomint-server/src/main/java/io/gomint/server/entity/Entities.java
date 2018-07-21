@@ -97,6 +97,13 @@ public class Entities {
         this.generators.register( io.gomint.server.entity.passive.EntityXPOrb.class, new EntityXPOrbGenerator() );
         this.generators.register( io.gomint.server.entity.passive.EntityZombieHorse.class, new EntityZombieHorseGenerator() );
         this.generators.register( io.gomint.server.entity.projectile.EntityExpBottle.class, new EntityExpBottleGenerator() );
+        this.generators.register( io.gomint.server.entity.monster.EntityDrowned.class, new EntityDrownedGenerator() );
+        this.generators.register( io.gomint.server.entity.monster.EntityVindicator.class, new EntityVindicatorGenerator() );
+        this.generators.register( io.gomint.server.entity.monster.EntityEvoker.class, new EntityEvokerGenerator() );
+        this.generators.register( io.gomint.server.entity.monster.EntityCod.class, new EntityCodGenerator() );
+        this.generators.register( io.gomint.server.entity.monster.EntityPufferfish.class, new EntityPufferfishGenerator() );
+        this.generators.register( io.gomint.server.entity.monster.EntitySalmon.class, new EntitySalmonGenerator() );
+        this.generators.register( io.gomint.server.entity.monster.EntityTropicalFish.class, new EntityTropicalfishGenerator() );
     }
 
     public <T extends Entity> T create( Class<T> entityClass ) {
