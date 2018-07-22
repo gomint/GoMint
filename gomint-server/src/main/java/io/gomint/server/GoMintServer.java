@@ -8,6 +8,7 @@
 package io.gomint.server;
 
 import com.google.common.util.concurrent.Futures;
+import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;

@@ -49,7 +49,7 @@ public class TitleCommand extends Command {
     @Override
     public CommandOutput execute( CommandSender player, String alias, Map<String, Object> arguments ) {
         CommandOutput output = new CommandOutput();
-        EntityPlayer target = arguments.get( "player" ) == null ? (EntityPlayer) player : (EntityPlayer) arguments.get( "player" );
+        EntityPlayer target = (EntityPlayer) arguments.get( "player" );
 
         if( target == null ) {
             return output.fail( "No targets matched selector" );
@@ -73,6 +73,7 @@ public class TitleCommand extends Command {
                     target.sendActionBar( (String) arguments.get( "text" ) );
                     break;
                 case "times":
+                    // Doesn't work yet
                     target.sendTitle( null, null, (int) arguments.get( "fadeIn" ), (int) arguments.get( "stay" ), (int) arguments.get( "fadeOut" ), TimeUnit.SECONDS );
                     break;
             }

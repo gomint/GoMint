@@ -7,6 +7,7 @@ import io.gomint.server.command.internal.DeopCommand;
 import io.gomint.server.command.internal.DifficultyCommand;
 import io.gomint.server.command.internal.EffectCommand;
 import io.gomint.server.command.internal.GamemodeCommand;
+import io.gomint.server.command.internal.GiveCommand;
 import io.gomint.server.command.internal.ListCommand;
 import io.gomint.server.command.internal.OpCommand;
 import io.gomint.server.command.internal.StopCommand;
@@ -45,6 +46,7 @@ public class CommandManager {
                 DifficultyCommand.class,
                 EffectCommand.class,
                 GamemodeCommand.class,
+                GiveCommand.class,
                 ListCommand.class,
                 OpCommand.class,
                 StopCommand.class,

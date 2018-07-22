@@ -21,7 +21,6 @@ import java.util.Map;
  * @version 1.0
  */
 @Name( "gamemode" )
-@Alias( "gm" )
 @Description( "Sets a player's game mode." )
 @Permission( "gomint.command.gamemode" )
 @Overload( {
