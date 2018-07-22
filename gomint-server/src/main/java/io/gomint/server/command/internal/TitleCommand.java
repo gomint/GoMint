@@ -15,6 +15,7 @@ import io.gomint.command.validator.TextValidator;
 import io.gomint.server.entity.EntityPlayer;
 
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author lukeeey
@@ -53,9 +54,28 @@ public class TitleCommand extends Command {
         if( target == null ) {
             return output.fail( "No targets matched selector" );
         }
-
         if( arguments.containsKey( "clear" ) ) {
+            target.clearTitle();
+        }
+        if( arguments.containsKey( "reset" ) ) {
+            target.resetTitle();
+        }
 
+        if( arguments.containsKey( "type" ) ) {
+            switch( (String) arguments.get( "type" ) ) {
+                case "title":
+                    target.sendTitle( (String) arguments.get( "text" ) );
+                    break;
+                case "subtitle":
+                    target.sendTitle( null, (String) arguments.get( "text" ) );
+                    break;
+                case "actionbar":
+                    target.sendActionBar( (String) arguments.get( "text" ) );
+                    break;
+                case "times":
+                    target.sendTitle( null, null, (int) arguments.get( "fadeIn" ), (int) arguments.get( "stay" ), (int) arguments.get( "fadeOut" ), TimeUnit.SECONDS );
+                    break;
+            }
         }
 
         return output.success( "Title command successfully executed" );

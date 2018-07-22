@@ -10,35 +10,29 @@ public enum Gamemode {
      * Survival mode can destroy blocks, attack mobs and other players like normal. They also can't fly or clip through
      * blocks
      */
-    SURVIVAL("Survival", 0),
+    SURVIVAL("Survival"),
 
     /**
      * Creative mode allows flying and instant breaking blocks
      */
-    CREATIVE("Creative", 1),
+    CREATIVE("Creative"),
 
     /**
      * Adventure removes hitboxes so you can't hit mobs / players or interact with certain blocks. They also can't fly
      * or clip through blocks
      */
-    ADVENTURE("Adventure", 2),
+    ADVENTURE("Adventure"),
 
     /**
      * Spectator removed the ability to break blocks or hit mobs / players. This also allows flying and clipping through
      * blocks
      */
-    SPECTATOR("Spectator", 3);
+    SPECTATOR("Spectator");
 
     private String name;
-    private int value;
 
-    Gamemode( String name, int value ) {
+    Gamemode( String name ) {
         this.name = name;
-        this.value = value;
-    }
-
-    public int getIntegerValue() {
-        return this.value;
     }
 
     public String getGamemodeName() {

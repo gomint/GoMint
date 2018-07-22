@@ -1442,12 +1442,15 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
     }
 
     @Override
-    public void sendTitle( String title, String subtitle, long fadein, long duration, long fadeout, TimeUnit unit ) {
-        // NPE check
-        if ( title == null ) {
-            title = "";
-        }
+    public void sendActionBar( String text ) {
+        PacketSetTitle packet = new PacketSetTitle();
+        packet.setType( PacketSetTitle.TitleType.TYPE_ACTION_BAR.getId() );
+        packet.setText( text );
+        this.getConnection().addToSendQueue( packet );
+    }
 
+    @Override
+    public void sendTitle( String title, String subtitle, long fadein, long duration, long fadeout, TimeUnit unit ) {
         if ( subtitle != null && !Objects.equals( subtitle, "" ) ) {
             PacketSetTitle subtitlePacket = new PacketSetTitle();
             subtitlePacket.setType( PacketSetTitle.TitleType.TYPE_SUBTITLE.getId() );
@@ -1458,13 +1461,15 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
             this.getConnection().addToSendQueue( subtitlePacket );
         }
 
-        PacketSetTitle titlePacket = new PacketSetTitle();
-        titlePacket.setType( PacketSetTitle.TitleType.TYPE_TITLE.getId() );
-        titlePacket.setText( title );
-        titlePacket.setFadeInTime( (int) unit.toMillis( fadein ) / 50 );
-        titlePacket.setStayTime( (int) unit.toMillis( duration ) / 50 );
-        titlePacket.setFadeOutTime( (int) unit.toMillis( fadeout ) / 50 );
-        this.getConnection().addToSendQueue( titlePacket );
+        if( title != null ) {
+            PacketSetTitle titlePacket = new PacketSetTitle();
+            titlePacket.setType( PacketSetTitle.TitleType.TYPE_TITLE.getId() );
+            titlePacket.setText( title );
+            titlePacket.setFadeInTime( (int) unit.toMillis( fadein ) / 50 );
+            titlePacket.setStayTime( (int) unit.toMillis( duration ) / 50 );
+            titlePacket.setFadeOutTime( (int) unit.toMillis( fadeout ) / 50 );
+            this.getConnection().addToSendQueue( titlePacket );
+        }
     }
 
     @Override
@@ -1475,6 +1480,20 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
     @Override
     public void sendTitle( String title, String subtitle ) {
         this.sendTitle( title, subtitle, 1, 1, (long) 0.5, TimeUnit.SECONDS );
+    }
+
+    @Override
+    public void clearTitle() {
+        PacketSetTitle packet = new PacketSetTitle();
+        packet.setType( PacketSetTitle.TitleType.TYPE_CLEAR.getId() );
+        this.getConnection().addToSendQueue( packet );
+    }
+
+    @Override
+    public void resetTitle() {
+        PacketSetTitle packet = new PacketSetTitle();
+        packet.setType( PacketSetTitle.TitleType.TYPE_RESET.getId() );
+        this.getConnection().addToSendQueue( packet );
     }
 
     public void firstSpawn() {

@@ -10,6 +10,7 @@ import io.gomint.server.command.internal.GamemodeCommand;
 import io.gomint.server.command.internal.ListCommand;
 import io.gomint.server.command.internal.OpCommand;
 import io.gomint.server.command.internal.StopCommand;
+import io.gomint.server.command.internal.TitleCommand;
 import io.gomint.server.command.internal.TPCommand;
 import io.gomint.server.entity.CommandPermission;
 import io.gomint.server.entity.EntityPlayer;
@@ -47,6 +48,7 @@ public class CommandManager {
                 ListCommand.class,
                 OpCommand.class,
                 StopCommand.class,
+                TitleCommand.class,
                 TPCommand.class
             } ) {
                 // Check for system only commands

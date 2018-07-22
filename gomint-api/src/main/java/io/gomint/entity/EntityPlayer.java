@@ -288,6 +288,14 @@ public interface EntityPlayer extends EntityHuman {
     boolean getFlying();
 
     /**
+     * Send an action bar to the user's screen.
+     * This displays text that is much smaller than a title.
+     *
+     * @param text  The text to be displayed on the screen
+     */
+    void sendActionBar( String text );
+
+    /**
      * Send a title text to the user's screen, with an optional subtitle.
      *
      * @param title    Big text displayed in the middle of the screen
@@ -315,6 +323,16 @@ public interface EntityPlayer extends EntityHuman {
      *                 Default time for fadein and duration is 1 second
      */
     void sendTitle( String title, String subtitle );
+
+    /**
+     * Removes the title from the clients screen
+     */
+    void clearTitle();
+
+    /**
+     * Resets the title duration settings
+     */
+    void resetTitle();
 
     /**
      * Toggle gliding status of the player
