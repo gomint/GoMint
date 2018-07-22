@@ -1,10 +1,10 @@
 package io.gomint.server.entity.ai;
 
+import io.gomint.math.BlockPosition;
 import io.gomint.math.MathUtils;
 import io.gomint.math.Vector;
 import io.gomint.server.entity.Entity;
 import io.gomint.server.entity.pathfinding.PathfindingEngine;
-import io.gomint.server.util.IntTriple;
 import io.gomint.server.world.WorldAdapter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,7 +23,7 @@ public class AIFollowEntity extends AIState {
     private final PathfindingEngine pathfinding;
 
     private int currentPathNode;
-    private List<IntTriple> path;
+    private List<BlockPosition> path;
 
     private Entity followEntity;
 
@@ -59,13 +59,13 @@ public class AIFollowEntity extends AIState {
         if ( this.path != null && this.currentPathNode < this.path.size() ) {
             Vector position = this.pathfinding.getTransform().getPosition();
 
-            IntTriple blockPosition = new IntTriple(
+            BlockPosition blockPosition = new BlockPosition(
                 MathUtils.fastFloor( position.getX() ),
                 MathUtils.fastFloor( position.getY() ),
                 MathUtils.fastFloor( position.getZ() )
             );
 
-            IntTriple node = this.path.get( this.currentPathNode );
+            BlockPosition node = this.path.get( this.currentPathNode );
 
             // Check if we need to jump
             boolean jump = node.getY() > position.getY();
@@ -90,7 +90,7 @@ public class AIFollowEntity extends AIState {
             this.currentPathNode = 0;
 
             LOGGER.debug( "Path to follow entity " + this.followEntity );
-            for ( IntTriple intTriple : this.path ) {
+            for ( BlockPosition intTriple : this.path ) {
                 /*EntityItem item = new EntityItem( new ItemStack( Material.BRICK ), this.world );
                 this.world.spawnEntityAt( item, intTriple.toVector() );
 

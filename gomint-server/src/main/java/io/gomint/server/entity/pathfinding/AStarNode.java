@@ -1,6 +1,6 @@
 package io.gomint.server.entity.pathfinding;
 
-import io.gomint.server.util.IntTriple;
+import io.gomint.math.BlockPosition;
 
 /**
  * Very simplistic node structure as required by the A* algorithm for its
@@ -11,7 +11,7 @@ import io.gomint.server.util.IntTriple;
  */
 class AStarNode implements Comparable<AStarNode> {
 
-    private final IntTriple blockPosition;
+    private final BlockPosition blockPosition;
     private double g;
     private double f;
     private int k;
@@ -22,7 +22,7 @@ class AStarNode implements Comparable<AStarNode> {
      *
      * @param blockPosition The position of the block
      */
-    public AStarNode( IntTriple blockPosition ) {
+    public AStarNode( BlockPosition blockPosition ) {
         this.blockPosition = blockPosition;
         this.f = Float.MAX_VALUE;
     }
@@ -33,7 +33,7 @@ class AStarNode implements Comparable<AStarNode> {
      * @param blockPosition The position of the block
      * @param f             The node's initial f value
      */
-    public AStarNode( IntTriple blockPosition, float f ) {
+    public AStarNode( BlockPosition blockPosition, float f ) {
         this.blockPosition = blockPosition;
         this.f = f;
     }
@@ -43,7 +43,7 @@ class AStarNode implements Comparable<AStarNode> {
      *
      * @return The position of the block the node is representing
      */
-    public IntTriple getBlockPosition() {
+    public BlockPosition getBlockPosition() {
         return this.blockPosition;
     }
 
