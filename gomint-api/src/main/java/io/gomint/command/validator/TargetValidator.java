@@ -34,6 +34,7 @@ public class TargetValidator extends ParamValidator {
     @Override
     public Object validate( List<String> input, CommandSender commandSender ) {
         Collection<EntityPlayer> searchPool = null;
+
         if ( commandSender instanceof PlayerCommandSender ) {
             if ( input.get( 0 ).equals( "@s" ) ) {
                 return commandSender;

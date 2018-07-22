@@ -119,7 +119,7 @@ public abstract class EntityLiving extends Entity implements InventoryHolder, io
     protected void fall() {
         // Check for jump potion
         float distanceReduce = 0.0f;
-        int jumpAmplifier = getEffectAmplifier( PotionEffect.JUMP );
+        int jumpAmplifier = getEffectAmplifier( PotionEffect.JUMP_BOOST );
         if ( jumpAmplifier != -1 ) {
             distanceReduce = jumpAmplifier + 1;
         }
@@ -392,7 +392,7 @@ public abstract class EntityLiving extends Entity implements InventoryHolder, io
             return damage;
         }
 
-        int damageResistanceAmplifier = getEffectAmplifier( PotionEffect.DAMAGE_RESISTANCE );
+        int damageResistanceAmplifier = getEffectAmplifier( PotionEffect.RESISTANCE );
         if ( damageResistanceAmplifier != -1 && damageEvent.getDamageSource() != EntityDamageEvent.DamageSource.VOID ) {
             float maxReductionDiff = 25f - ( ( damageResistanceAmplifier + 1 ) * 5 );
             float amplifiedDamage = damage * maxReductionDiff;
@@ -485,6 +485,11 @@ public abstract class EntityLiving extends Entity implements InventoryHolder, io
     public boolean hasEffect( PotionEffect effect ) {
         byte effectId = (byte) EnumConnectors.POTION_EFFECT_CONNECTOR.convert( effect ).getId();
         return this.effectManager.hasEffect( effectId );
+    }
+
+    @Override
+    public boolean hasEffects() {
+        return this.effectManager.hasEffects();
     }
 
     @Override

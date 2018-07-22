@@ -325,6 +325,12 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
     }
 
     @Override
+    public void setOp( boolean value ) {
+        this.adventureSettings.setOperator( value );
+        this.sendAdventureSettings();
+    }
+
+    @Override
     public void hidePlayer( io.gomint.entity.EntityPlayer player ) {
         // Never hide myself (client crashes when this is done)
         if ( player.equals( this ) ) {

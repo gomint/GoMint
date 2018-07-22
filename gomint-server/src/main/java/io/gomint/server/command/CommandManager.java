@@ -2,9 +2,13 @@ package io.gomint.server.command;
 
 import io.gomint.ChatColor;
 import io.gomint.command.*;
-import io.gomint.command.annotation.Name;
 import io.gomint.plugin.Plugin;
+import io.gomint.server.command.internal.DeopCommand;
+import io.gomint.server.command.internal.DifficultyCommand;
+import io.gomint.server.command.internal.EffectCommand;
+import io.gomint.server.command.internal.GamemodeCommand;
 import io.gomint.server.command.internal.ListCommand;
+import io.gomint.server.command.internal.OpCommand;
 import io.gomint.server.command.internal.StopCommand;
 import io.gomint.server.command.internal.TPCommand;
 import io.gomint.server.entity.CommandPermission;
@@ -36,7 +40,12 @@ public class CommandManager {
         // Register all internal commands
         try {
             for ( Class cmdClass : new Class[]{
+                DeopCommand.class,
+                DifficultyCommand.class,
+                EffectCommand.class,
+                GamemodeCommand.class,
                 ListCommand.class,
+                OpCommand.class,
                 StopCommand.class,
                 TPCommand.class
             } ) {

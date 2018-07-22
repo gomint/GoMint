@@ -206,6 +206,18 @@ public interface World {
     Chunk getChunk( int x, int z );
 
     /**
+     * Gets the difficulty of the world
+     * @return the difficulty of the world
+     */
+    Difficulty getDifficulty();
+
+    /**
+     * Sets the difficulty for the world.
+     * @param difficulty
+     */
+    void setDifficulty( Difficulty difficulty );
+
+    /**
      * Save all data to disk
      */
     void save();

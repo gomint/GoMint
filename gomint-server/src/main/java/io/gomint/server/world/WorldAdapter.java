@@ -61,6 +61,7 @@ import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -114,6 +115,7 @@ public abstract class WorldAdapter implements World {
      * Get the difficulty of this world
      */
     @Getter
+    @Setter
     protected Difficulty difficulty = Difficulty.NORMAL;
 
     // Chunk Handling

@@ -145,6 +145,10 @@ public class EffectManager {
         return this.effects.get( effectId ) != null;
     }
 
+    public boolean hasEffects() {
+        return !this.effects.isEmpty();
+    }
+
     public int getEffectAmplifier( byte effectId ) {
         Effect effect = this.effects.get( effectId );
         return ( effect == null ) ? -1 : effect.getAmplifier();
