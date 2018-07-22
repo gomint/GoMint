@@ -2,6 +2,7 @@ package io.gomint.plugin;
 
 import io.gomint.GoMint;
 import io.gomint.plugin.listener.EntityDamageListener;
+import io.gomint.plugin.listener.EntityDeathListener;
 import io.gomint.plugin.listener.PlayerJoinListener;
 import io.gomint.world.World;
 import io.gomint.world.generator.CreateOptions;
@@ -25,6 +26,7 @@ public class TestPlugin extends Plugin {
         // Register listener
         registerListener( new PlayerJoinListener( this ) );
         registerListener( new EntityDamageListener() );
+        registerListener( new EntityDeathListener() );
     }
 
     @Override
