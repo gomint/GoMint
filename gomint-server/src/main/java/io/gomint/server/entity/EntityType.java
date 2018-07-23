@@ -368,7 +368,18 @@ public enum EntityType {
     /**
      * Entity type value for a cod.
      */
-    COD( 112 );
+    COD( 112 ),
+
+    /**
+     * Entity type value for a turtle.
+     */
+    TURTLE( 74 ),
+
+    /**
+     * Entity type value for a parrot.
+     */
+    PARROT( 30 );
+
 
     private final int id;
 

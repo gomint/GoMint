@@ -10,6 +10,7 @@ package io.gomint.server.entity;
 import io.gomint.entity.Entity;
 import io.gomint.server.GoMintServer;
 import io.gomint.server.entity.generator.EntityGenerator;
+import io.gomint.server.entity.passive.EntityTurtle;
 import io.gomint.server.registry.GeneratorCallback;
 import io.gomint.server.registry.Registry;
 import io.gomint.server.entity.generator.*;
@@ -98,6 +99,8 @@ public class Entities {
         this.generators.register( io.gomint.server.entity.passive.EntityWolf.class, new EntityWolfGenerator() );
         this.generators.register( io.gomint.server.entity.passive.EntityXPOrb.class, new EntityXPOrbGenerator() );
         this.generators.register( io.gomint.server.entity.passive.EntityZombieHorse.class, new EntityZombieHorseGenerator() );
+        this.generators.register( io.gomint.server.entity.passive.EntityTurtle.class, new EntityTurtleGenerator() );
+        this.generators.register( io.gomint.server.entity.passive.EntityParrot.class, new EntityParrotGenerator() );
 
         this.generators.register( io.gomint.server.entity.projectile.EntityArrow.class, new EntityArrowGenerator() );
         this.generators.register( io.gomint.server.entity.projectile.EntityEnderpearl.class, new EntityEnderpearlGenerator() );
