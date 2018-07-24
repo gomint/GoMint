@@ -70,7 +70,7 @@ public class TitleCommand extends Command {
                     target.sendTitle( null, (String) arguments.get( "text" ) );
                     break;
                 case "actionbar":
-                    target.sendActionBar( (String) arguments.get( "text" ) );
+                    target.sendActionbar( (String) arguments.get( "text" ) );
                     break;
                 case "times":
                     // Doesn't work yet

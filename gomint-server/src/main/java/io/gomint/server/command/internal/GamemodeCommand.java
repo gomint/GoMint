@@ -32,10 +32,13 @@ public class GamemodeCommand extends Command {
     @Override
     public CommandOutput execute( CommandSender player, String alias, Map<String, Object> arguments ) {
         CommandOutput output = new CommandOutput();
-        EntityPlayer target = arguments.get( "player" ) == null ? (EntityPlayer) player : (EntityPlayer) arguments.get( "player" );
+        EntityPlayer target = (EntityPlayer) player;
 
-        if( target == null ) {
-            return output.fail( "No targets matched selector" );
+        if( arguments.containsKey( "player" ) ) {
+            if( arguments.get( "player" ) == null ) {
+                return output.fail( "No targets matched selector" );
+            }
+            target = (EntityPlayer) arguments.get( "player" );
         }
 
         Gamemode mode;

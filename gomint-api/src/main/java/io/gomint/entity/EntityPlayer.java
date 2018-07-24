@@ -214,14 +214,14 @@ public interface EntityPlayer extends EntityHuman {
      *
      * @return exp level
      */
-    int getLevel();
+    int getXPLevel();
 
     /**
      * Set the level of the exp bar
      *
      * @param level of this entity
      */
-    void setLevel( int level );
+    void setXPLevel( int level );
 
     /**
      * Play a sound for this player

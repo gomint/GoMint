@@ -1374,14 +1374,14 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
     public void setXP( int xp ) {
         // Iterate levels until we have a new xp percentage value to set
         int neededXP, tempXP = xp, level = 0;
-        while ( tempXP > ( neededXP = calculateRequiredExperienceForLevel( getLevel() ) ) ) {
+        while ( tempXP > ( neededXP = calculateRequiredExperienceForLevel( getXPLevel() ) ) ) {
             tempXP -= neededXP;
             level++;
         }
 
         this.xp = xp;
         this.setAttribute( Attribute.EXPERIENCE, tempXP / (float) neededXP );
-        this.setLevel( level );
+        this.setXPLevel( level );
     }
 
     protected boolean shouldTickHunger() {
@@ -1389,12 +1389,12 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
     }
 
     @Override
-    public int getLevel() {
+    public int getXPLevel() {
         return (int) this.getAttribute( Attribute.EXPERIENCE_LEVEL );
     }
 
     @Override
-    public void setLevel( int level ) {
+    public void setXPLevel( int level ) {
         this.setAttribute( Attribute.EXPERIENCE_LEVEL, level );
     }
 
