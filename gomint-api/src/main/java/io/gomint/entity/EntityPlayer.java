@@ -288,12 +288,22 @@ public interface EntityPlayer extends EntityHuman {
     boolean getFlying();
 
     /**
-     * Send an action bar to the user's screen.
-     * This displays text that is much smaller than a title.
+     * Send a text above the hotbar to the user's screen.
      *
-     * @param text  The text to be displayed on the screen
+     * @param message  Small text displayed above the hotbar
+     * @param fadein   duration for the fade in effect
+     * @param duration which is used for how long the title should be shown
+     * @param fadeout  duration for the fade out effect
+     * @param unit     of duration multiplier
      */
-    void sendActionBar( String text );
+     void sendActionbar( String message, long fadein, long duration, long fadeout, TimeUnit unit );
+
+    /**
+     * Send a text above the hotbar to the user's screen.
+     *
+     * @param message Small text displayed above the hotbar
+     */
+     void sendActionbar( String message );
 
     /**
      * Send a title text to the user's screen, with an optional subtitle.
