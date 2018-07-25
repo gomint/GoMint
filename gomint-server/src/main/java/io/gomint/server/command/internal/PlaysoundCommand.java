@@ -48,16 +48,20 @@ public class PlaysoundCommand extends Command {
         }
 
         Vector position = target.getPosition();
-        byte pitch = 0;
+        float pitch = 1;
+        float volume = 1;
 
         if( arguments.containsKey( "position" ) ) {
             position = (Vector) arguments.get( "position" );
         }
         if( arguments.containsKey( "pitch" ) ) {
-            pitch = (byte) arguments.get( "pitch" );
+            pitch = (float) arguments.get( "pitch" );
+        }
+        if( arguments.containsKey( "volume" ) ) {
+            volume = (float) arguments.get( "volume" );
         }
 
-        //target.playSound( position, "", pitch );
+        target.playSound( position, (String) arguments.get( "sound" ), pitch, volume );
 
         return output;
     }

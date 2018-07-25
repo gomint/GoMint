@@ -1399,13 +1399,22 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
     }
 
     @Override
-    public void playSound( Vector location, Sound sound, byte pitch, SoundData data ) {
-        this.world.playSound( this, location, sound, pitch, data );
+    public void playSound( Vector vector, String soundName ) {
+        this.playSound( vector, soundName, 1, 1);
     }
 
     @Override
-    public void playSound( Vector location, Sound sound, byte pitch ) {
-        this.world.playSound( this, location, sound, pitch, -1 );
+    public void playSound(  Vector vector, String soundName, float pitch ) {
+        this.playSound( vector, soundName, pitch, 1);
+    }
+
+    public void playSound( Vector vector, String soundName, float pitch, float volume ) {
+        PacketPlaySound soundPacket = new PacketPlaySound();
+        soundPacket.setSoundName( soundName );
+        soundPacket.setPitch( pitch );
+        soundPacket.setVolume( volume );
+        soundPacket.setPosition( vector.toBlockPosition() );
+        this.connection.addToSendQueue( soundPacket );
     }
 
     @Override

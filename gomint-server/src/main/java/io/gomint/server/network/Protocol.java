@@ -89,6 +89,7 @@ public final class Protocol {
     public static final byte PACKET_COMMAND_REQUEST = (byte) 0x4d;
     public static final byte PACKET_COMMAND_OUTPUT = (byte) 0x4f;
     public static final byte PACKET_TRANSFER = (byte) 0x55;
+    public static final byte PACKET_PLAY_SOUND = (byte) 0x56;
     public static final byte PACKET_BOOK_EDIT = (byte) 0x61;
     public static final byte PACKET_MODAL_REQUEST = (byte) 0x64;
     public static final byte PACKET_MODAL_RESPONSE = (byte) 0x65;
@@ -152,6 +153,9 @@ public final class Protocol {
 
             case PACKET_HOTBAR:
                 return new PacketHotbar();
+
+            case PACKET_PLAY_SOUND:
+                return new PacketPlaySound();
 
             case PACKET_LOGIN:
                 return new PacketLogin();

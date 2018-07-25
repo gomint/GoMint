@@ -226,21 +226,29 @@ public interface EntityPlayer extends EntityHuman {
     /**
      * Play a sound for this player
      *
-     * @param location of the sound in the client
-     * @param sound    The sound which should be played
-     * @param pitch    The pitch at which the sound should be played
-     * @param data     additional data for the sound
+     * @param location  of the sound in the client
+     * @param soundName The sound which should be played
      */
-    void playSound( Vector location, Sound sound, byte pitch, SoundData data );
+    void playSound( Vector location, String soundName );
 
     /**
      * Play a sound for this player
      *
-     * @param location of the sound in the client
-     * @param sound    The sound which should be played
-     * @param pitch    The pitch at which the sound should be played
+     * @param location  of the sound in the client
+     * @param soundName The sound which should be played
+     * @param pitch     The pitch at which the sound should be played
      */
-    void playSound( Vector location, Sound sound, byte pitch );
+    void playSound( Vector location, String soundName, float pitch );
+
+    /**
+     * Play a sound for this player
+     *
+     * @param location  of the sound in the client
+     * @param soundName The sound which should be played
+     * @param pitch     The pitch at which the sound should be played
+     * @param volume    The volume at which the sound should be played
+     */
+    void playSound( Vector location, String soundName, float pitch, float volume );
 
     /**
      * Send a particle to this player
