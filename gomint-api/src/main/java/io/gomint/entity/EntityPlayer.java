@@ -251,6 +251,18 @@ public interface EntityPlayer extends EntityHuman {
     void playSound( Vector location, String soundName, float pitch, float volume );
 
     /**
+     * Stop all sounds for this player
+     */
+    void stopSound();
+
+    /**
+     * Stop a sound for this player
+     *
+     * @param soundName The sound which should be stopped
+     */
+    void stopSound( String soundName );
+
+    /**
      * Send a particle to this player
      *
      * @param location of the particle in the client
