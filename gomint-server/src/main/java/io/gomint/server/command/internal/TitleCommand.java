@@ -64,7 +64,7 @@ public class TitleCommand extends Command {
         if( arguments.containsKey( "type" ) ) {
             switch( (String) arguments.get( "type" ) ) {
                 case "title":
-                    target.sendTitle( (String) arguments.get( "text" ) );
+                    target.sendTitle( (String) arguments.get( "titleText" ) );
                     break;
                 case "subtitle":
                     target.sendTitle( null, (String) arguments.get( "text" ) );

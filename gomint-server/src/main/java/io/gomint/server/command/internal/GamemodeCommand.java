@@ -3,7 +3,7 @@ package io.gomint.server.command.internal;
 import io.gomint.command.Command;
 import io.gomint.command.CommandOutput;
 import io.gomint.command.CommandSender;
-import io.gomint.command.annotation.Alias;
+import io.gomint.command.ConsoleCommandSender;
 import io.gomint.command.annotation.Description;
 import io.gomint.command.annotation.Name;
 import io.gomint.command.annotation.Parameter;
@@ -34,7 +34,7 @@ public class GamemodeCommand extends Command {
         CommandOutput output = new CommandOutput();
         EntityPlayer target = (EntityPlayer) player;
 
-        if( arguments.containsKey( "player" ) ) {
+        if( arguments.containsKey( "player" ) || player instanceof ConsoleCommandSender ) {
             if( arguments.get( "player" ) == null ) {
                 return output.fail( "No targets matched selector" );
             }
