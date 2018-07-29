@@ -1,6 +1,7 @@
 package io.gomint.server.world.block;
 
 import io.gomint.server.entity.Entity;
+import io.gomint.server.entity.EntityPlayer;
 import io.gomint.world.block.BlockType;
 
 import io.gomint.server.registry.RegisterInfo;
@@ -34,7 +35,9 @@ public class SlimeBlock extends Block implements io.gomint.world.block.BlockSlim
 
     @Override
     public void stepOn( Entity entity ) {
-        entity.resetFallDistance();
+        if( !((EntityPlayer) entity).isSneaking() ) {
+            entity.resetFallDistance();
+        }
     }
 
     @Override
