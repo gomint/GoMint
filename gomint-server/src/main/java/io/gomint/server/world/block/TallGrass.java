@@ -1,9 +1,13 @@
 package io.gomint.server.world.block;
 
+import io.gomint.inventory.item.ItemTallGrass;
 import io.gomint.inventory.item.ItemShears;
 import io.gomint.inventory.item.ItemStack;
 import io.gomint.server.registry.RegisterInfo;
 import io.gomint.world.block.BlockType;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author geNAZt
@@ -50,6 +54,17 @@ public class TallGrass extends Block implements io.gomint.world.block.BlockTallG
     @Override
     public boolean canBeBrokenWithHand() {
         return true;
+    }
+
+    @Override
+    public List<ItemStack> getDrops( ItemStack itemInHand ) {
+        if( isCorrectTool( itemInHand ) ) {
+            return new ArrayList<ItemStack>() {{
+                add( ItemTallGrass.create( 1 ) );
+            }};
+        }
+
+        return new ArrayList<>();
     }
 
     @Override

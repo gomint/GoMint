@@ -15,6 +15,7 @@ import io.gomint.server.world.LevelEvent;
 import io.gomint.server.world.block.Air;
 import io.gomint.server.world.block.Block;
 import io.gomint.server.world.block.Fire;
+import io.gomint.world.Gamemode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -83,16 +84,6 @@ public class PacketPlayerActionHandler implements PacketHandler<PacketPlayerActi
                         handleBreakStart( connection, currentTimeMillis, packet );
                     }
 
-                    // Nasty hack for fire
-                    io.gomint.server.world.block.Block block = connection.getEntity().getWorld().getBlockAt( packet.getPosition() );
-                    Block faced = block.getSide( packet.getFace() );
-                    if ( faced instanceof Fire ) {
-                        BlockBreakEvent event1 = new BlockBreakEvent( connection.getEntity(), faced, new ArrayList<>() );
-                        connection.getServer().getPluginManager().callEvent( event1 );
-                        if ( !event1.isCancelled() ) {
-                            faced.setType( Air.class );
-                        }
-                    }
                 } else {
                     connection.setStartBreakResult( false );
                 }
@@ -232,13 +223,15 @@ public class PacketPlayerActionHandler implements PacketHandler<PacketPlayerActi
 
         io.gomint.server.world.block.Block block = connection.getEntity().getWorld().getBlockAt( packet.getPosition() );
 
-        long breakTime = block.getFinalBreakTime( connection.getEntity().getInventory().getItemInHand(), connection.getEntity() );
-        LOGGER.debug( "Sending break time {} ms", breakTime );
+        if( !block.punch( connection.getEntity(), packet.getPosition(), ( connection.getEntity().getGamemode() == Gamemode.CREATIVE ) ) ) {
+            long breakTime = block.getFinalBreakTime( connection.getEntity().getInventory().getItemInHand(), connection.getEntity() );
+            LOGGER.debug( "Sending break time {} ms", breakTime );
 
-        // Tell the client which break time we want
-        if ( breakTime > 0 ) {
-            connection.getEntity().getWorld().sendLevelEvent( packet.getPosition().toVector(),
-                LevelEvent.BLOCK_START_BREAK, (int) ( 65536 / ( breakTime / 50 ) ) );
+            // Tell the client which break time we want
+            if ( breakTime > 0 ) {
+                connection.getEntity().getWorld().sendLevelEvent( packet.getPosition().toVector(),
+                    LevelEvent.BLOCK_START_BREAK, (int) ( 65536 / ( breakTime / 50 ) ) );
+            }
         }
     }
 

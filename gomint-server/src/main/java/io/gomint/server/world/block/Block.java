@@ -143,6 +143,17 @@ public abstract class Block implements io.gomint.world.block.Block {
     }
 
     /**
+     * Called when an entity punches a block
+     *
+     * @param entity  The entity which punches with it
+     * @param position The position where the entity punched the block
+     * @param creative
+     */
+    public boolean punch( Entity entity, BlockPosition position, boolean creative ) {
+        return false;
+    }
+
+    /**
      * Store additional temporary data to a block. Things like how many players have stepped on a pressure plate etc.
      * are use cases for this system.
      *

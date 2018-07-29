@@ -6,6 +6,8 @@ import io.gomint.world.block.BlockType;
 
 import io.gomint.server.registry.RegisterInfo;
 
+import java.util.List;
+
 /**
  * @author geNAZt
  * @version 1.0

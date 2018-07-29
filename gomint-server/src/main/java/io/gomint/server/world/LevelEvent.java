@@ -43,6 +43,7 @@ public class LevelEvent {
     public static final int PARTICLE_SPAWN = 2004;
     public static final int GUARDIAN_CURSE = 2006;
     public static final int PARTICLE_BLOCK_FORCE_FIELD = 2008;
+    public static final int DRAGON_EGG_TELEPORT = 2010;
     public static final int PARTICLE_PUNCH_BLOCK = 2014;
     public static final int START_RAIN = 3001;
     public static final int START_THUNDER = 3002;

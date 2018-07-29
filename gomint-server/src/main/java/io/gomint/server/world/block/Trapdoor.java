@@ -2,6 +2,7 @@ package io.gomint.server.world.block;
 
 import io.gomint.inventory.item.ItemStack;
 import io.gomint.math.AxisAlignedBB;
+import io.gomint.math.BlockPosition;
 import io.gomint.math.Vector;
 import io.gomint.server.entity.Entity;
 import io.gomint.server.registry.RegisterInfo;
@@ -9,6 +10,7 @@ import io.gomint.server.world.PlacementData;
 import io.gomint.server.world.block.helper.ToolPresets;
 import io.gomint.server.world.block.state.BooleanBlockState;
 import io.gomint.server.world.block.state.FacingBlockState;
+import io.gomint.world.block.BlockFace;
 import io.gomint.world.block.BlockType;
 
 import java.util.Collections;
@@ -24,6 +26,23 @@ public class Trapdoor extends Block implements io.gomint.world.block.BlockTrapdo
     private FacingBlockState facing = new FacingBlockState();
     private BooleanBlockState opened = new BooleanBlockState();
     private BooleanBlockState top = new BooleanBlockState();
+
+    @Override
+    public boolean isOpen() {
+        return ( getBlockData() & 0x04 ) == 0x04;
+    }
+
+    @Override
+    public void toggle() {
+        setBlockData( (byte) ( getBlockData() ^ 0x04 ) );
+        updateBlock();
+    }
+
+    @Override
+    public boolean interact( Entity entity, BlockFace face, Vector facePos, ItemStack item ) {
+        toggle();
+        return true;
+    }
 
     @Override
     public void generateBlockStates() {

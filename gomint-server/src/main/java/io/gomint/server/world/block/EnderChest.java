@@ -1,6 +1,7 @@
 package io.gomint.server.world.block;
 
 import io.gomint.inventory.Inventory;
+import io.gomint.inventory.item.ItemObsidian;
 import io.gomint.server.entity.tileentity.TileEntity;
 import io.gomint.server.world.block.helper.ToolPresets;
 import io.gomint.taglib.NBTTagCompound;
@@ -12,6 +13,9 @@ import io.gomint.math.Vector;
 import io.gomint.server.entity.Entity;
 import io.gomint.server.entity.tileentity.EnderChestTileEntity;
 import io.gomint.server.registry.RegisterInfo;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author geNAZt
@@ -75,6 +79,13 @@ public class EnderChest extends ContainerBlock implements io.gomint.world.block.
     public Inventory getInventory() {
         EnderChestTileEntity chestTileEntity = this.getTileEntity();
         return chestTileEntity.getInventory();
+    }
+
+    @Override
+    public List<ItemStack> getDrops( ItemStack itemInHand ) {
+        return new ArrayList<ItemStack>(){{
+            add( ItemObsidian.create( 8 ) );
+        }};
     }
 
     @Override

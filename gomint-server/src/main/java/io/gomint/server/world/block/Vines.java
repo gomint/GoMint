@@ -1,12 +1,15 @@
 package io.gomint.server.world.block;
 
 import io.gomint.inventory.item.ItemShears;
+import io.gomint.inventory.item.ItemVines;
 import io.gomint.inventory.item.ItemStack;
-import io.gomint.server.world.block.helper.ToolPresets;
 import io.gomint.world.block.BlockType;
 
 import io.gomint.server.entity.Entity;
 import io.gomint.server.registry.RegisterInfo;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author geNAZt
@@ -59,6 +62,17 @@ public class Vines extends Block implements io.gomint.world.block.BlockVines {
     @Override
     public BlockType getType() {
         return BlockType.VINES;
+    }
+
+    @Override
+    public List<ItemStack> getDrops( ItemStack itemInHand ) {
+        if( isCorrectTool( itemInHand ) ) {
+            return new ArrayList<ItemStack>() {{
+                add( ItemVines.create( 1 ) );
+            }};
+        }
+
+        return new ArrayList<>();
     }
 
     @Override

@@ -1,5 +1,7 @@
 package io.gomint.server.world.block;
 
+import io.gomint.math.BlockPosition;
+import io.gomint.server.entity.Entity;
 import io.gomint.world.block.BlockType;
 
 import io.gomint.event.entity.EntityDamageEvent;
@@ -47,6 +49,12 @@ public class Fire extends Block implements io.gomint.world.block.BlockFire {
     public void onEntityStanding( EntityLiving entityLiving ) {
         entityLiving.attack( 1.0f, EntityDamageEvent.DamageSource.FIRE );
         entityLiving.setBurning( 8, TimeUnit.SECONDS );
+    }
+
+    @Override
+    public boolean punch( Entity entity, BlockPosition position, boolean creative ) {
+        this.setType( Air.class );
+        return true;
     }
 
     @Override
