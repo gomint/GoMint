@@ -12,6 +12,7 @@ import io.gomint.server.entity.projectile.EntityArrow;
 import io.gomint.server.inventory.item.annotation.UseDataAsDamage;
 import io.gomint.server.registry.RegisterInfo;
 import io.gomint.taglib.NBTTagCompound;
+import io.gomint.world.Gamemode;
 
 /**
  * @author geNAZt
@@ -88,7 +89,7 @@ public class ItemBow extends ItemStack implements io.gomint.inventory.item.ItemB
         }
 
         // Don't shoot without arrow
-        if ( !foundArrow ) {
+        if ( !foundArrow && player.getGamemode() != Gamemode.CREATIVE ) {
             return;
         }
 

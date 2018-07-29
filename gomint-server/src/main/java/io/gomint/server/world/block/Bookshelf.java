@@ -1,10 +1,14 @@
 package io.gomint.server.world.block;
 
+import io.gomint.inventory.item.ItemBook;
 import io.gomint.inventory.item.ItemStack;
 import io.gomint.server.world.block.helper.ToolPresets;
 import io.gomint.world.block.BlockType;
 
 import io.gomint.server.registry.RegisterInfo;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author geNAZt
@@ -36,6 +40,13 @@ public class Bookshelf extends Block implements io.gomint.world.block.BlockBooks
     @Override
     public boolean canBeBrokenWithHand() {
         return true;
+    }
+
+    @Override
+    public List<ItemStack> getDrops( ItemStack itemInHand ) {
+        return new ArrayList<ItemStack>(){{
+            add( ItemBook.create( 3 ) );
+        }};
     }
 
     @Override
