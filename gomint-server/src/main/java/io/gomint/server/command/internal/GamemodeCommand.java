@@ -32,33 +32,31 @@ public class GamemodeCommand extends Command {
     @Override
     public CommandOutput execute( CommandSender player, String alias, Map<String, Object> arguments ) {
         CommandOutput output = new CommandOutput();
-        EntityPlayer target = (EntityPlayer) player;
+        EntityPlayer target;
 
         if( arguments.containsKey( "player" ) || player instanceof ConsoleCommandSender ) {
             if( arguments.get( "player" ) == null ) {
                 return output.fail( "No targets matched selector" );
             }
             target = (EntityPlayer) arguments.get( "player" );
+        } else {
+            target = (EntityPlayer) player;
         }
 
         Gamemode mode;
         switch( (String) arguments.get( "mode" ) ) {
-            case "0":
             case "s":
             case "survival":
                 mode = Gamemode.SURVIVAL;
                 break;
-            case "1":
             case "c":
             case "creative":
                 mode = Gamemode.CREATIVE;
                 break;
-            case "2":
             case "a":
             case "adventure":
                 mode = Gamemode.ADVENTURE;
                 break;
-            case "3":
             case "sp":
             case "spectator":
                 mode = Gamemode.SPECTATOR;

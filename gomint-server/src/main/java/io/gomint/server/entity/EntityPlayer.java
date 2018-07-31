@@ -1468,51 +1468,54 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
 
     @Override
     public void sendActionbar( String message, long fadein, long duration, long fadeout, TimeUnit unit ) {
-        PacketSetTitle titlePacket = new PacketSetTitle();
-        titlePacket.setType( PacketSetTitle.TitleType.TYPE_ACTION_BAR.getId() );
-        titlePacket.setText( message );
-        titlePacket.setFadeInTime( (int) unit.toMillis( fadein ) / 50 );
-        titlePacket.setStayTime( (int) unit.toMillis( duration ) / 50 );
-        titlePacket.setFadeOutTime( (int) unit.toMillis( fadeout ) / 50 );
-        this.getConnection().addToSendQueue( titlePacket );
+        this.sendTitleAnimationTimes( fadein, duration, fadeout, unit );
+        this.sendActionbar( message );
     }
 
     @Override
     public void sendActionbar( String message ) {
-        this.sendActionbar( message, 1, 1, (long) 0.5, TimeUnit.SECONDS );
+        PacketSetTitle titlePacket = new PacketSetTitle();
+        titlePacket.setType( PacketSetTitle.TitleType.TYPE_ACTION_BAR.getId() );
+        titlePacket.setText( message );
+        this.getConnection().addToSendQueue( titlePacket );
     }
 
     @Override
     public void sendTitle( String title, String subtitle, long fadein, long duration, long fadeout, TimeUnit unit ) {
+        this.sendTitleAnimationTimes( fadein, duration, fadeout, unit );
+        this.sendTitle( title, subtitle );
+    }
+
+    @Override
+    public void sendTitle( String title ) {
+        this.sendTitle( title, "" );
+    }
+
+    @Override
+    public void sendTitle( String title, String subtitle ) {
         if ( subtitle != null && !Objects.equals( subtitle, "" ) ) {
             PacketSetTitle subtitlePacket = new PacketSetTitle();
             subtitlePacket.setType( PacketSetTitle.TitleType.TYPE_SUBTITLE.getId() );
             subtitlePacket.setText( subtitle );
-            subtitlePacket.setFadeInTime( (int) unit.toMillis( fadein ) / 50 );
-            subtitlePacket.setStayTime( (int) unit.toMillis( duration ) / 50 );
-            subtitlePacket.setFadeOutTime( (int) unit.toMillis( fadeout ) / 50 );
             this.getConnection().addToSendQueue( subtitlePacket );
         }
 
-        if( title != null ) {
+        if( title != null && !Objects.equals( title, "" ) ) {
             PacketSetTitle titlePacket = new PacketSetTitle();
             titlePacket.setType( PacketSetTitle.TitleType.TYPE_TITLE.getId() );
             titlePacket.setText( title );
-            titlePacket.setFadeInTime( (int) unit.toMillis( fadein ) / 50 );
-            titlePacket.setStayTime( (int) unit.toMillis( duration ) / 50 );
-            titlePacket.setFadeOutTime( (int) unit.toMillis( fadeout ) / 50 );
             this.getConnection().addToSendQueue( titlePacket );
         }
     }
 
     @Override
-    public void sendTitle( String title ) {
-        this.sendTitle( title, "", 1, 1, (long) 0.5, TimeUnit.SECONDS );
-    }
-
-    @Override
-    public void sendTitle( String title, String subtitle ) {
-        this.sendTitle( title, subtitle, 1, 1, (long) 0.5, TimeUnit.SECONDS );
+    public void sendTitleAnimationTimes( long fadein, long duration, long fadeout, TimeUnit unit ) {
+        PacketSetTitle titlePacket = new PacketSetTitle();
+        titlePacket.setType( PacketSetTitle.TitleType.TYPE_ANIMATION_TIMES.getId() );
+        titlePacket.setFadeInTime( (int) unit.toMillis( fadein ) / 50 );
+        titlePacket.setStayTime( (int) unit.toMillis( duration ) / 50 );
+        titlePacket.setFadeOutTime( (int) unit.toMillis( fadeout ) / 50 );
+        this.getConnection().addToSendQueue( titlePacket );
     }
 
     @Override

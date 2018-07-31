@@ -13,6 +13,7 @@ import io.gomint.command.validator.IntegerValidator;
 import io.gomint.command.validator.TargetValidator;
 import io.gomint.command.validator.TextValidator;
 import io.gomint.server.entity.EntityPlayer;
+import io.gomint.server.network.packet.PacketSetTitle;
 
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -64,17 +65,16 @@ public class TitleCommand extends Command {
         if( arguments.containsKey( "type" ) ) {
             switch( (String) arguments.get( "type" ) ) {
                 case "title":
-                    target.sendTitle( (String) arguments.get( "titleText" ) );
+                    target.sendTitle( (String) arguments.get( "text" ) );
                     break;
                 case "subtitle":
-                    target.sendTitle( null, (String) arguments.get( "text" ) );
+                    target.sendTitle( "", (String) arguments.get( "text" ) );
                     break;
                 case "actionbar":
                     target.sendActionbar( (String) arguments.get( "text" ) );
                     break;
                 case "times":
-                    // Doesn't work yet
-                    target.sendTitle( null, null, (int) arguments.get( "fadeIn" ), (int) arguments.get( "stay" ), (int) arguments.get( "fadeOut" ), TimeUnit.SECONDS );
+                    target.sendTitleAnimationTimes( (int) arguments.get( "fadeIn" ), (int) arguments.get( "stay" ), (int) arguments.get( "fadeOut" ), TimeUnit.SECONDS );
                     break;
             }
         }

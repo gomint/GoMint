@@ -36,22 +36,18 @@ public class DifficultyCommand extends Command {
 
         Difficulty difficulty;
         switch( (String) arguments.get( "difficulty" ) ) {
-            case "0":
             case "p":
             case "peaceful":
                 difficulty = Difficulty.PEACEFUL;
                 break;
-            case "1":
             case "e":
             case "easy":
                 difficulty = Difficulty.EASY;
                 break;
-            case "2":
             case "n":
             case "normal":
                 difficulty = Difficulty.NORMAL;
                 break;
-            case "3":
             case "h":
             case "hard":
                 difficulty = Difficulty.HARD;

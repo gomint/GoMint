@@ -355,6 +355,16 @@ public interface EntityPlayer extends EntityHuman {
     void sendTitle( String title, String subtitle );
 
     /**
+     * Send the animation times for future titles.
+     *
+     * @param fadein   duration for the fade in effect
+     * @param duration which is used for how long the title should be shown
+     * @param fadeout  duration for the fade out effect
+     * @param unit     of duration multiplier
+     */
+    void sendTitleAnimationTimes( long fadein, long duration, long fadeout, TimeUnit unit );
+
+    /**
      * Removes the title from the clients screen
      */
     void clearTitle();
