@@ -6,14 +6,13 @@ import io.gomint.math.Vector;
 import io.gomint.server.entity.Entity;
 import io.gomint.server.entity.EntityPlayer;
 import io.gomint.server.world.LevelEvent;
+import io.gomint.util.random.FastRandom;
 import io.gomint.world.Gamemode;
 import io.gomint.world.Particle;
 import io.gomint.world.block.BlockFace;
 import io.gomint.world.block.BlockType;
 
 import io.gomint.server.registry.RegisterInfo;
-
-import java.util.Random;
 
 /**
  * @author geNAZt
@@ -69,7 +68,7 @@ public class DragonEgg extends Block implements io.gomint.world.block.BlockDrago
 
     private void teleport() {
         BlockPosition pos = this.getLocation().toBlockPosition();
-        Random random = new Random();
+        FastRandom random = FastRandom.current();
 
         for( int i = 0; i < 1000; i++ ) {
             BlockPosition blockPos = pos.add( random.nextInt( 16 ) - random.nextInt( 16 ), random.nextInt( 8 ) - random.nextInt( 8 ), random.nextInt( 16 ) - random.nextInt( 16 ) );

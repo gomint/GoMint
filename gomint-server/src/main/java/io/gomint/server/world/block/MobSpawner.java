@@ -1,7 +1,9 @@
 package io.gomint.server.world.block;
 
 import io.gomint.inventory.item.ItemStack;
+import io.gomint.server.world.WorldAdapter;
 import io.gomint.server.world.block.helper.ToolPresets;
+import io.gomint.util.random.FastRandom;
 import io.gomint.world.block.BlockType;
 
 import io.gomint.server.registry.RegisterInfo;
@@ -48,7 +50,11 @@ public class MobSpawner extends Block implements io.gomint.world.block.BlockMobS
 
     @Override
     public List<ItemStack> getDrops( ItemStack itemInHand ) {
-        return new ArrayList<>(); // TODO: give xp on break
+        // TODO: check these values (and spawn multiple xp orbs?)
+        //FastRandom random = FastRandom.current();
+        //((WorldAdapter) this.location.getWorld()).createExpOrb( this.location, random.nextInt( 15 ) + random.nextInt( 15 ) + 15 );
+
+        return new ArrayList<>();
     }
 
     @Override
