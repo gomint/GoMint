@@ -19,8 +19,7 @@ import io.gomint.server.registry.RegisterInfo;
 @RegisterInfo( id = 6 )
 public class Healing extends Effect {
 
-    public Healing( EffectManager manager, int amplifier, long runoutTimer ) {
-        super( manager, amplifier, runoutTimer );
+    public Healing() {
         this.visible = false;
     }
 

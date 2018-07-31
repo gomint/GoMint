@@ -24,10 +24,12 @@ public class Enchantment implements io.gomint.enchant.Enchantment {
      * Create new enchantment
      *
      * @param maxLevel which should be used to cap enchantment
-     * @param level    of the enchantment
      */
-    Enchantment( short maxLevel, short level ) {
+    Enchantment( short maxLevel ) {
         this.maxLevel = maxLevel;
+    }
+
+    void setLevel( short level ) {
         this.level = level;
     }
 

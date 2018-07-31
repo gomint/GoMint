@@ -20,6 +20,10 @@ import io.gomint.player.DeviceInfo;
 import io.gomint.server.GoMintServer;
 import io.gomint.server.entity.EntityPlayer;
 import io.gomint.server.entity.passive.EntityHuman;
+import io.gomint.server.jni.NativeCode;
+import io.gomint.server.jni.zlib.JavaZLib;
+import io.gomint.server.jni.zlib.NativeZLib;
+import io.gomint.server.jni.zlib.ZLib;
 import io.gomint.server.network.handler.PacketAdventureSettingsHandler;
 import io.gomint.server.network.handler.PacketAnimateHandler;
 import io.gomint.server.network.handler.PacketBlockPickRequestHandler;
@@ -75,6 +79,8 @@ import io.gomint.server.world.ChunkAdapter;
 import io.gomint.server.world.CoordinateUtils;
 import io.gomint.server.world.WorldAdapter;
 import io.gomint.util.random.FastRandom;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.PooledByteBufAllocator;
 import it.unimi.dsi.fastutil.longs.LongIterator;
 import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
 import it.unimi.dsi.fastutil.longs.LongSet;
@@ -83,9 +89,6 @@ import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Collections;
@@ -98,7 +101,7 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.zip.InflaterInputStream;
+import java.util.zip.DataFormatException;
 
 import static io.gomint.server.network.Protocol.PACKET_BATCH;
 import static io.gomint.server.network.Protocol.PACKET_ENCRYPTION_RESPONSE;
@@ -112,9 +115,13 @@ import static io.gomint.server.network.Protocol.PACKET_RESOURCEPACK_RESPONSE;
 public class PlayerConnection {
 
     private static final Logger LOGGER = LoggerFactory.getLogger( PlayerConnection.class );
+    private static final NativeCode<ZLib> ZLIB = new NativeCode<>( "zlib", JavaZLib.class, NativeZLib.class );
     private static final PacketHandler[] PACKET_HANDLERS = new PacketHandler[256];
 
     static {
+        // Load zlib native
+        ZLIB.load();
+
         // Register all packet handlers we need
         PACKET_HANDLERS[Protocol.PACKET_MOVE_PLAYER & 0xff] = new PacketMovePlayerHandler();
         PACKET_HANDLERS[Protocol.PACKET_SET_CHUNK_RADIUS & 0xff] = new PacketSetChunkRadiusHandler();
@@ -165,6 +172,7 @@ public class PlayerConnection {
     @Setter
     private int tcpPing;
     private PostProcessExecutor postProcessorExecutor;
+    private ZLib decompressor;
 
     // World data
     @Getter
@@ -222,6 +230,9 @@ public class PlayerConnection {
 
         // Attach data processor if needed
         if ( this.connection != null ) {
+            this.decompressor = ZLIB.newInstance();
+            this.decompressor.init( false, 7 ); // Level doesn't matter
+
             this.postProcessorExecutor = networkManager.getPostProcessService().getExecutor();
             this.connection.addDataProcessor( packetData -> {
                 PacketBuffer buffer = new PacketBuffer( packetData.getPacketData(), 0 );
@@ -587,6 +598,7 @@ public class PlayerConnection {
         // Encrypted?
         byte[] input = new byte[buffer.getRemaining()];
         System.arraycopy( buffer.getBuffer(), buffer.getPosition(), input, 0, input.length );
+
         if ( this.encryptionHandler != null ) {
             input = this.encryptionHandler.decryptInputFromClient( input );
             if ( input == null ) {
@@ -596,22 +608,25 @@ public class PlayerConnection {
             }
         }
 
-        InflaterInputStream inflaterInputStream = new InflaterInputStream( new ByteArrayInputStream( input ) );
+        ByteBuf inBuf = PooledByteBufAllocator.DEFAULT.directBuffer( input.length );
+        inBuf.writeBytes( input );
 
-        ByteArrayOutputStream bout = new ByteArrayOutputStream( buffer.getRemaining() );
-        byte[] batchIntermediate = new byte[256];
+        ByteBuf outBuf = PooledByteBufAllocator.DEFAULT.directBuffer( 8192 ); // We will write at least once so ensureWrite will realloc to 8192 so or so
 
         try {
-            int read;
-            while ( ( read = inflaterInputStream.read( batchIntermediate ) ) > -1 ) {
-                bout.write( batchIntermediate, 0, read );
-            }
-        } catch ( IOException e ) {
+            this.decompressor.process( inBuf, outBuf );
+        } catch ( DataFormatException e ) {
             LOGGER.error( "Failed to decompress batch packet", e );
+            outBuf.release();
             return null;
+        } finally {
+            inBuf.release();
         }
 
-        return bout.toByteArray();
+        byte[] data = new byte[outBuf.readableBytes()];
+        outBuf.readBytes( data );
+        outBuf.release();
+        return data;
     }
 
     /**

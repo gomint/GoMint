@@ -1,5 +1,4 @@
 package io.gomint.server.inventory.item;
-
 import io.gomint.inventory.item.ItemType;
 
 import io.gomint.server.registry.RegisterInfo;
@@ -12,15 +11,7 @@ import io.gomint.taglib.NBTTagCompound;
 @RegisterInfo( id = 319 )
 public class ItemRawPorkchop extends ItemFood implements io.gomint.inventory.item.ItemRawPorkchop {
 
-    // CHECKSTYLE:OFF
-    public ItemRawPorkchop( short data, int amount ) {
-        super( 319, data, amount );
-    }
 
-    public ItemRawPorkchop( short data, int amount, NBTTagCompound nbt ) {
-        super( 319, data, amount, nbt );
-    }
-    // CHECKSTYLE:ON
 
     @Override
     public float getSaturation() {

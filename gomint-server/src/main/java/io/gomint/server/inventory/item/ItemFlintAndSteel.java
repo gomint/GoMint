@@ -1,5 +1,4 @@
 package io.gomint.server.inventory.item;
-
 import io.gomint.inventory.item.ItemType;
 
 import io.gomint.server.inventory.item.annotation.UseDataAsDamage;
@@ -14,15 +13,7 @@ import io.gomint.taglib.NBTTagCompound;
 @RegisterInfo( id = 259 )
 public class ItemFlintAndSteel extends ItemStack implements io.gomint.inventory.item.ItemFlintAndSteel {
 
-    // CHECKSTYLE:OFF
-    public ItemFlintAndSteel( short data, int amount ) {
-        super( 259, data, amount );
-    }
 
-    public ItemFlintAndSteel( short data, int amount, NBTTagCompound nbt ) {
-        super( 259, data, amount, nbt );
-    }
-    // CHECKSTYLE:ON
 
     @Override
     public short getMaxDamage() {

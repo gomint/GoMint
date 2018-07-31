@@ -1,5 +1,4 @@
 package io.gomint.server.inventory.item;
-
 import io.gomint.inventory.item.ItemType;
 import io.gomint.math.Vector;
 import io.gomint.server.entity.Attribute;
@@ -19,15 +18,7 @@ import io.gomint.world.block.BlockFace;
 @RegisterInfo( id = 277 )
 public class ItemDiamondShovel extends ItemReduceTierDiamond implements io.gomint.inventory.item.ItemDiamondShovel {
 
-    // CHECKSTYLE:OFF
-    public ItemDiamondShovel( short data, int amount ) {
-        super( 277, data, amount );
-    }
 
-    public ItemDiamondShovel( short data, int amount, NBTTagCompound nbt ) {
-        super( 277, data, amount, nbt );
-    }
-    // CHECKSTYLE:ON
 
     @Override
     public boolean interact( EntityPlayer entity, BlockFace face, Vector clickPosition, Block clickedBlock ) {

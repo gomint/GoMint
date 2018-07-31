@@ -1,5 +1,4 @@
 package io.gomint.server.inventory.item;
-
 import io.gomint.inventory.item.ItemType;
 
 import io.gomint.server.registry.RegisterInfo;
@@ -12,15 +11,7 @@ import io.gomint.taglib.NBTTagCompound;
 @RegisterInfo( id = 118 )
  public class ItemCauldronBlock extends ItemStack {
 
-    // CHECKSTYLE:OFF
-    public ItemCauldronBlock( short data, int amount ) {
-        super( 118, data, amount );
-    }
 
-    public ItemCauldronBlock( short data, int amount, NBTTagCompound nbt ) {
-        super( 118, data, amount, nbt );
-    }
-    // CHECKSTYLE:ON
 
     @Override
     public ItemType getType() {

@@ -35,6 +35,7 @@ public class EnumBlockState<E extends Enum<E>> extends BlockState<E> {
         if ( data >= this.enumValues.length ) {
             this.setState( this.enumValues[0] );
             LOGGER.error( "Incorrect block data value in block", new Exception() );
+            return;
         }
 
         this.setState( this.enumValues[data] );

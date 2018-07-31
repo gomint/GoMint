@@ -10,8 +10,8 @@ package io.gomint.i18n;
 import io.gomint.i18n.localization.ResourceLoadFailedException;
 import io.gomint.i18n.localization.ResourceLoader;
 import io.gomint.i18n.localization.ResourceManager;
-import io.gomint.i18n.localization.ResourceNotLoadedException;
 import io.gomint.i18n.localization.loader.PropertiesResourceLoader;
+import io.gomint.i18n.localization.loader.YamlResourceLoader;
 import io.gomint.plugin.Plugin;
 import lombok.Getter;
 import lombok.Setter;
@@ -19,12 +19,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.net.URL;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Enumeration;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 
 /**
  * @author geNAZt
@@ -38,10 +42,13 @@ public class LocaleManager {
     private ResourceManager resourceManager;
 
     // The fallback Locale to use
-    @Getter private Locale defaultLocale = Locale.US;
+    @Getter
+    private Locale defaultLocale = Locale.US;
 
     // Whether to use the default locale also for untranslated messages
-    @Getter @Setter private boolean useDefaultLocaleForMessages = true;
+    @Getter
+    @Setter
+    private boolean useDefaultLocaleForMessages = true;
 
     // Plugin for which we have this
     private final Plugin plugin;
@@ -56,6 +63,46 @@ public class LocaleManager {
 
         this.resourceManager = new ResourceManager( plugin.getClass().getClassLoader() );
         this.resourceManager.registerLoader( new PropertiesResourceLoader() );
+        this.resourceManager.registerLoader( new YamlResourceLoader() );
+
+        // Load stuff from the plugin jar if possible
+        try {
+            URL jarFile = plugin.getClass().getProtectionDomain().getCodeSource().getLocation();
+            String filePath = jarFile.toExternalForm();
+            if ( filePath.startsWith( "file:/" ) ) {
+                try ( JarFile openJarFile = new JarFile( filePath.substring( 6 ) ) ) {
+                    Enumeration<JarEntry> jarEntryEnumeration = openJarFile.entries();
+                    while ( jarEntryEnumeration.hasMoreElements() ) {
+                        JarEntry entry = jarEntryEnumeration.nextElement();
+                        if ( !entry.isDirectory() ) {
+                            // We for sure don't support .class locales
+                            String name = entry.getName();
+                            if ( !name.endsWith( ".class" ) ) {
+                                // remove file ending
+                                String[] folderSplit = name.split( "/" );
+                                String last = folderSplit[folderSplit.length - 1];
+                                int lastDotIndex = last.lastIndexOf( '.' );
+                                last = last.substring( 0, lastDotIndex );
+
+                                if ( !last.contains( "_" ) ) {
+                                    continue;
+                                }
+
+                                String[] localeSplit = last.split( "_" );
+                                if ( localeSplit.length != 2 ) {
+                                    continue;
+                                }
+
+                                Locale locale = new Locale( localeSplit[0], localeSplit[1] );
+                                load( locale, name );
+                            }
+                        }
+                    }
+                }
+            }
+        } catch ( Exception e ) {
+            // Ignore
+        }
     }
 
     /**
@@ -80,7 +127,7 @@ public class LocaleManager {
     /**
      * Init / Load all Locales which could be found in the given spec file. This refreshes the languages all 5 minutes
      *
-     * @param path            The path of the file to query.
+     * @param path The path of the file to query.
      */
     public void initFromLocaleFolder( final File path ) {
         initFromLocaleFolderWithoutAutorefresh( path );

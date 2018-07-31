@@ -158,7 +158,12 @@ public abstract class Command {
             }
 
             if ( validator != null ) {
-                overloadHolder.param( parameter.name(), validator, parameter.optional() );
+                // Do we have a postfix?
+                if ( !"".equals( parameter.postfix() ) ) {
+                    overloadHolder.param( parameter.name(), validator, parameter.optional(), parameter.postfix() );
+                } else {
+                    overloadHolder.param( parameter.name(), validator, parameter.optional() );
+                }
             }
         }
     }

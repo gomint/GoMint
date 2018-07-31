@@ -23,8 +23,8 @@ public class EnchantmentEfficiency extends Enchantment implements io.gomint.ench
      *
      * @param level of this enchantment
      */
-    public EnchantmentEfficiency( short level ) {
-        super( (short) 5, level );
+    public EnchantmentEfficiency() {
+        super( (short) 5 );
     }
 
     @Override

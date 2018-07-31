@@ -23,8 +23,8 @@ public class EnchantmentFireProtection extends Enchantment implements io.gomint.
      *
      * @param level of this enchantment
      */
-    public EnchantmentFireProtection( short level ) {
-        super( (short) 4, level );
+    public EnchantmentFireProtection() {
+        super( (short) 4 );
     }
 
     @Override

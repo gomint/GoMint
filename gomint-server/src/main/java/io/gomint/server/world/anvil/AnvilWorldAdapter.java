@@ -464,7 +464,7 @@ public final class AnvilWorldAdapter extends WorldAdapter {
     public ChunkAdapter loadChunk( int x, int z, boolean generate ) {
         ChunkAdapter chunk = this.chunkCache.getChunk( x, z );
         if ( chunk == null ) {
-            this.logger.debug( "Starting to load chunk {} {}", x, z );
+            // this.logger.debug( "Starting to load chunk {} {}", x, z );
 
             try {
                 int regionX = CoordinateUtils.fromChunkToRegion( x );

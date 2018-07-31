@@ -1,5 +1,4 @@
 package io.gomint.server.inventory.item;
-
 import io.gomint.inventory.item.ItemType;
 
 import io.gomint.server.registry.RegisterInfo;
@@ -12,15 +11,7 @@ import io.gomint.taglib.NBTTagCompound;
 @RegisterInfo( id = 175 )
  public class ItemSunflower extends ItemStack implements io.gomint.inventory.item.ItemSunflower {
 
-    // CHECKSTYLE:OFF
-    public ItemSunflower( short data, int amount ) {
-        super( 175, data, amount );
-    }
 
-    public ItemSunflower( short data, int amount, NBTTagCompound nbt ) {
-        super( 175, data, amount, nbt );
-    }
-    // CHECKSTYLE:ON
 
     @Override
     public ItemType getType() {

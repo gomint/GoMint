@@ -6,6 +6,7 @@ import io.gomint.server.network.type.CommandData;
 import io.gomint.server.util.collection.IndexedHashMap;
 import lombok.Data;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -89,9 +90,70 @@ public class PacketAvailableCommands extends Packet {
         }
     }
 
+    private int readEnumIndex( PacketBuffer buffer ) {
+        if ( this.enumValues.size() < 256 ) {
+            return buffer.readByte() & 0xFF;
+        } else if ( this.enumValues.size() < 65536 ) {
+            return buffer.readLShort() & 0xFFFF;
+        } else {
+            return buffer.readLInt();
+        }
+    }
+
     @Override
     public void deserialize( PacketBuffer buffer, int protocolID ) {
+        int enumValueSize = buffer.readUnsignedVarInt();
+        this.enumValues = new ArrayList<>( enumValueSize );
+        for ( int i = 0; i < enumValueSize; i++ ) {
+            this.enumValues.add( buffer.readString() );
+        }
 
+        int postfixSize = buffer.readUnsignedVarInt();
+        this.postFixes = new ArrayList<>( postfixSize );
+        for ( int i = 0; i < postfixSize; i++ ) {
+            String postfix = buffer.readString();
+            System.out.println( "Postfix at " + i + ": " + postfix );
+            this.postFixes.add( postfix );
+        }
+
+        int amountOfEnums = buffer.readUnsignedVarInt();
+        this.enums = new IndexedHashMap<>();
+        for ( int i = 0; i < amountOfEnums; i++ ) {
+            String key = buffer.readString();
+            int amountOfValuesInEnum = buffer.readUnsignedVarInt();
+
+            List<Integer> enumIndexes = new ArrayList<>();
+            for ( int i1 = 0; i1 < amountOfValuesInEnum; i1++ ) {
+                enumIndexes.add( readEnumIndex( buffer ) );
+            }
+
+            this.enums.put( key, enumIndexes );
+        }
+
+        int amountOfCommands = buffer.readUnsignedVarInt();
+        for ( int i = 0; i < amountOfCommands; i++ ) {
+            String cmdName = buffer.readString();
+            String cmdDescription = buffer.readString();
+
+            buffer.readByte();
+            buffer.readByte();
+
+            buffer.readLInt();
+
+            int amountOfOverloads = buffer.readUnsignedVarInt();
+            for ( int i1 = 0; i1 < amountOfOverloads; i1++ ) {
+                int amountOfParameters = buffer.readUnsignedVarInt();
+                for ( int i2 = 0; i2 < amountOfParameters; i2++ ) {
+                    String paramName = buffer.readString();
+                    int paramType = buffer.readLInt();
+                    buffer.readBoolean();
+
+                    if ( cmdName.equals( "xp" ) ) {
+                        System.out.println( " Got param for XP command: " + paramName + " -> " + Integer.toHexString( paramType ) );
+                    }
+                }
+            }
+        }
     }
 
 }

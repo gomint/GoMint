@@ -121,7 +121,7 @@ public abstract class WorldAdapter implements World {
 
     // Block ticking
     int randomUpdateNumber = FastRandom.current().nextInt();
-    TickList tickQueue = new TickList();
+    private TickList tickQueue = new TickList();
 
     // I/O
     private AtomicBoolean asyncWorkerRunning;
@@ -799,9 +799,6 @@ public abstract class WorldAdapter implements World {
         while ( this.asyncWorkerRunning.get() ) {
             try {
                 AsyncChunkTask task = this.asyncChunkTasks.take();
-                if ( task == null ) {
-                    continue;
-                }
 
                 ChunkAdapter chunk;
                 switch ( task.getType() ) {
@@ -820,8 +817,13 @@ public abstract class WorldAdapter implements World {
 
                     case POPULATE:
                         AsyncChunkPopulateTask populateTask = (AsyncChunkPopulateTask) task;
-                        this.chunkGenerator.populate( populateTask.getChunk() );
-                        populateTask.getChunk().setPopulated( true );
+
+                        if ( !populateTask.getChunk().isPopulated() ) {
+                            this.chunkGenerator.populate( populateTask.getChunk() );
+                            populateTask.getChunk().calculateHeightmap( 240 );
+                            populateTask.getChunk().setPopulated( true );
+                        }
+
                         break;
 
                     default:
@@ -845,20 +847,23 @@ public abstract class WorldAdapter implements World {
      * @param pos The position of the block to update
      */
     public void updateBlock( BlockPosition pos ) {
+        // Players can't see unpopulated chunks
+        ChunkAdapter adapter = this.getChunk( pos.getX() >> 4, pos.getZ() >> 4 );
+        if ( !adapter.isPopulated() ) {
+            return;
+        }
+
         if ( !GoMint.instance().isMainThread() ) {
-            this.server.addToMainThread( new Runnable() {
-                @Override
-                public void run() {
-                    flagChunkDirty( pos );
+            this.server.addToMainThread( () -> {
+                flagChunkDirty( pos );
 
-                    sendToVisible( pos, null, entity -> {
-                        if ( entity instanceof io.gomint.server.entity.EntityPlayer ) {
-                            ( (io.gomint.server.entity.EntityPlayer) entity ).getBlockUpdates().add( pos );
-                        }
+                sendToVisible( pos, null, entity -> {
+                    if ( entity instanceof io.gomint.server.entity.EntityPlayer ) {
+                        ( (io.gomint.server.entity.EntityPlayer) entity ).getBlockUpdates().add( pos );
+                    }
 
-                        return false;
-                    } );
-                }
+                    return false;
+                } );
             } );
         } else {
             flagChunkDirty( pos );
@@ -883,6 +888,12 @@ public abstract class WorldAdapter implements World {
         }
     }
 
+    /**
+     * Append all packages needed to update a specific block
+     *
+     * @param connection which should get the packets
+     * @param pos of the block which should be updated
+     */
     public void appendUpdatePackets( PlayerConnection connection, BlockPosition pos ) {
         io.gomint.server.world.block.Block block = getBlockAt( pos );
 
@@ -1137,18 +1148,15 @@ public abstract class WorldAdapter implements World {
 
     public TemporaryStorage getTemporaryBlockStorage( BlockPosition position, int layer ) {
         // Get chunk
-        int x = position.getX(), y = position.getY(), z = position.getZ();
-        int xChunk = CoordinateUtils.fromBlockToChunk( x );
-        int zChunk = CoordinateUtils.fromBlockToChunk( z );
-
-        ChunkAdapter chunk = this.loadChunk( xChunk, zChunk, true );
-        return chunk.getTemporaryStorage( x & 0xF, y, z & 0xF, layer );
+        ChunkAdapter chunk = this.loadChunk( position.getX() >> 4, position.getZ() >> 4, true );
+        return chunk.getTemporaryStorage( position.getX() & 0xF, position.getY(), position.getZ() & 0xF, layer );
     }
 
     public ChunkAdapter generate( int x, int z ) {
         if ( this.chunkGenerator != null ) {
             ChunkAdapter chunk = (ChunkAdapter) this.chunkGenerator.generate( x, z );
             if ( chunk != null ) {
+                chunk.calculateHeightmap( 240 );
                 this.chunkCache.putChunk( chunk );
                 this.addPopulateTask( chunk );
                 return chunk;
@@ -1181,12 +1189,8 @@ public abstract class WorldAdapter implements World {
 
     public void storeTileEntity( BlockPosition position, TileEntity tileEntity ) {
         // Get chunk
-        int x = position.getX(), y = position.getY(), z = position.getZ();
-        int xChunk = CoordinateUtils.fromBlockToChunk( x );
-        int zChunk = CoordinateUtils.fromBlockToChunk( z );
-
-        ChunkAdapter chunk = this.loadChunk( xChunk, zChunk, true );
-        chunk.setTileEntity( x & 0xF, y, z & 0xF, tileEntity );
+        ChunkAdapter chunk = this.loadChunk( position.getX() >> 4, position.getZ() >> 4, true );
+        chunk.setTileEntity( position.getX() & 0xF, position.getY(), position.getZ() & 0xF, tileEntity );
     }
 
     public boolean breakBlock( BlockPosition position, List<ItemStack> drops, boolean creative ) {
@@ -1435,13 +1439,32 @@ public abstract class WorldAdapter implements World {
         return this.chunkCache;
     }
 
+    /**
+     * Gets called when a player gets switched to this world
+     *
+     * @param player which has been switched to this world
+     */
     public void playerSwitched( io.gomint.server.entity.EntityPlayer player ) {
         // Set difficulty
-        PacketSetDifficulty difficulty = new PacketSetDifficulty();
-        difficulty.setDifficulty( this.difficulty.getDifficultyDegree() );
-        player.getConnection().addToSendQueue( difficulty );
+        PacketSetDifficulty packetSetDifficulty = new PacketSetDifficulty();
+        packetSetDifficulty.setDifficulty( this.difficulty.getDifficultyDegree() );
+        player.getConnection().addToSendQueue( packetSetDifficulty );
     }
 
     public abstract boolean persistPlayer( io.gomint.server.entity.EntityPlayer player );
+
+    @Override
+    public Block getHighestBlockAt( int x, int z ) {
+        ChunkAdapter chunk = this.loadChunk( x >> 4, z >> 4, true );
+        int y = chunk.getHeight( x & 0xF, z & 0xF );
+        return chunk.getBlockAt( x & 0xF, y, z & 0xF );
+    }
+
+    @Override
+    public Block getHighestBlockAt( int x, int z, WorldLayer layer ) {
+        ChunkAdapter chunk = this.loadChunk( x >> 4, z >> 4, true );
+        int y = chunk.getHeight( x & 0xF, z & 0xF );
+        return chunk.getBlockAt( x & 0xF, y, z & 0xF, layer );
+    }
 
 }

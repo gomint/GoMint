@@ -23,11 +23,6 @@ public class Regeneration extends Effect {
     private float addHealthEvery;
     private float lastUpdatedT;
 
-    public Regeneration( EffectManager manager, int amplifier, long runoutTimer ) {
-        super( manager, amplifier, runoutTimer );
-        this.addHealthEvery = ( 50 >> amplifier ) / 20f;
-    }
-
     @Override
     public byte getId() {
         return 10;
@@ -50,6 +45,12 @@ public class Regeneration extends Effect {
     @Override
     public void remove( EntityLiving player ) {
         this.player = null;
+    }
+
+    @Override
+    public void setData( EffectManager manager, int amplifier, long lengthInMS ) {
+        super.setData( manager, amplifier, lengthInMS );
+        this.addHealthEvery = ( 50 >> amplifier ) / 20f;
     }
 
 }

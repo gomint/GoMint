@@ -1,5 +1,4 @@
 package io.gomint.server.inventory.item;
-
 import io.gomint.inventory.item.ItemType;
 
 import io.gomint.event.entity.projectile.ProjectileLaunchEvent;
@@ -21,15 +20,7 @@ import io.gomint.world.block.BlockFace;
 @RegisterInfo( id = 346 )
 public class ItemFishingRod extends ItemStack implements io.gomint.inventory.item.ItemFishingRod {
 
-    // CHECKSTYLE:OFF
-    public ItemFishingRod( short data, int amount ) {
-        super( 346, data, amount );
-    }
 
-    public ItemFishingRod( short data, int amount, NBTTagCompound nbt ) {
-        super( 346, data, amount, nbt );
-    }
-    // CHECKSTYLE:ON
 
     @Override
     public short getMaxDamage() {

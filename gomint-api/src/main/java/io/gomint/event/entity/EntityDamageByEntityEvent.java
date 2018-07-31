@@ -8,11 +8,13 @@
 package io.gomint.event.entity;
 
 import io.gomint.entity.Entity;
+import lombok.ToString;
 
 /**
  * @author geNAZt
  * @version 1.0
  */
+@ToString( callSuper = true )
 public class EntityDamageByEntityEvent extends EntityDamageEvent {
 
     private final Entity attacker;

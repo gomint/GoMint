@@ -13,6 +13,7 @@ import io.gomint.math.MathUtils;
 import io.gomint.math.Vector;
 import io.gomint.server.entity.EntityPlayer;
 import io.gomint.server.entity.EntityType;
+import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.util.Values;
 import io.gomint.server.world.WorldAdapter;
 import io.gomint.util.random.FastRandom;
@@ -21,12 +22,21 @@ import io.gomint.util.random.FastRandom;
  * @author geNAZt
  * @version 1.0
  */
+@RegisterInfo( id = 77 )
 public class EntityFishingHook extends EntityProjectile implements io.gomint.entity.projectile.EntityFishingHook {
 
     private static final Vector WATER_FLOATING_MOTION = new Vector( 0, 0.1f, 0 );
 
     private boolean isReset;
     private float lastUpdatedT;
+
+    /**
+     * Create entity for API
+     */
+    public EntityFishingHook() {
+        super( null, EntityType.FISHING_HOOK, null );
+        this.setSize( 0.25f, 0.25f );
+    }
 
     /**
      * Construct a new Entity

@@ -1,5 +1,4 @@
 package io.gomint.server.inventory.item;
-
 import io.gomint.inventory.item.ItemType;
 import io.gomint.math.Vector;
 import io.gomint.server.entity.Attribute;
@@ -20,15 +19,7 @@ import io.gomint.world.block.BlockFace;
 @RegisterInfo( id = 293 )
 public class ItemDiamondHoe extends ItemReduceTierDiamond implements io.gomint.inventory.item.ItemDiamondHoe {
 
-    // CHECKSTYLE:OFF
-    public ItemDiamondHoe( short data, int amount ) {
-        super( 293, data, amount );
-    }
 
-    public ItemDiamondHoe( short data, int amount, NBTTagCompound nbt ) {
-        super( 293, data, amount, nbt );
-    }
-    // CHECKSTYLE:ON
 
     @Override
     public boolean interact( EntityPlayer entity, BlockFace face, Vector clickPosition, Block clickedBlock ) {

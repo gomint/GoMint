@@ -38,6 +38,7 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.UUID;
@@ -141,7 +142,7 @@ public class EntityHuman extends EntityCreature implements io.gomint.entity.pass
                     int key = (int) arg;
                     if ( key == MetadataContainer.DATA_NAMETAG ) {
                         // We despawn this for everyone and respawn it
-                        for ( io.gomint.entity.Entity entity : getAttachedEntities() ) {
+                        for ( io.gomint.entity.Entity entity : new HashSet<>( getAttachedEntities() ) ) {
                             if ( entity instanceof EntityPlayer ) {
                                 ( (EntityPlayer) entity ).getEntityVisibilityManager().removeEntity( EntityHuman.this );
                                 ( (EntityPlayer) entity ).getEntityVisibilityManager().addEntity( EntityHuman.this );

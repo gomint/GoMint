@@ -13,14 +13,6 @@ public abstract class ItemColoredArmor extends ItemArmor implements io.gomint.in
 
     private static final String NBT_CUSTOM_COLOR_TAG = "customColor";
 
-    public ItemColoredArmor( int material, short data, int amount ) {
-        super( material, data, amount );
-    }
-
-    public ItemColoredArmor( int material, short data, int amount, NBTTagCompound nbt ) {
-        super( material, data, amount, nbt );
-    }
-
     @Override
     public Color getColor() {
         // Do we have a NBT tag?

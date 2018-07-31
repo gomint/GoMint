@@ -1,5 +1,4 @@
 package io.gomint.server.inventory.item;
-
 import io.gomint.inventory.item.ItemType;
 
 import io.gomint.server.entity.Attribute;
@@ -15,15 +14,7 @@ import io.gomint.taglib.NBTTagCompound;
 @RegisterInfo( id = 286 )
  public class ItemGoldenAxe extends ItemReduceTierGolden implements io.gomint.inventory.item.ItemGoldenAxe {
 
-    // CHECKSTYLE:OFF
-    public ItemGoldenAxe( short data, int amount ) {
-        super( 286, data, amount );
-    }
 
-    public ItemGoldenAxe( short data, int amount, NBTTagCompound nbt ) {
-        super( 286, data, amount, nbt );
-    }
-    // CHECKSTYLE:ON
 
 
     @Override

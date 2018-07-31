@@ -1,5 +1,4 @@
 package io.gomint.server.inventory.item;
-
 import io.gomint.inventory.item.ItemType;
 
 import io.gomint.server.registry.RegisterInfo;
@@ -12,15 +11,7 @@ import io.gomint.taglib.NBTTagCompound;
 @RegisterInfo( id = 73 )
  public class ItemRedstoneOre extends ItemStack implements io.gomint.inventory.item.ItemRedstoneOre {
 
-    // CHECKSTYLE:OFF
-    public ItemRedstoneOre( short data, int amount ) {
-        super( 73, data, amount );
-    }
 
-    public ItemRedstoneOre( short data, int amount, NBTTagCompound nbt ) {
-        super( 73, data, amount, nbt );
-    }
-    // CHECKSTYLE:ON
 
     @Override
     public ItemType getType() {

@@ -4,34 +4,23 @@ import io.gomint.jraknet.PacketBuffer;
 import io.gomint.math.Location;
 import io.gomint.math.MathUtils;
 import io.gomint.server.entity.tileentity.TileEntity;
-import io.gomint.server.util.DumpUtil;
 import io.gomint.server.util.Palette;
 import io.gomint.server.world.storage.TemporaryStorage;
 import io.gomint.world.block.Block;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
-import it.unimi.dsi.fastutil.longs.Long2IntArrayMap;
-import it.unimi.dsi.fastutil.longs.Long2IntMap;
 import it.unimi.dsi.fastutil.longs.LongArrayList;
 import it.unimi.dsi.fastutil.longs.LongList;
-import it.unimi.dsi.fastutil.objects.ObjectIterator;
 import it.unimi.dsi.fastutil.shorts.Short2ObjectOpenHashMap;
 import lombok.Getter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.function.IntConsumer;
-import java.util.function.LongConsumer;
 
 /**
  * @author geNAZt
  * @version 1.0
  */
 public class ChunkSlice {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger( ChunkSlice.class );
 
     @Getter
     private final ChunkAdapter chunk;
@@ -48,8 +37,8 @@ public class ChunkSlice {
     private short[][] blocks = new short[2][]; // MC currently supports two layers, we init them as we need
     private NibbleArray[] data = new NibbleArray[2]; // MC currently supports two layers, we init them as we need
 
-    private NibbleArray blockLight = new NibbleArray( (short) 4096 );
-    private NibbleArray skyLight = new NibbleArray( (short) 4096 );
+    private NibbleArray blockLight = NibbleArray.create( (short) 4096 );
+    private NibbleArray skyLight = NibbleArray.create( (short) 4096 );
 
     @Getter
     private Short2ObjectOpenHashMap<TileEntity> tileEntities = new Short2ObjectOpenHashMap<>();
@@ -157,7 +146,7 @@ public class ChunkSlice {
     public void setDataInternal( short index, int layer, byte data ) {
         // Check if we need to set new nibble array
         if ( !this.isAllAir && this.data[layer] == null ) {
-            this.data[layer] = new NibbleArray( (short) 4096 );
+            this.data[layer] = NibbleArray.create( (short) 4096 );
         }
 
         // All air and we want to set block data? How about no!

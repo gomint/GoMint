@@ -23,8 +23,8 @@ public class EnchantmentFeatherfalling extends Enchantment implements io.gomint.
      *
      * @param level of this enchantment
      */
-    public EnchantmentFeatherfalling( short level ) {
-        super( (short) 4, level );
+    public EnchantmentFeatherfalling() {
+        super( (short) 4 );
     }
 
     @Override

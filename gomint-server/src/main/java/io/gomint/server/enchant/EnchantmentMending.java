@@ -22,8 +22,8 @@ public class EnchantmentMending extends Enchantment implements io.gomint.enchant
      *
      * @param level of this enchantment
      */
-    public EnchantmentMending( short level ) {
-        super( (short) 1, level );
+    public EnchantmentMending() {
+        super( (short) 1 );
     }
 
     @Override

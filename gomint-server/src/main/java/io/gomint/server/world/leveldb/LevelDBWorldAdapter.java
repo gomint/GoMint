@@ -17,14 +17,12 @@ import io.gomint.server.world.WorldAdapter;
 import io.gomint.server.world.WorldLoadException;
 import io.gomint.server.world.block.Block;
 import io.gomint.taglib.NBTStream;
-import io.gomint.taglib.NBTTagCompound;
 import io.gomint.world.Chunk;
 import io.gomint.world.Difficulty;
 import io.gomint.world.generator.GeneratorContext;
 import io.gomint.world.generator.integrated.LayeredGenerator;
 import lombok.EqualsAndHashCode;
 import org.iq80.leveldb.DB;
-import org.iq80.leveldb.DBIterator;
 import org.iq80.leveldb.Options;
 import org.iq80.leveldb.impl.DbImpl;
 import org.iq80.leveldb.impl.Iq80DBFactory;
@@ -33,14 +31,12 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.ByteOrder;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author geNAZt

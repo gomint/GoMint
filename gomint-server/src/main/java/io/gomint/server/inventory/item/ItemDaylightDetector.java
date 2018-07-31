@@ -1,5 +1,4 @@
 package io.gomint.server.inventory.item;
-
 import io.gomint.inventory.item.ItemType;
 
 import io.gomint.server.registry.RegisterInfo;
@@ -12,15 +11,7 @@ import io.gomint.taglib.NBTTagCompound;
 @RegisterInfo( id = 151 )
  public class ItemDaylightDetector extends ItemStack implements io.gomint.inventory.item.ItemDaylightDetector {
 
-    // CHECKSTYLE:OFF
-    public ItemDaylightDetector( short data, int amount ) {
-        super( 151, data, amount );
-    }
 
-    public ItemDaylightDetector( short data, int amount, NBTTagCompound nbt ) {
-        super( 151, data, amount, nbt );
-    }
-    // CHECKSTYLE:ON
 
     @Override
     public ItemType getType() {

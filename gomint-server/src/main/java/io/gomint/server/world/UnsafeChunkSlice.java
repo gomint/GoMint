@@ -8,6 +8,7 @@
 package io.gomint.server.world;
 
 import io.gomint.server.util.PerformanceHacks;
+import io.gomint.server.util.performance.UnsafeAllocator;
 import sun.misc.Unsafe;
 
 /**
@@ -16,7 +17,7 @@ import sun.misc.Unsafe;
  */
 public class UnsafeChunkSlice extends ChunkSlice {
 
-    private static Unsafe unsafe = (Unsafe) PerformanceHacks.getUnsafe();
+    private static final Unsafe UNSAFE = (Unsafe) PerformanceHacks.getUnsafe();
     private long[] blockStorages = new long[2];
 
     public UnsafeChunkSlice( ChunkAdapter chunkAdapter, int sectionY ) {
@@ -40,23 +41,34 @@ public class UnsafeChunkSlice extends ChunkSlice {
             return 0;
         }
 
-        return unsafe.getShort( blockStorageAddress + ( index << 1 ) );
+        return UNSAFE.getShort( blockStorageAddress + ( index << 1 ) );
     }
 
+    @Override
     public void setBlockInternal( short index, int layer, int blockId ) {
         if ( blockId != 0 && this.blockStorages[layer] == 0 ) {
-            this.blockStorages[layer] = unsafe.allocateMemory( 8192L ); // we store 4096 shorts
-            unsafe.setMemory( this.blockStorages[layer], 8192L, (byte) 0 );
+            this.blockStorages[layer] = UnsafeAllocator.allocate( 8192 ); // we store 4096 shorts
+            UNSAFE.setMemory( this.blockStorages[layer], 8192L, (byte) 0 );
             this.isAllAir = false;
         }
 
         if ( this.blockStorages[layer] != 0 ) {
-            unsafe.putShort( this.blockStorages[layer] + ( index << 1 ), (short) blockId );
+            UNSAFE.putShort( this.blockStorages[layer] + ( index << 1 ), (short) blockId );
         }
     }
 
+    @Override
     protected int getAmountOfLayers() {
         return this.blockStorages[1] != 0 ? 2 : 1;
+    }
+
+    @Override
+    protected void finalize() throws Throwable {
+        for ( long blockStorage : blockStorages ) {
+            if ( blockStorage != 0 ) {
+                UnsafeAllocator.freeMemory( blockStorage );
+            }
+        }
     }
 
 }

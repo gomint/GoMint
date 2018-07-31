@@ -1,5 +1,4 @@
 package io.gomint.server.inventory.item;
-
 import io.gomint.event.entity.projectile.ProjectileLaunchEvent;
 import io.gomint.inventory.item.ItemAir;
 import io.gomint.inventory.item.ItemType;
@@ -18,15 +17,7 @@ import io.gomint.world.block.BlockFace;
 @RegisterInfo( id = 368 )
 public class ItemEnderPearl extends ItemStack implements io.gomint.inventory.item.ItemEnderPearl {
 
-    // CHECKSTYLE:OFF
-    public ItemEnderPearl( short data, int amount ) {
-        super( 368, data, amount );
-    }
 
-    public ItemEnderPearl( short data, int amount, NBTTagCompound nbt ) {
-        super( 368, data, amount, nbt );
-    }
-    // CHECKSTYLE:ON
 
     @Override
     public ItemType getType() {

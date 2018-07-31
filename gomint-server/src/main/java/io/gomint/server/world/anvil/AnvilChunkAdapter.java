@@ -13,6 +13,7 @@ import io.gomint.server.entity.tileentity.TileEntity;
 import io.gomint.server.util.Pair;
 import io.gomint.server.util.StringUtil;
 import io.gomint.server.world.ChunkAdapter;
+import io.gomint.server.world.HeapNibbleArray;
 import io.gomint.server.world.NibbleArray;
 import io.gomint.server.world.WorldLoadException;
 import io.gomint.server.world.anvil.entity.EntityConverters;
@@ -28,7 +29,6 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.ByteOrder;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -99,7 +99,7 @@ public class AnvilChunkAdapter extends ChunkAdapter {
 
         for ( int sectionY = 0; sectionY < 16; ++sectionY ) {
             byte[] blocks = new byte[4096];
-            NibbleArray data = new NibbleArray( (short) 4096 );
+            HeapNibbleArray data = new HeapNibbleArray( (short) 4096 );
             int baseIndex = sectionY * 16;
 
             for ( int y = baseIndex; y < baseIndex + 16; ++y ) {
@@ -305,8 +305,8 @@ public class AnvilChunkAdapter extends ChunkAdapter {
         byte[] blocks = section.getByteArray( "Blocks", new byte[0] );
         byte[] addBlocks = section.getByteArray( "Add", new byte[0] );
 
-        NibbleArray add = addBlocks.length > 0 ? new NibbleArray( addBlocks ) : null;
-        NibbleArray data = new NibbleArray( section.getByteArray( "Data", new byte[0] ) );
+        NibbleArray add = addBlocks.length > 0 ? NibbleArray.create( addBlocks ) : null;
+        NibbleArray data = NibbleArray.create( section.getByteArray( "Data", new byte[0] ) );
 
         if ( blocks == null ) {
             throw new IllegalArgumentException( "Corrupt chunk: Section is missing obligatory compounds" );

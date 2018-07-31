@@ -18,10 +18,6 @@ import io.gomint.server.registry.RegisterInfo;
 @RegisterInfo( id = 22 )
 public class Absorption extends Effect {
 
-    public Absorption( EffectManager manager, int amplifier, long runoutTimer ) {
-        super( manager, amplifier, runoutTimer );
-    }
-
     @Override
     public byte getId() {
         return 22;

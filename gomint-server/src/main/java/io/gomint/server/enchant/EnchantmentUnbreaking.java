@@ -23,8 +23,8 @@ public class EnchantmentUnbreaking extends Enchantment implements io.gomint.ench
      *
      * @param level of this enchantment
      */
-    public EnchantmentUnbreaking( short level ) {
-        super( (short) 3, level );
+    public EnchantmentUnbreaking() {
+        super( (short) 3 );
     }
 
     @Override

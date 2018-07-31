@@ -18,10 +18,6 @@ import io.gomint.server.registry.RegisterInfo;
 @RegisterInfo( id = 4 )
 public class MiningFatigue extends Effect {
 
-    public MiningFatigue( EffectManager manager, int amplifier, long runoutTimer ) {
-        super( manager, amplifier, runoutTimer );
-    }
-
     @Override
     public byte getId() {
         return 4;

@@ -18,10 +18,6 @@ import io.gomint.server.registry.RegisterInfo;
 @RegisterInfo( id = 13 )
 public class WaterBreathing extends Effect {
 
-    public WaterBreathing( EffectManager manager, int amplifier, long runoutTimer ) {
-        super( manager, amplifier, runoutTimer );
-    }
-
     @Override
     public byte getId() {
         return 13;

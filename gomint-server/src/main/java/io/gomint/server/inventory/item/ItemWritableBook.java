@@ -4,7 +4,6 @@
  * This code is licensed under the BSD license found in the
  * LICENSE file in the root directory of this source tree.
  */
-
 package io.gomint.server.inventory.item;
 
 import io.gomint.GoMint;
@@ -31,15 +30,7 @@ public class ItemWritableBook extends ItemStack implements io.gomint.inventory.i
     private static final String TITLE_TAG = "title";
     private static final String AUTHOR_TAG = "author";
 
-    // CHECKSTYLE:OFF
-    public ItemWritableBook( short data, int amount ) {
-        super( 386, data, amount );
-    }
 
-    public ItemWritableBook( short data, int amount, NBTTagCompound nbt ) {
-        super( 386, data, amount, nbt );
-    }
-    // CHECKSTYLE:ON
 
     @Override
     public ItemType getType() {

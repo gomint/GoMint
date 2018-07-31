@@ -18,10 +18,6 @@ import io.gomint.server.registry.RegisterInfo;
 @RegisterInfo( id = 3 )
 public class Haste extends Effect {
 
-    public Haste( EffectManager manager, int amplifier, long runoutTimer ) {
-        super( manager, amplifier, runoutTimer );
-    }
-
     @Override
     public byte getId() {
         return 3;

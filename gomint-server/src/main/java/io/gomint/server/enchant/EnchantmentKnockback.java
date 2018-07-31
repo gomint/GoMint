@@ -23,8 +23,8 @@ public class EnchantmentKnockback extends Enchantment implements io.gomint.encha
      *
      * @param level of this enchantment
      */
-    public EnchantmentKnockback( short level ) {
-        super( (short) 2, level );
+    public EnchantmentKnockback() {
+        super( (short) 2 );
     }
 
     @Override

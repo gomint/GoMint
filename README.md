@@ -18,9 +18,7 @@ impact minimal we deprecate old methods and provide better alternatives to switc
 
 Current deprecated methods:
 
-`io.gomint.command.Command#execute(EntityPlayer, String, List<String>)`<br />
-`io.gomint.command.ParamValidator#validate(List<String>, Entity)`<br />
-`io.gomint.command.SystemCommand`<br />
+`WorldType.GOMINT` - Worlds created with the gomint type will not load anymore (this is immediate effect). creating worlds with GOMINT type will be ignored and created with ANVIL instead.<br />
 
 Project
 --

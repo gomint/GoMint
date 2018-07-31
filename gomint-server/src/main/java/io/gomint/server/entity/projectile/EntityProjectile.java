@@ -179,7 +179,7 @@ public abstract class EntityProjectile extends Entity implements io.gomint.entit
 
     @Override
     public io.gomint.entity.EntityLiving getShooter() {
-        if ( this.shooter.isDead() ) {
+        if ( this.shooter == null || this.shooter.isDead() ) {
             return null;
         }
 

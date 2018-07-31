@@ -8,20 +8,27 @@
 package io.gomint.server.network;
 
 import lombok.Getter;
-import org.bouncycastle.crypto.BufferedBlockCipher;
-import org.bouncycastle.crypto.InvalidCipherTextException;
-import org.bouncycastle.crypto.digests.SHA256Digest;
-import org.bouncycastle.crypto.engines.AESEngine;
-import org.bouncycastle.crypto.modes.CFBBlockCipher;
-import org.bouncycastle.crypto.params.KeyParameter;
-import org.bouncycastle.crypto.params.ParametersWithIV;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.crypto.Cipher;
 import javax.crypto.KeyAgreement;
+import javax.crypto.NoSuchPaddingException;
+import javax.crypto.SecretKey;
+import javax.crypto.ShortBufferException;
+import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
-import java.security.*;
+import java.security.DigestException;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.Key;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.security.PrivateKey;
+import java.security.PublicKey;
+import java.security.SecureRandom;
 import java.security.interfaces.ECPublicKey;
 import java.util.Arrays;
 import java.util.Base64;
@@ -37,6 +44,7 @@ import java.util.concurrent.atomic.AtomicLong;
 public class EncryptionHandler {
 
     private static final Logger LOGGER = LoggerFactory.getLogger( EncryptionHandler.class );
+    private static final ThreadLocal<MessageDigest> SHA256_DIGEST = new ThreadLocal<>();
 
     // Packet counters
     private AtomicLong sendingCounter = new AtomicLong( 0 );
@@ -44,8 +52,8 @@ public class EncryptionHandler {
 
     // Client Side:
     private ECPublicKey clientPublicKey;
-    private BufferedBlockCipher clientEncryptor;
-    private BufferedBlockCipher clientDecryptor;
+    private Cipher clientEncryptor;
+    private Cipher clientDecryptor;
 
     // Data for packet and checksum calculations
     @Getter
@@ -128,12 +136,12 @@ public class EncryptionHandler {
 
         System.arraycopy( output, 0, outputChunked, 0, outputChunked.length );
 
-        byte[] hashBytes = calcHash( outputChunked, this.receiveCounter );
+        /*byte[] hashBytes = calcHash( outputChunked, this.receiveCounter );
         for ( int i = output.length - 8; i < output.length; i++ ) {
             if ( hashBytes[i - ( output.length - 8 )] != output[i] ) {
                 return null;
             }
-        }
+        }*/
 
         return outputChunked;
     }
@@ -173,28 +181,54 @@ public class EncryptionHandler {
         return this.keyFactory.getKeyPair().getPrivate();
     }
 
-    private byte[] calcHash( byte[] input, AtomicLong counter ) {
-        SHA256Digest digest = new SHA256Digest();
-
-        byte[] result = new byte[digest.getDigestSize()];
-        digest.update( ByteBuffer.allocate( 8 ).order( ByteOrder.LITTLE_ENDIAN ).putLong( counter.getAndIncrement() ).array(), 0, 8 );
-        digest.update( input, 0, input.length );
-        digest.update( this.key, 0, this.key.length );
-        digest.doFinal( result, 0 );
-
-        return Arrays.copyOf( result, 8 );
-    }
-
-    private byte[] processCipher( BufferedBlockCipher cipher, byte[] input ) {
-        byte[] output = new byte[cipher.getOutputSize( input.length )];
-        int cursor = cipher.processBytes( input, 0, input.length, output, 0 );
+    private MessageDigest getSHA256() {
+        MessageDigest digest = SHA256_DIGEST.get();
+        if ( digest != null ) {
+            digest.reset();
+            return digest;
+        }
 
         try {
+            digest = MessageDigest.getInstance( "SHA-256" );
+            SHA256_DIGEST.set( digest );
+            return digest;
+        } catch ( NoSuchAlgorithmException e ) {
+            LOGGER.error( "Could not create SHA256 digest" );
+        }
+
+        return null;
+    }
+
+    private byte[] calcHash( byte[] input, AtomicLong counter ) {
+        try {
+            MessageDigest digest = getSHA256();
+            if ( digest == null ) {
+                return new byte[8];
+            }
+
+            byte[] result = new byte[digest.getDigestLength()];
+            digest.update( ByteBuffer.allocate( 8 ).order( ByteOrder.LITTLE_ENDIAN ).putLong( counter.getAndIncrement() ).array(), 0, 8 );
+            digest.update( input, 0, input.length );
+            digest.update( this.key, 0, this.key.length );
+            digest.digest( result, 0, result.length );
+            return Arrays.copyOf( result, 8 );
+        } catch ( DigestException e ) {
+            LOGGER.error( "Could not create SHA256 hash", e );
+        }
+
+        return new byte[8];
+    }
+
+    private byte[] processCipher( Cipher cipher, byte[] input ) {
+        byte[] output = new byte[cipher.getOutputSize( input.length )];
+
+        try {
+            int cursor = cipher.update( input, 0, input.length, output, 0 );
             // cursor += cipher.doFinal( output, cursor );
             if ( cursor != output.length ) {
-                throw new InvalidCipherTextException( "Output size did not match cursor" );
+                throw new ShortBufferException( "Output size did not match cursor" );
             }
-        } catch ( InvalidCipherTextException e ) {
+        } catch ( ShortBufferException e ) {
             LOGGER.error( "Could not encrypt/decrypt to/from cipher-text", e );
             return null;
         }
@@ -206,11 +240,11 @@ public class EncryptionHandler {
 
     private byte[] generateECDHSecret( PrivateKey privateKey, PublicKey publicKey ) {
         try {
-            KeyAgreement ka = KeyAgreement.getInstance( "ECDH", "BC" );
+            KeyAgreement ka = KeyAgreement.getInstance( "ECDH" );
             ka.init( privateKey );
             ka.doPhase( publicKey, true );
             return ka.generateSecret();
-        } catch ( NoSuchAlgorithmException | InvalidKeyException | NoSuchProviderException e ) {
+        } catch ( NoSuchAlgorithmException | InvalidKeyException e ) {
             LOGGER.error( "Failed to generate Elliptic-Curve-Diffie-Hellman Shared Secret for clientside encryption", e );
             return null;
         }
@@ -223,22 +257,40 @@ public class EncryptionHandler {
     }
 
     private byte[] hashSHA256( byte[]... message ) {
-        SHA256Digest digest = new SHA256Digest();
+        try {
+            MessageDigest digest = getSHA256();
+            if ( digest == null ) {
+                return null;
+            }
 
-        byte[] result = new byte[digest.getDigestSize()];
-        for ( byte[] bytes : message ) {
-            digest.update( bytes, 0, bytes.length );
+            byte[] result = new byte[digest.getDigestLength()];
+
+            for ( byte[] bytes : message ) {
+                digest.update( bytes, 0, bytes.length );
+            }
+
+            digest.digest( result, 0, result.length );
+            return result;
+        } catch ( DigestException e ) {
+            LOGGER.error( "Could not create SHA256 hash", e );
         }
 
-        digest.doFinal( result, 0 );
-
-        return result;
+        return new byte[256];
     }
 
-    private BufferedBlockCipher createCipher( boolean encryptor, byte[] key, byte[] iv ) {
-        BufferedBlockCipher cipher = new BufferedBlockCipher( new CFBBlockCipher( new AESEngine(), 8 ) );
-        cipher.init( encryptor, new ParametersWithIV( new KeyParameter( key ), iv ) );
-        return cipher;
+    private Cipher createCipher( boolean encryptor, byte[] key, byte[] iv ) {
+        SecretKey secretKey = new SecretKeySpec( key, "AES" );
+        IvParameterSpec ivParameterSpec = new IvParameterSpec( iv );
+
+        try {
+            Cipher jdkCipher = Cipher.getInstance( "AES/CFB8/NoPadding" );
+            jdkCipher.init( encryptor ? Cipher.ENCRYPT_MODE : Cipher.DECRYPT_MODE, secretKey, ivParameterSpec );
+            return jdkCipher;
+        } catch ( NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | InvalidAlgorithmParameterException e ) {
+            LOGGER.error( "Could not create cipher", e );
+        }
+
+        return null;
     }
 
 }

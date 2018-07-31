@@ -9,6 +9,7 @@ package io.gomint.plugin.listener;
 
 import io.gomint.event.EventHandler;
 import io.gomint.event.EventListener;
+import io.gomint.event.entity.EntityDamageByEntityEvent;
 import io.gomint.event.entity.EntityDamageEvent;
 
 /**
@@ -19,6 +20,11 @@ public class EntityDamageListener implements EventListener {
 
     @EventHandler
     public void onEntityDamage( EntityDamageEvent event ) {
+        event.setCancelled( true );
+    }
+
+    @EventHandler
+    public void onEntityFromOtherDamage( EntityDamageByEntityEvent event ) {
         event.setCancelled( true );
     }
 

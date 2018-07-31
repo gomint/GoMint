@@ -22,8 +22,6 @@ import java.util.*;
 @Getter
 public class MojangChainValidator {
 
-    private static final boolean NEVER_ENABLE_SELFSIGN_IN_PROD = false;
-
     private List<JwtToken> chain;
 
     private String username;
@@ -84,10 +82,6 @@ public class MojangChainValidator {
                     }
 
                     if ( this.trustedKeys.containsKey( x5u ) ) {
-                        nextToken = token;
-                        break;
-                    } else if ( NEVER_ENABLE_SELFSIGN_IN_PROD && x5u.equals( token.getClaim( "identityPublicKey" ) ) ) {
-                        this.trustedKeys.put( x5u, this.encryptionKeyFactory.createPublicKey( x5u ) );
                         nextToken = token;
                         break;
                     }

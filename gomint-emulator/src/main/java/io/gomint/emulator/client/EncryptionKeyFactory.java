@@ -34,19 +34,12 @@ public class EncryptionKeyFactory {
      * Create a new factory which holds / creates a ECDH key factory and a optional keypair
      */
     public EncryptionKeyFactory() {
-        // We use BouncyCastle due to the policy restrictions in JRE
-        Security.addProvider( new org.bouncycastle.jce.provider.BouncyCastleProvider() );
-
         // Create the key factory
         try {
-            this.keyFactory = KeyFactory.getInstance( "ECDH", "BC" );
+            this.keyFactory = KeyFactory.getInstance( "EC" );
         } catch ( NoSuchAlgorithmException e ) {
             e.printStackTrace();
             System.err.println( "Could not find ECDH Key Factory - please ensure that you have installed the latest version of BouncyCastle" );
-            System.exit( -1 );
-        } catch ( NoSuchProviderException e ) {
-            e.printStackTrace();
-            System.err.println( "Could not find BouncyCastle Key Provider - please ensure that you have installed BouncyCastle properly" );
             System.exit( -1 );
         }
 
@@ -62,9 +55,9 @@ public class EncryptionKeyFactory {
         // Setup KeyPairGenerator:
         KeyPairGenerator generator;
         try {
-            generator = KeyPairGenerator.getInstance( "EC", "BC" );
+            generator = KeyPairGenerator.getInstance( "EC" );
             generator.initialize( 384 );
-        } catch ( NoSuchAlgorithmException | NoSuchProviderException e ) {
+        } catch ( NoSuchAlgorithmException e ) {
             System.err.println( "It seems you have not installed a recent version of BouncyCastle; please ensure that your version supports EC Key-Pair-Generation using the secp384r1 curve" );
             System.exit( -1 );
             return;

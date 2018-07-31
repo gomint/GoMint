@@ -19,5 +19,6 @@ public @interface Parameter {
     Class<? extends ParamValidator> validator();
     String[] arguments() default {};
     boolean optional() default false;
+    String postfix() default "";
 
 }

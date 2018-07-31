@@ -1,5 +1,4 @@
 package io.gomint.server.inventory.item;
-
 import io.gomint.inventory.item.ItemType;
 
 import io.gomint.server.registry.RegisterInfo;
@@ -12,15 +11,7 @@ import io.gomint.taglib.NBTTagCompound;
 @RegisterInfo( id = 96 )
  public class ItemTrapdoor extends ItemStack implements io.gomint.inventory.item.ItemTrapdoor {
 
-    // CHECKSTYLE:OFF
-    public ItemTrapdoor( short data, int amount ) {
-        super( 96, data, amount );
-    }
 
-    public ItemTrapdoor( short data, int amount, NBTTagCompound nbt ) {
-        super( 96, data, amount, nbt );
-    }
-    // CHECKSTYLE:ON
 
     @Override
     public ItemType getType() {

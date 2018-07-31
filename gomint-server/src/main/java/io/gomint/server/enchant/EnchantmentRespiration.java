@@ -23,8 +23,8 @@ public class EnchantmentRespiration extends Enchantment implements io.gomint.enc
      *
      * @param level of this enchantment
      */
-    public EnchantmentRespiration( short level ) {
-        super( (short) 3, level );
+    public EnchantmentRespiration() {
+        super( (short) 3 );
     }
 
     @Override

@@ -23,8 +23,8 @@ public class EnchantmentInfinity extends Enchantment implements io.gomint.enchan
      *
      * @param level of this enchantment
      */
-    public EnchantmentInfinity( short level ) {
-        super( (short) 1, level );
+    public EnchantmentInfinity() {
+        super( (short) 1 );
     }
 
     @Override

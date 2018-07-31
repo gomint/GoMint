@@ -14,7 +14,7 @@ import lombok.ToString;
  * @author geNAZt
  * @version 1.0
  */
-@ToString
+@ToString( callSuper = true )
 public class EntityDamageEvent extends CancellableEntityEvent {
 
     private final DamageSource damageSource;

@@ -23,8 +23,8 @@ public class EnchantmentSharpness extends Enchantment implements io.gomint.encha
      *
      * @param level of this enchantment
      */
-    public EnchantmentSharpness( short level ) {
-        super( (short) 5, level );
+    public EnchantmentSharpness() {
+        super( (short) 5 );
     }
 
     @Override

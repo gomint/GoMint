@@ -19,12 +19,10 @@ import io.gomint.server.registry.RegisterInfo;
 public class EnchantmentBaneOfArthopods extends Enchantment implements io.gomint.enchant.EnchantmentBaneOfArthopods {
 
     /**
-     * Create new enchantment smite
-     *
-     * @param level of this enchantment
+     * Create new enchantment bane of arthopods
      */
-    public EnchantmentBaneOfArthopods( short level ) {
-        super( (short) 5, level );
+    public EnchantmentBaneOfArthopods() {
+        super( (short) 5 );
     }
 
     @Override

@@ -4,7 +4,6 @@
  * This code is licensed under the BSD license found in the
  * LICENSE file in the root directory of this source tree.
  */
-
 package io.gomint.server.inventory.item;
 
 import io.gomint.server.entity.EntityPlayer;
@@ -17,15 +16,7 @@ import io.gomint.taglib.NBTTagCompound;
  */
 public abstract class ItemFood extends ItemStack implements io.gomint.inventory.item.ItemFood, ItemConsumable {
 
-    // CHECKSTYLE:OFF
-    public ItemFood( int material, short data, int amount ) {
-        super( material, data, amount );
-    }
 
-    public ItemFood( int material, short data, int amount, NBTTagCompound nbt ) {
-        super( material, data, amount, nbt );
-    }
-    // CHECKSTYLE:ON
 
     @Override
     public void onConsume( EntityPlayer player ) {

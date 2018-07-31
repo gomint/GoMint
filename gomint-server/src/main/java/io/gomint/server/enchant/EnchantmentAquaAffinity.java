@@ -19,12 +19,10 @@ import io.gomint.server.registry.RegisterInfo;
 public class EnchantmentAquaAffinity extends Enchantment implements io.gomint.enchant.EnchantmentAquaAffinity {
 
     /**
-     * Create new enchantment smite
-     *
-     * @param level of this enchantment
+     * Create new enchantment aqua affinity
      */
-    public EnchantmentAquaAffinity( short level ) {
-        super( (short) 1, level );
+    public EnchantmentAquaAffinity() {
+        super( (short) 1 );
     }
 
     @Override

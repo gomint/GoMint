@@ -8,10 +8,13 @@
 package io.gomint.server.entity;
 
 import io.gomint.entity.BossBar;
-import io.gomint.entity.passive.EntityVillager;
 import io.gomint.event.entity.EntityDamageEvent;
 import io.gomint.event.entity.EntityTeleportEvent;
-import io.gomint.math.*;
+import io.gomint.math.AxisAlignedBB;
+import io.gomint.math.Location;
+import io.gomint.math.MathUtils;
+import io.gomint.math.Vector;
+import io.gomint.math.Vector2;
 import io.gomint.server.entity.component.TransformComponent;
 import io.gomint.server.entity.metadata.MetadataContainer;
 import io.gomint.server.network.PlayerConnection;
@@ -22,7 +25,12 @@ import io.gomint.server.network.packet.PacketSpawnEntity;
 import io.gomint.server.util.Values;
 import io.gomint.server.world.CoordinateUtils;
 import io.gomint.server.world.WorldAdapter;
-import io.gomint.server.world.block.*;
+import io.gomint.server.world.block.Block;
+import io.gomint.server.world.block.FlowingWater;
+import io.gomint.server.world.block.Ladder;
+import io.gomint.server.world.block.Liquid;
+import io.gomint.server.world.block.StationaryWater;
+import io.gomint.server.world.block.Vines;
 import io.gomint.taglib.NBTTagCompound;
 import io.gomint.world.Chunk;
 import lombok.EqualsAndHashCode;
@@ -102,7 +110,8 @@ public abstract class Entity implements io.gomint.entity.Entity {
     /**
      * Fall distance tracking
      */
-    @Getter @Setter
+    @Getter
+    @Setter
     protected float fallDistance = 0;
 
     /**
@@ -147,7 +156,8 @@ public abstract class Entity implements io.gomint.entity.Entity {
      * Movement status
      */
     private int nextFullMovement = 20;
-    @Getter private Location oldPosition;
+    @Getter
+    private Location oldPosition;
 
     /**
      * Construct a new Entity
@@ -171,6 +181,11 @@ public abstract class Entity implements io.gomint.entity.Entity {
         this.setHasCollision( true );
         this.setAffectedByGravity( true );
         this.setNameTagVisible( true );
+
+        // Check if we can setup AI
+        if ( this.world != null ) {
+            this.setupAI();
+        }
     }
 
     // ==================================== ACCESSORS ==================================== //
@@ -1143,6 +1158,11 @@ public abstract class Entity implements io.gomint.entity.Entity {
 
         this.world = (WorldAdapter) location.getWorld();
         this.world.spawnEntityAt( this, location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch() );
+        this.setupAI();
+    }
+
+    protected void setupAI() {
+
     }
 
     public void teleport( Location to, EntityTeleportEvent.Cause cause ) {
@@ -1274,9 +1294,9 @@ public abstract class Entity implements io.gomint.entity.Entity {
         List<Object> pos = compound.getList( "Pos", false );
         if ( pos != null ) {
             // Data in the array are three floats (x, y, z)
-            float x = (float) pos.get( 0 );
-            float y = (float) pos.get( 1 );
-            float z = (float) pos.get( 2 );
+            float x = MathUtils.ensureFloat( pos.get( 0 ) );
+            float y = MathUtils.ensureFloat( pos.get( 1 ) );
+            float z = MathUtils.ensureFloat( pos.get( 2 ) );
 
             this.setPosition( x, y, z );
         }
@@ -1285,9 +1305,9 @@ public abstract class Entity implements io.gomint.entity.Entity {
         List<Object> motion = compound.getList( "Motion", false );
         if ( motion != null ) {
             // Data in the array are three floats (x, y, z)
-            float x = (float) motion.get( 0 );
-            float y = (float) motion.get( 1 );
-            float z = (float) motion.get( 2 );
+            float x = MathUtils.ensureFloat( motion.get( 0 ) );
+            float y = MathUtils.ensureFloat( motion.get( 1 ) );
+            float z = MathUtils.ensureFloat( motion.get( 2 ) );
 
             this.transform.setMotion( x, y, z );
         }

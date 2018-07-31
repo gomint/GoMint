@@ -23,8 +23,8 @@ public class EnchantmentFlame extends Enchantment implements io.gomint.enchant.E
      *
      * @param level of this enchantment
      */
-    public EnchantmentFlame( short level ) {
-        super( (short) 1, level );
+    public EnchantmentFlame() {
+        super( (short) 1 );
     }
 
     @Override

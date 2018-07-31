@@ -1,5 +1,4 @@
 package io.gomint.server.inventory.item;
-
 import io.gomint.inventory.item.ItemType;
 import io.gomint.math.Vector;
 import io.gomint.server.entity.Attribute;
@@ -19,15 +18,7 @@ import io.gomint.world.block.BlockFace;
 @RegisterInfo( id = 284 )
 public class ItemGoldenShovel extends ItemReduceTierGolden implements io.gomint.inventory.item.ItemGoldenShovel {
 
-    // CHECKSTYLE:OFF
-    public ItemGoldenShovel( short data, int amount ) {
-        super( 284, data, amount );
-    }
 
-    public ItemGoldenShovel( short data, int amount, NBTTagCompound nbt ) {
-        super( 284, data, amount, nbt );
-    }
-    // CHECKSTYLE:ON
 
     @Override
     public boolean interact( EntityPlayer entity, BlockFace face, Vector clickPosition, Block clickedBlock ) {

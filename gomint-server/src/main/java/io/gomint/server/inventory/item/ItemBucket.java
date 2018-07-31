@@ -1,5 +1,4 @@
 package io.gomint.server.inventory.item;
-
 import io.gomint.inventory.item.ItemType;
 
 import io.gomint.math.Vector;
@@ -15,15 +14,7 @@ import io.gomint.taglib.NBTTagCompound;
 @RegisterInfo( id = 325 )
 public class ItemBucket extends ItemStack implements io.gomint.inventory.item.ItemBucket {
 
-    // CHECKSTYLE:OFF
-    public ItemBucket( short data, int amount ) {
-        super( 325, data, amount );
-    }
 
-    public ItemBucket( short data, int amount, NBTTagCompound nbt ) {
-        super( 325, data, amount, nbt );
-    }
-    // CHECKSTYLE:ON
 
     @Override
     public byte getMaximumAmount() {

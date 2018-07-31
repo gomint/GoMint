@@ -91,4 +91,18 @@ public final class MathUtils {
         return number * y;
     }
 
+    /**
+     * Ensure that the object we are given in comes out as float
+     *
+     * @param o which should be converted
+     * @return float representation of the object
+     */
+    public static float ensureFloat( Object o ) {
+        if ( o instanceof Double ) {
+            return ( (Double) o ).floatValue();
+        }
+
+        return (float) o;
+    }
+
 }

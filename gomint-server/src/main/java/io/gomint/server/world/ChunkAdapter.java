@@ -26,10 +26,6 @@ import io.gomint.world.Biome;
 import io.gomint.world.Chunk;
 import io.gomint.world.WorldLayer;
 import io.gomint.world.block.Block;
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.ByteBufInputStream;
-import io.netty.buffer.ByteBufOutputStream;
-import io.netty.buffer.PooledByteBufAllocator;
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectIterator;
@@ -42,13 +38,18 @@ import lombok.ToString;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.ref.SoftReference;
 import java.nio.ByteOrder;
 import java.text.NumberFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Consumer;
@@ -115,7 +116,7 @@ public class ChunkAdapter implements Chunk {
      * @param dT            The delta from the full second which has been calculated in the last tick
      */
     final void tickRandomBlocks( long currentTimeMS, float dT ) {
-        for ( ChunkSlice chunkSlice: this.chunkSlices ) {
+        for ( ChunkSlice chunkSlice : this.chunkSlices ) {
             if ( chunkSlice != null && !chunkSlice.isAllAir() ) {
                 this.tickRandomBlocksForSlice( chunkSlice, currentTimeMS, dT );
             }
@@ -443,8 +444,8 @@ public class ChunkAdapter implements Chunk {
      * @param z The z-coordinate relative to the chunk
      * @return The maximum block height
      */
-    public byte getHeight( int x, int z ) {
-        return this.height[( z << 4 ) + x];
+    public int getHeight( int x, int z ) {
+        return this.height[( z << 4 ) + x] & 0xFF;
     }
 
     @Override
@@ -549,7 +550,7 @@ public class ChunkAdapter implements Chunk {
             }, ByteOrder.LITTLE_ENDIAN );
             nbtWriter.setUseVarint( true );
 
-            for ( TileEntity tileEntity: tileEntities ) {
+            for ( TileEntity tileEntity : tileEntities ) {
                 NBTTagCompound compound = new NBTTagCompound( "" );
                 tileEntity.toCompound( compound );
 
@@ -576,7 +577,7 @@ public class ChunkAdapter implements Chunk {
     public Collection<TileEntity> getTileEntities() {
         List<TileEntity> tileEntities = new ArrayList<>();
 
-        for ( ChunkSlice chunkSlice: this.chunkSlices ) {
+        for ( ChunkSlice chunkSlice : this.chunkSlices ) {
             if ( chunkSlice != null ) {
                 tileEntities.addAll( chunkSlice.getTileEntities().values() );
             }
@@ -599,7 +600,7 @@ public class ChunkAdapter implements Chunk {
     public <T extends io.gomint.entity.Entity> void iterateEntities( Class<T> entityClass, Consumer<T> entityConsumer ) {
         // Iterate over all chunks
         if ( this.entities != null ) {
-            for ( Long2ObjectMap.Entry<io.gomint.entity.Entity> entry: this.entities.long2ObjectEntrySet() ) {
+            for ( Long2ObjectMap.Entry<io.gomint.entity.Entity> entry : this.entities.long2ObjectEntrySet() ) {
                 if ( entityClass.isAssignableFrom( entry.getValue().getClass() ) ) {
                     entityConsumer.accept( (T) entry.getValue() );
                 }
@@ -695,7 +696,7 @@ public class ChunkAdapter implements Chunk {
     }
 
     public void tickTiles( long currentTimeMS, float dT ) {
-        for ( ChunkSlice chunkSlice: this.chunkSlices ) {
+        for ( ChunkSlice chunkSlice : this.chunkSlices ) {
             if ( chunkSlice != null ) {
                 ObjectIterator<Short2ObjectMap.Entry<TileEntity>> iterator = chunkSlice.getTileEntities().short2ObjectEntrySet().fastIterator();
                 while ( iterator.hasNext() ) {

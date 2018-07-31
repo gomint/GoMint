@@ -18,10 +18,6 @@ import io.gomint.server.registry.RegisterInfo;
 @RegisterInfo( id = 14 )
 public class Invisibility extends Effect {
 
-    public Invisibility( EffectManager manager, int amplifier, long runoutTimer ) {
-        super( manager, amplifier, runoutTimer );
-    }
-
     @Override
     public byte getId() {
         return 14;

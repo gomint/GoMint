@@ -23,8 +23,8 @@ public class EnchantmentFortune extends Enchantment implements io.gomint.enchant
      *
      * @param level of this enchantment
      */
-    public EnchantmentFortune( short level ) {
-        super( (short) 3, level );
+    public EnchantmentFortune() {
+        super( (short) 3 );
     }
 
     @Override

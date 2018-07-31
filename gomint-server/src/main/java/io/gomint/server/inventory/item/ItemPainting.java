@@ -1,5 +1,4 @@
 package io.gomint.server.inventory.item;
-
 import io.gomint.inventory.item.ItemType;
 
 import io.gomint.server.registry.RegisterInfo;
@@ -12,15 +11,7 @@ import io.gomint.taglib.NBTTagCompound;
 @RegisterInfo( id = 321 )
  public class ItemPainting extends ItemStack implements io.gomint.inventory.item.ItemPainting {
 
-    // CHECKSTYLE:OFF
-    public ItemPainting( short data, int amount ) {
-        super( 321, data, amount );
-    }
 
-    public ItemPainting( short data, int amount, NBTTagCompound nbt ) {
-        super( 321, data, amount, nbt );
-    }
-    // CHECKSTYLE:ON
 
     @Override
     public ItemType getType() {

@@ -13,6 +13,6 @@ public interface GeneratorCallback<T> {
      * @param clazz for which we need a ASM generator
      * @return generator for the given class
      */
-    T generate( Class<?> clazz );
+    Generator<T> generate( Class<?> clazz );
 
 }

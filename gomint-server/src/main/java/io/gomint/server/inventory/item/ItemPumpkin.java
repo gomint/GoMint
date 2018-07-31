@@ -1,5 +1,4 @@
 package io.gomint.server.inventory.item;
-
 import io.gomint.inventory.item.ItemType;
 
 import io.gomint.server.registry.RegisterInfo;
@@ -12,15 +11,7 @@ import io.gomint.taglib.NBTTagCompound;
 @RegisterInfo( id = 86 )
  public class ItemPumpkin extends ItemStack implements io.gomint.inventory.item.ItemPumpkin {
 
-    // CHECKSTYLE:OFF
-    public ItemPumpkin( short data, int amount ) {
-        super( 86, data, amount );
-    }
 
-    public ItemPumpkin( short data, int amount, NBTTagCompound nbt ) {
-        super( 86, data, amount, nbt );
-    }
-    // CHECKSTYLE:ON
 
     @Override
     public ItemType getType() {

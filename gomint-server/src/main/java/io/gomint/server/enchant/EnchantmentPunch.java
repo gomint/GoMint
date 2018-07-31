@@ -23,8 +23,8 @@ public class EnchantmentPunch extends Enchantment implements io.gomint.enchant.E
      *
      * @param level of this enchantment
      */
-    public EnchantmentPunch( short level ) {
-        super( (short) 2, level );
+    public EnchantmentPunch() {
+        super( (short) 2 );
     }
 
     @Override

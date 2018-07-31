@@ -23,8 +23,8 @@ public class EnchantmentFireAspect extends Enchantment implements io.gomint.ench
      *
      * @param level of this enchantment
      */
-    public EnchantmentFireAspect( short level ) {
-        super( (short) 2, level );
+    public EnchantmentFireAspect() {
+        super( (short) 2 );
     }
 
     @Override

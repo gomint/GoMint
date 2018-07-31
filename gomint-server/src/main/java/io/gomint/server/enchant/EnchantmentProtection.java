@@ -23,8 +23,8 @@ public class EnchantmentProtection extends Enchantment implements io.gomint.ench
      *
      * @param level of this enchantment
      */
-    public EnchantmentProtection( short level ) {
-        super( (short) 4, level );
+    public EnchantmentProtection() {
+        super( (short) 4 );
     }
 
     @Override

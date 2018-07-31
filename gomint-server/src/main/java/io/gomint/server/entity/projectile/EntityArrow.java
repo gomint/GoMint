@@ -17,6 +17,7 @@ import io.gomint.math.Vector;
 import io.gomint.server.entity.Entity;
 import io.gomint.server.entity.EntityPlayer;
 import io.gomint.server.entity.EntityType;
+import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.util.Values;
 import io.gomint.server.world.WorldAdapter;
 import io.gomint.util.random.FastRandom;
@@ -30,6 +31,7 @@ import java.util.concurrent.TimeUnit;
  * @author geNAZt
  * @version 1.0
  */
+@RegisterInfo( id = 80 )
 public class EntityArrow extends EntityProjectile implements io.gomint.entity.projectile.EntityArrow {
 
     private boolean firedHitEvent = false;
@@ -42,6 +44,14 @@ public class EntityArrow extends EntityProjectile implements io.gomint.entity.pr
     private int powerModifier;
     private int punchModifier;
     private int flameModifier;
+
+    /**
+     * Create entity for API
+     */
+    public EntityArrow() {
+        super( null, EntityType.ARROW, null );
+        this.setSize( 0.5f, 0.5f );
+    }
 
     /**
      * Construct a new Entity

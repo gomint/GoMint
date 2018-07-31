@@ -208,4 +208,25 @@ public interface World {
      */
     void save();
 
+    /**
+     * Get the highest block at the given coordinates
+     *
+     * @param x coordinate
+     * @param z coordinate
+     * @return highest block at the normal layer
+     */
+    Block getHighestBlockAt( int x, int z );
+
+    /**
+     * Get the highest block at the given coordinates. Please care this can be wrong, height calculations
+     * are always done on the normal layer. So the highest block on the underwater layer may be wrong at all
+     * times.
+     *
+     * @param x coordinate
+     * @param z coordinate
+     * @param layer on which we want to lookup
+     * @return highest block at the normal layer
+     */
+    Block getHighestBlockAt( int x, int z, WorldLayer layer );
+
 }

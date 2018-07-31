@@ -1,5 +1,4 @@
 package io.gomint.server.inventory.item;
-
 import io.gomint.inventory.item.ItemType;
 import io.gomint.math.Vector;
 import io.gomint.server.entity.EntityPlayer;
@@ -18,15 +17,7 @@ import io.gomint.world.block.BlockFace;
 @RegisterInfo( id = 294 )
 public class ItemGoldenHoe extends ItemReduceTierGolden implements io.gomint.inventory.item.ItemGoldenHoe {
 
-    // CHECKSTYLE:OFF
-    public ItemGoldenHoe( short data, int amount ) {
-        super( 294, data, amount );
-    }
 
-    public ItemGoldenHoe( short data, int amount, NBTTagCompound nbt ) {
-        super( 294, data, amount, nbt );
-    }
-    // CHECKSTYLE:ON
 
     @Override
     public boolean interact( EntityPlayer entity, BlockFace face, Vector clickPosition, Block clickedBlock ) {

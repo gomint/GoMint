@@ -23,8 +23,8 @@ public class EnchantmentPower extends Enchantment implements io.gomint.enchant.E
      *
      * @param level of this enchantment
      */
-    public EnchantmentPower( short level ) {
-        super( (short) 5, level );
+    public EnchantmentPower() {
+        super( (short) 5 );
     }
 
     @Override

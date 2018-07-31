@@ -6,6 +6,11 @@ import io.gomint.server.entity.EntityType;
 import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.world.WorldAdapter;
 
+/**
+ * @author BlackyPaw
+ * @author geNAZt
+ * @version 1.2
+ */
 @RegisterInfo( id = 11 )
 public class EntityCow extends EntityLiving implements io.gomint.entity.passive.EntityCow {
 
@@ -37,6 +42,12 @@ public class EntityCow extends EntityLiving implements io.gomint.entity.passive.
     @Override
     public void update( long currentTimeMS, float dT ) {
         super.update( currentTimeMS, dT );
+    }
+
+    @Override
+    protected void setupAI() {
+        // Kick of AI
+        // this.behaviour.getMachine().switchState( new AIPassiveIdleMovement( this.behaviour.getMachine(), this.world, new PathfindingEngine( this.getTransform() ) ) );
     }
 
 }

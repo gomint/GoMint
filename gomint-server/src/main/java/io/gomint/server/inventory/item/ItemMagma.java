@@ -4,7 +4,6 @@
  * This code is licensed under the BSD license found in the
  * LICENSE file in the root directory of this source tree.
  */
-
 package io.gomint.server.inventory.item;
 
 import io.gomint.inventory.item.ItemType;
@@ -18,15 +17,7 @@ import io.gomint.taglib.NBTTagCompound;
 @RegisterInfo( id = 213 )
 public class ItemMagma extends ItemStack implements io.gomint.inventory.item.ItemMagmaCream {
 
-    // CHECKSTYLE:OFF
-    public ItemMagma( short data, int amount ) {
-        super( 213, data, amount );
-    }
 
-    public ItemMagma( short data, int amount, NBTTagCompound nbt ) {
-        super( 213, data, amount, nbt );
-    }
-    // CHECKSTYLE:ON
 
     @Override
     public ItemType getType() {

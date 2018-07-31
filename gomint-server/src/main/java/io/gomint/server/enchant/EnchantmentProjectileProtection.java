@@ -23,8 +23,8 @@ public class EnchantmentProjectileProtection extends Enchantment implements io.g
      *
      * @param level of this enchantment
      */
-    public EnchantmentProjectileProtection( short level ) {
-        super( (short) 4, level );
+    public EnchantmentProjectileProtection() {
+        super( (short) 4 );
     }
 
     @Override

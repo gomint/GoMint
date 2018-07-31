@@ -20,8 +20,8 @@ class JwtSignatureES384 implements JwtSignature {
         // Create signature and convert to PublicKey:
         Signature signature;
         try {
-            signature = Signature.getInstance( "SHA384withECDSA", "BC" );
-        } catch ( NoSuchAlgorithmException | NoSuchProviderException e ) {
+            signature = Signature.getInstance( "SHA384withECDSA" );
+        } catch ( NoSuchAlgorithmException e ) {
             throw new JwtSignatureException( "Could not create signature for ES384 algorithm", e );
         }
         if ( !( key instanceof PublicKey ) ) {
@@ -47,8 +47,8 @@ class JwtSignatureES384 implements JwtSignature {
         // Create signature and convert to PrivateKey:
         Signature signature;
         try {
-            signature = Signature.getInstance( "SHA384withECDSA", "BC" );
-        } catch ( NoSuchAlgorithmException | NoSuchProviderException e ) {
+            signature = Signature.getInstance( "SHA384withECDSA" );
+        } catch ( NoSuchAlgorithmException e ) {
             throw new JwtSignatureException( "Could not create signature for ES384 algorithm", e );
         }
         if ( !( key instanceof PrivateKey ) ) {

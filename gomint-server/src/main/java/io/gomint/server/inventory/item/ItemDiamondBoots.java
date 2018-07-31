@@ -1,5 +1,4 @@
 package io.gomint.server.inventory.item;
-
 import io.gomint.inventory.item.ItemType;
 
 import io.gomint.math.Vector;
@@ -16,15 +15,7 @@ import io.gomint.world.block.BlockFace;
 @RegisterInfo( id = 313 )
 public class ItemDiamondBoots extends ItemArmor implements io.gomint.inventory.item.ItemDiamondBoots {
 
-    // CHECKSTYLE:OFF
-    public ItemDiamondBoots( short data, int amount ) {
-        super( 313, data, amount );
-    }
 
-    public ItemDiamondBoots( short data, int amount, NBTTagCompound nbt ) {
-        super( 313, data, amount, nbt );
-    }
-    // CHECKSTYLE:ON
 
     @Override
     public float getReductionValue() {

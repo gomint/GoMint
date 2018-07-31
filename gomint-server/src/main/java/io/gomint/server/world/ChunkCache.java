@@ -9,7 +9,9 @@ package io.gomint.server.world;
 
 import io.gomint.math.MathUtils;
 import io.gomint.server.entity.EntityPlayer;
+import io.gomint.server.util.PerformanceHacks;
 import io.gomint.server.util.Values;
+import io.gomint.server.util.performance.UnsafeAllocator;
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.longs.LongIterator;
@@ -98,8 +100,8 @@ public class ChunkCache {
 
             // Check if this is part of the spawn
             if ( spawnAreaSize > 0 &&
-                currentX >= spawnXChunk - spawnAreaSize && currentX <= spawnXChunk + spawnAreaSize &&
-                currentZ >= spawnZChunk - spawnAreaSize && currentZ <= spawnZChunk + spawnAreaSize ) {
+                ( Math.abs( currentX ) - spawnXChunk <= spawnAreaSize &&
+                Math.abs( currentZ ) - spawnZChunk <= spawnAreaSize ) ) {
                 continue;
             }
 
@@ -127,6 +129,10 @@ public class ChunkCache {
             LongIterator toRemoveCursor = this.tempHashes[1].iterator();
             while ( toRemoveCursor.hasNext() ) {
                 this.cachedChunks.remove( toRemoveCursor.nextLong() );
+            }
+
+            if ( PerformanceHacks.isUnsafeEnabled() ) {
+                UnsafeAllocator.printUsage();
             }
         }
     }

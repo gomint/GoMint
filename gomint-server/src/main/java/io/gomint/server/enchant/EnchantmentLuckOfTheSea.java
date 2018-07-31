@@ -23,8 +23,8 @@ public class EnchantmentLuckOfTheSea extends Enchantment implements io.gomint.en
      *
      * @param level of this enchantment
      */
-    public EnchantmentLuckOfTheSea( short level ) {
-        super( (short) 3, level );
+    public EnchantmentLuckOfTheSea() {
+        super( (short) 3 );
     }
 
     @Override

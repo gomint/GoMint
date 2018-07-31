@@ -1,5 +1,4 @@
 package io.gomint.server.inventory.item;
-
 import io.gomint.inventory.item.ItemType;
 import io.gomint.math.Vector;
 import io.gomint.server.entity.EntityPlayer;
@@ -15,15 +14,7 @@ import io.gomint.world.block.BlockFace;
 @RegisterInfo( id = 444 )
 public class ItemElytra extends ItemStack implements io.gomint.inventory.item.ItemElytra {
 
-    // CHECKSTYLE:OFF
-    public ItemElytra( short data, int amount ) {
-        super( 444, data, amount );
-    }
 
-    public ItemElytra( short data, int amount, NBTTagCompound nbt ) {
-        super( 444, data, amount, nbt );
-    }
-    // CHECKSTYLE:ON
 
     @Override
     public ItemType getType() {

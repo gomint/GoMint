@@ -23,8 +23,8 @@ public class EnchantmentSmite extends Enchantment implements io.gomint.enchant.E
      *
      * @param level of this enchantment
      */
-    public EnchantmentSmite( short level ) {
-        super( (short) 5, level );
+    public EnchantmentSmite() {
+        super( (short) 5 );
     }
 
     @Override

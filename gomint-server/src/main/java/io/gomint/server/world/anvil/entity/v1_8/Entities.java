@@ -8,12 +8,15 @@
 package io.gomint.server.world.anvil.entity.v1_8;
 
 import io.gomint.server.entity.Entity;
+import io.gomint.server.util.DumpUtil;
 import io.gomint.server.world.WorldAdapter;
 import io.gomint.server.world.anvil.entity.EntityConverter;
 import io.gomint.server.world.anvil.entity.EntityConverters;
 import io.gomint.taglib.NBTTagCompound;
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author geNAZt
@@ -21,6 +24,7 @@ import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
  */
 public class Entities implements EntityConverters {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger( Entities.class );
     private final Object2ObjectMap<String, EntityConverter> converters;
     private final WorldAdapter world;
 
@@ -41,6 +45,8 @@ public class Entities implements EntityConverters {
 
         EntityConverter<? extends Entity> converter = this.converters.get( id );
         if ( converter == null ) {
+            LOGGER.warn( "Unknown entity {}", id );
+            DumpUtil.dumpNBTCompund( compound );
             return null;
         }
 

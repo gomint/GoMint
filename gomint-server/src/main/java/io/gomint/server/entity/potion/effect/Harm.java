@@ -19,8 +19,7 @@ import io.gomint.server.registry.RegisterInfo;
 @RegisterInfo( id = 7 )
 public class Harm extends Effect {
 
-    public Harm( EffectManager manager, int amplifier, long runoutTimer ) {
-        super( manager, amplifier, runoutTimer );
+    public Harm() {
         this.visible = false;
     }
 

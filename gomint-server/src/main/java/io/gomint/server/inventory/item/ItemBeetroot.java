@@ -1,5 +1,4 @@
 package io.gomint.server.inventory.item;
-
 import io.gomint.inventory.item.ItemType;
 
 import io.gomint.server.registry.RegisterInfo;
@@ -12,15 +11,7 @@ import io.gomint.taglib.NBTTagCompound;
 @RegisterInfo( id = 457 )
 public class ItemBeetroot extends ItemFood implements io.gomint.inventory.item.ItemBeetroot {
 
-    // CHECKSTYLE:OFF
-    public ItemBeetroot( short data, int amount ) {
-        super( 457, data, amount );
-    }
 
-    public ItemBeetroot( short data, int amount, NBTTagCompound nbt ) {
-        super( 457, data, amount, nbt );
-    }
-    // CHECKSTYLE:ON
 
     @Override
     public float getSaturation() {

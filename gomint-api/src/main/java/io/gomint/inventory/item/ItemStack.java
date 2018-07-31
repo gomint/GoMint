@@ -33,11 +33,12 @@ public interface ItemStack {
     byte getMaximumAmount();
 
     /**
-     * Set the amount of items in this stack. This is silently capped to {@link #getMaximumAmount()}
+     * Set the amount of items in this stack. This is silently capped to {@link #getMaximumAmount()}, also this
+     * item stack returns air when amount is <= 0
      *
      * @param amount of items which should be in this stack
      */
-    void setAmount( int amount );
+    ItemStack setAmount( int amount );
 
     /**
      * Get the metadata from this item stack
@@ -51,7 +52,7 @@ public interface ItemStack {
      *
      * @param data to set into this stack
      */
-    void setData( short data );
+    ItemStack setData( short data );
 
     /**
      * Get the NBT data from this item stack
@@ -65,7 +66,7 @@ public interface ItemStack {
      *
      * @param name of this item stack
      */
-    void setCustomName( String name );
+    ItemStack setCustomName( String name );
 
     /**
      * Get the custom name of this item
@@ -79,7 +80,7 @@ public interface ItemStack {
      *
      * @param lore which should be used in this item stack
      */
-    void setLore( String ... lore );
+    ItemStack setLore( String ... lore );
 
     /**
      * Get the lore of this item stack
@@ -101,7 +102,7 @@ public interface ItemStack {
      * @param clazz of the enchantment
      * @param level of the enchantment
      */
-    void addEnchantment( Class<? extends Enchantment> clazz, short level );
+    ItemStack addEnchantment( Class<? extends Enchantment> clazz, short level );
 
     /**
      * Get the enchantment or null
@@ -117,6 +118,6 @@ public interface ItemStack {
      *
      * @param clazz of the enchantment
      */
-    void removeEnchantment( Class<? extends Enchantment> clazz );
+    ItemStack removeEnchantment( Class<? extends Enchantment> clazz );
 
 }

@@ -9,6 +9,7 @@ import java.util.List;
 public abstract class ParamValidator {
 
     private boolean optional;
+    private String postfix;
 
     /**
      * Get the type of this param.
@@ -57,6 +58,25 @@ public abstract class ParamValidator {
      */
     public void setOptional( boolean optional ) {
         this.optional = optional;
+    }
+
+    /**
+     * Get the attached postfix for this param validator
+     *
+     * @return postfix of this validator
+     */
+    public String getPostfix() {
+        return this.postfix;
+    }
+
+    /**
+     * Set the postfix for this param validator. Postfixes are currently only supported
+     * on int validators, if set to something else it will be ignored.
+     *
+     * @param postfix which should be used
+     */
+    public void setPostfix( String postfix ) {
+        this.postfix = postfix;
     }
 
     /**

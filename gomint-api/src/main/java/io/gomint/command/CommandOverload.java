@@ -64,6 +64,32 @@ public class CommandOverload {
     }
 
     /**
+     * Add a param to the command. Params are passed to their validators when the command gets
+     * executed.
+     *
+     * @param name      of the parameter
+     * @param validator which should decide if the parameter is valid
+     * @param optional  true when parameter is optional, false when not
+     * @param postfix   value which should be postfixed to the param
+     * @return the command currently build
+     */
+    public CommandOverload param( String name, ParamValidator validator, boolean optional, String postfix ) {
+        if ( this.parameters == null ) {
+            this.parameters = new LinkedHashMap<>();
+        }
+
+        // Special case CommandValidator
+        if ( validator instanceof CommandValidator ) {
+            validator.values().add( name );
+        }
+
+        validator.setOptional( optional );
+        validator.setPostfix( postfix );
+        this.parameters.put( name, validator );
+        return this;
+    }
+
+    /**
      * Return the amount of optional parts in this overload
      *
      * @return amount of optionals

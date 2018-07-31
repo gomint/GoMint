@@ -4,7 +4,6 @@
  * This code is licensed under the BSD license found in the
  * LICENSE file in the root directory of this source tree.
  */
-
 package io.gomint.server.inventory.item;
 
 import io.gomint.inventory.item.ItemType;
@@ -18,15 +17,7 @@ import io.gomint.taglib.NBTTagCompound;
 @RegisterInfo( id = 189 )
 public class ItemChainCommandBlock extends ItemStack implements io.gomint.inventory.item.ItemChainCommandBlock {
 
-    // CHECKSTYLE:OFF
-    public ItemChainCommandBlock( short data, int amount ) {
-        super( 189, data, amount );
-    }
 
-    public ItemChainCommandBlock( short data, int amount, NBTTagCompound nbt ) {
-        super( 189, data, amount, nbt );
-    }
-    // CHECKSTYLE:ON
 
     @Override
     public ItemType getType() {

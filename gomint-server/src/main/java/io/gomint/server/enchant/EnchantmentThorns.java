@@ -23,8 +23,8 @@ public class EnchantmentThorns extends Enchantment implements io.gomint.enchant.
      *
      * @param level of this enchantment
      */
-    public EnchantmentThorns( short level ) {
-        super( (short) 3, level );
+    public EnchantmentThorns() {
+        super( (short) 3 );
     }
 
     @Override

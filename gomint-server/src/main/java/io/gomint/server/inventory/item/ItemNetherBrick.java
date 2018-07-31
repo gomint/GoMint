@@ -1,5 +1,4 @@
 package io.gomint.server.inventory.item;
-
 import io.gomint.inventory.item.ItemType;
 
 import io.gomint.server.registry.RegisterInfo;
@@ -12,15 +11,7 @@ import io.gomint.taglib.NBTTagCompound;
 @RegisterInfo( id = 405 )
  public class ItemNetherBrick extends ItemStack implements io.gomint.inventory.item.ItemNetherBrick {
 
-    // CHECKSTYLE:OFF
-    public ItemNetherBrick( short data, int amount ) {
-        super( 405, data, amount );
-    }
 
-    public ItemNetherBrick( short data, int amount, NBTTagCompound nbt ) {
-        super( 405, data, amount, nbt );
-    }
-    // CHECKSTYLE:ON
 
     @Override
     public ItemType getType() {

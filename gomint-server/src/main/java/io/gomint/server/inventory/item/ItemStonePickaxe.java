@@ -1,5 +1,4 @@
 package io.gomint.server.inventory.item;
-
 import io.gomint.inventory.item.ItemType;
 
 import io.gomint.server.entity.Attribute;
@@ -15,15 +14,7 @@ import io.gomint.taglib.NBTTagCompound;
 @RegisterInfo( id = 274 )
 public class ItemStonePickaxe extends ItemReduceTierStone implements io.gomint.inventory.item.ItemStonePickaxe {
 
-    // CHECKSTYLE:OFF
-    public ItemStonePickaxe( short data, int amount ) {
-        super( 274, data, amount );
-    }
 
-    public ItemStonePickaxe( short data, int amount, NBTTagCompound nbt ) {
-        super( 274, data, amount, nbt );
-    }
-    // CHECKSTYLE:ON
 
     @Override
     public void gotInHand( EntityPlayer player ) {

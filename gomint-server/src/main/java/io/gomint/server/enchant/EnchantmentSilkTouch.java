@@ -23,8 +23,8 @@ public class EnchantmentSilkTouch extends Enchantment {
      *
      * @param level of this enchantment
      */
-    public EnchantmentSilkTouch( short level ) {
-        super( (short) 1, level );
+    public EnchantmentSilkTouch() {
+        super( (short) 1 );
     }
 
     @Override

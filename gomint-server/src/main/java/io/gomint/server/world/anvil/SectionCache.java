@@ -7,7 +7,7 @@
 
 package io.gomint.server.world.anvil;
 
-import io.gomint.server.world.NibbleArray;
+import io.gomint.server.world.HeapNibbleArray;
 import lombok.Data;
 
 /**
@@ -19,8 +19,8 @@ public class SectionCache {
 
     private int sectionY;
     private byte[] blocks;
-    private NibbleArray add;
-    private NibbleArray data;
+    private HeapNibbleArray add;
+    private HeapNibbleArray data;
 
     public boolean isAllAir() {
         for ( byte block : blocks ) {

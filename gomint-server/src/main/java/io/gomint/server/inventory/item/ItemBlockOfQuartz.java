@@ -1,5 +1,4 @@
 package io.gomint.server.inventory.item;
-
 import io.gomint.inventory.item.ItemType;
 
 import io.gomint.server.registry.RegisterInfo;
@@ -12,15 +11,7 @@ import io.gomint.taglib.NBTTagCompound;
 @RegisterInfo( id = 155 )
  public class ItemBlockOfQuartz extends ItemStack implements io.gomint.inventory.item.ItemBlockOfQuartz {
 
-    // CHECKSTYLE:OFF
-    public ItemBlockOfQuartz( short data, int amount ) {
-        super( 155, data, amount );
-    }
 
-    public ItemBlockOfQuartz( short data, int amount, NBTTagCompound nbt ) {
-        super( 155, data, amount, nbt );
-    }
-    // CHECKSTYLE:ON
 
     @Override
     public ItemType getType() {

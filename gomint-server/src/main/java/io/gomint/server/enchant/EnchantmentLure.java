@@ -23,8 +23,8 @@ public class EnchantmentLure extends Enchantment implements io.gomint.enchant.En
      *
      * @param level of this enchantment
      */
-    public EnchantmentLure( short level ) {
-        super( (short) 3, level );
+    public EnchantmentLure() {
+        super( (short) 3 );
     }
 
     @Override

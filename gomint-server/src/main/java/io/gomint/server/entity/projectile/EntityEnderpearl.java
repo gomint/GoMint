@@ -15,6 +15,7 @@ import io.gomint.math.MathUtils;
 import io.gomint.math.Vector;
 import io.gomint.server.entity.EntityPlayer;
 import io.gomint.server.entity.EntityType;
+import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.util.Values;
 import io.gomint.server.world.WorldAdapter;
 import io.gomint.util.random.FastRandom;
@@ -27,9 +28,18 @@ import java.util.Set;
  * @author geNAZt
  * @version 1.0
  */
+@RegisterInfo( id = 87 )
 public class EntityEnderpearl extends EntityProjectile implements io.gomint.entity.projectile.EntityEnderpearl {
 
     private float lastUpdatedT;
+
+    /**
+     * Create entity for API
+     */
+    public EntityEnderpearl() {
+        super( null, EntityType.THROWN_ENDERPEARL, null );
+        this.setSize( 0.25f, 0.25f );
+    }
 
     /**
      * Construct a new Entity

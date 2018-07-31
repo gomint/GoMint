@@ -1,5 +1,4 @@
 package io.gomint.server.inventory.item;
-
 import io.gomint.inventory.item.ItemType;
 
 import io.gomint.server.registry.RegisterInfo;
@@ -12,15 +11,7 @@ import io.gomint.taglib.NBTTagCompound;
 @RegisterInfo( id = 64 )
 public class ItemWoodenDoorBlock extends ItemStack {
 
-    // CHECKSTYLE:OFF
-    public ItemWoodenDoorBlock( short data, int amount ) {
-        super( 64, data, amount );
-    }
 
-    public ItemWoodenDoorBlock( short data, int amount, NBTTagCompound nbt ) {
-        super( 64, data, amount, nbt );
-    }
-    // CHECKSTYLE:ON
 
     @Override
     public ItemType getType() {

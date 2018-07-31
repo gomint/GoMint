@@ -1,5 +1,4 @@
 package io.gomint.server.inventory.item;
-
 import io.gomint.inventory.item.ItemType;
 
 import io.gomint.math.Vector;
@@ -16,15 +15,7 @@ import io.gomint.world.block.BlockFace;
 @RegisterInfo( id = 315 )
 public class ItemGoldenChestplate extends ItemArmor implements io.gomint.inventory.item.ItemGoldenChestplate {
 
-    // CHECKSTYLE:OFF
-    public ItemGoldenChestplate( short data, int amount ) {
-        super( 315, data, amount );
-    }
 
-    public ItemGoldenChestplate( short data, int amount, NBTTagCompound nbt ) {
-        super( 315, data, amount, nbt );
-    }
-    // CHECKSTYLE:ON
 
     @Override
     public float getReductionValue() {

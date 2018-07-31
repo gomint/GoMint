@@ -17,12 +17,11 @@ import lombok.RequiredArgsConstructor;
  * @author geNAZt
  * @version 1.0
  */
-@RequiredArgsConstructor
 public abstract class Effect implements io.gomint.entity.potion.Effect {
 
-    private final EffectManager manager;
-    @Getter protected final int amplifier;
-    @Getter private final long runoutTimer;
+    private EffectManager manager;
+    @Getter protected int amplifier;
+    @Getter private long runoutTimer;
     @Getter protected boolean visible = true;
 
     public abstract byte getId();
@@ -33,6 +32,12 @@ public abstract class Effect implements io.gomint.entity.potion.Effect {
     public void setVisible( boolean value ) {
         this.visible = value;
         this.manager.updateEffect( this );
+    }
+
+    public void setData( EffectManager manager, int amplifier, long lengthInMS ) {
+        this.manager = manager;
+        this.amplifier = amplifier;
+        this.runoutTimer = lengthInMS;
     }
 
 }

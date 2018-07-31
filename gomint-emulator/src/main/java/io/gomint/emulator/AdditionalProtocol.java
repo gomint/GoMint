@@ -22,9 +22,6 @@ import static io.gomint.server.network.Protocol.*;
  */
 public class AdditionalProtocol {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger( Protocol.class );
-    private static final AtomicInteger ENTITY_COUNT = new AtomicInteger( 0 );
-
     /**
      * Creates a new packet instance given the packet ID found inside the first byte of any
      * packet's data.
@@ -50,12 +47,13 @@ public class AdditionalProtocol {
                 return new PacketTileEntityData();
 
             case PACKET_SPAWN_PLAYER:
-                LOGGER.warn( "Entity count: {}", ENTITY_COUNT.incrementAndGet() );
                 return null;
 
             case PACKET_SPAWN_ENTITY:
-                LOGGER.warn( "Entity count: {}", ENTITY_COUNT.incrementAndGet() );
                 return new PacketSpawnEntity();
+
+            case PACKET_AVAILABLE_COMMANDS:
+                return new PacketAvailableCommands();
 
             default:
                 // LOGGER.warn( "Unknown client side packetId: {}", Integer.toHexString( id & 0xFF ) );

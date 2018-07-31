@@ -23,7 +23,6 @@ import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.security.Security;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
@@ -61,9 +60,6 @@ public class UI {
                 frame.setVisible( true );
             }
         } );
-
-        // Connect to the server
-        Security.addProvider( new org.bouncycastle.jce.provider.BouncyCastleProvider() );
 
         ScheduledExecutorService service = Executors.newScheduledThreadPool( 8 ); // Amount of cores
         PostProcessExecutorService postProcessExecutorService = new PostProcessExecutorService();

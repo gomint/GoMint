@@ -23,8 +23,8 @@ public class EnchantmentLooting extends Enchantment implements io.gomint.enchant
      *
      * @param level of this enchantment
      */
-    public EnchantmentLooting( short level ) {
-        super( (short) 3, level );
+    public EnchantmentLooting() {
+        super( (short) 3 );
     }
 
     @Override

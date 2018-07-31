@@ -1,5 +1,4 @@
 package io.gomint.server.inventory.item;
-
 import io.gomint.inventory.item.ItemType;
 
 import io.gomint.server.registry.RegisterInfo;
@@ -12,15 +11,7 @@ import io.gomint.taglib.NBTTagCompound;
 @RegisterInfo( id = 109 )
  public class ItemStoneBrickStairs extends ItemStack implements io.gomint.inventory.item.ItemStoneBrickStairs {
 
-    // CHECKSTYLE:OFF
-    public ItemStoneBrickStairs( short data, int amount ) {
-        super( 109, data, amount );
-    }
 
-    public ItemStoneBrickStairs( short data, int amount, NBTTagCompound nbt ) {
-        super( 109, data, amount, nbt );
-    }
-    // CHECKSTYLE:ON
 
     @Override
     public ItemType getType() {

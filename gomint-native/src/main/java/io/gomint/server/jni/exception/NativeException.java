@@ -11,7 +11,7 @@ package io.gomint.server.jni.exception;
  * @author geNAZt
  * @version 1.0
  */
-public class NativeException extends Exception {
+public class NativeException extends RuntimeException {
 
     /**
      * This will be called from the C part of this JNI binding only!

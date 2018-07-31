@@ -1,5 +1,4 @@
 package io.gomint.server.inventory.item;
-
 import io.gomint.event.entity.projectile.ProjectileLaunchEvent;
 import io.gomint.inventory.item.ItemAir;
 import io.gomint.inventory.item.ItemType;
@@ -21,15 +20,7 @@ import io.gomint.taglib.NBTTagCompound;
 @RegisterInfo( id = 261 )
 public class ItemBow extends ItemStack implements io.gomint.inventory.item.ItemBow {
 
-    // CHECKSTYLE:OFF
-    public ItemBow( short data, int amount ) {
-        super( 261, data, amount );
-    }
 
-    public ItemBow( short data, int amount, NBTTagCompound nbt ) {
-        super( 261, data, amount, nbt );
-    }
-    // CHECKSTYLE:ON
 
     @Override
     public byte getMaximumAmount() {

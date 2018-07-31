@@ -4,7 +4,6 @@
  * This code is licensed under the BSD license found in the
  * LICENSE file in the root directory of this source tree.
  */
-
 package io.gomint.server.inventory.item;
 
 import io.gomint.inventory.item.ItemType;
@@ -18,15 +17,7 @@ import io.gomint.taglib.NBTTagCompound;
 @RegisterInfo( id = -5 )
 public class ItemStripped4 extends ItemStack {
 
-    // CHECKSTYLE:OFF
-    public ItemStripped4( short data, int amount ) {
-        super( -5, data, amount );
-    }
 
-    public ItemStripped4( short data, int amount, NBTTagCompound nbt ) {
-        super( -5, data, amount, nbt );
-    }
-    // CHECKSTYLE:ON
 
     @Override
     public ItemType getType() {

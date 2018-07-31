@@ -21,10 +21,6 @@ import io.gomint.server.registry.RegisterInfo;
 @RegisterInfo( id = 2 )
 public class Slowness extends Effect {
 
-    public Slowness( EffectManager manager, int amplifier, long runoutTimer ) {
-        super( manager, amplifier, runoutTimer );
-    }
-
     @Override
     public byte getId() {
         return 2;

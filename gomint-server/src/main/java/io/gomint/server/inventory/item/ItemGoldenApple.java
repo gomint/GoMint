@@ -1,5 +1,4 @@
 package io.gomint.server.inventory.item;
-
 import io.gomint.inventory.item.ItemType;
 
 import io.gomint.entity.potion.PotionEffect;
@@ -16,15 +15,7 @@ import java.util.concurrent.TimeUnit;
 @RegisterInfo( id = 322 )
 public class ItemGoldenApple extends ItemFood implements io.gomint.inventory.item.ItemGoldenApple {
 
-    // CHECKSTYLE:OFF
-    public ItemGoldenApple( short data, int amount ) {
-        super( 322, data, amount );
-    }
 
-    public ItemGoldenApple( short data, int amount, NBTTagCompound nbt ) {
-        super( 322, data, amount, nbt );
-    }
-    // CHECKSTYLE:ON
 
     @Override
     public float getSaturation() {

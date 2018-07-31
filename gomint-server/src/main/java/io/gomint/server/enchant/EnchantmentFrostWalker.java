@@ -19,11 +19,9 @@ public class EnchantmentFrostWalker extends Enchantment implements io.gomint.enc
 
     /**
      * Create new enchantment smite
-     *
-     * @param level of this enchantment
      */
-    public EnchantmentFrostWalker( short level ) {
-        super( (short) 2, level );
+    public EnchantmentFrostWalker() {
+        super( (short) 2 );
     }
 
     @Override

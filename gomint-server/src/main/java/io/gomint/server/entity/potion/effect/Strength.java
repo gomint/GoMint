@@ -21,10 +21,6 @@ import io.gomint.server.registry.RegisterInfo;
 @RegisterInfo( id = 5 )
 public class Strength extends Effect {
 
-    public Strength( EffectManager manager, int amplifier, long runoutTimer ) {
-        super( manager, amplifier, runoutTimer );
-    }
-
     @Override
     public byte getId() {
         return 5;

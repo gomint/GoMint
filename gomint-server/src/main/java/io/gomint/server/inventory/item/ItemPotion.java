@@ -1,5 +1,4 @@
 package io.gomint.server.inventory.item;
-
 import io.gomint.inventory.item.ItemType;
 import io.gomint.server.entity.EntityPlayer;
 import io.gomint.server.inventory.item.category.ItemConsumable;
@@ -13,15 +12,7 @@ import io.gomint.taglib.NBTTagCompound;
 @RegisterInfo( id = 373 )
 public class ItemPotion extends ItemStack implements io.gomint.inventory.item.ItemPotion, ItemConsumable {
 
-    // CHECKSTYLE:OFF
-    public ItemPotion( short data, int amount ) {
-        super( 373, data, amount );
-    }
 
-    public ItemPotion( short data, int amount, NBTTagCompound nbt ) {
-        super( 373, data, amount, nbt );
-    }
-    // CHECKSTYLE:ON
 
     @Override
     public ItemType getType() {

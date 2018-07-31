@@ -1,5 +1,4 @@
 package io.gomint.server.inventory.item;
-
 import io.gomint.inventory.item.ItemType;
 
 import io.gomint.math.Vector;
@@ -16,15 +15,7 @@ import io.gomint.world.block.BlockFace;
 @RegisterInfo( id = 298 )
 public class ItemLeatherHelmet extends ItemColoredArmor implements io.gomint.inventory.item.ItemLeatherHelmet {
 
-    // CHECKSTYLE:OFF
-    public ItemLeatherHelmet( short data, int amount ) {
-        super( 298, data, amount );
-    }
 
-    public ItemLeatherHelmet( short data, int amount, NBTTagCompound nbt ) {
-        super( 298, data, amount, nbt );
-    }
-    // CHECKSTYLE:ON
 
     @Override
     public float getReductionValue() {

@@ -1,5 +1,6 @@
 package io.gomint.server.registry;
 
+import com.google.common.reflect.ClassPath;
 import io.gomint.server.GoMintServer;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
@@ -14,9 +15,10 @@ public class Registry<R> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger( Registry.class );
 
+    private final GoMintServer server;
     private final GeneratorCallback<R> generatorCallback;
-    private R[] generators;
-    private R[] negativeGenerators;
+    private Generator<R>[] generators;
+    private Generator<R>[] negativeGenerators;
     private final Object2IntMap<Class<?>> apiReferences = new Object2IntOpenHashMap<>();
 
     /**
@@ -26,9 +28,10 @@ public class Registry<R> {
      * @param callback which is used to generate a generator for each found element
      */
     public Registry( GoMintServer server, GeneratorCallback<R> callback ) {
+        this.server = server;
         this.generatorCallback = callback;
-        this.generators = (R[]) new Object[16];
-        this.negativeGenerators = (R[]) new Object[2];
+        this.generators = (Generator<R>[]) new Generator[16];
+        this.negativeGenerators = (Generator<R>[]) new Generator[2];
     }
 
     /**
@@ -39,9 +42,9 @@ public class Registry<R> {
     public void register( String classPath ) {
         LOGGER.debug( "Going to scan: {}", classPath );
 
-        /*for ( ClassPath.ClassInfo classInfo : this.server.getClassPath().getTopLevelClasses( classPath ) ) {
+        for ( ClassPath.ClassInfo classInfo : this.server.getClassPath().getTopLevelClasses( classPath ) ) {
             register( classInfo.load() );
-        }*/
+        }
     }
 
     private void register( Class<?> clazz ) {
@@ -53,7 +56,7 @@ public class Registry<R> {
 
         if ( clazz.isAnnotationPresent( RegisterInfo.class ) ) {
             int id = clazz.getAnnotation( RegisterInfo.class ).id();
-            R generator = this.generatorCallback.generate( clazz );
+            Generator<R> generator = this.generatorCallback.generate( clazz );
             if ( generator != null ) {
                 this.storeGeneratorForId( id, generator );
 
@@ -65,7 +68,7 @@ public class Registry<R> {
                 this.apiReferences.put( clazz, id );
             }
         } else {
-            R generator = this.generatorCallback.generate( clazz );
+            Generator<R> generator = this.generatorCallback.generate( clazz );
             if ( generator != null ) {
                 RegisterInfo[] infos = clazz.getAnnotation( RegisterInfos.class ).value();
                 for ( RegisterInfo info : infos ) {
@@ -83,22 +86,22 @@ public class Registry<R> {
         }
     }
 
-    private void storeGeneratorForId( int id, R generator ) {
+    private void storeGeneratorForId( int id, Generator<R> generator ) {
         boolean negative = false;
         if ( id < 0 ) {
             id = Math.abs( id );
             negative = true;
         }
 
-        R[] array = this.ensureArraySize( negative, id );
+        Generator<R>[] array = this.ensureArraySize( negative, id );
         array[id] = generator;
     }
 
-    private R[] ensureArraySize( boolean negative, int id ) {
+    private Generator<R>[] ensureArraySize( boolean negative, int id ) {
         // Check if we need to grow the array
-        R[] array = ( negative ) ? this.negativeGenerators : this.generators;
+        Generator<R>[] array = ( negative ) ? this.negativeGenerators : this.generators;
         if ( array.length < id + 16 ) {
-            R[] temp = (R[]) new Object[id + 16];
+            Generator<R>[] temp = (Generator<R>[]) new Generator[id + 16];
             System.arraycopy( array, 0, temp, 0, array.length );
             if ( negative ) {
                 this.negativeGenerators = temp;
@@ -110,7 +113,7 @@ public class Registry<R> {
         return ( negative ) ? this.negativeGenerators : this.generators;
     }
 
-    public R getGenerator( Class<?> clazz ) {
+    public Generator<R> getGenerator( Class<?> clazz ) {
         // Get the internal ID
         int id = apiReferences.getOrDefault( clazz, -1 );
         if ( id == -1 ) {
@@ -120,7 +123,7 @@ public class Registry<R> {
         return getGenerator( id );
     }
 
-    public final R getGenerator( int id ) {
+    public final Generator<R> getGenerator( int id ) {
         if ( id < 0 ) {
             id *= -1;
             return this.negativeGenerators.length <= id ? null : this.negativeGenerators[id];
@@ -133,7 +136,7 @@ public class Registry<R> {
         return this.apiReferences.getOrDefault( clazz, -1 );
     }
 
-    public void register( Class<?> clazz, R generator ) {
+    public void register( Class<?> clazz, Generator<R> generator ) {
         // We need register info
         if ( !clazz.isAnnotationPresent( RegisterInfo.class ) && !clazz.isAnnotationPresent( RegisterInfos.class ) ) {
             LOGGER.debug( "No register info annotation present" );

@@ -1,5 +1,4 @@
 package io.gomint.server.inventory.item;
-
 import io.gomint.inventory.item.ItemType;
 
 import io.gomint.server.registry.RegisterInfo;
@@ -12,15 +11,7 @@ import io.gomint.taglib.NBTTagCompound;
 @RegisterInfo( id = 354 )
 public class ItemCake extends ItemStack implements io.gomint.inventory.item.ItemCake {
 
-    // CHECKSTYLE:OFF
-    public ItemCake( short data, int amount ) {
-        super( 354, data, amount );
-    }
 
-    public ItemCake( short data, int amount, NBTTagCompound nbt ) {
-        super( 354, data, amount, nbt );
-    }
-    // CHECKSTYLE:ON
 
     @Override
     public byte getMaximumAmount() {

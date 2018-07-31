@@ -1,5 +1,4 @@
 package io.gomint.server.inventory.item;
-
 import io.gomint.taglib.NBTTagCompound;
 
 /**
@@ -8,15 +7,7 @@ import io.gomint.taglib.NBTTagCompound;
  */
 public abstract class ItemArmor extends ItemStack {
 
-    // CHECKSTYLE:OFF
-    public ItemArmor( int material, short data, int amount ) {
-        super( material, data, amount );
-    }
 
-    public ItemArmor( int material, short data, int amount, NBTTagCompound nbt ) {
-        super( material, data, amount, nbt );
-    }
-    // CHECKSTYLE:ON
 
     @Override
     public byte getMaximumAmount() {

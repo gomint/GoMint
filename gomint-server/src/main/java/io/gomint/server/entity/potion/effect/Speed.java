@@ -21,10 +21,6 @@ import io.gomint.server.registry.RegisterInfo;
 @RegisterInfo( id = 1 )
 public class Speed extends Effect {
 
-    public Speed( EffectManager manager, int amplifier, long runoutTimer ) {
-        super( manager, amplifier, runoutTimer );
-    }
-
     @Override
     public byte getId() {
         return 1;

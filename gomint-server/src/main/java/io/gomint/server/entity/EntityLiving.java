@@ -1,5 +1,6 @@
 package io.gomint.server.entity;
 
+import io.gomint.GoMint;
 import io.gomint.entity.potion.PotionEffect;
 import io.gomint.event.entity.EntityDamageByEntityEvent;
 import io.gomint.event.entity.EntityDamageEvent;
@@ -20,6 +21,8 @@ import io.gomint.server.util.Values;
 import io.gomint.server.world.WorldAdapter;
 import io.gomint.taglib.NBTTagCompound;
 import lombok.Getter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -38,6 +41,8 @@ import java.util.concurrent.TimeUnit;
  * @version 1.0
  */
 public abstract class EntityLiving extends Entity implements InventoryHolder, io.gomint.entity.EntityLiving {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger( EntityLiving.class );
 
     // AI of the entity:
     protected AIBehaviourComponent behaviour;
@@ -429,12 +434,20 @@ public abstract class EntityLiving extends Entity implements InventoryHolder, io
 
     @Override
     public void attach( EntityPlayer player ) {
+        if ( !GoMint.instance().isMainThread() ) {
+            LOGGER.warn( "Attaching entities from another thread than the main one can cause crashes", new Exception() );
+        }
+
         this.attachedEntities.add( player );
         this.effectManager.sendForPlayer( player );
     }
 
     @Override
     public void detach( EntityPlayer player ) {
+        if ( !GoMint.instance().isMainThread() ) {
+            LOGGER.warn( "Detaching entities from another thread than the main one can cause crashes", new Exception() );
+        }
+
         this.attachedEntities.remove( player );
     }
 

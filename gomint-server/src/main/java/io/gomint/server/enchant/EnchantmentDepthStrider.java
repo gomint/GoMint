@@ -19,12 +19,10 @@ import io.gomint.server.registry.RegisterInfo;
 public class EnchantmentDepthStrider extends Enchantment implements io.gomint.enchant.EnchantmentDepthStrider {
 
     /**
-     * Create new enchantment smite
-     *
-     * @param level of this enchantment
+     * Create new enchantment depth strider
      */
-    public EnchantmentDepthStrider( short level ) {
-        super( (short) 3, level );
+    public EnchantmentDepthStrider() {
+        super( (short) 3 );
     }
 
     @Override

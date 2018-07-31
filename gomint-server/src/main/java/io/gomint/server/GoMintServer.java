@@ -7,11 +7,9 @@
 
 package io.gomint.server;
 
-import com.google.common.util.concurrent.Futures;
-import com.google.common.util.concurrent.ListenableFuture;
+import com.google.common.reflect.ClassPath;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
-import com.google.common.util.concurrent.SettableFuture;
 import io.gomint.GoMint;
 import io.gomint.GoMintInstanceHolder;
 import io.gomint.config.InvalidConfigurationException;
@@ -42,16 +40,18 @@ import io.gomint.server.network.Protocol;
 import io.gomint.server.permission.PermissionGroupManager;
 import io.gomint.server.plugin.SimplePluginManager;
 import io.gomint.server.scheduler.SyncTaskManager;
+import io.gomint.server.util.PerformanceHacks;
 import io.gomint.server.util.Watchdog;
+import io.gomint.server.util.performance.UnsafeAllocator;
 import io.gomint.server.world.WorldAdapter;
 import io.gomint.server.world.WorldLoadException;
 import io.gomint.server.world.WorldManager;
 import io.gomint.server.world.block.Blocks;
 import io.gomint.world.World;
+import io.gomint.world.WorldType;
 import io.gomint.world.block.Block;
 import io.gomint.world.generator.CreateOptions;
 import io.gomint.world.generator.integrated.NormalGenerator;
-import io.netty.util.ResourceLeakDetector;
 import joptsimple.OptionSet;
 import lombok.Getter;
 import org.jline.reader.LineReader;
@@ -74,7 +74,6 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.SynchronousQueue;
@@ -128,6 +127,7 @@ public class GoMintServer implements GoMint, InventoryHolder {
     @Getter
     private SyncTaskManager syncTaskManager;
     private AtomicBoolean running = new AtomicBoolean( true );
+    private AtomicBoolean init = new AtomicBoolean( true );
     @Getter
     private ListeningExecutorService executorService;
     private Thread readerThread;
@@ -151,6 +151,8 @@ public class GoMintServer implements GoMint, InventoryHolder {
     private Entities entities;
     @Getter
     private Effects effects;
+    @Getter
+    private ClassPath classPath;
 
     private String gitHash;
 
@@ -189,6 +191,13 @@ public class GoMintServer implements GoMint, InventoryHolder {
         LOGGER.info( "Starting {}", getVersion() );
         Thread.currentThread().setName( "GoMint Main Thread" );
 
+        try {
+            this.classPath = ClassPath.from( GoMintServer.class.getClassLoader() );
+        } catch ( IOException e ) {
+            LOGGER.error( "Could not init classpath reader", e );
+            return;
+        }
+
         // ------------------------------------ //
         // Executor Initialization
         // ------------------------------------ //
@@ -205,6 +214,20 @@ public class GoMintServer implements GoMint, InventoryHolder {
 
         this.executorService = MoreExecutors.listeningDecorator( new ThreadPoolExecutor( 3, 512, 60L,
             TimeUnit.SECONDS, new SynchronousQueue<>(), threadFactory ) );
+
+        if ( PerformanceHacks.isUnsafeEnabled() ) {
+            this.executorService.submit( () -> {
+                while ( init.get() ) {
+                    UnsafeAllocator.printUsage();
+
+                    try {
+                        Thread.sleep( 10000 );
+                    } catch ( InterruptedException e ) {
+                        e.printStackTrace();
+                    }
+                }
+            } );
+        }
 
         this.watchdog = new Watchdog( this );
 
@@ -346,7 +369,7 @@ public class GoMintServer implements GoMint, InventoryHolder {
             this.worldManager.loadWorld( this.serverConfig.getDefaultWorld() );
         } catch ( WorldLoadException e ) {
             // Try to generate world
-            if ( this.worldManager.createWorld( this.serverConfig.getDefaultWorld(), new CreateOptions().generator( NormalGenerator.class ) ) == null ) {
+            if ( this.worldManager.createWorld( this.serverConfig.getDefaultWorld(), new CreateOptions().generator( NormalGenerator.class ).worldType( WorldType.ANVIL ) ) == null ) {
                 LOGGER.error( "Failed to load or generate default world", e );
                 this.internalShutdown();
                 return;
@@ -384,7 +407,12 @@ public class GoMintServer implements GoMint, InventoryHolder {
             return;
         }
 
-        LOGGER.info( "Done in " + ( System.currentTimeMillis() - start ) + " ms" );
+        init.set( false );
+        LOGGER.info( "Done in {} ms", ( System.currentTimeMillis() - start ) );
+
+        if ( PerformanceHacks.isUnsafeEnabled() ) {
+            UnsafeAllocator.printUsage();
+        }
 
         // ------------------------------------ //
         // Main Loop
@@ -394,8 +422,6 @@ public class GoMintServer implements GoMint, InventoryHolder {
         float lastTickTime = Float.MIN_NORMAL;
         ReentrantLock tickLock = new ReentrantLock( true );
         Condition tickCondition = tickLock.newCondition();
-
-        ResourceLeakDetector.setLevel( ResourceLeakDetector.Level.PARANOID );
 
         while ( this.running.get() ) {
             tickLock.lock();

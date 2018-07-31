@@ -9,11 +9,13 @@ package io.gomint.event.entity;
 
 import io.gomint.entity.Entity;
 import io.gomint.event.CancellableEvent;
+import lombok.ToString;
 
 /**
  * @author geNAZt
  * @version 1.0
  */
+@ToString( callSuper = true )
 public class CancellableEntityEvent extends CancellableEvent {
 
     private final Entity entity;

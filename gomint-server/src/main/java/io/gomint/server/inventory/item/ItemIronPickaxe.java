@@ -1,5 +1,4 @@
 package io.gomint.server.inventory.item;
-
 import io.gomint.inventory.item.ItemType;
 
 import io.gomint.server.entity.Attribute;
@@ -15,15 +14,7 @@ import io.gomint.taglib.NBTTagCompound;
 @RegisterInfo( id = 257 )
 public class ItemIronPickaxe extends ItemReduceTierIron implements io.gomint.inventory.item.ItemIronPickaxe {
 
-    // CHECKSTYLE:OFF
-    public ItemIronPickaxe( short data, int amount ) {
-        super( 257, data, amount );
-    }
 
-    public ItemIronPickaxe( short data, int amount, NBTTagCompound nbt ) {
-        super( 257, data, amount, nbt );
-    }
-    // CHECKSTYLE:ON
 
 
     @Override

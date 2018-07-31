@@ -431,7 +431,7 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
         // Check for attached entities
         if ( !this.getAttachedEntities().isEmpty() ) {
             Chunk chunk = this.getChunk();
-            for ( Entity entity : new ObjectOpenHashSet<>( this.getAttachedEntities() ) ) {
+            for ( Entity entity : new HashSet<>( this.getAttachedEntities() ) ) {
                 if ( entity instanceof EntityPlayer ) {
                     EntityPlayer player = (EntityPlayer) entity;
                     Chunk playerChunk = player.getChunk();
@@ -794,7 +794,7 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
                     }
 
                     // Check if player did hide this one
-                    if ( entityPlayer.hiddenPlayers != null && entityPlayer.hiddenPlayers.contains( getEntityId() ) ) {
+                    if ( entityPlayer.hiddenPlayers != null ) {
                         entityPlayer.hiddenPlayers.remove( getEntityId() );
                     }
 
@@ -1058,7 +1058,10 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
 
     @Override
     public void detach( EntityPlayer player ) {
-        this.armorInventory.removeViewer( player );
+        if ( this.armorInventory != null ) {
+            this.armorInventory.removeViewer( player );
+        }
+
         super.detach( player );
     }
 

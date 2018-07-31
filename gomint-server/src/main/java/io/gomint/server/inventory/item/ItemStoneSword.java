@@ -1,5 +1,4 @@
 package io.gomint.server.inventory.item;
-
 import io.gomint.inventory.item.ItemType;
 
 import io.gomint.inventory.item.ItemSword;
@@ -16,15 +15,7 @@ import io.gomint.taglib.NBTTagCompound;
 @RegisterInfo( id = 272 )
 public class ItemStoneSword extends ItemReduceTierSpecial implements io.gomint.inventory.item.ItemStoneSword, ItemSword {
 
-    // CHECKSTYLE:OFF
-    public ItemStoneSword( short data, int amount ) {
-        super( 272, data, amount );
-    }
 
-    public ItemStoneSword( short data, int amount, NBTTagCompound nbt ) {
-        super( 272, data, amount, nbt );
-    }
-    // CHECKSTYLE:ON
 
     @Override
     public void gotInHand( EntityPlayer player ) {

@@ -9,6 +9,7 @@ package io.gomint.server.world;
 
 import io.gomint.entity.Entity;
 import io.gomint.entity.EntityPlayer;
+import io.gomint.event.entity.EntityDespawnEvent;
 import io.gomint.event.entity.EntitySpawnEvent;
 import io.gomint.math.Location;
 import io.gomint.server.network.PlayerConnectionState;
@@ -20,6 +21,7 @@ import io.gomint.server.network.packet.PacketPlayerlist;
 import io.gomint.world.Chunk;
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.longs.LongIterator;
 import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
 import it.unimi.dsi.fastutil.longs.LongSet;
 import org.slf4j.Logger;
@@ -137,8 +139,9 @@ public class EntityManager {
         }
 
         if ( removeEntities != null && !removeEntities.isEmpty() ) {
-            for ( Long entity : removeEntities ) {
-                despawnEntity( this.entitiesById.get( entity ) );
+            LongIterator removeIterator = removeEntities.iterator();
+            while ( removeIterator.hasNext() ) {
+                despawnEntity( this.entitiesById.get( removeIterator.nextLong() ) );
             }
         }
 
@@ -451,6 +454,10 @@ public class EntityManager {
         }
 
         io.gomint.server.entity.Entity cEntity = (io.gomint.server.entity.Entity) entity;
+
+        // Inform all others
+        EntityDespawnEvent entityDespawnEvent = new EntityDespawnEvent( entity );
+        this.world.getServer().getPluginManager().callEvent( entityDespawnEvent );
 
         // Remove from chunk
         Chunk chunk = cEntity.getChunk();

@@ -94,7 +94,7 @@ public class EventManager {
             this.eventHandlers.put( eventHash, eventHandlerList );
         }
 
-        eventHandlerList.addHandler( listener.getClass().getName() + "#" + listenerMethod.getName() + "_" + eventHash,
+        eventHandlerList.addHandler( listener.getClass().getName() + "#" + listenerMethod.getName() + "_" + eventHash + "_" + listener.hashCode(),
             new EventHandlerMethod( listener, listenerMethod, annotation ) );
     }
 
@@ -105,7 +105,7 @@ public class EventManager {
             return;
         }
 
-        eventHandlerList.removeHandler( listener.getClass().getName() + "#" + listenerMethod.getName() + "_" + eventHash );
+        eventHandlerList.removeHandler( listener.getClass().getName() + "#" + listenerMethod.getName() + "_" + eventHash + "_" + listener.hashCode() );
     }
 
 }
