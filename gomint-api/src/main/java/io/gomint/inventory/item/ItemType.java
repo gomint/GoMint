@@ -108,6 +108,8 @@ public enum ItemType {
     COOKED_RABBIT,
     COOKED_SALMON,
     COOKIE,
+    CORAL,
+    CORAL_BLOCK,
     CRAFTING_TABLE,
     CROPS,
     CYAN_GLAZED_TERRACOTTA,
