@@ -62,6 +62,7 @@ public class PacketStartGame extends Packet {
     private boolean unknown1 = true;
     private long currentTick;
     private int enchantmentSeed;
+    private boolean educationEdition = true;
 
     /**
      * Create a new start game packet
@@ -121,6 +122,7 @@ public class PacketStartGame extends Packet {
         buffer.writeBoolean( this.unknown1 );
         buffer.writeLLong( this.currentTick );
         buffer.writeSignedVarInt( this.enchantmentSeed );
+        buffer.writeBoolean( this.educationEdition );
     }
 
     @Override
