@@ -36,6 +36,7 @@ public class PacketStartGame extends Packet {
     private boolean hasAchievementsDisabled = true;
     private int dayCycleStopTime;
     private boolean eduMode;
+    private boolean hasEduModeEnabled = true;
     private float rainLevel;
     private float lightningLevel;
     private boolean isMultiplayerGame = true;
@@ -94,7 +95,7 @@ public class PacketStartGame extends Packet {
         buffer.writeBoolean( this.hasAchievementsDisabled );
         buffer.writeSignedVarInt( this.dayCycleStopTime );
         buffer.writeBoolean( this.eduMode );
-        buffer.writeBoolean( true ); // This is hasEduModeEnabled, we default to false until we have all EDU stuff in
+        buffer.writeBoolean( this.hasEduModeEnabled );
         buffer.writeLFloat( this.rainLevel );
         buffer.writeLFloat( this.lightningLevel );
         buffer.writeBoolean( this.isMultiplayerGame );
@@ -122,7 +123,6 @@ public class PacketStartGame extends Packet {
         buffer.writeBoolean( this.unknown1 );
         buffer.writeLLong( this.currentTick );
         buffer.writeSignedVarInt( this.enchantmentSeed );
-        buffer.writeBoolean( this.educationEdition );
     }
 
     @Override
