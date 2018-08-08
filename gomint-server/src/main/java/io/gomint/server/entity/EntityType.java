@@ -378,7 +378,17 @@ public enum EntityType {
     /**
      * Entity type value for a parrot.
      */
-    PARROT( 30 );
+    PARROT( 30 ),
+
+    /**
+     * Entity type value for a npc.
+     */
+    NPC( 51 ),
+
+    /**
+     * Entity type value for a agent.
+     */
+    AGENT( 56 );
 
 
     private final int id;

@@ -37,7 +37,8 @@ public interface EntityVillager extends EntityLiving {
         LIBRARIAN,
         PRIEST,
         BLACKSMITH,
-        BUTCHER;
+        BUTCHER,
+        NITWIT,
     }
 
 }
