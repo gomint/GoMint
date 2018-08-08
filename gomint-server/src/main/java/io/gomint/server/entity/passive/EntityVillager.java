@@ -58,6 +58,9 @@ public class EntityVillager extends EntityLiving implements io.gomint.entity.pas
     public void setProfession( Profession profession ) {
         int variant = 0;
         switch ( profession ) {
+            case NITWIT:
+                variant = 5;
+                break;
             case BUTCHER:
                 variant = 4;
                 break;
@@ -82,6 +85,8 @@ public class EntityVillager extends EntityLiving implements io.gomint.entity.pas
     public Profession getProfession() {
         int variant = this.metadataContainer.getInt( MetadataContainer.DATA_VARIANT );
         switch ( variant ) {
+            case 5:
+                return Profession.NITWIT;
             case 4:
                 return Profession.BUTCHER;
             case 3:
