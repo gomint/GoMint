@@ -339,4 +339,12 @@ public interface Entity {
      */
     boolean isAffectedByGravity();
 
+    /**
+     * Get the fall distance
+     *
+     * @return current fall distance
+     */
+
+    float getFallDistance();
+
 }
