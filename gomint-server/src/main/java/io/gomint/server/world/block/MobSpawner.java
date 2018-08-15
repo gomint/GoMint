@@ -50,9 +50,8 @@ public class MobSpawner extends Block implements io.gomint.world.block.BlockMobS
 
     @Override
     public List<ItemStack> getDrops( ItemStack itemInHand ) {
-        // TODO: check these values (and spawn multiple xp orbs?)
-        //FastRandom random = FastRandom.current();
-        //((WorldAdapter) this.location.getWorld()).createExpOrb( this.location, random.nextInt( 15 ) + random.nextInt( 15 ) + 15 );
+        FastRandom random = FastRandom.current();
+        ((WorldAdapter) this.location.getWorld()).createExpOrb( this.location, random.nextInt( 15 ) + random.nextInt( 15 ) + 15 );
 
         return new ArrayList<>();
     }

@@ -21,6 +21,11 @@ public class LilyPad extends Block implements io.gomint.world.block.BlockLilyPad
     }
 
     @Override
+    public long getBreakTime() {
+        return 0;
+    }
+
+    @Override
     public boolean isTransparent() {
         return true;
     }

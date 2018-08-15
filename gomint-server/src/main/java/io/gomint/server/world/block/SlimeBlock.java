@@ -19,6 +19,11 @@ public class SlimeBlock extends Block implements io.gomint.world.block.BlockSlim
     }
 
     @Override
+    public long getBreakTime() {
+        return 0;
+    }
+
+    @Override
     public boolean isTransparent() {
         return true;
     }
