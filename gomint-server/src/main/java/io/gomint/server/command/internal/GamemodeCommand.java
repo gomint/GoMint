@@ -11,6 +11,7 @@ import io.gomint.command.annotation.Permission;
 import io.gomint.command.annotation.Overload;
 import io.gomint.command.validator.TargetValidator;
 import io.gomint.command.validator.EnumValidator;
+import io.gomint.command.validator.IntegerValidator;
 import io.gomint.server.entity.EntityPlayer;
 import io.gomint.world.Gamemode;
 
@@ -25,6 +26,10 @@ import java.util.Map;
 @Permission( "gomint.command.gamemode" )
 @Overload( {
     @Parameter( name = "mode", validator = EnumValidator.class, arguments = { "a", "adventure", "c", "creative", "s", "survival", "sp", "spectator" } ),
+    @Parameter( name = "player", validator = TargetValidator.class, optional = true )
+} )
+@Overload( {
+    @Parameter( name = "mode", validator = IntegerValidator.class ),
     @Parameter( name = "player", validator = TargetValidator.class, optional = true )
 } )
 public class GamemodeCommand extends Command {
@@ -44,19 +49,23 @@ public class GamemodeCommand extends Command {
         }
 
         Gamemode mode;
-        switch( (String) arguments.get( "mode" ) ) {
+        switch( String.valueOf( arguments.get( "mode" ) ) ) {
+			case "0":
             case "s":
             case "survival":
                 mode = Gamemode.SURVIVAL;
                 break;
+			case "1":
             case "c":
             case "creative":
                 mode = Gamemode.CREATIVE;
                 break;
+			case "2":
             case "a":
             case "adventure":
                 mode = Gamemode.ADVENTURE;
                 break;
+			case "3":
             case "sp":
             case "spectator":
                 mode = Gamemode.SPECTATOR;

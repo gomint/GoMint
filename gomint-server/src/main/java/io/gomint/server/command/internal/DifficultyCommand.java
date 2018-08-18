@@ -26,7 +26,7 @@ import java.util.Map;
     @Parameter( name = "difficulty", validator = EnumValidator.class, arguments = { "e", "easy", "h", "hard", "n", "normal", "p", "peaceful" } ),
 } )
 @Overload( {
-    @Parameter( name = "int", validator = IntegerValidator.class ),
+    @Parameter( name = "difficulty", validator = IntegerValidator.class )
 } )
 public class DifficultyCommand extends Command {
 
@@ -35,19 +35,23 @@ public class DifficultyCommand extends Command {
         CommandOutput output = new CommandOutput();
 
         Difficulty difficulty;
-        switch( (String) arguments.get( "difficulty" ) ) {
+        switch( String.valueOf( arguments.get( "difficulty" ) ) ) {
+			case "0":
             case "p":
             case "peaceful":
                 difficulty = Difficulty.PEACEFUL;
                 break;
+			case "1":
             case "e":
             case "easy":
                 difficulty = Difficulty.EASY;
                 break;
+			case "2":
             case "n":
             case "normal":
                 difficulty = Difficulty.NORMAL;
                 break;
+			case "3":
             case "h":
             case "hard":
                 difficulty = Difficulty.HARD;
