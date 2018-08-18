@@ -134,8 +134,8 @@ public class PlayerSkin implements io.gomint.player.PlayerSkin {
             byte[] skinData = new byte[image.getHeight() == 128 ? SKIN_DATA_SIZE_FULL : image.getHeight() == 64 ? SKIN_DATA_SIZE_ALEX : SKIN_DATA_SIZE_STEVE];
             int cursor = 0;
 
-            for ( int y = 0; y < image.getWidth(); y++ ) {
-                for ( int x = 0; x < image.getHeight(); x++ ) {
+            for ( int y = 0; y < image.getHeight(); y++ ) {
+                for ( int x = 0; x < image.getWidth(); x++ ) {
                     int color = image.getRGB( x, y );
                     skinData[cursor++] = (byte) ( ( color >> 16 ) & 0xFF ); // R
                     skinData[cursor++] = (byte) ( ( color >> 8 ) & 0xFF );  // G
