@@ -15,11 +15,10 @@ import java.util.Map;
  * @version 1.0
  */
 @Name( "stop" )
-@Description( "Stops the GoMint server" )
+@Description( "Stops the GoMint server." )
 @Permission( "gomint.command.stop" )
 public class StopCommand extends Command {
 
-    // Player execution
     @Override
     public CommandOutput execute( CommandSender player, String alias, Map<String, Object> arguments ) {
         GoMint.instance().shutdown();

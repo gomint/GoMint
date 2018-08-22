@@ -3,7 +3,7 @@ package io.gomint.event.player;
 import io.gomint.entity.EntityPlayer;
 
 /**
- * @author Luke (@lukeeey)
+ * @author lukeeey
  * @version 1.0
  */
 public class PlayerSwimEvent extends CancellablePlayerEvent {

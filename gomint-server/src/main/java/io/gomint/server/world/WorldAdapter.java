@@ -28,13 +28,7 @@ import io.gomint.server.entity.passive.EntityXPOrb;
 import io.gomint.server.entity.tileentity.TileEntity;
 import io.gomint.server.network.PlayerConnection;
 import io.gomint.server.network.Protocol;
-import io.gomint.server.network.packet.Packet;
-import io.gomint.server.network.packet.PacketSetDifficulty;
-import io.gomint.server.network.packet.PacketTileEntityData;
-import io.gomint.server.network.packet.PacketUpdateBlock;
-import io.gomint.server.network.packet.PacketWorldChunk;
-import io.gomint.server.network.packet.PacketWorldEvent;
-import io.gomint.server.network.packet.PacketWorldSoundEvent;
+import io.gomint.server.network.packet.*;
 import io.gomint.server.util.EnumConnectors;
 import io.gomint.server.world.block.Air;
 import io.gomint.server.world.storage.TemporaryStorage;
@@ -60,8 +54,9 @@ import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
 import lombok.ToString;
+import lombok.Getter;
+import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -114,6 +109,7 @@ public abstract class WorldAdapter implements World {
      * Get the difficulty of this world
      */
     @Getter
+    @Setter
     protected Difficulty difficulty = Difficulty.NORMAL;
 
     // Chunk Handling
@@ -169,11 +165,11 @@ public abstract class WorldAdapter implements World {
     public Collection<EntityPlayer> getPlayers() {
         return Collections.unmodifiableSet( this.players.keySet() );
     }
-
-    @Override
-    public void playSound( Vector vector, Sound sound, byte pitch, SoundData data ) {
-        this.playSound( null, vector, sound, pitch, data );
-    }
+	
+	@Override
+	public void playSound( Vector vector, Sound sound, byte pitch ) {
+		this.playSound( null, vector, sound, pitch, -1 );
+	}
 
     /**
      * Play a sound at the location given
@@ -185,6 +181,7 @@ public abstract class WorldAdapter implements World {
      * @param data   additional data for the sound
      * @throws IllegalArgumentException when the sound data given is incorrect for the sound wanted to play
      */
+    @Override
     public void playSound( EntityPlayer player, Vector vector, Sound sound, byte pitch, SoundData data ) {
         int soundData = -1;
 
@@ -236,12 +233,7 @@ public abstract class WorldAdapter implements World {
                 break;
         }
 
-        this.playSound( player, vector, sound, pitch, soundData );
-    }
-
-    @Override
-    public void playSound( Vector vector, Sound sound, byte pitch ) {
-        this.playSound( null, vector, sound, pitch, -1 );
+        this.playSound( null, vector, sound, pitch, soundData );
     }
 
     /**
@@ -253,6 +245,7 @@ public abstract class WorldAdapter implements World {
      * @param pitch     The pitch at which the sound should be played
      * @param extraData any data which should be send to the client to identify the sound
      */
+    @Override
     public void playSound( EntityPlayer player, Vector vector, Sound sound, byte pitch, int extraData ) {
         // There are sounds which don't work but have level event counterparts so we use them for now
         switch ( sound ) {

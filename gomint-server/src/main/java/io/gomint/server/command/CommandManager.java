@@ -1,16 +1,16 @@
 package io.gomint.server.command;
 
 import io.gomint.ChatColor;
+
 import io.gomint.command.Command;
 import io.gomint.command.CommandOutput;
 import io.gomint.command.CommandOutputMessage;
 import io.gomint.command.CommandOverload;
 import io.gomint.command.CommandSender;
 import io.gomint.command.ParamValidator;
+
 import io.gomint.plugin.Plugin;
-import io.gomint.server.command.internal.ListCommand;
-import io.gomint.server.command.internal.StopCommand;
-import io.gomint.server.command.internal.TPCommand;
+import io.gomint.server.command.internal.*;
 import io.gomint.server.entity.CommandPermission;
 import io.gomint.server.entity.EntityPlayer;
 import io.gomint.server.network.packet.PacketAvailableCommands;
@@ -47,8 +47,17 @@ public class CommandManager {
         // Register all internal commands
         try {
             for ( Class cmdClass : new Class[]{
+                DeopCommand.class,
+                DifficultyCommand.class,
+                EffectCommand.class,
+                GamemodeCommand.class,
+                GiveCommand.class,
                 ListCommand.class,
+                OpCommand.class,
                 StopCommand.class,
+                StopsoundCommand.class,
+                TitleCommand.class,
+                TellCommand.class,
                 TPCommand.class
             } ) {
                 // Check for system only commands

@@ -103,25 +103,11 @@ public interface World {
      */
     Collection<EntityPlayer> getPlayers();
 
-    /**
-     * Play a sound at the location given
-     *
-     * @param location The location where the sound should be played
-     * @param sound    The sound which should be played
-     * @param pitch    The pitch at which the sound should be played
-     * @param data     additional data for the sound
-     * @throws IllegalArgumentException when the sound data given is incorrect for the sound wanted to play
-     */
-    void playSound( Vector location, Sound sound, byte pitch, SoundData data );
+	void playSound( Vector vector, Sound sound, byte pitch );
+	
+    void playSound( EntityPlayer player, Vector vector, Sound sound, byte pitch, SoundData data );
 
-    /**
-     * Play a sound at the location given
-     *
-     * @param location The location where the sound should be played
-     * @param sound    The sound which should be played
-     * @param pitch    The pitch at which the sound should be played
-     */
-    void playSound( Vector location, Sound sound, byte pitch );
+    void playSound( EntityPlayer player, Vector vector, Sound sound, byte pitch, int extraData );
 
     /**
      * Send a particle to this world
@@ -204,6 +190,18 @@ public interface World {
      * @return chunk or null when not generated
      */
     Chunk getChunk( int x, int z );
+
+    /**
+     * Gets the difficulty of the world
+     * @return the difficulty of the world
+     */
+    Difficulty getDifficulty();
+
+    /**
+     * Sets the difficulty for the world.
+     * @param difficulty
+     */
+    void setDifficulty( Difficulty difficulty );
 
     /**
      * Save all data to disk
