@@ -50,6 +50,13 @@ public interface EntityPlayer extends EntityHuman {
     boolean isOp();
 
     /**
+     * Set this player's operator status
+     *
+     * @param value of the new operator status
+     */
+    void setOp( boolean value );
+
+    /**
      * Hide another player from this player
      *
      * @param player The player which should be hidden
@@ -207,33 +214,53 @@ public interface EntityPlayer extends EntityHuman {
      *
      * @return exp level
      */
-    int getLevel();
+    int getXPLevel();
 
     /**
      * Set the level of the exp bar
      *
      * @param level of this entity
      */
-    void setLevel( int level );
+    void setXPLevel( int level );
 
     /**
      * Play a sound for this player
      *
-     * @param location of the sound in the client
-     * @param sound    The sound which should be played
-     * @param pitch    The pitch at which the sound should be played
-     * @param data     additional data for the sound
+     * @param location  of the sound in the client
+     * @param soundName The sound which should be played
      */
-    void playSound( Vector location, Sound sound, byte pitch, SoundData data );
+    void playSound( Vector location, String soundName );
 
     /**
      * Play a sound for this player
      *
-     * @param location of the sound in the client
-     * @param sound    The sound which should be played
-     * @param pitch    The pitch at which the sound should be played
+     * @param location  of the sound in the client
+     * @param soundName The sound which should be played
+     * @param pitch     The pitch at which the sound should be played
      */
-    void playSound( Vector location, Sound sound, byte pitch );
+    void playSound( Vector location, String soundName, float pitch );
+
+    /**
+     * Play a sound for this player
+     *
+     * @param location  of the sound in the client
+     * @param soundName The sound which should be played
+     * @param pitch     The pitch at which the sound should be played
+     * @param volume    The volume at which the sound should be played
+     */
+    void playSound( Vector location, String soundName, float pitch, float volume );
+
+    /**
+     * Stop all sounds for this player
+     */
+    void stopSounds();
+
+    /**
+     * Stop the given sound for this player
+     *
+     * @param soundName The sound which should be stopped
+     */
+    void stopSound( String soundName );
 
     /**
      * Send a particle to this player
@@ -281,6 +308,24 @@ public interface EntityPlayer extends EntityHuman {
     boolean getFlying();
 
     /**
+     * Send a text above the hotbar to the user's screen.
+     *
+     * @param message  Small text displayed above the hotbar
+     * @param fadein   duration for the fade in effect
+     * @param duration which is used for how long the title should be shown
+     * @param fadeout  duration for the fade out effect
+     * @param unit     of duration multiplier
+     */
+    void sendActionbar( String message, long fadein, long duration, long fadeout, TimeUnit unit );
+
+    /**
+     * Send a text above the hotbar to the user's screen.
+     *
+     * @param message Small text displayed above the hotbar
+     */
+    void sendActionbar( String message );
+
+    /**
      * Send a title text to the user's screen, with an optional subtitle.
      *
      * @param title    Big text displayed in the middle of the screen
@@ -308,6 +353,26 @@ public interface EntityPlayer extends EntityHuman {
      *                 Default time for fadein and duration is 1 second
      */
     void sendTitle( String title, String subtitle );
+
+    /**
+     * Send the animation times for future titles.
+     *
+     * @param fadein   duration for the fade in effect
+     * @param duration which is used for how long the title should be shown
+     * @param fadeout  duration for the fade out effect
+     * @param unit     of duration multiplier
+     */
+    void sendTitleAnimationTimes( long fadein, long duration, long fadeout, TimeUnit unit );
+
+    /**
+     * Removes the title from the clients screen
+     */
+    void clearTitle();
+
+    /**
+     * Resets the title duration settings
+     */
+    void resetTitle();
 
     /**
      * Toggle gliding status of the player

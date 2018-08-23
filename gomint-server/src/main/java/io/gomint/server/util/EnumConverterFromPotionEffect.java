@@ -27,17 +27,17 @@ public class EnumConverterFromPotionEffect implements EnumConverter {
             case 4:
                 return io.gomint.entity.potion.PotionEffect.STRENGTH;
             case 5:
-                return io.gomint.entity.potion.PotionEffect.HEALING;
+                return io.gomint.entity.potion.PotionEffect.INSTANT_HEALTH;
             case 6:
-                return io.gomint.entity.potion.PotionEffect.HARMING;
+                return io.gomint.entity.potion.PotionEffect.INSTANT_DAMAGE;
             case 7:
-                return io.gomint.entity.potion.PotionEffect.JUMP;
+                return io.gomint.entity.potion.PotionEffect.JUMP_BOOST;
             case 8:
                 return io.gomint.entity.potion.PotionEffect.NAUSEA;
             case 9:
                 return io.gomint.entity.potion.PotionEffect.REGENERATION;
             case 10:
-                return io.gomint.entity.potion.PotionEffect.DAMAGE_RESISTANCE;
+                return io.gomint.entity.potion.PotionEffect.RESISTANCE;
             case 11:
                 return io.gomint.entity.potion.PotionEffect.FIRE_RESISTANCE;
             case 12:

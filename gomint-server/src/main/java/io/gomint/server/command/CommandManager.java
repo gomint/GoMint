@@ -1,12 +1,17 @@
 package io.gomint.server.command;
 
 import io.gomint.ChatColor;
-import io.gomint.command.*;
-import io.gomint.command.annotation.Name;
+
+import io.gomint.command.Command;
+import io.gomint.command.CommandOutput;
+import io.gomint.command.CommandOutputMessage;
+import io.gomint.command.CommandOverload;
+import io.gomint.command.CommandSender;
+import io.gomint.command.ParamValidator;
+
 import io.gomint.plugin.Plugin;
-import io.gomint.server.command.internal.ListCommand;
-import io.gomint.server.command.internal.StopCommand;
-import io.gomint.server.command.internal.TPCommand;
+import io.gomint.server.command.vanilla.*;
+import io.gomint.server.command.gomint.*;
 import io.gomint.server.entity.CommandPermission;
 import io.gomint.server.entity.EntityPlayer;
 import io.gomint.server.network.packet.PacketAvailableCommands;
@@ -14,7 +19,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
 
 /**
@@ -36,9 +48,22 @@ public class CommandManager {
         // Register all internal commands
         try {
             for ( Class cmdClass : new Class[]{
+                // Vanilla Commands
+                DeopCommand.class,
+                DifficultyCommand.class,
+                EffectCommand.class,
+                GamemodeCommand.class,
+                GiveCommand.class,
                 ListCommand.class,
+                OpCommand.class,
                 StopCommand.class,
-                TPCommand.class
+                StopsoundCommand.class,
+                TitleCommand.class,
+                TellCommand.class,
+                TPCommand.class,
+
+                // GoMint Commands
+                KickCommand.class,
             } ) {
                 // Check for system only commands
                 Object commandObject = null;
@@ -138,37 +163,39 @@ public class CommandManager {
                             boolean completed = true;
                             boolean completedOptionals = true;
 
-                            for ( Map.Entry<String, ParamValidator> entry : overload.getParameters().entrySet() ) {
-                                List<String> input = new ArrayList<>();
-                                ParamValidator validator = entry.getValue();
+                            if ( overload.getParameters() != null ) {
+                                for ( Map.Entry<String, ParamValidator> entry : overload.getParameters().entrySet() ) {
+                                    List<String> input = new ArrayList<>();
+                                    ParamValidator validator = entry.getValue();
 
-                                if ( validator.consumesParts() > 0 ) {
-                                    for ( int i = 0; i < validator.consumesParts(); i++ ) {
-                                        if ( !paramIterator.hasNext() ) {
-                                            if ( !validator.isOptional() ) {
-                                                completed = false;
-                                                break;
+                                    if ( validator.consumesParts() > 0 ) {
+                                        for ( int i = 0; i < validator.consumesParts(); i++ ) {
+                                            if ( !paramIterator.hasNext() ) {
+                                                if ( !validator.isOptional() ) {
+                                                    completed = false;
+                                                    break;
+                                                } else {
+                                                    completedOptionals = false;
+                                                }
                                             } else {
-                                                completedOptionals = false;
+                                                input.add( paramIterator.next() );
                                             }
-                                        } else {
+                                        }
+                                    } else {
+                                        // Consume as much as possible for thing like TEXT, RAWTEXT
+                                        while ( paramIterator.hasNext() ) {
                                             input.add( paramIterator.next() );
                                         }
                                     }
-                                } else {
-                                    // Consume as much as possible for thing like TEXT, RAWTEXT
-                                    while ( paramIterator.hasNext() ) {
-                                        input.add( paramIterator.next() );
-                                    }
-                                }
 
-                                if ( input.size() == validator.consumesParts() || validator.consumesParts() < 0 ) {
-                                    Object result = validator.validate( input, sender );
-                                    if ( result == null ) {
-                                        completed = false;
-                                    }
+                                    if ( input.size() == validator.consumesParts() || validator.consumesParts() < 0 ) {
+                                        Object result = validator.validate( input, sender );
+                                        if ( result == null ) {
+                                            completed = false;
+                                        }
 
-                                    commandInput.put( entry.getKey(), result );
+                                        commandInput.put( entry.getKey(), result );
+                                    }
                                 }
                             }
 

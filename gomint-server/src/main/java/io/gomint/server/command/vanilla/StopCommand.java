@@ -1,4 +1,4 @@
-package io.gomint.server.command.internal;
+package io.gomint.server.command.vanilla;
 
 import io.gomint.GoMint;
 import io.gomint.command.Command;
@@ -15,13 +15,12 @@ import java.util.Map;
  * @version 1.0
  */
 @Name( "stop" )
-@Description( "Stops the GoMint server" )
+@Description( "Stops the GoMint server." )
 @Permission( "gomint.command.stop" )
 public class StopCommand extends Command {
 
-    // Player execution
     @Override
-    public CommandOutput execute( CommandSender player, String alias, Map<String, Object> arguments ) {
+    public CommandOutput execute( CommandSender sender, String alias, Map<String, Object> arguments ) {
         GoMint.instance().shutdown();
         return new CommandOutput().success( "§7[§aSYSTEM§7] §fServer will be stopped" );
     }

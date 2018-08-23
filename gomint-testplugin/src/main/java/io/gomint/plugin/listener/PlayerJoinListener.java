@@ -27,7 +27,7 @@ public class PlayerJoinListener implements EventListener {
         ItemDye lapis = ItemDye.create( 64 );
         lapis.setDyeType( DyeType.LAPIS_LAZULI );
         event.getPlayer().getInventory().setItem( 1, lapis );
-        event.getPlayer().setLevel( 60 );
+        event.getPlayer().setXPLevel( 60 );
 
         event.getPlayer().getInventory().setItem( 2, ItemDiamondSword.create( 1 ) );
     }

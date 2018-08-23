@@ -96,6 +96,13 @@ public interface EntityLiving extends Entity {
     boolean hasEffect( PotionEffect effect );
 
     /**
+     * Does the player have any effects active?
+     *
+     * @return true if the player has active effects, false if not
+     */
+    boolean hasEffects();
+
+    /**
      * Get the effect amplifier
      *
      * @param effect for which we want to know the amplifier
