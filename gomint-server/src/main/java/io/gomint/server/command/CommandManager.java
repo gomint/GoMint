@@ -49,7 +49,6 @@ public class CommandManager {
                 MeCommand.class,
                 SayCommand.class,
                 StopCommand.class,
-                SummonCommand.class,
                 TPCommand.class
             } ) {
                 // Check for system only commands
