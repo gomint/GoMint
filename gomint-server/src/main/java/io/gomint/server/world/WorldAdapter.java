@@ -61,6 +61,7 @@ import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -114,6 +115,7 @@ public abstract class WorldAdapter implements World {
      * Get the difficulty of this world
      */
     @Getter
+    @Setter
     protected Difficulty difficulty = Difficulty.NORMAL;
 
     // Chunk Handling
@@ -171,8 +173,8 @@ public abstract class WorldAdapter implements World {
     }
 
     @Override
-    public void playSound( Vector vector, Sound sound, byte pitch, SoundData data ) {
-        this.playSound( null, vector, sound, pitch, data );
+    public void playSound( Vector vector, Sound sound, byte pitch ) {
+        this.playSound( null, vector, sound, pitch, -1 );
     }
 
     /**
@@ -185,6 +187,7 @@ public abstract class WorldAdapter implements World {
      * @param data   additional data for the sound
      * @throws IllegalArgumentException when the sound data given is incorrect for the sound wanted to play
      */
+    @Override
     public void playSound( EntityPlayer player, Vector vector, Sound sound, byte pitch, SoundData data ) {
         int soundData = -1;
 
@@ -236,12 +239,7 @@ public abstract class WorldAdapter implements World {
                 break;
         }
 
-        this.playSound( player, vector, sound, pitch, soundData );
-    }
-
-    @Override
-    public void playSound( Vector vector, Sound sound, byte pitch ) {
-        this.playSound( null, vector, sound, pitch, -1 );
+        this.playSound( null, vector, sound, pitch, soundData );
     }
 
     /**
@@ -253,6 +251,7 @@ public abstract class WorldAdapter implements World {
      * @param pitch     The pitch at which the sound should be played
      * @param extraData any data which should be send to the client to identify the sound
      */
+    @Override
     public void playSound( EntityPlayer player, Vector vector, Sound sound, byte pitch, int extraData ) {
         // There are sounds which don't work but have level event counterparts so we use them for now
         switch ( sound ) {

@@ -120,7 +120,7 @@ public class EnchantmentProcessor {
             if ( this.lapisItem.getAmount() < this.data ) {
                 this.reset();
             } else {
-                if ( this.player.getLevel() < this.data ) {
+                if ( this.player.getXPLevel() < this.data ) {
                     this.reset();
                 } else {
                     this.lapisItem.setAmount( this.lapisItem.getAmount() - this.data );
@@ -130,7 +130,7 @@ public class EnchantmentProcessor {
                         this.player.getEnchantmentInputInventory().setItem( 1, this.lapisItem );
                     }
 
-                    this.player.setLevel( this.player.getLevel() - this.data );
+                    this.player.setXPLevel( this.player.getXPLevel() - this.data );
 
                     // Enchant the start item
                     for ( Enchantment enchantment : this.enchantments ) {
