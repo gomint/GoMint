@@ -74,6 +74,8 @@ import io.gomint.server.network.packet.PacketSetTitle;
 import io.gomint.server.network.packet.PacketSpawnPlayer;
 import io.gomint.server.network.packet.PacketText;
 import io.gomint.server.network.packet.PacketTransfer;
+import io.gomint.server.network.packet.PacketPlaySound;
+import io.gomint.server.network.packet.PacketStopSound;
 import io.gomint.server.network.packet.PacketUpdateAttributes;
 import io.gomint.server.network.tcp.protocol.SendPlayerToServerPacket;
 import io.gomint.server.permission.PermissionManager;

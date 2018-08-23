@@ -34,6 +34,8 @@ import io.gomint.server.network.packet.PacketPlayerAction;
 import io.gomint.server.network.packet.PacketResourcePackResponse;
 import io.gomint.server.network.packet.PacketResourcePacksInfo;
 import io.gomint.server.network.packet.PacketServerSettingsRequest;
+import io.gomint.server.network.packet.PacketPlaySound;
+import io.gomint.server.network.packet.PacketStopSound;
 import io.gomint.server.network.packet.PacketSetChunkRadius;
 import io.gomint.server.network.packet.PacketSetLocalPlayerAsInitialized;
 import io.gomint.server.network.packet.PacketText;
