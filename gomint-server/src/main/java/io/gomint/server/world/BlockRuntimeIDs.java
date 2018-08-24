@@ -168,7 +168,7 @@ public class BlockRuntimeIDs {
     public static int fromLegacy( int blockId, byte dataValue, int protocolID ) {
         // Get lookup array
         int[][] lookup = BLOCK_DATA_TO_RUNTIME;
-        if ( protocolID == Protocol.MINECRAFT_PE_BETA_PROTOCOL_VERSION ) {
+        if ( protocolID >= Protocol.MINECRAFT_PE_NEXT_STABLE_PROTOCOL_VERSION ) {
             lookup = BLOCK_DATA_TO_RUNTIME_BETA;
         }
 

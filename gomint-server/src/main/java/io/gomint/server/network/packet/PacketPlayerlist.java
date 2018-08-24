@@ -35,8 +35,10 @@ public class PacketPlayerlist extends Packet {
                 buffer.writeSignedVarLong( entry.getEntityId() );
                 buffer.writeString( entry.getName() );
 
-                buffer.writeString( entry.getThirdPartyName() );
-                buffer.writeSignedVarInt( entry.getPlatformID() );
+                if ( protocolID < Protocol.MINECRAFT_PE_BETA_PROTOCOL_VERSION ) {
+                    buffer.writeString( entry.getThirdPartyName() );
+                    buffer.writeSignedVarInt( entry.getPlatformID() );
+                }
 
                 buffer.writeString( entry.getSkin().getName() );
 

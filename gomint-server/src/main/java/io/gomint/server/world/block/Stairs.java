@@ -1,6 +1,8 @@
 package io.gomint.server.world.block;
 
 import io.gomint.math.AxisAlignedBB;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Collections;
 import java.util.List;
@@ -11,6 +13,8 @@ import java.util.List;
  */
 public abstract class Stairs extends Block {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger( Stairs.class );
+
     @Override
     public boolean isTransparent() {
         return true;
@@ -18,6 +22,8 @@ public abstract class Stairs extends Block {
 
     @Override
     public List<AxisAlignedBB> getBoundingBox() {
+        LOGGER.info( "Position: {} - Data: {}", this.location, this.getBlockData() );
+
         return Collections.singletonList( new AxisAlignedBB(
             this.location.getX(),
             this.location.getY(),

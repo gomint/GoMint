@@ -40,11 +40,7 @@ public class PlayerJoinListener implements EventListener {
         event.getPlayer().getInventory().setItem( 5, ItemStrippedSpruceLog.create( 1 ) );
 
         // Spawn a entity human in front
-        EntityCow entityHuman = EntityCow.create();
-        entityHuman.setNameTag( "TEST" );
-        entityHuman.spawn( event.getPlayer().getSpawnLocation().add( new Vector( 2, 0, 2 ) ) );
-
-        this.plugin.getScheduler().schedule( () -> entityHuman.setNameTag( "TEST:" + FastRandom.current().nextInt( 1000 ) ), 5, 5, TimeUnit.SECONDS );
+        this.plugin.getScheduler().schedule( () -> plugin.getLogger().info( "Location {}", event.getPlayer().getLocation() ), 1, 1, TimeUnit.SECONDS );
     }
 
 }

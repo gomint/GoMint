@@ -112,7 +112,6 @@ public class PacketAvailableCommands extends Packet {
         this.postFixes = new ArrayList<>( postfixSize );
         for ( int i = 0; i < postfixSize; i++ ) {
             String postfix = buffer.readString();
-            System.out.println( "Postfix at " + i + ": " + postfix );
             this.postFixes.add( postfix );
         }
 
@@ -147,10 +146,6 @@ public class PacketAvailableCommands extends Packet {
                     String paramName = buffer.readString();
                     int paramType = buffer.readLInt();
                     buffer.readBoolean();
-
-                    if ( cmdName.equals( "xp" ) ) {
-                        System.out.println( " Got param for XP command: " + paramName + " -> " + Integer.toHexString( paramType ) );
-                    }
                 }
             }
         }

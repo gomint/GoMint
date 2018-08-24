@@ -32,7 +32,7 @@ public class BootStrap {
         for ( int i = 0; i < 1; i++ ) {
             service.execute( () -> {
                 Client client = new Client( service, postProcessExecutorService.getExecutor(), null );
-                client.ping( "127.0.0.1", 19132 );
+                client.ping( "192.168.178.113", 19132 );
 
                 try {
                     Thread.sleep( 150 );
@@ -40,7 +40,7 @@ public class BootStrap {
                     e.printStackTrace();
                 }
 
-                client.connect( "127.0.0.1", 19132 );
+                client.connect( "192.168.178.113", 19132 );
             } );
 
             Thread.sleep( 1000 );

@@ -56,8 +56,11 @@ public class PacketText extends Packet {
             case WHISPER:
             case ANNOUNCEMENT:
                 buffer.writeString( this.sender );
-                buffer.writeString( this.sourceThirdPartyName );
-                buffer.writeSignedVarInt( this.sourcePlatform );
+
+                if ( protocolID < Protocol.MINECRAFT_PE_BETA_PROTOCOL_VERSION ) {
+                    buffer.writeString( this.sourceThirdPartyName );
+                    buffer.writeSignedVarInt( this.sourcePlatform );
+                }
             case CLIENT_MESSAGE:
             case TIP_MESSAGE:
             case SYSTEM_MESSAGE:
@@ -94,8 +97,11 @@ public class PacketText extends Packet {
             case WHISPER:
             case ANNOUNCEMENT:
                 this.sender = buffer.readString();
-                this.sourceThirdPartyName = buffer.readString();
-                this.sourcePlatform = buffer.readSignedVarInt();
+
+                if ( protocolID < Protocol.MINECRAFT_PE_BETA_PROTOCOL_VERSION ) {
+                    this.sourceThirdPartyName = buffer.readString();
+                    this.sourcePlatform = buffer.readSignedVarInt();
+                }
             case CLIENT_MESSAGE:
             case TIP_MESSAGE:
             case SYSTEM_MESSAGE:

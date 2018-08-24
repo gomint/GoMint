@@ -117,6 +117,11 @@ public class PacketStartGame extends Packet {
         buffer.writeBoolean( false );
         buffer.writeBoolean( false );
 
+        // TODO: PRTCL 290
+        if ( protocolID == Protocol.MINECRAFT_PE_BETA_PROTOCOL_VERSION ) {
+            buffer.writeBoolean( false );
+        }
+
         buffer.writeString( this.levelId );
         buffer.writeString( this.worldName );
         buffer.writeString( this.templateName );
@@ -125,7 +130,7 @@ public class PacketStartGame extends Packet {
         buffer.writeSignedVarInt( this.enchantmentSeed );
 
         // TODO: PRTCL 282
-        if ( protocolID == Protocol.MINECRAFT_PE_BETA_PROTOCOL_VERSION ) {
+        if ( protocolID >= Protocol.MINECRAFT_PE_NEXT_STABLE_PROTOCOL_VERSION ) {
             // Write palette data
             byte[] data = BlockRuntimeIDs.getPacketCache( protocolID );
             buffer.writeBytes( data );

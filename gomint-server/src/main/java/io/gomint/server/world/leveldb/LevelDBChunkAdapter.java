@@ -105,7 +105,7 @@ public class LevelDBChunkAdapter extends ChunkAdapter {
 
                     // Read NBT data
                     int needed = buffer.readLInt();
-                    Int2ObjectMap<Pair<Byte, Byte>> chunkPalette = new Int2ObjectOpenHashMap<>( needed ); // Varint my ass
+                    Int2ObjectMap<Pair<Integer, Byte>> chunkPalette = new Int2ObjectOpenHashMap<>( needed ); // Varint my ass
 
                     int index = 0;
                     NBTReaderNoBuffer reader = new NBTReaderNoBuffer( new InputStream() {
@@ -122,7 +122,11 @@ public class LevelDBChunkAdapter extends ChunkAdapter {
                     while ( index < needed ) {
                         try {
                             NBTTagCompound compound = reader.parse();
-                            byte blockId = (byte) MaterialMagicNumbers.valueOfWithId( compound.getString( "name", "minecraft:air" ) );
+                            int blockId = MaterialMagicNumbers.valueOfWithId( compound.getString( "name", "minecraft:air" ) );
+                            if ( blockId == -1 ) {
+                                LOGGER.error( "Unknown block {}", compound.getString( "name", "minecraft:air" ) );
+                            }
+
                             byte blockData = compound.getShort( "val", (short) 0 ).byteValue();
 
                             chunkPalette.put( index++, new Pair<>( blockId, blockData ) );
@@ -138,7 +142,7 @@ public class LevelDBChunkAdapter extends ChunkAdapter {
                                 int y = ( sectionY << 4 ) + j;
                                 short blockIndex = (short) ( k << 8 | i << 4 | j ); // j k i - k j i - i k j -
 
-                                Pair<Byte, Byte> dataPair = chunkPalette.get( indexes[blockIndex] );
+                                Pair<Integer, Byte> dataPair = chunkPalette.get( indexes[blockIndex] );
                                 this.setBlock( k, y, i, sI, dataPair.getFirst() );
                                 this.setData( k, y, i, sI, dataPair.getSecond() );
                             }

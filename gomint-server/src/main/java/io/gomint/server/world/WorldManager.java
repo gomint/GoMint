@@ -10,7 +10,6 @@ package io.gomint.server.world;
 import io.gomint.GoMint;
 import io.gomint.server.GoMintServer;
 import io.gomint.server.world.anvil.AnvilWorldAdapter;
-import io.gomint.server.world.gomint.GomintWorldAdapter;
 import io.gomint.server.world.inmemory.InMemoryWorldAdapter;
 import io.gomint.server.world.leveldb.LevelDBWorldAdapter;
 import io.gomint.server.world.leveldb.ZippedLevelDBWorldAdapter;
@@ -202,7 +201,6 @@ public class WorldManager {
         // Check which type of world we want to create
         WorldAdapter world;
         switch ( options.worldType() ) {
-            case GOMINT:
             case ANVIL:
                 try {
                     world = AnvilWorldAdapter.create( this.server, name, options.generator() );

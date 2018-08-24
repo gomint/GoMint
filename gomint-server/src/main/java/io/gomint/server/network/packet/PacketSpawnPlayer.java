@@ -63,8 +63,11 @@ public class PacketSpawnPlayer extends Packet {
         buffer.writeUUID( this.uuid );
         buffer.writeString( this.name );
 
-        buffer.writeString( this.thirdPartyName );
-        buffer.writeSignedVarInt( this.platformID );
+        // TODO: PTRCL 290
+        if ( protocolID < Protocol.MINECRAFT_PE_BETA_PROTOCOL_VERSION ) {
+            buffer.writeString( this.thirdPartyName );
+            buffer.writeSignedVarInt( this.platformID );
+        }
 
         buffer.writeSignedVarLong( this.entityId );
         buffer.writeUnsignedVarLong( this.runtimeEntityId );
@@ -97,14 +100,15 @@ public class PacketSpawnPlayer extends Packet {
         writeEntityLinks( this.links, buffer );
 
         // TODO: PRTCL 282
-        if ( protocolID == Protocol.MINECRAFT_PE_BETA_PROTOCOL_VERSION ) {
+        if ( protocolID >= Protocol.MINECRAFT_PE_NEXT_STABLE_PROTOCOL_VERSION ) {
             buffer.writeString( this.deviceId );
         }
     }
 
     @Override
     public void deserialize( PacketBuffer buffer, int protocolID ) {
-
+        buffer.readUUID();
+        System.out.println( buffer.readString() );
     }
 
 }

@@ -172,6 +172,14 @@ public class GoMintServer implements GoMint, InventoryHolder {
     public GoMintServer( OptionSet args ) {
         long start = System.currentTimeMillis();
 
+        // ------------------------------------ //
+        // Executor Initialization
+        // ------------------------------------ //
+        this.executorService = MoreExecutors.listeningDecorator( EventLoops.LOOP_GROUP );
+        this.watchdog = new Watchdog( this );
+
+        this.watchdog.add( 30, TimeUnit.SECONDS );
+
         GoMintServer.mainThread = Thread.currentThread().getId();
         GoMintInstanceHolder.setInstance( this );
 
@@ -203,23 +211,6 @@ public class GoMintServer implements GoMint, InventoryHolder {
             LOGGER.error( "Could not init classpath reader", e );
             return;
         }
-
-        // ------------------------------------ //
-        // Executor Initialization
-        // ------------------------------------ //
-        ThreadFactory threadFactory = new ThreadFactory() {
-            private AtomicLong counter = new AtomicLong( 0 );
-
-            @Override
-            public Thread newThread( Runnable r ) {
-                Thread thread = Executors.defaultThreadFactory().newThread( r );
-                thread.setName( "GoMint Thread #" + counter.getAndIncrement() );
-                return thread;
-            }
-        };
-
-        this.executorService = MoreExecutors.listeningDecorator( EventLoops.LOOP_GROUP );
-        this.watchdog = new Watchdog( this );
 
         LOGGER.info( "Loading block, item and entity registers" );
 
@@ -399,10 +390,7 @@ public class GoMintServer implements GoMint, InventoryHolder {
 
         init.set( false );
         LOGGER.info( "Done in {} ms", ( System.currentTimeMillis() - start ) );
-
-        if ( PerformanceHacks.isUnsafeEnabled() ) {
-            UnsafeAllocator.printUsage();
-        }
+        this.watchdog.done();
 
         // ------------------------------------ //
         // Main Loop

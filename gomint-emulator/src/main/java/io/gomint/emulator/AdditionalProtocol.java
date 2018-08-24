@@ -47,7 +47,7 @@ public class AdditionalProtocol {
                 return new PacketTileEntityData();
 
             case PACKET_SPAWN_PLAYER:
-                return null;
+                return new PacketSpawnPlayer();
 
             case PACKET_SPAWN_ENTITY:
                 return new PacketSpawnEntity();
