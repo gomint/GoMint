@@ -42,6 +42,7 @@ import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.function.Consumer;
 
 /**
  * @author BlackyPaw
@@ -125,6 +126,7 @@ public class NetworkManager {
 
                 connectionHandler.onPing( playerConnection::setTcpPing );
                 connectionHandler.whenDisconnected( aVoid -> handleConnectionClosed( playerConnection.getId() ) );
+                connectionHandler.onException( throwable -> LOGGER.warn( "Exception in TCP handling", throwable ) );
             } );
 
             this.tcpChannel = this.tcpListener.bind( host, port ).syncUninterruptibly().channel();

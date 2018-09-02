@@ -5,11 +5,10 @@ import io.gomint.inventory.item.ItemAir;
 import io.gomint.inventory.item.ItemStack;
 import io.gomint.server.entity.EntityPlayer;
 import io.gomint.server.network.PlayerConnection;
+import io.gomint.server.util.Pair;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
+import java.util.function.Consumer;
 
 /**
  * @author geNAZt
@@ -18,10 +17,12 @@ import java.util.Set;
 public abstract class Inventory implements io.gomint.inventory.Inventory {
 
     protected InventoryHolder owner;
-    protected Set<PlayerConnection> viewer = new HashSet<>();
+    Set<PlayerConnection> viewer = new HashSet<>();
 
     protected int size;
     protected ItemStack[] contents;
+
+    private Vector<Consumer<Pair<Integer, ItemStack>>> changeObservers;
 
     public Inventory( InventoryHolder owner, int size ) {
         this.owner = owner;
@@ -67,6 +68,14 @@ public abstract class Inventory implements io.gomint.inventory.Inventory {
 
         // Set new item
         io.gomint.server.inventory.item.ItemStack newStack = (io.gomint.server.inventory.item.ItemStack) item.clone();
+
+        if ( this.changeObservers != null ) {
+            Pair<Integer, ItemStack> pair = new Pair<>( index, newStack );
+            for ( Consumer<Pair<Integer, ItemStack>> observer : this.changeObservers ) {
+                observer.accept( pair );
+            }
+        }
+
         this.contents[index] = newStack;
         newStack.addPlace( this, index );
 
@@ -257,6 +266,14 @@ public abstract class Inventory implements io.gomint.inventory.Inventory {
 
     public InventoryHolder getOwner() {
         return this.owner;
+    }
+
+    public void addObserver( Consumer<Pair<Integer, ItemStack>> consumer ) {
+        if ( this.changeObservers == null ) {
+            this.changeObservers = new Vector<>();
+        }
+
+        this.changeObservers.add( consumer );
     }
 
 }

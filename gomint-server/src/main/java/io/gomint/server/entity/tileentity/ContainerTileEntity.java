@@ -37,13 +37,13 @@ public class ContainerTileEntity extends TileEntity {
     }
 
     @Override
-    public void update( long currentMillis, float dF ) {
+    public void update( long currentMillis ) {
 
     }
 
     @Override
-    public void toCompound( NBTTagCompound compound ) {
-        super.toCompound( compound );
+    public void toCompound( NBTTagCompound compound, SerializationReason reason ) {
+        super.toCompound( compound, reason );
 
         if ( this.customName != null ) {
             compound.addValue( "CustomName", this.customName );

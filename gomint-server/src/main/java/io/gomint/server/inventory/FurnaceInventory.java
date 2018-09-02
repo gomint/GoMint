@@ -36,14 +36,4 @@ public class FurnaceInventory extends ContainerInventory {
 
     }
 
-    @Override
-    public void sendContents( PlayerConnection playerConnection ) {
-
-    }
-
-    @Override
-    public void sendContents( int slot, PlayerConnection playerConnection ) {
-
-    }
-
 }

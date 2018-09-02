@@ -1,25 +1,19 @@
 package io.gomint.server.network.handler;
 
 import io.gomint.event.player.PlayerInteractEvent;
+import io.gomint.event.player.PlayerSwimEvent;
 import io.gomint.event.player.PlayerToggleGlideEvent;
 import io.gomint.event.player.PlayerToggleSneakEvent;
 import io.gomint.event.player.PlayerToggleSprintEvent;
-import io.gomint.event.player.PlayerSwimEvent;
-import io.gomint.event.world.BlockBreakEvent;
 import io.gomint.server.enchant.EnchantmentProcessor;
 import io.gomint.server.network.PlayerConnection;
-import io.gomint.server.network.Protocol;
 import io.gomint.server.network.packet.PacketPlayerAction;
 import io.gomint.server.world.BlockRuntimeIDs;
 import io.gomint.server.world.LevelEvent;
-import io.gomint.server.world.block.Air;
 import io.gomint.server.world.block.Block;
-import io.gomint.server.world.block.Fire;
 import io.gomint.world.Gamemode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.ArrayList;
 
 /**
  * @author geNAZt
@@ -33,7 +27,7 @@ public class PacketPlayerActionHandler implements PacketHandler<PacketPlayerActi
     public void handle( PacketPlayerAction packet, long currentTimeMillis, PlayerConnection connection ) {
         switch ( packet.getAction() ) {
             case START_SWIMMING:
-                if( !connection.getEntity().isSwimming() ) {
+                if ( !connection.getEntity().isSwimming() ) {
                     PlayerSwimEvent playerSwimEvent = new PlayerSwimEvent( connection.getEntity(), true );
                     connection.getServer().getPluginManager().callEvent( playerSwimEvent );
                     if ( playerSwimEvent.isCancelled() ) {
@@ -45,7 +39,7 @@ public class PacketPlayerActionHandler implements PacketHandler<PacketPlayerActi
 
                 break;
             case STOP_SWIMMING:
-                if( connection.getEntity().isSwimming() ) {
+                if ( connection.getEntity().isSwimming() ) {
                     PlayerSwimEvent playerSwimEvent = new PlayerSwimEvent( connection.getEntity(), false );
                     connection.getServer().getPluginManager().callEvent( playerSwimEvent );
                     if ( playerSwimEvent.isCancelled() ) {
@@ -167,7 +161,7 @@ public class PacketPlayerActionHandler implements PacketHandler<PacketPlayerActi
                 // Broadcast break effects
                 if ( connection.getEntity().getBreakVector() != null ) {
                     Block block = connection.getEntity().getWorld().getBlockAt( connection.getEntity().getBreakVector() );
-                    int runtimeId = BlockRuntimeIDs.fromLegacy( block.getBlockId(), block.getBlockData(), Protocol.MINECRAFT_PE_PROTOCOL_VERSION );
+                    int runtimeId = BlockRuntimeIDs.fromLegacy( block.getBlockId(), block.getBlockData() );
 
                     connection.getEntity().getWorld().sendLevelEvent(
                         connection.getEntity().getBreakVector().toVector(),
@@ -223,7 +217,7 @@ public class PacketPlayerActionHandler implements PacketHandler<PacketPlayerActi
 
         io.gomint.server.world.block.Block block = connection.getEntity().getWorld().getBlockAt( packet.getPosition() );
 
-        if( !block.punch( connection.getEntity(), packet.getPosition(), ( connection.getEntity().getGamemode() == Gamemode.CREATIVE ) ) ) {
+        if ( !block.punch( connection.getEntity(), packet.getPosition(), ( connection.getEntity().getGamemode() == Gamemode.CREATIVE ) ) ) {
             long breakTime = block.getFinalBreakTime( connection.getEntity().getInventory().getItemInHand(), connection.getEntity() );
             LOGGER.debug( "Sending break time {} ms", breakTime );
 

@@ -34,11 +34,15 @@ public class PacketResourcePacksInfo extends Packet {
                 buffer.writeLLong( entry.getSize() );
                 buffer.writeString( "" );
                 buffer.writeString( "" );
+<<<<<<< HEAD
 
                 // TODO: PRTCL 282
                 if ( protocolID >= Protocol.MINECRAFT_PE_NEXT_STABLE_PROTOCOL_VERSION ) {
                     buffer.writeString( "" );
                 }
+=======
+                buffer.writeString( "" );
+>>>>>>> 893927c5c519bac56ae7d9e5f6a224f821340990
             }
         }
 
@@ -50,11 +54,15 @@ public class PacketResourcePacksInfo extends Packet {
                 buffer.writeLLong( entry.getSize() );
                 buffer.writeString( "" );
                 buffer.writeString( "" );
+<<<<<<< HEAD
 
                 // TODO: PRTCL 282
                 if ( protocolID >= Protocol.MINECRAFT_PE_NEXT_STABLE_PROTOCOL_VERSION ) {
                     buffer.writeString( "" );
                 }
+=======
+                buffer.writeString( "" );
+>>>>>>> 893927c5c519bac56ae7d9e5f6a224f821340990
             }
         }
     }
@@ -70,11 +78,15 @@ public class PacketResourcePacksInfo extends Packet {
             buffer.readLLong();
             buffer.readString();
             buffer.readString();
+<<<<<<< HEAD
 
             // TODO: PRTCL 282
             if ( protocolID >= Protocol.MINECRAFT_PE_NEXT_STABLE_PROTOCOL_VERSION ) {
                 buffer.readString();
             }
+=======
+            buffer.readString();
+>>>>>>> 893927c5c519bac56ae7d9e5f6a224f821340990
         }
 
         behaviourAmount = buffer.readLShort();
@@ -84,11 +96,15 @@ public class PacketResourcePacksInfo extends Packet {
             buffer.readLLong();
             buffer.readString();
             buffer.readString();
+<<<<<<< HEAD
 
             // TODO: PRTCL 282
             if ( protocolID >= Protocol.MINECRAFT_PE_NEXT_STABLE_PROTOCOL_VERSION ) {
                 buffer.readString();
             }
+=======
+            buffer.readString();
+>>>>>>> 893927c5c519bac56ae7d9e5f6a224f821340990
         }
     }
 

@@ -77,7 +77,6 @@ public class Client {
     private Pair<Integer, Integer> spawnChunk;
     private ClientSocket socket;
     private Connection connection;
-    private AtomicInteger chunkCounter = new AtomicInteger( 0 );
 
     private PlayerConnectionState state = PlayerConnectionState.HANDSHAKE;
 
@@ -103,8 +102,13 @@ public class Client {
         try {
             this.socket.initialize();
             this.socket.setMojangModificationEnabled( true );
+<<<<<<< HEAD
             this.socket.setProtocolVersion( 9 );
+=======
+>>>>>>> 893927c5c519bac56ae7d9e5f6a224f821340990
             this.socket.setEventHandler( ( socket, socketEvent ) -> {
+                System.out.println( socketEvent.getType() );
+
                 if ( socketEvent.getType() == SocketEvent.Type.CONNECTION_CLOSED ) {
                     CONNECTED.decrementAndGet();
                     DISCONNECTED.incrementAndGet();
@@ -523,10 +527,6 @@ public class Client {
 
     public void ping( String ip, int port ) {
         this.socket.ping( ip, port );
-    }
-
-    public byte getRaknetVersion() {
-        return this.connection.getProtocolVersion();
     }
 
 }

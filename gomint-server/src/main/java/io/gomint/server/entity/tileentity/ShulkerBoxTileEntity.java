@@ -72,25 +72,27 @@ public class ShulkerBoxTileEntity extends ContainerTileEntity implements Invento
     }
 
     @Override
-    public void toCompound( NBTTagCompound compound ) {
-        super.toCompound( compound );
+    public void toCompound( NBTTagCompound compound, SerializationReason reason ) {
+        super.toCompound( compound, reason );
 
         compound.addValue( "id", "ShulkerBox" );
         compound.addValue( "facing", this.facing );
         compound.addValue( "isUndyed", (byte) ( ( this.undyed ) ? 1 : 0 ) );
 
-        // Serialize items
-        List<NBTTagCompound> nbtTagCompounds = new ArrayList<>();
-        for ( int i = 0; i < this.inventory.size(); i++ ) {
-            ItemStack itemStack = this.inventory.getItem( i );
-            if ( itemStack != null ) {
-                NBTTagCompound nbtTagCompound = new NBTTagCompound( "" );
-                nbtTagCompound.addValue( "Slot", (byte) i );
-                putItemStack( (io.gomint.server.inventory.item.ItemStack) itemStack, nbtTagCompound );
-                nbtTagCompounds.add( nbtTagCompound );
+        if ( reason == SerializationReason.PERSIST ) {
+            // Serialize items
+            List<NBTTagCompound> nbtTagCompounds = new ArrayList<>();
+            for ( int i = 0; i < this.inventory.size(); i++ ) {
+                ItemStack itemStack = this.inventory.getItem( i );
+                if ( itemStack != null ) {
+                    NBTTagCompound nbtTagCompound = new NBTTagCompound( "" );
+                    nbtTagCompound.addValue( "Slot", (byte) i );
+                    putItemStack( (io.gomint.server.inventory.item.ItemStack) itemStack, nbtTagCompound );
+                    nbtTagCompounds.add( nbtTagCompound );
+                }
             }
-        }
 
-        compound.addValue( "Items", nbtTagCompounds );
+            compound.addValue( "Items", nbtTagCompounds );
+        }
     }
 }

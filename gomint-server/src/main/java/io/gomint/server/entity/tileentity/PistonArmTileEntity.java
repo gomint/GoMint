@@ -69,7 +69,7 @@ public class PistonArmTileEntity extends TileEntity {
     }
 
     @Override
-    public void update( long currentMillis, float dF ) {
+    public void update( long currentMillis ) {
         // TODO: MJ BUG / 1.2.13 / It seems they removed the technical block from persistent storage. Also they removed the hitbox on data value 0, so we now need to orientate the head correctly
         BlockPosition pos = this.location.toBlockPosition();
         Block piston = this.location.getWorld().getBlockAt( pos );
@@ -91,8 +91,9 @@ public class PistonArmTileEntity extends TileEntity {
     }
 
     @Override
-    public void toCompound( NBTTagCompound compound ) {
-        super.toCompound( compound );
+    public void toCompound( NBTTagCompound compound, SerializationReason reason ) {
+        super.toCompound( compound, reason );
+
         compound.addValue( "id", "PistonArm" );
 
         // States

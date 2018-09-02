@@ -16,6 +16,7 @@ import io.gomint.inventory.item.ItemStack;
 import io.gomint.permission.GroupManager;
 import io.gomint.player.PlayerSkin;
 import io.gomint.plugin.PluginManager;
+import io.gomint.scoreboard.Scoreboard;
 import io.gomint.world.World;
 import io.gomint.world.block.Block;
 import io.gomint.world.generator.CreateOptions;
@@ -244,4 +245,12 @@ public interface GoMint {
      * @return collection of worlds
      */
     Collection<World> getWorlds();
+
+    /**
+     * Create a new scoreboard
+     *
+     * @return new scoreboard
+     */
+    Scoreboard createScoreboard();
+
 }

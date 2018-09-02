@@ -9,6 +9,7 @@ package io.gomint.server.world.anvil;
 
 import io.gomint.math.BlockPosition;
 import io.gomint.server.entity.Entity;
+import io.gomint.server.entity.tileentity.SerializationReason;
 import io.gomint.server.entity.tileentity.TileEntity;
 import io.gomint.server.util.Pair;
 import io.gomint.server.util.StringUtil;
@@ -129,7 +130,7 @@ public class AnvilChunkAdapter extends ChunkAdapter {
         List<NBTTagCompound> tileEntityCompounds = new ArrayList<>();
         for ( TileEntity tileEntity : this.getTileEntities() ) {
             NBTTagCompound compound = new NBTTagCompound( "" );
-            tileEntity.toCompound( compound );
+            tileEntity.toCompound( compound, SerializationReason.PERSIST );
             tileEntityCompounds.add( compound );
         }
 

@@ -51,7 +51,7 @@ public class ItemFrameTileEntity extends TileEntity {
     }
 
     @Override
-    public void update( long currentMillis, float dF ) {
+    public void update( long currentMillis ) {
 
     }
 
@@ -61,11 +61,15 @@ public class ItemFrameTileEntity extends TileEntity {
     }
 
     @Override
-    public void toCompound( NBTTagCompound compound ) {
-        super.toCompound( compound );
+    public void toCompound( NBTTagCompound compound, SerializationReason reason ) {
+        super.toCompound( compound, reason );
 
         compound.addValue( "id", "ItemFrame" );
-        compound.addValue( "ItemDropChance", this.itemDropChance );
+
+        if ( reason == SerializationReason.PERSIST ) {
+            compound.addValue( "ItemDropChance", this.itemDropChance );
+        }
+        
         compound.addValue( "ItemRotation", this.itemRotation );
 
         NBTTagCompound itemCompound = new NBTTagCompound( "Item" );

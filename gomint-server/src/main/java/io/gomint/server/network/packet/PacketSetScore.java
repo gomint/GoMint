@@ -9,18 +9,20 @@ package io.gomint.server.network.packet;
 
 import io.gomint.jraknet.PacketBuffer;
 import io.gomint.server.network.Protocol;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 
 import java.util.List;
-import java.util.UUID;
 
 /**
  * @author geNAZt
  * @version 1.0
  */
 @Data
+@ToString
 public class PacketSetScore extends Packet {
 
     private byte type;
@@ -36,12 +38,25 @@ public class PacketSetScore extends Packet {
     @Override
     public void serialize( PacketBuffer buffer, int protocolID ) {
         buffer.writeByte( this.type );
-        buffer.writeUShort( this.entries.size() );
+        buffer.writeUnsignedVarInt( this.entries.size() );
 
         for ( ScoreEntry entry : this.entries ) {
-            buffer.writeUUID( entry.uuid );
+            buffer.writeSignedVarLong( entry.scoreId );
             buffer.writeString( entry.objective );
             buffer.writeLInt( entry.score );
+
+            if ( this.type == 0 ) {
+                buffer.writeByte( entry.entityType );
+                switch ( entry.entityType ) {
+                    case 3: // Fake entity
+                        buffer.writeString( entry.fakeEntity );
+                        break;
+                    case 1:
+                    case 2:
+                        buffer.writeUnsignedVarLong( entry.entityId );
+                        break;
+                }
+            }
         }
     }
 
@@ -50,12 +65,19 @@ public class PacketSetScore extends Packet {
 
     }
 
+    @AllArgsConstructor
     @RequiredArgsConstructor
     @Getter
+    @ToString
     public static class ScoreEntry {
-        private final UUID uuid;
+        private final long scoreId;
         private final String objective;
         private final int score;
+
+        // Add entity type
+        private byte entityType;
+        private String fakeEntity;
+        private long entityId;
     }
 
 }

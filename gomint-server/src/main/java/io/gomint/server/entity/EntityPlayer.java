@@ -59,11 +59,11 @@ import io.gomint.server.inventory.item.ItemStack;
 import io.gomint.server.maintenance.performance.LoginPerformance;
 import io.gomint.server.network.PlayerConnection;
 import io.gomint.server.network.PlayerConnectionState;
+import io.gomint.server.network.Protocol;
 import io.gomint.server.network.packet.Packet;
 import io.gomint.server.network.packet.PacketAvailableCommands;
 import io.gomint.server.network.packet.PacketContainerClose;
 import io.gomint.server.network.packet.PacketEntityEvent;
-import io.gomint.server.network.packet.PacketEntityMetadata;
 import io.gomint.server.network.packet.PacketModalRequest;
 import io.gomint.server.network.packet.PacketPlayState;
 import io.gomint.server.network.packet.PacketPlayerlist;
@@ -80,6 +80,7 @@ import io.gomint.server.network.packet.PacketUpdateAttributes;
 import io.gomint.server.network.tcp.protocol.SendPlayerToServerPacket;
 import io.gomint.server.permission.PermissionManager;
 import io.gomint.server.player.EntityVisibilityManager;
+import io.gomint.server.scoreboard.Scoreboard;
 import io.gomint.server.util.EnumConnectors;
 import io.gomint.server.world.ChunkAdapter;
 import io.gomint.server.world.WorldAdapter;
@@ -230,6 +231,10 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
 
     @Getter
     private String deviceId;
+
+    // Scoreboard
+    @Getter
+    private Scoreboard scoreboard;
 
     /**
      * Constructs a new player entity which will be spawned inside the specified world.
@@ -1607,10 +1612,10 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
     }
 
     @Override
-    public Packet createSpawnPacket() {
+    public Packet createSpawnPacket( EntityPlayer receiver ) {
         PacketSpawnPlayer packetSpawnPlayer = new PacketSpawnPlayer();
         packetSpawnPlayer.setUuid( this.getUUID() );
-        packetSpawnPlayer.setName( this.getNameTag() ); // TODO: MJ BUG / 1.5.0.14 / Nametags don't change according to metadata index 4 (nametag) anymore, the client uses the name set in the spawn player packet
+        packetSpawnPlayer.setName( receiver.getConnection().getProtocolID() > Protocol.MINECRAFT_PE_PROTOCOL_VERSION ? this.getNameTag() : this.getName() ); // TODO: MJ BUG / 1.5.0.14 / Nametags don't change according to metadata index 4 (nametag) anymore, the client uses the name set in the spawn player packet
         packetSpawnPlayer.setEntityId( this.getEntityId() );
         packetSpawnPlayer.setRuntimeEntityId( this.getEntityId() );
 
@@ -1628,7 +1633,7 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
 
         packetSpawnPlayer.setItemInHand( this.getInventory().getItemInHand() );
         packetSpawnPlayer.setMetadataContainer( this.getMetadata() );
-        packetSpawnPlayer.setDeviceId( this.deviceId == null ? "" : this.deviceId.toString() );
+        packetSpawnPlayer.setDeviceId( this.deviceId == null ? "" : this.deviceId );
         return packetSpawnPlayer;
     }
 
@@ -1639,11 +1644,7 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
 
     @Override
     public void postSpawn( PlayerConnection connection ) {
-        // TODO: Remove this, its a client bug in 1.2.13
-        PacketEntityMetadata metadata = new PacketEntityMetadata();
-        metadata.setEntityId( this.getEntityId() );
-        metadata.setMetadata( this.metadataContainer );
-        connection.addToSendQueue( metadata );
+
     }
 
     @Override
@@ -1692,6 +1693,27 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
     public void setSpawnLocation( Location spawnLocation ) {
         this.spawnLocation = spawnLocation;
         this.connection.sendPlayerSpawnPosition();
+    }
+
+    @Override
+    public void setScoreboard( io.gomint.scoreboard.Scoreboard scoreboard ) {
+        // Only allow for latest version (1.7.0.2+)
+        if ( this.connection.getProtocolID() < Protocol.MINECRAFT_PE_BETA_PROTOCOL_VERSION ) {
+            return;
+        }
+
+        this.removeScoreboard();
+
+        this.scoreboard = (Scoreboard) scoreboard;
+        this.scoreboard.showFor( this );
+    }
+
+    @Override
+    public void removeScoreboard() {
+        if ( this.scoreboard != null ) {
+            this.scoreboard.hideFor( this );
+            this.scoreboard = null;
+        }
     }
 
     public void setUsingItem( boolean value ) {

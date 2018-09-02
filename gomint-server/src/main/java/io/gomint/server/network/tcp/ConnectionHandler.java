@@ -45,7 +45,6 @@ public class ConnectionHandler extends SimpleChannelInboundHandler<Packet> {
     private Consumer<Throwable> exceptionCallback;
     private Consumer<Void> disconnectCallback;
     private Consumer<Integer> pingCallback;
-    private ByteConsumer raknetVersionConsumer;
 
     ConnectionHandler() {
         super( true );
@@ -94,8 +93,6 @@ public class ConnectionHandler extends SimpleChannelInboundHandler<Packet> {
         if ( packet instanceof WrappedMCPEPacket ) {
             WrappedMCPEPacket wrappedMCPEPacket = ( (WrappedMCPEPacket) packet );
 
-            this.raknetVersionConsumer.accept( wrappedMCPEPacket.getRaknetVersion() );
-
             for ( PacketBuffer buffer : wrappedMCPEPacket.getBuffer() ) {
                 this.data.offer( buffer );
             }
@@ -115,7 +112,7 @@ public class ConnectionHandler extends SimpleChannelInboundHandler<Packet> {
         this.pingCallback = callback;
     }
 
-    public void whenConnected( Consumer<Void> callback ) {
+    void whenConnected( Consumer<Void> callback ) {
         this.whenConnected = callback;
     }
 
@@ -134,10 +131,6 @@ public class ConnectionHandler extends SimpleChannelInboundHandler<Packet> {
     @Override
     public String toString() {
         return this.getClass().getSimpleName() + Integer.toHexString( this.hashCode() );
-    }
-
-    public void onRaknetVersion( ByteConsumer consumer ) {
-        this.raknetVersionConsumer = consumer;
     }
 
     private static final class Flusher implements Runnable {

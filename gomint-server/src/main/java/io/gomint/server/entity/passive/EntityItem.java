@@ -123,7 +123,7 @@ public class EntityItem extends Entity implements EntityItemDrop {
     }
 
     @Override
-    public Packet createSpawnPacket() {
+    public Packet createSpawnPacket( EntityPlayer receiver ) {
         PacketAddItemEntity packetAddItemEntity = new PacketAddItemEntity();
         packetAddItemEntity.setEntityId( this.getEntityId() );
         packetAddItemEntity.setItemStack( this.itemStack );

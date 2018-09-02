@@ -24,6 +24,7 @@ public class RecipeManager {
     private Set<Recipe> recipes;
 
     // Lookup stuff
+    private Map<ItemStack, SmeltingRecipe> smeltingRecipes;
     private Map<UUID, Recipe> lookup;
     private RecipeReverseLookup[] outputLookup;
 
@@ -34,6 +35,7 @@ public class RecipeManager {
      * Constructs a new recipe manager.
      */
     public RecipeManager() {
+        this.smeltingRecipes = new HashMap<>();
         this.recipes = new HashSet<>();
         this.lookup = new HashMap<>();
         this.dirty = true;
@@ -68,6 +70,12 @@ public class RecipeManager {
 
         if ( recipe.getUUID() != null ) {
             this.lookup.put( recipe.getUUID(), recipe );
+        }
+
+        // Check if this is a smelting recipe
+        if ( recipe instanceof SmeltingRecipe ) {
+            SmeltingRecipe smeltingRecipe = (SmeltingRecipe) recipe;
+            this.smeltingRecipes.put( smeltingRecipe.getIngredients()[0], smeltingRecipe );
         }
 
         this.dirty = true;
@@ -140,6 +148,10 @@ public class RecipeManager {
             sortOutput( sortedOutput );
             this.outputLookup[index++] = new RecipeReverseLookup( recipe, sortedOutput );
         }
+    }
+
+    public SmeltingRecipe getSmeltingRecipe( ItemStack input ) {
+        return this.smeltingRecipes.get( input );
     }
 
     @AllArgsConstructor

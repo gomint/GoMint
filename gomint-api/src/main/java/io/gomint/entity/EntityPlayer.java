@@ -16,6 +16,7 @@ import io.gomint.math.Location;
 import io.gomint.math.Vector;
 import io.gomint.permission.PermissionManager;
 import io.gomint.player.DeviceInfo;
+import io.gomint.scoreboard.Scoreboard;
 import io.gomint.world.*;
 
 import java.util.Locale;
@@ -417,5 +418,17 @@ public interface EntityPlayer extends EntityHuman {
      * @return location of spawn
      */
     Location getSpawnLocation();
+
+    /**
+     * Set a new scoreboard
+     *
+     * @param scoreboard which should be displayed to this player
+     */
+    void setScoreboard( Scoreboard scoreboard );
+
+    /**
+     * Remove the current scoreboard
+     */
+    void removeScoreboard();
 
 }

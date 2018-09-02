@@ -8,7 +8,6 @@
 package io.gomint.server;
 
 import com.google.common.reflect.ClassPath;
-import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.ListeningScheduledExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
 import io.gomint.GoMint;
@@ -24,6 +23,7 @@ import io.gomint.jraknet.EventLoops;
 import io.gomint.permission.GroupManager;
 import io.gomint.player.PlayerSkin;
 import io.gomint.plugin.StartupPriority;
+import io.gomint.scoreboard.Scoreboard;
 import io.gomint.server.assets.AssetsLibrary;
 import io.gomint.server.config.ServerConfig;
 import io.gomint.server.config.WorldConfig;
@@ -41,10 +41,9 @@ import io.gomint.server.network.NetworkManager;
 import io.gomint.server.network.Protocol;
 import io.gomint.server.permission.PermissionGroupManager;
 import io.gomint.server.plugin.SimplePluginManager;
+import io.gomint.server.scheduler.CoreScheduler;
 import io.gomint.server.scheduler.SyncTaskManager;
-import io.gomint.server.util.PerformanceHacks;
 import io.gomint.server.util.Watchdog;
-import io.gomint.server.util.performance.UnsafeAllocator;
 import io.gomint.server.world.WorldAdapter;
 import io.gomint.server.world.WorldLoadException;
 import io.gomint.server.world.WorldManager;
@@ -78,11 +77,7 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.RejectedExecutionHandler;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
-import java.util.concurrent.SynchronousQueue;
 import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
@@ -136,6 +131,8 @@ public class GoMintServer implements GoMint, InventoryHolder {
     private ListeningScheduledExecutorService executorService;
     private Thread readerThread;
     private long currentTickTime;
+    @Getter
+    private CoreScheduler scheduler;
 
     // Additional informations for API usage
     private double tps;
@@ -175,7 +172,20 @@ public class GoMintServer implements GoMint, InventoryHolder {
         // ------------------------------------ //
         // Executor Initialization
         // ------------------------------------ //
+<<<<<<< HEAD
         this.executorService = MoreExecutors.listeningDecorator( EventLoops.LOOP_GROUP );
+=======
+        this.executorService = MoreExecutors.listeningDecorator( Executors.newScheduledThreadPool( 4, new ThreadFactory() {
+            private final AtomicLong counter = new AtomicLong( 0 );
+
+            @Override
+            public Thread newThread( Runnable r ) {
+                Thread thread = new Thread( r );
+                thread.setName( "GoMint Thread #" + counter.incrementAndGet() );
+                return thread;
+            }
+        } ) );
+>>>>>>> 893927c5c519bac56ae7d9e5f6a224f821340990
         this.watchdog = new Watchdog( this );
 
         this.watchdog.add( 30, TimeUnit.SECONDS );
@@ -304,6 +314,8 @@ public class GoMintServer implements GoMint, InventoryHolder {
         // Scheduler + WorldManager + PluginManager Initialization
         // ------------------------------------ //
         this.syncTaskManager = new SyncTaskManager( this, skipNanos );
+        this.scheduler = new CoreScheduler( this.getExecutorService(), this.getSyncTaskManager() );
+
         this.worldManager = new WorldManager( this );
 
         this.pluginManager = new SimplePluginManager( this );
@@ -684,6 +696,11 @@ public class GoMintServer implements GoMint, InventoryHolder {
     @Override
     public Collection<World> getWorlds() {
         return Collections.unmodifiableCollection( this.worldManager.getWorlds() );
+    }
+
+    @Override
+    public Scoreboard createScoreboard() {
+        return new io.gomint.server.scoreboard.Scoreboard();
     }
 
     /**

@@ -85,7 +85,7 @@ public class SimplePluginManager implements PluginManager {
      */
     public SimplePluginManager( GoMintServer server ) {
         this.server = server;
-        this.scheduler = new CoreScheduler( server.getExecutorService(), server.getSyncTaskManager() );
+        this.scheduler = server.getScheduler();
         this.pluginFolder = new File( "plugins" );
         this.commandManager = new CommandManager();
 

@@ -63,7 +63,7 @@ public class FlowerPotTileEntity extends TileEntity implements InventoryHolder {
     }
 
     @Override
-    public void update( long currentMillis, float dF ) {
+    public void update( long currentMillis ) {
 
     }
 
@@ -73,9 +73,11 @@ public class FlowerPotTileEntity extends TileEntity implements InventoryHolder {
     }
 
     @Override
-    public void toCompound( NBTTagCompound compound ) {
-        super.toCompound( compound );
+    public void toCompound( NBTTagCompound compound, SerializationReason reason ) {
+        super.toCompound( compound, reason );
+
         compound.addValue( "id", "FlowerPot" );
+
         compound.addValue( "item", (short) this.holdingItem.getMaterial() );
         compound.addValue( "mData", (int) this.holdingItem.getData() );
     }

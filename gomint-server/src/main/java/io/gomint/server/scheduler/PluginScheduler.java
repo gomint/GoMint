@@ -10,8 +10,6 @@ package io.gomint.server.scheduler;
 import io.gomint.plugin.Plugin;
 import io.gomint.scheduler.Scheduler;
 import io.gomint.scheduler.Task;
-import io.gomint.util.CompleteHandler;
-import io.gomint.util.ExceptionHandler;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -48,20 +46,12 @@ public class PluginScheduler implements Scheduler {
         }
 
         Task task = coreScheduler.executeAsync( runnable );
-        task.onException( new ExceptionHandler() {
-            @Override
-            public boolean onException( Exception e ) {
-                plugin.getLogger().warn( "A task thrown a Exception", e );
-                return true;
-            }
+        task.onException( e -> {
+            plugin.getLogger().warn( "A task thrown a Exception", e );
+            return true;
         } );
 
-        task.onComplete( new CompleteHandler() {
-            @Override
-            public void onComplete() {
-                runningTasks.remove( task );
-            }
-        } );
+        task.onComplete( () -> runningTasks.remove( task ) );
 
         this.runningTasks.add( task );
         return task;
@@ -74,20 +64,12 @@ public class PluginScheduler implements Scheduler {
         }
 
         Task task = coreScheduler.scheduleAsync( runnable, delay, timeUnit );
-        task.onException( new ExceptionHandler() {
-            @Override
-            public boolean onException( Exception e ) {
-                plugin.getLogger().warn( "A task thrown a Exception", e );
-                return true;
-            }
+        task.onException( e -> {
+            plugin.getLogger().warn( "A task thrown a Exception", e );
+            return true;
         } );
 
-        task.onComplete( new CompleteHandler() {
-            @Override
-            public void onComplete() {
-                runningTasks.remove( task );
-            }
-        } );
+        task.onComplete( () -> runningTasks.remove( task ) );
 
         this.runningTasks.add( task );
         return task;
@@ -100,20 +82,12 @@ public class PluginScheduler implements Scheduler {
         }
 
         Task task = coreScheduler.scheduleAsync( runnable, delay, period, timeUnit );
-        task.onException( new ExceptionHandler() {
-            @Override
-            public boolean onException( Exception e ) {
-                plugin.getLogger().warn( "A task thrown a Exception", e );
-                return true;
-            }
+        task.onException( e -> {
+            plugin.getLogger().warn( "A task thrown a Exception", e );
+            return true;
         } );
 
-        task.onComplete( new CompleteHandler() {
-            @Override
-            public void onComplete() {
-                runningTasks.remove( task );
-            }
-        } );
+        task.onComplete( () -> runningTasks.remove( task ) );
 
         this.runningTasks.add( task );
         return task;
@@ -126,20 +100,12 @@ public class PluginScheduler implements Scheduler {
         }
 
         Task task = coreScheduler.execute( runnable );
-        task.onException( new ExceptionHandler() {
-            @Override
-            public boolean onException( Exception e ) {
-                plugin.getLogger().warn( "A task thrown a Exception", e );
-                return true;
-            }
+        task.onException( e -> {
+            plugin.getLogger().warn( "A task thrown a Exception", e );
+            return true;
         } );
 
-        task.onComplete( new CompleteHandler() {
-            @Override
-            public void onComplete() {
-                runningTasks.remove( task );
-            }
-        } );
+        task.onComplete( () -> runningTasks.remove( task ) );
 
         this.runningTasks.add( task );
         return task;
@@ -152,20 +118,12 @@ public class PluginScheduler implements Scheduler {
         }
 
         Task task = coreScheduler.schedule( runnable, delay, timeUnit );
-        task.onException( new ExceptionHandler() {
-            @Override
-            public boolean onException( Exception e ) {
-                plugin.getLogger().warn( "A task thrown a Exception", e );
-                return true;
-            }
+        task.onException( e -> {
+            plugin.getLogger().warn( "A task thrown a Exception", e );
+            return true;
         } );
 
-        task.onComplete( new CompleteHandler() {
-            @Override
-            public void onComplete() {
-                runningTasks.remove( task );
-            }
-        } );
+        task.onComplete( () -> runningTasks.remove( task ) );
 
         this.runningTasks.add( task );
         return task;
@@ -178,21 +136,12 @@ public class PluginScheduler implements Scheduler {
         }
 
         Task task = coreScheduler.schedule( runnable, delay, period, timeUnit );
-        task.onException( new ExceptionHandler() {
-            @Override
-            public boolean onException( Exception e ) {
-                plugin.getLogger().warn( "A task thrown a Exception", e );
-                return true;
-            }
+        task.onException( e -> {
+            plugin.getLogger().warn( "A task thrown a Exception", e );
+            return true;
         } );
 
-        task.onComplete( new CompleteHandler() {
-            @Override
-            public void onComplete() {
-
-                runningTasks.remove( task );
-            }
-        } );
+        task.onComplete( () -> runningTasks.remove( task ) );
 
         this.runningTasks.add( task );
         return task;

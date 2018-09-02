@@ -25,6 +25,7 @@ import io.gomint.server.entity.metadata.MetadataContainer;
 import io.gomint.server.inventory.ArmorInventory;
 import io.gomint.server.inventory.PlayerInventory;
 import io.gomint.server.network.PlayerConnection;
+import io.gomint.server.network.Protocol;
 import io.gomint.server.network.packet.Packet;
 import io.gomint.server.network.packet.PacketEntityMetadata;
 import io.gomint.server.network.packet.PacketPlayerlist;
@@ -144,8 +145,10 @@ public class EntityHuman extends EntityCreature implements io.gomint.entity.pass
                         // We despawn this for everyone and respawn it
                         for ( io.gomint.entity.Entity entity : new HashSet<>( getAttachedEntities() ) ) {
                             if ( entity instanceof EntityPlayer ) {
-                                ( (EntityPlayer) entity ).getEntityVisibilityManager().removeEntity( EntityHuman.this );
-                                ( (EntityPlayer) entity ).getEntityVisibilityManager().addEntity( EntityHuman.this );
+                                if ( ( (EntityPlayer) entity ).getConnection().getProtocolID() < Protocol.MINECRAFT_PE_BETA_PROTOCOL_VERSION ) {
+                                    ( (EntityPlayer) entity ).getEntityVisibilityManager().removeEntity( EntityHuman.this );
+                                    ( (EntityPlayer) entity ).getEntityVisibilityManager().addEntity( EntityHuman.this );
+                                }
                             }
                         }
                     }
@@ -510,10 +513,10 @@ public class EntityHuman extends EntityCreature implements io.gomint.entity.pass
     }
 
     @Override
-    public Packet createSpawnPacket() {
+    public Packet createSpawnPacket( EntityPlayer receiver ) {
         PacketSpawnPlayer packetSpawnPlayer = new PacketSpawnPlayer();
         packetSpawnPlayer.setUuid( this.getUUID() );
-        packetSpawnPlayer.setName( this.getNameTag() ); // TODO: MJ BUG / 1.5.0.14 / Nametags don't change according to metadata index 4 (nametag) anymore, the client uses the name set in the spawn player packet
+        packetSpawnPlayer.setName( receiver.getConnection().getProtocolID() > Protocol.MINECRAFT_PE_PROTOCOL_VERSION ? this.getNameTag() : this.username ); // TODO: MJ BUG / 1.5.0.14 / Nametags don't change according to metadata index 4 (nametag) anymore, the client uses the name set in the spawn player packet
         packetSpawnPlayer.setEntityId( this.getEntityId() );
         packetSpawnPlayer.setRuntimeEntityId( this.getEntityId() );
 

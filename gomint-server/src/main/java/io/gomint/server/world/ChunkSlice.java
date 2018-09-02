@@ -286,7 +286,7 @@ public class ChunkSlice {
         return this.tileEntities.get( i );
     }
 
-    public void writeToNetwork( PacketBuffer buffer, int protocolID ) {
+    public void writeToNetwork( PacketBuffer buffer ) {
         buffer.writeByte( (byte) 8 );
 
         // Check how many layers we have
@@ -313,7 +313,7 @@ public class ChunkSlice {
                         if ( hashId != lastHash ) {
                             foundIndex = indexList.indexOf( hashId );
                             if ( foundIndex == -1 ) {
-                                int runtimeId = BlockRuntimeIDs.fromLegacy( blockId, blockData, protocolID );
+                                int runtimeId = BlockRuntimeIDs.fromLegacy( blockId, blockData );
                                 runtimeIndex.add( runtimeId );
                                 indexList.add( hashId );
                                 foundIndex = indexList.size() - 1;

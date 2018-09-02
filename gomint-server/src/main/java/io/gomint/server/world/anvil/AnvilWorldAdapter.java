@@ -11,7 +11,6 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.google.common.cache.RemovalListener;
-import com.google.common.cache.RemovalNotification;
 import com.google.common.io.Files;
 import io.gomint.math.BlockPosition;
 import io.gomint.math.Location;
@@ -20,12 +19,7 @@ import io.gomint.server.entity.EntityPlayer;
 import io.gomint.server.inventory.MaterialMagicNumbers;
 import io.gomint.server.plugin.PluginClassloader;
 import io.gomint.server.util.Pair;
-import io.gomint.server.world.ChunkAdapter;
-import io.gomint.server.world.ChunkCache;
-import io.gomint.server.world.CoordinateUtils;
-import io.gomint.server.world.WorldAdapter;
-import io.gomint.server.world.WorldCreateException;
-import io.gomint.server.world.WorldLoadException;
+import io.gomint.server.world.*;
 import io.gomint.server.world.block.Block;
 import io.gomint.taglib.NBTStream;
 import io.gomint.taglib.NBTTagCompound;
@@ -41,11 +35,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.nio.ByteOrder;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -160,73 +150,65 @@ public final class AnvilWorldAdapter extends WorldAdapter {
     private void prepareChunkGenerator() {
         switch ( this.generatorName ) {
             case "flat":
-                // The first integer is a version number in options
-                int optionVersion = 0;
-                String[] optionSplit = this.generatorOptions.split( ";" );
-                if ( optionSplit.length > 1 ) {
-                    try {
-                        optionVersion = Integer.parseInt( optionSplit[0] );
-                    } catch ( NumberFormatException e ) {
-                        // Ignore (vanilla falls back to 0 but its already 0)
-                    }
-                }
-
-                // Check if version is valid (0-3)
-                if ( optionVersion >= 0 && optionVersion <= 3 ) {
+                if ( this.generatorOptions != null && !this.generatorOptions.isEmpty() ) {
+                    String[] idLayers = this.generatorOptions.split( ";" );
                     List<Block> layers = new ArrayList<>();
 
-                    int layerInfoIndex = optionSplit.length == 1 ? 0 : 1;
-                    String layerInfo = optionSplit[layerInfoIndex];
-                    for ( String layer : layerInfo.split( "," ) ) {
-                        String[] temp;
-                        if ( optionVersion >= 3 ) {
-                            // This format uses "*" as delimiter and uses new ids
-                            temp = layer.split( "\\*", 2 );
-
-                            int amountOfLayers = 1;
-                            int blockId;
-                            if ( temp.length == 1 ) {
-                                blockId = MaterialMagicNumbers.valueOfWithId( temp[0] );
-                            } else {
-                                amountOfLayers = Integer.parseInt( temp[0] );
-                                blockId = MaterialMagicNumbers.valueOfWithId( temp[1] );
-                            }
-
-                            Block block = this.server.getBlocks().get( blockId, (byte) 0, (byte) 0, (byte) 0, null, null, 0 );
-                            for ( int i = 0; i < amountOfLayers; i++ ) {
-                                layers.add( block );
-                            }
-                        } else {
+                    for ( String layer : idLayers ) {
+                        try {
                             if ( layer.length() > 0 ) {
-                                // This format uses "x" as delimiter and uses old ids
-                                temp = layer.split( "x", 2 );
+                                // Old ids
+                                if ( this.generatorVersion == 0 ) {
+                                    // This format uses "x" as delimiter and uses old ids
+                                    String[] temp = layer.split( "x", 2 );
 
-                                int amountOfLayers = 1;
-                                int blockId;
-                                if ( temp.length == 1 ) {
-                                    blockId = Integer.parseInt( temp[0] );
+                                    int amountOfLayers = 1;
+                                    int blockId;
+                                    if ( temp.length == 1 ) {
+                                        blockId = Integer.parseInt( temp[0] );
+                                    } else {
+                                        amountOfLayers = Integer.parseInt( temp[0] );
+                                        blockId = Integer.parseInt( temp[1] );
+                                    }
+
+                                    Block block = this.server.getBlocks().get( blockId, (byte) 0, (byte) 0, (byte) 0, null, null, 0 );
+                                    for ( int i = 0; i < amountOfLayers; i++ ) {
+                                        layers.add( block );
+                                    }
                                 } else {
-                                    amountOfLayers = Integer.parseInt( temp[0] );
-                                    blockId = Integer.parseInt( temp[1] );
-                                }
+                                    // This format uses "*" as delimiter and uses new ids
+                                    String[] temp = layer.split( "\\*", 2 );
 
-                                Block block = this.server.getBlocks().get( blockId, (byte) 0, (byte) 0, (byte) 0, null, null, 0 );
-                                for ( int i = 0; i < amountOfLayers; i++ ) {
-                                    layers.add( block );
+                                    int amountOfLayers = 1;
+                                    int blockId;
+                                    if ( temp.length == 1 ) {
+                                        blockId = MaterialMagicNumbers.valueOfWithId( temp[0] );
+                                    } else {
+                                        amountOfLayers = Integer.parseInt( temp[0] );
+                                        blockId = MaterialMagicNumbers.valueOfWithId( temp[1] );
+                                    }
+
+                                    Block block = this.server.getBlocks().get( blockId, (byte) 0, (byte) 0, (byte) 0, null, null, 0 );
+                                    for ( int i = 0; i < amountOfLayers; i++ ) {
+                                        layers.add( block );
+                                    }
                                 }
                             }
+                        } catch ( Exception e ) {
+                            // Ignored
                         }
-
-                        GeneratorContext generatorContext = new GeneratorContext();
-                        generatorContext.put( "amountOfLayers", layers.size() );
-
-                        int i = 0;
-                        for ( Block block : layers ) {
-                            generatorContext.put( "layer." + ( i++ ), block );
-                        }
-
-                        this.chunkGenerator = new LayeredGenerator( this, generatorContext );
                     }
+
+                    GeneratorContext generatorContext = new GeneratorContext();
+                    generatorContext.put( "amountOfLayers", layers.size() );
+
+                    int i = 0;
+                    for ( Block block : layers ) {
+                        generatorContext.put( "layer." + ( i++ ), block );
+                    }
+
+                    this.chunkGenerator = new LayeredGenerator( this, generatorContext );
+
                 } else {
                     this.chunkGenerator = new LayeredGenerator( this, new GeneratorContext() );
                 }

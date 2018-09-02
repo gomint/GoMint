@@ -34,7 +34,7 @@ public class DispenserTileEntity extends TileEntity implements InventoryHolder {
     /**
      * Construct a new dispenser
      *
-     * @param items which are inside the dispenser
+     * @param items    which are inside the dispenser
      * @param location of the dispenser
      */
     public DispenserTileEntity( ItemStack[] items, Location location ) {
@@ -54,7 +54,7 @@ public class DispenserTileEntity extends TileEntity implements InventoryHolder {
     /**
      * Create a new tile entity based on its stored compound
      *
-     * @param compound which holds stored data
+     * @param compound     which holds stored data
      * @param worldAdapter which holds this tile entity
      */
     public DispenserTileEntity( NBTTagCompound compound, WorldAdapter worldAdapter ) {
@@ -84,28 +84,30 @@ public class DispenserTileEntity extends TileEntity implements InventoryHolder {
     }
 
     @Override
-    public void update( long currentMillis, float dF ) {
+    public void update( long currentMillis ) {
 
     }
 
     @Override
-    public void toCompound( NBTTagCompound compound ) {
-        super.toCompound( compound );
+    public void toCompound( NBTTagCompound compound, SerializationReason reason ) {
+        super.toCompound( compound, reason );
 
         compound.addValue( "id", "Dispenser" );
 
-        List<NBTTagCompound> nbtTagCompounds = new ArrayList<>();
-        for ( int i = 0; i < this.inventory.size(); i++ ) {
-            ItemStack itemStack = (ItemStack) this.inventory.getItem( i );
-            if ( itemStack != null ) {
-                NBTTagCompound nbtTagCompound = new NBTTagCompound( "" );
-                nbtTagCompound.addValue( "Slot", (byte) i );
-                putItemStack( itemStack, nbtTagCompound );
-                nbtTagCompounds.add( nbtTagCompound );
+        if ( reason == SerializationReason.PERSIST ) {
+            List<NBTTagCompound> nbtTagCompounds = new ArrayList<>();
+            for ( int i = 0; i < this.inventory.size(); i++ ) {
+                ItemStack itemStack = (ItemStack) this.inventory.getItem( i );
+                if ( itemStack != null ) {
+                    NBTTagCompound nbtTagCompound = new NBTTagCompound( "" );
+                    nbtTagCompound.addValue( "Slot", (byte) i );
+                    putItemStack( itemStack, nbtTagCompound );
+                    nbtTagCompounds.add( nbtTagCompound );
+                }
             }
-        }
 
-        compound.addValue( "Items", nbtTagCompounds );
+            compound.addValue( "Items", nbtTagCompounds );
+        }
     }
 
 }

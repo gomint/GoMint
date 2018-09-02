@@ -8,7 +8,6 @@
 package io.gomint.server.world;
 
 import io.gomint.jraknet.PacketBuffer;
-import io.gomint.server.network.Protocol;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -37,24 +36,18 @@ public class BlockRuntimeIDs {
     // Release version tables
     private static int[][] BLOCK_DATA_TO_RUNTIME = new int[0][0];
 
-    // Beta channel tables
-    private static int[][] BLOCK_DATA_TO_RUNTIME_BETA = new int[0][0];
-
     //
     private static AtomicInteger RUNTIME_ID = new AtomicInteger( 0 );
-    private static AtomicInteger RUNTIME_ID_BETA = new AtomicInteger( 0 );
 
     // Cached packet streams
     private static byte[] START_GAME_BUFFER;
-    private static byte[] START_GAME_BUFFER_BETA;
 
     static {
         // Get the correct resource
-        loadFile( "/temp_runtimeids.json", false );
-        loadFile( "/temp_runtimeids_282.json", true );
+        loadFile( "/temp_runtimeids.json" );
     }
 
-    public static void loadFile( String file, boolean beta ) {
+    public static void loadFile( String file ) {
         InputStream inputStream = BlockRuntimeIDs.class.getResourceAsStream( file );
         if ( inputStream == null ) {
             try {
@@ -96,81 +89,57 @@ public class BlockRuntimeIDs {
             }
 
             // Init array
-            if ( beta ) {
-                BLOCK_DATA_TO_RUNTIME_BETA = new int[highestBlockID + 1][];
-                buffer.writeUnsignedVarInt( runtimeIDs.size() );
-            } else {
-                BLOCK_DATA_TO_RUNTIME = new int[highestBlockID + 1][];
-                buffer.writeUnsignedVarInt( runtimeIDs.size() );
-            }
+            BLOCK_DATA_TO_RUNTIME = new int[highestBlockID + 1][];
+            buffer.writeUnsignedVarInt( runtimeIDs.size() );
 
             for ( Object id : runtimeIDs ) {
                 JSONObject idObj = (JSONObject) id;
                 int blockId = ( (Long) idObj.get( "id" ) ).intValue();
                 int dataValue = ( (Long) idObj.get( "data" ) ).intValue();
 
-                int[] dataValues = null;
-                if ( beta ) {
-                    dataValues = BLOCK_DATA_TO_RUNTIME_BETA[blockId];
-                } else {
-                    dataValues = BLOCK_DATA_TO_RUNTIME[blockId];
-                }
-
+                int[] dataValues = BLOCK_DATA_TO_RUNTIME[blockId];
                 if ( dataValues == null ) {
                     dataValues = new int[highestDataValues.get( blockId ) + 1];
                 }
 
                 Long overrideId = (Long) idObj.get( "runtimeID" );
 
-                if ( beta ) {
-                    dataValues[dataValue] = overrideId != null ? overrideId.intValue() : RUNTIME_ID_BETA.getAndIncrement();
-                    BLOCK_DATA_TO_RUNTIME_BETA[blockId] = dataValues;
-                    buffer.writeString( (String) idObj.get( "name" ) );
-                    buffer.writeLShort( (short) dataValue );
-                } else {
-                    dataValues[dataValue] = overrideId != null ? overrideId.intValue() : RUNTIME_ID.getAndIncrement();
-                    BLOCK_DATA_TO_RUNTIME[blockId] = dataValues;
-                    buffer.writeString( (String) idObj.get( "name" ) );
-                    buffer.writeLShort( (short) dataValue );
-                }
+
+                dataValues[dataValue] = overrideId != null ? overrideId.intValue() : RUNTIME_ID.getAndIncrement();
+                BLOCK_DATA_TO_RUNTIME[blockId] = dataValues;
+                buffer.writeString( (String) idObj.get( "name" ) );
+                buffer.writeLShort( (short) dataValue );
             }
 
-            if ( !beta ) {
-                START_GAME_BUFFER = Arrays.copyOf( buffer.getBuffer(), buffer.getPosition() );
-            } else {
-                START_GAME_BUFFER_BETA = Arrays.copyOf( buffer.getBuffer(), buffer.getPosition() );
-            }
+            START_GAME_BUFFER = Arrays.copyOf( buffer.getBuffer(), buffer.getPosition() );
         }
     }
 
     /**
      * Get the cached view for the start game packet
      *
-     * @param protocolId of the player getting the packet
      * @return correct cached view
      */
-    public static byte[] getPacketCache( int protocolId ) {
-        if ( protocolId == Protocol.MINECRAFT_PE_PROTOCOL_VERSION ) {
-            return START_GAME_BUFFER;
-        }
-
-        return START_GAME_BUFFER_BETA;
+    public static byte[] getPacketCache() {
+        return START_GAME_BUFFER;
     }
 
     /**
      * Get the correct runtime id for the client. This may also result in blocks being 0'ed due to invalid blocks.
      *
-     * @param blockId    which should be converted
-     * @param dataValue  which should be converted
-     * @param protocolID of the client
+     * @param blockId   which should be converted
+     * @param dataValue which should be converted
      * @return runtime id or 0
      */
-    public static int fromLegacy( int blockId, byte dataValue, int protocolID ) {
+    public static int fromLegacy( int blockId, byte dataValue ) {
         // Get lookup array
         int[][] lookup = BLOCK_DATA_TO_RUNTIME;
+<<<<<<< HEAD
         if ( protocolID >= Protocol.MINECRAFT_PE_NEXT_STABLE_PROTOCOL_VERSION ) {
             lookup = BLOCK_DATA_TO_RUNTIME_BETA;
         }
+=======
+>>>>>>> 893927c5c519bac56ae7d9e5f6a224f821340990
 
         // We first lookup the wanted values
         int runtimeID = lookup( blockId, dataValue, lookup );

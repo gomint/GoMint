@@ -100,7 +100,7 @@ public class PostProcessWorker implements Runnable {
             } else {
                 buffer.setPosition( 0 );
 
-                packet.serializeHeader( buffer, this.connection.getConnection().getProtocolVersion() );
+                packet.serializeHeader( buffer );
                 packet.serialize( buffer, this.connection.getProtocolID() );
 
                 writeVarInt( buffer.getPosition(), inBuf );

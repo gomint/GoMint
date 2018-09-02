@@ -1027,9 +1027,10 @@ public abstract class Entity implements io.gomint.entity.Entity {
     /**
      * Create the packet for display in the client
      *
+     * @param receiver which should get this entity
      * @return packet for spawning this entity
      */
-    public Packet createSpawnPacket() {
+    public Packet createSpawnPacket( EntityPlayer receiver ) {
         PacketSpawnEntity spawnEntity = new PacketSpawnEntity();
         spawnEntity.setEntityId( this.getEntityId() );
         spawnEntity.setMetadata( this.metadataContainer );

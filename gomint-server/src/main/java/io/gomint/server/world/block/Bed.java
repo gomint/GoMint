@@ -9,6 +9,7 @@ import io.gomint.math.Vector;
 import io.gomint.server.entity.Entity;
 import io.gomint.server.entity.EntityPlayer;
 import io.gomint.server.entity.tileentity.BedTileEntity;
+import io.gomint.server.entity.tileentity.SerializationReason;
 import io.gomint.server.entity.tileentity.TileEntity;
 import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.world.PlacementData;
@@ -185,7 +186,7 @@ public class Bed extends Block implements io.gomint.world.block.BlockBed {
         Block otherBlock = (Block) this.getOtherBlock();
         if ( otherBlock != null ) {
             NBTTagCompound compound = new NBTTagCompound( "" );
-            this.getTileEntity().toCompound( compound );
+            this.getTileEntity().toCompound( compound , SerializationReason.PERSIST );
 
             data.setMetaData( (byte) ( this.getBlockData() | 0x08 ) );
             data.setCompound( compound );

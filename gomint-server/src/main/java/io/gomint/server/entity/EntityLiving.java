@@ -209,13 +209,8 @@ public abstract class EntityLiving extends Entity implements InventoryHolder, io
         return this.getAttribute( Attribute.HEALTH );
     }
 
-    /**
-     * Construct a spawn packet for this entity
-     *
-     * @return the spawn packet of this entity, ready to be sent to the client
-     */
     @Override
-    public Packet createSpawnPacket() {
+    public Packet createSpawnPacket( EntityPlayer receiver ) {
         // Broadcast spawn entity packet:
         PacketSpawnEntity packet = new PacketSpawnEntity();
         packet.setEntityId( this.id );

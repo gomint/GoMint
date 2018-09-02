@@ -311,13 +311,8 @@ public abstract class Packet {
         return buffer.readByte() * BYTE_ROTATION_DIVIDOR;
     }
 
-    public void serializeHeader( PacketBuffer buffer, byte protocolVersion ) {
-        if ( protocolVersion == 8 ) {
-            buffer.writeByte( this.id );
-            buffer.writeShort( (short) 0 );
-        } else {
-            buffer.writeUnsignedVarInt( this.id );
-        }
+    public void serializeHeader( PacketBuffer buffer ) {
+        buffer.writeUnsignedVarInt( this.id );
     }
 
 }

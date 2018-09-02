@@ -8,7 +8,6 @@
 package io.gomint.server.entity.tileentity;
 
 import com.google.common.base.Joiner;
-import io.gomint.math.BlockPosition;
 import io.gomint.math.Location;
 import io.gomint.server.world.WorldAdapter;
 import io.gomint.taglib.NBTTagCompound;
@@ -29,7 +28,7 @@ public class SignTileEntity extends TileEntity {
     /**
      * Construct a new sign tile
      *
-     * @param lines content of sign
+     * @param lines    content of sign
      * @param location of the sign
      */
     public SignTileEntity( String[] lines, Location location ) {
@@ -53,13 +52,13 @@ public class SignTileEntity extends TileEntity {
     }
 
     @Override
-    public void update( long currentMillis, float dF ) {
+    public void update( long currentMillis ) {
 
     }
 
     @Override
-    public void toCompound( NBTTagCompound compound ) {
-        super.toCompound( compound );
+    public void toCompound( NBTTagCompound compound, SerializationReason reason ) {
+        super.toCompound( compound, reason );
 
         compound.addValue( "id", "Sign" );
         compound.addValue( "Text", CONTENT_JOINER.join( this.lines ) );

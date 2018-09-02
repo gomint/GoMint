@@ -68,7 +68,7 @@ public class Blocks {
             lastReport = System.currentTimeMillis();
         }
 
-        LOGGER.warn( "Unknown block {} @ {}", blockId, location );
+        LOGGER.warn( "Unknown block {} @ {}", blockId, location, new Exception() );
         return null;
     }
 
@@ -78,7 +78,7 @@ public class Blocks {
             return instance.generate();
         }
 
-        LOGGER.warn( "Unknown block {}", blockId );
+        LOGGER.warn( "Unknown block {}", blockId, new Exception() );
         return null;
     }
 

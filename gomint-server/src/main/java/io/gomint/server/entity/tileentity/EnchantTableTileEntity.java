@@ -47,8 +47,8 @@ public class EnchantTableTileEntity extends ContainerTileEntity implements Inven
     }
 
     @Override
-    public void toCompound( NBTTagCompound compound ) {
-        super.toCompound( compound );
+    public void toCompound( NBTTagCompound compound, SerializationReason reason ) {
+        super.toCompound( compound, reason );
 
         compound.addValue( "id", "EnchantTable" );
     }

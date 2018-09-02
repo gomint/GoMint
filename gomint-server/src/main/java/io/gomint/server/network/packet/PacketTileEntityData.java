@@ -2,6 +2,7 @@ package io.gomint.server.network.packet;
 
 import io.gomint.jraknet.PacketBuffer;
 import io.gomint.math.BlockPosition;
+import io.gomint.server.entity.tileentity.SerializationReason;
 import io.gomint.server.entity.tileentity.TileEntity;
 import io.gomint.server.network.Protocol;
 import io.gomint.server.util.DumpUtil;
@@ -36,7 +37,7 @@ public class PacketTileEntityData extends Packet {
 
         // NBT Tag
         NBTTagCompound compound = new NBTTagCompound( "" );
-        this.tileEntity.toCompound( compound );
+        this.tileEntity.toCompound( compound, SerializationReason.NETWORK );
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         NBTWriter nbtWriter = new NBTWriter( baos, ByteOrder.LITTLE_ENDIAN );

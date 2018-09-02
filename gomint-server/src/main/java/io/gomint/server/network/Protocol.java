@@ -40,8 +40,6 @@ import io.gomint.server.network.packet.PacketSetChunkRadius;
 import io.gomint.server.network.packet.PacketSetLocalPlayerAsInitialized;
 import io.gomint.server.network.packet.PacketText;
 import io.gomint.server.network.packet.PacketWorldSoundEvent;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * @author BlackyPaw
@@ -52,9 +50,15 @@ public final class Protocol {
     // CHECKSTYLE:OFF
     // MC:PE Protocol ID
     public static final int MINECRAFT_PE_BETA_PROTOCOL_VERSION = 290;
+<<<<<<< HEAD
     public static final int MINECRAFT_PE_NEXT_STABLE_PROTOCOL_VERSION = 282;
     public static final int MINECRAFT_PE_PROTOCOL_VERSION = 274;
     public static final String MINECRAFT_PE_NETWORK_VERSION = "1.5.0";
+=======
+    public static final int MINECRAFT_PE_NEXT_STABLE_PROTOCOL_VERSION = -1;
+    public static final int MINECRAFT_PE_PROTOCOL_VERSION = 282;
+    public static final String MINECRAFT_PE_NETWORK_VERSION = "1.6.0.14";
+>>>>>>> 893927c5c519bac56ae7d9e5f6a224f821340990
 
     // ========================================= PACKET IDS ========================================= //
     public static final byte PACKET_BATCH = (byte) 0xfe;
@@ -102,7 +106,7 @@ public final class Protocol {
     public static final byte PACKET_HOTBAR = (byte) 0x30;
     public static final byte PACKET_INVENTORY_CONTENT_PACKET = (byte) 0x31;
     public static final byte PACKET_INVENTORY_SET_SLOT = (byte) 0x32;
-    public static final byte PACKET_CONTAINER_SET_CONTENT = (byte) 0x33;
+    public static final byte PACKET_SET_CONTAINER_DATA = (byte) 0x33;
     public static final byte PACKET_CRAFTING_RECIPES = (byte) 0x34;
     public static final byte PACKET_CRAFTING_EVENT = (byte) 0x35;
     public static final byte PACKET_ADVENTURE_SETTINGS = (byte) 0x37;
@@ -131,10 +135,10 @@ public final class Protocol {
     public static final byte PACKET_SET_SCORE = (byte) 0x6c;
     public static final byte PACKET_UPDATE_BLOCK_SYNCHED = (byte) 0x6e;
     public static final byte PACKET_ENTITY_RELATIVE_MOVEMENT = (byte) 0x6f;
-    public static final byte PACKET_SET_LOCAL_PLAYER_INITIALIZED = (byte) 0x70;
+    public static final byte PACKET_SET_SCOREBOARD_IDENTITY = (byte) 0x70;
+    public static final byte PACKET_SET_LOCAL_PLAYER_INITIALIZED = (byte) 0x71;
     public static final byte PACKET_SET_TITLE = (byte) 0x58;
     public static final byte PACKET_SET_COMPASS_TARGET = (byte) 0xB1;
-    private static final Logger LOGGER = LoggerFactory.getLogger( Protocol.class );
     // CHECKSTYLE:ON
 
     // ========================================= PACKET METHODS ========================================= //
@@ -147,7 +151,7 @@ public final class Protocol {
      * Creates a new packet instance given the packet ID found inside the first byte of any
      * packet's data.
      *
-     * @param id The ID of the the packet to create
+     * @param id              The ID of the the packet to create
      * @return The created packet or null if it could not be created
      */
     public static Packet createPacket( byte id ) {

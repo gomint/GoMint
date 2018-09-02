@@ -156,7 +156,6 @@ public class PlayerConnection {
     private final Connection connection;
     @Getter
     private final ConnectionHandler connectionHandler;
-    private byte raknetVersion;
 
     // World data
     @Getter
@@ -177,6 +176,7 @@ public class PlayerConnection {
     private int tcpPing;
     private PostProcessExecutor postProcessorExecutor;
     private ZLib decompressor;
+
     // Connection State:
     @Getter
     @Setter
@@ -250,10 +250,6 @@ public class PlayerConnection {
 
                 return packetData;
             } );
-
-            this.raknetVersion = this.connection.getProtocolVersion();
-        } else {
-            this.connectionHandler.onRaknetVersion( b -> raknetVersion = b );
         }
     }
 
@@ -376,12 +372,12 @@ public class PlayerConnection {
                 PacketBuffer[] packetBuffers = new PacketBuffer[packets.length];
                 for ( int i = 0; i < packets.length; i++ ) {
                     packetBuffers[i] = new PacketBuffer( 2 );
-                    packets[i].serializeHeader( packetBuffers[i], this.raknetVersion );
+                    packets[i].serializeHeader( packetBuffers[i] );
                     packets[i].serialize( packetBuffers[i], this.protocolID );
                 }
 
                 WrappedMCPEPacket mcpePacket = new WrappedMCPEPacket();
-                mcpePacket.setRaknetVersion( this.raknetVersion );
+                mcpePacket.setRaknetVersion( (byte) 9 );
                 mcpePacket.setBuffer( packetBuffers );
                 this.connectionHandler.send( mcpePacket );
                 this.sendQueue.clear();
@@ -450,11 +446,11 @@ public class PlayerConnection {
             LOGGER.debug( "Writing packet {} to client", Integer.toHexString( packet.getId() & 0xFF ) );
 
             PacketBuffer buffer = new PacketBuffer( 2 );
-            packet.serializeHeader( buffer, this.raknetVersion );
+            packet.serializeHeader( buffer );
             packet.serialize( buffer, this.protocolID );
 
             WrappedMCPEPacket mcpePacket = new WrappedMCPEPacket();
-            mcpePacket.setRaknetVersion( this.raknetVersion );
+            mcpePacket.setRaknetVersion( (byte) 9 );
             mcpePacket.setBuffer( new PacketBuffer[]{ buffer } );
             this.connectionHandler.send( mcpePacket );
         }
@@ -470,7 +466,7 @@ public class PlayerConnection {
     private boolean sendWorldChunk( ChunkAdapter chunkAdapter ) {
         this.playerChunks.add( chunkAdapter.longHashCode() );
         this.loadingChunks.remove( chunkAdapter.longHashCode() );
-        this.addToSendQueue( chunkAdapter.getCachedPacket( this.protocolID ) );
+        this.addToSendQueue( chunkAdapter.getCachedPacket() );
         this.entity.getEntityVisibilityManager().updateAddedChunk( chunkAdapter );
 
         if ( this.state == PlayerConnectionState.LOGIN && this.loadingChunks.isEmpty() ) {
@@ -527,27 +523,11 @@ public class PlayerConnection {
     private void handleBufferData( long currentTimeMillis, PacketBuffer buffer ) {
         // Grab the packet ID from the packet's data
         int rawId = buffer.readUnsignedVarInt();
-        byte packetId;
+        byte packetId = (byte) rawId;
 
-        // Check for split id stuff
-        if ( this.raknetVersion == 8 ) {
-            packetId = (byte) rawId;
-
-            // There is some data behind the packet id when non batched packets (2 bytes)
-            if ( packetId == PACKET_BATCH ) {
-                LOGGER.error( "Malformed batch packet payload: Batch packets are not allowed to contain further batch packets" );
-            }
-
-            // TODO: Proper implement sending subclient and target subclient (two bytes)
-            buffer.readShort();
-        } else {
-            // TODO: Find the new way of how the split ids are handled
-            packetId = (byte) rawId;
-
-            // There is some data behind the packet id when non batched packets (2 bytes)
-            if ( packetId == PACKET_BATCH ) {
-                LOGGER.error( "Malformed batch packet payload: Batch packets are not allowed to contain further batch packets" );
-            }
+        // There is some data behind the packet id when non batched packets (2 bytes)
+        if ( packetId == PACKET_BATCH ) {
+            LOGGER.error( "Malformed batch packet payload: Batch packets are not allowed to contain further batch packets" );
         }
 
         LOGGER.debug( "Got MCPE packet {}", Integer.toHexString( packetId & 0xFF ) );
@@ -726,7 +706,7 @@ public class PlayerConnection {
                     this.requestChunk( chunk.getFirst(), chunk.getSecond() );
                 } else {
                     // We already know this chunk but maybe forceResend is enabled
-                    worldAdapter.sendChunk( chunk.getFirst(), chunk.getSecond(), this.entity,
+                    worldAdapter.sendChunk( chunk.getFirst(), chunk.getSecond(),
                         false, ( chunkHash, loadedChunk ) -> {
                             if ( this.entity != null ) { // It can happen that the server loads longer and the client has disconnected
                                 this.entity.getEntityVisibilityManager().updateAddedChunk( loadedChunk );
@@ -771,7 +751,7 @@ public class PlayerConnection {
 
     private void requestChunk( Integer x, Integer z ) {
         LOGGER.debug( "Requesting chunk {} {} for {}", x, z, this.entity );
-        this.entity.getWorld().sendChunk( x, z, this.entity,
+        this.entity.getWorld().sendChunk( x, z,
             false, ( chunkHash, loadedChunk ) -> {
                 if ( this.entity != null ) { // It can happen that the server loads longer and the client has disconnected
                     this.entity.getChunkSendQueue().offer( loadedChunk );
