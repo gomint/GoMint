@@ -7,6 +7,7 @@
 
 package io.gomint.server.entity;
 
+import io.gomint.ChatColor;
 import io.gomint.GoMint;
 import io.gomint.command.CommandOutput;
 import io.gomint.command.PlayerCommandSender;
@@ -1544,8 +1545,15 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
 
         // Now its time for the join event since the player is fully loaded
         PlayerJoinEvent event = this.getConnection().getNetworkManager().getServer().getPluginManager().callEvent( new PlayerJoinEvent( this ) );
+        event.setJoinMessage( ChatColor.YELLOW + this.getDisplayName() + ChatColor.YELLOW + " joined the game." );
         if ( event.isCancelled() ) {
             this.connection.disconnect( event.getKickReason() );
+        } else {
+            if( event.getJoinMessage() != null && event.getJoinMessage() != "" ) {
+                GoMint.instance().getPlayers().forEach( ( player ) -> {
+                    player.sendMessage( event.getJoinMessage() );
+                });
+            }
         }
     }
 

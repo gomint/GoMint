@@ -17,9 +17,28 @@ import lombok.ToString;
 public class PlayerJoinEvent extends CancellablePlayerEvent {
 
     private String kickReason;
+    private String joinMessage;
 
     public PlayerJoinEvent( EntityPlayer player ) {
         super( player );
+    }
+
+    /**
+     * Set the message that will be displayed when the player joins the server
+     *
+     * @param joinMessage the message to display
+     */
+    public void setJoinMessage( String joinMessage ) {
+        this.joinMessage = joinMessage;
+    }
+
+    /**
+     * Get the message that will be displayed when the player joins the server
+     *
+     * @return the message that will be displayed
+     */
+    public String getJoinMessage() {
+        return joinMessage;
     }
 
     /**

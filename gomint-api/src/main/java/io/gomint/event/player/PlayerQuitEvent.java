@@ -11,6 +11,8 @@ import io.gomint.entity.EntityPlayer;
  */
 public class PlayerQuitEvent extends PlayerEvent {
 
+    private String quitMessage;
+
     /**
      * Construct a quit event with the player who disconnected
      *
@@ -18,6 +20,24 @@ public class PlayerQuitEvent extends PlayerEvent {
      */
     public PlayerQuitEvent( EntityPlayer player ) {
         super( player );
+    }
+
+    /**
+     * Set the message that will be displayed when the player leaves the server
+     *
+     * @param quitMessage the message to display
+     */
+    public void setQuitMessage( String quitMessage ) {
+        this.quitMessage = quitMessage;
+    }
+
+    /**
+     * Get the message that will be displayed when the player leaves the server
+     *
+     * @return the message that will be displayed
+     */
+    public String getQuitMessage() {
+        return quitMessage;
     }
 
 }
