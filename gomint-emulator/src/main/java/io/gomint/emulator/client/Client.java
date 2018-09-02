@@ -102,6 +102,10 @@ public class Client {
         try {
             this.socket.initialize();
             this.socket.setMojangModificationEnabled( true );
+<<<<<<< HEAD
+            this.socket.setProtocolVersion( 9 );
+=======
+>>>>>>> 893927c5c519bac56ae7d9e5f6a224f821340990
             this.socket.setEventHandler( ( socket, socketEvent ) -> {
                 System.out.println( socketEvent.getType() );
 

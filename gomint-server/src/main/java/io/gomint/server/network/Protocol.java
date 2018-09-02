@@ -34,6 +34,8 @@ import io.gomint.server.network.packet.PacketPlayerAction;
 import io.gomint.server.network.packet.PacketResourcePackResponse;
 import io.gomint.server.network.packet.PacketResourcePacksInfo;
 import io.gomint.server.network.packet.PacketServerSettingsRequest;
+import io.gomint.server.network.packet.PacketPlaySound;
+import io.gomint.server.network.packet.PacketStopSound;
 import io.gomint.server.network.packet.PacketSetChunkRadius;
 import io.gomint.server.network.packet.PacketSetLocalPlayerAsInitialized;
 import io.gomint.server.network.packet.PacketText;
@@ -48,9 +50,15 @@ public final class Protocol {
     // CHECKSTYLE:OFF
     // MC:PE Protocol ID
     public static final int MINECRAFT_PE_BETA_PROTOCOL_VERSION = 290;
+<<<<<<< HEAD
+    public static final int MINECRAFT_PE_NEXT_STABLE_PROTOCOL_VERSION = 282;
+    public static final int MINECRAFT_PE_PROTOCOL_VERSION = 274;
+    public static final String MINECRAFT_PE_NETWORK_VERSION = "1.5.0";
+=======
     public static final int MINECRAFT_PE_NEXT_STABLE_PROTOCOL_VERSION = -1;
     public static final int MINECRAFT_PE_PROTOCOL_VERSION = 282;
     public static final String MINECRAFT_PE_NETWORK_VERSION = "1.6.0.14";
+>>>>>>> 893927c5c519bac56ae7d9e5f6a224f821340990
 
     // ========================================= PACKET IDS ========================================= //
     public static final byte PACKET_BATCH = (byte) 0xfe;
@@ -115,6 +123,8 @@ public final class Protocol {
     public static final byte PACKET_COMMAND_REQUEST = (byte) 0x4d;
     public static final byte PACKET_COMMAND_OUTPUT = (byte) 0x4f;
     public static final byte PACKET_TRANSFER = (byte) 0x55;
+    public static final byte PACKET_PLAY_SOUND = (byte) 0x57;
+    public static final byte PACKET_STOP_SOUND = (byte) 0x58;
     public static final byte PACKET_BOOK_EDIT = (byte) 0x61;
     public static final byte PACKET_MODAL_REQUEST = (byte) 0x64;
     public static final byte PACKET_MODAL_RESPONSE = (byte) 0x65;
@@ -181,6 +191,12 @@ public final class Protocol {
 
             case PACKET_LOGIN:
                 return new PacketLogin();
+
+            case PACKET_PLAY_SOUND:
+                return new PacketPlaySound();
+
+            case PACKET_STOP_SOUND:
+                return new PacketStopSound();
 
             case PACKET_PLAY_STATE:
                 return new PacketPlayState();

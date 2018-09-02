@@ -259,6 +259,10 @@ public class ChunkAdapter implements Chunk {
      * cache.
      *
      * @param batch     The batch which has been generated to be sent to the clients
+<<<<<<< HEAD
+     * @param betaBatch The batch which has been generated to be sent to the beta clients
+=======
+>>>>>>> 893927c5c519bac56ae7d9e5f6a224f821340990
      */
     void setCachedPacket( Packet batch ) {
         this.dirty = false;
@@ -295,8 +299,14 @@ public class ChunkAdapter implements Chunk {
      *
      * @param callback The callback to be invoked once the operation is complete
      */
+<<<<<<< HEAD
+    void packageChunk( EntityPlayer player, Delegate2<Long, ChunkAdapter> callback ) {
+        SoftReference<Packet> cachedPacketRef = ( player.getConnection().getProtocolID() >=
+            Protocol.MINECRAFT_PE_NEXT_STABLE_PROTOCOL_VERSION ) ? this.cachedBetaPacket : this.cachedPacket;
+=======
     void packageChunk( Delegate2<Long, ChunkAdapter> callback ) {
         SoftReference<Packet> cachedPacketRef = this.cachedPacket;
+>>>>>>> 893927c5c519bac56ae7d9e5f6a224f821340990
 
         if ( !this.dirty && cachedPacketRef != null ) {
             Packet packet = cachedPacketRef.get();

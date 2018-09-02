@@ -13,29 +13,38 @@ package io.gomint.entity.potion;
  */
 public enum PotionEffect {
 
-    SPEED,
-    SLOWNESS,
-    HASTE,
-    MINING_FATIGUE,
-    STRENGTH,
-    HEALING,
-    HARMING,
-    JUMP,
-    NAUSEA,
-    REGENERATION,
-    DAMAGE_RESISTANCE,
-    FIRE_RESISTANCE,
-    WATER_BREATHING,
-    INVISIBILITY,
-    BLINDNESS,
-    NIGHT_VISION,
-    HUNGER,
-    WEAKNESS,
-    POISON,
-    WITHER,
-    HEALTH_BOOST,
-    ABSORPTION,
-    SATURATION,
-    LEVITATION;
+    SPEED("Speed"),
+    SLOWNESS("Slowness"),
+    HASTE("Haste"),
+    MINING_FATIGUE("Mining Fatigue"),
+    STRENGTH("Strength"),
+    INSTANT_HEALTH("Healing"),
+    INSTANT_DAMAGE("Harming"),
+    JUMP_BOOST("Jump Boost"),
+    NAUSEA("Nausea"),
+    REGENERATION("Regeneration"),
+    RESISTANCE("Resistance"),
+    FIRE_RESISTANCE("Fire Resistance"),
+    WATER_BREATHING("Water Breathing"),
+    INVISIBILITY("Invisibility"),
+    BLINDNESS("Blindness"),
+    NIGHT_VISION("Night Vision"),
+    HUNGER("Hunger"),
+    WEAKNESS("Weakness"),
+    POISON("Poison"),
+    WITHER("Wither"),
+    HEALTH_BOOST("Health Boost"),
+    ABSORPTION("Absorption"),
+    SATURATION("Saturation"),
+    LEVITATION("Levitation");
 
+    private String effectName;
+
+    PotionEffect( String effectName ) {
+        this.effectName = effectName;
+    }
+
+    public String getEffectName() {
+        return this.effectName;
+    }
 }

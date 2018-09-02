@@ -172,6 +172,9 @@ public class GoMintServer implements GoMint, InventoryHolder {
         // ------------------------------------ //
         // Executor Initialization
         // ------------------------------------ //
+<<<<<<< HEAD
+        this.executorService = MoreExecutors.listeningDecorator( EventLoops.LOOP_GROUP );
+=======
         this.executorService = MoreExecutors.listeningDecorator( Executors.newScheduledThreadPool( 4, new ThreadFactory() {
             private final AtomicLong counter = new AtomicLong( 0 );
 
@@ -182,6 +185,7 @@ public class GoMintServer implements GoMint, InventoryHolder {
                 return thread;
             }
         } ) );
+>>>>>>> 893927c5c519bac56ae7d9e5f6a224f821340990
         this.watchdog = new Watchdog( this );
 
         this.watchdog.add( 30, TimeUnit.SECONDS );

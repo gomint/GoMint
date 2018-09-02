@@ -26,10 +26,17 @@ public class MaterialMagicNumbers {
     private static final Int2ObjectMap<String> OLD_ID_MAPPING = new Int2ObjectOpenHashMap<>();
 
     static {
+<<<<<<< HEAD
+        InputStream inputStream = BlockRuntimeIDs.class.getResourceAsStream( "/temp_runtimeids_282.json" );
+        if ( inputStream == null ) {
+            try {
+                inputStream = new FileInputStream( "gomint-server/src/main/resources/temp_runtimeids_282.json" );
+=======
         InputStream inputStream = BlockRuntimeIDs.class.getResourceAsStream( "/temp_runtimeids.json" );
         if ( inputStream == null ) {
             try {
                 inputStream = new FileInputStream( "gomint-server/src/main/resources/temp_runtimeids.json" );
+>>>>>>> 893927c5c519bac56ae7d9e5f6a224f821340990
             } catch ( FileNotFoundException e ) {
                 e.printStackTrace();
             }

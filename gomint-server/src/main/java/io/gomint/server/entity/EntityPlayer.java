@@ -74,6 +74,8 @@ import io.gomint.server.network.packet.PacketSetTitle;
 import io.gomint.server.network.packet.PacketSpawnPlayer;
 import io.gomint.server.network.packet.PacketText;
 import io.gomint.server.network.packet.PacketTransfer;
+import io.gomint.server.network.packet.PacketPlaySound;
+import io.gomint.server.network.packet.PacketStopSound;
 import io.gomint.server.network.packet.PacketUpdateAttributes;
 import io.gomint.server.network.tcp.protocol.SendPlayerToServerPacket;
 import io.gomint.server.permission.PermissionManager;
@@ -383,6 +385,12 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
     @Override
     public boolean isOp() {
         return this.adventureSettings.isOperator();
+    }
+
+    @Override
+    public void setOp( boolean value ) {
+        this.adventureSettings.setOperator( value );
+        this.sendAdventureSettings();
     }
 
     @Override
@@ -1432,14 +1440,14 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
     public void setXP( int xp ) {
         // Iterate levels until we have a new xp percentage value to set
         int neededXP, tempXP = xp, level = 0;
-        while ( tempXP > ( neededXP = calculateRequiredExperienceForLevel( getLevel() ) ) ) {
+        while ( tempXP > ( neededXP = calculateRequiredExperienceForLevel( getXPLevel() ) ) ) {
             tempXP -= neededXP;
             level++;
         }
 
         this.xp = xp;
         this.setAttribute( Attribute.EXPERIENCE, tempXP / (float) neededXP );
-        this.setLevel( level );
+        this.setXPLevel( level );
     }
 
     protected boolean shouldTickHunger() {
@@ -1447,23 +1455,48 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
     }
 
     @Override
-    public int getLevel() {
+    public int getXPLevel() {
         return (int) this.getAttribute( Attribute.EXPERIENCE_LEVEL );
     }
 
     @Override
-    public void setLevel( int level ) {
+    public void setXPLevel( int level ) {
         this.setAttribute( Attribute.EXPERIENCE_LEVEL, level );
     }
 
     @Override
-    public void playSound( Vector location, Sound sound, byte pitch, SoundData data ) {
-        this.world.playSound( this, location, sound, pitch, data );
+    public void playSound( Vector vector, String soundName ) {
+        this.playSound( vector, soundName, 1, 1 );
     }
 
     @Override
-    public void playSound( Vector location, Sound sound, byte pitch ) {
-        this.world.playSound( this, location, sound, pitch, -1 );
+    public void playSound(  Vector vector, String soundName, float pitch ) {
+        this.playSound( vector, soundName, pitch, 1 );
+    }
+
+    @Override
+    public void playSound( Vector vector, String soundName, float pitch, float volume ) {
+        PacketPlaySound soundPacket = new PacketPlaySound();
+        soundPacket.setSoundName( soundName );
+        soundPacket.setPitch( pitch );
+        soundPacket.setVolume( volume );
+        soundPacket.setPosition( vector.toBlockPosition() );
+        this.connection.addToSendQueue( soundPacket );
+    }
+
+    @Override
+    public void stopSounds() {
+        PacketStopSound soundPacket = new PacketStopSound();
+        soundPacket.setStopAll( true );
+        this.connection.addToSendQueue( soundPacket );
+    }
+
+    @Override
+    public void stopSound( String soundName ) {
+        PacketStopSound soundPacket = new PacketStopSound();
+        soundPacket.setSoundName( soundName );
+        soundPacket.setStopAll( false );
+        this.connection.addToSendQueue( soundPacket );
     }
 
     @Override
@@ -1500,25 +1533,50 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
     }
 
     @Override
-    public void sendTitle( String title, String subtitle, long fadein, long duration, long fadeout, TimeUnit unit ) {
-        // NPE check
-        if ( title == null ) {
-            title = "";
-        }
+    public void sendActionbar( String text, long fadein, long duration, long fadeout, TimeUnit unit ) {
+        this.sendTitleAnimationTimes( fadein, duration, fadeout, unit );
+        this.sendActionbar( text );
+    }
 
+    @Override
+    public void sendActionbar( String text ) {
+        PacketSetTitle titlePacket = new PacketSetTitle();
+        titlePacket.setType( PacketSetTitle.TitleType.TYPE_ACTION_BAR.getId() );
+        titlePacket.setText( text );
+        this.connection.addToSendQueue( titlePacket );
+    }
+
+    @Override
+    public void sendTitle( String title, String subtitle, long fadein, long duration, long fadeout, TimeUnit unit ) {
+        this.sendTitleAnimationTimes( fadein, duration, fadeout, unit );
+        this.sendTitle( title, subtitle );
+    }
+
+    @Override
+    public void sendTitle( String title ) {
+        this.sendTitle( title, "" );
+    }
+
+    @Override
+    public void sendTitle( String title, String subtitle ) {
         if ( subtitle != null && !Objects.equals( subtitle, "" ) ) {
             PacketSetTitle subtitlePacket = new PacketSetTitle();
             subtitlePacket.setType( PacketSetTitle.TitleType.TYPE_SUBTITLE.getId() );
             subtitlePacket.setText( subtitle );
-            subtitlePacket.setFadeInTime( (int) unit.toMillis( fadein ) / 50 );
-            subtitlePacket.setStayTime( (int) unit.toMillis( duration ) / 50 );
-            subtitlePacket.setFadeOutTime( (int) unit.toMillis( fadeout ) / 50 );
-            this.getConnection().addToSendQueue( subtitlePacket );
         }
 
+        if( title != null && !Objects.equals( title, "" ) ) {
+            PacketSetTitle titlePacket = new PacketSetTitle();
+            titlePacket.setType( PacketSetTitle.TitleType.TYPE_TITLE.getId() );
+            titlePacket.setText( title );
+            this.getConnection().addToSendQueue( titlePacket );
+        }
+    }
+
+    @Override
+    public void sendTitleAnimationTimes( long fadein, long duration, long fadeout, TimeUnit unit ) {
         PacketSetTitle titlePacket = new PacketSetTitle();
-        titlePacket.setType( PacketSetTitle.TitleType.TYPE_TITLE.getId() );
-        titlePacket.setText( title );
+        titlePacket.setType( PacketSetTitle.TitleType.TYPE_ANIMATION_TIMES.getId() );
         titlePacket.setFadeInTime( (int) unit.toMillis( fadein ) / 50 );
         titlePacket.setStayTime( (int) unit.toMillis( duration ) / 50 );
         titlePacket.setFadeOutTime( (int) unit.toMillis( fadeout ) / 50 );
@@ -1526,13 +1584,17 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
     }
 
     @Override
-    public void sendTitle( String title ) {
-        this.sendTitle( title, "", 1, 1, (long) 0.5, TimeUnit.SECONDS );
+    public void clearTitle() {
+        PacketSetTitle packet = new PacketSetTitle();
+        packet.setType( PacketSetTitle.TitleType.TYPE_CLEAR.getId() );
+        this.getConnection().addToSendQueue( packet );
     }
 
     @Override
-    public void sendTitle( String title, String subtitle ) {
-        this.sendTitle( title, subtitle, 1, 1, (long) 0.5, TimeUnit.SECONDS );
+    public void resetTitle() {
+        PacketSetTitle packet = new PacketSetTitle();
+        packet.setType( PacketSetTitle.TitleType.TYPE_RESET.getId() );
+        this.getConnection().addToSendQueue( packet );
     }
 
     public void firstSpawn() {
