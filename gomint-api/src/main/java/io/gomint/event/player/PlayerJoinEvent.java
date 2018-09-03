@@ -19,8 +19,9 @@ public class PlayerJoinEvent extends CancellablePlayerEvent {
     private String kickReason;
     private String joinMessage;
 
-    public PlayerJoinEvent( EntityPlayer player ) {
-        super( player );
+    public PlayerJoinEvent( EntityPlayer player, String joinMessage ) {
+        super( player );      
+        this.joinMessage = joinMessage;
     }
 
     /**

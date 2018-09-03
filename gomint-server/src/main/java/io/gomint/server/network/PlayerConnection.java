@@ -911,9 +911,8 @@ public class PlayerConnection {
         LOGGER.info( "Player {} disconnected", this.entity );
 
         if ( this.entity != null && this.entity.getWorld() != null ) {
-            PlayerQuitEvent event = this.networkManager.getServer().getPluginManager().callEvent( new PlayerQuitEvent( this.entity ) );
-            event.setQuitMessage( ChatColor.YELLOW + this.entity.getDisplayName() + ChatColor.YELLOW + " left the game." );
-            if( event.getQuitMessage() != null && event.getQuitMessage() != "" ) {
+            PlayerQuitEvent event = this.networkManager.getServer().getPluginManager().callEvent( new PlayerQuitEvent( this.entity, ChatColor.YELLOW + this.entity.getDisplayName() + " left the game." ) );
+            if( event.getQuitMessage() != null && !event.getQuitMessage().isEmpty() ) {
                 this.getServer().getPlayers().forEach( ( player ) -> {
                     player.sendMessage( event.getQuitMessage() );
                 } );

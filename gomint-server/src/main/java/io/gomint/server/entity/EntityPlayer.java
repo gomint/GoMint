@@ -1544,12 +1544,11 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
         this.getWorld().spawnEntityAt( this, this.getPositionX(), this.getPositionY(), this.getPositionZ(), this.getYaw(), this.getPitch() );
 
         // Now its time for the join event since the player is fully loaded
-        PlayerJoinEvent event = this.getConnection().getNetworkManager().getServer().getPluginManager().callEvent( new PlayerJoinEvent( this ) );
-        event.setJoinMessage( ChatColor.YELLOW + this.getDisplayName() + ChatColor.YELLOW + " joined the game." );
+        PlayerJoinEvent event = this.getConnection().getNetworkManager().getServer().getPluginManager().callEvent( new PlayerJoinEvent( this, ChatColor.YELLOW + this.getDisplayName() + " joined the game." ) );
         if ( event.isCancelled() ) {
             this.connection.disconnect( event.getKickReason() );
         } else {
-            if( event.getJoinMessage() != null && event.getJoinMessage() != "" ) {
+            if( event.getJoinMessage() != null && !event.getJoinMessage().isEmpty() ) {
                 GoMint.instance().getPlayers().forEach( ( player ) -> {
                     player.sendMessage( event.getJoinMessage() );
                 });
