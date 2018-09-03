@@ -68,3 +68,7 @@ details.
 ## Documentation
 
 There currently is no documentation as things are still changing frequently.
+
+## Download
+
+You can recieve the latest builds here: http://ci.gomint.io/job/GoMint/job/master/
