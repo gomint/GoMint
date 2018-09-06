@@ -13,8 +13,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Global configuration for the whole GoMint Server.
@@ -58,9 +58,12 @@ public class ServerConfig extends YamlConfig {
     @Comment( "Load all worlds found at the start" )
     private boolean loadAllWorldsAtStart = false;
 
+    @Comment( "Configure a default world setting" )
+    private WorldConfig defaultWorldSettings = new WorldConfig();
+
     @Comment( "Configure each world like you need to" )
-    private List<WorldConfig> worlds = new ArrayList<WorldConfig>() {{
-        add( new WorldConfig() );
+    private Map<String, WorldConfig> worlds = new HashMap<String, WorldConfig>(){{
+        put("world", new WorldConfig());
     }};
 
     // ------------------------ Vanilla stuff

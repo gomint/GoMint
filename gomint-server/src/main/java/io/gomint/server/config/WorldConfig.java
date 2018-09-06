@@ -15,9 +15,6 @@ import lombok.ToString;
 @ToString
 public class WorldConfig extends YamlConfig {
 
-    @Comment( "Name of the world this affects" )
-    private String name = "world";
-
     @Comment( "How many blocks should we update per tick using random reasons" )
     private int randomUpdatesPerTick = 3;
 
