@@ -8,9 +8,7 @@
 package io.gomint.server.assets;
 
 import io.gomint.GoMint;
-import io.gomint.inventory.item.ItemAir;
 import io.gomint.jraknet.PacketBuffer;
-import io.gomint.server.GoMintServer;
 import io.gomint.server.crafting.Recipe;
 import io.gomint.server.crafting.ShapedRecipe;
 import io.gomint.server.crafting.ShapelessRecipe;
@@ -28,11 +26,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteOrder;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * A wrapper class around any suitable file format (currently NBT) that allows
@@ -50,6 +44,7 @@ public class AssetsLibrary {
     @Getter private Set<Recipe> recipes;
     @Getter private List<BlockIdentifier> blockPalette;
     @Getter private List<NBTTagCompound> converterData;
+    @Getter private List<NBTTagCompound> converterData_v1_13;
     @Getter private List<NBTTagCompound> converterItemsData;
     @Getter private List<NBTTagCompound> jeTopeItems;
 
@@ -85,6 +80,7 @@ public class AssetsLibrary {
         }
 
         this.converterData = ( (List<NBTTagCompound>) ( (List) root.getList( "converter", false ) ) );
+        this.converterData_v1_13 = ( (List<NBTTagCompound>) ( (List) root.getList( "converter1_13", false ) ) );
         this.converterItemsData = ( (List<NBTTagCompound>) ( (List) root.getList( "converterItems", false ) ) );
         this.jeTopeItems = ( (List<NBTTagCompound>) ( (List) root.getList( "JEtoPEItems", false ) ) );
     }

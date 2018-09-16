@@ -59,6 +59,23 @@ public class Main {
             e.printStackTrace();
         }
 
+        try {
+            List<Object> converterItems = assetsCompound.getList( "converter1_13", true );
+
+            List<String> input = Files.readAllLines( Paths.get( "gomint-asset-compiler/blockmappings-1.13.txt" ) );
+            for ( String line : input ) {
+                String[] split = line.split( " " );
+
+                NBTTagCompound idPairCompound = new NBTTagCompound( "" );
+                idPairCompound.addValue( "blockdata", Integer.parseInt( split[0] ) );
+                idPairCompound.addValue( "peblock", Integer.parseInt( split[1] ) );
+                idPairCompound.addValue( "pedata", Integer.parseInt( split[2] ) );
+                converterItems.add( idPairCompound );
+            }
+        } catch ( IOException e ) {
+            e.printStackTrace();
+        }
+
         // Check the in-ids.txt
         try {
             List<Object> converterItems = assetsCompound.getList( "converterItems", true );
