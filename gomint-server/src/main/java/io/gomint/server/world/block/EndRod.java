@@ -8,12 +8,12 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 208 )
+@RegisterInfo( sId = "minecraft:end_rod" )
 public class EndRod extends Block implements io.gomint.world.block.BlockEndRod {
 
     @Override
-    public int getBlockId() {
-        return 208;
+    public String getBlockId() {
+        return "minecraft:end_rod";
     }
 
     @Override

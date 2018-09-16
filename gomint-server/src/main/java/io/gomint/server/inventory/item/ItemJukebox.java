@@ -20,6 +20,11 @@ public class ItemJukebox extends ItemStack implements io.gomint.inventory.item.I
 
 
     @Override
+    public String getBlockId() {
+        return "minecraft:jukebox";
+    }
+
+    @Override
     public ItemType getType() {
         return ItemType.JUKEBOX;
     }

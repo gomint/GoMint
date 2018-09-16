@@ -12,12 +12,12 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 111 )
+@RegisterInfo( sId = "minecraft:waterlily" )
 public class LilyPad extends Block implements io.gomint.world.block.BlockLilyPad {
 
     @Override
-    public int getBlockId() {
-        return 111;
+    public String getBlockId() {
+        return "minecraft:waterlily";
     }
 
     @Override

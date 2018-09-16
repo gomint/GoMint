@@ -134,7 +134,7 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
     private Queue<ChunkAdapter> chunkSendQueue = new LinkedBlockingQueue<>();
 
     // EntityPlayer Information
-    private Gamemode gamemode = Gamemode.SURVIVAL;
+    private Gamemode gamemode = Gamemode.CREATIVE;
     @Getter
     private AdventureSettings adventureSettings;
     @Getter
@@ -385,6 +385,12 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
     @Override
     public boolean isOp() {
         return this.adventureSettings.isOperator();
+    }
+
+    @Override
+    public void setOp( boolean value ) {
+        this.adventureSettings.setOperator( value );
+        this.sendAdventureSettings();
     }
 
     @Override
@@ -792,6 +798,8 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
             add( new PacketPlayerlist.Entry( EntityPlayer.this ) );
         }} );
         this.getConnection().addToSendQueue( playerlist );
+
+        LOGGER.debug( "Did send all prepare entity data" );
     }
 
     @Override
@@ -867,9 +875,11 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
             } );
         }
 
-        // Check all open inventories
-        Object2ByteMap.FastEntrySet<ContainerInventory> fastEntrySet = (Object2ByteMap.FastEntrySet<ContainerInventory>) this.containerIds.object2ByteEntrySet();
-        fastEntrySet.fastIterator().forEachRemaining( containerInventoryEntry -> containerInventoryEntry.getKey().removeViewer( EntityPlayer.this ) );
+        if ( this.containerIds != null ) {
+            // Check all open inventories
+            Object2ByteMap.FastEntrySet<ContainerInventory> fastEntrySet = (Object2ByteMap.FastEntrySet<ContainerInventory>) this.containerIds.object2ByteEntrySet();
+            fastEntrySet.fastIterator().forEachRemaining( containerInventoryEntry -> containerInventoryEntry.getKey().removeViewer( EntityPlayer.this ) );
+        }
     }
 
     /**

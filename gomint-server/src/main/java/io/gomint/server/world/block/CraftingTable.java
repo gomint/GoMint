@@ -16,14 +16,14 @@ import org.slf4j.LoggerFactory;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 58 )
+@RegisterInfo( sId = "minecraft:crafting_table" )
 public class CraftingTable extends Block implements io.gomint.world.block.BlockCraftingTable {
 
     private static final Logger LOGGER = LoggerFactory.getLogger( CraftingTable.class );
 
     @Override
-    public int getBlockId() {
-        return 58;
+    public String getBlockId() {
+        return "minecraft:crafting_table";
     }
 
     @Override

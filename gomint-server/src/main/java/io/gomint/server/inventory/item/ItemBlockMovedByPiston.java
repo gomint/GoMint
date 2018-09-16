@@ -14,6 +14,11 @@ import io.gomint.taglib.NBTTagCompound;
 
 
     @Override
+    public String getBlockId() {
+        return "minecraft:movingBlock";
+    }
+
+    @Override
     public ItemType getType() {
         return ItemType.BLOCK_MOVED_BY_PISTON;
     }

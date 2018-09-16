@@ -11,6 +11,11 @@ import io.gomint.server.registry.RegisterInfo;
 public class ItemStrippedBirchLog extends ItemStack implements io.gomint.inventory.item.ItemStrippedBirchLog {
 
     @Override
+    public String getBlockId() {
+        return "minecraft:stripped_birch_log";
+    }
+
+    @Override
     public ItemType getType() {
         return ItemType.STRIPPED_BIRCH_LOG;
     }

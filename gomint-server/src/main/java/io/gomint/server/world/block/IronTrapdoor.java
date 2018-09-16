@@ -10,12 +10,12 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 167 )
+@RegisterInfo( sId = "minecraft:iron_trapdoor" )
 public class IronTrapdoor extends Block implements io.gomint.world.block.BlockIronTrapdoor {
 
     @Override
-    public int getBlockId() {
-        return 167;
+    public String getBlockId() {
+        return "minecraft:iron_trapdoor";
     }
 
     @Override

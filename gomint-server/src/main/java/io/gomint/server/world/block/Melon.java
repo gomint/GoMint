@@ -8,12 +8,12 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 103 )
+@RegisterInfo( sId = "minecraft:melon_block" )
 public class Melon extends Block implements io.gomint.world.block.BlockMelon {
 
     @Override
-    public int getBlockId() {
-        return 103;
+    public String getBlockId() {
+        return "minecraft:melon_block";
     }
 
     @Override

@@ -1,8 +1,7 @@
 package io.gomint.server.inventory.item;
-import io.gomint.inventory.item.ItemType;
 
+import io.gomint.inventory.item.ItemType;
 import io.gomint.server.registry.RegisterInfo;
-import io.gomint.taglib.NBTTagCompound;
 
 /**
  * @author geNAZt
@@ -11,16 +10,14 @@ import io.gomint.taglib.NBTTagCompound;
 @RegisterInfo( id = 354 )
 public class ItemCake extends ItemStack implements io.gomint.inventory.item.ItemCake {
 
-
-
     @Override
     public byte getMaximumAmount() {
         return 1;
     }
 
     @Override
-    public int getBlockId() {
-        return 92;
+    public String getBlockId() {
+        return "minecraft:cake";
     }
 
     @Override

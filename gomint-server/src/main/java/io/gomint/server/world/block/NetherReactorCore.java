@@ -10,12 +10,12 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 247 )
+@RegisterInfo( sId = "minecraft:netherreactor" )
 public class NetherReactorCore extends Block implements io.gomint.world.block.BlockNetherReactorCore {
 
     @Override
-    public int getBlockId() {
-        return 247;
+    public String getBlockId() {
+        return "minecraft:netherreactor";
     }
 
     @Override

@@ -10,12 +10,12 @@ import java.util.List;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 89 )
+@RegisterInfo( sId = "minecraft:glowstone" )
 public class Glowstone extends Block implements io.gomint.world.block.BlockGlowstone {
 
     @Override
-    public int getBlockId() {
-        return 89;
+    public String getBlockId() {
+        return "minecraft:glowstone";
     }
 
     @Override

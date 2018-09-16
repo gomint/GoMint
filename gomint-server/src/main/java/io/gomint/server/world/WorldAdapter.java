@@ -34,6 +34,7 @@ import io.gomint.server.network.packet.PacketUpdateBlock;
 import io.gomint.server.network.packet.PacketWorldEvent;
 import io.gomint.server.network.packet.PacketWorldSoundEvent;
 import io.gomint.server.scheduler.CoreScheduler;
+import io.gomint.server.util.BlockIdentifier;
 import io.gomint.server.util.EnumConnectors;
 import io.gomint.server.world.block.Air;
 import io.gomint.server.world.storage.TemporaryStorage;
@@ -77,7 +78,6 @@ import java.util.Queue;
 import java.util.Set;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -118,6 +118,7 @@ public abstract class WorldAdapter implements World {
     // Chunk Handling
     protected ChunkCache chunkCache;
     protected ChunkGenerator chunkGenerator;
+    private boolean isGeneratorBuilt;
 
     // Entity Handling
     private EntityManager entityManager;
@@ -196,7 +197,7 @@ public abstract class WorldAdapter implements World {
                     throw new IllegalArgumentException( "Sound " + sound + " needs block sound data" );
                 }
 
-                soundData = BlockRuntimeIDs.fromLegacy( this.server.getBlocks().getID( data.getBlock() ), (byte) 0 );
+                soundData = BlockRuntimeIDs.from( this.server.getBlocks().getID( data.getBlock() ), (byte) 0 );
                 break;
 
             case NOTE:
@@ -316,12 +317,12 @@ public abstract class WorldAdapter implements World {
     public <T extends Block> T getBlockAt( int x, int y, int z, WorldLayer layer ) {
         // Secure location
         if ( y < 0 || y > 255 ) {
-            return (T) this.server.getBlocks().get( 0, (byte) 0, (byte) ( y > 255 ? 15 : 0 ), (byte) 0, null, new Location( this, x, y, z ), layer.ordinal() );
+            return (T) this.server.getBlocks().get( "minecraft:air", (byte) 0, (byte) ( y > 255 ? 15 : 0 ), (byte) 0, null, new Location( this, x, y, z ), layer.ordinal() );
         }
 
         ChunkAdapter chunk = this.loadChunk( x >> 4, z >> 4, false );
         if ( chunk == null ) {
-            return (T) this.server.getBlocks().get( 0, (byte) 0, (byte) ( y > 255 ? 15 : 0 ), (byte) 0, null, new Location( this, x, y, z ), layer.ordinal() );
+            return (T) this.server.getBlocks().get( "minecraft:air", (byte) 0, (byte) ( y > 255 ? 15 : 0 ), (byte) 0, null, new Location( this, x, y, z ), layer.ordinal() );
         }
 
         return chunk.getBlockAt( x & 0xF, y, z & 0xF, layer.ordinal() );
@@ -334,13 +335,37 @@ public abstract class WorldAdapter implements World {
      * @param layer    on which we want to set the block
      * @param blockId  The new block id
      */
-    public void setBlockId( BlockPosition position, int layer, int blockId ) {
+    public void setBlockId( BlockPosition position, int layer, String blockId ) {
         final ChunkAdapter chunk = this.loadChunk(
             CoordinateUtils.fromBlockToChunk( position.getX() ),
             CoordinateUtils.fromBlockToChunk( position.getZ() ),
             true );
 
         chunk.setBlock( position.getX() & 0xF, position.getY(), position.getZ() & 0xF, layer, blockId );
+    }
+
+    public void setBlock( BlockPosition pos, int layer, BlockIdentifier blockIdentifier ) {
+        final ChunkAdapter chunk = this.loadChunk(
+            CoordinateUtils.fromBlockToChunk( pos.getX() ),
+            CoordinateUtils.fromBlockToChunk( pos.getZ() ),
+            true );
+
+        chunk.setBlock( pos.getX() & 0xF, pos.getY(), pos.getZ() & 0xF, layer, blockIdentifier );
+    }
+
+    public int getRuntimeID( BlockPosition position, int layer ) {
+        // Sanity check
+        if ( position.getY() < 0 ) {
+            this.logger.warn( "Got request for block under y 0", new Exception() );
+            return 0;
+        }
+
+        final ChunkAdapter chunk = this.loadChunk(
+            CoordinateUtils.fromBlockToChunk( position.getX() ),
+            CoordinateUtils.fromBlockToChunk( position.getZ() ),
+            true );
+
+        return chunk.getRuntimeID( position.getX() & 0xF, position.getY(), position.getZ() & 0xF, layer );
     }
 
     /**
@@ -350,11 +375,11 @@ public abstract class WorldAdapter implements World {
      * @param layer    where the block is
      * @return id of the block
      */
-    public int getBlockId( BlockPosition position, int layer ) {
+    public String getBlockId( BlockPosition position, int layer ) {
         // Sanity check
         if ( position.getY() < 0 ) {
             this.logger.warn( "Got request for block under y 0", new Exception() );
-            return 0;
+            return "minecraft:air";
         }
 
         final ChunkAdapter chunk = this.loadChunk(
@@ -372,7 +397,7 @@ public abstract class WorldAdapter implements World {
      * @param layer    where this block is
      * @param data     The new data of the block
      */
-    public void setBlockData( BlockPosition position, int layer, byte data ) {
+    public void setBlockData( BlockPosition position, int layer, short data ) {
         int xChunk = CoordinateUtils.fromBlockToChunk( position.getX() );
         int zChunk = CoordinateUtils.fromBlockToChunk( position.getZ() );
 
@@ -809,6 +834,7 @@ public abstract class WorldAdapter implements World {
                 switch ( task.getType() ) {
                     case LOAD:
                         AsyncChunkLoadTask load = (AsyncChunkLoadTask) task;
+                        this.getLogger().debug( "Loading chunk {} / {}", load.getX(), load.getZ() );
                         chunk = this.loadChunk( load.getX(), load.getZ(), load.isGenerate() );
 
                         load.getCallback().invoke( chunk );
@@ -904,7 +930,7 @@ public abstract class WorldAdapter implements World {
         PacketUpdateBlock updateBlock = new PacketUpdateBlock();
         updateBlock.setPosition( pos );
 
-        updateBlock.setBlockId( BlockRuntimeIDs.fromLegacy( block.getBlockId(), block.getBlockData() ) );
+        updateBlock.setBlockId( BlockRuntimeIDs.from( block.getBlockId(), block.getBlockData() ) );
         updateBlock.setFlags( PacketUpdateBlock.FLAG_ALL );
 
         connection.addToSendQueue( updateBlock );
@@ -1082,7 +1108,7 @@ public abstract class WorldAdapter implements World {
             .interact( entity, face, clickPosition, clickedBlock );
 
         if ( ( !interacted && !itemInteracted ) || entity.isSneaking() ) {
-            boolean canBePlaced = ( (io.gomint.server.inventory.item.ItemStack) itemInHand ).getBlockId() < 256 && !( itemInHand instanceof ItemAir );
+            boolean canBePlaced = ( (io.gomint.server.inventory.item.ItemStack) itemInHand ).getBlockId() != null && !( itemInHand instanceof ItemAir );
             if ( canBePlaced ) {
                 Block blockReplace = blockClicked.getSide( face );
                 io.gomint.server.world.block.Block replaceBlock = (io.gomint.server.world.block.Block) blockReplace;
@@ -1099,7 +1125,7 @@ public abstract class WorldAdapter implements World {
                 if ( success ) {
                     // Play sound
                     io.gomint.server.world.block.Block newBlock = replaceBlock.getLocation().getWorld().getBlockAt( replaceBlock.getLocation().toBlockPosition() );
-                    playSound( null, newBlock.getLocation(), Sound.PLACE, (byte) 1, BlockRuntimeIDs.fromLegacy( newBlock.getBlockId(), (byte) 0 ) );
+                    playSound( null, newBlock.getLocation(), Sound.PLACE, (byte) 1, BlockRuntimeIDs.from( newBlock.getBlockId(), (short) 0 ) );
 
                     // Schedule neighbour updates
                     scheduleNeighbourUpdates( newBlock );
@@ -1153,6 +1179,12 @@ public abstract class WorldAdapter implements World {
     }
 
     public ChunkAdapter generate( int x, int z ) {
+        // Check if we can build up the generator
+        if ( !this.isGeneratorBuilt ) {
+            this.prepareGenerator();
+            this.isGeneratorBuilt = true;
+        }
+
         if ( this.chunkGenerator != null ) {
             ChunkAdapter chunk = (ChunkAdapter) this.chunkGenerator.generate( x, z );
             if ( chunk != null ) {
@@ -1210,7 +1242,7 @@ public abstract class WorldAdapter implements World {
             }
 
             // Break animation (this also plays the break sound in the client)
-            sendLevelEvent( position.toVector().add( .5f, .5f, .5f ), LevelEvent.PARTICLE_DESTROY, BlockRuntimeIDs.fromLegacy( block.getBlockId(), block.getBlockData() ) );
+            sendLevelEvent( position.toVector().add( .5f, .5f, .5f ), LevelEvent.PARTICLE_DESTROY, BlockRuntimeIDs.from( block.getBlockId(), block.getBlockData() ) );
 
             block.setType( BlockAir.class );
 
@@ -1292,7 +1324,7 @@ public abstract class WorldAdapter implements World {
                 }
 
                 io.gomint.server.world.block.Block block = (io.gomint.server.world.block.Block) data.getBlock();
-                dataNumber = BlockRuntimeIDs.fromLegacy( block.getBlockId(), block.getBlockData() ) | ( data.getFace() << 24 );
+                dataNumber = BlockRuntimeIDs.from( block.getBlockId(), block.getBlockData() ) | ( data.getFace() << 24 );
 
                 break;
 
@@ -1302,7 +1334,7 @@ public abstract class WorldAdapter implements World {
                 }
 
                 block = (io.gomint.server.world.block.Block) data.getBlock();
-                dataNumber = BlockRuntimeIDs.fromLegacy( block.getBlockId(), block.getBlockData() );
+                dataNumber = BlockRuntimeIDs.from( block.getBlockId(), block.getBlockData() );
 
                 break;
         }
@@ -1352,7 +1384,7 @@ public abstract class WorldAdapter implements World {
     @Override
     public <T extends Block> void iterateBlocks( Class<T> blockClass, Consumer<T> blockConsumer ) {
         // Get the id of the block which we search
-        int blockId = this.server.getBlocks().getID( blockClass );
+        String blockId = this.server.getBlocks().getID( blockClass );
 
         // Iterate over all chunks
         this.chunkCache.iterateAll( chunkAdapter -> {
@@ -1363,8 +1395,8 @@ public abstract class WorldAdapter implements World {
                 for ( int x = 0; x < 16; x++ ) {
                     for ( int y = 0; y < 256; y++ ) {
                         for ( int z = 0; z < 16; z++ ) {
-                            int currentBlockId = chunkAdapter.getBlock( x, y, z, i );
-                            if ( currentBlockId == blockId ) {
+                            String currentBlockId = chunkAdapter.getBlock( x, y, z, i );
+                            if ( currentBlockId.equals( blockId ) ) {
                                 T block = getBlockAt( ( chunkX << 4 ) + x, y, ( chunkZ << 4 ) + z );
                                 blockConsumer.accept( block );
                             }
@@ -1372,7 +1404,6 @@ public abstract class WorldAdapter implements World {
                     }
                 }
             }
-
         } );
     }
 
@@ -1389,12 +1420,17 @@ public abstract class WorldAdapter implements World {
         BlockPosition check = new BlockPosition( (int) this.spawn.getX(), 0, (int) this.spawn.getZ() );
         for ( int i = 255; i > 0; i-- ) {
             check.setY( i );
-            if ( this.getBlockId( check, 0 ) != 0 ) {
+            if ( this.getRuntimeID( check, 0 ) != 0 ) {
                 this.spawn.setY( 1 + i );
                 break;
             }
         }
     }
+
+    /**
+     * Tell the world implementation it should build up its chunk generator
+     */
+    protected abstract void prepareGenerator();
 
     public void constructGenerator( Class<? extends ChunkGenerator> generator, GeneratorContext context ) throws
         WorldCreateException {

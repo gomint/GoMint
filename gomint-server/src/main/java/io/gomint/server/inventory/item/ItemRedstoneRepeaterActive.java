@@ -13,6 +13,11 @@ public class ItemRedstoneRepeaterActive extends ItemStack {
 
 
     @Override
+    public String getBlockId() {
+        return "minecraft:powered_repeater";
+    }
+
+    @Override
     public ItemType getType() {
         return ItemType.REDSTONE_REPEATER_ACTIVE;
     }

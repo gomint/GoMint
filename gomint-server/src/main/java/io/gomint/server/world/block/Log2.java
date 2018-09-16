@@ -7,7 +7,6 @@ import io.gomint.server.entity.EntityPlayer;
 import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.world.block.helper.ToolPresets;
 import io.gomint.world.block.BlockFace;
-import io.gomint.world.block.BlockLog;
 import io.gomint.world.block.BlockLog2;
 import io.gomint.world.block.BlockType;
 
@@ -18,12 +17,12 @@ import java.util.List;
  * @author KCodeYT
  * @version 1.0
  */
-@RegisterInfo( id = 162 )
+@RegisterInfo( sId = "minecraft:log2" )
 public class Log2 extends Block implements BlockLog2 {
 
     @Override
-    public int getBlockId() {
-        return 162;
+    public String getBlockId() {
+        return "minecraft:log2";
     }
 
     @Override
@@ -56,7 +55,7 @@ public class Log2 extends Block implements BlockLog2 {
 
     @Override
     public boolean interact( Entity entity, BlockFace face, Vector facePos, ItemStack item ) {
-        if ( entity instanceof EntityPlayer && this.isCorrectTool(item) ) {
+        if ( entity instanceof EntityPlayer && this.isCorrectTool( item ) ) {
             switch ( this.getTypeData() ) {
                 case 1:
                     this.setType( StrippedDarkOakLog.class );
@@ -155,7 +154,7 @@ public class Log2 extends Block implements BlockLog2 {
     public List<ItemStack> getDrops( ItemStack itemInHand ) {
         // Strip away direction meta
         return new ArrayList<ItemStack>() {{
-            add( world.getServer().getItems().create( getBlockId() & 0xFF, getTypeData(), (byte) 1, null ) );
+            add( world.getServer().getItems().create( getBlockId(), getTypeData(), (byte) 1, null ) );
         }};
     }
 

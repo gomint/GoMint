@@ -10,12 +10,12 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 183 )
+@RegisterInfo( sId = "minecraft:spruce_fence_gate" )
 public class SpruceFenceGate extends Block implements io.gomint.world.block.BlockSpruceFenceGate {
 
     @Override
-    public int getBlockId() {
-        return 183;
+    public String getBlockId() {
+        return "minecraft:spruce_fence_gate";
     }
 
     @Override

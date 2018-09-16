@@ -12,7 +12,7 @@ import java.util.List;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 50 )
+@RegisterInfo( sId = "minecraft:torch" )
 public class Torch extends Block implements io.gomint.world.block.BlockTorch {
 
     private BlockfaceBlockState facing = new BlockfaceBlockState();
@@ -24,8 +24,8 @@ public class Torch extends Block implements io.gomint.world.block.BlockTorch {
     }
 
     @Override
-    public int getBlockId() {
-        return 50;
+    public String getBlockId() {
+        return "minecraft:torch";
     }
 
     @Override

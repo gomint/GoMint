@@ -10,12 +10,12 @@ import io.gomint.world.block.BlockFlowingWater;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 8 )
+@RegisterInfo( sId = "minecraft:flowing_water" )
 public class FlowingWater extends Liquid implements BlockFlowingWater {
 
     @Override
-    public int getBlockId() {
-        return 8;
+    public String getBlockId() {
+        return "minecraft:flowing_water";
     }
 
     @Override

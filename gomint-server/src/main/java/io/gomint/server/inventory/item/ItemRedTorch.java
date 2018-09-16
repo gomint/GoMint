@@ -11,6 +11,11 @@ import io.gomint.server.registry.RegisterInfo;
 public class ItemRedTorch extends ItemStack implements io.gomint.inventory.item.ItemRedTorch {
 
     @Override
+    public String getBlockId() {
+        return "minecraft:colored_torch_rg";
+    }
+
+    @Override
     public ItemType getType() {
         return ItemType.RED_TORCH;
     }

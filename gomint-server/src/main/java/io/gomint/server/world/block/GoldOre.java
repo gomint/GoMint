@@ -12,12 +12,12 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 14 )
+@RegisterInfo( sId = "minecraft:gold_ore" )
 public class GoldOre extends Block implements io.gomint.world.block.BlockGoldOre {
 
     @Override
-    public int getBlockId() {
-        return 14;
+    public String getBlockId() {
+        return "minecraft:gold_ore";
     }
 
     @Override

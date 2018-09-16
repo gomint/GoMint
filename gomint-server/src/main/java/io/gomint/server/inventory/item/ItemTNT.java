@@ -13,6 +13,11 @@ public class ItemTNT extends ItemStack implements io.gomint.inventory.item.ItemT
 
 
     @Override
+    public String getBlockId() {
+        return "minecraft:tnt";
+    }
+
+    @Override
     public ItemType getType() {
         return ItemType.TNT;
     }

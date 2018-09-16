@@ -12,6 +12,7 @@ import io.gomint.math.Location;
 import io.gomint.math.Vector;
 import io.gomint.server.inventory.InventoryHolder;
 import io.gomint.server.inventory.item.ItemStack;
+import io.gomint.server.inventory.item.Items;
 import io.gomint.server.world.WorldAdapter;
 import io.gomint.taglib.NBTTagCompound;
 import io.gomint.world.block.BlockFace;
@@ -43,8 +44,8 @@ public class FlowerPotTileEntity extends TileEntity implements InventoryHolder {
      * @param tagCompound The TagCompound which should be used to read data from
      * @param world       The world in which this TileEntity resides
      */
-    public FlowerPotTileEntity( NBTTagCompound tagCompound, WorldAdapter world ) {
-        super( tagCompound, world );
+    public FlowerPotTileEntity( NBTTagCompound tagCompound, WorldAdapter world, Items items ) {
+        super( tagCompound, world, items );
 
         int material = tagCompound.getShort( "item", (short) 0 );
 
@@ -81,4 +82,5 @@ public class FlowerPotTileEntity extends TileEntity implements InventoryHolder {
         compound.addValue( "item", (short) this.holdingItem.getMaterial() );
         compound.addValue( "mData", (int) this.holdingItem.getData() );
     }
+
 }

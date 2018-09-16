@@ -6,11 +6,11 @@ import io.gomint.math.BlockPosition;
 import io.gomint.math.Vector;
 import io.gomint.server.entity.Entity;
 import io.gomint.server.registry.SkipRegister;
+import io.gomint.server.util.BlockIdentifier;
 import io.gomint.server.world.PlacementData;
 import io.gomint.server.world.UpdateReason;
 import io.gomint.world.Sound;
 import io.gomint.world.block.BlockLiquid;
-import io.gomint.world.block.BlockObsidian;
 import io.gomint.world.block.data.Facing;
 
 import java.util.HashMap;
@@ -49,14 +49,14 @@ public abstract class Liquid extends Block implements BlockLiquid {
         return ( ( data ) / 8f );
     }
 
-    private byte getEffectiveFlowDecay( Block block ) {
+    private short getEffectiveFlowDecay( Block block ) {
         // Block changed type?
         if ( block.getType() != this.getType() ) {
             return -1;
         }
 
         // Get block data and cap by 8
-        byte data = block.getBlockData();
+        short data = block.getBlockData();
         return data >= 8 ? 0 : data;
     }
 
@@ -64,12 +64,12 @@ public abstract class Liquid extends Block implements BlockLiquid {
     public Vector getFlowVector() {
         // Create a new vector and get the capped flow decay of this block
         Vector vector = Vector.ZERO;
-        byte decay = this.getEffectiveFlowDecay( this );
+        short decay = this.getEffectiveFlowDecay( this );
 
         // Check all 4 sides if we can flow into that
         for ( Facing face : Facing.values() ) {
             Block other = this.getSide( face );
-            byte blockDecay = this.getEffectiveFlowDecay( other );
+            short blockDecay = this.getEffectiveFlowDecay( other );
 
             // Do we have decay?
             if ( blockDecay < 0 ) {
@@ -82,7 +82,7 @@ public abstract class Liquid extends Block implements BlockLiquid {
                 blockDecay = this.getEffectiveFlowDecay( this.world.getBlockAt( other.getLocation().toBlockPosition().add( 0, -1, 0 ) ) );
                 if ( blockDecay >= 0 ) {
                     byte realDecay = (byte) ( blockDecay - ( decay - 8 ) );
-                   vector = vector.add( ( other.getLocation().getX() - this.getLocation().getX() ) * (float) realDecay,
+                    vector = vector.add( ( other.getLocation().getX() - this.getLocation().getX() ) * (float) realDecay,
                         ( other.getLocation().getY() - this.getLocation().getY() ) * (float) realDecay,
                         ( other.getLocation().getZ() - this.getLocation().getZ() ) * (float) realDecay );
                 }
@@ -140,7 +140,8 @@ public abstract class Liquid extends Block implements BlockLiquid {
     @Override
     public PlacementData calculatePlacementData( Entity entity, ItemStack item, Vector clickVector ) {
         PlacementData data = super.calculatePlacementData( entity, item, clickVector );
-        return data.setMetaData( (byte) 0 );
+        BlockIdentifier blockIdentifier = new BlockIdentifier( data.getBlockIdentifier().getBlockId(), (short) 0 );
+        return data.setBlockIdentifier( blockIdentifier );
     }
 
     @Override
@@ -216,7 +217,7 @@ public abstract class Liquid extends Block implements BlockLiquid {
     private void checkOwnDecay( BlockPosition pos, int decay ) {
         // Check for decay updates of own block
         if ( decay > 0 ) {
-            byte smallestFlowDecay = -100;
+            short smallestFlowDecay = -100;
             this.adjacentSources = 0;
 
             // Check for neighbour decay
@@ -349,22 +350,22 @@ public abstract class Liquid extends Block implements BlockLiquid {
     /**
      * Let the block be replaced by the new liquid
      *
-     * @param block which should be replaced with a liquid
+     * @param block        which should be replaced with a liquid
      * @param newFlowDecay decay value of the liquid
      */
     protected void flowIntoBlock( Block block, int newFlowDecay ) {
         if ( this.canFlowInto( block ) && !( block instanceof Liquid ) ) {
-            if ( block.getBlockId() > 0 ) {
+            if ( !block.getBlockId().equals( "minecraft:air" ) ) {
                 this.world.breakBlock( block.getLocation().toBlockPosition(), block.getDrops( ItemAir.create( 0 ) ), false );
             }
 
-            PlacementData data = new PlacementData( this.getBlockId(), (byte) newFlowDecay, null );
+            PlacementData data = new PlacementData( new BlockIdentifier( this.getBlockId(), (short) newFlowDecay ), null );
             block.setBlockFromPlacementData( data );
         }
     }
 
-    private byte getSmallestFlowDecay( Block block, byte decay ) {
-        byte blockDecay = this.getFlowDecay( block );
+    private short getSmallestFlowDecay( Block block, short decay ) {
+        short blockDecay = this.getFlowDecay( block );
 
         if ( blockDecay < 0 ) {
             return decay;
@@ -381,7 +382,7 @@ public abstract class Liquid extends Block implements BlockLiquid {
         return 1; // 1 for water, 2 for lava
     }
 
-    private byte getFlowDecay( Block block ) {
+    private short getFlowDecay( Block block ) {
         if ( block.getType() != this.getType() ) {
             return -1;
         }
@@ -407,7 +408,7 @@ public abstract class Liquid extends Block implements BlockLiquid {
      * Called when two liquids collide
      *
      * @param colliding with which we collide
-     * @param result of the collision
+     * @param result    of the collision
      */
     protected void liquidCollide( Block colliding, Class<? extends Block> result ) {
         this.setType( result );

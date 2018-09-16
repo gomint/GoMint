@@ -10,12 +10,12 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 126 )
+@RegisterInfo( sId = "minecraft:activator_rail" )
 public class ActivatorRail extends Block implements io.gomint.world.block.BlockActivatorRail {
 
     @Override
-    public int getBlockId() {
-        return 126;
+    public String getBlockId() {
+        return "minecraft:activator_rail";
     }
 
     @Override

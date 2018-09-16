@@ -10,12 +10,12 @@ import io.gomint.world.block.BlockAir;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 0 )
+@RegisterInfo( sId = "minecraft:air" )
 public class Air extends Block implements BlockAir {
 
     @Override
-    public int getBlockId() {
-        return 0;
+    public String getBlockId() {
+        return "minecraft:air";
     }
 
     @Override

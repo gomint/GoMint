@@ -11,12 +11,12 @@ import java.util.List;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 42 )
+@RegisterInfo( sId = "minecraft:iron_block" )
 public class BlockOfIron extends Block implements io.gomint.world.block.BlockBlockOfIron {
 
     @Override
-    public int getBlockId() {
-        return 42;
+    public String getBlockId() {
+        return "minecraft:iron_block";
     }
 
     @Override

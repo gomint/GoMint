@@ -13,7 +13,7 @@ import java.util.List;
  * @author Kaooot
  * @version 1.0
  */
-@RegisterInfo( id = 239 )
+@RegisterInfo( sId = "minecraft:underwater_torch" )
 public class UnderwaterTorch extends Block implements BlockUnderwaterTorch {
 
     private BlockfaceBlockState facing = new BlockfaceBlockState();
@@ -25,8 +25,8 @@ public class UnderwaterTorch extends Block implements BlockUnderwaterTorch {
     }
 
     @Override
-    public int getBlockId() {
-        return 239;
+    public String getBlockId() {
+        return "minecraft:underwater_torch";
     }
 
     @Override

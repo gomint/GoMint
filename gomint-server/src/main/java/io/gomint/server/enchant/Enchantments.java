@@ -7,6 +7,7 @@
 
 package io.gomint.server.enchant;
 
+import com.google.common.reflect.ClassPath;
 import io.gomint.server.GoMintServer;
 import io.gomint.server.registry.Generator;
 import io.gomint.server.registry.Registry;
@@ -24,8 +25,8 @@ public class Enchantments {
     private static final Logger LOGGER = LoggerFactory.getLogger( Enchantments.class );
     private final Registry<Enchantment> generators;
 
-    public Enchantments( GoMintServer server ) {
-        this.generators = new Registry<>( server, clazz -> () -> {
+    public Enchantments( ClassPath classPath ) {
+        this.generators = new Registry<>( classPath, clazz -> () -> {
             try {
                 return (Enchantment) clazz.newInstance();
             } catch ( InstantiationException | IllegalAccessException e ) {

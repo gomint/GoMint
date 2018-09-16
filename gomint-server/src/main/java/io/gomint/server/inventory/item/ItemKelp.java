@@ -16,8 +16,8 @@ public class ItemKelp extends ItemStack implements io.gomint.inventory.item.Item
     }
 
     @Override
-    public int getBlockId() {
-        return 393;
+    public String getBlockId() {
+        return "minecraft:kelp";
     }
 
 }

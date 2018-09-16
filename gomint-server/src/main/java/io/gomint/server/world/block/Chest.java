@@ -20,12 +20,12 @@ import java.util.List;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 54 )
+@RegisterInfo( sId = "minecraft:chest" )
 public class Chest extends ContainerBlock implements BlockChest {
 
     @Override
-    public int getBlockId() {
-        return 54;
+    public String getBlockId() {
+        return "minecraft:chest";
     }
 
     @Override

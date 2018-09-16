@@ -38,4 +38,9 @@ public class PacketBatch extends Packet {
         buffer.readBytes( this.payload );
     }
 
+    @Override
+    public void serializeHeader( PacketBuffer buffer ) {
+        buffer.writeByte( this.getId() );
+    }
+
 }

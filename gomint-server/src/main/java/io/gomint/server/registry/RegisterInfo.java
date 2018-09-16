@@ -11,7 +11,8 @@ import java.lang.annotation.*;
 @Repeatable( value = RegisterInfos.class )
 public @interface RegisterInfo {
 
-    int id();
+    int id() default -1;
+    String sId() default "";
     int itemId() default -1;
 
 }

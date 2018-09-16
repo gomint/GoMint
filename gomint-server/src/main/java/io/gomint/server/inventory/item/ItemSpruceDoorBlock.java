@@ -14,6 +14,11 @@ public class ItemSpruceDoorBlock extends ItemStack {
 
 
     @Override
+    public String getBlockId() {
+        return "minecraft:spruce_door";
+    }
+
+    @Override
     public ItemType getType() {
         return ItemType.SPRUCE_DOOR_BLOCK;
     }

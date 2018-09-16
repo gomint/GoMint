@@ -14,6 +14,11 @@ import io.gomint.taglib.NBTTagCompound;
 
 
     @Override
+    public String getBlockId() {
+        return "minecraft:mob_spawner";
+    }
+
+    @Override
     public ItemType getType() {
         return ItemType.MOB_SPAWNER;
     }

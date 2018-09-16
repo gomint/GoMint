@@ -14,12 +14,12 @@ import java.util.List;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 243 )
+@RegisterInfo( sId = "minecraft:podzol" )
 public class Podzol extends Block implements io.gomint.world.block.BlockPodzol {
 
     @Override
-    public int getBlockId() {
-        return 243;
+    public String getBlockId() {
+        return "minecraft:podzol";
     }
 
     @Override

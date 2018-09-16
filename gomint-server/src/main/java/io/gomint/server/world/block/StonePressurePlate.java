@@ -9,12 +9,12 @@ import io.gomint.world.block.BlockType;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 70 )
+@RegisterInfo( sId = "minecraft:stone_pressure_plate" )
 public class StonePressurePlate extends BasePressurePlate implements io.gomint.world.block.BlockStonePressurePlate {
 
     @Override
-    public int getBlockId() {
-        return 70;
+    public String getBlockId() {
+        return "minecraft:stone_pressure_plate";
     }
 
     @Override

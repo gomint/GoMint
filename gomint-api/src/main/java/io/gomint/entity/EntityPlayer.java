@@ -51,6 +51,13 @@ public interface EntityPlayer extends EntityHuman {
     boolean isOp();
 
     /**
+     * Set the player's operator status
+     *
+     * @param value
+     */
+    void setOp( boolean value );
+
+    /**
      * Hide another player from this player
      *
      * @param player The player which should be hidden

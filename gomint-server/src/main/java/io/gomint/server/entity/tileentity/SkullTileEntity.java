@@ -2,6 +2,7 @@ package io.gomint.server.entity.tileentity;
 
 import io.gomint.math.Location;
 import io.gomint.math.MojangRotation;
+import io.gomint.server.inventory.item.Items;
 import io.gomint.server.world.WorldAdapter;
 import io.gomint.taglib.NBTTagCompound;
 import lombok.Getter;
@@ -36,8 +37,8 @@ public class SkullTileEntity extends TileEntity {
      * @param tagCompound The TagCompound which should be used to read data from
      * @param world       The world in which this TileEntity resides
      */
-    public SkullTileEntity( NBTTagCompound tagCompound, WorldAdapter world ) {
-        super( tagCompound, world );
+    public SkullTileEntity( NBTTagCompound tagCompound, WorldAdapter world, Items items ) {
+        super( tagCompound, world, items );
 
         this.rotation = new MojangRotation( tagCompound.getByte( "Rot", (byte) 0 ) );
         this.skullType = tagCompound.getByte( "SkullType", (byte) 0 );

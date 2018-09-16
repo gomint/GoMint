@@ -10,12 +10,12 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 125 )
+@RegisterInfo( sId = "minecraft:dropper" )
 public class Dropper extends Block implements io.gomint.world.block.BlockDropper {
 
     @Override
-    public int getBlockId() {
-        return 125;
+    public String getBlockId() {
+        return "minecraft:dropper";
     }
 
     @Override

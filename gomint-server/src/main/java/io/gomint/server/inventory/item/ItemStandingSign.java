@@ -14,6 +14,11 @@ public class ItemStandingSign extends ItemStack {
 
 
     @Override
+    public String getBlockId() {
+        return "minecraft:standing_sign";
+    }
+
+    @Override
     public ItemType getType() {
         return ItemType.STANDING_SIGN;
     }

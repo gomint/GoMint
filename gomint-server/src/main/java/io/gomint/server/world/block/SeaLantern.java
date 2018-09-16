@@ -8,12 +8,12 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 169 )
+@RegisterInfo( sId = "minecraft:seaLantern" )
 public class SeaLantern extends Block implements io.gomint.world.block.BlockSeaLantern {
 
     @Override
-    public int getBlockId() {
-        return 169;
+    public String getBlockId() {
+        return "minecraft:seaLantern";
     }
 
     @Override

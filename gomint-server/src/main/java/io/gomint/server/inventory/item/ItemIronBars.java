@@ -14,6 +14,11 @@ import io.gomint.taglib.NBTTagCompound;
 
 
     @Override
+    public String getBlockId() {
+        return "minecraft:iron_bars";
+    }
+
+    @Override
     public ItemType getType() {
         return ItemType.IRON_BARS;
     }

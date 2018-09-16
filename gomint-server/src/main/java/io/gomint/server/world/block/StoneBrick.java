@@ -10,12 +10,12 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 98 )
+@RegisterInfo( sId = "minecraft:stonebrick" )
 public class StoneBrick extends Block implements io.gomint.world.block.BlockStoneBrick {
 
     @Override
-    public int getBlockId() {
-        return 98;
+    public String getBlockId() {
+        return "minecraft:stonebrick";
     }
 
     @Override

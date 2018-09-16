@@ -20,6 +20,11 @@ public class ItemUndyedShulkerBox extends ItemStack implements io.gomint.invento
 
 
     @Override
+    public String getBlockId() {
+        return "minecraft:undyed_shulker_box";
+    }
+
+    @Override
     public ItemType getType() {
         return ItemType.UNDYED_SHULKER_BOX;
     }

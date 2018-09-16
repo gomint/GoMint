@@ -14,6 +14,11 @@ public class ItemDarkOakDoorBlock extends ItemStack {
 
 
     @Override
+    public String getBlockId() {
+        return "minecraft:dark_oak_door";
+    }
+
+    @Override
     public ItemType getType() {
         return ItemType.DARK_OAK_DOOR_BLOCK;
     }

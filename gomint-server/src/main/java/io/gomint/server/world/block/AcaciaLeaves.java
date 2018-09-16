@@ -8,12 +8,12 @@ import io.gomint.world.block.BlockType;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 161 )
+@RegisterInfo( sId = "minecraft:leaves2" )
 public class AcaciaLeaves extends Block implements io.gomint.world.block.BlockAcaciaLeaves {
 
     @Override
-    public int getBlockId() {
-        return 161;
+    public String getBlockId() {
+        return "minecraft:leaves2";
     }
 
     @Override

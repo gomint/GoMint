@@ -14,6 +14,11 @@ import io.gomint.taglib.NBTTagCompound;
 
 
     @Override
+    public String getBlockId() {
+        return "minecraft:stained_hardened_clay";
+    }
+
+    @Override
     public ItemType getType() {
         return ItemType.STAINED_HARDENED_CLAY;
     }

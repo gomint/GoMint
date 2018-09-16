@@ -14,15 +14,15 @@ import java.util.List;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 155 )
+@RegisterInfo( sId = "minecraft:quartz_block" )
 @EqualsAndHashCode( callSuper = true )
 public class BlockOfQuartz extends Block implements io.gomint.world.block.BlockBlockOfQuartz {
 
     private EnumBlockState<Variant> variant = new EnumBlockState<>( Variant.values() );
 
     @Override
-    public int getBlockId() {
-        return 155;
+    public String getBlockId() {
+        return "minecraft:quartz_block";
     }
 
     @Override

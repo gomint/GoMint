@@ -10,12 +10,12 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 157 )
+@RegisterInfo( sId = "minecraft:double_wooden_slab" )
 public class WoodenDoubleSlab extends Block implements io.gomint.world.block.BlockWoodenDoubleSlab {
 
     @Override
-    public int getBlockId() {
-        return 157;
+    public String getBlockId() {
+        return "minecraft:double_wooden_slab";
     }
 
     @Override

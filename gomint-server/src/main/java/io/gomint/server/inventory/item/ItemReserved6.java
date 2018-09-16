@@ -11,6 +11,11 @@ import io.gomint.server.registry.RegisterInfo;
 public class ItemReserved6 extends ItemStack {
     
     @Override
+    public String getBlockId() {
+        return "minecraft:reserved6";
+    }
+
+    @Override
     public ItemType getType() {
         return ItemType.RESERVED6;
     }

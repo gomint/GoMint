@@ -14,6 +14,11 @@ import io.gomint.taglib.NBTTagCompound;
 
 
     @Override
+    public String getBlockId() {
+        return "minecraft:stone_slab2";
+    }
+
+    @Override
     public ItemType getType() {
         return ItemType.RED_SANDSTONE_SLAB;
     }

@@ -13,7 +13,7 @@ import java.util.List;
  * @author Kaooot
  * @version 1.0
  */
-@RegisterInfo( id = 202 )
+@RegisterInfo( sId = "minecraft:colored_torch_rg" )
 public class RedTorch extends Block implements BlockRedTorch {
 
     private BlockfaceBlockState facing = new BlockfaceBlockState();
@@ -25,8 +25,8 @@ public class RedTorch extends Block implements BlockRedTorch {
     }
 
     @Override
-    public int getBlockId() {
-        return 202;
+    public String getBlockId() {
+        return "minecraft:colored_torch_rg";
     }
 
     @Override

@@ -11,6 +11,11 @@ import io.gomint.server.registry.RegisterInfo;
 public class ItemLog2 extends ItemStack implements io.gomint.inventory.item.ItemLog2 {
 
     @Override
+    public String getBlockId() {
+        return "minecraft:log2";
+    }
+
+    @Override
     public ItemType getType() {
         return ItemType.LOG2;
     }

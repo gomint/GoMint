@@ -39,12 +39,12 @@ public class ProgressBlockState extends BlockState<Float> {
     }
 
     @Override
-    public byte toData() {
+    public short toData() {
         return (byte) Math.round( this.getState() * this.max );
     }
 
     @Override
-    public void fromData( byte data ) {
+    public void fromData( short data ) {
         this.setState( data * this.step );
     }
 

@@ -14,6 +14,11 @@ import io.gomint.taglib.NBTTagCompound;
 
 
     @Override
+    public String getBlockId() {
+        return "minecraft:sandstone_stairs";
+    }
+
+    @Override
     public ItemType getType() {
         return ItemType.SANDSTONE_STAIRS;
     }

@@ -12,12 +12,12 @@ import java.util.List;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 174 )
+@RegisterInfo( sId = "minecraft:packed_ice" )
 public class PackedIce extends Block implements io.gomint.world.block.BlockPackedIce {
 
     @Override
-    public int getBlockId() {
-        return 174;
+    public String getBlockId() {
+        return "minecraft:packed_ice";
     }
 
     @Override

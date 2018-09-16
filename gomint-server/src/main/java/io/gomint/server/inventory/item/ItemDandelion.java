@@ -14,6 +14,11 @@ import io.gomint.taglib.NBTTagCompound;
 
 
     @Override
+    public String getBlockId() {
+        return "minecraft:yellow_flower";
+    }
+
+    @Override
     public ItemType getType() {
         return ItemType.DANDELION;
     }

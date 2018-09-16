@@ -17,12 +17,12 @@ import java.util.List;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 34 )
+@RegisterInfo( sId = "minecraft:pistonArmCollision" )
 public class PistonHead extends Block implements io.gomint.world.block.BlockPistonHead {
 
     @Override
-    public int getBlockId() {
-        return 34;
+    public String getBlockId() {
+        return "minecraft:pistonArmCollision";
     }
 
     @Override

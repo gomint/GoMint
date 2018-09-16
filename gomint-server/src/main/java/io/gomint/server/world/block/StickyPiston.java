@@ -10,12 +10,12 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 29 )
+@RegisterInfo( sId = "minecraft:sticky_piston" )
 public class StickyPiston extends Block implements io.gomint.world.block.BlockStickyPiston {
 
     @Override
-    public int getBlockId() {
-        return 29;
+    public String getBlockId() {
+        return "minecraft:sticky_piston";
     }
 
     @Override

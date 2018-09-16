@@ -9,7 +9,8 @@ package io.gomint.server.world;
 
 import io.gomint.GoMint;
 import io.gomint.server.GoMintServer;
-import io.gomint.server.world.anvil.AnvilWorldAdapter;
+import io.gomint.server.inventory.item.Items;
+import io.gomint.server.world.converter.anvil.AnvilConverter;
 import io.gomint.server.world.inmemory.InMemoryWorldAdapter;
 import io.gomint.server.world.leveldb.LevelDBWorldAdapter;
 import io.gomint.server.world.leveldb.ZippedLevelDBWorldAdapter;
@@ -114,18 +115,18 @@ public class WorldManager {
         File file = new File( path );
         if ( file.exists() ) {
             if ( file.isDirectory() ) {
-                // Anvil world:
-                File regionFolder = new File( file, "region" );
-                if ( regionFolder.exists() && regionFolder.isDirectory() ) {
-                    LOGGER.info( "Detected anvil world '{}'", path );
-                    return this.loadAnvilWorld( file );
-                }
-
                 // LevelDB world:
                 File dbFolder = new File( file, "db" );
                 if ( dbFolder.exists() && dbFolder.isDirectory() ) {
                     LOGGER.info( "Detected leveldb world '{}'", path );
                     return this.loadLevelDBWorld( file );
+                }
+
+                // Anvil world:
+                File regionFolder = new File( file, "region" );
+                if ( regionFolder.exists() && regionFolder.isDirectory() ) {
+                    LOGGER.info( "Detected anvil world '{}', converting...", path );
+                    return this.convertAndLoad( file );
                 }
             } else {
                 throw new WorldLoadException( "World does not exist" );
@@ -143,6 +144,12 @@ public class WorldManager {
         throw new WorldLoadException( "Could not detect world format" );
     }
 
+    private World convertAndLoad( File file ) throws WorldLoadException {
+        AnvilConverter converter = new AnvilConverter( this.server.getAssets(), new Items( this.server.getClassPath(), this.server.getAssets().getJeTopeItems() ), file );
+        converter.done();
+        return loadLevelDBWorld( file );
+    }
+
     private World loadZippedLevelDBWorld( File path, String name ) throws WorldLoadException {
         LevelDBWorldAdapter world = ZippedLevelDBWorldAdapter.load( this.server, path, name );
         this.addWorld( world );
@@ -152,13 +159,6 @@ public class WorldManager {
 
     private World loadLevelDBWorld( File path ) throws WorldLoadException {
         LevelDBWorldAdapter world = LevelDBWorldAdapter.load( this.server, path );
-        this.addWorld( world );
-        LOGGER.info( "Successfully loaded world '{}'", path.getName() );
-        return world;
-    }
-
-    private World loadAnvilWorld( File path ) throws WorldLoadException {
-        AnvilWorldAdapter world = AnvilWorldAdapter.load( this.server, path );
         this.addWorld( world );
         LOGGER.info( "Successfully loaded world '{}'", path.getName() );
         return world;
@@ -201,9 +201,9 @@ public class WorldManager {
         // Check which type of world we want to create
         WorldAdapter world;
         switch ( options.worldType() ) {
-            case ANVIL:
+            case PERSISTENT:
                 try {
-                    world = AnvilWorldAdapter.create( this.server, name, options.generator() );
+                    world = LevelDBWorldAdapter.create( this.server, name, options.generator() );
                 } catch ( WorldCreateException e ) {
                     LOGGER.error( "Could not create new world", e );
                     return null;

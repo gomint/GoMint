@@ -11,6 +11,11 @@ import io.gomint.server.registry.RegisterInfo;
 public class ItemStrippedOakLog extends ItemStack implements io.gomint.inventory.item.ItemStrippedOakLog {
 
     @Override
+    public String getBlockId() {
+        return "minecraft:stripped_oak_log";
+    }
+
+    @Override
     public ItemType getType() {
         return ItemType.STRIPPED_OAK_LOG;
     }

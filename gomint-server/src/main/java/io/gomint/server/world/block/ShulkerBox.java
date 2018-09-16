@@ -17,14 +17,14 @@ import org.slf4j.LoggerFactory;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 218 )
+@RegisterInfo( sId = "minecraft:shulker_box" )
 public class ShulkerBox extends Block implements io.gomint.world.block.BlockShulkerBox {
 
     private static final Logger LOGGER = LoggerFactory.getLogger( ShulkerBox.class );
 
     @Override
-    public int getBlockId() {
-        return 218;
+    public String getBlockId() {
+        return "minecraft:shulker_box";
     }
 
     @Override
@@ -61,7 +61,7 @@ public class ShulkerBox extends Block implements io.gomint.world.block.BlockShul
         compound.addValue( "isUndyed", (byte) 0 );
         compound.addValue( "facing", (byte) 1 );
 
-        return new ShulkerBoxTileEntity( compound, this.world );
+        return new ShulkerBoxTileEntity( compound, this.world, this.world.getServer().getItems() );
     }
 
     @Override

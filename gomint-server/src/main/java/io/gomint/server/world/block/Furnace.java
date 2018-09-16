@@ -7,6 +7,7 @@ import io.gomint.server.entity.EntityPlayer;
 import io.gomint.server.entity.tileentity.FurnaceTileEntity;
 import io.gomint.server.entity.tileentity.TileEntity;
 import io.gomint.server.registry.RegisterInfo;
+import io.gomint.server.util.BlockIdentifier;
 import io.gomint.server.world.PlacementData;
 import io.gomint.server.world.block.helper.ToolPresets;
 import io.gomint.server.world.block.state.FacingBlockState;
@@ -19,15 +20,15 @@ import lombok.EqualsAndHashCode;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 61 )
+@RegisterInfo( sId = "minecraft:furnace" )
 @EqualsAndHashCode( callSuper = true )
 public class Furnace extends Block implements io.gomint.world.block.BlockFurnace {
 
     private FacingBlockState facing = new FacingBlockState();
 
     @Override
-    public int getBlockId() {
-        return 61;
+    public String getBlockId() {
+        return "minecraft:furnace";
     }
 
     @Override
@@ -63,7 +64,7 @@ public class Furnace extends Block implements io.gomint.world.block.BlockFurnace
     @Override
     TileEntity createTileEntity( NBTTagCompound compound ) {
         super.createTileEntity( compound );
-        return new FurnaceTileEntity( compound, this.world );
+        return new FurnaceTileEntity( compound, this.world, this.world.getServer().getItems() );
     }
 
     @Override
@@ -84,7 +85,7 @@ public class Furnace extends Block implements io.gomint.world.block.BlockFurnace
         this.facing.detectFromPlayer( (EntityPlayer) entity );
 
         this.calculateBlockData();
-        return new PlacementData( this.getBlockId(), this.getBlockData(), null );
+        return new PlacementData( new BlockIdentifier( this.getBlockId(), this.getBlockData() ), null );
     }
 
     @Override

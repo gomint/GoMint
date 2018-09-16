@@ -8,12 +8,12 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 80 )
+@RegisterInfo( sId = "minecraft:snow" )
 public class Snow extends Block implements io.gomint.world.block.BlockSnow {
 
     @Override
-    public int getBlockId() {
-        return 80;
+    public String getBlockId() {
+        return "minecraft:snow";
     }
 
     @Override

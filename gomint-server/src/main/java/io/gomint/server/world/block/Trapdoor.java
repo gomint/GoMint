@@ -20,7 +20,7 @@ import java.util.List;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 96 )
+@RegisterInfo( sId = "minecraft:trapdoor" )
 public class Trapdoor extends Block implements io.gomint.world.block.BlockTrapdoor {
 
     private FacingBlockState facing = new FacingBlockState();
@@ -62,8 +62,8 @@ public class Trapdoor extends Block implements io.gomint.world.block.BlockTrapdo
     }
 
     @Override
-    public int getBlockId() {
-        return 96;
+    public String getBlockId() {
+        return "minecraft:trapdoor";
     }
 
     @Override

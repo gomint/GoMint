@@ -10,12 +10,12 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 178 )
+@RegisterInfo( sId = "minecraft:daylight_detector_inverted" )
 public class InvertedDaylightSensor extends Block implements io.gomint.world.block.BlockInvertedDaylightSensor {
 
     @Override
-    public int getBlockId() {
-        return 178;
+    public String getBlockId() {
+        return "minecraft:daylight_detector_inverted";
     }
 
     @Override

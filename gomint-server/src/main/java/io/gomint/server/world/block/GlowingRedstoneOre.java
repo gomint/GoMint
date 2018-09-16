@@ -10,12 +10,12 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 74 )
+@RegisterInfo( sId = "minecraft:lit_redstone_ore" )
 public class GlowingRedstoneOre extends Block implements io.gomint.world.block.BlockGlowingRedstoneOre {
 
     @Override
-    public int getBlockId() {
-        return 74;
+    public String getBlockId() {
+        return "minecraft:lit_redstone_ore";
     }
 
     @Override

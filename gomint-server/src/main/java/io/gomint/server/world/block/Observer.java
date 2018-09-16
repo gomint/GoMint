@@ -10,12 +10,12 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 251 )
+@RegisterInfo( sId = "minecraft:observer" )
 public class Observer extends Block implements io.gomint.world.block.BlockObserver {
 
     @Override
-    public int getBlockId() {
-        return 251;
+    public String getBlockId() {
+        return "minecraft:observer";
     }
 
     @Override

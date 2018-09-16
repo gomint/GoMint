@@ -8,29 +8,44 @@
 package io.gomint.server.world.leveldb;
 
 import io.gomint.jraknet.PacketBuffer;
-import io.gomint.math.BlockPosition;
+import io.gomint.leveldb.DB;
+import io.gomint.leveldb.WriteBatch;
+import io.gomint.math.MathUtils;
 import io.gomint.server.entity.Entity;
+import io.gomint.server.entity.tileentity.SerializationReason;
 import io.gomint.server.entity.tileentity.TileEntities;
 import io.gomint.server.entity.tileentity.TileEntity;
-import io.gomint.server.inventory.MaterialMagicNumbers;
-import io.gomint.server.util.Pair;
+import io.gomint.server.util.Allocator;
+import io.gomint.server.util.BlockIdentifier;
 import io.gomint.server.util.Palette;
+import io.gomint.server.world.BlockRuntimeIDs;
 import io.gomint.server.world.ChunkAdapter;
-import io.gomint.server.world.HeapNibbleArray;
+import io.gomint.server.world.ChunkSlice;
 import io.gomint.server.world.WorldAdapter;
-import io.gomint.server.world.postprocessor.PistonPostProcessor;
 import io.gomint.taglib.NBTReader;
 import io.gomint.taglib.NBTReaderNoBuffer;
 import io.gomint.taglib.NBTTagCompound;
+import io.gomint.taglib.NBTWriter;
+import io.netty.buffer.ByteBuf;
+import it.unimi.dsi.fastutil.ints.Int2IntMap;
+import it.unimi.dsi.fastutil.ints.Int2IntOpenHashMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.ints.IntArrayList;
+import it.unimi.dsi.fastutil.ints.IntList;
+import it.unimi.dsi.fastutil.longs.LongArrayList;
+import it.unimi.dsi.fastutil.longs.LongList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.nio.ByteOrder;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * @author geNAZt
@@ -48,41 +63,157 @@ public class LevelDBChunkAdapter extends ChunkAdapter {
      * @param x            position of chunk
      * @param z            position of chunk
      * @param chunkVersion version of this chunk
+     * @param populated    true when chunk is already populated, false when not
      */
-    public LevelDBChunkAdapter( WorldAdapter worldAdapter, int x, int z, byte chunkVersion ) {
+    public LevelDBChunkAdapter( WorldAdapter worldAdapter, int x, int z, byte chunkVersion, boolean populated ) {
         super( worldAdapter, x, z );
         this.chunkVersion = chunkVersion;
+        this.setPopulated( populated );
+        this.loadedTime = worldAdapter.getServer().getCurrentTickTime();
     }
 
     public LevelDBChunkAdapter( WorldAdapter worldAdapter, int x, int z ) {
         super( worldAdapter, x, z );
-        this.chunkVersion = 8;
+        this.chunkVersion = 7;
+
+        this.loadedTime = worldAdapter.getServer().getCurrentTickTime();
     }
 
-    /**
-     * Calculates the needed data to be saved back to the database
-     *
-     * @return The data which will be saved in the database for this chunk
-     */
-    byte[] getSaveData() {
-       /* ByteBuffer byteBuffer = ByteBuffer.allocate( this.blocks.length +
-                this.data.raw().length +
-                this.skyLight.raw().length +
-                this.blockLight.raw().length +
-                this.height.length() +
-                256 );
+    void save( DB db ) {
+        WriteBatch writeBatch = new WriteBatch();
 
-        byteBuffer.put( this.blocks );
-        byteBuffer.put( this.data.raw() );
-        byteBuffer.put( this.skyLight.raw() );
-        byteBuffer.put( this.blockLight.raw() );
-        byteBuffer.put( this.height.toByteArray() );
+        // We do blocks first
+        for ( int i = 0; i < this.chunkSlices.length; i++ ) {
+            if ( this.chunkSlices[i] == null ) {
+                continue;
+            }
 
-        for ( int i = 0; i < 256; i++ ) {
-            byteBuffer.putInt( ( this.biomes[i] << 24 ) );
+            saveChunkSlice( i, writeBatch );
         }
-*/
-        return new byte[]{};
+
+        // Safe tiles
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        NBTWriter nbtWriter = new NBTWriter( baos, ByteOrder.LITTLE_ENDIAN );
+        for ( TileEntity tileEntity : this.getTileEntities() ) {
+            NBTTagCompound compound = new NBTTagCompound( "" );
+            tileEntity.toCompound( compound, SerializationReason.PERSIST );
+
+            try {
+                nbtWriter.write( compound );
+            } catch ( IOException e ) {
+                LOGGER.warn( "Could not write tile to leveldb", e );
+            }
+        }
+
+        if ( baos.size() > 0 ) {
+            ByteBuf key = ( (LevelDBWorldAdapter) this.world ).getKey( this.x, this.z, (byte) 0x31 );
+            ByteBuf val = Allocator.allocate( baos.toByteArray() );
+
+            writeBatch.put( key, val );
+        }
+
+        db.write( writeBatch );
+        writeBatch.clear();
+        writeBatch.close();
+    }
+
+    private void saveChunkSlice( int i, WriteBatch writeBatch ) {
+        ChunkSlice slice = this.chunkSlices[i];
+        PacketBuffer buffer = new PacketBuffer( 16 );
+
+        buffer.writeByte( (byte) 8 );
+        buffer.writeByte( (byte) slice.getAmountOfLayers() );
+
+        for ( int layer = 0; layer < slice.getAmountOfLayers(); layer++ ) {
+            List<BlockIdentifier> blocks = slice.getBlocks( layer );
+
+            // Count how many unique blocks we have in this chunk
+            int[] indexIDs = new int[4096];
+
+            LongList indexList = new LongArrayList();
+            IntList runtimeIndex = new IntArrayList();
+            Int2ObjectMap<BlockIdentifier> block = new Int2ObjectOpenHashMap<>();
+
+            int foundIndex = 0;
+
+            String lastBlockId = "";
+            short lastDataId = -1;
+
+            int runtimeIdCounter = 0;
+
+            for ( short blockIndex = 0; blockIndex < indexIDs.length; blockIndex++ ) {
+                String blockId = blocks.get( blockIndex ).getBlockId();
+                short blockData = blocks.get( blockIndex ).getData();
+
+                if ( !blockId.equals( lastBlockId ) || blockData != lastDataId ) {
+                    long hashId = ( (long) blockId.hashCode() ) << 32 | ( blockData & 0xFF );
+
+                    foundIndex = indexList.indexOf( hashId );
+                    if ( foundIndex == -1 ) {
+                        int runtimeId = runtimeIdCounter++;
+                        block.put( runtimeId, blocks.get( blockIndex ) );
+                        runtimeIndex.add( runtimeId );
+                        indexList.add( hashId );
+                        foundIndex = indexList.size() - 1;
+                    }
+
+                    lastBlockId = blockId;
+                    lastDataId = blockData;
+                }
+
+                indexIDs[blockIndex] = foundIndex;
+            }
+
+            // Get correct wordsize
+            int value = indexList.size();
+            int numberOfBits = MathUtils.fastFloor( MathUtils.log2( value ) ) + 1;
+
+            // Prepare palette
+            int amountOfBlocks = MathUtils.fastFloor( 32f / (float) numberOfBits );
+
+            buffer.writeByte( (byte) 8 );
+            buffer.writeByte( (byte) 1 );
+
+            Palette palette = new Palette( buffer, amountOfBlocks, false );
+
+            byte paletteWord = (byte) ( (byte) ( palette.getPaletteVersion().getVersionId() << 1 ) | 1 );
+            buffer.writeByte( paletteWord );
+            palette.addIndexIDs( indexIDs );
+            palette.finish();
+
+            // Write persistant ids
+            buffer.writeLInt( indexList.size() );
+            for ( int value1 : runtimeIndex.toArray( new int[0] ) ) {
+                BlockIdentifier blockIdentifier = block.get( value1 );
+
+                NBTTagCompound compound = new NBTTagCompound( "" );
+                compound.addValue( "name", blockIdentifier.getBlockId() );
+                compound.addValue( "val", blockIdentifier.getData() );
+
+                try {
+                    compound.writeTo( new OutputStream() {
+                        @Override
+                        public void write( byte[] b, int off, int len ) throws IOException {
+                            byte[] finalBytes = new byte[len];
+                            System.arraycopy( b, off, finalBytes, 0, len );
+                            buffer.writeBytes( finalBytes );
+                        }
+
+                        @Override
+                        public void write( int b ) throws IOException {
+                            buffer.writeByte( (byte) b );
+                        }
+                    }, false, ByteOrder.LITTLE_ENDIAN );
+                } catch ( IOException e ) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        ByteBuf key = ( (LevelDBWorldAdapter) this.world ).getKeySubChunk( this.x, this.z, (byte) 0x27, (byte) i );
+        ByteBuf val = Allocator.allocate( Arrays.copyOf( buffer.getBuffer(), buffer.getPosition() ) );
+
+        writeBatch.put( key, val );
     }
 
     void loadSection( int sectionY, byte[] chunkData ) {
@@ -105,7 +236,7 @@ public class LevelDBChunkAdapter extends ChunkAdapter {
 
                     // Read NBT data
                     int needed = buffer.readLInt();
-                    Int2ObjectMap<Pair<Integer, Byte>> chunkPalette = new Int2ObjectOpenHashMap<>( needed ); // Varint my ass
+                    Int2IntMap chunkPalette = new Int2IntOpenHashMap( needed ); // Varint my ass
 
                     int index = 0;
                     NBTReaderNoBuffer reader = new NBTReaderNoBuffer( new InputStream() {
@@ -122,75 +253,24 @@ public class LevelDBChunkAdapter extends ChunkAdapter {
                     while ( index < needed ) {
                         try {
                             NBTTagCompound compound = reader.parse();
-                            int blockId = MaterialMagicNumbers.valueOfWithId( compound.getString( "name", "minecraft:air" ) );
-                            if ( blockId == -1 ) {
-                                LOGGER.error( "Unknown block {}", compound.getString( "name", "minecraft:air" ) );
-                            }
+                            String blockId = compound.getString( "name", "minecraft:air" );
+                            short blockData = compound.getShort( "val", (short) 0 );
 
-                            byte blockData = compound.getShort( "val", (short) 0 ).byteValue();
-
-                            chunkPalette.put( index++, new Pair<>( blockId, blockData ) );
+                            chunkPalette.put( index++, BlockRuntimeIDs.from( blockId, blockData ) );
                         } catch ( IOException e ) {
                             LOGGER.error( "Error in loading tile entities", e );
                             break;
                         }
                     }
 
-                    for ( int j = 0; j < 16; ++j ) {
-                        for ( int i = 0; i < 16; ++i ) {
-                            for ( int k = 0; k < 16; ++k ) {
-                                int y = ( sectionY << 4 ) + j;
-                                short blockIndex = (short) ( k << 8 | i << 4 | j ); // j k i - k j i - i k j -
-
-                                Pair<Integer, Byte> dataPair = chunkPalette.get( indexes[blockIndex] );
-                                this.setBlock( k, y, i, sI, dataPair.getFirst() );
-                                this.setData( k, y, i, sI, dataPair.getSecond() );
-                            }
-                        }
+                    ChunkSlice slice = this.ensureSlice( sectionY );
+                    for ( short i = 0; i < indexes.length; i++ ) {
+                        int runtimeID = chunkPalette.get( indexes[i] );
+                        slice.setRuntimeIdInternal( i, sI, runtimeID );
                     }
                 }
 
                 break;
-
-            case 0:
-                // Next 4096 bytes are block data
-                byte[] blockData = new byte[4096];
-                buffer.readBytes( blockData );
-
-                // Next 2048 bytes are metadata
-                byte[] metaData = new byte[2048];
-                buffer.readBytes( metaData );
-                HeapNibbleArray meta = new HeapNibbleArray( metaData );
-
-                // In older versions of the chunk there are light values saved
-                if ( this.chunkVersion < 4 ) {
-                    // TODO: Get skylight data and check if its correct
-                }
-
-                for ( int j = 0; j < 16; ++j ) {
-                    for ( int i = 0; i < 16; ++i ) {
-                        for ( int k = 0; k < 16; ++k ) {
-                            int y = ( sectionY << 4 ) + j;
-                            short blockIndex = (short) ( k << 8 | i << 4 | j ); // j k i - k j i - i k j -
-                            byte blockId = blockData[blockIndex];
-                            this.setBlock( k, y, i, 0, blockId );
-
-                            if ( meta.get( blockIndex ) != 0 ) {
-                                this.setData( k, y, i, 0, meta.get( blockIndex ) );
-                            }
-
-                            switch ( blockId ) {
-                                case 29:
-                                case 33: // Piston head
-                                    BlockPosition position = new BlockPosition( ( this.x << 4 ) + k, y, ( this.z << 4 ) + i );
-                                    this.postProcessors.offer( new PistonPostProcessor( this.world, position ) );
-                                    break;
-                                default:
-                                    break;
-                            }
-                        }
-                    }
-                }
         }
     }
 
@@ -198,14 +278,16 @@ public class LevelDBChunkAdapter extends ChunkAdapter {
         ByteArrayInputStream bais = new ByteArrayInputStream( tileEntityData );
         NBTReader nbtReader = new NBTReader( bais, ByteOrder.LITTLE_ENDIAN );
         while ( nbtReader.hasMoreToRead() ) {
+            TileEntity tileEntity = null;
+
             try {
                 NBTTagCompound compound = nbtReader.parse();
 
-                TileEntity tileEntity = TileEntities.construct( compound, this.world );
+                tileEntity = TileEntities.construct( compound, this.world );
                 if ( tileEntity != null ) {
                     this.addTileEntity( tileEntity );
                 }
-            } catch ( IOException e ) {
+            } catch ( Exception e ) {
                 LOGGER.error( "Error in loading tile entities", e );
                 break;
             }

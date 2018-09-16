@@ -26,8 +26,8 @@ import io.gomint.server.world.block.Block;
 @RegisterInfo( id = 66 )
 public class EntityFallingBlock extends Entity implements io.gomint.entity.passive.EntityFallingBlock {
 
-    private int blockId;
-    private byte blockData;
+    private String blockId;
+    private short blockData;
 
     private BlockPosition position;
 
@@ -88,7 +88,7 @@ public class EntityFallingBlock extends Entity implements io.gomint.entity.passi
 
         this.blockId = block1.getBlockId();
         this.blockData = block1.getBlockData();
-        this.metadataContainer.putInt( MetadataContainer.DATA_VARIANT, BlockRuntimeIDs.fromLegacy( block1.getBlockId(), block1.getBlockData() ) );
+        this.metadataContainer.putInt( MetadataContainer.DATA_VARIANT, BlockRuntimeIDs.from( block1.getBlockId(), block1.getBlockData() ) );
         this.position = block1.getLocation().toBlockPosition();
     }
 
@@ -98,7 +98,7 @@ public class EntityFallingBlock extends Entity implements io.gomint.entity.passi
         blockSynched.setAction( 1 );
         blockSynched.setEntityId( this.getEntityId() );
         blockSynched.setPosition( this.position );
-        blockSynched.setBlockId( BlockRuntimeIDs.fromLegacy( this.blockId, this.blockData ) );
+        blockSynched.setBlockId( BlockRuntimeIDs.from( this.blockId, this.blockData ) );
         blockSynched.setLayer( 0 );
         blockSynched.setFlags( PacketUpdateBlock.FLAG_ALL );
         connection.addToSendQueue( blockSynched );

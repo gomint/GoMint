@@ -20,6 +20,11 @@ public class ItemRepeatingCommandBlock extends ItemStack implements io.gomint.in
 
 
     @Override
+    public String getBlockId() {
+        return "minecraft:repeating_command_block";
+    }
+
+    @Override
     public ItemType getType() {
         return ItemType.REPEATING_COMMAND_BLOCK;
     }

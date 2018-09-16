@@ -1,5 +1,6 @@
 package io.gomint.server.entity.tileentity;
 
+import io.gomint.server.inventory.item.Items;
 import io.gomint.server.world.WorldAdapter;
 import io.gomint.taglib.NBTTagCompound;
 import lombok.Getter;
@@ -34,9 +35,10 @@ public class CommandBlockTileEntity extends ContainerTileEntity {
      *
      * @param tagCompound The TagCompound which should be used to read data from
      * @param world       The world in which this TileEntity resides
+     * @param items       which is used to build up needed items
      */
-    public CommandBlockTileEntity( NBTTagCompound tagCompound, WorldAdapter world ) {
-        super( tagCompound, world );
+    public CommandBlockTileEntity( NBTTagCompound tagCompound, WorldAdapter world, Items items ) {
+        super( tagCompound, world, items );
 
         // Read the NBT tag for its given data
         this.command = tagCompound.getString( "Command", "" );

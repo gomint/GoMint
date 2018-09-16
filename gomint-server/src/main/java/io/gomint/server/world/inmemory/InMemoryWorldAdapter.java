@@ -27,14 +27,13 @@ import java.io.File;
  */
 public final class InMemoryWorldAdapter extends WorldAdapter {
 
+    private final Class<? extends ChunkGenerator> generator;
+
     private InMemoryWorldAdapter( GoMintServer server, String name, Class<? extends ChunkGenerator> generator ) throws WorldCreateException {
         super( server, new File( name ) );
         this.chunkCache = new ChunkCache( this );
         this.levelName = name;
-
-        // Build up generator
-        GeneratorContext context = new GeneratorContext();
-        this.constructGenerator( generator, context );
+        this.generator = generator;
 
         // Generate a spawnpoint
         BlockPosition spawnPoint = this.chunkGenerator.getSpawnPoint();
@@ -66,6 +65,17 @@ public final class InMemoryWorldAdapter extends WorldAdapter {
     @Override
     protected void closeFDs() {
 
+    }
+
+    @Override
+    protected void prepareGenerator() {
+        try {
+            // Build up generator
+            GeneratorContext context = new GeneratorContext();
+            this.constructGenerator( this.generator, context );
+        } catch ( WorldCreateException e ) {
+            this.logger.error( "Could not construct generator", e );
+        }
     }
 
     @Override

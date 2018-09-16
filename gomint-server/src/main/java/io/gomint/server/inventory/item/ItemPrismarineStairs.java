@@ -18,6 +18,11 @@ import io.gomint.server.registry.RegisterInfo;
 public class ItemPrismarineStairs extends ItemStack implements io.gomint.inventory.item.ItemPrismarineStairs {
 
     @Override
+    public String getBlockId() {
+        return "minecraft:prismarine_stairs";
+    }
+
+    @Override
     public ItemType getType() {
         return ItemType.PRISMARINE_STAIRS;
     }

@@ -14,6 +14,11 @@ import io.gomint.taglib.NBTTagCompound;
 
 
     @Override
+    public String getBlockId() {
+        return "minecraft:acacia_stairs";
+    }
+
+    @Override
     public ItemType getType() {
         return ItemType.ACACIA_WOOD_STAIRS;
     }

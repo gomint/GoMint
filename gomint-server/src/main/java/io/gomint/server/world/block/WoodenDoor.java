@@ -46,17 +46,17 @@ public class WoodenDoor extends Door implements BlockWoodenDoor {
     @Override
     public WoodType getWoodType() {
         switch ( this.getBlockId() ) {
-            case (byte) 197:
+            case "minecraft:dark_oak_door":
                 return WoodType.DARK_OAK;
-            case (byte) 196:
+            case "minecraft:acacia_door":
                 return WoodType.ACACIA;
-            case (byte) 195:
+            case "minecraft:jungle_door":
                 return WoodType.JUNGLE;
-            case (byte) 194:
+            case "minecraft:birch_door":
                 return WoodType.BIRCH;
-            case (byte) 193:
+            case "minecraft:spruce_door":
                 return WoodType.SPRUCE;
-            case 64:
+            case "minecraft:wooden_door":
             default:
                 return WoodType.OAK;
         }
@@ -66,23 +66,23 @@ public class WoodenDoor extends Door implements BlockWoodenDoor {
     public void setWoodType( WoodType woodType ) {
         switch ( woodType ) {
             case DARK_OAK:
-                this.setBlockId( (byte) 197 );
+                this.setBlockId( "minecraft:dark_oak_door" );
                 break;
             case ACACIA:
-                this.setBlockId( (byte) 196 );
+                this.setBlockId( "minecraft:acacia_door" );
                 break;
             case JUNGLE:
-                this.setBlockId( (byte) 195 );
+                this.setBlockId( "minecraft:jungle_door" );
                 break;
             case BIRCH:
-                this.setBlockId( (byte) 194 );
+                this.setBlockId( "minecraft:birch_door" );
                 break;
             case SPRUCE:
-                this.setBlockId( (byte) 193 );
+                this.setBlockId( "minecraft:spruce_door" );
                 break;
             case OAK:
             default:
-                this.setBlockId( (byte) 64 );
+                this.setBlockId( "minecraft:wooden_door" );
         }
 
         this.updateBlock();
@@ -92,22 +92,22 @@ public class WoodenDoor extends Door implements BlockWoodenDoor {
     public List<ItemStack> getDrops( ItemStack itemInHand ) {
         int itemId;
         switch ( this.getBlockId() ) {
-            case (byte) 197:
+            case "minecraft:dark_oak_door":
                 itemId = 431;
                 break;
-            case (byte) 196:
+            case "minecraft:acacia_door":
                 itemId = 430;
                 break;
-            case (byte) 195:
+            case "minecraft:jungle_door":
                 itemId = 429;
                 break;
-            case (byte) 194:
+            case "minecraft:birch_door":
                 itemId = 428;
                 break;
-            case (byte) 193:
+            case "minecraft:spruce_door":
                 itemId = 427;
                 break;
-            case 64:
+            case "minecraft:wooden_door":
             default:
                 itemId = 324;
         }

@@ -10,12 +10,12 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 110 )
+@RegisterInfo( sId = "minecraft:mycelium" )
 public class Mycelium extends Block implements io.gomint.world.block.BlockMycelium {
 
     @Override
-    public int getBlockId() {
-        return 110;
+    public String getBlockId() {
+        return "minecraft:mycelium";
     }
 
     @Override

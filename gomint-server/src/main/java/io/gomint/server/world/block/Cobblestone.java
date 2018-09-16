@@ -12,12 +12,12 @@ import java.util.List;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 4 )
+@RegisterInfo( sId = "minecraft:cobblestone" )
 public class Cobblestone extends Block implements io.gomint.world.block.BlockCobblestone {
 
     @Override
-    public int getBlockId() {
-        return 4;
+    public String getBlockId() {
+        return "minecraft:cobblestone";
     }
 
     @Override

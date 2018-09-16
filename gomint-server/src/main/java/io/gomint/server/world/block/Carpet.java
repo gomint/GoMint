@@ -11,12 +11,12 @@ import java.util.List;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 171 )
+@RegisterInfo( sId = "minecraft:carpet" )
 public class Carpet extends Block implements io.gomint.world.block.BlockCarpet {
 
     @Override
-    public int getBlockId() {
-        return 171;
+    public String getBlockId() {
+        return "minecraft:carpet";
     }
 
     @Override

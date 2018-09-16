@@ -10,12 +10,12 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 236 )
+@RegisterInfo( sId = "minecraft:concrete" )
 public class Concrete extends Block implements io.gomint.world.block.BlockConcrete {
 
     @Override
-    public int getBlockId() {
-        return 236;
+    public String getBlockId() {
+        return "minecraft:concrete";
     }
 
     @Override

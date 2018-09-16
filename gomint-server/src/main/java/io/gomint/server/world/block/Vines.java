@@ -15,12 +15,12 @@ import java.util.List;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 106 )
+@RegisterInfo( sId = "minecraft:vine" )
 public class Vines extends Block implements io.gomint.world.block.BlockVines {
 
     @Override
-    public int getBlockId() {
-        return 106;
+    public String getBlockId() {
+        return "minecraft:vine";
     }
 
     @Override

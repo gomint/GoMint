@@ -14,12 +14,12 @@ import java.util.List;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 133 )
+@RegisterInfo( sId = "minecraft:emerald_block" )
 public class BlockOfEmerald extends Block implements io.gomint.world.block.BlockBlockOfEmerald {
 
     @Override
-    public int getBlockId() {
-        return 133;
+    public String getBlockId() {
+        return "minecraft:emerald_block";
     }
 
     @Override

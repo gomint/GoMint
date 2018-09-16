@@ -9,12 +9,12 @@ import io.gomint.world.block.BlockType;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 56 )
+@RegisterInfo( sId = "minecraft:diamond_ore" )
 public class DiamondOre extends Block implements io.gomint.world.block.BlockDiamondOre {
 
     @Override
-    public int getBlockId() {
-        return 56;
+    public String getBlockId() {
+        return "minecraft:diamond_ore";
     }
 
     @Override

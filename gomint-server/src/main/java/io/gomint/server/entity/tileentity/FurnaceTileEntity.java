@@ -19,6 +19,7 @@ import io.gomint.server.crafting.SmeltingRecipe;
 import io.gomint.server.inventory.FurnaceInventory;
 import io.gomint.server.inventory.InventoryHolder;
 import io.gomint.server.inventory.item.ItemStack;
+import io.gomint.server.inventory.item.Items;
 import io.gomint.server.network.packet.PacketSetContainerData;
 import io.gomint.server.world.WorldAdapter;
 import io.gomint.server.world.block.Block;
@@ -56,8 +57,8 @@ public class FurnaceTileEntity extends ContainerTileEntity implements InventoryH
      * @param tagCompound The TagCompound which should be used to read data from
      * @param world       The world in which this TileEntity resides
      */
-    public FurnaceTileEntity( NBTTagCompound tagCompound, WorldAdapter world ) {
-        super( tagCompound, world );
+    public FurnaceTileEntity( NBTTagCompound tagCompound, WorldAdapter world, Items items ) {
+        super( tagCompound, world, items );
 
         this.inventory = new FurnaceInventory( this );
         this.inventory.addObserver( pair -> {

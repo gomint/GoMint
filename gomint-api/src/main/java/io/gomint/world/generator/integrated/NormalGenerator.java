@@ -63,7 +63,7 @@ public class NormalGenerator extends ChunkGenerator {
     }
 
     private List<Populator> populators = new ArrayList<>();
-    private List<Populator> generationPopluators = new ArrayList<>();
+    private List<Populator> generationPopulators = new ArrayList<>();
     private int waterHeight = 62;
 
     private FastRandom random;
@@ -119,7 +119,7 @@ public class NormalGenerator extends ChunkGenerator {
         };
 
         // Add needed populators
-        this.generationPopluators.add( new GroundPopulator() );
+        this.generationPopulators.add( new GroundPopulator() );
 
         this.populators.add( new OrePopulator( new OreType[]{
             new OreType( GoMint.instance().createBlock( BlockCoalOre.class ), 20, 16, 0, 128 ),
@@ -217,7 +217,7 @@ public class NormalGenerator extends ChunkGenerator {
         }
 
         // Let the generation populators work
-        for ( Populator popluator : this.generationPopluators ) {
+        for ( Populator popluator : this.generationPopulators ) {
             popluator.populate( this.world, chunk, this.random );
         }
 

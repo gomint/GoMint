@@ -8,12 +8,12 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 131 )
+@RegisterInfo( sId = "minecraft:tripwire_hook" )
 public class TripwireHook extends Block implements io.gomint.world.block.BlockTripwireHook {
 
     @Override
-    public int getBlockId() {
-        return 131;
+    public String getBlockId() {
+        return "minecraft:tripwire_hook";
     }
 
     @Override

@@ -17,7 +17,7 @@ import io.gomint.world.block.BlockFace;
 public class BlockfaceBlockState extends BlockState<BlockFace> {
 
     @Override
-    public byte toData() {
+    public short toData() {
         switch ( this.getState() ) {
             case DOWN:
                 return 0;
@@ -37,7 +37,7 @@ public class BlockfaceBlockState extends BlockState<BlockFace> {
     }
 
     @Override
-    public void fromData( byte data ) {
+    public void fromData( short data ) {
         this.setState( Things.convertFromDataToBlockFace( data ) );
     }
 

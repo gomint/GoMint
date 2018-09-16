@@ -13,6 +13,11 @@ public class ItemWood extends ItemStack implements io.gomint.inventory.item.Item
 
 
     @Override
+    public String getBlockId() {
+        return "minecraft:planks";
+    }
+
+    @Override
     public ItemType getType() {
         return ItemType.WOOD;
     }

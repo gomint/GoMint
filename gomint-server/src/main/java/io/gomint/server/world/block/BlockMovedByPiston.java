@@ -8,12 +8,12 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 250 )
+@RegisterInfo( sId = "minecraft:movingBlock" )
 public class BlockMovedByPiston extends Block implements io.gomint.world.block.BlockBlockMovedByPiston {
 
     @Override
-    public int getBlockId() {
-        return 250;
+    public String getBlockId() {
+        return "minecraft:movingBlock";
     }
 
     @Override

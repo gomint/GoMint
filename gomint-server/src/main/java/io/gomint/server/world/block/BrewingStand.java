@@ -10,12 +10,12 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 117 )
+@RegisterInfo( sId = "minecraft:brewing_stand" )
 public class BrewingStand extends Block implements io.gomint.world.block.BlockBrewingStand {
 
     @Override
-    public int getBlockId() {
-        return 117;
+    public String getBlockId() {
+        return "minecraft:brewing_stand";
     }
 
     @Override

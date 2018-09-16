@@ -7,6 +7,7 @@
 
 package io.gomint.server.entity.potion;
 
+import com.google.common.reflect.ClassPath;
 import io.gomint.server.GoMintServer;
 import io.gomint.server.entity.potion.effect.Effect;
 import io.gomint.server.player.EffectManager;
@@ -24,8 +25,8 @@ public class Effects {
     private static final Logger LOGGER = LoggerFactory.getLogger( Effects.class );
     private final Registry<Effect> generators;
 
-    public Effects( GoMintServer server ) {
-        this.generators = new Registry<>( server, clazz -> () -> {
+    public Effects( ClassPath classPath ) {
+        this.generators = new Registry<>( classPath, clazz -> () -> {
             try {
                 return (Effect) clazz.newInstance();
             } catch ( InstantiationException | IllegalAccessException e ) {

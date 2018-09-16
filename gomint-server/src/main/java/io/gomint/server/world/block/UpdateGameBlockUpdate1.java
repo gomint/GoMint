@@ -8,12 +8,12 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 248 )
+@RegisterInfo( sId = "minecraft:info_update" )
 public class UpdateGameBlockUpdate1 extends Block {
 
     @Override
-    public int getBlockId() {
-        return 248;
+    public String getBlockId() {
+        return "minecraft:info_update";
     }
 
     @Override

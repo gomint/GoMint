@@ -12,12 +12,12 @@ import io.gomint.taglib.NBTTagCompound;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 199 )
+@RegisterInfo( sId = "minecraft:frame" )
 public class ItemFrame extends Block implements io.gomint.world.block.BlockItemFrame {
 
     @Override
-    public int getBlockId() {
-        return 199;
+    public String getBlockId() {
+        return "minecraft:frame";
     }
 
     @Override
@@ -38,7 +38,7 @@ public class ItemFrame extends Block implements io.gomint.world.block.BlockItemF
         compound.addValue( "ItemDropChance", 1.0f );
         compound.addValue( "ItemRotation", (byte) 0 );
 
-        return new ItemFrameTileEntity( compound, this.world );
+        return new ItemFrameTileEntity( compound, this.world, this.world.getServer().getItems() );
     }
 
     @Override

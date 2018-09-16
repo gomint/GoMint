@@ -17,14 +17,14 @@ import org.slf4j.LoggerFactory;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 116 )
+@RegisterInfo( sId = "minecraft:enchanting_table" )
 public class EnchantmentTable extends Block implements io.gomint.world.block.BlockEnchantmentTable {
 
     private static final Logger LOGGER = LoggerFactory.getLogger( EnchantmentTable.class );
 
     @Override
-    public int getBlockId() {
-        return 116;
+    public String getBlockId() {
+        return "minecraft:enchanting_table";
     }
 
     @Override

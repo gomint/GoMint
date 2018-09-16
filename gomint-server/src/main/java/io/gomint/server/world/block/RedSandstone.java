@@ -10,12 +10,12 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 179 )
+@RegisterInfo( sId = "minecraft:red_sandstone" )
 public class RedSandstone extends Block implements io.gomint.world.block.BlockRedSandstone {
 
     @Override
-    public int getBlockId() {
-        return 179;
+    public String getBlockId() {
+        return "minecraft:red_sandstone";
     }
 
     @Override

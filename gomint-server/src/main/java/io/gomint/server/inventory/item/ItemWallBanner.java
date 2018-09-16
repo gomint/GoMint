@@ -15,6 +15,11 @@ public class ItemWallBanner extends ItemStack implements ItemBanner {
 
 
     @Override
+    public String getBlockId() {
+        return "minecraft:wall_banner";
+    }
+
+    @Override
     public ItemType getType() {
         return ItemType.WALL_BANNER;
     }

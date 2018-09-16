@@ -7,6 +7,7 @@ import io.gomint.server.entity.EntityPlayer;
 import io.gomint.server.inventory.ChestInventory;
 import io.gomint.server.inventory.InventoryHolder;
 import io.gomint.server.inventory.item.ItemAir;
+import io.gomint.server.inventory.item.Items;
 import io.gomint.server.world.WorldAdapter;
 import io.gomint.taglib.NBTTagCompound;
 import io.gomint.world.block.BlockFace;
@@ -32,8 +33,8 @@ public class ShulkerBoxTileEntity extends ContainerTileEntity implements Invento
      * @param tagCompound The TagCompound which should be used to read data from
      * @param world       The world in which this TileEntity resides
      */
-    public ShulkerBoxTileEntity( NBTTagCompound tagCompound, WorldAdapter world ) {
-        super( tagCompound, world );
+    public ShulkerBoxTileEntity( NBTTagCompound tagCompound, WorldAdapter world, Items items ) {
+        super( tagCompound, world, items );
 
         this.inventory = new ChestInventory( this );
 

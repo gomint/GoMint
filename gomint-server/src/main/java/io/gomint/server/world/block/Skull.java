@@ -20,7 +20,7 @@ import java.util.List;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 144 )
+@RegisterInfo( sId = "minecraft:skull" )
 public class Skull extends Block implements io.gomint.world.block.BlockSkull {
 
     @Override
@@ -68,7 +68,7 @@ public class Skull extends Block implements io.gomint.world.block.BlockSkull {
     TileEntity createTileEntity( NBTTagCompound compound ) {
         super.createTileEntity( compound );
         compound.addValue( "SkullType", this.getBlockData() );
-        return new SkullTileEntity( compound, this.world );
+        return new SkullTileEntity( compound, this.world, this.world.getServer().getItems() );
     }
 
     @Override

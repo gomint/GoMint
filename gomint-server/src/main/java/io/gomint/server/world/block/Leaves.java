@@ -11,12 +11,12 @@ import io.gomint.world.block.BlockType;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 18 )
+@RegisterInfo( sId = "minecraft:leaves" )
 public class Leaves extends Block implements BlockLeaves {
 
     private BlockState<BlockLeaves.Type> type = new BlockState<Type>() {
         @Override
-        public byte toData() {
+        public short toData() {
             switch ( this.getState() ) {
                 case OAK:
                     return 0;
@@ -30,7 +30,7 @@ public class Leaves extends Block implements BlockLeaves {
         }
 
         @Override
-        public void fromData( byte data ) {
+        public void fromData( short data ) {
             switch ( data ) {
                 case 0:
                     this.setState( Type.OAK );
@@ -59,8 +59,8 @@ public class Leaves extends Block implements BlockLeaves {
     }
 
     @Override
-    public int getBlockId() {
-        return 18;
+    public String getBlockId() {
+        return "minecraft:leaves";
     }
 
     @Override

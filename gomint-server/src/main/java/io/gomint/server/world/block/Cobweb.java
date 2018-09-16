@@ -15,12 +15,12 @@ import java.util.List;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 30 )
+@RegisterInfo( sId = "minecraft:web" )
 public class Cobweb extends Block implements BlockCobweb {
 
     @Override
-    public int getBlockId() {
-        return 30;
+    public String getBlockId() {
+        return "minecraft:web";
     }
 
     @Override

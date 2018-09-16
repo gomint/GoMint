@@ -10,12 +10,12 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 88 )
+@RegisterInfo( sId = "minecraft:soul_sand" )
 public class SoulSand extends Block implements io.gomint.world.block.BlockSoulSand {
 
     @Override
-    public int getBlockId() {
-        return 88;
+    public String getBlockId() {
+        return "minecraft:soul_sand";
     }
 
     @Override

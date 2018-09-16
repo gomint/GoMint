@@ -14,6 +14,11 @@ import io.gomint.taglib.NBTTagCompound;
 
 
     @Override
+    public String getBlockId() {
+        return "minecraft:brewing_stand";
+    }
+
+    @Override
     public ItemType getType() {
         return ItemType.BREWING_STAND_BLOCK;
     }

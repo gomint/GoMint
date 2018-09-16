@@ -8,12 +8,12 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 170 )
+@RegisterInfo( sId = "minecraft:hay_block" )
 public class HayBale extends Block implements io.gomint.world.block.BlockHayBale {
 
     @Override
-    public int getBlockId() {
-        return 170;
+    public String getBlockId() {
+        return "minecraft:hay_block";
     }
 
     @Override

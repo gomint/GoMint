@@ -9,12 +9,12 @@ import io.gomint.world.block.data.BlockColor;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 159 )
+@RegisterInfo( sId = "minecraft:stained_hardened_clay" )
 public class StainedHardenedClay extends Block implements io.gomint.world.block.BlockStainedHardenedClay {
 
     @Override
-    public int getBlockId() {
-        return 159;
+    public String getBlockId() {
+        return "minecraft:stained_hardened_clay";
     }
 
     @Override

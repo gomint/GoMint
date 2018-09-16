@@ -14,6 +14,11 @@ import io.gomint.taglib.NBTTagCompound;
 
 
     @Override
+    public String getBlockId() {
+        return "minecraft:frame";
+    }
+
+    @Override
     public ItemType getType() {
         return ItemType.ITEM_FRAME_BLOCK;
     }

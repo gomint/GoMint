@@ -10,12 +10,12 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 107 )
+@RegisterInfo( sId = "minecraft:fence_gate" )
 public class FenceGate extends Block implements io.gomint.world.block.BlockFenceGate {
 
     @Override
-    public int getBlockId() {
-        return 107;
+    public String getBlockId() {
+        return "minecraft:fence_gate";
     }
 
     @Override

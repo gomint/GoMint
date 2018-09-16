@@ -12,12 +12,12 @@ import java.util.List;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 244 )
+@RegisterInfo( sId = "minecraft:beetroot" )
 public class Beetroot extends Growable implements BlockBeetroot {
 
     @Override
-    public int getBlockId() {
-        return 244;
+    public String getBlockId() {
+        return "minecraft:beetroot";
     }
 
     @Override

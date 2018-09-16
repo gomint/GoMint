@@ -2,6 +2,7 @@ package io.gomint.server.world.block;
 
 import io.gomint.math.BlockPosition;
 import io.gomint.server.entity.Entity;
+import io.gomint.server.entity.EntityPlayer;
 import io.gomint.world.block.BlockType;
 
 import io.gomint.event.entity.EntityDamageEvent;
@@ -17,12 +18,12 @@ import java.util.concurrent.TimeUnit;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 51 )
+@RegisterInfo( sId = "minecraft:fire" )
 public class Fire extends Block implements io.gomint.world.block.BlockFire {
 
     @Override
-    public int getBlockId() {
-        return 51;
+    public String getBlockId() {
+        return "minecraft:fire";
     }
 
     @Override
@@ -52,7 +53,7 @@ public class Fire extends Block implements io.gomint.world.block.BlockFire {
     }
 
     @Override
-    public boolean punch( Entity entity, BlockPosition position, boolean creative ) {
+    public boolean punch( EntityPlayer player, BlockPosition position ) {
         this.setType( Air.class );
         return true;
     }

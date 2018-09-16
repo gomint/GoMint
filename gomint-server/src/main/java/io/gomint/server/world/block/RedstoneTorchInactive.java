@@ -8,12 +8,12 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 75 )
+@RegisterInfo( sId = "minecraft:unlit_redstone_torch" )
 public class RedstoneTorchInactive extends Block implements io.gomint.world.block.BlockRedstoneTorchInactive {
 
     @Override
-    public int getBlockId() {
-        return 75;
+    public String getBlockId() {
+        return "minecraft:unlit_redstone_torch";
     }
 
     @Override

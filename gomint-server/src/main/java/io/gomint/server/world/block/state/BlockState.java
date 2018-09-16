@@ -25,13 +25,13 @@ public abstract class BlockState<T> {
      *
      * @return byte data for the block
      */
-    public abstract byte toData();
+    public abstract short toData();
 
     /**
      * Get state from block data
      *
      * @param data from the block
      */
-    public abstract void fromData( byte data );
+    public abstract void fromData( short data );
 
 }

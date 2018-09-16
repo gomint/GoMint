@@ -10,12 +10,12 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 240 )
+@RegisterInfo( sId = "minecraft:chorus_plant" )
 public class ChorusPlant extends Block implements io.gomint.world.block.BlockChorusPlant {
 
     @Override
-    public int getBlockId() {
-        return 240;
+    public String getBlockId() {
+        return "minecraft:chorus_plant";
     }
 
     @Override

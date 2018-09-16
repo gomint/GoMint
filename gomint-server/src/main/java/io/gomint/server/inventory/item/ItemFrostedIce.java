@@ -20,6 +20,11 @@ public class ItemFrostedIce extends ItemStack implements io.gomint.inventory.ite
 
 
     @Override
+    public String getBlockId() {
+        return "minecraft:frosted_ice";
+    }
+
+    @Override
     public ItemType getType() {
         return ItemType.FROSTED_ICE;
     }

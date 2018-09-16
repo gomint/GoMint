@@ -10,12 +10,12 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 13 )
+@RegisterInfo( sId = "minecraft:gravel" )
 public class Gravel extends Block implements io.gomint.world.block.BlockGravel {
 
     @Override
-    public int getBlockId() {
-        return 13;
+    public String getBlockId() {
+        return "minecraft:gravel";
     }
 
     @Override

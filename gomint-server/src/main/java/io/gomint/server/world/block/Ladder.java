@@ -5,6 +5,7 @@ import io.gomint.math.Vector;
 import io.gomint.math.Vector2;
 import io.gomint.server.entity.Entity;
 import io.gomint.server.registry.RegisterInfo;
+import io.gomint.server.util.BlockIdentifier;
 import io.gomint.server.world.PlacementData;
 import io.gomint.server.world.block.helper.ToolPresets;
 import io.gomint.world.block.BlockType;
@@ -13,12 +14,12 @@ import io.gomint.world.block.BlockType;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 65 )
+@RegisterInfo( sId = "minecraft:ladder" )
 public class Ladder extends Block implements io.gomint.world.block.BlockLadder {
 
     @Override
-    public int getBlockId() {
-        return 65;
+    public String getBlockId() {
+        return "minecraft:ladder";
     }
 
     @Override
@@ -113,15 +114,19 @@ public class Ladder extends Block implements io.gomint.world.block.BlockLadder {
 
         if ( zAbs > xAbs ) {
             if ( directionPlane.getZ() > 0 ) {
-                return data.setMetaData( (byte) 2 );
+                BlockIdentifier identifier = new BlockIdentifier( data.getBlockIdentifier().getBlockId(), (short) 2 );
+                return data.setBlockIdentifier( identifier );
             } else {
-                return data.setMetaData( (byte) 3 );
+                BlockIdentifier identifier = new BlockIdentifier( data.getBlockIdentifier().getBlockId(), (short) 3 );
+                return data.setBlockIdentifier( identifier );
             }
         } else {
             if ( directionPlane.getX() > 0 ) {
-                return data.setMetaData( (byte) 4 );
+                BlockIdentifier identifier = new BlockIdentifier( data.getBlockIdentifier().getBlockId(), (short) 4 );
+                return data.setBlockIdentifier( identifier );
             } else {
-                return data.setMetaData( (byte) 5 );
+                BlockIdentifier identifier = new BlockIdentifier( data.getBlockIdentifier().getBlockId(), (short) 5 );
+                return data.setBlockIdentifier( identifier );
             }
         }
     }

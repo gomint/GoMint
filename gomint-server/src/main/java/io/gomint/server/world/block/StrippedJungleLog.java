@@ -2,11 +2,9 @@ package io.gomint.server.world.block;
 
 import io.gomint.GoMint;
 import io.gomint.inventory.item.ItemStack;
-import io.gomint.inventory.item.ItemStrippedAcaciaLog;
 import io.gomint.inventory.item.ItemStrippedJungleLog;
 import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.world.block.helper.ToolPresets;
-import io.gomint.world.block.BlockLog;
 import io.gomint.world.block.BlockStrippedJungleLog;
 import io.gomint.world.block.BlockType;
 
@@ -17,12 +15,12 @@ import java.util.List;
  * @author KCodeYT
  * @version 1.0
  */
-@RegisterInfo( id = 262 )
+@RegisterInfo( sId = "minecraft:stripped_jungle_log" )
 public class StrippedJungleLog extends Block implements BlockStrippedJungleLog {
 
     @Override
-    public int getBlockId() {
-        return 262;
+    public String getBlockId() {
+        return "minecraft:stripped_jungle_log";
     }
 
     @Override
@@ -52,7 +50,7 @@ public class StrippedJungleLog extends Block implements BlockStrippedJungleLog {
 
     @Override
     public void setLogDirection( Direction direction ) {
-        byte type = this.getBlockData();
+        short type = this.getBlockData();
 
         switch ( direction ) {
             case UP_DOWN:
@@ -94,7 +92,7 @@ public class StrippedJungleLog extends Block implements BlockStrippedJungleLog {
     }
 
     @Override
-    public List<ItemStack> getDrops(ItemStack itemInHand ) {
+    public List<ItemStack> getDrops( ItemStack itemInHand ) {
         return new ArrayList<ItemStack>() {{
             add( GoMint.instance().createItemStack( ItemStrippedJungleLog.class, 1 ) );
         }};

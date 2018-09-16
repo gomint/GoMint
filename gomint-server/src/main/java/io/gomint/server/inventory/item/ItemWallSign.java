@@ -14,6 +14,11 @@ public class ItemWallSign extends ItemStack {
 
 
     @Override
+    public String getBlockId() {
+        return "minecraft:wall_sign";
+    }
+
+    @Override
     public ItemType getType() {
         return ItemType.WALL_SIGN;
     }

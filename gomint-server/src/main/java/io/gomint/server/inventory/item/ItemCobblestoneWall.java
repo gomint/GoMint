@@ -14,6 +14,11 @@ import io.gomint.taglib.NBTTagCompound;
 
 
     @Override
+    public String getBlockId() {
+        return "minecraft:cobblestone_wall";
+    }
+
+    @Override
     public ItemType getType() {
         return ItemType.COBBLESTONE_WALL;
     }

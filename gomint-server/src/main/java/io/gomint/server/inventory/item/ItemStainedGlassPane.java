@@ -14,6 +14,11 @@ import io.gomint.taglib.NBTTagCompound;
 
 
     @Override
+    public String getBlockId() {
+        return "minecraft:stained_glass_pane";
+    }
+
+    @Override
     public ItemType getType() {
         return ItemType.STAINED_GLASS_PANE;
     }

@@ -10,12 +10,12 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 206 )
+@RegisterInfo( sId = "minecraft:end_bricks" )
 public class EndBricks extends Block implements io.gomint.world.block.BlockEndBricks {
 
     @Override
-    public int getBlockId() {
-        return 206;
+    public String getBlockId() {
+        return "minecraft:end_bricks";
     }
 
     @Override

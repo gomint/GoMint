@@ -14,12 +14,12 @@ import java.util.List;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 1 )
+@RegisterInfo( sId = "minecraft:stone" )
 public class Stone extends Block implements io.gomint.world.block.BlockStone {
 
     @Override
-    public int getBlockId() {
-        return 1;
+    public String getBlockId() {
+        return "minecraft:stone";
     }
 
     @Override

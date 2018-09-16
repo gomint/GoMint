@@ -8,10 +8,8 @@ import io.gomint.command.CommandOverload;
 import io.gomint.command.CommandSender;
 import io.gomint.command.ParamValidator;
 import io.gomint.plugin.Plugin;
-import io.gomint.server.command.internal.ListCommand;
-import io.gomint.server.command.internal.SayCommand;
-import io.gomint.server.command.internal.StopCommand;
-import io.gomint.server.command.internal.TPCommand;
+import io.gomint.server.command.vanilla.*;
+import io.gomint.server.command.gomint.*;
 import io.gomint.server.entity.CommandPermission;
 import io.gomint.server.entity.EntityPlayer;
 import io.gomint.server.network.packet.PacketAvailableCommands;
@@ -48,10 +46,15 @@ public class CommandManager {
         // Register all internal commands
         try {
             for ( Class cmdClass : new Class[]{
+                // Vanilla
+                DeopCommand.class,
                 ListCommand.class,
+                OpCommand.class,
                 SayCommand.class,
-                StopCommand.class,
-                TPCommand.class
+
+                // GoMint
+                KickCommand.class,
+                StopCommand.class
             } ) {
                 // Check for system only commands
                 Object commandObject = null;

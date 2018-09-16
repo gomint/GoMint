@@ -11,7 +11,6 @@ import io.gomint.server.network.packet.PacketPlayerAction;
 import io.gomint.server.world.BlockRuntimeIDs;
 import io.gomint.server.world.LevelEvent;
 import io.gomint.server.world.block.Block;
-import io.gomint.world.Gamemode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -161,7 +160,7 @@ public class PacketPlayerActionHandler implements PacketHandler<PacketPlayerActi
                 // Broadcast break effects
                 if ( connection.getEntity().getBreakVector() != null ) {
                     Block block = connection.getEntity().getWorld().getBlockAt( connection.getEntity().getBreakVector() );
-                    int runtimeId = BlockRuntimeIDs.fromLegacy( block.getBlockId(), block.getBlockData() );
+                    int runtimeId = BlockRuntimeIDs.from( block.getBlockId(), block.getBlockData() );
 
                     connection.getEntity().getWorld().sendLevelEvent(
                         connection.getEntity().getBreakVector().toVector(),
@@ -217,7 +216,7 @@ public class PacketPlayerActionHandler implements PacketHandler<PacketPlayerActi
 
         io.gomint.server.world.block.Block block = connection.getEntity().getWorld().getBlockAt( packet.getPosition() );
 
-        if ( !block.punch( connection.getEntity(), packet.getPosition(), ( connection.getEntity().getGamemode() == Gamemode.CREATIVE ) ) ) {
+        if ( !block.punch( connection.getEntity(), packet.getPosition() ) ) {
             long breakTime = block.getFinalBreakTime( connection.getEntity().getInventory().getItemInHand(), connection.getEntity() );
             LOGGER.debug( "Sending break time {} ms", breakTime );
 

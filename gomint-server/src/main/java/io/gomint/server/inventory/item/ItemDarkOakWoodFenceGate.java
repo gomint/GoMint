@@ -14,6 +14,11 @@ import io.gomint.taglib.NBTTagCompound;
 
 
     @Override
+    public String getBlockId() {
+        return "minecraft:dark_oak_fence_gate";
+    }
+
+    @Override
     public ItemType getType() {
         return ItemType.DARK_OAK_FENCE_GATE;
     }

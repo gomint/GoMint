@@ -13,6 +13,11 @@ public class ItemGlowstone extends ItemStack implements io.gomint.inventory.item
 
 
     @Override
+    public String getBlockId() {
+        return "minecraft:glowstone";
+    }
+
+    @Override
     public ItemType getType() {
         return ItemType.GLOWSTONE;
     }

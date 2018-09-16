@@ -1,8 +1,7 @@
 package io.gomint.server.inventory.item;
-import io.gomint.inventory.item.ItemType;
 
+import io.gomint.inventory.item.ItemType;
 import io.gomint.server.registry.RegisterInfo;
-import io.gomint.taglib.NBTTagCompound;
 
 /**
  * @author geNAZt
@@ -11,11 +10,9 @@ import io.gomint.taglib.NBTTagCompound;
 @RegisterInfo( id = 392 )
 public class ItemPotato extends ItemFood implements io.gomint.inventory.item.ItemPotato {
 
-
-
     @Override
-    public int getBlockId() {
-        return 142;
+    public String getBlockId() {
+        return "minecraft:potatoes";
     }
 
     @Override

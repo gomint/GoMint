@@ -21,6 +21,7 @@ import io.gomint.server.network.PlayerConnection;
 import io.gomint.server.network.packet.PacketTileEntityData;
 import io.gomint.server.network.packet.PacketUpdateBlock;
 import io.gomint.server.registry.SkipRegister;
+import io.gomint.server.util.BlockIdentifier;
 import io.gomint.server.world.BlockRuntimeIDs;
 import io.gomint.server.world.PlacementData;
 import io.gomint.server.world.UpdateReason;
@@ -52,7 +53,7 @@ public abstract class Block implements io.gomint.world.block.Block {
 
     // CHECKSTYLE:OFF
     @Getter
-    private int blockId;
+    private String blockId;
     @Setter
     protected WorldAdapter world;
     @Setter
@@ -62,7 +63,7 @@ public abstract class Block implements io.gomint.world.block.Block {
     @Setter
     private int layer;
     @Getter
-    private byte blockData;
+    private short blockData;
     @Setter
     private TileEntity tileEntity;
     @Getter
@@ -71,7 +72,7 @@ public abstract class Block implements io.gomint.world.block.Block {
     private byte blockLightLevel;
 
     // Set all needed data
-    public void setData( int blockId, byte blockData, TileEntity tileEntity, WorldAdapter worldAdapter, Location location, int layer, byte skyLightLevel, byte blockLightLevel ) {
+    public void setData( String blockId, short blockData, TileEntity tileEntity, WorldAdapter worldAdapter, Location location, int layer, byte skyLightLevel, byte blockLightLevel ) {
         this.blockId = blockId;
         this.blockData = blockData;
         this.tileEntity = tileEntity;
@@ -85,7 +86,7 @@ public abstract class Block implements io.gomint.world.block.Block {
     // CHECKSTYLE:ON
 
     /**
-     * Hook for blocks which have custom block states. This should be used to convert data from the block to the state
+     * Hook for blocks which have custom blockId states. This should be used to convert data from the blockId to the state
      * objects
      */
     public void generateBlockStates() {
@@ -93,7 +94,7 @@ public abstract class Block implements io.gomint.world.block.Block {
     }
 
     /**
-     * Check if a block update is scheduled for this block
+     * Check if a blockId update is scheduled for this blockId
      *
      * @return true when there is, false when not
      */
@@ -102,9 +103,9 @@ public abstract class Block implements io.gomint.world.block.Block {
     }
 
     /**
-     * Called when a normal block update should be done
+     * Called when a normal blockId update should be done
      *
-     * @param updateReason  The reason why this block should update
+     * @param updateReason  The reason why this blockId should update
      * @param currentTimeMS The timestamp when the tick has begun
      * @param dT            The difference time in full seconds since the last tick
      * @return a timestamp for the next execution
@@ -114,49 +115,48 @@ public abstract class Block implements io.gomint.world.block.Block {
     }
 
     /**
-     * Method which gets called when a entity steps on a block
+     * Method which gets called when a entity steps on a blockId
      *
-     * @param entity which stepped on the block
+     * @param entity which stepped on the blockId
      */
     public void stepOn( Entity entity ) {
 
     }
 
     /**
-     * method which gets called when a entity got off a block which it {@link #stepOn(Entity)}.
+     * method which gets called when a entity got off a blockId which it {@link #stepOn(Entity)}.
      *
-     * @param entity which got off the block
+     * @param entity which got off the blockId
      */
     public void gotOff( Entity entity ) {
 
     }
 
     /**
-     * Called when a entity decides to interact with the block
+     * Called when a entity decides to interact with the blockId
      *
      * @param entity  The entity which interacts with it
-     * @param face    The block face the entity interacts with
-     * @param facePos The position where the entity interacted with the block
+     * @param face    The blockId face the entity interacts with
+     * @param facePos The position where the entity interacted with the blockId
      * @param item    The item with which the entity interacted, can be null
-     * @return true when the block has made a action for interaction, false when not
+     * @return true when the blockId has made a action for interaction, false when not
      */
     public boolean interact( Entity entity, BlockFace face, Vector facePos, ItemStack item ) {
         return false;
     }
 
     /**
-     * Called when an entity punches a block
+     * Called when an entity punches a blockId
      *
-     * @param entity  The entity which punches with it
-     * @param position The position where the entity punched the block
-     * @param creative
+     * @param player  The player which punches it
+     * @param position The position where the entity punched the blockId
      */
-    public boolean punch( Entity entity, BlockPosition position, boolean creative ) {
+    public boolean punch( EntityPlayer player, BlockPosition position ) {
         return false;
     }
 
     /**
-     * Store additional temporary data to a block. Things like how many players have stepped on a pressure plate etc.
+     * Store additional temporary data to a blockId. Things like how many players have stepped on a pressure plate etc.
      * are use cases for this system.
      *
      * @param key  of the value under which it will be stored and received
@@ -197,7 +197,7 @@ public abstract class Block implements io.gomint.world.block.Block {
     }
 
     /**
-     * Does this block need a tile entity on placement?
+     * Does this blockId need a tile entity on placement?
      *
      * @return true when it needs a tile entity, false if it doesn't
      */
@@ -223,7 +223,7 @@ public abstract class Block implements io.gomint.world.block.Block {
     }
 
     /**
-     * Update the block for the client
+     * Update the blockId for the client
      */
     void updateBlock() {
         this.calculateBlockData();
@@ -249,7 +249,7 @@ public abstract class Block implements io.gomint.world.block.Block {
         }
 
         WorldAdapter worldAdapter = (WorldAdapter) this.location.getWorld();
-        return worldAdapter.getBlockId( this.location.toBlockPosition(), this.layer ) == this.getBlockId();
+        return worldAdapter.getBlockId( this.location.toBlockPosition(), this.layer ).equals( this.getBlockId() );
     }
 
     @Override
@@ -265,24 +265,23 @@ public abstract class Block implements io.gomint.world.block.Block {
     /**
      * Internal overload for NBT compound calculations
      *
-     * @param <T>  block generic type
-     * @param data optional data for the block
-     * @return the new placed block
+     * @param <T>  blockId generic type
+     * @param data optional data for the blockId
+     * @return the new placed blockId
      */
     public <T extends io.gomint.world.block.Block> T setBlockFromPlacementData( PlacementData data ) {
         BlockPosition pos = this.location.toBlockPosition();
-        Block instance = this.world.getServer().getBlocks().get( data.getBlockId() );
+        Block instance = this.world.getServer().getBlocks().get( data.getBlockIdentifier().getBlockId() );
 
         if ( instance != null ) {
             WorldAdapter worldAdapter = (WorldAdapter) this.location.getWorld();
-            worldAdapter.setBlockId( pos, this.layer, data.getBlockId() );
-            worldAdapter.setBlockData( pos, this.layer, data.getMetaData() );
+            worldAdapter.setBlock( pos, this.layer, data.getBlockIdentifier() );
             worldAdapter.resetTemporaryStorage( pos, this.layer );
 
             instance.setWorld( worldAdapter );
             instance.setLocation( this.location );
 
-            // Check if new block needs tile entity
+            // Check if new blockId needs tile entity
             if ( instance.needsTileEntity() ) {
                 // Create new tile entity compound if null
                 if ( data.getCompound() == null ) {
@@ -320,17 +319,18 @@ public abstract class Block implements io.gomint.world.block.Block {
         Block instance = this.world.getServer().getBlocks().get( blockType );
         if ( instance != null ) {
             WorldAdapter worldAdapter = (WorldAdapter) this.location.getWorld();
-            worldAdapter.setBlockId( pos, this.layer, instance.getBlockId() );
+
+            BlockIdentifier blockIdentifier = new BlockIdentifier( instance.getBlockId(), ( resetData ) ? 0 : this.getBlockData() );
+            worldAdapter.setBlock( pos, this.layer, blockIdentifier );
 
             if ( resetData ) {
-                worldAdapter.setBlockData( pos, this.layer, (byte) 0 );
                 worldAdapter.resetTemporaryStorage( pos, this.layer );
             }
 
             instance.setWorld( worldAdapter );
             instance.setLocation( this.location );
 
-            // Check if new block needs tile entity
+            // Check if new blockId needs tile entity
             if ( checkTile ) {
                 if ( instance.needsTileEntity() ) {
                     TileEntity tileEntityInstance = instance.createTileEntity( new NBTTagCompound( "" ) );
@@ -370,7 +370,7 @@ public abstract class Block implements io.gomint.world.block.Block {
         worldAdapter.setBlockData( pos, this.layer, instance.getBlockData() );
         worldAdapter.resetTemporaryStorage( pos, this.layer );
 
-        // Check if new block needs tile entity
+        // Check if new blockId needs tile entity
         if ( instance.getTileEntity() != null ) {
             worldAdapter.storeTileEntity( pos, instance.getTileEntity() );
         } else {
@@ -395,7 +395,7 @@ public abstract class Block implements io.gomint.world.block.Block {
         worldAdapter.setBlockData( pos, this.layer, instance.getBlockData() );
         worldAdapter.resetTemporaryStorage( pos, this.layer );
 
-        // Check if new block needs tile entity
+        // Check if new blockId needs tile entity
         if ( instance.getTileEntity() != null ) {
             // We need to copy the tile entity and change its location
             NBTTagCompound compound = new NBTTagCompound( "" );
@@ -423,16 +423,16 @@ public abstract class Block implements io.gomint.world.block.Block {
     }
 
     /**
-     * Get the break time needed to break this block without any enchantings or tools
+     * Get the break time needed to break this blockId without any enchantings or tools
      *
-     * @return time in milliseconds it needs to break this block
+     * @return time in milliseconds it needs to break this blockId
      */
     public long getBreakTime() {
         return 250;
     }
 
     /**
-     * Get the attached tile entity to this block
+     * Get the attached tile entity to this blockId
      *
      * @param <T> The type of the tile entity
      * @return null when there is not tile entity attached, otherwise the stored tile entity
@@ -444,7 +444,7 @@ public abstract class Block implements io.gomint.world.block.Block {
 
         // Emergency checking
         if ( this.tileEntity == null && needsTileEntity() ) {
-            LOGGER.warn( "Your world has been corrupted. The block {} @ {} has no stored tile entity. Please fix the world {}. The block will be repaired now, don't expect it to work like it should!",
+            LOGGER.warn( "Your world has been corrupted. The blockId {} @ {} has no stored tile entity. Please fix the world {}. The blockId will be repaired now, don't expect it to work like it should!",
                 this.getClass().getSimpleName(), this.location, this.world.getWorldName() );
 
             this.tileEntity = createTileEntity( new NBTTagCompound( "" ) );
@@ -499,10 +499,10 @@ public abstract class Block implements io.gomint.world.block.Block {
     }
 
     /**
-     * Get the side of this block
+     * Get the side of this blockId
      *
      * @param face which side we want to get
-     * @return block attached to the side given
+     * @return blockId attached to the side given
      */
     public Block getSide( Facing face ) {
         switch ( face ) {
@@ -524,19 +524,19 @@ public abstract class Block implements io.gomint.world.block.Block {
     }
 
     /**
-     * Check if this block can be replaced by the item in the arguments
+     * Check if this blockId can be replaced by the item in the arguments
      *
-     * @param item which may replace this block
-     * @return true if this block can be replaced with the item, false when not
+     * @param item which may replace this blockId
+     * @return true if this blockId can be replaced with the item, false when not
      */
     public boolean canBeReplaced( ItemStack item ) {
         return false;
     }
 
     /**
-     * Send all block packets needed to display this block
+     * Send all blockId packets needed to display this blockId
      *
-     * @param connection which should get the block data
+     * @param connection which should get the blockId data
      */
     public void send( PlayerConnection connection ) {
         if ( !isPlaced() ) {
@@ -547,7 +547,7 @@ public abstract class Block implements io.gomint.world.block.Block {
 
         PacketUpdateBlock updateBlock = new PacketUpdateBlock();
         updateBlock.setPosition( position );
-        updateBlock.setBlockId( BlockRuntimeIDs.fromLegacy( this.getBlockId(), this.getBlockData() ) );
+        updateBlock.setBlockId( BlockRuntimeIDs.from( this.getBlockId(), this.getBlockData() ) );
         updateBlock.setFlags( PacketUpdateBlock.FLAG_ALL_PRIORITY );
 
         connection.addToSendQueue( updateBlock );
@@ -572,15 +572,15 @@ public abstract class Block implements io.gomint.world.block.Block {
 
     public PlacementData calculatePlacementData( Entity entity, ItemStack item, Vector clickVector ) {
         io.gomint.server.inventory.item.ItemStack implStack = (io.gomint.server.inventory.item.ItemStack) item;
-        return new PlacementData( implStack.getBlockId(), (byte) item.getData(), null );
+        return new PlacementData( new BlockIdentifier( implStack.getBlockId(), item.getData() ), null );
     }
 
     /**
-     * Get the final break time of a block in milliseconds. This applies all sorts of enchantments and effects which
+     * Get the final break time of a blockId in milliseconds. This applies all sorts of enchantments and effects which
      * needs to be used.
      *
-     * @param item   with which the block should be destroyed
-     * @param player which should destroy the block
+     * @param item   with which the blockId should be destroyed
+     * @param player which should destroy the blockId
      * @return break time in milliseconds
      */
     public long getFinalBreakTime( ItemStack item, EntityPlayer player ) {
@@ -687,9 +687,9 @@ public abstract class Block implements io.gomint.world.block.Block {
     }
 
     /**
-     * Get drops from the block when it broke
+     * Get drops from the blockId when it broke
      *
-     * @param itemInHand which was used to destroy this block
+     * @param itemInHand which was used to destroy this blockId
      * @return a list of drops
      */
     public List<ItemStack> getDrops( ItemStack itemInHand ) {
@@ -698,11 +698,11 @@ public abstract class Block implements io.gomint.world.block.Block {
     }
 
     /**
-     * Set new block data for this position
+     * Set new blockId data for this position
      *
      * @param blockData which should be set
      */
-    public void setBlockData( byte blockData ) {
+    public void setBlockData( short blockData ) {
         // Only update when there has been a value already loaded
         if ( this.blockData > -1 && isPlaced() ) {
             this.world.setBlockData( this.location.toBlockPosition(), this.layer, blockData );
@@ -731,7 +731,7 @@ public abstract class Block implements io.gomint.world.block.Block {
 
     public abstract float getBlastResistance();
 
-    public void setBlockId( int blockId ) {
+    public void setBlockId( String blockId ) {
         if ( isPlaced() ) {
             this.blockId = blockId;
             this.world.setBlockId( this.location.toBlockPosition(), this.layer, blockId );
@@ -769,8 +769,8 @@ public abstract class Block implements io.gomint.world.block.Block {
         this.blockData = 0;
     }
 
-    protected void addToBlockData( byte dataValue ) {
-        this.setBlockData( (byte) ( this.getBlockData() + dataValue ) );
+    protected void addToBlockData( short dataValue ) {
+        this.setBlockData( (short) ( this.getBlockData() + dataValue ) );
     }
 
 }

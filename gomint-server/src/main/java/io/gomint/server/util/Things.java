@@ -15,7 +15,7 @@ import io.gomint.world.block.BlockFace;
  */
 public class Things {
 
-    public static BlockFace convertFromDataToBlockFace( byte data ) {
+    public static BlockFace convertFromDataToBlockFace( short data ) {
         switch ( data ) {
             case 0:
                 return BlockFace.DOWN;

@@ -8,12 +8,12 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 93 )
+@RegisterInfo( sId = "minecraft:unpowered_repeater" )
 public class RedstoneRepeaterInactive extends Block implements io.gomint.world.block.BlockRedstoneRepeaterInactive {
 
     @Override
-    public int getBlockId() {
-        return 93;
+    public String getBlockId() {
+        return "minecraft:unpowered_repeater";
     }
 
     @Override

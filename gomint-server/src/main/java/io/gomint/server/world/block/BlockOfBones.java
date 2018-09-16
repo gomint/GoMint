@@ -19,12 +19,12 @@ import java.util.List;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 216 )
+@RegisterInfo( sId = "minecraft:bone_block" )
 public class BlockOfBones extends Block implements io.gomint.world.block.BlockOfBones {
 
     @Override
-    public int getBlockId() {
-        return 216;
+    public String getBlockId() {
+        return "minecraft:bone_block";
     }
 
     @Override

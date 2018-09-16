@@ -15,12 +15,12 @@ import java.util.List;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 52 )
+@RegisterInfo( sId = "minecraft:mob_spawner" )
 public class MobSpawner extends Block implements io.gomint.world.block.BlockMobSpawner {
 
     @Override
-    public int getBlockId() {
-        return 52;
+    public String getBlockId() {
+        return "minecraft:mob_spawner";
     }
 
     @Override

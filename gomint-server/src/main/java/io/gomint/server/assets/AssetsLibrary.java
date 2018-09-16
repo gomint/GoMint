@@ -7,6 +7,7 @@
 
 package io.gomint.server.assets;
 
+import io.gomint.GoMint;
 import io.gomint.inventory.item.ItemAir;
 import io.gomint.jraknet.PacketBuffer;
 import io.gomint.server.GoMintServer;
@@ -16,7 +17,8 @@ import io.gomint.server.crafting.ShapelessRecipe;
 import io.gomint.server.crafting.SmeltingRecipe;
 import io.gomint.server.inventory.CreativeInventory;
 import io.gomint.server.inventory.item.ItemStack;
-import io.gomint.server.util.StringShortPair;
+import io.gomint.server.inventory.item.Items;
+import io.gomint.server.util.BlockIdentifier;
 import io.gomint.taglib.NBTTagCompound;
 import lombok.Getter;
 import org.slf4j.Logger;
@@ -44,27 +46,27 @@ public class AssetsLibrary {
 
     private static final Logger LOGGER = LoggerFactory.getLogger( AssetsLibrary.class );
 
-    @Getter
-    private CreativeInventory creativeInventory;
-    @Getter
-    private Set<Recipe> recipes;
-    @Getter
-    private List<StringShortPair> blockPalette;
+    @Getter private CreativeInventory creativeInventory;
+    @Getter private Set<Recipe> recipes;
+    @Getter private List<BlockIdentifier> blockPalette;
+    @Getter private List<NBTTagCompound> converterData;
+    @Getter private List<NBTTagCompound> converterItemsData;
+    @Getter private List<NBTTagCompound> jeTopeItems;
 
     // Statistics
     private int shapelessRecipes;
     private int shapedRecipes;
     private int smeltingRecipes;
 
-    private final GoMintServer server;
+    private final Items items;
 
     /**
      * Create new asset library
      *
-     * @param server which has been started
+     * @param items which should be used to create new items
      */
-    public AssetsLibrary( GoMintServer server ) {
-        this.server = server;
+    public AssetsLibrary( Items items ) {
+        this.items = items;
     }
 
     /**
@@ -76,30 +78,38 @@ public class AssetsLibrary {
     @SuppressWarnings( "unchecked" )
     public void load( InputStream input ) throws IOException {
         NBTTagCompound root = NBTTagCompound.readFrom( input, true, ByteOrder.BIG_ENDIAN );
-        this.loadRecipes( (List<NBTTagCompound>) ( (List) root.getList( "recipes", false ) ) );
-        this.loadCreativeInventory( (List<byte[]>) ( (List) root.getList( "creativeInventory", false ) ) );
-        this.loadBlockPalette( (List<NBTTagCompound>) ( (List) root.getList( "blockPalette", false ) ) );
+        if ( GoMint.instance() != null ) {
+            this.loadRecipes( (List<NBTTagCompound>) ( (List) root.getList( "recipes", false ) ) );
+            this.loadCreativeInventory( (List<byte[]>) ( (List) root.getList( "creativeInventory", false ) ) );
+            this.loadBlockPalette( (List<NBTTagCompound>) ( (List) root.getList( "blockPalette", false ) ) );
+        }
+
+        this.converterData = ( (List<NBTTagCompound>) ( (List) root.getList( "converter", false ) ) );
+        this.converterItemsData = ( (List<NBTTagCompound>) ( (List) root.getList( "converterItems", false ) ) );
+        this.jeTopeItems = ( (List<NBTTagCompound>) ( (List) root.getList( "JEtoPEItems", false ) ) );
     }
 
     private void loadBlockPalette( List<NBTTagCompound> blockPaletteCompounds ) {
         this.blockPalette = new ArrayList<>();
         for ( NBTTagCompound compound : blockPaletteCompounds ) {
-            this.blockPalette.add( new StringShortPair( compound.getString( "id", "minecraft:air" ), compound.getShort( "data", (short) 0 ) ) );
+            this.blockPalette.add( new BlockIdentifier( compound.getString( "id", "minecraft:air" ), compound.getShort( "data", (short) 0 ) ) );
         }
     }
 
     private void loadCreativeInventory( List<byte[]> raw ) {
-        this.creativeInventory = new CreativeInventory( null, raw.size() );
+        if ( GoMint.instance() != null ) {
+            this.creativeInventory = new CreativeInventory( null, raw.size() );
 
-        for ( byte[] bytes : raw ) {
-            try {
-                this.creativeInventory.addItem( this.loadItemStack( new PacketBuffer( bytes, 0 ) ) );
-            } catch ( IOException e ) {
-                LOGGER.error( "Could not load creative item: ", e );
+            for ( byte[] bytes : raw ) {
+                try {
+                    this.creativeInventory.addItem( this.loadItemStack( new PacketBuffer( bytes, 0 ) ) );
+                } catch ( IOException e ) {
+                    LOGGER.error( "Could not load creative item: ", e );
+                }
             }
-        }
 
-        LOGGER.info( "Loaded {} items into creative inventory", raw.size() );
+            LOGGER.info( "Loaded {} items into creative inventory", raw.size() );
+        }
     }
 
     private void loadRecipes( List<NBTTagCompound> raw ) throws IOException {
@@ -196,7 +206,7 @@ public class AssetsLibrary {
     private ItemStack loadItemStack( PacketBuffer buffer ) throws IOException {
         short id = buffer.readShort();
         if ( id == 0 ) {
-            return (ItemStack) ItemAir.create( 0 );
+            return this.items == null ? null : this.items.create( 0, (short) 0, (byte) 0, null );
         }
 
         byte amount = buffer.readByte();
@@ -210,7 +220,7 @@ public class AssetsLibrary {
             bin.close();
         }
 
-        return this.server.getItems().create( id, data, amount, compound );
+        return this.items == null ? null : this.items.create( id, data, amount, compound );
     }
 
 }

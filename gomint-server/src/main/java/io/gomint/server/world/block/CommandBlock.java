@@ -11,12 +11,12 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 137 )
+@RegisterInfo( sId = "minecraft:command_block" )
 public class CommandBlock extends ContainerBlock implements io.gomint.world.block.BlockCommandBlock {
 
     @Override
-    public int getBlockId() {
-        return 137;
+    public String getBlockId() {
+        return "minecraft:command_block";
     }
 
     @Override
@@ -42,7 +42,7 @@ public class CommandBlock extends ContainerBlock implements io.gomint.world.bloc
     @Override
     TileEntity createTileEntity( NBTTagCompound compound ) {
         super.createTileEntity( compound );
-        return new CommandBlockTileEntity( compound, this.world );
+        return new CommandBlockTileEntity( compound, this.world, this.world.getServer().getItems() );
     }
 
 }

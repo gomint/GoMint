@@ -10,12 +10,12 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 145 )
+@RegisterInfo( sId = "minecraft:anvil" )
 public class Anvil extends Block implements io.gomint.world.block.BlockAnvil {
 
     @Override
-    public int getBlockId() {
-        return 145;
+    public String getBlockId() {
+        return "minecraft:anvil";
     }
 
     @Override

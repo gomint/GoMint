@@ -10,12 +10,12 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 113 )
+@RegisterInfo( sId = "minecraft:nether_brick_fence" )
 public class NetherBrickFence extends Block implements io.gomint.world.block.BlockNetherBrickFence {
 
     @Override
-    public int getBlockId() {
-        return 113;
+    public String getBlockId() {
+        return "minecraft:nether_brick_fence";
     }
 
     @Override

@@ -39,7 +39,7 @@ public class FacingBlockState extends BlockState<Facing> {
     }
 
     @Override
-    public byte toData() {
+    public short toData() {
         switch ( this.getState() ) {
             case SOUTH:
                 return 2;
@@ -55,7 +55,7 @@ public class FacingBlockState extends BlockState<Facing> {
     }
 
     @Override
-    public void fromData( byte data ) {
+    public void fromData( short data ) {
         switch ( data ) {
             case 0:
                 this.setState( Facing.EAST );

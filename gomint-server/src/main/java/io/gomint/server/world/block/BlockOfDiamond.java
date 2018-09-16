@@ -14,12 +14,12 @@ import java.util.List;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 57 )
+@RegisterInfo( sId = "minecraft:diamond_block" )
 public class BlockOfDiamond extends Block implements io.gomint.world.block.BlockBlockOfDiamond {
 
     @Override
-    public int getBlockId() {
-        return 57;
+    public String getBlockId() {
+        return "minecraft:diamond_block";
     }
 
     @Override

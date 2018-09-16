@@ -13,6 +13,11 @@ public class ItemBurningFurnace extends ItemStack implements io.gomint.inventory
 
 
     @Override
+    public String getBlockId() {
+        return "minecraft:lit_furnace";
+    }
+
+    @Override
     public ItemType getType() {
         return ItemType.BURNING_FURNACE;
     }

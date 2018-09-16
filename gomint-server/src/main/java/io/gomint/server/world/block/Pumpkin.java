@@ -8,12 +8,12 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 86 )
+@RegisterInfo( sId = "minecraft:pumpkin" )
 public class Pumpkin extends Block implements io.gomint.world.block.BlockPumpkin {
 
     @Override
-    public int getBlockId() {
-        return 86;
+    public String getBlockId() {
+        return "minecraft:pumpkin";
     }
 
     @Override

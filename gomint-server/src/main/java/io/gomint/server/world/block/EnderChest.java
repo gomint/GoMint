@@ -21,12 +21,12 @@ import java.util.List;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 130 )
+@RegisterInfo( sId = "minecraft:ender_chest" )
 public class EnderChest extends ContainerBlock implements io.gomint.world.block.BlockEnderChest {
 
     @Override
-    public int getBlockId() {
-        return 130;
+    public String getBlockId() {
+        return "minecraft:ender_chest";
     }
 
     @Override

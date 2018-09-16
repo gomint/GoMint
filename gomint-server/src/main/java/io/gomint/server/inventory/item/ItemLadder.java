@@ -11,6 +11,11 @@ import io.gomint.server.registry.RegisterInfo;
 public class ItemLadder extends ItemStack implements io.gomint.inventory.item.ItemLadder {
 
     @Override
+    public String getBlockId() {
+        return "minecraft:ladder";
+    }
+
+    @Override
     public ItemType getType() {
         return ItemType.LADDER;
     }

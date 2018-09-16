@@ -1,11 +1,18 @@
 package io.gomint.server.registry;
 
 import com.google.common.reflect.ClassPath;
-import io.gomint.server.GoMintServer;
+import io.gomint.server.inventory.item.ItemStack;
+import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
+import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.List;
 
 /**
  * @author geNAZt
@@ -13,22 +20,35 @@ import org.slf4j.LoggerFactory;
  */
 public class Registry<R> {
 
+    private static final String FROM = "    @Override\n" +
+        "    public ItemType getType() {";
+
+    private static final String TO = "    @Override\n" +
+        "    public String getBlockId() {\n" +
+        "        return \"{PLACEHOLDER}\";\n" +
+        "    }\n" +
+        "\n" +
+        "    @Override\n" +
+        "    public ItemType getType() {";
+
     private static final Logger LOGGER = LoggerFactory.getLogger( Registry.class );
 
-    private final GoMintServer server;
+    private final ClassPath classPath;
     private final GeneratorCallback<R> generatorCallback;
+
     private Generator<R>[] generators;
     private Generator<R>[] negativeGenerators;
+
     private final Object2IntMap<Class<?>> apiReferences = new Object2IntOpenHashMap<>();
 
     /**
      * Build a new generator registry
      *
-     * @param server   which started this gomint
-     * @param callback which is used to generate a generator for each found element
+     * @param classPath which reflects the current classes
+     * @param callback  which is used to generate a generator for each found element
      */
-    public Registry( GoMintServer server, GeneratorCallback<R> callback ) {
-        this.server = server;
+    public Registry( ClassPath classPath, GeneratorCallback<R> callback ) {
+        this.classPath = classPath;
         this.generatorCallback = callback;
         this.generators = (Generator<R>[]) new Generator[16];
         this.negativeGenerators = (Generator<R>[]) new Generator[2];
@@ -42,13 +62,8 @@ public class Registry<R> {
     public void register( String classPath ) {
         LOGGER.debug( "Going to scan: {}", classPath );
 
-        for ( ClassPath.ClassInfo classInfo : this.server.getClassPath().getTopLevelClasses( classPath ) ) {
+        for ( ClassPath.ClassInfo classInfo : this.classPath.getTopLevelClasses( classPath ) ) {
             register( classInfo.load() );
-        }
-
-        LOGGER.info( "Registered generators: {}", classPath );
-        for ( int i = 0; i < this.generators.length; i++ ) {
-            LOGGER.info( "  {} -> {}", i, this.generators[i] );
         }
     }
 

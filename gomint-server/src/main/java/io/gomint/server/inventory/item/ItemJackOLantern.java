@@ -13,6 +13,11 @@ public class ItemJackOLantern extends ItemStack implements io.gomint.inventory.i
 
 
     @Override
+    public String getBlockId() {
+        return "minecraft:lit_pumpkin";
+    }
+
+    @Override
     public ItemType getType() {
         return ItemType.JACK_O_LANTERN;
     }

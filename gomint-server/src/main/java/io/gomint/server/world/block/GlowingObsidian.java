@@ -10,12 +10,12 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 246 )
+@RegisterInfo( sId = "minecraft:glowingobsidian" )
 public class GlowingObsidian extends Block implements io.gomint.world.block.BlockGlowingObsidian {
 
     @Override
-    public int getBlockId() {
-        return 246;
+    public String getBlockId() {
+        return "minecraft:glowingobsidian";
     }
 
     @Override

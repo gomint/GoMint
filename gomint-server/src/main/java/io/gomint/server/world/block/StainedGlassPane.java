@@ -12,12 +12,12 @@ import java.util.List;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 160 )
+@RegisterInfo( sId = "minecraft:stained_glass_pane" )
 public class StainedGlassPane extends Block implements io.gomint.world.block.BlockStainedGlassPane {
 
     @Override
-    public int getBlockId() {
-        return 160;
+    public String getBlockId() {
+        return "minecraft:stained_glass_pane";
     }
 
     @Override

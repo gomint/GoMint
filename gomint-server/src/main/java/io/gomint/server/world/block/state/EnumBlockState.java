@@ -26,12 +26,12 @@ public class EnumBlockState<E extends Enum<E>> extends BlockState<E> {
     }
 
     @Override
-    public byte toData() {
+    public short toData() {
         return (byte) this.getState().ordinal();
     }
 
     @Override
-    public void fromData( byte data ) {
+    public void fromData( short data ) {
         if ( data >= this.enumValues.length ) {
             this.setState( this.enumValues[0] );
             LOGGER.error( "Incorrect block data value in block", new Exception() );

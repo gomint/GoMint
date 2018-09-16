@@ -13,6 +13,11 @@ public class ItemClay extends ItemStack implements io.gomint.inventory.item.Item
 
 
     @Override
+    public String getBlockId() {
+        return "minecraft:clay";
+    }
+
+    @Override
     public ItemType getType() {
         return ItemType.CLAY;
     }

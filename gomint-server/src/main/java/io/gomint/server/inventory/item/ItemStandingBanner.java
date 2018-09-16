@@ -15,6 +15,11 @@ public class ItemStandingBanner extends ItemStack implements ItemBanner {
 
 
     @Override
+    public String getBlockId() {
+        return "minecraft:standing_banner";
+    }
+
+    @Override
     public ItemType getType() {
         return ItemType.STANDING_BANNER;
     }

@@ -12,6 +12,11 @@ import io.gomint.server.registry.RegisterInfo;
 public class ItemBlockOfCoal extends ItemStack implements io.gomint.inventory.item.ItemBlockOfCoal, ItemBurnable {
 
     @Override
+    public String getBlockId() {
+        return "minecraft:coal_block";
+    }
+
+    @Override
     public ItemType getType() {
         return ItemType.BLOCK_OF_COAL;
     }

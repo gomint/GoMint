@@ -18,12 +18,12 @@ import io.gomint.world.block.BlockType;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 215 )
+@RegisterInfo( sId = "minecraft:red_nether_brick" )
 public class RedNetherBrick extends Block implements BlockRedNetherBrick {
 
     @Override
-    public int getBlockId() {
-        return 215;
+    public String getBlockId() {
+        return "minecraft:red_nether_brick";
     }
 
     @Override

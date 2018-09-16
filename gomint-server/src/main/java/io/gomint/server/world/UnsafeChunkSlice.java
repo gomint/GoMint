@@ -31,34 +31,38 @@ public class UnsafeChunkSlice extends ChunkSlice {
      * @param index which should be looked up
      * @return block id of the index
      */
-    public int getBlockInternal( int layer, int index ) {
+    protected int getRuntimeID( int layer, int index ) {
         if ( this.isAllAir ) {
-            return 0;
+            return AIR_RUNTIME_ID;
         }
 
         long blockStorageAddress = this.blockStorages[layer];
         if ( blockStorageAddress == 0 ) {
-            return 0;
+            return AIR_RUNTIME_ID;
         }
 
         return UNSAFE.getShort( blockStorageAddress + ( index << 1 ) );
     }
 
     @Override
-    public void setBlockInternal( short index, int layer, int blockId ) {
-        if ( blockId != 0 && this.blockStorages[layer] == 0 ) {
+    public void setRuntimeIdInternal( short index, int layer, int runtimeID ) {
+        if ( runtimeID != AIR_RUNTIME_ID && this.blockStorages[layer] == 0 ) {
             this.blockStorages[layer] = UnsafeAllocator.allocate( 8192 ); // we store 4096 shorts
-            UNSAFE.setMemory( this.blockStorages[layer], 8192L, (byte) 0 );
+
+            for ( int i = 0; i < 4096; i++ ) {
+                UNSAFE.putShort( this.blockStorages[layer] + ( i << 1 ), AIR_RUNTIME_ID );
+            }
+
             this.isAllAir = false;
         }
 
         if ( this.blockStorages[layer] != 0 ) {
-            UNSAFE.putShort( this.blockStorages[layer] + ( index << 1 ), (short) blockId );
+            UNSAFE.putShort( this.blockStorages[layer] + ( index << 1 ), (short) runtimeID );
         }
     }
 
     @Override
-    protected int getAmountOfLayers() {
+    public int getAmountOfLayers() {
         return this.blockStorages[1] != 0 ? 2 : 1;
     }
 

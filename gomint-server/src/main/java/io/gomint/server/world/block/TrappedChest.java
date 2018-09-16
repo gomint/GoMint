@@ -10,12 +10,12 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 146 )
+@RegisterInfo( sId = "minecraft:trapped_chest" )
 public class TrappedChest extends Block implements io.gomint.world.block.BlockTrappedChest {
 
     @Override
-    public int getBlockId() {
-        return 146;
+    public String getBlockId() {
+        return "minecraft:trapped_chest";
     }
 
     @Override

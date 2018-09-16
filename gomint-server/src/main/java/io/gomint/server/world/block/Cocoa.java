@@ -10,12 +10,12 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 127 )
+@RegisterInfo( sId = "minecraft:cocoa" )
 public class Cocoa extends Block implements io.gomint.world.block.BlockCocoa {
 
     @Override
-    public int getBlockId() {
-        return 127;
+    public String getBlockId() {
+        return "minecraft:cocoa";
     }
 
     @Override

@@ -10,12 +10,12 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 62 )
+@RegisterInfo( sId = "minecraft:lit_furnace" )
 public class BurningFurnace extends Furnace implements io.gomint.world.block.BlockBurningFurnace {
 
     @Override
-    public int getBlockId() {
-        return 62;
+    public String getBlockId() {
+        return "minecraft:lit_furnace";
     }
 
     @Override

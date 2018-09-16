@@ -10,12 +10,12 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 153 )
+@RegisterInfo( sId = "minecraft:quartz_ore" )
 public class NetherQuartzOre extends Block implements io.gomint.world.block.BlockNetherQuartzOre {
 
     @Override
-    public int getBlockId() {
-        return 153;
+    public String getBlockId() {
+        return "minecraft:quartz_ore";
     }
 
     @Override

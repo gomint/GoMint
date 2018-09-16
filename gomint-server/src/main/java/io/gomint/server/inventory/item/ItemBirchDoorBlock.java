@@ -14,6 +14,11 @@ public class ItemBirchDoorBlock extends ItemStack {
 
 
     @Override
+    public String getBlockId() {
+        return "minecraft:birch_door";
+    }
+
+    @Override
     public ItemType getType() {
         return ItemType.BIRCH_DOOR_BLOCK;
     }

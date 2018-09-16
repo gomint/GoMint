@@ -14,6 +14,11 @@ public class ItemBlueGlazedTerracotta extends ItemStack implements io.gomint.inv
 
 
     @Override
+    public String getBlockId() {
+        return "minecraft:blue_glazed_terracotta";
+    }
+
+    @Override
     public ItemType getType() {
         return ItemType.BLUE_GLAZED_TERRACOTTA;
     }

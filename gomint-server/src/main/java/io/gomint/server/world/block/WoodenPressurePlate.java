@@ -14,12 +14,12 @@ import java.util.function.Function;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 72 )
+@RegisterInfo( sId = "minecraft:wooden_pressure_plate" )
 public class WoodenPressurePlate extends BasePressurePlate implements io.gomint.world.block.BlockWoodenPressurePlate {
 
     @Override
-    public int getBlockId() {
-        return 72;
+    public String getBlockId() {
+        return "minecraft:wooden_pressure_plate";
     }
 
     @Override

@@ -14,12 +14,12 @@ import io.gomint.world.block.BlockType;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 207 )
+@RegisterInfo( sId = "minecraft:frosted_ice" )
 public class FrostedIce extends Block implements io.gomint.world.block.BlockFrostedIce {
 
     @Override
-    public int getBlockId() {
-        return 207;
+    public String getBlockId() {
+        return "minecraft:frosted_ice";
     }
 
     @Override

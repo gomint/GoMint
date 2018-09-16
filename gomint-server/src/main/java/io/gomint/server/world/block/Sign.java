@@ -17,12 +17,12 @@ import java.util.List;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 63 )
+@RegisterInfo( sId = "minecraft:standing_sign" )
 public class Sign extends Block implements BlockSign {
 
     @Override
-    public int getBlockId() {
-        return 63;
+    public String getBlockId() {
+        return "minecraft:standing_sign";
     }
 
     @Override
@@ -48,7 +48,7 @@ public class Sign extends Block implements BlockSign {
     @Override
     TileEntity createTileEntity( NBTTagCompound compound ) {
         super.createTileEntity( compound );
-        return new SignTileEntity( compound, this.world );
+        return new SignTileEntity( compound, this.world, this.world.getServer().getItems() );
     }
 
     @Override

@@ -20,6 +20,11 @@ public class ItemRedNetherBrick extends ItemStack implements io.gomint.inventory
 
 
     @Override
+    public String getBlockId() {
+        return "minecraft:red_nether_brick";
+    }
+
+    @Override
     public ItemType getType() {
         return ItemType.RED_NETHER_BRICK;
     }

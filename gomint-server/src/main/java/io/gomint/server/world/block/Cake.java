@@ -14,15 +14,15 @@ import lombok.EqualsAndHashCode;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 92 )
+@RegisterInfo( sId = "minecraft:cake" )
 @EqualsAndHashCode( callSuper = true )
 public class Cake extends Block implements io.gomint.world.block.BlockCake {
 
     private ProgressBlockState cakeEaten = new ProgressBlockState( 5, aVoid -> Cake.this.setType( Air.class ) );
 
     @Override
-    public int getBlockId() {
-        return 92;
+    public String getBlockId() {
+        return "minecraft:cake";
     }
 
     @Override

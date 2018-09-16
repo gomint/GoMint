@@ -1,8 +1,7 @@
 package io.gomint.server.inventory.item;
-import io.gomint.inventory.item.ItemType;
 
+import io.gomint.inventory.item.ItemType;
 import io.gomint.server.registry.RegisterInfo;
-import io.gomint.taglib.NBTTagCompound;
 
 /**
  * @author geNAZt
@@ -11,12 +10,11 @@ import io.gomint.taglib.NBTTagCompound;
 @RegisterInfo( id = 427 )
 public class ItemSpruceDoor extends ItemStack implements io.gomint.inventory.item.ItemSpruceDoor {
 
-
-
     @Override
-    public int getBlockId() {
-        return 193;
+    public String getBlockId() {
+        return "minecraft:spruce_door";
     }
+
     @Override
     public ItemType getType() {
         return ItemType.SPRUCE_DOOR;

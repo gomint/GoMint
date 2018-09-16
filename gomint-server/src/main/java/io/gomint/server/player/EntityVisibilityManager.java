@@ -9,7 +9,6 @@ package io.gomint.server.player;
 
 import io.gomint.entity.Entity;
 import io.gomint.server.entity.EntityPlayer;
-import io.gomint.server.entity.passive.EntityVillager;
 import io.gomint.server.network.packet.PacketDespawnEntity;
 import io.gomint.server.world.ChunkAdapter;
 import io.gomint.server.world.CoordinateUtils;
@@ -21,7 +20,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Objects;
-import java.util.function.Consumer;
 
 /**
  * @author geNAZt

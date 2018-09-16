@@ -12,6 +12,7 @@ import io.gomint.server.entity.tileentity.BedTileEntity;
 import io.gomint.server.entity.tileentity.SerializationReason;
 import io.gomint.server.entity.tileentity.TileEntity;
 import io.gomint.server.registry.RegisterInfo;
+import io.gomint.server.util.BlockIdentifier;
 import io.gomint.server.world.PlacementData;
 import io.gomint.server.world.block.state.BooleanBlockState;
 import io.gomint.server.world.block.state.RotatedFacingBlockState;
@@ -30,7 +31,7 @@ import java.util.List;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 26 )
+@RegisterInfo( sId = "minecraft:bed" )
 @EqualsAndHashCode( callSuper = true )
 public class Bed extends Block implements io.gomint.world.block.BlockBed {
 
@@ -39,8 +40,8 @@ public class Bed extends Block implements io.gomint.world.block.BlockBed {
     private RotatedFacingBlockState facing = new RotatedFacingBlockState();
 
     @Override
-    public int getBlockId() {
-        return 26;
+    public String getBlockId() {
+        return "minecraft:bed";
     }
 
     @Override
@@ -178,7 +179,9 @@ public class Bed extends Block implements io.gomint.world.block.BlockBed {
         this.facing.detectFromPlayer( (EntityPlayer) entity );
 
         this.calculateBlockData();
-        return new PlacementData( 26, this.getBlockData(), compound );
+
+        BlockIdentifier blockIdentifier = new BlockIdentifier( "minecraft:bed", this.getBlockData() );
+        return new PlacementData( blockIdentifier, compound );
     }
 
     @Override
@@ -188,7 +191,8 @@ public class Bed extends Block implements io.gomint.world.block.BlockBed {
             NBTTagCompound compound = new NBTTagCompound( "" );
             this.getTileEntity().toCompound( compound , SerializationReason.PERSIST );
 
-            data.setMetaData( (byte) ( this.getBlockData() | 0x08 ) );
+            BlockIdentifier identifier = new BlockIdentifier( data.getBlockIdentifier().getBlockId(), (short) (this.getBlockData() | 0x08) );
+            data.setBlockIdentifier( identifier );
             data.setCompound( compound );
 
             otherBlock.setBlockFromPlacementData( data );
@@ -198,7 +202,7 @@ public class Bed extends Block implements io.gomint.world.block.BlockBed {
     @Override
     TileEntity createTileEntity( NBTTagCompound compound ) {
         super.createTileEntity( compound );
-        return new BedTileEntity( compound, this.world );
+        return new BedTileEntity( compound, this.world, this.world.getServer().getItems() );
     }
 
     @Override

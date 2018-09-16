@@ -18,6 +18,11 @@ import io.gomint.server.registry.RegisterInfo;
 public class ItemElementUnknown extends ItemStack implements io.gomint.inventory.item.ItemElementUnknown {
 
     @Override
+    public String getBlockId() {
+        return "minecraft:element_0";
+    }
+
+    @Override
     public ItemType getType() {
         return ItemType.ELEMENT_UNKNOWN;
     }

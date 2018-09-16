@@ -10,12 +10,12 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 69 )
+@RegisterInfo( sId = "minecraft:lever" )
 public class Lever extends Block implements io.gomint.world.block.BlockLever {
 
     @Override
-    public int getBlockId() {
-        return 69;
+    public String getBlockId() {
+        return "minecraft:lever";
     }
 
     @Override

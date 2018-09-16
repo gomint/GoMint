@@ -9,6 +9,11 @@ import lombok.Getter;
 public enum Generators {
 
     /**
+     * Normal generator for vanilla terrain
+     */
+    NORMAL( 1 ),
+
+    /**
      * Layered generator, named "Flat" in MC:PE
      */
     FLAT( 2 );

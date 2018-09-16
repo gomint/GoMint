@@ -12,12 +12,12 @@ import java.util.List;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 20 )
+@RegisterInfo( sId = "minecraft:glass" )
 public class Glass extends Block implements io.gomint.world.block.BlockGlass {
 
     @Override
-    public int getBlockId() {
-        return 20;
+    public String getBlockId() {
+        return "minecraft:glass";
     }
 
     @Override

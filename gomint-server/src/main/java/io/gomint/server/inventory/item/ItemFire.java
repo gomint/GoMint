@@ -14,6 +14,11 @@ import io.gomint.taglib.NBTTagCompound;
 
 
     @Override
+    public String getBlockId() {
+        return "minecraft:fire";
+    }
+
+    @Override
     public ItemType getType() {
         return ItemType.FIRE;
     }

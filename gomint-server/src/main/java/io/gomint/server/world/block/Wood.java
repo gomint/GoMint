@@ -14,12 +14,12 @@ import io.gomint.world.block.BlockType;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 5 )
+@RegisterInfo( sId = "minecraft:planks" )
 public class Wood extends Block implements io.gomint.world.block.BlockWood {
 
     @Override
-    public int getBlockId() {
-        return 5;
+    public String getBlockId() {
+        return "minecraft:planks";
     }
 
     @Override

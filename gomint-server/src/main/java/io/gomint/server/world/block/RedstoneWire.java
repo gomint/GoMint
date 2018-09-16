@@ -8,12 +8,12 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 55 )
+@RegisterInfo( sId = "minecraft:redstone_wire" )
 public class RedstoneWire extends Block implements io.gomint.world.block.BlockRedstoneWire {
 
     @Override
-    public int getBlockId() {
-        return 55;
+    public String getBlockId() {
+        return "minecraft:redstone_wire";
     }
 
     @Override

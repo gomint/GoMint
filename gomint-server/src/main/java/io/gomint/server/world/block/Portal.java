@@ -8,12 +8,12 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 90 )
+@RegisterInfo( sId = "minecraft:portal" )
 public class Portal extends Block implements io.gomint.world.block.BlockPortal {
 
     @Override
-    public int getBlockId() {
-        return 90;
+    public String getBlockId() {
+        return "minecraft:portal";
     }
 
     @Override

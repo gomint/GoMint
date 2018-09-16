@@ -10,12 +10,12 @@ import io.gomint.world.block.BlockType;
  * @author Kaooot
  * @version 1.0
  */
-@RegisterInfo( id = 387 )
+@RegisterInfo( sId = "minecraft:coral_block" )
 public class CoralBlock extends Block implements BlockCoralBlock {
 
     @Override
-    public int getBlockId() {
-        return 387;
+    public String getBlockId() {
+        return "minecraft:coral_block";
     }
 
     @Override

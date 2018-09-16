@@ -14,6 +14,11 @@ import io.gomint.taglib.NBTTagCompound;
 
 
     @Override
+    public String getBlockId() {
+        return "minecraft:sapling";
+    }
+
+    @Override
     public ItemType getType() {
         return ItemType.SAPLING;
     }

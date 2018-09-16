@@ -14,6 +14,11 @@ import io.gomint.taglib.NBTTagCompound;
 
 
     @Override
+    public String getBlockId() {
+        return "minecraft:lit_redstone_ore";
+    }
+
+    @Override
     public ItemType getType() {
         return ItemType.GLOWING_REDSTONE_ORE;
     }

@@ -5,7 +5,6 @@ import io.gomint.inventory.item.ItemStack;
 import io.gomint.inventory.item.ItemStrippedAcaciaLog;
 import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.world.block.helper.ToolPresets;
-import io.gomint.world.block.BlockLog;
 import io.gomint.world.block.BlockStrippedAcaciaLog;
 import io.gomint.world.block.BlockType;
 
@@ -16,12 +15,12 @@ import java.util.List;
  * @author KCodeYT
  * @version 1.0
  */
-@RegisterInfo( id = 263 )
+@RegisterInfo( sId = "minecraft:stripped_acacia_log" )
 public class StrippedAcaciaLog extends Block implements BlockStrippedAcaciaLog {
 
     @Override
-    public int getBlockId() {
-        return 263;
+    public String getBlockId() {
+        return "minecraft:stripped_acacia_log";
     }
 
     @Override
@@ -51,7 +50,7 @@ public class StrippedAcaciaLog extends Block implements BlockStrippedAcaciaLog {
 
     @Override
     public void setLogDirection( Direction direction ) {
-        byte type = this.getBlockData();
+        short type = this.getBlockData();
 
         switch ( direction ) {
             case UP_DOWN:

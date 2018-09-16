@@ -14,6 +14,11 @@ import io.gomint.taglib.NBTTagCompound;
 
 
     @Override
+    public String getBlockId() {
+        return "minecraft:spruce_stairs";
+    }
+
+    @Override
     public ItemType getType() {
         return ItemType.SPRUCE_WOOD_STAIRS;
     }

@@ -14,6 +14,11 @@ import io.gomint.taglib.NBTTagCompound;
 
 
     @Override
+    public String getBlockId() {
+        return "minecraft:flowing_water";
+    }
+
+    @Override
     public ItemType getType() {
         return ItemType.FLOWING_WATER;
     }

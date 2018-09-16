@@ -13,6 +13,11 @@ public class ItemRedstoneWire extends ItemStack {
 
 
     @Override
+    public String getBlockId() {
+        return "minecraft:redstone_wire";
+    }
+
+    @Override
     public ItemType getType() {
         return ItemType.REDSTONE_WIRE;
     }

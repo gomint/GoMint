@@ -10,12 +10,12 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 118 )
+@RegisterInfo( sId = "minecraft:cauldron" )
 public class Cauldron extends Block implements io.gomint.world.block.BlockCauldron {
 
     @Override
-    public int getBlockId() {
-        return 118;
+    public String getBlockId() {
+        return "minecraft:cauldron";
     }
 
     @Override

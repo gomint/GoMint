@@ -20,6 +20,11 @@ public class ItemMagma extends ItemStack implements io.gomint.inventory.item.Ite
 
 
     @Override
+    public String getBlockId() {
+        return "minecraft:magma";
+    }
+
+    @Override
     public ItemType getType() {
         return ItemType.MAGMA;
     }

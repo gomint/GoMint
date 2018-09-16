@@ -14,6 +14,11 @@ public class ItemCommandBlock extends ItemStack {
 
 
     @Override
+    public String getBlockId() {
+        return "minecraft:command_block";
+    }
+
+    @Override
     public ItemType getType() {
         return ItemType.COMMAND_BLOCK;
     }

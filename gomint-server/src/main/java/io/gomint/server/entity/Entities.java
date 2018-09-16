@@ -7,6 +7,7 @@
 
 package io.gomint.server.entity;
 
+import com.google.common.reflect.ClassPath;
 import io.gomint.entity.Entity;
 import io.gomint.server.GoMintServer;
 import io.gomint.server.registry.Generator;
@@ -25,8 +26,8 @@ public class Entities {
     private static final Logger LOGGER = LoggerFactory.getLogger( Entities.class );
     private final Registry<io.gomint.server.entity.Entity> generators;
 
-    public Entities( GoMintServer server ) {
-        this.generators = new Registry<>( server, clazz -> () -> {
+    public Entities( ClassPath classPath ) {
+        this.generators = new Registry<>( classPath, clazz -> () -> {
             try {
                 return (io.gomint.server.entity.Entity) clazz.newInstance();
             } catch ( InstantiationException | IllegalAccessException e ) {

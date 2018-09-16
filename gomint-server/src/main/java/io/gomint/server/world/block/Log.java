@@ -17,12 +17,12 @@ import java.util.List;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 17 )
+@RegisterInfo( sId = "minecraft:log" )
 public class Log extends Block implements BlockLog {
 
     @Override
-    public int getBlockId() {
-        return 17;
+    public String getBlockId() {
+        return "minecraft:log";
     }
 
     @Override
@@ -55,7 +55,7 @@ public class Log extends Block implements BlockLog {
 
     @Override
     public boolean interact( Entity entity, BlockFace face, Vector facePos, ItemStack item ) {
-        if ( entity instanceof EntityPlayer && this.isCorrectTool(item) ) {
+        if ( entity instanceof EntityPlayer && this.isCorrectTool( item ) ) {
             switch ( this.getTypeData() ) {
                 case 3:
                     this.setType( StrippedJungleLog.class );
@@ -170,7 +170,7 @@ public class Log extends Block implements BlockLog {
     public List<ItemStack> getDrops( ItemStack itemInHand ) {
         // Strip away direction meta
         return new ArrayList<ItemStack>() {{
-            add( world.getServer().getItems().create( getBlockId() & 0xFF, getTypeData(), (byte) 1, null ) );
+            add( world.getServer().getItems().create( getBlockId(), getTypeData(), (byte) 1, null ) );
         }};
     }
 

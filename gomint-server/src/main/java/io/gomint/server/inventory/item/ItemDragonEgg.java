@@ -14,6 +14,11 @@ import io.gomint.taglib.NBTTagCompound;
 
 
     @Override
+    public String getBlockId() {
+        return "minecraft:dragon_egg";
+    }
+
+    @Override
     public ItemType getType() {
         return ItemType.DRAGON_EGG;
     }

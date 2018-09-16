@@ -8,12 +8,12 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 95 )
+@RegisterInfo( sId = "minecraft:invisibleBedrock" )
 public class InvisibleBedrock extends Block implements io.gomint.world.block.BlockInvisibleBedrock {
 
     @Override
-    public int getBlockId() {
-        return 95;
+    public String getBlockId() {
+        return "minecraft:invisibleBedrock";
     }
 
     @Override

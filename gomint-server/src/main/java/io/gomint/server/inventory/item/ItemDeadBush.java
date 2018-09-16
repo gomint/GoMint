@@ -14,6 +14,11 @@ import io.gomint.taglib.NBTTagCompound;
 
 
     @Override
+    public String getBlockId() {
+        return "minecraft:deadbush";
+    }
+
+    @Override
     public ItemType getType() {
         return ItemType.DEAD_BUSH;
     }

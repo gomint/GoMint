@@ -14,6 +14,11 @@ public class ItemJungleDoorBlock extends ItemStack {
 
 
     @Override
+    public String getBlockId() {
+        return "minecraft:jungle_door";
+    }
+
+    @Override
     public ItemType getType() {
         return ItemType.JUNGLE_DOOR_BLOCK;
     }

@@ -8,12 +8,12 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 7 )
+@RegisterInfo( sId = "minecraft:bedrock" )
 public class Bedrock extends Block implements io.gomint.world.block.BlockBedrock {
 
     @Override
-    public int getBlockId() {
-        return 7;
+    public String getBlockId() {
+        return "minecraft:bedrock";
     }
 
     @Override

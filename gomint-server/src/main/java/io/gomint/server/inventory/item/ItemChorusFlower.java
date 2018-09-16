@@ -13,6 +13,11 @@ public class ItemChorusFlower extends ItemStack implements io.gomint.inventory.i
 
 
     @Override
+    public String getBlockId() {
+        return "minecraft:chorus_flower";
+    }
+
+    @Override
     public ItemType getType() {
         return ItemType.CHORUS_FLOWER;
     }

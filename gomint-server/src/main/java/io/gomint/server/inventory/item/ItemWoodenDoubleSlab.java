@@ -14,6 +14,11 @@ import io.gomint.taglib.NBTTagCompound;
 
 
     @Override
+    public String getBlockId() {
+        return "minecraft:double_wooden_slab";
+    }
+
+    @Override
     public ItemType getType() {
         return ItemType.WOODEN_DOUBLE_SLAB;
     }

@@ -1,7 +1,7 @@
 package io.gomint.server.inventory.item;
+
 import io.gomint.inventory.item.ItemType;
 import io.gomint.server.registry.RegisterInfo;
-import io.gomint.taglib.NBTTagCompound;
 
 /**
  * @author geNAZt
@@ -10,11 +10,9 @@ import io.gomint.taglib.NBTTagCompound;
 @RegisterInfo( id = 430 )
 public class ItemAcaciaWoodDoor extends ItemStack implements io.gomint.inventory.item.ItemAcaciaWoodDoor {
 
-
-
     @Override
-    public int getBlockId() {
-        return 196;
+    public String getBlockId() {
+        return "minecraft:acacia_door";
     }
 
     @Override

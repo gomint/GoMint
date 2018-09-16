@@ -8,12 +8,12 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 124 )
+@RegisterInfo( sId = "minecraft:lit_redstone_lamp" )
 public class RedstoneLampActive extends Block implements io.gomint.world.block.BlockRedstoneLampActive {
 
     @Override
-    public int getBlockId() {
-        return 124;
+    public String getBlockId() {
+        return "minecraft:lit_redstone_lamp";
     }
 
     @Override

@@ -21,12 +21,12 @@ public class BooleanBlockState extends BlockState<Boolean> {
     }
 
     @Override
-    public byte toData() {
+    public short toData() {
         return (byte) ( this.getState() ? 1 : 0 );
     }
 
     @Override
-    public void fromData( byte data ) {
+    public void fromData( short data ) {
         this.setState( data == 1 );
     }
 

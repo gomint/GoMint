@@ -14,6 +14,11 @@ import io.gomint.taglib.NBTTagCompound;
 
 
     @Override
+    public String getBlockId() {
+        return "minecraft:grass_path";
+    }
+
+    @Override
     public ItemType getType() {
         return ItemType.GRASS_PATH;
     }

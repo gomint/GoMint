@@ -14,6 +14,11 @@ import io.gomint.taglib.NBTTagCompound;
 
 
     @Override
+    public String getBlockId() {
+        return "minecraft:tripwire_hook";
+    }
+
+    @Override
     public ItemType getType() {
         return ItemType.TRIPWIRE_HOOK;
     }

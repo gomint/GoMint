@@ -42,7 +42,9 @@ import io.gomint.server.permission.PermissionGroupManager;
 import io.gomint.server.plugin.SimplePluginManager;
 import io.gomint.server.scheduler.CoreScheduler;
 import io.gomint.server.scheduler.SyncTaskManager;
+import io.gomint.server.util.BlockIdentifier;
 import io.gomint.server.util.Watchdog;
+import io.gomint.server.world.BlockRuntimeIDs;
 import io.gomint.server.world.WorldAdapter;
 import io.gomint.server.world.WorldLoadException;
 import io.gomint.server.world.WorldManager;
@@ -68,6 +70,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -158,6 +161,9 @@ public class GoMintServer implements GoMint, InventoryHolder {
 
     private BlockingQueue<Runnable> mainThreadWork = new LinkedBlockingQueue<>();
 
+    @Getter
+    private AssetsLibrary assets;
+
     /**
      * Starts the GoMint server
      *
@@ -220,11 +226,32 @@ public class GoMintServer implements GoMint, InventoryHolder {
         // ------------------------------------ //
         // Build up registries
         // ------------------------------------ //
-        this.blocks = new Blocks( this );
-        this.items = new Items( this );
-        this.entities = new Entities( this );
-        this.effects = new Effects( this );
-        this.enchantments = new Enchantments( this );
+        this.blocks = new Blocks( this.classPath );
+        this.items = new Items( this.classPath, null );
+        this.entities = new Entities( this.classPath );
+        this.effects = new Effects( this.classPath );
+        this.enchantments = new Enchantments( this.classPath );
+
+        // Load assets from file:
+        LOGGER.info( "Loading assets library..." );
+        this.assets = new AssetsLibrary( this.items );
+
+        try {
+            this.assets.load( this.getClass().getResourceAsStream( "/assets.dat" ) );
+        } catch ( IOException e ) {
+            LOGGER.error( "Failed to load assets library", e );
+            return;
+        }
+
+        this.assets.getBlockPalette().sort( ( o1, o2 ) -> {
+            if ( o1.getBlockId().equals( o2.getBlockId() ) ) {
+                return Short.compare( o1.getData(), o2.getData() );
+            }
+
+            return o1.getBlockId().compareTo( o2.getBlockId() );
+        } );
+
+        BlockRuntimeIDs.init( this.assets.getBlockPalette() );
 
         startAfterRegistryInit( args, start );
     }
@@ -319,28 +346,18 @@ public class GoMintServer implements GoMint, InventoryHolder {
         // ------------------------------------ //
         // Pre World Initialization
         // ------------------------------------ //
-        // Load assets from file:
-        LOGGER.info( "Loading assets library..." );
-        AssetsLibrary assetsLibrary = new AssetsLibrary( this );
-
-        try {
-            assetsLibrary.load( this.getClass().getResourceAsStream( "/assets.dat" ) );
-        } catch ( IOException e ) {
-            LOGGER.error( "Failed to load assets library", e );
-            return;
-        }
 
         LOGGER.info( "Initializing recipes..." );
         this.recipeManager = new RecipeManager();
 
         // Add all recipes from asset library:
-        for ( Recipe recipe : assetsLibrary.getRecipes() ) {
+        for ( Recipe recipe : this.assets.getRecipes() ) {
             this.recipeManager.registerRecipe( recipe );
         }
 
         this.recipeManager.fixMCPEBugs();
 
-        this.creativeInventory = assetsLibrary.getCreativeInventory();
+        this.creativeInventory = this.assets.getCreativeInventory();
         this.permissionGroupManager = new PermissionGroupManager();
 
         // ------------------------------------ //
@@ -351,7 +368,7 @@ public class GoMintServer implements GoMint, InventoryHolder {
             this.worldManager.loadWorld( this.serverConfig.getDefaultWorld() );
         } catch ( WorldLoadException e ) {
             // Try to generate world
-            if ( this.worldManager.createWorld( this.serverConfig.getDefaultWorld(), new CreateOptions().generator( NormalGenerator.class ).worldType( WorldType.ANVIL ) ) == null ) {
+            if ( this.worldManager.createWorld( this.serverConfig.getDefaultWorld(), new CreateOptions().generator( NormalGenerator.class ).worldType( WorldType.PERSISTENT ) ) == null ) {
                 LOGGER.error( "Failed to load or generate default world", e );
                 this.internalShutdown();
                 return;

@@ -15,12 +15,12 @@ import java.util.concurrent.TimeUnit;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 143 )
+@RegisterInfo( sId = "minecraft:wooden_button" )
 public class WoodenButton extends Block implements io.gomint.world.block.BlockWoodenButton {
 
     @Override
-    public int getBlockId() {
-        return 143;
+    public String getBlockId() {
+        return "minecraft:wooden_button";
     }
 
     @Override

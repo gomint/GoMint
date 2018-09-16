@@ -20,6 +20,11 @@ public class ItemChainCommandBlock extends ItemStack implements io.gomint.invent
 
 
     @Override
+    public String getBlockId() {
+        return "minecraft:chain_command_block";
+    }
+
+    @Override
     public ItemType getType() {
         return ItemType.CHAIN_COMMAND_BLOCK;
     }

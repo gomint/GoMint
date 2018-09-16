@@ -15,12 +15,12 @@ import java.util.List;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 198 )
+@RegisterInfo( sId = "minecraft:grass_path" )
 public class GrassPath extends Block implements io.gomint.world.block.BlockGrassPath {
 
     @Override
-    public int getBlockId() {
-        return 198;
+    public String getBlockId() {
+        return "minecraft:grass_path";
     }
 
     @Override

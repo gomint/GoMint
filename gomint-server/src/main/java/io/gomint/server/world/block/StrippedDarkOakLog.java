@@ -2,11 +2,9 @@ package io.gomint.server.world.block;
 
 import io.gomint.GoMint;
 import io.gomint.inventory.item.ItemStack;
-import io.gomint.inventory.item.ItemStrippedAcaciaLog;
 import io.gomint.inventory.item.ItemStrippedDarkOakLog;
 import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.world.block.helper.ToolPresets;
-import io.gomint.world.block.BlockLog;
 import io.gomint.world.block.BlockStrippedDarkOakLog;
 import io.gomint.world.block.BlockType;
 
@@ -17,12 +15,12 @@ import java.util.List;
  * @author KCodeYT
  * @version 1.0
  */
-@RegisterInfo( id = 264 )
+@RegisterInfo( sId = "minecraft:stripped_dark_oak_log" )
 public class StrippedDarkOakLog extends Block implements BlockStrippedDarkOakLog {
 
     @Override
-    public int getBlockId() {
-        return 264;
+    public String getBlockId() {
+        return "minecraft:stripped_dark_oak_log";
     }
 
     @Override
@@ -52,7 +50,7 @@ public class StrippedDarkOakLog extends Block implements BlockStrippedDarkOakLog
 
     @Override
     public void setLogDirection( Direction direction ) {
-        byte type = this.getBlockData();
+        short type = this.getBlockData();
 
         switch ( direction ) {
             case UP_DOWN:
@@ -94,7 +92,7 @@ public class StrippedDarkOakLog extends Block implements BlockStrippedDarkOakLog
     }
 
     @Override
-    public List<ItemStack> getDrops(ItemStack itemInHand ) {
+    public List<ItemStack> getDrops( ItemStack itemInHand ) {
         return new ArrayList<ItemStack>() {{
             add( GoMint.instance().createItemStack( ItemStrippedDarkOakLog.class, 1 ) );
         }};

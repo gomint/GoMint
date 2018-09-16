@@ -10,12 +10,12 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 224 )
+@RegisterInfo( sId = "minecraft:yellow_glazed_terracotta" )
 public class YellowGlazedTerracotta extends Block implements io.gomint.world.block.BlockYellowGlazedTerracotta {
 
     @Override
-    public int getBlockId() {
-        return 224;
+    public String getBlockId() {
+        return "minecraft:yellow_glazed_terracotta";
     }
 
     @Override

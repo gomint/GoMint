@@ -16,12 +16,12 @@ import java.util.List;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 16 )
+@RegisterInfo( sId = "minecraft:coal_ore" )
 public class CoalOre extends Block implements io.gomint.world.block.BlockCoalOre {
 
     @Override
-    public int getBlockId() {
-        return 16;
+    public String getBlockId() {
+        return "minecraft:coal_ore";
     }
 
     @Override

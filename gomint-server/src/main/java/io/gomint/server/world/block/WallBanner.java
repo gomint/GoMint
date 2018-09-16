@@ -8,12 +8,12 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 177 )
+@RegisterInfo( sId = "minecraft:wall_banner" )
 public class WallBanner extends Banner {
 
     @Override
-    public int getBlockId() {
-        return 177;
+    public String getBlockId() {
+        return "minecraft:wall_banner";
     }
 
     @Override

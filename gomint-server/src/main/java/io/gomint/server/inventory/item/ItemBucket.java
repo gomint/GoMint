@@ -56,14 +56,14 @@ public class ItemBucket extends ItemStack implements io.gomint.inventory.item.It
     }
 
     @Override
-    public int getBlockId() {
+    public String getBlockId() {
         switch ( this.getData() ) {
             case 10:
-                return 10;
+                return "minecraft:flowing_lava";
             case 8:
-                return 8;
+                return "minecraft:flowing_water";
             case 1:
-                return -1;  // Its not possible to empty out milk
+                return null;  // Its not possible to empty out milk
         }
 
         return super.getBlockId();

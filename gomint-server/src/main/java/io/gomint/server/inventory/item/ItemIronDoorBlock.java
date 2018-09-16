@@ -14,6 +14,11 @@ public class ItemIronDoorBlock extends ItemStack {
 
 
     @Override
+    public String getBlockId() {
+        return "minecraft:iron_door";
+    }
+
+    @Override
     public ItemType getType() {
         return ItemType.IRON_DOOR_BLOCK;
     }

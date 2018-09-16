@@ -13,6 +13,11 @@ public class ItemPurpurStairs extends ItemStack implements io.gomint.inventory.i
 
 
     @Override
+    public String getBlockId() {
+        return "minecraft:purpur_stairs";
+    }
+
+    @Override
     public ItemType getType() {
         return ItemType.PURPUR_STAIRS;
     }

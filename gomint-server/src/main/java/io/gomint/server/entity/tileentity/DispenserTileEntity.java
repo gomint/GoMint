@@ -12,6 +12,7 @@ import io.gomint.server.inventory.DispenserInventory;
 import io.gomint.server.inventory.InventoryHolder;
 import io.gomint.server.inventory.item.ItemAir;
 import io.gomint.server.inventory.item.ItemStack;
+import io.gomint.server.inventory.item.Items;
 import io.gomint.server.world.WorldAdapter;
 import io.gomint.taglib.NBTTagCompound;
 import lombok.Getter;
@@ -57,8 +58,8 @@ public class DispenserTileEntity extends TileEntity implements InventoryHolder {
      * @param compound     which holds stored data
      * @param worldAdapter which holds this tile entity
      */
-    public DispenserTileEntity( NBTTagCompound compound, WorldAdapter worldAdapter ) {
-        super( compound, worldAdapter );
+    public DispenserTileEntity( NBTTagCompound compound, WorldAdapter worldAdapter, Items items ) {
+        super( compound, worldAdapter, items );
         this.inventory = new DispenserInventory( this );
 
         // Read in items

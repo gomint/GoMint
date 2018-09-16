@@ -20,6 +20,11 @@ public class ItemNetherWartBlock extends ItemStack implements io.gomint.inventor
 
 
     @Override
+    public String getBlockId() {
+        return "minecraft:nether_wart_block";
+    }
+
+    @Override
     public ItemType getType() {
         return ItemType.NETHER_WART_BLOCK;
     }

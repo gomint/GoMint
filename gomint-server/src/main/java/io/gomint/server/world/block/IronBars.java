@@ -10,12 +10,12 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 101 )
+@RegisterInfo( sId = "minecraft:iron_bars" )
 public class IronBars extends Block implements io.gomint.world.block.BlockIronBars {
 
     @Override
-    public int getBlockId() {
-        return 101;
+    public String getBlockId() {
+        return "minecraft:iron_bars";
     }
 
     @Override

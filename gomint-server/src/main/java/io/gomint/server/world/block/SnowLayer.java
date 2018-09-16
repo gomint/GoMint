@@ -10,12 +10,12 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 78 )
+@RegisterInfo( sId = "minecraft:snow_layer" )
 public class SnowLayer extends Block implements io.gomint.world.block.BlockSnowLayer {
 
     @Override
-    public int getBlockId() {
-        return 78;
+    public String getBlockId() {
+        return "minecraft:snow_layer";
     }
 
     @Override

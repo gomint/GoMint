@@ -14,6 +14,11 @@ import io.gomint.taglib.NBTTagCompound;
 
 
     @Override
+    public String getBlockId() {
+        return "minecraft:stone_pressure_plate";
+    }
+
+    @Override
     public ItemType getType() {
         return ItemType.STONE_PRESSURE_PLATE;
     }

@@ -14,6 +14,11 @@ import io.gomint.taglib.NBTTagCompound;
 
 
     @Override
+    public String getBlockId() {
+        return "minecraft:trapped_chest";
+    }
+
+    @Override
     public ItemType getType() {
         return ItemType.TRAPPED_CHEST;
     }

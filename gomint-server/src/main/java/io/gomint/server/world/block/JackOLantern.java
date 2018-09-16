@@ -8,12 +8,12 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 91 )
+@RegisterInfo( sId = "minecraft:lit_pumpkin" )
 public class JackOLantern extends Block implements io.gomint.world.block.BlockJackOLantern {
 
     @Override
-    public int getBlockId() {
-        return 91;
+    public String getBlockId() {
+        return "minecraft:lit_pumpkin";
     }
 
     @Override

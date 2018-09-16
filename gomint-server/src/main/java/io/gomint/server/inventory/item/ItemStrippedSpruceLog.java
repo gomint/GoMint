@@ -11,6 +11,11 @@ import io.gomint.server.registry.RegisterInfo;
 public class ItemStrippedSpruceLog extends ItemStack implements io.gomint.inventory.item.ItemStrippedSpruceLog {
 
     @Override
+    public String getBlockId() {
+        return "minecraft:stripped_spruce_log";
+    }
+
+    @Override
     public ItemType getType() {
         return ItemType.STRIPPED_SPRUCE_LOG;
     }

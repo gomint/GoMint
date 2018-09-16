@@ -9,12 +9,12 @@ import io.gomint.world.block.BlockType;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 121 )
+@RegisterInfo( sId = "minecraft:end_stone" )
 public class EndStone extends Block implements io.gomint.world.block.BlockEndStone {
 
     @Override
-    public int getBlockId() {
-        return 121;
+    public String getBlockId() {
+        return "minecraft:end_stone";
     }
 
     @Override

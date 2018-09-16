@@ -13,6 +13,11 @@ public class ItemEndBricks extends ItemStack implements io.gomint.inventory.item
 
 
     @Override
+    public String getBlockId() {
+        return "minecraft:end_bricks";
+    }
+
+    @Override
     public ItemType getType() {
         return ItemType.END_BRICKS;
     }

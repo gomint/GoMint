@@ -28,6 +28,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 @EqualsAndHashCode
 class PostProcessExecutor implements Runnable {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger( PostProcessExecutor.class );
+
     @Getter private final AtomicInteger connectionsInUse = new AtomicInteger( 0 );
     private Queue<PostProcessWorker> workers = new ConcurrentLinkedQueue<>();
     @Getter private float load;
@@ -62,11 +64,18 @@ class PostProcessExecutor implements Runnable {
             while ( !this.workers.isEmpty() ) {
                 PostProcessWorker worker = this.workers.poll();
                 if ( worker != null ) {
-                    worker.run();
+                    try {
+                        worker.run();
+                    } catch ( Throwable t ) {
+                        t.printStackTrace();
+                    }
                 }
             }
 
             this.load = ( ( System.currentTimeMillis() - start ) / 50f ) * 100;
+            if ( this.load > 60 ) {
+                LOGGER.debug( "Post processor load > 60%: {}", this.load );
+            }
 
             // Wait on the next worker
             if ( this.workers.isEmpty() ) {

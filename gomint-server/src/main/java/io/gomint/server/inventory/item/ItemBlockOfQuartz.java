@@ -14,6 +14,11 @@ import io.gomint.taglib.NBTTagCompound;
 
 
     @Override
+    public String getBlockId() {
+        return "minecraft:quartz_block";
+    }
+
+    @Override
     public ItemType getType() {
         return ItemType.BLOCK_OF_QUARTZ;
     }

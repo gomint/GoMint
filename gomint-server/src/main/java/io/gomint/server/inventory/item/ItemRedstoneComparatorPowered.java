@@ -13,6 +13,11 @@ public class ItemRedstoneComparatorPowered extends ItemStack {
 
 
     @Override
+    public String getBlockId() {
+        return "minecraft:powered_comparator";
+    }
+
+    @Override
     public ItemType getType() {
         return ItemType.REDSTONE_COMPARATOR_POWERED;
     }

@@ -13,12 +13,12 @@ import java.util.concurrent.TimeUnit;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 11 )
+@RegisterInfo( sId = "minecraft:lava" )
 public class StationaryLava extends Liquid implements BlockStationaryLava {
 
     @Override
-    public int getBlockId() {
-        return 11;
+    public String getBlockId() {
+        return "minecraft:lava";
     }
 
     @Override

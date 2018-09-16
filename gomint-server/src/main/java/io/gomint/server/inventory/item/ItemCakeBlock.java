@@ -14,6 +14,11 @@ public class ItemCakeBlock extends ItemStack {
 
 
     @Override
+    public String getBlockId() {
+        return "minecraft:cake";
+    }
+
+    @Override
     public ItemType getType() {
         return ItemType.CAKE_BLOCK;
     }

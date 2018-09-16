@@ -14,6 +14,11 @@ import io.gomint.taglib.NBTTagCompound;
 
 
     @Override
+    public String getBlockId() {
+        return "minecraft:stonebrick";
+    }
+
+    @Override
     public ItemType getType() {
         return ItemType.STONE_BRICK;
     }

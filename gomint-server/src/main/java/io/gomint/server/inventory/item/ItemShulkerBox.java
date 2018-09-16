@@ -20,6 +20,11 @@ public class ItemShulkerBox extends ItemStack implements io.gomint.inventory.ite
 
 
     @Override
+    public String getBlockId() {
+        return "minecraft:shulker_box";
+    }
+
+    @Override
     public ItemType getType() {
         return ItemType.SHULKER_BOX;
     }

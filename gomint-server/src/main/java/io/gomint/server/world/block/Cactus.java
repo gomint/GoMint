@@ -10,12 +10,12 @@ import io.gomint.world.block.BlockType;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 81 )
+@RegisterInfo( sId = "minecraft:cactus" )
 public class Cactus extends Block implements io.gomint.world.block.BlockCactus {
 
     @Override
-    public int getBlockId() {
-        return 81;
+    public String getBlockId() {
+        return "minecraft:cactus";
     }
 
     @Override

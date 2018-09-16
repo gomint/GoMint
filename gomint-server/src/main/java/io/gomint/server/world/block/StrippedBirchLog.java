@@ -17,12 +17,12 @@ import java.util.List;
  * @author KCodeYT
  * @version 1.0
  */
-@RegisterInfo( id = 261 )
+@RegisterInfo( sId = "minecraft:stripped_birch_log" )
 public class StrippedBirchLog extends Block implements BlockStrippedBirchLog {
 
     @Override
-    public int getBlockId() {
-        return 261;
+    public String getBlockId() {
+        return "minecraft:stripped_birch_log";
     }
 
     @Override
@@ -52,7 +52,7 @@ public class StrippedBirchLog extends Block implements BlockStrippedBirchLog {
 
     @Override
     public void setLogDirection( Direction direction ) {
-        byte type = this.getBlockData();
+        short type = this.getBlockData();
 
         switch ( direction ) {
             case UP_DOWN:

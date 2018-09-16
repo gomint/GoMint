@@ -25,14 +25,14 @@ import org.slf4j.LoggerFactory;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 205 )
+@RegisterInfo( sId = "minecraft:undyed_shulker_box" )
 public class UndyedShulkerBox extends Block implements BlockUndyedShulkerBox {
 
     private static final Logger LOGGER = LoggerFactory.getLogger( ShulkerBox.class );
 
     @Override
-    public int getBlockId() {
-        return 205;
+    public String getBlockId() {
+        return "minecraft:undyed_shulker_box";
     }
 
     @Override
@@ -84,7 +84,7 @@ public class UndyedShulkerBox extends Block implements BlockUndyedShulkerBox {
         compound.addValue( "isUndyed", (byte) 1 );
         compound.addValue( "facing", (byte) 1 );
 
-        return new ShulkerBoxTileEntity( compound, this.world );
+        return new ShulkerBoxTileEntity( compound, this.world, this.world.getServer().getItems() );
     }
 
     @Override

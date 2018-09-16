@@ -10,12 +10,12 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 201 )
+@RegisterInfo( sId = "minecraft:purpur_block" )
 public class PurpurBlock extends Block implements io.gomint.world.block.BlockPurpurBlock {
 
     @Override
-    public int getBlockId() {
-        return 201;
+    public String getBlockId() {
+        return "minecraft:purpur_block";
     }
 
     @Override

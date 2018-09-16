@@ -8,12 +8,12 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 176 )
+@RegisterInfo( sId = "minecraft:standing_banner" )
 public class StandingBanner extends Banner {
 
     @Override
-    public int getBlockId() {
-        return 176;
+    public String getBlockId() {
+        return "minecraft:standing_banner";
     }
 
     @Override

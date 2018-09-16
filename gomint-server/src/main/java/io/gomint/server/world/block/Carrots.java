@@ -12,12 +12,12 @@ import java.util.List;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 141 )
+@RegisterInfo( sId = "minecraft:carrots" )
 public class Carrots extends Growable implements BlockCarrots {
 
     @Override
-    public int getBlockId() {
-        return 141;
+    public String getBlockId() {
+        return "minecraft:carrots";
     }
 
     @Override

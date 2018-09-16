@@ -10,12 +10,12 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 82 )
+@RegisterInfo( sId = "minecraft:clay" )
 public class Clay extends Block implements io.gomint.world.block.BlockClay {
 
     @Override
-    public int getBlockId() {
-        return 82;
+    public String getBlockId() {
+        return "minecraft:clay";
     }
 
     @Override

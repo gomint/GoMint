@@ -11,6 +11,11 @@ import io.gomint.server.registry.RegisterInfo;
 public class ItemUnderwaterTorch extends ItemStack implements io.gomint.inventory.item.ItemUnderwaterTorch {
 
     @Override
+    public String getBlockId() {
+        return "minecraft:underwater_torch";
+    }
+
+    @Override
     public ItemType getType() {
         return ItemType.UNDERWATER_TORCH;
     }

@@ -14,6 +14,11 @@ import io.gomint.taglib.NBTTagCompound;
 
 
     @Override
+    public String getBlockId() {
+        return "minecraft:sticky_piston";
+    }
+
+    @Override
     public ItemType getType() {
         return ItemType.STICKY_PISTON;
     }

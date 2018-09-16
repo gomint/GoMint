@@ -10,12 +10,12 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 22 )
+@RegisterInfo( sId = "minecraft:lapis_block" )
 public class LapisLazuliBlock extends Block implements io.gomint.world.block.BlockLapisLazuliBlock {
 
     @Override
-    public int getBlockId() {
-        return 22;
+    public String getBlockId() {
+        return "minecraft:lapis_block";
     }
 
     @Override

@@ -13,6 +13,11 @@ public class ItemUpdateGameBlockUpdate2 extends ItemStack {
 
 
     @Override
+    public String getBlockId() {
+        return "minecraft:info_update2";
+    }
+
+    @Override
     public ItemType getType() {
         return ItemType.UPDATE_GAME_BLOCK_UPDATE2;
     }

@@ -14,6 +14,11 @@ import io.gomint.taglib.NBTTagCompound;
 
 
     @Override
+    public String getBlockId() {
+        return "minecraft:mossy_cobblestone";
+    }
+
+    @Override
     public ItemType getType() {
         return ItemType.MOSSY_COBBLESTONE;
     }

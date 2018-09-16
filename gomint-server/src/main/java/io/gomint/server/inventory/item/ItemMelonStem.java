@@ -14,6 +14,11 @@ import io.gomint.taglib.NBTTagCompound;
 
 
     @Override
+    public String getBlockId() {
+        return "minecraft:melon_stem";
+    }
+
+    @Override
     public ItemType getType() {
         return ItemType.MELON_STEM;
     }

@@ -14,12 +14,12 @@ import java.util.List;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 47 )
+@RegisterInfo( sId = "minecraft:bookshelf" )
 public class Bookshelf extends Block implements io.gomint.world.block.BlockBookshelf {
 
     @Override
-    public int getBlockId() {
-        return 47;
+    public String getBlockId() {
+        return "minecraft:bookshelf";
     }
 
     @Override

@@ -14,6 +14,11 @@ import io.gomint.taglib.NBTTagCompound;
 
 
     @Override
+    public String getBlockId() {
+        return "minecraft:flower_pot";
+    }
+
+    @Override
     public ItemType getType() {
         return ItemType.FLOWER_POT_BLOCK;
     }

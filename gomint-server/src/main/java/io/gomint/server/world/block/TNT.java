@@ -15,12 +15,12 @@ import io.gomint.world.block.BlockType;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 46 )
+@RegisterInfo( sId = "minecraft:tnt" )
 public class TNT extends Block implements BlockTNT {
 
     @Override
-    public int getBlockId() {
-        return 46;
+    public String getBlockId() {
+        return "minecraft:tnt";
     }
 
     @Override

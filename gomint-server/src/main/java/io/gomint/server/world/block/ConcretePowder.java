@@ -16,12 +16,12 @@ import io.gomint.world.block.BlockType;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 237 )
+@RegisterInfo( sId = "minecraft:concretePowder" )
 public class ConcretePowder extends Block implements io.gomint.world.block.BlockConcretePowder {
 
     @Override
-    public int getBlockId() {
-        return 237;
+    public String getBlockId() {
+        return "minecraft:concretePowder";
     }
 
     @Override

@@ -15,12 +15,12 @@ import java.util.List;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 148 )
+@RegisterInfo( sId = "minecraft:heavy_weighted_pressure_plate" )
 public class HeavyWeightedPressurePlate extends Block implements io.gomint.world.block.BlockHeavyWeightedPressurePlate {
 
     @Override
-    public int getBlockId() {
-        return 148;
+    public String getBlockId() {
+        return "minecraft:heavy_weighted_pressure_plate";
     }
 
     @Override

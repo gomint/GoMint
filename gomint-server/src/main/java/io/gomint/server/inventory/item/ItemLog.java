@@ -13,6 +13,11 @@ public class ItemLog extends ItemStack implements io.gomint.inventory.item.ItemL
 
 
     @Override
+    public String getBlockId() {
+        return "minecraft:log";
+    }
+
+    @Override
     public ItemType getType() {
         return ItemType.LOG;
     }

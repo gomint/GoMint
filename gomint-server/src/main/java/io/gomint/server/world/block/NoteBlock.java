@@ -15,12 +15,12 @@ import io.gomint.world.block.BlockNoteblock;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 25 )
+@RegisterInfo( sId = "minecraft:noteblock" )
 public class NoteBlock extends Block implements BlockNoteblock {
 
     @Override
-    public int getBlockId() {
-        return 25;
+    public String getBlockId() {
+        return "minecraft:noteblock";
     }
 
     @Override

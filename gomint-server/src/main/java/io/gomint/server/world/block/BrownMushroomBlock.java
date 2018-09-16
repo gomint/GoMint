@@ -8,12 +8,12 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 99 )
+@RegisterInfo( sId = "minecraft:brown_mushroom_block" )
 public class BrownMushroomBlock extends Block implements io.gomint.world.block.BlockBrownMushroomBlock {
 
     @Override
-    public int getBlockId() {
-        return 99;
+    public String getBlockId() {
+        return "minecraft:brown_mushroom_block";
     }
 
     @Override

@@ -11,12 +11,12 @@ import io.gomint.world.block.BlockDirt;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 3 )
+@RegisterInfo( sId = "minecraft:dirt" )
 public class Dirt extends Block implements BlockDirt {
 
     @Override
-    public int getBlockId() {
-        return 3;
+    public String getBlockId() {
+        return "minecraft:dirt";
     }
 
     @Override

@@ -1,8 +1,7 @@
 package io.gomint.server.inventory.item;
-import io.gomint.inventory.item.ItemType;
 
+import io.gomint.inventory.item.ItemType;
 import io.gomint.server.registry.RegisterInfo;
-import io.gomint.taglib.NBTTagCompound;
 import io.gomint.world.block.data.BlockColor;
 
 /**
@@ -12,16 +11,14 @@ import io.gomint.world.block.data.BlockColor;
 @RegisterInfo( id = 355 )
 public class ItemBed extends ItemStack implements io.gomint.inventory.item.ItemBed {
 
-
-
     @Override
     public byte getMaximumAmount() {
         return 1;
     }
 
     @Override
-    public int getBlockId() {
-        return 26;
+    public String getBlockId() {
+        return "minecraft:bed";
     }
 
     @Override

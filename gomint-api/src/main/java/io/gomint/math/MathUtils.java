@@ -24,6 +24,11 @@ public final class MathUtils {
         throw new AssertionError( "Cannot instantiate MathUtils!" );
     }
 
+    public static int log2( int n ) {
+        if ( n <= 0 ) throw new IllegalArgumentException();
+        return 31 - Integer.numberOfLeadingZeros( n );
+    }
+
     /**
      * Clamps the specified value into the given range.
      *

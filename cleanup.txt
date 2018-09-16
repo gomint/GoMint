@@ -1,0 +1,719 @@
+Icon	Dec	Hex	Name	Block
+0	0	minecraft:air	Air
+Stone.png	1	1	minecraft:stone	Stone S B
+Grass Block.png	2	2	minecraft:grass	Grass Block
+Dirt.png	3	3	minecraft:dirt	Dirt S B
+Cobblestone.png	4	4	minecraft:cobblestone	Cobblestone
+Oak Planks.png	5	5	minecraft:planks	Wood Planks S B
+Oak Sapling.png	6	6	minecraft:sapling	Sapling S B
+Bedrock.png	7	7	minecraft:bedrock	Bedrock
+Water.png	8	8	minecraft:flowing_water	Water S
+Water.png	9	9	minecraft:water	Stationary Water S
+Lava.png	10	A	minecraft:flowing_lava	Lava S
+Lava.png	11	B	minecraft:lava	Stationary Lava S
+Sand.png	12	C	minecraft:sand	Sand S B
+Gravel.png	13	D	minecraft:gravel	Gravel
+Gold Ore.png	14	E	minecraft:gold_ore	Gold Ore
+Iron Ore.png	15	F	minecraft:iron_ore	Iron Ore
+Icon	Dec	Hex	Name	Block
+Coal Ore.png	16	10	minecraft:coal_ore	Coal Ore
+Oak Log.png	17	11	minecraft:log	Wood S B
+Leaves.png	18	12	minecraft:leaves	Leaves S B
+Sponge.png	19	13	minecraft:sponge	Sponge S B
+Glass.png	20	14	minecraft:glass	Glass
+Lapis Lazuli Ore.png	21	15	minecraft:lapis_ore	Lapis Lazuli Ore
+Lapis Lazuli Block.png	22	16	minecraft:lapis_block	Lapis Lazuli Block
+Dispenser.png	23	17	minecraft:dispenser	Dispenser S E
+Sandstone.png	24	18	minecraft:sandstone	Sandstone S B
+Note Block.png	25	19	minecraft:noteblock	Note Block E
+Red Bed.png	26	1A	minecraft:bed	Bed I S
+Powered Rail.png	27	1B	minecraft:golden_rail	Powered Rail S
+Detector Rail.png	28	1C	minecraft:detector_rail	Detector Rail S
+Sticky Piston.png	29	1D	minecraft:sticky_piston	Sticky Piston S
+Cobweb.png	30	1E	minecraft:web	Cobweb
+Grass.png	31	1F	minecraft:tallgrass	Grass S B
+Icon	Dec	Hex	Name	Block
+Dead Bush.png	32	20	minecraft:deadbush	Dead Bush
+Piston.png	33	21	minecraft:piston	Piston S
+Piston Head.png	34	22	minecraft:piston_head	Piston Head S
+White Wool.png	35	23	minecraft:wool	Wool S B
+36	24	minecraft:piston_extension	Block moved by Piston E
+Dandelion.png	37	25	minecraft:yellow_flower	Dandelion
+Poppy.png	38	26	minecraft:red_flower	Poppy S B
+Brown Mushroom.png	39	27	minecraft:brown_mushroom	Brown Mushroom
+Red Mushroom.png	40	28	minecraft:red_mushroom	Red Mushroom
+Block of Gold.png	41	29	minecraft:gold_block	Block of Gold
+Block of Iron.png	42	2A	minecraft:iron_block	Block of Iron
+Double Stone Slab.png	43	2B	minecraft:double_stone_slab	Double Stone Slab S B
+Stone Slab.png	44	2C	minecraft:stone_slab	Stone Slab S B
+Bricks.png	45	2D	minecraft:brick_block	Bricks
+TNT.png	46	2E	minecraft:tnt	TNT
+Bookshelf.png	47	2F	minecraft:bookshelf	Bookshelf
+Icon	Dec	Hex	Name	Block
+Mossy Cobblestone.png	48	30	minecraft:mossy_cobblestone	Mossy Cobblestone
+Obsidian.png	49	31	minecraft:obsidian	Obsidian
+Torch.png	50	32	minecraft:torch	Torch S
+Fire.png	51	33	minecraft:fire	Fire S
+Spawner.png	52	34	minecraft:mob_spawner	Spawner E
+Oak Stairs.png	53	35	minecraft:oak_stairs	Oak Stairs S
+Chest.png	54	36	minecraft:chest	Chest S E
+Redstone (Wire,Inventory).png	55	37	minecraft:redstone_wire	Redstone Wire I S
+Diamond Ore.png	56	38	minecraft:diamond_ore	Diamond Ore
+Block of Diamond.png	57	39	minecraft:diamond_block	Block of Diamond
+Crafting Table.png	58	3A	minecraft:crafting_table	Crafting Table
+Wheat Crops.png	59	3B	minecraft:wheat	Wheat I S
+Farmland.png	60	3C	minecraft:farmland	Farmland S
+Furnace.png	61	3D	minecraft:furnace	Furnace S E
+Lit Furnace.png	62	3E	minecraft:lit_furnace	Lit Furnace S E
+Standing Sign.png	63	3F	minecraft:standing_sign	Standing Sign I S E
+Icon	Dec	Hex	Name	Block
+Oak Door.png	64	40	minecraft:wooden_door	Oak Door I S
+Ladder.png	65	41	minecraft:ladder	Ladder S
+Rail.png	66	42	minecraft:rail	Rail S
+Cobblestone Stairs.png	67	43	minecraft:stone_stairs	Cobblestone Stairs S
+Wall Sign.png	68	44	minecraft:wall_sign	Wall Sign I S E
+Lever.png	69	45	minecraft:lever	Lever S
+Stone Pressure Plate.png	70	46	minecraft:stone_pressure_plate	Stone Pressure Plate S
+Iron Door.png	71	47	minecraft:iron_door	Iron Door I S
+Oak Pressure Plate.png	72	48	minecraft:wooden_pressure_plate	Wooden Pressure Plate S
+Redstone Ore.png	73	49	minecraft:redstone_ore	Redstone Ore
+Redstone Ore.png	74	4A	minecraft:lit_redstone_ore	Glowing Redstone Ore
+Unlit Redstone Torch.png	75	4B	minecraft:unlit_redstone_torch	Unlit Redstone Torch S
+Redstone Torch.png	76	4C	minecraft:redstone_torch	Redstone Torch S
+Stone Button.png	77	4D	minecraft:stone_button	Stone Button S
+Snow.png	78	4E	minecraft:snow_layer	Snow (layer) S B
+Ice.png	79	4F	minecraft:ice	Ice
+Icon	Dec	Hex	Name	Block
+Snow Block.png	80	50	minecraft:snow	Snow
+Cactus.png	81	51	minecraft:cactus	Cactus S
+Clay Block.png	82	52	minecraft:clay	Clay
+Sugar Cane.png	83	53	minecraft:reeds	Sugar Cane I S
+Jukebox.png	84	54	minecraft:jukebox	Jukebox S E
+Oak Fence.png	85	55	minecraft:fence	Oak Fence
+Carved Pumpkin.png	86	56	minecraft:pumpkin	Pumpkin S
+Netherrack.png	87	57	minecraft:netherrack	Netherrack
+Soul Sand.png	88	58	minecraft:soul_sand	Soul Sand
+Glowstone.png	89	59	minecraft:glowstone	Glowstone
+Portal.png	90	5A	minecraft:portal	Nether Portal
+Jack o'Lantern.png	91	5B	minecraft:lit_pumpkin	Jack o'Lantern S
+Cake.png	92	5C	minecraft:cake	Cake I S
+Redstone Repeater.png	93	5D	minecraft:unpowered_repeater	Redstone Repeater I S
+Active Redstone Repeater.png	94	5E	minecraft:powered_repeater	Active Redstone Repeater I S
+White Stained Glass.png	95	5F	minecraft:stained_glass	Stained Glass S B
+Icon	Dec	Hex	Name	Block
+Oak Trapdoor.png	96	60	minecraft:trapdoor	Oak Trapdoor S
+Stone.png	97	61	minecraft:monster_egg	Monster Egg S B
+Stone Bricks.png	98	62	minecraft:stonebrick	Stone Bricks S B
+Brown Mushroom Block.png	99	63	minecraft:brown_mushroom_block	Brown Mushroom Block S
+Red Mushroom Block.png	100	64	minecraft:red_mushroom_block	Red Mushroom Block S
+Iron Bars.png	101	65	minecraft:iron_bars	Iron Bars
+Glass Pane.png	102	66	minecraft:glass_pane	Glass Pane
+Melon.png	103	67	minecraft:melon_block	Melon
+Seed Stem.png	104	68	minecraft:pumpkin_stem	Pumpkin Stem S
+Seed Stem.png	105	69	minecraft:melon_stem	Melon Stem S
+Vines.png	106	6A	minecraft:vine	Vines S
+Oak Fence Gate.png	107	6B	minecraft:fence_gate	Fence Gate S
+Brick Stairs.png	108	6C	minecraft:brick_stairs	Brick Stairs S
+Stone Brick Stairs.png	109	6D	minecraft:stone_brick_stairs	Stone Brick Stairs S
+Mycelium.png	110	6E	minecraft:mycelium	Mycelium
+Lily Pad.png	111	6F	minecraft:waterlily	Lily Pad
+Icon	Dec	Hex	Name	Block
+Nether Bricks.png	112	70	minecraft:nether_brick	Nether Brick
+Nether Brick Fence.png	113	71	minecraft:nether_brick_fence	Nether Brick Fence
+Nether Brick Stairs.png	114	72	minecraft:nether_brick_stairs	Nether Brick Stairs S
+Nether Wart.png	115	73	minecraft:nether_wart	Nether Wart I S
+Enchanting Table.png	116	74	minecraft:enchanting_table	Enchanting Table E
+Brewing Stand.png	117	75	minecraft:brewing_stand	Brewing Stand I S E
+Cauldron.png	118	76	minecraft:cauldron	Cauldron I S
+End Portal.png	119	77	minecraft:end_portal	End Portal E
+End Portal Frame.png	120	78	minecraft:end_portal_frame	End Portal Frame S
+End Stone.png	121	79	minecraft:end_stone	End Stone
+Dragon Egg.png	122	7A	minecraft:dragon_egg	Dragon Egg
+Redstone Lamp.png	123	7B	minecraft:redstone_lamp	Redstone Lamp (inactive)
+Lit Redstone Lamp.png	124	7C	minecraft:lit_redstone_lamp	Redstone Lamp (active)
+Oak Planks.png	125	7D	minecraft:double_wooden_slab	Double Wooden Slab S B
+Oak Slab.png	126	7E	minecraft:wooden_slab	Wooden Slab S B
+Cocoa Plant.png	127	7F	minecraft:cocoa	Cocoa I S
+Icon	Dec	Hex	Name	Block
+Sandstone Stairs.png	128	80	minecraft:sandstone_stairs	Sandstone Stairs S
+Emerald Ore.png	129	81	minecraft:emerald_ore	Emerald Ore
+Ender Chest.png	130	82	minecraft:ender_chest	Ender Chest S E
+Tripwire Hook.png	131	83	minecraft:tripwire_hook	Tripwire Hook S
+Tripwire.png	132	84	minecraft:tripwire	Tripwire I S
+Block of Emerald.png	133	85	minecraft:emerald_block	Block of Emerald
+Spruce Stairs.png	134	86	minecraft:spruce_stairs	Spruce Stairs S
+Birch Stairs.png	135	87	minecraft:birch_stairs	Birch Stairs S
+Jungle Stairs.png	136	88	minecraft:jungle_stairs	Jungle Stairs S
+Impulse Command Block.png	137	89	minecraft:command_block	Command Block E
+Beacon.png	138	8A	minecraft:beacon	Beacon E
+Cobblestone Wall.png	139	8B	minecraft:cobblestone_wall	Cobblestone Wall S B
+Flower Pot.png	140	8C	minecraft:flower_pot	Flower Pot I S E
+Carrot.png	141	8D	minecraft:carrots	Carrot I S
+Potatoes.png	142	8E	minecraft:potatoes	Potatoes I S
+Oak Button.png	143	8F	minecraft:oak_button	Oak Button S
+Icon	Dec	Hex	Name	Block
+Skeleton Skull.png	144	90	minecraft:skull	Mob head I S E
+Anvil.png	145	91	minecraft:anvil	Anvil S B
+Trapped Chest.png	146	92	minecraft:trapped_chest	Trapped Chest S E
+Light Weighted Pressure Plate.png	147	93	minecraft:light_weighted_pressure_plate	Light Weighted Pressure Plate S
+Heavy Weighted Pressure Plate.png	148	94	minecraft:heavy_weighted_pressure_plate	Heavy Weighted Pressure Plate S
+Redstone Comparator.png	149	95	minecraft:unpowered_comparator	Redstone Comparator I S
+Active Redstone Comparator.png	150	96	minecraft:powered_comparator	Redstone Comparator (deprecated) S
+Daylight Detector.png	151	97	minecraft:daylight_detector	Daylight Detector E
+Block of Redstone.png	152	98	minecraft:redstone_block	Block of Redstone
+Nether Quartz Ore.png	153	99	minecraft:quartz_ore	Nether Quartz Ore
+Hopper.png	154	9A	minecraft:hopper	Hopper S E
+Block of Quartz.png	155	9B	minecraft:quartz_block	Block of Quartz S B
+Quartz Stairs.png	156	9C	minecraft:quartz_stairs	Quartz Stairs S
+Activator Rail.png	157	9D	minecraft:activator_rail	Activator Rail S
+Dropper.png	158	9E	minecraft:dropper	Dropper S E
+White Terracotta.png	159	9F	minecraft:stained_hardened_clay	Terracotta S B
+Icon	Dec	Hex	Name	Block
+White Stained Glass Pane.png	160	A0	minecraft:stained_glass_pane	Stained Glass Pane S B
+Leaves.png	161	A1	minecraft:leaves2	Leaves (Acacia/Dark Oak) S B
+Acacia Log.png	162	A2	minecraft:log2	Wood (Acacia/Dark Oak) S B
+Acacia Stairs.png	163	A3	minecraft:acacia_stairs	Acacia Stairs S
+Dark Oak Stairs.png	164	A4	minecraft:dark_oak_stairs	Dark Oak Stairs S
+Slime Block.png	165	A5	minecraft:slime	Slime Block
+Barrier.png	166	A6	minecraft:barrier	Barrier
+Iron Trapdoor.png	167	A7	minecraft:iron_trapdoor	Iron Trapdoor S
+Prismarine.png	168	A8	minecraft:prismarine	Prismarine S B
+Sea Lantern.png	169	A9	minecraft:sea_lantern	Sea Lantern
+Hay Bale.png	170	AA	minecraft:hay_block	Hay Bale S
+White Carpet.png	171	AB	minecraft:carpet	Carpet S B
+Terracotta.png	172	AC	minecraft:terracotta	Terracotta
+Block of Coal.png	173	AD	minecraft:coal_block	Block of Coal
+Packed Ice.png	174	AE	minecraft:packed_ice	Packed Ice
+Sunflower.png	175	AF	minecraft:double_plant	Large Flowers S B
+Icon	Dec	Hex	Name	Block
+Free-standing Banner (Small).png	176	B0	minecraft:standing_banner	Standing Banner I S E
+Wall-mounted Banner (Small).png	177	B1	minecraft:wall_banner	Wall Banner I S E
+Inverted Daylight Detector.png	178	B2	minecraft:inverted_daylight_detector	Inverted Daylight Detector E
+Red Sandstone.png	179	B3	minecraft:red_sandstone	Red Sandstone S B
+Red Sandstone Stairs.png	180	B4	minecraft:red_sandstone_stairs	Red Sandstone Stairs S
+Red Sandstone.png	181	B5	minecraft:double_stone_slab2	Double Red Sandstone Slab S
+Red Sandstone Slab.png	182	B6	minecraft:stone_slab2	Red Sandstone Slab S
+Spruce Fence Gate.png	183	B7	minecraft:spruce_fence_gate	Spruce Fence Gate
+Birch Fence Gate.png	184	B8	minecraft:birch_fence_gate	Birch Fence Gate
+Jungle Fence Gate.png	185	B9	minecraft:jungle_fence_gate	Jungle Fence Gate
+Dark Oak Fence Gate.png	186	BA	minecraft:dark_oak_fence_gate	Dark Oak Fence Gate
+Acacia Fence Gate.png	187	BB	minecraft:acacia_fence_gate	Acacia Fence Gate
+Spruce Fence.png	188	BC	minecraft:spruce_fence	Spruce Fence
+Birch Fence.png	189	BD	minecraft:birch_fence	Birch Fence
+Jungle Fence.png	190	BE	minecraft:jungle_fence	Jungle Fence
+Dark Oak Fence.png	191	BF	minecraft:dark_oak_fence	Dark Oak Fence
+Icon	Dec	Hex	Name	Block
+Acacia Fence.png	192	C0	minecraft:acacia_fence	Acacia Fence
+Spruce Door.png	193	C1	minecraft:spruce_door	Spruce Door I S
+Birch Door.png	194	C2	minecraft:birch_door	Birch Door I S
+Jungle Door.png	195	C3	minecraft:jungle_door	Jungle Door I S
+Acacia Door.png	196	C4	minecraft:acacia_door	Acacia Door I S
+Dark Oak Door.png	197	C5	minecraft:dark_oak_door	Dark Oak Door I S
+End Rod.png	198	C6	minecraft:end_rod	End Rod
+Chorus Plant.png	199	C7	minecraft:chorus_plant	Chorus Plant
+Chorus Flower.png	200	C8	minecraft:chorus_flower	Chorus Flower
+Purpur Block.png	201	C9	minecraft:purpur_block	Purpur Block
+Purpur Pillar.png	202	CA	minecraft:purpur_pillar	Purpur Pillar
+Purpur Stairs.png	203	CB	minecraft:purpur_stairs	Purpur Stairs
+Purpur Block.png	204	CC	minecraft:purpur_double_slab	Purpur Double Slab
+Purpur Slab.png	205	CD	minecraft:purpur_slab	Purpur Slab
+End Stone Bricks.png	206	CE	minecraft:end_bricks	End Stone Bricks
+Beetroots.png	207	CF	minecraft:beetroots	Beetroot Seeds
+Icon	Dec	Hex	Name	Block
+Grass Path.png	208	D0	minecraft:grass_path	Grass Path
+End Gateway.png	209	D1	minecraft:end_gateway	End Gateway
+Repeating Command Block.png	210	D2	minecraft:repeating_command_block	Repeating Command Block E
+Chain Command Block.png	211	D3	minecraft:chain_command_block	Chain Command Block E
+Ice.png	212	D4	minecraft:frosted_ice	Frosted Ice S
+Magma Block.png	213	D5	minecraft:magma	Magma Block
+Nether Wart Block.png	214	D6	minecraft:nether_wart_block	Nether Wart Block
+Red Nether Bricks.png	215	D7	minecraft:red_nether_brick	Red Nether Brick
+Bone Block.png	216	D8	minecraft:bone_block	Bone Block
+Structure Void.png	217	D9	minecraft:structure_void	Structure Void
+Observer.png	218	DA	minecraft:observer	Observer
+White Shulker Box.png	219	DB	minecraft:white_shulker_box	White Shulker Box
+Orange Shulker Box.png	220	DC	minecraft:orange_shulker_box	Orange Shulker Box
+Magenta Shulker Box.png	221	DD	minecraft:magenta_shulker_box	Magenta Shulker Box
+Light Blue Shulker Box.png	222	DE	minecraft:light_blue_shulker_box	Light Blue Shulker Box
+Yellow Shulker Box.png	223	DF	minecraft:yellow_shulker_box	Yellow Shulker Box
+Icon	Dec	Hex	Name	Block
+Lime Shulker Box.png	224	E0	minecraft:lime_shulker_box	Lime Shulker Box
+Pink Shulker Box.png	225	E1	minecraft:pink_shulker_box	Pink Shulker Box
+Gray Shulker Box.png	226	E2	minecraft:gray_shulker_box	Gray Shulker Box
+Light Gray Shulker Box.png	227	E3	minecraft:silver_shulker_box	Light Gray Shulker Box
+Cyan Shulker Box.png	228	E4	minecraft:cyan_shulker_box	Cyan Shulker Box
+Purple Shulker Box.png	229	E5	minecraft:purple_shulker_box	Purple Shulker Box
+Blue Shulker Box.png	230	E6	minecraft:blue_shulker_box	Blue Shulker Box
+Brown Shulker Box.png	231	E7	minecraft:brown_shulker_box	Brown Shulker Box
+Green Shulker Box.png	232	E8	minecraft:green_shulker_box	Green Shulker Box
+Red Shulker Box.png	233	E9	minecraft:red_shulker_box	Red Shulker Box
+Black Shulker Box.png	234	EA	minecraft:black_shulker_box	Black Shulker Box
+White Glazed Terracotta.png	235	EB	minecraft:white_glazed_terracotta	White Glazed Terracotta
+Orange Glazed Terracotta.png	236	EC	minecraft:orange_glazed_terracotta	Orange Glazed Terracotta
+Magenta Glazed Terracotta.png	237	ED	minecraft:magenta_glazed_terracotta	Magenta Glazed Terracotta
+Light Blue Glazed Terracotta.png	238	EE	minecraft:light_blue_glazed_terracotta	Light Blue Glazed Terracotta
+Yellow Glazed Terracotta.png	239	EF	minecraft:yellow_glazed_terracotta	Yellow Glazed Terracotta
+Icon	Dec	Hex	Name	Block
+Lime Glazed Terracotta.png	240	F0	minecraft:lime_glazed_terracotta	Lime Glazed Terracotta
+Pink Glazed Terracotta.png	241	F1	minecraft:pink_glazed_terracotta	Pink Glazed Terracotta
+Gray Glazed Terracotta.png	242	F2	minecraft:gray_glazed_terracotta	Gray Glazed Terracotta
+Light Gray Glazed Terracotta.png	243	F3	minecraft:silver_glazed_terracotta	Light Gray Glazed Terracotta
+Cyan Glazed Terracotta.png	244	F4	minecraft:cyan_glazed_terracotta	Cyan Glazed Terracotta
+Purple Glazed Terracotta.png	245	F5	minecraft:purple_glazed_terracotta	Purple Glazed Terracotta
+Blue Glazed Terracotta.png	246	F6	minecraft:blue_glazed_terracotta	Blue Glazed Terracotta
+Brown Glazed Terracotta.png	247	F7	minecraft:brown_glazed_terracotta	Brown Glazed Terracotta
+Green Glazed Terracotta.png	248	F8	minecraft:green_glazed_terracotta	Green Glazed Terracotta
+Red Glazed Terracotta.png	249	F9	minecraft:red_glazed_terracotta	Red Glazed Terracotta
+Black Glazed Terracotta.png	250	FA	minecraft:black_glazed_terracotta	Black Glazed Terracotta
+White Concrete.png	251	FB	minecraft:concrete	Concrete S
+White Concrete Powder.png	252	FC	minecraft:concrete_powder	Concrete Powder S
+253	FD		(unused)
+254	FE		(unused)
+Structure Block Save.png	255	FF	minecraft:structure_block	Structure Block S E
+Icon	Dec	Hex	Name	Item
+
+256	100	minecraft:iron_shovel	Iron Shovel D
+
+257	101	minecraft:iron_pickaxe	Iron Pickaxe D
+
+258	102	minecraft:iron_axe	Iron Axe D
+
+259	103	minecraft:flint_and_steel	Flint and Steel D
+
+260	104	minecraft:apple	Apple
+
+261	105	minecraft:bow	Bow D
+
+262	106	minecraft:arrow	Arrow
+
+263	107	minecraft:coal	Coal B
+
+264	108	minecraft:diamond	Diamond
+
+265	109	minecraft:iron_ingot	Iron Ingot
+
+266	10A	minecraft:gold_ingot	Gold Ingot
+
+267	10B	minecraft:iron_sword	Iron Sword D
+
+268	10C	minecraft:wooden_sword	Wooden Sword D
+
+269	10D	minecraft:wooden_shovel	Wooden Shovel D
+
+270	10E	minecraft:wooden_pickaxe	Wooden Pickaxe D
+
+271	10F	minecraft:wooden_axe	Wooden Axe D
+Icon	Dec	Hex	Name	Item
+
+272	110	minecraft:stone_sword	Stone Sword D
+
+273	111	minecraft:stone_shovel	Stone Shovel D
+
+274	112	minecraft:stone_pickaxe	Stone Pickaxe D
+
+275	113	minecraft:stone_axe	Stone Axe D
+
+276	114	minecraft:diamond_sword	Diamond Sword D
+
+277	115	minecraft:diamond_shovel	Diamond Shovel D
+
+278	116	minecraft:diamond_pickaxe	Diamond Pickaxe D
+
+279	117	minecraft:diamond_axe	Diamond Axe D
+
+280	118	minecraft:stick	Stick
+
+281	119	minecraft:bowl	Bowl
+
+282	11A	minecraft:mushroom_stew	Mushroom Stew
+
+283	11B	minecraft:golden_sword	Golden Sword D
+
+284	11C	minecraft:golden_shovel	Golden Shovel D
+
+285	11D	minecraft:golden_pickaxe	Golden Pickaxe D
+
+286	11E	minecraft:golden_axe	Golden Axe D
+
+287	11F	minecraft:string	String
+Icon	Dec	Hex	Name	Item
+
+288	120	minecraft:feather	Feather
+
+289	121	minecraft:gunpowder	Gunpowder
+
+290	122	minecraft:wooden_hoe	Wooden Hoe D
+
+291	123	minecraft:stone_hoe	Stone Hoe D
+
+292	124	minecraft:iron_hoe	Iron Hoe D
+
+293	125	minecraft:diamond_hoe	Diamond Hoe D
+
+294	126	minecraft:golden_hoe	Golden Hoe D
+
+295	127	minecraft:wheat_seeds	Seeds
+
+296	128	minecraft:wheat	Wheat
+
+297	129	minecraft:bread	Bread
+
+298	12A	minecraft:leather_helmet	Leather Cap D
+
+299	12B	minecraft:leather_chestplate	Leather Tunic D
+
+300	12C	minecraft:leather_leggings	Leather Pants D
+
+301	12D	minecraft:leather_boots	Leather Boots D
+
+302	12E	minecraft:chainmail_helmet	Chain Helmet D
+
+303	12F	minecraft:chainmail_chestplate	Chain Chestplate D
+Icon	Dec	Hex	Name	Item
+
+304	130	minecraft:chainmail_leggings	Chain Leggings D
+
+305	131	minecraft:chainmail_boots	Chain Boots D
+
+306	132	minecraft:iron_helmet	Iron Helmet D
+
+307	133	minecraft:iron_chestplate	Iron Chestplate D
+
+308	134	minecraft:iron_leggings	Iron Leggings D
+
+309	135	minecraft:iron_boots	Iron Boots D
+
+310	136	minecraft:diamond_helmet	Diamond Helmet D
+
+311	137	minecraft:diamond_chestplate	Diamond Chestplate D
+
+312	138	minecraft:diamond_leggings	Diamond Leggings D
+
+313	139	minecraft:diamond_boots	Diamond Boots D
+
+314	13A	minecraft:golden_helmet	Golden Helmet D
+
+315	13B	minecraft:golden_chestplate	Golden Chestplate D
+
+316	13C	minecraft:golden_leggings	Golden Leggings D
+
+317	13D	minecraft:golden_boots	Golden Boots D
+
+318	13E	minecraft:flint	Flint
+
+319	13F	minecraft:porkchop	Raw Porkchop
+Icon	Dec	Hex	Name	Item
+
+320	140	minecraft:cooked_porkchop	Cooked Porkchop
+
+321	141	minecraft:painting	Painting
+
+322	142	minecraft:golden_apple	Golden Apple B
+
+323	143	minecraft:sign	Sign
+
+324	144	minecraft:wooden_door	Oak Door
+
+325	145	minecraft:bucket	Bucket
+
+326	146	minecraft:water_bucket	Water Bucket
+
+327	147	minecraft:lava_bucket	Lava Bucket
+
+328	148	minecraft:minecart	Minecart
+
+329	149	minecraft:saddle	Saddle
+
+330	14A	minecraft:iron_door	Iron Door
+
+331	14B	minecraft:redstone	Redstone
+
+332	14C	minecraft:snowball	Snowball
+
+333	14D	minecraft:boat	Boat
+
+334	14E	minecraft:leather	Leather
+
+335	14F	minecraft:milk_bucket	Milk
+Icon	Dec	Hex	Name	Item
+
+336	150	minecraft:brick	Brick
+
+337	151	minecraft:clay_ball	Clay
+
+338	152	minecraft:reeds	Sugar Cane
+
+339	153	minecraft:paper	Paper
+
+340	154	minecraft:book	Book
+
+341	155	minecraft:slime_ball	Slimeball
+
+342	156	minecraft:chest_minecart	Minecart with Chest
+
+343	157	minecraft:furnace_minecart	Minecart with Furnace
+
+344	158	minecraft:egg	Egg
+
+345	159	minecraft:compass	Compass
+
+346	15A	minecraft:fishing_rod	Fishing Rod D
+
+347	15B	minecraft:clock	Clock
+
+348	15C	minecraft:glowstone_dust	Glowstone Dust
+
+349	15D	minecraft:fish	Raw Fish B
+
+350	15E	minecraft:cooked_fish	Cooked Fish B
+
+351	15F	minecraft:dye	Dye B
+Icon	Dec	Hex	Name	Item
+
+352	160	minecraft:bone	Bone
+
+353	161	minecraft:sugar	Sugar
+
+354	162	minecraft:cake	Cake
+
+355	163	minecraft:bed	Bed B
+
+356	164	minecraft:repeater	Redstone Repeater
+
+357	165	minecraft:cookie	Cookie
+
+358	166	minecraft:filled_map	Map B
+
+359	167	minecraft:shears	Shears D
+
+360	168	minecraft:melon	Melon
+
+361	169	minecraft:pumpkin_seeds	Pumpkin Seeds
+
+362	16A	minecraft:melon_seeds	Melon Seeds
+
+363	16B	minecraft:beef	Raw Beef
+
+364	16C	minecraft:cooked_beef	Steak
+
+365	16D	minecraft:chicken	Raw Chicken
+
+366	16E	minecraft:cooked_chicken	Cooked Chicken
+
+367	16F	minecraft:rotten_flesh	Rotten Flesh
+Icon	Dec	Hex	Name	Item
+
+368	170	minecraft:ender_pearl	Ender Pearl
+
+369	171	minecraft:blaze_rod	Blaze Rod
+
+370	172	minecraft:ghast_tear	Ghast Tear
+
+371	173	minecraft:gold_nugget	Gold Nugget
+
+372	174	minecraft:nether_wart	Nether Wart
+
+373	175	minecraft:potion	Potion B
+
+374	176	minecraft:glass_bottle	Glass Bottle
+
+375	177	minecraft:spider_eye	Spider Eye
+
+376	178	minecraft:fermented_spider_eye	Fermented Spider Eye
+
+377	179	minecraft:blaze_powder	Blaze Powder
+
+378	17A	minecraft:magma_cream	Magma Cream
+
+379	17B	minecraft:brewing_stand	Brewing Stand
+
+380	17C	minecraft:cauldron	Cauldron
+
+381	17D	minecraft:ender_eye	Eye of Ender
+
+382	17E	minecraft:speckled_melon	Glistering Melon
+
+383	17F	minecraft:spawn_egg	Spawn Egg N
+Icon	Dec	Hex	Name	Item
+
+384	180	minecraft:experience_bottle	Bottle o' Enchanting
+
+385	181	minecraft:fire_charge	Fire Charge
+
+386	182	minecraft:writable_book	Book and Quill
+
+387	183	minecraft:written_book	Written Book
+
+388	184	minecraft:emerald	Emerald
+
+389	185	minecraft:item_frame	Item Frame
+
+390	186	minecraft:flower_pot	Flower Pot
+
+391	187	minecraft:carrot	Carrot
+
+392	188	minecraft:potato	Potato
+
+393	189	minecraft:baked_potato	Baked Potato
+
+394	18A	minecraft:poisonous_potato	Poisonous Potato
+
+395	18B	minecraft:map	Empty Map
+
+396	18C	minecraft:golden_carrot	Golden Carrot
+
+397	18D	minecraft:skull	Mob head B
+
+398	18E	minecraft:carrot_on_a_stick	Carrot on a Stick D
+
+399	18F	minecraft:nether_star	Nether Star
+Icon	Dec	Hex	Name	Item
+
+400	190	minecraft:pumpkin_pie	Pumpkin Pie
+
+401	191	minecraft:fireworks	Firework Rocket
+
+402	192	minecraft:firework_charge	Firework Star
+
+403	193	minecraft:enchanted_book	Enchanted Book
+
+404	194	minecraft:comparator	Redstone Comparator
+
+405	195	minecraft:netherbrick	Nether Brick
+
+406	196	minecraft:quartz	Nether Quartz
+
+407	197	minecraft:tnt_minecart	Minecart with TNT
+
+408	198	minecraft:hopper_minecart	Minecart with Hopper
+
+409	199	minecraft:prismarine_shard	Prismarine Shard
+
+410	19A	minecraft:prismarine_crystals	Prismarine Crystals
+
+411	19B	minecraft:rabbit	Raw Rabbit
+
+412	19C	minecraft:cooked_rabbit	Cooked Rabbit
+
+413	19D	minecraft:rabbit_stew	Rabbit Stew
+
+414	19E	minecraft:rabbit_foot	Rabbit's Foot
+
+415	19F	minecraft:rabbit_hide	Rabbit Hide
+Icon	Dec	Hex	Name	Item
+
+416	1A0	minecraft:armor_stand	Armor Stand
+
+417	1A1	minecraft:iron_horse_armor	Iron Horse Armor
+
+418	1A2	minecraft:golden_horse_armor	Golden Horse Armor
+
+419	1A3	minecraft:diamond_horse_armor	Diamond Horse Armor
+
+420	1A4	minecraft:lead	Lead
+
+421	1A5	minecraft:name_tag	Name Tag
+
+422	1A6	minecraft:command_block_minecart	Minecart with Command Block
+
+423	1A7	minecraft:mutton	Raw Mutton
+
+424	1A8	minecraft:cooked_mutton	Cooked Mutton
+
+425	1A9	minecraft:banner	Banner
+
+426	1AA	minecraft:end_crystal	End Crystal
+
+427	1AB	minecraft:spruce_door	Spruce Door
+
+428	1AC	minecraft:birch_door	Birch Door
+
+429	1AD	minecraft:jungle_door	Jungle Door
+
+430	1AE	minecraft:acacia_door	Acacia Door
+
+431	1AF	minecraft:dark_oak_door	Dark Oak Door
+Icon	Dec	Hex	Name	Item
+
+432	1B0	minecraft:chorus_fruit	Chorus Fruit
+
+433	1B1	minecraft:chorus_fruit_popped	Popped Chorus Fruit
+
+434	1B2	minecraft:beetroot	Beetroot
+
+435	1B3	minecraft:beetroot_seeds	Beetroot Seeds
+
+436	1B4	minecraft:beetroot_soup	Beetroot Soup
+
+437	1B5	minecraft:dragon_breath	Dragon's Breath
+
+438	1B6	minecraft:splash_potion	Splash Potion
+
+439	1B7	minecraft:spectral_arrow	Spectral Arrow
+
+440	1B8	minecraft:tipped_arrow	Tipped Arrow
+
+441	1B9	minecraft:lingering_potion	Lingering Potion
+
+442	1BA	minecraft:shield	Shield
+
+443	1BB	minecraft:elytra	Elytra
+
+444	1BC	minecraft:spruce_boat	Spruce Boat
+
+445	1BD	minecraft:birch_boat	Birch Boat
+
+446	1BE	minecraft:jungle_boat	Jungle Boat
+
+447	1BF	minecraft:acacia_boat	Acacia Boat
+Icon	Dec	Hex	Name	Item
+
+448	1C0	minecraft:dark_oak_boat	Dark Oak Boat
+
+449	1C1	minecraft:totem_of_undying	Totem of Undying
+
+450	1C2	minecraft:shulker_shell	Shulker Shell
+451	1C3		(unused)
+
+452	1C4	minecraft:iron_nugget	Iron Nugget
+
+453	1C5	minecraft:knowledge_book	Knowledge Book
+454	1C6		(unused)
+455	1C7		(unused)
+456	1C8		(unused)
+457	1C9		(unused)
+458	1CA		(unused)
+459	1CB		(unused)
+460	1CC		(unused)
+461	1CD		(unused)
+462	1CE		(unused)
+463	1CF		(unused)
+Icon	Dec	Hex	Name	Item
+
+2256	8D0	minecraft:record_13	13 Disc
+
+2257	8D1	minecraft:record_cat	Cat Disc
+
+2258	8D2	minecraft:record_blocks	Blocks Disc
+
+2259	8D3	minecraft:record_chirp	Chirp Disc
+
+2260	8D4	minecraft:record_far	Far Disc
+
+2261	8D5	minecraft:record_mall	Mall Disc
+
+2262	8D6	minecraft:record_mellohi	Mellohi Disc
+
+2263	8D7	minecraft:record_stal	Stal Disc
+
+2264	8D8	minecraft:record_strad	Strad Disc
+
+2265	8D9	minecraft:record_ward	Ward Disc
+
+2266	8DA	minecraft:record_11	11 Disc
+
+2267	8DB	minecraft:record_wait	Wait Disc
+2268	8DC		(unused)
+2269	8DD		(unused)
+2270	8DE		(unused)
+2271	8DF		(unused)

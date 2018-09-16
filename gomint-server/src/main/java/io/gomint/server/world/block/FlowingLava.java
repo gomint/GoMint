@@ -11,12 +11,12 @@ import java.util.concurrent.TimeUnit;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 10 )
+@RegisterInfo( sId = "minecraft:flowing_lava" )
 public class FlowingLava extends Liquid implements BlockFlowingLava {
 
     @Override
-    public int getBlockId() {
-        return 10;
+    public String getBlockId() {
+        return "minecraft:flowing_lava";
     }
 
     @Override

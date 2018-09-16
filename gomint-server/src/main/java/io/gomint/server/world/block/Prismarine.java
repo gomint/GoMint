@@ -10,12 +10,12 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 168 )
+@RegisterInfo( sId = "minecraft:prismarine" )
 public class Prismarine extends Block implements io.gomint.world.block.BlockPrismarine {
 
     @Override
-    public int getBlockId() {
-        return 168;
+    public String getBlockId() {
+        return "minecraft:prismarine";
     }
 
     @Override

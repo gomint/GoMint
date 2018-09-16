@@ -16,12 +16,12 @@ import io.gomint.world.block.BlockType;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 214 )
+@RegisterInfo( sId = "minecraft:nether_wart_block" )
 public class NetherWartBlock extends Block implements BlockNetherWartBlock {
 
     @Override
-    public int getBlockId() {
-        return 214;
+    public String getBlockId() {
+        return "minecraft:nether_wart_block";
     }
 
     @Override

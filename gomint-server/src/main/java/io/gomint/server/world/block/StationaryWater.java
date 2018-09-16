@@ -10,12 +10,12 @@ import io.gomint.world.block.BlockStationaryWater;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 9 )
+@RegisterInfo( sId = "minecraft:water" )
 public class StationaryWater extends Liquid implements BlockStationaryWater {
 
     @Override
-    public int getBlockId() {
-        return 9;
+    public String getBlockId() {
+        return "minecraft:water";
     }
 
     @Override

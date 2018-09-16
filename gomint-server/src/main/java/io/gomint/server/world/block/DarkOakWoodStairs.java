@@ -10,12 +10,12 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 164 )
+@RegisterInfo( sId = "minecraft:dark_oak_stairs" )
 public class DarkOakWoodStairs extends Stairs {
 
     @Override
-    public int getBlockId() {
-        return 164;
+    public String getBlockId() {
+        return "minecraft:dark_oak_stairs";
     }
 
     @Override

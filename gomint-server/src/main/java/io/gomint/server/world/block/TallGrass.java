@@ -13,12 +13,12 @@ import java.util.List;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 31 )
+@RegisterInfo( sId = "minecraft:tallgrass" )
 public class TallGrass extends Block implements io.gomint.world.block.BlockTallGrass {
 
     @Override
-    public int getBlockId() {
-        return 31;
+    public String getBlockId() {
+        return "minecraft:tallgrass";
     }
 
     @Override

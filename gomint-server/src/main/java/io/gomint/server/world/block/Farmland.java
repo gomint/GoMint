@@ -18,12 +18,12 @@ import java.util.function.Predicate;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 60 )
+@RegisterInfo( sId = "minecraft:farmland" )
 public class Farmland extends Block implements io.gomint.world.block.BlockFarmland {
 
     @Override
-    public int getBlockId() {
-        return 60;
+    public String getBlockId() {
+        return "minecraft:farmland";
     }
 
     @Override

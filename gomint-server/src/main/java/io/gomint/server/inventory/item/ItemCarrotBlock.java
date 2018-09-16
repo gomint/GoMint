@@ -13,6 +13,11 @@ public class ItemCarrotBlock extends ItemStack implements io.gomint.inventory.it
 
 
     @Override
+    public String getBlockId() {
+        return "minecraft:carrots";
+    }
+
+    @Override
     public ItemType getType() {
         return ItemType.CARROTS;
     }

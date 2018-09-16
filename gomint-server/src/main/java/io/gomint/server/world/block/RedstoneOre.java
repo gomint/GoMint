@@ -12,12 +12,12 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 73 )
+@RegisterInfo( sId = "minecraft:redstone_ore" )
 public class RedstoneOre extends Block implements io.gomint.world.block.BlockRedstoneOre {
 
     @Override
-    public int getBlockId() {
-        return 73;
+    public String getBlockId() {
+        return "minecraft:redstone_ore";
     }
 
     @Override

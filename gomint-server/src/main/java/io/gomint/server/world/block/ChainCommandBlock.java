@@ -18,12 +18,12 @@ import io.gomint.world.block.BlockType;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 189 )
+@RegisterInfo( sId = "minecraft:chain_command_block" )
 public class ChainCommandBlock extends ContainerBlock implements BlockChainCommandBlock {
 
     @Override
-    public int getBlockId() {
-        return 189;
+    public String getBlockId() {
+        return "minecraft:chain_command_block";
     }
 
     @Override
@@ -49,7 +49,7 @@ public class ChainCommandBlock extends ContainerBlock implements BlockChainComma
     @Override
     TileEntity createTileEntity( NBTTagCompound compound ) {
         super.createTileEntity( compound );
-        return new CommandBlockTileEntity( compound, this.world );
+        return new CommandBlockTileEntity( compound, this.world, this.world.getServer().getItems() );
     }
 
 }

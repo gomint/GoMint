@@ -8,12 +8,12 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 97 )
+@RegisterInfo( sId = "minecraft:monster_egg" )
 public class MonsterEgg extends Block implements io.gomint.world.block.BlockMonsterEgg {
 
     @Override
-    public int getBlockId() {
-        return 97;
+    public String getBlockId() {
+        return "minecraft:monster_egg";
     }
 
     @Override

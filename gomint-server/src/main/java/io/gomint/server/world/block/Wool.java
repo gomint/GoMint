@@ -12,12 +12,12 @@ import io.gomint.world.block.data.BlockColor;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 35 )
+@RegisterInfo( sId = "minecraft:wool" )
 public class Wool extends Block implements io.gomint.world.block.BlockWool {
 
     @Override
-    public int getBlockId() {
-        return 35;
+    public String getBlockId() {
+        return "minecraft:wool";
     }
 
     @Override

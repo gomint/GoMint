@@ -8,12 +8,12 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 83 )
+@RegisterInfo( sId = "minecraft:reeds" )
 public class SugarCane extends Block implements io.gomint.world.block.BlockSugarCane {
 
     @Override
-    public int getBlockId() {
-        return 83;
+    public String getBlockId() {
+        return "minecraft:reeds";
     }
 
     @Override

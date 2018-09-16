@@ -11,12 +11,12 @@ import java.util.List;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 59 )
+@RegisterInfo( sId = "minecraft:wheat" )
 public class Crops extends Growable {
 
     @Override
-    public int getBlockId() {
-        return 59;
+    public String getBlockId() {
+        return "minecraft:wheat";
     }
 
     @Override

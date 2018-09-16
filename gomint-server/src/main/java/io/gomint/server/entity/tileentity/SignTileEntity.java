@@ -9,6 +9,7 @@ package io.gomint.server.entity.tileentity;
 
 import com.google.common.base.Joiner;
 import io.gomint.math.Location;
+import io.gomint.server.inventory.item.Items;
 import io.gomint.server.world.WorldAdapter;
 import io.gomint.taglib.NBTTagCompound;
 
@@ -42,8 +43,8 @@ public class SignTileEntity extends TileEntity {
      * @param tagCompound The TagCompound which should be used to read data from
      * @param world       The world in which this TileEntity resides
      */
-    public SignTileEntity( NBTTagCompound tagCompound, WorldAdapter world ) {
-        super( tagCompound, world );
+    public SignTileEntity( NBTTagCompound tagCompound, WorldAdapter world, Items items ) {
+        super( tagCompound, world, items );
 
         if ( tagCompound.containsKey( "Text" ) ) {
             String text = tagCompound.getString( "Text", "" );

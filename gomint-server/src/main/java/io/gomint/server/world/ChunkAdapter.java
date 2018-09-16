@@ -19,8 +19,8 @@ import io.gomint.server.network.Protocol;
 import io.gomint.server.network.packet.Packet;
 import io.gomint.server.network.packet.PacketBatch;
 import io.gomint.server.network.packet.PacketWorldChunk;
+import io.gomint.server.util.BlockIdentifier;
 import io.gomint.server.util.PerformanceHacks;
-import io.gomint.server.world.postprocessor.PostProcessor;
 import io.gomint.server.world.storage.TemporaryStorage;
 import io.gomint.taglib.NBTTagCompound;
 import io.gomint.taglib.NBTWriter;
@@ -50,9 +50,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Queue;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Consumer;
@@ -100,9 +98,6 @@ public class ChunkAdapter implements Chunk {
     // Entities
     protected Long2ObjectMap<io.gomint.entity.Entity> entities = null;
 
-    // Post loading processing
-    protected Queue<PostProcessor> postProcessors = new LinkedList<>();
-
     // State saving flag
     @Getter
     private boolean needsPersistance;
@@ -135,23 +130,23 @@ public class ChunkAdapter implements Chunk {
         if ( i < randomUpdatesPerTick ) {
             blockHash >>= 10;
             int index = blockHash & 0xfff;
-            int blockId = chunkSlice.getBlockInternal( 0, index );
+            String blockId = chunkSlice.getBlock( 0, index );
             this.tickRandomBlock( blockHash, blockId, chunkSlice, currentTimeMS, dT );
             this.iterateRandomBlocks( chunkSlice, currentTimeMS, dT, blockHash, i + 1, randomUpdatesPerTick );
         }
     }
 
-    private void tickRandomBlock( int blockHash, int blockId, ChunkSlice chunkSlice, long currentTimeMS, float dT ) {
+    private void tickRandomBlock( int blockHash, String blockId, ChunkSlice chunkSlice, long currentTimeMS, float dT ) {
         switch ( blockId ) {
-            case 244:           // Beetroot
-            case 2:             // Grass
-            case 60:            // Farmland
-            case 110:           // Mycelium
-            case 6:             // Sapling
-            case 16:            // Leaves
-            case 161:           // Acacia leaves
-            case 78:            // Top snow
-            case 79:            // Ice
+            case "minecraft:beetroot":              // Beetroot
+            case "minecraft:grass":                 // Grass
+            case "minecraft:farmland":              // Farmland
+            case "minecraft:mycelium":              // Mycelium
+            case "minecraft:sapling":               // Sapling
+            case "minecraft:leaves":                // Leaves
+            case "minecraft:leaves2":               // Acacia leaves
+            case "minecraft:snow_layer":            // Top snow
+            case "minecraft:ice":                   // Ice
                 this.updateRandomBlock( chunkSlice, blockHash, currentTimeMS, dT );
                 break;
 
@@ -181,7 +176,7 @@ public class ChunkAdapter implements Chunk {
         return this.world.randomUpdateNumber >> 2;
     }
 
-    private ChunkSlice ensureSlice( int y ) {
+    protected ChunkSlice ensureSlice( int y ) {
         ChunkSlice slice = this.chunkSlices[y];
         if ( slice != null ) {
             return slice;
@@ -258,7 +253,7 @@ public class ChunkAdapter implements Chunk {
      * Remove the dirty state for the chunk and set the batched packet to the
      * cache.
      *
-     * @param batch     The batch which has been generated to be sent to the clients
+     * @param batch The batch which has been generated to be sent to the clients
      */
     void setCachedPacket( Packet batch ) {
         this.dirty = false;
@@ -370,16 +365,26 @@ public class ChunkAdapter implements Chunk {
     /**
      * Sets the ID of a block at the specified coordinates given in chunk coordinates.
      *
-     * @param x     The x-coordinate of the block
-     * @param y     The y-coordinate of the block
-     * @param z     The z-coordinate of the block
-     * @param layer layer on which this block is
-     * @param id    The ID to set the block to
+     * @param x               The x-coordinate of the block
+     * @param y               The y-coordinate of the block
+     * @param z               The z-coordinate of the block
+     * @param layer           layer on which this block is
+     * @param blockIdentifier The ID to set the block to
      */
-    public void setBlock( int x, int y, int z, int layer, int id ) {
+    public void setBlock( int x, int y, int z, int layer, BlockIdentifier blockIdentifier ) {
         int ySection = y >> 4;
         ChunkSlice slice = ensureSlice( ySection );
-        slice.setBlock( x, y - ( ySection << 4 ), z, layer, id );
+        slice.setBlock( x, y - ( ySection << 4 ), z, layer, blockIdentifier );
+
+        this.dirty = true;
+        this.needsPersistance = true;
+    }
+
+    public void setBlock( int x, int y, int z, int layer, String blockId ) {
+        int ySection = y >> 4;
+        ChunkSlice slice = ensureSlice( ySection );
+        slice.setBlock( x, y - ( ySection << 4 ), z, layer, blockId );
+
         this.dirty = true;
         this.needsPersistance = true;
     }
@@ -393,39 +398,9 @@ public class ChunkAdapter implements Chunk {
      * @param layer in which the block is
      * @return The ID of the block
      */
-    public int getBlock( int x, int y, int z, int layer ) {
+    public String getBlock( int x, int y, int z, int layer ) {
         ChunkSlice slice = ensureSlice( y >> 4 );
         return slice.getBlock( x, y - 16 * ( y >> 4 ), z, layer );
-    }
-
-    /**
-     * Sets the metadata value of the block at the specified coordinates.
-     *
-     * @param x     The x-coordinate of the block
-     * @param y     The y-coordinate of the block
-     * @param z     The z-coordinate of the block
-     * @param layer layer on which this block is
-     * @param data  The data value to set
-     */
-    public void setData( int x, int y, int z, int layer, byte data ) {
-        ChunkSlice slice = ensureSlice( y >> 4 );
-        slice.setData( x, y - 16 * ( y >> 4 ), z, layer, data );
-        this.dirty = true;
-        this.needsPersistance = true;
-    }
-
-    /**
-     * Gets the metadata value of the block at the specified coordinates.
-     *
-     * @param x     The x-coordinate of the block
-     * @param y     The y-coordinate of the block
-     * @param z     The z-coordinate of the block
-     * @param layer in which the block is
-     * @return The data value of the block
-     */
-    public byte getData( int x, int y, int z, int layer ) {
-        ChunkSlice slice = ensureSlice( y >> 4 );
-        return slice.getData( x, y - 16 * ( y >> 4 ), z, layer );
     }
 
     /**
@@ -503,7 +478,7 @@ public class ChunkAdapter implements Chunk {
         for ( int i = 0; i < 16; ++i ) {
             for ( int k = 0; k < 16; ++k ) {
                 for ( int j = ( maxHeight + 16 ) - 1; j > 0; --j ) {
-                    if ( this.getBlock( i, j, k, 0 ) != 0 ) { // For height MC uses normal layer (0)
+                    if ( !this.getBlock( i, j, k, 0 ).equals( "minecraft:air" ) ) { // For height MC uses normal layer (0)
                         this.setHeight( i, k, (byte) j );
                         break;
                     }
@@ -652,10 +627,7 @@ public class ChunkAdapter implements Chunk {
         io.gomint.server.world.block.Block implBlock = (io.gomint.server.world.block.Block) block;
 
         // Copy block id
-        this.setBlock( x, y, z, layerID, implBlock.getBlockId() );
-
-        // Copy metadata
-        this.setData( x, y, z, layerID, implBlock.getBlockData() );
+        this.setBlock( x, y, z, layerID, new BlockIdentifier( implBlock.getBlockId(), implBlock.getBlockData() ) );
 
         // Copy NBT
         if ( implBlock.getTileEntity() != null ) {
@@ -723,12 +695,6 @@ public class ChunkAdapter implements Chunk {
         this.needsPersistance = true;
     }
 
-    public void runPostProcessors() {
-        while ( !this.postProcessors.isEmpty() ) {
-            this.postProcessors.poll().process();
-        }
-    }
-
     public long longHashCode() {
         return CoordinateUtils.toLong( this.x, this.z );
     }
@@ -755,6 +721,16 @@ public class ChunkAdapter implements Chunk {
 
     public void flagNeedsPersistance() {
         this.needsPersistance = true;
+    }
+
+    public int getRuntimeID( int x, int y, int z, int layer ) {
+        ChunkSlice slice = ensureSlice( y >> 4 );
+        return slice.getRuntimeID( x, y - 16 * ( y >> 4 ), z, layer );
+    }
+
+    public void setData( int x, int y, int z, int layer, short data ) {
+        ChunkSlice slice = ensureSlice( y >> 4 );
+        slice.setData( x, y - 16 * ( y >> 4 ), z, layer, data );
     }
 
 }

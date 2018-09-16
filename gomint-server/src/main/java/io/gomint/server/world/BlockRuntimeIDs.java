@@ -8,23 +8,19 @@
 package io.gomint.server.world;
 
 import io.gomint.jraknet.PacketBuffer;
-import io.gomint.server.util.StringShortPair;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
+import io.gomint.server.util.BlockIdentifier;
+import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
+import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.objects.Object2IntMap;
+import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -35,8 +31,8 @@ public class BlockRuntimeIDs {
 
     private static final Logger LOGGER = LoggerFactory.getLogger( BlockRuntimeIDs.class );
 
-    // Release version tables
-    private static int[][] BLOCK_DATA_TO_RUNTIME = new int[0][0];
+    private static Object2IntMap<String> BLOCK_TO_RUNTIME = new Object2IntOpenHashMap<>();
+    private static Int2ObjectMap<BlockIdentifier> RUNTIME_TO_BLOCK = new Int2ObjectOpenHashMap<>();
 
     //
     private static AtomicInteger RUNTIME_ID = new AtomicInteger( 0 );
@@ -44,79 +40,25 @@ public class BlockRuntimeIDs {
     // Cached packet streams
     private static byte[] START_GAME_BUFFER;
 
-    public static void init( List<StringShortPair> blockPalette ) {
+    public static void init( List<BlockIdentifier> blockPalette ) {
         PacketBuffer buffer = new PacketBuffer( 64 );
 
-        int highestBlockID = -1;
-        Map<Integer, Integer> highestDataValues = new HashMap<>();
+        for ( BlockIdentifier identifier : blockPalette ) {
+            int runtime = RUNTIME_ID.getAndIncrement();
 
-        for ( StringShortPair pair : blockPalette ) {
-            int blockId = ( (Long) idObj.get( "id" ) ).intValue();
-            int dataValue = ( (Long) idObj.get( "data" ) ).intValue();
-
-            if ( highestBlockID < blockId ) {
-                highestBlockID = blockId;
-            }
-
-            Integer knownData = highestDataValues.get( blockId );
-            if ( knownData == null || dataValue > knownData ) {
-                highestDataValues.put( blockId, dataValue );
-            }
-        }
-        for ( Object id : runtimeIDs ) {
-            JSONObject idObj = (JSONObject) id;
-
+            String full = identifier.getBlockId() + "[" + identifier.getData() + "]";
+            BLOCK_TO_RUNTIME.put( full, runtime );
+            RUNTIME_TO_BLOCK.put( runtime, identifier );
         }
 
-        // Init array
-        BLOCK_DATA_TO_RUNTIME = new int[highestBlockID + 1][];
-        buffer.writeUnsignedVarInt( runtimeIDs.size() );
-
-        for ( Object id : runtimeIDs ) {
-            JSONObject idObj = (JSONObject) id;
-            int blockId = ( (Long) idObj.get( "id" ) ).intValue();
-            int dataValue = ( (Long) idObj.get( "data" ) ).intValue();
-
-            int[] dataValues = BLOCK_DATA_TO_RUNTIME[blockId];
-            if ( dataValues == null ) {
-                dataValues = new int[highestDataValues.get( blockId ) + 1];
-            }
-
-            Long overrideId = (Long) idObj.get( "runtimeID" );
-
-
-            dataValues[dataValue] = overrideId != null ? overrideId.intValue() : RUNTIME_ID.getAndIncrement();
-            BLOCK_DATA_TO_RUNTIME[blockId] = dataValues;
-            buffer.writeString( (String) idObj.get( "name" ) );
-            buffer.writeLShort( (short) dataValue );
+        buffer.writeUnsignedVarInt( blockPalette.size() );
+        for ( BlockIdentifier identifier : blockPalette ) {
+            buffer.writeString( identifier.getBlockId() );
+            buffer.writeLShort( identifier.getData() );
         }
 
         START_GAME_BUFFER = Arrays.copyOf( buffer.getBuffer(), buffer.getPosition() );
-    }
-
-    public static void loadFile( String file ) {
-        InputStream inputStream = BlockRuntimeIDs.class.getResourceAsStream( file );
-        if ( inputStream == null ) {
-            try {
-                inputStream = new FileInputStream( "gomint-server/src/main/resources" + file );
-            } catch ( FileNotFoundException e ) {
-                e.printStackTrace();
-            }
-        }
-
-        JSONParser parser = new JSONParser();
-        JSONArray runtimeIDs = null;
-
-        try ( InputStreamReader reader = new InputStreamReader( inputStream ) ) {
-            runtimeIDs = (JSONArray) parser.parse( reader );
-        } catch ( IOException | ParseException e ) {
-            e.printStackTrace();
-        }
-
-        // Read in json data
-        if ( runtimeIDs != null ) {
-
-        }
+        BLOCK_TO_RUNTIME.defaultReturnValue( -1 );
     }
 
     /**
@@ -135,36 +77,37 @@ public class BlockRuntimeIDs {
      * @param dataValue which should be converted
      * @return runtime id or 0
      */
-    public static int fromLegacy( int blockId, byte dataValue ) {
+    public static int from( String blockId, short dataValue ) {
         // Get lookup array
-        int[][] lookup = BLOCK_DATA_TO_RUNTIME;
+        Object2IntMap<String> lookup = BLOCK_TO_RUNTIME;
 
         // We first lookup the wanted values
         int runtimeID = lookup( blockId, dataValue, lookup );
-        if ( runtimeID == -1 ) { // Unknown block => return air
+        if ( runtimeID == -1 ) { // Unknown data => return lookup with 0 data value
+            runtimeID = lookup( blockId, (short) 0, lookup );
+            if ( runtimeID == -1 ) { // Unknown block => return air
+                LOGGER.warn( "Unknown blockId and dataValue combination: {}:{}. Be sure your worlds are not corrupted!", blockId, dataValue );
+                return lookup( "minecraft:air", (short) 0, lookup );
+            }
+
             LOGGER.warn( "Unknown blockId and dataValue combination: {}:{}. Be sure your worlds are not corrupted!", blockId, dataValue );
-            return 0;
-        } else if ( runtimeID == -2 ) { // Unknown data => return lookup with 0 data value
-            LOGGER.warn( "Unknown blockId and dataValue combination: {}:{}. Be sure your worlds are not corrupted!", blockId, dataValue );
-            return lookup( blockId, (byte) 0, lookup );
+            return runtimeID;
         }
 
         return runtimeID;
     }
 
-    private static int lookup( int blockId, byte dataValue, int[][] lookup ) {
-        // First we need to check size of the array
-        if ( blockId >= lookup.length ) {
+    public static BlockIdentifier toBlockIdentifier( int runtimeId ) {
+        return RUNTIME_TO_BLOCK.get( runtimeId );
+    }
+
+    private static int lookup( String blockId, short dataValue, Object2IntMap<String> lookup ) {
+        int runtimeId = lookup.getInt( blockId + "[" + dataValue + "]" );
+        if ( runtimeId == -1 ) {
             return -1;
         }
 
-        // Get the data values of this block
-        int[] dataValues = lookup[blockId];
-        if ( dataValue >= dataValues.length ) {
-            return -2;
-        }
-
-        return dataValues[dataValue];
+        return runtimeId;
     }
 
 }

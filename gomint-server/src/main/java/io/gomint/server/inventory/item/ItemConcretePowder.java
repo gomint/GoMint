@@ -20,6 +20,11 @@ public class ItemConcretePowder extends ItemStack implements io.gomint.inventory
 
 
     @Override
+    public String getBlockId() {
+        return "minecraft:concretePowder";
+    }
+
+    @Override
     public ItemType getType() {
         return ItemType.CONCRETE_POWDER;
     }

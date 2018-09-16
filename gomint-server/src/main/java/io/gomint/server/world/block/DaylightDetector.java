@@ -11,12 +11,12 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 151 )
+@RegisterInfo( sId = "minecraft:daylight_detector" )
 public class DaylightDetector extends Block implements io.gomint.world.block.BlockDaylightDetector {
 
     @Override
-    public int getBlockId() {
-        return 151;
+    public String getBlockId() {
+        return "minecraft:daylight_detector";
     }
 
     @Override

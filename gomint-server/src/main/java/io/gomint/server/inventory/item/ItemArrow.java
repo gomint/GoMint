@@ -10,7 +10,6 @@ import io.gomint.server.registry.RegisterInfo;
 @RegisterInfo( id = 262 )
 public class ItemArrow extends ItemStack implements io.gomint.inventory.item.ItemArrow {
 
-
     @Override
     public ItemType getType() {
         return ItemType.ARROW;

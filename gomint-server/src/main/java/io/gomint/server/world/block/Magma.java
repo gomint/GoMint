@@ -17,12 +17,12 @@ import io.gomint.world.block.BlockType;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 213 )
+@RegisterInfo( sId = "minecraft:magma" )
 public class Magma extends Block implements BlockMagma {
 
     @Override
-    public int getBlockId() {
-        return 213;
+    public String getBlockId() {
+        return "minecraft:magma";
     }
 
     @Override

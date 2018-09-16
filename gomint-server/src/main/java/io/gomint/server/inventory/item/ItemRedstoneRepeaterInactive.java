@@ -13,6 +13,11 @@ public class ItemRedstoneRepeaterInactive extends ItemStack {
 
 
     @Override
+    public String getBlockId() {
+        return "minecraft:unpowered_repeater";
+    }
+
+    @Override
     public ItemType getType() {
         return ItemType.REDSTONE_REPEATER_INACTIVE;
     }

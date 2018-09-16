@@ -14,6 +14,11 @@ import io.gomint.taglib.NBTTagCompound;
 
 
     @Override
+    public String getBlockId() {
+        return "minecraft:light_weighted_pressure_plate";
+    }
+
+    @Override
     public ItemType getType() {
         return ItemType.LIGHT_WEIGHTED_PRESSURE_PLATE;
     }

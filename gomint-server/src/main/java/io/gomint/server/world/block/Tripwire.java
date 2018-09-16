@@ -12,12 +12,12 @@ import java.util.List;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 132 )
+@RegisterInfo( sId = "minecraft:tripWire" )
 public class Tripwire extends Block implements io.gomint.world.block.BlockTripwire {
 
     @Override
-    public int getBlockId() {
-        return 132;
+    public String getBlockId() {
+        return "minecraft:tripWire";
     }
 
     @Override

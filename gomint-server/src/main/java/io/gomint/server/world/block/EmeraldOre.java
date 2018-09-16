@@ -12,12 +12,12 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 129 )
+@RegisterInfo( sId = "minecraft:emerald_ore" )
 public class EmeraldOre extends Block implements io.gomint.world.block.BlockEmeraldOre {
 
     @Override
-    public int getBlockId() {
-        return 129;
+    public String getBlockId() {
+        return "minecraft:emerald_ore";
     }
 
     @Override

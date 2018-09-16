@@ -1,0 +1,200 @@
+0 0 minecraft:air Air 
+1 1 minecraft:stone Stone D B 
+2 2 minecraft:grass Grass Block 
+3 3 minecraft:dirt Dirt D B 
+4 4 minecraft:cobblestone Cobblestone 
+5 5 minecraft:planks Wood Planks D B 
+6 6 minecraft:sapling Saplings D B 
+7 7 minecraft:bedrock Bedrock 
+8 8 minecraft:flowing_water Water D 
+9 9 minecraft:water Stationary water D 
+10 A minecraft:flowing_lava Lava D 
+11 B minecraft:lava Stationary lava D 
+12 C minecraft:sand Sand D B 
+13 D minecraft:gravel Gravel 
+14 E minecraft:gold_ore Gold Ore 
+15 F minecraft:iron_ore Iron Ore 
+16 10 minecraft:coal_ore Coal Ore 
+17 11 minecraft:log Wood D B 
+18 12 minecraft:leaves Leaves D B 
+19 13 minecraft:sponge Sponge 
+20 14 minecraft:glass Glass 
+21 15 minecraft:lapis_ore Lapis Lazuli Ore 
+22 16 minecraft:lapis_block Lapis Lazuli Block 
+23 17 minecraft:dispenser Dispenser D T 
+24 18 minecraft:sandstone Sandstone D B 
+25 19 minecraft:noteblock Note Block T 
+26 1A minecraft:bed Bed D I 
+27 1B minecraft:golden_rail Powered Rail D 
+28 1C minecraft:detector_rail Detector Rail D 
+29 1D minecraft:sticky_piston Sticky Piston D 
+30 1E minecraft:web Cobweb 
+31 1F minecraft:tallgrass Grass D B 
+32 20 minecraft:deadbush Dead Bush 
+33 21 minecraft:piston Piston D 
+34 22 minecraft:pistonArmCollision Piston Extension D 
+35 23 minecraft:wool Wool D B 
+36 24 minecraft:movingBlock Block moved by Piston T 
+37 25 minecraft:yellow_flower Dandelion 
+38 26 minecraft:red_flower Poppy D B 
+39 27 minecraft:brown_mushroom Brown Mushroom 
+40 28 minecraft:red_mushroom Red Mushroom 
+41 29 minecraft:gold_block Block of Gold 
+42 2A minecraft:iron_block Block of Iron 
+43 2B minecraft:double_stone_slab Double Stone Slab D B 
+44 2C minecraft:stone_slab Stone Slab D B 
+45 2D minecraft:brick_block Bricks 
+46 2E minecraft:tnt TNT 
+47 2F minecraft:bookshelf Bookshelf 
+48 30 minecraft:mossy_cobblestone Moss Stone 
+49 31 minecraft:obsidian Obsidian 
+50 32 minecraft:torch Torch D 
+51 33 minecraft:fire Fire D 
+52 34 minecraft:mob_spawner Monster Spawner T 
+53 35 minecraft:oak_stairs Oak Wood Stairs D 
+54 36 minecraft:chest Chest D T 
+55 37 minecraft:redstone_wire Redstone Wire D I 
+56 38 minecraft:diamond_ore Diamond Ore 
+57 39 minecraft:diamond_block Block of Diamond 
+58 3A minecraft:crafting_table Crafting Table 
+59 3B minecraft:wheat Wheat D 
+60 3C minecraft:farmland Farmland D 
+61 3D minecraft:furnace Furnace D T 
+62 3E minecraft:lit_furnace Burning Furnace D T 
+63 3F minecraft:standing_sign Sign Post D I T 
+64 40 minecraft:wooden_door Wooden Door D I 
+65 41 minecraft:ladder Ladders D 
+66 42 minecraft:rail Rail D 
+67 43 minecraft:stone_stairs Cobblestone Stairs D 
+68 44 minecraft:wall_sign Wall Sign D T 
+69 45 minecraft:lever Lever D 
+70 46 minecraft:stone_pressure_plate Stone Pressure Plate D 
+71 47 minecraft:iron_door Iron Door D I 
+72 48 minecraft:wooden_pressure_plate Wooden Pressure Plate D 
+73 49 minecraft:redstone_ore Redstone Ore 
+74 4A minecraft:lit_redstone_ore Glowing Redstone Ore 
+75 4B minecraft:unlit_redstone_torch Redstone Torch (inactive) D 
+76 4C minecraft:redstone_torch Redstone Torch (active) D 
+77 4D minecraft:stone_button Stone Button D 
+78 4E minecraft:snow_layer Snow D B 
+79 4F minecraft:ice Ice 
+80 50 minecraft:snow Snow 
+81 51 minecraft:cactus Cactus D 
+82 52 minecraft:clay Clay 
+83 53 minecraft:reeds Sugar Cane D I 
+84 54 minecraft:jukebox Jukebox D T 
+85 55 minecraft:fence Fence 
+86 56 minecraft:pumpkin Pumpkin D 
+87 57 minecraft:netherrack Netherrack 
+88 58 minecraft:soul_sand Soul Sand 
+89 59 minecraft:glowstone Glowstone 
+90 5A minecraft:portal Nether Portal 
+91 5B minecraft:lit_pumpkin Jack 'o' Lantern D 
+92 5C minecraft:cake Cake Block D I 
+93 5D minecraft:unpowered_repeater Redstone Repeater (inactive) D I 
+94 5E minecraft:powered_repeater Redstone Repeater (active) D I 
+95 5F minecraft:stained_glass Stained Glass 
+96 60 minecraft:trapdoor Trapdoor D 
+97 61 minecraft:monster_egg Monster Egg D B 
+98 62 minecraft:stonebrick Stone Bricks D B 
+99 63 minecraft:brown_mushroom_block Huge Brown Mushroom D 
+100 64 minecraft:red_mushroom_block Huge Red Mushroom D 
+101 65 minecraft:iron_bars Iron Bars 
+102 66 minecraft:glass_pane Glass Pane 
+103 67 minecraft:melon_block Melon 
+104 68 minecraft:pumpkin_stem Pumpkin Stem D 
+105 69 minecraft:melon_stem Melon Stem D 
+106 6A minecraft:vine Vines D 
+107 6B minecraft:fence_gate Fence Gate D 
+108 6C minecraft:brick_stairs Brick Stairs D 
+109 6D minecraft:stone_brick_stairs Stone Brick Stairs D 
+110 6E minecraft:mycelium Mycelium 
+111 6F minecraft:waterlily Lily Pad 
+112 70 minecraft:nether_brick Nether Brick 
+113 71 minecraft:nether_brick_fence Nether Brick Fence 
+114 72 minecraft:nether_brick_stairs Nether Brick Stairs D 
+115 73 minecraft:nether_wart Nether Wart D I 
+116 74 minecraft:enchanting_table Enchantment Table T 
+117 75 minecraft:brewing_stand Brewing Stand D T I 
+118 76 minecraft:cauldron Cauldron D I 
+119 77 minecraft:end_portal End Portal T 
+120 78 minecraft:end_portal_frame End Portal Block D 
+121 79 minecraft:end_stone End Stone 
+122 7A minecraft:dragon_egg Dragon Egg 
+123 7B minecraft:redstone_lamp Redstone Lamp (inactive) 
+124 7C minecraft:lit_redstone_lamp Redstone Lamp (active) 
+125 7D minecraft:double_wooden_slab Wooden Double Slab D B 
+126 7E minecraft:wooden_slab Wooden Slab D B 
+127 7F minecraft:cocoa Cocoa D I 
+128 80 minecraft:sandstone_stairs Sandstone Stairs D 
+129 81 minecraft:emerald_ore Emerald Ore 
+130 82 minecraft:ender_chest Ender Chest D T 
+131 83 minecraft:tripwire_hook Tripwire Hook D 
+132 84 minecraft:tripWire Tripwire D I 
+133 85 minecraft:emerald_block Block of Emerald 
+134 86 minecraft:spruce_stairs Spruce Wood Stairs D 
+135 87 minecraft:birch_stairs Birch Wood Stairs D 
+136 88 minecraft:jungle_stairs Jungle Wood Stairs D 
+137 89 minecraft:command_block Command Block T 
+138 8A minecraft:beacon Beacon T 
+139 8B minecraft:cobblestone_wall Cobblestone Wall D B 
+140 8C minecraft:flower_pot Flower Pot D I 
+141 8D minecraft:carrots Carrots D I 
+142 8E minecraft:potatoes Potatoes D I 
+143 8F minecraft:wooden_button Wooden Button D 
+144 90 minecraft:skull Mob Head D T I 
+145 91 minecraft:anvil Anvil D B 
+146 92 minecraft:trapped_chest Trapped Chest D T 
+147 93 minecraft:light_weighted_pressure_plate Weighted Pressure Plate (Light) D 
+148 94 minecraft:heavy_weighted_pressure_plate Weighted Pressure Plate (Heavy) D 
+149 95 minecraft:unpowered_comparator Redstone Comparator (both states) D I 
+150 96 minecraft:powered_comparator Redstone Comparator (both states) D I 
+151 97 minecraft:daylight_detector Daylight Sensor 
+152 98 minecraft:redstone_block Block of Redstone 
+153 99 minecraft:quartz_ore Nether Quartz Ore 
+154 9A minecraft:hopper Hopper D T 
+155 9B minecraft:quartz_block Block of Quartz D B 
+156 9C minecraft:quartz_stairs Quartz Stairs D 
+157 9D minecraft:activator_rail Activator Rail D 
+158 9E minecraft:dropper Dropper D T 
+159 9F minecraft:stained_hardened_clay Stained Clay D B 
+160 A0 minecraft:stained_glass_pane Stained Glass Pane D 
+161 A1 minecraft:leaves2 Leaves (Acacia/Dark Oak) D B 
+162 A2 minecraft:log2 Wood (Acacia/Dark Oak) D B 
+163 A3 minecraft:acacia_stairs Acacia Wood Stairs D 
+164 A4 minecraft:dark_oak_stairs Dark Oak Wood Stairs D 
+165 A5 minecraft:slime Slime Block 
+166 A6 minecraft:barrier Barrier 
+167 A7 minecraft:iron_trapdoor Iron Trapdoor 
+168 A8 minecraft:prismarine Prismarine 
+169 A9 minecraft:seaLantern Sea Lantern 
+170 AA minecraft:hay_block Hay Block D 
+171 AB minecraft:carpet Carpet D B 
+172 AC minecraft:hardened_clay Hardened Clay 
+173 AD minecraft:coal_block Block of Coal 
+174 AE minecraft:packed_ice Packed Ice 
+175 AF minecraft:double_plant Large Flowers D B 
+176 minecraft:standing_banner
+177 minecraft:wall_banner
+178 minecraft:daylight_detector_inverted
+179 minecraft:red_sandstone
+180 minecraft:red_sandstone_stairs
+181 minecraft:double_stone_slab2
+182 minecraft:stone_slab2
+183 minecraft:spruce_fence_gate
+184 minecraft:birch_fence_gate
+185 minecraft:jungle_fence_gate
+186 minecraft:dark_oak_fence_gate
+187 minecraft:acacia_fence_gate
+188 minecraft:fence
+189 minecraft:fence
+190 minecraft:fence
+191 minecraft:fence
+192 minecraft:fence
+193 minecraft:spruce_door
+194 minecraft:birch_door
+195 minecraft:jungle_door
+196 minecraft:acacia_door
+197 minecraft:dark_oak_door
+198 minecraft:grass_path
+243 minecraft:podzol

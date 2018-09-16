@@ -8,12 +8,12 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 140 )
+@RegisterInfo( sId = "minecraft:flower_pot" )
 public class FlowerPot extends Block implements io.gomint.world.block.BlockFlowerPot {
 
     @Override
-    public int getBlockId() {
-        return 140;
+    public String getBlockId() {
+        return "minecraft:flower_pot";
     }
 
     @Override

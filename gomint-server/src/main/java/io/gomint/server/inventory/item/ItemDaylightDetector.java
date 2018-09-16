@@ -14,6 +14,11 @@ import io.gomint.taglib.NBTTagCompound;
 
 
     @Override
+    public String getBlockId() {
+        return "minecraft:daylight_detector";
+    }
+
+    @Override
     public ItemType getType() {
         return ItemType.DAYLIGHT_DETECTOR;
     }

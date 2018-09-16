@@ -14,6 +14,11 @@ import io.gomint.taglib.NBTTagCompound;
 
 
     @Override
+    public String getBlockId() {
+        return "minecraft:packed_ice";
+    }
+
+    @Override
     public ItemType getType() {
         return ItemType.PACKED_ICE;
     }

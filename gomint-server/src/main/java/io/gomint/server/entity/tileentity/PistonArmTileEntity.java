@@ -8,6 +8,7 @@
 package io.gomint.server.entity.tileentity;
 
 import io.gomint.math.BlockPosition;
+import io.gomint.server.inventory.item.Items;
 import io.gomint.server.util.Things;
 import io.gomint.server.world.WorldAdapter;
 import io.gomint.server.world.block.Air;
@@ -53,8 +54,8 @@ public class PistonArmTileEntity extends TileEntity {
      * @param tagCompound The TagCompound which should be used to read data from
      * @param world       The world in which this TileEntity resides
      */
-    public PistonArmTileEntity( NBTTagCompound tagCompound, WorldAdapter world ) {
-        super( tagCompound, world );
+    public PistonArmTileEntity( NBTTagCompound tagCompound, WorldAdapter world, Items items ) {
+        super( tagCompound, world, items );
 
         this.state = tagCompound.getByte( "State", (byte) 0 );
         this.newState = tagCompound.getByte( "NewState", (byte) 0 );
@@ -74,6 +75,7 @@ public class PistonArmTileEntity extends TileEntity {
         BlockPosition pos = this.location.toBlockPosition();
         Block piston = this.location.getWorld().getBlockAt( pos );
         BlockFace facing = Things.convertFromDataToBlockFace( piston.getBlockData() );
+
         if ( this.isExtended() ) {
             // We need a PistonHead
             Block above = piston.getSide( facing );

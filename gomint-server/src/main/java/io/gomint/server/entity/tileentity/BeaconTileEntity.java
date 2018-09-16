@@ -8,6 +8,7 @@
 package io.gomint.server.entity.tileentity;
 
 import io.gomint.math.Location;
+import io.gomint.server.inventory.item.Items;
 import io.gomint.server.world.WorldAdapter;
 import io.gomint.taglib.NBTTagCompound;
 import lombok.Getter;
@@ -41,9 +42,10 @@ public class BeaconTileEntity extends TileEntity {
      *
      * @param compound The TagCompound which should be used to read data from
      * @param world    The world in which this TileEntity resides
+     * @param items    which are available for this server
      */
-    public BeaconTileEntity( NBTTagCompound compound, WorldAdapter world ) {
-        super( compound, world );
+    public BeaconTileEntity( NBTTagCompound compound, WorldAdapter world, Items items ) {
+        super( compound, world, items );
 
         this.primary = compound.getInteger( "primary", 0 );
         this.secondary = compound.getInteger( "secondary", 0 );

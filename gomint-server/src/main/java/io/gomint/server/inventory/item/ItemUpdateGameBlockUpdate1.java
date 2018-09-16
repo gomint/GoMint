@@ -14,6 +14,11 @@ import io.gomint.taglib.NBTTagCompound;
 
 
     @Override
+    public String getBlockId() {
+        return "minecraft:info_update";
+    }
+
+    @Override
     public ItemType getType() {
         return ItemType.UPDATE_GAME_BLOCK_UPDATE1;
     }

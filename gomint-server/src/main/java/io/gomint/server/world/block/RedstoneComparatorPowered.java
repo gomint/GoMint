@@ -10,12 +10,12 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 150 )
+@RegisterInfo( sId = "minecraft:powered_comparator" )
 public class RedstoneComparatorPowered extends Block implements io.gomint.world.block.BlockRedstoneComparatorPowered {
 
     @Override
-    public int getBlockId() {
-        return 150;
+    public String getBlockId() {
+        return "minecraft:powered_comparator";
     }
 
     @Override

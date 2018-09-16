@@ -14,6 +14,11 @@ import io.gomint.taglib.NBTTagCompound;
 
 
     @Override
+    public String getBlockId() {
+        return "minecraft:unlit_redstone_torch";
+    }
+
+    @Override
     public ItemType getType() {
         return ItemType.REDSTONE_TORCH_INACTIVE;
     }

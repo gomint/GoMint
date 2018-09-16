@@ -1,6 +1,7 @@
 package io.gomint.server.entity.tileentity;
 
 import io.gomint.math.Location;
+import io.gomint.server.inventory.item.Items;
 import io.gomint.server.world.WorldAdapter;
 import io.gomint.taglib.NBTTagCompound;
 import io.gomint.world.block.data.BlockColor;
@@ -24,8 +25,8 @@ public class BedTileEntity extends TileEntity {
      * @param tagCompound The TagCompound which should be used to read data from
      * @param world       The world in which this TileEntity resides
      */
-    public BedTileEntity( NBTTagCompound tagCompound, WorldAdapter world ) {
-        super( tagCompound, world );
+    public BedTileEntity( NBTTagCompound tagCompound, WorldAdapter world, Items items ) {
+        super( tagCompound, world, items );
 
         this.color = tagCompound.getByte( "color", (byte) 0 );
     }

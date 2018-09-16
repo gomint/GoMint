@@ -14,6 +14,11 @@ import io.gomint.taglib.NBTTagCompound;
 
 
     @Override
+    public String getBlockId() {
+        return "minecraft:ender_chest";
+    }
+
+    @Override
     public ItemType getType() {
         return ItemType.ENDER_CHEST;
     }

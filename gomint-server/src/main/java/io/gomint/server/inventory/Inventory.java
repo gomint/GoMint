@@ -220,7 +220,7 @@ public abstract class Inventory implements io.gomint.inventory.Inventory {
         }
 
         this.contents = new ItemStack[this.size];
-        Arrays.fill( this.contents, ItemAir.create( 0 ) );
+        Arrays.fill( this.contents, new io.gomint.server.inventory.item.ItemAir() );
 
         // Inform all viewers
         for ( PlayerConnection playerConnection : this.viewer ) {
