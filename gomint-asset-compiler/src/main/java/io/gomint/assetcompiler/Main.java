@@ -164,6 +164,23 @@ public class Main {
             e.printStackTrace();
         }
 
+        try {
+            List<Object> converterItems = assetsCompound.getList( "converter1_13", true );
+
+            List<String> input = Files.readAllLines( Paths.get( "gomint-asset-compiler/blockmappings-1.13.txt" ) );
+            for ( String line : input ) {
+                String[] split = line.split( " " );
+
+                NBTTagCompound idPairCompound = new NBTTagCompound( "" );
+                idPairCompound.addValue( "blockdata", split[0] );
+                idPairCompound.addValue( "ni",  split[1] );
+                idPairCompound.addValue( "nd", Byte.parseByte( split[2] ) );
+                converterItems.add( idPairCompound );
+            }
+        } catch ( IOException e ) {
+            e.printStackTrace();
+        }
+
         // Write the final assets.dat
         assetsCompound.writeTo( new File( "gomint-asset-compiler/assets.dat" ), true, ByteOrder.BIG_ENDIAN );
     }
