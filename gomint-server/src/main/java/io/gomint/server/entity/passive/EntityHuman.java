@@ -516,7 +516,7 @@ public class EntityHuman extends EntityCreature implements io.gomint.entity.pass
     public Packet createSpawnPacket( EntityPlayer receiver ) {
         PacketSpawnPlayer packetSpawnPlayer = new PacketSpawnPlayer();
         packetSpawnPlayer.setUuid( this.getUUID() );
-        packetSpawnPlayer.setName( receiver.getConnection().getProtocolID() > Protocol.MINECRAFT_PE_PROTOCOL_VERSION ? this.getNameTag() : this.username ); // TODO: MJ BUG / 1.5.0.14 / Nametags don't change according to metadata index 4 (nametag) anymore, the client uses the name set in the spawn player packet
+        packetSpawnPlayer.setName( receiver.getConnection().getProtocolID() < Protocol.MINECRAFT_PE_BETA_PROTOCOL_VERSION ? this.getNameTag() : this.username ); // TODO: MJ BUG / 1.5.0.14 / Nametags don't change according to metadata index 4 (nametag) anymore, the client uses the name set in the spawn player packet
         packetSpawnPlayer.setEntityId( this.getEntityId() );
         packetSpawnPlayer.setRuntimeEntityId( this.getEntityId() );
 
