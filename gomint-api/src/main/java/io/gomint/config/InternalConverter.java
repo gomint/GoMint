@@ -1,15 +1,6 @@
 package io.gomint.config;
 
-import io.gomint.config.converter.ArrayConverter;
-import io.gomint.config.converter.BlockPositionConverter;
-import io.gomint.config.converter.ConfigConverter;
-import io.gomint.config.converter.Converter;
-import io.gomint.config.converter.ListConverter;
-import io.gomint.config.converter.LocationConverter;
-import io.gomint.config.converter.MapConverter;
-import io.gomint.config.converter.PrimitiveConverter;
-import io.gomint.config.converter.SetConverter;
-import io.gomint.math.Vector;
+import io.gomint.config.converter.*;
 import lombok.Getter;
 
 import java.lang.reflect.Field;
@@ -43,7 +34,7 @@ public class InternalConverter {
             addConverter( ArrayConverter.class );
             addConverter( SetConverter.class );
             addConverter( LocationConverter.class );
-            addConverter( Vector.class );
+            addConverter( VectorConverter.class );
             addConverter( BlockPositionConverter.class );
         } catch ( InvalidConverterException e ) {
             throw new IllegalStateException( e );
