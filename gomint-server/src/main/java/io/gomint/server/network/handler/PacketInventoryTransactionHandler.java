@@ -1,9 +1,6 @@
 package io.gomint.server.network.handler;
 
-import io.gomint.event.player.PlayerConsumeItemEvent;
-import io.gomint.event.player.PlayerDropItemEvent;
-import io.gomint.event.player.PlayerExhaustEvent;
-import io.gomint.event.player.PlayerInteractEvent;
+import io.gomint.event.player.*;
 import io.gomint.event.world.BlockBreakEvent;
 import io.gomint.inventory.item.ItemAir;
 import io.gomint.inventory.item.ItemStack;
@@ -140,6 +137,16 @@ public class PacketInventoryTransactionHandler implements PacketHandler<PacketIn
     private void handleUseItemOnEntity( io.gomint.entity.Entity target, PlayerConnection connection, PacketInventoryTransaction packet ) {
         switch ( packet.getActionType() ) {
             case 0:     // Interact
+                io.gomint.entity.Entity entity = connection.getEntity().getWorld().findEntity( packet.getEntityId() );
+
+                PlayerInteractWithEntityEvent event = new PlayerInteractWithEntityEvent( connection.getEntity(), entity );
+
+                connection.getServer().getPluginManager().callEvent( event );
+
+                if ( event.isCancelled() ) {
+                    break;
+                }
+
                 break;
             case 1:     // Attack
                 if ( connection.getEntity().attackWithItemInHand( target ) ) {
