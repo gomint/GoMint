@@ -1,10 +1,11 @@
 package io.gomint.gui;
 
 /**
+ * @param <R> type of return value from the response
  * @author geNAZt
  * @version 1.0
  */
-public interface Form {
+public interface Form<R> {
 
     /**
      * Get the title of this form

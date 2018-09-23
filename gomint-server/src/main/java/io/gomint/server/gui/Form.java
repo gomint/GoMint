@@ -9,7 +9,7 @@ import org.json.simple.JSONObject;
  * @version 1.0
  */
 @RequiredArgsConstructor
-public abstract class Form implements io.gomint.gui.Form {
+public abstract class Form<R> implements io.gomint.gui.Form<R> {
 
     private final String title;
     private String icon = null;
@@ -70,7 +70,7 @@ public abstract class Form implements io.gomint.gui.Form {
      * @param json data from the client
      * @return correct formatted object for the listener
      */
-    public abstract Object parseResponse( String json );
+    public abstract R parseResponse( String json );
 
     public void setDirty() {
         this.dirty = true;

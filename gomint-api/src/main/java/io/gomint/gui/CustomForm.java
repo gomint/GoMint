@@ -7,7 +7,7 @@ import io.gomint.gui.element.StepSlider;
 /**
  * @author geNAZt
  */
-public interface CustomForm extends Form {
+public interface CustomForm extends Form<FormResponse> {
 
     /**
      * Create a new custom form

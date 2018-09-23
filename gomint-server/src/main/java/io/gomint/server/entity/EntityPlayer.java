@@ -80,7 +80,6 @@ import io.gomint.server.network.tcp.protocol.SendPlayerToServerPacket;
 import io.gomint.server.permission.PermissionManager;
 import io.gomint.server.player.EntityVisibilityManager;
 import io.gomint.server.scoreboard.Scoreboard;
-import io.gomint.server.util.BlockIdentifier;
 import io.gomint.server.util.EnumConnectors;
 import io.gomint.server.world.ChunkAdapter;
 import io.gomint.server.world.WorldAdapter;
@@ -114,7 +113,6 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
-import java.util.function.Consumer;
 
 /**
  * The entity implementation for players. Players are considered living entities even though they
@@ -1309,8 +1307,9 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
         }
     }
 
+    @SuppressWarnings( "unchecked" )
     @Override
-    public <T> FormListener<T> showForm( Form form ) {
+    public <R> FormListener<R> showForm( Form<R> form ) {
         int formId = this.formId++;
         io.gomint.server.gui.Form implForm = (io.gomint.server.gui.Form) form;
 

@@ -6,7 +6,7 @@ import org.json.simple.JSONObject;
  * @author geNAZt
  * @version 1.0
  */
-public class Modal extends Form implements io.gomint.gui.Modal {
+public class Modal extends Form<Boolean> implements io.gomint.gui.Modal {
 
     private final String question;
     private String trueButtonText;
@@ -54,7 +54,7 @@ public class Modal extends Form implements io.gomint.gui.Modal {
     }
 
     @Override
-    public Object parseResponse( String json ) {
+    public Boolean parseResponse( String json ) {
         return json.trim().equals( "true" );
     }
 

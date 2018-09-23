@@ -12,7 +12,7 @@ import java.util.List;
  * @author geNAZt
  * @version 1.0
  */
-public class ButtonList extends Form implements io.gomint.gui.ButtonList {
+public class ButtonList extends Form<String> implements io.gomint.gui.ButtonList {
 
     private final List<Button> buttons = new ArrayList<>();
     private String content = "";
@@ -74,7 +74,7 @@ public class ButtonList extends Form implements io.gomint.gui.ButtonList {
     }
 
     @Override
-    public Object parseResponse( String json ) {
+    public String parseResponse( String json ) {
         // Input is LF terminated
         try {
             int buttonId = Integer.parseInt( json.trim() );

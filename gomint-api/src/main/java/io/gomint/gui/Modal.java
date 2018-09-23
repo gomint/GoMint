@@ -6,7 +6,7 @@ import io.gomint.GoMint;
  * @author geNAZt
  * @version 1.0
  */
-public interface Modal extends Form {
+public interface Modal extends Form<Boolean> {
 
     /**
      * Create a new Modal

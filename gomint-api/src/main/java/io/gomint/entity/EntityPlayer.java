@@ -142,10 +142,10 @@ public interface EntityPlayer extends EntityHuman {
      * Display new form and get a listener for the response
      *
      * @param form which should be shown
-     * @param <T>  type of return value from the response
+     * @param <R>  type of return value from the response
      * @return form listener to attaching for response
      */
-    <T> FormListener<T> showForm( Form form );
+    <R> FormListener<R> showForm( Form<R> form );
 
     /**
      * Set the server settings form

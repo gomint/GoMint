@@ -13,7 +13,7 @@ import java.util.List;
  * @author geNAZt
  * @version 1.0
  */
-public class CustomForm extends Form implements io.gomint.gui.CustomForm {
+public class CustomForm extends Form<io.gomint.gui.FormResponse> implements io.gomint.gui.CustomForm {
 
     private List<Element> elements = new ArrayList<>();
 
@@ -87,7 +87,7 @@ public class CustomForm extends Form implements io.gomint.gui.CustomForm {
     }
 
     @Override
-    public Object parseResponse( String json ) {
+    public io.gomint.gui.FormResponse parseResponse( String json ) {
         // Response is an array with values
         try {
             FormResponse response = new FormResponse();

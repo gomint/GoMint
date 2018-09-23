@@ -6,7 +6,7 @@ import io.gomint.GoMint;
  * @author geNAZt
  * @version 1.0
  */
-public interface ButtonList extends Form {
+public interface ButtonList extends Form<String> {
 
     /**
      * Create a new button list
