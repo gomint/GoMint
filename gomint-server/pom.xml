@@ -87,7 +87,7 @@
         <dependency>
             <groupId>io.gomint</groupId>
             <artifactId>jraknet</artifactId>
-            <version>6.0.1-SNAPSHOT</version>
+            <version>6.0.3-SNAPSHOT</version>
         </dependency>
 
         <dependency>
