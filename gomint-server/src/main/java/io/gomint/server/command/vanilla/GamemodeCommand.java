@@ -49,7 +49,7 @@ public class GamemodeCommand extends Command {
             target = (EntityPlayer) sender;
         }
 
-        switch( String.valueOf( arguments.get( "mode" ) ) ) {
+        switch( String.valueOf( arguments.get( "gameMode" ) ) ) {
             case "0":
             case "s":
             case "survival":
