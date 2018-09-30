@@ -50,6 +50,8 @@ public class CommandManager {
                 DeopCommand.class,
                 ListCommand.class,
                 OpCommand.class,
+                GamemodeCommand.class,
+                MeCommand.class,
                 SayCommand.class,
 
                 // GoMint

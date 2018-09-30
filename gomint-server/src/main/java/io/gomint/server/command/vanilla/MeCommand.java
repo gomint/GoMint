@@ -1,6 +1,5 @@
 package io.gomint.server.command.vanilla;
 
-import io.gomint.ChatColor;
 import io.gomint.GoMint;
 import io.gomint.command.*;
 import io.gomint.command.annotation.*;
@@ -10,23 +9,23 @@ import io.gomint.server.entity.EntityPlayer;
 import java.util.Map;
 
 /**
- * @author Kaooot
+ * @author lukeeey
  * @version 1.0
  */
-@Name( "say" )
-@Description( "Sends a message in the chat to other players." )
-@Permission( "gomint.command.say" )
+@Name( "me" )
+@Description( "Displays a message about yourself." )
+@Permission( "gomint.command.me" )
 @Overload( {
     @Parameter( name = "message", validator = TextValidator.class )
 } )
-public class SayCommand extends Command {
+public class MeCommand extends Command {
 
     @Override
     public CommandOutput execute( CommandSender sender, String alias, Map<String, Object> arguments ) {
         String message = (String) arguments.get( "message" );
 
         GoMint.instance().getPlayers().forEach( players ->
-            players.sendMessage( ChatColor.LIGHT_PURPLE + "[" + ( sender instanceof ConsoleCommandSender ? "Server" : ((EntityPlayer) sender).getName() ) + "] " + message ) );
+            players.sendMessage( "* " + ( sender instanceof ConsoleCommandSender ? "CONSOLE" : ((EntityPlayer) sender).getName() ) + " " + message ) );
 
         return new CommandOutput();
     }
