@@ -19,9 +19,7 @@ import io.gomint.server.registry.RegisterInfo;
 public class EnchantmentPower extends Enchantment implements io.gomint.enchant.EnchantmentPower {
 
     /**
-     * Create new enchantment smite
-     *
-     * @param level of this enchantment
+     * Create new enchantment power
      */
     public EnchantmentPower() {
         super( (short) 5 );

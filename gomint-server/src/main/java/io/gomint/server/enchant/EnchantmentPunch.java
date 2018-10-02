@@ -19,9 +19,7 @@ import io.gomint.server.registry.RegisterInfo;
 public class EnchantmentPunch extends Enchantment implements io.gomint.enchant.EnchantmentPunch {
 
     /**
-     * Create new enchantment smite
-     *
-     * @param level of this enchantment
+     * Create new enchantment punch
      */
     public EnchantmentPunch() {
         super( (short) 2 );

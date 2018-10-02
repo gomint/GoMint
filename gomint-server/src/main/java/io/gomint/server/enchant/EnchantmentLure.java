@@ -19,9 +19,7 @@ import io.gomint.server.registry.RegisterInfo;
 public class EnchantmentLure extends Enchantment implements io.gomint.enchant.EnchantmentLure {
 
     /**
-     * Create new enchantment smite
-     *
-     * @param level of this enchantment
+     * Create new enchantment lure
      */
     public EnchantmentLure() {
         super( (short) 3 );

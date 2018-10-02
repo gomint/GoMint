@@ -19,9 +19,7 @@ import io.gomint.server.registry.RegisterInfo;
 public class EnchantmentFortune extends Enchantment implements io.gomint.enchant.EnchantmentFortune {
 
     /**
-     * Create new enchantment smite
-     *
-     * @param level of this enchantment
+     * Create new enchantment fortune
      */
     public EnchantmentFortune() {
         super( (short) 3 );

@@ -19,9 +19,7 @@ import io.gomint.server.registry.RegisterInfo;
 public class EnchantmentFeatherfalling extends Enchantment implements io.gomint.enchant.EnchantmentFeatherfalling {
 
     /**
-     * Create new enchantment smite
-     *
-     * @param level of this enchantment
+     * Create new enchantment feather falling
      */
     public EnchantmentFeatherfalling() {
         super( (short) 4 );

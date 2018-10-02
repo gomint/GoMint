@@ -19,9 +19,7 @@ import io.gomint.server.registry.RegisterInfo;
 public class EnchantmentSilkTouch extends Enchantment {
 
     /**
-     * Create new enchantment smite
-     *
-     * @param level of this enchantment
+     * Create new enchantment silk touch
      */
     public EnchantmentSilkTouch() {
         super( (short) 1 );

@@ -19,9 +19,7 @@ import io.gomint.server.registry.RegisterInfo;
 public class EnchantmentInfinity extends Enchantment implements io.gomint.enchant.EnchantmentInfinity{
 
     /**
-     * Create new enchantment smite
-     *
-     * @param level of this enchantment
+     * Create new enchantment infinity
      */
     public EnchantmentInfinity() {
         super( (short) 1 );

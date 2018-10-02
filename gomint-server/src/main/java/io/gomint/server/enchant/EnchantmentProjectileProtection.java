@@ -19,9 +19,7 @@ import io.gomint.server.registry.RegisterInfo;
 public class EnchantmentProjectileProtection extends Enchantment implements io.gomint.enchant.EnchantmentProjectileProtection {
 
     /**
-     * Create new enchantment smite
-     *
-     * @param level of this enchantment
+     * Create new enchantment projectile protection
      */
     public EnchantmentProjectileProtection() {
         super( (short) 4 );

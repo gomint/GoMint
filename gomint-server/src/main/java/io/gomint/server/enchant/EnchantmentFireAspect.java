@@ -19,9 +19,7 @@ import io.gomint.server.registry.RegisterInfo;
 public class EnchantmentFireAspect extends Enchantment implements io.gomint.enchant.EnchantmentFireAspect {
 
     /**
-     * Create new enchantment smite
-     *
-     * @param level of this enchantment
+     * Create new enchantment fire aspect
      */
     public EnchantmentFireAspect() {
         super( (short) 2 );

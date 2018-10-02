@@ -19,9 +19,7 @@ import io.gomint.server.registry.RegisterInfo;
 public class EnchantmentFireProtection extends Enchantment implements io.gomint.enchant.EnchantmentFireProtection {
 
     /**
-     * Create new enchantment smite
-     *
-     * @param level of this enchantment
+     * Create new enchantment fire protection
      */
     public EnchantmentFireProtection() {
         super( (short) 4 );

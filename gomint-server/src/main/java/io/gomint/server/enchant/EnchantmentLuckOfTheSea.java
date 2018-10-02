@@ -19,9 +19,7 @@ import io.gomint.server.registry.RegisterInfo;
 public class EnchantmentLuckOfTheSea extends Enchantment implements io.gomint.enchant.EnchantmentLuckOfTheSea {
 
     /**
-     * Create new enchantment smite
-     *
-     * @param level of this enchantment
+     * Create new enchantment luck of the sea
      */
     public EnchantmentLuckOfTheSea() {
         super( (short) 3 );

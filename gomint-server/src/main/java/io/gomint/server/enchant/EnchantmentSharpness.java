@@ -19,9 +19,7 @@ import io.gomint.server.registry.RegisterInfo;
 public class EnchantmentSharpness extends Enchantment implements io.gomint.enchant.EnchantmentSharpness {
 
     /**
-     * Create new enchantment smite
-     *
-     * @param level of this enchantment
+     * Create new enchantment sharpness
      */
     public EnchantmentSharpness() {
         super( (short) 5 );

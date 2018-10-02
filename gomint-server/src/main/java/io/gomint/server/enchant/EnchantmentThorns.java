@@ -19,9 +19,7 @@ import io.gomint.server.registry.RegisterInfo;
 public class EnchantmentThorns extends Enchantment implements io.gomint.enchant.EnchantmentThorns {
 
     /**
-     * Create new enchantment smite
-     *
-     * @param level of this enchantment
+     * Create new enchantment thorns
      */
     public EnchantmentThorns() {
         super( (short) 3 );

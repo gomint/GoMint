@@ -19,9 +19,7 @@ import io.gomint.server.registry.RegisterInfo;
 public class EnchantmentEfficiency extends Enchantment implements io.gomint.enchant.EnchantmentEfficiency {
 
     /**
-     * Create new enchantment smite
-     *
-     * @param level of this enchantment
+     * Create new enchantment efficiency
      */
     public EnchantmentEfficiency() {
         super( (short) 5 );

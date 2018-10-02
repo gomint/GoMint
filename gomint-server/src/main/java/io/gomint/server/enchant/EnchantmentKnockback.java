@@ -19,9 +19,7 @@ import io.gomint.server.registry.RegisterInfo;
 public class EnchantmentKnockback extends Enchantment implements io.gomint.enchant.EnchantmentKnockback {
 
     /**
-     * Create new enchantment smite
-     *
-     * @param level of this enchantment
+     * Create new enchantment knockback
      */
     public EnchantmentKnockback() {
         super( (short) 2 );

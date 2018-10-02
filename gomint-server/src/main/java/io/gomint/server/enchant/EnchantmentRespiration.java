@@ -19,9 +19,7 @@ import io.gomint.server.registry.RegisterInfo;
 public class EnchantmentRespiration extends Enchantment implements io.gomint.enchant.EnchantmentRespiration {
 
     /**
-     * Create new enchantment smite
-     *
-     * @param level of this enchantment
+     * Create new enchantment respiration
      */
     public EnchantmentRespiration() {
         super( (short) 3 );

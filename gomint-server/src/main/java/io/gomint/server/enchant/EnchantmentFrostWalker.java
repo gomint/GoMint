@@ -19,7 +19,7 @@ import io.gomint.server.registry.RegisterInfo;
 public class EnchantmentFrostWalker extends Enchantment implements io.gomint.enchant.EnchantmentFrostWalker {
 
     /**
-     * Create new enchantment smite
+     * Create new enchantment frost walker
      */
     public EnchantmentFrostWalker() {
         super( (short) 2 );

@@ -19,9 +19,7 @@ import io.gomint.server.registry.RegisterInfo;
 public class EnchantmentFlame extends Enchantment implements io.gomint.enchant.EnchantmentFlame {
 
     /**
-     * Create new enchantment smite
-     *
-     * @param level of this enchantment
+     * Create new enchantment flame
      */
     public EnchantmentFlame() {
         super( (short) 1 );

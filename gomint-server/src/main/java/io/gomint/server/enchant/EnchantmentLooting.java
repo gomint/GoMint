@@ -19,9 +19,7 @@ import io.gomint.server.registry.RegisterInfo;
 public class EnchantmentLooting extends Enchantment implements io.gomint.enchant.EnchantmentLooting {
 
     /**
-     * Create new enchantment smite
-     *
-     * @param level of this enchantment
+     * Create new enchantment looting
      */
     public EnchantmentLooting() {
         super( (short) 3 );
