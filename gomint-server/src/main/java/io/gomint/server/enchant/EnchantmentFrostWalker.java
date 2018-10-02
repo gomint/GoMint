@@ -7,6 +7,7 @@
 
 package io.gomint.server.enchant;
 
+import io.gomint.inventory.item.ItemType;
 import io.gomint.server.inventory.item.ItemStack;
 import io.gomint.server.registry.RegisterInfo;
 
@@ -36,7 +37,11 @@ public class EnchantmentFrostWalker extends Enchantment implements io.gomint.enc
 
     @Override
     public boolean canBeApplied( ItemStack itemStack ) {
-        return false;
+        return itemStack.getType() == ItemType.LEATHER_BOOTS ||
+            itemStack.getType() == ItemType.CHAIN_BOOTS ||
+            itemStack.getType() == ItemType.GOLDEN_BOOTS ||
+            itemStack.getType() == ItemType.IRON_BOOTS ||
+            itemStack.getType() == ItemType.DIAMOND_BOOTS;
     }
 
 }
