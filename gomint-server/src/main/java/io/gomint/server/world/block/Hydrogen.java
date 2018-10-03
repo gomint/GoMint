@@ -4,17 +4,12 @@ import io.gomint.server.registry.RegisterInfo;
 import io.gomint.world.block.BlockHydrogen;
 import io.gomint.world.block.BlockType;
 
-import java.lang.reflect.Array;
-import java.util.List;
-
 /**
  * @author Kaooot
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:element_1" )
 public class Hydrogen extends BlockElement implements BlockHydrogen {
-
-    List<Integer> list;
 
     @Override
     public String getBlockId() {
