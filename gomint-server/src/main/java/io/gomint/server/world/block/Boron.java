@@ -47,8 +47,8 @@ public class Boron extends BlockElement implements BlockBoron {
     }
 
     @Override
-    public int getNeutrons() {
-        return 5;
+    public int[] getNeutrons() {
+        return new int[] {5, 6};
     }
 
     @Override

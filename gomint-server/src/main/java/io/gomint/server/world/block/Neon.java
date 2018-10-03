@@ -47,8 +47,8 @@ public class Neon extends BlockElement implements BlockNeon {
     }
 
     @Override
-    public int getNeutrons() {
-        return 10;
+    public int[] getNeutrons() {
+        return new int[] {10, 11, 12};
     }
 
     @Override

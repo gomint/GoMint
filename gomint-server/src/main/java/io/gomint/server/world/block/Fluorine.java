@@ -47,8 +47,8 @@ public class Fluorine extends BlockElement implements BlockFluorine {
     }
 
     @Override
-    public int getNeutrons() {
-        return 9;
+    public int[] getNeutrons() {
+        return new int[] {9, 10};
     }
 
     @Override

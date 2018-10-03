@@ -47,8 +47,8 @@ public class Helium extends BlockElement implements BlockHelium {
     }
 
     @Override
-    public int getNeutrons() {
-        return 1;
+    public int[] getNeutrons() {
+        return new int[] {1, 2};
     }
 
     @Override

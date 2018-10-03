@@ -10,7 +10,7 @@ public interface BlockElement extends Block {
 
     int getElectrons();
 
-    int getNeutrons();
+    int[] getNeutrons();
 
     int getAtomicWeight();
 

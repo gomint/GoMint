@@ -13,7 +13,7 @@ public abstract class BlockElement extends Block {
     @Getter
     private int electrons;
     @Getter
-    private int neutrons;
+    private int[] neutrons;
     @Getter
     private int atomicWeight;
     @Getter

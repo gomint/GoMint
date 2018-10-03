@@ -47,8 +47,8 @@ public class Lithium extends BlockElement implements BlockLithium {
     }
 
     @Override
-    public int getNeutrons() {
-        return 3;
+    public int[] getNeutrons() {
+        return new int[] {3, 4};
     }
 
     @Override

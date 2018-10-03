@@ -47,8 +47,8 @@ public class Oxygen extends BlockElement implements BlockOxygen {
     }
 
     @Override
-    public int getNeutrons() {
-        return 8;
+    public int[] getNeutrons() {
+        return new int[] {8, 9, 10};
     }
 
     @Override

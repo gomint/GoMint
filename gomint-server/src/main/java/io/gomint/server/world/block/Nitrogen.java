@@ -47,8 +47,8 @@ public class Nitrogen extends BlockElement implements BlockNitrogen {
     }
 
     @Override
-    public int getNeutrons() {
-        return 7;
+    public int[] getNeutrons() {
+        return new int[] {7, 8};
     }
 
     @Override

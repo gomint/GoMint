@@ -47,8 +47,8 @@ public class Beryllium extends BlockElement implements BlockBeryllium {
     }
 
     @Override
-    public int getNeutrons() {
-        return 5;
+    public int[] getNeutrons() {
+        return new int[] {5};
     }
 
     @Override
