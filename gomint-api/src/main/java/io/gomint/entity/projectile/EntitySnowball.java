@@ -14,9 +14,7 @@ import io.gomint.GoMint;
 public interface EntitySnowball extends EntityProjectile {
 
     /**
-     * Creates a new instance of a snowball projectile. "Creates" describes
-     * also spawning the actual snowball entity which is bound to this {@code EntitySnowball}
-     * instance.
+     * Creates a new instance of a snowball projectile.
      *
      * @return The instance of the created snowball projectile
      * @see GoMint#createEntity(Class)
