@@ -841,13 +841,7 @@ public class GoMintServer implements GoMint, InventoryHolder {
      * @return the config for this world
      */
     public WorldConfig getWorldConfig( String name ) {
-        for ( WorldConfig worldConfig : this.serverConfig.getWorlds() ) {
-            if ( worldConfig.getName().equals( name ) ) {
-                return worldConfig;
-            }
-        }
-
-        return new WorldConfig();
+         return this.serverConfig.getWorlds().getOrDefault(name, this.getServerConfig().getDefaultWorldSettings());
     }
 
     public boolean isRunning() {
