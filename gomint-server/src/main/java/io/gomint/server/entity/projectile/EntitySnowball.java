@@ -35,6 +35,58 @@ import java.util.Set;
 // TODO Perhaps extend "EntityThrowable" instead of "EntityProjectile"
 public class EntitySnowball extends EntityProjectile implements io.gomint.entity.projectile.EntitySnowball {
 
+    private static final class Properties {
+
+        private static final float GRAVITY = 0.03f;
+        private static final float DRAG = 0.01f;
+        private static final float WIDTH = 0.25f; // 0.25 meter
+        private static final float HEIGHT = 0.25f; // 0.25 meter
+        private static final int MAX_LIFETIME = 1200; // 1200 ticks (1 minute)
+
+        private static void apply( EntitySnowball entity ) {
+            entity.GRAVITY = GRAVITY;
+            entity.DRAG = DRAG;
+
+            entity.setSize( WIDTH, HEIGHT );
+        }
+
+    }
+
+    private static final class VelocityCalculator {
+
+        private static final FastRandom RANDOM = FastRandom.current();
+
+        private static float calculateX( Location position ) {
+            // Using local fields to improve readability
+            float yaw = (float) -sin( position.getYaw() / 180.0F * PI );
+            float pitch = (float) cos( position.getPitch() / 180.0F * (float) PI );
+
+            return (yaw * pitch) * 0.4f;
+        }
+
+        private static float calculateY( Location position ) {
+            // No local fields due to readability is fine
+            return (float) ( -sin( position.getPitch() / 180.0F * (float) PI ) * 0.4f );
+        }
+
+        private static float calculateZ( Location position ) {
+            // Using local fields to improve readability
+            float yaw = (float) cos( position.getYaw() / 180.0F * PI );
+            float pitch = (float) cos( position.getPitch() / 180.0F * (float) PI );
+
+            return (yaw * pitch) * 0.4f;
+        }
+
+        private static void calculateDistanceTravelAndApply( Vector vec ) {
+            float distanceTravel = sqrt( square( vec.getX() ) + square( vec.getY() ) + square( vec.getZ() ) );
+
+            vec.setX( (float) ( ( ( vec.getX() / distanceTravel ) + ( RANDOM.nextDouble() * 0.0075f ) ) * 1.5f ) );
+            vec.setY( (float) ( ( ( vec.getY() / distanceTravel ) + ( RANDOM.nextDouble() * 0.0075f ) ) * 1.5f ) );
+            vec.setZ( (float) ( ( ( vec.getZ() / distanceTravel ) + ( RANDOM.nextDouble() * 0.0075f ) ) * 1.5f ) );
+        }
+
+    }
+
     private float lastUpdatedTime;
 
     /**
@@ -132,58 +184,6 @@ public class EntitySnowball extends EntityProjectile implements io.gomint.entity
     @Override
     public float getDamage() {
         return 0;
-    }
-
-    private static final class Properties {
-
-        private static final float GRAVITY = 0.03f;
-        private static final float DRAG = 0.01f;
-        private static final float WIDTH = 0.25f; // 0.25 meter
-        private static final float HEIGHT = 0.25f; // 0.25 meter
-        private static final int MAX_LIFETIME = 1200; // 1200 ticks (1 minute)
-
-        private static void apply( EntitySnowball entity ) {
-            entity.GRAVITY = GRAVITY;
-            entity.DRAG = DRAG;
-
-            entity.setSize( WIDTH, HEIGHT );
-        }
-
-    }
-
-    private static final class VelocityCalculator {
-
-        private static final FastRandom RANDOM = FastRandom.current();
-
-        private static float calculateX( Location position ) {
-            // Using local fields to improve readability
-            float yaw = (float) -sin( position.getYaw() / 180.0F * PI );
-            float pitch = (float) cos( position.getPitch() / 180.0F * (float) PI );
-
-            return (yaw * pitch) * 0.4f;
-        }
-
-        private static float calculateY( Location position ) {
-            // No local fields due to readability is fine
-            return (float) ( -sin( position.getPitch() / 180.0F * (float) PI ) * 0.4f );
-        }
-
-        private static float calculateZ( Location position ) {
-            // Using local fields to improve readability
-            float yaw = (float) cos( position.getYaw() / 180.0F * PI );
-            float pitch = (float) cos( position.getPitch() / 180.0F * (float) PI );
-
-            return (yaw * pitch) * 0.4f;
-        }
-
-        private static void calculateDistanceTravelAndApply( Vector vec ) {
-            float distanceTravel = sqrt( square( vec.getX() ) + square( vec.getY() ) + square( vec.getZ() ) );
-
-            vec.setX( (float) ( ( ( vec.getX() / distanceTravel ) + ( RANDOM.nextDouble() * 0.0075f ) ) * 1.5f ) );
-            vec.setY( (float) ( ( ( vec.getY() / distanceTravel ) + ( RANDOM.nextDouble() * 0.0075f ) ) * 1.5f ) );
-            vec.setZ( (float) ( ( ( vec.getZ() / distanceTravel ) + ( RANDOM.nextDouble() * 0.0075f ) ) * 1.5f ) );
-        }
-
     }
 
 }
