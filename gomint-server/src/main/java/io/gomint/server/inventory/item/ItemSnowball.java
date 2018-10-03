@@ -8,7 +8,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( id = 332 )
- public class ItemSnowball extends ItemStack implements io.gomint.inventory.item.ItemSnowball {
+public class ItemSnowball extends ItemStack implements io.gomint.inventory.item.ItemSnowball {
 
 
 
