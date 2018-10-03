@@ -65,6 +65,11 @@ public class ProjectileLaunchEvent extends CancellableEntityEvent {
          */
         THROWING_ENDER_PEARL,
 
+        /**
+         * Throwing snowballs
+         */
+        THROWING_SNOWBALL
+
     }
 
 }
