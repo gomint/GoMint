@@ -61,7 +61,7 @@ public class EntitySnowball extends EntityProjectile implements io.gomint.entity
             float yaw = (float) -sin( position.getYaw() / 180.0F * PI );
             float pitch = (float) cos( position.getPitch() / 180.0F * (float) PI );
 
-            return (yaw * pitch) * 0.4f;
+            return ( yaw * pitch ) * 0.4f;
         }
 
         private static float calculateY( Location position ) {
@@ -74,7 +74,7 @@ public class EntitySnowball extends EntityProjectile implements io.gomint.entity
             float yaw = (float) cos( position.getYaw() / 180.0F * PI );
             float pitch = (float) cos( position.getPitch() / 180.0F * (float) PI );
 
-            return (yaw * pitch) * 0.4f;
+            return ( yaw * pitch ) * 0.4f;
         }
 
         private static void calculateDistanceTravelAndApply( Vector vec ) {
