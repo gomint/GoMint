@@ -17,6 +17,8 @@ import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.util.Values;
 import io.gomint.server.world.WorldAdapter;
 import io.gomint.util.random.FastRandom;
+import io.gomint.world.Particle;
+import io.gomint.world.ParticleData;
 import io.gomint.world.block.Block;
 import io.gomint.world.block.BlockType;
 
@@ -142,6 +144,7 @@ public class EntitySnowball extends EntityProjectile implements io.gomint.entity
 
                 if ( !hitBlocksEvent.isCancelled() ) {
                     super.despawn();
+                    this.displaySnowballPoofParticle( super.getLocation() );
                 }
             }
 
@@ -184,6 +187,12 @@ public class EntitySnowball extends EntityProjectile implements io.gomint.entity
     @Override
     public float getDamage() {
         return 0;
+    }
+
+    protected void displaySnowballPoofParticle( Location location ) {
+        for ( int i = 0; i < 6; i++ ) {
+            super.getWorld().sendParticle( location.add( 0f, 0.5f, 0f ), Particle.SNOWBALL_POOF );
+        }
     }
 
 }
