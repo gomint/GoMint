@@ -52,8 +52,8 @@ public class Beryllium extends BlockElement implements BlockBeryllium {
     }
 
     @Override
-    public int getAtomicWeight() {
-        return 9;
+    public int[] getAtomicWeight() {
+        return new int[] {9};
     }
 
     @Override

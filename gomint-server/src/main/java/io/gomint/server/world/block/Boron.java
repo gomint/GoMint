@@ -52,8 +52,8 @@ public class Boron extends BlockElement implements BlockBoron {
     }
 
     @Override
-    public int getAtomicWeight() {
-        return 11;
+    public int[] getAtomicWeight() {
+        return new int[] {11};
     }
 
     @Override

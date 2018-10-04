@@ -52,8 +52,8 @@ public class Fluorine extends BlockElement implements BlockFluorine {
     }
 
     @Override
-    public int getAtomicWeight() {
-        return 18;
+    public int[] getAtomicWeight() {
+        return new int[] {18, 19};
     }
 
     @Override

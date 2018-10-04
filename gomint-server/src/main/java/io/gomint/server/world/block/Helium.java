@@ -52,8 +52,8 @@ public class Helium extends BlockElement implements BlockHelium {
     }
 
     @Override
-    public int getAtomicWeight() {
-        return 4;
+    public int[] getAtomicWeight() {
+        return new int[] {4};
     }
 
     @Override

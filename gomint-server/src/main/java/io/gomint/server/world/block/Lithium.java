@@ -52,8 +52,8 @@ public class Lithium extends BlockElement implements BlockLithium {
     }
 
     @Override
-    public int getAtomicWeight() {
-        return 7;
+    public int[] getAtomicWeight() {
+        return new int[] {7};
     }
 
     @Override

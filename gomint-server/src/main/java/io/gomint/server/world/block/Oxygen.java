@@ -52,8 +52,8 @@ public class Oxygen extends BlockElement implements BlockOxygen {
     }
 
     @Override
-    public int getAtomicWeight() {
-        return 16;
+    public int[] getAtomicWeight() {
+        return new int[] {16};
     }
 
     @Override

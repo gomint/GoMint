@@ -52,8 +52,8 @@ public class Neon extends BlockElement implements BlockNeon {
     }
 
     @Override
-    public int getAtomicWeight() {
-        return 20;
+    public int[] getAtomicWeight() {
+        return new int[] {20};
     }
 
     @Override

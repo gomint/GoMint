@@ -52,8 +52,8 @@ public class Nitrogen extends BlockElement implements BlockNitrogen {
     }
 
     @Override
-    public int getAtomicWeight() {
-        return 14;
+    public int[] getAtomicWeight() {
+        return new int[] {14};
     }
 
     @Override

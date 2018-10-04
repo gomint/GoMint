@@ -15,7 +15,7 @@ public abstract class BlockElement extends Block {
     @Getter
     private int[] neutrons;
     @Getter
-    private int atomicWeight;
+    private int[] atomicWeight;
     @Getter
     private String name;
 }

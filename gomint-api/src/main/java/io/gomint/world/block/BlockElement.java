@@ -12,7 +12,7 @@ public interface BlockElement extends Block {
 
     int[] getNeutrons();
 
-    int getAtomicWeight();
+    int[] getAtomicWeight();
 
     String getName();
 }

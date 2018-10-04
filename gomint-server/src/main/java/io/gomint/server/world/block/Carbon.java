@@ -52,8 +52,8 @@ public class Carbon extends BlockElement implements BlockCarbon {
     }
 
     @Override
-    public int getAtomicWeight() {
-        return 12;
+    public int[] getAtomicWeight() {
+        return new int[] {12};
     }
 
     @Override
