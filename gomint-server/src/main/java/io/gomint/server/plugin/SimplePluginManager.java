@@ -10,6 +10,8 @@ package io.gomint.server.plugin;
 import io.gomint.command.Command;
 import io.gomint.event.Event;
 import io.gomint.event.EventListener;
+import io.gomint.event.plugin.PluginInstallEvent;
+import io.gomint.event.plugin.PluginUninstallEvent;
 import io.gomint.plugin.Plugin;
 import io.gomint.plugin.PluginManager;
 import io.gomint.plugin.PluginVersion;
@@ -319,6 +321,7 @@ public class SimplePluginManager implements PluginManager {
                 LOGGER.info( "Installing plugin {}", name );
                 plugin.onInstall();
                 this.installedPlugins.put( name, plugin );
+                this.callEvent( new PluginInstallEvent( plugin ) );
             } catch ( Exception e ) {
                 LOGGER.error( "Plugin did startup but could not be installed: " + name, e );
                 this.metadata.remove( plugin.getName() );
@@ -494,6 +497,8 @@ public class SimplePluginManager implements PluginManager {
             }
         } );
 
+        this.callEvent( new PluginUninstallEvent( plugin ) );
+
         // Unregister listeners
         try {
             List<EventListener> listeners = (List<EventListener>) this.listenerListField.get( plugin );
@@ -543,6 +548,11 @@ public class SimplePluginManager implements PluginManager {
         }
 
         return (T) this.installedPlugins.get( name );
+    }
+
+    @Override
+    public boolean isPluginInstalled( String name ) {
+        return this.installedPlugins.containsKey( name );
     }
 
     @Override

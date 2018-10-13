@@ -123,6 +123,15 @@ public class Plugin {
     }
 
     /**
+     * Check plugin installation status.
+     *
+     * @return Plugin installation status
+     */
+    public boolean isInstalled() {
+        return this.pluginManager.isPluginInstalled( this.name );
+    }
+
+    /**
      * Register a new command to this plugin
      *
      * @param command which should be registered

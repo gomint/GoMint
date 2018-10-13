@@ -43,6 +43,14 @@ public interface PluginManager {
     <T extends Plugin> T getPlugin( String name );
 
     /**
+     * Check plugin installation status
+     *
+     * @param name Plugin to check
+     * @return Plugin installation status
+     */
+    boolean isPluginInstalled( String name );
+
+    /**
      * Call out a event. This will give it to all handlers attached and return it once its done.
      *
      * @param event The event which should be handled
