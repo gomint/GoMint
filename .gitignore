@@ -1,4 +1,16 @@
-# Created by .ignore support plugin (hsz.mobi)
+### GoMint Debug Files START ############################# 
+plugins/
+logs/
+world/
+server.yml
+### GoMint Debug Files END ############################# 
+
+
+### Visual Studio Code START ############################# 
+.vscode/
+### Visual Studio Code END ############################# 
+
+
 ### Java START ############################# 
 *.class
 ### Java END #############################
