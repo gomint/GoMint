@@ -27,11 +27,8 @@ import io.gomint.event.player.PlayerFoodLevelChangeEvent;
 import io.gomint.event.player.PlayerJoinEvent;
 import io.gomint.event.player.PlayerMoveEvent;
 import io.gomint.event.player.PlayerRespawnEvent;
-import io.gomint.gui.ButtonList;
 import io.gomint.gui.Form;
 import io.gomint.gui.FormListener;
-import io.gomint.gui.FormResponse;
-import io.gomint.gui.Modal;
 import io.gomint.math.AxisAlignedBB;
 import io.gomint.math.BlockPosition;
 import io.gomint.math.Location;
@@ -574,10 +571,10 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
                 Vector moved = this.safeMove( moveX, moveY, moveZ );
 
                 // Exhaustion
-                double distance = Math.abs( moved.getX() ) + Math.abs( moved.getY() ) + Math.abs( moved.getZ() );
+                double distance = Math.sqrt( moved.getX() * moved.getX() + moved.getY() * moved.getY() + moved.getZ() * moved.getZ() );
                 if ( this.isSprinting() ) {
                     this.exhaust( (float) ( 0.1 * distance ), PlayerExhaustEvent.Cause.SPRINTING );
-                } else {
+                } else if ( this.isOnGround() ) {
                     this.exhaust( (float) ( 0.01 * distance ), PlayerExhaustEvent.Cause.WALKING );
                 }
 
@@ -1549,10 +1546,10 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
         if ( event.isCancelled() ) {
             this.connection.disconnect( event.getKickReason() );
         } else {
-            if( event.getJoinMessage() != null && !event.getJoinMessage().isEmpty() ) {
+            if ( event.getJoinMessage() != null && !event.getJoinMessage().isEmpty() ) {
                 GoMint.instance().getPlayers().forEach( ( player ) -> {
                     player.sendMessage( event.getJoinMessage() );
-                });
+                } );
             }
         }
     }
