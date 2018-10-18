@@ -84,7 +84,7 @@ public class PacketPlayerlist extends Packet {
         private PlayerSkin skin;
 
         public Entry( EntityHuman human ) {
-            this( human.getUUID(), human.getEntityId(), human.getName(), human.getXboxID(), human.getSkin() );
+            this( human.getUUID(), human.getEntityId(), human.getDisplayName(), human.getXboxID(), human.getSkin() );
         }
     }
 
