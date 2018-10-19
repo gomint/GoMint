@@ -13,6 +13,6 @@ public @interface Overload {
 
     String permission() default "";
 
-    Parameter[] parameters() default {};
+    Parameter[] value() default {};
 
 }
