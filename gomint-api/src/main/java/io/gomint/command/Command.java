@@ -95,6 +95,8 @@ public abstract class Command {
     private void registerOverloadAnnotation( Overload annotation ) {
         CommandOverload overloadHolder = this.overload();
 
+        overloadHolder.setPermission( annotation.permission() );
+
         for ( Parameter parameter : annotation.value() ) {
             // Search for either a no arg, string or a list<string> constructor
             Constructor<? extends ParamValidator> constructor;

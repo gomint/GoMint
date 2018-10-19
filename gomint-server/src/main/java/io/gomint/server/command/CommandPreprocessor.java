@@ -2,6 +2,7 @@ package io.gomint.server.command;
 
 import io.gomint.command.CommandOverload;
 import io.gomint.command.ParamValidator;
+import io.gomint.server.entity.EntityPlayer;
 import io.gomint.server.network.packet.PacketAvailableCommands;
 import io.gomint.server.network.type.CommandData;
 import io.gomint.server.util.collection.IndexedHashMap;
@@ -71,7 +72,7 @@ public class CommandPreprocessor {
      *
      * @param commands which should be merged and written
      */
-    public CommandPreprocessor( List<CommandHolder> commands ) {
+    public CommandPreprocessor( EntityPlayer player, List<CommandHolder> commands ) {
         this.commandsPacket = new PacketAvailableCommands();
 
         // First we should scan all commands for aliases
@@ -91,18 +92,20 @@ public class CommandPreprocessor {
         for ( CommandHolder command : commands ) {
             if ( command.getOverload() != null ) {
                 for ( CommandOverload overload : command.getOverload() ) {
-                    if ( overload.getParameters() != null ) {
-                        for ( Map.Entry<String, ParamValidator> entry : overload.getParameters().entrySet() ) {
-                            if ( entry.getValue().hasValues() ) {
-                                for ( String s : entry.getValue().values() ) {
-                                    this.addEnum( command.getName() + "#" + entry.getKey(), s );
+                    if( overload.getPermission().isEmpty() || player.hasPermission( overload.getPermission() ) ) {
+                        if( overload.getParameters() != null ) {
+                            for( Map.Entry<String, ParamValidator> entry : overload.getParameters().entrySet() ) {
+                                if( entry.getValue().hasValues() ) {
+                                    for( String s : entry.getValue().values() ) {
+                                        this.addEnum( command.getName() + "#" + entry.getKey(), s );
+                                    }
+
+                                    this.enumIndexes.put( command.getName() + "#" + entry.getKey(), this.enums.getIndex( command.getName() + "#" + entry.getKey() ) );
                                 }
 
-                                this.enumIndexes.put( command.getName() + "#" + entry.getKey(), this.enums.getIndex( command.getName() + "#" + entry.getKey() ) );
-                            }
-
-                            if ( entry.getValue().getPostfix() != null && !this.postfixes.contains( entry.getValue().getPostfix() ) ) {
-                                this.postfixes.add( entry.getValue().getPostfix() );
+                                if( entry.getValue().getPostfix() != null && !this.postfixes.contains( entry.getValue().getPostfix() ) ) {
+                                    this.postfixes.add( entry.getValue().getPostfix() );
+                                }
                             }
                         }
                     }

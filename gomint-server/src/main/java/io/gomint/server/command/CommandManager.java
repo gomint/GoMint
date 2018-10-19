@@ -152,44 +152,46 @@ public class CommandManager {
                 if ( selected.getOverload() != null && params.length > 0 ) {
                     List<CommandCanidate> commandCanidates = new ArrayList<>();
                     for ( CommandOverload overload : selected.getOverload() ) {
-                        Iterator<String> paramIterator = Arrays.asList( params ).iterator();
+                        if( overload.getPermission().isEmpty() || sender.hasPermission( overload.getPermission() ) ) {
+                            Iterator<String> paramIterator = Arrays.asList(params).iterator();
 
-                        if ( !paramIterator.hasNext() && overload.getParameters() == null ) {
-                            commandCanidates.add( new CommandCanidate( overload, new HashMap<>(), true, true ) );
-                        } else {
-                            Map<String, Object> commandInput = new HashMap<>();
+                            if(!paramIterator.hasNext() && overload.getParameters() == null) {
+                                commandCanidates.add(new CommandCanidate(overload, new HashMap<>(), true, true));
+                            } else {
+                                Map<String, Object> commandInput = new HashMap<>();
 
-                            boolean completed = true;
-                            boolean completedOptionals = true;
+                                boolean completed = true;
+                                boolean completedOptionals = true;
 
-                            if ( overload.getParameters() != null ) {
-                                for ( Map.Entry<String, ParamValidator> entry : overload.getParameters().entrySet() ) {
-                                    List<String> input = new ArrayList<>();
-                                    ParamValidator validator = entry.getValue();
+                                if(overload.getParameters() != null) {
+                                    for(Map.Entry<String, ParamValidator> entry : overload.getParameters().entrySet()) {
+                                        List<String> input = new ArrayList<>();
+                                        ParamValidator validator = entry.getValue();
 
-                                    String forValidator = validator.consume( paramIterator );
-                                    if ( forValidator == null ) {
-                                        if ( !validator.isOptional() ) {
-                                            completed = false;
-                                            break;
-                                        } else {
-                                            completedOptionals = false;
-                                        }
-                                    }
-
-                                    if ( forValidator != null ) {
-                                        Object result = validator.validate( forValidator, sender );
-                                        if ( result == null ) {
-                                            completed = false;
+                                        String forValidator = validator.consume(paramIterator);
+                                        if(forValidator == null) {
+                                            if(!validator.isOptional()) {
+                                                completed = false;
+                                                break;
+                                            } else {
+                                                completedOptionals = false;
+                                            }
                                         }
 
-                                        commandInput.put( entry.getKey(), result );
+                                        if(forValidator != null) {
+                                            Object result = validator.validate(forValidator, sender);
+                                            if(result == null) {
+                                                completed = false;
+                                            }
+
+                                            commandInput.put(entry.getKey(), result);
+                                        }
                                     }
                                 }
-                            }
 
-                            if ( completed ) {
-                                commandCanidates.add( new CommandCanidate( overload, commandInput, completedOptionals, !paramIterator.hasNext() && completedOptionals ) );
+                                if(completed) {
+                                    commandCanidates.add(new CommandCanidate(overload, commandInput, completedOptionals, !paramIterator.hasNext() && completedOptionals));
+                                }
                             }
                         }
                     }
@@ -395,7 +397,7 @@ public class CommandManager {
             LOGGER.debug( "Planning to send " + holder.getName() + " to " + player.getName() );
         }
 
-        CommandPreprocessor preprocessor = new CommandPreprocessor( holders );
+        CommandPreprocessor preprocessor = new CommandPreprocessor( player, holders );
         return preprocessor.getCommandsPacket();
     }
 

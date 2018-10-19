@@ -2,6 +2,7 @@ package io.gomint.command;
 
 import io.gomint.command.validator.CommandValidator;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 
 import java.util.LinkedHashMap;
@@ -13,6 +14,9 @@ import java.util.Map;
  */
 @ToString
 public class CommandOverload {
+
+    @Getter @Setter
+    private String permission;
 
     @Getter
     private Map<String, ParamValidator> parameters;

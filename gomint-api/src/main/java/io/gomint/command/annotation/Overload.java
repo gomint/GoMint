@@ -11,6 +11,8 @@ import java.lang.annotation.*;
 @Retention( RetentionPolicy.RUNTIME )
 public @interface Overload {
 
+    String permission() default "";
+
     Parameter[] value() default {};
 
 }
