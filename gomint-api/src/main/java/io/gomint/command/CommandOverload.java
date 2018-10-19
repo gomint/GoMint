@@ -16,7 +16,7 @@ import java.util.Map;
 public class CommandOverload {
 
     @Getter @Setter
-    private String permission;
+    private String permission = "";
 
     @Getter
     private Map<String, ParamValidator> parameters;
