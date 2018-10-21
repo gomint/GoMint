@@ -10,6 +10,7 @@ import java.util.List;
 public abstract class ParamValidator {
 
     private boolean optional;
+    private boolean nullable;
     private String postfix;
 
     /**
@@ -59,6 +60,24 @@ public abstract class ParamValidator {
      */
     public void setOptional( boolean optional ) {
         this.optional = optional;
+    }
+
+    /**
+     * Is this param nullable?
+     *
+     * @return true when its nullable, false when not
+     */
+    public boolean isNullable() {
+        return this.nullable;
+    }
+
+    /**
+     * Set to nullable
+     *
+     * @param nullable true when this parameter is nullable, false when not
+     */
+    public void setNullable( boolean nullable ) {
+        this.nullable = nullable;
     }
 
     /**

@@ -180,7 +180,7 @@ public class CommandManager {
 
                                         if(forValidator != null) {
                                             Object result = validator.validate(forValidator, sender);
-                                            if(result == null) {
+                                            if(result == null && !validator.isNullable()) {
                                                 completed = false;
                                             }
 
