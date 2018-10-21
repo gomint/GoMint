@@ -52,7 +52,7 @@ public class CommandOverload {
      * @param optional  true when parameter is optional, false when not
      * @return the command currently build
      */
-    public CommandOverload param( String name, ParamValidator validator, boolean optional ) {
+    public CommandOverload param( String name, ParamValidator validator, boolean optional, boolean nullable ) {
         if ( this.parameters == null ) {
             this.parameters = new LinkedHashMap<>();
         }
@@ -63,6 +63,7 @@ public class CommandOverload {
         }
 
         validator.setOptional( optional );
+        validator.setNullable( nullable );
         this.parameters.put( name, validator );
         return this;
     }
@@ -77,7 +78,7 @@ public class CommandOverload {
      * @param postfix   value which should be postfixed to the param
      * @return the command currently build
      */
-    public CommandOverload param( String name, ParamValidator validator, boolean optional, String postfix ) {
+    public CommandOverload param( String name, ParamValidator validator, boolean optional, boolean nullable, String postfix ) {
         if ( this.parameters == null ) {
             this.parameters = new LinkedHashMap<>();
         }
@@ -88,6 +89,7 @@ public class CommandOverload {
         }
 
         validator.setOptional( optional );
+        validator.setNullable( nullable );
         validator.setPostfix( postfix );
         this.parameters.put( name, validator );
         return this;

@@ -9,9 +9,9 @@ import java.util.List;
  */
 public abstract class ParamValidator {
 
-    private boolean optional;
-    private boolean nullable;
-    private String postfix;
+    private boolean optional = false;
+    private boolean nullable = false;
+    private String postfix = "";
 
     /**
      * Get the type of this param.

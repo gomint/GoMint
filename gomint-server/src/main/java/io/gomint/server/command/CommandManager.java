@@ -165,7 +165,6 @@ public class CommandManager {
 
                                 if(overload.getParameters() != null) {
                                     for(Map.Entry<String, ParamValidator> entry : overload.getParameters().entrySet()) {
-                                        List<String> input = new ArrayList<>();
                                         ParamValidator validator = entry.getValue();
 
                                         String forValidator = validator.consume(paramIterator);

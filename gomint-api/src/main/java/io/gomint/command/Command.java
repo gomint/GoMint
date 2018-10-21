@@ -162,9 +162,9 @@ public abstract class Command {
             if ( validator != null ) {
                 // Do we have a postfix?
                 if ( !"".equals( parameter.postfix() ) ) {
-                    overloadHolder.param( parameter.name(), validator, parameter.optional(), parameter.postfix() );
+                    overloadHolder.param( parameter.name(), validator, parameter.optional(), parameter.nullable(), parameter.postfix() );
                 } else {
-                    overloadHolder.param( parameter.name(), validator, parameter.optional() );
+                    overloadHolder.param( parameter.name(), validator, parameter.nullable(), parameter.optional() );
                 }
             }
         }
