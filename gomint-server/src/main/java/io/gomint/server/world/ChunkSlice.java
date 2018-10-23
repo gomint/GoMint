@@ -130,7 +130,10 @@ public class ChunkSlice {
     }
 
     void removeTileEntity( int x, int y, int z ) {
-        this.removeTileEntityInternal( getIndex( x, y, z ) );
+        short index = getIndex( x, y, z );
+        if ( this.tileEntities.containsKey( index ) ) {
+            this.removeTileEntityInternal( getIndex( x, y, z ) );
+        }
     }
 
     private void removeTileEntityInternal( short index ) {
