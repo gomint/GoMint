@@ -6,7 +6,7 @@ import io.gomint.GoMint;
  * @author geNAZt
  * @version 1.0
  */
-public interface ItemRedMushroomBlock extends ItemStack {
+public interface ItemRedMushroomBlock extends ItemStack, ItemBurnable {
 
     /**
      * Create a new item stack with given class and amount
@@ -15,6 +15,11 @@ public interface ItemRedMushroomBlock extends ItemStack {
      */
     static ItemRedMushroomBlock create( int amount ) {
         return GoMint.instance().createItemStack( ItemRedMushroomBlock.class, amount );
+    }
+
+    @Override
+    default long getBurnTime() {
+        return 15000;
     }
 
 }
