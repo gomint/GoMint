@@ -6,7 +6,7 @@ import io.gomint.GoMint;
  * @author geNAZt
  * @version 1.0
  */
-public interface ItemSpruceDoor extends ItemStack {
+public interface ItemSpruceDoor extends ItemStack, ItemBurnable {
 
     /**
      * Create a new item stack with given class and amount
@@ -15,6 +15,11 @@ public interface ItemSpruceDoor extends ItemStack {
      */
     static ItemSpruceDoor create( int amount ) {
         return GoMint.instance().createItemStack( ItemSpruceDoor.class, amount );
+    }
+
+    @Override
+    default long getBurnTime() {
+        return 10000;
     }
 
 }
