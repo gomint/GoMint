@@ -6,7 +6,7 @@ import io.gomint.GoMint;
  * @author geNAZt
  * @version 1.0
  */
-public interface ItemSign extends ItemStack, ItemBurnable {
+public interface ItemSign extends ItemStack {
 
     /**
      * Create a new item stack with given class and amount
@@ -15,11 +15,6 @@ public interface ItemSign extends ItemStack, ItemBurnable {
      */
     static ItemSign create( int amount ) {
         return GoMint.instance().createItemStack( ItemSign.class, amount );
-    }
-
-    @Override
-    default long getBurnTime() {
-        return 10000;
     }
 
 }
