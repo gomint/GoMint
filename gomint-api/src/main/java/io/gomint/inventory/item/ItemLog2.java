@@ -6,7 +6,7 @@ import io.gomint.GoMint;
  * @author KCodeYT
  * @version 1.0
  */
-public interface ItemLog2 extends ItemStack {
+public interface ItemLog2 extends ItemStack, ItemBurnable {
 
     /**
      * Create a new item stack with given class and amount
@@ -44,6 +44,11 @@ public interface ItemLog2 extends ItemStack {
      * @return direction of the log
      */
     Direction getLogDirection();
+
+    @Override
+    default long getBurnTime() {
+        return 15000;
+    }
 
     enum Type {
         ACACIA,
