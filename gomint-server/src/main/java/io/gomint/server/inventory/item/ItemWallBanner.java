@@ -12,7 +12,10 @@ import io.gomint.taglib.NBTTagCompound;
 @RegisterInfo( id = 177 )
 public class ItemWallBanner extends ItemStack implements ItemBanner {
 
-
+    @Override
+    public long getBurnTime() {
+        return 15000;
+    }
 
     @Override
     public String getBlockId() {
@@ -23,5 +26,4 @@ public class ItemWallBanner extends ItemStack implements ItemBanner {
     public ItemType getType() {
         return ItemType.WALL_BANNER;
     }
-
 }
