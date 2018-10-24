@@ -6,7 +6,7 @@ import io.gomint.GoMint;
  * @author geNAZt
  * @version 1.0
  */
-public interface ItemBucket extends ItemStack {
+public interface ItemBucket extends ItemStack, ItemBurnable {
 
     /**
      * Create a new item stack with given class and amount
@@ -30,6 +30,15 @@ public interface ItemBucket extends ItemStack {
      * @return content of bucket
      */
     Content getContent();
+
+    /**
+     * Returns {@code -1} if the the content type of this bucket
+     * is not equal to {@link Content#LAVA}
+     */
+    @Override
+    default long getBurnTime() {
+        return this.getContent() == Content.LAVA ? 1000000 : -1;
+    }
 
     enum Content {
         /**
