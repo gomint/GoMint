@@ -6,7 +6,7 @@ import io.gomint.GoMint;
  * @author geNAZt
  * @version 1.0
  */
-public interface ItemSapling extends ItemStack {
+public interface ItemSapling extends ItemStack, ItemBurnable {
 
     /**
      * Create a new item stack with given class and amount
@@ -15,6 +15,11 @@ public interface ItemSapling extends ItemStack {
      */
     static ItemSapling create( int amount ) {
         return GoMint.instance().createItemStack( ItemSapling.class, amount );
+    }
+
+    @Override
+    default long getBurnTime() {
+        return 5000;
     }
 
 }
