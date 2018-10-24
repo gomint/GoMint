@@ -6,7 +6,7 @@ import io.gomint.GoMint;
  * @author geNAZt
  * @version 1.0
  */
-public interface ItemStonePressurePlate extends ItemStack {
+public interface ItemStonePressurePlate extends ItemStack, ItemBurnable {
 
     /**
      * Create a new item stack with given class and amount
@@ -15,6 +15,11 @@ public interface ItemStonePressurePlate extends ItemStack {
      */
     static ItemStonePressurePlate create( int amount ) {
         return GoMint.instance().createItemStack( ItemStonePressurePlate.class, amount );
+    }
+
+    @Override
+    default long getBurnTime() {
+        return 15000;
     }
 
 }
