@@ -11,7 +11,10 @@ import io.gomint.taglib.NBTTagCompound;
 @RegisterInfo( id = 146 )
  public class ItemTrappedChest extends ItemStack implements io.gomint.inventory.item.ItemTrappedChest {
 
-
+    @Override
+    public long getBurnTime() {
+        return 15000;
+    }
 
     @Override
     public String getBlockId() {

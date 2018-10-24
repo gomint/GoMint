@@ -11,7 +11,10 @@ import io.gomint.taglib.NBTTagCompound;
 @RegisterInfo( id = 58 )
  public class ItemCraftingTable extends ItemStack implements io.gomint.inventory.item.ItemCraftingTable {
 
-
+    @Override
+    public long getBurnTime() {
+        return 15000;
+    }
 
     @Override
     public String getBlockId() {

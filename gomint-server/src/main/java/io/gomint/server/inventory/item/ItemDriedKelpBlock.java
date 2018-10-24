@@ -27,4 +27,9 @@ public class ItemDriedKelpBlock extends ItemStack implements io.gomint.inventory
         return ItemType.DRIED_KELP_BLOCK;
     }
 
+    @Override
+    public long getBurnTime() {
+        return 200000;
+    }
+
 }

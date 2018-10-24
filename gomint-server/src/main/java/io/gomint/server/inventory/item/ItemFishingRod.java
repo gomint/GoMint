@@ -20,7 +20,10 @@ import io.gomint.world.block.BlockFace;
 @RegisterInfo( id = 346 )
 public class ItemFishingRod extends ItemStack implements io.gomint.inventory.item.ItemFishingRod {
 
-
+    @Override
+    public long getBurnTime() {
+        return 10000;
+    }
 
     @Override
     public short getMaxDamage() {

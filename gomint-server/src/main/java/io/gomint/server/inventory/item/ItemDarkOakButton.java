@@ -18,6 +18,11 @@ import io.gomint.server.registry.RegisterInfo;
 public class ItemDarkOakButton extends ItemStack implements io.gomint.inventory.item.ItemDarkOakButton {
 
     @Override
+    public long getBurnTime() {
+        return 15000;
+    }
+
+    @Override
     public String getBlockId() {
         return "minecraft:dark_oak_button";
     }

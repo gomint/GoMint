@@ -17,9 +17,4 @@ public interface ItemChest extends ItemStack, ItemBurnable {
         return GoMint.instance().createItemStack( ItemChest.class, amount );
     }
 
-    @Override
-    default long getBurnTime() {
-        return 15000;
-    }
-
 }

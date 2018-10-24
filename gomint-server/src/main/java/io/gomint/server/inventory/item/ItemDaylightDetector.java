@@ -11,7 +11,10 @@ import io.gomint.taglib.NBTTagCompound;
 @RegisterInfo( id = 151 )
  public class ItemDaylightDetector extends ItemStack implements io.gomint.inventory.item.ItemDaylightDetector {
 
-
+    @Override
+    public long getBurnTime() {
+        return 15000;
+    }
 
     @Override
     public String getBlockId() {

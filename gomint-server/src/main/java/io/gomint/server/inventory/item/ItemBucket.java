@@ -14,8 +14,6 @@ import io.gomint.taglib.NBTTagCompound;
 @RegisterInfo( id = 325 )
 public class ItemBucket extends ItemStack implements io.gomint.inventory.item.ItemBucket {
 
-
-
     @Override
     public byte getMaximumAmount() {
         return 1;
@@ -50,6 +48,15 @@ public class ItemBucket extends ItemStack implements io.gomint.inventory.item.It
         }
 
         return Content.EMPTY;
+    }
+
+    /**
+     * Returns {@code -1} if the the content type of this bucket
+     * is not equal to {@link Content#LAVA}
+     */
+    @Override
+    public long getBurnTime() {
+        return this.getContent() == Content.LAVA ? 1000000 : -1;
     }
 
     @Override

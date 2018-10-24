@@ -17,9 +17,4 @@ public interface ItemTrappedChest extends ItemStack, ItemBurnable {
         return GoMint.instance().createItemStack( ItemTrappedChest.class, amount );
     }
 
-    @Override
-    default long getBurnTime() {
-        return 15000;
-    }
-
 }

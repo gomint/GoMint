@@ -24,9 +24,4 @@ public interface ItemBanner extends ItemStack, ItemBurnable {
         return GoMint.instance().createItemStack( ItemBanner.class, amount );
     }
 
-    @Override
-    default long getBurnTime() {
-        return 15000;
-    }
-
 }

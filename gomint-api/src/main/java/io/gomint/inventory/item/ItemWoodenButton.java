@@ -17,9 +17,4 @@ public interface ItemWoodenButton extends ItemStack, ItemBurnable {
         return GoMint.instance().createItemStack( ItemWoodenButton.class, amount );
     }
 
-    @Override
-    default long getBurnTime() {
-        return 15000;
-    }
-
 }

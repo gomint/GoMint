@@ -11,7 +11,10 @@ import io.gomint.taglib.NBTTagCompound;
 @RegisterInfo( id = 157 )
  public class ItemWoodenDoubleSlab extends ItemStack implements io.gomint.inventory.item.ItemWoodenDoubleSlab {
 
-
+    @Override
+    public long getBurnTime() {
+        return 15000;
+    }
 
     @Override
     public String getBlockId() {

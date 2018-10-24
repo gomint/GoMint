@@ -17,9 +17,4 @@ public interface ItemJungleWoodDoor extends ItemStack, ItemBurnable {
         return GoMint.instance().createItemStack( ItemJungleWoodDoor.class, amount );
     }
 
-    @Override
-    default long getBurnTime() {
-        return 10000;
-    }
-
 }

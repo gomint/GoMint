@@ -17,9 +17,4 @@ public interface ItemCraftingTable extends ItemStack, ItemBurnable {
         return GoMint.instance().createItemStack( ItemCraftingTable.class, amount );
     }
 
-    @Override
-    default long getBurnTime() {
-        return 15000;
-    }
-
 }

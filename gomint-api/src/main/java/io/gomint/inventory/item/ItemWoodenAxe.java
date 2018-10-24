@@ -17,9 +17,4 @@ public interface ItemWoodenAxe extends ItemStack, ItemBurnable {
         return GoMint.instance().createItemStack( ItemWoodenAxe.class, amount );
     }
 
-    @Override
-    default long getBurnTime() {
-        return 10000;
-    }
-
 }

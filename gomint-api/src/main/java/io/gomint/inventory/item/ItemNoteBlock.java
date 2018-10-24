@@ -17,9 +17,4 @@ public interface ItemNoteBlock extends ItemStack, ItemBurnable {
         return GoMint.instance().createItemStack( ItemNoteBlock.class, amount );
     }
 
-    @Override
-    default long getBurnTime() {
-        return 15000;
-    }
-
 }

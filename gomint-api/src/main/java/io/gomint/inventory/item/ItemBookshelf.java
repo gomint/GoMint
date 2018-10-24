@@ -17,9 +17,4 @@ public interface ItemBookshelf extends ItemStack, ItemBurnable {
         return GoMint.instance().createItemStack( ItemBookshelf.class, amount );
     }
 
-    @Override
-    default long getBurnTime() {
-        return 15000;
-    }
-
 }

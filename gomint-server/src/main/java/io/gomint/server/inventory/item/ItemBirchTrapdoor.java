@@ -18,6 +18,11 @@ import io.gomint.server.registry.RegisterInfo;
 public class ItemBirchTrapdoor extends ItemStack implements io.gomint.inventory.item.ItemBirchTrapdoor {
 
     @Override
+    public long getBurnTime() {
+        return 15000;
+    }
+
+    @Override
     public String getBlockId() {
         return "minecraft:birch_trapdoor";
     }

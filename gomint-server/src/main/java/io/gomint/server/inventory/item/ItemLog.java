@@ -10,7 +10,10 @@ import io.gomint.taglib.NBTTagCompound;
 @RegisterInfo( id = 17 )
 public class ItemLog extends ItemStack implements io.gomint.inventory.item.ItemLog {
 
-
+    @Override
+    public long getBurnTime() {
+        return 15000;
+    }
 
     @Override
     public String getBlockId() {

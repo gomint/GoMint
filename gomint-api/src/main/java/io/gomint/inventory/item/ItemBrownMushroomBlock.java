@@ -17,9 +17,4 @@ public interface ItemBrownMushroomBlock extends ItemStack, ItemBurnable {
         return GoMint.instance().createItemStack( ItemBrownMushroomBlock.class, amount );
     }
 
-    @Override
-    default long getBurnTime() {
-        return 15000;
-    }
-
 }

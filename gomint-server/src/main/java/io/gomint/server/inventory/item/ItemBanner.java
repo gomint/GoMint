@@ -10,7 +10,10 @@ import io.gomint.taglib.NBTTagCompound;
 @RegisterInfo( id = 446 )
 public class ItemBanner extends ItemStack implements io.gomint.inventory.item.ItemBanner {
 
-
+    @Override
+    public long getBurnTime() {
+        return 15000;
+    }
 
     @Override
     public ItemType getType() {

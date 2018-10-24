@@ -17,9 +17,4 @@ public interface ItemSpruceDoor extends ItemStack, ItemBurnable {
         return GoMint.instance().createItemStack( ItemSpruceDoor.class, amount );
     }
 
-    @Override
-    default long getBurnTime() {
-        return 10000;
-    }
-
 }

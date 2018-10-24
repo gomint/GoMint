@@ -17,9 +17,4 @@ public interface ItemBlazeRod extends ItemStack, ItemBurnable {
         return GoMint.instance().createItemStack( ItemBlazeRod.class, amount );
     }
 
-    @Override
-    default long getBurnTime() {
-        return 120000;
-    }
-
 }

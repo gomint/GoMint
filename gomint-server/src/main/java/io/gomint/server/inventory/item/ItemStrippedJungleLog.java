@@ -11,6 +11,11 @@ import io.gomint.server.registry.RegisterInfo;
 public class ItemStrippedJungleLog extends ItemStack implements io.gomint.inventory.item.ItemStrippedJungleLog {
 
     @Override
+    public long getBurnTime() {
+        return 15000;
+    }
+
+    @Override
     public String getBlockId() {
         return "minecraft:stripped_jungle_log";
     }

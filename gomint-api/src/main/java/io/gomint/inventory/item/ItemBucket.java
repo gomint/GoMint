@@ -31,15 +31,6 @@ public interface ItemBucket extends ItemStack, ItemBurnable {
      */
     Content getContent();
 
-    /**
-     * Returns {@code -1} if the the content type of this bucket
-     * is not equal to {@link Content#LAVA}
-     */
-    @Override
-    default long getBurnTime() {
-        return this.getContent() == Content.LAVA ? 1000000 : -1;
-    }
-
     enum Content {
         /**
          * Water content

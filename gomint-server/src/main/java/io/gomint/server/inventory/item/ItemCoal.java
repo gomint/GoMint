@@ -15,4 +15,9 @@ public class ItemCoal extends ItemStack implements io.gomint.inventory.item.Item
         return ItemType.COAL;
     }
 
+    @Override
+    public long getBurnTime() {
+        return 80000;
+    }
+
 }

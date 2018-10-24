@@ -30,12 +30,7 @@ public interface ItemStrippedDarkOakLog extends ItemStack, ItemBurnable {
      * @return direction of the log
      */
     Direction getLogDirection();
-
-    @Override
-    default long getBurnTime() {
-        return 15000;
-    }
-
+    
     enum Direction {
         UP_DOWN,
         EAST_WEST,

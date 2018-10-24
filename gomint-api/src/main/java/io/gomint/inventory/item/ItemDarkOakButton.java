@@ -24,9 +24,4 @@ public interface ItemDarkOakButton extends ItemStack, ItemBurnable {
         return GoMint.instance().createItemStack( ItemDarkOakButton.class, amount );
     }
 
-    @Override
-    default long getBurnTime() {
-        return 15000;
-    }
-
 }

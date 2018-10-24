@@ -10,7 +10,10 @@ import io.gomint.taglib.NBTTagCompound;
 @RegisterInfo( id = 428 )
 public class ItemBirchWoodDoor extends ItemStack implements io.gomint.inventory.item.ItemBirchWoodDoor {
 
-
+    @Override
+    public long getBurnTime() {
+        return 10000;
+    }
 
     @Override
     public ItemType getType() {

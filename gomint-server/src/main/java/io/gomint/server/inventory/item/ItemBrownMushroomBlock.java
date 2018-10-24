@@ -11,7 +11,10 @@ import io.gomint.taglib.NBTTagCompound;
 @RegisterInfo( id = 99 )
  public class ItemBrownMushroomBlock extends ItemStack implements io.gomint.inventory.item.ItemBrownMushroomBlock {
 
-
+    @Override
+    public long getBurnTime() {
+        return 15000;
+    }
 
     @Override
     public String getBlockId() {

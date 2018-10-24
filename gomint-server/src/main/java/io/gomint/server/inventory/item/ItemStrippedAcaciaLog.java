@@ -11,6 +11,11 @@ import io.gomint.server.registry.RegisterInfo;
 public class ItemStrippedAcaciaLog extends ItemStack implements io.gomint.inventory.item.ItemStrippedAcaciaLog {
 
     @Override
+    public long getBurnTime() {
+        return 15000;
+    }
+
+    @Override
     public String getBlockId() {
         return "minecraft:stripped_acacia_log";
     }

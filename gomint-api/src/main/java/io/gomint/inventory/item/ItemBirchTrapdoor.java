@@ -24,9 +24,4 @@ public interface ItemBirchTrapdoor extends ItemStack, ItemBurnable {
         return GoMint.instance().createItemStack( ItemBirchTrapdoor.class, amount );
     }
 
-    @Override
-    default long getBurnTime() {
-        return 15000;
-    }
-
 }

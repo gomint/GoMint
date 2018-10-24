@@ -16,6 +16,11 @@ import io.gomint.server.registry.RegisterInfo;
 public class ItemWoodenSword extends ItemReduceTierSpecial implements io.gomint.inventory.item.ItemWoodenSword, ItemSword {
 
     @Override
+    public long getBurnTime() {
+        return 10000;
+    }
+
+    @Override
     public void gotInHand( EntityPlayer player ) {
         player
             .getAttributeInstance( Attribute.ATTACK_DAMAGE )

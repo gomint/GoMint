@@ -24,9 +24,4 @@ public interface ItemAcaciaButton extends ItemStack, ItemBurnable {
         return GoMint.instance().createItemStack( ItemAcaciaButton.class, amount );
     }
 
-    @Override
-    default long getBurnTime() {
-        return 15000;
-    }
-
 }

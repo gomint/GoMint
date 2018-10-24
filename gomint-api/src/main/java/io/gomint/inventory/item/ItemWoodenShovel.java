@@ -17,9 +17,4 @@ public interface ItemWoodenShovel extends ItemShovel, ItemBurnable {
         return GoMint.instance().createItemStack( ItemWoodenShovel.class, amount );
     }
 
-    @Override
-    default long getBurnTime() {
-        return 10000;
-    }
-
 }

@@ -11,7 +11,10 @@ import io.gomint.taglib.NBTTagCompound;
 @RegisterInfo( id = 281 )
  public class ItemBowl extends ItemStack implements io.gomint.inventory.item.ItemBowl {
 
-
+    @Override
+    public long getBurnTime() {
+        return 10000;
+    }
 
     @Override
     public ItemType getType() {

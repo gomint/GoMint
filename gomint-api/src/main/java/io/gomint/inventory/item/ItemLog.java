@@ -45,11 +45,6 @@ public interface ItemLog extends ItemStack, ItemBurnable {
      */
     Direction getLogDirection();
 
-    @Override
-    default long getBurnTime() {
-        return 15000;
-    }
-
     enum Type {
         OAK,
         SPRUCE,

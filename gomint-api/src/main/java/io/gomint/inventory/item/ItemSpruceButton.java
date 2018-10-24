@@ -24,9 +24,4 @@ public interface ItemSpruceButton extends ItemStack, ItemBurnable {
         return GoMint.instance().createItemStack( ItemSpruceButton.class, amount );
     }
 
-    @Override
-    default long getBurnTime() {
-        return 15000;
-    }
-
 }

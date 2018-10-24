@@ -17,9 +17,4 @@ public interface ItemWoodenPickaxe extends ItemReduceBreaktime, ItemBurnable {
         return GoMint.instance().createItemStack( ItemWoodenPickaxe.class, amount );
     }
 
-    @Override
-    default long getBurnTime() {
-        return 10000;
-    }
-
 }

@@ -11,7 +11,10 @@ import io.gomint.taglib.NBTTagCompound;
 @RegisterInfo( id = 143 )
  public class ItemWoodenButton extends ItemStack implements io.gomint.inventory.item.ItemWoodenButton {
 
-
+    @Override
+    public long getBurnTime() {
+        return 15000;
+    }
 
     @Override
     public String getBlockId() {

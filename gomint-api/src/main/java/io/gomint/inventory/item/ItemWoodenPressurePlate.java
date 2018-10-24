@@ -17,9 +17,4 @@ public interface ItemWoodenPressurePlate extends ItemStack, ItemBurnable {
         return GoMint.instance().createItemStack( ItemWoodenPressurePlate.class, amount );
     }
 
-    @Override
-    default long getBurnTime() {
-        return 15000;
-    }
-
 }

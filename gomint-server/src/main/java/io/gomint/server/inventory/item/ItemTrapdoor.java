@@ -11,7 +11,10 @@ import io.gomint.taglib.NBTTagCompound;
 @RegisterInfo( id = 96 )
  public class ItemTrapdoor extends ItemStack implements io.gomint.inventory.item.ItemTrapdoor {
 
-
+    @Override
+    public long getBurnTime() {
+        return 15000;
+    }
 
     @Override
     public String getBlockId() {

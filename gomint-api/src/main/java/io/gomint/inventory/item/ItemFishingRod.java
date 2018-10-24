@@ -17,9 +17,4 @@ public interface ItemFishingRod extends ItemStack, ItemBurnable {
         return GoMint.instance().createItemStack( ItemFishingRod.class, amount );
     }
 
-    @Override
-    default long getBurnTime() {
-        return 15000;
-    }
-
 }

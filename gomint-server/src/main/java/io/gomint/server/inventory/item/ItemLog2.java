@@ -11,6 +11,11 @@ import io.gomint.server.registry.RegisterInfo;
 public class ItemLog2 extends ItemStack implements io.gomint.inventory.item.ItemLog2 {
 
     @Override
+    public long getBurnTime() {
+        return 15000;
+    }
+
+    @Override
     public String getBlockId() {
         return "minecraft:log2";
     }

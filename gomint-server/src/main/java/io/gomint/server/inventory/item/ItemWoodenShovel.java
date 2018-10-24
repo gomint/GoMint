@@ -19,7 +19,10 @@ import io.gomint.world.block.BlockFace;
 @RegisterInfo( id = 269 )
 public class ItemWoodenShovel extends ItemReduceTierWooden implements io.gomint.inventory.item.ItemWoodenShovel {
 
-
+    @Override
+    public long getBurnTime() {
+        return 10000;
+    }
 
     @Override
     public boolean interact( EntityPlayer entity, BlockFace face, Vector clickPosition, Block clickedBlock ) {

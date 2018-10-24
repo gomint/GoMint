@@ -17,7 +17,10 @@ import io.gomint.taglib.NBTTagCompound;
 @RegisterInfo( id = 84 )
 public class ItemJukebox extends ItemStack implements io.gomint.inventory.item.ItemJukebox {
 
-
+    @Override
+    public long getBurnTime() {
+        return 15000;
+    }
 
     @Override
     public String getBlockId() {

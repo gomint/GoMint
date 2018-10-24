@@ -24,9 +24,4 @@ public interface ItemJukebox extends ItemStack, ItemBurnable {
         return GoMint.instance().createItemStack( ItemJukebox.class, amount );
     }
 
-    @Override
-    default long getBurnTime() {
-        return 15000;
-    }
-
 }

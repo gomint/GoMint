@@ -11,8 +11,6 @@ import io.gomint.taglib.NBTTagCompound;
 @RegisterInfo( id = 173 )
  public class ItemBlockOfCoal extends ItemStack implements io.gomint.inventory.item.ItemBlockOfCoal {
 
-
-
     @Override
     public String getBlockId() {
         return "minecraft:coal_block";
@@ -21,6 +19,11 @@ import io.gomint.taglib.NBTTagCompound;
     @Override
     public ItemType getType() {
         return ItemType.BLOCK_OF_COAL;
+    }
+
+    @Override
+    public long getBurnTime() {
+        return 800000;
     }
 
 }

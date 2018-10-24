@@ -17,9 +17,4 @@ public interface ItemWoodenHoe extends ItemHoe, ItemBurnable {
         return GoMint.instance().createItemStack( ItemWoodenHoe.class, amount );
     }
 
-    @Override
-    default long getBurnTime() {
-        return 10000;
-    }
-
 }

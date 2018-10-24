@@ -21,6 +21,11 @@ import io.gomint.world.Gamemode;
 public class ItemBow extends ItemStack implements io.gomint.inventory.item.ItemBow {
 
     @Override
+    public long getBurnTime() {
+        return 10000;
+    }
+
+    @Override
     public byte getMaximumAmount() {
         return 1;
     }

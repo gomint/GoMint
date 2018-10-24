@@ -17,9 +17,4 @@ public interface ItemWoodenSlab extends ItemStack, ItemBurnable {
         return GoMint.instance().createItemStack( ItemWoodenSlab.class, amount );
     }
 
-    @Override
-    default long getBurnTime() {
-        return 15000;
-    }
-
 }

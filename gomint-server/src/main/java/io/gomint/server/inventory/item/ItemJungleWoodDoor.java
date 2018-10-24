@@ -11,6 +11,11 @@ import io.gomint.server.registry.RegisterInfo;
 public class ItemJungleWoodDoor extends ItemStack implements io.gomint.inventory.item.ItemJungleWoodDoor {
 
     @Override
+    public long getBurnTime() {
+        return 10000;
+    }
+
+    @Override
     public String getBlockId() {
         return "minecraft:jungle_door";
     }

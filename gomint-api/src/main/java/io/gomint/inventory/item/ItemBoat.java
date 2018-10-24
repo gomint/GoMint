@@ -17,9 +17,4 @@ public interface ItemBoat extends ItemStack, ItemBurnable {
         return GoMint.instance().createItemStack( ItemBoat.class, amount );
     }
 
-    @Override
-    default long getBurnTime() {
-        return 60000;
-    }
-
 }

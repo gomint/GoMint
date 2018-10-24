@@ -24,9 +24,4 @@ public interface ItemJungleButton extends ItemStack, ItemBurnable {
         return GoMint.instance().createItemStack( ItemJungleButton.class, amount );
     }
 
-    @Override
-    default long getBurnTime() {
-        return 15000;
-    }
-
 }

@@ -17,9 +17,4 @@ public interface ItemInvertedDaylightSensor extends ItemStack, ItemBurnable {
         return GoMint.instance().createItemStack( ItemInvertedDaylightSensor.class, amount );
     }
 
-    @Override
-    default long getBurnTime() {
-        return 15000;
-    }
-
 }

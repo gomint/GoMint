@@ -17,9 +17,4 @@ public interface ItemCoal extends ItemStack, ItemBurnable {
         return GoMint.instance().createItemStack( ItemCoal.class, amount );
     }
 
-    @Override
-    default long getBurnTime() {
-        return 80000;
-    }
-
 }

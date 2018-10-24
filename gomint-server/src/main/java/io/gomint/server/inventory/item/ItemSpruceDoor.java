@@ -11,6 +11,11 @@ import io.gomint.server.registry.RegisterInfo;
 public class ItemSpruceDoor extends ItemStack implements io.gomint.inventory.item.ItemSpruceDoor {
 
     @Override
+    public long getBurnTime() {
+        return 10000;
+    }
+
+    @Override
     public String getBlockId() {
         return "minecraft:spruce_door";
     }

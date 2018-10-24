@@ -27,4 +27,9 @@ public class ItemSpruceTrapdoor extends ItemStack implements io.gomint.inventory
         return ItemType.SPRUCE_TRAPDOOR;
     }
 
+    @Override
+    public long getBurnTime() {
+        return 15000;
+    }
+
 }

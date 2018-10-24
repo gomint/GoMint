@@ -17,9 +17,4 @@ public interface ItemDaylightDetector extends ItemStack, ItemBurnable {
         return GoMint.instance().createItemStack( ItemDaylightDetector.class, amount );
     }
 
-    @Override
-    default long getBurnTime() {
-        return 15000;
-    }
-
 }

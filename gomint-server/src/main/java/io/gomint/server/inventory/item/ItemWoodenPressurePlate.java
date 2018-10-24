@@ -11,7 +11,10 @@ import io.gomint.taglib.NBTTagCompound;
 @RegisterInfo( id = 72 )
  public class ItemWoodenPressurePlate extends ItemStack implements io.gomint.inventory.item.ItemWoodenPressurePlate {
 
-
+    @Override
+    public long getBurnTime() {
+        return 15000;
+    }
 
     @Override
     public String getBlockId() {

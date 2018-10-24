@@ -24,9 +24,4 @@ public interface ItemDriedKelpBlock extends ItemStack, ItemBurnable {
         return GoMint.instance().createItemStack( ItemDriedKelpBlock.class, amount );
     }
 
-    @Override
-    default long getBurnTime() {
-        return 200000;
-    }
-
 }

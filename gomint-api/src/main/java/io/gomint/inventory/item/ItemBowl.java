@@ -17,9 +17,4 @@ public interface ItemBowl extends ItemStack, ItemBurnable {
         return GoMint.instance().createItemStack( ItemBowl.class, amount );
     }
 
-    @Override
-    default long getBurnTime() {
-        return 10000;
-    }
-
 }

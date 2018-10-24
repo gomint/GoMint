@@ -31,11 +31,6 @@ public interface ItemStrippedBirchLog extends ItemStack, ItemBurnable {
      */
     Direction getLogDirection();
 
-    @Override
-    default long getBurnTime() {
-        return 15000;
-    }
-
     enum Direction {
         UP_DOWN,
         EAST_WEST,

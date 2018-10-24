@@ -17,9 +17,4 @@ public interface ItemWoodenSword extends ItemStack, ItemBurnable {
         return GoMint.instance().createItemStack( ItemWoodenSword.class, amount );
     }
 
-    @Override
-    default long getBurnTime() {
-        return 10000;
-    }
-
 }

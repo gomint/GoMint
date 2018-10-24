@@ -24,9 +24,4 @@ public interface ItemBirchButton extends ItemStack, ItemBurnable {
         return GoMint.instance().createItemStack( ItemBirchButton.class, amount );
     }
 
-    @Override
-    default long getBurnTime() {
-        return 15000;
-    }
-
 }
