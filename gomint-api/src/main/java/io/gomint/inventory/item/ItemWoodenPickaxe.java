@@ -6,7 +6,7 @@ import io.gomint.GoMint;
  * @author geNAZt
  * @version 1.0
  */
-public interface ItemWoodenPickaxe extends ItemReduceBreaktime {
+public interface ItemWoodenPickaxe extends ItemReduceBreaktime, ItemBurnable {
 
     /**
      * Create a new item stack with given class and amount
@@ -15,6 +15,11 @@ public interface ItemWoodenPickaxe extends ItemReduceBreaktime {
      */
     static ItemWoodenPickaxe create( int amount ) {
         return GoMint.instance().createItemStack( ItemWoodenPickaxe.class, amount );
+    }
+
+    @Override
+    default long getBurnTime() {
+        return 10000;
     }
 
 }

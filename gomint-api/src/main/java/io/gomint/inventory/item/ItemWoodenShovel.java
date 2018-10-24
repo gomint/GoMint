@@ -6,7 +6,7 @@ import io.gomint.GoMint;
  * @author geNAZt
  * @version 1.0
  */
-public interface ItemWoodenShovel extends ItemShovel {
+public interface ItemWoodenShovel extends ItemShovel, ItemBurnable {
 
     /**
      * Create a new item stack with given class and amount
@@ -15,6 +15,11 @@ public interface ItemWoodenShovel extends ItemShovel {
      */
     static ItemWoodenShovel create( int amount ) {
         return GoMint.instance().createItemStack( ItemWoodenShovel.class, amount );
+    }
+
+    @Override
+    default long getBurnTime() {
+        return 10000;
     }
 
 }
