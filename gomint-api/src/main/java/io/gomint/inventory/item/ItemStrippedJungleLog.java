@@ -6,7 +6,7 @@ import io.gomint.GoMint;
  * @author geNAZt
  * @version 1.0
  */
-public interface ItemStrippedJungleLog extends ItemStack {
+public interface ItemStrippedJungleLog extends ItemStack, ItemBurnable {
 
     /**
      * Create a new item stack with given class and amount
@@ -30,6 +30,11 @@ public interface ItemStrippedJungleLog extends ItemStack {
      * @return direction of the log
      */
     Direction getLogDirection();
+
+    @Override
+    default long getBurnTime() {
+        return 15000;
+    }
 
     enum Direction {
         UP_DOWN,
