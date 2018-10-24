@@ -6,7 +6,7 @@ import io.gomint.GoMint;
  * @author geNAZt
  * @version 1.0
  */
-public interface ItemLadder extends ItemStack {
+public interface ItemLadder extends ItemStack, ItemBurnable {
 
     /**
      * Create a new item stack with given class and amount
@@ -15,6 +15,11 @@ public interface ItemLadder extends ItemStack {
      */
     static ItemLadder create( int amount ) {
         return GoMint.instance().createItemStack( ItemLadder.class, amount );
+    }
+
+    @Override
+    default long getBurnTime() {
+        return 15000;
     }
 
 }
