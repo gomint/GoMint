@@ -13,7 +13,7 @@ import io.gomint.GoMint;
  * @author geNAZt
  * @version 1.0
  */
-public interface ItemBanner extends ItemStack {
+public interface ItemBanner extends ItemStack, ItemBurnable {
 
     /**
      * Create a new item stack with given class and amount
@@ -22,6 +22,11 @@ public interface ItemBanner extends ItemStack {
      */
     static ItemBanner create( int amount ) {
         return GoMint.instance().createItemStack( ItemBanner.class, amount );
+    }
+
+    @Override
+    default long getBurnTime() {
+        return 15000;
     }
 
 }
