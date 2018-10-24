@@ -18,7 +18,7 @@ impact minimal we deprecate old methods and provide better alternatives to switc
 
 Current deprecated methods:
 
-`WorldType.GOMINT` - Worlds created with the gomint type will not load anymore (this is immediate effect). creating worlds with GOMINT type will be ignored and created with ANVIL instead.<br />
+`WorldType.GOMINT` - Worlds created with the gomint type will not load anymore (this is immediate effect). creating worlds with GOMINT type will be ignored and created with LevelDB instead.<br />
 
 Project
 --
