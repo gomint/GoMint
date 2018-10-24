@@ -13,7 +13,7 @@ import io.gomint.GoMint;
  * @author geNAZt
  * @version 1.0
  */
-public interface ItemDriedKelpBlock extends ItemStack {
+public interface ItemDriedKelpBlock extends ItemStack, ItemBurnable {
 
     /**
      * Create a new item stack with given class and amount
@@ -23,4 +23,10 @@ public interface ItemDriedKelpBlock extends ItemStack {
     static ItemDriedKelpBlock create( int amount ) {
         return GoMint.instance().createItemStack( ItemDriedKelpBlock.class, amount );
     }
+
+    @Override
+    default long getBurnTime() {
+        return 200000;
+    }
+
 }
