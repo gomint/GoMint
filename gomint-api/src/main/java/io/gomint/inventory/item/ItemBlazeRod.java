@@ -6,7 +6,7 @@ import io.gomint.GoMint;
  * @author geNAZt
  * @version 1.0
  */
-public interface ItemBlazeRod extends ItemStack {
+public interface ItemBlazeRod extends ItemStack, ItemBurnable {
 
     /**
      * Create a new item stack with given class and amount
@@ -15,6 +15,11 @@ public interface ItemBlazeRod extends ItemStack {
      */
     static ItemBlazeRod create( int amount ) {
         return GoMint.instance().createItemStack( ItemBlazeRod.class, amount );
+    }
+
+    @Override
+    default long getBurnTime() {
+        return 120000;
     }
 
 }
