@@ -12,4 +12,10 @@ package io.gomint.world.block;
  * @version 1.0
  */
 public interface BlockDragonEgg extends Block {
+
+    /**
+     * Teleports the Dragon Egg to a random location up to
+     * 7 blocks vertically and 15 blocks horizontally
+    */
+    void teleport();
 }

@@ -65,7 +65,8 @@ public class DragonEgg extends Block implements io.gomint.world.block.BlockDrago
         return false;
     }
 
-    private void teleport() {
+    @Override
+    public void teleport() {
         BlockPosition pos = this.getLocation().toBlockPosition();
         FastRandom random = FastRandom.current();
 
