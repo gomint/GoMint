@@ -82,12 +82,7 @@ import io.gomint.server.world.ChunkAdapter;
 import io.gomint.server.world.WorldAdapter;
 import io.gomint.server.world.block.Block;
 import io.gomint.taglib.NBTTagCompound;
-import io.gomint.world.Chunk;
-import io.gomint.world.Gamemode;
-import io.gomint.world.Particle;
-import io.gomint.world.ParticleData;
-import io.gomint.world.Sound;
-import io.gomint.world.SoundData;
+import io.gomint.world.*;
 import it.unimi.dsi.fastutil.bytes.Byte2ObjectMap;
 import it.unimi.dsi.fastutil.bytes.Byte2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
@@ -632,6 +627,15 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
         if ( this.getGamemode() != Gamemode.CREATIVE ) {
             if ( this.getHunger() <= 6 && this.isSprinting() ) {
                 this.setSprinting( false );
+            }
+        }
+
+        // Check if the difficulty is peaceful and the player get lost lot of hunger
+        if( this.getWorld().getDifficulty().equals( Difficulty.PEACEFUL ) ) {
+            if( this.getGamemode() != Gamemode.CREATIVE ) {
+                if( this.getHunger() <= 20 ) {
+                    this.addHunger( 20 - this.getHunger() );
+                }
             }
         }
     }
