@@ -27,6 +27,7 @@ import io.gomint.event.player.PlayerFoodLevelChangeEvent;
 import io.gomint.event.player.PlayerJoinEvent;
 import io.gomint.event.player.PlayerMoveEvent;
 import io.gomint.event.player.PlayerRespawnEvent;
+import io.gomint.event.world.BlockBreakEvent;
 import io.gomint.gui.Form;
 import io.gomint.gui.FormListener;
 import io.gomint.math.AxisAlignedBB;
@@ -631,11 +632,10 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
         }
 
         // Check if the difficulty is peaceful and the player get lost hunger
-        if( this.getWorld().getDifficulty().equals( Difficulty.PEACEFUL ) ) {
-            if( this.getGamemode() != Gamemode.CREATIVE ) {
-                if( this.getHunger() <= 20 ) {
-                    this.addHunger( 20 - this.getHunger() );
-                }
+        if( this.getWorld().getDifficulty().equals( Difficulty.PEACEFUL ) &&
+            this.getGamemode().equals( Gamemode.SURVIVAL ) || this.getGamemode().equals( Gamemode.ADVENTURE ) ) {
+            if( this.getHunger() <= 20 ) {
+                this.setHunger( 20 - this.getHunger() );
             }
         }
     }
