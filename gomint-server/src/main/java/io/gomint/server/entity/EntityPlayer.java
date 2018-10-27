@@ -27,7 +27,6 @@ import io.gomint.event.player.PlayerFoodLevelChangeEvent;
 import io.gomint.event.player.PlayerJoinEvent;
 import io.gomint.event.player.PlayerMoveEvent;
 import io.gomint.event.player.PlayerRespawnEvent;
-import io.gomint.event.world.BlockBreakEvent;
 import io.gomint.gui.Form;
 import io.gomint.gui.FormListener;
 import io.gomint.math.AxisAlignedBB;
