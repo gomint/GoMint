@@ -623,8 +623,8 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
         // Update attributes which are flagged as dirty
         this.updateAttributes();
 
-        // Check for sprint, skip if player is in Creative mode
-        if ( this.getGamemode() != Gamemode.CREATIVE ) {
+        // Check for sprint, if player is in survival or adventure mode
+        if ( this.getGamemode().equals( Gamemode.SURVIVAL ) || this.getGamemode().equals( Gamemode.ADVENTURE ) ) {
             if ( this.getHunger() <= 6 && this.isSprinting() ) {
                 this.setSprinting( false );
             }
