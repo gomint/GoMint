@@ -632,7 +632,7 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
 
         // Check if the difficulty is peaceful and the player get lost hunger
         if( this.getWorld().getDifficulty() == Difficulty.PEACEFUL &&
-            this.getGamemode() == Gamemode.SURVIVAL || this.getGamemode() == Gamemode.ADVENTURE ) {
+            ( this.getGamemode() == Gamemode.SURVIVAL || this.getGamemode() == Gamemode.ADVENTURE ) ) {
             if( this.getHunger() <= 20 ) {
                 this.setHunger( 20 - this.getHunger() );
             }
