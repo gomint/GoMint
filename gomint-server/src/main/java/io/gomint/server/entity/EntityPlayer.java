@@ -624,15 +624,15 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
         this.updateAttributes();
 
         // Check for sprint, if player is in survival or adventure mode
-        if ( this.getGamemode().equals( Gamemode.SURVIVAL ) || this.getGamemode().equals( Gamemode.ADVENTURE ) ) {
+        if ( this.getGamemode() == Gamemode.SURVIVAL || this.getGamemode() == Gamemode.ADVENTURE ) {
             if ( this.getHunger() <= 6 && this.isSprinting() ) {
                 this.setSprinting( false );
             }
         }
 
         // Check if the difficulty is peaceful and the player get lost hunger
-        if( this.getWorld().getDifficulty().equals( Difficulty.PEACEFUL ) &&
-            this.getGamemode().equals( Gamemode.SURVIVAL ) || this.getGamemode().equals( Gamemode.ADVENTURE ) ) {
+        if( this.getWorld().getDifficulty() == Difficulty.PEACEFUL &&
+            this.getGamemode() == Gamemode.SURVIVAL || this.getGamemode() == Gamemode.ADVENTURE ) {
             if( this.getHunger() <= 20 ) {
                 this.setHunger( 20 - this.getHunger() );
             }
