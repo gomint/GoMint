@@ -23,8 +23,7 @@ Project
 --
 
 Build Version | Build Result
------------- | -------------
-Feature Build "genazt" | [![Build Status](https://travis-ci.org/GoMint/GoMint.svg?branch=genazt)](https://travis-ci.org/GoMint/GoMint)
+------------ | -------------|
 Master Build | [![Build Status](https://travis-ci.org/GoMint/GoMint.svg?branch=master)](https://travis-ci.org/GoMint/GoMint)
 
 GoMint is a Minecraft Bedrock Edition server software implementation that is still work in progress.
@@ -40,10 +39,16 @@ This is the implementation of the server. Fiddling with this is not supported bu
 This part of the project is developing the fastest. If you want to contribute to the software watch this module the
 most.
 
-##### gomint-helper
-Holds generator helpers for all type of things. Currently this only holds a class generator for Blocks.
+##### gomint-native
+Holds native code related to hasing and zlib.
 
-##### gomint-testplugin
+##### gomint-converter
+A standalone application that allows you to easily convert an Anvil world to LevelDB from the command line.
+
+##### gomint-asset-compiler
+Holds most of the data related to entities, blocks and more. The data is gathered via MiTM and from other sources
+
+##### gomint-test-plugin
 A plugin to test and see the API design. 
 
 ## Contact & Social
@@ -52,12 +57,6 @@ A plugin to test and see the API design.
 
 ## Todo
 Join Discord for more information about the current tasks we do
-
-## Testing
-
-As the project is still work in progress the only way to launch the application currently is to set up
-your respective IDE and provide a working directory that contains a regular Minecraft PC Anvil World.
-Afterwards you may join the server using your version of MC:BE.
 
 ## License
 
