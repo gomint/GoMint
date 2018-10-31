@@ -40,7 +40,7 @@ This part of the project is developing the fastest. If you want to contribute to
 most.
 
 ##### gomint-native
-Holds native code related to hasing and zlib.
+Holds native code related to hashing and zlib.
 
 ##### gomint-converter
 A standalone application that allows you to easily convert an Anvil world to LevelDB from the command line.
