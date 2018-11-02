@@ -295,10 +295,7 @@ public abstract class WorldAdapter implements World {
         packet.setSpawnType( PacketSetSpawnPosition.SpawnType.WORLD );
         packet.setPosition( location.toBlockPosition() );
 
-        for ( EntityPlayer player : this.getPlayers() ) {
-            io.gomint.server.entity.EntityPlayer handle = (io.gomint.server.entity.EntityPlayer) player;
-            handle.getConnection().send( packet );
-        }
+        this.broadcastPacket( packet );
     }
 
     @Override
