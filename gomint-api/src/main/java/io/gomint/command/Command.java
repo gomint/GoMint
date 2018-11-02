@@ -28,15 +28,15 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * @author geNAZt
- * @version 1.0
- * <p>
  * This class builds up a command. A command can have defined parameters and permissions
  * <p>
  * Quick notes on the API design idea:
  * <p>
  * Command cmd = new Command( "test" );
  * cmd.description("This is just a test command");
+ *
+ * @author geNAZt
+ * @version 1.0
  */
 @Getter
 public abstract class Command {
