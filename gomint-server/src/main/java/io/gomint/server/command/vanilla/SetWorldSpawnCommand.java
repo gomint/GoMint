@@ -10,6 +10,7 @@ import io.gomint.command.annotation.Overload;
 import io.gomint.command.annotation.Parameter;
 import io.gomint.command.annotation.Permission;
 import io.gomint.command.validator.BlockPositionValidator;
+import io.gomint.math.BlockPosition;
 import io.gomint.math.Location;
 import io.gomint.server.entity.EntityPlayer;
 import io.gomint.server.world.WorldAdapter;
@@ -36,17 +37,28 @@ public class SetWorldSpawnCommand extends Command {
             return output.fail( "Executor is required to be a player" );
         }
 
-        EntityPlayer executor = ( EntityPlayer ) sender;
+        EntityPlayer executor = (EntityPlayer) sender;
         WorldAdapter affectedWorld = executor.getWorld();
-        Location worldSpawnLocation = ( Location ) arguments.getOrDefault( "spawnPoint", executor.getLocation() );
+        Location worldSpawnLocation = executor.getLocation();
 
-        worldSpawnLocation.setX( (float) Math.floor( worldSpawnLocation.getX() ) );
-        worldSpawnLocation.setY( (float) Math.floor( worldSpawnLocation.getY() ) );
-        worldSpawnLocation.setZ( (float) Math.floor( worldSpawnLocation.getZ() ) );
+        // Handling argument: spawnPoint
+        BlockPosition spawnPoint = (BlockPosition) arguments.get("spawnPoint");
+        if ( spawnPoint != null ) {
+            worldSpawnLocation.setX(spawnPoint.getX());
+            worldSpawnLocation.setY(spawnPoint.getY());
+            worldSpawnLocation.setZ(spawnPoint.getZ());
+        }
 
+        this.floorLocation(worldSpawnLocation);
         affectedWorld.setSpawnLocation( worldSpawnLocation );
 
         return output.success( "Set the world spawn point to (%.1f, %.1f, %.1f)" );
+    }
+
+    private void floorLocation( Location location ) {
+        location.setX( (float) Math.floor( location.getX() ) );
+        location.setY( (float) Math.floor( location.getY() ) );
+        location.setZ( (float) Math.floor( location.getZ() ) );
     }
 
 }
