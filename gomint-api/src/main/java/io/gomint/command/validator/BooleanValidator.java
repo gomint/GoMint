@@ -30,14 +30,6 @@ public class BooleanValidator extends EnumValidator {
      * {@inheritDoc}
      */
     @Override
-    public ParamType getType() {
-        return ParamType.BOOL;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public Object validate( String input, CommandSender commandSender ) {
         String values = (String) super.validate( input, commandSender );
         if ( values == null ) {
@@ -45,6 +37,14 @@ public class BooleanValidator extends EnumValidator {
         }
 
         return values.equals( "true" ) ? Boolean.TRUE : Boolean.FALSE;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public ParamType getType() {
+        return ParamType.BOOL;
     }
 
 }

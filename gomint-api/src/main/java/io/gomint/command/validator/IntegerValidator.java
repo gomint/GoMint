@@ -17,30 +17,6 @@ public class IntegerValidator extends ParamValidator {
      * {@inheritDoc}
      */
     @Override
-    public ParamType getType() {
-        return ParamType.INT;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean hasValues() {
-        return false;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public List<String> values() {
-        return null;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public Object validate( String input, CommandSender commandSender ) {
         try {
             return Integer.parseInt( input );
@@ -59,6 +35,30 @@ public class IntegerValidator extends ParamValidator {
         }
 
         return null;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public ParamType getType() {
+        return ParamType.INT;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List<String> values() {
+        return null;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean hasValues() {
+        return false;
     }
 
     /**

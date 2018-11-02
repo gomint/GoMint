@@ -24,30 +24,6 @@ public class StringValidator extends ParamValidator {
      * {@inheritDoc}
      */
     @Override
-    public ParamType getType() {
-        return ParamType.STRING;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean hasValues() {
-        return false;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public List<String> values() {
-        return null;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public Object validate( String input, CommandSender commandSender ) {
         if ( this.pattern.matcher( input ).matches() ) {
             return input;
@@ -66,6 +42,30 @@ public class StringValidator extends ParamValidator {
         }
 
         return null;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public ParamType getType() {
+        return ParamType.STRING;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List<String> values() {
+        return null;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean hasValues() {
+        return false;
     }
 
     /**

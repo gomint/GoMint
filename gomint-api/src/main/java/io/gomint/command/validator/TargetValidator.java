@@ -21,30 +21,6 @@ public class TargetValidator extends ParamValidator {
      * {@inheritDoc}
      */
     @Override
-    public ParamType getType() {
-        return ParamType.TARGET;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean hasValues() {
-        return false;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public List<String> values() {
-        return null;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public Object validate( String input, CommandSender commandSender ) {
         Collection<EntityPlayer> searchPool = GoMint.instance().getPlayers();
         if ( commandSender instanceof PlayerCommandSender ) {
@@ -94,6 +70,30 @@ public class TargetValidator extends ParamValidator {
         }
 
         return first;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public ParamType getType() {
+        return ParamType.TARGET;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List<String> values() {
+        return null;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean hasValues() {
+        return false;
     }
 
     /**

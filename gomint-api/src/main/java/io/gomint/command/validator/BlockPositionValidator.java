@@ -20,30 +20,6 @@ public class BlockPositionValidator extends ParamValidator {
      * {@inheritDoc}
      */
     @Override
-    public ParamType getType() {
-        return ParamType.BLOCK_POS;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean hasValues() {
-        return false;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public List<String> values() {
-        return null;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public Object validate( String input, CommandSender sender ) {
         // 0 -> x
         // 1 -> y
@@ -75,6 +51,55 @@ public class BlockPositionValidator extends ParamValidator {
         }
 
         return new BlockPosition( xInt, yInt, zInt );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String consume( Iterator<String> data ) {
+        StringBuilder forValidator = new StringBuilder();
+        for ( int i = 0; i < 3; i++ ) {
+            if ( !data.hasNext() ) {
+                return null;
+            }
+
+            forValidator.append( data.next() );
+        }
+
+        return forValidator.toString();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public ParamType getType() {
+        return ParamType.BLOCK_POS;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List<String> values() {
+        return null;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean hasValues() {
+        return false;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String getHelpText() {
+        return "blockpos:x y z";
     }
 
     private Integer parsePos( int positionValue, String in ) {
@@ -116,31 +141,6 @@ public class BlockPositionValidator extends ParamValidator {
         }
 
         return null;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String getHelpText() {
-        return "blockpos:x y z";
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String consume( Iterator<String> data ) {
-        StringBuilder forValidator = new StringBuilder();
-        for ( int i = 0; i < 3; i++ ) {
-            if ( !data.hasNext() ) {
-                return null;
-            }
-
-            forValidator.append( data.next() );
-        }
-
-        return forValidator.toString();
     }
 
 }

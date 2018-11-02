@@ -27,24 +27,12 @@ public class EnumValidator extends ParamValidator {
      * {@inheritDoc}
      */
     @Override
-    public ParamType getType() {
-        return ParamType.STRING_ENUM;
-    }
+    public String consume( Iterator<String> data ) {
+        if ( data.hasNext() ) {
+            return data.next();
+        }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean hasValues() {
-        return true;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public List<String> values() {
-        return this.values;
+        return null;
     }
 
     /**
@@ -63,12 +51,24 @@ public class EnumValidator extends ParamValidator {
      * {@inheritDoc}
      */
     @Override
-    public String consume( Iterator<String> data ) {
-        if ( data.hasNext() ) {
-            return data.next();
-        }
+    public ParamType getType() {
+        return ParamType.STRING_ENUM;
+    }
 
-        return null;
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List<String> values() {
+        return this.values;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean hasValues() {
+        return true;
     }
 
     /**

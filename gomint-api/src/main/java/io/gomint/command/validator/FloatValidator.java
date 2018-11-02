@@ -17,16 +17,32 @@ public class FloatValidator extends ParamValidator {
      * {@inheritDoc}
      */
     @Override
-    public ParamType getType() {
-        return ParamType.FLOAT;
+    public Object validate( String input, CommandSender commandSender ) {
+        try {
+            return Float.parseFloat( input );
+        } catch ( NumberFormatException e ) {
+            return null;
+        }
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public boolean hasValues() {
-        return false;
+    public String consume( Iterator<String> data ) {
+        if ( data.hasNext() ) {
+            return data.next();
+        }
+
+        return null;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public ParamType getType() {
+        return ParamType.FLOAT;
     }
 
     /**
@@ -41,12 +57,8 @@ public class FloatValidator extends ParamValidator {
      * {@inheritDoc}
      */
     @Override
-    public Object validate( String input, CommandSender commandSender ) {
-        try {
-            return Float.parseFloat( input );
-        } catch ( NumberFormatException e ) {
-            return null;
-        }
+    public boolean hasValues() {
+        return false;
     }
 
     /**
@@ -55,18 +67,6 @@ public class FloatValidator extends ParamValidator {
     @Override
     public String getHelpText() {
         return "float";
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String consume( Iterator<String> data ) {
-        if ( data.hasNext() ) {
-            return data.next();
-        }
-
-        return null;
     }
 
 }

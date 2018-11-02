@@ -17,23 +17,16 @@ public class TextValidator extends ParamValidator {
      * {@inheritDoc}
      */
     @Override
-    public ParamType getType() {
-        return ParamType.TEXT;
-    }
+    public String consume( Iterator<String> data ) {
+        StringBuilder forValidator = new StringBuilder();
+        while ( data.hasNext() ) {
+            forValidator.append( data.next() ).append( " " );
+        }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean hasValues() {
-        return false;
-    }
+        if ( forValidator.length() > 0 ) {
+            return forValidator.deleteCharAt( forValidator.length() - 1 ).toString();
+        }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public List<String> values() {
         return null;
     }
 
@@ -49,17 +42,24 @@ public class TextValidator extends ParamValidator {
      * {@inheritDoc}
      */
     @Override
-    public String consume( Iterator<String> data ) {
-        StringBuilder forValidator = new StringBuilder();
-        while ( data.hasNext() ) {
-            forValidator.append( data.next() ).append( " " );
-        }
+    public ParamType getType() {
+        return ParamType.TEXT;
+    }
 
-        if ( forValidator.length() > 0 ) {
-            return forValidator.deleteCharAt( forValidator.length() - 1 ).toString();
-        }
-
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List<String> values() {
         return null;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean hasValues() {
+        return false;
     }
 
     /**
