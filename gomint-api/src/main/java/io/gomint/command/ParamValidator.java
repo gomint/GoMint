@@ -25,7 +25,7 @@ public abstract class ParamValidator {
      * Consume all parts this validator needs as input from the command
      *
      * @param data left from the command which can be consumed
-     * @return the concated data consumed
+     * @return the concatenated data consumed
      */
     public abstract String consume( Iterator<String> data );
 
