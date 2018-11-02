@@ -49,6 +49,7 @@ public class CommandManager {
             for ( Class cmdClass : new Class[]{
                 // Vanilla
                 DeopCommand.class,
+                DifficultyCommand.class,
                 ListCommand.class,
                 OpCommand.class,
                 GamemodeCommand.class,
