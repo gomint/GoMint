@@ -13,26 +13,41 @@ import java.util.List;
  */
 public class TextValidator extends ParamValidator {
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public ParamType getType() {
         return ParamType.TEXT;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean hasValues() {
         return false;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<String> values() {
         return null;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Object validate( String input, CommandSender commandSender ) {
         return input;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String consume( Iterator<String> data ) {
         StringBuilder forValidator = new StringBuilder();
@@ -47,6 +62,9 @@ public class TextValidator extends ParamValidator {
         return null;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getHelpText() {
         return "text";

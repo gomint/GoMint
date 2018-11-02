@@ -16,21 +16,33 @@ import java.util.List;
  */
 public class BlockPositionValidator extends ParamValidator {
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public ParamType getType() {
         return ParamType.BLOCK_POS;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean hasValues() {
         return false;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<String> values() {
         return null;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Object validate( String input, CommandSender sender ) {
         // 0 -> x
@@ -106,11 +118,17 @@ public class BlockPositionValidator extends ParamValidator {
         return null;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getHelpText() {
         return "blockpos:x y z";
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String consume( Iterator<String> data ) {
         StringBuilder forValidator = new StringBuilder();

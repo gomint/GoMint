@@ -26,11 +26,17 @@ public class BooleanValidator extends EnumValidator {
         super( ENUM_VALUES );
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public ParamType getType() {
         return ParamType.BOOL;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Object validate( String input, CommandSender commandSender ) {
         String values = (String) super.validate( input, commandSender );

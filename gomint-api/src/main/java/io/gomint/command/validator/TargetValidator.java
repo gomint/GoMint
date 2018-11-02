@@ -17,21 +17,33 @@ import java.util.List;
  */
 public class TargetValidator extends ParamValidator {
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public ParamType getType() {
         return ParamType.TARGET;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean hasValues() {
         return false;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<String> values() {
         return null;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Object validate( String input, CommandSender commandSender ) {
         Collection<EntityPlayer> searchPool = GoMint.instance().getPlayers();
@@ -50,6 +62,9 @@ public class TargetValidator extends ParamValidator {
         return null;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String consume( Iterator<String> data ) {
         // Check if we have one element left
@@ -81,6 +96,9 @@ public class TargetValidator extends ParamValidator {
         return first;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getHelpText() {
         return "target:player";

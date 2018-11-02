@@ -23,21 +23,33 @@ public class EnumValidator extends ParamValidator {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public ParamType getType() {
         return ParamType.STRING_ENUM;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean hasValues() {
         return true;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<String> values() {
         return this.values;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Object validate( String input, CommandSender commandSender ) {
         if ( this.values.contains( input ) ) {
@@ -47,6 +59,9 @@ public class EnumValidator extends ParamValidator {
         return null;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String consume( Iterator<String> data ) {
         if ( data.hasNext() ) {
@@ -56,6 +71,9 @@ public class EnumValidator extends ParamValidator {
         return null;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getHelpText() {
         return Joiner.on( " | " ).join( this.values );
