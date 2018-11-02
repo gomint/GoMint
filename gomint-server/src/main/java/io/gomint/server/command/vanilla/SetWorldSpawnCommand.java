@@ -42,14 +42,14 @@ public class SetWorldSpawnCommand extends Command {
         Location worldSpawnLocation = executor.getLocation();
 
         // Handling argument: spawnPoint
-        BlockPosition spawnPoint = (BlockPosition) arguments.get("spawnPoint");
+        BlockPosition spawnPoint = (BlockPosition) arguments.get( "spawnPoint" );
         if ( spawnPoint != null ) {
-            worldSpawnLocation.setX(spawnPoint.getX());
-            worldSpawnLocation.setY(spawnPoint.getY());
-            worldSpawnLocation.setZ(spawnPoint.getZ());
+            worldSpawnLocation.setX( spawnPoint.getX() );
+            worldSpawnLocation.setY( spawnPoint.getY() );
+            worldSpawnLocation.setZ( spawnPoint.getZ() );
         }
 
-        this.floorLocation(worldSpawnLocation);
+        this.floorLocation( worldSpawnLocation );
         affectedWorld.setSpawnLocation( worldSpawnLocation );
 
         return output.success( "Set the world spawn point to (%.1f, %.1f, %.1f)" );
