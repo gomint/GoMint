@@ -183,6 +183,7 @@ public class LevelDBWorldAdapter extends WorldAdapter {
         compound.addValue( "SpawnX", (int) this.spawn.getX() );
         compound.addValue( "SpawnY", (int) this.spawn.getY() );
         compound.addValue( "SpawnZ", (int) this.spawn.getZ() );
+        compound.addValue( "Difficulty", this.difficulty.getDifficultyDegree() );
 
         // Level name
         compound.addValue( "LevelName", this.levelName );
