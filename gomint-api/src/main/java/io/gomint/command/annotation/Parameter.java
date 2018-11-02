@@ -16,9 +16,13 @@ import java.lang.annotation.Target;
 public @interface Parameter {
 
     String name();
+
     Class<? extends ParamValidator> validator();
+
     String[] arguments() default {};
+
     boolean optional() default false;
+
     String postfix() default "";
 
 }
