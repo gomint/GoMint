@@ -228,23 +228,13 @@ public class LevelDBWorldAdapter extends WorldAdapter {
     @Override
     public void setSpawnLocation( Location location ) {
         super.setSpawnLocation( location );
-
-        try {
-            this.saveLevelDat();
-        } catch ( IOException cause ) {
-            this.logger.error( "level.dat for world '{}' could not be saved: ", this.levelName, cause );
-        }
+        this.sneakySaveLevelDat();
     }
 
     @Override
     public void setDifficulty( Difficulty difficulty ) {
         super.setDifficulty( difficulty );
-
-        try {
-            this.saveLevelDat();
-        } catch ( IOException cause ) {
-            this.logger.error( "level.dat for world '{}' could not be saved: ", this.levelName, cause );
-        }
+        this.sneakySaveLevelDat();
     }
 
     @Override
@@ -527,6 +517,14 @@ public class LevelDBWorldAdapter extends WorldAdapter {
     @Override
     public Chunk generateEmptyChunk( int x, int z ) {
         return new LevelDBChunkAdapter( this, x, z );
+    }
+
+    protected final void sneakySaveLevelDat() {
+        try {
+            this.saveLevelDat();
+        } catch ( IOException cause ) {
+            this.logger.error( "level.dat for world '{}' could not be saved: ", this.levelName, cause );
+        }
     }
 
 }
