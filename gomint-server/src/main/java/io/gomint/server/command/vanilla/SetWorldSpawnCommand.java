@@ -22,7 +22,7 @@ import java.util.Map;
  * @version 1.0
  */
 @Name( "setworldspawn" )
-@Description( "Sets the world spawn at the current location where the executor stands" )
+@Description( "Sets the world spawn" )
 @Permission( "gomint.command.setworldspawn" )
 @Overload( {
     @Parameter( name = "spawnPoint", validator = BlockPositionValidator.class, optional = true )
@@ -52,7 +52,10 @@ public class SetWorldSpawnCommand extends Command {
         this.floorLocation( worldSpawnLocation );
         affectedWorld.setSpawnLocation( worldSpawnLocation );
 
-        return output.success( "Set the world spawn point to (%.1f, %.1f, %.1f)" );
+        return output.success( String.format("Set the world spawn point to (%.1f, %.1f, %.1f)",
+                                             worldSpawnLocation.getX(),
+                                             worldSpawnLocation.getY(),
+                                             worldSpawnLocation.getZ() ) );
     }
 
     private void floorLocation( Location location ) {
