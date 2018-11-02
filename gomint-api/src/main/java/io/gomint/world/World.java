@@ -57,6 +57,20 @@ public interface World {
     Location getSpawnLocation();
 
     /**
+     * Set the difficulty of the world
+     *
+     * @param difficulty The world's new difficulty
+     */
+    void setDifficulty( Difficulty difficulty );
+
+    /**
+     * Returns the difficulty of the world
+     *
+     * @return The world's difficulty
+     */
+    Difficulty getDifficulty();
+
+    /**
      * Get the block at that position or null if the position is not loaded in the world.
      *
      * @param pos of the position
