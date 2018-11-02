@@ -43,6 +43,13 @@ public interface World {
     String getLevelName();
 
     /**
+     * Sets the spawn location of the world
+     *
+     * @param location The world's spawn location
+     */
+    void setSpawnLocation( Location location );
+
+    /**
      * Gets the spawn location of the world.
      *
      * @return The world's spawn location

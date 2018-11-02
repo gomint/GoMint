@@ -29,6 +29,7 @@ import io.gomint.server.entity.tileentity.TileEntity;
 import io.gomint.server.network.PlayerConnection;
 import io.gomint.server.network.packet.Packet;
 import io.gomint.server.network.packet.PacketSetDifficulty;
+import io.gomint.server.network.packet.PacketSetSpawnPosition;
 import io.gomint.server.network.packet.PacketTileEntityData;
 import io.gomint.server.network.packet.PacketUpdateBlock;
 import io.gomint.server.network.packet.PacketWorldEvent;
@@ -74,6 +75,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Queue;
 import java.util.Set;
 import java.util.concurrent.BlockingQueue;
@@ -283,6 +285,20 @@ public abstract class WorldAdapter implements World {
     @Override
     public String getLevelName() {
         return this.levelName;
+    }
+
+    @Override
+    public void setSpawnLocation( Location location ) {
+        this.spawn = Objects.requireNonNull( location, "Failed reassigning spawn location: Param 'location' is null" );
+
+        PacketSetSpawnPosition packet = new PacketSetSpawnPosition();
+        packet.setSpawnType( PacketSetSpawnPosition.SpawnType.WORLD );
+        packet.setPosition( location.toBlockPosition() );
+
+        for ( EntityPlayer player : this.getPlayers() ) {
+            io.gomint.server.entity.EntityPlayer handle = (io.gomint.server.entity.EntityPlayer) player;
+            handle.getConnection().send( packet );
+        }
     }
 
     @Override

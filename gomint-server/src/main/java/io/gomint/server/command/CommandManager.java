@@ -16,6 +16,7 @@ import io.gomint.server.command.vanilla.ListCommand;
 import io.gomint.server.command.vanilla.MeCommand;
 import io.gomint.server.command.vanilla.OpCommand;
 import io.gomint.server.command.vanilla.SayCommand;
+import io.gomint.server.command.vanilla.SetWorldSpawnCommand;
 import io.gomint.server.command.vanilla.TPCommand;
 import io.gomint.server.entity.CommandPermission;
 import io.gomint.server.entity.EntityPlayer;
@@ -60,6 +61,7 @@ public class CommandManager {
                 GamemodeCommand.class,
                 MeCommand.class,
                 SayCommand.class,
+                SetWorldSpawnCommand.class,
                 TPCommand.class,
 
                 // GoMint

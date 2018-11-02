@@ -225,6 +225,17 @@ public class LevelDBWorldAdapter extends WorldAdapter {
     }
 
     @Override
+    public void setSpawnLocation( Location location ) {
+        super.setSpawnLocation( location );
+
+        try {
+            this.saveLevelDat();
+        } catch ( IOException cause ) {
+            this.logger.error( "level.dat for world '{}' could not be saved: ", this.levelName, cause );
+        }
+    }
+
+    @Override
     protected void prepareGenerator() {
         if ( this.generatorType == -1 ) { // Custom generators
             try {
