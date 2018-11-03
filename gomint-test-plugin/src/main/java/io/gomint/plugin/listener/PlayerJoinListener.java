@@ -1,5 +1,6 @@
 package io.gomint.plugin.listener;
 
+import io.gomint.entity.passive.EntityArmorStand;
 import io.gomint.event.EventHandler;
 import io.gomint.event.EventListener;
 import io.gomint.event.EventPriority;
@@ -27,6 +28,9 @@ public class PlayerJoinListener implements EventListener {
 
         // Give this player the debug scoreboard
         new DebugScoreboard( this.plugin, event.getPlayer() );
+
+        // Spawn a Armor Stand to the player location
+        EntityArmorStand.create().spawn( event.getPlayer().getLocation() );
     }
 
 }

@@ -279,6 +279,13 @@ public interface Entity {
     float getEyeHeight();
 
     /**
+     * Handle a entity interaction from a player
+     *
+     * @param player the player which has interacted with the entity
+     */
+    void interact( EntityPlayer player, Vector clickVector );
+
+    /**
      * Reset the fall distance of this entity. This will prevent a entity getting damaged when it hits the ground when
      * it was high enough before (it needs to fall at least 3 blocks to get any damage from falling)
      */

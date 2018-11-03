@@ -1,5 +1,7 @@
 package io.gomint.server.entity.passive;
 
+import io.gomint.entity.EntityPlayer;
+import io.gomint.math.Vector;
 import io.gomint.server.entity.Attribute;
 import io.gomint.server.entity.EntityLiving;
 import io.gomint.server.entity.EntityType;
@@ -57,6 +59,11 @@ public class EntityVillager extends EntityLiving implements io.gomint.entity.pas
     @Override
     public void update( long currentTimeMS, float dT ) {
         super.update( currentTimeMS, dT );
+    }
+
+    @Override
+    public void interact( EntityPlayer player, Vector clickVector ) {
+        // TODO: Adding the ability of open the villager shop inventory for the player
     }
 
     @Override

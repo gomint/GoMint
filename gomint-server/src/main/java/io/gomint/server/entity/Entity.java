@@ -1105,6 +1105,10 @@ public abstract class Entity implements io.gomint.entity.Entity {
         return !damageEvent.isCancelled();
     }
 
+    public void interact( io.gomint.entity.EntityPlayer player, Vector clickVector ) {
+
+    }
+
     public void attach( EntityPlayer player ) {
 
     }
