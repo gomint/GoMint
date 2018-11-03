@@ -24,7 +24,7 @@ import java.nio.ByteOrder;
 public class PacketTileEntityData extends Packet {
 
     private BlockPosition position;
-    private TileEntity tileEntity;
+    private NBTTagCompound compound;
 
     public PacketTileEntityData() {
         super( Protocol.PACKET_TILE_ENTITY_DATA );
@@ -35,15 +35,11 @@ public class PacketTileEntityData extends Packet {
         // Block position
         writeBlockPosition( this.position, buffer );
 
-        // NBT Tag
-        NBTTagCompound compound = new NBTTagCompound( "" );
-        this.tileEntity.toCompound( compound, SerializationReason.NETWORK );
-
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         NBTWriter nbtWriter = new NBTWriter( baos, ByteOrder.LITTLE_ENDIAN );
         nbtWriter.setUseVarint( true );
         try {
-            nbtWriter.write( compound );
+            nbtWriter.write( this.compound );
         } catch ( IOException e ) {
             e.printStackTrace();
         }
@@ -61,9 +57,9 @@ public class PacketTileEntityData extends Packet {
         NBTReaderNoBuffer reader = new NBTReaderNoBuffer( new ByteArrayInputStream( data ), ByteOrder.LITTLE_ENDIAN );
         reader.setUseVarint( true );
         try {
-            DumpUtil.dumpNBTCompund( reader.parse() );
-        } catch ( IOException e ) {
-            e.printStackTrace();
+            this.compound = reader.parse();
+        } catch(IOException e) {
+            this.compound = new NBTTagCompound("");
         }
     }
 

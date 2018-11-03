@@ -5,7 +5,7 @@ import java.util.List;
 /**
  * @author geNAZt
  */
-public interface BlockWallSign extends Block {
+public interface BlockWallSign extends BlockSign {
 
     /**
      * Get a copy of all lines on this sign. The maximum size of

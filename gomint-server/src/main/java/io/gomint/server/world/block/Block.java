@@ -628,7 +628,10 @@ public abstract class Block implements io.gomint.world.block.Block {
         if ( this.getTileEntity() != null ) {
             PacketTileEntityData tileEntityData = new PacketTileEntityData();
             tileEntityData.setPosition( position );
-            tileEntityData.setTileEntity( this.getTileEntity() );
+
+            NBTTagCompound compound = new NBTTagCompound( "" );
+            this.getTileEntity().toCompound( compound, SerializationReason.NETWORK );
+            tileEntityData.setCompound( compound );
 
             connection.addToSendQueue( tileEntityData );
         }

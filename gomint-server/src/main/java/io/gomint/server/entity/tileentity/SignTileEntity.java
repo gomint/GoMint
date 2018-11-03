@@ -8,6 +8,7 @@
 package io.gomint.server.entity.tileentity;
 
 import com.google.common.base.Joiner;
+import io.gomint.event.world.SignChangeEvent;
 import io.gomint.math.Location;
 import io.gomint.server.inventory.item.Items;
 import io.gomint.server.world.WorldAdapter;
@@ -23,7 +24,7 @@ import java.util.List;
  */
 public class SignTileEntity extends TileEntity {
 
-    private static final Joiner CONTENT_JOINER = Joiner.on( "\n" ).skipNulls();
+    public static final Joiner CONTENT_JOINER = Joiner.on( "\n" ).skipNulls();
     private List<String> lines = new ArrayList<>( 4 );
 
     /**
@@ -63,6 +64,16 @@ public class SignTileEntity extends TileEntity {
 
         compound.addValue( "id", "Sign" );
         compound.addValue( "Text", CONTENT_JOINER.join( this.lines ) );
+    }
+
+    @Override
+    public void updateCompound( NBTTagCompound compound ) {
+        if( compound.containsKey( "Text" ) ) {
+            String text = compound.getString( "Text", "" );
+            this.lines = Arrays.asList( text.split( "\n" ) );
+        }
+
+        super.updateCompound(compound);
     }
 
     public List<String> getLines() {

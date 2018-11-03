@@ -25,6 +25,7 @@ import io.gomint.server.async.MultiOutputDelegate;
 import io.gomint.server.config.WorldConfig;
 import io.gomint.server.entity.passive.EntityItem;
 import io.gomint.server.entity.passive.EntityXPOrb;
+import io.gomint.server.entity.tileentity.SerializationReason;
 import io.gomint.server.entity.tileentity.TileEntity;
 import io.gomint.server.network.PlayerConnection;
 import io.gomint.server.network.packet.Packet;
@@ -39,6 +40,7 @@ import io.gomint.server.util.BlockIdentifier;
 import io.gomint.server.util.EnumConnectors;
 import io.gomint.server.world.block.Air;
 import io.gomint.server.world.storage.TemporaryStorage;
+import io.gomint.taglib.NBTTagCompound;
 import io.gomint.util.random.FastRandom;
 import io.gomint.world.Biome;
 import io.gomint.world.Chunk;
@@ -962,7 +964,11 @@ public abstract class WorldAdapter implements World {
         if ( block.getTileEntity() != null ) {
             PacketTileEntityData tileEntityData = new PacketTileEntityData();
             tileEntityData.setPosition( pos );
-            tileEntityData.setTileEntity( block.getTileEntity() );
+
+            NBTTagCompound compound = new NBTTagCompound( "" );
+            block.getTileEntity().toCompound( compound, SerializationReason.NETWORK );
+            tileEntityData.setCompound( compound );
+
             connection.addToSendQueue( tileEntityData );
         }
     }

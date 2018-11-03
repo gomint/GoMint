@@ -18,7 +18,7 @@ import java.util.List;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:wall_sign" )
-public class WallSign extends Block implements BlockWallSign {
+public class WallSign extends Sign implements BlockWallSign {
 
     @Override
     public String getBlockId() {

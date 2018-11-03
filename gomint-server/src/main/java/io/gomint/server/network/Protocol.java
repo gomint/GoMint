@@ -7,37 +7,7 @@
 
 package io.gomint.server.network;
 
-import io.gomint.server.network.packet.Packet;
-import io.gomint.server.network.packet.PacketAdventureSettings;
-import io.gomint.server.network.packet.PacketAnimate;
-import io.gomint.server.network.packet.PacketBatch;
-import io.gomint.server.network.packet.PacketBlockPickRequest;
-import io.gomint.server.network.packet.PacketBookEdit;
-import io.gomint.server.network.packet.PacketBossBar;
-import io.gomint.server.network.packet.PacketCommandRequest;
-import io.gomint.server.network.packet.PacketContainerClose;
-import io.gomint.server.network.packet.PacketCraftingEvent;
-import io.gomint.server.network.packet.PacketDisconnect;
-import io.gomint.server.network.packet.PacketEncryptionResponse;
-import io.gomint.server.network.packet.PacketEntityEvent;
-import io.gomint.server.network.packet.PacketEntityFall;
-import io.gomint.server.network.packet.PacketEntityMetadata;
-import io.gomint.server.network.packet.PacketHotbar;
-import io.gomint.server.network.packet.PacketInteract;
-import io.gomint.server.network.packet.PacketInventoryTransaction;
-import io.gomint.server.network.packet.PacketLogin;
-import io.gomint.server.network.packet.PacketMobEquipment;
-import io.gomint.server.network.packet.PacketModalResponse;
-import io.gomint.server.network.packet.PacketMovePlayer;
-import io.gomint.server.network.packet.PacketPlayState;
-import io.gomint.server.network.packet.PacketPlayerAction;
-import io.gomint.server.network.packet.PacketResourcePackResponse;
-import io.gomint.server.network.packet.PacketResourcePacksInfo;
-import io.gomint.server.network.packet.PacketServerSettingsRequest;
-import io.gomint.server.network.packet.PacketSetChunkRadius;
-import io.gomint.server.network.packet.PacketSetLocalPlayerAsInitialized;
-import io.gomint.server.network.packet.PacketText;
-import io.gomint.server.network.packet.PacketWorldSoundEvent;
+import io.gomint.server.network.packet.*;
 
 /**
  * @author BlackyPaw
@@ -235,6 +205,9 @@ public final class Protocol {
 
             case PACKET_SET_CHUNK_RADIUS:
                 return new PacketSetChunkRadius();
+
+            case PACKET_TILE_ENTITY_DATA:
+                return new PacketTileEntityData();
 
             default:
                 // LOGGER.warn( "Unknown client side packetId: {}", Integer.toHexString( id & 0xFF ) );
