@@ -147,7 +147,7 @@ public class PacketInventoryTransactionHandler implements PacketHandler<PacketIn
                     break;
                 }
 
-                entity.interact( connection.getEntity() );
+                entity.interact( connection.getEntity(), packet.getVector2() );
 
                 break;
             case 1:     // Attack
