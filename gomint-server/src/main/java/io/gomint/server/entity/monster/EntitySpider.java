@@ -41,7 +41,8 @@ public class EntitySpider extends EntityLiving implements io.gomint.entity.monst
         super.onCollideWithPlayer( player );
 
         switch( this.getWorld().getDifficulty() ) {
-            case EASY: case NORMAL:
+            case EASY:
+            case NORMAL:
                 player.attack( 2, EntityDamageEvent.DamageSource.ENTITY_ATTACK );
                 break;
             case HARD:
