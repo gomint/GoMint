@@ -1,8 +1,10 @@
 package io.gomint.server.entity.monster;
 
 import io.gomint.entity.Entity;
+import io.gomint.event.entity.EntityDamageEvent;
 import io.gomint.server.entity.Attribute;
 import io.gomint.server.entity.EntityLiving;
+import io.gomint.server.entity.EntityPlayer;
 import io.gomint.server.entity.EntityType;
 import io.gomint.server.entity.metadata.MetadataContainer;
 import io.gomint.server.registry.RegisterInfo;
@@ -39,6 +41,23 @@ public class EntityElderGuardian extends EntityLiving implements io.gomint.entit
     @Override
     public void update( long currentTimeMS, float dT ) {
         super.update( currentTimeMS, dT );
+    }
+
+    @Override
+    public void onCollideWithPlayer( EntityPlayer player ) {
+        super.onCollideWithPlayer( player );
+
+        switch( this.getWorld().getDifficulty() ) {
+            case EASY:
+                player.attack( 5, EntityDamageEvent.DamageSource.ENTITY_ATTACK );
+                break;
+            case NORMAL:
+                player.attack( 8, EntityDamageEvent.DamageSource.ENTITY_ATTACK );
+                break;
+            case HARD:
+                player.attack( 12, EntityDamageEvent.DamageSource.ENTITY_ATTACK );
+                break;
+        }
     }
 
     @Override

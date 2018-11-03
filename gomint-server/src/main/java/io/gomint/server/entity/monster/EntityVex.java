@@ -1,7 +1,9 @@
 package io.gomint.server.entity.monster;
 
+import io.gomint.event.entity.EntityDamageEvent;
 import io.gomint.server.entity.Attribute;
 import io.gomint.server.entity.EntityLiving;
+import io.gomint.server.entity.EntityPlayer;
 import io.gomint.server.entity.EntityType;
 import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.world.WorldAdapter;
@@ -33,6 +35,23 @@ public class EntityVex extends EntityLiving implements io.gomint.entity.monster.
         this.addAttribute( Attribute.HEALTH );
         this.setMaxHealth( 14 );
         this.setHealth( 14 );
+    }
+
+    @Override
+    public void onCollideWithPlayer( EntityPlayer player ) {
+        super.onCollideWithPlayer( player );
+
+        switch( this.getWorld().getDifficulty() ) {
+            case EASY:
+                player.attack( 5, EntityDamageEvent.DamageSource.ENTITY_ATTACK );
+                break;
+            case NORMAL:
+                player.attack( 9, EntityDamageEvent.DamageSource.ENTITY_ATTACK );
+                break;
+            case HARD:
+                player.attack( 13, EntityDamageEvent.DamageSource.ENTITY_ATTACK );
+                break;
+        }
     }
 
     @Override

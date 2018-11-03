@@ -1,8 +1,12 @@
 package io.gomint.server.inventory.item;
+
+import io.gomint.entity.potion.PotionEffect;
 import io.gomint.inventory.item.ItemType;
 
+import io.gomint.server.entity.EntityPlayer;
 import io.gomint.server.registry.RegisterInfo;
-import io.gomint.taglib.NBTTagCompound;
+
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author geNAZt
@@ -21,6 +25,16 @@ public class ItemPufferfish extends ItemFood implements io.gomint.inventory.item
     @Override
     public float getHunger() {
         return 1;
+    }
+
+    @Override
+    public void onConsume( EntityPlayer player ) {
+        super.onConsume( player );
+
+        // Apply effects
+        player.addEffect( PotionEffect.NAUSEA, 1, 15, TimeUnit.SECONDS );
+        player.addEffect( PotionEffect.HUNGER, 2, 15, TimeUnit.SECONDS );
+        player.addEffect( PotionEffect.POISON, 3, 1, TimeUnit.MINUTES );
     }
 
     @Override

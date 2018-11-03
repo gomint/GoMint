@@ -1,7 +1,9 @@
 package io.gomint.server.entity.monster;
 
+import io.gomint.event.entity.EntityDamageEvent;
 import io.gomint.server.entity.Attribute;
 import io.gomint.server.entity.EntityLiving;
+import io.gomint.server.entity.EntityPlayer;
 import io.gomint.server.entity.EntityType;
 import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.world.WorldAdapter;
@@ -32,6 +34,20 @@ public class EntityEndermite extends EntityLiving implements io.gomint.entity.mo
         this.addAttribute( Attribute.HEALTH );
         this.setMaxHealth( 8 );
         this.setHealth( 8 );
+    }
+
+    @Override
+    public void onCollideWithPlayer( EntityPlayer player ) {
+        super.onCollideWithPlayer( player );
+
+        switch( this.getWorld().getDifficulty() ) {
+            case EASY: case NORMAL:
+                player.attack( 2, EntityDamageEvent.DamageSource.ENTITY_ATTACK );
+                break;
+            case HARD:
+                player.attack( 3, EntityDamageEvent.DamageSource.ENTITY_ATTACK );
+                break;
+        }
     }
 
     @Override

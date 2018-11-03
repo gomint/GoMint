@@ -1,7 +1,9 @@
 package io.gomint.server.entity.monster;
 
+import io.gomint.event.entity.EntityDamageEvent;
 import io.gomint.server.entity.Attribute;
 import io.gomint.server.entity.EntityLiving;
+import io.gomint.server.entity.EntityPlayer;
 import io.gomint.server.entity.EntityType;
 import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.world.WorldAdapter;
@@ -32,6 +34,13 @@ public class EntitySilverfish extends EntityLiving implements io.gomint.entity.m
         this.addAttribute( Attribute.HEALTH );
         this.setMaxHealth( 8 );
         this.setHealth( 8 );
+    }
+
+    @Override
+    public void onCollideWithPlayer( EntityPlayer player ) {
+        super.onCollideWithPlayer( player );
+
+        player.attack( 1, EntityDamageEvent.DamageSource.ENTITY_ATTACK );
     }
 
     @Override

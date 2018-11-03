@@ -8,6 +8,9 @@
 package io.gomint.server.entity.projectile;
 
 import io.gomint.entity.EntityLiving;
+import io.gomint.entity.monster.EntitySkeleton;
+import io.gomint.entity.monster.EntityStray;
+import io.gomint.event.entity.EntityDamageEvent;
 import io.gomint.event.entity.projectile.ProjectileHitBlocksEvent;
 import io.gomint.event.player.PlayerPickupItemEvent;
 import io.gomint.inventory.item.ItemArrow;
@@ -192,6 +195,22 @@ public class EntityArrow extends EntityProjectile implements io.gomint.entity.pr
 
             player.getInventory().addItem( arrow );
             this.despawn();
+
+            EntitySkeleton skeleton = EntitySkeleton.create();
+            EntityStray stray = EntityStray.create();
+
+            switch( this.getWorld().getDifficulty() ) {
+                case EASY: case NORMAL:
+                    if( this.getShooter() == skeleton || this.getShooter() == stray ) {
+                        player.attack( 3, EntityDamageEvent.DamageSource.ENTITY_ATTACK );
+                    }
+                    break;
+                case HARD:
+                    if( this.getShooter() == skeleton || this.getShooter() == stray ) {
+                        player.attack( 4, EntityDamageEvent.DamageSource.ENTITY_ATTACK );
+                    }
+                    break;
+            }
         }
     }
 
