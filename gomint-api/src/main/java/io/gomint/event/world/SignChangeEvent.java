@@ -11,6 +11,7 @@ import io.gomint.entity.EntityPlayer;
 import io.gomint.event.player.CancellablePlayerEvent;
 import io.gomint.world.block.BlockSign;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -41,16 +42,32 @@ public class SignChangeEvent extends CancellablePlayerEvent {
      * @return new ArrayList with the lines as content
      */
     public List<String> getLines() {
-        return this.lines;
+        return new ArrayList<>( this.lines );
     }
 
     /**
-     * Updates the lines of this event
+     * Get the specific line of the line index
      *
-     * @param lines the event updated lines
+     * @return the line of the index
      */
-    public void setLines( List<String> lines ) {
-        this.lines = lines;
+    public String getLine( int index ) {
+        if ( index > 0 && index <= 4 ) {
+            return this.lines.get( index - 1 );
+        }
+
+        return "";
+    }
+
+    /**
+     * Updates a specific line
+     *
+     * @param index the index of the updatet line
+     * @param line  the text that is displayed in the line
+     */
+    public void setLine( int index, String line ) {
+        if ( index > 0 && index <= 4 ) {
+            this.lines.set( index - 1, line );
+        }
     }
 
     /**

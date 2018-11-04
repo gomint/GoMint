@@ -35,7 +35,7 @@ public class PacketTileEntityDataHandler implements PacketHandler<PacketTileEnti
                     SignChangeEvent signChangeEvent = connection.getServer().getPluginManager().callEvent( new SignChangeEvent( connection.getEntity(), (BlockSign) block, lines ) );
 
                     if ( !signChangeEvent.isCancelled() ) {
-                        compound.addValue( "Text", SignTileEntity.CONTENT_JOINER.join( lines ) );
+                        compound.addValue( "Text", SignTileEntity.CONTENT_JOINER.join( signChangeEvent.getLines() ) );
                         signTileEntity.updateCompound( compound );
                     }
                 }
