@@ -29,15 +29,13 @@ public class PacketTileEntityDataHandler implements PacketHandler<PacketTileEnti
                 NBTTagCompound compound = packet.getCompound();
                 SignTileEntity signTileEntity = (SignTileEntity) tileEntity;
 
-                if ( compound.containsKey( "Text" ) ) {
-                    String text = compound.getString( "Text", "" );
-                    List<String> lines = Arrays.asList( text.split( "\n" ) );
-                    SignChangeEvent signChangeEvent = connection.getServer().getPluginManager().callEvent( new SignChangeEvent( connection.getEntity(), (BlockSign) block, lines ) );
+                String text = compound.getString( "Text", "" );
+                List<String> lines = Arrays.asList( text.split( "\n" ) );
+                SignChangeEvent signChangeEvent = connection.getServer().getPluginManager().callEvent( new SignChangeEvent( connection.getEntity(), (BlockSign) block, lines ) );
 
-                    if ( !signChangeEvent.isCancelled() ) {
-                        compound.addValue( "Text", SignTileEntity.CONTENT_JOINER.join( signChangeEvent.getLines() ) );
-                        signTileEntity.updateCompound( compound );
-                    }
+                if ( !signChangeEvent.isCancelled() ) {
+                    compound.addValue( "Text", SignTileEntity.CONTENT_JOINER.join( signChangeEvent.getLines() ) );
+                    signTileEntity.updateCompound( compound );
                 }
             }
         }

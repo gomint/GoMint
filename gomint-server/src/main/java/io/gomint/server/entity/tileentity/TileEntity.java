@@ -146,16 +146,6 @@ public abstract class TileEntity {
      * @param compound the compound for this tile entity which should update this
      */
     public void updateCompound( NBTTagCompound compound ) {
-        if ( compound.containsKey( "x" ) ) {
-            this.location.setX( compound.getInteger( "x", (int) this.location.getX() ) );
-        }
-        if ( compound.containsKey( "y" ) ) {
-            this.location.setY( compound.getInteger( "y", (int) this.location.getY() ) );
-        }
-        if ( compound.containsKey( "z" ) ) {
-            this.location.setZ( compound.getInteger( "z", (int) this.location.getZ() ) );
-        }
-
         this.getBlock().updateBlock();
     }
 
