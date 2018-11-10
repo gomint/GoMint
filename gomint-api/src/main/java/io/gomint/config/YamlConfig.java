@@ -61,7 +61,7 @@ public class YamlConfig extends ConfigMapper implements Config {
 
         File parentFile = this.CONFIG_FILE.getParentFile();
 
-        if ( parentFile != null ) {
+        if ( parentFile != null && !parentFile.exists() ) {
             Preconditions.checkState( parentFile.mkdirs(),
                 "Failed creating directory " + parentFile.getAbsolutePath() );
         }
