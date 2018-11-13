@@ -25,10 +25,13 @@ import java.util.Map;
 @Description( "Summons an entity." )
 @Permission( "gomint.command.summon" )
 @Overload( {
-    @Parameter( name = "entityType", validator = EnumValidator.class, arguments = {"tnt", "blaze", "cave_spider", "cod", "creeper", "drowned", "elder_guardian", "ender_dragon", "enderman",
-        "endermite", "evoker", "ghast", "guardian", "husk", "magma_cube", "polar_bear", "pufferfish", "salmon", "shulker", "silverfish", "skeleton", "slime", "spider", "stray", "tropicalfish",
-        "vex", "vindicator", "witch", "wither", "wither_skeleton", "zombie", "zombie_pigman", "zombie_villager", "armor_stand", "bat", "chicken", "cow", "donkey", "horse", "llama", "mooshroom",
-        "mule", "ocelot", "parrot", "pig", "rabbit", "sheep", "skeleton_horse", "squid", "turtle", "villager", "wolf", "xp_orb", "zombie_horse", "snowball"} ),
+    @Parameter( name = "entityType", validator = EnumValidator.class, arguments = {"tnt", "blaze", "cave_spider", "cod",
+        "creeper", "drowned", "elder_guardian", "ender_dragon", "enderman", "endermite", "evoker", "ghast", "guardian",
+        "husk", "magma_cube", "polar_bear", "pufferfish", "salmon", "shulker", "silverfish", "skeleton", "slime",
+        "spider", "stray", "tropicalfish", "vex", "vindicator", "witch", "wither", "wither_skeleton", "zombie",
+        "zombie_pigman", "zombie_villager", "armor_stand", "bat", "chicken", "cow", "donkey", "horse", "llama",
+        "mooshroom", "mule", "ocelot", "parrot", "pig", "rabbit", "sheep", "skeleton_horse", "squid", "turtle",
+        "villager", "wolf", "xp_orb", "zombie_horse", "snowball"} ),
     @Parameter( name = "position", validator = BlockPositionValidator.class )
 } )
 public class SummonCommand extends Command {
