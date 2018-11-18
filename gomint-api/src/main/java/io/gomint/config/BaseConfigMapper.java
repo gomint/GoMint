@@ -96,22 +96,22 @@ public class BaseConfigMapper extends BaseConfig {
     protected void loadFromYaml() throws InvalidConfigurationException {
         this.root = new ConfigSection();
 
-        try ( InputStreamReader reader = new InputStreamReader( new FileInputStream( this.CONFIG_FILE ), CHARSET ) ) {
+        try ( InputStreamReader reader = new InputStreamReader(new FileInputStream( this.configFile), CHARSET ) ) {
             Object object = YAML.load( reader );
 
             if ( object != null ) {
                 convertMapsToSections( (Map<?, ?>) object, this.root );
             }
         } catch ( IOException | ClassCastException | YAMLException cause ) {
-            throw new InvalidConfigurationException( "Failed loading from YAML file " +
-                "\"" + this.CONFIG_FILE.getAbsolutePath() + "\"", cause );
+            throw new InvalidConfigurationException("Failed loading from YAML file " +
+                "\"" + this.configFile.getAbsolutePath() + "\"", cause );
         }
     }
 
     protected void saveToYaml() throws InvalidConfigurationException {
-        try ( OutputStreamWriter writer = new OutputStreamWriter( new FileOutputStream( this.CONFIG_FILE ), CHARSET ) ) {
-            if ( this.CONFIG_HEADER != null ) {
-                for ( String line : this.CONFIG_HEADER ) {
+        try ( OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream( this.configFile), CHARSET ) ) {
+            if ( this.configHeader != null ) {
+                for ( String line : this.configHeader) {
                     writer.write( "# " + line + "\n" );
                 }
 
@@ -199,8 +199,8 @@ public class BaseConfigMapper extends BaseConfig {
 
             writer.write( writeLines.toString() );
         } catch ( IOException cause ) {
-            throw new InvalidConfigurationException( "Failed saving to YAML file " +
-                "\"" + this.CONFIG_FILE.getAbsolutePath() + "\"", cause );
+            throw new InvalidConfigurationException("Failed saving to YAML file " +
+                "\"" + this.configFile.getAbsolutePath() + "\"", cause );
         }
     }
 

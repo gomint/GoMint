@@ -8,6 +8,9 @@
 package io.gomint.config;
 
 import com.google.common.base.Preconditions;
+import io.gomint.config.annotation.Comment;
+import io.gomint.config.annotation.Comments;
+import io.gomint.config.annotation.Path;
 import io.gomint.util.Messages;
 
 import java.io.File;
@@ -28,12 +31,12 @@ public class YamlConfig extends ConfigMapper implements Config {
     }
 
     public YamlConfig( String filename ) {
-        this.CONFIG_FILE = new File( filename + ( filename.endsWith( ".yml" ) ? "" : ".yml" ) );
+        this.configFile = new File(filename + ( filename.endsWith(".yml" ) ? "" : ".yml" ) );
     }
 
     @Override
     public void save() throws InvalidConfigurationException {
-        Preconditions.checkNotNull( this.CONFIG_FILE, "Cannot save config file: Local field 'CONFIG_FILE' is null" );
+        Preconditions.checkNotNull(this.configFile, "Cannot save config file: Local field 'configFile' is null" );
 
         if ( this.root == null ) {
             this.root = new ConfigSection();
@@ -48,18 +51,18 @@ public class YamlConfig extends ConfigMapper implements Config {
     public void save( File file ) throws InvalidConfigurationException {
         Preconditions.checkNotNull( file, Messages.paramIsNull( "file" ) );
 
-        this.CONFIG_FILE = file;
+        this.configFile = file;
         this.save();
     }
 
     @Override
     public void init() throws InvalidConfigurationException {
-        if ( this.CONFIG_FILE.exists() ) {
+        if ( this.configFile.exists() ) {
             this.load();
             return;
         }
 
-        File parentFile = this.CONFIG_FILE.getParentFile();
+        File parentFile = this.configFile.getParentFile();
 
         if ( parentFile != null && !parentFile.exists() ) {
             Preconditions.checkState( parentFile.mkdirs(),
@@ -67,8 +70,8 @@ public class YamlConfig extends ConfigMapper implements Config {
         }
 
         try {
-            Preconditions.checkState( this.CONFIG_FILE.createNewFile(),
-                "Failed creating file " + this.CONFIG_FILE.getAbsolutePath() );
+            Preconditions.checkState( this.configFile.createNewFile(),
+                "Failed creating file " + this.configFile.getAbsolutePath() );
 
             this.save();
         } catch ( IOException cause ) {
@@ -80,7 +83,7 @@ public class YamlConfig extends ConfigMapper implements Config {
     public void init( File file ) throws InvalidConfigurationException {
         Preconditions.checkNotNull( file, Messages.paramIsNull( "file" ) );
 
-        this.CONFIG_FILE = file;
+        this.configFile = file;
         this.init();
     }
 
@@ -92,7 +95,7 @@ public class YamlConfig extends ConfigMapper implements Config {
 
     @Override
     public void load() throws InvalidConfigurationException {
-        Preconditions.checkNotNull( this.CONFIG_FILE, "Cannot load config file: Local field 'CONFIG_FILE' is null" );
+        Preconditions.checkNotNull(this.configFile, "Cannot load config file: Local field 'configFile' is null" );
 
         this.loadFromYaml();
         this.update( this.root );
@@ -103,7 +106,7 @@ public class YamlConfig extends ConfigMapper implements Config {
     public void load( File file ) throws InvalidConfigurationException {
         Preconditions.checkNotNull( file, Messages.paramIsNull( "file" ) );
 
-        this.CONFIG_FILE = file;
+        this.configFile = file;
         this.load();
     }
 
@@ -119,7 +122,7 @@ public class YamlConfig extends ConfigMapper implements Config {
 
             String path;
 
-            switch ( this.CONFIG_MODE ) {
+            switch ( this.configMode) {
                 case PATH_BY_UNDERSCORE:
                     path = field.getName().replace( "_", "." );
                     break;
@@ -140,11 +143,11 @@ public class YamlConfig extends ConfigMapper implements Config {
             ArrayList<String> comments = new ArrayList<>();
 
             for ( Annotation annotation : field.getAnnotations() ) {
-                if ( annotation instanceof Comment ) {
+                if ( annotation instanceof Comment) {
                     comments.add( ( (Comment) annotation ).value() );
                 }
 
-                if ( annotation instanceof Comments ) {
+                if ( annotation instanceof Comments) {
                     for ( Comment comment : ( (Comments) annotation ).value() ) {
                         comments.add( comment.value() + "\n" );
                     }
@@ -191,7 +194,7 @@ public class YamlConfig extends ConfigMapper implements Config {
 
             String path;
 
-            switch ( this.CONFIG_MODE ) {
+            switch ( this.configMode) {
                 case PATH_BY_UNDERSCORE:
                     path = field.getName().replace( "_", "." );
                     break;

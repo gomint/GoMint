@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-package io.gomint.config;
+package io.gomint.config.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -15,13 +15,11 @@ import java.lang.annotation.Target;
 /**
  * @author geNAZt
  * @version 1.0
- * @deprecated Will be moved into the package 'io.gomint.config.annotation' for consistency purposes
  */
-@Deprecated
 @Retention( RetentionPolicy.RUNTIME )
 @Target( ElementType.FIELD )
-public @interface PreserveStatic {
+public @interface Comments {
 
-    boolean value() default true;
+    Comment[] value();
 
 }

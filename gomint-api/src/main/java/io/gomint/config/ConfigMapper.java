@@ -7,6 +7,7 @@
 
 package io.gomint.config;
 
+import io.gomint.config.annotation.Path;
 import io.gomint.config.converter.Converter;
 
 import java.lang.reflect.Field;
@@ -39,7 +40,7 @@ public class ConfigMapper extends BaseConfigMapper {
 
             String path;
 
-            switch ( CONFIG_MODE ) {
+            switch (configMode) {
                 case PATH_BY_UNDERSCORE:
                     path = field.getName().replace( "_", "." );
                     break;
@@ -88,7 +89,7 @@ public class ConfigMapper extends BaseConfigMapper {
 
             String path;
 
-            switch ( CONFIG_MODE ) {
+            switch (configMode) {
                 case PATH_BY_UNDERSCORE:
                     path = field.getName().replace( "_", "." );
                     break;

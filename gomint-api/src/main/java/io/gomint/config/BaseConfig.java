@@ -7,6 +7,9 @@
 
 package io.gomint.config;
 
+import io.gomint.config.annotation.PreserveStatic;
+import io.gomint.config.annotation.SerializeOptions;
+
 import java.io.File;
 import java.io.Serializable;
 import java.lang.reflect.Field;
@@ -18,21 +21,9 @@ import java.lang.reflect.Modifier;
  */
 public class BaseConfig implements Serializable {
 
-    /**
-     * @deprecated Will be renamed to {@code configFile} anytime soon
-     */
-    @Deprecated
-    protected transient File CONFIG_FILE = null;
-    /**
-     * @deprecated Will be renamed to {@code configHeader} anytime soon
-     */
-    @Deprecated
-    protected transient String[] CONFIG_HEADER = null;
-    /**
-     * @deprecated Will be renamed to {@code configMode} anytime soon
-     */
-    @Deprecated
-    protected transient ConfigMode CONFIG_MODE = ConfigMode.DEFAULT;
+    protected transient File configFile = null;
+    protected transient String[] configHeader = null;
+    protected transient ConfigMode configMode = ConfigMode.DEFAULT;
     protected transient boolean skipFailedObjects = false;
     protected transient InternalConverter converter = new InternalConverter( this );
 
@@ -63,8 +54,8 @@ public class BaseConfig implements Serializable {
         }
 
         SerializeOptions options = this.getClass().getAnnotation( SerializeOptions.class );
-        this.CONFIG_HEADER = options.configHeader();
-        this.CONFIG_MODE = options.configMode();
+        this.configHeader = options.configHeader();
+        this.configMode = options.configMode();
         this.skipFailedObjects = options.skipFailedObjects();
     }
 

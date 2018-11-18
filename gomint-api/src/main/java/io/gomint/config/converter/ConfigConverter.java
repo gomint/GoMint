@@ -8,6 +8,8 @@
 package io.gomint.config.converter;
 
 import io.gomint.config.*;
+import io.gomint.config.annotation.Comment;
+import io.gomint.config.annotation.Comments;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;

@@ -7,6 +7,7 @@
 
 package io.gomint.config;
 
+import io.gomint.config.annotation.PreserveStatic;
 import io.gomint.config.converter.*;
 import lombok.Getter;
 
