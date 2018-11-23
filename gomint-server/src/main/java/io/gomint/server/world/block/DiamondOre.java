@@ -1,15 +1,21 @@
 package io.gomint.server.world.block;
 
+import io.gomint.inventory.item.ItemDiamond;
 import io.gomint.inventory.item.ItemStack;
 import io.gomint.server.registry.RegisterInfo;
+import io.gomint.server.world.WorldAdapter;
 import io.gomint.server.world.block.helper.ToolPresets;
+import io.gomint.util.random.FastRandom;
 import io.gomint.world.block.BlockType;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:diamond_ore" )
+@RegisterInfo(sId = "minecraft:diamond_ore")
 public class DiamondOre extends Block implements io.gomint.world.block.BlockDiamondOre {
 
     @Override
@@ -35,6 +41,18 @@ public class DiamondOre extends Block implements io.gomint.world.block.BlockDiam
     @Override
     public boolean canBeBrokenWithHand() {
         return true;
+    }
+
+    @Override
+    public List<ItemStack> getDrops(ItemStack itemInHand) {
+        if (isCorrectTool(itemInHand)) {
+            ((WorldAdapter) this.location.getWorld()).createExpOrb(this.location, FastRandom.current().nextInt(3));
+            return new ArrayList<ItemStack>() {{
+                add(ItemDiamond.create(1));
+            }};
+        }
+
+        return new ArrayList<>();
     }
 
     @Override
