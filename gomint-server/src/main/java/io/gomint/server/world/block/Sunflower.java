@@ -20,6 +20,11 @@ public class Sunflower extends Block implements io.gomint.world.block.BlockSunfl
     public boolean isTransparent() {
         return true;
     }
+    
+    @Override
+    public long getBreakTime() {
+        return 0;
+    }
 
     @Override
     public boolean isSolid() {
