@@ -15,7 +15,7 @@ import java.util.List;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo(sId = "minecraft:diamond_ore")
+@RegisterInfo( sId = "minecraft:diamond_ore" )
 public class DiamondOre extends Block implements io.gomint.world.block.BlockDiamondOre {
 
     @Override
@@ -44,15 +44,14 @@ public class DiamondOre extends Block implements io.gomint.world.block.BlockDiam
     }
 
     @Override
-    public List<ItemStack> getDrops(ItemStack itemInHand) {
-        if (isCorrectTool(itemInHand)) {
-            ((WorldAdapter) this.location.getWorld()).createExpOrb(this.location, FastRandom.current().nextInt(3));
-            return new ArrayList<ItemStack>() {{
-                add(ItemDiamond.create(1));
-            }};
+    public List<ItemStack> getDrops( ItemStack itemInHand ) {
+        ArrayList<ItemStack> itemStackArrayList = new ArrayList<>();
+        if ( isCorrectTool( itemInHand ) ) {
+            ( (WorldAdapter) this.location.getWorld() ).createExpOrb( this.location, FastRandom.current().nextInt( 3 ) );
+            itemStackArrayList.add( ItemDiamond.create( 1 ) );
         }
 
-        return new ArrayList<>();
+        return itemStackArrayList;
     }
 
     @Override

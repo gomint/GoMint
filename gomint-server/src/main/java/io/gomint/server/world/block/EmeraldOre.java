@@ -44,15 +44,14 @@ public class EmeraldOre extends Block implements io.gomint.world.block.BlockEmer
     }
 
     @Override
-    public List<ItemStack> getDrops(ItemStack itemInHand) {
-        if (isCorrectTool(itemInHand)) {
-            ((WorldAdapter) this.location.getWorld()).createExpOrb(this.location, FastRandom.current().nextInt(3));
-            return new ArrayList<ItemStack>() {{
-                add(ItemEmerald.create(1));
-            }};
+    public List<ItemStack> getDrops( ItemStack itemInHand ) {
+        ArrayList<ItemStack> itemStackArrayList = new ArrayList<>();
+        if ( isCorrectTool( itemInHand ) ) {
+            ( (WorldAdapter) this.location.getWorld() ).createExpOrb( this.location, FastRandom.current().nextInt( 3 ) );
+            itemStackArrayList.add( ItemEmerald.create( 1 ) );
         }
 
-        return new ArrayList<>();
+        return itemStackArrayList;
     }
 
     @Override
