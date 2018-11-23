@@ -15,5 +15,4 @@ public class ItemShears extends ItemReduceTierDiamond implements io.gomint.inven
     public ItemType getType() {
         return ItemType.SHEARS;
     }
-
 }
