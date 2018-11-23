@@ -23,7 +23,7 @@ public class CoalOre extends Block implements io.gomint.world.block.BlockCoalOre
         return "minecraft:coal_ore";
     }
 
-    @Override 
+    @Override
     public long getBreakTime() {
         return 4500;
     }

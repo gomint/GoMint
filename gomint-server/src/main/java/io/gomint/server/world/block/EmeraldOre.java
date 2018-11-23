@@ -15,7 +15,7 @@ import java.util.List;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo(sId = "minecraft:emerald_ore")
+@RegisterInfo( sId = "minecraft:emerald_ore" )
 public class EmeraldOre extends Block implements io.gomint.world.block.BlockEmeraldOre {
 
     @Override

@@ -58,5 +58,4 @@ public class DiamondOre extends Block implements io.gomint.world.block.BlockDiam
     public Class<? extends ItemStack>[] getToolInterfaces() {
         return ToolPresets.PICKAXE;
     }
-
 }
