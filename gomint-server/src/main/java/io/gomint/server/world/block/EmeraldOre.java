@@ -58,5 +58,4 @@ public class EmeraldOre extends Block implements io.gomint.world.block.BlockEmer
     public Class<? extends ItemStack>[] getToolInterfaces() {
         return ToolPresets.PICKAXE;
     }
-
 }

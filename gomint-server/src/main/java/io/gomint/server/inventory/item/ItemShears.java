@@ -10,7 +10,6 @@ import io.gomint.server.registry.RegisterInfo;
 @RegisterInfo( id = 359 )
 public class ItemShears extends ItemReduceTierDiamond implements io.gomint.inventory.item.ItemShears {
 
-
     @Override
     public ItemType getType() {
         return ItemType.SHEARS;

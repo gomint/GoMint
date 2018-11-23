@@ -58,5 +58,4 @@ public class CoalOre extends Block implements io.gomint.world.block.BlockCoalOre
     public Class<? extends ItemStack>[] getToolInterfaces() {
         return ToolPresets.PICKAXE;
     }
-
 }

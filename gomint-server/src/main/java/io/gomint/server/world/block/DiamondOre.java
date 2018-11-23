@@ -50,7 +50,6 @@ public class DiamondOre extends Block implements io.gomint.world.block.BlockDiam
             ( (WorldAdapter) this.location.getWorld() ).createExpOrb( this.location, FastRandom.current().nextInt( 3 ) );
             itemStackArrayList.add( ItemDiamond.create( 1 ) );
         }
-
         return itemStackArrayList;
     }
 
