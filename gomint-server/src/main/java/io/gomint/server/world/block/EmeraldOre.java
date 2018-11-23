@@ -1,12 +1,15 @@
 package io.gomint.server.world.block;
 
-import io.gomint.inventory.item.ItemDiamondSword;
-import io.gomint.inventory.item.ItemIronSword;
+import io.gomint.inventory.item.ItemEmerald;
 import io.gomint.inventory.item.ItemStack;
+import io.gomint.server.registry.RegisterInfo;
+import io.gomint.server.world.WorldAdapter;
 import io.gomint.server.world.block.helper.ToolPresets;
+import io.gomint.util.random.FastRandom;
 import io.gomint.world.block.BlockType;
 
-import io.gomint.server.registry.RegisterInfo;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author geNAZt
@@ -38,6 +41,16 @@ public class EmeraldOre extends Block implements io.gomint.world.block.BlockEmer
     @Override
     public boolean canBeBrokenWithHand() {
         return true;
+    }
+
+    @Override
+    public List<ItemStack> getDrops( ItemStack itemInHand ) {
+        List<ItemStack> drops = new ArrayList<>();
+        if ( isCorrectTool( itemInHand ) ) {
+            ( (WorldAdapter) this.location.getWorld() ).createExpOrb( this.location, FastRandom.current().nextInt( 3 ) );
+            drops.add( ItemEmerald.create( 1 ) );
+        }
+        return drops;
     }
 
     @Override
