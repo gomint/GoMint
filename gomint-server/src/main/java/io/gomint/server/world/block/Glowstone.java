@@ -1,9 +1,13 @@
 package io.gomint.server.world.block;
 
+import io.gomint.inventory.item.ItemGlowstoneDust;
+import io.gomint.inventory.item.ItemStack;
+import io.gomint.util.random.FastRandom;
 import io.gomint.world.block.BlockType;
 
 import io.gomint.server.registry.RegisterInfo;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -41,5 +45,12 @@ public class Glowstone extends Block implements io.gomint.world.block.BlockGlows
     @Override
     public boolean canBeBrokenWithHand() {
         return true;
+    }
+
+    @Override
+    public List<ItemStack> getDrops( ItemStack itemInHand ) {
+        return new ArrayList<ItemStack>() {{
+            add( ItemGlowstoneDust.create( FastRandom.current().nextBoolean() ? 2 : 4 ) );
+        }};
     }
 }
