@@ -1,5 +1,6 @@
 package io.gomint.server.world.block;
 
+import io.gomint.inventory.item.ItemLeaves;
 import io.gomint.inventory.item.ItemShears;
 import io.gomint.inventory.item.ItemStack;
 import io.gomint.server.registry.RegisterInfo;
@@ -8,6 +9,9 @@ import io.gomint.server.world.block.state.EnumBlockState;
 import io.gomint.world.block.BlockLeaves;
 import io.gomint.world.block.BlockType;
 import io.gomint.world.block.data.WoodType;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author geNAZt
@@ -64,6 +68,17 @@ public class Leaves extends Block implements BlockLeaves {
     @Override
     public BlockType getType() {
         return BlockType.LEAVES;
+    }
+
+    @Override
+    public List<ItemStack> getDrops( ItemStack itemInHand ) {
+        if ( isCorrectTool( itemInHand ) ) {
+            return new ArrayList<ItemStack>() {{
+                add( ItemLeaves.create( 1 ) );
+            }};
+        }
+
+        return new ArrayList<>();
     }
 
     @Override
