@@ -72,13 +72,11 @@ public class Leaves extends Block implements BlockLeaves {
 
     @Override
     public List<ItemStack> getDrops( ItemStack itemInHand ) {
-        if ( isCorrectTool( itemInHand ) ) {
-            return new ArrayList<ItemStack>() {{
+        return new ArrayList<ItemStack>() {{
+            if ( isCorrectTool( itemInHand ) ) {
                 add( ItemLeaves.create( 1 ) );
-            }};
-        }
-
-        return new ArrayList<>();
+            }
+        }};
     }
 
     @Override
