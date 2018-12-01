@@ -1004,16 +1004,6 @@ public abstract class Entity implements io.gomint.entity.Entity {
         this.metadataContainer.setDataFlag( MetadataContainer.DATA_INDEX, EntityFlag.INVISIBLE, value );
     }
 
-    @Override
-    public boolean isBaby() {
-        return this.metadataContainer.getDataFlag( MetadataContainer.DATA_INDEX, EntityFlag.BABY );
-    }
-
-    @Override
-    public void setBaby( boolean value ) {
-        this.metadataContainer.setDataFlag( MetadataContainer.DATA_INDEX, EntityFlag.BABY, value );
-    }
-
     /**
      * Create the packet for display in the client
      *
