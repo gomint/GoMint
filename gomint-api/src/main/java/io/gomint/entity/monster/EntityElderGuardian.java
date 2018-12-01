@@ -11,7 +11,7 @@ import io.gomint.entity.EntityLiving;
 public interface EntityElderGuardian extends EntityLiving {
 
     /**
-     * Create a new entity bat with no config
+     * Create a new entity elder guardian with no config
      *
      * @return empty, fresh elder guardian
      */

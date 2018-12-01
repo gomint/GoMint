@@ -6,11 +6,12 @@ import io.gomint.entity.EntityLiving;
 public interface EntityVex extends EntityLiving {
 
     /**
-     * Create a new entity bat with no config
+     * Create a new entity vex with no config
      *
      * @return empty, fresh vex
      */
     static EntityVex create() {
         return GoMint.instance().createEntity( EntityVex.class );
     }
+
 }

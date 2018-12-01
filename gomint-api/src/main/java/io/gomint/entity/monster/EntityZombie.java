@@ -6,11 +6,12 @@ import io.gomint.entity.EntityLiving;
 public interface EntityZombie extends EntityLiving {
 
     /**
-     * Create a new entity bat with no config
+     * Create a new entity zombie with no config
      *
      * @return empty, fresh zombie
      */
     static EntityZombie create() {
         return GoMint.instance().createEntity( EntityZombie.class );
     }
+
 }

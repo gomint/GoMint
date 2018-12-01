@@ -13,4 +13,5 @@ public interface EntityDrowned extends EntityLiving {
     static EntityDrowned create() {
         return GoMint.instance().createEntity( EntityDrowned.class );
     }
+
 }

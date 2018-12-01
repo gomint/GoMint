@@ -13,4 +13,5 @@ public interface EntityEvoker extends EntityLiving {
     static EntityEvoker create() {
         return GoMint.instance().createEntity( EntityEvoker.class );
     }
+
 }

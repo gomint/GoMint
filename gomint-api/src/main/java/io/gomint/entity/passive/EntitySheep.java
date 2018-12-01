@@ -6,11 +6,12 @@ import io.gomint.entity.EntityLiving;
 public interface EntitySheep extends EntityLiving {
 
     /**
-     * Create a new entity donkey with no config
+     * Create a new entity sheep with no config
      *
      * @return empty, fresh sheep
      */
     static EntitySheep create() {
         return GoMint.instance().createEntity( EntitySheep.class );
     }
+
 }

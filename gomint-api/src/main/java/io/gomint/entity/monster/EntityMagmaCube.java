@@ -10,7 +10,7 @@ import io.gomint.entity.EntityLiving;
 public interface EntityMagmaCube extends EntityLiving {
 
     /**
-     * Create a new entity bat with no config
+     * Create a new entity magma cube with no config
      *
      * @return empty, fresh magma cube
      */

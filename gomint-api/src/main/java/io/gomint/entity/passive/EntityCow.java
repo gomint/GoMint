@@ -6,11 +6,12 @@ import io.gomint.entity.EntityLiving;
 public interface EntityCow extends EntityLiving {
 
     /**
-     * Create a new entity donkey with no config
+     * Create a new entity cow with no config
      *
      * @return empty, fresh cow
      */
     static EntityCow create() {
         return GoMint.instance().createEntity( EntityCow.class );
     }
+
 }

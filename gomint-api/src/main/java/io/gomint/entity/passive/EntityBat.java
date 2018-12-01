@@ -13,4 +13,5 @@ public interface EntityBat extends EntityLiving {
     static EntityBat create() {
         return GoMint.instance().createEntity( EntityBat.class );
     }
+
 }

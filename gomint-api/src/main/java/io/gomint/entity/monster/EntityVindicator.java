@@ -13,4 +13,5 @@ public interface EntityVindicator extends EntityLiving {
     static EntityVindicator create() {
         return GoMint.instance().createEntity( EntityVindicator.class );
     }
+
 }

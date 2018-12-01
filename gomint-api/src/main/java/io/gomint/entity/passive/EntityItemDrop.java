@@ -14,7 +14,7 @@ import java.util.concurrent.TimeUnit;
 public interface EntityItemDrop extends Entity {
 
     /**
-     * Create a new EntityItemDrop without any configuration. It will use default values when not configured and spawned
+     * Create a new entity item drop without any configuration. It will use default values when not configured and spawned
      *
      * @return new entity
      */

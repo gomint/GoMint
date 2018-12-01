@@ -13,4 +13,5 @@ public interface EntityLama extends EntityLiving {
     static EntityLama create() {
         return GoMint.instance().createEntity( EntityLama.class );
     }
+
 }

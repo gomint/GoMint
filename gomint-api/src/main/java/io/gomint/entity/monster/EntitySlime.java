@@ -10,7 +10,7 @@ import io.gomint.entity.EntityLiving;
 public interface EntitySlime extends EntityLiving {
 
     /**
-     * Create a new entity bat with no config
+     * Create a new entity slime with no config
      *
      * @return empty, fresh slime
      */

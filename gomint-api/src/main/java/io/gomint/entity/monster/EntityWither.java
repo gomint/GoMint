@@ -6,11 +6,12 @@ import io.gomint.entity.EntityLiving;
 public interface EntityWither extends EntityLiving {
 
     /**
-     * Create a new entity bat with no config
+     * Create a new entity wither with no config
      *
      * @return empty, fresh wither
      */
     static EntityWither create() {
         return GoMint.instance().createEntity( EntityWither.class );
     }
+
 }

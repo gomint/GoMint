@@ -6,11 +6,12 @@ import io.gomint.entity.EntityLiving;
 public interface EntitySalmon extends EntityLiving {
 
     /**
-     * Create a new salmon with no config
+     * Create a new entity salmon with no config
      *
      * @return empty, fresh salmon
      */
     static EntitySalmon create() {
         return GoMint.instance().createEntity( EntitySalmon.class );
     }
+
 }

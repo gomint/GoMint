@@ -13,4 +13,5 @@ public interface EntityHorse extends EntityLiving {
     static EntityHorse create() {
         return GoMint.instance().createEntity( EntityHorse.class );
     }
+
 }
