@@ -320,6 +320,20 @@ public interface Entity {
     boolean isImmobile();
 
     /**
+     * Set this entity to a baby
+     *
+     * @param value true if this entity should be a baby, false if not
+     */
+    void setBaby( boolean value );
+
+    /**
+     * Is the entity a baby?
+     *
+     * @return true if this entity is a baby, false if not
+     */
+    boolean isBaby();
+
+    /**
      * Set this entity on fire (it does not get damage, only visual)
      *
      * @param value true for on fire, false for not
