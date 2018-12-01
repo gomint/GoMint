@@ -1,13 +1,14 @@
 package io.gomint.server.entity.monster;
 
 import io.gomint.server.entity.Attribute;
+import io.gomint.server.entity.EntityAgeable;
 import io.gomint.server.entity.EntityLiving;
 import io.gomint.server.entity.EntityType;
 import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.world.WorldAdapter;
 
 @RegisterInfo( sId = "minecraft:zombie" )
-public class EntityZombie extends EntityLiving implements io.gomint.entity.monster.EntityZombie {
+public class EntityZombie extends EntityAgeable implements io.gomint.entity.monster.EntityZombie {
 
     /**
      * Constructs a new EntityLiving

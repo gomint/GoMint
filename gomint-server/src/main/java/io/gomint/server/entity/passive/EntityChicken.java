@@ -1,6 +1,7 @@
 package io.gomint.server.entity.passive;
 
 import io.gomint.server.entity.Attribute;
+import io.gomint.server.entity.EntityAgeable;
 import io.gomint.server.entity.EntityLiving;
 import io.gomint.server.entity.EntityType;
 import io.gomint.server.registry.RegisterInfo;
@@ -11,7 +12,7 @@ import io.gomint.server.world.WorldAdapter;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:chicken" )
-public class EntityChicken extends EntityLiving implements io.gomint.entity.passive.EntityChicken {
+public class EntityChicken extends EntityAgeable implements io.gomint.entity.passive.EntityChicken {
 
     /**
      * Constructs a new EntityLiving

@@ -1,13 +1,14 @@
 package io.gomint.entity.passive;
 
 import io.gomint.GoMint;
+import io.gomint.entity.EntityAgeable;
 import io.gomint.entity.EntityLiving;
 
 /**
  * @author geNAZt
  * @version 1.0
  */
-public interface EntityVillager extends EntityLiving {
+public interface EntityVillager extends EntityAgeable {
 
     /**
      * Create a new entity villager with no config

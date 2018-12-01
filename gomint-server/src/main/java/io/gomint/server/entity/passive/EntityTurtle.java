@@ -1,13 +1,14 @@
 package io.gomint.server.entity.passive;
 
 import io.gomint.server.entity.Attribute;
+import io.gomint.server.entity.EntityAgeable;
 import io.gomint.server.entity.EntityLiving;
 import io.gomint.server.entity.EntityType;
 import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.world.WorldAdapter;
 
 @RegisterInfo( sId = "minecraft:turtle" )
-public class EntityTurtle extends EntityLiving implements io.gomint.entity.passive.EntityTurtle {
+public class EntityTurtle extends EntityAgeable implements io.gomint.entity.passive.EntityTurtle {
 
     /**
      * Constructs a new EntityLiving

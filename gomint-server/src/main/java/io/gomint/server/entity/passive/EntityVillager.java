@@ -3,6 +3,7 @@ package io.gomint.server.entity.passive;
 import io.gomint.entity.EntityPlayer;
 import io.gomint.math.Vector;
 import io.gomint.server.entity.Attribute;
+import io.gomint.server.entity.EntityAgeable;
 import io.gomint.server.entity.EntityLiving;
 import io.gomint.server.entity.EntityType;
 import io.gomint.server.entity.metadata.MetadataContainer;
@@ -15,7 +16,7 @@ import io.gomint.taglib.NBTTagCompound;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:villager" )
-public class EntityVillager extends EntityLiving implements io.gomint.entity.passive.EntityVillager {
+public class EntityVillager extends EntityAgeable implements io.gomint.entity.passive.EntityVillager {
 
     /**
      * Constructs a new EntityLiving
