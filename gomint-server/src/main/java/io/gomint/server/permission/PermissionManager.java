@@ -60,7 +60,7 @@ public class PermissionManager implements io.gomint.permission.PermissionManager
     @Override
     public boolean hasPermission( String permission ) {
         // Check if player is op
-        if ( this.player.isOp() ) {
+        if ( this.player != null && this.player.isOp() ) {
             return true;
         }
 
