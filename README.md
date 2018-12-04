@@ -3,6 +3,10 @@
 <h4 align="center">A new fresh Minecraft Bedrock Edition server<br>aiming for stability and performance</h4>
 <p align="center">
   
+  <!-- BUILD BADGE -->
+  <a href="https://travis-ci.org/GoMint/GoMint">
+    <img alt="Build Status" src="https://travis-ci.org/GoMint/GoMint.svg?branch=master">
+  </a>
   <!-- STAR BADGE -->
   <a href="https://github.com/GoMint/GoMint/stargazers">
     <img alt="GitHub Stars" src="https://img.shields.io/github/stars/GoMint/GoMint.svg">
@@ -25,10 +29,6 @@
 
 Project
 --
-Build Version | Build Result
------------- | -------------|
-Master Build | [![Build Status](https://travis-ci.org/GoMint/GoMint.svg?branch=master)](https://travis-ci.org/GoMint/GoMint)
-
 GoMint is a Minecraft Bedrock Edition server software implementation that is still work in progress.
 The goal is to provide a full, modifiable server with plugin support for Java.
 The project is divided into four modules:
