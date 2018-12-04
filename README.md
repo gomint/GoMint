@@ -1,7 +1,8 @@
 ![GoMint](.github/gomint-github-optimized.png)
 
+<h4 align="center">A new fresh Minecraft Bedrock Edition server<br>aiming for stability and performance</h4>
 <p align="center">
-
+  
   <!-- STAR BADGE -->
   <a href="https://github.com/GoMint/GoMint/stargazers">
     <img alt="GitHub Stars" src="https://img.shields.io/github/stars/GoMint/GoMint.svg">
@@ -21,20 +22,9 @@
 
 </p>
 
-Deprecation Warnings
---
-Currently Gomint is in "fast" development "mode". This means that the API is not stable in all corners. The goal is to
-develop the API with the implementation problems we face. Due to that approach we will break API from time to time. To keep
-impact minimal we deprecate old methods and provide better alternatives to switch to. 
-
-**Deprecated methods will be deleted after 2 weeks of deprecation**
-
-Current deprecated methods:
-
 
 Project
 --
-
 Build Version | Build Result
 ------------ | -------------|
 Master Build | [![Build Status](https://travis-ci.org/GoMint/GoMint.svg?branch=master)](https://travis-ci.org/GoMint/GoMint)
@@ -63,6 +53,14 @@ Holds most of the data related to entities, blocks and more. The data is gathere
 
 ##### gomint-test-plugin
 A plugin to test and see the API design. 
+
+Deprecation Warnings
+--
+Currently, GoMint is in a fast development-mode. The API is in all corners not stable and may change over time. The goal is to develop an API with the implementation problems we face. We will break the API multiple times until we reach the first release. To keep the impact minimal we deprecate old methods and provide better alternatives you can use.
+
+```diff
+- Deprecated symbols (packages, fields, methods, classes etc.) will be deleted after 2 weeks of deprecation
+```
 
 ## Contact & Social
 [![Join the Discord](http://puu.sh/v9UB9/944431c790.png)](https://discord.gg/qC4nJVN)
