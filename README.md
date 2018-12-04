@@ -26,58 +26,44 @@
 
 </p>
 
+GoMint is an open-source Minecraft Bedrock Edition server software implementation that is still work in progress. The goal is to provide a server implementation aiming for performance and stability with support for plugins. Purely written in Java.
 
-Project
---
-GoMint is a Minecraft Bedrock Edition server software implementation that is still work in progress.
-The goal is to provide a full, modifiable server with plugin support for Java.
-The project is divided into four modules:
-
-##### gomint-api
-The API for plugin developers. This is currently not stable and will not be developed in this stage
-of the project. It will be finalized once all core components inside the server work.
-
-##### gomint-server
-This is the implementation of the server. Fiddling with this is not supported but we will help you if we can.
-This part of the project is developing the fastest. If you want to contribute to the software watch this module the
-most.
-
-##### gomint-native
-Holds native code related to hashing and zlib.
-
-##### gomint-converter
-A standalone application that allows you to easily convert an Anvil world to LevelDB from the command line.
-
-##### gomint-asset-compiler
-Holds most of the data related to entities, blocks and more. The data is gathered via MiTM and from other sources
-
-##### gomint-test-plugin
-A plugin to test and see the API design. 
-
-Deprecation Warnings
---
-Currently, GoMint is in a fast development-mode. The API is in all corners not stable and may change over time. The goal is to develop an API with the implementation problems we face. We will break the API multiple times until we reach the first release. To keep the impact minimal we deprecate old methods and provide better alternatives you can use.
+### A word of warning
+Currently, GoMint is in a fast development-mode. The API is in all corners not stable and may change over time. The goal is to develop an API with the implementation problems we face. We will break the API multiple times until we reach the first release. To keep the impact minimal we deprecate symbols and provide better alternatives you can use.
 
 ```diff
-- Deprecated symbols (packages, fields, methods, classes etc.) will be deleted after 2 weeks of deprecation
+- Deprecated symbols (packages, fields, methods, classes etc.) will be deleted after two weeks of deprecation
 ```
 
-## Contact & Social
+## tl;dr
+### Essentials
+
+| JDK  | Documentation                        | Download                                                   |
+| ---- | ------------------------------------ | ---------------------------------------------------------- |
+| 1.8  | [Click here](https://docs.gomint.io) | [Latest build](http://ci.gomint.io/job/GoMint/job/master/) |
+
+### Compilation
+Compiling GoMint is actually pretty easy. We'll guide you through the compilation step by step and address troubleshooting.
+
+##### Prerequisites
+For compiling GoMint, you will need some prerequisites:
+- Git
+- Maven
+- JDK 1.8
+
+##### Compiling
+This project's choice of build tool is Maven. To compile GoMint using Maven follow these steps:
+- Open up a terminal
+- Change the working directory to the cloned GoMint repository
+- Type the following command: `mvn clean install` (You can append `-T 4C` if you've got a decent machine)
+- Let it compile. This will take some time. Grab a drink and relax.
+
+##### Troubleshooting
+_To compile troubleshooting available._
+
+### License
+This project's choice of license is **BSD 3-Clause**. You may find the license file in the project's root directory.
+
+### Social
 [![Join the Discord](http://puu.sh/v9UB9/944431c790.png)](https://discord.gg/qC4nJVN)
 [![Twitter](http://puu.sh/v9V9H/ad70c8acf7.png)](https://twitter.com/GomintPe)
-
-## Todo
-Join Discord for more information about the current tasks we do
-
-## License
-
-The code found in this repository is licensed under a 3-clause BSD license. See the LICENSE file for further
-details.
-
-## Documentation
-
-There currently is no documentation as things are still changing frequently.
-
-## Download
-
-You can recieve the latest builds here: http://ci.gomint.io/job/GoMint/job/master/
