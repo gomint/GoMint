@@ -43,20 +43,20 @@ Currently, GoMint is in a fast development-mode. The API is in all corners not s
 ### Compilation
 Compiling GoMint is actually pretty easy. We'll guide you through the compilation step by step and address troubleshooting.
 
-##### Prerequisites
+**Prerequisites**<br>
 For compiling GoMint, you will need some prerequisites:
 - Git
 - Maven
 - JDK 1.8
-
-##### Compiling
+ 
+**Compiling**<br>
 This project's choice of build tool is Maven. To compile GoMint using Maven follow these steps:
 - Open up a terminal
 - Change the working directory to the cloned GoMint repository
 - Type the following command: `mvn clean install` (You can append `-T 4C` if you've got a decent machine)
 - Let it compile. This will take some time. Grab a drink and relax.
 
-##### Troubleshooting
+**Troubleshooting**<br>
 _No compile troubleshooting available._
 
 ### License
