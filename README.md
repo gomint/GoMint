@@ -36,8 +36,6 @@ Currently, GoMint is in a fast development-mode. The API is in all corners not s
 ```
 
 ## tl;dr
-### Essentials
-
 | JDK  | Documentation                        | Download                                                   |
 | ---- | ------------------------------------ | ---------------------------------------------------------- |
 | 1.8  | [Click here](https://docs.gomint.io) | [Latest build](http://ci.gomint.io/job/GoMint/job/master/) |
