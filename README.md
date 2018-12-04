@@ -66,12 +66,13 @@ This project's choice of license is **BSD 3-Clause**. You may find the license f
 <p align="center">
   
   <!-- DISCORD -->
-  <a href="https://discord.gg/qC4nJVN" width="32">
-    <img alt="Discord Logo" src=".github/ASSETS/logo_discord.png">
+  <a href="https://discord.gg/qC4nJVN">
+    <img width="32" alt="Discord Logo" src=".github/ASSETS/logo_discord.png">
   </a>
+  &nbsp;
   <!-- TWITTER -->
-  <a href="https://twitter.com/GomintPe" width="32">
-    <img alt="Discord Logo" src=".github/ASSETS/twitter_discord.png">
+  <a href="https://twitter.com/GomintPe">
+    <img width="32" alt="Twitter Logo" src=".github/ASSETS/logo_twitter.png">
   </a>
 
 </p>
