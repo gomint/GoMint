@@ -1,4 +1,4 @@
-![GoMint](.github/gomint-github-optimized.png)
+![GoMint](.github/ASSETS/logo_optimized.png)
 
 <h4 align="center">A new fresh Minecraft Bedrock Edition server<br>aiming for stability and performance</h4>
 <p align="center">
@@ -62,6 +62,16 @@ _No compile troubleshooting available._
 ### License
 This project's choice of license is **BSD 3-Clause**. You may find the license file in the project's root directory.
 
-### Social
-[![Join the Discord](http://puu.sh/v9UB9/944431c790.png)](https://discord.gg/qC4nJVN)
-[![Twitter](http://puu.sh/v9V9H/ad70c8acf7.png)](https://twitter.com/GomintPe)
+<br>
+<p align="center">
+  
+  <!-- DISCORD -->
+  <a href="https://discord.gg/qC4nJVN" width="32">
+    <img alt="Discord Logo" src=".github/ASSETS/logo_discord.png">
+  </a>
+  <!-- TWITTER -->
+  <a href="https://twitter.com/GomintPe" width="32">
+    <img alt="Discord Logo" src=".github/ASSETS/twitter_discord.png">
+  </a>
+
+</p>
