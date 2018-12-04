@@ -1,6 +1,6 @@
 <h1 align="center">
 
-  ![GoMint](https://gomint.io/wp-content/uploads/2015/08/cropped-GoMint_Transparent.png)
+  ![GoMint](.github/gomint-github-optimized.png)
 </h1>
 
 [![GitHub Stars](https://img.shields.io/github/stars/GoMint/GoMint.svg)](https://github.com/GoMint/GoMint/stargazers)
