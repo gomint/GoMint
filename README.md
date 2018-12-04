@@ -59,7 +59,7 @@ This project's choice of build tool is Maven. To compile GoMint using Maven foll
 - Let it compile. This will take some time. Grab a drink and relax.
 
 ##### Troubleshooting
-_To compile troubleshooting available._
+_No compile troubleshooting available._
 
 ### License
 This project's choice of license is **BSD 3-Clause**. You may find the license file in the project's root directory.
