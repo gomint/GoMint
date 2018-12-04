@@ -1,12 +1,25 @@
-<h1 align="center">
+[GoMint](.github/gomint-github-optimized.png)
 
-  ![GoMint](.github/gomint-github-optimized.png)
-</h1>
+<p align="center">
 
-[![GitHub Stars](https://img.shields.io/github/stars/GoMint/GoMint.svg)](https://github.com/GoMint/GoMint/stargazers)
-[![GitHub Issues](https://img.shields.io/github/issues/GoMint/GoMint.svg)](https://github.com/GoMint/GoMint/issues) 
-[![Current Version](https://img.shields.io/badge/version-1.0.5-green.svg)](https://github.com/GoMint/GoMint) 
-[![License](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause)
+  <!-- STAR BADGE -->
+  <a href="https://github.com/GoMint/GoMint/stargazers">
+    <img alt="GitHub Stars" src="https://img.shields.io/github/stars/GoMint/GoMint.svg">
+  </a>
+  <!-- ISSUES BADGE -->
+  <a href="https://github.com/GoMint/GoMint/issues">
+    <img alt="GitHub Stars" src="https://img.shields.io/github/issues/GoMint/GoMint.svg">
+  </a>
+  <!-- VERSION BADGE -->
+  <a href="https://github.com/GoMint/GoMint">
+    <img alt="GitHub Stars" src="https://img.shields.io/badge/version-1.0.5-green.svg">
+  </a>
+  <!-- LICENSE BADGE -->
+  <a href="https://opensource.org/licenses/BSD-3-Clause">
+    <img alt="License" src="https://img.shields.io/badge/License-BSD%203--Clause-blue.svg">
+  </a>
+
+</p>
 
 Deprecation Warnings
 --
