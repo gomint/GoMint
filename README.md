@@ -1,4 +1,4 @@
-[GoMint](.github/gomint-github-optimized.png)
+![GoMint](.github/gomint-github-optimized.png)
 
 <p align="center">
 
