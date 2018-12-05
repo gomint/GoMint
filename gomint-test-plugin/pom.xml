@@ -13,6 +13,9 @@
     <groupId>io.gomint.plugin</groupId>
     <artifactId>gomint-test-plugin</artifactId>
 
+    <name>GoMint Test Plugin</name>
+    <description>A plugin to test and see GoMint's API design</description>
+
     <dependencies>
         <dependency>
             <groupId>io.gomint</groupId>
