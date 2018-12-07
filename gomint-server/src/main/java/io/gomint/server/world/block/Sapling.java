@@ -41,4 +41,9 @@ public class Sapling extends Block implements io.gomint.world.block.BlockSapling
         return true;
     }
 
+    @Override
+    public long getBreakTime() {
+        return 0;
+    }
+
 }
