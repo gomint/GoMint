@@ -131,7 +131,9 @@ public class FurnaceTileEntity extends ContainerTileEntity implements InventoryH
             Block maybeBurningFurnace = this.getBlock();
             if ( maybeBurningFurnace.getType() == BlockType.FURNACE ) {
                 Furnace furnace = (Furnace) maybeBurningFurnace;
-                furnace.setBurning( true );
+                if ( !furnace.isBurning() ) {
+                    furnace.setBurning( true );
+                }
             }
 
             this.cookTime++;
@@ -169,7 +171,9 @@ public class FurnaceTileEntity extends ContainerTileEntity implements InventoryH
                     this.broadcastFuelInfo();
                 } else {
                     Furnace furnace = (Furnace) this.getBlock();
-                    furnace.setBurning( false );
+                    if ( furnace.isBurning() ) {
+                        furnace.setBurning( false );
+                    }
                 }
             }
 

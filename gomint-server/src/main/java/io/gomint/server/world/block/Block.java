@@ -353,6 +353,10 @@ public abstract class Block implements io.gomint.world.block.Block {
             instance.setWorld( worldAdapter );
             instance.setLocation( this.location );
 
+            // We need to calculate needed states
+            instance.setBlockData( data.getBlockIdentifier().getData() );
+            instance.generateBlockStates();
+
             // Check if new blockId needs tile entity
             if ( instance.needsTileEntity() ) {
                 // Create new tile entity compound if null
@@ -440,8 +444,7 @@ public abstract class Block implements io.gomint.world.block.Block {
         Block instance = (Block) apiInstance;
         BlockPosition pos = this.location.toBlockPosition();
         WorldAdapter worldAdapter = (WorldAdapter) this.location.getWorld();
-        worldAdapter.setBlockId( pos, this.layer, instance.getBlockId() );
-        worldAdapter.setBlockData( pos, this.layer, instance.blockData );
+        worldAdapter.setBlock( pos, this.layer, new BlockIdentifier( instance.blockId, instance.blockData ) );
         worldAdapter.resetTemporaryStorage( pos, this.layer );
 
         // Check if new blockId needs tile entity
@@ -465,8 +468,7 @@ public abstract class Block implements io.gomint.world.block.Block {
         Block instance = (Block) apiInstance;
         BlockPosition pos = this.location.toBlockPosition();
         WorldAdapter worldAdapter = (WorldAdapter) this.location.getWorld();
-        worldAdapter.setBlockId( pos, this.layer, instance.getBlockId() );
-        worldAdapter.setBlockData( pos, this.layer, instance.blockData );
+        worldAdapter.setBlock( pos, this.layer, new BlockIdentifier( instance.blockId, instance.blockData ) );
         worldAdapter.resetTemporaryStorage( pos, this.layer );
 
         // Check if new blockId needs tile entity
@@ -567,9 +569,9 @@ public abstract class Block implements io.gomint.world.block.Block {
                 return this.getRelative( BlockPosition.WEST );
             case EAST:
                 return this.getRelative( BlockPosition.EAST );
+            default:
+                return null;
         }
-
-        return null;
     }
 
     /**
@@ -588,9 +590,9 @@ public abstract class Block implements io.gomint.world.block.Block {
                 return this.getRelative( BlockPosition.EAST );
             case WEST:
                 return this.getRelative( BlockPosition.WEST );
+            default:
+                return null;
         }
-
-        return null;
     }
 
     private Block getRelative( BlockPosition position ) {
