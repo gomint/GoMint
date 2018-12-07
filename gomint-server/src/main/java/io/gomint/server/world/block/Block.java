@@ -343,6 +343,13 @@ public abstract class Block implements io.gomint.world.block.Block {
      */
     public <T extends io.gomint.world.block.Block> T setBlockFromPlacementData( PlacementData data ) {
         BlockPosition pos = this.location.toBlockPosition();
+
+        // Check if this block can be replaced
+        if ( pos.getY() < 0 || pos.getY() > 255 ) {
+            LOGGER.warn( "Invalid block placement @ {}", pos, new Exception() );
+            return null;
+        }
+
         Block instance = this.world.getServer().getBlocks().get( data.getBlockIdentifier().getBlockId() );
 
         if ( instance != null ) {
@@ -393,6 +400,13 @@ public abstract class Block implements io.gomint.world.block.Block {
 
     public <T extends io.gomint.world.block.Block> T setType( Class<T> blockType, boolean checkTile, boolean resetData ) {
         BlockPosition pos = this.location.toBlockPosition();
+
+        // Check if this block can be replaced
+        if ( pos.getY() < 0 || pos.getY() > 255 ) {
+            LOGGER.warn( "Invalid block placement @ {}", pos, new Exception() );
+            return null;
+        }
+
         Block instance = this.world.getServer().getBlocks().get( blockType );
         if ( instance != null ) {
             WorldAdapter worldAdapter = (WorldAdapter) this.location.getWorld();
@@ -443,6 +457,13 @@ public abstract class Block implements io.gomint.world.block.Block {
 
         Block instance = (Block) apiInstance;
         BlockPosition pos = this.location.toBlockPosition();
+
+        // Check if this block can be replaced
+        if ( pos.getY() < 0 || pos.getY() > 255 ) {
+            LOGGER.warn( "Invalid block placement @ {}", pos, new Exception() );
+            return null;
+        }
+
         WorldAdapter worldAdapter = (WorldAdapter) this.location.getWorld();
         worldAdapter.setBlock( pos, this.layer, new BlockIdentifier( instance.blockId, instance.blockData ) );
         worldAdapter.resetTemporaryStorage( pos, this.layer );
@@ -467,6 +488,13 @@ public abstract class Block implements io.gomint.world.block.Block {
     public <T extends io.gomint.world.block.Block> T copyFromBlock( T apiInstance ) {
         Block instance = (Block) apiInstance;
         BlockPosition pos = this.location.toBlockPosition();
+
+        // Check if this block can be replaced
+        if ( pos.getY() < 0 || pos.getY() > 255 ) {
+            LOGGER.warn( "Invalid block placement @ {}", pos, new Exception() );
+            return null;
+        }
+
         WorldAdapter worldAdapter = (WorldAdapter) this.location.getWorld();
         worldAdapter.setBlock( pos, this.layer, new BlockIdentifier( instance.blockId, instance.blockData ) );
         worldAdapter.resetTemporaryStorage( pos, this.layer );

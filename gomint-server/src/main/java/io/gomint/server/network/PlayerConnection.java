@@ -62,6 +62,7 @@ import io.gomint.server.network.packet.PacketEncryptionResponse;
 import io.gomint.server.network.packet.PacketInventoryTransaction;
 import io.gomint.server.network.packet.PacketLogin;
 import io.gomint.server.network.packet.PacketMovePlayer;
+import io.gomint.server.network.packet.PacketNetworkChunkPublisherUpdate;
 import io.gomint.server.network.packet.PacketPlayState;
 import io.gomint.server.network.packet.PacketPlayerlist;
 import io.gomint.server.network.packet.PacketResourcePackResponse;
@@ -786,6 +787,15 @@ public class PlayerConnection implements ConnectionWithState {
                         toSendChunks.add( new Pair<>( sendXChunk, sendZChunk ) );
                     }
                 }
+            }
+        }
+
+        if ( !toSendChunks.isEmpty() ) {
+            if ( this.protocolID >= Protocol.MINECRAFT_PE_NEXT_STABLE_PROTOCOL_VERSION ) {
+                PacketNetworkChunkPublisherUpdate packetNetworkChunkPublisherUpdate = new PacketNetworkChunkPublisherUpdate();
+                packetNetworkChunkPublisherUpdate.setBlockPosition( this.entity.getLocation().toBlockPosition() );
+                packetNetworkChunkPublisherUpdate.setRadius( this.entity.getViewDistance() * 16 );
+                this.addToSendQueue( packetNetworkChunkPublisherUpdate );
             }
         }
 

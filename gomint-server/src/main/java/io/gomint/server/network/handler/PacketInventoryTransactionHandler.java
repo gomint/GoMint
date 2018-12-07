@@ -5,6 +5,7 @@ import io.gomint.event.world.BlockBreakEvent;
 import io.gomint.inventory.item.ItemAir;
 import io.gomint.inventory.item.ItemStack;
 import io.gomint.inventory.item.ItemSword;
+import io.gomint.inventory.item.ItemType;
 import io.gomint.math.Vector;
 import io.gomint.server.enchant.EnchantmentProcessor;
 import io.gomint.server.entity.EntityPlayer;
@@ -421,6 +422,13 @@ public class PacketInventoryTransactionHandler implements PacketHandler<PacketIn
                 break;
             case -5:    // Crafting result input
                 inventory = entity.getCraftingInputInventory();
+                for ( int i = 0; i < inventory.getContentsArray().length; i++ ) {
+                    if ( inventory.getItem( i ).getType() == ItemType.AIR ) {
+                        transaction.setSlot( i );
+                        break;
+                    }
+                }
+
                 break;
             case -15:   // Input of items which should be enchanted
                 inventory = entity.getEnchantmentInputInventory();

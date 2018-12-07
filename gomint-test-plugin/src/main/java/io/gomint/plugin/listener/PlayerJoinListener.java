@@ -8,9 +8,12 @@ import io.gomint.event.player.PlayerJoinEvent;
 import io.gomint.inventory.PlayerInventory;
 import io.gomint.inventory.item.ItemCraftingTable;
 import io.gomint.inventory.item.ItemLog;
+import io.gomint.math.BlockPosition;
 import io.gomint.plugin.TestPlugin;
 import io.gomint.plugin.scoreboard.DebugScoreboard;
 import io.gomint.world.Gamemode;
+import io.gomint.world.block.Block;
+import io.gomint.world.block.BlockLog;
 import lombok.RequiredArgsConstructor;
 
 /**
@@ -41,6 +44,12 @@ public class PlayerJoinListener implements EventListener {
 
         // Spawn a Armor Stand to the player location
         EntityArmorStand.create().spawn( event.getPlayer().getLocation() );
+
+        // Try to make a invalid block placement
+        BlockPosition pos = event.getPlayer().getLocation().toBlockPosition();
+        pos.setY( 257 );
+        Block air = event.getPlayer().getWorld().getBlockAt( pos );
+        air.setType( BlockLog.class );
     }
 
 }

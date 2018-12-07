@@ -205,10 +205,16 @@ public class ShapedRecipe extends CraftingRecipe {
             }
         }
 
+        // Items not found in grid (only air left)
+        if ( zSpace == z && xSpace == x ) {
+            return null;
+        }
+
         int[] consumeItems = new int[this.width * this.height];
         for ( int i = 0; i < this.height; i++ ) {
             for ( int j = 0; j < this.width; j++ ) {
                 int itemSlot = ( ( i + xSpace ) * x ) + ( j + zSpace );
+
                 ItemStack invItem = inputInventory.getItem( itemSlot );
                 ItemStack recipeItem = this.arrangement[j + ( this.width * i )];
 

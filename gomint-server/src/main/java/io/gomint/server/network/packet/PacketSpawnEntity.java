@@ -47,7 +47,13 @@ public class PacketSpawnEntity extends Packet {
     public void serialize( PacketBuffer buffer, int protocolID ) {
         buffer.writeSignedVarLong( this.entityId );
         buffer.writeUnsignedVarLong( this.entityId );
-        buffer.writeUnsignedVarInt( this.entityType.getNetworkId() );
+
+        if ( protocolID < Protocol.MINECRAFT_PE_NEXT_STABLE_PROTOCOL_VERSION ) {
+            buffer.writeUnsignedVarInt( this.entityType.getNetworkId() );
+        } else {
+            buffer.writeString( this.entityType.getPersistantId() );
+        }
+
         buffer.writeLFloat( this.x );
         buffer.writeLFloat( this.y );
         buffer.writeLFloat( this.z );

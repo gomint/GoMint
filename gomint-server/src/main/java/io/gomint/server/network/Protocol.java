@@ -48,8 +48,8 @@ public final class Protocol {
 
     // CHECKSTYLE:OFF
     // MC:PE Protocol ID
-    public static final int MINECRAFT_PE_BETA_PROTOCOL_VERSION = 290;
-    public static final int MINECRAFT_PE_NEXT_STABLE_PROTOCOL_VERSION = -1;
+    public static final int MINECRAFT_PE_BETA_PROTOCOL_VERSION = -1;
+    public static final int MINECRAFT_PE_NEXT_STABLE_PROTOCOL_VERSION = 311;
     public static final int MINECRAFT_PE_PROTOCOL_VERSION = 291;
     public static final String MINECRAFT_PE_NETWORK_VERSION = "1.7.0";
 
@@ -128,6 +128,7 @@ public final class Protocol {
     public static final byte PACKET_ENTITY_RELATIVE_MOVEMENT = (byte) 0x6f;
     public static final byte PACKET_SET_SCOREBOARD_IDENTITY = (byte) 0x70;
     public static final byte PACKET_SET_LOCAL_PLAYER_INITIALIZED = (byte) 0x71;
+    public static final byte PACKET_NETWORK_CHUNK_PUBLISHER_UPDATE = (byte) 0x79;
     public static final byte PACKET_SET_TITLE = (byte) 0x58;
     public static final byte PACKET_SET_COMPASS_TARGET = (byte) 0xB1;
     // CHECKSTYLE:ON
