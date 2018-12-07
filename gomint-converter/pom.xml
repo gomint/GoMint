@@ -14,9 +14,14 @@
         <groupId>io.gomint</groupId>
         <version>1.0.0-SNAPSHOT</version>
     </parent>
+    
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>gomint-converter</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+
+    <name>GoMint Converter</name>
+    <description>Standalone command-line application converting Anvil worlds to LevelDB worlds</description>
 
     <dependencies>
         <dependency>

@@ -6,11 +6,12 @@ import io.gomint.entity.EntityLiving;
 public interface EntitySquid extends EntityLiving {
 
     /**
-     * Create a new entity donkey with no config
+     * Create a new entity squid with no config
      *
      * @return empty, fresh squid
      */
     static EntitySquid create() {
         return GoMint.instance().createEntity( EntitySquid.class );
     }
+
 }

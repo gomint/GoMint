@@ -1,13 +1,14 @@
 package io.gomint.server.entity.passive;
 
 import io.gomint.server.entity.Attribute;
+import io.gomint.server.entity.EntityAgeable;
 import io.gomint.server.entity.EntityLiving;
 import io.gomint.server.entity.EntityType;
 import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.world.WorldAdapter;
 
 @RegisterInfo( sId = "minecraft:pig" )
-public class EntityPig extends EntityLiving implements io.gomint.entity.passive.EntityPig {
+public class EntityPig extends EntityAgeable implements io.gomint.entity.passive.EntityPig {
 
     /**
      * Constructs a new EntityLiving

@@ -6,11 +6,12 @@ import io.gomint.entity.EntityLiving;
 public interface EntityGuardian extends EntityLiving {
 
     /**
-     * Create a new entity bat with no config
+     * Create a new entity guardian with no config
      *
      * @return empty, fresh guardian
      */
     static EntityGuardian create() {
         return GoMint.instance().createEntity( EntityGuardian.class );
     }
+
 }

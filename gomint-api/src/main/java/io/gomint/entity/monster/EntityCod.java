@@ -13,4 +13,5 @@ public interface EntityCod extends EntityLiving {
     static EntityCod create() {
         return GoMint.instance().createEntity( EntityCod.class );
     }
+
 }

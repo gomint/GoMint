@@ -6,11 +6,12 @@ import io.gomint.entity.EntityLiving;
 public interface EntityStray extends EntityLiving {
 
     /**
-     * Create a new entity bat with no config
+     * Create a new entity stray with no config
      *
      * @return empty, fresh stray
      */
     static EntityStray create() {
         return GoMint.instance().createEntity( EntityStray.class );
     }
+
 }

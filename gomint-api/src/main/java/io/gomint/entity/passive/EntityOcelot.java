@@ -6,11 +6,12 @@ import io.gomint.entity.EntityLiving;
 public interface EntityOcelot extends EntityLiving {
 
     /**
-     * Create a new entity cow with no config
+     * Create a new entity ocelot with no config
      *
      * @return empty, fresh ocelot
      */
     static EntityOcelot create() {
         return GoMint.instance().createEntity( EntityOcelot.class );
     }
+
 }

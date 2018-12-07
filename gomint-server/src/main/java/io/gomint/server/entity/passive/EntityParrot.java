@@ -1,8 +1,10 @@
 package io.gomint.server.entity.passive;
 
 import io.gomint.server.entity.Attribute;
+import io.gomint.server.entity.EntityFlag;
 import io.gomint.server.entity.EntityLiving;
 import io.gomint.server.entity.EntityType;
+import io.gomint.server.entity.metadata.MetadataContainer;
 import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.world.WorldAdapter;
 
@@ -35,7 +37,18 @@ public class EntityParrot extends EntityLiving implements io.gomint.entity.passi
     }
 
     @Override
+    public boolean isDancing() {
+        return this.metadataContainer.getDataFlag( MetadataContainer.DATA_INDEX, EntityFlag.DANCING );
+    }
+
+    @Override
+    public void setDancing( boolean value ) {
+        this.metadataContainer.setDataFlag( MetadataContainer.DATA_INDEX, EntityFlag.DANCING, value );
+    }
+
+    @Override
     public void update( long currentTimeMS, float dT ) {
         super.update( currentTimeMS, dT );
     }
+
 }

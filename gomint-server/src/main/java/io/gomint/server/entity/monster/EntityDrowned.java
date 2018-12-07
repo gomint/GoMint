@@ -1,13 +1,14 @@
 package io.gomint.server.entity.monster;
 
 import io.gomint.server.entity.Attribute;
+import io.gomint.server.entity.EntityAgeable;
 import io.gomint.server.entity.EntityLiving;
 import io.gomint.server.entity.EntityType;
 import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.world.WorldAdapter;
 
 @RegisterInfo( sId = "minecraft:drowned" )
-public class EntityDrowned extends EntityLiving implements io.gomint.entity.monster.EntityDrowned {
+public class EntityDrowned extends EntityAgeable implements io.gomint.entity.monster.EntityDrowned {
 
     /**
      * Constructs a new EntityLiving

@@ -19,6 +19,9 @@
     <artifactId>gomint-native</artifactId>
     <version>1.3.0-SNAPSHOT</version>
 
+    <name>GoMint Native</name>
+    <description>JNI bindings for native code related to hashing and zlib</description>
+
     <dependencies>
         <dependency>
             <groupId>com.google.guava</groupId>

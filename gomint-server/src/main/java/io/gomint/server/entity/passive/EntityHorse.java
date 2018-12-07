@@ -1,13 +1,14 @@
 package io.gomint.server.entity.passive;
 
 import io.gomint.server.entity.Attribute;
+import io.gomint.server.entity.EntityAgeable;
 import io.gomint.server.entity.EntityLiving;
 import io.gomint.server.entity.EntityType;
 import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.world.WorldAdapter;
 
 @RegisterInfo( sId = "minecraft:horse" )
-public class EntityHorse extends EntityLiving implements io.gomint.entity.passive.EntityHorse {
+public class EntityHorse extends EntityAgeable implements io.gomint.entity.passive.EntityHorse {
 
     /**
      * Constructs a new EntityLiving
