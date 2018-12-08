@@ -64,9 +64,7 @@ public class GrassBlock extends Block implements io.gomint.world.block.BlockGras
 
     @Override
     public Class<? extends ItemStack>[] getToolInterfaces() {
-        return new Class[]{
-            ItemShears.class
-        };
+        return ToolPresets.SHOVEL;
     }
 
 }
