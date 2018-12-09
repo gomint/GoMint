@@ -6,6 +6,7 @@ import io.gomint.inventory.item.ItemStack;
 import io.gomint.world.block.BlockType;
 import io.gomint.math.BlockPosition;
 import io.gomint.server.registry.RegisterInfo;
+import io.gomint.server.world.block.helper.ToolPresets;
 import io.gomint.server.world.UpdateReason;
 
 import java.util.ArrayList;
@@ -64,9 +65,7 @@ public class GrassBlock extends Block implements io.gomint.world.block.BlockGras
 
     @Override
     public Class<? extends ItemStack>[] getToolInterfaces() {
-        return new Class[]{
-            ItemShears.class
-        };
+        return ToolPresets.SHOVEL;
     }
 
 }
