@@ -48,7 +48,7 @@ public class SignConverter extends BasisConverter<SignTileEntity> {
         lines[3] = this.cleanText( compound, "Text4" );
 
         for ( int i = 0; i < lines.length; i++ ) {
-            tileEntity.getLines().set( i, lines[i] );
+            tileEntity.getLines().add( lines[i] );
         }
 
         // Construct new sign
@@ -89,7 +89,7 @@ public class SignConverter extends BasisConverter<SignTileEntity> {
             }
         }
 
-        return text == null ? null : text.substring( 1, text.length() - 1 );
+        return text == null ? "" : text.substring( 1, text.length() - 1 );
     }
 
     private void parseInner( StringBuilder output, Object extra ) {
