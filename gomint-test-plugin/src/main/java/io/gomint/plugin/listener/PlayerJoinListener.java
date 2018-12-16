@@ -13,6 +13,7 @@ import io.gomint.plugin.TestPlugin;
 import io.gomint.plugin.scoreboard.DebugScoreboard;
 import io.gomint.world.Gamemode;
 import io.gomint.world.block.Block;
+import io.gomint.world.block.BlockBambooSapling;
 import io.gomint.world.block.BlockLog;
 import lombok.RequiredArgsConstructor;
 
@@ -47,9 +48,9 @@ public class PlayerJoinListener implements EventListener {
 
         // Try to make a invalid block placement
         BlockPosition pos = event.getPlayer().getLocation().toBlockPosition();
-        pos.setY( 257 );
+        pos.add( 0, -1, 0 );
         Block air = event.getPlayer().getWorld().getBlockAt( pos );
-        air.setType( BlockLog.class );
+        air.setType( BlockBambooSapling.class );
     }
 
 }

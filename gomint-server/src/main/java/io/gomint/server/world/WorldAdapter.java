@@ -264,7 +264,7 @@ public abstract class WorldAdapter implements World {
             default:
                 PacketWorldSoundEvent soundPacket = new PacketWorldSoundEvent();
                 soundPacket.setType( EnumConnectors.SOUND_CONNECTOR.convert( sound ) );
-                soundPacket.setPitch( pitch );
+                // soundPacket.setPitch( pitch );
                 soundPacket.setExtraData( extraData );
                 soundPacket.setPosition( vector );
 

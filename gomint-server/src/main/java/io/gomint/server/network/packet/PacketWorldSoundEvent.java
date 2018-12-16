@@ -15,8 +15,8 @@ public class PacketWorldSoundEvent extends Packet {
 
     private SoundMagicNumbers type;
     private Vector position;
-    private int extraData = -1;
-    private int pitch = -1;
+    private int extraData = 0;
+    private String entityId = ":";
     private boolean isBabyMob;
     private boolean disableRelativeVolume;
 
@@ -31,7 +31,7 @@ public class PacketWorldSoundEvent extends Packet {
         buffer.writeLFloat( this.position.getY() );
         buffer.writeLFloat( this.position.getZ() );
         buffer.writeSignedVarInt( this.extraData );
-        buffer.writeSignedVarInt( this.pitch );
+        buffer.writeString( this.entityId );
         buffer.writeBoolean( this.isBabyMob );
         buffer.writeBoolean( this.disableRelativeVolume );
     }
@@ -41,7 +41,7 @@ public class PacketWorldSoundEvent extends Packet {
         this.type = SoundMagicNumbers.valueOf( buffer.readByte() );
         this.position = new Vector( buffer.readLFloat(), buffer.readLFloat(), buffer.readLFloat() );
         this.extraData = buffer.readSignedVarInt();
-        this.pitch = buffer.readSignedVarInt();
+        this.entityId = buffer.readString();
         this.isBabyMob = buffer.readBoolean();
         this.disableRelativeVolume = buffer.readBoolean();
     }

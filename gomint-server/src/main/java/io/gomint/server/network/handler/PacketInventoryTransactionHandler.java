@@ -12,6 +12,7 @@ import io.gomint.server.entity.EntityPlayer;
 import io.gomint.server.inventory.ContainerInventory;
 import io.gomint.server.inventory.Inventory;
 import io.gomint.server.inventory.item.ItemBow;
+import io.gomint.server.inventory.item.ItemCrossbow;
 import io.gomint.server.inventory.item.category.ItemConsumable;
 import io.gomint.server.inventory.transaction.DropItemTransaction;
 import io.gomint.server.inventory.transaction.InventoryTransaction;
@@ -181,6 +182,8 @@ public class PacketInventoryTransactionHandler implements PacketHandler<PacketIn
                 // Check if the item is a bow
                 if ( itemInHand instanceof ItemBow ) {
                     ( (ItemBow) itemInHand ).shoot( connection.getEntity() );
+                } else if ( itemInHand instanceof ItemCrossbow ) {
+                    ( (ItemCrossbow) itemInHand ).shoot( connection.getEntity() );
                 }
 
                 break;

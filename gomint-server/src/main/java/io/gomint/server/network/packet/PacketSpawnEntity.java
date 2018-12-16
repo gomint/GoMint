@@ -48,11 +48,7 @@ public class PacketSpawnEntity extends Packet {
         buffer.writeSignedVarLong( this.entityId );
         buffer.writeUnsignedVarLong( this.entityId );
 
-        if ( protocolID < Protocol.MINECRAFT_PE_NEXT_STABLE_PROTOCOL_VERSION ) {
-            buffer.writeUnsignedVarInt( this.entityType.getNetworkId() );
-        } else {
-            buffer.writeString( this.entityType.getPersistantId() );
-        }
+        buffer.writeString( this.entityType.getPersistantId() );
 
         buffer.writeLFloat( this.x );
         buffer.writeLFloat( this.y );

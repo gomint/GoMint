@@ -18,6 +18,8 @@ public class PacketResourcePackStack extends Packet {
     private List<ResourcePack> behaviourPackEntries;
     private List<ResourcePack> resourcePackEntries;
 
+    private boolean experimental;
+
     public PacketResourcePackStack() {
         super( Protocol.PACKET_RESOURCEPACK_STACK );
     }
@@ -43,6 +45,8 @@ public class PacketResourcePackStack extends Packet {
                 buffer.writeString( "" );
             }
         }
+
+        buffer.writeBoolean( this.experimental );
     }
 
     @Override
@@ -62,6 +66,8 @@ public class PacketResourcePackStack extends Packet {
             buffer.readString();
             buffer.readString();
         }
+
+        this.experimental = buffer.readBoolean();
     }
 
 }

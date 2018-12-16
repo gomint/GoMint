@@ -123,6 +123,8 @@ public class PacketStartGame extends Packet {
         buffer.writeBoolean( false );
         buffer.writeBoolean( false );
         buffer.writeBoolean( false );
+        buffer.writeBoolean( false );
+        buffer.writeBoolean( false );
 
         buffer.writeString( this.levelId );
         buffer.writeString( this.worldName );
@@ -175,7 +177,7 @@ public class PacketStartGame extends Packet {
         buffer.readBoolean();
         buffer.readSignedVarInt();
 
-        for ( int i = 0; i < 5; i++ ) {
+        for ( int i = 0; i < 7; i++ ) {
             buffer.readBoolean();
         }
 
