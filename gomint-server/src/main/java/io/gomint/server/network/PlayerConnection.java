@@ -93,7 +93,6 @@ import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -791,12 +790,10 @@ public class PlayerConnection implements ConnectionWithState {
         }
 
         if ( !toSendChunks.isEmpty() ) {
-            if ( this.protocolID >= Protocol.MINECRAFT_PE_NEXT_STABLE_PROTOCOL_VERSION ) {
-                PacketNetworkChunkPublisherUpdate packetNetworkChunkPublisherUpdate = new PacketNetworkChunkPublisherUpdate();
-                packetNetworkChunkPublisherUpdate.setBlockPosition( this.entity.getLocation().toBlockPosition() );
-                packetNetworkChunkPublisherUpdate.setRadius( this.entity.getViewDistance() * 16 );
-                this.addToSendQueue( packetNetworkChunkPublisherUpdate );
-            }
+            PacketNetworkChunkPublisherUpdate packetNetworkChunkPublisherUpdate = new PacketNetworkChunkPublisherUpdate();
+            packetNetworkChunkPublisherUpdate.setBlockPosition( this.entity.getLocation().toBlockPosition() );
+            packetNetworkChunkPublisherUpdate.setRadius( this.entity.getViewDistance() * 16 );
+            this.addToSendQueue( packetNetworkChunkPublisherUpdate );
         }
 
         toSendChunks.sort( ( o1, o2 ) -> {
