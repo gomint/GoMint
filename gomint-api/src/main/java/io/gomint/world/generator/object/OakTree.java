@@ -12,6 +12,7 @@ import io.gomint.util.random.FastRandom;
 import io.gomint.world.World;
 import io.gomint.world.block.BlockLeaves;
 import io.gomint.world.block.BlockLog;
+import io.gomint.world.block.data.WoodType;
 
 /**
  * @author geNAZt
@@ -21,7 +22,10 @@ public class OakTree extends Tree {
 
     public OakTree() {
         this.leafBlock = GoMint.instance().createBlock( BlockLeaves.class );
+        ( (BlockLeaves) this.leafBlock ).setWoodType( WoodType.OAK );
+
         this.trunkBlock = GoMint.instance().createBlock( BlockLog.class );
+        ( (BlockLog) this.trunkBlock ).setWoodType( WoodType.OAK );
     }
 
     @Override
