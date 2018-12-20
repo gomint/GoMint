@@ -15,7 +15,7 @@ public class ItemSeeds extends ItemStack implements io.gomint.inventory.item.Ite
 
     @Override
     public String getBlockId() {
-        return "minecraft:minecraft:wheat_seeds";
+        return "minecraft:wheat_seeds";
     }
 
     @Override
