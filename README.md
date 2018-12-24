@@ -1,6 +1,6 @@
 ![GoMint](.github/ASSETS/logo_optimized.png)
 
-<h4 align="center">A new fresh Minecraft Bedrock Edition server<br>aiming for stability and performance</h4>
+<h4 align="center">A new fresh Minecraf: Bedrock Edition server software<br>aiming for stability and performance</h4>
 <p align="center">
   
   <!-- BUILD BADGE -->
