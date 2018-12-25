@@ -200,7 +200,7 @@ public abstract class EntityLiving extends Entity implements InventoryHolder, io
 
     @Override
     public void setHealth( float amount ) {
-        if( this.getHealth() <= 0 ) {
+        if( amount <= 0 ) {
             this.kill();
         }
 
