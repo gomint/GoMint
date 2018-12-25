@@ -31,7 +31,7 @@ public class ItemPotion extends ItemStack implements io.gomint.inventory.item.It
             case 2:
             case 3:
             case 4:
-                // This potions do not have any effects
+                // These potions do not have any effects
                 break;
             case 5:
                 player.addEffect( PotionEffect.NIGHT_VISION, 0, 3, TimeUnit.MINUTES );
