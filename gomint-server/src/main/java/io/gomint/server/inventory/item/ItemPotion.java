@@ -82,10 +82,10 @@ public class ItemPotion extends ItemStack implements io.gomint.inventory.item.It
                 player.addEffect( PotionEffect.WATER_BREATHING, 0, 8, TimeUnit.MINUTES );
                 break;
             case 21:
-                player.setHealth( player.getHealth() + 2 );
+                player.setHealth( player.getHealth() + 4 );
                 break;
             case 22:
-                player.setHealth( player.getHealth() + 4 );
+                player.setHealth( player.getHealth() + 8 );
                 break;
             case 23:
                 EntityDamageEvent event = new EntityDamageEvent( player, EntityDamageEvent.DamageSource.HARM_EFFECT, 2 );
