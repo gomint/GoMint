@@ -1,5 +1,5 @@
 package io.gomint.server.inventory.item;
-import io.gomint.GoMint;
+
 import io.gomint.entity.potion.PotionEffect;
 import io.gomint.event.entity.EntityDamageEvent;
 import io.gomint.inventory.item.ItemType;
@@ -26,7 +26,11 @@ public class ItemPotion extends ItemStack implements io.gomint.inventory.item.It
     @Override
     public void onConsume( EntityPlayer player ) {
         switch ( this.getData() ) {
-            case 0: case 1: case 2: case 3: case 4:
+            case 0:
+            case 1:
+            case 2:
+            case 3:
+            case 4:
                 // This potions do not have any effects
                 break;
             case 5:
