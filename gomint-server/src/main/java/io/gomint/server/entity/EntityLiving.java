@@ -200,6 +200,10 @@ public abstract class EntityLiving extends Entity implements InventoryHolder, io
 
     @Override
     public void setHealth( float amount ) {
+        if( this.getHealth() <= 0 ) {
+            this.kill();
+        }
+
         AttributeInstance attributeInstance = this.attributes.get( Attribute.HEALTH.getKey() );
         attributeInstance.setValue( Math.min( attributeInstance.getMaxValue(), Math.max( attributeInstance.getMinValue(), amount ) ) );
     }
