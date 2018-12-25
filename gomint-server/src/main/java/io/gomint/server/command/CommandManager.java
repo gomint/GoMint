@@ -53,6 +53,7 @@ public class CommandManager {
                 ListCommand.class,
                 OpCommand.class,
                 GamemodeCommand.class,
+                KillCommand.class,
                 MeCommand.class,
                 SayCommand.class,
                 SetWorldSpawnCommand.class,
