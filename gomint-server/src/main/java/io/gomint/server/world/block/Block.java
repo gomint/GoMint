@@ -465,7 +465,7 @@ public abstract class Block implements io.gomint.world.block.Block {
         }
 
         WorldAdapter worldAdapter = (WorldAdapter) this.location.getWorld();
-        worldAdapter.setBlock( pos, this.layer, new BlockIdentifier( instance.blockId, instance.blockData ) );
+        worldAdapter.setBlock( pos, this.layer, new BlockIdentifier( instance.getBlockId(), instance.getBlockData() ) );
         worldAdapter.resetTemporaryStorage( pos, this.layer );
 
         // Check if new blockId needs tile entity
@@ -496,7 +496,7 @@ public abstract class Block implements io.gomint.world.block.Block {
         }
 
         WorldAdapter worldAdapter = (WorldAdapter) this.location.getWorld();
-        worldAdapter.setBlock( pos, this.layer, new BlockIdentifier( instance.blockId, instance.blockData ) );
+        worldAdapter.setBlock( pos, this.layer, new BlockIdentifier( instance.getBlockId(), instance.getBlockData() ) );
         worldAdapter.resetTemporaryStorage( pos, this.layer );
 
         // Check if new blockId needs tile entity
