@@ -5,13 +5,10 @@ import io.gomint.command.Command;
 import io.gomint.command.CommandOutput;
 import io.gomint.command.CommandSender;
 import io.gomint.command.PlayerCommandSender;
-import io.gomint.command.annotation.Description;
-import io.gomint.command.annotation.Name;
-import io.gomint.command.annotation.Overload;
-import io.gomint.command.annotation.Parameter;
+import io.gomint.command.annotation.*;
 import io.gomint.command.validator.TargetValidator;
+import io.gomint.event.entity.EntityDamageEvent;
 import io.gomint.server.entity.EntityPlayer;
-import io.gomint.world.Gamemode;
 
 import java.util.Map;
 
@@ -20,9 +17,10 @@ import java.util.Map;
  * @version 1.0
  */
 @Name( "kill" )
+@Permission( "gomint.command.kill" )
 @Description( "Kills entities (players, mobs, etc.)." )
 @Overload( {
-    @Parameter( name = "target", validator = TargetValidator.class )
+    @Parameter( name = "target", validator = TargetValidator.class, optional = true )
 } )
 public class KillCommand extends Command {
 
@@ -33,19 +31,20 @@ public class KillCommand extends Command {
         EntityPlayer target = (EntityPlayer) arguments.get( "target" );
 
         if ( target != null ) {
-            target.setHealth( 0 );
+            target.attack( target.getHealth(), EntityDamageEvent.DamageSource.PROJECTILE );
             GoMint.instance().getPlayers().forEach( players -> players.sendMessage( target.getName() + " died" ) );
             commandOutput.success( "Killed " + target.getName() );
+            System.out.println( commandSender instanceof PlayerCommandSender ? "" : ((EntityPlayer) commandSender).getName() + " was killed by " + target.getName() );
         } else {
             if ( commandSender instanceof PlayerCommandSender ) {
                 EntityPlayer player = (EntityPlayer) commandSender;
 
-                if ( player.getGamemode() != Gamemode.CREATIVE ) {
-                    player.setHealth( 0 );
-                    GoMint.instance().getPlayers().forEach( players -> players.sendMessage( player.getName() + " died" ) );
-                    commandOutput.success( "Killed " + player.getName() );
-                }
+                player.attack( player.getHealth(), EntityDamageEvent.DamageSource.PROJECTILE );
+                GoMint.instance().getPlayers().forEach( players -> players.sendMessage( player.getName() + " died" ) );
+                commandOutput.success( "Killed " + player.getName() );
+                System.out.println( player.getName() + " was killed by " + player.getName() );
             }
+            commandOutput.fail( "Please provide a player to kill: /kill [target]" );
         }
         return commandOutput;
     }
