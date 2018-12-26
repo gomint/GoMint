@@ -34,7 +34,7 @@ public class KillCommand extends Command {
             target.attack( target.getHealth(), EntityDamageEvent.DamageSource.PROJECTILE );
             GoMint.instance().getPlayers().forEach( players -> players.sendMessage( target.getName() + " died" ) );
             commandOutput.success( "Killed " + target.getName() );
-            System.out.println( commandSender instanceof PlayerCommandSender ? "" : ((EntityPlayer) commandSender).getName() + " was killed by " + target.getName() );
+            System.out.println( commandSender instanceof PlayerCommandSender ? target.getName() + " was killed by " + ((EntityPlayer) commandSender).getName() : target.getName() + " was killed by CONSOLE" );
         } else {
             if ( commandSender instanceof PlayerCommandSender ) {
                 EntityPlayer player = (EntityPlayer) commandSender;
@@ -43,8 +43,9 @@ public class KillCommand extends Command {
                 GoMint.instance().getPlayers().forEach( players -> players.sendMessage( player.getName() + " died" ) );
                 commandOutput.success( "Killed " + player.getName() );
                 System.out.println( player.getName() + " was killed by " + player.getName() );
+            } else {
+                commandOutput.fail( "Please provide a player to kill: /kill [target]" );
             }
-            commandOutput.fail( "Please provide a player to kill: /kill [target]" );
         }
         return commandOutput;
     }
