@@ -455,6 +455,11 @@ public class GoMintServer implements GoMint, InventoryHolder {
             LOGGER.info( "Done in {} ms", ( System.currentTimeMillis() - start ) );
             this.watchdog.done();
 
+            if ( args.has( "exit-after-boot" ) ) {
+                this.internalShutdown();
+                return;
+            }
+
             // ------------------------------------ //
             // Main Loop
             // ------------------------------------ //
