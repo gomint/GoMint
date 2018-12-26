@@ -98,14 +98,6 @@ public class BlockRuntimeIDs {
     }
 
     private static int lookup( String blockId, short dataValue, Long2IntMap lookup ) {
-        if ( lookup == null ) {
-            System.out.println( "LOOKUP IS NULL" );
-        }
-
-        if ( blockId == null ) {
-            System.out.println( "BLOCKID IS NULL" );
-        }
-
         return lookup.get( (long) blockId.hashCode() << 32 | dataValue );
     }
 
