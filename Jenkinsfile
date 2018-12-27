@@ -37,6 +37,12 @@ pipeline {
         archiveArtifacts 'gomint-converter/target/Converter.jar'
       }
     }
+
+    stage ('Deploy with operation') {
+      steps {
+        build job: 'Operation/master'
+      }
+    }
   }
   post {
     success {
