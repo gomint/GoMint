@@ -67,7 +67,7 @@ public class ListConverter implements Converter {
         List converted = new ArrayList();
 
         try {
-            converted = ( (List) type.newInstance() );
+            converted = ( (List) type.getDeclaredConstructor().newInstance() );
         } catch ( Exception ignored ) {
 
         }
