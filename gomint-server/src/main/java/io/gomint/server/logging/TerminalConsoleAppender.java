@@ -21,7 +21,7 @@ import java.io.Serializable;
  * @author geNAZt
  * @version 1.0
  */
-@Plugin( name = "TerminalConsole", category = Core.CATEGORY_NAME, elementType = Appender.ELEMENT_TYPE, printObject = true )
+@Plugin(name = "TerminalConsole", category = Core.CATEGORY_NAME, elementType = Appender.ELEMENT_TYPE, printObject = true)
 public final class TerminalConsoleAppender extends AbstractAppender {
 
     // Grab early or we will infinite loop with the log4j2 stdout redirection
@@ -31,51 +31,51 @@ public final class TerminalConsoleAppender extends AbstractAppender {
     private static Terminal terminal;
     private static LineReader reader;
 
-    private TerminalConsoleAppender( String name, Filter filter, Layout<? extends Serializable> layout, boolean ignoreExceptions ) {
-        super( name, filter, layout, ignoreExceptions );
+    private TerminalConsoleAppender(String name, Filter filter, Layout<? extends Serializable> layout, boolean ignoreExceptions) {
+        super(name, filter, layout, ignoreExceptions);
         initializeTerminal();
     }
 
     private static void initializeTerminal() {
-        if ( !initialized ) {
+        if (!initialized) {
             initialized = true;
 
-            boolean dumb = System.getProperty( "java.class.path" ).contains( "idea_rt.jar" ); // TODO: Check if other IDEs also have virtual terminals with ANSI color support
+            boolean dumb = System.getProperty("java.class.path").contains("idea_rt.jar"); // TODO: Check if other IDEs also have virtual terminals with ANSI color support
 
             try {
-                terminal = TerminalBuilder.builder().dumb( dumb ).build();
-            } catch ( IllegalStateException e ) {
-                LOGGER.warn( "Not supported terminal" );
-                LOGGER.debug( e );
-            } catch ( IOException e ) {
-                LOGGER.error( "Failed to init, falling back to STDOUT" );
-                LOGGER.debug( e );
+                terminal = TerminalBuilder.builder().dumb(dumb).build();
+            } catch (IllegalStateException e) {
+                LOGGER.warn("Not supported terminal");
+                LOGGER.debug(e);
+            } catch (IOException e) {
+                LOGGER.error("Failed to init, falling back to STDOUT");
+                LOGGER.debug(e);
             }
         }
     }
 
     @Override
-    public void append( LogEvent event ) {
-        if ( terminal != null ) {
-            if ( reader != null ) {
+    public void append(LogEvent event) {
+        if (terminal != null) {
+            if (reader != null) {
                 try {
                     // Clear, write and redraw prompt again so the prompt is always at the bottom
-                    reader.callWidget( LineReader.CLEAR );
-                    terminal.writer().print( getLayout().toSerializable( event ) );
-                    reader.callWidget( LineReader.REDRAW_LINE );
-                    reader.callWidget( LineReader.REDISPLAY );
-                } catch ( Exception e ) {
+                    reader.callWidget(LineReader.CLEAR);
+                    terminal.writer().print(getLayout().toSerializable(event));
+                    reader.callWidget(LineReader.REDRAW_LINE);
+                    reader.callWidget(LineReader.REDISPLAY);
+                } catch (Exception e) {
                     // There was an error (we did not really read from terminal)
-                    terminal.writer().print( getLayout().toSerializable( event ) );
+                    terminal.writer().print(getLayout().toSerializable(event));
                 }
             } else {
                 // There is no reader, no need to redraw prompt
-                terminal.writer().print( getLayout().toSerializable( event ) );
+                terminal.writer().print(getLayout().toSerializable(event));
             }
 
             terminal.writer().flush();
         } else {
-            STDOUT.print( getLayout().toSerializable( event ) );
+            STDOUT.print(getLayout().toSerializable(event));
         }
     }
 
@@ -85,39 +85,39 @@ public final class TerminalConsoleAppender extends AbstractAppender {
      * @throws IOException when closing failed
      */
     public static void close() throws IOException {
-        if ( terminal != null ) {
+        if (terminal != null) {
             terminal.reader().shutdown();
 
-            try {
+            /*try {
                 terminal.close();
             } finally {
                 terminal = null;
-            }
+            }*/
         }
     }
 
     /**
      * Factory for log4j2
      *
-     * @param name of the appender
-     * @param filter for the appender
-     * @param layout for the appender
+     * @param name             of the appender
+     * @param filter           for the appender
+     * @param layout           for the appender
      * @param ignoreExceptions controls if we should display exceptions
      * @return new jline terminal appender
      */
     @PluginFactory
     public static TerminalConsoleAppender createAppender(
-        @Required( message = "No name provided for TerminalConsoleAppender" ) @PluginAttribute( "name" ) String name,
-        @PluginElement( "Filter" ) Filter filter,
-        @PluginElement( "Layout" ) @Nullable Layout<? extends Serializable> layout,
-        @PluginAttribute( value = "ignoreExceptions", defaultBoolean = true ) boolean ignoreExceptions ) {
+        @Required(message = "No name provided for TerminalConsoleAppender") @PluginAttribute("name") String name,
+        @PluginElement("Filter") Filter filter,
+        @PluginElement("Layout") @Nullable Layout<? extends Serializable> layout,
+        @PluginAttribute(value = "ignoreExceptions", defaultBoolean = true) boolean ignoreExceptions) {
 
         Layout<? extends Serializable> finalLayout = layout;
-        if ( layout == null ) {
+        if (layout == null) {
             finalLayout = PatternLayout.createDefaultLayout();
         }
 
-        return new TerminalConsoleAppender( name, filter, finalLayout, ignoreExceptions );
+        return new TerminalConsoleAppender(name, filter, finalLayout, ignoreExceptions);
     }
 
     /**
@@ -134,9 +134,9 @@ public final class TerminalConsoleAppender extends AbstractAppender {
      *
      * @param newReader The new line reader
      */
-    public static void setReader( LineReader newReader ) {
-        if ( newReader != null && newReader.getTerminal() != terminal ) {
-            throw new IllegalArgumentException( "Reader was not created with TerminalConsoleAppender.getTerminal()" );
+    public static void setReader(LineReader newReader) {
+        if (newReader != null && newReader.getTerminal() != terminal) {
+            throw new IllegalArgumentException("Reader was not created with TerminalConsoleAppender.getTerminal()");
         }
 
         reader = newReader;

@@ -20,6 +20,7 @@ module gomint.server {
     requires io.netty.codec;
     requires io.netty.transport;
     requires io.netty.buffer;
+    requires io.netty.common;
 
     // Spring modules
     requires spring.beans;
@@ -31,13 +32,14 @@ module gomint.server {
     // Automatic modules (libs without module-info)
     requires it.unimi.dsi.fastutil;
     requires jopt.simple;
-    requires jline;
     requires com.google.common;
     requires javassist;
     requires org.apache.commons.io;
     requires json.simple;
     requires oshi.core;
     requires jsr305;
+    requires jline.reader;
+    requires jline.terminal;
 
     // Export logging stuff for log4j2
     exports net.minecrell.terminalconsole to org.apache.logging.log4j, org.apache.logging.log4j.core;
