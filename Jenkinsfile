@@ -3,7 +3,7 @@ def changesString = "";
 pipeline {
   agent {
     docker {
-      image 'maven:3'
+      image 'maven:3.6-jdk-11'
       args '-v /root/.m2:/root/.m2 -u root'
     }
   }
