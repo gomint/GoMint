@@ -66,7 +66,7 @@ public class MapConverter implements Converter {
             Map result = new HashMap();
 
             try {
-                result = (Map) ( (Class) genericType.getRawType() ).newInstance();
+                result = (Map) ( (Class) genericType.getRawType() ).getDeclaredConstructor().newInstance();
             } catch ( InstantiationException ignored ) {
 
             }

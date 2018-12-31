@@ -232,8 +232,10 @@ public class EnchantmentProcessor {
                     this.startItem = (ItemStack) networkTransaction.getOldItem();
                 } else if ( networkTransaction.getNewItem().getType() != ItemType.AIR &&
                     isEnchanted( (ItemStack) networkTransaction.getNewItem() ) ) {
+                    io.gomint.server.inventory.item.ItemStack serverItemStack = (io.gomint.server.inventory.item.ItemStack) networkTransaction.getNewItem();
+
                     // Extract enchantments
-                    List<Object> enchants = networkTransaction.getNewItem().getNbtData().getList( "ench", false );
+                    List<Object> enchants = serverItemStack.getNbtData().getList( "ench", false );
                     this.enchantments = new ArrayList<>();
                     for ( Object enchant : enchants ) {
                         NBTTagCompound enchantCompound = (NBTTagCompound) enchant;

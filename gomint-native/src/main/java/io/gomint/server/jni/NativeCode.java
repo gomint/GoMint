@@ -10,6 +10,7 @@ import oshi.PlatformEnum;
 import oshi.SystemInfo;
 
 import java.io.*;
+import java.lang.reflect.InvocationTargetException;
 
 import static com.google.common.io.ByteStreams.copy;
 
@@ -46,8 +47,8 @@ public final class NativeCode<T> {
      */
     public T newInstance() {
         try {
-            return ( loaded ) ? nativeImpl.newInstance() : javaImpl.newInstance();
-        } catch ( IllegalAccessException | InstantiationException ex ) {
+            return ( loaded ) ? nativeImpl.getDeclaredConstructor().newInstance() : javaImpl.getDeclaredConstructor().newInstance();
+        } catch (IllegalAccessException | InstantiationException | NoSuchMethodException | InvocationTargetException ex ) {
             throw new RuntimeException( "Error getting instance", ex );
         }
     }

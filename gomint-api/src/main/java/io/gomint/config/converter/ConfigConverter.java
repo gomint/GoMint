@@ -98,7 +98,7 @@ public class ConfigConverter implements Converter {
             Object instanceOfEnclosingClass = newInstance( enclosingClass );
             return type.getConstructor( enclosingClass ).newInstance( instanceOfEnclosingClass );
         } else {
-            return type.newInstance();
+            return type.getDeclaredConstructor().newInstance();
         }
     }
 

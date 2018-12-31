@@ -2,7 +2,6 @@ package io.gomint.world.generator;
 
 import org.json.simple.JSONObject;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -20,8 +19,8 @@ public class GeneratorContext {
      * @param key which should hold data
      * @return data assigned to the key or null
      */
-    public <T> T get( String key ) {
-        return (T) this.contextData.get( key );
+    public <T> T get(String key) {
+        return (T) this.contextData.get(key);
     }
 
     /**
@@ -30,8 +29,8 @@ public class GeneratorContext {
      * @param key which should be checked
      * @return true if there is data assigned, false if not
      */
-    public boolean contains( String key ) {
-        return this.contextData.containsKey( key );
+    public boolean contains(String key) {
+        return this.contextData.containsKey(key);
     }
 
     /**
@@ -40,13 +39,13 @@ public class GeneratorContext {
      * @param key   of the data
      * @param value of the data assoc
      */
-    public void put( String key, Object value ) {
-        this.contextData.put( key, value );
+    public void put(String key, Object value) {
+        this.contextData.put(key, value);
     }
 
     @Override
     public String toString() {
-        return JSONObject.toJSONString( this.contextData );
+        return JSONObject.toJSONString(this.contextData);
     }
 
 }

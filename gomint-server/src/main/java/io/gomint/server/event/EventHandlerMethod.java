@@ -16,22 +16,19 @@ import lombok.ToString;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.DataOutputStream;
-import java.io.FileOutputStream;
 import java.lang.reflect.Method;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * @author BlackyPaw
  * @version 1.0
  */
-@EqualsAndHashCode( callSuper = false )
-@ToString( of = { "instance" } )
+@EqualsAndHashCode(callSuper = false)
+@ToString(of = {"instance"})
 class EventHandlerMethod implements Comparable<EventHandlerMethod> {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger( EventHandlerMethod.class );
-    private static final AtomicLong PROXY_COUNT = new AtomicLong( 0 );
+    private static final Logger LOGGER = LoggerFactory.getLogger(EventHandlerMethod.class);
+    private static final AtomicLong PROXY_COUNT = new AtomicLong(0);
 
     private final EventHandler annotation;
     private EventProxy proxy;
@@ -46,26 +43,26 @@ class EventHandlerMethod implements Comparable<EventHandlerMethod> {
      * @param method     The method which should be invoked when the event arrives
      * @param annotation The annotation which holds additional information about this EventHandler Method
      */
-    EventHandlerMethod( final EventListener instance, final Method method, final EventHandler annotation ) {
+    EventHandlerMethod(final EventListener instance, final Method method, final EventHandler annotation) {
         this.annotation = annotation;
         this.instance = instance;
 
         // Build up proxy
         try {
             // Prepare class pool for this plugin
-            ClassPool pool = new ClassPool( ClassPool.getDefault() );
-            pool.appendClassPath( new LoaderClassPath( instance.getClass().getClassLoader() ) );
-            pool.appendClassPath( new LoaderClassPath( method.getParameterTypes()[0].getClassLoader() ) );
+            ClassPool pool = new ClassPool(ClassPool.getDefault());
+            pool.appendClassPath(new LoaderClassPath(instance.getClass().getClassLoader()));
+            pool.appendClassPath(new LoaderClassPath(method.getParameterTypes()[0].getClassLoader()));
 
-            CtClass ctClass = pool.makeClass( "io.gomint.server.event.Proxy" + PROXY_COUNT.incrementAndGet() );
-            ctClass.addInterface( pool.get( "io.gomint.server.event.EventProxy" ) );
-            ctClass.addField( CtField.make( "public " + instance.getClass().getName() + " obj;", ctClass ) );
-            ctClass.addMethod( CtMethod.make( "public void call( io.gomint.event.Event e ) { obj." + method.getName() + "( (" + method.getParameterTypes()[0].getName() + ") e ); }", ctClass ) );
+            CtClass ctClass = pool.makeClass("io.gomint.server.event.Proxy" + PROXY_COUNT.incrementAndGet());
+            ctClass.addInterface(pool.get("io.gomint.server.event.EventProxy"));
+            ctClass.addField(CtField.make("public " + instance.getClass().getName() + " obj;", ctClass));
+            ctClass.addMethod(CtMethod.make("public void call( io.gomint.event.Event e ) { obj." + method.getName() + "( (" + method.getParameterTypes()[0].getName() + ") e ); }", ctClass));
 
-            this.proxy = (EventProxy) ctClass.toClass( instance.getClass().getClassLoader(), null ).newInstance();
-            this.proxy.getClass().getDeclaredField( "obj" ).set( this.proxy, instance );
-        } catch ( Exception e ) {
-            LOGGER.error( "Could not construct new proxy for " + method.toString(), e );
+            this.proxy = (EventProxy) ctClass.toClass(instance.getClass().getClassLoader(), null).newInstance();
+            this.proxy.getClass().getDeclaredField("obj").set(this.proxy, instance);
+        } catch (Exception e) {
+            LOGGER.error("Could not construct new proxy for " + method.toString(), e);
         }
     }
 
@@ -74,11 +71,11 @@ class EventHandlerMethod implements Comparable<EventHandlerMethod> {
      *
      * @param event Event which should be handled in this handler
      */
-    public void invoke( Event event ) {
+    public void invoke(Event event) {
         try {
-            this.proxy.call( event );
-        } catch ( Throwable cause ) {
-            LOGGER.warn( "Event handler has thrown a exception: ", cause );
+            this.proxy.call(event);
+        } catch (Throwable cause) {
+            LOGGER.warn("Event handler has thrown a exception: ", cause);
         }
     }
 
@@ -92,8 +89,8 @@ class EventHandlerMethod implements Comparable<EventHandlerMethod> {
     }
 
     @Override
-    public int compareTo( EventHandlerMethod o ) {
-        return ( Byte.compare( this.annotation.priority().getValue(), o.annotation.priority().getValue() ) );
+    public int compareTo(EventHandlerMethod o) {
+        return (Byte.compare(this.annotation.priority().getValue(), o.annotation.priority().getValue()));
     }
 
 }

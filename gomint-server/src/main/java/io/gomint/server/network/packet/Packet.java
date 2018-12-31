@@ -112,10 +112,12 @@ public abstract class Packet {
             return;
         }
 
-        buffer.writeSignedVarInt( ( (io.gomint.server.inventory.item.ItemStack) itemStack ).getMaterial() );
+        io.gomint.server.inventory.item.ItemStack serverItemStack = (io.gomint.server.inventory.item.ItemStack) itemStack;
+
+        buffer.writeSignedVarInt( serverItemStack.getMaterial() );
         buffer.writeSignedVarInt( ( itemStack.getData() << 8 ) + ( itemStack.getAmount() & 0xff ) );
 
-        NBTTagCompound compound = itemStack.getNbtData();
+        NBTTagCompound compound = serverItemStack.getNbtData();
         if ( compound == null ) {
             buffer.writeLShort( (short) 0 );
         } else {

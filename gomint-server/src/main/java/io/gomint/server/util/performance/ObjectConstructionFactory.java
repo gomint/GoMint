@@ -7,39 +7,21 @@
 
 package io.gomint.server.util.performance;
 
-import java.lang.reflect.Constructor;
-
 /**
  * @author geNAZt
  * @version 1.0
  */
 public class ObjectConstructionFactory implements ConstructionFactory {
 
-    private static boolean USE_SUN;
-
-    static {
-        try {
-            Class test = Class.forName( "sun.reflect.ReflectionFactory" );
-            test.getDeclaredMethod( "newConstructorAccessor", Constructor.class );
-            USE_SUN = true;
-        } catch ( Exception e ) {
-            USE_SUN = false;
-        }
-    }
-
     private final ConstructionFactory factory;
 
-    public ObjectConstructionFactory( Class<?> clazz, Class... arguments ) {
-        if ( USE_SUN ) {
-            this.factory = new ConstructorAccessFactory( clazz, arguments );
-        } else {
-            this.factory = new ReflectionAccessFactory( clazz, arguments );
-        }
+    public ObjectConstructionFactory(Class<?> clazz, Class... arguments) {
+        this.factory = new ReflectionAccessFactory(clazz, arguments);
     }
 
     @Override
-    public Object newInstance( Object... init ) {
-        return this.factory.newInstance( init );
+    public Object newInstance(Object... init) {
+        return this.factory.newInstance(init);
     }
 
 }

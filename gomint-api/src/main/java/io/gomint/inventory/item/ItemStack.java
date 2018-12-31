@@ -1,7 +1,6 @@
 package io.gomint.inventory.item;
 
 import io.gomint.enchant.Enchantment;
-import io.gomint.taglib.NBTTagCompound;
 
 /**
  * @author geNAZt
@@ -53,13 +52,6 @@ public interface ItemStack {
      * @param data to set into this stack
      */
     ItemStack setData( short data );
-
-    /**
-     * Get the NBT data from this item stack
-     *
-     * @return nbt data from this item stack
-     */
-    NBTTagCompound getNbtData();
 
     /**
      * Set a custom name for this item stack

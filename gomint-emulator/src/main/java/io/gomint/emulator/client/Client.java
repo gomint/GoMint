@@ -209,7 +209,7 @@ public class Client {
             try {
                 PacketBuffer buffer = new PacketBuffer( 32 );
                 buffer.writeByte( packet.getId() );
-                packet.serialize( buffer, 290 );
+                packet.serialize( buffer, Protocol.MINECRAFT_PE_PROTOCOL_VERSION );
 
                 this.connection.send( PacketReliability.RELIABLE_ORDERED, packet.orderingChannel(), buffer.getBuffer(), 0, buffer.getPosition() );
             } catch ( Exception e ) {
@@ -268,7 +268,7 @@ public class Client {
             }, 50, 50, TimeUnit.MILLISECONDS );
 
             PacketLogin login = new PacketLogin();
-            login.setProtocol( 290 ); // 1.7.0.2
+            login.setProtocol( Protocol.MINECRAFT_PE_PROTOCOL_VERSION ); // 1.7.0.2
 
             // Send our handshake to the server -> this will trigger it to respond with a 0x03 ServerHandshake packet:
             MojangLoginForger mojangLoginForger = new MojangLoginForger();
@@ -281,7 +281,7 @@ public class Client {
                 put( "DefaultInputMode", 1 );
                 put( "ClientRandomId", FastRandom.current().nextInt() );
                 put( "GuiScale", 0 );
-                put( "GameVersion", "1.6.0.1" );
+                put( "GameVersion", "1.8.0.1" );
                 put( "ThirdPartyName", name );
                 put( "DeviceModel", "GoMintEmulator" );
                 put( "DeviceOS", 7 );
@@ -364,7 +364,7 @@ public class Client {
         if ( this.state == PlayerConnectionState.LOGIN ) {
             if ( packetId == PACKET_PLAY_STATE ) {
                 PacketPlayState packetPlayState = new PacketPlayState();
-                packetPlayState.deserialize( buffer, 290 );
+                packetPlayState.deserialize( buffer, Protocol.MINECRAFT_PE_PROTOCOL_VERSION );
 
                 if ( packetPlayState.getState() != PacketPlayState.PlayState.LOGIN_SUCCESS ) {
                     this.destroy( "Server responded with " + packetPlayState.getState().name() );
@@ -375,7 +375,7 @@ public class Client {
                 return;
             } else if ( packetId == PACKET_ENCRYPTION_REQUEST ) {
                 PacketEncryptionRequest packet = new PacketEncryptionRequest();
-                packet.deserialize( buffer, 290 );
+                packet.deserialize( buffer, Protocol.MINECRAFT_PE_PROTOCOL_VERSION );
 
                 LOGGER.info( "JWT content: {}", packet.getJwt() );
 
@@ -408,7 +408,7 @@ public class Client {
         if ( this.state == PlayerConnectionState.RESOURCE_PACK ) {
             if ( packetId == PACKET_RESOURCEPACK_INFO ) {
                 PacketResourcePacksInfo packet = new PacketResourcePacksInfo();
-                packet.deserialize( buffer, 290 );
+                packet.deserialize( buffer, Protocol.MINECRAFT_PE_PROTOCOL_VERSION );
 
                 //LOGGER.info( "Got resource packet info" );
 
@@ -418,7 +418,7 @@ public class Client {
 
             } else if ( packetId == PACKET_RESOURCEPACK_STACK ) {
                 PacketResourcePackStack stack = new PacketResourcePackStack();
-                stack.deserialize( buffer, 290 );
+                stack.deserialize( buffer, Protocol.MINECRAFT_PE_PROTOCOL_VERSION );
 
                 // LOGGER.info( "Got resource packet stack" );
 
@@ -439,7 +439,7 @@ public class Client {
                 if ( packet == null ) {
                     if ( packetId == 0x6f ) {
                         PacketEntityRelativeMovement relativeMovement = new PacketEntityRelativeMovement();
-                        relativeMovement.deserialize( buffer, 290 );
+                        relativeMovement.deserialize( buffer, Protocol.MINECRAFT_PE_PROTOCOL_VERSION );
                     }
 
                     // Got to skip
@@ -449,7 +449,7 @@ public class Client {
             }
 
             try {
-                packet.deserialize( buffer, 290 );
+                packet.deserialize( buffer, Protocol.MINECRAFT_PE_PROTOCOL_VERSION );
                 this.handlePacket( currentTimeMillis, packet );
             } catch ( Exception e ) {
                 e.printStackTrace();

@@ -19,7 +19,7 @@ import java.lang.reflect.InvocationTargetException;
  */
 public class ReflectionAccessFactory implements ConstructionFactory {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger( ConstructorAccessFactory.class );
+    private static final Logger LOGGER = LoggerFactory.getLogger( ReflectionAccessFactory.class );
 
     private Constructor constructor;
 

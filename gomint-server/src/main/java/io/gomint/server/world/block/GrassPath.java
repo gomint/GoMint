@@ -7,7 +7,6 @@ import io.gomint.world.block.BlockType;
 
 import io.gomint.server.registry.RegisterInfo;
 
-import javax.tools.Tool;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,7 +14,7 @@ import java.util.List;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:grass_path" )
+@RegisterInfo(sId = "minecraft:grass_path")
 public class GrassPath extends Block implements io.gomint.world.block.BlockGrassPath {
 
     @Override
@@ -44,9 +43,9 @@ public class GrassPath extends Block implements io.gomint.world.block.BlockGrass
     }
 
     @Override
-    public List<ItemStack> getDrops( ItemStack itemInHand ) {
-        return new ArrayList<ItemStack>(){{
-            add( ItemDirt.create( 1 ) );
+    public List<ItemStack> getDrops(ItemStack itemInHand) {
+        return new ArrayList<>() {{
+            add(ItemDirt.create(1));
         }};
     }
 

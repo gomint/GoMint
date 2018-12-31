@@ -59,7 +59,7 @@ public class SetConverter implements Converter {
         Set<Object> result = new HashSet<>();
 
         try {
-            result = (Set<Object>) type.newInstance();
+            result = (Set<Object>) type.getDeclaredConstructor().newInstance();
         } catch ( Exception ignored ) {
 
         }

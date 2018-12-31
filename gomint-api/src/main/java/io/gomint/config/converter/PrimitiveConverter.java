@@ -19,22 +19,22 @@ import java.util.HashSet;
  */
 public class PrimitiveConverter implements Converter {
 
-    private HashSet<String> types = new HashSet<String>() {{
-        this.add( "boolean" );
-        this.add( "char" );
-        this.add( "byte" );
-        this.add( "short" );
-        this.add( "int" );
-        this.add( "long" );
-        this.add( "float" );
-        this.add( "double" );
+    private HashSet<String> types = new HashSet<>() {{
+        this.add("boolean");
+        this.add("char");
+        this.add("byte");
+        this.add("short");
+        this.add("int");
+        this.add("long");
+        this.add("float");
+        this.add("double");
     }};
 
     // This constructor is needed to prevent InternalConverter throwing an exception
     // InternalConverter accesses this constructor with Reflection to create an instance
     // !!!! DO NOT REMOVE !!!!
     // It will compile but will fail at runtime
-    public PrimitiveConverter( InternalConverter internalConverter ) {
+    public PrimitiveConverter(InternalConverter internalConverter) {
 
     }
 
@@ -42,7 +42,7 @@ public class PrimitiveConverter implements Converter {
      * {@inheritDoc}
      */
     @Override
-    public Object toConfig( Class<?> type, Object object, ParameterizedType parameterizedType ) {
+    public Object toConfig(Class<?> type, Object object, ParameterizedType parameterizedType) {
         return object;
     }
 
@@ -50,20 +50,20 @@ public class PrimitiveConverter implements Converter {
      * {@inheritDoc}
      */
     @Override
-    public Object fromConfig( Class type, Object object, ParameterizedType parameterizedType ) {
-        switch ( type.getSimpleName() ) {
+    public Object fromConfig(Class type, Object object, ParameterizedType parameterizedType) {
+        switch (type.getSimpleName()) {
             case "short":
-                return ( object instanceof Short ) ? object : new Integer( (int) object ).shortValue();
+                return (object instanceof Short) ? object : Integer.valueOf((int) object).shortValue();
             case "byte":
-                return ( object instanceof Byte ) ? object : new Integer( (int) object ).byteValue();
+                return (object instanceof Byte) ? object : Integer.valueOf((int) object).byteValue();
             case "float":
-                if ( object instanceof Integer ) {
-                    return new Double( (int) object ).floatValue();
+                if (object instanceof Integer) {
+                    return Double.valueOf((int) object).floatValue();
                 }
 
-                return ( object instanceof Float ) ? object : new Double( (double) object ).floatValue();
+                return (object instanceof Float) ? object : Double.valueOf((double) object).floatValue();
             case "char":
-                return ( object instanceof Character ) ? object : ( (String) object ).charAt( 0 );
+                return (object instanceof Character) ? object : ((String) object).charAt(0);
             default:
                 return object;
         }
@@ -73,8 +73,8 @@ public class PrimitiveConverter implements Converter {
      * {@inheritDoc}
      */
     @Override
-    public boolean supports( Class<?> type ) {
-        return types.contains( type.getName() );
+    public boolean supports(Class<?> type) {
+        return types.contains(type.getName());
     }
 
 }
