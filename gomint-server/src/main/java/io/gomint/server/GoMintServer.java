@@ -34,6 +34,7 @@ import io.gomint.server.inventory.CreativeInventory;
 import io.gomint.server.inventory.InventoryHolder;
 import io.gomint.server.inventory.item.Items;
 import io.gomint.server.logging.TerminalConsoleAppender;
+import io.gomint.server.maintenance.ReportUploader;
 import io.gomint.server.network.NetworkManager;
 import io.gomint.server.network.Protocol;
 import io.gomint.server.permission.PermissionGroupManager;
@@ -461,6 +462,8 @@ public class GoMintServer implements GoMint, InventoryHolder {
                 this.internalShutdown();
                 return;
             }
+
+            ReportUploader.create().exception(new NullPointerException()).property("crash", "true").upload();
 
             // ------------------------------------ //
             // Main Loop

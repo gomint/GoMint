@@ -20,6 +20,7 @@ import io.gomint.plugin.injection.InjectPlugin;
 import io.gomint.server.GoMintServer;
 import io.gomint.server.command.CommandManager;
 import io.gomint.server.event.EventManager;
+import io.gomint.server.maintenance.ReportUploader;
 import io.gomint.server.scheduler.CoreScheduler;
 import io.gomint.server.scheduler.PluginScheduler;
 import io.gomint.server.util.CallerDetectorUtil;
@@ -232,7 +233,7 @@ public class SimplePluginManager implements PluginManager, EventCaller {
         PluginClassloader loader = null;
         try {
             LOGGER.info( "Starting to load plugin {}", pluginMeta.getName() );
-            loader = new PluginClassloader( pluginMeta.getPluginFile() );
+            loader = new PluginClassloader( pluginMeta );
             Plugin clazz = (Plugin) constructAndInject( pluginMeta.getMainClass(), loader );
             if ( clazz == null ) {
                 return;
@@ -327,6 +328,7 @@ public class SimplePluginManager implements PluginManager, EventCaller {
             } catch ( Exception e ) {
                 LOGGER.error( "Plugin did startup but could not be installed: " + name, e );
                 this.metadata.remove( plugin.getName() );
+                ReportUploader.create().exception(e).upload("Plugin could not be installed");
             }
 
             // Check if the plugin did shutdown the server

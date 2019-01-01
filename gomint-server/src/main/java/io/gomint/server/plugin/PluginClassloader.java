@@ -18,7 +18,7 @@ import java.util.concurrent.CopyOnWriteArraySet;
  */
 public class PluginClassloader extends URLClassLoader {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger( PluginClassloader.class );
+    private static final Logger LOGGER = LoggerFactory.getLogger(PluginClassloader.class);
     private static final Set<PluginClassloader> ALL_LOADERS = new CopyOnWriteArraySet<>();
     private static ClassLoader applicationClassloader;
 
@@ -28,72 +28,88 @@ public class PluginClassloader extends URLClassLoader {
         applicationClassloader = GoMint.class.getClassLoader();
     }
 
-    public static Class<?> find( String name ) throws ClassNotFoundException {
-        for ( PluginClassloader loader : ALL_LOADERS ) {
+    public static String getPluginWhichLoaded(String name) {
+        for (PluginClassloader loader : ALL_LOADERS) {
             try {
-                return loader.loadClass( name, true );
-            } catch ( ClassNotFoundException e ) {
-                LOGGER.info( "Could not find class in plugin" );
+                loader.loadClass(name, true);
+                return loader.meta.getName() + " v" + loader.meta.getVersion().toString();
+            } catch (ClassNotFoundException e) {
+                // Ignored
             }
         }
 
-        return applicationClassloader.loadClass( name );
+        return null;
     }
+
+    public static Class<?> find(String name) throws ClassNotFoundException {
+        for (PluginClassloader loader : ALL_LOADERS) {
+            try {
+                return loader.loadClass(name, true);
+            } catch (ClassNotFoundException e) {
+                LOGGER.info("Could not find class in plugin");
+            }
+        }
+
+        return applicationClassloader.loadClass(name);
+    }
+
+    private final PluginMeta meta;
 
     /**
      * Create a new plugin class loader
      *
-     * @param pluginFile which holds all classes of a plugin
+     * @param meta which holds information about the plugin to be loaded
      * @throws MalformedURLException when the file is incorrectly labeled
      */
-    PluginClassloader( File pluginFile ) throws MalformedURLException {
-        super( new URL[]{ pluginFile.toURI().toURL() } );
-        ALL_LOADERS.add( this );
+    PluginClassloader(PluginMeta meta) throws MalformedURLException {
+        super(new URL[]{meta.getPluginFile().toURI().toURL()});
+        this.meta = meta;
+        ALL_LOADERS.add(this);
     }
 
     @Override
-    protected Class<?> loadClass( String name, boolean resolve ) throws ClassNotFoundException {
-        return loadClass0( name, resolve, true );
+    protected Class<?> loadClass(String name, boolean resolve) throws ClassNotFoundException {
+        return loadClass0(name, resolve, true);
     }
 
-    private Class<?> loadClass0( String name, boolean resolve, boolean checkOther ) throws ClassNotFoundException {
+    private Class<?> loadClass0(String name, boolean resolve, boolean checkOther) throws ClassNotFoundException {
         try {
-            return super.loadClass( name, resolve );
-        } catch ( ClassNotFoundException ex ) {
+            return super.loadClass(name, resolve);
+        } catch (ClassNotFoundException ex) {
             // Ignored
         }
 
-        if ( checkOther ) {
-            for ( PluginClassloader loader : ALL_LOADERS ) {
-                if ( loader != this ) {
+        if (checkOther) {
+            for (PluginClassloader loader : ALL_LOADERS) {
+                if (loader != this) {
                     try {
-                        return loader.loadClass0( name, resolve, false );
-                    } catch ( ClassNotFoundException ex ) {
+                        return loader.loadClass0(name, resolve, false);
+                    } catch (ClassNotFoundException ex) {
                         // Ignored
                     }
                 }
             }
 
             try {
-                return applicationClassloader.loadClass( name );
-            } catch ( ClassNotFoundException ex ) {
+                return applicationClassloader.loadClass(name);
+            } catch (ClassNotFoundException ex) {
                 // Ignored
             }
         }
 
-        throw new ClassNotFoundException( name );
+        throw new ClassNotFoundException(name);
     }
 
     /**
      * Remove the loader and free the resources loaded with it
      */
     public void remove() {
-        ALL_LOADERS.remove( this );
+        ALL_LOADERS.remove(this);
 
         try {
             super.close();
-        } catch ( IOException e ) {
-            LOGGER.warn( "Could not close plugin classloader", e );
+        } catch (IOException e) {
+            LOGGER.warn("Could not close plugin classloader", e);
         }
     }
 

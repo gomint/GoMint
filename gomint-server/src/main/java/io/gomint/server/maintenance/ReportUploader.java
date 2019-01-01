@@ -13,14 +13,25 @@ import io.gomint.math.Location;
 import io.gomint.server.GoMintServer;
 import io.gomint.server.maintenance.report.PlayerReportData;
 import io.gomint.server.maintenance.report.WorldData;
+import io.gomint.server.plugin.PluginClassloader;
 import io.gomint.server.world.WorldAdapter;
 import io.sentry.SentryClient;
 import io.sentry.SentryClientFactory;
 import io.sentry.context.Context;
+import io.sentry.event.Event;
+import io.sentry.event.EventBuilder;
+import io.sentry.event.helper.EventBuilderHelper;
+import io.sentry.event.helper.ShouldSendEventCallback;
+import io.sentry.event.interfaces.ExceptionInterface;
+import io.sentry.event.interfaces.SentryException;
+import io.sentry.event.interfaces.SentryInterface;
+import io.sentry.event.interfaces.SentryStackTraceElement;
 import oshi.SystemInfo;
 
+import java.util.Deque;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Consumer;
 
 /**
  * @author geNAZt
@@ -141,6 +152,26 @@ public final class ReportUploader {
         if (this.players.size() > 0) {
             this.players.forEach((playerName, playerData) -> context.addExtra("player." + playerName, playerData));
         }
+
+        // Check for plugin crashes
+        this.client.addBuilderHelper(eventBuilder -> eventBuilder.getEvent().getSentryInterfaces().values().forEach(sentryInterface -> {
+            if (sentryInterface instanceof ExceptionInterface) {
+                Deque<SentryException> throwables = ((ExceptionInterface) sentryInterface).getExceptions();
+                for (SentryException throwable : throwables) {
+                    for (SentryStackTraceElement traceElement : throwable.getStackTraceInterface().getStackTrace()) {
+                        String plugin = PluginClassloader.getPluginWhichLoaded(traceElement.getModule());
+                        if (plugin != null) {
+                            eventBuilder.withTag("plugin.crash", "true");
+                            eventBuilder.withExtra("plugin", plugin);
+                            return;
+                        }
+                    }
+                }
+            }
+        }));
+
+        // Only send with supported release
+        this.client.addShouldSendEventCallback(event -> !event.getRelease().equals("dev/unsupported"));
 
         if (this.exception != null) {
             this.client.sendException(this.exception);
