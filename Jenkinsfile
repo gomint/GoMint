@@ -50,7 +50,7 @@ pipeline {
         script {
           def lastSuccessfulBuild = currentBuild.rawBuild.getPreviousSuccessfulBuild()
           if ( lastSuccessfulBuild ) {
-            def scmAction = build?.actions.find { action -> action instanceof jenkins.scm.api.SCMRevisionAction }
+            def scmAction = lastSuccessfulBuild ?.actions.find { action -> action instanceof jenkins.scm.api.SCMRevisionAction }
             def lastSuccessfulHash = scmAction?.revision?.hash
             def shortCommit = sh (script:"git log -n 1 --pretty=format:'%h'", returnStdout: true).trim()
             def longCommit = sh (script:"git log -n 1 --pretty=format:'%H'", returnStdout: true).trim()
