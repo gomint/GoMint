@@ -47,14 +47,13 @@ pipeline {
   post {
     success {
       withCredentials([string(credentialsId: 'sentry-deploy', variable: 'sentryDeployToken')]) {
-        sh """
-            shortCommit=`git log -n 1 --pretty=format:'%h'`
-
-            curl http://report.gomint.io/api/hooks/release/builtin/2/${sentryDeployToken}/ \
-              -X POST \
-              -H 'Content-Type: application/json' \
-              -d '{"version": "\$shortCommit"}'
-        """
+        script {
+            shortCommit = sh (script:'git log -n 1 --pretty=format:'%h'' returnStdout: true).trim()
+            jsonContent = "{\"version\": \"$shortCommit\"}
+            sh """
+                curl http://report.gomint.io/api/hooks/release/builtin/2/${sentryDeployToken}/ -X POST -H 'Content-Type: application/json' -d '$jsonContent'
+            """
+        }
       }
 
       withCredentials([string(credentialsId: 'discord', variable: 'webhookUrl')]) {
