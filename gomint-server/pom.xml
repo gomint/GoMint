@@ -172,7 +172,7 @@
                         </manifest>
                         <manifestEntries>
                             <Premain-Class>io.gomint.server.SelfInstrumentation</Premain-Class>
-                            <Implementation-Build>s:${buildNumber}-b:${buildScmBranch}</Implementation-Build>
+                            <Implementation-Build>s:${buildNumber}</Implementation-Build>
                         </manifestEntries>
                     </archive>
                 </configuration>
