@@ -40,7 +40,7 @@ pipeline {
 
     stage ('Deploy with operation') {
       steps {
-        build job: 'Operation/master', parameters: [[$class: 'StringParameterValue', name: 'GOMINT_BUILD_NUMBER', value: currentBuild.id]]
+        build job: 'Operation/master', parameters: [[$class: 'StringParameterValue', name: 'GOMINT_BUILD_NUMBER', value: currentBuild.id]], wait: false
       }
     }
   }
