@@ -52,7 +52,7 @@ pipeline {
             if (lastSuccessfulCommit != null) {
                 def shortCommit = sh (script:"git log -n 1 --pretty=format:'%h'", returnStdout: true).trim()
                 def longCommit = sh (script:"git log -n 1 --pretty=format:'%H'", returnStdout: true).trim()
-                def jsonContent = "{\"version\": \"s:$shortCommit\",\"refs\":[{\"repository\":\"gomint/GoMint\",\"commit\":\"$longCommit\",\"previousCommit\":\"$lastSuccessfulCommit\"}]}"
+                def jsonContent = "{\"version\": \"s:$shortCommit\",\"refs\":[{\"repository\":\"gomint/GoMint\",\"commit\":\"$longCommit\",\"previousCommit\":\"$lastSuccessfulCommit\"}],\"projects\":[\"gomint\"]}"
 
                 sh """
                     curl http://report.gomint.io/api/hooks/release/builtin/2/${sentryDeployToken}/ -X POST -H 'Content-Type: application/json' -d '$jsonContent'
