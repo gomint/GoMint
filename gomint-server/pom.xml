@@ -86,6 +86,12 @@
             <version>3.9.0</version>
         </dependency>
 
+        <dependency>
+            <groupId>io.sentry</groupId>
+            <artifactId>sentry</artifactId>
+            <version>1.7.5</version>
+        </dependency>
+
         <!-- https://mvnrepository.com/artifact/org.jline/jline-terminal-jansi -->
         <dependency>
             <groupId>org.jline</groupId>

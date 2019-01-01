@@ -46,6 +46,17 @@ pipeline {
   }
   post {
     success {
+      withCredentials([string(credentialsId: 'sentry-deploy', variable: 'sentryDeployToken')]) {
+        sh """
+            shortCommit=`git log -n 1 --pretty=format:'%h'`
+
+            curl http://report.gomint.io/api/hooks/release/builtin/2/${sentryDeployToken}/ \
+              -X POST \
+              -H 'Content-Type: application/json' \
+              -d '{"version": "${shortCommit}"}'
+        """
+      }
+
       withCredentials([string(credentialsId: 'discord', variable: 'webhookUrl')]) {
         discordSend title: "#${currentBuild.id} ${JOB_NAME}", link: currentBuild.absoluteUrl, footer: "Provided with <3", successful: currentBuild.resultIsBetterOrEqualTo('SUCCESS'), webhookURL: "${webhookUrl}", description: "${name} Build succeeded.\n\nChange(s):\n${changesString}\n\n${currentBuild.absoluteUrl}artifact/gomint-server/target/${name}.jar"
       }
