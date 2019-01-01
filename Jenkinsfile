@@ -49,7 +49,7 @@ pipeline {
       withCredentials([string(credentialsId: 'sentry-deploy', variable: 'sentryDeployToken')]) {
         script {
             shortCommit = sh (script:"git log -n 1 --pretty=format:'%h'", returnStdout: true).trim()
-            jsonContent = "{\"version\": \"$shortCommit\"}
+            jsonContent = "{\"version\": \"$shortCommit\"}"
             sh """
                 curl http://report.gomint.io/api/hooks/release/builtin/2/${sentryDeployToken}/ -X POST -H 'Content-Type: application/json' -d '$jsonContent'
             """
