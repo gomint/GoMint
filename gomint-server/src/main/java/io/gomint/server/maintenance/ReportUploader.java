@@ -37,7 +37,7 @@ public final class ReportUploader {
 
     private ReportUploader() {
         // Setup sentry
-        this.client = SentryClientFactory.sentryClient("http://15f4652d94494bd4859a9f64546fb1d4@report.gomint.io//2");
+        this.client = SentryClientFactory.sentryClient("http://15f4652d94494bd4859a9f64546fb1d4@report.gomint.io/2");
         this.client.setRelease(((GoMintServer) GoMint.instance()).getGitHash());
 
         this.context = this.client.getContext();
