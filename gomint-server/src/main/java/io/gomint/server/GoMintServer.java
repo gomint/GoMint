@@ -463,8 +463,6 @@ public class GoMintServer implements GoMint, InventoryHolder {
                 return;
             }
 
-            ReportUploader.create().exception(new NullPointerException()).property("crash", "true").upload();
-
             // ------------------------------------ //
             // Main Loop
             // ------------------------------------ //
