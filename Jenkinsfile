@@ -53,7 +53,7 @@ pipeline {
             curl http://report.gomint.io/api/hooks/release/builtin/2/${sentryDeployToken}/ \
               -X POST \
               -H 'Content-Type: application/json' \
-              -d '{"version": "${shortCommit}"}'
+              -d '{"version": "\$shortCommit"}'
         """
       }
 

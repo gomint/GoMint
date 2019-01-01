@@ -79,7 +79,7 @@ public class Blocks {
         // Don't spam the report server pls
         if ( System.currentTimeMillis() - lastReport > TimeUnit.SECONDS.toSeconds( 10 ) ) {
             LOGGER.warn( "Missing block: {}", blockId );
-            ReportUploader.create().includeWorlds().property( "missing_block", String.valueOf( blockId ) ).upload();
+            ReportUploader.create().includeWorlds().property( "missing_block", blockId).upload("Missing block in register");
             lastReport = System.currentTimeMillis();
         }
 

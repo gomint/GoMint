@@ -8,12 +8,14 @@
 package io.gomint.server.maintenance.report;
 
 import lombok.AllArgsConstructor;
+import lombok.ToString;
 
 /**
  * @author geNAZt
  * @version 1.0
  */
 @AllArgsConstructor
+@ToString
 public class WorldData {
 
     private int chunkAmount;

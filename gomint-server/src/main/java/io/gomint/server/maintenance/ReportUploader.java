@@ -8,23 +8,17 @@
 package io.gomint.server.maintenance;
 
 import io.gomint.GoMint;
-import io.gomint.config.YamlConfig;
 import io.gomint.entity.EntityPlayer;
 import io.gomint.math.Location;
 import io.gomint.server.GoMintServer;
 import io.gomint.server.maintenance.report.PlayerReportData;
 import io.gomint.server.maintenance.report.WorldData;
 import io.gomint.server.world.WorldAdapter;
-import org.apache.commons.io.IOUtils;
-import org.json.simple.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import io.sentry.SentryClient;
+import io.sentry.SentryClientFactory;
+import io.sentry.context.Context;
 import oshi.SystemInfo;
 
-import java.io.*;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLConnection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -34,40 +28,42 @@ import java.util.Map;
  */
 public final class ReportUploader {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger( ReportUploader.class );
+    private final SentryClient client;
+    private final Context context;
 
-    private Map<String, String> system = new HashMap<>();
     private Map<String, WorldData> worlds = new HashMap<>();
     private Map<String, PlayerReportData> players = new HashMap<>();
-    private Map<String, String> properties = new HashMap<>();
-    private String stacktrace = null;
+    private Throwable exception = null;
 
     private ReportUploader() {
-        // Get some basic system data
-        this.system.put( "gomint_version", GoMint.instance().getVersion() );
-        this.system.put( "java_version", System.getProperty( "java.vm.name" ) + " (" + System.getProperty( "java.runtime.version" ) + ")" );
+        // Setup sentry
+        this.client = SentryClientFactory.sentryClient("http://15f4652d94494bd4859a9f64546fb1d4@report.gomint.io//2");
+        this.client.setRelease(((GoMintServer) GoMint.instance()).getGitHash());
+
+        this.context = this.client.getContext();
+        this.context.addTag("java_version", System.getProperty("java.vm.name") + " (" + System.getProperty("java.runtime.version") + ")");
 
         // Ask for OS and CPU info
         SystemInfo systemInfo = new SystemInfo();
-        this.system.put( "os", systemInfo.getOperatingSystem().getFamily() + " [" + systemInfo.getOperatingSystem().getVersion().getVersion() + "]" );
-        this.system.put( "memory", getCount( systemInfo.getHardware().getMemory().getTotal() ) );
-        this.system.put( "cpu", systemInfo.getHardware().getProcessor().getName() );
+        this.context.addExtra("system.os", systemInfo.getOperatingSystem().getFamily() + " [" + systemInfo.getOperatingSystem().getVersion().getVersion() + "]");
+        this.context.addExtra("system.memory", getCount(systemInfo.getHardware().getMemory().getTotal()));
+        this.context.addExtra("system.cpu", systemInfo.getHardware().getProcessor().getName());
 
         // Basic process stats
-        this.system.put( "process_memory_total", getCount( Runtime.getRuntime().totalMemory() ) );
-        this.system.put( "process_memory_free", getCount( Runtime.getRuntime().freeMemory() ) );
+        this.context.addExtra("system.process_memory_total", getCount(Runtime.getRuntime().totalMemory()));
+        this.context.addExtra("system.process_memory_free", getCount(Runtime.getRuntime().freeMemory()));
     }
 
-    private static String getCount( long bytes ) {
+    private static String getCount(long bytes) {
         // Do we need to check for suffix
-        if ( bytes < 1024 ) {
+        if (bytes < 1024) {
             return bytes + " B";
         }
 
         // Get exp and get the correct suffix
-        int exp = (int) ( Math.log( bytes ) / Math.log( 1024 ) );
-        char pre = "KMGTPE".charAt( exp - 1 );
-        return String.format( "%.1f %siB", bytes / Math.pow( 1024, exp ), pre );
+        int exp = (int) (Math.log(bytes) / Math.log(1024));
+        char pre = "KMGTPE".charAt(exp - 1);
+        return String.format("%.1f %siB", bytes / Math.pow(1024, exp), pre);
     }
 
     /**
@@ -77,8 +73,8 @@ public final class ReportUploader {
      */
     public ReportUploader includeWorlds() {
         GoMintServer server = (GoMintServer) GoMint.instance();
-        for ( WorldAdapter adapter : server.getWorldManager().getWorlds() ) {
-            this.worlds.put( adapter.getWorldName(), new WorldData( adapter.getChunkCache().size() ) );
+        for (WorldAdapter adapter : server.getWorldManager().getWorlds()) {
+            this.worlds.put(adapter.getWorldName(), new WorldData(adapter.getChunkCache().size()));
         }
 
         return this;
@@ -90,10 +86,10 @@ public final class ReportUploader {
      * @return the report uploader for chaining
      */
     public ReportUploader includePlayers() {
-        for ( EntityPlayer player : GoMint.instance().getPlayers() ) {
+        for (EntityPlayer player : GoMint.instance().getPlayers()) {
             String key = player.getName() + ":" + player.getUUID().toString();
             Location location = player.getLocation();
-            this.players.put( key, new PlayerReportData( location.getWorld().getWorldName(), location.getX(), location.getY(), location.getZ() ) );
+            this.players.put(key, new PlayerReportData(location.getWorld().getWorldName(), location.getX(), location.getY(), location.getZ()));
         }
 
         return this;
@@ -102,13 +98,11 @@ public final class ReportUploader {
     /**
      * Convert a exception to a string and append it to the report
      *
-     * @param e which should be reported
+     * @param exception which should be reported
      * @return the report uploader for chaining
      */
-    public ReportUploader exception( Throwable e ) {
-        StringWriter stringWriter = new StringWriter();
-        e.printStackTrace( new PrintWriter( stringWriter ) );
-        this.stacktrace = stringWriter.toString();
+    public ReportUploader exception(Throwable exception) {
+        this.exception = exception;
         return this;
     }
 
@@ -119,102 +113,40 @@ public final class ReportUploader {
      * @param value of the property
      * @return the report uploader for chaining
      */
-    public ReportUploader property( String key, String value ) {
-        this.properties.put( key, value );
+    public ReportUploader property(String key, String value) {
+        this.context.addExtra("property." + key, value);
         return this;
+    }
+
+    public void upload() {
+        this.upload(null);
     }
 
     /**
      * Upload this report
      */
-    public void upload() {
+    public void upload(String message) {
         // Check if reporting has been disabled
         GoMintServer server = (GoMintServer) GoMint.instance();
-        if ( server.getServerConfig().isDisableGomintReports() ) {
+        if (server.getServerConfig().isDisableGomintReports()) {
             return;
         }
 
-        // Ask the round robin service
-        String service = this.getUploadServer();
-        if ( service == null ) {
-            return;
+        this.context.addExtra("config.server", server.getServerConfig());
+
+        if (this.worlds.size() > 0) {
+            this.worlds.forEach((worldName, worldData) -> context.addExtra("world." + worldName, worldData));
         }
 
-        // We got a server assigned, upload report
-        this.uploadToServer( service );
-    }
-
-    private void uploadToServer( String service ) {
-        GoMintServer server = (GoMintServer) GoMint.instance();
-
-        Map<String, Map<String, ?>> data = new HashMap<>();
-        data.put( "config", new HashMap<String, YamlConfig>() {{
-            put( "server", server.getServerConfig() );
-        }} );
-        data.put( "system", this.system );
-
-        if ( this.stacktrace != null ) {
-            data.put( "thrown", new HashMap<String, String>() {{
-                put( "trace", stacktrace );
-            }} );
+        if (this.players.size() > 0) {
+            this.players.forEach((playerName, playerData) -> context.addExtra("player." + playerName, playerData));
         }
 
-        if ( this.worlds.size() > 0 ) {
-            data.put( "worlds", this.worlds );
+        if (this.exception != null) {
+            this.client.sendException(this.exception);
+        } else {
+            this.client.sendMessage(message == null ? "Nulled message" : message);
         }
-
-        if ( this.players.size() > 0 ) {
-            data.put( "players", this.players );
-        }
-
-        if ( this.properties.size() > 0 ) {
-            data.put( "properties", this.properties );
-        }
-
-        String json = JSONObject.toJSONString( data );
-
-        try {
-            URL url = new URL( service );
-            URLConnection connection = url.openConnection();
-
-            connection.setConnectTimeout( 500 );
-            connection.setDoOutput( true );
-
-            try ( OutputStream out = connection.getOutputStream() ) {
-                out.write( json.getBytes( "UTF-8" ) );
-            }
-
-            connection.getInputStream().close();
-        } catch ( MalformedURLException e ) {
-            // This will never be malformed
-        } catch ( IOException e ) {
-            LOGGER.warn( "Could not upload report", e );
-        }
-    }
-
-    private String getUploadServer() {
-        try {
-            URL url = new URL( "http://report.gomint.io" );
-            URLConnection connection = url.openConnection();
-
-            connection.setConnectTimeout( 500 );
-            connection.setReadTimeout( 500 );
-
-            try ( InputStream in = connection.getInputStream() ) {
-                String server = IOUtils.readLines( in, "UTF-8" ).get( 0 );
-                if ( "NONE".equals( server ) ) {    // We use this wanted breaking point to disable uploading reports if needed server wise
-                    return null;
-                } else {
-                    return server;
-                }
-            }
-        } catch ( MalformedURLException e ) {
-            // This will never be malformed
-        } catch ( IOException e ) {
-            LOGGER.warn( "Could not get report upload service from round robin", e );
-        }
-
-        return null;
     }
 
     /**

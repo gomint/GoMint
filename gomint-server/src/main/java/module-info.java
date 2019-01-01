@@ -15,6 +15,7 @@ module gomint.server {
     requires slf4j.api;
     requires org.apache.logging.log4j;
     requires org.apache.logging.log4j.core;
+    requires io.sentry;
 
     // Netty modules
     requires io.netty.codec;
