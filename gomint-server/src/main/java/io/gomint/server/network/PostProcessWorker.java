@@ -5,6 +5,7 @@ import io.gomint.server.jni.NativeCode;
 import io.gomint.server.jni.zlib.JavaZLib;
 import io.gomint.server.jni.zlib.NativeZLib;
 import io.gomint.server.jni.zlib.ZLib;
+import io.gomint.server.maintenance.ReportUploader;
 import io.gomint.server.network.packet.Packet;
 import io.gomint.server.network.packet.PacketBatch;
 import io.netty.buffer.ByteBuf;
@@ -21,8 +22,8 @@ import java.util.zip.DataFormatException;
  */
 public class PostProcessWorker implements Runnable {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger( PostProcessWorker.class );
-    private static final NativeCode<ZLib> ZLIB = new NativeCode<>( "zlib", JavaZLib.class, NativeZLib.class );
+    private static final Logger LOGGER = LoggerFactory.getLogger(PostProcessWorker.class);
+    private static final NativeCode<ZLib> ZLIB = new NativeCode<>("zlib", JavaZLib.class, NativeZLib.class);
     private static final ThreadLocal<ZLib> COMPRESSOR = new ThreadLocal<>();
 
     static {
@@ -32,87 +33,88 @@ public class PostProcessWorker implements Runnable {
     private final ConnectionWithState connection;
     private final Packet[] packets;
 
-    public PostProcessWorker( ConnectionWithState connection, Packet[] packets ) {
+    public PostProcessWorker(ConnectionWithState connection, Packet[] packets) {
         this.connection = connection;
         this.packets = packets;
     }
 
     private ZLib getCompressor() {
         ZLib zLib = COMPRESSOR.get();
-        if ( zLib != null ) {
+        if (zLib != null) {
             return zLib;
         }
 
         zLib = ZLIB.newInstance();
-        zLib.init( true, false, 7 );
-        COMPRESSOR.set( zLib );
+        zLib.init(true, false, 7);
+        COMPRESSOR.set(zLib);
         return zLib;
     }
 
     @Override
     public void run() {
-        ByteBuf inBuf = writePackets( this.packets );
-        if ( inBuf.readableBytes() == 0 ) {
+        ByteBuf inBuf = writePackets(this.packets);
+        if (inBuf.readableBytes() == 0) {
             inBuf.release();
             return;
         }
 
-        byte[] data = compress( inBuf );
+        byte[] data = compress(inBuf);
         inBuf.release();
-        if ( data == null ) {
+        if (data == null) {
             return;
         }
 
-        PacketBatch batch = this.encrypt( data );
-        this.connection.send( batch );
+        PacketBatch batch = this.encrypt(data);
+        this.connection.send(batch);
     }
 
-    private PacketBatch encrypt( byte[] data ) {
+    private PacketBatch encrypt(byte[] data) {
         PacketBatch batch = new PacketBatch();
-        batch.setPayload( data );
-        batch.setPayloadLength( data.length );
+        batch.setPayload(data);
+        batch.setPayloadLength(data.length);
 
         EncryptionHandler encryptionHandler = this.connection.getEncryptionHandler();
-        if ( encryptionHandler != null && ( !this.connection.isPlayer() || this.connection.getState() == PlayerConnectionState.LOGIN || this.connection.getState() == PlayerConnectionState.PLAYING ) ) {
-            batch.setPayload( this.connection.isPlayer() ? encryptionHandler.encryptInputForClient( batch.getPayload() ) : encryptionHandler.encryptInputForServer( batch.getPayload() ) );
-            batch.setPayloadLength( batch.getPayload().length );
+        if (encryptionHandler != null && (!this.connection.isPlayer() || this.connection.getState() == PlayerConnectionState.LOGIN || this.connection.getState() == PlayerConnectionState.PLAYING)) {
+            batch.setPayload(this.connection.isPlayer() ? encryptionHandler.encryptInputForClient(batch.getPayload()) : encryptionHandler.encryptInputForServer(batch.getPayload()));
+            batch.setPayloadLength(batch.getPayload().length);
         }
 
         return batch;
     }
 
-    private ByteBuf writePackets( Packet[] packets ) {
+    private ByteBuf writePackets(Packet[] packets) {
         ByteBuf inBuf = newNettyBuffer();
 
         // Write all packets into the inBuf for compression
-        PacketBuffer buffer = new PacketBuffer( 16 );
+        PacketBuffer buffer = new PacketBuffer(16);
 
-        for ( Packet packet : packets ) {
-            if ( packet instanceof PacketBatch ) { // Only chunks can do this
+        for (Packet packet : packets) {
+            if (packet instanceof PacketBatch) { // Only chunks can do this
                 PacketBatch batch = (PacketBatch) packet;
-                if ( !batch.isCompressed() ) {
+                if (!batch.isCompressed()) {
                     ByteBuf in = newNettyBuffer();
-                    in.writeBytes( batch.getPayload() );
-                    batch.setPayload( this.compress( in ) );
-                    batch.setPayloadLength( batch.getPayload().length );
+                    in.writeBytes(batch.getPayload());
+                    batch.setPayload(this.compress(in));
+                    batch.setPayloadLength(batch.getPayload().length);
                     in.release();
-                    batch.setCompressed( true );
+                    batch.setCompressed(true);
                 }
 
-                PacketBatch encrypted = this.encrypt( batch.getPayload() );
-                this.connection.send( encrypted );
+                PacketBatch encrypted = this.encrypt(batch.getPayload());
+                this.connection.send(encrypted);
             } else {
-                buffer.setPosition( 0 );
+                buffer.setPosition(0);
 
                 // CHECKSTYLE:OFF
                 try {
-                    packet.serializeHeader( buffer );
-                    packet.serialize( buffer, this.connection.getProtocolID() );
+                    packet.serializeHeader(buffer);
+                    packet.serialize(buffer, this.connection.getProtocolID());
 
-                    writeVarInt( buffer.getPosition(), inBuf );
-                    inBuf.writeBytes( buffer.getBuffer(), buffer.getBufferOffset(), buffer.getPosition() - buffer.getBufferOffset() );
-                } catch ( Exception e ) {
-                    LOGGER.error( "Could not serialize packet", e );
+                    writeVarInt(buffer.getPosition(), inBuf);
+                    inBuf.writeBytes(buffer.getBuffer(), buffer.getBufferOffset(), buffer.getPosition() - buffer.getBufferOffset());
+                } catch (Exception e) {
+                    LOGGER.error("Could not serialize packet", e);
+                    ReportUploader.create().tag("network.serialize").exception(e).upload();
                 }
                 // CHECKSTYLE:ON
             }
@@ -125,33 +127,33 @@ public class PostProcessWorker implements Runnable {
         return PooledByteBufAllocator.DEFAULT.directBuffer();
     }
 
-    private byte[] compress( ByteBuf inBuf ) {
-        if ( inBuf.readableBytes() > 256 || !this.connection.isPlayer() ) {
-            return zlibCompress( inBuf );
+    private byte[] compress(ByteBuf inBuf) {
+        if (inBuf.readableBytes() > 256 || !this.connection.isPlayer()) {
+            return zlibCompress(inBuf);
         } else {
-            return fastStorage( inBuf );
+            return fastStorage(inBuf);
         }
     }
 
-    private byte[] zlibCompress( ByteBuf inBuf ) {
+    private byte[] zlibCompress(ByteBuf inBuf) {
         ZLib compressor = this.getCompressor();
         ByteBuf outBuf = newNettyBuffer();
 
         try {
-            compressor.process( inBuf, outBuf );
-        } catch ( DataFormatException e ) {
-            LOGGER.error( "Could not compress data for network", e );
+            compressor.process(inBuf, outBuf);
+        } catch (DataFormatException e) {
+            LOGGER.error("Could not compress data for network", e);
             outBuf.release();
             return null;
         }
 
         byte[] data = new byte[outBuf.readableBytes()];
-        outBuf.readBytes( data );
+        outBuf.readBytes(data);
         outBuf.release();
         return data;
     }
 
-    private byte[] fastStorage( ByteBuf inBuf ) {
+    private byte[] fastStorage(ByteBuf inBuf) {
         byte[] data = new byte[inBuf.readableBytes() + 7 + 4];
         data[0] = 0x78;
         data[1] = 0x01;
@@ -160,19 +162,19 @@ public class PostProcessWorker implements Runnable {
         // Write data length
         int length = inBuf.readableBytes();
         data[3] = (byte) length;
-        data[4] = (byte) ( length >>> 8 );
+        data[4] = (byte) (length >>> 8);
         length = ~length;
         data[5] = (byte) length;
-        data[6] = (byte) ( length >>> 8 );
+        data[6] = (byte) (length >>> 8);
 
         // Write data
-        inBuf.readBytes( data, 7, inBuf.readableBytes() );
+        inBuf.readBytes(data, 7, inBuf.readableBytes());
 
-        long checksum = adler32( data, 7, data.length - 11 );
-        data[data.length - 4] = ( (byte) ( ( checksum >> 24 ) % 256 ) );
-        data[data.length - 3] = ( (byte) ( ( checksum >> 16 ) % 256 ) );
-        data[data.length - 2] = ( (byte) ( ( checksum >> 8 ) % 256 ) );
-        data[data.length - 1] = ( (byte) ( checksum % 256 ) );
+        long checksum = adler32(data, 7, data.length - 11);
+        data[data.length - 4] = ((byte) ((checksum >> 24) % 256));
+        data[data.length - 3] = ((byte) ((checksum >> 16) % 256));
+        data[data.length - 2] = ((byte) ((checksum >> 8) % 256));
+        data[data.length - 1] = ((byte) (checksum % 256));
 
         return data;
     }
@@ -180,19 +182,19 @@ public class PostProcessWorker implements Runnable {
     /**
      * Calculates the adler32 checksum of the data
      */
-    private long adler32( byte[] data, int offset, int length ) {
+    private long adler32(byte[] data, int offset, int length) {
         final Adler32 checksum = new Adler32();
-        checksum.update( data, offset, length );
+        checksum.update(data, offset, length);
         return checksum.getValue();
     }
 
-    private void writeVarInt( int value, ByteBuf stream ) {
-        while ( ( value & -128 ) != 0 ) {
-            stream.writeByte( value & 127 | 128 );
+    private void writeVarInt(int value, ByteBuf stream) {
+        while ((value & -128) != 0) {
+            stream.writeByte(value & 127 | 128);
             value >>>= 7;
         }
 
-        stream.writeByte( value );
+        stream.writeByte(value);
     }
 
 }

@@ -183,4 +183,9 @@ public final class ReportUploader {
         return new ReportUploader();
     }
 
+    public ReportUploader tag(String tag) {
+        this.context.addTag(tag, "true");
+        return this;
+    }
+
 }

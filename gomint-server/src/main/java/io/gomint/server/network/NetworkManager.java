@@ -15,6 +15,7 @@ import io.gomint.jraknet.PacketBuffer;
 import io.gomint.jraknet.ServerSocket;
 import io.gomint.jraknet.SocketEvent;
 import io.gomint.server.GoMintServer;
+import io.gomint.server.maintenance.ReportUploader;
 import io.gomint.server.network.tcp.ConnectionHandler;
 import io.gomint.server.network.tcp.Initializer;
 import io.netty.bootstrap.ServerBootstrap;
@@ -245,6 +246,8 @@ public class NetworkManager {
      * @param buffer   The packet's contents without its ID
      */
     void notifyUnknownPacket(byte packetId, PacketBuffer buffer) {
+        ReportUploader.create().property("network.unknown_packet", "0x" + Integer.toHexString(((int) packetId) & 0xFF)).upload("Unknown packet 0x" + Integer.toHexString(((int) packetId) & 0xFF));
+
         if (this.dump) {
             if (LOGGER.isInfoEnabled()) {
                 LOGGER.info("Received unknown packet 0x{}", Integer.toHexString(((int) packetId) & 0xFF));
