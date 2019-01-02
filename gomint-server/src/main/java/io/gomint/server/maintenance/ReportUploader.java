@@ -42,7 +42,7 @@ public final class ReportUploader {
 
     private ReportUploader() {
         // Setup sentry
-        this.client = SentryClientFactory.sentryClient("http://15f4652d94494bd4859a9f64546fb1d4@report.gomint.io/2?stacktrace.app.packages=");
+        this.client = SentryClientFactory.sentryClient("http://15f4652d94494bd4859a9f64546fb1d4@report.gomint.io/2");
         this.client.setRelease(((GoMintServer) GoMint.instance()).getGitHash());
 
         this.context = this.client.getContext();
@@ -57,6 +57,8 @@ public final class ReportUploader {
         // Basic process stats
         this.context.addExtra("system.process_memory_total", getCount(Runtime.getRuntime().totalMemory()));
         this.context.addExtra("system.process_memory_free", getCount(Runtime.getRuntime().freeMemory()));
+
+        this.context.addExtra("system.current_thread", Thread.currentThread().getName());
     }
 
     private static String getCount(long bytes) {
