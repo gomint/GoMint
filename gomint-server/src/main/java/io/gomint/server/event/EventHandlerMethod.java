@@ -10,6 +10,7 @@ package io.gomint.server.event;
 import io.gomint.event.Event;
 import io.gomint.event.EventHandler;
 import io.gomint.event.EventListener;
+import io.gomint.server.maintenance.ReportUploader;
 import javassist.*;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -76,6 +77,7 @@ class EventHandlerMethod implements Comparable<EventHandlerMethod> {
             this.proxy.call(event);
         } catch (Throwable cause) {
             LOGGER.warn("Event handler has thrown a exception: ", cause);
+            ReportUploader.create().exception(cause).upload();
         }
     }
 
