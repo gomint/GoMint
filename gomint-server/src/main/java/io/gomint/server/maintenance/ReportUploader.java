@@ -18,20 +18,14 @@ import io.gomint.server.world.WorldAdapter;
 import io.sentry.SentryClient;
 import io.sentry.SentryClientFactory;
 import io.sentry.context.Context;
-import io.sentry.event.Event;
-import io.sentry.event.EventBuilder;
-import io.sentry.event.helper.EventBuilderHelper;
-import io.sentry.event.helper.ShouldSendEventCallback;
 import io.sentry.event.interfaces.ExceptionInterface;
 import io.sentry.event.interfaces.SentryException;
-import io.sentry.event.interfaces.SentryInterface;
 import io.sentry.event.interfaces.SentryStackTraceElement;
 import oshi.SystemInfo;
 
 import java.util.Deque;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Consumer;
 
 /**
  * @author geNAZt
@@ -48,7 +42,7 @@ public final class ReportUploader {
 
     private ReportUploader() {
         // Setup sentry
-        this.client = SentryClientFactory.sentryClient("http://15f4652d94494bd4859a9f64546fb1d4@report.gomint.io/2");
+        this.client = SentryClientFactory.sentryClient("http://15f4652d94494bd4859a9f64546fb1d4@report.gomint.io/2?stacktrace.app.packages=");
         this.client.setRelease(((GoMintServer) GoMint.instance()).getGitHash());
 
         this.context = this.client.getContext();
