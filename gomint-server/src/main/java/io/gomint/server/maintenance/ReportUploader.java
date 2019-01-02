@@ -24,6 +24,8 @@ import io.sentry.event.interfaces.SentryStackTraceElement;
 import io.sentry.event.interfaces.StackTraceInterface;
 import oshi.SystemInfo;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.Deque;
 import java.util.HashMap;
 import java.util.Map;
@@ -44,8 +46,16 @@ public final class ReportUploader {
 
     private ReportUploader() {
         // Setup sentry
+        System.setProperty("stacktrace.app.packages", "");
+
         this.client = SentryClientFactory.sentryClient("http://15f4652d94494bd4859a9f64546fb1d4@report.gomint.io/2");
         this.client.setRelease(((GoMintServer) GoMint.instance()).getGitHash());
+
+        try {
+            this.client.setServerName(InetAddress.getLocalHost().getCanonicalHostName());
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        }
 
         this.context = this.client.getContext();
         this.context.addTag("java_version", System.getProperty("java.vm.name") + " (" + System.getProperty("java.runtime.version") + ")");

@@ -34,7 +34,6 @@ import io.gomint.server.inventory.CreativeInventory;
 import io.gomint.server.inventory.InventoryHolder;
 import io.gomint.server.inventory.item.Items;
 import io.gomint.server.logging.TerminalConsoleAppender;
-import io.gomint.server.maintenance.ReportUploader;
 import io.gomint.server.network.NetworkManager;
 import io.gomint.server.network.Protocol;
 import io.gomint.server.permission.PermissionGroupManager;
@@ -75,20 +74,11 @@ import org.springframework.stereotype.Component;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.InetAddress;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.Executors;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.TimeUnit;
+import java.net.UnknownHostException;
+import java.util.*;
+import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.jar.Manifest;
@@ -186,7 +176,7 @@ public class GoMintServer implements GoMint, InventoryHolder {
      * @param context which generated this component
      */
     @Autowired
-    public GoMintServer(OptionSet args, AnnotationConfigApplicationContext context) {
+    public GoMintServer(OptionSet args, AnnotationConfigApplicationContext context) throws UnknownHostException {
         this.context = context;
 
         if (!args.has("convertOnly")) {
@@ -236,7 +226,7 @@ public class GoMintServer implements GoMint, InventoryHolder {
 
         this.gitHash = buildVersion;
 
-        LOGGER.info("Starting {}", getVersion());
+        LOGGER.info("Starting {} on {}", getVersion(), InetAddress.getLocalHost().getCanonicalHostName());
         Thread.currentThread().setName("GoMint Main Thread");
 
         if (!args.has("convertOnly")) {
