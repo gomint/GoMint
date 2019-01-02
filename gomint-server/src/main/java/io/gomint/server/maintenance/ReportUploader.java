@@ -175,7 +175,7 @@ public final class ReportUploader {
         }));
 
         // Only send with supported release
-        this.client.addShouldSendEventCallback(event -> !event.getRelease().equals("dev/unsupported"));
+        // this.client.addShouldSendEventCallback(event -> !event.getRelease().equals("dev/unsupported"));
 
         if (this.exception != null) {
             this.client.sendException(this.exception);
