@@ -8,6 +8,7 @@
 package io.gomint.server.util;
 
 import io.gomint.server.GoMintServer;
+import io.gomint.server.maintenance.ReportUploader;
 import it.unimi.dsi.fastutil.longs.Long2LongMap;
 import it.unimi.dsi.fastutil.longs.Long2LongOpenHashMap;
 import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
@@ -58,6 +59,15 @@ public class Watchdog implements Runnable {
                 if ( removeSet[0] == null ) {
                     removeSet[0] = new LongOpenHashSet();
                 }
+
+                ReportUploader.create()
+                    .tag("thread.too_long")
+                    .property("thread_name", threadInfo.getThreadName())
+                    .property("thread_state", threadInfo.getThreadState().name())
+                    .property("thread_lock", threadInfo.getLockName())
+                    .property("thread_lock_owner", threadInfo.getLockOwnerName())
+                    .stacktrace(threadInfo.getStackTrace())
+                    .upload("Thread did work too long");
 
                 removeSet[0].add( entry.getLongKey() );
             }

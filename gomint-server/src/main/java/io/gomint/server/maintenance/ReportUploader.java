@@ -21,6 +21,7 @@ import io.sentry.context.Context;
 import io.sentry.event.interfaces.ExceptionInterface;
 import io.sentry.event.interfaces.SentryException;
 import io.sentry.event.interfaces.SentryStackTraceElement;
+import io.sentry.event.interfaces.StackTraceInterface;
 import oshi.SystemInfo;
 
 import java.util.Deque;
@@ -39,6 +40,7 @@ public final class ReportUploader {
     private Map<String, WorldData> worlds = new HashMap<>();
     private Map<String, PlayerReportData> players = new HashMap<>();
     private Throwable exception = null;
+    private StackTraceElement[] stacktrace = null;
 
     private ReportUploader() {
         // Setup sentry
@@ -135,10 +137,6 @@ public final class ReportUploader {
     public void upload(String message) {
         // Check if reporting has been disabled
         GoMintServer server = (GoMintServer) GoMint.instance();
-        if (server.getServerConfig().isDisableGomintReports()) {
-            return;
-        }
-
         this.context.addExtra("config.server", server.getServerConfig());
 
         if (this.worlds.size() > 0) {
@@ -171,6 +169,9 @@ public final class ReportUploader {
 
         if (this.exception != null) {
             this.client.sendException(this.exception);
+        } else if (this.stacktrace != null) {
+            this.client.addBuilderHelper(eventBuilder -> eventBuilder.withSentryInterface(new StackTraceInterface(this.stacktrace)));
+            this.client.sendMessage(message == null ? "Nulled message" : message);
         } else {
             this.client.sendMessage(message == null ? "Nulled message" : message);
         }
@@ -187,6 +188,11 @@ public final class ReportUploader {
 
     public ReportUploader tag(String tag) {
         this.context.addTag(tag, "true");
+        return this;
+    }
+
+    public ReportUploader stacktrace(StackTraceElement[] stackTrace) {
+        this.stacktrace = stackTrace;
         return this;
     }
 
