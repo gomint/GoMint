@@ -75,7 +75,7 @@ public final class Protocol {
     public static final byte PACKET_MOVE_PLAYER = (byte) 0x13;
     public static final byte PACKET_UPDATE_BLOCK = (byte) 0x15;
     public static final byte PACKET_EXPLODE = (byte) 0x17;
-    public static final byte PACKET_WORLD_SOUND_EVENT = (byte) 0x18;
+    public static final byte PACKET_WORLD_SOUND_EVENT = (byte) 0x78;
     public static final byte PACKET_WORLD_EVENT = (byte) 0x19;
     public static final byte PACKET_BLOCK_EVENT = (byte) 0x1A;
     public static final byte PACKET_ENTITY_EVENT = (byte) 0x1B;

@@ -12,7 +12,7 @@ public interface FormResponse {
      * @param id for which we need the value
      * @return null when not found or the value given from the client
      */
-    Boolean getToogle( String id );
+    Boolean getToggle( String id );
 
     /**
      * Get the value of the step slider given

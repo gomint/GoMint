@@ -108,6 +108,7 @@ public class PacketInventoryTransaction extends Packet {
         private static final int SOURCE_CONTAINER = 0;
         private static final int SOURCE_WORLD = 2;
         private static final int SOURCE_CREATIVE = 3;
+        private static final int SOURCE_CRAFTING_GRID = 100;
         private static final int SOURCE_WTF_IS_DIS = 99999;
 
         private int sourceType;
@@ -128,6 +129,7 @@ public class PacketInventoryTransaction extends Packet {
             switch ( this.sourceType ) {
                 case SOURCE_CONTAINER:
                 case SOURCE_WTF_IS_DIS:
+                case SOURCE_CRAFTING_GRID:
                     this.windowId = buffer.readSignedVarInt();
                     break;
                 case SOURCE_WORLD:
