@@ -36,6 +36,16 @@ import java.util.Map;
  */
 public final class ReportUploader {
 
+    private static String HOST;
+
+    static {
+        try {
+            HOST = InetAddress.getLocalHost().getCanonicalHostName();
+        } catch (UnknownHostException e) {
+            HOST = "UNKNOWN";
+        }
+    }
+
     private final SentryClient client;
     private final Context context;
 
@@ -50,12 +60,7 @@ public final class ReportUploader {
 
         this.client = SentryClientFactory.sentryClient("http://15f4652d94494bd4859a9f64546fb1d4@report.gomint.io/2");
         this.client.setRelease(((GoMintServer) GoMint.instance()).getGitHash());
-
-        try {
-            this.client.setServerName(InetAddress.getLocalHost().getCanonicalHostName());
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
-        }
+        this.client.setServerName(HOST);
 
         this.context = this.client.getContext();
         this.context.addTag("java_version", System.getProperty("java.vm.name") + " (" + System.getProperty("java.runtime.version") + ")");

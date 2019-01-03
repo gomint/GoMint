@@ -16,6 +16,8 @@ import io.gomint.event.player.PlayerInteractEvent;
 import io.gomint.inventory.item.ItemArrow;
 import io.gomint.inventory.item.ItemStack;
 
+import java.util.Objects;
+
 /**
  * @author geNAZt
  * @version 1.0
@@ -23,14 +25,14 @@ import io.gomint.inventory.item.ItemStack;
 public class PlayerInteractListener implements EventListener {
 
     @EventHandler
-    public void onPlayerInteract( PlayerInteractEvent e ) {
+    public void onPlayerInteract(PlayerInteractEvent e) {
         EntityPlayer player = e.getPlayer();
         ItemStack itemStack = player.getInventory().getItemInHand();
-
-        if ( itemStack instanceof ItemArrow ) {
-            EntityArrow entityArrow = GoMint.instance().createEntity( EntityArrow.class );
-            entityArrow.spawn( player.getLocation().add( 0, (float) 1.5, 0 ) );
-            entityArrow.setVelocity( player.getDirection().multiply( 2 ) );
+        player.sendMessage(Objects.toString(itemStack));
+        if (itemStack instanceof ItemArrow) {
+            EntityArrow entityArrow = GoMint.instance().createEntity(EntityArrow.class);
+            entityArrow.spawn(player.getLocation().add(0, (float) 1.5, 0));
+            entityArrow.setVelocity(player.getDirection().multiply(2));
         }
     }
 

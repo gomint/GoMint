@@ -19,9 +19,6 @@ public class TestPlugin extends Plugin {
         registerListener( new PlayerJoinListener( this ) );
         registerListener( new PlayerInteractListener() );
         registerListener( new PlayerRespawnListener() );
-
-        // Throw some shit around to crash gomint
-        throw new RuntimeException("Test crash from plugin");
     }
 
 }

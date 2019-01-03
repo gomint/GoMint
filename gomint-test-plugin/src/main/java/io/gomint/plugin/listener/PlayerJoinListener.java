@@ -6,15 +6,14 @@ import io.gomint.event.EventListener;
 import io.gomint.event.EventPriority;
 import io.gomint.event.player.PlayerJoinEvent;
 import io.gomint.inventory.PlayerInventory;
+import io.gomint.inventory.item.ItemChest;
 import io.gomint.inventory.item.ItemCraftingTable;
 import io.gomint.inventory.item.ItemLog;
 import io.gomint.math.BlockPosition;
 import io.gomint.plugin.TestPlugin;
 import io.gomint.plugin.scoreboard.DebugScoreboard;
-import io.gomint.world.Gamemode;
 import io.gomint.world.block.Block;
 import io.gomint.world.block.BlockBambooSapling;
-import io.gomint.world.block.BlockLog;
 import lombok.RequiredArgsConstructor;
 
 /**
@@ -36,8 +35,10 @@ public class PlayerJoinListener implements EventListener {
         // Give this player the debug scoreboard
         new DebugScoreboard( this.plugin, event.getPlayer() );
 
+        event.getPlayer().getInventory().setItem(4, ItemChest.create(1).setCustomName("§r§9Server Selector").setLore("", "§r§7Right-Click to select a server"));
+
         PlayerInventory inventory = event.getPlayer().getInventory();
-        inventory.setItem( 0, ItemCraftingTable.create( 1 ) );
+        inventory.setItem( 5, ItemCraftingTable.create( 1 ) );
 
         ItemLog log = ItemLog.create( 64 );
         log.setLogType( ItemLog.Type.OAK );
