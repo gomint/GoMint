@@ -16,7 +16,7 @@ public class FormResponse implements io.gomint.gui.FormResponse {
     }
 
     @Override
-    public Boolean getToogle( String id ) {
+    public Boolean getToggle( String id ) {
         Object val = this.answers.get( id );
         if ( val != null ) {
             if ( val instanceof Boolean ) {
