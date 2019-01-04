@@ -37,13 +37,6 @@ public class PlayerJoinListener implements EventListener {
 
         event.getPlayer().getInventory().setItem(4, ItemChest.create(1).setCustomName("§r§9Server Selector").setLore("", "§r§7Right-Click to select a server"));
 
-        PlayerInventory inventory = event.getPlayer().getInventory();
-        inventory.setItem( 5, ItemCraftingTable.create( 1 ) );
-
-        ItemLog log = ItemLog.create( 64 );
-        log.setLogType( ItemLog.Type.OAK );
-        inventory.setItem( 1, log );
-
         // Spawn a Armor Stand to the player location
         EntityArmorStand.create().spawn( event.getPlayer().getLocation() );
 
