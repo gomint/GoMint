@@ -1,12 +1,14 @@
 package io.gomint.server.command.gomint;
 
+import io.gomint.ChatColor;
 import io.gomint.command.Command;
 import io.gomint.command.CommandOutput;
 import io.gomint.command.CommandSender;
+import io.gomint.command.PlayerCommandSender;
 import io.gomint.command.annotation.*;
 import io.gomint.command.validator.TargetValidator;
 import io.gomint.command.validator.TextValidator;
-import io.gomint.server.entity.EntityPlayer;
+import io.gomint.entity.EntityPlayer;
 
 import java.util.Map;
 
