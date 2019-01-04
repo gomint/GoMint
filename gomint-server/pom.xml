@@ -92,18 +92,11 @@
             <version>1.7.5</version>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/org.jline/jline-terminal-jansi -->
+        <!-- https://mvnrepository.com/artifact/org.jline/jline-terminal-jna -->
         <dependency>
             <groupId>org.jline</groupId>
-            <artifactId>jline-terminal-jansi</artifactId>
+            <artifactId>jline-terminal-jna</artifactId>
             <version>3.9.0</version>
-        </dependency>
-
-        <!-- https://mvnrepository.com/artifact/org.fusesource.jansi/jansi -->
-        <dependency>
-            <groupId>org.fusesource.jansi</groupId>
-            <artifactId>jansi</artifactId>
-            <version>1.17.1</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-slf4j-impl -->
