@@ -39,6 +39,6 @@ public class KickCommand extends Command {
         }
 
         target.disconnect(reason);
-        return new CommandOutput().success("Kicked %%s from the server", target.getDisplayName());
+        return output.success("Kicked %%s from the server", target.getDisplayName());
     }
 }
