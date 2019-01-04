@@ -38,7 +38,7 @@ Currently, GoMint is in a fast development-mode. The API is in all corners not s
 ## tl;dr
 | JDK  | Documentation                        | Download                                                   |
 | ---- | ------------------------------------ | ---------------------------------------------------------- |
-| 1.8  | [Click here](https://docs.gomint.io) | [Latest build](http://ci.gomint.io/job/GoMint/job/master/) |
+| 11  | [Click here](https://docs.gomint.io) | [Latest build](http://ci.gomint.io/job/GoMint/job/master/) |
 
 ### Compilation
 Compiling GoMint is actually pretty easy. We'll guide you through the compilation step by step and address troubleshooting.
@@ -47,7 +47,7 @@ Compiling GoMint is actually pretty easy. We'll guide you through the compilatio
 For compiling GoMint, you will need some prerequisites:
 - Git
 - Maven
-- JDK 1.8
+- JDK 11
  
 **Compiling**<br>
 This project's choice of build tool is Maven. To compile GoMint using Maven follow these steps:
