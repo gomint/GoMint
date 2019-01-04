@@ -14,25 +14,31 @@ import java.util.Map;
  * @author lukeeey
  * @version 1.0
  */
-@Name( "kick" )
+
+@Name("kick")
 @Description( "Kick a player from the server." )
-@Permission( "gomint.command.kick" )
-@Overload( {
-    @Parameter( name = "player", validator = TargetValidator.class ),
-    @Parameter( name = "reason", validator = TextValidator.class, optional = true )
-} )
+@Permission("gomint.command.kick")
+@Overload({
+    @Parameter(name = "player", validator = TargetValidator.class),
+    @Parameter(name = "reason", validator = TextValidator.class, optional = true)
+})
 public class KickCommand extends Command {
 
     @Override
-    public CommandOutput execute( CommandSender sender, String alias, Map<String, Object> arguments ) {
-        EntityPlayer target = (EntityPlayer) arguments.get( "player" );
+    public CommandOutput execute(CommandSender sender, String alias, Map<String, Object> arguments) {
+        CommandOutput output = new CommandOutput();
+        EntityPlayer target = (EntityPlayer) arguments.get("player");
         String reason = "Kicked by an operator.";
 
-        if( arguments.containsKey( "reason" ) ) {
-            reason = (String) arguments.get( "reason" );
+        if (target == null) {
+            return output.fail("You must provide a player!");
         }
 
-        target.disconnect( reason );
-        return new CommandOutput().success( "Kicked %%s from ther server", target.getDisplayName() );
+        if (arguments.containsKey("reason")) {
+            reason = (String) arguments.get("reason");
+        }
+
+        target.disconnect(reason);
+        return new CommandOutput().success("Kicked %%s from the server", target.getDisplayName());
     }
 }
