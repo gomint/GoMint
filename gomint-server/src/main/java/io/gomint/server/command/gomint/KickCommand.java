@@ -18,7 +18,7 @@ import java.util.Map;
 @Name("kick")
 @Description( "Kick a player from the server." )
 @Permission("gomint.command.kick")
-@Overload( {
+@Overload({
     @Parameter(name = "player", validator = TargetValidator.class),
     @Parameter(name = "reason", validator = TextValidator.class, optional = true)
 })
