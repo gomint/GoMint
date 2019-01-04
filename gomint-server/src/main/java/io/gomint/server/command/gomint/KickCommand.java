@@ -12,7 +12,7 @@ import java.util.Map;
 
 /**
  * @author lukeeey
- * @version 1.0
+ * @version 1.1
  */
 @Name( "kick" )
 @Description( "Kick a player from the server." )
@@ -24,15 +24,32 @@ import java.util.Map;
 public class KickCommand extends Command {
 
     @Override
-    public CommandOutput execute( CommandSender sender, String alias, Map<String, Object> arguments ) {
-        EntityPlayer target = (EntityPlayer) arguments.get( "player" );
-        String reason = "Kicked by an operator.";
+    public CommandOutput execute( CommandSender commandSender, String s, Map<String, Object> map ) {
+        CommandOutput commandOutput = new CommandOutput();
 
-        if( arguments.containsKey( "reason" ) ) {
-            reason = (String) arguments.get( "reason" );
+        // check if the target is entered
+        if ( !map.containsKey( "player" ) ) {
+            return commandOutput.fail( ChatColor.RED + "Please specify a player." );
         }
 
-        target.disconnect( reason );
-        return new CommandOutput().success( "Kicked %%s from ther server", target.getDisplayName() );
+        EntityPlayer target = (EntityPlayer) map.get( "player" );
+
+        // get the sender's name
+        String sender = commandSender instanceof PlayerCommandSender ? target.getName() : "CONSOLE";
+
+        // get string reason
+        String reason = (String) map.get( "reason" );
+
+        // the kick message that'll show up in the target's screen
+        String kick_message;
+        if ( !map.containsKey( "reason" ) ) {
+            kick_message = "You have been kicked out by " + sender + ".";
+        } else {
+            kick_message = "You have been kicked out by " + sender + ". Reason: " + reason;
+        }
+
+        // kick the specified target
+        target.disconnect( kick_message );
+        return commandOutput.success( target.getName() + " has been kicked out." );
     }
 }
