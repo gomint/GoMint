@@ -18,6 +18,7 @@ import java.util.Map;
 @Name("tell")
 @Alias("w")
 @Description("Sends a private message to one or more players.")
+@Permission("gomint.command.tell")
 @Overload({
     @Parameter(name = "player", validator = TargetValidator.class),
     @Parameter(name = "message", validator = TextValidator.class)
