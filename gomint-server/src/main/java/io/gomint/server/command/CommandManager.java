@@ -58,6 +58,7 @@ public class CommandManager {
                 SetWorldSpawnCommand.class,
                 SpawnPointCommand.class,
                 TPCommand.class,
+                TellCommand.class,
 
                 // GoMint
                 KickCommand.class,
