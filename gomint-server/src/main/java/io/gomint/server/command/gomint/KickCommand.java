@@ -1,6 +1,5 @@
 package io.gomint.server.command.gomint;
 
-import io.gomint.ChatColor;
 import io.gomint.command.Command;
 import io.gomint.command.CommandOutput;
 import io.gomint.command.CommandSender;
@@ -31,7 +30,7 @@ public class KickCommand extends Command {
 
         // check if the target is entered
         if ( !map.containsKey( "player" ) ) {
-            return commandOutput.fail( ChatColor.RED + "Please specify a player." );
+            return commandOutput.fail( "Please specify a player." );
         }
 
         EntityPlayer target = (EntityPlayer) map.get( "player" );
