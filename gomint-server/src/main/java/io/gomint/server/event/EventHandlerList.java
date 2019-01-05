@@ -23,7 +23,7 @@ import java.util.Map;
  * @author BlackyPaw
  * @version 1.0
  */
-public class EventHandlerList {
+class EventHandlerList {
 
     private static final Logger LOGGER = LoggerFactory.getLogger( EventHandlerList.class );
 

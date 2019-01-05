@@ -11,11 +11,14 @@ import io.gomint.event.Event;
 import io.gomint.event.EventHandler;
 import io.gomint.event.EventListener;
 import io.gomint.server.maintenance.ReportUploader;
-import javassist.*;
+import io.gomint.server.plugin.PluginClassloader;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.asm.ClassWriter;
+import org.springframework.asm.MethodVisitor;
+import org.springframework.asm.Opcodes;
 
 import java.lang.reflect.Method;
 import java.util.concurrent.atomic.AtomicLong;
@@ -50,18 +53,52 @@ class EventHandlerMethod implements Comparable<EventHandlerMethod> {
 
         // Build up proxy
         try {
-            // Prepare class pool for this plugin
-            ClassPool pool = new ClassPool(ClassPool.getDefault());
-            pool.appendClassPath(new LoaderClassPath(instance.getClass().getClassLoader()));
-            pool.appendClassPath(new LoaderClassPath(method.getParameterTypes()[0].getClassLoader()));
+            if (instance.getClass().getClassLoader() instanceof PluginClassloader) {
+                ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_FRAMES);
 
-            CtClass ctClass = pool.makeClass("io.gomint.server.event.Proxy" + PROXY_COUNT.incrementAndGet());
-            ctClass.addInterface(pool.get("io.gomint.server.event.EventProxy"));
-            ctClass.addField(CtField.make("public " + instance.getClass().getName() + " obj;", ctClass));
-            ctClass.addMethod(CtMethod.make("public void call( io.gomint.event.Event e ) { obj." + method.getName() + "( (" + method.getParameterTypes()[0].getName() + ") e ); }", ctClass));
+                String className = "io/gomint/server/event/EventProxy" + PROXY_COUNT.incrementAndGet();
+                String listenerClassName = instance.getClass().getName().replace(".", "/");
+                String eventClassName = method.getParameterTypes()[0].getName().replace(".", "/");
 
-            this.proxy = (EventProxy) ctClass.toClass(instance.getClass().getClassLoader(), null).newInstance();
-            this.proxy.getClass().getDeclaredField("obj").set(this.proxy, instance);
+                // Define the class
+                cw.visit(Opcodes.V11,
+                    Opcodes.ACC_PUBLIC,
+                    className,
+                    null,
+                    "java/lang/Object",
+                    new String[]{"io/gomint/server/event/EventProxy"});
+
+                // Define the obj field
+                cw.newField(className, "obj", "L" + listenerClassName + ";");
+                cw.visitField(Opcodes.ACC_PUBLIC, "obj", "L" + listenerClassName + ";", null, null);
+
+                // Build constructor
+                MethodVisitor con = cw.visitMethod(Opcodes.ACC_PUBLIC, "<init>", "()V", null, null);
+                con.visitCode();
+                con.visitVarInsn(Opcodes.ALOAD, 0);
+                con.visitMethodInsn(Opcodes.INVOKESPECIAL, "java/lang/Object", "<init>", "()V", false);
+                con.visitInsn(Opcodes.RETURN);
+                con.visitMaxs(1, 1);
+
+                // Build call method
+                MethodVisitor callCon = cw.visitMethod(Opcodes.ACC_PUBLIC, "call", "(Lio/gomint/event/Event;)V", null, null);
+                callCon.visitCode();
+                callCon.visitVarInsn(Opcodes.ALOAD, 0);
+                callCon.visitFieldInsn(Opcodes.GETFIELD, className, "obj", "L" + listenerClassName + ";");
+                callCon.visitVarInsn(Opcodes.ALOAD, 1);
+                callCon.visitTypeInsn(Opcodes.CHECKCAST, eventClassName);
+                callCon.visitMethodInsn(Opcodes.INVOKEVIRTUAL, listenerClassName, method.getName(), "(L" + eventClassName + ";)V", false);
+                callCon.visitInsn(Opcodes.RETURN);
+                callCon.visitMaxs(2, 2);
+
+                PluginClassloader classloader = (PluginClassloader) instance.getClass().getClassLoader();
+                Class<? extends EventProxy> proxyClass = (Class<? extends EventProxy>) classloader.defineClass(className.replace("/", "."), cw.toByteArray());
+
+                this.proxy = proxyClass.getDeclaredConstructor().newInstance();
+                this.proxy.getClass().getDeclaredField("obj").set(this.proxy, instance);
+            } else {
+                throw new IllegalArgumentException("Only plugins are allowed to register event listeners");
+            }
         } catch (Exception e) {
             LOGGER.error("Could not construct new proxy for " + method.toString(), e);
         }

@@ -67,6 +67,10 @@ public class PluginClassloader extends URLClassLoader {
         ALL_LOADERS.add(this);
     }
 
+    public Class<?> defineClass(String name, byte[] b) {
+        return defineClass(name, b, 0, b.length);
+    }
+
     @Override
     protected Class<?> loadClass(String name, boolean resolve) throws ClassNotFoundException {
         return loadClass0(name, resolve, true);
