@@ -34,7 +34,9 @@ public class BaseConfig implements Serializable {
      * @param section The root ConfigSection with all sub-nodes loaded into
      */
     public void update( ConfigSection section ) {
-
+        /*
+         * This is a hook point for custom classes to overwrite when needed to specify a update path
+         */
     }
 
     /**

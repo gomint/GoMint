@@ -21,6 +21,13 @@ import java.util.Map;
  */
 public class ConfigMapper extends BaseConfigMapper {
 
+    /**
+     * Serialize this object to the field structure of the given class
+     *
+     * @param clazz which holds the fields to serialize
+     * @return map containing all paths as keys and value
+     * @throws Exception which can be everything
+     */
     @SuppressWarnings("unchecked")
     public Map<String, Object> saveToMap(Class clazz) throws Exception {
         Map<String, Object> returnMap = new HashMap<>();
@@ -34,42 +41,16 @@ public class ConfigMapper extends BaseConfigMapper {
         }
 
         for (Field field : clazz.getDeclaredFields()) {
-            if (this.doSkip(field)) {
+            if (this.prepareField(field)) {
                 continue;
             }
 
-            String path;
-
-            switch (configMode) {
-                case PATH_BY_UNDERSCORE:
-                    path = field.getName().replace("_", ".");
-                    break;
-                case FIELD_IS_KEY:
-                    path = field.getName();
-                    break;
-                case DEFAULT:
-                default:
-                    if (field.getName().contains("_")) {
-                        path = field.getName().replace("_", ".");
-                    } else {
-                        path = field.getName();
-                    }
-
-                    break;
-            }
-
-            if (field.isAnnotationPresent(Path.class)) {
-                path = field.getAnnotation(Path.class).value();
-            }
-
-            if (Modifier.isPrivate(field.getModifiers())) {
-                field.setAccessible(true);
-            }
+            String path = this.getPath(field);
 
             try {
                 returnMap.put(path, field.get(this));
             } catch (IllegalAccessException ignored) {
-
+                // Ignored
             }
         }
 
@@ -77,46 +58,66 @@ public class ConfigMapper extends BaseConfigMapper {
         return (Map<String, Object>) mapConverter.toConfig(HashMap.class, returnMap, null);
     }
 
+    /**
+     * Deserialize the given map into the field structure of the given class
+     *
+     * @param section map containing all paths as keys and value
+     * @param clazz which holds the field structure
+     * @throws Exception which can be everything
+     */
     public void loadFromMap(Map section, Class clazz) throws Exception {
         if (!clazz.getSuperclass().equals(YamlConfig.class)) {
             this.loadFromMap(section, clazz.getSuperclass());
         }
 
         for (Field field : clazz.getDeclaredFields()) {
-            if (this.doSkip(field)) {
+            if (this.prepareField(field)) {
                 continue;
             }
 
-            String path;
-
-            switch (configMode) {
-                case PATH_BY_UNDERSCORE:
-                    path = field.getName().replace("_", ".");
-                    break;
-                case FIELD_IS_KEY:
-                    path = field.getName();
-                    break;
-                case DEFAULT:
-                default:
-                    if (field.getName().contains("_")) {
-                        path = field.getName().replace("_", ".");
-                    } else {
-                        path = field.getName();
-                    }
-
-                    break;
-            }
-
-            if (field.isAnnotationPresent(Path.class)) {
-                path = field.getAnnotation(Path.class).value();
-            }
-
-            if (Modifier.isPrivate(field.getModifiers())) {
-                field.setAccessible(true);
-            }
-
+            String path = this.getPath(field);
             converter.fromConfig((YamlConfig) this, field, ConfigSection.convertFromMap(section), path);
         }
+    }
+
+    private boolean prepareField(Field field) {
+        if (this.doSkip(field)) {
+            return true;
+        }
+
+        if (Modifier.isPrivate(field.getModifiers())) {
+            field.setAccessible(true);
+        }
+
+        return false;
+    }
+
+    private String getPath(Field field) {
+        String path;
+
+        switch (configMode) {
+            case PATH_BY_UNDERSCORE:
+                path = field.getName().replace("_", ".");
+                break;
+            case FIELD_IS_KEY:
+                path = field.getName();
+                break;
+            case DEFAULT:
+            default:
+                if (field.getName().contains("_")) {
+                    path = field.getName().replace("_", ".");
+                } else {
+                    path = field.getName();
+                }
+
+                break;
+        }
+
+        if (field.isAnnotationPresent(Path.class)) {
+            path = field.getAnnotation(Path.class).value();
+        }
+
+        return path;
     }
 
 }

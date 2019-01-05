@@ -26,22 +26,22 @@ import java.util.Map;
  */
 public class BaseConfigMapper extends BaseConfig {
 
-    private static transient final Charset CHARSET;
-    private static transient final Yaml YAML;
-    private static transient final Representer REPRESENTER;
+    private static final transient Charset CHARSET;
+    private static final transient Yaml YAML;
+    private static final transient Representer REPRESENTER;
 
     static {
-        CHARSET = Charset.forName( "UTF-8" );
+        CHARSET = Charset.forName("UTF-8");
 
         DumperOptions options = new DumperOptions();
-        options.setDefaultFlowStyle( DumperOptions.FlowStyle.BLOCK );
-        options.setIndent( 2 );
+        options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
+        options.setIndent(2);
 
         REPRESENTER = new Representer();
-        REPRESENTER.setDefaultFlowStyle( DumperOptions.FlowStyle.BLOCK );
+        REPRESENTER.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
 
         ClassLoader classLoader = BaseConfigMapper.class.getClassLoader();
-        YAML = new Yaml( new CustomClassLoaderConstructor( classLoader ), REPRESENTER, options );
+        YAML = new Yaml(new CustomClassLoaderConstructor(classLoader), REPRESENTER, options);
     }
 
     protected transient ConfigSection root;
@@ -55,13 +55,13 @@ public class BaseConfigMapper extends BaseConfig {
         this.configureFromSerializeOptionsAnnotation();
     }
 
-    public void addComment( String key, String value ) {
-        if ( !this.comments.containsKey( key ) ) {
-            this.comments.put( key, new ArrayList<>() );
+    public void addComment(String key, String value) {
+        if (!this.comments.containsKey(key)) {
+            this.comments.put(key, new ArrayList<>());
         }
 
-        for ( String split : value.split( "\n" ) ) {
-            this.comments.get( key ).add( split );
+        for (String split : value.split("\n")) {
+            this.comments.get(key).add(split);
         }
     }
 
@@ -69,154 +69,162 @@ public class BaseConfigMapper extends BaseConfig {
         this.comments.clear();
     }
 
-    public void mergeComments( Map<String, String> comments ) {
-        for ( Map.Entry<String, String> entry : comments.entrySet() ) {
+    public void mergeComments(Map<String, String> comments) {
+        for (Map.Entry<String, String> entry : comments.entrySet()) {
             String commentPath = this.commentPrefix + "." + entry.getKey();
 
-            if ( !this.comments.containsKey( commentPath ) ) {
-                this.addComment( commentPath, entry.getValue() );
+            if (!this.comments.containsKey(commentPath)) {
+                this.addComment(commentPath, entry.getValue());
             }
         }
     }
 
-    public void resetCommentPrefix( String path ) {
+    public void resetCommentPrefix(String path) {
         this.commentPrefix = path;
     }
 
-    public void addCommentPrefix( String path ) {
+    public void addCommentPrefix(String path) {
         this.commentPrefix += "." + path;
     }
 
-    public void removeCommentPrefix( String path ) {
-        if ( this.commentPrefix.endsWith( path ) ) {
-            this.commentPrefix = this.commentPrefix.substring( 0, this.commentPrefix.length() - ( 1 + path.length() ) );
+    public void removeCommentPrefix(String path) {
+        if (this.commentPrefix.endsWith(path)) {
+            this.commentPrefix = this.commentPrefix.substring(0, this.commentPrefix.length() - (1 + path.length()));
         }
     }
 
     protected void loadFromYaml() throws InvalidConfigurationException {
         this.root = new ConfigSection();
 
-        try ( InputStreamReader reader = new InputStreamReader(new FileInputStream( this.configFile), CHARSET ) ) {
-            Object object = YAML.load( reader );
+        try (InputStreamReader reader = new InputStreamReader(new FileInputStream(this.configFile), CHARSET)) {
+            Object object = YAML.load(reader);
 
-            if ( object != null ) {
-                convertMapsToSections( (Map<?, ?>) object, this.root );
+            if (object != null) {
+                convertMapsToSections((Map<?, ?>) object, this.root);
             }
-        } catch ( IOException | ClassCastException | YAMLException cause ) {
+        } catch (IOException | ClassCastException | YAMLException cause) {
             throw new InvalidConfigurationException("Failed loading from YAML file " +
-                "\"" + this.configFile.getAbsolutePath() + "\"", cause );
+                "\"" + this.configFile.getAbsolutePath() + "\"", cause);
         }
     }
 
     protected void saveToYaml() throws InvalidConfigurationException {
-        try ( OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream( this.configFile), CHARSET ) ) {
-            if ( this.configHeader != null ) {
-                for ( String line : this.configHeader) {
-                    writer.write( "# " + line + "\n" );
-                }
-
-                writer.write( "\n" );
-            }
+        try (OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(this.configFile), CHARSET)) {
+            this.writeHeader(writer);
 
             int depth = 0;
             List<String> keyChain = new ArrayList<>();
 
-            String yamlString = YAML.dump( this.root.getValues( true ) );
+            String yamlString = YAML.dump(this.root.getValues(true));
             StringBuilder writeLines = new StringBuilder();
 
-            for ( String line : yamlString.split( "\n" ) ) {
-                if ( line.startsWith( new String( new char[depth] ).replace( "\0", " " ) ) ) {
-                    keyChain.add( line.split( ":" )[0].trim() );
+            for (String line : yamlString.split("\n")) {
+                if (line.startsWith(new String(new char[depth]).replace("\0", " "))) {
+                    keyChain.add(line.split(":")[0].trim());
                     depth = depth + 2;
                 } else {
-                    if ( line.startsWith( new String( new char[depth - 2] ).replace( "\0", " " ) ) ) {
-                        if ( !line.startsWith( new String( new char[depth - 2] ).replace( "\0", " " ) + "-" ) ) {
-                            keyChain.remove( keyChain.size() - 1 );
+                    if (line.startsWith(new String(new char[depth - 2]).replace("\0", " "))) {
+                        if (!line.startsWith(new String(new char[depth - 2]).replace("\0", " ") + "-")) {
+                            keyChain.remove(keyChain.size() - 1);
                         } else {
-                            keyChain.add( "-" );
+                            keyChain.add("-");
                         }
                     } else {
                         // Check how much spaces are in front of the line
-                        int spaces = 0;
-                        for ( int i = 0; i < line.length(); i++ ) {
-                            if ( line.charAt( i ) == ' ' ) {
-                                spaces++;
-                            } else {
-                                break;
-                            }
-                        }
-
+                        int spaces = this.calcSpaces(line);
                         depth = spaces;
 
-                        if ( spaces == 0 ) {
+                        if (spaces == 0) {
                             keyChain = new ArrayList<>();
                             depth = 2;
                         } else {
                             List<String> temp = new ArrayList<>();
                             int index = 0;
-                            for ( int i = 0; i < spaces; i = i + 2, index++ ) {
-                                temp.add( keyChain.get( index ) );
+                            for (int i = 0; i < spaces; i = i + 2, index++) {
+                                temp.add(keyChain.get(index));
                             }
 
                             keyChain = temp;
-
                             depth = depth + 2;
                         }
                     }
 
-                    if ( !keyChain.isEmpty() && keyChain.get( keyChain.size() - 1 ).equals( "-" ) && line.trim().startsWith( "-" ) ) {
-                        keyChain.add( line.split( ":" )[0].trim().substring( 1 ).trim() );
+                    if (!keyChain.isEmpty() && keyChain.get(keyChain.size() - 1).equals("-") && line.trim().startsWith("-")) {
+                        keyChain.add(line.split(":")[0].trim().substring(1).trim());
                     } else {
-                        keyChain.add( line.split( ":" )[0].trim() );
+                        keyChain.add(line.split(":")[0].trim());
                     }
                 }
 
                 String search;
-                if ( !keyChain.isEmpty() ) {
-                    search = String.join( ".", keyChain );
+                if (!keyChain.isEmpty()) {
+                    search = String.join(".", keyChain);
                 } else {
                     search = "";
                 }
 
                 int useDepth = depth - 2;
-                if ( line.trim().startsWith( "-" ) ) {
-                    keyChain.remove( keyChain.size() - 1 );
+                if (line.trim().startsWith("-")) {
+                    keyChain.remove(keyChain.size() - 1);
                     useDepth += 2;
                 }
 
-                if ( this.comments.containsKey( search ) ) {
-                    for ( String comment : this.comments.get( search ) ) {
-                        writeLines.append( new String( new char[useDepth] ).replace( "\0", " " ) );
-                        writeLines.append( "# " );
-                        writeLines.append( comment );
-                        writeLines.append( "\n" );
+                if (this.comments.containsKey(search)) {
+                    for (String comment : this.comments.get(search)) {
+                        writeLines.append(new String(new char[useDepth]).replace("\0", " "));
+                        writeLines.append("# ");
+                        writeLines.append(comment);
+                        writeLines.append("\n");
                     }
                 }
 
-                writeLines.append( line );
-                writeLines.append( "\n" );
+                writeLines.append(line);
+                writeLines.append("\n");
             }
 
-            writer.write( writeLines.toString() );
-        } catch ( IOException cause ) {
+            writer.write(writeLines.toString());
+        } catch (IOException cause) {
             throw new InvalidConfigurationException("Failed saving to YAML file " +
-                "\"" + this.configFile.getAbsolutePath() + "\"", cause );
+                "\"" + this.configFile.getAbsolutePath() + "\"", cause);
         }
     }
 
-    private void convertMapsToSections( Map<?, ?> input, ConfigSection section ) {
-        if ( input == null ) {
+    private void writeHeader(OutputStreamWriter writer) throws IOException {
+        if (this.configHeader != null) {
+            for (String line : this.configHeader) {
+                writer.write("# " + line + "\n");
+            }
+
+            writer.write("\n");
+        }
+    }
+
+    private int calcSpaces(String line) {
+        int spaces = 0;
+        for (int i = 0; i < line.length(); i++) {
+            if (line.charAt(i) == ' ') {
+                spaces++;
+            } else {
+                break;
+            }
+        }
+
+        return spaces;
+    }
+
+    private void convertMapsToSections(Map<?, ?> input, ConfigSection section) {
+        if (input == null) {
             return;
         }
 
-        for ( Map.Entry<?, ?> entry : input.entrySet() ) {
+        for (Map.Entry<?, ?> entry : input.entrySet()) {
             String key = entry.getKey().toString();
             Object value = entry.getValue();
 
-            if ( value instanceof Map ) {
-                this.convertMapsToSections( (Map<?, ?>) value, section.create( key ) );
+            if (value instanceof Map) {
+                this.convertMapsToSections((Map<?, ?>) value, section.create(key));
             } else {
-                section.set( key, value, false );
+                section.set(key, value, false);
             }
         }
     }
