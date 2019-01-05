@@ -24,17 +24,13 @@ import io.gomint.server.maintenance.ReportUploader;
 import io.gomint.server.scheduler.CoreScheduler;
 import io.gomint.server.scheduler.PluginScheduler;
 import io.gomint.server.util.CallerDetectorUtil;
-import javassist.bytecode.AnnotationsAttribute;
-import javassist.bytecode.ClassFile;
-import javassist.bytecode.annotation.Annotation;
-import javassist.bytecode.annotation.ArrayMemberValue;
-import javassist.bytecode.annotation.EnumMemberValue;
-import javassist.bytecode.annotation.IntegerMemberValue;
-import javassist.bytecode.annotation.MemberValue;
-import javassist.bytecode.annotation.StringMemberValue;
 import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.asm.AnnotationVisitor;
+import org.springframework.asm.ClassReader;
+import org.springframework.asm.ClassVisitor;
+import org.springframework.asm.Opcodes;
 import org.springframework.stereotype.Component;
 
 import java.io.DataInputStream;
@@ -42,14 +38,9 @@ import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
@@ -60,7 +51,7 @@ import java.util.jar.JarFile;
 @Component
 public class SimplePluginManager implements PluginManager, EventCaller {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger( SimplePluginManager.class );
+    private static final Logger LOGGER = LoggerFactory.getLogger(SimplePluginManager.class);
 
     private final GoMintServer server;
     private final CoreScheduler scheduler;
@@ -88,55 +79,55 @@ public class SimplePluginManager implements PluginManager, EventCaller {
      *
      * @param server which started this manager
      */
-    public SimplePluginManager( GoMintServer server ) {
+    public SimplePluginManager(GoMintServer server) {
         this.server = server;
         this.scheduler = server.getScheduler();
-        this.pluginFolder = new File( "plugins" );
+        this.pluginFolder = new File("plugins");
         this.commandManager = new CommandManager();
 
-        if ( !this.pluginFolder.exists() && !this.pluginFolder.mkdirs() ) {
-            LOGGER.warn( "Plugin folder was not there and could not be created, plugins will not be available" );
+        if (!this.pluginFolder.exists() && !this.pluginFolder.mkdirs()) {
+            LOGGER.warn("Plugin folder was not there and could not be created, plugins will not be available");
         }
 
         // Prepare the field injections
         try {
-            this.loggerField = Plugin.class.getDeclaredField( "logger" );
-            this.loggerField.setAccessible( true );
+            this.loggerField = Plugin.class.getDeclaredField("logger");
+            this.loggerField.setAccessible(true);
 
-            this.nameField = Plugin.class.getDeclaredField( "name" );
-            this.nameField.setAccessible( true );
+            this.nameField = Plugin.class.getDeclaredField("name");
+            this.nameField.setAccessible(true);
 
-            this.pluginManagerField = Plugin.class.getDeclaredField( "pluginManager" );
-            this.pluginManagerField.setAccessible( true );
+            this.pluginManagerField = Plugin.class.getDeclaredField("pluginManager");
+            this.pluginManagerField.setAccessible(true);
 
-            this.versionField = Plugin.class.getDeclaredField( "version" );
-            this.versionField.setAccessible( true );
+            this.versionField = Plugin.class.getDeclaredField("version");
+            this.versionField.setAccessible(true);
 
-            this.schedulerField = Plugin.class.getDeclaredField( "scheduler" );
-            this.schedulerField.setAccessible( true );
+            this.schedulerField = Plugin.class.getDeclaredField("scheduler");
+            this.schedulerField.setAccessible(true);
 
-            this.serverField = Plugin.class.getDeclaredField( "server" );
-            this.serverField.setAccessible( true );
+            this.serverField = Plugin.class.getDeclaredField("server");
+            this.serverField.setAccessible(true);
 
-            this.listenerListField = Plugin.class.getDeclaredField( "listeners" );
-            this.listenerListField.setAccessible( true );
-        } catch ( NoSuchFieldException e ) {
-            LOGGER.error( "Could not reflect needed access into Plugin base class", e );
+            this.listenerListField = Plugin.class.getDeclaredField("listeners");
+            this.listenerListField.setAccessible(true);
+        } catch (NoSuchFieldException e) {
+            LOGGER.error("Could not reflect needed access into Plugin base class", e);
         }
     }
 
     public void detectPlugins() {
         // Search the plugins folder for valid .jar files
-        for ( File file : this.pluginFolder.listFiles( new FileFilter() {
+        for (File file : this.pluginFolder.listFiles(new FileFilter() {
             @Override
-            public boolean accept( File pathname ) {
-                return ( pathname.getAbsolutePath().endsWith( ".jar" ) );
+            public boolean accept(File pathname) {
+                return (pathname.getAbsolutePath().endsWith(".jar"));
             }
-        } ) ) {
-            PluginMeta metadata = getMetadata( file );
-            if ( metadata != null ) {
-                this.metadata.put( metadata.getName(), metadata );
-                this.detectedPlugins.add( metadata );
+        })) {
+            PluginMeta metadata = getMetadata(file);
+            if (metadata != null) {
+                this.metadata.put(metadata.getName(), metadata);
+                this.detectedPlugins.add(metadata);
             }
         }
     }
@@ -146,49 +137,49 @@ public class SimplePluginManager implements PluginManager, EventCaller {
      *
      * @param prio for which we want to load and startup plugins
      */
-    public void loadPlugins( StartupPriority prio ) {
-        if ( LOGGER.isDebugEnabled() ) {
-            LOGGER.debug( "Loading all plugins which have start priority: {}", prio.name() );
+    public void loadPlugins(StartupPriority prio) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Loading all plugins which have start priority: {}", prio.name());
         }
 
         // Create a copy of the detected plugins
-        for ( PluginMeta pluginMeta : new ArrayList<>( this.detectedPlugins ) ) {
-            if ( !this.detectedPlugins.contains( pluginMeta ) ) {
+        for (PluginMeta pluginMeta : new ArrayList<>(this.detectedPlugins)) {
+            if (!this.detectedPlugins.contains(pluginMeta)) {
                 continue;
             }
 
-            if ( pluginMeta.getPriority() == prio ) {
-                LOGGER.info( "Loading plugin {}", pluginMeta.getName() );
+            if (pluginMeta.getPriority() == prio) {
+                LOGGER.info("Loading plugin {}", pluginMeta.getName());
 
-                loadPlugin( pluginMeta );
+                loadPlugin(pluginMeta);
 
                 // Check if the plugin did shutdown the server
-                if ( !this.server.isRunning() ) {
+                if (!this.server.isRunning()) {
                     return;
                 }
             }
         }
     }
 
-    private void loadPlugin( PluginMeta pluginMeta ) {
+    private void loadPlugin(PluginMeta pluginMeta) {
         // Check for depends
-        if ( pluginMeta.getDepends() != null && !pluginMeta.getDepends().isEmpty() ) {
-            for ( String dependPlugin : pluginMeta.getDepends() ) {
+        if (pluginMeta.getDepends() != null && !pluginMeta.getDepends().isEmpty()) {
+            for (String dependPlugin : pluginMeta.getDepends()) {
                 // If the depend plugin is already loaded, skip it
-                if ( this.loadedPlugins.containsKey( dependPlugin ) ) {
+                if (this.loadedPlugins.containsKey(dependPlugin)) {
                     continue;
                 }
 
-                LOGGER.info( "Searching depend for {}: {}", pluginMeta.getName(), dependPlugin );
+                LOGGER.info("Searching depend for {}: {}", pluginMeta.getName(), dependPlugin);
 
                 // We need to check if the depend plugin is detected
                 boolean found = false;
-                for ( PluginMeta detectedPlugin : new ArrayList<>( this.detectedPlugins ) ) {
-                    if ( detectedPlugin.getName().equals( dependPlugin ) ) {
-                        loadPlugin( detectedPlugin );
+                for (PluginMeta detectedPlugin : new ArrayList<>(this.detectedPlugins)) {
+                    if (detectedPlugin.getName().equals(dependPlugin)) {
+                        loadPlugin(detectedPlugin);
 
                         // Check if the plugin did shutdown the server
-                        if ( !this.server.isRunning() ) {
+                        if (!this.server.isRunning()) {
                             return;
                         }
 
@@ -197,29 +188,29 @@ public class SimplePluginManager implements PluginManager, EventCaller {
                     }
                 }
 
-                if ( !found ) {
-                    LOGGER.warn( "Could not load plugin {} since the depend {} could not be found", pluginMeta.getName(), dependPlugin );
-                    this.metadata.remove( pluginMeta.getName() );
+                if (!found) {
+                    LOGGER.warn("Could not load plugin {} since the depend {} could not be found", pluginMeta.getName(), dependPlugin);
+                    this.metadata.remove(pluginMeta.getName());
                     return;
                 }
             }
         }
 
         // Check for soft depends
-        if ( pluginMeta.getSoftDepends() != null && !pluginMeta.getSoftDepends().isEmpty() ) {
-            for ( String dependPlugin : pluginMeta.getSoftDepends() ) {
+        if (pluginMeta.getSoftDepends() != null && !pluginMeta.getSoftDepends().isEmpty()) {
+            for (String dependPlugin : pluginMeta.getSoftDepends()) {
                 // If the depend plugin is already loaded, skip it
-                if ( this.loadedPlugins.containsKey( dependPlugin ) ) {
+                if (this.loadedPlugins.containsKey(dependPlugin)) {
                     continue;
                 }
 
                 // We need to check if the depend plugin is detected
-                for ( PluginMeta detectedPlugin : new ArrayList<>( this.detectedPlugins ) ) {
-                    if ( detectedPlugin.getName().equals( dependPlugin ) ) {
-                        loadPlugin( pluginMeta );
+                for (PluginMeta detectedPlugin : new ArrayList<>(this.detectedPlugins)) {
+                    if (detectedPlugin.getName().equals(dependPlugin)) {
+                        loadPlugin(pluginMeta);
 
                         // Check if the plugin did shutdown the server
-                        if ( !this.server.isRunning() ) {
+                        if (!this.server.isRunning()) {
                             return;
                         }
 
@@ -232,83 +223,83 @@ public class SimplePluginManager implements PluginManager, EventCaller {
         // Ok everything is fine now, load the plugin
         PluginClassloader loader = null;
         try {
-            LOGGER.info( "Starting to load plugin {}", pluginMeta.getName() );
-            loader = new PluginClassloader( pluginMeta );
-            Plugin clazz = (Plugin) constructAndInject( pluginMeta.getMainClass(), loader );
-            if ( clazz == null ) {
+            LOGGER.info("Starting to load plugin {}", pluginMeta.getName());
+            loader = new PluginClassloader(pluginMeta);
+            Plugin clazz = (Plugin) constructAndInject(pluginMeta.getMainClass(), loader);
+            if (clazz == null) {
                 return;
             }
 
             // Reflect the logger and stuff in
-            this.loggerField.set( clazz, LoggerFactory.getLogger( loader.loadClass( pluginMeta.getMainClass() ) ) );
-            this.pluginManagerField.set( clazz, this );
-            this.schedulerField.set( clazz, new PluginScheduler( clazz, this.scheduler ) );
-            this.nameField.set( clazz, pluginMeta.getName() );
-            this.versionField.set( clazz, pluginMeta.getVersion() );
-            this.serverField.set( clazz, this.server );
+            this.loggerField.set(clazz, LoggerFactory.getLogger(loader.loadClass(pluginMeta.getMainClass())));
+            this.pluginManagerField.set(clazz, this);
+            this.schedulerField.set(clazz, new PluginScheduler(clazz, this.scheduler));
+            this.nameField.set(clazz, pluginMeta.getName());
+            this.versionField.set(clazz, pluginMeta.getVersion());
+            this.serverField.set(clazz, this.server);
 
             clazz.onStartup();
 
-            this.loadedPlugins.put( pluginMeta.getName(), clazz );
-            this.detectedPlugins.remove( pluginMeta );
+            this.loadedPlugins.put(pluginMeta.getName(), clazz);
+            this.detectedPlugins.remove(pluginMeta);
 
             // Injection stuff
-            if ( pluginMeta.getInjectionCommands() != null ) {
-                for ( String commandClass : pluginMeta.getInjectionCommands() ) {
-                    Object maybeCommand = constructAndInject( commandClass, loader );
-                    if ( maybeCommand instanceof Command ) {
+            if (pluginMeta.getInjectionCommands() != null) {
+                for (String commandClass : pluginMeta.getInjectionCommands()) {
+                    Object maybeCommand = constructAndInject(commandClass, loader);
+                    if (maybeCommand instanceof Command) {
                         Command command = (Command) maybeCommand;
-                        this.commandManager.register( clazz, command );
+                        this.commandManager.register(clazz, command);
                     }
                 }
             }
-        } catch ( Exception e ) {
-            LOGGER.warn( "Error whilst starting plugin " + pluginMeta.getName(), e );
-            this.metadata.remove( pluginMeta.getName() );
+        } catch (Exception e) {
+            LOGGER.warn("Error whilst starting plugin " + pluginMeta.getName(), e);
+            this.metadata.remove(pluginMeta.getName());
 
             // Unload if needed
-            if ( loader != null ) {
+            if (loader != null) {
                 loader.remove();
             }
         }
     }
 
-    private Object constructAndInject( String clazz, PluginClassloader loader ) {
+    private Object constructAndInject(String clazz, PluginClassloader loader) {
         try {
-            Class<?> cl = loader.loadClass( clazz );
+            Class<?> cl = loader.loadClass(clazz);
 
             try {
                 Object built = cl.newInstance();
 
                 // Check all fields for injection
-                for ( Field field : cl.getDeclaredFields() ) {
+                for (Field field : cl.getDeclaredFields()) {
                     // Is there @InjectPlugin present? If so, check for plugin and inject
-                    if ( field.isAnnotationPresent( InjectPlugin.class ) ) {
-                        String plugin = field.getAnnotation( InjectPlugin.class ).value();
-                        if ( plugin.equals( "detect" ) ) {
+                    if (field.isAnnotationPresent(InjectPlugin.class)) {
+                        String plugin = field.getAnnotation(InjectPlugin.class).value();
+                        if (plugin.equals("detect")) {
                             // Get the fields type
                             Class<?> type = field.getType();
 
                             // Check loaded plugins first
-                            for ( Plugin foundPlugin : this.loadedPlugins.values() ) {
-                                if ( foundPlugin.getClass().equals( type ) ) {
-                                    field.setAccessible( true );
-                                    field.set( built, foundPlugin );
+                            for (Plugin foundPlugin : this.loadedPlugins.values()) {
+                                if (foundPlugin.getClass().equals(type)) {
+                                    field.setAccessible(true);
+                                    field.set(built, foundPlugin);
                                     break;
                                 }
                             }
                         } else {
-                            field.setAccessible( true );
-                            field.set( built, getPlugin( plugin ) );
+                            field.setAccessible(true);
+                            field.set(built, getPlugin(plugin));
                         }
                     }
                 }
 
                 return built;
-            } catch ( InstantiationException | IllegalAccessException e ) {
+            } catch (InstantiationException | IllegalAccessException e) {
                 e.printStackTrace();
             }
-        } catch ( ClassNotFoundException e ) {
+        } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
 
@@ -316,23 +307,23 @@ public class SimplePluginManager implements PluginManager, EventCaller {
     }
 
     public void installPlugins() {
-        for ( Map.Entry<String, Plugin> entry : this.loadedPlugins.entrySet() ) {
+        for (Map.Entry<String, Plugin> entry : this.loadedPlugins.entrySet()) {
             Plugin plugin = entry.getValue();
             String name = entry.getKey();
 
             try {
-                LOGGER.info( "Installing plugin {}", name );
+                LOGGER.info("Installing plugin {}", name);
                 plugin.onInstall();
-                this.installedPlugins.put( name, plugin );
-                this.callEvent( new PluginInstallEvent( plugin ) );
-            } catch ( Exception e ) {
-                LOGGER.error( "Plugin did startup but could not be installed: " + name, e );
-                this.metadata.remove( plugin.getName() );
+                this.installedPlugins.put(name, plugin);
+                this.callEvent(new PluginInstallEvent(plugin));
+            } catch (Exception e) {
+                LOGGER.error("Plugin did startup but could not be installed: " + name, e);
+                this.metadata.remove(plugin.getName());
                 ReportUploader.create().exception(e).upload("Plugin could not be installed");
             }
 
             // Check if the plugin did shutdown the server
-            if ( !this.server.isRunning() ) {
+            if (!this.server.isRunning()) {
                 return;
             }
         }
@@ -340,199 +331,221 @@ public class SimplePluginManager implements PluginManager, EventCaller {
         this.loadedPlugins.clear();
     }
 
-    private PluginMeta getMetadata( File file ) {
+    private AnnotationVisitor readDependAnnotation(AtomicReference<Set<String>> dep) {
+        return new AnnotationVisitor(Opcodes.ASM7) {
+            @Override
+            public AnnotationVisitor visitArray(String name) {
+                dep.set(new HashSet<>());
+                return new AnnotationVisitor(Opcodes.ASM7) {
+                    @Override
+                    public void visit(String name, Object value) {
+                        dep.get().add((String) value);
+                    }
+                };
+            }
+        };
+    }
+
+    private PluginMeta getMetadata(File file) {
         // Open the jar
-        try ( JarFile jar = new JarFile( file ) ) {
+        try (JarFile jar = new JarFile(file)) {
             Enumeration<JarEntry> jarEntries = jar.entries();
 
             // It seems like the jar is empty
-            if ( jarEntries == null || !jarEntries.hasMoreElements() ) {
-                LOGGER.warn( "Could not load Plugin. File {} is empty", file );
+            if (jarEntries == null || !jarEntries.hasMoreElements()) {
+                LOGGER.warn("Could not load Plugin. File {} is empty", file);
                 return null;
             }
 
-            PluginMeta meta = new PluginMeta( file );
+            PluginMeta meta = new PluginMeta(file);
 
             // Try to read every file in the jar
             try {
-                while ( jarEntries.hasMoreElements() ) {
+                while (jarEntries.hasMoreElements()) {
                     JarEntry jarEntry = jarEntries.nextElement();
 
                     // When the entry is valid and ends with a .class its a java class and we need to scan it
-                    if ( jarEntry != null && jarEntry.getName().endsWith( ".class" ) ) {
-                        ClassFile classFile = new ClassFile( new DataInputStream( jar.getInputStream( jarEntry ) ) );
+                    if (jarEntry != null && jarEntry.getName().endsWith(".class")) {
+                        ClassReader cr = new ClassReader(new DataInputStream(jar.getInputStream(jarEntry)));
 
                         // Does this class extend the plugin class?
-                        if ( classFile.getSuperclass().equals( "io.gomint.plugin.Plugin" ) ) {
-                            String name = null;
-                            PluginVersion version = null;
-                            Set<String> depends = null;
-                            Set<String> softDepends = null;
-                            String startup = StartupPriority.STARTUP.name();
+                        if (cr.getSuperName().equals("io/gomint/plugin/Plugin")) {
+                            final AtomicReference<String> name = new AtomicReference<>();
+                            final AtomicReference<PluginVersion> version = new AtomicReference<>();
+                            final AtomicReference<Set<String>> depends = new AtomicReference<>();
+                            final AtomicReference<Set<String>> softDepends = new AtomicReference<>();
+                            final AtomicReference<String> startup = new AtomicReference<>(StartupPriority.STARTUP.name());
 
-                            // Ok it did, time to parse the needed and optional annotations
-                            AnnotationsAttribute visible = (AnnotationsAttribute) classFile.getAttribute( AnnotationsAttribute.visibleTag );
-                            for ( Annotation annotation : visible.getAnnotations() ) {
-                                switch ( annotation.getTypeName() ) {
-                                    case "io.gomint.plugin.Name":   // Deprecated
-                                    case "io.gomint.plugin.PluginName":
-                                        name = ( (StringMemberValue) annotation.getMemberValue( "value" ) ).getValue();
-                                        break;
+                            cr.accept(new ClassVisitor(Opcodes.ASM7) {
+                                @Override
+                                public AnnotationVisitor visitAnnotation(String descriptor, boolean visible) {
+                                    switch (descriptor) {
+                                        case "Lio/gomint/plugin/PluginName;":
+                                            return new AnnotationVisitor(Opcodes.ASM7) {
+                                                @Override
+                                                public void visit(String key, Object value) {
+                                                    name.set((String) value);
+                                                }
+                                            };
+                                        case "Lio/gomint/plugin/Version;":
+                                            version.set(new PluginVersion());
+                                            return new AnnotationVisitor(Opcodes.ASM7) {
+                                                @Override
+                                                public void visit(String key, Object value) {
+                                                    switch (key) {
+                                                        case "major":
+                                                            version.get().setMajor((Integer) value);
+                                                            break;
+                                                        case "minor":
+                                                            version.get().setMinor((Integer) value);
+                                                            break;
+                                                        default:
+                                                            break;
+                                                    }
+                                                }
+                                            };
+                                        case "Lio/gomint/plugin/Startup;":
+                                            return new AnnotationVisitor(Opcodes.ASM7) {
+                                                @Override
+                                                public void visitEnum(String name, String descriptor, String value) {
+                                                    startup.set(value);
+                                                }
+                                            };
+                                        case "Lio/gomint/plugin/Depends;":
+                                            return readDependAnnotation(depends);
+                                        case "Lio/gomint/plugin/Softdepends":
+                                            return readDependAnnotation(softDepends);
+                                        default:
+                                            break;
+                                    }
 
-                                    case "io.gomint.plugin.Version":
-                                        version = new PluginVersion( ( (IntegerMemberValue) annotation.getMemberValue( "major" ) ).getValue(),
-                                            ( (IntegerMemberValue) annotation.getMemberValue( "minor" ) ).getValue() );
-                                        break;
-
-                                    case "io.gomint.plugin.Depends":
-                                        MemberValue[] dependsValues = ( (ArrayMemberValue) annotation.getMemberValue( "value" ) ).getValue();
-                                        depends = new HashSet<>();
-                                        for ( MemberValue value : dependsValues ) {
-                                            depends.add( ( (StringMemberValue) value ).getValue() );
-                                        }
-                                        break;
-
-                                    case "io.gomint.plugin.Softdepends":
-                                        dependsValues = ( (ArrayMemberValue) annotation.getMemberValue( "value" ) ).getValue();
-                                        softDepends = new HashSet<>();
-                                        for ( MemberValue value : dependsValues ) {
-                                            softDepends.add( ( (StringMemberValue) value ).getValue() );
-                                        }
-                                        break;
-
-                                    case "io.gomint.plugin.Startup":
-                                        startup = ( (EnumMemberValue) annotation.getMemberValue( "value" ) ).getValue();
-                                        break;
-
-                                    default:
-                                        break;
+                                    return super.visitAnnotation(descriptor, visible);
                                 }
-                            }
+                            }, 0);
 
                             // We at least need the name and the version of the plugin
-                            if ( name == null || version == null ) {
-                                LOGGER.warn( "It seems like there is a plugin in the jar. But its missing the @Name or @Version annotation" );
+                            if (name.get() == null || version.get() == null) {
+                                LOGGER.warn("It seems like there is a plugin in the jar. But its missing the @Name or @Version annotation");
                                 return null;
                             }
 
-                            meta.setName( name );
-                            meta.setVersion( version );
-                            meta.setPriority( StartupPriority.valueOf( startup ) );
-                            meta.setDepends( depends );
-                            meta.setSoftDepends( softDepends );
-                            meta.setMainClass( classFile.getName() );
+                            meta.setName(name.get());
+                            meta.setVersion(version.get());
+                            meta.setPriority(StartupPriority.valueOf(startup.get()));
+                            meta.setDepends(depends.get());
+                            meta.setSoftDepends(softDepends.get());
+                            meta.setMainClass(cr.getClassName().replace("/", "."));
                         } else {
-                            byte neededArguments = 0;
+                            AtomicInteger neededArguments = new AtomicInteger();
 
                             // Ok it did, time to parse the needed and optional annotations
-                            AnnotationsAttribute visible = (AnnotationsAttribute) classFile.getAttribute( AnnotationsAttribute.visibleTag );
-                            if ( visible == null || visible.getAnnotations() == null ) {
-                                continue;
-                            }
+                            cr.accept(new ClassVisitor(Opcodes.ASM7) {
+                                @Override
+                                public AnnotationVisitor visitAnnotation(String descriptor, boolean visible) {
+                                    switch (descriptor) {
+                                        case "Lio/gomint/command/annotation/Description;":
+                                        case "Lio/gomint/command/annotation/Name;":
+                                            neededArguments.incrementAndGet();
+                                            break;
+                                        default:
+                                            break;
+                                    }
 
-                            for ( Annotation annotation : visible.getAnnotations() ) {
-                                switch ( annotation.getTypeName() ) {
-                                    case "io.gomint.command.annotation.Name":
-                                        neededArguments++;
-                                        break;
-
-                                    case "io.gomint.command.annotation.Description":
-                                        neededArguments++;
-                                        break;
+                                    return super.visitAnnotation(descriptor, visible);
                                 }
-                            }
+                            }, 0);
 
                             // Do we have @Name and @Description attached?
-                            if ( neededArguments == 2 ) {
-                                if ( meta.getInjectionCommands() == null ) {
-                                    meta.setInjectionCommands( new HashSet<>() );
+                            if (neededArguments.get() == 2) {
+                                if (meta.getInjectionCommands() == null) {
+                                    meta.setInjectionCommands(new HashSet<>());
                                 }
 
-                                meta.getInjectionCommands().add( classFile.getName() );
+                                meta.getInjectionCommands().add(cr.getClassName().replace("/", "."));
                             }
                         }
                     }
                 }
 
                 // Check if we found a valid plugin
-                if ( meta.getMainClass() != null ) {
+                if (meta.getMainClass() != null) {
                     return meta;
                 }
 
                 return null;
-            } catch ( IOException e ) {
-                LOGGER.warn( "Could not load Plugin. File " + file + " is corrupted", e );
+            } catch (IOException e) {
+                LOGGER.warn("Could not load Plugin. File " + file + " is corrupted", e);
                 return null;
             }
-        } catch ( Exception ex ) {
-            LOGGER.warn( "Could not load plugin from file " + file, ex );
+        } catch (Exception ex) {
+            LOGGER.warn("Could not load plugin from file " + file, ex);
             return null;
         }
     }
 
     @Override
-    public void uninstallPlugin( Plugin plugin ) {
+    public void uninstallPlugin(Plugin plugin) {
         // Check for security
-        if ( !CallerDetectorUtil.getCallerPlugin().equals( plugin.getClass() ) ) {
-            throw new SecurityException( "Plugins can only disable themselves" );
+        if (!CallerDetectorUtil.getCallerPlugin().equals(plugin.getClass())) {
+            throw new SecurityException("Plugins can only disable themselves");
         }
 
         // Check if plugin is enabled
-        if ( !this.installedPlugins.containsValue( plugin ) ) {
+        if (!this.installedPlugins.containsValue(plugin)) {
             return;
         }
 
-        uninstallPlugin0( plugin );
+        uninstallPlugin0(plugin);
     }
 
-    private void uninstallPlugin0( Plugin plugin ) {
+    private void uninstallPlugin0(Plugin plugin) {
         // Did we already disable this plugin?
-        if ( !this.installedPlugins.containsKey( plugin.getName() ) ) {
+        if (!this.installedPlugins.containsKey(plugin.getName())) {
             return;
         }
 
         // Check for plugins with hard depends
-        new HashMap<>( this.metadata ).forEach( ( name, meta ) -> {
-            if ( meta.getDepends() != null && meta.getDepends().contains( plugin.getName() ) ) {
-                Plugin pluginToUninstall = installedPlugins.get( name );
-                if ( pluginToUninstall != null ) {
-                    uninstallPlugin0( pluginToUninstall );
+        new HashMap<>(this.metadata).forEach((name, meta) -> {
+            if (meta.getDepends() != null && meta.getDepends().contains(plugin.getName())) {
+                Plugin pluginToUninstall = installedPlugins.get(name);
+                if (pluginToUninstall != null) {
+                    uninstallPlugin0(pluginToUninstall);
                 }
             }
-        } );
+        });
 
-        this.callEvent( new PluginUninstallEvent( plugin ) );
+        this.callEvent(new PluginUninstallEvent(plugin));
 
         // Unregister listeners
         try {
-            List<EventListener> listeners = (List<EventListener>) this.listenerListField.get( plugin );
-            for ( EventListener listener : listeners ) {
-                this.eventManager.unregisterListener( listener );
+            List<EventListener> listeners = (List<EventListener>) this.listenerListField.get(plugin);
+            for (EventListener listener : listeners) {
+                this.eventManager.unregisterListener(listener);
             }
-        } catch ( IllegalAccessException e ) {
+        } catch (IllegalAccessException e) {
             e.printStackTrace();
         }
 
         // Cancel all tasks and cleanup scheduler
         try {
-            PluginScheduler pluginScheduler = (PluginScheduler) this.schedulerField.get( plugin );
+            PluginScheduler pluginScheduler = (PluginScheduler) this.schedulerField.get(plugin);
             pluginScheduler.cleanup();
-        } catch ( IllegalAccessException e ) {
+        } catch (IllegalAccessException e) {
             e.printStackTrace();
         }
 
         // CHECKSTYLE:OFF
         try {
-            LOGGER.info( "Starting to shutdown {}", plugin.getName() );
+            LOGGER.info("Starting to shutdown {}", plugin.getName());
             plugin.onUninstall();
-        } catch ( Exception e ) {
-            LOGGER.warn( "Plugin throw an exception whilst uninstalling: " + plugin.getName(), e );
+        } catch (Exception e) {
+            LOGGER.warn("Plugin throw an exception whilst uninstalling: " + plugin.getName(), e);
         }
         // CHECKSTYLE:ON
 
-        LOGGER.info( "Uninstalled plugin " + plugin.getName() );
-        this.installedPlugins.remove( plugin.getName() );
-        this.metadata.remove( plugin.getName() );
+        LOGGER.info("Uninstalled plugin " + plugin.getName());
+        this.installedPlugins.remove(plugin.getName());
+        this.metadata.remove(plugin.getName());
 
         // Unload the loader
         PluginClassloader classloader = (PluginClassloader) plugin.getClass().getClassLoader();
@@ -545,60 +558,60 @@ public class SimplePluginManager implements PluginManager, EventCaller {
     }
 
     @Override
-    public <T extends Plugin> T getPlugin( String name ) {
-        Plugin plugin = this.loadedPlugins.get( name );
-        if ( plugin != null ) {
+    public <T extends Plugin> T getPlugin(String name) {
+        Plugin plugin = this.loadedPlugins.get(name);
+        if (plugin != null) {
             return (T) plugin;
         }
 
-        return (T) this.installedPlugins.get( name );
+        return (T) this.installedPlugins.get(name);
     }
 
     @Override
-    public boolean isPluginInstalled( String name ) {
-        return this.installedPlugins.containsKey( name );
+    public boolean isPluginInstalled(String name) {
+        return this.installedPlugins.containsKey(name);
     }
 
     @Override
-    public <T extends Event> T callEvent( T event ) {
-        LOGGER.debug( "Calling event {}", event );
-        this.eventManager.triggerEvent( event );
+    public <T extends Event> T callEvent(T event) {
+        LOGGER.debug("Calling event {}", event);
+        this.eventManager.triggerEvent(event);
         return event;
     }
 
     @Override
-    public void registerListener( Plugin plugin, EventListener listener ) {
-        if ( !plugin.getClass().getClassLoader().equals( listener.getClass().getClassLoader() ) ) {
-            throw new SecurityException( "Wanted to register listener for another plugin" );
+    public void registerListener(Plugin plugin, EventListener listener) {
+        if (!plugin.getClass().getClassLoader().equals(listener.getClass().getClassLoader())) {
+            throw new SecurityException("Wanted to register listener for another plugin");
         }
 
-        this.eventManager.registerListener( listener );
+        this.eventManager.registerListener(listener);
     }
 
     @Override
-    public void unregisterListener( Plugin plugin, EventListener listener ) {
-        if ( !plugin.getClass().getClassLoader().equals( listener.getClass().getClassLoader() ) ) {
-            throw new SecurityException( "Wanted to unregister listener for another plugin" );
+    public void unregisterListener(Plugin plugin, EventListener listener) {
+        if (!plugin.getClass().getClassLoader().equals(listener.getClass().getClassLoader())) {
+            throw new SecurityException("Wanted to unregister listener for another plugin");
         }
 
-        this.eventManager.unregisterListener( listener );
+        this.eventManager.unregisterListener(listener);
     }
 
     @Override
-    public void registerCommand( Plugin plugin, Command command ) {
-        this.commandManager.register( plugin, command );
+    public void registerCommand(Plugin plugin, Command command) {
+        this.commandManager.register(plugin, command);
     }
 
     /**
      * Cleanup / uninstall all plugins
      */
     public void close() {
-        for ( Plugin plugin : new ArrayList<>( this.loadedPlugins.values() ) ) {
-            uninstallPlugin0( plugin );
+        for (Plugin plugin : new ArrayList<>(this.loadedPlugins.values())) {
+            uninstallPlugin0(plugin);
         }
 
-        for ( Plugin plugin : new ArrayList<>( this.installedPlugins.values() ) ) {
-            uninstallPlugin0( plugin );
+        for (Plugin plugin : new ArrayList<>(this.installedPlugins.values())) {
+            uninstallPlugin0(plugin);
         }
     }
 

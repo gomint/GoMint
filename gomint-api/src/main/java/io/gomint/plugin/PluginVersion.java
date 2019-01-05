@@ -10,17 +10,18 @@ package io.gomint.plugin;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
 /**
  * @author BlackyPaw
  * @version 1.0
  */
 @Getter
-@RequiredArgsConstructor
+@Setter
 public class PluginVersion implements Comparable<PluginVersion> {
 
-    private final int major;
-    private final int minor;
+    private int major;
+    private int minor;
 
     public int compareTo( @NonNull PluginVersion other ) {
         int diff = this.major - other.major;

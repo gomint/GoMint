@@ -11,6 +11,7 @@ import io.gomint.plugin.listener.PlayerRespawnListener;
 @PluginName( "TestPlugin" )
 @Version( major = 1, minor = 0 )
 @Startup( StartupPriority.STARTUP )
+@Depends({"test", "test1"})
 public class TestPlugin extends Plugin {
 
     @Override
