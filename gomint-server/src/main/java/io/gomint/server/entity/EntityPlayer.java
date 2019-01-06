@@ -1217,6 +1217,11 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
     protected void kill() {
         super.kill();
 
+        PacketEntityEvent entityEvent = new PacketEntityEvent();
+        entityEvent.setEntityId(this.id);
+        entityEvent.setEventId(EntityEvent.DEATH.getId());
+        this.connection.addToSendQueue(entityEvent);
+
         // TODO: Death messages based on last damage input
 
         List<io.gomint.inventory.item.ItemStack> drops = this.getDrops();

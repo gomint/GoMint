@@ -144,6 +144,11 @@ public class EntityDamageEvent extends CancellableEntityEvent {
          */
         STARVE,
 
+        /**
+         * Damage due to setHealth
+         */
+        API,
+
     }
 
 }

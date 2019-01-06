@@ -22,7 +22,7 @@ public interface EntityLiving extends Entity {
     /**
      * Set entity health
      *
-     * @param amount of health this entity has
+     * @param amount of health this entity has. setting to <= 0 kills the entity
      */
     void setHealth( float amount );
 
