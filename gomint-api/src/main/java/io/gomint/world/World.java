@@ -209,6 +209,13 @@ public interface World {
     <T extends Entity> void iterateEntities( Class<T> entityClass, Consumer<T> entityConsumer );
 
     /**
+     * Iterate over all loaded chunks in this  world
+     *
+     * @param chunkConsumer which gets called for every chunk loaded
+     */
+    void iterateChunks( Consumer<Chunk> chunkConsumer );
+
+    /**
      * Generate a empty chunk
      *
      * @param x coordinate of the chunk
