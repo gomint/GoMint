@@ -71,10 +71,10 @@ public class BlockPositionValidator extends ParamValidator {
                 return null;
             }
 
-            forValidator.append( data.next() );
+            forValidator.append( data.next() ).append(" ");
         }
 
-        return forValidator.toString();
+        return forValidator.deleteCharAt(forValidator.length() - 1).toString();
     }
 
     /**
