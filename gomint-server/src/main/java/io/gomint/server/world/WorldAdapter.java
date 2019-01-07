@@ -13,6 +13,7 @@ import io.gomint.entity.EntityPlayer;
 import io.gomint.event.player.PlayerInteractEvent;
 import io.gomint.inventory.item.ItemAir;
 import io.gomint.inventory.item.ItemStack;
+import io.gomint.inventory.item.ItemType;
 import io.gomint.math.Vector;
 import io.gomint.math.*;
 import io.gomint.server.GoMintServer;
@@ -1270,6 +1271,10 @@ public abstract class WorldAdapter implements World {
     }
 
     public void dropItem(Location location, ItemStack drop) {
+        if (drop.getType() == ItemType.AIR) {
+            return;
+        }
+
         Vector motion = new Vector(FastRandom.current().nextFloat() * 0.2f - 0.1f,
             0.2f, FastRandom.current().nextFloat() * 0.2f - 0.1f);
 
