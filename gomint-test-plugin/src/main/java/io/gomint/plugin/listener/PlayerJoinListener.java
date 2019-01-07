@@ -5,8 +5,7 @@ import io.gomint.event.EventHandler;
 import io.gomint.event.EventListener;
 import io.gomint.event.EventPriority;
 import io.gomint.event.player.PlayerJoinEvent;
-import io.gomint.inventory.item.ItemAnvil;
-import io.gomint.inventory.item.ItemDiamondShovel;
+import io.gomint.inventory.item.ItemBucket;
 import io.gomint.math.BlockPosition;
 import io.gomint.plugin.TestPlugin;
 import io.gomint.plugin.scoreboard.DebugScoreboard;
@@ -33,7 +32,9 @@ public class PlayerJoinListener implements EventListener {
         // Give this player the debug scoreboard
         new DebugScoreboard(this.plugin, event.getPlayer());
 
-        event.getPlayer().getInventory().setItem(4, ItemAnvil.create(1));
+        ItemBucket bucket = ItemBucket.create(1);
+        bucket.setContent(ItemBucket.Content.WATER);
+        event.getPlayer().getInventory().setItem(4, bucket);
 
         // Spawn a Armor Stand to the player location
         EntityArmorStand.create().spawn(event.getPlayer().getLocation());
