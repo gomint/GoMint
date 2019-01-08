@@ -29,7 +29,7 @@ public class PlayerInteractListener implements EventListener {
         EntityPlayer player = e.getPlayer();
         ItemStack itemStack = player.getInventory().getItemInHand();
         player.sendMessage(Objects.toString(itemStack));
-        player.setHealth(0);
+
         if (itemStack instanceof ItemArrow) {
             EntityArrow entityArrow = GoMint.instance().createEntity(EntityArrow.class);
             entityArrow.spawn(player.getLocation().add(0, (float) 1.5, 0));

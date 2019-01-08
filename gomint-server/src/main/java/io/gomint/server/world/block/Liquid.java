@@ -9,12 +9,11 @@ import io.gomint.server.entity.EntityPlayer;
 import io.gomint.server.util.BlockIdentifier;
 import io.gomint.server.world.PlacementData;
 import io.gomint.server.world.UpdateReason;
+import io.gomint.server.world.block.state.DirectValueBlockState;
 import io.gomint.world.Sound;
 import io.gomint.world.block.BlockFace;
 import io.gomint.world.block.BlockLiquid;
 import io.gomint.world.block.data.Facing;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -25,7 +24,6 @@ import java.util.Map;
  */
 public abstract class Liquid extends Block implements BlockLiquid {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(Liquid.class);
     private static Facing[] FACES_TO_CHECK = Facing.values();
 
     private enum FlowState {
@@ -33,6 +31,10 @@ public abstract class Liquid extends Block implements BlockLiquid {
         CAN_FLOW,
         BLOCKED
     }
+
+    // Nasty hack to get the missing blockstate warning away
+    // TODO: Build a proper block state for liquids
+    private final DirectValueBlockState blockState = new DirectValueBlockState(this);
 
     // Temporary storage for update
     private byte adjacentSources;
@@ -165,8 +167,6 @@ public abstract class Liquid extends Block implements BlockLiquid {
 
         int decay = this.getFlowDecay(this);
 
-        LOGGER.debug("Start checking liquid @ {}", this.location);
-
         // Check for own decay updates
         this.checkOwnDecay(decay);
 
@@ -230,8 +230,6 @@ public abstract class Liquid extends Block implements BlockLiquid {
             smallestFlowDecay = this.getSmallestFlowDecay(this.getSide(Facing.WEST), smallestFlowDecay);
             smallestFlowDecay = this.getSmallestFlowDecay(this.getSide(Facing.EAST), smallestFlowDecay);
 
-            LOGGER.debug("Flow decay: {}", smallestFlowDecay);
-
             int newDecay = smallestFlowDecay + this.getFlowDecayPerBlock();
             if (newDecay >= 8 || smallestFlowDecay < 0) { // There is no neighbour?
                 // Always stop flowing => decay to air
@@ -251,8 +249,6 @@ public abstract class Liquid extends Block implements BlockLiquid {
                     newDecay = 0;
                 }
             }
-
-            LOGGER.debug("New own value: {}", newDecay);
 
             // Do we need to update water decay value?
             if (newDecay != decay) {
@@ -323,21 +319,16 @@ public abstract class Liquid extends Block implements BlockLiquid {
         int j = 0;
         for (Facing face : FACES_TO_CHECK) {
             Block other = this.getSide(face);
-            LOGGER.debug("Checking if we can flow into {}", other.getLocation());
-
             if (!this.canFlowInto(other)) {
                 this.flowCostVisited.put(other.getLocation().toBlockPosition(), FlowState.BLOCKED);
-                LOGGER.debug("false");
             } else if (((Block) this.world.getBlockAt(this.getLocation().toBlockPosition().add(BlockPosition.DOWN))).canBeFlowedInto()) {
                 this.flowCostVisited.put(other.getLocation().toBlockPosition(), FlowState.CAN_FLOW_DOWN);
                 flowCost[j] = maxCost = 0;
-                LOGGER.debug("true");
             } else if (maxCost > 0) {
                 BlockPosition pos = other.getLocation().toBlockPosition();
                 this.flowCostVisited.put(pos, FlowState.CAN_FLOW);
                 flowCost[j] = this.calculateFlowCost(pos, (short) 1, maxCost, face, face);
                 maxCost = (short) Math.min(maxCost, flowCost[j]);
-                LOGGER.debug("true");
             }
 
             j++;
@@ -367,8 +358,6 @@ public abstract class Liquid extends Block implements BlockLiquid {
      * @param newFlowDecay decay value of the liquid
      */
     protected void flowIntoBlock(Block block, int newFlowDecay) {
-        LOGGER.debug("Trying to flow into {}", block.getLocation());
-
         if (this.canFlowInto(block) && !(block instanceof Liquid)) {
             if (!block.getBlockId().equals("minecraft:air")) {
                 this.world.breakBlock(block.getLocation().toBlockPosition(), block.getDrops(ItemAir.create(0)), false);
