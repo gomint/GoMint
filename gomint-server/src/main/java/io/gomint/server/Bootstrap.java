@@ -156,7 +156,7 @@ public class Bootstrap {
             try {
                 Method method = sysclass.getDeclaredMethod("addURL", parameters);
                 method.setAccessible(true);
-                method.invoke(sysloader, new Object[]{moduleURL});
+                method.invoke(sysloader, moduleURL );
             } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
                 e.printStackTrace();
                 throw new IOException("Error, could not add URL to system classloader");
