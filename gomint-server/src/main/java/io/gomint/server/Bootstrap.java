@@ -52,8 +52,7 @@ public class Bootstrap {
 
             try {
                 System.in.read();
-            } catch (IOException e) {
-                // Ignored
+            } catch (IOException ignored) {
             }
 
             System.exit(-1);
