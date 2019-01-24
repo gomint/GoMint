@@ -220,8 +220,7 @@ public class GoMintServer implements GoMint, InventoryHolder {
             if ( buildVersion == null ) {
                 buildVersion = "dev/unsupported";
             }
-        } catch ( IOException e ) {
-            // Ignored .-.
+        } catch ( IOException ignored ) {
         }
 
         this.gitHash = buildVersion;
