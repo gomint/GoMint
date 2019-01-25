@@ -9,7 +9,6 @@ package io.gomint.server;
 
 import io.gomint.server.maintenance.ReportUploader;
 import io.gomint.server.util.CommandLineHolder;
-import io.sentry.Sentry;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 import org.apache.logging.log4j.Level;
@@ -156,7 +155,7 @@ public class Bootstrap {
             try {
                 Method method = sysclass.getDeclaredMethod("addURL", parameters);
                 method.setAccessible(true);
-                method.invoke(sysloader, moduleURL );
+                method.invoke(sysloader, moduleURL);
             } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
                 e.printStackTrace();
                 throw new IOException("Error, could not add URL to system classloader");
