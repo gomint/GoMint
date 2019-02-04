@@ -9,7 +9,6 @@ package io.gomint.server;
 
 import io.gomint.server.maintenance.ReportUploader;
 import io.gomint.server.util.CommandLineHolder;
-import io.sentry.Sentry;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 import org.apache.logging.log4j.Level;

@@ -36,8 +36,9 @@ public interface ItemStack {
      * item stack returns air when amount is <= 0
      *
      * @param amount of items which should be in this stack
+     * @return the itemstack instance for further manipulation
      */
-    ItemStack setAmount( int amount );
+    ItemStack setAmount(int amount);
 
     /**
      * Get the metadata from this item stack
@@ -50,15 +51,17 @@ public interface ItemStack {
      * Set the data of this item stack
      *
      * @param data to set into this stack
+     * @return the itemstack instance for further manipulation
      */
-    ItemStack setData( short data );
+    ItemStack setData(short data);
 
     /**
      * Set a custom name for this item stack
      *
      * @param name of this item stack
+     * @return the itemstack instance for further manipulation
      */
-    ItemStack setCustomName( String name );
+    ItemStack setCustomName(String name);
 
     /**
      * Get the custom name of this item
@@ -71,8 +74,9 @@ public interface ItemStack {
      * Set the lore of this item stack
      *
      * @param lore which should be used in this item stack
+     * @return the itemstack instance for further manipulation
      */
-    ItemStack setLore( String ... lore );
+    ItemStack setLore(String... lore);
 
     /**
      * Get the lore of this item stack
@@ -93,23 +97,25 @@ public interface ItemStack {
      *
      * @param clazz of the enchantment
      * @param level of the enchantment
+     * @return the itemstack instance for further manipulation
      */
-    ItemStack addEnchantment( Class<? extends Enchantment> clazz, short level );
+    ItemStack addEnchantment(Class<? extends Enchantment> clazz, short level);
 
     /**
      * Get the enchantment or null
      *
      * @param clazz of the enchantment
-     * @param <T> type of enchantment object
+     * @param <T>   type of enchantment object
      * @return enchantment object or null
      */
-    <T extends Enchantment> T getEnchantment( Class<? extends Enchantment> clazz );
+    <T extends Enchantment> T getEnchantment(Class<? extends Enchantment> clazz);
 
     /**
      * Remove a enchantment from this item stack
      *
      * @param clazz of the enchantment
+     * @return the itemstack instance for further manipulation
      */
-    ItemStack removeEnchantment( Class<? extends Enchantment> clazz );
+    ItemStack removeEnchantment(Class<? extends Enchantment> clazz);
 
 }
