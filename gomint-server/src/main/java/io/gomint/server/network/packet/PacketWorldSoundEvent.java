@@ -26,7 +26,7 @@ public class PacketWorldSoundEvent extends Packet {
 
     @Override
     public void serialize( PacketBuffer buffer, int protocolID ) {
-        buffer.writeByte( this.type.getSoundId() );
+        buffer.writeUnsignedVarInt( this.type.getSoundId() );
         buffer.writeLFloat( this.position.getX() );
         buffer.writeLFloat( this.position.getY() );
         buffer.writeLFloat( this.position.getZ() );
@@ -38,7 +38,7 @@ public class PacketWorldSoundEvent extends Packet {
 
     @Override
     public void deserialize( PacketBuffer buffer, int protocolID ) {
-        this.type = SoundMagicNumbers.valueOf( buffer.readByte() );
+        this.type = SoundMagicNumbers.valueOf( buffer.readUnsignedVarInt() );
         this.position = new Vector( buffer.readLFloat(), buffer.readLFloat(), buffer.readLFloat() );
         this.extraData = buffer.readSignedVarInt();
         this.entityId = buffer.readString();

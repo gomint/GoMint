@@ -20,6 +20,7 @@ import io.gomint.server.util.Things;
 import io.gomint.taglib.AllocationLimitReachedException;
 import io.gomint.taglib.NBTReader;
 import io.gomint.taglib.NBTTagCompound;
+import io.gomint.taglib.NBTWriter;
 import io.gomint.world.Gamerule;
 import io.gomint.world.block.BlockFace;
 
@@ -49,7 +50,7 @@ public abstract class Packet {
      *
      * @param id of the packet
      */
-    protected Packet( byte id ) {
+    protected Packet(byte id) {
         this.id = id;
     }
 
@@ -59,45 +60,58 @@ public abstract class Packet {
      * @param buffer from the packet
      * @return read item stack
      */
-    static ItemStack readItemStack( PacketBuffer buffer ) {
+    static ItemStack readItemStack(PacketBuffer buffer) {
         int id = buffer.readSignedVarInt();
-        if ( id == 0 ) {
-            return ItemAir.create( 0 );
+        if (id == 0) {
+            return ItemAir.create(0);
         }
 
         int temp = buffer.readSignedVarInt();
-        byte amount = (byte) ( temp & 0xFF );
-        short data = (short) ( temp >> 8 );
+        byte amount = (byte) (temp & 0xFF);
+        short data = (short) (temp >> 8);
 
         NBTTagCompound nbt = null;
         short extraLen = buffer.readLShort();
-        if ( extraLen > 0 ) {
-            ByteArrayInputStream bin = new ByteArrayInputStream( buffer.getBuffer(), buffer.getPosition(), extraLen );
+        if (extraLen > 0) {
+            ByteArrayInputStream bin = new ByteArrayInputStream(buffer.getBuffer(), buffer.getPosition(), extraLen);
             try {
-                NBTReader nbtReader = new NBTReader( bin, ByteOrder.LITTLE_ENDIAN );
+                NBTReader nbtReader = new NBTReader(bin, ByteOrder.LITTLE_ENDIAN);
+                nbtReader.setUseVarint(true);
                 // There is no alloc limit needed here, you can't write so much shit in 32kb, so thats ok
                 nbt = nbtReader.parse();
-            } catch ( IOException | AllocationLimitReachedException e ) {
+            } catch (IOException | AllocationLimitReachedException e) {
                 return null;
             }
 
-            buffer.skip( extraLen );
-        } else if ( extraLen < 0 ) {
-            throw new IllegalStateException( "NBT length inside a item overflowed" );
+            buffer.skip(extraLen);
+        } else if (extraLen == -1) {
+            // New system uses a byte as amount of nbt tags
+            byte count = buffer.readByte();
+            for (byte i = 0; i < count; i++) {
+                ByteArrayInputStream bin = new ByteArrayInputStream(buffer.getBuffer(), buffer.getPosition(), buffer.getRemaining());
+                try {
+                    NBTReader nbtReader = new NBTReader(bin, ByteOrder.LITTLE_ENDIAN);
+                    nbtReader.setUseVarint(true);
+                    // There is no alloc limit needed here, you can't write so much shit in 32kb, so thats ok
+                    nbt = nbtReader.parse();
+                } catch (IOException | AllocationLimitReachedException e) {
+                    return null;
+                }
+            }
         }
 
         // They implemented additional data for item stacks aside from nbt
         int countPlacedOn = buffer.readSignedVarInt();
-        for ( int i = 0; i < countPlacedOn; i++ ) {
+        for (int i = 0; i < countPlacedOn; i++) {
             buffer.readString();    // TODO: Implement proper support once we know the string values
         }
 
         int countCanBreak = buffer.readSignedVarInt();
-        for ( int i = 0; i < countCanBreak; i++ ) {
+        for (int i = 0; i < countCanBreak; i++) {
             buffer.readString();    // TODO: Implement proper support once we know the string values
         }
 
-        return GoMint.instance() == null ? null : ( (GoMintServer) GoMint.instance() ).getItems().create( id, data, amount, nbt );
+        return GoMint.instance() == null ? null : ((GoMintServer) GoMint.instance()).getItems().create(id, data, amount, nbt);
     }
 
     /**
@@ -106,34 +120,40 @@ public abstract class Packet {
      * @param itemStack which should be written
      * @param buffer    which should be used to write to
      */
-    public static void writeItemStack( ItemStack itemStack, PacketBuffer buffer ) {
-        if ( itemStack == null || itemStack instanceof ItemAir ) {
-            buffer.writeSignedVarInt( 0 );
+    public static void writeItemStack(ItemStack itemStack, PacketBuffer buffer) {
+        if (itemStack == null || itemStack instanceof ItemAir) {
+            buffer.writeSignedVarInt(0);
             return;
         }
 
         io.gomint.server.inventory.item.ItemStack serverItemStack = (io.gomint.server.inventory.item.ItemStack) itemStack;
 
-        buffer.writeSignedVarInt( serverItemStack.getMaterial() );
-        buffer.writeSignedVarInt( ( itemStack.getData() << 8 ) + ( itemStack.getAmount() & 0xff ) );
+        buffer.writeSignedVarInt(serverItemStack.getMaterial());
+        buffer.writeSignedVarInt((itemStack.getData() << 8) + (itemStack.getAmount() & 0xff));
 
         NBTTagCompound compound = serverItemStack.getNbtData();
-        if ( compound == null ) {
-            buffer.writeLShort( (short) 0 );
+        if (compound == null) {
+            buffer.writeLShort((short) 0);
         } else {
             try {
-                ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-                compound.writeTo( byteArrayOutputStream, false, ByteOrder.LITTLE_ENDIAN );
-                buffer.writeLShort( (short) byteArrayOutputStream.size() );
-                buffer.writeBytes( byteArrayOutputStream.toByteArray() );
-            } catch ( IOException e ) {
-                buffer.writeLShort( (short) 0 );
+                // NBT Tag
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                NBTWriter nbtWriter = new NBTWriter(baos, ByteOrder.LITTLE_ENDIAN);
+                nbtWriter.setUseVarint(true);
+                nbtWriter.write(compound);
+
+                // Vanilla currently only writes one nbt tag (this is hardcoded)
+                buffer.writeLShort((short) 0xFFFF);
+                buffer.writeByte((byte) 1);
+                buffer.writeBytes(baos.toByteArray());
+            } catch (IOException e) {
+                buffer.writeLShort((short) 0);
             }
         }
 
         // canPlace and canBreak
-        buffer.writeSignedVarInt( 0 );
-        buffer.writeSignedVarInt( 0 );
+        buffer.writeSignedVarInt(0);
+        buffer.writeSignedVarInt(0);
     }
 
     /**
@@ -151,7 +171,7 @@ public abstract class Packet {
      * @param buffer     The buffer to serialize this packet into
      * @param protocolID Protocol for which we request the serialization
      */
-    public abstract void serialize( PacketBuffer buffer, int protocolID ) throws Exception;
+    public abstract void serialize(PacketBuffer buffer, int protocolID) throws Exception;
 
     /**
      * Deserializes this packet from the given buffer.
@@ -159,7 +179,7 @@ public abstract class Packet {
      * @param buffer     The buffer to deserialize this packet from
      * @param protocolID Protocol for which we request deserialization
      */
-    public abstract void deserialize( PacketBuffer buffer, int protocolID ) throws Exception;
+    public abstract void deserialize(PacketBuffer buffer, int protocolID) throws Exception;
 
     /**
      * Returns the ordering channel to send the packet on.
@@ -176,16 +196,16 @@ public abstract class Packet {
      * @param itemStacks which should be written to the buffer
      * @param buffer     which should be written to
      */
-    void writeItemStacks( ItemStack[] itemStacks, PacketBuffer buffer ) {
-        if ( itemStacks == null || itemStacks.length == 0 ) {
-            buffer.writeUnsignedVarInt( 0 );
+    void writeItemStacks(ItemStack[] itemStacks, PacketBuffer buffer) {
+        if (itemStacks == null || itemStacks.length == 0) {
+            buffer.writeUnsignedVarInt(0);
             return;
         }
 
-        buffer.writeUnsignedVarInt( itemStacks.length );
+        buffer.writeUnsignedVarInt(itemStacks.length);
 
-        for ( ItemStack itemStack : itemStacks ) {
-            writeItemStack( itemStack, buffer );
+        for (ItemStack itemStack : itemStacks) {
+            writeItemStack(itemStack, buffer);
         }
     }
 
@@ -195,12 +215,12 @@ public abstract class Packet {
      * @param buffer The buffer to read from
      * @return a list of item stacks
      */
-    ItemStack[] readItemStacks( PacketBuffer buffer ) {
+    ItemStack[] readItemStacks(PacketBuffer buffer) {
         int count = buffer.readUnsignedVarInt();
         ItemStack[] itemStacks = new ItemStack[count];
 
-        for ( int i = 0; i < count; i++ ) {
-            itemStacks[i] = readItemStack( buffer );
+        for (int i = 0; i < count; i++) {
+            itemStacks[i] = readItemStack(buffer);
         }
 
         return itemStacks;
@@ -212,72 +232,72 @@ public abstract class Packet {
      * @param integers which should be written to the buffer
      * @param buffer   which should be written to
      */
-    void writeIntList( int[] integers, PacketBuffer buffer ) {
-        if ( integers == null || integers.length == 0 ) {
-            buffer.writeUnsignedVarInt( 0 );
+    void writeIntList(int[] integers, PacketBuffer buffer) {
+        if (integers == null || integers.length == 0) {
+            buffer.writeUnsignedVarInt(0);
             return;
         }
 
-        buffer.writeUnsignedVarInt( integers.length );
+        buffer.writeUnsignedVarInt(integers.length);
 
-        for ( Integer integer : integers ) {
-            buffer.writeSignedVarInt( integer );
+        for (Integer integer : integers) {
+            buffer.writeSignedVarInt(integer);
         }
     }
 
-    public void writeGamerules( Map<Gamerule, Object> gamerules, PacketBuffer buffer ) {
-        if ( gamerules == null ) {
-            buffer.writeUnsignedVarInt( 0 );
+    public void writeGamerules(Map<Gamerule, Object> gamerules, PacketBuffer buffer) {
+        if (gamerules == null) {
+            buffer.writeUnsignedVarInt(0);
             return;
         }
 
-        buffer.writeUnsignedVarInt( gamerules.size() );
-        gamerules.forEach( ( gamerule, value ) -> {
-            buffer.writeString( gamerule.getNbtName().toLowerCase() );
+        buffer.writeUnsignedVarInt(gamerules.size());
+        gamerules.forEach((gamerule, value) -> {
+            buffer.writeString(gamerule.getNbtName().toLowerCase());
 
-            if ( gamerule.getValueType() == Boolean.class ) {
-                buffer.writeByte( (byte) 1 );
-                buffer.writeBoolean( (Boolean) value );
-            } else if ( gamerule.getValueType() == Integer.class ) {
-                buffer.writeByte( (byte) 2 );
-                buffer.writeUnsignedVarInt( (Integer) value );
-            } else if ( gamerule.getValueType() == Float.class ) {
-                buffer.writeByte( (byte) 3 );
-                buffer.writeLFloat( (Float) value );
+            if (gamerule.getValueType() == Boolean.class) {
+                buffer.writeByte((byte) 1);
+                buffer.writeBoolean((Boolean) value);
+            } else if (gamerule.getValueType() == Integer.class) {
+                buffer.writeByte((byte) 2);
+                buffer.writeUnsignedVarInt((Integer) value);
+            } else if (gamerule.getValueType() == Float.class) {
+                buffer.writeByte((byte) 3);
+                buffer.writeLFloat((Float) value);
             }
-        } );
+        });
     }
 
-    public Map<Gamerule, Object> readGamerules( PacketBuffer buffer ) {
+    public Map<Gamerule, Object> readGamerules(PacketBuffer buffer) {
         Map<Gamerule, Object> rules = new HashMap<>();
 
         int amountOfRules = buffer.readUnsignedVarInt();
-        for ( int i = 0; i < amountOfRules; i++ ) {
+        for (int i = 0; i < amountOfRules; i++) {
             String gameRulename = buffer.readString();
-            Gamerule rule = Gamerule.getByNbtName( gameRulename );
-            if ( rule == null ) {
+            Gamerule rule = Gamerule.getByNbtName(gameRulename);
+            if (rule == null) {
                 // System.out.println( "Unknown game rule: " + gameRulename );
             }
 
-            switch ( buffer.readByte() ) {
+            switch (buffer.readByte()) {
                 case 1:
                     boolean objB = buffer.readBoolean();
-                    if ( rule != null ) {
-                        rules.put( rule, objB );
+                    if (rule != null) {
+                        rules.put(rule, objB);
                     }
 
                     break;
                 case 2:
                     int objI = buffer.readUnsignedVarInt();
-                    if ( rule != null ) {
-                        rules.put( rule, objI );
+                    if (rule != null) {
+                        rules.put(rule, objI);
                     }
 
                     break;
                 case 3:
                     float objF = buffer.readLFloat();
-                    if ( rule != null ) {
-                        rules.put( rule, objF );
+                    if (rule != null) {
+                        rules.put(rule, objF);
                     }
 
                     break;
@@ -287,77 +307,77 @@ public abstract class Packet {
         return rules;
     }
 
-    public BlockPosition readBlockPosition( PacketBuffer buffer ) {
-        return new BlockPosition( buffer.readSignedVarInt(), buffer.readUnsignedVarInt(), buffer.readSignedVarInt() );
+    public BlockPosition readBlockPosition(PacketBuffer buffer) {
+        return new BlockPosition(buffer.readSignedVarInt(), buffer.readUnsignedVarInt(), buffer.readSignedVarInt());
     }
 
-    public BlockPosition readSignedBlockPosition( PacketBuffer buffer ) {
-        return new BlockPosition( buffer.readSignedVarInt(), buffer.readSignedVarInt(), buffer.readSignedVarInt() );
+    public BlockPosition readSignedBlockPosition(PacketBuffer buffer) {
+        return new BlockPosition(buffer.readSignedVarInt(), buffer.readSignedVarInt(), buffer.readSignedVarInt());
     }
 
-    public void writeBlockPosition( BlockPosition position, PacketBuffer buffer ) {
-        buffer.writeSignedVarInt( position.getX() );
-        buffer.writeUnsignedVarInt( position.getY() );
-        buffer.writeSignedVarInt( position.getZ() );
+    public void writeBlockPosition(BlockPosition position, PacketBuffer buffer) {
+        buffer.writeSignedVarInt(position.getX());
+        buffer.writeUnsignedVarInt(position.getY());
+        buffer.writeSignedVarInt(position.getZ());
     }
 
-    public void writeSignedBlockPosition( BlockPosition position, PacketBuffer buffer ) {
-        buffer.writeSignedVarInt( position.getX() );
-        buffer.writeSignedVarInt( position.getY() );
-        buffer.writeSignedVarInt( position.getZ() );
+    public void writeSignedBlockPosition(BlockPosition position, PacketBuffer buffer) {
+        buffer.writeSignedVarInt(position.getX());
+        buffer.writeSignedVarInt(position.getY());
+        buffer.writeSignedVarInt(position.getZ());
     }
 
-    public void writeEntityLinks( List<EntityLink> links, PacketBuffer buffer ) {
-        if ( links == null ) {
-            buffer.writeUnsignedVarInt( 0 );
+    public void writeEntityLinks(List<EntityLink> links, PacketBuffer buffer) {
+        if (links == null) {
+            buffer.writeUnsignedVarInt(0);
         } else {
-            buffer.writeUnsignedVarInt( links.size() );
-            for ( EntityLink link : links ) {
-                buffer.writeUnsignedVarLong( link.getFrom() );
-                buffer.writeUnsignedVarLong( link.getTo() );
-                buffer.writeByte( link.getUnknown1() );
-                buffer.writeByte( link.getUnknown2() );
+            buffer.writeUnsignedVarInt(links.size());
+            for (EntityLink link : links) {
+                buffer.writeUnsignedVarLong(link.getFrom());
+                buffer.writeUnsignedVarLong(link.getTo());
+                buffer.writeByte(link.getUnknown1());
+                buffer.writeByte(link.getUnknown2());
             }
         }
     }
 
-    void writeVector( Vector vector, PacketBuffer buffer ) {
-        buffer.writeLFloat( vector.getX() );
-        buffer.writeLFloat( vector.getY() );
-        buffer.writeLFloat( vector.getZ() );
+    void writeVector(Vector vector, PacketBuffer buffer) {
+        buffer.writeLFloat(vector.getX());
+        buffer.writeLFloat(vector.getY());
+        buffer.writeLFloat(vector.getZ());
     }
 
-    Vector readVector( PacketBuffer buffer ) {
-        return new Vector( buffer.readLFloat(), buffer.readLFloat(), buffer.readLFloat() );
+    Vector readVector(PacketBuffer buffer) {
+        return new Vector(buffer.readLFloat(), buffer.readLFloat(), buffer.readLFloat());
     }
 
-    CommandOrigin readCommandOrigin( PacketBuffer buffer ) {
+    CommandOrigin readCommandOrigin(PacketBuffer buffer) {
         // Seems to be 0, request uuid, 0, type (0 for player, 3 for server)
-        return new CommandOrigin( buffer.readByte(), buffer.readUUID(), buffer.readByte(), buffer.readByte() );
+        return new CommandOrigin(buffer.readByte(), buffer.readUUID(), buffer.readByte(), buffer.readByte());
     }
 
-    void writeCommandOrigin( CommandOrigin commandOrigin, PacketBuffer buffer ) {
-        buffer.writeByte( commandOrigin.getUnknown1() );
-        buffer.writeUUID( commandOrigin.getUuid() );
-        buffer.writeByte( commandOrigin.getUnknown2() );
-        buffer.writeByte( commandOrigin.getType() );
+    void writeCommandOrigin(CommandOrigin commandOrigin, PacketBuffer buffer) {
+        buffer.writeByte(commandOrigin.getUnknown1());
+        buffer.writeUUID(commandOrigin.getUuid());
+        buffer.writeByte(commandOrigin.getUnknown2());
+        buffer.writeByte(commandOrigin.getType());
     }
 
-    BlockFace readBlockFace( PacketBuffer buffer ) {
+    BlockFace readBlockFace(PacketBuffer buffer) {
         int value = buffer.readSignedVarInt();
-        return Things.convertFromDataToBlockFace( (byte) value );
+        return Things.convertFromDataToBlockFace((byte) value);
     }
 
-    void writeByteRotation( float rotation, PacketBuffer buffer ) {
-        buffer.writeByte( (byte) ( rotation / BYTE_ROTATION_DIVIDOR ) );
+    void writeByteRotation(float rotation, PacketBuffer buffer) {
+        buffer.writeByte((byte) (rotation / BYTE_ROTATION_DIVIDOR));
     }
 
-    float readByteRotation( PacketBuffer buffer ) {
+    float readByteRotation(PacketBuffer buffer) {
         return buffer.readByte() * BYTE_ROTATION_DIVIDOR;
     }
 
-    public void serializeHeader( PacketBuffer buffer ) {
-        buffer.writeUnsignedVarInt( this.id );
+    public void serializeHeader(PacketBuffer buffer) {
+        buffer.writeUnsignedVarInt(this.id);
     }
 
 }
