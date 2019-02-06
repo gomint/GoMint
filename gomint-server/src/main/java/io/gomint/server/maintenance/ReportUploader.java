@@ -58,7 +58,7 @@ public final class ReportUploader {
         // Setup sentry
         System.setProperty("stacktrace.app.packages", "");
 
-        this.client = SentryClientFactory.sentryClient("http://15f4652d94494bd4859a9f64546fb1d4@report.gomint.io/2");
+        this.client = SentryClientFactory.sentryClient("http://15f4652d94494bd4859a9f64546fb1d4@report.gomint.io/2?async=true");
         this.client.setRelease(((GoMintServer) GoMint.instance()).getGitHash());
         this.client.setServerName(HOST);
 
@@ -148,6 +148,8 @@ public final class ReportUploader {
 
     /**
      * Upload this report
+     *
+     * @param message which should be used if no additional data has been given
      */
     public void upload(String message) {
         // Check if reporting has been disabled
