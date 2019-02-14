@@ -75,80 +75,77 @@ public class PacketStartGame extends Packet {
      * Create a new start game packet
      */
     public PacketStartGame() {
-        super( Protocol.PACKET_START_GAME );
+        super(Protocol.PACKET_START_GAME);
     }
 
     @Override
-    public void serialize( PacketBuffer buffer, int protocolID ) {
-        buffer.writeSignedVarLong( this.entityId ); // EntityUnique
-        buffer.writeUnsignedVarLong( this.runtimeEntityId ); // EntityRuntime
-        buffer.writeSignedVarInt( this.gamemode ); // VarInt
-        buffer.writeLFloat( this.spawn.getX() ); // Vec3
-        buffer.writeLFloat( this.spawn.getY() );
-        buffer.writeLFloat( this.spawn.getZ() );
-        buffer.writeLFloat( this.spawn.getYaw() ); // Vec2
-        buffer.writeLFloat( this.spawn.getPitch() );
+    public void serialize(PacketBuffer buffer, int protocolID) {
+        buffer.writeSignedVarLong(this.entityId); // EntityUnique
+        buffer.writeUnsignedVarLong(this.runtimeEntityId); // EntityRuntime
+        buffer.writeSignedVarInt(this.gamemode); // VarInt
+        buffer.writeLFloat(this.spawn.getX()); // Vec3
+        buffer.writeLFloat(this.spawn.getY());
+        buffer.writeLFloat(this.spawn.getZ());
+        buffer.writeLFloat(this.spawn.getYaw()); // Vec2
+        buffer.writeLFloat(this.spawn.getPitch());
 
         // LevelSettings
-        buffer.writeSignedVarInt( this.seed );
-        buffer.writeSignedVarInt( this.dimension );
-        buffer.writeSignedVarInt( this.generator );
-        buffer.writeSignedVarInt( this.worldGamemode );
-        buffer.writeSignedVarInt( this.difficulty );
-        buffer.writeSignedVarInt( (int) this.spawn.getX() );
-        buffer.writeUnsignedVarInt( (int) this.spawn.getY() );
-        buffer.writeSignedVarInt( (int) this.spawn.getZ() );
-        buffer.writeBoolean( this.hasAchievementsDisabled );
-        buffer.writeSignedVarInt( this.dayCycleStopTime );
-        buffer.writeBoolean( this.eduMode );
-        buffer.writeBoolean( true ); // This is hasEduModeEnabled, we default to false until we have all EDU stuff in
-        buffer.writeLFloat( this.rainLevel );
-        buffer.writeLFloat( this.lightningLevel );
-        buffer.writeBoolean( this.isMultiplayerGame );
-        buffer.writeBoolean( this.hasLANBroadcast );
-        buffer.writeBoolean( this.hasXboxLiveBroadcast );
-        buffer.writeBoolean( this.commandsEnabled );
-        buffer.writeBoolean( this.isTexturePacksRequired );
-        writeGamerules( this.gamerules, buffer );
-        buffer.writeBoolean( this.hasBonusChestEnabled );
-        buffer.writeBoolean( this.hasStartWithMapEnabled );
-        buffer.writeBoolean( this.hasTrustPlayersEnabled );
-        buffer.writeSignedVarInt( this.defaultPlayerPermission );
-        buffer.writeSignedVarInt( this.xboxLiveBroadcastMode );
-        buffer.writeInt( 32 );
-        buffer.writeBoolean( this.hasPlatformBroadcast );
-        buffer.writeSignedVarInt( this.platformBroadcastMode );
-        buffer.writeBoolean( this.xboxLiveBroadcastIntent );
-        buffer.writeBoolean( false );
-        buffer.writeBoolean( false );
-        buffer.writeBoolean( false );
-        buffer.writeBoolean( false );
-        buffer.writeBoolean( false );
-        buffer.writeBoolean( false );
+        buffer.writeSignedVarInt(this.seed);
+        buffer.writeSignedVarInt(this.dimension);
+        buffer.writeSignedVarInt(this.generator);
+        buffer.writeSignedVarInt(this.worldGamemode);
+        buffer.writeSignedVarInt(this.difficulty);
+        buffer.writeSignedVarInt((int) this.spawn.getX());
+        buffer.writeUnsignedVarInt((int) this.spawn.getY());
+        buffer.writeSignedVarInt((int) this.spawn.getZ());
+        buffer.writeBoolean(this.hasAchievementsDisabled);
+        buffer.writeSignedVarInt(this.dayCycleStopTime);
+        buffer.writeBoolean(this.eduMode);
+        buffer.writeBoolean(true); // This is hasEduModeEnabled, we default to false until we have all EDU stuff in
+        buffer.writeLFloat(this.rainLevel);
+        buffer.writeLFloat(this.lightningLevel);
+        buffer.writeBoolean(false);
+        buffer.writeBoolean(this.isMultiplayerGame);
+        buffer.writeBoolean(this.hasLANBroadcast);
+        buffer.writeSignedVarInt(3);
+        buffer.writeSignedVarInt(3);
+        buffer.writeBoolean(this.commandsEnabled);
+        buffer.writeBoolean(this.isTexturePacksRequired);
+        writeGamerules(this.gamerules, buffer);
+        buffer.writeBoolean(this.hasBonusChestEnabled);
+        buffer.writeBoolean(this.hasStartWithMapEnabled);
+        buffer.writeSignedVarInt(this.defaultPlayerPermission);
+        buffer.writeInt(32);
+        buffer.writeBoolean(false);
+        buffer.writeBoolean(false);
+        buffer.writeBoolean(false);
+        buffer.writeBoolean(false);
+        buffer.writeBoolean(false);
+        buffer.writeBoolean(false);
 
-        buffer.writeString( this.levelId );
-        buffer.writeString( this.worldName );
-        buffer.writeString( this.templateName );
-        buffer.writeBoolean( this.unknown1 );
-        buffer.writeLLong( this.currentTick );
-        buffer.writeSignedVarInt( this.enchantmentSeed );
+        buffer.writeString(this.levelId);
+        buffer.writeString(this.worldName);
+        buffer.writeString(this.templateName);
+        buffer.writeBoolean(this.unknown1);
+        buffer.writeLLong(this.currentTick);
+        buffer.writeSignedVarInt(this.enchantmentSeed);
 
         // Write palette data
         byte[] data = BlockRuntimeIDs.getPacketCache();
-        buffer.writeBytes( data );
+        buffer.writeBytes(data);
 
-        buffer.writeString( this.correlationId );
+        buffer.writeString(this.correlationId);
     }
 
     @Override
-    public void deserialize( PacketBuffer buffer, int protocolID ) {
+    public void deserialize(PacketBuffer buffer, int protocolID) {
         this.entityId = buffer.readSignedVarLong().longValue();
         this.runtimeEntityId = buffer.readUnsignedVarLong();
         buffer.readSignedVarInt();
 
-        this.spawn = new Location( null, buffer.readLFloat(), buffer.readLFloat(), buffer.readLFloat(), buffer.readLFloat(), buffer.readLFloat() );
+        this.spawn = new Location(null, buffer.readLFloat(), buffer.readLFloat(), buffer.readLFloat(), buffer.readLFloat(), buffer.readLFloat());
 
-        for ( int i = 0; i < 6; i++ ) {
+        for (int i = 0; i < 6; i++) {
             buffer.readSignedVarInt();
         }
 
@@ -161,13 +158,13 @@ public class PacketStartGame extends Packet {
         buffer.readLFloat();
         buffer.readLFloat();
 
-        for ( int i = 0; i < 5; i++ ) {
+        for (int i = 0; i < 6; i++) {
             buffer.readBoolean();
         }
 
-        readGamerules( buffer );
+        readGamerules(buffer);
 
-        for ( int i = 0; i < 3; i++ ) {
+        for (int i = 0; i < 3; i++) {
             buffer.readBoolean();
         }
 
@@ -177,11 +174,11 @@ public class PacketStartGame extends Packet {
         buffer.readBoolean();
         buffer.readSignedVarInt();
 
-        for ( int i = 0; i < 7; i++ ) {
+        for (int i = 0; i < 7; i++) {
             buffer.readBoolean();
         }
 
-        for ( int i = 0; i < 3; i++ ) {
+        for (int i = 0; i < 3; i++) {
             buffer.readString();
         }
 
@@ -191,13 +188,13 @@ public class PacketStartGame extends Packet {
 
         // Runtime IDs
         int amountOfBlocks = buffer.readUnsignedVarInt();
-        this.runtimeIDs = new ArrayList<>( amountOfBlocks );
-        for ( int i = 0; i < amountOfBlocks; i++ ) {
-            this.runtimeIDs.add( new BlockIdentifier( buffer.readString(), buffer.readLShort() ) );
+        this.runtimeIDs = new ArrayList<>(amountOfBlocks);
+        for (int i = 0; i < amountOfBlocks; i++) {
+            this.runtimeIDs.add(new BlockIdentifier(buffer.readString(), buffer.readLShort()));
         }
 
         // Skip the rest for now
-        buffer.skip( buffer.getRemaining() );
+        buffer.skip(buffer.getRemaining());
     }
 
 }

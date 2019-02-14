@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.function.Predicate;
 
 public class DirectValueBlockState extends BlockState<Short> {
+
     public DirectValueBlockState(Block block) {
         super(block);
     }
@@ -29,7 +30,7 @@ public class DirectValueBlockState extends BlockState<Short> {
 
     @Override
     public void detectFromPlacement(EntityPlayer player, ItemStack placedItem, BlockFace face, Block block, Block clickedBlock, Vector clickPosition) {
-
+        this.setState((short) 0);
     }
 
     @Override
@@ -41,4 +42,5 @@ public class DirectValueBlockState extends BlockState<Short> {
     protected short data() {
         return this.getState();
     }
+
 }

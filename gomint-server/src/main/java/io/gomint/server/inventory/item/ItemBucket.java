@@ -45,9 +45,9 @@ public class ItemBucket extends ItemStack implements io.gomint.inventory.item.It
                 return Content.WATER;
             case 1:
                 return Content.MILK;
+            default:
+                return Content.EMPTY;
         }
-
-        return Content.EMPTY;
     }
 
     /**
@@ -68,9 +68,9 @@ public class ItemBucket extends ItemStack implements io.gomint.inventory.item.It
                 return "minecraft:flowing_water";
             case 1:
                 return null;  // Its not possible to empty out milk
+            default:
+                return super.getBlockId();
         }
-
-        return super.getBlockId();
     }
 
     @Override

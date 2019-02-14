@@ -50,8 +50,8 @@ public final class Protocol {
     // MC:PE Protocol ID
     public static final int MINECRAFT_PE_BETA_PROTOCOL_VERSION = -1;
     public static final int MINECRAFT_PE_NEXT_STABLE_PROTOCOL_VERSION = -1;
-    public static final int MINECRAFT_PE_PROTOCOL_VERSION = 313;
-    public static final String MINECRAFT_PE_NETWORK_VERSION = "1.8.0";
+    public static final int MINECRAFT_PE_PROTOCOL_VERSION = 332;
+    public static final String MINECRAFT_PE_NETWORK_VERSION = "1.9.0";
 
     // ========================================= PACKET IDS ========================================= //
     public static final byte PACKET_BATCH = (byte) 0xfe;
@@ -75,7 +75,7 @@ public final class Protocol {
     public static final byte PACKET_MOVE_PLAYER = (byte) 0x13;
     public static final byte PACKET_UPDATE_BLOCK = (byte) 0x15;
     public static final byte PACKET_EXPLODE = (byte) 0x17;
-    public static final byte PACKET_WORLD_SOUND_EVENT = (byte) 0x78;
+    public static final byte PACKET_WORLD_SOUND_EVENT = (byte) 0x7b;
     public static final byte PACKET_WORLD_EVENT = (byte) 0x19;
     public static final byte PACKET_BLOCK_EVENT = (byte) 0x1A;
     public static final byte PACKET_ENTITY_EVENT = (byte) 0x1B;

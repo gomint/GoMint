@@ -46,7 +46,6 @@ public final class TerminalConsoleAppender extends AbstractAppender {
                 terminal = TerminalBuilder.builder().dumb(dumb).build();
             } catch (IllegalStateException e) {
                 LOGGER.warn("Not supported terminal");
-                LOGGER.debug(e);
             } catch (IOException e) {
                 LOGGER.error("Failed to init, falling back to STDOUT");
                 LOGGER.debug(e);

@@ -191,13 +191,13 @@ public enum SoundMagicNumbers {
     private static final Logger LOGGER = LoggerFactory.getLogger( SoundMagicNumbers.class );
 
     @Getter
-    private final byte soundId;
+    private final int soundId;
 
     SoundMagicNumbers( int soundId ) {
-        this.soundId = (byte) soundId;
+        this.soundId = soundId;
     }
 
-    public static SoundMagicNumbers valueOf( byte id ) {
+    public static SoundMagicNumbers valueOf( int id ) {
         for ( SoundMagicNumbers soundMagicNumbers : values() ) {
             if ( soundMagicNumbers.soundId == id ) {
                 return soundMagicNumbers;

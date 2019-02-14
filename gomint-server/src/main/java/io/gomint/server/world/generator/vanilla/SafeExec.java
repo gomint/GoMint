@@ -9,15 +9,9 @@ package io.gomint.server.world.generator.vanilla;
 
 import com.google.common.util.concurrent.ListeningScheduledExecutorService;
 import io.gomint.server.GoMintServer;
-import io.gomint.server.util.CommandLineHolder;
 import org.springframework.stereotype.Component;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.Map;
@@ -43,128 +37,127 @@ public class SafeExec {
     /**
      * Build up a new safe executor for third party programs
      *
-     * @param server            which started this
-     * @param commandLineHolder which hold the command line of the parent program
+     * @param server which started this
      */
-    public SafeExec( GoMintServer server, CommandLineHolder commandLineHolder ) {
+    public SafeExec(GoMintServer server) {
         this.server = server;
 
-        String javaHome = System.getProperty( "java.home" );
-        File javaHomeFolder = new File( javaHome );
-        File binFolder = new File( javaHomeFolder, "bin" );
-        File javaExe = new File( binFolder, "java.exe" );
-        if ( javaExe.exists() ) {
+        String javaHome = System.getProperty("java.home");
+        File javaHomeFolder = new File(javaHome);
+        File binFolder = new File(javaHomeFolder, "bin");
+        File javaExe = new File(binFolder, "java.exe");
+        if (javaExe.exists()) {
             this.javaStarter = javaExe.getAbsolutePath();
         } else {
-            File javaBinary = new File( binFolder, "java" );
-            if ( javaBinary.exists() ) {
+            File javaBinary = new File(binFolder, "java");
+            if (javaBinary.exists()) {
                 this.javaStarter = javaBinary.getAbsolutePath();
             }
         }
     }
 
     private synchronized void ensureStarted() {
-        if ( this.process == null ) {
+        if (this.process == null) {
             // Check if temp is healthy
-            File temp = new File( "temp" );
-            if ( !temp.exists() ) {
+            File temp = new File("temp");
+            if (!temp.exists()) {
                 temp.mkdirs();
             }
 
-            File safeExec = new File( temp, "safeexec.jar" );
-            if ( !safeExec.exists() ) {
+            File safeExec = new File(temp, "safeexec.jar");
+            if (!safeExec.exists()) {
                 // Get safeexec.jar from resource folder
-                try ( InputStream in = SafeExec.class.getResourceAsStream( "/safeexec.jar" ) ) {
-                    Files.copy( in, safeExec.toPath(), StandardCopyOption.REPLACE_EXISTING );
-                } catch ( IOException e ) {
+                try (InputStream in = SafeExec.class.getResourceAsStream("/safeexec.jar")) {
+                    Files.copy(in, safeExec.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                } catch (IOException e) {
                     e.printStackTrace();
                     return;
                 }
             }
 
             // Start the new executor
-            ProcessBuilder builder = new ProcessBuilder( this.javaStarter, "-jar", safeExec.getAbsolutePath() );
+            ProcessBuilder builder = new ProcessBuilder(this.javaStarter, "-jar", safeExec.getAbsolutePath());
 
             try {
                 this.process = builder.start();
 
-                Thread stdReader = new Thread( () -> {
-                    try ( BufferedReader in = new BufferedReader( new InputStreamReader( process.getInputStream() ) ) ) {
+                Thread stdReader = new Thread(() -> {
+                    try (BufferedReader in = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
                         String line;
-                        while ( ( line = in.readLine() ) != null ) {
-                            if ( line.startsWith( "started:" ) ) {
-                                this.processId = Long.parseLong( line.substring( "started:".length() ) );
-                                synchronized ( this.sync ) {
+                        while ((line = in.readLine()) != null) {
+                            if (line.startsWith("started:")) {
+                                this.processId = Long.parseLong(line.substring("started:".length()));
+                                synchronized (this.sync) {
                                     this.sync.notify();
                                 }
                             } else {
-                                for ( Map.Entry<Long, Consumer<String>> entry : this.outputConsumer.entrySet() ) {
-                                    if ( line.startsWith( entry.getKey() + ":" ) ) {
-                                        entry.getValue().accept( line.replace( entry.getKey() + ":", "" ).trim() );
+                                for (Map.Entry<Long, Consumer<String>> entry : this.outputConsumer.entrySet()) {
+                                    if (line.startsWith(entry.getKey() + ":")) {
+                                        entry.getValue().accept(line.replace(entry.getKey() + ":", "").trim());
                                     }
                                 }
                             }
                         }
-                    } catch ( IOException ignored ) {
+                    } catch (IOException ignored) {
 
                     }
-                } );
+                });
 
-                stdReader.setDaemon( true );
+                stdReader.setDaemon(true);
                 stdReader.start();
 
                 ListeningScheduledExecutorService service = this.server.getExecutorService();
-                service.scheduleAtFixedRate( () -> {
-                    if ( this.process.isAlive() ) {
+                service.scheduleAtFixedRate(() -> {
+                    if (this.process.isAlive()) {
                         try {
                             OutputStream stdin = this.process.getOutputStream();
-                            stdin.write( "ping\n".getBytes() );
+                            stdin.write("ping\n".getBytes());
                             stdin.flush();
-                        } catch ( IOException e ) {
+                        } catch (IOException e) {
                             e.printStackTrace();
                         }
                     }
-                }, 500, 500, TimeUnit.MILLISECONDS );
-            } catch ( IOException e ) {
+                }, 500, 500, TimeUnit.MILLISECONDS);
+            } catch (IOException e) {
                 e.printStackTrace();
             }
         }
     }
 
-    public long exec( String cmd, String workPath, Consumer<String> stdoutConsumer ) {
+    public long exec(String cmd, String workPath, Consumer<String> stdoutConsumer) {
         this.ensureStarted();
 
         try {
-            String startLine = ( "exec w=\"" + workPath.replace( "\\", "\\\\" ) + "\" c=\"" + cmd.replace( "\\", "\\\\" ) + "\"\n" );
+            String startLine = ("exec w=\"" + workPath.replace("\\", "\\\\") + "\" c=\"" + cmd.replace("\\", "\\\\") + "\"\n");
 
             OutputStream stdin = this.process.getOutputStream();
-            stdin.write( startLine.getBytes() );
+            stdin.write(startLine.getBytes());
             stdin.flush();
 
-            synchronized ( this.sync ) {
+            synchronized (this.sync) {
                 this.sync.wait();
-                this.outputConsumer.put( this.processId, stdoutConsumer );
+                this.outputConsumer.put(this.processId, stdoutConsumer);
             }
 
             return this.processId;
-        } catch ( IOException | InterruptedException e ) {
+        } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
 
         return -1;
     }
 
-    public void stop( long processId ) {
-        if ( processId != -1 ) {
-            this.outputConsumer.remove( processId );
+    public void stop(long processId) {
+        if (processId != -1) {
+            this.outputConsumer.remove(processId);
 
-            String stopLine = ( "stop " + processId + "\n" );
+            String stopLine = ("stop " + processId + "\n");
 
             try {
                 OutputStream stdin = this.process.getOutputStream();
-                stdin.write( stopLine.getBytes() );
+                stdin.write(stopLine.getBytes());
                 stdin.flush();
-            } catch ( IOException e ) {
+            } catch (IOException e) {
                 e.printStackTrace();
             }
         }
