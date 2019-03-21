@@ -46,18 +46,18 @@
         <repository>
             <id>gomint-repo</id>
             <name>GoMint Public Repository</name>
-            <url>https://repo.gomint.io/content/groups/public/</url>
+            <url>http://repo.gomint.io/content/groups/public/</url>
         </repository>
     </repositories>
 
     <distributionManagement>
         <repository>
             <id>gomint-releases</id>
-            <url>https://repo.gomint.io/content/repositories/releases/</url>
+            <url>http://repo.gomint.io/content/repositories/releases/</url>
         </repository>
         <snapshotRepository>
             <id>gomint-snapshots</id>
-            <url>https://repo.gomint.io/content/repositories/snapshots/</url>
+            <url>http://repo.gomint.io/content/repositories/snapshots/</url>
         </snapshotRepository>
     </distributionManagement>
 
