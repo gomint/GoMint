@@ -46,7 +46,7 @@
         <repository>
             <id>gomint-repo</id>
             <name>GoMint Public Repository</name>
-            <url>https://repo.gomint.io/content/groups/public/</url>
+            <url>http://repo.gomint.io/content/groups/public/</url>
         </repository>
     </repositories>
 
