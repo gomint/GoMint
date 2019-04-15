@@ -38,7 +38,7 @@ Currently, GoMint is in a fast development-mode. The API is in all corners not s
 ## tl;dr
 | JDK  | Documentation                        | Download                                                   |
 | ---- | ------------------------------------ | ---------------------------------------------------------- |
-| 11  | [Click here](https://docs.gomint.io) | [Latest build](http://ci.gomint.io/job/GoMint/job/master/) |
+| 11  | [Click here](http://docs.gomint.io) | [Latest build](https://circleci.com/gh/GoMint) |
 
 ### Compilation
 Compiling GoMint is actually pretty easy. We'll guide you through the compilation step by step and address troubleshooting.
