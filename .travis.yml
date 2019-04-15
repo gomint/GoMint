@@ -9,7 +9,6 @@ addons:
   artifacts:
     paths:
       - ./gomint-server/target/GoMint.jar
-    debug: true
 
 jdk:
   - openjdk11
