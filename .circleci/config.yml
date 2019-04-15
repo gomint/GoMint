@@ -34,3 +34,7 @@ jobs:
 
       # run tests! and gen code coverage
       - run: mvn install
+
+      - store_artifacts:
+          path: ~/data/gomint-server/GoMint.jar
+          destination: GoMint.jar
