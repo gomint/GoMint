@@ -9,7 +9,7 @@ jobs:
       # specify the version you desire here
       - image: circleci/openjdk:11
 
-    working_directory: ~/
+    working_directory: ~/data
 
     environment:
       # Customize the JVM maximum heap limit
