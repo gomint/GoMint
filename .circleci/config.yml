@@ -36,5 +36,5 @@ jobs:
       - run: mvn install
 
       - store_artifacts:
-          path: ~/data/gomint-server/GoMint.jar
+          path: ~/data/gomint-server/target/GoMint.jar
           destination: GoMint.jar
