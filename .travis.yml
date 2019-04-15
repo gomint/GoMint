@@ -3,6 +3,15 @@ sudo: false
 install: true
 dist: trusty
 
+after_success:
+  - wget https://raw.githubusercontent.com/GoMint/travis-ci-discord-webhook/master/send.sh
+  - chmod +x send.sh
+  - ./send.sh success $WEBHOOK_URL
+after_failure:
+  - wget https://raw.githubusercontent.com/GoMint/travis-ci-discord-webhook/master/send.sh
+  - chmod +x send.sh
+  - ./send.sh failure $WEBHOOK_URL
+
 addons:
   sonarcloud:
     organization: "gomint-github"
