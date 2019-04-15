@@ -7,7 +7,6 @@ addons:
   sonarcloud:
     organization: "gomint-github"
   artifacts:
-    s3_region: "eu-central-1"
     paths:
       - ./gomint-server/target/GoMint.jar
     debug: true
