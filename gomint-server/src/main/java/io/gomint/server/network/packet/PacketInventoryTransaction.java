@@ -38,6 +38,7 @@ public class PacketInventoryTransaction extends Packet {
     private BlockFace face;
     private Vector playerPosition;
     private Vector clickPosition;
+    private int blockRuntimeID;
 
     // Type USE_ITEM_ON_ENTITY
     private long entityId;
@@ -82,6 +83,7 @@ public class PacketInventoryTransaction extends Packet {
                 this.itemInHand = readItemStack( buffer );
                 this.playerPosition = new Vector( buffer.readLFloat(), buffer.readLFloat(), buffer.readLFloat() );
                 this.clickPosition = new Vector( buffer.readLFloat(), buffer.readLFloat(), buffer.readLFloat() );
+                this.blockRuntimeID = buffer.readUnsignedVarInt();
                 break;
             case TYPE_USE_ITEM_ON_ENTITY:
                 this.entityId = buffer.readUnsignedVarLong();
