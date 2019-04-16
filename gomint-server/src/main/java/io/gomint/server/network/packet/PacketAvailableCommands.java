@@ -75,6 +75,7 @@ public class PacketAvailableCommands extends Packet {
                     buffer.writeString( parameter.getName() );
                     buffer.writeLInt( parameter.getType() );
                     buffer.writeBoolean( parameter.isOptional() );
+                    buffer.writeByte((byte) 0); // TODO: Find out what this really is
                 }
             }
         }
@@ -146,6 +147,7 @@ public class PacketAvailableCommands extends Packet {
                     String paramName = buffer.readString();
                     int paramType = buffer.readLInt();
                     buffer.readBoolean();
+                    buffer.readByte();
                 }
             }
         }
