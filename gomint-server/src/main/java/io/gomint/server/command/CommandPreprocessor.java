@@ -40,9 +40,9 @@ public class CommandPreprocessor {
     // WILDCARD_INT
     private static final int ARG_TYPE_TARGET = 0x06;
     // WILDCARD_TARGET
-    private static final int ARG_TYPE_STRING = 0x1a;
-    private static final int ARG_TYPE_POSITION = 0x1c;
-    private static final int ARG_TYPE_RAWTEXT = 0x1f;
+    private static final int ARG_TYPE_STRING = 0x1b;
+    private static final int ARG_TYPE_POSITION = 0x1d;
+    private static final int ARG_TYPE_RAWTEXT = 0x22;
 
     /**
      * Enums are a little different: they are composed as follows:
