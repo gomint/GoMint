@@ -71,8 +71,8 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.18.4</version>
-            <scope>provided</scope>
+            <version>1.18.8</version>
+            <scope>compile</scope>
         </dependency>
 
         <dependency>
@@ -97,14 +97,10 @@
                         <path>
                             <groupId>org.projectlombok</groupId>
                             <artifactId>lombok</artifactId>
-                            <version>1.18.4</version>
+                            <version>1.18.8</version>
                         </path>
                     </annotationProcessorPaths>
-                    <!-- this helps when getting error: file should be on source path, or on patch path for module -->
-                    <compilerArgs>
-                        <arg>-sourcepath</arg>
-                        <arg>${project.basedir}/src/main/java${path.separator}${project.basedir}/target/generated-sources/annotations${path.separator}/</arg>
-                    </compilerArgs>
+
                 </configuration>
             </plugin>
         </plugins>
