@@ -23,7 +23,7 @@ jdk:
   - openjdk11
 
 script:
-  - mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent install sonar:sonar
+  - mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent install
 
 cache:
   directories:
