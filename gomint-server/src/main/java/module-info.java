@@ -34,13 +34,13 @@ module gomint.server {
     requires it.unimi.dsi.fastutil;
     requires jopt.simple;
     requires com.google.common;
-    requires javassist;
     requires org.apache.commons.io;
     requires json.simple;
     requires oshi.core;
     requires jsr305;
     requires jline.reader;
     requires jline.terminal;
+    requires spring.core;
 
     // Export logging stuff for log4j2
     exports net.minecrell.terminalconsole to org.apache.logging.log4j, org.apache.logging.log4j.core;
