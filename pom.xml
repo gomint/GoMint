@@ -44,21 +44,24 @@
 
     <repositories>
         <repository>
-            <id>gomint-repo</id>
-            <name>GoMint Public Repository</name>
-            <url>http://repo.gomint.io/content/groups/public/</url>
+            <id>central</id>
+            <url>https://repo1.maven.org/maven2</url>
+            <releases><enabled>true</enabled></releases>
+            <snapshots><enabled>true</enabled></snapshots>
+        </repository>
+        <repository>
+            <id>github-jraknet</id>
+            <name>GitHub GoMint Apache Maven Packages</name>
+            <url>https://maven.pkg.github.com/GoMint/jRaknet</url>
         </repository>
     </repositories>
 
     <distributionManagement>
         <repository>
-            <id>gomint-releases</id>
-            <url>http://repo.gomint.io/content/repositories/releases/</url>
+            <id>github</id>
+            <name>GitHub GoMint Apache Maven Packages</name>
+            <url>https://maven.pkg.github.com/GoMint/GoMint</url>
         </repository>
-        <snapshotRepository>
-            <id>gomint-snapshots</id>
-            <url>http://repo.gomint.io/content/repositories/snapshots/</url>
-        </snapshotRepository>
     </distributionManagement>
 
     <dependencies>

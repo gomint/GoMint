@@ -111,7 +111,12 @@ public abstract class Packet {
             buffer.readString();    // TODO: Implement proper support once we know the string values
         }
 
-        return GoMint.instance() == null ? null : ((GoMintServer) GoMint.instance()).getItems().create(id, data, amount, nbt);
+        io.gomint.server.inventory.item.ItemStack itemStack = ((GoMintServer) GoMint.instance()).getItems().create(id, data, amount, nbt);
+
+        // New item data system?
+        itemStack.readAdditionalData(buffer);
+
+        return itemStack;
     }
 
     /**
@@ -154,6 +159,8 @@ public abstract class Packet {
         // canPlace and canBreak
         buffer.writeSignedVarInt(0);
         buffer.writeSignedVarInt(0);
+
+        ((io.gomint.server.inventory.item.ItemStack) itemStack).writeAdditionalData(buffer);
     }
 
     /**

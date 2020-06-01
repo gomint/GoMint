@@ -407,6 +407,7 @@ public enum ItemType {
     SEA_GRASS,
     SEEDS,
     SHEARS,
+    SHIELD,
     SHULKER_BOX,
     SHULKER_SHELL,
     SIGN,

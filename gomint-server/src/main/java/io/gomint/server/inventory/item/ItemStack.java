@@ -10,6 +10,7 @@ package io.gomint.server.inventory.item;
 import io.gomint.GoMint;
 import io.gomint.enchant.Enchantment;
 import io.gomint.inventory.item.ItemAir;
+import io.gomint.jraknet.PacketBuffer;
 import io.gomint.math.Vector;
 import io.gomint.server.GoMintServer;
 import io.gomint.server.entity.EntityPlayer;
@@ -500,6 +501,24 @@ public abstract class ItemStack implements Cloneable, io.gomint.inventory.item.I
 
     public void removePlace() {
         this.itemStackPlace = null;
+    }
+
+    /**
+     * Packets can define additional data for items (currently only the shield seems to be doing that)
+     *
+     * @param buffer from the network which holds the data
+     */
+    public void readAdditionalData(PacketBuffer buffer) {
+
+    }
+
+    /**
+     * Write additional item data to the network
+     *
+     * @param buffer from/to the network
+     */
+    public void writeAdditionalData(PacketBuffer buffer) {
+
     }
 
 }
