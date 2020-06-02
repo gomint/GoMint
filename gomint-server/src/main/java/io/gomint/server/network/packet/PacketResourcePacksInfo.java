@@ -15,6 +15,7 @@ import java.util.List;
 public class PacketResourcePacksInfo extends Packet {
 
     private boolean mustAccept;
+    private boolean hasScripts;
     private List<ResourcePack> behaviourPackEntries;
     private List<ResourcePack> resourcePackEntries;
 
@@ -25,6 +26,7 @@ public class PacketResourcePacksInfo extends Packet {
     @Override
     public void serialize( PacketBuffer buffer, int protocolID ) {
         buffer.writeBoolean( this.mustAccept );
+        buffer.writeBoolean( this.hasScripts );
 
         buffer.writeLShort( (short) ( this.behaviourPackEntries == null ? 0 : this.behaviourPackEntries.size() ) );
         if ( this.behaviourPackEntries != null ) {
@@ -35,6 +37,7 @@ public class PacketResourcePacksInfo extends Packet {
                 buffer.writeString( "" );
                 buffer.writeString( "" );
                 buffer.writeString( "" );
+                buffer.writeBoolean( false );
             }
         }
 
@@ -47,6 +50,7 @@ public class PacketResourcePacksInfo extends Packet {
                 buffer.writeString( "" );
                 buffer.writeString( "" );
                 buffer.writeString( "" );
+                buffer.writeBoolean( false );
             }
         }
     }
@@ -63,6 +67,7 @@ public class PacketResourcePacksInfo extends Packet {
             buffer.readString();
             buffer.readString();
             buffer.readString();
+            buffer.readBoolean();
         }
 
         behaviourAmount = buffer.readLShort();
@@ -73,6 +78,7 @@ public class PacketResourcePacksInfo extends Packet {
             buffer.readString();
             buffer.readString();
             buffer.readString();
+            buffer.readBoolean();
         }
     }
 

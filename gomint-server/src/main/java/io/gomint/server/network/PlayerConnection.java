@@ -996,7 +996,7 @@ public class PlayerConnection implements ConnectionWithState {
         packet.setDifficulty(this.entity.getWorld().getDifficulty().getDifficultyDegree());
         packet.setLevelId(Base64.getEncoder().encodeToString(StringUtil.getUTF8Bytes(world.getWorldName())));
         packet.setWorldName(world.getWorldName());
-        packet.setTemplateName("");
+        packet.setTemplateId("");
         packet.setGamerules(world.getGamerules());
         packet.setTexturePacksRequired(false);
         packet.setCommandsEnabled(true);
