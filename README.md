@@ -4,8 +4,8 @@
 <p align="center">
   
   <!-- BUILD BADGE -->
-  <a href="https://travis-ci.org/GoMint/GoMint">
-    <img alt="Build Status" src="https://travis-ci.org/GoMint/GoMint.svg?branch=master">
+  <a href="https://github.com/GoMint/GoMint/actions?query=workflow%3A%22Java+CI%22">
+    <img alt="Build Status" src="https://github.com/GoMint/GoMint/workflows/Java%20CI/badge.svg">
   </a>
   <!-- STAR BADGE -->
   <a href="https://github.com/GoMint/GoMint/stargazers">
