@@ -16,5 +16,5 @@ jobs:
     - name: Store artifacts
       uses: actions/upload-artifact@v2
       with:
-        name: my-artifact
+        name: GoMint Server
         path: gomint-server/target/GoMint.jar
