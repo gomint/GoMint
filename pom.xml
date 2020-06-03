@@ -49,6 +49,9 @@
       <releases>
         <enabled>true</enabled>
       </releases>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
     </repository>
     <repository>
       <id>ossrh</id>
@@ -56,6 +59,9 @@
       <snapshots>
         <enabled>true</enabled>
       </snapshots>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
     </repository>
   </repositories>
 
