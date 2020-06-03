@@ -7,6 +7,7 @@
 
 package io.gomint.assetcompiler;
 
+import io.gomint.taglib.AllocationLimitReachedException;
 import io.gomint.taglib.NBTTagCompound;
 
 import java.io.File;
@@ -37,7 +38,7 @@ public class BlockCleanup {
                 NBTTagCompound entry = (NBTTagCompound) palette;
                 knownIDs.add( entry.getString( "id", null ) );
             }
-        } catch ( IOException e ) {
+        } catch (IOException | AllocationLimitReachedException e ) {
             e.printStackTrace();
             System.exit( -1 );
         }
