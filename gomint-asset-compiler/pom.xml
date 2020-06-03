@@ -16,10 +16,11 @@
     <description>Gathers data via MiTM and other sources to generate entity/block data</description>
 
     <dependencies>
+        <!-- Temporary dependency -->
         <dependency>
             <groupId>io.gomint</groupId>
             <artifactId>taglib</artifactId>
-            <version>1.5.2-SNAPSHOT</version>
+            <version>2.1.0-20190109.190945-3</version>
         </dependency>
 
         <dependency>

@@ -44,6 +44,10 @@
 
     <repositories>
         <repository>
+            <id>janmm14-gomint-proxy</id>
+            <url>https://repo.janmm14.de/repository/gomint-proxy/</url>
+        </repository>
+        <repository>
             <id>gomint-repo</id>
             <name>GoMint Public Repository</name>
             <url>http://repo.gomint.io/content/groups/public/</url>
