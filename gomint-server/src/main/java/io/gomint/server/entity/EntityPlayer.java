@@ -711,6 +711,8 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
         // Send world init data
         this.connection.sendWorldTime(0);
         this.connection.sendWorldInitialization();
+        this.connection.addToSendQueue( new PacketBiomeDefinitionList() );
+        this.connection.addToSendQueue( new PacketAvailableEntityIdentifiers() );
         this.connection.sendSpawnPosition();
         this.connection.sendWorldTime(0);
         this.connection.sendDifficulty();
@@ -745,21 +747,21 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
 
         this.windowIds = new Byte2ObjectOpenHashMap<>();
         this.containerIds = new Object2ByteOpenHashMap<>();
-        this.connection.getServer().getCreativeInventory().addViewer(this);
+        // TODO: this.connection.getServer().getCreativeInventory().addViewer(this);
 
-        // Send crafting recipes
-        this.connection.addToSendQueue(this.world.getServer().getRecipeManager().getCraftingRecipesBatch());
+        // TODO: Update & Send crafting recipes
+        // this.connection.addToSendQueue(this.world.getServer().getRecipeManager().getCraftingRecipesBatch());
 
         // Send entity metadata
         this.sendData(this);
 
-        // Send player list for yourself
-        PacketPlayerlist playerlist = new PacketPlayerlist();
-        playerlist.setMode((byte) 0);
-        playerlist.setEntries(new ArrayList<PacketPlayerlist.Entry>() {{
-            add(new PacketPlayerlist.Entry(EntityPlayer.this));
-        }});
-        this.getConnection().addToSendQueue(playerlist);
+        // TODO: Send player list for yourself
+//        PacketPlayerlist playerlist = new PacketPlayerlist();
+//        playerlist.setMode((byte) 0);
+//        playerlist.setEntries(new ArrayList<PacketPlayerlist.Entry>() {{
+//            add(new PacketPlayerlist.Entry(EntityPlayer.this));
+//        }});
+//        this.getConnection().addToSendQueue(playerlist);
 
         LOGGER.debug("Did send all prepare entity data");
     }

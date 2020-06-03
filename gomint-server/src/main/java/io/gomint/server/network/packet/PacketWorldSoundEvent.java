@@ -21,7 +21,7 @@ public class PacketWorldSoundEvent extends Packet {
     private boolean disableRelativeVolume;
 
     public PacketWorldSoundEvent() {
-        super( Protocol.PACKET_WORLD_SOUND_EVENT );
+        super( Protocol.PACKET_WORLD_SOUND_EVENT_V1 );
     }
 
     @Override

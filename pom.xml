@@ -44,25 +44,30 @@
 
     <repositories>
         <repository>
-            <id>janmm14-gomint-proxy</id>
-            <url>https://repo.janmm14.de/repository/gomint-proxy/</url>
+            <id>central</id>
+            <url>https://repo1.maven.org/maven2</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
         </repository>
         <repository>
-            <id>gomint-repo</id>
-            <name>GoMint Public Repository</name>
-            <url>http://repo.gomint.io/content/groups/public/</url>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
         </repository>
     </repositories>
 
     <distributionManagement>
-        <repository>
-            <id>gomint-releases</id>
-            <url>http://repo.gomint.io/content/repositories/releases/</url>
-        </repository>
         <snapshotRepository>
-            <id>gomint-snapshots</id>
-            <url>http://repo.gomint.io/content/repositories/snapshots/</url>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
         </snapshotRepository>
+        <repository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
     </distributionManagement>
 
     <dependencies>

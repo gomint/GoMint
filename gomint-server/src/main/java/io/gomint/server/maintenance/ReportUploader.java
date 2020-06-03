@@ -58,7 +58,7 @@ public final class ReportUploader {
         // Setup sentry
         System.setProperty("stacktrace.app.packages", "");
 
-        this.client = SentryClientFactory.sentryClient("http://15f4652d94494bd4859a9f64546fb1d4@report.gomint.io/2?async=true");
+        this.client = SentryClientFactory.sentryClient("https://0cde9bdaffbb405ba8ae43a271edc30e@o376809.ingest.sentry.io/5198031?async=true");
         this.client.setRelease(((GoMintServer) GoMint.instance()).getGitHash());
         this.client.setServerName(HOST);
 

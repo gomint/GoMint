@@ -27,22 +27,7 @@ import io.gomint.server.network.NetworkManager;
 import io.gomint.server.network.PlayerConnectionState;
 import io.gomint.server.network.PostProcessExecutor;
 import io.gomint.server.network.Protocol;
-import io.gomint.server.network.packet.Packet;
-import io.gomint.server.network.packet.PacketAdventureSettings;
-import io.gomint.server.network.packet.PacketBatch;
-import io.gomint.server.network.packet.PacketDisconnect;
-import io.gomint.server.network.packet.PacketEncryptionRequest;
-import io.gomint.server.network.packet.PacketEncryptionResponse;
-import io.gomint.server.network.packet.PacketLogin;
-import io.gomint.server.network.packet.PacketMovePlayer;
-import io.gomint.server.network.packet.PacketPlayState;
-import io.gomint.server.network.packet.PacketResourcePackResponse;
-import io.gomint.server.network.packet.PacketResourcePackStack;
-import io.gomint.server.network.packet.PacketResourcePacksInfo;
-import io.gomint.server.network.packet.PacketSetChunkRadius;
-import io.gomint.server.network.packet.PacketSetLocalPlayerAsInitialized;
-import io.gomint.server.network.packet.PacketStartGame;
-import io.gomint.server.network.packet.PacketWorldChunk;
+import io.gomint.server.network.packet.*;
 import io.gomint.server.resource.ResourceResponseStatus;
 import io.gomint.server.util.BlockIdentifier;
 import io.gomint.server.util.Palette;
@@ -544,7 +529,7 @@ public class Client implements ConnectionWithState {
 
     private void sendChunkRadius() {
         // Send the wanted chunk radius
-        PacketSetChunkRadius chunkRadius = new PacketSetChunkRadius();
+        PacketConfirmChunkRadius chunkRadius = new PacketConfirmChunkRadius();
         chunkRadius.setChunkRadius( 32 );
         this.send( chunkRadius );
     }

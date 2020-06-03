@@ -2,6 +2,7 @@ package io.gomint.server.network.packet;
 
 import io.gomint.jraknet.PacketBuffer;
 import io.gomint.math.Location;
+import io.gomint.server.assets.AssetsLibrary;
 import io.gomint.server.network.Protocol;
 import io.gomint.server.player.PlayerPermission;
 import io.gomint.server.util.BlockIdentifier;
@@ -9,7 +10,9 @@ import io.gomint.server.world.BlockRuntimeIDs;
 import io.gomint.world.Gamerule;
 import lombok.Data;
 
+import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 import java.util.Map;
 
@@ -136,8 +139,22 @@ public class PacketStartGame extends Packet {
         buffer.writeSignedVarInt( this.enchantmentSeed );
 
         // Write palette data
-        byte[] data = BlockRuntimeIDs.getPacketCache();
-        buffer.writeBytes( data );
+        // byte[] data = BlockRuntimeIDs.getPacketCache();
+        // buffer.writeBytes( data );
+
+        // This is a temporary solution just to let people join and test
+        try {
+            InputStream inputStream = AssetsLibrary.class.getResourceAsStream( "/blocks.nbt" );
+            if ( inputStream == null ) {
+                throw new AssertionError( "Could not find blocks.nbt" );
+            }
+            byte[] encodedStates = inputStream.readAllBytes();
+            byte[] states = Base64.getDecoder().decode( encodedStates );
+            buffer.writeBytes( states );
+        }catch ( Exception e ) {
+            e.printStackTrace();
+        }
+
 
         // TODO: Item table
         buffer.writeUnsignedVarInt( 0 );

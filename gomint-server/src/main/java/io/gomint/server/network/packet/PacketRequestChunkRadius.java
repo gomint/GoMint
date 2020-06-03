@@ -18,28 +18,22 @@ import lombok.EqualsAndHashCode;
  */
 @Data
 @EqualsAndHashCode( callSuper = false )
-public class PacketSetCompassTarget extends Packet {
+public class PacketRequestChunkRadius extends Packet {
 
-    private int x;
-    private int y;
-    private int z;
+    private int chunkRadius;
 
-    public PacketSetCompassTarget() {
-        super( Protocol.PACKET_SET_COMPASS_TARGET );
+    public PacketRequestChunkRadius() {
+        super( Protocol.PACKET_REQUEST_CHUNK_RADIUS );
     }
 
     @Override
     public void serialize( PacketBuffer buffer, int protocolID ) {
-        buffer.writeInt( this.x );
-        buffer.writeInt( this.y );
-        buffer.writeInt( this.z );
+        buffer.writeSignedVarInt( this.chunkRadius );
     }
 
     @Override
     public void deserialize( PacketBuffer buffer, int protocolID ) {
-        this.x = buffer.readInt();
-        this.y = buffer.readInt();
-        this.z = buffer.readInt();
+        this.chunkRadius = buffer.readSignedVarInt();
     }
 
 }
