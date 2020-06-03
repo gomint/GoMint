@@ -36,14 +36,19 @@
         <module>gomint-asset-compiler</module>
         <module>gomint-converter</module>
         <module>gomint-safeexec</module>
-	    <module>gomint-taglib</module>
-	    <module>gomint-leveldb</module>
-        <module>gomint-jraknet</module>
     </modules>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
+
+    <repositories>
+        <repository>
+            <id>gomint-repo</id>
+            <name>GoMint Public Repository</name>
+            <url>http://repo.gomint.io/content/groups/public/</url>
+        </repository>
+    </repositories>
 
     <distributionManagement>
         <repository>

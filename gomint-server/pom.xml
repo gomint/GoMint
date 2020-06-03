@@ -22,6 +22,15 @@
 
     <name>GoMint Server</name>
     <description>Standard server implementation of GoMint</description>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <id>central</id>
+            <name>Central Repository</name>
+            <url>http://central.maven.org/maven2</url>
+        </pluginRepository>
+    </pluginRepositories>
+
     <dependencies>
         <dependency>
             <groupId>io.gomint</groupId>
