@@ -6,7 +6,6 @@ import io.gomint.server.assets.AssetsLibrary;
 import io.gomint.server.network.Protocol;
 import io.gomint.server.player.PlayerPermission;
 import io.gomint.server.util.BlockIdentifier;
-import io.gomint.server.world.BlockRuntimeIDs;
 import io.gomint.world.Gamerule;
 import lombok.Data;
 
@@ -106,7 +105,7 @@ public class PacketStartGame extends Packet {
         buffer.writeBoolean( this.hasAchievementsDisabled );
         buffer.writeSignedVarInt( this.dayCycleStopTime );
         buffer.writeSignedVarInt( this.eduEditionOffer );
-        buffer.writeBoolean( false ); // This is hasEduModeEnabled, we default to false until we have all EDU stuff in
+        buffer.writeBoolean( true ); // This is hasEduModeEnabled, we default to false until we have all EDU stuff in
         buffer.writeLFloat( this.rainLevel );
         buffer.writeLFloat( this.lightningLevel );
         buffer.writeBoolean( false );

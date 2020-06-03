@@ -40,8 +40,7 @@ public class PacketWorldChunk extends Packet {
         buffer.writeUnsignedVarInt( this.subChunkCount );
         buffer.writeBoolean( this.cached );
         buffer.writeUnsignedVarInt( this.dataLength );
-        buffer.writeBytes( this.data );
-        // buffer.writeBytes( this.data, 0, this.dataLength );
+        buffer.writeBytes( this.data, 0, this.dataLength );
     }
 
     @Override

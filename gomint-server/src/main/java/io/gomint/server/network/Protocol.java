@@ -7,7 +7,41 @@
 
 package io.gomint.server.network;
 
-import io.gomint.server.network.packet.*;
+import io.gomint.server.network.packet.Packet;
+import io.gomint.server.network.packet.PacketAdventureSettings;
+import io.gomint.server.network.packet.PacketAnimate;
+import io.gomint.server.network.packet.PacketBatch;
+import io.gomint.server.network.packet.PacketBlockPickRequest;
+import io.gomint.server.network.packet.PacketBookEdit;
+import io.gomint.server.network.packet.PacketBossBar;
+import io.gomint.server.network.packet.PacketCommandRequest;
+import io.gomint.server.network.packet.PacketContainerClose;
+import io.gomint.server.network.packet.PacketCraftingEvent;
+import io.gomint.server.network.packet.PacketDisconnect;
+import io.gomint.server.network.packet.PacketEncryptionResponse;
+import io.gomint.server.network.packet.PacketEntityEvent;
+import io.gomint.server.network.packet.PacketEntityFall;
+import io.gomint.server.network.packet.PacketEntityMetadata;
+import io.gomint.server.network.packet.PacketHotbar;
+import io.gomint.server.network.packet.PacketInteract;
+import io.gomint.server.network.packet.PacketInventoryTransaction;
+import io.gomint.server.network.packet.PacketLogin;
+import io.gomint.server.network.packet.PacketMobEquipment;
+import io.gomint.server.network.packet.PacketModalResponse;
+import io.gomint.server.network.packet.PacketMovePlayer;
+import io.gomint.server.network.packet.PacketPlayState;
+import io.gomint.server.network.packet.PacketPlayerAction;
+import io.gomint.server.network.packet.PacketResourcePackResponse;
+import io.gomint.server.network.packet.PacketResourcePacksInfo;
+import io.gomint.server.network.packet.PacketServerSettingsRequest;
+import io.gomint.server.network.packet.PacketSetLocalPlayerAsInitialized;
+import io.gomint.server.network.packet.PacketText;
+import io.gomint.server.network.packet.PacketTileEntityData;
+import io.gomint.server.network.packet.PacketWorldSoundEvent;
+import io.gomint.server.network.packet.PacketConfirmChunkRadius;
+import io.gomint.server.network.packet.PacketClientCacheStatus;
+import io.gomint.server.network.packet.PacketTickSync;
+import io.gomint.server.network.packet.PacketRequestChunkRadius;
 
 /**
  * @author BlackyPaw
@@ -181,7 +215,7 @@ public final class Protocol {
      * @param id              The ID of the the packet to create
      * @return The created packet or null if it could not be created
      */
-    public static Packet createPacket( byte id ) {
+    public static Packet createPacket(byte id ) {
         switch ( id ) {
             case PACKET_TILE_ENTITY_DATA:
                 return new PacketTileEntityData();
