@@ -35,6 +35,15 @@ public class PacketPlayerlist extends Packet {
                 buffer.writeSignedVarLong( entry.getEntityId() );
                 buffer.writeString( entry.getName() );
 
+                // xbox user id
+                buffer.writeString( entry.xboxId );
+
+                // This is platformChatId, probably a random UUID.
+                buffer.writeString( "" );
+
+                // TODO: This is buildPlatform, should be player device id.
+                buffer.writeLInt( -1 );
+
                 buffer.writeString( entry.getSkin().getName() );
 
                 // Raw skin data
@@ -56,15 +65,22 @@ public class PacketPlayerlist extends Packet {
                 buffer.writeUnsignedVarInt( entry.skin.getGeometryData().length() );
                 buffer.writeBytes( entry.skin.getGeometryData().getBytes() );
 
-                // xbox user id
-                buffer.writeString( entry.xboxId );
+                // Is teacher
+                buffer.writeBoolean( false );
 
-                // TODO: Is this the same as the unknown one in SpawnPlayer?
-                buffer.writeString( entry.uuid.toString() );
+                // Is host
+                buffer.writeBoolean( false );
             }
         } else {
             for ( Entry entry : this.entries ) {
                 buffer.writeUUID( entry.getUuid() );
+            }
+        }
+
+        if ( mode == 0 ) {
+            for (int i = 0; i < entries.size(); i++) {
+                // Is skin trusted
+                buffer.writeBoolean( true );
             }
         }
     }
