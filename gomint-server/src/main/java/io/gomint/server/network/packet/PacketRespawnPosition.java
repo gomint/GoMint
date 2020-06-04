@@ -41,16 +41,19 @@ public class PacketRespawnPosition extends Packet {
         this.entityId = buffer.readUnsignedVarLong();
     }
 
-    // TODO: maybe i need to move this on a external class as i need data for handler
     public enum RespawnState {
         SEARCHING_FOR_SPAWN( (byte) 0 ),
         READY_TO_SPAWN( (byte) 1 ),
         CLIENT_READY_TO_SPAWN( (byte) 2 );
 
-        private int id;
+        private byte id;
 
         RespawnState(byte id) {
             this.id = id;
+        }
+
+        public byte getId() {
+            return id;
         }
     }
 }

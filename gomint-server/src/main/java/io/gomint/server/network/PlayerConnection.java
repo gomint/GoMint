@@ -223,6 +223,8 @@ public class PlayerConnection implements ConnectionWithState {
             PACKET_HANDLERS[Protocol.PACKET_BOSS_BAR & 0xff] = new PacketBossBarHandler();
             PACKET_HANDLERS[Protocol.PACKET_RESPAWN_POSITION & 0xff] = new PacketRespawnPositionHandler();
             PACKET_HANDLERS[Protocol.PACKET_WORLD_SOUND_EVENT & 0xff] = new PacketWorldSoundEventHandler();
+            PACKET_HANDLERS[Protocol.PACKET_TICK_SYNC & 0xff] = new PacketTickSyncHandler();
+            PACKET_HANDLERS[Protocol.PACKET_CLIENT_CACHE_STATUS & 0xff] = new PacketClientCacheStatusHandler();
 
             packetHandlersInit = true;
         }

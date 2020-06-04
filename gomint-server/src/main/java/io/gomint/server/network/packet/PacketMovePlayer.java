@@ -30,6 +30,8 @@ public class PacketMovePlayer extends Packet {
     private byte mode;
     private boolean onGround;
     private long ridingEntityId;
+    private int teleportCause;
+    private int teleportItem;
 
     public PacketMovePlayer() {
         super( Protocol.PACKET_MOVE_PLAYER );
@@ -48,9 +50,9 @@ public class PacketMovePlayer extends Packet {
         buffer.writeBoolean( this.onGround );
         buffer.writeUnsignedVarLong( this.ridingEntityId );
 
-        if ( this.mode == 2 ) {
-            buffer.writeLInt( 0 );
-            buffer.writeLInt( 0 );
+        if ( this.mode == (byte) MovePlayerMode.TELEPORT.ordinal() ) {
+            buffer.writeLInt( this.teleportCause );
+            buffer.writeLInt( this.teleportItem );
         }
     }
 
@@ -66,6 +68,28 @@ public class PacketMovePlayer extends Packet {
         this.mode = buffer.readByte();
         this.onGround = buffer.readBoolean();
         this.ridingEntityId = buffer.readUnsignedVarLong();
+
+        if ( this.mode == (byte) MovePlayerMode.TELEPORT.ordinal() ) {
+            this.teleportCause = buffer.readLInt();
+            this.teleportItem = buffer.readLInt();
+        }
+    }
+
+    public enum MovePlayerMode {
+        NORMAL( 0 ),
+        RESET( 1 ),
+        TELEPORT( 2 ),
+        PITCH( 3 );
+
+        private int id;
+
+        MovePlayerMode(int id) {
+            this.id = id;
+        }
+
+        public int getId() {
+            return id;
+        }
     }
 
 }

@@ -39,6 +39,7 @@ import io.gomint.server.maintenance.performance.LoginPerformance;
 import io.gomint.server.network.PlayerConnection;
 import io.gomint.server.network.PlayerConnectionState;
 import io.gomint.server.network.packet.*;
+import io.gomint.server.network.packet.PacketRespawnPosition.RespawnState;
 import io.gomint.server.network.tcp.protocol.SendPlayerToServerPacket;
 import io.gomint.server.permission.PermissionManager;
 import io.gomint.server.player.EntityVisibilityManager;
@@ -1252,7 +1253,7 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
         PacketRespawnPosition packetRespawnPosition = new PacketRespawnPosition();
         packetRespawnPosition.setPosition(this.respawnPosition);
         packetRespawnPosition.setEntityId(this.getEntityId());
-        packetRespawnPosition.setState( (byte) 1 );  // TODO
+        packetRespawnPosition.setState( (byte) RespawnState.READY_TO_SPAWN.ordinal() );
         this.getConnection().addToSendQueue(packetRespawnPosition);
     }
 
