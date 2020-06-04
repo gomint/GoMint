@@ -1251,6 +1251,8 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
 
         PacketRespawnPosition packetRespawnPosition = new PacketRespawnPosition();
         packetRespawnPosition.setPosition(this.respawnPosition);
+        packetRespawnPosition.setEntityId(this.getEntityId());
+        packetRespawnPosition.setState( (byte) 1 );  // TODO
         this.getConnection().addToSendQueue(packetRespawnPosition);
     }
 

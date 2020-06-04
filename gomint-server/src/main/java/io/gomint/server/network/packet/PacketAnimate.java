@@ -15,6 +15,7 @@ public class PacketAnimate extends Packet {
 
     private int actionId;
     private long entityId;
+    private float boatRowingTime;
 
     public PacketAnimate() {
         super( Protocol.PACKET_ANIMATE );
@@ -24,12 +25,18 @@ public class PacketAnimate extends Packet {
     public void serialize( PacketBuffer buffer, int protocolID ) {
         buffer.writeSignedVarInt( this.actionId );
         buffer.writeUnsignedVarLong( this.entityId );
+        if ( (actionId & 0x80) != 0 ) {
+            buffer.writeLFloat( this.boatRowingTime );
+        }
     }
 
     @Override
     public void deserialize( PacketBuffer buffer, int protocolID ) {
         this.actionId = buffer.readSignedVarInt();
         this.playerAnimation = PlayerAnimation.getById( actionId );
+        if ( (actionId & 0x80) != 0 ) {
+            this.boatRowingTime = buffer.readLFloat();
+        }
         switch ( playerAnimation ) {
             case SWING:
                 this.entityId = buffer.readUnsignedVarLong();
@@ -39,7 +46,12 @@ public class PacketAnimate extends Packet {
 
     public enum PlayerAnimation {
 
-        SWING( 1 );
+        SWING( 1 ),
+        BED_WAKEUP( 3 ),
+        CRITICAL_HIT( 4 ),
+        MAGICAL_CRITICAL_HIT( 5 ),
+        ROW_RIGHT( 128 ),
+        ROW_LEFT( 129 );
 
         private int id;
 
@@ -51,6 +63,16 @@ public class PacketAnimate extends Packet {
             switch ( id ) {
                 case 1:
                     return SWING;
+                case 3:
+                    return BED_WAKEUP;
+                case 4:
+                    return CRITICAL_HIT;
+                case 5:
+                    return MAGICAL_CRITICAL_HIT;
+                case 128:
+                    return ROW_RIGHT;
+                case 129:
+                    return ROW_LEFT;
                 default:
                     return null;
             }

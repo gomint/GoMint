@@ -238,6 +238,7 @@ public class PlayerConnection implements ConnectionWithState {
             PACKET_HANDLERS[Protocol.PACKET_SET_LOCAL_PLAYER_INITIALIZED & 0xff] = new PacketSetLocalPlayerAsInitializedHandler();
             PACKET_HANDLERS[Protocol.PACKET_TILE_ENTITY_DATA & 0xff] = new PacketTileEntityDataHandler();
             PACKET_HANDLERS[Protocol.PACKET_BOSS_BAR & 0xff] = new PacketBossBarHandler();
+            PACKET_HANDLERS[Protocol.PACKET_RESPAWN_POSITION & 0xff] = new PacketRespawnPositionHandler();
 
             packetHandlersInit = true;
         }

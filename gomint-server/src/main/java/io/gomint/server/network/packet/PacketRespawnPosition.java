@@ -20,6 +20,8 @@ import lombok.Data;
 public class PacketRespawnPosition extends Packet {
 
     private Vector position;
+    private byte state;
+    private long entityId;
 
     public PacketRespawnPosition() {
         super( Protocol.PACKET_RESPAWN_POSITION );
@@ -28,10 +30,27 @@ public class PacketRespawnPosition extends Packet {
     @Override
     public void serialize( PacketBuffer buffer, int protocolID ) {
         writeVector( this.position, buffer );
+        buffer.writeByte( this.state );
+        buffer.writeUnsignedVarLong( this.entityId );
     }
 
     @Override
     public void deserialize( PacketBuffer buffer, int protocolID ) {
+        this.position = this.readVector( buffer );
+        this.state = buffer.readByte();
+        this.entityId = buffer.readUnsignedVarLong();
+    }
 
+    // TODO: maybe i need to move this on a external class as i need data for handler
+    public enum RespawnState {
+        SEARCHING_FOR_SPAWN( (byte) 0 ),
+        READY_TO_SPAWN( (byte) 1 ),
+        CLIENT_READY_TO_SPAWN( (byte) 2 );
+
+        private int id;
+
+        RespawnState(byte id) {
+            this.id = id;
+        }
     }
 }
