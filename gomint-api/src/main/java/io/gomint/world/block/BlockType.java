@@ -235,6 +235,10 @@ public enum BlockType {
     HONEY_BLOCK,
     BEE_HIVE,
     BEE_NEST,
-    HONEYCOMB
-
+    HONEYCOMB,
+    COMPOSTER,
+    CAMPFIRE,
+    LECTERN,
+    LOOM,
+    SWEETBERRIESBUSH,
 }

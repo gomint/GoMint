@@ -504,6 +504,12 @@ public enum ItemType {
     HONEY_BLOCK,
     HONEYCOMBBLOCK,
     HONEYCOMB,
+    COMPOSTER,
+    CAMPFIRE,
+    LECTERN,
+    LOOM,
+    SWEETBERRIESBUSH,
+    SWEETBERRIES,
 
 
 }

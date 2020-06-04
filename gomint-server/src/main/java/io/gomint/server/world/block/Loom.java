@@ -9,24 +9,23 @@ import io.gomint.world.block.BlockType;
  * @author KingAli
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:honey_block" )
-public class Honey extends Block implements io.gomint.world.block.BlockHoney {
+@RegisterInfo( sId = "minecraft:loom" )
+public class Loom extends Block implements io.gomint.world.block.BlockLoom {
 
     @Override
     public String getBlockId() {
-        return "minecraft:honey_block";
+        return "minecraft:loom";
     }
 
     @Override
     public long getBreakTime() {
-        return 900;
+        return 3750;
     }
 
     @Override
-    public boolean canBeBrokenWithHand() {
-        return true;
+    public Class<? extends ItemStack>[] getToolInterfaces() {
+        return ToolPresets.AXE;
     }
-
 
     @Override
     public float getBlastResistance() {
@@ -35,6 +34,6 @@ public class Honey extends Block implements io.gomint.world.block.BlockHoney {
 
     @Override
     public BlockType getType() {
-        return BlockType.HONEY_BLOCK;
+        return BlockType.LOOM;
     }
 }

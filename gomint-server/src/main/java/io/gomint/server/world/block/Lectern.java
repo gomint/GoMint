@@ -9,32 +9,36 @@ import io.gomint.world.block.BlockType;
  * @author KingAli
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:honey_block" )
-public class Honey extends Block implements io.gomint.world.block.BlockHoney {
+@RegisterInfo( sId = "minecraft:lectern" )
+public class Lectern extends Block implements io.gomint.world.block.BlockLectern {
 
     @Override
     public String getBlockId() {
-        return "minecraft:honey_block";
+        return "minecraft:lectern";
     }
 
     @Override
     public long getBreakTime() {
-        return 900;
+        return 3750; //DEFAULT
     }
 
     @Override
     public boolean canBeBrokenWithHand() {
-        return true;
+        return false;
     }
-
 
     @Override
     public float getBlastResistance() {
-        return 0;
+        return 0; //TODO
     }
 
     @Override
     public BlockType getType() {
-        return BlockType.HONEY_BLOCK;
+        return BlockType.LECTERN;
+    }
+
+    @Override
+    public Class<? extends ItemStack>[] getToolInterfaces() {
+        return ToolPresets.AXE;
     }
 }
