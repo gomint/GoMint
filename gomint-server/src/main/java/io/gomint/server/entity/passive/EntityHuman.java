@@ -488,7 +488,7 @@ public class EntityHuman extends EntityCreature implements io.gomint.entity.pass
     }
 
     private void updatePlayerList() {
-        List<PacketPlayerlist.Entry> singleEntry = Collections.singletonList( new PacketPlayerlist.Entry( EntityHuman.this ) );
+        List<PacketPlayerlist.Entry> singleEntry = Collections.singletonList( new PacketPlayerlist.Entry( (EntityPlayer) EntityHuman.this ) );
 
         PacketPlayerlist packetPlayerlist = new PacketPlayerlist();
         packetPlayerlist.setMode( (byte) 0 );
@@ -564,7 +564,7 @@ public class EntityHuman extends EntityCreature implements io.gomint.entity.pass
         PacketPlayerlist packetPlayerlist = new PacketPlayerlist();
         packetPlayerlist.setMode( (byte) 0 );
         packetPlayerlist.setEntries( new ArrayList<PacketPlayerlist.Entry>() {{
-            add( new PacketPlayerlist.Entry( EntityHuman.this ) );
+            add( new PacketPlayerlist.Entry( (EntityPlayer) EntityHuman.this ) );
         }} );
 
         connection.addToSendQueue( packetPlayerlist );
@@ -581,7 +581,7 @@ public class EntityHuman extends EntityCreature implements io.gomint.entity.pass
         PacketPlayerlist packetPlayerlist = new PacketPlayerlist();
         packetPlayerlist.setMode( (byte) 1 );
         packetPlayerlist.setEntries( new ArrayList<PacketPlayerlist.Entry>() {{
-            add( new PacketPlayerlist.Entry( EntityHuman.this ) );
+            add( new PacketPlayerlist.Entry( (EntityPlayer) EntityHuman.this ) );
         }} );
 
         connection.addToSendQueue( packetPlayerlist );

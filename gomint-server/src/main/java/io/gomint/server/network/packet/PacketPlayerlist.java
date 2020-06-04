@@ -1,8 +1,9 @@
 package io.gomint.server.network.packet;
 
 import io.gomint.jraknet.PacketBuffer;
+import io.gomint.player.DeviceInfo;
 import io.gomint.player.PlayerSkin;
-import io.gomint.server.entity.passive.EntityHuman;
+import io.gomint.server.entity.EntityPlayer;
 import io.gomint.server.network.Protocol;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -38,11 +39,11 @@ public class PacketPlayerlist extends Packet {
                 // xbox user id
                 buffer.writeString( entry.xboxId );
 
-                // This is platformChatId, probably a random UUID.
-                buffer.writeString( "" );
+                // Player device UUID
+                buffer.writeString( entry.deviceInfo.getDeviceId() );
 
-                // TODO: This is buildPlatform, should be player device id.
-                buffer.writeLInt( -1 );
+                // Player device ID
+                buffer.writeLInt( entry.deviceInfo.getOs().ordinal() );
 
                 buffer.writeString( entry.getSkin().getName() );
 
@@ -96,11 +97,12 @@ public class PacketPlayerlist extends Packet {
         private final UUID uuid;
         private long entityId = 0;
         private String name = "";
+        private DeviceInfo deviceInfo;
         private String xboxId = "";
         private PlayerSkin skin;
 
-        public Entry( EntityHuman human ) {
-            this( human.getUUID(), human.getEntityId(), human.getPlayerListName(), human.getXboxID(), human.getSkin() );
+        public Entry( EntityPlayer player ) {
+            this( player.getUUID(), player.getEntityId(), player.getPlayerListName(), player.getDeviceInfo(), player.getXboxID(), player.getSkin() );
         }
     }
 

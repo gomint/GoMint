@@ -22,7 +22,6 @@ import io.gomint.math.MathUtils;
 import io.gomint.player.DeviceInfo;
 import io.gomint.server.GoMintServer;
 import io.gomint.server.entity.EntityPlayer;
-import io.gomint.server.entity.passive.EntityHuman;
 import io.gomint.server.jni.NativeCode;
 import io.gomint.server.jni.zlib.JavaZLib;
 import io.gomint.server.jni.zlib.NativeZLib;
@@ -1110,7 +1109,7 @@ public class PlayerConnection implements ConnectionWithState {
                     listEntry = new ArrayList<>();
                 }
 
-                listEntry.add(new PacketPlayerlist.Entry((EntityHuman) player));
+                listEntry.add(new PacketPlayerlist.Entry((EntityPlayer) player));
             }
         }
 

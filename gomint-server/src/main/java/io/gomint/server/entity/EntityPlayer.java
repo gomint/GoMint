@@ -183,9 +183,6 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
     @Getter
     private boolean spawnPlayers;
 
-    @Getter
-    private String deviceId;
-
     // Scoreboard
     @Getter
     private Scoreboard scoreboard;
@@ -202,15 +199,13 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
      * @param xboxId     The xbox id from xbox live which has logged in
      * @param uuid       The uuid which has been sent from the client
      * @param locale     language of the player
-     * @param deviceId   id of the device (should be unique to all devices)
      */
     public EntityPlayer(WorldAdapter world,
                         PlayerConnection connection,
                         String username,
                         String xboxId,
                         UUID uuid,
-                        Locale locale,
-                        String deviceId) {
+                        Locale locale) {
         super(EntityType.PLAYER, world);
         this.connection = connection;
 
@@ -218,7 +213,6 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
         this.setPlayerData(username, username, xboxId, uuid);
 
         this.locale = locale;
-        this.deviceId = deviceId;
         this.adventureSettings = new AdventureSettings(this);
 
         // Performance stuff
@@ -886,6 +880,7 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
     public void sendMessage(String message) {
         PacketText packetText = new PacketText();
         packetText.setMessage(message);
+        packetText.setDeviceId(this.getDeviceInfo().getDeviceId());
         packetText.setType(PacketText.Type.CLIENT_MESSAGE);
         this.connection.addToSendQueue(packetText);
     }
@@ -894,6 +889,7 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
     public void sendMessage(ChatType type, String... message) {
         PacketText packetText = new PacketText();
         packetText.setMessage(message[0]);
+        packetText.setDeviceId(this.getDeviceInfo().getDeviceId());
         switch (type) {
             case TIP:
                 packetText.setType(PacketText.Type.TIP_MESSAGE);
@@ -1596,7 +1592,7 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
 
         packetSpawnPlayer.setItemInHand(this.getInventory().getItemInHand());
         packetSpawnPlayer.setMetadataContainer(this.getMetadata());
-        packetSpawnPlayer.setDeviceId(this.deviceId == null ? "" : this.deviceId);
+        packetSpawnPlayer.setDeviceId( this.getDeviceInfo().getDeviceId() );
         return packetSpawnPlayer;
     }
 

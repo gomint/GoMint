@@ -8,6 +8,7 @@
 package io.gomint.server.network.packet;
 
 import io.gomint.jraknet.PacketBuffer;
+import io.gomint.player.DeviceInfo;
 import io.gomint.server.network.Protocol;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -26,8 +27,7 @@ public class PacketText extends Packet {
     private String[] arguments = new String[0];
     private String xuid = "";
 
-    private String sourceThirdPartyName = "";
-    private int sourcePlatform = 0;
+    private String deviceId;
 
     public PacketText() {
         super( Protocol.PACKET_TEXT );
@@ -76,7 +76,7 @@ public class PacketText extends Packet {
         }
 
         buffer.writeString( this.xuid );
-        buffer.writeString( "" ); // TODO: Check if this is the same as in SpawnPlayer / PlayerList
+        buffer.writeString( this.deviceId );
     }
 
     @Override
@@ -115,7 +115,7 @@ public class PacketText extends Packet {
         }
 
         this.xuid = buffer.readString();
-        buffer.readString();
+        this.deviceId = buffer.readString();
     }
 
     public enum Type {

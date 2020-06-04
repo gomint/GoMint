@@ -10,6 +10,7 @@ import lombok.Getter;
 public class DeviceInfo {
 
     private final String deviceName;
+    private final String deviceId;
     private final DeviceOS os;
     private final UI ui;
 
@@ -20,9 +21,10 @@ public class DeviceInfo {
      * @param deviceName which the player is using
      * @param ui         which the player is using
      */
-    public DeviceInfo( DeviceOS deviceOS, String deviceName, UI ui ) {
+    public DeviceInfo( DeviceOS deviceOS, String deviceName, String deviceId, UI ui ) {
         this.os = deviceOS;
         this.deviceName = deviceName;
+        this.deviceId = deviceId;
         this.ui = ui;
     }
 
@@ -38,9 +40,58 @@ public class DeviceInfo {
         IOS,
 
         /**
-         * Windows. What else?
+         * MacOS, apple OS for mac computers
          */
-        WINDOWS
+        OSX,
+
+        AMAZON,
+
+        /**
+         * Oculus gear-vr
+         */
+        GEAR_VR,
+
+        /**
+         * Microsoft hololens
+         */
+        HOLOLENS,
+
+        /**
+         * Windows x64
+         */
+        WINDOWS,
+
+        /**
+         * Windows x32
+         */
+        WINDOWS_32,
+
+        DEDICATED,
+
+        /**
+         * Any tv supporting MCBE?
+         */
+        TVOS,
+
+        /**
+         * PS console by sony
+         */
+        PLAYSTATION,
+
+        /**
+         * Switch console by nintendo
+         */
+        NINTENDO,
+
+        /**
+         * XBOX console by microsoft
+         */
+        XBOX,
+
+        /**
+         * Windows Mobile, microsoft os for mobile phones
+         */
+        WINDOWS_PHONE
     }
 
     public enum UI {
