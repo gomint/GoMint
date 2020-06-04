@@ -243,7 +243,7 @@ public final class Protocol {
             case PACKET_RESOURCEPACK_RESPONSE:
                 return new PacketResourcePackResponse();
 
-            case PACKET_WORLD_SOUND_EVENT_V1:
+            case PACKET_WORLD_SOUND_EVENT:
                 return new PacketWorldSoundEvent();
 
             case PACKET_MOVE_PLAYER:

@@ -28,24 +28,7 @@ import io.gomint.server.jni.zlib.NativeZLib;
 import io.gomint.server.jni.zlib.ZLib;
 import io.gomint.server.maintenance.ReportUploader;
 import io.gomint.server.network.handler.*;
-import io.gomint.server.network.packet.Packet;
-import io.gomint.server.network.packet.PacketBatch;
-import io.gomint.server.network.packet.PacketConfirmChunkRadius;
-import io.gomint.server.network.packet.PacketDisconnect;
-import io.gomint.server.network.packet.PacketEncryptionResponse;
-import io.gomint.server.network.packet.PacketInventoryTransaction;
-import io.gomint.server.network.packet.PacketLogin;
-import io.gomint.server.network.packet.PacketMovePlayer;
-import io.gomint.server.network.packet.PacketNetworkChunkPublisherUpdate;
-import io.gomint.server.network.packet.PacketPlayState;
-import io.gomint.server.network.packet.PacketPlayerlist;
-import io.gomint.server.network.packet.PacketResourcePackResponse;
-import io.gomint.server.network.packet.PacketResourcePacksInfo;
-import io.gomint.server.network.packet.PacketSetCommandsEnabled;
-import io.gomint.server.network.packet.PacketSetDifficulty;
-import io.gomint.server.network.packet.PacketSetSpawnPosition;
-import io.gomint.server.network.packet.PacketStartGame;
-import io.gomint.server.network.packet.PacketWorldTime;
+import io.gomint.server.network.packet.*;
 import io.gomint.server.network.tcp.ConnectionHandler;
 import io.gomint.server.network.tcp.protocol.FlushTickPacket;
 import io.gomint.server.network.tcp.protocol.WrappedMCPEPacket;
@@ -239,6 +222,7 @@ public class PlayerConnection implements ConnectionWithState {
             PACKET_HANDLERS[Protocol.PACKET_TILE_ENTITY_DATA & 0xff] = new PacketTileEntityDataHandler();
             PACKET_HANDLERS[Protocol.PACKET_BOSS_BAR & 0xff] = new PacketBossBarHandler();
             PACKET_HANDLERS[Protocol.PACKET_RESPAWN_POSITION & 0xff] = new PacketRespawnPositionHandler();
+            PACKET_HANDLERS[Protocol.PACKET_WORLD_SOUND_EVENT & 0xff] = new PacketWorldSoundEventHandler();
 
             packetHandlersInit = true;
         }
