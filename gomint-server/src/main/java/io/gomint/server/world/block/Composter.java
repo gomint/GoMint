@@ -14,12 +14,12 @@ public class Composter extends Block implements io.gomint.world.block.BlockCompo
 
     @Override
     public float getBlastResistance() {
-        return 0; //TODO
+        return 3.5f;
     }
 
     @Override
     public long getBreakTime() {
-        return 750; //TODO
+        return 900;
     }
 
     @Override

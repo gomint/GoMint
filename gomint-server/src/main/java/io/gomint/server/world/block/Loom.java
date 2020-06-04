@@ -29,7 +29,7 @@ public class Loom extends Block implements io.gomint.world.block.BlockLoom {
 
     @Override
     public float getBlastResistance() {
-        return 0;
+        return 12.5f;
     }
 
     @Override

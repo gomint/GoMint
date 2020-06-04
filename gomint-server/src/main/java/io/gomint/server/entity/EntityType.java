@@ -475,6 +475,7 @@ public enum EntityType {
      */
     COD( "minecraft:cod", 112 );
 
+
     private final String persistantId;
     private final int networkId;
 

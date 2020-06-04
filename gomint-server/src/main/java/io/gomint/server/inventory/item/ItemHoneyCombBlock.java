@@ -8,7 +8,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( id = 474 )
-public class ItemHoneyCombBlock extends ItemStack {
+public class ItemHoneyCombBlock extends ItemStack implements io.gomint.inventory.item.ItemHoneyCombBlock {
 
     @Override
     public String getBlockId() {

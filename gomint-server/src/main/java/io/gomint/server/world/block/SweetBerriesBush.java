@@ -20,7 +20,9 @@ public class SweetBerriesBush extends Block implements BlockSweetBerriesBush {
     public float getBlastResistance() {
         return 0;
     }
-//TODO DAMAGE
+
+          //TODO DAMAGE
+
     @Override
     public BlockType getType() {
         return BlockType.SWEETBERRIESBUSH;

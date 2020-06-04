@@ -8,7 +8,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( id = 260 )
-public class ItemHoneyBottle extends ItemFood {
+public class ItemHoneyBottle extends ItemFood implements io.gomint.inventory.item.ItemHoneyBottle {
 
 
     @Override
@@ -23,7 +23,7 @@ public class ItemHoneyBottle extends ItemFood {
 
     @Override
     public float getSaturation() {
-        return 1.2f; //TODO KEine ahnung
+        return (float) 1.2;
     }
 
     @Override

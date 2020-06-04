@@ -9,17 +9,17 @@ import io.gomint.world.block.BlockType;
  * @author KingAli
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:bee_nest" )
-public class BeeHive extends Block {
+@RegisterInfo( sId = "minecraft:bee_hive" )
+public class BeeHive extends Block implements io.gomint.world.block.BlockBeeHive {
 
     @Override
     public String getBlockId() {
-        return "minecraft:bee_nest";
+        return "minecraft:bee_hive";
     }
 
     @Override
     public long getBreakTime() {
-        return 900;
+        return 450;
     }
 
     @Override
@@ -29,7 +29,7 @@ public class BeeHive extends Block {
 
     @Override
     public float getBlastResistance() {
-        return 0;
+        return 3;
     }
 
     @Override

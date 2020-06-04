@@ -27,7 +27,7 @@ public class HoneyComb extends Block implements io.gomint.world.block.BlockHoney
 
     @Override
     public float getBlastResistance() {
-        return 0.6f; //TODO
+        return 3;
     }
 
     @Override

@@ -19,7 +19,7 @@ public class Lectern extends Block implements io.gomint.world.block.BlockLectern
 
     @Override
     public long getBreakTime() {
-        return 3750; //DEFAULT
+        return 3750;
     }
 
     @Override
@@ -29,7 +29,7 @@ public class Lectern extends Block implements io.gomint.world.block.BlockLectern
 
     @Override
     public float getBlastResistance() {
-        return 0; //TODO
+        return 12.5f;
     }
 
     @Override

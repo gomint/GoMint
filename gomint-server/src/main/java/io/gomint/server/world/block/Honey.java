@@ -19,14 +19,13 @@ public class Honey extends Block implements io.gomint.world.block.BlockHoney {
 
     @Override
     public long getBreakTime() {
-        return 900;
+        return 0;
     }
 
     @Override
     public boolean canBeBrokenWithHand() {
         return true;
     }
-
 
     @Override
     public float getBlastResistance() {

@@ -8,7 +8,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( id = 734 )
-public class ItemSuspiciousStew extends ItemFood {
+public class ItemSuspiciousStew extends ItemFood implements io.gomint.inventory.item.ItemSuspiciousStew {
 
     @Override
     public byte getMaximumAmount() {
@@ -17,7 +17,7 @@ public class ItemSuspiciousStew extends ItemFood {
 
     @Override
     public float getSaturation() {
-        return 0;
+        return (float) 7.2;
     }
 
     @Override

@@ -19,7 +19,7 @@ public class Campfire extends Block implements io.gomint.world.block.BlockCampfi
 
     @Override
     public long getBreakTime() {
-        return 3000; //DEFAULT
+        return 3000;
     }
 
     @Override
@@ -29,7 +29,7 @@ public class Campfire extends Block implements io.gomint.world.block.BlockCampfi
 
     @Override
     public float getBlastResistance() {
-        return 0; //TODO
+        return 10;
     }
 
     @Override
