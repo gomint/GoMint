@@ -232,5 +232,9 @@ public enum BlockType {
     WOODEN_SLAB,
     WOOD,
     WOOL,
+    HONEY_BLOCK,
+    BEE_HIVE,
+    BEE_NEST,
+    HONEYCOMB
 
 }

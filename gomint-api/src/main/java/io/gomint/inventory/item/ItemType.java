@@ -407,7 +407,6 @@ public enum ItemType {
     SEA_GRASS,
     SEEDS,
     SHEARS,
-    SHIELD,
     SHULKER_BOX,
     SHULKER_SHELL,
     SIGN,
@@ -500,5 +499,11 @@ public enum ItemType {
     WRITABLE_BOOK,
     WRITTEN_BOOK,
     YELLOW_GLAZED_TERRACOTTA,
+    HONEY_BOTTLE,
+    SUSPICIOUSSTEW,
+    HONEY_BLOCK,
+    HONEYCOMBBLOCK,
+    HONEYCOMB,
+
 
 }
