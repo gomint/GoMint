@@ -29,10 +29,14 @@ public class EntityZombie extends EntityAgeable implements io.gomint.entity.mons
     }
 
     private void initEntity() {
-        this.setSize( 0.6f, 1.95f );
-        this.addAttribute( Attribute.HEALTH );
-        this.setMaxHealth( 20 );
-        this.setHealth( 20 );
+        this.addAttribute(Attribute.HEALTH);
+        this.setMaxHealth(20);
+        this.setHealth(20);
+        if(this.isBaby()) {
+            this.setSize(0.3f, 0.975f);
+        }else{
+            this.setSize(0.6f, 1.95f);
+        }
     }
 
     @Override

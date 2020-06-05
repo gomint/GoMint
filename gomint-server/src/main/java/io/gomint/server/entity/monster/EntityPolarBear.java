@@ -29,10 +29,14 @@ public class EntityPolarBear extends EntityAgeable implements io.gomint.entity.m
     }
 
     private void initEntity() {
-        this.setSize( 1.3f, 1.4f );
-        this.addAttribute( Attribute.HEALTH );
-        this.setMaxHealth( 30 );
-        this.setHealth( 30 );
+        this.addAttribute(Attribute.HEALTH);
+        this.setMaxHealth(30);
+        this.setHealth(30);
+        if(this.isBaby()) {
+            this.setSize(0.7f, 0.7f);
+        }else{
+            this.setSize(1.3f, 1.4f);
+        }
     }
 
     @Override

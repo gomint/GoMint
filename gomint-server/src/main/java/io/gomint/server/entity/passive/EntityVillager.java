@@ -37,12 +37,16 @@ public class EntityVillager extends EntityAgeable implements io.gomint.entity.pa
     }
 
     private void initEntity() {
-        this.setSize( 0.6f, 1.95f );
         this.eyeHeight = 1.62f;
-        this.addAttribute( Attribute.HEALTH );
-        this.setMaxHealth( 20 );
-        this.setHealth( 20 );
-        this.setProfession( Profession.FARMER );
+        this.addAttribute(Attribute.HEALTH);
+        this.setMaxHealth(20);
+        this.setHealth(20);
+        this.setProfession(Profession.FARMER);
+        if(this.isBaby()) {
+            this.setSize(0.3f, 0.975f);
+        }else{
+            this.setSize(0.6f, 1.95f);
+        }
     }
 
     @Override

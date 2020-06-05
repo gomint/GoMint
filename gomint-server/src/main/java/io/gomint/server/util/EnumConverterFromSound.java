@@ -7,6 +7,8 @@
 
 package io.gomint.server.util;
 
+import io.gomint.world.Sound;
+
 /**
  * @author generated
  * @version 2.0
@@ -344,6 +346,22 @@ public class EnumConverterFromSound implements EnumConverter {
                 return io.gomint.world.Sound.RANDOM_ANVIL_USE;
             case 163:
                 return io.gomint.world.Sound.BOTTLE_DRAGONBREATH;
+            case 164:
+                return io.gomint.world.Sound.PORTAL_TRAVEL;
+            case 165:
+                return io.gomint.world.Sound.BELLS;
+            case 166:
+                return io.gomint.world.Sound.RAVAGERS;
+            case 167:
+                return io.gomint.world.Sound.SWEETBERRYBUSHES;
+            case 168:
+                return io.gomint.world.Sound.CAMPFIRES;
+            case 169:
+                return io.gomint.world.Sound.RAIDS;
+            case 170:
+                return io.gomint.world.Sound.GRINDSTONES;
+            case 171:
+                return io.gomint.world.Sound.LANTERNS;
         }
 
         return null;
