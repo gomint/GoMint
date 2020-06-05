@@ -11,6 +11,7 @@ import io.gomint.jraknet.PacketBuffer;
 import io.gomint.server.network.Protocol;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 
 /**
  * @author BlackyPaw
@@ -46,7 +47,8 @@ public class PacketPlayState extends Packet {
         LOGIN_FAILED_SERVER( 2 ),
         SPAWN( 3 );
 
-        private int value;
+        @Getter
+        private final int value;
 
         PlayState( int value ) {
             this.value = value;
@@ -65,10 +67,6 @@ public class PacketPlayState extends Packet {
                 default:
                     return null;
             }
-        }
-
-        public int getValue() {
-            return this.value;
         }
 
     }
