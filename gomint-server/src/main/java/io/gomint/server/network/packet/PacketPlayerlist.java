@@ -4,6 +4,7 @@ import io.gomint.jraknet.PacketBuffer;
 import io.gomint.player.DeviceInfo;
 import io.gomint.player.PlayerSkin;
 import io.gomint.server.entity.EntityPlayer;
+import io.gomint.server.entity.passive.EntityHuman;
 import io.gomint.server.network.Protocol;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -43,7 +44,7 @@ public class PacketPlayerlist extends Packet {
                 buffer.writeString( entry.deviceInfo.getDeviceId() );
 
                 // Player device ID
-                buffer.writeLInt( entry.deviceInfo.getOs().ordinal() );
+                buffer.writeLInt( entry.deviceInfo.getOs().getId() );
 
                 buffer.writeString( entry.getSkin().getName() );
 
@@ -101,8 +102,8 @@ public class PacketPlayerlist extends Packet {
         private String xboxId = "";
         private PlayerSkin skin;
 
-        public Entry( EntityPlayer player ) {
-            this( player.getUUID(), player.getEntityId(), player.getPlayerListName(), player.getDeviceInfo(), player.getXboxID(), player.getSkin() );
+        public Entry( EntityHuman human ) {
+            this( human.getUUID(), human.getEntityId(), human.getPlayerListName(), human.getDeviceInfo() , human.getXboxID(), human.getSkin() );
         }
     }
 

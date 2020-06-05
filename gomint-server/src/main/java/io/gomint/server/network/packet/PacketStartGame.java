@@ -60,7 +60,6 @@ public class PacketStartGame extends Packet {
     private boolean xboxLiveBroadcastIntent = false;
 
     // World data
-    private String vanillaVersion = Protocol.MINECRAFT_PE_NETWORK_VERSION;
     private String levelId;
     private String worldName;
     private String templateId;
@@ -128,7 +127,7 @@ public class PacketStartGame extends Packet {
         buffer.writeBoolean( false );
         buffer.writeBoolean( false );
 
-        buffer.writeString( this.vanillaVersion );
+        buffer.writeString( Protocol.MINECRAFT_PE_NETWORK_VERSION );
         buffer.writeString( this.levelId );
         buffer.writeString( this.worldName );
         buffer.writeString( this.templateId );
