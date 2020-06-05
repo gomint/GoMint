@@ -256,6 +256,11 @@ public enum EntityType {
     PHANTOM( "minecraft:phantom", 58 ),
 
     /**
+     * Entity type value for a Ravager.
+     */
+    RAVAGER("minecraft:ravager",59),
+
+    /**
      * Entity type value for a armor stand.
      */
     ARMOR_STAND( "minecraft:armor_stand", 61 ),
@@ -473,7 +478,24 @@ public enum EntityType {
     /**
      * Entity type value for a cod.
      */
-    COD( "minecraft:cod", 112 );
+    COD( "minecraft:cod", 112 ),
+
+    /**
+     * Entity type value for a Pillager.
+     */
+    PILLAGER("minecarft:pillager",114),
+
+    /**
+     * Entity type value for a Fox.
+     */
+    FOX("minecraft:fox",121),
+
+    /**
+     * Entity type value for a Bee.
+     */
+    BEE("minecraft:bee",122);
+
+
 
 
     private final String persistantId;

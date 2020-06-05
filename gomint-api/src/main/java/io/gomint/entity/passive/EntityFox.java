@@ -4,7 +4,7 @@ import io.gomint.GoMint;
 import io.gomint.entity.EntityAgeable;
 
 /**
- * @author geNAZt
+ * @author KingAli
  * @version 1.0
  */
 public interface EntityFox extends EntityAgeable {

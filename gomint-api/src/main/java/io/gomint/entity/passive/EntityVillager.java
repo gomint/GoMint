@@ -38,7 +38,8 @@ public interface EntityVillager extends EntityAgeable {
         LIBRARIAN,
         PRIEST,
         BLACKSMITH,
-        BUTCHER;
+        BUTCHER,
+        TRADER;
     }
 
 }
