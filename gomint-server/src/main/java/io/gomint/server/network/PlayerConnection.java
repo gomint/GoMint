@@ -36,6 +36,7 @@ import io.gomint.server.network.packet.PacketEncryptionResponse;
 import io.gomint.server.network.packet.PacketInventoryTransaction;
 import io.gomint.server.network.packet.PacketLogin;
 import io.gomint.server.network.packet.PacketMovePlayer;
+import io.gomint.server.network.packet.PacketMovePlayer.MovePlayerMode;
 import io.gomint.server.network.packet.PacketNetworkChunkPublisherUpdate;
 import io.gomint.server.network.packet.PacketPlayState;
 import io.gomint.server.network.packet.PacketPlayerlist;
@@ -949,7 +950,7 @@ public class PlayerConnection implements ConnectionWithState {
         move.setHeadYaw(location.getHeadYaw());
         move.setYaw(location.getYaw());
         move.setPitch(location.getPitch());
-        move.setMode((byte) 2);
+        move.setMode( MovePlayerMode.TELEPORT );
         move.setOnGround(this.getEntity().isOnGround());
         move.setRidingEntityId(0);    // TODO: Implement riding entities correctly
         this.addToSendQueue(move);
