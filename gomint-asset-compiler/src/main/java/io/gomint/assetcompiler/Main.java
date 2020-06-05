@@ -44,7 +44,7 @@ public class Main {
                 NBTTagCompound entry = (NBTTagCompound) palette;
                 knownIDs.add( entry.getString( "id", null ) );
             }
-        } catch (IOException | AllocationLimitReachedException e ) {
+        } catch ( IOException | AllocationLimitReachedException e ) {
             e.printStackTrace();
             System.exit( -1 );
         }

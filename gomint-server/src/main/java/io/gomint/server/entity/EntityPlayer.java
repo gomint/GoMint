@@ -39,6 +39,7 @@ import io.gomint.server.maintenance.performance.LoginPerformance;
 import io.gomint.server.network.PlayerConnection;
 import io.gomint.server.network.PlayerConnectionState;
 import io.gomint.server.network.packet.*;
+import io.gomint.server.network.packet.PacketRespawnPosition.RespawnState;
 import io.gomint.server.network.tcp.protocol.SendPlayerToServerPacket;
 import io.gomint.server.permission.PermissionManager;
 import io.gomint.server.player.EntityVisibilityManager;
@@ -183,9 +184,6 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
     @Getter
     private boolean spawnPlayers;
 
-    @Getter
-    private String deviceId;
-
     // Scoreboard
     @Getter
     private Scoreboard scoreboard;
@@ -202,15 +200,13 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
      * @param xboxId     The xbox id from xbox live which has logged in
      * @param uuid       The uuid which has been sent from the client
      * @param locale     language of the player
-     * @param deviceId   id of the device (should be unique to all devices)
      */
     public EntityPlayer(WorldAdapter world,
                         PlayerConnection connection,
                         String username,
                         String xboxId,
                         UUID uuid,
-                        Locale locale,
-                        String deviceId) {
+                        Locale locale) {
         super(EntityType.PLAYER, world);
         this.connection = connection;
 
@@ -218,7 +214,6 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
         this.setPlayerData(username, username, xboxId, uuid);
 
         this.locale = locale;
-        this.deviceId = deviceId;
         this.adventureSettings = new AdventureSettings(this);
 
         // Performance stuff
@@ -711,6 +706,8 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
         // Send world init data
         this.connection.sendWorldTime(0);
         this.connection.sendWorldInitialization();
+        this.connection.addToSendQueue( new PacketBiomeDefinitionList() );
+        this.connection.addToSendQueue( new PacketAvailableEntityIdentifiers() );
         this.connection.sendSpawnPosition();
         this.connection.sendWorldTime(0);
         this.connection.sendDifficulty();
@@ -745,21 +742,21 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
 
         this.windowIds = new Byte2ObjectOpenHashMap<>();
         this.containerIds = new Object2ByteOpenHashMap<>();
-        this.connection.getServer().getCreativeInventory().addViewer(this);
+        // TODO: this.connection.getServer().getCreativeInventory().addViewer(this);
 
-        // Send crafting recipes
-        this.connection.addToSendQueue(this.world.getServer().getRecipeManager().getCraftingRecipesBatch());
+        // TODO: Update & Send crafting recipes
+        // this.connection.addToSendQueue(this.world.getServer().getRecipeManager().getCraftingRecipesBatch());
 
         // Send entity metadata
         this.sendData(this);
 
-        // Send player list for yourself
-        PacketPlayerlist playerlist = new PacketPlayerlist();
-        playerlist.setMode((byte) 0);
-        playerlist.setEntries(new ArrayList<PacketPlayerlist.Entry>() {{
-            add(new PacketPlayerlist.Entry(EntityPlayer.this));
-        }});
-        this.getConnection().addToSendQueue(playerlist);
+        // TODO: Send player list for yourself
+//        PacketPlayerlist playerlist = new PacketPlayerlist();
+//        playerlist.setMode((byte) 0);
+//        playerlist.setEntries(new ArrayList<PacketPlayerlist.Entry>() {{
+//            add(new PacketPlayerlist.Entry(EntityPlayer.this));
+//        }});
+//        this.getConnection().addToSendQueue(playerlist);
 
         LOGGER.debug("Did send all prepare entity data");
     }
@@ -884,6 +881,7 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
     public void sendMessage(String message) {
         PacketText packetText = new PacketText();
         packetText.setMessage(message);
+        packetText.setDeviceId(this.getDeviceInfo().getDeviceId());
         packetText.setType(PacketText.Type.CLIENT_MESSAGE);
         this.connection.addToSendQueue(packetText);
     }
@@ -892,6 +890,7 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
     public void sendMessage(ChatType type, String... message) {
         PacketText packetText = new PacketText();
         packetText.setMessage(message[0]);
+        packetText.setDeviceId(this.getDeviceInfo().getDeviceId());
         switch (type) {
             case TIP:
                 packetText.setType(PacketText.Type.TIP_MESSAGE);
@@ -1253,6 +1252,8 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
 
         PacketRespawnPosition packetRespawnPosition = new PacketRespawnPosition();
         packetRespawnPosition.setPosition(this.respawnPosition);
+        packetRespawnPosition.setEntityId(this.getEntityId());
+        packetRespawnPosition.setState( RespawnState.READY_TO_SPAWN );
         this.getConnection().addToSendQueue(packetRespawnPosition);
     }
 
@@ -1594,7 +1595,7 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
 
         packetSpawnPlayer.setItemInHand(this.getInventory().getItemInHand());
         packetSpawnPlayer.setMetadataContainer(this.getMetadata());
-        packetSpawnPlayer.setDeviceId(this.deviceId == null ? "" : this.deviceId);
+        packetSpawnPlayer.setDeviceId( this.getDeviceInfo().getDeviceId() );
         return packetSpawnPlayer;
     }
 

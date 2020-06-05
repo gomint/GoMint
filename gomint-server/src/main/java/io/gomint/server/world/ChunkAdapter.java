@@ -522,12 +522,10 @@ public class ChunkAdapter implements Chunk {
             }
         }
 
-        buffer.writeByte( (byte) topEmpty );
         for ( int i = 0; i < topEmpty; i++ ) {
             ensureSlice( i ).writeToNetwork( buffer );
         }
 
-        buffer.writeBytes( this.height );
         buffer.writeBytes( this.biomes );
         buffer.writeSignedVarInt( 0 );
         buffer.writeSignedVarInt( 0 );
@@ -558,6 +556,7 @@ public class ChunkAdapter implements Chunk {
         PacketWorldChunk packet = new PacketWorldChunk();
         packet.setX( this.x );
         packet.setZ( this.z );
+        packet.setSubChunkCount( topEmpty );
         packet.setData( buffer.getBuffer() );
         packet.setDataLength( buffer.getPosition() );
 

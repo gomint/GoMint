@@ -15,7 +15,6 @@ import io.gomint.inventory.item.ItemStack;
 import io.gomint.math.*;
 import io.gomint.math.Vector;
 import io.gomint.server.entity.Entity;
-import io.gomint.server.network.packet.PacketExplode;
 import io.gomint.server.world.block.Air;
 import io.gomint.util.random.FastRandom;
 import io.gomint.world.Particle;
@@ -210,11 +209,12 @@ public class Explosion {
             send.add( new Vector( blockLocation.getX() - sourceLocation.getX(), blockLocation.getY() - sourceLocation.getY(), blockLocation.getZ() - sourceLocation.getZ() ) );
         }
 
-        PacketExplode explode = new PacketExplode();
-        explode.setSource( sourceLocation );
-        explode.setRadius( this.size );
-        explode.setAffectedBlocksRelative( send );
-        this.source.getWorld().sendToVisible( sourceLocation.toBlockPosition(), explode, entity -> true );
+        // TODO: PacketExplode has been removed
+//        PacketExplode explode = new PacketExplode();
+//        explode.setSource( sourceLocation );
+//        explode.setRadius( this.size );
+//        explode.setAffectedBlocksRelative( send );
+//        this.source.getWorld().sendToVisible( sourceLocation.toBlockPosition(), explode, entity -> true );
 
         this.source.getWorld().sendParticle( sourceLocation, Particle.HUGE_EXPLODE_SEED );
         this.source.getWorld().sendLevelEvent( sourceLocation, LevelEvent.CAULDRON_EXPLODE, 0 );

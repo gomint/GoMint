@@ -20,7 +20,7 @@ public class PacketEntityFall extends Packet {
 
     private long entityId;
     private float fallDistance;
-    private boolean unknown;
+    private boolean inVoid;
 
     /**
      * Construct a new packet
@@ -38,6 +38,6 @@ public class PacketEntityFall extends Packet {
     public void deserialize( PacketBuffer buffer, int protocolID ) {
         this.entityId = buffer.readUnsignedVarLong();
         this.fallDistance = buffer.readLFloat();
-        this.unknown = buffer.readBoolean();
+        this.inVoid = buffer.readBoolean();
     }
 }

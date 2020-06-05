@@ -465,7 +465,7 @@ public class Client {
 
             this.spawnChunk = new Pair<>( (int) ( this.spawn.getX() / 16 ), (int) ( this.spawn.getZ() / 16 ) );
 
-            PacketSetChunkRadius chunkRadius = new PacketSetChunkRadius();
+            PacketConfirmChunkRadius chunkRadius = new PacketConfirmChunkRadius();
             chunkRadius.setChunkRadius( 7 );
             this.send( chunkRadius );
 

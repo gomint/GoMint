@@ -206,6 +206,7 @@ public class PacketLoginHandler implements PacketHandler<PacketLogin> {
                 DeviceInfo deviceInfo = new DeviceInfo(
                     getDeviceOSFrom( Math.toIntExact( skinToken.getClaim( "DeviceOS" ) ) ),
                     skinToken.getClaim( "DeviceModel" ),
+                    skinToken.getClaim( "DeviceId" ),
                     getUIFrom( Math.toIntExact( skinToken.getClaim( "UIProfile" ) ) ) );
                 connection.setDeviceInfo( deviceInfo );
 
@@ -222,8 +223,7 @@ public class PacketLoginHandler implements PacketHandler<PacketLogin> {
                 WorldAdapter world = this.server.getDefaultWorld();
 
                 EntityPlayer player = new EntityPlayer( world, connection, chainValidator.getUsername(),
-                    chainValidator.getXboxId(), chainValidator.getUuid(), locale,
-                    skinToken.getClaim( "DeviceId" ) != null ? skinToken.getClaim( "DeviceId" ) : null );
+                    chainValidator.getXboxId(), chainValidator.getUuid(), locale );
                 this.context.getAutowireCapableBeanFactory().autowireBean( player );
 
                 connection.setEntity( player );

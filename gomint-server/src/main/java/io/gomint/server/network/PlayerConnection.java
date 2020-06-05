@@ -22,7 +22,6 @@ import io.gomint.math.MathUtils;
 import io.gomint.player.DeviceInfo;
 import io.gomint.server.GoMintServer;
 import io.gomint.server.entity.EntityPlayer;
-import io.gomint.server.entity.passive.EntityHuman;
 import io.gomint.server.jni.NativeCode;
 import io.gomint.server.jni.zlib.JavaZLib;
 import io.gomint.server.jni.zlib.NativeZLib;
@@ -37,6 +36,7 @@ import io.gomint.server.network.packet.PacketEncryptionResponse;
 import io.gomint.server.network.packet.PacketInventoryTransaction;
 import io.gomint.server.network.packet.PacketLogin;
 import io.gomint.server.network.packet.PacketMovePlayer;
+import io.gomint.server.network.packet.PacketMovePlayer.MovePlayerMode;
 import io.gomint.server.network.packet.PacketNetworkChunkPublisherUpdate;
 import io.gomint.server.network.packet.PacketPlayState;
 import io.gomint.server.network.packet.PacketPlayerlist;
@@ -213,7 +213,7 @@ public class PlayerConnection implements ConnectionWithState {
         if (!packetHandlersInit) {
             // Register all packet handlers we need
             PACKET_HANDLERS[Protocol.PACKET_MOVE_PLAYER & 0xff] = new PacketMovePlayerHandler();
-            PACKET_HANDLERS[Protocol.PACKET_SET_CHUNK_RADIUS & 0xff] = new PacketSetChunkRadiusHandler();
+            PACKET_HANDLERS[Protocol.PACKET_REQUEST_CHUNK_RADIUS & 0xff] = new PacketRequestChunkRadiusHandler();
             PACKET_HANDLERS[Protocol.PACKET_PLAYER_ACTION & 0xff] = new PacketPlayerActionHandler();
             PACKET_HANDLERS[Protocol.PACKET_MOB_ARMOR_EQUIPMENT & 0xff] = new PacketMobArmorEquipmentHandler();
             PACKET_HANDLERS[Protocol.PACKET_ADVENTURE_SETTINGS & 0xff] = new PacketAdventureSettingsHandler();
@@ -229,7 +229,7 @@ public class PlayerConnection implements ConnectionWithState {
             PACKET_HANDLERS[Protocol.PACKET_HOTBAR & 0xff] = new PacketHotbarHandler();
             PACKET_HANDLERS[Protocol.PACKET_TEXT & 0xff] = new PacketTextHandler();
             PACKET_HANDLERS[Protocol.PACKET_COMMAND_REQUEST & 0xff] = new PacketCommandRequestHandler();
-            PACKET_HANDLERS[Protocol.PACKET_WORLD_SOUND_EVENT & 0xff] = new PacketWorldSoundEventHandler();
+            PACKET_HANDLERS[Protocol.PACKET_WORLD_SOUND_EVENT_V1 & 0xff] = new PacketWorldSoundEventHandler();
             PACKET_HANDLERS[Protocol.PACKET_ANIMATE & 0xff] = new PacketAnimateHandler();
             PACKET_HANDLERS[Protocol.PACKET_ENTITY_EVENT & 0xff] = new PacketEntityEventHandler();
             PACKET_HANDLERS[Protocol.PACKET_MODAL_RESPONSE & 0xFF] = new PacketModalResponseHandler();
@@ -239,6 +239,10 @@ public class PlayerConnection implements ConnectionWithState {
             PACKET_HANDLERS[Protocol.PACKET_SET_LOCAL_PLAYER_INITIALIZED & 0xff] = new PacketSetLocalPlayerAsInitializedHandler();
             PACKET_HANDLERS[Protocol.PACKET_TILE_ENTITY_DATA & 0xff] = new PacketTileEntityDataHandler();
             PACKET_HANDLERS[Protocol.PACKET_BOSS_BAR & 0xff] = new PacketBossBarHandler();
+            PACKET_HANDLERS[Protocol.PACKET_RESPAWN_POSITION & 0xff] = new PacketRespawnPositionHandler();
+            PACKET_HANDLERS[Protocol.PACKET_WORLD_SOUND_EVENT & 0xff] = new PacketWorldSoundEventHandler();
+            PACKET_HANDLERS[Protocol.PACKET_TICK_SYNC & 0xff] = new PacketTickSyncHandler();
+            PACKET_HANDLERS[Protocol.PACKET_CLIENT_CACHE_STATUS & 0xff] = new PacketClientCacheStatusHandler();
 
             packetHandlersInit = true;
         }
@@ -946,7 +950,7 @@ public class PlayerConnection implements ConnectionWithState {
         move.setHeadYaw(location.getHeadYaw());
         move.setYaw(location.getYaw());
         move.setPitch(location.getPitch());
-        move.setMode((byte) 2);
+        move.setMode( MovePlayerMode.TELEPORT );
         move.setOnGround(this.getEntity().isOnGround());
         move.setRidingEntityId(0);    // TODO: Implement riding entities correctly
         this.addToSendQueue(move);
@@ -996,7 +1000,7 @@ public class PlayerConnection implements ConnectionWithState {
         packet.setDifficulty(this.entity.getWorld().getDifficulty().getDifficultyDegree());
         packet.setLevelId(Base64.getEncoder().encodeToString(StringUtil.getUTF8Bytes(world.getWorldName())));
         packet.setWorldName(world.getWorldName());
-        packet.setTemplateName("");
+        packet.setTemplateId("");
         packet.setGamerules(world.getGamerules());
         packet.setTexturePacksRequired(false);
         packet.setCommandsEnabled(true);
@@ -1110,7 +1114,7 @@ public class PlayerConnection implements ConnectionWithState {
                     listEntry = new ArrayList<>();
                 }
 
-                listEntry.add(new PacketPlayerlist.Entry((EntityHuman) player));
+                listEntry.add(new PacketPlayerlist.Entry((EntityPlayer) player));
             }
         }
 

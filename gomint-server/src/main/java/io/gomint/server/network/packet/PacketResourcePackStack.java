@@ -47,6 +47,7 @@ public class PacketResourcePackStack extends Packet {
         }
 
         buffer.writeBoolean( this.experimental );
+        buffer.writeString( Protocol.MINECRAFT_PE_NETWORK_VERSION );
     }
 
     @Override
@@ -68,6 +69,8 @@ public class PacketResourcePackStack extends Packet {
         }
 
         this.experimental = buffer.readBoolean();
+        // This is gameVersion
+        buffer.readString();
     }
 
 }

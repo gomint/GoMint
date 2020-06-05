@@ -2,14 +2,16 @@ package io.gomint.server.network.packet;
 
 import io.gomint.jraknet.PacketBuffer;
 import io.gomint.math.Location;
+import io.gomint.server.assets.AssetsLibrary;
 import io.gomint.server.network.Protocol;
 import io.gomint.server.player.PlayerPermission;
 import io.gomint.server.util.BlockIdentifier;
-import io.gomint.server.world.BlockRuntimeIDs;
 import io.gomint.world.Gamerule;
 import lombok.Data;
 
+import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 import java.util.Map;
 
@@ -37,7 +39,7 @@ public class PacketStartGame extends Packet {
     private int z;
     private boolean hasAchievementsDisabled = true;
     private int dayCycleStopTime;
-    private boolean eduMode;
+    private int eduEditionOffer;
     private float rainLevel;
     private float lightningLevel;
     private boolean isMultiplayerGame = true;
@@ -60,8 +62,9 @@ public class PacketStartGame extends Packet {
     // World data
     private String levelId;
     private String worldName;
-    private String templateName;
-    private boolean unknown1 = true;
+    private String templateId;
+    private boolean isTrial;
+    private boolean movementServerAuthoritative;
     private long currentTick;
     private int enchantmentSeed;
 
@@ -75,66 +78,86 @@ public class PacketStartGame extends Packet {
      * Create a new start game packet
      */
     public PacketStartGame() {
-        super(Protocol.PACKET_START_GAME);
+        super( Protocol.PACKET_START_GAME );
     }
 
     @Override
-    public void serialize(PacketBuffer buffer, int protocolID) {
-        buffer.writeSignedVarLong(this.entityId); // EntityUnique
-        buffer.writeUnsignedVarLong(this.runtimeEntityId); // EntityRuntime
-        buffer.writeSignedVarInt(this.gamemode); // VarInt
-        buffer.writeLFloat(this.spawn.getX()); // Vec3
-        buffer.writeLFloat(this.spawn.getY());
-        buffer.writeLFloat(this.spawn.getZ());
-        buffer.writeLFloat(this.spawn.getYaw()); // Vec2
-        buffer.writeLFloat(this.spawn.getPitch());
+    public void serialize( PacketBuffer buffer, int protocolID ) {
+        buffer.writeSignedVarLong( this.entityId ); // EntityUnique
+        buffer.writeUnsignedVarLong( this.runtimeEntityId ); // EntityRuntime
+        buffer.writeSignedVarInt( this.gamemode ); // VarInt
+        buffer.writeLFloat( this.spawn.getX() ); // Vec3
+        buffer.writeLFloat( this.spawn.getY() );
+        buffer.writeLFloat( this.spawn.getZ() );
+        buffer.writeLFloat( this.spawn.getYaw() ); // Vec2
+        buffer.writeLFloat( this.spawn.getPitch() );
 
         // LevelSettings
-        buffer.writeSignedVarInt(this.seed);
-        buffer.writeSignedVarInt(this.dimension);
-        buffer.writeSignedVarInt(this.generator);
-        buffer.writeSignedVarInt(this.worldGamemode);
-        buffer.writeSignedVarInt(this.difficulty);
-        buffer.writeSignedVarInt((int) this.spawn.getX());
-        buffer.writeUnsignedVarInt((int) this.spawn.getY());
-        buffer.writeSignedVarInt((int) this.spawn.getZ());
-        buffer.writeBoolean(this.hasAchievementsDisabled);
-        buffer.writeSignedVarInt(this.dayCycleStopTime);
-        buffer.writeBoolean(this.eduMode);
-        buffer.writeBoolean(true); // This is hasEduModeEnabled, we default to false until we have all EDU stuff in
-        buffer.writeLFloat(this.rainLevel);
-        buffer.writeLFloat(this.lightningLevel);
-        buffer.writeBoolean(false);
-        buffer.writeBoolean(this.isMultiplayerGame);
-        buffer.writeBoolean(this.hasLANBroadcast);
-        buffer.writeSignedVarInt(3);
-        buffer.writeSignedVarInt(3);
-        buffer.writeBoolean(this.commandsEnabled);
-        buffer.writeBoolean(this.isTexturePacksRequired);
-        writeGamerules(this.gamerules, buffer);
-        buffer.writeBoolean(this.hasBonusChestEnabled);
-        buffer.writeBoolean(this.hasStartWithMapEnabled);
-        buffer.writeSignedVarInt(this.defaultPlayerPermission);
-        buffer.writeInt(32);
-        buffer.writeBoolean(false);
-        buffer.writeBoolean(false);
-        buffer.writeBoolean(false);
-        buffer.writeBoolean(false);
-        buffer.writeBoolean(false);
-        buffer.writeBoolean(false);
+        buffer.writeSignedVarInt( this.seed );
+        buffer.writeSignedVarInt( this.dimension );
+        buffer.writeSignedVarInt( this.generator );
+        buffer.writeSignedVarInt( this.worldGamemode );
+        buffer.writeSignedVarInt( this.difficulty );
+        buffer.writeSignedVarInt( (int) this.spawn.getX() );
+        buffer.writeUnsignedVarInt( (int) this.spawn.getY() );
+        buffer.writeSignedVarInt( (int) this.spawn.getZ() );
+        buffer.writeBoolean( this.hasAchievementsDisabled );
+        buffer.writeSignedVarInt( this.dayCycleStopTime );
+        buffer.writeSignedVarInt( this.eduEditionOffer );
+        buffer.writeBoolean( true ); // This is hasEduModeEnabled, we default to false until we have all EDU stuff in
+        buffer.writeLFloat( this.rainLevel );
+        buffer.writeLFloat( this.lightningLevel );
+        buffer.writeBoolean( false );
+        buffer.writeBoolean( this.isMultiplayerGame );
+        buffer.writeBoolean( this.hasLANBroadcast );
+        buffer.writeSignedVarInt( 3 );
+        buffer.writeSignedVarInt( 3 );
+        buffer.writeBoolean( this.commandsEnabled );
+        buffer.writeBoolean( this.isTexturePacksRequired );
+        writeGamerules( this.gamerules, buffer );
+        buffer.writeBoolean( this.hasBonusChestEnabled );
+        buffer.writeBoolean( this.hasStartWithMapEnabled );
+        buffer.writeSignedVarInt( this.defaultPlayerPermission );
+        buffer.writeInt( 32 );
+        buffer.writeBoolean( false );
+        buffer.writeBoolean( false );
+        buffer.writeBoolean( false );
+        buffer.writeBoolean( false );
+        buffer.writeBoolean( false );
+        buffer.writeBoolean( false );
+        buffer.writeBoolean( false );
 
-        buffer.writeString(this.levelId);
-        buffer.writeString(this.worldName);
-        buffer.writeString(this.templateName);
-        buffer.writeBoolean(this.unknown1);
-        buffer.writeLLong(this.currentTick);
-        buffer.writeSignedVarInt(this.enchantmentSeed);
+        buffer.writeString( Protocol.MINECRAFT_PE_NETWORK_VERSION );
+        buffer.writeString( this.levelId );
+        buffer.writeString( this.worldName );
+        buffer.writeString( this.templateId );
+        buffer.writeBoolean( this.isTrial );
+        buffer.writeBoolean( this.movementServerAuthoritative );
+        buffer.writeLLong( this.currentTick );
+        buffer.writeSignedVarInt( this.enchantmentSeed );
 
         // Write palette data
-        byte[] data = BlockRuntimeIDs.getPacketCache();
-        buffer.writeBytes(data);
+        // byte[] data = BlockRuntimeIDs.getPacketCache();
+        // buffer.writeBytes( data );
 
-        buffer.writeString(this.correlationId);
+        // This is a temporary solution just to let people join and test
+        try {
+            InputStream inputStream = AssetsLibrary.class.getResourceAsStream( "/blocks.nbt" );
+            if ( inputStream == null ) {
+                throw new AssertionError( "Could not find blocks.nbt" );
+            }
+            byte[] encodedStates = inputStream.readAllBytes();
+            byte[] states = Base64.getDecoder().decode( encodedStates );
+            buffer.writeBytes( states );
+        }catch ( Exception e ) {
+            e.printStackTrace();
+        }
+
+
+        // TODO: Item table
+        buffer.writeUnsignedVarInt( 0 );
+
+        buffer.writeString( this.correlationId );
     }
 
     @Override
@@ -192,6 +215,8 @@ public class PacketStartGame extends Packet {
         for (int i = 0; i < amountOfBlocks; i++) {
             this.runtimeIDs.add(new BlockIdentifier(buffer.readString(), buffer.readLShort()));
         }
+
+        buffer.readUnsignedVarInt();
 
         // Skip the rest for now
         buffer.skip(buffer.getRemaining());
