@@ -20,7 +20,7 @@ public class PacketAddItemEntity extends Packet {
     private float motionX;
     private float motionY;
     private float motionZ;
-    private boolean unknown;    // TODO: Maybe fishing flag?
+    private boolean fromFishing;
 
     public PacketAddItemEntity() {
         super( Protocol.PACKET_ADD_ITEM_ENTITY );
@@ -45,8 +45,8 @@ public class PacketAddItemEntity extends Packet {
         buffer.writeLFloat( this.motionY );
         buffer.writeLFloat( this.motionZ );
 
-        // Write unknown flag
-        buffer.writeBoolean( this.unknown );
+        // Write fromFishing
+        buffer.writeBoolean( this.fromFishing );
     }
 
     @Override

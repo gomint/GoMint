@@ -79,6 +79,10 @@ public class PacketAvailableCommands extends Packet {
                 }
             }
         }
+
+        // TODO: soft enums
+        buffer.writeUnsignedVarInt( 0 );
+        buffer.writeUnsignedVarInt( 0 );
     }
 
     private void writeEnumIndex( int enumValueIndex, PacketBuffer buffer ) {

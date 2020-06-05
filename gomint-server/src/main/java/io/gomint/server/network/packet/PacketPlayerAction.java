@@ -43,9 +43,10 @@ public class PacketPlayerAction extends Packet {
         START_BREAK,
         ABORT_BREAK,
         STOP_BREAK,
-        CONTINUE_BREAK,
+        GET_UPDATED_BLOCK,
 
         RELEASE_ITEM,
+        START_SLEEPING,
         STOP_SLEEPING,
         RESPAWN,
         JUMP,
@@ -55,11 +56,19 @@ public class PacketPlayerAction extends Packet {
         START_SNEAK,
         STOP_SNEAK,
 
-        DIMENSION_CHANGE,
-        ABORT_DIMENSION_CHANGE,
+        DIMENSION_CHANGE_REQUEST,
+        DIMENSION_CHANGE_ACK,
 
         START_GLIDE,
         STOP_GLIDE,
+
+        BUILD_DENIED,
+
+        CONTINUE_BREAK,
+
+        CHANGE_SKIN,
+
+        SET_ENCHANT_SEED,
 
         START_SWIMMING,
         STOP_SWIMMING,
@@ -67,9 +76,7 @@ public class PacketPlayerAction extends Packet {
         START_SPIN_ATTACK,
         STOP_SPIN_ATTACK,
 
-        INTERACT_BLOCK,
-
-        SET_ENCHANT_SEED;
+        INTERACT_BLOCK;
 
         public static PlayerAction valueOf( int actionId ) {
             switch ( actionId ) {
@@ -79,8 +86,12 @@ public class PacketPlayerAction extends Packet {
                     return ABORT_BREAK;
                 case 2:
                     return STOP_BREAK;
-                case 5:
+                case 3:
+                    return GET_UPDATED_BLOCK;
+                case 4:
                     return RELEASE_ITEM;
+                case 5:
+                    return START_SLEEPING;
                 case 6:
                     return STOP_SLEEPING;
                 case 7:
@@ -96,17 +107,19 @@ public class PacketPlayerAction extends Packet {
                 case 12:
                     return STOP_SNEAK;
                 case 13:
-                    return DIMENSION_CHANGE;
+                    return DIMENSION_CHANGE_REQUEST;
                 case 14:
-                    return ABORT_DIMENSION_CHANGE;
+                    return DIMENSION_CHANGE_ACK;
                 case 15:
                     return START_GLIDE;
                 case 16:
                     return STOP_GLIDE;
                 case 17:
-                    return INTERACT_BLOCK;
+                    return BUILD_DENIED;
                 case 18:
                     return CONTINUE_BREAK;
+                case 19:
+                    return CHANGE_SKIN;
                 case 20:
                     return SET_ENCHANT_SEED;
                 case 21:
@@ -117,6 +130,8 @@ public class PacketPlayerAction extends Packet {
                     return START_SPIN_ATTACK;
                 case 24:
                     return STOP_SPIN_ATTACK;
+                case 25:
+                    return INTERACT_BLOCK;
             }
 
             System.out.println( "Unknown action id: " + actionId );
