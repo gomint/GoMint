@@ -29,9 +29,14 @@ public class EntityZombiePigman extends EntityAgeable implements io.gomint.entit
     }
 
     private void initEntity() {
-        this.setSize( 0.6f, 1.95f );
-        this.addAttribute( Attribute.HEALTH );
-        this.setMaxHealth( 10 );
+        this.addAttribute(Attribute.HEALTH);
+        this.setHealth(20);
+        this.setMaxHealth(20);
+        if(this.isBaby()) {
+            this.setSize(0.3f, 0.975f);
+        }else{
+            this.setSize(0.6f, 1.95f);
+        }
     }
 
     @Override

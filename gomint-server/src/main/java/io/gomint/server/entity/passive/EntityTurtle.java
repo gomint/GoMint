@@ -29,10 +29,14 @@ public class EntityTurtle extends EntityAgeable implements io.gomint.entity.pass
     }
 
     private void initEntity() {
-        this.setSize( 1.2f, 0.4f );
-        this.addAttribute( Attribute.HEALTH );
-        this.setMaxHealth( 30 );
-        this.setHealth( 30 );
+        this.addAttribute(Attribute.HEALTH);
+        this.setMaxHealth(30);
+        this.setHealth(30);
+        if(this.isBaby()) {
+            this.setSize(0.36f, 0.12f);
+        }else{
+            this.setSize(1.2f, 0.4f);
+        }
     }
 
     @Override

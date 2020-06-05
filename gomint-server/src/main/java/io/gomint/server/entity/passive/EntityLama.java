@@ -29,10 +29,14 @@ public class EntityLama extends EntityAgeable implements io.gomint.entity.passiv
     }
 
     private void initEntity() {
-        this.setSize( 0.9f, 1.87f );
-        this.addAttribute( Attribute.HEALTH );
-        this.setMaxHealth( 30 );
-        this.setHealth( 30 );
+        this.addAttribute(Attribute.HEALTH);
+        this.setMaxHealth(30);
+        this.setHealth(30);
+        if(this.isBaby()) {
+            this.setSize(0.9f, 1.87f);
+        }else{
+            this.setSize(0.45f, 0.935f);
+        }
     }
 
     @Override

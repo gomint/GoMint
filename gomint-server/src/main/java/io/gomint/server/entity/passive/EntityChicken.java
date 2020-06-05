@@ -33,10 +33,14 @@ public class EntityChicken extends EntityAgeable implements io.gomint.entity.pas
     }
 
     private void initEntity() {
-        this.setSize( 0.4f, 0.7f );
-        this.addAttribute( Attribute.HEALTH );
-        this.setMaxHealth( 8 );
-        this.setHealth( 8 );
+        this.addAttribute(Attribute.HEALTH);
+        this.setMaxHealth(8);
+        this.setHealth(8);
+        if(this.isBaby()) {
+            this.setSize(0.2f, 0.35f);
+        }else{
+            this.setSize(0.4f, 0.7f);
+        }
     }
 
     @Override

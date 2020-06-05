@@ -29,10 +29,11 @@ public class EntityFox extends EntityAgeable implements io.gomint.entity.passive
     }
 
     private void initEntity() {
-        this.setSize( 0.7f, 0.6f );
-        this.addAttribute( Attribute.HEALTH );
-        this.setMaxHealth( 20 );
-        this.setHealth( 20 );
+        this.addAttribute(Attribute.HEALTH);
+        this.setMaxHealth(20);
+        this.setHealth(20);
+        this.setSize(0.7f, 0.6f);
+        //No Information for baby size ??
     }
 
     @Override

@@ -33,10 +33,14 @@ public class EntityDonkey extends EntityAgeable implements io.gomint.entity.pass
     }
 
     private void initEntity() {
-        this.setSize( 1.3965f, 1.6f );
-        this.addAttribute( Attribute.HEALTH );
-        this.setMaxHealth( 30 );
-        this.setHealth( 30 );
+        this.addAttribute(Attribute.HEALTH);
+        this.setMaxHealth(30);
+        this.setHealth(30);
+        if(this.isBaby()) {
+            this.setSize(0.6982f, 0.75f);
+        }else{
+            this.setSize(1.3965f, 1.5f);
+        }
     }
 
     @Override

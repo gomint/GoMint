@@ -29,10 +29,14 @@ public class EntityWolf extends EntityAgeable implements io.gomint.entity.passiv
     }
 
     private void initEntity() {
-        this.setSize( 0.6f, 0.85f );
-        this.addAttribute( Attribute.HEALTH );
-        this.setMaxHealth( 16 );
-        this.setHealth( 16 );
+        this.addAttribute(Attribute.HEALTH);
+        this.setMaxHealth(16);
+        this.setHealth(16);
+        if(this.isBaby()) {
+            this.setSize(0.3f, 0.425f);
+        }else{
+            this.setSize(0.6f, 0.85f);
+        }
     }
 
     @Override

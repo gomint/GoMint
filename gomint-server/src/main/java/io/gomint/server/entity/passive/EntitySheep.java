@@ -29,10 +29,14 @@ public class EntitySheep extends EntityAgeable implements io.gomint.entity.passi
     }
 
     private void initEntity() {
-        this.setSize( 0.9f, 1.3f );
-        this.addAttribute( Attribute.HEALTH );
-        this.setMaxHealth( 16 );
-        this.setHealth( 16 );
+        this.addAttribute(Attribute.HEALTH);
+        this.setMaxHealth(16);
+        this.setHealth(16);
+        if(this.isBaby()) {
+            this.setSize(0.45f, 0.65f);
+        }else{
+            this.setSize(0.9f, 1.3f);
+        }
     }
 
     @Override

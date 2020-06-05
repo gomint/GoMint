@@ -29,10 +29,14 @@ public class EntityPig extends EntityAgeable implements io.gomint.entity.passive
     }
 
     private void initEntity() {
-        this.setSize( 0.9f, 0.9f );
-        this.addAttribute( Attribute.HEALTH );
-        this.setMaxHealth( 20 );
-        this.setHealth( 20 );
+        this.addAttribute(Attribute.HEALTH);
+        this.setMaxHealth(20);
+        this.setHealth(20);
+        if(this.isBaby()) {
+            this.setSize(0.45f, 0.45f);
+        }else{
+            this.setSize(0.9f, 0.9f);
+        }
     }
 
     @Override

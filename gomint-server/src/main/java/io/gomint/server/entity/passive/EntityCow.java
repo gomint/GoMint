@@ -34,10 +34,14 @@ public class EntityCow extends EntityAgeable implements io.gomint.entity.passive
     }
 
     private void initEntity() {
-        this.setSize( 0.9f, 1.4f );
-        this.addAttribute( Attribute.HEALTH );
-        this.setMaxHealth( 20 );
-        this.setHealth( 20 );
+        this.addAttribute(Attribute.HEALTH);
+        this.setMaxHealth(20);
+        this.setHealth(20);
+        if(this.isBaby()) {
+            this.setSize(0.45f, 0.7f);
+        }else{
+            this.setSize(0.9f, 1.4f);
+        }
     }
 
     @Override
