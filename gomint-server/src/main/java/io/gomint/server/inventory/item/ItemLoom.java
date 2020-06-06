@@ -7,7 +7,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @author KingAli
  * @version 1.0
  */
-@RegisterInfo( id = 458 )
+@RegisterInfo( id = -204, sId = "minecraft:loom")
 public class ItemLoom extends ItemStack implements io.gomint.inventory.item.ItemLoom {
 
     @Override

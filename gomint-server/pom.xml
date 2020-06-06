@@ -33,13 +33,13 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>
-            <version>5.1.2.RELEASE</version>
+            <version>5.2.6.RELEASE</version>
         </dependency>
 
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-core</artifactId>
-            <version>5.1.2.RELEASE</version>
+            <version>5.2.6.RELEASE</version>
         </dependency>
 
         <dependency>
@@ -81,7 +81,7 @@
         <dependency>
             <groupId>io.sentry</groupId>
             <artifactId>sentry</artifactId>
-            <version>1.7.5</version>
+            <version>1.7.30</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.jline/jline-terminal-jna -->

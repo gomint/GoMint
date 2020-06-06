@@ -23,7 +23,9 @@ import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.module.ResolvedModule;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -32,6 +34,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.jar.JarEntry;
@@ -194,14 +197,15 @@ public class ClassPath {
         if ( classloader instanceof URLClassLoader ) {
             return ImmutableList.copyOf( ( (URLClassLoader) classloader ).getURLs() );
         } else {
-            return classloader.equals( ClassLoader.getSystemClassLoader() ) ? parseJavaClassPath() : ImmutableList.of();
+            return classloader.equals( ClassLoader.getSystemClassLoader() ) ? parseJavaClassPathAndModules() : ImmutableList.of();
         }
     }
 
-    private ImmutableList<URL> parseJavaClassPath() {
+    private ImmutableList<URL> parseJavaClassPathAndModules() {
         com.google.common.collect.ImmutableList.Builder<URL> urls = ImmutableList.builder();
-        Iterator var1 = Splitter.on( StandardSystemProperty.PATH_SEPARATOR.value() ).split( StandardSystemProperty.JAVA_CLASS_PATH.value() ).iterator();
 
+        // Scan classpath first
+        Iterator var1 = Splitter.on( StandardSystemProperty.PATH_SEPARATOR.value() ).split( StandardSystemProperty.JAVA_CLASS_PATH.value() ).iterator();
         while ( var1.hasNext() ) {
             String entry = (String) var1.next();
 
@@ -214,6 +218,18 @@ public class ClassPath {
             } catch ( MalformedURLException var5 ) {
                 LOGGER.warn( "malformed classpath entry: {}", entry, var5 );
             }
+        }
+
+        // Now modules
+        for (ResolvedModule module : ClassPath.class.getModule().getLayer().configuration().modules()) {
+            Optional<URI> moduleLocation = module.reference().location();
+            moduleLocation.ifPresent(url -> {
+                try {
+                    urls.add(url.toURL());
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                }
+            });
         }
 
         return urls.build();

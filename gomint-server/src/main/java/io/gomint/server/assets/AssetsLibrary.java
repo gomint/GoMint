@@ -87,16 +87,27 @@ public class AssetsLibrary {
     public void load() throws IOException, AllocationLimitReachedException {
         NBTTagCompound root = NBTTagCompound.readFrom( this.getClass().getResourceAsStream( "/assets.dat" ), true, ByteOrder.BIG_ENDIAN );
         if ( GoMint.instance() != null ) {
+            this.debug( (List<NBTTagCompound>) ( (List) root.getList( "itemLegacyIDs", false ) ) );
             this.loadRecipes( (List<NBTTagCompound>) ( (List) root.getList( "recipes", false ) ) );
             this.loadCreativeInventory( (List<byte[]>) ( (List) root.getList( "creativeInventory", false ) ) );
             this.loadBlockPalette( (List<NBTTagCompound>) ( (List) root.getList( "blockPalette", false ) ) );
         }
     }
 
+    private void debug(List<NBTTagCompound> itemLegacyIDs) {
+        for (NBTTagCompound compound : itemLegacyIDs) {
+            LOGGER.info("{} -> {}", compound.getShort("id", (short) -1), compound.getString("name", ""));
+        }
+    }
+
     private void loadBlockPalette( List<NBTTagCompound> blockPaletteCompounds ) {
         this.blockPalette = new ArrayList<>();
         for ( NBTTagCompound compound : blockPaletteCompounds ) {
-            this.blockPalette.add( new BlockIdentifier( compound.getString( "id", "minecraft:air" ), compound.getShort( "data", (short) 0 ) ) );
+            this.blockPalette.add( new BlockIdentifier(
+                compound.getCompound("block", false).getString( "name", "minecraft:air" ),
+                compound.getCompound("block", false).getCompound("states", false),
+                compound.getShort( "data", (short) 0 )
+            ) );
         }
     }
 

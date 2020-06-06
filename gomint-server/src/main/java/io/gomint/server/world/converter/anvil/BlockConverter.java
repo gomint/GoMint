@@ -27,11 +27,11 @@ public class BlockConverter {
             byte newMeta = compound.getByte( "nm", (byte) -1 );
 
             if ( oldMeta == -1 && newMeta == -1 ) {
-                this.converters.put( oldId, ( blockId, metaData ) -> new BlockIdentifier( newId, metaData ) );
+                this.converters.put( oldId, ( blockId, metaData ) -> new BlockIdentifier( newId, null, (short) metaData) );
             } else {
                 // Check if we already have a converter
                 if ( !this.converters.containsKey( oldId ) ) {
-                    this.converters.put( oldId, ( blockId, metaData ) -> new BlockIdentifier( newId, metaconverts.get( blockId << 16 | ( metaData & 0xFF ) ) ) );
+                    this.converters.put( oldId, ( blockId, metaData ) -> new BlockIdentifier( newId, null, (short) metaconverts.get( blockId << 16 | ( metaData & 0xFF ) )) );
                 }
 
                 this.metaconverts.put( oldId << 16 | ( oldMeta & 0xFF ), newMeta );

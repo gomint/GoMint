@@ -45,4 +45,19 @@ module gomint.server {
     // Export logging stuff for log4j2
     exports net.minecrell.terminalconsole to org.apache.logging.log4j, org.apache.logging.log4j.core;
     exports io.gomint.server.logging to org.apache.logging.log4j, org.apache.logging.log4j.core;
+
+    // Export stuff to spring
+    exports io.gomint.server to spring.beans;
+    exports io.gomint.server.util to spring.beans;
+    exports io.gomint.server.inventory.item to spring.beans;
+    exports io.gomint.server.network to spring.beans;
+    exports io.gomint.server.network.handler to spring.beans;
+    exports io.gomint.server.plugin to spring.beans;
+    exports io.gomint.server.world.generator.vanilla to spring.beans;
+
+    opens io.gomint.server.network to spring.core;
+    opens io.gomint.server.network.handler to spring.core;
+
+    // Open config to gomint api reader
+    opens io.gomint.server.config to gomint.api;
 }

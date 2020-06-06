@@ -248,7 +248,7 @@ public class AnvilConverter extends BaseConverter {
 
         // Check for missing subchunks
         BlockIdentifier[] blocks = new BlockIdentifier[4096];
-        Arrays.fill( blocks, new BlockIdentifier( "minecraft:air", (short) 0 ) );
+        Arrays.fill( blocks, new BlockIdentifier( "minecraft:air", null, (short) 0 ) );
 
         this.subChunksProcessed.long2ObjectEntrySet().forEach( byteSetEntry -> {
             int chunkX = (int) ( byteSetEntry.getLongKey() >> 32 );
@@ -465,7 +465,8 @@ public class AnvilConverter extends BaseConverter {
                     short newIndex = (short) ( ( i << 8 ) + ( k << 4 ) + j );
 
                     if ( this.nukkitPMMPConverted || gomintConverted ) {
-                        newBlocks[newIndex] = new BlockIdentifier( this.peConverter.convert( blockId ), (short) blockData );
+                        // TODO: Calculate proper state map
+                        newBlocks[newIndex] = new BlockIdentifier( this.peConverter.convert( blockId ), null, (short) blockData );
                     } else {
                         // Block data converter
                         if ( blockId == 3 && blockData == 1 ) {
@@ -484,7 +485,7 @@ public class AnvilConverter extends BaseConverter {
 
                         BlockIdentifier converted = this.converter.convert( blockId, blockData );
                         if ( converted == null ) {
-                            newBlocks[newIndex] = new BlockIdentifier( "minecraft:air", (short) 0 );
+                            newBlocks[newIndex] = new BlockIdentifier( "minecraft:air", null, (short) 0 );
                             LOGGER.warn( "Could not convert block {}:{}", blockId, blockData );
                         } else {
                             // Is this a piston? (they may lack tiles)
@@ -548,7 +549,8 @@ public class AnvilConverter extends BaseConverter {
                                                 break;
                                         }
 
-                                        converted = new BlockIdentifier( converted.getBlockId(), (short) 1 );
+                                        // TODO: Calculate proper state map
+                                        converted = new BlockIdentifier( converted.getBlockId(), null, (short) 1 );
                                     }
 
                                     if ( tiles == null ) {

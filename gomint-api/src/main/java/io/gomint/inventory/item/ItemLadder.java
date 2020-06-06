@@ -17,9 +17,4 @@ public interface ItemLadder extends ItemStack, ItemBurnable {
         return GoMint.instance().createItemStack( ItemLadder.class, amount );
     }
 
-    @Override
-    default long getBurnTime() {
-        return 15000;
-    }
-
 }

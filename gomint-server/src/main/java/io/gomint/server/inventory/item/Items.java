@@ -3,6 +3,7 @@ package io.gomint.server.inventory.item;
 import io.gomint.inventory.item.ItemStack;
 import io.gomint.server.registry.Generator;
 import io.gomint.server.registry.RegisterInfo;
+import io.gomint.server.registry.RegisterInfos;
 import io.gomint.server.registry.Registry;
 import io.gomint.server.util.ClassPath;
 import io.gomint.server.util.Pair;
@@ -10,6 +11,8 @@ import io.gomint.server.util.performance.ObjectConstructionFactory;
 import io.gomint.taglib.NBTTagCompound;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.ints.IntArraySet;
+import it.unimi.dsi.fastutil.ints.IntSet;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import org.slf4j.Logger;
@@ -26,6 +29,7 @@ import java.util.List;
 @Component
 public class Items {
 
+    private static final IntSet ALREADY_WARNED = new IntArraySet();
     private static final Logger LOGGER = LoggerFactory.getLogger(Items.class);
     private final Registry<io.gomint.server.inventory.item.ItemStack> generators;
     private final Int2ObjectMap<Pair<Integer, Integer>> itemMapper;
@@ -42,12 +46,29 @@ public class Items {
         this.generators = new Registry<>(classPath, clazz -> {
             ObjectConstructionFactory factory = new ObjectConstructionFactory(clazz);
 
-            // We need one instance to get the string blockid
-            io.gomint.server.inventory.item.ItemStack itemStack = (io.gomint.server.inventory.item.ItemStack) factory.newInstance();
-            String blockId = itemStack.getBlockId();
-            if (blockId != null) {
-                int id = clazz.getAnnotation(RegisterInfo.class).id();
-                this.blockIdToItemId.put(blockId, id);
+            RegisterInfos infos = clazz.getAnnotation(RegisterInfos.class);
+            if (infos != null) {
+                for (RegisterInfo registerInfo : infos.value()) {
+                    if (registerInfo.sId().length() > 0) {
+                        this.blockIdToItemId.put(registerInfo.sId(), registerInfo.id());
+                    }
+                }
+            }
+
+            RegisterInfo info = clazz.getAnnotation(RegisterInfo.class);
+            if (info != null) {
+                if (info.sId().length() > 0) {
+                    this.blockIdToItemId.put(info.sId(), info.id());
+                } else {
+                    // We need one instance to get the string blockid
+                    io.gomint.server.inventory.item.ItemStack itemStack = (io.gomint.server.inventory.item.ItemStack) factory.newInstance();
+                    String blockId = itemStack.getBlockId();
+                    if (blockId != null) {
+                        int id = info.id();
+                        LOGGER.warn("Block string ID not set: {} in {}", blockId, clazz.getName());
+                        this.blockIdToItemId.put(blockId, id);
+                    }
+                }
             }
 
             return () -> (io.gomint.server.inventory.item.ItemStack) factory.newInstance();
@@ -100,7 +121,11 @@ public class Items {
 
         Generator<io.gomint.server.inventory.item.ItemStack> itemGenerator = this.generators.getGenerator(id);
         if (itemGenerator == null) {
-            LOGGER.warn("Unknown item {}", id);
+            if (!ALREADY_WARNED.contains(id)) {
+                LOGGER.warn("Unknown item {} / total unknown {}", id, ALREADY_WARNED.size());
+                ALREADY_WARNED.add(id);
+            }
+
             return null;
         }
 

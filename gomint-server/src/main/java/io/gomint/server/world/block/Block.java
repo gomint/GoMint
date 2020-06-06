@@ -303,7 +303,9 @@ public abstract class Block implements io.gomint.world.block.Block {
             }
 
             io.gomint.server.inventory.item.ItemStack implStack = (io.gomint.server.inventory.item.ItemStack) item;
-            return new PlacementData( new BlockIdentifier( implStack.getBlockId(), this.calculateBlockData() ), null );
+
+            // TODO: Calculate proper state map
+            return new PlacementData( new BlockIdentifier( implStack.getBlockId(), null, this.calculateBlockData() ), null );
         }
 
         if ( item.getData() > 0 ) {
@@ -311,7 +313,9 @@ public abstract class Block implements io.gomint.world.block.Block {
         }
 
         io.gomint.server.inventory.item.ItemStack implStack = (io.gomint.server.inventory.item.ItemStack) item;
-        return new PlacementData( new BlockIdentifier( implStack.getBlockId(), item.getData() ), null );
+
+        // TODO: Calculate proper state map
+        return new PlacementData( new BlockIdentifier( implStack.getBlockId(), null, item.getData() ), null );
     }
 
     @Override
@@ -411,7 +415,8 @@ public abstract class Block implements io.gomint.world.block.Block {
         if ( instance != null ) {
             WorldAdapter worldAdapter = (WorldAdapter) this.location.getWorld();
 
-            BlockIdentifier blockIdentifier = new BlockIdentifier( instance.getBlockId(), ( resetData ) ? 0 : this.blockData );
+            // TODO: Calculate proper state map
+            BlockIdentifier blockIdentifier = new BlockIdentifier( instance.getBlockId(), null, ( resetData ) ? 0 : this.blockData );
             worldAdapter.setBlock( pos, this.layer, blockIdentifier );
 
             if ( resetData ) {
@@ -465,7 +470,9 @@ public abstract class Block implements io.gomint.world.block.Block {
         }
 
         WorldAdapter worldAdapter = (WorldAdapter) this.location.getWorld();
-        worldAdapter.setBlock( pos, this.layer, new BlockIdentifier( instance.getBlockId(), instance.getBlockData() ) );
+
+        // TODO: Calculate proper state map
+        worldAdapter.setBlock( pos, this.layer, new BlockIdentifier( instance.getBlockId(), null, instance.getBlockData() ) );
         worldAdapter.resetTemporaryStorage( pos, this.layer );
 
         // Check if new blockId needs tile entity
@@ -496,7 +503,9 @@ public abstract class Block implements io.gomint.world.block.Block {
         }
 
         WorldAdapter worldAdapter = (WorldAdapter) this.location.getWorld();
-        worldAdapter.setBlock( pos, this.layer, new BlockIdentifier( instance.getBlockId(), instance.getBlockData() ) );
+
+        // TODO: Calculate proper state map
+        worldAdapter.setBlock( pos, this.layer, new BlockIdentifier( instance.getBlockId(), null, instance.getBlockData() ) );
         worldAdapter.resetTemporaryStorage( pos, this.layer );
 
         // Check if new blockId needs tile entity

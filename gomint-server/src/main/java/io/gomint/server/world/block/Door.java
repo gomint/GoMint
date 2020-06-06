@@ -109,7 +109,8 @@ public abstract class Door extends Block implements io.gomint.world.block.BlockD
 
     @Override
     public void afterPlacement( PlacementData data ) {
-        data.setBlockIdentifier( new BlockIdentifier( data.getBlockIdentifier().getBlockId(), (short) 8 ) );
+        // TODO: Calculate proper state map
+        data.setBlockIdentifier( new BlockIdentifier( data.getBlockIdentifier().getBlockId(), null, (short) 8 ) );
 
         Block above = this.location.getWorld().getBlockAt( this.location.toBlockPosition().add( BlockPosition.UP ) );
         above.setBlockFromPlacementData( data );

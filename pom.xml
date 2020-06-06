@@ -44,6 +44,10 @@
 
   <repositories>
     <repository>
+      <id>projectlombok.org</id>
+      <url>https://projectlombok.org/edge-releases</url>
+    </repository>
+    <repository>
       <id>central</id>
       <url>https://repo1.maven.org/maven2</url>
       <releases>
@@ -86,7 +90,7 @@
     <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
-      <version>1.18.8</version>
+      <version>edge-SNAPSHOT</version>
       <scope>compile</scope>
     </dependency>
 
@@ -112,10 +116,9 @@
             <path>
               <groupId>org.projectlombok</groupId>
               <artifactId>lombok</artifactId>
-              <version>1.18.8</version>
+              <version>edge-SNAPSHOT</version>
             </path>
           </annotationProcessorPaths>
-
         </configuration>
       </plugin>
     </plugins>

@@ -14,7 +14,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = -161 )
+@RegisterInfo( id = -161, sId = "minecraft:barrier")
 public class ItemBarrier extends ItemStack implements io.gomint.inventory.item.ItemBarrier {
 
     @Override

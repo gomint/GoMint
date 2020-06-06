@@ -162,64 +162,7 @@ public class PacketStartGame extends Packet {
 
     @Override
     public void deserialize(PacketBuffer buffer, int protocolID) {
-        this.entityId = buffer.readSignedVarLong().longValue();
-        this.runtimeEntityId = buffer.readUnsignedVarLong();
-        buffer.readSignedVarInt();
 
-        this.spawn = new Location(null, buffer.readLFloat(), buffer.readLFloat(), buffer.readLFloat(), buffer.readLFloat(), buffer.readLFloat());
-
-        for (int i = 0; i < 6; i++) {
-            buffer.readSignedVarInt();
-        }
-
-        buffer.readUnsignedVarInt();
-        buffer.readSignedVarInt();
-        buffer.readBoolean();
-        buffer.readSignedVarInt();
-        buffer.readBoolean();
-        buffer.readBoolean();
-        buffer.readLFloat();
-        buffer.readLFloat();
-
-        for (int i = 0; i < 6; i++) {
-            buffer.readBoolean();
-        }
-
-        readGamerules(buffer);
-
-        for (int i = 0; i < 3; i++) {
-            buffer.readBoolean();
-        }
-
-        buffer.readSignedVarInt();
-        buffer.readSignedVarInt();
-        buffer.readInt();
-        buffer.readBoolean();
-        buffer.readSignedVarInt();
-
-        for (int i = 0; i < 7; i++) {
-            buffer.readBoolean();
-        }
-
-        for (int i = 0; i < 3; i++) {
-            buffer.readString();
-        }
-
-        buffer.readBoolean();
-        buffer.readLLong();
-        buffer.readSignedVarInt();
-
-        // Runtime IDs
-        int amountOfBlocks = buffer.readUnsignedVarInt();
-        this.runtimeIDs = new ArrayList<>(amountOfBlocks);
-        for (int i = 0; i < amountOfBlocks; i++) {
-            this.runtimeIDs.add(new BlockIdentifier(buffer.readString(), buffer.readLShort()));
-        }
-
-        buffer.readUnsignedVarInt();
-
-        // Skip the rest for now
-        buffer.skip(buffer.getRemaining());
     }
 
 }

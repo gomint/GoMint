@@ -7,19 +7,35 @@
 
 package io.gomint.server.util;
 
+import io.gomint.taglib.NBTTagCompound;
+import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+
+import java.util.Map;
+import java.util.SortedMap;
 
 /**
  * @author geNAZt
  * @version 1.0
  */
-@AllArgsConstructor
 @Getter
 public class BlockIdentifier {
 
     private final String blockId;
+    private final SortedMap<String, Object> states = new Object2ObjectLinkedOpenHashMap<>();
     private final short data;
+
+    public BlockIdentifier(String blockId, NBTTagCompound states, Short data)  {
+        this.blockId = blockId;
+        this.data = data;
+
+        if (states != null) {
+            for (Map.Entry<String, Object> entry : states.entrySet()) {
+                this.states.put(entry.getKey(), entry.getValue());
+            }
+        }
+    }
 
     @Override
     public int hashCode() {

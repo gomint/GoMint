@@ -6,7 +6,7 @@ import io.gomint.GoMint;
  * @author KingAli
  * @version 1.0
  */
-public interface ItemSweetBerries extends ItemStack {
+public interface ItemSweetBerries extends ItemStack, ItemFood {
 
     /**
      * Create a new item stack with given class and amount

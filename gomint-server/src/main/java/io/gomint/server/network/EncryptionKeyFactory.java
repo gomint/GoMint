@@ -36,18 +36,6 @@ public class EncryptionKeyFactory {
     private KeyFactory keyFactory;
     private KeyPair keyPair;
 
-    private final GoMintServer server;
-
-    /**
-     * Create a new factory which holds / creates a ECDH key factory and a optional keypair
-     *
-     * @param server The server for which this factory is
-     */
-    @Autowired
-    public EncryptionKeyFactory( GoMintServer server ) {
-        this.server = server;
-    }
-
     private void ensureKeyFactory() {
         // Create the key factory
         try {

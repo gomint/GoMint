@@ -4,8 +4,8 @@ open module gomint.api {
     requires com.google.common;
     requires it.unimi.dsi.fastutil;
     requires java.desktop;
-    requires snakeyaml;
     requires json.simple;
+    requires org.yaml.snakeyaml;
 
     exports io.gomint;
     exports io.gomint.command;

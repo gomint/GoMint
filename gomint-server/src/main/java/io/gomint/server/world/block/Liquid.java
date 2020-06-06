@@ -145,7 +145,8 @@ public abstract class Liquid extends Block implements BlockLiquid {
     @Override
     public PlacementData calculatePlacementData(EntityPlayer entity, ItemStack item, BlockFace face, Block block, Block clickedBlock, Vector clickVector) {
         PlacementData data = super.calculatePlacementData(entity, item, face, block, clickedBlock, clickVector);
-        BlockIdentifier blockIdentifier = new BlockIdentifier(data.getBlockIdentifier().getBlockId(), (short) 0);
+        // TODO: Calculate proper state map
+        BlockIdentifier blockIdentifier = new BlockIdentifier(data.getBlockIdentifier().getBlockId(), null, (short) 0);
         return data.setBlockIdentifier(blockIdentifier);
     }
 
@@ -363,7 +364,8 @@ public abstract class Liquid extends Block implements BlockLiquid {
                 this.world.breakBlock(block.getLocation().toBlockPosition(), block.getDrops(ItemAir.create(0)), false);
             }
 
-            PlacementData data = new PlacementData(new BlockIdentifier(this.getBlockId(), (short) newFlowDecay), null);
+            // TODO: Calculate proper state map
+            PlacementData data = new PlacementData(new BlockIdentifier(this.getBlockId(), null, (short) newFlowDecay), null);
             block.setBlockFromPlacementData(data);
         }
     }

@@ -50,7 +50,7 @@ public abstract class TileEntity {
             return null;
         }
 
-        return new BlockIdentifier( compound.getString( "name", "minecraft:air" ), compound.getShort( "val", (short) 0 ) );
+        return new BlockIdentifier( compound.getString( "name", "minecraft:air" ), null, compound.getShort( "val", (short) 0 ) );
     }
 
     void putBlockIdentifier( BlockIdentifier identifier, NBTTagCompound compound ) {

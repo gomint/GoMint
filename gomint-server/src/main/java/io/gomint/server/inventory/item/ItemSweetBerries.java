@@ -1,7 +1,9 @@
 package io.gomint.server.inventory.item;
 
 import io.gomint.inventory.item.ItemType;
+import io.gomint.server.registry.RegisterInfo;
 
+@RegisterInfo( id = 477, sId = "minecraft:sweet_berries")
 public class ItemSweetBerries extends ItemFood implements io.gomint.inventory.item.ItemSweetBerries {
 
     @Override
@@ -18,4 +20,5 @@ public class ItemSweetBerries extends ItemFood implements io.gomint.inventory.it
     public float getHunger() {
         return 1;
     }
+    
 }

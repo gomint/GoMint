@@ -1,6 +1,6 @@
 package io.gomint.server.inventory.item;
-import io.gomint.inventory.item.ItemType;
 
+import io.gomint.inventory.item.ItemType;
 import io.gomint.server.registry.RegisterInfo;
 import io.gomint.taglib.NBTTagCompound;
 
@@ -8,19 +8,17 @@ import io.gomint.taglib.NBTTagCompound;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 63 )
-public class ItemStandingSign extends ItemStack {
-
-
+@RegisterInfo(id = 5, sId = "minecraft:planks")
+public class ItemPlank extends ItemStack implements io.gomint.inventory.item.ItemPlank {
 
     @Override
     public String getBlockId() {
-        return "minecraft:standing_sign";
+        return "minecraft:planks";
     }
 
     @Override
     public ItemType getType() {
-        return ItemType.STANDING_SIGN;
+        return ItemType.PLANK;
     }
 
 }

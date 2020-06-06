@@ -3,7 +3,7 @@ package io.gomint.inventory.item;
 import io.gomint.GoMint;
 
 /**
- * @author KingAli
+ * @author Kaooot
  * @version 1.0
  */
 public interface ItemLectern extends ItemStack {
@@ -13,7 +13,7 @@ public interface ItemLectern extends ItemStack {
      *
      * @param amount which is used for the creation
      */
-    static ItemLectern create( int amount ) {
+    static ItemLectern create(int amount ) {
         return GoMint.instance().createItemStack( ItemLectern.class, amount );
     }
 }

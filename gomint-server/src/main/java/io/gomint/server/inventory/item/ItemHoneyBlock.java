@@ -7,7 +7,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @author KingAli
  * @version 1.0
  */
-@RegisterInfo( id = 473 )
+@RegisterInfo( id = -220, sId = "minecraft:honey_block" )
 public class ItemHoneyBlock extends ItemStack implements io.gomint.inventory.item.ItemHoneyBlock {
 
     @Override
