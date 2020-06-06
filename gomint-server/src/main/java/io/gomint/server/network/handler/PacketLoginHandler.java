@@ -7,6 +7,7 @@
 
 package io.gomint.server.network.handler;
 
+import io.gomint.event.player.PlayerAnimationEvent.Animation;
 import io.gomint.event.player.PlayerLoginEvent;
 import io.gomint.player.DeviceInfo;
 import io.gomint.server.GoMintServer;
@@ -26,6 +27,9 @@ import io.gomint.server.network.packet.PacketEncryptionRequest;
 import io.gomint.server.network.packet.PacketLogin;
 import io.gomint.server.network.packet.PacketPlayState;
 import io.gomint.server.player.PlayerSkin;
+import io.gomint.server.player.PlayerSkin.PersonaPiece;
+import io.gomint.server.player.PlayerSkin.PersonaPieceTintColour;
+import io.gomint.server.player.PlayerSkin.SkinAnimation;
 import io.gomint.server.plugin.EventCaller;
 import io.gomint.server.scheduler.SyncScheduledTask;
 import io.gomint.server.world.WorldAdapter;
@@ -39,9 +43,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
+import java.lang.reflect.Array;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.util.ArrayList;
 import java.util.Base64;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
@@ -81,8 +89,8 @@ public class PacketLoginHandler implements PacketHandler<PacketLogin> {
         // Check versions
         LOGGER.debug( "Trying to login with protocol version: " + packet.getProtocol() );
         if ( packet.getProtocol() != Protocol.MINECRAFT_PE_PROTOCOL_VERSION
-            && packet.getProtocol() != Protocol.MINECRAFT_PE_BETA_PROTOCOL_VERSION
-            && packet.getProtocol() != Protocol.MINECRAFT_PE_NEXT_STABLE_PROTOCOL_VERSION ) {
+                && packet.getProtocol() != Protocol.MINECRAFT_PE_BETA_PROTOCOL_VERSION
+                && packet.getProtocol() != Protocol.MINECRAFT_PE_NEXT_STABLE_PROTOCOL_VERSION ) {
             String message;
             if ( packet.getProtocol() < Protocol.MINECRAFT_PE_PROTOCOL_VERSION ) {
                 message = "disconnectionScreen.outdatedClient";
@@ -182,14 +190,49 @@ public class PacketLoginHandler implements PacketHandler<PacketLogin> {
                 // Check for name / uuid collision
                 for ( io.gomint.entity.EntityPlayer player : this.server.getPlayers() ) {
                     if ( player.getName().equals( name ) ||
-                        player.getUUID().equals( chainValidator.getUuid() ) ) {
+                            player.getUUID().equals( chainValidator.getUuid() ) ) {
                         connection.disconnect( "Player already logged in on this server" );
                         return;
                     }
                 }
 
+                LOGGER.info("-------------------------------------------------");
+
+                List<JSONObject> animationList = new ArrayList<>();
+                JSONArray animatedImageData = skinToken.getClaim( "AnimatedImageData" );
+                for ( Object animationObj : animatedImageData ) {
+                    JSONObject object = (JSONObject) animationObj;
+                    animationList.add( object );
+                }
+
+                String capeId = skinToken.getClaim( "CapeId" );
+                Boolean premiumSkin = skinToken.getClaim( "PremiumSkin" );
+                Boolean personaSkin = skinToken.getClaim( "PersonaSkin" );
+                Boolean capeOnClassicSkin = skinToken.getClaim( "CapeOnClassicSkin" );
+                String skinGeometryData = skinToken.getClaim( "SkinGeometryData" );
+                LOGGER.info( "SkinGeometryData: " + new String( Base64.getDecoder().decode( skinGeometryData ) ) );
+                String animationData = skinToken.getClaim( "SkinAnimationData" );
+                LOGGER.info( "AnimationData: " + new String( Base64.getDecoder().decode( animationData ) ) );
+
+                String skinColor = skinToken.getClaim( "SkinColor" );
+                String armSize = skinToken.getClaim( "ArmSize" );
+                JSONArray personaPieces = skinToken.getClaim( "PersonaPieces" );
+                for ( Object personaPiece : personaPieces ) {
+                    JSONObject piece = (JSONObject) personaPiece;
+                }
+                JSONArray pieceTintColors = skinToken.getClaim( "PieceTintColors" );
+                for ( Object pieceTint : pieceTintColors ) {
+                    JSONObject piece = (JSONObject) pieceTint;
+                }
+                PlayerSkin playerSkin = new PlayerSkin(skinToken.getClaim( "SkinId" ),
+                        Base64.getDecoder().decode( (String) skinToken.getClaim( "SkinResourcePatch" ) ),
+                        skinToken.getClaim( "SkinImageWidth" ),
+                        skinToken.getClaim( "SkinImageHeight" ),
+                        Base64.getDecoder().decode( "SkinData" ));
+                LOGGER.info("-------------------------------------------------");
+
                 // Create additional data wrappers
-                String skinGeometry = skinToken.getClaim( "SkinGeometry" ) != null ?
+                /* String skinGeometry = skinToken.getClaim( "SkinGeometry" ) != null ?
                     new String( Base64.getDecoder().decode( (String) skinToken.getClaim( "SkinGeometry" ) ) ) :
                     PlayerSkin.getGEOMETRY_CACHE().get( "geometry.humanoid.custom" );
 
@@ -200,7 +243,7 @@ public class PacketLoginHandler implements PacketHandler<PacketLogin> {
                     capeData.isEmpty() ? null : Base64.getDecoder().decode( capeData ),
                     skinToken.getClaim( "SkinGeometryName" ) == null ? "standard_custom" : skinToken.getClaim( "SkinGeometryName" ),
                     skinGeometry
-                );
+                ); */
 
                 // Create needed device info
                 DeviceInfo deviceInfo = new DeviceInfo(
@@ -223,11 +266,11 @@ public class PacketLoginHandler implements PacketHandler<PacketLogin> {
                 WorldAdapter world = this.server.getDefaultWorld();
 
                 EntityPlayer player = new EntityPlayer( world, connection, chainValidator.getUsername(),
-                    chainValidator.getXboxId(), chainValidator.getUuid(), locale );
+                        chainValidator.getXboxId(), chainValidator.getUuid(), locale );
                 this.context.getAutowireCapableBeanFactory().autowireBean( player );
 
                 connection.setEntity( player );
-                connection.getEntity().setSkin( playerSkin );
+//                connection.getEntity().setSkin( playerSkin );
                 connection.getEntity().setNameTagVisible( true );
                 connection.getEntity().setNameTagAlwaysVisible( true );
                 connection.getEntity().getLoginPerformance().setLoginPacket( currentTimeMillis );

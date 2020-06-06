@@ -7,6 +7,7 @@
 
 package io.gomint.server.player;
 
+import io.gomint.event.player.PlayerAnimationEvent.Animation;
 import lombok.Getter;
 
 import javax.imageio.ImageIO;
@@ -28,34 +29,57 @@ public class PlayerSkin implements io.gomint.player.PlayerSkin {
     private static final int SKIN_DATA_SIZE_ALEX = 16384;
     private static final int SKIN_DATA_SIZE_FULL = 65536;
 
-    private String name;
+    private String id;
+    private byte[] resourcePatch;
+    private int imageWidth;
+    private int imageHeight;
     private byte[] data;
+    private SkinAnimation[] animations;
+    private int capeImageWidth;
+    private int capeImageHeight;
     private byte[] capeData;
-    private String geometryName;
-    private String geometryData;
+    private byte[] geometry;
+    private byte[] animationData;
+    private boolean premium;
+    private boolean persona;
+    private boolean personaCapeOnClassic;
+    private String capeId;
+    private String fullId;
+    private String colour;
+    private String armSize;
+    private PersonaPiece[] personaPieces;
+    private PersonaPieceTintColour[] pieceTintColours;
+    private boolean trusted;
 
     // Internal image caching
     private BufferedImage image;
 
-    /**
-     * Create new skin
-     *
-     * @param name         of the skin
-     * @param data         byte array of skin data ( R G B A )
-     * @param capeData     byte array of the cape data (mostly null) ( R G B A )
-     * @param geometryName name of the geometry to use for this skin
-     * @param geometryData json data of the geometry with parents which has been sent from the client
-     */
-    public PlayerSkin( String name, byte[] data, byte[] capeData, String geometryName, String geometryData ) {
-        if ( data.length != SKIN_DATA_SIZE_STEVE && data.length != SKIN_DATA_SIZE_ALEX && data.length != SKIN_DATA_SIZE_FULL ) {
-            throw new IllegalArgumentException( "Invalid skin data buffer length: " + data.length );
-        }
+    public PlayerSkin(String id, byte[] resourcePatch, int imageWidth, int imageHeight, byte[] data, SkinAnimation[] animations, int capeImageWidth, int capeImageHeight, byte[] capeData, byte[] geometry, byte[] animationData, boolean premium, boolean persona, boolean personaCapeOnClassic, String capeId, String fullId, String colour, String armSize, PersonaPiece[] personaPieces, PersonaPieceTintColour[] pieceTintColours, boolean trusted ) {
+//        if ( data.length != SKIN_DATA_SIZE_STEVE && data.length != SKIN_DATA_SIZE_ALEX && data.length != SKIN_DATA_SIZE_FULL ) {
+//            throw new IllegalArgumentException( "Invalid skin data buffer length: " + data.length );
+//        }
 
-        this.name = name;
+        this.id = id;
+        this.resourcePatch = resourcePatch;
+        this.imageWidth = imageWidth;
+        this.imageHeight = imageHeight;
         this.data = data;
+        this.animations = animations;
+        this.capeImageWidth = capeImageWidth;
+        this.capeImageHeight = capeImageHeight;
         this.capeData = capeData;
-        this.geometryName = geometryName;
-        this.geometryData = geometryData;
+        this.geometry = geometry;
+        this.animationData = animationData;
+        this.premium = premium;
+        this.persona = persona;
+        this.personaCapeOnClassic = personaCapeOnClassic;
+        this.capeId = capeId;
+        this.fullId = fullId;
+        this.colour = colour;
+        this.armSize = armSize;
+        this.personaPieces = personaPieces;
+        this.pieceTintColours = pieceTintColours;
+        this.trusted = trusted;
     }
 
     private void createImageFromSkinData() {
@@ -75,9 +99,9 @@ public class PlayerSkin implements io.gomint.player.PlayerSkin {
                 byte a = this.data[cursor++];
 
                 int rgbValue = ( ( a & 0xFF ) << 24 ) |
-                    ( ( r & 0xFF ) << 16 ) |
-                    ( ( g & 0xFF ) << 8 ) |
-                    ( b & 0xFF );
+                        ( ( r & 0xFF ) << 16 ) |
+                        ( ( g & 0xFF ) << 8 ) |
+                        ( b & 0xFF );
 
                 this.image.setRGB( x, y, rgbValue );
             }
@@ -85,8 +109,8 @@ public class PlayerSkin implements io.gomint.player.PlayerSkin {
     }
 
     @Override
-    public String getName() {
-        return this.name;
+    public String getId() {
+        return this.id;
     }
 
     @Override
@@ -99,15 +123,15 @@ public class PlayerSkin implements io.gomint.player.PlayerSkin {
         return this.capeData;
     }
 
-    @Override
-    public String getGeometryName() {
-        return this.geometryName;
-    }
+//    @Override
+//    public String getGeometryName() {
+//        return this.geometryName;
+//    }
 
-    @Override
-    public String getGeometryData() {
-        return this.geometryData;
-    }
+//    @Override
+//    public String getGeometryData() {
+//        return this.geometryData;
+//    }
 
     @Override
     public void saveSkinTo( OutputStream out ) throws IOException {
@@ -157,6 +181,27 @@ public class PlayerSkin implements io.gomint.player.PlayerSkin {
      */
     public static PlayerSkin emptySkin() {
         return new PlayerSkin( "Gomint_Skin", new byte[8192], new byte[0], "geometry.humanoid.custom", GEOMETRY_CACHE.get( "geometry.humanoid.custom" ) );
+    }
+
+    public class SkinAnimation {
+        public int ImageWidth;
+        public int ImageHeight;
+        public byte[] ImageData;
+        public int AnimationType;
+        public float FrameCount;
+    }
+
+    public class PersonaPiece {
+        public String PieceID;
+        public String PieceType;
+        public String PackID;
+        public boolean Default;
+        public String ProductID;
+    }
+
+    public class PersonaPieceTintColour {
+        public String PieceType;
+        public String Colours;
     }
 
 }

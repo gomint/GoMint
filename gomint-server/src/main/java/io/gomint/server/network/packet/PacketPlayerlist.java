@@ -61,11 +61,11 @@ public class PacketPlayerlist extends Packet {
                 }
 
                 // Geometry name
-                buffer.writeString( entry.skin.getGeometryName() );
+//                buffer.writeString( entry.skin.getGeometryName() );
 
                 // Geometry data
-                buffer.writeUnsignedVarInt( entry.skin.getGeometryData().length() );
-                buffer.writeBytes( entry.skin.getGeometryData().getBytes() );
+//                buffer.writeUnsignedVarInt( entry.skin.getGeometryData().length() );
+//                buffer.writeBytes( entry.skin.getGeometryData().getBytes() );
 
                 // Is teacher
                 buffer.writeBoolean( false );

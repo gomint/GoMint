@@ -52,11 +52,11 @@ public interface PlayerSkin {
     }
 
     /**
-     * Gets the name of the player's skin.
+     * Gets the id of the player's skin.
      *
-     * @return The name of the player's skin
+     * @return The id of the player's skin
      */
-    String getName();
+    String getId();
 
     /**
      * Gets the raw data of the player's skin.
@@ -77,14 +77,14 @@ public interface PlayerSkin {
      *
      * @return geometry name
      */
-    String getGeometryName();
+//    String getGeometryName();
 
     /**
      * Data used for geometry of the skin
      *
      * @return geometry data
      */
-    String getGeometryData();
+//    String getGeometryData();
 
     /**
      * Save the skin to a given file in PNG format
