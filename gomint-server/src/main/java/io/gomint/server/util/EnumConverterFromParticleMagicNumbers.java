@@ -136,6 +136,10 @@ public class EnumConverterFromParticleMagicNumbers implements EnumConverter {
                 return io.gomint.server.world.ParticleMagicNumbers.FALLING_DRAGONS_BREATH;
             case 66:
                 return io.gomint.server.world.ParticleMagicNumbers.DRAGONS_BREATH;
+            case 67:
+                return io.gomint.server.world.ParticleMagicNumbers.BREAK_BLOCK;
+            case 68:
+                return io.gomint.server.world.ParticleMagicNumbers.PUNCH_BLOCK;
         }
 
         return null;
