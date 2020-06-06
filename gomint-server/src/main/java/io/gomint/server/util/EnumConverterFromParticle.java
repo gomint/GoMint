@@ -138,6 +138,10 @@ public class EnumConverterFromParticle implements EnumConverter {
                 return io.gomint.world.Particle.FALLING_DRAGONS_BREATH;
             case 66:
                 return io.gomint.world.Particle.DRAGONS_BREATH;
+            case 67:
+                return io.gomint.world.Particle.BREAK_BLOCK;
+            case 68:
+                return io.gomint.world.Particle.PUNCH_BLOCK;
         }
 
         return null;

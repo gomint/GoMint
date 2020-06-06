@@ -75,7 +75,9 @@ public enum ParticleMagicNumbers {
     FALLING_RED_DUST( 63 ),
     CAMPFIRE_SMOKE( 64) ,
     FALLING_DRAGONS_BREATH( 66) ,
-    DRAGONS_BREATH( 67 );
+    DRAGONS_BREATH( 67 ),
+    BREAK_BLOCK( -1 ),
+    PUNCH_BLOCK( -2 );
 
     @Getter
     private final int id;
