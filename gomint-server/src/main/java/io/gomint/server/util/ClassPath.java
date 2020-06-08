@@ -221,15 +221,21 @@ public class ClassPath {
         }
 
         // Now modules
-        for (ResolvedModule module : ClassPath.class.getModule().getLayer().configuration().modules()) {
-            Optional<URI> moduleLocation = module.reference().location();
-            moduleLocation.ifPresent(url -> {
-                try {
-                    urls.add(url.toURL());
-                } catch (MalformedURLException e) {
-                    e.printStackTrace();
+        Module currentModule = ClassPath.class.getModule();
+        if (currentModule != null) {
+            ModuleLayer currentLayer = currentModule.getLayer();
+            if (currentLayer != null) {
+                for (ResolvedModule module : currentLayer.configuration().modules()) {
+                    Optional<URI> moduleLocation = module.reference().location();
+                    moduleLocation.ifPresent(url -> {
+                        try {
+                            urls.add(url.toURL());
+                        } catch (MalformedURLException e) {
+                            e.printStackTrace();
+                        }
+                    });
                 }
-            });
+            }
         }
 
         return urls.build();
