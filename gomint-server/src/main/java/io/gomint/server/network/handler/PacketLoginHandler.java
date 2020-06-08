@@ -27,9 +27,6 @@ import io.gomint.server.network.packet.PacketEncryptionRequest;
 import io.gomint.server.network.packet.PacketLogin;
 import io.gomint.server.network.packet.PacketPlayState;
 import io.gomint.server.player.PlayerSkin;
-import io.gomint.server.player.PlayerSkin.PersonaPiece;
-import io.gomint.server.player.PlayerSkin.PersonaPieceTintColour;
-import io.gomint.server.player.PlayerSkin.SkinAnimation;
 import io.gomint.server.plugin.EventCaller;
 import io.gomint.server.scheduler.SyncScheduledTask;
 import io.gomint.server.world.WorldAdapter;
@@ -196,40 +193,47 @@ public class PacketLoginHandler implements PacketHandler<PacketLogin> {
                     }
                 }
 
-                LOGGER.info("-------------------------------------------------");
-
                 List<JSONObject> animationList = new ArrayList<>();
                 JSONArray animatedImageData = skinToken.getClaim( "AnimatedImageData" );
                 for ( Object animationObj : animatedImageData ) {
-                    JSONObject object = (JSONObject) animationObj;
-                    animationList.add( object );
+                    JSONObject animation = (JSONObject) animationObj;
+                    animationList.add( animation );
                 }
 
-                String capeId = skinToken.getClaim( "CapeId" );
-                Boolean premiumSkin = skinToken.getClaim( "PremiumSkin" );
-                Boolean personaSkin = skinToken.getClaim( "PersonaSkin" );
-                Boolean capeOnClassicSkin = skinToken.getClaim( "CapeOnClassicSkin" );
-                String skinGeometryData = skinToken.getClaim( "SkinGeometryData" );
-                LOGGER.info( "SkinGeometryData: " + new String( Base64.getDecoder().decode( skinGeometryData ) ) );
-                String animationData = skinToken.getClaim( "SkinAnimationData" );
-                LOGGER.info( "AnimationData: " + new String( Base64.getDecoder().decode( animationData ) ) );
-
-                String skinColor = skinToken.getClaim( "SkinColor" );
-                String armSize = skinToken.getClaim( "ArmSize" );
+                List<JSONObject> personaPieceList = new ArrayList<>();
                 JSONArray personaPieces = skinToken.getClaim( "PersonaPieces" );
-                for ( Object personaPiece : personaPieces ) {
-                    JSONObject piece = (JSONObject) personaPiece;
+                for ( Object personaPieceObj : personaPieces ) {
+                    JSONObject personaPiece = (JSONObject) personaPieceObj;
+                    personaPieceList.add( personaPiece );
                 }
+
+                List<JSONObject> pieceTintColorList = new ArrayList<>();
                 JSONArray pieceTintColors = skinToken.getClaim( "PieceTintColors" );
-                for ( Object pieceTint : pieceTintColors ) {
-                    JSONObject piece = (JSONObject) pieceTint;
+                for ( Object pieceTintColorObj : pieceTintColors ) {
+                    JSONObject pieceTintColor = (JSONObject) pieceTintColorObj;
+                    pieceTintColorList.add( pieceTintColor );
                 }
+
                 PlayerSkin playerSkin = new PlayerSkin(skinToken.getClaim( "SkinId" ),
                         Base64.getDecoder().decode( (String) skinToken.getClaim( "SkinResourcePatch" ) ),
-                        skinToken.getClaim( "SkinImageWidth" ),
-                        skinToken.getClaim( "SkinImageHeight" ),
-                        Base64.getDecoder().decode( "SkinData" ));
-                LOGGER.info("-------------------------------------------------");
+                        Math.toIntExact( skinToken.getClaim( "SkinImageWidth" ) ),
+                        Math.toIntExact( skinToken.getClaim( "SkinImageHeight" ) ),
+                        Base64.getDecoder().decode( (String) skinToken.getClaim( "SkinData" ) ),
+                        animationList,
+                        Math.toIntExact( skinToken.getClaim( "CapeImageWidth" ) ),
+                        Math.toIntExact( skinToken.getClaim( "CapeImageHeight" ) ),
+                        Base64.getDecoder().decode( (String) skinToken.getClaim( "CapeData" ) ),
+                        Base64.getDecoder().decode( (String) skinToken.getClaim( "SkinGeometryData" ) ),
+                        Base64.getDecoder().decode( (String) skinToken.getClaim( "SkinAnimationData" ) ),
+                        skinToken.getClaim( "PremiumSkin" ),
+                        skinToken.getClaim( "PersonaSkin" ),
+                        skinToken.getClaim( "CapeOnClassicSkin" ),
+                        skinToken.getClaim( "CapeId" ),
+                        skinToken.getClaim( "SkinColor" ),
+                        skinToken.getClaim( "ArmSize" ),
+                        personaPieceList,
+                        pieceTintColorList
+                    );
 
                 // Create additional data wrappers
                 /* String skinGeometry = skinToken.getClaim( "SkinGeometry" ) != null ?
@@ -270,7 +274,7 @@ public class PacketLoginHandler implements PacketHandler<PacketLogin> {
                 this.context.getAutowireCapableBeanFactory().autowireBean( player );
 
                 connection.setEntity( player );
-//                connection.getEntity().setSkin( playerSkin );
+                connection.getEntity().setSkin( playerSkin );
                 connection.getEntity().setNameTagVisible( true );
                 connection.getEntity().setNameTagAlwaysVisible( true );
                 connection.getEntity().getLoginPerformance().setLoginPacket( currentTimeMillis );

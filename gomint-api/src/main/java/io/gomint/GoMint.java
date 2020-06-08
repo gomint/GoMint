@@ -184,14 +184,14 @@ public interface GoMint {
      * @param inputStream which should be read
      * @return skin or null on error
      */
-    PlayerSkin createPlayerSkin( InputStream inputStream );
+//    PlayerSkin createPlayerSkin( InputStream inputStream );
 
     /**
      * Get the empty player skin
      *
      * @return empty player skin
      */
-    PlayerSkin getEmptyPlayerSkin();
+//    PlayerSkin getEmptyPlayerSkin();
 
     /**
      * Get the default world of this server

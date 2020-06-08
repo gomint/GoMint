@@ -29,7 +29,7 @@ public interface PlayerSkin {
      * @param url which we should fetch
      * @return skin or null on error
      */
-    static PlayerSkin fromURL( String url ) {
+    /* static PlayerSkin fromURL( String url ) {
         try {
             URL urlObj = new URL( url );
             URLConnection connection = urlObj.openConnection();
@@ -40,16 +40,16 @@ public interface PlayerSkin {
             e.printStackTrace();
             return null;
         }
-    }
+    } */
 
     /**
      * Create a empty skin
      *
      * @return
      */
-    static PlayerSkin empty() {
+    /* static PlayerSkin empty() {
         return GoMint.instance().getEmptyPlayerSkin();
-    }
+    }*/
 
     /**
      * Gets the id of the player's skin.
@@ -63,7 +63,7 @@ public interface PlayerSkin {
      *
      * @return The raw data of the player's skin
      */
-    byte[] getRawData();
+//    byte[] getRawData();
 
     /**
      * Get cape data

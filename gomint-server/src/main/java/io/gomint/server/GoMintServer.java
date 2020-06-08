@@ -839,20 +839,20 @@ public class GoMintServer implements GoMint, InventoryHolder {
         return GoMintServer.mainThread == Thread.currentThread().getId();
     }
 
-    @Override
-    public PlayerSkin createPlayerSkin(InputStream inputStream) {
+    // @Override
+    /* public PlayerSkin createPlayerSkin(InputStream inputStream) {
         try {
             return io.gomint.server.player.PlayerSkin.fromInputStream(inputStream);
         } catch (IOException e) {
             LOGGER.error("Could not read skin from input: ", e);
             return null;
         }
-    }
+    }*/
 
-    @Override
-    public PlayerSkin getEmptyPlayerSkin() {
-        return io.gomint.server.player.PlayerSkin.emptySkin();
-    }
+//    @Override
+//    public PlayerSkin getEmptyPlayerSkin() {
+//        return io.gomint.server.player.PlayerSkin.emptySkin();
+//    }
 
     public long getCurrentTickTime() {
         return this.currentTickTime;

@@ -751,12 +751,12 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
         this.sendData(this);
 
         // TODO: Send player list for yourself
-//        PacketPlayerlist playerlist = new PacketPlayerlist();
-//        playerlist.setMode((byte) 0);
-//        playerlist.setEntries(new ArrayList<PacketPlayerlist.Entry>() {{
-//            add(new PacketPlayerlist.Entry(EntityPlayer.this));
-//        }});
-//        this.getConnection().addToSendQueue(playerlist);
+        PacketPlayerlist playerlist = new PacketPlayerlist();
+        playerlist.setMode((byte) 0);
+        playerlist.setEntries(new ArrayList<PacketPlayerlist.Entry>() {{
+            add(new PacketPlayerlist.Entry(EntityPlayer.this));
+        }});
+        this.getConnection().addToSendQueue(playerlist);
 
         LOGGER.debug("Did send all prepare entity data");
     }

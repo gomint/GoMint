@@ -7,18 +7,18 @@
 
 package io.gomint.server.player;
 
-import io.gomint.event.player.PlayerAnimationEvent.Animation;
 import lombok.Getter;
+import org.json.simple.JSONObject;
 
 import javax.imageio.ImageIO;
-import javax.imageio.stream.ImageInputStream;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.List;
 
 /**
  * @author BlackyPaw
+ * @author HerryYT
  * @version 1.0
  */
 public class PlayerSkin implements io.gomint.player.PlayerSkin {
@@ -29,32 +29,53 @@ public class PlayerSkin implements io.gomint.player.PlayerSkin {
     private static final int SKIN_DATA_SIZE_ALEX = 16384;
     private static final int SKIN_DATA_SIZE_FULL = 65536;
 
-    private String id;
-    private byte[] resourcePatch;
-    private int imageWidth;
-    private int imageHeight;
-    private byte[] data;
-    private SkinAnimation[] animations;
-    private int capeImageWidth;
-    private int capeImageHeight;
-    private byte[] capeData;
-    private byte[] geometry;
-    private byte[] animationData;
-    private boolean premium;
-    private boolean persona;
-    private boolean personaCapeOnClassic;
-    private String capeId;
-    private String fullId;
-    private String colour;
-    private String armSize;
-    private PersonaPiece[] personaPieces;
-    private PersonaPieceTintColour[] pieceTintColours;
-    private boolean trusted;
+    @Getter
+    private final String id;
+    @Getter
+    private final byte[] resourcePatch;
+    @Getter
+    private final int imageWidth;
+    @Getter
+    private final int imageHeight;
+    @Getter
+    private final byte[] data;
+    @Getter
+    private final List<JSONObject> animations;
+    @Getter
+    private final int capeImageWidth;
+    @Getter
+    private final int capeImageHeight;
+    @Getter
+    private final byte[] capeData;
+    @Getter
+    private final byte[] geometry;
+    @Getter
+    private final byte[] animationData;
+    @Getter
+    private final boolean premium;
+    @Getter
+    private final boolean persona;
+    @Getter
+    private final boolean personaCapeOnClassic;
+    @Getter
+    private final String capeId;
+    @Getter
+    private final String fullId;
+    @Getter
+    private final String colour;
+    @Getter
+    private final String armSize;
+    @Getter
+    private final List<JSONObject> personaPieces;
+    @Getter
+    private final List<JSONObject> pieceTintColours;
+    @Getter
+    private final boolean trusted = true;  // Not sent in JWT, broken "feature"
 
     // Internal image caching
     private BufferedImage image;
 
-    public PlayerSkin(String id, byte[] resourcePatch, int imageWidth, int imageHeight, byte[] data, SkinAnimation[] animations, int capeImageWidth, int capeImageHeight, byte[] capeData, byte[] geometry, byte[] animationData, boolean premium, boolean persona, boolean personaCapeOnClassic, String capeId, String fullId, String colour, String armSize, PersonaPiece[] personaPieces, PersonaPieceTintColour[] pieceTintColours, boolean trusted ) {
+    public PlayerSkin(String id, byte[] resourcePatch, int imageWidth, int imageHeight, byte[] data, List<JSONObject> animations, int capeImageWidth, int capeImageHeight, byte[] capeData, byte[] geometry, byte[] animationData, boolean premium, boolean persona, boolean personaCapeOnClassic, String capeId, String colour, String armSize, List<JSONObject> personaPieces, List<JSONObject> pieceTintColours ) {
 //        if ( data.length != SKIN_DATA_SIZE_STEVE && data.length != SKIN_DATA_SIZE_ALEX && data.length != SKIN_DATA_SIZE_FULL ) {
 //            throw new IllegalArgumentException( "Invalid skin data buffer length: " + data.length );
 //        }
@@ -74,12 +95,11 @@ public class PlayerSkin implements io.gomint.player.PlayerSkin {
         this.persona = persona;
         this.personaCapeOnClassic = personaCapeOnClassic;
         this.capeId = capeId;
-        this.fullId = fullId;
+        this.fullId = id + capeId;  // Client doesn't send it, manually computed
         this.colour = colour;
         this.armSize = armSize;
         this.personaPieces = personaPieces;
         this.pieceTintColours = pieceTintColours;
-        this.trusted = trusted;
     }
 
     private void createImageFromSkinData() {
@@ -108,21 +128,6 @@ public class PlayerSkin implements io.gomint.player.PlayerSkin {
         }
     }
 
-    @Override
-    public String getId() {
-        return this.id;
-    }
-
-    @Override
-    public byte[] getRawData() {
-        return this.data;
-    }
-
-    @Override
-    public byte[] getCapeData() {
-        return this.capeData;
-    }
-
 //    @Override
 //    public String getGeometryName() {
 //        return this.geometryName;
@@ -139,13 +144,13 @@ public class PlayerSkin implements io.gomint.player.PlayerSkin {
         ImageIO.write( this.image, "PNG", out );
     }
 
-    /**
+    /*
      * Create a skin from a given input stream
      *
      * @param inputStream which holds the data for this skin
      * @return skin which can be applied to entity human
      * @throws IOException when there was an error with the image
-     */
+     *
     public static PlayerSkin fromInputStream( InputStream inputStream ) throws IOException {
         ImageInputStream imageInputStream = ImageIO.createImageInputStream( inputStream );
         BufferedImage image = ImageIO.read( imageInputStream );
@@ -173,35 +178,16 @@ public class PlayerSkin implements io.gomint.player.PlayerSkin {
             throw new IOException( "Input picture is not 64 / 32 pixel high" );
         }
     }
+     */
 
-    /**
+    /*
      * Create a new empty skin
      *
      * @return empty skin
-     */
+
     public static PlayerSkin emptySkin() {
         return new PlayerSkin( "Gomint_Skin", new byte[8192], new byte[0], "geometry.humanoid.custom", GEOMETRY_CACHE.get( "geometry.humanoid.custom" ) );
     }
-
-    public class SkinAnimation {
-        public int ImageWidth;
-        public int ImageHeight;
-        public byte[] ImageData;
-        public int AnimationType;
-        public float FrameCount;
-    }
-
-    public class PersonaPiece {
-        public String PieceID;
-        public String PieceType;
-        public String PackID;
-        public boolean Default;
-        public String ProductID;
-    }
-
-    public class PersonaPieceTintColour {
-        public String PieceType;
-        public String Colours;
-    }
+     */
 
 }

@@ -16,6 +16,7 @@ import io.gomint.math.Vector;
 import io.gomint.server.GoMintServer;
 import io.gomint.server.entity.EntityLink;
 import io.gomint.server.network.type.CommandOrigin;
+import io.gomint.server.player.PlayerSkin;
 import io.gomint.server.util.Things;
 import io.gomint.taglib.AllocationLimitReachedException;
 import io.gomint.taglib.NBTReader;
@@ -23,6 +24,8 @@ import io.gomint.taglib.NBTTagCompound;
 import io.gomint.taglib.NBTWriter;
 import io.gomint.world.Gamerule;
 import io.gomint.world.block.BlockFace;
+import org.apache.logging.log4j.core.filter.BurstFilter;
+import org.json.simple.JSONObject;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -377,6 +380,53 @@ public abstract class Packet {
 
     void writeByteRotation(float rotation, PacketBuffer buffer) {
         buffer.writeByte((byte) (rotation / BYTE_ROTATION_DIVIDOR));
+    }
+
+    void writeSerializedSkin( PlayerSkin skin, PacketBuffer buffer ) {
+        buffer.writeString( skin.getId() );
+        buffer.writeUnsignedVarInt( skin.getResourcePatch().length );
+        buffer.writeBytes( skin.getResourcePatch() );
+        buffer.writeUnsignedVarInt( skin.getImageWidth() );
+        buffer.writeUnsignedVarInt( skin.getImageHeight() );
+        buffer.writeUnsignedVarInt( skin.getData().length );
+        buffer.writeBytes( skin.getData() );
+        buffer.writeUnsignedVarInt( skin.getAnimations().size() );
+        for ( JSONObject animationObj : skin.getAnimations() ) {
+            buffer.writeUnsignedVarInt( Math.toIntExact( Long.valueOf( (String) animationObj.get("ImageWidth") ) ) );
+            buffer.writeUnsignedVarInt( Math.toIntExact( Long.valueOf( (String) animationObj.get( "ImageHeight" ) ) ) );
+            buffer.writeUnsignedVarInt( ( (String) animationObj.get( "ImageData" ) ).length() );
+            buffer.writeBytes( (byte[]) animationObj.get( "ImageData" ) );
+            buffer.writeUnsignedVarInt( Math.toIntExact( Long.valueOf( (String) animationObj.get( "AnimationType" ) ) ) );
+            buffer.writeLFloat( Float.parseFloat( (String) animationObj.get( "FrameCount" ) ) );
+        }
+        buffer.writeUnsignedVarInt( skin.getCapeImageWidth() );
+        buffer.writeUnsignedVarInt( skin.getCapeImageHeight() );
+        buffer.writeUnsignedVarInt( skin.getCapeData().length );
+        buffer.writeBytes( skin.getCapeData() );
+        buffer.writeUnsignedVarInt( skin.getGeometry().length );
+        buffer.writeBytes( skin.getGeometry() );
+        buffer.writeBoolean( skin.isPremium() );
+        buffer.writeBoolean( skin.isPersona() );
+        buffer.writeBoolean( skin.isPersonaCapeOnClassic() );
+        buffer.writeString( skin.getCapeId() );
+        buffer.writeString( skin.getFullId() );
+        buffer.writeString( skin.getArmSize() );
+        buffer.writeString( skin.getColour() );
+        buffer.writeUnsignedVarInt( skin.getPersonaPieces().size() );
+        for ( JSONObject personaPieceObj : skin.getPersonaPieces() ) {
+            buffer.writeString( (String) personaPieceObj.get( "PieceID" ) );
+            buffer.writeString( (String) personaPieceObj.get( "PieceType" ) );
+            buffer.writeString( (String) personaPieceObj.get( "PackID" ) );
+            buffer.writeBoolean( (boolean) personaPieceObj.get( "Default" ) );
+            buffer.writeString( (String) personaPieceObj.get( "ProductID" ) );
+        }
+        buffer.writeUnsignedVarInt( skin.getPieceTintColours().size() );
+        for ( JSONObject pieceTintColorObj : skin.getPieceTintColours() ) {
+            buffer.writeString( (String) pieceTintColorObj.get( "PieceType" ) );
+//            buffer.writeUnsignedVarInt( ( (JSONObject) pieceTintColorObj.get( "Colours" ) ).size() );  // or colors?
+//            for ( JSONObject colours : ( (JSONObject) pieceTintColorObj.get( "Colours" ) ) )
+            buffer.writeUnsignedVarInt( 0 );
+        }
     }
 
     float readByteRotation(PacketBuffer buffer) {
