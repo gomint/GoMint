@@ -7,7 +7,7 @@
 
 package io.gomint.world.block;
 
-import io.gomint.world.block.data.WoodType;
+import io.gomint.world.block.data.LogType;
 
 /**
  * @author geNAZt
@@ -20,13 +20,13 @@ public interface BlockLeaves extends Block {
      *
      * @param type of the leave
      */
-    void setWoodType( WoodType type );
+    void setLeaveType( LogType type );
 
     /**
      * Get type of leave
      *
      * @return type of leave
      */
-    WoodType getWoodType();
+    LogType getLeaveType();
 
 }

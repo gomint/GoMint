@@ -10,7 +10,7 @@ package io.gomint.world.block;
 public enum BlockType {
 
     // CHECKSTYLE:OFF
-    ACACIA_WOOD_STAIRS,
+    WOODEN_STAIR,
     ACTIVATOR_RAIL,
     AIR,
     ANVIL,
@@ -35,7 +35,7 @@ public enum BlockType {
     BOOKSHELF,
     BREWING_STAND,
     BRICK_BLOCK,
-    BRICK_STAIRS,
+    STONE_STAIR,
     BROWN_MUSHROOM,
     BROWN_MUSHROOM_BLOCK,
     BUBBLE_COLUMN,
@@ -164,6 +164,8 @@ public enum BlockType {
     RED_MUSHROOM_BLOCK,
     RED_NETHER_BRICK,
     RED_SANDSTONE,
+    SMOOTH_RED_SANDSTONE_STAIRS,
+    SMOOTH_QUARTZ_STAIRS,
     RED_SANDSTONE_STAIRS,
     RED_TORCH,
     REDSTONE_COMPARATOR,
@@ -241,4 +243,5 @@ public enum BlockType {
     LECTERN,
     LOOM,
     SWEETBERRIESBUSH,
+    PLANK,
 }

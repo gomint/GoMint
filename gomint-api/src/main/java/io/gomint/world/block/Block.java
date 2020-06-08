@@ -11,6 +11,7 @@ import io.gomint.inventory.item.ItemStack;
 import io.gomint.math.AxisAlignedBB;
 import io.gomint.math.Location;
 import io.gomint.world.Biome;
+import io.gomint.world.block.data.Facing;
 
 import java.util.List;
 
@@ -125,7 +126,7 @@ public interface Block {
      * @param face for which we want the block
      * @return attached block
      */
-    Block getSide( BlockFace face );
+    Block getSide( Facing face );
 
     /**
      * Get a list of drops which will be dropped when using the given tool

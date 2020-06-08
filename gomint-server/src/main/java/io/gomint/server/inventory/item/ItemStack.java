@@ -19,7 +19,7 @@ import io.gomint.server.inventory.item.annotation.UseDataAsDamage;
 import io.gomint.server.inventory.item.helper.ItemStackPlace;
 import io.gomint.taglib.NBTTagCompound;
 import io.gomint.world.block.Block;
-import io.gomint.world.block.BlockFace;
+import io.gomint.world.block.data.Facing;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.slf4j.Logger;
@@ -410,7 +410,7 @@ public abstract class ItemStack implements Cloneable, io.gomint.inventory.item.I
         // NormalGenerator items do nothing
     }
 
-    public boolean interact( EntityPlayer entity, BlockFace face, Vector clickPosition, Block clickedBlock ) {
+    public boolean interact(EntityPlayer entity, Facing face, Vector clickPosition, Block clickedBlock ) {
         return false;
     }
 

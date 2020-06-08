@@ -5,7 +5,7 @@ import io.gomint.math.Vector;
 import io.gomint.server.entity.EntityPlayer;
 import io.gomint.server.registry.RegisterInfo;
 import io.gomint.world.block.Block;
-import io.gomint.world.block.BlockFace;
+import io.gomint.world.block.data.Facing;
 
 /**
  * @author geNAZt
@@ -21,7 +21,7 @@ public class ItemLeatherChestplate extends ItemLeatherArmor implements io.gomint
     }
 
     @Override
-    public boolean interact( EntityPlayer entity, BlockFace face, Vector clickPosition, Block clickedBlock ) {
+    public boolean interact(EntityPlayer entity, Facing face, Vector clickPosition, Block clickedBlock ) {
         if ( clickedBlock == null ) {
             if ( isBetter( (ItemStack) entity.getArmorInventory().getChestplate() ) ) {
                 ItemStack old = (ItemStack) entity.getArmorInventory().getChestplate();

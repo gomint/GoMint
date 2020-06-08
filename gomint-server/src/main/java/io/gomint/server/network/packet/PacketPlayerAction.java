@@ -3,7 +3,7 @@ package io.gomint.server.network.packet;
 import io.gomint.jraknet.PacketBuffer;
 import io.gomint.math.BlockPosition;
 import io.gomint.server.network.Protocol;
-import io.gomint.world.block.BlockFace;
+import io.gomint.world.block.data.Facing;
 import lombok.Data;
 
 /**
@@ -18,7 +18,7 @@ public class PacketPlayerAction extends Packet {
     private PlayerAction action;
     private BlockPosition position;
 
-    private BlockFace face;
+    private Facing face;
 
     // There is more data but who knows what that could be
 

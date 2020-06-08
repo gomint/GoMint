@@ -7,7 +7,7 @@
 
 package io.gomint.world.block;
 
-import io.gomint.world.block.data.WoodType;
+import io.gomint.world.block.data.LogType;
 
 /**
  * @author geNAZt
@@ -20,13 +20,13 @@ public interface BlockWoodenDoor extends BlockDoor {
      *
      * @return type of wood for this door
      */
-    WoodType getWoodType();
+    LogType getWoodType();
 
     /**
      * Set a new type of wood for this door
      *
-     * @param woodType which should be the new wood for the door
+     * @param logType which should be the new wood for the door
      */
-    void setWoodType( WoodType woodType );
+    void setWoodType( LogType logType);
 
 }

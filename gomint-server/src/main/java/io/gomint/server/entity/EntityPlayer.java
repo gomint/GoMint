@@ -93,7 +93,7 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
     private int viewDistance = 4;
     private Queue<ChunkAdapter> chunkSendQueue = new LinkedBlockingQueue<>();
     // EntityPlayer Information
-    private Gamemode gamemode = Gamemode.SURVIVAL;
+    private Gamemode gamemode = Gamemode.SPECTATOR;
     @Getter
     private AdventureSettings adventureSettings;
     @Getter

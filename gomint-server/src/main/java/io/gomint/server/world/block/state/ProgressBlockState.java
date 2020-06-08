@@ -12,27 +12,28 @@ import io.gomint.math.MathUtils;
 import io.gomint.math.Vector;
 import io.gomint.server.entity.EntityPlayer;
 import io.gomint.server.world.block.Block;
-import io.gomint.world.block.BlockFace;
+import io.gomint.world.block.data.Facing;
 import lombok.Getter;
 
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 /**
  * @author geNAZt
  * @version 1.0
  */
-public class ProgressBlockState extends BlockState<Float> {
+public class ProgressBlockState extends BlockState<Float, Integer> {
 
     private Consumer<Void> maxedProgressConsumer;
     private int max;
-    @Getter
-    private float step;
+    @Getter private float step;
 
-    public ProgressBlockState( Block block, int max, Consumer<Void> maxedProgressConsumer ) {
-        super( block );
+    public ProgressBlockState(Block block, Supplier<String> key, int max, Consumer<Void> maxedProgressConsumer ) {
+        super( block, key );
         this.step = 1f / max;
         this.maxedProgressConsumer = maxedProgressConsumer;
         this.max = max;
+        this.setState(0f);
     }
 
     public boolean progress() {
@@ -46,24 +47,17 @@ public class ProgressBlockState extends BlockState<Float> {
     }
 
     @Override
-    protected int cap() {
-        return this.max;
+    protected void calculateValueFromState() {
+        this.setValue(Math.round( this.getState() * this.max ));
     }
 
     @Override
-    public void detectFromPlacement( EntityPlayer player, ItemStack placedItem, BlockFace face, Block block, Block clickedBlock, Vector clickPosition ) {
+    public void detectFromPlacement(EntityPlayer player, ItemStack placedItem, Facing face, Block block, Block clickedBlock, Vector clickPosition ) {
         this.setState( 0f );
     }
 
-    @Override
-    protected void data( short data ) {
-        this.setState( data * this.step );
+    public boolean maxed() {
+        return 1f - this.getState() <= MathUtils.EPSILON;
     }
-
-    @Override
-    protected short data() {
-        return (short) Math.round( this.getState() * this.max );
-    }
-
 
 }

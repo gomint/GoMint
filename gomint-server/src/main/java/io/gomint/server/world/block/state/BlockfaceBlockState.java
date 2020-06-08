@@ -11,86 +11,67 @@ import io.gomint.inventory.item.ItemStack;
 import io.gomint.math.Vector;
 import io.gomint.server.entity.EntityPlayer;
 import io.gomint.server.util.Bearing;
-import io.gomint.server.util.Things;
 import io.gomint.server.world.block.Block;
-import io.gomint.world.block.BlockFace;
+import io.gomint.world.block.data.Facing;
 
-import java.util.List;
-import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 /**
  * @author geNAZt
  * @version 1.0
  */
-public class BlockfaceBlockState extends BlockState<BlockFace> {
+public class BlockfaceBlockState extends BlockState<Facing, Integer> {
 
     protected final boolean detectUpDown;
 
-    public BlockfaceBlockState( Block block ) {
-        super( block );
-        this.detectUpDown = false;
+    public BlockfaceBlockState(Block block, Supplier<String> key) {
+        this(block, key, false);
     }
 
-    public BlockfaceBlockState( Block block, boolean detectUpDown ) {
-        super( block );
+    public BlockfaceBlockState(Block block, Supplier<String> key, boolean detectUpDown) {
+        super(block, key);
         this.detectUpDown = detectUpDown;
     }
 
-    public BlockfaceBlockState( Block block, Predicate<List<BlockState>> predicate ) {
-        super( block, predicate );
-        this.detectUpDown = false;
-    }
-
-    public BlockfaceBlockState( Block block, Predicate<List<BlockState>> predicate, int shift ) {
-        super( block, predicate, shift );
-        this.detectUpDown = false;
-    }
-
     @Override
-    protected int cap() {
-        return 5;
-    }
-
-    @Override
-    public void detectFromPlacement( EntityPlayer player, ItemStack placedItem, BlockFace face, Block block, Block clickedBlock, Vector clickPosition ) {
-        if ( this.detectUpDown ) {
-            if ( player.getPitch() < -60 ) {
-                this.setState( BlockFace.DOWN );
+    protected void calculateValueFromState() {
+        switch (this.getState()) {
+            case DOWN:
+            default:
+                this.setValue(0);
                 return;
-            } else if ( player.getPitch() > 60 ) {
-                this.setState( BlockFace.UP );
+            case UP:
+                this.setValue(1);
+                return;
+            case NORTH:
+                this.setValue(2);
+                return;
+            case SOUTH:
+                this.setValue(3);
+                return;
+            case WEST:
+                this.setValue(4);
+                return;
+            case EAST:
+                this.setValue(5);
+        }
+    }
+
+    @Override
+    public void detectFromPlacement(EntityPlayer player, ItemStack placedItem, Facing face, Block block, Block clickedBlock, Vector clickPosition) {
+        if (this.detectUpDown) {
+            if (player.getPitch() < -60) {
+                this.setState(Facing.DOWN);
+                return;
+            } else if (player.getPitch() > 60) {
+                this.setState(Facing.UP);
                 return;
             }
         }
 
-        Bearing bearing = Bearing.fromAngle( player.getYaw() );
+        Bearing bearing = Bearing.fromAngle(player.getYaw());
         bearing = bearing.opposite();
-        this.setState( bearing.toBlockFace() );
-    }
-
-    @Override
-    protected void data( short data ) {
-        this.setState( Things.convertFromDataToBlockFace( data ) );
-    }
-
-    @Override
-    protected short data() {
-        switch ( this.getState() ) {
-            case DOWN:
-                return 0;
-            case UP:
-                return 1;
-            case NORTH:
-                return 2;
-            case SOUTH:
-                return 3;
-            case WEST:
-                return 4;
-            case EAST:
-                return 5;
-            default:
-                return 0;
-        }
+        this.setState(bearing.toBlockFace());
     }
 
 }

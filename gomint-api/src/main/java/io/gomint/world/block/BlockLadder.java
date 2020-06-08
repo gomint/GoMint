@@ -7,6 +7,8 @@
 
 package io.gomint.world.block;
 
+import io.gomint.world.block.data.Facing;
+
 /**
  * @author geNAZt
  * @version 1.0
@@ -18,13 +20,13 @@ public interface BlockLadder extends Block {
      *
      * @param attachSide of this ladder
      */
-    void setAttachSide( BlockFace attachSide );
+    void setAttachSide( Facing attachSide );
 
     /**
      * Get the side to which this ladder is attached
      *
      * @return attached side of this ladder
      */
-    BlockFace getAttachSide();
+    Facing getAttachSide();
 
 }

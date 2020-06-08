@@ -23,7 +23,7 @@ import io.gomint.server.network.packet.PacketSetContainerData;
 import io.gomint.server.world.block.Block;
 import io.gomint.server.world.block.Furnace;
 import io.gomint.taglib.NBTTagCompound;
-import io.gomint.world.block.BlockFace;
+import io.gomint.world.block.data.Facing;
 import io.gomint.world.block.BlockType;
 import lombok.Getter;
 
@@ -248,7 +248,7 @@ public class FurnaceTileEntity extends ContainerTileEntity implements InventoryH
     }
 
     @Override
-    public void interact( Entity entity, BlockFace face, Vector facePos, io.gomint.inventory.item.ItemStack item ) {
+    public void interact(Entity entity, Facing face, Vector facePos, io.gomint.inventory.item.ItemStack item ) {
         if ( entity instanceof EntityPlayer ) {
             ( (EntityPlayer) entity ).openInventory( this.inventory );
 

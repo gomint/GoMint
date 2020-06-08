@@ -7,7 +7,7 @@
 
 package io.gomint.world.block;
 
-import io.gomint.world.block.data.WoodType;
+import io.gomint.world.block.data.LogType;
 
 /**
  * @author geNAZt
@@ -20,13 +20,13 @@ public interface BlockWoodenSlab extends BlockSlab {
      *
      * @return type of wood
      */
-    WoodType getWoodType();
+    LogType getWoodType();
 
     /**
      * Set the type of wood
      *
-     * @param woodType for this block
+     * @param logType for this block
      */
-    void setWoodType( WoodType woodType );
+    void setWoodType( LogType logType);
 
 }

@@ -11,57 +11,44 @@ import io.gomint.inventory.item.ItemStack;
 import io.gomint.math.Vector;
 import io.gomint.server.entity.EntityPlayer;
 import io.gomint.server.world.block.Block;
-import io.gomint.world.block.BlockFace;
+import io.gomint.world.block.data.Facing;
 import lombok.Getter;
 
-import java.util.List;
-import java.util.function.Predicate;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 /**
  * @param <T> type of the state
  * @author geNAZt
  * @version 1.0
  */
-public abstract class BlockState<T> {
+public abstract class BlockState<T, S> {
 
-    @Getter
-    private T state;
-    private final int shift;
+    private Supplier<String> key;
+    @Getter private T state;
     private final Block block;
 
-    public BlockState( Block block ) {
-        this( block, blockStates -> true ); // Always convert
-    }
-
-    public BlockState( Block block, Predicate<List<BlockState>> predicate ) {
-        this( block, predicate, 0 );
-    }
-
-    public BlockState( Block block, Predicate<List<BlockState>> predicate, int shift ) {
+    public BlockState( Block block, Supplier<String> key ) {
         // Remember to store the block
         this.block = block;
 
-        // Remember how much to shift
-        this.shift = shift;
+        // Store the key
+        this.key = key;
 
         // Register this to the block
-        block.registerState( this, predicate );
+        block.registerState( this );
     }
 
     public void setState( T state ) {
         this.state = state;
+        this.calculateValueFromState();
 
         if ( this.block.ready() ) {
             this.block.updateBlock();
         }
     }
 
-    /**
-     * Get the data cap this block state accepts
-     *
-     * @return cap of this block state
-     */
-    protected abstract int cap();
+    protected abstract void calculateValueFromState();
 
     /**
      * Detect from a player
@@ -73,48 +60,19 @@ public abstract class BlockState<T> {
      * @param clickedBlock  which has been clicked by the client
      * @param clickPosition where the client clicked on the block
      */
-    public abstract void detectFromPlacement( EntityPlayer player, ItemStack placedItem, BlockFace face, Block block, Block clickedBlock, Vector clickPosition );
+    public abstract void detectFromPlacement(EntityPlayer player, ItemStack placedItem, Facing face, Block block, Block clickedBlock, Vector clickPosition );
 
     /**
-     * Tell the block state its data from which it should decide what state to be in
+     * Store new value for this block state
      *
-     * @param data from the block which decides which state to choose
+     * @param value
      */
-    protected abstract void data( short data );
-
-    /**
-     * What data value should be stored for this block state
-     *
-     * @return the data value which should be stored for this state
-     */
-    protected abstract short data();
-
-    /**
-     * Get the data for the block
-     *
-     * @return byte data for the block
-     */
-    public short toData() {
-        short internalData = this.data();
-        if ( this.shift > 0 ) {
-            return (short) ( internalData << this.shift );
-        }
-
-        return internalData;
+    protected void setValue(S value) {
+        this.block.setState(this.key.get(), value);
     }
 
-    /**
-     * Get state from block data
-     *
-     * @param data from the block
-     */
-    public void fromData( short data ) {
-        if ( this.shift > 0 ) {
-            this.data( (short) ( ( data >> this.shift ) & this.cap() ) );
-            return;
-        }
-
-        this.data( (short) ( data & this.cap() ) );
+    protected S getValue() {
+        return (S) this.block.getState(this.key.get());
     }
 
 }

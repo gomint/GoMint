@@ -16,9 +16,11 @@ import io.gomint.server.inventory.item.Items;
 import io.gomint.server.util.BlockIdentifier;
 import io.gomint.server.world.block.Block;
 import io.gomint.taglib.NBTTagCompound;
-import io.gomint.world.block.BlockFace;
+import io.gomint.world.block.data.Facing;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.SortedMap;
 
 /**
  * @author geNAZt
@@ -50,7 +52,8 @@ public abstract class TileEntity {
             return null;
         }
 
-        return new BlockIdentifier( compound.getString( "name", "minecraft:air" ), null, compound.getShort( "val", (short) 0 ) );
+        // TODO: Check for correct NBT tag values
+        return new BlockIdentifier( compound.getString( "name", "minecraft:air" ), (SortedMap<String, Object>) null, compound.getShort( "val", (short) 0 ) );
     }
 
     void putBlockIdentifier( BlockIdentifier identifier, NBTTagCompound compound ) {
@@ -97,7 +100,7 @@ public abstract class TileEntity {
      */
     public abstract void update( long currentMillis );
 
-    public void interact( Entity entity, BlockFace face, Vector facePos, ItemStack item ) {
+    public void interact(Entity entity, Facing face, Vector facePos, ItemStack item ) {
 
     }
 

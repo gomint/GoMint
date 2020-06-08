@@ -7,8 +7,9 @@
 
 package io.gomint.server.world;
 
-import io.gomint.jraknet.PacketBuffer;
 import io.gomint.server.util.BlockIdentifier;
+import io.gomint.taglib.NBTTagCompound;
+import io.gomint.taglib.NBTWriter;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.longs.Long2IntMap;
@@ -16,8 +17,13 @@ import it.unimi.dsi.fastutil.longs.Long2IntOpenHashMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Arrays;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.nio.ByteOrder;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.SortedMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -37,23 +43,47 @@ public class BlockRuntimeIDs {
     // Cached packet streams
     private static byte[] START_GAME_BUFFER;
 
-    public static void init( List<BlockIdentifier> blockPalette ) {
-        PacketBuffer buffer = new PacketBuffer( 64 );
+    public static void init( List<BlockIdentifier> blockPalette ) throws IOException {
+        List<Object> compounds = new ArrayList<>();
+
+        ByteArrayOutputStream data = new ByteArrayOutputStream();
+        NBTWriter writer = new NBTWriter(data, ByteOrder.LITTLE_ENDIAN);
+        writer.setUseVarint(true);
 
         for ( BlockIdentifier identifier : blockPalette ) {
             int runtime = RUNTIME_ID.getAndIncrement();
 
             BLOCK_TO_RUNTIME.put( identifier.longHashCode(), runtime );
             RUNTIME_TO_BLOCK.put( runtime, identifier );
+
+            NBTTagCompound compound = new NBTTagCompound("");
+            NBTTagCompound block = new NBTTagCompound("block");
+            NBTTagCompound states = new NBTTagCompound("states");
+
+            for (Map.Entry<String, Object> entry : identifier.getStates(false).entrySet()) {
+                Class<?> typ = entry.getValue().getClass();
+                if (typ.equals(Byte.class)) {
+                    states.addValue(entry.getKey(), (byte) entry.getValue());
+                } else if (typ.equals(Integer.class)) {
+                    states.addValue(entry.getKey(), (int) entry.getValue());
+                } else if (typ.equals(Short.class)) {
+                    states.addValue(entry.getKey(), (short) entry.getValue());
+                } else if (typ.equals(String.class)) {
+                    states.addValue(entry.getKey(), (String) entry.getValue());
+                } else {
+                    LOGGER.warn("Unknown state type: {}", typ.getName());
+                }
+            }
+
+            block.addValue("name", identifier.getBlockId());
+            block.addValue("states", states);
+            compound.addValue("block", block);
+            compounds.add(compound);
         }
 
-        buffer.writeUnsignedVarInt( blockPalette.size() );
-        for ( BlockIdentifier identifier : blockPalette ) {
-            buffer.writeString( identifier.getBlockId() );
-            buffer.writeLShort( identifier.getData() );
-        }
+        writer.write(compounds);
 
-        START_GAME_BUFFER = Arrays.copyOf( buffer.getBuffer(), buffer.getPosition() );
+        START_GAME_BUFFER = data.toByteArray();
         BLOCK_TO_RUNTIME.defaultReturnValue( -1 );
     }
 
@@ -73,17 +103,17 @@ public class BlockRuntimeIDs {
      * @param dataValue which should be converted
      * @return runtime id or 0
      */
-    public static int from( String blockId, short dataValue ) {
+    public static int from(String blockId, SortedMap<String, Object> states, short dataValue ) {
         // Get lookup array
         Long2IntMap lookup = BLOCK_TO_RUNTIME;
 
         // We first lookup the wanted values
-        int runtimeID = lookup( blockId, dataValue, lookup );
+        int runtimeID = lookup( blockId, states, dataValue, lookup );
         if ( runtimeID == -1 ) { // Unknown data => return lookup with 0 data value
-            runtimeID = lookup( blockId, (short) 0, lookup );
+            runtimeID = lookup( blockId, null, (short) 0, lookup );
             if ( runtimeID == -1 ) { // Unknown block => return air
                 LOGGER.warn( "Unknown blockId and dataValue combination: {}:{}. Be sure your worlds are not corrupted!", blockId, dataValue );
-                return lookup( "minecraft:air", (short) 0, lookup );
+                return lookup( "minecraft:air", null, (short) 0, lookup );
             }
 
             LOGGER.warn( "Unknown blockId and dataValue combination: {}:{}. Be sure your worlds are not corrupted!", blockId, dataValue );
@@ -97,8 +127,15 @@ public class BlockRuntimeIDs {
         return RUNTIME_TO_BLOCK.get( runtimeId );
     }
 
-    private static int lookup( String blockId, short dataValue, Long2IntMap lookup ) {
-        return lookup.get( (long) blockId.hashCode() << 32 | dataValue );
+    private static int lookup( String blockId, SortedMap<String, Object> states, short dataValue, Long2IntMap lookup ) {
+        long hash = 0;
+        if (states != null) {
+            hash = (long) blockId.hashCode() << 32 | states.hashCode();
+        } else {
+            hash = (long) blockId.hashCode() << 32 | dataValue;
+        }
+
+        return lookup.get( hash );
     }
 
 }

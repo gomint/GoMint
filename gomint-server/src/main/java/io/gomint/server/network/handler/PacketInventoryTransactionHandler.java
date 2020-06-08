@@ -23,7 +23,7 @@ import io.gomint.server.plugin.EventCaller;
 import io.gomint.server.world.block.Block;
 import io.gomint.world.Gamemode;
 import io.gomint.world.block.BlockAir;
-import io.gomint.world.block.BlockFace;
+import io.gomint.world.block.data.Facing;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -493,7 +493,7 @@ public class PacketInventoryTransactionHandler implements PacketHandler<PacketIn
                 io.gomint.server.world.block.Block replacedBlock = blockClicked.getSide( packet.getFace() );
                 replacedBlock.send( connection );
 
-                for ( BlockFace face : BlockFace.values() ) {
+                for ( Facing face : Facing.values() ) {
                     io.gomint.server.world.block.Block replacedSide = replacedBlock.getSide( face );
                     replacedSide.send( connection );
                 }

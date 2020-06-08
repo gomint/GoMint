@@ -23,9 +23,9 @@ public interface BlockFacing extends Block {
     void setFacing( Facing facing );
 
     /**
-     * Get the facing in which this block
+     * Get the direction in which this block
      *
-     * @return the facing of this block
+     * @return the direction of this block
      */
     Facing getFacing();
 

@@ -11,7 +11,7 @@ package io.gomint.world.block;
  * @author geNAZt
  * @version 1.0
  */
-public interface BlockBlockOfQuartz extends Block {
+public interface BlockBlockOfQuartz extends Block, BlockAxis {
 
     /**
      * Get the variant of this quartz block
@@ -28,11 +28,10 @@ public interface BlockBlockOfQuartz extends Block {
     void setVariant( Variant variant );
 
     public enum Variant {
-        NORMAL,
-        CHISELED,
-        VERTICAL_PILLAR,
-        NORTH_SOUTH_PILLAR,
-        EAST_WEST_PILLAR
+        SMOOTH,
+        LINES,
+        DEFAULT,
+        CHISELED
     }
 
 }

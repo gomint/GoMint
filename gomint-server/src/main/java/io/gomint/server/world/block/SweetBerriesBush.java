@@ -9,7 +9,7 @@ import io.gomint.world.block.BlockType;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:sweet_berry_bush" )
-public class SweetBerriesBush extends Block implements BlockSweetBerriesBush {
+public class SweetBerriesBush extends Growable implements BlockSweetBerriesBush {
 
     @Override
     public String getBlockId() {

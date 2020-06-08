@@ -16,6 +16,7 @@ import it.unimi.dsi.fastutil.shorts.Short2ObjectOpenHashMap;
 import lombok.Getter;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.function.IntConsumer;
 
@@ -29,7 +30,7 @@ public class ChunkSlice {
     private static final ThreadLocal<LongList> INDEX_LIST = ThreadLocal.withInitial( LongArrayList::new );
     private static final ThreadLocal<IntList> RUNTIME_INDEX = ThreadLocal.withInitial( IntArrayList::new );
 
-    protected static final short AIR_RUNTIME_ID = (short) BlockRuntimeIDs.from( "minecraft:air", (short) 0 );
+    protected static final short AIR_RUNTIME_ID = (short) BlockRuntimeIDs.from( "minecraft:air", null, (short) 0 );
 
     @Getter
     private final ChunkAdapter chunk;
@@ -122,12 +123,12 @@ public class ChunkSlice {
         }
 
         BlockIdentifier identifier = BlockRuntimeIDs.toBlockIdentifier( runtimeID );
-        return (T) this.chunk.getWorld().getServer().getBlocks().get( identifier.getBlockId(), identifier.getData(), this.skyLight != null ? this.skyLight.get( index ) : 0,
+        return (T) this.chunk.getWorld().getServer().getBlocks().get( identifier.getBlockId(), identifier.getStates(false), identifier.getData(), this.skyLight != null ? this.skyLight.get( index ) : 0,
             this.blockLight != null ? this.blockLight.get( index ) : 0, this.tileEntities != null ? this.tileEntities.get( index ) : null, blockLocation, layer );
     }
 
     private <T extends Block> T getAirBlockInstance( Location location ) {
-        return (T) this.chunk.getWorld().getServer().getBlocks().get( "minecraft:air", (short) 0, (byte) 15, (byte) 15, null, location, 0 );
+        return (T) this.chunk.getWorld().getServer().getBlocks().get( "minecraft:air", null, (short) 0, (byte) 15, (byte) 15, null, location, 0 );
     }
 
     private Location getBlockLocation( int x, int y, int z ) {
@@ -162,12 +163,12 @@ public class ChunkSlice {
         short index = getIndex( x, y, z );
         int runtimeID = this.getRuntimeID( layer, index );
         BlockIdentifier identifier = BlockRuntimeIDs.toBlockIdentifier( runtimeID );
-        this.setRuntimeIdInternal( index, layer, BlockRuntimeIDs.from( blockId, identifier.getData() ) );
+        this.setRuntimeIdInternal( index, layer, BlockRuntimeIDs.from( blockId, identifier.getStates(false), identifier.getData() ) );
     }
 
     void setBlock( int x, int y, int z, int layer, BlockIdentifier blockIdentifier ) {
         short index = getIndex( x, y, z );
-        int runtimeId = BlockRuntimeIDs.from( blockIdentifier.getBlockId(), blockIdentifier.getData() );
+        int runtimeId = BlockRuntimeIDs.from( blockIdentifier.getBlockId(), blockIdentifier.getStates(false), blockIdentifier.getData() );
         this.setRuntimeIdInternal( index, layer, runtimeId );
     }
 
@@ -175,15 +176,13 @@ public class ChunkSlice {
         short index = getIndex( x, y, z );
         int runtimeID = this.getRuntimeID( layer, index );
         BlockIdentifier identifier = BlockRuntimeIDs.toBlockIdentifier( runtimeID );
-        this.setRuntimeIdInternal( index, layer, BlockRuntimeIDs.from( identifier.getBlockId(), data ) );
+        this.setRuntimeIdInternal( index, layer, BlockRuntimeIDs.from( identifier.getBlockId(), identifier.getStates(false), data ) );
     }
 
     public void setRuntimeIdInternal( short index, int layer, int runtimeID ) {
         if ( runtimeID != AIR_RUNTIME_ID && this.blocks[layer] == null ) {
             this.blocks[layer] = new short[4096]; // Defaults to all 0
-            for ( int i = 0; i < this.blocks[layer].length; i++ ) {
-                this.blocks[layer][i] = AIR_RUNTIME_ID;
-            }
+            Arrays.fill(this.blocks[layer], AIR_RUNTIME_ID);
             this.isAllAir = false;
         }
 

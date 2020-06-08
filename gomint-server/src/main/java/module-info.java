@@ -57,6 +57,7 @@ module gomint.server {
 
     opens io.gomint.server.network to spring.core;
     opens io.gomint.server.network.handler to spring.core;
+    opens io.gomint.server.entity to spring.core;
 
     // Open config to gomint api reader
     opens io.gomint.server.config to gomint.api;

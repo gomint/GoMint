@@ -2,40 +2,98 @@ package io.gomint.server.world.block;
 
 import io.gomint.inventory.item.ItemStack;
 import io.gomint.server.world.block.helper.ToolPresets;
+import io.gomint.server.world.block.state.BooleanBlockState;
 import io.gomint.server.world.block.state.EnumBlockState;
 import io.gomint.world.block.BlockStoneSlab;
 import io.gomint.world.block.BlockType;
 
 import io.gomint.server.registry.RegisterInfo;
 import io.gomint.world.block.data.StoneType;
+import lombok.Getter;
+
+import java.util.function.Function;
 
 /**
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:stone_slab", def = true )
-@RegisterInfo( sId = "minecraft:stone_slab2" )
+@RegisterInfo( sId = "minecraft:double_stone_slab", def = true )
+@RegisterInfo( sId = "minecraft:double_stone_slab2" )
+@RegisterInfo( sId = "minecraft:double_stone_slab3" )
+@RegisterInfo( sId = "minecraft:double_stone_slab4")
 public class StoneSlab extends Slab implements BlockStoneSlab {
 
-    private enum StoneType1 {
-        STONE,
-        SANDSTONE,
-        COBBLESTONE,
-        BRICKS,
-        STONE_BRICK,
-        NETHER_BRICK,
-        QUARTZ
+    private static final String STONE_SLAB_ID = "minecraft:double_stone_slab";
+    private static final String STONE_TYPE = "stone_slab_type";
+
+    private static final String STONE_SLAB2_ID = "minecraft:double_stone_slab2";
+    private static final String STONE_TYPE_2 = "stone_slab_type_2";
+
+    private static final String STONE_SLAB3_ID = "minecraft:double_stone_slab3";
+    private static final String STONE_TYPE_3 = "stone_slab_type_3";
+
+    private static final String STONE_SLAB4_ID = "minecraft:double_stone_slab4";
+    private static final String STONE_TYPE_4 = "stone_slab_type_4";
+
+    @Getter
+    public enum StoneTypeMagic {
+
+        // Slab types 1
+        SANDSTONE(STONE_SLAB_ID, STONE_TYPE,"sandstone"),
+        COBBLESTONE(STONE_SLAB_ID, STONE_TYPE, "cobblestone"),
+        BRICK(STONE_SLAB_ID, STONE_TYPE, "brick"),
+        STONE_BRICK(STONE_SLAB_ID, STONE_TYPE, "stone_brick"),
+        NETHER_BRICK(STONE_SLAB_ID, STONE_TYPE, "nether_brick"),
+        QUARTZ(STONE_SLAB_ID, STONE_TYPE, "quartz"),
+        SMOOTH_STONE(STONE_SLAB_ID, STONE_TYPE, "smooth_stone"),
+
+        // Slab types 2
+        PRISMARINE_BRICK(STONE_SLAB2_ID, STONE_TYPE_2, "prismarine_brick"),
+        PRISMARINE_ROUGH(STONE_SLAB2_ID, STONE_TYPE_2, "prismarine_rough"),
+        PRISMARINE_DARK(STONE_SLAB2_ID, STONE_TYPE_2, "prismarine_dark"),
+        MOSSY_COBBLESTONE(STONE_SLAB2_ID, STONE_TYPE_2, "mossy_cobblestone"),
+        RED_SANDSTONE(STONE_SLAB2_ID, STONE_TYPE_2, "red_sandstone"),
+        SMOOTH_SANDSTONE(STONE_SLAB2_ID, STONE_TYPE_2, "smooth_sandstone"),
+        PURPUR(STONE_SLAB2_ID, STONE_TYPE_2, "purpur"),
+        RED_NETHER_BRICK(STONE_SLAB2_ID, STONE_TYPE_2, "red_nether_brick"),
+
+        // Slab types 3
+        POLISHED_GRANITE(STONE_SLAB3_ID, STONE_TYPE_3, "polished_granite"),
+        DIORITE(STONE_SLAB3_ID, STONE_TYPE_3, "diorite"),
+        ANDESITE(STONE_SLAB3_ID, STONE_TYPE_3, "andesite"),
+        POLISHED_DIORITE(STONE_SLAB3_ID, STONE_TYPE_3, "polished_diorite"),
+        END_STONE_BRICK(STONE_SLAB3_ID, STONE_TYPE_3, "end_stone_brick"),
+        GRANITE(STONE_SLAB3_ID, STONE_TYPE_3, "granite"),
+        POLISHED_ANDESITE(STONE_SLAB3_ID, STONE_TYPE_3, "polished_andesite"),
+        SMOOTH_RED_SANDSTONE(STONE_SLAB3_ID, STONE_TYPE_3, "smooth_red_sandstone"),
+
+        // Slab types 4
+        STONE(STONE_SLAB4_ID, STONE_TYPE_4, "stone"),
+        MOSSY_STONE_BRICK(STONE_SLAB4_ID, STONE_TYPE_4, "mossy_stone_brick"),
+        SMOOTH_QUARTZ(STONE_SLAB4_ID, STONE_TYPE_4, "smooth_quartz"),
+        CUT_RED_STONE(STONE_SLAB4_ID, STONE_TYPE_4, "cut_red_sandstone"),
+        CUT_SANDSTONE(STONE_SLAB4_ID, STONE_TYPE_4, "cut_sandstone");
+
+        private final String key;
+        private final String value;
+        private final String blockId;
+
+        StoneTypeMagic(String blockId, String key, String value) {
+            this.key = key;
+            this.value = value;
+            this.blockId = blockId;
+        }
     }
 
-    private enum StoneType2 {
-        RED_SANDSTONE,
-        PURPUR,
-        PRISMARINE,
-        PRISMARINE_BRICK
-    }
+    private final EnumBlockState<StoneTypeMagic, String> variant = new EnumBlockState<>(this, () -> {
+        // Ensure we only have one type state
+        this.removeState(STONE_TYPE);
+        this.removeState(STONE_TYPE_2);
+        this.removeState(STONE_TYPE_3);
+        this.removeState(STONE_TYPE_4);
 
-    private EnumBlockState<StoneType1> variant = new EnumBlockState<>( this, StoneType1.values(), states -> this.getBlockId().equals( "minecraft:stone_slab" ) );
-    private EnumBlockState<StoneType2> variant2 = new EnumBlockState<>( this, StoneType2.values(), states -> this.getBlockId().equals( "minecraft:stone_slab2" ) );
+        return this.variant.getState().getKey();
+    }, StoneTypeMagic.values(), StoneTypeMagic::getValue);
 
     @Override
     public long getBreakTime() {
@@ -69,92 +127,14 @@ public class StoneSlab extends Slab implements BlockStoneSlab {
 
     @Override
     public StoneType getStoneType() {
-        switch ( this.getBlockId() ) {
-            case "minecraft:stone_slab":
-                switch ( this.variant.getState() ) {
-                    case STONE:
-                        return StoneType.STONE;
-                    case SANDSTONE:
-                        return StoneType.SANDSTONE;
-                    case COBBLESTONE:
-                        return StoneType.COBBLESTONE;
-                    case BRICKS:
-                        return StoneType.BRICKS;
-                    case QUARTZ:
-                        return StoneType.QUARTZ;
-                    case STONE_BRICK:
-                        return StoneType.STONE_BRICK;
-                    case NETHER_BRICK:
-                        return StoneType.NETHER_BRICK;
-                }
-
-                break;
-            case "minecraft:stone_slab2":
-                switch ( this.variant2.getState() ) {
-                    case PURPUR:
-                        return StoneType.PURPUR;
-                    case PRISMARINE:
-                        return StoneType.PRISMARINE;
-                    case RED_SANDSTONE:
-                        return StoneType.RED_SANDSTONE;
-                    case PRISMARINE_BRICK:
-                        return StoneType.PRISMARINE_BRICK;
-                }
-
-                break;
-        }
-
-        return null;
+        return StoneType.valueOf(this.variant.getState().name());
     }
 
     @Override
     public void setStoneType( StoneType stoneType ) {
-        switch ( stoneType ) {
-            case STONE:
-                this.setBlockId( "minecraft:stone_slab" );
-                this.variant.setState( StoneType1.STONE );
-                break;
-            case SANDSTONE:
-                this.setBlockId( "minecraft:stone_slab" );
-                this.variant.setState( StoneType1.SANDSTONE );
-                break;
-            case COBBLESTONE:
-                this.setBlockId( "minecraft:stone_slab" );
-                this.variant.setState( StoneType1.COBBLESTONE );
-                break;
-            case BRICKS:
-                this.setBlockId( "minecraft:stone_slab" );
-                this.variant.setState( StoneType1.BRICKS );
-                break;
-            case QUARTZ:
-                this.setBlockId( "minecraft:stone_slab" );
-                this.variant.setState( StoneType1.QUARTZ );
-                break;
-            case STONE_BRICK:
-                this.setBlockId( "minecraft:stone_slab" );
-                this.variant.setState( StoneType1.STONE_BRICK );
-                break;
-            case NETHER_BRICK:
-                this.setBlockId( "minecraft:stone_slab" );
-                this.variant.setState( StoneType1.NETHER_BRICK );
-                break;
-            case PURPUR:
-                this.setBlockId( "minecraft:stone_slab2" );
-                this.variant2.setState( StoneType2.PURPUR );
-                break;
-            case PRISMARINE:
-                this.setBlockId( "minecraft:stone_slab2" );
-                this.variant2.setState( StoneType2.PRISMARINE );
-                break;
-            case RED_SANDSTONE:
-                this.setBlockId( "minecraft:stone_slab2" );
-                this.variant2.setState( StoneType2.RED_SANDSTONE );
-                break;
-            case PRISMARINE_BRICK:
-                this.setBlockId( "minecraft:stone_slab2" );
-                this.variant2.setState( StoneType2.PRISMARINE_BRICK );
-                break;
-        }
+        StoneTypeMagic newState = StoneTypeMagic.valueOf(stoneType.name());
+        this.setBlockId(newState.getBlockId());
+        this.variant.setState(newState);
     }
 
 }

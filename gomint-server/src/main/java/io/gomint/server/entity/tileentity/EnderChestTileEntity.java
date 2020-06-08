@@ -15,7 +15,7 @@ import io.gomint.server.inventory.EnderChestInventory;
 import io.gomint.server.inventory.InventoryHolder;
 import io.gomint.server.world.block.Block;
 import io.gomint.taglib.NBTTagCompound;
-import io.gomint.world.block.BlockFace;
+import io.gomint.world.block.data.Facing;
 
 /**
  * @author geNAZt
@@ -41,7 +41,7 @@ public class EnderChestTileEntity extends ContainerTileEntity implements Invento
     }
 
     @Override
-    public void interact( Entity entity, BlockFace face, Vector facePos, ItemStack item ) {
+    public void interact(Entity entity, Facing face, Vector facePos, ItemStack item ) {
         // Open the chest inventory for the entity
         if ( entity instanceof EntityPlayer ) {
             ( (EntityPlayer) entity ).openInventory( this.inventory );

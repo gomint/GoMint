@@ -8,7 +8,7 @@ import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.util.BlockIdentifier;
 import io.gomint.server.world.PlacementData;
 import io.gomint.server.world.block.state.BlockfaceBlockState;
-import io.gomint.world.block.BlockFace;
+import io.gomint.world.block.data.Facing;
 import io.gomint.world.block.BlockType;
 
 import java.util.Collections;
@@ -21,7 +21,7 @@ import java.util.List;
 @RegisterInfo( sId = "minecraft:torch" )
 public class Torch extends Block implements io.gomint.world.block.BlockTorch {
 
-    private BlockfaceBlockState facing = new BlockfaceBlockState( this );
+    private BlockfaceBlockState facing = new BlockfaceBlockState( this, () -> "facing" );
 
     @Override
     public String getBlockId() {
@@ -118,19 +118,19 @@ public class Torch extends Block implements io.gomint.world.block.BlockTorch {
     }
 
     @Override
-    public PlacementData calculatePlacementData( EntityPlayer entity, ItemStack item, BlockFace face, Block block, Block clickedBlock, Vector clickVector ) {
+    public PlacementData calculatePlacementData(EntityPlayer entity, ItemStack item, Facing face, Block block, Block clickedBlock, Vector clickVector ) {
         PlacementData data = super.calculatePlacementData( entity, item, face, block, clickedBlock, clickVector );
 
-        BlockFace[] toCheck = new BlockFace[]{
-            BlockFace.DOWN,
-            BlockFace.SOUTH,
-            BlockFace.WEST,
-            BlockFace.NORTH,
-            BlockFace.EAST
+        Facing[] toCheck = new Facing[]{
+            Facing.DOWN,
+            Facing.SOUTH,
+            Facing.WEST,
+            Facing.NORTH,
+            Facing.EAST
         };
 
         boolean foundSide = false;
-        for ( BlockFace toCheckFace : toCheck ) {
+        for ( Facing toCheckFace : toCheck ) {
             if ( !clickedBlock.getSide( toCheckFace ).isTransparent() ) {
                 this.facing.setState( toCheckFace.opposite() );
                 foundSide = true;
@@ -143,7 +143,7 @@ public class Torch extends Block implements io.gomint.world.block.BlockTorch {
         }
 
         // TODO: Calculate proper state map
-        return new PlacementData( new BlockIdentifier( data.getBlockIdentifier().getBlockId(), null, this.calculateBlockData() ), null );
+        return new PlacementData( new BlockIdentifier( data.getBlockIdentifier().getBlockId(), this.getStates(false), (short) 0), null );
     }
 
 }

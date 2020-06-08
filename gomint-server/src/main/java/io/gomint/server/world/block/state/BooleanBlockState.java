@@ -11,47 +11,29 @@ import io.gomint.inventory.item.ItemStack;
 import io.gomint.math.Vector;
 import io.gomint.server.entity.EntityPlayer;
 import io.gomint.server.world.block.Block;
-import io.gomint.world.block.BlockFace;
+import io.gomint.world.block.data.Facing;
 
-import java.util.List;
-import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 /**
  * @author geNAZt
  * @version 1.0
  */
-public class BooleanBlockState extends BlockState<Boolean> {
+public class BooleanBlockState extends BlockState<Boolean, Byte> {
 
-    public BooleanBlockState( Block block ) {
-        super( block );
-    }
-
-    public BooleanBlockState( Block block, Predicate<List<BlockState>> predicate ) {
-        super( block, predicate );
-    }
-
-    public BooleanBlockState( Block block, Predicate<List<BlockState>> predicate, int shift ) {
-        super( block, predicate, shift );
+    public BooleanBlockState(Block block, Supplier<String> key) {
+        super(block, key);
+        this.setState(false);
     }
 
     @Override
-    protected int cap() {
-        return 1;
+    protected void calculateValueFromState() {
+        this.setValue((byte) (this.getState() ? 1 : 0));
     }
 
     @Override
-    public void detectFromPlacement( EntityPlayer player, ItemStack placedItem, BlockFace face, Block block, Block clickedBlock, Vector clickPosition ) {
-        this.setState( false );
-    }
-
-    @Override
-    protected short data() {
-        return (byte) ( this.getState() ? 1 : 0 );
-    }
-
-    @Override
-    protected void data( short data ) {
-        this.setState( data == 1 );
+    public void detectFromPlacement(EntityPlayer player, ItemStack placedItem, Facing face, Block block, Block clickedBlock, Vector clickPosition) {
+        this.setState(false);
     }
 
 }

@@ -11,7 +11,7 @@ package io.gomint.world.block.data;
  * @author geNAZt
  * @version 1.0
  */
-public enum WoodType {
+public enum LogType {
 
     OAK,
     SPRUCE,

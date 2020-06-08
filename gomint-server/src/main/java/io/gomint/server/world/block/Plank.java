@@ -4,17 +4,34 @@ import io.gomint.inventory.item.ItemStack;
 import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.world.block.helper.ToolPresets;
 import io.gomint.server.world.block.state.EnumBlockState;
+import io.gomint.world.block.BlockPlank;
 import io.gomint.world.block.BlockType;
-import io.gomint.world.block.data.WoodType;
+import io.gomint.world.block.data.LogType;
+import lombok.Getter;
 
 /**
  * @author geNAZt
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:planks" )
-public class Wood extends Block implements io.gomint.world.block.BlockWood {
+public class Plank extends Block implements BlockPlank {
 
-    private EnumBlockState<WoodType> variant = new EnumBlockState<>( this, WoodType.values() );
+    @Getter
+    private enum LogTypeMagic {
+        OAK("oak"),
+        SPRUCE("spruce"),
+        BIRCH("birch"),
+        JUNGLE("jungle"),
+        ACACIA("acacia"),
+        DARK_OAK("dark_oak");
+
+        private final String value;
+        LogTypeMagic(String value) {
+            this.value = value;
+        }
+    }
+
+    private final EnumBlockState<LogTypeMagic, String> variant = new EnumBlockState<>( this, () -> "wood_type", LogTypeMagic.values(), LogTypeMagic::getValue);
 
     @Override
     public String getBlockId() {
@@ -38,7 +55,7 @@ public class Wood extends Block implements io.gomint.world.block.BlockWood {
 
     @Override
     public BlockType getType() {
-        return BlockType.WOOD;
+        return BlockType.PLANK;
     }
 
     @Override
@@ -47,13 +64,13 @@ public class Wood extends Block implements io.gomint.world.block.BlockWood {
     }
 
     @Override
-    public WoodType getWoodType() {
-        return this.variant.getState();
+    public LogType getPlankType() {
+        return LogType.valueOf(this.variant.getState().name());
     }
 
     @Override
-    public void setWoodType( WoodType woodType ) {
-        this.variant.setState( woodType );
+    public void setPlankType(LogType logType) {
+        this.variant.setState(LogTypeMagic.valueOf(logType.name()));
     }
 
 }

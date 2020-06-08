@@ -9,7 +9,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:melon_stem" )
-public class MelonStem extends Block implements io.gomint.world.block.BlockMelonStem {
+public class MelonStem extends Growable implements io.gomint.world.block.BlockMelonStem {
 
     @Override
     public String getBlockId() {

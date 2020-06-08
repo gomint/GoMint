@@ -1,30 +1,30 @@
+/*
+ * Copyright (c) 2018 Gomint team
+ *
+ * This code is licensed under the BSD license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
 package io.gomint.server.world.block;
 
 import io.gomint.inventory.item.ItemStack;
 import io.gomint.math.AxisAlignedBB;
 import io.gomint.math.Vector;
 import io.gomint.server.entity.Entity;
-import io.gomint.server.registry.RegisterInfo;
-import io.gomint.server.world.block.helper.ToolPresets;
 import io.gomint.server.world.block.state.BooleanBlockState;
-import io.gomint.server.world.block.state.FacingBlockState;
-import io.gomint.world.block.BlockFace;
-import io.gomint.world.block.BlockType;
+import io.gomint.server.world.block.state.DirectionBlockState;
+import io.gomint.world.block.BlockTrapdoor;
+import io.gomint.world.block.data.Direction;
 import io.gomint.world.block.data.Facing;
 
 import java.util.Collections;
 import java.util.List;
 
-/**
- * @author geNAZt
- * @version 1.0
- */
-@RegisterInfo( sId = "minecraft:trapdoor" )
-public class Trapdoor extends Block implements io.gomint.world.block.BlockTrapdoor {
+public abstract class Trapdoor extends Block implements BlockTrapdoor {
 
-    private FacingBlockState facing = new FacingBlockState( this );
-    private BooleanBlockState top = new BooleanBlockState( this, states -> true, 2 );
-    private BooleanBlockState open = new BooleanBlockState( this, states -> true, 3 );
+    private final DirectionBlockState direction = new DirectionBlockState( this, () -> "direction" );
+    private final BooleanBlockState top = new BooleanBlockState( this, () -> "upside_down_bit" );
+    private final BooleanBlockState open = new BooleanBlockState( this, () -> "open_bit" );
 
     @Override
     public boolean isOpen() {
@@ -37,38 +37,8 @@ public class Trapdoor extends Block implements io.gomint.world.block.BlockTrapdo
     }
 
     @Override
-    public boolean interact( Entity entity, BlockFace face, Vector facePos, ItemStack item ) {
+    public boolean interact(Entity entity, Facing face, Vector facePos, ItemStack item ) {
         toggle();
-        return true;
-    }
-
-    @Override
-    public String getBlockId() {
-        return "minecraft:trapdoor";
-    }
-
-    @Override
-    public long getBreakTime() {
-        return 4500;
-    }
-
-    @Override
-    public boolean isTransparent() {
-        return true;
-    }
-
-    @Override
-    public float getBlastResistance() {
-        return 15.0f;
-    }
-
-    @Override
-    public BlockType getType() {
-        return BlockType.TRAPDOOR;
-    }
-
-    @Override
-    public boolean canBeBrokenWithHand() {
         return true;
     }
 
@@ -102,7 +72,7 @@ public class Trapdoor extends Block implements io.gomint.world.block.BlockTrapdo
 
         // Check for open state
         if ( this.open.getState() ) {
-            switch ( this.facing.getState() ) {
+            switch ( this.direction.getState() ) {
                 case NORTH:
                     bb.setBounds(
                         this.location.getX(),
@@ -157,18 +127,13 @@ public class Trapdoor extends Block implements io.gomint.world.block.BlockTrapdo
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
-        return ToolPresets.AXE;
+    public void setDirection(Direction direction) {
+        this.direction.setState(direction);
     }
 
     @Override
-    public void setFacing( Facing facing ) {
-        this.facing.setState( facing );
+    public Direction getDirection() {
+        return this.direction.getState();
     }
 
-    @Override
-    public Facing getFacing() {
-        return this.facing.getState();
-    }
-    
 }

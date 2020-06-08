@@ -37,7 +37,7 @@ import io.gomint.util.random.FastRandom;
 import io.gomint.world.*;
 import io.gomint.world.block.Block;
 import io.gomint.world.block.BlockAir;
-import io.gomint.world.block.BlockFace;
+import io.gomint.world.block.data.Facing;
 import io.gomint.world.generator.ChunkGenerator;
 import io.gomint.world.generator.GeneratorContext;
 import io.gomint.world.generator.integrated.VoidGenerator;
@@ -174,7 +174,7 @@ public abstract class WorldAdapter implements World {
                     throw new IllegalArgumentException("Sound " + sound + " needs block sound data");
                 }
 
-                soundData = BlockRuntimeIDs.from(this.server.getBlocks().getID(data.getBlock()), (byte) 0);
+                soundData = BlockRuntimeIDs.from(this.server.getBlocks().getID(data.getBlock()), null, (byte) 0);
                 break;
 
             case NOTE:
@@ -315,12 +315,12 @@ public abstract class WorldAdapter implements World {
     public <T extends Block> T getBlockAt(int x, int y, int z, WorldLayer layer) {
         // Secure location
         if (y < 0 || y > 255) {
-            return (T) this.server.getBlocks().get("minecraft:air", (byte) 0, (byte) (y > 255 ? 15 : 0), (byte) 0, null, new Location(this, x, y, z), layer.ordinal());
+            return (T) this.server.getBlocks().get("minecraft:air", null, (byte) 0, (byte) (y > 255 ? 15 : 0), (byte) 0, null, new Location(this, x, y, z), layer.ordinal());
         }
 
         ChunkAdapter chunk = this.loadChunk(x >> 4, z >> 4, false);
         if (chunk == null) {
-            return (T) this.server.getBlocks().get("minecraft:air", (byte) 0, (byte) (y > 255 ? 15 : 0), (byte) 0, null, new Location(this, x, y, z), layer.ordinal());
+            return (T) this.server.getBlocks().get("minecraft:air", null, (byte) 0, (byte) (y > 255 ? 15 : 0), (byte) 0, null, new Location(this, x, y, z), layer.ordinal());
         }
 
         return chunk.getBlockAt(x & 0xF, y, z & 0xF, layer.ordinal());
@@ -928,7 +928,7 @@ public abstract class WorldAdapter implements World {
         PacketUpdateBlock updateBlock = new PacketUpdateBlock();
         updateBlock.setPosition(pos);
 
-        updateBlock.setBlockId(BlockRuntimeIDs.from(block.getBlockId(), block.getBlockData()));
+        updateBlock.setBlockId(BlockRuntimeIDs.from(block.getBlockId(), block.getStates(false), block.getBlockData()));
         updateBlock.setFlags(PacketUpdateBlock.FLAG_ALL);
 
         connection.addToSendQueue(updateBlock);
@@ -1083,7 +1083,7 @@ public abstract class WorldAdapter implements World {
      * @param entity        which interacts with the block
      * @return true when interaction was successful, false when not
      */
-    public boolean useItemOn(ItemStack itemInHand, BlockPosition blockPosition, BlockFace face, Vector
+    public boolean useItemOn(ItemStack itemInHand, BlockPosition blockPosition, Facing face, Vector
         clickPosition, io.gomint.server.entity.EntityPlayer entity) {
         Block blockClicked = this.getBlockAt(blockPosition);
         if (blockClicked instanceof Air) {
@@ -1127,7 +1127,7 @@ public abstract class WorldAdapter implements World {
                 if (success) {
                     // Play sound
                     io.gomint.server.world.block.Block newBlock = replaceBlock.getLocation().getWorld().getBlockAt(replaceBlock.getLocation().toBlockPosition());
-                    playSound(null, newBlock.getLocation(), Sound.PLACE, (byte) 1, BlockRuntimeIDs.from(newBlock.getBlockId(), (short) 0));
+                    playSound(null, newBlock.getLocation(), Sound.PLACE, (byte) 1, BlockRuntimeIDs.from(newBlock.getBlockId(), null, (short) 0));
 
                     // Schedule neighbour updates
                     scheduleNeighbourUpdates(newBlock);
@@ -1146,7 +1146,7 @@ public abstract class WorldAdapter implements World {
 
     private void scheduleNeighbourUpdates(Block block) {
         io.gomint.server.world.block.Block implBlock = (io.gomint.server.world.block.Block) block;
-        for (BlockFace face : BlockFace.values()) {
+        for (Facing face : Facing.values()) {
             io.gomint.server.world.block.Block neighbourBlock = implBlock.getSide(face);
 
             // CHECKSTYLE:OFF
@@ -1244,7 +1244,7 @@ public abstract class WorldAdapter implements World {
             }
 
             // Break animation (this also plays the break sound in the client)
-            sendLevelEvent(position.toVector().add(.5f, .5f, .5f), LevelEvent.PARTICLE_DESTROY, BlockRuntimeIDs.from(block.getBlockId(), block.getBlockData()));
+            sendLevelEvent(position.toVector().add(.5f, .5f, .5f), LevelEvent.PARTICLE_DESTROY, BlockRuntimeIDs.from(block.getBlockId(), block.getStates(false), block.getBlockData()));
 
             block.setType(BlockAir.class);
 
@@ -1330,7 +1330,7 @@ public abstract class WorldAdapter implements World {
                 }
 
                 io.gomint.server.world.block.Block block = (io.gomint.server.world.block.Block) data.getBlock();
-                dataNumber = BlockRuntimeIDs.from(block.getBlockId(), block.getBlockData()) | (data.getFace() << 24);
+                dataNumber = BlockRuntimeIDs.from(block.getBlockId(), block.getStates(false), block.getBlockData()) | (data.getFace() << 24);
 
                 break;
 
@@ -1340,7 +1340,7 @@ public abstract class WorldAdapter implements World {
                 }
 
                 block = (io.gomint.server.world.block.Block) data.getBlock();
-                dataNumber = BlockRuntimeIDs.from(block.getBlockId(), block.getBlockData());
+                dataNumber = BlockRuntimeIDs.from(block.getBlockId(), block.getStates(false), block.getBlockData());
 
                 break;
         }
@@ -1433,7 +1433,7 @@ public abstract class WorldAdapter implements World {
      * Adjust the spawn level to the first in air block
      */
     protected void adjustSpawn() {
-        int airRuntime = BlockRuntimeIDs.from("minecraft:air", (short) 0);
+        int airRuntime = BlockRuntimeIDs.from("minecraft:air", null, (short) 0);
 
         BlockPosition check = new BlockPosition((int) this.spawn.getX(), 0, (int) this.spawn.getZ());
         for (int i = 255; i > 0; i--) {

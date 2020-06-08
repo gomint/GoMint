@@ -6,9 +6,8 @@ import io.gomint.math.Vector;
 import io.gomint.server.entity.EntityPlayer;
 import io.gomint.server.entity.projectile.EntityEnderpearl;
 import io.gomint.server.registry.RegisterInfo;
-import io.gomint.taglib.NBTTagCompound;
 import io.gomint.world.block.Block;
-import io.gomint.world.block.BlockFace;
+import io.gomint.world.block.data.Facing;
 
 /**
  * @author geNAZt
@@ -25,7 +24,7 @@ public class ItemEnderPearl extends ItemStack implements io.gomint.inventory.ite
     }
 
     @Override
-    public boolean interact( EntityPlayer entity, BlockFace face, Vector clickPosition, Block clickedBlock ) {
+    public boolean interact(EntityPlayer entity, Facing face, Vector clickPosition, Block clickedBlock ) {
         // Spawn ender pearl
         EntityEnderpearl entityEnderpearl = new EntityEnderpearl( entity, entity.getWorld() );
         ProjectileLaunchEvent event = new ProjectileLaunchEvent( entityEnderpearl, ProjectileLaunchEvent.Cause.THROWING_ENDER_PEARL );

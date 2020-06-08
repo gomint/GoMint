@@ -19,7 +19,7 @@ import io.gomint.server.world.block.Air;
 import io.gomint.util.random.FastRandom;
 import io.gomint.world.Particle;
 import io.gomint.world.block.Block;
-import io.gomint.world.block.BlockFace;
+import io.gomint.world.block.data.Facing;
 import io.gomint.world.block.BlockTNT;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -196,7 +196,7 @@ public class Explosion {
 
             block.setType( Air.class );
 
-            for ( BlockFace blockFace : BlockFace.values() ) {
+            for ( Facing blockFace : Facing.values() ) {
                 Block attached = block.getSide( blockFace );
                 if ( !event.getAffectedBlocks().contains( attached ) && !alreadyUpdated.contains( attached ) ) {
                     io.gomint.server.world.block.Block implBlock = (io.gomint.server.world.block.Block) attached;

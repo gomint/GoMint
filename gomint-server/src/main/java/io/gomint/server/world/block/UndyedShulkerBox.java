@@ -15,7 +15,7 @@ import io.gomint.server.entity.tileentity.TileEntity;
 import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.world.block.helper.ToolPresets;
 import io.gomint.taglib.NBTTagCompound;
-import io.gomint.world.block.BlockFace;
+import io.gomint.world.block.data.Facing;
 import io.gomint.world.block.BlockType;
 import io.gomint.world.block.BlockUndyedShulkerBox;
 import org.slf4j.Logger;
@@ -61,7 +61,7 @@ public class UndyedShulkerBox extends Block implements BlockUndyedShulkerBox {
     }
 
     @Override
-    public boolean interact( Entity entity, BlockFace face, Vector facePos, ItemStack item ) {
+    public boolean interact(Entity entity, Facing face, Vector facePos, ItemStack item ) {
         ShulkerBoxTileEntity tileEntity = this.getTileEntity();
         if ( tileEntity != null ) {
             tileEntity.interact( entity, face, facePos, item );

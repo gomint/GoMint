@@ -12,7 +12,7 @@ import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.world.block.helper.ToolPresets;
 import io.gomint.world.block.BlockType;
 import io.gomint.world.block.BlockWoodenDoor;
-import io.gomint.world.block.data.WoodType;
+import io.gomint.world.block.data.LogType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,27 +45,27 @@ public class WoodenDoor extends Door implements BlockWoodenDoor {
     }
 
     @Override
-    public WoodType getWoodType() {
+    public LogType getWoodType() {
         switch ( this.getBlockId() ) {
             case "minecraft:dark_oak_door":
-                return WoodType.DARK_OAK;
+                return LogType.DARK_OAK;
             case "minecraft:acacia_door":
-                return WoodType.ACACIA;
+                return LogType.ACACIA;
             case "minecraft:jungle_door":
-                return WoodType.JUNGLE;
+                return LogType.JUNGLE;
             case "minecraft:birch_door":
-                return WoodType.BIRCH;
+                return LogType.BIRCH;
             case "minecraft:spruce_door":
-                return WoodType.SPRUCE;
+                return LogType.SPRUCE;
             case "minecraft:wooden_door":
             default:
-                return WoodType.OAK;
+                return LogType.OAK;
         }
     }
 
     @Override
-    public void setWoodType( WoodType woodType ) {
-        switch ( woodType ) {
+    public void setWoodType( LogType logType) {
+        switch (logType) {
             case DARK_OAK:
                 this.setBlockId( "minecraft:dark_oak_door" );
                 break;
@@ -113,8 +113,8 @@ public class WoodenDoor extends Door implements BlockWoodenDoor {
                 itemId = 324;
         }
 
-        return new ArrayList<ItemStack>() {{
-            add( world.getServer().getItems().create( itemId, (short) 0, (byte) 1, null ) );
+        return new ArrayList<>() {{
+            add(world.getServer().getItems().create(itemId, (short) 0, (byte) 1, null));
         }};
     }
 

@@ -3,6 +3,8 @@ package io.gomint.server.world.block;
 import io.gomint.inventory.item.ItemCobblestone;
 import io.gomint.inventory.item.ItemStack;
 import io.gomint.server.world.block.helper.ToolPresets;
+import io.gomint.server.world.block.state.EnumBlockState;
+import io.gomint.world.block.BlockStone;
 import io.gomint.world.block.BlockType;
 
 import io.gomint.server.registry.RegisterInfo;
@@ -16,6 +18,8 @@ import java.util.List;
  */
 @RegisterInfo( sId = "minecraft:stone" )
 public class Stone extends Block implements io.gomint.world.block.BlockStone {
+
+    private final EnumBlockState<BlockStone.Type, String> variant = new EnumBlockState<>(this, () -> "stone_type", BlockStone.Type.values(), e -> e.name().toLowerCase());
 
     @Override
     public String getBlockId() {
@@ -47,6 +51,16 @@ public class Stone extends Block implements io.gomint.world.block.BlockStone {
     @Override
     public Class<? extends ItemStack>[] getToolInterfaces() {
         return ToolPresets.PICKAXE;
+    }
+
+    @Override
+    public void setStoneType(Type type) {
+        this.variant.setState(type);
+    }
+
+    @Override
+    public Type getStoneType() {
+        return this.variant.getState();
     }
 
 }

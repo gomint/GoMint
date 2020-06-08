@@ -7,26 +7,26 @@
 
 package io.gomint.world.block;
 
-import io.gomint.world.block.data.WoodType;
+import io.gomint.world.block.data.LogType;
 
 /**
  * @author geNAZt
  * @version 1.0
  */
-public interface BlockWood extends Block {
+public interface BlockPlank extends Block {
 
     /**
-     * Get wood type
+     * Get plank type
      *
-     * @return wood type
+     * @return plank type
      */
-    WoodType getWoodType();
+    LogType getPlankType();
 
     /**
-     * Set the wood type
+     * Set the plank type
      *
-     * @param woodType which should be used in this block
+     * @param logType which should be used in this block
      */
-    void setWoodType( WoodType woodType );
+    void setPlankType( LogType logType);
 
 }

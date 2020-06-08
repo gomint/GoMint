@@ -3,9 +3,12 @@ package io.gomint.server.world.block;
 import io.gomint.inventory.item.ItemStack;
 import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.world.block.helper.ToolPresets;
+import io.gomint.server.world.block.state.AxisBlockState;
 import io.gomint.server.world.block.state.EnumBlockState;
 import io.gomint.world.block.BlockType;
+import io.gomint.world.block.data.Axis;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 
 import java.util.Collections;
 import java.util.List;
@@ -14,11 +17,26 @@ import java.util.List;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:quartz_block" )
-@EqualsAndHashCode( callSuper = true )
+@RegisterInfo(sId = "minecraft:quartz_block")
+@EqualsAndHashCode(callSuper = true)
 public class BlockOfQuartz extends Block implements io.gomint.world.block.BlockBlockOfQuartz {
 
-    private EnumBlockState<Variant> variant = new EnumBlockState<>( this, Variant.values() );
+    @Getter
+    private enum VariantMagic {
+        SMOOTH("smooth"),
+        LINES("lines"),
+        DEFAULT("default"),
+        CHISELED("chiseled");
+
+        private final String value;
+
+        VariantMagic(String value) {
+            this.value = value;
+        }
+    }
+
+    private final AxisBlockState axis = new AxisBlockState(this, () -> "pillar_axis");
+    private final EnumBlockState<VariantMagic, String> variant = new EnumBlockState<>(this, () -> "chisel_type", VariantMagic.values(), VariantMagic::getValue);
 
     @Override
     public String getBlockId() {
@@ -42,12 +60,12 @@ public class BlockOfQuartz extends Block implements io.gomint.world.block.BlockB
 
     @Override
     public Variant getVariant() {
-        return this.variant.getState();
+        return Variant.valueOf(this.variant.getState().name());
     }
 
     @Override
-    public void setVariant( Variant variant ) {
-        this.variant.setState( variant );
+    public void setVariant(Variant variant) {
+        this.variant.setState(VariantMagic.valueOf(variant.name()));
     }
 
     @Override
@@ -56,12 +74,22 @@ public class BlockOfQuartz extends Block implements io.gomint.world.block.BlockB
     }
 
     @Override
-    public List<ItemStack> getDrops( ItemStack itemInHand ) {
-        if ( isCorrectTool( itemInHand ) ) {
-            return super.getDrops( itemInHand );
+    public List<ItemStack> getDrops(ItemStack itemInHand) {
+        if (isCorrectTool(itemInHand)) {
+            return super.getDrops(itemInHand);
         }
 
         return Collections.emptyList();
+    }
+
+    @Override
+    public void setAxis(Axis axis) {
+        this.axis.setState(axis);
+    }
+
+    @Override
+    public Axis getAxis() {
+        return this.axis.getState();
     }
 
 }

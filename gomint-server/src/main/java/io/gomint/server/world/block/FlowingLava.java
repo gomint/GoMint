@@ -4,6 +4,7 @@ import io.gomint.event.entity.EntityDamageEvent;
 import io.gomint.server.entity.EntityLiving;
 import io.gomint.server.registry.RegisterInfo;
 import io.gomint.world.block.*;
+import io.gomint.world.block.data.Facing;
 
 import java.util.concurrent.TimeUnit;
 
@@ -71,8 +72,8 @@ public class FlowingLava extends Liquid implements BlockFlowingLava {
     protected void checkForHarden() {
         // Find the block side on which we collided, can be anything except downwards
         Block colliding = null;
-        for ( BlockFace blockFace : BlockFace.values() ) {
-            if ( blockFace == BlockFace.DOWN ) {
+        for ( Facing blockFace : Facing.values() ) {
+            if ( blockFace == Facing.DOWN ) {
                 continue;
             }
 

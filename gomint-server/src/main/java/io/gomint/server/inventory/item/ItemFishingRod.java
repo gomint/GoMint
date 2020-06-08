@@ -2,15 +2,13 @@ package io.gomint.server.inventory.item;
 import io.gomint.inventory.item.ItemType;
 
 import io.gomint.event.entity.projectile.ProjectileLaunchEvent;
-import io.gomint.inventory.item.ItemAir;
 import io.gomint.math.Vector;
 import io.gomint.server.entity.EntityPlayer;
 import io.gomint.server.entity.projectile.EntityFishingHook;
 import io.gomint.server.inventory.item.annotation.UseDataAsDamage;
 import io.gomint.server.registry.RegisterInfo;
-import io.gomint.taglib.NBTTagCompound;
 import io.gomint.world.block.Block;
-import io.gomint.world.block.BlockFace;
+import io.gomint.world.block.data.Facing;
 
 /**
  * @author geNAZt
@@ -36,7 +34,7 @@ public class ItemFishingRod extends ItemStack implements io.gomint.inventory.ite
     }
 
     @Override
-    public boolean interact( EntityPlayer entity, BlockFace face, Vector clickPosition, Block clickedBlock ) {
+    public boolean interact(EntityPlayer entity, Facing face, Vector clickPosition, Block clickedBlock ) {
         if ( entity.getFishingHook() == null ) {
             EntityFishingHook hook = new EntityFishingHook( entity, entity.getWorld() );
             ProjectileLaunchEvent event = new ProjectileLaunchEvent( hook, ProjectileLaunchEvent.Cause.FISHING_ROD );

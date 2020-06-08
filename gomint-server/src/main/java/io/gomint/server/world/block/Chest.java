@@ -9,11 +9,12 @@ import io.gomint.server.entity.tileentity.TileEntity;
 import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.world.block.helper.ToolPresets;
 import io.gomint.server.world.block.state.BlockfaceBlockState;
+import io.gomint.server.world.block.state.DirectionBlockState;
 import io.gomint.taglib.NBTTagCompound;
 import io.gomint.world.block.BlockChest;
-import io.gomint.world.block.BlockFace;
-import io.gomint.world.block.BlockType;
+import io.gomint.world.block.data.Direction;
 import io.gomint.world.block.data.Facing;
+import io.gomint.world.block.BlockType;
 
 import java.util.List;
 
@@ -24,7 +25,7 @@ import java.util.List;
 @RegisterInfo( sId = "minecraft:chest" )
 public class Chest extends ContainerBlock implements BlockChest {
 
-    private BlockfaceBlockState facing = new BlockfaceBlockState( this );
+    private final BlockfaceBlockState direction = new BlockfaceBlockState( this, () -> "facing_direction" );
 
     @Override
     public String getBlockId() {
@@ -42,7 +43,7 @@ public class Chest extends ContainerBlock implements BlockChest {
     }
 
     @Override
-    public boolean interact( Entity entity, BlockFace face, Vector facePos, ItemStack item ) {
+    public boolean interact(Entity entity, Facing face, Vector facePos, ItemStack item ) {
         ChestTileEntity tileEntity = this.getTileEntity();
         if ( tileEntity != null ) {
             tileEntity.interact( entity, face, facePos, item );
@@ -108,12 +109,12 @@ public class Chest extends ContainerBlock implements BlockChest {
 
     @Override
     public void setFacing( Facing facing ) {
-        this.facing.setState( facing.toBlockFace() );
+        this.direction.setState( facing );
     }
 
     @Override
     public Facing getFacing() {
-        return this.facing.getState().toFacing();
+        return this.direction.getState();
     }
 
 }

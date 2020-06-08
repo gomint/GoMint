@@ -6,6 +6,7 @@ import io.gomint.inventory.item.ItemStack;
 import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.world.block.state.EnumBlockState;
 import io.gomint.world.block.BlockType;
+import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,10 +15,23 @@ import java.util.List;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:tallgrass" )
+@RegisterInfo(sId = "minecraft:tallgrass")
 public class TallGrass extends Block implements io.gomint.world.block.BlockTallGrass {
 
-    private EnumBlockState<Type> variant = new EnumBlockState<>( this, Type.values() );
+    @Getter
+    private enum TypeMagic {
+        GRASS("tall"),
+        FERN("fern"),
+        SNOW("snow");
+
+        private final String type;
+
+        TypeMagic(String type) {
+            this.type = type;
+        }
+    }
+
+    private final EnumBlockState<TypeMagic, String> variant = new EnumBlockState<>(this, () -> "tall_grass_type", TypeMagic.values(), TypeMagic::getType);
 
     @Override
     public String getBlockId() {
@@ -60,10 +74,10 @@ public class TallGrass extends Block implements io.gomint.world.block.BlockTallG
     }
 
     @Override
-    public List<ItemStack> getDrops( ItemStack itemInHand ) {
-        if( isCorrectTool( itemInHand ) ) {
+    public List<ItemStack> getDrops(ItemStack itemInHand) {
+        if (isCorrectTool(itemInHand)) {
             return new ArrayList<ItemStack>() {{
-                add( ItemTallGrass.create( 1 ) );
+                add(ItemTallGrass.create(1));
             }};
         }
 
@@ -78,13 +92,13 @@ public class TallGrass extends Block implements io.gomint.world.block.BlockTallG
     }
 
     @Override
-    public void setGrassType( Type type ) {
-        this.variant.setState( type );
+    public void setGrassType(Type type) {
+        this.variant.setState(TypeMagic.valueOf(type.name()));
     }
 
     @Override
     public Type getGrassType() {
-        return this.variant.getState();
+        return Type.valueOf(this.variant.getState().name());
     }
 
 }

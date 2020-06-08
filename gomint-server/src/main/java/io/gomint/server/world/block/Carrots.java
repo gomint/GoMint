@@ -12,7 +12,7 @@ import java.util.List;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:carrots" )
+@RegisterInfo(sId = "minecraft:carrots")
 public class Carrots extends Growable implements BlockCarrots {
 
     @Override
@@ -41,15 +41,14 @@ public class Carrots extends Growable implements BlockCarrots {
     }
 
     @Override
-    public List<ItemStack> getDrops( ItemStack itemInHand ) {
-        if ( getBlockData() >= 0x07 ) {
-
-            return new ArrayList<ItemStack>() {{
-                add( world.getServer().getItems().create( 391, (short) 0, (byte) ( 1 + SEED_RANDOMIZER.next().byteValue() ), null ) ); // Carrot
+    public List<ItemStack> getDrops(ItemStack itemInHand) {
+        if (this.growth.maxed()) {
+            return new ArrayList<>() {{
+                add(world.getServer().getItems().create(391, (short) 0, (byte) (1 + SEED_RANDOMIZER.next().byteValue()), null)); // Carrot
             }};
         } else {
-            return new ArrayList<ItemStack>() {{
-                add( world.getServer().getItems().create( 391, (short) 0, (byte) 1, null ) ); // Carrot
+            return new ArrayList<>() {{
+                add(world.getServer().getItems().create(391, (short) 0, (byte) 1, null)); // Carrot
             }};
         }
     }

@@ -13,7 +13,7 @@ import java.util.List;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:potatoes" )
+@RegisterInfo(sId = "minecraft:potatoes")
 public class Potato extends Growable implements BlockPotato {
 
     @Override
@@ -42,20 +42,20 @@ public class Potato extends Growable implements BlockPotato {
     }
 
     @Override
-    public List<ItemStack> getDrops( ItemStack itemInHand ) {
-        if ( getBlockData() >= 0x07 ) {
-            List<ItemStack> drops = new ArrayList<ItemStack>() {{
-                add( world.getServer().getItems().create( 392, (short) 0, (byte) ( 1 + SEED_RANDOMIZER.next().byteValue() ), null ) ); // Potato
+    public List<ItemStack> getDrops(ItemStack itemInHand) {
+        if (this.growth.maxed()) {
+            List<ItemStack> drops = new ArrayList<>() {{
+                add(world.getServer().getItems().create(392, (short) 0, (byte) (1 + SEED_RANDOMIZER.next().byteValue()), null)); // Potato
             }};
 
-            if ( FastRandom.current().nextDouble() > 0.98 ) {
-                drops.add( world.getServer().getItems().create( 394, (short) 0, (byte) 1, null ) ); // Poison potato on top!
+            if (FastRandom.current().nextDouble() > 0.98) {
+                drops.add(world.getServer().getItems().create(394, (short) 0, (byte) 1, null)); // Poison potato on top!
             }
 
             return drops;
         } else {
-            return new ArrayList<ItemStack>() {{
-                add( world.getServer().getItems().create( 392, (short) 0, (byte) 1, null ) ); // Potato
+            return new ArrayList<>() {{
+                add(world.getServer().getItems().create(392, (short) 0, (byte) 1, null)); // Potato
             }};
         }
     }

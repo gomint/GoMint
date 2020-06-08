@@ -643,8 +643,7 @@ public class ChunkAdapter implements Chunk {
         io.gomint.server.world.block.Block implBlock = (io.gomint.server.world.block.Block) block;
 
         // Copy block id
-        // TODO: Calculate proper state map
-        this.setBlock( x, y, z, layerID, new BlockIdentifier( implBlock.getBlockId(), null, implBlock.getBlockData() ) );
+        this.setBlock( x, y, z, layerID, new BlockIdentifier( implBlock.getBlockId(), implBlock.getStates(false), implBlock.getBlockData() ) );
 
         // Copy NBT
         if ( implBlock.getTileEntity() != null ) {

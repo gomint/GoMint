@@ -185,7 +185,7 @@ public class PacketPlayerActionHandler implements PacketHandler<PacketPlayerActi
                 // Broadcast break effects
                 if ( connection.getEntity().getBreakVector() != null ) {
                     Block block = connection.getEntity().getWorld().getBlockAt( connection.getEntity().getBreakVector() );
-                    int runtimeId = BlockRuntimeIDs.from( block.getBlockId(), block.getBlockData() );
+                    int runtimeId = BlockRuntimeIDs.from( block.getBlockId(), block.getStates(false), block.getBlockData() );
 
                     connection.getEntity().getWorld().sendLevelEvent(
                         connection.getEntity().getBreakVector().toVector(),

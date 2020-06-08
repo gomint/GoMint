@@ -22,7 +22,7 @@ import io.gomint.taglib.NBTReader;
 import io.gomint.taglib.NBTTagCompound;
 import io.gomint.taglib.NBTWriter;
 import io.gomint.world.Gamerule;
-import io.gomint.world.block.BlockFace;
+import io.gomint.world.block.data.Facing;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -370,7 +370,7 @@ public abstract class Packet {
         buffer.writeByte(commandOrigin.getType());
     }
 
-    BlockFace readBlockFace(PacketBuffer buffer) {
+    Facing readBlockFace(PacketBuffer buffer) {
         int value = buffer.readSignedVarInt();
         return Things.convertFromDataToBlockFace((byte) value);
     }

@@ -7,7 +7,7 @@
 
 package io.gomint.server.util;
 
-import io.gomint.world.block.BlockFace;
+import io.gomint.world.block.data.Facing;
 
 /**
  * @author geNAZt
@@ -15,20 +15,20 @@ import io.gomint.world.block.BlockFace;
  */
 public class Things {
 
-    public static BlockFace convertFromDataToBlockFace( short data ) {
+    public static Facing convertFromDataToBlockFace(short data ) {
         switch ( data ) {
             case 0:
-                return BlockFace.DOWN;
+                return Facing.DOWN;
             case 1:
-                return BlockFace.UP;
+                return Facing.UP;
             case 2:
-                return BlockFace.NORTH;
+                return Facing.NORTH;
             case 3:
-                return BlockFace.SOUTH;
+                return Facing.SOUTH;
             case 4:
-                return BlockFace.WEST;
+                return Facing.WEST;
             case 5:
-                return BlockFace.EAST;
+                return Facing.EAST;
             default:
                 return null;
         }

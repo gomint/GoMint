@@ -175,7 +175,7 @@ public class GoMintServer implements GoMint, InventoryHolder {
      * @param context which generated this component
      */
     @Autowired
-    public GoMintServer(OptionSet args, AnnotationConfigApplicationContext context) throws UnknownHostException {
+    public GoMintServer(OptionSet args, AnnotationConfigApplicationContext context) throws IOException {
         this.context = context;
 
         if (!args.has("convertOnly")) {
@@ -386,7 +386,7 @@ public class GoMintServer implements GoMint, InventoryHolder {
 
                 // Create options world generator
                 CreateOptions options = new CreateOptions();
-                options.worldType(WorldType.PERSISTENT); // Persistent world storage
+                options.worldType(WorldType.IN_MEMORY); // Persistent world storage
 
                 // Check if wished chunk generator is present
                 if (chunkGenerator != null) {

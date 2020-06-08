@@ -10,7 +10,7 @@ package io.gomint.server.world.block;
 import io.gomint.inventory.item.ItemStack;
 import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.world.block.helper.ToolPresets;
-import io.gomint.server.world.block.state.FacingBlockState;
+import io.gomint.server.world.block.state.BlockfaceBlockState;
 import io.gomint.world.block.BlockGlazedTerracotta;
 import io.gomint.world.block.BlockType;
 import io.gomint.world.block.data.BlockColor;
@@ -38,7 +38,7 @@ import io.gomint.world.block.data.Facing;
 @RegisterInfo( sId = "minecraft:black_glazed_terracotta" )
 public class GlazedTerracotta extends Block implements BlockGlazedTerracotta {
 
-    private FacingBlockState facing = new FacingBlockState( this, (short) 2 );
+    private final BlockfaceBlockState facing = new BlockfaceBlockState( this, () -> "facing_direction" );
 
     @Override
     public long getBreakTime() {
@@ -92,7 +92,7 @@ public class GlazedTerracotta extends Block implements BlockGlazedTerracotta {
             case GRAY:
                 this.setBlockId( "minecraft:gray_glazed_terracotta" );
                 break;
-            case LIGHT_GRAY:
+            case SILVER:
                 this.setBlockId( "minecraft:silver_glazed_terracotta" );
                 break;
             case CYAN:
@@ -139,7 +139,7 @@ public class GlazedTerracotta extends Block implements BlockGlazedTerracotta {
             case "minecraft:gray_glazed_terracotta":
                 return BlockColor.GRAY;
             case "minecraft:silver_glazed_terracotta":
-                return BlockColor.LIGHT_GRAY;
+                return BlockColor.SILVER;
             case "minecraft:cyan_glazed_terracotta":
                 return BlockColor.CYAN;
             case "minecraft:purple_glazed_terracotta":

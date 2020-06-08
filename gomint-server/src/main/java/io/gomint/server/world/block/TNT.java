@@ -7,7 +7,7 @@ import io.gomint.server.entity.Entity;
 import io.gomint.server.entity.EntityPlayer;
 import io.gomint.server.entity.active.EntityPrimedTNT;
 import io.gomint.server.registry.RegisterInfo;
-import io.gomint.world.block.BlockFace;
+import io.gomint.world.block.data.Facing;
 import io.gomint.world.block.BlockTNT;
 import io.gomint.world.block.BlockType;
 
@@ -34,7 +34,7 @@ public class TNT extends Block implements BlockTNT {
     }
 
     @Override
-    public boolean interact( Entity entity, BlockFace face, Vector facePos, ItemStack item ) {
+    public boolean interact(Entity entity, Facing face, Vector facePos, ItemStack item ) {
         if ( entity instanceof EntityPlayer && item instanceof ItemFlintAndSteel ) {
             io.gomint.server.inventory.item.ItemStack itemStack = (io.gomint.server.inventory.item.ItemStack) item;
             itemStack.afterPlacement();

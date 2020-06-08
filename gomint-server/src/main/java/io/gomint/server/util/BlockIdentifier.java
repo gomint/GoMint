@@ -19,31 +19,53 @@ import java.util.SortedMap;
  * @author geNAZt
  * @version 1.0
  */
-@Getter
 public class BlockIdentifier {
 
+    @Getter
     private final String blockId;
-    private final SortedMap<String, Object> states = new Object2ObjectLinkedOpenHashMap<>();
-    private final short data;
+    private SortedMap<String, Object> states;
+    @Getter
+    private short data;
 
     public BlockIdentifier(String blockId, NBTTagCompound states, Short data)  {
         this.blockId = blockId;
-        this.data = data;
 
         if (states != null) {
+            this.states = new Object2ObjectLinkedOpenHashMap<>();
             for (Map.Entry<String, Object> entry : states.entrySet()) {
                 this.states.put(entry.getKey(), entry.getValue());
             }
         }
     }
 
+    public BlockIdentifier(String blockId, SortedMap<String, Object> states, Short data) {
+        this.blockId = blockId;
+        this.states = states;
+    }
+
+    public SortedMap<String, Object> getStates(boolean copy) {
+        if (this.states == null) {
+            return null;
+        }
+
+        return copy ? new Object2ObjectLinkedOpenHashMap<>(this.states) : this.states;
+    }
+
     @Override
     public int hashCode() {
-        return this.blockId.hashCode() + this.data;
+        if (this.states != null) {
+            return this.blockId.hashCode() + this.states.hashCode();
+        }
+
+        return this.blockId.hashCode();
     }
 
     public long longHashCode() {
-        return (long) this.blockId.hashCode() << 32 | this.data;
+        if (this.states != null) {
+            return (long) this.blockId.hashCode() << 32 | this.states.hashCode();
+        }
+
+        return (long) this.blockId.hashCode() << 32;
     }
 
     @Override

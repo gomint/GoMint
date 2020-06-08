@@ -12,7 +12,7 @@ import io.gomint.server.world.block.Air;
 import io.gomint.server.world.block.Block;
 import io.gomint.server.world.block.PistonHead;
 import io.gomint.taglib.NBTTagCompound;
-import io.gomint.world.block.BlockFace;
+import io.gomint.world.block.data.Facing;
 import io.gomint.world.block.BlockType;
 import lombok.ToString;
 
@@ -70,7 +70,7 @@ public class PistonArmTileEntity extends TileEntity {
     @Override
     public void update( long currentMillis ) {
         Block piston = this.getBlock();
-        BlockFace facing = Things.convertFromDataToBlockFace( piston.getBlockData() );
+        Facing facing = Things.convertFromDataToBlockFace( piston.getBlockData() );
 
         if ( this.isExtended() ) {
             // We need a PistonHead

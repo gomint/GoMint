@@ -11,6 +11,8 @@ import io.gomint.server.registry.RegisterInfo;
 import io.gomint.taglib.NBTTagCompound;
 import io.gomint.world.block.BlockWallSign;
 import io.gomint.world.block.data.Facing;
+import io.gomint.world.block.data.LogType;
+import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,10 +21,31 @@ import java.util.List;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:wall_sign" )
+@RegisterInfo(sId = "minecraft:wall_sign", def = true)
+@RegisterInfo(sId = "minecraft:jungle_wall_sign")
+@RegisterInfo(sId = "minecraft:acacia_wall_sign")
+@RegisterInfo(sId = "minecraft:birch_wall_sign")
+@RegisterInfo(sId = "minecraft:spruce_wall_sign")
+@RegisterInfo(sId = "minecraft:darkoak_wall_sign")
 public class WallSign extends Block implements BlockWallSign {
 
-    private final BlockfaceFromPlayerBlockState facing = new BlockfaceFromPlayerBlockState( this );
+    @Getter
+    private enum LogTypeMagic {
+        OAK("minecraft:wall_sign"),
+        SPRUCE("minecraft:spruce_wall_sign"),
+        BIRCH("minecraft:birch_wall_sign"),
+        JUNGLE("minecraft:jungle_wall_sign"),
+        ACACIA("minecraft:acacia_wall_sign"),
+        DARK_OAK("minecraft:darkoak_wall_sign");
+
+        private final String blockId;
+
+        LogTypeMagic(String blockId) {
+            this.blockId = blockId;
+        }
+    }
+
+    private final BlockfaceFromPlayerBlockState facing = new BlockfaceFromPlayerBlockState(this, () -> "facing_direction", false);
 
     @Override
     public String getBlockId() {
@@ -50,60 +73,77 @@ public class WallSign extends Block implements BlockWallSign {
     }
 
     @Override
-    TileEntity createTileEntity( NBTTagCompound compound ) {
-        super.createTileEntity( compound );
-        return new SignTileEntity( this );
+    TileEntity createTileEntity(NBTTagCompound compound) {
+        super.createTileEntity(compound);
+        return new SignTileEntity(this);
     }
 
     @Override
     public List<String> getLines() {
         SignTileEntity sign = this.getTileEntity();
-        if ( sign == null ) {
+        if (sign == null) {
             return null;
         }
 
-        return new ArrayList<>( sign.getLines() );
+        return new ArrayList<>(sign.getLines());
     }
 
     @Override
-    public void setLine( int line, String content ) {
+    public void setLine(int line, String content) {
         // Silenty fail when line is incorrect
-        if ( line > 4 || line < 1 ) {
+        if (line > 4 || line < 1) {
             return;
         }
 
         SignTileEntity sign = this.getTileEntity();
-        if ( sign == null ) {
+        if (sign == null) {
             return;
         }
 
-        if ( sign.getLines().size() < line ) {
-            for ( int i = 0; i < line - sign.getLines().size(); i++ ) {
-                sign.getLines().add( "" );
+        if (sign.getLines().size() < line) {
+            for (int i = 0; i < line - sign.getLines().size(); i++) {
+                sign.getLines().add("");
             }
         }
 
-        sign.getLines().set( line - 1, content );
+        sign.getLines().set(line - 1, content);
         this.updateBlock();
     }
 
     @Override
-    public String getLine( int line ) {
+    public String getLine(int line) {
         // Silenty fail when line is incorrect
-        if ( line > 4 || line < 1 ) {
+        if (line > 4 || line < 1) {
             return null;
         }
 
         SignTileEntity sign = this.getTileEntity();
-        if ( sign == null ) {
+        if (sign == null) {
             return null;
         }
 
-        if ( sign.getLines().size() < line ) {
+        if (sign.getLines().size() < line) {
             return null;
         }
 
-        return sign.getLines().get( line - 1 );
+        return sign.getLines().get(line - 1);
+    }
+
+    @Override
+    public LogType getWoodType() {
+        for (LogTypeMagic value : LogTypeMagic.values()) {
+            if (value.getBlockId().equals(this.getBlockId())) {
+                return LogType.valueOf(value.name());
+            }
+        }
+
+        return null;
+    }
+
+    @Override
+    public void setWoodType(LogType logType) {
+        LogTypeMagic newState = LogTypeMagic.valueOf(logType.name());
+        this.setBlockId(newState.getBlockId());
     }
 
     @Override
@@ -127,13 +167,13 @@ public class WallSign extends Block implements BlockWallSign {
     }
 
     @Override
-    public void setFacing( Facing facing ) {
-        this.facing.setState( facing.toBlockFace() );
+    public void setFacing(Facing facing) {
+        this.facing.setState(facing);
     }
 
     @Override
     public Facing getFacing() {
-        return this.facing.getState().toFacing();
+        return this.facing.getState();
     }
 
 }

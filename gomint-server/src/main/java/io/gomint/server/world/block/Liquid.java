@@ -10,10 +10,10 @@ import io.gomint.server.util.BlockIdentifier;
 import io.gomint.server.world.PlacementData;
 import io.gomint.server.world.UpdateReason;
 import io.gomint.server.world.block.state.DirectValueBlockState;
+import io.gomint.server.world.block.state.ProgressBlockState;
 import io.gomint.world.Sound;
-import io.gomint.world.block.BlockFace;
-import io.gomint.world.block.BlockLiquid;
 import io.gomint.world.block.data.Facing;
+import io.gomint.world.block.BlockLiquid;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -32,9 +32,8 @@ public abstract class Liquid extends Block implements BlockLiquid {
         BLOCKED
     }
 
-    // Nasty hack to get the missing blockstate warning away
-    // TODO: Build a proper block state for liquids
-    private final DirectValueBlockState blockState = new DirectValueBlockState(this);
+    // TODO: Move liquid logic to block state
+    private final ProgressBlockState fill = new ProgressBlockState(this, () -> "liquid_depth", 15, aVoid -> {});
 
     // Temporary storage for update
     private byte adjacentSources;
@@ -143,10 +142,9 @@ public abstract class Liquid extends Block implements BlockLiquid {
     public abstract boolean isFlowing();
 
     @Override
-    public PlacementData calculatePlacementData(EntityPlayer entity, ItemStack item, BlockFace face, Block block, Block clickedBlock, Vector clickVector) {
+    public PlacementData calculatePlacementData(EntityPlayer entity, ItemStack item, Facing face, Block block, Block clickedBlock, Vector clickVector) {
         PlacementData data = super.calculatePlacementData(entity, item, face, block, clickedBlock, clickVector);
-        // TODO: Calculate proper state map
-        BlockIdentifier blockIdentifier = new BlockIdentifier(data.getBlockIdentifier().getBlockId(), null, (short) 0);
+        BlockIdentifier blockIdentifier = new BlockIdentifier(data.getBlockIdentifier().getBlockId(), data.getBlockIdentifier().getStates(false), (short) 0);
         return data.setBlockIdentifier(blockIdentifier);
     }
 
@@ -179,7 +177,7 @@ public abstract class Liquid extends Block implements BlockLiquid {
 
     private void checkSpread(int decay) {
         if (decay >= 0 && this.location.getY() > 0) {
-            Block bottomBlock = this.getSide(BlockFace.DOWN);
+            Block bottomBlock = this.getSide(Facing.DOWN);
             this.flowIntoBlock(bottomBlock, decay | 0x08);
             if (decay == 0 || !bottomBlock.canBeFlowedInto()) {
                 int adjacentDecay;
@@ -238,14 +236,14 @@ public abstract class Liquid extends Block implements BlockLiquid {
             }
 
             // Check if there is a block on top (flowing from top downwards)
-            int topFlowDecay = this.getFlowDecay(this.getSide(BlockFace.UP));
+            int topFlowDecay = this.getFlowDecay(this.getSide(Facing.UP));
             if (topFlowDecay >= 0) {
                 newDecay = topFlowDecay | 0x08;
             }
 
             // Did we hit a bottom block and are surrounded by other source blocks? -> convert to source block
             if (this.adjacentSources >= 2 && this instanceof FlowingWater) {
-                Block bottomBlock = this.getSide(BlockFace.DOWN);
+                Block bottomBlock = this.getSide(Facing.DOWN);
                 if (bottomBlock.isSolid() || (bottomBlock instanceof FlowingWater && bottomBlock.getBlockData() == 0)) {
                     newDecay = 0;
                 }
@@ -365,7 +363,7 @@ public abstract class Liquid extends Block implements BlockLiquid {
             }
 
             // TODO: Calculate proper state map
-            PlacementData data = new PlacementData(new BlockIdentifier(this.getBlockId(), null, (short) newFlowDecay), null);
+            PlacementData data = new PlacementData(new BlockIdentifier(this.getBlockId(), this.getStates(false), (short) newFlowDecay), null);
             block.setBlockFromPlacementData(data);
         }
     }

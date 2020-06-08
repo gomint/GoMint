@@ -16,11 +16,12 @@ import io.gomint.server.util.ClassPath;
 import io.gomint.server.util.performance.ObjectConstructionFactory;
 import io.gomint.server.world.PlacementData;
 import io.gomint.server.world.WorldAdapter;
-import io.gomint.world.block.BlockFace;
+import io.gomint.world.block.data.Facing;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Collection;
+import java.util.SortedMap;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -43,6 +44,9 @@ public class Blocks {
             ObjectConstructionFactory factory = new ObjectConstructionFactory( clazz );
             return () -> {
                 Block block = (Block) factory.newInstance();
+                if ( block == null) {
+                    LOGGER.error("Nulled block?! from {}", clazz.getName());
+                }
 
                 // Check if block has a id, if not set one
                 if ( block.getBlockId() == null ) {
@@ -63,8 +67,8 @@ public class Blocks {
         this.generators.cleanup();
     }
 
-    public <T extends Block> T get( String blockId, short blockData, byte skyLightLevel, byte blockLightLevel,
-                                    TileEntity tileEntity, Location location, int layer ) {
+    public <T extends Block> T get(String blockId, SortedMap<String, Object> states, short blockData, byte skyLightLevel, byte blockLightLevel,
+                                   TileEntity tileEntity, Location location, int layer) {
         Generator<Block> instance = this.generators.getGenerator( blockId );
         if ( instance != null ) {
             T block = (T) instance.generate();
@@ -72,7 +76,7 @@ public class Blocks {
                 return block;
             }
 
-            block.setData( blockId, blockData, tileEntity, (WorldAdapter) location.getWorld(), location, layer, skyLightLevel, blockLightLevel );
+            block.setData( blockId, states, blockData, tileEntity, (WorldAdapter) location.getWorld(), location, layer, skyLightLevel, blockLightLevel );
             return block;
         }
 
@@ -110,7 +114,7 @@ public class Blocks {
         return this.generators.getId( block );
     }
 
-    public boolean replaceWithItem( EntityPlayer entity, Block clickedBlock, Block block, BlockFace face, ItemStack item, Vector clickVector ) {
+    public boolean replaceWithItem(EntityPlayer entity, Block clickedBlock, Block block, Facing face, ItemStack item, Vector clickVector ) {
         // We need to change the block id first
         String id = ( (io.gomint.server.inventory.item.ItemStack) item ).getBlockId();
         if ( id == null ) {

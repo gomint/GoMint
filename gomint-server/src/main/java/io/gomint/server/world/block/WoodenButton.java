@@ -6,12 +6,11 @@ import io.gomint.server.entity.Entity;
 import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.world.UpdateReason;
 import io.gomint.server.world.block.helper.ToolPresets;
-import io.gomint.server.world.block.state.BlockfaceBlockState;
 import io.gomint.server.world.block.state.BlockfaceFromPlayerBlockState;
 import io.gomint.server.world.block.state.BooleanBlockState;
-import io.gomint.world.block.BlockFace;
+import io.gomint.world.block.data.Facing;
 import io.gomint.world.block.BlockType;
-import io.gomint.world.block.data.WoodType;
+import io.gomint.world.block.data.LogType;
 
 import java.util.concurrent.TimeUnit;
 
@@ -25,10 +24,7 @@ import java.util.concurrent.TimeUnit;
 @RegisterInfo( sId = "minecraft:dark_oak_button" )
 @RegisterInfo( sId = "minecraft:jungle_button" )
 @RegisterInfo( sId = "minecraft:acacia_button" )
-public class WoodenButton extends Block implements io.gomint.world.block.BlockWoodenButton {
-
-    private BlockfaceFromPlayerBlockState facing = new BlockfaceFromPlayerBlockState( this, true );
-    private BooleanBlockState pressed = new BooleanBlockState( this, states -> true, 3 );
+public class WoodenButton extends Button implements io.gomint.world.block.BlockWoodenButton {
 
     @Override
     public long getBreakTime() {
@@ -51,71 +47,28 @@ public class WoodenButton extends Block implements io.gomint.world.block.BlockWo
     }
 
     @Override
-    public boolean interact( Entity entity, BlockFace face, Vector facePos, ItemStack item ) {
-        // Press the button
-        this.press();
-
-        return true;
-    }
-
-    @Override
-    public long update( UpdateReason updateReason, long currentTimeMS, float dT ) {
-        if ( updateReason == UpdateReason.SCHEDULED && isPressed() ) {
-            this.pressed.setState( false );
-        }
-
-        return -1;
-    }
-
-    @Override
-    public boolean isPressed() {
-        return this.pressed.getState();
-    }
-
-    @Override
-    public void press() {
-        // Check if we need to update
-        if ( !isPressed() ) {
-            this.pressed.setState( true );
-        }
-
-        // Schedule release in 1 second
-        this.world.scheduleBlockUpdate( this.location, 1, TimeUnit.SECONDS );
-    }
-
-    @Override
-    public BlockFace getAttachedFace() {
-        return this.facing.getState();
-    }
-
-    @Override
-    public void setAttachedFace( BlockFace face ) {
-        this.facing.setState( face );
-    }
-
-    @Override
-    public WoodType getWoodType() {
+    public LogType getWoodType() {
         switch ( this.getBlockId() ) {
             case "minecraft:wooden_button":
-                return WoodType.OAK;
+                return LogType.OAK;
             case "minecraft:spruce_button":
-                return WoodType.SPRUCE;
+                return LogType.SPRUCE;
             case "minecraft:birch_button":
-                return WoodType.BIRCH;
+                return LogType.BIRCH;
             case "minecraft:dark_oak_button":
-                return WoodType.DARK_OAK;
+                return LogType.DARK_OAK;
             case "minecraft:jungle_button":
-                return WoodType.JUNGLE;
+                return LogType.JUNGLE;
             case "minecraft:acacia_button":
-                return WoodType.ACACIA;
+                return LogType.ACACIA;
         }
 
-        return WoodType.OAK;
+        return LogType.OAK;
     }
 
     @Override
-    public void setWoodType( WoodType woodType ) {
-        switch ( woodType ) {
+    public void setWoodType( LogType logType) {
+        switch (logType) {
             case OAK:
                 this.setBlockId( "minecraft:wooden_button" );
                 break;

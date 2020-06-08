@@ -32,4 +32,5 @@ public interface BlockCoralBlock extends Block {
         DEAD_FIRE,
         DEAD_HORN;
     }
+
 }

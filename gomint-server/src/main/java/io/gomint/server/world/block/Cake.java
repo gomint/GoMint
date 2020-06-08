@@ -6,7 +6,7 @@ import io.gomint.server.entity.Entity;
 import io.gomint.server.entity.EntityPlayer;
 import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.world.block.state.ProgressBlockState;
-import io.gomint.world.block.BlockFace;
+import io.gomint.world.block.data.Facing;
 import io.gomint.world.block.BlockType;
 import lombok.EqualsAndHashCode;
 
@@ -18,7 +18,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode( callSuper = true )
 public class Cake extends Block implements io.gomint.world.block.BlockCake {
 
-    private ProgressBlockState cakeEaten = new ProgressBlockState( this, 5, aVoid -> Cake.this.setType( Air.class ) );
+    private final ProgressBlockState cakeEaten = new ProgressBlockState( this, () -> "bite_counter", 6, aVoid -> Cake.this.setType( Air.class ) );
 
     @Override
     public String getBlockId() {
@@ -41,7 +41,7 @@ public class Cake extends Block implements io.gomint.world.block.BlockCake {
     }
 
     @Override
-    public boolean interact( Entity entity, BlockFace face, Vector facePos, ItemStack item ) {
+    public boolean interact(Entity entity, Facing face, Vector facePos, ItemStack item ) {
         if ( entity instanceof EntityPlayer ) {
             EntityPlayer player = (EntityPlayer) entity;
             if ( player.getHunger() < 20 ) {

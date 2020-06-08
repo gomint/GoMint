@@ -12,4 +12,29 @@ package io.gomint.world.block;
  * @version 1.0
  */
 public interface BlockStone extends Block {
+
+    enum Type {
+        STONE,
+        GRANITE_SMOOTH,
+        DIORITE_SMOOTH,
+        GRANITE,
+        DIORITE,
+        ANDESITE_SMOOTH,
+        ANDESITE,
+    }
+
+    /**
+     * Set type of stone
+     *
+     * @param type which should be set
+     */
+    void setStoneType(Type type);
+
+    /**
+     * Get the type of stone
+     *
+     * @return type of stone
+     */
+    Type getStoneType();
+
 }

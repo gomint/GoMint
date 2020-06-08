@@ -8,7 +8,7 @@ import io.gomint.server.inventory.EnchantmentTableInventory;
 import io.gomint.server.inventory.InventoryHolder;
 import io.gomint.server.world.block.Block;
 import io.gomint.taglib.NBTTagCompound;
-import io.gomint.world.block.BlockFace;
+import io.gomint.world.block.data.Facing;
 
 /**
  * @author geNAZt
@@ -26,7 +26,7 @@ public class EnchantTableTileEntity extends ContainerTileEntity implements Inven
     }
 
     @Override
-    public void interact( Entity entity, BlockFace face, Vector facePos, ItemStack item ) {
+    public void interact(Entity entity, Facing face, Vector facePos, ItemStack item ) {
         // Open the chest inventory for the entity
         if ( entity instanceof EntityPlayer ) {
             EntityPlayer player = (EntityPlayer) entity;

@@ -6,9 +6,8 @@ import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.world.block.Dirt;
 import io.gomint.server.world.block.Farmland;
 import io.gomint.server.world.block.GrassBlock;
-import io.gomint.taglib.NBTTagCompound;
 import io.gomint.world.block.Block;
-import io.gomint.world.block.BlockFace;
+import io.gomint.world.block.data.Facing;
 
 /**
  * @author geNAZt
@@ -23,7 +22,7 @@ public class ItemWoodenHoe extends ItemReduceTierWooden implements io.gomint.inv
     }
 
     @Override
-    public boolean interact( EntityPlayer entity, BlockFace face, Vector clickPosition, Block clickedBlock ) {
+    public boolean interact(EntityPlayer entity, Facing face, Vector clickPosition, Block clickedBlock ) {
         if ( clickedBlock instanceof Dirt || clickedBlock instanceof GrassBlock ) {
             clickedBlock.setType( Farmland.class );
             this.calculateUsageAndUpdate( 1 );

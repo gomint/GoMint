@@ -11,7 +11,7 @@ import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.world.WorldAdapter;
 import io.gomint.world.Gamemode;
 import io.gomint.world.block.Block;
-import io.gomint.world.block.BlockFace;
+import io.gomint.world.block.data.Facing;
 
 /**
  * @author Clockw1seLrd
@@ -22,7 +22,7 @@ import io.gomint.world.block.BlockFace;
 public class ItemSnowball extends ItemStack implements io.gomint.inventory.item.ItemSnowball {
 
     @Override
-    public boolean interact( EntityPlayer entity, BlockFace face, Vector clickPosition, Block clickedBlock ) {
+    public boolean interact(EntityPlayer entity, Facing face, Vector clickPosition, Block clickedBlock ) {
         // Spawn snowball projectile
         WorldAdapter world = entity.getWorld();
         EntitySnowball snowball = new EntitySnowball( entity, world );

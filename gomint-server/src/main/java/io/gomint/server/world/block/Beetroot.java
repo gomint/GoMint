@@ -12,7 +12,7 @@ import java.util.List;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:beetroot" )
+@RegisterInfo(sId = "minecraft:beetroot")
 public class Beetroot extends Growable implements BlockBeetroot {
 
     @Override
@@ -41,22 +41,22 @@ public class Beetroot extends Growable implements BlockBeetroot {
     }
 
     @Override
-    public List<ItemStack> getDrops( ItemStack itemInHand ) {
-        if ( getBlockData() >= 0x07 ) {
-            List<ItemStack> drops = new ArrayList<ItemStack>() {{
-                add( world.getServer().getItems().create( 457, (short) 0, (byte) 1, null ) ); // Beetroot
+    public List<ItemStack> getDrops(ItemStack itemInHand) {
+        if (this.growth.maxed()) {
+            List<ItemStack> drops = new ArrayList<>() {{
+                add(world.getServer().getItems().create(457, (short) 0, (byte) 1, null)); // Beetroot
             }};
 
             // Randomize seeds
             int amountOfSeeds = SEED_RANDOMIZER.next();
-            if ( amountOfSeeds > 0 ) {
-                drops.add( world.getServer().getItems().create( 458, (short) 0, (byte) amountOfSeeds, null ) ); // Seeds
+            if (amountOfSeeds > 0) {
+                drops.add(world.getServer().getItems().create(458, (short) 0, (byte) amountOfSeeds, null)); // Seeds
             }
 
             return drops;
         } else {
-            return new ArrayList<ItemStack>() {{
-                add( world.getServer().getItems().create( 458, (short) 0, (byte) 1, null ) ); // Seeds
+            return new ArrayList<>() {{
+                add(world.getServer().getItems().create(458, (short) 0, (byte) 1, null)); // Seeds
             }};
         }
     }

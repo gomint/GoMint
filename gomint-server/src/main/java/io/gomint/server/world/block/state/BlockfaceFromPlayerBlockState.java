@@ -11,10 +11,9 @@ import io.gomint.inventory.item.ItemStack;
 import io.gomint.math.Vector;
 import io.gomint.server.entity.EntityPlayer;
 import io.gomint.server.world.block.Block;
-import io.gomint.world.block.BlockFace;
+import io.gomint.world.block.data.Facing;
 
-import java.util.List;
-import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 /**
  * @author geNAZt
@@ -22,26 +21,14 @@ import java.util.function.Predicate;
  */
 public class BlockfaceFromPlayerBlockState extends BlockfaceBlockState {
 
-    public BlockfaceFromPlayerBlockState( Block block ) {
-        super( block );
-    }
-
-    public BlockfaceFromPlayerBlockState( Block block, boolean detectUpDown ) {
-        super( block, detectUpDown );
-    }
-
-    public BlockfaceFromPlayerBlockState( Block block, Predicate<List<BlockState>> predicate ) {
-        super( block, predicate );
-    }
-
-    public BlockfaceFromPlayerBlockState( Block block, Predicate<List<BlockState>> predicate, int shift ) {
-        super( block, predicate, shift );
+    public BlockfaceFromPlayerBlockState(Block block, Supplier<String> key, boolean detectUpDown ) {
+        super( block, key, detectUpDown );
     }
 
     @Override
-    public void detectFromPlacement( EntityPlayer player, ItemStack placedItem, BlockFace face, Block block, Block clickedBlock, Vector clickPosition ) {
-        if ( !this.detectUpDown && ( face == BlockFace.UP || face == BlockFace.DOWN ) ) {
-            face = BlockFace.NORTH;
+    public void detectFromPlacement(EntityPlayer player, ItemStack placedItem, Facing face, Block block, Block clickedBlock, Vector clickPosition ) {
+        if ( !this.detectUpDown && ( face == Facing.UP || face == Facing.DOWN ) ) {
+            face = Facing.NORTH;
         }
 
         this.setState( face );

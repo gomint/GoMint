@@ -248,7 +248,7 @@ public class AnvilConverter extends BaseConverter {
 
         // Check for missing subchunks
         BlockIdentifier[] blocks = new BlockIdentifier[4096];
-        Arrays.fill( blocks, new BlockIdentifier( "minecraft:air", null, (short) 0 ) );
+        Arrays.fill( blocks, new BlockIdentifier( "minecraft:air", (NBTTagCompound) null, (short) 0 ) );
 
         this.subChunksProcessed.long2ObjectEntrySet().forEach( byteSetEntry -> {
             int chunkX = (int) ( byteSetEntry.getLongKey() >> 32 );
@@ -466,7 +466,7 @@ public class AnvilConverter extends BaseConverter {
 
                     if ( this.nukkitPMMPConverted || gomintConverted ) {
                         // TODO: Calculate proper state map
-                        newBlocks[newIndex] = new BlockIdentifier( this.peConverter.convert( blockId ), null, (short) blockData );
+                        newBlocks[newIndex] = new BlockIdentifier( this.peConverter.convert( blockId ), (NBTTagCompound) null, (short) blockData );
                     } else {
                         // Block data converter
                         if ( blockId == 3 && blockData == 1 ) {
@@ -485,7 +485,7 @@ public class AnvilConverter extends BaseConverter {
 
                         BlockIdentifier converted = this.converter.convert( blockId, blockData );
                         if ( converted == null ) {
-                            newBlocks[newIndex] = new BlockIdentifier( "minecraft:air", null, (short) 0 );
+                            newBlocks[newIndex] = new BlockIdentifier( "minecraft:air", (NBTTagCompound) null, (short) 0 );
                             LOGGER.warn( "Could not convert block {}:{}", blockId, blockData );
                         } else {
                             // Is this a piston? (they may lack tiles)
@@ -550,7 +550,7 @@ public class AnvilConverter extends BaseConverter {
                                         }
 
                                         // TODO: Calculate proper state map
-                                        converted = new BlockIdentifier( converted.getBlockId(), null, (short) 1 );
+                                        converted = new BlockIdentifier( converted.getBlockId(), (NBTTagCompound) null, (short) 1 );
                                     }
 
                                     if ( tiles == null ) {

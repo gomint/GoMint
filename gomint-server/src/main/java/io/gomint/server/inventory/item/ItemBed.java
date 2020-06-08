@@ -46,7 +46,7 @@ public class ItemBed extends ItemStack implements io.gomint.inventory.item.ItemB
             case 7:
                 return BlockColor.GRAY;
             case 8:
-                return BlockColor.LIGHT_GRAY;
+                return BlockColor.SILVER;
             case 9:
                 return BlockColor.CYAN;
             case 10:
@@ -91,7 +91,7 @@ public class ItemBed extends ItemStack implements io.gomint.inventory.item.ItemB
             case GRAY:
                 this.setData( (short) 7 );
                 break;
-            case LIGHT_GRAY:
+            case SILVER:
                 this.setData( (short) 8 );
                 break;
             case CYAN:

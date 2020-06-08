@@ -8,15 +8,12 @@
 package io.gomint.server.entity.tileentity;
 
 import io.gomint.entity.Entity;
-import io.gomint.math.Location;
 import io.gomint.math.Vector;
 import io.gomint.server.inventory.InventoryHolder;
-import io.gomint.server.inventory.item.Items;
 import io.gomint.server.util.BlockIdentifier;
-import io.gomint.server.world.WorldAdapter;
 import io.gomint.server.world.block.Block;
 import io.gomint.taglib.NBTTagCompound;
-import io.gomint.world.block.BlockFace;
+import io.gomint.world.block.data.Facing;
 import lombok.Getter;
 
 /**
@@ -51,7 +48,7 @@ public class FlowerPotTileEntity extends TileEntity implements InventoryHolder {
     }
 
     @Override
-    public void interact( Entity entity, BlockFace face, Vector facePos, io.gomint.inventory.item.ItemStack item ) {
+    public void interact(Entity entity, Facing face, Vector facePos, io.gomint.inventory.item.ItemStack item ) {
 
     }
 

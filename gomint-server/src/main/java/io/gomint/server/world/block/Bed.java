@@ -16,13 +16,13 @@ import io.gomint.server.util.Bearing;
 import io.gomint.server.util.BlockIdentifier;
 import io.gomint.server.world.PlacementData;
 import io.gomint.server.world.block.state.BooleanBlockState;
-import io.gomint.server.world.block.state.FacingBlockState;
+import io.gomint.server.world.block.state.DirectionBlockState;
 import io.gomint.taglib.NBTTagCompound;
 import io.gomint.world.block.BlockBed;
-import io.gomint.world.block.BlockFace;
+import io.gomint.world.block.data.Direction;
+import io.gomint.world.block.data.Facing;
 import io.gomint.world.block.BlockType;
 import io.gomint.world.block.data.BlockColor;
-import io.gomint.world.block.data.Facing;
 import lombok.EqualsAndHashCode;
 
 import java.util.Collections;
@@ -36,9 +36,9 @@ import java.util.List;
 @EqualsAndHashCode( callSuper = true )
 public class Bed extends Block implements io.gomint.world.block.BlockBed {
 
-    private FacingBlockState facing = new FacingBlockState( this );
-    private BooleanBlockState occupied = new BooleanBlockState( this, states -> true, 2 );
-    private BooleanBlockState head = new BooleanBlockState( this, states -> true, 3 );
+    private final DirectionBlockState direction = new DirectionBlockState( this, () -> "direction" );
+    private final BooleanBlockState occupied = new BooleanBlockState( this, () -> "occupied_bit" );
+    private final BooleanBlockState head = new BooleanBlockState( this, () -> "head_piece_bit" );
 
     @Override
     public String getBlockId() {
@@ -82,7 +82,7 @@ public class Bed extends Block implements io.gomint.world.block.BlockBed {
 
     private io.gomint.world.block.Block getOtherBlock() {
         // Select which side we need to check
-        Facing facingToOtherHalf = this.facing.getState();
+        Direction facingToOtherHalf = this.direction.getState();
         if ( this.isHeadPart() ) {
             facingToOtherHalf = facingToOtherHalf.opposite();
         }
@@ -137,17 +137,17 @@ public class Bed extends Block implements io.gomint.world.block.BlockBed {
     @Override
     public boolean beforePlacement( Entity entity, ItemStack item, Location location ) {
         // We need to check if we are placed on a solid block
-        Block block = (Block) location.getWorld().getBlockAt( location.toBlockPosition() ).getSide( BlockFace.DOWN );
+        Block block = (Block) location.getWorld().getBlockAt( location.toBlockPosition() ).getSide( Facing.DOWN );
         if ( block.isSolid() ) {
             Bearing bearing = Bearing.fromAngle( entity.getYaw() );
 
             // Check for other block
-            Block other = block.getSide( bearing.toFacing() );
+            Block other = block.getSide( bearing.toDirection() );
             if ( !other.isSolid() ) {
                 return false;
             }
 
-            Block replacingHead = other.getSide( BlockFace.UP );
+            Block replacingHead = other.getSide( Facing.UP );
             return replacingHead.canBeReplaced( item );
         }
 
@@ -155,7 +155,7 @@ public class Bed extends Block implements io.gomint.world.block.BlockBed {
     }
 
     @Override
-    public PlacementData calculatePlacementData( EntityPlayer entity, ItemStack item, BlockFace face, Block block, Block clickedBlock, Vector clickVector ) {
+    public PlacementData calculatePlacementData(EntityPlayer entity, ItemStack item, Facing face, Block block, Block clickedBlock, Vector clickVector ) {
         NBTTagCompound compound = new NBTTagCompound( "" );
         compound.addValue( "color", (byte) item.getData() );
 
@@ -171,8 +171,7 @@ public class Bed extends Block implements io.gomint.world.block.BlockBed {
             NBTTagCompound compound = new NBTTagCompound( "" );
             this.getTileEntity().toCompound( compound, SerializationReason.PERSIST );
 
-            // TODO: Calculate proper state map
-            BlockIdentifier identifier = new BlockIdentifier( data.getBlockIdentifier().getBlockId(), null, (short) 0 );
+            BlockIdentifier identifier = new BlockIdentifier( data.getBlockIdentifier().getBlockId(), data.getBlockIdentifier().getStates(false), (short) 0 );
             data.setBlockIdentifier( identifier );
             data.setCompound( compound );
 

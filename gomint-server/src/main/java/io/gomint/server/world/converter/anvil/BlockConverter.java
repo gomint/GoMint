@@ -19,6 +19,7 @@ public class BlockConverter {
     private final Int2ObjectMap<Converter> converters = new Int2ObjectOpenHashMap<>();
     private final Int2ByteMap metaconverts = new Int2ByteOpenHashMap();
 
+    // TODO: Check if we can remove this whole system
     public BlockConverter( List<NBTTagCompound> converterData ) {
         for ( NBTTagCompound compound : converterData ) {
             short oldId = compound.getShort( "oi", (short) 0 );
@@ -27,11 +28,11 @@ public class BlockConverter {
             byte newMeta = compound.getByte( "nm", (byte) -1 );
 
             if ( oldMeta == -1 && newMeta == -1 ) {
-                this.converters.put( oldId, ( blockId, metaData ) -> new BlockIdentifier( newId, null, (short) metaData) );
+                this.converters.put( oldId, ( blockId, metaData ) -> new BlockIdentifier( newId, (NBTTagCompound) null, (short) metaData) );
             } else {
                 // Check if we already have a converter
                 if ( !this.converters.containsKey( oldId ) ) {
-                    this.converters.put( oldId, ( blockId, metaData ) -> new BlockIdentifier( newId, null, (short) metaconverts.get( blockId << 16 | ( metaData & 0xFF ) )) );
+                    this.converters.put( oldId, ( blockId, metaData ) -> new BlockIdentifier( newId, (NBTTagCompound) null, (short) metaconverts.get( blockId << 16 | ( metaData & 0xFF ) )) );
                 }
 
                 this.metaconverts.put( oldId << 16 | ( oldMeta & 0xFF ), newMeta );

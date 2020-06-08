@@ -10,12 +10,13 @@ package io.gomint.server.world.block;
 import io.gomint.inventory.item.ItemStack;
 import io.gomint.server.world.block.helper.ToolPresets;
 import io.gomint.server.world.block.state.BooleanBlockState;
-import io.gomint.server.world.block.state.FacingBlockState;
+import io.gomint.server.world.block.state.DirectionBlockState;
 import io.gomint.world.block.BlockType;
 
 import io.gomint.server.registry.RegisterInfo;
+import io.gomint.world.block.data.Direction;
 import io.gomint.world.block.data.Facing;
-import io.gomint.world.block.data.WoodType;
+import io.gomint.world.block.data.LogType;
 
 /**
  * @author geNAZt
@@ -29,8 +30,9 @@ import io.gomint.world.block.data.WoodType;
 @RegisterInfo( sId = "minecraft:acacia_fence_gate" )
 public class FenceGate extends Block implements io.gomint.world.block.BlockFenceGate {
 
-    private final FacingBlockState facing = new FacingBlockState( this );
-    private final BooleanBlockState open = new BooleanBlockState( this, blockStates -> true, 2 );
+    private final DirectionBlockState direction = new DirectionBlockState( this, () -> "direction" );
+    private final BooleanBlockState open = new BooleanBlockState( this, () -> "open_bit");
+    private final BooleanBlockState inWall = new BooleanBlockState( this, () -> "in_wall_bit");
 
     @Override
     public String getBlockId() {
@@ -78,28 +80,28 @@ public class FenceGate extends Block implements io.gomint.world.block.BlockFence
     }
 
     @Override
-    public WoodType getWoodType() {
+    public LogType getWoodType() {
         switch ( this.getBlockId() ) {
             case "minecraft:fence_gate":
-                return WoodType.OAK;
+                return LogType.OAK;
             case "minecraft:spruce_fence_gate":
-                return WoodType.SPRUCE;
+                return LogType.SPRUCE;
             case "minecraft:birch_fence_gate":
-                return WoodType.BIRCH;
+                return LogType.BIRCH;
             case "minecraft:jungle_fence_gate":
-                return WoodType.DARK_OAK;
+                return LogType.DARK_OAK;
             case "minecraft:dark_oak_fence_gate":
-                return WoodType.JUNGLE;
+                return LogType.JUNGLE;
             case "minecraft:acacia_fence_gate":
-                return WoodType.ACACIA;
+                return LogType.ACACIA;
         }
 
-        return WoodType.OAK;
+        return LogType.OAK;
     }
 
     @Override
-    public void setWoodType( WoodType woodType ) {
-        switch ( woodType ) {
+    public void setWoodType( LogType logType) {
+        switch (logType) {
             case OAK:
                 this.setBlockId( "minecraft:fence_gate" );
                 break;
@@ -122,13 +124,13 @@ public class FenceGate extends Block implements io.gomint.world.block.BlockFence
     }
 
     @Override
-    public void setFacing( Facing facing ) {
-        this.facing.setState( facing );
+    public void setDirection(Direction direction) {
+        this.direction.setState(direction);
     }
 
     @Override
-    public Facing getFacing() {
-        return this.facing.getState();
+    public Direction getDirection() {
+        return this.direction.getState();
     }
 
 }

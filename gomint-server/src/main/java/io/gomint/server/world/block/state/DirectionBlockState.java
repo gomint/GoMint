@@ -10,62 +10,51 @@ package io.gomint.server.world.block.state;
 import io.gomint.inventory.item.ItemStack;
 import io.gomint.math.Vector;
 import io.gomint.server.entity.EntityPlayer;
+import io.gomint.server.util.Bearing;
 import io.gomint.server.world.block.Block;
-import io.gomint.world.block.BlockFace;
 import io.gomint.world.block.data.Direction;
+import io.gomint.world.block.data.Facing;
 
-import java.util.List;
-import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 /**
  * @author geNAZt
  * @version 1.0
  */
-public class DirectionBlockState extends BlockState<Direction> {
+public class DirectionBlockState extends BlockState<Direction, Integer> {
 
-    public DirectionBlockState( Block block ) {
-        super( block );
-    }
-
-    public DirectionBlockState( Block block, Predicate<List<BlockState>> predicate ) {
-        super( block, predicate );
-    }
-
-    public DirectionBlockState( Block block, Predicate<List<BlockState>> predicate, int shift ) {
-        super( block, predicate, shift );
+    public DirectionBlockState(Block block, Supplier<String> key) {
+        this(block, key, 0);
     }
 
     @Override
-    protected int cap() {
-        return 3;
-    }
-
-    @Override
-    public void detectFromPlacement( EntityPlayer player, ItemStack placedItem, BlockFace face, Block block, Block clickedBlock, Vector clickPosition ) {
-        switch ( face ) {
-            case UP:
-            case DOWN:
-                this.setState( Direction.UP_DOWN );
-                break;
-
+    protected void calculateValueFromState() {
+        switch (this.getState()) {
             case NORTH:
-            case SOUTH:
-                this.setState( Direction.NORTH_SOUTH );
+                this.setValue(2);
                 break;
-
+            case EAST:
+                this.setValue(3);
+                break;
+            case WEST:
+                this.setValue(1);
+                break;
+            case SOUTH:
             default:
-                this.setState( Direction.EAST_WEST );
+                this.setValue(0);
                 break;
         }
     }
 
-    @Override
-    protected void data( short data ) {
-        this.setState( Direction.values()[data] );
+    public DirectionBlockState(Block block, Supplier<String> key, int rotation) {
+        super(block, key);
+        this.setValue(rotation);
     }
 
     @Override
-    protected short data() {
-        return (short) this.getState().ordinal();
+    public void detectFromPlacement(EntityPlayer player, ItemStack placedItem, Facing face, Block block, Block clickedBlock, Vector clickPosition) {
+        Bearing bearing = Bearing.fromAngle(player.getYaw());
+        this.setState(bearing.toDirection());
     }
+
 }

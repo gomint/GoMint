@@ -9,7 +9,7 @@ import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.world.LevelEvent;
 import io.gomint.util.random.FastRandom;
 import io.gomint.world.Gamemode;
-import io.gomint.world.block.BlockFace;
+import io.gomint.world.block.data.Facing;
 import io.gomint.world.block.BlockType;
 
 /**
@@ -50,7 +50,7 @@ public class DragonEgg extends Block implements io.gomint.world.block.BlockDrago
     }
 
     @Override
-    public boolean interact( Entity entity, BlockFace face, Vector facePos, ItemStack item ) {
+    public boolean interact(Entity entity, Facing face, Vector facePos, ItemStack item ) {
         this.teleport();
         return true;
     }

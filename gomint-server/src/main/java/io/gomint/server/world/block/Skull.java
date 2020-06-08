@@ -10,7 +10,7 @@ import io.gomint.server.entity.tileentity.TileEntity;
 import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.world.PlacementData;
 import io.gomint.taglib.NBTTagCompound;
-import io.gomint.world.block.BlockFace;
+import io.gomint.world.block.data.Facing;
 import io.gomint.world.block.BlockType;
 
 import java.util.ArrayList;
@@ -57,7 +57,7 @@ public class Skull extends Block implements io.gomint.world.block.BlockSkull {
     }
 
     @Override
-    public PlacementData calculatePlacementData( EntityPlayer entity, ItemStack item, BlockFace face, Block block, Block clickedBlock, Vector clickVector ) {
+    public PlacementData calculatePlacementData(EntityPlayer entity, ItemStack item, Facing face, Block block, Block clickedBlock, Vector clickVector ) {
         PlacementData data = super.calculatePlacementData( entity, item, face, block, clickedBlock, clickVector );
 
         NBTTagCompound compound = new NBTTagCompound( "" );

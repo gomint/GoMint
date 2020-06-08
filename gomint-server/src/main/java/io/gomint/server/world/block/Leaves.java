@@ -8,7 +8,8 @@ import io.gomint.server.world.block.state.BooleanBlockState;
 import io.gomint.server.world.block.state.EnumBlockState;
 import io.gomint.world.block.BlockLeaves;
 import io.gomint.world.block.BlockType;
-import io.gomint.world.block.data.WoodType;
+import io.gomint.world.block.data.LogType;
+import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,31 +19,52 @@ import java.util.List;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:leaves", def = true )
-@RegisterInfo( sId = "minecraft:leaves2", def = true )
+@RegisterInfo( sId = "minecraft:leaves2" )
 public class Leaves extends Block implements BlockLeaves {
 
-    private enum LeaveType {
-        OAK,
-        SPRUCE,
-        BIRCH,
-        JUNGLE
+    private static final String OLD_LOG_TYPE = "old_leaf_type";
+    private static final String OLD_LOG_ID = "minecraft:leaves";
+
+    private static final String NEW_LOG_TYPE = "new_leaf_type";
+    private static final String NEW_LOG_ID = "minecraft:leaves2";
+
+    @Getter
+    private enum LeaveTypeMagic {
+        OAK(OLD_LOG_ID, OLD_LOG_TYPE, "oak"),
+        SPRUCE(OLD_LOG_ID, OLD_LOG_TYPE, "spruce"),
+        BIRCH(OLD_LOG_ID, OLD_LOG_TYPE, "birch"),
+        JUNGLE(OLD_LOG_ID, OLD_LOG_TYPE, "jungle"),
+        ACACIA(NEW_LOG_ID, NEW_LOG_TYPE, "acacia"),
+        DARK_OAK(NEW_LOG_ID, NEW_LOG_TYPE, "dark_oak");
+
+        private final String key;
+        private final String value;
+        private final String blockId;
+
+        LeaveTypeMagic(String blockId, String key, String value) {
+            this.key = key;
+            this.value = value;
+            this.blockId = blockId;
+        }
     }
 
-    private enum Leave2Type {
-        ACACIA,
-        DARK_OAK
-    }
+    private final EnumBlockState<LeaveTypeMagic, String> variant = new EnumBlockState<>(this, () -> {
+        this.resetTypeStates();
 
-    private EnumBlockState<LeaveType> variantLeave = new EnumBlockState<>( this, LeaveType.values(), states -> this.getBlockId().equals( "minecraft:leaves" ) );
-    private EnumBlockState<Leave2Type> variantLeave2 = new EnumBlockState<>( this, Leave2Type.values(), states -> this.getBlockId().equals( "minecraft:leaves2" ) );
+        if (this.variant == null) {
+            return LeaveTypeMagic.OAK.getKey();
+        }
 
-    private BooleanBlockState noDecay = new BooleanBlockState( this, states -> true, 2 );
-    private BooleanBlockState checkDecay = new BooleanBlockState( this, states -> true, 3 );
-    private BooleanBlockState noAndCheckDecay = new BooleanBlockState( this, states -> true, 4 );
+        return this.variant.getState().getKey();
+    }, LeaveTypeMagic.values(), LeaveTypeMagic::getValue);
 
-    @Override
-    public String getBlockId() {
-        return "minecraft:leaves";
+    private BooleanBlockState updateForDecay = new BooleanBlockState( this, () -> "update_bit" );
+    private BooleanBlockState persistent = new BooleanBlockState( this, () -> "persistent_bit");
+
+    private void resetTypeStates() {
+        // Ensure we only have one type state
+        this.removeState(OLD_LOG_TYPE);
+        this.removeState(NEW_LOG_TYPE);
     }
 
     @Override
@@ -72,7 +94,7 @@ public class Leaves extends Block implements BlockLeaves {
 
     @Override
     public List<ItemStack> getDrops( ItemStack itemInHand ) {
-        return new ArrayList<ItemStack>() {{
+        return new ArrayList<>() {{
             if ( isCorrectTool( itemInHand ) ) {
                 add( ItemLeaves.create( 1 ) );
             }
@@ -87,63 +109,15 @@ public class Leaves extends Block implements BlockLeaves {
     }
 
     @Override
-    public void setWoodType( WoodType type ) {
-        switch ( type ) {
-            case OAK:
-                this.setBlockId( "minecraft:leaves" );
-                this.variantLeave.setState( LeaveType.OAK );
-                break;
-            case BIRCH:
-                this.setBlockId( "minecraft:leaves" );
-                this.variantLeave.setState( LeaveType.BIRCH );
-                break;
-            case JUNGLE:
-                this.setBlockId( "minecraft:leaves" );
-                this.variantLeave.setState( LeaveType.JUNGLE );
-                break;
-            case SPRUCE:
-                this.setBlockId( "minecraft:leaves" );
-                this.variantLeave.setState( LeaveType.SPRUCE );
-                break;
-            case ACACIA:
-                this.setBlockId( "minecraft:leaves2" );
-                this.variantLeave2.setState( Leave2Type.ACACIA );
-                break;
-            case DARK_OAK:
-                this.setBlockId( "minecraft:leaves2" );
-                this.variantLeave2.setState( Leave2Type.DARK_OAK );
-                break;
-        }
+    public void setLeaveType( LogType type ) {
+        LeaveTypeMagic newState = LeaveTypeMagic.valueOf(type.name());
+        this.setBlockId(newState.getBlockId());
+        this.variant.setState(newState);
     }
 
     @Override
-    public WoodType getWoodType() {
-        switch ( this.getBlockId() ) {
-            case "minecraft:leaves":
-                switch ( this.variantLeave.getState() ) {
-                    case OAK:
-                        return WoodType.OAK;
-                    case SPRUCE:
-                        return WoodType.SPRUCE;
-                    case JUNGLE:
-                        return WoodType.JUNGLE;
-                    case BIRCH:
-                        return WoodType.BIRCH;
-                }
-
-                break;
-            case "minecraft:leaves2":
-                switch ( this.variantLeave2.getState() ) {
-                    case ACACIA:
-                        return WoodType.ACACIA;
-                    case DARK_OAK:
-                        return WoodType.DARK_OAK;
-                }
-
-                break;
-        }
-
-        return WoodType.OAK;
+    public LogType getLeaveType() {
+        return LogType.valueOf(this.variant.getState().name());
     }
 
 }

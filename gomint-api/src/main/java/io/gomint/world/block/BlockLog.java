@@ -7,14 +7,13 @@
 
 package io.gomint.world.block;
 
-import io.gomint.world.block.data.Direction;
-import io.gomint.world.block.data.WoodType;
+import io.gomint.world.block.data.LogType;
 
 /**
  * @author geNAZt
  * @version 1.0
  */
-public interface BlockLog extends Block {
+public interface BlockLog extends Block, BlockAxis {
 
     /**
      * Is this log stripped
@@ -35,27 +34,13 @@ public interface BlockLog extends Block {
      *
      * @param type of log
      */
-    void setWoodType( WoodType type );
+    void setLogType( LogType type );
 
     /**
      * Get the type of this log
      *
      * @return type of log
      */
-    WoodType getWoodType();
-
-    /**
-     * Set the direction of the log
-     *
-     * @param direction of the log
-     */
-    void setLogDirection( Direction direction );
-
-    /**
-     * Get the direction of this log
-     *
-     * @return direction of the log
-     */
-    Direction getLogDirection();
+    LogType getLogType();
 
 }

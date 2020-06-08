@@ -19,7 +19,10 @@ import io.gomint.server.inventory.item.Items;
 import io.gomint.server.util.BlockIdentifier;
 import io.gomint.taglib.AllocationLimitReachedException;
 import io.gomint.taglib.NBTTagCompound;
+import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
 import lombok.Getter;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,10 +30,14 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.nio.ByteOrder;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.SortedMap;
 import java.util.UUID;
+import java.util.function.Function;
 
 /**
  * A wrapper class around any suitable file format (currently NBT) that allows
@@ -101,13 +108,41 @@ public class AssetsLibrary {
     }
 
     private void loadBlockPalette( List<NBTTagCompound> blockPaletteCompounds ) {
+        Map<String, List<SortedMap<String, Object>>> states = new HashMap<>();
+
         this.blockPalette = new ArrayList<>();
         for ( NBTTagCompound compound : blockPaletteCompounds ) {
+            String block = compound.getCompound("block", false).getString( "name", "minecraft:air" );
+
+            List<SortedMap<String, Object>> st = states.computeIfAbsent(block, s -> new ArrayList<>());
+
+            SortedMap<String, Object> sta = new Object2ObjectLinkedOpenHashMap<>();
+            for (Map.Entry<String, Object> entry : compound.getCompound("block", false).getCompound("states", false).entrySet()) {
+                sta.put(entry.getKey(), entry.getValue());
+            }
+
+            st.add(sta);
+
             this.blockPalette.add( new BlockIdentifier(
                 compound.getCompound("block", false).getString( "name", "minecraft:air" ),
                 compound.getCompound("block", false).getCompound("states", false),
-                compound.getShort( "data", (short) 0 )
+                (short) 0
             ) );
+        }
+
+        for (Map.Entry<String, List<SortedMap<String, Object>>> entry : states.entrySet()) {
+            LOGGER.info("Block {}", entry.getKey());
+
+            for (SortedMap<String, Object> map : entry.getValue()) {
+                StringBuilder builder = new StringBuilder("{");
+                for (Map.Entry<String, Object> objectEntry : map.entrySet()) {
+                    builder.append("\"").append(objectEntry.getKey()).append("\"").append(":").append(objectEntry.getValue()).append(" [").append(objectEntry.getValue().getClass().getName()).append("]").append(",");
+                }
+
+                builder.delete(builder.length() - 1, builder.length()).append("}");
+
+                LOGGER.info("State: {}", builder.toString());
+            }
         }
     }
 

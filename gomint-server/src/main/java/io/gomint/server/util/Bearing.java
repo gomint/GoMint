@@ -7,7 +7,7 @@
 
 package io.gomint.server.util;
 
-import io.gomint.world.block.BlockFace;
+import io.gomint.world.block.data.Direction;
 import io.gomint.world.block.data.Facing;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +27,22 @@ public enum Bearing {
 
     private final int direction;
 
-    public Facing toFacing() {
+    public Direction toDirection() {
+        switch ( this ) {
+            case SOUTH:
+                return Direction.SOUTH;
+            case NORTH:
+                return Direction.NORTH;
+            case EAST:
+                return Direction.EAST;
+            case WEST:
+                return Direction.WEST;
+        }
+
+        return Direction.EAST;
+    }
+
+    public Facing toBlockFace() {
         switch ( this ) {
             case SOUTH:
                 return Facing.SOUTH;
@@ -40,21 +55,6 @@ public enum Bearing {
         }
 
         return Facing.EAST;
-    }
-
-    public BlockFace toBlockFace() {
-        switch ( this ) {
-            case SOUTH:
-                return BlockFace.SOUTH;
-            case NORTH:
-                return BlockFace.NORTH;
-            case EAST:
-                return BlockFace.EAST;
-            case WEST:
-                return BlockFace.WEST;
-        }
-
-        return BlockFace.EAST;
     }
 
     public Bearing opposite() {

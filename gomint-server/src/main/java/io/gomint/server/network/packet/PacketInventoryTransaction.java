@@ -5,7 +5,7 @@ import io.gomint.jraknet.PacketBuffer;
 import io.gomint.math.BlockPosition;
 import io.gomint.math.Vector;
 import io.gomint.server.network.Protocol;
-import io.gomint.world.block.BlockFace;
+import io.gomint.world.block.data.Facing;
 import lombok.Data;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,7 +35,7 @@ public class PacketInventoryTransaction extends Packet {
 
     // Type USE_ITEM / RELEASE_ITEM
     private BlockPosition blockPosition;
-    private BlockFace face;
+    private Facing face;
     private Vector playerPosition;
     private Vector clickPosition;
     private int blockRuntimeID;

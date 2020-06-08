@@ -11,7 +11,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:stone_button" )
-public class StoneButton extends Block implements io.gomint.world.block.BlockStoneButton {
+public class StoneButton extends Button implements io.gomint.world.block.BlockStoneButton {
 
     @Override
     public String getBlockId() {
@@ -35,7 +35,7 @@ public class StoneButton extends Block implements io.gomint.world.block.BlockSto
 
     @Override
     public boolean canBeBrokenWithHand() {
-        return !true;
+        return false;
     }
 
     @Override

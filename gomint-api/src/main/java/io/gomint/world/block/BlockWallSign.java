@@ -1,5 +1,7 @@
 package io.gomint.world.block;
 
+import io.gomint.world.block.data.LogType;
+
 import java.util.List;
 
 /**
@@ -32,5 +34,19 @@ public interface BlockWallSign extends BlockFacing {
      * @return string or null when not set
      */
     String getLine( int line );
+
+    /**
+     * Get the type of wood from which this button has been made
+     *
+     * @return type of wood
+     */
+    LogType getWoodType();
+
+    /**
+     * Set the type of wood for this button
+     *
+     * @param logType type of wood
+     */
+    void setWoodType(LogType logType);
 
 }

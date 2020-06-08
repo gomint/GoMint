@@ -13,7 +13,7 @@ import io.gomint.math.Vector;
 import io.gomint.server.inventory.item.ItemStack;
 import io.gomint.server.world.block.Block;
 import io.gomint.taglib.NBTTagCompound;
-import io.gomint.world.block.BlockFace;
+import io.gomint.world.block.data.Facing;
 
 /**
  * @author geNAZt
@@ -52,7 +52,7 @@ public class ItemFrameTileEntity extends TileEntity {
     }
 
     @Override
-    public void interact( Entity entity, BlockFace face, Vector facePos, io.gomint.inventory.item.ItemStack item ) {
+    public void interact(Entity entity, Facing face, Vector facePos, io.gomint.inventory.item.ItemStack item ) {
 
     }
 

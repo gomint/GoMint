@@ -5,7 +5,7 @@ import io.gomint.math.Vector;
 import io.gomint.server.entity.EntityPlayer;
 import io.gomint.server.registry.RegisterInfo;
 import io.gomint.world.block.*;
-import io.gomint.taglib.NBTTagCompound;
+import io.gomint.world.block.data.Facing;
 
 /**
  * @author geNAZt
@@ -81,7 +81,7 @@ public class ItemBucket extends ItemStack implements io.gomint.inventory.item.It
     }
 
     @Override
-    public boolean interact( EntityPlayer entity, BlockFace face, Vector clickPosition, Block clickedBlock ) {
+    public boolean interact(EntityPlayer entity, Facing face, Vector clickPosition, Block clickedBlock ) {
         if ( clickedBlock != null ) {
             if ( clickedBlock instanceof BlockLiquid ) {
                 if ( ( (BlockLiquid) clickedBlock ).getFillHeight() > 0.9f ) {

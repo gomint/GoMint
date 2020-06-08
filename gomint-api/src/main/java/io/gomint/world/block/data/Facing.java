@@ -1,6 +1,11 @@
-package io.gomint.world.block.data;
+/*
+ * Copyright (c) 2018 Gomint team
+ *
+ * This code is licensed under the BSD license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 
-import io.gomint.world.block.BlockFace;
+package io.gomint.world.block.data;
 
 /**
  * @author geNAZt
@@ -8,47 +13,55 @@ import io.gomint.world.block.BlockFace;
  */
 public enum Facing {
 
-    SOUTH,
-    NORTH,
+    // CHECKSTYLE:OFF
+    DOWN,
+    UP,
+    EAST,
     WEST,
-    EAST;
+    NORTH,
+    SOUTH;
+    // CHECKSTYLE:ON
 
     /**
-     * Get the opposite face
+     * Get the opposite of the current facing
      *
-     * @return opposite face
+     * @return opposite facing site
      */
     public Facing opposite() {
         switch ( this ) {
-            case NORTH:
-                return Facing.SOUTH;
-            case SOUTH:
-                return Facing.NORTH;
+            case DOWN:
+                return UP;
+            case UP:
+                return DOWN;
             case EAST:
-                return Facing.WEST;
+                return WEST;
             case WEST:
-                return Facing.EAST;
-            default:
-                return null;
+                return EAST;
+            case NORTH:
+                return SOUTH;
+            case SOUTH:
+                return NORTH;
         }
+
+        return NORTH;
     }
 
     /**
-     * Get the block face enum value for this facing value
-     * @return block face value (3d) for this facing (2d)
+     * Get the face enum value for this block facing value
+     * @return face value (2d) for this block facing (3d)
      */
-    public BlockFace toBlockFace() {
+    public Direction toDirection() {
         switch ( this ) {
             case NORTH:
-                return BlockFace.NORTH;
+                return Direction.NORTH;
             case EAST:
-                return BlockFace.EAST;
+                return Direction.EAST;
             case WEST:
-                return BlockFace.WEST;
+                return Direction.WEST;
             case SOUTH:
-                return BlockFace.SOUTH;
+                return Direction.SOUTH;
             default:
-                return BlockFace.NORTH;
+                return Direction.NORTH;
         }
     }
 

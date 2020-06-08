@@ -3,9 +3,8 @@ import io.gomint.inventory.item.ItemType;
 import io.gomint.math.Vector;
 import io.gomint.server.entity.EntityPlayer;
 import io.gomint.server.registry.RegisterInfo;
-import io.gomint.taglib.NBTTagCompound;
 import io.gomint.world.block.Block;
-import io.gomint.world.block.BlockFace;
+import io.gomint.world.block.data.Facing;
 
 @RegisterInfo( id = 469 )
 public class ItemTurtleShell extends ItemArmor implements io.gomint.inventory.item.ItemTurtleShell {
@@ -18,7 +17,7 @@ public class ItemTurtleShell extends ItemArmor implements io.gomint.inventory.it
     }
 
     @Override
-    public boolean interact( EntityPlayer entity, BlockFace face, Vector clickPosition, Block clickedBlock ) {
+    public boolean interact(EntityPlayer entity, Facing face, Vector clickPosition, Block clickedBlock ) {
         if ( clickedBlock == null ) {
             if ( isBetter( (ItemStack) entity.getArmorInventory().getHelmet() ) ) {
                 ItemStack old = (ItemStack) entity.getArmorInventory().getHelmet();

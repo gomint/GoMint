@@ -265,7 +265,8 @@ public class LevelDBChunkAdapter extends ChunkAdapter {
                             String blockId = compound.getString( "name", "minecraft:air" );
                             short blockData = compound.getShort( "val", (short) 0 );
 
-                            chunkPalette.put( index++, BlockRuntimeIDs.from( blockId, blockData ) );
+                            // TODO: Check if the storage changed, there needs to be states in the compound now
+                            chunkPalette.put( index++, BlockRuntimeIDs.from( blockId, null, blockData ) );
                         } catch ( IOException | AllocationLimitReachedException e ) {
                             LOGGER.error( "Error in loading tile entities", e );
                             break;

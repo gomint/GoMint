@@ -13,10 +13,10 @@ package io.gomint.world.block;
  */
 public interface BlockTallGrass extends Block {
 
-    public enum Type {
-        DEAD_BUSH,
+    enum Type {
         GRASS,
         FERN,
+        SNOW,
     }
 
     /**

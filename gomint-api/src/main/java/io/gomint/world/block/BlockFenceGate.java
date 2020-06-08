@@ -7,13 +7,13 @@
 
 package io.gomint.world.block;
 
-import io.gomint.world.block.data.WoodType;
+import io.gomint.world.block.data.LogType;
 
 /**
  * @author geNAZt
  * @version 1.0
  */
-public interface BlockFenceGate extends BlockFacing {
+public interface BlockFenceGate extends BlockDirection {
 
     /**
      * Toggle this fence gate
@@ -30,15 +30,15 @@ public interface BlockFenceGate extends BlockFacing {
     /**
      * Set the type of wood for this fence gate
      *
-     * @param woodType type of wood
+     * @param logType type of wood
      */
-    void setWoodType( WoodType woodType );
+    void setWoodType( LogType logType);
 
     /**
      * Get the type of wood from which this fence gate has been made
      *
      * @return type of wood
      */
-    WoodType getWoodType();
+    LogType getWoodType();
 
 }

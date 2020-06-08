@@ -32,7 +32,7 @@ public abstract class Growable extends Block {
         SEED_RANDOMIZER.add( 0.15, 3 );
     }
 
-    protected ProgressBlockState growth = new ProgressBlockState( this, 7, aVoid -> {} );
+    protected ProgressBlockState growth = new ProgressBlockState( this, () -> "growth", 7, aVoid -> {} );
 
     @Override
     public boolean beforePlacement( Entity entity, ItemStack item, Location location ) {

@@ -7,13 +7,14 @@ import io.gomint.server.entity.Entity;
 import io.gomint.server.entity.EntityPlayer;
 import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.world.block.helper.ToolPresets;
-import io.gomint.server.world.block.state.DirectionBlockState;
+import io.gomint.server.world.block.state.AxisBlockState;
 import io.gomint.server.world.block.state.EnumBlockState;
-import io.gomint.world.block.BlockFace;
+import io.gomint.world.block.data.Axis;
+import io.gomint.world.block.data.Facing;
 import io.gomint.world.block.BlockLog;
 import io.gomint.world.block.BlockType;
-import io.gomint.world.block.data.Direction;
-import io.gomint.world.block.data.WoodType;
+import io.gomint.world.block.data.LogType;
+import lombok.Getter;
 
 import java.util.List;
 
@@ -31,23 +32,48 @@ import java.util.List;
 @RegisterInfo(sId = "minecraft:stripped_birch_log")
 public class Log extends Block implements BlockLog {
 
-    private enum LogType {
-        OAK,
-        SPRUCE,
-        BIRCH,
-        JUNGLE
+    private static final String OLD_LOG_TYPE = "old_log_type";
+    private static final String OLD_LOG_ID = "minecraft:log";
+
+    private static final String NEW_LOG_TYPE = "new_log_type";
+    private static final String NEW_LOG_ID = "minecraft:log2";
+
+    @Getter
+    private enum LogTypeMagic {
+        OAK(OLD_LOG_ID, OLD_LOG_TYPE, "oak"),
+        SPRUCE(OLD_LOG_ID, OLD_LOG_TYPE, "spruce"),
+        BIRCH(OLD_LOG_ID, OLD_LOG_TYPE, "birch"),
+        JUNGLE(OLD_LOG_ID, OLD_LOG_TYPE, "jungle"),
+        ACACIA(NEW_LOG_ID, NEW_LOG_TYPE, "acacia"),
+        DARK_OAK(NEW_LOG_ID, NEW_LOG_TYPE, "dark_oak");
+
+        private final String key;
+        private final String value;
+        private final String blockId;
+
+        LogTypeMagic(String blockId, String key, String value) {
+            this.key = key;
+            this.value = value;
+            this.blockId = blockId;
+        }
     }
 
-    private enum Log2Type {
-        ACACIA,
-        DARK_OAK
+    private final EnumBlockState<LogTypeMagic, String> variant = new EnumBlockState<>(this, () -> {
+        this.resetTypeStates();
+
+        if (this.variant == null) {
+            return LogTypeMagic.OAK.getKey();
+        }
+
+        return this.variant.getState().getKey();
+    }, LogTypeMagic.values(), LogTypeMagic::getValue);
+    private final AxisBlockState axis = new AxisBlockState(this, () -> "pillar_axis");
+
+    private void resetTypeStates() {
+        // Ensure we only have one type state
+        this.removeState(OLD_LOG_TYPE);
+        this.removeState(NEW_LOG_TYPE);
     }
-
-    private EnumBlockState<LogType> variantLog = new EnumBlockState<>(this, LogType.values(), states -> this.getBlockId().equals("minecraft:log"));
-    private EnumBlockState<Log2Type> variantLog2 = new EnumBlockState<>(this, Log2Type.values(), states -> this.getBlockId().equals("minecraft:log2"));
-
-    private DirectionBlockState direction = new DirectionBlockState(this, states -> this.getBlockId().equals("minecraft:log") || this.getBlockId().equals("minecraft:log2"), 2);
-    private DirectionBlockState directionStripped = new DirectionBlockState(this, states -> !this.getBlockId().equals("minecraft:log") && !this.getBlockId().equals("minecraft:log2"));
 
     @Override
     public long getBreakTime() {
@@ -70,7 +96,7 @@ public class Log extends Block implements BlockLog {
     }
 
     @Override
-    public boolean interact(Entity entity, BlockFace face, Vector facePos, ItemStack item) {
+    public boolean interact(Entity entity, Facing face, Vector facePos, ItemStack item) {
         if (entity instanceof EntityPlayer && this.isCorrectTool(item) && !this.isStripped()) {
             this.setStripped(true);
             return true;
@@ -91,11 +117,11 @@ public class Log extends Block implements BlockLog {
             return;
         }
 
-        if (stripped) {
-            Direction storedDirection = this.direction.getState();
+        this.resetTypeStates();
 
+        if (stripped) {
             if (this.getBlockId().equals("minecraft:log")) {
-                switch (this.variantLog.getState()) {
+                switch (this.variant.getState()) {
                     case OAK:
                         this.setBlockId("minecraft:stripped_oak_log");
                         break;
@@ -109,10 +135,8 @@ public class Log extends Block implements BlockLog {
                         this.setBlockId("minecraft:stripped_spruce_log");
                         break;
                 }
-
-                this.directionStripped.setState(storedDirection);
             } else if (this.getBlockId().equals("minecraft:log2")) {
-                switch (this.variantLog2.getState()) {
+                switch (this.variant.getState()) {
                     case ACACIA:
                         this.setBlockId("minecraft:stripped_acacia_log");
                         break;
@@ -120,72 +144,45 @@ public class Log extends Block implements BlockLog {
                         this.setBlockId("minecraft:stripped_dark_oak_log");
                         break;
                 }
-
-                this.directionStripped.setState(storedDirection);
             }
         } else {
-            Direction storedDirection = this.directionStripped.getState();
-
+            LogTypeMagic newState;
             switch (this.getBlockId()) {
+                default:
                 case "minecraft:stripped_oak_log":
-                    this.setBlockId("minecraft:log");
-                    this.variantLog.setState(LogType.OAK);
+                    newState = LogTypeMagic.OAK;
                     break;
                 case "minecraft:stripped_birch_log":
-                    this.setBlockId("minecraft:log");
-                    this.variantLog.setState(LogType.BIRCH);
+                    newState = LogTypeMagic.BIRCH;
                     break;
                 case "minecraft:stripped_jungle_log":
-                    this.setBlockId("minecraft:log");
-                    this.variantLog.setState(LogType.JUNGLE);
+                    newState = LogTypeMagic.JUNGLE;
                     break;
                 case "minecraft:stripped_spruce_log":
-                    this.setBlockId("minecraft:log");
-                    this.variantLog.setState(LogType.SPRUCE);
+                    newState = LogTypeMagic.SPRUCE;
                     break;
                 case "minecraft:stripped_acacia_log":
-                    this.setBlockId("minecraft:log2");
-                    this.variantLog2.setState(Log2Type.ACACIA);
+                    newState = LogTypeMagic.ACACIA;
                     break;
                 case "minecraft:stripped_dark_oak_log":
-                    this.setBlockId("minecraft:log2");
-                    this.variantLog2.setState(Log2Type.DARK_OAK);
+                    newState = LogTypeMagic.DARK_OAK;
                     break;
             }
 
-            this.direction.setState(storedDirection);
+            this.setBlockId(newState.getBlockId());
+            this.variant.setState(newState);
         }
     }
 
     @Override
-    public void setWoodType(WoodType type) {
+    public void setLogType(LogType type) {
+        this.resetTypeStates();
+
+        LogTypeMagic newState = LogTypeMagic.valueOf(type.name());
+
         if (!this.isStripped()) {
-            switch (type) {
-                case OAK:
-                    this.setBlockId("minecraft:log");
-                    this.variantLog.setState(LogType.OAK);
-                    break;
-                case BIRCH:
-                    this.setBlockId("minecraft:log");
-                    this.variantLog.setState(LogType.BIRCH);
-                    break;
-                case JUNGLE:
-                    this.setBlockId("minecraft:log");
-                    this.variantLog.setState(LogType.JUNGLE);
-                    break;
-                case SPRUCE:
-                    this.setBlockId("minecraft:log");
-                    this.variantLog.setState(LogType.SPRUCE);
-                    break;
-                case ACACIA:
-                    this.setBlockId("minecraft:log2");
-                    this.variantLog2.setState(Log2Type.ACACIA);
-                    break;
-                case DARK_OAK:
-                    this.setBlockId("minecraft:log2");
-                    this.variantLog2.setState(Log2Type.DARK_OAK);
-                    break;
-            }
+            this.setBlockId(newState.getBlockId());
+            this.variant.setState(newState);
         } else {
             switch (type) {
                 case OAK:
@@ -211,56 +208,34 @@ public class Log extends Block implements BlockLog {
     }
 
     @Override
-    public WoodType getWoodType() {
+    public LogType getLogType() {
         switch (this.getBlockId()) {
-            case "minecraft:log":
-                switch (this.variantLog.getState()) {
-                    case OAK:
-                        return WoodType.OAK;
-                    case SPRUCE:
-                        return WoodType.SPRUCE;
-                    case JUNGLE:
-                        return WoodType.JUNGLE;
-                    case BIRCH:
-                        return WoodType.BIRCH;
-                }
-
-                break;
-            case "minecraft:log2":
-                switch (this.variantLog2.getState()) {
-                    case ACACIA:
-                        return WoodType.ACACIA;
-                    case DARK_OAK:
-                        return WoodType.DARK_OAK;
-                }
-
-                break;
+            default:
+                return LogType.valueOf(this.variant.getState().name());
             case "minecraft:stripped_oak_log":
-                return WoodType.OAK;
+                return LogType.OAK;
             case "minecraft:stripped_birch_log":
-                return WoodType.BIRCH;
+                return LogType.BIRCH;
             case "minecraft:stripped_jungle_log":
-                return WoodType.JUNGLE;
+                return LogType.JUNGLE;
             case "minecraft:stripped_spruce_log":
-                return WoodType.SPRUCE;
+                return LogType.SPRUCE;
             case "minecraft:stripped_acacia_log":
-                return WoodType.ACACIA;
+                return LogType.ACACIA;
             case "minecraft:stripped_dark_oak_log":
-                return WoodType.DARK_OAK;
+                return LogType.DARK_OAK;
 
         }
-
-        return WoodType.OAK;
     }
 
     @Override
-    public void setLogDirection(Direction direction) {
-        this.direction.setState(direction);
+    public void setAxis(Axis axis) {
+        this.axis.setState(axis);
     }
 
     @Override
-    public Direction getLogDirection() {
-        return this.direction.getState();
+    public Axis getAxis() {
+        return this.axis.getState();
     }
 
     @Override
@@ -270,11 +245,12 @@ public class Log extends Block implements BlockLog {
 
     @Override
     public List<ItemStack> getDrops(ItemStack itemInHand) {
+        // TODO: Check for new data values
         if (this.getBlockId().equals("minecraft:log")) {
-            ItemStack itemStack = this.world.getServer().getItems().create(getBlockId(), this.variantLog.toData(), (byte) 1, null);
+            ItemStack itemStack = this.world.getServer().getItems().create(getBlockId(), (short) 0, (byte) 1, null);
             return Lists.newArrayList(itemStack);
         } else if (this.getBlockId().equals("minecraft:log2")) {
-            ItemStack itemStack = this.world.getServer().getItems().create(getBlockId(), this.variantLog2.toData(), (byte) 1, null);
+            ItemStack itemStack = this.world.getServer().getItems().create(getBlockId(), (short) 0, (byte) 1, null);
             return Lists.newArrayList(itemStack);
         } else {
             ItemStack itemStack = this.world.getServer().getItems().create(getBlockId(), (short) 0, (byte) 1, null);
