@@ -87,7 +87,15 @@ public class StoneSlab extends Slab implements BlockStoneSlab {
 
     private final EnumBlockState<StoneTypeMagic, String> variant = new EnumBlockState<>(this, () -> {
         return this.variant.getState().getKey();
-    }, StoneTypeMagic.values(), StoneTypeMagic::getValue);
+    }, StoneTypeMagic.values(), StoneTypeMagic::getValue, v -> {
+        for (StoneTypeMagic value : StoneTypeMagic.values()) {
+            if (value.getValue().equals(v)) {
+                return value;
+            }
+        }
+
+        return null;
+    });
 
     @Override
     public long getBreakTime() {

@@ -36,7 +36,15 @@ public class BlockOfQuartz extends Block implements io.gomint.world.block.BlockB
     }
 
     private final AxisBlockState axis = new AxisBlockState(this, () -> "pillar_axis");
-    private final EnumBlockState<VariantMagic, String> variant = new EnumBlockState<>(this, () -> "chisel_type", VariantMagic.values(), VariantMagic::getValue);
+    private final EnumBlockState<VariantMagic, String> variant = new EnumBlockState<>(this, () -> "chisel_type", VariantMagic.values(), VariantMagic::getValue, v -> {
+        for (VariantMagic value : VariantMagic.values()) {
+            if (value.getValue().equals(v)) {
+                return value;
+            }
+        }
+
+        return null;
+    });
 
     @Override
     public String getBlockId() {

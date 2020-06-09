@@ -57,4 +57,19 @@ public class DirectionBlockState extends BlockState<Direction, Integer> {
         this.setState(bearing.toDirection());
     }
 
+    @Override
+    public Direction getState() {
+        switch (this.getValue()) {
+            case 0:
+            default:
+                return Direction.SOUTH;
+            case 1:
+                return Direction.WEST;
+            case 2:
+                return Direction.NORTH;
+            case 3:
+                return Direction.EAST;
+        }
+    }
+
 }

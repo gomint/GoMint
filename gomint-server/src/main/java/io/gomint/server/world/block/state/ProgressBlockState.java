@@ -56,6 +56,11 @@ public class ProgressBlockState extends BlockState<Float, Integer> {
         this.setState( 0f );
     }
 
+    @Override
+    public Float getState() {
+        return this.getValue() * this.step;
+    }
+
     public boolean maxed() {
         return 1f - this.getState() <= MathUtils.EPSILON;
     }

@@ -25,7 +25,6 @@ import java.util.function.Supplier;
 public abstract class BlockState<T, S> {
 
     private Supplier<String> key;
-    @Getter private T state;
     private final Block block;
 
     public BlockState( Block block, Supplier<String> key ) {
@@ -40,7 +39,6 @@ public abstract class BlockState<T, S> {
     }
 
     public void setState( T state ) {
-        this.state = state;
         this.calculateValueFromState();
 
         if ( this.block.ready() ) {
@@ -74,5 +72,7 @@ public abstract class BlockState<T, S> {
     protected S getValue() {
         return (S) this.block.getState(this.key.get());
     }
+
+    public abstract T getState();
 
 }

@@ -28,4 +28,9 @@ public class DirectValueBlockState<T> extends BlockState<T, T> {
         this.setState(defaultValue);
     }
 
+    @Override
+    public T getState() {
+        return this.getValue();
+    }
+
 }

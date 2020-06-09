@@ -64,7 +64,15 @@ public class Log extends Block implements BlockLog {
         }
 
         return this.variant.getState().getKey();
-    }, LogTypeMagic.values(), LogTypeMagic::getValue);
+    }, LogTypeMagic.values(), LogTypeMagic::getValue, v -> {
+        for (LogTypeMagic value : LogTypeMagic.values()) {
+            if (value.getValue().equals(v)) {
+                return value;
+            }
+        }
+
+        return null;
+    });
     private final AxisBlockState axis = new AxisBlockState(this, () -> "pillar_axis");
 
     @Override

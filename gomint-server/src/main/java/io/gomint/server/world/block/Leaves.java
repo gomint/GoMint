@@ -54,7 +54,15 @@ public class Leaves extends Block implements BlockLeaves {
         }
 
         return this.variant.getState().getKey();
-    }, LeaveTypeMagic.values(), LeaveTypeMagic::getValue);
+    }, LeaveTypeMagic.values(), LeaveTypeMagic::getValue, v -> {
+        for (LeaveTypeMagic value : LeaveTypeMagic.values()) {
+            if (value.getValue().equals(v)) {
+                return value;
+            }
+        }
+
+        return null;
+    });
 
     private final BooleanBlockState updateForDecay = new BooleanBlockState( this, () -> "update_bit" );
     private final BooleanBlockState persistent = new BooleanBlockState( this, () -> "persistent_bit");

@@ -31,7 +31,15 @@ public class TallGrass extends Block implements io.gomint.world.block.BlockTallG
         }
     }
 
-    private final EnumBlockState<TypeMagic, String> variant = new EnumBlockState<>(this, () -> "tall_grass_type", TypeMagic.values(), TypeMagic::getType);
+    private final EnumBlockState<TypeMagic, String> variant = new EnumBlockState<>(this, () -> "tall_grass_type", TypeMagic.values(), TypeMagic::getType, v -> {
+        for (TypeMagic value : TypeMagic.values()) {
+            if (value.getType().equals(v)) {
+                return value;
+            }
+        }
+
+        return null;
+    });
 
     @Override
     public String getBlockId() {

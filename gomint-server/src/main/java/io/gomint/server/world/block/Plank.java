@@ -31,7 +31,15 @@ public class Plank extends Block implements BlockPlank {
         }
     }
 
-    private final EnumBlockState<LogTypeMagic, String> variant = new EnumBlockState<>( this, () -> "wood_type", LogTypeMagic.values(), LogTypeMagic::getValue);
+    private final EnumBlockState<LogTypeMagic, String> variant = new EnumBlockState<>( this, () -> "wood_type", LogTypeMagic.values(), LogTypeMagic::getValue, v -> {
+        for (LogTypeMagic value : LogTypeMagic.values()) {
+            if (value.getValue().equals(v)) {
+                return value;
+            }
+        }
+
+        return null;
+    });
 
     @Override
     public String getBlockId() {

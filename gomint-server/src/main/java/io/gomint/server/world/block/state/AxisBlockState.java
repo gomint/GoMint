@@ -57,4 +57,17 @@ public class AxisBlockState extends BlockState<Axis, String> {
         }
     }
 
+    @Override
+    public Axis getState() {
+        switch (this.getValue()) {
+            case "x":
+                return Axis.X;
+            case "z":
+                return Axis.Z;
+            case "y":
+            default:
+                return Axis.Y;
+        }
+    }
+
 }

@@ -16,7 +16,7 @@ import java.util.List;
 @RegisterInfo( sId = "minecraft:stained_glass" )
 public class StainedGlass extends Block implements io.gomint.world.block.BlockStainedGlass {
 
-    private EnumBlockState<BlockColor, String> color = new EnumBlockState<>( this, () -> "color", BlockColor.values(), e -> e.name().toLowerCase() );
+    private EnumBlockState<BlockColor, String> color = new EnumBlockState<>( this, () -> "color", BlockColor.values(), e -> e.name().toLowerCase(), v -> BlockColor.valueOf(v.toUpperCase()) );
 
     @Override
     public String getBlockId() {

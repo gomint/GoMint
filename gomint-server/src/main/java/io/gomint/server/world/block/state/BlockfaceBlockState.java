@@ -74,4 +74,23 @@ public class BlockfaceBlockState extends BlockState<Facing, Integer> {
         this.setState(bearing.toBlockFace());
     }
 
+    @Override
+    public Facing getState() {
+        switch (this.getValue()) {
+            case 0:
+            default:
+                return Facing.DOWN;
+            case 1:
+                return Facing.UP;
+            case 2:
+                return Facing.NORTH;
+            case 3:
+                return Facing.SOUTH;
+            case 4:
+                return Facing.WEST;
+            case 5:
+                return Facing.EAST;
+        }
+    }
+
 }
