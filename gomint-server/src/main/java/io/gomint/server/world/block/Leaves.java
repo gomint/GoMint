@@ -49,8 +49,6 @@ public class Leaves extends Block implements BlockLeaves {
     }
 
     private final EnumBlockState<LeaveTypeMagic, String> variant = new EnumBlockState<>(this, () -> {
-        this.resetTypeStates();
-
         if (this.variant == null) {
             return LeaveTypeMagic.OAK.getKey();
         }
@@ -58,14 +56,8 @@ public class Leaves extends Block implements BlockLeaves {
         return this.variant.getState().getKey();
     }, LeaveTypeMagic.values(), LeaveTypeMagic::getValue);
 
-    private BooleanBlockState updateForDecay = new BooleanBlockState( this, () -> "update_bit" );
-    private BooleanBlockState persistent = new BooleanBlockState( this, () -> "persistent_bit");
-
-    private void resetTypeStates() {
-        // Ensure we only have one type state
-        this.removeState(OLD_LOG_TYPE);
-        this.removeState(NEW_LOG_TYPE);
-    }
+    private final BooleanBlockState updateForDecay = new BooleanBlockState( this, () -> "update_bit" );
+    private final BooleanBlockState persistent = new BooleanBlockState( this, () -> "persistent_bit");
 
     @Override
     public long getBreakTime() {

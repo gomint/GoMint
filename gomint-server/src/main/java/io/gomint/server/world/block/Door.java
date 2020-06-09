@@ -6,6 +6,7 @@ import io.gomint.math.Location;
 import io.gomint.math.Vector;
 import io.gomint.server.entity.Entity;
 import io.gomint.server.util.BlockIdentifier;
+import io.gomint.server.world.BlockRuntimeIDs;
 import io.gomint.server.world.PlacementData;
 import io.gomint.server.world.block.helper.ToolPresets;
 import io.gomint.server.world.block.state.BlockState;
@@ -100,8 +101,7 @@ public abstract class Door extends Block implements io.gomint.world.block.BlockD
 
     @Override
     public void afterPlacement(PlacementData data) {
-        // TODO: Calculate proper state map (check for upper flag)
-        data.setBlockIdentifier(new BlockIdentifier(data.getBlockIdentifier().getBlockId(), data.getBlockIdentifier().getStates(false), (short) 8));
+        data.setBlockIdentifier(BlockRuntimeIDs.change(data.getBlockIdentifier(), "upper_block_bit", true));
 
         Block above = this.location.getWorld().getBlockAt(this.location.toBlockPosition().add(BlockPosition.UP));
         above.setBlockFromPlacementData(data);

@@ -12,4 +12,19 @@ package io.gomint.world.block;
  * @version 1.0
  */
 public interface BlockFarmland extends Block {
+
+    /**
+     * Get moisture level of this block
+     *
+     * @return moisture level
+     */
+    float getMoisture();
+
+    /**
+     * Set moisture level of this block
+     *
+     * @param moisture level of this block
+     */
+    void setMoisture(float moisture);
+
 }

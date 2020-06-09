@@ -30,7 +30,7 @@ public class ChunkSlice {
     private static final ThreadLocal<LongList> INDEX_LIST = ThreadLocal.withInitial( LongArrayList::new );
     private static final ThreadLocal<IntList> RUNTIME_INDEX = ThreadLocal.withInitial( IntArrayList::new );
 
-    protected static final short AIR_RUNTIME_ID = (short) BlockRuntimeIDs.from( "minecraft:air", null, (short) 0 );
+    protected static final short AIR_RUNTIME_ID = (short) BlockRuntimeIDs.toBlockIdentifier( "minecraft:air", null ).getRuntimeId();
 
     @Getter
     private final ChunkAdapter chunk;
@@ -123,12 +123,12 @@ public class ChunkSlice {
         }
 
         BlockIdentifier identifier = BlockRuntimeIDs.toBlockIdentifier( runtimeID );
-        return (T) this.chunk.getWorld().getServer().getBlocks().get( identifier.getBlockId(), identifier.getStates(false), identifier.getData(), this.skyLight != null ? this.skyLight.get( index ) : 0,
+        return (T) this.chunk.getWorld().getServer().getBlocks().get( identifier, this.skyLight != null ? this.skyLight.get( index ) : 0,
             this.blockLight != null ? this.blockLight.get( index ) : 0, this.tileEntities != null ? this.tileEntities.get( index ) : null, blockLocation, layer );
     }
 
     private <T extends Block> T getAirBlockInstance( Location location ) {
-        return (T) this.chunk.getWorld().getServer().getBlocks().get( "minecraft:air", null, (short) 0, (byte) 15, (byte) 15, null, location, 0 );
+        return (T) this.chunk.getWorld().getServer().getBlocks().get( BlockRuntimeIDs.toBlockIdentifier("minecraft:air", null), (byte) 15, (byte) 15, null, location, 0 );
     }
 
     private Location getBlockLocation( int x, int y, int z ) {
@@ -159,24 +159,9 @@ public class ChunkSlice {
         this.tileEntities.put( index, tileEntity );
     }
 
-    public void setBlock( int x, int y, int z, int layer, String blockId ) {
+    public void setBlock( int x, int y, int z, int layer, int runtimeId ) {
         short index = getIndex( x, y, z );
-        int runtimeID = this.getRuntimeID( layer, index );
-        BlockIdentifier identifier = BlockRuntimeIDs.toBlockIdentifier( runtimeID );
-        this.setRuntimeIdInternal( index, layer, BlockRuntimeIDs.from( blockId, identifier.getStates(false), identifier.getData() ) );
-    }
-
-    void setBlock( int x, int y, int z, int layer, BlockIdentifier blockIdentifier ) {
-        short index = getIndex( x, y, z );
-        int runtimeId = BlockRuntimeIDs.from( blockIdentifier.getBlockId(), blockIdentifier.getStates(false), blockIdentifier.getData() );
         this.setRuntimeIdInternal( index, layer, runtimeId );
-    }
-
-    public void setData( int x, int y, int z, int layer, short data ) {
-        short index = getIndex( x, y, z );
-        int runtimeID = this.getRuntimeID( layer, index );
-        BlockIdentifier identifier = BlockRuntimeIDs.toBlockIdentifier( runtimeID );
-        this.setRuntimeIdInternal( index, layer, BlockRuntimeIDs.from( identifier.getBlockId(), identifier.getStates(false), data ) );
     }
 
     public void setRuntimeIdInternal( short index, int layer, int runtimeID ) {

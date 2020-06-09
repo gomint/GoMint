@@ -59,8 +59,6 @@ public class Log extends Block implements BlockLog {
     }
 
     private final EnumBlockState<LogTypeMagic, String> variant = new EnumBlockState<>(this, () -> {
-        this.resetTypeStates();
-
         if (this.variant == null) {
             return LogTypeMagic.OAK.getKey();
         }
@@ -68,12 +66,6 @@ public class Log extends Block implements BlockLog {
         return this.variant.getState().getKey();
     }, LogTypeMagic.values(), LogTypeMagic::getValue);
     private final AxisBlockState axis = new AxisBlockState(this, () -> "pillar_axis");
-
-    private void resetTypeStates() {
-        // Ensure we only have one type state
-        this.removeState(OLD_LOG_TYPE);
-        this.removeState(NEW_LOG_TYPE);
-    }
 
     @Override
     public long getBreakTime() {
@@ -116,8 +108,6 @@ public class Log extends Block implements BlockLog {
         if (stripped == isCurrentlyStripped) {
             return;
         }
-
-        this.resetTypeStates();
 
         if (stripped) {
             if (this.getBlockId().equals("minecraft:log")) {
@@ -176,8 +166,6 @@ public class Log extends Block implements BlockLog {
 
     @Override
     public void setLogType(LogType type) {
-        this.resetTypeStates();
-
         LogTypeMagic newState = LogTypeMagic.valueOf(type.name());
 
         if (!this.isStripped()) {

@@ -1,6 +1,7 @@
 package io.gomint.server.world.block;
 
 import io.gomint.event.entity.EntityDamageEvent;
+import io.gomint.math.MathUtils;
 import io.gomint.server.entity.EntityLiving;
 import io.gomint.server.registry.RegisterInfo;
 import io.gomint.world.block.*;
@@ -86,9 +87,9 @@ public class FlowingLava extends Liquid implements BlockFlowingLava {
 
         // Did we find a block we can collide with?
         if ( colliding != null ) {
-            if ( this.getBlockData() == 0 ) {
+            if ( this.getFillHeight() > 4 ) {
                 this.liquidCollide( colliding, Obsidian.class );
-            } else if ( this.getBlockData() <= 4 ) {
+            } else if ( this.getFillHeight() <= 4 ) {
                 this.liquidCollide( colliding, Cobblestone.class );
             }
         }

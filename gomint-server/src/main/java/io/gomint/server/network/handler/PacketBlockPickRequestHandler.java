@@ -17,7 +17,8 @@ public class PacketBlockPickRequestHandler implements PacketHandler<PacketBlockP
         }
 
         Block block = player.getWorld().getBlockAt( packet.getLocation() );
-        ItemStack item = connection.getServer().getItems().create( block.getBlockId(), block.getBlockData(), (byte) 1, null );
+        // TODO: State to item data
+        ItemStack item = connection.getServer().getItems().create( block.getBlockId(), (short) 0, (byte) 1, null );
         player.getInventory().setItem( player.getInventory().getItemInHandSlot(), item );
     }
 

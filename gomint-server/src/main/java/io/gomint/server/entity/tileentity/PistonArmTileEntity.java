@@ -69,7 +69,7 @@ public class PistonArmTileEntity extends TileEntity {
 
     @Override
     public void update( long currentMillis ) {
-        Block piston = this.getBlock();
+        /*Block piston = this.getBlock();
         Facing facing = Things.convertFromDataToBlockFace( piston.getBlockData() );
 
         if ( this.isExtended() ) {
@@ -77,7 +77,8 @@ public class PistonArmTileEntity extends TileEntity {
             Block above = piston.getSide( facing );
             if ( above.getType() != BlockType.PISTON_HEAD ) {
                 PistonHead head = above.setType( PistonHead.class );
-                head.setBlockData( piston.getBlockData() );
+                // TODO: Check how the block is stored now
+                // head.setBlockData( piston.getBlockData() );
             }
         } else if ( !this.isExtended() ) {
             // We need air above
@@ -85,7 +86,7 @@ public class PistonArmTileEntity extends TileEntity {
             if ( above.getType() == BlockType.PISTON_HEAD ) {
                 above.setType( Air.class );
             }
-        }
+        }*/
     }
 
     @Override

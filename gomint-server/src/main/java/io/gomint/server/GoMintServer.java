@@ -47,7 +47,6 @@ import io.gomint.server.world.WorldAdapter;
 import io.gomint.server.world.WorldLoadException;
 import io.gomint.server.world.WorldManager;
 import io.gomint.server.world.block.Blocks;
-import io.gomint.server.world.converter.anvil.AnvilConverter;
 import io.gomint.server.world.generator.SimpleChunkGeneratorRegistry;
 import io.gomint.taglib.AllocationLimitReachedException;
 import io.gomint.world.World;
@@ -75,7 +74,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.net.UnknownHostException;
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -171,34 +169,32 @@ public class GoMintServer implements GoMint, InventoryHolder {
     /**
      * Starts the GoMint server
      *
-     * @param args    which should have been given over from the static Bootstrap
      * @param context which generated this component
      */
     @Autowired
-    public GoMintServer(OptionSet args, AnnotationConfigApplicationContext context) throws IOException {
+    public GoMintServer(AnnotationConfigApplicationContext context) throws IOException {
         this.context = context;
 
-        if (!args.has("convertOnly")) {
-            // ------------------------------------ //
-            // Executor Initialization
-            // ------------------------------------ //
-            this.executorService = MoreExecutors.listeningDecorator(Executors.newScheduledThreadPool(4, new ThreadFactory() {
-                private final AtomicLong counter = new AtomicLong(0);
+        // ------------------------------------ //
+        // Executor Initialization
+        // ------------------------------------ //
+        this.executorService = MoreExecutors.listeningDecorator(Executors.newScheduledThreadPool(4, new ThreadFactory() {
+            private final AtomicLong counter = new AtomicLong(0);
 
-                @Override
-                public Thread newThread(Runnable r) {
-                    Thread thread = new Thread(r);
-                    thread.setName("GoMint Thread #" + counter.incrementAndGet());
-                    return thread;
-                }
-            }));
+            @Override
+            public Thread newThread(Runnable r) {
+                Thread thread = new Thread(r);
+                thread.setName("GoMint Thread #" + counter.incrementAndGet());
+                return thread;
+            }
+        }));
 
-            this.watchdog = new Watchdog(this);
-            this.watchdog.add(30, TimeUnit.SECONDS);
+        this.watchdog = new Watchdog(this);
+        this.watchdog.add(30, TimeUnit.SECONDS);
 
-            GoMintServer.mainThread = Thread.currentThread().getId();
-            GoMintInstanceHolder.setInstance(this);
-        }
+        GoMintServer.mainThread = Thread.currentThread().getId();
+        GoMintInstanceHolder.setInstance(this);
+
 
         this.chunkGeneratorRegistry = new SimpleChunkGeneratorRegistry();
         this.getChunkGeneratorRegistry().registerGenerator(LayeredGenerator.NAME, LayeredGenerator.class);
@@ -228,25 +224,23 @@ public class GoMintServer implements GoMint, InventoryHolder {
         LOGGER.info("Starting {}", getVersion());
         Thread.currentThread().setName("GoMint Main Thread");
 
-        if (!args.has("convertOnly")) {
-            LOGGER.info("Loading block, item and entity registers");
+        LOGGER.info("Loading block, item and entity registers");
 
-            ClassPath classPath = this.context.getBean(ClassPath.class);
+        ClassPath classPath = this.context.getBean(ClassPath.class);
 
-            // ------------------------------------ //
-            // Build up registries
-            // ------------------------------------ //
-            this.blocks = new Blocks(classPath);
-            this.items = new Items(classPath, null);
-            this.entities = new Entities(classPath);
-            this.effects = new Effects(classPath);
-            this.enchantments = new Enchantments(classPath);
+        // ------------------------------------ //
+        // Build up registries
+        // ------------------------------------ //
+        this.blocks = new Blocks(classPath);
+        this.items = new Items(classPath, null);
+        this.entities = new Entities(classPath);
+        this.effects = new Effects(classPath);
+        this.enchantments = new Enchantments(classPath);
 
-            // ------------------------------------ //
-            // Configuration Initialization
-            // ------------------------------------ //
-            this.loadConfig();
-        }
+        // ------------------------------------ //
+        // Configuration Initialization
+        // ------------------------------------ //
+        this.loadConfig();
 
         // Load assets from file:
         LOGGER.info("Loading assets library...");
@@ -259,283 +253,258 @@ public class GoMintServer implements GoMint, InventoryHolder {
             return;
         }
 
-        if (!args.has("convertOnly")) {
-            this.assets.getBlockPalette().sort((o1, o2) -> {
-                if (o1.getBlockId().equals(o2.getBlockId())) {
-                    return Short.compare(o1.getData(), o2.getData());
-                }
-
-                return o1.getBlockId().compareTo(o2.getBlockId());
-            });
-
-            BlockRuntimeIDs.init(this.assets.getBlockPalette());
-        }
+        BlockRuntimeIDs.init(this.assets.getBlockPalette());
     }
 
     public void startAfterRegistryInit(OptionSet args) {
-        if (!args.has("convertOnly")) {
-            // ------------------------------------ //
-            // jLine setup
-            // ------------------------------------ //
-            BlockingQueue<String> inputLines = new LinkedBlockingQueue<>();
-            LineReader reader = null;
-            Terminal terminal = TerminalConsoleAppender.getTerminal();
-            if (terminal != null) {
-                reader = LineReaderBuilder.builder()
-                    .appName("GoMint")
-                    .terminal(terminal)
-                    .completer((lineReader, parsedLine, list) -> {
-                        List<String> suggestions = pluginManager.getCommandManager().completeSystem(parsedLine.line());
-                        for (String suggestion : suggestions) {
-                            LOGGER.info(suggestion);
-                        }
-                    })
-                    .build();
-
-                reader.setKeyMap("emacs");
-
-                TerminalConsoleAppender.setReader(reader);
-            }
-
-            // ------------------------------------ //
-            // Setup jLine reader thread
-            // ------------------------------------ //
-            if (reader != null) {
-                LineReader finalReader = reader;
-                AtomicBoolean reading = new AtomicBoolean(false);
-
-                ThreadGroup threadGroup = new ThreadGroup("gomint-internal");
-                this.readerThread = new Thread(threadGroup, () -> {
-                    String line;
-                    while (running.get()) {
-                        // Read jLine
-                        reading.set(true);
-                        try {
-                            line = finalReader.readLine("\u001b[32;0mGoMint\u001b[39;0m> ");
-                            inputLines.offer(line);
-                        } catch (UserInterruptException e) {
-                            GoMintServer.this.shutdown();
-                        } catch (Exception e) {
-                            LOGGER.error("jLine failed with following exception", e);
-                        }
+        // ------------------------------------ //
+        // jLine setup
+        // ------------------------------------ //
+        BlockingQueue<String> inputLines = new LinkedBlockingQueue<>();
+        LineReader reader = null;
+        Terminal terminal = TerminalConsoleAppender.getTerminal();
+        if (terminal != null) {
+            reader = LineReaderBuilder.builder()
+                .appName("GoMint")
+                .terminal(terminal)
+                .completer((lineReader, parsedLine, list) -> {
+                    List<String> suggestions = pluginManager.getCommandManager().completeSystem(parsedLine.line());
+                    for (String suggestion : suggestions) {
+                        LOGGER.info(suggestion);
                     }
-                });
+                })
+                .build();
 
-                this.readerThread.setName("GoMint CLI reader");
-                this.readerThread.start();
+            reader.setKeyMap("emacs");
 
-                while (!reading.get()) {
+            TerminalConsoleAppender.setReader(reader);
+        }
+
+        // ------------------------------------ //
+        // Setup jLine reader thread
+        // ------------------------------------ //
+        if (reader != null) {
+            LineReader finalReader = reader;
+            AtomicBoolean reading = new AtomicBoolean(false);
+
+            ThreadGroup threadGroup = new ThreadGroup("gomint-internal");
+            this.readerThread = new Thread(threadGroup, () -> {
+                String line;
+                while (running.get()) {
+                    // Read jLine
+                    reading.set(true);
                     try {
-                        Thread.sleep(10);
-                    } catch (InterruptedException e) {
-                        // Ignored .-.
+                        line = finalReader.readLine("\u001b[32;0mGoMint\u001b[39;0m> ");
+                        inputLines.offer(line);
+                    } catch (UserInterruptException e) {
+                        GoMintServer.this.shutdown();
+                    } catch (Exception e) {
+                        LOGGER.error("jLine failed with following exception", e);
                     }
                 }
-            }
+            });
 
-            this.defaultWorld = this.serverConfig.getDefaultWorld();
+            this.readerThread.setName("GoMint CLI reader");
+            this.readerThread.start();
 
-            // ------------------------------------ //
-            // Scheduler + WorldManager + PluginManager Initialization
-            // ------------------------------------ //
-            this.syncTaskManager = new SyncTaskManager(this);
-            this.scheduler = new CoreScheduler(this.getExecutorService(), this.getSyncTaskManager());
-
-            this.worldManager = new WorldManager(this);
-
-            this.pluginManager = new SimplePluginManager(this);
-            this.context.registerBean(SimplePluginManager.class, () -> this.pluginManager);
-            this.pluginManager.detectPlugins();
-            this.pluginManager.loadPlugins(StartupPriority.STARTUP);
-
-            if (!this.isRunning()) {
-                this.internalShutdown();
-                return;
-            }
-
-            // ------------------------------------ //
-            // Pre World Initialization
-            // ------------------------------------ //
-
-            LOGGER.info("Initializing recipes...");
-            this.recipeManager = new RecipeManager();
-
-            // Add all recipes from asset library:
-            for (Recipe recipe : this.assets.getRecipes()) {
-                this.recipeManager.registerRecipe(recipe);
-            }
-
-            this.recipeManager.fixMCPEBugs();
-
-            this.creativeInventory = this.assets.getCreativeInventory();
-            this.permissionGroupManager = new PermissionGroupManager();
-
-            // ------------------------------------ //
-            // World Initialization
-            // ------------------------------------ //
-            // CHECKSTYLE:OFF
-            try {
-                this.worldManager.loadWorld(this.serverConfig.getDefaultWorld());
-            } catch (WorldLoadException e) {
-                // Get world config of default world
-                WorldConfig worldConfig = this.getWorldConfig(this.defaultWorld);
-
-                // Get chunk generator which might have been changed in the world config
-                Class<? extends ChunkGenerator> chunkGenerator;
-                chunkGenerator = this.getChunkGeneratorRegistry().getGeneratorClass(worldConfig.getChunkGenerator());
-
-                // Create options world generator
-                CreateOptions options = new CreateOptions();
-                options.worldType(WorldType.IN_MEMORY); // Persistent world storage
-
-                // Check if wished chunk generator is present
-                if (chunkGenerator != null) {
-                    options.generator(chunkGenerator);
-                } else {
-                    // Apply standard generator
-                    options.generator(NormalGenerator.class);
-
-                    // Log chunk generator failure
-                    LOGGER.warn("No such chunk generator for '" + worldConfig.getChunkGenerator()
-                        + "' - Using " + NormalGenerator.class.getName());
-                }
-
-                // Try to generate world
-                World world = this.worldManager.createWorld(this.defaultWorld, options);
-                if (world == null) {
-                    LOGGER.error("Failed to load or generate default world", e);
-                    this.internalShutdown();
-                    return;
-                }
-            }
-            // CHECKSTYLE:ON
-
-            // We can cleanup the assets now
-            this.assets.cleanup();
-
-            // ------------------------------------ //
-            // Networking Initialization
-            // ------------------------------------ //
-            int port = args.has("lp") ? (int) args.valueOf("lp") : this.serverConfig.getListener().getPort();
-            String host = args.has("lh") ? (String) args.valueOf("lh") : this.serverConfig.getListener().getIp();
-
-            this.networkManager = this.context.getAutowireCapableBeanFactory().createBean(NetworkManager.class);
-            if (!this.initNetworking(host, port)) {
-                this.internalShutdown();
-                return;
-            }
-
-            setMotd(this.getServerConfig().getMotd());
-
-            // ------------------------------------ //
-            // Load plugins with StartupPriority LOAD
-            // ------------------------------------ //
-            this.pluginManager.loadPlugins(StartupPriority.LOAD);
-            if (!this.isRunning()) {
-                this.internalShutdown();
-                return;
-            }
-
-            this.pluginManager.installPlugins();
-
-            if (!this.isRunning()) {
-                this.internalShutdown();
-                return;
-            }
-
-            init.set(false);
-            LOGGER.info("Done in {} ms", (System.currentTimeMillis() - start));
-            this.watchdog.done();
-
-            if (args.has("exit-after-boot")) {
-                this.internalShutdown();
-                return;
-            }
-
-            // ------------------------------------ //
-            // Main Loop
-            // ------------------------------------ //
-
-            // Calculate the nanoseconds we need for the tick loop
-            int targetTPS = this.getServerConfig().getTargetTPS();
-            if (targetTPS > 1000) {
-                LOGGER.warn("Setting target TPS above 1k is not supported, target TPS has been set to 1k");
-                targetTPS = 1000;
-            }
-
-            long skipMillis = TimeUnit.SECONDS.toMillis(1) / targetTPS;
-            LOGGER.info("Setting skipMillis to: {}", skipMillis);
-
-            // Tick loop
-            float lastTickTime = Float.MIN_NORMAL;
-
-            while (this.running.get()) {
+            while (!reading.get()) {
                 try {
-                    // Tick all major subsystems:
-                    this.currentTickTime = System.currentTimeMillis();
-                    this.watchdog.add(this.currentTickTime, 30, TimeUnit.SECONDS);
-
-                    // Drain input lines
-                    while (!inputLines.isEmpty()) {
-                        String line = inputLines.poll();
-                        if (line != null) {
-                            this.pluginManager.getCommandManager().executeSystem(line);
-                        }
-                    }
-
-                    // Tick remaining work
-                    while (!this.mainThreadWork.isEmpty()) {
-                        Runnable runnable = this.mainThreadWork.poll();
-                        if (runnable != null) {
-                            runnable.run();
-                        }
-                    }
-
-                    // Tick networking at every tick
-                    this.networkManager.update(this.currentTickTime, lastTickTime);
-
-                    this.syncTaskManager.update(this.currentTickTime);
-                    this.worldManager.update(this.currentTickTime, lastTickTime);
-                    this.permissionGroupManager.update(this.currentTickTime, lastTickTime);
-
-                    this.watchdog.done();
-
-                    // Check if we got shutdown
-                    if (!this.running.get()) {
-                        break;
-                    }
-
-                    long diff = System.currentTimeMillis() - this.currentTickTime;
-                    if (diff < skipMillis) {
-                        Thread.sleep(skipMillis - diff);
-
-                        lastTickTime = (float) skipMillis / TimeUnit.SECONDS.toMillis(1);
-                        this.tps = (1 / (double) lastTickTime);
-                    } else {
-                        lastTickTime = (float) diff / TimeUnit.SECONDS.toMillis(1);
-                        this.tps = (1 / (double) lastTickTime);
-                        LOGGER.warn("Running behind: {} / {} tps", this.tps, (1 / (skipMillis / (float) TimeUnit.SECONDS.toMillis(1))));
-                    }
+                    Thread.sleep(10);
                 } catch (InterruptedException e) {
-                    // Ignored ._.
-                }
-            }
-
-            this.internalShutdown();
-        } else {
-            ClassPath classPath = this.context.getBean(ClassPath.class);
-            this.context.registerBean("items", Items.class, () -> new Items(classPath, getAssets().getJeTopeItems()));
-
-            // Scan all folders and convert them
-            File[] folderContent = new File(".").listFiles();
-            for (File file : folderContent) {
-                if (file.isDirectory() && new File(file, "region").exists()) {
-                    LOGGER.info("Start converting process for {}", file.getName());
-                    AnvilConverter anvilConverter = new AnvilConverter(this.assets, this.context, file);
-                    anvilConverter.done();
+                    // Ignored .-.
                 }
             }
         }
+
+        this.defaultWorld = this.serverConfig.getDefaultWorld();
+
+        // ------------------------------------ //
+        // Scheduler + WorldManager + PluginManager Initialization
+        // ------------------------------------ //
+        this.syncTaskManager = new SyncTaskManager(this);
+        this.scheduler = new CoreScheduler(this.getExecutorService(), this.getSyncTaskManager());
+
+        this.worldManager = new WorldManager(this);
+
+        this.pluginManager = new SimplePluginManager(this);
+        this.context.registerBean(SimplePluginManager.class, () -> this.pluginManager);
+        this.pluginManager.detectPlugins();
+        this.pluginManager.loadPlugins(StartupPriority.STARTUP);
+
+        if (!this.isRunning()) {
+            this.internalShutdown();
+            return;
+        }
+
+        // ------------------------------------ //
+        // Pre World Initialization
+        // ------------------------------------ //
+
+        LOGGER.info("Initializing recipes...");
+        this.recipeManager = new RecipeManager();
+
+        // Add all recipes from asset library:
+        for (Recipe recipe : this.assets.getRecipes()) {
+            this.recipeManager.registerRecipe(recipe);
+        }
+
+        this.recipeManager.fixMCPEBugs();
+
+        this.creativeInventory = this.assets.getCreativeInventory();
+        this.permissionGroupManager = new PermissionGroupManager();
+
+        // ------------------------------------ //
+        // World Initialization
+        // ------------------------------------ //
+        // CHECKSTYLE:OFF
+        try {
+            this.worldManager.loadWorld(this.serverConfig.getDefaultWorld());
+        } catch (WorldLoadException e) {
+            // Get world config of default world
+            WorldConfig worldConfig = this.getWorldConfig(this.defaultWorld);
+
+            // Get chunk generator which might have been changed in the world config
+            Class<? extends ChunkGenerator> chunkGenerator;
+            chunkGenerator = this.getChunkGeneratorRegistry().getGeneratorClass(worldConfig.getChunkGenerator());
+
+            // Create options world generator
+            CreateOptions options = new CreateOptions();
+            options.worldType(WorldType.IN_MEMORY); // Persistent world storage
+
+            // Check if wished chunk generator is present
+            if (chunkGenerator != null) {
+                options.generator(chunkGenerator);
+            } else {
+                // Apply standard generator
+                options.generator(NormalGenerator.class);
+
+                // Log chunk generator failure
+                LOGGER.warn("No such chunk generator for '" + worldConfig.getChunkGenerator()
+                    + "' - Using " + NormalGenerator.class.getName());
+            }
+
+            // Try to generate world
+            World world = this.worldManager.createWorld(this.defaultWorld, options);
+            if (world == null) {
+                LOGGER.error("Failed to load or generate default world", e);
+                this.internalShutdown();
+                return;
+            }
+        }
+        // CHECKSTYLE:ON
+
+        // We can cleanup the assets now
+        this.assets.cleanup();
+
+        // ------------------------------------ //
+        // Networking Initialization
+        // ------------------------------------ //
+        int port = args.has("lp") ? (int) args.valueOf("lp") : this.serverConfig.getListener().getPort();
+        String host = args.has("lh") ? (String) args.valueOf("lh") : this.serverConfig.getListener().getIp();
+
+        this.networkManager = this.context.getAutowireCapableBeanFactory().createBean(NetworkManager.class);
+        if (!this.initNetworking(host, port)) {
+            this.internalShutdown();
+            return;
+        }
+
+        setMotd(this.getServerConfig().getMotd());
+
+        // ------------------------------------ //
+        // Load plugins with StartupPriority LOAD
+        // ------------------------------------ //
+        this.pluginManager.loadPlugins(StartupPriority.LOAD);
+        if (!this.isRunning()) {
+            this.internalShutdown();
+            return;
+        }
+
+        this.pluginManager.installPlugins();
+
+        if (!this.isRunning()) {
+            this.internalShutdown();
+            return;
+        }
+
+        init.set(false);
+        LOGGER.info("Done in {} ms", (System.currentTimeMillis() - start));
+        this.watchdog.done();
+
+        if (args.has("exit-after-boot")) {
+            this.internalShutdown();
+            return;
+        }
+
+        // ------------------------------------ //
+        // Main Loop
+        // ------------------------------------ //
+
+        // Calculate the nanoseconds we need for the tick loop
+        int targetTPS = this.getServerConfig().getTargetTPS();
+        if (targetTPS > 1000) {
+            LOGGER.warn("Setting target TPS above 1k is not supported, target TPS has been set to 1k");
+            targetTPS = 1000;
+        }
+
+        long skipMillis = TimeUnit.SECONDS.toMillis(1) / targetTPS;
+        LOGGER.info("Setting skipMillis to: {}", skipMillis);
+
+        // Tick loop
+        float lastTickTime = Float.MIN_NORMAL;
+
+        while (this.running.get()) {
+            try {
+                // Tick all major subsystems:
+                this.currentTickTime = System.currentTimeMillis();
+                this.watchdog.add(this.currentTickTime, 30, TimeUnit.SECONDS);
+
+                // Drain input lines
+                while (!inputLines.isEmpty()) {
+                    String line = inputLines.poll();
+                    if (line != null) {
+                        this.pluginManager.getCommandManager().executeSystem(line);
+                    }
+                }
+
+                // Tick remaining work
+                while (!this.mainThreadWork.isEmpty()) {
+                    Runnable runnable = this.mainThreadWork.poll();
+                    if (runnable != null) {
+                        runnable.run();
+                    }
+                }
+
+                // Tick networking at every tick
+                this.networkManager.update(this.currentTickTime, lastTickTime);
+
+                this.syncTaskManager.update(this.currentTickTime);
+                this.worldManager.update(this.currentTickTime, lastTickTime);
+                this.permissionGroupManager.update(this.currentTickTime, lastTickTime);
+
+                this.watchdog.done();
+
+                // Check if we got shutdown
+                if (!this.running.get()) {
+                    break;
+                }
+
+                long diff = System.currentTimeMillis() - this.currentTickTime;
+                if (diff <= skipMillis) {
+                    Thread.sleep(skipMillis - diff);
+
+                    lastTickTime = (float) skipMillis / TimeUnit.SECONDS.toMillis(1);
+                    this.tps = (1 / (double) lastTickTime);
+                } else {
+                    lastTickTime = (float) diff / TimeUnit.SECONDS.toMillis(1);
+                    this.tps = (1 / (double) lastTickTime);
+                    LOGGER.warn("Running behind: {} / {} tps", this.tps, (1 / (skipMillis / (float) TimeUnit.SECONDS.toMillis(1))));
+                }
+            } catch (InterruptedException e) {
+                // Ignored ._.
+            }
+        }
+
+        this.internalShutdown();
     }
 
     private void internalShutdown() {

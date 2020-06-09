@@ -14,6 +14,8 @@ import io.gomint.math.Vector;
 import io.gomint.server.entity.EntityPlayer;
 import io.gomint.server.inventory.item.Items;
 import io.gomint.server.util.BlockIdentifier;
+import io.gomint.server.util.collection.FreezableSortedMap;
+import io.gomint.server.world.BlockRuntimeIDs;
 import io.gomint.server.world.block.Block;
 import io.gomint.taglib.NBTTagCompound;
 import io.gomint.world.block.data.Facing;
@@ -53,12 +55,12 @@ public abstract class TileEntity {
         }
 
         // TODO: Check for correct NBT tag values
-        return new BlockIdentifier( compound.getString( "name", "minecraft:air" ), (SortedMap<String, Object>) null, compound.getShort( "val", (short) 0 ) );
+        return BlockRuntimeIDs.toBlockIdentifier( compound.getString( "name", "minecraft:air" ), null);
     }
 
     void putBlockIdentifier( BlockIdentifier identifier, NBTTagCompound compound ) {
         compound.addValue( "name", identifier.getBlockId() );
-        compound.addValue( "val", identifier.getData() );
+        // compound.addValue( "val", identifier.getData() );
     }
 
     io.gomint.server.inventory.item.ItemStack getItemStack( NBTTagCompound compound ) {

@@ -143,7 +143,7 @@ public class Torch extends Block implements io.gomint.world.block.BlockTorch {
         }
 
         // TODO: Calculate proper state map
-        return new PlacementData( new BlockIdentifier( data.getBlockIdentifier().getBlockId(), this.getStates(false), (short) 0), null );
+        return new PlacementData( this.identifier, null );
     }
 
 }

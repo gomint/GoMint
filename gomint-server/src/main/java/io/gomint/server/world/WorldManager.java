@@ -8,11 +8,7 @@
 package io.gomint.server.world;
 
 import io.gomint.GoMint;
-import io.gomint.event.world.WorldConvertedEvent;
 import io.gomint.server.GoMintServer;
-import io.gomint.server.inventory.item.Items;
-import io.gomint.server.util.ClassPath;
-import io.gomint.server.world.converter.anvil.AnvilConverter;
 import io.gomint.server.world.generator.vanilla.VanillaGeneratorImpl;
 import io.gomint.server.world.inmemory.InMemoryWorldAdapter;
 import io.gomint.server.world.leveldb.LevelDBWorldAdapter;
@@ -28,7 +24,6 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.concurrent.TimeUnit;
 
 /**
  * @author BlackyPaw
@@ -132,13 +127,6 @@ public class WorldManager {
                     LOGGER.info("Detected leveldb world '{}'", path);
                     return this.loadLevelDBWorld(file);
                 }
-
-                // Anvil world:
-                File regionFolder = new File(file, "region");
-                if (regionFolder.exists() && regionFolder.isDirectory()) {
-                    LOGGER.info("Detected anvil world '{}', converting...", path);
-                    return this.convertAndLoad(file);
-                }
             } else {
                 throw new WorldLoadException("World does not exist");
             }
@@ -153,20 +141,6 @@ public class WorldManager {
         }
 
         throw new WorldLoadException("Could not detect world format");
-    }
-
-    private World convertAndLoad(File file) throws WorldLoadException {
-        this.server.getWatchdog().add(120, TimeUnit.SECONDS);
-
-        ClassPath classPath = this.server.getContext().getBean(ClassPath.class);
-        this.server.getContext().registerBean("items", Items.class, () -> new Items(classPath, server.getAssets().getJeTopeItems()));
-
-        AnvilConverter converter = new AnvilConverter(this.server.getAssets(), this.server.getContext(), file);
-        converter.done();
-
-        World world = loadLevelDBWorld(file);
-        this.server.getPluginManager().callEvent(new WorldConvertedEvent(world));
-        return world;
     }
 
     private World loadZippedLevelDBWorld(File path, String name) throws WorldLoadException {

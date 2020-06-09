@@ -14,11 +14,6 @@ import io.gomint.world.block.BlockStationaryWater;
 public class StationaryWater extends Liquid implements BlockStationaryWater {
 
     @Override
-    public String getBlockId() {
-        return "minecraft:water";
-    }
-
-    @Override
     public long getBreakTime() {
         return 150000;
     }

@@ -384,21 +384,12 @@ public class ChunkAdapter implements Chunk {
      * @param y               The y-coordinate of the block
      * @param z               The z-coordinate of the block
      * @param layer           layer on which this block is
-     * @param blockIdentifier The ID to set the block to
+     * @param runtimeId The ID to set the block to
      */
-    public void setBlock( int x, int y, int z, int layer, BlockIdentifier blockIdentifier ) {
+    public void setBlock( int x, int y, int z, int layer, int runtimeId ) {
         int ySection = y >> 4;
         ChunkSlice slice = ensureSlice( ySection );
-        slice.setBlock( x, y - ( ySection << 4 ), z, layer, blockIdentifier );
-
-        this.dirty = true;
-        this.needsPersistance = true;
-    }
-
-    public void setBlock( int x, int y, int z, int layer, String blockId ) {
-        int ySection = y >> 4;
-        ChunkSlice slice = ensureSlice( ySection );
-        slice.setBlock( x, y - ( ySection << 4 ), z, layer, blockId );
+        slice.setBlock( x, y - ( ySection << 4 ), z, layer, runtimeId );
 
         this.dirty = true;
         this.needsPersistance = true;
@@ -643,7 +634,7 @@ public class ChunkAdapter implements Chunk {
         io.gomint.server.world.block.Block implBlock = (io.gomint.server.world.block.Block) block;
 
         // Copy block id
-        this.setBlock( x, y, z, layerID, new BlockIdentifier( implBlock.getBlockId(), implBlock.getStates(false), implBlock.getBlockData() ) );
+        this.setBlock( x, y, z, layerID, implBlock.getRuntimeId() );
 
         // Copy NBT
         if ( implBlock.getTileEntity() != null ) {
@@ -743,11 +734,6 @@ public class ChunkAdapter implements Chunk {
     public int getRuntimeID( int x, int y, int z, int layer ) {
         ChunkSlice slice = ensureSlice( y >> 4 );
         return slice.getRuntimeID( x, y - 16 * ( y >> 4 ), z, layer );
-    }
-
-    public void setData( int x, int y, int z, int layer, short data ) {
-        ChunkSlice slice = ensureSlice( y >> 4 );
-        slice.setData( x, y - 16 * ( y >> 4 ), z, layer, data );
     }
 
     public void setHeightMap( byte[] height ) {

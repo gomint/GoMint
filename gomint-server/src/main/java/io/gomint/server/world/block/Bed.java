@@ -171,8 +171,7 @@ public class Bed extends Block implements io.gomint.world.block.BlockBed {
             NBTTagCompound compound = new NBTTagCompound( "" );
             this.getTileEntity().toCompound( compound, SerializationReason.PERSIST );
 
-            BlockIdentifier identifier = new BlockIdentifier( data.getBlockIdentifier().getBlockId(), data.getBlockIdentifier().getStates(false), (short) 0 );
-            data.setBlockIdentifier( identifier );
+            data.setBlockIdentifier( data.getBlockIdentifier() );
             data.setCompound( compound );
 
             Bed bed = otherBlock.setBlockFromPlacementData( data );

@@ -70,14 +70,16 @@ public class Skull extends Block implements io.gomint.world.block.BlockSkull {
         super.createTileEntity( compound );
 
         SkullTileEntity tileEntity = new SkullTileEntity( this );
-        tileEntity.setSkullType( (byte) this.getBlockData() );
+        // TODO: Set correct skull type
+        //tileEntity.setSkullType( (byte) this.getBlockData() );
         return tileEntity;
     }
 
     @Override
     public List<ItemStack> getDrops( ItemStack itemInHand ) {
-        return new ArrayList<ItemStack>() {{
-            add( world.getServer().getItems().create( 397, getBlockData(), (byte) 1, null ) );
+        return new ArrayList<>() {{
+            // TODO: State to item data
+            add(world.getServer().getItems().create(397, (short) 0, (byte) 1, null));
         }};
     }
 

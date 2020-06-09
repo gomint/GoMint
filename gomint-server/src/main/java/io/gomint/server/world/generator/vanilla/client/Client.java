@@ -394,7 +394,7 @@ public class Client implements ConnectionWithState {
                         short blockCounter = 0;
                         for ( short index : indexes ) {
                             BlockIdentifier blockIdentifier = this.runtimeIDs.get( localRuntimes[index] );
-                            slice.setRuntimeIdInternal( blockCounter, b, BlockRuntimeIDs.from( blockIdentifier.getBlockId(), blockIdentifier.getStates(false), blockIdentifier.getData() ) );
+                            slice.setRuntimeIdInternal( blockCounter, b, blockIdentifier.getRuntimeId() );
                             blockCounter++;
                         }
                     }

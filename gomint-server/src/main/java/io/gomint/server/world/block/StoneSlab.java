@@ -86,12 +86,6 @@ public class StoneSlab extends Slab implements BlockStoneSlab {
     }
 
     private final EnumBlockState<StoneTypeMagic, String> variant = new EnumBlockState<>(this, () -> {
-        // Ensure we only have one type state
-        this.removeState(STONE_TYPE);
-        this.removeState(STONE_TYPE_2);
-        this.removeState(STONE_TYPE_3);
-        this.removeState(STONE_TYPE_4);
-
         return this.variant.getState().getKey();
     }, StoneTypeMagic.values(), StoneTypeMagic::getValue);
 

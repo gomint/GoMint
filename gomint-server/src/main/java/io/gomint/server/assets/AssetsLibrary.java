@@ -58,16 +58,6 @@ public class AssetsLibrary {
 
     @Getter
     private List<BlockIdentifier> blockPalette;
-    @Getter
-    private List<NBTTagCompound> converterData;
-    @Getter
-    private List<NBTTagCompound> converterItemsData;
-    @Getter
-    private List<NBTTagCompound> jeTopeItems;
-    @Getter
-    private List<NBTTagCompound> jeTopeEntities;
-    @Getter
-    private List<NBTTagCompound> peConverter;
 
     // Statistics
     private int shapelessRecipes;
@@ -125,8 +115,7 @@ public class AssetsLibrary {
 
             this.blockPalette.add( new BlockIdentifier(
                 compound.getCompound("block", false).getString( "name", "minecraft:air" ),
-                compound.getCompound("block", false).getCompound("states", false),
-                (short) 0
+                compound.getCompound("block", false).getCompound("states", false)
             ) );
         }
 
@@ -281,26 +270,6 @@ public class AssetsLibrary {
         this.recipes = null;
         this.blockPalette = null;
         this.creativeInventory = null;
-    }
-
-    /**
-     * This method should make sure that all data needed for a convert is loaded
-     */
-    @SuppressWarnings( "unchecked" )
-    public void ensureConvertData() {
-        if ( this.converterData == null ) {
-            try {
-                NBTTagCompound root = NBTTagCompound.readFrom( this.getClass().getResourceAsStream( "/assets.dat" ), true, ByteOrder.BIG_ENDIAN );
-
-                this.converterData = ( (List<NBTTagCompound>) ( (List) root.getList( "converter", false ) ) );
-                this.converterItemsData = ( (List<NBTTagCompound>) ( (List) root.getList( "converterItems", false ) ) );
-                this.jeTopeItems = ( (List<NBTTagCompound>) ( (List) root.getList( "JEtoPEItems", false ) ) );
-                this.jeTopeEntities = ( (List<NBTTagCompound>) ( (List) root.getList( "JEtoPEEntityIDs", false ) ) );
-                this.peConverter = ( (List<NBTTagCompound>) ( (List) root.getList( "PEconverter", false ) ) );
-            } catch ( IOException | AllocationLimitReachedException e ) {
-                LOGGER.error( "Could not load needed converter data", e );
-            }
-        }
     }
 
 }

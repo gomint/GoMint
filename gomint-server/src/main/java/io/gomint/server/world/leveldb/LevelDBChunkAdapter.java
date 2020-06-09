@@ -18,6 +18,7 @@ import io.gomint.server.entity.tileentity.TileEntity;
 import io.gomint.server.util.Allocator;
 import io.gomint.server.util.BlockIdentifier;
 import io.gomint.server.util.Palette;
+import io.gomint.server.util.collection.FreezableSortedMap;
 import io.gomint.server.world.BlockRuntimeIDs;
 import io.gomint.server.world.ChunkAdapter;
 import io.gomint.server.world.ChunkSlice;
@@ -48,6 +49,7 @@ import java.io.OutputStream;
 import java.nio.ByteOrder;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author geNAZt
@@ -56,6 +58,7 @@ import java.util.List;
 public class LevelDBChunkAdapter extends ChunkAdapter {
 
     private static final Logger LOGGER = LoggerFactory.getLogger( LevelDBChunkAdapter.class );
+    private static final int BLOCK_VERSION = 17760256;
     private int chunkVersion;
 
     /**
@@ -76,7 +79,7 @@ public class LevelDBChunkAdapter extends ChunkAdapter {
 
     public LevelDBChunkAdapter( WorldAdapter worldAdapter, int x, int z ) {
         super( worldAdapter, x, z );
-        this.chunkVersion = 7;
+        this.chunkVersion = 15;
 
         this.loadedTime = worldAdapter.getServer().getCurrentTickTime();
         this.flagNeedsPersistance();
@@ -155,7 +158,7 @@ public class LevelDBChunkAdapter extends ChunkAdapter {
 
             for ( short blockIndex = 0; blockIndex < indexIDs.length; blockIndex++ ) {
                 String blockId = blocks.get( blockIndex ).getBlockId();
-                short blockData = blocks.get( blockIndex ).getData();
+                short blockData = 0; // blocks.get( blockIndex ).getData();
 
                 if ( !blockId.equals( lastBlockId ) || blockData != lastDataId ) {
                     long hashId = ( (long) blockId.hashCode() ) << 32 | ( blockData & 0xFF );
@@ -190,14 +193,15 @@ public class LevelDBChunkAdapter extends ChunkAdapter {
             palette.addIndexIDs( indexIDs );
             palette.finish();
 
-            // Write persistant ids
+            // Write persistent ids
             buffer.writeLInt( indexList.size() );
             for ( int value1 : runtimeIndex.toArray( new int[0] ) ) {
                 BlockIdentifier blockIdentifier = block.get( value1 );
 
                 NBTTagCompound compound = new NBTTagCompound( "" );
                 compound.addValue( "name", blockIdentifier.getBlockId() );
-                compound.addValue( "val", blockIdentifier.getData() );
+                compound.addValue("states", blockIdentifier.getNbt());
+                compound.addValue("version", BLOCK_VERSION);
 
                 try {
                     compound.writeTo( new OutputStream() {
@@ -263,10 +267,24 @@ public class LevelDBChunkAdapter extends ChunkAdapter {
                         try {
                             NBTTagCompound compound = reader.parse();
                             String blockId = compound.getString( "name", "minecraft:air" );
-                            short blockData = compound.getShort( "val", (short) 0 );
+                            NBTTagCompound states = compound.getCompound("states", false);
+                            if (states != null) {
+                                FreezableSortedMap<String, Object> mStates = new FreezableSortedMap<>();
+                                for (Map.Entry<String, Object> entry : states.entrySet()) {
+                                    mStates.put(entry.getKey(), entry.getValue());
+                                }
 
-                            // TODO: Check if the storage changed, there needs to be states in the compound now
-                            chunkPalette.put( index++, BlockRuntimeIDs.from( blockId, null, blockData ) );
+                                mStates.setFrozen(true);
+
+                                BlockIdentifier identifier = BlockRuntimeIDs.toBlockIdentifier( blockId, mStates );
+                                if (identifier == null) {
+                                    LOGGER.error("Unknown block / state config: {} / {}", blockId, states);
+                                }
+
+                                chunkPalette.put( index++, identifier.getRuntimeId() );
+                            } else {
+                                chunkPalette.put( index++, BlockRuntimeIDs.toBlockIdentifier( blockId, null ).getRuntimeId() );
+                            }
                         } catch ( IOException | AllocationLimitReachedException e ) {
                             LOGGER.error( "Error in loading tile entities", e );
                             break;

@@ -7,6 +7,7 @@ import io.gomint.math.Vector;
 import io.gomint.server.entity.Entity;
 import io.gomint.server.entity.EntityPlayer;
 import io.gomint.server.util.BlockIdentifier;
+import io.gomint.server.world.BlockRuntimeIDs;
 import io.gomint.server.world.PlacementData;
 import io.gomint.server.world.UpdateReason;
 import io.gomint.server.world.block.state.DirectValueBlockState;
@@ -24,7 +25,8 @@ import java.util.Map;
  */
 public abstract class Liquid extends Block implements BlockLiquid {
 
-    private static Facing[] FACES_TO_CHECK = Facing.values();
+    private static final String LIQUID_DEPTH = "liquid_depth";
+    private static final Facing[] FACES_TO_CHECK = Facing.values();
 
     private enum FlowState {
         CAN_FLOW_DOWN,
@@ -33,7 +35,7 @@ public abstract class Liquid extends Block implements BlockLiquid {
     }
 
     // TODO: Move liquid logic to block state
-    private final ProgressBlockState fill = new ProgressBlockState(this, () -> "liquid_depth", 15, aVoid -> {});
+    private final ProgressBlockState liquidDepth = new ProgressBlockState(this, () -> LIQUID_DEPTH, 15, aVoid -> {});
 
     // Temporary storage for update
     private byte adjacentSources;
@@ -41,16 +43,7 @@ public abstract class Liquid extends Block implements BlockLiquid {
 
     @Override
     public float getFillHeight() {
-        short data = this.getBlockData();
-        if (data >= 8) {
-            data = 8;
-        }
-
-        if (data == 0) {
-            return 1f;
-        }
-
-        return ((data) / 8f);
+        return this.liquidDepth.getState();
     }
 
     private short getEffectiveFlowDecay(Block block) {
@@ -60,7 +53,7 @@ public abstract class Liquid extends Block implements BlockLiquid {
         }
 
         // Get block data and cap by 8
-        short data = block.getBlockData();
+        short data = (short) (this.liquidDepth.getState() * 15);
         return data >= 8 ? 0 : data;
     }
 
@@ -99,7 +92,7 @@ public abstract class Liquid extends Block implements BlockLiquid {
             }
         }
 
-        if (this.getBlockData() >= 8) {
+        if (this.liquidDepth.maxed()) {
             BlockPosition pos = this.getLocation().toBlockPosition();
             if (!this.canFlowInto(this.world.getBlockAt(pos.add(0, 0, -1))) ||
                 !this.canFlowInto(this.world.getBlockAt(pos.add(0, 0, 1))) ||
@@ -144,8 +137,7 @@ public abstract class Liquid extends Block implements BlockLiquid {
     @Override
     public PlacementData calculatePlacementData(EntityPlayer entity, ItemStack item, Facing face, Block block, Block clickedBlock, Vector clickVector) {
         PlacementData data = super.calculatePlacementData(entity, item, face, block, clickedBlock, clickVector);
-        BlockIdentifier blockIdentifier = new BlockIdentifier(data.getBlockIdentifier().getBlockId(), data.getBlockIdentifier().getStates(false), (short) 0);
-        return data.setBlockIdentifier(blockIdentifier);
+        return data.setBlockIdentifier(BlockRuntimeIDs.change(data.getBlockIdentifier(), LIQUID_DEPTH, 15));
     }
 
     @Override
@@ -244,7 +236,7 @@ public abstract class Liquid extends Block implements BlockLiquid {
             // Did we hit a bottom block and are surrounded by other source blocks? -> convert to source block
             if (this.adjacentSources >= 2 && this instanceof FlowingWater) {
                 Block bottomBlock = this.getSide(Facing.DOWN);
-                if (bottomBlock.isSolid() || (bottomBlock instanceof FlowingWater && bottomBlock.getBlockData() == 0)) {
+                if (bottomBlock.isSolid() || (bottomBlock instanceof FlowingWater && ((FlowingWater) bottomBlock).getFillHeight() >= 0.9f)) {
                     newDecay = 0;
                 }
             }
@@ -258,7 +250,8 @@ public abstract class Liquid extends Block implements BlockLiquid {
                 if (decayed) {
                     this.setType(Air.class);
                 } else {
-                    this.setBlockData((byte) decay);
+                    // TODO: Update state
+                    //this.setBlockData((byte) decay);
                     this.updateBlock();
                 }
             }
@@ -362,8 +355,7 @@ public abstract class Liquid extends Block implements BlockLiquid {
                 this.world.breakBlock(block.getLocation().toBlockPosition(), block.getDrops(ItemAir.create(0)), false);
             }
 
-            // TODO: Calculate proper state map
-            PlacementData data = new PlacementData(new BlockIdentifier(this.getBlockId(), this.getStates(false), (short) newFlowDecay), null);
+            PlacementData data = new PlacementData(BlockRuntimeIDs.change(this.identifier, LIQUID_DEPTH, newFlowDecay), null);
             block.setBlockFromPlacementData(data);
         }
     }
@@ -391,7 +383,7 @@ public abstract class Liquid extends Block implements BlockLiquid {
             return -1;
         }
 
-        return block.getBlockData();
+        return (short) (this.liquidDepth.getState() * 15);
     }
 
     @Override
@@ -400,7 +392,7 @@ public abstract class Liquid extends Block implements BlockLiquid {
     }
 
     private boolean canFlowInto(Block block) {
-        return block.canBeFlowedInto() && !(block instanceof Liquid && block.getBlockData() == 0);
+        return block.canBeFlowedInto() && !(block instanceof Liquid && ((Liquid) block).getFillHeight() > 0.9f);
     }
 
     @Override

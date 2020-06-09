@@ -25,12 +25,10 @@ import java.util.SortedMap;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:falling_block" )
+@RegisterInfo(sId = "minecraft:falling_block")
 public class EntityFallingBlock extends Entity implements io.gomint.entity.passive.EntityFallingBlock {
 
     private String blockId;
-    private SortedMap<String, Object> states;
-    private short blockData;
 
     private BlockPosition position;
 
@@ -40,34 +38,35 @@ public class EntityFallingBlock extends Entity implements io.gomint.entity.passi
      * @param block Which will be represented by this entity
      * @param world The world in which this entity is in
      */
-    public EntityFallingBlock( Block block, WorldAdapter world ) {
-        super( EntityType.FALLING_BLOCK, world );
+    public EntityFallingBlock(Block block, WorldAdapter world) {
+        super(EntityType.FALLING_BLOCK, world);
         this.initEntity();
-        this.setBlock( block );
+        this.setBlock(block);
     }
 
     /**
      * Create new entity falling block for API
      */
     public EntityFallingBlock() {
-        super( EntityType.FALLING_BLOCK, null );
+        super(EntityType.FALLING_BLOCK, null);
         this.initEntity();
     }
 
     @Override
-    public void update( long currentTimeMS, float dT ) {
-        if ( this.isDead() ) {
+    public void update(long currentTimeMS, float dT) {
+        if (this.isDead()) {
             return;
         }
 
-        super.update( currentTimeMS, dT );
+        super.update(currentTimeMS, dT);
 
         // Are we onground?
-        if ( this.onGround ) {
+        if (this.onGround) {
             this.despawn();
 
             // Generate new item drop
-            this.world.createItemDrop( this.getLocation(), this.world.getServer().getItems().create( this.blockId, this.blockData, (byte) 1, null ) );
+            // TODO: States to Item data
+            this.world.createItemDrop(this.getLocation(), this.world.getServer().getItems().create(this.blockId, (short) 0, (byte) 1, null));
         }
     }
 
@@ -78,7 +77,7 @@ public class EntityFallingBlock extends Entity implements io.gomint.entity.passi
     }
 
     private void initEntity() {
-        this.setSize( 0.98f, 0.98f );
+        this.setSize(0.98f, 0.98f);
         this.offsetY = 0.49f;
 
         GRAVITY = 0.04f;
@@ -86,30 +85,28 @@ public class EntityFallingBlock extends Entity implements io.gomint.entity.passi
     }
 
     @Override
-    public void setBlock( io.gomint.world.block.Block block ) {
+    public void setBlock(io.gomint.world.block.Block block) {
         Block block1 = (Block) block;
 
         this.blockId = block1.getBlockId();
-        this.blockData = block1.getBlockData();
-        this.states = block1.getStates(true);
-        this.metadataContainer.putInt( MetadataContainer.DATA_VARIANT, BlockRuntimeIDs.from( block1.getBlockId(), block1.getStates(false), block1.getBlockData() ) );
+        this.metadataContainer.putInt(MetadataContainer.DATA_VARIANT, block1.getRuntimeId());
 
-        if ( block1.getLocation() != null ) {
+        if (block1.getLocation() != null) {
             this.position = block1.getLocation().toBlockPosition();
         }
     }
 
     @Override
-    public void postSpawn( PlayerConnection connection ) {
-        if ( this.position != null ) {
+    public void postSpawn(PlayerConnection connection) {
+        if (this.position != null) {
             PacketUpdateBlockSynched blockSynched = new PacketUpdateBlockSynched();
-            blockSynched.setAction( 1 );
-            blockSynched.setEntityId( this.getEntityId() );
-            blockSynched.setPosition( this.position );
-            blockSynched.setBlockId( BlockRuntimeIDs.from( this.blockId, this.states, this.blockData ) );
-            blockSynched.setLayer( 0 );
-            blockSynched.setFlags( PacketUpdateBlock.FLAG_ALL );
-            connection.addToSendQueue( blockSynched );
+            blockSynched.setAction(1);
+            blockSynched.setEntityId(this.getEntityId());
+            blockSynched.setPosition(this.position);
+            blockSynched.setBlockId(this.metadataContainer.getInt(MetadataContainer.DATA_VARIANT));
+            blockSynched.setLayer(0);
+            blockSynched.setFlags(PacketUpdateBlock.FLAG_ALL);
+            connection.addToSendQueue(blockSynched);
         }
     }
 

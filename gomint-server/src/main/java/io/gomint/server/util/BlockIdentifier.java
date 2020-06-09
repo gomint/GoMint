@@ -7,75 +7,40 @@
 
 package io.gomint.server.util;
 
+import io.gomint.server.util.collection.FreezableSortedMap;
 import io.gomint.taglib.NBTTagCompound;
-import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
-import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.util.Map;
-import java.util.SortedMap;
 
 /**
  * @author geNAZt
  * @version 1.0
  */
+@EqualsAndHashCode
+@Getter
 public class BlockIdentifier {
 
-    @Getter
     private final String blockId;
-    private SortedMap<String, Object> states;
-    @Getter
-    private short data;
+    private FreezableSortedMap<String, Object> states;
+    @Setter private int runtimeId;
+    private NBTTagCompound nbt;
 
-    public BlockIdentifier(String blockId, NBTTagCompound states, Short data)  {
+    public BlockIdentifier(String blockId, NBTTagCompound states)  {
         this.blockId = blockId;
 
         if (states != null) {
-            this.states = new Object2ObjectLinkedOpenHashMap<>();
+            this.states = new FreezableSortedMap<>();
             for (Map.Entry<String, Object> entry : states.entrySet()) {
                 this.states.put(entry.getKey(), entry.getValue());
             }
-        }
-    }
 
-    public BlockIdentifier(String blockId, SortedMap<String, Object> states, Short data) {
-        this.blockId = blockId;
-        this.states = states;
-    }
-
-    public SortedMap<String, Object> getStates(boolean copy) {
-        if (this.states == null) {
-            return null;
+            this.states.setFrozen(true);
         }
 
-        return copy ? new Object2ObjectLinkedOpenHashMap<>(this.states) : this.states;
-    }
-
-    @Override
-    public int hashCode() {
-        if (this.states != null) {
-            return this.blockId.hashCode() + this.states.hashCode();
-        }
-
-        return this.blockId.hashCode();
-    }
-
-    public long longHashCode() {
-        if (this.states != null) {
-            return (long) this.blockId.hashCode() << 32 | this.states.hashCode();
-        }
-
-        return (long) this.blockId.hashCode() << 32;
-    }
-
-    @Override
-    public boolean equals( Object obj ) {
-        if ( obj instanceof BlockIdentifier ) {
-            BlockIdentifier other = (BlockIdentifier) obj;
-            return other.blockId.equals( this.blockId ) && other.data == this.data;
-        }
-
-        return false;
+        this.nbt = states;
     }
 
 }

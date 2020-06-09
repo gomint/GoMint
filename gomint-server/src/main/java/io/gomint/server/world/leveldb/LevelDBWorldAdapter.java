@@ -35,6 +35,8 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -49,6 +51,8 @@ import java.util.List;
  * @version 1.0
  */
 public class LevelDBWorldAdapter extends WorldAdapter {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(LevelDBWorldAdapter.class);
 
     static {
         if ( !NativeLoader.load() ) {
@@ -327,6 +331,7 @@ public class LevelDBWorldAdapter extends WorldAdapter {
 
             NBTStream nbtStream = new NBTStream( stream, ByteOrder.LITTLE_ENDIAN );
             nbtStream.addListener( ( path, value ) -> {
+                LOGGER.info(path + " -> " + value);
 
                 switch ( path ) {
                     case ".GeneratorClass":

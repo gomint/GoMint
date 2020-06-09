@@ -12,7 +12,9 @@ import io.gomint.server.maintenance.ReportUploader;
 import io.gomint.server.registry.Generator;
 import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.registry.StringRegistry;
+import io.gomint.server.util.BlockIdentifier;
 import io.gomint.server.util.ClassPath;
+import io.gomint.server.util.collection.FreezableSortedMap;
 import io.gomint.server.util.performance.ObjectConstructionFactory;
 import io.gomint.server.world.PlacementData;
 import io.gomint.server.world.WorldAdapter;
@@ -48,17 +50,8 @@ public class Blocks {
                     LOGGER.error("Nulled block?! from {}", clazz.getName());
                 }
 
-                // Check if block has a id, if not set one
-                if ( block.getBlockId() == null ) {
-                    // Search for default id in annotations
-                    for ( RegisterInfo info : clazz.getAnnotationsByType( RegisterInfo.class ) ) {
-                        if ( info.def() ) {
-                            block.setBlockId( info.sId() );
-                            break;
-                        }
-                    }
-                }
-
+                // Search for default id in annotations
+                block.ensureIdentifier();
                 return block;
             };
         } );
@@ -67,27 +60,27 @@ public class Blocks {
         this.generators.cleanup();
     }
 
-    public <T extends Block> T get(String blockId, SortedMap<String, Object> states, short blockData, byte skyLightLevel, byte blockLightLevel,
+    public <T extends Block> T get(BlockIdentifier identifier, byte skyLightLevel, byte blockLightLevel,
                                    TileEntity tileEntity, Location location, int layer) {
-        Generator<Block> instance = this.generators.getGenerator( blockId );
+        Generator<Block> instance = this.generators.getGenerator( identifier.getBlockId() );
         if ( instance != null ) {
             T block = (T) instance.generate();
             if ( location == null ) {
                 return block;
             }
 
-            block.setData( blockId, states, blockData, tileEntity, (WorldAdapter) location.getWorld(), location, layer, skyLightLevel, blockLightLevel );
+            block.setData( identifier, tileEntity, (WorldAdapter) location.getWorld(), location, layer, skyLightLevel, blockLightLevel );
             return block;
         }
 
         // Don't spam the report server pls
         if ( System.currentTimeMillis() - lastReport > TimeUnit.SECONDS.toSeconds( 10 ) ) {
-            LOGGER.warn( "Missing block: {}", blockId );
-            ReportUploader.create().includeWorlds().property( "missing_block", blockId).upload("Missing block in register");
+            LOGGER.warn( "Missing block: {}", identifier.getBlockId() );
+            ReportUploader.create().includeWorlds().property( "missing_block", identifier.getBlockId()).upload("Missing block in register");
             lastReport = System.currentTimeMillis();
         }
 
-        LOGGER.warn( "Unknown block {} @ {}", blockId, location, new Exception() );
+        LOGGER.warn( "Unknown block {} @ {}", identifier.getBlockId(), location, new Exception() );
         return null;
     }
 
@@ -136,8 +129,6 @@ public class Blocks {
         // Check only solid blocks for bounding box intersects
         if ( newBlock.isSolid() ) {
             newBlock.setLocation( block.location ); // Temp setting, needed for getting bounding boxes
-            newBlock.setBlockData( data.getBlockIdentifier().getData() );
-            newBlock.generateBlockStates();
 
             for ( AxisAlignedBB bb : newBlock.getBoundingBox() ) {
                 // Check other entities in the bounding box

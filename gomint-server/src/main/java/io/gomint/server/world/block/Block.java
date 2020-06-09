@@ -20,7 +20,9 @@ import io.gomint.server.entity.tileentity.TileEntity;
 import io.gomint.server.network.PlayerConnection;
 import io.gomint.server.network.packet.PacketTileEntityData;
 import io.gomint.server.network.packet.PacketUpdateBlock;
+import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.util.BlockIdentifier;
+import io.gomint.server.util.collection.FreezableSortedMap;
 import io.gomint.server.world.BlockRuntimeIDs;
 import io.gomint.server.world.PlacementData;
 import io.gomint.server.world.UpdateReason;
@@ -40,7 +42,9 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.SortedMap;
 import java.util.function.Function;
 
@@ -53,9 +57,11 @@ public abstract class Block implements io.gomint.world.block.Block {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Block.class);
 
+    // This is the source of truth
+    @Setter
+    protected BlockIdentifier identifier;
+
     // CHECKSTYLE:OFF
-    @Getter
-    private String blockId;
     @Setter
     protected WorldAdapter world;
     @Setter
@@ -64,8 +70,6 @@ public abstract class Block implements io.gomint.world.block.Block {
     @Getter
     @Setter
     private int layer;
-    @Getter
-    private short blockData;
     @Setter
     private TileEntity tileEntity;
     @Getter
@@ -74,23 +78,19 @@ public abstract class Block implements io.gomint.world.block.Block {
     private byte blockLightLevel;
 
     // States
-    private SortedMap<String, Object> states;
     private List<BlockState> blockStates;
 
     private boolean ready;
 
     // Set all needed data
-    public void setData(String blockId, SortedMap<String, Object> states, short blockData, TileEntity tileEntity, WorldAdapter worldAdapter, Location location, int layer, byte skyLightLevel, byte blockLightLevel) {
-        this.blockId = blockId;
-        this.blockData = blockData;
+    public void setData(BlockIdentifier identifier, TileEntity tileEntity, WorldAdapter worldAdapter, Location location, int layer, byte skyLightLevel, byte blockLightLevel) {
+        this.identifier = identifier;
         this.tileEntity = tileEntity;
         this.world = worldAdapter;
         this.location = location;
         this.skyLightLevel = skyLightLevel;
         this.blockLightLevel = blockLightLevel;
         this.layer = layer;
-        this.states = states;
-        this.generateBlockStates();
 
         this.ready = true;
     }
@@ -107,20 +107,8 @@ public abstract class Block implements io.gomint.world.block.Block {
             this.blockStates = new ArrayList<>();
         }
 
-        if (this.states == null) {
-            this.states = new Object2ObjectLinkedOpenHashMap<>();
-        }
-
         // Store this new block state
         this.blockStates.add(blockState);
-    }
-
-    /**
-     * Hook for blocks which have custom blockId states. This should be used to convert data from the blockId to the state
-     * objects
-     */
-    void generateBlockStates() {
-
     }
 
     /**
@@ -274,16 +262,14 @@ public abstract class Block implements io.gomint.world.block.Block {
                 blockState.detectFromPlacement(entity, item, face, block, clickedBlock, clickVector);
             }
 
-            io.gomint.server.inventory.item.ItemStack implStack = (io.gomint.server.inventory.item.ItemStack) item;
-            return new PlacementData(new BlockIdentifier(implStack.getBlockId(), this.getStates(false), (short) 0), null);
+            return new PlacementData(this.identifier, null);
         }
 
         if (item.getData() > 0) {
             LOGGER.warn("Block implementation is missing states: {}", this.getClass().getName());
         }
 
-        io.gomint.server.inventory.item.ItemStack implStack = (io.gomint.server.inventory.item.ItemStack) item;
-        return new PlacementData(new BlockIdentifier(implStack.getBlockId(), (SortedMap<String, Object>) null, (short) 0), null);
+        return new PlacementData(this.identifier, null);
     }
 
     @Override
@@ -293,7 +279,7 @@ public abstract class Block implements io.gomint.world.block.Block {
         }
 
         WorldAdapter worldAdapter = (WorldAdapter) this.location.getWorld();
-        return worldAdapter.getBlockId(this.location.toBlockPosition(), this.layer).equals(this.getBlockId());
+        return worldAdapter.getRuntimeID(this.location.toBlockPosition(), this.layer) == this.identifier.getRuntimeId();
     }
 
     @Override
@@ -323,17 +309,16 @@ public abstract class Block implements io.gomint.world.block.Block {
         }
 
         Block instance = this.world.getServer().getBlocks().get(data.getBlockIdentifier().getBlockId());
-
         if (instance != null) {
             WorldAdapter worldAdapter = (WorldAdapter) this.location.getWorld();
-            worldAdapter.setBlock(pos, this.layer, data.getBlockIdentifier());
+            worldAdapter.setBlock(pos, this.layer, data.getBlockIdentifier().getRuntimeId());
             worldAdapter.resetTemporaryStorage(pos, this.layer);
 
             instance.setWorld(worldAdapter);
             instance.setLocation(this.location);
 
             // We need to calculate needed states
-            instance.setStates(data.getBlockIdentifier().getStates(true));
+            instance.setIdentifier(data.getBlockIdentifier());
 
             // Check if new blockId needs tile entity
             if (instance.needsTileEntity()) {
@@ -364,16 +349,8 @@ public abstract class Block implements io.gomint.world.block.Block {
         return (T) instance;
     }
 
-    private void setStates(SortedMap<String, Object> states) {
-        this.states = states;
-    }
-
     @Override
     public <T extends io.gomint.world.block.Block> T setType(Class<T> blockType) {
-        return this.setType(blockType, true, true);
-    }
-
-    public <T extends io.gomint.world.block.Block> T setType(Class<T> blockType, boolean checkTile, boolean resetData) {
         BlockPosition pos = this.location.toBlockPosition();
 
         // Check if this block can be replaced
@@ -385,31 +362,22 @@ public abstract class Block implements io.gomint.world.block.Block {
         Block instance = this.world.getServer().getBlocks().get(blockType);
         if (instance != null) {
             WorldAdapter worldAdapter = (WorldAdapter) this.location.getWorld();
-
-            BlockIdentifier blockIdentifier = new BlockIdentifier(instance.getBlockId(), instance.getStates(false), (resetData) ? 0 : this.blockData);
-            worldAdapter.setBlock(pos, this.layer, blockIdentifier);
-
-            if (resetData) {
-                worldAdapter.resetTemporaryStorage(pos, this.layer);
-            }
+            worldAdapter.setBlock(pos, this.layer, instance.identifier.getRuntimeId());
+            worldAdapter.resetTemporaryStorage(pos, this.layer);
 
             instance.setWorld(worldAdapter);
             instance.setLocation(this.location);
 
             // Check if new blockId needs tile entity
-            if (checkTile) {
-                if (instance.needsTileEntity()) {
-                    TileEntity tileEntityInstance = instance.createTileEntity(new NBTTagCompound(""));
-                    if (tileEntityInstance != null) {
-                        this.world.getServer().getContext().getAutowireCapableBeanFactory().autowireBean(tileEntityInstance);
-                        instance.setTileEntity(tileEntityInstance);
-                        worldAdapter.storeTileEntity(pos, tileEntityInstance);
-                    }
-                } else {
-                    worldAdapter.removeTileEntity(pos);
+            if (instance.needsTileEntity()) {
+                TileEntity tileEntityInstance = instance.createTileEntity(new NBTTagCompound(""));
+                if (tileEntityInstance != null) {
+                    this.world.getServer().getContext().getAutowireCapableBeanFactory().autowireBean(tileEntityInstance);
+                    instance.setTileEntity(tileEntityInstance);
+                    worldAdapter.storeTileEntity(pos, tileEntityInstance);
                 }
             } else {
-                instance.setTileEntity(this.tileEntity);
+                worldAdapter.removeTileEntity(pos);
             }
 
             long next = instance.update(UpdateReason.BLOCK_ADDED, this.world.getServer().getCurrentTickTime(), 0f);
@@ -440,7 +408,7 @@ public abstract class Block implements io.gomint.world.block.Block {
         }
 
         WorldAdapter worldAdapter = (WorldAdapter) this.location.getWorld();
-        worldAdapter.setBlock(pos, this.layer, new BlockIdentifier(instance.getBlockId(), instance.getStates(false), instance.getBlockData()));
+        worldAdapter.setBlock(pos, this.layer, instance.identifier.getRuntimeId());
         worldAdapter.resetTemporaryStorage(pos, this.layer);
 
         // Check if new blockId needs tile entity
@@ -471,7 +439,7 @@ public abstract class Block implements io.gomint.world.block.Block {
         }
 
         WorldAdapter worldAdapter = (WorldAdapter) this.location.getWorld();
-        worldAdapter.setBlock(pos, this.layer, new BlockIdentifier(instance.getBlockId(), instance.getStates(false), instance.getBlockData()));
+        worldAdapter.setBlock(pos, this.layer, instance.identifier.getRuntimeId());
         worldAdapter.resetTemporaryStorage(pos, this.layer);
 
         // Check if new blockId needs tile entity
@@ -626,7 +594,7 @@ public abstract class Block implements io.gomint.world.block.Block {
 
         PacketUpdateBlock updateBlock = new PacketUpdateBlock();
         updateBlock.setPosition(position);
-        updateBlock.setBlockId(BlockRuntimeIDs.from(this.getBlockId(), this.getStates(false), this.blockData));
+        updateBlock.setBlockId(this.identifier.getRuntimeId());
         updateBlock.setFlags(PacketUpdateBlock.FLAG_ALL_PRIORITY);
 
         connection.addToSendQueue(updateBlock);
@@ -771,22 +739,9 @@ public abstract class Block implements io.gomint.world.block.Block {
      * @return a list of drops
      */
     public List<ItemStack> getDrops(ItemStack itemInHand) {
-        ItemStack drop = this.world.getServer().getItems().create(getBlockId(), this.blockData, (byte) 1, null);
+        // TODO: New system
+        ItemStack drop = this.world.getServer().getItems().create(this.identifier.getBlockId(), (short) 0, (byte) 1, null);
         return Lists.newArrayList(drop);
-    }
-
-    /**
-     * Set new blockId data for this position
-     *
-     * @param blockData which should be set
-     */
-    public void setBlockData(short blockData) {
-        // Only update when there has been a value already loaded
-        if (this.blockData > -1 && isPlaced()) {
-            this.world.setBlockData(this.location.toBlockPosition(), this.layer, blockData);
-        }
-
-        this.blockData = blockData;
     }
 
     public void onEntityCollision(Entity entity) {
@@ -810,12 +765,13 @@ public abstract class Block implements io.gomint.world.block.Block {
     public abstract float getBlastResistance();
 
     public void setBlockId(String blockId) {
+        BlockIdentifier identifier = BlockRuntimeIDs.toBlockIdentifier(blockId, this.identifier == null ? null : this.identifier.getStates());
         if (isPlaced()) {
-            this.world.setBlockId(this.location.toBlockPosition(), this.layer, blockId);
+            this.world.setBlock(this.location.toBlockPosition(), this.layer, identifier.getRuntimeId());
             this.updateBlock();
         }
 
-        this.blockId = blockId;
+        this.identifier = identifier;
     }
 
     public boolean canBeFlowedInto() {
@@ -840,24 +796,36 @@ public abstract class Block implements io.gomint.world.block.Block {
         return this.ready;
     }
 
-    public SortedMap<String, Object> getStates(boolean copy) {
-        if (this.states == null) {
-            return null;
-        }
-
-        return copy ? new Object2ObjectLinkedOpenHashMap<>(this.states) : this.states;
-    }
-
     public Object getState(String key) {
-        return this.states.get(key);
+        return this.identifier.getStates().get(key);
     }
 
     public <S> void setState(String key, S value) {
-        this.states.put(key, value);
+        this.ensureIdentifier();
+        this.identifier = BlockRuntimeIDs.change(this.identifier, key, value);
     }
 
-    protected void removeState(String key) {
-        this.states.remove(key);
+    public void ensureIdentifier() {
+        if (this.identifier == null) {
+            RegisterInfo[] annotations = this.getClass().getAnnotationsByType(RegisterInfo.class);
+            if (annotations.length == 1) {
+                this.identifier = BlockRuntimeIDs.toBlockIdentifier(annotations[0].sId(), null);
+            } else {
+                for (RegisterInfo annotation : annotations) {
+                    if (annotation.def()) {
+                        this.identifier = BlockRuntimeIDs.toBlockIdentifier(annotation.sId(), null);
+                    }
+                }
+            }
+        }
+    }
+
+    public int getRuntimeId() {
+        return this.identifier.getRuntimeId();
+    }
+
+    public String getBlockId() {
+        return this.identifier.getBlockId();
     }
 
 }

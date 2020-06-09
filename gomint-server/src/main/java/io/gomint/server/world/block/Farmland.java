@@ -99,4 +99,14 @@ public class Farmland extends Block implements io.gomint.world.block.BlockFarmla
         return ToolPresets.SHOVEL;
     }
 
+    @Override
+    public float getMoisture() {
+        return this.waterLevel.getState();
+    }
+
+    @Override
+    public void setMoisture(float moisture) {
+        this.waterLevel.setState(moisture);
+    }
+
 }
