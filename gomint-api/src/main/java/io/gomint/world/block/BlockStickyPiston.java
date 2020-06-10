@@ -11,5 +11,5 @@ package io.gomint.world.block;
  * @author geNAZt
  * @version 1.0
  */
-public interface BlockStickyPiston extends Block {
+public interface BlockStickyPiston extends BlockFacing {
 }
