@@ -12,15 +12,15 @@ public class DirectValueBlockState<T> extends BlockState<T, T> {
 
     private final T defaultValue;
 
-    public DirectValueBlockState(Block block, Supplier<String> key, T defaultValue) {
-        super(block, key);
+    public DirectValueBlockState(Block block, Supplier<String[]> key, T defaultValue) {
+        super(block, v -> key.get());
         this.defaultValue = defaultValue;
         this.setState(defaultValue);
     }
 
     @Override
-    protected void calculateValueFromState() {
-        this.setValue(this.getState());
+    protected void calculateValueFromState(T state) {
+        this.setValue(state);
     }
 
     @Override

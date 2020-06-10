@@ -8,15 +8,8 @@ import io.gomint.taglib.NBTTagCompound;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 71 )
+@RegisterInfo( sId = "minecraft:iron_door", id = 71 )
 public class ItemIronDoorBlock extends ItemStack {
-
-
-
-    @Override
-    public String getBlockId() {
-        return "minecraft:iron_door";
-    }
 
     @Override
     public ItemType getType() {

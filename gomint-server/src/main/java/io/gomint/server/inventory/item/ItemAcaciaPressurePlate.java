@@ -14,13 +14,8 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = -150 )
+@RegisterInfo( sId = "minecraft:acacia_pressure_plate", id = -150 )
 public class ItemAcaciaPressurePlate extends ItemStack implements io.gomint.inventory.item.ItemAcaciaPressurePlate {
-
-    @Override
-    public String getBlockId() {
-        return "minecraft:acacia_pressure_plate";
-    }
 
     @Override
     public ItemType getType() {

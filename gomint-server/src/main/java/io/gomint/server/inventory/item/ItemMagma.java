@@ -14,15 +14,8 @@ import io.gomint.taglib.NBTTagCompound;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 213 )
+@RegisterInfo( sId = "minecraft:magma", id = 213 )
 public class ItemMagma extends ItemStack implements io.gomint.inventory.item.ItemMagmaCream {
-
-
-
-    @Override
-    public String getBlockId() {
-        return "minecraft:magma";
-    }
 
     @Override
     public ItemType getType() {

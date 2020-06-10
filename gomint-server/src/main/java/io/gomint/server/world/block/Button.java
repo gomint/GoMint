@@ -20,11 +20,11 @@ import java.util.concurrent.TimeUnit;
 
 public abstract class Button extends Block implements BlockButton {
 
-    private final BlockfaceFromPlayerBlockState facing = new BlockfaceFromPlayerBlockState( this, () -> "facing_direction", true );
-    private final BooleanBlockState pressed = new BooleanBlockState( this, () -> "button_pressed_bit" );
+    private final BlockfaceFromPlayerBlockState facing = new BlockfaceFromPlayerBlockState(this, () -> new String[]{"facing_direction"}, true);
+    private final BooleanBlockState pressed = new BooleanBlockState(this, () -> new String[]{"button_pressed_bit"});
 
     @Override
-    public boolean interact(Entity entity, Facing face, Vector facePos, ItemStack item ) {
+    public boolean interact(Entity entity, Facing face, Vector facePos, ItemStack item) {
         // Press the button
         this.press();
 
@@ -32,9 +32,9 @@ public abstract class Button extends Block implements BlockButton {
     }
 
     @Override
-    public long update(UpdateReason updateReason, long currentTimeMS, float dT ) {
-        if ( updateReason == UpdateReason.SCHEDULED && isPressed() ) {
-            this.pressed.setState( false );
+    public long update(UpdateReason updateReason, long currentTimeMS, float dT) {
+        if (updateReason == UpdateReason.SCHEDULED && isPressed()) {
+            this.pressed.setState(false);
         }
 
         return -1;
@@ -48,12 +48,12 @@ public abstract class Button extends Block implements BlockButton {
     @Override
     public void press() {
         // Check if we need to update
-        if ( !isPressed() ) {
-            this.pressed.setState( true );
+        if (!isPressed()) {
+            this.pressed.setState(true);
         }
 
         // Schedule release in 1 second
-        this.world.scheduleBlockUpdate( this.location, 1, TimeUnit.SECONDS );
+        this.world.scheduleBlockUpdate(this.location, 1, TimeUnit.SECONDS);
     }
 
     @Override
@@ -62,8 +62,8 @@ public abstract class Button extends Block implements BlockButton {
     }
 
     @Override
-    public void setAttachedFace( Facing face ) {
-        this.facing.setState( face );
+    public void setAttachedFace(Facing face) {
+        this.facing.setState(face);
     }
 
     @Override

@@ -7,17 +7,12 @@ import io.gomint.server.registry.RegisterInfo;
  * @author KCodeYT
  * @version 1.0
  */
-@RegisterInfo( id = -6 )
+@RegisterInfo( sId = "minecraft:stripped_birch_log", id = -6 )
 public class ItemStrippedBirchLog extends ItemStack implements io.gomint.inventory.item.ItemStrippedBirchLog {
 
     @Override
     public long getBurnTime() {
         return 15000;
-    }
-
-    @Override
-    public String getBlockId() {
-        return "minecraft:stripped_birch_log";
     }
 
     @Override

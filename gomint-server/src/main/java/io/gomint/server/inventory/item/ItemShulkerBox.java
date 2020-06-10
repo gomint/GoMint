@@ -14,15 +14,8 @@ import io.gomint.taglib.NBTTagCompound;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 218 )
+@RegisterInfo(sId = "minecraft:shulker_box", id = 218)
 public class ItemShulkerBox extends ItemStack implements io.gomint.inventory.item.ItemShulkerBox {
-
-
-
-    @Override
-    public String getBlockId() {
-        return "minecraft:shulker_box";
-    }
 
     @Override
     public ItemType getType() {

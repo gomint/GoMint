@@ -1,4 +1,5 @@
 package io.gomint.server.inventory.item;
+
 import io.gomint.inventory.item.ItemBanner;
 import io.gomint.inventory.item.ItemType;
 
@@ -9,17 +10,12 @@ import io.gomint.taglib.NBTTagCompound;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 177 )
+@RegisterInfo(sId = "minecraft:wall_banner", id = 177)
 public class ItemWallBanner extends ItemStack implements ItemBanner {
 
     @Override
     public long getBurnTime() {
         return 15000;
-    }
-
-    @Override
-    public String getBlockId() {
-        return "minecraft:wall_banner";
     }
 
     @Override

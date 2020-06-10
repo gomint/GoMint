@@ -7,17 +7,12 @@ import io.gomint.taglib.NBTTagCompound;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 17 )
+@RegisterInfo( sId = "minecraft:log", id = 17 )
 public class ItemLog extends ItemStack implements io.gomint.inventory.item.ItemLog {
 
     @Override
     public long getBurnTime() {
         return 15000;
-    }
-
-    @Override
-    public String getBlockId() {
-        return "minecraft:log";
     }
 
     @Override

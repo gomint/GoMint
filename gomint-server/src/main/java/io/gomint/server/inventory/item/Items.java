@@ -20,6 +20,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.List;
 
 /**
@@ -32,66 +37,40 @@ public class Items {
     private static final IntSet ALREADY_WARNED = new IntArraySet();
     private static final Logger LOGGER = LoggerFactory.getLogger(Items.class);
     private final Registry<io.gomint.server.inventory.item.ItemStack> generators;
-    private final Int2ObjectMap<Pair<Integer, Integer>> itemMapper;
     private final Object2IntMap<String> blockIdToItemId = new Object2IntOpenHashMap<>();
+    private final Int2ObjectMap<String> itemIdToBlockId = new Int2ObjectOpenHashMap<>();
 
     /**
      * Create a new item registry
      *
      * @param classPath  which builds this registry
-     * @param mapperData data which may be used to map item ids
      */
     @Autowired
-    public Items(ClassPath classPath, List<NBTTagCompound> mapperData) {
+    public Items(ClassPath classPath) {
         this.generators = new Registry<>(classPath, clazz -> {
             ObjectConstructionFactory factory = new ObjectConstructionFactory(clazz);
 
-            RegisterInfos infos = clazz.getAnnotation(RegisterInfos.class);
-            if (infos != null) {
-                for (RegisterInfo registerInfo : infos.value()) {
-                    if (registerInfo.sId().length() > 0) {
-                        this.blockIdToItemId.put(registerInfo.sId(), registerInfo.id());
-                    }
+            RegisterInfo[] info = clazz.getAnnotationsByType(RegisterInfo.class);
+            for (RegisterInfo registerInfo : info) {
+                if (registerInfo.sId().length() > 0) {
+                    this.itemIdToBlockId.put(registerInfo.id(), registerInfo.sId());
+                    this.blockIdToItemId.put(registerInfo.sId(), registerInfo.id());
                 }
             }
 
-            RegisterInfo info = clazz.getAnnotation(RegisterInfo.class);
-            if (info != null) {
-                if (info.sId().length() > 0) {
-                    this.blockIdToItemId.put(info.sId(), info.id());
-                } else {
-                    // We need one instance to get the string blockid
-                    io.gomint.server.inventory.item.ItemStack itemStack = (io.gomint.server.inventory.item.ItemStack) factory.newInstance();
-                    String blockId = itemStack.getBlockId();
-                    if (blockId != null) {
-                        int id = info.id();
-                        LOGGER.warn("Block string ID not set: {} in {}", blockId, clazz.getName());
-                        this.blockIdToItemId.put(blockId, id);
-                    }
-                }
-            }
-
-            return () -> (io.gomint.server.inventory.item.ItemStack) factory.newInstance();
+            return () -> {
+                io.gomint.server.inventory.item.ItemStack itemStack = (io.gomint.server.inventory.item.ItemStack) factory.newInstance();
+                itemStack.setItems(this);
+                return itemStack;
+            };
         });
 
         this.generators.register("io.gomint.server.inventory.item");
         this.generators.cleanup();
+    }
 
-        if (mapperData != null) {
-            this.itemMapper = new Int2ObjectOpenHashMap<>();
-
-            for (NBTTagCompound compound : mapperData) {
-                int source = compound.getInteger("s", -1);
-                int target = compound.getInteger("t", -1);
-                int targetMeta = compound.getInteger("tm", -1);
-
-                if (source != -1 && target != -1 && targetMeta != -1) {
-                    this.itemMapper.put(source, new Pair<>(target, targetMeta));
-                }
-            }
-        } else {
-            this.itemMapper = null;
-        }
+    public String getBlockId(int itemId) {
+        return this.itemIdToBlockId.get(itemId);
     }
 
     public <T extends ItemStack> T create(String id, short data, byte amount, NBTTagCompound nbt) {
@@ -110,15 +89,6 @@ public class Items {
      * @return generated item stack
      */
     public <T extends ItemStack> T create(int id, short data, byte amount, NBTTagCompound nbt) {
-        // Lets check for a mapper
-        if (this.itemMapper != null) {
-            Pair<Integer, Integer> replacement = this.itemMapper.get(id);
-            if (replacement != null) {
-                id = replacement.getFirst();
-                data = replacement.getSecond().shortValue();
-            }
-        }
-
         Generator<io.gomint.server.inventory.item.ItemStack> itemGenerator = this.generators.getGenerator(id);
         if (itemGenerator == null) {
             if (!ALREADY_WARNED.contains(id)) {

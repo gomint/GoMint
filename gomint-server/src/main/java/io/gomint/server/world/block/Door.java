@@ -25,10 +25,10 @@ import java.util.function.Predicate;
  */
 public abstract class Door extends Block implements io.gomint.world.block.BlockDoor {
 
-    private final BooleanBlockState hinge = new BooleanBlockState(this, () -> "door_hinge_bit");
-    private final BooleanBlockState top = new BooleanBlockState(this, () -> "upper_block_bit");
-    private final BooleanBlockState open = new BooleanBlockState(this, () -> "open_bit");
-    private final DirectionBlockState direction = new DirectionBlockState(this, () -> "direction"); // Rotation is always clockwise
+    private final BooleanBlockState hinge = new BooleanBlockState(this, () -> new String[]{"door_hinge_bit"});
+    private final BooleanBlockState top = new BooleanBlockState(this, () -> new String[]{"upper_block_bit"});
+    private final BooleanBlockState open = new BooleanBlockState(this, () -> new String[]{"open_bit"});
+    private final DirectionBlockState direction = new DirectionBlockState(this, () -> new String[]{"direction"}); // Rotation is always clockwise
 
     @Override
     public boolean isTop() {

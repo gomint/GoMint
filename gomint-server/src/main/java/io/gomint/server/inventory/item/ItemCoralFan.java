@@ -14,13 +14,8 @@ import io.gomint.server.registry.RegisterInfo;
  * @author Kaooot
  * @version 1.0
  */
-@RegisterInfo( id = -133 )
+@RegisterInfo( sId = "minecraft:coral_fan", id = -133 )
 public class ItemCoralFan extends ItemStack implements io.gomint.inventory.item.ItemCoralFan {
-
-    @Override
-    public String getBlockId() {
-        return "minecraft:coral_fan";
-    }
 
     @Override
     public ItemType getType() {

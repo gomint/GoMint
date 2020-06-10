@@ -14,13 +14,8 @@ import io.gomint.server.registry.RegisterInfo;
  * @author Kaooot
  * @version 1.0
  */
-@RegisterInfo( id = -139 )
+@RegisterInfo( sId = "minecraft:dried_kelp_block", id = -139 )
 public class ItemDriedKelpBlock extends ItemStack implements io.gomint.inventory.item.ItemDriedKelpBlock {
-
-    @Override
-    public String getBlockId() {
-        return "minecraft:dried_kelp_block";
-    }
 
     @Override
     public ItemType getType() {

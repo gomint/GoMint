@@ -7,13 +7,8 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo(id = 138)
+@RegisterInfo(sId = "minecraft:bell", id = 138)
 public class ItemBell extends ItemStack implements io.gomint.inventory.item.ItemBell {
-
-    @Override
-    public String getBlockId() {
-        return "minecraft:bell";
-    }
 
     @Override
     public ItemType getType() {

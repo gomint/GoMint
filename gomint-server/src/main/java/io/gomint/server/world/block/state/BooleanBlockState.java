@@ -21,14 +21,14 @@ import java.util.function.Supplier;
  */
 public class BooleanBlockState extends BlockState<Boolean, Byte> {
 
-    public BooleanBlockState(Block block, Supplier<String> key) {
-        super(block, key);
+    public BooleanBlockState(Block block, Supplier<String[]> key) {
+        super(block, v -> key.get());
         this.setState(false);
     }
 
     @Override
-    protected void calculateValueFromState() {
-        this.setValue((byte) (this.getState() ? 1 : 0));
+    protected void calculateValueFromState(Boolean state) {
+        this.setValue((byte) (state ? 1 : 0));
     }
 
     @Override

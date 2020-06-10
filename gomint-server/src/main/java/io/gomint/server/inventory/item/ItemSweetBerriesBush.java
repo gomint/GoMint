@@ -7,16 +7,12 @@ import io.gomint.server.registry.RegisterInfo;
  * @author KingAli
  * @version 1.0
  */
-@RegisterInfo( id = 462 )
+@RegisterInfo(sId = "minecraft:sweet_burry_bush", id = 462)
 public class ItemSweetBerriesBush extends ItemStack implements io.gomint.inventory.item.ItemSweetBerriesBush {
-
-    @Override
-    public String getBlockId() {
-        return "minecraft:sweet_burry_bush";
-    }
 
     @Override
     public ItemType getType() {
         return ItemType.SWEETBERRIESBUSH;
     }
+
 }

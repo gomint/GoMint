@@ -7,15 +7,8 @@ import io.gomint.taglib.NBTTagCompound;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 206 )
+@RegisterInfo( sId = "minecraft:end_bricks", id = 206 )
 public class ItemEndBricks extends ItemStack implements io.gomint.inventory.item.ItemEndBricks {
-
-
-
-    @Override
-    public String getBlockId() {
-        return "minecraft:end_bricks";
-    }
 
     @Override
     public ItemType getType() {

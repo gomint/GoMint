@@ -21,7 +21,7 @@ import java.util.function.Supplier;
  */
 public class BlockfaceFromPlayerBlockState extends BlockfaceBlockState {
 
-    public BlockfaceFromPlayerBlockState(Block block, Supplier<String> key, boolean detectUpDown ) {
+    public BlockfaceFromPlayerBlockState(Block block, Supplier<String[]> key, boolean detectUpDown ) {
         super( block, key, detectUpDown );
     }
 

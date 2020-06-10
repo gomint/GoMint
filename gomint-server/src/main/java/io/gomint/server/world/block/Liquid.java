@@ -35,7 +35,7 @@ public abstract class Liquid extends Block implements BlockLiquid {
     }
 
     // TODO: Move liquid logic to block state
-    private final ProgressBlockState liquidDepth = new ProgressBlockState(this, () -> LIQUID_DEPTH, 15, aVoid -> {});
+    private final ProgressBlockState liquidDepth = new ProgressBlockState(this, () -> new String[]{LIQUID_DEPTH}, 15, aVoid -> {});
 
     // Temporary storage for update
     private byte adjacentSources;

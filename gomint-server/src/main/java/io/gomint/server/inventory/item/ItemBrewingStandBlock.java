@@ -9,13 +9,8 @@ import io.gomint.taglib.NBTTagCompound;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo(id = 117)
+@RegisterInfo(sId = "minecraft:brewing_stand", id = 117)
 public class ItemBrewingStandBlock extends ItemStack {
-
-    @Override
-    public String getBlockId() {
-        return "minecraft:brewing_stand";
-    }
 
     @Override
     public ItemType getType() {

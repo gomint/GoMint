@@ -14,17 +14,12 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = -140 )
+@RegisterInfo( sId = "minecraft:acacia_button", id = -140 )
 public class ItemAcaciaButton extends ItemStack implements io.gomint.inventory.item.ItemAcaciaButton {
 
     @Override
     public long getBurnTime() {
         return 15000;
-    }
-
-    @Override
-    public String getBlockId() {
-        return "minecraft:acacia_button";
     }
 
     @Override

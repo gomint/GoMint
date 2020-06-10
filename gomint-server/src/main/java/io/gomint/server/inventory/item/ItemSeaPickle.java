@@ -7,13 +7,8 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = -156 )
+@RegisterInfo( sId = "minecraft:sea_pickle", id = -156 )
 public class ItemSeaPickle extends ItemStack implements io.gomint.inventory.item.ItemSeaPickle {
-
-    @Override
-    public String getBlockId() {
-        return "minecraft:sea_pickle";
-    }
 
     @Override
     public ItemType getType() {

@@ -18,14 +18,14 @@ import java.util.function.Supplier;
 
 public class AxisBlockState extends BlockState<Axis, String> {
 
-    public AxisBlockState(Block block, Supplier<String> key) {
-        super(block, key);
+    public AxisBlockState(Block block, Supplier<String[]> key) {
+        super(block, v -> key.get());
         this.setState(Axis.Y);
     }
 
     @Override
-    protected void calculateValueFromState() {
-        switch (this.getState()) {
+    protected void calculateValueFromState(Axis state) {
+        switch (state) {
             case X:
                 this.setValue("x");
                 break;

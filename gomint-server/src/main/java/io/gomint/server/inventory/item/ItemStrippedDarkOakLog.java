@@ -7,7 +7,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @author KCodeYT
  * @version 1.0
  */
-@RegisterInfo( id = -9 )
+@RegisterInfo(sId = "minecraft:stripped_dark_oak_log", id = -9)
 public class ItemStrippedDarkOakLog extends ItemStack implements io.gomint.inventory.item.ItemStrippedDarkOakLog {
 
     @Override
@@ -16,20 +16,15 @@ public class ItemStrippedDarkOakLog extends ItemStack implements io.gomint.inven
     }
 
     @Override
-    public String getBlockId() {
-        return "minecraft:stripped_dark_oak_log";
-    }
-
-    @Override
     public ItemType getType() {
         return ItemType.STRIPPED_DARK_OAK_LOG;
     }
 
     @Override
-    public void setLogDirection( Direction direction ) {
+    public void setLogDirection(Direction direction) {
         short type = 0;
 
-        switch ( direction ) {
+        switch (direction) {
             case EAST_WEST:
                 type = 1;
                 break;
@@ -43,14 +38,14 @@ public class ItemStrippedDarkOakLog extends ItemStack implements io.gomint.inven
                 break;
         }
 
-        this.setData( type );
+        this.setData(type);
     }
 
     @Override
     public Direction getLogDirection() {
         short direction = this.getData();
 
-        switch ( direction ) {
+        switch (direction) {
             case 0:
                 return Direction.UP_DOWN;
             case 1:

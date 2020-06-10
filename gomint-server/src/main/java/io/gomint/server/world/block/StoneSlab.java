@@ -17,10 +17,10 @@ import java.util.function.Function;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:double_stone_slab", def = true )
-@RegisterInfo( sId = "minecraft:double_stone_slab2" )
-@RegisterInfo( sId = "minecraft:double_stone_slab3" )
-@RegisterInfo( sId = "minecraft:double_stone_slab4")
+@RegisterInfo(sId = "minecraft:double_stone_slab", def = true)
+@RegisterInfo(sId = "minecraft:double_stone_slab2")
+@RegisterInfo(sId = "minecraft:double_stone_slab3")
+@RegisterInfo(sId = "minecraft:double_stone_slab4")
 public class StoneSlab extends Slab implements BlockStoneSlab {
 
     private static final String STONE_SLAB_ID = "minecraft:double_stone_slab";
@@ -39,7 +39,7 @@ public class StoneSlab extends Slab implements BlockStoneSlab {
     public enum StoneTypeMagic {
 
         // Slab types 1
-        SANDSTONE(STONE_SLAB_ID, STONE_TYPE,"sandstone"),
+        SANDSTONE(STONE_SLAB_ID, STONE_TYPE, "sandstone"),
         COBBLESTONE(STONE_SLAB_ID, STONE_TYPE, "cobblestone"),
         BRICK(STONE_SLAB_ID, STONE_TYPE, "brick"),
         STONE_BRICK(STONE_SLAB_ID, STONE_TYPE, "stone_brick"),
@@ -85,8 +85,27 @@ public class StoneSlab extends Slab implements BlockStoneSlab {
         }
     }
 
-    private final EnumBlockState<StoneTypeMagic, String> variant = new EnumBlockState<>(this, () -> {
-        return this.variant.getState().getKey();
+    private final EnumBlockState<StoneTypeMagic, String> variant = new EnumBlockState<>(this, v -> {
+        if (this.variant == null) {
+            return new String[]{STONE_TYPE, STONE_TYPE_2, STONE_TYPE_3, STONE_TYPE_4};
+        }
+
+        for (StoneTypeMagic value : StoneTypeMagic.values()) {
+            if (value.getValue().equals(v)) {
+                switch (value.getKey()) {
+                    case STONE_TYPE:
+                        return new String[]{STONE_TYPE, STONE_TYPE_2, STONE_TYPE_3, STONE_TYPE_4};
+                    case STONE_TYPE_2:
+                        return new String[]{STONE_TYPE_2, STONE_TYPE, STONE_TYPE_3, STONE_TYPE_4};
+                    case STONE_TYPE_3:
+                        return new String[]{STONE_TYPE_3, STONE_TYPE_2, STONE_TYPE, STONE_TYPE_4};
+                    case STONE_TYPE_4:
+                        return new String[]{STONE_TYPE_4, STONE_TYPE_2, STONE_TYPE_3, STONE_TYPE};
+                }
+            }
+        }
+
+        return new String[]{STONE_TYPE, STONE_TYPE_2, STONE_TYPE_3, STONE_TYPE_4};
     }, StoneTypeMagic.values(), StoneTypeMagic::getValue, v -> {
         for (StoneTypeMagic value : StoneTypeMagic.values()) {
             if (value.getValue().equals(v)) {
@@ -133,7 +152,7 @@ public class StoneSlab extends Slab implements BlockStoneSlab {
     }
 
     @Override
-    public void setStoneType( StoneType stoneType ) {
+    public void setStoneType(StoneType stoneType) {
         StoneTypeMagic newState = StoneTypeMagic.valueOf(stoneType.name());
         this.setBlockId(newState.getBlockId());
         this.variant.setState(newState);

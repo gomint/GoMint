@@ -24,18 +24,18 @@ public class BlockfaceBlockState extends BlockState<Facing, Integer> {
 
     protected final boolean detectUpDown;
 
-    public BlockfaceBlockState(Block block, Supplier<String> key) {
+    public BlockfaceBlockState(Block block, Supplier<String[]> key) {
         this(block, key, false);
     }
 
-    public BlockfaceBlockState(Block block, Supplier<String> key, boolean detectUpDown) {
-        super(block, key);
+    public BlockfaceBlockState(Block block, Supplier<String[]> key, boolean detectUpDown) {
+        super(block, v -> key.get());
         this.detectUpDown = detectUpDown;
     }
 
     @Override
-    protected void calculateValueFromState() {
-        switch (this.getState()) {
+    protected void calculateValueFromState(Facing state) {
+        switch (state) {
             case DOWN:
             default:
                 this.setValue(0);

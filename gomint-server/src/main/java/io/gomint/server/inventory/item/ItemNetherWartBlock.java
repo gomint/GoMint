@@ -14,15 +14,8 @@ import io.gomint.taglib.NBTTagCompound;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 214 )
+@RegisterInfo(sId = "minecraft:nether_wart_block", id = 214)
 public class ItemNetherWartBlock extends ItemStack implements io.gomint.inventory.item.ItemNetherWartBlock {
-
-
-
-    @Override
-    public String getBlockId() {
-        return "minecraft:nether_wart_block";
-    }
 
     @Override
     public ItemType getType() {

@@ -7,13 +7,8 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = -130 )
+@RegisterInfo(sId = "minecraft:seagrass", id = -130)
 public class ItemSeaGrass extends ItemStack implements io.gomint.inventory.item.ItemSeaGrass {
-
-    @Override
-    public String getBlockId() {
-        return "minecraft:seagrass";
-    }
 
     @Override
     public ItemType getType() {

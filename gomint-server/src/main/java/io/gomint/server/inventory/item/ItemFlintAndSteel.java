@@ -9,7 +9,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @UseDataAsDamage
-@RegisterInfo( id = 259 )
+@RegisterInfo( sId = "minecraft:fire", id = 259 )
 public class ItemFlintAndSteel extends ItemStack implements io.gomint.inventory.item.ItemFlintAndSteel {
 
     @Override
@@ -20,11 +20,6 @@ public class ItemFlintAndSteel extends ItemStack implements io.gomint.inventory.
     @Override
     public byte getMaximumAmount() {
         return 1;
-    }
-
-    @Override
-    public String getBlockId() {
-        return "minecraft:fire";
     }
 
     @Override

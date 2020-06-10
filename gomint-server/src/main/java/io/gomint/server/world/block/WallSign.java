@@ -45,7 +45,7 @@ public class WallSign extends Block implements BlockWallSign {
         }
     }
 
-    private final BlockfaceFromPlayerBlockState facing = new BlockfaceFromPlayerBlockState(this, () -> "facing_direction", false);
+    private final BlockfaceFromPlayerBlockState facing = new BlockfaceFromPlayerBlockState(this, () -> new String[]{"facing_direction"}, false);
 
     @Override
     public String getBlockId() {

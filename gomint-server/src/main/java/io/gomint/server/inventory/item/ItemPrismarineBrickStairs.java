@@ -14,13 +14,8 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = -4 )
+@RegisterInfo(sId = "minecraft:prismarine_bricks_stairs", id = -4)
 public class ItemPrismarineBrickStairs extends ItemStack implements io.gomint.inventory.item.ItemPrismarineBrickStairs {
-
-    @Override
-    public String getBlockId() {
-        return "minecraft:prismarine_bricks_stairs";
-    }
 
     @Override
     public ItemType getType() {

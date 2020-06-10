@@ -7,13 +7,8 @@ import io.gomint.server.registry.RegisterInfo;
  * @author Kaooot
  * @version 1.0
  */
-@RegisterInfo( id = 204 )
+@RegisterInfo(sId = "minecraft:colored_torch_bp", id = 204)
 public class ItemBlueTorch extends ItemStack implements io.gomint.inventory.item.ItemBlueTorch {
-
-    @Override
-    public String getBlockId() {
-        return "minecraft:colored_torch_bp";
-    }
 
     @Override
     public ItemType getType() {

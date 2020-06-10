@@ -14,17 +14,12 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = -145 )
+@RegisterInfo( sId = "minecraft:acacia_trapdoor", id = -145 )
 public class ItemAcaciaTrapdoor extends ItemStack implements io.gomint.inventory.item.ItemAcaciaTrapdoor {
 
     @Override
     public long getBurnTime() {
         return 15000;
-    }
-
-    @Override
-    public String getBlockId() {
-        return "minecraft:acacia_trapdoor";
     }
 
     @Override

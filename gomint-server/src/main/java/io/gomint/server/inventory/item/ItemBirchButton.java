@@ -14,17 +14,12 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = -141 )
+@RegisterInfo(sId = "minecraft:birch_button", id = -141)
 public class ItemBirchButton extends ItemStack implements io.gomint.inventory.item.ItemBirchButton {
 
     @Override
     public long getBurnTime() {
         return 15000;
-    }
-
-    @Override
-    public String getBlockId() {
-        return "minecraft:birch_button";
     }
 
     @Override

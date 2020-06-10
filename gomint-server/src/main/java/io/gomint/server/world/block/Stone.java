@@ -20,7 +20,7 @@ import java.util.List;
 @RegisterInfo( sId = "minecraft:stone" )
 public class Stone extends Block implements io.gomint.world.block.BlockStone {
 
-    private final EnumBlockState<BlockStone.Type, String> variant = new EnumBlockState<>(this, () -> "stone_type", BlockStone.Type.values(), e -> e.name().toLowerCase(), v -> BlockStone.Type.valueOf(v.toUpperCase()));
+    private final EnumBlockState<BlockStone.Type, String> variant = new EnumBlockState<>(this, v -> new String[]{"stone_type"}, BlockStone.Type.values(), e -> e.name().toLowerCase(), v -> BlockStone.Type.valueOf(v.toUpperCase()));
 
     @Override
     public String getBlockId() {
