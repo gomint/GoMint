@@ -52,7 +52,7 @@ import java.util.UUID;
  * @version 1.0
  */
 @EqualsAndHashCode( callSuper = false, of = { "uuid" } )
-@ToString( of = { "uuid", "username" } )
+@ToString( of = { "uuid", "username" }, callSuper = true )
 @RegisterInfo( sId = "minecraft:player" )
 public class EntityHuman extends EntityCreature implements io.gomint.entity.passive.EntityHuman {
 
@@ -551,6 +551,7 @@ public class EntityHuman extends EntityCreature implements io.gomint.entity.pass
         packetSpawnPlayer.setName( this.username );
         packetSpawnPlayer.setEntityId( this.getEntityId() );
         packetSpawnPlayer.setRuntimeEntityId( this.getEntityId() );
+        packetSpawnPlayer.setPlatformChatId(this.getUUID().toString());
 
         packetSpawnPlayer.setX( this.getPositionX() );
         packetSpawnPlayer.setY( this.getPositionY() );

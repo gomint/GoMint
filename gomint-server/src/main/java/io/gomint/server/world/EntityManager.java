@@ -267,7 +267,8 @@ public class EntityManager {
 
                     player.getEntityVisibilityManager().updateEntity( movedEntity, chunk );
                     if ( player.getEntityVisibilityManager().isVisible( movedEntity ) ) {
-                        if ( needsFullMovement ) {
+                        LOGGER.info("Sending movement for {} to {}", movedEntity, player);
+                        if ( true || needsFullMovement ) {
                             player.getConnection().addToSendQueue( packetEntityMovement );
                         } else {
                             player.getConnection().addToSendQueue( relativeMovement );

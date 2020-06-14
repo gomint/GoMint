@@ -37,6 +37,7 @@ import io.gomint.world.Chunk;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -55,6 +56,7 @@ import java.util.concurrent.atomic.AtomicLong;
  * @version 1.1
  */
 @EqualsAndHashCode( of = { "id" } )
+@ToString( of = { "id" } )
 public abstract class Entity implements io.gomint.entity.Entity {
 
     private static final Logger LOGGER = LoggerFactory.getLogger( Entity.class );

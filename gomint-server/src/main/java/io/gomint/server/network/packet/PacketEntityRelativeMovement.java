@@ -48,7 +48,7 @@ public class PacketEntityRelativeMovement extends Packet {
     public void serialize( PacketBuffer buffer, int protocolID ) {
         buffer.writeUnsignedVarLong( this.entityId );
 
-        byte flags = 0;
+        short flags = 0;
         if ( this.x != 0 ) {
             flags |= 1;
         }

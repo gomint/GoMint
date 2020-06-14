@@ -1580,6 +1580,7 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
         packetSpawnPlayer.setName(this.getName());
         packetSpawnPlayer.setEntityId(this.getEntityId());
         packetSpawnPlayer.setRuntimeEntityId(this.getEntityId());
+        packetSpawnPlayer.setPlatformChatId(this.getDeviceInfo().getDeviceId());
 
         packetSpawnPlayer.setX(this.getPositionX());
         packetSpawnPlayer.setY(this.getPositionY());
