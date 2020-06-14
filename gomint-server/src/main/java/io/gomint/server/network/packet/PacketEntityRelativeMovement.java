@@ -19,7 +19,7 @@ import lombok.Data;
 public class PacketEntityRelativeMovement extends Packet {
 
     private long entityId;
-    private int flags;
+    private short flags;
 
     private float oldX;
     private float oldY;
@@ -73,7 +73,7 @@ public class PacketEntityRelativeMovement extends Packet {
             flags |= 32;
         }
 
-        buffer.writeByte( flags );
+        buffer.writeLShort( flags );
 
         if ( this.x != 0 ) {
             buffer.writeSignedVarInt( Float.floatToIntBits( this.x ) - Float.floatToIntBits( this.oldX ) );
