@@ -265,6 +265,8 @@ public class PlayerConnection implements ConnectionWithState {
 
         if (!this.sendQueue.add(packet)) {
             LOGGER.warn("Could not add packet {} to the send queue", packet);
+        } else {
+            LOGGER.debug("Added packet {} to be sent to {}", packet.getClass().getName(), this.entity != null ? this.entity.getName() : "UNKNOWN");
         }
     }
 

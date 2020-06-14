@@ -567,6 +567,8 @@ public class EntityHuman extends EntityCreature implements io.gomint.entity.pass
         packetSpawnPlayer.setItemInHand( this.getInventory().getItemInHand() );
         packetSpawnPlayer.setMetadataContainer( this.getMetadata() );
         packetSpawnPlayer.setDeviceId( "" );
+        packetSpawnPlayer.setBuildPlatform(0);
+
         return packetSpawnPlayer;
     }
 

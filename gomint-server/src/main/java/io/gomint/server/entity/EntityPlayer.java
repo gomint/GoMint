@@ -93,7 +93,7 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
     private int viewDistance = 4;
     private Queue<ChunkAdapter> chunkSendQueue = new LinkedBlockingQueue<>();
     // EntityPlayer Information
-    private Gamemode gamemode = Gamemode.SPECTATOR;
+    private Gamemode gamemode = Gamemode.SURVIVAL;
     @Getter
     private AdventureSettings adventureSettings;
     @Getter
@@ -1596,6 +1596,8 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
         packetSpawnPlayer.setItemInHand(this.getInventory().getItemInHand());
         packetSpawnPlayer.setMetadataContainer(this.getMetadata());
         packetSpawnPlayer.setDeviceId( this.getDeviceInfo().getDeviceId() );
+        packetSpawnPlayer.setBuildPlatform( this.getDeviceInfo().getOs().getId() );
+
         return packetSpawnPlayer;
     }
 

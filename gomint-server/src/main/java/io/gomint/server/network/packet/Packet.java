@@ -30,6 +30,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.ByteOrder;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -279,34 +280,24 @@ public abstract class Packet {
 
     void writeSerializedSkin(PlayerSkin skin, PacketBuffer buffer) {
         buffer.writeString(skin.getId());
-        buffer.writeUnsignedVarInt(skin.getResourcePatch().length);
-        buffer.writeBytes(skin.getResourcePatch());
-        buffer.writeUnsignedVarInt(skin.getImageWidth());
-        buffer.writeUnsignedVarInt(skin.getImageHeight());
-        buffer.writeUnsignedVarInt(skin.getData().length);
-        buffer.writeBytes(skin.getData());
+        buffer.writeString(skin.getResourcePatch());
+        writeSkinImageData(buffer, skin.getImageWidth(), skin.getImageHeight(), skin.getData());
 
         if (skin.getAnimations() != null) {
-            buffer.writeUnsignedVarInt(skin.getAnimations().size());
+            buffer.writeLInt(skin.getAnimations().size());
 
             for (PlayerSkin.AnimationFrame animationObj : skin.getAnimations()) {
-                buffer.writeUnsignedVarInt(animationObj.getWidth());
-                buffer.writeUnsignedVarInt(animationObj.getHeight());
-                buffer.writeUnsignedVarInt(animationObj.getData().length);
-                buffer.writeBytes(animationObj.getData());
-                buffer.writeUnsignedVarInt(animationObj.getType());
+                writeSkinImageData(buffer, animationObj.getWidth(), animationObj.getHeight(), animationObj.getData());
+                buffer.writeLInt(animationObj.getType());
                 buffer.writeLFloat(animationObj.getFrames());
             }
         } else {
-            buffer.writeUnsignedVarInt(0);
+            buffer.writeLInt(0);
         }
 
-        buffer.writeUnsignedVarInt(skin.getCapeImageWidth());
-        buffer.writeUnsignedVarInt(skin.getCapeImageHeight());
-        buffer.writeUnsignedVarInt(skin.getCapeData().length);
-        buffer.writeBytes(skin.getCapeData());
-        buffer.writeUnsignedVarInt(skin.getGeometry().length);
-        buffer.writeBytes(skin.getGeometry());
+        writeSkinImageData(buffer, skin.getCapeImageWidth(), skin.getCapeImageHeight(), skin.getCapeData());
+        buffer.writeString(skin.getGeometry());
+        buffer.writeString(skin.getAnimationData());
         buffer.writeBoolean(skin.isPremium());
         buffer.writeBoolean(skin.isPersona());
         buffer.writeBoolean(skin.isPersonaCapeOnClassic());
@@ -316,7 +307,7 @@ public abstract class Packet {
         buffer.writeString(skin.getColour());
 
         if (skin.getPersonaPieces() != null) {
-            buffer.writeUnsignedVarInt(skin.getPersonaPieces().size());
+            buffer.writeLInt(skin.getPersonaPieces().size());
 
             for (PlayerSkin.PersonaPiece personaPieceObj : skin.getPersonaPieces()) {
                 buffer.writeString(personaPieceObj.getPieceId());
@@ -326,23 +317,34 @@ public abstract class Packet {
                 buffer.writeString(personaPieceObj.getProductId());
             }
         } else {
-            buffer.writeUnsignedVarInt(0);
+            buffer.writeLInt(0);
         }
 
-        buffer.writeUnsignedVarInt(skin.getPieceTintColours().size());
+        if (skin.getPieceTintColours() != null) {
+            buffer.writeLInt(skin.getPieceTintColours().size());
 
-        for (PlayerSkin.PieceTintColor pieceTintColorObj : skin.getPieceTintColours()) {
-            buffer.writeString(pieceTintColorObj.getPieceType());
+            for (PlayerSkin.PieceTintColor pieceTintColorObj : skin.getPieceTintColours()) {
+                buffer.writeString(pieceTintColorObj.getPieceType());
 
-            if (pieceTintColorObj.getColors() != null) {
-                buffer.writeUnsignedVarInt(pieceTintColorObj.getColors().size());
-                for (String color : pieceTintColorObj.getColors()) {
-                    buffer.writeString(color);
+                if (pieceTintColorObj.getColors() != null) {
+                    buffer.writeLInt(pieceTintColorObj.getColors().size());
+                    for (String color : pieceTintColorObj.getColors()) {
+                        buffer.writeString(color);
+                    }
+                } else {
+                    buffer.writeUnsignedVarInt(0);
                 }
-            } else {
-                buffer.writeUnsignedVarInt(0);
             }
+        } else {
+            buffer.writeLInt(0);
         }
+    }
+
+    private void writeSkinImageData(PacketBuffer buffer, int imageWidth, int imageHeight, byte[] data) {
+        buffer.writeLInt(imageWidth);
+        buffer.writeLInt(imageHeight);
+        buffer.writeUnsignedVarInt(data.length);
+        buffer.writeBytes(data);
     }
 
     public BlockPosition readBlockPosition(PacketBuffer buffer) {

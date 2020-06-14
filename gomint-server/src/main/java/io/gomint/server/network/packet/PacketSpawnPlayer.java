@@ -49,6 +49,8 @@ public class PacketSpawnPlayer extends Packet {
     private List<EntityLink> links;
     private String deviceId;
 
+    private int buildPlatform;
+
     /**
      * Create a new spawn player packet
      */
@@ -75,8 +77,8 @@ public class PacketSpawnPlayer extends Packet {
         buffer.writeLFloat( this.velocityZ );
 
         buffer.writeLFloat( this.pitch );
-        buffer.writeLFloat( this.headYaw );
         buffer.writeLFloat( this.yaw );
+        buffer.writeLFloat( this.headYaw );
 
         writeItemStack( this.itemInHand, buffer );
         this.metadataContainer.serialize( buffer );
@@ -92,6 +94,7 @@ public class PacketSpawnPlayer extends Packet {
         writeEntityLinks( this.links, buffer );
 
         buffer.writeString( this.deviceId );
+        buffer.writeLInt(this.buildPlatform);
     }
 
     @Override

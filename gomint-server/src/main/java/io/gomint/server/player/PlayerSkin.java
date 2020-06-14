@@ -122,7 +122,7 @@ public class PlayerSkin implements io.gomint.player.PlayerSkin {
     @Getter
     private final String id;
     @Getter
-    private final byte[] resourcePatch;
+    private final String resourcePatch;
     @Getter
     private final int imageWidth;
     @Getter
@@ -138,9 +138,9 @@ public class PlayerSkin implements io.gomint.player.PlayerSkin {
     @Getter
     private final byte[] capeData;
     @Getter
-    private final byte[] geometry;
+    private final String geometry;
     @Getter
-    private final byte[] animationData;
+    private final String animationData;
     @Getter
     private final boolean premium;
     @Getter
@@ -165,9 +165,9 @@ public class PlayerSkin implements io.gomint.player.PlayerSkin {
     // Internal image caching
     private SoftReference<BufferedImage> image;
 
-    public PlayerSkin(String id, byte[] resourcePatch, int imageWidth, int imageHeight, byte[] data,
+    public PlayerSkin(String id, String resourcePatch, int imageWidth, int imageHeight, byte[] data,
                       List<JSONObject> animations, int capeImageWidth, int capeImageHeight, byte[] capeData,
-                      byte[] geometry, byte[] animationData, boolean premium, boolean persona,
+                      String geometry, String animationData, boolean premium, boolean persona,
                       boolean personaCapeOnClassic, String capeId, String colour, String armSize,
                       List<JSONObject> personaPieces, List<JSONObject> pieceTintColours) {
         // Some sanity checks
