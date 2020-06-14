@@ -41,7 +41,9 @@ import org.springframework.stereotype.Component;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.util.ArrayList;
 import java.util.Base64;
+import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
@@ -188,18 +190,46 @@ public class PacketLoginHandler implements PacketHandler<PacketLogin> {
                     }
                 }
 
-                // Create additional data wrappers
-                String skinGeometry = skinToken.getClaim( "SkinGeometry" ) != null ?
-                    new String( Base64.getDecoder().decode( (String) skinToken.getClaim( "SkinGeometry" ) ) ) :
-                    PlayerSkin.getGEOMETRY_CACHE().get( "geometry.humanoid.custom" );
+                List<JSONObject> animationList = new ArrayList<>();
+                JSONArray animatedImageData = skinToken.getClaim( "AnimatedImageData" );
+                for ( Object animationObj : animatedImageData ) {
+                    JSONObject animation = (JSONObject) animationObj;
+                    animationList.add( animation );
+                }
 
-                String capeData = skinToken.getClaim( "CapeData" );
-                PlayerSkin playerSkin = new PlayerSkin(
-                    skinToken.getClaim( "SkinId" ),
+                List<JSONObject> personaPieceList = new ArrayList<>();
+                JSONArray personaPieces = skinToken.getClaim( "PersonaPieces" );
+                for ( Object personaPieceObj : personaPieces ) {
+                    JSONObject personaPiece = (JSONObject) personaPieceObj;
+                    personaPieceList.add( personaPiece );
+                }
+
+                List<JSONObject> pieceTintColorList = new ArrayList<>();
+                JSONArray pieceTintColors = skinToken.getClaim( "PieceTintColors" );
+                for ( Object pieceTintColorObj : pieceTintColors ) {
+                    JSONObject pieceTintColor = (JSONObject) pieceTintColorObj;
+                    pieceTintColorList.add( pieceTintColor );
+                }
+
+                PlayerSkin playerSkin = new PlayerSkin(skinToken.getClaim( "SkinId" ),
+                    Base64.getDecoder().decode( (String) skinToken.getClaim( "SkinResourcePatch" ) ),
+                    Math.toIntExact( skinToken.getClaim( "SkinImageWidth" ) ),
+                    Math.toIntExact( skinToken.getClaim( "SkinImageHeight" ) ),
                     Base64.getDecoder().decode( (String) skinToken.getClaim( "SkinData" ) ),
-                    capeData.isEmpty() ? null : Base64.getDecoder().decode( capeData ),
-                    skinToken.getClaim( "SkinGeometryName" ) == null ? "standard_custom" : skinToken.getClaim( "SkinGeometryName" ),
-                    skinGeometry
+                    animationList,
+                    Math.toIntExact( skinToken.getClaim( "CapeImageWidth" ) ),
+                    Math.toIntExact( skinToken.getClaim( "CapeImageHeight" ) ),
+                    Base64.getDecoder().decode( (String) skinToken.getClaim( "CapeData" ) ),
+                    Base64.getDecoder().decode( (String) skinToken.getClaim( "SkinGeometryData" ) ),
+                    Base64.getDecoder().decode( (String) skinToken.getClaim( "SkinAnimationData" ) ),
+                    skinToken.getClaim( "PremiumSkin" ),
+                    skinToken.getClaim( "PersonaSkin" ),
+                    skinToken.getClaim( "CapeOnClassicSkin" ),
+                    skinToken.getClaim( "CapeId" ),
+                    skinToken.getClaim( "SkinColor" ),
+                    skinToken.getClaim( "ArmSize" ),
+                    personaPieceList,
+                    pieceTintColorList
                 );
 
                 // Create needed device info

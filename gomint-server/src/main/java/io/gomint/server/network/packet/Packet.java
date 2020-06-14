@@ -16,6 +16,7 @@ import io.gomint.math.Vector;
 import io.gomint.server.GoMintServer;
 import io.gomint.server.entity.EntityLink;
 import io.gomint.server.network.type.CommandOrigin;
+import io.gomint.server.player.PlayerSkin;
 import io.gomint.server.util.Things;
 import io.gomint.taglib.AllocationLimitReachedException;
 import io.gomint.taglib.NBTReader;
@@ -23,6 +24,7 @@ import io.gomint.taglib.NBTTagCompound;
 import io.gomint.taglib.NBTWriter;
 import io.gomint.world.Gamerule;
 import io.gomint.world.block.data.Facing;
+import org.json.simple.JSONObject;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -275,43 +277,72 @@ public abstract class Packet {
         });
     }
 
-    public Map<Gamerule, Object> readGamerules(PacketBuffer buffer) {
-        Map<Gamerule, Object> rules = new HashMap<>();
+    void writeSerializedSkin(PlayerSkin skin, PacketBuffer buffer) {
+        buffer.writeString(skin.getId());
+        buffer.writeUnsignedVarInt(skin.getResourcePatch().length);
+        buffer.writeBytes(skin.getResourcePatch());
+        buffer.writeUnsignedVarInt(skin.getImageWidth());
+        buffer.writeUnsignedVarInt(skin.getImageHeight());
+        buffer.writeUnsignedVarInt(skin.getData().length);
+        buffer.writeBytes(skin.getData());
 
-        int amountOfRules = buffer.readUnsignedVarInt();
-        for (int i = 0; i < amountOfRules; i++) {
-            String gameRulename = buffer.readString();
-            Gamerule rule = Gamerule.getByNbtName(gameRulename);
-            if (rule == null) {
-                // System.out.println( "Unknown game rule: " + gameRulename );
+        if (skin.getAnimations() != null) {
+            buffer.writeUnsignedVarInt(skin.getAnimations().size());
+
+            for (PlayerSkin.AnimationFrame animationObj : skin.getAnimations()) {
+                buffer.writeUnsignedVarInt(animationObj.getWidth());
+                buffer.writeUnsignedVarInt(animationObj.getHeight());
+                buffer.writeUnsignedVarInt(animationObj.getData().length);
+                buffer.writeBytes(animationObj.getData());
+                buffer.writeUnsignedVarInt(animationObj.getType());
+                buffer.writeLFloat(animationObj.getFrames());
             }
-
-            switch (buffer.readByte()) {
-                case 1:
-                    boolean objB = buffer.readBoolean();
-                    if (rule != null) {
-                        rules.put(rule, objB);
-                    }
-
-                    break;
-                case 2:
-                    int objI = buffer.readUnsignedVarInt();
-                    if (rule != null) {
-                        rules.put(rule, objI);
-                    }
-
-                    break;
-                case 3:
-                    float objF = buffer.readLFloat();
-                    if (rule != null) {
-                        rules.put(rule, objF);
-                    }
-
-                    break;
-            }
+        } else {
+            buffer.writeUnsignedVarInt(0);
         }
 
-        return rules;
+        buffer.writeUnsignedVarInt(skin.getCapeImageWidth());
+        buffer.writeUnsignedVarInt(skin.getCapeImageHeight());
+        buffer.writeUnsignedVarInt(skin.getCapeData().length);
+        buffer.writeBytes(skin.getCapeData());
+        buffer.writeUnsignedVarInt(skin.getGeometry().length);
+        buffer.writeBytes(skin.getGeometry());
+        buffer.writeBoolean(skin.isPremium());
+        buffer.writeBoolean(skin.isPersona());
+        buffer.writeBoolean(skin.isPersonaCapeOnClassic());
+        buffer.writeString(skin.getCapeId());
+        buffer.writeString(skin.getFullId());
+        buffer.writeString(skin.getArmSize());
+        buffer.writeString(skin.getColour());
+
+        if (skin.getPersonaPieces() != null) {
+            buffer.writeUnsignedVarInt(skin.getPersonaPieces().size());
+
+            for (PlayerSkin.PersonaPiece personaPieceObj : skin.getPersonaPieces()) {
+                buffer.writeString(personaPieceObj.getPieceId());
+                buffer.writeString(personaPieceObj.getPieceType());
+                buffer.writeString(personaPieceObj.getPackId());
+                buffer.writeBoolean(personaPieceObj.isDefaultValue());
+                buffer.writeString(personaPieceObj.getProductId());
+            }
+        } else {
+            buffer.writeUnsignedVarInt(0);
+        }
+
+        buffer.writeUnsignedVarInt(skin.getPieceTintColours().size());
+
+        for (PlayerSkin.PieceTintColor pieceTintColorObj : skin.getPieceTintColours()) {
+            buffer.writeString(pieceTintColorObj.getPieceType());
+
+            if (pieceTintColorObj.getColors() != null) {
+                buffer.writeUnsignedVarInt(pieceTintColorObj.getColors().size());
+                for (String color : pieceTintColorObj.getColors()) {
+                    buffer.writeString(color);
+                }
+            } else {
+                buffer.writeUnsignedVarInt(0);
+            }
+        }
     }
 
     public BlockPosition readBlockPosition(PacketBuffer buffer) {
