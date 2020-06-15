@@ -3,9 +3,11 @@ package io.gomint.server.network.packet;
 import io.gomint.jraknet.PacketBuffer;
 import io.gomint.math.Location;
 import io.gomint.server.assets.AssetsLibrary;
+import io.gomint.server.inventory.item.Items;
 import io.gomint.server.network.Protocol;
 import io.gomint.server.player.PlayerPermission;
 import io.gomint.server.util.BlockIdentifier;
+import io.gomint.server.util.StringShortPair;
 import io.gomint.server.world.BlockRuntimeIDs;
 import io.gomint.world.Gamerule;
 import lombok.Data;
@@ -71,9 +73,6 @@ public class PacketStartGame extends Packet {
 
     // Server stuff
     private String correlationId;
-
-    // Runtime ID
-    private List<BlockIdentifier> runtimeIDs;
 
     /**
      * Create a new start game packet
@@ -141,8 +140,9 @@ public class PacketStartGame extends Packet {
         byte[] data = BlockRuntimeIDs.getPacketCache();
         buffer.writeBytes( data );
 
-        // TODO: Item table
-        buffer.writeUnsignedVarInt( 0 );
+        // Item table
+        PacketBuffer itemData = Items.getPacketCache();
+        buffer.writeBytes( itemData.getBuffer(), itemData.getBufferOffset(), itemData.getPosition() - itemData.getBufferOffset() );
 
         buffer.writeString( this.correlationId );
     }

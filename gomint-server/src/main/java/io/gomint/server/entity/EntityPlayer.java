@@ -722,7 +722,7 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
         this.sendAdventureSettings();
 
         // Send commands
-        this.sendCommands();
+        // this.sendCommands();
 
         // Attributes
         this.updateAttributes();
@@ -742,21 +742,19 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
 
         this.windowIds = new Byte2ObjectOpenHashMap<>();
         this.containerIds = new Object2ByteOpenHashMap<>();
-        // TODO: this.connection.getServer().getCreativeInventory().addViewer(this);
+        // this.connection.getServer().getCreativeInventory().addViewer(this);
 
-        // TODO: Update & Send crafting recipes
-        // this.connection.addToSendQueue(this.world.getServer().getRecipeManager().getCraftingRecipesBatch());
+        this.connection.addToSendQueue(this.world.getServer().getRecipeManager().getCraftingRecipesBatch());
 
         // Send entity metadata
         this.sendData(this);
 
-        // TODO: Send player list for yourself
-//        PacketPlayerlist playerlist = new PacketPlayerlist();
-//        playerlist.setMode((byte) 0);
-//        playerlist.setEntries(new ArrayList<PacketPlayerlist.Entry>() {{
-//            add(new PacketPlayerlist.Entry(EntityPlayer.this));
-//        }});
-//        this.getConnection().addToSendQueue(playerlist);
+        PacketPlayerlist playerlist = new PacketPlayerlist();
+        playerlist.setMode((byte) 0);
+        playerlist.setEntries(new ArrayList<>() {{
+            add(new PacketPlayerlist.Entry(EntityPlayer.this));
+        }});
+        this.getConnection().addToSendQueue(playerlist);
 
         LOGGER.debug("Did send all prepare entity data");
     }

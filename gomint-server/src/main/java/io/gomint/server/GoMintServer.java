@@ -254,6 +254,7 @@ public class GoMintServer implements GoMint, InventoryHolder {
         }
 
         BlockRuntimeIDs.init(this.assets.getBlockPalette());
+        Items.init(this.assets.getItemIDs());
     }
 
     public void startAfterRegistryInit(OptionSet args) {

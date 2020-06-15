@@ -17,6 +17,7 @@ import io.gomint.server.inventory.CreativeInventory;
 import io.gomint.server.inventory.item.ItemStack;
 import io.gomint.server.inventory.item.Items;
 import io.gomint.server.util.BlockIdentifier;
+import io.gomint.server.util.StringShortPair;
 import io.gomint.taglib.AllocationLimitReachedException;
 import io.gomint.taglib.NBTTagCompound;
 import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
@@ -49,15 +50,17 @@ import java.util.function.Function;
  */
 public class AssetsLibrary {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger( AssetsLibrary.class );
+    private static final Logger LOGGER = LoggerFactory.getLogger(AssetsLibrary.class);
 
     @Getter
     private CreativeInventory creativeInventory;
     @Getter
-    private Set<Recipe> recipes;
+    private List<Recipe> recipes;
 
     @Getter
     private List<BlockIdentifier> blockPalette;
+    @Getter
+    private List<StringShortPair> itemIDs;
 
     // Statistics
     private int shapelessRecipes;
@@ -71,7 +74,7 @@ public class AssetsLibrary {
      *
      * @param items which should be used to create new items
      */
-    public AssetsLibrary( Items items ) {
+    public AssetsLibrary(Items items) {
         this.items = items;
     }
 
@@ -80,14 +83,22 @@ public class AssetsLibrary {
      *
      * @throws IOException Thrown if an I/O error occurs whilst loading the library
      */
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     public void load() throws IOException, AllocationLimitReachedException {
-        NBTTagCompound root = NBTTagCompound.readFrom( this.getClass().getResourceAsStream( "/assets.dat" ), true, ByteOrder.BIG_ENDIAN );
-        if ( GoMint.instance() != null ) {
-            this.debug( (List<NBTTagCompound>) ( (List) root.getList( "itemLegacyIDs", false ) ) );
-            this.loadRecipes( (List<NBTTagCompound>) ( (List) root.getList( "recipes", false ) ) );
-            this.loadCreativeInventory( (List<byte[]>) ( (List) root.getList( "creativeInventory", false ) ) );
-            this.loadBlockPalette( (List<NBTTagCompound>) ( (List) root.getList( "blockPalette", false ) ) );
+        NBTTagCompound root = NBTTagCompound.readFrom(this.getClass().getResourceAsStream("/assets.dat"), true, ByteOrder.BIG_ENDIAN);
+        if (GoMint.instance() != null) {
+            this.debug((List<NBTTagCompound>) ((List) root.getList("itemLegacyIDs", false)));
+            this.loadRecipes((List<NBTTagCompound>) ((List) root.getList("recipes", false)));
+            this.loadCreativeInventory((List<byte[]>) ((List) root.getList("creativeInventory", false)));
+            this.loadBlockPalette((List<NBTTagCompound>) ((List) root.getList("blockPalette", false)));
+            this.loadItemIDs((List<NBTTagCompound>) ((List) root.getList("itemLegacyIDs", false)));
+        }
+    }
+
+    private void loadItemIDs(List<NBTTagCompound> itemLegacyIDs) {
+        this.itemIDs = new ArrayList<>();
+        for (NBTTagCompound itemLegacyID : itemLegacyIDs) {
+            this.itemIDs.add(new StringShortPair(itemLegacyID.getString("name", ""), itemLegacyID.getShort("id", (short) 0)));
         }
     }
 
@@ -97,12 +108,12 @@ public class AssetsLibrary {
         }
     }
 
-    private void loadBlockPalette( List<NBTTagCompound> blockPaletteCompounds ) {
+    private void loadBlockPalette(List<NBTTagCompound> blockPaletteCompounds) {
         Map<String, List<SortedMap<String, Object>>> states = new HashMap<>();
 
         this.blockPalette = new ArrayList<>();
-        for ( NBTTagCompound compound : blockPaletteCompounds ) {
-            String block = compound.getCompound("block", false).getString( "name", "minecraft:air" );
+        for (NBTTagCompound compound : blockPaletteCompounds) {
+            String block = compound.getCompound("block", false).getString("name", "minecraft:air");
 
             List<SortedMap<String, Object>> st = states.computeIfAbsent(block, s -> new ArrayList<>());
 
@@ -113,10 +124,10 @@ public class AssetsLibrary {
 
             st.add(sta);
 
-            this.blockPalette.add( new BlockIdentifier(
-                compound.getCompound("block", false).getString( "name", "minecraft:air" ),
+            this.blockPalette.add(new BlockIdentifier(
+                compound.getCompound("block", false).getString("name", "minecraft:air"),
                 compound.getCompound("block", false).getCompound("states", false)
-            ) );
+            ));
         }
 
         for (Map.Entry<String, List<SortedMap<String, Object>>> entry : states.entrySet()) {
@@ -135,117 +146,128 @@ public class AssetsLibrary {
         }
     }
 
-    private void loadCreativeInventory( List<byte[]> raw ) {
-        if ( GoMint.instance() != null ) {
-            this.creativeInventory = new CreativeInventory( null, raw.size() );
+    private void loadCreativeInventory(List<byte[]> raw) {
+        if (GoMint.instance() != null) {
+            this.creativeInventory = new CreativeInventory(null, raw.size());
 
-            for ( byte[] bytes : raw ) {
+            for (byte[] bytes : raw) {
                 try {
-                    this.creativeInventory.addItem( this.loadItemStack( new PacketBuffer( bytes, 0 ) ) );
-                } catch ( IOException | AllocationLimitReachedException e ) {
-                    LOGGER.error( "Could not load creative item: ", e );
+                    this.creativeInventory.addItem(this.loadItemStack(new PacketBuffer(bytes, 0)));
+                } catch (IOException | AllocationLimitReachedException e) {
+                    LOGGER.error("Could not load creative item: ", e);
                 }
             }
 
-            LOGGER.info( "Loaded {} items into creative inventory", raw.size() );
+            LOGGER.info("Loaded {} items into creative inventory", raw.size());
         }
     }
 
-    private void loadRecipes( List<NBTTagCompound> raw ) throws IOException, AllocationLimitReachedException {
-        this.recipes = new HashSet<>();
+    private void loadRecipes(List<NBTTagCompound> raw) throws IOException, AllocationLimitReachedException {
+        this.recipes = new ArrayList<>();
 
         this.shapelessRecipes = 0;
         this.shapedRecipes = 0;
         this.smeltingRecipes = 0;
 
-        if ( raw == null ) {
+        if (raw == null) {
             return;
         }
 
-        for ( NBTTagCompound compound : raw ) {
-            byte type = compound.getByte( "type", (byte) -1 );
+        for (NBTTagCompound compound : raw) {
+            byte type = compound.getByte("type", (byte) -1);
             Recipe recipe;
-            switch ( type ) {
+            switch (type) {
                 case 0:
-                    recipe = this.loadShapelessRecipe( compound );
+                    recipe = this.loadShapelessRecipe(compound);
                     break;
 
                 case 1:
-                    recipe = this.loadShapedRecipe( compound );
+                    recipe = this.loadShapedRecipe(compound);
                     break;
 
                 case 2:
-                    recipe = this.loadSmeltingRecipe( compound );
+                    recipe = this.loadSmeltingRecipe(compound);
                     break;
 
                 default:
                     continue;
             }
 
-            this.recipes.add( recipe );
+            this.recipes.add(recipe);
         }
 
-        LOGGER.info( "Loaded {} shapeless, {} shaped and {} smelting recipes", this.shapelessRecipes, this.shapedRecipes, this.smeltingRecipes );
+        LOGGER.info("Loaded {} shapeless, {} shaped and {} smelting recipes", this.shapelessRecipes, this.shapedRecipes, this.smeltingRecipes);
     }
 
-    private ShapelessRecipe loadShapelessRecipe( NBTTagCompound data ) throws IOException, AllocationLimitReachedException {
-        List<Object> inputItems = data.getList( "i", false );
+    private ShapelessRecipe loadShapelessRecipe(NBTTagCompound data) throws IOException, AllocationLimitReachedException {
+        String name = data.getString("name", null);
+        String block = data.getString("block", null);
+        int priority = data.getInteger("prio", 50);
+
+        List<Object> inputItems = data.getList("i", false);
         ItemStack[] ingredients = new ItemStack[inputItems.size()];
-        for ( int i = 0; i < ingredients.length; ++i ) {
-            ingredients[i] = this.loadItemStack( new PacketBuffer( (byte[]) inputItems.get( i ), 0 ) );
+        for (int i = 0; i < ingredients.length; ++i) {
+            ingredients[i] = this.loadItemStack(new PacketBuffer((byte[]) inputItems.get(i), 0));
         }
 
-        List<Object> outputItems = data.getList( "o", false );
+        List<Object> outputItems = data.getList("o", false);
         ItemStack[] outcome = new ItemStack[outputItems.size()];
-        for ( int i = 0; i < outcome.length; ++i ) {
-            outcome[i] = this.loadItemStack( new PacketBuffer( (byte[]) outputItems.get( i ), 0 ) );
+        for (int i = 0; i < outcome.length; ++i) {
+            outcome[i] = this.loadItemStack(new PacketBuffer((byte[]) outputItems.get(i), 0));
         }
 
         this.shapelessRecipes++;
-        return new ShapelessRecipe( ingredients, outcome, null );
+        return new ShapelessRecipe(name, block, ingredients, outcome, null, priority);
     }
 
-    private ShapedRecipe loadShapedRecipe( NBTTagCompound data ) throws IOException, AllocationLimitReachedException {
-        int width = data.getInteger( "w", 0 );
-        int height = data.getInteger( "h", 0 );
+    private ShapedRecipe loadShapedRecipe(NBTTagCompound data) throws IOException, AllocationLimitReachedException {
+        String name = data.getString("name", null);
+        String block = data.getString("block", null);
+        int priority = data.getInteger("prio", 50);
 
-        List<Object> inputItems = data.getList( "i", false );
+        int width = data.getInteger("w", 0);
+        int height = data.getInteger("h", 0);
+
+        List<Object> inputItems = data.getList("i", false);
 
         ItemStack[] arrangement = new ItemStack[width * height];
-        for ( int j = 0; j < height; ++j ) {
-            for ( int i = 0; i < width; ++i ) {
-                arrangement[j * width + i] = this.loadItemStack( new PacketBuffer( (byte[]) inputItems.get( j * width + i ), 0 ) );
+        for (int j = 0; j < height; ++j) {
+            for (int i = 0; i < width; ++i) {
+                arrangement[j * width + i] = this.loadItemStack(new PacketBuffer((byte[]) inputItems.get(j * width + i), 0));
             }
         }
 
-        List<Object> outputItems = data.getList( "o", false );
+        List<Object> outputItems = data.getList("o", false);
 
         ItemStack[] outcome = new ItemStack[outputItems.size()];
-        for ( int i = 0; i < outcome.length; ++i ) {
-            outcome[i] = this.loadItemStack( new PacketBuffer( (byte[]) outputItems.get( i ), 0 ) );
+        for (int i = 0; i < outcome.length; ++i) {
+            outcome[i] = this.loadItemStack(new PacketBuffer((byte[]) outputItems.get(i), 0));
         }
 
         this.shapedRecipes++;
-        return new ShapedRecipe( width, height, arrangement, outcome, UUID.fromString( data.getString( "u", UUID.randomUUID().toString() ) ) );
+        return new ShapedRecipe(name, block, width, height, arrangement, outcome, UUID.fromString(data.getString("u", UUID.randomUUID().toString())), priority);
     }
 
-    private SmeltingRecipe loadSmeltingRecipe( NBTTagCompound data ) throws IOException, AllocationLimitReachedException {
-        List<Object> inputList = data.getList( "i", false );
-        byte[] inputData = (byte[]) inputList.get( 0 );
-        ItemStack input = this.loadItemStack( new PacketBuffer( inputData, 0 ) );
+    private SmeltingRecipe loadSmeltingRecipe(NBTTagCompound data) throws IOException, AllocationLimitReachedException {
+        String block = data.getString("block", null);
+        int priority = data.getInteger("prio", 50);
 
-        List<Object> outputList = data.getList( "o", false );
-        byte[] outcomeData = (byte[]) outputList.get( 0 );
-        ItemStack outcome = this.loadItemStack( new PacketBuffer( outcomeData, 0 ) );
+        List<Object> inputList = data.getList("i", false);
+        byte[] inputData = (byte[]) inputList.get(0);
+        ItemStack input = this.loadItemStack(new PacketBuffer(inputData, 0));
+
+        List<Object> outputList = data.getList("o", false);
+        byte[] outcomeData = (byte[]) outputList.get(0);
+        ItemStack outcome = this.loadItemStack(new PacketBuffer(outcomeData, 0));
 
         this.smeltingRecipes++;
-        return new SmeltingRecipe( input, outcome, UUID.fromString( data.getString( "u", UUID.randomUUID().toString() ) ) );
+        return new SmeltingRecipe(block, input, outcome, UUID.fromString(data.getString("u", UUID.randomUUID().toString())), priority);
     }
 
-    private ItemStack loadItemStack( PacketBuffer buffer ) throws IOException, AllocationLimitReachedException {
+    private ItemStack loadItemStack(PacketBuffer buffer) throws IOException, AllocationLimitReachedException {
         short id = buffer.readShort();
-        if ( id == 0 ) {
-            return this.items == null ? null : this.items.create( 0, (short) 0, (byte) 0, null );
+        if (id == 0) {
+            return this.items == null ? null : this.items.create(0, (short) 0, (byte) 0, null);
         }
 
         byte amount = buffer.readByte();
@@ -253,13 +275,13 @@ public class AssetsLibrary {
         short extraLen = buffer.readShort();
 
         NBTTagCompound compound = null;
-        if ( extraLen > 0 ) {
-            ByteArrayInputStream bin = new ByteArrayInputStream( buffer.getBuffer(), buffer.getPosition(), extraLen );
-            compound = NBTTagCompound.readFrom( bin, false, ByteOrder.BIG_ENDIAN );
+        if (extraLen > 0) {
+            ByteArrayInputStream bin = new ByteArrayInputStream(buffer.getBuffer(), buffer.getPosition(), extraLen);
+            compound = NBTTagCompound.readFrom(bin, false, ByteOrder.BIG_ENDIAN);
             bin.close();
         }
 
-        return this.items == null ? null : this.items.create( id, data, amount, compound );
+        return this.items == null ? null : this.items.create(id, data, amount, compound);
     }
 
     /**

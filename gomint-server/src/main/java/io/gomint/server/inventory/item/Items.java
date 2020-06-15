@@ -1,12 +1,15 @@
 package io.gomint.server.inventory.item;
 
 import io.gomint.inventory.item.ItemStack;
+import io.gomint.jraknet.PacketBuffer;
+import io.gomint.server.assets.AssetsLibrary;
 import io.gomint.server.registry.Generator;
 import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.registry.RegisterInfos;
 import io.gomint.server.registry.Registry;
 import io.gomint.server.util.ClassPath;
 import io.gomint.server.util.Pair;
+import io.gomint.server.util.StringShortPair;
 import io.gomint.server.util.performance.ObjectConstructionFactory;
 import io.gomint.taglib.NBTTagCompound;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
@@ -15,6 +18,7 @@ import it.unimi.dsi.fastutil.ints.IntArraySet;
 import it.unimi.dsi.fastutil.ints.IntSet;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
+import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +43,20 @@ public class Items {
     private final Registry<io.gomint.server.inventory.item.ItemStack> generators;
     private final Object2IntMap<String> blockIdToItemId = new Object2IntOpenHashMap<>();
     private final Int2ObjectMap<String> itemIdToBlockId = new Int2ObjectOpenHashMap<>();
+
+    @Getter
+    private static PacketBuffer packetCache;
+
+    public static void init(List<StringShortPair> items) {
+        PacketBuffer buffer = new PacketBuffer(1024);
+        buffer.writeUnsignedVarInt( items.size() );
+        for (StringShortPair itemID : items) {
+            buffer.writeString(itemID.getBlockId());
+            buffer.writeLShort(itemID.getData());
+        }
+
+        Items.packetCache = buffer;
+    }
 
     /**
      * Create a new item registry

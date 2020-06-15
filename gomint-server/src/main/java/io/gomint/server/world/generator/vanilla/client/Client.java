@@ -539,7 +539,6 @@ public class Client implements ConnectionWithState {
             this.spawn = ( (PacketStartGame) packet ).getSpawn();
             this.ownId = ( (PacketStartGame) packet ).getEntityId();
             this.runtimeId = ( (PacketStartGame) packet ).getRuntimeEntityId();
-            this.runtimeIDs = ( (PacketStartGame) packet ).getRuntimeIDs();
 
             this.sendChunkRadius();
 

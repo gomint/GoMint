@@ -21,7 +21,7 @@ import java.util.*;
  */
 public class RecipeManager {
 
-    private Set<Recipe> recipes;
+    private List<Recipe> recipes;
 
     // Lookup stuff
     private Map<ItemStack, SmeltingRecipe> smeltingRecipes;
@@ -36,7 +36,7 @@ public class RecipeManager {
      */
     public RecipeManager() {
         this.smeltingRecipes = new HashMap<>();
-        this.recipes = new HashSet<>();
+        this.recipes = new ArrayList<>();
         this.lookup = new HashMap<>();
         this.dirty = true;
     }

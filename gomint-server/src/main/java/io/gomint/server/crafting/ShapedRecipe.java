@@ -29,6 +29,9 @@ import java.util.UUID;
  */
 public class ShapedRecipe extends CraftingRecipe {
 
+    private final String name;
+    private final String block;
+
     private final int width;
     private final int height;
 
@@ -46,9 +49,12 @@ public class ShapedRecipe extends CraftingRecipe {
      * @param outcome     Output of the recipe
      * @param uuid        UUID of the recipe
      */
-    public ShapedRecipe( int width, int height, ItemStack[] ingredients, ItemStack[] outcome, UUID uuid ) {
-        super( outcome, uuid );
+    public ShapedRecipe( String name, String block, int width, int height, ItemStack[] ingredients, ItemStack[] outcome, UUID uuid, int priority ) {
+        super( outcome, uuid, priority );
         assert ingredients.length == width * height : "Invalid arrangement: Fill out empty slots with air!";
+
+        this.name = name;
+        this.block = block;
 
         this.width = width;
         this.height = height;
@@ -98,6 +104,8 @@ public class ShapedRecipe extends CraftingRecipe {
         // Type of recipe ( 1 == shaped )
         buffer.writeSignedVarInt( 1 );
 
+        buffer.writeString(this.name);
+
         // Size of grid
         buffer.writeSignedVarInt( this.width );
         buffer.writeSignedVarInt( this.height );
@@ -105,7 +113,7 @@ public class ShapedRecipe extends CraftingRecipe {
         // Input items
         for ( int j = 0; j < this.height; ++j ) {
             for ( int i = 0; i < this.width; ++i ) {
-                Packet.writeItemStack( this.arrangement[j * this.width + i], buffer );
+                Packet.writeRecipeInput( this.arrangement[j * this.width + i], buffer );
             }
         }
 
@@ -118,6 +126,8 @@ public class ShapedRecipe extends CraftingRecipe {
 
         // Write recipe UUID
         buffer.writeUUID( this.getUUID() );
+        buffer.writeString(this.block);
+        buffer.writeSignedVarInt(this.getPriority());
     }
 
     @Override

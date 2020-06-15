@@ -29,6 +29,7 @@ import org.json.simple.JSONObject;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.nio.ByteOrder;
 import java.util.Base64;
 import java.util.HashMap;
@@ -137,23 +138,26 @@ public abstract class Packet {
         io.gomint.server.inventory.item.ItemStack serverItemStack = (io.gomint.server.inventory.item.ItemStack) itemStack;
 
         buffer.writeSignedVarInt(serverItemStack.getMaterial());
-        buffer.writeSignedVarInt((itemStack.getData() << 8) + (itemStack.getAmount() & 0xff));
+        buffer.writeSignedVarInt(((itemStack.getData() & 0x7fff)<< 8) + (itemStack.getAmount() & 0xff));
 
         NBTTagCompound compound = serverItemStack.getNbtData();
         if (compound == null) {
             buffer.writeLShort((short) 0);
         } else {
             try {
-                // NBT Tag
-                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                NBTWriter nbtWriter = new NBTWriter(baos, ByteOrder.LITTLE_ENDIAN);
-                nbtWriter.setUseVarint(true);
-                nbtWriter.write(compound);
-
                 // Vanilla currently only writes one nbt tag (this is hardcoded)
                 buffer.writeLShort((short) 0xFFFF);
                 buffer.writeByte((byte) 1);
-                buffer.writeBytes(baos.toByteArray());
+
+                // NBT Tag
+                NBTWriter nbtWriter = new NBTWriter(new OutputStream() {
+                    @Override
+                    public void write(int b) throws IOException {
+                        buffer.writeByte((byte) b);
+                    }
+                }, ByteOrder.LITTLE_ENDIAN);
+                nbtWriter.setUseVarint(true);
+                nbtWriter.write(compound);
             } catch (IOException e) {
                 buffer.writeLShort((short) 0);
             }
@@ -164,6 +168,15 @@ public abstract class Packet {
         buffer.writeSignedVarInt(0);
 
         ((io.gomint.server.inventory.item.ItemStack) itemStack).writeAdditionalData(buffer);
+    }
+
+    public static void writeRecipeInput(ItemStack ingredient, PacketBuffer buffer) {
+        int material = ((io.gomint.server.inventory.item.ItemStack) ingredient).getMaterial();
+        buffer.writeSignedVarInt(material);
+        if (material != 0) {
+            buffer.writeSignedVarInt(ingredient.getData() & 0x7FFF);
+            buffer.writeSignedVarInt(ingredient.getAmount());
+        }
     }
 
     /**

@@ -26,11 +26,15 @@ import java.util.UUID;
  */
 public class ShapelessRecipe extends CraftingRecipe {
 
-    private ItemStack[] ingredients;
-    private ItemStack[] outcome;
+    private final String name;
+    private final String block;
+    private final ItemStack[] ingredients;
+    private final ItemStack[] outcome;
 
-    public ShapelessRecipe( ItemStack[] ingredients, ItemStack[] outcome, UUID uuid ) {
-        super( outcome, uuid );
+    public ShapelessRecipe(String name, String block, ItemStack[] ingredients, ItemStack[] outcome, UUID uuid, int priority) {
+        super(outcome, uuid, priority);
+        this.name = name;
+        this.block = block;
         this.ingredients = ingredients;
         this.outcome = outcome;
     }
@@ -41,46 +45,49 @@ public class ShapelessRecipe extends CraftingRecipe {
     }
 
     @Override
-    public void serialize( PacketBuffer buffer ) {
-        buffer.writeSignedVarInt( 0 );
+    public void serialize(PacketBuffer buffer) {
+        buffer.writeSignedVarInt(0);
 
-        buffer.writeUnsignedVarInt( this.ingredients.length );
-        for ( ItemStack ingredient : this.ingredients ) {
-            Packet.writeItemStack( ingredient, buffer );
+        buffer.writeString(this.name);
+        buffer.writeUnsignedVarInt(this.ingredients.length);
+        for (ItemStack ingredient : this.ingredients) {
+            Packet.writeRecipeInput(ingredient, buffer);
         }
 
-        buffer.writeUnsignedVarInt( this.outcome.length );
-        for ( ItemStack itemStack : this.outcome ) {
-            Packet.writeItemStack( itemStack, buffer );
+        buffer.writeUnsignedVarInt(this.outcome.length);
+        for (ItemStack itemStack : this.outcome) {
+            Packet.writeItemStack(itemStack, buffer);
         }
 
-        buffer.writeUUID( this.getUUID() );
+        buffer.writeUUID(this.getUUID());
+        buffer.writeString(this.block);
+        buffer.writeSignedVarInt(this.getPriority());
     }
 
     @Override
-    public int[] isCraftable( Inventory inputInventory ) {
+    public int[] isCraftable(Inventory inputInventory) {
         ItemStack[] inputItems = inputInventory.getContentsArray();
         ItemStack[] ingredients = getIngredients();
         int[] consumeSlots = new int[ingredients.length];
-        Arrays.fill( consumeSlots, -1 );
+        Arrays.fill(consumeSlots, -1);
 
-        for ( int rI = 0; rI < ingredients.length; rI++ ) {
+        for (int rI = 0; rI < ingredients.length; rI++) {
             ItemStack recipeWanted = ingredients[rI];
             boolean found = false;
 
-            for ( int i = 0; i < inputItems.length; i++ ) {
+            for (int i = 0; i < inputItems.length; i++) {
                 ItemStack input = inputItems[i];
 
-                if ( canBeUsedForCrafting( recipeWanted, input ) ) {
+                if (canBeUsedForCrafting(recipeWanted, input)) {
                     // Check if we already consumed this
                     int alreadyConsumed = 0;
-                    for ( int consumeSlot : consumeSlots ) {
-                        if ( consumeSlot == i ) {
+                    for (int consumeSlot : consumeSlots) {
+                        if (consumeSlot == i) {
                             alreadyConsumed++;
                         }
                     }
 
-                    if ( input.getAmount() >= alreadyConsumed + 1 ) {
+                    if (input.getAmount() >= alreadyConsumed + 1) {
                         consumeSlots[rI] = i;
                         found = true;
                         break;
@@ -88,7 +95,7 @@ public class ShapelessRecipe extends CraftingRecipe {
                 }
             }
 
-            if ( !found ) {
+            if (!found) {
                 return null;
             }
         }
