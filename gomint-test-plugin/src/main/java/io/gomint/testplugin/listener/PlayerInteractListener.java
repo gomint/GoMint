@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-package io.gomint.plugin.listener;
+package io.gomint.testplugin.listener;
 
 import io.gomint.GoMint;
 import io.gomint.entity.EntityPlayer;

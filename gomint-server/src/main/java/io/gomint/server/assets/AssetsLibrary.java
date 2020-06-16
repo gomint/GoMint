@@ -87,7 +87,6 @@ public class AssetsLibrary {
     public void load() throws IOException, AllocationLimitReachedException {
         NBTTagCompound root = NBTTagCompound.readFrom(this.getClass().getResourceAsStream("/assets.dat"), true, ByteOrder.BIG_ENDIAN);
         if (GoMint.instance() != null) {
-            this.debug((List<NBTTagCompound>) ((List) root.getList("itemLegacyIDs", false)));
             this.loadRecipes((List<NBTTagCompound>) ((List) root.getList("recipes", false)));
             this.loadCreativeInventory((List<byte[]>) ((List) root.getList("creativeInventory", false)));
             this.loadBlockPalette((List<NBTTagCompound>) ((List) root.getList("blockPalette", false)));
@@ -99,12 +98,6 @@ public class AssetsLibrary {
         this.itemIDs = new ArrayList<>();
         for (NBTTagCompound itemLegacyID : itemLegacyIDs) {
             this.itemIDs.add(new StringShortPair(itemLegacyID.getString("name", ""), itemLegacyID.getShort("id", (short) 0)));
-        }
-    }
-
-    private void debug(List<NBTTagCompound> itemLegacyIDs) {
-        for (NBTTagCompound compound : itemLegacyIDs) {
-            LOGGER.info("{} -> {}", compound.getShort("id", (short) -1), compound.getString("name", ""));
         }
     }
 
@@ -128,21 +121,6 @@ public class AssetsLibrary {
                 compound.getCompound("block", false).getString("name", "minecraft:air"),
                 compound.getCompound("block", false).getCompound("states", false)
             ));
-        }
-
-        for (Map.Entry<String, List<SortedMap<String, Object>>> entry : states.entrySet()) {
-            LOGGER.info("Block {}", entry.getKey());
-
-            for (SortedMap<String, Object> map : entry.getValue()) {
-                StringBuilder builder = new StringBuilder("{");
-                for (Map.Entry<String, Object> objectEntry : map.entrySet()) {
-                    builder.append("\"").append(objectEntry.getKey()).append("\"").append(":").append(objectEntry.getValue()).append(" [").append(objectEntry.getValue().getClass().getName()).append("]").append(",");
-                }
-
-                builder.delete(builder.length() - 1, builder.length()).append("}");
-
-                LOGGER.info("State: {}", builder.toString());
-            }
         }
     }
 

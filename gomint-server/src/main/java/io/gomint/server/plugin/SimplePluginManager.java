@@ -28,8 +28,10 @@ import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.asm.AnnotationVisitor;
+import org.springframework.asm.Attribute;
 import org.springframework.asm.ClassReader;
 import org.springframework.asm.ClassVisitor;
+import org.springframework.asm.ModuleVisitor;
 import org.springframework.asm.Opcodes;
 import org.springframework.stereotype.Component;
 
@@ -37,7 +39,10 @@ import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
+import java.lang.module.Configuration;
+import java.lang.module.ModuleFinder;
 import java.lang.reflect.Field;
+import java.nio.file.Path;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
@@ -118,12 +123,7 @@ public class SimplePluginManager implements PluginManager, EventCaller {
 
     public void detectPlugins() {
         // Search the plugins folder for valid .jar files
-        for (File file : this.pluginFolder.listFiles(new FileFilter() {
-            @Override
-            public boolean accept(File pathname) {
-                return (pathname.getAbsolutePath().endsWith(".jar"));
-            }
-        })) {
+        for (File file : this.pluginFolder.listFiles(pathname -> (pathname.getAbsolutePath().endsWith(".jar")))) {
             PluginMeta metadata = getMetadata(file);
             if (metadata != null) {
                 this.metadata.put(metadata.getName(), metadata);
@@ -225,7 +225,38 @@ public class SimplePluginManager implements PluginManager, EventCaller {
         try {
             LOGGER.info("Starting to load plugin {}", pluginMeta.getName());
             loader = new PluginClassloader(pluginMeta);
-            Plugin clazz = (Plugin) constructAndInject(pluginMeta.getMainClass(), loader);
+
+            ModuleFinder finder = ModuleFinder.of(pluginMeta.getPluginFile().toPath());
+            ModuleFinder empty = ModuleFinder.of();
+            ModuleLayer bootLayer = ModuleLayer.boot();
+
+            String name = pluginMeta.getPluginFile().toPath().getFileName().toString();
+            name = name.substring(0, name.length() - 4);
+
+            Configuration configuration = bootLayer.configuration();
+            String finalName = name;
+            Configuration newConfiguration = configuration.resolve(finder, empty, new HashSet<>() {{
+                add(finalName);
+            }});
+
+            PluginClassloader finalLoader = loader;
+            ModuleLayer.Controller moduleLayerController = ModuleLayer.defineModules(newConfiguration, Collections.singletonList(bootLayer), s -> finalLoader);
+
+            ModuleLayer moduleLayer = moduleLayerController.layer();
+            Module pluginModule = moduleLayer.findModule(pluginMeta.getModuleName()).get();
+            Module currentModule = SimplePluginManager.class.getModule();
+
+            for (String aPackage : pluginMeta.getPackages()) {
+                moduleLayerController.addExports(pluginModule, aPackage, currentModule);
+                moduleLayerController.addOpens(pluginModule, aPackage, currentModule);
+                moduleLayerController.addReads(pluginModule, currentModule);
+                currentModule.addReads(pluginModule);
+                currentModule.addExports("io.gomint.server.event", pluginModule);
+            }
+
+            ClassLoader mLoader = moduleLayer.findLoader(pluginMeta.getModuleName());
+
+            Plugin clazz = (Plugin) constructAndInject(pluginMeta.getMainClass(), mLoader);
             if (clazz == null) {
                 return;
             }
@@ -264,7 +295,7 @@ public class SimplePluginManager implements PluginManager, EventCaller {
         }
     }
 
-    private Object constructAndInject(String clazz, PluginClassloader loader) {
+    private Object constructAndInject(String clazz, ClassLoader loader) {
         try {
             Class<?> cl = loader.loadClass(clazz);
 
@@ -367,6 +398,31 @@ public class SimplePluginManager implements PluginManager, EventCaller {
                     // When the entry is valid and ends with a .class its a java class and we need to scan it
                     if (jarEntry != null && jarEntry.getName().endsWith(".class")) {
                         ClassReader cr = new ClassReader(new DataInputStream(jar.getInputStream(jarEntry)));
+
+                        // Sort out *info.class files
+                        if (cr.getSuperName() == null) {
+                            cr.accept(new ClassVisitor(Opcodes.ASM7) {
+                                @Override
+                                public ModuleVisitor visitModule(String name, int access, String version) {
+                                    meta.setModuleName(name);
+                                    return super.visitModule(name, access, version);
+                                }
+                            }, 0);
+
+                            continue;
+                        } else {
+                            cr.accept(new ClassVisitor(Opcodes.ASM7) {
+                                @Override
+                                public void visit(int version, int access, String name, String signature, String superName, String[] interfaces) {
+                                    String packageName = name.replace("/", ".");
+                                    int lastIndex = packageName.lastIndexOf(".");
+                                    packageName = packageName.substring(0, lastIndex);
+
+                                    meta.addPackage(packageName);
+                                    super.visit(version, access, name, signature, superName, interfaces);
+                                }
+                            }, 0);
+                        }
 
                         // Does this class extend the plugin class?
                         if (cr.getSuperName().equals("io/gomint/plugin/Plugin")) {

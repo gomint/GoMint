@@ -1,8 +1,13 @@
-package io.gomint.plugin;
+package io.gomint.testplugin;
 
-import io.gomint.plugin.listener.PlayerInteractListener;
-import io.gomint.plugin.listener.PlayerJoinListener;
-import io.gomint.plugin.listener.PlayerRespawnListener;
+import io.gomint.testplugin.listener.PlayerInteractListener;
+import io.gomint.testplugin.listener.PlayerJoinListener;
+import io.gomint.testplugin.listener.PlayerRespawnListener;
+import io.gomint.plugin.Plugin;
+import io.gomint.plugin.Version;
+import io.gomint.plugin.Startup;
+import io.gomint.plugin.StartupPriority;
+import io.gomint.plugin.PluginName;
 
 /**
  * @author geNAZt

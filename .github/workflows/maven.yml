@@ -13,8 +13,12 @@ jobs:
         java-version: 11
     - name: Build with Maven
       run: mvn -B package
+    - run: mkdir -p ./release/modules && cp -r ./gomint-server/target/modules/* ./release/modules/
+    - uses: montudor/action-zip@v0.1.0
+      with:
+        args: cd ./release && zip -qq -r ./release.zip ./
     - name: Store artifacts
       uses: actions/upload-artifact@v2
       with:
         name: GoMint Server
-        path: gomint-server/target/GoMint.jar
+        path: ./release/release.zip

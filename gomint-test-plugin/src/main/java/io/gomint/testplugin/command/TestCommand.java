@@ -1,4 +1,4 @@
-package io.gomint.plugin.command;
+package io.gomint.testplugin.command;
 
 import io.gomint.command.Command;
 import io.gomint.command.CommandOutput;
@@ -6,7 +6,7 @@ import io.gomint.command.CommandSender;
 import io.gomint.command.annotation.Description;
 import io.gomint.command.annotation.Name;
 import io.gomint.entity.EntityPlayer;
-import io.gomint.plugin.TestPlugin;
+import io.gomint.testplugin.TestPlugin;
 import io.gomint.plugin.injection.InjectPlugin;
 import io.gomint.util.random.FastRandom;
 import io.gomint.world.World;

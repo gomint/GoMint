@@ -5,12 +5,12 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-package io.gomint.plugin.scoreboard;
+package io.gomint.testplugin.scoreboard;
 
 import io.gomint.ChatColor;
 import io.gomint.GoMint;
 import io.gomint.entity.EntityPlayer;
-import io.gomint.plugin.TestPlugin;
+import io.gomint.testplugin.TestPlugin;
 import io.gomint.scoreboard.DisplayEntry;
 import io.gomint.scoreboard.DisplaySlot;
 import io.gomint.scoreboard.Scoreboard;

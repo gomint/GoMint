@@ -75,35 +75,12 @@ public class Bootstrap {
         parser.accepts("slc");
         parser.accepts("dbg-net");
         parser.accepts("exit-after-boot");
-        parser.accepts("convertOnly", "Scans root dir for folders with a anvil based world in it and converts it. After converting the process dies");
 
         OptionSet options = parser.parse(args);
 
         // Set custom log level
         if (options.has("dbg-net")) {
             Configurator.setLevel("io.gomint.server.network.NetworkManager", Level.TRACE);
-        }
-
-        // Check if we need to create the libs Folder
-        File libsFolder = new File("libs/");
-        if (libsFolder.exists()) {
-            File[] files = libsFolder.listFiles();
-            if (files == null) {
-                LOGGER.error("Library Directory is corrupted");
-                System.exit(-1);
-            }
-
-            // Scan the libs/ Directory for .jar Files
-            for (File file : files) {
-                if (file.getAbsolutePath().endsWith(".jar")) {
-                    try {
-                        LOGGER.info("Loading lib: " + file.getAbsolutePath());
-                        addJARToClasspath(file);
-                    } catch (IOException e) {
-                        LOGGER.warn("Error attaching library to system classpath: ", e);
-                    }
-                }
-            }
         }
 
         // Load the Class entrypoint
@@ -119,45 +96,6 @@ public class Bootstrap {
         } catch (Throwable t) {
             LOGGER.error("GoMint crashed: ", t);
             ReportUploader.create().exception(t).property("crash", "true").upload();
-        }
-    }
-
-    /**
-     * Appends a JAR into the System Classloader
-     *
-     * @param moduleFile which should be added to the classpath
-     * @throws IOException
-     */
-    private static void addJARToClasspath(File moduleFile) throws IOException {
-        URL moduleURL = moduleFile.toURI().toURL();
-
-        // Check if classloader has been changed (it should be a URLClassLoader)
-        if (!(ClassLoader.getSystemClassLoader() instanceof URLClassLoader)) {
-            // This is invalid for Java 9/10, they use a UCP inside a wrapper loader
-            try {
-                Field ucpField = ClassLoader.getSystemClassLoader().getClass().getDeclaredField("ucp");
-                ucpField.setAccessible(true);
-
-                Object ucp = ucpField.get(ClassLoader.getSystemClassLoader());
-                Method addURLucp = ucp.getClass().getDeclaredMethod("addURL", URL.class);
-                addURLucp.invoke(ucp, moduleURL);
-            } catch (NoSuchFieldException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
-                e.printStackTrace();
-            }
-        } else {
-            Class[] parameters = new Class[]{URL.class};
-
-            ClassLoader sysloader = ClassLoader.getSystemClassLoader();
-            Class sysclass = URLClassLoader.class;
-
-            try {
-                Method method = sysclass.getDeclaredMethod("addURL", parameters);
-                method.setAccessible(true);
-                method.invoke(sysloader, new Object[]{moduleURL});
-            } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
-                e.printStackTrace();
-                throw new IOException("Error, could not add URL to system classloader");
-            }
         }
     }
 

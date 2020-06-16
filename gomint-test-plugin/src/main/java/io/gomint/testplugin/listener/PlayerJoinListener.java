@@ -1,4 +1,4 @@
-package io.gomint.plugin.listener;
+package io.gomint.testplugin.listener;
 
 import io.gomint.entity.passive.EntityArmorStand;
 import io.gomint.event.EventHandler;
@@ -7,8 +7,8 @@ import io.gomint.event.EventPriority;
 import io.gomint.event.player.PlayerJoinEvent;
 import io.gomint.inventory.item.ItemBucket;
 import io.gomint.math.BlockPosition;
-import io.gomint.plugin.TestPlugin;
-import io.gomint.plugin.scoreboard.DebugScoreboard;
+import io.gomint.testplugin.TestPlugin;
+import io.gomint.testplugin.scoreboard.DebugScoreboard;
 import io.gomint.world.block.Block;
 import io.gomint.world.block.BlockBambooSapling;
 import lombok.RequiredArgsConstructor;

@@ -13,6 +13,7 @@ import io.gomint.server.world.UpdateReason;
 import io.gomint.server.world.block.state.DirectValueBlockState;
 import io.gomint.server.world.block.state.ProgressBlockState;
 import io.gomint.world.Sound;
+import io.gomint.world.block.data.Direction;
 import io.gomint.world.block.data.Facing;
 import io.gomint.world.block.BlockLiquid;
 
@@ -26,7 +27,7 @@ import java.util.Map;
 public abstract class Liquid extends Block implements BlockLiquid {
 
     private static final String LIQUID_DEPTH = "liquid_depth";
-    private static final Facing[] FACES_TO_CHECK = Facing.values();
+    private static final Direction[] DIRECTIONS_TO_CHECK = Direction.values();
 
     private enum FlowState {
         CAN_FLOW_DOWN,
@@ -258,9 +259,9 @@ public abstract class Liquid extends Block implements BlockLiquid {
         }
     }
 
-    private short calculateFlowCost(BlockPosition pos, short accumulatedCost, short maxCost, Facing origin, Facing current) {
+    private short calculateFlowCost(BlockPosition pos, short accumulatedCost, short maxCost, Direction origin, Direction current) {
         short cost = 1000;
-        for (Facing facing : FACES_TO_CHECK) {
+        for (Direction facing : DIRECTIONS_TO_CHECK) {
             if (facing == current || facing == origin) {
                 continue;
             }
@@ -309,7 +310,7 @@ public abstract class Liquid extends Block implements BlockLiquid {
 
         short maxCost = (short) (4 / this.getFlowDecayPerBlock());
         int j = 0;
-        for (Facing face : FACES_TO_CHECK) {
+        for (Direction face : DIRECTIONS_TO_CHECK) {
             Block other = this.getSide(face);
             if (!this.canFlowInto(other)) {
                 this.flowCostVisited.put(other.getLocation().toBlockPosition(), FlowState.BLOCKED);
