@@ -45,4 +45,9 @@ public class ConsoleCommandSender implements io.gomint.command.ConsoleCommandSen
         return true;
     }
 
+    @Override
+    public boolean hasPermission(String permission, boolean defaultValue) {
+        return defaultValue;
+    }
+
 }

@@ -24,6 +24,7 @@ public class CommandHolder {
 
     private CommandPermission commandPermission;
     private String permission;
+    private boolean permissionDefault;
     private Command executor;
     private List<CommandOverload> overload;
 

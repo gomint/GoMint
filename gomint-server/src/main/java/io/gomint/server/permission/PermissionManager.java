@@ -58,7 +58,12 @@ public class PermissionManager implements io.gomint.permission.PermissionManager
     }
 
     @Override
-    public boolean hasPermission( String permission ) {
+    public boolean hasPermission(String permission) {
+        return this.hasPermission(permission, false);
+    }
+
+    @Override
+    public boolean hasPermission( String permission, boolean defaultValue ) {
         // Check if player is op
         if ( this.player.isOp() ) {
             return true;
@@ -133,8 +138,8 @@ public class PermissionManager implements io.gomint.permission.PermissionManager
                 }
             }
 
-            this.cache.put( permissionIntern, false );
-            return false;
+            this.cache.put( permissionIntern, defaultValue );
+            return defaultValue;
         }
 
         return val;

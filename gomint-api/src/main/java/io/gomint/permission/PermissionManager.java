@@ -30,6 +30,15 @@ public interface PermissionManager {
     boolean hasPermission( String permission );
 
     /**
+     * Same behaviour as {@link #hasPermission(String)} but with another return behaviour
+     *
+     * @param permission asked for
+     * @param defaultValue which will be returned when no permission setting has been found
+     * @return true if this manager has the permission, defaultValue if not
+     */
+    boolean hasPermission( String permission, boolean defaultValue );
+
+    /**
      * Add a new permission group to this manager
      *
      * @param group which should be added

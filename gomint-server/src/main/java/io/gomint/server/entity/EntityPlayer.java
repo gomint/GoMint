@@ -722,7 +722,7 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
         this.sendAdventureSettings();
 
         // Send commands
-        // this.sendCommands();
+        this.sendCommands();
 
         // Attributes
         this.updateAttributes();
@@ -919,6 +919,11 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
     @Override
     public boolean hasPermission(String permission) {
         return this.permissionManager.hasPermission(permission);
+    }
+
+    @Override
+    public boolean hasPermission(String permission, boolean defaultValue) {
+        return this.permissionManager.hasPermission(permission, defaultValue);
     }
 
     /**

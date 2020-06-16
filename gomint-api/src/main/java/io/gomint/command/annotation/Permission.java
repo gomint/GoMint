@@ -21,5 +21,6 @@ import java.lang.annotation.Target;
 public @interface Permission {
 
     String value();
+    boolean def() default false;
 
 }
