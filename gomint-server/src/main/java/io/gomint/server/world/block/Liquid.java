@@ -46,14 +46,10 @@ public abstract class Liquid extends Block implements BlockLiquid {
     public float getFillHeight() {
         int data = this.liquidDepth.getState();
         if (data >= 8) {
-            data = 8;
+            data = 0;
         }
 
-        if (data == 0) {
-            return 1f;
-        }
-
-        return ((data) / 8f);
+        return ((data + 1) / 9f);
     }
 
     private short getEffectiveFlowDecay(Block block) {
@@ -166,7 +162,7 @@ public abstract class Liquid extends Block implements BlockLiquid {
             return currentTimeMS + getTickDiff(); // Water updates every 5 client ticks
         }
 
-        int decay = this.getFlowDecay(this);
+        int decay = this.getEffectiveFlowDecay(this);
 
         // Check for own decay updates
         this.checkOwnDecay(decay);
@@ -246,7 +242,7 @@ public abstract class Liquid extends Block implements BlockLiquid {
             // Did we hit a bottom block and are surrounded by other source blocks? -> convert to source block
             if (this.adjacentSources >= 2 && this instanceof FlowingWater) {
                 Block bottomBlock = this.getSide(Facing.DOWN);
-                if (bottomBlock.isSolid() || (bottomBlock instanceof FlowingWater && ((FlowingWater) bottomBlock).getFillHeight() >= 0.9f)) {
+                if (bottomBlock.isSolid() || (bottomBlock instanceof FlowingWater && ((FlowingWater) bottomBlock).getFillHeight() == 1f)) {
                     newDecay = 0;
                 }
             }
@@ -391,7 +387,7 @@ public abstract class Liquid extends Block implements BlockLiquid {
             return -1;
         }
 
-        return this.liquidDepth.getState().shortValue();
+        return ((Liquid) block).liquidDepth.getState().shortValue();
     }
 
     @Override
@@ -400,7 +396,7 @@ public abstract class Liquid extends Block implements BlockLiquid {
     }
 
     private boolean canFlowInto(Block block) {
-        return block.canBeFlowedInto() && !(block instanceof Liquid && ((Liquid) block).getFillHeight() > 0.9f);
+        return block.canBeFlowedInto() && !(block instanceof Liquid && ((Liquid) block).getFillHeight() == 1f);
     }
 
     @Override
