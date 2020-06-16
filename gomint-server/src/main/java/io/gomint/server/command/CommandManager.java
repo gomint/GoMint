@@ -303,13 +303,6 @@ public class CommandManager {
         }
 
         this.internalRegister( plugin, commandBuilder.getName(), commandBuilder );
-
-        // TODO: Remove once aliases are fixed in 1.2
-        if ( commandBuilder.getAlias() != null ) {
-            for ( String s : commandBuilder.getAlias() ) {
-                this.internalRegister( plugin, s, commandBuilder );
-            }
-        }
     }
 
     private void internalRegister( Plugin plugin, String name, Command commandBuilder ) {
