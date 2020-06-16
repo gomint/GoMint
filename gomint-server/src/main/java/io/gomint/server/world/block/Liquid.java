@@ -46,10 +46,14 @@ public abstract class Liquid extends Block implements BlockLiquid {
     public float getFillHeight() {
         int data = this.liquidDepth.getState();
         if (data >= 8) {
-            data = 0;
+            data = 8;
         }
 
-        return ((data + 1) / 9f);
+        if (data == 0) {
+            return 1f;
+        }
+
+        return (data / 8f);
     }
 
     private short getEffectiveFlowDecay(Block block) {
