@@ -16,7 +16,7 @@ jobs:
     - run: mkdir -p ./release/modules && cp -r ./gomint-server/target/modules/* ./release/modules/
     - uses: montudor/action-zip@v0.1.0
       with:
-        args: cd ./release && zip -qq -r ./release.zip ./
+        args: zip -qq -r ./release.zip ./release/*
     - name: Store artifacts
       uses: actions/upload-artifact@v2
       with:
