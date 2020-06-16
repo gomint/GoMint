@@ -236,7 +236,7 @@ public class SimplePluginManager implements PluginManager, EventCaller {
             Configuration configuration = bootLayer.configuration();
             String finalName = name;
             Configuration newConfiguration = configuration.resolve(finder, empty, new HashSet<>() {{
-                add(finalName);
+                add(pluginMeta.getModuleName());
             }});
 
             PluginClassloader finalLoader = loader;
