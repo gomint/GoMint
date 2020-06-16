@@ -50,9 +50,7 @@ public class Cake extends Block implements io.gomint.world.block.BlockCake {
                 float saturation = Math.min( player.getSaturation() + ( 2 * 0.1f * 2.0f ), player.getHunger() );
                 player.setSaturation( saturation );
 
-                if ( this.cakeEaten.progress() ) {
-                    this.updateBlock();
-                }
+                this.cakeEaten.progress();
             }
         }
 

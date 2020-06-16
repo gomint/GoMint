@@ -15,7 +15,6 @@ public class DirectValueBlockState<T> extends BlockState<T, T> {
     public DirectValueBlockState(Block block, Supplier<String[]> key, T defaultValue) {
         super(block, v -> key.get());
         this.defaultValue = defaultValue;
-        this.setState(defaultValue);
     }
 
     @Override

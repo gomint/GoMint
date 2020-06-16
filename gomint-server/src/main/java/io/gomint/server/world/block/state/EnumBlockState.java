@@ -31,7 +31,6 @@ public class EnumBlockState<E extends Enum<E>, T> extends BlockState<E, T> {
         this.enumValues = values;
         this.valueResolver = valueResolver;
         this.stateResolver = stateResolver;
-        this.setState(values[0]);
     }
 
     @Override

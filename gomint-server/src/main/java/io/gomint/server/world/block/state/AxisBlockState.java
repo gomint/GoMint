@@ -20,7 +20,6 @@ public class AxisBlockState extends BlockState<Axis, String> {
 
     public AxisBlockState(Block block, Supplier<String[]> key) {
         super(block, v -> key.get());
-        this.setState(Axis.Y);
     }
 
     @Override

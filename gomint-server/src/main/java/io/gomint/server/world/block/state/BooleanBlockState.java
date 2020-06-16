@@ -23,7 +23,6 @@ public class BooleanBlockState extends BlockState<Boolean, Byte> {
 
     public BooleanBlockState(Block block, Supplier<String[]> key) {
         super(block, v -> key.get());
-        this.setState(false);
     }
 
     @Override

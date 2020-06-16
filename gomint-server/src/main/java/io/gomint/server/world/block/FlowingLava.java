@@ -17,11 +17,6 @@ import java.util.concurrent.TimeUnit;
 public class FlowingLava extends Liquid implements BlockFlowingLava {
 
     @Override
-    public String getBlockId() {
-        return "minecraft:flowing_lava";
-    }
-
-    @Override
     public long getBreakTime() {
         return 150000;
     }

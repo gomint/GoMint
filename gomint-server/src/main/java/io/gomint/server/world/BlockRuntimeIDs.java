@@ -136,6 +136,7 @@ public class BlockRuntimeIDs {
             }
         }
 
+        LOGGER.warn("No usable block state found for: {} -> {} -> {}", oldState, changingKey, newValue);
         return null;
     }
 

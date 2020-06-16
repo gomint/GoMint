@@ -34,7 +34,6 @@ public class ProgressBlockState extends BlockState<Float, Integer> {
         this.step = 1f / max;
         this.maxedProgressConsumer = maxedProgressConsumer;
         this.max = max;
-        this.setState(0f);
     }
 
     public boolean progress() {
