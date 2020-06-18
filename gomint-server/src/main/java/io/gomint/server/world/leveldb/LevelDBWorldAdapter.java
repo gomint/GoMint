@@ -331,8 +331,6 @@ public class LevelDBWorldAdapter extends WorldAdapter {
 
             NBTStream nbtStream = new NBTStream( stream, ByteOrder.LITTLE_ENDIAN );
             nbtStream.addListener( ( path, value ) -> {
-                LOGGER.info(path + " -> " + value);
-
                 switch ( path ) {
                     case ".GeneratorClass":
                         LevelDBWorldAdapter.this.generatorClass = (Class<? extends ChunkGenerator>) PluginClassloader.find( (String) value );
