@@ -526,12 +526,7 @@ public class ChunkAdapter implements Chunk {
         // Write tile entity data
         Collection<TileEntity> tileEntities = this.getTileEntities();
         if ( !tileEntities.isEmpty() ) {
-            NBTWriter nbtWriter = new NBTWriter( new OutputStream() {
-                @Override
-                public void write( int b ) throws IOException {
-                    buffer.writeByte( (byte) b );
-                }
-            }, ByteOrder.LITTLE_ENDIAN );
+            NBTWriter nbtWriter = new NBTWriter( buffer.getBuffer(), ByteOrder.LITTLE_ENDIAN );
             nbtWriter.setUseVarint( true );
 
             for ( TileEntity tileEntity : tileEntities ) {

@@ -16,6 +16,7 @@ import io.gomint.server.crafting.SmeltingRecipe;
 import io.gomint.server.inventory.CreativeInventory;
 import io.gomint.server.inventory.item.ItemStack;
 import io.gomint.server.inventory.item.Items;
+import io.gomint.server.util.Allocator;
 import io.gomint.server.util.BlockIdentifier;
 import io.gomint.server.util.StringShortPair;
 import io.gomint.taglib.AllocationLimitReachedException;
@@ -32,6 +33,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.ByteOrder;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -88,13 +90,19 @@ public class AssetsLibrary {
      */
     @SuppressWarnings("unchecked")
     public void load() throws IOException, AllocationLimitReachedException {
-        NBTTagCompound root = NBTTagCompound.readFrom(this.getClass().getResourceAsStream("/assets.dat"), true, ByteOrder.BIG_ENDIAN);
+        InputStream in = this.getClass().getResourceAsStream("/assets.dat");
+        byte[] data = in.readAllBytes();
+
+        ByteBuf buf = Allocator.allocate(data);
+        NBTTagCompound root = NBTTagCompound.readFrom(buf, true, ByteOrder.BIG_ENDIAN);
         if (GoMint.instance() != null) {
             this.loadRecipes((List<NBTTagCompound>) ((List) root.getList("recipes", false)));
             this.loadCreativeInventory((List<byte[]>) ((List) root.getList("creativeInventory", false)));
             this.loadBlockPalette((List<NBTTagCompound>) ((List) root.getList("blockPalette", false)));
             this.loadItemIDs((List<NBTTagCompound>) ((List) root.getList("itemLegacyIDs", false)));
         }
+
+        buf.release();
     }
 
     private void loadItemIDs(List<NBTTagCompound> itemLegacyIDs) {
@@ -282,9 +290,7 @@ public class AssetsLibrary {
 
         NBTTagCompound compound = null;
         if (extraLen > 0) {
-            ByteBufInputStream bin = new ByteBufInputStream(buffer.getBuffer(), extraLen);
-            compound = NBTTagCompound.readFrom(bin, false, ByteOrder.BIG_ENDIAN);
-            bin.close();
+            compound = NBTTagCompound.readFrom(buffer.getBuffer(), false, ByteOrder.BIG_ENDIAN);
         }
 
         return this.items == null ? null : this.items.create(id, data, amount, compound);

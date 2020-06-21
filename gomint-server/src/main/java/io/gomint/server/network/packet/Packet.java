@@ -78,24 +78,20 @@ public abstract class Packet {
         NBTTagCompound nbt = null;
         short extraLen = buffer.readLShort();
         if (extraLen > 0) {
-            ByteBufInputStream bin = new ByteBufInputStream(buffer.getBuffer(), extraLen);
             try {
-                NBTReader nbtReader = new NBTReader(bin, ByteOrder.LITTLE_ENDIAN);
+                NBTReader nbtReader = new NBTReader(buffer.getBuffer(), ByteOrder.LITTLE_ENDIAN);
                 nbtReader.setUseVarint(true);
                 // There is no alloc limit needed here, you can't write so much shit in 32kb, so thats ok
                 nbt = nbtReader.parse();
             } catch (IOException | AllocationLimitReachedException e) {
                 return null;
             }
-
-            buffer.skip(extraLen);
         } else if (extraLen == -1) {
             // New system uses a byte as amount of nbt tags
             byte count = buffer.readByte();
             for (byte i = 0; i < count; i++) {
-                ByteBufInputStream bin = new ByteBufInputStream(buffer.getBuffer());
                 try {
-                    NBTReader nbtReader = new NBTReader(bin, ByteOrder.LITTLE_ENDIAN);
+                    NBTReader nbtReader = new NBTReader(buffer.getBuffer(), ByteOrder.LITTLE_ENDIAN);
                     nbtReader.setUseVarint(true);
                     // There is no alloc limit needed here, you can't write so much shit in 32kb, so thats ok
                     nbt = nbtReader.parse();
@@ -151,12 +147,7 @@ public abstract class Packet {
                 buffer.writeByte((byte) 1);
 
                 // NBT Tag
-                NBTWriter nbtWriter = new NBTWriter(new OutputStream() {
-                    @Override
-                    public void write(int b) throws IOException {
-                        buffer.writeByte((byte) b);
-                    }
-                }, ByteOrder.LITTLE_ENDIAN);
+                NBTWriter nbtWriter = new NBTWriter(buffer.getBuffer(), ByteOrder.LITTLE_ENDIAN);
                 nbtWriter.setUseVarint(true);
                 nbtWriter.write(compound);
             } catch (IOException e) {

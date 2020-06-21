@@ -27,7 +27,7 @@ public class CheckPacketTileEntityTest {
     public void checkNBTAllocLimitFailure() throws Exception {
         // Fill new compound with too much data for the packet
         NBTTagCompound testCompound = new NBTTagCompound( "" );
-        for ( int i = 0; i < 1024 * 1024; i++ ) {
+        for ( int i = 0; i < 512 * 1024; i++ ) {
             testCompound.addValue( String.valueOf( i ), new ArrayList() );
         }
 
@@ -49,7 +49,7 @@ public class CheckPacketTileEntityTest {
     public void checkNBTAllocLimitSuccess() throws Exception {
         // Fill new compound with too much data for the packet
         NBTTagCompound testCompound = new NBTTagCompound( "" );
-        for ( int i = 0; i < 1024; i++ ) {
+        for ( int i = 0; i < 4; i++ ) {
             testCompound.addValue( String.valueOf( i ), new ArrayList() );
         }
 

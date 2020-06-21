@@ -16,8 +16,9 @@ import io.gomint.server.world.WorldAdapter;
  */
 class InMemoryChunkAdapter extends ChunkAdapter {
 
-    public InMemoryChunkAdapter( WorldAdapter world, int x, int z ) {
-        super( world, x, z );
+    public InMemoryChunkAdapter( WorldAdapter worldAdapter, int x, int z ) {
+        super( worldAdapter, x, z );
+        this.loadedTime = worldAdapter.getServer().getCurrentTickTime();
     }
 
 }

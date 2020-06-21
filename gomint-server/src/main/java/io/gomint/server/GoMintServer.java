@@ -370,7 +370,7 @@ public class GoMintServer implements GoMint, InventoryHolder {
 
             // Create options world generator
             CreateOptions options = new CreateOptions();
-            options.worldType(WorldType.IN_MEMORY); // Persistent world storage
+            options.worldType(WorldType.PERSISTENT); // Persistent world storage
 
             // Check if wished chunk generator is present
             if (chunkGenerator != null) {

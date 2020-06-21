@@ -32,17 +32,31 @@ import io.gomint.server.network.NetworkManager;
 import io.gomint.server.network.PlayerConnectionState;
 import io.gomint.server.network.PostProcessExecutor;
 import io.gomint.server.network.Protocol;
-import io.gomint.server.network.packet.*;
+import io.gomint.server.network.packet.Packet;
+import io.gomint.server.network.packet.PacketAdventureSettings;
+import io.gomint.server.network.packet.PacketBatch;
+import io.gomint.server.network.packet.PacketConfirmChunkRadius;
+import io.gomint.server.network.packet.PacketDisconnect;
+import io.gomint.server.network.packet.PacketEncryptionRequest;
+import io.gomint.server.network.packet.PacketEncryptionResponse;
+import io.gomint.server.network.packet.PacketLogin;
+import io.gomint.server.network.packet.PacketMovePlayer;
+import io.gomint.server.network.packet.PacketPlayState;
+import io.gomint.server.network.packet.PacketResourcePackResponse;
+import io.gomint.server.network.packet.PacketResourcePackStack;
+import io.gomint.server.network.packet.PacketResourcePacksInfo;
+import io.gomint.server.network.packet.PacketSetLocalPlayerAsInitialized;
+import io.gomint.server.network.packet.PacketStartGame;
+import io.gomint.server.network.packet.PacketWorldChunk;
 import io.gomint.server.resource.ResourceResponseStatus;
 import io.gomint.server.util.BlockIdentifier;
 import io.gomint.server.util.Palette;
-import io.gomint.server.world.BlockRuntimeIDs;
 import io.gomint.server.world.ChunkAdapter;
 import io.gomint.server.world.ChunkSlice;
 import io.gomint.server.world.WorldAdapter;
 import io.gomint.server.world.generator.vanilla.chunk.ChunkSquare;
 import io.gomint.server.world.generator.vanilla.chunk.ChunkSquareCache;
-import io.gomint.taglib.NBTReaderNoBuffer;
+import io.gomint.taglib.NBTReader;
 import io.gomint.taglib.NBTTagCompound;
 import io.gomint.util.random.FastRandom;
 import io.netty.buffer.ByteBuf;
@@ -54,8 +68,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.SocketException;
@@ -70,7 +82,6 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 import java.util.zip.DataFormatException;
-import java.util.zip.InflaterInputStream;
 
 import static io.gomint.server.network.Protocol.PACKET_BATCH;
 import static io.gomint.server.network.Protocol.PACKET_ENCRYPTION_REQUEST;
@@ -434,17 +445,7 @@ public class Client implements ConnectionWithState {
 
                 // Read tiles
                 if ( chunkBuffer.getRemaining() > 0 ) {
-                    NBTReaderNoBuffer reader = new NBTReaderNoBuffer( new InputStream() {
-                        @Override
-                        public int read() throws IOException {
-                            return chunkBuffer.readByte();
-                        }
-
-                        @Override
-                        public int available() throws IOException {
-                            return chunkBuffer.getRemaining();
-                        }
-                    }, ByteOrder.LITTLE_ENDIAN );
+                    NBTReader reader = new NBTReader(chunkBuffer.getBuffer(), ByteOrder.LITTLE_ENDIAN );
 
                     loop:
                     while ( true ) {

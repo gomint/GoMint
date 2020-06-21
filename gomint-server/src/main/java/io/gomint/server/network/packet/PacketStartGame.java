@@ -138,8 +138,8 @@ public class PacketStartGame extends Packet {
         buffer.writeSignedVarInt( this.enchantmentSeed );
 
         // Write palette data
-        byte[] data = BlockRuntimeIDs.getPacketCache();
-        buffer.writeBytes( data );
+        ByteBuf data = BlockRuntimeIDs.getPacketCache();
+        buffer.writeBytes( data.asReadOnly().readerIndex(0) );
 
         // Item table
         PacketBuffer itemData = Items.getPacketCache();
