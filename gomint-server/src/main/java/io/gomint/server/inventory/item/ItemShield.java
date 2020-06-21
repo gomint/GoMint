@@ -8,6 +8,7 @@
 package io.gomint.server.inventory.item;
 
 import io.gomint.inventory.item.ItemType;
+import io.gomint.jraknet.PacketBuffer;
 import io.gomint.server.registry.RegisterInfo;
 
 /**
@@ -20,6 +21,16 @@ public class ItemShield extends ItemStack implements io.gomint.inventory.item.It
     @Override
     public ItemType getType() {
         return ItemType.SHIELD;
+    }
+
+    @Override
+    public void readAdditionalData(PacketBuffer buffer) {
+        buffer.readSignedVarLong();
+    }
+
+    @Override
+    public void writeAdditionalData(PacketBuffer buffer) {
+        buffer.writeSignedVarLong(0);
     }
 
 }
