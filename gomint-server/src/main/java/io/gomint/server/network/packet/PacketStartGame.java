@@ -10,6 +10,7 @@ import io.gomint.server.util.BlockIdentifier;
 import io.gomint.server.util.StringShortPair;
 import io.gomint.server.world.BlockRuntimeIDs;
 import io.gomint.world.Gamerule;
+import io.netty.buffer.ByteBuf;
 import lombok.Data;
 
 import java.io.InputStream;
@@ -142,7 +143,7 @@ public class PacketStartGame extends Packet {
 
         // Item table
         PacketBuffer itemData = Items.getPacketCache();
-        buffer.writeBytes( itemData.getBuffer(), itemData.getBufferOffset(), itemData.getPosition() - itemData.getBufferOffset() );
+        buffer.writeBytes( itemData.getBuffer().asReadOnly().readerIndex(0) );
 
         buffer.writeString( this.correlationId );
     }

@@ -358,6 +358,8 @@ public class NetworkManager {
                 writer.write("-------------------------------------\n");
                 writer.write("# Textual payload\n");
                 StringBuilder lineBuilder = new StringBuilder();
+
+                int pos = buffer.getReadPosition();
                 while (buffer.getRemaining() > 0) {
                     for (int i = 0; i < 16 && buffer.getRemaining() > 0; ++i) {
                         String hex = Integer.toHexString(((int) buffer.readByte()) & 0xFF);
@@ -378,9 +380,10 @@ public class NetworkManager {
                 writer.write("# Binary payload\n");
                 writer.flush();
 
-                buffer.resetPosition();
-                buffer.skip(1); // Packet ID
-                out.write(buffer.getBuffer(), buffer.getPosition(), buffer.getRemaining());
+                buffer.setReadPosition(pos);
+                byte[] data = new byte[buffer.getRemaining()];
+                buffer.readBytes(data);
+                out.write(data);
             }
         } catch (IOException e) {
             LOGGER.error("Failed to dump packet " + filename);

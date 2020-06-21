@@ -39,7 +39,6 @@ public class CheckPacketTileEntityTest {
         // Serialize the packet
         PacketBuffer buffer = new PacketBuffer( 16 );
         packetTileEntityData.serialize( buffer, Protocol.MINECRAFT_PE_PROTOCOL_VERSION );
-        buffer.setPosition( 0 );
 
         // Deserialize the packet, this should raise a exception
         packetTileEntityData = new PacketTileEntityData();
@@ -62,7 +61,6 @@ public class CheckPacketTileEntityTest {
         // Serialize the packet
         PacketBuffer buffer = new PacketBuffer( 16 );
         packetTileEntityData.serialize( buffer, Protocol.MINECRAFT_PE_PROTOCOL_VERSION );
-        buffer.setPosition( 0 );
 
         // Deserialize the packet, this should raise a exception
         packetTileEntityData = new PacketTileEntityData();

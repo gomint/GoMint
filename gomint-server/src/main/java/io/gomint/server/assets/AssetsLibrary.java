@@ -20,6 +20,9 @@ import io.gomint.server.util.BlockIdentifier;
 import io.gomint.server.util.StringShortPair;
 import io.gomint.taglib.AllocationLimitReachedException;
 import io.gomint.taglib.NBTTagCompound;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.ByteBufInputStream;
+import io.netty.buffer.PooledByteBufAllocator;
 import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
 import lombok.Getter;
 import org.json.simple.JSONObject;
@@ -130,7 +133,10 @@ public class AssetsLibrary {
 
             for (byte[] bytes : raw) {
                 try {
-                    this.creativeInventory.addItem(this.loadItemStack(new PacketBuffer(bytes, 0)));
+                    ByteBuf i = PooledByteBufAllocator.DEFAULT.directBuffer(bytes.length);
+                    i.writeBytes(bytes);
+                    this.creativeInventory.addItem(this.loadItemStack(new PacketBuffer(i)));
+                    i.release(2);
                 } catch (IOException | AllocationLimitReachedException e) {
                     LOGGER.error("Could not load creative item: ", e);
                 }
@@ -185,13 +191,21 @@ public class AssetsLibrary {
         List<Object> inputItems = data.getList("i", false);
         ItemStack[] ingredients = new ItemStack[inputItems.size()];
         for (int i = 0; i < ingredients.length; ++i) {
-            ingredients[i] = this.loadItemStack(new PacketBuffer((byte[]) inputItems.get(i), 0));
+            byte[] in = (byte[]) inputItems.get(i);
+            ByteBuf ini = PooledByteBufAllocator.DEFAULT.directBuffer(in.length);
+            ini.writeBytes(in);
+            ingredients[i] = this.loadItemStack(new PacketBuffer(ini));
+            ini.release(2);
         }
 
         List<Object> outputItems = data.getList("o", false);
         ItemStack[] outcome = new ItemStack[outputItems.size()];
         for (int i = 0; i < outcome.length; ++i) {
-            outcome[i] = this.loadItemStack(new PacketBuffer((byte[]) outputItems.get(i), 0));
+            byte[] in = (byte[]) outputItems.get(i);
+            ByteBuf ini = PooledByteBufAllocator.DEFAULT.directBuffer(in.length);
+            ini.writeBytes(in);
+            outcome[i] = this.loadItemStack(new PacketBuffer(ini));
+            ini.release(2);
         }
 
         this.shapelessRecipes++;
@@ -211,7 +225,11 @@ public class AssetsLibrary {
         ItemStack[] arrangement = new ItemStack[width * height];
         for (int j = 0; j < height; ++j) {
             for (int i = 0; i < width; ++i) {
-                arrangement[j * width + i] = this.loadItemStack(new PacketBuffer((byte[]) inputItems.get(j * width + i), 0));
+                byte[] in = (byte[]) inputItems.get(j * width + i);
+                ByteBuf ini = PooledByteBufAllocator.DEFAULT.directBuffer(in.length);
+                ini.writeBytes(in);
+                arrangement[j * width + i] = this.loadItemStack(new PacketBuffer(ini));
+                ini.release(2);
             }
         }
 
@@ -219,7 +237,11 @@ public class AssetsLibrary {
 
         ItemStack[] outcome = new ItemStack[outputItems.size()];
         for (int i = 0; i < outcome.length; ++i) {
-            outcome[i] = this.loadItemStack(new PacketBuffer((byte[]) outputItems.get(i), 0));
+            byte[] in = (byte[]) outputItems.get(i);
+            ByteBuf ini = PooledByteBufAllocator.DEFAULT.directBuffer(in.length);
+            ini.writeBytes(in);
+            outcome[i] = this.loadItemStack(new PacketBuffer(ini));
+            ini.release(2);
         }
 
         this.shapedRecipes++;
@@ -231,12 +253,18 @@ public class AssetsLibrary {
         int priority = data.getInteger("prio", 50);
 
         List<Object> inputList = data.getList("i", false);
-        byte[] inputData = (byte[]) inputList.get(0);
-        ItemStack input = this.loadItemStack(new PacketBuffer(inputData, 0));
+        byte[] i = (byte[]) inputList.get(0);
+        ByteBuf inputData = PooledByteBufAllocator.DEFAULT.directBuffer(i.length);
+        inputData.writeBytes(i);
+        ItemStack input = this.loadItemStack(new PacketBuffer(inputData));
+        inputData.release(2);
 
         List<Object> outputList = data.getList("o", false);
-        byte[] outcomeData = (byte[]) outputList.get(0);
-        ItemStack outcome = this.loadItemStack(new PacketBuffer(outcomeData, 0));
+        byte[] o = (byte[]) outputList.get(0);
+        ByteBuf outputData = PooledByteBufAllocator.DEFAULT.directBuffer(o.length);
+        outputData.writeBytes(o);
+        ItemStack outcome = this.loadItemStack(new PacketBuffer(outputData));
+        outputData.release(2);
 
         this.smeltingRecipes++;
         return new SmeltingRecipe(block, input, outcome, UUID.fromString(data.getString("u", UUID.randomUUID().toString())), priority);
@@ -254,7 +282,7 @@ public class AssetsLibrary {
 
         NBTTagCompound compound = null;
         if (extraLen > 0) {
-            ByteArrayInputStream bin = new ByteArrayInputStream(buffer.getBuffer(), buffer.getPosition(), extraLen);
+            ByteBufInputStream bin = new ByteBufInputStream(buffer.getBuffer(), extraLen);
             compound = NBTTagCompound.readFrom(bin, false, ByteOrder.BIG_ENDIAN);
             bin.close();
         }

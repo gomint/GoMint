@@ -3,6 +3,7 @@ module gomint.jni {
     requires com.google.common;
     requires io.netty.buffer;
     requires slf4j.api;
+    requires io.netty.common;
 
     exports io.gomint.server.jni;
     exports io.gomint.server.jni.exception;

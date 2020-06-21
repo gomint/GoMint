@@ -72,6 +72,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import java.nio.ByteBuffer;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -188,22 +189,25 @@ public class PlayerConnection implements ConnectionWithState {
 
             this.postProcessorExecutor = networkManager.getPostProcessService().getExecutor();
             this.connection.addDataProcessor(packetData -> {
-                PacketBuffer buffer = new PacketBuffer(packetData.getPacketData(), 0);
-                if (buffer.getRemaining() <= 0) {
+                if (packetData.getPacketData().readableBytes() <= 0) {
                     // Malformed packet:
                     return packetData;
                 }
 
                 // Check if packet is batched
-                byte packetId = buffer.readByte();
+                byte packetId = packetData.getPacketData().readByte();
                 if (packetId == Protocol.PACKET_BATCH) {
                     // Decompress and decrypt
-                    byte[] pureData = handleBatchPacket(buffer);
+                    ByteBuf pureData = handleBatchPacket(packetData.getPacketData());
                     EncapsulatedPacket newPacket = new EncapsulatedPacket();
                     newPacket.setPacketData(pureData);
+
+                    pureData.release(); // The packet takes over ownership
+                    // packetData.release(); // Since we also consumed the old packet, release it
                     return newPacket;
                 }
 
+                packetData.getPacketData().readerIndex(0);
                 return packetData;
             });
         }
@@ -449,7 +453,8 @@ public class PlayerConnection implements ConnectionWithState {
                     packetBuffers = new ArrayList<>();
                 }
 
-                packetBuffers.add(new PacketBuffer(packetData.getPacketData(), 0));
+                packetBuffers.add(new PacketBuffer(packetData.getPacketData()));
+                packetData.release(); // The internal buffer took over
             }
         } else {
             while (!this.connectionHandler.getData().isEmpty()) {
@@ -472,6 +477,8 @@ public class PlayerConnection implements ConnectionWithState {
                     LOGGER.error("Error whilst processing packet: ", e);
                 }
                 // CHECKSTYLE:ON
+
+                buffer.release();
             }
         }
     }
@@ -492,7 +499,7 @@ public class PlayerConnection implements ConnectionWithState {
                     buffer.writeByte(packet.getId());
                     packet.serialize(buffer, this.protocolID);
 
-                    this.connection.send(PacketReliability.RELIABLE_ORDERED, packet.orderingChannel(), buffer.getBuffer(), 0, buffer.getPosition());
+                    this.connection.send(PacketReliability.RELIABLE_ORDERED, packet.orderingChannel(), buffer);
                 } catch (Exception e) {
                     LOGGER.error("Could not serialize packet", e);
                 }
@@ -572,14 +579,15 @@ public class PlayerConnection implements ConnectionWithState {
             while (buffer.getRemaining() > 0) {
                 int packetLength = buffer.readUnsignedVarInt();
 
-                byte[] payData = new byte[packetLength];
-                buffer.readBytes(payData);
-                PacketBuffer pktBuf = new PacketBuffer(payData, 0);
-                this.handleBufferData(currentTimeMillis, pktBuf);
+                int currentIndex = buffer.getReadPosition();
+                byte packetID = buffer.getBuffer().getByte(currentIndex);
+                this.handleBufferData(currentTimeMillis, buffer);
+                int consumedByPacket = buffer.getReadPosition() - currentIndex;
 
-                if (pktBuf.getRemaining() > 0) {
-                    LOGGER.error("Malformed batch packet payload: Could not read enclosed packet data correctly: 0x{} remaining {} bytes", Integer.toHexString(payData[0]), pktBuf.getRemaining());
-                    ReportUploader.create().tag("network.packet_remaining").property("packet_id", "0x" + Integer.toHexString(payData[0])).property("packet_remaining", String.valueOf(pktBuf.getRemaining())).upload();
+                if (consumedByPacket != packetLength) {
+                    int remaining = packetLength - consumedByPacket;
+                    LOGGER.error("Malformed batch packet payload: Could not read enclosed packet data correctly: 0x{} remaining {} bytes", Integer.toHexString(packetID), remaining);
+                    ReportUploader.create().tag("network.packet_remaining").property("packet_id", "0x" + Integer.toHexString(packetID)).property("packet_remaining", String.valueOf(remaining)).upload();
                     return;
                 }
             }
@@ -688,10 +696,9 @@ public class PlayerConnection implements ConnectionWithState {
      * @param buffer The buffer containing the batch packet's data (except packet ID)
      * @return decompressed and decrypted data
      */
-    private byte[] handleBatchPacket(PacketBuffer buffer) {
+    private ByteBuf handleBatchPacket(ByteBuf buffer) {
         // Encrypted?
-        byte[] input = new byte[buffer.getRemaining()];
-        System.arraycopy(buffer.getBuffer(), buffer.getPosition(), input, 0, input.length);
+        ByteBuf input = buffer;
 
         if (this.encryptionHandler != null) {
             input = this.encryptionHandler.decryptInputFromClient(input);
@@ -702,25 +709,19 @@ public class PlayerConnection implements ConnectionWithState {
             }
         }
 
-        ByteBuf inBuf = PooledByteBufAllocator.DEFAULT.directBuffer(input.length);
-        inBuf.writeBytes(input);
-
         ByteBuf outBuf = PooledByteBufAllocator.DEFAULT.directBuffer(8192); // We will write at least once so ensureWrite will realloc to 8192 so or so
 
         try {
-            this.decompressor.process(inBuf, outBuf);
+            this.decompressor.process(input.nioBuffer(), outBuf);
         } catch (DataFormatException e) {
             LOGGER.error("Failed to decompress batch packet", e);
             outBuf.release();
             return null;
         } finally {
-            inBuf.release();
+            input.release();
         }
 
-        byte[] data = new byte[outBuf.readableBytes()];
-        outBuf.readBytes(data);
-        outBuf.release();
-        return data;
+        return outBuf;
     }
 
     /**

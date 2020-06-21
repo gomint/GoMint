@@ -105,6 +105,8 @@ public class DumpUtil {
     }
 
     public static void dumpPacketbuffer( PacketBuffer buffer ) {
+        int pos = buffer.getReadPosition();
+
         StringBuilder lineBuilder = new StringBuilder();
         StringBuilder stringRepBuilder = new StringBuilder();
         while ( buffer.getRemaining() > 0 ) {
@@ -129,7 +131,7 @@ public class DumpUtil {
             stringRepBuilder = new StringBuilder();
         }
 
-        buffer.resetPosition();
+        buffer.setReadPosition(pos);
     }
 
     public static void dumpByteArray( byte[] bytes, int skip ) {

@@ -9,6 +9,7 @@ package io.gomint.server.network.packet;
 
 import io.gomint.jraknet.PacketBuffer;
 import io.gomint.server.network.Protocol;
+import io.netty.buffer.ByteBuf;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -26,8 +27,7 @@ public class PacketWorldChunk extends Packet {
     private boolean cached;
     private int subChunkCount;
 
-    private byte[] data;
-    private int dataLength;
+    private ByteBuf data;
 
     public PacketWorldChunk() {
         super( Protocol.PACKET_WORLD_CHUNK );
@@ -39,8 +39,8 @@ public class PacketWorldChunk extends Packet {
         buffer.writeSignedVarInt( this.z );
         buffer.writeUnsignedVarInt( this.subChunkCount );
         buffer.writeBoolean( this.cached );
-        buffer.writeUnsignedVarInt( this.dataLength );
-        buffer.writeBytes( this.data, 0, this.dataLength );
+        buffer.writeUnsignedVarInt( this.data.readableBytes() );
+        buffer.writeBytes( this.data );
     }
 
     @Override
@@ -49,9 +49,8 @@ public class PacketWorldChunk extends Packet {
         this.z = buffer.readSignedVarInt();
         this.cached = buffer.readBoolean();
         this.subChunkCount = buffer.readUnsignedVarInt();
-        this.dataLength = buffer.readUnsignedVarInt();
-        this.data = new byte[this.dataLength];
-        buffer.readBytes( this.data );
+        int length = buffer.readUnsignedVarInt();
+        this.data = buffer.readSlice(length);
     }
 
 }

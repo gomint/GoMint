@@ -9,6 +9,7 @@ package io.gomint.server.jni.zlib;
 
 import io.netty.buffer.ByteBuf;
 
+import java.nio.ByteBuffer;
 import java.util.zip.DataFormatException;
 import java.util.zip.Deflater;
 import java.util.zip.Inflater;
@@ -49,13 +50,10 @@ public class JavaZLib implements ZLib {
     }
 
     @Override
-    public void process( ByteBuf in, ByteBuf out ) throws DataFormatException {
-        byte[] inData = new byte[in.readableBytes()];
-        in.readBytes( inData );
-
+    public void process( ByteBuffer in, ByteBuf out ) throws DataFormatException {
         if ( compress ) {
             try {
-                deflater.setInput( inData );
+                deflater.setInput( in );
                 deflater.finish();
 
                 while ( !deflater.finished() ) {
@@ -72,9 +70,10 @@ public class JavaZLib implements ZLib {
             }
         } else {
             try {
-                inflater.setInput( inData );
+                inflater.setInput( in );
 
-                while ( !inflater.finished() && inflater.getTotalIn() < inData.length ) {
+                int needed = in.remaining();
+                while ( !inflater.finished() && inflater.getTotalIn() < needed ) {
                     int count = inflater.inflate( buffer );
                     out.writeBytes( buffer, 0, count );
 

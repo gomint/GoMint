@@ -24,6 +24,7 @@ import io.gomint.taglib.NBTTagCompound;
 import io.gomint.taglib.NBTWriter;
 import io.gomint.world.Gamerule;
 import io.gomint.world.block.data.Facing;
+import io.netty.buffer.ByteBufInputStream;
 import org.json.simple.JSONObject;
 
 import java.io.ByteArrayInputStream;
@@ -77,7 +78,7 @@ public abstract class Packet {
         NBTTagCompound nbt = null;
         short extraLen = buffer.readLShort();
         if (extraLen > 0) {
-            ByteArrayInputStream bin = new ByteArrayInputStream(buffer.getBuffer(), buffer.getPosition(), extraLen);
+            ByteBufInputStream bin = new ByteBufInputStream(buffer.getBuffer(), extraLen);
             try {
                 NBTReader nbtReader = new NBTReader(bin, ByteOrder.LITTLE_ENDIAN);
                 nbtReader.setUseVarint(true);
@@ -92,7 +93,7 @@ public abstract class Packet {
             // New system uses a byte as amount of nbt tags
             byte count = buffer.readByte();
             for (byte i = 0; i < count; i++) {
-                ByteArrayInputStream bin = new ByteArrayInputStream(buffer.getBuffer(), buffer.getPosition(), buffer.getRemaining());
+                ByteBufInputStream bin = new ByteBufInputStream(buffer.getBuffer());
                 try {
                     NBTReader nbtReader = new NBTReader(bin, ByteOrder.LITTLE_ENDIAN);
                     nbtReader.setUseVarint(true);

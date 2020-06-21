@@ -12,7 +12,8 @@ import io.gomint.server.jni.exception.NativeException;
 import io.netty.buffer.ByteBuf;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
+import io.netty.util.internal.PlatformDependent;
+import java.nio.ByteBuffer;
 import java.util.zip.DataFormatException;
 
 /**
@@ -48,19 +49,29 @@ public class NativeZLib implements ZLib {
     }
 
     @Override
-    public void process( ByteBuf in, ByteBuf out ) throws DataFormatException {
+    public void process(ByteBuffer in, ByteBuf out ) throws DataFormatException {
         // Smoke tests
-        in.memoryAddress();
+        if (!in.isDirect()) {
+            throw new IllegalArgumentException("input is not a direct buffer");
+        }
+
         out.memoryAddress();
         Preconditions.checkState( ctx != 0, "Invalid pointer to compress!" );
 
+        long getBaseAddress;
         try {
-            while ( !nativeCompress.finished && ( compress || in.isReadable() ) ) {
+            getBaseAddress = getAddress(in);
+        } catch (Exception e) {
+            throw new DataFormatException("could not get input base address");
+        }
+
+        try {
+            while ( !nativeCompress.finished && ( compress || in.remaining() > 0 ) ) {
                 out.ensureWritable( 8192 );
 
-                int processed = nativeCompress.process( ctx, in.memoryAddress() + in.readerIndex(), in.readableBytes(), out.memoryAddress() + out.writerIndex(), out.writableBytes(), compress );
+                int processed = nativeCompress.process( ctx, getBaseAddress + in.position(), in.remaining(), out.memoryAddress() + out.writerIndex(), out.writableBytes(), compress );
 
-                in.readerIndex( in.readerIndex() + nativeCompress.consumed );
+                in.position( in.position() + nativeCompress.consumed );
                 out.writerIndex( out.writerIndex() + processed );
 
                 // Check for hard limit
@@ -76,6 +87,10 @@ public class NativeZLib implements ZLib {
             nativeCompress.consumed = 0;
             nativeCompress.finished = false;
         }
+    }
+
+    private long getAddress(ByteBuffer in) {
+        return PlatformDependent.directBufferAddress(in);
     }
 
 }

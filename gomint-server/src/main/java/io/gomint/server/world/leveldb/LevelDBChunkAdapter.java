@@ -224,13 +224,13 @@ public class LevelDBChunkAdapter extends ChunkAdapter {
         }
 
         ByteBuf key = ( (LevelDBWorldAdapter) this.world ).getKeySubChunk( this.x, this.z, (byte) 0x2f, (byte) i );
-        ByteBuf val = Allocator.allocate( Arrays.copyOf( buffer.getBuffer(), buffer.getPosition() ) );
-
-        writeBatch.put( key, val );
+        buffer.setReadPosition(0);
+        writeBatch.put( key, buffer.getBuffer() );
     }
 
     void loadSection( int sectionY, byte[] chunkData ) {
-        PacketBuffer buffer = new PacketBuffer( chunkData, 0 );
+        ByteBuf buf = Allocator.allocate(chunkData);
+        PacketBuffer buffer = new PacketBuffer( buf );
 
         // First byte is chunk section version
         byte subchunkVersion = buffer.readByte();
@@ -300,6 +300,8 @@ public class LevelDBChunkAdapter extends ChunkAdapter {
 
                 break;
         }
+
+        buf.release();
     }
 
     void loadTileEntities( byte[] tileEntityData ) {

@@ -9,6 +9,7 @@ package io.gomint.server.jni.zlib;
 
 import io.netty.buffer.ByteBuf;
 
+import java.nio.ByteBuffer;
 import java.util.zip.DataFormatException;
 
 public interface ZLib {
@@ -19,6 +20,6 @@ public interface ZLib {
 
     void free();
 
-    void process( ByteBuf in, ByteBuf out ) throws DataFormatException;
+    void process(ByteBuffer in, ByteBuf out) throws DataFormatException;
 
 }

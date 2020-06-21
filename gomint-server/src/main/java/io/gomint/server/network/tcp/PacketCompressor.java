@@ -47,7 +47,7 @@ public class PacketCompressor extends MessageToByteEncoder<ByteBuf> {
             out.writeBytes( msg );
         } else {
             out.writeInt( origSize );
-            zlib.process( msg, out );
+            zlib.process( msg.nioBuffer(), out );
         }
     }
 
