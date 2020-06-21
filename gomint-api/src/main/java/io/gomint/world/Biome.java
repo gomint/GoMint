@@ -13,6 +13,7 @@ import io.gomint.world.block.Block;
 import io.gomint.world.block.BlockDirt;
 import io.gomint.world.block.BlockGrassBlock;
 import io.gomint.world.block.BlockGravel;
+import io.gomint.world.generator.DefinedBlocks;
 import io.gomint.world.generator.object.BirchTree;
 import io.gomint.world.generator.object.OakTree;
 import io.gomint.world.generator.populator.Populator;
@@ -52,10 +53,10 @@ public enum Biome {
         public List<Block> getGround() {
             return Collections.unmodifiableList( Arrays.asList(
                 GoMint.instance().createBlock( BlockGrassBlock.class ),
-                GoMint.instance().createBlock( BlockDirt.class ),
-                GoMint.instance().createBlock( BlockDirt.class ),
-                GoMint.instance().createBlock( BlockDirt.class ),
-                GoMint.instance().createBlock( BlockDirt.class )
+                DefinedBlocks.DIRT,
+                DefinedBlocks.DIRT,
+                DefinedBlocks.DIRT,
+                DefinedBlocks.DIRT
             ) );
         }
 
@@ -73,10 +74,10 @@ public enum Biome {
         public List<Block> getGround() {
             return Collections.unmodifiableList( Arrays.asList(
                 GoMint.instance().createBlock( BlockGrassBlock.class ),
-                GoMint.instance().createBlock( BlockDirt.class ),
-                GoMint.instance().createBlock( BlockDirt.class ),
-                GoMint.instance().createBlock( BlockDirt.class ),
-                GoMint.instance().createBlock( BlockDirt.class )
+                DefinedBlocks.DIRT,
+                DefinedBlocks.DIRT,
+                DefinedBlocks.DIRT,
+                DefinedBlocks.DIRT
             ) );
         }
 
@@ -102,11 +103,11 @@ public enum Biome {
         @Override
         public List<Block> getGround() {
             return Collections.unmodifiableList( Arrays.asList(
-                GoMint.instance().createBlock( BlockDirt.class ),
-                GoMint.instance().createBlock( BlockDirt.class ),
-                GoMint.instance().createBlock( BlockDirt.class ),
-                GoMint.instance().createBlock( BlockDirt.class ),
-                GoMint.instance().createBlock( BlockDirt.class )
+                DefinedBlocks.DIRT,
+                DefinedBlocks.DIRT,
+                DefinedBlocks.DIRT,
+                DefinedBlocks.DIRT,
+                DefinedBlocks.DIRT
             ) );
         }
 
@@ -141,10 +142,10 @@ public enum Biome {
         public List<Block> getGround() {
             return Collections.unmodifiableList( Arrays.asList(
                 GoMint.instance().createBlock( BlockGrassBlock.class ),
-                GoMint.instance().createBlock( BlockDirt.class ),
-                GoMint.instance().createBlock( BlockDirt.class ),
-                GoMint.instance().createBlock( BlockDirt.class ),
-                GoMint.instance().createBlock( BlockDirt.class )
+                DefinedBlocks.DIRT,
+                DefinedBlocks.DIRT,
+                DefinedBlocks.DIRT,
+                DefinedBlocks.DIRT
             ) );
         }
 
