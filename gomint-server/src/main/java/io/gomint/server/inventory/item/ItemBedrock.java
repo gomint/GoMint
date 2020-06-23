@@ -11,8 +11,6 @@ import io.gomint.taglib.NBTTagCompound;
 @RegisterInfo( id = 7 )
  public class ItemBedrock extends ItemStack implements io.gomint.inventory.item.ItemBedrock {
 
-
-
     @Override
     public String getBlockId() {
         return "minecraft:bedrock";

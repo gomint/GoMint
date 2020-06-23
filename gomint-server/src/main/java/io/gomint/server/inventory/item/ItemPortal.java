@@ -11,8 +11,6 @@ import io.gomint.taglib.NBTTagCompound;
 @RegisterInfo( id = 90 )
  public class ItemPortal extends ItemStack implements io.gomint.inventory.item.ItemPortal {
 
-
-
     @Override
     public String getBlockId() {
         return "minecraft:portal";

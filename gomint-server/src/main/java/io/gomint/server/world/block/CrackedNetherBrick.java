@@ -1,0 +1,44 @@
+package io.gomint.server.world.block;
+
+import io.gomint.inventory.item.ItemStack;
+import io.gomint.server.registry.RegisterInfo;
+import io.gomint.server.world.block.helper.ToolPresets;
+import io.gomint.world.block.BlockType;
+
+/**
+ * @author KingAli
+ * @version 1.0
+ */
+@RegisterInfo( sId = "minecraft:cracked_nether_bricks" )
+public class CrackedNetherBrick extends Block {
+
+    @Override
+    public String getBlockId() {
+        return "minecraft:cracked_nether_bricks";
+    }
+
+    @Override
+    public float getBlastResistance() {
+        return 30.0f;
+    }
+
+    @Override
+    public long getBreakTime() {
+        return 3000;
+    }
+
+    @Override
+    public BlockType getType() {
+        return BlockType.CRACKED_NETHER_BRICK;
+    }
+
+    @Override
+    public boolean canBeBrokenWithHand() {
+        return true;
+    }
+
+    @Override
+    public Class<? extends ItemStack>[] getToolInterfaces() {
+        return ToolPresets.PICKAXE;
+    }
+}

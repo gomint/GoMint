@@ -30,7 +30,9 @@ import java.util.List;
 @RegisterInfo(sId = "minecraft:stripped_dark_oak_log")
 @RegisterInfo(sId = "minecraft:stripped_jungle_log")
 @RegisterInfo(sId = "minecraft:stripped_birch_log")
-public class Log extends Block implements BlockLog {
+@RegisterInfo(sId = "minecraft:crimson_stem")
+@RegisterInfo(sId = "minecraft:warped_stem")
+public class Log extends Block implements BlockLog { //TODO WARPED AND CRIMSON
 
     private static final String OLD_LOG_TYPE = "old_log_type";
     private static final String OLD_LOG_ID = "minecraft:log";
@@ -45,7 +47,9 @@ public class Log extends Block implements BlockLog {
         BIRCH(OLD_LOG_ID, OLD_LOG_TYPE, "birch"),
         JUNGLE(OLD_LOG_ID, OLD_LOG_TYPE, "jungle"),
         ACACIA(NEW_LOG_ID, NEW_LOG_TYPE, "acacia"),
-        DARK_OAK(NEW_LOG_ID, NEW_LOG_TYPE, "dark_oak");
+        DARK_OAK(NEW_LOG_ID, NEW_LOG_TYPE, "dark_oak"),
+        CRIMSON_STEM
+
 
         private final String key;
         private final String value;
