@@ -7,7 +7,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @author KingAli
  * @version 1.0
  */
-@RegisterInfo(id = 210 ,sId = "minecraft:crying_obsidian" ) //TODO get ID ???
+@RegisterInfo(id = 544 ,sId = "minecraft:crying_obsidian" )
 public class ItemCryingObsidian extends ItemStack implements io.gomint.inventory.item.ItemCryingObsidian {
 
     @Override

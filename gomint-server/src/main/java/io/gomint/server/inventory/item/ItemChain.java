@@ -7,7 +7,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @author KingAli
  * @version 1.0
  */
-@RegisterInfo(id = 212 ,sId = "minecraft:chain" ) //TODO get ID???
+@RegisterInfo(id = 541 ,sId = "minecraft:chain" )
 public class ItemChain extends ItemStack implements io.gomint.inventory.item.ItemChain {
 
     @Override

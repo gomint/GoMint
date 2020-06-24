@@ -7,7 +7,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @author KingAli
  * @version 1.0
  */
-@RegisterInfo(id = 210 ,sId = "minecraft:crimson_nylium") //TODO get ID ???
+@RegisterInfo(id = 487 ,sId = "minecraft:crimson_nylium")
 public class ItemCrimsonNylium extends ItemStack implements io.gomint.inventory.item.ItemCrimsonNylium {
 
     @Override

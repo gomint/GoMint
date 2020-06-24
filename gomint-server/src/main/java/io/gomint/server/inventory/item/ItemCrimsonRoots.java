@@ -7,7 +7,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @author KingAli
  * @version 1.0
  */
-@RegisterInfo(id = 210 ,sId = "minecraft:crimson_roots" ) //TODO get ID ???
+@RegisterInfo(id = 478 ,sId = "minecraft:crimson_roots" )
 public class ItemCrimsonRoots extends ItemStack implements io.gomint.inventory.item.ItemCrimsonRoots {
 
     @Override

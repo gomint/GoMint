@@ -7,7 +7,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @author KingAli
  * @version 1.0
  */
-@RegisterInfo(id = 210 ,sId = "minecraft:lodestone" ) //TODO get ID??
+@RegisterInfo(id = 477 ,sId = "minecraft:lodestone" )
 public class ItemLodeStone extends ItemStack implements io.gomint.inventory.item.ItemLodeStone {
 
     @Override

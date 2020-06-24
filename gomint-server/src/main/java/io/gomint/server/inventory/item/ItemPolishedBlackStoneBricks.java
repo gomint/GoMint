@@ -7,7 +7,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @author KingAli
  * @version 1.0
  */
-@RegisterInfo(id = 210 ,sId = "minecraft:polished_blackstone_bricks" ) //TODO get ID??
+@RegisterInfo(id = 535 ,sId = "minecraft:polished_blackstone_bricks" )
 public class ItemPolishedBlackStoneBricks extends ItemStack implements io.gomint.inventory.item.ItemPolishedBlackStoneBricks {
 
     @Override

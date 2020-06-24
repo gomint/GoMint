@@ -7,7 +7,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @author KingAli
  * @version 1.0
  */
-@RegisterInfo(id = 210 ,sId = "minecraft:cracked_nether_bricks" ) //TODO get ID ???
+@RegisterInfo(id = 483 ,sId = "minecraft:cracked_nether_bricks" )
 public class ItemCrimsonFungus extends ItemStack implements io.gomint.inventory.item.ItemCrimsonFungus {
 
     @Override
