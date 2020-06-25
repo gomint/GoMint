@@ -54,8 +54,8 @@ public final class Protocol {
     // MC:PE Protocol ID
     public static final int MINECRAFT_PE_BETA_PROTOCOL_VERSION = -1;
     public static final int MINECRAFT_PE_NEXT_STABLE_PROTOCOL_VERSION = -1;
-    public static final int MINECRAFT_PE_PROTOCOL_VERSION = 390;
-    public static final String MINECRAFT_PE_NETWORK_VERSION = "1.14.60";
+    public static final int MINECRAFT_PE_PROTOCOL_VERSION = 407;
+    public static final String MINECRAFT_PE_NETWORK_VERSION = "1.16.0";
 
     // ========================================= PACKET IDS ========================================= //
     public static final byte PACKET_BATCH = (byte) 0xfe;
@@ -201,6 +201,18 @@ public final class Protocol {
     public static final byte PACKET_COMPLETED_USING_ITEM = (byte) 0x8e;
     public static final byte PACKET_NETWORK_SETTINGS = (byte) 0x8f;
     public static final byte PACKET_PLAYER_AUTH_INPUT = (byte) 0x90;
+    public static final byte PACKET_CREATIVE_CONTENT = (byte) 0x91;
+    public static final byte PACKET_PLAYER_ENCHANT_OPTIONS = (byte) 0x92;
+    public static final byte PACKET_ITEM_STACK_REQUEST = (byte) 0x93;
+    public static final byte PACKET_ITEM_STACK_RESPONSE = (byte) 0x94;
+    public static final byte PACKET_PLAYER_ARMOR_DAMAGE = (byte) 0x95;
+    public static final byte PACKET_CODE_BUILDER = (byte) 0x96;
+    public static final byte PACKET_UPDATE_PLAYER_GAME_TYPE = (byte) 0x97;
+    public static final byte PACKET_EMOTE_LIST = (byte) 0x98;
+    public static final byte PACKET_POS_TRACKING_SERVER_BROADCAST = (byte) 0x99;
+    public static final byte PACKET_POS_TRACKING_CLIENT_REQUEST = (byte) 0x9a;
+    public static final byte PACKET_DEBUG_INFO = (byte) 0x9b;
+    public static final byte PACKET_VIOLATION_WARNING = (byte) 0x9c;
     // CHECKSTYLE:ON
 
     // ========================================= PACKET METHODS ========================================= //
