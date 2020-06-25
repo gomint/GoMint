@@ -1,5 +1,6 @@
 package io.gomint.server.world.block;
 
+import io.gomint.inventory.item.ItemHoe;
 import io.gomint.inventory.item.ItemStack;
 import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.world.block.helper.ToolPresets;
@@ -9,36 +10,33 @@ import io.gomint.world.block.BlockType;
  * @author KingAli
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:campfire" )
-public class Campfire extends Block implements io.gomint.world.block.BlockCampfire {
+@RegisterInfo( sId = "minecraft:target" )
+public class Target extends Block implements io.gomint.world.block.BlockTarget {
 
     @Override
     public String getBlockId() {
-        return "minecraft:campfire";
+        return "minecraft:target";
     }
 
     @Override
     public long getBreakTime() {
-        return 3000;
-    }
-
-    @Override
-    public boolean canBeBrokenWithHand() {
-        return true;
+        return 800;
     }
 
     @Override
     public float getBlastResistance() {
-        return 10.0f;
+        return 2.5f;
     }
 
     @Override
     public Class<? extends ItemStack>[] getToolInterfaces() {
-        return ToolPresets.AXE;
+        return new Class[]{
+            ItemHoe.class
+        };
     }
 
     @Override
     public BlockType getType() {
-        return BlockType.CAMPFIRE;
+        return BlockType.TARGET;
     }
 }

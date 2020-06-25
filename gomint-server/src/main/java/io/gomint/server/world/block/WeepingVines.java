@@ -7,36 +7,31 @@ import io.gomint.world.block.BlockType;
  * @author KingAli
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:border_block" )
-public class Border extends Block implements io.gomint.world.block.BlockBorder {
+@RegisterInfo( sId = "minecraft:weeping_vines" )
+public class WeepingVines extends Block implements io.gomint.world.block.BlockWeepingVines {
 
     @Override
     public String getBlockId() {
-        return "minecraft:border_block";
+        return "minecraft:weeping_vines";
     }
 
     @Override
     public long getBreakTime() {
-        return -1;
+        return 0;
     }
 
     @Override
     public float getBlastResistance() {
-        return 1.8E7f;
+        return 0;
     }
 
     @Override
-    public boolean onBreak( boolean creative ) {
-        return creative;
+    public boolean canBeBrokenWithHand() {
+        return true;
     }
 
     @Override
     public BlockType getType() {
-        return BlockType.BORDER;
+        return BlockType.WEEPING_VINES;
     }
-
-    public boolean canBeBrokenWithHand() {
-        return false;
-    }
-
 }

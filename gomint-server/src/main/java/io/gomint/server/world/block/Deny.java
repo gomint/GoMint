@@ -16,12 +16,27 @@ public class Deny extends Block implements io.gomint.world.block.BlockDeny {
     }
 
     @Override
+    public long getBreakTime() {
+        return -1;
+    }
+
+    @Override
+    public boolean onBreak( boolean creative ) {
+        return creative;
+    }
+
+    @Override
     public float getBlastResistance() {
-        return 0; //No Informaton??
+        return 1.8E7f;
     }
 
     @Override
     public BlockType getType() {
         return BlockType.DENY;
+    }
+
+    @Override
+    public boolean canBeBrokenWithHand() {
+        return false;
     }
 }

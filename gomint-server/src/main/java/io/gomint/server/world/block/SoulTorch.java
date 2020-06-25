@@ -5,28 +5,26 @@ import io.gomint.math.AxisAlignedBB;
 import io.gomint.math.Vector;
 import io.gomint.server.entity.EntityPlayer;
 import io.gomint.server.registry.RegisterInfo;
-import io.gomint.server.util.BlockIdentifier;
 import io.gomint.server.world.PlacementData;
 import io.gomint.server.world.block.state.BlockfaceBlockState;
-import io.gomint.world.block.data.Facing;
 import io.gomint.world.block.BlockType;
+import io.gomint.world.block.data.Facing;
 
 import java.util.Collections;
 import java.util.List;
 
 /**
- * @author geNAZt
+ * @author KingAli
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:torch" )
-public class Torch extends Block implements io.gomint.world.block.BlockTorch {
-
+@RegisterInfo( sId = "minecraft:soul_torch" )
+public class SoulTorch extends Block implements io.gomint.world.block.BlockSoulTorch {
 
     private BlockfaceBlockState facing = new BlockfaceBlockState( this, () -> "facing" );
 
     @Override
     public String getBlockId() {
-        return "minecraft:torch";
+        return "minecraft:soul_torch";
     }
 
     @Override
@@ -46,7 +44,7 @@ public class Torch extends Block implements io.gomint.world.block.BlockTorch {
 
     @Override
     public BlockType getType() {
-        return BlockType.TORCH;
+        return BlockType.SOUL_TORCH;
     }
 
     @Override
@@ -149,3 +147,4 @@ public class Torch extends Block implements io.gomint.world.block.BlockTorch {
     }
 
 }
+

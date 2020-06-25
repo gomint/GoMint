@@ -9,12 +9,12 @@ import io.gomint.world.block.BlockType;
  * @author KingAli
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:campfire" )
-public class Campfire extends Block implements io.gomint.world.block.BlockCampfire {
+@RegisterInfo( sId = "minecraft:soul_campfire" )
+public class SoulCampfire extends Block implements io.gomint.world.block.BlockSoulCampfire {
 
     @Override
     public String getBlockId() {
-        return "minecraft:campfire";
+        return "minecraft:soul_campfire";
     }
 
     @Override
@@ -39,6 +39,6 @@ public class Campfire extends Block implements io.gomint.world.block.BlockCampfi
 
     @Override
     public BlockType getType() {
-        return BlockType.CAMPFIRE;
+        return BlockType.SOUL_CAMPFIRE;
     }
 }

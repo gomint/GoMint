@@ -9,12 +9,12 @@ import io.gomint.world.block.BlockType;
  * @author KingAli
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:campfire" )
-public class Campfire extends Block implements io.gomint.world.block.BlockCampfire {
+@RegisterInfo( sId = "minecraft:stripped_crimson_stem" )
+public class StrippedCrimsonStem extends Block implements io.gomint.world.block.ItemStrippedCrimsonStem {
 
     @Override
     public String getBlockId() {
-        return "minecraft:campfire";
+        return "minecraft:stripped_crimson_stem";
     }
 
     @Override
@@ -39,6 +39,7 @@ public class Campfire extends Block implements io.gomint.world.block.BlockCampfi
 
     @Override
     public BlockType getType() {
-        return BlockType.CAMPFIRE;
+        return BlockType.STRIPPED_CRIMSON_STEM;
     }
+
 }
