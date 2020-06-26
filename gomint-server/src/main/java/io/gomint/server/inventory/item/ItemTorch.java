@@ -8,7 +8,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo(sId = "minecraft:torch", id = 50)
- public class ItemTorch extends ItemStack implements io.gomint.inventory.item.ItemTorch {
+public class ItemTorch extends ItemStack implements io.gomint.inventory.item.ItemTorch {
 
     @Override
     public String getBlockId() {

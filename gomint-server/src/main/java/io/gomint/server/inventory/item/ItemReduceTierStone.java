@@ -22,7 +22,7 @@ public abstract class ItemReduceTierStone extends ItemStack implements ItemReduc
 
     @Override
     public short getMaxDamage() {
-        return 132;
+        return 131;
     }
 
     @Override

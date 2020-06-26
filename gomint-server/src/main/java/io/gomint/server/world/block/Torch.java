@@ -21,7 +21,6 @@ import java.util.List;
 @RegisterInfo( sId = "minecraft:torch" )
 public class Torch extends Block implements io.gomint.world.block.BlockTorch {
 
-
     private final BlockfaceBlockState facing = new BlockfaceBlockState( this, () -> "facing" );
 
     @Override

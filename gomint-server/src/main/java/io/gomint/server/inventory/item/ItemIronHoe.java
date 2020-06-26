@@ -35,7 +35,7 @@ public class ItemIronHoe extends ItemReduceTierIron implements io.gomint.invento
     public void gotInHand( EntityPlayer player ) {
         player
             .getAttributeInstance( Attribute.ATTACK_DAMAGE )
-            .setModifier( AttributeModifier.ITEM_ATTACK_DAMAGE, AttributeModifierType.ADDITION, 2 ); // 2 from iron material
+            .setModifier( AttributeModifier.ITEM_ATTACK_DAMAGE, AttributeModifierType.ADDITION, 3 );
     }
 
     @Override

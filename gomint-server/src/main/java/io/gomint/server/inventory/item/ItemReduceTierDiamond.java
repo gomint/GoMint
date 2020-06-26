@@ -22,7 +22,7 @@ public abstract class ItemReduceTierDiamond extends ItemStack implements ItemRed
 
     @Override
     public short getMaxDamage() {
-        return 1562;
+        return 1561;
     }
 
     @Override

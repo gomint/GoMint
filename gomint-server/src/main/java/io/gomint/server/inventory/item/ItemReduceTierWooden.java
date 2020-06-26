@@ -22,7 +22,7 @@ public abstract class ItemReduceTierWooden extends ItemStack implements ItemRedu
 
     @Override
     public short getMaxDamage() {
-        return 60;
+        return 59;
     }
 
     @Override

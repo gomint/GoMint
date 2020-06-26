@@ -34,7 +34,7 @@ public class BlockfaceBlockState extends BlockState<Facing, Integer> {
     }
 
     @Override
-    protected void calculateValueFromState() {
+    protected void calculateValueFromState(Facing state) {
         switch (this.getState()) {
             case DOWN:
             default:

@@ -4,11 +4,11 @@ import io.gomint.inventory.item.ItemReduceBreaktime;
 import io.gomint.server.inventory.item.annotation.UseDataAsDamage;
 
 /**
- * @author geNAZt
+ * @author KingAli
  * @version 1.0
  */
 @UseDataAsDamage
-public abstract class ItemReduceTierIron extends ItemStack implements ItemReduceBreaktime {
+public abstract class ItemReduceTierNetherite extends ItemStack implements ItemReduceBreaktime {
 
     @Override
     public byte getMaximumAmount() {
@@ -17,17 +17,17 @@ public abstract class ItemReduceTierIron extends ItemStack implements ItemReduce
 
     @Override
     public float getDivisor() {
-        return 6;
+        return 9;
     }
 
     @Override
     public short getMaxDamage() {
-        return 250;
+        return 2031;
     }
 
     @Override
     public int getEnchantAbility() {
-        return 14;
+        return 15;
     }
 
 }
