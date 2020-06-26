@@ -22,7 +22,7 @@ import java.util.List;
 public class Torch extends Block implements io.gomint.world.block.BlockTorch {
 
 
-    private BlockfaceBlockState facing = new BlockfaceBlockState( this, () -> "facing" );
+    private final BlockfaceBlockState facing = new BlockfaceBlockState( this, () -> "facing" );
 
     @Override
     public String getBlockId() {

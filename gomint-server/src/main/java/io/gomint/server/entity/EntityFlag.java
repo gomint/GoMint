@@ -64,7 +64,7 @@ public enum EntityFlag {
     SHOW_TRIDENT_ROPE(52),
     CONTAINER_PRIVATE(53),
     IS_TRANSFORMING(54),
-    SPIN_ATTACK(55),
+    SPINNING(55),
     SWIMMING( 56 ),
     BRIBED(57),
     PREGNANT(58),

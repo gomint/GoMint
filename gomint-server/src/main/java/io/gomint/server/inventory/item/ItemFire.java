@@ -7,7 +7,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 51 )
+@RegisterInfo(sId = "minecraft:fire", id = 51 )
  public class ItemFire extends ItemStack implements io.gomint.inventory.item.ItemFire {
 
     @Override
