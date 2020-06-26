@@ -1,0 +1,20 @@
+package io.gomint.entity.monster;
+
+import io.gomint.GoMint;
+import io.gomint.entity.EntityAgeable;
+
+/**
+ * @author KingAli
+ * @version 1.0
+ */
+public interface EntityHoglin extends EntityAgeable {
+
+    /**
+     * Create a new entity hoglin with no config
+     *
+     * @return empty, fresh zombie hoglin
+     */
+    static EntityHoglin create() {
+        return GoMint.instance().createEntity( EntityHoglin.class );
+    }
+}

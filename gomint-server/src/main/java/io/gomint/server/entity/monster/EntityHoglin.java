@@ -2,40 +2,41 @@ package io.gomint.server.entity.monster;
 
 import io.gomint.server.entity.Attribute;
 import io.gomint.server.entity.EntityAgeable;
-import io.gomint.server.entity.EntityLiving;
 import io.gomint.server.entity.EntityType;
 import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.world.WorldAdapter;
 
-@RegisterInfo( sId = "minecraft:zombie_pigman" )
-public class EntityZombiePigman extends EntityAgeable implements io.gomint.entity.monster.EntityZombiePigman {
+/**
+ * @author KingAli
+ * @version 1.0
+ */
+@RegisterInfo( sId = "minecraft:hoglin" )
+public class EntityHoglin extends EntityAgeable implements io.gomint.entity.monster.EntityHoglin {
 
     /**
      * Constructs a new EntityLiving
      *
      * @param world The world in which this entity is in
      */
-    public EntityZombiePigman( WorldAdapter world ) {
-        super( EntityType.ZOMBIE_PIGMAN, world );
+    public EntityHoglin( WorldAdapter world ) {
+        super( EntityType.HOGLIN, world );
         this.initEntity();
     }
 
-    /**
-     * Create new entity zombie pigman for API
-     */
-    public EntityZombiePigman() {
-        super( EntityType.ZOMBIE_PIGMAN, null );
+
+    public EntityHoglin() {
+        super( EntityType.HOGLIN, null );
         this.initEntity();
     }
 
     private void initEntity() {
         this.addAttribute(Attribute.HEALTH);
-        this.setHealth(20);
-        this.setMaxHealth(20);
+        this.setHealth(40);
+        this.setMaxHealth(40);
         if(this.isBaby()) {
-            this.setSize(0.3f, 0.975f);
+            this.setSize(0.45f, 0.45f);
         }else{
-            this.setSize(0.6f, 1.95f);
+            this.setSize(0.9f, 0.9f);
         }
     }
 
