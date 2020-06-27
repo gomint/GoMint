@@ -1,7 +1,9 @@
 package io.gomint.server.inventory.item;
+
 import io.gomint.inventory.item.ItemType;
 
 import io.gomint.server.registry.RegisterInfo;
+import io.gomint.taglib.NBTTagCompound;
 
 /**
  * @author geNAZt
@@ -9,11 +11,6 @@ import io.gomint.server.registry.RegisterInfo;
  */
 @RegisterInfo(sId = "minecraft:torch", id = 50)
 public class ItemTorch extends ItemStack implements io.gomint.inventory.item.ItemTorch {
-
-    @Override
-    public String getBlockId() {
-        return "minecraft:torch";
-    }
 
     @Override
     public ItemType getType() {

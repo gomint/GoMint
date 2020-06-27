@@ -21,7 +21,7 @@ import java.util.List;
 @RegisterInfo( sId = "minecraft:torch" )
 public class Torch extends Block implements io.gomint.world.block.BlockTorch {
 
-    private final BlockfaceBlockState facing = new BlockfaceBlockState( this, () -> "facing" );
+    private final BlockfaceBlockState facing = new BlockfaceBlockState( this, () -> new String[]{"facing_direction"} );
 
     @Override
     public String getBlockId() {
@@ -119,7 +119,7 @@ public class Torch extends Block implements io.gomint.world.block.BlockTorch {
 
     @Override
     public PlacementData calculatePlacementData(EntityPlayer entity, ItemStack item, Facing face, Block block, Block clickedBlock, Vector clickVector ) {
-        PlacementData data = super.calculatePlacementData(entity, item, face, block, clickedBlock, clickVector);
+        PlacementData data = super.calculatePlacementData( entity, item, face, block, clickedBlock, clickVector );
 
         Facing[] toCheck = new Facing[]{
             Facing.DOWN,
@@ -130,21 +130,20 @@ public class Torch extends Block implements io.gomint.world.block.BlockTorch {
         };
 
         boolean foundSide = false;
-        for (Facing toCheckFace : toCheck) {
-            if (!clickedBlock.getSide(toCheckFace).isTransparent()) {
-                this.facing.setState(toCheckFace.opposite());
+        for ( Facing toCheckFace : toCheck ) {
+            if ( !clickedBlock.getSide( toCheckFace ).isTransparent() ) {
+                this.facing.setState( toCheckFace.opposite() );
                 foundSide = true;
                 break;
             }
         }
 
-        if (!foundSide) {
+        if ( !foundSide ) {
             return null;
         }
 
         // TODO: Calculate proper state map
-        return new PlacementData(this.identifier, null);
-
+        return new PlacementData( this.identifier, null );
     }
 
 }
