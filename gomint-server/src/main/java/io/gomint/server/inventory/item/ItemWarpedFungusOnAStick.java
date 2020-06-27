@@ -7,11 +7,11 @@ import io.gomint.server.registry.RegisterInfo;
  * @author KingAli
  * @version 1.0
  */
-@RegisterInfo( id = 383 )
-public class ItemFoxEgg extends ItemStack implements io.gomint.inventory.item.ItemFoxEgg {
+@RegisterInfo(id = 757 )
+public class ItemWarpedFungusOnAStick extends ItemStack implements io.gomint.inventory.item.ItemWarpedFungusOnAStick {
 
     @Override
     public ItemType getType() {
-        return ItemType.FOXEGG;
+        return ItemType.WARPED_FUNGUS_ON_A_STICK;
     }
 }

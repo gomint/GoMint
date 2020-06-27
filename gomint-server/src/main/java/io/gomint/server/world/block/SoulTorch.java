@@ -20,7 +20,7 @@ import java.util.List;
 @RegisterInfo( sId = "minecraft:soul_torch" )
 public class SoulTorch extends Block implements io.gomint.world.block.BlockSoulTorch {
 
-    private BlockfaceBlockState facing = new BlockfaceBlockState( this, () -> "facing" );
+    private BlockfaceBlockState facing = new BlockfaceBlockState( this, () -> new String[]{"facing_direction"} );
 
     @Override
     public String getBlockId() {
