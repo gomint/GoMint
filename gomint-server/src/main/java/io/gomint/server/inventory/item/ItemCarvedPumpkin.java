@@ -14,13 +14,8 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = -155 )
+@RegisterInfo(sId = "minecraft:carved_pumpkin", id = -155)
 public class ItemCarvedPumpkin extends ItemStack implements io.gomint.inventory.item.ItemCarvedPumpkin {
-
-    @Override
-    public String getBlockId() {
-        return "minecraft:carved_pumpkin";
-    }
 
     @Override
     public ItemType getType() {

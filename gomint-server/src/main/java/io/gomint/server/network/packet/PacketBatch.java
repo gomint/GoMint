@@ -9,6 +9,7 @@ package io.gomint.server.network.packet;
 
 import io.gomint.jraknet.PacketBuffer;
 import io.gomint.server.network.Protocol;
+import io.netty.buffer.ByteBuf;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -22,8 +23,7 @@ public class PacketBatch extends Packet {
 
     private boolean compressed;
 
-    private byte[] payload;
-    private int payloadLength;
+    private ByteBuf payload;
 
     public PacketBatch() {
         super( Protocol.PACKET_BATCH );
@@ -31,13 +31,12 @@ public class PacketBatch extends Packet {
 
     @Override
     public void serialize( PacketBuffer buffer, int protocolID ) {
-        buffer.writeBytes( this.payload, 0, this.payloadLength );
+        buffer.writeBytes( this.payload );
     }
 
     @Override
     public void deserialize( PacketBuffer buffer, int protocolID ) {
-        this.payload = new byte[buffer.getRemaining()];
-        buffer.readBytes( this.payload );
+        this.payload = buffer.getBuffer();
     }
 
     @Override

@@ -6,9 +6,13 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.module.Configuration;
+import java.lang.module.ModuleFinder;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.nio.file.Path;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 
@@ -63,12 +67,9 @@ public class PluginClassloader extends URLClassLoader {
      */
     PluginClassloader(PluginMeta meta) throws MalformedURLException {
         super(new URL[]{meta.getPluginFile().toURI().toURL()});
+
         this.meta = meta;
         ALL_LOADERS.add(this);
-    }
-
-    public Class<?> defineClass(String name, byte[] b) {
-        return defineClass(name, b, 0, b.length);
     }
 
     @Override

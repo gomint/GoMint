@@ -27,6 +27,7 @@ import io.gomint.world.block.BlockRedstoneOre;
 import io.gomint.world.block.BlockStationaryWater;
 import io.gomint.world.block.BlockStone;
 import io.gomint.world.generator.ChunkGenerator;
+import io.gomint.world.generator.DefinedBlocks;
 import io.gomint.world.generator.GeneratorContext;
 import io.gomint.world.generator.biome.BiomeSelector;
 import io.gomint.world.generator.noise.Simplex;
@@ -46,11 +47,6 @@ import java.util.concurrent.ThreadLocalRandom;
  * @version 1.0
  */
 public class NormalGenerator extends ChunkGenerator {
-
-    // Used blocks for terrain
-    private static final Block WATER = GoMint.instance().createBlock( BlockStationaryWater.class );
-    private static final Block BEDROCK = GoMint.instance().createBlock( BlockBedrock.class );
-    private static final Block STONE = GoMint.instance().createBlock( BlockStone.class );
 
     private static final int SMOOTH_SIZE = 2;
     private static final double[][] GAUSSIAN = new double[SMOOTH_SIZE * 2 + 1][SMOOTH_SIZE * 2 + 1];
@@ -210,15 +206,15 @@ public class NormalGenerator extends ChunkGenerator {
                 // We currently only care about noise generation with stones
                 for ( int y = 0; y < correctedMax; ++y ) {
                     if ( y == 0 ) {
-                        chunk.setBlock( x, y, z, WorldLayer.NORMAL, BEDROCK );
+                        chunk.setBlock( x, y, z, WorldLayer.NORMAL, DefinedBlocks.BEDROCK);
                         continue;
                     }
 
                     double noiseValue = noiseValues[x][z][y] - 1 / smoothHeight[x][z] * ( y - smoothHeight[x][z] - minHeight[x][z] );
                     if ( noiseValue > 0 ) {
-                        chunk.setBlock( x, y, z, STONE );
+                        chunk.setBlock( x, y, z, DefinedBlocks.STONE );
                     } else if ( y <= this.waterHeight ) {
-                        chunk.setBlock( x, y, z, WATER );
+                        chunk.setBlock( x, y, z, DefinedBlocks.WATER );
                     }
                 }
             }

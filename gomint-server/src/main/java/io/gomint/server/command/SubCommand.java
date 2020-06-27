@@ -112,6 +112,7 @@ public class SubCommand extends Command {
                 null,
                 CommandPermission.NORMAL,
                 null,
+                false,
                 this,
                 overloads );
         }

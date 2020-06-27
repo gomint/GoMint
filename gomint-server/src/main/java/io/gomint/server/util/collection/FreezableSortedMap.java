@@ -18,10 +18,6 @@ public class FreezableSortedMap<K, V> extends Object2ObjectLinkedOpenHashMap<K, 
     @Setter
     private boolean frozen;
 
-    public FreezableSortedMap(FreezableSortedMap<K, V> states) {
-        super(states);
-    }
-
     public FreezableSortedMap() {
         super();
     }

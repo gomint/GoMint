@@ -13,8 +13,9 @@ jobs:
         java-version: 11
     - name: Build with Maven
       run: mvn -B package
+    - run: mkdir -p ./release/modules && cp -r ./gomint-server/target/modules/* ./release/modules/
     - name: Store artifacts
       uses: actions/upload-artifact@v2
       with:
         name: GoMint Server
-        path: gomint-server/target/GoMint.jar
+        path: ./release/

@@ -27,7 +27,7 @@ public class CheckPacketTileEntityTest {
     public void checkNBTAllocLimitFailure() throws Exception {
         // Fill new compound with too much data for the packet
         NBTTagCompound testCompound = new NBTTagCompound( "" );
-        for ( int i = 0; i < 1024 * 1024; i++ ) {
+        for ( int i = 0; i < 512 * 1024; i++ ) {
             testCompound.addValue( String.valueOf( i ), new ArrayList() );
         }
 
@@ -39,7 +39,6 @@ public class CheckPacketTileEntityTest {
         // Serialize the packet
         PacketBuffer buffer = new PacketBuffer( 16 );
         packetTileEntityData.serialize( buffer, Protocol.MINECRAFT_PE_PROTOCOL_VERSION );
-        buffer.setPosition( 0 );
 
         // Deserialize the packet, this should raise a exception
         packetTileEntityData = new PacketTileEntityData();
@@ -50,7 +49,7 @@ public class CheckPacketTileEntityTest {
     public void checkNBTAllocLimitSuccess() throws Exception {
         // Fill new compound with too much data for the packet
         NBTTagCompound testCompound = new NBTTagCompound( "" );
-        for ( int i = 0; i < 1024; i++ ) {
+        for ( int i = 0; i < 4; i++ ) {
             testCompound.addValue( String.valueOf( i ), new ArrayList() );
         }
 
@@ -62,7 +61,6 @@ public class CheckPacketTileEntityTest {
         // Serialize the packet
         PacketBuffer buffer = new PacketBuffer( 16 );
         packetTileEntityData.serialize( buffer, Protocol.MINECRAFT_PE_PROTOCOL_VERSION );
-        buffer.setPosition( 0 );
 
         // Deserialize the packet, this should raise a exception
         packetTileEntityData = new PacketTileEntityData();

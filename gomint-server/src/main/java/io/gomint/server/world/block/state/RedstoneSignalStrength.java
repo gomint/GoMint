@@ -14,7 +14,7 @@ import java.util.function.Supplier;
 
 public class RedstoneSignalStrength extends ProgressBlockState {
 
-    public RedstoneSignalStrength(Block block, Supplier<String> key) {
+    public RedstoneSignalStrength(Block block, Supplier<String[]> key) {
         super(block, key, 15, aVoid -> {
         });
     }

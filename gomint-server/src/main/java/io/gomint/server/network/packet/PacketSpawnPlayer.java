@@ -23,6 +23,7 @@ public class PacketSpawnPlayer extends Packet {
     private String name;
     private long entityId;
     private long runtimeEntityId;
+    private String platformChatId;
 
     private float x;
     private float y;
@@ -49,6 +50,8 @@ public class PacketSpawnPlayer extends Packet {
     private List<EntityLink> links;
     private String deviceId;
 
+    private int buildPlatform;
+
     /**
      * Create a new spawn player packet
      */
@@ -64,7 +67,7 @@ public class PacketSpawnPlayer extends Packet {
         buffer.writeSignedVarLong( this.entityId );
         buffer.writeUnsignedVarLong( this.runtimeEntityId );
 
-        buffer.writeString( this.uuid.toString() );
+        buffer.writeString( this.platformChatId );
 
         buffer.writeLFloat( this.x );
         buffer.writeLFloat( this.y );
@@ -75,8 +78,8 @@ public class PacketSpawnPlayer extends Packet {
         buffer.writeLFloat( this.velocityZ );
 
         buffer.writeLFloat( this.pitch );
-        buffer.writeLFloat( this.headYaw );
         buffer.writeLFloat( this.yaw );
+        buffer.writeLFloat( this.headYaw );
 
         writeItemStack( this.itemInHand, buffer );
         this.metadataContainer.serialize( buffer );
@@ -92,6 +95,7 @@ public class PacketSpawnPlayer extends Packet {
         writeEntityLinks( this.links, buffer );
 
         buffer.writeString( this.deviceId );
+        buffer.writeLInt(this.buildPlatform);
     }
 
     @Override

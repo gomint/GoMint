@@ -21,6 +21,7 @@ import io.gomint.taglib.NBTTagCompound;
 import io.gomint.world.block.Block;
 import io.gomint.world.block.data.Facing;
 import lombok.EqualsAndHashCode;
+import lombok.Setter;
 import lombok.ToString;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,6 +55,10 @@ public abstract class ItemStack implements Cloneable, io.gomint.inventory.item.I
 
     // Observer stuff for damaging items
     private ItemStackPlace itemStackPlace;
+
+    // Item constructor factors
+    @Setter
+    private Items items;
 
     ItemStack setMaterial( int material ) {
         this.material = material;
@@ -366,7 +371,7 @@ public abstract class ItemStack implements Cloneable, io.gomint.inventory.item.I
      * @return id for the block when this item is placed
      */
     public String getBlockId() {
-        return null;
+        return this.items.getBlockId(this.material);
     }
 
     /**

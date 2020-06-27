@@ -38,4 +38,12 @@ public interface CommandSender {
      */
     boolean hasPermission( String permission );
 
+    /**
+     * Check if player has a specific permission
+     *
+     * @param permission which should be checked for
+     * @return true if the player has this permission, defaultValue if not
+     */
+    boolean hasPermission( String permission, boolean defaultValue );
+
 }

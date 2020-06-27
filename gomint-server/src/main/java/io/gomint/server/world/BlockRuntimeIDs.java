@@ -11,6 +11,8 @@ import io.gomint.server.util.BlockIdentifier;
 import io.gomint.server.util.collection.FreezableSortedMap;
 import io.gomint.taglib.NBTTagCompound;
 import io.gomint.taglib.NBTWriter;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.PooledByteBufAllocator;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.longs.Long2IntMap;
@@ -45,12 +47,12 @@ public class BlockRuntimeIDs {
     private static Object2ObjectMap<String, List<BlockIdentifier>> BLOCK_STATE_IDENTIFIER = new Object2ObjectLinkedOpenHashMap<>();
 
     // Cached packet streams
-    private static byte[] START_GAME_BUFFER;
+    private static ByteBuf START_GAME_BUFFER;
 
     public static void init(List<BlockIdentifier> blockPalette) throws IOException {
         List<Object> compounds = new ArrayList<>();
 
-        ByteArrayOutputStream data = new ByteArrayOutputStream();
+        ByteBuf data = PooledByteBufAllocator.DEFAULT.directBuffer();
         NBTWriter writer = new NBTWriter(data, ByteOrder.LITTLE_ENDIAN);
         writer.setUseVarint(true);
 
@@ -75,7 +77,7 @@ public class BlockRuntimeIDs {
 
         writer.write(compounds);
 
-        START_GAME_BUFFER = data.toByteArray();
+        START_GAME_BUFFER = data;
     }
 
     /**
@@ -83,7 +85,7 @@ public class BlockRuntimeIDs {
      *
      * @return correct cached view
      */
-    public static byte[] getPacketCache() {
+    public static ByteBuf getPacketCache() {
         return START_GAME_BUFFER;
     }
 
@@ -136,6 +138,7 @@ public class BlockRuntimeIDs {
             }
         }
 
+        LOGGER.warn("No usable block state found for: {} -> {} -> {}", oldState, changingKey, newValue);
         return null;
     }
 

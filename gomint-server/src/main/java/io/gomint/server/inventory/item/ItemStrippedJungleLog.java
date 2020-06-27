@@ -7,7 +7,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @author KCodeYT
  * @version 1.0
  */
-@RegisterInfo( id = -7 )
+@RegisterInfo(sId = "minecraft:stripped_jungle_log", id = -7)
 public class ItemStrippedJungleLog extends ItemStack implements io.gomint.inventory.item.ItemStrippedJungleLog {
 
     @Override
@@ -16,20 +16,15 @@ public class ItemStrippedJungleLog extends ItemStack implements io.gomint.invent
     }
 
     @Override
-    public String getBlockId() {
-        return "minecraft:stripped_jungle_log";
-    }
-
-    @Override
     public ItemType getType() {
         return ItemType.STRIPPED_JUNGLE_LOG;
     }
 
     @Override
-    public void setLogDirection( Direction direction ) {
+    public void setLogDirection(Direction direction) {
         short type = 0;
 
-        switch ( direction ) {
+        switch (direction) {
             case EAST_WEST:
                 type = 1;
                 break;
@@ -43,14 +38,14 @@ public class ItemStrippedJungleLog extends ItemStack implements io.gomint.invent
                 break;
         }
 
-        this.setData( type );
+        this.setData(type);
     }
 
     @Override
     public Direction getLogDirection() {
         short direction = this.getData();
 
-        switch ( direction ) {
+        switch (direction) {
             case 0:
                 return Direction.UP_DOWN;
             case 1:

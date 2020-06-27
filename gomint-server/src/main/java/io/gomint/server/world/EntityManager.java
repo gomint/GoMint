@@ -13,6 +13,7 @@ import io.gomint.event.entity.EntityDespawnEvent;
 import io.gomint.event.entity.EntitySpawnEvent;
 import io.gomint.math.Location;
 import io.gomint.server.network.PlayerConnectionState;
+import io.gomint.server.network.packet.Packet;
 import io.gomint.server.network.packet.PacketEntityMetadata;
 import io.gomint.server.network.packet.PacketEntityMotion;
 import io.gomint.server.network.packet.PacketEntityMovement;
@@ -237,18 +238,7 @@ public class EntityManager {
                 movedEntity.updateOldPosition();
 
                 // Prepare movement packet
-                PacketEntityMovement packetEntityMovement = new PacketEntityMovement();
-                packetEntityMovement.setEntityId( movedEntity.getEntityId() );
-
-                packetEntityMovement.setX( movedEntity.getPositionX() );
-                packetEntityMovement.setY( movedEntity.getPositionY() + movedEntity.getOffsetY() );
-                packetEntityMovement.setZ( movedEntity.getPositionZ() );
-
-                packetEntityMovement.setYaw( movedEntity.getYaw() );
-                packetEntityMovement.setHeadYaw( movedEntity.getHeadYaw() );
-                packetEntityMovement.setPitch( movedEntity.getPitch() );
-
-                packetEntityMovement.setOnGround( movedEntity.isOnGround() );
+                Packet packetEntityMovement = movedEntity.getMovementPacket();
 
                 PacketEntityMotion entityMotion = null;
                 if ( movedEntity.isMotionSendingEnabled() ) {
@@ -267,7 +257,7 @@ public class EntityManager {
 
                     player.getEntityVisibilityManager().updateEntity( movedEntity, chunk );
                     if ( player.getEntityVisibilityManager().isVisible( movedEntity ) ) {
-                        if ( true || needsFullMovement ) {
+                        if ( needsFullMovement ) {
                             player.getConnection().addToSendQueue( packetEntityMovement );
                         } else {
                             player.getConnection().addToSendQueue( relativeMovement );

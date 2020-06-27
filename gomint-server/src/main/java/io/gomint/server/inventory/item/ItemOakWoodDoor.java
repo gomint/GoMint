@@ -7,17 +7,12 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 324 )
+@RegisterInfo( sId = "minecraft:wooden_door", id = 324 )
 public class ItemOakWoodDoor extends ItemStack implements io.gomint.inventory.item.ItemOakWoodDoor {
 
     @Override
     public long getBurnTime() {
         return 10000;
-    }
-
-    @Override
-    public String getBlockId() {
-        return "minecraft:wooden_door";
     }
 
     @Override

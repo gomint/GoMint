@@ -14,15 +14,8 @@ import io.gomint.taglib.NBTTagCompound;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 215 )
+@RegisterInfo(sId = "minecraft:red_nether_brick", id = 215)
 public class ItemRedNetherBrick extends ItemStack implements io.gomint.inventory.item.ItemRedNetherBrick {
-
-
-
-    @Override
-    public String getBlockId() {
-        return "minecraft:red_nether_brick";
-    }
 
     @Override
     public ItemType getType() {

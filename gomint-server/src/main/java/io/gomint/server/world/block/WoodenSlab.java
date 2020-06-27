@@ -33,7 +33,7 @@ public class WoodenSlab extends Slab implements BlockWoodenSlab {
         }
     }
 
-    private final EnumBlockState<LogTypeMagic, String> variant = new EnumBlockState<>(this, () -> "wood_type", LogTypeMagic.values(), LogTypeMagic::getValue, v -> {
+    private final EnumBlockState<LogTypeMagic, String> variant = new EnumBlockState<>(this, v -> new String[]{"wood_type"}, LogTypeMagic.values(), LogTypeMagic::getValue, v -> {
         for (LogTypeMagic value : LogTypeMagic.values()) {
             if (value.getValue().equals(v)) {
                 return value;

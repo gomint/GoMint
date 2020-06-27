@@ -14,19 +14,14 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = -147 )
+@RegisterInfo( sId = "minecraft:dark_oak_trapdoor", id = -147 )
 public class ItemDarkOakTrapdoor extends ItemStack implements io.gomint.inventory.item.ItemDarkOakTrapdoor {
 
     @Override
     public long getBurnTime() {
         return 15000;
     }
-
-    @Override
-    public String getBlockId() {
-        return "minecraft:dark_oak_trapdoor";
-    }
-
+    
     @Override
     public ItemType getType() {
         return ItemType.DARK_OAK_TRAPDOOR;

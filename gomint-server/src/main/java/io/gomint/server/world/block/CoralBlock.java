@@ -39,8 +39,8 @@ public class CoralBlock extends Block implements BlockCoralBlock {
         }
     }
 
-    private final BooleanBlockState dead = new BooleanBlockState(this, () -> "dead_bit");
-    private final DirectValueBlockState<String> color = new DirectValueBlockState<>(this, () -> "coral_color", "blue");
+    private final BooleanBlockState dead = new BooleanBlockState(this, () -> new String[]{"dead_bit"});
+    private final DirectValueBlockState<String> color = new DirectValueBlockState<>(this, () -> new String[]{"coral_color"}, "blue");
 
     @Override
     public String getBlockId() {

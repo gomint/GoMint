@@ -7,17 +7,12 @@ import io.gomint.server.registry.RegisterInfo;
  * @author KCodeYT
  * @version 1.0
  */
-@RegisterInfo( id = 162 )
+@RegisterInfo( sId = "minecraft:log2", id = 162 )
 public class ItemLog2 extends ItemStack implements io.gomint.inventory.item.ItemLog2 {
 
     @Override
     public long getBurnTime() {
         return 15000;
-    }
-
-    @Override
-    public String getBlockId() {
-        return "minecraft:log2";
     }
 
     @Override

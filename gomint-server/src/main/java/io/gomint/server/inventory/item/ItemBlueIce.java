@@ -14,13 +14,8 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = -11 )
+@RegisterInfo(sId = "minecraft:blue_ice", id = -11)
 public class ItemBlueIce extends ItemStack implements io.gomint.inventory.item.ItemBlueIce {
-
-    @Override
-    public String getBlockId() {
-        return "minecraft:blue_ice";
-    }
 
     @Override
     public ItemType getType() {

@@ -14,13 +14,8 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = -153 )
+@RegisterInfo(sId = "minecraft:jungle_pressure_plate", id = -153)
 public class ItemJunglePressurePlate extends ItemStack implements io.gomint.inventory.item.ItemJunglePressurePlate {
-
-    @Override
-    public String getBlockId() {
-        return "minecraft:jungle_pressure_plate";
-    }
 
     @Override
     public ItemType getType() {

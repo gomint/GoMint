@@ -9,13 +9,8 @@ import io.gomint.taglib.NBTTagCompound;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo(id = 65)
+@RegisterInfo( sId = "minecraft:ladder", id = 65)
 public class ItemLadder extends ItemStack implements io.gomint.inventory.item.ItemLadder {
-
-    @Override
-    public String getBlockId() {
-        return "minecraft:ladder";
-    }
 
     @Override
     public ItemType getType() {

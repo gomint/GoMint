@@ -8,15 +8,8 @@ import io.gomint.taglib.NBTTagCompound;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 231 )
+@RegisterInfo( sId = "minecraft:blue_glazed_terracotta", id = 231 )
 public class ItemBlueGlazedTerracotta extends ItemStack implements io.gomint.inventory.item.ItemBlueGlazedTerracotta {
-
-
-
-    @Override
-    public String getBlockId() {
-        return "minecraft:blue_glazed_terracotta";
-    }
 
     @Override
     public ItemType getType() {

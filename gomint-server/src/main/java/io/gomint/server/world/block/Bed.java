@@ -36,9 +36,9 @@ import java.util.List;
 @EqualsAndHashCode( callSuper = true )
 public class Bed extends Block implements io.gomint.world.block.BlockBed {
 
-    private final DirectionBlockState direction = new DirectionBlockState( this, () -> "direction" );
-    private final BooleanBlockState occupied = new BooleanBlockState( this, () -> "occupied_bit" );
-    private final BooleanBlockState head = new BooleanBlockState( this, () -> "head_piece_bit" );
+    private final DirectionBlockState direction = new DirectionBlockState( this, () -> new String[]{"direction"} );
+    private final BooleanBlockState occupied = new BooleanBlockState( this, () -> new String[]{"occupied_bit"} );
+    private final BooleanBlockState head = new BooleanBlockState( this, () -> new String[]{"head_piece_bit"} );
 
     @Override
     public String getBlockId() {

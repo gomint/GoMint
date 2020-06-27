@@ -25,7 +25,7 @@ import java.util.List;
 @RegisterInfo( sId = "minecraft:chest" )
 public class Chest extends ContainerBlock implements BlockChest {
 
-    private final BlockfaceBlockState direction = new BlockfaceBlockState( this, () -> "facing_direction" );
+    private final BlockfaceBlockState direction = new BlockfaceBlockState( this, () -> new String[]{"facing_direction"} );
 
     @Override
     public String getBlockId() {

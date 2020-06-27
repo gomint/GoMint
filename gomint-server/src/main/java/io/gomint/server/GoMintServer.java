@@ -232,7 +232,7 @@ public class GoMintServer implements GoMint, InventoryHolder {
         // Build up registries
         // ------------------------------------ //
         this.blocks = new Blocks(classPath);
-        this.items = new Items(classPath, null);
+        this.items = new Items(classPath);
         this.entities = new Entities(classPath);
         this.effects = new Effects(classPath);
         this.enchantments = new Enchantments(classPath);
@@ -254,6 +254,7 @@ public class GoMintServer implements GoMint, InventoryHolder {
         }
 
         BlockRuntimeIDs.init(this.assets.getBlockPalette());
+        Items.init(this.assets.getItemIDs());
     }
 
     public void startAfterRegistryInit(OptionSet args) {
@@ -369,7 +370,7 @@ public class GoMintServer implements GoMint, InventoryHolder {
 
             // Create options world generator
             CreateOptions options = new CreateOptions();
-            options.worldType(WorldType.IN_MEMORY); // Persistent world storage
+            options.worldType(WorldType.PERSISTENT); // Persistent world storage
 
             // Check if wished chunk generator is present
             if (chunkGenerator != null) {

@@ -18,8 +18,13 @@ import io.gomint.math.Location;
 import io.gomint.math.MathUtils;
 import io.gomint.server.entity.tileentity.TileEntities;
 import io.gomint.server.entity.tileentity.TileEntity;
+import io.gomint.server.jni.NativeCode;
+import io.gomint.server.jni.zlib.JavaZLib;
+import io.gomint.server.jni.zlib.NativeZLib;
+import io.gomint.server.jni.zlib.ZLib;
 import io.gomint.server.jwt.JwtSignatureException;
 import io.gomint.server.jwt.JwtToken;
+import io.gomint.server.maintenance.ReportUploader;
 import io.gomint.server.network.ConnectionWithState;
 import io.gomint.server.network.EncryptionHandler;
 import io.gomint.server.network.EncryptionKeyFactory;
@@ -27,19 +32,35 @@ import io.gomint.server.network.NetworkManager;
 import io.gomint.server.network.PlayerConnectionState;
 import io.gomint.server.network.PostProcessExecutor;
 import io.gomint.server.network.Protocol;
-import io.gomint.server.network.packet.*;
+import io.gomint.server.network.packet.Packet;
+import io.gomint.server.network.packet.PacketAdventureSettings;
+import io.gomint.server.network.packet.PacketBatch;
+import io.gomint.server.network.packet.PacketConfirmChunkRadius;
+import io.gomint.server.network.packet.PacketDisconnect;
+import io.gomint.server.network.packet.PacketEncryptionRequest;
+import io.gomint.server.network.packet.PacketEncryptionResponse;
+import io.gomint.server.network.packet.PacketLogin;
+import io.gomint.server.network.packet.PacketMovePlayer;
+import io.gomint.server.network.packet.PacketPlayState;
+import io.gomint.server.network.packet.PacketResourcePackResponse;
+import io.gomint.server.network.packet.PacketResourcePackStack;
+import io.gomint.server.network.packet.PacketResourcePacksInfo;
+import io.gomint.server.network.packet.PacketSetLocalPlayerAsInitialized;
+import io.gomint.server.network.packet.PacketStartGame;
+import io.gomint.server.network.packet.PacketWorldChunk;
 import io.gomint.server.resource.ResourceResponseStatus;
 import io.gomint.server.util.BlockIdentifier;
 import io.gomint.server.util.Palette;
-import io.gomint.server.world.BlockRuntimeIDs;
 import io.gomint.server.world.ChunkAdapter;
 import io.gomint.server.world.ChunkSlice;
 import io.gomint.server.world.WorldAdapter;
 import io.gomint.server.world.generator.vanilla.chunk.ChunkSquare;
 import io.gomint.server.world.generator.vanilla.chunk.ChunkSquareCache;
-import io.gomint.taglib.NBTReaderNoBuffer;
+import io.gomint.taglib.NBTReader;
 import io.gomint.taglib.NBTTagCompound;
 import io.gomint.util.random.FastRandom;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.PooledByteBufAllocator;
 import lombok.Setter;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
@@ -47,8 +68,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.SocketException;
@@ -62,7 +81,7 @@ import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
-import java.util.zip.InflaterInputStream;
+import java.util.zip.DataFormatException;
 
 import static io.gomint.server.network.Protocol.PACKET_BATCH;
 import static io.gomint.server.network.Protocol.PACKET_ENCRYPTION_REQUEST;
@@ -81,6 +100,12 @@ public class Client implements ConnectionWithState {
 
     private static final AtomicInteger CLIENT_IDS = new AtomicInteger( 0 );
     private static final Logger LOGGER = LoggerFactory.getLogger( Client.class );
+
+    private static final NativeCode<ZLib> ZLIB = new NativeCode<>("zlib", JavaZLib.class, NativeZLib.class);
+
+    static {
+        ZLIB.load();
+    }
 
     private final PostProcessExecutor postProcessExecutor;
 
@@ -115,6 +140,8 @@ public class Client implements ConnectionWithState {
     private Consumer<Void> disconnectConsumer;
     private boolean disconnected;
 
+    private ZLib decompressor;
+
     public Client( WorldAdapter world, ChunkSquareCache chunkSquareCache, PostProcessExecutor postProcessExecutor ) {
         this.world = world;
         this.postProcessExecutor = postProcessExecutor;
@@ -127,25 +154,32 @@ public class Client implements ConnectionWithState {
             this.socket.setMojangModificationEnabled( true );
             this.socket.setEventHandler( ( socket, socketEvent ) -> {
                 if ( socketEvent.getType() == SocketEvent.Type.CONNECTION_ATTEMPT_SUCCEEDED ) {
+                    Client.this.decompressor = ZLIB.newInstance();
+                    Client.this.decompressor.init(false, false, 7); // Level doesn't matter
+
                     Client.this.connection = socketEvent.getConnection();
                     Client.this.connection.addDataProcessor( packetData -> {
-                        PacketBuffer buffer = new PacketBuffer( packetData.getPacketData(), 0 );
-                        if ( buffer.getRemaining() <= 0 ) {
+                        if ( packetData.getPacketData().readableBytes() <= 0 ) {
                             // Malformed packet:
                             return packetData;
                         }
 
                         // Check if packet is batched
-                        byte packetId = buffer.readByte();
+                        byte packetId = packetData.getPacketData().readByte();
                         if ( packetId == Protocol.PACKET_BATCH ) {
                             // Decompress and decrypt
-                            byte[] pureData = handleBatchPacket( buffer );
+                            ByteBuf pureData = handleBatchPacket( packetData.getPacketData() );
 
-                            Client.this.handleSocketData( new PacketBuffer( pureData, 0 ) );
+                            Client.this.handleSocketData( new PacketBuffer( pureData ) );
+
+                            // We consumed everything
+                            pureData.release();
+                            packetData.release();
 
                             return null;
                         }
 
+                        packetData.getPacketData().readerIndex(0);
                         return packetData;
                     } );
 
@@ -178,10 +212,9 @@ public class Client implements ConnectionWithState {
      * @param buffer The buffer containing the batch packet's data (except packet ID)
      * @return decompressed and decrypted data
      */
-    private byte[] handleBatchPacket( PacketBuffer buffer ) {
+    private ByteBuf handleBatchPacket( ByteBuf buffer ) {
         // Encrypted?
-        byte[] input = new byte[buffer.getRemaining()];
-        System.arraycopy( buffer.getBuffer(), buffer.getPosition(), input, 0, input.length );
+        ByteBuf input = buffer;
         if ( this.encryptionHandler != null ) {
             input = this.encryptionHandler.decryptInputFromServer( input );
             if ( input == null ) {
@@ -191,21 +224,19 @@ public class Client implements ConnectionWithState {
             }
         }
 
-        InflaterInputStream inflaterInputStream = new InflaterInputStream( new ByteArrayInputStream( input ) );
-
-        ByteArrayOutputStream bout = new ByteArrayOutputStream( buffer.getRemaining() );
-        byte[] batchIntermediate = new byte[256];
+        ByteBuf outBuf = PooledByteBufAllocator.DEFAULT.directBuffer(8192); // We will write at least once so ensureWrite will realloc to 8192 so or so
 
         try {
-            int read;
-            while ( ( read = inflaterInputStream.read( batchIntermediate ) ) > -1 ) {
-                bout.write( batchIntermediate, 0, read );
-            }
-        } catch ( IOException e ) {
+            this.decompressor.process(input.nioBuffer(), outBuf);
+        } catch (DataFormatException e) {
+            LOGGER.error("Failed to decompress batch packet", e);
+            outBuf.release();
             return null;
+        } finally {
+            input.release();
         }
 
-        return bout.toByteArray();
+        return outBuf;
     }
 
     public void disconnect( String message ) {
@@ -229,7 +260,7 @@ public class Client implements ConnectionWithState {
                 packet.serializeHeader( buffer );
                 packet.serialize( buffer, Protocol.MINECRAFT_PE_PROTOCOL_VERSION );
 
-                this.connection.send( PacketReliability.RELIABLE_ORDERED, packet.orderingChannel(), buffer.getBuffer(), 0, buffer.getPosition() );
+                this.connection.send( PacketReliability.RELIABLE_ORDERED, packet.orderingChannel(), buffer );
             } catch ( Exception e ) {
                 e.printStackTrace();
             }
@@ -332,13 +363,15 @@ public class Client implements ConnectionWithState {
             while ( buffer.getRemaining() > 0 ) {
                 int packetLength = buffer.readUnsignedVarInt();
 
-                byte[] payData = new byte[packetLength];
-                buffer.readBytes( payData );
-                PacketBuffer pktBuf = new PacketBuffer( payData, 0 );
-                this.handleBufferData( pktBuf );
+                int currentIndex = buffer.getReadPosition();
+                byte packetID = buffer.getBuffer().getByte(currentIndex);
+                this.handleBufferData(buffer);
+                int consumedByPacket = buffer.getReadPosition() - currentIndex;
 
-                if ( pktBuf.getRemaining() > 100 ) {
-                    LOGGER.error( "Malformed batch packet payload: Could not read enclosed packet data correctly: 0x{} remaining {} bytes", Integer.toHexString( payData[0] ), pktBuf.getRemaining() );
+                if (consumedByPacket != packetLength) {
+                    int remaining = packetLength - consumedByPacket;
+                    LOGGER.error("Malformed batch packet payload: Could not read enclosed packet data correctly: 0x{} remaining {} bytes", Integer.toHexString(packetID), remaining);
+                    ReportUploader.create().tag("network.packet_remaining").property("packet_id", "0x" + Integer.toHexString(packetID)).property("packet_remaining", String.valueOf(remaining)).upload();
                     return;
                 }
             }
@@ -369,7 +402,7 @@ public class Client implements ConnectionWithState {
             if ( chunkSquare.getChunk( x, z ) == null ) {
                 ChunkAdapter chunkAdapter = (ChunkAdapter) this.world.generateEmptyChunk( x, z );
 
-                PacketBuffer chunkBuffer = new PacketBuffer( chunk.getData(), 0 );
+                PacketBuffer chunkBuffer = new PacketBuffer( chunk.getData() );
 
                 byte amountOfSubchunks = chunkBuffer.readByte();
                 for ( byte i = 0; i < amountOfSubchunks; i++ ) {
@@ -412,17 +445,7 @@ public class Client implements ConnectionWithState {
 
                 // Read tiles
                 if ( chunkBuffer.getRemaining() > 0 ) {
-                    NBTReaderNoBuffer reader = new NBTReaderNoBuffer( new InputStream() {
-                        @Override
-                        public int read() throws IOException {
-                            return chunkBuffer.readByte();
-                        }
-
-                        @Override
-                        public int available() throws IOException {
-                            return chunkBuffer.getRemaining();
-                        }
-                    }, ByteOrder.LITTLE_ENDIAN );
+                    NBTReader reader = new NBTReader(chunkBuffer.getBuffer(), ByteOrder.LITTLE_ENDIAN );
 
                     loop:
                     while ( true ) {
@@ -539,7 +562,6 @@ public class Client implements ConnectionWithState {
             this.spawn = ( (PacketStartGame) packet ).getSpawn();
             this.ownId = ( (PacketStartGame) packet ).getEntityId();
             this.runtimeId = ( (PacketStartGame) packet ).getRuntimeEntityId();
-            this.runtimeIDs = ( (PacketStartGame) packet ).getRuntimeIDs();
 
             this.sendChunkRadius();
 

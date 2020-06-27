@@ -23,6 +23,7 @@ public class PacketEntityMovement extends Packet {
 
     private static final byte FLAG_ON_GROUND = 0x1;
     private static final byte FLAG_TELEPORTED = 0x2;
+    private static final byte FLAG_FORCE_MOVE_LOCAL_ENTITY = 0x4;
 
     private long entityId;
     private float x;

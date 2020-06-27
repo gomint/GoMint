@@ -20,7 +20,7 @@ import java.util.function.Predicate;
 @RegisterInfo( sId = "minecraft:farmland" )
 public class Farmland extends Block implements io.gomint.world.block.BlockFarmland {
 
-    private final ProgressBlockState waterLevel = new ProgressBlockState( this, () -> "moisturized_amount", 7, aVoid -> {} );
+    private final ProgressBlockState waterLevel = new ProgressBlockState( this, () -> new String[]{"moisturized_amount"}, 7, aVoid -> {} );
 
     @Override
     public String getBlockId() {

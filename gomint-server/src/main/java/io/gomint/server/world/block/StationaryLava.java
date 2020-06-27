@@ -17,11 +17,6 @@ import java.util.concurrent.TimeUnit;
 public class StationaryLava extends Liquid implements BlockStationaryLava {
 
     @Override
-    public String getBlockId() {
-        return "minecraft:lava";
-    }
-
-    @Override
     public long getBreakTime() {
         return 150000;
     }

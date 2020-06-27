@@ -22,9 +22,9 @@ import java.util.List;
 
 public abstract class Trapdoor extends Block implements BlockTrapdoor {
 
-    private final DirectionBlockState direction = new DirectionBlockState( this, () -> "direction" );
-    private final BooleanBlockState top = new BooleanBlockState( this, () -> "upside_down_bit" );
-    private final BooleanBlockState open = new BooleanBlockState( this, () -> "open_bit" );
+    private final DirectionBlockState direction = new DirectionBlockState(this, () -> new String[]{"direction"});
+    private final BooleanBlockState top = new BooleanBlockState(this, () -> new String[]{"upside_down_bit"});
+    private final BooleanBlockState open = new BooleanBlockState(this, () -> new String[]{"open_bit"});
 
     @Override
     public boolean isOpen() {
@@ -33,11 +33,11 @@ public abstract class Trapdoor extends Block implements BlockTrapdoor {
 
     @Override
     public void toggle() {
-        this.open.setState( !this.isOpen() );
+        this.open.setState(!this.isOpen());
     }
 
     @Override
-    public boolean interact(Entity entity, Facing face, Vector facePos, ItemStack item ) {
+    public boolean interact(Entity entity, Facing face, Vector facePos, ItemStack item) {
         toggle();
         return true;
     }
@@ -48,7 +48,7 @@ public abstract class Trapdoor extends Block implements BlockTrapdoor {
 
         // Basis box
         AxisAlignedBB bb;
-        if ( this.top.getState() ) {
+        if (this.top.getState()) {
             // Top closed box
             bb = new AxisAlignedBB(
                 this.location.getX(),
@@ -71,8 +71,8 @@ public abstract class Trapdoor extends Block implements BlockTrapdoor {
         }
 
         // Check for open state
-        if ( this.open.getState() ) {
-            switch ( this.direction.getState() ) {
+        if (this.open.getState()) {
+            switch (this.direction.getState()) {
                 case NORTH:
                     bb.setBounds(
                         this.location.getX(),
@@ -123,7 +123,7 @@ public abstract class Trapdoor extends Block implements BlockTrapdoor {
             }
         }
 
-        return Collections.singletonList( bb );
+        return Collections.singletonList(bb);
     }
 
     @Override

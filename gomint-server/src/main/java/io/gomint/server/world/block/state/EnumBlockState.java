@@ -26,22 +26,21 @@ public class EnumBlockState<E extends Enum<E>, T> extends BlockState<E, T> {
     private final Function<E, T> valueResolver;
     private final Function<T, E> stateResolver;
 
-    public EnumBlockState(Block block, Supplier<String> key, E[] values, Function<E, T> valueResolver, Function<T, E> stateResolver) {
-        super( block, key );
+    public EnumBlockState(Block block, Function<T, String[]> key, E[] values, Function<E, T> valueResolver, Function<T, E> stateResolver) {
+        super(block, key);
         this.enumValues = values;
         this.valueResolver = valueResolver;
         this.stateResolver = stateResolver;
-        this.setState(values[0]);
     }
 
     @Override
-    protected void calculateValueFromState() {
-        this.setValue(this.valueResolver.apply(this.getState()));
+    protected void calculateValueFromState(E state) {
+        this.setValue(this.valueResolver.apply(state));
     }
 
     @Override
-    public void detectFromPlacement(EntityPlayer player, ItemStack placedItem, Facing face, Block block, Block clickedBlock, Vector clickPosition ) {
-        this.setState( this.enumValues[placedItem.getData()] );
+    public void detectFromPlacement(EntityPlayer player, ItemStack placedItem, Facing face, Block block, Block clickedBlock, Vector clickPosition) {
+        this.setState(this.enumValues[placedItem.getData()]);
     }
 
     @Override

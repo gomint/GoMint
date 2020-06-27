@@ -21,7 +21,7 @@ import java.util.Map;
  */
 public class CommandPreprocessor {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger( CommandPreprocessor.class );
+    private static final Logger LOGGER = LoggerFactory.getLogger(CommandPreprocessor.class);
 
     // Those a static values which are used for PE to identify the type
     /**
@@ -40,9 +40,9 @@ public class CommandPreprocessor {
     // WILDCARD_INT
     private static final int ARG_TYPE_TARGET = 0x06;
     // WILDCARD_TARGET
-    private static final int ARG_TYPE_STRING = 0x1b;
-    private static final int ARG_TYPE_POSITION = 0x1d;
-    private static final int ARG_TYPE_RAWTEXT = 0x22;
+    private static final int ARG_TYPE_STRING = 0x1d;
+    private static final int ARG_TYPE_POSITION = 0x25;
+    private static final int ARG_TYPE_RAWTEXT = 0x2b;
 
     /**
      * Enums are a little different: they are composed as follows:
@@ -59,7 +59,7 @@ public class CommandPreprocessor {
     // a integer list reflecting the index inside enumValues
     private List<String> enumValues = new ArrayList<>();
     private IndexedHashMap<String, List<Integer>> enums = new IndexedHashMap<>();
-    // private Map<CommandHolder, Integer> aliasIndex = new HashMap<>();
+    private Map<CommandHolder, Integer> aliasIndex = new HashMap<>();
     private Map<String, Integer> enumIndexes = new HashMap<>();
     private List<String> postfixes = new ArrayList<>();
 
@@ -73,39 +73,39 @@ public class CommandPreprocessor {
      * @param player   which should get the packet
      * @param commands which should be merged and written
      */
-    public CommandPreprocessor( EntityPlayer player, List<CommandHolder> commands ) {
+    public CommandPreprocessor(EntityPlayer player, List<CommandHolder> commands) {
         this.commandsPacket = new PacketAvailableCommands();
 
         // First we should scan all commands for aliases
-        /*for ( CommandHolder command : commands ) {
-            if ( command.getAlias() != null ) {
-                for ( String s : command.getAlias() ) {
-                    this.addEnum( command.getName() + "CommandAlias", s );
+        for (CommandHolder command : commands) {
+            if (command.getAlias() != null) {
+                for (String s : command.getAlias()) {
+                    this.addEnum(command.getName() + "CommandAlias", s);
                 }
 
-                this.aliasIndex.put( command, this.enums.getIndex( command.getName() + "CommandAlias" ) );
+                this.aliasIndex.put(command, this.enums.getIndex(command.getName() + "CommandAlias"));
             }
-        }*/
+        }
 
-        this.commandsPacket.setEnumValues( this.enumValues );
+        this.commandsPacket.setEnumValues(this.enumValues);
 
         // Now we need to search for enum validators
-        for ( CommandHolder command : commands ) {
-            if ( command.getOverload() != null ) {
-                for ( CommandOverload overload : command.getOverload() ) {
-                    if( overload.getPermission().isEmpty() || player.hasPermission( overload.getPermission() ) ) {
-                        if( overload.getParameters() != null ) {
-                            for( Map.Entry<String, ParamValidator> entry : overload.getParameters().entrySet() ) {
-                                if( entry.getValue().hasValues() ) {
-                                    for( String s : entry.getValue().values() ) {
-                                        this.addEnum( command.getName() + "#" + entry.getKey(), s );
+        for (CommandHolder command : commands) {
+            if (command.getOverload() != null) {
+                for (CommandOverload overload : command.getOverload()) {
+                    if (overload.getPermission().isEmpty() || player.hasPermission(overload.getPermission())) {
+                        if (overload.getParameters() != null) {
+                            for (Map.Entry<String, ParamValidator> entry : overload.getParameters().entrySet()) {
+                                if (entry.getValue().hasValues()) {
+                                    for (String s : entry.getValue().values()) {
+                                        this.addEnum(command.getName() + "#" + entry.getKey(), s);
                                     }
 
-                                    this.enumIndexes.put( command.getName() + "#" + entry.getKey(), this.enums.getIndex( command.getName() + "#" + entry.getKey() ) );
+                                    this.enumIndexes.put(command.getName() + "#" + entry.getKey(), this.enums.getIndex(command.getName() + "#" + entry.getKey()));
                                 }
 
-                                if( entry.getValue().getPostfix() != null && !this.postfixes.contains( entry.getValue().getPostfix() ) ) {
-                                    this.postfixes.add( entry.getValue().getPostfix() );
+                                if (entry.getValue().getPostfix() != null && !this.postfixes.contains(entry.getValue().getPostfix())) {
+                                    this.postfixes.add(entry.getValue().getPostfix());
                                 }
                             }
                         }
@@ -114,45 +114,45 @@ public class CommandPreprocessor {
             }
         }
 
-        this.commandsPacket.setEnums( this.enums );
-        this.commandsPacket.setPostFixes( this.postfixes );
+        this.commandsPacket.setEnums(this.enums);
+        this.commandsPacket.setPostFixes(this.postfixes);
 
         // Now we should have sorted any enums. Move on to write the command data
         List<CommandData> commandDataList = new ArrayList<>();
-        for ( CommandHolder command : commands ) {
+        for (CommandHolder command : commands) {
             // Construct new data helper for the packet
-            CommandData commandData = new CommandData( command.getName(), command.getDescription() );
-            commandData.setFlags( (byte) 0 );
-            commandData.setPermission( (byte) command.getCommandPermission().getId() );
+            CommandData commandData = new CommandData(command.getName(), command.getDescription());
+            commandData.setFlags((byte) 0);
+            commandData.setPermission((byte) command.getCommandPermission().getId());
 
             // Put in alias index
-            /*if ( command.getAlias() != null ) {
-                commandData.setAliasIndex( this.aliasIndex.get( command ) );
+            if (command.getAlias() != null) {
+                commandData.setAliasIndex(this.aliasIndex.get(command));
             } else {
-                commandData.setAliasIndex( -1 );
-            }*/
+                commandData.setAliasIndex(-1);
+            }
 
             // Do we need to hack a bit here?
             List<List<CommandData.Parameter>> overloads = new ArrayList<>();
 
-            if ( command.getOverload() != null ) {
-                for ( CommandOverload overload : command.getOverload() ) {
-                    if( overload.getPermission().isEmpty() || player.hasPermission( overload.getPermission() ) ) {
+            if (command.getOverload() != null) {
+                for (CommandOverload overload : command.getOverload()) {
+                    if (overload.getPermission().isEmpty() || player.hasPermission(overload.getPermission())) {
                         List<CommandData.Parameter> parameters = new ArrayList<>();
-                        if(overload.getParameters() != null) {
-                            for(Map.Entry<String, ParamValidator> entry : overload.getParameters().entrySet()) {
+                        if (overload.getParameters() != null) {
+                            for (Map.Entry<String, ParamValidator> entry : overload.getParameters().entrySet()) {
                                 // Build together type
                                 int paramType = 0; // We don't support postfixes yet
 
-                                switch(entry.getValue().getType()) {
+                                switch (entry.getValue().getType()) {
                                     case INT:
-                                    /*if ( entry.getValue().getPostfix() != null ) {
-                                        paramType |= ARG_FLAG_POSTFIX;
-                                        paramType |= this.postfixes.indexOf( entry.getValue().getPostfix() );
-                                    } else {*/
-                                        paramType |= ARG_FLAG_VALID;
-                                        paramType |= ARG_TYPE_INT;
-                                        // }
+                                        if (entry.getValue().getPostfix() != null) {
+                                            paramType |= ARG_FLAG_POSTFIX;
+                                            paramType |= this.postfixes.indexOf(entry.getValue().getPostfix());
+                                        } else {
+                                            paramType |= ARG_FLAG_VALID;
+                                            paramType |= ARG_TYPE_INT;
+                                        }
 
                                         break;
                                     case BOOL:
@@ -200,31 +200,31 @@ public class CommandPreprocessor {
                 }
             }
 
-            commandData.setParameters( overloads );
-            commandDataList.add( commandData );
+            commandData.setParameters(overloads);
+            commandDataList.add(commandData);
         }
 
-        this.commandsPacket.setCommandData( commandDataList );
+        this.commandsPacket.setCommandData(commandDataList);
     }
 
-    private void addEnum( String name, String value ) {
+    private void addEnum(String name, String value) {
         // Check if we already know this enum value
         int enumValueIndex;
-        if ( this.enumValues.contains( value ) ) {
-            enumValueIndex = this.enumValues.indexOf( value );
+        if (this.enumValues.contains(value)) {
+            enumValueIndex = this.enumValues.indexOf(value);
         } else {
-            this.enumValues.add( value );
-            enumValueIndex = this.enumValues.indexOf( value );
+            this.enumValues.add(value);
+            enumValueIndex = this.enumValues.indexOf(value);
         }
 
         // Create / add this value to the enum
-        List<Integer> old = this.enums.get( name );
-        if ( old == null ) {    // DONT use computeIfAbsent, the index won't show up
+        List<Integer> old = this.enums.get(name);
+        if (old == null) {    // DONT use computeIfAbsent, the index won't show up
             old = new ArrayList<>();
-            this.enums.put( name, old );
+            this.enums.put(name, old);
         }
 
-        old.add( enumValueIndex );
+        old.add(enumValueIndex);
     }
 
 }

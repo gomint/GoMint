@@ -7,15 +7,8 @@ import io.gomint.taglib.NBTTagCompound;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 141 )
+@RegisterInfo( sId = "minecraft:carrots", id = 141 )
 public class ItemCarrotBlock extends ItemStack implements io.gomint.inventory.item.ItemCarrotBlock {
-
-
-
-    @Override
-    public String getBlockId() {
-        return "minecraft:carrots";
-    }
 
     @Override
     public ItemType getType() {

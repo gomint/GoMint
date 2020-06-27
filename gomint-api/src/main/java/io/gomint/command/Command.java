@@ -48,6 +48,7 @@ public abstract class Command {
     private List<CommandOverload> overload;
     private Set<String> alias;
     private String permission;
+    private boolean permissionDefault;
 
     /**
      * Constructor for loading commands from annotations like {@link Name}.
@@ -66,7 +67,9 @@ public abstract class Command {
 
         // Setup permission
         if ( clazz.isAnnotationPresent( Permission.class ) ) {
-            this.permission = clazz.getAnnotation( Permission.class ).value();
+            Permission perm = clazz.getAnnotation( Permission.class );
+            this.permission = perm.value();
+            this.permissionDefault = perm.def();
         }
 
         // Setup alias

@@ -10,6 +10,7 @@ package io.gomint.server.crafting;
 import io.gomint.inventory.item.ItemStack;
 import io.gomint.jraknet.PacketBuffer;
 import io.gomint.server.inventory.Inventory;
+import lombok.Getter;
 
 import java.util.Collection;
 import java.util.UUID;
@@ -23,6 +24,8 @@ import java.util.UUID;
  */
 public abstract class Recipe implements io.gomint.crafting.Recipe {
 
+    @Getter
+    private final int priority;
     private final UUID uuid;
 
     /**
@@ -30,7 +33,8 @@ public abstract class Recipe implements io.gomint.crafting.Recipe {
      *
      * @param uuid of the recipe
      */
-    Recipe( UUID uuid ) {
+    Recipe( UUID uuid, int priority ) {
+        this.priority = priority;
         this.uuid = ( uuid != null ? uuid : UUID.randomUUID() );
     }
 

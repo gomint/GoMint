@@ -8,15 +8,8 @@ import io.gomint.taglib.NBTTagCompound;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 92 )
+@RegisterInfo( sId = "minecraft:cake", id = 92 )
 public class ItemCakeBlock extends ItemStack {
-
-
-
-    @Override
-    public String getBlockId() {
-        return "minecraft:cake";
-    }
 
     @Override
     public ItemType getType() {

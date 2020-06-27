@@ -14,17 +14,12 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = -148 )
+@RegisterInfo( sId = "minecraft:jungle_trapdoor", id = -148 )
 public class ItemJungleTrapdoor extends ItemStack implements io.gomint.inventory.item.ItemJungleTrapdoor {
 
     @Override
     public long getBurnTime() {
         return 15000;
-    }
-
-    @Override
-    public String getBlockId() {
-        return "minecraft:jungle_trapdoor";
     }
 
     @Override

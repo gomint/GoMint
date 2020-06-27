@@ -16,7 +16,7 @@ import io.gomint.world.block.BlockDirt;
 @RegisterInfo( sId = "minecraft:dirt" )
 public class Dirt extends Block implements BlockDirt {
 
-    private final EnumBlockState<BlockDirt.Type, String> variant = new EnumBlockState<>(this, () -> "dirt_type", BlockDirt.Type.values(), e -> e.name().toLowerCase(), v -> BlockDirt.Type.valueOf(v.toUpperCase()));
+    private final EnumBlockState<BlockDirt.Type, String> variant = new EnumBlockState<>(this, v -> new String[]{"dirt_type"}, BlockDirt.Type.values(), e -> e.name().toLowerCase(), v -> BlockDirt.Type.valueOf(v.toUpperCase()));
 
     @Override
     public String getBlockId() {

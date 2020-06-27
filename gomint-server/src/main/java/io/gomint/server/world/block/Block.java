@@ -251,6 +251,7 @@ public abstract class Block implements io.gomint.world.block.Block {
 
         BlockPosition pos = this.location.toBlockPosition();
         WorldAdapter worldAdapter = (WorldAdapter) this.location.getWorld();
+        worldAdapter.setBlock(pos, this.layer, this.identifier.getRuntimeId());
         worldAdapter.updateBlock(pos);
         worldAdapter.flagNeedsPersistance(pos);
     }
@@ -765,13 +766,10 @@ public abstract class Block implements io.gomint.world.block.Block {
     public abstract float getBlastResistance();
 
     public void setBlockId(String blockId) {
-        BlockIdentifier identifier = BlockRuntimeIDs.toBlockIdentifier(blockId, this.identifier == null ? null : this.identifier.getStates());
+        this.identifier = BlockRuntimeIDs.toBlockIdentifier(blockId, this.identifier == null ? null : this.identifier.getStates());
         if (isPlaced()) {
-            this.world.setBlock(this.location.toBlockPosition(), this.layer, identifier.getRuntimeId());
             this.updateBlock();
         }
-
-        this.identifier = identifier;
     }
 
     public boolean canBeFlowedInto() {
@@ -808,6 +806,10 @@ public abstract class Block implements io.gomint.world.block.Block {
     public void ensureIdentifier() {
         if (this.identifier == null) {
             RegisterInfo[] annotations = this.getClass().getAnnotationsByType(RegisterInfo.class);
+            if (annotations.length == 0) {
+                System.out.println("?");
+            }
+
             if (annotations.length == 1) {
                 this.identifier = BlockRuntimeIDs.toBlockIdentifier(annotations[0].sId(), null);
             } else {

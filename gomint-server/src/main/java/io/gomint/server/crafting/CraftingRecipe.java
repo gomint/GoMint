@@ -8,6 +8,7 @@
 package io.gomint.server.crafting;
 
 import io.gomint.inventory.item.ItemStack;
+import lombok.Getter;
 
 import java.util.*;
 
@@ -20,10 +21,10 @@ import java.util.*;
  */
 public abstract class CraftingRecipe extends Recipe {
 
-    private ItemStack[] outcome;
+    private final ItemStack[] outcome;
 
-    CraftingRecipe( ItemStack[] outcome, UUID uuid ) {
-        super( uuid );
+    CraftingRecipe( ItemStack[] outcome, UUID uuid, int priority ) {
+        super( uuid, priority );
         this.outcome = outcome;
     }
 

@@ -24,8 +24,10 @@ import java.util.UUID;
  */
 public class SmeltingRecipe extends Recipe {
 
-    private ItemStack input;
-    private ItemStack outcome;
+    private final String block;
+
+    private final ItemStack input;
+    private final ItemStack outcome;
 
     /**
      * Create new smelting recipe
@@ -34,36 +36,40 @@ public class SmeltingRecipe extends Recipe {
      * @param outcome of this recipe
      * @param uuid    of the recipe
      */
-    public SmeltingRecipe( ItemStack input, ItemStack outcome, UUID uuid ) {
-        super( uuid );
+    public SmeltingRecipe(String block, ItemStack input, ItemStack outcome, UUID uuid, int priority) {
+        super(uuid, priority);
+
+        this.block = block;
+
         this.input = input;
         this.outcome = outcome;
     }
 
     @Override
     public ItemStack[] getIngredients() {
-        return new ItemStack[]{ this.input };
+        return new ItemStack[]{this.input};
     }
 
     @Override
     public Collection<ItemStack> createResult() {
-        return Collections.singletonList( ( (io.gomint.server.inventory.item.ItemStack) this.outcome ).clone() );
+        return Collections.singletonList(((io.gomint.server.inventory.item.ItemStack) this.outcome).clone());
     }
 
     @Override
-    public void serialize( PacketBuffer buffer ) {
+    public void serialize(PacketBuffer buffer) {
         // The type of this recipe is defined after the input metadata
-        buffer.writeSignedVarInt( this.input.getData() == 0 ? 2 : 3 );
+        buffer.writeSignedVarInt(this.input.getData() == 0 ? 2 : 3);
 
         // We need to custom write items
-        buffer.writeSignedVarInt( ( (io.gomint.server.inventory.item.ItemStack) this.input ).getMaterial() );
-        if ( this.input.getData() != 0 ) buffer.writeSignedVarInt( this.input.getData() );
+        buffer.writeSignedVarInt(((io.gomint.server.inventory.item.ItemStack) this.input).getMaterial());
+        if (this.input.getData() != 0) buffer.writeSignedVarInt(this.input.getData());
 
-        Packet.writeItemStack( this.outcome, buffer );
+        Packet.writeItemStack(this.outcome, buffer);
+        buffer.writeString(this.block);
     }
 
     @Override
-    public int[] isCraftable( Inventory inputInventory ) {
+    public int[] isCraftable(Inventory inputInventory) {
         return new int[0];
     }
 

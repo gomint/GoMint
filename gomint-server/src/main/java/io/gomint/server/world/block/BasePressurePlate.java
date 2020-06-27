@@ -24,7 +24,7 @@ import java.util.function.Function;
  */
 public abstract class BasePressurePlate extends Block {
 
-    private RedstoneSignalStrength signal = new RedstoneSignalStrength(this, () -> "redstone_signal");
+    private final RedstoneSignalStrength signal = new RedstoneSignalStrength(this, () -> new String[]{"redstone_signal"});
 
     @Override
     public void stepOn(Entity entity) {

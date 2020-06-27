@@ -10,6 +10,7 @@ import io.gomint.command.ParamValidator;
 import io.gomint.plugin.Plugin;
 import io.gomint.server.command.gomint.KickCommand;
 import io.gomint.server.command.gomint.StopCommand;
+import io.gomint.server.command.gomint.VersionCommand;
 import io.gomint.server.command.vanilla.*;
 import io.gomint.server.entity.CommandPermission;
 import io.gomint.server.entity.EntityPlayer;
@@ -62,7 +63,8 @@ public class CommandManager {
 
                 // GoMint
                 KickCommand.class,
-                StopCommand.class
+                StopCommand.class,
+                VersionCommand.class,
             } ) {
                 // Check for system only commands
                 Object commandObject = null;
@@ -301,13 +303,6 @@ public class CommandManager {
         }
 
         this.internalRegister( plugin, commandBuilder.getName(), commandBuilder );
-
-        // TODO: Remove once aliases are fixed in 1.2
-        if ( commandBuilder.getAlias() != null ) {
-            for ( String s : commandBuilder.getAlias() ) {
-                this.internalRegister( plugin, s, commandBuilder );
-            }
-        }
     }
 
     private void internalRegister( Plugin plugin, String name, Command commandBuilder ) {
@@ -329,6 +324,7 @@ public class CommandManager {
                 holder.getAlias(),
                 holder.getCommandPermission(),
                 holder.getPermission(),
+                holder.isPermissionDefault(),
                 holder.getExecutor(),
                 holder.getOverload()
             );
@@ -344,6 +340,7 @@ public class CommandManager {
             commandBuilder.getAlias(),
             CommandPermission.NORMAL,
             commandBuilder.getPermission(),
+            commandBuilder.isPermissionDefault(),
             commandBuilder,
             commandBuilder.getOverload() );
 
@@ -387,13 +384,13 @@ public class CommandManager {
         for ( CommandHolder holder : this.commands.values() ) {
             if ( !holder.getName().contains( " " ) &&
                 ( holder.getPermission() == null ||
-                    player.hasPermission( holder.getPermission() ) ) ) {
+                    player.hasPermission( holder.getPermission(), holder.isPermissionDefault() ) ) ) {
                 holders.add( holder );
             }
         }
 
         for ( CommandHolder holder : holders ) {
-            LOGGER.debug( "Planning to send " + holder.getName() + " to " + player.getName() );
+            LOGGER.info( "Planning to send " + holder.getName() + " to " + player.getName() );
         }
 
         CommandPreprocessor preprocessor = new CommandPreprocessor( player, holders );

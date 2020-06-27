@@ -46,26 +46,8 @@ public class PacketPlayerlist extends Packet {
                 // Player device ID
                 buffer.writeLInt( entry.deviceInfo.getOs().getId() );
 
-                buffer.writeString( entry.getSkin().getName() );
-
-                // Raw skin data
-                buffer.writeUnsignedVarInt( entry.getSkin().getRawData().length );
-                buffer.writeBytes( entry.getSkin().getRawData() );
-
-                // Cape data
-                if ( entry.skin.getCapeData() != null ) {
-                    buffer.writeUnsignedVarInt( entry.skin.getCapeData().length );
-                    buffer.writeBytes( entry.skin.getCapeData() );
-                } else {
-                    buffer.writeUnsignedVarInt( 0 );
-                }
-
-                // Geometry name
-                buffer.writeString( entry.skin.getGeometryName() );
-
-                // Geometry data
-                buffer.writeUnsignedVarInt( entry.skin.getGeometryData().length() );
-                buffer.writeBytes( entry.skin.getGeometryData().getBytes() );
+                // Write skin
+                writeSerializedSkin( (io.gomint.server.player.PlayerSkin) entry.skin, buffer );
 
                 // Is teacher
                 buffer.writeBoolean( false );
@@ -79,8 +61,8 @@ public class PacketPlayerlist extends Packet {
             }
         }
 
-        if ( mode == 0 ) {
-            for (int i = 0; i < entries.size(); i++) {
+        if ( this.mode == 0 ) {
+            for (int i = 0; i < this.entries.size(); i++) {
                 // Is skin trusted
                 buffer.writeBoolean( true );
             }

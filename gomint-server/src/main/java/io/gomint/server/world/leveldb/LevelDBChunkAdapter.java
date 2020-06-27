@@ -26,10 +26,10 @@ import io.gomint.server.world.WorldAdapter;
 import io.gomint.server.world.block.Block;
 import io.gomint.taglib.AllocationLimitReachedException;
 import io.gomint.taglib.NBTReader;
-import io.gomint.taglib.NBTReaderNoBuffer;
 import io.gomint.taglib.NBTTagCompound;
 import io.gomint.taglib.NBTWriter;
 import io.netty.buffer.ByteBuf;
+import io.netty.buffer.PooledByteBufAllocator;
 import it.unimi.dsi.fastutil.ints.Int2IntMap;
 import it.unimi.dsi.fastutil.ints.Int2IntOpenHashMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
@@ -41,13 +41,8 @@ import it.unimi.dsi.fastutil.longs.LongList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.nio.ByteOrder;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -107,8 +102,8 @@ public class LevelDBChunkAdapter extends ChunkAdapter {
         writeBatch.put( key, val );
 
         // Save tiles
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        NBTWriter nbtWriter = new NBTWriter( baos, ByteOrder.LITTLE_ENDIAN );
+        ByteBuf out = PooledByteBufAllocator.DEFAULT.directBuffer();
+        NBTWriter nbtWriter = new NBTWriter( out, ByteOrder.LITTLE_ENDIAN );
         for ( TileEntity tileEntity : this.getTileEntities() ) {
             NBTTagCompound compound = new NBTTagCompound( "" );
             tileEntity.toCompound( compound, SerializationReason.PERSIST );
@@ -120,11 +115,9 @@ public class LevelDBChunkAdapter extends ChunkAdapter {
             }
         }
 
-        if ( baos.size() > 0 ) {
+        if ( out.readableBytes() > 0 ) {
             key = ( (LevelDBWorldAdapter) this.world ).getKey( this.x, this.z, (byte) 0x31 );
-            val = Allocator.allocate( baos.toByteArray() );
-
-            writeBatch.put( key, val );
+            writeBatch.put( key, out );
         }
 
         db.write( writeBatch );
@@ -204,19 +197,7 @@ public class LevelDBChunkAdapter extends ChunkAdapter {
                 compound.addValue("version", BLOCK_VERSION);
 
                 try {
-                    compound.writeTo( new OutputStream() {
-                        @Override
-                        public void write( byte[] b, int off, int len ) throws IOException {
-                            byte[] finalBytes = new byte[len];
-                            System.arraycopy( b, off, finalBytes, 0, len );
-                            buffer.writeBytes( finalBytes );
-                        }
-
-                        @Override
-                        public void write( int b ) throws IOException {
-                            buffer.writeByte( (byte) b );
-                        }
-                    }, false, ByteOrder.LITTLE_ENDIAN );
+                    compound.writeTo( buffer.getBuffer(), false, ByteOrder.LITTLE_ENDIAN );
                 } catch ( IOException e ) {
                     e.printStackTrace();
                 }
@@ -224,13 +205,13 @@ public class LevelDBChunkAdapter extends ChunkAdapter {
         }
 
         ByteBuf key = ( (LevelDBWorldAdapter) this.world ).getKeySubChunk( this.x, this.z, (byte) 0x2f, (byte) i );
-        ByteBuf val = Allocator.allocate( Arrays.copyOf( buffer.getBuffer(), buffer.getPosition() ) );
-
-        writeBatch.put( key, val );
+        buffer.setReadPosition(0);
+        writeBatch.put( key, buffer.getBuffer() );
     }
 
     void loadSection( int sectionY, byte[] chunkData ) {
-        PacketBuffer buffer = new PacketBuffer( chunkData, 0 );
+        ByteBuf buf = Allocator.allocate(chunkData);
+        PacketBuffer buffer = new PacketBuffer( buf );
 
         // First byte is chunk section version
         byte subchunkVersion = buffer.readByte();
@@ -252,17 +233,7 @@ public class LevelDBChunkAdapter extends ChunkAdapter {
                     Int2IntMap chunkPalette = new Int2IntOpenHashMap( needed ); // Varint my ass
 
                     int index = 0;
-                    NBTReaderNoBuffer reader = new NBTReaderNoBuffer( new InputStream() {
-                        @Override
-                        public int read() throws IOException {
-                            return buffer.readByte();
-                        }
-
-                        @Override
-                        public int available() throws IOException {
-                            return buffer.getRemaining();
-                        }
-                    }, ByteOrder.LITTLE_ENDIAN );
+                    NBTReader reader = new NBTReader( buffer.getBuffer(), ByteOrder.LITTLE_ENDIAN );
                     while ( index < needed ) {
                         try {
                             NBTTagCompound compound = reader.parse();
@@ -300,12 +271,14 @@ public class LevelDBChunkAdapter extends ChunkAdapter {
 
                 break;
         }
+
+        buf.release();
     }
 
     void loadTileEntities( byte[] tileEntityData ) {
-        ByteArrayInputStream bais = new ByteArrayInputStream( tileEntityData );
-        NBTReader nbtReader = new NBTReader( bais, ByteOrder.LITTLE_ENDIAN );
-        while ( nbtReader.hasMoreToRead() ) {
+        ByteBuf data = Allocator.allocate(tileEntityData);
+        NBTReader nbtReader = new NBTReader( data, ByteOrder.LITTLE_ENDIAN );
+        while ( data.readableBytes() > 0 ) {
             TileEntity tileEntity = null;
 
             try {
@@ -322,12 +295,14 @@ public class LevelDBChunkAdapter extends ChunkAdapter {
                 break;
             }
         }
+
+        data.release();
     }
 
     void loadEntities( byte[] entityData ) {
-        ByteArrayInputStream bais = new ByteArrayInputStream( entityData );
-        NBTReader nbtReader = new NBTReader( bais, ByteOrder.LITTLE_ENDIAN );
-        while ( nbtReader.hasMoreToRead() ) {
+        ByteBuf data = Allocator.allocate(entityData);
+        NBTReader nbtReader = new NBTReader( data, ByteOrder.LITTLE_ENDIAN );
+        while ( data.readableBytes() > 0 ) {
             try {
                 NBTTagCompound compound = nbtReader.parse();
                 String identifier = compound.getString( "identifier", null );
@@ -343,6 +318,8 @@ public class LevelDBChunkAdapter extends ChunkAdapter {
                 break;
             }
         }
+
+        data.release();
     }
 
 }

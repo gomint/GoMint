@@ -31,6 +31,7 @@ import io.gomint.server.inventory.PlayerInventory;
 import io.gomint.server.network.PlayerConnection;
 import io.gomint.server.network.packet.Packet;
 import io.gomint.server.network.packet.PacketEntityMetadata;
+import io.gomint.server.network.packet.PacketMovePlayer;
 import io.gomint.server.network.packet.PacketPlayerlist;
 import io.gomint.server.network.packet.PacketSpawnPlayer;
 import io.gomint.server.registry.RegisterInfo;
@@ -52,7 +53,7 @@ import java.util.UUID;
  * @version 1.0
  */
 @EqualsAndHashCode( callSuper = false, of = { "uuid" } )
-@ToString( of = { "uuid", "username" } )
+@ToString( of = { "uuid", "username" }, callSuper = true )
 @RegisterInfo( sId = "minecraft:player" )
 public class EntityHuman extends EntityCreature implements io.gomint.entity.passive.EntityHuman {
 
@@ -551,6 +552,7 @@ public class EntityHuman extends EntityCreature implements io.gomint.entity.pass
         packetSpawnPlayer.setName( this.username );
         packetSpawnPlayer.setEntityId( this.getEntityId() );
         packetSpawnPlayer.setRuntimeEntityId( this.getEntityId() );
+        packetSpawnPlayer.setPlatformChatId(this.getUUID().toString());
 
         packetSpawnPlayer.setX( this.getPositionX() );
         packetSpawnPlayer.setY( this.getPositionY() );
@@ -567,6 +569,8 @@ public class EntityHuman extends EntityCreature implements io.gomint.entity.pass
         packetSpawnPlayer.setItemInHand( this.getInventory().getItemInHand() );
         packetSpawnPlayer.setMetadataContainer( this.getMetadata() );
         packetSpawnPlayer.setDeviceId( "" );
+        packetSpawnPlayer.setBuildPlatform(0);
+
         return packetSpawnPlayer;
     }
 
@@ -615,6 +619,30 @@ public class EntityHuman extends EntityCreature implements io.gomint.entity.pass
 
         // Player inventory
         return compound;
+    }
+
+    @Override
+    public boolean needsFullMovement() {
+        return true; // Due to a "bug" in 1.14.30 there needs to be a PlayerMove packet sent which only has absolute coordinates
+    }
+
+    @Override
+    public Packet getMovementPacket() {
+        PacketMovePlayer packetMovePlayer = new PacketMovePlayer();
+        packetMovePlayer.setEntityId(this.getEntityId());
+
+        packetMovePlayer.setX( this.getPositionX() );
+        packetMovePlayer.setY( this.getPositionY() + this.getOffsetY() );
+        packetMovePlayer.setZ( this.getPositionZ() );
+
+        packetMovePlayer.setYaw( this.getYaw() );
+        packetMovePlayer.setHeadYaw( this.getHeadYaw() );
+        packetMovePlayer.setPitch( this.getPitch() );
+
+        packetMovePlayer.setOnGround( this.isOnGround() );
+        packetMovePlayer.setMode(PacketMovePlayer.MovePlayerMode.NORMAL);
+
+        return packetMovePlayer;
     }
 
 }

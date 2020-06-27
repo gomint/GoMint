@@ -18,8 +18,8 @@ import java.util.List;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:leaves", def = true )
-@RegisterInfo( sId = "minecraft:leaves2" )
+@RegisterInfo(sId = "minecraft:leaves", def = true)
+@RegisterInfo(sId = "minecraft:leaves2")
 public class Leaves extends Block implements BlockLeaves {
 
     private static final String OLD_LOG_TYPE = "old_leaf_type";
@@ -48,12 +48,18 @@ public class Leaves extends Block implements BlockLeaves {
         }
     }
 
-    private final EnumBlockState<LeaveTypeMagic, String> variant = new EnumBlockState<>(this, () -> {
+    private final EnumBlockState<LeaveTypeMagic, String> variant = new EnumBlockState<>(this, v -> {
         if (this.variant == null) {
-            return LeaveTypeMagic.OAK.getKey();
+            return new String[]{OLD_LOG_TYPE, NEW_LOG_TYPE};
         }
 
-        return this.variant.getState().getKey();
+        for (LeaveTypeMagic value : LeaveTypeMagic.values()) {
+            if (value.getValue().equals(v)) {
+                return value.getKey().equals(OLD_LOG_TYPE) ? new String[]{OLD_LOG_TYPE, NEW_LOG_TYPE} : new String[]{NEW_LOG_TYPE, OLD_LOG_TYPE};
+            }
+        }
+
+        return new String[]{OLD_LOG_TYPE, NEW_LOG_TYPE};
     }, LeaveTypeMagic.values(), LeaveTypeMagic::getValue, v -> {
         for (LeaveTypeMagic value : LeaveTypeMagic.values()) {
             if (value.getValue().equals(v)) {
@@ -64,8 +70,8 @@ public class Leaves extends Block implements BlockLeaves {
         return null;
     });
 
-    private final BooleanBlockState updateForDecay = new BooleanBlockState( this, () -> "update_bit" );
-    private final BooleanBlockState persistent = new BooleanBlockState( this, () -> "persistent_bit");
+    private final BooleanBlockState updateForDecay = new BooleanBlockState(this, () -> new String[]{"update_bit"});
+    private final BooleanBlockState persistent = new BooleanBlockState(this, () -> new String[]{"persistent_bit"});
 
     @Override
     public long getBreakTime() {
@@ -93,10 +99,10 @@ public class Leaves extends Block implements BlockLeaves {
     }
 
     @Override
-    public List<ItemStack> getDrops( ItemStack itemInHand ) {
+    public List<ItemStack> getDrops(ItemStack itemInHand) {
         return new ArrayList<>() {{
-            if ( isCorrectTool( itemInHand ) ) {
-                add( ItemLeaves.create( 1 ) );
+            if (isCorrectTool(itemInHand)) {
+                add(ItemLeaves.create(1));
             }
         }};
     }
@@ -109,7 +115,7 @@ public class Leaves extends Block implements BlockLeaves {
     }
 
     @Override
-    public void setLeaveType( LogType type ) {
+    public void setLeaveType(LogType type) {
         LeaveTypeMagic newState = LeaveTypeMagic.valueOf(type.name());
         this.setBlockId(newState.getBlockId());
         this.variant.setState(newState);

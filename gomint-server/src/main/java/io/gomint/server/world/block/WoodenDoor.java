@@ -85,8 +85,6 @@ public class WoodenDoor extends Door implements BlockWoodenDoor {
             default:
                 this.setBlockId( "minecraft:wooden_door" );
         }
-
-        this.updateBlock();
     }
 
     @Override

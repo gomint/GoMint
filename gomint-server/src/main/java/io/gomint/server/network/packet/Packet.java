@@ -16,6 +16,7 @@ import io.gomint.math.Vector;
 import io.gomint.server.GoMintServer;
 import io.gomint.server.entity.EntityLink;
 import io.gomint.server.network.type.CommandOrigin;
+import io.gomint.server.player.PlayerSkin;
 import io.gomint.server.util.Things;
 import io.gomint.taglib.AllocationLimitReachedException;
 import io.gomint.taglib.NBTReader;
@@ -23,11 +24,15 @@ import io.gomint.taglib.NBTTagCompound;
 import io.gomint.taglib.NBTWriter;
 import io.gomint.world.Gamerule;
 import io.gomint.world.block.data.Facing;
+import io.netty.buffer.ByteBufInputStream;
+import org.json.simple.JSONObject;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.nio.ByteOrder;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -73,24 +78,20 @@ public abstract class Packet {
         NBTTagCompound nbt = null;
         short extraLen = buffer.readLShort();
         if (extraLen > 0) {
-            ByteArrayInputStream bin = new ByteArrayInputStream(buffer.getBuffer(), buffer.getPosition(), extraLen);
             try {
-                NBTReader nbtReader = new NBTReader(bin, ByteOrder.LITTLE_ENDIAN);
+                NBTReader nbtReader = new NBTReader(buffer.getBuffer(), ByteOrder.LITTLE_ENDIAN);
                 nbtReader.setUseVarint(true);
                 // There is no alloc limit needed here, you can't write so much shit in 32kb, so thats ok
                 nbt = nbtReader.parse();
             } catch (IOException | AllocationLimitReachedException e) {
                 return null;
             }
-
-            buffer.skip(extraLen);
         } else if (extraLen == -1) {
             // New system uses a byte as amount of nbt tags
             byte count = buffer.readByte();
             for (byte i = 0; i < count; i++) {
-                ByteArrayInputStream bin = new ByteArrayInputStream(buffer.getBuffer(), buffer.getPosition(), buffer.getRemaining());
                 try {
-                    NBTReader nbtReader = new NBTReader(bin, ByteOrder.LITTLE_ENDIAN);
+                    NBTReader nbtReader = new NBTReader(buffer.getBuffer(), ByteOrder.LITTLE_ENDIAN);
                     nbtReader.setUseVarint(true);
                     // There is no alloc limit needed here, you can't write so much shit in 32kb, so thats ok
                     nbt = nbtReader.parse();
@@ -134,23 +135,21 @@ public abstract class Packet {
         io.gomint.server.inventory.item.ItemStack serverItemStack = (io.gomint.server.inventory.item.ItemStack) itemStack;
 
         buffer.writeSignedVarInt(serverItemStack.getMaterial());
-        buffer.writeSignedVarInt((itemStack.getData() << 8) + (itemStack.getAmount() & 0xff));
+        buffer.writeSignedVarInt(((itemStack.getData() & 0x7fff)<< 8) + (itemStack.getAmount() & 0xff));
 
         NBTTagCompound compound = serverItemStack.getNbtData();
         if (compound == null) {
             buffer.writeLShort((short) 0);
         } else {
             try {
-                // NBT Tag
-                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                NBTWriter nbtWriter = new NBTWriter(baos, ByteOrder.LITTLE_ENDIAN);
-                nbtWriter.setUseVarint(true);
-                nbtWriter.write(compound);
-
                 // Vanilla currently only writes one nbt tag (this is hardcoded)
                 buffer.writeLShort((short) 0xFFFF);
                 buffer.writeByte((byte) 1);
-                buffer.writeBytes(baos.toByteArray());
+
+                // NBT Tag
+                NBTWriter nbtWriter = new NBTWriter(buffer.getBuffer(), ByteOrder.LITTLE_ENDIAN);
+                nbtWriter.setUseVarint(true);
+                nbtWriter.write(compound);
             } catch (IOException e) {
                 buffer.writeLShort((short) 0);
             }
@@ -161,6 +160,15 @@ public abstract class Packet {
         buffer.writeSignedVarInt(0);
 
         ((io.gomint.server.inventory.item.ItemStack) itemStack).writeAdditionalData(buffer);
+    }
+
+    public static void writeRecipeInput(ItemStack ingredient, PacketBuffer buffer) {
+        int material = ((io.gomint.server.inventory.item.ItemStack) ingredient).getMaterial();
+        buffer.writeSignedVarInt(material);
+        if (material != 0) {
+            buffer.writeSignedVarInt(ingredient.getData() & 0x7FFF);
+            buffer.writeSignedVarInt(ingredient.getAmount());
+        }
     }
 
     /**
@@ -275,43 +283,73 @@ public abstract class Packet {
         });
     }
 
-    public Map<Gamerule, Object> readGamerules(PacketBuffer buffer) {
-        Map<Gamerule, Object> rules = new HashMap<>();
+    void writeSerializedSkin(PlayerSkin skin, PacketBuffer buffer) {
+        buffer.writeString(skin.getId());
+        buffer.writeString(skin.getResourcePatch());
+        writeSkinImageData(buffer, skin.getImageWidth(), skin.getImageHeight(), skin.getData());
 
-        int amountOfRules = buffer.readUnsignedVarInt();
-        for (int i = 0; i < amountOfRules; i++) {
-            String gameRulename = buffer.readString();
-            Gamerule rule = Gamerule.getByNbtName(gameRulename);
-            if (rule == null) {
-                // System.out.println( "Unknown game rule: " + gameRulename );
+        if (skin.getAnimations() != null) {
+            buffer.writeLInt(skin.getAnimations().size());
+
+            for (PlayerSkin.AnimationFrame animationObj : skin.getAnimations()) {
+                writeSkinImageData(buffer, animationObj.getWidth(), animationObj.getHeight(), animationObj.getData());
+                buffer.writeLInt(animationObj.getType());
+                buffer.writeLFloat(animationObj.getFrames());
             }
-
-            switch (buffer.readByte()) {
-                case 1:
-                    boolean objB = buffer.readBoolean();
-                    if (rule != null) {
-                        rules.put(rule, objB);
-                    }
-
-                    break;
-                case 2:
-                    int objI = buffer.readUnsignedVarInt();
-                    if (rule != null) {
-                        rules.put(rule, objI);
-                    }
-
-                    break;
-                case 3:
-                    float objF = buffer.readLFloat();
-                    if (rule != null) {
-                        rules.put(rule, objF);
-                    }
-
-                    break;
-            }
+        } else {
+            buffer.writeLInt(0);
         }
 
-        return rules;
+        writeSkinImageData(buffer, skin.getCapeImageWidth(), skin.getCapeImageHeight(), skin.getCapeData());
+        buffer.writeString(skin.getGeometry());
+        buffer.writeString(skin.getAnimationData());
+        buffer.writeBoolean(skin.isPremium());
+        buffer.writeBoolean(skin.isPersona());
+        buffer.writeBoolean(skin.isPersonaCapeOnClassic());
+        buffer.writeString(skin.getCapeId());
+        buffer.writeString(skin.getFullId());
+        buffer.writeString(skin.getArmSize());
+        buffer.writeString(skin.getColour());
+
+        if (skin.getPersonaPieces() != null) {
+            buffer.writeLInt(skin.getPersonaPieces().size());
+
+            for (PlayerSkin.PersonaPiece personaPieceObj : skin.getPersonaPieces()) {
+                buffer.writeString(personaPieceObj.getPieceId());
+                buffer.writeString(personaPieceObj.getPieceType());
+                buffer.writeString(personaPieceObj.getPackId());
+                buffer.writeBoolean(personaPieceObj.isDefaultValue());
+                buffer.writeString(personaPieceObj.getProductId());
+            }
+        } else {
+            buffer.writeLInt(0);
+        }
+
+        if (skin.getPieceTintColours() != null) {
+            buffer.writeLInt(skin.getPieceTintColours().size());
+
+            for (PlayerSkin.PieceTintColor pieceTintColorObj : skin.getPieceTintColours()) {
+                buffer.writeString(pieceTintColorObj.getPieceType());
+
+                if (pieceTintColorObj.getColors() != null) {
+                    buffer.writeLInt(pieceTintColorObj.getColors().size());
+                    for (String color : pieceTintColorObj.getColors()) {
+                        buffer.writeString(color);
+                    }
+                } else {
+                    buffer.writeUnsignedVarInt(0);
+                }
+            }
+        } else {
+            buffer.writeLInt(0);
+        }
+    }
+
+    private void writeSkinImageData(PacketBuffer buffer, int imageWidth, int imageHeight, byte[] data) {
+        buffer.writeLInt(imageWidth);
+        buffer.writeLInt(imageHeight);
+        buffer.writeUnsignedVarInt(data.length);
+        buffer.writeBytes(data);
     }
 
     public BlockPosition readBlockPosition(PacketBuffer buffer) {

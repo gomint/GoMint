@@ -14,15 +14,8 @@ import io.gomint.taglib.NBTTagCompound;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 237 )
+@RegisterInfo( sId = "minecraft:concretePowder", id = 237 )
 public class ItemConcretePowder extends ItemStack implements io.gomint.inventory.item.ItemConcretePowder {
-
-
-
-    @Override
-    public String getBlockId() {
-        return "minecraft:concretePowder";
-    }
 
     @Override
     public ItemType getType() {

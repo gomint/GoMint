@@ -7,13 +7,8 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 35 )
+@RegisterInfo(sId = "minecraft:wool", id = 35)
 public class ItemWool extends ItemStack implements io.gomint.inventory.item.ItemWool {
-
-    @Override
-    public String getBlockId() {
-        return "minecraft:wool";
-    }
 
     @Override
     public ItemType getType() {

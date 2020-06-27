@@ -26,20 +26,20 @@ public class ProgressBlockState extends BlockState<Float, Integer> {
 
     private Consumer<Void> maxedProgressConsumer;
     private int max;
-    @Getter private float step;
+    @Getter
+    private float step;
 
-    public ProgressBlockState(Block block, Supplier<String> key, int max, Consumer<Void> maxedProgressConsumer ) {
-        super( block, key );
+    public ProgressBlockState(Block block, Supplier<String[]> key, int max, Consumer<Void> maxedProgressConsumer) {
+        super(block, v -> key.get());
         this.step = 1f / max;
         this.maxedProgressConsumer = maxedProgressConsumer;
         this.max = max;
-        this.setState(0f);
     }
 
     public boolean progress() {
-        this.setState( this.getState() + this.step );
-        if ( 1f - this.getState() <= MathUtils.EPSILON ) {
-            this.maxedProgressConsumer.accept( null );
+        this.setState(this.getState() + this.step);
+        if (1f - this.getState() <= MathUtils.EPSILON) {
+            this.maxedProgressConsumer.accept(null);
             return false;
         }
 
@@ -47,13 +47,13 @@ public class ProgressBlockState extends BlockState<Float, Integer> {
     }
 
     @Override
-    protected void calculateValueFromState() {
-        this.setValue(Math.round( this.getState() * this.max ));
+    protected void calculateValueFromState(Float state) {
+        this.setValue(Math.round(state * this.max));
     }
 
     @Override
-    public void detectFromPlacement(EntityPlayer player, ItemStack placedItem, Facing face, Block block, Block clickedBlock, Vector clickPosition ) {
-        this.setState( 0f );
+    public void detectFromPlacement(EntityPlayer player, ItemStack placedItem, Facing face, Block block, Block clickedBlock, Vector clickPosition) {
+        this.setState(0f);
     }
 
     @Override

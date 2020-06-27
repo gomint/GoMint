@@ -28,6 +28,8 @@ import io.gomint.world.Biome;
 import io.gomint.world.Chunk;
 import io.gomint.world.WorldLayer;
 import io.gomint.world.block.Block;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.PooledByteBufAllocator;
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectIterator;
@@ -524,12 +526,7 @@ public class ChunkAdapter implements Chunk {
         // Write tile entity data
         Collection<TileEntity> tileEntities = this.getTileEntities();
         if ( !tileEntities.isEmpty() ) {
-            NBTWriter nbtWriter = new NBTWriter( new OutputStream() {
-                @Override
-                public void write( int b ) throws IOException {
-                    buffer.writeByte( (byte) b );
-                }
-            }, ByteOrder.LITTLE_ENDIAN );
+            NBTWriter nbtWriter = new NBTWriter( buffer.getBuffer(), ByteOrder.LITTLE_ENDIAN );
             nbtWriter.setUseVarint( true );
 
             for ( TileEntity tileEntity : tileEntities ) {
@@ -549,7 +546,6 @@ public class ChunkAdapter implements Chunk {
         packet.setZ( this.z );
         packet.setSubChunkCount( topEmpty );
         packet.setData( buffer.getBuffer() );
-        packet.setDataLength( buffer.getPosition() );
 
         // Don't pack the chunk if using TCP
         if ( this.world.getServer().getServerConfig().getListener().isUseTCP() ) {
@@ -565,22 +561,21 @@ public class ChunkAdapter implements Chunk {
         chunkPacket.serializeHeader( buffer );
         chunkPacket.serialize( buffer, Protocol.MINECRAFT_PE_PROTOCOL_VERSION );
 
-        ByteBuffer finalOut = ByteBuffer.allocate( buffer.getPosition() + 5 );
-        writeVarInt( buffer.getPosition(), finalOut );
-        finalOut.put( buffer.getBuffer(), buffer.getBufferOffset(), buffer.getBufferOffset() + buffer.getPosition() );
-        chunkPacketBatch.setPayload( finalOut.array() );
-        chunkPacketBatch.setPayloadLength( finalOut.position() );
-
+        ByteBuf finalOut = PooledByteBufAllocator.DEFAULT.directBuffer(buffer.getWritePosition() + 5);
+        writeVarInt( buffer.getWritePosition(), finalOut );
+        finalOut.writeBytes( buffer.getBuffer() );
+        chunkPacketBatch.setPayload(finalOut.readerIndex(0));
+        buffer.release();
         return chunkPacketBatch;
     }
 
-    private void writeVarInt( int value, ByteBuffer stream ) {
+    private void writeVarInt( int value, ByteBuf stream ) {
         while ( ( value & -128 ) != 0 ) {
-            stream.put( (byte) ( value & 127 | 128 ) );
+            stream.writeByte( (byte) ( value & 127 | 128 ) );
             value >>>= 7;
         }
 
-        stream.put( (byte) value );
+        stream.writeByte( (byte) value );
     }
 
     /**

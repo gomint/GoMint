@@ -8,17 +8,12 @@ import io.gomint.world.block.data.BlockColor;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 355 )
+@RegisterInfo(sId = "minecraft:bed", id = 355)
 public class ItemBed extends ItemStack implements io.gomint.inventory.item.ItemBed {
 
     @Override
     public byte getMaximumAmount() {
         return 1;
-    }
-
-    @Override
-    public String getBlockId() {
-        return "minecraft:bed";
     }
 
     @Override
@@ -28,7 +23,7 @@ public class ItemBed extends ItemStack implements io.gomint.inventory.item.ItemB
 
     @Override
     public BlockColor getColor() {
-        switch ( this.getData() ) {
+        switch (this.getData()) {
             case 0:
                 return BlockColor.WHITE;
             case 1:
@@ -65,56 +60,56 @@ public class ItemBed extends ItemStack implements io.gomint.inventory.item.ItemB
     }
 
     @Override
-    public void setColor( BlockColor color ) {
-        switch ( color ) {
+    public void setColor(BlockColor color) {
+        switch (color) {
             case WHITE:
-                this.setData( (short) 0 );
+                this.setData((short) 0);
                 break;
             case ORANGE:
-                this.setData( (short) 1 );
+                this.setData((short) 1);
                 break;
             case MAGENTA:
-                this.setData( (short) 2 );
+                this.setData((short) 2);
                 break;
             case LIGHT_BLUE:
-                this.setData( (short) 3 );
+                this.setData((short) 3);
                 break;
             case YELLOW:
-                this.setData( (short) 4 );
+                this.setData((short) 4);
                 break;
             case LIME:
-                this.setData( (short) 5 );
+                this.setData((short) 5);
                 break;
             case PINK:
-                this.setData( (short) 6 );
+                this.setData((short) 6);
                 break;
             case GRAY:
-                this.setData( (short) 7 );
+                this.setData((short) 7);
                 break;
             case SILVER:
-                this.setData( (short) 8 );
+                this.setData((short) 8);
                 break;
             case CYAN:
-                this.setData( (short) 9 );
+                this.setData((short) 9);
                 break;
             case PURPLE:
-                this.setData( (short) 10 );
+                this.setData((short) 10);
                 break;
             case BLUE:
-                this.setData( (short) 11 );
+                this.setData((short) 11);
                 break;
             case BROWN:
-                this.setData( (short) 12 );
+                this.setData((short) 12);
                 break;
             case GREEN:
-                this.setData( (short) 13 );
+                this.setData((short) 13);
                 break;
             case RED:
-                this.setData( (short) 14 );
+                this.setData((short) 14);
                 break;
             case BLACK:
             default:
-                this.setData( (short) 15 );
+                this.setData((short) 15);
         }
     }
 

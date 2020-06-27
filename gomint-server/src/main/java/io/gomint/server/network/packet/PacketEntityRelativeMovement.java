@@ -19,7 +19,7 @@ import lombok.Data;
 public class PacketEntityRelativeMovement extends Packet {
 
     private long entityId;
-    private int flags;
+    private short flags;
 
     private float oldX;
     private float oldY;
@@ -48,7 +48,7 @@ public class PacketEntityRelativeMovement extends Packet {
     public void serialize( PacketBuffer buffer, int protocolID ) {
         buffer.writeUnsignedVarLong( this.entityId );
 
-        byte flags = 0;
+        short flags = 0;
         if ( this.x != 0 ) {
             flags |= 1;
         }
@@ -73,7 +73,7 @@ public class PacketEntityRelativeMovement extends Packet {
             flags |= 32;
         }
 
-        buffer.writeByte( flags );
+        buffer.writeLShort( flags );
 
         if ( this.x != 0 ) {
             buffer.writeSignedVarInt( Float.floatToIntBits( this.x ) - Float.floatToIntBits( this.oldX ) );

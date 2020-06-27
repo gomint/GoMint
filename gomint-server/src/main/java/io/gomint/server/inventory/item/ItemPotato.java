@@ -7,13 +7,8 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 392 )
+@RegisterInfo(sId = "minecraft:potatoes", id = 392)
 public class ItemPotato extends ItemFood implements io.gomint.inventory.item.ItemPotato {
-
-    @Override
-    public String getBlockId() {
-        return "minecraft:potatoes";
-    }
 
     @Override
     public float getSaturation() {

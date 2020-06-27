@@ -14,17 +14,12 @@ import io.gomint.taglib.NBTTagCompound;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 84 )
+@RegisterInfo( sId = "minecraft:jukebox", id = 84 )
 public class ItemJukebox extends ItemStack implements io.gomint.inventory.item.ItemJukebox {
 
     @Override
     public long getBurnTime() {
         return 15000;
-    }
-
-    @Override
-    public String getBlockId() {
-        return "minecraft:jukebox";
     }
 
     @Override

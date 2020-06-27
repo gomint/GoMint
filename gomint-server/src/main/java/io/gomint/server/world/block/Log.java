@@ -59,12 +59,18 @@ public class Log extends Block implements BlockLog {
         }
     }
 
-    private final EnumBlockState<LogTypeMagic, String> variant = new EnumBlockState<>(this, () -> {
+    private final EnumBlockState<LogTypeMagic, String> variant = new EnumBlockState<>(this, v -> {
         if (this.variant == null) {
-            return LogTypeMagic.OAK.getKey();
+            return new String[]{OLD_LOG_TYPE, NEW_LOG_TYPE};
         }
 
-        return this.variant.getState().getKey();
+        for (LogTypeMagic value : LogTypeMagic.values()) {
+            if (value.getValue().equals(v)) {
+                return value.getKey().equals(OLD_LOG_TYPE) ? new String[]{OLD_LOG_TYPE, NEW_LOG_TYPE} : new String[]{NEW_LOG_TYPE, OLD_LOG_TYPE};
+            }
+        }
+
+        return new String[]{OLD_LOG_TYPE, NEW_LOG_TYPE};
     }, LogTypeMagic.values(), LogTypeMagic::getValue, v -> {
         for (LogTypeMagic value : LogTypeMagic.values()) {
             if (value.getValue().equals(v)) {
@@ -74,7 +80,7 @@ public class Log extends Block implements BlockLog {
 
         return null;
     });
-    private final AxisBlockState axis = new AxisBlockState(this, () -> "pillar_axis");
+    private final AxisBlockState axis = new AxisBlockState(this, () -> new String[]{"pillar_axis"});
 
     @Override
     public long getBreakTime() {

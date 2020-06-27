@@ -52,7 +52,7 @@ public class PacketDecompressor extends MessageToMessageDecoder<ByteBuf> {
             ByteBuf decompressed = ctx.alloc().directBuffer();
 
             try {
-                zlib.process( in, decompressed );
+                zlib.process( in.nioBuffer(), decompressed );
                 Preconditions.checkState( decompressed.readableBytes() == size, "Decompressed packet size mismatch" );
 
                 out.add( decompressed );

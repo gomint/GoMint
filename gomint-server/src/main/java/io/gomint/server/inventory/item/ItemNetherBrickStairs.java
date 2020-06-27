@@ -8,10 +8,8 @@ import io.gomint.taglib.NBTTagCompound;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 114 )
- public class ItemNetherBrickStairs extends ItemStack implements io.gomint.inventory.item.ItemNetherBrickStairs {
-
-
+@RegisterInfo( sId = "minecraft:nether_brick_stairs", id = 114 )
+public class ItemNetherBrickStairs extends ItemStack implements io.gomint.inventory.item.ItemNetherBrickStairs {
 
     @Override
     public String getBlockId() {

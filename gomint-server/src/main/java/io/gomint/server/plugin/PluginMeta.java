@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 
 import java.io.File;
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -38,4 +39,15 @@ public class PluginMeta {
     // Injection stuff
     private Set<String> injectionCommands;
 
+    // Module stuff
+    private String moduleName;
+    private Set<String> packages;
+
+    public void addPackage(String packageName) {
+        if (this.packages == null) {
+            this.packages = new HashSet<>();
+        }
+
+        this.packages.add(packageName);
+    }
 }

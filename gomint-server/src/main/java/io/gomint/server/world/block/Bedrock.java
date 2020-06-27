@@ -12,7 +12,7 @@ import io.gomint.server.registry.RegisterInfo;
 @RegisterInfo( sId = "minecraft:bedrock" )
 public class Bedrock extends Block implements io.gomint.world.block.BlockBedrock {
 
-    private final BooleanBlockState infiniBurn = new BooleanBlockState(this, () -> "infiniburn_bit");
+    private final BooleanBlockState infiniBurn = new BooleanBlockState(this, () -> new String[]{"infiniburn_bit"});
 
     @Override
     public String getBlockId() {

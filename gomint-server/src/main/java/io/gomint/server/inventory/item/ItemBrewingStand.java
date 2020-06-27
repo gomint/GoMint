@@ -7,13 +7,8 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 379 )
+@RegisterInfo(sId = "minecraft:brewing_stand", id = 379)
 public class ItemBrewingStand extends ItemStack implements io.gomint.inventory.item.ItemBrewingStand {
-
-    @Override
-    public String getBlockId() {
-        return "minecraft:brewing_stand";
-    }
 
     @Override
     public ItemType getType() {

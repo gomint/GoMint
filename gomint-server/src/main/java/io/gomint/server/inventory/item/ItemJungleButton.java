@@ -14,17 +14,12 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = -143 )
+@RegisterInfo( sId = "minecraft:jungle_button", id = -143 )
 public class ItemJungleButton extends ItemStack implements io.gomint.inventory.item.ItemJungleButton {
 
     @Override
     public long getBurnTime() {
         return 15000;
-    }
-
-    @Override
-    public String getBlockId() {
-        return "minecraft:jungle_button";
     }
 
     @Override

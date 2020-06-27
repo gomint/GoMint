@@ -93,7 +93,7 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
     private int viewDistance = 4;
     private Queue<ChunkAdapter> chunkSendQueue = new LinkedBlockingQueue<>();
     // EntityPlayer Information
-    private Gamemode gamemode = Gamemode.SPECTATOR;
+    private Gamemode gamemode = Gamemode.SURVIVAL;
     @Getter
     private AdventureSettings adventureSettings;
     @Getter
@@ -742,21 +742,19 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
 
         this.windowIds = new Byte2ObjectOpenHashMap<>();
         this.containerIds = new Object2ByteOpenHashMap<>();
-        // TODO: this.connection.getServer().getCreativeInventory().addViewer(this);
+        // this.connection.getServer().getCreativeInventory().addViewer(this);
 
-        // TODO: Update & Send crafting recipes
-        // this.connection.addToSendQueue(this.world.getServer().getRecipeManager().getCraftingRecipesBatch());
+        this.connection.addToSendQueue(this.world.getServer().getRecipeManager().getCraftingRecipesBatch());
 
         // Send entity metadata
         this.sendData(this);
 
-        // TODO: Send player list for yourself
-//        PacketPlayerlist playerlist = new PacketPlayerlist();
-//        playerlist.setMode((byte) 0);
-//        playerlist.setEntries(new ArrayList<PacketPlayerlist.Entry>() {{
-//            add(new PacketPlayerlist.Entry(EntityPlayer.this));
-//        }});
-//        this.getConnection().addToSendQueue(playerlist);
+        PacketPlayerlist playerlist = new PacketPlayerlist();
+        playerlist.setMode((byte) 0);
+        playerlist.setEntries(new ArrayList<>() {{
+            add(new PacketPlayerlist.Entry(EntityPlayer.this));
+        }});
+        this.getConnection().addToSendQueue(playerlist);
 
         LOGGER.debug("Did send all prepare entity data");
     }
@@ -921,6 +919,11 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
     @Override
     public boolean hasPermission(String permission) {
         return this.permissionManager.hasPermission(permission);
+    }
+
+    @Override
+    public boolean hasPermission(String permission, boolean defaultValue) {
+        return this.permissionManager.hasPermission(permission, defaultValue);
     }
 
     /**
@@ -1580,6 +1583,7 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
         packetSpawnPlayer.setName(this.getName());
         packetSpawnPlayer.setEntityId(this.getEntityId());
         packetSpawnPlayer.setRuntimeEntityId(this.getEntityId());
+        packetSpawnPlayer.setPlatformChatId(this.getDeviceInfo().getDeviceId());
 
         packetSpawnPlayer.setX(this.getPositionX());
         packetSpawnPlayer.setY(this.getPositionY());
@@ -1596,6 +1600,8 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
         packetSpawnPlayer.setItemInHand(this.getInventory().getItemInHand());
         packetSpawnPlayer.setMetadataContainer(this.getMetadata());
         packetSpawnPlayer.setDeviceId( this.getDeviceInfo().getDeviceId() );
+        packetSpawnPlayer.setBuildPlatform( this.getDeviceInfo().getOs().getId() );
+
         return packetSpawnPlayer;
     }
 

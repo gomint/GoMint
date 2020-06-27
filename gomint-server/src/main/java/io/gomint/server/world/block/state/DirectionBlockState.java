@@ -23,13 +23,13 @@ import java.util.function.Supplier;
  */
 public class DirectionBlockState extends BlockState<Direction, Integer> {
 
-    public DirectionBlockState(Block block, Supplier<String> key) {
+    public DirectionBlockState(Block block, Supplier<String[]> key) {
         this(block, key, 0);
     }
 
     @Override
-    protected void calculateValueFromState() {
-        switch (this.getState()) {
+    protected void calculateValueFromState(Direction state) {
+        switch (state) {
             case NORTH:
                 this.setValue(2);
                 break;
@@ -46,8 +46,8 @@ public class DirectionBlockState extends BlockState<Direction, Integer> {
         }
     }
 
-    public DirectionBlockState(Block block, Supplier<String> key, int rotation) {
-        super(block, key);
+    public DirectionBlockState(Block block, Supplier<String[]> key, int rotation) {
+        super(block, v -> key.get());
         this.setValue(rotation);
     }
 

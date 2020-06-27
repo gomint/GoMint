@@ -14,7 +14,7 @@ import io.gomint.world.block.data.BlockColor;
 @RegisterInfo( sId = "minecraft:wool" )
 public class Wool extends Block implements io.gomint.world.block.BlockWool {
 
-    private EnumBlockState<BlockColor, String> color = new EnumBlockState<>( this, () -> "color", BlockColor.values(), e -> e.name().toLowerCase(), v -> BlockColor.valueOf(v.toUpperCase()) );
+    private final EnumBlockState<BlockColor, String> color = new EnumBlockState<>( this, v -> new String[]{"color"}, BlockColor.values(), e -> e.name().toLowerCase(), v -> BlockColor.valueOf(v.toUpperCase()) );
 
     @Override
     public String getBlockId() {

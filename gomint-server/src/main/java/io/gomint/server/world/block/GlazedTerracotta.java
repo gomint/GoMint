@@ -38,7 +38,7 @@ import io.gomint.world.block.data.Facing;
 @RegisterInfo( sId = "minecraft:black_glazed_terracotta" )
 public class GlazedTerracotta extends Block implements BlockGlazedTerracotta {
 
-    private final BlockfaceBlockState facing = new BlockfaceBlockState( this, () -> "facing_direction" );
+    private final BlockfaceBlockState facing = new BlockfaceBlockState( this, () -> new String[]{"facing_direction"} );
 
     @Override
     public long getBreakTime() {

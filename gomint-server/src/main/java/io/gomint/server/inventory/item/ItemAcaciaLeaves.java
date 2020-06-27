@@ -7,13 +7,8 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo(id = 161)
+@RegisterInfo( sId = "minecraft:leaves2", id = 161)
 public class ItemAcaciaLeaves extends ItemStack implements io.gomint.inventory.item.ItemAcaciaLeaves {
-
-    @Override
-    public String getBlockId() {
-        return "minecraft:leaves2";
-    }
 
     @Override
     public ItemType getType() {

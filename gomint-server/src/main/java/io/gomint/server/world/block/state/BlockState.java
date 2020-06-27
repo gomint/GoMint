@@ -12,7 +12,6 @@ import io.gomint.math.Vector;
 import io.gomint.server.entity.EntityPlayer;
 import io.gomint.server.world.block.Block;
 import io.gomint.world.block.data.Facing;
-import lombok.Getter;
 
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -24,10 +23,10 @@ import java.util.function.Supplier;
  */
 public abstract class BlockState<T, S> {
 
-    private Supplier<String> key;
+    private Function<S, String[]> key;
     private final Block block;
 
-    public BlockState( Block block, Supplier<String> key ) {
+    public BlockState( Block block, Function<S, String[]> key ) {
         // Remember to store the block
         this.block = block;
 
@@ -39,14 +38,14 @@ public abstract class BlockState<T, S> {
     }
 
     public void setState( T state ) {
-        this.calculateValueFromState();
+        this.calculateValueFromState(state);
 
         if ( this.block.ready() ) {
             this.block.updateBlock();
         }
     }
 
-    protected abstract void calculateValueFromState();
+    protected abstract void calculateValueFromState(T state);
 
     /**
      * Detect from a player
@@ -66,11 +65,18 @@ public abstract class BlockState<T, S> {
      * @param value
      */
     protected void setValue(S value) {
-        this.block.setState(this.key.get(), value);
+        this.block.setState(this.key.apply(value)[0], value);
     }
 
     protected S getValue() {
-        return (S) this.block.getState(this.key.get());
+        for (String s : this.key.apply(null)) {
+            S v = (S) this.block.getState(s);
+            if (v != null) {
+                return v;
+            }
+        }
+
+        return null;
     }
 
     public abstract T getState();

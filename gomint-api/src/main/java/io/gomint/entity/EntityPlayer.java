@@ -109,14 +109,6 @@ public interface EntityPlayer extends EntityHuman {
     void sendMessage( ChatType type, String... message );
 
     /**
-     * Check if player has a specific permission
-     *
-     * @param permission which should be checked for
-     * @return true if the player has this permission, false if not
-     */
-    boolean hasPermission( String permission );
-
-    /**
      * Get the view distance of this player
      *
      * @return radius of chunks this player can see

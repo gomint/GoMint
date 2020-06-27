@@ -29,9 +29,9 @@ public class WrappedMCPEPacket extends Packet {
         this.buffer = new PacketBuffer[amountOfPackets];
         for ( short i = 0; i < amountOfPackets; i++ ) {
             int bufferLength = buf.readInt();
-            byte[] data = new byte[bufferLength];
-            buf.readBytes( data );
-            this.buffer[i] = new PacketBuffer( data, 0 );
+            ByteBuf data = buf.retainedSlice(buf.readerIndex(), bufferLength);
+            buf.readerIndex(buf.readerIndex() + bufferLength);
+            this.buffer[i] = new PacketBuffer( data );
         }
     }
 
@@ -40,9 +40,8 @@ public class WrappedMCPEPacket extends Packet {
         buf.writeByte( this.raknetVersion );
         buf.writeShort( this.buffer.length );
         for ( PacketBuffer buffer : this.buffer ) {
-            byte[] data = Arrays.copyOf( buffer.getBuffer(), buffer.getPosition() );
-            buf.writeInt( data.length );
-            buf.writeBytes( data );
+            buf.writeInt( buffer.getWritePosition() );
+            buf.writeBytes( buffer.getBuffer() );
         }
     }
 

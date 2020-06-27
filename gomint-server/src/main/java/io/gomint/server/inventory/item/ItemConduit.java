@@ -14,13 +14,8 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = -157 )
+@RegisterInfo(sId = "minecraft:conduit", id = -157)
 public class ItemConduit extends ItemStack implements io.gomint.inventory.item.ItemConduit {
-
-    @Override
-    public String getBlockId() {
-        return "minecraft:conduit";
-    }
 
     @Override
     public ItemType getType() {

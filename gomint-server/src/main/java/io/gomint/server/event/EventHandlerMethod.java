@@ -19,7 +19,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.asm.ClassWriter;
 import org.springframework.asm.MethodVisitor;
 import org.springframework.asm.Opcodes;
+import org.springframework.util.ReflectionUtils;
 
+import java.lang.invoke.MethodHandle;
+import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Method;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -56,8 +59,8 @@ class EventHandlerMethod implements Comparable<EventHandlerMethod> {
             if (instance.getClass().getClassLoader() instanceof PluginClassloader) {
                 ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_FRAMES);
 
-                String className = "io/gomint/server/event/EventProxy" + PROXY_COUNT.incrementAndGet();
                 String listenerClassName = instance.getClass().getName().replace(".", "/");
+                String className = listenerClassName + "Proxy";
                 String eventClassName = method.getParameterTypes()[0].getName().replace(".", "/");
 
                 // Define the class
@@ -91,8 +94,12 @@ class EventHandlerMethod implements Comparable<EventHandlerMethod> {
                 callCon.visitInsn(Opcodes.RETURN);
                 callCon.visitMaxs(2, 2);
 
-                PluginClassloader classloader = (PluginClassloader) instance.getClass().getClassLoader();
-                Class<? extends EventProxy> proxyClass = (Class<? extends EventProxy>) classloader.defineClass(className.replace("/", "."), cw.toByteArray());
+                // Get bytecode
+                byte[] data = cw.toByteArray();
+
+                MethodHandles.Lookup lookup = MethodHandles.lookup();
+                MethodHandles.Lookup privateLookup = MethodHandles.privateLookupIn(instance.getClass(), lookup);
+                Class<? extends EventProxy> proxyClass = (Class<? extends EventProxy>) privateLookup.defineClass(data);
 
                 this.proxy = proxyClass.getDeclaredConstructor().newInstance();
                 this.proxy.getClass().getDeclaredField("obj").set(this.proxy, instance);

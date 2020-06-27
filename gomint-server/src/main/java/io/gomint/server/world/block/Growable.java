@@ -33,7 +33,7 @@ public abstract class Growable extends Block {
         SEED_RANDOMIZER.add(0.15, 3);
     }
 
-    protected ProgressBlockState growth = new ProgressBlockState(this, () -> "growth", 7, aVoid -> {
+    protected ProgressBlockState growth = new ProgressBlockState(this, () -> new String[]{"growth"}, 7, aVoid -> {
     });
 
     @Override

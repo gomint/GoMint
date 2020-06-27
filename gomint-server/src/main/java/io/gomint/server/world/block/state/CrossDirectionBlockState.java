@@ -23,13 +23,13 @@ import java.util.function.Supplier;
  */
 public class CrossDirectionBlockState extends BlockState<Direction, Integer> {
 
-    public CrossDirectionBlockState(Block block, Supplier<String> key) {
-        super(block, key);
+    public CrossDirectionBlockState(Block block, Supplier<String[]> key) {
+        super(block, v -> key.get());
     }
 
     @Override
-    protected void calculateValueFromState() {
-        switch (this.getState()) {
+    protected void calculateValueFromState(Direction state) {
+        switch (state) {
             case NORTH:
                 this.setValue(3);
                 break;

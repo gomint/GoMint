@@ -9,13 +9,8 @@ import io.gomint.taglib.NBTTagCompound;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo(id = 138)
+@RegisterInfo(sId = "minecraft:beacon", id = 138)
 public class ItemBeacon extends ItemStack implements io.gomint.inventory.item.ItemBeacon {
-
-    @Override
-    public String getBlockId() {
-        return "minecraft:beacon";
-    }
 
     @Override
     public ItemType getType() {

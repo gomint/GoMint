@@ -9,14 +9,8 @@ import io.gomint.taglib.NBTTagCompound;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 295 )
+@RegisterInfo(sId = "minecraft:wheat_seeds", id = 295)
 public class ItemSeeds extends ItemStack implements io.gomint.inventory.item.ItemSeeds {
-
-
-    @Override
-    public String getBlockId() {
-        return "minecraft:wheat_seeds";
-    }
 
     @Override
     public ItemType getType() {

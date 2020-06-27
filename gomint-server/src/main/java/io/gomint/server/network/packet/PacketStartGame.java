@@ -3,11 +3,14 @@ package io.gomint.server.network.packet;
 import io.gomint.jraknet.PacketBuffer;
 import io.gomint.math.Location;
 import io.gomint.server.assets.AssetsLibrary;
+import io.gomint.server.inventory.item.Items;
 import io.gomint.server.network.Protocol;
 import io.gomint.server.player.PlayerPermission;
 import io.gomint.server.util.BlockIdentifier;
+import io.gomint.server.util.StringShortPair;
 import io.gomint.server.world.BlockRuntimeIDs;
 import io.gomint.world.Gamerule;
+import io.netty.buffer.ByteBuf;
 import lombok.Data;
 
 import java.io.InputStream;
@@ -72,9 +75,6 @@ public class PacketStartGame extends Packet {
     // Server stuff
     private String correlationId;
 
-    // Runtime ID
-    private List<BlockIdentifier> runtimeIDs;
-
     /**
      * Create a new start game packet
      */
@@ -138,11 +138,12 @@ public class PacketStartGame extends Packet {
         buffer.writeSignedVarInt( this.enchantmentSeed );
 
         // Write palette data
-        byte[] data = BlockRuntimeIDs.getPacketCache();
-        buffer.writeBytes( data );
+        ByteBuf data = BlockRuntimeIDs.getPacketCache();
+        buffer.writeBytes( data.asReadOnly().readerIndex(0) );
 
-        // TODO: Item table
-        buffer.writeUnsignedVarInt( 0 );
+        // Item table
+        PacketBuffer itemData = Items.getPacketCache();
+        buffer.writeBytes( itemData.getBuffer().asReadOnly().readerIndex(0) );
 
         buffer.writeString( this.correlationId );
     }

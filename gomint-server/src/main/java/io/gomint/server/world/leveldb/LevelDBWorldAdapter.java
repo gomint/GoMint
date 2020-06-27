@@ -15,6 +15,7 @@ import io.gomint.math.Location;
 import io.gomint.server.GoMintServer;
 import io.gomint.server.entity.EntityPlayer;
 import io.gomint.server.plugin.PluginClassloader;
+import io.gomint.server.util.Allocator;
 import io.gomint.server.world.ChunkAdapter;
 import io.gomint.server.world.ChunkCache;
 import io.gomint.server.world.WorldAdapter;
@@ -197,7 +198,11 @@ public class LevelDBWorldAdapter extends WorldAdapter {
         // Save level.dat
         try ( FileOutputStream stream = new FileOutputStream( levelDat ) ) {
             stream.write( new byte[8] );
-            compound.writeTo( stream, false, ByteOrder.LITTLE_ENDIAN );
+
+            ByteBuf data = PooledByteBufAllocator.DEFAULT.heapBuffer();
+            compound.writeTo( data, false, ByteOrder.LITTLE_ENDIAN );
+            stream.write(data.array(), data.arrayOffset(), data.readableBytes());
+            data.release();
         }
     }
 
@@ -329,10 +334,11 @@ public class LevelDBWorldAdapter extends WorldAdapter {
             // Skip some data. For example the amount of bytes of this NBT Tag
             stream.skip( 8 );
 
-            NBTStream nbtStream = new NBTStream( stream, ByteOrder.LITTLE_ENDIAN );
-            nbtStream.addListener( ( path, value ) -> {
-                LOGGER.info(path + " -> " + value);
+            byte[] data = stream.readAllBytes();
+            ByteBuf buf = Allocator.allocate(data);
 
+            NBTStream nbtStream = new NBTStream( buf, ByteOrder.LITTLE_ENDIAN );
+            nbtStream.addListener( ( path, value ) -> {
                 switch ( path ) {
                     case ".GeneratorClass":
                         LevelDBWorldAdapter.this.generatorClass = (Class<? extends ChunkGenerator>) PluginClassloader.find( (String) value );
@@ -385,6 +391,8 @@ public class LevelDBWorldAdapter extends WorldAdapter {
                 throw new WorldLoadException( "Could not load level.dat NBT: " + e.getMessage() );
             }
             // CHECKSTYLE:ON
+
+            buf.release();
         } catch ( IOException e ) {
             throw new WorldLoadException( "Failed to load leveldb world: " + e.getMessage() );
         }
@@ -482,12 +490,14 @@ public class LevelDBWorldAdapter extends WorldAdapter {
             // Register entities
             this.registerEntitiesFromChunk( loadingChunk );
 
+            // Give it into the chunk cache before we populate
+            this.chunkCache.putChunk( loadingChunk );
+
             // Do some work on the chunk if needed (like population)
             if ( !populated ) {
                 this.addPopulateTask( loadingChunk );
             }
 
-            this.chunkCache.putChunk( loadingChunk );
             return loadingChunk;
         }
 

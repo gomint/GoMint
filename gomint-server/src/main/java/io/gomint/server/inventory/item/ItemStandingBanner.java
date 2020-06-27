@@ -9,17 +9,12 @@ import io.gomint.taglib.NBTTagCompound;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 176 )
+@RegisterInfo( sId = "minecraft:standing_banner", id = 176 )
 public class ItemStandingBanner extends ItemStack implements ItemBanner {
 
     @Override
     public long getBurnTime() {
         return 15000;
-    }
-
-    @Override
-    public String getBlockId() {
-        return "minecraft:standing_banner";
     }
 
     @Override

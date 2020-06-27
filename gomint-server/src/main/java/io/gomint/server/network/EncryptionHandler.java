@@ -25,6 +25,7 @@ import javax.crypto.SecretKey;
 import javax.crypto.ShortBufferException;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
+import java.nio.ByteBuffer;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.Key;
@@ -133,24 +134,29 @@ public class EncryptionHandler {
      * @param input RAW packet data from RakNet
      * @return Either null when the data was corrupted or the decrypted data
      */
-    public byte[] decryptInputFromClient( byte[] input ) {
-        byte[] output = this.processCipher( this.clientDecryptor, input );
+    public ByteBuf decryptInputFromClient(ByteBuf input) {
+        ByteBuf output = this.processCipher( this.clientDecryptor, input.nioBuffer(input.readerIndex(), input.readableBytes()) );
         if ( output == null ) {
             return null;
         }
 
-        byte[] outputChunked = new byte[input.length - 8];
+        ByteBuffer nOutput = output.nioBuffer(0, output.readableBytes());
+        nOutput.position(0);
+        int oldLimit = nOutput.limit();
+        nOutput.limit(nOutput.limit() - 8);
 
-        System.arraycopy( output, 0, outputChunked, 0, outputChunked.length );
+        byte[] hashBytes = calcHash( nOutput, this.key, this.receiveCounter );
 
-        byte[] hashBytes = calcHash( outputChunked, this.key, this.receiveCounter );
-        for ( int i = output.length - 8; i < output.length; i++ ) {
-            if ( hashBytes[i - ( output.length - 8 )] != output[i] ) {
+        nOutput.position(0);
+        nOutput.limit(oldLimit);
+
+        for ( int i = nOutput.limit() - 8; i < nOutput.limit(); i++ ) {
+            if ( hashBytes[i - ( nOutput.limit() - 8 )] != nOutput.get(i) ) {
                 return null;
             }
         }
 
-        return outputChunked;
+        return output.capacity(output.capacity() - 8);
     }
 
     /**
@@ -195,34 +201,42 @@ public class EncryptionHandler {
         return ( this.serverEncryptor != null && this.serverDecryptor != null );
     }
 
-    public byte[] decryptInputFromServer( byte[] input ) {
-        byte[] output = this.processCipher( this.serverDecryptor, input );
+    public ByteBuf decryptInputFromServer( ByteBuf input ) {
+        ByteBuf output = this.processCipher( this.serverDecryptor, input.nioBuffer() );
         if ( output == null ) {
             return null;
         }
 
-        byte[] outputChunked = new byte[input.length - 8];
+        ByteBuffer nOutput = output.nioBuffer();
+        nOutput.position(0);
+        int oldLimit = nOutput.limit();
+        nOutput.limit(nOutput.limit() - 8);
 
-        System.arraycopy( output, 0, outputChunked, 0, outputChunked.length );
+        byte[] hashBytes = calcHash( nOutput, this.serverKey, this.serverReceiveCounter );
 
-        byte[] hashBytes = calcHash( outputChunked, this.serverKey, this.serverReceiveCounter );
-        for ( int i = output.length - 8; i < output.length; i++ ) {
-            if ( hashBytes[i - ( output.length - 8 )] != output[i] ) {
+        nOutput.position(0);
+        nOutput.limit(oldLimit);
+
+        for ( int i = nOutput.limit() - 8; i < nOutput.limit(); i++ ) {
+            if ( hashBytes[i - ( nOutput.limit() - 8 )] != nOutput.get(i) ) {
                 return null;
             }
         }
 
-        return outputChunked;
+        return output.capacity(output.capacity() - 8);
     }
 
-    public byte[] encryptInputForServer( byte[] input ) {
+    public ByteBuf encryptInputForServer( ByteBuffer input ) {
         byte[] hashBytes = calcHash( input, this.serverKey, this.serverSendCounter );
-        byte[] finalInput = new byte[8 + input.length];
+        input.position(0);
 
-        System.arraycopy( input, 0, finalInput, 0, input.length );
-        System.arraycopy( hashBytes, 0, finalInput, input.length, 8 );
+        ByteBuf output = PooledByteBufAllocator.DEFAULT.directBuffer(8 + input.remaining());
+        output.writeBytes(input);
+        output.writeBytes(hashBytes);
 
-        return this.processCipher( this.serverEncryptor, finalInput );
+        ByteBuf encrypted = this.processCipher( this.serverEncryptor, output.nioBuffer() );
+        output.release();
+        return encrypted;
     }
 
     /**
@@ -231,14 +245,17 @@ public class EncryptionHandler {
      * @param input zlib compressed data
      * @return data ready to be sent directly to the client
      */
-    public byte[] encryptInputForClient( byte[] input ) {
+    public ByteBuf encryptInputForClient( ByteBuffer input ) {
         byte[] hashBytes = calcHash( input, this.key, this.sendingCounter );
-        byte[] finalInput = new byte[8 + input.length];
+        input.position(0);
 
-        System.arraycopy( input, 0, finalInput, 0, input.length );
-        System.arraycopy( hashBytes, 0, finalInput, input.length, 8 );
+        ByteBuf output = PooledByteBufAllocator.DEFAULT.directBuffer(8 + input.remaining());
+        output.writeBytes(input);
+        output.writeBytes(hashBytes, 0, 8);
 
-        return this.processCipher( this.clientEncryptor, finalInput );
+        ByteBuf encrypted = this.processCipher( this.clientEncryptor, output.nioBuffer() );
+        output.release();
+        return encrypted;
     }
 
     /**
@@ -271,13 +288,10 @@ public class EncryptionHandler {
         return digest;
     }
 
-    private byte[] calcHash( byte[] input, byte[] key, AtomicLong counter ) {
+    private byte[] calcHash( ByteBuffer input, byte[] key, AtomicLong counter ) {
         Hash digest = getSHA256();
-        if ( digest == null ) {
-            return new byte[8];
-        }
 
-        ByteBuf buf = PooledByteBufAllocator.DEFAULT.directBuffer( 8 + input.length + key.length );
+        ByteBuf buf = PooledByteBufAllocator.DEFAULT.directBuffer( 8 + input.remaining() + key.length );
         buf.writeLongLE( counter.getAndIncrement() );
         buf.writeBytes( input );
         buf.writeBytes( key );
@@ -286,13 +300,14 @@ public class EncryptionHandler {
         return digest.digest();
     }
 
-    private byte[] processCipher( Cipher cipher, byte[] input ) {
-        byte[] output = new byte[cipher.getOutputSize( input.length )];
+    private ByteBuf processCipher( Cipher cipher, ByteBuffer input ) {
+        int outputLength = cipher.getOutputSize( input.remaining() );
+        ByteBuf output = PooledByteBufAllocator.DEFAULT.directBuffer(outputLength);
 
         try {
-            int cursor = cipher.update( input, 0, input.length, output, 0 );
+            int cursor = cipher.update( input, output.nioBuffer(0, outputLength) );
             // cursor += cipher.doFinal( output, cursor );
-            if ( cursor != output.length ) {
+            if ( cursor != outputLength ) {
                 throw new ShortBufferException( "Output size did not match cursor" );
             }
         } catch ( ShortBufferException e ) {
@@ -300,6 +315,7 @@ public class EncryptionHandler {
             return null;
         }
 
+        output.writerIndex(outputLength);
         return output;
     }
 
@@ -325,9 +341,6 @@ public class EncryptionHandler {
 
     private byte[] hashSHA256( byte[]... message ) {
         Hash digest = getSHA256();
-        if ( digest == null ) {
-            return null;
-        }
 
         ByteBuf buf = PooledByteBufAllocator.DEFAULT.directBuffer();
         for ( byte[] bytes : message ) {

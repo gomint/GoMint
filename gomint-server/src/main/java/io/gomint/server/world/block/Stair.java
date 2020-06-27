@@ -18,8 +18,8 @@ import java.util.List;
  */
 public abstract class Stair extends Block implements BlockStair {
 
-    private final CrossDirectionBlockState direction = new CrossDirectionBlockState( this, () -> "weirdo_direction" );
-    private final BooleanBlockState top = new BooleanBlockState( this, () -> "upside_down_bit" );
+    private final CrossDirectionBlockState direction = new CrossDirectionBlockState( this, () -> new String[]{"weirdo_direction"} );
+    private final BooleanBlockState top = new BooleanBlockState( this, () -> new String[]{"upside_down_bit"} );
 
     @Override
     public boolean isTransparent() {

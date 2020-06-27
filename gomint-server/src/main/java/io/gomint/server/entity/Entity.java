@@ -22,6 +22,7 @@ import io.gomint.server.network.PlayerConnection;
 import io.gomint.server.network.packet.Packet;
 import io.gomint.server.network.packet.PacketEntityMetadata;
 import io.gomint.server.network.packet.PacketEntityMotion;
+import io.gomint.server.network.packet.PacketEntityMovement;
 import io.gomint.server.network.packet.PacketSpawnEntity;
 import io.gomint.server.util.Values;
 import io.gomint.server.world.CoordinateUtils;
@@ -37,6 +38,7 @@ import io.gomint.world.Chunk;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -55,6 +57,7 @@ import java.util.concurrent.atomic.AtomicLong;
  * @version 1.1
  */
 @EqualsAndHashCode( of = { "id" } )
+@ToString( of = { "id" } )
 public abstract class Entity implements io.gomint.entity.Entity {
 
     private static final Logger LOGGER = LoggerFactory.getLogger( Entity.class );
@@ -1405,6 +1408,23 @@ public abstract class Entity implements io.gomint.entity.Entity {
 
     public void updateOldPosition() {
         this.oldPosition = this.getLocation();
+    }
+
+    public Packet getMovementPacket() {
+        PacketEntityMovement packetEntityMovement = new PacketEntityMovement();
+        packetEntityMovement.setEntityId( this.getEntityId() );
+
+        packetEntityMovement.setX( this.getPositionX() );
+        packetEntityMovement.setY( this.getPositionY() + this.getOffsetY() );
+        packetEntityMovement.setZ( this.getPositionZ() );
+
+        packetEntityMovement.setYaw( this.getYaw() );
+        packetEntityMovement.setHeadYaw( this.getHeadYaw() );
+        packetEntityMovement.setPitch( this.getPitch() );
+
+        packetEntityMovement.setOnGround( this.isOnGround() );
+
+        return packetEntityMovement;
     }
 
 }
