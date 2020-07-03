@@ -704,12 +704,10 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
      */
     public void prepareEntity() {
         // Send world init data
-        //this.connection.sendWorldTime(0);
         this.connection.sendWorldInitialization();
         this.connection.addToSendQueue( new PacketBiomeDefinitionList() );
         this.connection.addToSendQueue( new PacketAvailableEntityIdentifiers() );
         this.connection.sendSpawnPosition();
-        //this.connection.sendWorldTime(0);
         this.connection.sendDifficulty();
         this.connection.sendCommandsEnabled();
 
@@ -742,7 +740,7 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
 
         this.windowIds = new Byte2ObjectOpenHashMap<>();
         this.containerIds = new Object2ByteOpenHashMap<>();
-        this.connection.getServer().getCreativeInventory().addViewer(this);
+        // this.connection.getServer().getCreativeInventory().addViewer(this);
 
         // this.connection.addToSendQueue(this.world.getServer().getRecipeManager().getCraftingRecipesBatch());
 
