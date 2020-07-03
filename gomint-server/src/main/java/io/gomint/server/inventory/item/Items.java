@@ -12,6 +12,7 @@ import io.gomint.server.util.Pair;
 import io.gomint.server.util.StringShortPair;
 import io.gomint.server.util.performance.ObjectConstructionFactory;
 import io.gomint.taglib.NBTTagCompound;
+import it.unimi.dsi.fastutil.Hash;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.ints.IntArraySet;
@@ -19,17 +20,22 @@ import it.unimi.dsi.fastutil.ints.IntSet;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import lombok.Getter;
+import org.apache.commons.text.WordUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.function.BiConsumer;
 
 /**
  * @author geNAZt
@@ -46,6 +52,7 @@ public class Items {
 
     @Getter
     private static PacketBuffer packetCache;
+    private AssetsLibrary assets;
 
     public static void init(List<StringShortPair> items) {
         PacketBuffer buffer = new PacketBuffer(1024);
@@ -110,7 +117,20 @@ public class Items {
         Generator<io.gomint.server.inventory.item.ItemStack> itemGenerator = this.generators.getGenerator(id);
         if (itemGenerator == null) {
             if (!ALREADY_WARNED.contains(id)) {
-                LOGGER.warn("Unknown item {} / total unknown {}", id, ALREADY_WARNED.size());
+                LOGGER.warn("Unknown item {} ({}) / total unknown {}", id, this.assets.getItemID(id), ALREADY_WARNED.size());
+
+                // Try to generate the implementation
+                String blockId = this.assets.getItemID(id).split(":")[1];
+                String className = WordUtils.capitalize(blockId, '_').replaceAll("_", "");
+
+                Map<String, String> replace = new HashMap<>();
+                replace.put("NAME", className);
+                replace.put("BLOCK_ID", this.assets.getItemID(id));
+                replace.put("ITEM_ID", String.valueOf(id));
+                replace.put("ENUM", blockId.toUpperCase());
+                generate("gen/item_api.txt", "gen/api/Item" + className + ".java", replace);
+                generate("gen/item_implementation.txt", "gen/impl/Item" + className + ".java", replace);
+
                 ALREADY_WARNED.add(id);
             }
 
@@ -130,6 +150,19 @@ public class Items {
         }
 
         return (T) itemStack;
+    }
+
+    private void generate(String templateFile, String outputFile, Map<String, String> data) {
+        try {
+            String template = Files.readString(Paths.get(templateFile));
+            for (Map.Entry<String, String> entry : data.entrySet()) {
+                template = template.replaceAll("%" + entry.getKey() + "%", entry.getValue());
+            }
+
+            Files.writeString(Paths.get(outputFile), template);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -155,6 +188,10 @@ public class Items {
         }
 
         return (T) itemStack.setData((short) 0);
+    }
+
+    public void setAssets(AssetsLibrary assetsLibrary) {
+        this.assets = assetsLibrary;
     }
 
 }

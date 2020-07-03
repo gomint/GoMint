@@ -81,6 +81,7 @@ public class AssetsLibrary {
      */
     public AssetsLibrary(Items items) {
         this.items = items;
+        this.items.setAssets(this);
     }
 
     /**
@@ -96,10 +97,10 @@ public class AssetsLibrary {
         ByteBuf buf = Allocator.allocate(data);
         NBTTagCompound root = NBTTagCompound.readFrom(buf, false, ByteOrder.BIG_ENDIAN);
         if (GoMint.instance() != null) {
+            this.loadItemIDs((List<NBTTagCompound>) ((List) root.getList("itemLegacyIDs", false)));
             this.loadRecipes((List<NBTTagCompound>) ((List) root.getList("recipes", false)));
             this.loadCreativeInventory((List<byte[]>) ((List) root.getList("creativeInventory", false)));
             this.loadBlockPalette((List<NBTTagCompound>) ((List) root.getList("blockPalette", false)));
-            this.loadItemIDs((List<NBTTagCompound>) ((List) root.getList("itemLegacyIDs", false)));
         }
 
         buf.release();
@@ -108,7 +109,8 @@ public class AssetsLibrary {
     private void loadItemIDs(List<NBTTagCompound> itemLegacyIDs) {
         this.itemIDs = new ArrayList<>();
         for (NBTTagCompound itemLegacyID : itemLegacyIDs) {
-            this.itemIDs.add(new StringShortPair(itemLegacyID.getString("name", ""), itemLegacyID.getShort("id", (short) 0)));
+            StringShortPair pair = new StringShortPair(itemLegacyID.getString("name", ""), itemLegacyID.getShort("id", (short) 0));
+            this.itemIDs.add(pair);
         }
     }
 
@@ -311,6 +313,16 @@ public class AssetsLibrary {
         this.recipes = null;
         this.blockPalette = null;
         this.creativeInventory = null;
+    }
+
+    public String getItemID(int id) {
+        for (StringShortPair itemID : this.itemIDs) {
+            if (itemID.getData() == id) {
+                return itemID.getBlockId();
+            }
+        }
+
+        return "UNKNOWN";
     }
 
 }

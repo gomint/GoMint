@@ -1,51 +1,25 @@
+/*
+ * Copyright (c) 2018, GoMint, BlackyPaw and geNAZt
+ *
+ * This code is licensed under the BSD license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
 package io.gomint.server.inventory.item;
 
 import io.gomint.inventory.item.ItemType;
-import io.gomint.math.Vector;
-import io.gomint.server.entity.Attribute;
-import io.gomint.server.entity.AttributeModifier;
-import io.gomint.server.entity.AttributeModifierType;
-import io.gomint.server.entity.EntityPlayer;
 import io.gomint.server.registry.RegisterInfo;
-import io.gomint.server.world.block.GrassBlock;
-import io.gomint.server.world.block.GrassPath;
-import io.gomint.world.block.Block;
-import io.gomint.world.block.data.Facing;
 
 /**
- * @author KingAli
+ * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 774 )
-public class ItemNetheriteShovel extends ItemReduceTierNetherite implements io.gomint.inventory.item.ItemNetheriteShovel {
-
-    @Override
-    public boolean interact(EntityPlayer entity, Facing face, Vector clickPosition, Block clickedBlock ) {
-        if ( clickedBlock instanceof GrassBlock) {
-            clickedBlock.setType( GrassPath.class );
-            this.calculateUsageAndUpdate( 1 );
-            return true;
-        }
-
-        return false;
-    }
-
-    @Override
-    public void gotInHand( EntityPlayer player ) {
-        player
-            .getAttributeInstance( Attribute.ATTACK_DAMAGE )
-            .setModifier( AttributeModifier.ITEM_ATTACK_DAMAGE, AttributeModifierType.ADDITION, 6 );
-    }
-
-    @Override
-    public void removeFromHand( EntityPlayer player ) {
-        player
-            .getAttributeInstance( Attribute.ATTACK_DAMAGE )
-            .removeModifier( AttributeModifier.ITEM_ATTACK_DAMAGE );
-    }
+@RegisterInfo( sId = "minecraft:netherite_shovel", id = 744 )
+public class ItemNetheriteShovel extends ItemStack implements io.gomint.inventory.item.ItemNetheriteShovel {
 
     @Override
     public ItemType getType() {
         return ItemType.NETHERITE_SHOVEL;
     }
+
 }

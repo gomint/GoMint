@@ -1,9 +1,16 @@
+/*
+ * Copyright (c) 2018, GoMint, BlackyPaw and geNAZt
+ *
+ * This code is licensed under the BSD license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
 package io.gomint.inventory.item;
 
 import io.gomint.GoMint;
 
 /**
- * @author KingAli
+ * @author geNAZt
  * @version 1.0
  */
 public interface ItemCrimsonRoots extends ItemStack {
@@ -16,4 +23,5 @@ public interface ItemCrimsonRoots extends ItemStack {
     static ItemCrimsonRoots create( int amount ) {
         return GoMint.instance().createItemStack( ItemCrimsonRoots.class, amount );
     }
+
 }

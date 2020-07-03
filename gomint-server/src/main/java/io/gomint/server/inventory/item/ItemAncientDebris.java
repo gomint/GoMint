@@ -1,22 +1,25 @@
+/*
+ * Copyright (c) 2018, GoMint, BlackyPaw and geNAZt
+ *
+ * This code is licensed under the BSD license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
 package io.gomint.server.inventory.item;
 
 import io.gomint.inventory.item.ItemType;
 import io.gomint.server.registry.RegisterInfo;
 
 /**
- * @author KingAli
+ * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo(id = 526 ,sId = "minecraft:ancient_debris" )
+@RegisterInfo( sId = "minecraft:ancient_debris", id = -271 )
 public class ItemAncientDebris extends ItemStack implements io.gomint.inventory.item.ItemAncientDebris {
-
-    @Override
-    public String getBlockId() {
-        return "minecraft:ancient_debris";
-    }
 
     @Override
     public ItemType getType() {
         return ItemType.ANCIENT_DEBRIS;
     }
+
 }

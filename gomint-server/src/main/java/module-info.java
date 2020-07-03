@@ -42,6 +42,7 @@ module gomint.server {
     requires jline.terminal;
     requires spring.core;
     requires gomint.jni;
+    requires org.apache.commons.text;
 
     // Export logging stuff for log4j2
     exports net.minecrell.terminalconsole to org.apache.logging.log4j, org.apache.logging.log4j.core;
