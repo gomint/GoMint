@@ -19,8 +19,6 @@ import io.gomint.world.block.data.Facing;
 @RegisterInfo( id = 293 )
 public class ItemDiamondHoe extends ItemReduceTierDiamond implements io.gomint.inventory.item.ItemDiamondHoe {
 
-
-
     @Override
     public boolean interact(EntityPlayer entity, Facing face, Vector clickPosition, Block clickedBlock ) {
         if ( clickedBlock instanceof Dirt || clickedBlock instanceof GrassBlock ) {
@@ -36,7 +34,7 @@ public class ItemDiamondHoe extends ItemReduceTierDiamond implements io.gomint.i
     public void gotInHand( EntityPlayer player ) {
         player
             .getAttributeInstance( Attribute.ATTACK_DAMAGE )
-            .setModifier( AttributeModifier.ITEM_ATTACK_DAMAGE, AttributeModifierType.ADDITION, 3 ); // 3 from diamond material
+            .setModifier( AttributeModifier.ITEM_ATTACK_DAMAGE, AttributeModifierType.ADDITION, 4 );
     }
 
     @Override

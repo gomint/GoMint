@@ -41,8 +41,8 @@ public class BlockOfGold extends Block implements io.gomint.world.block.BlockBlo
     public Class<? extends ItemStack>[] getToolInterfaces() {
         // Only iron and up
         return new Class[]{
-            ItemIronPickaxe.class,
-            ItemDiamondPickaxe.class,
+        ItemIronPickaxe.class,
+        ItemDiamondPickaxe.class
         };
     }
 

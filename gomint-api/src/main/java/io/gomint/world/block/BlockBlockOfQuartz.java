@@ -31,7 +31,8 @@ public interface BlockBlockOfQuartz extends Block, BlockAxis {
         SMOOTH,
         LINES,
         DEFAULT,
-        CHISELED
+        CHISELED,
+        BRICKS
     }
 
 }

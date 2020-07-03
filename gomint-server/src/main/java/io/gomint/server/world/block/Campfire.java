@@ -24,12 +24,12 @@ public class Campfire extends Block implements io.gomint.world.block.BlockCampfi
 
     @Override
     public boolean canBeBrokenWithHand() {
-        return false;
+        return true;
     }
 
     @Override
     public float getBlastResistance() {
-        return 10;
+        return 10.0f;
     }
 
     @Override

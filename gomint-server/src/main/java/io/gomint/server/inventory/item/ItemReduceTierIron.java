@@ -22,7 +22,7 @@ public abstract class ItemReduceTierIron extends ItemStack implements ItemReduce
 
     @Override
     public short getMaxDamage() {
-        return 251;
+        return 250;
     }
 
     @Override

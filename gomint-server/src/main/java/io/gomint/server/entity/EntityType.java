@@ -151,11 +151,6 @@ public enum EntityType {
     SPIDER( "minecraft:spider", 35 ),
 
     /**
-     * Entity type value for a zombie pigman.
-     */
-    ZOMBIE_PIGMAN( "minecraft:zombie_pigman", 36 ),
-
-    /**
      * Entity type value for a slime.
      */
     SLIME( "minecraft:slime", 37 ),
@@ -493,9 +488,27 @@ public enum EntityType {
     /**
      * Entity type value for a Bee.
      */
-    BEE("minecraft:bee",122);
+    BEE("minecraft:bee",122),
 
+    /**
+     * Entity type value for a Piglin.
+     */
+    PIGLIN("minecraft:piglin", 123),
 
+    /**
+     * Entity type value for a Hoglin.
+     */
+    HOGLIN("minecraft:hoglin", 124),
+
+    /**
+     * Entity type value for a Strider.
+     */
+    STRIDER("minecraft:strider", 125),
+
+    /**
+     * Entity type value for a Zoglin.
+     */
+    ZOGLIN("minecraft:zoglin", 126);
 
 
     private final String persistantId;

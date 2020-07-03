@@ -34,7 +34,7 @@ public class ItemStoneShovel extends ItemReduceTierStone implements io.gomint.in
     public void gotInHand( EntityPlayer player ) {
         player
             .getAttributeInstance( Attribute.ATTACK_DAMAGE )
-            .setModifier( AttributeModifier.ITEM_ATTACK_DAMAGE, AttributeModifierType.ADDITION, 2 ); // 1 from shovel type, 1 from stone material
+            .setModifier( AttributeModifier.ITEM_ATTACK_DAMAGE, AttributeModifierType.ADDITION, 3 );
     }
 
     @Override

@@ -1,6 +1,9 @@
 package io.gomint.server.inventory.item;
 import io.gomint.inventory.item.ItemType;
 import io.gomint.math.Vector;
+import io.gomint.server.entity.Attribute;
+import io.gomint.server.entity.AttributeModifier;
+import io.gomint.server.entity.AttributeModifierType;
 import io.gomint.server.entity.EntityPlayer;
 import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.world.block.Dirt;
@@ -27,6 +30,20 @@ public class ItemGoldenHoe extends ItemReduceTierGolden implements io.gomint.inv
         }
 
         return false;
+    }
+
+    @Override
+    public void gotInHand( EntityPlayer player ) {
+        player
+            .getAttributeInstance( Attribute.ATTACK_DAMAGE )
+            .setModifier( AttributeModifier.ITEM_ATTACK_DAMAGE, AttributeModifierType.ADDITION, 1 );
+    }
+
+    @Override
+    public void removeFromHand( EntityPlayer player ) {
+        player
+            .getAttributeInstance( Attribute.ATTACK_DAMAGE )
+            .removeModifier( AttributeModifier.ITEM_ATTACK_DAMAGE );
     }
 
     @Override

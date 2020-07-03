@@ -136,7 +136,7 @@ public class EntityHuman extends EntityCreature implements io.gomint.entity.pass
         this.metadataContainer.setDataFlag( MetadataContainer.DATA_INDEX, EntityFlag.BREATHING, true );
 
         // Sleeping stuff
-        this.setPlayerFlag( EntityFlag.PLAYER_SLEEP, false );
+        this.setPlayerFlag( EntityFlag.SLEEPING, false );
         this.metadataContainer.putPosition( DATA_PLAYER_BED_POSITION, 0, 0, 0 );
 
         // Exhaustion, saturation and food

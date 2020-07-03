@@ -34,7 +34,7 @@ public class ItemIronShovel extends ItemReduceTierIron implements io.gomint.inve
     public void gotInHand( EntityPlayer player ) {
         player
             .getAttributeInstance( Attribute.ATTACK_DAMAGE )
-            .setModifier( AttributeModifier.ITEM_ATTACK_DAMAGE, AttributeModifierType.ADDITION, 3 ); // 1 from shovel type, 2 from iron material
+            .setModifier( AttributeModifier.ITEM_ATTACK_DAMAGE, AttributeModifierType.ADDITION, 4 );
     }
 
     @Override

@@ -14,7 +14,6 @@ import io.gomint.server.registry.RegisterInfo;
  * @author KingAli
  * @version 1.0
  */
-@RegisterInfo(id = 464, sId = "minecraft:campfire")
 @RegisterInfo(id = 720, sId = "minecraft:campfire")
 public class ItemCampfire extends ItemStack implements io.gomint.inventory.item.ItemCampfire {
 

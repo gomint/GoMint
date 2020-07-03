@@ -11,8 +11,6 @@ import io.gomint.taglib.NBTTagCompound;
 @RegisterInfo( id = 265 )
  public class ItemIronIngot extends ItemStack implements io.gomint.inventory.item.ItemIronIngot {
 
-
-
     @Override
     public ItemType getType() {
         return ItemType.IRON_INGOT;

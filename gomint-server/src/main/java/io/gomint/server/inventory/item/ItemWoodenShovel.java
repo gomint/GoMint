@@ -38,7 +38,7 @@ public class ItemWoodenShovel extends ItemReduceTierWooden implements io.gomint.
     public void gotInHand( EntityPlayer player ) {
         player
             .getAttributeInstance( Attribute.ATTACK_DAMAGE )
-            .setModifier( AttributeModifier.ITEM_ATTACK_DAMAGE, AttributeModifierType.ADDITION, 1 ); // 1 from shovel type
+            .setModifier( AttributeModifier.ITEM_ATTACK_DAMAGE, AttributeModifierType.ADDITION, 2 );
     }
 
     @Override

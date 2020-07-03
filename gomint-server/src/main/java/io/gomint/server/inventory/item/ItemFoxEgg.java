@@ -9,6 +9,7 @@ import io.gomint.server.registry.RegisterInfo;
  */
 @RegisterInfo( id = 383 )
 public class ItemFoxEgg extends ItemStack implements io.gomint.inventory.item.ItemFoxEgg {
+
     @Override
     public ItemType getType() {
         return ItemType.FOXEGG;

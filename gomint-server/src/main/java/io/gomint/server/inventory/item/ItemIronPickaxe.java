@@ -6,7 +6,6 @@ import io.gomint.server.entity.AttributeModifier;
 import io.gomint.server.entity.AttributeModifierType;
 import io.gomint.server.entity.EntityPlayer;
 import io.gomint.server.registry.RegisterInfo;
-import io.gomint.taglib.NBTTagCompound;
 
 /**
  * @author geNAZt
@@ -14,9 +13,6 @@ import io.gomint.taglib.NBTTagCompound;
  */
 @RegisterInfo( id = 257 )
 public class ItemIronPickaxe extends ItemReduceTierIron implements io.gomint.inventory.item.ItemIronPickaxe {
-
-
-
 
     @Override
     public void gotInHand( EntityPlayer player ) {

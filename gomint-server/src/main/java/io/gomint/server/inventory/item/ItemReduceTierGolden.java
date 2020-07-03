@@ -1,7 +1,6 @@
 package io.gomint.server.inventory.item;
 import io.gomint.inventory.item.ItemReduceBreaktime;
 import io.gomint.server.inventory.item.annotation.UseDataAsDamage;
-import io.gomint.taglib.NBTTagCompound;
 
 /**
  * @author geNAZt
@@ -17,12 +16,12 @@ public abstract class ItemReduceTierGolden extends ItemStack implements ItemRedu
 
     @Override
     public float getDivisor() {
-        return 16;
+        return 12;
     }
 
     @Override
     public short getMaxDamage() {
-        return 33;
+        return 32;
     }
 
     @Override

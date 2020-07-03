@@ -26,7 +26,8 @@ public class BlockOfQuartz extends Block implements io.gomint.world.block.BlockB
         SMOOTH("smooth"),
         LINES("lines"),
         DEFAULT("default"),
-        CHISELED("chiseled");
+        CHISELED("chiseled"),
+        BRICKS("bricks");
 
         private final String value;
 

@@ -23,7 +23,9 @@ public class Plank extends Block implements BlockPlank {
         BIRCH("birch"),
         JUNGLE("jungle"),
         ACACIA("acacia"),
-        DARK_OAK("dark_oak");
+        DARK_OAK("dark_oak"),
+        CRIMSON("crimsion"),
+        WARPED("warped");
 
         private final String value;
         LogTypeMagic(String value) {

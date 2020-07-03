@@ -47,6 +47,7 @@ public class Log extends Block implements BlockLog {
         ACACIA(NEW_LOG_ID, NEW_LOG_TYPE, "acacia"),
         DARK_OAK(NEW_LOG_ID, NEW_LOG_TYPE, "dark_oak");
 
+
         private final String key;
         private final String value;
         private final String blockId;
@@ -226,7 +227,6 @@ public class Log extends Block implements BlockLog {
                 return LogType.ACACIA;
             case "minecraft:stripped_dark_oak_log":
                 return LogType.DARK_OAK;
-
         }
     }
 
