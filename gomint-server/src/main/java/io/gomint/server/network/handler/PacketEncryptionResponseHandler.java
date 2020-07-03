@@ -26,6 +26,8 @@ public class PacketEncryptionResponseHandler implements PacketHandler<PacketEncr
     public void handle( PacketEncryptionResponse packet, long currentTimeMillis, PlayerConnection connection ) {
         connection.getEntity().getLoginPerformance().setEncryptionEnd( currentTimeMillis );
 
+        LOGGER.debug("We got encryption response");
+
         connection.setState( PlayerConnectionState.LOGIN );
         connection.sendPlayState( PacketPlayState.PlayState.LOGIN_SUCCESS );
 

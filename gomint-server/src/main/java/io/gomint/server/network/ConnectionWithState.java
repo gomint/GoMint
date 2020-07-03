@@ -7,6 +7,7 @@
 
 package io.gomint.server.network;
 
+import io.gomint.crypto.Processor;
 import io.gomint.server.network.packet.Packet;
 
 /**
@@ -19,6 +20,6 @@ public interface ConnectionWithState {
     PlayerConnectionState getState();
     boolean isPlayer();
     int getProtocolID();
-    EncryptionHandler getEncryptionHandler();
+    Processor getOutputProcessor();
 
 }

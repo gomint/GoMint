@@ -26,7 +26,7 @@ public class PacketBatch extends Packet {
     private ByteBuf payload;
 
     public PacketBatch() {
-        super( Protocol.PACKET_BATCH );
+        super( Protocol.BATCH_MAGIC );
     }
 
     @Override
@@ -41,7 +41,7 @@ public class PacketBatch extends Packet {
 
     @Override
     public void serializeHeader( PacketBuffer buffer ) {
-        buffer.writeByte( this.getId() );
+        buffer.writeByte( Protocol.BATCH_MAGIC );
     }
 
 }

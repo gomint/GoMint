@@ -16,6 +16,7 @@ public class PacketInteract extends Packet {
     private InteractAction action;
     private long entityId;
     private Vector position;
+
     public PacketInteract() {
         super( Protocol.PACKET_INTERACT );
     }
@@ -36,7 +37,11 @@ public class PacketInteract extends Packet {
         this.entityId = buffer.readUnsignedVarLong();
 
         if ( this.action == InteractAction.MOUSEOVER ) {
-            this.position = readVector( buffer );
+            if ( buffer.getRemaining() > 0 ) {
+                this.position = readVector(buffer);
+            } else {
+                System.out.println("No position on mouseover interaction");
+            }
         }
     }
 

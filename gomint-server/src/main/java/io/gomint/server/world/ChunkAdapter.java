@@ -547,35 +547,7 @@ public class ChunkAdapter implements Chunk {
         packet.setSubChunkCount( topEmpty );
         packet.setData( buffer.getBuffer() );
 
-        // Don't pack the chunk if using TCP
-        if ( this.world.getServer().getServerConfig().getListener().isUseTCP() ) {
-            return packet;
-        }
-
-        return packChunk( packet );
-    }
-
-    private PacketBatch packChunk( PacketWorldChunk chunkPacket ) {
-        PacketBatch chunkPacketBatch = new PacketBatch();
-        PacketBuffer buffer = new PacketBuffer( 16 );
-        chunkPacket.serializeHeader( buffer );
-        chunkPacket.serialize( buffer, Protocol.MINECRAFT_PE_PROTOCOL_VERSION );
-
-        ByteBuf finalOut = PooledByteBufAllocator.DEFAULT.directBuffer(buffer.getWritePosition() + 5);
-        writeVarInt( buffer.getWritePosition(), finalOut );
-        finalOut.writeBytes( buffer.getBuffer() );
-        chunkPacketBatch.setPayload(finalOut.readerIndex(0));
-        buffer.release();
-        return chunkPacketBatch;
-    }
-
-    private void writeVarInt( int value, ByteBuf stream ) {
-        while ( ( value & -128 ) != 0 ) {
-            stream.writeByte( (byte) ( value & 127 | 128 ) );
-            value >>>= 7;
-        }
-
-        stream.writeByte( (byte) value );
+        return packet;
     }
 
     /**

@@ -15,7 +15,6 @@ public enum WindowMagicNumbers {
     LAST( 100 ),
     OFFHAND( 119 ),
     ARMOR( 120 ),
-    CREATIVE( 121 ),
     CURSOR( 124 );
 
     private final byte id;

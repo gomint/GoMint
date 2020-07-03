@@ -2,7 +2,7 @@ package io.gomint.server.inventory;
 
 import io.gomint.inventory.InventoryType;
 import io.gomint.server.network.PlayerConnection;
-import io.gomint.server.network.packet.PacketInventoryContent;
+import io.gomint.server.network.packet.PacketCreativeContent;
 
 /**
  * @author geNAZt
@@ -22,9 +22,8 @@ public class CreativeInventory extends Inventory {
 
     @Override
     public void sendContents( PlayerConnection playerConnection ) {
-        PacketInventoryContent inventoryContent = new PacketInventoryContent();
+        PacketCreativeContent inventoryContent = new PacketCreativeContent();
         inventoryContent.setItems( getContentsArray() );
-        inventoryContent.setWindowId( WindowMagicNumbers.CREATIVE.getId() );
         playerConnection.addToSendQueue( inventoryContent );
     }
 

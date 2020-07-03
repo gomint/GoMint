@@ -56,19 +56,13 @@ public class EncryptionHandler {
     // Holder for the server keypair
     private final EncryptionKeyFactory keyFactory;
 
-    // Packet counters
-    private AtomicLong sendingCounter = new AtomicLong( 0 );
-    private AtomicLong receiveCounter = new AtomicLong( 0 );
-
     // Client Side:
     private ECPublicKey clientPublicKey;
-    private Cipher clientEncryptor;
-    private Cipher clientDecryptor;
 
     // Data for packet and checksum calculations
-    @Getter
-    private byte[] clientSalt;
-    private byte[] key;
+    @Getter private byte[] clientSalt;
+    @Getter private byte[] key;
+    @Getter private byte[] iv;
 
     // Server side
     private PublicKey serverPublicKey;
@@ -102,7 +96,7 @@ public class EncryptionHandler {
      * @return Whether or not the setup completed successfully
      */
     public boolean beginClientsideEncryption() {
-        if ( this.clientEncryptor != null && this.clientDecryptor != null ) {
+        if ( this.key != null && this.clientSalt != null ) {
             // Already initialized:
             LOGGER.debug( "Already initialized" );
             return true;
@@ -120,43 +114,10 @@ public class EncryptionHandler {
 
         // Derive key as salted SHA-256 hash digest:
         this.key = this.hashSHA256( this.clientSalt, secret );
-        byte[] iv = this.takeBytesFromArray( this.key, 0, 16 );
+        this.iv = this.takeBytesFromArray( this.key, 0, 16 );
 
         // Initialize BlockCiphers:
-        this.clientEncryptor = this.createCipher( true, this.key, iv );
-        this.clientDecryptor = this.createCipher( false, this.key, iv );
         return true;
-    }
-
-    /**
-     * Decrypt data from the clients
-     *
-     * @param input RAW packet data from RakNet
-     * @return Either null when the data was corrupted or the decrypted data
-     */
-    public ByteBuf decryptInputFromClient(ByteBuf input) {
-        ByteBuf output = this.processCipher( this.clientDecryptor, input.nioBuffer(input.readerIndex(), input.readableBytes()) );
-        if ( output == null ) {
-            return null;
-        }
-
-        ByteBuffer nOutput = output.nioBuffer(0, output.readableBytes());
-        nOutput.position(0);
-        int oldLimit = nOutput.limit();
-        nOutput.limit(nOutput.limit() - 8);
-
-        byte[] hashBytes = calcHash( nOutput, this.key, this.receiveCounter );
-
-        nOutput.position(0);
-        nOutput.limit(oldLimit);
-
-        for ( int i = nOutput.limit() - 8; i < nOutput.limit(); i++ ) {
-            if ( hashBytes[i - ( nOutput.limit() - 8 )] != nOutput.get(i) ) {
-                return null;
-            }
-        }
-
-        return output.capacity(output.capacity() - 8);
     }
 
     /**
@@ -235,25 +196,6 @@ public class EncryptionHandler {
         output.writeBytes(hashBytes);
 
         ByteBuf encrypted = this.processCipher( this.serverEncryptor, output.nioBuffer() );
-        output.release();
-        return encrypted;
-    }
-
-    /**
-     * Encrypt data for the client
-     *
-     * @param input zlib compressed data
-     * @return data ready to be sent directly to the client
-     */
-    public ByteBuf encryptInputForClient( ByteBuffer input ) {
-        byte[] hashBytes = calcHash( input, this.key, this.sendingCounter );
-        input.position(0);
-
-        ByteBuf output = PooledByteBufAllocator.DEFAULT.directBuffer(8 + input.remaining());
-        output.writeBytes(input);
-        output.writeBytes(hashBytes, 0, 8);
-
-        ByteBuf encrypted = this.processCipher( this.clientEncryptor, output.nioBuffer() );
         output.release();
         return encrypted;
     }

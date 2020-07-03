@@ -266,11 +266,13 @@ public abstract class WorldAdapter implements World {
     public void setSpawnLocation(Location location) {
         this.spawn = Objects.requireNonNull(location, "Failed reassigning spawn location: Param 'location' is null");
 
-        PacketSetSpawnPosition packet = new PacketSetSpawnPosition();
-        packet.setSpawnType(PacketSetSpawnPosition.SpawnType.WORLD);
-        packet.setPosition(location.toBlockPosition());
-
-        this.broadcastPacket(packet);
+        for (io.gomint.server.entity.EntityPlayer player : this.players.keySet()) {
+            PacketSetSpawnPosition packet = new PacketSetSpawnPosition();
+            packet.setSpawnType(PacketSetSpawnPosition.SpawnType.WORLD);
+            packet.setPlayerPosition(player.getPosition().toBlockPosition());
+            packet.setWorldSpawn(location.toBlockPosition());
+            player.getConnection().addToSendQueue(packet);
+        }
     }
 
     @Override
@@ -845,10 +847,6 @@ public abstract class WorldAdapter implements World {
     public void updateBlock(BlockPosition pos) {
         // Players can't see unpopulated chunks
         ChunkAdapter adapter = this.getChunk(pos.getX() >> 4, pos.getZ() >> 4);
-        if (adapter == null) {
-            System.out.println(("?"));
-        }
-
         if (!adapter.isPopulated()) {
             return;
         }
@@ -859,7 +857,7 @@ public abstract class WorldAdapter implements World {
 
                 sendToVisible(pos, null, entity -> {
                     if (entity instanceof io.gomint.server.entity.EntityPlayer) {
-                        ((io.gomint.server.entity.EntityPlayer) entity).getBlockUpdates().add(pos);
+                        //((io.gomint.server.entity.EntityPlayer) entity).getBlockUpdates().add(pos);
                     }
 
                     return false;
@@ -870,7 +868,7 @@ public abstract class WorldAdapter implements World {
 
             sendToVisible(pos, null, entity -> {
                 if (entity instanceof io.gomint.server.entity.EntityPlayer) {
-                    ((io.gomint.server.entity.EntityPlayer) entity).getBlockUpdates().add(pos);
+                    //((io.gomint.server.entity.EntityPlayer) entity).getBlockUpdates().add(pos);
                 }
 
                 return false;
@@ -1504,6 +1502,10 @@ public abstract class WorldAdapter implements World {
             io.gomint.server.entity.EntityPlayer handle = (io.gomint.server.entity.EntityPlayer) player;
             handle.getConnection().send(packet);
         }
+    }
+
+    public int getDimension() {
+        return 0; // TODO: Implement peoper dimensions
     }
 
 }

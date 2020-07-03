@@ -19,6 +19,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Consumer;
 
 /**
  * @author geNAZt
@@ -44,8 +45,8 @@ public class PostProcessExecutor implements Runnable {
         this.future = executorService.submit( this );
     }
 
-    public void addWork( ConnectionWithState connection, Packet[] packets ) {
-        this.workers.offer( new PostProcessWorker( connection, packets ) );
+    public void addWork(ConnectionWithState connection, Packet[] packets, Consumer<Void> callback) {
+        this.workers.offer( new PostProcessWorker( connection, packets, callback ) );
 
         synchronized ( this.waiter ) {
             this.waiter.notifyAll();

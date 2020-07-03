@@ -245,12 +245,12 @@ public class NetworkManager {
      * @param packetId The ID of the packet
      * @param buffer   The packet's contents without its ID
      */
-    void notifyUnknownPacket(byte packetId, PacketBuffer buffer) {
-        ReportUploader.create().property("network.unknown_packet", "0x" + Integer.toHexString(((int) packetId) & 0xFF)).upload("Unknown packet 0x" + Integer.toHexString(((int) packetId) & 0xFF));
+    void notifyUnknownPacket(int packetId, PacketBuffer buffer) {
+        ReportUploader.create().property("network.unknown_packet", "0x" + Integer.toHexString(packetId & 0xFF)).upload("Unknown packet 0x" + Integer.toHexString(((int) packetId) & 0xFF));
 
         if (this.dump) {
             if (LOGGER.isInfoEnabled()) {
-                LOGGER.info("Received unknown packet 0x{}", Integer.toHexString(((int) packetId) & 0xFF));
+                LOGGER.info("Received unknown packet 0x{}", Integer.toHexString(packetId & 0xFF));
             }
 
             this.dumpPacket(packetId, buffer);
@@ -336,12 +336,12 @@ public class NetworkManager {
         }
     }
 
-    private void dumpPacket(byte packetId, PacketBuffer buffer) {
+    private void dumpPacket(int packetId, PacketBuffer buffer) {
         if (LOGGER.isInfoEnabled()) {
-            LOGGER.info("Dumping packet {}", Integer.toHexString(((int) packetId) & 0xFF));
+            LOGGER.info("Dumping packet {}", Integer.toHexString(packetId));
         }
 
-        StringBuilder filename = new StringBuilder(Integer.toHexString(((int) packetId) & 0xFF));
+        StringBuilder filename = new StringBuilder(Integer.toHexString(packetId));
         while (filename.length() < 2) {
             filename.insert(0, "0");
         }
@@ -354,7 +354,7 @@ public class NetworkManager {
         // Dump buffer contents:
         try (OutputStream out = new FileOutputStream(dumpFile)) {
             try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(out))) {
-                writer.write("# Packet dump of 0x" + Integer.toHexString(((int) packetId) & 0xFF) + "\n");
+                writer.write("# Packet dump of 0x" + Integer.toHexString(packetId) + "\n");
                 writer.write("-------------------------------------\n");
                 writer.write("# Textual payload\n");
                 StringBuilder lineBuilder = new StringBuilder();

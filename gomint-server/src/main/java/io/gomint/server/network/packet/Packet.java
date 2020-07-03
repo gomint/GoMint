@@ -48,14 +48,14 @@ public abstract class Packet {
     /**
      * Internal MC:PE id of this packet
      */
-    protected final byte id;
+    protected final int id;
 
     /**
      * Construct a new packet
      *
      * @param id of the packet
      */
-    protected Packet(byte id) {
+    protected Packet(int id) {
         this.id = id;
     }
 
@@ -120,6 +120,23 @@ public abstract class Packet {
         return itemStack;
     }
 
+    public static ItemStack readItemStackWithID(PacketBuffer buffer) {
+        int id = buffer.readSignedVarInt();
+        io.gomint.server.inventory.item.ItemStack serverItemStack = (io.gomint.server.inventory.item.ItemStack) readItemStack(buffer);
+        if (serverItemStack != null) {
+            serverItemStack.setID(id);
+        }
+
+        return serverItemStack;
+    }
+
+    public static void writeItemStackWithID(ItemStack itemStack, PacketBuffer buffer) {
+        io.gomint.server.inventory.item.ItemStack serverItemStack = (io.gomint.server.inventory.item.ItemStack) itemStack;
+
+        buffer.writeSignedVarInt(serverItemStack.getID());
+        writeItemStack(itemStack, buffer);
+    }
+
     /**
      * Write a item stack to the packet buffer
      *
@@ -127,7 +144,7 @@ public abstract class Packet {
      * @param buffer    which should be used to write to
      */
     public static void writeItemStack(ItemStack itemStack, PacketBuffer buffer) {
-        if (itemStack == null || itemStack instanceof ItemAir) {
+        if (itemStack instanceof ItemAir) {
             buffer.writeSignedVarInt(0);
             return;
         }
@@ -176,7 +193,7 @@ public abstract class Packet {
      *
      * @return The packet's ID
      */
-    public byte getId() {
+    public int getId() {
         return this.id;
     }
 
@@ -236,6 +253,42 @@ public abstract class Packet {
 
         for (int i = 0; i < count; i++) {
             itemStacks[i] = readItemStack(buffer);
+        }
+
+        return itemStacks;
+    }
+
+    /**
+     * Write a array of item stacks to the buffer
+     *
+     * @param itemStacks which should be written to the buffer
+     * @param buffer     which should be written to
+     */
+    void writeItemStacksWithIDs(ItemStack[] itemStacks, PacketBuffer buffer) {
+        if (itemStacks == null || itemStacks.length == 0) {
+            buffer.writeUnsignedVarInt(0);
+            return;
+        }
+
+        buffer.writeUnsignedVarInt(itemStacks.length);
+
+        for (ItemStack itemStack : itemStacks) {
+            writeItemStackWithID(itemStack, buffer);
+        }
+    }
+
+    /**
+     * Read in a variable amount of itemstacks
+     *
+     * @param buffer The buffer to read from
+     * @return a list of item stacks
+     */
+    ItemStack[] readItemStacksWithIDs(PacketBuffer buffer) {
+        int count = buffer.readUnsignedVarInt();
+        ItemStack[] itemStacks = new ItemStack[count];
+
+        for (int i = 0; i < count; i++) {
+            itemStacks[i] = readItemStackWithID(buffer);
         }
 
         return itemStacks;

@@ -8,6 +8,7 @@
 package io.gomint.server.world.generator.vanilla.client;
 
 import com.google.common.util.concurrent.ListenableFuture;
+import io.gomint.crypto.Processor;
 import io.gomint.jraknet.ClientSocket;
 import io.gomint.jraknet.Connection;
 import io.gomint.jraknet.PacketBuffer;
@@ -68,8 +69,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.net.SocketException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -83,7 +82,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 import java.util.zip.DataFormatException;
 
-import static io.gomint.server.network.Protocol.PACKET_BATCH;
 import static io.gomint.server.network.Protocol.PACKET_ENCRYPTION_REQUEST;
 import static io.gomint.server.network.Protocol.PACKET_MOVE_PLAYER;
 import static io.gomint.server.network.Protocol.PACKET_PLAY_STATE;
@@ -166,7 +164,7 @@ public class Client implements ConnectionWithState {
 
                         // Check if packet is batched
                         byte packetId = packetData.getPacketData().readByte();
-                        if ( packetId == Protocol.PACKET_BATCH ) {
+                        if ( packetId == Protocol.BATCH_MAGIC ) {
                             // Decompress and decrypt
                             ByteBuf pureData = handleBatchPacket( packetData.getPacketData() );
 
@@ -253,7 +251,7 @@ public class Client implements ConnectionWithState {
 
     public void send( Packet packet ) {
         if ( !( packet instanceof PacketBatch ) ) {
-            this.postProcessExecutor.addWork( this, new Packet[]{ packet } );
+            this.postProcessExecutor.addWork( this, new Packet[]{ packet }, null);
         } else {
             try {
                 PacketBuffer buffer = new PacketBuffer( 32 );
@@ -283,8 +281,8 @@ public class Client implements ConnectionWithState {
     }
 
     @Override
-    public EncryptionHandler getEncryptionHandler() {
-        return this.encryptionHandler;
+    public Processor getOutputProcessor() {
+        return null;
     }
 
     private void internalClose( String message ) {
@@ -385,8 +383,9 @@ public class Client implements ConnectionWithState {
         byte packetId = (byte) buffer.readUnsignedVarInt();
 
         // There is some data behind the packet id when non batched packets (2 bytes)
-        if ( packetId == PACKET_BATCH ) {
+        if ( packetId == Protocol.BATCH_MAGIC ) {
             LOGGER.error( "Malformed batch packet payload: Batch packets are not allowed to contain further batch packets" );
+            return;
         }
 
         if ( packetId == PACKET_WORLD_CHUNK ) {

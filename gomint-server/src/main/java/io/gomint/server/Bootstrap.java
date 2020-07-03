@@ -57,6 +57,9 @@ public class Bootstrap {
             System.exit(-1);
         }
 
+        // Enable reflection access to JDK NIO buffers for netty
+        System.setProperty( "io.netty.tryReflectionSetAccessible","true");
+
         // Setup additional debug
         if ("true".equals(System.getProperty("gomint.debug_events"))) {
             Configurator.setLevel("io.gomint.server.event.EventHandlerList", Level.DEBUG);

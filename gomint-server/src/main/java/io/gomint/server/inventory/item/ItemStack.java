@@ -44,6 +44,7 @@ public abstract class ItemStack implements Cloneable, io.gomint.inventory.item.I
 
     private static final Logger LOGGER = LoggerFactory.getLogger( ItemStack.class );
 
+    private int id;
     private int material;
     private short data;
     private byte amount;
@@ -524,6 +525,18 @@ public abstract class ItemStack implements Cloneable, io.gomint.inventory.item.I
      */
     public void writeAdditionalData(PacketBuffer buffer) {
 
+    }
+
+    public int getID() {
+        if (this.id > 1) {
+            return this.id;
+        }
+
+        return this.amount == 0 || this instanceof ItemAir ? 0 : 1; // TODO: implement authoritative inventories
+    }
+
+    public void setID(int id) {
+        this.id = id;
     }
 
 }

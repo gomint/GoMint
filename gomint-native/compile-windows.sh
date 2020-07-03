@@ -1,5 +1,5 @@
 #!/bin/sh
-CXX="g++ -s -shared -static -fPIC -static-libgcc -static-libstdc++ -D_WIN32_WINNT=0x0600 -D_WIN32_WINDOWS=0x0600 -fPIC -O3 -Wall -Werror -I$JAVA_HOME/include/ -I$JAVA_HOME/include/win32/"
+CXX="g++ -s -shared -static -fPIC -static-libgcc -static-libstdc++ -D_WIN32_WINNT=0x0600 -D_WIN32_WINDOWS=0x0600 -fPIC -O3 -Wall -Werror -I./src/main/c/include/ -I./src/main/c/include/win32/"
 
 echo $CXX
 $CXX src/main/c/zlib.cpp -o src/main/resources/zlib.dll -lz

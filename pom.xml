@@ -32,7 +32,6 @@
     <module>gomint-test-plugin</module>
     <module>gomint-performance-viewer</module>
     <module>gomint-native</module>
-    <module>gomint-asset-compiler</module>
     <module>gomint-safeexec</module>
   </modules>
 

@@ -9,6 +9,7 @@ package io.gomint.server.network;
 
 import io.gomint.ChatColor;
 import io.gomint.GoMint;
+import io.gomint.crypto.Processor;
 import io.gomint.event.player.PlayerCleanedupEvent;
 import io.gomint.event.player.PlayerKickEvent;
 import io.gomint.event.player.PlayerQuitEvent;
@@ -22,10 +23,6 @@ import io.gomint.math.MathUtils;
 import io.gomint.player.DeviceInfo;
 import io.gomint.server.GoMintServer;
 import io.gomint.server.entity.EntityPlayer;
-import io.gomint.server.jni.NativeCode;
-import io.gomint.server.jni.zlib.JavaZLib;
-import io.gomint.server.jni.zlib.NativeZLib;
-import io.gomint.server.jni.zlib.ZLib;
 import io.gomint.server.maintenance.ReportUploader;
 import io.gomint.server.network.handler.*;
 import io.gomint.server.network.packet.Packet;
@@ -58,8 +55,8 @@ import io.gomint.server.world.ChunkAdapter;
 import io.gomint.server.world.CoordinateUtils;
 import io.gomint.server.world.WorldAdapter;
 import io.gomint.util.random.FastRandom;
+import io.gomint.world.Biome;
 import io.netty.buffer.ByteBuf;
-import io.netty.buffer.PooledByteBufAllocator;
 import it.unimi.dsi.fastutil.longs.LongIterator;
 import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
 import it.unimi.dsi.fastutil.longs.LongSet;
@@ -72,13 +69,12 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import java.nio.ByteBuffer;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.zip.DataFormatException;
+import java.util.function.Consumer;
 
-import static io.gomint.server.network.Protocol.PACKET_BATCH;
+import static io.gomint.server.network.Protocol.BATCH_MAGIC;
 import static io.gomint.server.network.Protocol.PACKET_ENCRYPTION_RESPONSE;
 import static io.gomint.server.network.Protocol.PACKET_LOGIN;
 import static io.gomint.server.network.Protocol.PACKET_RESOURCEPACK_RESPONSE;
@@ -92,15 +88,9 @@ import static io.gomint.server.network.Protocol.PACKET_RESOURCEPACK_RESPONSE;
 public class PlayerConnection implements ConnectionWithState {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PlayerConnection.class);
-    private static final NativeCode<ZLib> ZLIB = new NativeCode<>("zlib", JavaZLib.class, NativeZLib.class);
 
     private static boolean packetHandlersInit = false;
     private static final PacketHandler[] PACKET_HANDLERS = new PacketHandler[256];
-
-    static {
-        // Load zlib native
-        ZLIB.load();
-    }
 
     // Network manager that created this connection:
     private final NetworkManager networkManager;
@@ -117,9 +107,6 @@ public class PlayerConnection implements ConnectionWithState {
     @Getter
     private final LongSet loadingChunks;
     @Getter
-    @Setter
-    private EncryptionHandler encryptionHandler;
-    @Getter
     private GoMintServer server;
     @Setter
     @Getter
@@ -129,7 +116,6 @@ public class PlayerConnection implements ConnectionWithState {
     @Setter
     private int tcpPing;
     private PostProcessExecutor postProcessorExecutor;
-    private ZLib decompressor;
 
     // Connection State:
     @Getter
@@ -162,6 +148,12 @@ public class PlayerConnection implements ConnectionWithState {
     @Getter
     private AtomicInteger responseChunks = new AtomicInteger(0);
 
+    // Processors
+    @Getter
+    private Processor inputProcessor = new Processor(false);
+    @Getter
+    private Processor outputProcessor = new Processor(true);
+
     /**
      * Constructs a new player connection.
      *
@@ -184,9 +176,6 @@ public class PlayerConnection implements ConnectionWithState {
 
         // Attach data processor if needed
         if (this.connection != null) {
-            this.decompressor = ZLIB.newInstance();
-            this.decompressor.init(false, false, 7); // Level doesn't matter
-
             this.postProcessorExecutor = networkManager.getPostProcessService().getExecutor();
             this.connection.addDataProcessor(packetData -> {
                 if (packetData.getPacketData().readableBytes() <= 0) {
@@ -196,7 +185,7 @@ public class PlayerConnection implements ConnectionWithState {
 
                 // Check if packet is batched
                 byte packetId = packetData.getPacketData().readByte();
-                if (packetId == Protocol.PACKET_BATCH) {
+                if (packetId == Protocol.BATCH_MAGIC) {
                     // Decompress and decrypt
                     ByteBuf pureData = handleBatchPacket(packetData.getPacketData());
                     EncapsulatedPacket newPacket = new EncapsulatedPacket();
@@ -408,7 +397,7 @@ public class PlayerConnection implements ConnectionWithState {
         // Send all queued packets
         if (this.connection != null) {
             if (this.sendQueue != null && !this.sendQueue.isEmpty()) {
-                this.postProcessorExecutor.addWork(this, this.sendQueue.toArray(new Packet[0]));
+                this.postProcessorExecutor.addWork(this, this.sendQueue.toArray(new Packet[0]), null);
                 this.sendQueue.clear();
             }
         } else {
@@ -488,15 +477,15 @@ public class PlayerConnection implements ConnectionWithState {
      *
      * @param packet The packet which should be send to the player
      */
-    public void send(Packet packet) {
+    public void send(Packet packet, Consumer<Void> callback) {
         if (this.connection != null) {
             if (!(packet instanceof PacketBatch)) {
-                this.postProcessorExecutor.addWork(this, new Packet[]{packet});
+                this.postProcessorExecutor.addWork(this, new Packet[]{packet}, callback);
             } else {
                 // CHECKSTYLE:OFF
                 try {
                     PacketBuffer buffer = new PacketBuffer(64);
-                    buffer.writeByte(packet.getId());
+                    packet.serializeHeader(buffer);
                     packet.serialize(buffer, this.protocolID);
 
                     this.connection.send(PacketReliability.RELIABLE_ORDERED, packet.orderingChannel(), buffer);
@@ -523,6 +512,11 @@ public class PlayerConnection implements ConnectionWithState {
             }
             // CHECKSTYLE:ON
         }
+    }
+
+    @Override
+    public void send(Packet packet) {
+        this.send(packet, null);
     }
 
     @Override
@@ -599,11 +593,12 @@ public class PlayerConnection implements ConnectionWithState {
     private void handleBufferData(long currentTimeMillis, PacketBuffer buffer) {
         // Grab the packet ID from the packet's data
         int rawId = buffer.readUnsignedVarInt();
-        byte packetId = (byte) rawId;
+        int packetId = rawId & 0x3FF;
 
         // There is some data behind the packet id when non batched packets (2 bytes)
-        if (packetId == PACKET_BATCH) {
+        if (packetId == BATCH_MAGIC) {
             LOGGER.error("Malformed batch packet payload: Batch packets are not allowed to contain further batch packets");
+            return;
         }
 
         LOGGER.debug("Got MCPE packet {}", Integer.toHexString(packetId & 0xFF));
@@ -697,31 +692,7 @@ public class PlayerConnection implements ConnectionWithState {
      * @return decompressed and decrypted data
      */
     private ByteBuf handleBatchPacket(ByteBuf buffer) {
-        // Encrypted?
-        ByteBuf input = buffer;
-
-        if (this.encryptionHandler != null) {
-            input = this.encryptionHandler.decryptInputFromClient(input);
-            if (input == null) {
-                // Decryption error
-                disconnect("Checksum of encrypted packet was wrong");
-                return null;
-            }
-        }
-
-        ByteBuf outBuf = PooledByteBufAllocator.DEFAULT.directBuffer(8192); // We will write at least once so ensureWrite will realloc to 8192 so or so
-
-        try {
-            this.decompressor.process(input.nioBuffer(), outBuf);
-        } catch (DataFormatException e) {
-            LOGGER.error("Failed to decompress batch packet", e);
-            outBuf.release();
-            return null;
-        } finally {
-            input.release();
-        }
-
-        return outBuf;
+        return this.inputProcessor.process(buffer);
     }
 
     /**
@@ -953,7 +924,7 @@ public class PlayerConnection implements ConnectionWithState {
         move.setHeadYaw(location.getHeadYaw());
         move.setYaw(location.getYaw());
         move.setPitch(location.getPitch());
-        move.setMode( MovePlayerMode.TELEPORT );
+        move.setMode(MovePlayerMode.TELEPORT);
         move.setOnGround(this.getEntity().isOnGround());
         move.setRidingEntityId(0);    // TODO: Implement riding entities correctly
         this.addToSendQueue(move);
@@ -984,20 +955,20 @@ public class PlayerConnection implements ConnectionWithState {
         packet.setRuntimeEntityId(this.entity.getEntityId());
         packet.setGamemode(EnumConnectors.GAMEMODE_CONNECTOR.convert(this.entity.getGamemode()).getMagicNumber());
 
-        if (this.entity.getSpawnLocation() != null) {
-            packet.setSpawn(this.entity.getSpawnLocation().add(0, this.entity.getOffsetY(), 0));
-            packet.setX((int) this.entity.getSpawnLocation().getX());
-            packet.setY((int) (this.entity.getSpawnLocation().getY() + this.entity.getOffsetY()));
-            packet.setZ((int) this.entity.getSpawnLocation().getZ());
-        } else {
-            packet.setSpawn(world.getSpawnLocation().add(0, this.entity.getOffsetY(), 0));
-            packet.setX((int) world.getSpawnLocation().getX());
-            packet.setY((int) (world.getSpawnLocation().getY() + this.entity.getOffsetY()));
-            packet.setZ((int) world.getSpawnLocation().getZ());
-        }
+        Location spawn = this.entity.getSpawnLocation() != null ? this.entity.getSpawnLocation() : world.getSpawnLocation();
+
+        packet.setSpawn(spawn.add(0, this.entity.getOffsetY(), 0));
+        packet.setX((int) spawn.getX());
+        packet.setY((int) (spawn.getY() + this.entity.getOffsetY()));
+        packet.setZ((int) spawn.getZ());
 
         packet.setWorldGamemode(0);
+
+        Biome biome = world.getBiome(spawn.toBlockPosition());
+        packet.setBiomeType(PacketStartGame.BIOME_TYPE_DEFAULT);
+        packet.setBiomeName(biome.getName());
         packet.setDimension(0);
+
         packet.setSeed(12345);
         packet.setGenerator(1);
         packet.setDifficulty(this.entity.getWorld().getDifficulty().getDifficultyDegree());
@@ -1069,16 +1040,18 @@ public class PlayerConnection implements ConnectionWithState {
     public void sendPlayerSpawnPosition() {
         PacketSetSpawnPosition spawnPosition = new PacketSetSpawnPosition();
         spawnPosition.setSpawnType(PacketSetSpawnPosition.SpawnType.PLAYER);
-        spawnPosition.setForce(false);
-        spawnPosition.setPosition(this.getEntity().getSpawnLocation().toBlockPosition());
+        spawnPosition.setPlayerPosition(this.getEntity().getPosition().toBlockPosition());
+        spawnPosition.setDimension(this.entity.getWorld().getDimension());
+        spawnPosition.setWorldSpawn(this.getEntity().getWorld().getSpawnLocation().toBlockPosition());
         addToSendQueue(spawnPosition);
     }
 
     public void sendSpawnPosition() {
         PacketSetSpawnPosition spawnPosition = new PacketSetSpawnPosition();
         spawnPosition.setSpawnType(PacketSetSpawnPosition.SpawnType.WORLD);
-        spawnPosition.setForce(false);
-        spawnPosition.setPosition(this.getEntity().getWorld().getSpawnLocation().toBlockPosition());
+        spawnPosition.setPlayerPosition(this.getEntity().getPosition().toBlockPosition());
+        spawnPosition.setDimension(this.entity.getWorld().getDimension());
+        spawnPosition.setWorldSpawn(this.getEntity().getWorld().getSpawnLocation().toBlockPosition());
         addToSendQueue(spawnPosition);
     }
 

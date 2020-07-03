@@ -297,14 +297,22 @@ public class PacketLoginHandler implements PacketHandler<PacketLogin> {
                         if (encryptionHandler.beginClientsideEncryption()) {
                             // Get the needed data for the encryption start
                             connection.setState(PlayerConnectionState.ENCRPYTION_INIT);
-                            connection.setEncryptionHandler(encryptionHandler);
+
+                            byte[] key = encryptionHandler.getKey();
+                            byte[] iv = encryptionHandler.getIv();
+
+                            // We need every packet to be encrypted from now on
+                            connection.getInputProcessor().enableCrypto(key, iv);
 
                             // Forge a JWT
                             String encryptionRequestJWT = FORGER.forge(encryptionHandler.getServerPublic(), encryptionHandler.getServerPrivate(), encryptionHandler.getClientSalt());
 
+                            // Tell the client to enable encryption after sending that packet we also enable it
                             PacketEncryptionRequest packetEncryptionRequest = new PacketEncryptionRequest();
                             packetEncryptionRequest.setJwt(encryptionRequestJWT);
-                            connection.send(packetEncryptionRequest);
+                            connection.send(packetEncryptionRequest, aVoid -> {
+                                connection.getOutputProcessor().enableCrypto(key, iv);
+                            });
                         }
 
                         connection.getServer().getWatchdog().done();

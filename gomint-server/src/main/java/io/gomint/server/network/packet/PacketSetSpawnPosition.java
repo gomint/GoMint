@@ -25,25 +25,27 @@ public class PacketSetSpawnPosition extends Packet {
     }
 
     private SpawnType spawnType;
-    private BlockPosition position;
-    private boolean force;
+    private BlockPosition playerPosition;
+    private int dimension;
+    private BlockPosition worldSpawn;
 
     /**
      * Construct a new packet
      */
     public PacketSetSpawnPosition() {
-        super( Protocol.PACKET_SET_SPAWN_POSITION );
+        super(Protocol.PACKET_SET_SPAWN_POSITION);
     }
 
     @Override
-    public void serialize( PacketBuffer buffer, int protocolID ) {
-        buffer.writeSignedVarInt( this.spawnType.ordinal() );
-        writeBlockPosition( this.position, buffer );
-        buffer.writeBoolean( this.force );
+    public void serialize(PacketBuffer buffer, int protocolID) {
+        buffer.writeSignedVarInt(this.spawnType.ordinal());
+        writeBlockPosition(this.playerPosition, buffer);
+        buffer.writeSignedVarInt(this.dimension);
+        writeBlockPosition(this.worldSpawn, buffer);
     }
 
     @Override
-    public void deserialize( PacketBuffer buffer, int protocolID ) {
+    public void deserialize(PacketBuffer buffer, int protocolID) {
 
     }
 

@@ -21,13 +21,13 @@ public class PacketInventoryContent extends Packet {
     @Override
     public void serialize( PacketBuffer buffer, int protocolID ) {
         buffer.writeUnsignedVarInt( this.windowId );
-        writeItemStacks( this.items, buffer );
+        writeItemStacksWithIDs( this.items, buffer );
     }
 
     @Override
     public void deserialize( PacketBuffer buffer, int protocolID ) {
         this.windowId = buffer.readUnsignedVarInt();
-        this.items = readItemStacks( buffer );
+        this.items = readItemStacksWithIDs( buffer );
     }
 
 }

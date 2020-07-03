@@ -94,7 +94,7 @@ public class AssetsLibrary {
         byte[] data = in.readAllBytes();
 
         ByteBuf buf = Allocator.allocate(data);
-        NBTTagCompound root = NBTTagCompound.readFrom(buf, true, ByteOrder.BIG_ENDIAN);
+        NBTTagCompound root = NBTTagCompound.readFrom(buf, false, ByteOrder.BIG_ENDIAN);
         if (GoMint.instance() != null) {
             this.loadRecipes((List<NBTTagCompound>) ((List) root.getList("recipes", false)));
             this.loadCreativeInventory((List<byte[]>) ((List) root.getList("creativeInventory", false)));
@@ -139,11 +139,18 @@ public class AssetsLibrary {
         if (GoMint.instance() != null) {
             this.creativeInventory = new CreativeInventory(null, raw.size());
 
+            int index = 1;
             for (byte[] bytes : raw) {
                 try {
                     ByteBuf i = PooledByteBufAllocator.DEFAULT.directBuffer(bytes.length);
                     i.writeBytes(bytes);
-                    this.creativeInventory.addItem(this.loadItemStack(new PacketBuffer(i)));
+
+                    ItemStack itemStack = this.loadItemStack(new PacketBuffer(i));
+                    if (itemStack != null) {
+                        itemStack.setID(index++);
+                        this.creativeInventory.addItem(itemStack);
+                    }
+
                     i.release(2);
                 } catch (IOException | AllocationLimitReachedException e) {
                     LOGGER.error("Could not load creative item: ", e);
