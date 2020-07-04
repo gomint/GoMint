@@ -45,6 +45,11 @@ public class PacketInventoryTransaction extends Packet {
     private Vector vector1;
     private Vector vector2;
 
+    // New request id and changes slot (1.16)
+    private int requestId;
+    private ChangeSlot changeSlot;
+    private boolean hasItemstackIDs;
+
     /**
      * Construct a new packet
      */
@@ -59,7 +64,14 @@ public class PacketInventoryTransaction extends Packet {
 
     @Override
     public void deserialize( PacketBuffer buffer, int protocolID ) {
+        this.requestId = buffer.readSignedVarInt();
+        if (this.requestId != 0) {
+            this.changeSlot = new ChangeSlot();
+            this.changeSlot.deserialize(buffer);
+        }
+
         this.type = buffer.readUnsignedVarInt();
+        this.hasItemstackIDs = buffer.readBoolean();
 
         // Read transaction action(s)
         int actionCount = buffer.readUnsignedVarInt();
@@ -105,6 +117,25 @@ public class PacketInventoryTransaction extends Packet {
     }
 
     @Data
+    public class ChangeSlot {
+        private byte containerId;
+        private byte[] changedSlots;
+
+        /**
+         * Deserialize a transaction action
+         *
+         * @param buffer Data from the packet
+         */
+        public void deserialize( PacketBuffer buffer ) {
+            this.containerId = buffer.readByte();
+
+            int count = buffer.readUnsignedVarInt();
+            this.changedSlots = new byte[count];
+            buffer.readBytes(this.changedSlots);
+        }
+    }
+
+    @Data
     public class NetworkTransaction {
 
         private static final int SOURCE_CONTAINER = 0;
@@ -119,6 +150,9 @@ public class PacketInventoryTransaction extends Packet {
         private int slot;
         private ItemStack oldItem;
         private ItemStack newItem;
+
+        // Itemstack id for the new item (1.16)
+        private int newItemStackID;
 
         /**
          * Deserialize a transaction action
@@ -146,6 +180,7 @@ public class PacketInventoryTransaction extends Packet {
             this.slot = buffer.readUnsignedVarInt();
             this.oldItem = readItemStack( buffer );
             this.newItem = readItemStack( buffer );
+            this.newItemStackID = buffer.readSignedVarInt();
         }
 
     }

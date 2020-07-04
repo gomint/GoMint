@@ -2,6 +2,7 @@ package io.gomint.server.network.packet;
 
 import io.gomint.inventory.item.ItemStack;
 import io.gomint.jraknet.PacketBuffer;
+import io.gomint.server.entity.metadata.MetadataContainer;
 import io.gomint.server.network.Protocol;
 import lombok.Data;
 
@@ -20,6 +21,7 @@ public class PacketAddItemEntity extends Packet {
     private float motionX;
     private float motionY;
     private float motionZ;
+    private MetadataContainer metadata;
     private boolean fromFishing;
 
     public PacketAddItemEntity() {
@@ -44,6 +46,8 @@ public class PacketAddItemEntity extends Packet {
         buffer.writeLFloat( this.motionX );
         buffer.writeLFloat( this.motionY );
         buffer.writeLFloat( this.motionZ );
+
+        this.metadata.serialize( buffer );
 
         // Write fromFishing
         buffer.writeBoolean( this.fromFishing );

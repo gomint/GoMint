@@ -134,6 +134,7 @@ public class EntityItem extends Entity implements EntityItemDrop {
         packetAddItemEntity.setMotionX( this.getMotionX() );
         packetAddItemEntity.setMotionY( this.getMotionY() );
         packetAddItemEntity.setMotionZ( this.getMotionZ() );
+        packetAddItemEntity.setMetadata( this.getMetadata() );
         return packetAddItemEntity;
     }
 
