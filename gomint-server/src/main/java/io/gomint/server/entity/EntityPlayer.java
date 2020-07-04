@@ -740,7 +740,6 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
 
         this.windowIds = new Byte2ObjectOpenHashMap<>();
         this.containerIds = new Object2ByteOpenHashMap<>();
-        // this.connection.getServer().getCreativeInventory().addViewer(this);
 
         // this.connection.addToSendQueue(this.world.getServer().getRecipeManager().getCraftingRecipesBatch());
 
@@ -753,6 +752,8 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
             add(new PacketPlayerlist.Entry(EntityPlayer.this));
         }});
         this.getConnection().addToSendQueue(playerlist);
+
+        this.connection.getServer().getCreativeInventory().addViewer(this);
 
         LOGGER.debug("Did send all prepare entity data");
     }

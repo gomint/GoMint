@@ -27,13 +27,7 @@ public class PacketCreativeContent extends Packet {
 
     @Override
     public void serialize(PacketBuffer buffer, int protocolID) throws Exception {
-        buffer.writeUnsignedVarInt(this.items.length);
-
-        for (ItemStack item : this.items) {
-            io.gomint.server.inventory.item.ItemStack serverItem = (io.gomint.server.inventory.item.ItemStack) item;
-            buffer.writeUnsignedVarInt(serverItem.getID());
-            writeItemStack(item, buffer);
-        }
+        writeItemStacksWithIDs(this.items, buffer);
     }
 
     @Override

@@ -26,6 +26,8 @@ import io.gomint.world.Gamerule;
 import io.gomint.world.block.data.Facing;
 import io.netty.buffer.ByteBufInputStream;
 import org.json.simple.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -43,6 +45,7 @@ import java.util.Map;
  */
 public abstract class Packet {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(Packet.class);
     private static final float BYTE_ROTATION_DIVIDOR = 360f / 256f;
 
     /**
@@ -168,7 +171,7 @@ public abstract class Packet {
                 nbtWriter.setUseVarint(true);
                 nbtWriter.write(compound);
             } catch (IOException e) {
-                buffer.writeLShort((short) 0);
+                LOGGER.warn("Could not write NBT Tag", e);
             }
         }
 
