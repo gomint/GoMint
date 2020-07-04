@@ -22,7 +22,7 @@ public class PacketContainerClose extends Packet {
 
     @Override
     public void serialize( PacketBuffer buffer, int protocolID ) {
-
+        buffer.writeByte( this.windowId );
     }
 
     @Override

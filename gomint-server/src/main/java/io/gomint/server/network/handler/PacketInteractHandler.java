@@ -17,6 +17,11 @@ public class PacketInteractHandler implements PacketHandler<PacketInteract> {
                 connection.getEntity().setHoverEntity( entity );
             }
         }
+
+        // Player requested to open their own inventory?
+        if ( packet.getAction() == PacketInteract.InteractAction.OPEN_INVENTORY ) {
+            connection.getEntity().openInventory(connection.getEntity().getInventory());
+        }
     }
 
 }

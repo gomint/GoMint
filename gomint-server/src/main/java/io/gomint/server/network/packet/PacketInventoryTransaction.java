@@ -78,7 +78,7 @@ public class PacketInventoryTransaction extends Packet {
         this.actions = new NetworkTransaction[actionCount];
         for ( int i = 0; i < actionCount; i++ ) {
             NetworkTransaction networkTransaction = new NetworkTransaction();
-            networkTransaction.deserialize( buffer );
+            networkTransaction.deserialize( buffer, this.hasItemstackIDs );
             this.actions[i] = networkTransaction;
         }
 
@@ -159,7 +159,7 @@ public class PacketInventoryTransaction extends Packet {
          *
          * @param buffer Data from the packet
          */
-        public void deserialize( PacketBuffer buffer ) {
+        public void deserialize( PacketBuffer buffer, boolean hasItemstackID ) {
             this.sourceType = buffer.readUnsignedVarInt();
 
             switch ( this.sourceType ) {
@@ -180,9 +180,11 @@ public class PacketInventoryTransaction extends Packet {
             this.slot = buffer.readUnsignedVarInt();
             this.oldItem = readItemStack( buffer );
             this.newItem = readItemStack( buffer );
-            this.newItemStackID = buffer.readSignedVarInt();
-        }
 
+            if (hasItemstackID) {
+                this.newItemStackID = buffer.readSignedVarInt();
+            }
+        }
     }
 
 }

@@ -725,6 +725,9 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
         // Attributes
         this.updateAttributes();
 
+        this.windowIds = new Byte2ObjectOpenHashMap<>();
+        this.containerIds = new Object2ByteOpenHashMap<>();
+
         // Inventories
         this.inventory = new PlayerInventory(this);
         this.armorInventory = new ArmorInventory(this);
@@ -737,9 +740,6 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
         this.craftingResultInventory = new OneSlotInventory(this);
 
         this.enchantmentOutputInventory = new OneSlotInventory(this);
-
-        this.windowIds = new Byte2ObjectOpenHashMap<>();
-        this.containerIds = new Object2ByteOpenHashMap<>();
 
         // this.connection.addToSendQueue(this.world.getServer().getRecipeManager().getCraftingRecipesBatch());
 

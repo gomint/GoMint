@@ -49,7 +49,9 @@ public class PacketInteract extends Packet {
         INTERACT( 1 ),
         ATTACK( 2 ),
         LEAVE_VEHICLE( 3 ),
-        MOUSEOVER( 4 );
+        MOUSEOVER( 4 ),
+        OPEN_NPC( 5 ),
+        OPEN_INVENTORY( 6 );
 
         @Getter
         private final byte id;
@@ -68,8 +70,11 @@ public class PacketInteract extends Packet {
                     return LEAVE_VEHICLE;
                 case 4:
                     return MOUSEOVER;
+                case 5:
+                    return OPEN_NPC;
                 default:
-                    return MOUSEOVER;
+                case 6:
+                    return OPEN_INVENTORY;
             }
         }
     }
