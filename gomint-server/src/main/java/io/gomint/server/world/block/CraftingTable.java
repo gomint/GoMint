@@ -34,10 +34,16 @@ public class CraftingTable extends Block implements io.gomint.world.block.BlockC
     @Override
     public boolean interact(Entity entity, Facing face, Vector facePos, ItemStack item ) {
         if ( entity instanceof EntityPlayer ) {
+            EntityPlayer player = (EntityPlayer) entity;
+
             // This should be a container open
-            LOGGER.debug( "Changing to 3x3 crafting grid for player " + ( (EntityPlayer) entity ).getName() );
-            ( (EntityPlayer) entity ).getCraftingInventory().resizeAndClear( 9 );
-            ( (EntityPlayer) entity ).getCraftingInputInventory().resizeAndClear( 9 );
+            LOGGER.debug( "Changing to 3x3 crafting grid for player " + player.getName() );
+            player.getCraftingInventory().resizeAndClear( 9 );
+            player.getCraftingInputInventory().resizeAndClear( 9 );
+
+            // Open the crafting table
+            player.getCraftingInputInventory().setPosition(this.location.toBlockPosition());
+            player.openInventory(player.getCraftingInputInventory());
         }
 
         return true;

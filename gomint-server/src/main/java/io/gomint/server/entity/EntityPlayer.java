@@ -117,7 +117,7 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
     @Getter
     private Inventory craftingInventory;
     @Getter
-    private Inventory craftingInputInventory;
+    private CraftingInputInventory craftingInputInventory;
     @Getter
     private Inventory craftingResultInventory;
 

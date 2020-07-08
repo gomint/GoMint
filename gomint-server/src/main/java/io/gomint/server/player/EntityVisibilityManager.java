@@ -84,7 +84,7 @@ public class EntityVisibilityManager {
 
     public void addEntity( Entity entity ) {
         if ( !this.visible.contains( entity ) && !this.player.equals( entity ) ) {
-            LOGGER.info( "Spawning entity {} for {}", entity, this.player.getName() );
+            LOGGER.debug( "Spawning entity {} for {}", entity, this.player.getName() );
             io.gomint.server.entity.Entity implEntity = (io.gomint.server.entity.Entity) entity;
 
             implEntity.preSpawn( this.player.getConnection() );
