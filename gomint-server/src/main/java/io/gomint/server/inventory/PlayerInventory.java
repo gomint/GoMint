@@ -114,14 +114,6 @@ public class PlayerInventory extends ContainerInventory implements io.gomint.inv
     public void removeViewer(EntityPlayer player) {
         // Call special close event
         this.onClose(player);
-
-        byte windowId = player.getWindowId(this);
-        if (windowId >= WindowMagicNumbers.FIRST.getId()) {
-            // Sent ContainerOpen first
-            PacketContainerClose containerClose = new PacketContainerClose();
-            containerClose.setWindowId(windowId);
-            player.getConnection().addToSendQueue(containerClose);
-        }
     }
 
     @Override

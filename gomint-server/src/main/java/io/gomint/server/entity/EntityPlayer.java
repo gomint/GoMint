@@ -862,6 +862,10 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
 
             InventoryCloseEvent inventoryCloseEvent = new InventoryCloseEvent(this, containerInventory);
             this.getWorld().getServer().getPluginManager().callEvent(inventoryCloseEvent);
+
+            PacketContainerClose packetContainerClose = new PacketContainerClose();
+            packetContainerClose.setWindowId(windowId);
+            this.connection.addToSendQueue(packetContainerClose);
         }
     }
 
