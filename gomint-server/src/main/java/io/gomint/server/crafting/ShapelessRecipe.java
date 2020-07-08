@@ -26,6 +26,7 @@ import java.util.UUID;
  */
 public class ShapelessRecipe extends CraftingRecipe {
 
+    private final int id;
     private final String name;
     private final String block;
     private final ItemStack[] ingredients;
@@ -37,6 +38,8 @@ public class ShapelessRecipe extends CraftingRecipe {
         this.block = block;
         this.ingredients = ingredients;
         this.outcome = outcome;
+
+        this.id = this.getNewID();
     }
 
     @Override
@@ -62,6 +65,7 @@ public class ShapelessRecipe extends CraftingRecipe {
         buffer.writeUUID(this.getUUID());
         buffer.writeString(this.block);
         buffer.writeSignedVarInt(this.getPriority());
+        buffer.writeUnsignedVarInt(this.id);
     }
 
     @Override

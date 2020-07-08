@@ -741,7 +741,8 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
 
         this.enchantmentOutputInventory = new OneSlotInventory(this);
 
-        // this.connection.addToSendQueue(this.world.getServer().getRecipeManager().getCraftingRecipesBatch());
+        // Send all recipes
+        this.connection.addToSendQueue(this.world.getServer().getRecipeManager().getCraftingRecipesBatch());
 
         // Send entity metadata
         this.sendData(this);

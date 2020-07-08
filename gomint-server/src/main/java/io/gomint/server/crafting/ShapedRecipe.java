@@ -29,6 +29,8 @@ import java.util.UUID;
  */
 public class ShapedRecipe extends CraftingRecipe {
 
+    private final int id;
+
     private final String name;
     private final String block;
 
@@ -49,8 +51,8 @@ public class ShapedRecipe extends CraftingRecipe {
      * @param outcome     Output of the recipe
      * @param uuid        UUID of the recipe
      */
-    public ShapedRecipe( String name, String block, int width, int height, ItemStack[] ingredients, ItemStack[] outcome, UUID uuid, int priority ) {
-        super( outcome, uuid, priority );
+    public ShapedRecipe(String name, String block, int width, int height, ItemStack[] ingredients, ItemStack[] outcome, UUID uuid, int priority) {
+        super(outcome, uuid, priority);
         assert ingredients.length == width * height : "Invalid arrangement: Fill out empty slots with air!";
 
         this.name = name;
@@ -60,6 +62,8 @@ public class ShapedRecipe extends CraftingRecipe {
         this.height = height;
         this.arrangement = ingredients;
         this.outcome = outcome;
+
+        this.id = this.getNewID();
     }
 
     /**
@@ -82,94 +86,95 @@ public class ShapedRecipe extends CraftingRecipe {
 
     @Override
     public ItemStack[] getIngredients() {
-        if ( this.ingredients == null ) {
+        if (this.ingredients == null) {
             // Got to sort out possible AIR slots and combine types:
             this.ingredients = new ArrayList<>();
 
-            for ( int j = 0; j < this.height; ++j ) {
-                for ( int i = 0; i < this.width; ++i ) {
+            for (int j = 0; j < this.height; ++j) {
+                for (int i = 0; i < this.width; ++i) {
                     ItemStack stack = this.arrangement[j * this.width + i];
-                    if ( !( stack instanceof ItemAir ) ) {
-                        this.ingredients.add( stack );
+                    if (!(stack instanceof ItemAir)) {
+                        this.ingredients.add(stack);
                     }
                 }
             }
         }
 
-        return this.ingredients.toArray( new ItemStack[0] );
+        return this.ingredients.toArray(new ItemStack[0]);
     }
 
     @Override
-    public void serialize( PacketBuffer buffer ) {
+    public void serialize(PacketBuffer buffer) {
         // Type of recipe ( 1 == shaped )
-        buffer.writeSignedVarInt( 1 );
+        buffer.writeSignedVarInt(1);
 
         buffer.writeString(this.name);
 
         // Size of grid
-        buffer.writeSignedVarInt( this.width );
-        buffer.writeSignedVarInt( this.height );
+        buffer.writeSignedVarInt(this.width);
+        buffer.writeSignedVarInt(this.height);
 
         // Input items
-        for ( int j = 0; j < this.height; ++j ) {
-            for ( int i = 0; i < this.width; ++i ) {
-                Packet.writeRecipeInput( this.arrangement[j * this.width + i], buffer );
+        for (int j = 0; j < this.height; ++j) {
+            for (int i = 0; i < this.width; ++i) {
+                Packet.writeRecipeInput(this.arrangement[j * this.width + i], buffer);
             }
         }
 
         // Amount of result
-        buffer.writeUnsignedVarInt( this.outcome.length );
+        buffer.writeUnsignedVarInt(this.outcome.length);
 
-        for ( ItemStack itemStack : this.outcome ) {
-            Packet.writeItemStack( itemStack, buffer );
+        for (ItemStack itemStack : this.outcome) {
+            Packet.writeItemStack(itemStack, buffer);
         }
 
         // Write recipe UUID
-        buffer.writeUUID( this.getUUID() );
+        buffer.writeUUID(this.getUUID());
         buffer.writeString(this.block);
         buffer.writeSignedVarInt(this.getPriority());
+        buffer.writeUnsignedVarInt(this.id);
     }
 
     @Override
-    public int[] isCraftable( Inventory inputInventory ) {
+    public int[] isCraftable(Inventory inputInventory) {
         // Check normal first
-        int[] output = this.check( inputInventory );
-        if ( output == null ) {
+        int[] output = this.check(inputInventory);
+        if (output == null) {
             // vFlip the input
-            Inventory flippedInventory = new CraftingInputInventory( inputInventory.getOwner() );
-            if ( inputInventory.size() > 4 ) {
-                flippedInventory.resizeAndClear( inputInventory.size() );
+            Inventory flippedInventory = new CraftingInputInventory(inputInventory.getOwner());
+            if (inputInventory.size() > 4) {
+                flippedInventory.resizeAndClear(inputInventory.size());
             }
 
             // Take over and flip the slots
-            for ( int i = 0; i < inputInventory.getContentsArray().length; i++ ) {
-                if ( inputInventory.size() == 9 ) {
-                    if ( i == 0 || i == 3 || i == 6 ) {
+            for (int i = 0; i < inputInventory.getContentsArray().length; i++) {
+                if (inputInventory.size() == 9) {
+                    if (i == 0 || i == 3 || i == 6) {
                         // Flip to +2
-                        flippedInventory.setItem( i + 2, inputInventory.getContentsArray()[i] );
-                    } else if ( i == 2 || i == 5 || i == 8 ) {
+                        flippedInventory.setItem(i + 2, inputInventory.getContentsArray()[i]);
+                    } else if (i == 2 || i == 5 || i == 8) {
                         // Flip to -2
-                        flippedInventory.setItem( i - 2, inputInventory.getContentsArray()[i] );
+                        flippedInventory.setItem(i - 2, inputInventory.getContentsArray()[i]);
                     } else {
                         // This should be the middle
-                        flippedInventory.setItem( i, inputInventory.getContentsArray()[i] );
+                        flippedInventory.setItem(i, inputInventory.getContentsArray()[i]);
                     }
                 } else {
-                    if ( i == 0 || i == 2 ) {
-                        flippedInventory.setItem( i + 1, inputInventory.getContentsArray()[i] );
+                    if (i == 0 || i == 2) {
+                        flippedInventory.setItem(i + 1, inputInventory.getContentsArray()[i]);
                     } else {
-                        flippedInventory.setItem( i - 1, inputInventory.getContentsArray()[i] );
+                        flippedInventory.setItem(i - 1, inputInventory.getContentsArray()[i]);
                     }
                 }
             }
 
-            return this.check( flippedInventory );
+            return this.check(flippedInventory);
         }
 
         return output;
     }
 
-    private int[] check( Inventory inputInventory ) {
+    private int[] check(Inventory inputInventory) {
         // Order the input so the recipe is in the upper left corner
         int xSpace = 0;
         int zSpace = 0;
@@ -181,34 +186,34 @@ public class ShapedRecipe extends CraftingRecipe {
         // 0 1 2
         // 3 4 5
         // 6 7 8
-        for ( int i = 0; i < z; i++ ) {
+        for (int i = 0; i < z; i++) {
             boolean freeX = true;
-            for ( int i2 = 0; i2 < x; i2++ ) {
-                ItemStack itemStack = inputInventory.getItem( ( i * z ) + i2 );
-                if ( itemStack.getType() != ItemType.AIR ) {
+            for (int i2 = 0; i2 < x; i2++) {
+                ItemStack itemStack = inputInventory.getItem((i * z) + i2);
+                if (itemStack.getType() != ItemType.AIR) {
                     freeX = false;
                     break;
                 }
             }
 
-            if ( !freeX ) {
+            if (!freeX) {
                 break;
             } else {
                 xSpace++;
             }
         }
 
-        for ( int i = 0; i < x; i++ ) {
+        for (int i = 0; i < x; i++) {
             boolean freeZ = true;
-            for ( int i2 = 0; i2 < z; i2++ ) {
-                ItemStack itemStack = inputInventory.getItem( ( i2 * z ) + i );
-                if ( itemStack.getType() != ItemType.AIR ) {
+            for (int i2 = 0; i2 < z; i2++) {
+                ItemStack itemStack = inputInventory.getItem((i2 * z) + i);
+                if (itemStack.getType() != ItemType.AIR) {
                     freeZ = false;
                     break;
                 }
             }
 
-            if ( !freeZ ) {
+            if (!freeZ) {
                 break;
             } else {
                 zSpace++;
@@ -216,28 +221,28 @@ public class ShapedRecipe extends CraftingRecipe {
         }
 
         // Items not found in grid (only air left)
-        if ( zSpace == z && xSpace == x ) {
+        if (zSpace == z && xSpace == x) {
             return null;
         }
 
         int[] consumeItems = new int[this.width * this.height];
-        for ( int i = 0; i < this.height; i++ ) {
-            for ( int j = 0; j < this.width; j++ ) {
-                int itemSlot = ( ( i + xSpace ) * x ) + ( j + zSpace );
+        for (int i = 0; i < this.height; i++) {
+            for (int j = 0; j < this.width; j++) {
+                int itemSlot = ((i + xSpace) * x) + (j + zSpace);
 
-                ItemStack invItem = inputInventory.getItem( itemSlot );
-                ItemStack recipeItem = this.arrangement[j + ( this.width * i )];
+                ItemStack invItem = inputInventory.getItem(itemSlot);
+                ItemStack recipeItem = this.arrangement[j + (this.width * i)];
 
-                if ( !canBeUsedForCrafting( recipeItem, invItem ) ) {
+                if (!canBeUsedForCrafting(recipeItem, invItem)) {
                     return null;
                 }
 
                 // Ignore AIR
-                if ( invItem.getType() == ItemType.AIR ) {
+                if (invItem.getType() == ItemType.AIR) {
                     continue;
                 }
 
-                consumeItems[j + ( this.width * i )] = itemSlot;
+                consumeItems[j + (this.width * i)] = itemSlot;
             }
         }
 

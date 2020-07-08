@@ -188,7 +188,7 @@ public abstract class Packet {
         int material = ((io.gomint.server.inventory.item.ItemStack) ingredient).getMaterial();
         buffer.writeSignedVarInt(material);
         if (material != 0) {
-            buffer.writeSignedVarInt(ingredient.getData() & 0x7FFF);
+            buffer.writeSignedVarInt(ingredient.getData());
             buffer.writeSignedVarInt(ingredient.getAmount());
         }
     }

@@ -42,7 +42,7 @@ public class PacketCraftingRecipes extends Packet {
 
         buffer.writeUnsignedVarInt(0); // Potions
         buffer.writeUnsignedVarInt(0);
-        buffer.writeByte( (byte) 1 ); // Unknown use
+        buffer.writeBoolean( true); // Clean client recipes
     }
 
     @Override

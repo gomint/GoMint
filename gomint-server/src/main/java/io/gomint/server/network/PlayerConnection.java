@@ -236,6 +236,7 @@ public class PlayerConnection implements ConnectionWithState {
             PACKET_HANDLERS[Protocol.PACKET_WORLD_SOUND_EVENT & 0xff] = new PacketWorldSoundEventHandler();
             PACKET_HANDLERS[Protocol.PACKET_TICK_SYNC & 0xff] = new PacketTickSyncHandler();
             PACKET_HANDLERS[Protocol.PACKET_CLIENT_CACHE_STATUS & 0xff] = new PacketClientCacheStatusHandler();
+            PACKET_HANDLERS[Protocol.PACKET_VIOLATION_WARNING & 0xff] = new PacketViolationWarningHandler();
 
             packetHandlersInit = true;
         }

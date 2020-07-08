@@ -14,6 +14,7 @@ import lombok.Getter;
 
 import java.util.Collection;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * A recipe of some type that may be used to create a new item given some other
@@ -24,8 +25,9 @@ import java.util.UUID;
  */
 public abstract class Recipe implements io.gomint.crafting.Recipe {
 
-    @Getter
-    private final int priority;
+    private static final AtomicInteger RECIPE_ID = new AtomicInteger(0);
+
+    @Getter private final int priority;
     private final UUID uuid;
 
     /**
@@ -36,6 +38,10 @@ public abstract class Recipe implements io.gomint.crafting.Recipe {
     Recipe( UUID uuid, int priority ) {
         this.priority = priority;
         this.uuid = ( uuid != null ? uuid : UUID.randomUUID() );
+    }
+
+    protected int getNewID() {
+        return RECIPE_ID.getAndIncrement();
     }
 
     @Override

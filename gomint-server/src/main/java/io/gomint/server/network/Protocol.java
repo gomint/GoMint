@@ -42,6 +42,7 @@ import io.gomint.server.network.packet.PacketSetLocalPlayerAsInitialized;
 import io.gomint.server.network.packet.PacketText;
 import io.gomint.server.network.packet.PacketTickSync;
 import io.gomint.server.network.packet.PacketTileEntityData;
+import io.gomint.server.network.packet.PacketViolationWarning;
 import io.gomint.server.network.packet.PacketWorldSoundEvent;
 
 /**
@@ -230,6 +231,9 @@ public final class Protocol {
      */
     public static Packet createPacket(int id) {
         switch (id) {
+            case PACKET_VIOLATION_WARNING:
+                return new PacketViolationWarning();
+
             case PACKET_TILE_ENTITY_DATA:
                 return new PacketTileEntityData();
 

@@ -24,7 +24,7 @@ public class CreativeInventory extends Inventory {
     @Override
     public void sendContents( PlayerConnection playerConnection ) {
         PacketCreativeContent inventoryContent = new PacketCreativeContent();
-        inventoryContent.setItems( new ItemStack[]{getContentsArray()[0],getContentsArray()[1]});
+        inventoryContent.setItems( getContentsArray() );
         playerConnection.addToSendQueue( inventoryContent );
     }
 
