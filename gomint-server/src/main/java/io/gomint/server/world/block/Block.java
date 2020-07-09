@@ -799,17 +799,19 @@ public abstract class Block implements io.gomint.world.block.Block {
     }
 
     public <S> void setState(String key, S value) {
-        this.ensureIdentifier();
+        this.ensureIdentifier(null);
         this.identifier = BlockRuntimeIDs.change(this.identifier, key, value);
     }
 
-    public void ensureIdentifier() {
+    public void ensureIdentifier(String idHint) {
         if (this.identifier == null) {
-            RegisterInfo[] annotations = this.getClass().getAnnotationsByType(RegisterInfo.class);
-            if (annotations.length == 0) {
-                System.out.println("?");
+            // Resolve idHint if given
+            if (idHint != null) {
+                this.identifier = BlockRuntimeIDs.toBlockIdentifier(idHint, null);
+                return;
             }
 
+            RegisterInfo[] annotations = this.getClass().getAnnotationsByType(RegisterInfo.class);
             if (annotations.length == 1) {
                 this.identifier = BlockRuntimeIDs.toBlockIdentifier(annotations[0].sId(), null);
             } else {

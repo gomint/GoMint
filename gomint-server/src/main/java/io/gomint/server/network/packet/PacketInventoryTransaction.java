@@ -47,7 +47,7 @@ public class PacketInventoryTransaction extends Packet {
 
     // New request id and changes slot (1.16)
     private int requestId;
-    private ChangeSlot changeSlot;
+    private ChangeSlot[] changeSlot;
     private boolean hasItemstackIDs;
 
     /**
@@ -66,8 +66,12 @@ public class PacketInventoryTransaction extends Packet {
     public void deserialize( PacketBuffer buffer, int protocolID ) {
         this.requestId = buffer.readSignedVarInt();
         if (this.requestId != 0) {
-            this.changeSlot = new ChangeSlot();
-            this.changeSlot.deserialize(buffer);
+            int length = buffer.readUnsignedVarInt();
+            this.changeSlot = new ChangeSlot[length];
+            for (int i = 0; i < length; i++) {
+                this.changeSlot[i] = new ChangeSlot();
+                this.changeSlot[i].deserialize(buffer);
+            }
         }
 
         this.type = buffer.readUnsignedVarInt();

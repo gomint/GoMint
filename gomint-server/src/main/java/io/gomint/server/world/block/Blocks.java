@@ -10,6 +10,7 @@ import io.gomint.server.entity.EntityPlayer;
 import io.gomint.server.entity.tileentity.TileEntity;
 import io.gomint.server.maintenance.ReportUploader;
 import io.gomint.server.registry.Generator;
+import io.gomint.server.registry.GeneratorCallback;
 import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.registry.StringRegistry;
 import io.gomint.server.util.BlockIdentifier;
@@ -42,19 +43,19 @@ public class Blocks {
      * @param classPath which builds this registry
      */
     public Blocks( ClassPath classPath ) {
-        this.generators = new StringRegistry<>( classPath, clazz -> {
-            ObjectConstructionFactory factory = new ObjectConstructionFactory( clazz );
+        this.generators = new StringRegistry<>(classPath, (clazz, id) -> {
+            ObjectConstructionFactory factory = new ObjectConstructionFactory(clazz);
             return () -> {
                 Block block = (Block) factory.newInstance();
-                if ( block == null) {
+                if (block == null) {
                     LOGGER.error("Nulled block?! from {}", clazz.getName());
                 }
 
                 // Search for default id in annotations
-                block.ensureIdentifier();
+                block.ensureIdentifier(id);
                 return block;
             };
-        } );
+        });
 
         this.generators.register( "io.gomint.server.world.block" );
         this.generators.cleanup();

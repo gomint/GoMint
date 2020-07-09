@@ -11,8 +11,9 @@ public interface GeneratorCallback<T> {
      * Generate a ASM generator for the given id and class
      *
      * @param clazz for which we need a ASM generator
+     * @param id for which we generate
      * @return generator for the given class
      */
-    Generator<T> generate( Class<?> clazz );
+    Generator<T> generate( Class<?> clazz, String id );
 
 }

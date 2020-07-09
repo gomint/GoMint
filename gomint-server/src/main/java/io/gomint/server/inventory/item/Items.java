@@ -72,7 +72,7 @@ public class Items {
      */
     @Autowired
     public Items(ClassPath classPath) {
-        this.generators = new Registry<>(classPath, clazz -> {
+        this.generators = new Registry<>(classPath, (clazz, id) -> {
             ObjectConstructionFactory factory = new ObjectConstructionFactory(clazz);
 
             RegisterInfo[] info = clazz.getAnnotationsByType(RegisterInfo.class);

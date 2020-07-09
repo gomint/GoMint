@@ -23,7 +23,7 @@ public class Enchantments {
     private final Registry<Enchantment> generators;
 
     public Enchantments( ClassPath classPath ) {
-        this.generators = new Registry<>( classPath, clazz -> () -> {
+        this.generators = new Registry<>( classPath, (clazz, id) -> () -> {
             try {
                 return (Enchantment) clazz.newInstance();
             } catch ( InstantiationException | IllegalAccessException e ) {

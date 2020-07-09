@@ -47,16 +47,10 @@ public class Registry<R> {
     }
 
     private void register( Class<?> clazz ) {
-        // We need register info
-        if ( !clazz.isAnnotationPresent( RegisterInfo.class ) && !clazz.isAnnotationPresent( RegisterInfos.class ) ) {
-            LOGGER.debug( "No register info annotation present" );
-            return;
-        }
-
-        if ( clazz.isAnnotationPresent( RegisterInfo.class ) ) {
-            int id = clazz.getAnnotation( RegisterInfo.class ).id();
-            Generator<R> generator = this.generatorCallback.generate( clazz );
+        for (RegisterInfo info : clazz.getAnnotationsByType(RegisterInfo.class)) {
+            Generator<R> generator = this.generatorCallback.generate( clazz, info.sId() );
             if ( generator != null ) {
+                int id = info.id();
                 this.storeGeneratorForId( id, generator );
 
                 // Check for API interfaces
@@ -65,22 +59,6 @@ public class Registry<R> {
                 }
 
                 this.apiReferences.put( clazz, id );
-            }
-        } else {
-            Generator<R> generator = this.generatorCallback.generate( clazz );
-            if ( generator != null ) {
-                RegisterInfo[] infos = clazz.getAnnotation( RegisterInfos.class ).value();
-                for ( RegisterInfo info : infos ) {
-                    int id = info.id();
-                    this.storeGeneratorForId( id, generator );
-
-                    // Check for API interfaces
-                    for ( Class<?> apiInter : clazz.getInterfaces() ) {
-                        this.apiReferences.put( apiInter, id );
-                    }
-
-                    this.apiReferences.put( clazz, id );
-                }
             }
         }
     }

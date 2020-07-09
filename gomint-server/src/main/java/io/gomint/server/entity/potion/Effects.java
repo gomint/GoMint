@@ -25,7 +25,7 @@ public class Effects {
     private final Registry<Effect> generators;
 
     public Effects( ClassPath classPath ) {
-        this.generators = new Registry<>( classPath, clazz -> () -> {
+        this.generators = new Registry<>( classPath, (clazz, id) -> () -> {
             try {
                 return (Effect) clazz.newInstance();
             } catch ( InstantiationException | IllegalAccessException e ) {

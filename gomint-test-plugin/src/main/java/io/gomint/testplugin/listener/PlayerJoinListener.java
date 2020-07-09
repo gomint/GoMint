@@ -6,6 +6,7 @@ import io.gomint.event.EventListener;
 import io.gomint.event.EventPriority;
 import io.gomint.event.player.PlayerJoinEvent;
 import io.gomint.inventory.item.ItemBucket;
+import io.gomint.inventory.item.ItemFlower;
 import io.gomint.inventory.item.ItemShears;
 import io.gomint.inventory.item.ItemShield;
 import io.gomint.math.BlockPosition;
@@ -40,7 +41,7 @@ public class PlayerJoinListener implements EventListener {
 
         event.getPlayer().getInventory().setItem(3, ItemShears.create(1));
 
-        event.getPlayer().getInventory().setItem(5, ItemShield.create(1));
+        event.getPlayer().getInventory().setItem(5, ItemFlower.create(4));
 
         // Spawn a Armor Stand to the player location
         EntityArmorStand.create().spawn(event.getPlayer().getLocation());

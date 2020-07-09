@@ -48,7 +48,6 @@ public class Dirt extends Block implements BlockDirt {
         return BlockType.DIRT;
     }
 
-
     @Override
     public void setDirtType(Type type) {
         this.variant.setState(type);

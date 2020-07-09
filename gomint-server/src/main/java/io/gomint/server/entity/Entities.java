@@ -25,7 +25,7 @@ public class Entities {
     private final StringRegistry<io.gomint.server.entity.Entity> generators;
 
     public Entities( ClassPath classPath ) {
-        this.generators = new StringRegistry<>( classPath, clazz -> () -> {
+        this.generators = new StringRegistry<>( classPath, (clazz, id) -> () -> {
             try {
                 return (io.gomint.server.entity.Entity) clazz.newInstance();
             } catch ( InstantiationException | IllegalAccessException e ) {
