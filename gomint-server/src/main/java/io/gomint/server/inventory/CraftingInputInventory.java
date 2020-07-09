@@ -50,7 +50,7 @@ public class CraftingInputInventory extends ContainerInventory {
 
         // Client closed its crafting view
         player.getCraftingInventory().resizeAndClear( 4 );
-        player.getCraftingResultInventory().resizeAndClear( 4 );
+        player.getCraftingInputInventory().resizeAndClear( 4 );
     }
 
     @Override
