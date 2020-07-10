@@ -62,11 +62,16 @@ public class EntityFallingBlock extends Entity implements io.gomint.entity.passi
 
         // Are we onground?
         if (this.onGround) {
-            this.despawn();
+            // this.despawn();
 
-            // Generate new item drop
-            // TODO: States to Item data
-            this.world.createItemDrop(this.getLocation(), this.world.getServer().getItems().create(this.blockId, (short) 0, (byte) 1, null));
+            // Check if block can be replaced
+            Block block = this.world.getBlockAt(this.getLocation().toBlockPosition());
+            if ( block.canBeReplaced( null ) ) {
+                // block.setIdentifier(BlockRuntimeIDs.toBlockIdentifier(this.blockId, null));
+            } else {
+                // Generate new item drop
+                this.world.createItemDrop(this.getLocation(), this.world.getServer().getItems().create(this.blockId, (short) 0, (byte) 1, null));
+            }
         }
     }
 
@@ -96,7 +101,7 @@ public class EntityFallingBlock extends Entity implements io.gomint.entity.passi
         }
     }
 
-    @Override
+    /*@Override
     public void postSpawn(PlayerConnection connection) {
         if (this.position != null) {
             PacketUpdateBlockSynched blockSynched = new PacketUpdateBlockSynched();
@@ -108,6 +113,6 @@ public class EntityFallingBlock extends Entity implements io.gomint.entity.passi
             blockSynched.setFlags(PacketUpdateBlock.FLAG_ALL);
             connection.addToSendQueue(blockSynched);
         }
-    }
+    }*/
 
 }

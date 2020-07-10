@@ -11,7 +11,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:sand" )
-public class Sand extends Block implements io.gomint.world.block.BlockSand {
+public class Sand extends Fallable implements io.gomint.world.block.BlockSand {
 
     @Override
     public String getBlockId() {
@@ -32,6 +32,7 @@ public class Sand extends Block implements io.gomint.world.block.BlockSand {
     public Class<? extends ItemStack>[] getToolInterfaces() {
         return ToolPresets.SHOVEL;
     }
+
     @Override
     public float getBlastResistance() {
         return 2.5f;

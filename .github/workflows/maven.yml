@@ -19,3 +19,11 @@ jobs:
       with:
         name: GoMint Server
         path: ./release/
+    - name: Build and push image
+      uses: docker/build-push-action@v1
+      with:
+        username: gomint
+        password: ${{ secrets.DOCKER_PASSWORD }}
+        registry: hub.docker.com
+        repository: gomint/gomint
+        tags: latest

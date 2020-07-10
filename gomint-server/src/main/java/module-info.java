@@ -28,6 +28,7 @@ module gomint.server {
     requires spring.context;
 
     // Compile modules
+    requires com.fasterxml.jackson.core;
     requires lombok;
 
     // Automatic modules (libs without module-info)

@@ -11,7 +11,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:gravel" )
-public class Gravel extends Block implements io.gomint.world.block.BlockGravel {
+public class Gravel extends Fallable implements io.gomint.world.block.BlockGravel {
 
     @Override
     public String getBlockId() {
