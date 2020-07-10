@@ -117,7 +117,7 @@ public class Leaves extends Block implements BlockLeaves {
     @Override
     public void setLeaveType(LogType type) {
         LeaveTypeMagic newState = LeaveTypeMagic.valueOf(type.name());
-        this.setBlockId(newState.getBlockId());
+        this.setBlockId(newState.getBlockId(), NEW_LOG_TYPE, OLD_LOG_TYPE); // We ignore the two keys here to get a known wrong value, the set state below will select the correct runtime id
         this.variant.setState(newState);
     }
 

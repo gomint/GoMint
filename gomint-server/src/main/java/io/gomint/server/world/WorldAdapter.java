@@ -28,7 +28,6 @@ import io.gomint.server.entity.tileentity.TileEntity;
 import io.gomint.server.network.PlayerConnection;
 import io.gomint.server.network.packet.*;
 import io.gomint.server.scheduler.CoreScheduler;
-import io.gomint.server.util.BlockIdentifier;
 import io.gomint.server.util.EnumConnectors;
 import io.gomint.server.world.block.Air;
 import io.gomint.server.world.storage.TemporaryStorage;
@@ -69,6 +68,8 @@ import java.util.function.Predicate;
 @EqualsAndHashCode(of = {"worldDir"})
 @ToString(of = {"levelName", "worldDir"})
 public abstract class WorldAdapter implements World {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(WorldAdapter.class);
 
     // Shared objects
     @Getter
@@ -857,7 +858,7 @@ public abstract class WorldAdapter implements World {
 
                 sendToVisible(pos, null, entity -> {
                     if (entity instanceof io.gomint.server.entity.EntityPlayer) {
-                        //((io.gomint.server.entity.EntityPlayer) entity).getBlockUpdates().add(pos);
+                        ((io.gomint.server.entity.EntityPlayer) entity).getBlockUpdates().add(pos);
                     }
 
                     return false;
@@ -868,7 +869,7 @@ public abstract class WorldAdapter implements World {
 
             sendToVisible(pos, null, entity -> {
                 if (entity instanceof io.gomint.server.entity.EntityPlayer) {
-                    //((io.gomint.server.entity.EntityPlayer) entity).getBlockUpdates().add(pos);
+                    ((io.gomint.server.entity.EntityPlayer) entity).getBlockUpdates().add(pos);
                 }
 
                 return false;
@@ -1159,6 +1160,8 @@ public abstract class WorldAdapter implements World {
         }
 
         if (this.chunkGenerator != null) {
+            LOGGER.info("Generating chunk {} / {}", x, z);
+
             ChunkAdapter chunk = (ChunkAdapter) this.chunkGenerator.generate(x, z);
             if (chunk != null) {
                 chunk.calculateHeightmap(240);
@@ -1404,7 +1407,7 @@ public abstract class WorldAdapter implements World {
      * Adjust the spawn level to the first in air block
      */
     protected void adjustSpawn() {
-        int airRuntime = BlockRuntimeIDs.toBlockIdentifier("minecraft:air", null ).getRuntimeId();
+        int airRuntime = BlockRuntimeIDs.toBlockIdentifier("minecraft:air", null).getRuntimeId();
 
         BlockPosition check = new BlockPosition((int) this.spawn.getX(), 0, (int) this.spawn.getZ());
         for (int i = 255; i > 0; i--) {

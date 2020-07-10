@@ -11,6 +11,8 @@ import io.gomint.util.random.FastRandom;
 import io.gomint.world.World;
 import io.gomint.world.block.Block;
 import io.gomint.world.block.BlockDirt;
+import io.gomint.world.block.BlockLeaves;
+import io.gomint.world.block.BlockLog;
 import io.gomint.world.block.BlockType;
 
 /**
@@ -24,8 +26,8 @@ public abstract class Tree {
     };
 
     protected int treeHeight;
-    protected Block trunkBlock;
-    protected Block leafBlock;
+    protected BlockLog trunkBlock;
+    protected BlockLeaves leafBlock;
 
     public abstract void grow(World world, int x, int y, int z, FastRandom random);
 

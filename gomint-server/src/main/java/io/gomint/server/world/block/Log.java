@@ -174,7 +174,7 @@ public class Log extends Block implements BlockLog {
                     break;
             }
 
-            this.setBlockId(newState.getBlockId());
+            this.setBlockId(newState.getBlockId(), OLD_LOG_TYPE, NEW_LOG_TYPE);
             this.variant.setState(newState);
         }
     }
@@ -184,7 +184,7 @@ public class Log extends Block implements BlockLog {
         LogTypeMagic newState = LogTypeMagic.valueOf(type.name());
 
         if (!this.isStripped()) {
-            this.setBlockId(newState.getBlockId());
+            this.setBlockId(newState.getBlockId(), OLD_LOG_TYPE, NEW_LOG_TYPE);
             this.variant.setState(newState);
         } else {
             switch (type) {
