@@ -25,4 +25,4 @@ jobs:
         username: gomint
         password: ${{ secrets.DOCKER_PASSWORD }}
         repository: gomint/gomint
-        tags: latest
+        tags: ${{ github.sha }}
