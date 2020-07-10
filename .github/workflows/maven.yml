@@ -24,6 +24,5 @@ jobs:
       with:
         username: gomint
         password: ${{ secrets.DOCKER_PASSWORD }}
-        registry: hub.docker.com
         repository: gomint/gomint
         tags: latest
