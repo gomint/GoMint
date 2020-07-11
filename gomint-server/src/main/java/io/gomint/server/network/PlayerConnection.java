@@ -829,7 +829,7 @@ public class PlayerConnection implements ConnectionWithState {
     public void initWorldAndResourceSend() {
         // We have the chance of forcing resource and behaviour packs here
         PacketResourcePacksInfo packetResourcePacksInfo = new PacketResourcePacksInfo();
-        this.send(packetResourcePacksInfo);
+        this.addToSendQueue(packetResourcePacksInfo);
     }
 
     /**

@@ -10,6 +10,7 @@ package io.gomint.server.network.handler;
 import io.gomint.server.network.PlayerConnection;
 import io.gomint.server.network.PlayerConnectionState;
 import io.gomint.server.network.packet.PacketEncryptionResponse;
+import io.gomint.server.network.packet.PacketNetworkSettings;
 import io.gomint.server.network.packet.PacketPlayState;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,6 +28,10 @@ public class PacketEncryptionResponseHandler implements PacketHandler<PacketEncr
         connection.getEntity().getLoginPerformance().setEncryptionEnd( currentTimeMillis );
 
         LOGGER.debug("We got encryption response");
+
+        PacketNetworkSettings networkSettings = new PacketNetworkSettings();
+        networkSettings.setCompressionThreshold((short) 1);
+        connection.addToSendQueue(networkSettings);
 
         connection.setState( PlayerConnectionState.LOGIN );
         connection.sendPlayState( PacketPlayState.PlayState.LOGIN_SUCCESS );

@@ -243,7 +243,9 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
             this.viewDistance = tempViewDistance;
         }
 
-        if (this.connection.getState() != PlayerConnectionState.PLAYING) {
+        if (this.connection.getState() == PlayerConnectionState.LOGIN) {
+            this.connection.addToSendQueue( new PacketBiomeDefinitionList() );
+            this.connection.sendPlayState(PacketPlayState.PlayState.SPAWN);
             this.getLoginPerformance().setChunkStart(this.world.getServer().getCurrentTickTime());
         }
 
@@ -702,7 +704,6 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
     public void prepareEntity() {
         // Send world init data
         this.connection.sendWorldInitialization();
-        this.connection.addToSendQueue( new PacketBiomeDefinitionList() );
         this.connection.addToSendQueue( new PacketAvailableEntityIdentifiers() );
         this.connection.sendSpawnPosition();
         this.connection.sendDifficulty();
@@ -1558,7 +1559,6 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
     }
 
     public void firstSpawn() {
-        this.connection.sendPlayState(PacketPlayState.PlayState.SPAWN);
         this.getConnection().sendMovePlayer(this.getLocation());
 
         // Spawn for others
