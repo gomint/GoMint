@@ -87,7 +87,7 @@ public class ChunkCache {
         while ( iterator.hasNext() ) {
             Long2ObjectMap.Entry<ChunkAdapter> entry = iterator.next();
             ChunkAdapter chunk = entry.getValue();
-            if ( checkChunkSave && chunk.isNeedsPersistance() && currentTimeMS - chunk.getLastSavedTimestamp() >= this.autoSaveInterval ) {
+            if ( checkChunkSave && chunk.isNeedsPersistence() && currentTimeMS - chunk.getLastSavedTimestamp() >= this.autoSaveInterval ) {
                 chunk.setLastSavedTimestamp( currentTimeMS );
                 this.world.saveChunkAsynchronously( chunk );
             }
@@ -125,7 +125,8 @@ public class ChunkCache {
         if ( !this.tempHashes[1].isEmpty() ) {
             LongIterator toRemoveCursor = this.tempHashes[1].iterator();
             while ( toRemoveCursor.hasNext() ) {
-                this.cachedChunks.remove( toRemoveCursor.nextLong() );
+                ChunkAdapter adapter = this.cachedChunks.remove( toRemoveCursor.nextLong() );
+                adapter.release();
             }
         }
     }

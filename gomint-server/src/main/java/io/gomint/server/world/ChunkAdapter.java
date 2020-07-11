@@ -15,12 +15,8 @@ import io.gomint.server.entity.EntityPlayer;
 import io.gomint.server.entity.tileentity.SerializationReason;
 import io.gomint.server.entity.tileentity.TileEntities;
 import io.gomint.server.entity.tileentity.TileEntity;
-import io.gomint.server.network.Protocol;
-import io.gomint.server.network.packet.Packet;
-import io.gomint.server.network.packet.PacketBatch;
 import io.gomint.server.network.packet.PacketWorldChunk;
-import io.gomint.server.util.BlockIdentifier;
-import io.gomint.server.util.PerformanceHacks;
+import io.gomint.server.util.Cache;
 import io.gomint.server.world.storage.TemporaryStorage;
 import io.gomint.taglib.NBTTagCompound;
 import io.gomint.taglib.NBTWriter;
@@ -36,24 +32,18 @@ import it.unimi.dsi.fastutil.objects.ObjectIterator;
 import it.unimi.dsi.fastutil.shorts.Short2ObjectMap;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.io.OutputStream;
-import java.lang.ref.SoftReference;
-import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
-import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Consumer;
 
 /**
@@ -61,21 +51,14 @@ import java.util.function.Consumer;
  * @version 1.0
  */
 @ToString( of = { "world", "x", "z" } )
-@RequiredArgsConstructor
 @EqualsAndHashCode( callSuper = false, of = { "world", "x", "z" } )
 public class ChunkAdapter implements Chunk {
 
     private static final Logger LOGGER = LoggerFactory.getLogger( ChunkAdapter.class );
-    private static final AtomicLong LAST_WARNING = new AtomicLong( System.currentTimeMillis() );
 
     // CHECKSTYLE:OFF
     // World
-    @Getter
-    protected final WorldAdapter world;
-
-    // Networking
-    boolean dirty;
-    SoftReference<Packet> cachedPacket;
+    @Getter protected final WorldAdapter world;
 
     // Chunk
     protected final int x;
@@ -83,11 +66,10 @@ public class ChunkAdapter implements Chunk {
     protected long inhabitedTime;
 
     // Biomes
-    protected byte[] biomes = new byte[16 * 16];
+    protected final ByteBuf biomes = PooledByteBufAllocator.DEFAULT.directBuffer(16*16);
 
     // Blocks
-    @Getter
-    protected ChunkSlice[] chunkSlices = new ChunkSlice[16];
+    @Getter protected ChunkSlice[] chunkSlices = new ChunkSlice[16];
     private byte[] height = new byte[16 * 16 * 2];
 
     // Players / Chunk GC
@@ -100,13 +82,18 @@ public class ChunkAdapter implements Chunk {
     protected Long2ObjectMap<io.gomint.entity.Entity> entities = null;
 
     // State saving flag
-    @Getter
-    private boolean needsPersistance;
-    @Getter
-    @Setter
-    private boolean populated;
+    @Getter private boolean needsPersistence;
+    @Getter @Setter private boolean populated;
 
     // CHECKSTYLE:ON
+
+    public ChunkAdapter(WorldAdapter world, int x, int z) {
+        this.world = world;
+        this.x = x;
+        this.z = z;
+
+        this.biomes.writerIndex(255);
+    }
 
     /**
      * Ticks this chunk for random block updates
@@ -198,7 +185,7 @@ public class ChunkAdapter implements Chunk {
         if ( slice != null ) {
             return slice;
         } else {
-            this.chunkSlices[y] = PerformanceHacks.createChunkSlice( this, y );
+            this.chunkSlices[y] = new ChunkSlice( this, y );
             return this.chunkSlices[y];
         }
     }
@@ -267,17 +254,6 @@ public class ChunkAdapter implements Chunk {
     }
 
     /**
-     * Remove the dirty state for the chunk and set the batched packet to the
-     * cache.
-     *
-     * @param batch The batch which has been generated to be sent to the clients
-     */
-    void setCachedPacket( Packet batch ) {
-        this.dirty = false;
-        this.cachedPacket = new SoftReference<>( batch );
-    }
-
-    /**
      * Gets the time at which this chunk was last written out to disk.
      *
      * @return The timestamp this chunk was last written out at
@@ -293,7 +269,7 @@ public class ChunkAdapter implements Chunk {
      */
     void setLastSavedTimestamp( long timestamp ) {
         this.lastSavedTimestamp = timestamp;
-        this.needsPersistance = false;
+        this.needsPersistence = false;
     }
 
     // ==================================== MANIPULATION ==================================== //
@@ -308,18 +284,7 @@ public class ChunkAdapter implements Chunk {
      * @param callback The callback to be invoked once the operation is complete
      */
     void packageChunk( Delegate2<Long, ChunkAdapter> callback ) {
-        SoftReference<Packet> cachedPacketRef = this.cachedPacket;
-
-        if ( !this.dirty && cachedPacketRef != null ) {
-            Packet packet = cachedPacketRef.get();
-            if ( packet != null ) {
-                callback.invoke( CoordinateUtils.toLong( x, z ), this );
-            } else {
-                this.world.notifyPackageChunk( x, z, callback );
-            }
-        } else {
-            this.world.notifyPackageChunk( x, z, callback );
-        }
+        this.world.notifyPackageChunk( this.x, this.z, callback );
     }
 
     /**
@@ -393,8 +358,7 @@ public class ChunkAdapter implements Chunk {
         ChunkSlice slice = ensureSlice( ySection );
         slice.setBlock( x, y - ( ySection << 4 ), z, layer, runtimeId );
 
-        this.dirty = true;
-        this.needsPersistance = true;
+        this.needsPersistence = true;
     }
 
     /**
@@ -420,7 +384,6 @@ public class ChunkAdapter implements Chunk {
      */
     private void setHeight( int x, int z, byte height ) {
         this.height[( z << 4 ) + x] = height;
-        this.dirty = true;
     }
 
     /**
@@ -437,13 +400,12 @@ public class ChunkAdapter implements Chunk {
 
     @Override
     public void setBiome( int x, int z, Biome biome ) {
-        this.biomes[( x << 4 ) + z] = (byte) biome.getId();
-        this.dirty = true;
+        this.biomes.setByte(( x << 4 ) + z, (byte) biome.getId());
     }
 
     @Override
     public Biome getBiome( int x, int z ) {
-        return Biome.getBiomeById( this.biomes[( x << 4 ) + z] );
+        return Biome.getBiomeById( this.biomes.getByte(( x << 4 ) + z) );
     }
 
     @Override
@@ -501,7 +463,7 @@ public class ChunkAdapter implements Chunk {
      *
      * @return The world chunk packet that is to be sent
      */
-    Packet createPackagedData() {
+    public PacketWorldChunk createPackagedData(Cache cache, boolean cached) {
         PacketBuffer buffer = new PacketBuffer( 16 );
 
         // Detect how much data we can skip
@@ -515,11 +477,26 @@ public class ChunkAdapter implements Chunk {
             }
         }
 
-        for ( int i = 0; i < topEmpty; i++ ) {
-            ensureSlice( i ).writeToNetwork( buffer );
+        long[] hashes = new long[topEmpty + 1];
+        if (cached) {
+            for (int i = 0; i < topEmpty; i++) {
+                ByteBuf buf = PooledByteBufAllocator.DEFAULT.directBuffer();
+                PacketBuffer packetBuffer = new PacketBuffer(buf);
+                ensureSlice(i).serializeNetwork(packetBuffer);
+                packetBuffer.release();
+                hashes[i] = cache.add(packetBuffer.getBuffer());
+            }
+
+            hashes[hashes.length - 1] = cache.add(this.biomes.asReadOnly().retain().readerIndex(0));
+        } else {
+            for (int i = 0; i < topEmpty; i++) {
+                ensureSlice(i).serializeNetwork(buffer);
+            }
+
+            buffer.writeBytes(this.biomes.asReadOnly().readerIndex(0));
         }
 
-        buffer.writeBytes( this.biomes );
+        // Border blocks
         buffer.writeSignedVarInt( 0 );
         buffer.writeSignedVarInt( 0 );
 
@@ -545,6 +522,12 @@ public class ChunkAdapter implements Chunk {
         packet.setX( this.x );
         packet.setZ( this.z );
         packet.setSubChunkCount( topEmpty );
+
+        if (cached) {
+            packet.setCached(true);
+            packet.setHashes(hashes);
+        }
+
         packet.setData( buffer.getBuffer() );
 
         return packet;
@@ -625,49 +608,18 @@ public class ChunkAdapter implements Chunk {
         }
     }
 
-    public Packet getCachedPacket() {
-        if ( this.dirty ) {
-            this.cachedPacket.clear();
-
-            this.cachedPacket = new SoftReference<>( createPackagedData() );
-            this.dirty = false;
-        }
-
-        // Check if we have a object
-        Packet packetWorldChunk = this.cachedPacket.get();
-        if ( packetWorldChunk == null ) {
-            // The packet got cleared from the JVM due to memory limits
-            if ( this.world.getServer().getCurrentTickTime() - LAST_WARNING.get() >= 5000 ) {
-                NumberFormat numberFormat = NumberFormat.getNumberInstance();
-                numberFormat.setMaximumFractionDigits( 2 );
-
-                LOGGER.warn( "We need to create new chunk data for the network. This only happens when the JVM runs low on " +
-                        "memory. Please consider raising -Xmx in your start parameters. Current free: {} MB",
-                    numberFormat.format( ( Runtime.getRuntime().freeMemory() / (double) 1024 ) / (double) 1024 ) );
-
-                LAST_WARNING.set( this.world.getServer().getCurrentTickTime() );
-            }
-
-            return createPackagedData();
-        }
-
-        return packetWorldChunk;
-    }
-
     public void setTileEntity( int x, int y, int z, TileEntity tileEntity ) {
         ChunkSlice slice = ensureSlice( y >> 4 );
         slice.addTileEntity( x, y - 16 * ( y >> 4 ), z, tileEntity );
 
-        this.dirty = true;
-        this.needsPersistance = true;
+        this.needsPersistence = true;
     }
 
     public void removeTileEntity( int x, int y, int z ) {
         ChunkSlice slice = ensureSlice( y >> 4 );
         slice.removeTileEntity( x, y - 16 * ( y >> 4 ), z );
 
-        this.dirty = true;
-        this.needsPersistance = true;
+        this.needsPersistence = true;
     }
 
     public long longHashCode() {
@@ -687,7 +639,7 @@ public class ChunkAdapter implements Chunk {
                     tileEntity.update( currentTimeMS );
 
                     if ( tileEntity.isNeedsPersistence() ) {
-                        this.needsPersistance = true;
+                        this.needsPersistence = true;
                     }
                 }
             }
@@ -695,7 +647,7 @@ public class ChunkAdapter implements Chunk {
     }
 
     public void flagNeedsPersistance() {
-        this.needsPersistance = true;
+        this.needsPersistence = true;
     }
 
     public int getRuntimeID( int x, int y, int z, int layer ) {
@@ -708,7 +660,17 @@ public class ChunkAdapter implements Chunk {
     }
 
     public void setBiomes( byte[] biomes ) {
-        this.biomes = biomes;
+        this.biomes.setBytes(0, biomes);
+    }
+
+    public void release() {
+        this.biomes.release();
+
+        for (ChunkSlice slice : this.chunkSlices) {
+            if (slice != null) {
+                slice.release();
+            }
+        }
     }
 
 }

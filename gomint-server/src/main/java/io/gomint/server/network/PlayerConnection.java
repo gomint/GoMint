@@ -47,6 +47,7 @@ import io.gomint.server.network.packet.PacketWorldTime;
 import io.gomint.server.network.tcp.ConnectionHandler;
 import io.gomint.server.network.tcp.protocol.FlushTickPacket;
 import io.gomint.server.network.tcp.protocol.WrappedMCPEPacket;
+import io.gomint.server.util.Cache;
 import io.gomint.server.util.EnumConnectors;
 import io.gomint.server.util.Pair;
 import io.gomint.server.util.StringUtil;
@@ -96,63 +97,44 @@ public class PlayerConnection implements ConnectionWithState {
     private final NetworkManager networkManager;
 
     // Actual connection for wire transfer:
-    @Getter
-    private final Connection connection;
-    @Getter
-    private final ConnectionHandler connectionHandler;
+    @Getter private final Connection connection;
+    @Getter private final ConnectionHandler connectionHandler;
+
+    // Caching state
+    @Getter @Setter private boolean cachingSupported;
+    @Getter private final Cache cache = new Cache();
 
     // World data
-    @Getter
-    private final LongSet playerChunks;
-    @Getter
-    private final LongSet loadingChunks;
-    @Getter
-    private GoMintServer server;
-    @Setter
-    @Getter
-    private int protocolID;
-    @Setter
-    private long tcpId;
-    @Setter
-    private int tcpPing;
+    @Getter private final LongSet playerChunks;
+    @Getter private final LongSet loadingChunks;
+    @Getter private final GoMintServer server;
+    @Setter @Getter private int protocolID;
+    @Setter private long tcpId;
+    @Setter private int tcpPing;
     private PostProcessExecutor postProcessorExecutor;
 
     // Connection State:
-    @Getter
-    @Setter
-    private PlayerConnectionState state;
+    @Getter @Setter private PlayerConnectionState state;
     private List<Packet> sendQueue;
 
     // Entity
-    @Getter
-    @Setter
-    private EntityPlayer entity;
+    @Getter @Setter private EntityPlayer entity;
 
     // Additional data
-    @Getter
-    @Setter
-    private DeviceInfo deviceInfo;
+    @Getter @Setter private DeviceInfo deviceInfo;
     private float lastUpdateDT = 0;
 
     // Anti spam because mojang likes to send data
-    @Setter
-    @Getter
-    private boolean hadStartBreak;
-    @Setter
-    @Getter
-    private boolean startBreakResult;
-    @Getter
-    private Set<PacketInventoryTransaction> transactionsHandled = new HashSet<>();
-
-    // Debug stuff
-    @Getter
-    private AtomicInteger responseChunks = new AtomicInteger(0);
+    @Setter @Getter private boolean hadStartBreak;
+    @Setter @Getter private boolean startBreakResult;
+    @Getter private Set<PacketInventoryTransaction> transactionsHandled = new HashSet<>();
 
     // Processors
-    @Getter
-    private Processor inputProcessor = new Processor(false);
-    @Getter
-    private Processor outputProcessor = new Processor(true);
+    @Getter private Processor inputProcessor = new Processor(false);
+    @Getter private Processor outputProcessor = new Processor(true);
+
+    // Stats
+    private AtomicInteger tx = new AtomicInteger(0);
 
     /**
      * Constructs a new player connection.
@@ -237,6 +219,7 @@ public class PlayerConnection implements ConnectionWithState {
             PACKET_HANDLERS[Protocol.PACKET_TICK_SYNC & 0xff] = new PacketTickSyncHandler();
             PACKET_HANDLERS[Protocol.PACKET_CLIENT_CACHE_STATUS & 0xff] = new PacketClientCacheStatusHandler();
             PACKET_HANDLERS[Protocol.PACKET_VIOLATION_WARNING & 0xff] = new PacketViolationWarningHandler();
+            PACKET_HANDLERS[Protocol.PACKET_CLIENT_CACHE_BLOB_STATUS & 0xff] = new PacketClientCacheBlobStatusHandler();
 
             packetHandlersInit = true;
         }
@@ -311,8 +294,8 @@ public class PlayerConnection implements ConnectionWithState {
                         break;
                     }
 
-                    if (Math.abs(chunk.getX() - currentX) > this.entity.getViewDistance() ||
-                        Math.abs(chunk.getZ() - currentZ) > this.entity.getViewDistance() ||
+                    if (Math.abs(chunk.getX() - currentX) > this.entity.getViewDistance() + 1 ||
+                        Math.abs(chunk.getZ() - currentZ) > this.entity.getViewDistance() + 1 ||
                         !chunk.getWorld().equals(this.entity.getWorld())) {
                         LOGGER.debug("Removed chunk from sending due to out of scope");
 
@@ -527,15 +510,17 @@ public class PlayerConnection implements ConnectionWithState {
      * a chance to know once it is ready for spawning.
      *
      * @param chunkAdapter which should be sent to the client
-     * @return true when the chunk has been sent, false when not
      */
-    private boolean sendWorldChunk(ChunkAdapter chunkAdapter) {
+    private void sendWorldChunk(ChunkAdapter chunkAdapter) {
         this.playerChunks.add(chunkAdapter.longHashCode());
         this.loadingChunks.remove(chunkAdapter.longHashCode());
-        this.addToSendQueue(chunkAdapter.getCachedPacket());
+        this.addToSendQueue(chunkAdapter.createPackagedData(this.cache, this.cachingSupported));
         this.entity.getEntityVisibilityManager().updateAddedChunk(chunkAdapter);
+        this.checkForSpawning();
+    }
 
-        if (this.state == PlayerConnectionState.LOGIN && this.loadingChunks.isEmpty()) {
+    public void checkForSpawning() {
+        if (this.state == PlayerConnectionState.LOGIN && this.loadingChunks.isEmpty() && (!this.cachingSupported || this.cache.isEmpty())) {
             int spawnXChunk = CoordinateUtils.fromBlockToChunk((int) this.entity.getLocation().getX());
             int spawnZChunk = CoordinateUtils.fromBlockToChunk((int) this.entity.getLocation().getZ());
 
@@ -549,8 +534,6 @@ public class PlayerConnection implements ConnectionWithState {
             this.entity.getLoginPerformance().setChunkEnd(this.entity.getWorld().getServer().getCurrentTickTime());
             this.entity.getLoginPerformance().print();
         }
-
-        return true;
     }
 
     // ========================================= PACKET HANDLERS ========================================= //
@@ -904,7 +887,7 @@ public class PlayerConnection implements ConnectionWithState {
     public void sendPlayState(PacketPlayState.PlayState state) {
         PacketPlayState packet = new PacketPlayState();
         packet.setState(state);
-        this.send(packet);
+        this.addToSendQueue(packet);
     }
 
     /**

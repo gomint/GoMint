@@ -638,11 +638,7 @@ public abstract class WorldAdapter implements World {
             this.getOrLoadChunk(x, z, true, chunk -> chunk.packageChunk(sendDelegate));
         } else {
             ChunkAdapter chunkAdapter = this.loadChunk(x, z, true);
-            if (chunkAdapter.dirty || chunkAdapter.cachedPacket == null || chunkAdapter.cachedPacket.get() == null) {
-                packageChunk(chunkAdapter, sendDelegate);
-            } else {
-                sendDelegate.invoke(CoordinateUtils.toLong(x, z), chunkAdapter);
-            }
+            packageChunk(chunkAdapter, sendDelegate);
         }
     }
 
@@ -743,7 +739,7 @@ public abstract class WorldAdapter implements World {
      * @param callback The callback which should be invoked when the packing has been done
      */
     private void packageChunk(ChunkAdapter chunk, Delegate2<Long, ChunkAdapter> callback) {
-        chunk.setCachedPacket(chunk.createPackagedData());
+        chunk.createPackagedData(null,false); // We generate some garbage to warm caches
         callback.invoke(CoordinateUtils.toLong(chunk.getX(), chunk.getZ()), chunk);
     }
 
@@ -872,8 +868,6 @@ public abstract class WorldAdapter implements World {
      * @param pos of the block which changes
      */
     private void updateBlock0(ChunkAdapter adapter, BlockPosition pos) {
-        flagChunkDirty(pos);
-
         sendToVisible(pos, null, entity -> {
             if (entity instanceof io.gomint.server.entity.EntityPlayer) {
                 // Check if player already knows this chunk
@@ -885,16 +879,6 @@ public abstract class WorldAdapter implements World {
 
             return false;
         });
-    }
-
-    private void flagChunkDirty(BlockPosition position) {
-        int posX = CoordinateUtils.fromBlockToChunk(position.getX());
-        int posZ = CoordinateUtils.fromBlockToChunk(position.getZ());
-
-        ChunkAdapter chunkAdapter = getChunk(posX, posZ);
-        if (chunkAdapter != null) {
-            chunkAdapter.dirty = true;
-        }
     }
 
     /**

@@ -18,39 +18,43 @@ import lombok.EqualsAndHashCode;
  * @version 1.0
  */
 @Data
-@EqualsAndHashCode( callSuper = false )
+@EqualsAndHashCode(callSuper = false)
 public class PacketWorldChunk extends Packet {
 
     private int x;
     private int z;
 
     private boolean cached;
+    private long[] hashes;
     private int subChunkCount;
 
     private ByteBuf data;
 
     public PacketWorldChunk() {
-        super( Protocol.PACKET_WORLD_CHUNK );
+        super(Protocol.PACKET_WORLD_CHUNK);
     }
 
     @Override
-    public void serialize( PacketBuffer buffer, int protocolID ) {
-        buffer.writeSignedVarInt( this.x );
-        buffer.writeSignedVarInt( this.z );
-        buffer.writeUnsignedVarInt( this.subChunkCount );
-        buffer.writeBoolean( this.cached );
-        buffer.writeUnsignedVarInt( this.data.readableBytes() );
-        buffer.writeBytes( this.data );
+    public void serialize(PacketBuffer buffer, int protocolID) {
+        buffer.writeSignedVarInt(this.x);
+        buffer.writeSignedVarInt(this.z);
+        buffer.writeUnsignedVarInt(this.subChunkCount);
+        buffer.writeBoolean(this.cached);
+
+        if (this.cached) {
+            buffer.writeUnsignedVarInt(this.hashes.length);
+            for (long hash : this.hashes) {
+                buffer.writeLLong(hash);
+            }
+        }
+
+        buffer.writeUnsignedVarInt(this.data.readableBytes());
+        buffer.writeBytes(this.data);
     }
 
     @Override
-    public void deserialize( PacketBuffer buffer, int protocolID ) {
-        this.x = buffer.readSignedVarInt();
-        this.z = buffer.readSignedVarInt();
-        this.cached = buffer.readBoolean();
-        this.subChunkCount = buffer.readUnsignedVarInt();
-        int length = buffer.readUnsignedVarInt();
-        this.data = buffer.readSlice(length);
+    public void deserialize(PacketBuffer buffer, int protocolID) {
+
     }
 
 }

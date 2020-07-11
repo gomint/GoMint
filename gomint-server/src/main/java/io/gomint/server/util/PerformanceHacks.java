@@ -7,9 +7,6 @@
 
 package io.gomint.server.util;
 
-import io.gomint.server.world.ChunkAdapter;
-import io.gomint.server.world.ChunkSlice;
-import io.gomint.server.world.UnsafeChunkSlice;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -57,16 +54,4 @@ public class PerformanceHacks {
         return unsafe;
     }
 
-    /**
-     * Check if this JVM has direct access memory via unsafe
-     *
-     * @return true when it has, false when not
-     */
-    public static boolean isUnsafeEnabled() {
-        return unsafe != null;
-    }
-
-    public static ChunkSlice createChunkSlice( ChunkAdapter chunkAdapter, int y ) {
-        return PerformanceHacks.isUnsafeEnabled() ? new UnsafeChunkSlice( chunkAdapter, y ) : new ChunkSlice( chunkAdapter, y );
-    }
 }

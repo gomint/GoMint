@@ -14,6 +14,7 @@ import io.gomint.server.network.packet.PacketBatch;
 import io.gomint.server.network.packet.PacketBlockPickRequest;
 import io.gomint.server.network.packet.PacketBookEdit;
 import io.gomint.server.network.packet.PacketBossBar;
+import io.gomint.server.network.packet.PacketClientCacheBlobStatus;
 import io.gomint.server.network.packet.PacketClientCacheStatus;
 import io.gomint.server.network.packet.PacketCommandRequest;
 import io.gomint.server.network.packet.PacketContainerClose;
@@ -231,6 +232,9 @@ public final class Protocol {
      */
     public static Packet createPacket(int id) {
         switch (id) {
+            case PACKET_CLIENT_CACHE_BLOB_STATUS:
+                return new PacketClientCacheBlobStatus();
+
             case PACKET_VIOLATION_WARNING:
                 return new PacketViolationWarning();
 

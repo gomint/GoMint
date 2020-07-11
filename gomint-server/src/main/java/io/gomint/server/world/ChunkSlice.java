@@ -8,6 +8,8 @@ import io.gomint.server.util.BlockIdentifier;
 import io.gomint.server.util.Palette;
 import io.gomint.server.world.storage.TemporaryStorage;
 import io.gomint.world.block.Block;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.PooledByteBufAllocator;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
 import it.unimi.dsi.fastutil.longs.LongArrayList;
@@ -32,10 +34,8 @@ public class ChunkSlice {
 
     protected static final short AIR_RUNTIME_ID = (short) BlockRuntimeIDs.toBlockIdentifier( "minecraft:air", null ).getRuntimeId();
 
-    @Getter
-    private final ChunkAdapter chunk;
-    @Getter
-    private final int sectionY;
+    @Getter private final ChunkAdapter chunk;
+    @Getter private final int sectionY;
 
     // Cache
     private int shiftedMinX;
@@ -44,13 +44,12 @@ public class ChunkSlice {
 
     protected boolean isAllAir = true;
 
-    private short[][] blocks = new short[2][]; // MC currently supports two layers, we init them as we need
+    private ByteBuf[] blocks = new ByteBuf[2]; // MC currently supports two layers, we init them as we need
 
     private NibbleArray blockLight = null; // NibbleArray.create( (short) 4096 );
     private NibbleArray skyLight = null; // NibbleArray.create( (short) 4096 )
 
-    @Getter
-    private Short2ObjectOpenHashMap<TileEntity> tileEntities = null;
+    @Getter private Short2ObjectOpenHashMap<TileEntity> tileEntities = null;
     private Short2ObjectOpenHashMap[] temporaryStorages = new Short2ObjectOpenHashMap[2];   // MC currently supports two layers, we init them as we need
 
     public ChunkSlice( ChunkAdapter chunkAdapter, int sectionY ) {
@@ -104,12 +103,12 @@ public class ChunkSlice {
             return AIR_RUNTIME_ID;
         }
 
-        short[] blockStorage = this.blocks[layer];
+        ByteBuf blockStorage = this.blocks[layer];
         if ( blockStorage == null ) {
             return AIR_RUNTIME_ID;
         }
 
-        return blockStorage[index];
+        return blockStorage.getShort(index * 2);
     }
 
     <T extends io.gomint.world.block.Block> T getBlockInstance( int x, int y, int z, int layer ) {
@@ -166,13 +165,16 @@ public class ChunkSlice {
 
     public void setRuntimeIdInternal( short index, int layer, int runtimeID ) {
         if ( runtimeID != AIR_RUNTIME_ID && this.blocks[layer] == null ) {
-            this.blocks[layer] = new short[4096]; // Defaults to all 0
-            Arrays.fill(this.blocks[layer], AIR_RUNTIME_ID);
+            this.blocks[layer] = PooledByteBufAllocator.DEFAULT.directBuffer( 4096 * 2 ); // Defaults to all 0
+            for (int i = 0; i < 4096; i++) {
+                this.blocks[layer].writeShort(AIR_RUNTIME_ID);
+            }
+
             this.isAllAir = false;
         }
 
         if ( this.blocks[layer] != null ) {
-            this.blocks[layer][index] = (short) runtimeID;
+            this.blocks[layer].setShort(index * 2, (short) runtimeID );
         }
     }
 
@@ -218,12 +220,14 @@ public class ChunkSlice {
         storage.remove( index );
     }
 
-    public void writeToNetwork( PacketBuffer buffer ) {
+    public void serializeNetwork( PacketBuffer buffer ) {
         buffer.writeByte( (byte) 8 );
 
         // Check how many layers we have
         int amountOfLayers = this.getAmountOfLayers();
         buffer.writeByte( (byte) amountOfLayers );
+
+
 
         for ( int layer = 0; layer < amountOfLayers; layer++ ) {
             int foundIndex = 0;
@@ -281,6 +285,22 @@ public class ChunkSlice {
         }
 
         return blocks;
+    }
+
+    public void release() {
+        for (ByteBuf block : this.blocks) {
+            if (block != null) {
+                block.release();
+            }
+        }
+
+        if ( this.blockLight != null ) {
+            this.blockLight.release();
+        }
+
+        if ( this.skyLight != null ) {
+            this.skyLight.release();
+        }
     }
 
 }

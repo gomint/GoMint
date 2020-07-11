@@ -8,22 +8,14 @@
 package io.gomint.server.world;
 
 import io.gomint.server.util.PerformanceHacks;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.PooledByteBufAllocator;
 
 /**
  * @author geNAZt
  * @version 1.0
  */
-public interface NibbleArray {
-
-    /**
-     * Create a new heap allocated nibble array holding the data given
-     *
-     * @param data which should be inside the nibble array
-     * @return a nibble array which is stored on heap
-     */
-    static NibbleArray create( byte[] data ) {
-        return new HeapNibbleArray( data );
-    }
+public class NibbleArray {
 
     /**
      * Allocates a new nibble array that is able to hold length entries.
@@ -31,7 +23,20 @@ public interface NibbleArray {
      * @param size The desired length of the array
      */
     static NibbleArray create( short size ) {
-        return PerformanceHacks.isUnsafeEnabled() ? new UnsafeNibbleArray( size ) : new HeapNibbleArray( size );
+        return new NibbleArray( size );
+    }
+
+    private final int length;
+    private final ByteBuf data;
+
+    /**
+     * Allocates a new nibble array that is able to hold length entries.
+     *
+     * @param length The desired length of the array
+     */
+    public NibbleArray( short length ) {
+        this.length = length;
+        this.data = PooledByteBufAllocator.DEFAULT.directBuffer(( this.length + 1 ) >> 1);
     }
 
     /**
@@ -40,7 +45,14 @@ public interface NibbleArray {
      * @param index The index of the nibble to be set
      * @param value The value to set
      */
-    void set( int index, byte value );
+    public void set( int index, byte value ) {
+        value &= 0xF;
+
+        byte old = this.data.getByte(index / 2);
+        old &= (byte) ( 0xF << ( ( index + 1 ) % 2 * 4 ) );
+        old |= (byte) ( value << ( index % 2 * 4 ) );
+        this.data.setByte( index / 2, old );
+    }
 
     /**
      * Gets the entry at the specified index
@@ -48,20 +60,24 @@ public interface NibbleArray {
      * @param index The index of the nibble to get
      * @return The nibble's value
      */
-    byte get( int index );
-
-    /**
-     * Gets the raw byte array held by this nibble array
-     *
-     * @return The raw byte array
-     */
-    byte[] raw();
+    public byte get( int index ) {
+        return (byte) ( this.data.getByte(index / 2) >> ( ( index & 1 ) << 2 ) & 0xF );
+    }
 
     /**
      * Gets the length of the nibble array
      *
      * @return The length of the nibble array
      */
-    int length();
+    public int length() {
+        return this.length;
+    }
+
+    /**
+     * Release this array
+     */
+    public void release() {
+        this.data.release();
+    }
 
 }
