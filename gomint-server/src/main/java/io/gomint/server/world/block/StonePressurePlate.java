@@ -38,7 +38,7 @@ public class StonePressurePlate extends BasePressurePlate implements io.gomint.w
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.STONE_PRESSURE_PLATE;
     }
 

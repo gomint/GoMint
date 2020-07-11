@@ -43,7 +43,7 @@ public class ChorusPlant extends Block implements io.gomint.world.block.BlockCho
         return true;
     }
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.CHORUS_PLANT;
     }
 

@@ -39,7 +39,7 @@ public class ChorusFlower extends Block implements io.gomint.world.block.BlockCh
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.CHORUS_FLOWER;
     }
 

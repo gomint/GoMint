@@ -6,12 +6,10 @@ import io.gomint.math.BlockPosition;
 import io.gomint.math.Vector;
 import io.gomint.server.entity.Entity;
 import io.gomint.server.entity.EntityPlayer;
-import io.gomint.server.util.BlockIdentifier;
 import io.gomint.server.world.BlockRuntimeIDs;
 import io.gomint.server.world.PlacementData;
 import io.gomint.server.world.UpdateReason;
 import io.gomint.server.world.block.state.DirectValueBlockState;
-import io.gomint.server.world.block.state.ProgressBlockState;
 import io.gomint.world.Sound;
 import io.gomint.world.block.data.Direction;
 import io.gomint.world.block.data.Facing;
@@ -58,7 +56,7 @@ public abstract class Liquid extends Block implements BlockLiquid {
 
     private short getEffectiveFlowDecay(Block block) {
         // Block changed type?
-        if (block.getType() != this.getType()) {
+        if (block.getBlockType() != this.getBlockType()) {
             return -1;
         }
 
@@ -258,7 +256,7 @@ public abstract class Liquid extends Block implements BlockLiquid {
                 // Did we fully decay?
                 boolean decayed = decay < 0;
                 if (decayed) {
-                    this.setType(Air.class);
+                    this.setBlockType(Air.class);
                 } else {
                     this.liquidDepth.setState(decay);
                 }
@@ -387,7 +385,7 @@ public abstract class Liquid extends Block implements BlockLiquid {
     }
 
     private short getFlowDecay(Block block) {
-        if (block.getType() != this.getType()) {
+        if (block.getBlockType() != this.getBlockType()) {
             return -1;
         }
 
@@ -415,7 +413,7 @@ public abstract class Liquid extends Block implements BlockLiquid {
      * @param result    of the collision
      */
     protected void liquidCollide(Block colliding, Class<? extends Block> result) {
-        this.setType(result);
+        this.setBlockType(result);
         this.world.playSound(this.location.add(0.5f, 0.5f, 0.5f), Sound.FIZZ, (byte) 0);
     }
 

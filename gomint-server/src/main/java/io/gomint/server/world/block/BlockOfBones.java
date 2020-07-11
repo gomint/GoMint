@@ -38,7 +38,7 @@ public class BlockOfBones extends Block implements io.gomint.world.block.BlockOf
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.BLOCK_OF_BONES;
     }
 

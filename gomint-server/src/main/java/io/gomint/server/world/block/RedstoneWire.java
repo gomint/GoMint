@@ -27,7 +27,7 @@ public class RedstoneWire extends Block implements io.gomint.world.block.BlockRe
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.REDSTONE_WIRE;
     }
 

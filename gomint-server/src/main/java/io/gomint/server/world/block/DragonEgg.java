@@ -40,7 +40,7 @@ public class DragonEgg extends Block implements io.gomint.world.block.BlockDrago
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.DRAGON_EGG;
     }
 
@@ -67,8 +67,8 @@ public class DragonEgg extends Block implements io.gomint.world.block.BlockDrago
 
     @Override
     public void teleport( BlockPosition blockPosition ) {
-        this.setType( Air.class );
-        this.world.getBlockAt( blockPosition ).setType( DragonEgg.class );
+        this.setBlockType( Air.class );
+        this.world.getBlockAt( blockPosition ).setBlockType( DragonEgg.class );
         this.world.sendLevelEvent( blockPosition.toVector(), LevelEvent.DRAGON_EGG_TELEPORT, 0 );
     }
 
@@ -80,7 +80,7 @@ public class DragonEgg extends Block implements io.gomint.world.block.BlockDrago
         for ( int i = 0; i < 1000; i++ ) {
             BlockPosition blockPos = pos.add( random.nextInt( 16 ) - random.nextInt( 16 ), random.nextInt( 8 ) - random.nextInt( 8 ), random.nextInt( 16 ) - random.nextInt( 16 ) );
 
-            if ( this.world.getBlockAt( blockPos ).getType() == BlockType.AIR ) {
+            if ( this.world.getBlockAt( blockPos ).getBlockType() == BlockType.AIR ) {
                 this.teleport( blockPos );
                 return;
             }

@@ -29,7 +29,7 @@ public class Bamboo extends Block implements BlockBamboo {
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.BAMBOO;
     }
 

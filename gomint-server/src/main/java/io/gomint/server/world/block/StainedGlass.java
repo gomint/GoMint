@@ -49,7 +49,7 @@ public class StainedGlass extends Block implements io.gomint.world.block.BlockSt
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.STAINED_GLASS;
     }
 

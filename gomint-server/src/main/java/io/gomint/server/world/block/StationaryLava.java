@@ -64,7 +64,7 @@ public class StationaryLava extends Liquid implements BlockStationaryLava {
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.STATIONARY_LAVA;
     }
 

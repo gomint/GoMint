@@ -94,7 +94,7 @@ public class Leaves extends Block implements BlockLeaves {
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.LEAVES;
     }
 

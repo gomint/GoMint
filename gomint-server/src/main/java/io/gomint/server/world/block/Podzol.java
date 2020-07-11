@@ -33,7 +33,7 @@ public class Podzol extends Block implements io.gomint.world.block.BlockPodzol {
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.PODZOL;
     }
 

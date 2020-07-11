@@ -28,7 +28,7 @@ public class CrackedPolishedBlackStoneBricks extends Block implements io.gomint.
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.CRACKED_POLISHED_BLACKSTONE_BRICKS;
     }
 

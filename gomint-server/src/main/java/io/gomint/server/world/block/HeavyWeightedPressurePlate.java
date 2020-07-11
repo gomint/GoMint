@@ -56,7 +56,7 @@ public class HeavyWeightedPressurePlate extends Block implements io.gomint.world
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.HEAVY_WEIGHTED_PRESSURE_PLATE;
     }
 

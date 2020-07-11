@@ -27,7 +27,7 @@ public class BlockMovedByPiston extends Block implements io.gomint.world.block.B
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.BLOCK_MOVED_BY_PISTON;
     }
 

@@ -29,7 +29,7 @@ public class AncientDebris extends Block implements io.gomint.world.block.BlockA
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.ANCIENT_DEBRIS;
     }
 

@@ -60,7 +60,7 @@ public class WoodenTrapdoor extends Trapdoor implements io.gomint.world.block.Bl
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.TRAPDOOR;
     }
 

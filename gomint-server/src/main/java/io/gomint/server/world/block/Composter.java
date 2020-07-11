@@ -33,7 +33,7 @@ public class Composter extends Block implements io.gomint.world.block.BlockCompo
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.COMPOSTER;
     }
 }

@@ -31,7 +31,7 @@ public class WeepingVines extends Block implements io.gomint.world.block.BlockWe
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.WEEPING_VINES;
     }
 }

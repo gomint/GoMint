@@ -28,7 +28,7 @@ public class WarpedNylium extends Block implements io.gomint.world.block.BlockWa
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.WARPED_NYLIUM;
     }
 

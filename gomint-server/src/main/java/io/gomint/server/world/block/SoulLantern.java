@@ -38,7 +38,7 @@ public class SoulLantern extends Block implements io.gomint.world.block.BlockSou
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.SOUL_LANTERN;
     }
 }

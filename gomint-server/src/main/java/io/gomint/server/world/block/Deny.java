@@ -31,7 +31,7 @@ public class Deny extends Block implements io.gomint.world.block.BlockDeny {
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.DENY;
     }
 

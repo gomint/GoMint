@@ -28,7 +28,7 @@ public class NetherGoldOre extends Block implements io.gomint.world.block.BlockN
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.NETHER_GOLD_ORE;
     }
 

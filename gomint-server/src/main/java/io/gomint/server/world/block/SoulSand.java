@@ -29,7 +29,7 @@ public class SoulSand extends Block implements io.gomint.world.block.BlockSoulSa
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.SOUL_SAND;
     }
 

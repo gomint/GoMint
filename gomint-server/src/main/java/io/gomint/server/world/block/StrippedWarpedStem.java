@@ -38,7 +38,7 @@ public class StrippedWarpedStem extends Block implements io.gomint.world.block.B
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.STRIPPED_WARPED_STEM;
     }
 }

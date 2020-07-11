@@ -32,7 +32,7 @@ public class EndGateway extends Block implements io.gomint.world.block.BlockEndG
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.END_GATEWAY;
     }
 

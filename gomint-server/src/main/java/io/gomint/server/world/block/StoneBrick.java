@@ -29,7 +29,7 @@ public class StoneBrick extends Block implements io.gomint.world.block.BlockSton
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.STONE_BRICK;
     }
 

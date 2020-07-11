@@ -36,7 +36,7 @@ public class Target extends Block implements io.gomint.world.block.BlockTarget {
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.TARGET;
     }
 }

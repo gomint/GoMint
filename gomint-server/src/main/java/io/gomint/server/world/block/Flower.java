@@ -28,7 +28,7 @@ public class Flower extends Block implements io.gomint.world.block.BlockFlower {
     public boolean beforePlacement(Entity entity, ItemStack item, Location location) {
         // Check if downwards block is valid
         Block block = entity.getWorld().getBlockAt(location.toBlockPosition().add(Vector.DOWN.toBlockPosition()));
-        return ALLOWED_PLACED_ON.contains(block.getType());
+        return ALLOWED_PLACED_ON.contains(block.getBlockType());
     }
 
     @Override
@@ -57,7 +57,7 @@ public class Flower extends Block implements io.gomint.world.block.BlockFlower {
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.FLOWER;
     }
 

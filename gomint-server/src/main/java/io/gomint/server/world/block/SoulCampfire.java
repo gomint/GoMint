@@ -38,7 +38,7 @@ public class SoulCampfire extends Block implements io.gomint.world.block.BlockSo
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.SOUL_CAMPFIRE;
     }
 }

@@ -31,7 +31,7 @@ public class Cobblestone extends Block implements io.gomint.world.block.BlockCob
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.COBBLESTONE;
     }
 

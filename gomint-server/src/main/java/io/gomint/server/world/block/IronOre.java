@@ -29,7 +29,7 @@ public class IronOre extends Block implements io.gomint.world.block.BlockIronOre
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.IRON_ORE;
     }
 

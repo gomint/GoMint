@@ -47,7 +47,7 @@ public class GrassBlock extends Block implements io.gomint.world.block.BlockGras
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.GRASS_BLOCK;
     }
 

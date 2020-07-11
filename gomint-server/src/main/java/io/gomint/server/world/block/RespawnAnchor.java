@@ -35,7 +35,7 @@ public class RespawnAnchor extends Block implements io.gomint.world.block.BlockR
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.RESPAWN_ANCHOR;
     }
 }

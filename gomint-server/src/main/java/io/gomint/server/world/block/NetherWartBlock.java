@@ -40,7 +40,7 @@ public class NetherWartBlock extends Block implements BlockNetherWartBlock {
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.NETHER_WART_BLOCK;
     }
 

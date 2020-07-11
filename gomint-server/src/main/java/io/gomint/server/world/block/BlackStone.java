@@ -33,7 +33,7 @@ public class BlackStone extends Block implements io.gomint.world.block.BlockBlac
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.BLACKSTONE;
     }
 }

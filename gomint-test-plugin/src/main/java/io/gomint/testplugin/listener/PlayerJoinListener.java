@@ -6,9 +6,8 @@ import io.gomint.event.EventListener;
 import io.gomint.event.EventPriority;
 import io.gomint.event.player.PlayerJoinEvent;
 import io.gomint.inventory.item.ItemBucket;
-import io.gomint.inventory.item.ItemFlower;
+import io.gomint.inventory.item.ItemSand;
 import io.gomint.inventory.item.ItemShears;
-import io.gomint.inventory.item.ItemShield;
 import io.gomint.math.BlockPosition;
 import io.gomint.testplugin.TestPlugin;
 import io.gomint.testplugin.scoreboard.DebugScoreboard;
@@ -41,16 +40,7 @@ public class PlayerJoinListener implements EventListener {
 
         event.getPlayer().getInventory().setItem(3, ItemShears.create(1));
 
-        event.getPlayer().getInventory().setItem(5, ItemFlower.create(4));
-
-        // Spawn a Armor Stand to the player location
-        EntityArmorStand.create().spawn(event.getPlayer().getLocation());
-
-        // Try to make a invalid block placement
-        BlockPosition pos = event.getPlayer().getLocation().toBlockPosition();
-        pos.add(0, -1, 0);
-        Block air = event.getPlayer().getWorld().getBlockAt(pos);
-        air.setType(BlockBambooSapling.class);
+        event.getPlayer().getInventory().setItem(5, ItemSand.create(4));
     }
 
 }

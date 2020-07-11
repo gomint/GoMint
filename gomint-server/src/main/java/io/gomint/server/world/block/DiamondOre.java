@@ -34,7 +34,7 @@ public class DiamondOre extends Block implements io.gomint.world.block.BlockDiam
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.DIAMOND_ORE;
     }
 

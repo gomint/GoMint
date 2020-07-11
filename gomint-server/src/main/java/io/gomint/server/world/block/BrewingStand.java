@@ -34,7 +34,7 @@ public class BrewingStand extends Block implements io.gomint.world.block.BlockBr
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.BREWING_STAND;
     }
 

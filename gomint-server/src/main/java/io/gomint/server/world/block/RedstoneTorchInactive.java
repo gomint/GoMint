@@ -37,7 +37,7 @@ public class RedstoneTorchInactive extends Block implements io.gomint.world.bloc
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.REDSTONE_TORCH_INACTIVE;
     }
 

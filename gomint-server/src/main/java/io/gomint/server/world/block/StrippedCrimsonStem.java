@@ -38,7 +38,7 @@ public class StrippedCrimsonStem extends Block implements io.gomint.world.block.
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.STRIPPED_CRIMSON_STEM;
     }
 

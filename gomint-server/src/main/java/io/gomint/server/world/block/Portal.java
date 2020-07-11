@@ -27,7 +27,7 @@ public class Portal extends Block implements io.gomint.world.block.BlockPortal {
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.PORTAL;
     }
 

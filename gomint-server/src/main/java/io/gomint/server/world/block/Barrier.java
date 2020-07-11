@@ -39,7 +39,7 @@ public class Barrier extends Block implements BlockBarrier {
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.BARRIER;
     }
 

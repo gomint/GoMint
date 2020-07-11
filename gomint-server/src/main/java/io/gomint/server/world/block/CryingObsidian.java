@@ -35,7 +35,7 @@ public class CryingObsidian extends Block implements io.gomint.world.block.Block
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.CRYING_OBSIDIAN;
     }
 }

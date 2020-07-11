@@ -1,22 +1,55 @@
 package io.gomint.server.world.block;
 
+import com.google.common.collect.Lists;
+import io.gomint.inventory.item.data.SandType;
+import io.gomint.math.Vector;
+import io.gomint.server.entity.EntityPlayer;
+import io.gomint.server.util.BlockIdentifier;
+import io.gomint.server.world.BlockRuntimeIDs;
+import io.gomint.server.world.PlacementData;
 import io.gomint.server.world.block.helper.ToolPresets;
+import io.gomint.server.world.block.state.EnumBlockState;
 import io.gomint.world.block.BlockType;
 
 import io.gomint.inventory.item.*;
 import io.gomint.server.registry.RegisterInfo;
+import io.gomint.world.block.data.Facing;
+import lombok.Getter;
+
+import java.util.List;
 
 /**
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:sand" )
+@RegisterInfo(sId = "minecraft:sand")
 public class Sand extends Fallable implements io.gomint.world.block.BlockSand {
 
-    @Override
-    public String getBlockId() {
-        return "minecraft:sand";
+    private static final String[] SAND_TYPE = new String[]{"sand_type"};
+
+    @Getter
+    private enum SandTypeMagic {
+        RED("red"),
+        NORMAL("normal");
+
+        private final String type;
+
+        SandTypeMagic(String type) {
+            this.type = type;
+        }
     }
+
+    private final EnumBlockState<SandTypeMagic, String> type = new EnumBlockState<>(this, newValue -> {
+        return SAND_TYPE;
+    }, SandTypeMagic.values(), SandTypeMagic::getType, v -> {
+        for (SandTypeMagic value : SandTypeMagic.values()) {
+            if (value.getType().equals(v)) {
+                return value;
+            }
+        }
+
+        return null;
+    });
 
     @Override
     public long getBreakTime() {
@@ -39,8 +72,40 @@ public class Sand extends Fallable implements io.gomint.world.block.BlockSand {
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.SAND;
+    }
+
+    @Override
+    public void setType(SandType type) {
+        SandTypeMagic newState = SandTypeMagic.valueOf(type.name());
+        this.type.setState(newState);
+    }
+
+    @Override
+    public SandType getType() {
+        return SandType.valueOf(this.type.getState().name());
+    }
+
+    @Override
+    public PlacementData calculatePlacementData(EntityPlayer entity, ItemStack item, Facing face, Block block, Block clickedBlock, Vector clickVector) {
+        PlacementData placementData = super.calculatePlacementData(entity, item, face, block, clickedBlock, clickVector);
+        BlockIdentifier identifier = placementData.getBlockIdentifier();
+
+        SandTypeMagic should = item.getData() == 0 ? SandTypeMagic.NORMAL : SandTypeMagic.RED;
+        placementData.setBlockIdentifier(BlockRuntimeIDs.change(identifier, SAND_TYPE[0], should.getType()));
+        return placementData;
+    }
+
+    @Override
+    public List<ItemStack> getDrops(ItemStack itemInHand) {
+        if (this.type.getState() == SandTypeMagic.NORMAL) {
+            ItemStack drop = this.world.getServer().getItems().create(this.identifier.getBlockId(), (short) 0, (byte) 1, null);
+            return Lists.newArrayList(drop);
+        }
+
+        ItemStack drop = this.world.getServer().getItems().create(this.identifier.getBlockId(), (short) 1, (byte) 1, null);
+        return Lists.newArrayList(drop);
     }
 
 }

@@ -41,7 +41,7 @@ public class FlowingWater extends Liquid implements BlockFlowingWater {
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.FLOWING_WATER;
     }
 

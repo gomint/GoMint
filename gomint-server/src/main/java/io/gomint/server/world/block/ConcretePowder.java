@@ -40,7 +40,7 @@ public class ConcretePowder extends Block implements io.gomint.world.block.Block
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.CONCRETE_POWDER;
     }
 

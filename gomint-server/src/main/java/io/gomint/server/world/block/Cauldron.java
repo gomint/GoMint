@@ -37,7 +37,7 @@ public class Cauldron extends Block implements io.gomint.world.block.BlockCauldr
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.CAULDRON;
     }
 

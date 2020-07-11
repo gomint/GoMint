@@ -39,7 +39,7 @@ public class Anvil extends Block implements io.gomint.world.block.BlockAnvil {
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.ANVIL;
     }
 

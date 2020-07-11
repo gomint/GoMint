@@ -55,7 +55,7 @@ public class CraftingTable extends Block implements io.gomint.world.block.BlockC
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.CRAFTING_TABLE;
     }
 

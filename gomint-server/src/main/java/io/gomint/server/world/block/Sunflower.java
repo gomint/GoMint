@@ -37,7 +37,7 @@ public class Sunflower extends Block implements io.gomint.world.block.BlockSunfl
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.SUNFLOWER;
     }
 

@@ -42,7 +42,7 @@ public class Beacon extends Block implements io.gomint.world.block.BlockBeacon {
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.BEACON;
     }
 

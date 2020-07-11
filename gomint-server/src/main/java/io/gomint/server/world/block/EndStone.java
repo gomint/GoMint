@@ -28,7 +28,7 @@ public class EndStone extends Block implements io.gomint.world.block.BlockEndSto
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.END_STONE;
     }
 

@@ -24,7 +24,7 @@ public class EndBricks extends Block implements io.gomint.world.block.BlockEndBr
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.END_BRICKS;
     }
 

@@ -38,7 +38,7 @@ public class BeeHive extends Block implements io.gomint.world.block.BlockBeeHive
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.BEE_HIVE;
     }
 }

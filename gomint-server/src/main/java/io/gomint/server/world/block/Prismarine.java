@@ -29,7 +29,7 @@ public class Prismarine extends Block implements io.gomint.world.block.BlockPris
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.PRISMARINE;
     }
 

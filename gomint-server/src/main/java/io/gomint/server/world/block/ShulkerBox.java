@@ -76,7 +76,7 @@ public class ShulkerBox extends Block implements io.gomint.world.block.BlockShul
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.SHULKER_BOX;
     }
 

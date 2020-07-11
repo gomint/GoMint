@@ -50,14 +50,14 @@ public class TallGrassPopulator implements Populator {
 
     private boolean canTallGrassStay( Chunk chunk, int x, int y, int z ) {
         Block block = chunk.getBlockAt( x, y, z );
-        return ( block.getType() == BlockType.AIR || block.getType() == BlockType.SNOW_LAYER ) && chunk.getBlockAt( x, y - 1, z ).getType() == BlockType.GRASS_BLOCK;
+        return ( block.getBlockType() == BlockType.AIR || block.getBlockType() == BlockType.SNOW_LAYER ) && chunk.getBlockAt( x, y - 1, z ).getBlockType() == BlockType.GRASS_BLOCK;
     }
 
     private int getHighestWorkableBlock( Chunk chunk, int x, int z ) {
         int y = 255;
         for ( ; y >= 0; --y ) {
             Block block = chunk.getBlockAt( x, y, z );
-            if ( block.getType() != BlockType.AIR && block.getType() != BlockType.LEAVES && block.getType() != BlockType.SNOW_LAYER ) {
+            if ( block.getBlockType() != BlockType.AIR && block.getBlockType() != BlockType.LEAVES && block.getBlockType() != BlockType.SNOW_LAYER ) {
                 break;
             }
         }

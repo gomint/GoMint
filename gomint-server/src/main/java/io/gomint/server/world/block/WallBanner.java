@@ -17,7 +17,7 @@ public class WallBanner extends Banner {
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.WALL_BANNER;
     }
 

@@ -34,7 +34,7 @@ public class Fence extends Block implements io.gomint.world.block.BlockFence {
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.FENCE;
     }
 

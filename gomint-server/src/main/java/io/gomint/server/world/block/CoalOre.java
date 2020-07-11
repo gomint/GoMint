@@ -35,7 +35,7 @@ public class CoalOre extends Block implements io.gomint.world.block.BlockCoalOre
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.COAL_ORE;
     }
 

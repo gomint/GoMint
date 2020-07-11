@@ -35,7 +35,7 @@ public class Bedrock extends Block implements io.gomint.world.block.BlockBedrock
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.BEDROCK;
     }
 

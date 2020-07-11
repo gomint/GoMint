@@ -60,7 +60,7 @@ public class Cobweb extends Block implements BlockCobweb {
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.COBWEB;
     }
 

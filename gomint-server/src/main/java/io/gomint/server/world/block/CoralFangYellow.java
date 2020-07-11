@@ -24,7 +24,7 @@ public class CoralFangYellow extends Block implements BlockCoralFangYellow {
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.CORAL_FANG_YELLOW;
     }
 

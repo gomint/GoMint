@@ -34,7 +34,7 @@ public class NetherBrickFence extends Block implements io.gomint.world.block.Blo
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.NETHER_BRICK_FENCE;
     }
 

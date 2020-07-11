@@ -34,7 +34,7 @@ public class IronTrapdoor extends Trapdoor implements io.gomint.world.block.Bloc
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.IRON_TRAPDOOR;
     }
 

@@ -31,7 +31,7 @@ public class CrimsonFungus extends Block implements io.gomint.world.block.BlockC
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.CRIMSON_FUNGUS;
     }
 

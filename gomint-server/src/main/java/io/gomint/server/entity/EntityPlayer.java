@@ -289,11 +289,8 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
         this.sendAdventureSettings();
 
         // Set fly
-        if (this.gamemode == Gamemode.SPECTATOR || this.gamemode == Gamemode.CREATIVE) {
-            this.metadataContainer.setDataFlag(MetadataContainer.DATA_INDEX, EntityFlag.CAN_FLY, true);
-        } else {
-            this.metadataContainer.setDataFlag(MetadataContainer.DATA_INDEX, EntityFlag.CAN_FLY, false);
-        }
+        this.metadataContainer.setDataFlag(MetadataContainer.DATA_INDEX, EntityFlag.CAN_FLY,
+            this.gamemode == Gamemode.SPECTATOR || this.gamemode == Gamemode.CREATIVE);
 
         // Set invis
         if (this.gamemode == Gamemode.SPECTATOR) {
@@ -372,7 +369,7 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
         // Remove from player list
         PacketPlayerlist packetPlayerlist = new PacketPlayerlist();
         packetPlayerlist.setMode((byte) 1);
-        packetPlayerlist.setEntries(new ArrayList<PacketPlayerlist.Entry>() {{
+        packetPlayerlist.setEntries(new ArrayList<>() {{
             add(new PacketPlayerlist.Entry(other));
         }});
         getConnection().addToSendQueue(packetPlayerlist);
@@ -392,7 +389,7 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
             // Send tablist and spawn packet
             PacketPlayerlist packetPlayerlist = new PacketPlayerlist();
             packetPlayerlist.setMode((byte) 0);
-            packetPlayerlist.setEntries(new ArrayList<PacketPlayerlist.Entry>() {{
+            packetPlayerlist.setEntries(new ArrayList<>() {{
                 add(new PacketPlayerlist.Entry(other));
             }});
             getConnection().addToSendQueue(packetPlayerlist);
@@ -1722,6 +1719,10 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
     @Override
     public boolean shouldBeSeen(EntityPlayer player) {
         return player.isSpawnPlayers() && super.shouldBeSeen(player);
+    }
+
+    public boolean knowsChunk(ChunkAdapter adapter) {
+        return this.connection.knowsChunk(adapter);
     }
 
 }

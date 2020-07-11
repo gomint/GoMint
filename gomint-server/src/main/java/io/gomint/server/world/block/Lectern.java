@@ -33,7 +33,7 @@ public class Lectern extends Block implements io.gomint.world.block.BlockLectern
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.LECTERN;
     }
 

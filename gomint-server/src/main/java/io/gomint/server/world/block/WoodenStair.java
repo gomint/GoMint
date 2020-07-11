@@ -59,7 +59,7 @@ public class WoodenStair extends Stair implements BlockWoodenStair {
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.WOODEN_STAIR;
     }
 

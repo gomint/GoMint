@@ -29,7 +29,7 @@ public class MossyCobblestone extends Block implements io.gomint.world.block.Blo
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.MOSSY_COBBLESTONE;
     }
 

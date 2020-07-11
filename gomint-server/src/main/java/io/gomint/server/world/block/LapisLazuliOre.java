@@ -29,7 +29,7 @@ public class LapisLazuliOre extends Block implements io.gomint.world.block.Block
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.LAPIS_LAZULI_ORE;
     }
 

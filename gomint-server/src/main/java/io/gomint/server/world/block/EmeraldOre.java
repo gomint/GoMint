@@ -34,7 +34,7 @@ public class EmeraldOre extends Block implements io.gomint.world.block.BlockEmer
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.EMERALD_ORE;
     }
 

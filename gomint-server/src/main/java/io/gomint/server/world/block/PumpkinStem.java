@@ -32,7 +32,7 @@ public class PumpkinStem extends Growable implements io.gomint.world.block.Block
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.PUMPKIN_STEM;
     }
 

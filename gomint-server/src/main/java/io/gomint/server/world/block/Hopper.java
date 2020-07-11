@@ -37,7 +37,7 @@ public class Hopper extends Block implements io.gomint.world.block.BlockHopper {
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.HOPPER;
     }
 

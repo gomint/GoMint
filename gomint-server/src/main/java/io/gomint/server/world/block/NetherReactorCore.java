@@ -24,7 +24,7 @@ public class NetherReactorCore extends Block implements io.gomint.world.block.Bl
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.NETHER_REACTOR_CORE;
     }
 

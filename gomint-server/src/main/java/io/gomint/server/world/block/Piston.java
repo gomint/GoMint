@@ -47,7 +47,7 @@ public class Piston extends Block implements io.gomint.world.block.BlockPiston {
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.PISTON;
     }
 

@@ -34,7 +34,7 @@ public class SnowLayer extends Block implements io.gomint.world.block.BlockSnowL
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.SNOW_LAYER;
     }
 

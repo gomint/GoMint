@@ -32,7 +32,7 @@ public class Dispenser extends Block implements io.gomint.world.block.BlockDispe
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.DISPENSER;
     }
 

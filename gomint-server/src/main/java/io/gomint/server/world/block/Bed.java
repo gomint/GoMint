@@ -13,7 +13,6 @@ import io.gomint.server.entity.tileentity.SerializationReason;
 import io.gomint.server.entity.tileentity.TileEntity;
 import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.util.Bearing;
-import io.gomint.server.util.BlockIdentifier;
 import io.gomint.server.world.PlacementData;
 import io.gomint.server.world.block.state.BooleanBlockState;
 import io.gomint.server.world.block.state.DirectionBlockState;
@@ -64,7 +63,7 @@ public class Bed extends Block implements io.gomint.world.block.BlockBed {
     public boolean onBreak( boolean creative ) {
         Bed otherHalf = (Bed) this.getOtherHalf();
         if ( otherHalf != null ) {
-            otherHalf.setType( Air.class );
+            otherHalf.setBlockType( Air.class );
         }
 
         return true;
@@ -76,7 +75,7 @@ public class Bed extends Block implements io.gomint.world.block.BlockBed {
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.BED;
     }
 
@@ -109,7 +108,7 @@ public class Bed extends Block implements io.gomint.world.block.BlockBed {
         io.gomint.world.block.Block otherHalf = getOtherBlock();
 
         // Check if other part is a bed
-        if ( otherHalf != null && otherHalf.getType() == BlockType.BED ) {
+        if ( otherHalf != null && otherHalf.getBlockType() == BlockType.BED ) {
             Bed otherBedHalf = (Bed) otherHalf;
             if ( otherBedHalf.isHeadPart() != this.isHeadPart() ) {
                 return otherBedHalf;

@@ -54,7 +54,7 @@ public class Ladder extends Block implements io.gomint.world.block.BlockLadder {
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.LADDER;
     }
 

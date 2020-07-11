@@ -28,7 +28,7 @@ public class PolishedBlackStoneBricks extends Block implements io.gomint.world.b
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.POLISHED_BLACKSTONE_BRICKS;
     }
 

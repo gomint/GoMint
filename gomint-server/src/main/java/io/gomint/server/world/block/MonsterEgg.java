@@ -27,7 +27,7 @@ public class MonsterEgg extends Block implements io.gomint.world.block.BlockMons
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.MONSTER_EGG;
     }
 

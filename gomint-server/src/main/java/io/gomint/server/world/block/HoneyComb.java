@@ -31,7 +31,7 @@ public class HoneyComb extends Block implements io.gomint.world.block.BlockHoney
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.HONEYCOMB;
     }
 }

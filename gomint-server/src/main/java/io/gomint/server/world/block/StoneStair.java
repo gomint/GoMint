@@ -99,7 +99,7 @@ public class StoneStair extends Stair implements BlockStoneStair {
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.STONE_STAIR;
     }
 

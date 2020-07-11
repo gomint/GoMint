@@ -37,7 +37,7 @@ public class SugarCane extends Block implements io.gomint.world.block.BlockSugar
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.SUGAR_CANE;
     }
 

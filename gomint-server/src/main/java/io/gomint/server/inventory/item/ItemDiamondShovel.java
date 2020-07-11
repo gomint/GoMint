@@ -23,7 +23,7 @@ public class ItemDiamondShovel extends ItemReduceTierDiamond implements io.gomin
     @Override
     public boolean interact(EntityPlayer entity, Facing face, Vector clickPosition, Block clickedBlock ) {
         if ( clickedBlock instanceof GrassBlock ) {
-            clickedBlock.setType( GrassPath.class );
+            clickedBlock.setBlockType( GrassPath.class );
             this.calculateUsageAndUpdate( 1 );
             return true;
         }

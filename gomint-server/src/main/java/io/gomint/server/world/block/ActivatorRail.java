@@ -44,7 +44,7 @@ public class ActivatorRail extends Block implements io.gomint.world.block.BlockA
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.ACTIVATOR_RAIL;
     }
 

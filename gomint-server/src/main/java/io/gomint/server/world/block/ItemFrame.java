@@ -38,7 +38,7 @@ public class ItemFrame extends Block implements io.gomint.world.block.BlockItemF
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.ITEM_FRAME;
     }
 

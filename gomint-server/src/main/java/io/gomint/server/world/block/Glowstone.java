@@ -38,7 +38,7 @@ public class Glowstone extends Block implements io.gomint.world.block.BlockGlows
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.GLOWSTONE;
     }
 

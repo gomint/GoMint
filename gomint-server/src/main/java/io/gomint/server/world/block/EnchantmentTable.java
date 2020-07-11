@@ -43,7 +43,7 @@ public class EnchantmentTable extends Block implements io.gomint.world.block.Blo
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.ENCHANTMENT_TABLE;
     }
 

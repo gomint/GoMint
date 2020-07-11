@@ -41,7 +41,7 @@ public class Cactus extends Block implements io.gomint.world.block.BlockCactus {
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.CACTUS;
     }
 

@@ -96,7 +96,7 @@ public class WoodenButton extends Button implements io.gomint.world.block.BlockW
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.WOODEN_BUTTON;
     }
 

@@ -51,7 +51,7 @@ public class TNT extends Block implements BlockTNT {
         int primeTicks = (int) ( secondsUntilExplosion * 20f );
 
         // Set this to air
-        this.setType( Air.class );
+        this.setBlockType( Air.class );
 
         // Spawn tnt entity
         EntityPrimedTNT entityTNT = new EntityPrimedTNT( this.world, this.location.add( 0.5f, 0.5f, 0.5f ), primeTicks );
@@ -64,7 +64,7 @@ public class TNT extends Block implements BlockTNT {
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.TNT;
     }
 

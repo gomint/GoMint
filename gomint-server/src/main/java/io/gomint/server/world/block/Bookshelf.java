@@ -33,7 +33,7 @@ public class Bookshelf extends Block implements io.gomint.world.block.BlockBooks
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.BOOKSHELF;
     }
 

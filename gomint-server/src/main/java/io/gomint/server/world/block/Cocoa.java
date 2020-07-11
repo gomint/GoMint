@@ -35,7 +35,7 @@ public class Cocoa extends Growable implements io.gomint.world.block.BlockCocoa 
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.COCOA;
     }
 

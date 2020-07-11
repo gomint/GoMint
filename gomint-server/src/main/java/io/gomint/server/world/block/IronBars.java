@@ -34,7 +34,7 @@ public class IronBars extends Block implements io.gomint.world.block.BlockIronBa
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.IRON_BARS;
     }
 

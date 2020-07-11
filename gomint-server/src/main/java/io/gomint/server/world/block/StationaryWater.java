@@ -51,7 +51,7 @@ public class StationaryWater extends Liquid implements BlockStationaryWater {
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.STATIONARY_WATER;
     }
 

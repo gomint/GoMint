@@ -39,7 +39,7 @@ public class PoweredRail extends Block implements io.gomint.world.block.BlockPow
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.POWERED_RAIL;
     }
 

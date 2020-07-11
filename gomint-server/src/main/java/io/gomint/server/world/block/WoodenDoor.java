@@ -40,7 +40,7 @@ public class WoodenDoor extends Door implements BlockWoodenDoor {
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.WOODEN_DOOR;
     }
 

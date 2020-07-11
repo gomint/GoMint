@@ -18,7 +18,6 @@ import io.gomint.server.util.Values;
 import io.gomint.server.world.WorldAdapter;
 import io.gomint.util.random.FastRandom;
 import io.gomint.world.Particle;
-import io.gomint.world.ParticleData;
 import io.gomint.world.block.Block;
 import io.gomint.world.block.BlockType;
 
@@ -148,7 +147,7 @@ public class EntitySnowball extends EntityProjectile implements io.gomint.entity
                 }
             }
 
-            BlockType blockOnPosType = super.getLocation().getBlock().getType();
+            BlockType blockOnPosType = super.getLocation().getBlock().getBlockType();
 
             // A snowball projectile is set on fire if it goes through lava (but doesn't ignite hit entities)
             if ( blockOnPosType == BlockType.FLOWING_LAVA || blockOnPosType == BlockType.STATIONARY_LAVA ) {

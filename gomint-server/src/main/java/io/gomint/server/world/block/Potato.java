@@ -66,7 +66,7 @@ public class Potato extends Growable implements BlockPotato {
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.POTATO;
     }
 

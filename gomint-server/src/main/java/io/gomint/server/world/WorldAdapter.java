@@ -819,10 +819,13 @@ public abstract class WorldAdapter implements World {
                     case POPULATE:
                         AsyncChunkPopulateTask populateTask = (AsyncChunkPopulateTask) task;
 
-                        if (!populateTask.getChunk().isPopulated()) {
+                        ChunkAdapter chunkToPopulate = populateTask.getChunk();
+                        if (!chunkToPopulate.isPopulated()) {
+                            LOGGER.debug("Starting populating chunk {} / {}", chunkToPopulate.getX(), chunkToPopulate.getZ());
+
                             this.chunkGenerator.populate(populateTask.getChunk());
-                            populateTask.getChunk().calculateHeightmap(240);
-                            populateTask.getChunk().setPopulated(true);
+                            chunkToPopulate.calculateHeightmap(240);
+                            chunkToPopulate.setPopulated(true);
                         }
 
                         break;
@@ -841,7 +844,8 @@ public abstract class WorldAdapter implements World {
     }
 
     /**
-     * Send the block given under the position to all players in the chunk of the block
+     * Send the block given under the position to all players in the chunk of the block. This method may
+     * delay the block position update when called from async. It syncs up with the main ticker first in that case
      *
      * @param pos The position of the block to update
      */
@@ -854,27 +858,33 @@ public abstract class WorldAdapter implements World {
 
         if (!GoMint.instance().isMainThread()) {
             this.server.addToMainThread(() -> {
-                flagChunkDirty(pos);
-
-                sendToVisible(pos, null, entity -> {
-                    if (entity instanceof io.gomint.server.entity.EntityPlayer) {
-                        ((io.gomint.server.entity.EntityPlayer) entity).getBlockUpdates().add(pos);
-                    }
-
-                    return false;
-                });
+                updateBlock0(adapter, pos);
             });
         } else {
-            flagChunkDirty(pos);
-
-            sendToVisible(pos, null, entity -> {
-                if (entity instanceof io.gomint.server.entity.EntityPlayer) {
-                    ((io.gomint.server.entity.EntityPlayer) entity).getBlockUpdates().add(pos);
-                }
-
-                return false;
-            });
+            updateBlock0(adapter, pos);
         }
+    }
+
+    /**
+     * This helper method executes a block update schedule on the main thread
+     *
+     * @param adapter in which the block update happens
+     * @param pos of the block which changes
+     */
+    private void updateBlock0(ChunkAdapter adapter, BlockPosition pos) {
+        flagChunkDirty(pos);
+
+        sendToVisible(pos, null, entity -> {
+            if (entity instanceof io.gomint.server.entity.EntityPlayer) {
+                // Check if player already knows this chunk
+                io.gomint.server.entity.EntityPlayer player = ((io.gomint.server.entity.EntityPlayer) entity);
+                if ( player.knowsChunk( adapter ) ) {
+                    player.getBlockUpdates().add(pos);
+                }
+            }
+
+            return false;
+        });
     }
 
     private void flagChunkDirty(BlockPosition position) {
@@ -1160,7 +1170,7 @@ public abstract class WorldAdapter implements World {
         }
 
         if (this.chunkGenerator != null) {
-            LOGGER.info("Generating chunk {} / {}", x, z);
+            LOGGER.debug("Generating chunk {} / {}", x, z);
 
             ChunkAdapter chunk = (ChunkAdapter) this.chunkGenerator.generate(x, z);
             if (chunk != null) {
@@ -1220,7 +1230,7 @@ public abstract class WorldAdapter implements World {
             // Break animation (this also plays the break sound in the client)
             sendLevelEvent(position.toVector().add(.5f, .5f, .5f), LevelEvent.PARTICLE_DESTROY, block.getRuntimeId());
 
-            block.setType(BlockAir.class);
+            block.setBlockType(BlockAir.class);
 
             return true;
         } else {

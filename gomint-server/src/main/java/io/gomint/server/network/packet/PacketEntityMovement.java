@@ -11,6 +11,7 @@ import io.gomint.jraknet.PacketBuffer;
 import io.gomint.server.network.Protocol;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
  * @author BlackyPaw
@@ -19,6 +20,7 @@ import lombok.EqualsAndHashCode;
  */
 @Data
 @EqualsAndHashCode( callSuper = false )
+@ToString
 public class PacketEntityMovement extends Packet {
 
     private static final byte FLAG_ON_GROUND = 0x1;

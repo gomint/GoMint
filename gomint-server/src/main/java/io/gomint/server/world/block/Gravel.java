@@ -39,7 +39,7 @@ public class Gravel extends Fallable implements io.gomint.world.block.BlockGrave
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.GRAVEL;
     }
 

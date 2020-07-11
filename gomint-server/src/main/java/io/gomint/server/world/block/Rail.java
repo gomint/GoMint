@@ -39,7 +39,7 @@ public class Rail extends Block implements io.gomint.world.block.BlockRail {
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.RAIL;
     }
 

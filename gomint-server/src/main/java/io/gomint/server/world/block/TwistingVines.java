@@ -33,7 +33,7 @@ public class TwistingVines extends Block implements io.gomint.world.block.BlockT
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.TWISTING_VINES;
     }
 }

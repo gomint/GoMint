@@ -28,7 +28,7 @@ public class GildedBlackStone extends Block implements io.gomint.world.block.Blo
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.GILDED_BLACKSTONE;
     }
 

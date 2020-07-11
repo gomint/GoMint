@@ -26,7 +26,7 @@ public class RedstoneComparator extends Block implements BlockRedstoneComparator
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.REDSTONE_COMPARATOR;
     }
 

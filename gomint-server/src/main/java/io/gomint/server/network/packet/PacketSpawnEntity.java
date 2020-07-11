@@ -14,6 +14,7 @@ import io.gomint.server.entity.metadata.MetadataContainer;
 import io.gomint.server.network.Protocol;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import java.util.Collection;
 
@@ -23,6 +24,7 @@ import java.util.Collection;
  */
 @Data
 @EqualsAndHashCode( callSuper = false )
+@ToString
 public class PacketSpawnEntity extends Packet {
 
     private long entityId;

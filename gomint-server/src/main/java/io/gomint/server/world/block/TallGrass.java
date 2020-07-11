@@ -72,7 +72,7 @@ public class TallGrass extends Block implements io.gomint.world.block.BlockTallG
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.TALL_GRASS;
     }
 

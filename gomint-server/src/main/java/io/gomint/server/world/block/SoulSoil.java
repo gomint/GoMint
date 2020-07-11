@@ -38,7 +38,7 @@ public class SoulSoil extends Block implements io.gomint.world.block.BlockSoulSo
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.SOUL_SOIL;
     }
 

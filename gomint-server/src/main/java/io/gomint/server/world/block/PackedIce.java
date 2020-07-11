@@ -31,7 +31,7 @@ public class PackedIce extends Block implements io.gomint.world.block.BlockPacke
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.PACKED_ICE;
     }
 

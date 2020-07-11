@@ -313,7 +313,7 @@ public class PacketInventoryTransactionHandler implements PacketHandler<PacketIn
                     // Check for special break rights (creative)
                     if (connection.getEntity().getGamemode() == Gamemode.CREATIVE) {
                         if (connection.getEntity().getWorld().breakBlock(packet.getBlockPosition(), blockBreakEvent.getDrops(), true)) {
-                            block.setType(BlockAir.class);
+                            block.setBlockType(BlockAir.class);
                             connection.getEntity().setBreakVector(null);
                         } else {
                             reset(packet, connection);

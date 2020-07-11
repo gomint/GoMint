@@ -194,7 +194,7 @@ public class Explosion {
                 }
             }
 
-            block.setType( Air.class );
+            block.setBlockType( Air.class );
 
             for ( Facing blockFace : Facing.values() ) {
                 Block attached = block.getSide( blockFace );

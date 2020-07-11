@@ -28,7 +28,7 @@ public class SignTileTest {
             }
 
             @Override
-            public BlockType getType() {
+            public BlockType getBlockType() {
                 return null;
             }
 

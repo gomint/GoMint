@@ -42,7 +42,7 @@ public class DeadBush extends Block implements io.gomint.world.block.BlockDeadBu
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.DEAD_BUSH;
     }
 

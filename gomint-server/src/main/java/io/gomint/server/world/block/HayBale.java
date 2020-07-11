@@ -27,7 +27,7 @@ public class HayBale extends Block implements io.gomint.world.block.BlockHayBale
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.HAY_BALE;
     }
 

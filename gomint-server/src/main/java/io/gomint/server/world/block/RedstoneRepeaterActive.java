@@ -27,7 +27,7 @@ public class RedstoneRepeaterActive extends Block implements io.gomint.world.blo
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.REDSTONE_REPEATER_ACTIVE;
     }
 

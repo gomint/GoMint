@@ -53,7 +53,7 @@ public abstract class Block implements io.gomint.world.block.Block {
     private static final Logger LOGGER = LoggerFactory.getLogger(Block.class);
 
     // This is the source of truth
-    @Setter
+    @Setter @Getter
     protected BlockIdentifier identifier;
 
     // CHECKSTYLE:OFF
@@ -346,7 +346,7 @@ public abstract class Block implements io.gomint.world.block.Block {
     }
 
     @Override
-    public <T extends io.gomint.world.block.Block> T setType(Class<T> blockType) {
+    public <T extends io.gomint.world.block.Block> T setBlockType(Class<T> blockType) {
         BlockPosition pos = this.location.toBlockPosition();
 
         // Check if this block can be replaced

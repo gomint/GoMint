@@ -33,7 +33,7 @@ public class FrostedIce extends Block implements io.gomint.world.block.BlockFros
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.FROSTED_ICE;
     }
 

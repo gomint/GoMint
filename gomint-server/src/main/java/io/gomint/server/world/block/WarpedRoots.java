@@ -31,7 +31,7 @@ public class WarpedRoots extends Block implements io.gomint.world.block.BlockWar
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.WARPED_ROOTS;
     }
 

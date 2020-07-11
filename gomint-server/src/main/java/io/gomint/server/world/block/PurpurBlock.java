@@ -29,7 +29,7 @@ public class PurpurBlock extends Block implements io.gomint.world.block.BlockPur
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.PURPUR_BLOCK;
     }
 

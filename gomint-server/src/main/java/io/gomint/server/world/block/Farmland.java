@@ -85,7 +85,7 @@ public class Farmland extends Block implements io.gomint.world.block.BlockFarmla
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.FARMLAND;
     }
 

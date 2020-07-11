@@ -32,7 +32,7 @@ public class InvisibleBedrock extends Block implements io.gomint.world.block.Blo
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.INVISIBLE_BEDROCK;
     }
 

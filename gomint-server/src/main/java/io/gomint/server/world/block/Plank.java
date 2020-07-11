@@ -64,7 +64,7 @@ public class Plank extends Block implements BlockPlank {
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.PLANK;
     }
 

@@ -25,7 +25,7 @@ public class CommandBlock extends ContainerBlock implements io.gomint.world.bloc
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.COMMAND_BLOCK;
     }
 

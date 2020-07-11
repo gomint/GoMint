@@ -64,7 +64,7 @@ public class WoodenSlab extends Slab implements BlockWoodenSlab {
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.WOODEN_SLAB;
     }
 

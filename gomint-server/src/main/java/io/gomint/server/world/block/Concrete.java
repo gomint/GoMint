@@ -29,7 +29,7 @@ public class Concrete extends Block implements io.gomint.world.block.BlockConcre
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.CONCRETE;
     }
 

@@ -59,7 +59,7 @@ public class Carrots extends Growable implements BlockCarrots {
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.CARROTS;
     }
 

@@ -34,7 +34,7 @@ public class InvertedDaylightSensor extends Block implements io.gomint.world.blo
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.INVERTED_DAYLIGHT_SENSOR;
     }
 

@@ -22,7 +22,7 @@ public class EndRod extends Block implements io.gomint.world.block.BlockEndRod {
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.END_ROD;
     }
 

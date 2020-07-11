@@ -27,7 +27,7 @@ public interface Block {
      *
      * @return type of this block
      */
-    BlockType getType();
+    BlockType getBlockType();
 
     /**
      * Get the level of skylight this block has
@@ -71,7 +71,7 @@ public interface Block {
      * @param blockType the new material of this block
      * @return the new placed block
      */
-    <T extends Block> T setType( Class<T> blockType );
+    <T extends Block> T setBlockType(Class<T> blockType );
 
     /**
      * Set the data and tiles from a block which has been on the same position before
@@ -138,7 +138,7 @@ public interface Block {
 
     /**
      * This method tells you if you can modify the block. A block gets unmodifiable
-     * when the block id in the same location differs ({@link #setType(Class)}.
+     * when the block id in the same location differs ({@link #setBlockType(Class)}.
      *
      * @return true when the block has been placed in the world, false when not
      */

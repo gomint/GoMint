@@ -27,7 +27,7 @@ public class Ore {
     }
 
     public boolean canPlaceObject( World world, int x, int y, int z ) {
-        return world.getBlockAt( x, y, z ).getType() == BlockType.STONE;
+        return world.getBlockAt( x, y, z ).getBlockType() == BlockType.STONE;
     }
 
     public void placeObject( World world, int x, int y, int z ) {
@@ -67,7 +67,7 @@ public class Ore {
                             for ( z = startZ; z <= endZ; ++z ) {
                                 double sizeZ = ( z + 0.5 - seedZ ) / size;
                                 sizeZ *= sizeZ;
-                                if ( ( sizeX + sizeY + sizeZ ) < 1 && world.getBlockAt( x, y, z ).getType() == BlockType.STONE ) {
+                                if ( ( sizeX + sizeY + sizeZ ) < 1 && world.getBlockAt( x, y, z ).getBlockType() == BlockType.STONE ) {
                                     world.getBlockAt( x, y, z ).copyFromBlock( this.type.getBlock() );
                                 }
                             }

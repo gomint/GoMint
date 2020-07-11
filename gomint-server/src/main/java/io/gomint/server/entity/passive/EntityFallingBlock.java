@@ -7,19 +7,13 @@
 
 package io.gomint.server.entity.passive;
 
-import io.gomint.math.BlockPosition;
+import io.gomint.inventory.item.ItemStack;
 import io.gomint.server.entity.Entity;
 import io.gomint.server.entity.EntityType;
 import io.gomint.server.entity.metadata.MetadataContainer;
-import io.gomint.server.network.PlayerConnection;
-import io.gomint.server.network.packet.PacketUpdateBlock;
-import io.gomint.server.network.packet.PacketUpdateBlockSynched;
 import io.gomint.server.registry.RegisterInfo;
-import io.gomint.server.world.BlockRuntimeIDs;
 import io.gomint.server.world.WorldAdapter;
 import io.gomint.server.world.block.Block;
-
-import java.util.SortedMap;
 
 /**
  * @author geNAZt
@@ -28,9 +22,7 @@ import java.util.SortedMap;
 @RegisterInfo(sId = "minecraft:falling_block")
 public class EntityFallingBlock extends Entity implements io.gomint.entity.passive.EntityFallingBlock {
 
-    private String blockId;
-
-    private BlockPosition position;
+    private Block block;
 
     /**
      * Constructs a new EntityFallingBlock
@@ -62,15 +54,17 @@ public class EntityFallingBlock extends Entity implements io.gomint.entity.passi
 
         // Are we onground?
         if (this.onGround) {
-            // this.despawn();
+            this.despawn();
 
             // Check if block can be replaced
             Block block = this.world.getBlockAt(this.getLocation().toBlockPosition());
             if ( block.canBeReplaced( null ) ) {
-                // block.setIdentifier(BlockRuntimeIDs.toBlockIdentifier(this.blockId, null));
+                block.copyFromBlock(this.block);
             } else {
                 // Generate new item drop
-                this.world.createItemDrop(this.getLocation(), this.world.getServer().getItems().create(this.blockId, (short) 0, (byte) 1, null));
+                for (ItemStack drop : this.block.getDrops(null)) {
+                    this.world.dropItem(this.getLocation(), drop);
+                }
             }
         }
     }
@@ -93,12 +87,8 @@ public class EntityFallingBlock extends Entity implements io.gomint.entity.passi
     public void setBlock(io.gomint.world.block.Block block) {
         Block block1 = (Block) block;
 
-        this.blockId = block1.getBlockId();
+        this.block = block1;
         this.metadataContainer.putInt(MetadataContainer.DATA_VARIANT, block1.getRuntimeId());
-
-        if (block1.getLocation() != null) {
-            this.position = block1.getLocation().toBlockPosition();
-        }
     }
 
     /*@Override

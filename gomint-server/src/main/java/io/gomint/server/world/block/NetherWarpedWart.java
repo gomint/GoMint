@@ -40,7 +40,7 @@ public class NetherWarpedWart extends Block implements io.gomint.world.block.Blo
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.NETHER_WARPED_WART;
     }
 

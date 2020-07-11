@@ -108,7 +108,7 @@ public class Sign extends Block implements BlockSign {
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.SIGN;
     }
 

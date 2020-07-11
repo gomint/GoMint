@@ -40,7 +40,7 @@ public class Furnace extends Block implements io.gomint.world.block.BlockFurnace
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.FURNACE;
     }
 

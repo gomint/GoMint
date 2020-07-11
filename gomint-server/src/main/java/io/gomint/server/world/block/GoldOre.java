@@ -31,7 +31,7 @@ public class GoldOre extends Block implements io.gomint.world.block.BlockGoldOre
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.GOLD_ORE;
     }
 

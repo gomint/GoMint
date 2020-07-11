@@ -32,7 +32,7 @@ public class EndPortalFrame extends Block implements io.gomint.world.block.Block
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.END_PORTAL_FRAME;
     }
 

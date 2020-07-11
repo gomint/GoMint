@@ -1,7 +1,6 @@
 package io.gomint.server.world.block;
 
 import io.gomint.event.entity.EntityDamageEvent;
-import io.gomint.math.MathUtils;
 import io.gomint.server.entity.EntityLiving;
 import io.gomint.server.registry.RegisterInfo;
 import io.gomint.world.block.*;
@@ -60,7 +59,7 @@ public class FlowingLava extends Liquid implements BlockFlowingLava {
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.FLOWING_LAVA;
     }
 
@@ -74,7 +73,7 @@ public class FlowingLava extends Liquid implements BlockFlowingLava {
             }
 
             Block otherBlock = this.getSide( blockFace );
-            if ( otherBlock.getType() == BlockType.FLOWING_WATER ) {
+            if ( otherBlock.getBlockType() == BlockType.FLOWING_WATER ) {
                 colliding = otherBlock;
                 break;
             }
@@ -92,7 +91,7 @@ public class FlowingLava extends Liquid implements BlockFlowingLava {
 
     @Override
     protected void flowIntoBlock( Block block, int newFlowDecay ) {
-        if ( block.getType() == BlockType.FLOWING_WATER ) {
+        if ( block.getBlockType() == BlockType.FLOWING_WATER ) {
             ( (Liquid) block ).liquidCollide( this, Stone.class );
         } else {
             super.flowIntoBlock( block, newFlowDecay );

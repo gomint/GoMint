@@ -39,7 +39,7 @@ public class Lever extends Block implements io.gomint.world.block.BlockLever {
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.LEVER;
     }
 

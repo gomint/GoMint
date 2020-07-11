@@ -34,7 +34,7 @@ public class Basalt extends Block implements io.gomint.world.block.BlockBasalt {
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.BASALT;
     }
 }

@@ -39,7 +39,7 @@ public class Observer extends Block implements io.gomint.world.block.BlockObserv
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.OBSERVER;
     }
 

@@ -33,7 +33,7 @@ public class Loom extends Block implements io.gomint.world.block.BlockLoom {
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.LOOM;
     }
 }

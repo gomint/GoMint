@@ -34,7 +34,7 @@ public class GlowingRedstoneOre extends Block implements io.gomint.world.block.B
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.GLOWING_REDSTONE_ORE;
     }
 

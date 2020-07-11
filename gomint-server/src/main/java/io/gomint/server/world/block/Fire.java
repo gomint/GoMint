@@ -1,7 +1,6 @@
 package io.gomint.server.world.block;
 
 import io.gomint.math.BlockPosition;
-import io.gomint.server.entity.Entity;
 import io.gomint.server.entity.EntityPlayer;
 import io.gomint.world.block.BlockType;
 
@@ -54,7 +53,7 @@ public class Fire extends Block implements io.gomint.world.block.BlockFire {
 
     @Override
     public boolean punch( EntityPlayer player, BlockPosition position ) {
-        this.setType( Air.class );
+        this.setBlockType( Air.class );
         return true;
     }
 
@@ -69,7 +68,7 @@ public class Fire extends Block implements io.gomint.world.block.BlockFire {
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.FIRE;
     }
 

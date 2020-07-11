@@ -42,7 +42,7 @@ public class Carpet extends Block implements io.gomint.world.block.BlockCarpet {
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.CARPET;
     }
 

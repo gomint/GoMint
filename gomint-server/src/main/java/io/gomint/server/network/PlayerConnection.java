@@ -257,11 +257,8 @@ public class PlayerConnection implements ConnectionWithState {
             this.sendQueue = new ArrayList<>();
         }
 
-        if (!this.sendQueue.add(packet)) {
-            LOGGER.warn("Could not add packet {} to the send queue", packet);
-        } else {
-            LOGGER.debug("Added packet {} to be sent to {}", packet.getClass().getName(), this.entity != null ? this.entity.getName() : "UNKNOWN");
-        }
+        this.sendQueue.add(packet);
+        LOGGER.debug("Added packet {} to be sent to {}", packet, this.entity != null ? this.entity.getName() : "UNKNOWN");
     }
 
     /**
@@ -1114,6 +1111,10 @@ public class PlayerConnection implements ConnectionWithState {
             ChunkAdapter chunk = this.entity.getWorld().getChunk(currentX, currentZ);
             this.entity.getEntityVisibilityManager().updateAddedChunk(chunk);
         }
+    }
+
+    public boolean knowsChunk(ChunkAdapter adapter) {
+        return this.playerChunks.contains(adapter.longHashCode());
     }
 
 }

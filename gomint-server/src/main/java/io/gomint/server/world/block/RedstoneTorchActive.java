@@ -32,7 +32,7 @@ public class RedstoneTorchActive extends Block implements io.gomint.world.block.
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.REDSTONE_TORCH_ACTIVE;
     }
 

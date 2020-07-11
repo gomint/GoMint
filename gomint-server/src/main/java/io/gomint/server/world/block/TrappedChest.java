@@ -34,7 +34,7 @@ public class TrappedChest extends Block implements io.gomint.world.block.BlockTr
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.TRAPPED_CHEST;
     }
 

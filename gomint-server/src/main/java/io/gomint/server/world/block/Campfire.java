@@ -38,7 +38,7 @@ public class Campfire extends Block implements io.gomint.world.block.BlockCampfi
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.CAMPFIRE;
     }
 }

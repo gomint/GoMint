@@ -39,7 +39,7 @@ public class DetectorRail extends Block implements io.gomint.world.block.BlockDe
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.DETECTOR_RAIL;
     }
 

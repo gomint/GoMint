@@ -66,7 +66,7 @@ public class Crops extends Growable {
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.CROPS;
     }
 

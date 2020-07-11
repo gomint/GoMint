@@ -78,7 +78,7 @@ public class Chest extends ContainerBlock implements BlockChest {
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.CHEST;
     }
 

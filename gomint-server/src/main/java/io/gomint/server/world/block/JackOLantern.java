@@ -31,7 +31,7 @@ public class JackOLantern extends Block implements io.gomint.world.block.BlockJa
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.JACK_O_LANTERN;
     }
 

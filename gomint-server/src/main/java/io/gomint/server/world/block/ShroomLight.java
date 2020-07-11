@@ -36,7 +36,7 @@ public class ShroomLight extends Block implements io.gomint.world.block.BlockShr
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.SHROOMLIGHT;
     }
 }

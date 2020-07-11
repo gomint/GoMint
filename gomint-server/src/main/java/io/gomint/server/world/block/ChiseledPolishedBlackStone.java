@@ -28,7 +28,7 @@ public class ChiseledPolishedBlackStone extends Block implements io.gomint.world
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.CHISELED_POLISHED_BLACKSTONE;
     }
 

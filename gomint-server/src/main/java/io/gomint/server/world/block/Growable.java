@@ -39,14 +39,14 @@ public abstract class Growable extends Block {
     @Override
     public boolean beforePlacement(Entity entity, ItemStack item, Location location) {
         // Check if we place on farmland
-        return location.getWorld().getBlockAt(location.toBlockPosition().add(BlockPosition.DOWN)).getType() == BlockType.FARMLAND;
+        return location.getWorld().getBlockAt(location.toBlockPosition().add(BlockPosition.DOWN)).getBlockType() == BlockType.FARMLAND;
     }
 
     @Override
     public long update(UpdateReason updateReason, long currentTimeMS, float dT) {
         if (updateReason == UpdateReason.NEIGHBOUR_UPDATE) {
             // Check if farmland is still under us
-            if (this.world.getBlockAt(this.location.toBlockPosition().add(BlockPosition.DOWN)).getType() != BlockType.FARMLAND) {
+            if (this.world.getBlockAt(this.location.toBlockPosition().add(BlockPosition.DOWN)).getBlockType() != BlockType.FARMLAND) {
                 this.world.breakBlock(this.location.toBlockPosition(), new ArrayList<>(), false);
             }
         } else if (updateReason == UpdateReason.RANDOM) {
@@ -96,14 +96,14 @@ public abstract class Growable extends Block {
         // Check if there are similar crops around (slow down bigger farms)
         // We check in a pattern which goes up and clockwise around
         BlockPosition start = this.location.toBlockPosition().add(BlockPosition.NORTH);
-        if (this.world.getBlockAt(start).getType() == getType() ||
-            this.world.getBlockAt(start.add(BlockPosition.EAST)).getType() == getType() ||
-            this.world.getBlockAt(start.add(BlockPosition.SOUTH)).getType() == getType() ||
-            this.world.getBlockAt(start.add(BlockPosition.SOUTH)).getType() == getType() ||
-            this.world.getBlockAt(start.add(BlockPosition.WEST)).getType() == getType() ||
-            this.world.getBlockAt(start.add(BlockPosition.WEST)).getType() == getType() ||
-            this.world.getBlockAt(start.add(BlockPosition.NORTH)).getType() == getType() ||
-            this.world.getBlockAt(start.add(BlockPosition.NORTH)).getType() == getType()) {
+        if (this.world.getBlockAt(start).getBlockType() == getBlockType() ||
+            this.world.getBlockAt(start.add(BlockPosition.EAST)).getBlockType() == getBlockType() ||
+            this.world.getBlockAt(start.add(BlockPosition.SOUTH)).getBlockType() == getBlockType() ||
+            this.world.getBlockAt(start.add(BlockPosition.SOUTH)).getBlockType() == getBlockType() ||
+            this.world.getBlockAt(start.add(BlockPosition.WEST)).getBlockType() == getBlockType() ||
+            this.world.getBlockAt(start.add(BlockPosition.WEST)).getBlockType() == getBlockType() ||
+            this.world.getBlockAt(start.add(BlockPosition.NORTH)).getBlockType() == getBlockType() ||
+            this.world.getBlockAt(start.add(BlockPosition.NORTH)).getBlockType() == getBlockType()) {
             divider /= 2f;
         }
 

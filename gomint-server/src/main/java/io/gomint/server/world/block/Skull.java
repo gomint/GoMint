@@ -89,7 +89,7 @@ public class Skull extends Block implements io.gomint.world.block.BlockSkull {
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.SKULL;
     }
 

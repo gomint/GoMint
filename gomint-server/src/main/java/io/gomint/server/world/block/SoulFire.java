@@ -52,7 +52,7 @@ public class SoulFire extends Block implements io.gomint.world.block.BlockSoulFi
 
     @Override
     public boolean punch(EntityPlayer player, BlockPosition position ) {
-        this.setType( Air.class );
+        this.setBlockType( Air.class );
         return true;
     }
 
@@ -67,7 +67,7 @@ public class SoulFire extends Block implements io.gomint.world.block.BlockSoulFi
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.SOUL_FIRE;
     }
 }

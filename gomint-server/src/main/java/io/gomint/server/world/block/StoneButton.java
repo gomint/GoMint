@@ -44,7 +44,7 @@ public class StoneButton extends Button implements io.gomint.world.block.BlockSt
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.STONE_BUTTON;
     }
 

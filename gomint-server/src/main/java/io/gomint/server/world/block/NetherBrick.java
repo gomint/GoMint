@@ -29,7 +29,7 @@ public class NetherBrick extends Block implements io.gomint.world.block.BlockNet
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.NETHER_BRICK;
     }
 

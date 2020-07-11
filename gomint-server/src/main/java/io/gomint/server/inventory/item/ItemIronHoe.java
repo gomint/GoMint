@@ -23,7 +23,7 @@ public class ItemIronHoe extends ItemReduceTierIron implements io.gomint.invento
     @Override
     public boolean interact(EntityPlayer entity, Facing face, Vector clickPosition, Block clickedBlock ) {
         if ( clickedBlock instanceof Dirt || clickedBlock instanceof GrassBlock ) {
-            clickedBlock.setType( Farmland.class );
+            clickedBlock.setBlockType( Farmland.class );
             this.calculateUsageAndUpdate( 1 );
             return true;
         }

@@ -152,7 +152,7 @@ public class WallSign extends Block implements BlockWallSign {
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.WALL_SIGN;
     }
 

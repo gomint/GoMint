@@ -32,7 +32,7 @@ public class RedstoneLampInactive extends Block implements io.gomint.world.block
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.REDSTONE_LAMP_INACTIVE;
     }
 

@@ -27,7 +27,7 @@ public class Sponge extends Block implements io.gomint.world.block.BlockSponge {
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.SPONGE;
     }
 

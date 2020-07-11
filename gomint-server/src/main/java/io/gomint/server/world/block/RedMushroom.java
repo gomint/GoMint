@@ -22,7 +22,7 @@ public class RedMushroom extends Block implements io.gomint.world.block.BlockRed
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.RED_MUSHROOM;
     }
 

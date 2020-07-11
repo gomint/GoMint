@@ -129,7 +129,7 @@ public class FurnaceTileEntity extends ContainerTileEntity implements InventoryH
         if ( this.output != null && this.burnTime > 0 ) {
             // Check if visuals are correct!
             Block maybeBurningFurnace = this.getBlock();
-            if ( maybeBurningFurnace.getType() == BlockType.FURNACE ) {
+            if ( maybeBurningFurnace.getBlockType() == BlockType.FURNACE ) {
                 Furnace furnace = (Furnace) maybeBurningFurnace;
                 if ( !furnace.isBurning() ) {
                     furnace.setBurning( true );

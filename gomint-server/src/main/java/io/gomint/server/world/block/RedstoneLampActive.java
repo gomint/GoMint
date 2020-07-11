@@ -32,7 +32,7 @@ public class RedstoneLampActive extends Block implements io.gomint.world.block.B
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.REDSTONE_LAMP_ACTIVE;
     }
 

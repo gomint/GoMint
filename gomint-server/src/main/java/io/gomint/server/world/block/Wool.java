@@ -32,7 +32,7 @@ public class Wool extends Block implements io.gomint.world.block.BlockWool {
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.WOOL;
     }
 

@@ -29,7 +29,7 @@ public class Clay extends Block implements io.gomint.world.block.BlockClay {
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.CLAY;
     }
 

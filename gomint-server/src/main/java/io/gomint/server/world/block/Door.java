@@ -5,19 +5,14 @@ import io.gomint.math.BlockPosition;
 import io.gomint.math.Location;
 import io.gomint.math.Vector;
 import io.gomint.server.entity.Entity;
-import io.gomint.server.util.BlockIdentifier;
 import io.gomint.server.world.BlockRuntimeIDs;
 import io.gomint.server.world.PlacementData;
 import io.gomint.server.world.block.helper.ToolPresets;
-import io.gomint.server.world.block.state.BlockState;
 import io.gomint.server.world.block.state.BooleanBlockState;
 import io.gomint.server.world.block.state.DirectionBlockState;
 import io.gomint.world.block.BlockAir;
 import io.gomint.world.block.data.Direction;
 import io.gomint.world.block.data.Facing;
-
-import java.util.List;
-import java.util.function.Predicate;
 
 /**
  * @author geNAZt
@@ -85,10 +80,10 @@ public abstract class Door extends Block implements io.gomint.world.block.BlockD
     public boolean onBreak(boolean creative) {
         if (isTop()) {
             Block otherPart = getLocation().getWorld().getBlockAt(getLocation().toBlockPosition().add(BlockPosition.DOWN));
-            otherPart.setType(BlockAir.class);
+            otherPart.setBlockType(BlockAir.class);
         } else {
             Block otherPart = getLocation().getWorld().getBlockAt(getLocation().toBlockPosition().add(BlockPosition.UP));
-            otherPart.setType(BlockAir.class);
+            otherPart.setBlockType(BlockAir.class);
         }
 
         return true;

@@ -37,7 +37,7 @@ public class Dropper extends Block implements io.gomint.world.block.BlockDropper
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.DROPPER;
     }
 

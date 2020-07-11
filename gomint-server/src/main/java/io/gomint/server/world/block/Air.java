@@ -49,7 +49,7 @@ public class Air extends Block implements BlockAir {
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.AIR;
     }
 

@@ -42,7 +42,7 @@ public class StainedHardenedClay extends Block implements io.gomint.world.block.
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.STAINED_HARDENED_CLAY;
     }
 

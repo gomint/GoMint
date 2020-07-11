@@ -34,7 +34,7 @@ public class Chain extends Block implements io.gomint.world.block.BlockChain {
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.CHAIN;
     }
 }

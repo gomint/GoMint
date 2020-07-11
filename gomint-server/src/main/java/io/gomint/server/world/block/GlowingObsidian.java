@@ -24,7 +24,7 @@ public class GlowingObsidian extends Block implements io.gomint.world.block.Bloc
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.GLOWING_OBSIDIAN;
     }
 

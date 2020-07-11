@@ -32,7 +32,7 @@ public class Melon extends Block implements io.gomint.world.block.BlockMelon {
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.MELON;
     }
 

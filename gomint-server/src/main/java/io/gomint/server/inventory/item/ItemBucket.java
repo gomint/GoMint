@@ -88,7 +88,7 @@ public class ItemBucket extends ItemStack implements io.gomint.inventory.item.It
                     this.setContent( clickedBlock instanceof BlockFlowingWater || clickedBlock instanceof BlockStationaryWater ?
                         Content.WATER : Content.LAVA );
                     entity.getInventory().setItem( entity.getInventory().getItemInHandSlot(), this );
-                    clickedBlock.setType( BlockAir.class );
+                    clickedBlock.setBlockType( BlockAir.class );
                     return true;
                 }
             }

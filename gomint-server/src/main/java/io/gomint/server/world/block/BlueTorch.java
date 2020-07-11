@@ -17,7 +17,7 @@ public class BlueTorch extends Torch implements BlockBlueTorch {
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.BLUE_TORCH;
     }
 

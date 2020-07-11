@@ -30,7 +30,7 @@ public class Obsidian extends Block implements io.gomint.world.block.BlockObsidi
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.OBSIDIAN;
     }
 

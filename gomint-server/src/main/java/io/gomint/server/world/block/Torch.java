@@ -44,7 +44,7 @@ public class Torch extends Block implements io.gomint.world.block.BlockTorch {
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.TORCH;
     }
 

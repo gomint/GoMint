@@ -34,7 +34,7 @@ public class Sandstone extends Block implements io.gomint.world.block.BlockSands
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.SANDSTONE;
     }
 

@@ -24,7 +24,7 @@ public class SweetBerriesBush extends Growable implements BlockSweetBerriesBush 
           //TODO DAMAGE
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.SWEETBERRIESBUSH;
     }
 

@@ -36,7 +36,7 @@ public class Ice extends Block implements io.gomint.world.block.BlockIce {
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.ICE;
     }
 
@@ -48,8 +48,8 @@ public class Ice extends Block implements io.gomint.world.block.BlockIce {
     @Override
     public boolean onBreak(boolean creative) {
         Block below = this.world.getBlockAt(this.location.toBlockPosition().add(BlockPosition.DOWN));
-        if (!creative || below.getType() != BlockType.AIR) {
-            this.setType(FlowingWater.class);
+        if (!creative || below.getBlockType() != BlockType.AIR) {
+            this.setBlockType(FlowingWater.class);
         }
 
         return super.onBreak(creative);

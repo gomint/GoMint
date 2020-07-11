@@ -36,7 +36,7 @@ public class Magma extends Block implements BlockMagma {
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.MAGMA;
     }
 

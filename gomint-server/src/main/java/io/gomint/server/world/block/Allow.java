@@ -31,7 +31,7 @@ public class Allow extends Block implements io.gomint.world.block.BlockAllow{
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.ALLOW;
     }
 

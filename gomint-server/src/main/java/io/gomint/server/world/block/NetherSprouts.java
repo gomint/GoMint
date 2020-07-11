@@ -24,7 +24,7 @@ public class NetherSprouts extends Block implements io.gomint.world.block.BlockN
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.GILDED_BLACKSTONE;
     }
 

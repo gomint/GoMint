@@ -34,7 +34,7 @@ public class BambooSapling extends Block implements BlockBambooSapling {
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.BAMBOO;
     }
 

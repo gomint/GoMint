@@ -41,7 +41,7 @@ public class LilyPad extends Block implements io.gomint.world.block.BlockLilyPad
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.LILY_PAD;
     }
 

@@ -31,7 +31,7 @@ public class CrimsonRoots extends Block implements io.gomint.world.block.BlockCr
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.CRIMSON_ROOTS;
     }
 

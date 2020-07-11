@@ -46,7 +46,7 @@ public class GlassPane extends Block implements io.gomint.world.block.BlockGlass
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.GLASS_PANE;
     }
 

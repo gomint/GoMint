@@ -27,7 +27,7 @@ public class Snow extends Block implements io.gomint.world.block.BlockSnow {
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.SNOW;
     }
 

@@ -34,7 +34,7 @@ public class Stonecutter extends Block implements io.gomint.world.block.BlockSto
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.STONECUTTER;
     }
 

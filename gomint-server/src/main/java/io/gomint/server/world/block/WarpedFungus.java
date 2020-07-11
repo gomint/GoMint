@@ -31,7 +31,7 @@ public class WarpedFungus extends Block implements io.gomint.world.block.BlockWa
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.WARPED_FUNGUS;
     }
 

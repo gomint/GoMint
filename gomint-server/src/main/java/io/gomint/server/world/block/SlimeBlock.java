@@ -34,7 +34,7 @@ public class SlimeBlock extends Block implements io.gomint.world.block.BlockSlim
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.SLIME_BLOCK;
     }
 

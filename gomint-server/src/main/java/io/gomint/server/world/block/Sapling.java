@@ -32,7 +32,7 @@ public class Sapling extends Block implements io.gomint.world.block.BlockSapling
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.SAPLING;
     }
 

@@ -60,7 +60,7 @@ public class WoodenPressurePlate extends BasePressurePlate implements io.gomint.
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.WOODEN_PRESSURE_PLATE;
     }
 

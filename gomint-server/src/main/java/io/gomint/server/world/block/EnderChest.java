@@ -56,7 +56,7 @@ public class EnderChest extends ContainerBlock implements io.gomint.world.block.
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.ENDER_CHEST;
     }
 

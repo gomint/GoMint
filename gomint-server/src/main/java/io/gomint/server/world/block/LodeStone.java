@@ -28,7 +28,7 @@ public class LodeStone extends Block implements io.gomint.world.block.BlockLodeS
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.LODESTONE;
     }
 

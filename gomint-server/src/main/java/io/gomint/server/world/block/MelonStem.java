@@ -32,7 +32,7 @@ public class MelonStem extends Growable implements io.gomint.world.block.BlockMe
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.MELON_STEM;
     }
 

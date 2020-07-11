@@ -32,7 +32,7 @@ public class Pumpkin extends Block implements io.gomint.world.block.BlockPumpkin
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.PUMPKIN;
     }
 

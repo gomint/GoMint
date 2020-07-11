@@ -33,7 +33,7 @@ public class Honey extends Block implements io.gomint.world.block.BlockHoney {
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.HONEY_BLOCK;
     }
 }

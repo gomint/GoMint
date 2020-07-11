@@ -24,7 +24,7 @@ public abstract class Fallable extends Block {
                 entity.setBlock(this);
 
                 // Replace block with air
-                this.setType(Air.class);
+                this.setBlockType(Air.class);
 
                 // Spawn entity
                 entity.spawn(this.location);

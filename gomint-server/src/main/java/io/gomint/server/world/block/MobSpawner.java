@@ -39,7 +39,7 @@ public class MobSpawner extends Block implements io.gomint.world.block.BlockMobS
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.MOB_SPAWNER;
     }
 

@@ -29,7 +29,7 @@ public class Netherrack extends Block implements io.gomint.world.block.BlockNeth
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.NETHERRACK;
     }
 

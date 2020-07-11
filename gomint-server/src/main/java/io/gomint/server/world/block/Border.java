@@ -31,7 +31,7 @@ public class Border extends Block implements io.gomint.world.block.BlockBorder {
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.BORDER;
     }
 

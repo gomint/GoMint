@@ -29,7 +29,7 @@ public class DoubleRedSandstoneSlab extends Block implements io.gomint.world.blo
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.DOUBLE_RED_SANDSTONE_SLAB;
     }
 

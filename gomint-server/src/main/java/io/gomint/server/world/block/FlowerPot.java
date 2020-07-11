@@ -32,7 +32,7 @@ public class FlowerPot extends Block implements io.gomint.world.block.BlockFlowe
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.FLOWER_POT;
     }
 

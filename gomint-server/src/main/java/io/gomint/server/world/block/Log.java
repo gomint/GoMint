@@ -93,7 +93,7 @@ public class Log extends Block implements BlockLog {
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.LOG;
     }
 

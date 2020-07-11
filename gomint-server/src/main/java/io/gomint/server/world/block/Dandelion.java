@@ -42,7 +42,7 @@ public class Dandelion extends Block implements io.gomint.world.block.BlockDande
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.DANDELION;
     }
 

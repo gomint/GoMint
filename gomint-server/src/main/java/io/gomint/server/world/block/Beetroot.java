@@ -67,7 +67,7 @@ public class Beetroot extends Growable implements BlockBeetroot {
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.BEETROOT;
     }
 

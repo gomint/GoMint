@@ -37,7 +37,7 @@ public class RedNetherBrick extends Block implements BlockRedNetherBrick {
     }
 
     @Override
-    public BlockType getType() {
+    public BlockType getBlockType() {
         return BlockType.RED_NETHER_BRICK;
     }
 
