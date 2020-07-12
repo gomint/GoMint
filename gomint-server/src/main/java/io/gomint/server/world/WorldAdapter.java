@@ -19,6 +19,7 @@ import io.gomint.math.*;
 import io.gomint.server.GoMintServer;
 import io.gomint.server.async.Delegate;
 import io.gomint.server.async.Delegate2;
+import io.gomint.server.async.Future;
 import io.gomint.server.async.MultiOutputDelegate;
 import io.gomint.server.config.WorldConfig;
 import io.gomint.server.entity.passive.EntityItem;
@@ -108,7 +109,6 @@ public abstract class WorldAdapter implements World {
     // I/O
     private AtomicBoolean asyncWorkerRunning;
     private BlockingQueue<AsyncChunkTask> asyncChunkTasks;
-    private Queue<AsyncChunkPackageTask> chunkPackageTasks;
 
     // EntityPlayer handling
     private Object2ObjectMap<io.gomint.server.entity.EntityPlayer, ChunkAdapter> players;
@@ -122,7 +122,6 @@ public abstract class WorldAdapter implements World {
         this.config = this.server.getWorldConfig(worldDir.getName());
         this.players = new Object2ObjectOpenHashMap<>();
         this.asyncChunkTasks = new LinkedBlockingQueue<>();
-        this.chunkPackageTasks = new ConcurrentLinkedQueue<>();
         this.startAsyncWorker(server.getScheduler());
         this.initGamerules();
     }
@@ -456,22 +455,6 @@ public abstract class WorldAdapter implements World {
         this.entityManager.update(currentTimeMS, dT);
 
         // ---------------------------------------
-        // Chunk packages are done in main thread in order to be able to
-        // cache packets without possibly getting into race conditions:
-        while (!this.chunkPackageTasks.isEmpty()) {
-            // One chunk per tick at max:
-            AsyncChunkPackageTask task = this.chunkPackageTasks.poll();
-            ChunkAdapter chunk = this.getChunk(task.getX(), task.getZ());
-            if (chunk == null) {
-                chunk = this.loadChunk(task.getX(), task.getZ(), false);
-            }
-
-            if (chunk != null) {
-                packageChunk(chunk, task.getCallback());
-            }
-        }
-
-        // ---------------------------------------
         // Perform regular updates:
     }
 
@@ -571,75 +554,23 @@ public abstract class WorldAdapter implements World {
      * @param x        The x-coordinate of the chunk
      * @param z        The z-coordinate of the chunk
      * @param generate Whether or not to generate teh chunk if it does not yet exist
-     * @param callback The callback to be invoked once the chunk is available
+     * @return future which get resolved when the chunk is available
      */
-    public void getOrLoadChunk(int x, int z, boolean generate, Delegate<ChunkAdapter> callback) {
+    public Future<ChunkAdapter> getOrLoadChunk(int x, int z, boolean generate) {
+        // Create future
+        Future<ChunkAdapter> future = new Future<>();
+
         // Early out:
         ChunkAdapter chunk = this.chunkCache.getChunk(x, z);
         if (chunk != null) {
-            callback.invoke(chunk);
-            return;
-        }
-
-        // Check if we already have a task
-        AsyncChunkLoadTask oldTask = this.findAsyncChunkLoadTask(x, z);
-        if (oldTask != null) {
-            this.logger.debug("Found loader for chunk {} {}", x, z);
-
-            // Set generating if needed
-            if (!oldTask.isGenerate() && generate) {
-                oldTask.setGenerate(true);
-            }
-
-            // Check for multi callback
-            MultiOutputDelegate<ChunkAdapter> multiOutputDelegate;
-            if (oldTask.getCallback() instanceof MultiOutputDelegate) {
-                multiOutputDelegate = (MultiOutputDelegate<ChunkAdapter>) oldTask.getCallback();
-                multiOutputDelegate.getOutputs().offer(callback);
-            } else {
-                Delegate<ChunkAdapter> delegate = oldTask.getCallback();
-                multiOutputDelegate = new MultiOutputDelegate<>();
-                multiOutputDelegate.getOutputs().offer(delegate);
-                multiOutputDelegate.getOutputs().offer(callback);
-                oldTask.setCallback(multiOutputDelegate);
-            }
-
-            return;
+            future.resolve(chunk);
+            return future;
         }
 
         // Schedule this chunk for asynchronous loading:
-        AsyncChunkLoadTask task = new AsyncChunkLoadTask(x, z, generate, callback);
+        AsyncChunkLoadTask task = new AsyncChunkLoadTask(x, z, generate, future);
         this.asyncChunkTasks.offer(task);
-    }
-
-    private AsyncChunkLoadTask findAsyncChunkLoadTask(int x, int z) {
-        for (AsyncChunkTask task : this.asyncChunkTasks) {
-            if (task instanceof AsyncChunkLoadTask) {
-                AsyncChunkLoadTask loadTask = (AsyncChunkLoadTask) task;
-                if (loadTask.getX() == x && loadTask.getZ() == z) {
-                    return loadTask;
-                }
-            }
-        }
-
-        return null;
-    }
-
-    /**
-     * Send a chunk of this world to the client
-     *
-     * @param x            The x-coordinate of the chunk
-     * @param z            The z-coordinate of the chunk
-     * @param sync         Force sync chunk loading
-     * @param sendDelegate delegate which may add the chunk to the send queue or add all entities on it to the send queue
-     */
-    public void sendChunk(int x, int z, boolean sync, Delegate2<Long, ChunkAdapter> sendDelegate) {
-        if (!sync) {
-            this.getOrLoadChunk(x, z, true, chunk -> chunk.packageChunk(sendDelegate));
-        } else {
-            ChunkAdapter chunkAdapter = this.loadChunk(x, z, true);
-            packageChunk(chunkAdapter, sendDelegate);
-        }
+        return future;
     }
 
     /**
@@ -719,30 +650,6 @@ public abstract class WorldAdapter implements World {
         this.asyncChunkTasks.offer(task);
     }
 
-    /**
-     * Notifies the world that the given chunk was told to package itself. This will effectively
-     * produce an asynchronous chunk task which will be completed by the asynchronous worker thread.
-     *
-     * @param x        The x coordinate of the chunk we want to package
-     * @param z        The z coordinate of the chunk we want to package
-     * @param callback The callback to be invoked once the chunk is packaged
-     */
-    void notifyPackageChunk(int x, int z, Delegate2<Long, ChunkAdapter> callback) {
-        AsyncChunkPackageTask task = new AsyncChunkPackageTask(x, z, callback);
-        this.chunkPackageTasks.add(task);
-    }
-
-    /**
-     * Package a Chunk into a ChunkData Packet for Raknet. This is done to enable caching of those packets.
-     *
-     * @param chunk    The chunk which should be packed
-     * @param callback The callback which should be invoked when the packing has been done
-     */
-    private void packageChunk(ChunkAdapter chunk, Delegate2<Long, ChunkAdapter> callback) {
-        chunk.createPackagedData(null,false); // We generate some garbage to warm caches
-        callback.invoke(CoordinateUtils.toLong(chunk.getX(), chunk.getZ()), chunk);
-    }
-
     // ==================================== NETWORKING HELPERS ==================================== //
 
     /**
@@ -803,27 +710,13 @@ public abstract class WorldAdapter implements World {
                         this.getLogger().debug("Loading chunk {} / {}", load.getX(), load.getZ());
                         chunk = this.loadChunk(load.getX(), load.getZ(), load.isGenerate());
 
-                        load.getCallback().invoke(chunk);
+                        load.getFuture().resolve(chunk);
                         break;
 
                     case SAVE:
                         AsyncChunkSaveTask save = (AsyncChunkSaveTask) task;
                         chunk = save.getChunk();
                         this.saveChunk(chunk);
-                        break;
-
-                    case POPULATE:
-                        AsyncChunkPopulateTask populateTask = (AsyncChunkPopulateTask) task;
-
-                        ChunkAdapter chunkToPopulate = populateTask.getChunk();
-                        if (!chunkToPopulate.isPopulated()) {
-                            LOGGER.debug("Starting populating chunk {} / {}", chunkToPopulate.getX(), chunkToPopulate.getZ());
-
-                            this.chunkGenerator.populate(populateTask.getChunk());
-                            chunkToPopulate.calculateHeightmap(240);
-                            chunkToPopulate.setPopulated(true);
-                        }
-
                         break;
 
                     default:
@@ -865,14 +758,14 @@ public abstract class WorldAdapter implements World {
      * This helper method executes a block update schedule on the main thread
      *
      * @param adapter in which the block update happens
-     * @param pos of the block which changes
+     * @param pos     of the block which changes
      */
     private void updateBlock0(ChunkAdapter adapter, BlockPosition pos) {
         sendToVisible(pos, null, entity -> {
             if (entity instanceof io.gomint.server.entity.EntityPlayer) {
                 // Check if player already knows this chunk
                 io.gomint.server.entity.EntityPlayer player = ((io.gomint.server.entity.EntityPlayer) entity);
-                if ( player.knowsChunk( adapter ) ) {
+                if (player.knowsChunk(adapter)) {
                     player.getBlockUpdates().add(pos);
                 }
             }
@@ -1160,7 +1053,7 @@ public abstract class WorldAdapter implements World {
             if (chunk != null) {
                 chunk.calculateHeightmap(240);
                 this.chunkCache.putChunk(chunk);
-                this.addPopulateTask(chunk);
+                this.populate(chunk);
                 return chunk;
             }
         }
@@ -1168,8 +1061,15 @@ public abstract class WorldAdapter implements World {
         return null;
     }
 
-    public void addPopulateTask(ChunkAdapter chunk) {
-        this.asyncChunkTasks.offer(new AsyncChunkPopulateTask(chunk));
+    public void populate(ChunkAdapter chunk) {
+        if (!chunk.isPopulated()) {
+            // We use the current thread for ease of use
+            LOGGER.debug("Starting populating chunk {} / {}", chunk.getX(), chunk.getZ());
+
+            this.chunkGenerator.populate(chunk);
+            chunk.calculateHeightmap(240);
+            chunk.setPopulated(true);
+        }
     }
 
     public void sendLevelEvent(Vector position, int levelEvent, int data) {

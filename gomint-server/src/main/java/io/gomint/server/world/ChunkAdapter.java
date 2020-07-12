@@ -275,19 +275,6 @@ public class ChunkAdapter implements Chunk {
     // ==================================== MANIPULATION ==================================== //
 
     /**
-     * Makes a request to package this chunk asynchronously. The package that will be
-     * given to the provided callback will be a world chunk packet inside a batch packet.
-     * <p>
-     * This operation is done asynchronously in order to limit how many chunks are being
-     * packaged in parallel as well as to cache some chunk packets.
-     *
-     * @param callback The callback to be invoked once the operation is complete
-     */
-    void packageChunk( Delegate2<Long, ChunkAdapter> callback ) {
-        this.world.notifyPackageChunk( this.x, this.z, callback );
-    }
-
-    /**
      * Checks if this chunk can be gced
      *
      * @param currentTimeMillis The time when this collection cycle started

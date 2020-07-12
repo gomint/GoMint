@@ -7,7 +7,7 @@
 
 package io.gomint.server.world;
 
-import io.gomint.server.async.Delegate;
+import io.gomint.server.async.Future;
 import lombok.Setter;
 
 /**
@@ -19,7 +19,7 @@ public class AsyncChunkLoadTask extends AsyncChunkTask {
     private int x;
     private int z;
     @Setter private boolean generate;
-    @Setter private Delegate<ChunkAdapter> callback;
+    @Setter private Future<ChunkAdapter> future;
 
     /**
      * Construct a new loading task
@@ -27,14 +27,14 @@ public class AsyncChunkLoadTask extends AsyncChunkTask {
      * @param x        The X coordinate of the chunk
      * @param z        The Z coordinate of the chunk
      * @param generate Is it allowed to generate the chunk if its missing?
-     * @param callback A delegate which is called when the task has been completed
+     * @param future   A future which gets resolved when the chunk has been loaded
      */
-    AsyncChunkLoadTask( int x, int z, boolean generate, Delegate<ChunkAdapter> callback ) {
-        super( Type.LOAD );
+    AsyncChunkLoadTask(int x, int z, boolean generate, Future<ChunkAdapter> future) {
+        super(Type.LOAD);
         this.x = x;
         this.z = z;
         this.generate = generate;
-        this.callback = callback;
+        this.future = future;
     }
 
     /**
@@ -43,7 +43,7 @@ public class AsyncChunkLoadTask extends AsyncChunkTask {
      * @return x coordinate
      */
     public int getX() {
-        return x;
+        return this.x;
     }
 
     /**
@@ -52,7 +52,7 @@ public class AsyncChunkLoadTask extends AsyncChunkTask {
      * @return z coordinate
      */
     public int getZ() {
-        return z;
+        return this.z;
     }
 
     /**
@@ -61,7 +61,7 @@ public class AsyncChunkLoadTask extends AsyncChunkTask {
      * @return allowed to generate
      */
     boolean isGenerate() {
-        return generate;
+        return this.generate;
     }
 
     /**
@@ -69,8 +69,8 @@ public class AsyncChunkLoadTask extends AsyncChunkTask {
      *
      * @return the callback which should be invoked on completion
      */
-    Delegate<ChunkAdapter> getCallback() {
-        return callback;
+    Future<ChunkAdapter> getFuture() {
+        return this.future;
     }
 
 }

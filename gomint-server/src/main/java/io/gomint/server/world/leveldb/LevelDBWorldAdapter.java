@@ -494,9 +494,7 @@ public class LevelDBWorldAdapter extends WorldAdapter {
             this.chunkCache.putChunk( loadingChunk );
 
             // Do some work on the chunk if needed (like population)
-            if ( !populated ) {
-                this.addPopulateTask( loadingChunk );
-            }
+            this.populate( loadingChunk );
 
             return loadingChunk;
         }
