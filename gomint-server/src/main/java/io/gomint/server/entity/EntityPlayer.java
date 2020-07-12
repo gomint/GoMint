@@ -91,6 +91,7 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
     @Getter
     private final EntityVisibilityManager entityVisibilityManager = new EntityVisibilityManager(this);
     private int viewDistance = 4;
+    private Queue<ChunkAdapter> chunkSendQueue = new LinkedBlockingQueue<>();
     // EntityPlayer Information
     private Gamemode gamemode = Gamemode.SURVIVAL;
     @Getter
@@ -424,6 +425,9 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
 
         Location from = getLocation();
 
+        // Reset chunks
+        this.connection.resetQueuedChunks();
+
         // Check if we need to change worlds
         if (!to.getWorld().equals(from.getWorld())) {
             // Despawn entities first
@@ -485,6 +489,15 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
         } else {
             this.resendAttributes();
         }
+    }
+
+    /**
+     * Queue which holds chunks to be sent to the client
+     *
+     * @return queue with chunks to be sent to the client
+     */
+    public Queue<ChunkAdapter> getChunkSendQueue() {
+        return this.chunkSendQueue;
     }
 
     // ==================================== UPDATING ==================================== //

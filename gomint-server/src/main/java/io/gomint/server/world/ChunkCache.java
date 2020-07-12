@@ -72,6 +72,11 @@ public class ChunkCache {
             while ( chunkIterator.hasNext() ) {
                 this.tempHashes[0].add( chunkIterator.nextLong() );
             }
+
+            chunkIterator = player.getConnection().getLoadingChunks().iterator();
+            while ( chunkIterator.hasNext() ) {
+                this.tempHashes[0].add( chunkIterator.nextLong() );
+            }
         }
 
         boolean checkChunkSave = this.isAutosaveEnabled() &&
