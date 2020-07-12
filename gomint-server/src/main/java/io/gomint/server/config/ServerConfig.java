@@ -77,10 +77,8 @@ public class ServerConfig extends YamlConfig {
     @Comment( "Control whether we want to load chunks when entities step over borders or not." )
     private boolean loadChunksForEntities = true;
 
-    @Comment( "How much chunks do you want to send to the client per client tick (50ms). Vanilla defaults to 4, but i " +
-        "tested its more or less safe to up to 1024 per tick for Windows 10 Client and Android on a LG G2. Recommended is not to set " +
-        "this value to anything higher than 32, else other packets like movement or chat may be delayed to long")
-    private int sendChunksPerTick = 16;
+    @Comment( "How many chunks should be sent per tick. The maximum without side effects is 4, reducing it may help with lower end clients." )
+    private int sendChunksPerTick = 4;
 
     @Comment( "Enables fast join. This does disable sendChunksPerTick for the first batch if chunks needed to login. There is no " +
         "data between the chunks and thus delaying it is just letting the player wait longer on login")
