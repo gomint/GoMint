@@ -111,7 +111,6 @@ public class PlayerConnection implements ConnectionWithState {
     @Setter @Getter private int protocolID;
     @Setter private long tcpId;
     @Setter private int tcpPing;
-    private int nextChunkPublisherpacket = 20;
     private PostProcessExecutor postProcessorExecutor;
 
     // Connection State:
@@ -319,16 +318,6 @@ public class PlayerConnection implements ConnectionWithState {
                     }
 
                     this.entity.getBlockUpdates().clear();
-                }
-
-                // Enforce every second
-                if (this.nextChunkPublisherpacket > 20) {
-                    this.nextChunkPublisherpacket = 20;
-                }
-
-                if (this.nextChunkPublisherpacket-- <= 0) {
-                    this.sendNetworkChunkPublisher();
-                    this.nextChunkPublisherpacket = 20;
                 }
             }
 
@@ -694,10 +683,6 @@ public class PlayerConnection implements ConnectionWithState {
             }
         }
 
-        if (!toSendChunks.isEmpty()) {
-            this.sendNetworkChunkPublisher();
-        }
-
         // Sort so that chunks closer to the current chunk may be sent first
         toSendChunks.sort((o1, o2) -> {
             if (Objects.equals(o1.getFirst(), o2.getFirst()) &&
@@ -751,8 +736,11 @@ public class PlayerConnection implements ConnectionWithState {
             int oldChunkZ = CoordinateUtils.fromBlockToChunk((int) from.getZ());
             if (!from.getWorld().equals(worldAdapter) || oldChunkX != currentXChunk || oldChunkZ != currentZChunk) {
                 worldAdapter.movePlayerToChunk(currentXChunk, currentZChunk, this.entity);
+                this.sendNetworkChunkPublisher();
             }
         }
+
+        boolean unloaded = false;
 
         // Check for unloading chunks
         LongIterator longCursor = this.playerChunks.iterator();
@@ -771,6 +759,7 @@ public class PlayerConnection implements ConnectionWithState {
                     this.entity.getEntityVisibilityManager().updateRemoveChunk(chunk);
                 }
 
+                unloaded = true;
                 longCursor.remove();
             }
         }
@@ -786,9 +775,13 @@ public class PlayerConnection implements ConnectionWithState {
                 longCursor.remove(); // Not needed anymore
             }
         }
+
+        if (unloaded || !this.entity.getChunkSendQueue().isEmpty()) {
+            this.sendNetworkChunkPublisher();
+        }
     }
 
-    private void sendNetworkChunkPublisher() {
+    public void sendNetworkChunkPublisher() {
         PacketNetworkChunkPublisherUpdate packetNetworkChunkPublisherUpdate = new PacketNetworkChunkPublisherUpdate();
         packetNetworkChunkPublisherUpdate.setBlockPosition(this.entity.getLocation().toBlockPosition());
         packetNetworkChunkPublisherUpdate.setRadius(this.entity.getViewDistance() * 16);

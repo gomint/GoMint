@@ -1560,6 +1560,7 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
 
     public void firstSpawn() {
         this.getConnection().sendMovePlayer(this.getLocation());
+        this.getConnection().sendNetworkChunkPublisher();
 
         // Spawn for others
         this.getWorld().spawnEntityAt(this, this.getPositionX(), this.getPositionY(), this.getPositionZ(), this.getYaw(), this.getPitch());
