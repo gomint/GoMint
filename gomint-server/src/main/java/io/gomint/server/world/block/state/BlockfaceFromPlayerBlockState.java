@@ -27,6 +27,11 @@ public class BlockfaceFromPlayerBlockState extends BlockfaceBlockState {
 
     @Override
     public void detectFromPlacement(EntityPlayer player, ItemStack placedItem, Facing face, Block block, Block clickedBlock, Vector clickPosition ) {
+        if (face == null) {
+            this.setState(Facing.NORTH);
+            return;
+        }
+
         if ( !this.detectUpDown && ( face == Facing.UP || face == Facing.DOWN ) ) {
             face = Facing.NORTH;
         }

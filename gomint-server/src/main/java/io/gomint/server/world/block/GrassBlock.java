@@ -8,6 +8,7 @@ import io.gomint.math.BlockPosition;
 import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.world.block.helper.ToolPresets;
 import io.gomint.server.world.UpdateReason;
+import io.gomint.world.block.data.Facing;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +27,7 @@ public class GrassBlock extends Block implements io.gomint.world.block.BlockGras
 
     @Override
     public long update( UpdateReason updateReason, long currentTimeMS, float dT ) {
-        Block block = this.world.getBlockAt( this.location.toBlockPosition().add( BlockPosition.UP ) );
+        Block block = this.getSide( Facing.UP );
         byte lightLevel = block.getSkyLightLevel();
 
         if ( lightLevel >= 9 ) {

@@ -39,6 +39,11 @@ public class AxisBlockState extends BlockState<Axis, String> {
 
     @Override
     public void detectFromPlacement(EntityPlayer player, ItemStack placedItem, Facing face, Block block, Block clickedBlock, Vector clickPosition) {
+        if ( face == null ) {
+            this.setState( Axis.Z );
+            return;
+        }
+
         switch ( face ) {
             case UP:
             case DOWN:

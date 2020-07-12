@@ -117,7 +117,7 @@ public class Blocks {
 
         Generator<Block> blockGenerator = this.generators.getGenerator( id );
         Block newBlock = blockGenerator.generate();
-        if ( !newBlock.beforePlacement( entity, item, block.location ) ) {
+        if ( !newBlock.beforePlacement( entity, item, face, block.location ) ) {
             return false;
         }
 

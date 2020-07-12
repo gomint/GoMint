@@ -130,6 +130,10 @@ public class AssetsLibrary {
 
             st.add(sta);
 
+            if (block.contains("minecraft:vine")) {
+                LOGGER.info("{}: {}", block, sta);
+            }
+
             this.blockPalette.add(new BlockIdentifier(
                 compound.getCompound("block", false).getString("name", "minecraft:air"),
                 compound.getCompound("block", false).getCompound("states", false)

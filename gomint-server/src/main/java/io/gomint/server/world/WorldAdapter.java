@@ -102,7 +102,6 @@ public abstract class WorldAdapter implements World {
     private EntityManager entityManager;
 
     // Block ticking
-    int randomUpdateNumber = FastRandom.current().nextInt();
     private TickList tickQueue = new TickList();
 
     // I/O

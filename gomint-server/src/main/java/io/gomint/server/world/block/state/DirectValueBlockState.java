@@ -24,7 +24,7 @@ public class DirectValueBlockState<T> extends BlockState<T, T> {
 
     @Override
     public void detectFromPlacement(EntityPlayer player, ItemStack placedItem, Facing face, Block block, Block clickedBlock, Vector clickPosition) {
-        this.setState(defaultValue);
+        this.setState(this.defaultValue);
     }
 
     @Override

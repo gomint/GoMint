@@ -92,7 +92,7 @@ public class Sand extends Fallable implements io.gomint.world.block.BlockSand {
         PlacementData placementData = super.calculatePlacementData(entity, item, face, block, clickedBlock, clickVector);
         BlockIdentifier identifier = placementData.getBlockIdentifier();
 
-        SandTypeMagic should = item.getData() == 0 ? SandTypeMagic.NORMAL : SandTypeMagic.RED;
+        SandTypeMagic should = item == null || item.getData() == 0 ? SandTypeMagic.NORMAL : SandTypeMagic.RED;
         placementData.setBlockIdentifier(BlockRuntimeIDs.change(identifier, SAND_TYPE[0], should.getType()));
         return placementData;
     }

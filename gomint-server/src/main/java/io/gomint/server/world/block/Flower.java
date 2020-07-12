@@ -7,6 +7,7 @@ import io.gomint.server.entity.Entity;
 import io.gomint.world.block.BlockType;
 
 import io.gomint.server.registry.RegisterInfo;
+import io.gomint.world.block.data.Facing;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -25,7 +26,7 @@ public class Flower extends Block implements io.gomint.world.block.BlockFlower {
     }};
 
     @Override
-    public boolean beforePlacement(Entity entity, ItemStack item, Location location) {
+    public boolean beforePlacement(Entity entity, ItemStack item, Facing face, Location location) {
         // Check if downwards block is valid
         Block block = entity.getWorld().getBlockAt(location.toBlockPosition().add(Vector.DOWN.toBlockPosition()));
         return ALLOWED_PLACED_ON.contains(block.getBlockType());

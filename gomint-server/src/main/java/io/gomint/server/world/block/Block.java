@@ -10,6 +10,7 @@ import io.gomint.inventory.item.ItemSword;
 import io.gomint.math.AxisAlignedBB;
 import io.gomint.math.BlockPosition;
 import io.gomint.math.Location;
+import io.gomint.math.MathUtils;
 import io.gomint.math.Vector;
 import io.gomint.server.entity.Entity;
 import io.gomint.server.entity.EntityLiving;
@@ -357,8 +358,10 @@ public abstract class Block implements io.gomint.world.block.Block {
 
         Block instance = this.world.getServer().getBlocks().get(blockType);
         if (instance != null) {
+            PlacementData data = instance.calculatePlacementData(null, null, null, null, null, null);
+
             WorldAdapter worldAdapter = (WorldAdapter) this.location.getWorld();
-            worldAdapter.setBlock(pos, this.layer, instance.identifier.getRuntimeId());
+            worldAdapter.setBlock(pos, this.layer, data.getBlockIdentifier().getRuntimeId());
             worldAdapter.resetTemporaryStorage(pos, this.layer);
 
             instance.setWorld(worldAdapter);
@@ -563,7 +566,11 @@ public abstract class Block implements io.gomint.world.block.Block {
     }
 
     private Block getRelative(BlockPosition position) {
-        return this.location.getWorld().getBlockAt(this.location.toBlockPosition().add(position));
+        int x = MathUtils.fastFloor( this.location.getX() ) + position.getX();
+        int y = MathUtils.fastFloor( this.location.getY() ) + position.getY();
+        int z = MathUtils.fastFloor( this.location.getZ() ) + position.getZ();
+
+        return this.location.getWorld().getBlockAt(x,y,z);
     }
 
     /**
@@ -609,7 +616,7 @@ public abstract class Block implements io.gomint.world.block.Block {
         }
     }
 
-    public boolean beforePlacement(Entity entity, ItemStack item, Location location) {
+    public boolean beforePlacement(Entity entity, ItemStack item, Facing face, Location location) {
         return true;
     }
 

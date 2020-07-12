@@ -59,6 +59,11 @@ public class BlockfaceBlockState extends BlockState<Facing, Integer> {
 
     @Override
     public void detectFromPlacement(EntityPlayer player, ItemStack placedItem, Facing face, Block block, Block clickedBlock, Vector clickPosition) {
+        if (player == null) {
+            this.setState(Facing.EAST);
+            return;
+        }
+
         if (this.detectUpDown) {
             if (player.getPitch() < -60) {
                 this.setState(Facing.DOWN);

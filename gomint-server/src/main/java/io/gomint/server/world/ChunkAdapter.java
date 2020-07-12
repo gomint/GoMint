@@ -20,6 +20,7 @@ import io.gomint.server.util.Cache;
 import io.gomint.server.world.storage.TemporaryStorage;
 import io.gomint.taglib.NBTTagCompound;
 import io.gomint.taglib.NBTWriter;
+import io.gomint.util.random.FastRandom;
 import io.gomint.world.Biome;
 import io.gomint.world.Chunk;
 import io.gomint.world.WorldLayer;
@@ -43,6 +44,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
@@ -110,17 +112,16 @@ public class ChunkAdapter implements Chunk {
     }
 
     private void tickRandomBlocksForSlice( ChunkSlice chunkSlice, long currentTimeMS, float dT ) {
-        int blockHash = this.getRandomBlockHash();
-        this.iterateRandomBlocks( chunkSlice, currentTimeMS, dT, blockHash, 0, this.world.getConfig().getRandomUpdatesPerTick() );
+        int blockHash = FastRandom.current().nextInt();
+        this.iterateRandomBlocks( chunkSlice, currentTimeMS, dT, blockHash, this.world.getConfig().getRandomUpdatesPerTick() );
     }
 
-    private void iterateRandomBlocks( ChunkSlice chunkSlice, long currentTimeMS, float dT, int blockHash, int i, int randomUpdatesPerTick ) {
-        if ( i < randomUpdatesPerTick ) {
-            blockHash >>= 10;
+    private void iterateRandomBlocks( ChunkSlice chunkSlice, long currentTimeMS, float dT, int blockHash, int randomUpdatesPerTick ) {
+        for (int i = 0; i < randomUpdatesPerTick; i++) {
+            blockHash >>= 12;
             int index = blockHash & 0xfff;
             String blockId = chunkSlice.getBlock( 0, index );
             this.tickRandomBlock( blockHash, blockId, chunkSlice, currentTimeMS, dT );
-            this.iterateRandomBlocks( chunkSlice, currentTimeMS, dT, blockHash, i + 1, randomUpdatesPerTick );
         }
     }
 
@@ -137,6 +138,7 @@ public class ChunkAdapter implements Chunk {
             case "minecraft:ice":                   // Ice
             case "minecraft:wheat":
             case "minecraft:cocoa":
+            case "minecraft:vine":
                 this.updateRandomBlock( chunkSlice, blockHash, currentTimeMS, dT );
                 break;
 
@@ -159,11 +161,6 @@ public class ChunkAdapter implements Chunk {
                 this.world.addTickingBlock( next, block.getLocation().toBlockPosition() );
             }
         }
-    }
-
-    private int getRandomBlockHash() {
-        this.world.randomUpdateNumber = ( ( this.world.randomUpdateNumber << 2 ) - this.world.randomUpdateNumber ) + 1013904223;
-        return this.world.randomUpdateNumber >> 2;
     }
 
     public ChunkSlice ensureSlice( int y ) {

@@ -61,7 +61,7 @@ public class Skull extends Block implements io.gomint.world.block.BlockSkull {
         PlacementData data = super.calculatePlacementData( entity, item, face, block, clickedBlock, clickVector );
 
         NBTTagCompound compound = new NBTTagCompound( "" );
-        compound.addValue( "Rot", MojangRotation.fromEntityForBlock( entity ).getRotationValue() );
+        compound.addValue( "Rot", entity == null ? (byte) 0 : MojangRotation.fromEntityForBlock( entity ).getRotationValue() );
         return data.setCompound( compound );
     }
 

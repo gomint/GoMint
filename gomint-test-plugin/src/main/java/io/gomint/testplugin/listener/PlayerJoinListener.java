@@ -8,6 +8,7 @@ import io.gomint.event.player.PlayerJoinEvent;
 import io.gomint.inventory.item.ItemBucket;
 import io.gomint.inventory.item.ItemSand;
 import io.gomint.inventory.item.ItemShears;
+import io.gomint.inventory.item.ItemVines;
 import io.gomint.math.BlockPosition;
 import io.gomint.testplugin.TestPlugin;
 import io.gomint.testplugin.scoreboard.DebugScoreboard;
@@ -41,6 +42,7 @@ public class PlayerJoinListener implements EventListener {
         event.getPlayer().getInventory().setItem(3, ItemShears.create(1));
 
         event.getPlayer().getInventory().setItem(5, ItemSand.create(4));
+        event.getPlayer().getInventory().setItem(6, ItemVines.create(4));
     }
 
 }

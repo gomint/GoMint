@@ -40,7 +40,7 @@ public class EnumBlockState<E extends Enum<E>, T> extends BlockState<E, T> {
 
     @Override
     public void detectFromPlacement(EntityPlayer player, ItemStack placedItem, Facing face, Block block, Block clickedBlock, Vector clickPosition) {
-        this.setState(this.enumValues[placedItem.getData()]);
+        this.setState(this.enumValues[placedItem == null ? 0 : placedItem.getData()]);
     }
 
     @Override

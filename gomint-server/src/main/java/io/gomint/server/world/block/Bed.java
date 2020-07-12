@@ -134,7 +134,7 @@ public class Bed extends Block implements io.gomint.world.block.BlockBed {
     }
 
     @Override
-    public boolean beforePlacement( Entity entity, ItemStack item, Location location ) {
+    public boolean beforePlacement(Entity entity, ItemStack item, Facing face, Location location) {
         // We need to check if we are placed on a solid block
         Block block = (Block) location.getWorld().getBlockAt( location.toBlockPosition() ).getSide( Facing.DOWN );
         if ( block.isSolid() ) {
@@ -156,7 +156,7 @@ public class Bed extends Block implements io.gomint.world.block.BlockBed {
     @Override
     public PlacementData calculatePlacementData(EntityPlayer entity, ItemStack item, Facing face, Block block, Block clickedBlock, Vector clickVector ) {
         NBTTagCompound compound = new NBTTagCompound( "" );
-        compound.addValue( "color", (byte) item.getData() );
+        compound.addValue( "color", ( item != null ) ? (byte) item.getData() : (byte) 0);
 
         // Calc block states
         PlacementData data = super.calculatePlacementData( entity, item, face, block, clickedBlock, clickVector );

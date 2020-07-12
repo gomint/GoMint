@@ -51,7 +51,7 @@ public class LilyPad extends Block implements io.gomint.world.block.BlockLilyPad
     }
 
     @Override
-    public boolean beforePlacement( Entity entity, ItemStack item, Location location ) {
+    public boolean beforePlacement(Entity entity, ItemStack item, Facing face, Location location) {
         Block block = (Block) location.getWorld().getBlockAt( location.toBlockPosition() ).getSide( Facing.UP );
         if( block instanceof StationaryWater ) {
             return true;
