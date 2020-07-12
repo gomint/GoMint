@@ -284,7 +284,7 @@ public class ChunkAdapter implements Chunk {
         int secondsAfterLeft = this.world.getConfig().getSecondsUntilGCAfterLastPlayerLeft();
         int waitAfterLoad = this.world.getConfig().getWaitAfterLoadForGCSeconds();
 
-        return currentTimeMillis - this.loadedTime > TimeUnit.SECONDS.toMillis( waitAfterLoad ) &&
+        return this.populated && currentTimeMillis - this.loadedTime > TimeUnit.SECONDS.toMillis( waitAfterLoad ) &&
             this.players.isEmpty() &&
             currentTimeMillis - this.lastPlayerOnThisChunk > TimeUnit.SECONDS.toMillis( secondsAfterLeft );
     }

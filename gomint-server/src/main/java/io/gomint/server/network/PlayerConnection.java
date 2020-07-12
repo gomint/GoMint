@@ -692,7 +692,7 @@ public class PlayerConnection implements ConnectionWithState {
                         toSendChunks.add(newChunk);
                     } else {
                         long hash = CoordinateUtils.toLong(newChunk.getFirst(), newChunk.getSecond());
-                        if (!this.playerChunks.contains(hash)) {
+                        if (!this.playerChunks.contains(hash) && !this.loadingChunks.contains(hash)) {
                             toSendChunks.add(newChunk);
                         }
                     }
@@ -706,6 +706,28 @@ public class PlayerConnection implements ConnectionWithState {
             packetNetworkChunkPublisherUpdate.setRadius(this.entity.getViewDistance() * 16);
             this.addToSendQueue(packetNetworkChunkPublisherUpdate);
         }
+
+        // Sort so that chunks closer to the current chunk may be sent first
+        toSendChunks.sort((o1, o2) -> {
+            if (Objects.equals(o1.getFirst(), o2.getFirst()) &&
+                Objects.equals(o1.getSecond(), o2.getSecond())) {
+                return 0;
+            }
+
+            int distXFirst = Math.abs(o1.getFirst() - currentXChunk);
+            int distXSecond = Math.abs(o2.getFirst() - currentXChunk);
+
+            int distZFirst = Math.abs(o1.getSecond() - currentZChunk);
+            int distZSecond = Math.abs(o2.getSecond() - currentZChunk);
+
+            if (distXFirst + distZFirst > distXSecond + distZSecond) {
+                return 1;
+            } else if (distXFirst + distZFirst < distXSecond + distZSecond) {
+                return -1;
+            }
+
+            return 0;
+        });
 
         if (forceResendEntities) {
             this.entity.getEntityVisibilityManager().clear();
@@ -754,6 +776,18 @@ public class PlayerConnection implements ConnectionWithState {
                 }
 
                 longCursor.remove();
+            }
+        }
+
+        longCursor = this.loadingChunks.iterator();
+        while (longCursor.hasNext()) {
+            long hash = longCursor.nextLong();
+            int x = (int) (hash >> 32);
+            int z = (int) (hash) + Integer.MIN_VALUE;
+
+            if (Math.abs(x - currentXChunk) > viewDistance ||
+                Math.abs(z - currentZChunk) > viewDistance) {
+                longCursor.remove(); // Not needed anymore
             }
         }
     }
