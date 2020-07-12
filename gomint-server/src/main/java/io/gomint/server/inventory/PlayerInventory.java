@@ -155,6 +155,12 @@ public class PlayerInventory extends ContainerInventory implements io.gomint.inv
         packet.setSelectedSlot(this.itemInHandSlot);
         packet.setSlot(this.itemInHandSlot);
 
+        // Send it to our own if needed
+        if ( player instanceof EntityPlayer ) {
+            EntityPlayer p = (EntityPlayer) player;
+            p.getConnection().addToSendQueue(packet);
+        }
+
         // Relay packet
         for (Entity entity : player.getAttachedEntities()) {
             if (entity instanceof EntityPlayer) {

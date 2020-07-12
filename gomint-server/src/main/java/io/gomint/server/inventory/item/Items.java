@@ -179,7 +179,6 @@ public class Items {
             return null;
         }
 
-
         io.gomint.server.inventory.item.ItemStack itemStack = itemGenerator.generate();
         itemStack.setMaterial(this.generators.getId(itemClass));
 
