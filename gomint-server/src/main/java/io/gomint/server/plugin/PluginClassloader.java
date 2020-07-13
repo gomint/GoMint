@@ -66,10 +66,23 @@ public class PluginClassloader extends URLClassLoader {
      * @throws MalformedURLException when the file is incorrectly labeled
      */
     PluginClassloader(PluginMeta meta) throws MalformedURLException {
-        super(new URL[]{meta.getPluginFile().toURI().toURL()});
+        super(resolveURLs(meta));
 
         this.meta = meta;
         ALL_LOADERS.add(this);
+    }
+
+    private static URL[] resolveURLs(PluginMeta meta) throws MalformedURLException {
+        URL[] loaderURLs = new URL[meta.getModuleDependencies() != null ? meta.getModuleDependencies().size() + 1 : 1];
+        loaderURLs[0] = meta.getPluginFile().toURI().toURL();
+        if (meta.getModuleDependencies() != null) {
+            int index = 1;
+            for (File moduleDependency : meta.getModuleDependencies()) {
+                loaderURLs[index++] = moduleDependency.toURI().toURL();
+            }
+        }
+
+        return loaderURLs;
     }
 
     @Override

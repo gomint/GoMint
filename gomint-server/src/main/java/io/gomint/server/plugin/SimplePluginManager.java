@@ -38,11 +38,13 @@ import org.springframework.stereotype.Component;
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileFilter;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.module.Configuration;
 import java.lang.module.ModuleFinder;
 import java.lang.reflect.Field;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
@@ -226,15 +228,20 @@ public class SimplePluginManager implements PluginManager, EventCaller {
             LOGGER.info("Starting to load plugin {}", pluginMeta.getName());
             loader = new PluginClassloader(pluginMeta);
 
-            ModuleFinder finder = ModuleFinder.of(pluginMeta.getPluginFile().toPath());
+            Path[] finderFiles = new Path[pluginMeta.getModuleDependencies() != null ? pluginMeta.getModuleDependencies().size() + 1 : 1];
+            finderFiles[0] = pluginMeta.getPluginFile().toPath();
+            if (pluginMeta.getModuleDependencies() != null) {
+                int index = 1;
+                for (File moduleDependency : pluginMeta.getModuleDependencies()) {
+                    finderFiles[index++] = moduleDependency.toPath();
+                }
+            }
+
+            ModuleFinder finder = ModuleFinder.of(finderFiles);
             ModuleFinder empty = ModuleFinder.of();
             ModuleLayer bootLayer = ModuleLayer.boot();
 
-            String name = pluginMeta.getPluginFile().toPath().getFileName().toString();
-            name = name.substring(0, name.length() - 4);
-
             Configuration configuration = bootLayer.configuration();
-            String finalName = name;
             Configuration newConfiguration = configuration.resolve(finder, empty, new HashSet<>() {{
                 add(pluginMeta.getModuleName());
             }});
@@ -389,11 +396,30 @@ public class SimplePluginManager implements PluginManager, EventCaller {
             }
 
             PluginMeta meta = new PluginMeta(file);
+            File depModules = new File("modules/plugin/" + file.getName().replace(".jar", ""));
 
             // Try to read every file in the jar
             try {
                 while (jarEntries.hasMoreElements()) {
                     JarEntry jarEntry = jarEntries.nextElement();
+
+                    // If we found a jar inside a jar extract it
+                    if (jarEntry != null && jarEntry.getName().endsWith(".jar")) {
+                        depModules.mkdirs(); // We simply ignore it, if the creation failed the extraction will error either way
+
+                        File jarFile = Paths.get(depModules.getAbsolutePath(), jarEntry.getName()).toFile();
+                        jarFile.getParentFile().mkdirs(); // Ignore, it will fail in the copy
+
+                        try (FileOutputStream toFile = new FileOutputStream(jarFile)) {
+                            jar.getInputStream(jarEntry).transferTo(toFile);
+                        }
+
+                        if ( meta.getModuleDependencies() == null ) {
+                            meta.setModuleDependencies( new HashSet<>() );
+                        }
+
+                        meta.getModuleDependencies().add(jarFile);
+                    }
 
                     // When the entry is valid and ends with a .class its a java class and we need to scan it
                     if (jarEntry != null && jarEntry.getName().endsWith(".class")) {

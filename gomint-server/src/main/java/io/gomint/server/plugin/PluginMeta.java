@@ -42,6 +42,7 @@ public class PluginMeta {
     // Module stuff
     private String moduleName;
     private Set<String> packages;
+    private Set<File> moduleDependencies;
 
     public void addPackage(String packageName) {
         if (this.packages == null) {
