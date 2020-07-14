@@ -262,7 +262,7 @@ public abstract class Block implements io.gomint.world.block.Block {
             return new PlacementData(this.identifier, null);
         }
 
-        if (item.getData() > 0) {
+        if (item != null && item.getData() > 0) {
             LOGGER.warn("Block implementation is missing states: {}", this.getClass().getName());
         }
 
