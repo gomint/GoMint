@@ -111,10 +111,14 @@ public class ChunkSlice {
         return blockStorage.getShort(index * 2);
     }
 
-    <T extends io.gomint.world.block.Block> T getBlockInstance( int x, int y, int z, int layer ) {
-        short index = getIndex( x, y, z );
+    public <T extends io.gomint.world.block.Block> T getBlockInstanceInternal(short index, int layer, Location blockLocation) {
+        if (blockLocation == null) {
+            int blockX = ( index >> 8 ) & 0x0f;
+            int blockY = ( index ) & 0x0f;
+            int blockZ = ( index >> 4 ) & 0x0f;
 
-        Location blockLocation = this.getBlockLocation( x, y, z );
+            blockLocation = this.getBlockLocation(blockX, blockY, blockZ);
+        }
 
         int runtimeID = this.getRuntimeID( layer, index );
         if ( this.isAllAir || runtimeID == AIR_RUNTIME_ID ) {
@@ -124,6 +128,11 @@ public class ChunkSlice {
         BlockIdentifier identifier = BlockRuntimeIDs.toBlockIdentifier( runtimeID );
         return (T) this.chunk.getWorld().getServer().getBlocks().get( identifier, this.skyLight != null ? this.skyLight.get( index ) : 0,
             this.blockLight != null ? this.blockLight.get( index ) : 0, this.tileEntities != null ? this.tileEntities.get( index ) : null, blockLocation, layer );
+    }
+
+    <T extends io.gomint.world.block.Block> T getBlockInstance( int x, int y, int z, int layer ) {
+        short index = getIndex( x, y, z );
+        return getBlockInstanceInternal(index, layer, getBlockLocation(x,y,z));
     }
 
     private <T extends Block> T getAirBlockInstance( Location location ) {

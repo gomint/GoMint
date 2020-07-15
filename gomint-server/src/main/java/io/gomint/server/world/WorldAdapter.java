@@ -55,6 +55,7 @@ import java.util.*;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
@@ -84,8 +85,7 @@ public abstract class WorldAdapter implements World {
     protected Location spawn;
     @Getter
     protected Map<Gamerule, Object> gamerules = new HashMap<>();
-    @Getter
-    private WorldConfig config;
+    @Getter private WorldConfig config;
 
     /**
      * Get the difficulty of this world
@@ -102,6 +102,7 @@ public abstract class WorldAdapter implements World {
     private EntityManager entityManager;
 
     // Block ticking
+    int lcg = ThreadLocalRandom.current().nextInt();
     private TickList tickQueue = new TickList();
 
     // I/O
@@ -1206,7 +1207,7 @@ public abstract class WorldAdapter implements World {
             if (!drops.isEmpty()) {
                 for (ItemStack itemStack : drops) {
                     EntityItem item = this.createItemDrop(block.getLocation().add(0.5f, 0.5f, 0.5f), itemStack);
-                    item.setVelocity(new Vector(FastRandom.current().nextFloat() * 0.2f - 0.1f, 0.2f, FastRandom.current().nextFloat() * 0.2f - 0.1f));
+                    item.setVelocity(new Vector(ThreadLocalRandom.current().nextFloat() * 0.2f - 0.1f, 0.2f, ThreadLocalRandom.current().nextFloat() * 0.2f - 0.1f));
                 }
             }
 
@@ -1242,8 +1243,8 @@ public abstract class WorldAdapter implements World {
             return;
         }
 
-        Vector motion = new Vector(FastRandom.current().nextFloat() * 0.2f - 0.1f,
-            0.2f, FastRandom.current().nextFloat() * 0.2f - 0.1f);
+        Vector motion = new Vector(ThreadLocalRandom.current().nextFloat() * 0.2f - 0.1f,
+            0.2f, ThreadLocalRandom.current().nextFloat() * 0.2f - 0.1f);
 
         EntityItem item = this.createItemDrop(location, drop);
         item.setVelocity(motion);

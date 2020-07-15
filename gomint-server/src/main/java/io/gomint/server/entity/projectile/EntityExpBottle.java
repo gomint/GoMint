@@ -16,8 +16,9 @@ import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.util.Values;
 import io.gomint.server.world.LevelEvent;
 import io.gomint.server.world.WorldAdapter;
-import io.gomint.util.random.FastRandom;
 import io.gomint.world.Particle;
+
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * @author geNAZt
@@ -84,11 +85,11 @@ public class EntityExpBottle extends EntityThrowable implements io.gomint.entity
         this.world.sendParticle( location, Particle.MOB_SPELL );
         this.world.sendLevelEvent( location, LevelEvent.PARTICLE_SPLASH, 0x00385dc6 );
 
-        int amountOfOrbs = 3 + FastRandom.current().nextInt( 8 );
+        int amountOfOrbs = 3 + ThreadLocalRandom.current().nextInt( 8 );
         int add = 1;
         for ( int i = 0; i < amountOfOrbs; i += add ) {
             this.world.createExpOrb( location, add );
-            add = 1 + FastRandom.current().nextInt( 2 );
+            add = 1 + ThreadLocalRandom.current().nextInt( 2 );
         }
     }
 

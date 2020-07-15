@@ -13,6 +13,7 @@ import io.gomint.world.block.BlockType;
 import io.gomint.world.block.data.Facing;
 
 import java.util.ArrayList;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * @author geNAZt
@@ -54,7 +55,7 @@ public abstract class Growable extends Block {
             // Check for growth state
             if (this.growth.getState() < 1f) {
                 float growthDivider = getGrowthDivider();
-                int random = FastRandom.current().nextInt((int) ((25f / growthDivider) + 1));
+                int random = ThreadLocalRandom.current().nextInt((int) ((25f / growthDivider) + 1));
 
                 // Grow it
                 if (random == 0) {

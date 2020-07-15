@@ -4,6 +4,7 @@ import io.gomint.util.random.FastRandom;
 
 import java.util.NavigableMap;
 import java.util.TreeMap;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * @author geNAZt
@@ -41,7 +42,7 @@ public class WeightedRandom<V> {
      * @return random value out of values inputted via {@link #add(double, Object)}
      */
     public V next() {
-        double value = FastRandom.current().nextDouble() * this.total;
+        double value = ThreadLocalRandom.current().nextDouble() * this.total;
         return this.map.higherEntry( value ).getValue();
     }
 

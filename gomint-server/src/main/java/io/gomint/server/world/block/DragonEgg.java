@@ -12,6 +12,8 @@ import io.gomint.world.Gamemode;
 import io.gomint.world.block.data.Facing;
 import io.gomint.world.block.BlockType;
 
+import java.util.concurrent.ThreadLocalRandom;
+
 /**
  * @author geNAZt
  * @version 1.0
@@ -75,10 +77,11 @@ public class DragonEgg extends Block implements io.gomint.world.block.BlockDrago
     @Override
     public void teleport() {
         BlockPosition pos = this.getLocation().toBlockPosition();
-        FastRandom random = FastRandom.current();
 
         for ( int i = 0; i < 1000; i++ ) {
-            BlockPosition blockPos = pos.add( random.nextInt( 16 ) - random.nextInt( 16 ), random.nextInt( 8 ) - random.nextInt( 8 ), random.nextInt( 16 ) - random.nextInt( 16 ) );
+            BlockPosition blockPos = pos.add( ThreadLocalRandom.current().nextInt( 16 ) - ThreadLocalRandom.current().nextInt( 16 ),
+                ThreadLocalRandom.current().nextInt( 8 ) - ThreadLocalRandom.current().nextInt( 8 ),
+                ThreadLocalRandom.current().nextInt( 16 ) - ThreadLocalRandom.current().nextInt( 16 ) );
 
             if ( this.world.getBlockAt( blockPos ).getBlockType() == BlockType.AIR ) {
                 this.teleport( blockPos );

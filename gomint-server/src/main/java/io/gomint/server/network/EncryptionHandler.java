@@ -34,6 +34,7 @@ import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.interfaces.ECPublicKey;
 import java.util.Base64;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
@@ -104,7 +105,7 @@ public class EncryptionHandler {
 
         // Generate a random salt:
         this.clientSalt = new byte[16];
-        FastRandom.current().nextBytes( this.clientSalt );
+        ThreadLocalRandom.current().nextBytes( this.clientSalt );
 
         // Generate shared secret from ECDH keys:
         byte[] secret = this.generateECDHSecret( this.keyFactory.getKeyPair().getPrivate(), this.clientPublicKey );

@@ -130,7 +130,7 @@ public class AssetsLibrary {
 
             st.add(sta);
 
-            if (block.contains("minecraft:vine")) {
+            if (block.contains("minecraft:rail")) {
                 LOGGER.info("{}: {}", block, sta);
             }
 

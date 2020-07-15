@@ -16,13 +16,13 @@ import io.gomint.server.entity.EntityType;
 import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.util.Values;
 import io.gomint.server.world.WorldAdapter;
-import io.gomint.util.random.FastRandom;
 import io.gomint.world.Particle;
 import io.gomint.world.block.Block;
 import io.gomint.world.block.BlockType;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * The actual implementation of {@link io.gomint.entity.projectile.EntitySnowball}. Currently adopting
@@ -55,8 +55,6 @@ public class EntitySnowball extends EntityProjectile implements io.gomint.entity
 
     private static final class VelocityCalculator {
 
-        private static final FastRandom RANDOM = FastRandom.current();
-
         private static float calculateX( Location position ) {
             // Using local fields to improve readability
             float yaw = (float) -sin( position.getYaw() / 180.0F * PI );
@@ -81,9 +79,9 @@ public class EntitySnowball extends EntityProjectile implements io.gomint.entity
         private static void calculateDistanceTravelAndApply( Vector vec ) {
             float distanceTravel = sqrt( square( vec.getX() ) + square( vec.getY() ) + square( vec.getZ() ) );
 
-            vec.setX( (float) ( ( ( vec.getX() / distanceTravel ) + ( RANDOM.nextDouble() * 0.0075f ) ) * 1.5f ) );
-            vec.setY( (float) ( ( ( vec.getY() / distanceTravel ) + ( RANDOM.nextDouble() * 0.0075f ) ) * 1.5f ) );
-            vec.setZ( (float) ( ( ( vec.getZ() / distanceTravel ) + ( RANDOM.nextDouble() * 0.0075f ) ) * 1.5f ) );
+            vec.setX( (float) ( ( ( vec.getX() / distanceTravel ) + ( ThreadLocalRandom.current().nextDouble() * 0.0075f ) ) * 1.5f ) );
+            vec.setY( (float) ( ( ( vec.getY() / distanceTravel ) + ( ThreadLocalRandom.current().nextDouble() * 0.0075f ) ) * 1.5f ) );
+            vec.setZ( (float) ( ( ( vec.getZ() / distanceTravel ) + ( ThreadLocalRandom.current().nextDouble() * 0.0075f ) ) * 1.5f ) );
         }
 
     }

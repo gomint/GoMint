@@ -21,9 +21,9 @@ import io.gomint.server.entity.EntityPlayer;
 import io.gomint.server.entity.EntityType;
 import io.gomint.server.util.Values;
 import io.gomint.server.world.WorldAdapter;
-import io.gomint.util.random.FastRandom;
 
 import java.util.Collection;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * @author geNAZt
@@ -134,7 +134,7 @@ public abstract class EntityProjectile extends Entity implements io.gomint.entit
 
                             // Critical?
                             if ( isCritical() ) {
-                                damage += FastRandom.current().nextInt( damage / 2 + 2 );
+                                damage += ThreadLocalRandom.current().nextInt( damage / 2 + 2 );
                             }
 
                             EntityDamageByEntityEvent event = new EntityDamageByEntityEvent( hitEntity, this, EntityDamageEvent.DamageSource.PROJECTILE, damage );

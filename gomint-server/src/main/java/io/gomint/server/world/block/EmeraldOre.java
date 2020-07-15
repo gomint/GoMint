@@ -10,6 +10,7 @@ import io.gomint.world.block.BlockType;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * @author geNAZt
@@ -47,7 +48,7 @@ public class EmeraldOre extends Block implements io.gomint.world.block.BlockEmer
     public List<ItemStack> getDrops( ItemStack itemInHand ) {
         List<ItemStack> drops = new ArrayList<>();
         if ( isCorrectTool( itemInHand ) ) {
-            ( (WorldAdapter) this.location.getWorld() ).createExpOrb( this.location, FastRandom.current().nextInt( 3 ) );
+            ( (WorldAdapter) this.location.getWorld() ).createExpOrb( this.location, ThreadLocalRandom.current().nextInt( 3 ) );
             drops.add( ItemEmerald.create( 1 ) );
         }
         return drops;

@@ -71,6 +71,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
@@ -939,7 +940,7 @@ public class PlayerConnection implements ConnectionWithState {
         packet.setGamerules(world.getGamerules());
         packet.setTexturePacksRequired(false);
         packet.setCommandsEnabled(true);
-        packet.setEnchantmentSeed(FastRandom.current().nextInt());
+        packet.setEnchantmentSeed(ThreadLocalRandom.current().nextInt());
         packet.setCorrelationId(this.server.getServerUniqueID().toString());
 
         // Set the new location

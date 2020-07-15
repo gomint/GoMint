@@ -16,7 +16,8 @@ import io.gomint.server.entity.EntityType;
 import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.util.Values;
 import io.gomint.server.world.WorldAdapter;
-import io.gomint.util.random.FastRandom;
+
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * @author geNAZt
@@ -59,9 +60,9 @@ public class EntityFishingHook extends EntityProjectile implements io.gomint.ent
         );
 
         float distanceTravel = (float) Math.sqrt( MathUtils.square( motion.getX() ) + MathUtils.square( motion.getY() ) + MathUtils.square( motion.getZ() ) );
-        motion.setX( (float) ( ( ( motion.getX() / distanceTravel ) + ( FastRandom.current().nextDouble() * 0.0075f ) ) * 1.5f ) );
-        motion.setY( (float) ( ( ( motion.getY() / distanceTravel ) + ( FastRandom.current().nextDouble() * 0.0075f ) ) * 1.5f ) );
-        motion.setZ( (float) ( ( ( motion.getZ() / distanceTravel ) + ( FastRandom.current().nextDouble() * 0.0075f ) ) * 1.5f ) );
+        motion.setX( (float) ( ( ( motion.getX() / distanceTravel ) + ( ThreadLocalRandom.current().nextDouble() * 0.0075f ) ) * 1.5f ) );
+        motion.setY( (float) ( ( ( motion.getY() / distanceTravel ) + ( ThreadLocalRandom.current().nextDouble() * 0.0075f ) ) * 1.5f ) );
+        motion.setZ( (float) ( ( ( motion.getZ() / distanceTravel ) + ( ThreadLocalRandom.current().nextDouble() * 0.0075f ) ) * 1.5f ) );
         this.setVelocity( motion );
 
         // Set owning entity (this draws the rod line)

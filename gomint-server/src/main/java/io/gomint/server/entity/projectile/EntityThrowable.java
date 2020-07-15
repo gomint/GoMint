@@ -13,7 +13,8 @@ import io.gomint.math.Vector;
 import io.gomint.server.entity.EntityLiving;
 import io.gomint.server.entity.EntityType;
 import io.gomint.server.world.WorldAdapter;
-import io.gomint.util.random.FastRandom;
+
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * @author geNAZt
@@ -42,9 +43,9 @@ public abstract class EntityThrowable extends EntityProjectile {
         );
 
         float distanceTravel = (float) Math.sqrt( MathUtils.square( motion.getX() ) + MathUtils.square( motion.getY() ) + MathUtils.square( motion.getZ() ) );
-        motion.setX( (float) ( ( ( motion.getX() / distanceTravel ) + ( FastRandom.current().nextDouble() * 0.0075f ) ) * 1.5f ) );
-        motion.setY( (float) ( ( ( motion.getY() / distanceTravel ) + ( FastRandom.current().nextDouble() * 0.0075f ) ) * 1.5f ) );
-        motion.setZ( (float) ( ( ( motion.getZ() / distanceTravel ) + ( FastRandom.current().nextDouble() * 0.0075f ) ) * 1.5f ) );
+        motion.setX( (float) ( ( ( motion.getX() / distanceTravel ) + ( ThreadLocalRandom.current().nextDouble() * 0.0075f ) ) * 1.5f ) );
+        motion.setY( (float) ( ( ( motion.getY() / distanceTravel ) + ( ThreadLocalRandom.current().nextDouble() * 0.0075f ) ) * 1.5f ) );
+        motion.setZ( (float) ( ( ( motion.getZ() / distanceTravel ) + ( ThreadLocalRandom.current().nextDouble() * 0.0075f ) ) * 1.5f ) );
         this.setVelocity( motion );
 
         // Calculate correct yaw / pitch

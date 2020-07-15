@@ -9,6 +9,7 @@ import io.gomint.server.registry.RegisterInfo;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * @author geNAZt
@@ -50,7 +51,7 @@ public class Glowstone extends Block implements io.gomint.world.block.BlockGlows
     @Override
     public List<ItemStack> getDrops( ItemStack itemInHand ) {
         return new ArrayList<ItemStack>() {{
-            add( ItemGlowstoneDust.create( FastRandom.current().nextBoolean() ? 2 : 4 ) );
+            add( ItemGlowstoneDust.create( ThreadLocalRandom.current().nextBoolean() ? 2 : 4 ) );
         }};
     }
 }

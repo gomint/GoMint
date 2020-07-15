@@ -45,6 +45,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
@@ -52,15 +53,16 @@ import java.util.function.Consumer;
  * @author BlackyPaw
  * @version 1.0
  */
-@ToString( of = { "world", "x", "z" } )
-@EqualsAndHashCode( callSuper = false, of = { "world", "x", "z" } )
+@ToString(of = {"world", "x", "z"})
+@EqualsAndHashCode(callSuper = false, of = {"world", "x", "z"})
 public class ChunkAdapter implements Chunk {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger( ChunkAdapter.class );
+    private static final Logger LOGGER = LoggerFactory.getLogger(ChunkAdapter.class);
 
     // CHECKSTYLE:OFF
     // World
-    @Getter protected final WorldAdapter world;
+    @Getter
+    protected final WorldAdapter world;
 
     // Chunk
     protected final int x;
@@ -68,10 +70,11 @@ public class ChunkAdapter implements Chunk {
     protected long inhabitedTime;
 
     // Biomes
-    protected final ByteBuf biomes = PooledByteBufAllocator.DEFAULT.directBuffer(16*16);
+    protected final ByteBuf biomes = PooledByteBufAllocator.DEFAULT.directBuffer(16 * 16);
 
     // Blocks
-    @Getter protected ChunkSlice[] chunkSlices = new ChunkSlice[16];
+    @Getter
+    protected ChunkSlice[] chunkSlices = new ChunkSlice[16];
     private byte[] height = new byte[16 * 16 * 2];
 
     // Players / Chunk GC
@@ -84,8 +87,11 @@ public class ChunkAdapter implements Chunk {
     protected Long2ObjectMap<io.gomint.entity.Entity> entities = null;
 
     // State saving flag
-    @Getter private boolean needsPersistence;
-    @Getter @Setter private boolean populated;
+    @Getter
+    private boolean needsPersistence;
+    @Getter
+    @Setter
+    private boolean populated;
 
     // CHECKSTYLE:ON
 
@@ -103,30 +109,29 @@ public class ChunkAdapter implements Chunk {
      * @param currentTimeMS The current time in milliseconds. Used to reduce the number of calls to System#currentTimeMillis()
      * @param dT            The delta from the full second which has been calculated in the last tick
      */
-    final void tickRandomBlocks( long currentTimeMS, float dT ) {
-        for ( ChunkSlice chunkSlice : this.chunkSlices ) {
-            if ( chunkSlice != null && !chunkSlice.isAllAir() ) {
-                this.tickRandomBlocksForSlice( chunkSlice, currentTimeMS, dT );
+    final void tickRandomBlocks(long currentTimeMS, float dT) {
+        for (ChunkSlice chunkSlice : this.chunkSlices) {
+            if (chunkSlice != null && !chunkSlice.isAllAir()) {
+                this.tickRandomBlocksForSlice(chunkSlice, currentTimeMS, dT);
             }
         }
     }
 
-    private void tickRandomBlocksForSlice( ChunkSlice chunkSlice, long currentTimeMS, float dT ) {
-        int blockHash = FastRandom.current().nextInt();
-        this.iterateRandomBlocks( chunkSlice, currentTimeMS, dT, blockHash, this.world.getConfig().getRandomUpdatesPerTick() );
+    private void tickRandomBlocksForSlice(ChunkSlice chunkSlice, long currentTimeMS, float dT) {
+        this.iterateRandomBlocks(chunkSlice, currentTimeMS, dT, this.world.getConfig().getRandomUpdatesPerTick());
     }
 
-    private void iterateRandomBlocks( ChunkSlice chunkSlice, long currentTimeMS, float dT, int blockHash, int randomUpdatesPerTick ) {
+    private void iterateRandomBlocks(ChunkSlice chunkSlice, long currentTimeMS, float dT, int randomUpdatesPerTick) {
         for (int i = 0; i < randomUpdatesPerTick; i++) {
-            blockHash >>= 12;
-            int index = blockHash & 0xfff;
-            String blockId = chunkSlice.getBlock( 0, index );
-            this.tickRandomBlock( blockHash, blockId, chunkSlice, currentTimeMS, dT );
+            this.world.lcg = this.world.lcg * 3 + 1013904223;
+            short index = (short) ((this.world.lcg >> 2) & 0xfff);
+            String blockId = chunkSlice.getBlock(0, index);
+            this.tickRandomBlock(index, blockId, chunkSlice, currentTimeMS, dT);
         }
     }
 
-    private void tickRandomBlock( int blockHash, String blockId, ChunkSlice chunkSlice, long currentTimeMS, float dT ) {
-        switch ( blockId ) {
+    private void tickRandomBlock(short blockHash, String blockId, ChunkSlice chunkSlice, long currentTimeMS, float dT) {
+        switch (blockId) {
             case "minecraft:beetroot":              // Beetroot
             case "minecraft:grass":                 // Grass
             case "minecraft:farmland":              // Farmland
@@ -139,7 +144,7 @@ public class ChunkAdapter implements Chunk {
             case "minecraft:wheat":
             case "minecraft:cocoa":
             case "minecraft:vine":
-                this.updateRandomBlock( chunkSlice, blockHash, currentTimeMS, dT );
+                this.updateRandomBlock(chunkSlice, blockHash, currentTimeMS, dT);
                 break;
 
             default:
@@ -147,42 +152,38 @@ public class ChunkAdapter implements Chunk {
         }
     }
 
-    private void updateRandomBlock( ChunkSlice chunkSlice, int blockHash, long currentTimeMS, float dT ) {
-        int blockX = ( blockHash >> 8 ) & 0x0f;
-        int blockY = ( blockHash ) & 0x0f;
-        int blockZ = ( blockHash >> 4 ) & 0x0f;
+    private void updateRandomBlock(ChunkSlice chunkSlice, short index, long currentTimeMS, float dT) {
+        Block block = chunkSlice.getBlockInstanceInternal(index, 0, null);
+        if (block instanceof io.gomint.server.world.block.Block) {
+            long next = ((io.gomint.server.world.block.Block) block)
+                .update(UpdateReason.RANDOM, currentTimeMS, dT);
 
-        Block block = chunkSlice.getBlockInstance( blockX, blockY, blockZ, 0 );
-        if ( block instanceof io.gomint.server.world.block.Block ) {
-            long next = ( (io.gomint.server.world.block.Block) block )
-                .update( UpdateReason.RANDOM, currentTimeMS, dT );
-
-            if ( next > currentTimeMS ) {
-                this.world.addTickingBlock( next, block.getLocation().toBlockPosition() );
+            if (next > currentTimeMS) {
+                this.world.addTickingBlock(next, block.getLocation().toBlockPosition());
             }
         }
     }
 
-    public ChunkSlice ensureSlice( int y ) {
+    public ChunkSlice ensureSlice(int y) {
         ChunkSlice slice = this.chunkSlices[y];
-        if ( slice != null ) {
+        if (slice != null) {
             return slice;
         }
 
         // Ensure all chunk slices till y
-        for ( int i = 0; i < y; i++ ) {
-            this.internalEnsureChunkSlice( i );
+        for (int i = 0; i < y; i++) {
+            this.internalEnsureChunkSlice(i);
         }
 
-        return this.internalEnsureChunkSlice( y );
+        return this.internalEnsureChunkSlice(y);
     }
 
-    private ChunkSlice internalEnsureChunkSlice( int y ) {
+    private ChunkSlice internalEnsureChunkSlice(int y) {
         ChunkSlice slice = this.chunkSlices[y];
-        if ( slice != null ) {
+        if (slice != null) {
             return slice;
         } else {
-            this.chunkSlices[y] = new ChunkSlice( this, y );
+            this.chunkSlices[y] = new ChunkSlice(this, y);
             return this.chunkSlices[y];
         }
     }
@@ -192,14 +193,14 @@ public class ChunkAdapter implements Chunk {
      *
      * @param player The player which we want to add to this chunk
      */
-    void addPlayer( EntityPlayer player ) {
-        this.players.add( player );
+    void addPlayer(EntityPlayer player) {
+        this.players.add(player);
 
-        if ( this.entities == null ) {
+        if (this.entities == null) {
             this.entities = new Long2ObjectOpenHashMap<>();
         }
 
-        this.entities.put( player.getEntityId(), player );
+        this.entities.put(player.getEntityId(), player);
     }
 
     /**
@@ -207,16 +208,16 @@ public class ChunkAdapter implements Chunk {
      *
      * @param player The player which we want to remove from this chunk
      */
-    void removePlayer( EntityPlayer player ) {
-        this.players.remove( player );
+    void removePlayer(EntityPlayer player) {
+        this.players.remove(player);
         this.lastPlayerOnThisChunk = System.currentTimeMillis();
 
-        if ( this.entities == null ) {
+        if (this.entities == null) {
             return;
         }
 
-        this.entities.remove( player.getEntityId() );
-        if ( this.entities.size() == 0 ) {
+        this.entities.remove(player.getEntityId());
+        if (this.entities.size() == 0) {
             this.entities = null;
         }
     }
@@ -226,12 +227,12 @@ public class ChunkAdapter implements Chunk {
      *
      * @param entity The entity which should be added
      */
-    protected void addEntity( Entity entity ) {
-        if ( this.entities == null ) {
+    protected void addEntity(Entity entity) {
+        if (this.entities == null) {
             this.entities = new Long2ObjectOpenHashMap<>();
         }
 
-        this.entities.put( entity.getEntityId(), entity );
+        this.entities.put(entity.getEntityId(), entity);
     }
 
     /**
@@ -239,13 +240,13 @@ public class ChunkAdapter implements Chunk {
      *
      * @param entity The entity which should be removed
      */
-    void removeEntity( Entity entity ) {
-        if ( this.entities == null ) {
+    void removeEntity(Entity entity) {
+        if (this.entities == null) {
             return;
         }
 
-        this.entities.remove( entity.getEntityId() );
-        if ( this.entities.size() == 0 ) {
+        this.entities.remove(entity.getEntityId());
+        if (this.entities.size() == 0) {
             this.entities = null;
         }
     }
@@ -264,7 +265,7 @@ public class ChunkAdapter implements Chunk {
      *
      * @param timestamp The timestamp to set
      */
-    void setLastSavedTimestamp( long timestamp ) {
+    void setLastSavedTimestamp(long timestamp) {
         this.lastSavedTimestamp = timestamp;
         this.needsPersistence = false;
     }
@@ -280,8 +281,8 @@ public class ChunkAdapter implements Chunk {
      *
      * @param callback The callback to be invoked once the operation is complete
      */
-    void packageChunk( Delegate2<Long, ChunkAdapter> callback ) {
-        this.world.notifyPackageChunk( this.x, this.z, callback );
+    void packageChunk(Delegate2<Long, ChunkAdapter> callback) {
+        this.world.notifyPackageChunk(this.x, this.z, callback);
     }
 
     /**
@@ -290,13 +291,13 @@ public class ChunkAdapter implements Chunk {
      * @param currentTimeMillis The time when this collection cycle started
      * @return true when it can be gced, false when not
      */
-    boolean canBeGCed( long currentTimeMillis ) {
+    boolean canBeGCed(long currentTimeMillis) {
         int secondsAfterLeft = this.world.getConfig().getSecondsUntilGCAfterLastPlayerLeft();
         int waitAfterLoad = this.world.getConfig().getWaitAfterLoadForGCSeconds();
 
-        return this.populated && currentTimeMillis - this.loadedTime > TimeUnit.SECONDS.toMillis( waitAfterLoad ) &&
+        return this.populated && currentTimeMillis - this.loadedTime > TimeUnit.SECONDS.toMillis(waitAfterLoad) &&
             this.players.isEmpty() &&
-            currentTimeMillis - this.lastPlayerOnThisChunk > TimeUnit.SECONDS.toMillis( secondsAfterLeft );
+            currentTimeMillis - this.lastPlayerOnThisChunk > TimeUnit.SECONDS.toMillis(secondsAfterLeft);
     }
 
     /**
@@ -305,7 +306,7 @@ public class ChunkAdapter implements Chunk {
      * @return non modifiable collection of players on this chunk
      */
     public Collection<EntityPlayer> getPlayers() {
-        return Collections.unmodifiableCollection( this.players );
+        return Collections.unmodifiableCollection(this.players);
     }
 
     /**
@@ -331,29 +332,29 @@ public class ChunkAdapter implements Chunk {
      *
      * @param tileEntity The NBT tag of the tile entity which should be added
      */
-    protected void addTileEntity( TileEntity tileEntity ) {
+    protected void addTileEntity(TileEntity tileEntity) {
         BlockPosition tileEntityLocation = tileEntity.getBlock().getLocation().toBlockPosition();
         int xPos = tileEntityLocation.getX() & 0xF;
         int yPos = tileEntityLocation.getY();
         int zPos = tileEntityLocation.getZ() & 0xF;
 
-        ChunkSlice slice = ensureSlice( yPos >> 4 );
-        slice.addTileEntity( xPos, yPos - slice.getSectionY() * 16, zPos, tileEntity );
+        ChunkSlice slice = ensureSlice(yPos >> 4);
+        slice.addTileEntity(xPos, yPos - slice.getSectionY() * 16, zPos, tileEntity);
     }
 
     /**
      * Sets the ID of a block at the specified coordinates given in chunk coordinates.
      *
-     * @param x               The x-coordinate of the block
-     * @param y               The y-coordinate of the block
-     * @param z               The z-coordinate of the block
-     * @param layer           layer on which this block is
+     * @param x         The x-coordinate of the block
+     * @param y         The y-coordinate of the block
+     * @param z         The z-coordinate of the block
+     * @param layer     layer on which this block is
      * @param runtimeId The ID to set the block to
      */
-    public void setBlock( int x, int y, int z, int layer, int runtimeId ) {
+    public void setBlock(int x, int y, int z, int layer, int runtimeId) {
         int ySection = y >> 4;
-        ChunkSlice slice = ensureSlice( ySection );
-        slice.setBlock( x, y - ( ySection << 4 ), z, layer, runtimeId );
+        ChunkSlice slice = ensureSlice(ySection);
+        slice.setBlock(x, y - (ySection << 4), z, layer, runtimeId);
 
         this.needsPersistence = true;
     }
@@ -367,9 +368,9 @@ public class ChunkAdapter implements Chunk {
      * @param layer in which the block is
      * @return The ID of the block
      */
-    public String getBlock( int x, int y, int z, int layer ) {
-        ChunkSlice slice = ensureSlice( y >> 4 );
-        return slice.getBlock( x, y - 16 * ( y >> 4 ), z, layer );
+    public String getBlock(int x, int y, int z, int layer) {
+        ChunkSlice slice = ensureSlice(y >> 4);
+        return slice.getBlock(x, y - 16 * (y >> 4), z, layer);
     }
 
     /**
@@ -379,8 +380,8 @@ public class ChunkAdapter implements Chunk {
      * @param z      The z-coordinate relative to the chunk
      * @param height The maximum block height
      */
-    private void setHeight( int x, int z, byte height ) {
-        this.height[( z << 4 ) + x] = height;
+    private void setHeight(int x, int z, byte height) {
+        this.height[(z << 4) + x] = height;
     }
 
     /**
@@ -391,43 +392,43 @@ public class ChunkAdapter implements Chunk {
      * @param z The z-coordinate relative to the chunk
      * @return The maximum block height
      */
-    public int getHeight( int x, int z ) {
-        return this.height[( z << 4 ) + x] & 0xFF;
+    public int getHeight(int x, int z) {
+        return this.height[(z << 4) + x] & 0xFF;
     }
 
     @Override
-    public void setBiome( int x, int z, Biome biome ) {
-        this.biomes.setByte(( x << 4 ) + z, (byte) biome.getId());
+    public void setBiome(int x, int z, Biome biome) {
+        this.biomes.setByte((x << 4) + z, (byte) biome.getId());
     }
 
     @Override
-    public Biome getBiome( int x, int z ) {
-        return Biome.getBiomeById( this.biomes.getByte(( x << 4 ) + z) );
+    public Biome getBiome(int x, int z) {
+        return Biome.getBiomeById(this.biomes.getByte((x << 4) + z));
     }
 
     @Override
-    public <T extends Block> T getBlockAt( int x, int y, int z ) {
-        return getBlockAt( x, y, z, WorldLayer.NORMAL );
+    public <T extends Block> T getBlockAt(int x, int y, int z) {
+        return getBlockAt(x, y, z, WorldLayer.NORMAL);
     }
 
-    public <T extends Block> T getBlockAt( int x, int y, int z, int layer ) {
-        ChunkSlice slice = ensureSlice( y >> 4 );
-        return slice.getBlockInstance( x, y & 0x000000F, z, layer );
+    public <T extends Block> T getBlockAt(int x, int y, int z, int layer) {
+        ChunkSlice slice = ensureSlice(y >> 4);
+        return slice.getBlockInstance(x, y & 0x000000F, z, layer);
     }
 
     @Override
-    public <T extends Block> T getBlockAt( int x, int y, int z, WorldLayer layer ) {
-        return this.getBlockAt( x, y, z, layer.ordinal() );
+    public <T extends Block> T getBlockAt(int x, int y, int z, WorldLayer layer) {
+        return this.getBlockAt(x, y, z, layer.ordinal());
     }
 
-    public TemporaryStorage getTemporaryStorage( int x, int y, int z, int layer ) {
-        ChunkSlice slice = ensureSlice( y >> 4 );
-        return slice.getTemporaryStorage( x, y - 16 * ( y >> 4 ), z, layer );
+    public TemporaryStorage getTemporaryStorage(int x, int y, int z, int layer) {
+        ChunkSlice slice = ensureSlice(y >> 4);
+        return slice.getTemporaryStorage(x, y - 16 * (y >> 4), z, layer);
     }
 
-    public void resetTemporaryStorage( int x, int y, int z, int layer ) {
-        ChunkSlice slice = ensureSlice( y >> 4 );
-        slice.resetTemporaryStorage( x, y - 16 * ( y >> 4 ), z, layer );
+    public void resetTemporaryStorage(int x, int y, int z, int layer) {
+        ChunkSlice slice = ensureSlice(y >> 4);
+        slice.resetTemporaryStorage(x, y - 16 * (y >> 4), z, layer);
     }
 
     // ==================================== MISCELLANEOUS ==================================== //
@@ -437,16 +438,16 @@ public class ChunkAdapter implements Chunk {
      *
      * @param maxHeight max height of this chunk. Used to reduce load on the CPU
      */
-    public void calculateHeightmap( int maxHeight ) {
-        if ( maxHeight == 0 ) {
+    public void calculateHeightmap(int maxHeight) {
+        if (maxHeight == 0) {
             return;
         }
 
-        for ( int i = 0; i < 16; ++i ) {
-            for ( int k = 0; k < 16; ++k ) {
-                for ( int j = ( maxHeight + 16 ) - 1; j > 0; --j ) {
-                    if ( !this.getBlock( i, j, k, 0 ).equals( "minecraft:air" ) ) { // For height MC uses normal layer (0)
-                        this.setHeight( i, k, (byte) j );
+        for (int i = 0; i < 16; ++i) {
+            for (int k = 0; k < 16; ++k) {
+                for (int j = (maxHeight + 16) - 1; j > 0; --j) {
+                    if (!this.getBlock(i, j, k, 0).equals("minecraft:air")) { // For height MC uses normal layer (0)
+                        this.setHeight(i, k, (byte) j);
                         break;
                     }
                 }
@@ -461,13 +462,13 @@ public class ChunkAdapter implements Chunk {
      * @return The world chunk packet that is to be sent
      */
     public PacketWorldChunk createPackagedData(Cache cache, boolean cached) {
-        PacketBuffer buffer = new PacketBuffer( 16 );
+        PacketBuffer buffer = new PacketBuffer(16);
 
         // Detect how much data we can skip
         int topEmpty = 15;
-        for ( int i = 15; i >= 0; i-- ) {
+        for (int i = 15; i >= 0; i--) {
             ChunkSlice slice = this.chunkSlices[i];
-            if ( slice == null || slice.isAllAir() ) {
+            if (slice == null || slice.isAllAir()) {
                 topEmpty = i;
             } else {
                 break;
@@ -494,38 +495,38 @@ public class ChunkAdapter implements Chunk {
         }
 
         // Border blocks
-        buffer.writeSignedVarInt( 0 );
-        buffer.writeSignedVarInt( 0 );
+        buffer.writeSignedVarInt(0);
+        buffer.writeSignedVarInt(0);
 
         // Write tile entity data
         Collection<TileEntity> tileEntities = this.getTileEntities();
-        if ( !tileEntities.isEmpty() ) {
-            NBTWriter nbtWriter = new NBTWriter( buffer.getBuffer(), ByteOrder.LITTLE_ENDIAN );
-            nbtWriter.setUseVarint( true );
+        if (!tileEntities.isEmpty()) {
+            NBTWriter nbtWriter = new NBTWriter(buffer.getBuffer(), ByteOrder.LITTLE_ENDIAN);
+            nbtWriter.setUseVarint(true);
 
-            for ( TileEntity tileEntity : tileEntities ) {
-                NBTTagCompound compound = new NBTTagCompound( "" );
-                tileEntity.toCompound( compound, SerializationReason.NETWORK );
+            for (TileEntity tileEntity : tileEntities) {
+                NBTTagCompound compound = new NBTTagCompound("");
+                tileEntity.toCompound(compound, SerializationReason.NETWORK);
 
                 try {
-                    nbtWriter.write( compound );
-                } catch ( IOException e ) {
-                    LOGGER.warn( "Could not persist nbt for network", e );
+                    nbtWriter.write(compound);
+                } catch (IOException e) {
+                    LOGGER.warn("Could not persist nbt for network", e);
                 }
             }
         }
 
         PacketWorldChunk packet = new PacketWorldChunk();
-        packet.setX( this.x );
-        packet.setZ( this.z );
-        packet.setSubChunkCount( topEmpty );
+        packet.setX(this.x);
+        packet.setZ(this.z);
+        packet.setSubChunkCount(topEmpty);
 
         if (cached) {
             packet.setCached(true);
             packet.setHashes(hashes);
         }
 
-        packet.setData( buffer.getBuffer() );
+        packet.setData(buffer.getBuffer());
 
         return packet;
     }
@@ -538,9 +539,9 @@ public class ChunkAdapter implements Chunk {
     public Collection<TileEntity> getTileEntities() {
         List<TileEntity> tileEntities = new ArrayList<>();
 
-        for ( ChunkSlice chunkSlice : this.chunkSlices ) {
-            if ( chunkSlice != null && chunkSlice.getTileEntities() != null ) {
-                tileEntities.addAll( chunkSlice.getTileEntities().values() );
+        for (ChunkSlice chunkSlice : this.chunkSlices) {
+            if (chunkSlice != null && chunkSlice.getTileEntities() != null) {
+                tileEntities.addAll(chunkSlice.getTileEntities().values());
             }
         }
 
@@ -553,89 +554,89 @@ public class ChunkAdapter implements Chunk {
      * @param entity The entity which should be checked for
      * @return true if the chunk contains that entity, false if not
      */
-    public boolean knowsEntity( Entity entity ) {
-        return this.entities != null && this.entities.containsKey( entity.getEntityId() );
+    public boolean knowsEntity(Entity entity) {
+        return this.entities != null && this.entities.containsKey(entity.getEntityId());
     }
 
     @Override
-    public <T extends io.gomint.entity.Entity> void iterateEntities( Class<T> entityClass, Consumer<T> entityConsumer ) {
+    public <T extends io.gomint.entity.Entity> void iterateEntities(Class<T> entityClass, Consumer<T> entityConsumer) {
         // Iterate over all chunks
-        if ( this.entities != null ) {
-            for ( Long2ObjectMap.Entry<io.gomint.entity.Entity> entry : this.entities.long2ObjectEntrySet() ) {
-                if ( entityClass.isAssignableFrom( entry.getValue().getClass() ) ) {
-                    entityConsumer.accept( (T) entry.getValue() );
+        if (this.entities != null) {
+            for (Long2ObjectMap.Entry<io.gomint.entity.Entity> entry : this.entities.long2ObjectEntrySet()) {
+                if (entityClass.isAssignableFrom(entry.getValue().getClass())) {
+                    entityConsumer.accept((T) entry.getValue());
                 }
             }
         }
     }
 
     @Override
-    public void setBlock( int x, int y, int z, Block block ) {
-        this.setBlock( x, y, z, WorldLayer.NORMAL, block );
+    public void setBlock(int x, int y, int z, Block block) {
+        this.setBlock(x, y, z, WorldLayer.NORMAL, block);
     }
 
     @Override
-    public void setBlock( int x, int y, int z, WorldLayer layer, Block block ) {
+    public void setBlock(int x, int y, int z, WorldLayer layer, Block block) {
         int layerID = layer.ordinal();
 
         io.gomint.server.world.block.Block implBlock = (io.gomint.server.world.block.Block) block;
 
         // Copy block id
-        this.setBlock( x, y, z, layerID, implBlock.getRuntimeId() );
+        this.setBlock(x, y, z, layerID, implBlock.getRuntimeId());
 
         // Copy NBT
-        if ( implBlock.getTileEntity() != null ) {
+        if (implBlock.getTileEntity() != null) {
             // Get compound
-            NBTTagCompound compound = new NBTTagCompound( "" );
-            implBlock.getTileEntity().toCompound( compound, SerializationReason.PERSIST );
+            NBTTagCompound compound = new NBTTagCompound("");
+            implBlock.getTileEntity().toCompound(compound, SerializationReason.PERSIST);
 
             // Change position
-            int fullX = CoordinateUtils.getChunkMin( this.x ) + x;
-            int fullZ = CoordinateUtils.getChunkMin( this.z ) + z;
+            int fullX = CoordinateUtils.getChunkMin(this.x) + x;
+            int fullZ = CoordinateUtils.getChunkMin(this.z) + z;
 
             // Change the position
-            compound.addValue( "x", fullX );
-            compound.addValue( "y", y );
-            compound.addValue( "z", fullZ );
+            compound.addValue("x", fullX);
+            compound.addValue("y", y);
+            compound.addValue("z", fullZ);
 
             // Create new tile entity
-            TileEntity tileEntity = TileEntities.construct( this.world.getServer().getContext(), compound,
-                this.getBlockAt( compound.getInteger( "x", 0 ) & 0xF, compound.getInteger( "y", 0 ), compound.getInteger( "z", 0 ) & 0xF ) );
-            this.setTileEntity( x, y, z, tileEntity );
+            TileEntity tileEntity = TileEntities.construct(this.world.getServer().getContext(), compound,
+                this.getBlockAt(compound.getInteger("x", 0) & 0xF, compound.getInteger("y", 0), compound.getInteger("z", 0) & 0xF));
+            this.setTileEntity(x, y, z, tileEntity);
         }
     }
 
-    public void setTileEntity( int x, int y, int z, TileEntity tileEntity ) {
-        ChunkSlice slice = ensureSlice( y >> 4 );
-        slice.addTileEntity( x, y - 16 * ( y >> 4 ), z, tileEntity );
+    public void setTileEntity(int x, int y, int z, TileEntity tileEntity) {
+        ChunkSlice slice = ensureSlice(y >> 4);
+        slice.addTileEntity(x, y - 16 * (y >> 4), z, tileEntity);
 
         this.needsPersistence = true;
     }
 
-    public void removeTileEntity( int x, int y, int z ) {
-        ChunkSlice slice = ensureSlice( y >> 4 );
-        slice.removeTileEntity( x, y - 16 * ( y >> 4 ), z );
+    public void removeTileEntity(int x, int y, int z) {
+        ChunkSlice slice = ensureSlice(y >> 4);
+        slice.removeTileEntity(x, y - 16 * (y >> 4), z);
 
         this.needsPersistence = true;
     }
 
     public long longHashCode() {
-        return CoordinateUtils.toLong( this.x, this.z );
+        return CoordinateUtils.toLong(this.x, this.z);
     }
 
     public Long2ObjectMap<io.gomint.entity.Entity> getEntities() {
         return this.entities;
     }
 
-    public void tickTiles( long currentTimeMS ) {
-        for ( ChunkSlice chunkSlice : this.chunkSlices ) {
-            if ( chunkSlice != null && chunkSlice.getTileEntities() != null ) {
+    public void tickTiles(long currentTimeMS) {
+        for (ChunkSlice chunkSlice : this.chunkSlices) {
+            if (chunkSlice != null && chunkSlice.getTileEntities() != null) {
                 ObjectIterator<Short2ObjectMap.Entry<TileEntity>> iterator = chunkSlice.getTileEntities().short2ObjectEntrySet().fastIterator();
-                while ( iterator.hasNext() ) {
+                while (iterator.hasNext()) {
                     TileEntity tileEntity = iterator.next().getValue();
-                    tileEntity.update( currentTimeMS );
+                    tileEntity.update(currentTimeMS);
 
-                    if ( tileEntity.isNeedsPersistence() ) {
+                    if (tileEntity.isNeedsPersistence()) {
                         this.needsPersistence = true;
                     }
                 }
@@ -647,16 +648,16 @@ public class ChunkAdapter implements Chunk {
         this.needsPersistence = true;
     }
 
-    public int getRuntimeID( int x, int y, int z, int layer ) {
-        ChunkSlice slice = ensureSlice( y >> 4 );
-        return slice.getRuntimeID( x, y - 16 * ( y >> 4 ), z, layer );
+    public int getRuntimeID(int x, int y, int z, int layer) {
+        ChunkSlice slice = ensureSlice(y >> 4);
+        return slice.getRuntimeID(x, y - 16 * (y >> 4), z, layer);
     }
 
-    public void setHeightMap( byte[] height ) {
+    public void setHeightMap(byte[] height) {
         this.height = height;
     }
 
-    public void setBiomes( byte[] biomes ) {
+    public void setBiomes(byte[] biomes) {
         this.biomes.setBytes(0, biomes);
     }
 

@@ -10,6 +10,7 @@ import io.gomint.server.registry.RegisterInfo;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * @author geNAZt
@@ -50,8 +51,7 @@ public class MobSpawner extends Block implements io.gomint.world.block.BlockMobS
 
     @Override
     public List<ItemStack> getDrops( ItemStack itemInHand ) {
-        FastRandom random = FastRandom.current();
-        ((WorldAdapter) this.location.getWorld()).createExpOrb( this.location, random.nextInt( 15 ) + random.nextInt( 15 ) + 15 );
+        ((WorldAdapter) this.location.getWorld()).createExpOrb( this.location, ThreadLocalRandom.current().nextInt( 15 ) + ThreadLocalRandom.current().nextInt( 15 ) + 15 );
 
         return new ArrayList<>();
     }

@@ -26,6 +26,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * @author geNAZt
@@ -89,7 +90,7 @@ public class Explosion {
             float directionY = this.source.getPositionY();
             float directionZ = this.source.getPositionZ();
 
-            for ( double blastForce = this.size * ( 0.7f + FastRandom.current().nextFloat() * 0.6f ); blastForce > 0; blastForce -= 0.225f ) {
+            for (double blastForce = this.size * ( 0.7f + ThreadLocalRandom.current().nextFloat() * 0.6f ); blastForce > 0; blastForce -= 0.225f ) {
                 int newX = MathUtils.fastFloor( directionX );
                 int newY = MathUtils.fastFloor( directionY );
                 int newZ = MathUtils.fastFloor( directionZ );
@@ -187,8 +188,8 @@ public class Explosion {
         List<Vector> send = new ArrayList<>();
         for ( Block block : event.getAffectedBlocks() ) {
             if ( block instanceof BlockTNT ) {
-                ( (BlockTNT) block ).prime( 0.5f + FastRandom.current().nextFloat() );
-            } else if ( FastRandom.current().nextFloat() * 100 < event.getRandomDropChance() ) {
+                ( (BlockTNT) block ).prime( 0.5f + ThreadLocalRandom.current().nextFloat() );
+            } else if ( ThreadLocalRandom.current().nextFloat() * 100 < event.getRandomDropChance() ) {
                 for ( ItemStack drop : block.getDrops( ItemAir.create( 0 ) ) ) {
                     this.source.getWorld().dropItem( block.getLocation().add( 0.5f, 0.5f, 0.5f ), drop );
                 }

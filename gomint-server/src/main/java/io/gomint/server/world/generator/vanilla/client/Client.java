@@ -78,6 +78,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 import java.util.zip.DataFormatException;
@@ -309,7 +310,7 @@ public class Client implements ConnectionWithState {
                 put( "ServerAddress", "127.0.0.1:" + connection.getAddress().getPort() );
                 put( "CurrentInputMode", 1 );
                 put( "DefaultInputMode", 1 );
-                put( "ClientRandomId", FastRandom.current().nextInt() );
+                put( "ClientRandomId", ThreadLocalRandom.current().nextInt() );
                 put( "GuiScale", 0 );
                 put( "GameVersion", "1.7.1.0" );
                 put( "ThirdPartyName", name );

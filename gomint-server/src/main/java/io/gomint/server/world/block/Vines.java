@@ -15,6 +15,7 @@ import io.gomint.world.block.data.Facing;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * @author geNAZt
@@ -24,7 +25,7 @@ import java.util.List;
 public class Vines extends Block implements io.gomint.world.block.BlockVines {
 
     private static final String[] DIRECTION_KEY = new String[]{"vine_direction_bits"};
-    private static final Facing[] FACES_TO_CHECK = new Facing[]{Facing.EAST, Facing.WEST, Facing.NORTH, Facing.SOUTH};
+    private static final Facing[] FACES_TO_CHECK = new Facing[]{Facing.NORTH, Facing.SOUTH, Facing.EAST, Facing.WEST};
 
     private final AttachingBlockState attachedSides = new AttachingBlockState(this, () -> DIRECTION_KEY);
 
@@ -100,21 +101,32 @@ public class Vines extends Block implements io.gomint.world.block.BlockVines {
     @Override
     public long update(UpdateReason updateReason, long currentTimeMS, float dT) {
         if (updateReason == UpdateReason.RANDOM) {
-            if (FastRandom.current().nextFloat() <= 0.25) {
+            if (ThreadLocalRandom.current().nextFloat() <= 0.25) {
+                // Check if we can grow to the bottom block
                 Block down = this.getSide(Facing.DOWN);
                 for (Facing facing : FACES_TO_CHECK) {
-                    // Check if we can grow to the bottom block
                     if (this.attachedSides.enabled(facing) && down.getBlockType() == BlockType.AIR) {
-                        if (FastRandom.current().nextFloat() <= 0.5) {
+                        if (ThreadLocalRandom.current().nextFloat() <= 0.5) {
                             Vines downVines = down.setBlockType(Vines.class);
                             downVines.attach(facing);
+                            return -1;
                         }
                     }
+                }
+
+                // Check if we can spread upwards
+                Block up = this.getSide(Facing.UP);
+                if (up.getBlockType() == BlockType.AIR && amountOfVines(9,3,9) < 4) {
+
                 }
             }
         }
 
         return -1;
+    }
+
+    private int amountOfVines(int x, int y, int z) {
+        return 1;
     }
 
     public void attach(Facing facing) {

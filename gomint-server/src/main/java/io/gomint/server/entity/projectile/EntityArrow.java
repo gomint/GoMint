@@ -20,11 +20,11 @@ import io.gomint.server.entity.EntityType;
 import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.util.Values;
 import io.gomint.server.world.WorldAdapter;
-import io.gomint.util.random.FastRandom;
 import io.gomint.world.block.Block;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -84,9 +84,9 @@ public class EntityArrow extends EntityProjectile implements io.gomint.entity.pr
         );
 
         float distanceTravel = (float) Math.sqrt( MathUtils.square( motion.getX() ) + MathUtils.square( motion.getY() ) + MathUtils.square( motion.getZ() ) );
-        motion.setX( (float) ( ( ( motion.getX() / distanceTravel ) + ( FastRandom.current().nextDouble() * ( FastRandom.current().nextBoolean() ? -1 : 1 ) * 0.0075f ) ) * ( applyForce * 1.5f ) ) );
-        motion.setY( (float) ( ( ( motion.getY() / distanceTravel ) + ( FastRandom.current().nextDouble() * ( FastRandom.current().nextBoolean() ? -1 : 1 ) * 0.0075f ) ) * ( applyForce * 1.5f ) ) );
-        motion.setZ( (float) ( ( ( motion.getZ() / distanceTravel ) + ( FastRandom.current().nextDouble() * ( FastRandom.current().nextBoolean() ? -1 : 1 ) * 0.0075f ) ) * ( applyForce * 1.5f ) ) );
+        motion.setX( (float) ( ( ( motion.getX() / distanceTravel ) + ( ThreadLocalRandom.current().nextDouble() * ( ThreadLocalRandom.current().nextBoolean() ? -1 : 1 ) * 0.0075f ) ) * ( applyForce * 1.5f ) ) );
+        motion.setY( (float) ( ( ( motion.getY() / distanceTravel ) + ( ThreadLocalRandom.current().nextDouble() * ( ThreadLocalRandom.current().nextBoolean() ? -1 : 1 ) * 0.0075f ) ) * ( applyForce * 1.5f ) ) );
+        motion.setZ( (float) ( ( ( motion.getZ() / distanceTravel ) + ( ThreadLocalRandom.current().nextDouble() * ( ThreadLocalRandom.current().nextBoolean() ? -1 : 1 ) * 0.0075f ) ) * ( applyForce * 1.5f ) ) );
         this.setVelocity( motion );
 
         // Calculate correct yaw / pitch

@@ -8,6 +8,7 @@ import io.gomint.world.block.BlockType;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * @author geNAZt
@@ -48,7 +49,7 @@ public class Potato extends Growable implements BlockPotato {
                 add(world.getServer().getItems().create(392, (short) 0, (byte) (1 + SEED_RANDOMIZER.next().byteValue()), null)); // Potato
             }};
 
-            if (FastRandom.current().nextDouble() > 0.98) {
+            if (ThreadLocalRandom.current().nextDouble() > 0.98) {
                 drops.add(world.getServer().getItems().create(394, (short) 0, (byte) 1, null)); // Poison potato on top!
             }
 
