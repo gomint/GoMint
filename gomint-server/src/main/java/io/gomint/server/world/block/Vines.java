@@ -3,6 +3,7 @@ package io.gomint.server.world.block;
 import io.gomint.inventory.item.ItemShears;
 import io.gomint.inventory.item.ItemVines;
 import io.gomint.inventory.item.ItemStack;
+import io.gomint.math.AxisAlignedBB;
 import io.gomint.math.BlockPosition;
 import io.gomint.math.Location;
 import io.gomint.math.MathUtils;
@@ -20,6 +21,7 @@ import io.gomint.server.registry.RegisterInfo;
 import io.gomint.world.block.data.Facing;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -32,8 +34,15 @@ import java.util.concurrent.ThreadLocalRandom;
 @RegisterInfo(sId = "minecraft:vine")
 public class Vines extends Block implements io.gomint.world.block.BlockVines {
 
-    private static final String[] DIRECTION_KEY = new String[]{"vine_direction_bits"};
+    // Bounding boxes
+    protected static final AxisAlignedBB UP_AABB = new AxisAlignedBB(0.0f, 0.9375f, 0.0f, 1.0f, 1.0f, 1.0f);
+    protected static final AxisAlignedBB WEST_AABB = new AxisAlignedBB(0.0f, 0.0f, 0.0f, 0.0625f, 1.0f, 1.0f);
+    protected static final AxisAlignedBB EAST_AABB = new AxisAlignedBB(0.9375f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f);
+    protected static final AxisAlignedBB NORTH_AABB = new AxisAlignedBB(0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0625f);
+    protected static final AxisAlignedBB SOUTH_AABB = new AxisAlignedBB(0.0f, 0.0f, 0.9375f, 1.0f, 1.0f, 1.0f);
 
+    // State
+    private static final String[] DIRECTION_KEY = new String[]{"vine_direction_bits"};
     private final AttachingBlockState attachedSides = new AttachingBlockState(this, () -> DIRECTION_KEY);
 
     @Override
@@ -70,6 +79,32 @@ public class Vines extends Block implements io.gomint.world.block.BlockVines {
     public void stepOn(Entity entity) {
         // Reset fall distance
         entity.resetFallDistance();
+    }
+
+    @Override
+    public List<AxisAlignedBB> getBoundingBox() {
+        if (this.attachedSides.getState() == 0) {
+            return Collections.singletonList(UP_AABB);
+        }
+
+        List<AxisAlignedBB> boundingBoxes = new ArrayList<>();
+        if (this.attachedSides.enabled(Facing.NORTH)) {
+            boundingBoxes.add(NORTH_AABB);
+        }
+
+        if (this.attachedSides.enabled(Facing.EAST)) {
+            boundingBoxes.add(EAST_AABB);
+        }
+
+        if (this.attachedSides.enabled(Facing.SOUTH)) {
+            boundingBoxes.add(SOUTH_AABB);
+        }
+
+        if (this.attachedSides.enabled(Facing.WEST)) {
+            boundingBoxes.add(WEST_AABB);
+        }
+
+        return boundingBoxes;
     }
 
     @Override
