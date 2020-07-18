@@ -278,12 +278,7 @@ public class PlayerConnection implements ConnectionWithState {
                     Queue<ChunkAdapter> queue = this.entity.getChunkSendQueue();
                     int sent = 0;
 
-                    int maxSent = this.server.getServerConfig().getSendChunksPerTick();
-                    if (this.server.getServerConfig().isEnableFastJoin() && this.state == PlayerConnectionState.LOGIN) {
-                        maxSent = Integer.MAX_VALUE;
-                    }
-
-                    while (!queue.isEmpty() && sent <= maxSent) {
+                    while (!queue.isEmpty() && sent <= 4) {
                         ChunkAdapter chunk = queue.peek();
                         if (chunk == null) {
                             break;

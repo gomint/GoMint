@@ -77,11 +77,4 @@ public class ServerConfig extends YamlConfig {
     @Comment( "Control whether we want to load chunks when entities step over borders or not." )
     private boolean loadChunksForEntities = true;
 
-    @Comment( "How many chunks should be sent per tick. The maximum without side effects is 4, reducing it may help with lower end clients." )
-    private int sendChunksPerTick = 4;
-
-    @Comment( "Enables fast join. This does disable sendChunksPerTick for the first batch if chunks needed to login. There is no " +
-        "data between the chunks and thus delaying it is just letting the player wait longer on login")
-    private boolean enableFastJoin = true;
-
 }
