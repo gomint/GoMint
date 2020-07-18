@@ -12,6 +12,7 @@ import io.gomint.util.random.FastRandom;
 import io.gomint.world.World;
 import io.gomint.world.block.BlockLeaves;
 import io.gomint.world.block.BlockLog;
+import io.gomint.world.block.data.Axis;
 import io.gomint.world.block.data.LogType;
 
 /**
@@ -22,10 +23,12 @@ public class BirchTree extends Tree {
 
     public BirchTree() {
         this.leafBlock = GoMint.instance().createBlock( BlockLeaves.class );
-        ( (BlockLeaves) this.leafBlock ).setLeaveType( LogType.BIRCH );
+        this.leafBlock.setLeaveType( LogType.BIRCH );
 
         this.trunkBlock = GoMint.instance().createBlock( BlockLog.class );
-        ( (BlockLog) this.trunkBlock ).setLogType( LogType.BIRCH );
+        this.trunkBlock.setLogType( LogType.BIRCH );
+        this.trunkBlock.setStripped(false);
+        this.trunkBlock.setAxis(Axis.Y);
     }
 
     @Override
