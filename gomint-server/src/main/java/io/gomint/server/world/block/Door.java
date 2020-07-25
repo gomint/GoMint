@@ -20,14 +20,14 @@ import io.gomint.world.block.data.Facing;
  */
 public abstract class Door extends Block implements io.gomint.world.block.BlockDoor {
 
-    private final BooleanBlockState hinge = new BooleanBlockState(this, () -> new String[]{"door_hinge_bit"});
-    private final BooleanBlockState top = new BooleanBlockState(this, () -> new String[]{"upper_block_bit"});
-    private final BooleanBlockState open = new BooleanBlockState(this, () -> new String[]{"open_bit"});
-    private final DirectionBlockState direction = new DirectionBlockState(this, () -> new String[]{"direction"}); // Rotation is always clockwise
+    private static final BooleanBlockState HINGE = new BooleanBlockState(() -> new String[]{"door_hinge_bit"});
+    private static final BooleanBlockState TOP = new BooleanBlockState(() -> new String[]{"upper_block_bit"});
+    private static final BooleanBlockState OPEN = new BooleanBlockState(() -> new String[]{"open_bit"});
+    private static final DirectionBlockState DIRECTION = new DirectionBlockState(() -> new String[]{"direction"}); // Rotation is always clockwise
 
     @Override
     public boolean isTop() {
-        return this.top.getState();
+        return TOP.getState(this);
     }
 
     @Override
@@ -37,7 +37,7 @@ public abstract class Door extends Block implements io.gomint.world.block.BlockD
             return otherPart.isOpen();
         }
 
-        return this.open.getState();
+        return OPEN.getState(this);
     }
 
     @Override
@@ -48,7 +48,7 @@ public abstract class Door extends Block implements io.gomint.world.block.BlockD
             return;
         }
 
-        this.open.setState(!this.isOpen());
+        OPEN.setState(this, !this.isOpen());
     }
 
     @Override
@@ -96,7 +96,7 @@ public abstract class Door extends Block implements io.gomint.world.block.BlockD
 
     @Override
     public void afterPlacement(PlacementData data) {
-        data.setBlockIdentifier(BlockRuntimeIDs.change(data.getBlockIdentifier(), "upper_block_bit", true));
+        data.setBlockIdentifier(BlockRuntimeIDs.change(data.getBlockIdentifier(), null, "upper_block_bit", true));
 
         Block above = this.location.getWorld().getBlockAt(this.location.toBlockPosition().add(BlockPosition.UP));
         above.setBlockFromPlacementData(data);
@@ -109,12 +109,12 @@ public abstract class Door extends Block implements io.gomint.world.block.BlockD
 
     @Override
     public void setDirection(Direction direction) {
-        this.direction.setState(direction);
+        DIRECTION.setState(this, direction);
     }
 
     @Override
     public Direction getDirection() {
-        return this.direction.getState();
+        return DIRECTION.getState(this);
     }
 
 }

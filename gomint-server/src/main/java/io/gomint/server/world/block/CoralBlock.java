@@ -39,8 +39,8 @@ public class CoralBlock extends Block implements BlockCoralBlock {
         }
     }
 
-    private final BooleanBlockState dead = new BooleanBlockState(this, () -> new String[]{"dead_bit"});
-    private final DirectValueBlockState<String> color = new DirectValueBlockState<>(this, () -> new String[]{"coral_color"}, "blue");
+    private static final BooleanBlockState DEAD = new BooleanBlockState(() -> new String[]{"dead_bit"});
+    private static final DirectValueBlockState<String> COLOR = new DirectValueBlockState<>(() -> new String[]{"coral_color"}, "blue");
 
     @Override
     public String getBlockId() {
@@ -74,8 +74,8 @@ public class CoralBlock extends Block implements BlockCoralBlock {
 
     @Override
     public CoralType getCoralType() {
-        String c = this.color.getState();
-        boolean d = this.dead.getState();
+        String c = COLOR.getState(this);
+        boolean d = DEAD.getState(this);
         for (CoralTypeMagic value : CoralTypeMagic.values()) {
             if (value.dead == d && c.equals(value.color)) {
                 return CoralType.valueOf(value.name());
@@ -88,8 +88,8 @@ public class CoralBlock extends Block implements BlockCoralBlock {
     @Override
     public void setCoralType(CoralType coralType) {
         CoralTypeMagic newState = CoralTypeMagic.valueOf(coralType.name());
-        this.dead.setState(newState.isDead());
-        this.color.setState(newState.getColor());
+        DEAD.setState(this, newState.isDead());
+        COLOR.setState(this, newState.getColor());
     }
 
 }

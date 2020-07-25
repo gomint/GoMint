@@ -18,7 +18,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode( callSuper = true )
 public class Cake extends Block implements io.gomint.world.block.BlockCake {
 
-    private final ProgressBlockState cakeEaten = new ProgressBlockState( this, () -> new String[]{"bite_counter"}, 6, aVoid -> Cake.this.setBlockType( Air.class ) );
+    private static final ProgressBlockState CAKE_EATEN = new ProgressBlockState( () -> new String[]{"bite_counter"}, 6, b -> b.setBlockType( Air.class ) );
 
     @Override
     public String getBlockId() {
@@ -50,7 +50,7 @@ public class Cake extends Block implements io.gomint.world.block.BlockCake {
                 float saturation = Math.min( player.getSaturation() + ( 2 * 0.1f * 2.0f ), player.getHunger() );
                 player.setSaturation( saturation );
 
-                this.cakeEaten.progress();
+                CAKE_EATEN.progress(this);
             }
         }
 

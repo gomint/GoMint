@@ -42,7 +42,9 @@ import io.gomint.world.generator.GeneratorContext;
 import io.gomint.world.generator.integrated.VoidGenerator;
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
+import it.unimi.dsi.fastutil.objects.Object2ObjectMaps;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.objects.ObjectIterator;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
@@ -318,12 +320,14 @@ public abstract class WorldAdapter implements World {
     public <T extends Block> T getBlockAt(int x, int y, int z, WorldLayer layer) {
         // Secure location
         if (y < 0 || y > 255) {
-            return (T) this.server.getBlocks().get(BlockRuntimeIDs.toBlockIdentifier("minecraft:air", null), (byte) (y > 255 ? 15 : 0), (byte) 0, null, new Location(this, x, y, z), layer.ordinal());
+            return (T) this.server.getBlocks().get(BlockRuntimeIDs.toBlockIdentifier("minecraft:air", null),
+                (byte) (y > 255 ? 15 : 0), (byte) 0, null, new Location(this, x, y, z), layer.ordinal(), null, (short) 0);
         }
 
         ChunkAdapter chunk = this.loadChunk(x >> 4, z >> 4, false);
         if (chunk == null) {
-            return (T) this.server.getBlocks().get(BlockRuntimeIDs.toBlockIdentifier("minecraft:air", null), (byte) (y > 255 ? 15 : 0), (byte) 0, null, new Location(this, x, y, z), layer.ordinal());
+            return (T) this.server.getBlocks().get(BlockRuntimeIDs.toBlockIdentifier("minecraft:air", null),
+                (byte) (y > 255 ? 15 : 0), (byte) 0, null, new Location(this, x, y, z), layer.ordinal(), null, (short) 0);
         }
 
         return chunk.getBlockAt(x & 0xF, y, z & 0xF, layer.ordinal());
@@ -755,14 +759,14 @@ public abstract class WorldAdapter implements World {
     public void sendToVisible(BlockPosition position, Packet packet, Predicate<Entity> predicate) {
         int posX = CoordinateUtils.fromBlockToChunk(position.getX());
         int posZ = CoordinateUtils.fromBlockToChunk(position.getZ());
+        this.sendToVisible(posX, posZ, packet, predicate);
+    }
 
+    public void sendToVisible(int posX, int posZ, Packet packet, Predicate<Entity> predicate) {
         for (EntityPlayer player : this.getPlayers()) {
-            Location location = player.getLocation();
-            int currentX = CoordinateUtils.fromBlockToChunk((int) location.getX());
-            int currentZ = CoordinateUtils.fromBlockToChunk((int) location.getZ());
+            io.gomint.server.entity.EntityPlayer p = (io.gomint.server.entity.EntityPlayer) player;
 
-            if (Math.abs(posX - currentX) <= player.getViewDistance() &&
-                Math.abs(posZ - currentZ) <= player.getViewDistance() &&
+            if (p.knowsChunk(posX, posZ) &&
                 predicate.test(player)) {
                 ((io.gomint.server.entity.EntityPlayer) player).getConnection().addToSendQueue(packet);
             }
@@ -867,18 +871,17 @@ public abstract class WorldAdapter implements World {
      * @param adapter in which the block update happens
      * @param pos of the block which changes
      */
-    private void updateBlock0(ChunkAdapter adapter, BlockPosition pos) {
-        sendToVisible(pos, null, entity -> {
-            if (entity instanceof io.gomint.server.entity.EntityPlayer) {
-                // Check if player already knows this chunk
-                io.gomint.server.entity.EntityPlayer player = ((io.gomint.server.entity.EntityPlayer) entity);
-                if ( player.knowsChunk( adapter ) ) {
+    public void updateBlock0(ChunkAdapter adapter, BlockPosition pos) {
+        if (!this.players.isEmpty()) {
+            var iterator = Object2ObjectMaps.fastIterator(this.players);
+            while (iterator.hasNext()) {
+                Object2ObjectMap.Entry<io.gomint.server.entity.EntityPlayer, ChunkAdapter> entry = iterator.next();
+                io.gomint.server.entity.EntityPlayer player = entry.getKey();
+                if (player.knowsChunk(adapter)) {
                     player.getBlockUpdates().add(pos);
                 }
             }
-
-            return false;
-        });
+        }
     }
 
     /**
@@ -1452,14 +1455,6 @@ public abstract class WorldAdapter implements World {
         if (entities != null && !entities.isEmpty()) {
             this.entityManager.addFromChunk(entities);
         }
-    }
-
-    public void flagNeedsPersistance(BlockPosition pos) {
-        int xChunk = CoordinateUtils.fromBlockToChunk(pos.getX());
-        int zChunk = CoordinateUtils.fromBlockToChunk(pos.getZ());
-
-        ChunkAdapter chunk = this.loadChunk(xChunk, zChunk, true);
-        chunk.flagNeedsPersistance();
     }
 
     public ChunkCache getChunkCache() {

@@ -14,6 +14,8 @@ import io.gomint.server.util.Bearing;
 import io.gomint.server.world.block.Block;
 import io.gomint.world.block.data.Direction;
 import io.gomint.world.block.data.Facing;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import java.util.function.Supplier;
 
@@ -21,50 +23,47 @@ import java.util.function.Supplier;
  * @author geNAZt
  * @version 1.0
  */
+@ToString
+@EqualsAndHashCode(callSuper = false)
 public class DirectionBlockState extends BlockState<Direction, Integer> {
 
-    public DirectionBlockState(Block block, Supplier<String[]> key) {
-        this(block, key, 0);
+    public DirectionBlockState(Supplier<String[]> key) {
+        super(v -> key.get());
     }
 
     @Override
-    protected void calculateValueFromState(Direction state) {
+    protected void calculateValueFromState(Block block, Direction state) {
         switch (state) {
             case NORTH:
-                this.setValue(2);
+                this.setValue(block,2);
                 break;
             case EAST:
-                this.setValue(3);
+                this.setValue(block,3);
                 break;
             case WEST:
-                this.setValue(1);
+                this.setValue(block,1);
                 break;
             case SOUTH:
             default:
-                this.setValue(0);
+                this.setValue(block,0);
                 break;
         }
     }
 
-    public DirectionBlockState(Block block, Supplier<String[]> key, int rotation) {
-        super(block, v -> key.get());
-        this.setValue(rotation);
-    }
-
     @Override
-    public void detectFromPlacement(EntityPlayer player, ItemStack placedItem, Facing face, Block block, Block clickedBlock, Vector clickPosition) {
+    public void detectFromPlacement(Block newBlock, EntityPlayer player, ItemStack placedItem, Facing face, Block block, Block clickedBlock, Vector clickPosition) {
         if (player == null) {
-            this.setState(Direction.SOUTH);
+            this.setState(block, Direction.SOUTH);
             return;
         }
 
         Bearing bearing = Bearing.fromAngle(player.getYaw());
-        this.setState(bearing.toDirection());
+        this.setState(block, bearing.toDirection());
     }
 
     @Override
-    public Direction getState() {
-        switch (this.getValue()) {
+    public Direction getState(Block block) {
+        switch (this.getValue(block)) {
             case 0:
             default:
                 return Direction.SOUTH;

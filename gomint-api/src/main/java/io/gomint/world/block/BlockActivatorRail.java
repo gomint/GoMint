@@ -12,4 +12,28 @@ package io.gomint.world.block;
  * @version 1.0
  */
 public interface BlockActivatorRail extends Block {
+
+    enum Direction {
+        NORTH_SOUTH,
+        EAST_WEST,
+        ASCENDING_EAST,
+        ASCENDING_WEST,
+        ASCENDING_NORTH,
+        ASCENDING_SOUTH;
+    }
+
+    /**
+     * Direction of the rail
+     *
+     * @param direction which this rail should be oriented by
+     */
+    void setDirection(Direction direction);
+
+    /**
+     * Get direction of the rail
+     *
+     * @return direction of this rail
+     */
+    Direction getDirection();
+
 }

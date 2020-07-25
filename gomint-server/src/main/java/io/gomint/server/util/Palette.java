@@ -55,7 +55,6 @@ public class Palette {
 
     // Input bitset
     private int bits = 0;
-    private int inputIndex = 0;
     private int wordsWritten = 0;
 
     /**
@@ -82,6 +81,28 @@ public class Palette {
     }
 
     public void addIndexIDs( int[] indexIDs ) {
+        // Check the shift needed to multiply the words
+        int shift;
+        switch (this.paletteVersion.getVersionId()) {
+            case 1:
+                shift = 0;
+                break;
+            case 2:
+                shift = 1;
+                break;
+            case 4:
+                shift = 2;
+                break;
+            case 8:
+                shift = 3;
+                break;
+            case 16:
+                shift = 4;
+                break;
+            default:
+                throw new IllegalStateException("Unexpected value: " + this.paletteVersion.getVersionId());
+        }
+
         for ( int id : indexIDs ) {
             // Check if old input is full and we need a new one
             if ( this.wordsWritten == this.paletteVersion.getAmountOfWords() ) {
@@ -90,32 +111,20 @@ public class Palette {
 
                 // New input
                 this.bits = 0;
-                this.inputIndex = 0;
                 this.wordsWritten = 0;
             }
 
             // Write id
-            while ( id != 0L ) {
-                if ( id % 2L != 0 ) {
-                    this.bits |= ( 1 << this.inputIndex );
-                }
-
-                ++this.inputIndex;
-                id = id >>> 1;
-            }
+            this.bits |= id << (this.wordsWritten << shift);
 
             // Increment written words
             this.wordsWritten++;
-
-            // Set the index correct
-            this.inputIndex = this.wordsWritten * this.paletteVersion.getVersionId();
         }
     }
 
     public void finish() {
         this.data.writeLInt( this.bits );
         this.bits = 0;
-        this.inputIndex = 0;
     }
 
     public short[] getIndexes() {

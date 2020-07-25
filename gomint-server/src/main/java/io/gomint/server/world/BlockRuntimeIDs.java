@@ -7,15 +7,16 @@
 
 package io.gomint.server.world;
 
+import io.gomint.server.registry.SwitchBlockStateMapper;
 import io.gomint.server.util.BlockIdentifier;
 import io.gomint.server.util.collection.FreezableSortedMap;
+import io.gomint.server.util.performance.SingleKeyChangeMap;
+import io.gomint.server.world.block.mapper.BlockStateMapper;
 import io.gomint.taglib.NBTTagCompound;
 import io.gomint.taglib.NBTWriter;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.PooledByteBufAllocator;
-import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
-import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
-import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
+import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import org.slf4j.Logger;
@@ -26,7 +27,6 @@ import java.nio.ByteOrder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * @author geNAZt
@@ -36,16 +36,18 @@ public class BlockRuntimeIDs {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(BlockRuntimeIDs.class);
 
-    private static final Int2ObjectMap<BlockIdentifier> RUNTIME_TO_BLOCK = new Int2ObjectOpenHashMap<>();
+    private static BlockIdentifier[] RUNTIME_TO_BLOCK;
 
-    //
-    private static final AtomicInteger RUNTIME_ID = new AtomicInteger(0);
+    private static final Object2IntOpenHashMap<String> BLOCK_ID_TO_NUMERIC = new Object2IntOpenHashMap<>();
 
     //
     private static final Object2ObjectMap<String, List<BlockIdentifier>> BLOCK_STATE_IDENTIFIER = new Object2ObjectOpenHashMap<>();
 
     // Cached packet streams
     private static ByteBuf START_GAME_BUFFER;
+
+    // State jumptables
+    private static SwitchBlockStateMapper MAPPER_REGISTRY = new SwitchBlockStateMapper();
 
     public static void init(List<BlockIdentifier> blockPalette) throws IOException {
         List<Object> compounds = new ArrayList<>();
@@ -54,11 +56,12 @@ public class BlockRuntimeIDs {
         NBTWriter writer = new NBTWriter(data, ByteOrder.LITTLE_ENDIAN);
         writer.setUseVarint(true);
 
+        RUNTIME_TO_BLOCK = new BlockIdentifier[blockPalette.size()];
         for (BlockIdentifier identifier : blockPalette) {
-            int runtime = RUNTIME_ID.getAndIncrement();
+            int runtime = identifier.getRuntimeId();
 
-            RUNTIME_TO_BLOCK.put(runtime, identifier);
-            identifier.setRuntimeId(runtime);
+            RUNTIME_TO_BLOCK[runtime] = identifier;
+            BLOCK_ID_TO_NUMERIC.put(identifier.getBlockId(), identifier.getBlockNumericId());
 
             // Store identifier by block id
             List<BlockIdentifier> identifiers = BLOCK_STATE_IDENTIFIER.computeIfAbsent(identifier.getBlockId(), s -> new ArrayList<>());
@@ -88,100 +91,45 @@ public class BlockRuntimeIDs {
     }
 
     public static BlockIdentifier toBlockIdentifier(int runtimeId) {
-        return RUNTIME_TO_BLOCK.get(runtimeId);
+        return RUNTIME_TO_BLOCK[runtimeId];
     }
 
-    public static BlockIdentifier toBlockIdentifier(String blockId, FreezableSortedMap<String, Object> states, String ... ignoreStateKeys) {
-        List<BlockIdentifier> identifiers = BLOCK_STATE_IDENTIFIER.get(blockId);
-        if (identifiers == null) {
-            LOGGER.error("Unknown block id: {}", blockId);
+    public static BlockIdentifier toBlockIdentifier(String blockId, FreezableSortedMap<String, Object> states) {
+        BlockStateMapper mapper = MAPPER_REGISTRY.get(BLOCK_ID_TO_NUMERIC.getInt(blockId));
+        int runeTimeId = mapper.map(states);
+        if (runeTimeId == -1) {
+            LOGGER.error("Unknown states for block id: {}", blockId);
             return null;
         }
 
-        // Check if states match
-        if (states == null) {
-            return identifiers.get(0);
-        }
-
-        for (BlockIdentifier identifier : identifiers) {
-            if (ignoreStateKeys.length == 0) {
-                if (identifier.getStates().equals(states)) {
-                    return identifier;
-                }
-            } else {
-                boolean goodIdentifier = true;
-                for (Map.Entry<String, Object> entry : identifier.getStates().entrySet()) {
-                    if (contains(entry.getKey(), ignoreStateKeys)) {
-                        continue;
-                    }
-
-                    if (!entry.getValue().equals(states.get(entry.getKey()))) {
-                        goodIdentifier = false;
-                        break;
-                    }
-                }
-
-                if (goodIdentifier) {
-                    return identifier;
-                }
-            }
-        }
-
-        LOGGER.error("Unknown states for block id: {}", blockId);
-        return null;
-    }
-
-    private static boolean contains(String key, String[] ignoreStateKeys) {
-        for (String ignoreStateKey : ignoreStateKeys) {
-            if (key.equals(ignoreStateKey)) {
-                return true;
-            }
-        }
-
-        return false;
+        return toBlockIdentifier(runeTimeId);
     }
 
     /**
      * Get the new block identifier which holds the changes state map
      *
-     * @param oldState        from which we get the diff
-     * @param changingKey     key which changes
-     * @param newValue        value of this key
+     * @param oldState    from which we get the diff
+     * @param newBlockId  new block id to use, can be null if the block id should not be changed
+     * @param changingKey key which changes
+     * @param newValue    value of this key
      * @return new block identifier or null if no state has been found
      */
-    public static BlockIdentifier change(BlockIdentifier oldState, String changingKey, Object newValue) {
-        // Get the list of all identifiers
-        List<BlockIdentifier> identifiers = BLOCK_STATE_IDENTIFIER.get(oldState.getBlockId());
-        if (identifiers == null) {
-            LOGGER.error("Unknown block id: {}", oldState.getBlockId());
+    public static BlockIdentifier change(BlockIdentifier oldState, String newBlockId, String changingKey, Object newValue) {
+        Map<String, Object> changed;
+        if (changingKey != null) {
+            changed = new SingleKeyChangeMap<>(oldState.getStates(), changingKey, newValue);
+        } else {
+            changed = oldState.getStates();
+        }
+
+        BlockStateMapper mapper = MAPPER_REGISTRY.get(newBlockId != null ? BLOCK_ID_TO_NUMERIC.getInt(newBlockId) : oldState.getBlockNumericId());
+        int runeTimeId = mapper.map(changed);
+        if (runeTimeId == -1) {
+            LOGGER.warn("No usable block state found for: {} -> {} -> {}", oldState, changingKey, newValue);
             return null;
         }
 
-        // Now we need to get the one which has all keys and values correct
-        for (BlockIdentifier identifier : identifiers) {
-            if (useableIdentifier(identifier, oldState, changingKey, newValue)) {
-                return identifier;
-            }
-        }
-
-        LOGGER.warn("No usable block state found for: {} -> {} -> {}", oldState, changingKey, newValue);
-        return null;
-    }
-
-    private static boolean useableIdentifier(BlockIdentifier identifier, BlockIdentifier oldState, String changingKey, Object newValue) {
-        // The keys should be the same
-        for (Map.Entry<String, Object> entry : identifier.getStates().entrySet()) {
-            Object compareValue = oldState.getStates().get(entry.getKey());
-            if (entry.getKey().equals(changingKey)) {
-                compareValue = newValue;
-            }
-
-            if (!compareValue.equals(entry.getValue())) {
-                return false;
-            }
-        }
-
-        return true;
+        return toBlockIdentifier(runeTimeId);
     }
 
 }

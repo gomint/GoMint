@@ -30,9 +30,9 @@ import io.gomint.world.block.data.LogType;
 @RegisterInfo(sId = "minecraft:acacia_fence_gate")
 public class FenceGate extends Block implements io.gomint.world.block.BlockFenceGate {
 
-    private final DirectionBlockState direction = new DirectionBlockState(this, () -> new String[]{"direction"});
-    private final BooleanBlockState open = new BooleanBlockState(this, () -> new String[]{"open_bit"});
-    private final BooleanBlockState inWall = new BooleanBlockState(this, () -> new String[]{"in_wall_bit"});
+    private final DirectionBlockState DIRECTION = new DirectionBlockState( () -> new String[]{"direction"});
+    private final BooleanBlockState OPEN = new BooleanBlockState( () -> new String[]{"open_bit"});
+    private final BooleanBlockState IN_WALL = new BooleanBlockState( () -> new String[]{"in_wall_bit"});
 
     @Override
     public String getBlockId() {
@@ -71,12 +71,12 @@ public class FenceGate extends Block implements io.gomint.world.block.BlockFence
 
     @Override
     public void toggle() {
-        this.open.setState(!this.isOpen());
+        OPEN.setState(this, !this.isOpen());
     }
 
     @Override
     public boolean isOpen() {
-        return this.open.getState();
+        return OPEN.getState(this);
     }
 
     @Override
@@ -125,12 +125,12 @@ public class FenceGate extends Block implements io.gomint.world.block.BlockFence
 
     @Override
     public void setDirection(Direction direction) {
-        this.direction.setState(direction);
+        DIRECTION.setState(this, direction);
     }
 
     @Override
     public Direction getDirection() {
-        return this.direction.getState();
+        return DIRECTION.getState(this);
     }
 
 }

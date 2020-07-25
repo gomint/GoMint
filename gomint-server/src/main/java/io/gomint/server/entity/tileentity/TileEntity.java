@@ -134,9 +134,11 @@ public abstract class TileEntity {
     }
 
     public boolean isNeedsPersistence() {
-        boolean ne = this.needsPersistence;
+        return this.needsPersistence;
+    }
+
+    public void resetPersistenceFlag() {
         this.needsPersistence = false;
-        return ne;
     }
 
     public void applyClientData( EntityPlayer player, NBTTagCompound compound ) throws Exception {

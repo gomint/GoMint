@@ -195,7 +195,6 @@ public class GoMintServer implements GoMint, InventoryHolder {
         GoMintServer.mainThread = Thread.currentThread().getId();
         GoMintInstanceHolder.setInstance(this);
 
-
         this.chunkGeneratorRegistry = new SimpleChunkGeneratorRegistry();
         this.getChunkGeneratorRegistry().registerGenerator(LayeredGenerator.NAME, LayeredGenerator.class);
         this.getChunkGeneratorRegistry().registerGenerator(NormalGenerator.NAME, NormalGenerator.class);
@@ -228,19 +227,7 @@ public class GoMintServer implements GoMint, InventoryHolder {
 
         ClassPath classPath = this.context.getBean(ClassPath.class);
 
-        // ------------------------------------ //
-        // Build up registries
-        // ------------------------------------ //
-        this.blocks = new Blocks(classPath);
         this.items = new Items(classPath);
-        this.entities = new Entities(classPath);
-        this.effects = new Effects(classPath);
-        this.enchantments = new Enchantments(classPath);
-
-        // ------------------------------------ //
-        // Configuration Initialization
-        // ------------------------------------ //
-        this.loadConfig();
 
         // Load assets from file:
         LOGGER.info("Loading assets library...");
@@ -253,8 +240,28 @@ public class GoMintServer implements GoMint, InventoryHolder {
             return;
         }
 
-        BlockRuntimeIDs.init(this.assets.getBlockPalette());
         Items.init(this.assets.getItemIDs());
+        BlockRuntimeIDs.init(this.assets.getBlockPalette());
+
+        // ------------------------------------ //
+        // Build up registries
+        // ------------------------------------ //
+        this.blocks = new Blocks(classPath);
+        this.entities = new Entities(classPath);
+        this.effects = new Effects(classPath);
+        this.enchantments = new Enchantments(classPath);
+
+        // ------------------------------------ //
+        // Configuration Initialization
+        // ------------------------------------ //
+        this.loadConfig();
+
+        // ------------------------------------ //
+        // Scheduler + WorldManager
+        // ------------------------------------ //
+        this.syncTaskManager = new SyncTaskManager(this);
+        this.scheduler = new CoreScheduler(this.getExecutorService(), this.getSyncTaskManager());
+        this.worldManager = new WorldManager(this);
     }
 
     public void startAfterRegistryInit(OptionSet args) {
@@ -319,14 +326,7 @@ public class GoMintServer implements GoMint, InventoryHolder {
 
         this.defaultWorld = this.serverConfig.getDefaultWorld();
 
-        // ------------------------------------ //
-        // Scheduler + WorldManager + PluginManager Initialization
-        // ------------------------------------ //
-        this.syncTaskManager = new SyncTaskManager(this);
-        this.scheduler = new CoreScheduler(this.getExecutorService(), this.getSyncTaskManager());
-
-        this.worldManager = new WorldManager(this);
-
+        // PluginManager Initialization
         this.pluginManager = new SimplePluginManager(this);
         this.context.registerBean(SimplePluginManager.class, () -> this.pluginManager);
         this.pluginManager.detectPlugins();
@@ -667,6 +667,7 @@ public class GoMintServer implements GoMint, InventoryHolder {
             System.exit(-1);
         }
 
+        LOGGER.info("Loaded config...");
         this.context.registerBean(ServerConfig.class, () -> this.serverConfig);
     }
 

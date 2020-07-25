@@ -59,8 +59,8 @@ public class Log extends Block implements BlockLog {
         }
     }
 
-    private final EnumBlockState<LogTypeMagic, String> variant = new EnumBlockState<>(this, v -> {
-        if (this.variant == null) {
+    private static final EnumBlockState<LogTypeMagic, String> VARIANT = new EnumBlockState<>(v -> {
+        if (v == null) {
             return new String[]{OLD_LOG_TYPE, NEW_LOG_TYPE};
         }
 
@@ -80,7 +80,7 @@ public class Log extends Block implements BlockLog {
 
         return null;
     });
-    private final AxisBlockState axis = new AxisBlockState(this, () -> new String[]{"pillar_axis"});
+    private static final AxisBlockState AXIS = new AxisBlockState(() -> new String[]{"pillar_axis"});
 
     @Override
     public long getBreakTime() {
@@ -126,7 +126,7 @@ public class Log extends Block implements BlockLog {
 
         if (stripped) {
             if (this.getBlockId().equals("minecraft:log")) {
-                switch (this.variant.getState()) {
+                switch (VARIANT.getState(this)) {
                     case OAK:
                         this.setBlockId("minecraft:stripped_oak_log");
                         break;
@@ -141,7 +141,7 @@ public class Log extends Block implements BlockLog {
                         break;
                 }
             } else if (this.getBlockId().equals("minecraft:log2")) {
-                switch (this.variant.getState()) {
+                switch (VARIANT.getState(this)) {
                     case ACACIA:
                         this.setBlockId("minecraft:stripped_acacia_log");
                         break;
@@ -174,8 +174,8 @@ public class Log extends Block implements BlockLog {
                     break;
             }
 
-            this.setBlockId(newState.getBlockId(), OLD_LOG_TYPE, NEW_LOG_TYPE);
-            this.variant.setState(newState);
+            this.setBlockIdOnStateChange(newState.getBlockId());
+            VARIANT.setState(this, newState);
         }
     }
 
@@ -184,8 +184,8 @@ public class Log extends Block implements BlockLog {
         LogTypeMagic newState = LogTypeMagic.valueOf(type.name());
 
         if (!this.isStripped()) {
-            this.setBlockId(newState.getBlockId(), OLD_LOG_TYPE, NEW_LOG_TYPE);
-            this.variant.setState(newState);
+            this.setBlockIdOnStateChange(newState.getBlockId());
+            VARIANT.setState(this, newState);
         } else {
             switch (type) {
                 case OAK:
@@ -214,7 +214,7 @@ public class Log extends Block implements BlockLog {
     public LogType getLogType() {
         switch (this.getBlockId()) {
             default:
-                return LogType.valueOf(this.variant.getState().name());
+                return LogType.valueOf(VARIANT.getState(this).name());
             case "minecraft:stripped_oak_log":
                 return LogType.OAK;
             case "minecraft:stripped_birch_log":
@@ -232,12 +232,12 @@ public class Log extends Block implements BlockLog {
 
     @Override
     public void setAxis(Axis axis) {
-        this.axis.setState(axis);
+        AXIS.setState(this, axis);
     }
 
     @Override
     public Axis getAxis() {
-        return this.axis.getState();
+        return AXIS.getState(this);
     }
 
     @Override

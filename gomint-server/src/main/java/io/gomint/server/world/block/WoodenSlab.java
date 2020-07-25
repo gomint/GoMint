@@ -33,7 +33,7 @@ public class WoodenSlab extends Slab implements BlockWoodenSlab {
         }
     }
 
-    private final EnumBlockState<LogTypeMagic, String> variant = new EnumBlockState<>(this, v -> new String[]{"wood_type"}, LogTypeMagic.values(), LogTypeMagic::getValue, v -> {
+    private static final EnumBlockState<LogTypeMagic, String> VARIANT = new EnumBlockState<>( v -> new String[]{"wood_type"}, LogTypeMagic.values(), LogTypeMagic::getValue, v -> {
         for (LogTypeMagic value : LogTypeMagic.values()) {
             if (value.getValue().equals(v)) {
                 return value;
@@ -80,12 +80,12 @@ public class WoodenSlab extends Slab implements BlockWoodenSlab {
 
     @Override
     public LogType getWoodType() {
-        return LogType.valueOf(this.variant.getState().name());
+        return LogType.valueOf(VARIANT.getState(this).name());
     }
 
     @Override
     public void setWoodType(LogType logType) {
-        this.variant.setState(LogTypeMagic.valueOf(logType.name()));
+        VARIANT.setState(this, LogTypeMagic.valueOf(logType.name()));
     }
 
 }

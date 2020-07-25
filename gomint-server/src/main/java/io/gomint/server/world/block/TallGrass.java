@@ -31,7 +31,7 @@ public class TallGrass extends Block implements io.gomint.world.block.BlockTallG
         }
     }
 
-    private final EnumBlockState<TypeMagic, String> variant = new EnumBlockState<>(this, v -> new String[]{"tall_grass_type"}, TypeMagic.values(), TypeMagic::getType, v -> {
+    private static final EnumBlockState<TypeMagic, String> VARIANT = new EnumBlockState<>(v -> new String[]{"tall_grass_type"}, TypeMagic.values(), TypeMagic::getType, v -> {
         for (TypeMagic value : TypeMagic.values()) {
             if (value.getType().equals(v)) {
                 return value;
@@ -101,12 +101,12 @@ public class TallGrass extends Block implements io.gomint.world.block.BlockTallG
 
     @Override
     public void setGrassType(Type type) {
-        this.variant.setState(TypeMagic.valueOf(type.name()));
+        VARIANT.setState(this, TypeMagic.valueOf(type.name()));
     }
 
     @Override
     public Type getGrassType() {
-        return Type.valueOf(this.variant.getState().name());
+        return Type.valueOf(VARIANT.getState(this).name());
     }
 
 }

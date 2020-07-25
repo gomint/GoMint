@@ -2,8 +2,8 @@ module gomint.jni {
     requires oshi.core;
     requires com.google.common;
     requires io.netty.buffer;
-    requires slf4j.api;
     requires io.netty.common;
+    requires org.slf4j;
 
     exports io.gomint.server.jni;
     exports io.gomint.server.jni.exception;

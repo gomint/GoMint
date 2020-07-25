@@ -15,7 +15,7 @@ import io.gomint.world.block.BlockType;
 @RegisterInfo( sId = "minecraft:ladder" )
 public class Ladder extends Block implements io.gomint.world.block.BlockLadder {
 
-    private final BlockfaceBlockState attached = new BlockfaceBlockState( this, () -> new String[]{"facing_direction"} );
+    private static final BlockfaceBlockState ATTACHED = new BlockfaceBlockState( () -> new String[]{"facing_direction"} );
 
     @Override
     public String getBlockId() {
@@ -70,12 +70,12 @@ public class Ladder extends Block implements io.gomint.world.block.BlockLadder {
 
     @Override
     public void setAttachSide( Facing attachSide ) {
-        this.attached.setState( attachSide );
+        ATTACHED.setState( this, attachSide );
     }
 
     @Override
     public Facing getAttachSide() {
-        return this.attached.getState();
+        return ATTACHED.getState(this);
     }
 
 }

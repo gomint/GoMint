@@ -19,12 +19,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.asm.ClassWriter;
 import org.springframework.asm.MethodVisitor;
 import org.springframework.asm.Opcodes;
-import org.springframework.util.ReflectionUtils;
 
-import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Method;
-import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * @author BlackyPaw
@@ -35,7 +32,6 @@ import java.util.concurrent.atomic.AtomicLong;
 class EventHandlerMethod implements Comparable<EventHandlerMethod> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(EventHandlerMethod.class);
-    private static final AtomicLong PROXY_COUNT = new AtomicLong(0);
 
     private final EventHandler annotation;
     private EventProxy proxy;

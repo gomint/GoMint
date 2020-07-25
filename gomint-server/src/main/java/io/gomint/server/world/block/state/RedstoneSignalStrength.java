@@ -9,34 +9,37 @@ package io.gomint.server.world.block.state;
 
 import io.gomint.math.MathUtils;
 import io.gomint.server.world.block.Block;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import java.util.function.Supplier;
 
+@ToString
+@EqualsAndHashCode(callSuper = false)
 public class RedstoneSignalStrength extends ProgressBlockState {
 
-    public RedstoneSignalStrength(Block block, Supplier<String[]> key) {
-        super(block, key, 15, aVoid -> {
-        });
+    public RedstoneSignalStrength(Supplier<String[]> key) {
+        super(key, 15, aVoid -> {});
     }
 
-    public void decrease() {
-        if (this.getState() - this.getStep() <= MathUtils.EPSILON) {
-            this.setState(this.getState() - this.getStep());
+    public void decrease(Block block) {
+        if (this.getState(block) - this.getStep() <= MathUtils.EPSILON) {
+            this.setState(block,this.getState(block) - this.getStep());
         }
     }
 
-    public void increase() {
-        if (1f - this.getState() <= MathUtils.EPSILON) {
-            this.setState(this.getState() + this.getStep());
+    public void increase(Block block) {
+        if (1f - this.getState(block) <= MathUtils.EPSILON) {
+            this.setState(block, this.getState(block) + this.getStep());
         }
     }
 
-    public void on() {
-        this.setState(1f);
+    public void on(Block block) {
+        this.setState(block,1f);
     }
 
-    public void off() {
-        this.setState(0f);
+    public void off(Block block) {
+        this.setState(block,0f);
     }
 
 }

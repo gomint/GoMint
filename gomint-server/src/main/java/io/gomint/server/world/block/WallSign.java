@@ -45,7 +45,7 @@ public class WallSign extends Block implements BlockWallSign {
         }
     }
 
-    private final BlockfaceFromPlayerBlockState facing = new BlockfaceFromPlayerBlockState(this, () -> new String[]{"facing_direction"}, false);
+    private static final BlockfaceFromPlayerBlockState FACING = new BlockfaceFromPlayerBlockState(() -> new String[]{"facing_direction"}, false);
 
     @Override
     public String getBlockId() {
@@ -168,12 +168,12 @@ public class WallSign extends Block implements BlockWallSign {
 
     @Override
     public void setFacing(Facing facing) {
-        this.facing.setState(facing);
+        FACING.setState(this,facing);
     }
 
     @Override
     public Facing getFacing() {
-        return this.facing.getState();
+        return FACING.getState(this);
     }
 
 }

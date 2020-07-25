@@ -15,12 +15,7 @@ import io.gomint.world.block.data.Facing;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:detector_rail" )
-public class DetectorRail extends Block implements io.gomint.world.block.BlockDetectorRail {
-
-    @Override
-    public String getBlockId() {
-        return "minecraft:detector_rail";
-    }
+public class DetectorRail extends RailBase implements io.gomint.world.block.BlockDetectorRail {
 
     @Override
     public long getBreakTime() {
@@ -55,12 +50,6 @@ public class DetectorRail extends Block implements io.gomint.world.block.BlockDe
     @Override
     public Class<? extends ItemStack>[] getToolInterfaces() {
         return ToolPresets.PICKAXE;
-    }
-
-    @Override
-    public boolean beforePlacement(Entity entity, ItemStack item, Facing face, Location location) {
-        Block down = entity.getWorld().getBlockAt(location.toBlockPosition().add(BlockPosition.DOWN));
-        return !down.isTransparent();
     }
 
 }

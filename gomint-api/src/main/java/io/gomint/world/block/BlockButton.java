@@ -14,7 +14,7 @@ import io.gomint.world.block.data.LogType;
  * @author geNAZt
  * @version 1.0
  */
-public interface BlockButton extends BlockFacing {
+public interface BlockButton extends Block {
 
     /**
      * Get the state of this button

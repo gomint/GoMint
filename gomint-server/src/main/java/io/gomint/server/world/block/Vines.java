@@ -43,7 +43,7 @@ public class Vines extends Block implements io.gomint.world.block.BlockVines {
 
     // State
     private static final String[] DIRECTION_KEY = new String[]{"vine_direction_bits"};
-    private final AttachingBlockState attachedSides = new AttachingBlockState(this, () -> DIRECTION_KEY);
+    private static final AttachingBlockState ATTACHED_SIDES = new AttachingBlockState(() -> DIRECTION_KEY);
 
     @Override
     public String getBlockId() {
@@ -83,24 +83,24 @@ public class Vines extends Block implements io.gomint.world.block.BlockVines {
 
     @Override
     public List<AxisAlignedBB> getBoundingBox() {
-        if (this.attachedSides.getState() == 0) {
+        if (ATTACHED_SIDES.getState(this) == 0) {
             return Collections.singletonList(UP_AABB);
         }
 
         List<AxisAlignedBB> boundingBoxes = new ArrayList<>();
-        if (this.attachedSides.enabled(Facing.NORTH)) {
+        if (ATTACHED_SIDES.enabled(this, Facing.NORTH)) {
             boundingBoxes.add(NORTH_AABB);
         }
 
-        if (this.attachedSides.enabled(Facing.EAST)) {
+        if (ATTACHED_SIDES.enabled(this, Facing.EAST)) {
             boundingBoxes.add(EAST_AABB);
         }
 
-        if (this.attachedSides.enabled(Facing.SOUTH)) {
+        if (ATTACHED_SIDES.enabled(this, Facing.SOUTH)) {
             boundingBoxes.add(SOUTH_AABB);
         }
 
-        if (this.attachedSides.enabled(Facing.WEST)) {
+        if (ATTACHED_SIDES.enabled(this, Facing.WEST)) {
             boundingBoxes.add(WEST_AABB);
         }
 
@@ -160,7 +160,7 @@ public class Vines extends Block implements io.gomint.world.block.BlockVines {
                     if (other.getBlockType() == BlockType.AIR) {
                         Set<Facing> attachTo = new HashSet<>();
                         for (Facing facing : Facing.HORIZONTAL) {
-                            if (ThreadLocalRandom.current().nextBoolean() && this.attachedSides.enabled(facing)) {
+                            if (ThreadLocalRandom.current().nextBoolean() && ATTACHED_SIDES.enabled(this, facing)) {
                                 attachTo.add(facing);
                             }
                         }
@@ -169,18 +169,18 @@ public class Vines extends Block implements io.gomint.world.block.BlockVines {
                     } else if (other.getBlockType() == BlockType.VINES) {
                         Vines newVines = (Vines) other;
                         for (Facing facing : Facing.HORIZONTAL) {
-                            if (ThreadLocalRandom.current().nextBoolean() && this.attachedSides.enabled(facing)) {
+                            if (ThreadLocalRandom.current().nextBoolean() && ATTACHED_SIDES.enabled(this, facing)) {
                                 newVines.attach(facing);
                             }
                         }
                     }
-                } else if (!this.attachedSides.enabled(face) && amountOfVines(9, 3, 9) < 5) {
+                } else if (!ATTACHED_SIDES.enabled(this, face) && amountOfVines(9, 3, 9) < 5) {
                     if (other.getBlockType() == BlockType.AIR) {
                         Facing clockwiseY = face.rotateClockWiseOnY();
                         Facing counterClockwiseY = face.rotateCounterClockWiseOnY();
 
-                        boolean attachedOnClockwise = this.attachedSides.enabled(clockwiseY);
-                        boolean attachedOnCounterClockwise = this.attachedSides.enabled(counterClockwiseY);
+                        boolean attachedOnClockwise = ATTACHED_SIDES.enabled(this, clockwiseY);
+                        boolean attachedOnCounterClockwise = ATTACHED_SIDES.enabled(this, counterClockwiseY);
 
                         Block otherClockwise = other.getSide(clockwiseY);
                         Block otherCounterClockwise = other.getSide(counterClockwiseY);
@@ -218,14 +218,17 @@ public class Vines extends Block implements io.gomint.world.block.BlockVines {
     }
 
     public void detach(Facing facing) {
-        this.attachedSides.disable(facing);
+        ATTACHED_SIDES.disable(this, facing);
     }
 
     @Override
     public PlacementData calculatePlacementData(EntityPlayer entity, ItemStack item, Facing face, Block block, Block clickedBlock, Vector clickVector) {
         PlacementData placementData = super.calculatePlacementData(entity, item, face, block, clickedBlock, clickVector);
         if (face == null && entity == null) {
-            placementData.setBlockIdentifier(BlockRuntimeIDs.change(placementData.getBlockIdentifier(), DIRECTION_KEY[0], 0));
+            placementData.setBlockIdentifier(BlockRuntimeIDs.change(placementData.getBlockIdentifier(), null, DIRECTION_KEY[0], 0));
+        } else {
+            ATTACHED_SIDES.detectFromPlacement(this, entity, item, face, block, clickedBlock, clickVector);
+            placementData.setBlockIdentifier(this.identifier);
         }
 
         return placementData;
@@ -275,7 +278,7 @@ public class Vines extends Block implements io.gomint.world.block.BlockVines {
     }
 
     public void attach(Facing facing) {
-        this.attachedSides.enable(facing);
+        ATTACHED_SIDES.enable(this, facing);
     }
 
 }

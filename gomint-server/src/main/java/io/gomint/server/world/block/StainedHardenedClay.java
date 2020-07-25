@@ -13,7 +13,7 @@ import io.gomint.world.block.data.BlockColor;
 @RegisterInfo( sId = "minecraft:stained_hardened_clay" )
 public class StainedHardenedClay extends Block implements io.gomint.world.block.BlockStainedHardenedClay {
 
-    private final EnumBlockState<BlockColor, String> color = new EnumBlockState<>( this, v -> new String[]{"color"}, BlockColor.values(), e -> e.name().toLowerCase(), v -> BlockColor.valueOf(v.toUpperCase()) );
+    private static final EnumBlockState<BlockColor, String> COLOR = new EnumBlockState<>( v -> new String[]{"color"}, BlockColor.values(), e -> e.name().toLowerCase(), v -> BlockColor.valueOf(v.toUpperCase()) );
 
     @Override
     public String getBlockId() {
@@ -48,12 +48,12 @@ public class StainedHardenedClay extends Block implements io.gomint.world.block.
 
     @Override
     public BlockColor getColor() {
-        return this.color.getState();
+        return COLOR.getState(this);
     }
 
     @Override
     public void setColor( BlockColor color ) {
-        this.color.setState( color );
+        COLOR.setState(this, color );
     }
 
     @Override

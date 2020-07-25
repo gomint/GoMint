@@ -42,7 +42,7 @@ public class Carrots extends Growable implements BlockCarrots {
 
     @Override
     public List<ItemStack> getDrops(ItemStack itemInHand) {
-        if (this.growth.maxed()) {
+        if (GROWTH.maxed(this)) {
             return new ArrayList<>() {{
                 add(world.getServer().getItems().create(391, (short) 0, (byte) (1 + SEED_RANDOMIZER.next().byteValue()), null)); // Carrot
             }};

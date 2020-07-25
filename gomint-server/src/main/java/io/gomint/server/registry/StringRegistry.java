@@ -7,12 +7,26 @@
 
 package io.gomint.server.registry;
 
+import io.gomint.server.event.EventProxy;
 import io.gomint.server.util.ClassPath;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.asm.ClassWriter;
+import org.springframework.asm.Label;
+import org.springframework.asm.MethodVisitor;
+import org.springframework.asm.Opcodes;
+import org.springframework.cglib.core.Constants;
 
+import java.io.IOException;
+import java.lang.invoke.MethodHandles;
+import java.lang.reflect.ParameterizedType;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -27,7 +41,7 @@ public class StringRegistry<R> {
     private ClassPath classPath;
     private final GeneratorCallback<R> generatorCallback;
 
-    private final Int2ObjectMap<Generator<R>> generators = new Int2ObjectOpenHashMap<>();
+    private final Object2ObjectMap<String, Generator<R>> generators = new Object2ObjectOpenHashMap<>();
     private final Map<Class<?>, String> apiReferences = new HashMap<>();
 
     /**
@@ -52,7 +66,7 @@ public class StringRegistry<R> {
         this.classPath.getTopLevelClasses( classPath, classInfo -> register( classInfo.load() ) );
     }
 
-    private void register( Class<?> clazz ) {
+    private void register( Class<? extends R> clazz ) {
         for (RegisterInfo info : clazz.getAnnotationsByType(RegisterInfo.class)) {
             Generator<R> generator = this.generatorCallback.generate( clazz, info.sId() );
             if ( generator != null ) {
@@ -70,11 +84,10 @@ public class StringRegistry<R> {
     }
 
     private void storeGeneratorForId( String id, Generator<R> generator ) {
-        int hash = id.hashCode();
-        if ( this.generators.containsKey( hash ) ) {
+        if ( this.generators.containsKey( id ) ) {
             LOGGER.warn( "Detected hash collision for {}", id );
         } else {
-            this.generators.put( hash, generator );
+            this.generators.put( id, generator );
         }
     }
 
@@ -89,7 +102,7 @@ public class StringRegistry<R> {
     }
 
     public final Generator<R> getGenerator( String id ) {
-        return this.generators.get( id.hashCode() );
+        return this.generators.get( id );
     }
 
     public String getId( Class<?> clazz ) {

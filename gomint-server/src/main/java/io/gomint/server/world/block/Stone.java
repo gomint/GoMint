@@ -8,7 +8,6 @@ import io.gomint.world.block.BlockStone;
 import io.gomint.world.block.BlockType;
 
 import io.gomint.server.registry.RegisterInfo;
-import io.gomint.world.block.data.BlockColor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +19,7 @@ import java.util.List;
 @RegisterInfo( sId = "minecraft:stone" )
 public class Stone extends Block implements io.gomint.world.block.BlockStone {
 
-    private final EnumBlockState<BlockStone.Type, String> variant = new EnumBlockState<>(this, v -> new String[]{"stone_type"}, BlockStone.Type.values(), e -> e.name().toLowerCase(), v -> BlockStone.Type.valueOf(v.toUpperCase()));
+    private static final EnumBlockState<BlockStone.Type, String> VARIANT = new EnumBlockState<>(v -> new String[]{"stone_type"}, BlockStone.Type.values(), e -> e.name().toLowerCase(), v -> BlockStone.Type.valueOf(v.toUpperCase()));
 
     @Override
     public String getBlockId() {
@@ -44,8 +43,8 @@ public class Stone extends Block implements io.gomint.world.block.BlockStone {
 
     @Override
     public List<ItemStack> getDrops( ItemStack itemInHand ) {
-        return new ArrayList<ItemStack>(){{
-            add( ItemCobblestone.create( 1 ) );
+        return new ArrayList<>() {{
+            add(ItemCobblestone.create(1));
         }};
     }
 
@@ -56,12 +55,12 @@ public class Stone extends Block implements io.gomint.world.block.BlockStone {
 
     @Override
     public void setStoneType(Type type) {
-        this.variant.setState(type);
+        VARIANT.setState(this,type);
     }
 
     @Override
     public Type getStoneType() {
-        return this.variant.getState();
+        return VARIANT.getState(this);
     }
 
 }

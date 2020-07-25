@@ -15,7 +15,7 @@ import io.gomint.world.block.data.Facing;
 @RegisterInfo(sId = "minecraft:sticky_piston")
 public class StickyPiston extends Block implements io.gomint.world.block.BlockStickyPiston {
 
-    private final BlockfaceBlockState facing = new BlockfaceBlockState(this, () -> new String[]{"facing_direction"});
+    private static final BlockfaceBlockState FACING = new BlockfaceBlockState(() -> new String[]{"facing_direction"});
 
     @Override
     public long getBreakTime() {
@@ -49,12 +49,12 @@ public class StickyPiston extends Block implements io.gomint.world.block.BlockSt
 
     @Override
     public void setFacing(Facing facing) {
-        this.facing.setState(facing);
+        FACING.setState(this, facing);
     }
 
     @Override
     public Facing getFacing() {
-        return this.facing.getState();
+        return FACING.getState(this);
     }
 
 }

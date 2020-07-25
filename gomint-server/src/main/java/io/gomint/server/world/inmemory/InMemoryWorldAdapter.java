@@ -29,7 +29,7 @@ public final class InMemoryWorldAdapter extends WorldAdapter {
 
     private final Class<? extends ChunkGenerator> generator;
 
-    private InMemoryWorldAdapter( GoMintServer server, String name, Class<? extends ChunkGenerator> generator ) throws WorldCreateException {
+    public InMemoryWorldAdapter(GoMintServer server, String name, Class<? extends ChunkGenerator> generator) throws WorldCreateException {
         super( server, new File( name ) );
         this.chunkCache = new ChunkCache( this );
         this.levelName = name;

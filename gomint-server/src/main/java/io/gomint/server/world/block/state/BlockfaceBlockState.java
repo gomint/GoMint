@@ -13,6 +13,8 @@ import io.gomint.server.entity.EntityPlayer;
 import io.gomint.server.util.Bearing;
 import io.gomint.server.world.block.Block;
 import io.gomint.world.block.data.Facing;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import java.util.function.Supplier;
 
@@ -20,68 +22,70 @@ import java.util.function.Supplier;
  * @author geNAZt
  * @version 1.0
  */
+@ToString
+@EqualsAndHashCode(callSuper = false)
 public class BlockfaceBlockState extends BlockState<Facing, Integer> {
 
     protected final boolean detectUpDown;
 
-    public BlockfaceBlockState(Block block, Supplier<String[]> key) {
-        this(block, key, false);
+    public BlockfaceBlockState(Supplier<String[]> key) {
+        this(key, false);
     }
 
-    public BlockfaceBlockState(Block block, Supplier<String[]> key, boolean detectUpDown) {
-        super(block, v -> key.get());
+    public BlockfaceBlockState(Supplier<String[]> key, boolean detectUpDown) {
+        super(v -> key.get());
         this.detectUpDown = detectUpDown;
     }
 
     @Override
-    protected void calculateValueFromState(Facing state) {
+    protected void calculateValueFromState(Block block, Facing state) {
         switch (state) {
             case DOWN:
             default:
-                this.setValue(0);
+                this.setValue(block, 0);
                 return;
             case UP:
-                this.setValue(1);
+                this.setValue(block, 1);
                 return;
             case NORTH:
-                this.setValue(2);
+                this.setValue(block, 2);
                 return;
             case SOUTH:
-                this.setValue(3);
+                this.setValue(block, 3);
                 return;
             case WEST:
-                this.setValue(4);
+                this.setValue(block, 4);
                 return;
             case EAST:
-                this.setValue(5);
+                this.setValue(block, 5);
         }
     }
 
     @Override
-    public void detectFromPlacement(EntityPlayer player, ItemStack placedItem, Facing face, Block block, Block clickedBlock, Vector clickPosition) {
+    public void detectFromPlacement(Block newBlock, EntityPlayer player, ItemStack placedItem, Facing face, Block block, Block clickedBlock, Vector clickPosition) {
         if (player == null) {
-            this.setState(Facing.EAST);
+            this.setState(newBlock, Facing.EAST);
             return;
         }
 
         if (this.detectUpDown) {
             if (player.getPitch() < -60) {
-                this.setState(Facing.DOWN);
+                this.setState(newBlock, Facing.DOWN);
                 return;
             } else if (player.getPitch() > 60) {
-                this.setState(Facing.UP);
+                this.setState(newBlock, Facing.UP);
                 return;
             }
         }
 
         Bearing bearing = Bearing.fromAngle(player.getYaw());
         bearing = bearing.opposite();
-        this.setState(bearing.toBlockFace());
+        this.setState(newBlock, bearing.toBlockFace());
     }
 
     @Override
-    public Facing getState() {
-        switch (this.getValue()) {
+    public Facing getState(Block block) {
+        switch (this.getValue(block)) {
             case 0:
             default:
                 return Facing.DOWN;

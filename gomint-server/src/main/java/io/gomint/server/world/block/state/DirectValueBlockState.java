@@ -5,31 +5,35 @@ import io.gomint.math.Vector;
 import io.gomint.server.entity.EntityPlayer;
 import io.gomint.server.world.block.Block;
 import io.gomint.world.block.data.Facing;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import java.util.function.Supplier;
 
+@ToString
+@EqualsAndHashCode(callSuper = false)
 public class DirectValueBlockState<T> extends BlockState<T, T> {
 
     private final T defaultValue;
 
-    public DirectValueBlockState(Block block, Supplier<String[]> key, T defaultValue) {
-        super(block, v -> key.get());
+    public DirectValueBlockState(Supplier<String[]> key, T defaultValue) {
+        super(v -> key.get());
         this.defaultValue = defaultValue;
     }
 
     @Override
-    protected void calculateValueFromState(T state) {
-        this.setValue(state);
+    protected void calculateValueFromState(Block block, T state) {
+        this.setValue(block, state);
     }
 
     @Override
-    public void detectFromPlacement(EntityPlayer player, ItemStack placedItem, Facing face, Block block, Block clickedBlock, Vector clickPosition) {
-        this.setState(this.defaultValue);
+    public void detectFromPlacement(Block newBlock, EntityPlayer player, ItemStack placedItem, Facing face, Block block, Block clickedBlock, Vector clickPosition) {
+        this.setState(newBlock, this.defaultValue);
     }
 
     @Override
-    public T getState() {
-        return this.getValue();
+    public T getState( Block block ) {
+        return this.getValue( block );
     }
 
 }

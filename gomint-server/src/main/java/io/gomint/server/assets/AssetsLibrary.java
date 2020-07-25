@@ -22,28 +22,19 @@ import io.gomint.server.util.StringShortPair;
 import io.gomint.taglib.AllocationLimitReachedException;
 import io.gomint.taglib.NBTTagCompound;
 import io.netty.buffer.ByteBuf;
-import io.netty.buffer.ByteBufInputStream;
 import io.netty.buffer.PooledByteBufAllocator;
-import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
 import lombok.Getter;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteOrder;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.SortedMap;
 import java.util.UUID;
-import java.util.function.Function;
 
 /**
  * A wrapper class around any suitable file format (currently NBT) that allows
@@ -115,29 +106,29 @@ public class AssetsLibrary {
     }
 
     private void loadBlockPalette(List<NBTTagCompound> blockPaletteCompounds) {
-        Map<String, List<SortedMap<String, Object>>> states = new HashMap<>();
+        int blockNumber = 0;
+        Map<String, Integer> knownBlocks = new HashMap<>();
 
         this.blockPalette = new ArrayList<>();
+
+        int runtimeId = 0;
         for (NBTTagCompound compound : blockPaletteCompounds) {
             String block = compound.getCompound("block", false).getString("name", "minecraft:air");
 
-            List<SortedMap<String, Object>> st = states.computeIfAbsent(block, s -> new ArrayList<>());
-
-            SortedMap<String, Object> sta = new Object2ObjectLinkedOpenHashMap<>();
-            for (Map.Entry<String, Object> entry : compound.getCompound("block", false).getCompound("states", false).entrySet()) {
-                sta.put(entry.getKey(), entry.getValue());
+            Integer id = knownBlocks.get(block);
+            if ( id == null ) {
+                id = blockNumber++;
+                knownBlocks.put(block, id);
             }
 
-            st.add(sta);
-
-            if (block.contains("minecraft:rail")) {
-                LOGGER.info("{}: {}", block, sta);
-            }
-
-            this.blockPalette.add(new BlockIdentifier(
-                compound.getCompound("block", false).getString("name", "minecraft:air"),
+            BlockIdentifier identifier = new BlockIdentifier(
+                block,
+                id,
+                runtimeId++,
                 compound.getCompound("block", false).getCompound("states", false)
-            ));
+            );
+
+            this.blockPalette.add(identifier);
         }
     }
 

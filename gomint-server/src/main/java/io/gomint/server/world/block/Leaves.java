@@ -48,8 +48,8 @@ public class Leaves extends Block implements BlockLeaves {
         }
     }
 
-    private final EnumBlockState<LeaveTypeMagic, String> variant = new EnumBlockState<>(this, v -> {
-        if (this.variant == null) {
+    private static final EnumBlockState<LeaveTypeMagic, String> VARIANT = new EnumBlockState<>(v -> {
+        if (v == null) {
             return new String[]{OLD_LOG_TYPE, NEW_LOG_TYPE};
         }
 
@@ -70,8 +70,8 @@ public class Leaves extends Block implements BlockLeaves {
         return null;
     });
 
-    private final BooleanBlockState updateForDecay = new BooleanBlockState(this, () -> new String[]{"update_bit"});
-    private final BooleanBlockState persistent = new BooleanBlockState(this, () -> new String[]{"persistent_bit"});
+    private static final BooleanBlockState UPDATE_FOR_DECAY = new BooleanBlockState( () -> new String[]{"update_bit"});
+    private static final BooleanBlockState PERSISTENT = new BooleanBlockState( () -> new String[]{"persistent_bit"});
 
     @Override
     public long getBreakTime() {
@@ -117,13 +117,13 @@ public class Leaves extends Block implements BlockLeaves {
     @Override
     public void setLeaveType(LogType type) {
         LeaveTypeMagic newState = LeaveTypeMagic.valueOf(type.name());
-        this.setBlockId(newState.getBlockId(), NEW_LOG_TYPE, OLD_LOG_TYPE); // We ignore the two keys here to get a known wrong value, the set state below will select the correct runtime id
-        this.variant.setState(newState);
+        this.setBlockIdOnStateChange(newState.getBlockId()); // We ignore the two keys here to get a known wrong value, the set state below will select the correct runtime id
+        VARIANT.setState(this, newState);
     }
 
     @Override
     public LogType getLeaveType() {
-        return LogType.valueOf(this.variant.getState().name());
+        return LogType.valueOf(VARIANT.getState(this).name());
     }
 
 }

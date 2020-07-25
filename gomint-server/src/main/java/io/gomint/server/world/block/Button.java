@@ -20,8 +20,8 @@ import java.util.concurrent.TimeUnit;
 
 public abstract class Button extends Block implements BlockButton {
 
-    private final BlockfaceFromPlayerBlockState facing = new BlockfaceFromPlayerBlockState(this, () -> new String[]{"facing_direction"}, true);
-    private final BooleanBlockState pressed = new BooleanBlockState(this, () -> new String[]{"button_pressed_bit"});
+    private static final BlockfaceFromPlayerBlockState FACING = new BlockfaceFromPlayerBlockState( () -> new String[]{"facing_direction"}, true);
+    private static final BooleanBlockState PRESSED = new BooleanBlockState( () -> new String[]{"button_pressed_bit"});
 
     @Override
     public boolean interact(Entity entity, Facing face, Vector facePos, ItemStack item) {
@@ -34,7 +34,7 @@ public abstract class Button extends Block implements BlockButton {
     @Override
     public long update(UpdateReason updateReason, long currentTimeMS, float dT) {
         if (updateReason == UpdateReason.SCHEDULED && isPressed()) {
-            this.pressed.setState(false);
+            PRESSED.setState(this,false);
         }
 
         return -1;
@@ -42,14 +42,14 @@ public abstract class Button extends Block implements BlockButton {
 
     @Override
     public boolean isPressed() {
-        return this.pressed.getState();
+        return PRESSED.getState(this);
     }
 
     @Override
     public void press() {
         // Check if we need to update
         if (!isPressed()) {
-            this.pressed.setState(true);
+            PRESSED.setState(this, true);
         }
 
         // Schedule release in 1 second
@@ -58,22 +58,12 @@ public abstract class Button extends Block implements BlockButton {
 
     @Override
     public Facing getAttachedFace() {
-        return this.facing.getState();
+        return FACING.getState(this);
     }
 
     @Override
     public void setAttachedFace(Facing face) {
-        this.facing.setState(face);
-    }
-
-    @Override
-    public void setFacing(Facing facing) {
-        this.facing.setState(facing);
-    }
-
-    @Override
-    public Facing getFacing() {
-        return this.facing.getState();
+        FACING.setState(this, face);
     }
 
 }

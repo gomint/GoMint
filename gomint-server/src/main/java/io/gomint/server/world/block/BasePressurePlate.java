@@ -24,7 +24,7 @@ import java.util.function.Function;
  */
 public abstract class BasePressurePlate extends Block {
 
-    private final RedstoneSignalStrength signal = new RedstoneSignalStrength(this, () -> new String[]{"redstone_signal"});
+    private static final RedstoneSignalStrength SIGNAL = new RedstoneSignalStrength(() -> new String[]{"redstone_signal"});
 
     @Override
     public void stepOn(Entity entity) {
@@ -34,8 +34,8 @@ public abstract class BasePressurePlate extends Block {
             return old + 1;
         });
 
-        if (amountOfEntitiesOn > 0 && this.signal.getState() <= MathUtils.EPSILON) {
-            this.signal.on();
+        if (amountOfEntitiesOn > 0 && SIGNAL.getState(this) <= MathUtils.EPSILON) {
+            SIGNAL.on(this);
         }
     }
 
@@ -49,8 +49,8 @@ public abstract class BasePressurePlate extends Block {
             return old - 1;
         });
 
-        if (amountOfEntitiesOn == null && this.signal.getState() > MathUtils.EPSILON) {
-            this.signal.off();
+        if (amountOfEntitiesOn == null && SIGNAL.getState(this) > MathUtils.EPSILON) {
+            SIGNAL.off(this);
         }
     }
 

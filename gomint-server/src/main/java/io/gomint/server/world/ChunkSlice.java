@@ -10,11 +10,18 @@ import io.gomint.server.world.storage.TemporaryStorage;
 import io.gomint.world.block.Block;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.PooledByteBufAllocator;
+import it.unimi.dsi.fastutil.ints.Int2IntMap;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
 import it.unimi.dsi.fastutil.longs.LongArrayList;
 import it.unimi.dsi.fastutil.longs.LongList;
+import it.unimi.dsi.fastutil.objects.ObjectIterator;
+import it.unimi.dsi.fastutil.shorts.Short2IntMap;
+import it.unimi.dsi.fastutil.shorts.Short2IntOpenHashMap;
+import it.unimi.dsi.fastutil.shorts.Short2ObjectMap;
 import it.unimi.dsi.fastutil.shorts.Short2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.shorts.ShortArrayList;
+import it.unimi.dsi.fastutil.shorts.ShortList;
 import lombok.Getter;
 
 import java.util.ArrayList;
@@ -29,8 +36,12 @@ import java.util.function.IntConsumer;
 public class ChunkSlice {
 
     private static final ThreadLocal<int[]> INDEX_IDS = ThreadLocal.withInitial( () -> new int[4096] );
-    private static final ThreadLocal<LongList> INDEX_LIST = ThreadLocal.withInitial( LongArrayList::new );
-    private static final ThreadLocal<IntList> RUNTIME_INDEX = ThreadLocal.withInitial( IntArrayList::new );
+    private static final ThreadLocal<Short2IntMap> INDEX_LIST = ThreadLocal.withInitial( () -> {
+        Short2IntMap map = new Short2IntOpenHashMap( 4096 );
+        map.defaultReturnValue(-1);
+        return map;
+    });
+    private static final ThreadLocal<IntList> RUNTIME_INDEX = ThreadLocal.withInitial( () -> new IntArrayList(4096) );
 
     protected static final short AIR_RUNTIME_ID = (short) BlockRuntimeIDs.toBlockIdentifier( "minecraft:air", null ).getRuntimeId();
 
@@ -38,19 +49,21 @@ public class ChunkSlice {
     @Getter private final int sectionY;
 
     // Cache
-    private int shiftedMinX;
-    private int shiftedMinY;
-    private int shiftedMinZ;
+    private final int shiftedMinX;
+    private final int shiftedMinY;
+    private final int shiftedMinZ;
 
     protected boolean isAllAir = true;
 
-    private ByteBuf[] blocks = new ByteBuf[2]; // MC currently supports two layers, we init them as we need
+    private final ByteBuf[] blocks = new ByteBuf[2]; // MC currently supports two layers, we init them as we need
 
-    private NibbleArray blockLight = null; // NibbleArray.create( (short) 4096 );
-    private NibbleArray skyLight = null; // NibbleArray.create( (short) 4096 )
+    private final NibbleArray blockLight = null; // NibbleArray.create( (short) 4096 );
+    private final NibbleArray skyLight = null; // NibbleArray.create( (short) 4096 )
 
     @Getter private Short2ObjectOpenHashMap<TileEntity> tileEntities = null;
-    private Short2ObjectOpenHashMap[] temporaryStorages = new Short2ObjectOpenHashMap[2];   // MC currently supports two layers, we init them as we need
+    private final Short2ObjectOpenHashMap[] temporaryStorages = new Short2ObjectOpenHashMap[2];   // MC currently supports two layers, we init them as we need
+
+    private boolean needsPersistence;
 
     public ChunkSlice( ChunkAdapter chunkAdapter, int sectionY ) {
         this.chunk = chunkAdapter;
@@ -98,17 +111,13 @@ public class ChunkSlice {
         return this.getRuntimeID( layer, getIndex( x, y, z ) );
     }
 
-    protected int getRuntimeID( int layer, int index ) {
-        if ( this.isAllAir ) {
-            return AIR_RUNTIME_ID;
-        }
-
+    protected short getRuntimeID( int layer, int index ) {
         ByteBuf blockStorage = this.blocks[layer];
         if ( blockStorage == null ) {
             return AIR_RUNTIME_ID;
         }
 
-        return blockStorage.getShort(index * 2);
+        return blockStorage.getShort(index << 1);
     }
 
     public <T extends io.gomint.world.block.Block> T getBlockInstanceInternal(short index, int layer, Location blockLocation) {
@@ -121,13 +130,14 @@ public class ChunkSlice {
         }
 
         int runtimeID = this.getRuntimeID( layer, index );
-        if ( this.isAllAir || runtimeID == AIR_RUNTIME_ID ) {
+        if ( runtimeID == AIR_RUNTIME_ID ) {
             return this.getAirBlockInstance( blockLocation );
         }
 
         BlockIdentifier identifier = BlockRuntimeIDs.toBlockIdentifier( runtimeID );
         return (T) this.chunk.getWorld().getServer().getBlocks().get( identifier, this.skyLight != null ? this.skyLight.get( index ) : 0,
-            this.blockLight != null ? this.blockLight.get( index ) : 0, this.tileEntities != null ? this.tileEntities.get( index ) : null, blockLocation, layer );
+            this.blockLight != null ? this.blockLight.get( index ) : 0, this.tileEntities != null ? this.tileEntities.get( index ) : null,
+            blockLocation, layer, this, index );
     }
 
     <T extends io.gomint.world.block.Block> T getBlockInstance( int x, int y, int z, int layer ) {
@@ -136,7 +146,8 @@ public class ChunkSlice {
     }
 
     private <T extends Block> T getAirBlockInstance( Location location ) {
-        return (T) this.chunk.getWorld().getServer().getBlocks().get( BlockRuntimeIDs.toBlockIdentifier("minecraft:air", null), (byte) 15, (byte) 15, null, location, 0 );
+        return (T) this.chunk.getWorld().getServer().getBlocks().get( BlockRuntimeIDs.toBlockIdentifier("minecraft:air", null),
+            (byte) 15, (byte) 15, null, location, 0, null, (short) 0);
     }
 
     private Location getBlockLocation( int x, int y, int z ) {
@@ -153,6 +164,7 @@ public class ChunkSlice {
         }
 
         this.tileEntities.remove( index );
+        this.needsPersistence = true;
     }
 
     void addTileEntity( int x, int y, int z, TileEntity tileEntity ) {
@@ -165,6 +177,7 @@ public class ChunkSlice {
         }
 
         this.tileEntities.put( index, tileEntity );
+        this.needsPersistence = true;
     }
 
     public void setBlock( int x, int y, int z, int layer, int runtimeId ) {
@@ -184,11 +197,12 @@ public class ChunkSlice {
 
         if ( this.blocks[layer] != null ) {
             this.blocks[layer].setShort(index * 2, (short) runtimeID );
+            this.needsPersistence = true;
         }
     }
 
     boolean isAllAir() {
-        return this.isAllAir;
+        return this.blocks[0] == null;
     }
 
     public int getAmountOfLayers() {
@@ -236,28 +250,29 @@ public class ChunkSlice {
         int amountOfLayers = this.getAmountOfLayers();
         buffer.writeByte( (byte) amountOfLayers );
 
-
-
         for ( int layer = 0; layer < amountOfLayers; layer++ ) {
+            ByteBuf layerBuf = this.blocks[layer];
             int foundIndex = 0;
+            int nextIndex = 0;
             int lastRuntimeID = -1;
 
             int[] indexIDs = INDEX_IDS.get();
-            LongList indexList = INDEX_LIST.get();
+            Short2IntMap indexList = INDEX_LIST.get();
             IntList runtimeIndex = RUNTIME_INDEX.get();
 
             indexList.clear();
             runtimeIndex.clear();
 
             for ( short blockIndex = 0; blockIndex < indexIDs.length; blockIndex++ ) {
-                int runtimeID = this.getRuntimeID( layer, blockIndex );
+                short runtimeID = layerBuf.getShort(blockIndex << 1);
 
                 if ( runtimeID != lastRuntimeID ) {
-                    foundIndex = indexList.indexOf( runtimeID );
+                    foundIndex = indexList.get( runtimeID );
                     if ( foundIndex == -1 ) {
                         runtimeIndex.add( runtimeID );
-                        indexList.add( runtimeID );
-                        foundIndex = indexList.size() - 1;
+                        indexList.put( runtimeID, nextIndex );
+                        foundIndex = nextIndex;
+                        nextIndex++;
                     }
 
                     lastRuntimeID = runtimeID;
@@ -268,10 +283,10 @@ public class ChunkSlice {
 
             // Get correct wordsize
             int value = indexList.size();
-            int numberOfBits = MathUtils.fastFloor( log2( value ) ) + 1;
+            float numberOfBits = log2( value ) + 1;
 
             // Prepare palette
-            int amountOfBlocks = MathUtils.fastFloor( 32f / (float) numberOfBits );
+            int amountOfBlocks = MathUtils.fastFloor( 32 / numberOfBits );
             Palette palette = new Palette( buffer, amountOfBlocks, false );
 
             byte paletteWord = (byte) ( (byte) ( palette.getPaletteVersion().getVersionId() << 1 ) | 1 );
@@ -309,6 +324,38 @@ public class ChunkSlice {
 
         if ( this.skyLight != null ) {
             this.skyLight.release();
+        }
+    }
+
+    public boolean isNeedsPersistence() {
+        // Did a block change?
+        if ( this.needsPersistence ) {
+            return true;
+        }
+
+        // Check for tile entity changes
+        if ( this.getTileEntities() != null) {
+            ObjectIterator<Short2ObjectMap.Entry<TileEntity>> iterator = this.getTileEntities().short2ObjectEntrySet().fastIterator();
+            while (iterator.hasNext()) {
+                TileEntity tileEntity = iterator.next().getValue();
+                if (tileEntity.isNeedsPersistence()) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    public void resetPersistenceFlag() {
+        this.needsPersistence = false;
+
+        if ( this.getTileEntities() != null) {
+            ObjectIterator<Short2ObjectMap.Entry<TileEntity>> iterator = this.getTileEntities().short2ObjectEntrySet().fastIterator();
+            while (iterator.hasNext()) {
+                TileEntity tileEntity = iterator.next().getValue();
+                tileEntity.resetPersistenceFlag();
+            }
         }
     }
 

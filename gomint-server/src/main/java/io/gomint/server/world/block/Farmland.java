@@ -11,7 +11,6 @@ import io.gomint.server.util.StatefulBlockSearcher;
 import io.gomint.server.world.UpdateReason;
 
 import java.util.function.Function;
-import java.util.function.Predicate;
 
 /**
  * @author geNAZt
@@ -20,7 +19,7 @@ import java.util.function.Predicate;
 @RegisterInfo( sId = "minecraft:farmland" )
 public class Farmland extends Block implements io.gomint.world.block.BlockFarmland {
 
-    private final ProgressBlockState waterLevel = new ProgressBlockState( this, () -> new String[]{"moisturized_amount"}, 7, aVoid -> {} );
+    private static final ProgressBlockState WATER_LEVEL = new ProgressBlockState( () -> new String[]{"moisturized_amount"}, 7, aVoid -> {} );
 
     @Override
     public String getBlockId() {
@@ -67,13 +66,13 @@ public class Farmland extends Block implements io.gomint.world.block.BlockFarmla
     private boolean recalc( StatefulBlockSearcher blockSearcher ) {
         BlockPosition waterBlock = blockSearcher.validate();
         if ( waterBlock != null ) {
-            if ( this.waterLevel.getState() < 1f ) {
-                this.waterLevel.setState( 1f );
+            if ( WATER_LEVEL.getState(this) < 1f ) {
+                WATER_LEVEL.setState(this,  1f );
             }
 
             return true;
-        } else if ( this.waterLevel.getState() > 0 ) {
-            this.waterLevel.setState( this.waterLevel.getState() - this.waterLevel.getStep() );
+        } else if ( WATER_LEVEL.getState(this) > 0 ) {
+            WATER_LEVEL.setState(this,  WATER_LEVEL.getState(this) - this.WATER_LEVEL.getStep() );
         }
 
         return false;
@@ -101,12 +100,12 @@ public class Farmland extends Block implements io.gomint.world.block.BlockFarmla
 
     @Override
     public float getMoisture() {
-        return this.waterLevel.getState();
+        return WATER_LEVEL.getState(this);
     }
 
     @Override
     public void setMoisture(float moisture) {
-        this.waterLevel.setState(moisture);
+        WATER_LEVEL.setState(this, moisture);
     }
 
 }

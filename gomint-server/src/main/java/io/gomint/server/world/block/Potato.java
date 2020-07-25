@@ -44,7 +44,7 @@ public class Potato extends Growable implements BlockPotato {
 
     @Override
     public List<ItemStack> getDrops(ItemStack itemInHand) {
-        if (this.growth.maxed()) {
+        if (GROWTH.maxed(this)) {
             List<ItemStack> drops = new ArrayList<>() {{
                 add(world.getServer().getItems().create(392, (short) 0, (byte) (1 + SEED_RANDOMIZER.next().byteValue()), null)); // Potato
             }};

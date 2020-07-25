@@ -39,7 +39,7 @@ public class Sand extends Fallable implements io.gomint.world.block.BlockSand {
         }
     }
 
-    private final EnumBlockState<SandTypeMagic, String> type = new EnumBlockState<>(this, newValue -> {
+    private static final EnumBlockState<SandTypeMagic, String> TYPE = new EnumBlockState<>(newValue -> {
         return SAND_TYPE;
     }, SandTypeMagic.values(), SandTypeMagic::getType, v -> {
         for (SandTypeMagic value : SandTypeMagic.values()) {
@@ -79,12 +79,12 @@ public class Sand extends Fallable implements io.gomint.world.block.BlockSand {
     @Override
     public void setType(SandType type) {
         SandTypeMagic newState = SandTypeMagic.valueOf(type.name());
-        this.type.setState(newState);
+        TYPE.setState(this, newState);
     }
 
     @Override
     public SandType getType() {
-        return SandType.valueOf(this.type.getState().name());
+        return SandType.valueOf(TYPE.getState(this).name());
     }
 
     @Override
@@ -93,13 +93,13 @@ public class Sand extends Fallable implements io.gomint.world.block.BlockSand {
         BlockIdentifier identifier = placementData.getBlockIdentifier();
 
         SandTypeMagic should = item == null || item.getData() == 0 ? SandTypeMagic.NORMAL : SandTypeMagic.RED;
-        placementData.setBlockIdentifier(BlockRuntimeIDs.change(identifier, SAND_TYPE[0], should.getType()));
+        placementData.setBlockIdentifier(BlockRuntimeIDs.change(identifier, null, SAND_TYPE[0], should.getType()));
         return placementData;
     }
 
     @Override
     public List<ItemStack> getDrops(ItemStack itemInHand) {
-        if (this.type.getState() == SandTypeMagic.NORMAL) {
+        if (TYPE.getState(this) == SandTypeMagic.NORMAL) {
             ItemStack drop = this.world.getServer().getItems().create(this.identifier.getBlockId(), (short) 0, (byte) 1, null);
             return Lists.newArrayList(drop);
         }

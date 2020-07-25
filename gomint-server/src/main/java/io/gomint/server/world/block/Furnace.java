@@ -22,7 +22,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 public class Furnace extends Block implements io.gomint.world.block.BlockFurnace {
 
-    private final BlockfaceBlockState facing = new BlockfaceBlockState(this, () -> new String[]{"facing_direction"});
+    private static final BlockfaceBlockState FACING = new BlockfaceBlockState(() -> new String[]{"facing_direction"});
 
     @Override
     public long getBreakTime() {
@@ -106,12 +106,12 @@ public class Furnace extends Block implements io.gomint.world.block.BlockFurnace
 
     @Override
     public void setFacing(Facing facing) {
-        this.facing.setState(facing);
+        FACING.setState(this, facing);
     }
 
     @Override
     public Facing getFacing() {
-        return this.facing.getState();
+        return FACING.getState(this);
     }
 
 }

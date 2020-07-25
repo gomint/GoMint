@@ -36,8 +36,8 @@ public class BlockOfQuartz extends Block implements io.gomint.world.block.BlockB
         }
     }
 
-    private final AxisBlockState axis = new AxisBlockState(this, () -> new String[]{"pillar_axis"});
-    private final EnumBlockState<VariantMagic, String> variant = new EnumBlockState<>(this, v -> new String[]{"chisel_type"}, VariantMagic.values(), VariantMagic::getValue, v -> {
+    private static final AxisBlockState AXIS = new AxisBlockState(() -> new String[]{"pillar_axis"});
+    private static final EnumBlockState<VariantMagic, String> VARIANT = new EnumBlockState<>(v -> new String[]{"chisel_type"}, VariantMagic.values(), VariantMagic::getValue, v -> {
         for (VariantMagic value : VariantMagic.values()) {
             if (value.getValue().equals(v)) {
                 return value;
@@ -69,12 +69,12 @@ public class BlockOfQuartz extends Block implements io.gomint.world.block.BlockB
 
     @Override
     public Variant getVariant() {
-        return Variant.valueOf(this.variant.getState().name());
+        return Variant.valueOf(VARIANT.getState(this).name());
     }
 
     @Override
     public void setVariant(Variant variant) {
-        this.variant.setState(VariantMagic.valueOf(variant.name()));
+        VARIANT.setState(this, VariantMagic.valueOf(variant.name()));
     }
 
     @Override
@@ -93,12 +93,12 @@ public class BlockOfQuartz extends Block implements io.gomint.world.block.BlockB
 
     @Override
     public void setAxis(Axis axis) {
-        this.axis.setState(axis);
+        AXIS.setState(this, axis);
     }
 
     @Override
     public Axis getAxis() {
-        return this.axis.getState();
+        return AXIS.getState(this);
     }
 
 }

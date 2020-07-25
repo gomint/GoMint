@@ -50,11 +50,16 @@ public class PacketWorldChunk extends Packet {
 
         buffer.writeUnsignedVarInt(this.data.readableBytes());
         buffer.writeBytes(this.data);
+        this.release();
     }
 
     @Override
     public void deserialize(PacketBuffer buffer, int protocolID) {
 
+    }
+
+    public void release() {
+        this.data.release();
     }
 
 }

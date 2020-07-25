@@ -13,7 +13,9 @@ import io.gomint.math.Vector;
 import io.gomint.server.entity.EntityPlayer;
 import io.gomint.server.world.block.Block;
 import io.gomint.world.block.data.Facing;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.ToString;
 
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -22,24 +24,25 @@ import java.util.function.Supplier;
  * @author geNAZt
  * @version 1.0
  */
+@ToString
+@EqualsAndHashCode(callSuper = false)
 public class ProgressBlockState extends BlockState<Float, Integer> {
 
-    private Consumer<Void> maxedProgressConsumer;
+    private Consumer<Block> maxedProgressConsumer;
     private int max;
-    @Getter
-    private float step;
+    @Getter private float step;
 
-    public ProgressBlockState(Block block, Supplier<String[]> key, int max, Consumer<Void> maxedProgressConsumer) {
-        super(block, v -> key.get());
+    public ProgressBlockState(Supplier<String[]> key, int max, Consumer<Block> maxedProgressConsumer) {
+        super(v -> key.get());
         this.step = 1f / max;
         this.maxedProgressConsumer = maxedProgressConsumer;
         this.max = max;
     }
 
-    public boolean progress() {
-        this.setState(this.getState() + this.step);
-        if (1f - this.getState() <= MathUtils.EPSILON) {
-            this.maxedProgressConsumer.accept(null);
+    public boolean progress(Block block) {
+        this.setState(block,this.getState(block) + this.step);
+        if (1f - this.getState(block) <= MathUtils.EPSILON) {
+            this.maxedProgressConsumer.accept(block);
             return false;
         }
 
@@ -47,22 +50,22 @@ public class ProgressBlockState extends BlockState<Float, Integer> {
     }
 
     @Override
-    protected void calculateValueFromState(Float state) {
-        this.setValue(Math.round(state * this.max));
+    protected void calculateValueFromState(Block block, Float state) {
+        this.setValue(block, Math.round(state * this.max));
     }
 
     @Override
-    public void detectFromPlacement(EntityPlayer player, ItemStack placedItem, Facing face, Block block, Block clickedBlock, Vector clickPosition) {
-        this.setState(0f);
+    public void detectFromPlacement(Block newBlock, EntityPlayer player, ItemStack placedItem, Facing face, Block block, Block clickedBlock, Vector clickPosition) {
+        this.setState(newBlock, 0f);
     }
 
     @Override
-    public Float getState() {
-        return this.getValue() * this.step;
+    public Float getState(Block block) {
+        return this.getValue(block) * this.step;
     }
 
-    public boolean maxed() {
-        return 1f - this.getState() <= MathUtils.EPSILON;
+    public boolean maxed(Block block) {
+        return 1f - this.getState(block) <= MathUtils.EPSILON;
     }
 
 }

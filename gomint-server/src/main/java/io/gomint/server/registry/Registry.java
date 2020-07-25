@@ -46,7 +46,7 @@ public class Registry<R> {
         this.classPath.getTopLevelClasses( classPath, classInfo -> register( classInfo.load() ) );
     }
 
-    private void register( Class<?> clazz ) {
+    private void register( Class<? extends R> clazz ) {
         for (RegisterInfo info : clazz.getAnnotationsByType(RegisterInfo.class)) {
             Generator<R> generator = this.generatorCallback.generate( clazz, info.sId() );
             if ( generator != null ) {
@@ -113,7 +113,7 @@ public class Registry<R> {
         return this.apiReferences.getOrDefault( clazz, -1 );
     }
 
-    public void register( Class<?> clazz, Generator<R> generator ) {
+    public void register( Class<? extends R> clazz, Generator<R> generator ) {
         // We need register info
         if ( !clazz.isAnnotationPresent( RegisterInfo.class ) && !clazz.isAnnotationPresent( RegisterInfos.class ) ) {
             LOGGER.debug( "No register info annotation present" );

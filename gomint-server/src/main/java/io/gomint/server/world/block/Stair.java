@@ -18,8 +18,8 @@ import java.util.List;
  */
 public abstract class Stair extends Block implements BlockStair {
 
-    private final CrossDirectionBlockState direction = new CrossDirectionBlockState( this, () -> new String[]{"weirdo_direction"} );
-    private final BooleanBlockState top = new BooleanBlockState( this, () -> new String[]{"upside_down_bit"} );
+    private static final CrossDirectionBlockState DIRECTION = new CrossDirectionBlockState(() -> new String[]{"weirdo_direction"});
+    private static final BooleanBlockState TOP = new BooleanBlockState(() -> new String[]{"upside_down_bit"});
 
     @Override
     public boolean isTransparent() {
@@ -29,34 +29,34 @@ public abstract class Stair extends Block implements BlockStair {
     @Override
     public List<AxisAlignedBB> getBoundingBox() {
         // TODO: Fix bounding box when top / directional
-        return Collections.singletonList( new AxisAlignedBB(
+        return Collections.singletonList(new AxisAlignedBB(
             this.location.getX(),
             this.location.getY(),
             this.location.getZ(),
             this.location.getX() + 1,
             this.location.getY() + .5f,
             this.location.getZ() + 1
-        ) );
+        ));
     }
 
     @Override
     public void setDirection(Direction direction) {
-        this.direction.setState(direction);
+        DIRECTION.setState(this, direction);
     }
 
     @Override
     public Direction getDirection() {
-        return this.direction.getState();
+        return DIRECTION.getState(this);
     }
 
     @Override
     public boolean isTop() {
-        return this.top.getState();
+        return TOP.getState(this);
     }
 
     @Override
     public void setTop(boolean top) {
-        this.top.setState(top);
+        TOP.setState(this, top);
     }
 
 }

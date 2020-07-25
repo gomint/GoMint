@@ -35,7 +35,7 @@ public abstract class Growable extends Block {
         SEED_RANDOMIZER.add(0.15, 3);
     }
 
-    protected ProgressBlockState growth = new ProgressBlockState(this, () -> new String[]{"growth"}, 7, aVoid -> {
+    protected static final ProgressBlockState GROWTH = new ProgressBlockState(() -> new String[]{"growth"}, 7, aVoid -> {
     });
 
     @Override
@@ -53,14 +53,14 @@ public abstract class Growable extends Block {
             }
         } else if (updateReason == UpdateReason.RANDOM) {
             // Check for growth state
-            if (this.growth.getState() < 1f) {
+            if (GROWTH.getState(this) < 1f) {
                 float growthDivider = getGrowthDivider();
                 int random = ThreadLocalRandom.current().nextInt((int) ((25f / growthDivider) + 1));
 
                 // Grow it
                 if (random == 0) {
                     // TODO: Some sort of growth event
-                    this.growth.progress();
+                    GROWTH.progress(this);
                 }
             }
         }

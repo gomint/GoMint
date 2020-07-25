@@ -16,8 +16,8 @@ import io.gomint.world.block.data.Direction;
 @RegisterInfo(sId = "minecraft:cocoa")
 public class Cocoa extends Growable implements io.gomint.world.block.BlockCocoa {
 
-    private final DirectionBlockState direction = new DirectionBlockState(this, () -> new String[]{"direction"});
-    private final ProgressBlockState age = new ProgressBlockState(this, () -> new String[]{"age"},2, aVoid -> {});
+    private static final DirectionBlockState DIRECTION = new DirectionBlockState(() -> new String[]{"direction"});
+    private static final ProgressBlockState AGE = new ProgressBlockState( () -> new String[]{"age"},2, aVoid -> {});
 
     @Override
     public long getBreakTime() {
@@ -51,12 +51,12 @@ public class Cocoa extends Growable implements io.gomint.world.block.BlockCocoa 
 
     @Override
     public void setDirection(Direction direction) {
-        this.direction.setState(direction);
+        DIRECTION.setState(this, direction);
     }
 
     @Override
     public Direction getDirection() {
-        return this.direction.getState();
+        return DIRECTION.getState(this);
     }
 
 }

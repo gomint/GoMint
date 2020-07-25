@@ -13,10 +13,10 @@ import java.util.List;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:stained_glass" )
+@RegisterInfo(sId = "minecraft:stained_glass")
 public class StainedGlass extends Block implements io.gomint.world.block.BlockStainedGlass {
 
-    private final EnumBlockState<BlockColor, String> color = new EnumBlockState<>( this, v -> new String[]{"color"}, BlockColor.values(), e -> e.name().toLowerCase(), v -> BlockColor.valueOf(v.toUpperCase()) );
+    private static final EnumBlockState<BlockColor, String> COLOR = new EnumBlockState<>(v -> new String[]{"color"}, BlockColor.values(), e -> e.name().toLowerCase(), v -> BlockColor.valueOf(v.toUpperCase()));
 
     @Override
     public String getBlockId() {
@@ -39,7 +39,7 @@ public class StainedGlass extends Block implements io.gomint.world.block.BlockSt
     }
 
     @Override
-    public List<ItemStack> getDrops( ItemStack itemInHand ) {
+    public List<ItemStack> getDrops(ItemStack itemInHand) {
         return new ArrayList<>();
     }
 
@@ -55,12 +55,12 @@ public class StainedGlass extends Block implements io.gomint.world.block.BlockSt
 
     @Override
     public BlockColor getColor() {
-        return this.color.getState();
+        return COLOR.getState(this);
     }
 
     @Override
-    public void setColor( BlockColor color ) {
-        this.color.setState( color );
+    public void setColor(BlockColor color) {
+        COLOR.setState(this, color);
     }
 
 }

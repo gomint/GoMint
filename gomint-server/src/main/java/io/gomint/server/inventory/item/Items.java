@@ -5,14 +5,11 @@ import io.gomint.jraknet.PacketBuffer;
 import io.gomint.server.assets.AssetsLibrary;
 import io.gomint.server.registry.Generator;
 import io.gomint.server.registry.RegisterInfo;
-import io.gomint.server.registry.RegisterInfos;
 import io.gomint.server.registry.Registry;
 import io.gomint.server.util.ClassPath;
-import io.gomint.server.util.Pair;
 import io.gomint.server.util.StringShortPair;
-import io.gomint.server.util.performance.ObjectConstructionFactory;
+import io.gomint.server.util.performance.LambdaConstructionFactory;
 import io.gomint.taglib.NBTTagCompound;
-import it.unimi.dsi.fastutil.Hash;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.ints.IntArraySet;
@@ -26,16 +23,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.BiConsumer;
 
 /**
  * @author geNAZt
@@ -73,7 +66,7 @@ public class Items {
     @Autowired
     public Items(ClassPath classPath) {
         this.generators = new Registry<>(classPath, (clazz, id) -> {
-            ObjectConstructionFactory factory = new ObjectConstructionFactory(clazz);
+            LambdaConstructionFactory<io.gomint.server.inventory.item.ItemStack> factory = new LambdaConstructionFactory<>(clazz);
 
             RegisterInfo[] info = clazz.getAnnotationsByType(RegisterInfo.class);
             for (RegisterInfo registerInfo : info) {
@@ -84,7 +77,7 @@ public class Items {
             }
 
             return () -> {
-                io.gomint.server.inventory.item.ItemStack itemStack = (io.gomint.server.inventory.item.ItemStack) factory.newInstance();
+                io.gomint.server.inventory.item.ItemStack itemStack = factory.newInstance();
                 itemStack.setItems(this);
                 return itemStack;
             };

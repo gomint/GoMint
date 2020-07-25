@@ -11,7 +11,6 @@ import io.gomint.server.util.collection.FreezableSortedMap;
 import io.gomint.taglib.NBTTagCompound;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.Setter;
 
 import java.util.Map;
 
@@ -24,14 +23,17 @@ import java.util.Map;
 public class BlockIdentifier {
 
     private final String blockId;
+    private final int blockNumericId;
     private FreezableSortedMap<String, Object> states;
-    @Setter private int runtimeId;
+    private final int runtimeId;
     private NBTTagCompound nbt;
 
-    public BlockIdentifier(String blockId, NBTTagCompound states)  {
+    public BlockIdentifier(String blockId, int blockNumericId, int runtimeId, NBTTagCompound states)  {
         this.blockId = blockId;
+        this.blockNumericId = blockNumericId;
+        this.runtimeId = runtimeId;
 
-        if (states != null) {
+        if (states != null && states.size() > 0) {
             this.states = new FreezableSortedMap<>();
             for (Map.Entry<String, Object> entry : states.entrySet()) {
                 this.states.put(entry.getKey(), entry.getValue());

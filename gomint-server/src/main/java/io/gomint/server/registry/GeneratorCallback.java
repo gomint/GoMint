@@ -14,6 +14,6 @@ public interface GeneratorCallback<T> {
      * @param id for which we generate
      * @return generator for the given class
      */
-    Generator<T> generate( Class<?> clazz, String id );
+    Generator<T> generate( Class<? extends T> clazz, String id );
 
 }

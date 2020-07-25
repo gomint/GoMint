@@ -35,9 +35,9 @@ import java.util.List;
 @EqualsAndHashCode( callSuper = true )
 public class Bed extends Block implements io.gomint.world.block.BlockBed {
 
-    private final DirectionBlockState direction = new DirectionBlockState( this, () -> new String[]{"direction"} );
-    private final BooleanBlockState occupied = new BooleanBlockState( this, () -> new String[]{"occupied_bit"} );
-    private final BooleanBlockState head = new BooleanBlockState( this, () -> new String[]{"head_piece_bit"} );
+    private static final DirectionBlockState DIRECTION = new DirectionBlockState( () -> new String[]{"direction"} );
+    private static final BooleanBlockState OCCUPIED = new BooleanBlockState( () -> new String[]{"occupied_bit"} );
+    private static final BooleanBlockState HEAD = new BooleanBlockState( () -> new String[]{"head_piece_bit"} );
 
     @Override
     public String getBlockId() {
@@ -81,7 +81,7 @@ public class Bed extends Block implements io.gomint.world.block.BlockBed {
 
     private io.gomint.world.block.Block getOtherBlock() {
         // Select which side we need to check
-        Direction facingToOtherHalf = this.direction.getState();
+        Direction facingToOtherHalf = DIRECTION.getState(this);
         if ( this.isHeadPart() ) {
             facingToOtherHalf = facingToOtherHalf.opposite();
         }
@@ -120,12 +120,12 @@ public class Bed extends Block implements io.gomint.world.block.BlockBed {
 
     @Override
     public boolean isHeadPart() {
-        return this.head.getState();
+        return HEAD.getState(this);
     }
 
     @Override
     public void setHeadPart( boolean value ) {
-        this.head.setState( value );
+        HEAD.setState( this, value );
     }
 
     @Override
@@ -174,7 +174,7 @@ public class Bed extends Block implements io.gomint.world.block.BlockBed {
             data.setCompound( compound );
 
             Bed bed = otherBlock.setBlockFromPlacementData( data );
-            bed.head.setState( true );
+            HEAD.setState( bed,true );
         }
     }
 

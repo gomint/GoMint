@@ -11,17 +11,17 @@ package io.gomint.server.util.performance;
  * @author geNAZt
  * @version 1.0
  */
-public class ObjectConstructionFactory implements ConstructionFactory {
+public class ObjectConstructionFactory<T> implements ConstructionFactory<T> {
 
-    private final ConstructionFactory factory;
+    private final ConstructionFactory<T> factory;
 
-    public ObjectConstructionFactory(Class<?> clazz, Class... arguments) {
-        this.factory = new ReflectionAccessFactory(clazz, arguments);
+    public ObjectConstructionFactory(Class<T> clazz) {
+        this.factory = new ReflectionAccessFactory<T>(clazz);
     }
 
     @Override
-    public Object newInstance(Object... init) {
-        return this.factory.newInstance(init);
+    public T newInstance() {
+        return this.factory.newInstance();
     }
 
 }

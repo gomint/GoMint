@@ -22,18 +22,18 @@ import java.util.List;
 
 public abstract class Trapdoor extends Block implements BlockTrapdoor {
 
-    private final DirectionBlockState direction = new DirectionBlockState(this, () -> new String[]{"direction"});
-    private final BooleanBlockState top = new BooleanBlockState(this, () -> new String[]{"upside_down_bit"});
-    private final BooleanBlockState open = new BooleanBlockState(this, () -> new String[]{"open_bit"});
+    private static final DirectionBlockState DIRECTION = new DirectionBlockState( () -> new String[]{"direction"});
+    private static final BooleanBlockState TOP = new BooleanBlockState( () -> new String[]{"upside_down_bit"});
+    private static final BooleanBlockState OPEN = new BooleanBlockState( () -> new String[]{"open_bit"});
 
     @Override
     public boolean isOpen() {
-        return this.open.getState();
+        return OPEN.getState(this);
     }
 
     @Override
     public void toggle() {
-        this.open.setState(!this.isOpen());
+        OPEN.setState(this, !this.isOpen());
     }
 
     @Override
@@ -48,7 +48,7 @@ public abstract class Trapdoor extends Block implements BlockTrapdoor {
 
         // Basis box
         AxisAlignedBB bb;
-        if (this.top.getState()) {
+        if (TOP.getState(this)) {
             // Top closed box
             bb = new AxisAlignedBB(
                 this.location.getX(),
@@ -71,8 +71,8 @@ public abstract class Trapdoor extends Block implements BlockTrapdoor {
         }
 
         // Check for open state
-        if (this.open.getState()) {
-            switch (this.direction.getState()) {
+        if (OPEN.getState(this)) {
+            switch (DIRECTION.getState(this)) {
                 case NORTH:
                     bb.setBounds(
                         this.location.getX(),
@@ -128,12 +128,12 @@ public abstract class Trapdoor extends Block implements BlockTrapdoor {
 
     @Override
     public void setDirection(Direction direction) {
-        this.direction.setState(direction);
+        DIRECTION.setState(this, direction);
     }
 
     @Override
     public Direction getDirection() {
-        return this.direction.getState();
+        return DIRECTION.getState(this);
     }
 
 }

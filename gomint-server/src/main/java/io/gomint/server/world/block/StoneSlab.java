@@ -2,7 +2,6 @@ package io.gomint.server.world.block;
 
 import io.gomint.inventory.item.ItemStack;
 import io.gomint.server.world.block.helper.ToolPresets;
-import io.gomint.server.world.block.state.BooleanBlockState;
 import io.gomint.server.world.block.state.EnumBlockState;
 import io.gomint.world.block.BlockStoneSlab;
 import io.gomint.world.block.BlockType;
@@ -10,8 +9,6 @@ import io.gomint.world.block.BlockType;
 import io.gomint.server.registry.RegisterInfo;
 import io.gomint.world.block.data.StoneType;
 import lombok.Getter;
-
-import java.util.function.Function;
 
 /**
  * @author geNAZt
@@ -85,8 +82,8 @@ public class StoneSlab extends Slab implements BlockStoneSlab {
         }
     }
 
-    private final EnumBlockState<StoneTypeMagic, String> variant = new EnumBlockState<>(this, v -> {
-        if (this.variant == null) {
+    private static final EnumBlockState<StoneTypeMagic, String> VARIANT = new EnumBlockState<>(v -> {
+        if (v == null) {
             return new String[]{STONE_TYPE, STONE_TYPE_2, STONE_TYPE_3, STONE_TYPE_4};
         }
 
@@ -148,14 +145,14 @@ public class StoneSlab extends Slab implements BlockStoneSlab {
 
     @Override
     public StoneType getStoneType() {
-        return StoneType.valueOf(this.variant.getState().name());
+        return StoneType.valueOf(VARIANT.getState(this).name());
     }
 
     @Override
     public void setStoneType(StoneType stoneType) {
         StoneTypeMagic newState = StoneTypeMagic.valueOf(stoneType.name());
         this.setBlockId(newState.getBlockId());
-        this.variant.setState(newState);
+        VARIANT.setState(this, newState);
     }
 
 }

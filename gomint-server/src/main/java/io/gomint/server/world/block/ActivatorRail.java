@@ -15,12 +15,7 @@ import io.gomint.world.block.data.Facing;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:activator_rail" )
-public class ActivatorRail extends Block implements io.gomint.world.block.BlockActivatorRail {
-
-    @Override
-    public String getBlockId() {
-        return "minecraft:activator_rail";
-    }
+public class ActivatorRail extends RailBase implements io.gomint.world.block.BlockActivatorRail {
 
     @Override
     public long getBreakTime() {
@@ -58,9 +53,14 @@ public class ActivatorRail extends Block implements io.gomint.world.block.BlockA
     }
 
     @Override
-    public boolean beforePlacement(Entity entity, ItemStack item, Facing face, Location location) {
-        Block down = entity.getWorld().getBlockAt(location.toBlockPosition().add(BlockPosition.DOWN));
-        return !down.isTransparent();
+    public void setDirection(Direction direction) {
+        RailDirection railDirection = RailDirection.valueOf(direction.name());
+        RAIL_DIRECTION.setState(this, railDirection);
+    }
+
+    @Override
+    public Direction getDirection() {
+        return Direction.valueOf(RAIL_DIRECTION.getState(this).name());
     }
 
 }

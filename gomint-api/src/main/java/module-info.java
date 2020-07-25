@@ -1,11 +1,11 @@
 open module gomint.api {
     requires lombok;
-    requires slf4j.api;
     requires com.google.common;
     requires it.unimi.dsi.fastutil;
     requires java.desktop;
     requires json.simple;
     requires org.yaml.snakeyaml;
+    requires org.slf4j;
 
     exports io.gomint;
     exports io.gomint.command;

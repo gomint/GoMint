@@ -15,7 +15,7 @@ import io.gomint.server.registry.RegisterInfo;
 @RegisterInfo( sId = "minecraft:daylight_detector" )
 public class DaylightDetector extends Block implements io.gomint.world.block.BlockDaylightDetector {
 
-    private final RedstoneSignalStrength signalStrength = new RedstoneSignalStrength(this, () -> new String[]{"redstone_signal"});
+    private static final RedstoneSignalStrength SIGNAL_STRENGTH = new RedstoneSignalStrength(() -> new String[]{"redstone_signal"});
 
     @Override
     public long getBreakTime() {

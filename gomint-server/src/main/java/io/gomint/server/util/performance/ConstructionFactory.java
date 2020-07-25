@@ -13,14 +13,13 @@ package io.gomint.server.util.performance;
  * <p>
  * No we don't build houses in here, just objects from classes !
  */
-public interface ConstructionFactory {
+public interface ConstructionFactory<T> {
 
     /**
      * Construct a new object with no arguments
      *
-     * @param init the objects for the construction
      * @return fresh new and shiny object
      */
-    Object newInstance( Object... init );
+    T newInstance();
 
 }

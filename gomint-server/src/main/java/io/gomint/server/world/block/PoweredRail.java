@@ -15,12 +15,7 @@ import io.gomint.world.block.data.Facing;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:golden_rail" )
-public class PoweredRail extends Block implements io.gomint.world.block.BlockPoweredRail {
-
-    @Override
-    public String getBlockId() {
-        return "minecraft:golden_rail";
-    }
+public class PoweredRail extends RailBase implements io.gomint.world.block.BlockPoweredRail {
 
     @Override
     public long getBreakTime() {
@@ -55,12 +50,6 @@ public class PoweredRail extends Block implements io.gomint.world.block.BlockPow
     @Override
     public Class<? extends ItemStack>[] getToolInterfaces() {
         return ToolPresets.PICKAXE;
-    }
-
-    @Override
-    public boolean beforePlacement(Entity entity, ItemStack item, Facing face, Location location) {
-        Block down = entity.getWorld().getBlockAt(location.toBlockPosition().add(BlockPosition.DOWN));
-        return !down.isTransparent();
     }
 
 }

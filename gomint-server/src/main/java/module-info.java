@@ -3,6 +3,8 @@ module gomint.server {
     requires java.desktop;
     requires jdk.unsupported;
     requires java.management;
+    requires java.compiler;
+    requires compiler;
 
     // Gomint modules
     requires gomint.taglib;
@@ -12,7 +14,6 @@ module gomint.server {
     requires gomint.crypto;
 
     // Logging modules
-    requires slf4j.api;
     requires org.apache.logging.log4j;
     requires org.apache.logging.log4j.core;
     requires io.sentry;
@@ -44,6 +45,7 @@ module gomint.server {
     requires spring.core;
     requires gomint.jni;
     requires org.apache.commons.text;
+    requires org.slf4j;
 
     // Export logging stuff for log4j2
     exports net.minecrell.terminalconsole to org.apache.logging.log4j, org.apache.logging.log4j.core;

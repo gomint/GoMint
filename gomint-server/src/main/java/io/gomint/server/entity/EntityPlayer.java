@@ -47,6 +47,7 @@ import io.gomint.server.plugin.EventCaller;
 import io.gomint.server.scoreboard.Scoreboard;
 import io.gomint.server.util.EnumConnectors;
 import io.gomint.server.world.ChunkAdapter;
+import io.gomint.server.world.CoordinateUtils;
 import io.gomint.server.world.WorldAdapter;
 import io.gomint.server.world.block.Block;
 import io.gomint.taglib.NBTTagCompound;
@@ -1723,7 +1724,11 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
     }
 
     public boolean knowsChunk(ChunkAdapter adapter) {
-        return this.connection.knowsChunk(adapter);
+        return this.connection.knowsChunk(adapter.longHashCode());
+    }
+
+    public boolean knowsChunk(int posX, int posZ) {
+        return this.connection.knowsChunk(CoordinateUtils.toLong(posX, posZ));
     }
 
 }

@@ -17,15 +17,15 @@ import java.lang.reflect.InvocationTargetException;
  * @author geNAZt
  * @version 1.0
  */
-public class ReflectionAccessFactory implements ConstructionFactory {
+public class ReflectionAccessFactory<T> implements ConstructionFactory<T> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger( ReflectionAccessFactory.class );
 
-    private Constructor constructor;
+    private Constructor<T> constructor;
 
-    public ReflectionAccessFactory( Class<?> clazz, Class ... arguments ) {
+    public ReflectionAccessFactory( Class<T> clazz ) {
         try {
-            this.constructor = clazz.getConstructor( arguments );
+            this.constructor = clazz.getConstructor();
             this.constructor.setAccessible( true );
         } catch ( NoSuchMethodException e ) {
             LOGGER.error( "Can't construct access factory for {}", clazz.getName(), e );
@@ -33,9 +33,9 @@ public class ReflectionAccessFactory implements ConstructionFactory {
     }
 
     @Override
-    public Object newInstance( Object ... init ) {
+    public T newInstance() {
         try {
-            return this.constructor.newInstance( init );
+            return this.constructor.newInstance();
         } catch ( InstantiationException | InvocationTargetException | IllegalAccessException e ) {
             LOGGER.error( "Can't construct new object", e );
         }

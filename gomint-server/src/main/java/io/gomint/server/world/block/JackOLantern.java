@@ -13,7 +13,7 @@ import io.gomint.world.block.data.Direction;
 @RegisterInfo( sId = "minecraft:lit_pumpkin" )
 public class JackOLantern extends Block implements io.gomint.world.block.BlockJackOLantern {
 
-    private final DirectionBlockState direction = new DirectionBlockState(this, () -> new String[]{"direction"});
+    private static final DirectionBlockState DIRECTION = new DirectionBlockState(() -> new String[]{"direction"});
 
     @Override
     public long getBreakTime() {
@@ -42,12 +42,12 @@ public class JackOLantern extends Block implements io.gomint.world.block.BlockJa
 
     @Override
     public void setDirection(Direction direction) {
-        this.direction.setState(direction);
+        DIRECTION.setState(this, direction);
     }
 
     @Override
     public Direction getDirection() {
-        return this.direction.getState();
+        return DIRECTION.getState(this);
     }
 
 }

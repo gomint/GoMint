@@ -14,6 +14,8 @@ import io.gomint.server.util.Bearing;
 import io.gomint.server.world.block.Block;
 import io.gomint.world.block.data.Direction;
 import io.gomint.world.block.data.Facing;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import java.util.function.Supplier;
 
@@ -21,44 +23,46 @@ import java.util.function.Supplier;
  * @author geNAZt
  * @version 1.0
  */
+@ToString
+@EqualsAndHashCode(callSuper = false)
 public class CrossDirectionBlockState extends BlockState<Direction, Integer> {
 
-    public CrossDirectionBlockState(Block block, Supplier<String[]> key) {
-        super(block, v -> key.get());
+    public CrossDirectionBlockState(Supplier<String[]> key) {
+        super(v -> key.get());
     }
 
     @Override
-    protected void calculateValueFromState(Direction state) {
+    protected void calculateValueFromState(Block block, Direction state) {
         switch (state) {
             case NORTH:
-                this.setValue(3);
+                this.setValue(block,3);
                 break;
             case SOUTH:
-                this.setValue(2);
+                this.setValue(block,2);
                 break;
             case WEST:
-                this.setValue(1);
+                this.setValue(block,1);
                 break;
             default:
-                this.setValue(0);
+                this.setValue(block,0);
                 break;
         }
     }
 
     @Override
-    public void detectFromPlacement(EntityPlayer player, ItemStack placedItem, Facing face, Block block, Block clickedBlock, Vector clickPosition) {
+    public void detectFromPlacement(Block newBlock, EntityPlayer player, ItemStack placedItem, Facing face, Block block, Block clickedBlock, Vector clickPosition) {
         if (player == null) {
-            this.setState(Direction.EAST);
+            this.setState(newBlock,Direction.EAST);
             return;
         }
 
         Bearing bearing = Bearing.fromAngle(player.getYaw());
-        this.setState(bearing.toDirection());
+        this.setState(newBlock,bearing.toDirection());
     }
 
     @Override
-    public Direction getState() {
-        switch (this.getValue()) {
+    public Direction getState(Block block) {
+        switch (this.getValue(block)) {
             case 0:
             default:
                 return Direction.EAST;

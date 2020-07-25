@@ -12,6 +12,8 @@ import io.gomint.math.Vector;
 import io.gomint.server.entity.EntityPlayer;
 import io.gomint.server.world.block.Block;
 import io.gomint.world.block.data.Facing;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import java.util.function.Supplier;
 
@@ -19,25 +21,27 @@ import java.util.function.Supplier;
  * @author geNAZt
  * @version 1.0
  */
+@ToString
+@EqualsAndHashCode(callSuper = false)
 public class BooleanBlockState extends BlockState<Boolean, Byte> {
 
-    public BooleanBlockState(Block block, Supplier<String[]> key) {
-        super(block, v -> key.get());
+    public BooleanBlockState(Supplier<String[]> key) {
+        super(v -> key.get());
     }
 
     @Override
-    protected void calculateValueFromState(Boolean state) {
-        this.setValue((byte) (state ? 1 : 0));
+    protected void calculateValueFromState(Block block, Boolean state) {
+        this.setValue(block, (byte) (state ? 1 : 0));
     }
 
     @Override
-    public void detectFromPlacement(EntityPlayer player, ItemStack placedItem, Facing face, Block block, Block clickedBlock, Vector clickPosition) {
-        this.setState(false);
+    public void detectFromPlacement(Block newBlock, EntityPlayer player, ItemStack placedItem, Facing face, Block block, Block clickedBlock, Vector clickPosition) {
+        this.setState(newBlock, false);
     }
 
     @Override
-    public Boolean getState() {
-        return this.getValue() == 1;
+    public Boolean getState(Block block) {
+        return this.getValue(block) == 1;
     }
 
 }

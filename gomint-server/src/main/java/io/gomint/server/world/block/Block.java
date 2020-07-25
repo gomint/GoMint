@@ -24,6 +24,7 @@ import io.gomint.server.network.packet.PacketUpdateBlock;
 import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.util.BlockIdentifier;
 import io.gomint.server.world.BlockRuntimeIDs;
+import io.gomint.server.world.ChunkSlice;
 import io.gomint.server.world.PlacementData;
 import io.gomint.server.world.UpdateReason;
 import io.gomint.server.world.WorldAdapter;
@@ -41,7 +42,9 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.function.Function;
 
 /**
@@ -54,32 +57,28 @@ public abstract class Block implements io.gomint.world.block.Block {
     private static final Logger LOGGER = LoggerFactory.getLogger(Block.class);
 
     // This is the source of truth
-    @Setter @Getter
-    protected BlockIdentifier identifier;
+    @Setter @Getter protected BlockIdentifier identifier;
 
     // CHECKSTYLE:OFF
-    @Setter
-    protected WorldAdapter world;
-    @Setter
-    @Getter
-    protected Location location;
-    @Getter
-    @Setter
-    private int layer;
-    @Setter
-    private TileEntity tileEntity;
-    @Getter
-    private byte skyLightLevel;
-    @Getter
-    private byte blockLightLevel;
+    @Setter protected WorldAdapter world;
+    @Setter @Getter protected Location location;
+    @Getter @Setter private int layer;
+    @Setter private TileEntity tileEntity;
+    @Getter private byte skyLightLevel;
+    @Getter private byte blockLightLevel;
 
-    // States
-    private List<BlockState> blockStates;
+    // Shortcuts
+    private ChunkSlice chunkSlice;
+    private short index;
+
+    // Hacky shit for mojangs state stuff
+    private String stateChangeBlockId = null;
 
     private boolean ready;
 
     // Set all needed data
-    public void setData(BlockIdentifier identifier, TileEntity tileEntity, WorldAdapter worldAdapter, Location location, int layer, byte skyLightLevel, byte blockLightLevel) {
+    public void setData(BlockIdentifier identifier, TileEntity tileEntity, WorldAdapter worldAdapter, Location location,
+                        int layer, byte skyLightLevel, byte blockLightLevel, ChunkSlice chunkSlice, short index) {
         this.identifier = identifier;
         this.tileEntity = tileEntity;
         this.world = worldAdapter;
@@ -87,25 +86,12 @@ public abstract class Block implements io.gomint.world.block.Block {
         this.skyLightLevel = skyLightLevel;
         this.blockLightLevel = blockLightLevel;
         this.layer = layer;
+        this.chunkSlice = chunkSlice;
+        this.index = index;
 
         this.ready = true;
     }
     // CHECKSTYLE:ON
-
-    /**
-     * Register a new block state wrapper
-     *
-     * @param blockState which should be registered
-     */
-    public void registerState(BlockState blockState) {
-        // Check if we have a storage
-        if (this.blockStates == null) {
-            this.blockStates = new ArrayList<>();
-        }
-
-        // Store this new block state
-        this.blockStates.add(blockState);
-    }
 
     /**
      * Check if a blockId update is scheduled for this blockId
@@ -240,28 +226,19 @@ public abstract class Block implements io.gomint.world.block.Block {
      * Update the blockId for the client
      */
     public void updateBlock() {
-        if (this.location == null) {
+        if (this.location == null || this.chunkSlice == null) {
             // No need to update
             return;
         }
 
+        // Update the chunk slice
+        this.chunkSlice.setRuntimeIdInternal(this.index, this.layer, this.identifier.getRuntimeId());
         BlockPosition pos = this.location.toBlockPosition();
-        WorldAdapter worldAdapter = (WorldAdapter) this.location.getWorld();
-        worldAdapter.setBlock(pos, this.layer, this.identifier.getRuntimeId());
-        worldAdapter.updateBlock(pos);
-        worldAdapter.flagNeedsPersistance(pos);
+        this.world.updateBlock0(this.chunkSlice.getChunk(), pos);
     }
 
+    // TODO: Implement overrides for all state blocks
     public PlacementData calculatePlacementData(EntityPlayer entity, ItemStack item, Facing face, Block block, Block clickedBlock, Vector clickVector) {
-        // Do we have some block states?
-        if (this.blockStates != null) {
-            for (BlockState blockState : this.blockStates) {
-                blockState.detectFromPlacement(entity, item, face, block, clickedBlock, clickVector);
-            }
-
-            return new PlacementData(this.identifier, null);
-        }
-
         if (item != null && item.getData() > 0) {
             LOGGER.warn("Block implementation is missing states: {}", this.getClass().getName());
         }
@@ -767,8 +744,8 @@ public abstract class Block implements io.gomint.world.block.Block {
 
     public abstract float getBlastResistance();
 
-    public void setBlockId(String blockId, String ... ignoreStateKeys) {
-        this.identifier = BlockRuntimeIDs.toBlockIdentifier(blockId, this.identifier == null ? null : this.identifier.getStates(), ignoreStateKeys);
+    public void setBlockId(String blockId) {
+        this.identifier = BlockRuntimeIDs.change(this.identifier, blockId, null, null);
         if (isPlaced()) {
             this.updateBlock();
         }
@@ -801,29 +778,8 @@ public abstract class Block implements io.gomint.world.block.Block {
     }
 
     public <S> void setState(String key, S value) {
-        this.ensureIdentifier(null);
-        this.identifier = BlockRuntimeIDs.change(this.identifier, key, value);
-    }
-
-    public void ensureIdentifier(String idHint) {
-        if (this.identifier == null) {
-            // Resolve idHint if given
-            if (idHint != null) {
-                this.identifier = BlockRuntimeIDs.toBlockIdentifier(idHint, null);
-                return;
-            }
-
-            RegisterInfo[] annotations = this.getClass().getAnnotationsByType(RegisterInfo.class);
-            if (annotations.length == 1) {
-                this.identifier = BlockRuntimeIDs.toBlockIdentifier(annotations[0].sId(), null);
-            } else {
-                for (RegisterInfo annotation : annotations) {
-                    if (annotation.def()) {
-                        this.identifier = BlockRuntimeIDs.toBlockIdentifier(annotation.sId(), null);
-                    }
-                }
-            }
-        }
+        this.identifier = BlockRuntimeIDs.change(this.identifier, this.stateChangeBlockId, key, value);
+        this.stateChangeBlockId = null;
     }
 
     public int getRuntimeId() {
@@ -832,6 +788,15 @@ public abstract class Block implements io.gomint.world.block.Block {
 
     public String getBlockId() {
         return this.identifier.getBlockId();
+    }
+
+    /**
+     * Set a block id which should be set when the next state change arrives. This is used to switch state keys
+     *
+     * @param blockId
+     */
+    protected void setBlockIdOnStateChange(String blockId) {
+        this.stateChangeBlockId = blockId;
     }
 
 }

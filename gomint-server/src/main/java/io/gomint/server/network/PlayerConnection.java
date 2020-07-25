@@ -1072,8 +1072,8 @@ public class PlayerConnection implements ConnectionWithState {
         }
     }
 
-    public boolean knowsChunk(ChunkAdapter adapter) {
-        return this.playerChunks.contains(adapter.longHashCode());
+    public boolean knowsChunk(long hash) {
+        return this.playerChunks.contains(hash);
     }
 
 }

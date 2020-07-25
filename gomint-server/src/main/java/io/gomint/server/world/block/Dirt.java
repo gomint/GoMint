@@ -16,7 +16,23 @@ import io.gomint.world.block.BlockDirt;
 @RegisterInfo( sId = "minecraft:dirt" )
 public class Dirt extends Block implements BlockDirt {
 
-    private final EnumBlockState<BlockDirt.Type, String> variant = new EnumBlockState<>(this, v -> new String[]{"dirt_type"}, BlockDirt.Type.values(), e -> e.name().toLowerCase(), v -> BlockDirt.Type.valueOf(v.toUpperCase()));
+    enum TypeMagic {
+        NORMAL("normal"),
+        COARSE("coarse");
+
+        private final String magic;
+        TypeMagic(String magic) {
+            this.magic = magic;
+        }
+    }
+
+    private static final EnumBlockState<TypeMagic, String> VARIANT = new EnumBlockState<>(v -> new String[]{"dirt_type"}, TypeMagic.values(), e -> e.magic, v -> {
+        if ("normal".equals(v)) {
+            return TypeMagic.NORMAL;
+        }
+
+        return TypeMagic.COARSE;
+    });
 
     @Override
     public String getBlockId() {
@@ -50,12 +66,12 @@ public class Dirt extends Block implements BlockDirt {
 
     @Override
     public void setDirtType(Type type) {
-        this.variant.setState(type);
+        VARIANT.setState(this, TypeMagic.valueOf(type.name()));
     }
 
     @Override
     public Type getDirtType() {
-        return this.variant.getState();
+        return Type.valueOf(VARIANT.getState(this).name());
     }
 
 }

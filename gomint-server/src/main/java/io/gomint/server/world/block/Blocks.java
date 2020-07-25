@@ -10,13 +10,12 @@ import io.gomint.server.entity.EntityPlayer;
 import io.gomint.server.entity.tileentity.TileEntity;
 import io.gomint.server.maintenance.ReportUploader;
 import io.gomint.server.registry.Generator;
-import io.gomint.server.registry.GeneratorCallback;
-import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.registry.StringRegistry;
 import io.gomint.server.util.BlockIdentifier;
 import io.gomint.server.util.ClassPath;
-import io.gomint.server.util.collection.FreezableSortedMap;
-import io.gomint.server.util.performance.ObjectConstructionFactory;
+import io.gomint.server.util.performance.LambdaConstructionFactory;
+import io.gomint.server.world.BlockRuntimeIDs;
+import io.gomint.server.world.ChunkSlice;
 import io.gomint.server.world.PlacementData;
 import io.gomint.server.world.WorldAdapter;
 import io.gomint.world.block.data.Facing;
@@ -24,7 +23,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Collection;
-import java.util.SortedMap;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -44,15 +42,12 @@ public class Blocks {
      */
     public Blocks( ClassPath classPath ) {
         this.generators = new StringRegistry<>(classPath, (clazz, id) -> {
-            ObjectConstructionFactory factory = new ObjectConstructionFactory(clazz);
-            return () -> {
-                Block block = (Block) factory.newInstance();
-                if (block == null) {
-                    LOGGER.error("Nulled block?! from {}", clazz.getName());
-                }
+            LambdaConstructionFactory<Block> factory = new LambdaConstructionFactory<>(clazz);
+            BlockIdentifier blockIdentifier = BlockRuntimeIDs.toBlockIdentifier(id, null);
 
-                // Search for default id in annotations
-                block.ensureIdentifier(id);
+            return () -> {
+                Block block = factory.newInstance();
+                block.setIdentifier(blockIdentifier);
                 return block;
             };
         });
@@ -62,7 +57,7 @@ public class Blocks {
     }
 
     public <T extends Block> T get(BlockIdentifier identifier, byte skyLightLevel, byte blockLightLevel,
-                                   TileEntity tileEntity, Location location, int layer) {
+                                   TileEntity tileEntity, Location location, int layer, ChunkSlice chunkSlice, short index) {
         Generator<Block> instance = this.generators.getGenerator( identifier.getBlockId() );
         if ( instance != null ) {
             T block = (T) instance.generate();
@@ -70,7 +65,7 @@ public class Blocks {
                 return block;
             }
 
-            block.setData( identifier, tileEntity, (WorldAdapter) location.getWorld(), location, layer, skyLightLevel, blockLightLevel );
+            block.setData( identifier, tileEntity, (WorldAdapter) location.getWorld(), location, layer, skyLightLevel, blockLightLevel, chunkSlice, index );
             return block;
         }
 

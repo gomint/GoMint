@@ -73,8 +73,7 @@ public class ChunkAdapter implements Chunk {
     protected final ByteBuf biomes = PooledByteBufAllocator.DEFAULT.directBuffer(16 * 16);
 
     // Blocks
-    @Getter
-    protected ChunkSlice[] chunkSlices = new ChunkSlice[16];
+    @Getter protected ChunkSlice[] chunkSlices = new ChunkSlice[16];
     private byte[] height = new byte[16 * 16 * 2];
 
     // Players / Chunk GC
@@ -87,11 +86,7 @@ public class ChunkAdapter implements Chunk {
     protected Long2ObjectMap<io.gomint.entity.Entity> entities = null;
 
     // State saving flag
-    @Getter
-    private boolean needsPersistence;
-    @Getter
-    @Setter
-    private boolean populated;
+    @Getter @Setter private boolean populated;
 
     // CHECKSTYLE:ON
 
@@ -267,7 +262,11 @@ public class ChunkAdapter implements Chunk {
      */
     void setLastSavedTimestamp(long timestamp) {
         this.lastSavedTimestamp = timestamp;
-        this.needsPersistence = false;
+
+        // Unflag all chunk slices
+        for (ChunkSlice chunkSlice : this.chunkSlices) {
+            chunkSlice.resetPersistenceFlag();
+        }
     }
 
     // ==================================== MANIPULATION ==================================== //
@@ -355,8 +354,6 @@ public class ChunkAdapter implements Chunk {
         int ySection = y >> 4;
         ChunkSlice slice = ensureSlice(ySection);
         slice.setBlock(x, y - (ySection << 4), z, layer, runtimeId);
-
-        this.needsPersistence = true;
     }
 
     /**
@@ -526,8 +523,8 @@ public class ChunkAdapter implements Chunk {
             packet.setHashes(hashes);
         }
 
-        packet.setData(buffer.getBuffer());
-
+        packet.setData(buffer.getBuffer().retain());
+        buffer.release();
         return packet;
     }
 
@@ -609,15 +606,11 @@ public class ChunkAdapter implements Chunk {
     public void setTileEntity(int x, int y, int z, TileEntity tileEntity) {
         ChunkSlice slice = ensureSlice(y >> 4);
         slice.addTileEntity(x, y - 16 * (y >> 4), z, tileEntity);
-
-        this.needsPersistence = true;
     }
 
     public void removeTileEntity(int x, int y, int z) {
         ChunkSlice slice = ensureSlice(y >> 4);
         slice.removeTileEntity(x, y - 16 * (y >> 4), z);
-
-        this.needsPersistence = true;
     }
 
     public long longHashCode() {
@@ -635,17 +628,9 @@ public class ChunkAdapter implements Chunk {
                 while (iterator.hasNext()) {
                     TileEntity tileEntity = iterator.next().getValue();
                     tileEntity.update(currentTimeMS);
-
-                    if (tileEntity.isNeedsPersistence()) {
-                        this.needsPersistence = true;
-                    }
                 }
             }
         }
-    }
-
-    public void flagNeedsPersistance() {
-        this.needsPersistence = true;
     }
 
     public int getRuntimeID(int x, int y, int z, int layer) {
@@ -669,6 +654,17 @@ public class ChunkAdapter implements Chunk {
                 slice.release();
             }
         }
+    }
+
+    public boolean isNeedsPersistence() {
+        // Ask all sections if they need persistence
+        for (ChunkSlice slice : this.chunkSlices) {
+            if (slice.isNeedsPersistence()) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
 }

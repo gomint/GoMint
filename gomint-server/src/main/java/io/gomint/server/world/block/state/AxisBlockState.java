@@ -13,57 +13,61 @@ import io.gomint.server.entity.EntityPlayer;
 import io.gomint.server.world.block.Block;
 import io.gomint.world.block.data.Axis;
 import io.gomint.world.block.data.Facing;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import java.util.function.Supplier;
 
+@ToString
+@EqualsAndHashCode(callSuper = false)
 public class AxisBlockState extends BlockState<Axis, String> {
 
-    public AxisBlockState(Block block, Supplier<String[]> key) {
-        super(block, v -> key.get());
+    public AxisBlockState(Supplier<String[]> key) {
+        super(v -> key.get());
     }
 
     @Override
-    protected void calculateValueFromState(Axis state) {
+    protected void calculateValueFromState(Block block, Axis state) {
         switch (state) {
             case X:
-                this.setValue("x");
+                this.setValue(block, "x");
                 break;
             case Y:
-                this.setValue("y");
+                this.setValue(block, "y");
                 break;
             case Z:
-                this.setValue("z");
+                this.setValue(block, "z");
                 break;
         }
     }
 
     @Override
-    public void detectFromPlacement(EntityPlayer player, ItemStack placedItem, Facing face, Block block, Block clickedBlock, Vector clickPosition) {
-        if ( face == null ) {
-            this.setState( Axis.Z );
+    public void detectFromPlacement(Block newBlock, EntityPlayer player, ItemStack placedItem, Facing face, Block block, Block clickedBlock, Vector clickPosition) {
+        if (face == null) {
+            this.setState(newBlock, Axis.Z);
             return;
         }
 
-        switch ( face ) {
+        switch (face) {
             case UP:
             case DOWN:
-                this.setState( Axis.Y );
+                this.setState(newBlock, Axis.Y);
                 break;
 
             case NORTH:
             case SOUTH:
-                this.setState( Axis.X );
+                this.setState(newBlock, Axis.X);
                 break;
 
             default:
-                this.setState( Axis.Z );
+                this.setState(newBlock, Axis.Z);
                 break;
         }
     }
 
     @Override
-    public Axis getState() {
-        switch (this.getValue()) {
+    public Axis getState(Block block) {
+        switch (this.getValue(block)) {
             case "x":
                 return Axis.X;
             case "z":

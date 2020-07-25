@@ -12,9 +12,13 @@ import io.gomint.math.Vector;
 import io.gomint.server.entity.EntityPlayer;
 import io.gomint.server.world.block.Block;
 import io.gomint.world.block.data.Facing;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import java.util.function.Supplier;
 
+@ToString
+@EqualsAndHashCode(callSuper = false)
 public class AttachingBlockState extends DirectValueBlockState<Integer> {
 
     private static final short SOUTH = 1;
@@ -22,16 +26,16 @@ public class AttachingBlockState extends DirectValueBlockState<Integer> {
     private static final short NORTH = 4;
     private static final short EAST = 8;
 
-    public AttachingBlockState(Block block, Supplier<String[]> key) {
-        super(block, key, 0);
+    public AttachingBlockState(Supplier<String[]> key) {
+        super(key, 0);
     }
 
     @Override
-    public void detectFromPlacement(EntityPlayer player, ItemStack placedItem, Facing face, Block block, Block clickedBlock, Vector clickPosition) {
-        super.detectFromPlacement(player, placedItem, face, block, clickedBlock, clickPosition);
+    public void detectFromPlacement(Block newBlock, EntityPlayer player, ItemStack placedItem, Facing face, Block block, Block clickedBlock, Vector clickPosition) {
+        super.detectFromPlacement(newBlock, player, placedItem, face, block, clickedBlock, clickPosition);
 
         if (face != null) {
-            this.enable(face.opposite());
+            this.enable(newBlock, face.opposite());
         }
     }
 
@@ -50,28 +54,28 @@ public class AttachingBlockState extends DirectValueBlockState<Integer> {
         }
     }
 
-    public void disable(Facing face) {
-        if (!this.enabled(face)) {
+    public void disable(Block block, Facing face) {
+        if (!this.enabled(block, face)) {
             return;
         }
 
-        int value = this.getState();
+        int value = this.getState(block);
         value -= this.mapValue(face);
-        this.setState(value);
+        this.setState(block, value);
     }
 
-    public boolean enabled(Facing face) {
-        return (this.getState() & this.mapValue(face)) != 0;
+    public boolean enabled(Block block, Facing face) {
+        return (this.getState(block) & this.mapValue(face)) != 0;
     }
 
-    public void enable(Facing face) {
-        if (this.enabled(face)) {
+    public void enable(Block block, Facing face) {
+        if (this.enabled(block, face)) {
             return;
         }
 
-        int value = this.getState();
+        int value = this.getState(block);
         value += this.mapValue(face);
-        this.setState(value);
+        this.setState(block, value);
     }
 
 }

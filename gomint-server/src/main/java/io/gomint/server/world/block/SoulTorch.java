@@ -20,7 +20,7 @@ import java.util.List;
 @RegisterInfo( sId = "minecraft:soul_torch" )
 public class SoulTorch extends Block implements io.gomint.world.block.BlockSoulTorch {
 
-    private BlockfaceBlockState facing = new BlockfaceBlockState( this, () -> new String[]{"facing_direction"} );
+    private static final BlockfaceBlockState FACING = new BlockfaceBlockState( () -> new String[]{"facing_direction"} );
 
     @Override
     public String getBlockId() {
@@ -66,7 +66,7 @@ public class SoulTorch extends Block implements io.gomint.world.block.BlockSoulT
     public List<AxisAlignedBB> getBoundingBox() {
         float size = 0.15f;
 
-        switch ( this.facing.getState() ) {
+        switch ( FACING.getState(this) ) {
             case EAST:
                 return Collections.singletonList( new AxisAlignedBB(
                     this.location.getX(),
@@ -131,7 +131,7 @@ public class SoulTorch extends Block implements io.gomint.world.block.BlockSoulT
         boolean foundSide = false;
         for (Facing toCheckFace : toCheck) {
             if (!clickedBlock.getSide(toCheckFace).isTransparent()) {
-                this.facing.setState(toCheckFace.opposite());
+                FACING.setState(this, toCheckFace.opposite());
                 foundSide = true;
                 break;
             }

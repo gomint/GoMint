@@ -22,10 +22,10 @@ import java.util.List;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:chest" )
+@RegisterInfo(sId = "minecraft:chest")
 public class Chest extends ContainerBlock implements BlockChest {
 
-    private final BlockfaceBlockState direction = new BlockfaceBlockState( this, () -> new String[]{"facing_direction"} );
+    private static final BlockfaceBlockState DIRECTION = new BlockfaceBlockState(() -> new String[]{"facing_direction"});
 
     @Override
     public String getBlockId() {
@@ -43,10 +43,10 @@ public class Chest extends ContainerBlock implements BlockChest {
     }
 
     @Override
-    public boolean interact(Entity entity, Facing face, Vector facePos, ItemStack item ) {
+    public boolean interact(Entity entity, Facing face, Vector facePos, ItemStack item) {
         ChestTileEntity tileEntity = this.getTileEntity();
-        if ( tileEntity != null ) {
-            tileEntity.interact( entity, face, facePos, item );
+        if (tileEntity != null) {
+            tileEntity.interact(entity, face, facePos, item);
         }
 
         return true;
@@ -55,7 +55,7 @@ public class Chest extends ContainerBlock implements BlockChest {
     @Override
     public Inventory getInventory() {
         ChestTileEntity tileEntity = this.getTileEntity();
-        if ( tileEntity != null ) {
+        if (tileEntity != null) {
             return tileEntity.getInventory();
         }
 
@@ -68,8 +68,8 @@ public class Chest extends ContainerBlock implements BlockChest {
     }
 
     @Override
-    TileEntity createTileEntity( NBTTagCompound compound ) {
-        return new ChestTileEntity( this );
+    TileEntity createTileEntity(NBTTagCompound compound) {
+        return new ChestTileEntity(this);
     }
 
     @Override
@@ -93,14 +93,14 @@ public class Chest extends ContainerBlock implements BlockChest {
     }
 
     @Override
-    public List<ItemStack> getDrops( ItemStack itemInHand ) {
-        List<ItemStack> items = super.getDrops( itemInHand );
+    public List<ItemStack> getDrops(ItemStack itemInHand) {
+        List<ItemStack> items = super.getDrops(itemInHand);
 
         // We also drop the inventory
         ChestTileEntity chestTileEntity = this.getTileEntity();
-        for ( ItemStack itemStack : chestTileEntity.getInventory().getContentsArray() ) {
-            if ( itemStack != null ) {
-                items.add( itemStack );
+        for (ItemStack itemStack : chestTileEntity.getInventory().getContentsArray()) {
+            if (itemStack != null) {
+                items.add(itemStack);
             }
         }
 
@@ -108,13 +108,13 @@ public class Chest extends ContainerBlock implements BlockChest {
     }
 
     @Override
-    public void setFacing( Facing facing ) {
-        this.direction.setState( facing );
+    public void setFacing(Facing facing) {
+        DIRECTION.setState(this, facing);
     }
 
     @Override
     public Facing getFacing() {
-        return this.direction.getState();
+        return DIRECTION.getState(this);
     }
 
 }

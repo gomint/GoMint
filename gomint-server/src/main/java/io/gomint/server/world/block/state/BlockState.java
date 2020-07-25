@@ -14,7 +14,6 @@ import io.gomint.server.world.block.Block;
 import io.gomint.world.block.data.Facing;
 
 import java.util.function.Function;
-import java.util.function.Supplier;
 
 /**
  * @param <T> type of the state
@@ -24,32 +23,26 @@ import java.util.function.Supplier;
 public abstract class BlockState<T, S> {
 
     private Function<S, String[]> key;
-    private final Block block;
 
-    public BlockState( Block block, Function<S, String[]> key ) {
-        // Remember to store the block
-        this.block = block;
-
+    public BlockState(Function<S, String[]> key) {
         // Store the key
         this.key = key;
-
-        // Register this to the block
-        block.registerState( this );
     }
 
-    public void setState( T state ) {
-        this.calculateValueFromState(state);
+    public void setState(Block block, T state) {
+        this.calculateValueFromState(block, state);
 
-        if ( this.block.ready() ) {
-            this.block.updateBlock();
+        if (block.ready()) {
+            block.updateBlock();
         }
     }
 
-    protected abstract void calculateValueFromState(T state);
+    protected abstract void calculateValueFromState(Block block, T state);
 
     /**
      * Detect from a player
      *
+     * @param newBlock
      * @param player        from which we generate data
      * @param placedItem    which has been used to get this block
      * @param face          which the client has clicked on
@@ -57,20 +50,20 @@ public abstract class BlockState<T, S> {
      * @param clickedBlock  which has been clicked by the client
      * @param clickPosition where the client clicked on the block
      */
-    public abstract void detectFromPlacement(EntityPlayer player, ItemStack placedItem, Facing face, Block block, Block clickedBlock, Vector clickPosition );
+    public abstract void detectFromPlacement(Block newBlock, EntityPlayer player, ItemStack placedItem, Facing face, Block block, Block clickedBlock, Vector clickPosition);
 
     /**
      * Store new value for this block state
      *
      * @param value
      */
-    protected void setValue(S value) {
-        this.block.setState(this.key.apply(value)[0], value);
+    protected void setValue(Block block, S value) {
+        block.setState(this.key.apply(value)[0], value);
     }
 
-    protected S getValue() {
+    protected S getValue(Block block) {
         for (String s : this.key.apply(null)) {
-            S v = (S) this.block.getState(s);
+            S v = (S) block.getState(s);
             if (v != null) {
                 return v;
             }
@@ -79,6 +72,6 @@ public abstract class BlockState<T, S> {
         return null;
     }
 
-    public abstract T getState();
+    public abstract T getState( Block block );
 
 }
