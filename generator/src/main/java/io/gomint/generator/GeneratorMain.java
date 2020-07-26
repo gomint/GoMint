@@ -29,7 +29,7 @@ public class GeneratorMain {
         buf.writeBytes(data);
 
         // Parse the NBT from it
-        NBTTagCompound root = NBTTagCompound.readFrom(buf, false, ByteOrder.BIG_ENDIAN);
+        NBTTagCompound root = NBTTagCompound.readFrom(buf, ByteOrder.BIG_ENDIAN);
 
         // Generate switches
         BlockStateSwitchGenerator stateSwitchGenerator = new BlockStateSwitchGenerator();

@@ -4,7 +4,6 @@ module gomint.server {
     requires jdk.unsupported;
     requires java.management;
     requires java.compiler;
-    requires compiler;
 
     // Gomint modules
     requires gomint.taglib;
