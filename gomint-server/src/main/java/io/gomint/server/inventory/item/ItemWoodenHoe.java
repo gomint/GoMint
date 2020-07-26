@@ -50,7 +50,7 @@ public class ItemWoodenHoe extends ItemReduceTierWooden implements io.gomint.inv
     }
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.WOODEN_HOE;
     }
 

@@ -33,7 +33,7 @@ public class ItemLeatherLeggings extends ItemLeatherArmor implements io.gomint.i
     }
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.LEATHER_LEGGINGS;
     }
 

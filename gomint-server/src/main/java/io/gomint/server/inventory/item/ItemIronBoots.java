@@ -33,7 +33,7 @@ public class ItemIronBoots extends ItemIronArmor implements io.gomint.inventory.
     }
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.IRON_BOOTS;
     }
 

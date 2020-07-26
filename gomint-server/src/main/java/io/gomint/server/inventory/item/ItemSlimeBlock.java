@@ -13,7 +13,7 @@ import io.gomint.taglib.NBTTagCompound;
 public class ItemSlimeBlock extends ItemStack implements io.gomint.inventory.item.ItemSlimeBlock {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.SLIME_BLOCK;
     }
 

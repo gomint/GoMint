@@ -45,7 +45,7 @@ public class ItemStoneShovel extends ItemReduceTierStone implements io.gomint.in
     }
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.STONE_SHOVEL;
     }
 

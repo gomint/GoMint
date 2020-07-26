@@ -11,7 +11,7 @@ import io.gomint.server.registry.RegisterInfo;
 public class ItemFlowerPot extends ItemStack implements io.gomint.inventory.item.ItemFlowerPot {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.FLOWER_POT;
     }
 

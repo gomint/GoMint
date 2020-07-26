@@ -18,7 +18,7 @@ import io.gomint.server.registry.RegisterInfo;
 public class ItemWarpedSlab extends ItemStack implements io.gomint.inventory.item.ItemWarpedSlab {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.WARPED_SLAB;
     }
 

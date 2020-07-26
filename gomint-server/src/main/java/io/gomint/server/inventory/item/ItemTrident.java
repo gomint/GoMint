@@ -11,7 +11,7 @@ import io.gomint.server.registry.RegisterInfo;
 public class ItemTrident extends ItemStack implements io.gomint.inventory.item.ItemTrident {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.TRIDENT;
     }
 

@@ -20,7 +20,7 @@ public class ItemArmorStand extends ItemStack implements io.gomint.inventory.ite
 
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.ARMOR_STAND;
     }
 

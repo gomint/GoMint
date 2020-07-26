@@ -13,7 +13,7 @@ import io.gomint.taglib.NBTTagCompound;
 public class ItemGoldOre extends ItemStack implements io.gomint.inventory.item.ItemGoldOre {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.GOLD_ORE;
     }
 

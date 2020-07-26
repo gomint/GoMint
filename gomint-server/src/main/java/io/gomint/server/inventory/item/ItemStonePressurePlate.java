@@ -13,7 +13,7 @@ import io.gomint.taglib.NBTTagCompound;
 public class ItemStonePressurePlate extends ItemStack implements io.gomint.inventory.item.ItemStonePressurePlate {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.STONE_PRESSURE_PLATE;
     }
 

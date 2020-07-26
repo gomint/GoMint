@@ -18,7 +18,7 @@ import io.gomint.server.registry.RegisterInfo;
 public class ItemWarpedRoots extends ItemStack implements io.gomint.inventory.item.ItemWarpedRoots {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.WARPED_ROOTS;
     }
 

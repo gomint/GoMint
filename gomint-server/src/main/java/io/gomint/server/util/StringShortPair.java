@@ -9,6 +9,7 @@ package io.gomint.server.util;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.ToString;
 
 /**
  * @author geNAZt
@@ -16,6 +17,7 @@ import lombok.Getter;
  */
 @AllArgsConstructor
 @Getter
+@ToString
 public class StringShortPair {
 
     private final String blockId;

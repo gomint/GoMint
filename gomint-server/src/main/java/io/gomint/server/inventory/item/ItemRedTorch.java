@@ -11,7 +11,7 @@ import io.gomint.server.registry.RegisterInfo;
 public class ItemRedTorch extends ItemStack implements io.gomint.inventory.item.ItemRedTorch {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.RED_TORCH;
     }
 }

@@ -13,7 +13,7 @@ import io.gomint.taglib.NBTTagCompound;
 public class ItemSugarCane extends ItemStack implements io.gomint.inventory.item.ItemSugarCane {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.SUGAR_CANE;
     }
 

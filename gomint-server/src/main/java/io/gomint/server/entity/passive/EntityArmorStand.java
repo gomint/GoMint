@@ -2,7 +2,6 @@ package io.gomint.server.entity.passive;
 
 import io.gomint.entity.EntityPlayer;
 import io.gomint.event.entity.EntityDamageEvent;
-import io.gomint.inventory.item.ItemLeatherBoots;
 import io.gomint.inventory.item.ItemType;
 import io.gomint.math.Vector;
 import io.gomint.server.entity.Attribute;
@@ -10,7 +9,6 @@ import io.gomint.server.entity.EntityCreature;
 import io.gomint.server.entity.EntityType;
 import io.gomint.server.inventory.ArmorInventory;
 import io.gomint.inventory.item.ItemStack;
-import io.gomint.server.inventory.item.ItemArmor;
 import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.world.WorldAdapter;
 
@@ -57,7 +55,7 @@ public class EntityArmorStand extends EntityCreature implements io.gomint.entity
         ItemStack[] inventoryContent = this.armorInventory.getContents();
 
         for ( ItemStack itemStack : inventoryContent ) {
-            if ( itemStack.getType() != ItemType.AIR ) {
+            if ( itemStack.getItemType() != ItemType.AIR ) {
                 this.getWorld().dropItem(this.getLocation(), itemStack);
             }
         }

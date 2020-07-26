@@ -34,7 +34,7 @@ public class ItemChainChestplate extends ItemChainArmor implements io.gomint.inv
     }
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.CHAIN_CHESTPLATE;
     }
 

@@ -18,7 +18,7 @@ import io.gomint.server.registry.RegisterInfo;
 public class ItemJunglePressurePlate extends ItemStack implements io.gomint.inventory.item.ItemJunglePressurePlate {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.JUNGLE_PRESSURE_PLATE;
     }
 

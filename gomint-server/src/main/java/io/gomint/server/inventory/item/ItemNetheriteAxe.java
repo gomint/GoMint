@@ -29,7 +29,7 @@ public class ItemNetheriteAxe extends ItemReduceTierNetherite implements io.gomi
     }
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.NETHERITE_AXE;
     }
 }

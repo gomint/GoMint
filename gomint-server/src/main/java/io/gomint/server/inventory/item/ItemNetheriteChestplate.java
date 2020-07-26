@@ -33,7 +33,7 @@ public class ItemNetheriteChestplate extends ItemNetheriteArmor implements io.go
     }
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.NETHERITE_CHESTPLATE;
     }
 }

@@ -13,7 +13,7 @@ import io.gomint.taglib.NBTTagCompound;
 public class ItemDoubleRedSandstoneSlab extends ItemStack implements io.gomint.inventory.item.ItemDoubleRedSandstoneSlab {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.DOUBLE_RED_SANDSTONE_SLAB;
     }
 

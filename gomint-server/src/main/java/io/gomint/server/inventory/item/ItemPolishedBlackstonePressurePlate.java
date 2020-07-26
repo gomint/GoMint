@@ -18,7 +18,7 @@ import io.gomint.server.registry.RegisterInfo;
 public class ItemPolishedBlackstonePressurePlate extends ItemStack implements io.gomint.inventory.item.ItemPolishedBlackstonePressurePlate {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.POLISHED_BLACKSTONE_PRESSURE_PLATE;
     }
 

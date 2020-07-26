@@ -18,7 +18,7 @@ public class ItemInvertedDaylightSensor extends ItemStack implements io.gomint.i
     }
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.INVERTED_DAYLIGHT_SENSOR;
     }
 

@@ -13,7 +13,7 @@ import io.gomint.taglib.NBTTagCompound;
 public class ItemTripwire extends ItemStack implements io.gomint.inventory.item.ItemTripwire {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.TRIPWIRE;
     }
 

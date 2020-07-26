@@ -16,7 +16,7 @@ public class ItemLog2 extends ItemStack implements io.gomint.inventory.item.Item
     }
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.LOG2;
     }
 

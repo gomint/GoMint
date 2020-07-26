@@ -141,7 +141,7 @@ public class FurnaceTileEntity extends ContainerTileEntity implements InventoryH
             if ( this.cookTime >= 200 ) {
                 // We did it
                 ItemStack itemStack = (ItemStack) this.inventory.getItem( 2 );
-                if ( itemStack.getType() != this.output.getType() ) {
+                if ( itemStack.getItemType() != this.output.getItemType() ) {
                     this.inventory.setItem( 2, this.output );
                 } else {
                     itemStack.setAmount( itemStack.getAmount() + this.output.getAmount() );
@@ -234,13 +234,13 @@ public class FurnaceTileEntity extends ContainerTileEntity implements InventoryH
 
         // Do we have enough input?
         ItemStack input = (ItemStack) this.inventory.getItem( 0 );
-        if ( input.getType() == ItemType.AIR || input.getAmount() == 0 ) {
+        if ( input.getItemType() == ItemType.AIR || input.getAmount() == 0 ) {
             return false;
         }
 
         // Do we have enough space in the output slot for this
         io.gomint.inventory.item.ItemStack itemStack = this.inventory.getItem( 2 );
-        if ( itemStack.getType() == this.output.getType() ) {
+        if ( itemStack.getItemType() == this.output.getItemType() ) {
             return itemStack.getAmount() + this.output.getAmount() <= itemStack.getMaximumAmount();
         }
 

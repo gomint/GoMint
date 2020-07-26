@@ -13,7 +13,7 @@ import io.gomint.taglib.NBTTagCompound;
 public class ItemCobblestoneWall extends ItemStack implements io.gomint.inventory.item.ItemCobblestoneWall {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.COBBLESTONE_WALL;
     }
 

@@ -13,7 +13,7 @@ import io.gomint.taglib.NBTTagCompound;
 public class ItemSeeds extends ItemStack implements io.gomint.inventory.item.ItemSeeds {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.SEEDS;
     }
 }

@@ -18,7 +18,7 @@ import io.gomint.taglib.NBTTagCompound;
 public class ItemChainCommandBlock extends ItemStack implements io.gomint.inventory.item.ItemChainCommandBlock {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.CHAIN_COMMAND_BLOCK;
     }
 

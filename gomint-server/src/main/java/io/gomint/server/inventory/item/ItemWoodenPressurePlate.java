@@ -18,7 +18,7 @@ public class ItemWoodenPressurePlate extends ItemStack implements io.gomint.inve
     }
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.WOODEN_PRESSURE_PLATE;
     }
 

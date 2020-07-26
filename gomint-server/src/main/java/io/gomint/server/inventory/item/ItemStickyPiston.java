@@ -13,7 +13,7 @@ import io.gomint.taglib.NBTTagCompound;
 public class ItemStickyPiston extends ItemStack implements io.gomint.inventory.item.ItemStickyPiston {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.STICKY_PISTON;
     }
 

@@ -17,7 +17,7 @@ import io.gomint.server.registry.RegisterInfo;
 public class ItemNetherWart extends ItemStack implements io.gomint.inventory.item.ItemNetherWart {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.NETHER_WART;
     }
 

@@ -18,7 +18,7 @@ import io.gomint.server.registry.RegisterInfo;
 public class ItemAcaciaPressurePlate extends ItemStack implements io.gomint.inventory.item.ItemAcaciaPressurePlate {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.ACACIA_PRESSURE_PLATE;
     }
 

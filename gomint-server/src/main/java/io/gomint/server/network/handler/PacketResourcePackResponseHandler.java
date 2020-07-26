@@ -5,8 +5,13 @@ import io.gomint.server.network.PlayerConnection;
 import io.gomint.server.network.PlayerConnectionState;
 import io.gomint.server.network.packet.PacketResourcePackResponse;
 import io.gomint.server.network.packet.PacketResourcePackStack;
+import io.gomint.server.resource.PackIdVersion;
+import io.gomint.server.resource.ResourcePack;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.UUID;
 
 /**
  * @author geNAZt
@@ -14,39 +19,47 @@ import org.slf4j.LoggerFactory;
  */
 public class PacketResourcePackResponseHandler implements PacketHandler<PacketResourcePackResponse> {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger( PacketResourcePackResponseHandler.class );
+    private static final Logger LOGGER = LoggerFactory.getLogger(PacketResourcePackResponseHandler.class);
 
     @Override
-    public void handle( PacketResourcePackResponse packet, long currentTimeMillis, PlayerConnection connection ) {
+    public void handle(PacketResourcePackResponse packet, long currentTimeMillis, PlayerConnection connection) {
         // TODO: Implement resource pack sending
-        switch ( packet.getStatus() ) {
+        switch (packet.getStatus()) {
             case HAVE_ALL_PACKS:
-                LOGGER.debug( "Login state: HAVE_ALL_PACKS reached" );
+                LOGGER.debug("Login state: HAVE_ALL_PACKS reached");
 
                 PacketResourcePackStack packetResourcePackStack = new PacketResourcePackStack();
-                connection.send( packetResourcePackStack );
+
+                packetResourcePackStack.setResourcePackEntries(new ArrayList<>() {{
+                    add(new ResourcePack(
+                        new PackIdVersion(UUID.fromString("0fba4063-dba1-4281-9b89-ff9390653530"), "1.0.0"),
+                        0
+                    ));
+                }});
+
+                connection.send(packetResourcePackStack);
                 break;
 
             case COMPLETED:
-                LOGGER.debug( "Login state: COMPLETED reached" );
+                LOGGER.debug("Login state: COMPLETED reached");
 
                 // Proceed with login
-                this.switchToLogin( connection, currentTimeMillis );
+                this.switchToLogin(connection, currentTimeMillis);
 
                 break;
         }
     }
 
-    private void switchToLogin( PlayerConnection connection, long currentTimeMillis ) {
+    private void switchToLogin(PlayerConnection connection, long currentTimeMillis) {
         // Proceed with login
-        connection.setState( PlayerConnectionState.LOGIN );
-        LOGGER.info( "Logging in as " + connection.getEntity().getName() + " with id " + connection.getEntity().getEntityId() );
+        connection.setState(PlayerConnectionState.LOGIN);
+        LOGGER.info("Logging in as " + connection.getEntity().getName() + " with id " + connection.getEntity().getEntityId());
 
-        connection.getEntity().getLoginPerformance().setResourceEnd( currentTimeMillis );
+        connection.getEntity().getLoginPerformance().setResourceEnd(currentTimeMillis);
 
-        PlayerPreJoinEvent playerPreJoinEvent = new PlayerPreJoinEvent( connection.getEntity() );
-        connection.getServer().getPluginManager().callEvent( playerPreJoinEvent );
-        if ( !playerPreJoinEvent.isCancelled() ) {
+        PlayerPreJoinEvent playerPreJoinEvent = new PlayerPreJoinEvent(connection.getEntity());
+        connection.getServer().getPluginManager().callEvent(playerPreJoinEvent);
+        if (!playerPreJoinEvent.isCancelled()) {
             connection.getEntity().prepareEntity();
         }
     }

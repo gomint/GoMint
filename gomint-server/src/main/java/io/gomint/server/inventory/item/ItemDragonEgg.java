@@ -13,7 +13,7 @@ import io.gomint.taglib.NBTTagCompound;
 public class ItemDragonEgg extends ItemStack implements io.gomint.inventory.item.ItemDragonEgg {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.DRAGON_EGG;
     }
 

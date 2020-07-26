@@ -12,7 +12,7 @@ import io.gomint.taglib.NBTTagCompound;
 public class ItemBirchDoorBlock extends ItemStack {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.BIRCH_DOOR_BLOCK;
     }
 

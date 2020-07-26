@@ -18,7 +18,7 @@ import io.gomint.server.registry.RegisterInfo;
 public class ItemCrimsonFenceGate extends ItemStack implements io.gomint.inventory.item.ItemCrimsonFenceGate {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.CRIMSON_FENCE_GATE;
     }
 

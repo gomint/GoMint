@@ -24,7 +24,7 @@ public class ItemMelon extends ItemFood implements io.gomint.inventory.item.Item
     }
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.MELON;
     }
 

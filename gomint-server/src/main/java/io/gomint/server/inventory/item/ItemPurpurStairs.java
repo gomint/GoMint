@@ -12,7 +12,7 @@ import io.gomint.taglib.NBTTagCompound;
 public class ItemPurpurStairs extends ItemStack implements io.gomint.inventory.item.ItemPurpurStairs {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.PURPUR_STAIRS;
     }
 

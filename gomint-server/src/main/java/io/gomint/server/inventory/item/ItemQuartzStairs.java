@@ -13,7 +13,7 @@ import io.gomint.taglib.NBTTagCompound;
 public class ItemQuartzStairs extends ItemStack implements io.gomint.inventory.item.ItemQuartzStairs {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.QUARTZ_STAIRS;
     }
 

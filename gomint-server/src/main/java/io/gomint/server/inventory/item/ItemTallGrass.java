@@ -13,7 +13,7 @@ import io.gomint.taglib.NBTTagCompound;
 public class ItemTallGrass extends ItemStack implements io.gomint.inventory.item.ItemTallGrass {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.TALL_GRASS;
     }
 

@@ -18,7 +18,7 @@ public class ItemWoodenDoubleSlab extends ItemStack implements io.gomint.invento
     }
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.WOODEN_DOUBLE_SLAB;
     }
 

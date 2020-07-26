@@ -16,7 +16,7 @@ public class ItemOakWoodDoor extends ItemStack implements io.gomint.inventory.it
     }
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.WOODEN_DOOR;
     }
 

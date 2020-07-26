@@ -18,7 +18,7 @@ import io.gomint.taglib.NBTTagCompound;
 public class ItemMagma extends ItemStack implements io.gomint.inventory.item.ItemMagmaCream {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.MAGMA;
     }
 

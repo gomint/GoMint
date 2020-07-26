@@ -18,7 +18,7 @@ import io.gomint.taglib.NBTTagCompound;
 public class ItemRepeatingCommandBlock extends ItemStack implements io.gomint.inventory.item.ItemRepeatingCommandBlock {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.REPEATING_COMMAND_BLOCK;
     }
 

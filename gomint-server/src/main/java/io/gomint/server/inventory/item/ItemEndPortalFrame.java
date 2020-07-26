@@ -13,7 +13,7 @@ import io.gomint.taglib.NBTTagCompound;
 public class ItemEndPortalFrame extends ItemStack implements io.gomint.inventory.item.ItemEndPortalFrame {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.END_PORTAL_FRAME;
     }
 

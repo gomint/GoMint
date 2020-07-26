@@ -18,7 +18,7 @@ import io.gomint.taglib.NBTTagCompound;
 public class ItemNetherWartBlock extends ItemStack implements io.gomint.inventory.item.ItemNetherWartBlock {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.NETHER_WART_BLOCK;
     }
 

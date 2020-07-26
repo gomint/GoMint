@@ -18,7 +18,7 @@ import io.gomint.server.registry.RegisterInfo;
 public class ItemStrippedCrimsonStem extends ItemStack implements io.gomint.inventory.item.ItemStrippedCrimsonStem {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.STRIPPED_CRIMSON_STEM;
     }
 

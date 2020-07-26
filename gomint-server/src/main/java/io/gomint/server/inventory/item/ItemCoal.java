@@ -11,7 +11,7 @@ import io.gomint.server.registry.RegisterInfo;
 public class ItemCoal extends ItemStack implements io.gomint.inventory.item.ItemCoal{
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.COAL;
     }
 

@@ -33,7 +33,7 @@ public class ItemNetheriteLeggings extends ItemNetheriteArmor implements io.gomi
     }
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.NETHERITE_LEGGINGS;
     }
 }

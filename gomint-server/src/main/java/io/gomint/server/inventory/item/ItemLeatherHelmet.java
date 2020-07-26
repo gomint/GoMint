@@ -33,7 +33,7 @@ public class ItemLeatherHelmet extends ItemLeatherArmor implements io.gomint.inv
     }
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.LEATHER_HELMET;
     }
 

@@ -18,7 +18,7 @@ public class ItemStandingBanner extends ItemStack implements ItemBanner {
     }
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.STANDING_BANNER;
     }
 

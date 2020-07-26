@@ -18,7 +18,7 @@ import io.gomint.server.registry.RegisterInfo;
 public class ItemCrimsonSlab extends ItemStack implements io.gomint.inventory.item.ItemCrimsonSlab {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.CRIMSON_SLAB;
     }
 

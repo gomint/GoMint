@@ -9,7 +9,7 @@ public class ItemHeartOfTheSea extends ItemStack implements io.gomint.inventory.
 
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.HEART_OF_THE_SEA;
     }
 }

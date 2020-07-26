@@ -11,7 +11,7 @@ import io.gomint.server.registry.RegisterInfo;
 public class ItemIronDoor extends ItemStack implements io.gomint.inventory.item.ItemIronDoor {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.IRON_DOOR;
     }
 

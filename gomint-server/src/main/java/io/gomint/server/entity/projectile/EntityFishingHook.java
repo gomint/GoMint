@@ -93,7 +93,7 @@ public class EntityFishingHook extends EntityProjectile implements io.gomint.ent
     public void update( long currentTimeMS, float dT ) {
         super.update( currentTimeMS, dT );
 
-        if ( this.shooter.isDead() || ((EntityPlayer) this.shooter).getInventory().getItemInHand().getType() != ItemType.FISHING_ROD ) {
+        if ( this.shooter.isDead() || ((EntityPlayer) this.shooter).getInventory().getItemInHand().getItemType() != ItemType.FISHING_ROD ) {
             this.despawn();
         }
 

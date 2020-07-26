@@ -11,7 +11,7 @@ import io.gomint.server.registry.RegisterInfo;
 public class ItemTurtleEgg extends ItemStack implements io.gomint.inventory.item.ItemTurtleEgg {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.TURTLE_EGG;
     }
 

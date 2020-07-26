@@ -18,7 +18,7 @@ import io.gomint.server.registry.RegisterInfo;
 public class ItemNetherGoldOre extends ItemStack implements io.gomint.inventory.item.ItemNetherGoldOre {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.NETHER_GOLD_ORE;
     }
 

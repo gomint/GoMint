@@ -33,7 +33,7 @@ public class ItemDiamondHelmet extends ItemDiamondArmor implements io.gomint.inv
     }
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.DIAMOND_HELMET;
     }
 

@@ -13,7 +13,7 @@ import io.gomint.taglib.NBTTagCompound;
 public class ItemCauldronBlock extends ItemStack {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.CAULDRON_BLOCK;
     }
 

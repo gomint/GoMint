@@ -190,7 +190,7 @@ public class ShapedRecipe extends CraftingRecipe {
             boolean freeX = true;
             for (int i2 = 0; i2 < x; i2++) {
                 ItemStack itemStack = inputInventory.getItem((i * z) + i2);
-                if (itemStack.getType() != ItemType.AIR) {
+                if (itemStack.getItemType() != ItemType.AIR) {
                     freeX = false;
                     break;
                 }
@@ -207,7 +207,7 @@ public class ShapedRecipe extends CraftingRecipe {
             boolean freeZ = true;
             for (int i2 = 0; i2 < z; i2++) {
                 ItemStack itemStack = inputInventory.getItem((i2 * z) + i);
-                if (itemStack.getType() != ItemType.AIR) {
+                if (itemStack.getItemType() != ItemType.AIR) {
                     freeZ = false;
                     break;
                 }
@@ -238,7 +238,7 @@ public class ShapedRecipe extends CraftingRecipe {
                 }
 
                 // Ignore AIR
-                if (invItem.getType() == ItemType.AIR) {
+                if (invItem.getItemType() == ItemType.AIR) {
                     continue;
                 }
 

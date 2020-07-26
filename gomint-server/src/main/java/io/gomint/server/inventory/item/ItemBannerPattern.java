@@ -10,7 +10,7 @@ import io.gomint.server.registry.RegisterInfo;
 public class ItemBannerPattern extends ItemStack implements io.gomint.inventory.item.ItemBannerPattern {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.BANNER_PATTERN;
     }
 

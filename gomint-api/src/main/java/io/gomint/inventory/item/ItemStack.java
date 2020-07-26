@@ -15,7 +15,7 @@ public interface ItemStack {
      *
      * @return type of the item
      */
-    ItemType getType();
+    ItemType getItemType();
 
     /**
      * Get the amount of items in this stack

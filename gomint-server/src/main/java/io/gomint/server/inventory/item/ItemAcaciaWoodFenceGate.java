@@ -13,7 +13,7 @@ public class ItemAcaciaWoodFenceGate extends ItemStack implements io.gomint.inve
 
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.ACACIA_FENCE_GATE;
     }
 

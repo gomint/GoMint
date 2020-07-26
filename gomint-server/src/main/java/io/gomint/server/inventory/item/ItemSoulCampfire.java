@@ -18,7 +18,7 @@ import io.gomint.server.registry.RegisterInfo;
 public class ItemSoulCampfire extends ItemStack implements io.gomint.inventory.item.ItemSoulCampfire {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.SOUL_CAMPFIRE;
     }
 

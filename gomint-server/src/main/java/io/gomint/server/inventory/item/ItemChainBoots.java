@@ -33,7 +33,7 @@ public class ItemChainBoots extends ItemChainArmor implements io.gomint.inventor
     }
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.CHAIN_BOOTS;
     }
 

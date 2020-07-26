@@ -13,7 +13,7 @@ import io.gomint.taglib.NBTTagCompound;
 public class ItemCarpet extends ItemStack implements io.gomint.inventory.item.ItemCarpet {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.CARPET;
     }
 

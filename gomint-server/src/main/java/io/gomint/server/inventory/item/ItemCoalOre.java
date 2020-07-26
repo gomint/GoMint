@@ -13,7 +13,7 @@ import io.gomint.taglib.NBTTagCompound;
 public class ItemCoalOre extends ItemStack implements io.gomint.inventory.item.ItemCoalOre {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.COAL_ORE;
     }
 

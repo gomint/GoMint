@@ -12,7 +12,7 @@ import io.gomint.taglib.NBTTagCompound;
 public class ItemRedstoneWire extends ItemStack {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.REDSTONE_WIRE;
     }
 

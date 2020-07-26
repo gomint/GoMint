@@ -13,7 +13,7 @@ public class ItemRedstoneComparator extends ItemStack implements io.gomint.inven
 
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.COMPARATOR;
     }
 

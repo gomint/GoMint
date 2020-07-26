@@ -13,7 +13,7 @@ import io.gomint.taglib.NBTTagCompound;
 public class ItemFlowingLava extends ItemStack implements io.gomint.inventory.item.ItemFlowingLava {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.FLOWING_LAVA;
     }
 

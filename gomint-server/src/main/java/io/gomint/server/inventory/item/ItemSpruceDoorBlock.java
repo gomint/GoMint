@@ -13,7 +13,7 @@ import io.gomint.taglib.NBTTagCompound;
 public class ItemSpruceDoorBlock extends ItemStack {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.SPRUCE_DOOR_BLOCK;
     }
 

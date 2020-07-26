@@ -19,7 +19,7 @@ public class ItemSpawnEgg extends ItemStack implements io.gomint.inventory.item.
     }
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.SPAWN_EGG;
     }
 

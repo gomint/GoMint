@@ -13,7 +13,7 @@ import io.gomint.taglib.NBTTagCompound;
 public class ItemNetherrack extends ItemStack implements io.gomint.inventory.item.ItemNetherrack {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.NETHERRACK;
     }
 

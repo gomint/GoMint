@@ -13,7 +13,7 @@ import io.gomint.taglib.NBTTagCompound;
 public class ItemItemFrameBlock extends ItemStack {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.ITEM_FRAME_BLOCK;
     }
 

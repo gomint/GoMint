@@ -37,7 +37,7 @@ public class ItemGoldenApple extends ItemFood implements io.gomint.inventory.ite
     }
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.GOLDEN_APPLE;
     }
 

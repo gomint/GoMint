@@ -34,7 +34,7 @@ public class ItemChainHelmet extends ItemChainArmor implements io.gomint.invento
     }
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.CHAIN_HELMET;
     }
 

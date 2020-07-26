@@ -33,7 +33,7 @@ public class ItemNetheriteHelmet extends ItemNetheriteArmor implements io.gomint
     }
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.NETHERITE_HELMET;
     }
 }

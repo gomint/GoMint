@@ -29,7 +29,7 @@ public class ItemStonePickaxe extends ItemReduceTierStone implements io.gomint.i
     }
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.STONE_PICKAXE;
     }
 

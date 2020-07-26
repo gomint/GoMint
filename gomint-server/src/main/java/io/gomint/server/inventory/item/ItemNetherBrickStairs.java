@@ -17,7 +17,7 @@ public class ItemNetherBrickStairs extends ItemStack implements io.gomint.invent
     }
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.NETHER_BRICK_STAIRS;
     }
 

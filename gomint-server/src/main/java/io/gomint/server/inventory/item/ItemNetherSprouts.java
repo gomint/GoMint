@@ -18,7 +18,7 @@ import io.gomint.server.registry.RegisterInfo;
 public class ItemNetherSprouts extends ItemStack implements io.gomint.inventory.item.ItemNetherSprouts {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.NETHER_SPROUTS;
     }
 

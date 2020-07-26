@@ -46,7 +46,7 @@ public class ItemNetheriteHoe extends ItemReduceTierNetherite implements io.gomi
     }
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.NETHERITE_HOE;
     }
 }

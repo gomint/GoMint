@@ -13,7 +13,7 @@ import io.gomint.taglib.NBTTagCompound;
 public class ItemHayBale extends ItemStack implements io.gomint.inventory.item.ItemHayBale {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.HAY_BALE;
     }
 

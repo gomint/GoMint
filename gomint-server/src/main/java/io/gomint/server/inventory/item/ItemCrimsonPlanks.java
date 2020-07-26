@@ -18,7 +18,7 @@ import io.gomint.server.registry.RegisterInfo;
 public class ItemCrimsonPlanks extends ItemStack implements io.gomint.inventory.item.ItemCrimsonPlanks {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.CRIMSON_PLANKS;
     }
 

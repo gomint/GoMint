@@ -18,7 +18,7 @@ import io.gomint.server.registry.RegisterInfo;
 public class ItemSoulTorch extends ItemStack implements io.gomint.inventory.item.ItemSoulTorch {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.SOUL_TORCH;
     }
 

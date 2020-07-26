@@ -11,7 +11,7 @@ import io.gomint.server.registry.RegisterInfo;
 public class ItemCoral extends ItemStack implements io.gomint.inventory.item.ItemCoral {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.CORAL;
     }
 }

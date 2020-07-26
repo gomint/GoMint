@@ -14,7 +14,7 @@ public class ItemDye extends ItemStack implements io.gomint.inventory.item.ItemD
 
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.DYE;
     }
 

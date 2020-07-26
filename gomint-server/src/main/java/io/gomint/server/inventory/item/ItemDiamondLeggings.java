@@ -33,7 +33,7 @@ public class ItemDiamondLeggings extends ItemDiamondArmor implements io.gomint.i
     }
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.DIAMOND_LEGGINGS;
     }
 

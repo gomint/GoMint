@@ -18,7 +18,7 @@ import io.gomint.server.registry.RegisterInfo;
 public class ItemSprucePressurePlate extends ItemStack implements io.gomint.inventory.item.ItemSprucePressurePlate {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.SPRUCE_PRESSURE_PLATE;
     }
 

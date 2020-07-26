@@ -37,11 +37,11 @@ public class EnchantmentAquaAffinity extends Enchantment implements io.gomint.en
 
     @Override
     public boolean canBeApplied( ItemStack itemStack ) {
-        return itemStack.getType() == ItemType.CHAIN_HELMET ||
-            itemStack.getType() == ItemType.DIAMOND_HELMET ||
-            itemStack.getType() == ItemType.GOLDEN_HELMET ||
-            itemStack.getType() == ItemType.IRON_HELMET ||
-            itemStack.getType() == ItemType.LEATHER_HELMET;
+        return itemStack.getItemType() == ItemType.CHAIN_HELMET ||
+            itemStack.getItemType() == ItemType.DIAMOND_HELMET ||
+            itemStack.getItemType() == ItemType.GOLDEN_HELMET ||
+            itemStack.getItemType() == ItemType.IRON_HELMET ||
+            itemStack.getItemType() == ItemType.LEATHER_HELMET;
     }
 
 }

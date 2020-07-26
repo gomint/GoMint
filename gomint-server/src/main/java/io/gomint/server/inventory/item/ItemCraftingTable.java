@@ -18,7 +18,7 @@ public class ItemCraftingTable extends ItemStack implements io.gomint.inventory.
     }
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.CRAFTING_TABLE;
     }
 

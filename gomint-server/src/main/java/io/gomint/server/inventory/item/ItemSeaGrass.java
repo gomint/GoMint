@@ -11,7 +11,7 @@ import io.gomint.server.registry.RegisterInfo;
 public class ItemSeaGrass extends ItemStack implements io.gomint.inventory.item.ItemSeaGrass {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.SEA_GRASS;
     }
 

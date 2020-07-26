@@ -13,7 +13,7 @@ import io.gomint.taglib.NBTTagCompound;
 public class ItemOakWoodStairs extends ItemStack implements io.gomint.inventory.item.ItemOakWoodStairs {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.OAK_WOOD_STAIRS;
     }
 

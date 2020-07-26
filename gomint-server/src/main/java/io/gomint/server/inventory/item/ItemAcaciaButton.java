@@ -23,7 +23,7 @@ public class ItemAcaciaButton extends ItemStack implements io.gomint.inventory.i
     }
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.ACACIA_BUTTON;
     }
 

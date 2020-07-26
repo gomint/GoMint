@@ -18,7 +18,7 @@ import io.gomint.server.registry.RegisterInfo;
 public class ItemShroomlight extends ItemStack implements io.gomint.inventory.item.ItemShroomlight {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.SHROOMLIGHT;
     }
 

@@ -18,7 +18,7 @@ import io.gomint.taglib.NBTTagCompound;
 public class ItemFrostedIce extends ItemStack implements io.gomint.inventory.item.ItemFrostedIce {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.FROSTED_ICE;
     }
 

@@ -12,7 +12,7 @@ import io.gomint.taglib.NBTTagCompound;
 public class ItemJackOLantern extends ItemStack implements io.gomint.inventory.item.ItemJackOLantern {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.JACK_O_LANTERN;
     }
 

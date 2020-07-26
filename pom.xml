@@ -34,6 +34,7 @@
     <module>gomint-safeexec</module>
     <module>benchmark</module>
     <module>generator</module>
+      <module>check</module>
   </modules>
 
   <properties>

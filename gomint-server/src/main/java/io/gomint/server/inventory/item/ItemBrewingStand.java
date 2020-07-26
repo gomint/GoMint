@@ -11,7 +11,7 @@ import io.gomint.server.registry.RegisterInfo;
 public class ItemBrewingStand extends ItemStack implements io.gomint.inventory.item.ItemBrewingStand {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.BREWING_STAND;
     }
 

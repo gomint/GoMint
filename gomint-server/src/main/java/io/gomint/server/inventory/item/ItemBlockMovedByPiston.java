@@ -13,7 +13,7 @@ import io.gomint.taglib.NBTTagCompound;
 public class ItemBlockMovedByPiston extends ItemStack {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.BLOCK_MOVED_BY_PISTON;
     }
 

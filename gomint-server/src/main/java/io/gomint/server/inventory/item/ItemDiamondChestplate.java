@@ -33,7 +33,7 @@ public class ItemDiamondChestplate extends ItemDiamondArmor implements io.gomint
     }
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.DIAMOND_CHESTPLATE;
     }
 

@@ -16,7 +16,7 @@ public class ItemStrippedJungleLog extends ItemStack implements io.gomint.invent
     }
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.STRIPPED_JUNGLE_LOG;
     }
 

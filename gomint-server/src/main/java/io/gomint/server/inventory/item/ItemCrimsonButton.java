@@ -18,7 +18,7 @@ import io.gomint.server.registry.RegisterInfo;
 public class ItemCrimsonButton extends ItemStack implements io.gomint.inventory.item.ItemCrimsonButton {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.CRIMSON_BUTTON;
     }
 

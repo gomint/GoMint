@@ -11,7 +11,7 @@ import io.gomint.server.registry.RegisterInfo;
 public class ItemAcaciaLeaves extends ItemStack implements io.gomint.inventory.item.ItemAcaciaLeaves {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.ACACIA_LEAVES;
     }
 

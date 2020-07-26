@@ -13,7 +13,7 @@ import io.gomint.taglib.NBTTagCompound;
 public class ItemActivatorRail extends ItemStack implements io.gomint.inventory.item.ItemActivatorRail {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.ACTIVATOR_RAIL;
     }
 

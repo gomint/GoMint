@@ -45,7 +45,7 @@ public class ItemGoldenShovel extends ItemReduceTierGolden implements io.gomint.
     }
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.GOLDEN_SHOVEL;
     }
 

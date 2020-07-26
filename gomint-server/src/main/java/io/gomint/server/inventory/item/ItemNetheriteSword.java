@@ -30,7 +30,7 @@ public class ItemNetheriteSword extends ItemReduceTierNetherite implements io.go
     }
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.NETHERITE_SWORD;
     }
 

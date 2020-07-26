@@ -13,7 +13,7 @@ import io.gomint.taglib.NBTTagCompound;
 public class ItemDispenser extends ItemStack implements io.gomint.inventory.item.ItemDispenser {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.DISPENSER;
     }
 

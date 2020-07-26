@@ -13,7 +13,7 @@ import io.gomint.taglib.NBTTagCompound;
 public class ItemUpdateGameBlockUpdate1 extends ItemStack {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.UPDATE_GAME_BLOCK_UPDATE1;
     }
 

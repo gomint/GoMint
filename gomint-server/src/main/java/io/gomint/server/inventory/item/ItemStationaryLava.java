@@ -13,7 +13,7 @@ import io.gomint.taglib.NBTTagCompound;
 public class ItemStationaryLava extends ItemStack implements io.gomint.inventory.item.ItemStationaryLava {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.STATIONARY_LAVA;
     }
 

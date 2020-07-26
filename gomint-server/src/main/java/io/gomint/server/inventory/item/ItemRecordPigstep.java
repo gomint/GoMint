@@ -18,7 +18,7 @@ import io.gomint.server.registry.RegisterInfo;
 public class ItemRecordPigstep extends ItemStack implements io.gomint.inventory.item.ItemRecordPigstep {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.RECORD_PIGSTEP;
     }
 

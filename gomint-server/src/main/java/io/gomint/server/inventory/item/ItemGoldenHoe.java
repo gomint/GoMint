@@ -47,7 +47,7 @@ public class ItemGoldenHoe extends ItemReduceTierGolden implements io.gomint.inv
     }
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.GOLDEN_HOE;
     }
 

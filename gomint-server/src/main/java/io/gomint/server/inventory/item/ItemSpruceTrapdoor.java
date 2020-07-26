@@ -18,7 +18,7 @@ import io.gomint.server.registry.RegisterInfo;
 public class ItemSpruceTrapdoor extends ItemStack implements io.gomint.inventory.item.ItemSpruceTrapdoor {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.SPRUCE_TRAPDOOR;
     }
 

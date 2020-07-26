@@ -11,7 +11,7 @@ import io.gomint.server.registry.RegisterInfo;
 public class ItemHoneyComb extends ItemStack implements io.gomint.inventory.item.ItemHoneyComb {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.HONEYCOMB;
     }
 }

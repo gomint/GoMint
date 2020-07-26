@@ -18,7 +18,7 @@ import io.gomint.server.registry.RegisterInfo;
 public class ItemCrimsonFungus extends ItemStack implements io.gomint.inventory.item.ItemCrimsonFungus {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.CRIMSON_FUNGUS;
     }
 

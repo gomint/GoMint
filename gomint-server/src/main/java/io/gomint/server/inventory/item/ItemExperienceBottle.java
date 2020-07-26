@@ -36,7 +36,7 @@ public class ItemExperienceBottle extends ItemStack implements io.gomint.invento
     }
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.EXPERIENCE_BOTTLE;
     }
 

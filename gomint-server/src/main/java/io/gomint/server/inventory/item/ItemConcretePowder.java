@@ -18,7 +18,7 @@ import io.gomint.taglib.NBTTagCompound;
 public class ItemConcretePowder extends ItemStack implements io.gomint.inventory.item.ItemConcretePowder {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.CONCRETE_POWDER;
     }
 

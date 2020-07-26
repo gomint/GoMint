@@ -11,7 +11,7 @@ import io.gomint.server.registry.RegisterInfo;
 public class ItemAir extends ItemStack implements io.gomint.inventory.item.ItemAir {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.AIR;
     }
 

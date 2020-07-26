@@ -12,7 +12,7 @@ import io.gomint.taglib.NBTTagCompound;
 public class ItemChorusPlant extends ItemStack implements io.gomint.inventory.item.ItemChorusPlant {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.CHORUS_PLANT;
     }
 

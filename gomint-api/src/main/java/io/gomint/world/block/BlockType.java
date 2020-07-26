@@ -281,4 +281,5 @@ public enum BlockType {
     WOODEN_PRESSURE_PLATE,
     WOODEN_SLAB,
     WOOL,
+    ELEMENT,
 }

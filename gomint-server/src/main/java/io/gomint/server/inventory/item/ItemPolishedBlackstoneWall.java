@@ -18,7 +18,7 @@ import io.gomint.server.registry.RegisterInfo;
 public class ItemPolishedBlackstoneWall extends ItemStack implements io.gomint.inventory.item.ItemPolishedBlackstoneWall {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.POLISHED_BLACKSTONE_WALL;
     }
 

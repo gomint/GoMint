@@ -12,7 +12,7 @@ import io.gomint.taglib.NBTTagCompound;
 public class ItemRedstoneRepeaterInactive extends ItemStack {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.REDSTONE_REPEATER_INACTIVE;
     }
 

@@ -14,7 +14,7 @@ public class ItemString extends ItemStack implements io.gomint.inventory.item.It
 
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.STRING;
     }
 

@@ -13,7 +13,7 @@ import io.gomint.taglib.NBTTagCompound;
 public class ItemNetherQuartzOre extends ItemStack implements io.gomint.inventory.item.ItemNetherQuartzOre {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.NETHER_QUARTZ_ORE;
     }
 

@@ -39,22 +39,22 @@ public class EnchantmentSilkTouch extends Enchantment {
 
     @Override
     public boolean canBeApplied( ItemStack itemStack ) {
-        return itemStack.getType() == ItemType.DIAMOND_PICKAXE ||
-            itemStack.getType() == ItemType.STONE_PICKAXE ||
-            itemStack.getType() == ItemType.GOLDEN_PICKAXE ||
-            itemStack.getType() == ItemType.IRON_PICKAXE ||
-            itemStack.getType() == ItemType.WOODEN_PICKAXE ||
-            itemStack.getType() == ItemType.DIAMOND_AXE ||
-            itemStack.getType() == ItemType.STONE_AXE ||
-            itemStack.getType() == ItemType.GOLDEN_AXE ||
-            itemStack.getType() == ItemType.IRON_AXE ||
-            itemStack.getType() == ItemType.WOODEN_AXE ||
-            itemStack.getType() == ItemType.DIAMOND_SHOVEL ||
-            itemStack.getType() == ItemType.STONE_SHOVEL ||
-            itemStack.getType() == ItemType.GOLDEN_SHOVEL ||
-            itemStack.getType() == ItemType.IRON_SHOVEL ||
-            itemStack.getType() == ItemType.WOODEN_SHOVEL ||
-            itemStack.getType() == ItemType.SHEARS;
+        return itemStack.getItemType() == ItemType.DIAMOND_PICKAXE ||
+            itemStack.getItemType() == ItemType.STONE_PICKAXE ||
+            itemStack.getItemType() == ItemType.GOLDEN_PICKAXE ||
+            itemStack.getItemType() == ItemType.IRON_PICKAXE ||
+            itemStack.getItemType() == ItemType.WOODEN_PICKAXE ||
+            itemStack.getItemType() == ItemType.DIAMOND_AXE ||
+            itemStack.getItemType() == ItemType.STONE_AXE ||
+            itemStack.getItemType() == ItemType.GOLDEN_AXE ||
+            itemStack.getItemType() == ItemType.IRON_AXE ||
+            itemStack.getItemType() == ItemType.WOODEN_AXE ||
+            itemStack.getItemType() == ItemType.DIAMOND_SHOVEL ||
+            itemStack.getItemType() == ItemType.STONE_SHOVEL ||
+            itemStack.getItemType() == ItemType.GOLDEN_SHOVEL ||
+            itemStack.getItemType() == ItemType.IRON_SHOVEL ||
+            itemStack.getItemType() == ItemType.WOODEN_SHOVEL ||
+            itemStack.getItemType() == ItemType.SHEARS;
     }
 
 }

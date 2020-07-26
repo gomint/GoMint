@@ -11,7 +11,7 @@ import io.gomint.server.registry.RegisterInfo;
 public class ItemCrops extends ItemStack implements io.gomint.inventory.item.ItemCrops {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.CROPS;
     }
 

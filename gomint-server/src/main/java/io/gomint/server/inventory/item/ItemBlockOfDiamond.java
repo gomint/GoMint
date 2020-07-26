@@ -13,7 +13,7 @@ import io.gomint.taglib.NBTTagCompound;
 public class ItemBlockOfDiamond extends ItemStack implements io.gomint.inventory.item.ItemBlockOfDiamond {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.BLOCK_OF_DIAMOND;
     }
 

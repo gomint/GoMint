@@ -11,7 +11,7 @@ import io.gomint.server.registry.RegisterInfo;
 public class ItemBlazePowder extends ItemStack implements io.gomint.inventory.item.ItemBlazePowder {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.BLAZE_POWDER;
     }
 

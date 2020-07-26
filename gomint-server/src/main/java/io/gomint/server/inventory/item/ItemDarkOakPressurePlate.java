@@ -18,7 +18,7 @@ import io.gomint.server.registry.RegisterInfo;
 public class ItemDarkOakPressurePlate extends ItemStack implements io.gomint.inventory.item.ItemDarkOakPressurePlate {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.DARK_OAK_PRESSURE_PLATE;
     }
 

@@ -9,7 +9,6 @@ import io.gomint.server.crafting.Recipe;
 import io.gomint.server.crafting.ShapedRecipe;
 import io.gomint.server.inventory.CraftingInputInventory;
 import io.gomint.server.inventory.Inventory;
-import io.gomint.server.inventory.OneSlotInventory;
 import io.gomint.server.network.PlayerConnection;
 import io.gomint.server.network.packet.PacketCraftingEvent;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
@@ -137,7 +136,7 @@ public class PacketCraftingEventHandler implements PacketHandler<PacketCraftingE
                 Object2IntMap<ItemStack> usedAmount = new Object2IntOpenHashMap<>();
                 for ( int i = 0; i < recipe.getIngredients().length; i++ ) {
                     ItemStack stack = recipe.getIngredients()[i].clone();
-                    if ( stack.getType() == ItemType.AIR ) {
+                    if ( stack.getItemType() == ItemType.AIR ) {
                         continue;
                     }
 

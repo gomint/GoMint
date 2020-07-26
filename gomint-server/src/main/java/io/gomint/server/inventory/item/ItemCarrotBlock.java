@@ -11,7 +11,7 @@ import io.gomint.taglib.NBTTagCompound;
 public class ItemCarrotBlock extends ItemStack implements io.gomint.inventory.item.ItemCarrotBlock {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.CARROTS;
     }
 

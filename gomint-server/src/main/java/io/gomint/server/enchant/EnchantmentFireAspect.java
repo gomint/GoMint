@@ -39,11 +39,11 @@ public class EnchantmentFireAspect extends Enchantment implements io.gomint.ench
 
     @Override
     public boolean canBeApplied( ItemStack itemStack ) {
-        return itemStack.getType() == ItemType.DIAMOND_SWORD ||
-            itemStack.getType() == ItemType.STONE_SWORD ||
-            itemStack.getType() == ItemType.GOLDEN_SWORD ||
-            itemStack.getType() == ItemType.IRON_SWORD ||
-            itemStack.getType() == ItemType.WOODEN_SWORD;
+        return itemStack.getItemType() == ItemType.DIAMOND_SWORD ||
+            itemStack.getItemType() == ItemType.STONE_SWORD ||
+            itemStack.getItemType() == ItemType.GOLDEN_SWORD ||
+            itemStack.getItemType() == ItemType.IRON_SWORD ||
+            itemStack.getItemType() == ItemType.WOODEN_SWORD;
     }
 
 }

@@ -20,7 +20,7 @@ public class ItemFireworkCharge extends ItemStack implements io.gomint.inventory
 
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.FIREWORK_CHARGE;
     }
 

@@ -19,7 +19,7 @@ public class ItemEnderPearl extends ItemStack implements io.gomint.inventory.ite
 
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.ENDER_PEARL;
     }
 

@@ -16,7 +16,7 @@ public class ItemBlockOfNetherite extends ItemStack implements io.gomint.invento
     }
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.BLACKSTONE;
     }
 }

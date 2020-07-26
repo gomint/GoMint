@@ -20,7 +20,7 @@ public class ItemMinecartWithCommandBlock extends ItemStack implements io.gomint
 
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.MINECART_WITH_COMMAND_BLOCK;
     }
 

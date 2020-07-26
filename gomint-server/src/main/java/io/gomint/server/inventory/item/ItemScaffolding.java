@@ -23,7 +23,7 @@ public class ItemScaffolding extends ItemStack implements io.gomint.inventory.it
     }
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.SCAFFOLDING;
     }
 

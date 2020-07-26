@@ -18,7 +18,7 @@ import io.gomint.server.registry.RegisterInfo;
 public class ItemDeadCoralFan extends ItemStack implements io.gomint.inventory.item.ItemDeadCoralFan {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.DEAD_CORAL_FAN;
     }
 

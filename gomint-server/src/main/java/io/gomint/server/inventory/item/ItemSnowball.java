@@ -54,7 +54,7 @@ public class ItemSnowball extends ItemStack implements io.gomint.inventory.item.
     }
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.SNOWBALL;
     }
 

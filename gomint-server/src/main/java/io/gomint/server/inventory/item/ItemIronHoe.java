@@ -46,7 +46,7 @@ public class ItemIronHoe extends ItemReduceTierIron implements io.gomint.invento
     }
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.IRON_HOE;
     }
 

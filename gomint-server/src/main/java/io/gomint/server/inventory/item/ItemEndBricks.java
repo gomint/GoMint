@@ -11,7 +11,7 @@ import io.gomint.taglib.NBTTagCompound;
 public class ItemEndBricks extends ItemStack implements io.gomint.inventory.item.ItemEndBricks {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.END_BRICKS;
     }
 

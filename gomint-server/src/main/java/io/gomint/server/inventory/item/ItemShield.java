@@ -19,7 +19,7 @@ import io.gomint.server.registry.RegisterInfo;
 public class ItemShield extends ItemStack implements io.gomint.inventory.item.ItemShield {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.SHIELD;
     }
 

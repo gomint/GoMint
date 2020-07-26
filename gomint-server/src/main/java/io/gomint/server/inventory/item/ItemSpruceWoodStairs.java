@@ -13,7 +13,7 @@ import io.gomint.taglib.NBTTagCompound;
 public class ItemSpruceWoodStairs extends ItemStack implements io.gomint.inventory.item.ItemSpruceWoodStairs {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.SPRUCE_WOOD_STAIRS;
     }
 

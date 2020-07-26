@@ -24,7 +24,7 @@ public class ItemBeetrootSoup extends ItemFood implements io.gomint.inventory.it
     }
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.BEETROOT_SOUP;
     }
 

@@ -23,7 +23,7 @@ public class ItemDarkOakTrapdoor extends ItemStack implements io.gomint.inventor
     }
     
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.DARK_OAK_TRAPDOOR;
     }
 

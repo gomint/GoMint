@@ -13,7 +13,7 @@ import io.gomint.taglib.NBTTagCompound;
 public class ItemShears extends ItemStack implements io.gomint.inventory.item.ItemShears {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.SHEARS;
     }
 

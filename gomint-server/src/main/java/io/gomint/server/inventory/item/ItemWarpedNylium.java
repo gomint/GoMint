@@ -18,7 +18,7 @@ import io.gomint.server.registry.RegisterInfo;
 public class ItemWarpedNylium extends ItemStack implements io.gomint.inventory.item.ItemWarpedNylium {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.WARPED_NYLIUM;
     }
 

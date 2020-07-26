@@ -18,7 +18,7 @@ import io.gomint.server.registry.RegisterInfo;
 public class ItemStrippedWarpedStem extends ItemStack implements io.gomint.inventory.item.ItemStrippedWarpedStem {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.STRIPPED_WARPED_STEM;
     }
 

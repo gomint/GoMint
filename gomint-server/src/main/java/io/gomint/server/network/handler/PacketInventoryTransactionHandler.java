@@ -87,7 +87,7 @@ public class PacketInventoryTransactionHandler implements PacketHandler<PacketIn
                 // Check if in hand item is in sync
                 ItemStack itemInHand = connection.getEntity().getInventory().getItemInHand();
                 ItemStack packetItemInHand = packet.getItemInHand();
-                if (itemInHand.getType() != packetItemInHand.getType()) {
+                if (itemInHand.getItemType() != packetItemInHand.getItemType()) {
                     LOGGER.warn("{} item in hand does not match: {} / {}", connection.getEntity().getName(), itemInHand, packetItemInHand);
                     reset(packet, connection);
                     return;
@@ -104,7 +104,7 @@ public class PacketInventoryTransactionHandler implements PacketHandler<PacketIn
                 // Check item in hand
                 itemInHand = connection.getEntity().getInventory().getItemInHand();
                 packetItemInHand = packet.getItemInHand();
-                if (itemInHand.getType() != packetItemInHand.getType()) {
+                if (itemInHand.getItemType() != packetItemInHand.getItemType()) {
                     LOGGER.warn("{} item in hand does not match (X): {} / {}", connection.getEntity().getName(), itemInHand, packetItemInHand);
                     reset(packet, connection);
                     return;
@@ -422,9 +422,9 @@ public class PacketInventoryTransactionHandler implements PacketHandler<PacketIn
                 break;
             case -5:    // Crafting result input
                 inventory = entity.getCraftingInputInventory();
-                if (inventory.getItem(transaction.getSlot()).getType() != ItemType.AIR) {
+                if (inventory.getItem(transaction.getSlot()).getItemType() != ItemType.AIR) {
                     for (int i = 0; i < inventory.getContentsArray().length; i++) {
-                        if (inventory.getItem(i).getType() == ItemType.AIR) {
+                        if (inventory.getItem(i).getItemType() == ItemType.AIR) {
                             transaction.setSlot(i);
                             break;
                         }

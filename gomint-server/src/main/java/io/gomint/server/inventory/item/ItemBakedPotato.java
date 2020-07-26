@@ -21,7 +21,7 @@ public class ItemBakedPotato extends ItemFood implements io.gomint.inventory.ite
     }
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.BAKED_POTATO;
     }
 

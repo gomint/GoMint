@@ -11,7 +11,7 @@ import io.gomint.server.registry.RegisterInfo;
 public class ItemItemFrame extends ItemStack implements io.gomint.inventory.item.ItemItemFrame {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.ITEM_FRAME;
     }
 

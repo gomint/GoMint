@@ -18,7 +18,7 @@ public class ItemRedMushroomBlock extends ItemStack implements io.gomint.invento
     }
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.RED_MUSHROOM_BLOCK;
     }
 

@@ -18,7 +18,7 @@ import io.gomint.server.registry.RegisterInfo;
 public class ItemSoulSoil extends ItemStack implements io.gomint.inventory.item.ItemSoulSoil {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.SOUL_SOIL;
     }
 

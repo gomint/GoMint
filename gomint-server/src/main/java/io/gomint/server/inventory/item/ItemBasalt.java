@@ -18,7 +18,7 @@ import io.gomint.server.registry.RegisterInfo;
 public class ItemBasalt extends ItemStack implements io.gomint.inventory.item.ItemBasalt {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.BASALT;
     }
 

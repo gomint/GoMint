@@ -18,7 +18,7 @@ import io.gomint.server.registry.RegisterInfo;
 public class ItemPrismarineStairs extends ItemStack implements io.gomint.inventory.item.ItemPrismarineStairs {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.PRISMARINE_STAIRS;
     }
 

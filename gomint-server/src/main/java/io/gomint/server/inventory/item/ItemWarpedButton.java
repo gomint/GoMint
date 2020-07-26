@@ -18,7 +18,7 @@ import io.gomint.server.registry.RegisterInfo;
 public class ItemWarpedButton extends ItemStack implements io.gomint.inventory.item.ItemWarpedButton {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.WARPED_BUTTON;
     }
 

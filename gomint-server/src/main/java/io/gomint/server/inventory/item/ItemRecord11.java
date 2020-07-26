@@ -20,7 +20,7 @@ public class ItemRecord11 extends ItemStack implements io.gomint.inventory.item.
 
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.RECORD_11;
     }
 

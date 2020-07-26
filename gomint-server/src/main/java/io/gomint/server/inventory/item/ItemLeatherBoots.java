@@ -33,7 +33,7 @@ public class ItemLeatherBoots extends ItemLeatherArmor implements io.gomint.inve
     }
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.LEATHER_BOOTS;
     }
 

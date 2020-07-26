@@ -11,7 +11,7 @@ import io.gomint.server.registry.RegisterInfo;
 public class ItemKelp extends ItemStack implements io.gomint.inventory.item.ItemKelp {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.KELP;
     }
 

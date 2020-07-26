@@ -18,7 +18,7 @@ import io.gomint.server.registry.RegisterInfo;
 public class ItemChain extends ItemStack implements io.gomint.inventory.item.ItemChain {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.CHAIN;
     }
 

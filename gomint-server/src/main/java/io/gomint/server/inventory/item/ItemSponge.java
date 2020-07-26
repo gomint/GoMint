@@ -13,7 +13,7 @@ import io.gomint.taglib.NBTTagCompound;
 public class ItemSponge extends ItemStack implements io.gomint.inventory.item.ItemSponge {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.SPONGE;
     }
 

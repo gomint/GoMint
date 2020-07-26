@@ -46,7 +46,7 @@ public class ItemDiamondShovel extends ItemReduceTierDiamond implements io.gomin
     }
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.DIAMOND_SHOVEL;
     }
 

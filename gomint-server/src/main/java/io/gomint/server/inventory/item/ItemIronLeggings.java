@@ -33,7 +33,7 @@ public class ItemIronLeggings extends ItemIronArmor implements io.gomint.invento
     }
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.IRON_LEGGINGS;
     }
 

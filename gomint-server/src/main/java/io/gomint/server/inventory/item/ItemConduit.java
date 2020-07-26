@@ -18,7 +18,7 @@ import io.gomint.server.registry.RegisterInfo;
 public class ItemConduit extends ItemStack implements io.gomint.inventory.item.ItemConduit {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.CONDUIT;
     }
 

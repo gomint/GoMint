@@ -19,7 +19,7 @@ public class ItemWallBanner extends ItemStack implements ItemBanner {
     }
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.WALL_BANNER;
     }
 }

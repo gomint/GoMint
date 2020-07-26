@@ -13,7 +13,7 @@ import io.gomint.taglib.NBTTagCompound;
 public class ItemGlassPane extends ItemStack implements io.gomint.inventory.item.ItemGlassPane {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.GLASS_PANE;
     }
 

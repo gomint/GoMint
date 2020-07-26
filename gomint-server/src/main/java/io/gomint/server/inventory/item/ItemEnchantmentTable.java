@@ -13,7 +13,7 @@ import io.gomint.taglib.NBTTagCompound;
 public class ItemEnchantmentTable extends ItemStack implements io.gomint.inventory.item.ItemEnchantmentTable {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.ENCHANTMENT_TABLE;
     }
 

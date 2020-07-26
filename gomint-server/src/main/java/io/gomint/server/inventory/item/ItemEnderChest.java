@@ -13,7 +13,7 @@ import io.gomint.taglib.NBTTagCompound;
 public class ItemEnderChest extends ItemStack implements io.gomint.inventory.item.ItemEnderChest {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.ENDER_CHEST;
     }
 

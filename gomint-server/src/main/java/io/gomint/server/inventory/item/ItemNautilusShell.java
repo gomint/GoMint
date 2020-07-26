@@ -11,7 +11,7 @@ import io.gomint.server.registry.RegisterInfo;
 public class ItemNautilusShell extends ItemStack implements io.gomint.inventory.item.ItemNautilusShell {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.NAUTILUS_SHELL;
     }
 

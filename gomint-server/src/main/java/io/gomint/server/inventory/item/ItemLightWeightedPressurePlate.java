@@ -13,7 +13,7 @@ import io.gomint.taglib.NBTTagCompound;
 public class ItemLightWeightedPressurePlate extends ItemStack implements io.gomint.inventory.item.ItemLightWeightedPressurePlate {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.LIGHT_WEIGHTED_PRESSURE_PLATE;
     }
 

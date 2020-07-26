@@ -18,7 +18,7 @@ import io.gomint.server.registry.RegisterInfo;
 public class ItemLodestone extends ItemStack implements io.gomint.inventory.item.ItemLodestone {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.LODESTONE;
     }
 

@@ -12,7 +12,7 @@ import io.gomint.server.registry.RegisterInfo;
 public class ItemBoat extends ItemStack implements io.gomint.inventory.item.ItemBoat {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.BOAT;
     }
 

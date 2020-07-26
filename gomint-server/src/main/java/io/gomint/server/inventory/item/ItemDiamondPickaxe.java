@@ -29,7 +29,7 @@ public class ItemDiamondPickaxe extends ItemReduceTierDiamond implements io.gomi
     }
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.DIAMOND_PICKAXE;
     }
 

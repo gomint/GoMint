@@ -18,7 +18,7 @@ import io.gomint.server.registry.RegisterInfo;
 public class ItemBirchPressurePlate extends ItemStack implements io.gomint.inventory.item.ItemBirchPressurePlate {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.BIRCH_PRESSURE_PLATE;
     }
 

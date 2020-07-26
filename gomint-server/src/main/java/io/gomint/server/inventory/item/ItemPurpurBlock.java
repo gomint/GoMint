@@ -13,7 +13,7 @@ import io.gomint.taglib.NBTTagCompound;
 public class ItemPurpurBlock extends ItemStack implements io.gomint.inventory.item.ItemPurpurBlock {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.PURPUR_BLOCK;
     }
 

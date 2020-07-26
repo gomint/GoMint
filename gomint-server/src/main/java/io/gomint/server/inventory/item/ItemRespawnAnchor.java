@@ -18,7 +18,7 @@ import io.gomint.server.registry.RegisterInfo;
 public class ItemRespawnAnchor extends ItemStack implements io.gomint.inventory.item.ItemRespawnAnchor {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.RESPAWN_ANCHOR;
     }
 

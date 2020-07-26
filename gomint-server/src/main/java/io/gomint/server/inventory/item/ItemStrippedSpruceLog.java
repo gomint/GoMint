@@ -16,7 +16,7 @@ public class ItemStrippedSpruceLog extends ItemStack implements io.gomint.invent
     }
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.STRIPPED_SPRUCE_LOG;
     }
 

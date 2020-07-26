@@ -29,7 +29,7 @@ public class ItemStoneAxe extends ItemReduceTierStone implements io.gomint.inven
     }
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.STONE_AXE;
     }
 

@@ -29,7 +29,7 @@ public class ItemDiamondAxe extends ItemReduceTierDiamond implements io.gomint.i
     }
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.DIAMOND_AXE;
     }
 

@@ -13,7 +13,7 @@ import io.gomint.taglib.NBTTagCompound;
 public class ItemLilyPad extends ItemStack implements io.gomint.inventory.item.ItemLilyPad {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.LILY_PAD;
     }
 

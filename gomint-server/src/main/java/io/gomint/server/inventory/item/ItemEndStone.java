@@ -13,7 +13,7 @@ import io.gomint.taglib.NBTTagCompound;
 public class ItemEndStone extends ItemStack implements io.gomint.inventory.item.ItemEndStone {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.END_STONE;
     }
 

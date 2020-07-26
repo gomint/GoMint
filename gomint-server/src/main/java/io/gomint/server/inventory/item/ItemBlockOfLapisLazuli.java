@@ -13,7 +13,7 @@ import io.gomint.taglib.NBTTagCompound;
 public class ItemBlockOfLapisLazuli extends ItemStack implements io.gomint.inventory.item.ItemBlockOfLapisLazuli {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.LAPIS_LAZULI_BLOCK;
     }
 

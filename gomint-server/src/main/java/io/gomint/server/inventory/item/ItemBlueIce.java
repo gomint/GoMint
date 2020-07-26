@@ -18,7 +18,7 @@ import io.gomint.server.registry.RegisterInfo;
 public class ItemBlueIce extends ItemStack implements io.gomint.inventory.item.ItemBlueIce {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.BLUE_ICE;
     }
 

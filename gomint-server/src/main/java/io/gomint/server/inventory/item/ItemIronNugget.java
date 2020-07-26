@@ -20,7 +20,7 @@ public class ItemIronNugget extends ItemStack implements io.gomint.inventory.ite
 
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.IRON_NUGGET;
     }
 

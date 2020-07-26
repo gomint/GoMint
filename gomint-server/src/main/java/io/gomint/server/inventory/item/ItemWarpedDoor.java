@@ -18,7 +18,7 @@ import io.gomint.server.registry.RegisterInfo;
 public class ItemWarpedDoor extends ItemStack implements io.gomint.inventory.item.ItemWarpedDoor {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.WARPED_DOOR;
     }
 

@@ -13,7 +13,7 @@ import io.gomint.taglib.NBTTagCompound;
 public class ItemObsidian extends ItemStack implements io.gomint.inventory.item.ItemObsidian {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.OBSIDIAN;
     }
 

@@ -16,7 +16,7 @@ public class ItemStrippedOakLog extends ItemStack implements io.gomint.inventory
     }
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.STRIPPED_OAK_LOG;
     }
 

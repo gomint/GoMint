@@ -33,7 +33,7 @@ public class ItemChainLeggings extends ItemChainArmor implements io.gomint.inven
     }
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.CHAIN_LEGGINGS;
     }
 

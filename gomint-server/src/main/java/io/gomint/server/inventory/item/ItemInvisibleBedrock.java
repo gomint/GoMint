@@ -13,7 +13,7 @@ import io.gomint.taglib.NBTTagCompound;
 public class ItemInvisibleBedrock extends ItemStack implements io.gomint.inventory.item.ItemInvisibleBedrock {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.INVISIBLE_BEDROCK;
     }
 

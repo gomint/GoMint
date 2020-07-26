@@ -187,6 +187,7 @@ public enum ItemType {
     DYE,
     EGG,
     ELYTRA,
+    ELEMENT,
     EMERALD_ORE,
     EMERALD,
     ENCHANTED_BOOK,

@@ -45,7 +45,7 @@ public class ItemIronShovel extends ItemReduceTierIron implements io.gomint.inve
     }
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.IRON_SHOVEL;
     }
 

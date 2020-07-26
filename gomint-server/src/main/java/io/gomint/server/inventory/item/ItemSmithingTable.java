@@ -16,7 +16,7 @@ public class ItemSmithingTable extends ItemStack implements io.gomint.inventory.
     }
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.SMITHING_TABLE;
     }
 

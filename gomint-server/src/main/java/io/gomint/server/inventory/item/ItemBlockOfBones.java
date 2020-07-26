@@ -18,7 +18,7 @@ import io.gomint.taglib.NBTTagCompound;
 public class ItemBlockOfBones extends ItemStack implements io.gomint.inventory.item.ItemBlockOfBones {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.BLOCK_OF_BONES;
     }
 

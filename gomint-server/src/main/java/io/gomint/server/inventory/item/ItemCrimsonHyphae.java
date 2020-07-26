@@ -18,7 +18,7 @@ import io.gomint.server.registry.RegisterInfo;
 public class ItemCrimsonHyphae extends ItemStack implements io.gomint.inventory.item.ItemCrimsonHyphae {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.CRIMSON_HYPHAE;
     }
 

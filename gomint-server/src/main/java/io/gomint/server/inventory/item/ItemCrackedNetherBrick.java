@@ -16,7 +16,7 @@ public class ItemCrackedNetherBrick extends ItemStack implements io.gomint.inven
     }
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.CRACKED_NETHER_BRICK;
     }
 

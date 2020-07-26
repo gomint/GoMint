@@ -1,10 +1,7 @@
 package io.gomint.server.entity.tileentity;
 
 import io.gomint.inventory.item.ItemType;
-import io.gomint.math.Location;
 import io.gomint.server.inventory.item.ItemStack;
-import io.gomint.server.inventory.item.Items;
-import io.gomint.server.world.WorldAdapter;
 import io.gomint.server.world.block.Block;
 import io.gomint.taglib.NBTTagCompound;
 
@@ -47,7 +44,7 @@ public class JukeboxTileEntity extends TileEntity {
 
         compound.addValue( "id", "Jukebox" );
 
-        if ( this.recordItem.getType() != ItemType.AIR ) {
+        if ( this.recordItem.getItemType() != ItemType.AIR ) {
             NBTTagCompound itemCompound = compound.getCompound( "RecordItem", true );
             this.putItemStack( this.recordItem, itemCompound );
         }

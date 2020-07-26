@@ -13,7 +13,7 @@ import io.gomint.taglib.NBTTagCompound;
 public class ItemSeaLantern extends ItemStack implements io.gomint.inventory.item.ItemSeaLantern {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.SEA_LANTERN;
     }
 

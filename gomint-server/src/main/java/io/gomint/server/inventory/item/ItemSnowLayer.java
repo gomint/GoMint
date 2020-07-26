@@ -13,7 +13,7 @@ import io.gomint.taglib.NBTTagCompound;
 public class ItemSnowLayer extends ItemStack implements io.gomint.inventory.item.ItemSnowLayer {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.SNOW_LAYER;
     }
 

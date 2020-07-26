@@ -18,7 +18,7 @@ import io.gomint.server.registry.RegisterInfo;
 public class ItemWarpedWartBlock extends ItemStack implements io.gomint.inventory.item.ItemWarpedWartBlock {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.WARPED_WART_BLOCK;
     }
 

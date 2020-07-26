@@ -34,7 +34,7 @@ public class ItemWoodenPickaxe extends ItemReduceTierWooden implements io.gomint
     }
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.WOODEN_PICKAXE;
     }
 

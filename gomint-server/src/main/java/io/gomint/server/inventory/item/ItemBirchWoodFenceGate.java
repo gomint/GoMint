@@ -13,7 +13,7 @@ import io.gomint.taglib.NBTTagCompound;
 public class ItemBirchWoodFenceGate extends ItemStack implements io.gomint.inventory.item.ItemBirchWoodFenceGate {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.BIRCH_FENCE_GATE;
     }
 

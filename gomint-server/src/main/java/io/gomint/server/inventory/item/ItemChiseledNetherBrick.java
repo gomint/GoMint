@@ -16,7 +16,7 @@ public class ItemChiseledNetherBrick extends ItemStack implements io.gomint.inve
     }
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.CHISELED_NETHER_BRICK;
     }
 }

@@ -24,7 +24,7 @@ public class ItemCookedChicken extends ItemFood implements io.gomint.inventory.i
     }
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.COOKED_CHICKEN;
     }
 

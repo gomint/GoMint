@@ -20,7 +20,7 @@ public class ItemRecordMellohi extends ItemStack implements io.gomint.inventory.
 
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.RECORD_MELLOHI;
     }
 

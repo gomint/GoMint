@@ -9,7 +9,7 @@ public class ItemScute extends ItemStack implements io.gomint.inventory.item.Ite
 
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.SCUTE;
     }
 }

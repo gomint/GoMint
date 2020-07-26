@@ -49,7 +49,7 @@ public class ItemWoodenShovel extends ItemReduceTierWooden implements io.gomint.
     }
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.WOODEN_SHOVEL;
     }
 

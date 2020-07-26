@@ -18,7 +18,7 @@ import io.gomint.server.registry.RegisterInfo;
 public class ItemChiseledNetherBricks extends ItemStack implements io.gomint.inventory.item.ItemChiseledNetherBricks {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.CHISELED_NETHER_BRICKS;
     }
 

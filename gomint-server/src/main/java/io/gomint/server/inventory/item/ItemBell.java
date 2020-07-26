@@ -18,7 +18,7 @@ import io.gomint.server.registry.RegisterInfo;
 public class ItemBell extends ItemStack implements io.gomint.inventory.item.ItemBell {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.BELL;
     }
 

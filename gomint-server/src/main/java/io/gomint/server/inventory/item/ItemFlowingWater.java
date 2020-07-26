@@ -13,7 +13,7 @@ import io.gomint.taglib.NBTTagCompound;
 public class ItemFlowingWater extends ItemStack implements io.gomint.inventory.item.ItemFlowingWater {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.FLOWING_WATER;
     }
 

@@ -18,7 +18,7 @@ import io.gomint.server.registry.RegisterInfo;
 public class ItemTwistingVines extends ItemStack implements io.gomint.inventory.item.ItemTwistingVines {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.TWISTING_VINES;
     }
 

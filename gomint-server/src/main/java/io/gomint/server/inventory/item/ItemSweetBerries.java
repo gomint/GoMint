@@ -7,7 +7,7 @@ import io.gomint.server.registry.RegisterInfo;
 public class ItemSweetBerries extends ItemFood implements io.gomint.inventory.item.ItemSweetBerries {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.SWEETBERRIES;
     }
 

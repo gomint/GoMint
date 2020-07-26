@@ -23,7 +23,7 @@ public class ItemDarkOakButton extends ItemStack implements io.gomint.inventory.
     }
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.DARK_OAK_BUTTON;
     }
 

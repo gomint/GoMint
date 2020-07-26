@@ -30,7 +30,7 @@ public class ItemTurtleShell extends ItemArmor implements io.gomint.inventory.it
     }
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.TURTLE_SHELL;
     }
 }

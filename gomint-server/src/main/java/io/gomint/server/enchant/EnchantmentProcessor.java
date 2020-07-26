@@ -55,7 +55,7 @@ public class EnchantmentProcessor {
         }
 
         if ( this.lapisItem == null || this.startItem.getEnchantAbility() == 0 ||
-            this.lapisItem.getType() != ItemType.DYE || this.lapisItem.getData() != 4 ) {
+            this.lapisItem.getItemType() != ItemType.DYE || this.lapisItem.getData() != 4 ) {
             this.reset();
             return;
         }
@@ -227,10 +227,10 @@ public class EnchantmentProcessor {
 
         for ( PacketInventoryTransaction.NetworkTransaction networkTransaction : inventoryTransaction.getActions() ) {
             if ( networkTransaction.getWindowId() == -15 ) {
-                if ( networkTransaction.getOldItem().getType() != ItemType.AIR &&
+                if ( networkTransaction.getOldItem().getItemType() != ItemType.AIR &&
                     !isEnchanted( (ItemStack) networkTransaction.getOldItem() ) ) {
                     this.startItem = (ItemStack) networkTransaction.getOldItem();
-                } else if ( networkTransaction.getNewItem().getType() != ItemType.AIR &&
+                } else if ( networkTransaction.getNewItem().getItemType() != ItemType.AIR &&
                     isEnchanted( (ItemStack) networkTransaction.getNewItem() ) ) {
                     io.gomint.server.inventory.item.ItemStack serverItemStack = (io.gomint.server.inventory.item.ItemStack) networkTransaction.getNewItem();
 

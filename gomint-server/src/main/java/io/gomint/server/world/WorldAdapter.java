@@ -32,7 +32,6 @@ import io.gomint.server.util.EnumConnectors;
 import io.gomint.server.world.block.Air;
 import io.gomint.server.world.storage.TemporaryStorage;
 import io.gomint.taglib.NBTTagCompound;
-import io.gomint.util.random.FastRandom;
 import io.gomint.world.*;
 import io.gomint.world.block.Block;
 import io.gomint.world.block.BlockAir;
@@ -44,7 +43,6 @@ import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectMaps;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
-import it.unimi.dsi.fastutil.objects.ObjectIterator;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
@@ -1242,7 +1240,7 @@ public abstract class WorldAdapter implements World {
     }
 
     public void dropItem(Location location, ItemStack drop) {
-        if (drop.getType() == ItemType.AIR) {
+        if (drop.getItemType() == ItemType.AIR) {
             return;
         }
 

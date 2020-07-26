@@ -23,7 +23,7 @@ public class ItemSmoothStone extends ItemStack implements io.gomint.inventory.it
     }
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.SMOOTH_STONE;
     }
 

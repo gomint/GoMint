@@ -13,7 +13,7 @@ import io.gomint.taglib.NBTTagCompound;
 public class ItemPodzol extends ItemStack implements io.gomint.inventory.item.ItemPodzol {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.PODZOL;
     }
 

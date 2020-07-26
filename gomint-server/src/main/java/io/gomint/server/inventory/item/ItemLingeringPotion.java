@@ -13,7 +13,7 @@ public class ItemLingeringPotion extends ItemStack implements io.gomint.inventor
 
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.LINGERING_POTION;
     }
 

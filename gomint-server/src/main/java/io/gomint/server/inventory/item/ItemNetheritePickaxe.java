@@ -29,7 +29,7 @@ public class ItemNetheritePickaxe extends ItemReduceTierNetherite implements io.
     }
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.NETHERITE_PICKAXE;
     }
 }

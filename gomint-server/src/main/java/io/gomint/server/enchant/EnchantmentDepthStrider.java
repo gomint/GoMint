@@ -37,11 +37,11 @@ public class EnchantmentDepthStrider extends Enchantment implements io.gomint.en
 
     @Override
     public boolean canBeApplied( ItemStack itemStack ) {
-        return itemStack.getType() == ItemType.CHAIN_BOOTS ||
-            itemStack.getType() == ItemType.DIAMOND_BOOTS ||
-            itemStack.getType() == ItemType.GOLDEN_BOOTS ||
-            itemStack.getType() == ItemType.IRON_BOOTS ||
-            itemStack.getType() == ItemType.LEATHER_BOOTS;
+        return itemStack.getItemType() == ItemType.CHAIN_BOOTS ||
+            itemStack.getItemType() == ItemType.DIAMOND_BOOTS ||
+            itemStack.getItemType() == ItemType.GOLDEN_BOOTS ||
+            itemStack.getItemType() == ItemType.IRON_BOOTS ||
+            itemStack.getItemType() == ItemType.LEATHER_BOOTS;
     }
 
 }

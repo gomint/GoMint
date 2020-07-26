@@ -18,7 +18,7 @@ import io.gomint.server.registry.RegisterInfo;
 public class ItemDriedKelpBlock extends ItemStack implements io.gomint.inventory.item.ItemDriedKelpBlock {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.DRIED_KELP_BLOCK;
     }
 

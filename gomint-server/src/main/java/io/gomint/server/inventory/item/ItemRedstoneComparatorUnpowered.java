@@ -11,7 +11,7 @@ import io.gomint.taglib.NBTTagCompound;
 public class ItemRedstoneComparatorUnpowered extends ItemStack {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.REDSTONE_COMPARATOR_UNPOWERED;
     }
 

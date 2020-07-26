@@ -18,7 +18,7 @@ import io.gomint.server.registry.RegisterInfo;
 public class ItemNetheriteShovel extends ItemStack implements io.gomint.inventory.item.ItemNetheriteShovel {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.NETHERITE_SHOVEL;
     }
 

@@ -13,7 +13,7 @@ import io.gomint.taglib.NBTTagCompound;
 public class ItemRedstoneLampActive extends ItemStack {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.REDSTONE_LAMP_ACTIVE;
     }
 

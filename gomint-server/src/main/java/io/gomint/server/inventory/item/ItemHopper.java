@@ -11,7 +11,7 @@ import io.gomint.server.registry.RegisterInfo;
 public class ItemHopper extends ItemStack implements io.gomint.inventory.item.ItemHopper {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.HOPPER;
     }
 

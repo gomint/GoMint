@@ -13,7 +13,7 @@ import io.gomint.taglib.NBTTagCompound;
 public class ItemTorch extends ItemStack implements io.gomint.inventory.item.ItemTorch {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.TORCH;
     }
 

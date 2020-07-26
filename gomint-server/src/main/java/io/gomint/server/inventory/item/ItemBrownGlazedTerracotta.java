@@ -12,7 +12,7 @@ import io.gomint.taglib.NBTTagCompound;
 public class ItemBrownGlazedTerracotta extends ItemStack implements io.gomint.inventory.item.ItemBrownGlazedTerracotta {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.BROWN_GLAZED_TERRACOTTA;
     }
 

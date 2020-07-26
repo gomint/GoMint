@@ -13,7 +13,7 @@ import io.gomint.taglib.NBTTagCompound;
 public class ItemFenceGate extends ItemStack implements io.gomint.inventory.item.ItemFenceGate {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.FENCE_GATE;
     }
 

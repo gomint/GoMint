@@ -17,7 +17,7 @@ public class ItemBed extends ItemStack implements io.gomint.inventory.item.ItemB
     }
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.BED;
     }
 

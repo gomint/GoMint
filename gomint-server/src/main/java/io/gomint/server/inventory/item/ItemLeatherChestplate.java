@@ -34,7 +34,7 @@ public class ItemLeatherChestplate extends ItemLeatherArmor implements io.gomint
     }
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.LEATHER_CHESTPLATE;
     }
 

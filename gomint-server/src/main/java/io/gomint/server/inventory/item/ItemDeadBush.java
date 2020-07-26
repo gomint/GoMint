@@ -13,7 +13,7 @@ import io.gomint.taglib.NBTTagCompound;
 public class ItemDeadBush extends ItemStack implements io.gomint.inventory.item.ItemDeadBush {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.DEAD_BUSH;
     }
 

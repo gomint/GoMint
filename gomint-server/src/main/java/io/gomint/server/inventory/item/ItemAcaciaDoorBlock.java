@@ -11,7 +11,7 @@ import io.gomint.server.registry.RegisterInfo;
 public class ItemAcaciaDoorBlock extends ItemStack {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.ACACIA_DOOR_BLOCK;
     }
 

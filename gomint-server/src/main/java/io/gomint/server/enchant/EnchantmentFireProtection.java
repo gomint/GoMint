@@ -39,26 +39,26 @@ public class EnchantmentFireProtection extends Enchantment implements io.gomint.
 
     @Override
     public boolean canBeApplied( ItemStack itemStack ) {
-        return itemStack.getType() == ItemType.CHAIN_HELMET ||
-            itemStack.getType() == ItemType.DIAMOND_HELMET ||
-            itemStack.getType() == ItemType.GOLDEN_HELMET ||
-            itemStack.getType() == ItemType.IRON_HELMET ||
-            itemStack.getType() == ItemType.LEATHER_HELMET ||
-            itemStack.getType() == ItemType.CHAIN_LEGGINGS ||
-            itemStack.getType() == ItemType.DIAMOND_LEGGINGS ||
-            itemStack.getType() == ItemType.GOLDEN_LEGGINGS ||
-            itemStack.getType() == ItemType.IRON_LEGGINGS ||
-            itemStack.getType() == ItemType.LEATHER_LEGGINGS ||
-            itemStack.getType() == ItemType.CHAIN_CHESTPLATE ||
-            itemStack.getType() == ItemType.DIAMOND_CHESTPLATE ||
-            itemStack.getType() == ItemType.GOLDEN_CHESTPLATE ||
-            itemStack.getType() == ItemType.IRON_CHESTPLATE ||
-            itemStack.getType() == ItemType.LEATHER_CHESTPLATE ||
-            itemStack.getType() == ItemType.CHAIN_BOOTS ||
-            itemStack.getType() == ItemType.DIAMOND_BOOTS ||
-            itemStack.getType() == ItemType.GOLDEN_BOOTS ||
-            itemStack.getType() == ItemType.IRON_BOOTS ||
-            itemStack.getType() == ItemType.LEATHER_BOOTS;
+        return itemStack.getItemType() == ItemType.CHAIN_HELMET ||
+            itemStack.getItemType() == ItemType.DIAMOND_HELMET ||
+            itemStack.getItemType() == ItemType.GOLDEN_HELMET ||
+            itemStack.getItemType() == ItemType.IRON_HELMET ||
+            itemStack.getItemType() == ItemType.LEATHER_HELMET ||
+            itemStack.getItemType() == ItemType.CHAIN_LEGGINGS ||
+            itemStack.getItemType() == ItemType.DIAMOND_LEGGINGS ||
+            itemStack.getItemType() == ItemType.GOLDEN_LEGGINGS ||
+            itemStack.getItemType() == ItemType.IRON_LEGGINGS ||
+            itemStack.getItemType() == ItemType.LEATHER_LEGGINGS ||
+            itemStack.getItemType() == ItemType.CHAIN_CHESTPLATE ||
+            itemStack.getItemType() == ItemType.DIAMOND_CHESTPLATE ||
+            itemStack.getItemType() == ItemType.GOLDEN_CHESTPLATE ||
+            itemStack.getItemType() == ItemType.IRON_CHESTPLATE ||
+            itemStack.getItemType() == ItemType.LEATHER_CHESTPLATE ||
+            itemStack.getItemType() == ItemType.CHAIN_BOOTS ||
+            itemStack.getItemType() == ItemType.DIAMOND_BOOTS ||
+            itemStack.getItemType() == ItemType.GOLDEN_BOOTS ||
+            itemStack.getItemType() == ItemType.IRON_BOOTS ||
+            itemStack.getItemType() == ItemType.LEATHER_BOOTS;
     }
 
 }

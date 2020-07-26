@@ -20,7 +20,7 @@ public class ItemRecordChirp extends ItemStack implements io.gomint.inventory.it
 
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.RECORD_CHIRP;
     }
 

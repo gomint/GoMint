@@ -18,7 +18,7 @@ import io.gomint.server.registry.RegisterInfo;
 public class ItemSoulLantern extends ItemStack implements io.gomint.inventory.item.ItemSoulLantern {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.SOUL_LANTERN;
     }
 

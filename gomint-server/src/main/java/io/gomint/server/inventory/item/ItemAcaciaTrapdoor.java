@@ -23,7 +23,7 @@ public class ItemAcaciaTrapdoor extends ItemStack implements io.gomint.inventory
     }
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.ACACIA_TRAPDOOR;
     }
 

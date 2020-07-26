@@ -18,7 +18,7 @@ import io.gomint.server.registry.RegisterInfo;
 public class ItemCrimsonPressurePlate extends ItemStack implements io.gomint.inventory.item.ItemCrimsonPressurePlate {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.CRIMSON_PRESSURE_PLATE;
     }
 

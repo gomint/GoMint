@@ -33,7 +33,7 @@ public class ItemGoldenBoots extends ItemGoldenArmor implements io.gomint.invent
     }
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.GOLDEN_BOOTS;
     }
 

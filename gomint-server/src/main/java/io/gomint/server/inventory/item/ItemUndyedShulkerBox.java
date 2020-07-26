@@ -18,7 +18,7 @@ import io.gomint.taglib.NBTTagCompound;
 public class ItemUndyedShulkerBox extends ItemStack implements io.gomint.inventory.item.ItemUndyedShulkerBox {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.UNDYED_SHULKER_BOX;
     }
 

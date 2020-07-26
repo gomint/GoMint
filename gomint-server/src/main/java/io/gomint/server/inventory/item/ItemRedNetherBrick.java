@@ -18,7 +18,7 @@ import io.gomint.taglib.NBTTagCompound;
 public class ItemRedNetherBrick extends ItemStack implements io.gomint.inventory.item.ItemRedNetherBrick {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.RED_NETHER_BRICK;
     }
 

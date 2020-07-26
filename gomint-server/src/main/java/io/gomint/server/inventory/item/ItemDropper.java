@@ -13,7 +13,7 @@ import io.gomint.taglib.NBTTagCompound;
 public class ItemDropper extends ItemStack implements io.gomint.inventory.item.ItemDropper {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.DROPPER;
     }
 

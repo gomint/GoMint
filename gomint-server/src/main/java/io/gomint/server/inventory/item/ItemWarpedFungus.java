@@ -18,7 +18,7 @@ import io.gomint.server.registry.RegisterInfo;
 public class ItemWarpedFungus extends ItemStack implements io.gomint.inventory.item.ItemWarpedFungus {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.WARPED_FUNGUS;
     }
 

@@ -13,7 +13,7 @@ import io.gomint.taglib.NBTTagCompound;
 public class ItemStainedHardenedClay extends ItemStack implements io.gomint.inventory.item.ItemStainedHardenedClay {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.STAINED_HARDENED_CLAY;
     }
 

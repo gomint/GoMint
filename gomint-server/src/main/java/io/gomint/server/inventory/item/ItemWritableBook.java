@@ -33,7 +33,7 @@ public class ItemWritableBook extends ItemStack implements io.gomint.inventory.i
 
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.WRITABLE_BOOK;
     }
 

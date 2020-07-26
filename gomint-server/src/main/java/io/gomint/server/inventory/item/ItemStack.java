@@ -63,7 +63,7 @@ public abstract class ItemStack implements Cloneable, io.gomint.inventory.item.I
 
     ItemStack setMaterial( int material ) {
         this.material = material;
-        return this;
+        return this.updateInventories(false);
     }
 
     /**
@@ -390,9 +390,9 @@ public abstract class ItemStack implements Cloneable, io.gomint.inventory.item.I
      * @param replaceWithAir if the item should be deleted (replaced with air)
      * @return the item instance used or the air instance which has been set
      */
-    io.gomint.inventory.item.ItemStack updateInventories( boolean replaceWithAir ) {
+    ItemStack updateInventories( boolean replaceWithAir ) {
         if ( replaceWithAir ) {
-            io.gomint.inventory.item.ItemStack itemStack = ItemAir.create( 0 );
+            ItemStack itemStack = (ItemStack) ItemAir.create( 0 );
 
             if ( this.itemStackPlace != null ) {
                 this.itemStackPlace.getInventory().setItem( this.itemStackPlace.getSlot(), itemStack );
@@ -537,6 +537,10 @@ public abstract class ItemStack implements Cloneable, io.gomint.inventory.item.I
 
     public void setID(int id) {
         this.id = id;
+    }
+
+    protected void setBlockId(String blockId) {
+        this.setMaterial(this.items.getMaterial(blockId));
     }
 
 }

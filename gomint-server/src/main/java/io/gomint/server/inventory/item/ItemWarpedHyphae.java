@@ -18,7 +18,7 @@ import io.gomint.server.registry.RegisterInfo;
 public class ItemWarpedHyphae extends ItemStack implements io.gomint.inventory.item.ItemWarpedHyphae {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.WARPED_HYPHAE;
     }
 

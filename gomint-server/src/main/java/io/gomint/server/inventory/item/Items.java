@@ -68,17 +68,24 @@ public class Items {
         this.generators = new Registry<>(classPath, (clazz, id) -> {
             LambdaConstructionFactory<io.gomint.server.inventory.item.ItemStack> factory = new LambdaConstructionFactory<>(clazz);
 
+            int material = 0;
+
             RegisterInfo[] info = clazz.getAnnotationsByType(RegisterInfo.class);
             for (RegisterInfo registerInfo : info) {
+                if (registerInfo.def() || material == 0) {
+                    material = registerInfo.id();
+                }
+
                 if (registerInfo.sId().length() > 0) {
                     this.itemIdToBlockId.put(registerInfo.id(), registerInfo.sId());
                     this.blockIdToItemId.put(registerInfo.sId(), registerInfo.id());
                 }
             }
 
+            int finalMaterial = material;
             return () -> {
                 io.gomint.server.inventory.item.ItemStack itemStack = factory.newInstance();
-                itemStack.setItems(this);
+                itemStack.setMaterial(finalMaterial).setItems(this);
                 return itemStack;
             };
         });
@@ -91,9 +98,13 @@ public class Items {
         return this.itemIdToBlockId.get(itemId);
     }
 
+    public int getMaterial(String blockId) {
+        return this.blockIdToItemId.getInt(blockId);
+    }
+
     public <T extends ItemStack> T create(String id, short data, byte amount, NBTTagCompound nbt) {
         // Resolve the item id and create as ever
-        return this.create(this.blockIdToItemId.getInt(id), data, amount, nbt);
+        return this.create(this.getMaterial(id), data, amount, nbt);
     }
 
     /**
@@ -173,8 +184,6 @@ public class Items {
         }
 
         io.gomint.server.inventory.item.ItemStack itemStack = itemGenerator.generate();
-        itemStack.setMaterial(this.generators.getId(itemClass));
-
         if (amount > 0) {
             itemStack.setAmount(amount);
         }

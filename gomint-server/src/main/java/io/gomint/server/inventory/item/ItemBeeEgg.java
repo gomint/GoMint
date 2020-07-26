@@ -11,7 +11,7 @@ import io.gomint.server.registry.RegisterInfo;
 public class ItemBeeEgg extends ItemStack implements io.gomint.inventory.item.ItemBeeEgg {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.BEEEGG;
     }
 

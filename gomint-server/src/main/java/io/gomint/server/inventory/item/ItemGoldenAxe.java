@@ -29,7 +29,7 @@ public class ItemGoldenAxe extends ItemReduceTierGolden implements io.gomint.inv
     }
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.GOLDEN_AXE;
     }
 

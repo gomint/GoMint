@@ -18,7 +18,7 @@ import io.gomint.server.registry.RegisterInfo;
 public class ItemCrackedNetherBricks extends ItemStack implements io.gomint.inventory.item.ItemCrackedNetherBricks {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.CRACKED_NETHER_BRICKS;
     }
 

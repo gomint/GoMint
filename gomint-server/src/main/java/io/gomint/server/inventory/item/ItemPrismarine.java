@@ -13,7 +13,7 @@ import io.gomint.taglib.NBTTagCompound;
 public class ItemPrismarine extends ItemStack implements io.gomint.inventory.item.ItemPrismarine {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.PRISMARINE;
     }
 

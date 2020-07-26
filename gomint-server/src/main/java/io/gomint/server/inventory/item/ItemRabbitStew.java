@@ -24,7 +24,7 @@ public class ItemRabbitStew extends ItemFood implements io.gomint.inventory.item
     }
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.RABBIT_STEW;
     }
 

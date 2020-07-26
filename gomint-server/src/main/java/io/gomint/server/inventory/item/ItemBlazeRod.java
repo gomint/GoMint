@@ -12,7 +12,7 @@ import io.gomint.server.registry.RegisterInfo;
 public class ItemBlazeRod extends ItemStack implements io.gomint.inventory.item.ItemBlazeRod {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.BLAZE_ROD;
     }
 

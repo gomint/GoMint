@@ -30,7 +30,7 @@ public class ItemIronSword extends ItemReduceTierSpecial implements io.gomint.in
     }
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.IRON_SWORD;
     }
 

@@ -11,7 +11,7 @@ import io.gomint.server.registry.RegisterInfo;
 public class ItemNetherWarpedWart extends ItemStack implements io.gomint.inventory.item.ItemNetherWarpedWart {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.NETHER_WARPED_WART;
     }
 

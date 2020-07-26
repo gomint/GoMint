@@ -24,7 +24,7 @@ public class ItemRottenFlesh extends ItemFood implements io.gomint.inventory.ite
     }
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.ROTTEN_FLESH;
     }
 

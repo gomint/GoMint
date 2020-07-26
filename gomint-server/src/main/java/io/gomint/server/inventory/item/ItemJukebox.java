@@ -23,7 +23,7 @@ public class ItemJukebox extends ItemStack implements io.gomint.inventory.item.I
     }
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.JUKEBOX;
     }
 

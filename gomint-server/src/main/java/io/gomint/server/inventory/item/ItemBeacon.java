@@ -13,7 +13,7 @@ import io.gomint.taglib.NBTTagCompound;
 public class ItemBeacon extends ItemStack implements io.gomint.inventory.item.ItemBeacon {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.BEACON;
     }
 

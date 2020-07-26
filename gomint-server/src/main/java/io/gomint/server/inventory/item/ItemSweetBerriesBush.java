@@ -11,7 +11,7 @@ import io.gomint.server.registry.RegisterInfo;
 public class ItemSweetBerriesBush extends ItemStack implements io.gomint.inventory.item.ItemSweetBerriesBush {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.SWEETBERRIESBUSH;
     }
 

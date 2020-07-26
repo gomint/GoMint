@@ -14,7 +14,7 @@ import io.gomint.taglib.NBTTagCompound;
 
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.MINECART;
     }
 

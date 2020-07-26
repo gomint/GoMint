@@ -29,7 +29,7 @@ public class ItemIronPickaxe extends ItemReduceTierIron implements io.gomint.inv
     }
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.IRON_PICKAXE;
     }
 

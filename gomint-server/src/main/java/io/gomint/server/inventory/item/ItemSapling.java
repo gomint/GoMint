@@ -13,7 +13,7 @@ import io.gomint.taglib.NBTTagCompound;
 public class ItemSapling extends ItemStack implements io.gomint.inventory.item.ItemSapling {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.SAPLING;
     }
 
