@@ -200,7 +200,7 @@ public class LevelDBWorldAdapter extends WorldAdapter {
             stream.write( new byte[8] );
 
             ByteBuf data = PooledByteBufAllocator.DEFAULT.heapBuffer();
-            compound.writeTo( data, false, ByteOrder.LITTLE_ENDIAN );
+            compound.writeTo( data, ByteOrder.LITTLE_ENDIAN );
             stream.write(data.array(), data.arrayOffset(), data.readableBytes());
             data.release();
         }

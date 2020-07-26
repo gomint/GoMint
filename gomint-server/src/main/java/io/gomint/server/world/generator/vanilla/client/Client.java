@@ -19,10 +19,6 @@ import io.gomint.math.Location;
 import io.gomint.math.MathUtils;
 import io.gomint.server.entity.tileentity.TileEntities;
 import io.gomint.server.entity.tileentity.TileEntity;
-import io.gomint.server.jni.NativeCode;
-import io.gomint.server.jni.zlib.JavaZLib;
-import io.gomint.server.jni.zlib.NativeZLib;
-import io.gomint.server.jni.zlib.ZLib;
 import io.gomint.server.jwt.JwtSignatureException;
 import io.gomint.server.jwt.JwtToken;
 import io.gomint.server.maintenance.ReportUploader;
@@ -59,9 +55,8 @@ import io.gomint.server.world.generator.vanilla.chunk.ChunkSquare;
 import io.gomint.server.world.generator.vanilla.chunk.ChunkSquareCache;
 import io.gomint.taglib.NBTReader;
 import io.gomint.taglib.NBTTagCompound;
-import io.gomint.util.random.FastRandom;
 import io.netty.buffer.ByteBuf;
-import io.netty.buffer.PooledByteBufAllocator;
+import lombok.Getter;
 import lombok.Setter;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
@@ -81,7 +76,6 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
-import java.util.zip.DataFormatException;
 
 import static io.gomint.server.network.Protocol.PACKET_ENCRYPTION_REQUEST;
 import static io.gomint.server.network.Protocol.PACKET_MOVE_PLAYER;
@@ -99,12 +93,6 @@ public class Client implements ConnectionWithState {
 
     private static final AtomicInteger CLIENT_IDS = new AtomicInteger( 0 );
     private static final Logger LOGGER = LoggerFactory.getLogger( Client.class );
-
-    private static final NativeCode<ZLib> ZLIB = new NativeCode<>("zlib", JavaZLib.class, NativeZLib.class);
-
-    static {
-        ZLIB.load();
-    }
 
     private final PostProcessExecutor postProcessExecutor;
 
@@ -139,7 +127,9 @@ public class Client implements ConnectionWithState {
     private Consumer<Void> disconnectConsumer;
     private boolean disconnected;
 
-    private ZLib decompressor;
+    // Processors
+    @Getter private Processor inputProcessor = new Processor(false);
+    @Getter private Processor outputProcessor = new Processor(true);
 
     public Client( WorldAdapter world, ChunkSquareCache chunkSquareCache, PostProcessExecutor postProcessExecutor ) {
         this.world = world;
@@ -153,9 +143,6 @@ public class Client implements ConnectionWithState {
             this.socket.setMojangModificationEnabled( true );
             this.socket.setEventHandler( ( socket, socketEvent ) -> {
                 if ( socketEvent.getType() == SocketEvent.Type.CONNECTION_ATTEMPT_SUCCEEDED ) {
-                    Client.this.decompressor = ZLIB.newInstance();
-                    Client.this.decompressor.init(false, false, 7); // Level doesn't matter
-
                     Client.this.connection = socketEvent.getConnection();
                     Client.this.connection.addDataProcessor( packetData -> {
                         if ( packetData.getPacketData().readableBytes() <= 0 ) {
@@ -212,30 +199,7 @@ public class Client implements ConnectionWithState {
      * @return decompressed and decrypted data
      */
     private ByteBuf handleBatchPacket( ByteBuf buffer ) {
-        // Encrypted?
-        ByteBuf input = buffer;
-        if ( this.encryptionHandler != null ) {
-            input = this.encryptionHandler.decryptInputFromServer( input );
-            if ( input == null ) {
-                // Decryption error
-                disconnect( "Checksum of encrypted packet was wrong" );
-                return null;
-            }
-        }
-
-        ByteBuf outBuf = PooledByteBufAllocator.DEFAULT.directBuffer(8192); // We will write at least once so ensureWrite will realloc to 8192 so or so
-
-        try {
-            this.decompressor.process(input.nioBuffer(), outBuf);
-        } catch (DataFormatException e) {
-            LOGGER.error("Failed to decompress batch packet", e);
-            outBuf.release();
-            return null;
-        } finally {
-            input.release();
-        }
-
-        return outBuf;
+        return this.inputProcessor.process(buffer);
     }
 
     public void disconnect( String message ) {
@@ -283,7 +247,7 @@ public class Client implements ConnectionWithState {
 
     @Override
     public Processor getOutputProcessor() {
-        return null;
+        return this.outputProcessor;
     }
 
     private void internalClose( String message ) {

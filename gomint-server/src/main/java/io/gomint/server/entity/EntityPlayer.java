@@ -40,7 +40,6 @@ import io.gomint.server.network.PlayerConnection;
 import io.gomint.server.network.PlayerConnectionState;
 import io.gomint.server.network.packet.*;
 import io.gomint.server.network.packet.PacketRespawnPosition.RespawnState;
-import io.gomint.server.network.tcp.protocol.SendPlayerToServerPacket;
 import io.gomint.server.permission.PermissionManager;
 import io.gomint.server.player.EntityVisibilityManager;
 import io.gomint.server.plugin.EventCaller;
@@ -245,7 +244,7 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
         }
 
         if (this.connection.getState() == PlayerConnectionState.LOGIN) {
-            this.connection.addToSendQueue( new PacketBiomeDefinitionList() );
+            this.connection.addToSendQueue(new PacketBiomeDefinitionList());
             this.connection.sendPlayState(PacketPlayState.PlayState.SPAWN);
             this.getLoginPerformance().setChunkStart(this.world.getServer().getCurrentTickTime());
         }
@@ -255,17 +254,10 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
 
     @Override
     public void transfer(String host, int port) {
-        if (this.world.getServer().getServerConfig().getListener().isUseTCP()) {
-            SendPlayerToServerPacket sendPlayerToServerPacket = new SendPlayerToServerPacket();
-            sendPlayerToServerPacket.setHost(host);
-            sendPlayerToServerPacket.setPort(port);
-            this.connection.getConnectionHandler().send(sendPlayerToServerPacket);
-        } else {
-            PacketTransfer packetTransfer = new PacketTransfer();
-            packetTransfer.setAddress(host);
-            packetTransfer.setPort(port);
-            this.connection.addToSendQueue(packetTransfer);
-        }
+        PacketTransfer packetTransfer = new PacketTransfer();
+        packetTransfer.setAddress(host);
+        packetTransfer.setPort(port);
+        this.connection.addToSendQueue(packetTransfer);
     }
 
     @Override
@@ -705,7 +697,7 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
     public void prepareEntity() {
         // Send world init data
         this.connection.sendWorldInitialization();
-        this.connection.addToSendQueue( new PacketAvailableEntityIdentifiers() );
+        this.connection.addToSendQueue(new PacketAvailableEntityIdentifiers());
         this.connection.sendSpawnPosition();
         this.connection.sendDifficulty();
         this.connection.sendCommandsEnabled();
@@ -1259,7 +1251,7 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
         PacketRespawnPosition packetRespawnPosition = new PacketRespawnPosition();
         packetRespawnPosition.setPosition(this.respawnPosition);
         packetRespawnPosition.setEntityId(this.getEntityId());
-        packetRespawnPosition.setState( RespawnState.READY_TO_SPAWN );
+        packetRespawnPosition.setState(RespawnState.READY_TO_SPAWN);
         this.getConnection().addToSendQueue(packetRespawnPosition);
     }
 
@@ -1602,8 +1594,8 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
 
         packetSpawnPlayer.setItemInHand(this.getInventory().getItemInHand());
         packetSpawnPlayer.setMetadataContainer(this.getMetadata());
-        packetSpawnPlayer.setDeviceId( this.getDeviceInfo().getDeviceId() );
-        packetSpawnPlayer.setBuildPlatform( this.getDeviceInfo().getOs().getId() );
+        packetSpawnPlayer.setDeviceId(this.getDeviceInfo().getDeviceId());
+        packetSpawnPlayer.setBuildPlatform(this.getDeviceInfo().getOs().getId());
 
         return packetSpawnPlayer;
     }

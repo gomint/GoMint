@@ -16,8 +16,6 @@ import io.gomint.jraknet.ServerSocket;
 import io.gomint.jraknet.SocketEvent;
 import io.gomint.server.GoMintServer;
 import io.gomint.server.maintenance.ReportUploader;
-import io.gomint.server.network.tcp.ConnectionHandler;
-import io.gomint.server.network.tcp.Initializer;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;
 import io.netty.util.ResourceLeakDetector;
@@ -66,12 +64,6 @@ public class NetworkManager {
     private ServerSocket socket;
     private Long2ObjectMap<PlayerConnection> playersByGuid = new Long2ObjectOpenHashMap<>();
 
-    // TCP listener
-    private ServerBootstrap tcpListener;
-    private Channel tcpChannel;
-    private AtomicLong idCounter = new AtomicLong(0);
-    private int boundPort = 0;
-
     // Incoming connections to be added to the player map during next tick:
     private Queue<PlayerConnection> incomingConnections = new ConcurrentLinkedQueue<>();
 
@@ -116,46 +108,15 @@ public class NetworkManager {
         System.setProperty("io.netty.selectorAutoRebuildThreshold", "0");     // Never rebuild selectors
         ResourceLeakDetector.setLevel(ResourceLeakDetector.Level.DISABLED);   // Eats performance
 
-        // Check which listener to use
-        if (this.server.getServerConfig().getListener().isUseTCP()) {
-            this.tcpListener = Initializer.buildServerBootstrap(connectionHandler -> {
-                PlayerPreLoginEvent playerPreLoginEvent = getServer().getPluginManager().callEvent(
-                    new PlayerPreLoginEvent((InetSocketAddress) connectionHandler.getChannel().remoteAddress())
-                );
 
-                if (playerPreLoginEvent.isCancelled()) {
-                    connectionHandler.disconnect();
-                    return;
-                }
-
-                this.context.registerBean("network.newConnection.raknet", Connection.class, () -> null);
-                this.context.registerBean("network.newConnection.tcp", ConnectionHandler.class, () -> connectionHandler);
-
-                PlayerConnection playerConnection = this.context.getAutowireCapableBeanFactory().getBean(PlayerConnection.class);
-                playerConnection.setTcpId(idCounter.incrementAndGet());
-
-                this.context.removeBeanDefinition("network.newConnection.raknet");
-                this.context.removeBeanDefinition("network.newConnection.tcp");
-
-                incomingConnections.offer(playerConnection);
-
-                connectionHandler.onPing(playerConnection::setTcpPing);
-                connectionHandler.whenDisconnected(aVoid -> handleConnectionClosed(playerConnection.getId()));
-                connectionHandler.onException(throwable -> LOGGER.warn("Exception in TCP handling", throwable));
-            });
-
-            this.tcpChannel = this.tcpListener.bind(host, port).syncUninterruptibly().channel();
-            this.boundPort = port;
-        } else {
-            if (this.socket != null) {
-                throw new IllegalStateException("Cannot re-initialize network manager");
-            }
-
-            this.socket = new ServerSocket(LOGGER, maxConnections);
-            this.socket.setMojangModificationEnabled(true);
-            this.socket.setEventHandler((eventSocket, socketEvent) -> NetworkManager.this.handleSocketEvent(socketEvent));
-            this.socket.bind(host, port);
+        if (this.socket != null) {
+            throw new IllegalStateException("Cannot re-initialize network manager");
         }
+
+        this.socket = new ServerSocket(LOGGER, maxConnections);
+        this.socket.setMojangModificationEnabled(true);
+        this.socket.setEventHandler((eventSocket, socketEvent) -> NetworkManager.this.handleSocketEvent(socketEvent));
+        this.socket.bind(host, port);
     }
 
     /**
@@ -316,13 +277,11 @@ public class NetworkManager {
      */
     private void handleNewConnection(Connection newConnection) {
         this.context.registerBean("network.newConnection.raknet", Connection.class, () -> newConnection);
-        this.context.registerBean("network.newConnection.tcp", ConnectionHandler.class, () -> null);
 
         PlayerConnection playerConnection = this.context.getAutowireCapableBeanFactory().getBean(PlayerConnection.class);
         this.incomingConnections.add(playerConnection);
 
         this.context.removeBeanDefinition("network.newConnection.raknet");
-        this.context.removeBeanDefinition("network.newConnection.tcp");
     }
 
     /**
@@ -396,7 +355,7 @@ public class NetworkManager {
      * @return bound port
      */
     public int getPort() {
-        return this.tcpListener != null ? this.boundPort : this.socket.getBindAddress().getPort();
+        return this.socket.getBindAddress().getPort();
     }
 
     /**
@@ -413,10 +372,6 @@ public class NetworkManager {
             }
         }
 
-        if (this.tcpListener != null) {
-            this.tcpChannel.close();
-            Initializer.close();
-        }
         LOGGER.info("Shutdown of network completed");
     }
 

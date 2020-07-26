@@ -196,7 +196,7 @@ public class LevelDBChunkAdapter extends ChunkAdapter {
                 compound.addValue("version", BLOCK_VERSION);
 
                 try {
-                    compound.writeTo( buffer.getBuffer(), false, ByteOrder.LITTLE_ENDIAN );
+                    compound.writeTo( buffer.getBuffer(), ByteOrder.LITTLE_ENDIAN );
                 } catch ( IOException e ) {
                     e.printStackTrace();
                 }

@@ -86,7 +86,7 @@ public class AssetsLibrary {
         byte[] data = in.readAllBytes();
 
         ByteBuf buf = Allocator.allocate(data);
-        NBTTagCompound root = NBTTagCompound.readFrom(buf, false, ByteOrder.BIG_ENDIAN);
+        NBTTagCompound root = NBTTagCompound.readFrom(buf, ByteOrder.BIG_ENDIAN);
         if (GoMint.instance() != null) {
             this.loadItemIDs((List<NBTTagCompound>) ((List) root.getList("itemLegacyIDs", false)));
             this.loadRecipes((List<NBTTagCompound>) ((List) root.getList("recipes", false)));
@@ -294,7 +294,7 @@ public class AssetsLibrary {
 
         NBTTagCompound compound = null;
         if (extraLen > 0) {
-            compound = NBTTagCompound.readFrom(buffer.getBuffer(), false, ByteOrder.BIG_ENDIAN);
+            compound = NBTTagCompound.readFrom(buffer.getBuffer(), ByteOrder.BIG_ENDIAN);
         }
 
         return this.items == null ? null : this.items.create(id, data, amount, compound);

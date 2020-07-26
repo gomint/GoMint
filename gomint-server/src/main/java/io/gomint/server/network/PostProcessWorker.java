@@ -1,10 +1,6 @@
 package io.gomint.server.network;
 
 import io.gomint.jraknet.PacketBuffer;
-import io.gomint.server.jni.NativeCode;
-import io.gomint.server.jni.zlib.JavaZLib;
-import io.gomint.server.jni.zlib.NativeZLib;
-import io.gomint.server.jni.zlib.ZLib;
 import io.gomint.server.maintenance.ReportUploader;
 import io.gomint.server.network.packet.Packet;
 import io.gomint.server.network.packet.PacketBatch;
@@ -13,10 +9,7 @@ import io.netty.buffer.PooledByteBufAllocator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.nio.ByteBuffer;
 import java.util.function.Consumer;
-import java.util.zip.Adler32;
-import java.util.zip.DataFormatException;
 
 /**
  * @author geNAZt

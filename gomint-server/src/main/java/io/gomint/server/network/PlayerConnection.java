@@ -44,9 +44,6 @@ import io.gomint.server.network.packet.PacketSetDifficulty;
 import io.gomint.server.network.packet.PacketSetSpawnPosition;
 import io.gomint.server.network.packet.PacketStartGame;
 import io.gomint.server.network.packet.PacketWorldTime;
-import io.gomint.server.network.tcp.ConnectionHandler;
-import io.gomint.server.network.tcp.protocol.FlushTickPacket;
-import io.gomint.server.network.tcp.protocol.WrappedMCPEPacket;
 import io.gomint.server.util.Cache;
 import io.gomint.server.util.EnumConnectors;
 import io.gomint.server.util.Pair;
@@ -55,7 +52,6 @@ import io.gomint.server.util.Values;
 import io.gomint.server.world.ChunkAdapter;
 import io.gomint.server.world.CoordinateUtils;
 import io.gomint.server.world.WorldAdapter;
-import io.gomint.util.random.FastRandom;
 import io.gomint.world.Biome;
 import io.netty.buffer.ByteBuf;
 import it.unimi.dsi.fastutil.longs.LongIterator;
@@ -98,41 +94,64 @@ public class PlayerConnection implements ConnectionWithState {
     private final NetworkManager networkManager;
 
     // Actual connection for wire transfer:
-    @Getter private final Connection connection;
-    @Getter private final ConnectionHandler connectionHandler;
+    @Getter
+    private final Connection connection;
 
     // Caching state
-    @Getter @Setter private boolean cachingSupported;
-    @Getter private final Cache cache = new Cache();
+    @Getter
+    @Setter
+    private boolean cachingSupported;
+    @Getter
+    private final Cache cache = new Cache();
 
     // World data
-    @Getter private final LongSet playerChunks;
-    @Getter private final LongSet loadingChunks;
-    @Getter private final GoMintServer server;
-    @Setter @Getter private int protocolID;
-    @Setter private long tcpId;
-    @Setter private int tcpPing;
+    @Getter
+    private final LongSet playerChunks;
+    @Getter
+    private final LongSet loadingChunks;
+    @Getter
+    private final GoMintServer server;
+    @Setter
+    @Getter
+    private int protocolID;
+    @Setter
+    private long tcpId;
+    @Setter
+    private int tcpPing;
     private PostProcessExecutor postProcessorExecutor;
 
     // Connection State:
-    @Getter @Setter private PlayerConnectionState state;
+    @Getter
+    @Setter
+    private PlayerConnectionState state;
     private List<Packet> sendQueue;
 
     // Entity
-    @Getter @Setter private EntityPlayer entity;
+    @Getter
+    @Setter
+    private EntityPlayer entity;
 
     // Additional data
-    @Getter @Setter private DeviceInfo deviceInfo;
+    @Getter
+    @Setter
+    private DeviceInfo deviceInfo;
     private float lastUpdateDT = 0;
 
     // Anti spam because mojang likes to send data
-    @Setter @Getter private boolean hadStartBreak;
-    @Setter @Getter private boolean startBreakResult;
-    @Getter private Set<PacketInventoryTransaction> transactionsHandled = new HashSet<>();
+    @Setter
+    @Getter
+    private boolean hadStartBreak;
+    @Setter
+    @Getter
+    private boolean startBreakResult;
+    @Getter
+    private Set<PacketInventoryTransaction> transactionsHandled = new HashSet<>();
 
     // Processors
-    @Getter private Processor inputProcessor = new Processor(false);
-    @Getter private Processor outputProcessor = new Processor(true);
+    @Getter
+    private Processor inputProcessor = new Processor(false);
+    @Getter
+    private Processor outputProcessor = new Processor(true);
 
     /**
      * Constructs a new player connection.
@@ -140,15 +159,13 @@ public class PlayerConnection implements ConnectionWithState {
      * @param context        The spring context who loaded this application
      * @param networkManager The network manager creating this instance
      * @param connection     The jRakNet connection for actual wire-transfer
-     * @param tcpConnection  TCP connection for low latency communication with proxies
      */
     @Autowired
-    PlayerConnection(ApplicationContext context, NetworkManager networkManager, Optional<Connection> connection, Optional<ConnectionHandler> tcpConnection) {
+    PlayerConnection(ApplicationContext context, NetworkManager networkManager, Optional<Connection> connection) {
         PlayerConnection.ensureStaticInit(context);
 
         this.networkManager = networkManager;
         this.connection = connection.orElse(null);
-        this.connectionHandler = tcpConnection.orElse(null);
         this.state = PlayerConnectionState.HANDSHAKE;
         this.server = networkManager.getServer();
         this.playerChunks = new LongOpenHashSet();
@@ -324,39 +341,12 @@ public class PlayerConnection implements ConnectionWithState {
 
     private void releaseSendQueue() {
         // Send all queued packets
-        if (this.connection != null) {
-            if (this.sendQueue != null && !this.sendQueue.isEmpty()) {
-                this.postProcessorExecutor.addWork(this, this.sendQueue.toArray(new Packet[0]), null);
-                this.sendQueue.clear();
-            }
-        } else {
-            if (this.sendQueue != null && !this.sendQueue.isEmpty()) {
-                Packet[] packets = this.sendQueue.toArray(new Packet[0]);
 
-                List<PacketBuffer> packetBuffers = new ArrayList<>();
-                for (int i = 0; i < packets.length; i++) {
-                    // CHECKSTYLE:OFF
-                    try {
-                        PacketBuffer buffer = new PacketBuffer(2);
-                        packets[i].serializeHeader(buffer);
-                        packets[i].serialize(buffer, this.protocolID);
-                        packetBuffers.add(buffer);
-                    } catch (Exception e) {
-                        LOGGER.error("Could not serialize packet", e);
-                        ReportUploader.create().tag("network.serialize").exception(e).upload();
-                    }
-                    // CHECKSTYLE:ON
-                }
-
-                WrappedMCPEPacket mcpePacket = new WrappedMCPEPacket();
-                mcpePacket.setRaknetVersion((byte) 9);
-                mcpePacket.setBuffer(packetBuffers.toArray(new PacketBuffer[0]));
-                this.connectionHandler.send(mcpePacket);
-                this.sendQueue.clear();
-            }
-
-            this.connectionHandler.send(new FlushTickPacket());
+        if (this.sendQueue != null && !this.sendQueue.isEmpty()) {
+            this.postProcessorExecutor.addWork(this, this.sendQueue.toArray(new Packet[0]), null);
+            this.sendQueue.clear();
         }
+
     }
 
     private void updateNetwork(long currentMillis) {
@@ -364,26 +354,14 @@ public class PlayerConnection implements ConnectionWithState {
         List<PacketBuffer> packetBuffers = null;
 
         // Receive all waiting packets:
-        if (this.connection != null) {
-            EncapsulatedPacket packetData;
-            while ((packetData = this.connection.receive()) != null) {
-                if (packetBuffers == null) {
-                    packetBuffers = new ArrayList<>();
-                }
-
-                packetBuffers.add(new PacketBuffer(packetData.getPacketData()));
-                packetData.release(); // The internal buffer took over
+        EncapsulatedPacket packetData;
+        while ((packetData = this.connection.receive()) != null) {
+            if (packetBuffers == null) {
+                packetBuffers = new ArrayList<>();
             }
-        } else {
-            while (!this.connectionHandler.getData().isEmpty()) {
-                PacketBuffer buffer = this.connectionHandler.getData().poll();
 
-                if (packetBuffers == null) {
-                    packetBuffers = new ArrayList<>();
-                }
-
-                packetBuffers.add(buffer);
-            }
+            packetBuffers.add(new PacketBuffer(packetData.getPacketData()));
+            packetData.release(); // The internal buffer took over
         }
 
         if (packetBuffers != null) {
@@ -407,35 +385,16 @@ public class PlayerConnection implements ConnectionWithState {
      * @param packet The packet which should be send to the player
      */
     public void send(Packet packet, Consumer<Void> callback) {
-        if (this.connection != null) {
-            if (!(packet instanceof PacketBatch)) {
-                this.postProcessorExecutor.addWork(this, new Packet[]{packet}, callback);
-            } else {
-                // CHECKSTYLE:OFF
-                try {
-                    PacketBuffer buffer = new PacketBuffer(64);
-                    packet.serializeHeader(buffer);
-                    packet.serialize(buffer, this.protocolID);
-
-                    this.connection.send(PacketReliability.RELIABLE_ORDERED, packet.orderingChannel(), buffer);
-                } catch (Exception e) {
-                    LOGGER.error("Could not serialize packet", e);
-                }
-                // CHECKSTYLE:ON
-            }
+        if (!(packet instanceof PacketBatch)) {
+            this.postProcessorExecutor.addWork(this, new Packet[]{packet}, callback);
         } else {
             // CHECKSTYLE:OFF
             try {
-                LOGGER.debug("Writing packet {} to client", Integer.toHexString(packet.getId() & 0xFF));
-
-                PacketBuffer buffer = new PacketBuffer(2);
+                PacketBuffer buffer = new PacketBuffer(64);
                 packet.serializeHeader(buffer);
                 packet.serialize(buffer, this.protocolID);
 
-                WrappedMCPEPacket mcpePacket = new WrappedMCPEPacket();
-                mcpePacket.setRaknetVersion((byte) 9);
-                mcpePacket.setBuffer(new PacketBuffer[]{buffer});
-                this.connectionHandler.send(mcpePacket);
+                this.connection.send(PacketReliability.RELIABLE_ORDERED, packet.orderingChannel(), buffer);
             } catch (Exception e) {
                 LOGGER.error("Could not serialize packet", e);
             }
@@ -843,14 +802,9 @@ public class PlayerConnection implements ConnectionWithState {
     }
 
     private void internalClose(String message) {
-        if (this.connection != null) {
-            if (this.connection.isConnected() && !this.connection.isDisconnecting()) {
-                this.connection.disconnect(message);
-            }
-        } else {
-            this.connectionHandler.disconnect();
+        if (this.connection.isConnected() && !this.connection.isDisconnecting()) {
+            this.connection.disconnect(message);
         }
-
     }
 
     // ====================================== PACKET SENDERS ====================================== //

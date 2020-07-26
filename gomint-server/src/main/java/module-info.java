@@ -43,7 +43,6 @@ module gomint.server {
     requires jline.reader;
     requires jline.terminal;
     requires spring.core;
-    requires gomint.jni;
     requires org.apache.commons.text;
     requires org.slf4j;
 
