@@ -7,9 +7,33 @@
 
 package io.gomint.world.block;
 
+import io.gomint.inventory.Inventory;
+
 /**
  * @author geNAZt
  * @version 1.0
  */
-public interface BlockTrappedChest extends Block {
+public interface BlockTrappedChest extends BlockFacing {
+
+    /**
+     * Get the chests inventory
+     *
+     * @return inventory of this chest
+     */
+    Inventory getInventory();
+
+    /**
+     * Set a custom name for this container
+     *
+     * @param customName which should be used
+     */
+    void setCustomName( String customName );
+
+    /**
+     * Get the custom name of this container
+     *
+     * @return custom name of this container
+     */
+    String getCustomName();
+
 }

@@ -4,9 +4,11 @@ import io.gomint.inventory.Inventory;
 import io.gomint.inventory.item.ItemStack;
 import io.gomint.math.Vector;
 import io.gomint.server.entity.Entity;
+import io.gomint.server.entity.EntityPlayer;
 import io.gomint.server.entity.tileentity.ChestTileEntity;
 import io.gomint.server.entity.tileentity.TileEntity;
 import io.gomint.server.registry.RegisterInfo;
+import io.gomint.server.world.PlacementData;
 import io.gomint.server.world.block.helper.ToolPresets;
 import io.gomint.server.world.block.state.BlockfaceBlockState;
 import io.gomint.server.world.block.state.DirectionBlockState;
@@ -23,88 +25,11 @@ import java.util.List;
  * @version 1.0
  */
 @RegisterInfo(sId = "minecraft:chest")
-public class Chest extends ContainerBlock implements BlockChest {
-
-    private static final BlockfaceBlockState DIRECTION = new BlockfaceBlockState(() -> new String[]{"facing_direction"});
-
-    @Override
-    public String getBlockId() {
-        return "minecraft:chest";
-    }
-
-    @Override
-    public long getBreakTime() {
-        return 3750;
-    }
-
-    @Override
-    public boolean isTransparent() {
-        return true;
-    }
-
-    @Override
-    public boolean interact(Entity entity, Facing face, Vector facePos, ItemStack item) {
-        ChestTileEntity tileEntity = this.getTileEntity();
-        if (tileEntity != null) {
-            tileEntity.interact(entity, face, facePos, item);
-        }
-
-        return true;
-    }
-
-    @Override
-    public Inventory getInventory() {
-        ChestTileEntity tileEntity = this.getTileEntity();
-        if (tileEntity != null) {
-            return tileEntity.getInventory();
-        }
-
-        return null;
-    }
-
-    @Override
-    public boolean needsTileEntity() {
-        return true;
-    }
-
-    @Override
-    TileEntity createTileEntity(NBTTagCompound compound) {
-        return new ChestTileEntity(this);
-    }
-
-    @Override
-    public float getBlastResistance() {
-        return 12.5f;
-    }
+public class Chest extends ChestBase implements BlockChest {
 
     @Override
     public BlockType getBlockType() {
         return BlockType.CHEST;
-    }
-
-    @Override
-    public boolean canBeBrokenWithHand() {
-        return true;
-    }
-
-    @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
-        return ToolPresets.AXE;
-    }
-
-    @Override
-    public List<ItemStack> getDrops(ItemStack itemInHand) {
-        List<ItemStack> items = super.getDrops(itemInHand);
-
-        // We also drop the inventory
-        ChestTileEntity chestTileEntity = this.getTileEntity();
-        for (ItemStack itemStack : chestTileEntity.getInventory().getContentsArray()) {
-            if (itemStack != null) {
-                items.add(itemStack);
-            }
-        }
-
-        return items;
     }
 
     @Override
@@ -115,6 +40,11 @@ public class Chest extends ContainerBlock implements BlockChest {
     @Override
     public Facing getFacing() {
         return DIRECTION.getState(this);
+    }
+
+    @Override
+    public Inventory getInventory() {
+        return super.getInventory();
     }
 
 }
