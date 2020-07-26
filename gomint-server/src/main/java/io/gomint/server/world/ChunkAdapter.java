@@ -459,7 +459,7 @@ public class ChunkAdapter implements Chunk {
      * @return The world chunk packet that is to be sent
      */
     public PacketWorldChunk createPackagedData(Cache cache, boolean cached) {
-        PacketBuffer buffer = new PacketBuffer(16);
+        PacketBuffer buffer = new PacketBuffer(17 * 4096);
 
         // Detect how much data we can skip
         int topEmpty = 15;

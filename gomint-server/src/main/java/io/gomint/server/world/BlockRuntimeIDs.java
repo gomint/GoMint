@@ -47,7 +47,7 @@ public class BlockRuntimeIDs {
     private static ByteBuf START_GAME_BUFFER;
 
     // State jumptables
-    private static SwitchBlockStateMapper MAPPER_REGISTRY = new SwitchBlockStateMapper();
+    private static final SwitchBlockStateMapper MAPPER_REGISTRY = new SwitchBlockStateMapper();
 
     public static void init(List<BlockIdentifier> blockPalette) throws IOException {
         List<Object> compounds = new ArrayList<>();

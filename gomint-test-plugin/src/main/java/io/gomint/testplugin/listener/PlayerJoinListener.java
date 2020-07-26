@@ -1,20 +1,12 @@
 package io.gomint.testplugin.listener;
 
-import io.gomint.entity.passive.EntityArmorStand;
 import io.gomint.event.EventHandler;
 import io.gomint.event.EventListener;
 import io.gomint.event.EventPriority;
 import io.gomint.event.player.PlayerJoinEvent;
-import io.gomint.inventory.item.ItemBucket;
-import io.gomint.inventory.item.ItemRail;
-import io.gomint.inventory.item.ItemSand;
-import io.gomint.inventory.item.ItemShears;
-import io.gomint.inventory.item.ItemVines;
-import io.gomint.math.BlockPosition;
 import io.gomint.testplugin.TestPlugin;
 import io.gomint.testplugin.scoreboard.DebugScoreboard;
-import io.gomint.world.block.Block;
-import io.gomint.world.block.BlockBambooSapling;
+import io.gomint.world.Gamemode;
 import lombok.RequiredArgsConstructor;
 
 /**
@@ -31,19 +23,10 @@ public class PlayerJoinListener implements EventListener {
         // Set to allow all permissions
         event.getPlayer().getPermissionManager().setPermission("*", true);
 
-        // event.getPlayer().setGamemode( Gamemode.CREATIVE );
+        event.getPlayer().setGamemode( Gamemode.CREATIVE );
 
         // Give this player the debug scoreboard
         new DebugScoreboard(this.plugin, event.getPlayer());
-
-        ItemBucket bucket = ItemBucket.create(1);
-        bucket.setContent(ItemBucket.Content.WATER);
-        event.getPlayer().getInventory().setItem(4, bucket);
-
-        event.getPlayer().getInventory().setItem(3, ItemShears.create(1));
-        event.getPlayer().getInventory().setItem(4, ItemRail.create(4));
-        event.getPlayer().getInventory().setItem(5, ItemSand.create(4));
-        event.getPlayer().getInventory().setItem(6, ItemVines.create(4));
     }
 
 }
