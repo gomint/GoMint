@@ -45,4 +45,8 @@ public enum StoneType {
     CUT_RED_STONE,
     CUT_SANDSTONE,
 
+    BLACKSTONE,
+    POLISHED_BLACKSTONE,
+    POLISHED_BLACKSTONE_BRICK,
+
 }

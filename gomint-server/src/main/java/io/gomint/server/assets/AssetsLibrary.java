@@ -101,6 +101,7 @@ public class AssetsLibrary {
         this.itemIDs = new ArrayList<>();
         for (NBTTagCompound itemLegacyID : itemLegacyIDs) {
             StringShortPair pair = new StringShortPair(itemLegacyID.getString("name", ""), itemLegacyID.getShort("id", (short) 0));
+            System.out.println("@RegisterInfo(id = " + pair.getData() + ", sId = \"" + pair.getBlockId() + "\")");
             this.itemIDs.add(pair);
         }
     }

@@ -14,11 +14,6 @@ import io.gomint.server.registry.RegisterInfo;
 public class DoubleStoneSlab extends Block implements io.gomint.world.block.BlockDoubleStoneSlab {
 
     @Override
-    public String getBlockId() {
-        return "minecraft:double_stone_slab";
-    }
-
-    @Override
     public float getBlastResistance() {
         return 30.0f;
     }

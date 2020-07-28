@@ -13,7 +13,7 @@ import java.util.List;
  */
 public abstract class Slab extends Block implements BlockSlab {
 
-    private static final BooleanBlockState TOP = new BooleanBlockState( () -> new String[]{"top_slot_bit"} );
+    protected static final BooleanBlockState TOP = new BooleanBlockState( () -> new String[]{"top_slot_bit"} );
 
     @Override
     public void setTop( boolean top ) {
