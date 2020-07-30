@@ -1553,7 +1553,6 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
 
     public void firstSpawn() {
         this.getConnection().sendMovePlayer(this.getLocation());
-        this.getConnection().sendNetworkChunkPublisher();
 
         // Spawn for others
         this.getWorld().spawnEntityAt(this, this.getPositionX(), this.getPositionY(), this.getPositionZ(), this.getYaw(), this.getPitch());
@@ -1569,6 +1568,13 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
                 });
             }
         }
+
+        // Send network chunk publisher packet after join
+        this.world.getServer().getScheduler().schedule(() -> {
+            if (isOnline()) {
+                getConnection().sendNetworkChunkPublisher();
+            }
+        }, 1, TimeUnit.SECONDS);
     }
 
     @Override
