@@ -27,7 +27,7 @@ public class PacketEncryptionResponseHandler implements PacketHandler<PacketEncr
     public void handle( PacketEncryptionResponse packet, long currentTimeMillis, PlayerConnection connection ) {
         connection.getEntity().getLoginPerformance().setEncryptionEnd( currentTimeMillis );
 
-        LOGGER.debug("We got encryption response");
+        LOGGER.info("We got encryption response: {}", connection.getEntity());
 
         PacketNetworkSettings networkSettings = new PacketNetworkSettings();
         networkSettings.setCompressionThreshold((short) 1);

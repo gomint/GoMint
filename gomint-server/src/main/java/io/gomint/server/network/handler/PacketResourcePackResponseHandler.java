@@ -26,7 +26,7 @@ public class PacketResourcePackResponseHandler implements PacketHandler<PacketRe
         // TODO: Implement resource pack sending
         switch (packet.getStatus()) {
             case HAVE_ALL_PACKS:
-                LOGGER.debug("Login state: HAVE_ALL_PACKS reached");
+                LOGGER.info("Login state: HAVE_ALL_PACKS reached: {}", connection.getEntity());
 
                 PacketResourcePackStack packetResourcePackStack = new PacketResourcePackStack();
 
@@ -41,7 +41,7 @@ public class PacketResourcePackResponseHandler implements PacketHandler<PacketRe
                 break;
 
             case COMPLETED:
-                LOGGER.debug("Login state: COMPLETED reached");
+                LOGGER.info("Login state: COMPLETED reached: {}", connection.getEntity());
 
                 // Proceed with login
                 this.switchToLogin(connection, currentTimeMillis);
