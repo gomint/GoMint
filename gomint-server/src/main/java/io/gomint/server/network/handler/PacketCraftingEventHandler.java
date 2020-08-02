@@ -45,32 +45,8 @@ public class PacketCraftingEventHandler implements PacketHandler<PacketCraftingE
             return;
         }
 
-        // Generate lists of output and input
-        List<ItemStack> packetOutput = new ArrayList<>(Arrays.asList(packet.getOutput()));
-
         // Generate a output stack for compare
         Collection<ItemStack> output = recipe.createResult();
-
-        // Due to a bug in MC:PE it can happen that the recipe id is shit
-        if (output.size() != packet.getOutput().length) {
-            LOGGER.debug("Output size does not match up");
-            recipe = connection.getEntity().getWorld().getServer().getRecipeManager().getRecipe(packetOutput);
-        } else {
-            Iterator<ItemStack> recipeSide = output.iterator();
-            Iterator<ItemStack> packetSide = packetOutput.iterator();
-
-            while (recipeSide.hasNext()) {
-                ItemStack recipeOutput = recipeSide.next();
-                ItemStack packetSingleOutput = packetSide.next();
-
-                if (!recipeOutput.equals(packetSingleOutput)) {
-                    LOGGER.debug("Packet wanted to get a recipe with different output");
-                    recipe = connection.getEntity().getWorld().getServer().getRecipeManager().getRecipe(packetOutput);
-                    output = recipe.createResult();
-                    break;
-                }
-            }
-        }
 
         // Crafting types:
         // 0 => Small crafting window inside of the player inventory
