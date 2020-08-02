@@ -20,6 +20,7 @@ import io.gomint.server.network.packet.PacketCommandRequest;
 import io.gomint.server.network.packet.PacketContainerClose;
 import io.gomint.server.network.packet.PacketCraftingEvent;
 import io.gomint.server.network.packet.PacketDisconnect;
+import io.gomint.server.network.packet.PacketEmoteList;
 import io.gomint.server.network.packet.PacketEncryptionResponse;
 import io.gomint.server.network.packet.PacketEntityEvent;
 import io.gomint.server.network.packet.PacketEntityFall;
@@ -232,6 +233,9 @@ public final class Protocol {
      */
     public static Packet createPacket(int id) {
         switch (id) {
+            case PACKET_EMOTE_LIST:
+                return new PacketEmoteList();
+
             case PACKET_CLIENT_CACHE_BLOB_STATUS:
                 return new PacketClientCacheBlobStatus();
 
