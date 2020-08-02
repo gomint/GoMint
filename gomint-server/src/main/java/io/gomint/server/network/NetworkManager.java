@@ -267,7 +267,7 @@ public class NetworkManager {
         );
 
         event.getPingPongInfo().setMotd("MCPE;" + pingEvent.getMotd() + ";" + Protocol.MINECRAFT_PE_PROTOCOL_VERSION +
-            ";" + Protocol.MINECRAFT_PE_NETWORK_VERSION + ";" + pingEvent.getOnlinePlayers() + ";" + pingEvent.getMaxPlayers());
+            ";" + Protocol.MINECRAFT_PE_NETWORK_VERSION + ";" + pingEvent.getOnlinePlayers() + ";" + pingEvent.getMaxPlayers() + ";" + this.socket.getGuid());
     }
 
     /**
