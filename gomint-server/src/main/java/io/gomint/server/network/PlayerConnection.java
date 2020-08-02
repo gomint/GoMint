@@ -457,28 +457,23 @@ public class PlayerConnection implements ConnectionWithState {
             return;
         }
 
-        if (this.connection != null) {
-            while (buffer.getRemaining() > 0) {
-                int packetLength = buffer.readUnsignedVarInt();
+        while (buffer.getRemaining() > 0) {
+            int packetLength = buffer.readUnsignedVarInt();
 
-                int currentIndex = buffer.getReadPosition();
-                byte packetID = buffer.getBuffer().getByte(currentIndex);
-                this.handleBufferData(currentTimeMillis, buffer);
-                int consumedByPacket = buffer.getReadPosition() - currentIndex;
+            int currentIndex = buffer.getReadPosition();
+            int packetID = this.handleBufferData(currentTimeMillis, buffer, currentIndex + packetLength);
 
-                if (consumedByPacket != packetLength) {
-                    int remaining = packetLength - consumedByPacket;
-                    LOGGER.error("Malformed batch packet payload: Could not read enclosed packet data correctly: 0x{} remaining {} bytes", Integer.toHexString(packetID), remaining);
-                    ReportUploader.create().tag("network.packet_remaining").property("packet_id", "0x" + Integer.toHexString(packetID)).property("packet_remaining", String.valueOf(remaining)).upload();
-                    return;
-                }
+            int consumedByPacket = buffer.getReadPosition() - currentIndex;
+            if (consumedByPacket != packetLength) {
+                int remaining = packetLength - consumedByPacket;
+                LOGGER.error("Malformed batch packet payload: Could not read enclosed packet data correctly: 0x{} remaining {} bytes", Integer.toHexString(packetID), remaining);
+                ReportUploader.create().tag("network.packet_remaining").property("packet_id", "0x" + Integer.toHexString(packetID)).property("packet_remaining", String.valueOf(remaining)).upload();
+                return;
             }
-        } else {
-            this.handleBufferData(currentTimeMillis, buffer);
         }
     }
 
-    private void handleBufferData(long currentTimeMillis, PacketBuffer buffer) {
+    private int handleBufferData(long currentTimeMillis, PacketBuffer buffer, int skippablePosition) {
         // Grab the packet ID from the packet's data
         int rawId = buffer.readUnsignedVarInt();
         int packetId = rawId & 0x3FF;
@@ -486,7 +481,7 @@ public class PlayerConnection implements ConnectionWithState {
         // There is some data behind the packet id when non batched packets (2 bytes)
         if (packetId == BATCH_MAGIC) {
             LOGGER.error("Malformed batch packet payload: Batch packets are not allowed to contain further batch packets");
-            return;
+            return packetId;
         }
 
         LOGGER.debug("Got MCPE packet {}", Integer.toHexString(packetId & 0xFF));
@@ -509,7 +504,7 @@ public class PlayerConnection implements ConnectionWithState {
             }
 
             // Don't allow for any other packets if we are in HANDSHAKE state:
-            return;
+            return packetId;
         }
 
         // When we are in encryption init state
@@ -528,7 +523,7 @@ public class PlayerConnection implements ConnectionWithState {
             }
 
             // Don't allow for any other packets if we are in RESOURCE_PACK state:
-            return;
+            return packetId;
         }
 
         // When we are in resource pack state
@@ -549,7 +544,7 @@ public class PlayerConnection implements ConnectionWithState {
             }
 
             // Don't allow for any other packets if we are in RESOURCE_PACK state:
-            return;
+            return packetId;
         }
 
 
@@ -558,8 +553,8 @@ public class PlayerConnection implements ConnectionWithState {
             this.networkManager.notifyUnknownPacket(packetId, buffer);
 
             // Got to skip
-            buffer.skip(buffer.getRemaining());
-            return;
+            buffer.setReadPosition(skippablePosition);
+            return packetId;
         }
 
         // CHECKSTYLE:OFF
@@ -571,6 +566,8 @@ public class PlayerConnection implements ConnectionWithState {
             ReportUploader.create().tag("network.deserialize").exception(e).upload();
         }
         // CHECKSTYLE:ON
+        
+        return packetId;
     }
 
     /**
