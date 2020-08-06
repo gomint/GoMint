@@ -5,6 +5,7 @@ import io.gomint.event.EventListener;
 import io.gomint.event.EventPriority;
 import io.gomint.event.player.PlayerJoinEvent;
 import io.gomint.inventory.item.ItemCake;
+import io.gomint.inventory.item.ItemPlank;
 import io.gomint.testplugin.TestPlugin;
 import io.gomint.testplugin.scoreboard.DebugScoreboard;
 import io.gomint.world.Gamemode;
@@ -24,12 +25,12 @@ public class PlayerJoinListener implements EventListener {
         // Set to allow all permissions
         event.getPlayer().getPermissionManager().setPermission("*", true);
 
-        event.getPlayer().setGamemode( Gamemode.CREATIVE );
+        // event.getPlayer().setGamemode( Gamemode.CREATIVE );
 
         // Give this player the debug scoreboard
         new DebugScoreboard(this.plugin, event.getPlayer());
 
-        event.getPlayer().getInventory().setItem(6, ItemCake.create(1));
+        event.getPlayer().getInventory().setItem(6, ItemPlank.create(64));
     }
 
 }

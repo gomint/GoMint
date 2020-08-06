@@ -16,6 +16,7 @@ import io.gomint.server.inventory.Inventory;
 import io.gomint.server.network.packet.Packet;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.UUID;
 
@@ -138,7 +139,7 @@ public class ShapedRecipe extends CraftingRecipe {
     @Override
     public int[] isCraftable(Inventory inputInventory) {
         // Check normal first
-        int[] output = this.check(inputInventory);
+        /*int[] output = this.check(inputInventory);
         if (output == null) {
             // vFlip the input
             Inventory flippedInventory = new CraftingInputInventory(inputInventory.getOwner());
@@ -171,7 +172,42 @@ public class ShapedRecipe extends CraftingRecipe {
             return this.check(flippedInventory);
         }
 
-        return output;
+        return output;*/
+        ItemStack[] inputItems = inputInventory.getContentsArray();
+        ItemStack[] ingredients = getIngredients();
+        int[] consumeSlots = new int[ingredients.length];
+        Arrays.fill(consumeSlots, -1);
+
+        for (int rI = 0; rI < ingredients.length; rI++) {
+            ItemStack recipeWanted = ingredients[rI];
+            boolean found = false;
+
+            for (int i = 0; i < inputItems.length; i++) {
+                ItemStack input = inputItems[i];
+
+                if (canBeUsedForCrafting(recipeWanted, input)) {
+                    // Check if we already consumed this
+                    int alreadyConsumed = 0;
+                    for (int consumeSlot : consumeSlots) {
+                        if (consumeSlot == i) {
+                            alreadyConsumed++;
+                        }
+                    }
+
+                    if (input.getAmount() >= alreadyConsumed + 1) {
+                        consumeSlots[rI] = i;
+                        found = true;
+                        break;
+                    }
+                }
+            }
+
+            if (!found) {
+                return null;
+            }
+        }
+
+        return consumeSlots;
     }
 
     private int[] check(Inventory inputInventory) {

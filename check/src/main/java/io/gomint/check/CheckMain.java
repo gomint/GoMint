@@ -113,8 +113,10 @@ public class CheckMain {
             missingBlocks.incrementAndGet();
 
             for (String stateKey : stateKeys) {
-                System.out.println("[X]  Missing state " + stateKey + " in block " + block);
-                missingStates.incrementAndGet();
+                if (!stateKey.equals("deprecated")) {
+                    System.out.println("[X]  Missing state " + stateKey + " in block " + block);
+                    missingStates.incrementAndGet();
+                }
             }
         });
 
