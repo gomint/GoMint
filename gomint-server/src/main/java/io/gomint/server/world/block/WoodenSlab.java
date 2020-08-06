@@ -14,21 +14,29 @@ import lombok.Getter;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo(sId = "minecraft:wooden_slab")
+@RegisterInfo(sId = "minecraft:wooden_slab", def = true)
+@RegisterInfo(sId = "minecraft:warped_slab")
+@RegisterInfo(sId = "minecraft:crimson_slab")
 public class WoodenSlab extends Slab implements BlockWoodenSlab {
+
+    private static final String WOODEN_ID = "minecraft:wooden_slab";
 
     @Getter
     private enum LogTypeMagic {
-        OAK("oak"),
-        SPRUCE("spruce"),
-        BIRCH("birch"),
-        JUNGLE("jungle"),
-        ACACIA("acacia"),
-        DARK_OAK("dark_oak");
+        OAK(WOODEN_ID, "oak"),
+        SPRUCE(WOODEN_ID,"spruce"),
+        BIRCH(WOODEN_ID,"birch"),
+        JUNGLE(WOODEN_ID,"jungle"),
+        ACACIA(WOODEN_ID,"acacia"),
+        DARK_OAK(WOODEN_ID,"dark_oak"),
+        CRIMSON("minecraft:crimson_slab", ""),
+        WARPED("minecraft:warped_slab", "");
 
+        private final String blockId;
         private final String value;
 
-        LogTypeMagic(String value) {
+        LogTypeMagic(String blockId, String value) {
+            this.blockId = blockId;
             this.value = value;
         }
     }
@@ -42,11 +50,6 @@ public class WoodenSlab extends Slab implements BlockWoodenSlab {
 
         return null;
     });
-
-    @Override
-    public String getBlockId() {
-        return "minecraft:wooden_slab";
-    }
 
     @Override
     public long getBreakTime() {
@@ -80,12 +83,27 @@ public class WoodenSlab extends Slab implements BlockWoodenSlab {
 
     @Override
     public LogType getWoodType() {
+        switch (this.getBlockId()) {
+            case "minecraft:crimson_slab":
+                return LogType.CRIMSON;
+            case "minecraft:warped_slab":
+                return LogType.WARPED;
+        }
+
         return LogType.valueOf(VARIANT.getState(this).name());
     }
 
     @Override
     public void setWoodType(LogType logType) {
-        VARIANT.setState(this, LogTypeMagic.valueOf(logType.name()));
+        LogTypeMagic newState = LogTypeMagic.valueOf(logType.name());
+
+        if (!newState.value.isEmpty()) {
+            VARIANT.setState(this, newState);
+        }
+
+        if (!this.getBlockId().equals(newState.blockId)) {
+            this.setBlockId(newState.blockId);
+        }
     }
 
 }

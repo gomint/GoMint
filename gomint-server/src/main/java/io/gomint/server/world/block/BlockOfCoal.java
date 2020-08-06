@@ -3,6 +3,7 @@ package io.gomint.server.world.block;
 import io.gomint.inventory.item.*;
 import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.world.block.helper.ToolPresets;
+import io.gomint.world.block.BlockBlockOfCoal;
 import io.gomint.world.block.BlockType;
 
 import java.util.ArrayList;
@@ -13,7 +14,7 @@ import java.util.List;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:coal_block" )
-public class BlockOfCoal extends Block implements io.gomint.world.block.BlockBlockOfCoal {
+public class BlockOfCoal extends Block implements BlockBlockOfCoal {
 
     @Override
     public String getBlockId() {

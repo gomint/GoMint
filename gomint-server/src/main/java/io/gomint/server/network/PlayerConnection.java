@@ -69,7 +69,6 @@ import org.springframework.stereotype.Component;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
 import static io.gomint.server.network.Protocol.BATCH_MAGIC;

@@ -9,6 +9,7 @@ import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.world.block.helper.ToolPresets;
 import io.gomint.server.world.block.state.BlockfaceBlockState;
 import io.gomint.taglib.NBTTagCompound;
+import io.gomint.world.block.BlockBlastFurnace;
 import io.gomint.world.block.data.Facing;
 import io.gomint.world.block.BlockType;
 import lombok.EqualsAndHashCode;
@@ -20,7 +21,7 @@ import lombok.EqualsAndHashCode;
 @RegisterInfo( sId = "minecraft:lit_blast_furnace" )
 @RegisterInfo( sId = "minecraft:blast_furnace", def = true )
 @EqualsAndHashCode( callSuper = true )
-public class BlastFurnace extends Block implements io.gomint.world.block.BlockBlastFurnace {
+public class BlastFurnace extends Block implements BlockBlastFurnace {
 
     private static final BlockfaceBlockState FACING = new BlockfaceBlockState( () -> new String[]{"facing_direction"} );
 

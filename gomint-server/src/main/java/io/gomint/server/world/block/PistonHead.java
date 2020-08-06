@@ -1,14 +1,11 @@
 package io.gomint.server.world.block;
 
 import io.gomint.server.world.block.helper.ToolPresets;
+import io.gomint.world.block.BlockPistonHead;
 import io.gomint.world.block.BlockType;
 
 import io.gomint.inventory.item.ItemStack;
-import io.gomint.math.BlockPosition;
-import io.gomint.server.entity.tileentity.PistonArmTileEntity;
-import io.gomint.server.entity.tileentity.TileEntity;
 import io.gomint.server.registry.RegisterInfo;
-import io.gomint.taglib.NBTTagCompound;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +15,7 @@ import java.util.List;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:pistonArmCollision" )
-public class PistonHead extends Block implements io.gomint.world.block.BlockPistonHead {
+public class PistonHead extends Block implements BlockPistonHead {
 
     @Override
     public String getBlockId() {

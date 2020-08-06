@@ -11,6 +11,7 @@ import io.gomint.server.util.collection.FreezableSortedMap;
 import io.gomint.taglib.NBTTagCompound;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.ToString;
 
 import java.util.Map;
 
@@ -20,6 +21,7 @@ import java.util.Map;
  */
 @EqualsAndHashCode
 @Getter
+@ToString
 public class BlockIdentifier {
 
     private final String blockId;

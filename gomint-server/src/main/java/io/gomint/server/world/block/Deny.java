@@ -1,6 +1,7 @@
 package io.gomint.server.world.block;
 
 import io.gomint.server.registry.RegisterInfo;
+import io.gomint.world.block.BlockDeny;
 import io.gomint.world.block.BlockType;
 
 /**
@@ -8,7 +9,7 @@ import io.gomint.world.block.BlockType;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:deny" )
-public class Deny extends Block implements io.gomint.world.block.BlockDeny {
+public class Deny extends Block implements BlockDeny {
 
     @Override
     public String getBlockId() {

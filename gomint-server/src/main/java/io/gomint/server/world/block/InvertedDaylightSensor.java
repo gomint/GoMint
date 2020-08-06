@@ -1,7 +1,6 @@
 package io.gomint.server.world.block;
 
-import io.gomint.inventory.item.ItemStack;
-import io.gomint.server.world.block.helper.ToolPresets;
+import io.gomint.world.block.BlockInvertedDaylightSensor;
 import io.gomint.world.block.BlockType;
 
 import io.gomint.server.registry.RegisterInfo;
@@ -11,7 +10,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:daylight_detector_inverted" )
-public class InvertedDaylightSensor extends Block implements io.gomint.world.block.BlockInvertedDaylightSensor {
+public class InvertedDaylightSensor extends Block implements BlockInvertedDaylightSensor {
 
     @Override
     public String getBlockId() {

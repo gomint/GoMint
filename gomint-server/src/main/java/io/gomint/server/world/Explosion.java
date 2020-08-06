@@ -16,7 +16,6 @@ import io.gomint.math.*;
 import io.gomint.math.Vector;
 import io.gomint.server.entity.Entity;
 import io.gomint.server.world.block.Air;
-import io.gomint.util.random.FastRandom;
 import io.gomint.world.Particle;
 import io.gomint.world.block.Block;
 import io.gomint.world.block.data.Facing;

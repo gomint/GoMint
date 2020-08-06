@@ -5,6 +5,7 @@ import io.gomint.server.entity.tileentity.CauldronTileEntity;
 import io.gomint.server.entity.tileentity.TileEntity;
 import io.gomint.server.world.block.helper.ToolPresets;
 import io.gomint.taglib.NBTTagCompound;
+import io.gomint.world.block.BlockCauldron;
 import io.gomint.world.block.BlockType;
 
 import io.gomint.server.registry.RegisterInfo;
@@ -14,7 +15,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:cauldron" )
-public class Cauldron extends Block implements io.gomint.world.block.BlockCauldron {
+public class Cauldron extends Block implements BlockCauldron {
 
     @Override
     public String getBlockId() {

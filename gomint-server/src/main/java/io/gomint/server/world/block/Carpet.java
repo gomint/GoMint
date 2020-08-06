@@ -2,6 +2,7 @@ package io.gomint.server.world.block;
 
 import io.gomint.math.AxisAlignedBB;
 import io.gomint.server.registry.RegisterInfo;
+import io.gomint.world.block.BlockCarpet;
 import io.gomint.world.block.BlockType;
 
 import java.util.Collections;
@@ -12,7 +13,7 @@ import java.util.List;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:carpet" )
-public class Carpet extends Block implements io.gomint.world.block.BlockCarpet {
+public class Carpet extends Block implements BlockCarpet {
 
     @Override
     public String getBlockId() {

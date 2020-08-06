@@ -1,6 +1,7 @@
 package io.gomint.server.world.block;
 
 import io.gomint.server.registry.RegisterInfo;
+import io.gomint.world.block.BlockBorder;
 import io.gomint.world.block.BlockType;
 
 /**
@@ -8,7 +9,7 @@ import io.gomint.world.block.BlockType;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:border_block" )
-public class Border extends Block implements io.gomint.world.block.BlockBorder {
+public class Border extends Block implements BlockBorder {
 
     @Override
     public String getBlockId() {

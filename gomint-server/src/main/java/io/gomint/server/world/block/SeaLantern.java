@@ -1,5 +1,6 @@
 package io.gomint.server.world.block;
 
+import io.gomint.world.block.BlockSeaLantern;
 import io.gomint.world.block.BlockType;
 
 import io.gomint.server.registry.RegisterInfo;
@@ -9,7 +10,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:seaLantern" )
-public class SeaLantern extends Block implements io.gomint.world.block.BlockSeaLantern {
+public class SeaLantern extends Block implements BlockSeaLantern {
 
     @Override
     public String getBlockId() {

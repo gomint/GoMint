@@ -114,7 +114,7 @@ public class BlockRuntimeIDs {
      * @param newValue    value of this key
      * @return new block identifier or null if no state has been found
      */
-    public static BlockIdentifier change(BlockIdentifier oldState, String newBlockId, String changingKey, Object newValue) {
+    public static BlockIdentifier change(BlockIdentifier oldState, String newBlockId, String[] changingKey, Object newValue) {
         Map<String, Object> changed;
         if (changingKey != null) {
             changed = new SingleKeyChangeMap<>(oldState.getStates(), changingKey, newValue);

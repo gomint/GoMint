@@ -10,22 +10,16 @@ import io.gomint.server.world.storage.TemporaryStorage;
 import io.gomint.world.block.Block;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.PooledByteBufAllocator;
-import it.unimi.dsi.fastutil.ints.Int2IntMap;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
-import it.unimi.dsi.fastutil.longs.LongArrayList;
-import it.unimi.dsi.fastutil.longs.LongList;
 import it.unimi.dsi.fastutil.objects.ObjectIterator;
 import it.unimi.dsi.fastutil.shorts.Short2IntMap;
 import it.unimi.dsi.fastutil.shorts.Short2IntOpenHashMap;
 import it.unimi.dsi.fastutil.shorts.Short2ObjectMap;
 import it.unimi.dsi.fastutil.shorts.Short2ObjectOpenHashMap;
-import it.unimi.dsi.fastutil.shorts.ShortArrayList;
-import it.unimi.dsi.fastutil.shorts.ShortList;
 import lombok.Getter;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.function.IntConsumer;
 
@@ -120,7 +114,7 @@ public class ChunkSlice {
         return blockStorage.getShort(index << 1);
     }
 
-    public <T extends io.gomint.world.block.Block> T getBlockInstanceInternal(short index, int layer, Location blockLocation) {
+    public <T extends Block> T getBlockInstanceInternal(short index, int layer, Location blockLocation) {
         if (blockLocation == null) {
             int blockX = ( index >> 8 ) & 0x0f;
             int blockY = ( index ) & 0x0f;
@@ -140,7 +134,7 @@ public class ChunkSlice {
             blockLocation, layer, this, index );
     }
 
-    <T extends io.gomint.world.block.Block> T getBlockInstance( int x, int y, int z, int layer ) {
+    <T extends Block> T getBlockInstance(int x, int y, int z, int layer ) {
         short index = getIndex( x, y, z );
         return getBlockInstanceInternal(index, layer, getBlockLocation(x,y,z));
     }

@@ -3,6 +3,7 @@ package io.gomint.server.world.block;
 import io.gomint.inventory.item.ItemStack;
 import io.gomint.server.world.block.helper.ToolPresets;
 import io.gomint.server.world.block.state.ProgressBlockState;
+import io.gomint.world.block.BlockFarmland;
 import io.gomint.world.block.BlockType;
 
 import io.gomint.math.BlockPosition;
@@ -17,7 +18,7 @@ import java.util.function.Function;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:farmland" )
-public class Farmland extends Block implements io.gomint.world.block.BlockFarmland {
+public class Farmland extends Block implements BlockFarmland {
 
     private static final ProgressBlockState WATER_LEVEL = new ProgressBlockState( () -> new String[]{"moisturized_amount"}, 7, aVoid -> {} );
 

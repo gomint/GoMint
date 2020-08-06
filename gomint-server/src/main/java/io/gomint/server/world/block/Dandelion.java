@@ -1,5 +1,6 @@
 package io.gomint.server.world.block;
 
+import io.gomint.world.block.BlockDandelion;
 import io.gomint.world.block.BlockType;
 
 import io.gomint.server.registry.RegisterInfo;
@@ -9,7 +10,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:yellow_flower" )
-public class Dandelion extends Block implements io.gomint.world.block.BlockDandelion {
+public class Dandelion extends Block implements BlockDandelion {
 
     @Override
     public String getBlockId() {

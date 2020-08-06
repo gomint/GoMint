@@ -3,6 +3,7 @@ package io.gomint.server.world.block;
 import io.gomint.inventory.item.ItemHoe;
 import io.gomint.inventory.item.ItemStack;
 import io.gomint.server.registry.RegisterInfo;
+import io.gomint.world.block.BlockNetherWarpedWart;
 import io.gomint.world.block.BlockType;
 
 /**
@@ -10,7 +11,7 @@ import io.gomint.world.block.BlockType;
  * @version 1.0
  */
 @RegisterInfo(sId = "minecraft:warped_wart_block")
-public class NetherWarpedWart extends Block implements io.gomint.world.block.BlockNetherWarpedWart {
+public class NetherWarpedWart extends Block implements BlockNetherWarpedWart {
 
     @Override
     public String getBlockId() {

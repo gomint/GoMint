@@ -3,6 +3,7 @@ package io.gomint.server.world.block;
 import io.gomint.inventory.item.ItemStack;
 import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.world.block.helper.ToolPresets;
+import io.gomint.world.block.BlockEndStone;
 import io.gomint.world.block.BlockType;
 
 /**
@@ -10,7 +11,7 @@ import io.gomint.world.block.BlockType;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:end_stone" )
-public class EndStone extends Block implements io.gomint.world.block.BlockEndStone {
+public class EndStone extends Block implements BlockEndStone {
 
     @Override
     public String getBlockId() {

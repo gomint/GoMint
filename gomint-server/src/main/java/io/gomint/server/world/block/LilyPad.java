@@ -3,6 +3,7 @@ package io.gomint.server.world.block;
 import io.gomint.inventory.item.ItemStack;
 import io.gomint.math.Location;
 import io.gomint.server.entity.Entity;
+import io.gomint.world.block.BlockLilyPad;
 import io.gomint.world.block.data.Facing;
 import io.gomint.world.block.BlockType;
 
@@ -13,7 +14,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:waterlily" )
-public class LilyPad extends Block implements io.gomint.world.block.BlockLilyPad {
+public class LilyPad extends Block implements BlockLilyPad {
 
     @Override
     public String getBlockId() {

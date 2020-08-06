@@ -2,6 +2,7 @@ package io.gomint.server.world.block;
 
 import io.gomint.server.entity.Entity;
 import io.gomint.server.entity.EntityPlayer;
+import io.gomint.world.block.BlockSlimeBlock;
 import io.gomint.world.block.BlockType;
 
 import io.gomint.server.registry.RegisterInfo;
@@ -11,7 +12,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:slime" )
-public class SlimeBlock extends Block implements io.gomint.world.block.BlockSlimeBlock {
+public class SlimeBlock extends Block implements BlockSlimeBlock {
 
     @Override
     public String getBlockId() {

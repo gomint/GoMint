@@ -9,6 +9,7 @@ import io.gomint.server.world.BlockRuntimeIDs;
 import io.gomint.server.world.PlacementData;
 import io.gomint.server.world.block.helper.ToolPresets;
 import io.gomint.server.world.block.state.EnumBlockState;
+import io.gomint.world.block.BlockSand;
 import io.gomint.world.block.BlockType;
 
 import io.gomint.inventory.item.*;
@@ -23,7 +24,7 @@ import java.util.List;
  * @version 1.0
  */
 @RegisterInfo(sId = "minecraft:sand")
-public class Sand extends Fallable implements io.gomint.world.block.BlockSand {
+public class Sand extends Fallable implements BlockSand {
 
     private static final String[] SAND_TYPE = new String[]{"sand_type"};
 
@@ -93,7 +94,7 @@ public class Sand extends Fallable implements io.gomint.world.block.BlockSand {
         BlockIdentifier identifier = placementData.getBlockIdentifier();
 
         SandTypeMagic should = item == null || item.getData() == 0 ? SandTypeMagic.NORMAL : SandTypeMagic.RED;
-        placementData.setBlockIdentifier(BlockRuntimeIDs.change(identifier, null, SAND_TYPE[0], should.getType()));
+        placementData.setBlockIdentifier(BlockRuntimeIDs.change(identifier, null, SAND_TYPE, should.getType()));
         return placementData;
     }
 

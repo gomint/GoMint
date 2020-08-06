@@ -5,6 +5,7 @@ import io.gomint.server.entity.tileentity.DispenserTileEntity;
 import io.gomint.server.entity.tileentity.TileEntity;
 import io.gomint.server.world.block.helper.ToolPresets;
 import io.gomint.taglib.NBTTagCompound;
+import io.gomint.world.block.BlockDispenser;
 import io.gomint.world.block.BlockType;
 
 import io.gomint.server.registry.RegisterInfo;
@@ -14,7 +15,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:dispenser" )
-public class Dispenser extends Block implements io.gomint.world.block.BlockDispenser {
+public class Dispenser extends Block implements BlockDispenser {
 
     @Override
     public String getBlockId() {

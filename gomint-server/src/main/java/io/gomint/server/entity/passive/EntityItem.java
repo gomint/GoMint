@@ -15,7 +15,6 @@ import io.gomint.server.network.packet.Packet;
 import io.gomint.server.network.packet.PacketAddItemEntity;
 import io.gomint.server.network.packet.PacketPickupItemEntity;
 import io.gomint.server.registry.RegisterInfo;
-import io.gomint.server.util.DumpUtil;
 import io.gomint.server.util.Values;
 import io.gomint.server.world.WorldAdapter;
 import io.gomint.taglib.NBTTagCompound;

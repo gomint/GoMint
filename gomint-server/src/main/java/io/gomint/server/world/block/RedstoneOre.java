@@ -3,7 +3,7 @@ package io.gomint.server.world.block;
 import io.gomint.inventory.item.ItemDiamondPickaxe;
 import io.gomint.inventory.item.ItemIronPickaxe;
 import io.gomint.inventory.item.ItemStack;
-import io.gomint.server.world.block.helper.ToolPresets;
+import io.gomint.world.block.BlockRedstoneOre;
 import io.gomint.world.block.BlockType;
 
 import io.gomint.server.registry.RegisterInfo;
@@ -13,7 +13,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:redstone_ore" )
-public class RedstoneOre extends Block implements io.gomint.world.block.BlockRedstoneOre {
+public class RedstoneOre extends Block implements BlockRedstoneOre {
 
     @Override
     public String getBlockId() {

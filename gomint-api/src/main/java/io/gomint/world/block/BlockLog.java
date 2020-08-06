@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, GoMint, BlackyPaw and geNAZt
+ * Copyright (c) 2018 Gomint team
  *
  * This code is licensed under the BSD license found in the
  * LICENSE file in the root directory of this source tree.
@@ -42,5 +42,19 @@ public interface BlockLog extends Block, BlockAxis {
      * @return type of log
      */
     LogType getLogType();
+
+    /**
+     * Add bark textures to all sides or not
+     *
+     * @param allSides true when bark on all sides, false if not
+     */
+    void setBarkOnAllSides( boolean allSides );
+
+    /**
+     * Is bark on all sides?
+     *
+     * @return true when bark is on all sides, false when not
+     */
+    boolean isBarkOnAllSides();
 
 }

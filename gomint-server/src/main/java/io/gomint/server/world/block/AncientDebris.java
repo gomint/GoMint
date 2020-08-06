@@ -1,9 +1,9 @@
 package io.gomint.server.world.block;
 
 import io.gomint.inventory.item.ItemDiamondPickaxe;
-import io.gomint.inventory.item.ItemIronPickaxe;
 import io.gomint.inventory.item.ItemStack;
 import io.gomint.server.registry.RegisterInfo;
+import io.gomint.world.block.BlockAncientDebris;
 import io.gomint.world.block.BlockType;
 
 /**
@@ -11,7 +11,7 @@ import io.gomint.world.block.BlockType;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:ancient_debris" )
-public class AncientDebris extends Block implements io.gomint.world.block.BlockAncientDebris {
+public class AncientDebris extends Block implements BlockAncientDebris {
 
     @Override
     public String getBlockId() {

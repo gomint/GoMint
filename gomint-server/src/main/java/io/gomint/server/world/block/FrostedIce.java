@@ -8,6 +8,7 @@
 package io.gomint.server.world.block;
 
 import io.gomint.server.registry.RegisterInfo;
+import io.gomint.world.block.BlockFrostedIce;
 import io.gomint.world.block.BlockType;
 
 /**
@@ -15,7 +16,7 @@ import io.gomint.world.block.BlockType;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:frosted_ice" )
-public class FrostedIce extends Block implements io.gomint.world.block.BlockFrostedIce {
+public class FrostedIce extends Block implements BlockFrostedIce {
 
     @Override
     public String getBlockId() {

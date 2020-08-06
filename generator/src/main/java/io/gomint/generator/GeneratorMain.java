@@ -24,6 +24,8 @@ public class GeneratorMain {
     public static void main(String[] args) throws IOException, AllocationLimitReachedException {
         // Read in the assets file
         Path assetFile = Paths.get("gomint-server", "src", "main", "resources", "assets.dat");
+        System.out.println(assetFile.toAbsolutePath());
+
         byte[] data = Files.readAllBytes(assetFile);
         ByteBuf buf = PooledByteBufAllocator.DEFAULT.directBuffer();
         buf.writeBytes(data);

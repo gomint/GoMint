@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, GoMint, BlackyPaw and geNAZt
+ * Copyright (c) 2018 Gomint team
  *
  * This code is licensed under the BSD license found in the
  * LICENSE file in the root directory of this source tree.
@@ -10,7 +10,6 @@ package io.gomint.world;
 import io.gomint.GoMint;
 import io.gomint.math.MathUtils;
 import io.gomint.world.block.Block;
-import io.gomint.world.block.BlockDirt;
 import io.gomint.world.block.BlockGrassBlock;
 import io.gomint.world.block.BlockGravel;
 import io.gomint.world.generator.DefinedBlocks;

@@ -1,6 +1,7 @@
 package io.gomint.server.world.block;
 
 import io.gomint.server.world.block.helper.ToolPresets;
+import io.gomint.world.block.BlockCraftingTable;
 import io.gomint.world.block.data.Facing;
 import io.gomint.world.block.BlockType;
 
@@ -17,7 +18,7 @@ import org.slf4j.LoggerFactory;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:crafting_table" )
-public class CraftingTable extends Block implements io.gomint.world.block.BlockCraftingTable {
+public class CraftingTable extends Block implements BlockCraftingTable {
 
     private static final Logger LOGGER = LoggerFactory.getLogger( CraftingTable.class );
 

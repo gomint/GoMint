@@ -2,7 +2,6 @@ package io.gomint.event.player;
 
 import io.gomint.entity.Entity;
 import io.gomint.entity.EntityPlayer;
-import io.gomint.world.block.Block;
 import lombok.ToString;
 
 /**

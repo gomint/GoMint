@@ -14,19 +14,28 @@ import java.util.Objects;
 public class SingleKeyChangeMap<K, V> extends ReadOnlyMap<K, V> {
 
     private final FreezableSortedMap<K, V> backing;
-    private final int keyCode;
+    private final int[] keyCode;
     private final V value;
 
-    public SingleKeyChangeMap(FreezableSortedMap<K, V> backing, K key, V value) {
+    public SingleKeyChangeMap(FreezableSortedMap<K, V> backing, K[] key, V value) {
         this.backing = backing;
-        this.keyCode = key.hashCode();
+        this.keyCode = new int[key.length];
         this.value = value;
+
+        for (int i = 0; i < key.length; i++) {
+            this.keyCode[i] = key[i].hashCode();
+        }
     }
 
     @Override
     public V get(Object k) {
-        if (k != null && k.hashCode() == this.keyCode) {
-            return this.value;
+        if (k != null) {
+            int hashCodeK = k.hashCode();
+            for (int hashCode : this.keyCode) {
+                if (hashCode == hashCodeK) {
+                    return this.value;
+                }
+            }
         }
 
         return this.backing.get(k);
@@ -44,8 +53,13 @@ public class SingleKeyChangeMap<K, V> extends ReadOnlyMap<K, V> {
 
     @Override
     public boolean containsKey(Object k) {
-        if (k != null && k.hashCode() == this.keyCode) {
-            return true;
+        if (k != null) {
+            int hashCodeK = k.hashCode();
+            for (int hashCode : this.keyCode) {
+                if (hashCode == hashCodeK) {
+                    return true;
+                }
+            }
         }
 
         return this.backing.containsKey(k);

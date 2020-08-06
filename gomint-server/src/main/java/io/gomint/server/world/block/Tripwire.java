@@ -1,6 +1,7 @@
 package io.gomint.server.world.block;
 
 import io.gomint.math.AxisAlignedBB;
+import io.gomint.world.block.BlockTripwire;
 import io.gomint.world.block.BlockType;
 
 import io.gomint.server.registry.RegisterInfo;
@@ -13,7 +14,7 @@ import java.util.List;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:tripWire" )
-public class Tripwire extends Block implements io.gomint.world.block.BlockTripwire {
+public class Tripwire extends Block implements BlockTripwire {
 
     @Override
     public String getBlockId() {

@@ -7,6 +7,8 @@
 
 package io.gomint.server.util;
 
+import io.gomint.world.Gamemode;
+
 /**
  * @author generated
  * @version 2.0
@@ -17,13 +19,13 @@ public class EnumConverterFromGamemode implements EnumConverter {
         int id = value.ordinal();
         switch ( id ) {
             case 0:
-                return io.gomint.world.Gamemode.SURVIVAL;
+                return Gamemode.SURVIVAL;
             case 1:
-                return io.gomint.world.Gamemode.CREATIVE;
+                return Gamemode.CREATIVE;
             case 2:
-                return io.gomint.world.Gamemode.ADVENTURE;
+                return Gamemode.ADVENTURE;
             case 3:
-                return io.gomint.world.Gamemode.SPECTATOR;
+                return Gamemode.SPECTATOR;
         }
 
         return null;

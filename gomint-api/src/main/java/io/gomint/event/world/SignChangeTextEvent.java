@@ -10,6 +10,8 @@ package io.gomint.event.world;
 import io.gomint.entity.EntityPlayer;
 import io.gomint.event.player.CancellablePlayerEvent;
 import io.gomint.world.block.Block;
+import io.gomint.world.block.BlockSign;
+import io.gomint.world.block.BlockWallSign;
 
 import java.util.List;
 
@@ -30,8 +32,8 @@ public class SignChangeTextEvent extends CancellablePlayerEvent {
     }
 
     /**
-     * Get the sign block which should get its text changed. This returned block can be of {@link io.gomint.world.block.BlockSign}
-     * or {@link io.gomint.world.block.BlockWallSign} type.
+     * Get the sign block which should get its text changed. This returned block can be of {@link BlockSign}
+     * or {@link BlockWallSign} type.
      *
      * @return the block which should be changed
      */

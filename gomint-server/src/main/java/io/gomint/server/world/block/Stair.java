@@ -3,11 +3,8 @@ package io.gomint.server.world.block;
 import io.gomint.math.AxisAlignedBB;
 import io.gomint.server.world.block.state.BooleanBlockState;
 import io.gomint.server.world.block.state.CrossDirectionBlockState;
-import io.gomint.world.block.BlockDirection;
-import io.gomint.world.block.BlockFacing;
 import io.gomint.world.block.BlockStair;
 import io.gomint.world.block.data.Direction;
-import io.gomint.world.block.data.Facing;
 
 import java.util.Collections;
 import java.util.List;

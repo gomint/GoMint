@@ -2,6 +2,7 @@ package io.gomint.server.world.block;
 
 import io.gomint.inventory.item.ItemStack;
 import io.gomint.server.world.block.helper.ToolPresets;
+import io.gomint.world.block.BlockLightWeightedPressurePlate;
 import io.gomint.world.block.BlockType;
 
 import io.gomint.math.AxisAlignedBB;
@@ -15,7 +16,7 @@ import java.util.List;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:light_weighted_pressure_plate" )
-public class LightWeightedPressurePlate extends Block implements io.gomint.world.block.BlockLightWeightedPressurePlate {
+public class LightWeightedPressurePlate extends Block implements BlockLightWeightedPressurePlate {
 
     @Override
     public String getBlockId() {

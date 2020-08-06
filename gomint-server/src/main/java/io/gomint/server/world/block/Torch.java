@@ -5,9 +5,9 @@ import io.gomint.math.AxisAlignedBB;
 import io.gomint.math.Vector;
 import io.gomint.server.entity.EntityPlayer;
 import io.gomint.server.registry.RegisterInfo;
-import io.gomint.server.util.BlockIdentifier;
 import io.gomint.server.world.PlacementData;
 import io.gomint.server.world.block.state.BlockfaceBlockState;
+import io.gomint.world.block.BlockTorch;
 import io.gomint.world.block.data.Facing;
 import io.gomint.world.block.BlockType;
 
@@ -19,7 +19,7 @@ import java.util.List;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:torch" )
-public class Torch extends Block implements io.gomint.world.block.BlockTorch {
+public class Torch extends Block implements BlockTorch {
 
     private static final BlockfaceBlockState FACING = new BlockfaceBlockState( () -> new String[]{"facing_direction"} );
 

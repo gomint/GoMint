@@ -60,6 +60,7 @@ public class CheckMain {
         // Now we iterate over block implementations to find out whats missing
         List<String> contents = Files
             .walk(Paths.get("gomint-server", "src", "main", "java", "io", "gomint", "server", "world", "block"))
+            .filter(p -> !p.toFile().isDirectory())
             .filter(p -> !p.endsWith(".java"))
             .map(p -> {
                 try {
@@ -77,7 +78,7 @@ public class CheckMain {
 
         knownBlockKeys.forEach((block, stateKeys) -> {
             for (String content : contents) {
-                if (content.contains(block)) {
+                if (content.contains("\"" + block + "\"")) {
                     for (String stateKey : stateKeys) {
                         if (!content.contains(stateKey)) {
                             // Check for extends (we only have one level nesting here)

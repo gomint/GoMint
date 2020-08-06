@@ -3,7 +3,7 @@ package io.gomint.server.world.block;
 import io.gomint.inventory.item.ItemDiamondPickaxe;
 import io.gomint.inventory.item.ItemStack;
 import io.gomint.server.registry.RegisterInfo;
-import io.gomint.server.world.block.helper.ToolPresets;
+import io.gomint.world.block.BlockBlockOfNetherite;
 import io.gomint.world.block.BlockType;
 
 /**
@@ -11,7 +11,7 @@ import io.gomint.world.block.BlockType;
  * @version 1.0
  */
 @RegisterInfo(sId = "minecraft:netherite_block")
-public class BlockOfNetherite extends Block implements io.gomint.world.block.BlockBlockOfNetherite {
+public class BlockOfNetherite extends Block implements BlockBlockOfNetherite {
 
     @Override
     public String getBlockId() {

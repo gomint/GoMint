@@ -3,6 +3,7 @@ package io.gomint.server.world.block;
 import io.gomint.server.entity.tileentity.CommandBlockTileEntity;
 import io.gomint.server.entity.tileentity.TileEntity;
 import io.gomint.taglib.NBTTagCompound;
+import io.gomint.world.block.BlockCommandBlock;
 import io.gomint.world.block.BlockType;
 
 import io.gomint.server.registry.RegisterInfo;
@@ -12,7 +13,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:command_block" )
-public class CommandBlock extends ContainerBlock implements io.gomint.world.block.BlockCommandBlock {
+public class CommandBlock extends ContainerBlock implements BlockCommandBlock {
 
     @Override
     public String getBlockId() {

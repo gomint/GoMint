@@ -3,7 +3,7 @@ package io.gomint.server.world.block;
 import io.gomint.inventory.item.ItemDiamondPickaxe;
 import io.gomint.inventory.item.ItemIronPickaxe;
 import io.gomint.inventory.item.ItemStack;
-import io.gomint.server.world.block.helper.ToolPresets;
+import io.gomint.world.block.BlockGoldOre;
 import io.gomint.world.block.BlockType;
 
 import io.gomint.server.registry.RegisterInfo;
@@ -13,7 +13,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:gold_ore" )
-public class GoldOre extends Block implements io.gomint.world.block.BlockGoldOre {
+public class GoldOre extends Block implements BlockGoldOre {
 
     @Override
     public String getBlockId() {

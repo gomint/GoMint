@@ -41,7 +41,8 @@ public class BooleanBlockState extends BlockState<Boolean, Byte> {
 
     @Override
     public Boolean getState(Block block) {
-        return this.getValue(block) == 1;
+        Byte val = this.getValue(block);
+        return val != null && val == 1;
     }
 
 }

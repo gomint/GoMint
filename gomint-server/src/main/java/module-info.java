@@ -50,14 +50,19 @@ module gomint.server {
     exports io.gomint.server.logging to org.apache.logging.log4j, org.apache.logging.log4j.core;
 
     // Export stuff to spring
-    exports io.gomint.server to spring.beans;
-    exports io.gomint.server.util to spring.beans;
+    exports io.gomint.server to spring.beans, gomint.test;
+    exports io.gomint.server.util to spring.beans, gomint.test;
     exports io.gomint.server.inventory.item to spring.beans;
-    exports io.gomint.server.network to spring.beans;
+    exports io.gomint.server.network to spring.beans, gomint.test;
     exports io.gomint.server.network.handler to spring.beans;
     exports io.gomint.server.plugin to spring.beans;
     exports io.gomint.server.world.generator.vanilla to spring.beans;
 
+    exports io.gomint.server.network.packet to gomint.test;
+    exports io.gomint.server.entity.tileentity to gomint.test;
+    exports io.gomint.server.world.block to gomint.test;
+
+    // Open stuff to spring
     opens io.gomint.server.network to spring.core;
     opens io.gomint.server.network.handler to spring.core;
     opens io.gomint.server.entity to spring.core;
@@ -65,4 +70,9 @@ module gomint.server {
 
     // Open config to gomint api reader
     opens io.gomint.server.config to gomint.api;
+
+    exports io.gomint.server.entity to gomint.test;
+    exports io.gomint.server.permission to gomint.test;
+    exports io.gomint.server.world to gomint.test;
+    exports io.gomint.server.util.collection to gomint.test;
 }

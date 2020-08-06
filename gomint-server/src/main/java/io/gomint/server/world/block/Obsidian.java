@@ -2,7 +2,7 @@ package io.gomint.server.world.block;
 
 import io.gomint.inventory.item.ItemDiamondPickaxe;
 import io.gomint.inventory.item.ItemStack;
-import io.gomint.server.world.block.helper.ToolPresets;
+import io.gomint.world.block.BlockObsidian;
 import io.gomint.world.block.BlockType;
 
 import io.gomint.server.registry.RegisterInfo;
@@ -12,7 +12,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:obsidian" )
-public class Obsidian extends Block implements io.gomint.world.block.BlockObsidian {
+public class Obsidian extends Block implements BlockObsidian {
 
     @Override
     public String getBlockId() {

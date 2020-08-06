@@ -5,6 +5,7 @@ import io.gomint.server.entity.Entity;
 import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.world.block.helper.ToolPresets;
 import io.gomint.server.world.block.state.BlockfaceBlockState;
+import io.gomint.world.block.BlockLadder;
 import io.gomint.world.block.data.Facing;
 import io.gomint.world.block.BlockType;
 
@@ -13,7 +14,7 @@ import io.gomint.world.block.BlockType;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:ladder" )
-public class Ladder extends Block implements io.gomint.world.block.BlockLadder {
+public class Ladder extends Block implements BlockLadder {
 
     private static final BlockfaceBlockState ATTACHED = new BlockfaceBlockState( () -> new String[]{"facing_direction"} );
 

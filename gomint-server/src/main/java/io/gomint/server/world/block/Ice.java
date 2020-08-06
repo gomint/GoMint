@@ -3,6 +3,7 @@ package io.gomint.server.world.block;
 import io.gomint.inventory.item.ItemStack;
 import io.gomint.math.BlockPosition;
 import io.gomint.server.registry.RegisterInfo;
+import io.gomint.world.block.BlockIce;
 import io.gomint.world.block.BlockType;
 
 import java.util.ArrayList;
@@ -13,7 +14,7 @@ import java.util.List;
  * @version 1.0
  */
 @RegisterInfo(sId = "minecraft:ice")
-public class Ice extends Block implements io.gomint.world.block.BlockIce {
+public class Ice extends Block implements BlockIce {
 
     @Override
     public String getBlockId() {

@@ -1,18 +1,11 @@
 package io.gomint.server.world.block;
 
 import io.gomint.inventory.item.ItemStack;
-import io.gomint.math.Vector;
-import io.gomint.server.entity.Entity;
 import io.gomint.server.registry.RegisterInfo;
-import io.gomint.server.world.UpdateReason;
 import io.gomint.server.world.block.helper.ToolPresets;
-import io.gomint.server.world.block.state.BlockfaceFromPlayerBlockState;
-import io.gomint.server.world.block.state.BooleanBlockState;
-import io.gomint.world.block.data.Facing;
 import io.gomint.world.block.BlockType;
+import io.gomint.world.block.BlockWoodenButton;
 import io.gomint.world.block.data.LogType;
-
-import java.util.concurrent.TimeUnit;
 
 /**
  * @author geNAZt
@@ -24,7 +17,7 @@ import java.util.concurrent.TimeUnit;
 @RegisterInfo( sId = "minecraft:dark_oak_button" )
 @RegisterInfo( sId = "minecraft:jungle_button" )
 @RegisterInfo( sId = "minecraft:acacia_button" )
-public class WoodenButton extends Button implements io.gomint.world.block.BlockWoodenButton {
+public class WoodenButton extends Button implements BlockWoodenButton {
 
     @Override
     public long getBreakTime() {

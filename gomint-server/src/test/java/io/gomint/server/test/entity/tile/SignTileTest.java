@@ -5,14 +5,15 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-package io.gomint.entity.tile;
+package io.gomint.server.test.entity.tile;
 
 import io.gomint.math.Location;
 import io.gomint.server.entity.tileentity.SignTileEntity;
 import io.gomint.server.world.block.Block;
 import io.gomint.taglib.NBTTagCompound;
 import io.gomint.world.block.BlockType;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author geNAZt
@@ -39,13 +40,15 @@ public class SignTileTest {
         };
     }
 
-    @Test( expected = IllegalArgumentException.class )
+    @Test
     public void throwOnTooMuchLines() throws Exception {
-        SignTileEntity tileEntity = new SignTileEntity( this.getBlock() );
+        Assertions.assertThrows(IllegalArgumentException.class, () -> {
+            SignTileEntity tileEntity = new SignTileEntity(this.getBlock());
 
-        NBTTagCompound compound = new NBTTagCompound( "" );
-        compound.addValue( "Text", "\n\n\n\n" );
-        tileEntity.applyClientData( null, compound );
+            NBTTagCompound compound = new NBTTagCompound("");
+            compound.addValue("Text", "\n\n\n\n");
+            tileEntity.applyClientData(null, compound);
+        });
     }
 
     @Test
@@ -57,13 +60,15 @@ public class SignTileTest {
         tileEntity.applyClientData( null, compound );
     }
 
-    @Test( expected = IllegalArgumentException.class )
+    @Test
     public void throwOnTooLongLine() throws Exception {
-        SignTileEntity tileEntity = new SignTileEntity( this.getBlock() );
+        Assertions.assertThrows(IllegalArgumentException.class, () -> {
+            SignTileEntity tileEntity = new SignTileEntity(this.getBlock());
 
-        NBTTagCompound compound = new NBTTagCompound( "" );
-        compound.addValue( "Text", "hjkhjkgkhjgjgjhjhjk" );
-        tileEntity.applyClientData( null, compound );
+            NBTTagCompound compound = new NBTTagCompound("");
+            compound.addValue("Text", "hjkhjkgkhjgjgjhjhjk");
+            tileEntity.applyClientData(null, compound);
+        });
     }
 
 }

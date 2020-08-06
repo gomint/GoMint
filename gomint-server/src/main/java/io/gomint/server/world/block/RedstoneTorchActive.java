@@ -1,5 +1,6 @@
 package io.gomint.server.world.block;
 
+import io.gomint.world.block.BlockRedstoneTorchActive;
 import io.gomint.world.block.BlockType;
 
 import io.gomint.server.registry.RegisterInfo;
@@ -9,7 +10,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:redstone_torch" )
-public class RedstoneTorchActive extends Block implements io.gomint.world.block.BlockRedstoneTorchActive {
+public class RedstoneTorchActive extends Block implements BlockRedstoneTorchActive {
 
     @Override
     public String getBlockId() {

@@ -1,21 +1,12 @@
 package io.gomint.server.world.block;
 
 import io.gomint.inventory.item.ItemStack;
-import io.gomint.math.AxisAlignedBB;
-import io.gomint.math.Vector;
-import io.gomint.server.entity.Entity;
 import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.world.block.helper.ToolPresets;
-import io.gomint.server.world.block.state.BooleanBlockState;
-import io.gomint.server.world.block.state.DirectionBlockState;
-import io.gomint.world.block.data.Direction;
-import io.gomint.world.block.data.Facing;
 import io.gomint.world.block.BlockType;
+import io.gomint.world.block.BlockWoodenTrapdoor;
 import io.gomint.world.block.data.LogType;
 import lombok.Getter;
-
-import java.util.Collections;
-import java.util.List;
 
 /**
  * @author geNAZt
@@ -27,7 +18,7 @@ import java.util.List;
 @RegisterInfo(sId = "minecraft:acacia_trapdoor")
 @RegisterInfo(sId = "minecraft:dark_oak_trapdoor")
 @RegisterInfo(sId = "minecraft:birch_trapdoor")
-public class WoodenTrapdoor extends Trapdoor implements io.gomint.world.block.BlockWoodenTrapdoor {
+public class WoodenTrapdoor extends Trapdoor implements BlockWoodenTrapdoor {
 
     @Getter
     private enum LogTypeMagic {
@@ -36,7 +27,9 @@ public class WoodenTrapdoor extends Trapdoor implements io.gomint.world.block.Bl
         BIRCH("minecraft:birch_trapdoor"),
         JUNGLE("minecraft:jungle_trapdoor"),
         ACACIA("minecraft:acacia_trapdoor"),
-        DARK_OAK("minecraft:dark_oak_trapdoor");
+        DARK_OAK("minecraft:dark_oak_trapdoor"),
+        CRIMSON("minecraft:crimson_trapdoor"),
+        WARPED("minecraft:warped_trapdoor");
 
         private final String blockId;
         LogTypeMagic(String blockId) {

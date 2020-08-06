@@ -10,6 +10,7 @@ import io.gomint.server.entity.tileentity.TileEntity;
 import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.world.PlacementData;
 import io.gomint.taglib.NBTTagCompound;
+import io.gomint.world.block.BlockSkull;
 import io.gomint.world.block.data.Facing;
 import io.gomint.world.block.BlockType;
 
@@ -22,7 +23,7 @@ import java.util.List;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:skull" )
-public class Skull extends Block implements io.gomint.world.block.BlockSkull {
+public class Skull extends Block implements BlockSkull {
 
     @Override
     public long getBreakTime() {

@@ -1,6 +1,12 @@
+/*
+ * Copyright (c) 2018 Gomint team
+ *
+ * This code is licensed under the BSD license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
 package io.gomint.world.generator;
 
-import com.google.common.base.Preconditions;
 import io.gomint.math.BlockPosition;
 import io.gomint.world.Chunk;
 import io.gomint.world.World;
@@ -30,7 +36,7 @@ public abstract class ChunkGenerator {
 
     /**
      * Generate a chunk at the given coordinates. You have to return a fully built chunk, you can request one with
-     * {@link io.gomint.world.World#generateEmptyChunk(int, int)}
+     * {@link World#generateEmptyChunk(int, int)}
      *
      * @param x coordinate of the chunk
      * @param z coordinate of the chunk

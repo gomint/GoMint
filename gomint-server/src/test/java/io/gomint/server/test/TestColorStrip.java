@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2017, GoMint, BlackyPaw and geNAZt
+ * Copyright (c) 2018 Gomint team
  *
  * This code is licensed under the BSD license found in the
  * LICENSE file in the root directory of this source tree.
  */
 
-import org.junit.Assert;
-import org.junit.Test;
+package io.gomint.server.test;import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.regex.Pattern;
 
@@ -21,7 +21,7 @@ public class TestColorStrip {
 
     @Test
     public void colorStrip() {
-        Assert.assertEquals( regexFilter(), iterationFilter() );
+        Assertions.assertEquals( regexFilter(), iterationFilter() );
     }
 
     public String regexFilter() {

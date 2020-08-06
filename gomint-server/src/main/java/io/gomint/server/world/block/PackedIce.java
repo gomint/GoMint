@@ -1,6 +1,7 @@
 package io.gomint.server.world.block;
 
 import io.gomint.inventory.item.ItemStack;
+import io.gomint.world.block.BlockPackedIce;
 import io.gomint.world.block.BlockType;
 
 import io.gomint.server.registry.RegisterInfo;
@@ -13,7 +14,7 @@ import java.util.List;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:packed_ice" )
-public class PackedIce extends Block implements io.gomint.world.block.BlockPackedIce {
+public class PackedIce extends Block implements BlockPackedIce {
 
     @Override
     public String getBlockId() {

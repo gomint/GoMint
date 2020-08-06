@@ -1,5 +1,6 @@
 package io.gomint.server.world.block;
 
+import io.gomint.world.block.BlockMelonStem;
 import io.gomint.world.block.BlockType;
 
 import io.gomint.server.registry.RegisterInfo;
@@ -9,7 +10,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:melon_stem" )
-public class MelonStem extends Growable implements io.gomint.world.block.BlockMelonStem {
+public class MelonStem extends Growable implements BlockMelonStem {
 
     @Override
     public String getBlockId() {

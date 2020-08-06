@@ -13,11 +13,11 @@ import io.gomint.server.world.BlockRuntimeIDs;
 import io.gomint.server.world.PlacementData;
 import io.gomint.server.world.UpdateReason;
 import io.gomint.server.world.block.state.AttachingBlockState;
-import io.gomint.util.random.FastRandom;
 import io.gomint.world.block.BlockType;
 
 import io.gomint.server.entity.Entity;
 import io.gomint.server.registry.RegisterInfo;
+import io.gomint.world.block.BlockVines;
 import io.gomint.world.block.data.Facing;
 
 import java.util.ArrayList;
@@ -32,7 +32,7 @@ import java.util.concurrent.ThreadLocalRandom;
  * @version 1.0
  */
 @RegisterInfo(sId = "minecraft:vine")
-public class Vines extends Block implements io.gomint.world.block.BlockVines {
+public class Vines extends Block implements BlockVines {
 
     // Bounding boxes
     protected static final AxisAlignedBB UP_AABB = new AxisAlignedBB(0.0f, 0.9375f, 0.0f, 1.0f, 1.0f, 1.0f);
@@ -225,7 +225,7 @@ public class Vines extends Block implements io.gomint.world.block.BlockVines {
     public PlacementData calculatePlacementData(EntityPlayer entity, ItemStack item, Facing face, Block block, Block clickedBlock, Vector clickVector) {
         PlacementData placementData = super.calculatePlacementData(entity, item, face, block, clickedBlock, clickVector);
         if (face == null && entity == null) {
-            placementData.setBlockIdentifier(BlockRuntimeIDs.change(placementData.getBlockIdentifier(), null, DIRECTION_KEY[0], 0));
+            placementData.setBlockIdentifier(BlockRuntimeIDs.change(placementData.getBlockIdentifier(), null, DIRECTION_KEY, 0));
         } else {
             ATTACHED_SIDES.detectFromPlacement(this, entity, item, face, block, clickedBlock, clickVector);
             placementData.setBlockIdentifier(this.identifier);

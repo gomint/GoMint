@@ -18,6 +18,7 @@ import io.gomint.player.PlayerSkin;
 import io.gomint.plugin.PluginManager;
 import io.gomint.scoreboard.Scoreboard;
 import io.gomint.world.World;
+import io.gomint.world.Chunk;
 import io.gomint.world.block.Block;
 import io.gomint.world.generator.ChunkGeneratorRegistry;
 import io.gomint.world.generator.CreateOptions;
@@ -209,7 +210,7 @@ public interface GoMint {
 
     /**
      * Create a empty block to be placed into the world with {@link Block#copyFromBlock(Block)} or
-     * {@link io.gomint.world.Chunk#setBlock(int, int, int, Block)}
+     * {@link Chunk#setBlock(int, int, int, Block)}
      *
      * @param blockClass class of the block we want to create
      * @param <T>        type of block which the target object should have

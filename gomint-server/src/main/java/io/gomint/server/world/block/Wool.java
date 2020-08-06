@@ -5,6 +5,7 @@ import io.gomint.inventory.item.ItemStack;
 import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.world.block.state.EnumBlockState;
 import io.gomint.world.block.BlockType;
+import io.gomint.world.block.BlockWool;
 import io.gomint.world.block.data.BlockColor;
 
 /**
@@ -12,7 +13,7 @@ import io.gomint.world.block.data.BlockColor;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:wool" )
-public class Wool extends Block implements io.gomint.world.block.BlockWool {
+public class Wool extends Block implements BlockWool {
 
     private static final EnumBlockState<BlockColor, String> COLOR = new EnumBlockState<>( v -> new String[]{"color"}, BlockColor.values(), e -> e.name().toLowerCase(), v -> BlockColor.valueOf(v.toUpperCase()) );
 

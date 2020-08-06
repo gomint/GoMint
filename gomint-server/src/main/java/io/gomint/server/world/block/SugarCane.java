@@ -1,5 +1,6 @@
 package io.gomint.server.world.block;
 
+import io.gomint.world.block.BlockSugarCane;
 import io.gomint.world.block.BlockType;
 
 import io.gomint.server.registry.RegisterInfo;
@@ -9,7 +10,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:reeds" )
-public class SugarCane extends Block implements io.gomint.world.block.BlockSugarCane {
+public class SugarCane extends Block implements BlockSugarCane {
 
     @Override
     public String getBlockId() {

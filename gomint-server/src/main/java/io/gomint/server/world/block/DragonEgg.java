@@ -7,8 +7,8 @@ import io.gomint.server.entity.Entity;
 import io.gomint.server.entity.EntityPlayer;
 import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.world.LevelEvent;
-import io.gomint.util.random.FastRandom;
 import io.gomint.world.Gamemode;
+import io.gomint.world.block.BlockDragonEgg;
 import io.gomint.world.block.data.Facing;
 import io.gomint.world.block.BlockType;
 
@@ -19,7 +19,7 @@ import java.util.concurrent.ThreadLocalRandom;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:dragon_egg" )
-public class DragonEgg extends Block implements io.gomint.world.block.BlockDragonEgg {
+public class DragonEgg extends Block implements BlockDragonEgg {
 
     @Override
     public String getBlockId() {

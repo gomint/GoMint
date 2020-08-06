@@ -1,12 +1,7 @@
 package io.gomint.server.world.block;
 
 import io.gomint.inventory.Inventory;
-import io.gomint.inventory.item.ItemStack;
-import io.gomint.math.Vector;
-import io.gomint.server.entity.EntityPlayer;
-import io.gomint.server.world.PlacementData;
-import io.gomint.server.world.block.helper.ToolPresets;
-import io.gomint.server.world.block.state.BlockfaceBlockState;
+import io.gomint.world.block.BlockTrappedChest;
 import io.gomint.world.block.BlockType;
 
 import io.gomint.server.registry.RegisterInfo;
@@ -17,7 +12,7 @@ import io.gomint.world.block.data.Facing;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:trapped_chest" )
-public class TrappedChest extends ChestBase implements io.gomint.world.block.BlockTrappedChest {
+public class TrappedChest extends ChestBase implements BlockTrappedChest {
 
     @Override
     public BlockType getBlockType() {

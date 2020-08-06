@@ -3,6 +3,7 @@ package io.gomint.server.world.block;
 import io.gomint.inventory.item.*;
 import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.world.block.state.EnumBlockState;
+import io.gomint.world.block.BlockStainedHardenedClay;
 import io.gomint.world.block.BlockType;
 import io.gomint.world.block.data.BlockColor;
 
@@ -11,7 +12,7 @@ import io.gomint.world.block.data.BlockColor;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:stained_hardened_clay" )
-public class StainedHardenedClay extends Block implements io.gomint.world.block.BlockStainedHardenedClay {
+public class StainedHardenedClay extends Block implements BlockStainedHardenedClay {
 
     private static final EnumBlockState<BlockColor, String> COLOR = new EnumBlockState<>( v -> new String[]{"color"}, BlockColor.values(), e -> e.name().toLowerCase(), v -> BlockColor.valueOf(v.toUpperCase()) );
 

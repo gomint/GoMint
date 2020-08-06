@@ -1,6 +1,7 @@
 package io.gomint.server.world.block;
 
 import io.gomint.server.registry.RegisterInfo;
+import io.gomint.world.block.BlockHoneyComb;
 import io.gomint.world.block.BlockType;
 
 /**
@@ -8,7 +9,7 @@ import io.gomint.world.block.BlockType;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:honeycomb_block" )
-public class HoneyComb extends Block implements io.gomint.world.block.BlockHoneyComb {
+public class HoneyComb extends Block implements BlockHoneyComb {
 
     @Override
     public String getBlockId() {

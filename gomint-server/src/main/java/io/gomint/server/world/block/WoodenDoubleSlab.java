@@ -5,18 +5,14 @@ import io.gomint.server.world.block.helper.ToolPresets;
 import io.gomint.world.block.BlockType;
 
 import io.gomint.server.registry.RegisterInfo;
+import io.gomint.world.block.BlockWoodenDoubleSlab;
 
 /**
  * @author geNAZt
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:double_wooden_slab" )
-public class WoodenDoubleSlab extends Block implements io.gomint.world.block.BlockWoodenDoubleSlab {
-
-    @Override
-    public String getBlockId() {
-        return "minecraft:double_wooden_slab";
-    }
+public class WoodenDoubleSlab extends Block implements BlockWoodenDoubleSlab {
 
     @Override
     public long getBreakTime() {

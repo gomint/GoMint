@@ -1,6 +1,7 @@
 package io.gomint.server.world.block;
 
 import io.gomint.server.registry.RegisterInfo;
+import io.gomint.world.block.BlockCrimsonFungus;
 import io.gomint.world.block.BlockType;
 
 /**
@@ -8,7 +9,7 @@ import io.gomint.world.block.BlockType;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:crimson_fungus" )
-public class CrimsonFungus extends Block implements io.gomint.world.block.BlockCrimsonFungus {
+public class CrimsonFungus extends Block implements BlockCrimsonFungus {
 
     @Override
     public String getBlockId() {

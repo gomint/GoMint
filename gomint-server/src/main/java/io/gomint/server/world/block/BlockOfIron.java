@@ -2,6 +2,7 @@ package io.gomint.server.world.block;
 
 import io.gomint.inventory.item.*;
 import io.gomint.server.registry.RegisterInfo;
+import io.gomint.world.block.BlockBlockOfIron;
 import io.gomint.world.block.BlockType;
 
 import java.util.ArrayList;
@@ -12,7 +13,7 @@ import java.util.List;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:iron_block" )
-public class BlockOfIron extends Block implements io.gomint.world.block.BlockBlockOfIron {
+public class BlockOfIron extends Block implements BlockBlockOfIron {
 
     @Override
     public String getBlockId() {

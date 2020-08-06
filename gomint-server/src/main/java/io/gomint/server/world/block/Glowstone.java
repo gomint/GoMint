@@ -2,10 +2,10 @@ package io.gomint.server.world.block;
 
 import io.gomint.inventory.item.ItemGlowstoneDust;
 import io.gomint.inventory.item.ItemStack;
-import io.gomint.util.random.FastRandom;
 import io.gomint.world.block.BlockType;
 
 import io.gomint.server.registry.RegisterInfo;
+import io.gomint.world.block.BlockGlowstone;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +16,7 @@ import java.util.concurrent.ThreadLocalRandom;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:glowstone" )
-public class Glowstone extends Block implements io.gomint.world.block.BlockGlowstone {
+public class Glowstone extends Block implements BlockGlowstone {
 
     @Override
     public String getBlockId() {

@@ -8,7 +8,6 @@ import io.gomint.server.entity.Entity;
 import io.gomint.server.util.random.WeightedRandom;
 import io.gomint.server.world.UpdateReason;
 import io.gomint.server.world.block.state.ProgressBlockState;
-import io.gomint.util.random.FastRandom;
 import io.gomint.world.block.BlockType;
 import io.gomint.world.block.data.Facing;
 

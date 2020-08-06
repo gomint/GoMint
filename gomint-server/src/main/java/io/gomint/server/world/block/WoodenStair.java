@@ -6,8 +6,6 @@ import io.gomint.world.block.BlockType;
 import io.gomint.inventory.item.*;
 import io.gomint.server.registry.RegisterInfo;
 import io.gomint.world.block.BlockWoodenStair;
-import io.gomint.world.block.data.Direction;
-import io.gomint.world.block.data.Facing;
 import io.gomint.world.block.data.LogType;
 import lombok.Getter;
 
@@ -21,6 +19,8 @@ import lombok.Getter;
 @RegisterInfo( sId = "minecraft:birch_stairs" )
 @RegisterInfo( sId = "minecraft:dark_oak_stairs" )
 @RegisterInfo( sId = "minecraft:jungle_stairs" )
+@RegisterInfo( sId = "minecraft:crimson_stairs" )
+@RegisterInfo( sId = "minecraft:warped_stairs" )
 public class WoodenStair extends Stair implements BlockWoodenStair {
 
     @Getter
@@ -30,7 +30,9 @@ public class WoodenStair extends Stair implements BlockWoodenStair {
         BIRCH("minecraft:birch_stairs"),
         JUNGLE("minecraft:jungle_stairs"),
         ACACIA("minecraft:acacia_stairs"),
-        DARK_OAK("minecraft:dark_oak_stairs");
+        DARK_OAK("minecraft:dark_oak_stairs"),
+        CRIMSON("minecraft:crimson_stairs"),
+        WARPED("minecraft:warped_stairs");
 
         private final String blockId;
         LogTypeMagic(String blockId) {

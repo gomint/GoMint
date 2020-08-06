@@ -58,7 +58,7 @@ public abstract class BlockState<T, S> {
      * @param value
      */
     protected void setValue(Block block, S value) {
-        block.setState(this.key.apply(value)[0], value);
+        block.setState(this.key.apply(value), value);
     }
 
     protected S getValue(Block block) {

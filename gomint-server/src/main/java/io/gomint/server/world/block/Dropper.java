@@ -4,6 +4,7 @@ import io.gomint.server.entity.tileentity.DropperTileEntity;
 import io.gomint.server.entity.tileentity.TileEntity;
 import io.gomint.server.world.block.helper.ToolPresets;
 import io.gomint.taglib.NBTTagCompound;
+import io.gomint.world.block.BlockDropper;
 import io.gomint.world.block.BlockType;
 
 import io.gomint.inventory.item.*;
@@ -14,7 +15,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:dropper" )
-public class Dropper extends Block implements io.gomint.world.block.BlockDropper {
+public class Dropper extends Block implements BlockDropper {
 
     @Override
     public String getBlockId() {

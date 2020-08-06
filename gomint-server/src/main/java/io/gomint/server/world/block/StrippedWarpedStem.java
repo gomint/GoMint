@@ -3,6 +3,7 @@ package io.gomint.server.world.block;
 import io.gomint.inventory.item.ItemStack;
 import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.world.block.helper.ToolPresets;
+import io.gomint.world.block.BlockStrippedWarpedStem;
 import io.gomint.world.block.BlockType;
 
 /**
@@ -10,7 +11,7 @@ import io.gomint.world.block.BlockType;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:stripped_warped_stem" )
-public class StrippedWarpedStem extends Block implements io.gomint.world.block.BlockStrippedWarpedStem {
+public class StrippedWarpedStem extends Block implements BlockStrippedWarpedStem {
 
     @Override
     public String getBlockId() {

@@ -2,6 +2,7 @@ package io.gomint.server.world.block;
 
 import io.gomint.inventory.item.ItemStack;
 import io.gomint.server.world.block.helper.ToolPresets;
+import io.gomint.world.block.BlockPrismarine;
 import io.gomint.world.block.BlockType;
 
 import io.gomint.server.registry.RegisterInfo;
@@ -11,7 +12,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:prismarine" )
-public class Prismarine extends Block implements io.gomint.world.block.BlockPrismarine {
+public class Prismarine extends Block implements BlockPrismarine {
 
     @Override
     public String getBlockId() {

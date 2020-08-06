@@ -2,13 +2,14 @@ package io.gomint.server.world.block;
 
 import io.gomint.server.registry.RegisterInfo;
 import io.gomint.world.block.BlockType;
+import io.gomint.world.block.BlockWeepingVines;
 
 /**
  * @author KingAli
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:weeping_vines" )
-public class WeepingVines extends Block implements io.gomint.world.block.BlockWeepingVines {
+public class WeepingVines extends Block implements BlockWeepingVines {
 
     @Override
     public String getBlockId() {

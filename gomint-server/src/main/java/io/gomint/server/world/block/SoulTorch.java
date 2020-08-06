@@ -7,6 +7,7 @@ import io.gomint.server.entity.EntityPlayer;
 import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.world.PlacementData;
 import io.gomint.server.world.block.state.BlockfaceBlockState;
+import io.gomint.world.block.BlockSoulTorch;
 import io.gomint.world.block.BlockType;
 import io.gomint.world.block.data.Facing;
 
@@ -18,7 +19,7 @@ import java.util.List;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:soul_torch" )
-public class SoulTorch extends Block implements io.gomint.world.block.BlockSoulTorch {
+public class SoulTorch extends Block implements BlockSoulTorch {
 
     private static final BlockfaceBlockState FACING = new BlockfaceBlockState( () -> new String[]{"facing_direction"} );
 

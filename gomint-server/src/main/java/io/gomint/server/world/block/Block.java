@@ -21,14 +21,12 @@ import io.gomint.server.entity.tileentity.TileEntity;
 import io.gomint.server.network.PlayerConnection;
 import io.gomint.server.network.packet.PacketTileEntityData;
 import io.gomint.server.network.packet.PacketUpdateBlock;
-import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.util.BlockIdentifier;
 import io.gomint.server.world.BlockRuntimeIDs;
 import io.gomint.server.world.ChunkSlice;
 import io.gomint.server.world.PlacementData;
 import io.gomint.server.world.UpdateReason;
 import io.gomint.server.world.WorldAdapter;
-import io.gomint.server.world.block.state.BlockState;
 import io.gomint.server.world.storage.TemporaryStorage;
 import io.gomint.taglib.NBTTagCompound;
 import io.gomint.world.Biome;
@@ -40,11 +38,8 @@ import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.function.Function;
 
 /**
@@ -248,12 +243,7 @@ public abstract class Block implements io.gomint.world.block.Block {
 
     @Override
     public boolean isPlaced() {
-        if (this.location == null) {
-            return false;
-        }
-
-        WorldAdapter worldAdapter = (WorldAdapter) this.location.getWorld();
-        return worldAdapter.getRuntimeID(this.location.toBlockPosition(), this.layer) == this.identifier.getRuntimeId();
+        return this.location != null;
     }
 
     @Override
@@ -777,7 +767,7 @@ public abstract class Block implements io.gomint.world.block.Block {
         return this.identifier.getStates().get(key);
     }
 
-    public <S> void setState(String key, S value) {
+    public <S> void setState(String[] key, S value) {
         this.identifier = BlockRuntimeIDs.change(this.identifier, this.stateChangeBlockId, key, value);
         this.stateChangeBlockId = null;
     }

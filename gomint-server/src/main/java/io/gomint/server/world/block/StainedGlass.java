@@ -3,6 +3,7 @@ package io.gomint.server.world.block;
 import io.gomint.inventory.item.ItemStack;
 import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.world.block.state.EnumBlockState;
+import io.gomint.world.block.BlockStainedGlass;
 import io.gomint.world.block.BlockType;
 import io.gomint.world.block.data.BlockColor;
 
@@ -14,7 +15,7 @@ import java.util.List;
  * @version 1.0
  */
 @RegisterInfo(sId = "minecraft:stained_glass")
-public class StainedGlass extends Block implements io.gomint.world.block.BlockStainedGlass {
+public class StainedGlass extends Block implements BlockStainedGlass {
 
     private static final EnumBlockState<BlockColor, String> COLOR = new EnumBlockState<>(v -> new String[]{"color"}, BlockColor.values(), e -> e.name().toLowerCase(), v -> BlockColor.valueOf(v.toUpperCase()));
 

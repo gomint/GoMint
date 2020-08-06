@@ -2,6 +2,7 @@ package io.gomint.server.world.block;
 
 import io.gomint.inventory.item.ItemStack;
 import io.gomint.server.world.block.helper.ToolPresets;
+import io.gomint.world.block.BlockGlowingRedstoneOre;
 import io.gomint.world.block.BlockType;
 
 import io.gomint.server.registry.RegisterInfo;
@@ -11,7 +12,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:lit_redstone_ore" )
-public class GlowingRedstoneOre extends Block implements io.gomint.world.block.BlockGlowingRedstoneOre {
+public class GlowingRedstoneOre extends Block implements BlockGlowingRedstoneOre {
 
     @Override
     public String getBlockId() {

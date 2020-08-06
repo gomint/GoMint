@@ -60,6 +60,10 @@ public class BlockStateSwitchGenerator {
             if (identifier.getStates() != null) {
                 SwitchNode start = states.computeIfAbsent(block, s -> new SwitchNode());
                 for (Map.Entry<String, Object> objectEntry : identifier.getStates().entrySet()) {
+                    if (objectEntry.getKey().equals("deprecated")) {
+                        continue;
+                    }
+
                     start.setKey(objectEntry.getKey());
                     start.setType(objectEntry.getValue().getClass());
                     start = start.getOrGenerate(objectEntry.getValue());

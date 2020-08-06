@@ -5,6 +5,7 @@ import io.gomint.inventory.item.ItemShears;
 import io.gomint.inventory.item.ItemStack;
 import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.world.block.state.EnumBlockState;
+import io.gomint.world.block.BlockTallGrass;
 import io.gomint.world.block.BlockType;
 import lombok.Getter;
 
@@ -16,7 +17,7 @@ import java.util.List;
  * @version 1.0
  */
 @RegisterInfo(sId = "minecraft:tallgrass")
-public class TallGrass extends Block implements io.gomint.world.block.BlockTallGrass {
+public class TallGrass extends Block implements BlockTallGrass {
 
     @Getter
     private enum TypeMagic {

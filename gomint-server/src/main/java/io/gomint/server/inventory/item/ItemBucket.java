@@ -4,7 +4,11 @@ import io.gomint.inventory.item.ItemType;
 import io.gomint.math.Vector;
 import io.gomint.server.entity.EntityPlayer;
 import io.gomint.server.registry.RegisterInfo;
-import io.gomint.world.block.*;
+import io.gomint.world.block.Block;
+import io.gomint.world.block.BlockAir;
+import io.gomint.world.block.BlockFlowingWater;
+import io.gomint.world.block.BlockLiquid;
+import io.gomint.world.block.BlockStationaryWater;
 import io.gomint.world.block.data.Facing;
 
 /**
@@ -83,7 +87,7 @@ public class ItemBucket extends ItemStack implements io.gomint.inventory.item.It
     @Override
     public boolean interact(EntityPlayer entity, Facing face, Vector clickPosition, Block clickedBlock ) {
         if ( clickedBlock != null ) {
-            if ( clickedBlock instanceof BlockLiquid ) {
+            if ( clickedBlock instanceof BlockLiquid) {
                 if ( ( (BlockLiquid) clickedBlock ).getFillHeight() > 0.9f ) {
                     this.setContent( clickedBlock instanceof BlockFlowingWater || clickedBlock instanceof BlockStationaryWater ?
                         Content.WATER : Content.LAVA );

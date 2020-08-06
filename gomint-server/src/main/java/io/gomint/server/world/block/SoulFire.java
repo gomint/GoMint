@@ -6,6 +6,7 @@ import io.gomint.math.BlockPosition;
 import io.gomint.server.entity.EntityLiving;
 import io.gomint.server.entity.EntityPlayer;
 import io.gomint.server.registry.RegisterInfo;
+import io.gomint.world.block.BlockSoulFire;
 import io.gomint.world.block.BlockType;
 
 import java.util.ArrayList;
@@ -17,7 +18,7 @@ import java.util.concurrent.TimeUnit;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:soul_fire" )
-public class SoulFire extends Block implements io.gomint.world.block.BlockSoulFire {
+public class SoulFire extends Block implements BlockSoulFire {
 
     @Override
     public String getBlockId() {

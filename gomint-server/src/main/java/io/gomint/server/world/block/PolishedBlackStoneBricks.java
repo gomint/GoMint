@@ -3,6 +3,7 @@ package io.gomint.server.world.block;
 import io.gomint.inventory.item.ItemStack;
 import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.world.block.helper.ToolPresets;
+import io.gomint.world.block.BlockPolishedBlackStoneBricks;
 import io.gomint.world.block.BlockType;
 
 /**
@@ -10,7 +11,7 @@ import io.gomint.world.block.BlockType;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:polished_blackstone_bricks" )
-public class PolishedBlackStoneBricks extends Block implements io.gomint.world.block.BlockPolishedBlackStoneBricks {
+public class PolishedBlackStoneBricks extends Block implements BlockPolishedBlackStoneBricks {
 
     @Override
     public String getBlockId() {

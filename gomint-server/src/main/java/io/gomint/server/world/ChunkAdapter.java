@@ -20,7 +20,6 @@ import io.gomint.server.util.Cache;
 import io.gomint.server.world.storage.TemporaryStorage;
 import io.gomint.taglib.NBTTagCompound;
 import io.gomint.taglib.NBTWriter;
-import io.gomint.util.random.FastRandom;
 import io.gomint.world.Biome;
 import io.gomint.world.Chunk;
 import io.gomint.world.WorldLayer;
@@ -44,8 +43,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 

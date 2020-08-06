@@ -5,13 +5,14 @@ import io.gomint.world.block.BlockType;
 
 import io.gomint.inventory.item.*;
 import io.gomint.server.registry.RegisterInfo;
+import io.gomint.world.block.BlockChorusFlower;
 
 /**
  * @author geNAZt
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:chorus_flower" )
-public class ChorusFlower extends Block implements io.gomint.world.block.BlockChorusFlower {
+public class ChorusFlower extends Block implements BlockChorusFlower {
 
     @Override
     public String getBlockId() {

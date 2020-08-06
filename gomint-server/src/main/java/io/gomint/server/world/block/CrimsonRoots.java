@@ -1,6 +1,7 @@
 package io.gomint.server.world.block;
 
 import io.gomint.server.registry.RegisterInfo;
+import io.gomint.world.block.BlockCrimsonRoots;
 import io.gomint.world.block.BlockType;
 
 /**
@@ -8,7 +9,7 @@ import io.gomint.world.block.BlockType;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:crimson_roots" )
-public class CrimsonRoots extends Block implements io.gomint.world.block.BlockCrimsonRoots {
+public class CrimsonRoots extends Block implements BlockCrimsonRoots {
 
     @Override
     public String getBlockId() {

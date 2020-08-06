@@ -2,6 +2,7 @@ package io.gomint.server.world.block;
 
 import io.gomint.inventory.item.ItemStack;
 import io.gomint.server.world.block.helper.ToolPresets;
+import io.gomint.world.block.BlockNetherBrick;
 import io.gomint.world.block.BlockType;
 
 import io.gomint.server.registry.RegisterInfo;
@@ -11,7 +12,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:nether_brick" )
-public class NetherBrick extends Block implements io.gomint.world.block.BlockNetherBrick {
+public class NetherBrick extends Block implements BlockNetherBrick {
 
     @Override
     public String getBlockId() {

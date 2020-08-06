@@ -2,13 +2,14 @@ package io.gomint.server.world.block;
 
 import io.gomint.server.registry.RegisterInfo;
 import io.gomint.world.block.BlockType;
+import io.gomint.world.block.BlockWarpedFungus;
 
 /**
  * @author KingAli
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:warped_fungus" )
-public class WarpedFungus extends Block implements io.gomint.world.block.BlockWarpedFungus {
+public class WarpedFungus extends Block implements BlockWarpedFungus {
 
     @Override
     public String getBlockId() {

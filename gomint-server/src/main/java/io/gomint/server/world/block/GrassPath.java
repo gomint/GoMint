@@ -3,6 +3,7 @@ package io.gomint.server.world.block;
 import io.gomint.inventory.item.ItemDirt;
 import io.gomint.inventory.item.ItemStack;
 import io.gomint.server.world.block.helper.ToolPresets;
+import io.gomint.world.block.BlockGrassPath;
 import io.gomint.world.block.BlockType;
 
 import io.gomint.server.registry.RegisterInfo;
@@ -15,7 +16,7 @@ import java.util.List;
  * @version 1.0
  */
 @RegisterInfo(sId = "minecraft:grass_path")
-public class GrassPath extends Block implements io.gomint.world.block.BlockGrassPath {
+public class GrassPath extends Block implements BlockGrassPath {
 
     @Override
     public String getBlockId() {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, GoMint, BlackyPaw and geNAZt
+ * Copyright (c) 2018 Gomint team
  *
  * This code is licensed under the BSD license found in the
  * LICENSE file in the root directory of this source tree.
@@ -9,6 +9,7 @@ package io.gomint.world;
 
 import io.gomint.entity.Entity;
 import io.gomint.world.block.Block;
+import io.gomint.world.generator.ChunkGenerator;
 
 import java.util.function.Consumer;
 
@@ -41,7 +42,7 @@ public interface Chunk {
      * @param z The z-coordinate of the block
      * @return The block itself or null if the given coordinates lie not within this chunk
      */
-    <T extends Block> T getBlockAt( int x, int y, int z );
+    <T extends Block> T getBlockAt(int x, int y, int z );
 
     /**
      * Gets the block at the specified position.
@@ -65,7 +66,7 @@ public interface Chunk {
 
     /**
      * Set the block at the position to the one given in this method call. Please only use this in
-     * {@link io.gomint.world.generator.ChunkGenerator} instances.
+     * {@link ChunkGenerator} instances.
      *
      * @param x     coordinate in the chunk (0-15) of the block to replace
      * @param y     coordinate in the chunk (0-255) of the block to replace
@@ -76,7 +77,7 @@ public interface Chunk {
 
     /**
      * Set the block at the position to the one given in this method call. Please only use this in
-     * {@link io.gomint.world.generator.ChunkGenerator} instances.
+     * {@link ChunkGenerator} instances.
      *
      * @param x     coordinate in the chunk (0-15) of the block to replace
      * @param y     coordinate in the chunk (0-255) of the block to replace

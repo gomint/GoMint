@@ -5,7 +5,6 @@ import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.world.block.helper.ToolPresets;
 import io.gomint.server.world.block.state.BooleanBlockState;
 import io.gomint.server.world.block.state.DirectValueBlockState;
-import io.gomint.server.world.block.state.EnumBlockState;
 import io.gomint.world.block.BlockCoralBlock;
 import io.gomint.world.block.BlockType;
 import lombok.Getter;

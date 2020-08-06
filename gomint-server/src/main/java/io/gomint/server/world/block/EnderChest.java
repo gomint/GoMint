@@ -5,6 +5,7 @@ import io.gomint.inventory.item.ItemObsidian;
 import io.gomint.server.entity.tileentity.TileEntity;
 import io.gomint.server.world.block.helper.ToolPresets;
 import io.gomint.taglib.NBTTagCompound;
+import io.gomint.world.block.BlockEnderChest;
 import io.gomint.world.block.data.Facing;
 import io.gomint.world.block.BlockType;
 
@@ -22,7 +23,7 @@ import java.util.List;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:ender_chest" )
-public class EnderChest extends ContainerBlock implements io.gomint.world.block.BlockEnderChest {
+public class EnderChest extends ContainerBlock implements BlockEnderChest {
 
     @Override
     public String getBlockId() {

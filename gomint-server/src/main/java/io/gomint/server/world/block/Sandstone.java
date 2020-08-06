@@ -1,6 +1,7 @@
 package io.gomint.server.world.block;
 
 import io.gomint.server.world.block.helper.ToolPresets;
+import io.gomint.world.block.BlockSandstone;
 import io.gomint.world.block.BlockType;
 
 import io.gomint.inventory.item.*;
@@ -11,7 +12,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:sandstone" )
-public class Sandstone extends Block implements io.gomint.world.block.BlockSandstone {
+public class Sandstone extends Block implements BlockSandstone {
 
     @Override
     public String getBlockId() {

@@ -1,5 +1,6 @@
 package io.gomint.server.world.block;
 
+import io.gomint.world.block.BlockRedstoneRepeaterInactive;
 import io.gomint.world.block.BlockType;
 
 import io.gomint.server.registry.RegisterInfo;
@@ -9,7 +10,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:unpowered_repeater" )
-public class RedstoneRepeaterInactive extends Block implements io.gomint.world.block.BlockRedstoneRepeaterInactive {
+public class RedstoneRepeaterInactive extends Block implements BlockRedstoneRepeaterInactive {
 
     @Override
     public String getBlockId() {

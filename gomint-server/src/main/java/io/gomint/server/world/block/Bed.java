@@ -33,7 +33,7 @@ import java.util.List;
  */
 @RegisterInfo( sId = "minecraft:bed" )
 @EqualsAndHashCode( callSuper = true )
-public class Bed extends Block implements io.gomint.world.block.BlockBed {
+public class Bed extends Block implements BlockBed {
 
     private static final DirectionBlockState DIRECTION = new DirectionBlockState( () -> new String[]{"direction"} );
     private static final BooleanBlockState OCCUPIED = new BooleanBlockState( () -> new String[]{"occupied_bit"} );

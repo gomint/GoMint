@@ -5,6 +5,7 @@ import io.gomint.inventory.item.ItemStack;
 import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.world.WorldAdapter;
 import io.gomint.server.world.block.helper.ToolPresets;
+import io.gomint.world.block.BlockCoalOre;
 import io.gomint.world.block.BlockType;
 
 import java.util.ArrayList;
@@ -16,7 +17,7 @@ import java.util.concurrent.ThreadLocalRandom;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:coal_ore" )
-public class CoalOre extends Block implements io.gomint.world.block.BlockCoalOre {
+public class CoalOre extends Block implements BlockCoalOre {
 
     @Override
     public String getBlockId() {

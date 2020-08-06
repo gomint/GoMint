@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, GoMint, BlackyPaw and geNAZt
+ * Copyright (c) 2018 Gomint team
  *
  * This code is licensed under the BSD license found in the
  * LICENSE file in the root directory of this source tree.
@@ -18,6 +18,8 @@ public enum LogType {
     BIRCH,
     JUNGLE,
     ACACIA,
-    DARK_OAK
+    DARK_OAK,
+    CRIMSON,
+    WARPED
 
 }

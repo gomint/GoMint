@@ -1,5 +1,6 @@
 package io.gomint.server.world.block;
 
+import io.gomint.world.block.BlockEndPortal;
 import io.gomint.world.block.BlockType;
 
 import io.gomint.server.registry.RegisterInfo;
@@ -9,7 +10,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:end_portal" )
-public class EndPortal extends Block implements io.gomint.world.block.BlockEndPortal {
+public class EndPortal extends Block implements BlockEndPortal {
 
     @Override
     public String getBlockId() {

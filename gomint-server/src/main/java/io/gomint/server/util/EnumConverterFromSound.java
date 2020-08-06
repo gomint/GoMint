@@ -19,349 +19,349 @@ public class EnumConverterFromSound implements EnumConverter {
         int id = value.ordinal();
         switch ( id ) {
             case 0:
-                return io.gomint.world.Sound.ITEM_USE_ON;
+                return Sound.ITEM_USE_ON;
             case 1:
-                return io.gomint.world.Sound.HIT;
+                return Sound.HIT;
             case 2:
-                return io.gomint.world.Sound.STEP;
+                return Sound.STEP;
             case 3:
-                return io.gomint.world.Sound.FLY;
+                return Sound.FLY;
             case 4:
-                return io.gomint.world.Sound.JUMP;
+                return Sound.JUMP;
             case 5:
-                return io.gomint.world.Sound.BREAK;
+                return Sound.BREAK;
             case 6:
-                return io.gomint.world.Sound.PLACE;
+                return Sound.PLACE;
             case 7:
-                return io.gomint.world.Sound.HEAVY_STEP;
+                return Sound.HEAVY_STEP;
             case 8:
-                return io.gomint.world.Sound.GALLOP;
+                return Sound.GALLOP;
             case 9:
-                return io.gomint.world.Sound.FALL;
+                return Sound.FALL;
             case 10:
-                return io.gomint.world.Sound.AMBIENT;
+                return Sound.AMBIENT;
             case 11:
-                return io.gomint.world.Sound.AMBIENT_BABY;
+                return Sound.AMBIENT_BABY;
             case 12:
-                return io.gomint.world.Sound.AMBIENT_IN_WATER;
+                return Sound.AMBIENT_IN_WATER;
             case 13:
-                return io.gomint.world.Sound.BREATHE;
+                return Sound.BREATHE;
             case 14:
-                return io.gomint.world.Sound.DEATH;
+                return Sound.DEATH;
             case 15:
-                return io.gomint.world.Sound.DEATH_IN_WATER;
+                return Sound.DEATH_IN_WATER;
             case 16:
-                return io.gomint.world.Sound.DEATH_TO_ZOMBIE;
+                return Sound.DEATH_TO_ZOMBIE;
             case 17:
-                return io.gomint.world.Sound.HURT;
+                return Sound.HURT;
             case 18:
-                return io.gomint.world.Sound.HURT_IN_WATER;
+                return Sound.HURT_IN_WATER;
             case 19:
-                return io.gomint.world.Sound.MAD;
+                return Sound.MAD;
             case 20:
-                return io.gomint.world.Sound.BOOST;
+                return Sound.BOOST;
             case 21:
-                return io.gomint.world.Sound.BOW;
+                return Sound.BOW;
             case 22:
-                return io.gomint.world.Sound.SQUISH_BIG;
+                return Sound.SQUISH_BIG;
             case 23:
-                return io.gomint.world.Sound.SQUISH_SMALL;
+                return Sound.SQUISH_SMALL;
             case 24:
-                return io.gomint.world.Sound.FALL_BIG;
+                return Sound.FALL_BIG;
             case 25:
-                return io.gomint.world.Sound.FALL_SMALL;
+                return Sound.FALL_SMALL;
             case 26:
-                return io.gomint.world.Sound.SPLASH;
+                return Sound.SPLASH;
             case 27:
-                return io.gomint.world.Sound.FIZZ;
+                return Sound.FIZZ;
             case 28:
-                return io.gomint.world.Sound.FLAP;
+                return Sound.FLAP;
             case 29:
-                return io.gomint.world.Sound.SWIM;
+                return Sound.SWIM;
             case 30:
-                return io.gomint.world.Sound.DRINK;
+                return Sound.DRINK;
             case 31:
-                return io.gomint.world.Sound.EAT;
+                return Sound.EAT;
             case 32:
-                return io.gomint.world.Sound.TAKEOFF;
+                return Sound.TAKEOFF;
             case 33:
-                return io.gomint.world.Sound.SHAKE;
+                return Sound.SHAKE;
             case 34:
-                return io.gomint.world.Sound.PLOP;
+                return Sound.PLOP;
             case 35:
-                return io.gomint.world.Sound.LAND;
+                return Sound.LAND;
             case 36:
-                return io.gomint.world.Sound.SADDLE;
+                return Sound.SADDLE;
             case 37:
-                return io.gomint.world.Sound.ARMOR;
+                return Sound.ARMOR;
             case 38:
-                return io.gomint.world.Sound.ADD_CHEST;
+                return Sound.ADD_CHEST;
             case 39:
-                return io.gomint.world.Sound.THROW;
+                return Sound.THROW;
             case 40:
-                return io.gomint.world.Sound.ATTACK;
+                return Sound.ATTACK;
             case 41:
-                return io.gomint.world.Sound.ATTACK_NODAMAGE;
+                return Sound.ATTACK_NODAMAGE;
             case 42:
-                return io.gomint.world.Sound.ATTACK_STRONG;
+                return Sound.ATTACK_STRONG;
             case 43:
-                return io.gomint.world.Sound.WARN;
+                return Sound.WARN;
             case 44:
-                return io.gomint.world.Sound.SHEAR;
+                return Sound.SHEAR;
             case 45:
-                return io.gomint.world.Sound.MILK;
+                return Sound.MILK;
             case 46:
-                return io.gomint.world.Sound.THUNDER;
+                return Sound.THUNDER;
             case 47:
-                return io.gomint.world.Sound.EXPLODE;
+                return Sound.EXPLODE;
             case 48:
-                return io.gomint.world.Sound.FIRE;
+                return Sound.FIRE;
             case 49:
-                return io.gomint.world.Sound.IGNITE;
+                return Sound.IGNITE;
             case 50:
-                return io.gomint.world.Sound.FUSE;
+                return Sound.FUSE;
             case 51:
-                return io.gomint.world.Sound.STARE;
+                return Sound.STARE;
             case 52:
-                return io.gomint.world.Sound.SPAWN;
+                return Sound.SPAWN;
             case 53:
-                return io.gomint.world.Sound.SHOOT;
+                return Sound.SHOOT;
             case 54:
-                return io.gomint.world.Sound.BREAK_BLOCK;
+                return Sound.BREAK_BLOCK;
             case 55:
-                return io.gomint.world.Sound.LAUNCH;
+                return Sound.LAUNCH;
             case 56:
-                return io.gomint.world.Sound.BLAST;
+                return Sound.BLAST;
             case 57:
-                return io.gomint.world.Sound.LARGE_BLAST;
+                return Sound.LARGE_BLAST;
             case 58:
-                return io.gomint.world.Sound.TWINKLE;
+                return Sound.TWINKLE;
             case 59:
-                return io.gomint.world.Sound.REMEDY;
+                return Sound.REMEDY;
             case 60:
-                return io.gomint.world.Sound.UNFECT;
+                return Sound.UNFECT;
             case 61:
-                return io.gomint.world.Sound.LEVELUP;
+                return Sound.LEVELUP;
             case 62:
-                return io.gomint.world.Sound.BOW_HIT;
+                return Sound.BOW_HIT;
             case 63:
-                return io.gomint.world.Sound.BULLET_HIT;
+                return Sound.BULLET_HIT;
             case 64:
-                return io.gomint.world.Sound.EXTINGUISH_FIRE;
+                return Sound.EXTINGUISH_FIRE;
             case 65:
-                return io.gomint.world.Sound.ITEM_FIZZ;
+                return Sound.ITEM_FIZZ;
             case 66:
-                return io.gomint.world.Sound.CHEST_OPEN;
+                return Sound.CHEST_OPEN;
             case 67:
-                return io.gomint.world.Sound.CHEST_CLOSED;
+                return Sound.CHEST_CLOSED;
             case 68:
-                return io.gomint.world.Sound.SHULKERBOX_OPEN;
+                return Sound.SHULKERBOX_OPEN;
             case 69:
-                return io.gomint.world.Sound.SHULKERBOX_CLOSED;
+                return Sound.SHULKERBOX_CLOSED;
             case 70:
-                return io.gomint.world.Sound.POWER_ON;
+                return Sound.POWER_ON;
             case 71:
-                return io.gomint.world.Sound.POWER_OFF;
+                return Sound.POWER_OFF;
             case 72:
-                return io.gomint.world.Sound.ATTACH;
+                return Sound.ATTACH;
             case 73:
-                return io.gomint.world.Sound.DETACH;
+                return Sound.DETACH;
             case 74:
-                return io.gomint.world.Sound.DENY;
+                return Sound.DENY;
             case 75:
-                return io.gomint.world.Sound.TRIPOD;
+                return Sound.TRIPOD;
             case 76:
-                return io.gomint.world.Sound.POP;
+                return Sound.POP;
             case 77:
-                return io.gomint.world.Sound.DROP_SLOT;
+                return Sound.DROP_SLOT;
             case 78:
-                return io.gomint.world.Sound.NOTE;
+                return Sound.NOTE;
             case 79:
-                return io.gomint.world.Sound.THORNS;
+                return Sound.THORNS;
             case 80:
-                return io.gomint.world.Sound.PISTON_IN;
+                return Sound.PISTON_IN;
             case 81:
-                return io.gomint.world.Sound.PISTON_OUT;
+                return Sound.PISTON_OUT;
             case 82:
-                return io.gomint.world.Sound.PORTAL;
+                return Sound.PORTAL;
             case 83:
-                return io.gomint.world.Sound.WATER;
+                return Sound.WATER;
             case 84:
-                return io.gomint.world.Sound.LAVA_POP;
+                return Sound.LAVA_POP;
             case 85:
-                return io.gomint.world.Sound.LAVA;
+                return Sound.LAVA;
             case 86:
-                return io.gomint.world.Sound.BURP;
+                return Sound.BURP;
             case 87:
-                return io.gomint.world.Sound.BUCKET_FILL_WATER;
+                return Sound.BUCKET_FILL_WATER;
             case 88:
-                return io.gomint.world.Sound.BUCKET_FILL_LAVA;
+                return Sound.BUCKET_FILL_LAVA;
             case 89:
-                return io.gomint.world.Sound.BUCKET_EMPTY_WATER;
+                return Sound.BUCKET_EMPTY_WATER;
             case 90:
-                return io.gomint.world.Sound.BUCKET_EMPTY_LAVA;
+                return Sound.BUCKET_EMPTY_LAVA;
             case 91:
-                return io.gomint.world.Sound.RECORD_13;
+                return Sound.RECORD_13;
             case 92:
-                return io.gomint.world.Sound.RECORD_CAT;
+                return Sound.RECORD_CAT;
             case 93:
-                return io.gomint.world.Sound.RECORD_BLOCKS;
+                return Sound.RECORD_BLOCKS;
             case 94:
-                return io.gomint.world.Sound.RECORD_CHIRP;
+                return Sound.RECORD_CHIRP;
             case 95:
-                return io.gomint.world.Sound.RECORD_FAR;
+                return Sound.RECORD_FAR;
             case 96:
-                return io.gomint.world.Sound.RECORD_MALL;
+                return Sound.RECORD_MALL;
             case 97:
-                return io.gomint.world.Sound.RECORD_MELLOHI;
+                return Sound.RECORD_MELLOHI;
             case 98:
-                return io.gomint.world.Sound.RECORD_STAL;
+                return Sound.RECORD_STAL;
             case 99:
-                return io.gomint.world.Sound.RECORD_STRAD;
+                return Sound.RECORD_STRAD;
             case 100:
-                return io.gomint.world.Sound.RECORD_WARD;
+                return Sound.RECORD_WARD;
             case 101:
-                return io.gomint.world.Sound.RECORD_11;
+                return Sound.RECORD_11;
             case 102:
-                return io.gomint.world.Sound.RECORD_WAIT;
+                return Sound.RECORD_WAIT;
             case 103:
-                return io.gomint.world.Sound.GUARDIAN_FLOP;
+                return Sound.GUARDIAN_FLOP;
             case 104:
-                return io.gomint.world.Sound.ELDERGUARDIAN_CURSE;
+                return Sound.ELDERGUARDIAN_CURSE;
             case 105:
-                return io.gomint.world.Sound.MOB_WARNING;
+                return Sound.MOB_WARNING;
             case 106:
-                return io.gomint.world.Sound.MOB_WARNING_BABY;
+                return Sound.MOB_WARNING_BABY;
             case 107:
-                return io.gomint.world.Sound.TELEPORT;
+                return Sound.TELEPORT;
             case 108:
-                return io.gomint.world.Sound.SHULKER_OPEN;
+                return Sound.SHULKER_OPEN;
             case 109:
-                return io.gomint.world.Sound.SHULKER_CLOSE;
+                return Sound.SHULKER_CLOSE;
             case 110:
-                return io.gomint.world.Sound.HAGGLE;
+                return Sound.HAGGLE;
             case 111:
-                return io.gomint.world.Sound.HAGGLE_YES;
+                return Sound.HAGGLE_YES;
             case 112:
-                return io.gomint.world.Sound.HAGGLE_NO;
+                return Sound.HAGGLE_NO;
             case 113:
-                return io.gomint.world.Sound.HAGGLE_IDLE;
+                return Sound.HAGGLE_IDLE;
             case 114:
-                return io.gomint.world.Sound.CHORUSGROW;
+                return Sound.CHORUSGROW;
             case 115:
-                return io.gomint.world.Sound.CHORUSDEATH;
+                return Sound.CHORUSDEATH;
             case 116:
-                return io.gomint.world.Sound.GLASS;
+                return Sound.GLASS;
             case 117:
-                return io.gomint.world.Sound.CAST_SPELL;
+                return Sound.CAST_SPELL;
             case 118:
-                return io.gomint.world.Sound.PREPARE_ATTACK;
+                return Sound.PREPARE_ATTACK;
             case 119:
-                return io.gomint.world.Sound.PREPARE_SUMMON;
+                return Sound.PREPARE_SUMMON;
             case 120:
-                return io.gomint.world.Sound.PREPARE_WOLOLO;
+                return Sound.PREPARE_WOLOLO;
             case 121:
-                return io.gomint.world.Sound.FANG;
+                return Sound.FANG;
             case 122:
-                return io.gomint.world.Sound.CHARGE;
+                return Sound.CHARGE;
             case 123:
-                return io.gomint.world.Sound.CAMERA_TAKE_PICTURE;
+                return Sound.CAMERA_TAKE_PICTURE;
             case 124:
-                return io.gomint.world.Sound.LEASHKNOT_PLACE;
+                return Sound.LEASHKNOT_PLACE;
             case 125:
-                return io.gomint.world.Sound.LEASHKNOT_BREAK;
+                return Sound.LEASHKNOT_BREAK;
             case 126:
-                return io.gomint.world.Sound.GROWL;
+                return Sound.GROWL;
             case 127:
-                return io.gomint.world.Sound.WHINE;
+                return Sound.WHINE;
             case 128:
-                return io.gomint.world.Sound.PANT;
+                return Sound.PANT;
             case 129:
-                return io.gomint.world.Sound.PURR;
+                return Sound.PURR;
             case 130:
-                return io.gomint.world.Sound.PURREOW;
+                return Sound.PURREOW;
             case 131:
-                return io.gomint.world.Sound.DEATH_MIN_VOLUME;
+                return Sound.DEATH_MIN_VOLUME;
             case 132:
-                return io.gomint.world.Sound.DEATH_MID_VOLUME;
+                return Sound.DEATH_MID_VOLUME;
             case 133:
-                return io.gomint.world.Sound.IMITATE_BLAZE;
+                return Sound.IMITATE_BLAZE;
             case 134:
-                return io.gomint.world.Sound.IMITATE_CAVE_SPIDER;
+                return Sound.IMITATE_CAVE_SPIDER;
             case 135:
-                return io.gomint.world.Sound.IMITATE_CREEPER;
+                return Sound.IMITATE_CREEPER;
             case 136:
-                return io.gomint.world.Sound.IMITATE_ELDER_GUARDIAN;
+                return Sound.IMITATE_ELDER_GUARDIAN;
             case 137:
-                return io.gomint.world.Sound.IMITATE_ENDER_DRAGON;
+                return Sound.IMITATE_ENDER_DRAGON;
             case 138:
-                return io.gomint.world.Sound.IMITATE_ENDERMAN;
+                return Sound.IMITATE_ENDERMAN;
             case 139:
-                return io.gomint.world.Sound.IMITATE_EVOCATION_ILLAGER;
+                return Sound.IMITATE_EVOCATION_ILLAGER;
             case 140:
-                return io.gomint.world.Sound.IMITATE_GHAST;
+                return Sound.IMITATE_GHAST;
             case 141:
-                return io.gomint.world.Sound.IMITATE_HUSK;
+                return Sound.IMITATE_HUSK;
             case 142:
-                return io.gomint.world.Sound.IMITATE_ILLUSION_ILLAGER;
+                return Sound.IMITATE_ILLUSION_ILLAGER;
             case 143:
-                return io.gomint.world.Sound.IMITATE_MAGMA_CUBE;
+                return Sound.IMITATE_MAGMA_CUBE;
             case 144:
-                return io.gomint.world.Sound.IMITATE_POLAR_BEAR;
+                return Sound.IMITATE_POLAR_BEAR;
             case 145:
-                return io.gomint.world.Sound.IMITATE_SHULKER;
+                return Sound.IMITATE_SHULKER;
             case 146:
-                return io.gomint.world.Sound.IMITATE_SILVERFISH;
+                return Sound.IMITATE_SILVERFISH;
             case 147:
-                return io.gomint.world.Sound.IMITATE_SKELETON;
+                return Sound.IMITATE_SKELETON;
             case 148:
-                return io.gomint.world.Sound.IMITATE_SLIME;
+                return Sound.IMITATE_SLIME;
             case 149:
-                return io.gomint.world.Sound.IMITATE_SPIDER;
+                return Sound.IMITATE_SPIDER;
             case 150:
-                return io.gomint.world.Sound.IMITATE_STRAY;
+                return Sound.IMITATE_STRAY;
             case 151:
-                return io.gomint.world.Sound.IMITATE_VEX;
+                return Sound.IMITATE_VEX;
             case 152:
-                return io.gomint.world.Sound.IMITATE_VINDICATION_ILLAGER;
+                return Sound.IMITATE_VINDICATION_ILLAGER;
             case 153:
-                return io.gomint.world.Sound.IMITATE_WITCH;
+                return Sound.IMITATE_WITCH;
             case 154:
-                return io.gomint.world.Sound.IMITATE_WITHER;
+                return Sound.IMITATE_WITHER;
             case 155:
-                return io.gomint.world.Sound.IMITATE_WITHER_SKELETON;
+                return Sound.IMITATE_WITHER_SKELETON;
             case 156:
-                return io.gomint.world.Sound.IMITATE_WOLF;
+                return Sound.IMITATE_WOLF;
             case 157:
-                return io.gomint.world.Sound.IMITATE_ZOMBIE;
+                return Sound.IMITATE_ZOMBIE;
             case 158:
-                return io.gomint.world.Sound.IMITATE_ZOMBIE_PIGMAN;
+                return Sound.IMITATE_ZOMBIE_PIGMAN;
             case 159:
-                return io.gomint.world.Sound.IMITATE_ZOMBIE_VILLAGER;
+                return Sound.IMITATE_ZOMBIE_VILLAGER;
             case 160:
-                return io.gomint.world.Sound.BLOCK_END_PORTAL_FRAME_FILL;
+                return Sound.BLOCK_END_PORTAL_FRAME_FILL;
             case 161:
-                return io.gomint.world.Sound.BLOCK_END_PORTAL_SPAWN;
+                return Sound.BLOCK_END_PORTAL_SPAWN;
             case 162:
-                return io.gomint.world.Sound.RANDOM_ANVIL_USE;
+                return Sound.RANDOM_ANVIL_USE;
             case 163:
-                return io.gomint.world.Sound.BOTTLE_DRAGONBREATH;
+                return Sound.BOTTLE_DRAGONBREATH;
             case 164:
-                return io.gomint.world.Sound.PORTAL_TRAVEL;
+                return Sound.PORTAL_TRAVEL;
             case 165:
-                return io.gomint.world.Sound.BELLS;
+                return Sound.BELLS;
             case 166:
-                return io.gomint.world.Sound.RAVAGERS;
+                return Sound.RAVAGERS;
             case 167:
-                return io.gomint.world.Sound.SWEETBERRYBUSHES;
+                return Sound.SWEETBERRYBUSHES;
             case 168:
-                return io.gomint.world.Sound.CAMPFIRES;
+                return Sound.CAMPFIRES;
             case 169:
-                return io.gomint.world.Sound.RAIDS;
+                return Sound.RAIDS;
             case 170:
-                return io.gomint.world.Sound.GRINDSTONES;
+                return Sound.GRINDSTONES;
             case 171:
-                return io.gomint.world.Sound.LANTERNS;
+                return Sound.LANTERNS;
         }
 
         return null;

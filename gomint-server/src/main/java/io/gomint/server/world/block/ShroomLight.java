@@ -4,6 +4,7 @@ package io.gomint.server.world.block;
 import io.gomint.inventory.item.ItemHoe;
 import io.gomint.inventory.item.ItemStack;
 import io.gomint.server.registry.RegisterInfo;
+import io.gomint.world.block.BlockShroomLight;
 import io.gomint.world.block.BlockType;
 
 /**
@@ -11,7 +12,7 @@ import io.gomint.world.block.BlockType;
  * @version 1.0
  */
 @RegisterInfo(sId = "minecraft:shroomligh")
-public class ShroomLight extends Block implements io.gomint.world.block.BlockShroomLight {
+public class ShroomLight extends Block implements BlockShroomLight {
 
     @Override
     public String getBlockId() {

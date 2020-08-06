@@ -4,6 +4,7 @@ import io.gomint.server.entity.tileentity.DaylightDetectorTileEntity;
 import io.gomint.server.entity.tileentity.TileEntity;
 import io.gomint.server.world.block.state.RedstoneSignalStrength;
 import io.gomint.taglib.NBTTagCompound;
+import io.gomint.world.block.BlockDaylightDetector;
 import io.gomint.world.block.BlockType;
 
 import io.gomint.server.registry.RegisterInfo;
@@ -13,7 +14,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:daylight_detector" )
-public class DaylightDetector extends Block implements io.gomint.world.block.BlockDaylightDetector {
+public class DaylightDetector extends Block implements BlockDaylightDetector {
 
     private static final RedstoneSignalStrength SIGNAL_STRENGTH = new RedstoneSignalStrength(() -> new String[]{"redstone_signal"});
 

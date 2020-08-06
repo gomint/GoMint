@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, GoMint, BlackyPaw and geNAZt
+ * Copyright (c) 2018 Gomint team
  *
  * This code is licensed under the BSD license found in the
  * LICENSE file in the root directory of this source tree.
@@ -76,7 +76,7 @@ public interface World {
      * @param pos of the position
      * @return block which has been found at that position or null
      */
-    <T extends Block> T getBlockAt( BlockPosition pos );
+    <T extends Block> T getBlockAt(BlockPosition pos );
 
     /**
      * Get the block at that position or air if the position is not loaded in the world.

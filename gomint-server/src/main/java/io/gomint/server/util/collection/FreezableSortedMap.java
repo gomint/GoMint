@@ -9,7 +9,9 @@ package io.gomint.server.util.collection;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
 import lombok.Setter;
+import lombok.ToString;
 
+@ToString
 public class FreezableSortedMap<K, V> extends Object2ObjectLinkedOpenHashMap<K, V> {
 
     private boolean cachedHashCode;

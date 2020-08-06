@@ -16,7 +16,6 @@ import io.gomint.server.network.PlayerConnectionState;
 import io.gomint.server.network.packet.Packet;
 import io.gomint.server.network.packet.PacketEntityMetadata;
 import io.gomint.server.network.packet.PacketEntityMotion;
-import io.gomint.server.network.packet.PacketEntityMovement;
 import io.gomint.server.network.packet.PacketEntityRelativeMovement;
 import io.gomint.server.network.packet.PacketPlayerlist;
 import io.gomint.world.Chunk;

@@ -5,6 +5,7 @@ import io.gomint.inventory.item.ItemDiamondPickaxe;
 import io.gomint.inventory.item.ItemIronPickaxe;
 import io.gomint.inventory.item.ItemStack;
 import io.gomint.server.registry.RegisterInfo;
+import io.gomint.world.block.BlockBlockOfEmerald;
 import io.gomint.world.block.BlockType;
 
 import java.util.ArrayList;
@@ -15,7 +16,7 @@ import java.util.List;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:emerald_block" )
-public class BlockOfEmerald extends Block implements io.gomint.world.block.BlockBlockOfEmerald {
+public class BlockOfEmerald extends Block implements BlockBlockOfEmerald {
 
     @Override
     public String getBlockId() {

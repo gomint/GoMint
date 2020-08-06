@@ -59,7 +59,27 @@ public class SwitchNode {
             builder.append(repeatSpace(indents)).append("private int ").append(parent).append("(Map<String, Object> input) {\n");
         }
 
+        String defaultReturn = "";
+        String defaultMethod = "";
+        for (Map.Entry<String, SwitchNode> entry : this.nodes.entrySet()) {
+            if (entry.getValue().value != null) {
+                defaultReturn = entry.getValue().value;
+                break;
+            } else if (defaultMethod.isEmpty()) {
+                defaultMethod = makeNice(((parent != null) ? parent : "") + this.key + entry.getKey());
+            }
+        }
+
         builder.append(repeatSpace(indents + 4)).append(this.type).append(" ").append(this.key).append(" = (").append(this.type).append(") input.get(\"").append(this.key).append("\");").append("\n");
+        builder.append(repeatSpace(indents + 4)).append("if ( ").append(this.key).append(" == null ) { ").append("\n");
+
+        if (defaultReturn.isEmpty()) {
+            builder.append(repeatSpace(indents + 8)).append("return this.").append(defaultMethod).append("(input);").append("\n");
+        } else {
+            builder.append(repeatSpace(indents + 8)).append("return ").append(defaultReturn).append(";").append("\n");
+        }
+
+        builder.append(repeatSpace(indents + 4)).append("}").append("\n\n");
         builder.append(repeatSpace(indents + 4)).append("switch ( ").append(this.key).append(" ) { ").append("\n");
         for (Map.Entry<String, SwitchNode> entry : this.nodes.entrySet()) {
             String methodName = makeNice(((parent != null) ? parent : "") + this.key + entry.getKey());

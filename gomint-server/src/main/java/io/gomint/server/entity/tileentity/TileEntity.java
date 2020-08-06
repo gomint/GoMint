@@ -14,15 +14,12 @@ import io.gomint.math.Vector;
 import io.gomint.server.entity.EntityPlayer;
 import io.gomint.server.inventory.item.Items;
 import io.gomint.server.util.BlockIdentifier;
-import io.gomint.server.util.collection.FreezableSortedMap;
 import io.gomint.server.world.BlockRuntimeIDs;
 import io.gomint.server.world.block.Block;
 import io.gomint.taglib.NBTTagCompound;
 import io.gomint.world.block.data.Facing;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import java.util.SortedMap;
 
 /**
  * @author geNAZt

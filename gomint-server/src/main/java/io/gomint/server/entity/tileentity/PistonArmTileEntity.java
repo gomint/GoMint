@@ -7,13 +7,8 @@
 
 package io.gomint.server.entity.tileentity;
 
-import io.gomint.server.util.Things;
-import io.gomint.server.world.block.Air;
 import io.gomint.server.world.block.Block;
-import io.gomint.server.world.block.PistonHead;
 import io.gomint.taglib.NBTTagCompound;
-import io.gomint.world.block.data.Facing;
-import io.gomint.world.block.BlockType;
 import lombok.ToString;
 
 import java.util.ArrayList;

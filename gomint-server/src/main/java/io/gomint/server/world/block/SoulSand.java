@@ -5,13 +5,14 @@ import io.gomint.server.world.block.helper.ToolPresets;
 import io.gomint.world.block.BlockType;
 
 import io.gomint.server.registry.RegisterInfo;
+import io.gomint.world.block.BlockSoulSand;
 
 /**
  * @author geNAZt
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:soul_sand" )
-public class SoulSand extends Block implements io.gomint.world.block.BlockSoulSand {
+public class SoulSand extends Block implements BlockSoulSand {
 
     @Override
     public String getBlockId() {

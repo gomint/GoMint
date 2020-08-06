@@ -11,11 +11,11 @@ import io.gomint.inventory.item.ItemStack;
 import io.gomint.server.world.block.helper.ToolPresets;
 import io.gomint.server.world.block.state.BooleanBlockState;
 import io.gomint.server.world.block.state.DirectionBlockState;
+import io.gomint.world.block.BlockFenceGate;
 import io.gomint.world.block.BlockType;
 
 import io.gomint.server.registry.RegisterInfo;
 import io.gomint.world.block.data.Direction;
-import io.gomint.world.block.data.Facing;
 import io.gomint.world.block.data.LogType;
 
 /**
@@ -28,7 +28,9 @@ import io.gomint.world.block.data.LogType;
 @RegisterInfo(sId = "minecraft:jungle_fence_gate")
 @RegisterInfo(sId = "minecraft:dark_oak_fence_gate")
 @RegisterInfo(sId = "minecraft:acacia_fence_gate")
-public class FenceGate extends Block implements io.gomint.world.block.BlockFenceGate {
+@RegisterInfo(sId = "minecraft:warped_fence_gate")
+@RegisterInfo(sId = "minecraft:crimson_fence_gate")
+public class FenceGate extends Block implements BlockFenceGate {
 
     private final DirectionBlockState DIRECTION = new DirectionBlockState( () -> new String[]{"direction"});
     private final BooleanBlockState OPEN = new BooleanBlockState( () -> new String[]{"open_bit"});
@@ -94,6 +96,10 @@ public class FenceGate extends Block implements io.gomint.world.block.BlockFence
                 return LogType.JUNGLE;
             case "minecraft:acacia_fence_gate":
                 return LogType.ACACIA;
+            case "minecraft:warped_fence_gate":
+                return LogType.WARPED;
+            case "minecraft:crimson_fence_gate":
+                return LogType.CRIMSON;
         }
 
         return LogType.OAK;
@@ -119,6 +125,12 @@ public class FenceGate extends Block implements io.gomint.world.block.BlockFence
                 break;
             case ACACIA:
                 this.setBlockId("minecraft:acacia_fence_gate");
+                break;
+            case WARPED:
+                this.setBlockId("minecraft:warped_fence_gate");
+                break;
+            case CRIMSON:
+                this.setBlockId("minecraft:crimson_fence_gate");
                 break;
         }
     }

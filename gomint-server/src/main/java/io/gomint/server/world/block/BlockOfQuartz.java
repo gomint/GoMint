@@ -5,6 +5,7 @@ import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.world.block.helper.ToolPresets;
 import io.gomint.server.world.block.state.AxisBlockState;
 import io.gomint.server.world.block.state.EnumBlockState;
+import io.gomint.world.block.BlockBlockOfQuartz;
 import io.gomint.world.block.BlockType;
 import io.gomint.world.block.data.Axis;
 import lombok.EqualsAndHashCode;
@@ -19,7 +20,7 @@ import java.util.List;
  */
 @RegisterInfo(sId = "minecraft:quartz_block")
 @EqualsAndHashCode(callSuper = true)
-public class BlockOfQuartz extends Block implements io.gomint.world.block.BlockBlockOfQuartz {
+public class BlockOfQuartz extends Block implements BlockBlockOfQuartz {
 
     @Getter
     private enum VariantMagic {

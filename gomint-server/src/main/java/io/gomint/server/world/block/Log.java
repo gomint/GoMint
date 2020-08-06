@@ -8,6 +8,7 @@ import io.gomint.server.entity.EntityPlayer;
 import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.world.block.helper.ToolPresets;
 import io.gomint.server.world.block.state.AxisBlockState;
+import io.gomint.server.world.block.state.BooleanBlockState;
 import io.gomint.server.world.block.state.EnumBlockState;
 import io.gomint.world.block.data.Axis;
 import io.gomint.world.block.data.Facing;
@@ -24,53 +25,59 @@ import java.util.List;
  */
 @RegisterInfo(sId = "minecraft:log", def = true)
 @RegisterInfo(sId = "minecraft:log2")
+@RegisterInfo(sId = "minecraft:crimson_stem")
+@RegisterInfo(sId = "minecraft:warped_stem")
 @RegisterInfo(sId = "minecraft:stripped_oak_log")
 @RegisterInfo(sId = "minecraft:stripped_spruce_log")
 @RegisterInfo(sId = "minecraft:stripped_acacia_log")
 @RegisterInfo(sId = "minecraft:stripped_dark_oak_log")
 @RegisterInfo(sId = "minecraft:stripped_jungle_log")
 @RegisterInfo(sId = "minecraft:stripped_birch_log")
+@RegisterInfo(sId = "minecraft:stripped_crimson_stem")
+@RegisterInfo(sId = "minecraft:stripped_warped_stem")
+@RegisterInfo(sId = "minecraft:stripped_crimson_hyphae")
+@RegisterInfo(sId = "minecraft:stripped_warped_hyphae")
+@RegisterInfo(sId = "minecraft:wood")
+@RegisterInfo(sId = "minecraft:warped_hyphae")
+@RegisterInfo(sId = "minecraft:crimson_hyphae")
 public class Log extends Block implements BlockLog {
 
     private static final String OLD_LOG_TYPE = "old_log_type";
     private static final String OLD_LOG_ID = "minecraft:log";
+    private static final String OLD_WOOD_ID = "minecraft:wood";
+    private static final String OLD_WOOD_TYPE = "wood_type";
 
     private static final String NEW_LOG_TYPE = "new_log_type";
     private static final String NEW_LOG_ID = "minecraft:log2";
 
     @Getter
     private enum LogTypeMagic {
-        OAK(OLD_LOG_ID, OLD_LOG_TYPE, "oak"),
-        SPRUCE(OLD_LOG_ID, OLD_LOG_TYPE, "spruce"),
-        BIRCH(OLD_LOG_ID, OLD_LOG_TYPE, "birch"),
-        JUNGLE(OLD_LOG_ID, OLD_LOG_TYPE, "jungle"),
-        ACACIA(NEW_LOG_ID, NEW_LOG_TYPE, "acacia"),
-        DARK_OAK(NEW_LOG_ID, NEW_LOG_TYPE, "dark_oak");
+        OAK(OLD_WOOD_ID, OLD_WOOD_TYPE, OLD_LOG_ID, OLD_LOG_TYPE, "oak"),
+        SPRUCE(OLD_WOOD_ID, OLD_WOOD_TYPE, OLD_LOG_ID, OLD_LOG_TYPE, "spruce"),
+        BIRCH(OLD_WOOD_ID, OLD_WOOD_TYPE, OLD_LOG_ID, OLD_LOG_TYPE, "birch"),
+        JUNGLE(OLD_WOOD_ID, OLD_WOOD_TYPE, OLD_LOG_ID, OLD_LOG_TYPE, "jungle"),
+        ACACIA(OLD_WOOD_ID, OLD_WOOD_TYPE, NEW_LOG_ID, NEW_LOG_TYPE, "acacia"),
+        DARK_OAK(OLD_WOOD_ID, OLD_WOOD_TYPE, NEW_LOG_ID, NEW_LOG_TYPE, "dark_oak"),
+        CRIMSON("minecraft:crimson_hyphae", "", "minecraft:crimson_stem", "", ""),
+        WARPED("minecraft:warped_hyphae", "", "minecraft:warped_stem", "", "");
 
-
+        private final String fullTextureBlockId;
+        private final String fullTextureKey;
+        private final String blockId;
         private final String key;
         private final String value;
-        private final String blockId;
 
-        LogTypeMagic(String blockId, String key, String value) {
+        LogTypeMagic(String fullTextureBlockId, String fullTextureKey, String blockId, String key, String value) {
+            this.fullTextureBlockId = fullTextureBlockId;
+            this.fullTextureKey = fullTextureKey;
+            this.blockId = blockId;
             this.key = key;
             this.value = value;
-            this.blockId = blockId;
         }
     }
 
     private static final EnumBlockState<LogTypeMagic, String> VARIANT = new EnumBlockState<>(v -> {
-        if (v == null) {
-            return new String[]{OLD_LOG_TYPE, NEW_LOG_TYPE};
-        }
-
-        for (LogTypeMagic value : LogTypeMagic.values()) {
-            if (value.getValue().equals(v)) {
-                return value.getKey().equals(OLD_LOG_TYPE) ? new String[]{OLD_LOG_TYPE, NEW_LOG_TYPE} : new String[]{NEW_LOG_TYPE, OLD_LOG_TYPE};
-            }
-        }
-
-        return new String[]{OLD_LOG_TYPE, NEW_LOG_TYPE};
+        return new String[]{OLD_LOG_TYPE, NEW_LOG_TYPE, OLD_WOOD_TYPE};
     }, LogTypeMagic.values(), LogTypeMagic::getValue, v -> {
         for (LogTypeMagic value : LogTypeMagic.values()) {
             if (value.getValue().equals(v)) {
@@ -80,7 +87,9 @@ public class Log extends Block implements BlockLog {
 
         return null;
     });
+
     private static final AxisBlockState AXIS = new AxisBlockState(() -> new String[]{"pillar_axis"});
+    private static final BooleanBlockState STRIPPED = new BooleanBlockState(() -> new String[]{"stripped_bit"});
 
     @Override
     public long getBreakTime() {
@@ -114,7 +123,19 @@ public class Log extends Block implements BlockLog {
 
     @Override
     public boolean isStripped() {
-        return !this.getBlockId().equals("minecraft:log") && !this.getBlockId().equals("minecraft:log2");
+        return this.getBlockId().startsWith("minecraft:stripped_");
+    }
+
+    private void update(LogType type, boolean stripped, boolean fullTexture) {
+        LogTypeMagic state = LogTypeMagic.valueOf(type.name());
+        STRIPPED.setState(this, stripped);
+
+        if (!stripped) {
+            this.setBlockIdOnStateChange(fullTexture ? state.getFullTextureBlockId() : state.getBlockId());
+            VARIANT.setState(this, state);
+        } else {
+            this.setBlockIdFromType(state, fullTexture);
+        }
     }
 
     @Override
@@ -124,89 +145,40 @@ public class Log extends Block implements BlockLog {
             return;
         }
 
-        if (stripped) {
-            if (this.getBlockId().equals("minecraft:log")) {
-                switch (VARIANT.getState(this)) {
-                    case OAK:
-                        this.setBlockId("minecraft:stripped_oak_log");
-                        break;
-                    case BIRCH:
-                        this.setBlockId("minecraft:stripped_birch_log");
-                        break;
-                    case JUNGLE:
-                        this.setBlockId("minecraft:stripped_jungle_log");
-                        break;
-                    case SPRUCE:
-                        this.setBlockId("minecraft:stripped_spruce_log");
-                        break;
-                }
-            } else if (this.getBlockId().equals("minecraft:log2")) {
-                switch (VARIANT.getState(this)) {
-                    case ACACIA:
-                        this.setBlockId("minecraft:stripped_acacia_log");
-                        break;
-                    case DARK_OAK:
-                        this.setBlockId("minecraft:stripped_dark_oak_log");
-                        break;
-                }
-            }
-        } else {
-            LogTypeMagic newState;
-            switch (this.getBlockId()) {
-                default:
-                case "minecraft:stripped_oak_log":
-                    newState = LogTypeMagic.OAK;
-                    break;
-                case "minecraft:stripped_birch_log":
-                    newState = LogTypeMagic.BIRCH;
-                    break;
-                case "minecraft:stripped_jungle_log":
-                    newState = LogTypeMagic.JUNGLE;
-                    break;
-                case "minecraft:stripped_spruce_log":
-                    newState = LogTypeMagic.SPRUCE;
-                    break;
-                case "minecraft:stripped_acacia_log":
-                    newState = LogTypeMagic.ACACIA;
-                    break;
-                case "minecraft:stripped_dark_oak_log":
-                    newState = LogTypeMagic.DARK_OAK;
-                    break;
-            }
-
-            this.setBlockIdOnStateChange(newState.getBlockId());
-            VARIANT.setState(this, newState);
-        }
+        this.update(this.getLogType(), stripped, this.isBarkOnAllSides());
     }
 
     @Override
     public void setLogType(LogType type) {
-        LogTypeMagic newState = LogTypeMagic.valueOf(type.name());
+        this.update(type, this.isStripped(), this.isBarkOnAllSides());
+    }
 
-        if (!this.isStripped()) {
-            this.setBlockIdOnStateChange(newState.getBlockId());
-            VARIANT.setState(this, newState);
-        } else {
-            switch (type) {
-                case OAK:
-                    this.setBlockId("minecraft:stripped_oak_log");
-                    break;
-                case BIRCH:
-                    this.setBlockId("minecraft:stripped_birch_log");
-                    break;
-                case JUNGLE:
-                    this.setBlockId("minecraft:stripped_jungle_log");
-                    break;
-                case SPRUCE:
-                    this.setBlockId("minecraft:stripped_spruce_log");
-                    break;
-                case ACACIA:
-                    this.setBlockId("minecraft:stripped_acacia_log");
-                    break;
-                case DARK_OAK:
-                    this.setBlockId("minecraft:stripped_dark_oak_log");
-                    break;
-            }
+    private void setBlockIdFromType(LogTypeMagic type, boolean fullTexture) {
+        switch (type) {
+            case OAK:
+                this.setBlockId(fullTexture ? type.getFullTextureBlockId() : "minecraft:stripped_oak_log");
+                break;
+            case BIRCH:
+                this.setBlockId(fullTexture ? type.getFullTextureBlockId() : "minecraft:stripped_birch_log");
+                break;
+            case JUNGLE:
+                this.setBlockId(fullTexture ? type.getFullTextureBlockId() : "minecraft:stripped_jungle_log");
+                break;
+            case SPRUCE:
+                this.setBlockId(fullTexture ? type.getFullTextureBlockId() : "minecraft:stripped_spruce_log");
+                break;
+            case ACACIA:
+                this.setBlockId(fullTexture ? type.getFullTextureBlockId() : "minecraft:stripped_acacia_log");
+                break;
+            case DARK_OAK:
+                this.setBlockId(fullTexture ? type.getFullTextureBlockId() : "minecraft:stripped_dark_oak_log");
+                break;
+            case CRIMSON:
+                this.setBlockId(fullTexture ? "minecraft:stripped_crimson_hyphae" : "minecraft:stripped_crimson_stem");
+                break;
+            case WARPED:
+                this.setBlockId(fullTexture ? "minecraft:stripped_warped_hyphae" : "minecraft:stripped_warped_stem");
+                break;
         }
     }
 
@@ -227,7 +199,33 @@ public class Log extends Block implements BlockLog {
                 return LogType.ACACIA;
             case "minecraft:stripped_dark_oak_log":
                 return LogType.DARK_OAK;
+            case "minecraft:stripped_crimson_stem":
+            case "minecraft:stripped_crimson_hyphae":
+            case "minecraft:crimson_hyphae":
+            case "minecraft:crimson_stem":
+                return LogType.CRIMSON;
+            case "minecraft:stripped_warped_hyphae":
+            case "minecraft:stripped_warped_stem":
+            case "minecraft:warped_hyphae":
+            case "minecraft:warped_stem":
+                return LogType.WARPED;
         }
+    }
+
+    @Override
+    public void setBarkOnAllSides(boolean allSides) {
+        boolean isAllSides = this.isBarkOnAllSides();
+        if (allSides == isAllSides) {
+            return;
+        }
+
+        this.update(this.getLogType(), this.isStripped(), allSides);
+    }
+
+    @Override
+    public boolean isBarkOnAllSides() {
+        return this.getBlockId().equals(OLD_WOOD_ID) ||
+            this.getBlockId().endsWith("_hyphae");
     }
 
     @Override

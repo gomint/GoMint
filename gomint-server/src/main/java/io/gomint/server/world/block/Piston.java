@@ -6,6 +6,7 @@ import io.gomint.server.entity.tileentity.TileEntity;
 import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.world.block.helper.ToolPresets;
 import io.gomint.taglib.NBTTagCompound;
+import io.gomint.world.block.BlockPiston;
 import io.gomint.world.block.BlockType;
 
 /**
@@ -13,7 +14,7 @@ import io.gomint.world.block.BlockType;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:piston" )
-public class Piston extends Block implements io.gomint.world.block.BlockPiston {
+public class Piston extends Block implements BlockPiston {
 
     @Override
     public String getBlockId() {

@@ -4,13 +4,10 @@ import io.gomint.inventory.item.ItemStack;
 import io.gomint.server.world.block.helper.ToolPresets;
 import io.gomint.world.block.BlockType;
 
-import io.gomint.math.AxisAlignedBB;
-import io.gomint.server.entity.Entity;
 import io.gomint.server.registry.RegisterInfo;
+import io.gomint.world.block.BlockWoodenPressurePlate;
 import io.gomint.world.block.data.LogType;
 import lombok.Getter;
-
-import java.util.function.Function;
 
 /**
  * @author geNAZt
@@ -22,7 +19,7 @@ import java.util.function.Function;
 @RegisterInfo(sId = "minecraft:birch_pressure_plate")
 @RegisterInfo(sId = "minecraft:spruce_pressure_plate")
 @RegisterInfo(sId = "minecraft:dark_oak_pressure_plate")
-public class WoodenPressurePlate extends BasePressurePlate implements io.gomint.world.block.BlockWoodenPressurePlate {
+public class WoodenPressurePlate extends BasePressurePlate implements BlockWoodenPressurePlate {
 
     @Getter
     private enum LogTypeMagic {

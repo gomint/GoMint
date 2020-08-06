@@ -5,7 +5,7 @@ import io.gomint.inventory.item.ItemStack;
 import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.world.WorldAdapter;
 import io.gomint.server.world.block.helper.ToolPresets;
-import io.gomint.util.random.FastRandom;
+import io.gomint.world.block.BlockDiamondOre;
 import io.gomint.world.block.BlockType;
 
 import java.util.ArrayList;
@@ -17,7 +17,7 @@ import java.util.concurrent.ThreadLocalRandom;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:diamond_ore" )
-public class DiamondOre extends Block implements io.gomint.world.block.BlockDiamondOre {
+public class DiamondOre extends Block implements BlockDiamondOre {
 
     @Override
     public String getBlockId() {

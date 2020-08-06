@@ -7,6 +7,7 @@ import io.gomint.server.entity.EntityPlayer;
 import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.world.PlacementData;
 import io.gomint.server.world.block.state.ProgressBlockState;
+import io.gomint.world.block.BlockCake;
 import io.gomint.world.block.data.Facing;
 import io.gomint.world.block.BlockType;
 import lombok.EqualsAndHashCode;
@@ -17,7 +18,7 @@ import lombok.EqualsAndHashCode;
  */
 @RegisterInfo(sId = "minecraft:cake")
 @EqualsAndHashCode(callSuper = true)
-public class Cake extends Block implements io.gomint.world.block.BlockCake {
+public class Cake extends Block implements BlockCake {
 
     private static final ProgressBlockState CAKE_EATEN = new ProgressBlockState(() -> new String[]{"bite_counter"}, 6, b -> b.setBlockType(Air.class));
 

@@ -8,7 +8,6 @@ import io.gomint.command.annotation.Name;
 import io.gomint.entity.EntityPlayer;
 import io.gomint.testplugin.TestPlugin;
 import io.gomint.plugin.injection.InjectPlugin;
-import io.gomint.util.random.FastRandom;
 import io.gomint.world.World;
 import io.gomint.world.generator.CreateOptions;
 

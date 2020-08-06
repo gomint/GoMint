@@ -4,6 +4,7 @@ import io.gomint.inventory.item.ItemStack;
 import io.gomint.server.world.block.helper.ToolPresets;
 import io.gomint.server.world.block.state.DirectionBlockState;
 import io.gomint.server.world.block.state.ProgressBlockState;
+import io.gomint.world.block.BlockCocoa;
 import io.gomint.world.block.BlockType;
 
 import io.gomint.server.registry.RegisterInfo;
@@ -14,7 +15,7 @@ import io.gomint.world.block.data.Direction;
  * @version 1.0
  */
 @RegisterInfo(sId = "minecraft:cocoa")
-public class Cocoa extends Growable implements io.gomint.world.block.BlockCocoa {
+public class Cocoa extends Growable implements BlockCocoa {
 
     private static final DirectionBlockState DIRECTION = new DirectionBlockState(() -> new String[]{"direction"});
     private static final ProgressBlockState AGE = new ProgressBlockState( () -> new String[]{"age"},2, aVoid -> {});

@@ -3,6 +3,7 @@ package io.gomint.server.world.block;
 import io.gomint.inventory.item.ItemStack;
 import io.gomint.math.AxisAlignedBB;
 import io.gomint.server.world.block.helper.ToolPresets;
+import io.gomint.world.block.BlockCobblestoneWall;
 import io.gomint.world.block.BlockType;
 
 import io.gomint.server.registry.RegisterInfo;
@@ -15,7 +16,7 @@ import java.util.List;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:cobblestone_wall" )
-public class CobblestoneWall extends Block implements io.gomint.world.block.BlockCobblestoneWall {
+public class CobblestoneWall extends Block implements BlockCobblestoneWall {
 
     @Override
     public String getBlockId() {

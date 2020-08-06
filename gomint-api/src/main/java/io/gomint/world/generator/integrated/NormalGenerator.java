@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, GoMint, BlackyPaw and geNAZt
+ * Copyright (c) 2018 Gomint team
  *
  * This code is licensed under the BSD license found in the
  * LICENSE file in the root directory of this source tree.
@@ -14,8 +14,6 @@ import io.gomint.world.Biome;
 import io.gomint.world.Chunk;
 import io.gomint.world.World;
 import io.gomint.world.WorldLayer;
-import io.gomint.world.block.Block;
-import io.gomint.world.block.BlockBedrock;
 import io.gomint.world.block.BlockCoalOre;
 import io.gomint.world.block.BlockDiamondOre;
 import io.gomint.world.block.BlockDirt;
@@ -24,8 +22,6 @@ import io.gomint.world.block.BlockGravel;
 import io.gomint.world.block.BlockIronOre;
 import io.gomint.world.block.BlockLapisLazuliOre;
 import io.gomint.world.block.BlockRedstoneOre;
-import io.gomint.world.block.BlockStationaryWater;
-import io.gomint.world.block.BlockStone;
 import io.gomint.world.generator.ChunkGenerator;
 import io.gomint.world.generator.DefinedBlocks;
 import io.gomint.world.generator.GeneratorContext;

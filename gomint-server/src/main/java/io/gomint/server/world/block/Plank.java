@@ -13,22 +13,29 @@ import lombok.Getter;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:planks" )
+@RegisterInfo( sId = "minecraft:planks", def = true )
+@RegisterInfo( sId = "minecraft:crimson_planks" )
+@RegisterInfo( sId = "minecraft:warped_planks" )
 public class Plank extends Block implements BlockPlank {
+
+    private static final String PLANK_ID = "minecraft:planks";
 
     @Getter
     private enum LogTypeMagic {
-        OAK("oak"),
-        SPRUCE("spruce"),
-        BIRCH("birch"),
-        JUNGLE("jungle"),
-        ACACIA("acacia"),
-        DARK_OAK("dark_oak"),
-        CRIMSON("crimsion"),
-        WARPED("warped");
+        OAK(PLANK_ID,"oak"),
+        SPRUCE(PLANK_ID,"spruce"),
+        BIRCH(PLANK_ID,"birch"),
+        JUNGLE(PLANK_ID,"jungle"),
+        ACACIA(PLANK_ID,"acacia"),
+        DARK_OAK(PLANK_ID,"dark_oak"),
+        CRIMSON("minecraft:crimson_planks", ""),
+        WARPED("minecraft:warped_planks", "");
 
+        private final String blockId;
         private final String value;
-        LogTypeMagic(String value) {
+
+        LogTypeMagic(String blockId, String value) {
+            this.blockId = blockId;
             this.value = value;
         }
     }
@@ -42,11 +49,6 @@ public class Plank extends Block implements BlockPlank {
 
         return null;
     });
-
-    @Override
-    public String getBlockId() {
-        return "minecraft:planks";
-    }
 
     @Override
     public long getBreakTime() {
@@ -75,12 +77,27 @@ public class Plank extends Block implements BlockPlank {
 
     @Override
     public LogType getPlankType() {
+        switch (this.getBlockId()) {
+            case "minecraft:crimson_planks":
+                return LogType.CRIMSON;
+            case "minecraft:warped_planks":
+                return LogType.WARPED;
+        }
+
         return LogType.valueOf(VARIANT.getState(this).name());
     }
 
     @Override
     public void setPlankType(LogType logType) {
-        VARIANT.setState(this, LogTypeMagic.valueOf(logType.name()));
+        LogTypeMagic newState = LogTypeMagic.valueOf(logType.name());
+
+        if (!newState.value.isEmpty()) {
+            VARIANT.setState(this, newState);
+        }
+
+        if (!this.getBlockId().equals(newState.blockId)) {
+            this.setBlockId(newState.blockId);
+        }
     }
 
 }

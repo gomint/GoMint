@@ -1,21 +1,18 @@
 package io.gomint.server.world.block;
 
 import io.gomint.inventory.item.ItemStack;
-import io.gomint.math.BlockPosition;
-import io.gomint.math.Location;
-import io.gomint.server.entity.Entity;
 import io.gomint.server.world.block.helper.ToolPresets;
+import io.gomint.world.block.BlockDetectorRail;
 import io.gomint.world.block.BlockType;
 
 import io.gomint.server.registry.RegisterInfo;
-import io.gomint.world.block.data.Facing;
 
 /**
  * @author geNAZt
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:detector_rail" )
-public class DetectorRail extends RailBase implements io.gomint.world.block.BlockDetectorRail {
+public class DetectorRail extends RailBase implements BlockDetectorRail {
 
     @Override
     public long getBreakTime() {

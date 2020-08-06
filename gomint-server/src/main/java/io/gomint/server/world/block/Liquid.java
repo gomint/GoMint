@@ -24,7 +24,7 @@ import java.util.Map;
  */
 public abstract class Liquid extends Block implements BlockLiquid {
 
-    private static final String LIQUID_DEPTH_KEY = "liquid_depth";
+    private static final String[] LIQUID_DEPTH_KEY = new String[]{"liquid_depth"};
     private static final Direction[] DIRECTIONS_TO_CHECK = Direction.values();
 
     private enum FlowState {
@@ -33,7 +33,7 @@ public abstract class Liquid extends Block implements BlockLiquid {
         BLOCKED
     }
 
-    private static final DirectValueBlockState<Integer> LIQUID_DEPTH = new DirectValueBlockState<>(() -> new String[]{LIQUID_DEPTH_KEY}, 0);
+    private static final DirectValueBlockState<Integer> LIQUID_DEPTH = new DirectValueBlockState<>(() -> LIQUID_DEPTH_KEY, 0);
 
     // Temporary storage for update
     private byte adjacentSources;

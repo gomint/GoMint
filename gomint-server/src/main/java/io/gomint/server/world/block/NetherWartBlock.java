@@ -8,7 +8,6 @@
 package io.gomint.server.world.block;
 
 import io.gomint.server.registry.RegisterInfo;
-import io.gomint.world.block.BlockMagma;
 import io.gomint.world.block.BlockNetherWartBlock;
 import io.gomint.world.block.BlockType;
 

@@ -17,7 +17,11 @@ import io.gomint.math.Vector;
 import io.gomint.permission.PermissionManager;
 import io.gomint.player.DeviceInfo;
 import io.gomint.scoreboard.Scoreboard;
-import io.gomint.world.*;
+import io.gomint.world.Gamemode;
+import io.gomint.world.Particle;
+import io.gomint.world.ParticleData;
+import io.gomint.world.Sound;
+import io.gomint.world.SoundData;
 
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
@@ -224,7 +228,7 @@ public interface EntityPlayer extends EntityHuman {
      * @param pitch    The pitch at which the sound should be played
      * @param data     additional data for the sound
      */
-    void playSound( Vector location, Sound sound, byte pitch, SoundData data );
+    void playSound(Vector location, Sound sound, byte pitch, SoundData data );
 
     /**
      * Play a sound for this player

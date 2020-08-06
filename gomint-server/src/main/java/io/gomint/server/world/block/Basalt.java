@@ -3,6 +3,7 @@ package io.gomint.server.world.block;
 import io.gomint.inventory.item.ItemStack;
 import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.world.block.helper.ToolPresets;
+import io.gomint.world.block.BlockBasalt;
 import io.gomint.world.block.BlockType;
 
 /**
@@ -11,7 +12,7 @@ import io.gomint.world.block.BlockType;
  */
 @RegisterInfo(sId = "minecraft:basalt" )
 @RegisterInfo(sId = "minecraft:polished_basalt" ) //TODO Item, BlockState
-public class Basalt extends Block implements io.gomint.world.block.BlockBasalt {
+public class Basalt extends Block implements BlockBasalt {
 
     @Override
     public String getBlockId() {

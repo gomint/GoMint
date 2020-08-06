@@ -2,10 +2,10 @@ package io.gomint.server.world.block;
 
 import io.gomint.inventory.item.ItemStack;
 import io.gomint.server.world.block.helper.ToolPresets;
+import io.gomint.world.block.BlockHeavyWeightedPressurePlate;
 import io.gomint.world.block.BlockType;
 
 import io.gomint.math.AxisAlignedBB;
-import io.gomint.server.inventory.item.ItemHeavyWeightedPressurePlate;
 import io.gomint.server.registry.RegisterInfo;
 
 import java.util.Collections;
@@ -16,7 +16,7 @@ import java.util.List;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:heavy_weighted_pressure_plate" )
-public class HeavyWeightedPressurePlate extends Block implements io.gomint.world.block.BlockHeavyWeightedPressurePlate {
+public class HeavyWeightedPressurePlate extends Block implements BlockHeavyWeightedPressurePlate {
 
     @Override
     public String getBlockId() {

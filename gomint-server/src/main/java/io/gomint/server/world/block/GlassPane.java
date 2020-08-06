@@ -1,5 +1,6 @@
 package io.gomint.server.world.block;
 
+import io.gomint.world.block.BlockGlassPane;
 import io.gomint.world.block.BlockType;
 
 import io.gomint.inventory.item.ItemStack;
@@ -13,7 +14,7 @@ import java.util.List;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:glass_pane" )
-public class GlassPane extends Block implements io.gomint.world.block.BlockGlassPane {
+public class GlassPane extends Block implements BlockGlassPane {
 
     @Override
     public String getBlockId() {

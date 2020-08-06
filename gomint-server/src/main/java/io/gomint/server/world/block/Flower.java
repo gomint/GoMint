@@ -4,6 +4,7 @@ import io.gomint.inventory.item.ItemStack;
 import io.gomint.math.Location;
 import io.gomint.math.Vector;
 import io.gomint.server.entity.Entity;
+import io.gomint.world.block.BlockFlower;
 import io.gomint.world.block.BlockType;
 
 import io.gomint.server.registry.RegisterInfo;
@@ -18,7 +19,7 @@ import java.util.Set;
  */
 @RegisterInfo( sId = "minecraft:red_flower" )
 @RegisterInfo( sId = "minecraft:wither_rose" )
-public class Flower extends Block implements io.gomint.world.block.BlockFlower {
+public class Flower extends Block implements BlockFlower {
 
     private static final Set<BlockType> ALLOWED_PLACED_ON = new HashSet<>(){{
         add(BlockType.DISPENSER);

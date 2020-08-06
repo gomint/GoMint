@@ -1,5 +1,6 @@
 package io.gomint.server.world.block;
 
+import io.gomint.world.block.BlockNetherWart;
 import io.gomint.world.block.BlockType;
 
 import io.gomint.server.registry.RegisterInfo;
@@ -9,7 +10,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:nether_wart" )
-public class NetherWart extends Block implements io.gomint.world.block.BlockNetherWart {
+public class NetherWart extends Block implements BlockNetherWart {
 
     @Override
     public String getBlockId() {

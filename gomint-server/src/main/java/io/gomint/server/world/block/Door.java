@@ -11,6 +11,7 @@ import io.gomint.server.world.block.helper.ToolPresets;
 import io.gomint.server.world.block.state.BooleanBlockState;
 import io.gomint.server.world.block.state.DirectionBlockState;
 import io.gomint.world.block.BlockAir;
+import io.gomint.world.block.BlockDoor;
 import io.gomint.world.block.data.Direction;
 import io.gomint.world.block.data.Facing;
 
@@ -18,7 +19,7 @@ import io.gomint.world.block.data.Facing;
  * @author geNAZt
  * @version 1.0
  */
-public abstract class Door extends Block implements io.gomint.world.block.BlockDoor {
+public abstract class Door extends Block implements BlockDoor {
 
     private static final BooleanBlockState HINGE = new BooleanBlockState(() -> new String[]{"door_hinge_bit"});
     private static final BooleanBlockState TOP = new BooleanBlockState(() -> new String[]{"upper_block_bit"});
@@ -96,7 +97,7 @@ public abstract class Door extends Block implements io.gomint.world.block.BlockD
 
     @Override
     public void afterPlacement(PlacementData data) {
-        data.setBlockIdentifier(BlockRuntimeIDs.change(data.getBlockIdentifier(), null, "upper_block_bit", true));
+        data.setBlockIdentifier(BlockRuntimeIDs.change(data.getBlockIdentifier(), null, new String[]{"upper_block_bit"}, true));
 
         Block above = this.location.getWorld().getBlockAt(this.location.toBlockPosition().add(BlockPosition.UP));
         above.setBlockFromPlacementData(data);

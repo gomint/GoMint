@@ -1,5 +1,6 @@
 package io.gomint.server.world.block;
 
+import io.gomint.world.block.BlockHayBale;
 import io.gomint.world.block.BlockType;
 
 import io.gomint.server.registry.RegisterInfo;
@@ -9,7 +10,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:hay_block" )
-public class HayBale extends Block implements io.gomint.world.block.BlockHayBale {
+public class HayBale extends Block implements BlockHayBale {
 
     @Override
     public String getBlockId() {

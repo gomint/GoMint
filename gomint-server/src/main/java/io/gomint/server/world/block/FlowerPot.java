@@ -1,5 +1,6 @@
 package io.gomint.server.world.block;
 
+import io.gomint.world.block.BlockFlowerPot;
 import io.gomint.world.block.BlockType;
 
 import io.gomint.server.registry.RegisterInfo;
@@ -9,7 +10,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:flower_pot" )
-public class FlowerPot extends Block implements io.gomint.world.block.BlockFlowerPot {
+public class FlowerPot extends Block implements BlockFlowerPot {
 
     @Override
     public String getBlockId() {

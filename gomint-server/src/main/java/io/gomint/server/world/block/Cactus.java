@@ -4,6 +4,7 @@ import io.gomint.event.entity.EntityDamageEvent;
 import io.gomint.server.entity.Entity;
 import io.gomint.server.entity.EntityLiving;
 import io.gomint.server.registry.RegisterInfo;
+import io.gomint.world.block.BlockCactus;
 import io.gomint.world.block.BlockType;
 
 /**
@@ -11,7 +12,7 @@ import io.gomint.world.block.BlockType;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:cactus" )
-public class Cactus extends Block implements io.gomint.world.block.BlockCactus {
+public class Cactus extends Block implements BlockCactus {
 
     @Override
     public String getBlockId() {

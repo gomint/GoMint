@@ -1,5 +1,6 @@
 package io.gomint.server.world.block;
 
+import io.gomint.world.block.BlockBrownMushroomBlock;
 import io.gomint.world.block.BlockType;
 
 import io.gomint.server.registry.RegisterInfo;
@@ -9,7 +10,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:brown_mushroom_block" )
-public class BrownMushroomBlock extends Block implements io.gomint.world.block.BlockBrownMushroomBlock {
+public class BrownMushroomBlock extends Block implements BlockBrownMushroomBlock {
 
     @Override
     public String getBlockId() {
