@@ -6,6 +6,8 @@ import io.gomint.event.EventPriority;
 import io.gomint.event.player.PlayerJoinEvent;
 import io.gomint.inventory.item.ItemCake;
 import io.gomint.inventory.item.ItemPlank;
+import io.gomint.inventory.item.ItemShovel;
+import io.gomint.inventory.item.ItemWoodenShovel;
 import io.gomint.testplugin.TestPlugin;
 import io.gomint.testplugin.scoreboard.DebugScoreboard;
 import io.gomint.world.Gamemode;
@@ -30,7 +32,7 @@ public class PlayerJoinListener implements EventListener {
         // Give this player the debug scoreboard
         new DebugScoreboard(this.plugin, event.getPlayer());
 
-        event.getPlayer().getInventory().setItem(6, ItemPlank.create(64));
+        event.getPlayer().getInventory().setItem(6, ItemWoodenShovel.create(1));
     }
 
 }

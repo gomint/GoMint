@@ -5,7 +5,7 @@ import io.gomint.event.entity.projectile.ProjectileLaunchEvent;
 import io.gomint.math.Vector;
 import io.gomint.server.entity.EntityPlayer;
 import io.gomint.server.entity.projectile.EntityFishingHook;
-import io.gomint.server.inventory.item.annotation.UseDataAsDamage;
+import io.gomint.server.inventory.item.annotation.CanBeDamaged;
 import io.gomint.server.registry.RegisterInfo;
 import io.gomint.world.block.Block;
 import io.gomint.world.block.data.Facing;
@@ -14,7 +14,7 @@ import io.gomint.world.block.data.Facing;
  * @author geNAZt
  * @version 1.0
  */
-@UseDataAsDamage
+@CanBeDamaged
 @RegisterInfo( id = 346 )
 public class ItemFishingRod extends ItemStack implements io.gomint.inventory.item.ItemFishingRod {
 

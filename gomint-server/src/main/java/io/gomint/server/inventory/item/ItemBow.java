@@ -8,7 +8,7 @@ import io.gomint.event.entity.projectile.ProjectileLaunchEvent;
 import io.gomint.inventory.item.ItemType;
 import io.gomint.server.entity.EntityPlayer;
 import io.gomint.server.entity.projectile.EntityArrow;
-import io.gomint.server.inventory.item.annotation.UseDataAsDamage;
+import io.gomint.server.inventory.item.annotation.CanBeDamaged;
 import io.gomint.server.registry.RegisterInfo;
 import io.gomint.world.Gamemode;
 
@@ -16,7 +16,7 @@ import io.gomint.world.Gamemode;
  * @author geNAZt
  * @version 1.0
  */
-@UseDataAsDamage
+@CanBeDamaged
 @RegisterInfo( id = 261 )
 public class ItemBow extends ItemStack implements io.gomint.inventory.item.ItemBow {
 

@@ -66,10 +66,8 @@ public class ItemWritableBook extends ItemStack implements io.gomint.inventory.i
     }
 
     public void createPage( int index ) {
-        this.enforceNBTData();
-
         // We ignore sanity checks since we only call this from
-        List<Object> pages = this.getNbtData().getList( PAGE_TAG, true );
+        List<Object> pages = this.getOrCreateNBT().getList( PAGE_TAG, true );
         if ( pages.size() <= index ) {
             for ( int i = pages.size(); i < index + 1; i++ ) {
                 NBTTagCompound emptyPage = new NBTTagCompound( "" );
@@ -110,9 +108,7 @@ public class ItemWritableBook extends ItemStack implements io.gomint.inventory.i
      * @param index of the page we want to insert
      */
     public void addBlankPage( int index ) {
-        this.enforceNBTData();
-
-        List<Object> pages = this.getNbtData().getList( PAGE_TAG, true );
+        List<Object> pages = this.getOrCreateNBT().getList( PAGE_TAG, true );
         NBTTagCompound emptyPage = new NBTTagCompound( "" );
         emptyPage.addValue( PHOTO_TAG, "" );
         emptyPage.addValue( PAGE_CONTENT_TAG, "" );
@@ -131,12 +127,10 @@ public class ItemWritableBook extends ItemStack implements io.gomint.inventory.i
     }
 
     public ItemWrittenBook sign( String title, String author, String xuid ) {
-        this.enforceNBTData();
-
-        this.getNbtData().addValue( TITLE_TAG, title );
-        this.getNbtData().addValue( AUTHOR_TAG, author );
-        this.getNbtData().addValue( XUID_TAG, xuid );
-        this.getNbtData().addValue( GENERATION_TAG, 0 );
+        this.getOrCreateNBT().addValue( TITLE_TAG, title );
+        this.getOrCreateNBT().addValue( AUTHOR_TAG, author );
+        this.getOrCreateNBT().addValue( XUID_TAG, xuid );
+        this.getOrCreateNBT().addValue( GENERATION_TAG, 0 );
 
         // Create final version of the book
         ItemWrittenBook writtenBook = (ItemWrittenBook) GoMint.instance().createItemStack( io.gomint.inventory.item.ItemWrittenBook.class, 1 );

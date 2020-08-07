@@ -1,12 +1,12 @@
 package io.gomint.server.inventory.item;
 import io.gomint.inventory.item.ItemReduceBreaktime;
-import io.gomint.server.inventory.item.annotation.UseDataAsDamage;
+import io.gomint.server.inventory.item.annotation.CanBeDamaged;
 
 /**
  * @author geNAZt
  * @version 1.0
  */
-@UseDataAsDamage
+@CanBeDamaged
 public abstract class ItemReduceTierGolden extends ItemStack implements ItemReduceBreaktime {
 
     @Override
