@@ -26,6 +26,7 @@ import io.gomint.world.WorldLayer;
 import io.gomint.world.block.Block;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.PooledByteBufAllocator;
+import io.netty.buffer.UnpooledByteBufAllocator;
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectIterator;
@@ -67,7 +68,7 @@ public class ChunkAdapter implements Chunk {
     protected long inhabitedTime;
 
     // Biomes
-    protected final ByteBuf biomes = PooledByteBufAllocator.DEFAULT.directBuffer(16 * 16);
+    protected final ByteBuf biomes = UnpooledByteBufAllocator.DEFAULT.directBuffer(16 * 16);
 
     // Blocks
     @Getter protected ChunkSlice[] chunkSlices = new ChunkSlice[16];
@@ -662,6 +663,16 @@ public class ChunkAdapter implements Chunk {
         }
 
         return false;
+    }
+
+    public void populate() {
+        if (!this.isPopulated()) {
+            LOGGER.debug("Starting populating chunk {} / {}", this.getX(), this.getZ());
+
+            this.world.chunkGenerator.populate(this);
+            this.calculateHeightmap(240);
+            this.setPopulated(true);
+        }
     }
 
 }

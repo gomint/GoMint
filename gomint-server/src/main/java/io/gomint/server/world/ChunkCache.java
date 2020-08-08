@@ -126,6 +126,7 @@ public class ChunkCache {
             LongIterator toRemoveCursor = this.tempHashes[1].iterator();
             while ( toRemoveCursor.hasNext() ) {
                 ChunkAdapter adapter = this.cachedChunks.remove( toRemoveCursor.nextLong() );
+                this.world.saveChunk( adapter );
                 adapter.release();
             }
         }
@@ -267,6 +268,14 @@ public class ChunkCache {
 
     public synchronized int size() {
         return this.cachedChunks.size();
+    }
+
+    public synchronized void unload(int x, int z) {
+        ChunkAdapter adapter = this.cachedChunks.remove(CoordinateUtils.toLong(x, z));
+        if (adapter != null) {
+            this.world.saveChunk( adapter );
+            adapter.release();
+        }
     }
 
 }

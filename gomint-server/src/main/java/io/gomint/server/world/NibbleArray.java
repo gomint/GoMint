@@ -10,6 +10,7 @@ package io.gomint.server.world;
 import io.gomint.server.util.PerformanceHacks;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.PooledByteBufAllocator;
+import io.netty.buffer.UnpooledByteBufAllocator;
 
 /**
  * @author geNAZt
@@ -36,7 +37,7 @@ public class NibbleArray {
      */
     public NibbleArray( short length ) {
         this.length = length;
-        this.data = PooledByteBufAllocator.DEFAULT.directBuffer(( this.length + 1 ) >> 1);
+        this.data = UnpooledByteBufAllocator.DEFAULT.directBuffer(( this.length + 1 ) >> 1);
     }
 
     /**

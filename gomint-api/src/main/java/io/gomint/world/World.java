@@ -76,7 +76,7 @@ public interface World {
      * @param pos of the position
      * @return block which has been found at that position or null
      */
-    <T extends Block> T getBlockAt(BlockPosition pos );
+    <T extends Block> T getBlockAt( BlockPosition pos );
 
     /**
      * Get the block at that position or air if the position is not loaded in the world.
@@ -234,6 +234,15 @@ public interface World {
     Chunk getChunk( int x, int z );
 
     /**
+     * Get or generate a chunk
+     *
+     * @param x coordinate of the chunk
+     * @param z coordinate of the chunk
+     * @return chunk
+     */
+    Chunk getOrGenerateChunk( int x, int z );
+
+    /**
      * Save all data to disk
      */
     void save();
@@ -258,5 +267,13 @@ public interface World {
      * @return highest block at the normal layer
      */
     Block getHighestBlockAt( int x, int z, WorldLayer layer );
+
+    /**
+     * Unload a chunk from memory. This may trigger a save
+     *
+     * @param x coordinate of the chunk
+     * @param z coordinate of the chunk
+     */
+    void unloadChunk(int x, int z);
 
 }

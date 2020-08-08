@@ -172,7 +172,7 @@
                 <configuration>
                     <!-- test code needs access to package private level, so we use add-opens -->
                     <argLine>
-                        --add-opens gomint.server/io.gomint.server.entity=ALL-UNNAMED --add-reads net.bytebuddy.dynamic.loading=ALL-UNNAMED
+                        --add-opens java.base/java.nio=io.netty.common --add-exports java.base/jdk.internal.misc=io.netty.common --add-opens gomint.server/io.gomint.server.entity=ALL-UNNAMED --add-reads net.bytebuddy.dynamic.loading=ALL-UNNAMED -Dio.netty.tryReflectionSetAccessible=true
                     </argLine>
                     <systemPropertyVariables>
                         <!-- this hidden property force mockito to use method lookup -->

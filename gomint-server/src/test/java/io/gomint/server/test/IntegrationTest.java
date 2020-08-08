@@ -23,9 +23,6 @@ public class IntegrationTest {
 
     @BeforeAll
     public void setupGomint() {
-        // Enable reflection access to JDK NIO buffers for netty
-        System.setProperty( "io.netty.tryReflectionSetAccessible","true");
-
         OptionParser parser = new OptionParser();
         OptionSet options = parser.parse();
 

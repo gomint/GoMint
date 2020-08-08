@@ -411,7 +411,7 @@ public class LevelDBWorldAdapter extends WorldAdapter {
 
             if ( version == null ) {
                 if ( generate ) {
-                    return this.generate( x, z );
+                    return this.generate( x, z, false );
                 } else {
                     return null;
                 }
@@ -424,7 +424,7 @@ public class LevelDBWorldAdapter extends WorldAdapter {
 
             if ( finalized == null ) {
                 if ( generate ) {
-                    return this.generate( x, z );
+                    return this.generate( x, z, false );
                 } else {
                     return null;
                 }

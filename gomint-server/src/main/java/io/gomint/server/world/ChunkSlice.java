@@ -10,6 +10,7 @@ import io.gomint.server.world.storage.TemporaryStorage;
 import io.gomint.world.block.Block;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.PooledByteBufAllocator;
+import io.netty.buffer.UnpooledByteBufAllocator;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
 import it.unimi.dsi.fastutil.objects.ObjectIterator;
@@ -18,6 +19,8 @@ import it.unimi.dsi.fastutil.shorts.Short2IntOpenHashMap;
 import it.unimi.dsi.fastutil.shorts.Short2ObjectMap;
 import it.unimi.dsi.fastutil.shorts.Short2ObjectOpenHashMap;
 import lombok.Getter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +32,7 @@ import java.util.function.IntConsumer;
  */
 public class ChunkSlice {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(ChunkSlice.class);
     private static final ThreadLocal<int[]> INDEX_IDS = ThreadLocal.withInitial( () -> new int[4096] );
     private static final ThreadLocal<Short2IntMap> INDEX_LIST = ThreadLocal.withInitial( () -> {
         Short2IntMap map = new Short2IntOpenHashMap( 4096 );
@@ -58,6 +62,7 @@ public class ChunkSlice {
     private final Short2ObjectOpenHashMap[] temporaryStorages = new Short2ObjectOpenHashMap[2];   // MC currently supports two layers, we init them as we need
 
     private boolean needsPersistence;
+    private boolean isReleased;
 
     public ChunkSlice( ChunkAdapter chunkAdapter, int sectionY ) {
         this.chunk = chunkAdapter;
@@ -180,8 +185,13 @@ public class ChunkSlice {
     }
 
     public void setRuntimeIdInternal( short index, int layer, int runtimeID ) {
+        if ( this.isReleased ) {
+            LOGGER.warn("Trying to set a block into a released chunk");
+            return;
+        }
+
         if ( runtimeID != AIR_RUNTIME_ID && this.blocks[layer] == null ) {
-            this.blocks[layer] = PooledByteBufAllocator.DEFAULT.directBuffer( 4096 * 2 ); // Defaults to all 0
+            this.blocks[layer] = UnpooledByteBufAllocator.DEFAULT.directBuffer( 4096 * 2 ); // Defaults to all 0
             for (int i = 0; i < 4096; i++) {
                 this.blocks[layer].writeShort(AIR_RUNTIME_ID);
             }
@@ -306,9 +316,13 @@ public class ChunkSlice {
     }
 
     public void release() {
+        this.isReleased = true;
+
         for (ByteBuf block : this.blocks) {
             if (block != null) {
-                block.release();
+                if (!block.release()) {
+                    LOGGER.warn("Chunk got released but block memory is not refcount 0");
+                }
             }
         }
 

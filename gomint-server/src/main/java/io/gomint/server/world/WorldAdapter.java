@@ -563,16 +563,19 @@ public abstract class WorldAdapter implements World {
 
     // ==================================== CHUNK MANAGEMENT ==================================== //
 
-    /**
-     * Gets the chunk at the specified coordinates. If the chunk is currently not available
-     * it will be loaded or generated.
-     *
-     * @param x The x-coordinate of the chunk
-     * @param z The z-coordinate of the chunk
-     * @return The chunk if available or null otherwise
-     */
+    @Override
     public ChunkAdapter getChunk(int x, int z) {
         return this.chunkCache.getChunk(x, z);
+    }
+
+    @Override
+    public Chunk getOrGenerateChunk(int x, int z) {
+        Chunk chunk = this.getChunk(x, z);
+        if ( chunk == null ) {
+            return this.generate( x, z, true );
+        }
+
+        return chunk;
     }
 
     /**
@@ -828,13 +831,7 @@ public abstract class WorldAdapter implements World {
                         AsyncChunkPopulateTask populateTask = (AsyncChunkPopulateTask) task;
 
                         ChunkAdapter chunkToPopulate = populateTask.getChunk();
-                        if (!chunkToPopulate.isPopulated()) {
-                            LOGGER.debug("Starting populating chunk {} / {}", chunkToPopulate.getX(), chunkToPopulate.getZ());
-
-                            this.chunkGenerator.populate(populateTask.getChunk());
-                            chunkToPopulate.calculateHeightmap(240);
-                            chunkToPopulate.setPopulated(true);
-                        }
+                        chunkToPopulate.populate();
 
                         break;
 
@@ -1157,7 +1154,7 @@ public abstract class WorldAdapter implements World {
         return chunk.getTemporaryStorage(position.getX() & 0xF, position.getY(), position.getZ() & 0xF, layer);
     }
 
-    public ChunkAdapter generate(int x, int z) {
+    public ChunkAdapter generate(int x, int z, boolean syncPopulation) {
         // Check if we can build up the generator
         if (!this.isGeneratorBuilt) {
             this.prepareGenerator();
@@ -1171,7 +1168,13 @@ public abstract class WorldAdapter implements World {
             if (chunk != null) {
                 chunk.calculateHeightmap(240);
                 this.chunkCache.putChunk(chunk);
-                this.addPopulateTask(chunk);
+
+                if (syncPopulation) {
+                    chunk.populate();
+                } else {
+                    this.addPopulateTask(chunk);
+                }
+
                 return chunk;
             }
         }
@@ -1505,7 +1508,12 @@ public abstract class WorldAdapter implements World {
     }
 
     public int getDimension() {
-        return 0; // TODO: Implement peoper dimensions
+        return 0; // TODO: Implement proper dimensions
+    }
+
+    @Override
+    public void unloadChunk(int x, int z) {
+        this.chunkCache.unload(x, z);
     }
 
 }

@@ -51,7 +51,7 @@ public final class InMemoryWorldAdapter extends WorldAdapter {
         }
 
         if ( generate ) {
-            return this.generate( x, z );
+            return this.generate( x, z, false );
         }
 
         return null;
