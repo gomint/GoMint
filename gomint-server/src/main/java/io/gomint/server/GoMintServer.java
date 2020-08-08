@@ -325,6 +325,7 @@ public class GoMintServer implements GoMint, InventoryHolder {
         }
 
         this.defaultWorld = this.serverConfig.getDefaultWorld();
+        this.currentTickTime = System.currentTimeMillis();
 
         // PluginManager Initialization
         this.pluginManager = new SimplePluginManager(this);

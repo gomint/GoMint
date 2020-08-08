@@ -69,14 +69,14 @@ public class LevelDBChunkAdapter extends ChunkAdapter {
         super( worldAdapter, x, z );
         this.chunkVersion = chunkVersion;
         this.setPopulated( populated );
-        this.loadedTime = worldAdapter.getServer().getCurrentTickTime();
+        this.loadedTime = this.lastSavedTimestamp = worldAdapter.getServer().getCurrentTickTime();
     }
 
     public LevelDBChunkAdapter( WorldAdapter worldAdapter, int x, int z ) {
         super( worldAdapter, x, z );
         this.chunkVersion = 15;
 
-        this.loadedTime = worldAdapter.getServer().getCurrentTickTime();
+        this.loadedTime = this.lastSavedTimestamp = worldAdapter.getServer().getCurrentTickTime();
     }
 
     void save( DB db ) {

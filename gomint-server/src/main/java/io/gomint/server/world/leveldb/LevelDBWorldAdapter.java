@@ -339,6 +339,8 @@ public class LevelDBWorldAdapter extends WorldAdapter {
 
             NBTStream nbtStream = new NBTStream( buf, ByteOrder.LITTLE_ENDIAN );
             nbtStream.addListener( ( path, value ) -> {
+                LOGGER.info("LevelDAT: {} -> {}", path, value);
+
                 switch ( path ) {
                     case ".GeneratorClass":
                         LevelDBWorldAdapter.this.generatorClass = (Class<? extends ChunkGenerator>) PluginClassloader.find( (String) value );
@@ -417,21 +419,13 @@ public class LevelDBWorldAdapter extends WorldAdapter {
                 }
             }
 
-            // Get version bit
+            // Get the finalized value, only needed for vanilla though, other implementations don't use this (null = true)
             ByteBuf finalizedKey = this.getKey( x, z, (byte) 0x36 );
             byte[] finalized = this.db.get( snapshot, finalizedKey );
             finalizedKey.release();
 
-            if ( finalized == null ) {
-                if ( generate ) {
-                    return this.generate( x, z, false );
-                } else {
-                    return null;
-                }
-            }
-
             byte v = version[0];
-            boolean populated = finalized[0] == 2;
+            boolean populated = finalized == null || finalized[0] == 2;
 
             LevelDBChunkAdapter loadingChunk = new LevelDBChunkAdapter( this, x, z, v, populated );
 

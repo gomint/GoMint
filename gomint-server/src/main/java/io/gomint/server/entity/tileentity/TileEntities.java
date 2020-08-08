@@ -142,7 +142,9 @@ public enum TileEntities {
     /**
      * Data for a dropper
      */
-    DROPPER( "Dropper", DropperTileEntity.class );
+    DROPPER( "Dropper", DropperTileEntity.class ),
+
+    BEE_HIVE( "Beehive", BeehiveTileEntity.class );
 
     private static final Logger LOGGER = LoggerFactory.getLogger( TileEntities.class );
     private final String nbtID;
