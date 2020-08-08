@@ -110,4 +110,9 @@ public class TallGrass extends Block implements BlockTallGrass {
         return Type.valueOf(VARIANT.getState(this).name());
     }
 
+    @Override
+    public boolean canBeReplaced(ItemStack item) {
+        return true;
+    }
+
 }
