@@ -45,6 +45,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
 /**
@@ -79,6 +80,7 @@ public class ChunkAdapter implements Chunk {
     private long lastPlayerOnThisChunk;
     protected long loadedTime;
     protected long lastSavedTimestamp;
+    private AtomicInteger refCount = new AtomicInteger(0);
 
     // Entities
     protected Long2ObjectMap<io.gomint.entity.Entity> entities = null;
@@ -292,7 +294,8 @@ public class ChunkAdapter implements Chunk {
         int secondsAfterLeft = this.world.getConfig().getSecondsUntilGCAfterLastPlayerLeft();
         int waitAfterLoad = this.world.getConfig().getWaitAfterLoadForGCSeconds();
 
-        return this.populated && currentTimeMillis - this.loadedTime > TimeUnit.SECONDS.toMillis(waitAfterLoad) &&
+        return this.refCount.get() == 0 &&
+            this.populated && currentTimeMillis - this.loadedTime > TimeUnit.SECONDS.toMillis(waitAfterLoad) &&
             this.players.isEmpty() &&
             currentTimeMillis - this.lastPlayerOnThisChunk > TimeUnit.SECONDS.toMillis(secondsAfterLeft);
     }
@@ -673,6 +676,14 @@ public class ChunkAdapter implements Chunk {
             this.calculateHeightmap(240);
             this.setPopulated(true);
         }
+    }
+
+    public void retainForConnection() {
+        LOGGER.debug("Incrementing on send ref count: {}", refCount.incrementAndGet());
+    }
+
+    public void releaseForConnection() {
+        LOGGER.debug("Decrementing on send ref count: {}", refCount.decrementAndGet());
     }
 
 }

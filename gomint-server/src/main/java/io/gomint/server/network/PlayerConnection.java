@@ -315,7 +315,7 @@ public class PlayerConnection implements ConnectionWithState {
 
                         // Send the chunk to the client
                         this.sendWorldChunk(chunk);
-                        queue.remove();
+                        queue.remove().releaseForConnection();
                         sent++;
                     }
                 }
@@ -746,8 +746,10 @@ public class PlayerConnection implements ConnectionWithState {
             false, (chunkHash, loadedChunk) -> {
                 LOGGER.debug("Loaded chunk: {} -> {}", this.entity, loadedChunk);
                 if (this.entity != null) { // It can happen that the server loads longer and the client has disconnected
+                    loadedChunk.retainForConnection();
                     if (!this.entity.getChunkSendQueue().offer(loadedChunk)) {
                         LOGGER.warn("Could not add chunk to send queue");
+                        loadedChunk.releaseForConnection();
                     }
 
                     LOGGER.debug("Current queue length: {}", this.entity.getChunkSendQueue().size());
@@ -980,6 +982,7 @@ public class PlayerConnection implements ConnectionWithState {
             for (ChunkAdapter adapter : this.entity.getChunkSendQueue()) {
                 long hash = CoordinateUtils.toLong(adapter.getX(), adapter.getZ());
                 this.loadingChunks.remove(hash);
+                adapter.releaseForConnection();
             }
         }
 
