@@ -9,6 +9,7 @@ import io.gomint.server.util.Pair;
 
 import java.util.*;
 import java.util.function.Consumer;
+import java.util.stream.Stream;
 
 /**
  * @author geNAZt
@@ -278,6 +279,11 @@ public abstract class Inventory implements io.gomint.inventory.Inventory {
 
     public void clearViewers() {
         this.viewer.clear();
+    }
+
+    @Override
+    public Stream<ItemStack> items() {
+        return Stream.of(this.contents);
     }
 
 }

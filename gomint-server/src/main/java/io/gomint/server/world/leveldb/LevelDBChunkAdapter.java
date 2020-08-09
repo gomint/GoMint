@@ -271,6 +271,7 @@ public class LevelDBChunkAdapter extends ChunkAdapter {
                 break;
         }
 
+        buffer.release();
         buf.release();
     }
 

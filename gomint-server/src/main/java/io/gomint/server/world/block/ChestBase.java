@@ -9,6 +9,7 @@ package io.gomint.server.world.block;
 
 import io.gomint.inventory.Inventory;
 import io.gomint.inventory.item.ItemStack;
+import io.gomint.inventory.item.ItemType;
 import io.gomint.math.Vector;
 import io.gomint.server.entity.Entity;
 import io.gomint.server.entity.EntityPlayer;
@@ -21,6 +22,7 @@ import io.gomint.taglib.NBTTagCompound;
 import io.gomint.world.block.data.Facing;
 
 import java.util.List;
+import java.util.Objects;
 
 public abstract class ChestBase extends ContainerBlock {
 
@@ -92,11 +94,11 @@ public abstract class ChestBase extends ContainerBlock {
 
         // We also drop the inventory
         ChestTileEntity chestTileEntity = this.getTileEntity();
-        for (ItemStack itemStack : chestTileEntity.getInventory().getContentsArray()) {
-            if (itemStack != null) {
-                items.add(itemStack);
-            }
-        }
+        chestTileEntity.getInventory()
+            .items()
+            .filter(Objects::nonNull)
+            .filter(item -> item.getItemType() != ItemType.AIR)
+            .forEach(items::add);
 
         return items;
     }

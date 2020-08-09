@@ -11,6 +11,7 @@ import io.gomint.entity.Entity;
 import io.gomint.inventory.item.ItemStack;
 
 import java.util.Collection;
+import java.util.stream.Stream;
 
 /**
  * @author geNAZt
@@ -82,5 +83,12 @@ public interface Inventory {
      * @return true if inventory contains, false if not
      */
     boolean contains( ItemStack itemStack );
+
+    /**
+     * Get a stream of items inside this inventory
+     *
+     * @return stream of items
+     */
+    Stream<ItemStack> items();
 
 }
