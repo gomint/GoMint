@@ -76,7 +76,7 @@ public class LevelDBWorldAdapter extends WorldAdapter {
     private GeneratorContext generatorContext;
 
     private LevelDBWorldAdapter( final GoMintServer server, final String name, final Class<? extends ChunkGenerator> generator ) throws WorldCreateException {
-        super( server, new File( name ) );
+        super( server, new File( name ), name );
         this.chunkCache = new ChunkCache( this );
 
         // Build up generator
@@ -111,8 +111,8 @@ public class LevelDBWorldAdapter extends WorldAdapter {
      * @param worldDir the folder where the world should be in
      * @throws WorldLoadException Thrown in case the world could not be loaded successfully
      */
-    LevelDBWorldAdapter( GoMintServer server, File worldDir ) throws WorldLoadException {
-        super( server, worldDir );
+    LevelDBWorldAdapter( GoMintServer server, File worldDir, String name ) throws WorldLoadException {
+        super( server, worldDir, name );
         this.chunkCache = new ChunkCache( this );
 
         this.loadLevelDat();
@@ -126,6 +126,8 @@ public class LevelDBWorldAdapter extends WorldAdapter {
     }
 
     private void open() throws WorldLoadException {
+
+
         try {
             this.db = new DB( new File( this.worldDir, "db" ) );
             this.db.open();
@@ -230,7 +232,7 @@ public class LevelDBWorldAdapter extends WorldAdapter {
      * @throws WorldLoadException Thrown in case the world could not be loaded successfully
      */
     public static LevelDBWorldAdapter load( GoMintServer server, File pathToWorld ) throws WorldLoadException {
-        return new LevelDBWorldAdapter( server, pathToWorld );
+        return new LevelDBWorldAdapter( server, pathToWorld, pathToWorld.getName() );
     }
 
     @Override
@@ -413,8 +415,10 @@ public class LevelDBWorldAdapter extends WorldAdapter {
 
             if ( version == null ) {
                 if ( generate ) {
+                    snapshot.close();
                     return this.generate( x, z, false );
                 } else {
+                    snapshot.close();
                     return null;
                 }
             }
@@ -492,6 +496,7 @@ public class LevelDBWorldAdapter extends WorldAdapter {
                 this.addPopulateTask( loadingChunk );
             }
 
+            snapshot.close();
             return loadingChunk;
         }
 

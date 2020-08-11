@@ -27,126 +27,128 @@ public enum TileEntities {
     /**
      * Represents a sign. This TileEntity holds 4 lines of strings to be displayed on a piece of wood
      */
-    SIGN( "Sign", SignTileEntity.class ),
+    SIGN("Sign", SignTileEntity.class),
 
     /**
      * Represents a chest. This TileEntity holds a inventory which can hold up to 27 itemstacks
      */
-    CHEST( "Chest", ChestTileEntity.class ),
+    CHEST("Chest", ChestTileEntity.class),
 
     /**
      * Represents a skull. This TileEntity holds rotation and the type of the skull
      */
-    SKULL( "Skull", SkullTileEntity.class ),
+    SKULL("Skull", SkullTileEntity.class),
 
     /**
      * Represents a noteblock. This TileEntity holds only the note of the block
      */
-    NOTEBLOCK( "Music", NoteblockTileEntity.class ),
+    NOTEBLOCK("Music", NoteblockTileEntity.class),
 
     /**
      * Represents a ender chest. This TileEntity does not contain any other informations
      */
-    ENDER_CHEST( "EnderChest", EnderChestTileEntity.class ),
+    ENDER_CHEST("EnderChest", EnderChestTileEntity.class),
 
     /**
      * Represents a flower pot. Contains data about which item it holds
      */
-    FLOWER_POT( "FlowerPot", FlowerPotTileEntity.class ),
+    FLOWER_POT("FlowerPot", FlowerPotTileEntity.class),
 
     /**
      * Represents a command block. Contains data like command string, output etc.
      */
-    COMMAND_BLOCK( "CommandBlock", CommandBlockTileEntity.class ),
+    COMMAND_BLOCK("CommandBlock", CommandBlockTileEntity.class),
 
     /**
      * Represents a item frame. It holds a item and rotation states
      */
-    ITEM_FRAME( "ItemFrame", ItemFrameTileEntity.class ),
+    ITEM_FRAME("ItemFrame", ItemFrameTileEntity.class),
 
     /**
      * Enchantment table. Stores nothing except a optional custom name
      */
-    ENCHANT_TABLE( "EnchantTable", EnchantTableTileEntity.class ),
+    ENCHANT_TABLE("EnchantTable", EnchantTableTileEntity.class),
 
     /**
      * Holds nothing :)
      */
-    DAYLIGHT_DETECTOR( "DaylightDetector", DaylightDetectorTileEntity.class ),
+    DAYLIGHT_DETECTOR("DaylightDetector", DaylightDetectorTileEntity.class),
 
     /**
      * More or less a cooler chest
      */
-    SHULKER_BOX( "ShulkerBox", ShulkerBoxTileEntity.class ),
+    SHULKER_BOX("ShulkerBox", ShulkerBoxTileEntity.class),
 
     /**
      * Data for the piston extension
      */
-    PISTON_ARM( "PistonArm", PistonArmTileEntity.class ),
+    PISTON_ARM("PistonArm", PistonArmTileEntity.class),
 
     /**
      * Data for a furnace
      */
-    FURNACE( "Furnace", FurnaceTileEntity.class ),
+    FURNACE("Furnace", FurnaceTileEntity.class),
 
     /**
      * Data for a bed
      */
-    BED( "Bed", BedTileEntity.class ),
+    BED("Bed", BedTileEntity.class),
 
     /**
      * Data for a dispenser
      */
-    DISPENSER( "Dispenser", DispenserTileEntity.class ),
+    DISPENSER("Dispenser", DispenserTileEntity.class),
 
     /**
      * Data for beacon
      */
-    BEACON( "Beacon", BeaconTileEntity.class ),
+    BEACON("Beacon", BeaconTileEntity.class),
 
     /**
      * Data for end portals
      */
-    END_PORTAL( "EndPortal", EndPortalTileEntity.class ),
+    END_PORTAL("EndPortal", EndPortalTileEntity.class),
 
     /**
      * Data for banner
      */
-    BANNER( "Banner", BannerTileEntity.class ),
+    BANNER("Banner", BannerTileEntity.class),
 
     /**
      * Data for mob spawner
      */
-    MOB_SPAWNER( "MobSpawner", MobSpawnerTileEntity.class ),
+    MOB_SPAWNER("MobSpawner", MobSpawnerTileEntity.class),
 
     /**
      * Data for a jukebox
      */
-    JUKEBOX( "Jukebox", JukeboxTileEntity.class ),
+    JUKEBOX("Jukebox", JukeboxTileEntity.class),
 
     /**
      * Data for a hopper
      */
-    HOPPER( "Hopper", HopperTileEntity.class ),
+    HOPPER("Hopper", HopperTileEntity.class),
 
     /**
      * Data for a comparator
      */
-    COMPARATOR( "Comparator", ComparatorTileEntity.class ),
+    COMPARATOR("Comparator", ComparatorTileEntity.class),
 
     /**
      * Data for a cauldron
      */
-    CAULDRON( "Cauldron", CauldronTileEntity.class ),
+    CAULDRON("Cauldron", CauldronTileEntity.class),
 
     /**
      * Data for a dropper
      */
-    DROPPER( "Dropper", DropperTileEntity.class ),
+    DROPPER("Dropper", DropperTileEntity.class),
 
-    BEE_HIVE( "Beehive", BeehiveTileEntity.class );
+    BEE_HIVE("Beehive", BeehiveTileEntity.class),
 
-    private static final Logger LOGGER = LoggerFactory.getLogger( TileEntities.class );
+    SMOKER("Smoker", SmokerTileEntity.class);
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(TileEntities.class);
     private final String nbtID;
     private MethodHandle tileEntityConstructor;
 
@@ -156,12 +158,12 @@ public enum TileEntities {
      * @param nbtID           The ID which can be found in NBT Tags
      * @param tileEntityClass The class which should be used to instantiate the TileEntity
      */
-    TileEntities( String nbtID, Class<? extends TileEntity> tileEntityClass ) {
+    TileEntities(String nbtID, Class<? extends TileEntity> tileEntityClass) {
         this.nbtID = nbtID;
 
         try {
-            this.tileEntityConstructor = MethodHandles.lookup().unreflectConstructor( tileEntityClass.getConstructor( Block.class ) );
-        } catch ( IllegalAccessException | NoSuchMethodException e ) {
+            this.tileEntityConstructor = MethodHandles.lookup().unreflectConstructor(tileEntityClass.getConstructor(Block.class));
+        } catch (IllegalAccessException | NoSuchMethodException e) {
             e.printStackTrace();
             this.tileEntityConstructor = null;
         }
@@ -175,30 +177,30 @@ public enum TileEntities {
      * @param block    The block in which this TileEntity resides
      * @return The constructed and ready to use TileEntity or null
      */
-    public static TileEntity construct( ApplicationContext context, NBTTagCompound compound, Block block ) {
+    public static TileEntity construct(ApplicationContext context, NBTTagCompound compound, Block block) {
         // Check if compound has a id
-        String id = compound.getString( "id", null );
-        if ( id == null ) {
+        String id = compound.getString("id", null);
+        if (id == null) {
             return null;
         }
 
         // Search for correct tile entity
-        for ( TileEntities tileEntities : values() ) {
-            if ( tileEntities.nbtID.equals( id ) ) {
+        for (TileEntities tileEntities : values()) {
+            if (tileEntities.nbtID.equals(id)) {
                 try {
-                    TileEntity tileEntity = (TileEntity) tileEntities.tileEntityConstructor.invoke( block );
-                    context.getAutowireCapableBeanFactory().autowireBean( tileEntity );
-                    tileEntity.fromCompound( compound );
+                    TileEntity tileEntity = (TileEntity) tileEntities.tileEntityConstructor.invoke(block);
+                    context.getAutowireCapableBeanFactory().autowireBean(tileEntity);
+                    tileEntity.fromCompound(compound);
                     return tileEntity;
-                } catch ( Throwable throwable ) {
-                    LOGGER.warn( "Could not build up tile entity: ", throwable );
+                } catch (Throwable throwable) {
+                    LOGGER.warn("Could not build up tile entity: ", throwable);
                     return null;
                 }
 
             }
         }
 
-        LOGGER.warn( "Unknown tile entity found: {} -> {}", id, compound );
+        LOGGER.warn("Unknown tile entity found: {} -> {}", id, compound);
         return null;
     }
 

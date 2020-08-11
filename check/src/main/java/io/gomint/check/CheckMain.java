@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 
 public class CheckMain {
@@ -37,7 +38,7 @@ public class CheckMain {
         // Parse the NBT from it
         NBTTagCompound root = NBTTagCompound.readFrom(buf, ByteOrder.BIG_ENDIAN);
 
-        Map<String, Set<String>> knownBlockKeys = new HashMap<>();
+        Map<String, Map<String, Object>> knownBlockKeys = new HashMap<>();
 
         List<NBTTagCompound> blockIdentifiers = (List<NBTTagCompound>) ((List) root.getList("blockPalette", false));
         for (NBTTagCompound compound : blockIdentifiers) {
@@ -46,14 +47,14 @@ public class CheckMain {
             knownBlockKeys.computeIfAbsent(block, s -> {
                 NBTTagCompound states = compound.getCompound("block", false).getCompound("states", false);
                 if (states != null) {
-                    Set<String> keys = new HashSet<>();
+                    Map<String, Object> keys = new HashMap<>();
                     for (Map.Entry<String, Object> entry : states.entrySet()) {
-                        keys.add(entry.getKey());
+                        keys.put(entry.getKey(), entry.getValue());
                     }
                     return keys;
                 }
 
-                return new HashSet<>();
+                return new HashMap<>();
             });
         }
 
@@ -62,6 +63,7 @@ public class CheckMain {
             .walk(Paths.get("gomint-server", "src", "main", "java", "io", "gomint", "server", "world", "block"))
             .filter(p -> !p.toFile().isDirectory())
             .filter(p -> !p.endsWith(".java"))
+            .filter(p -> !p.toAbsolutePath().toString().contains("mapper"))
             .map(p -> {
                 try {
                     return Files.readString(p);
@@ -79,7 +81,7 @@ public class CheckMain {
         knownBlockKeys.forEach((block, stateKeys) -> {
             for (String content : contents) {
                 if (content.contains("\"" + block + "\"")) {
-                    for (String stateKey : stateKeys) {
+                    for (String stateKey : stateKeys.keySet()) {
                         if (!content.contains(stateKey)) {
                             // Check for extends (we only have one level nesting here)
                             if (content.contains("extends")) {
@@ -88,19 +90,23 @@ public class CheckMain {
 
                                 boolean found = false;
                                 for (String s : contents) {
-                                    if (s.contains(parentClass) && s.contains(stateKey)) {
+                                    if (s.contains("class" + parentClass) && s.contains(stateKey)) {
                                         found = true;
                                         break;
                                     }
                                 }
 
                                 if (!found) {
-                                    System.out.println("[X]  Missing state " + stateKey + " in block " + block);
-                                    missingStates.incrementAndGet();
+                                    if (!stateKey.equals("deprecated")) {
+                                        System.out.println("[X]  Missing state " + stateKey + " (" + stateKeys.get(stateKey).getClass().getSimpleName() + ") in block " + block);
+                                        missingStates.incrementAndGet();
+                                    }
                                 }
                             } else {
-                                System.out.println("[X]  Missing state " + stateKey + " in block " + block);
-                                missingStates.incrementAndGet();
+                                if (!stateKey.equals("deprecated")) {
+                                    System.out.println("[X]  Missing state " + stateKey + " (" + stateKeys.get(stateKey).getClass().getSimpleName() + ") in block " + block);
+                                    missingStates.incrementAndGet();
+                                }
                             }
                         }
                     }
@@ -112,9 +118,9 @@ public class CheckMain {
             System.out.println("[X] Missing block: " + block);
             missingBlocks.incrementAndGet();
 
-            for (String stateKey : stateKeys) {
+            for (String stateKey : stateKeys.keySet()) {
                 if (!stateKey.equals("deprecated")) {
-                    System.out.println("[X]  Missing state " + stateKey + " in block " + block);
+                    System.out.println("[X]  Missing state " + stateKey + " (" + stateKeys.get(stateKey).getClass().getSimpleName() + ") in block " + block);
                     missingStates.incrementAndGet();
                 }
             }

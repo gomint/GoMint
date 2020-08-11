@@ -16,6 +16,9 @@ import lombok.Getter;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:double_stone_slab", def = true )
+@RegisterInfo( sId = "minecraft:double_stone_slab2" )
+@RegisterInfo( sId = "minecraft:double_stone_slab3" )
+@RegisterInfo( sId = "minecraft:double_stone_slab4" )
 public class DoubleStoneSlab extends Block implements BlockDoubleStoneSlab {
 
     private static final String STONE_SLAB_ID = "minecraft:double_stone_slab";

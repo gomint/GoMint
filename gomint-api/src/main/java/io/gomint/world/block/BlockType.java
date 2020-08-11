@@ -18,9 +18,11 @@ public enum BlockType {
     WOODEN_STAIR,
     BAMBOO,
     BARRIER,
+    BARREL,
     BASALT,
     BEACON,
     BED,
+    BELL,
     BEDROCK,
     BEE_HIVE,
     BEE_NEST,
@@ -282,4 +284,5 @@ public enum BlockType {
     WOODEN_SLAB,
     WOOL,
     ELEMENT,
+    SMOKER,
 }

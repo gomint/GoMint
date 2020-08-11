@@ -123,13 +123,16 @@ public abstract class WorldAdapter implements World {
     // EntityPlayer handling
     private Object2ObjectMap<io.gomint.server.entity.EntityPlayer, ChunkAdapter> players;
 
-    protected WorldAdapter(GoMintServer server, File worldDir) {
+    private final String name;
+
+    protected WorldAdapter(GoMintServer server, File worldDir, String name) {
+        this.name = name;
         this.chunkGenerator = new VoidGenerator(this, new GeneratorContext());
         this.server = server;
         this.logger = LoggerFactory.getLogger("io.gomint.World-" + worldDir.getName());
         this.worldDir = worldDir;
         this.entityManager = new EntityManager(this);
-        this.config = this.server.getWorldConfig(worldDir.getName());
+        this.config = this.server.getWorldConfig(name);
         this.players = new Object2ObjectOpenHashMap<>();
         this.asyncChunkTasks = new LinkedBlockingQueue<>();
         this.chunkPackageTasks = new ConcurrentLinkedQueue<>();
@@ -265,7 +268,7 @@ public abstract class WorldAdapter implements World {
 
     @Override
     public String getWorldName() {
-        return this.worldDir.getName();
+        return this.name;
     }
 
     @Override

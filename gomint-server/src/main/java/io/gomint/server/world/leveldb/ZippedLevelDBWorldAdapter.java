@@ -22,8 +22,6 @@ import java.util.zip.ZipInputStream;
  */
 public final class ZippedLevelDBWorldAdapter extends LevelDBWorldAdapter {
 
-    private final String name;
-
     /**
      * Construct and init a new levedb based World
      *
@@ -33,14 +31,7 @@ public final class ZippedLevelDBWorldAdapter extends LevelDBWorldAdapter {
      * @throws WorldLoadException Thrown in case the world could not be loaded successfully
      */
     private ZippedLevelDBWorldAdapter( GoMintServer server, File worldDir, String name ) throws WorldLoadException {
-        super( server, worldDir );
-        this.name = name;
-    }
-
-
-    @Override
-    public String getWorldName() {
-        return this.name;
+        super( server, worldDir, name );
     }
 
     /**

@@ -10,6 +10,8 @@ import io.gomint.world.block.BlockType;
 import io.gomint.server.registry.RegisterInfo;
 import io.gomint.world.block.data.Direction;
 
+import java.util.concurrent.ThreadLocalRandom;
+
 /**
  * @author geNAZt
  * @version 1.0
@@ -18,7 +20,8 @@ import io.gomint.world.block.data.Direction;
 public class Cocoa extends Growable implements BlockCocoa {
 
     private static final DirectionBlockState DIRECTION = new DirectionBlockState(() -> new String[]{"direction"});
-    private static final ProgressBlockState AGE = new ProgressBlockState( () -> new String[]{"age"},2, aVoid -> {});
+    private static final ProgressBlockState AGE = new ProgressBlockState(() -> new String[]{"age"}, 2, aVoid -> {
+    });
 
     @Override
     public long getBreakTime() {
@@ -58,6 +61,21 @@ public class Cocoa extends Growable implements BlockCocoa {
     @Override
     public Direction getDirection() {
         return DIRECTION.getState(this);
+    }
+
+    @Override
+    protected void grow() {
+        // Check for growth state
+        if (AGE.getState(this) < 1f) {
+            float growthDivider = getGrowthDivider();
+            int random = ThreadLocalRandom.current().nextInt((int) ((25f / growthDivider) + 1));
+
+            // Grow it
+            if (random == 0) {
+                // TODO: Some sort of growth event
+                AGE.progress(this);
+            }
+        }
     }
 
 }

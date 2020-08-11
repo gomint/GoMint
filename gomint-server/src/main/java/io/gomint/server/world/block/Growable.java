@@ -51,23 +51,27 @@ public abstract class Growable extends Block {
                 this.world.breakBlock(this.location.toBlockPosition(), new ArrayList<>(), false);
             }
         } else if (updateReason == UpdateReason.RANDOM) {
-            // Check for growth state
-            if (GROWTH.getState(this) < 1f) {
-                float growthDivider = getGrowthDivider();
-                int random = ThreadLocalRandom.current().nextInt((int) ((25f / growthDivider) + 1));
-
-                // Grow it
-                if (random == 0) {
-                    // TODO: Some sort of growth event
-                    GROWTH.progress(this);
-                }
-            }
+            this.grow();
         }
 
         return -1;
     }
 
-    private float getGrowthDivider() {
+    protected void grow() {
+        // Check for growth state
+        if (GROWTH.getState(this) < 1f) {
+            float growthDivider = getGrowthDivider();
+            int random = ThreadLocalRandom.current().nextInt((int) ((25f / growthDivider) + 1));
+
+            // Grow it
+            if (random == 0) {
+                // TODO: Some sort of growth event
+                GROWTH.progress(this);
+            }
+        }
+    }
+
+    protected float getGrowthDivider() {
         float divider = 1f;
         BlockPosition underCrops = this.location.toBlockPosition().add(BlockPosition.DOWN);
 

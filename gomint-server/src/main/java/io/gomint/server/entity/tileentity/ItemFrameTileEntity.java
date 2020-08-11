@@ -23,7 +23,7 @@ public class ItemFrameTileEntity extends TileEntity {
 
     private ItemStack holdingItem = (ItemStack) ItemAir.create( 0 );
     private float itemDropChance = 1f;
-    private byte itemRotation;
+    private float itemRotation;
 
     /**
      * Construct new tile entity from position and world data
@@ -40,7 +40,7 @@ public class ItemFrameTileEntity extends TileEntity {
 
         //
         this.itemDropChance = compound.getFloat( "ItemDropChance", 1.0f );
-        this.itemRotation = compound.getByte( "ItemRotation", (byte) 0 );
+        this.itemRotation = compound.getFloat( "ItemRotation", 0f );
 
         //
         this.holdingItem = getItemStack( compound.getCompound( "Item", false ) );
