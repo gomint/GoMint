@@ -2,13 +2,11 @@ package io.gomint.server.network.packet;
 
 import io.gomint.jraknet.PacketBuffer;
 import io.gomint.server.network.Protocol;
-import lombok.Data;
 
 /**
  * @author geNAZt
  * @version 1.0
  */
-@Data
 public class PacketHotbar extends Packet {
 
     private int selectedHotbarSlot;
@@ -35,4 +33,35 @@ public class PacketHotbar extends Packet {
         this.selectHotbarSlot = buffer.readBoolean();
     }
 
+    public int getSelectedHotbarSlot() {
+        return selectedHotbarSlot;
+    }
+
+    public void setSelectedHotbarSlot(int selectedHotbarSlot) {
+        this.selectedHotbarSlot = selectedHotbarSlot;
+    }
+
+    public byte getWindowId() {
+        return windowId;
+    }
+
+    public void setWindowId(byte windowId) {
+        this.windowId = windowId;
+    }
+
+    public int[] getSlots() {
+        return slots;
+    }
+
+    public void setSlots(int[] slots) {
+        this.slots = slots;
+    }
+
+    public boolean isSelectHotbarSlot() {
+        return selectHotbarSlot;
+    }
+
+    public void setSelectHotbarSlot(boolean selectHotbarSlot) {
+        this.selectHotbarSlot = selectHotbarSlot;
+    }
 }

@@ -12,9 +12,6 @@ import io.gomint.server.entity.AttributeInstance;
 import io.gomint.server.entity.EntityType;
 import io.gomint.server.entity.metadata.MetadataContainer;
 import io.gomint.server.network.Protocol;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
 
 import java.util.Collection;
 
@@ -22,9 +19,6 @@ import java.util.Collection;
  * @author BlackyPaw
  * @version 1.0
  */
-@Data
-@EqualsAndHashCode( callSuper = false )
-@ToString
 public class PacketSpawnEntity extends Packet {
 
     private long entityId;
@@ -83,4 +77,107 @@ public class PacketSpawnEntity extends Packet {
 
     }
 
+    public long getEntityId() {
+        return entityId;
+    }
+
+    public void setEntityId(long entityId) {
+        this.entityId = entityId;
+    }
+
+    public EntityType getEntityType() {
+        return entityType;
+    }
+
+    public void setEntityType(EntityType entityType) {
+        this.entityType = entityType;
+    }
+
+    public float getX() {
+        return x;
+    }
+
+    public void setX(float x) {
+        this.x = x;
+    }
+
+    public float getY() {
+        return y;
+    }
+
+    public void setY(float y) {
+        this.y = y;
+    }
+
+    public float getZ() {
+        return z;
+    }
+
+    public void setZ(float z) {
+        this.z = z;
+    }
+
+    public float getVelocityX() {
+        return velocityX;
+    }
+
+    public void setVelocityX(float velocityX) {
+        this.velocityX = velocityX;
+    }
+
+    public float getVelocityY() {
+        return velocityY;
+    }
+
+    public void setVelocityY(float velocityY) {
+        this.velocityY = velocityY;
+    }
+
+    public float getVelocityZ() {
+        return velocityZ;
+    }
+
+    public void setVelocityZ(float velocityZ) {
+        this.velocityZ = velocityZ;
+    }
+
+    public float getPitch() {
+        return pitch;
+    }
+
+    public void setPitch(float pitch) {
+        this.pitch = pitch;
+    }
+
+    public float getHeadYaw() {
+        return headYaw;
+    }
+
+    public void setHeadYaw(float headYaw) {
+        this.headYaw = headYaw;
+    }
+
+    public float getYaw() {
+        return yaw;
+    }
+
+    public void setYaw(float yaw) {
+        this.yaw = yaw;
+    }
+
+    public Collection<AttributeInstance> getAttributes() {
+        return attributes;
+    }
+
+    public void setAttributes(Collection<AttributeInstance> attributes) {
+        this.attributes = attributes;
+    }
+
+    public MetadataContainer getMetadata() {
+        return metadata;
+    }
+
+    public void setMetadata(MetadataContainer metadata) {
+        this.metadata = metadata;
+    }
 }

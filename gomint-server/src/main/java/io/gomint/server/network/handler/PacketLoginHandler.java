@@ -26,7 +26,6 @@ import io.gomint.server.network.packet.PacketEncryptionRequest;
 import io.gomint.server.network.packet.PacketLogin;
 import io.gomint.server.network.packet.PacketPlayState;
 import io.gomint.server.player.PlayerSkin;
-import io.gomint.server.plugin.EventCaller;
 import io.gomint.server.scheduler.SyncScheduledTask;
 import io.gomint.server.world.WorldAdapter;
 import org.json.simple.JSONArray;
@@ -35,9 +34,6 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.stereotype.Component;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -56,27 +52,21 @@ import static io.gomint.player.DeviceInfo.DeviceOS.WINDOWS;
  * @author geNAZt
  * @version 1.0
  */
-@Component
 public class PacketLoginHandler implements PacketHandler<PacketLogin> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PacketLoginHandler.class);
     private static final EncryptionRequestForger FORGER = new EncryptionRequestForger();
     private static final Pattern NAME_PATTERN = Pattern.compile("[a-zA-z0-9_\\. ]{1,16}");
 
-    @Autowired
-    private EncryptionKeyFactory keyFactory;
+    private final EncryptionKeyFactory keyFactory;
+    private final ServerConfig serverConfig;
+    private final GoMintServer server;
 
-    @Autowired
-    private ServerConfig serverConfig;
-
-    @Autowired
-    private GoMintServer server;
-
-    @Autowired
-    private EventCaller eventCaller;
-
-    @Autowired
-    private ApplicationContext context;
+    public PacketLoginHandler(EncryptionKeyFactory keyFactory, ServerConfig serverConfig, GoMintServer server) {
+        this.keyFactory = keyFactory;
+        this.serverConfig = serverConfig;
+        this.server = server;
+    }
 
     @Override
     public void handle(PacketLogin packet, long currentTimeMillis, PlayerConnection connection) {
@@ -253,8 +243,7 @@ public class PacketLoginHandler implements PacketHandler<PacketLogin> {
                 WorldAdapter world = this.server.getDefaultWorld();
 
                 EntityPlayer player = new EntityPlayer(world, connection, chainValidator.getUsername(),
-                    chainValidator.getXboxId(), chainValidator.getUuid(), locale);
-                this.context.getAutowireCapableBeanFactory().autowireBean(player);
+                    chainValidator.getXboxId(), chainValidator.getUuid(), locale, this.server.getPluginManager());
 
                 connection.setEntity(player);
                 connection.getEntity().setSkin(playerSkin);
@@ -275,7 +264,7 @@ public class PacketLoginHandler implements PacketHandler<PacketLogin> {
                     event.setKickMessage("Server is full");
                 }
 
-                this.eventCaller.callEvent(event);
+                this.server.getPluginManager().callEvent(event);
                 if (event.isCancelled()) {
                     connection.disconnect(event.getKickMessage());
                     return;

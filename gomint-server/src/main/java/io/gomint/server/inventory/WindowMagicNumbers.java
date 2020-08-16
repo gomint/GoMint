@@ -1,12 +1,10 @@
 package io.gomint.server.inventory;
 
-import lombok.Getter;
 
 /**
  * @author geNAZt
  * @version 1.0
  */
-@Getter
 public enum WindowMagicNumbers {
 
     // CHECKSTYLE:OFF
@@ -21,6 +19,10 @@ public enum WindowMagicNumbers {
 
     WindowMagicNumbers( int id ) {
         this.id = (byte) id;
+    }
+
+    public byte getId() {
+        return id;
     }
 
 }

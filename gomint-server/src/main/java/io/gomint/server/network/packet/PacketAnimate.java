@@ -2,13 +2,11 @@ package io.gomint.server.network.packet;
 
 import io.gomint.jraknet.PacketBuffer;
 import io.gomint.server.network.Protocol;
-import lombok.Data;
 
 /**
  * @author geNAZt
  * @version 1.0
  */
-@Data
 public class PacketAnimate extends Packet {
 
     private PlayerAnimation playerAnimation;
@@ -37,6 +35,7 @@ public class PacketAnimate extends Packet {
         if ( (actionId & 0x80) != 0 ) {
             this.boatRowingTime = buffer.readLFloat();
         }
+
         switch ( playerAnimation ) {
             case SWING:
                 this.entityId = buffer.readUnsignedVarLong();
@@ -81,5 +80,37 @@ public class PacketAnimate extends Packet {
         public int getId() {
             return this.id;
         }
+    }
+
+    public PlayerAnimation getPlayerAnimation() {
+        return playerAnimation;
+    }
+
+    public void setPlayerAnimation(PlayerAnimation playerAnimation) {
+        this.playerAnimation = playerAnimation;
+    }
+
+    public int getActionId() {
+        return actionId;
+    }
+
+    public void setActionId(int actionId) {
+        this.actionId = actionId;
+    }
+
+    public long getEntityId() {
+        return entityId;
+    }
+
+    public void setEntityId(long entityId) {
+        this.entityId = entityId;
+    }
+
+    public float getBoatRowingTime() {
+        return boatRowingTime;
+    }
+
+    public void setBoatRowingTime(float boatRowingTime) {
+        this.boatRowingTime = boatRowingTime;
     }
 }

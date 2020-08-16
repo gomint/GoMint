@@ -1,8 +1,8 @@
 package io.gomint.event.player;
 
 import io.gomint.entity.EntityPlayer;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+
+import java.util.Objects;
 
 /**
  * @author geNAZt
@@ -11,8 +11,6 @@ import lombok.ToString;
  * This event is fired when the login stage begins, way before any data will be sent to the client. If you cancel
  * this event to kick someone the player will have no impact on performance, chunk loading, etc.
  */
-@EqualsAndHashCode( callSuper = false )
-@ToString( callSuper = true )
 public class PlayerLoginEvent extends CancellablePlayerEvent {
 
     private String kickMessage;
@@ -39,6 +37,27 @@ public class PlayerLoginEvent extends CancellablePlayerEvent {
      */
     public void setKickMessage( String kickMessage ) {
         this.kickMessage = kickMessage;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        PlayerLoginEvent that = (PlayerLoginEvent) o;
+        return Objects.equals(kickMessage, that.kickMessage);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), kickMessage);
+    }
+
+    @Override
+    public String toString() {
+        return "PlayerLoginEvent{" +
+            "kickMessage='" + kickMessage + '\'' +
+            '}';
     }
 
 }

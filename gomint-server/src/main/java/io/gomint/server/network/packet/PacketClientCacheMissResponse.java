@@ -4,16 +4,11 @@ import io.gomint.jraknet.PacketBuffer;
 import io.gomint.server.network.Protocol;
 import io.netty.buffer.ByteBuf;
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
-import lombok.Data;
-
-import java.nio.ByteBuffer;
-import java.util.function.Consumer;
 
 /**
  * @author geNAZt
  * @version 1.0
  */
-@Data
 public class PacketClientCacheMissResponse extends Packet {
 
     private Long2ObjectMap<ByteBuf> data;
@@ -36,5 +31,13 @@ public class PacketClientCacheMissResponse extends Packet {
     @Override
     public void deserialize(PacketBuffer buffer, int protocolID) {
 
+    }
+
+    public Long2ObjectMap<ByteBuf> getData() {
+        return data;
+    }
+
+    public void setData(Long2ObjectMap<ByteBuf> data) {
+        this.data = data;
     }
 }

@@ -9,13 +9,11 @@ package io.gomint.server.network.packet;
 
 import io.gomint.jraknet.PacketBuffer;
 import io.gomint.server.network.Protocol;
-import lombok.Data;
 
 /**
  * @author geNAZt
  * @version 1.0
  */
-@Data
 public class PacketEntityEvent extends Packet {
 
     private long entityId;
@@ -43,4 +41,27 @@ public class PacketEntityEvent extends Packet {
         this.eventData = buffer.readSignedVarInt();
     }
 
+    public long getEntityId() {
+        return entityId;
+    }
+
+    public void setEntityId(long entityId) {
+        this.entityId = entityId;
+    }
+
+    public byte getEventId() {
+        return eventId;
+    }
+
+    public void setEventId(byte eventId) {
+        this.eventId = eventId;
+    }
+
+    public int getEventData() {
+        return eventData;
+    }
+
+    public void setEventData(int eventData) {
+        this.eventData = eventData;
+    }
 }

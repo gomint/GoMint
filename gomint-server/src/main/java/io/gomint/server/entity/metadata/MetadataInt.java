@@ -8,13 +8,11 @@
 package io.gomint.server.entity.metadata;
 
 import io.gomint.jraknet.PacketBuffer;
-import lombok.ToString;
 
 /**
  * @author BlackyPaw
  * @version 1.0
  */
-@ToString
 public class MetadataInt extends MetadataValue {
 
     private int value;
@@ -68,6 +66,13 @@ public class MetadataInt extends MetadataValue {
     @Override
     byte getTypeId() {
         return MetadataContainer.METADATA_INT;
+    }
+
+    @Override
+    public String toString() {
+        return "MetadataInt{" +
+            "value=" + value +
+            '}';
     }
 
 }

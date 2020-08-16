@@ -2,13 +2,11 @@ package io.gomint.server.network.packet;
 
 import io.gomint.jraknet.PacketBuffer;
 import io.gomint.server.network.Protocol;
-import lombok.Data;
 
 /**
  * @author geNAZt
  * @version 1.0
  */
-@Data
 public class PacketClientCacheBlobStatus extends Packet {
 
     private long[] hit;
@@ -38,5 +36,21 @@ public class PacketClientCacheBlobStatus extends Packet {
         for (int i = 0; i < hitCount; i++) {
             this.hit[i] = buffer.readLLong();
         }
+    }
+
+    public long[] getHit() {
+        return hit;
+    }
+
+    public void setHit(long[] hit) {
+        this.hit = hit;
+    }
+
+    public long[] getMiss() {
+        return miss;
+    }
+
+    public void setMiss(long[] miss) {
+        this.miss = miss;
     }
 }

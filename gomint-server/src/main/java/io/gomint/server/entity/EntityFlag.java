@@ -1,7 +1,5 @@
 package io.gomint.server.entity;
 
-import lombok.Getter;
-
 /**
  * @author geNAZt
  * @author KingAli
@@ -105,10 +103,14 @@ public enum EntityFlag {
     ADMIRING(93),
     CELEBRATING_SPECIAL(94);
 
-    @Getter
     private final int id;
 
     EntityFlag( int id ) {
         this.id = id;
     }
+
+    public int getId() {
+        return id;
+    }
+
 }

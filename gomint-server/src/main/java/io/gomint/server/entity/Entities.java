@@ -12,6 +12,8 @@ import io.gomint.server.registry.Generator;
 import io.gomint.server.registry.Registry;
 import io.gomint.server.registry.StringRegistry;
 import io.gomint.server.util.ClassPath;
+import io.gomint.server.util.performance.LambdaConstructionFactory;
+import io.gomint.server.world.block.Block;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,14 +27,11 @@ public class Entities {
     private final StringRegistry<io.gomint.server.entity.Entity> generators;
 
     public Entities( ClassPath classPath ) {
-        this.generators = new StringRegistry<>( classPath, (clazz, id) -> () -> {
-            try {
-                return (io.gomint.server.entity.Entity) clazz.newInstance();
-            } catch ( InstantiationException | IllegalAccessException e ) {
-                LOGGER.error( "Could not generate new entity", e );
-            }
-
-            return null;
+        this.generators = new StringRegistry<>( classPath, (clazz, id) -> {
+            LambdaConstructionFactory<io.gomint.server.entity.Entity> factory = new LambdaConstructionFactory<>(clazz);
+            return in -> {
+                return factory.newInstance();
+            };
         } );
 
         // Register all subgroups

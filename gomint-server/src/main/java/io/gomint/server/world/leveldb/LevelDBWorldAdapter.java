@@ -126,8 +126,6 @@ public class LevelDBWorldAdapter extends WorldAdapter {
     }
 
     private void open() throws WorldLoadException {
-
-
         try {
             this.db = new DB( new File( this.worldDir, "db" ) );
             this.db.open();

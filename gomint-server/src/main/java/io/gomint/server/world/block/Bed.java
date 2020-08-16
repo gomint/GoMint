@@ -8,6 +8,7 @@ import io.gomint.math.Location;
 import io.gomint.math.Vector;
 import io.gomint.server.entity.Entity;
 import io.gomint.server.entity.EntityPlayer;
+import io.gomint.server.entity.tileentity.BannerTileEntity;
 import io.gomint.server.entity.tileentity.BedTileEntity;
 import io.gomint.server.entity.tileentity.SerializationReason;
 import io.gomint.server.entity.tileentity.TileEntity;
@@ -22,7 +23,6 @@ import io.gomint.world.block.data.Direction;
 import io.gomint.world.block.data.Facing;
 import io.gomint.world.block.BlockType;
 import io.gomint.world.block.data.BlockColor;
-import lombok.EqualsAndHashCode;
 
 import java.util.Collections;
 import java.util.List;
@@ -32,7 +32,6 @@ import java.util.List;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:bed" )
-@EqualsAndHashCode( callSuper = true )
 public class Bed extends Block implements BlockBed {
 
     private static final DirectionBlockState DIRECTION = new DirectionBlockState( () -> new String[]{"direction"} );
@@ -181,7 +180,7 @@ public class Bed extends Block implements BlockBed {
     @Override
     TileEntity createTileEntity( NBTTagCompound compound ) {
         super.createTileEntity( compound );
-        return new BedTileEntity( this );
+        return this.world.getServer().getTileEntities().construct(BedTileEntity.class, compound, this, this.world.getServer().getItems());
     }
 
     @Override

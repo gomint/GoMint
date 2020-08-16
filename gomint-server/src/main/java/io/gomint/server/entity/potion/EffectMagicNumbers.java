@@ -7,8 +7,6 @@
 
 package io.gomint.server.entity.potion;
 
-import lombok.Getter;
-
 /**
  * @author geNAZt
  * @version 1.0
@@ -40,10 +38,14 @@ public enum EffectMagicNumbers {
     SATURATION( 23 ),
     LEVITATION( 24 );
 
-    @Getter
     private final int id;
+
     EffectMagicNumbers( int id ) {
         this.id = id;
+    }
+
+    public int getId() {
+        return id;
     }
 
 }

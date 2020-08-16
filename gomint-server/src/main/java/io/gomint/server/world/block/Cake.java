@@ -10,14 +10,12 @@ import io.gomint.server.world.block.state.ProgressBlockState;
 import io.gomint.world.block.BlockCake;
 import io.gomint.world.block.data.Facing;
 import io.gomint.world.block.BlockType;
-import lombok.EqualsAndHashCode;
 
 /**
  * @author geNAZt
  * @version 1.0
  */
 @RegisterInfo(sId = "minecraft:cake")
-@EqualsAndHashCode(callSuper = true)
 public class Cake extends Block implements BlockCake {
 
     private static final ProgressBlockState CAKE_EATEN = new ProgressBlockState(() -> new String[]{"bite_counter"}, 6, b -> b.setBlockType(Air.class));

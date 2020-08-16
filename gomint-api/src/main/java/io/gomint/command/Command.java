@@ -15,7 +15,6 @@ import io.gomint.command.annotation.Overload;
 import io.gomint.command.annotation.Overloads;
 import io.gomint.command.annotation.Parameter;
 import io.gomint.command.annotation.Permission;
-import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,7 +37,6 @@ import java.util.Set;
  * @author geNAZt
  * @version 1.0
  */
-@Getter
 public abstract class Command {
 
     private static final Logger LOGGER = LoggerFactory.getLogger( Command.class );
@@ -242,6 +240,30 @@ public abstract class Command {
                 }
             }
         }
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public List<CommandOverload> getOverload() {
+        return overload;
+    }
+
+    public Set<String> getAlias() {
+        return alias;
+    }
+
+    public String getPermission() {
+        return permission;
+    }
+
+    public boolean isPermissionDefault() {
+        return permissionDefault;
     }
 
 }

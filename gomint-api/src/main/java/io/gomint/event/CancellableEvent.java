@@ -7,15 +7,12 @@
 
 package io.gomint.event;
 
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import java.util.Objects;
 
 /**
  * @author geNAZt
  * @version 1.0
  */
-@EqualsAndHashCode( callSuper = false )
-@ToString()
 public class CancellableEvent extends Event {
 
     private boolean cancelled = false;
@@ -36,6 +33,26 @@ public class CancellableEvent extends Event {
      */
     public void setCancelled( boolean cancelled ) {
         this.cancelled = cancelled;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        CancellableEvent that = (CancellableEvent) o;
+        return cancelled == that.cancelled;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(cancelled);
+    }
+
+    @Override
+    public String toString() {
+        return "CancellableEvent{" +
+            "cancelled=" + cancelled +
+            '}';
     }
 
 }

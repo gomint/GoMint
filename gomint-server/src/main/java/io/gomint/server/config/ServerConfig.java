@@ -9,9 +9,6 @@ package io.gomint.server.config;
 
 import io.gomint.config.annotation.Comment;
 import io.gomint.config.YamlConfig;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,9 +20,6 @@ import java.util.List;
  * @author geNAZt
  * @version 1.0
  */
-@NoArgsConstructor
-@Getter
-@ToString
 public class ServerConfig extends YamlConfig {
 
     // ------------------------ General
@@ -77,4 +71,79 @@ public class ServerConfig extends YamlConfig {
     @Comment( "Control whether we want to load chunks when entities step over borders or not." )
     private boolean loadChunksForEntities = true;
 
+    public ListenerConfig getListener() {
+        return listener;
+    }
+
+    public ConnectionConfig getConnection() {
+        return connection;
+    }
+
+    public int getMaxPlayers() {
+        return maxPlayers;
+    }
+
+    public boolean isOnlyXBOXLogin() {
+        return onlyXBOXLogin;
+    }
+
+    public String getMotd() {
+        return motd;
+    }
+
+    public boolean isEnablePacketDumping() {
+        return enablePacketDumping;
+    }
+
+    public String getDumpDirectory() {
+        return dumpDirectory;
+    }
+
+    public String getDefaultWorld() {
+        return defaultWorld;
+    }
+
+    public boolean isLoadAllWorldsAtStart() {
+        return loadAllWorldsAtStart;
+    }
+
+    public List<WorldConfig> getWorlds() {
+        return worlds;
+    }
+
+    public VanillaConfig getVanilla() {
+        return vanilla;
+    }
+
+    public int getTargetTPS() {
+        return targetTPS;
+    }
+
+    public boolean isDisableGomintReports() {
+        return disableGomintReports;
+    }
+
+    public boolean isLoadChunksForEntities() {
+        return loadChunksForEntities;
+    }
+
+    @Override
+    public String toString() {
+        return "ServerConfig{" +
+            "listener=" + listener +
+            ", connection=" + connection +
+            ", maxPlayers=" + maxPlayers +
+            ", onlyXBOXLogin=" + onlyXBOXLogin +
+            ", motd='" + motd + '\'' +
+            ", enablePacketDumping=" + enablePacketDumping +
+            ", dumpDirectory='" + dumpDirectory + '\'' +
+            ", defaultWorld='" + defaultWorld + '\'' +
+            ", loadAllWorldsAtStart=" + loadAllWorldsAtStart +
+            ", worlds=" + worlds +
+            ", vanilla=" + vanilla +
+            ", targetTPS=" + targetTPS +
+            ", disableGomintReports=" + disableGomintReports +
+            ", loadChunksForEntities=" + loadChunksForEntities +
+            '}';
+    }
 }

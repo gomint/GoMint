@@ -11,6 +11,8 @@ import io.gomint.entity.Entity;
 import io.gomint.inventory.item.ItemAir;
 import io.gomint.math.Vector;
 import io.gomint.server.inventory.item.ItemStack;
+import io.gomint.server.inventory.item.Items;
+import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.world.block.Block;
 import io.gomint.taglib.NBTTagCompound;
 import io.gomint.world.block.data.Facing;
@@ -19,6 +21,7 @@ import io.gomint.world.block.data.Facing;
  * @author geNAZt
  * @version 1.0
  */
+@RegisterInfo(sId = "ItemFrame")
 public class ItemFrameTileEntity extends TileEntity {
 
     private ItemStack holdingItem = (ItemStack) ItemAir.create( 0 );
@@ -30,8 +33,8 @@ public class ItemFrameTileEntity extends TileEntity {
      *
      * @param block which created this tile
      */
-    public ItemFrameTileEntity( Block block ) {
-        super( block );
+    public ItemFrameTileEntity(Block block, Items items) {
+        super( block, items );
     }
 
     @Override
@@ -47,7 +50,7 @@ public class ItemFrameTileEntity extends TileEntity {
     }
 
     @Override
-    public void update( long currentMillis ) {
+    public void update( long currentMillis, float dT ) {
 
     }
 

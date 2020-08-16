@@ -1,7 +1,5 @@
 package io.gomint.server.world.leveldb;
 
-import lombok.Getter;
-
 /**
  * @author geNAZt
  * @version 1.0
@@ -18,7 +16,6 @@ public enum Generators {
      */
     FLAT( 2 );
 
-    @Getter
     private final int id;
 
     /**
@@ -28,6 +25,10 @@ public enum Generators {
      */
     Generators( int id ) {
         this.id = id;
+    }
+
+    public int getId() {
+        return id;
     }
 
     /**

@@ -8,20 +8,43 @@
 package io.gomint.server.inventory.item.helper;
 
 import io.gomint.server.inventory.Inventory;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
+
+import java.util.Objects;
 
 /**
  * @author geNAZt
  * @version 1.0
  */
-@AllArgsConstructor
-@Getter
-@EqualsAndHashCode
 public class ItemStackPlace {
 
     private int slot;
     private Inventory inventory;
+
+    public ItemStackPlace(int slot, Inventory inventory) {
+        this.slot = slot;
+        this.inventory = inventory;
+    }
+
+    public int getSlot() {
+        return slot;
+    }
+
+    public Inventory getInventory() {
+        return inventory;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ItemStackPlace that = (ItemStackPlace) o;
+        return slot == that.slot &&
+            Objects.equals(inventory, that.inventory);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(slot, inventory);
+    }
 
 }

@@ -10,8 +10,6 @@ package io.gomint.server.scheduler;
 import io.gomint.scheduler.Task;
 import io.gomint.util.CompleteHandler;
 import io.gomint.util.ExceptionHandler;
-import lombok.Getter;
-import lombok.ToString;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,13 +21,12 @@ import java.util.concurrent.TimeUnit;
  * @author geNAZt
  * @version 1.0
  */
-@ToString( of = { "task", "period", "nextExecution" } )
 public class SyncScheduledTask implements Task, Runnable {
 
     private static final Logger LOGGER = LoggerFactory.getLogger( SyncScheduledTask.class );
-    @Getter private final Runnable task;
+    private final Runnable task;
     private long period;          // -1 means no reschedule
-    @Getter private long nextExecution; // -1 is cancelled
+    private long nextExecution; // -1 is cancelled
     private ExceptionHandler exceptionHandler;
     private List<CompleteHandler> completeHandlerList;
     private SyncTaskManager manager;
@@ -48,6 +45,23 @@ public class SyncScheduledTask implements Task, Runnable {
         this.period = ( period >= 0 ) ? unit.toMillis( period ) : -1;
         this.nextExecution = ( delay >= 0 ) ? System.currentTimeMillis() + unit.toMillis( delay ) : -1;
         this.manager = manager;
+    }
+
+    public Runnable getTask() {
+        return task;
+    }
+
+    public long getNextExecution() {
+        return nextExecution;
+    }
+
+    @Override
+    public String toString() {
+        return "SyncScheduledTask{" +
+            "task=" + task +
+            ", period=" + period +
+            ", nextExecution=" + nextExecution +
+            '}';
     }
 
     @Override

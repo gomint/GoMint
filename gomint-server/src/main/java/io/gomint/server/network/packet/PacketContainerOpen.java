@@ -3,13 +3,11 @@ package io.gomint.server.network.packet;
 import io.gomint.jraknet.PacketBuffer;
 import io.gomint.math.BlockPosition;
 import io.gomint.server.network.Protocol;
-import lombok.Data;
 
 /**
  * @author geNAZt
  * @version 1.0
  */
-@Data
 public class PacketContainerOpen extends Packet {
 
     private byte windowId;
@@ -40,4 +38,35 @@ public class PacketContainerOpen extends Packet {
         this.entityId = buffer.readSignedVarLong().longValue();
     }
 
+    public byte getWindowId() {
+        return windowId;
+    }
+
+    public void setWindowId(byte windowId) {
+        this.windowId = windowId;
+    }
+
+    public byte getType() {
+        return type;
+    }
+
+    public void setType(byte type) {
+        this.type = type;
+    }
+
+    public BlockPosition getLocation() {
+        return location;
+    }
+
+    public void setLocation(BlockPosition location) {
+        this.location = location;
+    }
+
+    public long getEntityId() {
+        return entityId;
+    }
+
+    public void setEntityId(long entityId) {
+        this.entityId = entityId;
+    }
 }

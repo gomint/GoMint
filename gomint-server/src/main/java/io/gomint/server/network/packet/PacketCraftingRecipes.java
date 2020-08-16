@@ -10,17 +10,14 @@ package io.gomint.server.network.packet;
 import io.gomint.jraknet.PacketBuffer;
 import io.gomint.server.crafting.Recipe;
 import io.gomint.server.network.Protocol;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 import java.util.Collection;
+import java.util.Objects;
 
 /**
  * @author BlackyPaw
  * @version 1.0
  */
-@Data
-@EqualsAndHashCode( callSuper = false )
 public class PacketCraftingRecipes extends Packet {
 
     private Collection<Recipe> recipes;
@@ -50,4 +47,24 @@ public class PacketCraftingRecipes extends Packet {
 
     }
 
+    public Collection<Recipe> getRecipes() {
+        return recipes;
+    }
+
+    public void setRecipes(Collection<Recipe> recipes) {
+        this.recipes = recipes;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        PacketCraftingRecipes that = (PacketCraftingRecipes) o;
+        return Objects.equals(recipes, that.recipes);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(recipes);
+    }
 }

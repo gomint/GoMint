@@ -4,13 +4,11 @@ import io.gomint.jraknet.PacketBuffer;
 import io.gomint.math.Vector;
 import io.gomint.server.network.Protocol;
 import io.gomint.server.world.SoundMagicNumbers;
-import lombok.Data;
 
 /**
  * @author geNAZt
  * @version 1.0
  */
-@Data
 public class PacketWorldSoundEvent extends Packet {
 
     private SoundMagicNumbers type;
@@ -46,4 +44,51 @@ public class PacketWorldSoundEvent extends Packet {
         this.disableRelativeVolume = buffer.readBoolean();
     }
 
+    public SoundMagicNumbers getType() {
+        return type;
+    }
+
+    public void setType(SoundMagicNumbers type) {
+        this.type = type;
+    }
+
+    public Vector getPosition() {
+        return position;
+    }
+
+    public void setPosition(Vector position) {
+        this.position = position;
+    }
+
+    public int getExtraData() {
+        return extraData;
+    }
+
+    public void setExtraData(int extraData) {
+        this.extraData = extraData;
+    }
+
+    public String getEntityId() {
+        return entityId;
+    }
+
+    public void setEntityId(String entityId) {
+        this.entityId = entityId;
+    }
+
+    public boolean isBabyMob() {
+        return isBabyMob;
+    }
+
+    public void setBabyMob(boolean babyMob) {
+        isBabyMob = babyMob;
+    }
+
+    public boolean isDisableRelativeVolume() {
+        return disableRelativeVolume;
+    }
+
+    public void setDisableRelativeVolume(boolean disableRelativeVolume) {
+        this.disableRelativeVolume = disableRelativeVolume;
+    }
 }

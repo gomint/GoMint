@@ -2,8 +2,6 @@ package io.gomint.server.entity;
 
 import io.gomint.math.MathUtils;
 import io.gomint.taglib.NBTTagCompound;
-import lombok.Getter;
-import lombok.ToString;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,8 +14,6 @@ import java.util.Map;
  * @author geNAZt
  * @version 1.0
  */
-@ToString
-@Getter
 public class AttributeInstance {
 
     private static final Logger LOGGER = LoggerFactory.getLogger( AttributeInstance.class );
@@ -192,4 +188,40 @@ public class AttributeInstance {
         return compound;
     }
 
+    public String getKey() {
+        return key;
+    }
+
+    public float getMinValue() {
+        return minValue;
+    }
+
+    public float getMaxValue() {
+        return maxValue;
+    }
+
+    public float getDefaultValue() {
+        return defaultValue;
+    }
+
+    public float getValue() {
+        return value;
+    }
+
+    public Map<AttributeModifierType, Map<AttributeModifier, Float>> getModifiers() {
+        return modifiers;
+    }
+
+    @Override
+    public String toString() {
+        return "AttributeInstance{" +
+            "key='" + key + '\'' +
+            ", minValue=" + minValue +
+            ", maxValue=" + maxValue +
+            ", defaultValue=" + defaultValue +
+            ", value=" + value +
+            ", dirty=" + dirty +
+            ", modifiers=" + modifiers +
+            '}';
+    }
 }

@@ -13,17 +13,14 @@ import io.gomint.server.entity.EntityFlag;
 import io.gomint.server.inventory.item.ItemStack;
 import it.unimi.dsi.fastutil.bytes.Byte2ObjectMap;
 import it.unimi.dsi.fastutil.bytes.Byte2ObjectOpenHashMap;
-import lombok.ToString;
 
 import java.util.Observable;
-import java.util.Observer;
 
 /**
  * @author BlackyPaw
  * @author geNAZt
  * @version 2.0
  */
-@ToString
 public class MetadataContainer extends Observable {
 
     /**
@@ -648,6 +645,14 @@ public class MetadataContainer extends Observable {
         boolean result = this.dirty;
         this.dirty = false;
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return "MetadataContainer{" +
+            "entries=" + entries +
+            ", dirty=" + dirty +
+            '}';
     }
 
 }

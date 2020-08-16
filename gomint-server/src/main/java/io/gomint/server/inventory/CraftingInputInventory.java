@@ -8,7 +8,6 @@ import io.gomint.server.entity.EntityPlayer;
 import io.gomint.server.network.PlayerConnection;
 import io.gomint.server.network.type.WindowType;
 import io.gomint.server.world.WorldAdapter;
-import lombok.Setter;
 
 /**
  * @author geNAZt
@@ -16,7 +15,6 @@ import lombok.Setter;
  */
 public class CraftingInputInventory extends ContainerInventory {
 
-    @Setter
     private BlockPosition position;
 
     public CraftingInputInventory( InventoryHolder owner ) {
@@ -66,6 +64,10 @@ public class CraftingInputInventory extends ContainerInventory {
     @Override
     public InventoryType getInventoryType() {
         return InventoryType.CRAFTING;
+    }
+
+    public void setPosition(BlockPosition position) {
+        this.position = position;
     }
 
 }

@@ -7,9 +7,10 @@
 
 package io.gomint.server.entity.tileentity;
 
+import io.gomint.server.inventory.item.Items;
+import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.world.block.Block;
 import io.gomint.taglib.NBTTagCompound;
-import lombok.ToString;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +19,7 @@ import java.util.List;
  * @author geNAZt
  * @version 1.0
  */
-@ToString
+@RegisterInfo(sId = "PistonArm")
 public class PistonArmTileEntity extends TileEntity {
 
     // States
@@ -41,10 +42,9 @@ public class PistonArmTileEntity extends TileEntity {
      *
      * @param block which created this tile
      */
-    public PistonArmTileEntity( Block block ) {
-        super( block );
+    public PistonArmTileEntity(Block block, Items items) {
+        super( block, items );
     }
-
 
     @Override
     public void fromCompound( NBTTagCompound compound ) {
@@ -63,7 +63,7 @@ public class PistonArmTileEntity extends TileEntity {
     }
 
     @Override
-    public void update( long currentMillis ) {
+    public void update( long currentMillis, float dT ) {
         /*Block piston = this.getBlock();
         Facing facing = Things.convertFromDataToBlockFace( piston.getBlockData() );
 
@@ -125,6 +125,19 @@ public class PistonArmTileEntity extends TileEntity {
         this.newState = this.state;
         this.progess = state ? 1.0f : 0.0f;
         this.lastProgress = this.progess;
+    }
+
+    @Override
+    public String toString() {
+        return "PistonArmTileEntity{" +
+            "state=" + state +
+            ", newState=" + newState +
+            ", progess=" + progess +
+            ", lastProgress=" + lastProgress +
+            ", attachedBlocks=" + attachedBlocks +
+            ", breakBlocks=" + breakBlocks +
+            ", sticky=" + sticky +
+            '}';
     }
 
 }

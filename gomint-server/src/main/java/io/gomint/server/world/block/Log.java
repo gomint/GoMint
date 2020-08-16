@@ -15,7 +15,6 @@ import io.gomint.world.block.data.Facing;
 import io.gomint.world.block.BlockLog;
 import io.gomint.world.block.BlockType;
 import io.gomint.world.block.data.LogType;
-import lombok.Getter;
 
 import java.util.List;
 
@@ -50,7 +49,6 @@ public class Log extends Block implements BlockLog {
     private static final String NEW_LOG_TYPE = "new_log_type";
     private static final String NEW_LOG_ID = "minecraft:log2";
 
-    @Getter
     private enum LogTypeMagic {
         OAK(OLD_WOOD_ID, OLD_WOOD_TYPE, OLD_LOG_ID, OLD_LOG_TYPE, "oak"),
         SPRUCE(OLD_WOOD_ID, OLD_WOOD_TYPE, OLD_LOG_ID, OLD_LOG_TYPE, "spruce"),
@@ -78,9 +76,9 @@ public class Log extends Block implements BlockLog {
 
     private static final EnumBlockState<LogTypeMagic, String> VARIANT = new EnumBlockState<>(v -> {
         return new String[]{OLD_LOG_TYPE, NEW_LOG_TYPE, OLD_WOOD_TYPE};
-    }, LogTypeMagic.values(), LogTypeMagic::getValue, v -> {
+    }, LogTypeMagic.values(), v -> v.value, v -> {
         for (LogTypeMagic value : LogTypeMagic.values()) {
-            if (value.getValue().equals(v)) {
+            if (value.value.equals(v)) {
                 return value;
             }
         }
@@ -131,7 +129,7 @@ public class Log extends Block implements BlockLog {
         STRIPPED.setState(this, stripped);
 
         if (!stripped) {
-            this.setBlockIdOnStateChange(fullTexture ? state.getFullTextureBlockId() : state.getBlockId());
+            this.setBlockIdOnStateChange(fullTexture ? state.fullTextureBlockId : state.blockId);
             VARIANT.setState(this, state);
         } else {
             this.setBlockIdFromType(state, fullTexture);
@@ -156,22 +154,22 @@ public class Log extends Block implements BlockLog {
     private void setBlockIdFromType(LogTypeMagic type, boolean fullTexture) {
         switch (type) {
             case OAK:
-                this.setBlockId(fullTexture ? type.getFullTextureBlockId() : "minecraft:stripped_oak_log");
+                this.setBlockId(fullTexture ? type.fullTextureBlockId : "minecraft:stripped_oak_log");
                 break;
             case BIRCH:
-                this.setBlockId(fullTexture ? type.getFullTextureBlockId() : "minecraft:stripped_birch_log");
+                this.setBlockId(fullTexture ? type.fullTextureBlockId : "minecraft:stripped_birch_log");
                 break;
             case JUNGLE:
-                this.setBlockId(fullTexture ? type.getFullTextureBlockId() : "minecraft:stripped_jungle_log");
+                this.setBlockId(fullTexture ? type.fullTextureBlockId : "minecraft:stripped_jungle_log");
                 break;
             case SPRUCE:
-                this.setBlockId(fullTexture ? type.getFullTextureBlockId() : "minecraft:stripped_spruce_log");
+                this.setBlockId(fullTexture ? type.fullTextureBlockId : "minecraft:stripped_spruce_log");
                 break;
             case ACACIA:
-                this.setBlockId(fullTexture ? type.getFullTextureBlockId() : "minecraft:stripped_acacia_log");
+                this.setBlockId(fullTexture ? type.fullTextureBlockId : "minecraft:stripped_acacia_log");
                 break;
             case DARK_OAK:
-                this.setBlockId(fullTexture ? type.getFullTextureBlockId() : "minecraft:stripped_dark_oak_log");
+                this.setBlockId(fullTexture ? type.fullTextureBlockId : "minecraft:stripped_dark_oak_log");
                 break;
             case CRIMSON:
                 this.setBlockId(fullTexture ? "minecraft:stripped_crimson_hyphae" : "minecraft:stripped_crimson_stem");

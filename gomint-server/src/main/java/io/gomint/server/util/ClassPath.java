@@ -14,12 +14,9 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import com.google.common.collect.UnmodifiableIterator;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.io.IOException;
@@ -44,7 +41,6 @@ import java.util.jar.JarFile;
  * @author geNAZt
  * @version 1.0
  */
-@Component
 public class ClassPath {
 
     private static final Logger LOGGER = LoggerFactory.getLogger( ClassPath.class );
@@ -52,7 +48,7 @@ public class ClassPath {
     private final Set<File> scannedUris = new HashSet<>();
     private final Set<ClassInfo> classes = new HashSet<>();
 
-    public ClassPath( @Value( "io.gomint.server" ) String preFilter ) throws IOException {
+    public ClassPath( String preFilter ) throws IOException {
         UnmodifiableIterator var2 = getClassPathEntries( ClassPath.class.getClassLoader() ).entrySet().iterator();
 
         preFilter = preFilter.replace( ".", "/" );
@@ -251,10 +247,12 @@ public class ClassPath {
         }
     }
 
-    @AllArgsConstructor
-    @Getter
     public class ClassInfo {
         private final String className;
+
+        public ClassInfo(String className) {
+            this.className = className;
+        }
 
         public Class load() {
             try {

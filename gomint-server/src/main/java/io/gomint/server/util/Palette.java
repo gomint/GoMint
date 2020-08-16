@@ -9,18 +9,13 @@ package io.gomint.server.util;
 
 import io.gomint.jraknet.PacketBuffer;
 import io.gomint.math.MathUtils;
-import lombok.Getter;
-
-import java.util.BitSet;
 
 /**
  * @author geNAZt
  * @version 1.0
  */
-@Getter
 public class Palette {
 
-    @Getter
     public enum PaletteVersion {
         P1( 1, 32 ),
         P2( 2, 16 ),
@@ -31,7 +26,6 @@ public class Palette {
         P8( 8, 4 ),
         P16( 16, 2 );
 
-        @Getter
         private final byte versionId;
         private final byte amountOfWords;
         private final byte amountOfPadding;
@@ -44,6 +38,18 @@ public class Palette {
             this.versionId = (byte) versionId;
             this.amountOfWords = (byte) amountOfWords;
             this.amountOfPadding = (byte) amountOfPadding;
+        }
+
+        public byte getVersionId() {
+            return versionId;
+        }
+
+        public byte getAmountOfWords() {
+            return amountOfWords;
+        }
+
+        public byte getAmountOfPadding() {
+            return amountOfPadding;
         }
     }
 
@@ -161,4 +167,23 @@ public class Palette {
         return this.output;
     }
 
+    public PacketBuffer getData() {
+        return data;
+    }
+
+    public PaletteVersion getPaletteVersion() {
+        return paletteVersion;
+    }
+
+    public short[] getOutput() {
+        return output;
+    }
+
+    public int getBits() {
+        return bits;
+    }
+
+    public int getWordsWritten() {
+        return wordsWritten;
+    }
 }

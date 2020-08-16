@@ -1,15 +1,16 @@
 package io.gomint.server.entity.tileentity;
 
 import io.gomint.math.MojangRotation;
+import io.gomint.server.inventory.item.Items;
+import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.world.block.Block;
 import io.gomint.taglib.NBTTagCompound;
-import lombok.Data;
 
 /**
  * @author geNAZt
  * @version 1.0
  */
-@Data
+@RegisterInfo(sId = "Skull")
 public class SkullTileEntity extends TileEntity {
 
     private MojangRotation rotation;
@@ -20,8 +21,8 @@ public class SkullTileEntity extends TileEntity {
      *
      * @param block which holds this tile
      */
-    public SkullTileEntity( Block block ) {
-        super( block );
+    public SkullTileEntity(Block block, Items items) {
+        super( block, items );
     }
 
     @Override
@@ -33,7 +34,7 @@ public class SkullTileEntity extends TileEntity {
     }
 
     @Override
-    public void update( long currentMillis ) {
+    public void update( long currentMillis, float dT ) {
 
     }
 
@@ -44,6 +45,22 @@ public class SkullTileEntity extends TileEntity {
         compound.addValue( "id", "Skull" );
         compound.addValue( "Rot", this.rotation.getRotationValue() );
         compound.addValue( "SkullType", this.skullType );
+    }
+
+    public MojangRotation getRotation() {
+        return rotation;
+    }
+
+    public void setRotation(MojangRotation rotation) {
+        this.rotation = rotation;
+    }
+
+    public byte getSkullType() {
+        return skullType;
+    }
+
+    public void setSkullType(byte skullType) {
+        this.skullType = skullType;
     }
 
 }

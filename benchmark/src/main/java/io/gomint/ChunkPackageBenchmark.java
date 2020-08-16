@@ -25,8 +25,8 @@ import org.openjdk.jmh.annotations.Scope;
 import org.openjdk.jmh.annotations.Setup;
 import org.openjdk.jmh.annotations.State;
 import org.openjdk.jmh.annotations.TearDown;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
+import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
 @State(Scope.Benchmark)
@@ -35,22 +35,13 @@ import java.util.concurrent.TimeUnit;
 @BenchmarkMode(Mode.AverageTime)
 public class ChunkPackageBenchmark {
 
-    private AnnotationConfigApplicationContext context;
+    private GoMintServer server;
     private World world;
     private ChunkAdapter chunk;
 
     @Setup
-    public void init() {
-        OptionParser parser = new OptionParser();
-        OptionSet options = parser.parse();
-
-        context = new AnnotationConfigApplicationContext();
-        context.registerBean(OptionSet.class, () -> options); // Register CLI options
-        context.scan("io.gomint.server");
-
-        context.refresh();
-
-        GoMintServer server = context.getBean(GoMintServer.class);
+    public void init() throws IOException {
+        server = new GoMintServer();
         // server.startAfterRegistryInit(options);
 
         this.world = server.createWorld("test", new CreateOptions().worldType(WorldType.IN_MEMORY));
@@ -73,10 +64,7 @@ public class ChunkPackageBenchmark {
 
     @TearDown
     public void teardown() {
-        GoMintServer server = context.getBean(GoMintServer.class);
         server.shutdown();
-
-        context.close();
     }
 
 }

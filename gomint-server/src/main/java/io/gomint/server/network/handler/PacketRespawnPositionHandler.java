@@ -3,13 +3,11 @@ package io.gomint.server.network.handler;
 import io.gomint.server.network.PlayerConnection;
 import io.gomint.server.network.packet.PacketRespawnPosition;
 import io.gomint.server.network.packet.PacketRespawnPosition.RespawnState;
-import lombok.Data;
 
 /**
  * @author HerryYT
  * @version 1.0
  */
-@Data
 public class PacketRespawnPositionHandler implements PacketHandler<PacketRespawnPosition> {
 
     @Override

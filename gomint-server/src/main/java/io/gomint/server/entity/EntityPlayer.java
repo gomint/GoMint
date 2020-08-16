@@ -62,13 +62,8 @@ import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2ByteMap;
 import it.unimi.dsi.fastutil.objects.Object2ByteOpenHashMap;
-import lombok.Getter;
-import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
 import java.util.*;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -84,25 +79,18 @@ import java.util.concurrent.TimeUnit;
  * @author BlackyPaw
  * @version 1.0
  */
-@Component
-@Scope("prototype")
 public class EntityPlayer extends EntityHuman implements io.gomint.entity.EntityPlayer, InventoryHolder, PlayerCommandSender {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(EntityPlayer.class);
 
     private final PlayerConnection connection;
-    @Getter
     private final PermissionManager permissionManager = new PermissionManager(this);
-    @Getter
     private final EntityVisibilityManager entityVisibilityManager = new EntityVisibilityManager(this);
     private int viewDistance = 4;
     private Queue<ChunkAdapter> chunkSendQueue = new LinkedBlockingQueue<>();
     // EntityPlayer Information
     private Gamemode gamemode = Gamemode.SURVIVAL;
-    @Getter
     private AdventureSettings adventureSettings;
-    @Getter
-    @Setter
     private Entity hoverEntity;
     private Location respawnPosition = null;
     private Locale locale;
@@ -119,39 +107,22 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
     private Inventory offhandInventory;
 
     // Crafting
-    @Getter
     private Inventory craftingInventory;
-    @Getter
     private CraftingInputInventory craftingInputInventory;
-    @Getter
     private Inventory craftingResultInventory;
 
     // Enchantment table
-    @Setter
-    @Getter
     private EnchantmentTableInventory enchantmentInputInventory;
-    @Getter
     private Inventory enchantmentOutputInventory;
-    @Setter
-    @Getter
     private EnchantmentProcessor enchantmentProcessor;
 
     // Block break data
-    @Setter
-    @Getter
     private BlockPosition breakVector;
-    @Setter
-    @Getter
     private long startBreak;
-    @Setter
-    @Getter
     private long breakTime;
 
     // Update data
-    @Getter
     private Set<BlockPosition> blockUpdates = new HashSet<>();
-    @Getter
-    @Setter
     private Location teleportPosition = null;
 
     // Form stuff
@@ -163,38 +134,27 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
     private int serverSettingsForm = -1;
 
     // Entity data
-    @Getter
-    @Setter
     private EntityFishingHook fishingHook;
     private long lastPickupXP;
-    @Getter
     private Location spawnLocation;
 
     // Item usage ticking
-    @Getter
     private long actionStart = -1;
 
     // Exp
     private int xp;
 
     // Performance metrics
-    @Getter
     private LoginPerformance loginPerformance;
 
     // Movement delay
-    @Setter
     private Location nextMovement;
-
-    @Setter
-    @Getter
     private boolean spawnPlayers;
 
     // Scoreboard
-    @Getter
     private Scoreboard scoreboard;
 
-    @Autowired
-    private EventCaller eventCaller;
+    private final EventCaller eventCaller;
 
     /**
      * Constructs a new player entity which will be spawned inside the specified world.
@@ -211,9 +171,11 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
                         String username,
                         String xboxId,
                         UUID uuid,
-                        Locale locale) {
+                        Locale locale,
+                        EventCaller eventCaller) {
         super(EntityType.PLAYER, world);
         this.connection = connection;
+        this.eventCaller = eventCaller;
 
         // EntityHuman stuff
         this.setPlayerData(username, username, xboxId, uuid);
@@ -1732,6 +1694,135 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
 
     public boolean knowsChunk(int posX, int posZ) {
         return this.connection.knowsChunk(CoordinateUtils.toLong(posX, posZ));
+    }
+
+    public PermissionManager getPermissionManager() {
+        return permissionManager;
+    }
+
+    public EntityVisibilityManager getEntityVisibilityManager() {
+        return entityVisibilityManager;
+    }
+
+    public AdventureSettings getAdventureSettings() {
+        return adventureSettings;
+    }
+
+    public Entity getHoverEntity() {
+        return hoverEntity;
+    }
+
+    public void setHoverEntity(Entity hoverEntity) {
+        this.hoverEntity = hoverEntity;
+    }
+
+    public Inventory getCraftingInventory() {
+        return craftingInventory;
+    }
+
+    public CraftingInputInventory getCraftingInputInventory() {
+        return craftingInputInventory;
+    }
+
+    public Inventory getCraftingResultInventory() {
+        return craftingResultInventory;
+    }
+
+    public EnchantmentTableInventory getEnchantmentInputInventory() {
+        return enchantmentInputInventory;
+    }
+
+    public Inventory getEnchantmentOutputInventory() {
+        return enchantmentOutputInventory;
+    }
+
+    public EnchantmentProcessor getEnchantmentProcessor() {
+        return enchantmentProcessor;
+    }
+
+    public BlockPosition getBreakVector() {
+        return breakVector;
+    }
+
+    public long getStartBreak() {
+        return startBreak;
+    }
+
+    public long getBreakTime() {
+        return breakTime;
+    }
+
+    public Set<BlockPosition> getBlockUpdates() {
+        return blockUpdates;
+    }
+
+    public Location getTeleportPosition() {
+        return teleportPosition;
+    }
+
+    public void setEnchantmentInputInventory(EnchantmentTableInventory enchantmentInputInventory) {
+        this.enchantmentInputInventory = enchantmentInputInventory;
+    }
+
+    public void setEnchantmentProcessor(EnchantmentProcessor enchantmentProcessor) {
+        this.enchantmentProcessor = enchantmentProcessor;
+    }
+
+    public void setBreakVector(BlockPosition breakVector) {
+        this.breakVector = breakVector;
+    }
+
+    public void setStartBreak(long startBreak) {
+        this.startBreak = startBreak;
+    }
+
+    public void setBreakTime(long breakTime) {
+        this.breakTime = breakTime;
+    }
+
+    public void setTeleportPosition(Location teleportPosition) {
+        this.teleportPosition = teleportPosition;
+    }
+
+
+    public void setFishingHook(EntityFishingHook fishingHook) {
+        this.fishingHook = fishingHook;
+    }
+
+    public void setNextMovement(Location nextMovement) {
+        this.nextMovement = nextMovement;
+    }
+
+    public void setSpawnPlayers(boolean spawnPlayers) {
+        this.spawnPlayers = spawnPlayers;
+    }
+
+    public EntityFishingHook getFishingHook() {
+        return fishingHook;
+    }
+
+    public Location getSpawnLocation() {
+        return spawnLocation;
+    }
+
+    public long getActionStart() {
+        return actionStart;
+    }
+
+    public LoginPerformance getLoginPerformance() {
+        return loginPerformance;
+    }
+
+    public Location getNextMovement() {
+        return nextMovement;
+    }
+
+    public boolean isSpawnPlayers() {
+        return spawnPlayers;
+    }
+
+    public Scoreboard getScoreboard() {
+        return scoreboard;
     }
 
 }

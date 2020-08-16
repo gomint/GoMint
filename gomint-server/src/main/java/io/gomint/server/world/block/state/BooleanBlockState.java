@@ -12,8 +12,6 @@ import io.gomint.math.Vector;
 import io.gomint.server.entity.EntityPlayer;
 import io.gomint.server.world.block.Block;
 import io.gomint.world.block.data.Facing;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
 
 import java.util.function.Supplier;
 
@@ -21,8 +19,6 @@ import java.util.function.Supplier;
  * @author geNAZt
  * @version 1.0
  */
-@ToString
-@EqualsAndHashCode(callSuper = false)
 public class BooleanBlockState extends BlockState<Boolean, Byte> {
 
     public BooleanBlockState(Supplier<String[]> key) {

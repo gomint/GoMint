@@ -2,13 +2,9 @@ package io.gomint.server.network.packet;
 
 import io.gomint.jraknet.PacketBuffer;
 import io.gomint.math.Location;
-import io.gomint.server.inventory.item.Items;
 import io.gomint.server.network.Protocol;
 import io.gomint.server.player.PlayerPermission;
-import io.gomint.server.world.BlockRuntimeIDs;
 import io.gomint.world.Gamerule;
-import io.netty.buffer.ByteBuf;
-import lombok.Data;
 
 import java.util.Map;
 
@@ -16,7 +12,6 @@ import java.util.Map;
  * @author geNAZt
  * @version 1.0
  */
-@Data
 public class PacketStartGame extends Packet {
 
     public static final short BIOME_TYPE_DEFAULT = 0;
@@ -74,6 +69,10 @@ public class PacketStartGame extends Packet {
 
     // Server stuff
     private String correlationId;
+
+    // Lookup tables
+    private PacketBuffer blockPalette;
+    private PacketBuffer itemPalette;
 
     /**
      * Create a new start game packet
@@ -149,12 +148,10 @@ public class PacketStartGame extends Packet {
         buffer.writeSignedVarInt(this.enchantmentSeed);
 
         // Write palette data
-        ByteBuf data = BlockRuntimeIDs.getPacketCache();
-        buffer.writeBytes(data.asReadOnly().readerIndex(0));
+        buffer.writeBytes(this.blockPalette.getBuffer().asReadOnly().readerIndex(0));
 
         // Item table
-        PacketBuffer itemData = Items.getPacketCache();
-        buffer.writeBytes(itemData.getBuffer().asReadOnly().readerIndex(0));
+        buffer.writeBytes(this.itemPalette.getBuffer().asReadOnly().readerIndex(0));
 
         buffer.writeString(this.correlationId);
         buffer.writeBoolean(false); // TODO: use new inventory system
@@ -165,4 +162,347 @@ public class PacketStartGame extends Packet {
 
     }
 
+    public long getEntityId() {
+        return entityId;
+    }
+
+    public void setEntityId(long entityId) {
+        this.entityId = entityId;
+    }
+
+    public long getRuntimeEntityId() {
+        return runtimeEntityId;
+    }
+
+    public void setRuntimeEntityId(long runtimeEntityId) {
+        this.runtimeEntityId = runtimeEntityId;
+    }
+
+    public int getGamemode() {
+        return gamemode;
+    }
+
+    public void setGamemode(int gamemode) {
+        this.gamemode = gamemode;
+    }
+
+    public Location getSpawn() {
+        return spawn;
+    }
+
+    public void setSpawn(Location spawn) {
+        this.spawn = spawn;
+    }
+
+    public int getSeed() {
+        return seed;
+    }
+
+    public void setSeed(int seed) {
+        this.seed = seed;
+    }
+
+    public short getBiomeType() {
+        return biomeType;
+    }
+
+    public void setBiomeType(short biomeType) {
+        this.biomeType = biomeType;
+    }
+
+    public String getBiomeName() {
+        return biomeName;
+    }
+
+    public void setBiomeName(String biomeName) {
+        this.biomeName = biomeName;
+    }
+
+    public int getDimension() {
+        return dimension;
+    }
+
+    public void setDimension(int dimension) {
+        this.dimension = dimension;
+    }
+
+    public int getGenerator() {
+        return generator;
+    }
+
+    public void setGenerator(int generator) {
+        this.generator = generator;
+    }
+
+    public int getWorldGamemode() {
+        return worldGamemode;
+    }
+
+    public void setWorldGamemode(int worldGamemode) {
+        this.worldGamemode = worldGamemode;
+    }
+
+    public int getDifficulty() {
+        return difficulty;
+    }
+
+    public void setDifficulty(int difficulty) {
+        this.difficulty = difficulty;
+    }
+
+    public int getX() {
+        return x;
+    }
+
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    public void setY(int y) {
+        this.y = y;
+    }
+
+    public int getZ() {
+        return z;
+    }
+
+    public void setZ(int z) {
+        this.z = z;
+    }
+
+    public boolean isHasAchievementsDisabled() {
+        return hasAchievementsDisabled;
+    }
+
+    public void setHasAchievementsDisabled(boolean hasAchievementsDisabled) {
+        this.hasAchievementsDisabled = hasAchievementsDisabled;
+    }
+
+    public int getDayCycleStopTime() {
+        return dayCycleStopTime;
+    }
+
+    public void setDayCycleStopTime(int dayCycleStopTime) {
+        this.dayCycleStopTime = dayCycleStopTime;
+    }
+
+    public int getEduEditionOffer() {
+        return eduEditionOffer;
+    }
+
+    public void setEduEditionOffer(int eduEditionOffer) {
+        this.eduEditionOffer = eduEditionOffer;
+    }
+
+    public float getRainLevel() {
+        return rainLevel;
+    }
+
+    public void setRainLevel(float rainLevel) {
+        this.rainLevel = rainLevel;
+    }
+
+    public float getLightningLevel() {
+        return lightningLevel;
+    }
+
+    public void setLightningLevel(float lightningLevel) {
+        this.lightningLevel = lightningLevel;
+    }
+
+    public boolean isMultiplayerGame() {
+        return isMultiplayerGame;
+    }
+
+    public void setMultiplayerGame(boolean multiplayerGame) {
+        isMultiplayerGame = multiplayerGame;
+    }
+
+    public boolean isHasLANBroadcast() {
+        return hasLANBroadcast;
+    }
+
+    public void setHasLANBroadcast(boolean hasLANBroadcast) {
+        this.hasLANBroadcast = hasLANBroadcast;
+    }
+
+    public boolean isHasXboxLiveBroadcast() {
+        return hasXboxLiveBroadcast;
+    }
+
+    public void setHasXboxLiveBroadcast(boolean hasXboxLiveBroadcast) {
+        this.hasXboxLiveBroadcast = hasXboxLiveBroadcast;
+    }
+
+    public boolean isCommandsEnabled() {
+        return commandsEnabled;
+    }
+
+    public void setCommandsEnabled(boolean commandsEnabled) {
+        this.commandsEnabled = commandsEnabled;
+    }
+
+    public boolean isTexturePacksRequired() {
+        return isTexturePacksRequired;
+    }
+
+    public void setTexturePacksRequired(boolean texturePacksRequired) {
+        isTexturePacksRequired = texturePacksRequired;
+    }
+
+    public Map<Gamerule, Object> getGamerules() {
+        return gamerules;
+    }
+
+    public void setGamerules(Map<Gamerule, Object> gamerules) {
+        this.gamerules = gamerules;
+    }
+
+    public boolean isHasBonusChestEnabled() {
+        return hasBonusChestEnabled;
+    }
+
+    public void setHasBonusChestEnabled(boolean hasBonusChestEnabled) {
+        this.hasBonusChestEnabled = hasBonusChestEnabled;
+    }
+
+    public boolean isHasStartWithMapEnabled() {
+        return hasStartWithMapEnabled;
+    }
+
+    public void setHasStartWithMapEnabled(boolean hasStartWithMapEnabled) {
+        this.hasStartWithMapEnabled = hasStartWithMapEnabled;
+    }
+
+    public boolean isHasTrustPlayersEnabled() {
+        return hasTrustPlayersEnabled;
+    }
+
+    public void setHasTrustPlayersEnabled(boolean hasTrustPlayersEnabled) {
+        this.hasTrustPlayersEnabled = hasTrustPlayersEnabled;
+    }
+
+    public int getDefaultPlayerPermission() {
+        return defaultPlayerPermission;
+    }
+
+    public void setDefaultPlayerPermission(int defaultPlayerPermission) {
+        this.defaultPlayerPermission = defaultPlayerPermission;
+    }
+
+    public int getXboxLiveBroadcastMode() {
+        return xboxLiveBroadcastMode;
+    }
+
+    public void setXboxLiveBroadcastMode(int xboxLiveBroadcastMode) {
+        this.xboxLiveBroadcastMode = xboxLiveBroadcastMode;
+    }
+
+    public boolean isHasPlatformBroadcast() {
+        return hasPlatformBroadcast;
+    }
+
+    public void setHasPlatformBroadcast(boolean hasPlatformBroadcast) {
+        this.hasPlatformBroadcast = hasPlatformBroadcast;
+    }
+
+    public int getPlatformBroadcastMode() {
+        return platformBroadcastMode;
+    }
+
+    public void setPlatformBroadcastMode(int platformBroadcastMode) {
+        this.platformBroadcastMode = platformBroadcastMode;
+    }
+
+    public boolean isXboxLiveBroadcastIntent() {
+        return xboxLiveBroadcastIntent;
+    }
+
+    public void setXboxLiveBroadcastIntent(boolean xboxLiveBroadcastIntent) {
+        this.xboxLiveBroadcastIntent = xboxLiveBroadcastIntent;
+    }
+
+    public String getLevelId() {
+        return levelId;
+    }
+
+    public void setLevelId(String levelId) {
+        this.levelId = levelId;
+    }
+
+    public String getWorldName() {
+        return worldName;
+    }
+
+    public void setWorldName(String worldName) {
+        this.worldName = worldName;
+    }
+
+    public String getTemplateId() {
+        return templateId;
+    }
+
+    public void setTemplateId(String templateId) {
+        this.templateId = templateId;
+    }
+
+    public boolean isTrial() {
+        return isTrial;
+    }
+
+    public void setTrial(boolean trial) {
+        isTrial = trial;
+    }
+
+    public boolean isMovementServerAuthoritative() {
+        return movementServerAuthoritative;
+    }
+
+    public void setMovementServerAuthoritative(boolean movementServerAuthoritative) {
+        this.movementServerAuthoritative = movementServerAuthoritative;
+    }
+
+    public long getCurrentTick() {
+        return currentTick;
+    }
+
+    public void setCurrentTick(long currentTick) {
+        this.currentTick = currentTick;
+    }
+
+    public int getEnchantmentSeed() {
+        return enchantmentSeed;
+    }
+
+    public void setEnchantmentSeed(int enchantmentSeed) {
+        this.enchantmentSeed = enchantmentSeed;
+    }
+
+    public String getCorrelationId() {
+        return correlationId;
+    }
+
+    public void setCorrelationId(String correlationId) {
+        this.correlationId = correlationId;
+    }
+
+    public PacketBuffer getBlockPalette() {
+        return blockPalette;
+    }
+
+    public void setBlockPalette(PacketBuffer blockPalette) {
+        this.blockPalette = blockPalette;
+    }
+
+    public PacketBuffer getItemPalette() {
+        return itemPalette;
+    }
+
+    public void setItemPalette(PacketBuffer itemPalette) {
+        this.itemPalette = itemPalette;
+    }
 }

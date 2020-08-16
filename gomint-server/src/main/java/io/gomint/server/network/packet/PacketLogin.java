@@ -9,13 +9,11 @@ package io.gomint.server.network.packet;
 
 import io.gomint.jraknet.PacketBuffer;
 import io.gomint.server.network.Protocol;
-import lombok.Data;
 
 /**
  * @author geNAZt
  * @version 1.0
  */
-@Data
 public class PacketLogin extends Packet {
 
     private int protocol;
@@ -42,4 +40,19 @@ public class PacketLogin extends Packet {
         buffer.readBytes( this.payload );
     }
 
+    public int getProtocol() {
+        return protocol;
+    }
+
+    public void setProtocol(int protocol) {
+        this.protocol = protocol;
+    }
+
+    public byte[] getPayload() {
+        return payload;
+    }
+
+    public void setPayload(byte[] payload) {
+        this.payload = payload;
+    }
 }

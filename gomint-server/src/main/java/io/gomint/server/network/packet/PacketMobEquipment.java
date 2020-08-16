@@ -3,13 +3,11 @@ package io.gomint.server.network.packet;
 import io.gomint.inventory.item.ItemStack;
 import io.gomint.jraknet.PacketBuffer;
 import io.gomint.server.network.Protocol;
-import lombok.Data;
 
 /**
  * @author geNAZt
  * @version 1.0
  */
-@Data
 public class PacketMobEquipment extends Packet {
 
     private long entityId;
@@ -44,4 +42,43 @@ public class PacketMobEquipment extends Packet {
         this.windowId = buffer.readByte();
     }
 
+    public long getEntityId() {
+        return entityId;
+    }
+
+    public void setEntityId(long entityId) {
+        this.entityId = entityId;
+    }
+
+    public ItemStack getStack() {
+        return stack;
+    }
+
+    public void setStack(ItemStack stack) {
+        this.stack = stack;
+    }
+
+    public byte getSlot() {
+        return slot;
+    }
+
+    public void setSlot(byte slot) {
+        this.slot = slot;
+    }
+
+    public byte getSelectedSlot() {
+        return selectedSlot;
+    }
+
+    public void setSelectedSlot(byte selectedSlot) {
+        this.selectedSlot = selectedSlot;
+    }
+
+    public byte getWindowId() {
+        return windowId;
+    }
+
+    public void setWindowId(byte windowId) {
+        this.windowId = windowId;
+    }
 }

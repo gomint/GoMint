@@ -7,20 +7,34 @@
 
 package io.gomint.server.util;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.ToString;
-
 /**
  * @author geNAZt
  * @version 1.0
  */
-@AllArgsConstructor
-@Getter
-@ToString
 public class StringShortPair {
 
     private final String blockId;
     private final short data;
+
+    public StringShortPair(String blockId, short data) {
+        this.blockId = blockId;
+        this.data = data;
+    }
+
+    public String getBlockId() {
+        return blockId;
+    }
+
+    public short getData() {
+        return data;
+    }
+
+    @Override
+    public String toString() {
+        return "StringShortPair{" +
+            "blockId='" + blockId + '\'' +
+            ", data=" + data +
+            '}';
+    }
 
 }

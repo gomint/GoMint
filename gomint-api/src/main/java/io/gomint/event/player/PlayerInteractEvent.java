@@ -2,13 +2,11 @@ package io.gomint.event.player;
 
 import io.gomint.entity.EntityPlayer;
 import io.gomint.world.block.Block;
-import lombok.ToString;
 
 /**
  * @author geNAZt
  * @version 1.0
  */
-@ToString
 public class PlayerInteractEvent extends CancellablePlayerEvent {
 
     private ClickType clickType;
@@ -43,6 +41,14 @@ public class PlayerInteractEvent extends CancellablePlayerEvent {
      */
     public Block getBlock() {
         return block;
+    }
+
+    @Override
+    public String toString() {
+        return "PlayerInteractEvent{" +
+            "clickType=" + clickType +
+            ", block=" + block +
+            '}';
     }
 
     public enum ClickType {

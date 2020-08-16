@@ -9,15 +9,11 @@ package io.gomint.server.network.packet;
 
 import io.gomint.jraknet.PacketBuffer;
 import io.gomint.server.network.Protocol;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 /**
  * @author BlackyPaw
  * @version 1.0
  */
-@Data
-@EqualsAndHashCode( callSuper = false )
 public class PacketWorldTime extends Packet {
 
     private int ticks;
@@ -36,4 +32,11 @@ public class PacketWorldTime extends Packet {
         this.ticks = buffer.readSignedVarInt();
     }
 
+    public int getTicks() {
+        return ticks;
+    }
+
+    public void setTicks(int ticks) {
+        this.ticks = ticks;
+    }
 }

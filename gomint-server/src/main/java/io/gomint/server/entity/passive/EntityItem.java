@@ -19,8 +19,6 @@ import io.gomint.server.util.Values;
 import io.gomint.server.world.WorldAdapter;
 import io.gomint.taglib.NBTTagCompound;
 import io.gomint.world.Gamemode;
-import lombok.Getter;
-import lombok.ToString;
 
 import java.util.concurrent.TimeUnit;
 
@@ -29,11 +27,9 @@ import java.util.concurrent.TimeUnit;
  * @version 1.0
  */
 @RegisterInfo( sId = "item" )
-@ToString
 public class EntityItem extends Entity implements EntityItemDrop {
 
     private ItemStack itemStack;
-    @Getter
     private long pickupTime;
     private boolean isReset;
 
@@ -184,6 +180,21 @@ public class EntityItem extends Entity implements EntityItemDrop {
 
 
         // DumpUtil.dumpNBTCompund( compound );
+    }
+
+    @Override
+    public long getPickupTime() {
+        return pickupTime;
+    }
+
+    @Override
+    public String toString() {
+        return "EntityItem{" +
+            "itemStack=" + itemStack +
+            ", pickupTime=" + pickupTime +
+            ", isReset=" + isReset +
+            ", lastUpdateDT=" + lastUpdateDT +
+            '}';
     }
 
 }

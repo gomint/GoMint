@@ -35,16 +35,13 @@ import io.gomint.server.world.block.StationaryWater;
 import io.gomint.server.world.block.Vines;
 import io.gomint.taglib.NBTTagCompound;
 import io.gomint.world.Chunk;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
@@ -56,8 +53,6 @@ import java.util.concurrent.atomic.AtomicLong;
  * @author BlackyPaw
  * @version 1.1
  */
-@EqualsAndHashCode( of = { "id" } )
-@ToString( of = { "id" } )
 public abstract class Entity implements io.gomint.entity.Entity {
 
     private static final Logger LOGGER = LoggerFactory.getLogger( Entity.class );
@@ -66,10 +61,12 @@ public abstract class Entity implements io.gomint.entity.Entity {
      * The id of this entity
      */
     protected final long id;
+
     /**
      * Type of the entity
      */
     protected final EntityType type;
+
     /**
      * Metadata
      */
@@ -77,18 +74,19 @@ public abstract class Entity implements io.gomint.entity.Entity {
     // Useful stuff for movement. Those are values for per client tick
     protected float GRAVITY = 0.08f;
     protected float DRAG = 0.02f;
+
     /**
      * Bounding Box
      */
     protected AxisAlignedBB boundingBox;
-    @Getter
     protected float height;
+
     /**
      * How high can this entity "climb" in one movement?
      */
     protected float stepHeight = 0;
-    @Setter
     protected boolean onGround;
+
     /**
      * Collision states
      */
@@ -97,37 +95,30 @@ public abstract class Entity implements io.gomint.entity.Entity {
     protected boolean isCollidedHorizontally;
     protected boolean isCollided;
     protected Set<Block> collidedWith = new HashSet<>();
+
     /**
      * Fall distance tracking
      */
-    @Getter
-    @Setter
     protected float fallDistance = 0;
+
     /**
      * Since MC:PE movements are eye instead of foot based we need to offset by this amount
      */
-    @Getter
     protected float eyeHeight;
     // CHECKSTYLE:ON
-    @Getter
     protected float offsetY;
     protected int age;
     protected WorldAdapter world;
-    @Setter
-    @Getter
     protected boolean ticking = true;
-    @Getter
     private float width;
     private boolean stuckInBlock = false;
+
     /**
      * Dead status
      */
-    @Getter
-    @Setter
     private boolean dead;
     private TransformComponent transform;
     private float lastUpdateDT;
-    @Getter
     private List<EntityLink> links;
     // Some tracker for "smooth" movement
     private int stuckInBlockTicks = 0;
@@ -144,7 +135,6 @@ public abstract class Entity implements io.gomint.entity.Entity {
      * Movement status
      */
     private int nextFullMovement = 20;
-    @Getter
     private Location oldPosition;
 
     /**
@@ -174,6 +164,83 @@ public abstract class Entity implements io.gomint.entity.Entity {
         if ( this.world != null ) {
             this.setupAI();
         }
+    }
+
+    public void setOnGround(boolean onGround) {
+        this.onGround = onGround;
+    }
+
+    public void setFallDistance(float fallDistance) {
+        this.fallDistance = fallDistance;
+    }
+
+    @Override
+    public float getFallDistance() {
+        return fallDistance;
+    }
+
+    @Override
+    public float getEyeHeight() {
+        return eyeHeight;
+    }
+
+    public float getOffsetY() {
+        return offsetY;
+    }
+
+    @Override
+    public boolean isTicking() {
+        return ticking;
+    }
+
+    @Override
+    public void setTicking(boolean ticking) {
+        this.ticking = ticking;
+    }
+
+    public float getWidth() {
+        return width;
+    }
+
+    @Override
+    public boolean isDead() {
+        return dead;
+    }
+
+    public void setDead(boolean dead) {
+        this.dead = dead;
+    }
+
+    public List<EntityLink> getLinks() {
+        return links;
+    }
+
+    public Location getOldPosition() {
+        return oldPosition;
+    }
+
+    public float getHeight() {
+        return height;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Entity entity = (Entity) o;
+        return id == entity.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
+
+    @Override
+    public String toString() {
+        return "Entity{" +
+            "id=" + id +
+            '}';
     }
 
     // ==================================== ACCESSORS ==================================== //

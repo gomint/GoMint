@@ -10,15 +10,14 @@ package io.gomint.server.network.packet;
 import io.gomint.jraknet.PacketBuffer;
 import io.gomint.server.network.Protocol;
 import io.netty.buffer.ByteBuf;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+
+import java.util.Arrays;
+import java.util.Objects;
 
 /**
  * @author BlackyPaw
  * @version 1.0
  */
-@Data
-@EqualsAndHashCode(callSuper = false)
 public class PacketWorldChunk extends Packet {
 
     private int x;
@@ -62,4 +61,71 @@ public class PacketWorldChunk extends Packet {
         this.data.release();
     }
 
+    public int getX() {
+        return x;
+    }
+
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public int getZ() {
+        return z;
+    }
+
+    public void setZ(int z) {
+        this.z = z;
+    }
+
+    public boolean isCached() {
+        return cached;
+    }
+
+    public void setCached(boolean cached) {
+        this.cached = cached;
+    }
+
+    public long[] getHashes() {
+        return hashes;
+    }
+
+    public void setHashes(long[] hashes) {
+        this.hashes = hashes;
+    }
+
+    public int getSubChunkCount() {
+        return subChunkCount;
+    }
+
+    public void setSubChunkCount(int subChunkCount) {
+        this.subChunkCount = subChunkCount;
+    }
+
+    public ByteBuf getData() {
+        return data;
+    }
+
+    public void setData(ByteBuf data) {
+        this.data = data;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        PacketWorldChunk that = (PacketWorldChunk) o;
+        return x == that.x &&
+            z == that.z &&
+            cached == that.cached &&
+            subChunkCount == that.subChunkCount &&
+            Arrays.equals(hashes, that.hashes) &&
+            Objects.equals(data, that.data);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = Objects.hash(x, z, cached, subChunkCount, data);
+        result = 31 * result + Arrays.hashCode(hashes);
+        return result;
+    }
 }

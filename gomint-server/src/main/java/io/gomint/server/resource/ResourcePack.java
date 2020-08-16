@@ -1,17 +1,24 @@
 package io.gomint.server.resource;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-
 /**
  * @author geNAZt
  * @version 1.0
  */
-@AllArgsConstructor
-@Getter
 public class ResourcePack {
 
     private PackIdVersion version;
     private long size;
 
+    public ResourcePack(PackIdVersion version, long size) {
+        this.version = version;
+        this.size = size;
+    }
+
+    public PackIdVersion getVersion() {
+        return version;
+    }
+
+    public long getSize() {
+        return size;
+    }
 }

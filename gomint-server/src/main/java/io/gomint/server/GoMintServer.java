@@ -30,10 +30,12 @@ import io.gomint.server.crafting.RecipeManager;
 import io.gomint.server.enchant.Enchantments;
 import io.gomint.server.entity.Entities;
 import io.gomint.server.entity.potion.Effects;
+import io.gomint.server.entity.tileentity.TileEntities;
 import io.gomint.server.inventory.CreativeInventory;
 import io.gomint.server.inventory.InventoryHolder;
 import io.gomint.server.inventory.item.Items;
 import io.gomint.server.logging.TerminalConsoleAppender;
+import io.gomint.server.network.EncryptionKeyFactory;
 import io.gomint.server.network.NetworkManager;
 import io.gomint.server.network.Protocol;
 import io.gomint.server.permission.PermissionGroupManager;
@@ -59,16 +61,12 @@ import io.gomint.world.generator.integrated.NormalGenerator;
 import io.gomint.world.generator.integrated.VanillaGenerator;
 import io.gomint.world.generator.integrated.VoidGenerator;
 import joptsimple.OptionSet;
-import lombok.Getter;
 import org.jline.reader.LineReader;
 import org.jline.reader.LineReaderBuilder;
 import org.jline.reader.UserInterruptException;
 import org.jline.terminal.Terminal;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.io.IOException;
@@ -86,32 +84,24 @@ import java.util.jar.Manifest;
  * @author geNAZt
  * @version 1.1
  */
-@Component
 public class GoMintServer implements GoMint, InventoryHolder {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(GoMintServer.class);
     private static long mainThread;
 
-    // Spring context
-    @Getter
-    private final AnnotationConfigApplicationContext context;
-
     // Configuration
-    @Getter
     private ServerConfig serverConfig;
 
     // Networking
     private NetworkManager networkManager;
+    private EncryptionKeyFactory encryptionKeyFactory;
 
     // Player lookups
-    @Getter
     private Map<UUID, EntityPlayer> playersByUUID = new ConcurrentHashMap<>();
 
     // World Management
-    @Getter
     private WorldManager worldManager;
     private String defaultWorld;
-    @Getter
     private SimpleChunkGeneratorRegistry chunkGeneratorRegistry;
 
     // Game Information
@@ -120,61 +110,44 @@ public class GoMintServer implements GoMint, InventoryHolder {
     private PermissionGroupManager permissionGroupManager;
 
     // Plugin Management
-    @Getter
     private SimplePluginManager pluginManager;
 
     // Task Scheduling
-    @Getter
     private SyncTaskManager syncTaskManager;
-    private AtomicBoolean running = new AtomicBoolean(true);
-    private AtomicBoolean init = new AtomicBoolean(true);
-    @Getter
+    private final AtomicBoolean running = new AtomicBoolean(true);
+    private final AtomicBoolean init = new AtomicBoolean(true);
     private ListeningScheduledExecutorService executorService;
     private Thread readerThread;
     private long currentTickTime;
-    @Getter
     private CoreScheduler scheduler;
 
     // Additional informations for API usage
     private double tps;
 
     // Watchdog
-    @Getter
     private Watchdog watchdog;
 
     // Core utils
-    @Getter
     private Blocks blocks;
-    @Getter
     private Items items;
-    @Getter
     private Enchantments enchantments;
-    @Getter
     private Entities entities;
-    @Getter
     private Effects effects;
+    private TileEntities tileEntities;
 
-    @Getter
-    private UUID serverUniqueID = UUID.randomUUID();
-    @Getter
+    private final UUID serverUniqueID = UUID.randomUUID();
     private String gitHash;
 
     private BlockingQueue<Runnable> mainThreadWork = new LinkedBlockingQueue<>();
 
-    @Getter
     private AssetsLibrary assets;
 
     private long start = System.currentTimeMillis();
 
     /**
      * Starts the GoMint server
-     *
-     * @param context which generated this component
      */
-    @Autowired
-    public GoMintServer(AnnotationConfigApplicationContext context) throws IOException {
-        this.context = context;
-
+    public GoMintServer() throws IOException {
         // ------------------------------------ //
         // Executor Initialization
         // ------------------------------------ //
@@ -225,7 +198,7 @@ public class GoMintServer implements GoMint, InventoryHolder {
 
         LOGGER.info("Loading block, item and entity registers");
 
-        ClassPath classPath = this.context.getBean(ClassPath.class);
+        ClassPath classPath = new ClassPath("io.gomint.server");
 
         this.items = new Items(classPath);
 
@@ -240,16 +213,16 @@ public class GoMintServer implements GoMint, InventoryHolder {
             return;
         }
 
-        Items.init(this.assets.getItemIDs());
-        BlockRuntimeIDs.init(this.assets.getBlockPalette());
+        this.items.initItemIDs(this.assets.getItemIDs());
 
         // ------------------------------------ //
         // Build up registries
         // ------------------------------------ //
-        this.blocks = new Blocks(classPath);
+        this.blocks = new Blocks(classPath, this.assets.getBlockPalette());
         this.entities = new Entities(classPath);
         this.effects = new Effects(classPath);
         this.enchantments = new Enchantments(classPath);
+        this.tileEntities = new TileEntities(classPath, this.items);
 
         // ------------------------------------ //
         // Configuration Initialization
@@ -259,7 +232,7 @@ public class GoMintServer implements GoMint, InventoryHolder {
         // ------------------------------------ //
         // Scheduler + WorldManager
         // ------------------------------------ //
-        this.syncTaskManager = new SyncTaskManager(this);
+        this.syncTaskManager = new SyncTaskManager();
         this.scheduler = new CoreScheduler(this.getExecutorService(), this.getSyncTaskManager());
         this.worldManager = new WorldManager(this);
     }
@@ -329,7 +302,6 @@ public class GoMintServer implements GoMint, InventoryHolder {
 
         // PluginManager Initialization
         this.pluginManager = new SimplePluginManager(this);
-        this.context.registerBean(SimplePluginManager.class, () -> this.pluginManager);
         this.pluginManager.detectPlugins();
         this.pluginManager.loadPlugins(StartupPriority.STARTUP);
 
@@ -404,7 +376,8 @@ public class GoMintServer implements GoMint, InventoryHolder {
         int port = args.has("lp") ? (int) args.valueOf("lp") : this.serverConfig.getListener().getPort();
         String host = args.has("lh") ? (String) args.valueOf("lh") : this.serverConfig.getListener().getIp();
 
-        this.networkManager = this.context.getAutowireCapableBeanFactory().createBean(NetworkManager.class);
+        this.encryptionKeyFactory = new EncryptionKeyFactory();
+        this.networkManager = new NetworkManager(this);
         if (!this.initNetworking(host, port)) {
             this.internalShutdown();
             return;
@@ -669,7 +642,6 @@ public class GoMintServer implements GoMint, InventoryHolder {
         }
 
         LOGGER.info("Loaded config...");
-        this.context.registerBean(ServerConfig.class, () -> this.serverConfig);
     }
 
     @Override
@@ -868,6 +840,87 @@ public class GoMintServer implements GoMint, InventoryHolder {
 
     public void addToMainThread(Runnable runnable) {
         this.mainThreadWork.offer(runnable);
+    }
+
+    public ServerConfig getServerConfig() {
+        return serverConfig;
+    }
+
+    public NetworkManager getNetworkManager() {
+        return networkManager;
+    }
+
+    public EncryptionKeyFactory getEncryptionKeyFactory() {
+        return encryptionKeyFactory;
+    }
+
+    public Map<UUID, EntityPlayer> getPlayersByUUID() {
+        return playersByUUID;
+    }
+
+    public SimpleChunkGeneratorRegistry getChunkGeneratorRegistry() {
+        return chunkGeneratorRegistry;
+    }
+
+    public SimplePluginManager getPluginManager() {
+        return pluginManager;
+    }
+
+    public SyncTaskManager getSyncTaskManager() {
+        return syncTaskManager;
+    }
+
+    public ListeningScheduledExecutorService getExecutorService() {
+        return executorService;
+    }
+
+    public CoreScheduler getScheduler() {
+        return scheduler;
+    }
+
+    public WorldManager getWorldManager() {
+        return worldManager;
+    }
+
+
+    public Watchdog getWatchdog() {
+        return watchdog;
+    }
+
+    public Blocks getBlocks() {
+        return blocks;
+    }
+
+    public Items getItems() {
+        return items;
+    }
+
+    public Enchantments getEnchantments() {
+        return enchantments;
+    }
+
+    public Entities getEntities() {
+        return entities;
+    }
+
+    public Effects getEffects() {
+        return effects;
+    }
+
+    public TileEntities getTileEntities() {
+        return tileEntities;
+    }
+
+    public UUID getServerUniqueID() {
+        return serverUniqueID;
+    }
+
+    public String getGitHash() {
+        return gitHash;
+    }
+
+    public AssetsLibrary getAssets() {
+        return assets;
     }
 
 }

@@ -10,34 +10,42 @@ package io.gomint.server.entity.tileentity;
 import com.google.common.base.Joiner;
 import io.gomint.event.world.SignChangeTextEvent;
 import io.gomint.server.entity.EntityPlayer;
+import io.gomint.server.inventory.item.Items;
 import io.gomint.server.plugin.EventCaller;
+import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.world.block.Block;
 import io.gomint.taglib.NBTTagCompound;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
  * @author geNAZt
  * @version 1.0
  */
+@RegisterInfo(sId = "Sign")
 public class SignTileEntity extends TileEntity {
 
     private static final Joiner CONTENT_JOINER = Joiner.on( "\n" ).skipNulls();
-    private List<String> lines = new ArrayList<>( 4 );
 
-    @Autowired
-    private EventCaller eventCaller;
+    private final List<String> lines = new ArrayList<>( 4 );
+    private final EventCaller eventCaller;
 
     /**
      * Construct new tile entity from position and world data
      *
      * @param block which created this tile
      */
-    public SignTileEntity( Block block ) {
-        super( block );
+    public SignTileEntity(Block block, Items items, EventCaller eventCaller ) {
+        super( block, items );
+        this.eventCaller = eventCaller;
+    }
+
+    @Override
+    public void update(long currentMillis, float dT) {
+
     }
 
     @Override
@@ -48,11 +56,6 @@ public class SignTileEntity extends TileEntity {
             String text = compound.getString( "Text", "" );
             this.lines.addAll( Arrays.asList( text.split( "\n" ) ) );
         }
-    }
-
-    @Override
-    public void update( long currentMillis ) {
-
     }
 
     @Override
@@ -98,9 +101,7 @@ public class SignTileEntity extends TileEntity {
 
         // Fire sign change event
         List<String> lineList = new ArrayList<>();
-        for ( String line : lines ) {
-            lineList.add( line );
-        }
+        Collections.addAll(lineList, lines);
 
         if ( this.eventCaller != null ) {
             SignChangeTextEvent event = new SignChangeTextEvent( player, this.getBlock(), lineList );

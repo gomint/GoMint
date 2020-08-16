@@ -1,6 +1,5 @@
 package io.gomint.server.gui;
 
-import lombok.RequiredArgsConstructor;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -8,7 +7,6 @@ import org.json.simple.JSONObject;
  * @author geNAZt
  * @version 1.0
  */
-@RequiredArgsConstructor
 public abstract class Form<R> implements io.gomint.gui.Form<R> {
 
     private final String title;
@@ -17,6 +15,10 @@ public abstract class Form<R> implements io.gomint.gui.Form<R> {
     // Caching
     protected JSONObject cache;
     protected boolean dirty;
+
+    public Form(String title) {
+        this.title = title;
+    }
 
     /**
      * Get the type of form we have right here

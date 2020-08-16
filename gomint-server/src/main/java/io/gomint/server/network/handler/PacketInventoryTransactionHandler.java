@@ -26,8 +26,6 @@ import io.gomint.world.block.BlockAir;
 import io.gomint.world.block.data.Facing;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 
@@ -35,13 +33,15 @@ import java.util.ArrayList;
  * @author geNAZt
  * @version 1.0
  */
-@Component
 public class PacketInventoryTransactionHandler implements PacketHandler<PacketInventoryTransaction> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PacketInventoryTransactionHandler.class);
 
-    @Autowired
-    private EventCaller eventCaller;
+    private final EventCaller eventCaller;
+
+    public PacketInventoryTransactionHandler(EventCaller eventCaller) {
+        this.eventCaller = eventCaller;
+    }
 
     @Override
     public void handle(PacketInventoryTransaction packet, long currentTimeMillis, PlayerConnection connection) {

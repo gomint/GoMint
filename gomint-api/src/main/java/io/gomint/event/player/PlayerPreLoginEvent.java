@@ -1,9 +1,8 @@
 package io.gomint.event.player;
 
 import io.gomint.event.CancellableEvent;
-import lombok.ToString;
-
 import java.net.InetSocketAddress;
+import java.util.Objects;
 
 /**
  * @author geNAZt
@@ -14,7 +13,6 @@ import java.net.InetSocketAddress;
  * is a network level operation you can't provide a reason which is printed in the client. If this is needed please use
  * the {@link PlayerLoginEvent}.
  */
-@ToString
 public class PlayerPreLoginEvent extends CancellableEvent {
 
     private final InetSocketAddress clientAddress;
@@ -35,6 +33,27 @@ public class PlayerPreLoginEvent extends CancellableEvent {
      */
     public InetSocketAddress getClientAddress() {
         return this.clientAddress;
+    }
+
+    @Override
+    public String toString() {
+        return "PlayerPreLoginEvent{" +
+            "clientAddress=" + clientAddress +
+            '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        PlayerPreLoginEvent that = (PlayerPreLoginEvent) o;
+        return Objects.equals(clientAddress, that.clientAddress);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), clientAddress);
     }
 
 }

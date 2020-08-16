@@ -10,7 +10,6 @@ package io.gomint.server.scheduler;
 import io.gomint.scheduler.Task;
 import io.gomint.util.CompleteHandler;
 import io.gomint.util.ExceptionHandler;
-import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,7 +24,7 @@ import java.util.concurrent.Future;
 public class AsyncScheduledTask implements Task, Runnable {
 
     private static final Logger LOGGER = LoggerFactory.getLogger( AsyncScheduledTask.class );
-    @Getter private final Runnable task;
+    private final Runnable task;
 
     private ExceptionHandler exceptionHandler;
     private List<CompleteHandler> completeHandlerList;
@@ -95,6 +94,10 @@ public class AsyncScheduledTask implements Task, Runnable {
      */
     void setFuture( Future<?> future ) {
         this.future = future;
+    }
+
+    public Runnable getTask() {
+        return task;
     }
 
 }

@@ -12,9 +12,6 @@ import io.gomint.math.BlockPosition;
 import io.gomint.server.world.ChunkAdapter;
 import io.netty.util.collection.ShortObjectHashMap;
 import io.netty.util.collection.ShortObjectMap;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 
 /**
  * @author geNAZt
@@ -22,14 +19,38 @@ import lombok.Setter;
  * <p>
  * A chunk square holds 24 * 24 chunks for a specific view distance of 32
  */
-@RequiredArgsConstructor
 public class ChunkSquare {
 
-    @Getter private final int x;
-    @Getter private final int z;
+    private final int x;
+    private final int z;
     private final ShortObjectMap<ChunkAdapter> chunks = new ShortObjectHashMap<>();
-    @Getter private final SettableFuture<Boolean> future = SettableFuture.create();
-    @Getter @Setter private boolean loading;
+    private final SettableFuture<Boolean> future = SettableFuture.create();
+    private boolean loading;
+
+    public ChunkSquare(int x, int z) {
+        this.x = x;
+        this.z = z;
+    }
+
+    public SettableFuture<Boolean> getFuture() {
+        return future;
+    }
+
+    public boolean isLoading() {
+        return loading;
+    }
+
+    public int getX() {
+        return x;
+    }
+
+    public int getZ() {
+        return z;
+    }
+
+    public void setLoading(boolean loading) {
+        this.loading = loading;
+    }
 
     public synchronized boolean isComplete() {
         if ( this.chunks.size() == 16 * 16 ) {

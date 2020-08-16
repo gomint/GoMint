@@ -2,13 +2,11 @@ package io.gomint.server.network.packet;
 
 import io.gomint.jraknet.PacketBuffer;
 import io.gomint.server.network.Protocol;
-import lombok.Data;
 
 /**
  * @author geNAZt
  * @version 1.0
  */
-@Data
 public class PacketEncryptionRequest extends Packet {
 
     private String jwt;
@@ -27,4 +25,11 @@ public class PacketEncryptionRequest extends Packet {
         this.jwt = buffer.readString();
     }
 
+    public String getJwt() {
+        return jwt;
+    }
+
+    public void setJwt(String jwt) {
+        this.jwt = jwt;
+    }
 }

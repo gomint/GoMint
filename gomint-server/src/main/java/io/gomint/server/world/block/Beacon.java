@@ -1,6 +1,7 @@
 package io.gomint.server.world.block;
 
 import io.gomint.inventory.item.ItemStack;
+import io.gomint.server.entity.tileentity.BannerTileEntity;
 import io.gomint.server.entity.tileentity.BeaconTileEntity;
 import io.gomint.server.entity.tileentity.TileEntity;
 import io.gomint.server.world.block.helper.ToolPresets;
@@ -54,7 +55,8 @@ public class Beacon extends Block implements BlockBeacon {
 
     @Override
     TileEntity createTileEntity( NBTTagCompound compound ) {
-        return new BeaconTileEntity( this );
+        super.createTileEntity( compound );
+        return this.world.getServer().getTileEntities().construct(BeaconTileEntity.class, compound, this, this.world.getServer().getItems());
     }
 
     @Override

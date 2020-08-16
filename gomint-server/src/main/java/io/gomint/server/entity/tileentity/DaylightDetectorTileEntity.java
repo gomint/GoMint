@@ -1,5 +1,7 @@
 package io.gomint.server.entity.tileentity;
 
+import io.gomint.server.inventory.item.Items;
+import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.world.block.Block;
 import io.gomint.taglib.NBTTagCompound;
 
@@ -7,6 +9,7 @@ import io.gomint.taglib.NBTTagCompound;
  * @author geNAZt
  * @version 1.0
  */
+@RegisterInfo(sId = "DaylightDetector")
 public class DaylightDetectorTileEntity extends TileEntity {
 
     /**
@@ -14,12 +17,12 @@ public class DaylightDetectorTileEntity extends TileEntity {
      *
      * @param block which created this tile
      */
-    public DaylightDetectorTileEntity( Block block ) {
-        super( block );
+    public DaylightDetectorTileEntity(Block block, Items items) {
+        super( block, items );
     }
 
     @Override
-    public void update( long currentMillis ) {
+    public void update( long currentMillis, float dT ) {
 
     }
 

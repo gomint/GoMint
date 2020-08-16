@@ -1,6 +1,7 @@
 package io.gomint.server.world.block;
 
 import io.gomint.inventory.item.ItemStack;
+import io.gomint.server.entity.tileentity.CommandBlockTileEntity;
 import io.gomint.server.entity.tileentity.DispenserTileEntity;
 import io.gomint.server.entity.tileentity.TileEntity;
 import io.gomint.server.world.block.helper.ToolPresets;
@@ -50,7 +51,7 @@ public class Dispenser extends Block implements BlockDispenser {
     @Override
     TileEntity createTileEntity( NBTTagCompound compound ) {
         super.createTileEntity( compound );
-        return new DispenserTileEntity( this );
+        return this.world.getServer().getTileEntities().construct(DispenserTileEntity.class, compound, this, this.world.getServer().getItems());
     }
 
     @Override

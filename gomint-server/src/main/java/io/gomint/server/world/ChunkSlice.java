@@ -9,7 +9,6 @@ import io.gomint.server.util.Palette;
 import io.gomint.server.world.storage.TemporaryStorage;
 import io.gomint.world.block.Block;
 import io.netty.buffer.ByteBuf;
-import io.netty.buffer.PooledByteBufAllocator;
 import io.netty.buffer.UnpooledByteBufAllocator;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
@@ -18,7 +17,6 @@ import it.unimi.dsi.fastutil.shorts.Short2IntMap;
 import it.unimi.dsi.fastutil.shorts.Short2IntOpenHashMap;
 import it.unimi.dsi.fastutil.shorts.Short2ObjectMap;
 import it.unimi.dsi.fastutil.shorts.Short2ObjectOpenHashMap;
-import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,8 +41,8 @@ public class ChunkSlice {
 
     protected static final short AIR_RUNTIME_ID = (short) BlockRuntimeIDs.toBlockIdentifier( "minecraft:air", null ).getRuntimeId();
 
-    @Getter private final ChunkAdapter chunk;
-    @Getter private final int sectionY;
+    private final ChunkAdapter chunk;
+    private final int sectionY;
 
     // Cache
     private final int shiftedMinX;
@@ -58,7 +56,7 @@ public class ChunkSlice {
     private final NibbleArray blockLight = null; // NibbleArray.create( (short) 4096 );
     private final NibbleArray skyLight = null; // NibbleArray.create( (short) 4096 )
 
-    @Getter private Short2ObjectOpenHashMap<TileEntity> tileEntities = null;
+    private Short2ObjectOpenHashMap<TileEntity> tileEntities = null;
     private final Short2ObjectOpenHashMap[] temporaryStorages = new Short2ObjectOpenHashMap[2];   // MC currently supports two layers, we init them as we need
 
     private boolean needsPersistence;
@@ -74,7 +72,19 @@ public class ChunkSlice {
         this.shiftedMinZ = this.chunk.z << 4;
     }
 
-    private short getIndex( int x, int y, int z ) {
+    public Short2ObjectOpenHashMap<TileEntity> getTileEntities() {
+        return tileEntities;
+    }
+
+    public int getSectionY() {
+        return sectionY;
+    }
+
+    public ChunkAdapter getChunk() {
+        return chunk;
+    }
+
+    private short getIndex(int x, int y, int z ) {
         return (short) ( ( x << 8 ) + ( z << 4 ) + y );
     }
 

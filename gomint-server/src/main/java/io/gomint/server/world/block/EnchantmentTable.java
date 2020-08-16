@@ -3,6 +3,7 @@ package io.gomint.server.world.block;
 import io.gomint.inventory.item.ItemStack;
 import io.gomint.math.Vector;
 import io.gomint.server.entity.Entity;
+import io.gomint.server.entity.tileentity.CommandBlockTileEntity;
 import io.gomint.server.entity.tileentity.EnchantTableTileEntity;
 import io.gomint.server.entity.tileentity.TileEntity;
 import io.gomint.server.registry.RegisterInfo;
@@ -60,7 +61,8 @@ public class EnchantmentTable extends Block implements BlockEnchantmentTable {
 
     @Override
     TileEntity createTileEntity( NBTTagCompound compound ) {
-        return new EnchantTableTileEntity( this );
+        super.createTileEntity( compound );
+        return this.world.getServer().getTileEntities().construct(EnchantTableTileEntity.class, compound, this, this.world.getServer().getItems());
     }
 
     @Override

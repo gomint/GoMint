@@ -1,5 +1,6 @@
 package io.gomint.server.world.block;
 
+import io.gomint.server.entity.tileentity.CommandBlockTileEntity;
 import io.gomint.server.entity.tileentity.DropperTileEntity;
 import io.gomint.server.entity.tileentity.TileEntity;
 import io.gomint.server.world.block.helper.ToolPresets;
@@ -55,7 +56,7 @@ public class Dropper extends Block implements BlockDropper {
     @Override
     TileEntity createTileEntity( NBTTagCompound compound ) {
         super.createTileEntity( compound );
-        return new DropperTileEntity( this );
+        return this.world.getServer().getTileEntities().construct(DropperTileEntity.class, compound, this, this.world.getServer().getItems());
     }
 
 }

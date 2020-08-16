@@ -9,11 +9,6 @@ package io.gomint.server.network.packet;
 
 import io.gomint.jraknet.PacketBuffer;
 import io.gomint.server.network.Protocol;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.ToString;
 
 import java.util.List;
 
@@ -21,8 +16,6 @@ import java.util.List;
  * @author geNAZt
  * @version 1.0
  */
-@Data
-@ToString
 public class PacketSetScore extends Packet {
 
     private byte type;
@@ -65,10 +58,22 @@ public class PacketSetScore extends Packet {
 
     }
 
-    @AllArgsConstructor
-    @RequiredArgsConstructor
-    @Getter
-    @ToString
+    public byte getType() {
+        return type;
+    }
+
+    public void setType(byte type) {
+        this.type = type;
+    }
+
+    public List<ScoreEntry> getEntries() {
+        return entries;
+    }
+
+    public void setEntries(List<ScoreEntry> entries) {
+        this.entries = entries;
+    }
+
     public static class ScoreEntry {
         private final long scoreId;
         private final String objective;
@@ -78,6 +83,45 @@ public class PacketSetScore extends Packet {
         private byte entityType;
         private String fakeEntity;
         private long entityId;
+
+        public ScoreEntry(long scoreId, String objective, int score) {
+            this.scoreId = scoreId;
+            this.objective = objective;
+            this.score = score;
+        }
+
+        public ScoreEntry(long scoreId, String objective, int score, byte entityType, String fakeEntity, long entityId) {
+            this.scoreId = scoreId;
+            this.objective = objective;
+            this.score = score;
+            this.entityType = entityType;
+            this.fakeEntity = fakeEntity;
+            this.entityId = entityId;
+        }
+
+        public long getScoreId() {
+            return scoreId;
+        }
+
+        public String getObjective() {
+            return objective;
+        }
+
+        public int getScore() {
+            return score;
+        }
+
+        public byte getEntityType() {
+            return entityType;
+        }
+
+        public String getFakeEntity() {
+            return fakeEntity;
+        }
+
+        public long getEntityId() {
+            return entityId;
+        }
     }
 
 }

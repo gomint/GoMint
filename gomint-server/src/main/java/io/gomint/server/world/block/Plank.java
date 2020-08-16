@@ -7,7 +7,6 @@ import io.gomint.server.world.block.state.EnumBlockState;
 import io.gomint.world.block.BlockPlank;
 import io.gomint.world.block.BlockType;
 import io.gomint.world.block.data.LogType;
-import lombok.Getter;
 
 /**
  * @author geNAZt
@@ -20,7 +19,6 @@ public class Plank extends Block implements BlockPlank {
 
     private static final String PLANK_ID = "minecraft:planks";
 
-    @Getter
     private enum LogTypeMagic {
         OAK(PLANK_ID,"oak"),
         SPRUCE(PLANK_ID,"spruce"),
@@ -40,9 +38,9 @@ public class Plank extends Block implements BlockPlank {
         }
     }
 
-    private static final EnumBlockState<LogTypeMagic, String> VARIANT = new EnumBlockState<>(v -> new String[]{"wood_type"}, LogTypeMagic.values(), LogTypeMagic::getValue, v -> {
+    private static final EnumBlockState<LogTypeMagic, String> VARIANT = new EnumBlockState<>(v -> new String[]{"wood_type"}, LogTypeMagic.values(), v -> v.value, v -> {
         for (LogTypeMagic value : LogTypeMagic.values()) {
-            if (value.getValue().equals(v)) {
+            if (value.value.equals(v)) {
                 return value;
             }
         }

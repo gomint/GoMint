@@ -19,8 +19,6 @@ import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.util.Values;
 import io.gomint.server.world.WorldAdapter;
 import io.gomint.world.Gamemode;
-import lombok.Getter;
-import lombok.Setter;
 
 import java.util.concurrent.TimeUnit;
 
@@ -31,10 +29,7 @@ import java.util.concurrent.TimeUnit;
 @RegisterInfo( sId = "minecraft:xp_orb" )
 public class EntityXPOrb extends Entity implements io.gomint.entity.passive.EntityXPOrb {
 
-    @Setter
-    @Getter
     private int xpAmount;
-    @Getter
     private long pickupTime;
 
     // Since xp orbs can travel a bit
@@ -70,6 +65,21 @@ public class EntityXPOrb extends Entity implements io.gomint.entity.passive.Enti
 
         GRAVITY = 0.04f;
         DRAG = 0.02f;
+    }
+
+    @Override
+    public int getXpAmount() {
+        return xpAmount;
+    }
+
+    @Override
+    public void setXpAmount(int xpAmount) {
+        this.xpAmount = xpAmount;
+    }
+
+    @Override
+    public long getPickupTime() {
+        return pickupTime;
     }
 
     @Override

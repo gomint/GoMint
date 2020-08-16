@@ -7,6 +7,8 @@ import io.gomint.server.entity.EntityPlayer;
 import io.gomint.server.inventory.ChestInventory;
 import io.gomint.server.inventory.InventoryHolder;
 import io.gomint.server.inventory.item.ItemAir;
+import io.gomint.server.inventory.item.Items;
+import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.world.block.Block;
 import io.gomint.taglib.NBTTagCompound;
 import io.gomint.world.block.data.Facing;
@@ -20,10 +22,11 @@ import java.util.List;
  * @author geNAZt
  * @version 1.0
  */
+@RegisterInfo(sId = "ShulkerBox")
 public class ShulkerBoxTileEntity extends ContainerTileEntity implements InventoryHolder {
 
     private static final Logger LOGGER = LoggerFactory.getLogger( ShulkerBoxTileEntity.class );
-    private ChestInventory inventory;
+    private final ChestInventory inventory;
     private boolean undyed = true;
     private byte facing = 1;
 
@@ -32,8 +35,8 @@ public class ShulkerBoxTileEntity extends ContainerTileEntity implements Invento
      *
      * @param block of the tile entity
      */
-    public ShulkerBoxTileEntity( Block block ) {
-        super( block );
+    public ShulkerBoxTileEntity(Block block, Items items) {
+        super( block, items );
         this.inventory = new ChestInventory( this );
     }
 

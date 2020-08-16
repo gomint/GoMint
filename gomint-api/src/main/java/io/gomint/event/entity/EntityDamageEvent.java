@@ -8,13 +8,11 @@
 package io.gomint.event.entity;
 
 import io.gomint.entity.Entity;
-import lombok.ToString;
 
 /**
  * @author geNAZt
  * @version 1.0
  */
-@ToString( callSuper = true )
 public class EntityDamageEvent extends CancellableEntityEvent {
 
     private final DamageSource damageSource;
@@ -80,6 +78,15 @@ public class EntityDamageEvent extends CancellableEntityEvent {
      */
     public DamageSource getDamageSource() {
         return this.damageSource;
+    }
+
+    @Override
+    public String toString() {
+        return "EntityDamageEvent{" +
+            "damageSource=" + damageSource +
+            ", damage=" + damage +
+            ", finalDamage=" + finalDamage +
+            '}';
     }
 
     public enum DamageSource {

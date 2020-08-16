@@ -7,7 +7,6 @@ import io.gomint.server.world.block.state.BooleanBlockState;
 import io.gomint.server.world.block.state.DirectValueBlockState;
 import io.gomint.world.block.BlockCoralBlock;
 import io.gomint.world.block.BlockType;
-import lombok.Getter;
 
 /**
  * @author Kaooot
@@ -16,7 +15,6 @@ import lombok.Getter;
 @RegisterInfo(sId = "minecraft:coral_block")
 public class CoralBlock extends Block implements BlockCoralBlock {
 
-    @Getter
     private enum CoralTypeMagic {
         TUBE(false, "blue"),
         BRAIN(false, "pink"),
@@ -87,8 +85,8 @@ public class CoralBlock extends Block implements BlockCoralBlock {
     @Override
     public void setCoralType(CoralType coralType) {
         CoralTypeMagic newState = CoralTypeMagic.valueOf(coralType.name());
-        DEAD.setState(this, newState.isDead());
-        COLOR.setState(this, newState.getColor());
+        DEAD.setState(this, newState.dead);
+        COLOR.setState(this, newState.color);
     }
 
 }

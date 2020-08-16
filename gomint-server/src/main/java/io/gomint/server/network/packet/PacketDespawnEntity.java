@@ -9,14 +9,12 @@ package io.gomint.server.network.packet;
 
 import io.gomint.jraknet.PacketBuffer;
 import io.gomint.server.network.Protocol;
-import lombok.Data;
 
 /**
  * @author BlackyPaw
  * @author geNAZt
  * @version 1.1
  */
-@Data
 public class PacketDespawnEntity extends Packet {
 
     private long entityId;
@@ -35,4 +33,11 @@ public class PacketDespawnEntity extends Packet {
         this.entityId = buffer.readSignedVarLong().longValue();
     }
 
+    public long getEntityId() {
+        return entityId;
+    }
+
+    public void setEntityId(long entityId) {
+        this.entityId = entityId;
+    }
 }

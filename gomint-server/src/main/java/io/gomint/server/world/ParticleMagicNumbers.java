@@ -7,8 +7,6 @@
 
 package io.gomint.server.world;
 
-import lombok.Getter;
-
 /**
  * @author geNAZt
  * @version 1.0
@@ -79,11 +77,14 @@ public enum ParticleMagicNumbers {
     BREAK_BLOCK( -1 ),
     PUNCH_BLOCK( -2 );
 
-    @Getter
     private final int id;
 
     ParticleMagicNumbers( int id ) {
         this.id = id;
+    }
+
+    public int getId() {
+        return id;
     }
 
 }

@@ -2,13 +2,11 @@ package io.gomint.server.network.packet;
 
 import io.gomint.jraknet.PacketBuffer;
 import io.gomint.server.network.Protocol;
-import lombok.Data;
 
 /**
  * @author geNAZt
  * @version 1.0
  */
-@Data
 public class PacketContainerClose extends Packet {
 
     private byte windowId;
@@ -30,4 +28,11 @@ public class PacketContainerClose extends Packet {
         this.windowId = buffer.readByte();
     }
 
+    public byte getWindowId() {
+        return windowId;
+    }
+
+    public void setWindowId(byte windowId) {
+        this.windowId = windowId;
+    }
 }

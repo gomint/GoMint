@@ -9,13 +9,9 @@ package io.gomint.server.world.block.state;
 
 import io.gomint.math.MathUtils;
 import io.gomint.server.world.block.Block;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
 
 import java.util.function.Supplier;
 
-@ToString
-@EqualsAndHashCode(callSuper = false)
 public class RedstoneSignalStrength extends ProgressBlockState {
 
     public RedstoneSignalStrength(Supplier<String[]> key) {

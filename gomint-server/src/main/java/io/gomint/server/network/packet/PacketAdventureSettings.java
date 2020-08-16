@@ -2,13 +2,11 @@ package io.gomint.server.network.packet;
 
 import io.gomint.jraknet.PacketBuffer;
 import io.gomint.server.network.Protocol;
-import lombok.Data;
 
 /**
  * @author geNAZt
  * @version 1.0
  */
-@Data
 public class PacketAdventureSettings extends Packet {
 
     private int flags;
@@ -40,6 +38,54 @@ public class PacketAdventureSettings extends Packet {
         this.playerPermission = buffer.readUnsignedVarInt();
         this.customFlags = buffer.readUnsignedVarInt();
         this.entityId = buffer.readLLong();
+    }
+
+    public int getFlags() {
+        return flags;
+    }
+
+    public void setFlags(int flags) {
+        this.flags = flags;
+    }
+
+    public int getCommandPermission() {
+        return commandPermission;
+    }
+
+    public void setCommandPermission(int commandPermission) {
+        this.commandPermission = commandPermission;
+    }
+
+    public int getFlags2() {
+        return flags2;
+    }
+
+    public void setFlags2(int flags2) {
+        this.flags2 = flags2;
+    }
+
+    public int getPlayerPermission() {
+        return playerPermission;
+    }
+
+    public void setPlayerPermission(int playerPermission) {
+        this.playerPermission = playerPermission;
+    }
+
+    public int getCustomFlags() {
+        return customFlags;
+    }
+
+    public void setCustomFlags(int customFlags) {
+        this.customFlags = customFlags;
+    }
+
+    public long getEntityId() {
+        return entityId;
+    }
+
+    public void setEntityId(long entityId) {
+        this.entityId = entityId;
     }
 
 }

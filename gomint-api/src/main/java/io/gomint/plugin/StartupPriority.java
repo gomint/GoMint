@@ -7,8 +7,6 @@
 
 package io.gomint.plugin;
 
-import lombok.Getter;
-
 /**
  * Set of possible priorities of plugin initialization order.
  * The default is {@link #LOAD}.
@@ -16,7 +14,6 @@ import lombok.Getter;
  * @author BlackyPaw
  * @version 1.0
  */
-@Getter
 public enum StartupPriority implements Comparable<StartupPriority> {
 
     /**
@@ -38,6 +35,10 @@ public enum StartupPriority implements Comparable<StartupPriority> {
      */
     StartupPriority( final int order ) {
         this.order = order;
+    }
+
+    public int getOrder() {
+        return order;
     }
 
 }

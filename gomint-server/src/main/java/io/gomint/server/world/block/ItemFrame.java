@@ -1,5 +1,6 @@
 package io.gomint.server.world.block;
 
+import io.gomint.server.entity.tileentity.CommandBlockTileEntity;
 import io.gomint.world.block.BlockItemFrame;
 import io.gomint.world.block.BlockType;
 
@@ -12,7 +13,7 @@ import io.gomint.taglib.NBTTagCompound;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:frame" )
+@RegisterInfo(sId = "minecraft:frame")
 public class ItemFrame extends Block implements BlockItemFrame {
 
     @Override
@@ -26,10 +27,9 @@ public class ItemFrame extends Block implements BlockItemFrame {
     }
 
     @Override
-    TileEntity createTileEntity( NBTTagCompound compound ) {
-        super.createTileEntity( compound );
-
-        return new ItemFrameTileEntity( this );
+    TileEntity createTileEntity(NBTTagCompound compound) {
+        super.createTileEntity(compound);
+        return this.world.getServer().getTileEntities().construct(ItemFrameTileEntity.class, compound, this, this.world.getServer().getItems());
     }
 
     @Override

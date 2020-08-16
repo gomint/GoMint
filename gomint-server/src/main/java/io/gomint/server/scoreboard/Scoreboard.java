@@ -13,8 +13,6 @@ import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import it.unimi.dsi.fastutil.longs.LongArrayList;
 import it.unimi.dsi.fastutil.longs.LongList;
 import it.unimi.dsi.fastutil.objects.ObjectIterator;
-import lombok.AllArgsConstructor;
-import lombok.Data;
 
 import java.util.ArrayList;
 import java.util.EnumMap;
@@ -294,8 +292,6 @@ public class Scoreboard implements io.gomint.scoreboard.Scoreboard {
         return 0;
     }
 
-    @AllArgsConstructor
-    @Data
     private class ScoreboardLine {
         private final byte type;
         private final long entityId;
@@ -303,6 +299,24 @@ public class Scoreboard implements io.gomint.scoreboard.Scoreboard {
         private final String objective;
 
         private int score;
+
+        public ScoreboardLine(byte type, long entityId, String fakeName, String objective, int score) {
+            this.type = type;
+            this.entityId = entityId;
+            this.fakeName = fakeName;
+            this.objective = objective;
+            this.score = score;
+        }
+
+
+        public int getScore() {
+            return score;
+        }
+
+        public void setScore(int score) {
+            this.score = score;
+        }
+
     }
 
 }

@@ -4,13 +4,11 @@ import io.gomint.jraknet.PacketBuffer;
 import io.gomint.math.BlockPosition;
 import io.gomint.server.network.Protocol;
 import io.gomint.world.block.data.Facing;
-import lombok.Data;
 
 /**
  * @author geNAZt
  * @version 1.0
  */
-@Data
 public class PacketPlayerAction extends Packet {
 
     private long entityId;
@@ -37,6 +35,38 @@ public class PacketPlayerAction extends Packet {
         this.action = PlayerAction.valueOf( buffer.readSignedVarInt() );
         this.position = readBlockPosition( buffer );
         this.face = readBlockFace( buffer );
+    }
+
+    public long getEntityId() {
+        return entityId;
+    }
+
+    public void setEntityId(long entityId) {
+        this.entityId = entityId;
+    }
+
+    public PlayerAction getAction() {
+        return action;
+    }
+
+    public void setAction(PlayerAction action) {
+        this.action = action;
+    }
+
+    public BlockPosition getPosition() {
+        return position;
+    }
+
+    public void setPosition(BlockPosition position) {
+        this.position = position;
+    }
+
+    public Facing getFace() {
+        return face;
+    }
+
+    public void setFace(Facing face) {
+        this.face = face;
     }
 
     public enum PlayerAction {

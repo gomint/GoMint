@@ -11,6 +11,7 @@ import io.gomint.inventory.item.*;
 import io.gomint.math.Vector;
 import io.gomint.server.entity.Entity;
 import io.gomint.server.entity.tileentity.ShulkerBoxTileEntity;
+import io.gomint.server.entity.tileentity.SkullTileEntity;
 import io.gomint.server.entity.tileentity.TileEntity;
 import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.world.block.helper.ToolPresets;
@@ -79,8 +80,7 @@ public class UndyedShulkerBox extends Block implements BlockUndyedShulkerBox {
     @Override
     TileEntity createTileEntity( NBTTagCompound compound ) {
         super.createTileEntity( compound );
-
-        return new ShulkerBoxTileEntity( this );
+        return this.world.getServer().getTileEntities().construct(ShulkerBoxTileEntity.class, compound, this, this.world.getServer().getItems());
     }
 
     @Override

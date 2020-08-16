@@ -3,17 +3,11 @@ package io.gomint.server.config;
 import io.gomint.config.annotation.Comment;
 import io.gomint.config.YamlConfig;
 import io.gomint.world.generator.integrated.NormalGenerator;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
 
 /**
  * @author geNAZt
  * @version 1.0
  */
-@NoArgsConstructor
-@Getter
-@ToString
 public class WorldConfig extends YamlConfig {
 
     @Comment( "Name of the world this affects" )
@@ -55,5 +49,71 @@ public class WorldConfig extends YamlConfig {
 
     @Comment( "Disabled chunk gc?" )
     private boolean disableChunkGC = false;
+
+    public String getName() {
+        return name;
+    }
+
+    public String getChunkGenerator() {
+        return chunkGenerator;
+    }
+
+    public int getRandomUpdatesPerTick() {
+        return randomUpdatesPerTick;
+    }
+
+    public int getAmountOfChunksForSpawnArea() {
+        return amountOfChunksForSpawnArea;
+    }
+
+    public int getViewDistance() {
+        return viewDistance;
+    }
+
+    public int getSecondsUntilGCAfterLastPlayerLeft() {
+        return secondsUntilGCAfterLastPlayerLeft;
+    }
+
+    public int getWaitAfterLoadForGCSeconds() {
+        return waitAfterLoadForGCSeconds;
+    }
+
+    public boolean isAutoSave() {
+        return autoSave;
+    }
+
+    public boolean isSaveOnUnload() {
+        return saveOnUnload;
+    }
+
+    public int getAutoSaveInterval() {
+        return autoSaveInterval;
+    }
+
+    public boolean isDisableRandomTicking() {
+        return disableRandomTicking;
+    }
+
+    public boolean isDisableChunkGC() {
+        return disableChunkGC;
+    }
+
+    @Override
+    public String toString() {
+        return "WorldConfig{" +
+            "name='" + name + '\'' +
+            ", chunkGenerator='" + chunkGenerator + '\'' +
+            ", randomUpdatesPerTick=" + randomUpdatesPerTick +
+            ", amountOfChunksForSpawnArea=" + amountOfChunksForSpawnArea +
+            ", viewDistance=" + viewDistance +
+            ", secondsUntilGCAfterLastPlayerLeft=" + secondsUntilGCAfterLastPlayerLeft +
+            ", waitAfterLoadForGCSeconds=" + waitAfterLoadForGCSeconds +
+            ", autoSave=" + autoSave +
+            ", saveOnUnload=" + saveOnUnload +
+            ", autoSaveInterval=" + autoSaveInterval +
+            ", disableRandomTicking=" + disableRandomTicking +
+            ", disableChunkGC=" + disableChunkGC +
+            '}';
+    }
 
 }

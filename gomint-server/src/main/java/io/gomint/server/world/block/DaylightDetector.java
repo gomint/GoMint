@@ -1,5 +1,6 @@
 package io.gomint.server.world.block;
 
+import io.gomint.server.entity.tileentity.CommandBlockTileEntity;
 import io.gomint.server.entity.tileentity.DaylightDetectorTileEntity;
 import io.gomint.server.entity.tileentity.TileEntity;
 import io.gomint.server.world.block.state.RedstoneSignalStrength;
@@ -50,7 +51,8 @@ public class DaylightDetector extends Block implements BlockDaylightDetector {
 
     @Override
     TileEntity createTileEntity( NBTTagCompound compound ) {
-        return new DaylightDetectorTileEntity( this );
+        super.createTileEntity( compound );
+        return this.world.getServer().getTileEntities().construct(DaylightDetectorTileEntity.class, compound, this, this.world.getServer().getItems());
     }
 
 }

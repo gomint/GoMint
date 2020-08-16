@@ -8,13 +8,8 @@
 package io.gomint.server.world;
 
 import io.gomint.math.BlockPosition;
-import io.gomint.server.util.collection.LongList;
-import lombok.AllArgsConstructor;
-import lombok.Data;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Queue;
 
 /**
@@ -138,12 +133,40 @@ public class TickList {
         return false;
     }
 
-    @AllArgsConstructor
-    @Data
     private final class LongElement {
         private long key;
         private LongElement next;
         private Queue<BlockPosition> values;
+
+        public LongElement(long key, LongElement next, Queue<BlockPosition> values) {
+            this.key = key;
+            this.next = next;
+            this.values = values;
+        }
+
+        public long getKey() {
+            return key;
+        }
+
+        public void setKey(long key) {
+            this.key = key;
+        }
+
+        public LongElement getNext() {
+            return next;
+        }
+
+        public void setNext(LongElement next) {
+            this.next = next;
+        }
+
+        public Queue<BlockPosition> getValues() {
+            return values;
+        }
+
+        public void setValues(Queue<BlockPosition> values) {
+            this.values = values;
+        }
     }
 
 }

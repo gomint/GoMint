@@ -8,13 +8,11 @@
 package io.gomint.server.entity.metadata;
 
 import io.gomint.jraknet.PacketBuffer;
-import lombok.ToString;
 
 /**
  * @author BlackyPaw
  * @version 1.0
  */
-@ToString
 public class MetadataPosition extends MetadataValue {
 
     private int x;
@@ -129,4 +127,12 @@ public class MetadataPosition extends MetadataValue {
         return MetadataContainer.METADATA_POSITION;
     }
 
+    @Override
+    public String toString() {
+        return "MetadataPosition{" +
+            "x=" + x +
+            ", y=" + y +
+            ", z=" + z +
+            '}';
+    }
 }

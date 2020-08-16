@@ -12,8 +12,6 @@ import io.gomint.math.Vector;
 import io.gomint.server.entity.EntityPlayer;
 import io.gomint.server.world.block.Block;
 import io.gomint.world.block.data.Facing;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
 
 import java.util.function.Function;
 
@@ -21,8 +19,6 @@ import java.util.function.Function;
  * @author geNAZt
  * @version 1.0
  */
-@ToString
-@EqualsAndHashCode(callSuper = false)
 public class EnumBlockState<E extends Enum<E>, T> extends BlockState<E, T> {
 
     private final E[] enumValues;

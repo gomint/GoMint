@@ -8,7 +8,6 @@
 package io.gomint.server.jwt;
 
 import io.gomint.server.network.EncryptionKeyFactory;
-import lombok.Getter;
 
 import java.security.Key;
 import java.security.PublicKey;
@@ -19,7 +18,6 @@ import java.util.*;
  * @author BlackyPaw
  * @version 1.0
  */
-@Getter
 public class MojangChainValidator {
 
     private List<JwtToken> chain;
@@ -188,6 +186,34 @@ public class MojangChainValidator {
         if ( unsafe && xuidSniffed instanceof String ) {
             this.xboxId = (String) xuidSniffed;
         }
+    }
+
+    public List<JwtToken> getChain() {
+        return chain;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public UUID getUuid() {
+        return uuid;
+    }
+
+    public String getXboxId() {
+        return xboxId;
+    }
+
+    public ECPublicKey getClientPublicKey() {
+        return clientPublicKey;
+    }
+
+    public Map<String, Key> getTrustedKeys() {
+        return trustedKeys;
+    }
+
+    public EncryptionKeyFactory getEncryptionKeyFactory() {
+        return encryptionKeyFactory;
     }
 
 }

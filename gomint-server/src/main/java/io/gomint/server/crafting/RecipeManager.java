@@ -9,7 +9,6 @@ package io.gomint.server.crafting;
 
 import io.gomint.inventory.item.ItemStack;
 import io.gomint.server.network.packet.PacketCraftingRecipes;
-import lombok.AllArgsConstructor;
 
 import java.util.*;
 
@@ -146,7 +145,7 @@ public class RecipeManager {
             // TODO: Due to a MC:PE Bug there is chance the wrong recipe UUID has been sent. To get rid of it we need to do a expensive output search
             List<ItemStack> sortedOutput = new ArrayList<>( recipe.createResult() );
             sortOutput( sortedOutput );
-            this.outputLookup[index++] = new RecipeReverseLookup( recipe, sortedOutput );
+            this.outputLookup[index++] = new RecipeReverseLookup(recipe, sortedOutput);
         }
     }
 
@@ -154,10 +153,14 @@ public class RecipeManager {
         return this.smeltingRecipes.get( input );
     }
 
-    @AllArgsConstructor
-    private class RecipeReverseLookup {
-        private Recipe recipe;
-        private List<ItemStack> output;
+    private static class RecipeReverseLookup {
+        private final Recipe recipe;
+        private final List<ItemStack> output;
+
+        public RecipeReverseLookup(Recipe recipe, List<ItemStack> output) {
+            this.recipe = recipe;
+            this.output = output;
+        }
     }
 
 }

@@ -5,6 +5,7 @@ import io.gomint.math.AxisAlignedBB;
 import io.gomint.math.MojangRotation;
 import io.gomint.math.Vector;
 import io.gomint.server.entity.EntityPlayer;
+import io.gomint.server.entity.tileentity.CommandBlockTileEntity;
 import io.gomint.server.entity.tileentity.SkullTileEntity;
 import io.gomint.server.entity.tileentity.TileEntity;
 import io.gomint.server.registry.RegisterInfo;
@@ -69,11 +70,7 @@ public class Skull extends Block implements BlockSkull {
     @Override
     TileEntity createTileEntity( NBTTagCompound compound ) {
         super.createTileEntity( compound );
-
-        SkullTileEntity tileEntity = new SkullTileEntity( this );
-        // TODO: Set correct skull type
-        //tileEntity.setSkullType( (byte) this.getBlockData() );
-        return tileEntity;
+        return this.world.getServer().getTileEntities().construct(SkullTileEntity.class, compound, this, this.world.getServer().getItems());
     }
 
     @Override

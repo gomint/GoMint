@@ -7,8 +7,6 @@
 
 package io.gomint.command;
 
-import lombok.Getter;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -17,11 +15,18 @@ import java.util.List;
  * @author geNAZt
  * @version 1.0
  */
-@Getter
 public class CommandOutput {
 
     private boolean success = true;
     private List<CommandOutputMessage> messages = new ArrayList<>();
+
+    public boolean isSuccess() {
+        return success;
+    }
+
+    public List<CommandOutputMessage> getMessages() {
+        return messages;
+    }
 
     /**
      * When the execution of a command failed you can execute this and must provide a reason why it failed

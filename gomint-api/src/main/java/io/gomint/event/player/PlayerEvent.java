@@ -9,15 +9,13 @@ package io.gomint.event.player;
 
 import io.gomint.entity.EntityPlayer;
 import io.gomint.event.Event;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+
+import java.util.Objects;
 
 /**
  * @author geNAZt
  * @version 1.0
  */
-@EqualsAndHashCode( callSuper = false )
-@ToString( callSuper = true )
 public class PlayerEvent extends Event {
 
     private final EntityPlayer player;
@@ -33,6 +31,26 @@ public class PlayerEvent extends Event {
      */
     public EntityPlayer getPlayer() {
         return this.player;
+    }
+
+    @Override
+    public String toString() {
+        return "PlayerEvent{" +
+            "player=" + player +
+            '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        PlayerEvent that = (PlayerEvent) o;
+        return Objects.equals(player, that.player);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(player);
     }
 
 }

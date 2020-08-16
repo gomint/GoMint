@@ -13,7 +13,6 @@ import io.gomint.math.MathUtils;
 import io.gomint.server.GoMintServer;
 import io.gomint.server.entity.EntityLiving;
 import io.gomint.server.entity.EntityPlayer;
-import io.gomint.server.entity.potion.Effects;
 import io.gomint.server.entity.potion.effect.Effect;
 import io.gomint.server.network.packet.PacketMobEffect;
 import io.gomint.taglib.NBTTagCompound;
@@ -21,7 +20,6 @@ import it.unimi.dsi.fastutil.bytes.Byte2ObjectMap;
 import it.unimi.dsi.fastutil.bytes.Byte2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.bytes.ByteOpenHashSet;
 import it.unimi.dsi.fastutil.bytes.ByteSet;
-import lombok.RequiredArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,12 +28,15 @@ import java.util.List;
  * @author geNAZt
  * @version 1.0
  */
-@RequiredArgsConstructor
 public class EffectManager {
 
     private final EntityLiving living;
     private final GoMintServer server = (GoMintServer) GoMint.instance();
     private final Byte2ObjectMap<Effect> effects = new Byte2ObjectOpenHashMap<>();
+
+    public EffectManager(EntityLiving living) {
+        this.living = living;
+    }
 
     /**
      * Update effects (look if we can remove some)

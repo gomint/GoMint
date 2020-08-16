@@ -1,6 +1,5 @@
 package io.gomint.server.world;
 
-import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -190,14 +189,17 @@ public enum SoundMagicNumbers {
 
     private static final Logger LOGGER = LoggerFactory.getLogger( SoundMagicNumbers.class );
 
-    @Getter
     private final int soundId;
 
     SoundMagicNumbers( int soundId ) {
         this.soundId = soundId;
     }
 
-    public static SoundMagicNumbers valueOf( int id ) {
+    public int getSoundId() {
+        return soundId;
+    }
+
+    public static SoundMagicNumbers valueOf(int id ) {
         for ( SoundMagicNumbers soundMagicNumbers : values() ) {
             if ( soundMagicNumbers.soundId == id ) {
                 return soundMagicNumbers;

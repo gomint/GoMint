@@ -13,6 +13,8 @@ import io.gomint.math.Vector;
 import io.gomint.server.entity.EntityPlayer;
 import io.gomint.server.inventory.EnderChestInventory;
 import io.gomint.server.inventory.InventoryHolder;
+import io.gomint.server.inventory.item.Items;
+import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.world.block.Block;
 import io.gomint.taglib.NBTTagCompound;
 import io.gomint.world.block.data.Facing;
@@ -21,22 +23,23 @@ import io.gomint.world.block.data.Facing;
  * @author geNAZt
  * @version 1.0
  */
+@RegisterInfo(sId = "EnderChest")
 public class EnderChestTileEntity extends ContainerTileEntity implements InventoryHolder {
 
-    private EnderChestInventory inventory;
+    private final EnderChestInventory inventory;
 
     /**
      * Create new ender chest based on the position
      *
      * @param block where the ender chest should be placed
      */
-    public EnderChestTileEntity( Block block ) {
-        super( block );
+    public EnderChestTileEntity(Block block, Items items) {
+        super( block, items );
         this.inventory = new EnderChestInventory( this );
     }
 
     @Override
-    public void update( long currentMillis ) {
+    public void update( long currentMillis, float dT ) {
 
     }
 

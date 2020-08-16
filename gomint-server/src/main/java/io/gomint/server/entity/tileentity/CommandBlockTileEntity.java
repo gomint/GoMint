@@ -1,10 +1,9 @@
 package io.gomint.server.entity.tileentity;
 
 import io.gomint.server.inventory.item.Items;
-import io.gomint.server.world.WorldAdapter;
+import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.world.block.Block;
 import io.gomint.taglib.NBTTagCompound;
-import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +12,7 @@ import java.util.List;
  * @author geNAZt
  * @version 1.0
  */
-@Getter
+@RegisterInfo(sId = "CommandBlock")
 public class CommandBlockTileEntity extends ContainerTileEntity {
 
     private String command;
@@ -36,8 +35,8 @@ public class CommandBlockTileEntity extends ContainerTileEntity {
      *
      * @param block of the tile entity
      */
-    public CommandBlockTileEntity( Block block ) {
-        super( block );
+    public CommandBlockTileEntity( Block block, Items items ) {
+        super( block, items );
     }
 
     @Override
@@ -72,7 +71,7 @@ public class CommandBlockTileEntity extends ContainerTileEntity {
     }
 
     @Override
-    public void update( long currentMillis ) {
+    public void update( long currentMillis, float dT ) {
 
     }
 
@@ -107,4 +106,47 @@ public class CommandBlockTileEntity extends ContainerTileEntity {
         compound.addValue( "Version", this.version );
     }
 
+    public String getCommand() {
+        return command;
+    }
+
+    public int getSuccessCount() {
+        return successCount;
+    }
+
+    public String getOutput() {
+        return output;
+    }
+
+    public boolean isTrackOutput() {
+        return trackOutput;
+    }
+
+    public List<String> getParameter() {
+        return parameter;
+    }
+
+    public boolean isAuto() {
+        return auto;
+    }
+
+    public boolean isPowered() {
+        return powered;
+    }
+
+    public boolean isRedstoneMode() {
+        return redstoneMode;
+    }
+
+    public boolean isConditionalMode() {
+        return conditionalMode;
+    }
+
+    public int getCommandMode() {
+        return commandMode;
+    }
+
+    public int getVersion() {
+        return version;
+    }
 }

@@ -56,13 +56,9 @@ import io.gomint.server.world.generator.vanilla.chunk.ChunkSquareCache;
 import io.gomint.taglib.NBTReader;
 import io.gomint.taglib.NBTTagCompound;
 import io.netty.buffer.ByteBuf;
-import lombok.Getter;
-import lombok.Setter;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 
 import java.net.SocketException;
 import java.nio.ByteBuffer;
@@ -95,12 +91,7 @@ public class Client implements ConnectionWithState {
     private static final Logger LOGGER = LoggerFactory.getLogger( Client.class );
 
     private final PostProcessExecutor postProcessExecutor;
-
-    @Autowired
-    private ApplicationContext context;
-
-    @Autowired
-    private EncryptionKeyFactory keyFactory;
+    private final EncryptionKeyFactory keyFactory;
 
     private ClientSocket socket;
     private Connection connection;
@@ -116,7 +107,6 @@ public class Client implements ConnectionWithState {
     private long ownId;
     private long runtimeId;
 
-    @Setter
     private Consumer<BlockPosition> spawnPointConsumer;
 
     private List<BlockIdentifier> runtimeIDs;
@@ -128,11 +118,13 @@ public class Client implements ConnectionWithState {
     private boolean disconnected;
 
     // Processors
-    @Getter private Processor inputProcessor = new Processor(false);
-    @Getter private Processor outputProcessor = new Processor(true);
+    private Processor inputProcessor = new Processor(false);
+    private Processor outputProcessor = new Processor(true);
 
-    public Client( WorldAdapter world, ChunkSquareCache chunkSquareCache, PostProcessExecutor postProcessExecutor ) {
+    public Client( WorldAdapter world, EncryptionKeyFactory encryptionKeyFactory,
+                   ChunkSquareCache chunkSquareCache, PostProcessExecutor postProcessExecutor ) {
         this.world = world;
+        this.keyFactory = encryptionKeyFactory;
         this.postProcessExecutor = postProcessExecutor;
         this.chunkSquareCache = chunkSquareCache;
 
@@ -180,6 +172,14 @@ public class Client implements ConnectionWithState {
         } catch ( SocketException e ) {
             LOGGER.warn( "Exception caught", e );
         }
+    }
+
+    public void setSpawnPointConsumer(Consumer<BlockPosition> spawnPointConsumer) {
+        this.spawnPointConsumer = spawnPointConsumer;
+    }
+
+    public Processor getInputProcessor() {
+        return inputProcessor;
     }
 
     /**
@@ -415,7 +415,7 @@ public class Client implements ConnectionWithState {
                     while ( true ) {
                         try {
                             NBTTagCompound compound = reader.parse();
-                            TileEntity tileEntity = TileEntities.construct( this.context, compound, chunkAdapter.getBlockAt( compound.getInteger( "x", 0 ) & 0xF, compound.getInteger( "y", 0 ), compound.getInteger( "z", 0 ) & 0xF ) );
+                            TileEntity tileEntity = this.world.getServer().getTileEntities().construct( compound, chunkAdapter.getBlockAt( compound.getInteger( "x", 0 ) & 0xF, compound.getInteger( "y", 0 ), compound.getInteger( "z", 0 ) & 0xF ) );
                             if ( tileEntity != null ) {
                                 chunkAdapter.setTileEntity( compound.getInteger( "x", 0 ) & 0xF, compound.getInteger( "y", 0 ), compound.getInteger( "z", 0 ) & 0xF, tileEntity );
                             }

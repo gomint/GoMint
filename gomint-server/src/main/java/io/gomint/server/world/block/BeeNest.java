@@ -7,6 +7,7 @@
 
 package io.gomint.server.world.block;
 
+import io.gomint.server.entity.tileentity.BannerTileEntity;
 import io.gomint.server.entity.tileentity.BeehiveTileEntity;
 import io.gomint.server.entity.tileentity.TileEntity;
 import io.gomint.server.registry.RegisterInfo;
@@ -18,7 +19,8 @@ public class BeeNest extends Block {
 
     @Override
     TileEntity createTileEntity(NBTTagCompound compound) {
-        return new BeehiveTileEntity( this );
+        super.createTileEntity( compound );
+        return this.world.getServer().getTileEntities().construct(BeehiveTileEntity.class, compound, this, this.world.getServer().getItems());
     }
 
     @Override

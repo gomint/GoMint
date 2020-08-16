@@ -43,7 +43,7 @@ public class SignTileTest {
     @Test
     public void throwOnTooMuchLines() throws Exception {
         Assertions.assertThrows(IllegalArgumentException.class, () -> {
-            SignTileEntity tileEntity = new SignTileEntity(this.getBlock());
+            SignTileEntity tileEntity = new SignTileEntity(this.getBlock(), null, null);
 
             NBTTagCompound compound = new NBTTagCompound("");
             compound.addValue("Text", "\n\n\n\n");
@@ -53,7 +53,7 @@ public class SignTileTest {
 
     @Test
     public void accept3Lines() throws Exception {
-        SignTileEntity tileEntity = new SignTileEntity( this.getBlock() );
+        SignTileEntity tileEntity = new SignTileEntity( this.getBlock(), null, null );
 
         NBTTagCompound compound = new NBTTagCompound( "" );
         compound.addValue( "Text", "\n\n\n" );
@@ -63,7 +63,7 @@ public class SignTileTest {
     @Test
     public void throwOnTooLongLine() throws Exception {
         Assertions.assertThrows(IllegalArgumentException.class, () -> {
-            SignTileEntity tileEntity = new SignTileEntity(this.getBlock());
+            SignTileEntity tileEntity = new SignTileEntity(this.getBlock(), null, null);
 
             NBTTagCompound compound = new NBTTagCompound("");
             compound.addValue("Text", "hjkhjkgkhjgjgjhjhjk");

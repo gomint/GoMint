@@ -7,6 +7,7 @@
 
 package io.gomint.server.world.block;
 
+import io.gomint.server.entity.tileentity.SkullTileEntity;
 import io.gomint.server.entity.tileentity.SmokerTileEntity;
 import io.gomint.server.entity.tileentity.TileEntity;
 import io.gomint.server.registry.RegisterInfo;
@@ -33,7 +34,8 @@ public class Smoker extends Block {
 
     @Override
     TileEntity createTileEntity(NBTTagCompound compound) {
-        return new SmokerTileEntity( this );
+        super.createTileEntity( compound );
+        return this.world.getServer().getTileEntities().construct(SmokerTileEntity.class, compound, this, this.world.getServer().getItems());
     }
 
 }

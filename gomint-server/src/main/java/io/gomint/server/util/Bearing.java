@@ -9,15 +9,11 @@ package io.gomint.server.util;
 
 import io.gomint.world.block.data.Direction;
 import io.gomint.world.block.data.Facing;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 
 /**
  * @author geNAZt
  * @version 1.0
  */
-@RequiredArgsConstructor
-@Getter
 public enum Bearing {
 
     SOUTH( 0 ),
@@ -26,6 +22,14 @@ public enum Bearing {
     EAST( 3 );
 
     private final int direction;
+
+    Bearing(int direction) {
+        this.direction = direction;
+    }
+
+    public int getDirection() {
+        return direction;
+    }
 
     public Direction toDirection() {
         switch ( this ) {

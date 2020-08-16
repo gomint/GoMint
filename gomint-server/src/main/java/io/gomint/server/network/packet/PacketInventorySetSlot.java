@@ -3,13 +3,11 @@ package io.gomint.server.network.packet;
 import io.gomint.inventory.item.ItemStack;
 import io.gomint.jraknet.PacketBuffer;
 import io.gomint.server.network.Protocol;
-import lombok.Data;
 
 /**
  * @author geNAZt
  * @version 1.0
  */
-@Data
 public class PacketInventorySetSlot extends Packet {
 
     private int windowId;
@@ -34,4 +32,27 @@ public class PacketInventorySetSlot extends Packet {
         this.itemStack = readItemStackWithID( buffer );
     }
 
+    public int getWindowId() {
+        return windowId;
+    }
+
+    public void setWindowId(int windowId) {
+        this.windowId = windowId;
+    }
+
+    public int getSlot() {
+        return slot;
+    }
+
+    public void setSlot(int slot) {
+        this.slot = slot;
+    }
+
+    public ItemStack getItemStack() {
+        return itemStack;
+    }
+
+    public void setItemStack(ItemStack itemStack) {
+        this.itemStack = itemStack;
+    }
 }

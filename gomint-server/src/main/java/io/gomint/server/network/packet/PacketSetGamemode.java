@@ -2,13 +2,11 @@ package io.gomint.server.network.packet;
 
 import io.gomint.jraknet.PacketBuffer;
 import io.gomint.server.network.Protocol;
-import lombok.Data;
 
 /**
  * @author geNAZt
  * @version 1.0
  */
-@Data
 public class PacketSetGamemode extends Packet {
 
     private int gameMode;
@@ -27,4 +25,11 @@ public class PacketSetGamemode extends Packet {
 
     }
 
+    public int getGameMode() {
+        return gameMode;
+    }
+
+    public void setGameMode(int gameMode) {
+        this.gameMode = gameMode;
+    }
 }

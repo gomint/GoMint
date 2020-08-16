@@ -4,7 +4,6 @@ import com.google.common.io.ByteStreams;
 import io.gomint.jraknet.PacketBuffer;
 import io.gomint.server.assets.AssetsLibrary;
 import io.gomint.server.network.Protocol;
-import lombok.Data;
 
 import java.io.InputStream;
 
@@ -12,7 +11,6 @@ import java.io.InputStream;
  * @author HerryYT
  * @version 1.0
  */
-@Data
 public class PacketBiomeDefinitionList extends Packet {
 
     private byte[] nbt;
@@ -43,4 +41,9 @@ public class PacketBiomeDefinitionList extends Packet {
     public void deserialize(PacketBuffer buffer, int protocolID) {
 
     }
+
+    public byte[] getNbt() {
+        return nbt;
+    }
+
 }

@@ -8,7 +8,6 @@ package io.gomint.server.inventory.item;
 
 import io.gomint.GoMint;
 import io.gomint.inventory.item.ItemType;
-import io.gomint.server.GoMintServer;
 import io.gomint.server.inventory.item.data.BookPage;
 import io.gomint.server.registry.RegisterInfo;
 import io.gomint.taglib.NBTTagCompound;
@@ -29,8 +28,6 @@ public class ItemWritableBook extends ItemStack implements io.gomint.inventory.i
     private static final String GENERATION_TAG = "generation";
     private static final String TITLE_TAG = "title";
     private static final String AUTHOR_TAG = "author";
-
-
 
     @Override
     public ItemType getItemType() {

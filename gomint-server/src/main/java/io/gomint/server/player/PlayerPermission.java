@@ -1,13 +1,8 @@
 package io.gomint.server.player;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-
 /**
  * @author geNAZt
  */
-@AllArgsConstructor
-@Getter
 public enum PlayerPermission {
 
     VISITOR( 0 ),
@@ -17,4 +12,11 @@ public enum PlayerPermission {
 
     private int id;
 
+    PlayerPermission(int id) {
+        this.id = id;
+    }
+
+    public int getId() {
+        return id;
+    }
 }

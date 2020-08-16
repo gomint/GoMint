@@ -3,9 +3,7 @@ package io.gomint.server.network.packet;
 import io.gomint.jraknet.PacketBuffer;
 import io.gomint.math.BlockPosition;
 import io.gomint.server.network.Protocol;
-import lombok.Data;
 
-@Data
 public class PacketBlockPickRequest extends Packet {
 
     private BlockPosition location;
@@ -28,5 +26,29 @@ public class PacketBlockPickRequest extends Packet {
         this.location = readSignedBlockPosition( buffer );
         this.addUserData = buffer.readBoolean();
         this.hotbarSlot = buffer.readByte();
+    }
+
+    public BlockPosition getLocation() {
+        return location;
+    }
+
+    public void setLocation(BlockPosition location) {
+        this.location = location;
+    }
+
+    public boolean isAddUserData() {
+        return addUserData;
+    }
+
+    public void setAddUserData(boolean addUserData) {
+        this.addUserData = addUserData;
+    }
+
+    public byte getHotbarSlot() {
+        return hotbarSlot;
+    }
+
+    public void setHotbarSlot(byte hotbarSlot) {
+        this.hotbarSlot = hotbarSlot;
     }
 }

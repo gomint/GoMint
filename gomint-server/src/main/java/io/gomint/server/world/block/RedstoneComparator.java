@@ -1,5 +1,6 @@
 package io.gomint.server.world.block;
 
+import io.gomint.server.entity.tileentity.CommandBlockTileEntity;
 import io.gomint.server.entity.tileentity.ComparatorTileEntity;
 import io.gomint.server.entity.tileentity.TileEntity;
 import io.gomint.server.registry.RegisterInfo;
@@ -11,8 +12,8 @@ import io.gomint.world.block.BlockType;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:powered_comparator" )
-@RegisterInfo( sId = "minecraft:unpowered_comparator" )
+@RegisterInfo(sId = "minecraft:powered_comparator")
+@RegisterInfo(sId = "minecraft:unpowered_comparator")
 public class RedstoneComparator extends Block implements BlockRedstoneComparator {
 
     @Override
@@ -37,7 +38,7 @@ public class RedstoneComparator extends Block implements BlockRedstoneComparator
 
     @Override
     public boolean isPowered() {
-        return this.getBlockId().equals( "minecraft:powered_comparator" );
+        return this.getBlockId().equals("minecraft:powered_comparator");
     }
 
     @Override
@@ -46,9 +47,9 @@ public class RedstoneComparator extends Block implements BlockRedstoneComparator
     }
 
     @Override
-    TileEntity createTileEntity( NBTTagCompound compound ) {
-        super.createTileEntity( compound );
-        return new ComparatorTileEntity( this );
+    TileEntity createTileEntity(NBTTagCompound compound) {
+        super.createTileEntity(compound);
+        return this.world.getServer().getTileEntities().construct(ComparatorTileEntity.class, compound, this, this.world.getServer().getItems());
     }
 
 }

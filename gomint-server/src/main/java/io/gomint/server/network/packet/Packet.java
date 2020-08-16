@@ -24,7 +24,6 @@ import io.gomint.taglib.NBTTagCompound;
 import io.gomint.taglib.NBTWriter;
 import io.gomint.world.Gamerule;
 import io.gomint.world.block.data.Facing;
-import lombok.ToString;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,7 +36,6 @@ import java.util.Map;
  * @author BlackyPaw
  * @version 1.0
  */
-@ToString
 public abstract class Packet {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Packet.class);
@@ -474,6 +472,13 @@ public abstract class Packet {
 
     public void serializeHeader(PacketBuffer buffer) {
         buffer.writeUnsignedVarInt(this.id);
+    }
+
+    @Override
+    public String toString() {
+        return "Packet{" +
+            "id=" + id +
+            '}';
     }
 
 }

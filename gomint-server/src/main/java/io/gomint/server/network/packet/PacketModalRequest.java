@@ -2,13 +2,11 @@ package io.gomint.server.network.packet;
 
 import io.gomint.jraknet.PacketBuffer;
 import io.gomint.server.network.Protocol;
-import lombok.Data;
 
 /**
  * @author geNAZt
  * @version 1.0
  */
-@Data
 public class PacketModalRequest extends Packet {
 
     private int formId;
@@ -29,4 +27,19 @@ public class PacketModalRequest extends Packet {
 
     }
 
+    public int getFormId() {
+        return formId;
+    }
+
+    public void setFormId(int formId) {
+        this.formId = formId;
+    }
+
+    public String getJson() {
+        return json;
+    }
+
+    public void setJson(String json) {
+        this.json = json;
+    }
 }

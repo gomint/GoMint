@@ -2,13 +2,11 @@ package io.gomint.server.network.packet;
 
 import io.gomint.jraknet.PacketBuffer;
 import io.gomint.server.network.Protocol;
-import lombok.Data;
 
 /**
  * @author HerryYT
  * @version 1.0
  */
-@Data
 public class PacketAddPainting extends Packet {
 
     private long entityId;
@@ -43,5 +41,53 @@ public class PacketAddPainting extends Packet {
     @Override
     public void deserialize(PacketBuffer buffer, int protocolID) {
 
+    }
+
+    public long getEntityId() {
+        return entityId;
+    }
+
+    public void setEntityId(long entityId) {
+        this.entityId = entityId;
+    }
+
+    public float getX() {
+        return x;
+    }
+
+    public void setX(float x) {
+        this.x = x;
+    }
+
+    public float getY() {
+        return y;
+    }
+
+    public void setY(float y) {
+        this.y = y;
+    }
+
+    public float getZ() {
+        return z;
+    }
+
+    public void setZ(float z) {
+        this.z = z;
+    }
+
+    public int getDirection() {
+        return direction;
+    }
+
+    public void setDirection(int direction) {
+        this.direction = direction;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 }

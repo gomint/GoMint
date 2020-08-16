@@ -24,20 +24,16 @@ import io.gomint.server.maintenance.ReportUploader;
 import io.gomint.server.scheduler.CoreScheduler;
 import io.gomint.server.scheduler.PluginScheduler;
 import io.gomint.server.util.CallerDetectorUtil;
-import lombok.Getter;
+import org.objectweb.asm.AnnotationVisitor;
+import org.objectweb.asm.ClassReader;
+import org.objectweb.asm.ClassVisitor;
+import org.objectweb.asm.ModuleVisitor;
+import org.objectweb.asm.Opcodes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.asm.AnnotationVisitor;
-import org.springframework.asm.Attribute;
-import org.springframework.asm.ClassReader;
-import org.springframework.asm.ClassVisitor;
-import org.springframework.asm.ModuleVisitor;
-import org.springframework.asm.Opcodes;
-import org.springframework.stereotype.Component;
 
 import java.io.DataInputStream;
 import java.io.File;
-import java.io.FileFilter;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.module.Configuration;
@@ -55,7 +51,6 @@ import java.util.jar.JarFile;
  * @author geNAZt
  * @version 1.0
  */
-@Component
 public class SimplePluginManager implements PluginManager, EventCaller {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SimplePluginManager.class);
@@ -70,7 +65,6 @@ public class SimplePluginManager implements PluginManager, EventCaller {
     private final Map<String, PluginMeta> metadata = new HashMap<>();
 
     private final EventManager eventManager = new EventManager();
-    @Getter
     private final CommandManager commandManager;
 
     private Field loggerField;
@@ -132,6 +126,10 @@ public class SimplePluginManager implements PluginManager, EventCaller {
                 this.detectedPlugins.add(metadata);
             }
         }
+    }
+
+    public CommandManager getCommandManager() {
+        return commandManager;
     }
 
     /**

@@ -10,15 +10,11 @@ package io.gomint.server.network.packet;
 import io.gomint.jraknet.PacketBuffer;
 import io.gomint.player.DeviceInfo;
 import io.gomint.server.network.Protocol;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 /**
  * @author BlackyPaw
  * @version 1.0
  */
-@Data
-@EqualsAndHashCode( callSuper = false )
 public class PacketText extends Packet {
 
     private Type type;
@@ -116,6 +112,54 @@ public class PacketText extends Packet {
 
         this.xuid = buffer.readString();
         this.deviceId = buffer.readString();
+    }
+
+    public Type getType() {
+        return type;
+    }
+
+    public void setType(Type type) {
+        this.type = type;
+    }
+
+    public String getSender() {
+        return sender;
+    }
+
+    public void setSender(String sender) {
+        this.sender = sender;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public String[] getArguments() {
+        return arguments;
+    }
+
+    public void setArguments(String[] arguments) {
+        this.arguments = arguments;
+    }
+
+    public String getXuid() {
+        return xuid;
+    }
+
+    public void setXuid(String xuid) {
+        this.xuid = xuid;
+    }
+
+    public String getDeviceId() {
+        return deviceId;
+    }
+
+    public void setDeviceId(String deviceId) {
+        this.deviceId = deviceId;
     }
 
     public enum Type {

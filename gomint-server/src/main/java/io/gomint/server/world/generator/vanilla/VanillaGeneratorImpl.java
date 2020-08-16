@@ -27,8 +27,6 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import oshi.PlatformEnum;
 import oshi.SystemInfo;
 
@@ -64,13 +62,10 @@ public class VanillaGeneratorImpl extends VanillaGenerator {
     private long processId;
     private long seed;
 
-    @Autowired
-    private NetworkManager networkManager;
-
-    @Autowired
-    private ApplicationContext applicationContext;
+    private final NetworkManager networkManager;
 
     private List<Client> client;
+    private SafeExec safeExec;
 
     private SettableFuture<BlockPosition> spawnPointFuture = SettableFuture.create();
 
@@ -87,6 +82,8 @@ public class VanillaGeneratorImpl extends VanillaGenerator {
      */
     public VanillaGeneratorImpl( World world, GeneratorContext context ) {
         super( world, context );
+
+        this.networkManager = ((WorldAdapter) world).getServer().getNetworkManager();
 
         // Eula check
         if ( !Objects.equals( System.getProperty( "eula.accepted" ), "true" ) ) {
@@ -236,8 +233,8 @@ public class VanillaGeneratorImpl extends VanillaGenerator {
         }
 
         // Start the server
-        SafeExec safeExec = server.getContext().getBean( SafeExec.class );
-        this.processId = safeExec.exec( SystemInfo.getCurrentPlatformEnum() == PlatformEnum.WINDOWS ? tempServer.getAbsolutePath() + File.separator + "bedrock_server.exe" : tempServer.getAbsolutePath() + File.separator + "start.sh", tempServer.getAbsolutePath(), line -> {
+        this.safeExec = new SafeExec( server );
+        this.processId = this.safeExec.exec( SystemInfo.getCurrentPlatformEnum() == PlatformEnum.WINDOWS ? tempServer.getAbsolutePath() + File.separator + "bedrock_server.exe" : tempServer.getAbsolutePath() + File.separator + "start.sh", tempServer.getAbsolutePath(), line -> {
             if ( line.contains( "IPv4 supported, port:" ) ) {
                 String[] split = line.split( " " );
                 port = Integer.parseInt( split[split.length - 1] );
@@ -266,8 +263,7 @@ public class VanillaGeneratorImpl extends VanillaGenerator {
 
     private Client connectClient( WorldAdapter worldAdapter ) {
         PostProcessExecutor executor = this.networkManager.getPostProcessService().getExecutor();
-        Client newClient = new Client( worldAdapter, this.chunkCache, executor );
-        this.applicationContext.getAutowireCapableBeanFactory().autowireBean( newClient );
+        Client newClient = new Client( worldAdapter, worldAdapter.getServer().getEncryptionKeyFactory(), this.chunkCache, executor );
 
         // Accept the spawn point
         newClient.setSpawnPointConsumer( blockPosition -> this.spawnPointFuture.set( blockPosition ) );
@@ -410,8 +406,7 @@ public class VanillaGeneratorImpl extends VanillaGenerator {
             client1.disconnect( "Closing chunk generator down" );
         }
 
-        SafeExec safeExec = this.applicationContext.getBean( SafeExec.class );
-        safeExec.stop( this.processId );
+        this.safeExec.stop( this.processId );
     }
 
 }

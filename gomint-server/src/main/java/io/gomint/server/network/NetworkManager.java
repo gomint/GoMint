@@ -16,8 +16,40 @@ import io.gomint.jraknet.ServerSocket;
 import io.gomint.jraknet.SocketEvent;
 import io.gomint.server.GoMintServer;
 import io.gomint.server.maintenance.ReportUploader;
-import io.netty.bootstrap.ServerBootstrap;
-import io.netty.channel.Channel;
+import io.gomint.server.network.handler.PacketAdventureSettingsHandler;
+import io.gomint.server.network.handler.PacketAnimateHandler;
+import io.gomint.server.network.handler.PacketBlockPickRequestHandler;
+import io.gomint.server.network.handler.PacketBookEditHandler;
+import io.gomint.server.network.handler.PacketBossBarHandler;
+import io.gomint.server.network.handler.PacketClientCacheBlobStatusHandler;
+import io.gomint.server.network.handler.PacketClientCacheStatusHandler;
+import io.gomint.server.network.handler.PacketCommandRequestHandler;
+import io.gomint.server.network.handler.PacketContainerCloseHandler;
+import io.gomint.server.network.handler.PacketCraftingEventHandler;
+import io.gomint.server.network.handler.PacketEmoteListHandler;
+import io.gomint.server.network.handler.PacketEncryptionResponseHandler;
+import io.gomint.server.network.handler.PacketEntityEventHandler;
+import io.gomint.server.network.handler.PacketEntityFallHandler;
+import io.gomint.server.network.handler.PacketHandler;
+import io.gomint.server.network.handler.PacketHotbarHandler;
+import io.gomint.server.network.handler.PacketInteractHandler;
+import io.gomint.server.network.handler.PacketInventoryTransactionHandler;
+import io.gomint.server.network.handler.PacketLoginHandler;
+import io.gomint.server.network.handler.PacketMobArmorEquipmentHandler;
+import io.gomint.server.network.handler.PacketMobEquipmentHandler;
+import io.gomint.server.network.handler.PacketModalResponseHandler;
+import io.gomint.server.network.handler.PacketMovePlayerHandler;
+import io.gomint.server.network.handler.PacketPlayerActionHandler;
+import io.gomint.server.network.handler.PacketRequestChunkRadiusHandler;
+import io.gomint.server.network.handler.PacketResourcePackResponseHandler;
+import io.gomint.server.network.handler.PacketRespawnPositionHandler;
+import io.gomint.server.network.handler.PacketServerSettingsRequestHandler;
+import io.gomint.server.network.handler.PacketSetLocalPlayerAsInitializedHandler;
+import io.gomint.server.network.handler.PacketTextHandler;
+import io.gomint.server.network.handler.PacketTickSyncHandler;
+import io.gomint.server.network.handler.PacketTileEntityDataHandler;
+import io.gomint.server.network.handler.PacketViolationWarningHandler;
+import io.gomint.server.network.handler.PacketWorldSoundEventHandler;
 import io.netty.util.ResourceLeakDetector;
 import io.netty.util.ThreadDeathWatcher;
 import io.netty.util.concurrent.GlobalEventExecutor;
@@ -25,13 +57,8 @@ import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
 import it.unimi.dsi.fastutil.longs.LongSet;
-import lombok.Getter;
-import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.stereotype.Component;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -39,26 +66,23 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.net.InetSocketAddress;
 import java.net.SocketException;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * @author BlackyPaw
  * @author geNAZt
  * @version 1.0
  */
-@Component
 public class NetworkManager {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(NetworkManager.class);
     private final GoMintServer server;
-
-    private final AnnotationConfigApplicationContext context;
-
+    
+    private final PacketHandler[] packetHandlers = new PacketHandler[256];
+    
     // Connections which were closed and should be removed during next tick:
     private final LongSet closedConnections = new LongOpenHashSet();
     private ServerSocket socket;
@@ -72,25 +96,70 @@ public class NetworkManager {
     private File dumpDirectory;
 
     // Motd
-    @Getter
-    @Setter
     private String motd;
 
     // Post process service
-    @Getter
     private PostProcessExecutorService postProcessService;
 
     /**
      * Init a new NetworkManager for accepting new connections and read incoming data
      *
-     * @param context which started the application
      * @param server  server instance which should be used
      */
-    @Autowired
-    public NetworkManager(AnnotationConfigApplicationContext context, GoMintServer server) {
-        this.context = context;
+    public NetworkManager(GoMintServer server) {
         this.server = server;
         this.postProcessService = new PostProcessExecutorService(server.getExecutorService());
+        this.initPacketHandlers();
+    }
+
+    public PostProcessExecutorService getPostProcessService() {
+        return postProcessService;
+    }
+
+    public void setMotd(String motd) {
+        this.motd = motd;
+    }
+
+    public String getMotd() {
+        return motd;
+    }
+
+    private void initPacketHandlers() {
+        // Register all packet handlers we need
+        this.packetHandlers[Protocol.PACKET_MOVE_PLAYER & 0xff] = new PacketMovePlayerHandler();
+        this.packetHandlers[Protocol.PACKET_REQUEST_CHUNK_RADIUS & 0xff] = new PacketRequestChunkRadiusHandler();
+        this.packetHandlers[Protocol.PACKET_PLAYER_ACTION & 0xff] = new PacketPlayerActionHandler();
+        this.packetHandlers[Protocol.PACKET_MOB_ARMOR_EQUIPMENT & 0xff] = new PacketMobArmorEquipmentHandler();
+        this.packetHandlers[Protocol.PACKET_ADVENTURE_SETTINGS & 0xff] = new PacketAdventureSettingsHandler();
+        this.packetHandlers[Protocol.PACKET_RESOURCEPACK_RESPONSE & 0xff] = new PacketResourcePackResponseHandler();
+        this.packetHandlers[Protocol.PACKET_CRAFTING_EVENT & 0xff] = new PacketCraftingEventHandler();
+        this.packetHandlers[Protocol.PACKET_LOGIN & 0xff] = new PacketLoginHandler(this.server.getEncryptionKeyFactory(), this.server.getServerConfig(), this.server);
+        this.packetHandlers[Protocol.PACKET_MOB_EQUIPMENT & 0xff] = new PacketMobEquipmentHandler();
+        this.packetHandlers[Protocol.PACKET_INTERACT & 0xff] = new PacketInteractHandler();
+        this.packetHandlers[Protocol.PACKET_BLOCK_PICK_REQUEST & 0xff] = new PacketBlockPickRequestHandler();
+        this.packetHandlers[Protocol.PACKET_ENCRYPTION_RESPONSE & 0xff] = new PacketEncryptionResponseHandler();
+        this.packetHandlers[Protocol.PACKET_INVENTORY_TRANSACTION & 0xff] = new PacketInventoryTransactionHandler(this.server.getPluginManager());
+        this.packetHandlers[Protocol.PACKET_CONTAINER_CLOSE & 0xff] = new PacketContainerCloseHandler();
+        this.packetHandlers[Protocol.PACKET_HOTBAR & 0xff] = new PacketHotbarHandler();
+        this.packetHandlers[Protocol.PACKET_TEXT & 0xff] = new PacketTextHandler();
+        this.packetHandlers[Protocol.PACKET_COMMAND_REQUEST & 0xff] = new PacketCommandRequestHandler();
+        this.packetHandlers[Protocol.PACKET_WORLD_SOUND_EVENT_V1 & 0xff] = new PacketWorldSoundEventHandler();
+        this.packetHandlers[Protocol.PACKET_ANIMATE & 0xff] = new PacketAnimateHandler();
+        this.packetHandlers[Protocol.PACKET_ENTITY_EVENT & 0xff] = new PacketEntityEventHandler();
+        this.packetHandlers[Protocol.PACKET_MODAL_RESPONSE & 0xFF] = new PacketModalResponseHandler();
+        this.packetHandlers[Protocol.PACKET_SERVER_SETTINGS_REQUEST & 0xFF] = new PacketServerSettingsRequestHandler();
+        this.packetHandlers[Protocol.PACKET_ENTITY_FALL & 0xFF] = new PacketEntityFallHandler();
+        this.packetHandlers[Protocol.PACKET_BOOK_EDIT & 0xFF] = new PacketBookEditHandler();
+        this.packetHandlers[Protocol.PACKET_SET_LOCAL_PLAYER_INITIALIZED & 0xff] = new PacketSetLocalPlayerAsInitializedHandler();
+        this.packetHandlers[Protocol.PACKET_TILE_ENTITY_DATA & 0xff] = new PacketTileEntityDataHandler();
+        this.packetHandlers[Protocol.PACKET_BOSS_BAR & 0xff] = new PacketBossBarHandler();
+        this.packetHandlers[Protocol.PACKET_RESPAWN_POSITION & 0xff] = new PacketRespawnPositionHandler();
+        this.packetHandlers[Protocol.PACKET_WORLD_SOUND_EVENT & 0xff] = new PacketWorldSoundEventHandler();
+        this.packetHandlers[Protocol.PACKET_TICK_SYNC & 0xff] = new PacketTickSyncHandler();
+        this.packetHandlers[Protocol.PACKET_CLIENT_CACHE_STATUS & 0xff] = new PacketClientCacheStatusHandler();
+        this.packetHandlers[Protocol.PACKET_EMOTE_LIST & 0xff] = new PacketEmoteListHandler();
+        this.packetHandlers[Protocol.PACKET_VIOLATION_WARNING & 0xff] = new PacketViolationWarningHandler();
+        this.packetHandlers[Protocol.PACKET_CLIENT_CACHE_BLOB_STATUS & 0xff] = new PacketClientCacheBlobStatusHandler();
     }
 
     // ======================================= PUBLIC API ======================================= //
@@ -276,12 +345,8 @@ public class NetworkManager {
      * @param newConnection The new incoming connection
      */
     private void handleNewConnection(Connection newConnection) {
-        this.context.registerBean("network.newConnection.raknet", Connection.class, () -> newConnection);
-
-        PlayerConnection playerConnection = this.context.getAutowireCapableBeanFactory().getBean(PlayerConnection.class);
+        PlayerConnection playerConnection = new PlayerConnection(this, newConnection);
         this.incomingConnections.add(playerConnection);
-
-        this.context.removeBeanDefinition("network.newConnection.raknet");
     }
 
     /**
@@ -373,6 +438,10 @@ public class NetworkManager {
         }
 
         LOGGER.info("Shutdown of network completed");
+    }
+
+    public PacketHandler getPacketHandler(int packetId) {
+        return this.packetHandlers[packetId];
     }
 
 }

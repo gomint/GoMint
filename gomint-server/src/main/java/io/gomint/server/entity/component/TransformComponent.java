@@ -4,7 +4,6 @@ import io.gomint.math.Location;
 import io.gomint.math.Vector;
 import io.gomint.server.entity.Transformable;
 import io.gomint.server.world.WorldAdapter;
-import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,11 +21,8 @@ public class TransformComponent implements EntityComponent, Transformable {
     private float posY;
     private float posZ;
 
-    @Setter
     private float motionX;
-    @Setter
     private float motionY;
-    @Setter
     private float motionZ;
 
     private float yaw;
@@ -61,6 +57,18 @@ public class TransformComponent implements EntityComponent, Transformable {
     @Override
     public float getMotionZ() {
         return this.motionZ;
+    }
+
+    public void setMotionX(float motionX) {
+        this.motionX = motionX;
+    }
+
+    public void setMotionY(float motionY) {
+        this.motionY = motionY;
+    }
+
+    public void setMotionZ(float motionZ) {
+        this.motionZ = motionZ;
     }
 
     @Override

@@ -4,13 +4,11 @@ import io.gomint.inventory.item.ItemStack;
 import io.gomint.jraknet.PacketBuffer;
 import io.gomint.server.entity.metadata.MetadataContainer;
 import io.gomint.server.network.Protocol;
-import lombok.Data;
 
 /**
  * @author geNAZt
  * @version 1.0
  */
-@Data
 public class PacketAddItemEntity extends Packet {
 
     private long entityId;
@@ -58,4 +56,83 @@ public class PacketAddItemEntity extends Packet {
 
     }
 
+    public long getEntityId() {
+        return entityId;
+    }
+
+    public void setEntityId(long entityId) {
+        this.entityId = entityId;
+    }
+
+    public ItemStack getItemStack() {
+        return itemStack;
+    }
+
+    public void setItemStack(ItemStack itemStack) {
+        this.itemStack = itemStack;
+    }
+
+    public float getX() {
+        return x;
+    }
+
+    public void setX(float x) {
+        this.x = x;
+    }
+
+    public float getY() {
+        return y;
+    }
+
+    public void setY(float y) {
+        this.y = y;
+    }
+
+    public float getZ() {
+        return z;
+    }
+
+    public void setZ(float z) {
+        this.z = z;
+    }
+
+    public float getMotionX() {
+        return motionX;
+    }
+
+    public void setMotionX(float motionX) {
+        this.motionX = motionX;
+    }
+
+    public float getMotionY() {
+        return motionY;
+    }
+
+    public void setMotionY(float motionY) {
+        this.motionY = motionY;
+    }
+
+    public float getMotionZ() {
+        return motionZ;
+    }
+
+    public void setMotionZ(float motionZ) {
+        this.motionZ = motionZ;
+    }
+
+    public MetadataContainer getMetadata() {
+        return metadata;
+    }
+
+    public void setMetadata(MetadataContainer metadata) {
+        this.metadata = metadata;
+    }
+
+    public boolean isFromFishing() {
+        return fromFishing;
+    }
+
+    public void setFromFishing(boolean fromFishing) {
+        this.fromFishing = fromFishing;
+    }
 }

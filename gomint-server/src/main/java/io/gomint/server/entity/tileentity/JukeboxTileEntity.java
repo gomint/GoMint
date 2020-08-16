@@ -2,6 +2,8 @@ package io.gomint.server.entity.tileentity;
 
 import io.gomint.inventory.item.ItemType;
 import io.gomint.server.inventory.item.ItemStack;
+import io.gomint.server.inventory.item.Items;
+import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.world.block.Block;
 import io.gomint.taglib.NBTTagCompound;
 
@@ -9,6 +11,7 @@ import io.gomint.taglib.NBTTagCompound;
  * @author geNAZt
  * @version 1.0
  */
+@RegisterInfo(sId = "Jukebox")
 public class JukeboxTileEntity extends TileEntity {
 
     private ItemStack recordItem;
@@ -18,8 +21,8 @@ public class JukeboxTileEntity extends TileEntity {
      *
      * @param block which created this tile
      */
-    public JukeboxTileEntity( Block block ) {
-        super( block );
+    public JukeboxTileEntity(Block block, Items items) {
+        super( block, items );
     }
 
     @Override
@@ -30,7 +33,7 @@ public class JukeboxTileEntity extends TileEntity {
     }
 
     @Override
-    public void update( long currentMillis ) {
+    public void update( long currentMillis, float dT ) {
 
     }
 

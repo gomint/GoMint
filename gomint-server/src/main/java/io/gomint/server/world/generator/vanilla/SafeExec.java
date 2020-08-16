@@ -9,7 +9,6 @@ package io.gomint.server.world.generator.vanilla;
 
 import com.google.common.util.concurrent.ListeningScheduledExecutorService;
 import io.gomint.server.GoMintServer;
-import org.springframework.stereotype.Component;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -23,7 +22,6 @@ import java.util.function.Consumer;
  * @author geNAZt
  * @version 1.0
  */
-@Component
 public class SafeExec {
 
     private final GoMintServer server;

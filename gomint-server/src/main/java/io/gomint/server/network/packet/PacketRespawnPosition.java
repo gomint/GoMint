@@ -10,14 +10,11 @@ package io.gomint.server.network.packet;
 import io.gomint.jraknet.PacketBuffer;
 import io.gomint.math.Vector;
 import io.gomint.server.network.Protocol;
-import lombok.Data;
-import lombok.Getter;
 
 /**
  * @author geNAZt
  * @version 1.0
  */
-@Data
 public class PacketRespawnPosition extends Packet {
 
     private Vector position;
@@ -42,12 +39,35 @@ public class PacketRespawnPosition extends Packet {
         this.entityId = buffer.readUnsignedVarLong();
     }
 
+    public Vector getPosition() {
+        return position;
+    }
+
+    public void setPosition(Vector position) {
+        this.position = position;
+    }
+
+    public RespawnState getState() {
+        return state;
+    }
+
+    public void setState(RespawnState state) {
+        this.state = state;
+    }
+
+    public long getEntityId() {
+        return entityId;
+    }
+
+    public void setEntityId(long entityId) {
+        this.entityId = entityId;
+    }
+
     public enum RespawnState {
         SEARCHING_FOR_SPAWN( (byte) 0 ),
         READY_TO_SPAWN( (byte) 1 ),
         CLIENT_READY_TO_SPAWN( (byte) 2 );
 
-        @Getter
         private final byte id;
 
         RespawnState(byte id) {
@@ -65,6 +85,10 @@ public class PacketRespawnPosition extends Packet {
                 default:
                     return CLIENT_READY_TO_SPAWN;
             }
+        }
+
+        public byte getId() {
+            return this.id;
         }
     }
 }

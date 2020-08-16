@@ -3,7 +3,6 @@ package io.gomint.server.network.packet;
 import io.gomint.jraknet.PacketBuffer;
 import io.gomint.server.network.Protocol;
 import io.gomint.server.resource.ResourcePack;
-import lombok.Data;
 
 import java.util.List;
 
@@ -11,7 +10,6 @@ import java.util.List;
  * @author geNAZt
  * @version 1.0
  */
-@Data
 public class PacketResourcePackStack extends Packet {
 
     private boolean mustAccept;
@@ -73,4 +71,35 @@ public class PacketResourcePackStack extends Packet {
         buffer.readString();
     }
 
+    public boolean isMustAccept() {
+        return mustAccept;
+    }
+
+    public void setMustAccept(boolean mustAccept) {
+        this.mustAccept = mustAccept;
+    }
+
+    public List<ResourcePack> getBehaviourPackEntries() {
+        return behaviourPackEntries;
+    }
+
+    public void setBehaviourPackEntries(List<ResourcePack> behaviourPackEntries) {
+        this.behaviourPackEntries = behaviourPackEntries;
+    }
+
+    public List<ResourcePack> getResourcePackEntries() {
+        return resourcePackEntries;
+    }
+
+    public void setResourcePackEntries(List<ResourcePack> resourcePackEntries) {
+        this.resourcePackEntries = resourcePackEntries;
+    }
+
+    public boolean isExperimental() {
+        return experimental;
+    }
+
+    public void setExperimental(boolean experimental) {
+        this.experimental = experimental;
+    }
 }

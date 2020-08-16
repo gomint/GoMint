@@ -20,7 +20,6 @@ import io.gomint.world.Particle;
 import io.gomint.world.block.Block;
 import io.gomint.world.block.data.Facing;
 import io.gomint.world.block.BlockTNT;
-import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,10 +30,8 @@ import java.util.concurrent.ThreadLocalRandom;
  * @author geNAZt
  * @version 1.0
  */
-@RequiredArgsConstructor
 public class Explosion {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger( Explosion.class );
     private static final float STEP_LENGTH = 0.3f;
     private final float size;
     private final Entity source;
@@ -44,6 +41,11 @@ public class Explosion {
     private BlockPosition tempBlock = new BlockPosition( 0, 0, 0 );
     private Set<Block> affectedBlocks = new HashSet<>();
     private Block currentBlock;
+
+    public Explosion(float size, Entity source) {
+        this.size = size;
+        this.source = source;
+    }
 
     private void checkAffectedWithZGiven( int z ) {
         for ( int y = 0; y < 16; ++y ) {

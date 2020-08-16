@@ -7,7 +7,6 @@ import io.gomint.inventory.item.*;
 import io.gomint.server.registry.RegisterInfo;
 import io.gomint.world.block.BlockWoodenStair;
 import io.gomint.world.block.data.LogType;
-import lombok.Getter;
 
 /**
  * @author geNAZt
@@ -23,7 +22,6 @@ import lombok.Getter;
 @RegisterInfo( sId = "minecraft:warped_stairs" )
 public class WoodenStair extends Stair implements BlockWoodenStair {
 
-    @Getter
     private enum LogTypeMagic {
         OAK("minecraft:oak_stairs"),
         SPRUCE("minecraft:spruce_stairs"),
@@ -68,7 +66,7 @@ public class WoodenStair extends Stair implements BlockWoodenStair {
     @Override
     public LogType getWoodType() {
         for (LogTypeMagic value : LogTypeMagic.values()) {
-            if (this.getBlockId().equals(value.getBlockId())) {
+            if (this.getBlockId().equals(value.blockId)) {
                 return LogType.valueOf(value.name());
             }
         }
@@ -79,7 +77,7 @@ public class WoodenStair extends Stair implements BlockWoodenStair {
     @Override
     public void setWoodType(LogType logType) {
         LogTypeMagic newState = LogTypeMagic.valueOf(logType.name());
-        this.setBlockId(newState.getBlockId());
+        this.setBlockId(newState.blockId);
     }
 
 }

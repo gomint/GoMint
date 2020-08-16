@@ -1,20 +1,13 @@
 package io.gomint.math;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
-
 /**
  * @author geNAZt
  * @version 1.0
  */
-@ToString
 public class Vector2 {
 
     public static final Vector2 ZERO = new Vector2( 0, 0 );
 
-    @Getter
-    @Setter
     private float x, z;
 
     public Vector2( float x, float z ) {
@@ -57,6 +50,30 @@ public class Vector2 {
 
     public float dot(Vector2 v){
         return this.x * v.x + this.z * v.z;
+    }
+
+    public float getX() {
+        return x;
+    }
+
+    public void setX(float x) {
+        this.x = x;
+    }
+
+    public float getZ() {
+        return z;
+    }
+
+    public void setZ(float z) {
+        this.z = z;
+    }
+
+    @Override
+    public String toString() {
+        return "Vector2{" +
+            "x=" + x +
+            ", z=" + z +
+            '}';
     }
 
 }

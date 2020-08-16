@@ -9,10 +9,8 @@ package io.gomint.math;
 
 import io.gomint.world.World;
 import io.gomint.world.block.Block;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+
+import java.util.Objects;
 
 /**
  * <p>
@@ -25,24 +23,15 @@ import lombok.ToString;
  * @author BlackyPaw
  * @version 2.0
  */
-@EqualsAndHashCode( callSuper = true )
-@ToString( callSuper = true )
 public class Location extends Vector {
 
-    @Getter
     private World world;
 
-    @Getter
-    @Setter
     private float yaw;
-    @Getter
-    @Setter
     private float headYaw;
-    @Getter
-    @Setter
     private float pitch;
 
-    public Location( World world ) {
+    public Location(World world ) {
         this.setWorld( world );
     }
 
@@ -126,6 +115,65 @@ public class Location extends Vector {
 
     public <T extends Block> T getBlock() {
         return this.world.getBlockAt( MathUtils.fastFloor( this.x ), MathUtils.fastFloor( this.y ), MathUtils.fastFloor( this.z ) );
+    }
+
+
+    public void setYaw(float yaw) {
+        this.yaw = yaw;
+    }
+
+    public void setHeadYaw(float headYaw) {
+        this.headYaw = headYaw;
+    }
+
+    public void setPitch(float pitch) {
+        this.pitch = pitch;
+    }
+
+    public World getWorld() {
+        return world;
+    }
+
+    public float getYaw() {
+        return yaw;
+    }
+
+    public float getHeadYaw() {
+        return headYaw;
+    }
+
+    public float getPitch() {
+        return pitch;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        Location location = (Location) o;
+        return Float.compare(location.yaw, yaw) == 0 &&
+            Float.compare(location.headYaw, headYaw) == 0 &&
+            Float.compare(location.pitch, pitch) == 0 &&
+            Objects.equals(world, location.world);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), world, yaw, headYaw, pitch);
+    }
+
+    @Override
+    public String toString() {
+        return "Location{" +
+            "world=" + world +
+            ", yaw=" + yaw +
+            ", headYaw=" + headYaw +
+            ", pitch=" + pitch +
+            ", x=" + x +
+            ", y=" + y +
+            ", z=" + z +
+            '}';
     }
 
 }

@@ -9,15 +9,11 @@ package io.gomint.server.network.packet;
 
 import io.gomint.jraknet.PacketBuffer;
 import io.gomint.server.network.Protocol;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 /**
  * @author geNAZt
  * @version 1.0
  */
-@Data
-@EqualsAndHashCode( callSuper = false )
 public class PacketRequestChunkRadius extends Packet {
 
     private int chunkRadius;
@@ -36,4 +32,11 @@ public class PacketRequestChunkRadius extends Packet {
         this.chunkRadius = buffer.readSignedVarInt();
     }
 
+    public int getChunkRadius() {
+        return chunkRadius;
+    }
+
+    public void setChunkRadius(int chunkRadius) {
+        this.chunkRadius = chunkRadius;
+    }
 }

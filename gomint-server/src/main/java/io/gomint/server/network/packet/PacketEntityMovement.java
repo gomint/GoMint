@@ -9,18 +9,12 @@ package io.gomint.server.network.packet;
 
 import io.gomint.jraknet.PacketBuffer;
 import io.gomint.server.network.Protocol;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
 
 /**
  * @author BlackyPaw
  * @author geNAZt
  * @version 2.0
  */
-@Data
-@EqualsAndHashCode( callSuper = false )
-@ToString
 public class PacketEntityMovement extends Packet {
 
     private static final byte FLAG_ON_GROUND = 0x1;
@@ -66,4 +60,75 @@ public class PacketEntityMovement extends Packet {
 
     }
 
+    public long getEntityId() {
+        return entityId;
+    }
+
+    public void setEntityId(long entityId) {
+        this.entityId = entityId;
+    }
+
+    public float getX() {
+        return x;
+    }
+
+    public void setX(float x) {
+        this.x = x;
+    }
+
+    public float getY() {
+        return y;
+    }
+
+    public void setY(float y) {
+        this.y = y;
+    }
+
+    public float getZ() {
+        return z;
+    }
+
+    public void setZ(float z) {
+        this.z = z;
+    }
+
+    public float getYaw() {
+        return yaw;
+    }
+
+    public void setYaw(float yaw) {
+        this.yaw = yaw;
+    }
+
+    public float getHeadYaw() {
+        return headYaw;
+    }
+
+    public void setHeadYaw(float headYaw) {
+        this.headYaw = headYaw;
+    }
+
+    public float getPitch() {
+        return pitch;
+    }
+
+    public void setPitch(float pitch) {
+        this.pitch = pitch;
+    }
+
+    public boolean isOnGround() {
+        return onGround;
+    }
+
+    public void setOnGround(boolean onGround) {
+        this.onGround = onGround;
+    }
+
+    public boolean isTeleported() {
+        return teleported;
+    }
+
+    public void setTeleported(boolean teleported) {
+        this.teleported = teleported;
+    }
 }

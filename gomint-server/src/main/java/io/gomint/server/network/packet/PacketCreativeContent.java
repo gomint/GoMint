@@ -10,13 +10,11 @@ package io.gomint.server.network.packet;
 import io.gomint.jraknet.PacketBuffer;
 import io.gomint.inventory.item.ItemStack;
 import io.gomint.server.network.Protocol;
-import lombok.Data;
 
 /**
  * @author geNAZt
  * @version 1.0
  */
-@Data
 public class PacketCreativeContent extends Packet {
 
     private ItemStack[] items;
@@ -34,4 +32,13 @@ public class PacketCreativeContent extends Packet {
     public void deserialize(PacketBuffer buffer, int protocolID) throws Exception {
 
     }
+
+    public ItemStack[] getItems() {
+        return items;
+    }
+
+    public void setItems(ItemStack[] items) {
+        this.items = items;
+    }
+
 }

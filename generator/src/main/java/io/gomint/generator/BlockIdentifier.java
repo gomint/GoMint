@@ -8,10 +8,9 @@
 package io.gomint.generator;
 
 import io.gomint.taglib.NBTTagCompound;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
 
 import java.util.Map;
+import java.util.Objects;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
@@ -19,8 +18,6 @@ import java.util.TreeMap;
  * @author geNAZt
  * @version 1.0
  */
-@EqualsAndHashCode
-@Getter
 public class BlockIdentifier {
 
     private final String blockId;
@@ -40,6 +37,48 @@ public class BlockIdentifier {
         }
 
         this.nbt = states;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        BlockIdentifier that = (BlockIdentifier) o;
+        return runtimeId == that.runtimeId &&
+            Objects.equals(blockId, that.blockId) &&
+            Objects.equals(states, that.states) &&
+            Objects.equals(nbt, that.nbt);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(blockId, states, runtimeId, nbt);
+    }
+
+    @Override
+    public String toString() {
+        return "BlockIdentifier{" +
+            "blockId='" + blockId + '\'' +
+            ", states=" + states +
+            ", runtimeId=" + runtimeId +
+            ", nbt=" + nbt +
+            '}';
+    }
+
+    public String getBlockId() {
+        return blockId;
+    }
+
+    public SortedMap<String, Object> getStates() {
+        return states;
+    }
+
+    public int getRuntimeId() {
+        return runtimeId;
+    }
+
+    public NBTTagCompound getNbt() {
+        return nbt;
     }
 
 }

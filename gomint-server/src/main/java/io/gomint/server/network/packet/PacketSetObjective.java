@@ -9,13 +9,11 @@ package io.gomint.server.network.packet;
 
 import io.gomint.jraknet.PacketBuffer;
 import io.gomint.server.network.Protocol;
-import lombok.Data;
 
 /**
  * @author geNAZt
  * @version 1.0
  */
-@Data
 public class PacketSetObjective extends Packet {
 
     private String displaySlot;
@@ -43,5 +41,45 @@ public class PacketSetObjective extends Packet {
     @Override
     public void deserialize( PacketBuffer buffer, int protocolID ) {
 
+    }
+
+    public String getDisplaySlot() {
+        return displaySlot;
+    }
+
+    public void setDisplaySlot(String displaySlot) {
+        this.displaySlot = displaySlot;
+    }
+
+    public String getObjectiveName() {
+        return objectiveName;
+    }
+
+    public void setObjectiveName(String objectiveName) {
+        this.objectiveName = objectiveName;
+    }
+
+    public String getDisplayName() {
+        return displayName;
+    }
+
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
+    }
+
+    public String getCriteriaName() {
+        return criteriaName;
+    }
+
+    public void setCriteriaName(String criteriaName) {
+        this.criteriaName = criteriaName;
+    }
+
+    public int getSortOrder() {
+        return sortOrder;
+    }
+
+    public void setSortOrder(int sortOrder) {
+        this.sortOrder = sortOrder;
     }
 }

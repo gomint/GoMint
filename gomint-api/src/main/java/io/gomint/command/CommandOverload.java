@@ -8,9 +8,6 @@
 package io.gomint.command;
 
 import io.gomint.command.validator.CommandValidator;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -19,14 +16,22 @@ import java.util.Map;
  * @author geNAZt
  * @version 1.0
  */
-@ToString
 public class CommandOverload {
 
-    @Getter @Setter
     private String permission = "";
-
-    @Getter
     private Map<String, ParamValidator> parameters;
+
+    public void setPermission(String permission) {
+        this.permission = permission;
+    }
+
+    public String getPermission() {
+        return permission;
+    }
+
+    public Map<String, ParamValidator> getParameters() {
+        return parameters;
+    }
 
     /**
      * Add a param to the command. Params are passed to their validators when the command gets
@@ -115,6 +120,14 @@ public class CommandOverload {
         }
 
         return count;
+    }
+
+    @Override
+    public String toString() {
+        return "CommandOverload{" +
+            "permission='" + permission + '\'' +
+            ", parameters=" + parameters +
+            '}';
     }
 
 }

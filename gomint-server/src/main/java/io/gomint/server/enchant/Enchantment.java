@@ -8,7 +8,6 @@
 package io.gomint.server.enchant;
 
 import io.gomint.server.inventory.item.ItemStack;
-import lombok.Getter;
 
 /**
  * @author geNAZt
@@ -16,7 +15,6 @@ import lombok.Getter;
  */
 public class Enchantment implements io.gomint.enchant.Enchantment {
 
-    @Getter
     private final short maxLevel;
     private short level;
 
@@ -31,6 +29,10 @@ public class Enchantment implements io.gomint.enchant.Enchantment {
 
     void setLevel( short level ) {
         this.level = level;
+    }
+
+    public short getMaxLevel() {
+        return maxLevel;
     }
 
     @Override

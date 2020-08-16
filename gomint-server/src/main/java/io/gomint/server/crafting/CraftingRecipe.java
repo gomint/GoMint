@@ -8,7 +8,6 @@
 package io.gomint.server.crafting;
 
 import io.gomint.inventory.item.ItemStack;
-import lombok.Getter;
 
 import java.util.*;
 
@@ -58,6 +57,10 @@ public abstract class CraftingRecipe extends Recipe {
 
         return recipeMaterial == inputMaterial &&
             ( recipeItem.getData() == -1 || recipeItem.getData() == invItem.getData() );
+    }
+
+    public ItemStack[] getOutcome() {
+        return outcome;
     }
 
 }

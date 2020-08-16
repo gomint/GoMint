@@ -9,13 +9,11 @@ package io.gomint.server.network.packet;
 
 import io.gomint.jraknet.PacketBuffer;
 import io.gomint.server.network.Protocol;
-import lombok.Data;
 
 /**
  * @author geNAZt
  * @version 1.0
  */
-@Data
 public class PacketRemoveObjective extends Packet {
 
     private String objectiveName;
@@ -35,5 +33,13 @@ public class PacketRemoveObjective extends Packet {
     @Override
     public void deserialize( PacketBuffer buffer, int protocolID ) {
 
+    }
+
+    public String getObjectiveName() {
+        return objectiveName;
+    }
+
+    public void setObjectiveName(String objectiveName) {
+        this.objectiveName = objectiveName;
     }
 }

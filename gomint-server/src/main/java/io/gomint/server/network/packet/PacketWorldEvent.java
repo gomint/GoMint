@@ -3,13 +3,11 @@ package io.gomint.server.network.packet;
 import io.gomint.jraknet.PacketBuffer;
 import io.gomint.math.Vector;
 import io.gomint.server.network.Protocol;
-import lombok.Data;
 
 /**
  * @author geNAZt
  * @version 1.0
  */
-@Data
 public class PacketWorldEvent extends Packet {
 
     private int eventId;
@@ -35,4 +33,27 @@ public class PacketWorldEvent extends Packet {
 
     }
 
+    public int getEventId() {
+        return eventId;
+    }
+
+    public void setEventId(int eventId) {
+        this.eventId = eventId;
+    }
+
+    public Vector getPosition() {
+        return position;
+    }
+
+    public void setPosition(Vector position) {
+        this.position = position;
+    }
+
+    public int getData() {
+        return data;
+    }
+
+    public void setData(int data) {
+        this.data = data;
+    }
 }

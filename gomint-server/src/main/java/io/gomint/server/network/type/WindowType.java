@@ -1,7 +1,5 @@
 package io.gomint.server.network.type;
 
-import lombok.Getter;
-
 /**
  * @author geNAZt
  * @version 1.0
@@ -45,11 +43,14 @@ public enum WindowType {
     JIGSAW_EDITOR(32),
     SMITHING_TABLE(33);
 
-    @Getter
     private final byte id;
 
     WindowType(int id) {
         this.id = (byte) id;
+    }
+
+    public byte getId() {
+        return id;
     }
 
 }

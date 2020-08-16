@@ -53,9 +53,6 @@ import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectMaps;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.ToString;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -76,31 +73,24 @@ import java.util.function.Predicate;
  * @author BlackyPaw
  * @version 1.0
  */
-@EqualsAndHashCode(of = {"worldDir"})
-@ToString(of = {"levelName", "worldDir"})
 public abstract class WorldAdapter implements World {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(WorldAdapter.class);
 
     // Shared objects
-    @Getter
     protected final GoMintServer server;
-    @Getter
     protected final Logger logger;
 
     // World properties
-    @Getter
     protected final File worldDir;
     protected String levelName;
     protected Location spawn;
-    @Getter
     protected Map<Gamerule, Object> gamerules = new HashMap<>();
-    @Getter private WorldConfig config;
+    private WorldConfig config;
 
     /**
      * Get the difficulty of this world
      */
-    @Getter
     protected Difficulty difficulty = Difficulty.NORMAL;
 
     // Chunk Handling
@@ -138,6 +128,52 @@ public abstract class WorldAdapter implements World {
         this.chunkPackageTasks = new ConcurrentLinkedQueue<>();
         this.startAsyncWorker(server.getScheduler());
         this.initGamerules();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        WorldAdapter that = (WorldAdapter) o;
+        return Objects.equals(worldDir, that.worldDir);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(worldDir);
+    }
+
+    @Override
+    public String toString() {
+        return "WorldAdapter{" +
+            "worldDir=" + worldDir +
+            ", levelName='" + levelName + '\'' +
+            '}';
+    }
+
+    public GoMintServer getServer() {
+        return server;
+    }
+
+    public Logger getLogger() {
+        return logger;
+    }
+
+    public File getWorldDir() {
+        return worldDir;
+    }
+
+    public Map<Gamerule, Object> getGamerules() {
+        return gamerules;
+    }
+
+    public WorldConfig getConfig() {
+        return config;
+    }
+
+    @Override
+    public Difficulty getDifficulty() {
+        return difficulty;
     }
 
     // ==================================== GENERAL ACCESSORS ==================================== //
@@ -498,7 +534,7 @@ public abstract class WorldAdapter implements World {
                 chunkAdapter.tickRandomBlocks(currentTimeMS, dT);
             }
 
-            chunkAdapter.tickTiles(currentTimeMS);
+            chunkAdapter.tickTiles(currentTimeMS, dT);
         }
     }
 
@@ -1439,7 +1475,6 @@ public abstract class WorldAdapter implements World {
         WorldCreateException {
         try {
             this.chunkGenerator = generator.getConstructor(World.class, GeneratorContext.class).newInstance(this, context);
-            this.server.getContext().getAutowireCapableBeanFactory().autowireBean(this.chunkGenerator);
         } catch (NoSuchMethodException e) {
             throw new WorldCreateException("The given generator does not provide a (World, GeneratorContext) constructor");
         } catch (IllegalAccessException e) {

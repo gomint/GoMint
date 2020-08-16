@@ -2,7 +2,6 @@ package io.gomint.server.entity;
 
 import io.gomint.server.network.packet.PacketAdventureSettings;
 import io.gomint.server.player.PlayerPermission;
-import lombok.Data;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -10,10 +9,7 @@ import org.slf4j.LoggerFactory;
  * @author geNAZt
  * @version 1.0
  */
-@Data
 public class AdventureSettings {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger( AdventureSettings.class );
 
     // First flag set
     private static final int WORLD_IMMUTABLE = 0x01;
@@ -175,4 +171,147 @@ public class AdventureSettings {
         this.player.getConnection().addToSendQueue( adventureSettingsPacket );
     }
 
+    public CommandPermission getCommandPermission() {
+        return commandPermission;
+    }
+
+    public void setCommandPermission(CommandPermission commandPermission) {
+        this.commandPermission = commandPermission;
+    }
+
+    public PlayerPermission getPlayerPermission() {
+        return playerPermission;
+    }
+
+    public void setPlayerPermission(PlayerPermission playerPermission) {
+        this.playerPermission = playerPermission;
+    }
+
+    public boolean isWorldImmutable() {
+        return worldImmutable;
+    }
+
+    public void setWorldImmutable(boolean worldImmutable) {
+        this.worldImmutable = worldImmutable;
+    }
+
+    public boolean isNoPvP() {
+        return noPvP;
+    }
+
+    public void setNoPvP(boolean noPvP) {
+        this.noPvP = noPvP;
+    }
+
+    public boolean isAutoJump() {
+        return autoJump;
+    }
+
+    public void setAutoJump(boolean autoJump) {
+        this.autoJump = autoJump;
+    }
+
+    public boolean isCanFly() {
+        return canFly;
+    }
+
+    public void setCanFly(boolean canFly) {
+        this.canFly = canFly;
+    }
+
+    public boolean isNoClip() {
+        return noClip;
+    }
+
+    public void setNoClip(boolean noClip) {
+        this.noClip = noClip;
+    }
+
+    public boolean isWorldBuilder() {
+        return worldBuilder;
+    }
+
+    public void setWorldBuilder(boolean worldBuilder) {
+        this.worldBuilder = worldBuilder;
+    }
+
+    public boolean isFlying() {
+        return flying;
+    }
+
+    public void setFlying(boolean flying) {
+        this.flying = flying;
+    }
+
+    public boolean isMuted() {
+        return muted;
+    }
+
+    public void setMuted(boolean muted) {
+        this.muted = muted;
+    }
+
+    public boolean isBuildAndMine() {
+        return buildAndMine;
+    }
+
+    public void setBuildAndMine(boolean buildAndMine) {
+        this.buildAndMine = buildAndMine;
+    }
+
+    public boolean isUseDoorsAndSwitches() {
+        return useDoorsAndSwitches;
+    }
+
+    public void setUseDoorsAndSwitches(boolean useDoorsAndSwitches) {
+        this.useDoorsAndSwitches = useDoorsAndSwitches;
+    }
+
+    public boolean isOpenContainers() {
+        return openContainers;
+    }
+
+    public void setOpenContainers(boolean openContainers) {
+        this.openContainers = openContainers;
+    }
+
+    public boolean isAttackPlayers() {
+        return attackPlayers;
+    }
+
+    public void setAttackPlayers(boolean attackPlayers) {
+        this.attackPlayers = attackPlayers;
+    }
+
+    public boolean isAttackMobs() {
+        return attackMobs;
+    }
+
+    public void setAttackMobs(boolean attackMobs) {
+        this.attackMobs = attackMobs;
+    }
+
+    public boolean isOperator() {
+        return operator;
+    }
+
+    public void setOperator(boolean operator) {
+        this.operator = operator;
+    }
+
+    public boolean isTeleport() {
+        return teleport;
+    }
+
+    public void setTeleport(boolean teleport) {
+        this.teleport = teleport;
+    }
+
+    public EntityPlayer getPlayer() {
+        return player;
+    }
+
+    public void setPlayer(EntityPlayer player) {
+        this.player = player;
+    }
 }

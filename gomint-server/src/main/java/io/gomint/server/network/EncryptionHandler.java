@@ -9,7 +9,6 @@ package io.gomint.server.network;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.PooledByteBufAllocator;
-import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,9 +42,9 @@ public class EncryptionHandler {
     private ECPublicKey clientPublicKey;
 
     // Data for packet and checksum calculations
-    @Getter private byte[] clientSalt;
-    @Getter private byte[] key;
-    @Getter private byte[] iv;
+    private byte[] clientSalt;
+    private byte[] key;
+    private byte[] iv;
 
     // Server side
     private PublicKey serverPublicKey;
@@ -59,6 +58,18 @@ public class EncryptionHandler {
      */
     public EncryptionHandler( EncryptionKeyFactory keyFactory ) {
         this.keyFactory = keyFactory;
+    }
+
+    public byte[] getClientSalt() {
+        return clientSalt;
+    }
+
+    public byte[] getKey() {
+        return key;
+    }
+
+    public byte[] getIv() {
+        return iv;
     }
 
     /**

@@ -57,14 +57,9 @@ import io.netty.buffer.ByteBuf;
 import it.unimi.dsi.fastutil.longs.LongIterator;
 import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
 import it.unimi.dsi.fastutil.longs.LongSet;
-import lombok.Getter;
-import lombok.Setter;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
@@ -80,91 +75,56 @@ import static io.gomint.server.network.Protocol.PACKET_RESOURCEPACK_RESPONSE;
  * @author BlackyPaw
  * @version 1.0
  */
-@Component
-@Scope("prototype")
 public class PlayerConnection implements ConnectionWithState {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PlayerConnection.class);
-
-    private static boolean packetHandlersInit = false;
-    private static final PacketHandler[] PACKET_HANDLERS = new PacketHandler[256];
 
     // Network manager that created this connection:
     private final NetworkManager networkManager;
 
     // Actual connection for wire transfer:
-    @Getter
     private final Connection connection;
 
     // Caching state
-    @Getter
-    @Setter
     private boolean cachingSupported;
-    @Getter
     private final Cache cache = new Cache();
 
     // World data
-    @Getter
     private final LongSet playerChunks;
-    @Getter
     private final LongSet loadingChunks;
-    @Getter
     private final GoMintServer server;
-    @Setter
-    @Getter
     private int protocolID;
-    @Setter
-    private long tcpId;
-    @Setter
-    private int tcpPing;
     private PostProcessExecutor postProcessorExecutor;
 
     // Connection State:
-    @Getter
-    @Setter
     private PlayerConnectionState state;
     private List<Packet> sendQueue;
 
     // Entity
-    @Getter
-    @Setter
     private EntityPlayer entity;
 
     // Additional data
-    @Getter
-    @Setter
     private DeviceInfo deviceInfo;
     private float lastUpdateDT = 0;
 
     // Anti spam because mojang likes to send data
-    @Setter
-    @Getter
     private boolean hadStartBreak;
-    @Setter
-    @Getter
     private boolean startBreakResult;
-    @Getter
     private Set<PacketInventoryTransaction> transactionsHandled = new HashSet<>();
 
     // Processors
-    @Getter
     private Processor inputProcessor = new Processor(false);
-    @Getter
     private Processor outputProcessor = new Processor(true);
 
     /**
      * Constructs a new player connection.
      *
-     * @param context        The spring context who loaded this application
      * @param networkManager The network manager creating this instance
      * @param connection     The jRakNet connection for actual wire-transfer
      */
-    @Autowired
-    PlayerConnection(ApplicationContext context, NetworkManager networkManager, Optional<Connection> connection) {
-        PlayerConnection.ensureStaticInit(context);
-
+    PlayerConnection(NetworkManager networkManager, Connection connection) {
         this.networkManager = networkManager;
-        this.connection = connection.orElse(null);
+        this.connection = connection;
         this.state = PlayerConnectionState.HANDSHAKE;
         this.server = networkManager.getServer();
         this.playerChunks = new LongOpenHashSet();
@@ -198,46 +158,95 @@ public class PlayerConnection implements ConnectionWithState {
         }
     }
 
-    private static void ensureStaticInit(ApplicationContext applicationContext) {
-        if (!packetHandlersInit) {
-            // Register all packet handlers we need
-            PACKET_HANDLERS[Protocol.PACKET_MOVE_PLAYER & 0xff] = new PacketMovePlayerHandler();
-            PACKET_HANDLERS[Protocol.PACKET_REQUEST_CHUNK_RADIUS & 0xff] = new PacketRequestChunkRadiusHandler();
-            PACKET_HANDLERS[Protocol.PACKET_PLAYER_ACTION & 0xff] = new PacketPlayerActionHandler();
-            PACKET_HANDLERS[Protocol.PACKET_MOB_ARMOR_EQUIPMENT & 0xff] = new PacketMobArmorEquipmentHandler();
-            PACKET_HANDLERS[Protocol.PACKET_ADVENTURE_SETTINGS & 0xff] = new PacketAdventureSettingsHandler();
-            PACKET_HANDLERS[Protocol.PACKET_RESOURCEPACK_RESPONSE & 0xff] = new PacketResourcePackResponseHandler();
-            PACKET_HANDLERS[Protocol.PACKET_CRAFTING_EVENT & 0xff] = new PacketCraftingEventHandler();
-            PACKET_HANDLERS[Protocol.PACKET_LOGIN & 0xff] = applicationContext.getBean(PacketLoginHandler.class);
-            PACKET_HANDLERS[Protocol.PACKET_MOB_EQUIPMENT & 0xff] = new PacketMobEquipmentHandler();
-            PACKET_HANDLERS[Protocol.PACKET_INTERACT & 0xff] = new PacketInteractHandler();
-            PACKET_HANDLERS[Protocol.PACKET_BLOCK_PICK_REQUEST & 0xff] = new PacketBlockPickRequestHandler();
-            PACKET_HANDLERS[Protocol.PACKET_ENCRYPTION_RESPONSE & 0xff] = new PacketEncryptionResponseHandler();
-            PACKET_HANDLERS[Protocol.PACKET_INVENTORY_TRANSACTION & 0xff] = applicationContext.getBean(PacketInventoryTransactionHandler.class);
-            PACKET_HANDLERS[Protocol.PACKET_CONTAINER_CLOSE & 0xff] = new PacketContainerCloseHandler();
-            PACKET_HANDLERS[Protocol.PACKET_HOTBAR & 0xff] = new PacketHotbarHandler();
-            PACKET_HANDLERS[Protocol.PACKET_TEXT & 0xff] = new PacketTextHandler();
-            PACKET_HANDLERS[Protocol.PACKET_COMMAND_REQUEST & 0xff] = new PacketCommandRequestHandler();
-            PACKET_HANDLERS[Protocol.PACKET_WORLD_SOUND_EVENT_V1 & 0xff] = new PacketWorldSoundEventHandler();
-            PACKET_HANDLERS[Protocol.PACKET_ANIMATE & 0xff] = new PacketAnimateHandler();
-            PACKET_HANDLERS[Protocol.PACKET_ENTITY_EVENT & 0xff] = new PacketEntityEventHandler();
-            PACKET_HANDLERS[Protocol.PACKET_MODAL_RESPONSE & 0xFF] = new PacketModalResponseHandler();
-            PACKET_HANDLERS[Protocol.PACKET_SERVER_SETTINGS_REQUEST & 0xFF] = new PacketServerSettingsRequestHandler();
-            PACKET_HANDLERS[Protocol.PACKET_ENTITY_FALL & 0xFF] = new PacketEntityFallHandler();
-            PACKET_HANDLERS[Protocol.PACKET_BOOK_EDIT & 0xFF] = new PacketBookEditHandler();
-            PACKET_HANDLERS[Protocol.PACKET_SET_LOCAL_PLAYER_INITIALIZED & 0xff] = new PacketSetLocalPlayerAsInitializedHandler();
-            PACKET_HANDLERS[Protocol.PACKET_TILE_ENTITY_DATA & 0xff] = new PacketTileEntityDataHandler();
-            PACKET_HANDLERS[Protocol.PACKET_BOSS_BAR & 0xff] = new PacketBossBarHandler();
-            PACKET_HANDLERS[Protocol.PACKET_RESPAWN_POSITION & 0xff] = new PacketRespawnPositionHandler();
-            PACKET_HANDLERS[Protocol.PACKET_WORLD_SOUND_EVENT & 0xff] = new PacketWorldSoundEventHandler();
-            PACKET_HANDLERS[Protocol.PACKET_TICK_SYNC & 0xff] = new PacketTickSyncHandler();
-            PACKET_HANDLERS[Protocol.PACKET_CLIENT_CACHE_STATUS & 0xff] = new PacketClientCacheStatusHandler();
-            PACKET_HANDLERS[Protocol.PACKET_EMOTE_LIST & 0xff] = new PacketEmoteListHandler();
-            PACKET_HANDLERS[Protocol.PACKET_VIOLATION_WARNING & 0xff] = new PacketViolationWarningHandler();
-            PACKET_HANDLERS[Protocol.PACKET_CLIENT_CACHE_BLOB_STATUS & 0xff] = new PacketClientCacheBlobStatusHandler();
+    public Processor getInputProcessor() {
+        return inputProcessor;
+    }
 
-            packetHandlersInit = true;
-        }
+    @Override
+    public Processor getOutputProcessor() {
+        return outputProcessor;
+    }
+
+    public Set<PacketInventoryTransaction> getTransactionsHandled() {
+        return transactionsHandled;
+    }
+
+    public void setStartBreakResult(boolean startBreakResult) {
+        this.startBreakResult = startBreakResult;
+    }
+
+    public boolean isStartBreakResult() {
+        return startBreakResult;
+    }
+
+    public void setHadStartBreak(boolean hadStartBreak) {
+        this.hadStartBreak = hadStartBreak;
+    }
+
+    public boolean isHadStartBreak() {
+        return hadStartBreak;
+    }
+
+    public void setDeviceInfo(DeviceInfo deviceInfo) {
+        this.deviceInfo = deviceInfo;
+    }
+
+    public DeviceInfo getDeviceInfo() {
+        return deviceInfo;
+    }
+
+    public void setEntity(EntityPlayer entity) {
+        this.entity = entity;
+    }
+
+    public EntityPlayer getEntity() {
+        return entity;
+    }
+
+    public void setState(PlayerConnectionState state) {
+        this.state = state;
+    }
+
+    @Override
+    public PlayerConnectionState getState() {
+        return state;
+    }
+
+    public void setProtocolID(int protocolID) {
+        this.protocolID = protocolID;
+    }
+
+    @Override
+    public int getProtocolID() {
+        return protocolID;
+    }
+
+    public GoMintServer getServer() {
+        return server;
+    }
+
+    public LongSet getLoadingChunks() {
+        return loadingChunks;
+    }
+
+    public LongSet getPlayerChunks() {
+        return playerChunks;
+    }
+
+    public boolean isCachingSupported() {
+        return cachingSupported;
+    }
+
+    public Cache getCache() {
+        return cache;
+    }
+
+    public void setCachingSupported(boolean cachingSupported) {
+        this.cachingSupported = cachingSupported;
+    }
+
+    public Connection getConnection() {
+        return connection;
     }
 
     /**
@@ -588,7 +597,7 @@ public class PlayerConnection implements ConnectionWithState {
      */
     @SuppressWarnings("unchecked")  // Needed for generic types not matching
     private void handlePacket(long currentTimeMillis, Packet packet) throws Exception {
-        PacketHandler handler = PACKET_HANDLERS[packet.getId() & 0xff];
+        PacketHandler handler = this.networkManager.getPacketHandler(packet.getId() & 0xff);
         if (handler != null) {
             LOGGER.debug("Packet: {}", packet);
             handler.handle(packet, currentTimeMillis, this);
@@ -891,6 +900,9 @@ public class PlayerConnection implements ConnectionWithState {
         packet.setEnchantmentSeed(ThreadLocalRandom.current().nextInt());
         packet.setCorrelationId(this.server.getServerUniqueID().toString());
 
+        packet.setBlockPalette(this.server.getBlocks().getPacketCache());
+        packet.setItemPalette(this.server.getItems().getPacketCache());
+
         // Set the new location
         this.entity.setAndRecalcPosition(this.entity.getSpawnLocation() != null ? this.entity.getSpawnLocation() : world.getSpawnLocation());
         this.addToSendQueue(packet);
@@ -932,14 +944,14 @@ public class PlayerConnection implements ConnectionWithState {
     /**
      * Get this connection ping
      *
-     * @return ping of UDP connection or 0 when TCP is used
+     * @return ping of UDP connection
      */
     public int getPing() {
-        return (this.connection != null) ? (int) this.connection.getPing() : this.tcpPing;
+        return (int) this.connection.getPing();
     }
 
     public long getId() {
-        return (this.connection != null) ? this.connection.getGuid() : this.tcpId;
+        return this.connection.getGuid();
     }
 
     @Override

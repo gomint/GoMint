@@ -3,6 +3,7 @@ package io.gomint.server.world.block;
 import io.gomint.entity.Entity;
 import io.gomint.event.world.BlockPlaceEvent;
 import io.gomint.inventory.item.ItemStack;
+import io.gomint.jraknet.PacketBuffer;
 import io.gomint.math.AxisAlignedBB;
 import io.gomint.math.Location;
 import io.gomint.math.Vector;
@@ -22,7 +23,9 @@ import io.gomint.world.block.data.Facing;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.util.Collection;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -34,26 +37,33 @@ public class Blocks {
     private static final Logger LOGGER = LoggerFactory.getLogger( Blocks.class );
     private static long lastReport = 0;
     private final StringRegistry<Block> generators;
+    private PacketBuffer packetCache;
 
     /**
      * Create a new block registry
      *
      * @param classPath which builds this registry
      */
-    public Blocks( ClassPath classPath ) {
+    public Blocks(ClassPath classPath, List<BlockIdentifier> blockIdentifiers) throws IOException {
         this.generators = new StringRegistry<>(classPath, (clazz, id) -> {
             LambdaConstructionFactory<Block> factory = new LambdaConstructionFactory<>(clazz);
             BlockIdentifier blockIdentifier = BlockRuntimeIDs.toBlockIdentifier(id, null);
 
-            return () -> {
+            return in -> {
                 Block block = factory.newInstance();
                 block.setIdentifier(blockIdentifier);
                 return block;
             };
         });
 
+        BlockRuntimeIDs.init(blockIdentifiers, this);
+
         this.generators.register( "io.gomint.server.world.block" );
         this.generators.cleanup();
+    }
+
+    public PacketBuffer getPacketCache() {
+        return packetCache;
     }
 
     public <T extends Block> T get(BlockIdentifier identifier, byte skyLightLevel, byte blockLightLevel,
@@ -147,6 +157,10 @@ public class Blocks {
         block = block.setBlockFromPlacementData( data );
         block.afterPlacement( data );
         return true;
+    }
+
+    public void setPacketCache(PacketBuffer packetCache) {
+        this.packetCache = packetCache;
     }
 
 }

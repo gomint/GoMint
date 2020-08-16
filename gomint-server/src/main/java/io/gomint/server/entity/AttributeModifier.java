@@ -7,15 +7,10 @@
 
 package io.gomint.server.entity;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-
 /**
  * @author geNAZt
  * @version 1.0
  */
-@RequiredArgsConstructor
-@Getter
 public enum AttributeModifier {
 
     // Damage
@@ -32,5 +27,13 @@ public enum AttributeModifier {
     RANDOM_SPAWN_BONUS( "RandomSpawnBonus" );
 
     private final String name;
+
+    AttributeModifier(String name) {
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
+    }
 
 }

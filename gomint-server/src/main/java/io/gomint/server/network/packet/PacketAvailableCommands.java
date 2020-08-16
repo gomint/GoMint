@@ -4,9 +4,7 @@ import io.gomint.jraknet.PacketBuffer;
 import io.gomint.server.network.Protocol;
 import io.gomint.server.network.type.CommandData;
 import io.gomint.server.util.collection.IndexedHashMap;
-import lombok.Data;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -14,7 +12,6 @@ import java.util.Map;
  * @author geNAZt
  * @version 1.0
  */
-@Data
 public class PacketAvailableCommands extends Packet {
 
     private List<String> enumValues;
@@ -108,6 +105,38 @@ public class PacketAvailableCommands extends Packet {
     @Override
     public void deserialize( PacketBuffer buffer, int protocolID ) {
 
+    }
+
+    public List<String> getEnumValues() {
+        return enumValues;
+    }
+
+    public void setEnumValues(List<String> enumValues) {
+        this.enumValues = enumValues;
+    }
+
+    public List<String> getPostFixes() {
+        return postFixes;
+    }
+
+    public void setPostFixes(List<String> postFixes) {
+        this.postFixes = postFixes;
+    }
+
+    public IndexedHashMap<String, List<Integer>> getEnums() {
+        return enums;
+    }
+
+    public void setEnums(IndexedHashMap<String, List<Integer>> enums) {
+        this.enums = enums;
+    }
+
+    public List<CommandData> getCommandData() {
+        return commandData;
+    }
+
+    public void setCommandData(List<CommandData> commandData) {
+        this.commandData = commandData;
     }
 
 }

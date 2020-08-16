@@ -10,15 +10,11 @@ package io.gomint.server.network.packet;
 import io.gomint.jraknet.PacketBuffer;
 import io.gomint.math.Vector;
 import io.gomint.server.network.Protocol;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 /**
  * @author BlackyPaw
  * @version 1.0
  */
-@Data
-@EqualsAndHashCode( callSuper = false )
 public class PacketEntityMotion extends Packet {
 
     private long entityId;
@@ -41,4 +37,19 @@ public class PacketEntityMotion extends Packet {
 
     }
 
+    public long getEntityId() {
+        return entityId;
+    }
+
+    public void setEntityId(long entityId) {
+        this.entityId = entityId;
+    }
+
+    public Vector getVelocity() {
+        return velocity;
+    }
+
+    public void setVelocity(Vector velocity) {
+        this.velocity = velocity;
+    }
 }

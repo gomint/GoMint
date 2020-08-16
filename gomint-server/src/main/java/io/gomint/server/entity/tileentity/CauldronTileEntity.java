@@ -7,6 +7,8 @@
 
 package io.gomint.server.entity.tileentity;
 
+import io.gomint.server.inventory.item.Items;
+import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.world.block.Block;
 import io.gomint.taglib.NBTTagCompound;
 
@@ -16,6 +18,7 @@ import java.awt.Color;
  * @author geNAZt
  * @version 1.0
  */
+@RegisterInfo(sId = "Cauldron")
 public class CauldronTileEntity extends TileEntity {
 
     private Color color;
@@ -23,8 +26,8 @@ public class CauldronTileEntity extends TileEntity {
     private short potionId;
     private short potionType;
 
-    public CauldronTileEntity( Block block ) {
-        super( block );
+    public CauldronTileEntity( Block block, Items items) {
+        super( block, items );
     }
 
     @Override
@@ -41,7 +44,7 @@ public class CauldronTileEntity extends TileEntity {
     }
 
     @Override
-    public void update( long currentMillis ) {
+    public void update( long currentMillis, float dT ) {
 
     }
 

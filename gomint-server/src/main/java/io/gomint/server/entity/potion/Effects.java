@@ -8,10 +8,12 @@
 package io.gomint.server.entity.potion;
 
 import io.gomint.server.entity.potion.effect.Effect;
+import io.gomint.server.entity.tileentity.TileEntity;
 import io.gomint.server.player.EffectManager;
 import io.gomint.server.registry.Generator;
 import io.gomint.server.registry.Registry;
 import io.gomint.server.util.ClassPath;
+import io.gomint.server.util.performance.LambdaConstructionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,14 +27,11 @@ public class Effects {
     private final Registry<Effect> generators;
 
     public Effects( ClassPath classPath ) {
-        this.generators = new Registry<>( classPath, (clazz, id) -> () -> {
-            try {
-                return (Effect) clazz.newInstance();
-            } catch ( InstantiationException | IllegalAccessException e ) {
-                LOGGER.error( "Could not generate new effect", e );
-            }
-
-            return null;
+        this.generators = new Registry<>( classPath, (clazz, id) -> {
+            LambdaConstructionFactory<Effect> factory = new LambdaConstructionFactory<>(clazz);
+            return in -> {
+                return factory.newInstance();
+            };
         } );
 
         this.generators.register( "io.gomint.server.entity.potion.effect" );

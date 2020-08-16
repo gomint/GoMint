@@ -3,14 +3,11 @@ package io.gomint.server.network.packet;
 import io.gomint.jraknet.PacketBuffer;
 import io.gomint.math.Vector;
 import io.gomint.server.network.Protocol;
-import lombok.Data;
-import lombok.Getter;
 
 /**
  * @author geNAZt
  * @version 1.0
  */
-@Data
 public class PacketInteract extends Packet {
 
     private InteractAction action;
@@ -45,6 +42,30 @@ public class PacketInteract extends Packet {
         }
     }
 
+    public InteractAction getAction() {
+        return action;
+    }
+
+    public void setAction(InteractAction action) {
+        this.action = action;
+    }
+
+    public long getEntityId() {
+        return entityId;
+    }
+
+    public void setEntityId(long entityId) {
+        this.entityId = entityId;
+    }
+
+    public Vector getPosition() {
+        return position;
+    }
+
+    public void setPosition(Vector position) {
+        this.position = position;
+    }
+
     public enum InteractAction {
         INTERACT( 1 ),
         ATTACK( 2 ),
@@ -53,14 +74,17 @@ public class PacketInteract extends Packet {
         OPEN_NPC( 5 ),
         OPEN_INVENTORY( 6 );
 
-        @Getter
         private final byte id;
 
         InteractAction( int id ) {
             this.id = (byte) id;
         }
 
-        public static InteractAction valueOf( byte actionId ) {
+        public byte getId() {
+            return id;
+        }
+
+        public static InteractAction valueOf(byte actionId ) {
             switch ( actionId ) {
                 case 1:
                     return INTERACT;

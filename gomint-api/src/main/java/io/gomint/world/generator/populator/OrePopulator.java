@@ -12,16 +12,18 @@ import io.gomint.world.Chunk;
 import io.gomint.world.World;
 import io.gomint.world.generator.object.Ore;
 import io.gomint.world.generator.object.OreType;
-import lombok.AllArgsConstructor;
 
 /**
  * @author geNAZt
  * @version 1.0
  */
-@AllArgsConstructor
 public class OrePopulator implements Populator {
 
     private final OreType[] oreTypes;
+
+    public OrePopulator(OreType[] oreTypes) {
+        this.oreTypes = oreTypes;
+    }
 
     @Override
     public void populate( World world, Chunk chunk, FastRandom random ) {

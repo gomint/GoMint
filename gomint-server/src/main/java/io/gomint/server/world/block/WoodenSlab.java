@@ -8,7 +8,6 @@ import io.gomint.world.block.BlockType;
 import io.gomint.server.registry.RegisterInfo;
 import io.gomint.world.block.BlockWoodenSlab;
 import io.gomint.world.block.data.LogType;
-import lombok.Getter;
 
 /**
  * @author geNAZt
@@ -21,7 +20,6 @@ public class WoodenSlab extends Slab implements BlockWoodenSlab {
 
     private static final String WOODEN_ID = "minecraft:wooden_slab";
 
-    @Getter
     private enum LogTypeMagic {
         OAK(WOODEN_ID, "oak"),
         SPRUCE(WOODEN_ID,"spruce"),
@@ -41,9 +39,9 @@ public class WoodenSlab extends Slab implements BlockWoodenSlab {
         }
     }
 
-    private static final EnumBlockState<LogTypeMagic, String> VARIANT = new EnumBlockState<>( v -> new String[]{"wood_type"}, LogTypeMagic.values(), LogTypeMagic::getValue, v -> {
+    private static final EnumBlockState<LogTypeMagic, String> VARIANT = new EnumBlockState<>( v -> new String[]{"wood_type"}, LogTypeMagic.values(), v -> v.value, v -> {
         for (LogTypeMagic value : LogTypeMagic.values()) {
-            if (value.getValue().equals(v)) {
+            if (value.value.equals(v)) {
                 return value;
             }
         }

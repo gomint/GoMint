@@ -11,7 +11,6 @@ import io.gomint.permission.Group;
 import io.gomint.permission.GroupManager;
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
-import lombok.Setter;
 
 /**
  * @author geNAZt
@@ -19,7 +18,6 @@ import lombok.Setter;
  */
 public class PermissionGroupManager implements GroupManager {
 
-    @Setter
     private boolean dirty;
     private Object2ObjectMap<String, Group> groupMap = null;
 
@@ -64,6 +62,10 @@ public class PermissionGroupManager implements GroupManager {
     @Override
     public void removeGroup( Group group ) {
         this.groupMap.remove( group.getName() );
+    }
+
+    public void setDirty(boolean dirty) {
+        this.dirty = dirty;
     }
 
 }

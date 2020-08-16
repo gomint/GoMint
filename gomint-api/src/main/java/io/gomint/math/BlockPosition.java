@@ -1,14 +1,9 @@
 package io.gomint.math;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-
 /**
  * @author geNAZt
  * @version 1.0
  */
-@Data
-@AllArgsConstructor
 public class BlockPosition implements Cloneable {
 
     public static final BlockPosition UP = new BlockPosition( 0, 1, 0 );
@@ -20,6 +15,36 @@ public class BlockPosition implements Cloneable {
     public static final BlockPosition SOUTH = new BlockPosition( 0, 0, 1 );
 
     private int x, y, z;
+
+    public BlockPosition(int x, int y, int z) {
+        this.x = x;
+        this.y = y;
+        this.z = z;
+    }
+
+    public int getX() {
+        return x;
+    }
+
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    public void setY(int y) {
+        this.y = y;
+    }
+
+    public int getZ() {
+        return z;
+    }
+
+    public void setZ(int z) {
+        this.z = z;
+    }
 
     public Vector toVector() {
         return new Vector( this.x, this.y, this.z );

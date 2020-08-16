@@ -7,17 +7,12 @@
 
 package io.gomint.server.entity;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-
 /**
  * An enumeration of all entity types known. Those values are needed for the AddEntityPackets
  *
  * @author BlackyPaw
  * @version 1.0
  */
-@RequiredArgsConstructor
-@Getter
 public enum EntityType {
 
     /**
@@ -514,4 +509,16 @@ public enum EntityType {
     private final String persistantId;
     private final int networkId;
 
+    EntityType(String persistantId, int networkId) {
+        this.persistantId = persistantId;
+        this.networkId = networkId;
+    }
+
+    public String getPersistantId() {
+        return persistantId;
+    }
+
+    public int getNetworkId() {
+        return networkId;
+    }
 }

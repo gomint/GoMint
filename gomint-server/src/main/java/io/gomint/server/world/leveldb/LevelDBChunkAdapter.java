@@ -286,7 +286,7 @@ public class LevelDBChunkAdapter extends ChunkAdapter {
 
                 Block block = this.getBlockAt( compound.getInteger( "x", 0 ) & 0xF, compound.getInteger( "y", 0 ), compound.getInteger( "z", 0 ) & 0xF );
 
-                tileEntity = TileEntities.construct( this.world.getServer().getContext(), compound, block );
+                tileEntity = this.world.getServer().getTileEntities().construct( compound, block );
                 if ( tileEntity != null ) {
                     this.addTileEntity( tileEntity );
                 }

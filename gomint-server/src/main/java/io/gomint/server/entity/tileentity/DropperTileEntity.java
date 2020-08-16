@@ -11,9 +11,10 @@ import io.gomint.server.inventory.DropperInventory;
 import io.gomint.server.inventory.InventoryHolder;
 import io.gomint.server.inventory.item.ItemAir;
 import io.gomint.server.inventory.item.ItemStack;
+import io.gomint.server.inventory.item.Items;
+import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.world.block.Block;
 import io.gomint.taglib.NBTTagCompound;
-import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,7 +25,7 @@ import java.util.List;
  * @author geNAZt
  * @version 1.0
  */
-@Getter
+@RegisterInfo(sId = "Dropper")
 public class DropperTileEntity extends TileEntity implements InventoryHolder {
 
     private static final Logger LOGGER = LoggerFactory.getLogger( DropperTileEntity.class );
@@ -35,8 +36,8 @@ public class DropperTileEntity extends TileEntity implements InventoryHolder {
      *
      * @param block which created this tile
      */
-    public DropperTileEntity( Block block ) {
-        super( block );
+    public DropperTileEntity(Block block, Items items) {
+        super( block, items );
 
         this.inventory = new DropperInventory( this );
     }
@@ -68,7 +69,7 @@ public class DropperTileEntity extends TileEntity implements InventoryHolder {
     }
 
     @Override
-    public void update( long currentMillis ) {
+    public void update( long currentMillis, float dT ) {
 
     }
 
@@ -94,4 +95,7 @@ public class DropperTileEntity extends TileEntity implements InventoryHolder {
         }
     }
 
+    public DropperInventory getInventory() {
+        return inventory;
+    }
 }

@@ -18,8 +18,6 @@ import io.gomint.server.world.BlockRuntimeIDs;
 import io.gomint.server.world.block.Block;
 import io.gomint.taglib.NBTTagCompound;
 import io.gomint.world.block.data.Facing;
-import lombok.Getter;
-import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * @author geNAZt
@@ -28,10 +26,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 public abstract class TileEntity {
 
     // CHECKSTYLE:OFF
-    @Getter
-    protected Block block;
-    @Autowired
-    protected Items items;
+    protected final Block block;
+    protected final Items items;
     private byte moveable;
     protected boolean needsPersistence;
     // CHECKSTYLE:ON
@@ -41,7 +37,8 @@ public abstract class TileEntity {
      *
      * @param block which created this tile
      */
-    TileEntity( Block block ) {
+    TileEntity( Block block, Items items ) {
+        this.items = items;
         this.block = block;
         this.moveable = 1;
     }
@@ -97,7 +94,7 @@ public abstract class TileEntity {
      *
      * @param currentMillis The amount of millis to save some CPU
      */
-    public abstract void update( long currentMillis );
+    public abstract void update( long currentMillis, float dT );
 
     public void interact(Entity entity, Facing face, Vector facePos, ItemStack item ) {
 
@@ -140,6 +137,10 @@ public abstract class TileEntity {
 
     public void applyClientData( EntityPlayer player, NBTTagCompound compound ) throws Exception {
 
+    }
+
+    public Block getBlock() {
+        return block;
     }
 
 }

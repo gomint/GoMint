@@ -9,7 +9,6 @@ package io.gomint.server.entity.potion.effect;
 
 import io.gomint.server.entity.EntityLiving;
 import io.gomint.server.player.EffectManager;
-import lombok.Getter;
 
 /**
  * @author geNAZt
@@ -18,12 +17,21 @@ import lombok.Getter;
 public abstract class Effect implements io.gomint.entity.potion.Effect {
 
     private EffectManager manager;
-    @Getter
     protected int amplifier;
-    @Getter
     private long runoutTimer;
-    @Getter
     protected boolean visible = true;
+
+    public int getAmplifier() {
+        return amplifier;
+    }
+
+    public long getRunoutTimer() {
+        return runoutTimer;
+    }
+
+    public boolean isVisible() {
+        return visible;
+    }
 
     public abstract byte getId();
 

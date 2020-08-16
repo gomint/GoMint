@@ -14,15 +14,8 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.core.config.Configurator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
-import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.net.URL;
-import java.net.URLClassLoader;
 
 /**
  * This Bootstrap downloads all Libraries given inside of the "libs.dep" File in the Root
@@ -88,13 +81,7 @@ public class Bootstrap {
 
         // Load the Class entrypoint
         try {
-            AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext();
-            context.registerBean(OptionSet.class, () -> options); // Register CLI options
-            context.scan("io.gomint.server");
-
-            context.refresh();
-
-            GoMintServer server = context.getBean(GoMintServer.class);
+            GoMintServer server = new GoMintServer();
             server.startAfterRegistryInit(options);
         } catch (Throwable t) {
             LOGGER.error("GoMint crashed: ", t);

@@ -6,7 +6,6 @@ import io.gomint.server.entity.EntityPlayer;
 import io.gomint.server.network.packet.PacketAvailableCommands;
 import io.gomint.server.network.type.CommandData;
 import io.gomint.server.util.collection.IndexedHashMap;
-import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -64,7 +63,6 @@ public class CommandPreprocessor {
     private List<String> postfixes = new ArrayList<>();
 
     // Cached commands packet
-    @Getter
     private PacketAvailableCommands commandsPacket;
 
     /**
@@ -225,6 +223,10 @@ public class CommandPreprocessor {
         }
 
         old.add(enumValueIndex);
+    }
+
+    public PacketAvailableCommands getCommandsPacket() {
+        return commandsPacket;
     }
 
 }

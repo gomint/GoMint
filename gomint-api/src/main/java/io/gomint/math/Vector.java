@@ -6,10 +6,7 @@
  */
 package io.gomint.math;
 
-
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import java.util.Objects;
 
 /**
  * <p>
@@ -22,9 +19,6 @@ import lombok.ToString;
  * @author BlackyPaw
  * @version 2.0
  */
-@EqualsAndHashCode
-@ToString
-@Data
 public class Vector {
 
     public static final Vector ZERO = new Vector( 0, 0, 0 );
@@ -161,6 +155,54 @@ public class Vector {
 
         float f = ( z - this.z ) / zDiff;
         return ( f >= 0F && f <= 1F ) ? new Vector( this.x + xDiff * f, this.y + yDiff * f, this.z + zDiff * f ) : null;
+    }
+
+    public float getX() {
+        return x;
+    }
+
+    public float getY() {
+        return y;
+    }
+
+    public float getZ() {
+        return z;
+    }
+
+    public void setX(float x) {
+        this.x = x;
+    }
+
+    public void setY(float y) {
+        this.y = y;
+    }
+
+    public void setZ(float z) {
+        this.z = z;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Vector vector = (Vector) o;
+        return Float.compare(vector.x, x) == 0 &&
+            Float.compare(vector.y, y) == 0 &&
+            Float.compare(vector.z, z) == 0;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(x, y, z);
+    }
+
+    @Override
+    public String toString() {
+        return "Vector{" +
+            "x=" + x +
+            ", y=" + y +
+            ", z=" + z +
+            '}';
     }
 
 }

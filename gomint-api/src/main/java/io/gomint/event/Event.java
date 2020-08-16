@@ -7,13 +7,10 @@
 
 package io.gomint.event;
 
-import lombok.ToString;
-
 /**
  * @author geNAZt
  * @version 1.0
  */
-@ToString( callSuper = true )
 public class Event {
 
 }

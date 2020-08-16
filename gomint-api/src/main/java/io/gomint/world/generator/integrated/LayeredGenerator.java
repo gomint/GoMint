@@ -17,7 +17,6 @@ import io.gomint.world.block.BlockDirt;
 import io.gomint.world.block.BlockGrassBlock;
 import io.gomint.world.generator.ChunkGenerator;
 import io.gomint.world.generator.GeneratorContext;
-import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,8 +28,6 @@ import java.util.List;
 public class LayeredGenerator extends ChunkGenerator {
 
     public static final String NAME = "flat";
-
-    @Getter
     private List<Block> layers;
 
     /**
@@ -62,6 +59,10 @@ public class LayeredGenerator extends ChunkGenerator {
             this.layers.add( dirt );
             this.layers.add( grass );
         }
+    }
+
+    public List<Block> getLayers() {
+        return layers;
     }
 
     @Override

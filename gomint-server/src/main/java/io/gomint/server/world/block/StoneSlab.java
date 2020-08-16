@@ -13,7 +13,6 @@ import io.gomint.world.block.BlockType;
 import io.gomint.server.registry.RegisterInfo;
 import io.gomint.world.block.data.Facing;
 import io.gomint.world.block.data.StoneType;
-import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -44,7 +43,6 @@ public class StoneSlab extends Slab implements BlockStoneSlab {
     private static final String STONE_SLAB4_ID = "minecraft:stone_slab4";
     private static final String STONE_TYPE_4 = "stone_slab_type_4";
 
-    @Getter
     public enum StoneTypeMagic {
 
         // Slab types 1
@@ -106,8 +104,8 @@ public class StoneSlab extends Slab implements BlockStoneSlab {
         }
 
         for (StoneTypeMagic value : StoneTypeMagic.values()) {
-            if (value.getValue().equals(v)) {
-                switch (value.getKey()) {
+            if (value.value.equals(v)) {
+                switch (value.key) {
                     case STONE_TYPE:
                         return new String[]{STONE_TYPE, STONE_TYPE_2, STONE_TYPE_3, STONE_TYPE_4};
                     case STONE_TYPE_2:
@@ -121,9 +119,9 @@ public class StoneSlab extends Slab implements BlockStoneSlab {
         }
 
         return new String[]{STONE_TYPE, STONE_TYPE_2, STONE_TYPE_3, STONE_TYPE_4};
-    }, StoneTypeMagic.values(), StoneTypeMagic::getValue, v -> {
+    }, StoneTypeMagic.values(), v -> v.value, v -> {
         for (StoneTypeMagic value : StoneTypeMagic.values()) {
-            if (value.getValue().equals(v)) {
+            if (value.value.equals(v)) {
                 return value;
             }
         }
@@ -176,7 +174,7 @@ public class StoneSlab extends Slab implements BlockStoneSlab {
     @Override
     public void setStoneType(StoneType stoneType) {
         StoneTypeMagic newState = StoneTypeMagic.valueOf(stoneType.name());
-        this.setBlockId(newState.getBlockId());
+        this.setBlockId(newState.blockId);
         VARIANT.setState(this, newState);
     }
 

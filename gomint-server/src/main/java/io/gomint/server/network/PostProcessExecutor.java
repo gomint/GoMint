@@ -8,11 +8,10 @@
 package io.gomint.server.network;
 
 import io.gomint.server.network.packet.Packet;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Objects;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutorService;
@@ -25,15 +24,12 @@ import java.util.function.Consumer;
  * @author geNAZt
  * @version 1.0
  */
-@EqualsAndHashCode
 public class PostProcessExecutor implements Runnable {
 
     private static final Logger LOGGER = LoggerFactory.getLogger( PostProcessExecutor.class );
 
-    @Getter
     private final AtomicInteger connectionsInUse = new AtomicInteger( 0 );
     private Queue<PostProcessWorker> workers = new ConcurrentLinkedQueue<>();
-    @Getter
     private float load;
     private Future<?> future;
     private AtomicBoolean running = new AtomicBoolean( true );
@@ -43,6 +39,33 @@ public class PostProcessExecutor implements Runnable {
     public PostProcessExecutor( ExecutorService executorService ) {
         this.executorService = executorService;
         this.future = executorService.submit( this );
+    }
+
+    public float getLoad() {
+        return load;
+    }
+
+    public AtomicInteger getConnectionsInUse() {
+        return connectionsInUse;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        PostProcessExecutor that = (PostProcessExecutor) o;
+        return Float.compare(that.load, load) == 0 &&
+            Objects.equals(connectionsInUse, that.connectionsInUse) &&
+            Objects.equals(workers, that.workers) &&
+            Objects.equals(future, that.future) &&
+            Objects.equals(running, that.running) &&
+            Objects.equals(waiter, that.waiter) &&
+            Objects.equals(executorService, that.executorService);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(connectionsInUse, workers, load, future, running, waiter, executorService);
     }
 
     public void addWork(ConnectionWithState connection, Packet[] packets, Consumer<Void> callback) {

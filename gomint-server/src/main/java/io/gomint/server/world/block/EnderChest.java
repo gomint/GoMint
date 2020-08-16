@@ -2,6 +2,7 @@ package io.gomint.server.world.block;
 
 import io.gomint.inventory.Inventory;
 import io.gomint.inventory.item.ItemObsidian;
+import io.gomint.server.entity.tileentity.CommandBlockTileEntity;
 import io.gomint.server.entity.tileentity.TileEntity;
 import io.gomint.server.world.block.helper.ToolPresets;
 import io.gomint.taglib.NBTTagCompound;
@@ -73,7 +74,8 @@ public class EnderChest extends ContainerBlock implements BlockEnderChest {
 
     @Override
     TileEntity createTileEntity( NBTTagCompound compound ) {
-        return new EnderChestTileEntity( this );
+        super.createTileEntity( compound );
+        return this.world.getServer().getTileEntities().construct(EnderChestTileEntity.class, compound, this, this.world.getServer().getItems());
     }
 
     @Override
@@ -84,8 +86,8 @@ public class EnderChest extends ContainerBlock implements BlockEnderChest {
 
     @Override
     public List<ItemStack> getDrops( ItemStack itemInHand ) {
-        return new ArrayList<ItemStack>(){{
-            add( ItemObsidian.create( 8 ) );
+        return new ArrayList<>() {{
+            add(ItemObsidian.create(8));
         }};
     }
 

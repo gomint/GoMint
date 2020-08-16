@@ -1,8 +1,8 @@
 package io.gomint.event.player;
 
 import io.gomint.entity.EntityPlayer;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+
+import java.util.Objects;
 
 /**
  * @author geNAZt
@@ -12,8 +12,6 @@ import lombok.ToString;
  * to be sent to other players (become visible). If you cancel this event the player will never be spawned but it has loaded
  * world chunks and got all resource pack data.
  */
-@EqualsAndHashCode( callSuper = false )
-@ToString( callSuper = true )
 public class PlayerJoinEvent extends CancellablePlayerEvent {
 
     private String kickReason;
@@ -58,6 +56,29 @@ public class PlayerJoinEvent extends CancellablePlayerEvent {
      */
     public String getKickReason() {
         return kickReason;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        PlayerJoinEvent that = (PlayerJoinEvent) o;
+        return Objects.equals(kickReason, that.kickReason) &&
+            Objects.equals(joinMessage, that.joinMessage);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), kickReason, joinMessage);
+    }
+
+    @Override
+    public String toString() {
+        return "PlayerJoinEvent{" +
+            "kickReason='" + kickReason + '\'' +
+            ", joinMessage='" + joinMessage + '\'' +
+            '}';
     }
 
 }

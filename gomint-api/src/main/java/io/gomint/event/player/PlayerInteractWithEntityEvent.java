@@ -2,13 +2,11 @@ package io.gomint.event.player;
 
 import io.gomint.entity.Entity;
 import io.gomint.entity.EntityPlayer;
-import lombok.ToString;
 
 /**
  * @author KCodeYT
  * @version 1.0
  */
-@ToString
 public class PlayerInteractWithEntityEvent extends CancellablePlayerEvent {
 
     private Entity entity;
@@ -31,6 +29,13 @@ public class PlayerInteractWithEntityEvent extends CancellablePlayerEvent {
      */
     public Entity getEntity() {
         return entity;
+    }
+
+    @Override
+    public String toString() {
+        return "PlayerInteractWithEntityEvent{" +
+            "entity=" + entity +
+            '}';
     }
 
 }

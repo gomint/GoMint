@@ -7,9 +7,6 @@
 
 package io.gomint.event;
 
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
-
 /**
  * @author Fabian
  * @version 1.0
@@ -17,7 +14,6 @@ import lombok.NoArgsConstructor;
  *          Importance of the {@link EventHandler}. When executing an Event, the handlers
  *          are called in order of their Priority.
  */
-@NoArgsConstructor( access = AccessLevel.PRIVATE )
 public enum EventPriority {
 
     LOWEST( (byte) -64 ),

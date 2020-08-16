@@ -15,7 +15,6 @@ import io.gomint.server.world.CoordinateUtils;
 import io.gomint.world.Chunk;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import it.unimi.dsi.fastutil.objects.ObjectSet;
-import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,14 +24,17 @@ import java.util.Objects;
  * @author geNAZt
  * @version 1.0
  */
-@RequiredArgsConstructor
 public class EntityVisibilityManager {
 
     private static final Logger LOGGER = LoggerFactory.getLogger( EntityVisibilityManager.class );
     private final EntityPlayer player;
     private final ObjectSet<Entity> visible = new ObjectOpenHashSet<>();
 
-    public void updateAddedChunk( ChunkAdapter chunk ) {
+    public EntityVisibilityManager(EntityPlayer player) {
+        this.player = player;
+    }
+
+    public void updateAddedChunk(ChunkAdapter chunk ) {
         LOGGER.debug( "Checking chunk {}, {}", chunk.getX(), chunk.getZ() );
 
         // Check if we should be able to see this entity

@@ -7,21 +7,34 @@
 
 package io.gomint.command;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-
 import java.util.List;
 
 /**
  * @author geNAZt
  * @version 1.0
  */
-@AllArgsConstructor
-@Getter
 public class CommandOutputMessage {
 
     private boolean success;
     private String format;
     private List<String> parameters;
+
+    public CommandOutputMessage(boolean success, String format, List<String> parameters) {
+        this.success = success;
+        this.format = format;
+        this.parameters = parameters;
+    }
+
+    public boolean isSuccess() {
+        return success;
+    }
+
+    public String getFormat() {
+        return format;
+    }
+
+    public List<String> getParameters() {
+        return parameters;
+    }
 
 }

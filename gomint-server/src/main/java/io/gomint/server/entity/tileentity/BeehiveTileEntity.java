@@ -7,9 +7,12 @@
 
 package io.gomint.server.entity.tileentity;
 
+import io.gomint.server.inventory.item.Items;
+import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.world.block.Block;
 import io.gomint.taglib.NBTTagCompound;
 
+@RegisterInfo(sId = "Beehive")
 public class BeehiveTileEntity extends TileEntity {
 
     /**
@@ -17,12 +20,12 @@ public class BeehiveTileEntity extends TileEntity {
      *
      * @param block which created this tile
      */
-    public BeehiveTileEntity(Block block) {
-        super(block);
+    public BeehiveTileEntity(Block block, Items items) {
+        super(block, items);
     }
 
     @Override
-    public void update(long currentMillis) {
+    public void update(long currentMillis, float dT) {
 
     }
 

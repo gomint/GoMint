@@ -11,9 +11,10 @@ import io.gomint.server.inventory.DispenserInventory;
 import io.gomint.server.inventory.InventoryHolder;
 import io.gomint.server.inventory.item.ItemAir;
 import io.gomint.server.inventory.item.ItemStack;
+import io.gomint.server.inventory.item.Items;
+import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.world.block.Block;
 import io.gomint.taglib.NBTTagCompound;
-import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,7 +25,7 @@ import java.util.List;
  * @author geNAZt
  * @version 1.0
  */
-@Getter
+@RegisterInfo(sId = "Dispenser")
 public class DispenserTileEntity extends TileEntity implements InventoryHolder {
 
     private static final Logger LOGGER = LoggerFactory.getLogger( DispenserTileEntity.class );
@@ -35,8 +36,8 @@ public class DispenserTileEntity extends TileEntity implements InventoryHolder {
      *
      * @param block which created this tile
      */
-    public DispenserTileEntity( Block block ) {
-        super( block );
+    public DispenserTileEntity(Block block, Items items) {
+        super( block, items );
         this.inventory = new DispenserInventory( this );
     }
 
@@ -67,7 +68,7 @@ public class DispenserTileEntity extends TileEntity implements InventoryHolder {
     }
 
     @Override
-    public void update( long currentMillis ) {
+    public void update( long currentMillis, float dT ) {
 
     }
 
@@ -91,6 +92,10 @@ public class DispenserTileEntity extends TileEntity implements InventoryHolder {
 
             compound.addValue( "Items", nbtTagCompounds );
         }
+    }
+
+    public DispenserInventory getInventory() {
+        return inventory;
     }
 
 }

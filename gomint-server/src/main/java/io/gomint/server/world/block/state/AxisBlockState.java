@@ -13,13 +13,9 @@ import io.gomint.server.entity.EntityPlayer;
 import io.gomint.server.world.block.Block;
 import io.gomint.world.block.data.Axis;
 import io.gomint.world.block.data.Facing;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
 
 import java.util.function.Supplier;
 
-@ToString
-@EqualsAndHashCode(callSuper = false)
 public class AxisBlockState extends BlockState<Axis, String> {
 
     public AxisBlockState(Supplier<String[]> key) {

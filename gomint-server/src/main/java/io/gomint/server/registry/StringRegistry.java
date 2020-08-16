@@ -7,28 +7,17 @@
 
 package io.gomint.server.registry;
 
-import io.gomint.server.event.EventProxy;
 import io.gomint.server.util.ClassPath;
-import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
-import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.asm.ClassWriter;
-import org.springframework.asm.Label;
-import org.springframework.asm.MethodVisitor;
-import org.springframework.asm.Opcodes;
-import org.springframework.cglib.core.Constants;
 
-import java.io.IOException;
-import java.lang.invoke.MethodHandles;
-import java.lang.reflect.ParameterizedType;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
+import java.util.function.Function;
 
 /**
  * @author geNAZt
@@ -36,12 +25,36 @@ import java.util.Map;
  */
 public class StringRegistry<R> {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger( StringRegistry.class );
+    private static final Logger LOGGER = LoggerFactory.getLogger(StringRegistry.class);
+
+    private static final class Lookup {
+        private final String id;
+        private final int arguments;
+
+        public Lookup(String id, int arguments) {
+            this.id = id;
+            this.arguments = arguments;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            Lookup lookup = (Lookup) o;
+            return arguments == lookup.arguments &&
+                Objects.equals(id, lookup.id);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(id, arguments);
+        }
+    }
 
     private ClassPath classPath;
     private final GeneratorCallback<R> generatorCallback;
 
-    private final Object2ObjectMap<String, Generator<R>> generators = new Object2ObjectOpenHashMap<>();
+    private final Object2ObjectMap<Lookup, Generator<R>> generators = new Object2ObjectOpenHashMap<>();
     private final Map<Class<?>, String> apiReferences = new HashMap<>();
 
     /**
@@ -50,7 +63,7 @@ public class StringRegistry<R> {
      * @param classPath which reflects the current classes
      * @param callback  which is used to generate a generator for each found element
      */
-    public StringRegistry( ClassPath classPath, GeneratorCallback<R> callback ) {
+    public StringRegistry(ClassPath classPath, GeneratorCallback<R> callback) {
         this.classPath = classPath;
         this.generatorCallback = callback;
     }
@@ -60,53 +73,68 @@ public class StringRegistry<R> {
      *
      * @param classPath which should be searched
      */
-    public void register( String classPath ) {
-        LOGGER.debug( "Going to scan: {}", classPath );
+    public void register(String classPath) {
+        LOGGER.debug("Going to scan: {}", classPath);
 
-        this.classPath.getTopLevelClasses( classPath, classInfo -> register( classInfo.load() ) );
+        this.classPath.getTopLevelClasses(classPath, classInfo -> register(classInfo.load()));
     }
 
-    private void register( Class<? extends R> clazz ) {
+    public void registerAdditionalConstructor(String id, int parameterCount, Function<Object[], R> generator) {
+        this.generators.put(new Lookup(id, parameterCount), generator::apply);
+    }
+
+    private void register(Class<? extends R> clazz) {
         for (RegisterInfo info : clazz.getAnnotationsByType(RegisterInfo.class)) {
-            Generator<R> generator = this.generatorCallback.generate( clazz, info.sId() );
-            if ( generator != null ) {
-                String id = info.sId();
-                this.storeGeneratorForId( id, generator );
+            String id = info.sId();
 
-                // Check for API interfaces
-                for ( Class<?> apiInter : clazz.getInterfaces() ) {
-                    this.apiReferences.put( apiInter, id );
-                }
-
-                this.apiReferences.put( clazz, id );
+            Generator<R> generator = this.generatorCallback.generate(clazz, id);
+            if (generator != null) {
+                this.storeGeneratorForId(id, generator);
             }
+
+            // Check for API interfaces
+            for (Class<?> apiInter : clazz.getInterfaces()) {
+                this.apiReferences.put(apiInter, id);
+            }
+
+            this.apiReferences.put(clazz, id);
         }
     }
 
-    private void storeGeneratorForId( String id, Generator<R> generator ) {
-        if ( this.generators.containsKey( id ) ) {
-            LOGGER.warn( "Detected hash collision for {}", id );
+    private void storeGeneratorForId(String id, Generator<R> generator) {
+        Lookup lookup = new Lookup(id, 0);
+        if (this.generators.containsKey(lookup)) {
+            LOGGER.warn("Detected hash collision for {}", id);
         } else {
-            this.generators.put( id, generator );
+            this.generators.put(lookup, generator);
         }
     }
 
-    public Generator<R> getGenerator( Class<?> clazz ) {
+    public final Generator<R> getGenerator(Class<?> clazz, int amountOfParameters) {
         // Get the internal ID
-        String id = this.apiReferences.getOrDefault( clazz, null );
-        if ( id == null ) {
+        String id = this.apiReferences.getOrDefault(clazz, null);
+        if (id == null) {
             return null;
         }
 
-        return getGenerator( id );
+        return getGenerator(id, amountOfParameters);
     }
 
-    public final Generator<R> getGenerator( String id ) {
-        return this.generators.get( id );
+    public final Generator<R> getGenerator(Class<?> clazz) {
+        return this.getGenerator(clazz, 0);
     }
 
-    public String getId( Class<?> clazz ) {
-        return this.apiReferences.getOrDefault( clazz, null );
+    public final Generator<R> getGenerator(String id) {
+        return this.getGenerator(id, 0);
+    }
+
+    public final Generator<R> getGenerator(String id, int amountOfParameters) {
+        Lookup lookup = new Lookup(id, amountOfParameters);
+        return this.generators.get(lookup);
+    }
+
+    public String getId(Class<?> clazz) {
+        return this.apiReferences.getOrDefault(clazz, null);
     }
 
     public void cleanup() {

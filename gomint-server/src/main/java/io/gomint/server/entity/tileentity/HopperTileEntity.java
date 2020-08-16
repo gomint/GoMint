@@ -11,9 +11,10 @@ import io.gomint.server.inventory.HopperInventory;
 import io.gomint.server.inventory.InventoryHolder;
 import io.gomint.server.inventory.item.ItemAir;
 import io.gomint.server.inventory.item.ItemStack;
+import io.gomint.server.inventory.item.Items;
+import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.world.block.Block;
 import io.gomint.taglib.NBTTagCompound;
-import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,20 +25,21 @@ import java.util.List;
  * @author geNAZt
  * @version 1.0
  */
+@RegisterInfo(sId = "Hopper")
 public class HopperTileEntity extends TileEntity implements InventoryHolder {
 
     private static final Logger LOGGER = LoggerFactory.getLogger( HopperTileEntity.class );
 
     private int transferCooldown;
-    @Getter private HopperInventory inventory;
+    private HopperInventory inventory;
 
     /**
      * Construct new tile entity from position and world data
      *
      * @param block which created this tile
      */
-    public HopperTileEntity( Block block ) {
-        super( block );
+    public HopperTileEntity(Block block, Items items) {
+        super( block, items );
     }
 
     @Override
@@ -70,7 +72,7 @@ public class HopperTileEntity extends TileEntity implements InventoryHolder {
     }
 
     @Override
-    public void update( long currentMillis ) {
+    public void update( long currentMillis, float dT ) {
 
     }
 
@@ -78,7 +80,7 @@ public class HopperTileEntity extends TileEntity implements InventoryHolder {
     public void toCompound( NBTTagCompound compound, SerializationReason reason ) {
         super.toCompound( compound, reason );
 
-        compound.addValue( "id", "Dispenser" );
+        compound.addValue( "id", "Hopper" );
         compound.addValue( "TransferCooldown", this.transferCooldown );
 
         if ( reason == SerializationReason.PERSIST ) {
@@ -95,6 +97,10 @@ public class HopperTileEntity extends TileEntity implements InventoryHolder {
 
             compound.addValue( "Items", nbtTagCompounds );
         }
+    }
+
+    public HopperInventory getInventory() {
+        return inventory;
     }
 
 }

@@ -9,16 +9,18 @@ package io.gomint.server.entity;
 
 import io.gomint.entity.EntityPlayer;
 import io.gomint.server.network.packet.PacketBossBar;
-import lombok.RequiredArgsConstructor;
 
 /**
  * @author geNAZt
  * @version 1.0
  */
-@RequiredArgsConstructor
 public class BossBar implements io.gomint.entity.BossBar {
 
     private final Entity entity;
+
+    public BossBar(Entity entity) {
+        this.entity = entity;
+    }
 
     @Override
     public void addPlayer( EntityPlayer player ) {

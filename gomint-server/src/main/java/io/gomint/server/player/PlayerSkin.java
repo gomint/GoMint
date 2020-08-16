@@ -7,17 +7,13 @@
 
 package io.gomint.server.player;
 
-import io.gomint.player.AnimationFrame;
 import io.gomint.server.util.Picture;
-import lombok.Getter;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import javax.imageio.ImageIO;
 import javax.imageio.stream.ImageInputStream;
 import java.awt.image.BufferedImage;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -33,13 +29,11 @@ import java.util.List;
  */
 public class PlayerSkin implements io.gomint.player.PlayerSkin {
 
-    @Getter
-    private static final GeometryCache GEOMETRY_CACHE = new GeometryCache();
+    // private static final GeometryCache GEOMETRY_CACHE = new GeometryCache();
     private static final int SKIN_DATA_SIZE_STEVE = 8192;
     private static final int SKIN_DATA_SIZE_ALEX = 16384;
     private static final int SKIN_DATA_SIZE_FULL = 65536;
 
-    @Getter
     public class PieceTintColor {
         private final String pieceType;
         private List<String> colors;
@@ -55,9 +49,16 @@ public class PlayerSkin implements io.gomint.player.PlayerSkin {
                 }
             }
         }
+
+        public String getPieceType() {
+            return pieceType;
+        }
+
+        public List<String> getColors() {
+            return colors;
+        }
     }
 
-    @Getter
     public class PersonaPiece {
         private final String pieceId;
         private final String pieceType;
@@ -72,9 +73,28 @@ public class PlayerSkin implements io.gomint.player.PlayerSkin {
             this.defaultValue = (boolean) o.get( "IsDefault" );
             this.productId = (String) o.get( "ProductId" );
         }
+
+        public String getPieceId() {
+            return pieceId;
+        }
+
+        public String getPieceType() {
+            return pieceType;
+        }
+
+        public String getPackId() {
+            return packId;
+        }
+
+        public boolean isDefaultValue() {
+            return defaultValue;
+        }
+
+        public String getProductId() {
+            return productId;
+        }
     }
 
-    @Getter
     public class AnimationFrame implements io.gomint.player.AnimationFrame {
         private final float frames;
         private final int type;
@@ -117,49 +137,73 @@ public class PlayerSkin implements io.gomint.player.PlayerSkin {
         public void saveTo(OutputStream out) throws IOException {
             ImageIO.write(this.createImage(), "PNG", out);
         }
+
+        public float getFrames() {
+            return frames;
+        }
+
+        public int getType() {
+            return type;
+        }
+
+        public int getHeight() {
+            return height;
+        }
+
+        public int getWidth() {
+            return width;
+        }
+
+        public byte[] getData() {
+            return data;
+        }
+
+        public SoftReference<BufferedImage> getImage() {
+            return image;
+        }
     }
 
-    @Getter
+
     private final String id;
-    @Getter
+
     private final String resourcePatch;
-    @Getter
+
     private final int imageWidth;
-    @Getter
+
     private final int imageHeight;
-    @Getter
+
     private final byte[] data;
-    @Getter
+
     private List<AnimationFrame> animations;
-    @Getter
+
     private final int capeImageWidth;
-    @Getter
+
     private final int capeImageHeight;
-    @Getter
+
     private final byte[] capeData;
-    @Getter
+
     private final String geometry;
-    @Getter
+
     private final String animationData;
-    @Getter
+
     private final boolean premium;
-    @Getter
+
     private final boolean persona;
-    @Getter
+
     private final boolean personaCapeOnClassic;
-    @Getter
+
     private final String capeId;
-    @Getter
+
     private final String fullId;
-    @Getter
+
     private final String colour;
-    @Getter
+
     private final String armSize;
-    @Getter
+
     private List<PersonaPiece> personaPieces;
-    @Getter
+
     private List<PieceTintColor> pieceTintColours;
-    @Getter
+
     private final boolean trusted = true;  // Not sent in JWT, broken "feature"
 
     // Internal image caching
@@ -298,5 +342,91 @@ public class PlayerSkin implements io.gomint.player.PlayerSkin {
         // return new PlayerSkin( "Gomint_Skin", new byte[8192], new byte[0], "geometry.humanoid.custom", GEOMETRY_CACHE.get( "geometry.humanoid.custom" ) );
     }
 
+    public String getId() {
+        return id;
+    }
 
+    public String getResourcePatch() {
+        return resourcePatch;
+    }
+
+    public int getImageWidth() {
+        return imageWidth;
+    }
+
+    public int getImageHeight() {
+        return imageHeight;
+    }
+
+    public byte[] getData() {
+        return data;
+    }
+
+    public List<AnimationFrame> getAnimations() {
+        return animations;
+    }
+
+    public int getCapeImageWidth() {
+        return capeImageWidth;
+    }
+
+    public int getCapeImageHeight() {
+        return capeImageHeight;
+    }
+
+    public byte[] getCapeData() {
+        return capeData;
+    }
+
+    public String getGeometry() {
+        return geometry;
+    }
+
+    public String getAnimationData() {
+        return animationData;
+    }
+
+    public boolean isPremium() {
+        return premium;
+    }
+
+    public boolean isPersona() {
+        return persona;
+    }
+
+    public boolean isPersonaCapeOnClassic() {
+        return personaCapeOnClassic;
+    }
+
+    public String getCapeId() {
+        return capeId;
+    }
+
+    public String getFullId() {
+        return fullId;
+    }
+
+    public String getColour() {
+        return colour;
+    }
+
+    public String getArmSize() {
+        return armSize;
+    }
+
+    public List<PersonaPiece> getPersonaPieces() {
+        return personaPieces;
+    }
+
+    public List<PieceTintColor> getPieceTintColours() {
+        return pieceTintColours;
+    }
+
+    public boolean isTrusted() {
+        return trusted;
+    }
+
+    public SoftReference<BufferedImage> getImage() {
+        return image;
+    }
 }

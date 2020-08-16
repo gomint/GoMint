@@ -10,15 +10,11 @@ package io.gomint.server.network.packet;
 import io.gomint.jraknet.PacketBuffer;
 import io.gomint.server.network.Protocol;
 import io.netty.buffer.ByteBuf;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 /**
  * @author BlackyPaw
  * @version 1.0
  */
-@Data
-@EqualsAndHashCode( callSuper = false )
 public class PacketBatch extends Packet {
 
     private boolean compressed;
@@ -42,6 +38,22 @@ public class PacketBatch extends Packet {
     @Override
     public void serializeHeader( PacketBuffer buffer ) {
         buffer.writeByte( Protocol.BATCH_MAGIC );
+    }
+
+    public boolean isCompressed() {
+        return compressed;
+    }
+
+    public void setCompressed(boolean compressed) {
+        this.compressed = compressed;
+    }
+
+    public ByteBuf getPayload() {
+        return payload;
+    }
+
+    public void setPayload(ByteBuf payload) {
+        this.payload = payload;
     }
 
 }

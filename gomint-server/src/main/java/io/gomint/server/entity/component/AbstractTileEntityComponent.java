@@ -7,14 +7,22 @@
 
 package io.gomint.server.entity.component;
 
+import io.gomint.entity.Entity;
+import io.gomint.inventory.item.ItemStack;
+import io.gomint.math.Vector;
+import io.gomint.server.entity.tileentity.TileEntity;
 import io.gomint.server.inventory.item.Items;
+import io.gomint.server.world.block.Block;
 import io.gomint.taglib.NBTTagCompound;
+import io.gomint.world.block.data.Facing;
 
 public abstract class AbstractTileEntityComponent implements TileEntityComponent {
 
+    private final TileEntity entity;
     private final Items items;
 
-    public AbstractTileEntityComponent(Items items) {
+    public AbstractTileEntityComponent(TileEntity entity, Items items) {
+        this.entity = entity;
         this.items = items;
     }
 
@@ -49,5 +57,11 @@ public abstract class AbstractTileEntityComponent implements TileEntityComponent
             compound.addValue( "tag", itemTag );
         }
     }
+
+    protected Block getBlock() {
+        return this.entity.getBlock();
+    }
+
+    public abstract void interact(Entity entity, Facing face, Vector facePos, ItemStack item);
 
 }

@@ -4,15 +4,11 @@ import io.gomint.jraknet.PacketBuffer;
 import io.gomint.server.network.Protocol;
 import io.gomint.server.player.ResourcePackInfo;
 import io.gomint.server.resource.ResourceResponseStatus;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 /**
  * @author geNAZt
  * @version 1.0
  */
-@Data
-@EqualsAndHashCode( callSuper = false )
 public class PacketResourcePackResponse extends Packet {
 
     private ResourceResponseStatus status;
@@ -39,4 +35,19 @@ public class PacketResourcePackResponse extends Packet {
         }
     }
 
+    public ResourceResponseStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(ResourceResponseStatus status) {
+        this.status = status;
+    }
+
+    public ResourcePackInfo getInfo() {
+        return info;
+    }
+
+    public void setInfo(ResourcePackInfo info) {
+        this.info = info;
+    }
 }

@@ -7,7 +7,6 @@ import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.world.block.state.EnumBlockState;
 import io.gomint.world.block.BlockTallGrass;
 import io.gomint.world.block.BlockType;
-import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +18,6 @@ import java.util.List;
 @RegisterInfo(sId = "minecraft:tallgrass")
 public class TallGrass extends Block implements BlockTallGrass {
 
-    @Getter
     private enum TypeMagic {
         GRASS("tall"),
         FERN("fern"),
@@ -32,9 +30,9 @@ public class TallGrass extends Block implements BlockTallGrass {
         }
     }
 
-    private static final EnumBlockState<TypeMagic, String> VARIANT = new EnumBlockState<>(v -> new String[]{"tall_grass_type"}, TypeMagic.values(), TypeMagic::getType, v -> {
+    private static final EnumBlockState<TypeMagic, String> VARIANT = new EnumBlockState<>(v -> new String[]{"tall_grass_type"}, TypeMagic.values(), v -> v.type, v -> {
         for (TypeMagic value : TypeMagic.values()) {
-            if (value.getType().equals(v)) {
+            if (value.type.equals(v)) {
                 return value;
             }
         }

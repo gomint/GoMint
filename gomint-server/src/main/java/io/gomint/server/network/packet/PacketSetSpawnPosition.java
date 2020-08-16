@@ -10,13 +10,11 @@ package io.gomint.server.network.packet;
 import io.gomint.jraknet.PacketBuffer;
 import io.gomint.math.BlockPosition;
 import io.gomint.server.network.Protocol;
-import lombok.Data;
 
 /**
  * @author geNAZt
  * @version 1.0
  */
-@Data
 public class PacketSetSpawnPosition extends Packet {
 
     public enum SpawnType {
@@ -49,4 +47,35 @@ public class PacketSetSpawnPosition extends Packet {
 
     }
 
+    public SpawnType getSpawnType() {
+        return spawnType;
+    }
+
+    public void setSpawnType(SpawnType spawnType) {
+        this.spawnType = spawnType;
+    }
+
+    public BlockPosition getPlayerPosition() {
+        return playerPosition;
+    }
+
+    public void setPlayerPosition(BlockPosition playerPosition) {
+        this.playerPosition = playerPosition;
+    }
+
+    public int getDimension() {
+        return dimension;
+    }
+
+    public void setDimension(int dimension) {
+        this.dimension = dimension;
+    }
+
+    public BlockPosition getWorldSpawn() {
+        return worldSpawn;
+    }
+
+    public void setWorldSpawn(BlockPosition worldSpawn) {
+        this.worldSpawn = worldSpawn;
+    }
 }

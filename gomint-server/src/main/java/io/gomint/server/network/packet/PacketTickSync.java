@@ -2,13 +2,11 @@ package io.gomint.server.network.packet;
 
 import io.gomint.jraknet.PacketBuffer;
 import io.gomint.server.network.Protocol;
-import lombok.Data;
 
 /**
  * @author HerryYT
  * @version 1.0
  */
-@Data
 public class PacketTickSync extends Packet {
 
     private long clientTiming;
@@ -28,5 +26,21 @@ public class PacketTickSync extends Packet {
     public void deserialize(PacketBuffer buffer, int protocolID) {
         this.clientTiming = buffer.readLLong();
         this.serverTiming = buffer.readLLong();
+    }
+
+    public long getClientTiming() {
+        return clientTiming;
+    }
+
+    public void setClientTiming(long clientTiming) {
+        this.clientTiming = clientTiming;
+    }
+
+    public long getServerTiming() {
+        return serverTiming;
+    }
+
+    public void setServerTiming(long serverTiming) {
+        this.serverTiming = serverTiming;
     }
 }

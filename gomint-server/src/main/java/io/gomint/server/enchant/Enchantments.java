@@ -7,9 +7,11 @@
 
 package io.gomint.server.enchant;
 
+import io.gomint.server.entity.tileentity.TileEntity;
 import io.gomint.server.registry.Generator;
 import io.gomint.server.registry.Registry;
 import io.gomint.server.util.ClassPath;
+import io.gomint.server.util.performance.LambdaConstructionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,14 +25,11 @@ public class Enchantments {
     private final Registry<Enchantment> generators;
 
     public Enchantments( ClassPath classPath ) {
-        this.generators = new Registry<>( classPath, (clazz, id) -> () -> {
-            try {
-                return (Enchantment) clazz.newInstance();
-            } catch ( InstantiationException | IllegalAccessException e ) {
-                LOGGER.error( "Could not generate new enchantment", e );
-            }
-
-            return null;
+        this.generators = new Registry<>( classPath, (clazz, id) -> {
+            LambdaConstructionFactory<Enchantment> factory = new LambdaConstructionFactory<>(clazz);
+            return in -> {
+                return factory.newInstance();
+            };
         } );
 
         this.generators.register( "io.gomint.server.enchant" );

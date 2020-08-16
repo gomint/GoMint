@@ -14,8 +14,6 @@ import io.gomint.server.util.Bearing;
 import io.gomint.server.world.block.Block;
 import io.gomint.world.block.data.Direction;
 import io.gomint.world.block.data.Facing;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
 
 import java.util.function.Supplier;
 
@@ -23,8 +21,6 @@ import java.util.function.Supplier;
  * @author geNAZt
  * @version 1.0
  */
-@ToString
-@EqualsAndHashCode(callSuper = false)
 public class CrossDirectionBlockState extends BlockState<Direction, Integer> {
 
     public CrossDirectionBlockState(Supplier<String[]> key) {

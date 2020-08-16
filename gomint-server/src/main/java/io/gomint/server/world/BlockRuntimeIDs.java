@@ -7,10 +7,12 @@
 
 package io.gomint.server.world;
 
+import io.gomint.jraknet.PacketBuffer;
 import io.gomint.server.registry.SwitchBlockStateMapper;
 import io.gomint.server.util.BlockIdentifier;
 import io.gomint.server.util.collection.FreezableSortedMap;
 import io.gomint.server.util.performance.SingleKeyChangeMap;
+import io.gomint.server.world.block.Blocks;
 import io.gomint.server.world.block.mapper.BlockStateMapper;
 import io.gomint.taglib.NBTTagCompound;
 import io.gomint.taglib.NBTWriter;
@@ -43,17 +45,14 @@ public class BlockRuntimeIDs {
     //
     private static final Object2ObjectMap<String, List<BlockIdentifier>> BLOCK_STATE_IDENTIFIER = new Object2ObjectOpenHashMap<>();
 
-    // Cached packet streams
-    private static ByteBuf START_GAME_BUFFER;
-
     // State jumptables
     private static final SwitchBlockStateMapper MAPPER_REGISTRY = new SwitchBlockStateMapper();
 
-    public static void init(List<BlockIdentifier> blockPalette) throws IOException {
+    public static void init(List<BlockIdentifier> blockPalette, Blocks blocks) throws IOException {
         List<Object> compounds = new ArrayList<>();
 
-        ByteBuf data = PooledByteBufAllocator.DEFAULT.directBuffer();
-        NBTWriter writer = new NBTWriter(data, ByteOrder.LITTLE_ENDIAN);
+        PacketBuffer data = new PacketBuffer(blockPalette.size() * 128);
+        NBTWriter writer = new NBTWriter(data.getBuffer(), ByteOrder.LITTLE_ENDIAN);
         writer.setUseVarint(true);
 
         RUNTIME_TO_BLOCK = new BlockIdentifier[blockPalette.size()];
@@ -77,17 +76,7 @@ public class BlockRuntimeIDs {
         }
 
         writer.write(compounds);
-
-        START_GAME_BUFFER = data;
-    }
-
-    /**
-     * Get the cached view for the start game packet
-     *
-     * @return correct cached view
-     */
-    public static ByteBuf getPacketCache() {
-        return START_GAME_BUFFER;
+        blocks.setPacketCache(data);
     }
 
     public static BlockIdentifier toBlockIdentifier(int runtimeId) {

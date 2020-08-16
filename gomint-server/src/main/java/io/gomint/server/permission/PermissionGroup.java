@@ -11,22 +11,18 @@ import io.gomint.permission.Group;
 import it.unimi.dsi.fastutil.objects.Object2BooleanMap;
 import it.unimi.dsi.fastutil.objects.Object2BooleanOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectSet;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.ToString;
+
+import java.util.Objects;
 
 /**
  * @author geNAZt
  * @version 1.0
  */
-@ToString( of = { "name", "permissions" } )
-@EqualsAndHashCode( of = "name" )
 public class PermissionGroup implements Group {
 
     private final PermissionGroupManager manager;
     private final String name;
 
-    @Getter
     private boolean dirty;
     private Object2BooleanMap<String> permissions;
 
@@ -39,6 +35,10 @@ public class PermissionGroup implements Group {
     PermissionGroup( PermissionGroupManager manager, String name ) {
         this.name = name;
         this.manager = manager;
+    }
+
+    public boolean isDirty() {
+        return dirty;
     }
 
     @Override
@@ -91,6 +91,27 @@ public class PermissionGroup implements Group {
      */
     public Boolean get( String permission ) {
         return this.permissions.get( permission );
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        PermissionGroup that = (PermissionGroup) o;
+        return Objects.equals(name, that.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name);
+    }
+
+    @Override
+    public String toString() {
+        return "PermissionGroup{" +
+            "name='" + name + '\'' +
+            ", permissions=" + permissions +
+            '}';
     }
 
 }

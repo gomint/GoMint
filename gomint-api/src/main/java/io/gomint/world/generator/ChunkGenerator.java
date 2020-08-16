@@ -10,7 +10,6 @@ package io.gomint.world.generator;
 import io.gomint.math.BlockPosition;
 import io.gomint.world.Chunk;
 import io.gomint.world.World;
-import lombok.Getter;
 
 /**
  * @author Clockw1seLrd
@@ -20,7 +19,6 @@ import lombok.Getter;
 public abstract class ChunkGenerator {
 
     protected World world;
-    @Getter
     protected GeneratorContext context;
 
     /**
@@ -32,6 +30,10 @@ public abstract class ChunkGenerator {
     public ChunkGenerator( World world, GeneratorContext context ) {
         this.world = world;
         this.context = context;
+    }
+
+    public GeneratorContext getContext() {
+        return context;
     }
 
     /**

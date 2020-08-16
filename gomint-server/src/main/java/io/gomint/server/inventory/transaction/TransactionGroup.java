@@ -5,8 +5,6 @@ import io.gomint.inventory.Inventory;
 import io.gomint.inventory.item.ItemAir;
 import io.gomint.inventory.item.ItemStack;
 import io.gomint.server.entity.EntityPlayer;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,13 +17,12 @@ import java.util.Map;
  * @author geNAZt
  * @version 1.0
  */
-@RequiredArgsConstructor
 public class TransactionGroup {
 
     private static final Logger LOGGER = LoggerFactory.getLogger( TransactionGroup.class );
 
     private final EntityPlayer player;
-    @Getter private final List<Transaction> transactions = new ArrayList<>();
+    private final List<Transaction> transactions = new ArrayList<>();
 
     // Need / have for this transactions
     private List<ItemStack> haveItems = new ArrayList<>();
@@ -33,6 +30,14 @@ public class TransactionGroup {
 
     // Matched
     private boolean matchItems;
+
+    public TransactionGroup(EntityPlayer player) {
+        this.player = player;
+    }
+
+    public List<Transaction> getTransactions() {
+        return transactions;
+    }
 
     /**
      * Add a new transaction to this group

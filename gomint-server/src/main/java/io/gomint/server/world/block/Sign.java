@@ -1,6 +1,7 @@
 package io.gomint.server.world.block;
 
 import io.gomint.inventory.item.ItemStack;
+import io.gomint.server.entity.tileentity.CommandBlockTileEntity;
 import io.gomint.server.world.block.helper.ToolPresets;
 import io.gomint.world.block.BlockType;
 
@@ -48,7 +49,7 @@ public class Sign extends Block implements BlockSign {
     @Override
     TileEntity createTileEntity( NBTTagCompound compound ) {
         super.createTileEntity( compound );
-        return new SignTileEntity( this );
+        return this.world.getServer().getTileEntities().construct(SignTileEntity.class, compound, this, this.world.getServer().getItems());
     }
 
     @Override

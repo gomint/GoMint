@@ -7,20 +7,32 @@
 
 package io.gomint.server.maintenance.report;
 
-import lombok.AllArgsConstructor;
-import lombok.ToString;
-
 /**
  * @author geNAZt
  * @version 1.0
  */
-@AllArgsConstructor
-@ToString
 public class PlayerReportData {
 
-    private String world;
-    private float x;
-    private float y;
-    private float z;
+    private final String world;
+    private final float x;
+    private final float y;
+    private final float z;
+
+    public PlayerReportData(String world, float x, float y, float z) {
+        this.world = world;
+        this.x = x;
+        this.y = y;
+        this.z = z;
+    }
+
+    @Override
+    public String toString() {
+        return "PlayerReportData{" +
+            "world='" + world + '\'' +
+            ", x=" + x +
+            ", y=" + y +
+            ", z=" + z +
+            '}';
+    }
 
 }

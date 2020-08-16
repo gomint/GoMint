@@ -10,17 +10,18 @@ package io.gomint.server.entity.tileentity;
 import io.gomint.entity.Entity;
 import io.gomint.math.Vector;
 import io.gomint.server.inventory.InventoryHolder;
+import io.gomint.server.inventory.item.Items;
+import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.util.BlockIdentifier;
 import io.gomint.server.world.block.Block;
 import io.gomint.taglib.NBTTagCompound;
-import io.gomint.world.block.data.Facing;
-import lombok.Getter;
+import io.gomint.world.block.data.Facing;;
 
 /**
  * @author geNAZt
  * @version 1.0
  */
-@Getter
+@RegisterInfo(sId = "FlowerPot")
 public class FlowerPotTileEntity extends TileEntity implements InventoryHolder {
 
     private BlockIdentifier holding;
@@ -30,10 +31,9 @@ public class FlowerPotTileEntity extends TileEntity implements InventoryHolder {
      *
      * @param block which created this tile
      */
-    public FlowerPotTileEntity( Block block ) {
-        super( block );
+    public FlowerPotTileEntity(Block block, Items items) {
+        super( block, items );
     }
-
 
     @Override
     public void fromCompound( NBTTagCompound compound ) {
@@ -43,7 +43,7 @@ public class FlowerPotTileEntity extends TileEntity implements InventoryHolder {
     }
 
     @Override
-    public void update( long currentMillis ) {
+    public void update( long currentMillis, float dT ) {
 
     }
 
@@ -62,6 +62,10 @@ public class FlowerPotTileEntity extends TileEntity implements InventoryHolder {
             NBTTagCompound block = compound.getCompound( "PlantBlock", true );
             putBlockIdentifier( this.holding, block );
         }
+    }
+
+    public BlockIdentifier getHolding() {
+        return holding;
     }
 
 }

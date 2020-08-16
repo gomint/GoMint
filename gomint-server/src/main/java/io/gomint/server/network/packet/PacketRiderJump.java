@@ -2,13 +2,11 @@ package io.gomint.server.network.packet;
 
 import io.gomint.jraknet.PacketBuffer;
 import io.gomint.server.network.Protocol;
-import lombok.Data;
 
 /**
  * @author HerryYT
  * @version 1.0
  */
-@Data
 public class PacketRiderJump extends Packet {
 
     private int strength;
@@ -25,5 +23,13 @@ public class PacketRiderJump extends Packet {
     @Override
     public void deserialize(PacketBuffer buffer, int protocolID) {
         this.strength = buffer.readSignedVarInt();
+    }
+
+    public int getStrength() {
+        return strength;
+    }
+
+    public void setStrength(int strength) {
+        this.strength = strength;
     }
 }

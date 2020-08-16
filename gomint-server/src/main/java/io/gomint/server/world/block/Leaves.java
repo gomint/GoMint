@@ -9,7 +9,6 @@ import io.gomint.server.world.block.state.EnumBlockState;
 import io.gomint.world.block.BlockLeaves;
 import io.gomint.world.block.BlockType;
 import io.gomint.world.block.data.LogType;
-import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +27,6 @@ public class Leaves extends Block implements BlockLeaves {
     private static final String NEW_LOG_TYPE = "new_leaf_type";
     private static final String NEW_LOG_ID = "minecraft:leaves2";
 
-    @Getter
     private enum LeaveTypeMagic {
         OAK(OLD_LOG_ID, OLD_LOG_TYPE, "oak"),
         SPRUCE(OLD_LOG_ID, OLD_LOG_TYPE, "spruce"),
@@ -54,15 +52,15 @@ public class Leaves extends Block implements BlockLeaves {
         }
 
         for (LeaveTypeMagic value : LeaveTypeMagic.values()) {
-            if (value.getValue().equals(v)) {
-                return value.getKey().equals(OLD_LOG_TYPE) ? new String[]{OLD_LOG_TYPE, NEW_LOG_TYPE} : new String[]{NEW_LOG_TYPE, OLD_LOG_TYPE};
+            if (value.value.equals(v)) {
+                return value.key.equals(OLD_LOG_TYPE) ? new String[]{OLD_LOG_TYPE, NEW_LOG_TYPE} : new String[]{NEW_LOG_TYPE, OLD_LOG_TYPE};
             }
         }
 
         return new String[]{OLD_LOG_TYPE, NEW_LOG_TYPE};
-    }, LeaveTypeMagic.values(), LeaveTypeMagic::getValue, v -> {
+    }, LeaveTypeMagic.values(), v -> v.value, v -> {
         for (LeaveTypeMagic value : LeaveTypeMagic.values()) {
-            if (value.getValue().equals(v)) {
+            if (value.value.equals(v)) {
                 return value;
             }
         }
@@ -117,7 +115,7 @@ public class Leaves extends Block implements BlockLeaves {
     @Override
     public void setLeaveType(LogType type) {
         LeaveTypeMagic newState = LeaveTypeMagic.valueOf(type.name());
-        this.setBlockIdOnStateChange(newState.getBlockId()); // We ignore the two keys here to get a known wrong value, the set state below will select the correct runtime id
+        this.setBlockIdOnStateChange(newState.blockId); // We ignore the two keys here to get a known wrong value, the set state below will select the correct runtime id
         VARIANT.setState(this, newState);
     }
 

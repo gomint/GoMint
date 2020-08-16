@@ -10,13 +10,11 @@ package io.gomint.server.network.packet;
 import io.gomint.jraknet.PacketBuffer;
 import io.gomint.math.BlockPosition;
 import io.gomint.server.network.Protocol;
-import lombok.Data;
 
 /**
  * @author geNAZt
  * @version 1.0
  */
-@Data
 public class PacketBlockEvent extends Packet {
 
     private BlockPosition position;
@@ -42,4 +40,27 @@ public class PacketBlockEvent extends Packet {
 
     }
 
+    public BlockPosition getPosition() {
+        return position;
+    }
+
+    public void setPosition(BlockPosition position) {
+        this.position = position;
+    }
+
+    public int getData1() {
+        return data1;
+    }
+
+    public void setData1(int data1) {
+        this.data1 = data1;
+    }
+
+    public int getData2() {
+        return data2;
+    }
+
+    public void setData2(int data2) {
+        this.data2 = data2;
+    }
 }

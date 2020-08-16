@@ -2,9 +2,6 @@ package io.gomint.server.network.packet;
 
 import io.gomint.jraknet.PacketBuffer;
 import io.gomint.server.network.Protocol;
-import lombok.Data;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 
@@ -12,7 +9,6 @@ import java.util.List;
  * @author geNAZt
  * @version 1.0
  */
-@Data
 public class PacketSetScoreboardIdentity extends Packet {
 
     private byte type;
@@ -43,11 +39,38 @@ public class PacketSetScoreboardIdentity extends Packet {
 
     }
 
-    @RequiredArgsConstructor
-    @Getter
+    public byte getType() {
+        return type;
+    }
+
+    public void setType(byte type) {
+        this.type = type;
+    }
+
+    public List<ScoreboardIdentity> getEntries() {
+        return entries;
+    }
+
+    public void setEntries(List<ScoreboardIdentity> entries) {
+        this.entries = entries;
+    }
+
     public static class ScoreboardIdentity {
         private final long scoreId;
-        private long entityId;
+        private final long entityId;
+
+        public ScoreboardIdentity(long scoreId, long entityId) {
+            this.scoreId = scoreId;
+            this.entityId = entityId;
+        }
+
+        public long getScoreId() {
+            return scoreId;
+        }
+
+        public long getEntityId() {
+            return entityId;
+        }
     }
 
 }

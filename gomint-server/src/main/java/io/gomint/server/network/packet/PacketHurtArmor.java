@@ -9,13 +9,11 @@ package io.gomint.server.network.packet;
 
 import io.gomint.jraknet.PacketBuffer;
 import io.gomint.server.network.Protocol;
-import lombok.Data;
 
 /**
  * @author geNAZt
  * @version 1.0
  */
-@Data
 public class PacketHurtArmor extends Packet {
 
     private int damage;
@@ -35,5 +33,13 @@ public class PacketHurtArmor extends Packet {
     @Override
     public void deserialize( PacketBuffer buffer, int protocolID ) {
         this.damage = buffer.readSignedVarInt();
+    }
+
+    public int getDamage() {
+        return damage;
+    }
+
+    public void setDamage(int damage) {
+        this.damage = damage;
     }
 }

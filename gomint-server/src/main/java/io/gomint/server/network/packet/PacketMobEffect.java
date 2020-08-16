@@ -9,13 +9,11 @@ package io.gomint.server.network.packet;
 
 import io.gomint.jraknet.PacketBuffer;
 import io.gomint.server.network.Protocol;
-import lombok.Data;
 
 /**
  * @author geNAZt
  * @version 1.0
  */
-@Data
 public class PacketMobEffect extends Packet {
 
     // CHECKSTYLE:OFF
@@ -53,4 +51,51 @@ public class PacketMobEffect extends Packet {
 
     }
 
+    public long getEntityId() {
+        return entityId;
+    }
+
+    public void setEntityId(long entityId) {
+        this.entityId = entityId;
+    }
+
+    public byte getAction() {
+        return action;
+    }
+
+    public void setAction(byte action) {
+        this.action = action;
+    }
+
+    public int getEffectId() {
+        return effectId;
+    }
+
+    public void setEffectId(int effectId) {
+        this.effectId = effectId;
+    }
+
+    public int getAmplifier() {
+        return amplifier;
+    }
+
+    public void setAmplifier(int amplifier) {
+        this.amplifier = amplifier;
+    }
+
+    public boolean isVisible() {
+        return visible;
+    }
+
+    public void setVisible(boolean visible) {
+        this.visible = visible;
+    }
+
+    public int getDuration() {
+        return duration;
+    }
+
+    public void setDuration(int duration) {
+        this.duration = duration;
+    }
 }

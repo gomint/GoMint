@@ -3,6 +3,7 @@ package io.gomint.server.world.block;
 import io.gomint.inventory.item.ItemStack;
 import io.gomint.math.Vector;
 import io.gomint.server.entity.Entity;
+import io.gomint.server.entity.tileentity.CommandBlockTileEntity;
 import io.gomint.server.entity.tileentity.FurnaceTileEntity;
 import io.gomint.server.entity.tileentity.TileEntity;
 import io.gomint.server.registry.RegisterInfo;
@@ -12,7 +13,6 @@ import io.gomint.taglib.NBTTagCompound;
 import io.gomint.world.block.BlockFurnace;
 import io.gomint.world.block.data.Facing;
 import io.gomint.world.block.BlockType;
-import lombok.EqualsAndHashCode;
 
 /**
  * @author geNAZt
@@ -20,7 +20,6 @@ import lombok.EqualsAndHashCode;
  */
 @RegisterInfo(sId = "minecraft:lit_furnace")
 @RegisterInfo(sId = "minecraft:furnace", def = true)
-@EqualsAndHashCode(callSuper = true)
 public class Furnace extends Block implements BlockFurnace {
 
     private static final BlockfaceBlockState FACING = new BlockfaceBlockState(() -> new String[]{"facing_direction"});
@@ -57,8 +56,8 @@ public class Furnace extends Block implements BlockFurnace {
 
     @Override
     TileEntity createTileEntity(NBTTagCompound compound) {
-        super.createTileEntity(compound);
-        return new FurnaceTileEntity(this);
+        super.createTileEntity( compound );
+        return this.world.getServer().getTileEntities().construct(FurnaceTileEntity.class, compound, this, this.world.getServer().getItems());
     }
 
     @Override

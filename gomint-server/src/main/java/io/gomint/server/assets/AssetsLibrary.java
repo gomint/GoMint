@@ -23,7 +23,6 @@ import io.gomint.taglib.AllocationLimitReachedException;
 import io.gomint.taglib.NBTTagCompound;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.PooledByteBufAllocator;
-import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -48,14 +47,10 @@ public class AssetsLibrary {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AssetsLibrary.class);
 
-    @Getter
     private CreativeInventory creativeInventory;
-    @Getter
     private List<Recipe> recipes;
 
-    @Getter
     private List<BlockIdentifier> blockPalette;
-    @Getter
     private List<StringShortPair> itemIDs;
 
     // Statistics
@@ -322,6 +317,23 @@ public class AssetsLibrary {
         }
 
         return "UNKNOWN";
+    }
+
+
+    public CreativeInventory getCreativeInventory() {
+        return creativeInventory;
+    }
+
+    public List<Recipe> getRecipes() {
+        return recipes;
+    }
+
+    public List<BlockIdentifier> getBlockPalette() {
+        return blockPalette;
+    }
+
+    public List<StringShortPair> getItemIDs() {
+        return itemIDs;
     }
 
 }

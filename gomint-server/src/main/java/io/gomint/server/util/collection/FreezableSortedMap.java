@@ -8,16 +8,12 @@
 package io.gomint.server.util.collection;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
-import lombok.Setter;
-import lombok.ToString;
 
-@ToString
 public class FreezableSortedMap<K, V> extends Object2ObjectLinkedOpenHashMap<K, V> {
 
     private boolean cachedHashCode;
     private int hashCode;
 
-    @Setter
     private boolean frozen;
 
     public FreezableSortedMap() {
@@ -54,4 +50,18 @@ public class FreezableSortedMap<K, V> extends Object2ObjectLinkedOpenHashMap<K, 
 
         return super.hashCode();
     }
+
+    public void setFrozen(boolean frozen) {
+        this.frozen = frozen;
+    }
+
+    @Override
+    public String toString() {
+        return "FreezableSortedMap{" +
+            "cachedHashCode=" + cachedHashCode +
+            ", hashCode=" + hashCode +
+            ", frozen=" + frozen +
+            '}';
+    }
+
 }

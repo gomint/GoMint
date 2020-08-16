@@ -9,13 +9,11 @@ package io.gomint.server.network.packet;
 
 import io.gomint.jraknet.PacketBuffer;
 import io.gomint.server.network.Protocol;
-import lombok.Data;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-@Data
 public class PacketEmoteList extends Packet {
 
     private long runtimeId;
@@ -40,4 +38,19 @@ public class PacketEmoteList extends Packet {
         }
     }
 
+    public long getRuntimeId() {
+        return runtimeId;
+    }
+
+    public void setRuntimeId(long runtimeId) {
+        this.runtimeId = runtimeId;
+    }
+
+    public List<UUID> getEmoteIds() {
+        return emoteIds;
+    }
+
+    public void setEmoteIds(List<UUID> emoteIds) {
+        this.emoteIds = emoteIds;
+    }
 }

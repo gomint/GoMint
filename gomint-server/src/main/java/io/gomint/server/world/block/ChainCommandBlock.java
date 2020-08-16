@@ -7,6 +7,7 @@
 
 package io.gomint.server.world.block;
 
+import io.gomint.server.entity.tileentity.BannerTileEntity;
 import io.gomint.server.entity.tileentity.CommandBlockTileEntity;
 import io.gomint.server.entity.tileentity.TileEntity;
 import io.gomint.server.registry.RegisterInfo;
@@ -49,7 +50,7 @@ public class ChainCommandBlock extends ContainerBlock implements BlockChainComma
     @Override
     TileEntity createTileEntity( NBTTagCompound compound ) {
         super.createTileEntity( compound );
-        return new CommandBlockTileEntity( this );
+        return this.world.getServer().getTileEntities().construct(CommandBlockTileEntity.class, compound, this, this.world.getServer().getItems());
     }
 
 }

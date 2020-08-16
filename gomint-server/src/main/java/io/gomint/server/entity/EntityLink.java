@@ -1,12 +1,9 @@
 package io.gomint.server.entity;
 
-import lombok.Data;
-
 /**
  * @author geNAZt
  * @version 1.0
  */
-@Data
 public class EntityLink {
 
     private long from;
@@ -14,4 +11,35 @@ public class EntityLink {
     private byte unknown1;
     private byte unknown2;
 
+    public long getFrom() {
+        return from;
+    }
+
+    public void setFrom(long from) {
+        this.from = from;
+    }
+
+    public long getTo() {
+        return to;
+    }
+
+    public void setTo(long to) {
+        this.to = to;
+    }
+
+    public byte getUnknown1() {
+        return unknown1;
+    }
+
+    public void setUnknown1(byte unknown1) {
+        this.unknown1 = unknown1;
+    }
+
+    public byte getUnknown2() {
+        return unknown2;
+    }
+
+    public void setUnknown2(byte unknown2) {
+        this.unknown2 = unknown2;
+    }
 }

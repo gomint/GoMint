@@ -39,21 +39,17 @@ import io.gomint.server.util.Values;
 import io.gomint.server.world.WorldAdapter;
 import io.gomint.taglib.NBTTagCompound;
 import io.gomint.world.Difficulty;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.ToString;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 /**
  * @author geNAZt
  * @version 1.0
  */
-@EqualsAndHashCode( callSuper = false, of = { "uuid" } )
-@ToString( of = { "uuid", "username" }, callSuper = true )
 @RegisterInfo( sId = "minecraft:player" )
 public class EntityHuman extends EntityCreature implements io.gomint.entity.passive.EntityHuman {
 
@@ -69,9 +65,7 @@ public class EntityHuman extends EntityCreature implements io.gomint.entity.pass
     private String xboxId = "";
 
     private PlayerSkin skin;
-    @Getter
     private String playerListName;
-    @Getter
     private DeviceInfo deviceInfo;
 
     /**
@@ -643,6 +637,35 @@ public class EntityHuman extends EntityCreature implements io.gomint.entity.pass
         packetMovePlayer.setMode(PacketMovePlayer.MovePlayerMode.NORMAL);
 
         return packetMovePlayer;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        EntityHuman that = (EntityHuman) o;
+        return Objects.equals(uuid, that.uuid);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(uuid);
+    }
+
+    @Override
+    public String toString() {
+        return "EntityHuman{" +
+            "username='" + username + '\'' +
+            ", uuid=" + uuid +
+            '}';
+    }
+
+    public String getPlayerListName() {
+        return playerListName;
+    }
+
+    public DeviceInfo getDeviceInfo() {
+        return deviceInfo;
     }
 
 }

@@ -8,9 +8,6 @@
 package io.gomint.server.command;
 
 import io.gomint.command.CommandOverload;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.ToString;
 
 import java.util.Map;
 
@@ -18,14 +15,44 @@ import java.util.Map;
  * @author geNAZt
  * @version 1.0
  */
-@AllArgsConstructor
-@Getter
-@ToString
 public class CommandCanidate {
 
     private CommandOverload overload;
     private Map<String, Object> arguments;
     private boolean completedOptionals;
     private boolean readCompleted;
+
+    public CommandCanidate(CommandOverload overload, Map<String, Object> arguments, boolean completedOptionals, boolean readCompleted) {
+        this.overload = overload;
+        this.arguments = arguments;
+        this.completedOptionals = completedOptionals;
+        this.readCompleted = readCompleted;
+    }
+
+    public CommandOverload getOverload() {
+        return overload;
+    }
+
+    public Map<String, Object> getArguments() {
+        return arguments;
+    }
+
+    public boolean isCompletedOptionals() {
+        return completedOptionals;
+    }
+
+    public boolean isReadCompleted() {
+        return readCompleted;
+    }
+
+    @Override
+    public String toString() {
+        return "CommandCanidate{" +
+            "overload=" + overload +
+            ", arguments=" + arguments +
+            ", completedOptionals=" + completedOptionals +
+            ", readCompleted=" + readCompleted +
+            '}';
+    }
 
 }

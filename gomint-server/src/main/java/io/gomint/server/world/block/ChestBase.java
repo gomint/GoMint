@@ -13,6 +13,7 @@ import io.gomint.inventory.item.ItemType;
 import io.gomint.math.Vector;
 import io.gomint.server.entity.Entity;
 import io.gomint.server.entity.EntityPlayer;
+import io.gomint.server.entity.tileentity.BannerTileEntity;
 import io.gomint.server.entity.tileentity.ChestTileEntity;
 import io.gomint.server.entity.tileentity.TileEntity;
 import io.gomint.server.world.PlacementData;
@@ -50,7 +51,8 @@ public abstract class ChestBase extends ContainerBlock {
 
     @Override
     TileEntity createTileEntity(NBTTagCompound compound) {
-        return new ChestTileEntity(this);
+        super.createTileEntity( compound );
+        return this.world.getServer().getTileEntities().construct(ChestTileEntity.class, compound, this, this.world.getServer().getItems());
     }
 
     @Override

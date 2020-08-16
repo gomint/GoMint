@@ -9,8 +9,6 @@ package io.gomint.server.world.generator.vanilla.client;
 
 import io.gomint.server.jwt.JwtAlgorithm;
 import io.gomint.server.jwt.JwtSignatureException;
-import lombok.Getter;
-import lombok.Setter;
 import org.json.simple.JSONObject;
 
 import java.nio.charset.StandardCharsets;
@@ -25,14 +23,33 @@ import java.util.UUID;
  * @author BlackyPaw
  * @version 1.0
  */
-@Setter
 public class MojangLoginForger {
 
     private String username;
-    @Getter private UUID uuid;
+    private UUID uuid;
     private PublicKey publicKey;
     private JSONObject skinData;
     private String xuid;
+
+    public UUID getUuid() {
+        return uuid;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void setUuid(UUID uuid) {
+        this.uuid = uuid;
+    }
+
+    public void setPublicKey(PublicKey publicKey) {
+        this.publicKey = publicKey;
+    }
+
+    public void setXuid(String xuid) {
+        this.xuid = xuid;
+    }
 
     @SuppressWarnings( "unchecked" )
     public String forge( PrivateKey privateKey ) {

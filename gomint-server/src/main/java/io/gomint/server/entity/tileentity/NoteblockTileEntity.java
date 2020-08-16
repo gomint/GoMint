@@ -3,6 +3,8 @@ package io.gomint.server.entity.tileentity;
 import io.gomint.entity.Entity;
 import io.gomint.inventory.item.ItemStack;
 import io.gomint.math.Vector;
+import io.gomint.server.inventory.item.Items;
+import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.world.block.Block;
 import io.gomint.taglib.NBTTagCompound;
 import io.gomint.world.Sound;
@@ -12,6 +14,7 @@ import io.gomint.world.block.data.Facing;
  * @author geNAZt
  * @version 1.0
  */
+@RegisterInfo(sId = "Music")
 public class NoteblockTileEntity extends TileEntity {
 
     private byte note;
@@ -21,8 +24,8 @@ public class NoteblockTileEntity extends TileEntity {
      *
      * @param block which created this tile
      */
-    public NoteblockTileEntity( Block block ) {
-        super( block );
+    public NoteblockTileEntity(Block block, Items items) {
+        super( block, items );
     }
 
     @Override
@@ -33,7 +36,7 @@ public class NoteblockTileEntity extends TileEntity {
     }
 
     @Override
-    public void update( long currentMillis ) {
+    public void update( long currentMillis, float dT ) {
 
     }
 

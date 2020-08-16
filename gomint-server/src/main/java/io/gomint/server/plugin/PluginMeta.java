@@ -9,10 +9,6 @@ package io.gomint.server.plugin;
 
 import io.gomint.plugin.PluginVersion;
 import io.gomint.plugin.StartupPriority;
-import lombok.Data;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.ToString;
 
 import java.io.File;
 import java.util.HashSet;
@@ -22,9 +18,6 @@ import java.util.Set;
  * @author BlackyPaw
  * @version 1.0
  */
-@RequiredArgsConstructor
-@ToString
-@Data
 public class PluginMeta {
 
     // Plugin basics
@@ -44,11 +37,99 @@ public class PluginMeta {
     private Set<String> packages;
     private Set<File> moduleDependencies;
 
+    public PluginMeta(File pluginFile) {
+        this.pluginFile = pluginFile;
+    }
+
     public void addPackage(String packageName) {
         if (this.packages == null) {
             this.packages = new HashSet<>();
         }
 
         this.packages.add(packageName);
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public PluginVersion getVersion() {
+        return version;
+    }
+
+    public void setVersion(PluginVersion version) {
+        this.version = version;
+    }
+
+    public StartupPriority getPriority() {
+        return priority;
+    }
+
+    public void setPriority(StartupPriority priority) {
+        this.priority = priority;
+    }
+
+    public Set<String> getDepends() {
+        return depends;
+    }
+
+    public void setDepends(Set<String> depends) {
+        this.depends = depends;
+    }
+
+    public Set<String> getSoftDepends() {
+        return softDepends;
+    }
+
+    public void setSoftDepends(Set<String> softDepends) {
+        this.softDepends = softDepends;
+    }
+
+    public String getMainClass() {
+        return mainClass;
+    }
+
+    public void setMainClass(String mainClass) {
+        this.mainClass = mainClass;
+    }
+
+    public Set<String> getInjectionCommands() {
+        return injectionCommands;
+    }
+
+    public void setInjectionCommands(Set<String> injectionCommands) {
+        this.injectionCommands = injectionCommands;
+    }
+
+    public String getModuleName() {
+        return moduleName;
+    }
+
+    public void setModuleName(String moduleName) {
+        this.moduleName = moduleName;
+    }
+
+    public Set<String> getPackages() {
+        return packages;
+    }
+
+    public void setPackages(Set<String> packages) {
+        this.packages = packages;
+    }
+
+    public Set<File> getModuleDependencies() {
+        return moduleDependencies;
+    }
+
+    public void setModuleDependencies(Set<File> moduleDependencies) {
+        this.moduleDependencies = moduleDependencies;
+    }
+
+    public File getPluginFile() {
+        return pluginFile;
     }
 }

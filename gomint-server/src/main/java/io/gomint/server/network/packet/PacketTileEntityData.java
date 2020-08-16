@@ -6,7 +6,6 @@ import io.gomint.server.network.Protocol;
 import io.gomint.taglib.NBTReader;
 import io.gomint.taglib.NBTTagCompound;
 import io.gomint.taglib.NBTWriter;
-import lombok.Data;
 
 import java.nio.ByteOrder;
 
@@ -14,7 +13,6 @@ import java.nio.ByteOrder;
  * @author geNAZt
  * @version 1.0
  */
-@Data
 public class PacketTileEntityData extends Packet {
 
     private static final int MAX_ALLOC = 1024 * 1024;
@@ -48,4 +46,19 @@ public class PacketTileEntityData extends Packet {
         this.compound = reader.parse();
     }
 
+    public BlockPosition getPosition() {
+        return position;
+    }
+
+    public void setPosition(BlockPosition position) {
+        this.position = position;
+    }
+
+    public NBTTagCompound getCompound() {
+        return compound;
+    }
+
+    public void setCompound(NBTTagCompound compound) {
+        this.compound = compound;
+    }
 }

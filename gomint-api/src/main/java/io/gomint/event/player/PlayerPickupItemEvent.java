@@ -9,17 +9,14 @@ package io.gomint.event.player;
 
 import io.gomint.entity.Entity;
 import io.gomint.entity.EntityPlayer;
-import io.gomint.entity.passive.EntityItemDrop;
 import io.gomint.inventory.item.ItemStack;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+
+import java.util.Objects;
 
 /**
  * @author geNAZt
  * @version 1.0
  */
-@EqualsAndHashCode( callSuper = true )
-@ToString( callSuper = true )
 public class PlayerPickupItemEvent extends CancellablePlayerEvent {
 
     private final Entity holdingEntity;
@@ -47,6 +44,29 @@ public class PlayerPickupItemEvent extends CancellablePlayerEvent {
      */
     public Entity getHoldingEntity() {
         return this.holdingEntity;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        PlayerPickupItemEvent that = (PlayerPickupItemEvent) o;
+        return Objects.equals(holdingEntity, that.holdingEntity) &&
+            Objects.equals(itemStack, that.itemStack);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), holdingEntity, itemStack);
+    }
+
+    @Override
+    public String toString() {
+        return "PlayerPickupItemEvent{" +
+            "holdingEntity=" + holdingEntity +
+            ", itemStack=" + itemStack +
+            '}';
     }
 
 }

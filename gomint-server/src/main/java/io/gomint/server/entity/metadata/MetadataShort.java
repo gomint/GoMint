@@ -8,13 +8,11 @@
 package io.gomint.server.entity.metadata;
 
 import io.gomint.jraknet.PacketBuffer;
-import lombok.ToString;
 
 /**
  * @author BlackyPaw
  * @version 1.0
  */
-@ToString
 public class MetadataShort extends MetadataValue {
 
     private short value;
@@ -70,4 +68,10 @@ public class MetadataShort extends MetadataValue {
         return MetadataContainer.METADATA_SHORT;
     }
 
+    @Override
+    public String toString() {
+        return "MetadataShort{" +
+            "value=" + value +
+            '}';
+    }
 }

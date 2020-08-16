@@ -6,7 +6,6 @@ import io.gomint.server.world.block.helper.ToolPresets;
 import io.gomint.world.block.BlockType;
 import io.gomint.world.block.BlockWoodenTrapdoor;
 import io.gomint.world.block.data.LogType;
-import lombok.Getter;
 
 /**
  * @author geNAZt
@@ -20,7 +19,6 @@ import lombok.Getter;
 @RegisterInfo(sId = "minecraft:birch_trapdoor")
 public class WoodenTrapdoor extends Trapdoor implements BlockWoodenTrapdoor {
 
-    @Getter
     private enum LogTypeMagic {
         OAK("minecraft:trapdoor"),
         SPRUCE("minecraft:spruce_trapdoor"),
@@ -70,7 +68,7 @@ public class WoodenTrapdoor extends Trapdoor implements BlockWoodenTrapdoor {
     @Override
     public LogType getWoodType() {
         for (LogTypeMagic value : LogTypeMagic.values()) {
-            if (value.getBlockId().equals(this.getBlockId())) {
+            if (value.blockId.equals(this.getBlockId())) {
                 return LogType.valueOf(value.name());
             }
         }
@@ -81,7 +79,7 @@ public class WoodenTrapdoor extends Trapdoor implements BlockWoodenTrapdoor {
     @Override
     public void setWoodType(LogType logType) {
         LogTypeMagic newState = LogTypeMagic.valueOf(logType.name());
-        this.setBlockId(newState.getBlockId());
+        this.setBlockId(newState.blockId);
     }
 
 }

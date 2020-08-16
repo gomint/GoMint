@@ -20,9 +20,6 @@ import io.gomint.server.inventory.item.helper.ItemStackPlace;
 import io.gomint.taglib.NBTTagCompound;
 import io.gomint.world.block.Block;
 import io.gomint.world.block.data.Facing;
-import lombok.EqualsAndHashCode;
-import lombok.Setter;
-import lombok.ToString;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,8 +32,6 @@ import java.util.*;
  * @author BlackyPaw
  * @version 1.0
  */
-@ToString
-@EqualsAndHashCode(of = {"material", "data", "nbt"})
 public abstract class ItemStack implements Cloneable, io.gomint.inventory.item.ItemStack {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ItemStack.class);
@@ -55,7 +50,6 @@ public abstract class ItemStack implements Cloneable, io.gomint.inventory.item.I
     private ItemStackPlace itemStackPlace;
 
     // Item constructor factors
-    @Setter
     private Items items;
 
     ItemStack setMaterial(int material) {
@@ -529,6 +523,40 @@ public abstract class ItemStack implements Cloneable, io.gomint.inventory.item.I
 
     protected void setBlockId(String blockId) {
         this.setMaterial(this.items.getMaterial(blockId));
+    }
+
+    @Override
+    public String toString() {
+        return "ItemStack{" +
+            "id=" + id +
+            ", material=" + material +
+            ", data=" + data +
+            ", amount=" + amount +
+            ", nbt=" + nbt +
+            ", enchantments=" + enchantments +
+            ", dirtyEnchantments=" + dirtyEnchantments +
+            ", itemStackPlace=" + itemStackPlace +
+            ", items=" + items +
+            '}';
+    }
+
+    public void setItems(Items items) {
+        this.items = items;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ItemStack itemStack = (ItemStack) o;
+        return material == itemStack.material &&
+            data == itemStack.data &&
+            Objects.equals(nbt, itemStack.nbt);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(material, data, nbt);
     }
 
 }

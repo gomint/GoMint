@@ -7,16 +7,24 @@
 
 package io.gomint.server.util;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-
 /**
  * @author geNAZt
  * @version 1.0
  */
-@AllArgsConstructor
-@Data
 public class Pair<A, B> {
     private A first;
     private B second;
+
+    public Pair(A first, B second) {
+        this.first = first;
+        this.second = second;
+    }
+
+    public A getFirst() {
+        return first;
+    }
+
+    public B getSecond() {
+        return second;
+    }
 }

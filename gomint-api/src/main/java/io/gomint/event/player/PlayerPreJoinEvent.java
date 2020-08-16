@@ -8,8 +8,8 @@
 package io.gomint.event.player;
 
 import io.gomint.entity.EntityPlayer;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+
+import java.util.Objects;
 
 /**
  * @author geNAZt
@@ -19,8 +19,6 @@ import lombok.ToString;
  * into the client. This event can be used when you need to be sure the play status has been reached (like redirecting
  * a player to another server without ever touching this one)
  */
-@EqualsAndHashCode( callSuper = false )
-@ToString( callSuper = true )
 public class PlayerPreJoinEvent extends CancellablePlayerEvent {
 
     private String kickReason;
@@ -45,6 +43,27 @@ public class PlayerPreJoinEvent extends CancellablePlayerEvent {
      */
     public String getKickReason() {
         return kickReason;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        PlayerPreJoinEvent that = (PlayerPreJoinEvent) o;
+        return Objects.equals(kickReason, that.kickReason);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), kickReason);
+    }
+
+    @Override
+    public String toString() {
+        return "PlayerPreJoinEvent{" +
+            "kickReason='" + kickReason + '\'' +
+            '}';
     }
 
 }

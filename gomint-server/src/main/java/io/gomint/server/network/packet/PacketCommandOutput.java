@@ -4,7 +4,6 @@ import io.gomint.jraknet.PacketBuffer;
 import io.gomint.server.network.Protocol;
 import io.gomint.server.network.type.CommandOrigin;
 import io.gomint.server.network.type.OutputMessage;
-import lombok.Data;
 
 import java.util.List;
 
@@ -12,7 +11,6 @@ import java.util.List;
  * @author geNAZt
  * @version 1.0
  */
-@Data
 public class PacketCommandOutput extends Packet {
 
     private CommandOrigin origin;
@@ -47,4 +45,27 @@ public class PacketCommandOutput extends Packet {
 
     }
 
+    public CommandOrigin getOrigin() {
+        return origin;
+    }
+
+    public void setOrigin(CommandOrigin origin) {
+        this.origin = origin;
+    }
+
+    public boolean isSuccess() {
+        return success;
+    }
+
+    public void setSuccess(boolean success) {
+        this.success = success;
+    }
+
+    public List<OutputMessage> getOutputs() {
+        return outputs;
+    }
+
+    public void setOutputs(List<OutputMessage> outputs) {
+        this.outputs = outputs;
+    }
 }

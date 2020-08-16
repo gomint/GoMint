@@ -8,23 +8,17 @@
 package io.gomint.server.scheduler;
 
 import io.gomint.server.GoMintServer;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 
 import java.util.Comparator;
+import java.util.Objects;
 import java.util.PriorityQueue;
 
 /**
  * @author geNAZt
  * @version 1.0
  */
-@RequiredArgsConstructor
 public class SyncTaskManager {
 
-    @Getter
-    private final GoMintServer goMintServer;
     private final PriorityQueue<SyncScheduledTaskHolder> taskList = new PriorityQueue<>( Comparator.comparingLong( o -> o.execution ) );
 
     /**
@@ -85,12 +79,31 @@ public class SyncTaskManager {
         }
     }
 
-    @AllArgsConstructor
-    @EqualsAndHashCode( of = { "task" } )
     private static class SyncScheduledTaskHolder {
-        @Getter
         private long execution;
         private SyncScheduledTask task;
+
+        public SyncScheduledTaskHolder(long execution, SyncScheduledTask task) {
+            this.execution = execution;
+            this.task = task;
+        }
+
+        public long getExecution() {
+            return execution;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            SyncScheduledTaskHolder that = (SyncScheduledTaskHolder) o;
+            return Objects.equals(task, that.task);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(task);
+        }
     }
 
 }

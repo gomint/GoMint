@@ -16,7 +16,6 @@ import io.gomint.server.entity.Entity;
 import io.gomint.server.entity.EntityLiving;
 import io.gomint.server.entity.EntityPlayer;
 import io.gomint.server.entity.tileentity.SerializationReason;
-import io.gomint.server.entity.tileentity.TileEntities;
 import io.gomint.server.entity.tileentity.TileEntity;
 import io.gomint.server.network.PlayerConnection;
 import io.gomint.server.network.packet.PacketTileEntityData;
@@ -32,35 +31,32 @@ import io.gomint.taglib.NBTTagCompound;
 import io.gomint.world.Biome;
 import io.gomint.world.block.data.Direction;
 import io.gomint.world.block.data.Facing;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Function;
 
 /**
  * @author geNAZt
  * @version 1.0
  */
-@EqualsAndHashCode(of = {"location"})
 public abstract class Block implements io.gomint.world.block.Block {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Block.class);
 
     // This is the source of truth
-    @Setter @Getter protected BlockIdentifier identifier;
+    protected BlockIdentifier identifier;
 
     // CHECKSTYLE:OFF
-    @Setter protected WorldAdapter world;
-    @Setter @Getter protected Location location;
-    @Getter @Setter private int layer;
-    @Setter private TileEntity tileEntity;
-    @Getter private byte skyLightLevel;
-    @Getter private byte blockLightLevel;
+    protected WorldAdapter world;
+    protected Location location;
+    private int layer;
+    private TileEntity tileEntity;
+    private byte skyLightLevel;
+    private byte blockLightLevel;
 
     // Shortcuts
     private ChunkSlice chunkSlice;
@@ -87,6 +83,63 @@ public abstract class Block implements io.gomint.world.block.Block {
         this.ready = true;
     }
     // CHECKSTYLE:ON
+
+
+    public void setIdentifier(BlockIdentifier identifier) {
+        this.identifier = identifier;
+    }
+
+    public void setWorld(WorldAdapter world) {
+        this.world = world;
+    }
+
+    public void setLocation(Location location) {
+        this.location = location;
+    }
+
+    public void setLayer(int layer) {
+        this.layer = layer;
+    }
+
+    public void setTileEntity(TileEntity tileEntity) {
+        this.tileEntity = tileEntity;
+    }
+
+    @Override
+    public byte getBlockLightLevel() {
+        return blockLightLevel;
+    }
+
+    @Override
+    public byte getSkyLightLevel() {
+        return skyLightLevel;
+    }
+
+    public int getLayer() {
+        return layer;
+    }
+
+    @Override
+    public Location getLocation() {
+        return location;
+    }
+
+    public BlockIdentifier getIdentifier() {
+        return identifier;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Block block = (Block) o;
+        return Objects.equals(location, block.location);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(location);
+    }
 
     /**
      * Check if a blockId update is scheduled for this blockId
@@ -293,7 +346,6 @@ public abstract class Block implements io.gomint.world.block.Block {
 
                 TileEntity tileEntityInstance = instance.createTileEntity(data.getCompound());
                 if (tileEntityInstance != null) {
-                    this.world.getServer().getContext().getAutowireCapableBeanFactory().autowireBean(tileEntityInstance);
                     instance.setTileEntity(tileEntityInstance);
                     worldAdapter.storeTileEntity(pos, tileEntityInstance);
                 }
@@ -338,7 +390,6 @@ public abstract class Block implements io.gomint.world.block.Block {
             if (instance.needsTileEntity()) {
                 TileEntity tileEntityInstance = instance.createTileEntity(new NBTTagCompound(""));
                 if (tileEntityInstance != null) {
-                    this.world.getServer().getContext().getAutowireCapableBeanFactory().autowireBean(tileEntityInstance);
                     instance.setTileEntity(tileEntityInstance);
                     worldAdapter.storeTileEntity(pos, tileEntityInstance);
                 }
@@ -420,7 +471,7 @@ public abstract class Block implements io.gomint.world.block.Block {
             compound.addValue("z", pos.getZ());
 
             // Construct new tile entity
-            TileEntity tileEntityInstance = TileEntities.construct(this.world.getServer().getContext(), compound, instance);
+            TileEntity tileEntityInstance = this.world.getServer().getTileEntities().construct(compound, instance);
             worldAdapter.storeTileEntity(pos, tileEntityInstance);
         } else {
             worldAdapter.removeTileEntity(pos);

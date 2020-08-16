@@ -14,6 +14,8 @@ import io.gomint.server.inventory.ChestInventory;
 import io.gomint.server.inventory.InventoryHolder;
 import io.gomint.server.inventory.item.ItemAir;
 import io.gomint.server.inventory.item.ItemStack;
+import io.gomint.server.inventory.item.Items;
+import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.world.block.Block;
 import io.gomint.taglib.NBTTagCompound;
 import io.gomint.world.block.data.Facing;
@@ -27,13 +29,14 @@ import java.util.List;
  * @author geNAZt
  * @version 1.0
  */
+@RegisterInfo(sId = "Chest")
 public class ChestTileEntity extends ContainerTileEntity implements InventoryHolder {
 
     private static final Logger LOGGER = LoggerFactory.getLogger( ChestTileEntity.class );
-    private ChestInventory inventory;
+    private final ChestInventory inventory;
 
-    public ChestTileEntity( Block block ) {
-        super( block );
+    public ChestTileEntity(Block block, Items items) {
+        super( block, items );
         this.inventory = new ChestInventory( this );
     }
 
@@ -64,7 +67,7 @@ public class ChestTileEntity extends ContainerTileEntity implements InventoryHol
     }
 
     @Override
-    public void update( long currentMillis ) {
+    public void update( long currentMillis, float dT ) {
 
     }
 

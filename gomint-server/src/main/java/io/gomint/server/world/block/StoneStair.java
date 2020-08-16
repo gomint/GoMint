@@ -7,7 +7,6 @@ import io.gomint.world.block.BlockType;
 
 import io.gomint.server.registry.RegisterInfo;
 import io.gomint.world.block.data.StoneType;
-import lombok.Getter;
 
 /**
  * @author geNAZt
@@ -38,7 +37,6 @@ import lombok.Getter;
 @RegisterInfo(sId = "minecraft:polished_granite_stairs")
 public class StoneStair extends Stair implements BlockStoneStair {
 
-    @Getter
     private enum StoneTypeMagic {
 
         SANDSTONE("minecraft:sandstone_stairs"),
@@ -116,7 +114,7 @@ public class StoneStair extends Stair implements BlockStoneStair {
     @Override
     public StoneType getStoneType() {
         for (StoneTypeMagic value : StoneTypeMagic.values()) {
-            if (this.getBlockId().equals(value.getBlockId())) {
+            if (this.getBlockId().equals(value.blockId)) {
                 return StoneType.valueOf(value.name());
             }
         }
@@ -127,8 +125,8 @@ public class StoneStair extends Stair implements BlockStoneStair {
     @Override
     public void setStoneType(StoneType stoneType) {
         StoneTypeMagic newState = StoneTypeMagic.valueOf(stoneType.name());
-        if (newState.getBlockId() != null) {
-            this.setBlockId(newState.getBlockId());
+        if (newState.blockId != null) {
+            this.setBlockId(newState.blockId);
         }
     }
 

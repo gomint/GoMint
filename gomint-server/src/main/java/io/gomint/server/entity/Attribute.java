@@ -1,7 +1,5 @@
 package io.gomint.server.entity;
 
-import lombok.Getter;
-
 /**
  * @author geNAZt
  * @version 1.0
@@ -25,9 +23,9 @@ public enum Attribute {
     EXPERIENCE( "minecraft:player.experience", 0, 1, 0 );
     // CHECKSTYLE:ON
 
-    @Getter private final String key;
-    @Getter private final float minValue;
-    @Getter private final float maxValue;
+    private final String key;
+    private final float minValue;
+    private final float maxValue;
     private final float defaultValue;
 
 
@@ -40,6 +38,10 @@ public enum Attribute {
 
     public AttributeInstance create() {
         return new AttributeInstance( this.key, this.minValue, this.maxValue, this.defaultValue );
+    }
+
+    public String getKey() {
+        return key;
     }
 
 }

@@ -1,6 +1,7 @@
 package io.gomint.server.world.block;
 
 import io.gomint.inventory.item.ItemStack;
+import io.gomint.server.entity.tileentity.SkullTileEntity;
 import io.gomint.server.world.block.helper.ToolPresets;
 import io.gomint.server.world.block.state.BlockfaceFromPlayerBlockState;
 import io.gomint.world.block.BlockType;
@@ -12,7 +13,6 @@ import io.gomint.taglib.NBTTagCompound;
 import io.gomint.world.block.BlockWallSign;
 import io.gomint.world.block.data.Facing;
 import io.gomint.world.block.data.LogType;
-import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +29,6 @@ import java.util.List;
 @RegisterInfo(sId = "minecraft:darkoak_wall_sign")
 public class WallSign extends Block implements BlockWallSign {
 
-    @Getter
     private enum LogTypeMagic {
         OAK("minecraft:wall_sign"),
         SPRUCE("minecraft:spruce_wall_sign"),
@@ -74,8 +73,8 @@ public class WallSign extends Block implements BlockWallSign {
 
     @Override
     TileEntity createTileEntity(NBTTagCompound compound) {
-        super.createTileEntity(compound);
-        return new SignTileEntity(this);
+        super.createTileEntity( compound );
+        return this.world.getServer().getTileEntities().construct(SignTileEntity.class, compound, this, this.world.getServer().getItems());
     }
 
     @Override
@@ -132,7 +131,7 @@ public class WallSign extends Block implements BlockWallSign {
     @Override
     public LogType getWoodType() {
         for (LogTypeMagic value : LogTypeMagic.values()) {
-            if (value.getBlockId().equals(this.getBlockId())) {
+            if (value.blockId.equals(this.getBlockId())) {
                 return LogType.valueOf(value.name());
             }
         }
@@ -143,7 +142,7 @@ public class WallSign extends Block implements BlockWallSign {
     @Override
     public void setWoodType(LogType logType) {
         LogTypeMagic newState = LogTypeMagic.valueOf(logType.name());
-        this.setBlockId(newState.getBlockId());
+        this.setBlockId(newState.blockId);
     }
 
     @Override

@@ -9,7 +9,6 @@ package io.gomint.config;
 
 import io.gomint.config.annotation.PreserveStatic;
 import io.gomint.config.converter.*;
-import lombok.Getter;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -23,7 +22,6 @@ import java.util.*;
  */
 public class InternalConverter {
 
-    @Getter
     private final BaseConfig config;
     private Set<Converter> converters;
     private List<Class> customConverters;
@@ -50,7 +48,11 @@ public class InternalConverter {
         }
     }
 
-    public void addConverters( Class... classes ) throws InvalidConverterException {
+    public BaseConfig getConfig() {
+        return config;
+    }
+
+    public void addConverters(Class... classes ) throws InvalidConverterException {
         for ( Class converterClass : classes ) {
             this.addConverter( converterClass );
         }

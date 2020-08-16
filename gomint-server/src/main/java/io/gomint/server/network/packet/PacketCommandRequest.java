@@ -3,13 +3,11 @@ package io.gomint.server.network.packet;
 import io.gomint.jraknet.PacketBuffer;
 import io.gomint.server.network.Protocol;
 import io.gomint.server.network.type.CommandOrigin;
-import lombok.Data;
 
 /**
  * @author geNAZt
  * @version 1.0
  */
-@Data
 public class PacketCommandRequest extends Packet {
 
     private String inputCommand;
@@ -31,6 +29,22 @@ public class PacketCommandRequest extends Packet {
     public void deserialize( PacketBuffer buffer, int protocolID ) {
         this.inputCommand = buffer.readString();
         this.commandOrigin = readCommandOrigin( buffer );
+    }
+
+    public String getInputCommand() {
+        return inputCommand;
+    }
+
+    public void setInputCommand(String inputCommand) {
+        this.inputCommand = inputCommand;
+    }
+
+    public CommandOrigin getCommandOrigin() {
+        return commandOrigin;
+    }
+
+    public void setCommandOrigin(CommandOrigin commandOrigin) {
+        this.commandOrigin = commandOrigin;
     }
 
 }

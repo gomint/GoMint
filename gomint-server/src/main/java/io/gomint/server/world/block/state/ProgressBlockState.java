@@ -13,9 +13,6 @@ import io.gomint.math.Vector;
 import io.gomint.server.entity.EntityPlayer;
 import io.gomint.server.world.block.Block;
 import io.gomint.world.block.data.Facing;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.ToString;
 
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -24,13 +21,11 @@ import java.util.function.Supplier;
  * @author geNAZt
  * @version 1.0
  */
-@ToString
-@EqualsAndHashCode(callSuper = false)
 public class ProgressBlockState extends BlockState<Float, Integer> {
 
     private Consumer<Block> maxedProgressConsumer;
     private int max;
-    @Getter private float step;
+    private float step;
 
     public ProgressBlockState(Supplier<String[]> key, int max, Consumer<Block> maxedProgressConsumer) {
         super(v -> key.get());
@@ -68,4 +63,7 @@ public class ProgressBlockState extends BlockState<Float, Integer> {
         return 1f - this.getState(block) <= MathUtils.EPSILON;
     }
 
+    public float getStep() {
+        return step;
+    }
 }

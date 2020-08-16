@@ -15,7 +15,6 @@ import io.gomint.world.block.BlockType;
 import io.gomint.inventory.item.*;
 import io.gomint.server.registry.RegisterInfo;
 import io.gomint.world.block.data.Facing;
-import lombok.Getter;
 
 import java.util.List;
 
@@ -28,7 +27,6 @@ public class Sand extends Fallable implements BlockSand {
 
     private static final String[] SAND_TYPE = new String[]{"sand_type"};
 
-    @Getter
     private enum SandTypeMagic {
         RED("red"),
         NORMAL("normal");
@@ -42,9 +40,9 @@ public class Sand extends Fallable implements BlockSand {
 
     private static final EnumBlockState<SandTypeMagic, String> TYPE = new EnumBlockState<>(newValue -> {
         return SAND_TYPE;
-    }, SandTypeMagic.values(), SandTypeMagic::getType, v -> {
+    }, SandTypeMagic.values(), v -> v.type, v -> {
         for (SandTypeMagic value : SandTypeMagic.values()) {
-            if (value.getType().equals(v)) {
+            if (value.type.equals(v)) {
                 return value;
             }
         }
@@ -94,7 +92,7 @@ public class Sand extends Fallable implements BlockSand {
         BlockIdentifier identifier = placementData.getBlockIdentifier();
 
         SandTypeMagic should = item == null || item.getData() == 0 ? SandTypeMagic.NORMAL : SandTypeMagic.RED;
-        placementData.setBlockIdentifier(BlockRuntimeIDs.change(identifier, null, SAND_TYPE, should.getType()));
+        placementData.setBlockIdentifier(BlockRuntimeIDs.change(identifier, null, SAND_TYPE, should.type));
         return placementData;
     }
 

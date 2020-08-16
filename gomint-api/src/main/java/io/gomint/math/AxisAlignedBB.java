@@ -1,7 +1,5 @@
 package io.gomint.math;
 
-import lombok.Getter;
-import lombok.ToString;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -9,8 +7,6 @@ import org.slf4j.LoggerFactory;
  * @author geNAZt
  * @version 1.0
  */
-@Getter
-@ToString
 public class AxisAlignedBB implements Cloneable {
 
     private static final Logger LOGGER = LoggerFactory.getLogger( AxisAlignedBB.class );
@@ -435,6 +431,42 @@ public class AxisAlignedBB implements Cloneable {
         } catch ( CloneNotSupportedException e ) {
             return new AxisAlignedBB( this.minX, this.minY, this.minZ, this.maxX, this.maxY, this.maxZ );
         }
+    }
+
+    public float getMinX() {
+        return minX;
+    }
+
+    public float getMinY() {
+        return minY;
+    }
+
+    public float getMinZ() {
+        return minZ;
+    }
+
+    public float getMaxX() {
+        return maxX;
+    }
+
+    public float getMaxY() {
+        return maxY;
+    }
+
+    public float getMaxZ() {
+        return maxZ;
+    }
+
+    @Override
+    public String toString() {
+        return "AxisAlignedBB{" +
+            "minX=" + minX +
+            ", minY=" + minY +
+            ", minZ=" + minZ +
+            ", maxX=" + maxX +
+            ", maxY=" + maxY +
+            ", maxZ=" + maxZ +
+            '}';
     }
 
 }

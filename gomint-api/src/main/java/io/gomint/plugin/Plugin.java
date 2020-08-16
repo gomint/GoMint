@@ -11,7 +11,6 @@ import io.gomint.GoMint;
 import io.gomint.command.Command;
 import io.gomint.event.EventListener;
 import io.gomint.scheduler.Scheduler;
-import lombok.Getter;
 import org.slf4j.Logger;
 
 import java.io.File;
@@ -61,48 +60,42 @@ public class Plugin {
      * plugins to determine their end on their own by disabling them. As this operation
      * needs to be done by the plugin manager each plugin gets a reference to it.
      */
-    @Getter
     PluginManager pluginManager;
 
     /**
      * The name of the plugin as provided by annotation data.
      */
-    @Getter
     String name;
 
     /**
      * The version of the plugin as provided by annotation data.
      */
-    @Getter
     PluginVersion version;
 
     /**
      * Logger for this Plugin
      */
-    @Getter
     Logger logger;
 
     /**
      * Scheduler for this Plugin
      */
-    @Getter
     Scheduler scheduler;
 
     /**
      * Server which is running
      */
-    @Getter
     GoMint server;
 
     /**
      * List which contains all listeners this plugin has registered
      */
-    private List<EventListener> listeners = new ArrayList<>();
+    private final List<EventListener> listeners = new ArrayList<>();
 
     /**
      * List which contains all registered commands for this plugin
      */
-    private List<Command> commands = new ArrayList<>();
+    private final List<Command> commands = new ArrayList<>();
 
     /**
      * Implementation hook. This hook is invoked once the plugin is being installed.
@@ -190,4 +183,27 @@ public class Plugin {
         return new File( getPluginManager().getBaseDirectory(), getName() );
     }
 
+    public PluginManager getPluginManager() {
+        return pluginManager;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public PluginVersion getVersion() {
+        return version;
+    }
+
+    public Logger getLogger() {
+        return logger;
+    }
+
+    public Scheduler getScheduler() {
+        return scheduler;
+    }
+
+    public GoMint getServer() {
+        return server;
+    }
 }

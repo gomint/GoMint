@@ -9,15 +9,11 @@ package io.gomint.server.network.packet;
 
 import io.gomint.jraknet.PacketBuffer;
 import io.gomint.server.network.Protocol;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.Getter;
 
 /**
  * @author geNAZt
  * @version 1.0
  */
-@Data
 public class PacketBossBar extends Packet {
 
     private long entityId;
@@ -63,8 +59,62 @@ public class PacketBossBar extends Packet {
 
     }
 
-    @AllArgsConstructor
-    @Getter
+    public long getEntityId() {
+        return entityId;
+    }
+
+    public void setEntityId(long entityId) {
+        this.entityId = entityId;
+    }
+
+    public Type getType() {
+        return type;
+    }
+
+    public void setType(Type type) {
+        this.type = type;
+    }
+
+    public long getPlayerId() {
+        return playerId;
+    }
+
+    public void setPlayerId(long playerId) {
+        this.playerId = playerId;
+    }
+
+    public float getHealthPercent() {
+        return healthPercent;
+    }
+
+    public void setHealthPercent(float healthPercent) {
+        this.healthPercent = healthPercent;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public int getColor() {
+        return color;
+    }
+
+    public void setColor(int color) {
+        this.color = color;
+    }
+
+    public int getOverlay() {
+        return overlay;
+    }
+
+    public void setOverlay(int overlay) {
+        this.overlay = overlay;
+    }
+
     public enum Type {
         SHOW( 0 ),
         REGISTER_PLAYER( 1 ),
@@ -75,24 +125,15 @@ public class PacketBossBar extends Packet {
         UNKNOWN( 6 ),
         TEXTURE( 7 );
 
-        /* S2C: Shows the bossbar to the player. */
-        public static final int TYPE_SHOW = 0;
-        /* C2S: Registers a player to a boss fight. */
-        public static final int TYPE_REGISTER_PLAYER = 1;
-        public static final int TYPE_UPDATE = 1;
-        /* S2C: Removes the bossbar from the client. */
-        public static final int TYPE_HIDE = 2;
-        /* C2S: Unregisters a player from a boss fight. */
-        public static final int TYPE_UNREGISTER_PLAYER = 3;
-        /* S2C: Appears not to be implemented. Currently bar percentage only appears to change in response to the target entity's health. */
-        public static final int TYPE_HEALTH_PERCENT = 4;
-        /* S2C: Also appears to not be implemented. Title clientside sticks as the target entity's nametag, or their entity type name if not set. */
-        public static final int TYPE_TITLE = 5;
-        /* S2C: Not sure on this. Includes color and overlay fields, plus an unknown short. TODO: check this */
-        public static final int TYPE_UNKNOWN_6 = 6;
-        /* S2C: Not implemented :( Intended to alter bar appearance, but these currently produce no effect on clientside whatsoever. */
-        public static final int TYPE_TEXTURE = 7;
         private final int id;
+
+        Type(int id) {
+            this.id = id;
+        }
+
+        public int getId() {
+            return id;
+        }
     }
 
 }

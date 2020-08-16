@@ -10,21 +10,43 @@ package io.gomint.server.scoreboard;
 import io.gomint.entity.Entity;
 import io.gomint.scoreboard.DisplayEntry;
 import io.gomint.scoreboard.SortOrder;
-import lombok.AllArgsConstructor;
-import lombok.Data;
 
 /**
  * @author geNAZt
  * @version 1.0
  */
-@AllArgsConstructor
-@Data
 public class ScoreboardDisplay implements io.gomint.scoreboard.ScoreboardDisplay {
 
     private final Scoreboard scoreboard;
     private final String objectiveName;
     private String displayName;
     private SortOrder sortOrder;
+
+    public ScoreboardDisplay(Scoreboard scoreboard, String objectiveName, String displayName, SortOrder sortOrder) {
+        this.scoreboard = scoreboard;
+        this.objectiveName = objectiveName;
+        this.displayName = displayName;
+        this.sortOrder = sortOrder;
+    }
+
+    public Scoreboard getScoreboard() {
+        return scoreboard;
+    }
+
+    @Override
+    public String getObjectiveName() {
+        return objectiveName;
+    }
+
+    @Override
+    public String getDisplayName() {
+        return displayName;
+    }
+
+    @Override
+    public SortOrder getSortOrder() {
+        return sortOrder;
+    }
 
     @Override
     public DisplayEntry addEntity( Entity entity, int score ) {

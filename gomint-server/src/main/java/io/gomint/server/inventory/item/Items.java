@@ -16,12 +16,9 @@ import it.unimi.dsi.fastutil.ints.IntArraySet;
 import it.unimi.dsi.fastutil.ints.IntSet;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
-import lombok.Getter;
 import org.apache.commons.text.WordUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -34,7 +31,6 @@ import java.util.Map;
  * @author geNAZt
  * @version 1.0
  */
-@Component
 public class Items {
 
     private static final IntSet ALREADY_WARNED = new IntArraySet();
@@ -43,27 +39,14 @@ public class Items {
     private final Object2IntMap<String> blockIdToItemId = new Object2IntOpenHashMap<>();
     private final Int2ObjectMap<String> itemIdToBlockId = new Int2ObjectOpenHashMap<>();
 
-    @Getter
-    private static PacketBuffer packetCache;
+    private PacketBuffer packetCache;
     private AssetsLibrary assets;
-
-    public static void init(List<StringShortPair> items) {
-        PacketBuffer buffer = new PacketBuffer(1024);
-        buffer.writeUnsignedVarInt( items.size() );
-        for (StringShortPair itemID : items) {
-            buffer.writeString(itemID.getBlockId());
-            buffer.writeLShort(itemID.getData());
-        }
-
-        Items.packetCache = buffer;
-    }
 
     /**
      * Create a new item registry
      *
      * @param classPath  which builds this registry
      */
-    @Autowired
     public Items(ClassPath classPath) {
         this.generators = new Registry<>(classPath, (clazz, id) -> {
             LambdaConstructionFactory<io.gomint.server.inventory.item.ItemStack> factory = new LambdaConstructionFactory<>(clazz);
@@ -83,7 +66,7 @@ public class Items {
             }
 
             int finalMaterial = material;
-            return () -> {
+            return in -> {
                 io.gomint.server.inventory.item.ItemStack itemStack = factory.newInstance();
                 itemStack.setMaterial(finalMaterial).setItems(this);
                 return itemStack;
@@ -193,6 +176,21 @@ public class Items {
 
     public void setAssets(AssetsLibrary assetsLibrary) {
         this.assets = assetsLibrary;
+    }
+
+    public void initItemIDs(List<StringShortPair> itemIDs) {
+        PacketBuffer buffer = new PacketBuffer(itemIDs.size() * 32);
+        buffer.writeUnsignedVarInt( itemIDs.size() );
+        for (StringShortPair itemID : itemIDs) {
+            buffer.writeString(itemID.getBlockId());
+            buffer.writeLShort(itemID.getData());
+        }
+
+        this.packetCache = buffer;
+    }
+
+    public PacketBuffer getPacketCache() {
+        return packetCache;
     }
 
 }

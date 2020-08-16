@@ -12,23 +12,21 @@ import io.gomint.event.EventHandler;
 import io.gomint.event.EventListener;
 import io.gomint.server.maintenance.ReportUploader;
 import io.gomint.server.plugin.PluginClassloader;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+
+import org.objectweb.asm.ClassWriter;
+import org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.Opcodes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.asm.ClassWriter;
-import org.springframework.asm.MethodVisitor;
-import org.springframework.asm.Opcodes;
 
 import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Method;
+import java.util.Objects;
 
 /**
  * @author BlackyPaw
  * @version 1.0
  */
-@EqualsAndHashCode(callSuper = false)
-@ToString(of = {"instance"})
 class EventHandlerMethod implements Comparable<EventHandlerMethod> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(EventHandlerMethod.class);
@@ -105,6 +103,28 @@ class EventHandlerMethod implements Comparable<EventHandlerMethod> {
         } catch (Exception e) {
             LOGGER.error("Could not construct new proxy for " + method.toString(), e);
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        EventHandlerMethod that = (EventHandlerMethod) o;
+        return Objects.equals(annotation, that.annotation) &&
+            Objects.equals(proxy, that.proxy) &&
+            Objects.equals(instance, that.instance);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(annotation, proxy, instance);
+    }
+
+    @Override
+    public String toString() {
+        return "EventHandlerMethod{" +
+            "instance=" + instance +
+            '}';
     }
 
     /**

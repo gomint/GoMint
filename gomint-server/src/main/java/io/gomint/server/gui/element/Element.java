@@ -1,20 +1,28 @@
 package io.gomint.server.gui.element;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import org.json.simple.JSONObject;
 
 /**
  * @author geNAZt
  * @version 1.0
  */
-@RequiredArgsConstructor
 public abstract class Element {
 
-    @Getter
     private final String id;
-    @Getter
     private final String text;
+
+    public Element(String id, String text) {
+        this.id = id;
+        this.text = text;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public String getText() {
+        return text;
+    }
 
     /**
      * Get the JSON representation of a form

@@ -3,7 +3,6 @@ package io.gomint.server.network.packet;
 import io.gomint.jraknet.PacketBuffer;
 import io.gomint.server.entity.AttributeInstance;
 import io.gomint.server.network.Protocol;
-import lombok.Data;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,7 +11,6 @@ import java.util.List;
  * @author geNAZt
  * @version 1.0
  */
-@Data
 public class PacketUpdateAttributes extends Packet {
 
     private long entityId;
@@ -63,4 +61,19 @@ public class PacketUpdateAttributes extends Packet {
         this.entries.add( instance );
     }
 
+    public long getEntityId() {
+        return entityId;
+    }
+
+    public void setEntityId(long entityId) {
+        this.entityId = entityId;
+    }
+
+    public List<AttributeInstance> getEntries() {
+        return entries;
+    }
+
+    public void setEntries(List<AttributeInstance> entries) {
+        this.entries = entries;
+    }
 }

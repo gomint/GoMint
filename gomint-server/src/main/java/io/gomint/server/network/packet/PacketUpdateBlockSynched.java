@@ -10,13 +10,11 @@ package io.gomint.server.network.packet;
 import io.gomint.jraknet.PacketBuffer;
 import io.gomint.math.BlockPosition;
 import io.gomint.server.network.Protocol;
-import lombok.Data;
 
 /**
  * @author geNAZt
  * @version 1.0
  */
-@Data
 public class PacketUpdateBlockSynched extends Packet {
 
     private BlockPosition position;
@@ -45,5 +43,53 @@ public class PacketUpdateBlockSynched extends Packet {
     @Override
     public void deserialize( PacketBuffer buffer, int protocolID ) {
 
+    }
+
+    public BlockPosition getPosition() {
+        return position;
+    }
+
+    public void setPosition(BlockPosition position) {
+        this.position = position;
+    }
+
+    public int getBlockId() {
+        return blockId;
+    }
+
+    public void setBlockId(int blockId) {
+        this.blockId = blockId;
+    }
+
+    public int getFlags() {
+        return flags;
+    }
+
+    public void setFlags(int flags) {
+        this.flags = flags;
+    }
+
+    public int getLayer() {
+        return layer;
+    }
+
+    public void setLayer(int layer) {
+        this.layer = layer;
+    }
+
+    public long getEntityId() {
+        return entityId;
+    }
+
+    public void setEntityId(long entityId) {
+        this.entityId = entityId;
+    }
+
+    public long getAction() {
+        return action;
+    }
+
+    public void setAction(long action) {
+        this.action = action;
     }
 }

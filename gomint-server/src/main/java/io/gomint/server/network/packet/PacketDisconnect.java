@@ -2,13 +2,11 @@ package io.gomint.server.network.packet;
 
 import io.gomint.jraknet.PacketBuffer;
 import io.gomint.server.network.Protocol;
-import lombok.Data;
 
 /**
  * @author geNAZt
  * @version 1.0
  */
-@Data
 public class PacketDisconnect extends Packet {
 
     private boolean hideDisconnectionScreen = false;
@@ -29,4 +27,19 @@ public class PacketDisconnect extends Packet {
 
     }
 
+    public boolean isHideDisconnectionScreen() {
+        return hideDisconnectionScreen;
+    }
+
+    public void setHideDisconnectionScreen(boolean hideDisconnectionScreen) {
+        this.hideDisconnectionScreen = hideDisconnectionScreen;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
 }

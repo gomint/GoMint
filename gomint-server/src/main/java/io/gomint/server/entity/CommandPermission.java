@@ -1,13 +1,8 @@
 package io.gomint.server.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-
 /**
  * @author geNAZt
  */
-@Getter
-@AllArgsConstructor
 public enum CommandPermission {
 
     NORMAL( 0 ),
@@ -16,6 +11,14 @@ public enum CommandPermission {
     AUTOMATION( 3 ),
     ADMIN( 4 );
 
-    private int id;
+    private final int id;
+
+    CommandPermission(int id) {
+        this.id = id;
+    }
+
+    public int getId() {
+        return id;
+    }
 
 }

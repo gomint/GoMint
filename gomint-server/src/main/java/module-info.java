@@ -23,13 +23,9 @@ module gomint.server {
     requires io.netty.buffer;
     requires io.netty.common;
 
-    // Spring modules
-    requires spring.beans;
-    requires spring.context;
-
     // Compile modules
     requires com.fasterxml.jackson.core;
-    requires lombok;
+    requires org.objectweb.asm;
 
     // Automatic modules (libs without module-info)
     requires it.unimi.dsi.fastutil;
@@ -41,7 +37,6 @@ module gomint.server {
     requires jsr305;
     requires jline.reader;
     requires jline.terminal;
-    requires spring.core;
     requires org.apache.commons.text;
     requires org.slf4j;
 
@@ -50,23 +45,14 @@ module gomint.server {
     exports io.gomint.server.logging to org.apache.logging.log4j, org.apache.logging.log4j.core;
 
     // Export stuff to spring
-    exports io.gomint.server to spring.beans, gomint.test;
-    exports io.gomint.server.util to spring.beans, gomint.test;
-    exports io.gomint.server.inventory.item to spring.beans;
-    exports io.gomint.server.network to spring.beans, gomint.test;
-    exports io.gomint.server.network.handler to spring.beans;
-    exports io.gomint.server.plugin to spring.beans;
-    exports io.gomint.server.world.generator.vanilla to spring.beans;
+    exports io.gomint.server to gomint.test;
+    exports io.gomint.server.util to gomint.test;
+    exports io.gomint.server.network to gomint.test;
 
     exports io.gomint.server.network.packet to gomint.test;
     exports io.gomint.server.entity.tileentity to gomint.test;
     exports io.gomint.server.world.block to gomint.test;
 
-    // Open stuff to spring
-    opens io.gomint.server.network to spring.core;
-    opens io.gomint.server.network.handler to spring.core;
-    opens io.gomint.server.entity to spring.core;
-    opens io.gomint.server.entity.tileentity to spring.core;
 
     // Open config to gomint api reader
     opens io.gomint.server.config to gomint.api;
@@ -75,4 +61,5 @@ module gomint.server {
     exports io.gomint.server.permission to gomint.test;
     exports io.gomint.server.world to gomint.test;
     exports io.gomint.server.util.collection to gomint.test;
+    exports io.gomint.server.util.performance;
 }

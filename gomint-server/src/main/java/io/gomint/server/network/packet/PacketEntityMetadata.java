@@ -10,15 +10,11 @@ package io.gomint.server.network.packet;
 import io.gomint.jraknet.PacketBuffer;
 import io.gomint.server.entity.metadata.MetadataContainer;
 import io.gomint.server.network.Protocol;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 /**
  * @author BlackyPaw
  * @version 1.0
  */
-@Data
-@EqualsAndHashCode( callSuper = false )
 public class PacketEntityMetadata extends Packet {
 
     private long entityId;
@@ -41,4 +37,19 @@ public class PacketEntityMetadata extends Packet {
         this.metadata.deserialize( buffer );
     }
 
+    public long getEntityId() {
+        return entityId;
+    }
+
+    public void setEntityId(long entityId) {
+        this.entityId = entityId;
+    }
+
+    public MetadataContainer getMetadata() {
+        return metadata;
+    }
+
+    public void setMetadata(MetadataContainer metadata) {
+        this.metadata = metadata;
+    }
 }

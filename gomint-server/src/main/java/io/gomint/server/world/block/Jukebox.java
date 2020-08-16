@@ -8,6 +8,7 @@
 package io.gomint.server.world.block;
 
 import io.gomint.inventory.item.ItemStack;
+import io.gomint.server.entity.tileentity.CommandBlockTileEntity;
 import io.gomint.server.entity.tileentity.JukeboxTileEntity;
 import io.gomint.server.entity.tileentity.TileEntity;
 import io.gomint.server.registry.RegisterInfo;
@@ -20,7 +21,7 @@ import io.gomint.world.block.BlockType;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:jukebox" )
+@RegisterInfo(sId = "minecraft:jukebox")
 public class Jukebox extends Block implements BlockJukebox {
 
     @Override
@@ -59,9 +60,9 @@ public class Jukebox extends Block implements BlockJukebox {
     }
 
     @Override
-    TileEntity createTileEntity( NBTTagCompound compound ) {
-        super.createTileEntity( compound );
-        return new JukeboxTileEntity( this );
+    TileEntity createTileEntity(NBTTagCompound compound) {
+        super.createTileEntity(compound);
+        return this.world.getServer().getTileEntities().construct(JukeboxTileEntity.class, compound, this, this.world.getServer().getItems());
     }
 
 }

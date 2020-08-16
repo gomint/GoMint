@@ -9,16 +9,13 @@ package io.gomint.server.network.packet;
 
 import io.gomint.jraknet.PacketBuffer;
 import io.gomint.server.network.Protocol;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
+
+import java.util.Objects;
 
 /**
  * @author BlackyPaw
  * @version 1.0
  */
-@Data
-@EqualsAndHashCode( callSuper = false )
 public class PacketPlayState extends Packet {
 
     private PlayState state;
@@ -37,6 +34,27 @@ public class PacketPlayState extends Packet {
         this.state = PlayState.fromValue( buffer.readInt() );
     }
 
+    public PlayState getState() {
+        return state;
+    }
+
+    public void setState(PlayState state) {
+        this.state = state;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        PacketPlayState that = (PacketPlayState) o;
+        return state == that.state;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(state);
+    }
+
     /**
      * Enumeration of play states observed to be sent inside certain packets.
      */
@@ -47,7 +65,6 @@ public class PacketPlayState extends Packet {
         LOGIN_FAILED_SERVER( 2 ),
         SPAWN( 3 );
 
-        @Getter
         private final int value;
 
         PlayState( int value ) {
@@ -67,6 +84,10 @@ public class PacketPlayState extends Packet {
                 default:
                     return null;
             }
+        }
+
+        public int getValue() {
+            return this.value;
         }
 
     }

@@ -1,6 +1,7 @@
 package io.gomint.server.world.block;
 
 import io.gomint.inventory.item.ItemStack;
+import io.gomint.server.entity.tileentity.BannerTileEntity;
 import io.gomint.server.entity.tileentity.CauldronTileEntity;
 import io.gomint.server.entity.tileentity.TileEntity;
 import io.gomint.server.world.block.helper.ToolPresets;
@@ -60,7 +61,7 @@ public class Cauldron extends Block implements BlockCauldron {
     @Override
     TileEntity createTileEntity( NBTTagCompound compound ) {
         super.createTileEntity( compound );
-        return new CauldronTileEntity( this );
+        return this.world.getServer().getTileEntities().construct(CauldronTileEntity.class, compound, this, this.world.getServer().getItems());
     }
 
 }

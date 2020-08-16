@@ -1,6 +1,7 @@
 package io.gomint.server.world.block;
 
 import io.gomint.inventory.item.ItemStack;
+import io.gomint.server.entity.tileentity.CommandBlockTileEntity;
 import io.gomint.server.entity.tileentity.PistonArmTileEntity;
 import io.gomint.server.entity.tileentity.TileEntity;
 import io.gomint.server.registry.RegisterInfo;
@@ -13,7 +14,7 @@ import io.gomint.world.block.BlockType;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:piston" )
+@RegisterInfo(sId = "minecraft:piston")
 public class Piston extends Block implements BlockPiston {
 
     @Override
@@ -37,9 +38,9 @@ public class Piston extends Block implements BlockPiston {
     }
 
     @Override
-    TileEntity createTileEntity( NBTTagCompound compound ) {
-        super.createTileEntity( compound );
-        return new PistonArmTileEntity( this );
+    TileEntity createTileEntity(NBTTagCompound compound) {
+        super.createTileEntity(compound);
+        return this.world.getServer().getTileEntities().construct(PistonArmTileEntity.class, compound, this, this.world.getServer().getItems());
     }
 
     @Override

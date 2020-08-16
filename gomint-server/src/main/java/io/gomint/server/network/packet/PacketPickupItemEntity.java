@@ -2,13 +2,11 @@ package io.gomint.server.network.packet;
 
 import io.gomint.jraknet.PacketBuffer;
 import io.gomint.server.network.Protocol;
-import lombok.Data;
 
 /**
  * @author geNAZt
  * @version 1.0
  */
-@Data
 public class PacketPickupItemEntity extends Packet {
 
     private long itemEntityId;
@@ -29,4 +27,19 @@ public class PacketPickupItemEntity extends Packet {
 
     }
 
+    public long getItemEntityId() {
+        return itemEntityId;
+    }
+
+    public void setItemEntityId(long itemEntityId) {
+        this.itemEntityId = itemEntityId;
+    }
+
+    public long getPlayerEntityId() {
+        return playerEntityId;
+    }
+
+    public void setPlayerEntityId(long playerEntityId) {
+        this.playerEntityId = playerEntityId;
+    }
 }

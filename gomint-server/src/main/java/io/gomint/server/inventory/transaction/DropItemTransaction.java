@@ -5,22 +5,35 @@ import io.gomint.math.Location;
 import io.gomint.math.Vector;
 import io.gomint.server.entity.passive.EntityItem;
 import io.gomint.server.inventory.Inventory;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.ToString;
 
 /**
  * @author geNAZt
  * @version 1.0
  */
-@AllArgsConstructor
-@Getter
-@ToString
 public class DropItemTransaction implements Transaction {
 
     private final Location location;
     private final Vector velocity;
     private final ItemStack targetItem;
+
+    public DropItemTransaction(Location location, Vector velocity, ItemStack targetItem) {
+        this.location = location;
+        this.velocity = velocity;
+        this.targetItem = targetItem;
+    }
+
+    public Location getLocation() {
+        return location;
+    }
+
+    public Vector getVelocity() {
+        return velocity;
+    }
+
+    @Override
+    public ItemStack getTargetItem() {
+        return targetItem;
+    }
 
     @Override
     public boolean hasInventory() {
@@ -51,6 +64,15 @@ public class DropItemTransaction implements Transaction {
     @Override
     public void revert() {
 
+    }
+
+    @Override
+    public String toString() {
+        return "DropItemTransaction{" +
+            "location=" + location +
+            ", velocity=" + velocity +
+            ", targetItem=" + targetItem +
+            '}';
     }
 
 }

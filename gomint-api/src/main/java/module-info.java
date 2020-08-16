@@ -1,5 +1,4 @@
 open module gomint.api {
-    requires lombok;
     requires com.google.common;
     requires it.unimi.dsi.fastutil;
     requires java.desktop;

@@ -2,15 +2,13 @@ package io.gomint.event.player;
 
 import io.gomint.entity.EntityPlayer;
 import io.gomint.math.Location;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+
+import java.util.Objects;
 
 /**
  * @author geNAZt
  * @version 1.0
  */
-@EqualsAndHashCode( callSuper = true )
-@ToString( callSuper = true )
 public class PlayerMoveEvent extends CancellablePlayerEvent {
 
     private final Location from;
@@ -58,6 +56,29 @@ public class PlayerMoveEvent extends CancellablePlayerEvent {
      */
     public void setTo( Location to ) {
         this.to = to;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        PlayerMoveEvent that = (PlayerMoveEvent) o;
+        return Objects.equals(from, that.from) &&
+            Objects.equals(to, that.to);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), from, to);
+    }
+
+    @Override
+    public String toString() {
+        return "PlayerMoveEvent{" +
+            "from=" + from +
+            ", to=" + to +
+            '}';
     }
 
 }

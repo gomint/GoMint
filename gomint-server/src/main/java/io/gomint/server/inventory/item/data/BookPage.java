@@ -8,18 +8,22 @@
 package io.gomint.server.inventory.item.data;
 
 import io.gomint.server.inventory.item.ItemWritableBook;
-import lombok.AllArgsConstructor;
 
 /**
  * @author geNAZt
  * @version 1.0
  */
-@AllArgsConstructor
 public class BookPage implements io.gomint.inventory.item.data.BookPage {
 
     private final ItemWritableBook book;
     private final int index;
     private String content;
+
+    public BookPage(ItemWritableBook book, int index, String content) {
+        this.book = book;
+        this.index = index;
+        this.content = content;
+    }
 
     @Override
     public String getContent() {

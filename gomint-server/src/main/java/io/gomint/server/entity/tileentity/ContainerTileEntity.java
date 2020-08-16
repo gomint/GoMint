@@ -1,9 +1,8 @@
 package io.gomint.server.entity.tileentity;
 
+import io.gomint.server.inventory.item.Items;
 import io.gomint.server.world.block.Block;
 import io.gomint.taglib.NBTTagCompound;
-import lombok.Getter;
-import lombok.Setter;
 
 /**
  * @author geNAZt
@@ -11,8 +10,6 @@ import lombok.Setter;
  */
 public class ContainerTileEntity extends TileEntity {
 
-    @Getter
-    @Setter
     private String customName = null;
 
     /**
@@ -20,8 +17,13 @@ public class ContainerTileEntity extends TileEntity {
      *
      * @param block of the tile entity
      */
-    ContainerTileEntity( Block block ) {
-        super( block );
+    ContainerTileEntity( Block block, Items items ) {
+        super( block, items );
+    }
+
+    @Override
+    public void update(long currentMillis, float dT) {
+
     }
 
     @Override
@@ -32,17 +34,20 @@ public class ContainerTileEntity extends TileEntity {
     }
 
     @Override
-    public void update( long currentMillis ) {
-
-    }
-
-    @Override
     public void toCompound( NBTTagCompound compound, SerializationReason reason ) {
         super.toCompound( compound, reason );
 
         if ( this.customName != null ) {
             compound.addValue( "CustomName", this.customName );
         }
+    }
+
+    public String getCustomName() {
+        return customName;
+    }
+
+    public void setCustomName(String customName) {
+        this.customName = customName;
     }
 
 }

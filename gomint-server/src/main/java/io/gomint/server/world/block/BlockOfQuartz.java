@@ -8,8 +8,6 @@ import io.gomint.server.world.block.state.EnumBlockState;
 import io.gomint.world.block.BlockBlockOfQuartz;
 import io.gomint.world.block.BlockType;
 import io.gomint.world.block.data.Axis;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
 
 import java.util.Collections;
 import java.util.List;
@@ -19,10 +17,8 @@ import java.util.List;
  * @version 1.0
  */
 @RegisterInfo(sId = "minecraft:quartz_block")
-@EqualsAndHashCode(callSuper = true)
 public class BlockOfQuartz extends Block implements BlockBlockOfQuartz {
 
-    @Getter
     private enum VariantMagic {
         SMOOTH("smooth"),
         LINES("lines"),
@@ -38,9 +34,9 @@ public class BlockOfQuartz extends Block implements BlockBlockOfQuartz {
     }
 
     private static final AxisBlockState AXIS = new AxisBlockState(() -> new String[]{"pillar_axis"});
-    private static final EnumBlockState<VariantMagic, String> VARIANT = new EnumBlockState<>(v -> new String[]{"chisel_type"}, VariantMagic.values(), VariantMagic::getValue, v -> {
+    private static final EnumBlockState<VariantMagic, String> VARIANT = new EnumBlockState<>(v -> new String[]{"chisel_type"}, VariantMagic.values(), v -> v.value, v -> {
         for (VariantMagic value : VariantMagic.values()) {
-            if (value.getValue().equals(v)) {
+            if (value.value.equals(v)) {
                 return value;
             }
         }

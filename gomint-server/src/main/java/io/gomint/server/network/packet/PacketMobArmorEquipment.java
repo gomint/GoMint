@@ -3,13 +3,11 @@ package io.gomint.server.network.packet;
 import io.gomint.jraknet.PacketBuffer;
 import io.gomint.inventory.item.ItemStack;
 import io.gomint.server.network.Protocol;
-import lombok.Data;
 
 /**
  * @author geNAZt
  * @version 1.0
  */
-@Data
 public class PacketMobArmorEquipment extends Packet {
 
     private long entityId;
@@ -40,4 +38,43 @@ public class PacketMobArmorEquipment extends Packet {
         this.boots = readItemStack( buffer );
     }
 
+    public long getEntityId() {
+        return entityId;
+    }
+
+    public void setEntityId(long entityId) {
+        this.entityId = entityId;
+    }
+
+    public ItemStack getHelmet() {
+        return helmet;
+    }
+
+    public void setHelmet(ItemStack helmet) {
+        this.helmet = helmet;
+    }
+
+    public ItemStack getChestplate() {
+        return chestplate;
+    }
+
+    public void setChestplate(ItemStack chestplate) {
+        this.chestplate = chestplate;
+    }
+
+    public ItemStack getLeggings() {
+        return leggings;
+    }
+
+    public void setLeggings(ItemStack leggings) {
+        this.leggings = leggings;
+    }
+
+    public ItemStack getBoots() {
+        return boots;
+    }
+
+    public void setBoots(ItemStack boots) {
+        this.boots = boots;
+    }
 }

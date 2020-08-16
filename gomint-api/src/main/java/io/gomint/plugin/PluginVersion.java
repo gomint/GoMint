@@ -7,25 +7,34 @@
 
 package io.gomint.plugin;
 
-import lombok.Getter;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
-
 /**
  * @author BlackyPaw
  * @version 1.0
  */
-@Getter
-@Setter
 public class PluginVersion implements Comparable<PluginVersion> {
 
     private int major;
     private int minor;
 
-    public int compareTo( @NonNull PluginVersion other ) {
+    public int getMajor() {
+        return major;
+    }
+
+    public void setMajor(int major) {
+        this.major = major;
+    }
+
+    public int getMinor() {
+        return minor;
+    }
+
+    public void setMinor(int minor) {
+        this.minor = minor;
+    }
+
+    public int compareTo(PluginVersion other) {
         int diff = this.major - other.major;
-        if ( diff != 0 ) {
+        if (diff != 0) {
             return diff;
         } else {
             return this.minor - other.minor;
@@ -33,17 +42,17 @@ public class PluginVersion implements Comparable<PluginVersion> {
     }
 
     @Override
-    public boolean equals( Object o ) {
-        if ( o == this ) {
+    public boolean equals(Object o) {
+        if (o == this) {
             return true;
         }
 
-        if ( !( o instanceof PluginVersion ) ) {
+        if (!(o instanceof PluginVersion)) {
             return false;
         }
 
         PluginVersion v = (PluginVersion) o;
-        return ( this.major == v.major && this.minor == v.minor );
+        return (this.major == v.major && this.minor == v.minor);
     }
 
     @Override

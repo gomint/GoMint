@@ -8,13 +8,11 @@
 package io.gomint.event.entity;
 
 import io.gomint.entity.Entity;
-import lombok.ToString;
 
 /**
  * @author geNAZt
  * @version 1.0
  */
-@ToString( callSuper = true )
 public class EntityDamageByEntityEvent extends EntityDamageEvent {
 
     private final Entity attacker;
@@ -39,6 +37,13 @@ public class EntityDamageByEntityEvent extends EntityDamageEvent {
      */
     public Entity getAttacker() {
         return this.attacker;
+    }
+
+    @Override
+    public String toString() {
+        return "EntityDamageByEntityEvent{" +
+            "attacker=" + attacker +
+            '}';
     }
 
 }

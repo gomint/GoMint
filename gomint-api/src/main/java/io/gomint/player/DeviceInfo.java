@@ -1,12 +1,9 @@
 package io.gomint.player;
 
-import lombok.Getter;
-
 /**
  * @author geNAZt
  * @version 1.0
  */
-@Getter
 public class DeviceInfo {
 
     private final String deviceName;
@@ -26,6 +23,22 @@ public class DeviceInfo {
         this.deviceName = deviceName;
         this.deviceId = deviceId;
         this.ui = ui;
+    }
+
+    public String getDeviceName() {
+        return deviceName;
+    }
+
+    public String getDeviceId() {
+        return deviceId;
+    }
+
+    public DeviceOS getOs() {
+        return os;
+    }
+
+    public UI getUi() {
+        return ui;
     }
 
     public enum DeviceOS {

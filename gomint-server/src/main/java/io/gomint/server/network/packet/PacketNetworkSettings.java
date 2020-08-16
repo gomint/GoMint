@@ -9,9 +9,7 @@ package io.gomint.server.network.packet;
 
 import io.gomint.jraknet.PacketBuffer;
 import io.gomint.server.network.Protocol;
-import lombok.Data;
 
-@Data
 public class PacketNetworkSettings extends Packet {
 
     private short compressionThreshold;
@@ -30,4 +28,11 @@ public class PacketNetworkSettings extends Packet {
         this.compressionThreshold = buffer.readLShort();
     }
 
+    public short getCompressionThreshold() {
+        return compressionThreshold;
+    }
+
+    public void setCompressionThreshold(short compressionThreshold) {
+        this.compressionThreshold = compressionThreshold;
+    }
 }

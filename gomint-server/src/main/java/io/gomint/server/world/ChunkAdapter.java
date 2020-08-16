@@ -31,10 +31,6 @@ import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectIterator;
 import it.unimi.dsi.fastutil.shorts.Short2ObjectMap;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -44,6 +40,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
@@ -52,15 +49,12 @@ import java.util.function.Consumer;
  * @author BlackyPaw
  * @version 1.0
  */
-@ToString(of = {"world", "x", "z"})
-@EqualsAndHashCode(callSuper = false, of = {"world", "x", "z"})
 public class ChunkAdapter implements Chunk {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ChunkAdapter.class);
 
     // CHECKSTYLE:OFF
     // World
-    @Getter
     protected final WorldAdapter world;
 
     // Chunk
@@ -72,7 +66,7 @@ public class ChunkAdapter implements Chunk {
     protected final ByteBuf biomes = UnpooledByteBufAllocator.DEFAULT.directBuffer(16 * 16);
 
     // Blocks
-    @Getter protected ChunkSlice[] chunkSlices = new ChunkSlice[16];
+    protected ChunkSlice[] chunkSlices = new ChunkSlice[16];
     private byte[] height = new byte[16 * 16 * 2];
 
     // Players / Chunk GC
@@ -86,7 +80,7 @@ public class ChunkAdapter implements Chunk {
     protected Long2ObjectMap<io.gomint.entity.Entity> entities = null;
 
     // State saving flag
-    @Getter @Setter private boolean populated;
+    private boolean populated;
 
     // CHECKSTYLE:ON
 
@@ -96,6 +90,46 @@ public class ChunkAdapter implements Chunk {
         this.z = z;
 
         this.biomes.writerIndex(255);
+    }
+
+    @Override
+    public String toString() {
+        return "ChunkAdapter{" +
+            "world=" + world +
+            ", x=" + x +
+            ", z=" + z +
+            '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ChunkAdapter adapter = (ChunkAdapter) o;
+        return x == adapter.x &&
+            z == adapter.z &&
+            Objects.equals(world, adapter.world);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(world, x, z);
+    }
+
+    public void setPopulated(boolean populated) {
+        this.populated = populated;
+    }
+
+    public boolean isPopulated() {
+        return populated;
+    }
+
+    public ChunkSlice[] getChunkSlices() {
+        return chunkSlices;
+    }
+
+    public WorldAdapter getWorld() {
+        return world;
     }
 
     /**
@@ -598,7 +632,7 @@ public class ChunkAdapter implements Chunk {
             compound.addValue("z", fullZ);
 
             // Create new tile entity
-            TileEntity tileEntity = TileEntities.construct(this.world.getServer().getContext(), compound,
+            TileEntity tileEntity = this.world.getServer().getTileEntities().construct(compound,
                 this.getBlockAt(compound.getInteger("x", 0) & 0xF, compound.getInteger("y", 0), compound.getInteger("z", 0) & 0xF));
             this.setTileEntity(x, y, z, tileEntity);
         }
@@ -622,13 +656,13 @@ public class ChunkAdapter implements Chunk {
         return this.entities;
     }
 
-    public void tickTiles(long currentTimeMS) {
+    public void tickTiles(long currentTimeMS, float dT) {
         for (ChunkSlice chunkSlice : this.chunkSlices) {
             if (chunkSlice != null && chunkSlice.getTileEntities() != null) {
                 ObjectIterator<Short2ObjectMap.Entry<TileEntity>> iterator = chunkSlice.getTileEntities().short2ObjectEntrySet().fastIterator();
                 while (iterator.hasNext()) {
                     TileEntity tileEntity = iterator.next().getValue();
-                    tileEntity.update(currentTimeMS);
+                    tileEntity.update(currentTimeMS, dT);
                 }
             }
         }

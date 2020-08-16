@@ -8,15 +8,11 @@
 package io.gomint.world.generator.object;
 
 import io.gomint.world.block.Block;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
 
 /**
  * @author geNAZt
  * @version 1.0
  */
-@AllArgsConstructor
-@Getter
 public class OreType {
 
     private Block block;
@@ -24,5 +20,33 @@ public class OreType {
     private int clusterSize;
     private int minHeight;
     private int maxHeight;
+
+    public OreType(Block block, int clusterCount, int clusterSize, int minHeight, int maxHeight) {
+        this.block = block;
+        this.clusterCount = clusterCount;
+        this.clusterSize = clusterSize;
+        this.minHeight = minHeight;
+        this.maxHeight = maxHeight;
+    }
+
+    public Block getBlock() {
+        return block;
+    }
+
+    public int getClusterCount() {
+        return clusterCount;
+    }
+
+    public int getClusterSize() {
+        return clusterSize;
+    }
+
+    public int getMinHeight() {
+        return minHeight;
+    }
+
+    public int getMaxHeight() {
+        return maxHeight;
+    }
 
 }

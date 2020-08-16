@@ -6,6 +6,8 @@ import io.gomint.math.Vector;
 import io.gomint.server.entity.EntityPlayer;
 import io.gomint.server.inventory.EnchantmentTableInventory;
 import io.gomint.server.inventory.InventoryHolder;
+import io.gomint.server.inventory.item.Items;
+import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.world.block.Block;
 import io.gomint.taglib.NBTTagCompound;
 import io.gomint.world.block.data.Facing;
@@ -14,6 +16,7 @@ import io.gomint.world.block.data.Facing;
  * @author geNAZt
  * @version 1.0
  */
+@RegisterInfo(sId = "EnchantTable")
 public class EnchantTableTileEntity extends ContainerTileEntity implements InventoryHolder {
 
     /**
@@ -21,8 +24,8 @@ public class EnchantTableTileEntity extends ContainerTileEntity implements Inven
      *
      * @param block of the tile entity
      */
-    public EnchantTableTileEntity( Block block ) {
-        super( block );
+    public EnchantTableTileEntity(Block block, Items items) {
+        super( block, items );
     }
 
     @Override

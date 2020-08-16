@@ -8,9 +8,7 @@ package io.gomint.server.network.packet;
 
 import io.gomint.jraknet.PacketBuffer;
 import io.gomint.server.network.Protocol;
-import lombok.Data;
 
-@Data
 public class PacketSetLocalPlayerAsInitialized extends Packet {
 
     private long entityId;
@@ -32,4 +30,11 @@ public class PacketSetLocalPlayerAsInitialized extends Packet {
         this.entityId = buffer.readUnsignedVarLong();
     }
 
+    public long getEntityId() {
+        return entityId;
+    }
+
+    public void setEntityId(long entityId) {
+        this.entityId = entityId;
+    }
 }

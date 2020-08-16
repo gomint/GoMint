@@ -18,7 +18,6 @@ import io.gomint.taglib.NBTTagCompound;
 import io.gomint.world.Gamemode;
 import io.gomint.world.World;
 import io.gomint.world.block.BlockType;
-import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,7 +36,6 @@ import java.util.List;
  * after that we get some inventory transactions with windowId -15 and -17 (those contain the enchantment items) and the
  * last packet is a EntityEvent with ID 34 (enchanted) with data of the missing levels (-1,-2,-3)
  */
-@RequiredArgsConstructor
 public class EnchantmentProcessor {
 
     private static final Logger LOGGER = LoggerFactory.getLogger( EnchantmentProcessor.class );
@@ -47,6 +45,10 @@ public class EnchantmentProcessor {
     private ItemStack lapisItem;
     private List<Enchantment> enchantments;
     private short data;
+
+    public EnchantmentProcessor(EntityPlayer player) {
+        this.player = player;
+    }
 
     private void check() {
         if ( this.player.getGamemode() != Gamemode.CREATIVE && ( this.data < 1 || this.data > 3 ) ) {

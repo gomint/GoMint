@@ -20,7 +20,6 @@ import io.gomint.server.util.EnumConnectors;
 import io.gomint.server.util.Values;
 import io.gomint.server.world.WorldAdapter;
 import io.gomint.taglib.NBTTagCompound;
-import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,7 +46,6 @@ public abstract class EntityLiving extends Entity implements InventoryHolder, io
     protected Map<String, AttributeInstance> attributes = new HashMap<>();
 
     private float lastUpdateDT = 0;
-    @Getter
     private final Set<io.gomint.entity.Entity> attachedEntities = new HashSet<>();
 
     private byte attackCoolDown = 0;
@@ -57,9 +55,7 @@ public abstract class EntityLiving extends Entity implements InventoryHolder, io
 
     // Damage stats
     protected float lastDamage = 0;
-    @Getter
     protected EntityDamageEvent.DamageSource lastDamageSource;
-    @Getter
     protected io.gomint.entity.Entity lastDamageEntity;
 
     // Effects
@@ -603,6 +599,18 @@ public abstract class EntityLiving extends Entity implements InventoryHolder, io
         compound.addValue("HurtTime", (short) this.attackCoolDown);
 
         return compound;
+    }
+
+    public Set<io.gomint.entity.Entity> getAttachedEntities() {
+        return attachedEntities;
+    }
+
+    public EntityDamageEvent.DamageSource getLastDamageSource() {
+        return lastDamageSource;
+    }
+
+    public io.gomint.entity.Entity getLastDamageEntity() {
+        return lastDamageEntity;
     }
 
 }

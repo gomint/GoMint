@@ -7,7 +7,6 @@ import io.gomint.world.block.BlockType;
 import io.gomint.server.registry.RegisterInfo;
 import io.gomint.world.block.BlockWoodenPressurePlate;
 import io.gomint.world.block.data.LogType;
-import lombok.Getter;
 
 /**
  * @author geNAZt
@@ -21,7 +20,6 @@ import lombok.Getter;
 @RegisterInfo(sId = "minecraft:dark_oak_pressure_plate")
 public class WoodenPressurePlate extends BasePressurePlate implements BlockWoodenPressurePlate {
 
-    @Getter
     private enum LogTypeMagic {
         OAK("minecraft:wooden_pressure_plate"),
         SPRUCE("minecraft:spruce_pressure_plate"),
@@ -74,7 +72,7 @@ public class WoodenPressurePlate extends BasePressurePlate implements BlockWoode
     @Override
     public LogType getWoodType() {
         for (LogTypeMagic value : LogTypeMagic.values()) {
-            if (value.getBlockId().equals(this.getBlockId())) {
+            if (value.blockId.equals(this.getBlockId())) {
                 return LogType.valueOf(value.name());
             }
         }
@@ -85,7 +83,7 @@ public class WoodenPressurePlate extends BasePressurePlate implements BlockWoode
     @Override
     public void setWoodType(LogType logType) {
         LogTypeMagic newState = LogTypeMagic.valueOf(logType.name());
-        this.setBlockId(newState.getBlockId());
+        this.setBlockId(newState.blockId);
     }
 
 }

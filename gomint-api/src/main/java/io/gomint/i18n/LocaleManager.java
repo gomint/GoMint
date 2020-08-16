@@ -13,8 +13,6 @@ import io.gomint.i18n.localization.ResourceManager;
 import io.gomint.i18n.localization.loader.PropertiesResourceLoader;
 import io.gomint.i18n.localization.loader.YamlResourceLoader;
 import io.gomint.plugin.Plugin;
-import lombok.Getter;
-import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,12 +40,9 @@ public class LocaleManager {
     private ResourceManager resourceManager;
 
     // The fallback Locale to use
-    @Getter
     private Locale defaultLocale = Locale.US;
 
     // Whether to use the default locale also for untranslated messages
-    @Getter
-    @Setter
     private boolean useDefaultLocaleForMessages = true;
 
     // Plugin for which we have this
@@ -302,6 +297,18 @@ public class LocaleManager {
     public synchronized void cleanup() {
         resourceManager.cleanup();
         resourceManager = null;
+    }
+
+    public Locale getDefaultLocale() {
+        return defaultLocale;
+    }
+
+    public boolean isUseDefaultLocaleForMessages() {
+        return useDefaultLocaleForMessages;
+    }
+
+    public void setUseDefaultLocaleForMessages(boolean useDefaultLocaleForMessages) {
+        this.useDefaultLocaleForMessages = useDefaultLocaleForMessages;
     }
 
 }

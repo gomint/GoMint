@@ -12,7 +12,6 @@ import io.gomint.server.entity.EntityPlayer;
 import it.unimi.dsi.fastutil.objects.Object2BooleanMap;
 import it.unimi.dsi.fastutil.objects.Object2BooleanOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectSet;
-import lombok.RequiredArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -22,7 +21,6 @@ import java.util.List;
  * @author geNAZt
  * @version 1.0
  */
-@RequiredArgsConstructor
 public class PermissionManager implements io.gomint.permission.PermissionManager {
 
     private final EntityPlayer player;
@@ -32,6 +30,10 @@ public class PermissionManager implements io.gomint.permission.PermissionManager
 
     // Effective cache
     private Object2BooleanMap<String> cache = new Object2BooleanOpenHashMap<>();
+
+    public PermissionManager(EntityPlayer player) {
+        this.player = player;
+    }
 
     /**
      * Update this permission manager

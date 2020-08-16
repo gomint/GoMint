@@ -1,7 +1,5 @@
 package io.gomint.server.world;
 
-import lombok.Getter;
-
 /**
  * @author geNAZt
  * @version 1.0
@@ -16,12 +14,14 @@ public enum GamemodeMagicNumbers {
     ADVENTURE( 2 ),
     SPECTATOR( 3 );
 
-    @Getter
     private final int magicNumber;
 
     GamemodeMagicNumbers( int magicNumber ) {
         this.magicNumber = magicNumber;
     }
 
+    public int getMagicNumber() {
+        return magicNumber;
+    }
 }
 // CHECKSTYLE:ON

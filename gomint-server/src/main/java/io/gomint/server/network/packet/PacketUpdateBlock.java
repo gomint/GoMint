@@ -3,13 +3,11 @@ package io.gomint.server.network.packet;
 import io.gomint.jraknet.PacketBuffer;
 import io.gomint.math.BlockPosition;
 import io.gomint.server.network.Protocol;
-import lombok.Data;
 
 /**
  * @author geNAZt
  * @version 1.0
  */
-@Data
 public class PacketUpdateBlock extends Packet {
 
     public static final int FLAG_NONE = 0b0000;
@@ -42,4 +40,35 @@ public class PacketUpdateBlock extends Packet {
 
     }
 
+    public BlockPosition getPosition() {
+        return position;
+    }
+
+    public void setPosition(BlockPosition position) {
+        this.position = position;
+    }
+
+    public int getBlockId() {
+        return blockId;
+    }
+
+    public void setBlockId(int blockId) {
+        this.blockId = blockId;
+    }
+
+    public int getFlags() {
+        return flags;
+    }
+
+    public void setFlags(int flags) {
+        this.flags = flags;
+    }
+
+    public int getLayer() {
+        return layer;
+    }
+
+    public void setLayer(int layer) {
+        this.layer = layer;
+    }
 }
