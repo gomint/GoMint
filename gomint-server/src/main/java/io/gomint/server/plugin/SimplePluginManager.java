@@ -648,6 +648,11 @@ public class SimplePluginManager implements PluginManager, EventCaller {
     }
 
     @Override
+    public Map< String, Plugin > getPlugins() {
+        return this.installedPlugins;
+    }
+
+    @Override
     public boolean isPluginInstalled(String name) {
         return this.installedPlugins.containsKey(name);
     }
