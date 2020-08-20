@@ -18,6 +18,8 @@ import io.gomint.world.generator.object.OakTree;
 import io.gomint.world.generator.populator.Populator;
 import io.gomint.world.generator.populator.TallGrassPopulator;
 import io.gomint.world.generator.populator.TreePopulator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
@@ -186,62 +188,66 @@ public enum Biome {
     MESA( 37, "Mesa", 2.0D, 0.0D ),
     MESA_PLATEAU_F( 38, "Mesa Plateau D", 2.0D, 0.0D ),
     MESA_PLATEAU( 39, "Mesa Plateau", 2.0D, 0.0D ),
-    THE_VOID( 127, "The Void", 0.8D, 0.4D ),
-    UNKNOWN_1( 128, "Unknown 1", 0.8D, 0.4D ),
-    SUNFLOWER_PLAINS( 129, "Sunflower Plains", 0.8D, 0.4D ),
-    DESERT_M( 130, "Desert M", 2.0D, 0.0D ),
-    EXTREME_HILLS_M( 131, "Extreme Hills M", 0.2D, 0.3D ),
-    FLOWER_FOREST( 132, "Flower Forest", 0.7D, 0.8D ),
-    TAIGA_M( 133, "Taiga M", 0.5D, 0.8D ),
-    SWAMPLAND_M( 134, "Swampland M", 0.8D, 0.9D ) {
+
+    SUNFLOWER_PLAINS( 51, "Sunflower Plains", 0.8D, 0.4D ),
+    DESERT_M( 58, "Desert M", 2.0D, 0.0D ),
+    EXTREME_HILLS_M( 69, "Extreme Hills M", 0.2D, 0.3D ),
+    FLOWER_FOREST( 59, "Flower Forest", 0.7D, 0.8D ),
+    TAIGA_M( 60, "Taiga M", 0.5D, 0.8D ),
+    SWAMPLAND_M( 52, "Swampland M", 0.8D, 0.9D ) {
         @Override
         public int getColorRGB( boolean grass, int height ) {
             // TODO: Implement Perlin noise!
             return 0x4C763C;
         }
     },
-    ICE_PLAINS_SPIKES( 140, "Ice Plains Spikes", 0.0D, 0.5D ),
-    JUNGLE_M( 149, "Jungle M", 1.2D, 0.9D ),
-    UNKNOWN_2( 150, "Unknown 2", 0.8D, 0.4D ),
-    JUNGLE_EDGE_M( 151, "Jungle Edge M", 0.5D, 0.8D ),
-    BIRCH_FOREST_M( 155, "Birch Forest M", 0.6D, 0.6D ),
-    BIRCH_FOREST_HILLS_M( 156, "Birch Forest Hills M", 0.6D, 0.6D ),
-    ROOFED_FOREST_M( 157, "Roofed Forest M", 0.7D, 0.8D ) {
+    /*
+"warm_ocean" 40
+"deep_warm_ocean" 41
+"lukewarm_ocean" 42
+"deep_lukewarm_ocean" 43
+"cold_ocean" 44
+"deep_cold_ocean" 45
+"frozen_ocean" 46
+"deep_frozen_ocean" 47
+"bamboo_jungle" 48
+"bamboo_jungle_hills" 49
+"redwood_taiga_mutated" 68
+"redwood_taiga_hills_mutated" 71
+"soulsand_valley" 72
+"crimson_forest" 73
+"warped_forest" 74
+"basalt_deltas" 75
+ */
+    ICE_PLAINS_SPIKES( 53, "Ice Plains Spikes", 0.0D, 0.5D ),
+    JUNGLE_M( 61, "Jungle M", 1.2D, 0.9D ),
+    JUNGLE_EDGE_M( 62, "Jungle Edge M", 0.5D, 0.8D ),
+    BIRCH_FOREST_M( 66, "Birch Forest M", 0.6D, 0.6D ),
+    BIRCH_FOREST_HILLS_M( 67, "Birch Forest Hills M", 0.6D, 0.6D ),
+    ROOFED_FOREST_M( 57, "Roofed Forest M", 0.7D, 0.8D ) {
         @Override
         public int getColorRGB( boolean grass, int height ) {
             int color = super.getColorRGB( grass, height );
             return ( grass ? ( ( ( color & 0xFEFEFE ) + ROOFED_FOREST_MODIFIER ) / 2 ) : color );
         }
     },
-    COLD_TAIGA_M( 158, "Cold Taiga M", -0.5D, 0.4D ),
-    MEGA_SPRUCE_TAIGA( 160, "Mega Spruce Taiga", 0.5D, 0.8D ) {
+    COLD_TAIGA_M( 54, "Cold Taiga M", -0.5D, 0.4D ),
+    EXTREME_HILLS_PLUS_M( 70, "Extreme Hills+ M", 0.2D, 0.3D ),
+    SAVANNA_M( 55, "Savanna M", 1.2D, 0.0D ),
+    SAVANNA_PLATEAU_M( 56, "Savanna Plateau M", 1.0D, 0.0D ),
+    MESA_BRYCE( 63, "Mesa (Bryce)", 2.0D, 0.0D ) {
         @Override
         public int getColorRGB( boolean grass, int height ) {
             return ( grass ? MESA_GRASS_COLOR : MESA_FOLIAGE_COLOR );
         }
     },
-    MEGA_SPRUCE_TAIGA_HILLS( 161, "Mega Spruce Taiga Hills", 0.3D, 0.8D ) {
+    MESA_PLATEAU_F_M( 64, "Mesa Plateau F M", 2.0D, 0.0D ) {
         @Override
         public int getColorRGB( boolean grass, int height ) {
             return ( grass ? MESA_GRASS_COLOR : MESA_FOLIAGE_COLOR );
         }
     },
-    EXTREME_HILLS_PLUS_M( 162, "Extreme Hills+ M", 0.2D, 0.3D ),
-    SAVANNA_M( 163, "Savanna M", 1.2D, 0.0D ),
-    SAVANNA_PLATEAU_M( 164, "Savanna Plateau M", 1.0D, 0.0D ),
-    MESA_BRYCE( 165, "Mesa (Bryce)", 2.0D, 0.0D ) {
-        @Override
-        public int getColorRGB( boolean grass, int height ) {
-            return ( grass ? MESA_GRASS_COLOR : MESA_FOLIAGE_COLOR );
-        }
-    },
-    MESA_PLATEAU_F_M( 166, "Mesa Plateau F M", 2.0D, 0.0D ) {
-        @Override
-        public int getColorRGB( boolean grass, int height ) {
-            return ( grass ? MESA_GRASS_COLOR : MESA_FOLIAGE_COLOR );
-        }
-    },
-    MESA_PLATEAU_M( 167, "Mesa Plateau M", 2.0D, 0.0D ) {
+    MESA_PLATEAU_M( 65, "Mesa Plateau M", 2.0D, 0.0D ) {
         @Override
         public int getColorRGB( boolean grass, int height ) {
             return ( grass ? MESA_GRASS_COLOR : MESA_FOLIAGE_COLOR );
@@ -265,6 +271,7 @@ public enum Biome {
 
     // ==================================== FIELDS ==================================== //
     private static final Map<Integer, Biome> BIOMES_BY_ID = new HashMap<>();
+    private static final Logger LOGGER = LoggerFactory.getLogger(Biome.class);
 
     static {
         for ( Biome biome : Biome.values() ) {
@@ -301,7 +308,12 @@ public enum Biome {
      * @return The biome if found or null otherwise
      */
     public static Biome getBiomeById( int id ) {
-        return BIOMES_BY_ID.get( id );
+        Biome biome = BIOMES_BY_ID.get( id );
+        if (biome == null) {
+            LOGGER.warn("Unknown biome: {}", id);
+        }
+
+        return biome;
     }
 
     /**

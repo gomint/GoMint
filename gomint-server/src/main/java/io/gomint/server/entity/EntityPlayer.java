@@ -663,7 +663,7 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
      */
     public void prepareEntity() {
         // Send world init data
-        this.connection.sendWorldInitialization();
+        this.connection.sendWorldInitialization(this.getEntityId());
         this.connection.addToSendQueue(new PacketAvailableEntityIdentifiers());
         this.connection.sendSpawnPosition();
         this.connection.sendDifficulty();

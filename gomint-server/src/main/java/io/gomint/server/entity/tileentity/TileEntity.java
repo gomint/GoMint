@@ -14,10 +14,13 @@ import io.gomint.math.Vector;
 import io.gomint.server.entity.EntityPlayer;
 import io.gomint.server.inventory.item.Items;
 import io.gomint.server.util.BlockIdentifier;
+import io.gomint.server.util.collection.FreezableSortedMap;
 import io.gomint.server.world.BlockRuntimeIDs;
 import io.gomint.server.world.block.Block;
 import io.gomint.taglib.NBTTagCompound;
 import io.gomint.world.block.data.Facing;
+
+import java.util.Map;
 
 /**
  * @author geNAZt
@@ -48,13 +51,23 @@ public abstract class TileEntity {
             return null;
         }
 
-        // TODO: Check for correct NBT tag values
-        return BlockRuntimeIDs.toBlockIdentifier( compound.getString( "name", "minecraft:air" ), null);
+        NBTTagCompound states = compound.getCompound("states", false);
+        FreezableSortedMap<String, Object> stateMap = null;
+        if (states != null && states.size() > 0) {
+            stateMap = new FreezableSortedMap<>();
+            for (Map.Entry<String, Object> entry : states.entrySet()) {
+                stateMap.put(entry.getKey(), entry.getValue());
+            }
+
+            stateMap.setFrozen(true);
+        }
+
+        return BlockRuntimeIDs.toBlockIdentifier( compound.getString( "name", "minecraft:air" ), stateMap);
     }
 
     void putBlockIdentifier( BlockIdentifier identifier, NBTTagCompound compound ) {
         compound.addValue( "name", identifier.getBlockId() );
-        // compound.addValue( "val", identifier.getData() );
+        compound.addValue( "states", identifier.getNbt());
     }
 
     io.gomint.server.inventory.item.ItemStack getItemStack( NBTTagCompound compound ) {

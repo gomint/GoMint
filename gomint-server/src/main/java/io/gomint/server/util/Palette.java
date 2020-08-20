@@ -9,6 +9,7 @@ package io.gomint.server.util;
 
 import io.gomint.jraknet.PacketBuffer;
 import io.gomint.math.MathUtils;
+import io.netty.buffer.ByteBuf;
 
 /**
  * @author geNAZt
@@ -53,7 +54,7 @@ public class Palette {
         }
     }
 
-    private PacketBuffer data;
+    private ByteBuf data;
     private PaletteVersion paletteVersion = null;
 
     // Output indexes
@@ -70,7 +71,7 @@ public class Palette {
      * @param version of the palette or the amount of blocks we want to store in one word
      * @param read    do we read or write to this palette?
      */
-    public Palette( PacketBuffer data, int version, boolean read ) {
+    public Palette( ByteBuf data, int version, boolean read ) {
         this.data = data;
 
         for ( PaletteVersion paletteVersionCanidate : PaletteVersion.values() ) {
@@ -113,7 +114,7 @@ public class Palette {
             // Check if old input is full and we need a new one
             if ( this.wordsWritten == this.paletteVersion.getAmountOfWords() ) {
                 // Write to output
-                this.data.writeLInt( this.bits );
+                this.data.writeIntLE( this.bits );
 
                 // New input
                 this.bits = 0;
@@ -129,7 +130,7 @@ public class Palette {
     }
 
     public void finish() {
-        this.data.writeLInt( this.bits );
+        this.data.writeIntLE( this.bits );
         this.bits = 0;
     }
 
@@ -141,7 +142,7 @@ public class Palette {
             // We need the amount of iterations
             int iterations = MathUtils.fastCeil( 4096 / (float) this.paletteVersion.getAmountOfWords() );
             for ( int i = 0; i < iterations; i++ ) {
-                int currentData = this.data.readLInt();
+                int currentData = this.data.readIntLE();
                 int index = 0;
 
                 for ( byte b = 0; b < this.paletteVersion.getAmountOfWords(); b++ ) {
@@ -167,7 +168,7 @@ public class Palette {
         return this.output;
     }
 
-    public PacketBuffer getData() {
+    public ByteBuf getData() {
         return data;
     }
 

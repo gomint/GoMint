@@ -21,6 +21,8 @@ public class PacketMovePlayerHandler implements PacketHandler<PacketMovePlayer> 
 
     @Override
     public void handle( PacketMovePlayer packet, long currentTimeMillis, PlayerConnection connection ) {
+        System.out.println(packet.getEntityId());
+
         EntityPlayer entity = connection.getEntity();
         Location to = entity.getLocation();
         to.setX( packet.getX() );

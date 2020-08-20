@@ -301,7 +301,7 @@ public class ChunkSlice {
 
             // Prepare palette
             int amountOfBlocks = MathUtils.fastFloor( 32 / numberOfBits );
-            Palette palette = new Palette( buffer, amountOfBlocks, false );
+            Palette palette = new Palette( buffer.getBuffer(), amountOfBlocks, false );
 
             byte paletteWord = (byte) ( (byte) ( palette.getPaletteVersion().getVersionId() << 1 ) | 1 );
             buffer.writeByte( paletteWord );
