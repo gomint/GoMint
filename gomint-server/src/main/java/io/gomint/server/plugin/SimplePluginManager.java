@@ -649,7 +649,7 @@ public class SimplePluginManager implements PluginManager, EventCaller {
 
     @Override
     public Map< String, Plugin > getPlugins() {
-        return this.installedPlugins;
+        return ImmutableMap.copyOf(this.installedPlugins);
     }
 
     @Override
