@@ -379,7 +379,7 @@ public class Client implements ConnectionWithState {
                         byte paletteWord = chunkBuffer.readByte();
                         byte wordTemplate = (byte) ( paletteWord >>> 1 ); // Get rid of the last bit (which seems to be the isPresent state)
 
-                        Palette palette = new Palette( chunkBuffer, wordTemplate, true );
+                        Palette palette = new Palette( chunkBuffer.getBuffer(), wordTemplate, true );
                         short[] indexes = palette.getIndexes();
 
                         int amountOfRuntimeIds = chunkBuffer.readSignedVarInt();

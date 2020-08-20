@@ -8,6 +8,7 @@
 package io.gomint.server.entity.tileentity;
 
 import io.gomint.server.inventory.item.Items;
+import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.world.block.Block;
 import io.gomint.taglib.NBTTagCompound;
 
@@ -19,6 +20,7 @@ import java.util.Map;
  * @author geNAZt
  * @version 1.0
  */
+@RegisterInfo(sId = "Banner")
 public class BannerTileEntity extends TileEntity {
 
     private int baseColor;

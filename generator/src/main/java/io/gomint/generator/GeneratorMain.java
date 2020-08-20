@@ -82,8 +82,6 @@ public class GeneratorMain {
 
                         registry.append(parameters.length).append(", in -> new ").append(className).append("( ");
 
-                        System.out.println(content);
-
                         int index = 0;
                         for (String parameter : parameters) {
                             String[] typeAndName = parameter.trim().split(" ");

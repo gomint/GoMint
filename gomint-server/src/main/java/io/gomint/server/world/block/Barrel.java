@@ -7,7 +7,11 @@
 
 package io.gomint.server.world.block;
 
+import io.gomint.server.entity.tileentity.BarrelTileEntity;
+import io.gomint.server.entity.tileentity.LecternTileEntity;
+import io.gomint.server.entity.tileentity.TileEntity;
 import io.gomint.server.registry.RegisterInfo;
+import io.gomint.taglib.NBTTagCompound;
 import io.gomint.world.block.BlockBarrier;
 import io.gomint.world.block.BlockType;
 
@@ -42,6 +46,17 @@ public class Barrel extends Block {
     @Override
     public boolean canBeBrokenWithHand() {
         return false;
+    }
+
+    @Override
+    public boolean needsTileEntity() {
+        return true;
+    }
+
+    @Override
+    TileEntity createTileEntity(NBTTagCompound compound) {
+        super.createTileEntity(compound);
+        return this.world.getServer().getTileEntities().construct(BarrelTileEntity.class, compound, this, this.world.getServer().getItems());
     }
 
 }

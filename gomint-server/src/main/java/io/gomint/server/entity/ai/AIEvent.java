@@ -7,6 +7,6 @@ package io.gomint.server.entity.ai;
  * @author BlackyPaw
  * @version 1.0
  */
-public class AIEvent {
+public interface AIEvent {
 
 }

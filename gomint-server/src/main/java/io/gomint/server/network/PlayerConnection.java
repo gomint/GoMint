@@ -866,12 +866,12 @@ public class PlayerConnection implements ConnectionWithState {
      * Sends a world initialization packet of the world the entity associated with this
      * connection is currently in to this player.
      */
-    public void sendWorldInitialization() {
+    public void sendWorldInitialization(long entityId) {
         WorldAdapter world = this.entity.getWorld();
 
         PacketStartGame packet = new PacketStartGame();
-        packet.setEntityId(this.entity.getEntityId());
-        packet.setRuntimeEntityId(this.entity.getEntityId());
+        packet.setEntityId(entityId);
+        packet.setRuntimeEntityId(entityId);
         packet.setGamemode(EnumConnectors.GAMEMODE_CONNECTOR.convert(this.entity.getGamemode()).getMagicNumber());
 
         Location spawn = this.entity.getSpawnLocation() != null ? this.entity.getSpawnLocation() : world.getSpawnLocation();

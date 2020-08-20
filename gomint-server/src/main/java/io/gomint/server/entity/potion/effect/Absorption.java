@@ -35,7 +35,7 @@ public class Absorption extends Effect {
      */
     @Override
     public void update( long currentTimeMillis, float dT ) {
-
+        // There is no update needed for this effect
     }
 
     @Override

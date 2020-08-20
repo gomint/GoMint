@@ -57,4 +57,5 @@ open module gomint.api {
     exports io.gomint.world.generator.noise;
     exports io.gomint.world.generator.object;
     exports io.gomint.world.generator.populator;
+
 }

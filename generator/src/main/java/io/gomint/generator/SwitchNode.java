@@ -70,8 +70,8 @@ public class SwitchNode {
             }
         }
 
-        builder.append(repeatSpace(indents + 4)).append(this.type).append(" ").append(this.key).append(" = (").append(this.type).append(") input.get(\"").append(this.key).append("\");").append("\n");
-        builder.append(repeatSpace(indents + 4)).append("if ( ").append(this.key).append(" == null ) { ").append("\n");
+        builder.append(repeatSpace(indents + 4)).append(this.type).append(" ").append(niceKey(this.key)).append(" = (").append(this.type).append(") input.get(\"").append(this.key).append("\");").append("\n");
+        builder.append(repeatSpace(indents + 4)).append("if ( ").append(niceKey(this.key)).append(" == null ) { ").append("\n");
 
         if (defaultReturn.isEmpty()) {
             builder.append(repeatSpace(indents + 8)).append("return this.").append(defaultMethod).append("(input);").append("\n");
@@ -80,7 +80,7 @@ public class SwitchNode {
         }
 
         builder.append(repeatSpace(indents + 4)).append("}").append("\n\n");
-        builder.append(repeatSpace(indents + 4)).append("switch ( ").append(this.key).append(" ) { ").append("\n");
+        builder.append(repeatSpace(indents + 4)).append("switch ( ").append(niceKey(this.key)).append(" ) { ").append("\n");
         for (Map.Entry<String, SwitchNode> entry : this.nodes.entrySet()) {
             String methodName = makeNice(((parent != null) ? parent : "") + this.key + entry.getKey());
 
@@ -94,8 +94,9 @@ public class SwitchNode {
             }
         }
 
+        builder.append(repeatSpace(indents + 8)).append("default: return -1;\n");
         builder.append(repeatSpace(indents + 4)).append("}").append("\n\n");
-        builder.append(repeatSpace(indents + 4)).append("return -1;\n");
+
 
         if (parent != null) {
             builder.append(repeatSpace(indents)).append("}\n");
@@ -104,11 +105,15 @@ public class SwitchNode {
         return builder.toString();
     }
 
+    private String niceKey(String key) {
+        return WordUtils.capitalize(key, '_').replaceAll("_", "").toLowerCase();
+    }
+
     private String makeNice(String methodName) {
         methodName = methodName.replaceAll("Resolver", "");
         methodName = WordUtils.capitalize(methodName, '_').replaceAll("_", "");
         methodName = methodName.replaceAll("\"", "");
-        return methodName + "Resolver";
+        return methodName.toLowerCase() + "Resolver";
     }
 
     private String repeatSpace(int indents) {
