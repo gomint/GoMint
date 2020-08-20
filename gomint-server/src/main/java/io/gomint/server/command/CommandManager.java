@@ -9,6 +9,7 @@ import io.gomint.command.CommandSender;
 import io.gomint.command.ParamValidator;
 import io.gomint.plugin.Plugin;
 import io.gomint.server.command.gomint.KickCommand;
+import io.gomint.server.command.gomint.PluginsCommand;
 import io.gomint.server.command.gomint.StopCommand;
 import io.gomint.server.command.gomint.VersionCommand;
 import io.gomint.server.command.vanilla.*;
@@ -54,6 +55,7 @@ public class CommandManager {
                 ListCommand.class,
                 OpCommand.class,
                 GamemodeCommand.class,
+                PluginsCommand.class,
                 MeCommand.class,
                 SayCommand.class,
                 SetWorldSpawnCommand.class,

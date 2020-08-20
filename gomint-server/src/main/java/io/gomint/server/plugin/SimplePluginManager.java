@@ -31,6 +31,7 @@ import org.objectweb.asm.ModuleVisitor;
 import org.objectweb.asm.Opcodes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import com.google.common.collect.ImmutableMap;
 
 import java.io.DataInputStream;
 import java.io.File;
@@ -645,6 +646,11 @@ public class SimplePluginManager implements PluginManager, EventCaller {
         }
 
         return (T) this.installedPlugins.get(name);
+    }
+
+    @Override
+    public Map< String, Plugin > getPlugins() {
+        return ImmutableMap.copyOf(this.installedPlugins);
     }
 
     @Override

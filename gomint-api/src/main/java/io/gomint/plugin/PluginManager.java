@@ -11,6 +11,8 @@ import io.gomint.command.Command;
 import io.gomint.event.Event;
 import io.gomint.event.EventListener;
 
+import java.util.Map;
+
 /**
  * @author geNAZt
  * @version 1.0
@@ -41,6 +43,13 @@ public interface PluginManager {
      * @return loaded or enabled plugin or null when the plugin was not found
      */
     <T extends Plugin> T getPlugin( String name );
+
+    /**
+     * Get the a map containing the plugins.
+     *
+     * @return loaded or enabled plugin or null when the plugin was not found
+     */
+    Map< String, Plugin > getPlugins();
 
     /**
      * Check plugin installation status
