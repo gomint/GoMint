@@ -66,12 +66,17 @@ public class GeneratorMain {
                 for (String line : content.split("\n")) {
                     if (line.startsWith("@RegisterInfo(")) {
                         registry.append("\"")
-                            .append(line.replace("@RegisterInfo(sId = \"", "").replace("\")", ""))
+                            .append(line.replace("@RegisterInfo(sId = \"", "").replace("\")", "").replace("\n", "").replace("\r", ""))
                             .append("\", ");
-                    } else if (line.startsWith("public class ")) {
+                        continue;
+                    }
+                    if (line.startsWith("public class ")) {
                         className = line.substring("public class ".length());
                         className = className.substring(0, className.indexOf(" "));
-                    } else if (line.contains(className) && line.endsWith("{")) {
+                        continue;
+                    }
+                    line = line.replace("\n", "").replace("\r", "");
+                    if (line.contains(className) && line.endsWith("{")) {
                         String constructor = line.replace("public", "").replace("{", "").trim();
                         String[] parameters = constructor.substring(constructor.indexOf("(") + 1, constructor.indexOf(")")).trim().split(",");
 
