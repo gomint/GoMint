@@ -8,7 +8,6 @@ import io.gomint.command.CommandOverload;
 import io.gomint.command.CommandSender;
 import io.gomint.command.ParamValidator;
 import io.gomint.plugin.Plugin;
-import io.gomint.server.command.debug.StartGameCommand;
 import io.gomint.server.command.gomint.KickCommand;
 import io.gomint.server.command.gomint.StopCommand;
 import io.gomint.server.command.gomint.VersionCommand;
@@ -66,9 +65,6 @@ public class CommandManager {
                 KickCommand.class,
                 StopCommand.class,
                 VersionCommand.class,
-
-                // Debug
-                StartGameCommand.class,
             } ) {
                 // Check for system only commands
                 Object commandObject = null;
