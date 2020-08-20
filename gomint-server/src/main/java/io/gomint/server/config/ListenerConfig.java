@@ -19,6 +19,11 @@ public class ListenerConfig extends YamlConfig {
 
     private String ip = "0.0.0.0";
     private int port = 19132;
+    private boolean useUPNP = true;
+
+    public boolean isUseUPNP() {
+        return useUPNP;
+    }
 
     public String getIp() {
         return ip;

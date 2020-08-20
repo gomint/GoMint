@@ -38,6 +38,7 @@ import io.gomint.server.logging.TerminalConsoleAppender;
 import io.gomint.server.network.EncryptionKeyFactory;
 import io.gomint.server.network.NetworkManager;
 import io.gomint.server.network.Protocol;
+import io.gomint.server.network.upnp.UPNPClient;
 import io.gomint.server.permission.PermissionGroupManager;
 import io.gomint.server.plugin.SimplePluginManager;
 import io.gomint.server.scheduler.CoreScheduler;
@@ -381,6 +382,11 @@ public class GoMintServer implements GoMint, InventoryHolder {
         if (!this.initNetworking(host, port)) {
             this.internalShutdown();
             return;
+        }
+
+        if (this.serverConfig.getListener().isUseUPNP()) {
+            UPNPClient client = new UPNPClient();
+            client.portForward(port);
         }
 
         setMotd(this.getServerConfig().getMotd());
