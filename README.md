@@ -1,4 +1,4 @@
-![GoMint](.github/ASSETS/logo_optimized.png)
+![GoMint](.github/ASSETS/gomint-logo.png)
 
 <h4 align="center">A new fresh Minecraft: Bedrock Edition server software<br>aiming for stability and performance</h4>
 <p align="center">
