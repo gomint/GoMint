@@ -401,6 +401,15 @@ public class GoMintServer implements GoMint, InventoryHolder {
             return;
         }
 
+        try {
+            if (GoMintServerHelper.minecraftLoopbackExemptIsNotPermitted()) {
+                GoMintServerHelper.offerMinecraftLoopbackExempt();
+            }
+        } catch (IOException | InterruptedException ex) {
+            System.err.println("Failed determining loopback exempt status of Minecraft:");
+            ex.printStackTrace();
+        }
+
         init.set(false);
         LOGGER.info("Done in {} ms", (System.currentTimeMillis() - start));
         this.watchdog.done();
