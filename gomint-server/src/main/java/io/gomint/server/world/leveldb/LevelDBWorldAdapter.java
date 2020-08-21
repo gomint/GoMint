@@ -8,6 +8,8 @@
 package io.gomint.server.world.leveldb;
 
 import com.google.common.io.Files;
+import io.gomint.leveldb.DB;
+import io.gomint.leveldb.NativeLoader;
 import io.gomint.math.BlockPosition;
 import io.gomint.math.Location;
 import io.gomint.server.GoMintServer;
@@ -37,9 +39,6 @@ import org.json.simple.parser.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import net.daporkchop.ldbjni.LevelDB;
-import org.iq80.leveldb.*;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -55,6 +54,13 @@ import java.util.List;
 public class LevelDBWorldAdapter extends WorldAdapter {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LevelDBWorldAdapter.class);
+
+    static {
+        if ( !NativeLoader.load() ) {
+            System.out.println( "Could not load native leveldb. Please be sure you have a supported OS installed" );
+            System.exit( -1 );
+        }
+    }
 
     private DB db;
     private int worldVersion;
@@ -121,11 +127,8 @@ public class LevelDBWorldAdapter extends WorldAdapter {
 
     private void open() throws WorldLoadException {
         try {
-            Options options = new Options()
-                .createIfMissing(true)
-                .compressionType(CompressionType.ZLIB_RAW)
-                .blockSize(64 * 1024);
-            this.db = LevelDB.PROVIDER.open(new File( this.worldDir, "db" ), options);
+            this.db = new DB( new File( this.worldDir, "db" ) );
+            this.db.open();
         } catch ( Exception e ) {
             throw new WorldLoadException( "Could not open leveldb connection: " + e.getMessage() );
         }
@@ -306,14 +309,14 @@ public class LevelDBWorldAdapter extends WorldAdapter {
         }
     }
 
-    public byte[] getKey( int chunkX, int chunkZ, byte dataType ) {
-        return new byte[]{(byte) chunkX, (byte) (chunkX >>> 8), (byte) (chunkX >>> 16), (byte) (chunkX >>> 24),
-            (byte) chunkZ, (byte) (chunkZ >>> 8), (byte) (chunkZ >>> 16), (byte) (chunkZ >>> 24), dataType};
+    public ByteBuf getKey( int chunkX, int chunkZ, byte dataType ) {
+        ByteBuf buf = PooledByteBufAllocator.DEFAULT.directBuffer( 9 );
+        return buf.writeIntLE( chunkX ).writeIntLE( chunkZ ).writeByte( dataType );
     }
 
-    public byte[] getKeySubChunk( int chunkX, int chunkZ, byte dataType, byte subChunk ) {
-        return new byte[]{(byte) chunkX, (byte) (chunkX >>> 8), (byte) (chunkX >>> 16), (byte) (chunkX >>> 24),
-            (byte) chunkZ, (byte) (chunkZ >>> 8), (byte) (chunkZ >>> 16), (byte) (chunkZ >>> 24), dataType, subChunk};
+    public ByteBuf getKeySubChunk( int chunkX, int chunkZ, byte dataType, byte subChunk ) {
+        ByteBuf buf = PooledByteBufAllocator.DEFAULT.directBuffer( 10 );
+        return buf.writeIntLE( chunkX ).writeIntLE( chunkZ ).writeByte( dataType ).writeByte( subChunk );
     }
 
     private void loadLevelDat() throws WorldLoadException {
@@ -401,36 +404,27 @@ public class LevelDBWorldAdapter extends WorldAdapter {
     public ChunkAdapter loadChunk( int x, int z, boolean generate ) {
         ChunkAdapter chunk = this.chunkCache.getChunk( x, z );
         if ( chunk == null ) {
-            Snapshot snapshot = this.db.getSnapshot();
-            ReadOptions ro = new ReadOptions().snapshot(snapshot);
+            DB.Snapshot snapshot = this.db.getSnapshot();
 
             // Get version bit
-            byte[] versionKey = this.getKey( x, z, (byte) 0x76 );
-            byte[] version = this.db.get( versionKey, ro );
+            ByteBuf versionKey = this.getKey( x, z, (byte) 0x76 );
+            byte[] version = this.db.get( snapshot, versionKey );
+            versionKey.release();
 
             if ( version == null ) {
                 if ( generate ) {
-                    try {
-                        snapshot.close();
-                    } catch (IOException e) {
-                        LOGGER.warn("Could not close snapshot", e);
-                    }
-
+                    snapshot.close();
                     return this.generate( x, z, false );
                 } else {
-                    try {
-                        snapshot.close();
-                    } catch (IOException e) {
-                        LOGGER.warn("Could not close snapshot", e);
-                    }
-
+                    snapshot.close();
                     return null;
                 }
             }
 
             // Get the finalized value, only needed for vanilla though, other implementations don't use this (null = true)
-            byte[] finalizedKey = this.getKey( x, z, (byte) 0x36 );
-            byte[] finalized = this.db.get( finalizedKey, ro );
+            ByteBuf finalizedKey = this.getKey( x, z, (byte) 0x36 );
+            byte[] finalized = this.db.get( snapshot, finalizedKey );
+            finalizedKey.release();
 
             byte v = version[0];
             boolean populated = finalized == null || finalized[0] == 2;
@@ -439,8 +433,9 @@ public class LevelDBWorldAdapter extends WorldAdapter {
 
             for ( int sectionY = 0; sectionY < 16; sectionY++ ) {
                 try {
-                    byte[] chunkKey = this.getKeySubChunk( x, z, (byte) 0x2f, (byte) sectionY );
-                    byte[] chunkData = this.db.get( chunkKey, ro );
+                    ByteBuf chunkKey = this.getKeySubChunk( x, z, (byte) 0x2f, (byte) sectionY );
+                    byte[] chunkData = this.db.get( snapshot, chunkKey );
+                    chunkKey.release();
 
                     if ( chunkData != null ) {
                         loadingChunk.loadSection( sectionY, chunkData );
@@ -453,8 +448,9 @@ public class LevelDBWorldAdapter extends WorldAdapter {
             }
 
             try {
-                byte[] tileEntityKey = this.getKey( x, z, (byte) 0x31 );
-                byte[] tileEntityData = this.db.get( tileEntityKey, ro );
+                ByteBuf tileEntityKey = this.getKey( x, z, (byte) 0x31 );
+                byte[] tileEntityData = this.db.get( snapshot, tileEntityKey );
+                tileEntityKey.release();
 
                 if ( tileEntityData != null ) {
                     loadingChunk.loadTileEntities( tileEntityData );
@@ -464,8 +460,9 @@ public class LevelDBWorldAdapter extends WorldAdapter {
             }
 
             try {
-                byte[] entityKey = this.getKey( x, z, (byte) 0x32 );
-                byte[] entityData = this.db.get( entityKey, ro );
+                ByteBuf entityKey = this.getKey( x, z, (byte) 0x32 );
+                byte[] entityData = this.db.get( snapshot, entityKey );
+                entityKey.release();
 
                 if ( entityData != null ) {
                     loadingChunk.loadEntities( entityData );
@@ -500,12 +497,7 @@ public class LevelDBWorldAdapter extends WorldAdapter {
                 this.addPopulateTask( loadingChunk );
             }
 
-            try {
-                snapshot.close();
-            } catch (IOException e) {
-                LOGGER.warn("Could not close snapshot", e);
-            }
-
+            snapshot.close();
             return loadingChunk;
         }
 
