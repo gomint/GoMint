@@ -38,7 +38,7 @@ public class Bootstrap {
      */
     public static void main(String[] args) {
         // If not 32bit, print out a error and halt
-        if (!"amd64".equals(System.getProperty("os.arch"))) {
+        if (!System.getProperty("os.arch").contains("64")) {
             System.err.println("GoMint only support x86_64 (64bit) Java. Please install 64bit java");
 
             try {
