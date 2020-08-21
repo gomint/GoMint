@@ -124,10 +124,6 @@ public class AssetsLibrary {
             );
 
             this.blockPalette.add(identifier);
-
-            if (block.equals("minecraft:wood") || block.contains("log") || block.contains("hyphae") || block.contains("stem")) {
-                System.out.println(identifier);
-            }
         }
     }
 
