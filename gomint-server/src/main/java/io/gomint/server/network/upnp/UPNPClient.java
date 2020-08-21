@@ -165,6 +165,10 @@ public class UPNPClient {
     }
 
     public void portForward(int port) {
+        if (this.localAddress == null) {
+            return;
+        }
+        
         String body =
             "<u:AddPortMapping xmlns:u=\"urn:schemas-upnp-org:service:WANIPConnection:1\">" +
                 "<NewRemoteHost></NewRemoteHost>" +
