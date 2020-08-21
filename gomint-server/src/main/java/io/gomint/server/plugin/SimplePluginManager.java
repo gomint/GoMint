@@ -396,6 +396,7 @@ public class SimplePluginManager implements PluginManager, EventCaller {
 
             PluginMeta meta = new PluginMeta(file);
             File depModules = new File("modules/plugin/" + file.getName().replace(".jar", ""));
+            meta.setModuleName(file.getName().split("-")[0]); // Quick and dirty hack for unnamed modules (old plugins on JDK 8)
 
             // Try to read every file in the jar
             try {
