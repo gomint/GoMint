@@ -177,16 +177,15 @@ public class GoMintServer implements GoMint, InventoryHolder {
 
         // Extract information from the manifest
         String buildVersion = "dev/unsupported";
-        ClassLoader cl = getClass().getClassLoader();
-        try {
-            URL url = cl.getResource("META-INF/MANIFEST.MF");
-            if (url != null) {
-                Manifest manifest = new Manifest(url.openStream());
+        Module module = getClass().getModule();
+        try (InputStream is = module.getResourceAsStream("META-INF/MANIFEST.MF")) {
+            if (is != null) {
+                Manifest manifest = new Manifest(is);
                 buildVersion = manifest.getMainAttributes().getValue("Implementation-Build");
-            }
 
-            if (buildVersion == null) {
-                buildVersion = "dev/unsupported";
+                if (buildVersion == null) {
+                    buildVersion = "dev/unsupported";
+                }
             }
         } catch (IOException e) {
             // Ignored .-.
