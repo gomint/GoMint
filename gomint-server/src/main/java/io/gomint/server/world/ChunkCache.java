@@ -150,10 +150,16 @@ public class ChunkCache {
      * Puts the specified chunk into the cache thus making it available to the outside
      *
      * @param chunk The chunk to put into the cache
+     * @return true when chunk has been cached, false otherwise
      */
-    public synchronized void putChunk( ChunkAdapter chunk ) {
+    public synchronized boolean putChunk( ChunkAdapter chunk ) {
         long key = CoordinateUtils.toLong( chunk.getX(), chunk.getZ() );
+        if (this.cachedChunks.containsKey(key)) {
+            return false;
+        }
+
         this.cachedChunks.put( key, chunk );
+        return true;
     }
 
     // ==================================== AUTOSAVE ==================================== //

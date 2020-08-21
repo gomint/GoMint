@@ -9,6 +9,7 @@ import io.gomint.server.util.Palette;
 import io.gomint.server.world.storage.TemporaryStorage;
 import io.gomint.world.block.Block;
 import io.netty.buffer.ByteBuf;
+import io.netty.buffer.PooledByteBufAllocator;
 import io.netty.buffer.UnpooledByteBufAllocator;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
@@ -31,15 +32,15 @@ import java.util.function.IntConsumer;
 public class ChunkSlice {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ChunkSlice.class);
-    private static final ThreadLocal<int[]> INDEX_IDS = ThreadLocal.withInitial( () -> new int[4096] );
-    private static final ThreadLocal<Short2IntMap> INDEX_LIST = ThreadLocal.withInitial( () -> {
-        Short2IntMap map = new Short2IntOpenHashMap( 4096 );
+    private static final ThreadLocal<int[]> INDEX_IDS = ThreadLocal.withInitial(() -> new int[4096]);
+    private static final ThreadLocal<Short2IntMap> INDEX_LIST = ThreadLocal.withInitial(() -> {
+        Short2IntMap map = new Short2IntOpenHashMap(4096);
         map.defaultReturnValue(-1);
         return map;
     });
-    private static final ThreadLocal<IntList> RUNTIME_INDEX = ThreadLocal.withInitial( () -> new IntArrayList(4096) );
+    private static final ThreadLocal<IntList> RUNTIME_INDEX = ThreadLocal.withInitial(() -> new IntArrayList(4096));
 
-    protected static final short AIR_RUNTIME_ID = (short) BlockRuntimeIDs.toBlockIdentifier( "minecraft:air", null ).getRuntimeId();
+    protected static final short AIR_RUNTIME_ID = (short) BlockRuntimeIDs.toBlockIdentifier("minecraft:air", null).getRuntimeId();
 
     private final ChunkAdapter chunk;
     private final int sectionY;
@@ -62,7 +63,7 @@ public class ChunkSlice {
     private boolean needsPersistence;
     private boolean isReleased;
 
-    public ChunkSlice( ChunkAdapter chunkAdapter, int sectionY ) {
+    public ChunkSlice(ChunkAdapter chunkAdapter, int sectionY) {
         this.chunk = chunkAdapter;
         this.sectionY = sectionY;
 
@@ -84,8 +85,8 @@ public class ChunkSlice {
         return chunk;
     }
 
-    private short getIndex(int x, int y, int z ) {
-        return (short) ( ( x << 8 ) + ( z << 4 ) + y );
+    private short getIndex(int x, int y, int z) {
+        return (short) ((x << 8) + (z << 4) + y);
     }
 
     /**
@@ -97,13 +98,13 @@ public class ChunkSlice {
      * @param layer on which the block is
      * @return id of the block
      */
-    String getBlock( int x, int y, int z, int layer ) {
-        return this.getBlock( layer, getIndex( x, y, z ) );
+    String getBlock(int x, int y, int z, int layer) {
+        return this.getBlock(layer, getIndex(x, y, z));
     }
 
-    String getBlock( int layer, int index ) {
-        int runtimeId = this.getRuntimeID( layer, index );
-        BlockIdentifier identifier = BlockRuntimeIDs.toBlockIdentifier( runtimeId );
+    String getBlock(int layer, int index) {
+        int runtimeId = this.getRuntimeID(layer, index);
+        BlockIdentifier identifier = BlockRuntimeIDs.toBlockIdentifier(runtimeId);
         return identifier.getBlockId();
     }
 
@@ -116,13 +117,13 @@ public class ChunkSlice {
      * @param layer on which the block is
      * @return block id of the index
      */
-    int getRuntimeID( int x, int y, int z, int layer ) {
-        return this.getRuntimeID( layer, getIndex( x, y, z ) );
+    int getRuntimeID(int x, int y, int z, int layer) {
+        return this.getRuntimeID(layer, getIndex(x, y, z));
     }
 
-    protected short getRuntimeID( int layer, int index ) {
+    protected short getRuntimeID(int layer, int index) {
         ByteBuf blockStorage = this.blocks[layer];
-        if ( blockStorage == null ) {
+        if (blockStorage == null) {
             return AIR_RUNTIME_ID;
         }
 
@@ -131,77 +132,77 @@ public class ChunkSlice {
 
     public <T extends Block> T getBlockInstanceInternal(short index, int layer, Location blockLocation) {
         if (blockLocation == null) {
-            int blockX = ( index >> 8 ) & 0x0f;
-            int blockY = ( index ) & 0x0f;
-            int blockZ = ( index >> 4 ) & 0x0f;
+            int blockX = (index >> 8) & 0x0f;
+            int blockY = (index) & 0x0f;
+            int blockZ = (index >> 4) & 0x0f;
 
             blockLocation = this.getBlockLocation(blockX, blockY, blockZ);
         }
 
-        int runtimeID = this.getRuntimeID( layer, index );
-        if ( runtimeID == AIR_RUNTIME_ID ) {
-            return this.getAirBlockInstance( blockLocation );
+        int runtimeID = this.getRuntimeID(layer, index);
+        if (runtimeID == AIR_RUNTIME_ID) {
+            return this.getAirBlockInstance(blockLocation);
         }
 
-        BlockIdentifier identifier = BlockRuntimeIDs.toBlockIdentifier( runtimeID );
-        return (T) this.chunk.getWorld().getServer().getBlocks().get( identifier, this.skyLight != null ? this.skyLight.get( index ) : 0,
-            this.blockLight != null ? this.blockLight.get( index ) : 0, this.tileEntities != null ? this.tileEntities.get( index ) : null,
-            blockLocation, layer, this, index );
+        BlockIdentifier identifier = BlockRuntimeIDs.toBlockIdentifier(runtimeID);
+        return (T) this.chunk.getWorld().getServer().getBlocks().get(identifier, this.skyLight != null ? this.skyLight.get(index) : 0,
+            this.blockLight != null ? this.blockLight.get(index) : 0, this.tileEntities != null ? this.tileEntities.get(index) : null,
+            blockLocation, layer, this, index);
     }
 
-    <T extends Block> T getBlockInstance(int x, int y, int z, int layer ) {
-        short index = getIndex( x, y, z );
-        return getBlockInstanceInternal(index, layer, getBlockLocation(x,y,z));
+    <T extends Block> T getBlockInstance(int x, int y, int z, int layer) {
+        short index = getIndex(x, y, z);
+        return getBlockInstanceInternal(index, layer, getBlockLocation(x, y, z));
     }
 
-    private <T extends Block> T getAirBlockInstance( Location location ) {
-        return (T) this.chunk.getWorld().getServer().getBlocks().get( BlockRuntimeIDs.toBlockIdentifier("minecraft:air", null),
+    private <T extends Block> T getAirBlockInstance(Location location) {
+        return (T) this.chunk.getWorld().getServer().getBlocks().get(BlockRuntimeIDs.toBlockIdentifier("minecraft:air", null),
             (byte) 15, (byte) 15, null, location, 0, null, (short) 0);
     }
 
-    private Location getBlockLocation( int x, int y, int z ) {
-        return new Location( this.chunk.world, this.shiftedMinX + x, this.shiftedMinY + y, this.shiftedMinZ + z );
+    private Location getBlockLocation(int x, int y, int z) {
+        return new Location(this.chunk.world, this.shiftedMinX + x, this.shiftedMinY + y, this.shiftedMinZ + z);
     }
 
-    void removeTileEntity( int x, int y, int z ) {
-        this.removeTileEntityInternal( getIndex( x, y, z ) );
+    void removeTileEntity(int x, int y, int z) {
+        this.removeTileEntityInternal(getIndex(x, y, z));
     }
 
-    private void removeTileEntityInternal( short index ) {
-        if ( this.tileEntities == null ) { // Not tiles in this chunk. This happens because on break still wants to reset any tiles on that position even though there might not be one
+    private void removeTileEntityInternal(short index) {
+        if (this.tileEntities == null) { // Not tiles in this chunk. This happens because on break still wants to reset any tiles on that position even though there might not be one
             return;
         }
 
-        this.tileEntities.remove( index );
+        this.tileEntities.remove(index);
         this.needsPersistence = true;
     }
 
-    void addTileEntity( int x, int y, int z, TileEntity tileEntity ) {
-        this.addTileEntityInternal( getIndex( x, y, z ), tileEntity );
+    void addTileEntity(int x, int y, int z, TileEntity tileEntity) {
+        this.addTileEntityInternal(getIndex(x, y, z), tileEntity);
     }
 
-    public void addTileEntityInternal( short index, TileEntity tileEntity ) {
-        if ( this.tileEntities == null ) {
+    public void addTileEntityInternal(short index, TileEntity tileEntity) {
+        if (this.tileEntities == null) {
             this.tileEntities = new Short2ObjectOpenHashMap<>();
         }
 
-        this.tileEntities.put( index, tileEntity );
+        this.tileEntities.put(index, tileEntity);
         this.needsPersistence = true;
     }
 
-    public void setBlock( int x, int y, int z, int layer, int runtimeId ) {
-        short index = getIndex( x, y, z );
-        this.setRuntimeIdInternal( index, layer, runtimeId );
+    public void setBlock(int x, int y, int z, int layer, int runtimeId) {
+        short index = getIndex(x, y, z);
+        this.setRuntimeIdInternal(index, layer, runtimeId);
     }
 
-    public void setRuntimeIdInternal( short index, int layer, int runtimeID ) {
-        if ( this.isReleased ) {
+    public void setRuntimeIdInternal(short index, int layer, int runtimeID) {
+        if (this.isReleased) {
             LOGGER.warn("Trying to set a block into a released chunk");
             return;
         }
 
-        if ( runtimeID != AIR_RUNTIME_ID && this.blocks[layer] == null ) {
-            this.blocks[layer] = UnpooledByteBufAllocator.DEFAULT.directBuffer( 4096 * 2 ); // Defaults to all 0
+        if (runtimeID != AIR_RUNTIME_ID && this.blocks[layer] == null) {
+            this.blocks[layer] = PooledByteBufAllocator.DEFAULT.directBuffer(4096 * 2); // Defaults to all 0
             for (int i = 0; i < 4096; i++) {
                 this.blocks[layer].writeShort(AIR_RUNTIME_ID);
             }
@@ -209,8 +210,8 @@ public class ChunkSlice {
             this.isAllAir = false;
         }
 
-        if ( this.blocks[layer] != null ) {
-            this.blocks[layer].setShort(index * 2, (short) runtimeID );
+        if (this.blocks[layer] != null) {
+            this.blocks[layer].setShort(index * 2, (short) runtimeID);
             this.needsPersistence = true;
         }
     }
@@ -223,48 +224,48 @@ public class ChunkSlice {
         return this.blocks[1] != null ? 2 : 1;
     }
 
-    private int log2( int n ) {
-        if ( n <= 0 ) throw new IllegalArgumentException();
-        return 31 - Integer.numberOfLeadingZeros( n );
+    private int log2(int n) {
+        if (n <= 0) throw new IllegalArgumentException();
+        return 31 - Integer.numberOfLeadingZeros(n);
     }
 
-    public TemporaryStorage getTemporaryStorage( int x, int y, int z, int layer ) {
-        short index = getIndex( x, y, z );
+    public TemporaryStorage getTemporaryStorage(int x, int y, int z, int layer) {
+        short index = getIndex(x, y, z);
 
         // Select correct layer
         Short2ObjectOpenHashMap<TemporaryStorage> storage = this.temporaryStorages[layer];
-        if ( storage == null ) {
+        if (storage == null) {
             storage = new Short2ObjectOpenHashMap<>();
             this.temporaryStorages[layer] = storage;
         }
 
-        TemporaryStorage blockStorage = storage.get( index );
-        if ( blockStorage == null ) {
+        TemporaryStorage blockStorage = storage.get(index);
+        if (blockStorage == null) {
             blockStorage = new TemporaryStorage();
-            storage.put( index, blockStorage );
+            storage.put(index, blockStorage);
         }
 
         return blockStorage;
     }
 
-    public void resetTemporaryStorage( int x, int y, int z, int layer ) {
+    public void resetTemporaryStorage(int x, int y, int z, int layer) {
         Short2ObjectOpenHashMap<TemporaryStorage> storage = this.temporaryStorages[layer];
-        if ( storage == null ) {
+        if (storage == null) {
             return;
         }
 
-        short index = getIndex( x, y, z );
-        storage.remove( index );
+        short index = getIndex(x, y, z);
+        storage.remove(index);
     }
 
-    public void serializeNetwork( PacketBuffer buffer ) {
-        buffer.writeByte( (byte) 8 );
+    public void serializeNetwork(PacketBuffer buffer) {
+        buffer.writeByte((byte) 8);
 
         // Check how many layers we have
         int amountOfLayers = this.getAmountOfLayers();
-        buffer.writeByte( (byte) amountOfLayers );
+        buffer.writeByte((byte) amountOfLayers);
 
-        for ( int layer = 0; layer < amountOfLayers; layer++ ) {
+        for (int layer = 0; layer < amountOfLayers; layer++) {
             ByteBuf layerBuf = this.blocks[layer];
             int foundIndex = 0;
             int nextIndex = 0;
@@ -277,14 +278,14 @@ public class ChunkSlice {
             indexList.clear();
             runtimeIndex.clear();
 
-            for ( short blockIndex = 0; blockIndex < indexIDs.length; blockIndex++ ) {
+            for (short blockIndex = 0; blockIndex < indexIDs.length; blockIndex++) {
                 short runtimeID = layerBuf.getShort(blockIndex << 1);
 
-                if ( runtimeID != lastRuntimeID ) {
-                    foundIndex = indexList.get( runtimeID );
-                    if ( foundIndex == -1 ) {
-                        runtimeIndex.add( runtimeID );
-                        indexList.put( runtimeID, nextIndex );
+                if (runtimeID != lastRuntimeID) {
+                    foundIndex = indexList.get(runtimeID);
+                    if (foundIndex == -1) {
+                        runtimeIndex.add(runtimeID);
+                        indexList.put(runtimeID, nextIndex);
                         foundIndex = nextIndex;
                         nextIndex++;
                     }
@@ -297,29 +298,29 @@ public class ChunkSlice {
 
             // Get correct wordsize
             int value = indexList.size();
-            float numberOfBits = log2( value ) + 1;
+            float numberOfBits = log2(value) + 1;
 
             // Prepare palette
-            int amountOfBlocks = MathUtils.fastFloor( 32 / numberOfBits );
-            Palette palette = new Palette( buffer.getBuffer(), amountOfBlocks, false );
+            int amountOfBlocks = MathUtils.fastFloor(32 / numberOfBits);
+            Palette palette = new Palette(buffer.getBuffer(), amountOfBlocks, false);
 
-            byte paletteWord = (byte) ( (byte) ( palette.getPaletteVersion().getVersionId() << 1 ) | 1 );
-            buffer.writeByte( paletteWord );
-            palette.addIndexIDs( indexIDs );
+            byte paletteWord = (byte) ((byte) (palette.getPaletteVersion().getVersionId() << 1) | 1);
+            buffer.writeByte(paletteWord);
+            palette.addIndexIDs(indexIDs);
             palette.finish();
 
             // Write runtimeIDs
-            buffer.writeSignedVarInt( indexList.size() );
-            runtimeIndex.forEach( (IntConsumer) buffer::writeSignedVarInt );
+            buffer.writeSignedVarInt(indexList.size());
+            runtimeIndex.forEach((IntConsumer) buffer::writeSignedVarInt);
         }
     }
 
-    public List<BlockIdentifier> getBlocks( int layer ) {
-        List<BlockIdentifier> blocks = new ArrayList<>( 4096 );
+    public List<BlockIdentifier> getBlocks(int layer) {
+        List<BlockIdentifier> blocks = new ArrayList<>(4096);
 
-        for ( int i = 0; i < 4096; i++ ) {
-            int runtime = this.getRuntimeID( layer, i );
-            blocks.add( BlockRuntimeIDs.toBlockIdentifier( runtime ) );
+        for (int i = 0; i < 4096; i++) {
+            int runtime = this.getRuntimeID(layer, i);
+            blocks.add(BlockRuntimeIDs.toBlockIdentifier(runtime));
         }
 
         return blocks;
@@ -329,30 +330,28 @@ public class ChunkSlice {
         this.isReleased = true;
 
         for (ByteBuf block : this.blocks) {
-            if (block != null) {
-                if (!block.release()) {
-                    LOGGER.warn("Chunk got released but block memory is not refcount 0");
-                }
+            if (block != null && !block.release()) {
+                LOGGER.warn("Chunk got released but block memory is not refcount 0");
             }
         }
 
-        if ( this.blockLight != null ) {
+        if (this.blockLight != null) {
             this.blockLight.release();
         }
 
-        if ( this.skyLight != null ) {
+        if (this.skyLight != null) {
             this.skyLight.release();
         }
     }
 
     public boolean isNeedsPersistence() {
         // Did a block change?
-        if ( this.needsPersistence ) {
+        if (this.needsPersistence) {
             return true;
         }
 
         // Check for tile entity changes
-        if ( this.getTileEntities() != null) {
+        if (this.getTileEntities() != null) {
             ObjectIterator<Short2ObjectMap.Entry<TileEntity>> iterator = this.getTileEntities().short2ObjectEntrySet().fastIterator();
             while (iterator.hasNext()) {
                 TileEntity tileEntity = iterator.next().getValue();
@@ -368,7 +367,7 @@ public class ChunkSlice {
     public void resetPersistenceFlag() {
         this.needsPersistence = false;
 
-        if ( this.getTileEntities() != null) {
+        if (this.getTileEntities() != null) {
             ObjectIterator<Short2ObjectMap.Entry<TileEntity>> iterator = this.getTileEntities().short2ObjectEntrySet().fastIterator();
             while (iterator.hasNext()) {
                 TileEntity tileEntity = iterator.next().getValue();

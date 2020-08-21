@@ -1201,17 +1201,20 @@ public abstract class WorldAdapter implements World {
         }
 
         if (this.chunkGenerator != null) {
-            LOGGER.debug("Generating chunk {} / {}", x, z);
+            LOGGER.info("Generating chunk {} / {}", x, z);
 
             ChunkAdapter chunk = (ChunkAdapter) this.chunkGenerator.generate(x, z);
             if (chunk != null) {
                 chunk.calculateHeightmap(240);
-                this.chunkCache.putChunk(chunk);
-
-                if (syncPopulation) {
-                    chunk.populate();
+                if (!this.chunkCache.putChunk(chunk)) {
+                    chunk.release();
+                    return this.chunkCache.getChunk(x, z);
                 } else {
-                    this.addPopulateTask(chunk);
+                    if (syncPopulation) {
+                        chunk.populate();
+                    } else {
+                        this.addPopulateTask(chunk);
+                    }
                 }
 
                 return chunk;
