@@ -36,7 +36,7 @@ public class Bootstrap {
      *
      * @param args The command-line arguments to be passed to the entryClass
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         // If not 32bit, print out a error and halt
         if (!System.getProperty("os.arch").contains("64")) {
             System.err.println("GoMint only support x86_64 (64bit) Java. Please install 64bit java");

@@ -610,8 +610,8 @@ public abstract class WorldAdapter implements World {
     @Override
     public Chunk getOrGenerateChunk(int x, int z) {
         Chunk chunk = this.getChunk(x, z);
-        if ( chunk == null ) {
-            return this.generate( x, z, true );
+        if (chunk == null) {
+            return this.generate(x, z, true);
         }
 
         return chunk;
@@ -793,7 +793,7 @@ public abstract class WorldAdapter implements World {
      * @param callback The callback which should be invoked when the packing has been done
      */
     private void packageChunk(ChunkAdapter chunk, Delegate2<Long, ChunkAdapter> callback) {
-        chunk.createPackagedData(null,false); // We generate some garbage to warm caches
+        chunk.createPackagedData(null, false); // We generate some garbage to warm caches
         callback.invoke(CoordinateUtils.toLong(chunk.getX(), chunk.getZ()), chunk);
     }
 
@@ -913,7 +913,7 @@ public abstract class WorldAdapter implements World {
      * This helper method executes a block update schedule on the main thread
      *
      * @param adapter in which the block update happens
-     * @param pos of the block which changes
+     * @param pos     of the block which changes
      */
     public void updateBlock0(ChunkAdapter adapter, BlockPosition pos) {
         if (!this.players.isEmpty()) {
@@ -1193,6 +1193,14 @@ public abstract class WorldAdapter implements World {
         return chunk.getTemporaryStorage(position.getX() & 0xF, position.getY(), position.getZ() & 0xF, layer);
     }
 
+    /**
+     * Generate a new chunk, either with async or synced up populations
+     *
+     * @param x              coord of the chunk
+     * @param z              coord of the chunk
+     * @param syncPopulation true when the populators should be run sync
+     * @return freshly generated chunk
+     */
     public ChunkAdapter generate(int x, int z, boolean syncPopulation) {
         // Check if we can build up the generator
         if (!this.isGeneratorBuilt) {
@@ -1201,7 +1209,7 @@ public abstract class WorldAdapter implements World {
         }
 
         if (this.chunkGenerator != null) {
-            LOGGER.info("Generating chunk {} / {}", x, z);
+            LOGGER.debug("Generating chunk {} / {}", x, z);
 
             ChunkAdapter chunk = (ChunkAdapter) this.chunkGenerator.generate(x, z);
             if (chunk != null) {

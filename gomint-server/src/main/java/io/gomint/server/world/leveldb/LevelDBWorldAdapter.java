@@ -32,6 +32,8 @@ import io.gomint.world.generator.integrated.LayeredGenerator;
 import io.gomint.world.generator.integrated.NormalGenerator;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.PooledByteBufAllocator;
+import org.iq80.leveldb.impl.Iq80DBFactory;
+import org.iq80.leveldb.table.BloomFilterPolicy;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -75,17 +77,17 @@ public class LevelDBWorldAdapter extends WorldAdapter {
     private Class<? extends ChunkGenerator> generatorClass;
     private GeneratorContext generatorContext;
 
-    private LevelDBWorldAdapter( final GoMintServer server, final String name, final Class<? extends ChunkGenerator> generator ) throws WorldCreateException {
-        super( server, new File( name ), name );
-        this.chunkCache = new ChunkCache( this );
+    private LevelDBWorldAdapter(final GoMintServer server, final String name, final Class<? extends ChunkGenerator> generator) throws WorldCreateException {
+        super(server, new File(name), name);
+        this.chunkCache = new ChunkCache(this);
 
         // Build up generator
         GeneratorContext context = new GeneratorContext();
-        this.constructGenerator( generator, context );
+        this.constructGenerator(generator, context);
 
         // Generate a spawnpoint
         BlockPosition spawnPoint = this.chunkGenerator.getSpawnPoint();
-        this.spawn = new Location( this, spawnPoint.getX(), spawnPoint.getY(), spawnPoint.getZ() );
+        this.spawn = new Location(this, spawnPoint.getX(), spawnPoint.getY(), spawnPoint.getZ());
 
         // Take over level name
         this.levelName = name;
@@ -93,14 +95,14 @@ public class LevelDBWorldAdapter extends WorldAdapter {
         // We need a level.dat
         try {
             this.saveLevelDat();
-        } catch ( IOException e ) {
-            throw new WorldCreateException( "level.dat for world '" + name + "' could not be saved", e );
+        } catch (IOException e) {
+            throw new WorldCreateException("level.dat for world '" + name + "' could not be saved", e);
         }
 
         try {
             this.open();
-        } catch ( WorldLoadException e ) {
-            throw new WorldCreateException( "Could not open/load world", e );
+        } catch (WorldLoadException e) {
+            throw new WorldCreateException("Could not open/load world", e);
         }
     }
 
@@ -109,17 +111,18 @@ public class LevelDBWorldAdapter extends WorldAdapter {
      *
      * @param server   which has requested to load this world
      * @param worldDir the folder where the world should be in
+     * @param name     of this world
      * @throws WorldLoadException Thrown in case the world could not be loaded successfully
      */
-    LevelDBWorldAdapter( GoMintServer server, File worldDir, String name ) throws WorldLoadException {
-        super( server, worldDir, name );
-        this.chunkCache = new ChunkCache( this );
+    LevelDBWorldAdapter(GoMintServer server, File worldDir, String name) throws WorldLoadException {
+        super(server, worldDir, name);
+        this.chunkCache = new ChunkCache(this);
 
         this.loadLevelDat();
 
         // We only support storage version 3 and up (MC:PE >= 1.0)
-        if ( this.worldVersion < 8 ) {
-            throw new WorldLoadException( "Version of the world is too old. Please update your MC:PE and import this world. After that you can use the exported version again." );
+        if (this.worldVersion < 8) {
+            throw new WorldLoadException("Version of the world is too old. Please update your MC:PE and import this world. After that you can use the exported version again.");
         }
 
         this.open();
@@ -149,73 +152,73 @@ public class LevelDBWorldAdapter extends WorldAdapter {
      * @return new world
      * @throws WorldCreateException when there already is a world or a error during creating occured
      */
-    public static LevelDBWorldAdapter create( GoMintServer server, String name, Class<? extends ChunkGenerator> generator ) throws WorldCreateException {
-        File worldFolder = new File( name );
-        if ( worldFolder.exists() ) {
-            throw new WorldCreateException( "Folder with name '" + name + "' already exists" );
+    public static LevelDBWorldAdapter create(GoMintServer server, String name, Class<? extends ChunkGenerator> generator) throws WorldCreateException {
+        File worldFolder = new File(name);
+        if (worldFolder.exists()) {
+            throw new WorldCreateException("Folder with name '" + name + "' already exists");
         }
 
-        if ( !worldFolder.mkdir() ) {
-            throw new WorldCreateException( "World '" + name + "' could not be created. Folder could not be created" );
+        if (!worldFolder.mkdir()) {
+            throw new WorldCreateException("World '" + name + "' could not be created. Folder could not be created");
         }
 
-        File regionFolder = new File( worldFolder, "db" );
-        if ( !regionFolder.mkdir() ) {
-            throw new WorldCreateException( "World '" + name + "' could not be created. Folder could not be created" );
+        File regionFolder = new File(worldFolder, "db");
+        if (!regionFolder.mkdir()) {
+            throw new WorldCreateException("World '" + name + "' could not be created. Folder could not be created");
         }
 
-        return new LevelDBWorldAdapter( server, name, generator );
+        return new LevelDBWorldAdapter(server, name, generator);
     }
 
     private void saveLevelDat() throws IOException {
-        File levelDat = new File( this.worldDir, "level.dat" );
-        if ( levelDat.exists() ) {
+        File levelDat = new File(this.worldDir, "level.dat");
+        if (levelDat.exists()) {
             // Backup old level.dat
-            Files.copy( levelDat, new File( this.worldDir, "level.dat.bak" ) );
+            Files.copy(levelDat, new File(this.worldDir, "level.dat.bak"));
 
             // Delete the old one
             levelDat.delete();
         }
 
         //
-        NBTTagCompound compound = new NBTTagCompound( "" );
+        NBTTagCompound compound = new NBTTagCompound("");
 
         // Add version number
-        compound.addValue( "StorageVersion", 8 );
+        compound.addValue("StorageVersion", 8);
 
         // Spawn
-        compound.addValue( "SpawnX", (int) this.spawn.getX() );
-        compound.addValue( "SpawnY", (int) this.spawn.getY() );
-        compound.addValue( "SpawnZ", (int) this.spawn.getZ() );
-        compound.addValue( "Difficulty", this.difficulty.getDifficultyDegree() );
+        compound.addValue("SpawnX", (int) this.spawn.getX());
+        compound.addValue("SpawnY", (int) this.spawn.getY());
+        compound.addValue("SpawnZ", (int) this.spawn.getZ());
+        compound.addValue("Difficulty", this.difficulty.getDifficultyDegree());
 
         // Level name
-        compound.addValue( "LevelName", this.levelName );
+        compound.addValue("LevelName", this.levelName);
 
         // Save generator
-        this.saveGenerator( compound );
+        this.saveGenerator(compound);
 
         // Save level.dat
-        try ( FileOutputStream stream = new FileOutputStream( levelDat ) ) {
-            stream.write( new byte[8] );
+        try (FileOutputStream stream = new FileOutputStream(levelDat)) {
+            stream.write(new byte[8]);
 
             ByteBuf data = PooledByteBufAllocator.DEFAULT.heapBuffer();
-            compound.writeTo( data, ByteOrder.LITTLE_ENDIAN );
+            compound.writeTo(data, ByteOrder.LITTLE_ENDIAN);
             stream.write(data.array(), data.arrayOffset(), data.readableBytes());
             data.release();
         }
     }
 
-    private void saveGenerator( NBTTagCompound compound ) {
-        if ( this.chunkGenerator instanceof NormalGenerator ) {
-            compound.addValue( "Generator", 1 );
-            compound.addValue( "RandomSeed", (long) this.chunkGenerator.getContext().get( "seed" ) );
-        } else if ( this.chunkGenerator instanceof LayeredGenerator ) {
-            compound.addValue( "Generator", 2 );
+    private void saveGenerator(NBTTagCompound compound) {
+        if (this.chunkGenerator instanceof NormalGenerator) {
+            compound.addValue("Generator", 1);
+            compound.addValue("RandomSeed", (long) this.chunkGenerator.getContext().get("seed"));
+        } else if (this.chunkGenerator instanceof LayeredGenerator) {
+            compound.addValue("Generator", 2);
         } else {
-            compound.addValue( "Generator", -1 );
-            compound.addValue( "GeneratorClass", this.chunkGenerator.getClass().getName() );
-            compound.addValue( "GeneratorContext", this.chunkGenerator.getContext().toString() );
+            compound.addValue("Generator", -1);
+            compound.addValue("GeneratorClass", this.chunkGenerator.getClass().getName());
+            compound.addValue("GeneratorContext", this.chunkGenerator.getContext().toString());
         }
     }
 
@@ -229,38 +232,38 @@ public class LevelDBWorldAdapter extends WorldAdapter {
      * @return The leveldb world adapter used to access the world
      * @throws WorldLoadException Thrown in case the world could not be loaded successfully
      */
-    public static LevelDBWorldAdapter load( GoMintServer server, File pathToWorld ) throws WorldLoadException {
-        return new LevelDBWorldAdapter( server, pathToWorld, pathToWorld.getName() );
+    public static LevelDBWorldAdapter load(GoMintServer server, File pathToWorld) throws WorldLoadException {
+        return new LevelDBWorldAdapter(server, pathToWorld, pathToWorld.getName());
     }
 
     @Override
-    public void setSpawnLocation( Location location ) {
-        super.setSpawnLocation( location );
+    public void setSpawnLocation(Location location) {
+        super.setSpawnLocation(location);
         this.sneakySaveLevelDat();
     }
 
     @Override
-    public void setDifficulty( Difficulty difficulty ) {
-        super.setDifficulty( difficulty );
+    public void setDifficulty(Difficulty difficulty) {
+        super.setDifficulty(difficulty);
         this.sneakySaveLevelDat();
     }
 
     @Override
     protected void prepareGenerator() {
-        if ( this.generatorType == -1 ) { // Custom generators
+        if (this.generatorType == -1) { // Custom generators
             try {
-                constructGenerator( this.generatorClass, this.generatorContext );
-            } catch ( WorldCreateException e ) {
-                this.getLogger().error( "Could not reconstruct generator class", e );
+                constructGenerator(this.generatorClass, this.generatorContext);
+            } catch (WorldCreateException e) {
+                this.getLogger().error("Could not reconstruct generator class", e);
             }
         } else {
-            Generators generators = Generators.valueOf( this.generatorType );
-            if ( generators != null ) {
-                switch ( generators ) {
+            Generators generators = Generators.valueOf(this.generatorType);
+            if (generators != null) {
+                switch (generators) {
                     case NORMAL:
                         GeneratorContext context = new GeneratorContext();
-                        context.put( "seed", this.generatorSeed );
-                        this.chunkGenerator = new NormalGenerator( this, context );
+                        context.put("seed", this.generatorSeed);
+                        this.chunkGenerator = new NormalGenerator(this, context);
                         break;
 
                     case FLAT:
@@ -271,19 +274,19 @@ public class LevelDBWorldAdapter extends WorldAdapter {
                         try {
                             List<Block> blocks = new ArrayList<>();
 
-                            JSONObject jsonObject = (JSONObject) parser.parse( this.generatorOptions );
-                            if ( jsonObject != null && jsonObject.containsKey( "block_layers" ) ) {
-                                JSONArray blockLayers = (JSONArray) jsonObject.get( "block_layers" );
-                                for ( Object layer : blockLayers ) {
+                            JSONObject jsonObject = (JSONObject) parser.parse(this.generatorOptions);
+                            if (jsonObject != null && jsonObject.containsKey("block_layers")) {
+                                JSONArray blockLayers = (JSONArray) jsonObject.get("block_layers");
+                                for (Object layer : blockLayers) {
                                     JSONObject layerConfig = (JSONObject) layer;
                                     int count = 1;
-                                    if ( layerConfig.containsKey( "count" ) ) {
-                                        count = ( (Long) layerConfig.get( "count" ) ).intValue();
+                                    if (layerConfig.containsKey("count")) {
+                                        count = ((Long) layerConfig.get("count")).intValue();
                                     }
 
                                     // TODO: look at new format of the flat layers
-                                    int blockId = ( (Long) layerConfig.get( "block_id" ) ).intValue();
-                                    byte blockData = ( (Long) layerConfig.get( "block_data" ) ).byteValue();
+                                    int blockId = ((Long) layerConfig.get("block_id")).intValue();
+                                    byte blockData = ((Long) layerConfig.get("block_data")).byteValue();
 
                                 /*Block block = this.server.getBlocks().get( blockId, blockData, (byte) 0, (byte) 0, null, null, 0 );
                                 for ( int i = 0; i < count; i++ ) {
@@ -292,17 +295,17 @@ public class LevelDBWorldAdapter extends WorldAdapter {
                                 }
                             }
 
-                            context.put( "amountOfLayers", blocks.size() );
+                            context.put("amountOfLayers", blocks.size());
                             int i = 0;
-                            for ( Block block : blocks ) {
-                                context.put( "layer." + ( i++ ), block );
+                            for (Block block : blocks) {
+                                context.put("layer." + (i++), block);
                             }
-                        } catch ( ParseException e ) {
+                        } catch (ParseException e) {
                             // Ignore this, if this happens the context is empty and the generator will fallback to default
                             // behaviour
                         }
 
-                        this.chunkGenerator = new LayeredGenerator( this, context );
+                        this.chunkGenerator = new LayeredGenerator(this, context);
                         break;
                 }
             }
@@ -320,38 +323,38 @@ public class LevelDBWorldAdapter extends WorldAdapter {
     }
 
     private void loadLevelDat() throws WorldLoadException {
-        File levelDat = new File( this.worldDir, "level.dat" );
-        if ( !levelDat.exists() || !levelDat.isFile() ) {
-            throw new WorldLoadException( "Missing level.dat" );
+        File levelDat = new File(this.worldDir, "level.dat");
+        if (!levelDat.exists() || !levelDat.isFile()) {
+            throw new WorldLoadException("Missing level.dat");
         }
 
         // Default the settings
         this.levelName = "";
-        this.spawn = new Location( this, 0, 0, 0 );
+        this.spawn = new Location(this, 0, 0, 0);
         this.worldVersion = 0;
 
-        try ( FileInputStream stream = new FileInputStream( levelDat ) ) {
+        try (FileInputStream stream = new FileInputStream(levelDat)) {
             // Skip some data. For example the amount of bytes of this NBT Tag
-            stream.skip( 8 );
+            stream.skip(8);
 
             byte[] data = stream.readAllBytes();
             ByteBuf buf = Allocator.allocate(data);
 
-            NBTStream nbtStream = new NBTStream( buf, ByteOrder.LITTLE_ENDIAN );
-            nbtStream.addListener( ( path, value ) -> {
+            NBTStream nbtStream = new NBTStream(buf, ByteOrder.LITTLE_ENDIAN);
+            nbtStream.addListener((path, value) -> {
                 LOGGER.info("LevelDAT: {} -> {}", path, value);
 
-                switch ( path ) {
+                switch (path) {
                     case ".GeneratorClass":
-                        LevelDBWorldAdapter.this.generatorClass = (Class<? extends ChunkGenerator>) PluginClassloader.find( (String) value );
+                        LevelDBWorldAdapter.this.generatorClass = (Class<? extends ChunkGenerator>) PluginClassloader.find((String) value);
                         break;
                     case ".GeneratorContext":
                         LevelDBWorldAdapter.this.generatorContext = new GeneratorContext();
 
                         String jsonContext = (String) value;
                         JSONParser parser = new JSONParser();
-                        JSONObject jsonObject = (JSONObject) parser.parse( jsonContext );
-                        jsonObject.forEach( ( o, o2 ) -> LevelDBWorldAdapter.this.generatorContext.put( (String) o, o2 ) );
+                        JSONObject jsonObject = (JSONObject) parser.parse(jsonContext);
+                        jsonObject.forEach((o, o2) -> LevelDBWorldAdapter.this.generatorContext.put((String) o, o2));
 
                         break;
                     case ".RandomSeed":
@@ -367,36 +370,36 @@ public class LevelDBWorldAdapter extends WorldAdapter {
                         LevelDBWorldAdapter.this.levelName = (String) value;
                         break;
                     case ".SpawnX":
-                        LevelDBWorldAdapter.this.spawn.setX( (int) value );
+                        LevelDBWorldAdapter.this.spawn.setX((int) value);
                         break;
                     case ".SpawnY":
-                        LevelDBWorldAdapter.this.spawn.setY( (int) value );
+                        LevelDBWorldAdapter.this.spawn.setY((int) value);
                         break;
                     case ".SpawnZ":
-                        LevelDBWorldAdapter.this.spawn.setZ( (int) value );
+                        LevelDBWorldAdapter.this.spawn.setZ((int) value);
                         break;
                     case ".StorageVersion":
                         LevelDBWorldAdapter.this.worldVersion = (int) value;
                         break;
                     case ".Difficulty":
-                        LevelDBWorldAdapter.this.difficulty = Difficulty.valueOf( (int) value );
+                        LevelDBWorldAdapter.this.difficulty = Difficulty.valueOf((int) value);
                         break;
                     default:
                         break;
                 }
-            } );
+            });
 
             // CHECKSTYLE:OFF
             try {
                 nbtStream.parse();
-            } catch ( Exception e ) {
-                throw new WorldLoadException( "Could not load level.dat NBT: " + e.getMessage() );
+            } catch (Exception e) {
+                throw new WorldLoadException("Could not load level.dat NBT: " + e.getMessage());
             }
             // CHECKSTYLE:ON
 
             buf.release();
-        } catch ( IOException e ) {
-            throw new WorldLoadException( "Failed to load leveldb world: " + e.getMessage() );
+        } catch (IOException e) {
+            throw new WorldLoadException("Failed to load leveldb world: " + e.getMessage());
         }
     }
 
@@ -429,21 +432,21 @@ public class LevelDBWorldAdapter extends WorldAdapter {
             byte v = version[0];
             boolean populated = finalized == null || finalized[0] == 2;
 
-            LevelDBChunkAdapter loadingChunk = new LevelDBChunkAdapter( this, x, z, v, populated );
+            LevelDBChunkAdapter loadingChunk = new LevelDBChunkAdapter(this, x, z, v, populated);
 
-            for ( int sectionY = 0; sectionY < 16; sectionY++ ) {
+            for (int sectionY = 0; sectionY < 16; sectionY++) {
                 try {
                     ByteBuf chunkKey = this.getKeySubChunk( x, z, (byte) 0x2f, (byte) sectionY );
                     byte[] chunkData = this.db.get( snapshot, chunkKey );
                     chunkKey.release();
 
-                    if ( chunkData != null ) {
-                        loadingChunk.loadSection( sectionY, chunkData );
+                    if (chunkData != null) {
+                        loadingChunk.loadSection(sectionY, chunkData);
                     } else {
                         break;
                     }
-                } catch ( Exception e ) {
-                    this.logger.warn( "Could not load subchunk", e );
+                } catch (Exception e) {
+                    this.logger.warn("Could not load subchunk", e);
                 }
             }
 
@@ -452,11 +455,11 @@ public class LevelDBWorldAdapter extends WorldAdapter {
                 byte[] tileEntityData = this.db.get( snapshot, tileEntityKey );
                 tileEntityKey.release();
 
-                if ( tileEntityData != null ) {
-                    loadingChunk.loadTileEntities( tileEntityData );
+                if (tileEntityData != null) {
+                    loadingChunk.loadTileEntities(tileEntityData);
                 }
-            } catch ( Exception e ) {
-                this.logger.warn( "Could not load tiles", e );
+            } catch (Exception e) {
+                this.logger.warn("Could not load tiles", e);
             }
 
             try {
@@ -464,11 +467,11 @@ public class LevelDBWorldAdapter extends WorldAdapter {
                 byte[] entityData = this.db.get( snapshot, entityKey );
                 entityKey.release();
 
-                if ( entityData != null ) {
-                    loadingChunk.loadEntities( entityData );
+                if (entityData != null) {
+                    loadingChunk.loadEntities(entityData);
                 }
-            } catch ( Exception e ) {
-                this.logger.warn( "Could not load entities", e );
+            } catch (Exception e) {
+                this.logger.warn("Could not load entities", e);
             }
 
             /*byte[] extraData = null;
@@ -484,17 +487,17 @@ public class LevelDBWorldAdapter extends WorldAdapter {
             }*/
 
             // Register entities
-            this.registerEntitiesFromChunk( loadingChunk );
+            this.registerEntitiesFromChunk(loadingChunk);
 
             // Give it into the chunk cache before we populate
-            if ( !this.chunkCache.putChunk( loadingChunk ) ) {
+            if (!this.chunkCache.putChunk(loadingChunk)) {
                 loadingChunk.release();
                 return this.chunkCache.getChunk(x, z);
             }
 
             // Do some work on the chunk if needed (like population)
-            if ( !populated ) {
-                this.addPopulateTask( loadingChunk );
+            if (!populated) {
+                this.addPopulateTask(loadingChunk);
             }
 
             snapshot.close();
@@ -505,39 +508,39 @@ public class LevelDBWorldAdapter extends WorldAdapter {
     }
 
     @Override
-    protected void saveChunk( ChunkAdapter chunk ) {
-        if ( chunk == null ) {
+    protected void saveChunk(ChunkAdapter chunk) {
+        if (chunk == null) {
             return;
         }
 
         LevelDBChunkAdapter adapter = (LevelDBChunkAdapter) chunk;
-        adapter.save( this.db );
+        adapter.save(this.db);
     }
 
     @Override
     protected void closeFDs() {
         try {
             this.db.close();
-        } catch ( Exception e ) {
-            this.logger.error( "Could not close leveldb", e );
+        } catch (Exception e) {
+            this.logger.error("Could not close leveldb", e);
         }
     }
 
     @Override
-    public boolean persistPlayer( EntityPlayer player ) {
+    public boolean persistPlayer(EntityPlayer player) {
         return false;
     }
 
     @Override
-    public Chunk generateEmptyChunk( int x, int z ) {
-        return new LevelDBChunkAdapter( this, x, z );
+    public Chunk generateEmptyChunk(int x, int z) {
+        return new LevelDBChunkAdapter(this, x, z);
     }
 
     protected final void sneakySaveLevelDat() {
         try {
             this.saveLevelDat();
-        } catch ( IOException cause ) {
-            this.logger.error( "level.dat for world '{}' could not be saved: ", this.levelName, cause );
+        } catch (IOException cause) {
+            this.logger.error("level.dat for world '{}' could not be saved: ", this.levelName, cause);
         }
     }
 
