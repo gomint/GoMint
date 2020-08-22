@@ -8,12 +8,9 @@
 package io.gomint.server.world.leveldb;
 
 import io.gomint.jraknet.PacketBuffer;
-import io.gomint.leveldb.DB;
-import io.gomint.leveldb.WriteBatch;
 import io.gomint.math.MathUtils;
 import io.gomint.server.entity.Entity;
 import io.gomint.server.entity.tileentity.SerializationReason;
-import io.gomint.server.entity.tileentity.TileEntities;
 import io.gomint.server.entity.tileentity.TileEntity;
 import io.gomint.server.util.Allocator;
 import io.gomint.server.util.BlockIdentifier;
@@ -38,6 +35,8 @@ import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
 import it.unimi.dsi.fastutil.longs.LongArrayList;
 import it.unimi.dsi.fastutil.longs.LongList;
+import org.iq80.leveldb.DB;
+import org.iq80.leveldb.WriteBatch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -80,7 +79,7 @@ public class LevelDBChunkAdapter extends ChunkAdapter {
     }
 
     void save( DB db ) {
-        WriteBatch writeBatch = new WriteBatch();
+        WriteBatch writeBatch = db.createWriteBatch();
 
         // We do blocks first
         for ( int i = 0; i < this.chunkSlices.length; i++ ) {
@@ -92,16 +91,16 @@ public class LevelDBChunkAdapter extends ChunkAdapter {
         }
 
         // Save metadata
-        ByteBuf key = ( (LevelDBWorldAdapter) this.world ).getKey( this.x, this.z, (byte) 0x76 );
-        ByteBuf val = Allocator.allocate( new byte[]{ (byte) this.chunkVersion } );
+        byte[] key = ( (LevelDBWorldAdapter) this.world ).getKey( this.x, this.z, (byte) 0x76 );
+        byte[] val = new byte[]{ (byte) this.chunkVersion };
         writeBatch.put( key, val );
 
         key = ( (LevelDBWorldAdapter) this.world ).getKey( this.x, this.z, (byte) 0x36 );
-        val = Allocator.allocate( isPopulated() ? new byte[]{ 2, 0, 0, 0 } : new byte[]{ 0, 0, 0, 0 } );
+        val = isPopulated() ? new byte[]{ 2, 0, 0, 0 } : new byte[]{ 0, 0, 0, 0 };
         writeBatch.put( key, val );
 
         // Save tiles
-        ByteBuf out = PooledByteBufAllocator.DEFAULT.directBuffer();
+        ByteBuf out = PooledByteBufAllocator.DEFAULT.heapBuffer();
         NBTWriter nbtWriter = new NBTWriter( out, ByteOrder.LITTLE_ENDIAN );
         for ( TileEntity tileEntity : this.getTileEntities() ) {
             NBTTagCompound compound = new NBTTagCompound( "" );
@@ -116,17 +115,22 @@ public class LevelDBChunkAdapter extends ChunkAdapter {
 
         if ( out.readableBytes() > 0 ) {
             key = ( (LevelDBWorldAdapter) this.world ).getKey( this.x, this.z, (byte) 0x31 );
-            writeBatch.put( key, out );
+            writeBatch.put( key, out.array() );
         }
 
         db.write( writeBatch );
-        writeBatch.clear();
-        writeBatch.close();
+        out.release();
+
+        try {
+            writeBatch.close();
+        } catch (IOException e) {
+            LOGGER.warn("Could not close write batch", e);
+        }
     }
 
     private void saveChunkSlice( int i, WriteBatch writeBatch ) {
         ChunkSlice slice = this.chunkSlices[i];
-        PacketBuffer buffer = new PacketBuffer( 16 );
+        ByteBuf buffer = PooledByteBufAllocator.DEFAULT.heapBuffer();
 
         buffer.writeByte( (byte) 8 );
         buffer.writeByte( (byte) slice.getAmountOfLayers() );
@@ -137,35 +141,29 @@ public class LevelDBChunkAdapter extends ChunkAdapter {
             // Count how many unique blocks we have in this chunk
             int[] indexIDs = new int[4096];
 
-            LongList indexList = new LongArrayList();
+            IntList indexList = new IntArrayList();
             IntList runtimeIndex = new IntArrayList();
             Int2ObjectMap<BlockIdentifier> block = new Int2ObjectOpenHashMap<>();
 
             int foundIndex = 0;
 
-            String lastBlockId = "";
-            short lastDataId = -1;
-
+            int lastBlockId = -1;
             int runtimeIdCounter = 0;
 
             for ( short blockIndex = 0; blockIndex < indexIDs.length; blockIndex++ ) {
-                String blockId = blocks.get( blockIndex ).getBlockId();
-                short blockData = 0; // blocks.get( blockIndex ).getData();
+                int blockId = blocks.get( blockIndex ).getRuntimeId();
 
-                if ( !blockId.equals( lastBlockId ) || blockData != lastDataId ) {
-                    long hashId = ( (long) blockId.hashCode() ) << 32 | ( blockData & 0xFF );
-
-                    foundIndex = indexList.indexOf( hashId );
+                if ( lastBlockId != blockId ) {
+                    foundIndex = indexList.indexOf( blockId );
                     if ( foundIndex == -1 ) {
                         int runtimeId = runtimeIdCounter++;
                         block.put( runtimeId, blocks.get( blockIndex ) );
                         runtimeIndex.add( runtimeId );
-                        indexList.add( hashId );
+                        indexList.add( blockId );
                         foundIndex = indexList.size() - 1;
                     }
 
                     lastBlockId = blockId;
-                    lastDataId = blockData;
                 }
 
                 indexIDs[blockIndex] = foundIndex;
@@ -178,7 +176,7 @@ public class LevelDBChunkAdapter extends ChunkAdapter {
             // Prepare palette
             int amountOfBlocks = MathUtils.fastFloor( 32f / (float) numberOfBits );
 
-            Palette palette = new Palette( buffer.getBuffer(), amountOfBlocks, false );
+            Palette palette = new Palette( buffer, amountOfBlocks, false );
 
             byte paletteWord = (byte) ( (byte) ( palette.getPaletteVersion().getVersionId() << 1 ) | 1 );
             buffer.writeByte( paletteWord );
@@ -186,7 +184,7 @@ public class LevelDBChunkAdapter extends ChunkAdapter {
             palette.finish();
 
             // Write persistent ids
-            buffer.writeLInt( indexList.size() );
+            buffer.writeIntLE( indexList.size() );
             for ( int value1 : runtimeIndex.toArray( new int[0] ) ) {
                 BlockIdentifier blockIdentifier = block.get( value1 );
 
@@ -196,21 +194,21 @@ public class LevelDBChunkAdapter extends ChunkAdapter {
                 compound.addValue("version", BLOCK_VERSION);
 
                 try {
-                    compound.writeTo( buffer.getBuffer(), ByteOrder.LITTLE_ENDIAN );
+                    compound.writeTo( buffer, ByteOrder.LITTLE_ENDIAN );
                 } catch ( IOException e ) {
                     e.printStackTrace();
                 }
             }
         }
 
-        ByteBuf key = ( (LevelDBWorldAdapter) this.world ).getKeySubChunk( this.x, this.z, (byte) 0x2f, (byte) i );
-        buffer.setReadPosition(0);
-        writeBatch.put( key, buffer.getBuffer() );
+        byte[] key = ( (LevelDBWorldAdapter) this.world ).getKeySubChunk( this.x, this.z, (byte) 0x2f, (byte) i );
+        buffer.readerIndex(0);
+        writeBatch.put( key, buffer.array() );
+        buffer.release();
     }
 
     void loadSection( int sectionY, byte[] chunkData ) {
-        ByteBuf buf = Allocator.allocate(chunkData);
-        PacketBuffer buffer = new PacketBuffer( buf );
+        ByteBuf buffer = Allocator.allocate(chunkData);
 
         // First byte is chunk section version
         byte subchunkVersion = buffer.readByte();
@@ -224,15 +222,15 @@ public class LevelDBChunkAdapter extends ChunkAdapter {
                     boolean isPersistent = ( ( data >> 8 ) & 1 ) != 1; // last bit is the isPresent state (shift and mask it to 1)
                     byte wordTemplate = (byte) ( data >>> 1 ); // Get rid of the last bit (which seems to be the isPresent state)
 
-                    Palette palette = new Palette( buffer.getBuffer(), wordTemplate, true );
+                    Palette palette = new Palette( buffer, wordTemplate, true );
                     short[] indexes = palette.getIndexes();
 
                     // Read NBT data
-                    int needed = buffer.readLInt();
+                    int needed = buffer.readIntLE();
                     Int2IntMap chunkPalette = new Int2IntOpenHashMap( needed ); // Varint my ass
 
                     int index = 0;
-                    NBTReader reader = new NBTReader( buffer.getBuffer(), ByteOrder.LITTLE_ENDIAN );
+                    NBTReader reader = new NBTReader( buffer, ByteOrder.LITTLE_ENDIAN );
                     while ( index < needed ) {
                         try {
                             NBTTagCompound compound = reader.parse();
@@ -272,7 +270,6 @@ public class LevelDBChunkAdapter extends ChunkAdapter {
         }
 
         buffer.release();
-        buf.release();
     }
 
     void loadTileEntities( byte[] tileEntityData ) {
