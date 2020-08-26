@@ -3,6 +3,7 @@ package io.gomint;
 /**
  * @author geNAZt
  * @version 1.0
+ * @stability 3
  *
  * This is the only class in the API which is not part of the public API. We need it to get the server implementation
  * linked for the API.

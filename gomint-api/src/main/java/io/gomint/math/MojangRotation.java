@@ -5,6 +5,7 @@ import io.gomint.entity.Entity;
 /**
  * @author geNAZt
  * @version 1.0
+ * @stability 3
  * <p>
  * Mojang rotations are stored in 16 different stages. A byte holds the correct value and can be multiplied with
  * 22.5f to get the correct amount of degrees

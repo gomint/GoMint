@@ -6,6 +6,7 @@ import io.gomint.inventory.item.data.DyeType;
 /**
  * @author geNAZt
  * @version 1.0
+ * @stability 3
  */
 public interface ItemDye extends ItemStack {
 

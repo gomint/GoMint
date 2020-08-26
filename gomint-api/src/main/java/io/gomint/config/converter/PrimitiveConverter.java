@@ -16,6 +16,7 @@ import java.util.HashSet;
 /**
  * @author geNAZt
  * @version 1.0
+ * @stability 3
  */
 public class PrimitiveConverter implements Converter {
 

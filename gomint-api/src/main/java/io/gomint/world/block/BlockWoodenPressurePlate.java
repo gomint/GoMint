@@ -12,6 +12,7 @@ import io.gomint.world.block.data.LogType;
 /**
  * @author geNAZt
  * @version 1.0
+ * @stability 2
  */
 public interface BlockWoodenPressurePlate extends Block {
 

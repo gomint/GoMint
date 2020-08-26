@@ -5,6 +5,7 @@ import io.gomint.GoMint;
 /**
  * @author KCodeYT
  * @version 1.0
+ * @stability 1
  */
 public interface ItemLog2 extends ItemStack, ItemBurnable {
 

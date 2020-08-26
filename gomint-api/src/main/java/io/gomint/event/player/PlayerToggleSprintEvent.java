@@ -5,6 +5,7 @@ import io.gomint.entity.EntityPlayer;
 /**
  * @author LucGamesHD
  * @version 1.0
+ * @stability 3
  */
 public class PlayerToggleSprintEvent extends CancellablePlayerEvent {
 

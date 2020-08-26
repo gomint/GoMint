@@ -12,6 +12,7 @@ import io.gomint.world.block.data.StoneType;
 /**
  * @author geNAZt
  * @version 1.0
+ * @stability 3
  */
 public interface BlockStoneSlab extends BlockSlab {
 

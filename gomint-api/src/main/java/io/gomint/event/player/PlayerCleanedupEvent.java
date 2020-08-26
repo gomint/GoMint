@@ -12,6 +12,7 @@ import io.gomint.entity.EntityPlayer;
 /**
  * @author geNAZt
  * @version 1.0
+ * @stability 3
  *
  * This event gets called once the entity has been cleaned up and despawned. There is NO data left in the server except
  * the object copy in this event.

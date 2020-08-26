@@ -12,6 +12,7 @@ import io.gomint.math.BlockPosition;
 /**
  * @author geNAZt
  * @version 1.0
+ * @stability 3
  */
 public interface BlockDragonEgg extends Block {
 

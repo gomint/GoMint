@@ -10,6 +10,7 @@ package io.gomint.plugin;
 /**
  * @author BlackyPaw
  * @version 1.0
+ * @stability 3
  */
 public class PluginVersion implements Comparable<PluginVersion> {
 
@@ -32,6 +33,7 @@ public class PluginVersion implements Comparable<PluginVersion> {
         this.minor = minor;
     }
 
+    @Override
     public int compareTo(PluginVersion other) {
         int diff = this.major - other.major;
         if (diff != 0) {

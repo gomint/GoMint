@@ -5,6 +5,7 @@ import io.gomint.entity.EntityPlayer;
 /**
  * @author geNAZt
  * @version 1.0
+ * @stability 3
  *
  * This event is fired when the server decides to disconnect a player.
  */

@@ -7,6 +7,11 @@
 
 package io.gomint.i18n.localization;
 
+/**
+ * @author geNAZt
+ * @version 1.0
+ * @stability 3
+ */
 public class ResourceNotLoadedException extends Exception {
     /**
      * Constructs a new ResourceNotLoadedException based on the given Exception

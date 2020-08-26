@@ -6,6 +6,8 @@ import io.gomint.gui.element.StepSlider;
 
 /**
  * @author geNAZt
+ * @version 1.0
+ * @stability 3
  */
 public interface CustomForm extends Form<FormResponse> {
 

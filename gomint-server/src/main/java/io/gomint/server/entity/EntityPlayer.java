@@ -13,7 +13,7 @@ import io.gomint.command.CommandOutput;
 import io.gomint.command.PlayerCommandSender;
 import io.gomint.enchant.EnchantmentKnockback;
 import io.gomint.enchant.EnchantmentSharpness;
-import io.gomint.entity.ChatType;
+import io.gomint.player.ChatType;
 import io.gomint.entity.Entity;
 import io.gomint.entity.potion.PotionEffect;
 import io.gomint.event.entity.EntityDamageByEntityEvent;

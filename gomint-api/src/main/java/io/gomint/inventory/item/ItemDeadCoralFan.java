@@ -12,6 +12,7 @@ import io.gomint.GoMint;
 /**
  * @author Kaooot
  * @version 1.0
+ * @stability 1
  */
 public interface ItemDeadCoralFan extends ItemStack {
 

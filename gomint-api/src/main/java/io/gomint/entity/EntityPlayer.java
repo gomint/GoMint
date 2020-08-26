@@ -15,6 +15,7 @@ import io.gomint.inventory.Inventory;
 import io.gomint.math.Location;
 import io.gomint.math.Vector;
 import io.gomint.permission.PermissionManager;
+import io.gomint.player.ChatType;
 import io.gomint.player.DeviceInfo;
 import io.gomint.scoreboard.Scoreboard;
 import io.gomint.world.Gamemode;
@@ -30,6 +31,7 @@ import java.util.concurrent.TimeUnit;
  * @author BlackyPaw
  * @author Digot
  * @version 1.0
+ * @stability 3
  */
 public interface EntityPlayer extends EntityHuman {
 

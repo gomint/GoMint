@@ -12,6 +12,7 @@ import io.gomint.inventory.item.ItemStack;
 /**
  * @author geNAZt
  * @version 1.0
+ * @stability 3
  */
 public interface ArmorInventory extends Inventory {
 

@@ -9,6 +9,11 @@ package io.gomint.world.block;
 
 import io.gomint.world.block.data.Axis;
 
+/**
+ * @author geNAZt
+ * @version 1.0
+ * @stability 3
+ */
 public interface BlockAxis {
 
     /**

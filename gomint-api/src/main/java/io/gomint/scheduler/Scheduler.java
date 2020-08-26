@@ -12,6 +12,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * @author BlackyPaw
  * @version 1.0
+ * @stability 3
  */
 public interface Scheduler {
 

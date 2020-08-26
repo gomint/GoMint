@@ -5,6 +5,7 @@ import io.gomint.GoMint;
 /**
  * @author KingAli
  * @version 1.0
+ * @stability 3
  */
 public interface ItemNetheriteHoe extends ItemHoe {
 

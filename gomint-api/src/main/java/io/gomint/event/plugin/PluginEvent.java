@@ -8,6 +8,7 @@ import java.util.Objects;
 /**
  * @author theminecoder
  * @version 1.0
+ * @stability 3
  */
 public class PluginEvent extends Event {
 

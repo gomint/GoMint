@@ -5,6 +5,7 @@ import io.gomint.inventory.item.ItemStack;
 /**
  * @author geNAZt
  * @version 1.0
+ * @stability 2
  */
 public interface PlayerInventory extends Inventory {
 

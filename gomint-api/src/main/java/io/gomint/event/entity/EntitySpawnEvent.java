@@ -12,6 +12,7 @@ import io.gomint.entity.Entity;
 /**
  * @author geNAZt
  * @version 1.0
+ * @stability 3
  */
 public class EntitySpawnEvent extends CancellableEntityEvent {
 

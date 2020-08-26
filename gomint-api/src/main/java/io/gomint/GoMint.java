@@ -31,6 +31,7 @@ import java.util.UUID;
  * @author BlackyPaw
  * @author geNAZt
  * @version 1.0
+ * @stability 3
  */
 public interface GoMint {
 
@@ -227,6 +228,11 @@ public interface GoMint {
      */
     World createWorld( String name, CreateOptions options );
 
+    /**
+     * Get the chunk generator registry
+     *
+     * @return the chunk generator registry
+     */
     ChunkGeneratorRegistry getChunkGeneratorRegistry();
 
     /**

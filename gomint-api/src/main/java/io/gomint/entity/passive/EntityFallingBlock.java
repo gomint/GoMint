@@ -14,6 +14,7 @@ import io.gomint.world.block.Block;
 /**
  * @author geNAZt
  * @version 1.0
+ * @stability 3
  */
 public interface EntityFallingBlock extends Entity {
 

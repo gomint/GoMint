@@ -7,6 +7,7 @@ import java.util.Objects;
 /**
  * @author geNAZt
  * @version 1.0
+ * @stability 3
  *
  * This event gets fired after the inital login stage has been completed and the player is ready to be added to the world
  * to be sent to other players (become visible). If you cancel this event the player will never be spawned but it has loaded

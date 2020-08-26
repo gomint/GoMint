@@ -11,6 +11,7 @@ package io.gomint.entity.potion;
 /**
  * @author geNAZt
  * @version 1.0
+ * @stability 3
  */
 public enum PotionEffect {
 

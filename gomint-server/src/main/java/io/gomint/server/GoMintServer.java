@@ -353,8 +353,8 @@ public class GoMintServer implements GoMint, InventoryHolder {
                 options.generator(NormalGenerator.class);
 
                 // Log chunk generator failure
-                LOGGER.warn("No such chunk generator for '" + worldConfig.getChunkGenerator()
-                    + "' - Using " + NormalGenerator.class.getName());
+                LOGGER.warn("No such chunk generator for '{}' - Using {}",
+                    worldConfig.getChunkGenerator(),  NormalGenerator.class.getName());
             }
 
             // Try to generate world

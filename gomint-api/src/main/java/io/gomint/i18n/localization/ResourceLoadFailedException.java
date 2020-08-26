@@ -10,6 +10,7 @@ package io.gomint.i18n.localization;
 /**
  * @author geNAZt
  * @version 1.0
+ * @stability 3
  */
 public class ResourceLoadFailedException extends Exception {
 

@@ -13,6 +13,7 @@ package io.gomint.plugin;
  *
  * @author BlackyPaw
  * @version 1.0
+ * @stability 3
  */
 public enum StartupPriority implements Comparable<StartupPriority> {
 

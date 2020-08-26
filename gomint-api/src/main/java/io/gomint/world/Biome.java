@@ -26,6 +26,7 @@ import java.util.*;
 /**
  * @author BlackyPaw
  * @version 1.0
+ * @stability 0
  */
 public enum Biome {
 

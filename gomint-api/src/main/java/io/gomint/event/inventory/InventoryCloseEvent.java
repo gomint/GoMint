@@ -7,6 +7,7 @@ import io.gomint.inventory.Inventory;
 /**
  * @author geNAZt
  * @version 1.0
+ * @stability 3
  */
 public class InventoryCloseEvent extends PlayerEvent {
 

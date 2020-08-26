@@ -13,6 +13,7 @@ import io.gomint.math.Vector;
 /**
  * @author geNAZt
  * @version 1.0
+ * @stability 3
  */
 public class EntityVelocityEvent extends CancellableEntityEvent {
 

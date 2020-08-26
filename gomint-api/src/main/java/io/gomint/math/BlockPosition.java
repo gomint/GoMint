@@ -3,6 +3,7 @@ package io.gomint.math;
 /**
  * @author geNAZt
  * @version 1.0
+ * @stability 3
  */
 public class BlockPosition implements Cloneable {
 

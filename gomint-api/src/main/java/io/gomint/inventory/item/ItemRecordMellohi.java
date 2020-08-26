@@ -12,6 +12,7 @@ import io.gomint.GoMint;
 /**
  * @author geNAZt
  * @version 1.0
+ * @stability 1
  */
 public interface ItemRecordMellohi extends ItemStack {
 

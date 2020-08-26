@@ -17,6 +17,7 @@ import java.util.function.Consumer;
  * @author geNAZt
  * @author BlackyPaw
  * @version 1.0
+ * @stability 3
  */
 public interface Chunk {
 

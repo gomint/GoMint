@@ -1,5 +1,10 @@
 package io.gomint.config.converter;
 
+/**
+ * @author geNAZt
+ * @version 1.0
+ * @stability 3
+ */
 public abstract class BaseConverter implements Converter {
 
     protected final int asInteger( Object object ) {

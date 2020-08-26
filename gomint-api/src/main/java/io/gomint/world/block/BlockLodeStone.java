@@ -10,6 +10,7 @@ package io.gomint.world.block;
 /**
  * @author KingAli
  * @version 1.0
+ * @stability 3
  */
 public interface BlockLodeStone extends Block {
 }

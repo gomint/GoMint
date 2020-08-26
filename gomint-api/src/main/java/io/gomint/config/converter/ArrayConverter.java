@@ -19,6 +19,7 @@ import java.util.List;
  * @author geNAZt
  * @author bibo38
  * @version 1.1
+ * @stability 3
  */
 public class ArrayConverter implements Converter {
 

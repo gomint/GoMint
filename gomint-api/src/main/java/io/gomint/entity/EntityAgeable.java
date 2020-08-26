@@ -3,6 +3,7 @@ package io.gomint.entity;
 /**
  * @author KCodeYT
  * @version 1.0
+ * @stability 3
  */
 public interface EntityAgeable extends EntityLiving {
 

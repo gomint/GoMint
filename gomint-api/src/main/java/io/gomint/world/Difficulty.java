@@ -10,6 +10,7 @@ package io.gomint.world;
 /**
  * @author BlackyPaw
  * @version 1.0
+ * @stability 2
  */
 public enum Difficulty {
 

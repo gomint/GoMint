@@ -12,15 +12,16 @@ import io.gomint.i18n.localization.ResourceLoader;
 import io.gomint.i18n.localization.ResourceManager;
 
 import java.io.*;
-import java.net.URL;
+import java.nio.charset.StandardCharsets;
 
 /**
  * @author geNAZt
  * @version 1.0
+ * @stability 3
  */
 public abstract class FileResourceLoader {
 
-    protected ClassLoader classLoader;
+    protected Module module;
 
     /**
      * Empty Constructor template for the
@@ -34,10 +35,10 @@ public abstract class FileResourceLoader {
      * Load a new FileResource. Every Loader which want to read from either the JAR or the Filesystem should extend this Class.
      * It first checks if the File can be found on the Disk and then if not it gets read from the Jar
      *
-     * @param classLoader The classLoader from and for which this Resource should be loaded
+     * @param module The module from and for which this Resource should be loaded
      */
-    public FileResourceLoader( ClassLoader classLoader ) {
-        this.classLoader = classLoader;
+    public FileResourceLoader( Module module ) {
+        this.module = module;
     }
 
     /**
@@ -51,17 +52,17 @@ public abstract class FileResourceLoader {
     protected InputStreamReader getFileInputStreamReader( String path ) throws ResourceLoadFailedException {
         try {
             if ( !path.startsWith( "file://" ) ) {
-                URL resourceUrl = classLoader.getResource( path );
+                InputStream resourceAsStream = module.getResourceAsStream( path );
 
-                if ( resourceUrl != null ) {
+                if ( resourceAsStream != null ) {
                     //If the file is not on the Disk read it from the JAR
-                    return new InputStreamReader( resourceUrl.openStream(), "UTF8" );
+                    return new InputStreamReader( resourceAsStream, StandardCharsets.UTF_8 );
                 }
             } else {
                 File file = new File( path.substring( 7 ) );
 
                 if ( file.isFile() ) {
-                    return new InputStreamReader( new FileInputStream( file ), "UTF8" );
+                    return new InputStreamReader( new FileInputStream( file ), StandardCharsets.UTF_8 );
                 }
             }
         } catch ( UnsupportedEncodingException | FileNotFoundException e ) {
@@ -77,7 +78,7 @@ public abstract class FileResourceLoader {
      * Remove the Reference on the Plugin
      */
     protected void cleanup() {
-        this.classLoader = null;
+        this.module = null;
     }
 
 }

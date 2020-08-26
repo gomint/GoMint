@@ -10,6 +10,7 @@ import io.gomint.GoMint;
  *
  * @author Clockw1seLrd
  * @version 1.0
+ * @stability 3
  */
 public interface EntitySnowball extends EntityProjectile {
 

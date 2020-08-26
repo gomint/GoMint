@@ -10,6 +10,7 @@ package io.gomint.world.block;
 /**
  * @author KingAli
  * @version 1.0
+ * @stability 2
  */
 public interface BlockLoom extends Block {
 }

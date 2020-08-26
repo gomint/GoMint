@@ -12,6 +12,7 @@ import io.gomint.world.block.data.BlockColor;
 /**
  * @author geNAZt
  * @version 1.0
+ * @stability 1
  */
 public interface BlockStainedGlass extends Block {
 

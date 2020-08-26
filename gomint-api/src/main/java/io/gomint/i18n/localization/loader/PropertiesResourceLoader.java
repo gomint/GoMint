@@ -21,6 +21,7 @@ import java.util.Properties;
 /**
  * @author geNAZt
  * @version 1.0
+ * @stability 3
  */
 public class PropertiesResourceLoader extends FileResourceLoader implements ResourceLoader {
 
@@ -39,49 +40,44 @@ public class PropertiesResourceLoader extends FileResourceLoader implements Reso
     /**
      * Load a new PropertiesResource
      *
-     * @param classLoader The classLoader for which this Resource should be loaded
-     * @param file        The file to load
+     * @param module The module for which this Resource should be loaded
+     * @param file   The file to load
      * @throws ResourceLoadFailedException if the stream could not be closed
      */
-    public PropertiesResourceLoader( ClassLoader classLoader, String file ) throws ResourceLoadFailedException {
-        super( classLoader );
+    public PropertiesResourceLoader(Module module, String file) throws ResourceLoadFailedException {
+        super(module);
 
         this.file = file;
-
-        try {
-            load();
-        } catch ( ResourceLoadFailedException e ) {
-            throw e;
-        }
+        this.load();
     }
 
     private void load() throws ResourceLoadFailedException {
         InputStreamReader stream = null;
         try {
             //Get the correct InputStreamReader for this file
-            stream = getFileInputStreamReader( file );
+            stream = getFileInputStreamReader(file);
 
             //Try to parse the properties
             pro = new Properties();
-            pro.load( stream );
+            pro.load(stream);
 
             //Get the keys
             keys = new ArrayList<>();
 
-            for ( Object o : pro.keySet() ) {
-                keys.add( (String) o );
+            for (Object o : pro.keySet()) {
+                keys.add((String) o);
             }
-        } catch ( IOException e ) {
+        } catch (IOException e) {
             pro = null;
-            throw new ResourceLoadFailedException( e );
-        } catch ( ResourceLoadFailedException e ) {
+            throw new ResourceLoadFailedException(e);
+        } catch (ResourceLoadFailedException e) {
             throw e;
         } finally {
-            if ( stream != null ) {
+            if (stream != null) {
                 try {
                     stream.close();
-                } catch ( IOException e ) {
-                    throw new ResourceLoadFailedException( e );
+                } catch (IOException e) {
+                    throw new ResourceLoadFailedException(e);
                 }
             }
         }
@@ -104,8 +100,8 @@ public class PropertiesResourceLoader extends FileResourceLoader implements Reso
      * @return The object from Properties or null if Properties loading was an error
      */
     @Override
-    public String get( String key ) {
-        return pro != null ? (String) pro.get( key ) : null;
+    public String get(String key) {
+        return pro != null ? (String) pro.get(key) : null;
     }
 
     /**
@@ -115,7 +111,7 @@ public class PropertiesResourceLoader extends FileResourceLoader implements Reso
      */
     @Override
     public List<String> getFormats() {
-        return Arrays.asList( ".properties" );
+        return Arrays.asList(".properties");
     }
 
     /**
@@ -125,11 +121,7 @@ public class PropertiesResourceLoader extends FileResourceLoader implements Reso
      */
     @Override
     public void reload() throws ResourceLoadFailedException {
-        try {
-            load();
-        } catch ( ResourceLoadFailedException e ) {
-            throw e;
-        }
+        this.load();
     }
 
     /**

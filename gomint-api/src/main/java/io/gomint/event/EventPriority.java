@@ -8,8 +8,9 @@
 package io.gomint.event;
 
 /**
- * @author Fabian
+ * @author geNAZt
  * @version 1.0
+ * @stability 3
  *          <p>
  *          Importance of the {@link EventHandler}. When executing an Event, the handlers
  *          are called in order of their Priority.

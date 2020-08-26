@@ -6,6 +6,7 @@ import io.gomint.entity.EntityLiving;
 /**
  * @author LucGames
  * @version 1.0
+ * @stability 3
  */
 public interface EntitySlime extends EntityLiving {
 

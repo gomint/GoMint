@@ -9,17 +9,16 @@ package io.gomint.player;
 
 import io.gomint.GoMint;
 
-import java.io.IOError;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 
 /**
  * @author BlackyPaw
  * @version 1.0
+ * @stability 3
  */
 public interface PlayerSkin {
 

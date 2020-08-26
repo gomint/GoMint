@@ -14,6 +14,7 @@ import java.util.List;
 /**
  * @author geNAZt
  * @version 1.0
+ * @stability 1
  */
 public interface BlockWallSign extends BlockFacing {
 

@@ -52,6 +52,7 @@ import java.util.List;
  *
  * @author BlackyPaw
  * @version 1.0
+ * @stability 3
  */
 public class Plugin {
 

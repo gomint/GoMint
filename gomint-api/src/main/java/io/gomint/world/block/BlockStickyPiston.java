@@ -10,6 +10,7 @@ package io.gomint.world.block;
 /**
  * @author geNAZt
  * @version 1.0
+ * @stability 2
  */
 public interface BlockStickyPiston extends BlockFacing {
 }

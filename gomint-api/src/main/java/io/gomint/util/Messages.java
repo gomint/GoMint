@@ -5,6 +5,7 @@ import com.google.common.base.Preconditions;
 /**
  * @author Clockw1seLrd
  * @version 1.0
+ * @stability 3
  */
 public class Messages {
 

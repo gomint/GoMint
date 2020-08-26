@@ -13,6 +13,7 @@ import it.unimi.dsi.fastutil.objects.ObjectSet;
 /**
  * @author geNAZt
  * @version 1.0
+ * @stability 3
  */
 public interface Group {
 

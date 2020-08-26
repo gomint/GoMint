@@ -9,6 +9,11 @@ package io.gomint.world.biome;
 
 import java.util.Set;
 
+/**
+ * @author geNAZt
+ * @version 1.0
+ * @stability 1
+ */
 public interface Biome {
 
     /**

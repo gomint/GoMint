@@ -12,6 +12,7 @@ import io.gomint.entity.EntityPlayer;
 /**
  * @author geNAZt
  * @version 1.0
+ * @stability 3
  */
 public class PlayerToggleFlyEvent extends CancellablePlayerEvent {
 

@@ -12,6 +12,7 @@ import java.util.Collection;
 /**
  * @author Clockw1seLrd
  * @version 1.0
+ * @stability 3
  */
 public interface ChunkGeneratorRegistry {
 

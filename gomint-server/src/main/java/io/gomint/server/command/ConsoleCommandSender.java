@@ -7,7 +7,7 @@
 
 package io.gomint.server.command;
 
-import io.gomint.entity.ChatType;
+import io.gomint.player.ChatType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

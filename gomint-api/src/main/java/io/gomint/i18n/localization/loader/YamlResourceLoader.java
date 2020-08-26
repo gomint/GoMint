@@ -23,6 +23,7 @@ import java.util.Map;
 /**
  * @author geNAZt
  * @version 1.0
+ * @stability 3
  */
 public class YamlResourceLoader extends FileResourceLoader implements ResourceLoader {
 
@@ -40,20 +41,15 @@ public class YamlResourceLoader extends FileResourceLoader implements ResourceLo
     /**
      * Load a new YamlResource
      *
-     * @param classLoader   The classLoader for which this Resource should be loaded
+     * @param module   The module for which this Resource should be loaded
      * @param file          The file to load
      * @throws ResourceLoadFailedException if the stream could not be closed
      */
-    public YamlResourceLoader( ClassLoader classLoader, String file ) throws ResourceLoadFailedException {
-        super( classLoader );
+    public YamlResourceLoader( Module module, String file ) throws ResourceLoadFailedException {
+        super( module );
 
         this.file = file;
-
-        try {
-            load();
-        } catch ( ResourceLoadFailedException e ) {
-            throw e;
-        }
+        this.load();
     }
 
     private void load() throws ResourceLoadFailedException {
@@ -168,11 +164,7 @@ public class YamlResourceLoader extends FileResourceLoader implements ResourceLo
      */
     @Override
     public void reload() throws ResourceLoadFailedException {
-        try {
-            load();
-        } catch ( ResourceLoadFailedException e ) {
-            throw e;
-        }
+        this.load();
     }
 
     /**

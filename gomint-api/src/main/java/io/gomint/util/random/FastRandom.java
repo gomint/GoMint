@@ -10,6 +10,7 @@ package io.gomint.util.random;
 /**
  * @author geNAZt
  * @version 1.0
+ * @stability 3
  */
 public final class FastRandom extends java.util.Random {
 

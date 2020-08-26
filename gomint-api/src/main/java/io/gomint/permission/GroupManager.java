@@ -10,6 +10,7 @@ package io.gomint.permission;
 /**
  * @author geNAZt
  * @version 1.0
+ * @stability 3
  *
  * The group manager is a global defined manager which manages permission groups. You can define groups which contain
  * certain permission settings. This will help permission plugins attach permission containers to players quickly

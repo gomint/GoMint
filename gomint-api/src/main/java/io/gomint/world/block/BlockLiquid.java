@@ -12,6 +12,7 @@ import io.gomint.math.Vector;
 /**
  * @author geNAZt
  * @version 1.0
+ * @stability 3
  */
 public interface BlockLiquid extends Block {
 

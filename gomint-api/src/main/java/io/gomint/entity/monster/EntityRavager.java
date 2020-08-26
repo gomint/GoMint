@@ -6,6 +6,7 @@ import io.gomint.entity.EntityLiving;
 /**
  * @author KingAli
  * @version 1.0
+ * @stability 3
  */
 public interface EntityRavager extends EntityLiving {
 

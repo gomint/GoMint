@@ -14,6 +14,7 @@ import java.util.Objects;
 /**
  * @author geNAZt
  * @version 1.0
+ * @stability 3
  *
  * This event gets called when the login has been completed and the server decides to start loading world data
  * into the client. This event can be used when you need to be sure the play status has been reached (like redirecting

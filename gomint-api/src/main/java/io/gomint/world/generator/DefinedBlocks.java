@@ -14,6 +14,11 @@ import io.gomint.world.block.BlockDirt;
 import io.gomint.world.block.BlockStationaryWater;
 import io.gomint.world.block.BlockStone;
 
+/**
+ * @author geNAZt
+ * @version 1.0
+ * @stability 0
+ */
 public class DefinedBlocks {
 
     // Used blocks for terrain

@@ -7,6 +7,11 @@
 
 package io.gomint.world.biome.component;
 
+/**
+ * @author geNAZt
+ * @version 1.0
+ * @stability 1
+ */
 public interface Climate {
 
     /**

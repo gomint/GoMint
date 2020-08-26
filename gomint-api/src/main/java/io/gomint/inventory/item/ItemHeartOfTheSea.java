@@ -2,6 +2,11 @@ package io.gomint.inventory.item;
 
 import io.gomint.GoMint;
 
+/**
+ * @author geNAZt
+ * @version 1.0
+ * @stability 3
+ */
 public interface ItemHeartOfTheSea extends ItemStack {
 
     /**

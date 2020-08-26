@@ -5,6 +5,7 @@ import io.gomint.GoMint;
 /**
  * @author geNAZt
  * @version 1.0
+ * @stability 2
  */
 public interface ItemIce extends ItemStack {
 

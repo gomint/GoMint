@@ -2,11 +2,11 @@ package io.gomint.entity.passive;
 
 import io.gomint.GoMint;
 import io.gomint.entity.EntityAgeable;
-import io.gomint.entity.monster.EntityPiglin;
 
 /**
  * @author KingAli
  * @version 1.0
+ * @stability 3
  */
 public interface EntityStrider extends EntityAgeable {
 

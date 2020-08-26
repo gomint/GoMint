@@ -12,6 +12,7 @@ package io.gomint.util;
  * @version 1.0
  *          <p>
  *          Interface which should be used to catch Exceptions thrown. This is mainly used in the Scheduler for Exception handling
+ * @stability 3
  */
 public interface ExceptionHandler {
 

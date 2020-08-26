@@ -13,6 +13,7 @@ import java.util.Map;
 /**
  * @author geNAZt
  * @version 1.0
+ * @stability 3
  */
 public class ConfigSection {
 

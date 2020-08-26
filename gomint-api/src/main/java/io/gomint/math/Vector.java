@@ -18,6 +18,7 @@ import java.util.Objects;
  * @author geNAZt
  * @author BlackyPaw
  * @version 2.0
+ * @stability 3
  */
 public class Vector {
 

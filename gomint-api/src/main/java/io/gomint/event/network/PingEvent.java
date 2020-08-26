@@ -5,6 +5,7 @@ import io.gomint.event.Event;
 /**
  * @author geNAZt
  * @version 1.0
+ * @stability 3
  *
  * This event gets fired when a unconnected Client pings the server. This can happen very often so care about putting
  * heavy calculation on this event since it may slow down other connections by a huge amount.

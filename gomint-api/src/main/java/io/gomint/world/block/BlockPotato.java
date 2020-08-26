@@ -10,6 +10,7 @@ package io.gomint.world.block;
 /**
  * @author geNAZt
  * @version 1.0
+ * @stability 3
  */
 public interface BlockPotato extends Block {
 }

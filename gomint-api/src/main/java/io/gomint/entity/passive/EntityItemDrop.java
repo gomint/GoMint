@@ -2,7 +2,6 @@ package io.gomint.entity.passive;
 
 import io.gomint.GoMint;
 import io.gomint.entity.Entity;
-import io.gomint.entity.active.EntityPrimedTNT;
 import io.gomint.inventory.item.ItemStack;
 
 import java.util.concurrent.TimeUnit;
@@ -10,6 +9,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * @author geNAZt
  * @version 1.0
+ * @stability 3
  */
 public interface EntityItemDrop extends Entity {
 

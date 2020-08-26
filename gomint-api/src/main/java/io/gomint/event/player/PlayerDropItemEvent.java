@@ -13,6 +13,7 @@ import io.gomint.inventory.item.ItemStack;
 /**
  * @author geNAZt
  * @version 1.0
+ * @stability 3
  */
 public class PlayerDropItemEvent extends CancellablePlayerEvent {
 

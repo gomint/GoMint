@@ -2,8 +2,12 @@ package io.gomint.entity.monster;
 
 import io.gomint.GoMint;
 import io.gomint.entity.EntityLiving;
-import io.gomint.entity.passive.EntityBat;
 
+/**
+ * @author geNAZt
+ * @version 1.0
+ * @stability 3
+ */
 public interface EntityBlaze extends EntityLiving {
 
     /**

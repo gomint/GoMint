@@ -7,6 +7,7 @@ import java.util.Objects;
 /**
  * @author geNAZt
  * @version 1.0
+ * @stability 3
  *
  * This event is fired when the login stage begins, way before any data will be sent to the client. If you cancel
  * this event to kick someone the player will have no impact on performance, chunk loading, etc.

@@ -7,6 +7,7 @@ import java.util.Objects;
 /**
  * @author geNAZt
  * @version 1.0
+ * @stability 3
  *
  * This event is fired when RakNet (the networking) decided to accept a connection. This is before any MC:PE packets
  * will be handled (event before login). This can be used to create IP Bans / Proxy detections. Please notice: Since this

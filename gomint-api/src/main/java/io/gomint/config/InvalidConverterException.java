@@ -10,6 +10,7 @@ package io.gomint.config;
 /**
  * @author geNAZt
  * @version 1.0
+ * @stability 3
  */
 public class InvalidConverterException extends Exception {
 

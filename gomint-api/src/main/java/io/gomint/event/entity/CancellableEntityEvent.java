@@ -13,6 +13,7 @@ import io.gomint.event.CancellableEvent;
 /**
  * @author geNAZt
  * @version 1.0
+ * @stability 3
  */
 public class CancellableEntityEvent extends CancellableEvent {
 

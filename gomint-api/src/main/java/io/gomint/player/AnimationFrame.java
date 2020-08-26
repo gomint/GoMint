@@ -10,6 +10,11 @@ package io.gomint.player;
 import java.io.IOException;
 import java.io.OutputStream;
 
+/**
+ * @author geNAZt
+ * @version 1.0
+ * @stability 2
+ */
 public interface AnimationFrame {
 
     /**

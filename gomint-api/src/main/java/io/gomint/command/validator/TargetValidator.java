@@ -21,6 +21,7 @@ import java.util.List;
 /**
  * @author geNAZt
  * @version 1.0
+ * @stability 3
  */
 public class TargetValidator extends ParamValidator {
 

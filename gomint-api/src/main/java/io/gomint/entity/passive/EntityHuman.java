@@ -17,6 +17,7 @@ import java.util.UUID;
 /**
  * @author geNAZt
  * @version 1.0
+ * @stability 3
  */
 public interface EntityHuman extends EntityCreature {
 

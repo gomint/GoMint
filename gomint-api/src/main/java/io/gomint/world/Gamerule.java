@@ -16,6 +16,7 @@ import java.util.Map;
  * @param <T> Type of the Gamerule. Can be Boolean, Integer or Float
  * @author BlackyPaw
  * @version 1.0
+ * @stability 2
  */
 public final class Gamerule<T> {
 

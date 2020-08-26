@@ -2,12 +2,12 @@ package io.gomint.crafting;
 
 import io.gomint.inventory.item.ItemStack;
 
-import java.util.Collection;
 import java.util.UUID;
 
 /**
  * @author geNAZt
  * @version 1.0
+ * @stability 3
  */
 public interface Recipe {
 

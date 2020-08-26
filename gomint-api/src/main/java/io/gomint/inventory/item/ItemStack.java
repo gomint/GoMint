@@ -5,6 +5,7 @@ import io.gomint.enchant.Enchantment;
 /**
  * @author geNAZt
  * @version 1.0
+ * @stability 1
  */
 public interface ItemStack {
 

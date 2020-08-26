@@ -6,10 +6,9 @@ import org.slf4j.LoggerFactory;
 /**
  * @author geNAZt
  * @version 1.0
+ * @stability 3
  */
 public class AxisAlignedBB implements Cloneable {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger( AxisAlignedBB.class );
 
     private float minX;
     private float minY;
