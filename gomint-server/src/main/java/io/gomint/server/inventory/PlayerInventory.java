@@ -148,18 +148,7 @@ public class PlayerInventory extends ContainerInventory implements io.gomint.inv
     private void updateItemInHand() {
         EntityHuman player = (EntityHuman) this.owner;
 
-        PacketMobEquipment packet = new PacketMobEquipment();
-        packet.setEntityId(player.getEntityId());
-        packet.setStack(this.getItemInHand());
-        packet.setWindowId(WindowMagicNumbers.PLAYER.getId());
-        packet.setSelectedSlot(this.itemInHandSlot);
-        packet.setSlot(this.itemInHandSlot);
-
-        // Send it to our own if needed
-        if ( player instanceof EntityPlayer ) {
-            EntityPlayer p = (EntityPlayer) player;
-            p.getConnection().addToSendQueue(packet);
-        }
+        PacketMobEquipment packet = this.createMobEquipmentPacket(player);
 
         // Relay packet
         for (Entity entity : player.getAttachedEntities()) {
@@ -167,6 +156,16 @@ public class PlayerInventory extends ContainerInventory implements io.gomint.inv
                 ((EntityPlayer) entity).getConnection().addToSendQueue(packet);
             }
         }
+    }
+
+    private PacketMobEquipment createMobEquipmentPacket(EntityHuman human) {
+        PacketMobEquipment packet = new PacketMobEquipment();
+        packet.setEntityId(human.getEntityId());
+        packet.setStack(this.getItemInHand());
+        packet.setWindowId(WindowMagicNumbers.PLAYER.getId());
+        packet.setSelectedSlot(this.itemInHandSlot);
+        packet.setSlot(this.itemInHandSlot);
+        return packet;
     }
 
     /**
@@ -216,6 +215,18 @@ public class PlayerInventory extends ContainerInventory implements io.gomint.inv
     @Override
     public InventoryType getInventoryType() {
         return InventoryType.PLAYER;
+    }
+
+    public void sendItemInHand() {
+        EntityHuman player = (EntityHuman) this.owner;
+
+        PacketMobEquipment packet = this.createMobEquipmentPacket(player);
+
+        // Send it to our own if needed
+        if ( player instanceof EntityPlayer ) {
+            EntityPlayer p = (EntityPlayer) player;
+            p.getConnection().addToSendQueue(packet);
+        }
     }
 
 }
