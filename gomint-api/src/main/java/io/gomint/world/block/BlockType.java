@@ -67,7 +67,7 @@ public enum BlockType {
     CLAY,
     COAL_ORE,
     COBBLESTONE_STAIRS,
-    COBBLESTONE_WALL,
+    WALL,
     COBBLESTONE,
     COBWEB,
     COCOA,
@@ -291,5 +291,10 @@ public enum BlockType {
     ELEMENT,
     SMOKER,
     LANTERN,
+    CHEMICAL_HEATER,
+    CHEMISTRY_TABLE,
+    JIGSAW,
+    HARDENED_GLASS_PANE,
+    FLETCHING_TABLE,
 
 }

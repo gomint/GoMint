@@ -8,6 +8,7 @@
 package io.gomint.world.block;
 
 import io.gomint.world.block.data.LogType;
+import io.gomint.world.block.data.SignDirection;
 
 import java.util.List;
 
@@ -56,5 +57,19 @@ public interface BlockSign extends Block {
      * @param logType type of wood
      */
     void setWoodType(LogType logType);
+
+    /**
+     * Direction of this sign
+     *
+     * @return sign direction
+     */
+    SignDirection getSignDirection();
+
+    /**
+     * Set the direction of this sign
+     *
+     * @param direction of this sign
+     */
+    void setSignDirection(SignDirection direction);
 
 }

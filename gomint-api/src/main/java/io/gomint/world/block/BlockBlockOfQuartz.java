@@ -7,10 +7,12 @@
 
 package io.gomint.world.block;
 
+import io.gomint.world.block.data.QuartzVariant;
+
 /**
  * @author geNAZt
  * @version 1.0
- * @stability 2
+ * @stability 3
  */
 public interface BlockBlockOfQuartz extends Block, BlockAxis {
 
@@ -19,21 +21,13 @@ public interface BlockBlockOfQuartz extends Block, BlockAxis {
      *
      * @return variant of this block
      */
-    Variant getVariant();
+    QuartzVariant getVariant();
 
     /**
      * Set the variant of this block
      *
      * @param variant which should be used
      */
-    void setVariant( Variant variant );
-
-    public enum Variant {
-        SMOOTH,
-        LINES,
-        DEFAULT,
-        CHISELED,
-        BRICKS
-    }
+    void setVariant( QuartzVariant variant );
 
 }

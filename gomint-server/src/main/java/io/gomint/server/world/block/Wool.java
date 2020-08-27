@@ -3,6 +3,7 @@ package io.gomint.server.world.block;
 import io.gomint.inventory.item.ItemShears;
 import io.gomint.inventory.item.ItemStack;
 import io.gomint.server.registry.RegisterInfo;
+import io.gomint.server.world.block.state.BlockColorBlockState;
 import io.gomint.server.world.block.state.EnumBlockState;
 import io.gomint.world.block.BlockType;
 import io.gomint.world.block.BlockWool;
@@ -15,7 +16,7 @@ import io.gomint.world.block.data.BlockColor;
 @RegisterInfo( sId = "minecraft:wool" )
 public class Wool extends Block implements BlockWool {
 
-    private static final EnumBlockState<BlockColor, String> COLOR = new EnumBlockState<>( v -> new String[]{"color"}, BlockColor.values(), e -> e.name().toLowerCase(), v -> BlockColor.valueOf(v.toUpperCase()) );
+    private static final BlockColorBlockState COLOR = new BlockColorBlockState(() -> new String[]{"color"});
 
     @Override
     public String getBlockId() {

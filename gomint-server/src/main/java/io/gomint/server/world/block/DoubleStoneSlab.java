@@ -18,6 +18,9 @@ import io.gomint.world.block.data.StoneType;
 @RegisterInfo( sId = "minecraft:double_stone_slab2" )
 @RegisterInfo( sId = "minecraft:double_stone_slab3" )
 @RegisterInfo( sId = "minecraft:double_stone_slab4" )
+@RegisterInfo(sId = "minecraft:blackstone_double_slab")
+@RegisterInfo(sId = "minecraft:polished_blackstone_double_slab")
+@RegisterInfo(sId = "minecraft:polished_blackstone_brick_double_slab")
 public class DoubleStoneSlab extends Block implements BlockDoubleStoneSlab {
 
     private static final String STONE_SLAB_ID = "minecraft:double_stone_slab";
@@ -73,9 +76,9 @@ public class DoubleStoneSlab extends Block implements BlockDoubleStoneSlab {
         CUT_RED_STONE(STONE_SLAB4_ID, STONE_TYPE_4, "cut_red_sandstone"),
 
         // Additional slabs (new ones)
-        BLACKSTONE("minecraft:blackstone_slab", "", ""),
-        POLISHED_BLACKSTONE("minecraft:polished_blackstone_slab", "", ""),
-        POLISHED_BLACKSTONE_BRICK("minecraft:polished_blackstone_brick_slab", "", "");
+        BLACKSTONE("minecraft:blackstone_double_slab", "", ""),
+        POLISHED_BLACKSTONE("minecraft:polished_blackstone_brick_double_slab", "", ""),
+        POLISHED_BLACKSTONE_BRICK("minecraft:polished_blackstone_brick_double_slab", "", "");
 
         private final String key;
         private final String value;

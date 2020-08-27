@@ -1,0 +1,51 @@
+/*
+ * Copyright (c) 2018 Gomint team
+ *
+ * This code is licensed under the BSD license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+package io.gomint.server.world.block;
+
+import io.gomint.server.registry.RegisterInfo;
+import io.gomint.server.world.block.state.GlassColorBlockState;
+import io.gomint.world.block.BlockHardenedGlassPane;
+import io.gomint.world.block.BlockType;
+import io.gomint.world.block.data.GlassColor;
+
+@RegisterInfo(sId = "minecraft:hard_glass_pane", def = true)
+@RegisterInfo(sId = "minecraft:hard_stained_glass_pane")
+public class HardenedGlassPane extends Block implements BlockHardenedGlassPane {
+
+    private static final GlassColorBlockState COLOR = new GlassColorBlockState(() -> new String[]{"color"});
+
+    @Override
+    public float getBlastResistance() {
+        return 0;
+    }
+
+    @Override
+    public BlockType getBlockType() {
+        return BlockType.HARDENED_GLASS_PANE;
+    }
+
+    @Override
+    public GlassColor getColor() {
+        if ("minecraft:hard_glass_pane".equals(this.getBlockId())) {
+            return GlassColor.TRANSPARENT;
+        }
+
+        return COLOR.getState(this);
+    }
+
+    @Override
+    public void setColor(GlassColor color) {
+        if (color == GlassColor.TRANSPARENT) {
+            this.setBlockId("minecraft:hard_glass_pane");
+            return;
+        }
+
+        COLOR.setState(this, color);
+    }
+
+}

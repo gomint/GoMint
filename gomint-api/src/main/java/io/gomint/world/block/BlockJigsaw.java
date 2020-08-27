@@ -10,7 +10,7 @@ package io.gomint.world.block;
 /**
  * @author geNAZt
  * @version 1.0
- * @stability 3
+ * @stability 2
  */
-public interface BlockCobblestoneWall extends Block {
+public interface BlockJigsaw extends BlockFacing {
 }

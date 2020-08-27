@@ -27,6 +27,8 @@ import java.util.List;
 @RegisterInfo(sId = "minecraft:birch_wall_sign")
 @RegisterInfo(sId = "minecraft:spruce_wall_sign")
 @RegisterInfo(sId = "minecraft:darkoak_wall_sign")
+@RegisterInfo(sId = "minecraft:crimson_wall_sign")
+@RegisterInfo(sId = "minecraft:warped_wall_sign")
 public class WallSign extends Block implements BlockWallSign {
 
     private enum LogTypeMagic {
@@ -35,7 +37,9 @@ public class WallSign extends Block implements BlockWallSign {
         BIRCH("minecraft:birch_wall_sign"),
         JUNGLE("minecraft:jungle_wall_sign"),
         ACACIA("minecraft:acacia_wall_sign"),
-        DARK_OAK("minecraft:darkoak_wall_sign");
+        DARK_OAK("minecraft:darkoak_wall_sign"),
+        CRIMSON("minecraft:crimson_wall_sign"),
+        WARPED("minecraft:warped_wall_sign");
 
         private final String blockId;
 
@@ -45,11 +49,6 @@ public class WallSign extends Block implements BlockWallSign {
     }
 
     private static final BlockfaceFromPlayerBlockState FACING = new BlockfaceFromPlayerBlockState(() -> new String[]{"facing_direction"}, false);
-
-    @Override
-    public String getBlockId() {
-        return "minecraft:wall_sign";
-    }
 
     @Override
     public long getBreakTime() {

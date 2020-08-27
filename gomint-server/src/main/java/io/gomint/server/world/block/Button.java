@@ -10,6 +10,8 @@ package io.gomint.server.world.block;
 import io.gomint.inventory.item.ItemStack;
 import io.gomint.math.Vector;
 import io.gomint.server.entity.Entity;
+import io.gomint.server.entity.EntityPlayer;
+import io.gomint.server.world.PlacementData;
 import io.gomint.server.world.UpdateReason;
 import io.gomint.server.world.block.state.BlockfaceFromPlayerBlockState;
 import io.gomint.server.world.block.state.BooleanBlockState;
@@ -29,6 +31,12 @@ public abstract class Button extends Block implements BlockButton {
         this.press();
 
         return true;
+    }
+
+    @Override
+    public PlacementData calculatePlacementData(EntityPlayer entity, ItemStack item, Facing face, Block block, Block clickedBlock, Vector clickVector) {
+        FACING.detectFromPlacement(this, entity, item, face, block, clickedBlock, clickVector);
+        return super.calculatePlacementData(entity, item, face, block, clickedBlock, clickVector);
     }
 
     @Override

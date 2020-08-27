@@ -8,6 +8,7 @@ import io.gomint.server.world.block.state.EnumBlockState;
 import io.gomint.world.block.BlockBlockOfQuartz;
 import io.gomint.world.block.BlockType;
 import io.gomint.world.block.data.Axis;
+import io.gomint.world.block.data.QuartzVariant;
 
 import java.util.Collections;
 import java.util.List;
@@ -16,19 +17,22 @@ import java.util.List;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo(sId = "minecraft:quartz_block")
+@RegisterInfo(sId = "minecraft:quartz_block", def = true)
+@RegisterInfo(sId = "minecraft:quartz_bricks")
 public class BlockOfQuartz extends Block implements BlockBlockOfQuartz {
 
     private enum VariantMagic {
-        SMOOTH("smooth"),
-        LINES("lines"),
-        DEFAULT("default"),
-        CHISELED("chiseled"),
-        BRICKS("bricks");
+        SMOOTH("minecraft:quartz_block","smooth"),
+        LINES("minecraft:quartz_block","lines"),
+        DEFAULT("minecraft:quartz_block","default"),
+        CHISELED("minecraft:quartz_block","chiseled"),
+        BRICKS("minecraft:quartz_bricks", "bricks");
 
+        private final String blockId;
         private final String value;
 
-        VariantMagic(String value) {
+        VariantMagic(String blockId, String value) {
+            this.blockId = blockId;
             this.value = value;
         }
     }
@@ -43,11 +47,6 @@ public class BlockOfQuartz extends Block implements BlockBlockOfQuartz {
 
         return null;
     });
-
-    @Override
-    public String getBlockId() {
-        return "minecraft:quartz_block";
-    }
 
     @Override
     public long getBreakTime() {
@@ -65,12 +64,21 @@ public class BlockOfQuartz extends Block implements BlockBlockOfQuartz {
     }
 
     @Override
-    public Variant getVariant() {
-        return Variant.valueOf(VARIANT.getState(this).name());
+    public QuartzVariant getVariant() {
+        if ("minecraft:quartz_bricks".equals(this.getBlockId())) {
+            return QuartzVariant.BRICKS;
+        }
+
+        return QuartzVariant.valueOf(VARIANT.getState(this).name());
     }
 
     @Override
-    public void setVariant(Variant variant) {
+    public void setVariant(QuartzVariant variant) {
+        if (variant == QuartzVariant.BRICKS) {
+            this.setBlockId("minecraft:quartz_bricks");
+            return;
+        }
+
         VARIANT.setState(this, VariantMagic.valueOf(variant.name()));
     }
 

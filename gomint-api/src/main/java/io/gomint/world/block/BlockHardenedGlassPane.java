@@ -8,26 +8,27 @@
 package io.gomint.world.block;
 
 import io.gomint.world.block.data.BlockColor;
+import io.gomint.world.block.data.GlassColor;
 
 /**
  * @author geNAZt
  * @version 1.0
  * @stability 3
  */
-public interface BlockConcrete extends Block {
+public interface BlockHardenedGlassPane extends Block {
 
     /**
      * Get the color of this block
      *
      * @return color of this block
      */
-    BlockColor getColor();
+    GlassColor getColor();
 
     /**
      * Set the color of this block
      *
      * @param color which this block should be
      */
-    void setColor( BlockColor color );
+    void setColor( GlassColor color );
 
 }

@@ -166,6 +166,8 @@ public class StoneSlab extends Slab implements BlockStoneSlab {
                 return StoneType.BLACKSTONE;
             case "minecraft:polished_blackstone_slab":
                 return StoneType.POLISHED_BLACKSTONE;
+            case "minecraft:polished_blackstone_brick_slab":
+                return StoneType.POLISHED_BLACKSTONE_BRICK;
         }
 
         return StoneType.valueOf(VARIANT.getState(this).name());

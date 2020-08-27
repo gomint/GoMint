@@ -5,10 +5,12 @@ import io.gomint.server.entity.tileentity.SignTileEntity;
 import io.gomint.server.entity.tileentity.TileEntity;
 import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.world.block.helper.ToolPresets;
+import io.gomint.server.world.block.state.SignDirectionBlockState;
 import io.gomint.taglib.NBTTagCompound;
 import io.gomint.world.block.BlockSign;
 import io.gomint.world.block.BlockType;
 import io.gomint.world.block.data.LogType;
+import io.gomint.world.block.data.SignDirection;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +24,7 @@ import java.util.List;
 @RegisterInfo(sId = "minecraft:acacia_standing_sign")
 @RegisterInfo(sId = "minecraft:birch_standing_sign")
 @RegisterInfo(sId = "minecraft:spruce_standing_sign")
-@RegisterInfo(sId = "minecraft:dark_oak_standing_sign")
+@RegisterInfo(sId = "minecraft:darkoak_standing_sign")
 @RegisterInfo(sId = "minecraft:crimson_standing_sign")
 @RegisterInfo(sId = "minecraft:warped_standing_sign")
 public class Sign extends Block implements BlockSign {
@@ -33,7 +35,7 @@ public class Sign extends Block implements BlockSign {
         BIRCH("minecraft:birch_standing_sign"),
         JUNGLE("minecraft:jungle_standing_sign"),
         ACACIA("minecraft:acacia_standing_sign"),
-        DARK_OAK("minecraft:dark_oak_standing_sign"),
+        DARK_OAK("minecraft:darkoak_standing_sign"),
         CRIMSON("minecraft:crimson_standing_sign"),
         WARPED("minecraft:warped_standing_sign");
 
@@ -42,6 +44,8 @@ public class Sign extends Block implements BlockSign {
             this.blockId = blockId;
         }
     }
+
+    private static final SignDirectionBlockState DIRECTION = new SignDirectionBlockState(() -> new String[]{"ground_sign_direction"});
     
     @Override
     public long getBreakTime() {
@@ -135,6 +139,16 @@ public class Sign extends Block implements BlockSign {
     public void setWoodType(LogType logType) {
         LogTypeMagic newState = LogTypeMagic.valueOf(logType.name());
         this.setBlockId(newState.blockId);
+    }
+
+    @Override
+    public SignDirection getSignDirection() {
+        return DIRECTION.getState(this);
+    }
+
+    @Override
+    public void setSignDirection(SignDirection direction) {
+        DIRECTION.setState(this, direction);
     }
 
     @Override

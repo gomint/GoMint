@@ -8,6 +8,7 @@
 package io.gomint.server.world.block;
 
 import io.gomint.server.registry.RegisterInfo;
+import io.gomint.server.world.block.state.EnumBlockState;
 import io.gomint.server.world.block.state.RotationDirectionBlockState;
 import io.gomint.world.block.BlockCoralFan;
 import io.gomint.world.block.BlockType;
@@ -35,8 +36,17 @@ public class CoralFan extends Block implements BlockCoralFan {
         }
     }
 
-    private static final RotationDirectionBlockState DIRECTION = new RotationDirectionBlockState(() -> new String[]{"coral_direction"});
+    private static final RotationDirectionBlockState DIRECTION = new RotationDirectionBlockState(() -> new String[]{"coral_fan_direction"});
+    private static final EnumBlockState<CoralTypeMagic, String> COLOR = new EnumBlockState<>(t -> new String[]{"coral_color"},
+        CoralTypeMagic.values(), coralTypeMagic -> coralTypeMagic.color, s -> {
+        for (CoralTypeMagic value : CoralTypeMagic.values()) {
+            if (value.color.equals(s)) {
+                return value;
+            }
+        }
 
+        return null;
+    });
 
     @Override
     public float getBlastResistance() {
@@ -60,12 +70,13 @@ public class CoralFan extends Block implements BlockCoralFan {
 
     @Override
     public void setCoralType(CoralType type) {
-
+        CoralTypeMagic state = CoralTypeMagic.valueOf(type.name());
+        COLOR.setState(this, state);
     }
 
     @Override
     public CoralType getCoralType() {
-        return null;
+        return CoralType.valueOf(COLOR.getState(this).name());
     }
 
 }

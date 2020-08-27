@@ -11,12 +11,14 @@ import io.gomint.world.block.data.LogType;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:wooden_button", def = true )
-@RegisterInfo( sId = "minecraft:spruce_button" )
-@RegisterInfo( sId = "minecraft:birch_button" )
-@RegisterInfo( sId = "minecraft:dark_oak_button" )
-@RegisterInfo( sId = "minecraft:jungle_button" )
-@RegisterInfo( sId = "minecraft:acacia_button" )
+@RegisterInfo(sId = "minecraft:wooden_button", def = true)
+@RegisterInfo(sId = "minecraft:spruce_button")
+@RegisterInfo(sId = "minecraft:birch_button")
+@RegisterInfo(sId = "minecraft:dark_oak_button")
+@RegisterInfo(sId = "minecraft:jungle_button")
+@RegisterInfo(sId = "minecraft:acacia_button")
+@RegisterInfo(sId = "minecraft:warped_button")
+@RegisterInfo(sId = "minecraft:crimson_button")
 public class WoodenButton extends Button implements BlockWoodenButton {
 
     @Override
@@ -41,7 +43,11 @@ public class WoodenButton extends Button implements BlockWoodenButton {
 
     @Override
     public LogType getWoodType() {
-        switch ( this.getBlockId() ) {
+        switch (this.getBlockId()) {
+            case "minecraft:crimson_button":
+                return LogType.CRIMSON;
+            case "minecraft:warped_button":
+                return LogType.WARPED;
             case "minecraft:wooden_button":
                 return LogType.OAK;
             case "minecraft:spruce_button":
@@ -60,25 +66,31 @@ public class WoodenButton extends Button implements BlockWoodenButton {
     }
 
     @Override
-    public void setWoodType( LogType logType) {
+    public void setWoodType(LogType logType) {
         switch (logType) {
+            case CRIMSON:
+                this.setBlockId("minecraft:crimson_button");
+                break;
+            case WARPED:
+                this.setBlockId("minecraft:warped_button");
+                break;
             case OAK:
-                this.setBlockId( "minecraft:wooden_button" );
+                this.setBlockId("minecraft:wooden_button");
                 break;
             case SPRUCE:
-                this.setBlockId( "minecraft:spruce_button" );
+                this.setBlockId("minecraft:spruce_button");
                 break;
             case BIRCH:
-                this.setBlockId( "minecraft:birch_button" );
+                this.setBlockId("minecraft:birch_button");
                 break;
             case DARK_OAK:
-                this.setBlockId( "minecraft:dark_oak_button" );
+                this.setBlockId("minecraft:dark_oak_button");
                 break;
             case JUNGLE:
-                this.setBlockId( "minecraft:jungle_button" );
+                this.setBlockId("minecraft:jungle_button");
                 break;
             case ACACIA:
-                this.setBlockId( "minecraft:acacia_button" );
+                this.setBlockId("minecraft:acacia_button");
                 break;
         }
     }

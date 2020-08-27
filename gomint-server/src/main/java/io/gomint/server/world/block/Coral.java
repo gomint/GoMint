@@ -8,8 +8,11 @@
 package io.gomint.server.world.block;
 
 import io.gomint.server.registry.RegisterInfo;
+import io.gomint.server.world.block.state.BooleanBlockState;
+import io.gomint.server.world.block.state.EnumBlockState;
 import io.gomint.world.block.BlockCoral;
 import io.gomint.world.block.BlockType;
+import io.gomint.world.block.data.CoralType;
 
 /**
  * @author geNAZt
@@ -17,6 +20,32 @@ import io.gomint.world.block.BlockType;
  */
 @RegisterInfo( sId = "minecraft:coral" )
 public class Coral extends Block implements BlockCoral {
+
+    private enum CoralTypeMagic {
+        TUBE("blue"),
+        BRAIN("pink"),
+        BUBBLE("purple"),
+        FIRE("red"),
+        HORN("yellow"),
+        ;
+
+        private final String color;
+        CoralTypeMagic(String color) {
+            this.color = color;
+        }
+    }
+
+    private static final BooleanBlockState DEAD = new BooleanBlockState(() -> new String[]{"dead_bit"});
+    private static final EnumBlockState<CoralTypeMagic, String> COLOR = new EnumBlockState<>(t -> new String[]{"coral_color"},
+        CoralTypeMagic.values(), coralTypeMagic -> coralTypeMagic.color, s -> {
+        for (CoralTypeMagic value : CoralTypeMagic.values()) {
+            if (value.color.equals(s)) {
+                return value;
+            }
+        }
+
+        return null;
+    });
 
     @Override
     public float getBlastResistance() {
@@ -26,6 +55,28 @@ public class Coral extends Block implements BlockCoral {
     @Override
     public BlockType getBlockType() {
         return BlockType.CORAL;
+    }
+
+    @Override
+    public void setDead(boolean dead) {
+        DEAD.setState(this, dead);
+    }
+
+    @Override
+    public boolean isDead() {
+        return DEAD.getState(this);
+    }
+
+
+    @Override
+    public void setCoralType(CoralType type) {
+        CoralTypeMagic state = CoralTypeMagic.valueOf(type.name());
+        COLOR.setState(this, state);
+    }
+
+    @Override
+    public CoralType getCoralType() {
+        return CoralType.valueOf(COLOR.getState(this).name());
     }
 
 }

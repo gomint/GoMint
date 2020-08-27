@@ -16,6 +16,7 @@ public interface BlockStone extends Block {
 
     enum Type {
         STONE,
+        STONE_SMOOTH,
         GRANITE_SMOOTH,
         DIORITE_SMOOTH,
         GRANITE,
