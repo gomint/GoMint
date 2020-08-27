@@ -1,20 +1,17 @@
 package io.gomint.server.world.block;
 
-import io.gomint.inventory.Inventory;
 import io.gomint.inventory.item.ItemObsidian;
-import io.gomint.server.entity.tileentity.CommandBlockTileEntity;
-import io.gomint.server.entity.tileentity.TileEntity;
-import io.gomint.server.world.block.helper.ToolPresets;
-import io.gomint.taglib.NBTTagCompound;
-import io.gomint.world.block.BlockEnderChest;
-import io.gomint.world.block.data.Facing;
-import io.gomint.world.block.BlockType;
-
 import io.gomint.inventory.item.ItemStack;
 import io.gomint.math.Vector;
 import io.gomint.server.entity.Entity;
 import io.gomint.server.entity.tileentity.EnderChestTileEntity;
+import io.gomint.server.entity.tileentity.TileEntity;
 import io.gomint.server.registry.RegisterInfo;
+import io.gomint.server.world.block.helper.ToolPresets;
+import io.gomint.taglib.NBTTagCompound;
+import io.gomint.world.block.BlockEnderChest;
+import io.gomint.world.block.BlockType;
+import io.gomint.world.block.data.Facing;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -76,12 +73,6 @@ public class EnderChest extends ContainerBlock implements BlockEnderChest {
     TileEntity createTileEntity( NBTTagCompound compound ) {
         super.createTileEntity( compound );
         return this.world.getServer().getTileEntities().construct(EnderChestTileEntity.class, compound, this, this.world.getServer().getItems());
-    }
-
-    @Override
-    public Inventory getInventory() {
-        EnderChestTileEntity chestTileEntity = this.getTileEntity();
-        return chestTileEntity.getInventory();
     }
 
     @Override

@@ -26,8 +26,6 @@ import io.gomint.world.block.data.Facing;
 @RegisterInfo(sId = "EnderChest")
 public class EnderChestTileEntity extends ContainerTileEntity implements InventoryHolder {
 
-    private final EnderChestInventory inventory;
-
     /**
      * Create new ender chest based on the position
      *
@@ -35,7 +33,6 @@ public class EnderChestTileEntity extends ContainerTileEntity implements Invento
      */
     public EnderChestTileEntity(Block block, Items items) {
         super( block, items );
-        this.inventory = new EnderChestInventory( this );
     }
 
     @Override
@@ -47,7 +44,8 @@ public class EnderChestTileEntity extends ContainerTileEntity implements Invento
     public void interact(Entity entity, Facing face, Vector facePos, ItemStack item ) {
         // Open the chest inventory for the entity
         if ( entity instanceof EntityPlayer ) {
-            ( (EntityPlayer) entity ).openInventory( this.inventory );
+            EntityPlayer player = (EntityPlayer) entity;
+            player.openInventory( player.getEnderChestInventory() );
         }
     }
 
@@ -55,15 +53,6 @@ public class EnderChestTileEntity extends ContainerTileEntity implements Invento
     public void toCompound( NBTTagCompound compound, SerializationReason reason ) {
         super.toCompound( compound, reason );
         compound.addValue( "id", "EnderChest" );
-    }
-
-    /**
-     * Get the inventory of this ender chest
-     *
-     * @return
-     */
-    public EnderChestInventory getInventory() {
-        return this.inventory;
     }
 
 }

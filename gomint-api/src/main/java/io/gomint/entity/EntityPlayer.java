@@ -11,6 +11,7 @@ import io.gomint.command.CommandOutput;
 import io.gomint.entity.passive.EntityHuman;
 import io.gomint.gui.Form;
 import io.gomint.gui.FormListener;
+import io.gomint.inventory.EnderChestInventory;
 import io.gomint.inventory.Inventory;
 import io.gomint.math.Location;
 import io.gomint.math.Vector;
@@ -377,5 +378,12 @@ public interface EntityPlayer extends EntityHuman {
      * Remove the current scoreboard
      */
     void removeScoreboard();
+
+    /**
+     * Get the ender chest inventory for this player
+     *
+     * @return ender chest inventory
+     */
+    EnderChestInventory getEnderChestInventory();
 
 }

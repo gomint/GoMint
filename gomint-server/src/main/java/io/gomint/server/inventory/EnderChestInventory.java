@@ -12,7 +12,7 @@ import io.gomint.world.Sound;
  * @author geNAZt
  * @version 1.0
  */
-public class EnderChestInventory extends ContainerInventory {
+public class EnderChestInventory extends ContainerInventory implements io.gomint.inventory.EnderChestInventory {
 
     /**
      * Constructs a ender chest inventory. A ender chest does NOT have a own inventory. It displays

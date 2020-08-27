@@ -105,6 +105,7 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
     // Inventory
     private Inventory cursorInventory;
     private Inventory offhandInventory;
+    private EnderChestInventory enderChestInventory;
 
     // Crafting
     private Inventory craftingInventory;
@@ -692,6 +693,7 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
 
         this.cursorInventory = new CursorInventory(this);
         this.offhandInventory = new OffhandInventory(this);
+        this.enderChestInventory = new EnderChestInventory( this );
 
         this.craftingInventory = new CraftingInputInventory(this);
         this.craftingInputInventory = new CraftingInputInventory(this);
@@ -1823,6 +1825,11 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
 
     public Scoreboard getScoreboard() {
         return scoreboard;
+    }
+
+    @Override
+    public EnderChestInventory getEnderChestInventory() {
+        return enderChestInventory;
     }
 
 }

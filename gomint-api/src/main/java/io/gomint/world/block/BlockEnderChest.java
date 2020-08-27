@@ -7,21 +7,12 @@
 
 package io.gomint.world.block;
 
-import io.gomint.inventory.Inventory;
-
 /**
  * @author geNAZt
  * @version 1.0
- * @stability 3
+ * @stability 2
  */
 public interface BlockEnderChest extends Block {
-
-    /**
-     * Get the chests inventory
-     *
-     * @return inventory of this chest
-     */
-    Inventory getInventory();
 
     /**
      * Set a custom name for this container
