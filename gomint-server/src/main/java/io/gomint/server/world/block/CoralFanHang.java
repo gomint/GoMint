@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, GoMint, BlackyPaw and geNAZt
+ * Copyright (c) 2018 Gomint team
  *
  * This code is licensed under the BSD license found in the
  * LICENSE file in the root directory of this source tree.
@@ -8,15 +8,12 @@
 package io.gomint.server.world.block;
 
 import io.gomint.server.registry.RegisterInfo;
-import io.gomint.world.block.BlockCoralFangYellow;
 import io.gomint.world.block.BlockType;
 
-/**
- * @author geNAZt
- * @version 1.0
- */
-@RegisterInfo( sId = "minecraft:coral_fan_hang3" )
-public class CoralFangYellow extends Block implements BlockCoralFangYellow {
+@RegisterInfo( sId = "minecraft:coral_fan_hang" ) // tube, brain
+@RegisterInfo( sId = "minecraft:coral_fan_hang2" ) // bubble, fire
+@RegisterInfo( sId = "minecraft:coral_fan_hang3" ) // horn
+public class CoralFanHang extends Block {
 
     @Override
     public float getBlastResistance() {
@@ -25,7 +22,7 @@ public class CoralFangYellow extends Block implements BlockCoralFangYellow {
 
     @Override
     public BlockType getBlockType() {
-        return BlockType.CORAL_FANG_YELLOW;
+        return BlockType.CORAL_FAN_HANG;
     }
 
 }

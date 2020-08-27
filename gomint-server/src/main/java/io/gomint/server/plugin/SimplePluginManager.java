@@ -38,6 +38,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.module.Configuration;
+import java.lang.module.ModuleDescriptor;
 import java.lang.module.ModuleFinder;
 import java.lang.reflect.Field;
 import java.nio.file.Path;
@@ -396,7 +397,10 @@ public class SimplePluginManager implements PluginManager, EventCaller {
 
             PluginMeta meta = new PluginMeta(file);
             File depModules = new File("modules/plugin/" + file.getName().replace(".jar", ""));
-            meta.setModuleName(file.getName().split("-")[0]); // Quick and dirty hack for unnamed modules (old plugins on JDK 8)
+
+            ModuleDetector detector = new ModuleDetector();
+            ModuleDescriptor descriptor = detector.deriveModuleDescriptor(jar);
+            meta.setModuleName(descriptor.name());
 
             // Try to read every file in the jar
             try {

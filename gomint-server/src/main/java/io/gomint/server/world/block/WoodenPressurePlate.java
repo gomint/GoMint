@@ -18,6 +18,8 @@ import io.gomint.world.block.data.LogType;
 @RegisterInfo(sId = "minecraft:birch_pressure_plate")
 @RegisterInfo(sId = "minecraft:spruce_pressure_plate")
 @RegisterInfo(sId = "minecraft:dark_oak_pressure_plate")
+@RegisterInfo(sId = "minecraft:crimson_pressure_plate")
+@RegisterInfo(sId = "minecraft:warped_pressure_plate")
 public class WoodenPressurePlate extends BasePressurePlate implements BlockWoodenPressurePlate {
 
     private enum LogTypeMagic {
@@ -26,7 +28,9 @@ public class WoodenPressurePlate extends BasePressurePlate implements BlockWoode
         BIRCH("minecraft:birch_pressure_plate"),
         JUNGLE("minecraft:jungle_pressure_plate"),
         ACACIA("minecraft:acacia_pressure_plate"),
-        DARK_OAK("minecraft:dark_oak_pressure_plate");
+        DARK_OAK("minecraft:dark_oak_pressure_plate"),
+        CRIMSON("minecraft:crimson_pressure_plate"),
+        WARPED("minecraft:warped_pressure_plate");
 
         private final String blockId;
         LogTypeMagic(String blockId) {

@@ -7,10 +7,42 @@
 
 package io.gomint.world.block;
 
+import io.gomint.world.block.data.CoralType;
+import io.gomint.world.block.data.RotationDirection;
+
 /**
  * @author geNAZt
  * @version 1.0
- * @stability 1
+ * @stability 3
  */
 public interface BlockCoralFan extends Block {
+
+    /**
+     * Get the direction of this coral fan
+     *
+     * @return direction of the coral
+     */
+    RotationDirection getDirection();
+
+    /**
+     * Set the direction of this coral fan
+     *
+     * @param direction in which this coral fan should face
+     */
+    void setDirection(RotationDirection direction);
+
+    /**
+     * Set coral type
+     *
+     * @param type of coral
+     */
+    void setCoralType(CoralType type);
+
+    /**
+     * Get type of coral
+     *
+     * @return type of coral
+     */
+    CoralType getCoralType();
+
 }

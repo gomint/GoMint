@@ -1,15 +1,14 @@
 package io.gomint.server.world.block;
 
 import io.gomint.inventory.item.ItemStack;
-import io.gomint.server.entity.tileentity.CommandBlockTileEntity;
-import io.gomint.server.world.block.helper.ToolPresets;
-import io.gomint.world.block.BlockType;
-
 import io.gomint.server.entity.tileentity.SignTileEntity;
 import io.gomint.server.entity.tileentity.TileEntity;
 import io.gomint.server.registry.RegisterInfo;
+import io.gomint.server.world.block.helper.ToolPresets;
 import io.gomint.taglib.NBTTagCompound;
 import io.gomint.world.block.BlockSign;
+import io.gomint.world.block.BlockType;
+import io.gomint.world.block.data.LogType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,14 +17,32 @@ import java.util.List;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:standing_sign" )
+@RegisterInfo(sId = "minecraft:standing_sign", def = true)
+@RegisterInfo(sId = "minecraft:jungle_standing_sign")
+@RegisterInfo(sId = "minecraft:acacia_standing_sign")
+@RegisterInfo(sId = "minecraft:birch_standing_sign")
+@RegisterInfo(sId = "minecraft:spruce_standing_sign")
+@RegisterInfo(sId = "minecraft:dark_oak_standing_sign")
+@RegisterInfo(sId = "minecraft:crimson_standing_sign")
+@RegisterInfo(sId = "minecraft:warped_standing_sign")
 public class Sign extends Block implements BlockSign {
 
-    @Override
-    public String getBlockId() {
-        return "minecraft:standing_sign";
-    }
+    private enum LogTypeMagic {
+        OAK("minecraft:standing_sign"),
+        SPRUCE("minecraft:spruce_standing_sign"),
+        BIRCH("minecraft:birch_standing_sign"),
+        JUNGLE("minecraft:jungle_standing_sign"),
+        ACACIA("minecraft:acacia_standing_sign"),
+        DARK_OAK("minecraft:dark_oak_standing_sign"),
+        CRIMSON("minecraft:crimson_standing_sign"),
+        WARPED("minecraft:warped_standing_sign");
 
+        private final String blockId;
+        LogTypeMagic(String blockId) {
+            this.blockId = blockId;
+        }
+    }
+    
     @Override
     public long getBreakTime() {
         return 1500;
@@ -101,6 +118,23 @@ public class Sign extends Block implements BlockSign {
         }
 
         return sign.getLines().get( line - 1 );
+    }
+
+    @Override
+    public LogType getWoodType() {
+        for (LogTypeMagic value : LogTypeMagic.values()) {
+            if (value.blockId.equals(this.getBlockId())) {
+                return LogType.valueOf(value.name());
+            }
+        }
+
+        return null;
+    }
+
+    @Override
+    public void setWoodType(LogType logType) {
+        LogTypeMagic newState = LogTypeMagic.valueOf(logType.name());
+        this.setBlockId(newState.blockId);
     }
 
     @Override

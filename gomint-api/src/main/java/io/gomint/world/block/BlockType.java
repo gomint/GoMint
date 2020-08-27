@@ -77,7 +77,7 @@ public enum BlockType {
     CONCRETE,
     CORAL_BLOCK,
     CORAL_FAN,
-    CORAL_FANG_YELLOW,
+    CORAL_FAN_HANG,
     CORAL,
     CRACKED_NETHER_BRICK,
     CRACKED_POLISHED_BLACKSTONE_BRICKS,
@@ -290,4 +290,6 @@ public enum BlockType {
     WOOL,
     ELEMENT,
     SMOKER,
+    LANTERN,
+
 }

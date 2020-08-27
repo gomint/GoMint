@@ -50,26 +50,22 @@ public class Log extends Block implements BlockLog {
     private static final String NEW_LOG_ID = "minecraft:log2";
 
     private enum LogTypeMagic {
-        OAK(OLD_WOOD_ID, OLD_WOOD_TYPE, OLD_LOG_ID, OLD_LOG_TYPE, "oak"),
-        SPRUCE(OLD_WOOD_ID, OLD_WOOD_TYPE, OLD_LOG_ID, OLD_LOG_TYPE, "spruce"),
-        BIRCH(OLD_WOOD_ID, OLD_WOOD_TYPE, OLD_LOG_ID, OLD_LOG_TYPE, "birch"),
-        JUNGLE(OLD_WOOD_ID, OLD_WOOD_TYPE, OLD_LOG_ID, OLD_LOG_TYPE, "jungle"),
-        ACACIA(OLD_WOOD_ID, OLD_WOOD_TYPE, NEW_LOG_ID, NEW_LOG_TYPE, "acacia"),
-        DARK_OAK(OLD_WOOD_ID, OLD_WOOD_TYPE, NEW_LOG_ID, NEW_LOG_TYPE, "dark_oak"),
-        CRIMSON("minecraft:crimson_hyphae", "", "minecraft:crimson_stem", "", ""),
-        WARPED("minecraft:warped_hyphae", "", "minecraft:warped_stem", "", "");
+        OAK(OLD_WOOD_ID, OLD_LOG_ID, "oak"),
+        SPRUCE(OLD_WOOD_ID, OLD_LOG_ID, "spruce"),
+        BIRCH(OLD_WOOD_ID, OLD_LOG_ID, "birch"),
+        JUNGLE(OLD_WOOD_ID, OLD_LOG_ID, "jungle"),
+        ACACIA(OLD_WOOD_ID, NEW_LOG_ID, "acacia"),
+        DARK_OAK(OLD_WOOD_ID, NEW_LOG_ID, "dark_oak"),
+        CRIMSON("minecraft:crimson_hyphae", "minecraft:crimson_stem", ""),
+        WARPED("minecraft:warped_hyphae", "minecraft:warped_stem", "");
 
         private final String fullTextureBlockId;
-        private final String fullTextureKey;
         private final String blockId;
-        private final String key;
         private final String value;
 
-        LogTypeMagic(String fullTextureBlockId, String fullTextureKey, String blockId, String key, String value) {
+        LogTypeMagic(String fullTextureBlockId, String blockId, String value) {
             this.fullTextureBlockId = fullTextureBlockId;
-            this.fullTextureKey = fullTextureKey;
             this.blockId = blockId;
-            this.key = key;
             this.value = value;
         }
     }
