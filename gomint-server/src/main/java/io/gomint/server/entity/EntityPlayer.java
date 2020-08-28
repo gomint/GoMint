@@ -372,6 +372,7 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
         return this.hiddenPlayers != null && this.hiddenPlayers.contains(player.getEntityId());
     }
 
+    @Override
     public void teleport(Location to, EntityTeleportEvent.Cause cause) {
         // Only teleport when online
         if (!isOnline()) {
@@ -677,9 +678,6 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
 
         // Send adventure settings
         this.sendAdventureSettings();
-
-        // Send commands
-        this.sendCommands();
 
         // Attributes
         this.updateAttributes();
@@ -1543,7 +1541,7 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
             if (isOnline()) {
                 getConnection().sendNetworkChunkPublisher();
             }
-        }, 1, TimeUnit.SECONDS);
+        }, 250, TimeUnit.MILLISECONDS);
     }
 
     @Override

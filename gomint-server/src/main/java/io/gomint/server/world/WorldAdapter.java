@@ -1539,14 +1539,14 @@ public abstract class WorldAdapter implements World {
     public Block getHighestBlockAt(int x, int z) {
         ChunkAdapter chunk = this.loadChunk(x >> 4, z >> 4, true);
         int y = chunk.getHeight(x & 0xF, z & 0xF);
-        return chunk.getBlockAt(x & 0xF, y, z & 0xF);
+        return chunk.getBlockAt(x & 0xF, y - 1, z & 0xF);
     }
 
     @Override
     public Block getHighestBlockAt(int x, int z, WorldLayer layer) {
         ChunkAdapter chunk = this.loadChunk(x >> 4, z >> 4, true);
         int y = chunk.getHeight(x & 0xF, z & 0xF);
-        return chunk.getBlockAt(x & 0xF, y, z & 0xF, layer);
+        return chunk.getBlockAt(x & 0xF, y - 1, z & 0xF, layer);
     }
 
     protected final void broadcastPacket(Packet packet) {

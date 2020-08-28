@@ -14,6 +14,7 @@ import io.gomint.server.GoMintServer;
 import io.gomint.server.entity.EntityPlayer;
 import io.gomint.server.plugin.PluginClassloader;
 import io.gomint.server.util.Allocator;
+import io.gomint.server.util.DumpUtil;
 import io.gomint.server.world.ChunkAdapter;
 import io.gomint.server.world.ChunkCache;
 import io.gomint.server.world.WorldAdapter;
@@ -48,6 +49,7 @@ import java.io.IOException;
 import java.nio.ByteOrder;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author geNAZt
@@ -408,8 +410,7 @@ public class LevelDBWorldAdapter extends WorldAdapter {
             ReadOptions ro = new ReadOptions().snapshot(snapshot);
 
             // Get version bit
-            byte[] versionKey = this.getKey(x, z, (byte) 0x76);
-            byte[] version = this.db.get(versionKey, ro);
+            byte[] version = this.db.get(this.getKey(x, z, (byte) 0x76), ro);
 
             if (version == null) {
                 if (generate) {
@@ -432,8 +433,7 @@ public class LevelDBWorldAdapter extends WorldAdapter {
             }
 
             // Get the finalized value, only needed for vanilla though, other implementations don't use this (null = true)
-            byte[] finalizedKey = this.getKey(x, z, (byte) 0x36);
-            byte[] finalized = this.db.get(finalizedKey, ro);
+            byte[] finalized = this.db.get(this.getKey(x, z, (byte) 0x36), ro);
 
             byte v = version[0];
             boolean populated = finalized == null || finalized[0] == 2;
@@ -441,53 +441,29 @@ public class LevelDBWorldAdapter extends WorldAdapter {
             LevelDBChunkAdapter loadingChunk = new LevelDBChunkAdapter(this, x, z, v, populated);
 
             for (int sectionY = 0; sectionY < 16; sectionY++) {
-                try {
-                    byte[] chunkKey = this.getKeySubChunk(x, z, (byte) 0x2f, (byte) sectionY);
-                    byte[] chunkData = this.db.get(chunkKey, ro);
+                byte[] chunkData = this.db.get(this.getKeySubChunk(x, z, (byte) 0x2f, (byte) sectionY), ro);
 
-                    if (chunkData != null) {
-                        loadingChunk.loadSection(sectionY, chunkData);
-                    } else {
-                        break;
-                    }
-                } catch (Exception e) {
-                    this.logger.warn("Could not load subchunk", e);
+                if (chunkData != null) {
+                    loadingChunk.loadSection(sectionY, chunkData);
+                } else {
+                    break;
                 }
             }
 
-            try {
-                byte[] tileEntityKey = this.getKey(x, z, (byte) 0x31);
-                byte[] tileEntityData = this.db.get(tileEntityKey, ro);
-
-                if (tileEntityData != null) {
-                    loadingChunk.loadTileEntities(tileEntityData);
-                }
-            } catch (Exception e) {
-                this.logger.warn("Could not load tiles", e);
+            byte[] tileEntityData = this.db.get(this.getKey(x, z, (byte) 0x31), ro);
+            if (tileEntityData != null) {
+                loadingChunk.loadTileEntities(tileEntityData);
             }
 
-            try {
-                byte[] entityKey = this.getKey(x, z, (byte) 0x32);
-                byte[] entityData = this.db.get(entityKey, ro);
-
-                if (entityData != null) {
-                    loadingChunk.loadEntities(entityData);
-                }
-            } catch (Exception e) {
-                this.logger.warn("Could not load entities", e);
+            byte[] entityData = this.db.get(this.getKey(x, z, (byte) 0x32), ro);
+            if (entityData != null) {
+                loadingChunk.loadEntities(entityData);
             }
 
-            /*byte[] extraData = null;
-            try {
-                extraData = this.db.get( snapshot, this.getKey( x, z, (byte) 0x34 ) );
-            } catch ( Exception ignored ) {
-                ignored.printStackTrace();
-                // TODO: Implement proper error handling here
+            byte[] biomes = this.db.get(this.getKey(x, z, (byte) 0x2d));
+            if (biomes != null) {
+                loadingChunk.loadHeightAndBiomes(biomes);
             }
-
-            if ( extraData != null ) {
-                DumpUtil.dumpByteArray( extraData );
-            }*/
 
             // Register entities
             this.registerEntitiesFromChunk(loadingChunk);

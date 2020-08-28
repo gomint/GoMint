@@ -98,13 +98,13 @@ public class CheckMain {
 
                                 if (!found) {
                                     if (!stateKey.equals("deprecated")) {
-                                        System.out.println("[X]  Missing state " + stateKey + " (" + stateKeys.get(stateKey).getClass().getSimpleName() + ") in block " + block);
+                                        //System.out.println("[X]  Missing state " + stateKey + " (" + stateKeys.get(stateKey).getClass().getSimpleName() + ") in block " + block);
                                         missingStates.incrementAndGet();
                                     }
                                 }
                             } else {
                                 if (!stateKey.equals("deprecated")) {
-                                    System.out.println("[X]  Missing state " + stateKey + " (" + stateKeys.get(stateKey).getClass().getSimpleName() + ") in block " + block);
+                                    //System.out.println("[X]  Missing state " + stateKey + " (" + stateKeys.get(stateKey).getClass().getSimpleName() + ") in block " + block);
                                     missingStates.incrementAndGet();
                                 }
                             }
@@ -120,7 +120,7 @@ public class CheckMain {
 
             for (String stateKey : stateKeys.keySet()) {
                 if (!stateKey.equals("deprecated")) {
-                    System.out.println("[X]  Missing state " + stateKey + " (" + stateKeys.get(stateKey).getClass().getSimpleName() + ") in block " + block);
+                    //System.out.println("[X]  Missing state " + stateKey + " (" + stateKeys.get(stateKey).getClass().getSimpleName() + ") in block " + block);
                     missingStates.incrementAndGet();
                 }
             }

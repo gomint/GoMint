@@ -37,9 +37,13 @@ public class PostProcessWorker implements Runnable {
             return;
         }
 
+        long start = System.nanoTime();
+
         PacketBatch batch = new PacketBatch();
         batch.setPayload(this.connection.getOutputProcessor().process(inBuf));
         this.connection.send(batch);
+
+        LOGGER.debug("Encoding and sending took {} ns", System.nanoTime() - start);
 
         if (this.callback != null) {
             this.callback.accept(null);

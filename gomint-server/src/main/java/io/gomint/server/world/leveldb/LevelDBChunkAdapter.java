@@ -7,7 +7,6 @@
 
 package io.gomint.server.world.leveldb;
 
-import io.gomint.jraknet.PacketBuffer;
 import io.gomint.math.MathUtils;
 import io.gomint.server.entity.Entity;
 import io.gomint.server.entity.tileentity.SerializationReason;
@@ -27,14 +26,13 @@ import io.gomint.taglib.NBTTagCompound;
 import io.gomint.taglib.NBTWriter;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.PooledByteBufAllocator;
+import io.netty.buffer.Unpooled;
 import it.unimi.dsi.fastutil.ints.Int2IntMap;
 import it.unimi.dsi.fastutil.ints.Int2IntOpenHashMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
-import it.unimi.dsi.fastutil.longs.LongArrayList;
-import it.unimi.dsi.fastutil.longs.LongList;
 import org.iq80.leveldb.DB;
 import org.iq80.leveldb.WriteBatch;
 import org.slf4j.Logger;
@@ -317,6 +315,20 @@ public class LevelDBChunkAdapter extends ChunkAdapter {
         }
 
         data.release();
+    }
+
+    public void loadHeightAndBiomes(byte[] heightAndBiomes) {
+        ByteBuf buf = Unpooled.wrappedBuffer(heightAndBiomes);
+        short[] height = new short[16 * 16];
+        for (int i = 0; i < height.length; i++) {
+            height[i] = buf.readShortLE();
+        }
+
+        byte[] biomes = new byte[16 * 16];
+        buf.readBytes(biomes);
+
+        this.setHeightMap(height);
+        this.setBiomes(biomes);
     }
 
 }

@@ -21,6 +21,7 @@ import java.util.Objects;
 public class PacketCraftingRecipes extends Packet {
 
     private Collection<Recipe> recipes;
+    private PacketBuffer cache = null;
 
     /**
      * Construct new crafting recipe packet
@@ -31,15 +32,11 @@ public class PacketCraftingRecipes extends Packet {
 
     @Override
     public void serialize( PacketBuffer buffer, int protocolID ) {
-        buffer.writeUnsignedVarInt( this.recipes.size() );
-
-        for ( Recipe recipe : this.recipes ) {
-            recipe.serialize( buffer );
+        if (this.cache == null) {
+            this.cache();
         }
 
-        buffer.writeUnsignedVarInt(0); // Potions
-        buffer.writeUnsignedVarInt(0);
-        buffer.writeBoolean( true); // Clean client recipes
+        buffer.writeBytes(this.cache.getBuffer().asReadOnly());
     }
 
     @Override
@@ -53,6 +50,11 @@ public class PacketCraftingRecipes extends Packet {
 
     public void setRecipes(Collection<Recipe> recipes) {
         this.recipes = recipes;
+
+        if (this.cache != null) {
+            this.cache.release();
+            this.cache = null;
+        }
     }
 
     @Override
@@ -67,4 +69,18 @@ public class PacketCraftingRecipes extends Packet {
     public int hashCode() {
         return Objects.hash(recipes);
     }
+
+    public void cache() {
+        this.cache = new PacketBuffer(1024);
+        this.cache.writeUnsignedVarInt( this.recipes.size() );
+
+        for ( Recipe recipe : this.recipes ) {
+            recipe.serialize( this.cache );
+        }
+
+        this.cache.writeUnsignedVarInt(0); // Potions
+        this.cache.writeUnsignedVarInt(0);
+        this.cache.writeBoolean( true); // Clean client recipes
+    }
+
 }

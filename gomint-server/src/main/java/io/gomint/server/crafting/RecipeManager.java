@@ -50,6 +50,7 @@ public class RecipeManager {
         if ( this.dirty ) {
             PacketCraftingRecipes recipes = new PacketCraftingRecipes();
             recipes.setRecipes( this.recipes );
+            recipes.cache();
 
             this.batchPacket = recipes;
             this.dirty = false;

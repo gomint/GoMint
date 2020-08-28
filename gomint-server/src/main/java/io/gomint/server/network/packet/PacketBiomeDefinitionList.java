@@ -4,14 +4,8 @@ import com.google.common.io.ByteStreams;
 import io.gomint.jraknet.PacketBuffer;
 import io.gomint.server.assets.AssetsLibrary;
 import io.gomint.server.network.Protocol;
-import io.gomint.taglib.NBTReader;
-import io.gomint.taglib.NBTTagCompound;
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.UnpooledByteBufAllocator;
 
 import java.io.InputStream;
-import java.nio.ByteOrder;
-import java.util.List;
 
 /**
  * @author HerryYT
@@ -33,13 +27,6 @@ public class PacketBiomeDefinitionList extends Packet {
 
             // noinspection UnstableApiUsage
             this.nbt = ByteStreams.toByteArray( inputStream );
-
-            ByteBuf d = UnpooledByteBufAllocator.DEFAULT.heapBuffer();
-            d.writeBytes(this.nbt);
-            NBTReader reader = new NBTReader(d, ByteOrder.LITTLE_ENDIAN);
-            reader.setUseVarint(true);
-            NBTTagCompound output = reader.parse();
-            System.out.println(output);
         } catch ( Exception e ) {
             throw new AssertionError( "Error whilst loading biome_definitions.dat", e );
         }

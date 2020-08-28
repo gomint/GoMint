@@ -18,14 +18,24 @@ import io.gomint.server.network.Protocol;
 public class PacketCreativeContent extends Packet {
 
     private ItemStack[] items;
+    private PacketBuffer cache = null;
 
     public PacketCreativeContent() {
         super(Protocol.PACKET_CREATIVE_CONTENT);
     }
 
     @Override
-    public void serialize(PacketBuffer buffer, int protocolID) throws Exception {
-        writeItemStacksWithIDs(this.items, buffer);
+    public void serialize(PacketBuffer buffer, int protocolID) {
+        if (this.cache == null) {
+            this.cache();
+        }
+
+        buffer.writeBytes(this.cache.getBuffer().asReadOnly());
+    }
+
+    private void cache() {
+        this.cache = new PacketBuffer(1024);
+        writeItemStacksWithIDs(this.items, this.cache);
     }
 
     @Override
@@ -39,6 +49,11 @@ public class PacketCreativeContent extends Packet {
 
     public void setItems(ItemStack[] items) {
         this.items = items;
+
+        if (this.cache != null) {
+            this.cache.release();
+            this.cache = null;
+        }
     }
 
 }

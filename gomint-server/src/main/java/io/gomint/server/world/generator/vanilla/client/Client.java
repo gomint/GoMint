@@ -397,11 +397,6 @@ public class Client implements ConnectionWithState {
                     }
                 }
 
-                // Read height
-                byte[] height = new byte[512];
-                chunkBuffer.readBytes( height );
-                chunkAdapter.setHeightMap( height );
-
                 // Read biomes
                 byte[] biomes = new byte[256];
                 chunkBuffer.readBytes( biomes );

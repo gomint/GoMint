@@ -13,7 +13,6 @@ import io.gomint.server.async.Delegate2;
 import io.gomint.server.entity.Entity;
 import io.gomint.server.entity.EntityPlayer;
 import io.gomint.server.entity.tileentity.SerializationReason;
-import io.gomint.server.entity.tileentity.TileEntities;
 import io.gomint.server.entity.tileentity.TileEntity;
 import io.gomint.server.network.packet.PacketWorldChunk;
 import io.gomint.server.util.Cache;
@@ -63,11 +62,11 @@ public class ChunkAdapter implements Chunk {
     protected long inhabitedTime;
 
     // Biomes
-    protected final ByteBuf biomes = UnpooledByteBufAllocator.DEFAULT.directBuffer(16 * 16);
+    protected final ByteBuf biomes = PooledByteBufAllocator.DEFAULT.directBuffer(16 * 16);
 
     // Blocks
     protected ChunkSlice[] chunkSlices = new ChunkSlice[16];
-    private byte[] height = new byte[16 * 16 * 2];
+    private short[] height = new short[16 * 16];
 
     // Players / Chunk GC
     protected List<EntityPlayer> players = new ArrayList<>();
@@ -412,7 +411,7 @@ public class ChunkAdapter implements Chunk {
      * @param z      The z-coordinate relative to the chunk
      * @param height The maximum block height
      */
-    private void setHeight(int x, int z, byte height) {
+    private void setHeight(int x, int z, short height) {
         this.height[(z << 4) + x] = height;
     }
 
@@ -425,7 +424,7 @@ public class ChunkAdapter implements Chunk {
      * @return The maximum block height
      */
     public int getHeight(int x, int z) {
-        return this.height[(z << 4) + x] & 0xFF;
+        return this.height[(z << 4) + x];
     }
 
     @Override
@@ -479,7 +478,7 @@ public class ChunkAdapter implements Chunk {
             for (int k = 0; k < 16; ++k) {
                 for (int j = (maxHeight + 16) - 1; j > 0; --j) {
                     if (!this.getBlock(i, j, k, 0).equals("minecraft:air")) { // For height MC uses normal layer (0)
-                        this.setHeight(i, k, (byte) j);
+                        this.setHeight(i, k, (short) ((short) j+1));
                         break;
                     }
                 }
@@ -673,7 +672,7 @@ public class ChunkAdapter implements Chunk {
         return slice.getRuntimeID(x, y - 16 * (y >> 4), z, layer);
     }
 
-    public void setHeightMap(byte[] height) {
+    public void setHeightMap(short[] height) {
         this.height = height;
     }
 

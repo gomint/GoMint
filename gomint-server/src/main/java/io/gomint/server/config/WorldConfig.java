@@ -23,11 +23,11 @@ public class WorldConfig extends YamlConfig {
         "You can set this to 0 if you don't want to hold any Chunks in Memory but this also means\n" +
         "that you have to load the Chunks from disk everytime someone joins and the Chunk GC has cleared\n" +
         "the chunks. USE 0 WITH CAUTION!!!" )
-    private int amountOfChunksForSpawnArea = 4;
+    private int amountOfChunksForSpawnArea = 8;
 
     @Comment( "View distance of a player. This defines the amount of chunks sent to a player when he moves or spawns.\n" +
         "This is measured in Chunks." )
-    private int viewDistance = 6;
+    private int viewDistance = 8;
 
     @Comment( "After how many seconds should a chunk be marked to be gced after the last player left the chunk." )
     private int secondsUntilGCAfterLastPlayerLeft = 300;
@@ -38,7 +38,7 @@ public class WorldConfig extends YamlConfig {
     @Comment( "Whether or not the world should be saved automatically on a regular basis" )
     private boolean autoSave = true;
 
-    @Comment( "Save the world when it gets unloaded or the server shuts down?")
+    @Comment( "Save the world when it or its chunks get unloaded or the server shuts down?")
     private boolean saveOnUnload = true;
 
     @Comment( "The auto-save interval in which chunks should be saved automatically in milliseconds" )

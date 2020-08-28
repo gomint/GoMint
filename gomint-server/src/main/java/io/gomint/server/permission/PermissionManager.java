@@ -33,6 +33,7 @@ public class PermissionManager implements io.gomint.permission.PermissionManager
 
     public PermissionManager(EntityPlayer player) {
         this.player = player;
+        this.dirty = true; // Dirty by default so we only send commands once on join
     }
 
     /**
