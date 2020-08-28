@@ -296,5 +296,6 @@ public enum BlockType {
     JIGSAW,
     HARDENED_GLASS_PANE,
     FLETCHING_TABLE,
+    CAMERA,
 
 }
