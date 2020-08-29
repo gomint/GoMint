@@ -66,7 +66,7 @@ public class ChunkAdapter implements Chunk {
 
     // Blocks
     protected ChunkSlice[] chunkSlices = new ChunkSlice[16];
-    private short[] height = new short[16 * 16];
+    protected short[] height = new short[16 * 16];
 
     // Players / Chunk GC
     protected List<EntityPlayer> players = new ArrayList<>();

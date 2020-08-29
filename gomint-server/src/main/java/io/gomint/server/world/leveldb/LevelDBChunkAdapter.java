@@ -116,8 +116,20 @@ public class LevelDBChunkAdapter extends ChunkAdapter {
             writeBatch.put( key, out.array() );
         }
 
+        // Save biome and height
+        ByteBuf outHB = PooledByteBufAllocator.DEFAULT.heapBuffer(768);
+        key = ( (LevelDBWorldAdapter) this.world ).getKey( this.x, this.z, (byte) 0x2d );
+
+        for (short height : this.height) {
+            outHB.writeShortLE(height);
+        }
+
+        outHB.writeBytes(this.biomes.asReadOnly());
+        writeBatch.put( key, out.array() );
+
         db.write( writeBatch );
         out.release();
+        outHB.release();
 
         try {
             writeBatch.close();
