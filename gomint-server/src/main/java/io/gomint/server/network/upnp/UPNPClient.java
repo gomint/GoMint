@@ -102,7 +102,7 @@ public class UPNPClient {
                     }
 
                     this.future.resolve(String.format("http://%s:%d%s", url.getHost(), url.getPort(), out));
-                    ctx.channel().closeFuture().addListener(future -> {
+                    ctx.channel().close().addListener(future -> {
                         this.group.shutdownGracefully();
                     });
                 }

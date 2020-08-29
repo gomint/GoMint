@@ -435,6 +435,8 @@ public class NetworkManager {
             for (Long2ObjectMap.Entry<PlayerConnection> entry : this.playersByGuid.long2ObjectEntrySet()) {
                 entry.getValue().close();
             }
+
+            this.close();
         }
 
         LOGGER.info("Shutdown of network completed");

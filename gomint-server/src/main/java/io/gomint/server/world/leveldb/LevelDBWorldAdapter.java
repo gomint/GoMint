@@ -403,7 +403,7 @@ public class LevelDBWorldAdapter extends WorldAdapter {
     }
 
     @Override
-    public ChunkAdapter loadChunk(int x, int z, boolean generate) {
+    public ChunkAdapter loadChunk0(int x, int z, boolean generate) {
         ChunkAdapter chunk = this.chunkCache.getChunk(x, z);
         if (chunk == null) {
             Snapshot snapshot = this.db.getSnapshot();
@@ -461,8 +461,10 @@ public class LevelDBWorldAdapter extends WorldAdapter {
             }
 
             byte[] biomes = this.db.get(this.getKey(x, z, (byte) 0x2d));
-            if (biomes != null) {
+            if (biomes != null && biomes.length == 768) { // There are 256 bytes versions of this which only contain 0 bytes
                 loadingChunk.loadHeightAndBiomes(biomes);
+            } else {
+                loadingChunk.calculateHeightmap(240);
             }
 
             // Register entities

@@ -298,7 +298,9 @@ public class ChunkAdapter implements Chunk {
 
         // Unflag all chunk slices
         for (ChunkSlice chunkSlice : this.chunkSlices) {
-            chunkSlice.resetPersistenceFlag();
+            if (chunkSlice != null) {
+                chunkSlice.resetPersistenceFlag();
+            }
         }
     }
 
@@ -693,7 +695,7 @@ public class ChunkAdapter implements Chunk {
     public boolean isNeedsPersistence() {
         // Ask all sections if they need persistence
         for (ChunkSlice slice : this.chunkSlices) {
-            if (slice.isNeedsPersistence()) {
+            if (slice != null && slice.isNeedsPersistence()) {
                 return true;
             }
         }

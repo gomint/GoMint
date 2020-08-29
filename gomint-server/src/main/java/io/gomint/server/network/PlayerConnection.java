@@ -678,8 +678,7 @@ public class PlayerConnection implements ConnectionWithState {
                     this.requestChunk(chunk.getFirst(), chunk.getSecond());
                 } else {
                     // We already know this chunk but maybe forceResend is enabled
-                    worldAdapter.sendChunk(chunk.getFirst(), chunk.getSecond(),
-                        false, (chunkHash, loadedChunk) -> {
+                    worldAdapter.sendChunk(chunk.getFirst(), chunk.getSecond(), (chunkHash, loadedChunk) -> {
                             if (this.entity != null) { // It can happen that the server loads longer and the client has disconnected
                                 this.entity.getEntityVisibilityManager().updateAddedChunk(loadedChunk);
                             }
@@ -751,8 +750,7 @@ public class PlayerConnection implements ConnectionWithState {
 
     private void requestChunk(Integer x, Integer z) {
         LOGGER.debug("Requesting chunk {} {} for {}", x, z, this.entity);
-        this.entity.getWorld().sendChunk(x, z,
-            false, (chunkHash, loadedChunk) -> {
+        this.entity.getWorld().sendChunk(x, z, (chunkHash, loadedChunk) -> {
                 LOGGER.debug("Loaded chunk: {} -> {}", this.entity, loadedChunk);
                 if (this.entity != null) { // It can happen that the server loads longer and the client has disconnected
                     loadedChunk.retainForConnection();

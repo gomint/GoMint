@@ -19,6 +19,7 @@ import io.gomint.math.*;
 import io.gomint.server.GoMintServer;
 import io.gomint.server.async.Delegate;
 import io.gomint.server.async.Delegate2;
+import io.gomint.server.async.Future;
 import io.gomint.server.async.MultiOutputDelegate;
 import io.gomint.server.config.WorldConfig;
 import io.gomint.server.entity.passive.EntityItem;
@@ -61,6 +62,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
@@ -684,16 +686,10 @@ public abstract class WorldAdapter implements World {
      *
      * @param x            The x-coordinate of the chunk
      * @param z            The z-coordinate of the chunk
-     * @param sync         Force sync chunk loading
      * @param sendDelegate delegate which may add the chunk to the send queue or add all entities on it to the send queue
      */
-    public void sendChunk(int x, int z, boolean sync, Delegate2<Long, ChunkAdapter> sendDelegate) {
-        if (!sync) {
-            this.getOrLoadChunk(x, z, true, chunk -> chunk.packageChunk(sendDelegate));
-        } else {
-            ChunkAdapter chunkAdapter = this.loadChunk(x, z, true);
-            packageChunk(chunkAdapter, sendDelegate);
-        }
+    public void sendChunk(int x, int z, Delegate2<Long, ChunkAdapter> sendDelegate) {
+        this.getOrLoadChunk(x, z, true, chunk -> chunk.packageChunk(sendDelegate));
     }
 
     /**
@@ -753,7 +749,32 @@ public abstract class WorldAdapter implements World {
      * @param generate A boolean which decides whether or not the chunk should be generated when not found
      * @return The loaded or generated Chunk
      */
-    public abstract ChunkAdapter loadChunk(int x, int z, boolean generate);
+    public ChunkAdapter loadChunk(int x, int z, boolean generate) {
+        // If we are on main thread async this for unload order reasons
+        if (this.server.isMainThread()) {
+            Future<ChunkAdapter> chunkAdapter = new Future<>();
+            this.getOrLoadChunk(x, z, generate, chunkAdapter::resolve);
+
+            try {
+                return chunkAdapter.get();
+            } catch (InterruptedException | ExecutionException e) {
+                logger.warn("Could not load chunk {} / {}", x, z, e);
+                return null;
+            }
+        }
+
+        return loadChunk0(x, z, generate);
+    }
+
+    /**
+     * Load a Chunk from the underlying implementation
+     *
+     * @param x        The x coordinate of the chunk we want to load
+     * @param z        The x coordinate of the chunk we want to load
+     * @param generate A boolean which decides whether or not the chunk should be generated when not found
+     * @return The loaded or generated Chunk
+     */
+    public abstract ChunkAdapter loadChunk0(int x, int z, boolean generate);
 
     /**
      * Saves the given chunk to its respective region file. The respective region file
@@ -766,10 +787,11 @@ public abstract class WorldAdapter implements World {
     /**
      * Saves the given chunk to its region file asynchronously.
      *
-     * @param chunk The chunk to save
+     * @param chunk            The chunk to save
+     * @param releaseAfterSave should this chunk be freed after saving?
      */
-    void saveChunkAsynchronously(ChunkAdapter chunk) {
-        AsyncChunkSaveTask task = new AsyncChunkSaveTask(chunk);
+    void saveChunkAsynchronously(ChunkAdapter chunk, boolean releaseAfterSave) {
+        AsyncChunkSaveTask task = new AsyncChunkSaveTask(chunk, releaseAfterSave);
         this.asyncChunkTasks.offer(task);
     }
 
@@ -864,6 +886,11 @@ public abstract class WorldAdapter implements World {
                         AsyncChunkSaveTask save = (AsyncChunkSaveTask) task;
                         chunk = save.getChunk();
                         this.saveChunk(chunk);
+
+                        if (save.isReleaseAfterSave()) {
+                            chunk.release();
+                        }
+
                         break;
 
                     case POPULATE:
@@ -1409,6 +1436,9 @@ public abstract class WorldAdapter implements World {
             // Save this world
             this.chunkCache.saveAll();
         }
+
+        // Unload all chunks
+        this.chunkCache.unloadAll();
 
         // Close the generator
         this.chunkGenerator.close();

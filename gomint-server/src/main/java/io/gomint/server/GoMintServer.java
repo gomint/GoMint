@@ -555,13 +555,14 @@ public class GoMintServer implements GoMint, InventoryHolder {
             long start = System.currentTimeMillis();
             while ((System.currentTimeMillis() - start) < TimeUnit.SECONDS.toMillis(10)) {
                 try {
-                    Thread.sleep(50);
+                    Thread.sleep(1000);
+                    if (!this.announceThreads()) {
+                        break;
+                    }
                 } catch (InterruptedException e) {
                     // Ignore
                 }
             }
-
-            this.announceThreads();
         }
 
         System.exit(0);
@@ -572,8 +573,9 @@ public class GoMintServer implements GoMint, InventoryHolder {
 
         Set<Thread> threadSet = Thread.getAllStackTraces().keySet();
         for (Thread thread : threadSet) {
-            if (thread.isDaemon() || thread.getId() == mainThread || thread.getThreadGroup().getName().equals("gomint-internal") ||
-                (thread.getThreadGroup().getParent() == null && thread.getThreadGroup().getName().equals("system"))) {
+            if (thread.isDaemon() || thread.getId() == mainThread || (thread.getThreadGroup() != null &&
+                thread.getThreadGroup().getName().equals("gomint-internal")) || (thread.getThreadGroup() != null &&
+                thread.getThreadGroup().getParent() == null && thread.getThreadGroup().getName().equals("system"))) {
                 continue;
             }
 

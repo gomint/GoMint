@@ -14,15 +14,18 @@ package io.gomint.server.world;
 public class AsyncChunkSaveTask extends AsyncChunkTask {
 
     private final ChunkAdapter chunk;
+    private final boolean releaseAfterSave;
 
     /**
      * Save the chunk into its on disk format
      *
      * @param chunk The chunk which should be saved
+     * @param releaseAfterSave should this chunk be freed after saving?
      */
-    AsyncChunkSaveTask( ChunkAdapter chunk ) {
+    AsyncChunkSaveTask( ChunkAdapter chunk, boolean releaseAfterSave ) {
         super( Type.SAVE );
         this.chunk = chunk;
+        this.releaseAfterSave = releaseAfterSave;
     }
 
     /**
@@ -32,6 +35,15 @@ public class AsyncChunkSaveTask extends AsyncChunkTask {
      */
     public ChunkAdapter getChunk() {
         return this.chunk;
+    }
+
+    /**
+     * Should this chunk be freed after save
+     *
+     * @return true when it should be freed, false otherwise
+     */
+    public boolean isReleaseAfterSave() {
+        return releaseAfterSave;
     }
 
 }

@@ -90,7 +90,7 @@ public class ChunkCache {
             if ( checkChunkSave && chunk.isNeedsPersistence() &&
                 currentTimeMS - chunk.getLastSavedTimestamp() >= this.autoSaveInterval ) {
                 chunk.setLastSavedTimestamp( currentTimeMS );
-                this.world.saveChunkAsynchronously( chunk );
+                this.world.saveChunkAsynchronously( chunk, false );
             }
 
             int currentX = (int) ( entry.getLongKey() >> 32 );
@@ -128,12 +128,13 @@ public class ChunkCache {
             while ( toRemoveCursor.hasNext() ) {
                 ChunkAdapter adapter = this.cachedChunks.remove( toRemoveCursor.nextLong() );
 
-                if (this.world.getConfig().isSaveOnUnload()) {
+                if (this.world.getConfig().isSaveOnUnload() &&
+                    adapter.isNeedsPersistence()) {
                     adapter.setLastSavedTimestamp( currentTimeMS );
-                    this.world.saveChunk(adapter);
+                    this.world.saveChunkAsynchronously(adapter, true);
+                } else {
+                    adapter.release();
                 }
-
-                adapter.release();
             }
         }
     }
@@ -267,8 +268,10 @@ public class ChunkCache {
     synchronized void saveAll() {
         for ( long l : this.cachedChunks.keySet() ) {
             ChunkAdapter chunkAdapter = this.cachedChunks.get( l );
-            this.world.saveChunk( chunkAdapter );
-            chunkAdapter.setLastSavedTimestamp( this.world.getServer().getCurrentTickTime() );
+            if (chunkAdapter.isNeedsPersistence()) {
+                this.world.saveChunk(chunkAdapter);
+                chunkAdapter.setLastSavedTimestamp(this.world.getServer().getCurrentTickTime());
+            }
         }
     }
 
@@ -285,8 +288,24 @@ public class ChunkCache {
     public synchronized void unload(int x, int z) {
         ChunkAdapter adapter = this.cachedChunks.remove(CoordinateUtils.toLong(x, z));
         if (adapter != null) {
-            this.world.saveChunk( adapter );
-            adapter.release();
+            if (this.world.getConfig().isSaveOnUnload() &&
+                adapter.isNeedsPersistence()) {
+                adapter.setLastSavedTimestamp( this.world.server.getCurrentTickTime() );
+                this.world.saveChunkAsynchronously(adapter, true);
+            } else {
+                adapter.release();
+            }
+        }
+    }
+
+    public void unloadAll() {
+        Long2ObjectMap.FastEntrySet<ChunkAdapter> fastEntrySet = (Long2ObjectMap.FastEntrySet<ChunkAdapter>) this.cachedChunks.long2ObjectEntrySet();
+        ObjectIterator<Long2ObjectMap.Entry<ChunkAdapter>> iterator = fastEntrySet.fastIterator();
+        while ( iterator.hasNext() ) {
+            Long2ObjectMap.Entry<ChunkAdapter> entry = iterator.next();
+            ChunkAdapter chunk = entry.getValue();
+            chunk.release();
+            iterator.remove();
         }
     }
 

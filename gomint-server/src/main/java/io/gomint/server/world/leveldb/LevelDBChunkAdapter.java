@@ -71,7 +71,7 @@ public class LevelDBChunkAdapter extends ChunkAdapter {
 
     public LevelDBChunkAdapter( WorldAdapter worldAdapter, int x, int z ) {
         super( worldAdapter, x, z );
-        this.chunkVersion = 15;
+        this.chunkVersion = 19;
 
         this.loadedTime = this.lastSavedTimestamp = worldAdapter.getServer().getCurrentTickTime();
     }
@@ -274,6 +274,8 @@ public class LevelDBChunkAdapter extends ChunkAdapter {
                         int runtimeID = chunkPalette.get( indexes[i] );
                         slice.setRuntimeIdInternal( i, sI, runtimeID );
                     }
+
+                    slice.resetPersistenceFlag(); // Since we have loaded and nothing changed in storage we reset this
                 }
 
                 break;
