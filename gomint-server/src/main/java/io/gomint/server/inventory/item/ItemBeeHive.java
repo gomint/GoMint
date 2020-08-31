@@ -18,11 +18,6 @@ import io.gomint.server.registry.RegisterInfo;
 public class ItemBeeHive extends ItemStack implements io.gomint.inventory.item.ItemBeeHive {
 
     @Override
-    public String getBlockId() {
-        return "minecraft:beehive";
-    }
-
-    @Override
     public ItemType getItemType() {
         return ItemType.BEEHIVE;
     }

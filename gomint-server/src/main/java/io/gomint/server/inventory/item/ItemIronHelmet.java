@@ -11,7 +11,7 @@ import io.gomint.world.block.data.Facing;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 306 )
+@RegisterInfo( sId = "minecraft:iron_helmet", id = 306 )
 public class ItemIronHelmet extends ItemIronArmor implements io.gomint.inventory.item.ItemIronHelmet {
 
     @Override

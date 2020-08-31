@@ -7,7 +7,7 @@ import io.gomint.taglib.NBTTagCompound;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 338 )
+@RegisterInfo( sId = "minecraft:reeds", id = 338 )
 public class ItemReeds extends ItemStack implements io.gomint.inventory.item.ItemReeds {
 
 

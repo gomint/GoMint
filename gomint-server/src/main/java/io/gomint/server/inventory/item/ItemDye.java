@@ -8,7 +8,7 @@ import io.gomint.taglib.NBTTagCompound;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 351 )
+@RegisterInfo( sId = "minecraft:dye", id = 351 )
 public class ItemDye extends ItemStack implements io.gomint.inventory.item.ItemDye {
 
 

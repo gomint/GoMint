@@ -24,7 +24,7 @@ import io.gomint.world.Gamemode;
  * @version 1.0
  */
 @CanBeDamaged
-@RegisterInfo( id = 471 )
+@RegisterInfo( sId = "minecraft:crossbow", id = 471 )
 public class ItemCrossbow extends ItemStack implements io.gomint.inventory.item.ItemBow {
 
     @Override

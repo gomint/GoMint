@@ -9,7 +9,7 @@ import io.gomint.taglib.NBTTagCompound;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo(id = 359)
+@RegisterInfo( sId = "minecraft:shears", id = 359 )
 public class ItemShears extends ItemStack implements io.gomint.inventory.item.ItemShears {
 
     @Override

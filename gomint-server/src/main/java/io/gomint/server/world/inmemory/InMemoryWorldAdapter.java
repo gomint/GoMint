@@ -79,8 +79,13 @@ public final class InMemoryWorldAdapter extends WorldAdapter {
     }
 
     @Override
-    public boolean persistPlayer( EntityPlayer player ) {
-        return false;
+    public void persistPlayer( EntityPlayer player ) {
+
+    }
+
+    @Override
+    public void loadPlayer(EntityPlayer player) {
+
     }
 
     @Override

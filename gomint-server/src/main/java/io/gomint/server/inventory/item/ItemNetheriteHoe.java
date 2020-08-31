@@ -17,7 +17,7 @@ import io.gomint.world.block.data.Facing;
  * @author KingAli
  * @version 1.0
  */
-@RegisterInfo( id = 747 )
+@RegisterInfo( sId = "minecraft:netherite_hoe", id = 747 )
 public class ItemNetheriteHoe extends ItemReduceTierNetherite implements io.gomint.inventory.item.ItemNetheriteHoe {
 
     @Override

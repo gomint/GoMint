@@ -21,6 +21,8 @@ import io.gomint.server.world.WorldAdapter;
 import io.gomint.server.world.WorldCreateException;
 import io.gomint.server.world.WorldLoadException;
 import io.gomint.server.world.block.Block;
+import io.gomint.taglib.AllocationLimitReachedException;
+import io.gomint.taglib.NBTReader;
 import io.gomint.taglib.NBTStream;
 import io.gomint.taglib.NBTTagCompound;
 import io.gomint.world.Chunk;
@@ -31,6 +33,7 @@ import io.gomint.world.generator.integrated.LayeredGenerator;
 import io.gomint.world.generator.integrated.NormalGenerator;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.PooledByteBufAllocator;
+import io.netty.buffer.Unpooled;
 import org.iq80.leveldb.impl.Iq80DBFactory;
 import org.iq80.leveldb.table.BloomFilterPolicy;
 import org.json.simple.JSONArray;
@@ -133,6 +136,23 @@ public class LevelDBWorldAdapter extends WorldAdapter {
             this.db = Iq80DBFactory.factory.open(new File(this.worldDir, "db"), options);
         } catch (Exception e) {
             throw new WorldLoadException("Could not open leveldb connection: " + e.getMessage());
+        }
+
+        DBIterator iterator = this.db.iterator();
+        while (iterator.hasNext()) {
+            Map.Entry<byte[], byte[]> entry = iterator.next();
+            if (entry.getKey().length > 12) {
+                DumpUtil.dumpByteArray(entry.getKey());
+                LOGGER.info(new String(entry.getKey()));
+
+                ByteBuf buf = Unpooled.wrappedBuffer(entry.getValue());
+                NBTReader reader = new NBTReader(buf, ByteOrder.LITTLE_ENDIAN);
+                try {
+                    DumpUtil.dumpNBTCompund(reader.parse());
+                } catch (IOException | AllocationLimitReachedException e) {
+                    e.printStackTrace();
+                }
+            }
         }
 
         this.prepareSpawnRegion();
@@ -513,8 +533,34 @@ public class LevelDBWorldAdapter extends WorldAdapter {
     }
 
     @Override
-    public boolean persistPlayer(EntityPlayer player) {
-        return false;
+    public void persistPlayer(EntityPlayer player) {
+
+    }
+
+    @Override
+    public void loadPlayer(EntityPlayer player) {
+        String key = "player_" + player.getUUID().toString();
+        byte[] playerInfoNbt = this.db.get(key.getBytes());
+        if (playerInfoNbt == null) {
+            return;
+        }
+
+        ByteBuf buf = Unpooled.wrappedBuffer(playerInfoNbt);
+        NBTReader reader = new NBTReader(buf, ByteOrder.LITTLE_ENDIAN);
+        try {
+            NBTTagCompound playerInfoCompound = reader.parse();
+            byte[] serverId = playerInfoCompound.getString("ServerId", "").getBytes();
+            if (serverId.length > 0) {
+                byte[] playerNbtData = this.db.get(serverId);
+                buf = Unpooled.wrappedBuffer(playerNbtData);
+                reader = new NBTReader(buf, ByteOrder.LITTLE_ENDIAN);
+
+                NBTTagCompound playerNbt = reader.parse();
+                player.initFromNBT(playerNbt);
+            }
+        } catch (IOException | AllocationLimitReachedException e) {
+            logger.warn("Could not load player information for loading", e);
+        }
     }
 
     @Override
@@ -526,7 +572,7 @@ public class LevelDBWorldAdapter extends WorldAdapter {
         try {
             this.saveLevelDat();
         } catch (IOException cause) {
-            this.logger.error("level.dat for world '{}' could not be saved: ", this.levelName, cause);
+            this.logger.warn("level.dat for world '{}' could not be saved: ", this.levelName, cause);
         }
     }
 

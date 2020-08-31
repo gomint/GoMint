@@ -8,7 +8,7 @@ import io.gomint.taglib.NBTTagCompound;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 265 )
+@RegisterInfo( sId = "minecraft:iron_ingot", id = 265 )
  public class ItemIronIngot extends ItemStack implements io.gomint.inventory.item.ItemIronIngot {
 
     @Override

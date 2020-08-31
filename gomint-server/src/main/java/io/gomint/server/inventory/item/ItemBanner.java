@@ -7,7 +7,7 @@ import io.gomint.taglib.NBTTagCompound;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 446 )
+@RegisterInfo( sId = "minecraft:banner", id = 446 )
 public class ItemBanner extends ItemStack implements io.gomint.inventory.item.ItemBanner {
 
     @Override

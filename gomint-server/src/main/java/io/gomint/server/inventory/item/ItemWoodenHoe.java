@@ -16,7 +16,7 @@ import io.gomint.world.block.data.Facing;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 290 )
+@RegisterInfo( sId = "minecraft:wooden_hoe", id = 290 )
 public class ItemWoodenHoe extends ItemReduceTierWooden implements io.gomint.inventory.item.ItemWoodenHoe {
 
     @Override

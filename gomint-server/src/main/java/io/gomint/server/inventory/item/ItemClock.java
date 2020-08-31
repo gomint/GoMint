@@ -8,7 +8,7 @@ import io.gomint.taglib.NBTTagCompound;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 347 )
+@RegisterInfo( sId = "minecraft:clock", id = 347 )
  public class ItemClock extends ItemStack implements io.gomint.inventory.item.ItemClock {
 
 

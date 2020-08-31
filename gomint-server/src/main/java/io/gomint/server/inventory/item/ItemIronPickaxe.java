@@ -11,7 +11,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 257 )
+@RegisterInfo( sId = "minecraft:iron_pickaxe", id = 257 )
 public class ItemIronPickaxe extends ItemReduceTierIron implements io.gomint.inventory.item.ItemIronPickaxe {
 
     @Override

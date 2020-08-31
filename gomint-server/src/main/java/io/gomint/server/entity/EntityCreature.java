@@ -43,14 +43,16 @@ public class EntityCreature extends EntityLiving implements io.gomint.entity.Ent
     public void initFromNBT( NBTTagCompound compound ) {
         super.initFromNBT( compound );
 
-        if ( this.armorInventory != null ) {
-            this.armorInventory.initFromNBT( compound );
-        }
+        this.armorInventory.initFromNBT( compound.getList("Armor", false ) );
     }
 
     @Override
     public NBTTagCompound persistToNBT() {
-        return super.persistToNBT();
+        NBTTagCompound compound = super.persistToNBT();
+
+        compound.addValue("Armor", this.armorInventory.persistToNBT() );
+
+        return compound;
     }
 
 }

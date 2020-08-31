@@ -7,7 +7,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @author KingAli
  * @version 1.0
  */
-@RegisterInfo(id = 757 )
+@RegisterInfo( sId = "minecraft:warped_fungus_on_a_stick", id = 757 )
 public class ItemWarpedFungusOnAStick extends ItemStack implements io.gomint.inventory.item.ItemWarpedFungusOnAStick {
 
     @Override

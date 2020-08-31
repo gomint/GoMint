@@ -665,9 +665,12 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
      */
     public void prepareEntity() {
         // Send world init data
+        this.connection.sendWorldTime(0);
         this.connection.sendWorldInitialization(this.getEntityId());
-        this.connection.addToSendQueue(new PacketAvailableEntityIdentifiers());
         this.connection.sendSpawnPosition();
+        this.connection.sendWorldTime(0);
+        this.connection.addToSendQueue(new PacketAvailableEntityIdentifiers());
+
         this.connection.sendDifficulty();
         this.connection.sendCommandsEnabled();
 
@@ -686,21 +689,24 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
         this.containerIds = new Object2ByteOpenHashMap<>();
 
         // Inventories
-        this.inventory = new PlayerInventory(this);
-        this.armorInventory = new ArmorInventory(this);
+        this.inventory = new PlayerInventory(this.world.getServer().getItems(), this);
+        this.armorInventory = new ArmorInventory(this.world.getServer().getItems(), this);
 
-        this.cursorInventory = new CursorInventory(this);
-        this.offhandInventory = new OffhandInventory(this);
-        this.enderChestInventory = new EnderChestInventory( this );
+        this.cursorInventory = new CursorInventory(this.world.getServer().getItems(), this);
+        this.offhandInventory = new OffhandInventory(this.world.getServer().getItems(), this);
+        this.enderChestInventory = new EnderChestInventory(this.world.getServer().getItems(),  this );
 
-        this.craftingInventory = new CraftingInputInventory(this);
-        this.craftingInputInventory = new CraftingInputInventory(this);
-        this.craftingResultInventory = new OneSlotInventory(this);
+        this.craftingInventory = new CraftingInputInventory(this.world.getServer().getItems(), this);
+        this.craftingInputInventory = new CraftingInputInventory(this.world.getServer().getItems(), this);
+        this.craftingResultInventory = new OneSlotInventory(this.world.getServer().getItems(), this);
 
-        this.enchantmentOutputInventory = new OneSlotInventory(this);
+        this.enchantmentOutputInventory = new OneSlotInventory(this.world.getServer().getItems(), this);
 
-        // Send all recipes
-        this.connection.addToSendQueue(this.world.getServer().getRecipeManager().getCraftingRecipesBatch());
+        // Load from world
+        this.world.loadPlayer(this);
+
+        // Send all inventories
+        this.sendInventories();
 
         // Send entity metadata
         this.sendData(this);
@@ -711,6 +717,9 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
             add(new PacketPlayerlist.Entry(EntityPlayer.this));
         }});
         this.getConnection().addToSendQueue(playerlist);
+
+        // Send all recipes
+        this.connection.addToSendQueue(this.world.getServer().getRecipeManager().getCraftingRecipesBatch());
 
         this.connection.getServer().getCreativeInventory().addViewer(this);
 
@@ -1542,6 +1551,12 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
                 getConnection().sendNetworkChunkPublisher();
             }
         }, 250, TimeUnit.MILLISECONDS);
+
+        this.world.getServer().getScheduler().schedule(() -> {
+            if (isOnline()) {
+                sendInventories();
+            }
+        }, 1000, TimeUnit.MILLISECONDS);
     }
 
     @Override
@@ -1675,11 +1690,16 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
     @Override
     public void initFromNBT(NBTTagCompound compound) {
         super.initFromNBT(compound);
+
+        this.enderChestInventory.initFromNBT(compound.getList("EnderChestInventory", false));
     }
 
     @Override
     public NBTTagCompound persistToNBT() {
         NBTTagCompound compound = super.persistToNBT();
+
+        compound.addValue("EnderChestInventory", this.enderChestInventory.persistToNBT());
+
         return compound;
     }
 
@@ -1828,6 +1848,27 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
     @Override
     public EnderChestInventory getEnderChestInventory() {
         return enderChestInventory;
+    }
+
+    public void sendInventories() {
+        this.inventory.addViewer(this);
+        this.armorInventory.addViewer(this);
+
+        this.cursorInventory.addViewer(this);
+        this.offhandInventory.addViewer(this);
+        this.enderChestInventory.addViewer(this);
+
+        this.craftingInventory.addViewer(this);
+        this.craftingInputInventory.addViewer(this);
+        this.craftingResultInventory.addViewer(this);
+
+        this.enchantmentOutputInventory.addViewer(this);
+
+        PacketHotbar hotbar = new PacketHotbar();
+        hotbar.setWindowId((byte) 0);
+        hotbar.setSelectedHotbarSlot(this.inventory.getItemInHandSlot());
+        hotbar.setSelectHotbarSlot(true);
+        this.connection.addToSendQueue(hotbar);
     }
 
 }

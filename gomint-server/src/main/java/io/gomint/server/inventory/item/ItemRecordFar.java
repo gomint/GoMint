@@ -14,7 +14,7 @@ import io.gomint.taglib.NBTTagCompound;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 504 )
+@RegisterInfo( sId = "minecraft:record_far", id = 504 )
 public class ItemRecordFar extends ItemStack implements io.gomint.inventory.item.ItemRecordFar {
 
 

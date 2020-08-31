@@ -8,7 +8,7 @@ import io.gomint.taglib.NBTTagCompound;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 422 )
+@RegisterInfo( sId = "minecraft:prismarine_crystals", id = 422 )
  public class ItemPrismarineCrystals extends ItemStack implements io.gomint.inventory.item.ItemPrismarineCrystals {
 
 

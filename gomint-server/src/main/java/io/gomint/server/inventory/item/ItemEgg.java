@@ -8,7 +8,7 @@ import io.gomint.taglib.NBTTagCompound;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 344 )
+@RegisterInfo( sId = "minecraft:egg", id = 344 )
  public class ItemEgg extends ItemStack implements io.gomint.inventory.item.ItemEgg {
 
 

@@ -51,7 +51,8 @@ public class Bootstrap {
         }
 
         // Enable reflection access to JDK NIO buffers for netty
-        System.setProperty( "io.netty.tryReflectionSetAccessible","true");
+        System.setProperty("io.netty.tryReflectionSetAccessible", "true");
+        System.setProperty("io.netty.maxDirectMemory", "0");
 
         // Setup additional debug
         if ("true".equals(System.getProperty("gomint.debug_events"))) {

@@ -7,7 +7,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 393 )
+@RegisterInfo( sId = "minecraft:baked_potato", id = 393 )
 public class ItemBakedPotato extends ItemFood implements io.gomint.inventory.item.ItemBakedPotato {
 
     @Override

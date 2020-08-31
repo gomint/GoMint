@@ -16,7 +16,7 @@ import io.gomint.world.block.data.Facing;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 293 )
+@RegisterInfo( sId = "minecraft:diamond_hoe", id = 293 )
 public class ItemDiamondHoe extends ItemReduceTierDiamond implements io.gomint.inventory.item.ItemDiamondHoe {
 
     @Override

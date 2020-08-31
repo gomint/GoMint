@@ -288,7 +288,7 @@ public class PacketInventoryTransactionHandler implements PacketHandler<PacketIn
 
                         // Check if target item is either the same item or air
                         io.gomint.server.inventory.item.ItemStack target = (io.gomint.server.inventory.item.ItemStack) packet.getActions()[0].getNewItem();
-                        if (target.getMaterial() != ((io.gomint.server.inventory.item.ItemStack) itemInHand).getMaterial() && target.getMaterial() != 0) {
+                        if (!target.getMaterial().equals(((io.gomint.server.inventory.item.ItemStack) itemInHand).getMaterial()) && !target.isAir()) {
                             // Transaction is invalid
                             reset(packet, connection);
                             connection.getEntity().setBreakVector(null);

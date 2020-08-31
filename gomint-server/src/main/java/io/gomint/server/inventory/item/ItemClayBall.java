@@ -8,7 +8,7 @@ import io.gomint.taglib.NBTTagCompound;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 337 )
+@RegisterInfo( sId = "minecraft:clay_ball", id = 337 )
  public class ItemClayBall extends ItemStack implements io.gomint.inventory.item.ItemClayBall {
 
 

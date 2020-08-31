@@ -11,7 +11,7 @@ import io.gomint.world.block.data.Facing;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 299 )
+@RegisterInfo( sId = "minecraft:leather_chestplate", id = 299 )
 public class ItemLeatherChestplate extends ItemLeatherArmor implements io.gomint.inventory.item.ItemLeatherChestplate {
 
 

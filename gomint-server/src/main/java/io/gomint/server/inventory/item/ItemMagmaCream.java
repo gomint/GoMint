@@ -8,7 +8,7 @@ import io.gomint.taglib.NBTTagCompound;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 378 )
+@RegisterInfo( sId = "minecraft:magma_cream", id = 378 )
  public class ItemMagmaCream extends ItemStack implements io.gomint.inventory.item.ItemMagmaCream {
 
 

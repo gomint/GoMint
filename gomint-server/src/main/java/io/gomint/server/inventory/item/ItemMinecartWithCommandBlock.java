@@ -14,7 +14,7 @@ import io.gomint.taglib.NBTTagCompound;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 443 )
+@RegisterInfo( sId = "minecraft:command_block_minecart", id = 443 )
 public class ItemMinecartWithCommandBlock extends ItemStack implements io.gomint.inventory.item.ItemMinecartWithCommandBlock {
 
 

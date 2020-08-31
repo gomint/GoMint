@@ -14,7 +14,7 @@ public class ItemUpdateGameBlockUpdate1 extends ItemStack {
 
     @Override
     public ItemType getItemType() {
-        return ItemType.UPDATE_GAME_BLOCK_UPDATE1;
+        return ItemType.AIR;
     }
 
 }

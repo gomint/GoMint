@@ -8,6 +8,7 @@
 package io.gomint.server.inventory;
 
 import io.gomint.server.entity.EntityPlayer;
+import io.gomint.server.inventory.item.Items;
 import io.gomint.server.network.PlayerConnection;
 import io.gomint.server.network.type.WindowType;
 
@@ -17,8 +18,8 @@ import io.gomint.server.network.type.WindowType;
  */
 public class DispenserInventory extends ContainerInventory {
 
-    public DispenserInventory( InventoryHolder owner ) {
-        super( owner, 9 );
+    public DispenserInventory(Items items, InventoryHolder owner) {
+        super(items, owner, 9);
     }
 
     @Override
@@ -27,22 +28,22 @@ public class DispenserInventory extends ContainerInventory {
     }
 
     @Override
-    public void onOpen( EntityPlayer player ) {
+    public void onOpen(EntityPlayer player) {
 
     }
 
     @Override
-    public void onClose( EntityPlayer player ) {
+    public void onClose(EntityPlayer player) {
 
     }
 
     @Override
-    public void sendContents( PlayerConnection playerConnection ) {
+    public void sendContents(PlayerConnection playerConnection) {
 
     }
 
     @Override
-    public void sendContents( int slot, PlayerConnection playerConnection ) {
+    public void sendContents(int slot, PlayerConnection playerConnection) {
 
     }
 

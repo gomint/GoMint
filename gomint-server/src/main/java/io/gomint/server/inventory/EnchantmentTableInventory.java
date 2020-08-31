@@ -5,6 +5,7 @@ import io.gomint.inventory.item.ItemType;
 import io.gomint.math.Location;
 import io.gomint.server.entity.EntityPlayer;
 import io.gomint.server.entity.tileentity.EnchantTableTileEntity;
+import io.gomint.server.inventory.item.Items;
 import io.gomint.server.network.type.WindowType;
 
 /**
@@ -18,8 +19,8 @@ public class EnchantmentTableInventory extends ContainerInventory {
      *
      * @param owner of the container (mostly a tile or normal entity)
      */
-    public EnchantmentTableInventory( InventoryHolder owner ) {
-        super( owner, 2 );
+    public EnchantmentTableInventory(Items items, InventoryHolder owner ) {
+        super( items, owner, 2 );
     }
 
     @Override

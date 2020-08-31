@@ -8,6 +8,7 @@
 package io.gomint.server.inventory;
 
 import io.gomint.server.entity.EntityPlayer;
+import io.gomint.server.inventory.item.Items;
 import io.gomint.server.network.type.WindowType;
 
 public class BarrelInventory extends ContainerInventory {
@@ -16,9 +17,10 @@ public class BarrelInventory extends ContainerInventory {
      * Create new chest inventory
      *
      * @param owner tile entity of the chest
+     * @param items factory
      */
-    public BarrelInventory( InventoryHolder owner ) {
-        super( owner, 27 );
+    public BarrelInventory(Items items, InventoryHolder owner) {
+        super(items, owner, 27);
     }
 
     @Override

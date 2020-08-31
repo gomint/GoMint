@@ -82,19 +82,16 @@ public class RecipeManager {
     }
 
     private void sortOutput( List<ItemStack> sortedOutput ) {
-        sortedOutput.sort( new Comparator<ItemStack>() {
-            @Override
-            public int compare( ItemStack o1, ItemStack o2 ) {
-                int mat1 = ( (io.gomint.server.inventory.item.ItemStack) o1 ).getMaterial();
-                int mat2 = ( (io.gomint.server.inventory.item.ItemStack) o2 ).getMaterial();
+        sortedOutput.sort((o1, o2) -> {
+            String mat1 = ( (io.gomint.server.inventory.item.ItemStack) o1 ).getMaterial();
+            String mat2 = ( (io.gomint.server.inventory.item.ItemStack) o2 ).getMaterial();
 
-                if ( mat1 == mat2 ) {
-                    return Short.compare( o1.getData(), o2.getData() );
-                }
-
-                return Integer.compare( mat1, mat2 );
+            if ( mat1.equals(mat2) ) {
+                return Short.compare( o1.getData(), o2.getData() );
             }
-        } );
+
+            return mat1.compareTo(mat2);
+        });
     }
 
     /**

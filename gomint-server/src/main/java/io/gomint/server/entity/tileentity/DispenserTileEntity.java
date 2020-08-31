@@ -28,69 +28,70 @@ import java.util.List;
 @RegisterInfo(sId = "Dispenser")
 public class DispenserTileEntity extends TileEntity implements InventoryHolder {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger( DispenserTileEntity.class );
+    private static final Logger LOGGER = LoggerFactory.getLogger(DispenserTileEntity.class);
     private final DispenserInventory inventory;
 
     /**
      * Construct new tile entity from position and world data
      *
      * @param block which created this tile
+     * @param items factory
      */
     public DispenserTileEntity(Block block, Items items) {
-        super( block, items );
-        this.inventory = new DispenserInventory( this );
+        super(block, items);
+        this.inventory = new DispenserInventory(items, this);
     }
 
     @Override
-    public void fromCompound( NBTTagCompound compound ) {
-        super.fromCompound( compound );
+    public void fromCompound(NBTTagCompound compound) {
+        super.fromCompound(compound);
 
         // Read in items
-        List<Object> itemList = compound.getList( "Items", false );
-        if ( itemList == null ) return;
+        List<Object> itemList = compound.getList("Items", false);
+        if (itemList == null) return;
 
-        for ( Object item : itemList ) {
+        for (Object item : itemList) {
             NBTTagCompound itemCompound = (NBTTagCompound) item;
 
-            io.gomint.server.inventory.item.ItemStack itemStack = getItemStack( itemCompound );
-            if ( itemStack instanceof ItemAir ) {
+            io.gomint.server.inventory.item.ItemStack itemStack = getItemStack(itemCompound);
+            if (itemStack instanceof ItemAir) {
                 continue;
             }
 
-            byte slot = itemCompound.getByte( "Slot", (byte) 127 );
-            if ( slot == 127 ) {
-                LOGGER.warn( "Found item without slot information: {} @ {} setting it to the next free slot", itemStack.getMaterial(), this.getBlock().getLocation() );
-                this.inventory.addItem( itemStack );
+            byte slot = itemCompound.getByte("Slot", (byte) 127);
+            if (slot == 127) {
+                LOGGER.warn("Found item without slot information: {} @ {} setting it to the next free slot", itemStack.getMaterial(), this.getBlock().getLocation());
+                this.inventory.addItem(itemStack);
             } else {
-                this.inventory.setItem( slot, itemStack );
+                this.inventory.setItem(slot, itemStack);
             }
         }
     }
 
     @Override
-    public void update( long currentMillis, float dT ) {
+    public void update(long currentMillis, float dT) {
 
     }
 
     @Override
-    public void toCompound( NBTTagCompound compound, SerializationReason reason ) {
-        super.toCompound( compound, reason );
+    public void toCompound(NBTTagCompound compound, SerializationReason reason) {
+        super.toCompound(compound, reason);
 
-        compound.addValue( "id", "Dispenser" );
+        compound.addValue("id", "Dispenser");
 
-        if ( reason == SerializationReason.PERSIST ) {
+        if (reason == SerializationReason.PERSIST) {
             List<NBTTagCompound> nbtTagCompounds = new ArrayList<>();
-            for ( int i = 0; i < this.inventory.size(); i++ ) {
-                ItemStack itemStack = (ItemStack) this.inventory.getItem( i );
-                if ( itemStack != null ) {
-                    NBTTagCompound nbtTagCompound = new NBTTagCompound( "" );
-                    nbtTagCompound.addValue( "Slot", (byte) i );
-                    putItemStack( itemStack, nbtTagCompound );
-                    nbtTagCompounds.add( nbtTagCompound );
+            for (int i = 0; i < this.inventory.size(); i++) {
+                ItemStack itemStack = (ItemStack) this.inventory.getItem(i);
+                if (itemStack != null) {
+                    NBTTagCompound nbtTagCompound = new NBTTagCompound("");
+                    nbtTagCompound.addValue("Slot", (byte) i);
+                    putItemStack(itemStack, nbtTagCompound);
+                    nbtTagCompounds.add(nbtTagCompound);
                 }
             }
 
-            compound.addValue( "Items", nbtTagCompounds );
+            compound.addValue("Items", nbtTagCompounds);
         }
     }
 

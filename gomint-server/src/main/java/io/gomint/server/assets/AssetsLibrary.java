@@ -67,7 +67,6 @@ public class AssetsLibrary {
      */
     public AssetsLibrary(Items items) {
         this.items = items;
-        this.items.setAssets(this);
     }
 
     /**
@@ -96,8 +95,11 @@ public class AssetsLibrary {
         this.itemIDs = new ArrayList<>();
         for (NBTTagCompound itemLegacyID : itemLegacyIDs) {
             StringShortPair pair = new StringShortPair(itemLegacyID.getString("name", ""), itemLegacyID.getShort("id", (short) 0));
+            System.out.println(pair.getBlockId() + " -> " + pair.getData());
             this.itemIDs.add(pair);
         }
+
+        this.items.initItemIDs(this.itemIDs);
     }
 
     private void loadBlockPalette(List<NBTTagCompound> blockPaletteCompounds) {
@@ -280,7 +282,7 @@ public class AssetsLibrary {
     private ItemStack loadItemStack(PacketBuffer buffer) throws IOException, AllocationLimitReachedException {
         short id = buffer.readShort();
         if (id == 0) {
-            return this.items == null ? null : this.items.create(0, (short) 0, (byte) 0, null);
+            return null;
         }
 
         byte amount = buffer.readByte();

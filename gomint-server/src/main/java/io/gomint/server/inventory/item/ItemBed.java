@@ -8,7 +8,8 @@ import io.gomint.world.block.data.BlockColor;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo(sId = "minecraft:bed", id = 355)
+@RegisterInfo(sId = "minecraft:bed", id = 355, def = true)
+@RegisterInfo(sId = "minecraft:item.bed", id = 26)
 public class ItemBed extends ItemStack implements io.gomint.inventory.item.ItemBed {
 
     @Override

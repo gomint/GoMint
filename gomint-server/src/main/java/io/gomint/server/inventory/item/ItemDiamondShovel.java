@@ -16,7 +16,7 @@ import io.gomint.world.block.data.Facing;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 277 )
+@RegisterInfo( sId = "minecraft:diamond_shovel", id = 277 )
 public class ItemDiamondShovel extends ItemReduceTierDiamond implements io.gomint.inventory.item.ItemDiamondShovel {
 
 

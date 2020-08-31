@@ -8,7 +8,7 @@ import io.gomint.taglib.NBTTagCompound;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 352 )
+@RegisterInfo( sId = "minecraft:bone", id = 352 )
  public class ItemBone extends ItemStack implements io.gomint.inventory.item.ItemBone {
 
 

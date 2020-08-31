@@ -8,8 +8,13 @@
 package io.gomint.server.inventory;
 
 import io.gomint.server.entity.EntityPlayer;
+import io.gomint.server.inventory.item.Items;
 import io.gomint.server.network.type.WindowType;
 
+/**
+ * @author geNAZt
+ * @version 1.0
+ */
 public class SmokerInventory extends ContainerInventory {
 
     /**
@@ -17,8 +22,8 @@ public class SmokerInventory extends ContainerInventory {
      *
      * @param owner of the container (mostly a tile or normal entity)
      */
-    public SmokerInventory(InventoryHolder owner) {
-        super(owner, 3);
+    public SmokerInventory(Items items, InventoryHolder owner) {
+        super(items, owner, 3);
     }
 
     @Override

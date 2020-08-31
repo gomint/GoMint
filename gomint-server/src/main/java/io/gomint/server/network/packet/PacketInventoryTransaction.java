@@ -9,6 +9,8 @@ import io.gomint.world.block.data.Facing;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Arrays;
+
 /**
  * @author geNAZt
  * @version 1.0
@@ -257,6 +259,19 @@ public class PacketInventoryTransaction extends Packet {
         public void setNewItemStackID(int newItemStackID) {
             this.newItemStackID = newItemStackID;
         }
+
+        @Override
+        public String toString() {
+            return "NetworkTransaction{" +
+                "sourceType=" + sourceType +
+                ", windowId=" + windowId +
+                ", unknown=" + unknown +
+                ", slot=" + slot +
+                ", oldItem=" + oldItem +
+                ", newItem=" + newItem +
+                ", newItemStackID=" + newItemStackID +
+                '}';
+        }
     }
 
     public int getType() {
@@ -385,5 +400,27 @@ public class PacketInventoryTransaction extends Packet {
 
     public void setHasItemstackIDs(boolean hasItemstackIDs) {
         this.hasItemstackIDs = hasItemstackIDs;
+    }
+
+    @Override
+    public String toString() {
+        return "PacketInventoryTransaction{" +
+            "type=" + type +
+            ", actions=" + Arrays.toString(actions) +
+            ", actionType=" + actionType +
+            ", hotbarSlot=" + hotbarSlot +
+            ", itemInHand=" + itemInHand +
+            ", blockPosition=" + blockPosition +
+            ", face=" + face +
+            ", playerPosition=" + playerPosition +
+            ", clickPosition=" + clickPosition +
+            ", blockRuntimeID=" + blockRuntimeID +
+            ", entityId=" + entityId +
+            ", vector1=" + vector1 +
+            ", vector2=" + vector2 +
+            ", requestId=" + requestId +
+            ", changeSlot=" + Arrays.toString(changeSlot) +
+            ", hasItemstackIDs=" + hasItemstackIDs +
+            '}';
     }
 }

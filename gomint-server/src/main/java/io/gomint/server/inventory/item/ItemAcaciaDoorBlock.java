@@ -7,12 +7,12 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:acacia_door",  id = 196 )
+@RegisterInfo( sId = "minecraft:item.acacia_door",  id = 196 )
 public class ItemAcaciaDoorBlock extends ItemStack {
 
     @Override
     public ItemType getItemType() {
-        return ItemType.ACACIA_DOOR_BLOCK;
+        return ItemType.ACACIA_DOOR;
     }
 
 }

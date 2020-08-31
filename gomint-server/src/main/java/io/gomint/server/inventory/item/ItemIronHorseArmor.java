@@ -8,7 +8,7 @@ import io.gomint.taglib.NBTTagCompound;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 417 )
+@RegisterInfo( sId = "minecraft:horsearmoriron", id = 417 )
  public class ItemIronHorseArmor extends ItemStack implements io.gomint.inventory.item.ItemIronHorseArmor {
 
 

@@ -13,7 +13,7 @@ import io.gomint.world.block.data.Facing;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 368 )
+@RegisterInfo( sId = "minecraft:ender_pearl", id = 368 )
 public class ItemEnderPearl extends ItemStack implements io.gomint.inventory.item.ItemEnderPearl {
 
 

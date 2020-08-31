@@ -8,7 +8,7 @@ import io.gomint.taglib.NBTTagCompound;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 420 )
+@RegisterInfo( sId = "minecraft:lead", id = 420 )
  public class ItemLead extends ItemStack implements io.gomint.inventory.item.ItemLead {
 
 

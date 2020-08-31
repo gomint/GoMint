@@ -11,7 +11,7 @@ import io.gomint.world.block.data.Facing;
  * @author KingAli
  * @version 1.0
  */
-@RegisterInfo( id = 749 )
+@RegisterInfo( sId = "minecraft:netherite_chestplate", id = 749 )
 public class ItemNetheriteChestplate extends ItemNetheriteArmor implements io.gomint.inventory.item.ItemNetheriteChestplate {
 
     @Override

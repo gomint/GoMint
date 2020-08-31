@@ -4,12 +4,14 @@ import io.gomint.entity.Entity;
 import io.gomint.inventory.InventoryType;
 import io.gomint.inventory.item.ItemStack;
 import io.gomint.server.inventory.item.ItemArmor;
+import io.gomint.server.inventory.item.Items;
 import io.gomint.server.network.PlayerConnection;
 import io.gomint.server.network.packet.PacketInventoryContent;
 import io.gomint.server.network.packet.PacketInventorySetSlot;
 import io.gomint.server.network.packet.PacketMobArmorEquipment;
 import io.gomint.taglib.NBTTagCompound;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -22,9 +24,10 @@ public class ArmorInventory extends Inventory implements io.gomint.inventory.Arm
      * Construct a inventory for holding armor items
      *
      * @param owner of this inventory
+     * @param items factory
      */
-    public ArmorInventory( InventoryHolder owner ) {
-        super( owner, 4 );
+    public ArmorInventory(Items items, InventoryHolder owner ) {
+        super( items, owner, 4 );
     }
 
     @Override
@@ -137,20 +140,6 @@ public class ArmorInventory extends Inventory implements io.gomint.inventory.Arm
                 itemStack.setData( (short) ( itemStack.getData() + damage ) );
                 this.setItem( i, itemStack );
             }
-        }
-    }
-
-    public void initFromNBT( NBTTagCompound compound ) {
-        List<Object> armorItems = compound.getList( "ArmorItems", false );
-        if ( armorItems != null ) {
-            //this.setBoots(  );
-            for ( Object armorItem : armorItems ) {
-
-            }
-        }
-
-        if ( compound.containsKey( "ArmorItems" ) ) {
-
         }
     }
 

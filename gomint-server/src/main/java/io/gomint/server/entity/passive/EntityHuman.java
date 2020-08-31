@@ -91,8 +91,8 @@ public class EntityHuman extends EntityCreature implements io.gomint.entity.pass
         super( EntityType.PLAYER, null );
 
         // Init inventories
-        this.inventory = new PlayerInventory( this );
-        this.armorInventory = new ArmorInventory( this );
+        this.inventory = new PlayerInventory( this.world.getServer().getItems(), this );
+        this.armorInventory = new ArmorInventory( this.world.getServer().getItems(), this );
 
         // Some default values
         this.uuid = UUID.randomUUID();
@@ -298,7 +298,6 @@ public class EntityHuman extends EntityCreature implements io.gomint.entity.pass
         AttributeInstance instance = this.getAttributeInstance( Attribute.SATURATION );
         this.setSaturation( instance.getValue() + amount );
     }
-
 
     public void setSaturation( float amount ) {
         AttributeInstance instance = this.getAttributeInstance( Attribute.SATURATION );
@@ -599,17 +598,15 @@ public class EntityHuman extends EntityCreature implements io.gomint.entity.pass
     @Override
     public void initFromNBT( NBTTagCompound compound ) {
         super.initFromNBT( compound );
+
+        this.inventory.initFromNBT(compound.getList("Inventory", false));
     }
 
     @Override
     public NBTTagCompound persistToNBT() {
         NBTTagCompound compound = super.persistToNBT();
 
-        // Food
-        compound.addValue( "foodLevel", (int) this.getHunger() );
-        compound.addValue( "foodExhaustionLevel", this.getExhaustion() );
-        compound.addValue( "foodSaturationLevel", this.getSaturation() );
-        compound.addValue( "foodTickTimer", this.foodTicks );
+        compound.addValue("Inventory", this.inventory.persistToNBT());
 
         // Player inventory
         return compound;

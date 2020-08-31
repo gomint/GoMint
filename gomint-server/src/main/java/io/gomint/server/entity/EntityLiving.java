@@ -572,7 +572,6 @@ public abstract class EntityLiving extends Entity implements InventoryHolder, io
         }
 
         this.deadTimer = compound.getShort("DeathTime", (short) 0);
-        this.setHealth(compound.getFloat("Health", 20f));
         this.attackCoolDown = compound.getShort("HurtTime", (short) 0).byteValue();
     }
 
@@ -595,7 +594,6 @@ public abstract class EntityLiving extends Entity implements InventoryHolder, io
 
         compound.addValue("Attributes", nbtAttributes);
         compound.addValue("DeathTime", (short) this.deadTimer);
-        compound.addValue("Health", this.getHealth());
         compound.addValue("HurtTime", (short) this.attackCoolDown);
 
         return compound;

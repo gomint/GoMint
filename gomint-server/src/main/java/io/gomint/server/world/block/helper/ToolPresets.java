@@ -21,6 +21,7 @@ public final class ToolPresets {
     };
 
     public static final Class<? extends ItemStack>[] PICKAXE = new Class[]{
+        ItemNetheritePickaxe.class,
         ItemDiamondPickaxe.class,
         ItemGoldenPickaxe.class,
         ItemIronPickaxe.class,

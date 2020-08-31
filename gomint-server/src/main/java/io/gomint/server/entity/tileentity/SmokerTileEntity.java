@@ -33,7 +33,7 @@ public class SmokerTileEntity extends TileEntity implements InventoryHolder {
     public SmokerTileEntity(Block block, Items items) {
         super(block, items);
 
-        this.inventory = new SmokerInventory(this);
+        this.inventory = new SmokerInventory(items, this);
         this.smeltingComponent = new SmeltingComponent(this.inventory, this, this.items);
     }
 

@@ -7,7 +7,7 @@ import io.gomint.taglib.NBTTagCompound;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 385 )
+@RegisterInfo( sId = "minecraft:fireball", id = 385 )
 public class ItemFireCharge extends ItemStack implements io.gomint.inventory.item.ItemFireCharge {
 
 

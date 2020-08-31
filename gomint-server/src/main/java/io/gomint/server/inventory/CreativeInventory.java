@@ -19,7 +19,7 @@ public class CreativeInventory extends Inventory {
      * @param size  of the inventory
      */
     public CreativeInventory( InventoryHolder owner, int size ) {
-        super( owner, size );
+        super( null, owner, size );
 
         this.inventoryContent.setItems( getContentsArray() );
     }

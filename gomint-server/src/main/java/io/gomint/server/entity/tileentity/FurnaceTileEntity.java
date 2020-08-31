@@ -37,7 +37,7 @@ public class FurnaceTileEntity extends ContainerTileEntity implements InventoryH
     public FurnaceTileEntity(Block block, Items items) {
         super(block, items);
 
-        this.inventory = new FurnaceInventory(this);
+        this.inventory = new FurnaceInventory(items, this);
         this.smeltingComponent = new SmeltingComponent(this.inventory, this, this.items);
     }
 

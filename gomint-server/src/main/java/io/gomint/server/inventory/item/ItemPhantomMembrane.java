@@ -7,7 +7,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 470 )
+@RegisterInfo( sId = "minecraft:phantom_membrane", id = 470 )
 public class ItemPhantomMembrane extends ItemStack implements io.gomint.inventory.item.ItemPhantomMembrane {
 
     @Override

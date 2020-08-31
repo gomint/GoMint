@@ -8,7 +8,7 @@ import io.gomint.taglib.NBTTagCompound;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 318 )
+@RegisterInfo( sId = "minecraft:flint", id = 318 )
  public class ItemFlint extends ItemStack implements io.gomint.inventory.item.ItemFlint {
 
 

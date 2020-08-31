@@ -14,7 +14,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = -165 )
+@RegisterInfo( sId = "minecraft:scaffolding", id = -165 )
 public class ItemScaffolding extends ItemStack implements io.gomint.inventory.item.ItemScaffolding {
 
     @Override

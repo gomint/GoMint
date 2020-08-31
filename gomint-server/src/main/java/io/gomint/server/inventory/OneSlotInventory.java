@@ -8,6 +8,7 @@
 package io.gomint.server.inventory;
 
 import io.gomint.inventory.InventoryType;
+import io.gomint.server.inventory.item.Items;
 import io.gomint.server.network.PlayerConnection;
 
 /**
@@ -16,17 +17,17 @@ import io.gomint.server.network.PlayerConnection;
  */
 public class OneSlotInventory extends Inventory {
 
-    public OneSlotInventory( InventoryHolder owner ) {
-        super( owner, 1 );
+    public OneSlotInventory(Items items, InventoryHolder owner) {
+        super(items, owner, 1);
     }
 
     @Override
-    public void sendContents( PlayerConnection playerConnection ) {
+    public void sendContents(PlayerConnection playerConnection) {
 
     }
 
     @Override
-    public void sendContents( int slot, PlayerConnection playerConnection ) {
+    public void sendContents(int slot, PlayerConnection playerConnection) {
 
     }
 

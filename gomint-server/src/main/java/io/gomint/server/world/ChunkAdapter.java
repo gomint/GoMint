@@ -710,6 +710,8 @@ public class ChunkAdapter implements Chunk {
             this.world.chunkGenerator.populate(this);
             this.calculateHeightmap(240);
             this.setPopulated(true);
+
+            this.setLastSavedTimestamp(this.world.getServer().getCurrentTickTime());
         }
     }
 

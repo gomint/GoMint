@@ -18,11 +18,6 @@ import io.gomint.server.registry.RegisterInfo;
 public class ItemBarrel extends ItemStack implements io.gomint.inventory.item.ItemBarrel {
 
     @Override
-    public String getBlockId() {
-        return "minecraft:barrel";
-    }
-
-    @Override
     public ItemType getItemType() {
         return ItemType.BARREL;
     }

@@ -11,7 +11,6 @@ public class PacketHotbar extends Packet {
 
     private int selectedHotbarSlot;
     private byte windowId;
-    private int[] slots;
     private boolean selectHotbarSlot;
 
     /**
@@ -23,7 +22,9 @@ public class PacketHotbar extends Packet {
 
     @Override
     public void serialize( PacketBuffer buffer, int protocolID ) {
-
+        buffer.writeUnsignedVarInt(this.selectedHotbarSlot);
+        buffer.writeByte(this.windowId);
+        buffer.writeBoolean(this.selectHotbarSlot);
     }
 
     @Override
@@ -47,14 +48,6 @@ public class PacketHotbar extends Packet {
 
     public void setWindowId(byte windowId) {
         this.windowId = windowId;
-    }
-
-    public int[] getSlots() {
-        return slots;
-    }
-
-    public void setSlots(int[] slots) {
-        this.slots = slots;
     }
 
     public boolean isSelectHotbarSlot() {

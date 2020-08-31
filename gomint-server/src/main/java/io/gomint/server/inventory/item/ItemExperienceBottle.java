@@ -12,7 +12,7 @@ import io.gomint.world.block.data.Facing;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 384 )
+@RegisterInfo( sId = "minecraft:experience_bottle", id = 384 )
 public class ItemExperienceBottle extends ItemStack implements io.gomint.inventory.item.ItemExperienceBottle {
 
 

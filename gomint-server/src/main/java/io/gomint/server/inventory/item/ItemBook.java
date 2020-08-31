@@ -7,7 +7,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 340 )
+@RegisterInfo( sId = "minecraft:book", id = 340 )
 public class ItemBook extends ItemStack implements io.gomint.inventory.item.ItemBook {
 
     @Override

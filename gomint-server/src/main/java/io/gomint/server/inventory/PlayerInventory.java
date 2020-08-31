@@ -6,8 +6,8 @@ import io.gomint.inventory.item.ItemStack;
 import io.gomint.math.Vector;
 import io.gomint.server.entity.EntityPlayer;
 import io.gomint.server.entity.passive.EntityHuman;
+import io.gomint.server.inventory.item.Items;
 import io.gomint.server.network.PlayerConnection;
-import io.gomint.server.network.packet.PacketContainerClose;
 import io.gomint.server.network.packet.PacketContainerOpen;
 import io.gomint.server.network.packet.PacketInventoryContent;
 import io.gomint.server.network.packet.PacketInventorySetSlot;
@@ -27,8 +27,8 @@ public class PlayerInventory extends ContainerInventory implements io.gomint.inv
      *
      * @param player for which this inventory is
      */
-    public PlayerInventory(EntityHuman player) {
-        super(player, 36);
+    public PlayerInventory(Items items, EntityHuman player) {
+        super(items, player, 36);
     }
 
     /**

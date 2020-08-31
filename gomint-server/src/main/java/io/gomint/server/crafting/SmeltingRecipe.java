@@ -61,7 +61,7 @@ public class SmeltingRecipe extends Recipe {
         buffer.writeSignedVarInt(this.input.getData() == 0 ? 2 : 3);
 
         // We need to custom write items
-        buffer.writeSignedVarInt(((io.gomint.server.inventory.item.ItemStack) this.input).getMaterial());
+        buffer.writeSignedVarInt(((io.gomint.server.inventory.item.ItemStack) this.input).getRuntimeID());
         if (this.input.getData() != 0) buffer.writeSignedVarInt(this.input.getData());
 
         Packet.writeItemStack(this.outcome, buffer);

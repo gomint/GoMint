@@ -17,7 +17,7 @@ import io.gomint.world.block.data.Facing;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 292 )
+@RegisterInfo( sId = "minecraft:iron_hoe", id = 292 )
 public class ItemIronHoe extends ItemReduceTierIron implements io.gomint.inventory.item.ItemIronHoe {
 
     @Override

@@ -23,12 +23,8 @@ public class ItemCampfire extends ItemStack implements io.gomint.inventory.item.
     }
 
     @Override
-    public String getBlockId() {
-        return "minecraft:campfire";
-    }
-
-    @Override
     public ItemType getItemType() {
         return ItemType.CAMPFIRE;
     }
+
 }

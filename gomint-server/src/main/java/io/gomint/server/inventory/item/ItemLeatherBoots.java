@@ -11,7 +11,7 @@ import io.gomint.world.block.data.Facing;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 301 )
+@RegisterInfo( sId = "minecraft:leather_boots", id = 301 )
 public class ItemLeatherBoots extends ItemLeatherArmor implements io.gomint.inventory.item.ItemLeatherBoots {
 
     @Override

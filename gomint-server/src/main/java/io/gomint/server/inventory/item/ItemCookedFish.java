@@ -8,7 +8,7 @@ import io.gomint.taglib.NBTTagCompound;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 350 )
+@RegisterInfo( sId = "minecraft:cooked_fish", id = 350 )
 public class ItemCookedFish extends ItemFood implements io.gomint.inventory.item.ItemCookedFish {
 
 

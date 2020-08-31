@@ -11,7 +11,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 279 )
+@RegisterInfo( sId = "minecraft:diamond_axe", id = 279 )
 public class ItemDiamondAxe extends ItemReduceTierDiamond implements io.gomint.inventory.item.ItemDiamondAxe {
 
     @Override

@@ -4,8 +4,10 @@ import io.gomint.entity.Entity;
 import io.gomint.inventory.item.ItemAir;
 import io.gomint.inventory.item.ItemStack;
 import io.gomint.server.entity.EntityPlayer;
+import io.gomint.server.inventory.item.Items;
 import io.gomint.server.network.PlayerConnection;
 import io.gomint.server.util.Pair;
+import io.gomint.taglib.NBTTagCompound;
 
 import java.util.*;
 import java.util.function.Consumer;
@@ -24,17 +26,14 @@ public abstract class Inventory implements io.gomint.inventory.Inventory {
     protected ItemStack[] contents;
 
     private Vector<Consumer<Pair<Integer, ItemStack>>> changeObservers;
+    private final Items items;
 
-    public Inventory( InventoryHolder owner, int size ) {
+    public Inventory( Items items, InventoryHolder owner, int size ) {
         this.owner = owner;
         this.size = size;
+        this.items = items;
 
         this.clear();
-
-        // Add owner to viewers if needed
-        if ( this.owner instanceof EntityPlayer ) {
-            addViewer( (EntityPlayer) this.owner );
-        }
     }
 
     public void addViewer( EntityPlayer player ) {
@@ -284,6 +283,54 @@ public abstract class Inventory implements io.gomint.inventory.Inventory {
     @Override
     public Stream<ItemStack> items() {
         return Stream.of(this.contents);
+    }
+
+    protected ItemStack loadItem(NBTTagCompound compound) {
+        short data = compound.getShort("Damage", (short) 0);
+        byte amount = compound.getByte("Count", (byte) 0);
+        String itemId = compound.getString("Name", "");
+        if (itemId.isEmpty()) {
+            return ItemAir.create(0);
+        }
+
+        return this.items.create(itemId, data, amount, null);
+    }
+
+    protected NBTTagCompound persistItem(io.gomint.server.inventory.item.ItemStack itemStack) {
+        NBTTagCompound compound = new NBTTagCompound("");
+        compound.addValue("Damage", itemStack.getData());
+        compound.addValue("Count", itemStack.getAmount());
+        compound.addValue("Name", itemStack.getBlockId());
+        return compound;
+    }
+
+    public void initFromNBT( List<Object> compounds ) {
+        if (compounds != null) {
+            byte slot = 0;
+            for (Object compound : compounds) {
+                NBTTagCompound itemCompound = (NBTTagCompound) compound;
+                slot = itemCompound.getByte("Slot", slot);
+
+                this.setItem(slot, this.loadItem(itemCompound));
+
+                slot++;
+            }
+        }
+    }
+
+    public List<NBTTagCompound> persistToNBT() {
+        List<NBTTagCompound> compounds = new ArrayList<>();
+
+        byte slot = 0;
+        for (ItemStack itemStack : getContentsArray()) {
+            NBTTagCompound itemCompound = this.persistItem((io.gomint.server.inventory.item.ItemStack) itemStack);
+            itemCompound.addValue("Slot", slot);
+            compounds.add(itemCompound);
+
+            slot++;
+        }
+
+        return compounds;
     }
 
 }

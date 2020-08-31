@@ -7,7 +7,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 455 )
+@RegisterInfo( sId = "minecraft:trident", id = 455 )
 public class ItemTrident extends ItemStack implements io.gomint.inventory.item.ItemTrident {
 
     @Override

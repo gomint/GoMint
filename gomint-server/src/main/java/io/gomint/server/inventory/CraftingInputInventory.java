@@ -5,6 +5,7 @@ import io.gomint.inventory.item.ItemStack;
 import io.gomint.math.BlockPosition;
 import io.gomint.math.Location;
 import io.gomint.server.entity.EntityPlayer;
+import io.gomint.server.inventory.item.Items;
 import io.gomint.server.network.PlayerConnection;
 import io.gomint.server.network.type.WindowType;
 import io.gomint.server.world.WorldAdapter;
@@ -17,8 +18,8 @@ public class CraftingInputInventory extends ContainerInventory {
 
     private BlockPosition position;
 
-    public CraftingInputInventory( InventoryHolder owner ) {
-        super( owner, 4 );
+    public CraftingInputInventory(Items items, InventoryHolder owner) {
+        super(items, owner, 4);
     }
 
     @Override
@@ -42,22 +43,22 @@ public class CraftingInputInventory extends ContainerInventory {
         Location location = player.getLocation();
 
         // Push out all items in the crafting views
-        for ( ItemStack stack : player.getCraftingInventory().getContentsArray() ) {
-            worldAdapter.dropItem( location, stack );
+        for (ItemStack stack : player.getCraftingInventory().getContentsArray()) {
+            worldAdapter.dropItem(location, stack);
         }
 
         // Client closed its crafting view
-        player.getCraftingInventory().resizeAndClear( 4 );
-        player.getCraftingInputInventory().resizeAndClear( 4 );
+        player.getCraftingInventory().resizeAndClear(4);
+        player.getCraftingInputInventory().resizeAndClear(4);
     }
 
     @Override
-    public void sendContents( PlayerConnection playerConnection ) {
+    public void sendContents(PlayerConnection playerConnection) {
 
     }
 
     @Override
-    public void sendContents( int slot, PlayerConnection playerConnection ) {
+    public void sendContents(int slot, PlayerConnection playerConnection) {
 
     }
 

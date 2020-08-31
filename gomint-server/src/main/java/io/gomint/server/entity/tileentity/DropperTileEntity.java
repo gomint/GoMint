@@ -39,7 +39,7 @@ public class DropperTileEntity extends TileEntity implements InventoryHolder {
     public DropperTileEntity(Block block, Items items) {
         super( block, items );
 
-        this.inventory = new DropperInventory( this );
+        this.inventory = new DropperInventory( items,this );
     }
 
     @Override

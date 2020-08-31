@@ -299,8 +299,8 @@ public class LevelDBChunkAdapter extends ChunkAdapter {
                 if ( tileEntity != null ) {
                     this.addTileEntity( tileEntity );
                 }
-            } catch ( Exception e ) {
-                LOGGER.error( "Error in loading tile entities", e );
+            } catch ( IOException | AllocationLimitReachedException e ) {
+                LOGGER.warn( "Error in loading tile entities", e );
                 break;
             }
         }

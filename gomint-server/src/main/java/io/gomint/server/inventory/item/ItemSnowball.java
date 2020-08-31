@@ -18,7 +18,7 @@ import io.gomint.world.block.data.Facing;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 332 )
+@RegisterInfo( sId = "minecraft:snowball", id = 332 )
 public class ItemSnowball extends ItemStack implements io.gomint.inventory.item.ItemSnowball {
 
     @Override

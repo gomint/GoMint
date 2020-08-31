@@ -18,11 +18,6 @@ import io.gomint.server.registry.RegisterInfo;
 public class ItemBarrier extends ItemStack implements io.gomint.inventory.item.ItemBarrier {
 
     @Override
-    public String getBlockId() {
-        return "minecraft:barrier";
-    }
-
-    @Override
     public ItemType getItemType() {
         return ItemType.BARRIER;
     }

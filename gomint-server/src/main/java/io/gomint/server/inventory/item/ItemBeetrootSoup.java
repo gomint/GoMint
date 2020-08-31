@@ -8,7 +8,7 @@ import io.gomint.taglib.NBTTagCompound;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 459 )
+@RegisterInfo( sId = "minecraft:beetroot_soup", id = 459 )
 public class ItemBeetrootSoup extends ItemFood implements io.gomint.inventory.item.ItemBeetrootSoup {
 
 

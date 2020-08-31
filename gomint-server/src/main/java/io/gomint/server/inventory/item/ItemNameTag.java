@@ -8,7 +8,7 @@ import io.gomint.taglib.NBTTagCompound;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 421 )
+@RegisterInfo( sId = "minecraft:name_tag", id = 421 )
  public class ItemNameTag extends ItemStack implements io.gomint.inventory.item.ItemNameTag {
 
 

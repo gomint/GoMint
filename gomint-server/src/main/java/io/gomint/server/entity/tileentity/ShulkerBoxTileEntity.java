@@ -37,7 +37,7 @@ public class ShulkerBoxTileEntity extends ContainerTileEntity implements Invento
      */
     public ShulkerBoxTileEntity(Block block, Items items) {
         super( block, items );
-        this.inventory = new ChestInventory( this );
+        this.inventory = new ChestInventory( items, this );
     }
 
     @Override

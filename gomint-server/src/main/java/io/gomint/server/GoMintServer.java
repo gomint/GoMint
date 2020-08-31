@@ -213,8 +213,6 @@ public class GoMintServer implements GoMint, InventoryHolder {
             return;
         }
 
-        this.items.initItemIDs(this.assets.getItemIDs());
-
         // ------------------------------------ //
         // Build up registries
         // ------------------------------------ //

@@ -11,11 +11,6 @@ import io.gomint.server.registry.RegisterInfo;
 public class ItemBlastFurnace extends ItemStack implements io.gomint.inventory.item.ItemBlastFurnace {
 
     @Override
-    public String getBlockId() {
-        return "minecraft:blast_furnace";
-    }
-
-    @Override
     public ItemType getItemType() {
         return ItemType.BLAST_FURNACE;
     }

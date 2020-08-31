@@ -7,7 +7,7 @@ import io.gomint.taglib.NBTTagCompound;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 356 )
+@RegisterInfo( sId = "minecraft:repeater", id = 356 )
 public class ItemRedstoneRepeater extends ItemStack implements io.gomint.inventory.item.ItemRedstoneRepeater {
 
 

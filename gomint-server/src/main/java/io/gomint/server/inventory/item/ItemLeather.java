@@ -8,7 +8,7 @@ import io.gomint.taglib.NBTTagCompound;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 334 )
+@RegisterInfo( sId = "minecraft:leather", id = 334 )
  public class ItemLeather extends ItemStack implements io.gomint.inventory.item.ItemLeather {
 
 

@@ -8,7 +8,7 @@ import io.gomint.taglib.NBTTagCompound;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 408 )
+@RegisterInfo( sId = "minecraft:hopper_minecart", id = 408 )
  public class ItemMinecartWithHopper extends ItemStack implements io.gomint.inventory.item.ItemMinecartWithHopper {
 
 

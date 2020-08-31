@@ -8,7 +8,7 @@ import io.gomint.taglib.NBTTagCompound;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 462 )
+@RegisterInfo( sId = "minecraft:pufferfish", id = 462 )
 public class ItemPufferfish extends ItemFood implements io.gomint.inventory.item.ItemPufferfish {
 
 

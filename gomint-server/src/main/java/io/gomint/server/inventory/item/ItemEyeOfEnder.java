@@ -8,7 +8,7 @@ import io.gomint.taglib.NBTTagCompound;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 381 )
+@RegisterInfo( sId = "minecraft:ender_eye", id = 381 )
  public class ItemEyeOfEnder extends ItemStack implements io.gomint.inventory.item.ItemEyeOfEnder {
 
 

@@ -7,7 +7,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 262 )
+@RegisterInfo( sId = "minecraft:arrow", id = 262 )
 public class ItemArrow extends ItemStack implements io.gomint.inventory.item.ItemArrow {
 
     @Override

@@ -11,7 +11,6 @@ import io.gomint.entity.Entity;
 import io.gomint.math.Vector;
 import io.gomint.server.entity.EntityPlayer;
 import io.gomint.server.inventory.BarrelInventory;
-import io.gomint.server.inventory.ChestInventory;
 import io.gomint.server.inventory.InventoryHolder;
 import io.gomint.server.inventory.item.ItemAir;
 import io.gomint.server.inventory.item.ItemStack;
@@ -38,7 +37,7 @@ public class BarrelTileEntity extends ContainerTileEntity implements InventoryHo
 
     public BarrelTileEntity(Block block, Items items) {
         super( block, items );
-        this.inventory = new BarrelInventory( this );
+        this.inventory = new BarrelInventory( items,this );
     }
 
     @Override

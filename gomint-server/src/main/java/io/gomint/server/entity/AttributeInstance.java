@@ -124,6 +124,8 @@ public class AttributeInstance {
 
     public void initFromNBT( NBTTagCompound compound ) {
         this.defaultValue = compound.getFloat( "Base", this.defaultValue );
+        this.value = compound.getFloat("Current", this.value);
+        this.maxValue = compound.getFloat("Max", this.maxValue);
 
         List<Object> nbtAmplifiers = compound.getList( "Modifiers", false );
         if ( nbtAmplifiers != null ) {
@@ -162,8 +164,6 @@ public class AttributeInstance {
                     }
                 }
             }
-
-            this.recalc();
         }
     }
 
@@ -171,17 +171,21 @@ public class AttributeInstance {
         NBTTagCompound compound = new NBTTagCompound( "" );
         compound.addValue( "Name", this.key );
         compound.addValue( "Base", this.defaultValue );
+        compound.addValue("Current", this.value);
+        compound.addValue("Max", this.maxValue);
 
         // Check for 0 mode multipliers (simple addition)
         List<NBTTagCompound> nbtModifiers = new ArrayList<>();
         if ( !this.modifiers.isEmpty() ) {
-            /*for ( Map.Entry<AttributeModifier, Float> entry: this.modifiers.entrySet() ) {
-                NBTTagCompound nbtTagCompound = new NBTTagCompound( "" );
-                nbtTagCompound.addValue( "Name", entry.getKey().name() );
-                nbtTagCompound.addValue( "Operation", 0 );
-                nbtTagCompound.addValue( "Amount", (double) entry.getValue() );
-                nbtModifiers.add( nbtTagCompound );
-            }*/
+            for ( Map.Entry<AttributeModifierType, Map<AttributeModifier, Float>> entry: this.modifiers.entrySet() ) {
+                for (Map.Entry<AttributeModifier, Float> modifierEntry : entry.getValue().entrySet()) {
+                    NBTTagCompound nbtTagCompound = new NBTTagCompound( "" );
+                    nbtTagCompound.addValue( "Name", modifierEntry.getKey().getName() );
+                    nbtTagCompound.addValue( "Operation", entry.getKey().ordinal() );
+                    nbtTagCompound.addValue( "Amount", (double) modifierEntry.getValue() );
+                    nbtModifiers.add( nbtTagCompound );
+                }
+            }
         }
 
         compound.addValue( "Modifiers", nbtModifiers );

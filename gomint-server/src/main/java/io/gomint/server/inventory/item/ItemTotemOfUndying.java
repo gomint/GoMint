@@ -14,7 +14,7 @@ import io.gomint.taglib.NBTTagCompound;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 450 )
+@RegisterInfo( sId = "minecraft:totem", id = 450 )
 public class ItemTotemOfUndying extends ItemStack implements io.gomint.inventory.item.ItemTotemOfUndying {
 
 

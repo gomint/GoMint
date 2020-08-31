@@ -14,7 +14,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = -163 )
+@RegisterInfo( sId = "minecraft:bamboo", id = -163 )
 public class ItemBamboo extends ItemStack implements io.gomint.inventory.item.ItemBamboo {
 
     @Override

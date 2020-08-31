@@ -8,7 +8,7 @@ import io.gomint.taglib.NBTTagCompound;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 289 )
+@RegisterInfo( sId = "minecraft:gunpowder", id = 289 )
  public class ItemGunpowder extends ItemStack implements io.gomint.inventory.item.ItemGunpowder {
 
 

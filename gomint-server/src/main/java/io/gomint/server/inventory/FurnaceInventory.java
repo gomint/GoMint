@@ -8,7 +8,7 @@
 package io.gomint.server.inventory;
 
 import io.gomint.server.entity.EntityPlayer;
-import io.gomint.server.network.PlayerConnection;
+import io.gomint.server.inventory.item.Items;
 import io.gomint.server.network.type.WindowType;
 
 /**
@@ -17,8 +17,8 @@ import io.gomint.server.network.type.WindowType;
  */
 public class FurnaceInventory extends ContainerInventory {
 
-    public FurnaceInventory( InventoryHolder owner ) {
-        super( owner, 3 );
+    public FurnaceInventory(Items items, InventoryHolder owner) {
+        super(items, owner, 3);
     }
 
     @Override
@@ -27,12 +27,12 @@ public class FurnaceInventory extends ContainerInventory {
     }
 
     @Override
-    public void onOpen( EntityPlayer player ) {
+    public void onOpen(EntityPlayer player) {
 
     }
 
     @Override
-    public void onClose( EntityPlayer player ) {
+    public void onClose(EntityPlayer player) {
 
     }
 

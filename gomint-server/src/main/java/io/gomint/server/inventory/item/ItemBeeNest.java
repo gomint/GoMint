@@ -18,11 +18,6 @@ import io.gomint.server.registry.RegisterInfo;
 public class ItemBeeNest extends ItemStack implements io.gomint.inventory.item.ItemBeeNest {
 
     @Override
-    public String getBlockId() {
-        return "minecraft:bee_nest";
-    }
-
-    @Override
     public ItemType getItemType() {
         return ItemType.BEENEST;
     }

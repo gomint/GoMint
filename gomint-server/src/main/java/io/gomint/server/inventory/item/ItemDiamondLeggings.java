@@ -11,7 +11,7 @@ import io.gomint.world.block.data.Facing;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 312 )
+@RegisterInfo( sId = "minecraft:diamond_leggings", id = 312 )
 public class ItemDiamondLeggings extends ItemDiamondArmor implements io.gomint.inventory.item.ItemDiamondLeggings {
 
     @Override

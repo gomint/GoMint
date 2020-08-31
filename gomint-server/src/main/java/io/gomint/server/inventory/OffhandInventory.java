@@ -8,6 +8,7 @@
 package io.gomint.server.inventory;
 
 import io.gomint.inventory.InventoryType;
+import io.gomint.server.inventory.item.Items;
 import io.gomint.server.network.PlayerConnection;
 import io.gomint.server.network.packet.PacketInventoryContent;
 import io.gomint.server.network.packet.PacketInventorySetSlot;
@@ -18,25 +19,25 @@ import io.gomint.server.network.packet.PacketInventorySetSlot;
  */
 public class OffhandInventory extends Inventory {
 
-    public OffhandInventory( InventoryHolder owner ) {
-        super( owner, 1 );
+    public OffhandInventory(Items items, InventoryHolder owner) {
+        super(items, owner, 1);
     }
 
     @Override
-    public void sendContents( PlayerConnection playerConnection ) {
+    public void sendContents(PlayerConnection playerConnection) {
         PacketInventoryContent inventory = new PacketInventoryContent();
-        inventory.setWindowId( WindowMagicNumbers.OFFHAND.getId() );
-        inventory.setItems( getContentsArray() );
-        playerConnection.addToSendQueue( inventory );
+        inventory.setWindowId(WindowMagicNumbers.OFFHAND.getId());
+        inventory.setItems(getContentsArray());
+        playerConnection.addToSendQueue(inventory);
     }
 
     @Override
-    public void sendContents( int slot, PlayerConnection playerConnection ) {
+    public void sendContents(int slot, PlayerConnection playerConnection) {
         PacketInventorySetSlot setSlot = new PacketInventorySetSlot();
-        setSlot.setSlot( slot );
-        setSlot.setWindowId( WindowMagicNumbers.OFFHAND.getId() );
-        setSlot.setItemStack( this.contents[slot] );
-        playerConnection.addToSendQueue( setSlot );
+        setSlot.setSlot(slot);
+        setSlot.setWindowId(WindowMagicNumbers.OFFHAND.getId());
+        setSlot.setItemStack(this.contents[slot]);
+        playerConnection.addToSendQueue(setSlot);
     }
 
     @Override

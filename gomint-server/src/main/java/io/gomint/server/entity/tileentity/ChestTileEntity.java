@@ -37,7 +37,7 @@ public class ChestTileEntity extends ContainerTileEntity implements InventoryHol
 
     public ChestTileEntity(Block block, Items items) {
         super( block, items );
-        this.inventory = new ChestInventory( this );
+        this.inventory = new ChestInventory( items, this );
     }
 
     @Override

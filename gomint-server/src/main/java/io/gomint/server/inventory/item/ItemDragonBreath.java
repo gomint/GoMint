@@ -8,7 +8,7 @@ import io.gomint.taglib.NBTTagCompound;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 437 )
+@RegisterInfo( sId = "minecraft:dragon_breath", id = 437 )
  public class ItemDragonBreath extends ItemStack implements io.gomint.inventory.item.ItemDragonBreath {
 
 

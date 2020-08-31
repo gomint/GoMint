@@ -8,7 +8,7 @@ import io.gomint.taglib.NBTTagCompound;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 460 )
+@RegisterInfo( sId = "minecraft:salmon", id = 460 )
  public class ItemRawSalmon extends ItemStack implements io.gomint.inventory.item.ItemRawSalmon {
 
 

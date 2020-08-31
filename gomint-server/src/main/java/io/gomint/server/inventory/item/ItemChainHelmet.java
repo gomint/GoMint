@@ -11,7 +11,7 @@ import io.gomint.world.block.data.Facing;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 302 )
+@RegisterInfo( sId = "minecraft:chainmail_helmet", id = 302 )
 public class ItemChainHelmet extends ItemChainArmor implements io.gomint.inventory.item.ItemChainHelmet {
 
 

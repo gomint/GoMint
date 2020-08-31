@@ -7,7 +7,8 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:flower_pot", id = 390 )
+@RegisterInfo(sId = "minecraft:flower_pot", id = 390, def = true)
+@RegisterInfo(sId = "minecraft:item.flower_pot", id = 140)
 public class ItemFlowerPot extends ItemStack implements io.gomint.inventory.item.ItemFlowerPot {
 
     @Override

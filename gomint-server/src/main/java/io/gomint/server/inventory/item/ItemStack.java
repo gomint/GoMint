@@ -37,7 +37,7 @@ public abstract class ItemStack implements Cloneable, io.gomint.inventory.item.I
     private static final Logger LOGGER = LoggerFactory.getLogger(ItemStack.class);
 
     private int id;
-    private int material;
+    private String material;
     private short data;
     private byte amount;
     private NBTTagCompound nbt;
@@ -52,7 +52,7 @@ public abstract class ItemStack implements Cloneable, io.gomint.inventory.item.I
     // Item constructor factors
     private Items items;
 
-    ItemStack setMaterial(int material) {
+    ItemStack setMaterial(String material) {
         this.material = material;
         return this.updateInventories(false);
     }
@@ -62,8 +62,12 @@ public abstract class ItemStack implements Cloneable, io.gomint.inventory.item.I
      *
      * @return The material of the item(s) on this stack
      */
-    public int getMaterial() {
+    public String getMaterial() {
         return this.material;
+    }
+
+    public int getRuntimeID() {
+        return this.items.getRuntimeId(this.getMaterial());
     }
 
     /**
@@ -366,7 +370,7 @@ public abstract class ItemStack implements Cloneable, io.gomint.inventory.item.I
      * @return id for the block when this item is placed
      */
     public String getBlockId() {
-        return this.items.getBlockId(this.material);
+        return this.material;
     }
 
     /**
@@ -522,7 +526,7 @@ public abstract class ItemStack implements Cloneable, io.gomint.inventory.item.I
     }
 
     protected void setBlockId(String blockId) {
-        this.setMaterial(this.items.getMaterial(blockId));
+        this.setMaterial(blockId);
     }
 
     @Override
@@ -549,7 +553,7 @@ public abstract class ItemStack implements Cloneable, io.gomint.inventory.item.I
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ItemStack itemStack = (ItemStack) o;
-        return material == itemStack.material &&
+        return material.equals(itemStack.material) &&
             data == itemStack.data &&
             Objects.equals(nbt, itemStack.nbt);
     }
@@ -557,6 +561,10 @@ public abstract class ItemStack implements Cloneable, io.gomint.inventory.item.I
     @Override
     public int hashCode() {
         return Objects.hash(material, data, nbt);
+    }
+
+    public boolean isAir() {
+        return "minecraft:air".equals(this.material);
     }
 
 }

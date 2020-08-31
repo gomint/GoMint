@@ -15,7 +15,7 @@ import io.gomint.world.block.data.Facing;
  * @version 1.0
  */
 @CanBeDamaged
-@RegisterInfo( id = 346 )
+@RegisterInfo( sId = "minecraft:fishing_rod", id = 346 )
 public class ItemFishingRod extends ItemStack implements io.gomint.inventory.item.ItemFishingRod {
 
     @Override

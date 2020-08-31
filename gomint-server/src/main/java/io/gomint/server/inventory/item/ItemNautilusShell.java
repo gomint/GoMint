@@ -7,7 +7,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @author Kaooot
  * @version 1.0
  */
-@RegisterInfo( id = 465 )
+@RegisterInfo( sId = "minecraft:nautilus_shell", id = 465 )
 public class ItemNautilusShell extends ItemStack implements io.gomint.inventory.item.ItemNautilusShell {
 
     @Override

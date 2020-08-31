@@ -7,7 +7,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @author KingAli
  * @version 1.0
  */
-@RegisterInfo( id = 752 )
+@RegisterInfo( sId = "minecraft:netherite_scrap", id = 752 )
 public class ItemNetheriteScrap extends ItemStack implements io.gomint.inventory.item.ItemNetheriteScrap {
 
     @Override

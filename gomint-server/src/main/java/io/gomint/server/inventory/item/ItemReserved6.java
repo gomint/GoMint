@@ -3,7 +3,6 @@ package io.gomint.server.inventory.item;
 import io.gomint.inventory.item.ItemType;
 
 import io.gomint.server.registry.RegisterInfo;
-import io.gomint.taglib.NBTTagCompound;
 
 /**
  * @author geNAZt
@@ -14,7 +13,7 @@ public class ItemReserved6 extends ItemStack {
 
     @Override
     public ItemType getItemType() {
-        return ItemType.RESERVED6;
+        return ItemType.AIR;
     }
 
 }

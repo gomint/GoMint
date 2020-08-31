@@ -8,7 +8,7 @@ import io.gomint.taglib.NBTTagCompound;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 399 )
+@RegisterInfo( sId = "minecraft:netherstar", id = 399 )
  public class ItemNetherStar extends ItemStack implements io.gomint.inventory.item.ItemNetherStar {
 
 

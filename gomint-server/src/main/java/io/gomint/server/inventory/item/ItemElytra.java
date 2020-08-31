@@ -10,7 +10,7 @@ import io.gomint.world.block.data.Facing;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 444 )
+@RegisterInfo( sId = "minecraft:elytra", id = 444 )
 public class ItemElytra extends ItemStack implements io.gomint.inventory.item.ItemElytra {
 
 

@@ -8,7 +8,7 @@ import io.gomint.taglib.NBTTagCompound;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 349 )
+@RegisterInfo( sId = "minecraft:fish", id = 349 )
  public class ItemRawFish extends ItemStack implements io.gomint.inventory.item.ItemRawFish {
 
 

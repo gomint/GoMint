@@ -42,7 +42,7 @@ public class EntityArmorStand extends EntityCreature implements io.gomint.entity
         this.addAttribute( Attribute.HEALTH );
         this.setMaxHealth( 20 );
         this.setHealth( 20 );
-        this.armorInventory = new ArmorInventory( this );
+        this.armorInventory = new ArmorInventory(this.world == null ? null : this.world.getServer().getItems(), this );
     }
 
     @Override

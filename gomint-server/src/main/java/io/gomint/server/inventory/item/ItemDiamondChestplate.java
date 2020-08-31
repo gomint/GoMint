@@ -11,7 +11,7 @@ import io.gomint.world.block.data.Facing;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 311 )
+@RegisterInfo( sId = "minecraft:diamond_chestplate", id = 311 )
 public class ItemDiamondChestplate extends ItemDiamondArmor implements io.gomint.inventory.item.ItemDiamondChestplate {
 
     @Override

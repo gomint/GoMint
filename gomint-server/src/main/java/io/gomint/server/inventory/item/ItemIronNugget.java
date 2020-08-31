@@ -14,7 +14,7 @@ import io.gomint.taglib.NBTTagCompound;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 452 )
+@RegisterInfo( sId = "minecraft:iron_nugget", id = 452 )
 public class ItemIronNugget extends ItemStack implements io.gomint.inventory.item.ItemIronNugget {
 
 

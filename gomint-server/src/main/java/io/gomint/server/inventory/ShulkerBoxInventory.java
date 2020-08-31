@@ -2,6 +2,7 @@ package io.gomint.server.inventory;
 
 import io.gomint.math.BlockPosition;
 import io.gomint.server.entity.EntityPlayer;
+import io.gomint.server.inventory.item.Items;
 import io.gomint.server.network.packet.PacketBlockEvent;
 import io.gomint.server.network.type.WindowType;
 import io.gomint.server.world.WorldAdapter;
@@ -14,8 +15,8 @@ import io.gomint.world.Sound;
 
 public class ShulkerBoxInventory extends ContainerInventory implements io.gomint.inventory.ShulkerBoxInventory {
 
-    public ShulkerBoxInventory( InventoryHolder owner ) {
-        super( owner, 27 );
+    public ShulkerBoxInventory(Items items, InventoryHolder owner ) {
+        super( items, owner, 27 );
     }
 
     @Override

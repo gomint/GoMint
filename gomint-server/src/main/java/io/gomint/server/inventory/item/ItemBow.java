@@ -17,7 +17,7 @@ import io.gomint.world.Gamemode;
  * @version 1.0
  */
 @CanBeDamaged
-@RegisterInfo( id = 261 )
+@RegisterInfo( sId = "minecraft:bow", id = 261 )
 public class ItemBow extends ItemStack implements io.gomint.inventory.item.ItemBow {
 
     @Override

@@ -8,7 +8,7 @@ import io.gomint.taglib.NBTTagCompound;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 432 )
+@RegisterInfo( sId = "minecraft:chorus_fruit", id = 432 )
 public class ItemChorusFruit extends ItemFood implements io.gomint.inventory.item.ItemChorusFruit {
 
 

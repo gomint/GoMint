@@ -111,7 +111,7 @@ public class CoreScheduler implements Scheduler {
 
         Future<?> future;
         if ( period > 0 ) {
-            future = this.executorService.scheduleWithFixedDelay( wrapRunnable( task ), delay, period, timeUnit );
+            future = this.executorService.scheduleAtFixedRate( wrapRunnable( task ), delay, period, timeUnit );
         } else if ( delay > 0 ) {
             future = this.executorService.schedule( wrapRunnable( task ), delay, timeUnit );
         } else {

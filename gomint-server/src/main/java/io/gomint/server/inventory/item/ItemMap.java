@@ -8,7 +8,7 @@ import io.gomint.taglib.NBTTagCompound;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 395 )
+@RegisterInfo( sId = "minecraft:emptymap", id = 395 )
  public class ItemMap extends ItemStack implements io.gomint.inventory.item.ItemMap {
 
 

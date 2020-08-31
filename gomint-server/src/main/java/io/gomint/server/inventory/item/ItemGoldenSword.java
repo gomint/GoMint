@@ -12,7 +12,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 283 )
+@RegisterInfo( sId = "minecraft:golden_sword", id = 283 )
 public class ItemGoldenSword extends ItemReduceTierSpecial implements io.gomint.inventory.item.ItemGoldenSword, ItemSword {
 
     @Override

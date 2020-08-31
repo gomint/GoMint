@@ -23,12 +23,8 @@ public class ItemCartographyTable extends ItemStack implements io.gomint.invento
     }
 
     @Override
-    public String getBlockId() {
-        return "minecraft:cartography_table";
-    }
-
-    @Override
     public ItemType getItemType() {
         return ItemType.CARTOGRAPHY_TABLE;
     }
+
 }

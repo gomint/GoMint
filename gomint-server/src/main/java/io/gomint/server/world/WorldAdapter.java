@@ -861,7 +861,7 @@ public abstract class WorldAdapter implements World {
      */
     private void asyncWorkerLoop() {
         // Fast out
-        if (!this.asyncWorkerRunning.get() || this.asyncChunkTasks.isEmpty()) {
+        if (!this.asyncWorkerRunning.get()) {
             return;
         }
 
@@ -1241,6 +1241,8 @@ public abstract class WorldAdapter implements World {
             ChunkAdapter chunk = (ChunkAdapter) this.chunkGenerator.generate(x, z);
             if (chunk != null) {
                 chunk.calculateHeightmap(240);
+                chunk.setLastSavedTimestamp(this.server.getCurrentTickTime());
+
                 if (!this.chunkCache.putChunk(chunk)) {
                     chunk.release();
                     return this.chunkCache.getChunk(x, z);
@@ -1563,7 +1565,19 @@ public abstract class WorldAdapter implements World {
         player.getConnection().addToSendQueue(packetSetDifficulty);
     }
 
-    public abstract boolean persistPlayer(io.gomint.server.entity.EntityPlayer player);
+    /**
+     * Persists a player to the underlying storage
+     *
+     * @param player which should be persisted
+     */
+    public abstract void persistPlayer(io.gomint.server.entity.EntityPlayer player);
+
+    /**
+     * Load a player state from the underlying storage
+     *
+     * @param player which should be loaded
+     */
+    public abstract void loadPlayer(io.gomint.server.entity.EntityPlayer player);
 
     @Override
     public Block getHighestBlockAt(int x, int z) {

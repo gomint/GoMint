@@ -16,7 +16,7 @@ import io.gomint.world.block.data.Facing;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 284 )
+@RegisterInfo( sId = "minecraft:golden_shovel", id = 284 )
 public class ItemGoldenShovel extends ItemReduceTierGolden implements io.gomint.inventory.item.ItemGoldenShovel {
 
     @Override

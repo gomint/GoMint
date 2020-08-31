@@ -8,7 +8,7 @@ import io.gomint.taglib.NBTTagCompound;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 297 )
+@RegisterInfo( sId = "minecraft:bread", id = 297 )
 public class ItemBread extends ItemFood implements io.gomint.inventory.item.ItemBread {
 
 

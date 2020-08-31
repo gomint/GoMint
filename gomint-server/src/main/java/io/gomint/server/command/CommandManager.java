@@ -8,6 +8,7 @@ import io.gomint.command.CommandOverload;
 import io.gomint.command.CommandSender;
 import io.gomint.command.ParamValidator;
 import io.gomint.plugin.Plugin;
+import io.gomint.server.command.debug.InventoryCommand;
 import io.gomint.server.command.gomint.KickCommand;
 import io.gomint.server.command.gomint.PluginsCommand;
 import io.gomint.server.command.gomint.StopCommand;
@@ -67,6 +68,9 @@ public class CommandManager {
                 KickCommand.class,
                 StopCommand.class,
                 VersionCommand.class,
+
+                // Debug
+                InventoryCommand.class,
             } ) {
                 // Check for system only commands
                 Object commandObject = null;

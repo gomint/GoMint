@@ -8,7 +8,7 @@ import io.gomint.taglib.NBTTagCompound;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 388 )
+@RegisterInfo( sId = "minecraft:emerald", id = 388 )
  public class ItemEmerald extends ItemStack implements io.gomint.inventory.item.ItemEmerald {
 
 

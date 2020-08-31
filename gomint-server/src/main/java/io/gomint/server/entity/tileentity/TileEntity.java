@@ -92,7 +92,7 @@ public abstract class TileEntity {
     }
 
     void putItemStack( io.gomint.server.inventory.item.ItemStack itemStack, NBTTagCompound compound ) {
-        compound.addValue( "id", (short) itemStack.getMaterial() );
+        compound.addValue( "id", (short) itemStack.getRuntimeID() );
         compound.addValue( "Damage", itemStack.getData() );
         compound.addValue( "Count", itemStack.getAmount() );
 

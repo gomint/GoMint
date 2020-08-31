@@ -47,7 +47,7 @@ public class HopperTileEntity extends TileEntity implements InventoryHolder {
         super.fromCompound( compound );
 
         this.transferCooldown = compound.getInteger( "TransferCooldown", 0 );
-        this.inventory = new HopperInventory( this );
+        this.inventory = new HopperInventory( this.items, this );
 
         // Read in items
         List<Object> itemList = compound.getList( "Items", false );

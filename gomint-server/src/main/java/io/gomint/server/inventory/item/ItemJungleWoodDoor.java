@@ -7,7 +7,8 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:jungle_door", id = 429 )
+@RegisterInfo( sId = "minecraft:jungle_door", id = 429, def = true )
+@RegisterInfo( sId = "minecraft:item.jungle_door", id = 195 )
 public class ItemJungleWoodDoor extends ItemStack implements io.gomint.inventory.item.ItemJungleWoodDoor {
 
     @Override

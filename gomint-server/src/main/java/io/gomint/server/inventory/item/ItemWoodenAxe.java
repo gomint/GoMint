@@ -11,7 +11,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 271 )
+@RegisterInfo( sId = "minecraft:wooden_axe", id = 271 )
 public class ItemWoodenAxe extends ItemReduceTierWooden implements io.gomint.inventory.item.ItemWoodenAxe {
 
     @Override

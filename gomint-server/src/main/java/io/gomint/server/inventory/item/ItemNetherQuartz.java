@@ -8,7 +8,7 @@ import io.gomint.taglib.NBTTagCompound;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 406 )
+@RegisterInfo( sId = "minecraft:quartz", id = 406 )
  public class ItemNetherQuartz extends ItemStack implements io.gomint.inventory.item.ItemNetherQuartz {
 
 

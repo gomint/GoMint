@@ -15,7 +15,7 @@ import io.gomint.world.block.data.Facing;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 325 )
+@RegisterInfo( sId = "minecraft:bucket", id = 325 )
 public class ItemBucket extends ItemStack implements io.gomint.inventory.item.ItemBucket {
 
     @Override

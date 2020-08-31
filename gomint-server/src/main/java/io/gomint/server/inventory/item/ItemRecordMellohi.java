@@ -14,7 +14,7 @@ import io.gomint.taglib.NBTTagCompound;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 506 )
+@RegisterInfo( sId = "minecraft:record_mellohi", id = 506 )
 public class ItemRecordMellohi extends ItemStack implements io.gomint.inventory.item.ItemRecordMellohi {
 
 

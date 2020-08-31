@@ -8,7 +8,7 @@ import io.gomint.taglib.NBTTagCompound;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 370 )
+@RegisterInfo( sId = "minecraft:ghast_tear", id = 370 )
  public class ItemGhastTear extends ItemStack implements io.gomint.inventory.item.ItemGhastTear {
 
 

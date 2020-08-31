@@ -7,7 +7,7 @@ import io.gomint.taglib.NBTTagCompound;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 428 )
+@RegisterInfo( sId = "minecraft:birch_door", id = 428 )
 public class ItemBirchWoodDoor extends ItemStack implements io.gomint.inventory.item.ItemBirchWoodDoor {
 
     @Override

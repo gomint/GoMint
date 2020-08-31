@@ -8,7 +8,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 333 )
+@RegisterInfo( sId = "minecraft:boat", id = 333 )
 public class ItemBoat extends ItemStack implements io.gomint.inventory.item.ItemBoat {
 
     @Override

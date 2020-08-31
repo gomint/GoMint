@@ -11,12 +11,8 @@ import io.gomint.server.registry.RegisterInfo;
 public class ItemBorder extends ItemStack implements io.gomint.inventory.item.ItemBorder {
 
     @Override
-    public String getBlockId() {
-        return "minecraft:border_block";
-    }
-
-    @Override
     public ItemType getItemType() {
         return ItemType.BORDER;
     }
+
 }

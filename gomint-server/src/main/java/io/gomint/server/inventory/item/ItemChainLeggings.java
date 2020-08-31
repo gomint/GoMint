@@ -11,7 +11,7 @@ import io.gomint.world.block.data.Facing;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 304 )
+@RegisterInfo( sId = "minecraft:chainmail_leggings", id = 304 )
 public class ItemChainLeggings extends ItemChainArmor implements io.gomint.inventory.item.ItemChainLeggings {
 
     @Override

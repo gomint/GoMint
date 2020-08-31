@@ -297,5 +297,7 @@ public enum BlockType {
     HARDENED_GLASS_PANE,
     FLETCHING_TABLE,
     CAMERA,
+    TURTLE_EGG,
+    BLUE_ICE,
 
 }

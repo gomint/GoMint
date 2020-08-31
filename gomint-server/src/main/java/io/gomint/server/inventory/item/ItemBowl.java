@@ -8,7 +8,7 @@ import io.gomint.taglib.NBTTagCompound;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 281 )
+@RegisterInfo( sId = "minecraft:bowl", id = 281 )
  public class ItemBowl extends ItemStack implements io.gomint.inventory.item.ItemBowl {
 
     @Override

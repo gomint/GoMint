@@ -14,7 +14,7 @@ package io.gomint.server.entity;
 public enum AttributeModifierType {
 
     ADDITION,
+    MULTIPLY,
     ADDITION_MULTIPLY,
-    MULTIPLY;
 
 }

@@ -7,7 +7,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 263 )
+@RegisterInfo( sId = "minecraft:coal", id = 263 )
 public class ItemCoal extends ItemStack implements io.gomint.inventory.item.ItemCoal{
 
     @Override

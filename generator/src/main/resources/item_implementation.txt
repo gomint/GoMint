@@ -18,7 +18,7 @@ import io.gomint.server.registry.RegisterInfo;
 public class Item%NAME% extends ItemStack implements io.gomint.inventory.item.Item%NAME% {
 
     @Override
-    public ItemType getType() {
+    public ItemType getItemType() {
         return ItemType.%ENUM%;
     }
 

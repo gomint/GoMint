@@ -8,7 +8,7 @@ import io.gomint.taglib.NBTTagCompound;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 345 )
+@RegisterInfo( sId = "minecraft:compass", id = 345 )
  public class ItemCompass extends ItemStack implements io.gomint.inventory.item.ItemCompass {
 
 

@@ -11,11 +11,6 @@ import io.gomint.server.registry.RegisterInfo;
 public class ItemAllowBlock extends ItemStack implements io.gomint.inventory.item.ItemAllowBlock {
 
     @Override
-    public String getBlockId() {
-        return "minecraft:allow";
-    }
-
-    @Override
     public ItemType getItemType() {
         return ItemType.ALLOW;
     }
