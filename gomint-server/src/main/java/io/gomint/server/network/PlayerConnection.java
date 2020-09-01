@@ -30,6 +30,7 @@ import io.gomint.server.network.packet.PacketBatch;
 import io.gomint.server.network.packet.PacketConfirmChunkRadius;
 import io.gomint.server.network.packet.PacketDisconnect;
 import io.gomint.server.network.packet.PacketEncryptionResponse;
+import io.gomint.server.network.packet.PacketHotbar;
 import io.gomint.server.network.packet.PacketInventoryTransaction;
 import io.gomint.server.network.packet.PacketLogin;
 import io.gomint.server.network.packet.PacketMovePlayer;
@@ -1045,6 +1046,14 @@ public class PlayerConnection implements ConnectionWithState {
 
     public boolean knowsChunk(long hash) {
         return this.playerChunks.contains(hash);
+    }
+
+    public void sendHotbar() {
+        PacketHotbar hotbar = new PacketHotbar();
+        hotbar.setWindowId((byte) 0);
+        hotbar.setSelectedHotbarSlot(this.entity.getInventory().getItemInHandSlot());
+        hotbar.setSelectHotbarSlot(true);
+        this.addToSendQueue(hotbar);
     }
 
 }
