@@ -95,7 +95,7 @@ public abstract class ItemStack implements Cloneable, io.gomint.inventory.item.I
      */
     public io.gomint.inventory.item.ItemStack setData(short data) {
         this.data = data;
-        return this;
+        return this.updateInventories(false);
     }
 
     /**

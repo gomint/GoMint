@@ -159,11 +159,6 @@ public abstract class Entity implements io.gomint.entity.Entity {
         this.setHasCollision( true );
         this.setAffectedByGravity( true );
         this.setNameTagVisible( true );
-
-        // Check if we can setup AI
-        if ( this.world != null ) {
-            this.setupAI();
-        }
     }
 
     public void setOnGround(boolean onGround) {

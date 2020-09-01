@@ -58,7 +58,7 @@ public class DragonEgg extends Block implements BlockDragonEgg {
     }
 
     @Override
-    public boolean punch( EntityPlayer player, BlockPosition position ) {
+    public boolean punch( EntityPlayer player ) {
         if ( player.getGamemode() != Gamemode.CREATIVE ) {
             this.teleport();
             return true;

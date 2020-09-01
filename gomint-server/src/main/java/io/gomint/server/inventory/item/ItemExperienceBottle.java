@@ -15,8 +15,6 @@ import io.gomint.world.block.data.Facing;
 @RegisterInfo( sId = "minecraft:experience_bottle", id = 384 )
 public class ItemExperienceBottle extends ItemStack implements io.gomint.inventory.item.ItemExperienceBottle {
 
-
-
     @Override
     public boolean interact(EntityPlayer entity, Facing face, Vector clickPosition, Block clickedBlock ) {
         if ( clickedBlock == null ) {

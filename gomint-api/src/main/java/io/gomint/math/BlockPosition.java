@@ -1,5 +1,7 @@
 package io.gomint.math;
 
+import java.util.Objects;
+
 /**
  * @author geNAZt
  * @version 1.0
@@ -76,6 +78,21 @@ public class BlockPosition implements Cloneable {
         } catch ( CloneNotSupportedException e ) {
             throw new AssertionError( "Failed to clone block position!" );
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        BlockPosition that = (BlockPosition) o;
+        return x == that.x &&
+            y == that.y &&
+            z == that.z;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(x, y, z);
     }
 
 }

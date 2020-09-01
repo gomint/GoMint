@@ -53,7 +53,7 @@ public class Fire extends Block implements BlockFire {
     }
 
     @Override
-    public boolean punch( EntityPlayer player, BlockPosition position ) {
+    public boolean punch( EntityPlayer player ) {
         this.setBlockType( Air.class );
         return true;
     }

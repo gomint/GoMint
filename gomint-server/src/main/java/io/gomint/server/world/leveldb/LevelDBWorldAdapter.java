@@ -478,11 +478,6 @@ public class LevelDBWorldAdapter extends WorldAdapter {
                 loadingChunk.loadTileEntities(tileEntityData);
             }
 
-            byte[] entityData = this.db.get(this.getKey(x, z, (byte) 0x32), ro);
-            if (entityData != null) {
-                loadingChunk.loadEntities(entityData);
-            }
-
             byte[] biomes = this.db.get(this.getKey(x, z, (byte) 0x2d));
             if (biomes != null && biomes.length == 768) { // There are 256 bytes versions of this which only contain 0 bytes
                 loadingChunk.loadHeightAndBiomes(biomes);
@@ -502,6 +497,12 @@ public class LevelDBWorldAdapter extends WorldAdapter {
             // Do some work on the chunk if needed (like population)
             if (!populated) {
                 this.addPopulateTask(loadingChunk);
+            }
+
+            // Load entities
+            byte[] entityData = this.db.get(this.getKey(x, z, (byte) 0x32), ro);
+            if (entityData != null) {
+                loadingChunk.loadEntities(entityData);
             }
 
             try {

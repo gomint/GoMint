@@ -46,10 +46,11 @@ public class AIStateMachine {
             this.activeState.onLeave();
         }
 
+        AIState old = this.activeState;
         this.activeState = next;
 
         if ( this.activeState != null ) {
-            this.activeState.onEnter();
+            this.activeState.onEnter(old);
         }
     }
 

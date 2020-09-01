@@ -240,9 +240,9 @@ public class PacketPlayerActionHandler implements PacketHandler<PacketPlayerActi
         connection.getEntity().setBreakVector( packet.getPosition() );
         connection.getEntity().setStartBreak( currentTimeMillis );
 
-        io.gomint.server.world.block.Block block = connection.getEntity().getWorld().getBlockAt( packet.getPosition() );
+        Block block = connection.getEntity().getWorld().getBlockAt( packet.getPosition() );
 
-        if ( !block.punch( connection.getEntity(), packet.getPosition() ) ) {
+        if ( !block.getSide(packet.getFace()).punch( connection.getEntity() ) ) {
             long breakTime = block.getFinalBreakTime( connection.getEntity().getInventory().getItemInHand(), connection.getEntity() );
             LOGGER.debug( "Sending break time {} ms", breakTime );
 

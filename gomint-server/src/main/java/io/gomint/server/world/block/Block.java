@@ -197,9 +197,8 @@ public abstract class Block implements io.gomint.world.block.Block {
      * Called when an entity punches a blockId
      *
      * @param player   The player which punches it
-     * @param position The position where the entity punched the blockId
      */
-    public boolean punch(EntityPlayer player, BlockPosition position) {
+    public boolean punch(EntityPlayer player ) {
         return false;
     }
 

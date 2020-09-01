@@ -17,7 +17,7 @@ import java.util.concurrent.TimeUnit;
  * @author KingAli
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:soul_fire" )
+@RegisterInfo(sId = "minecraft:soul_fire")
 public class SoulFire extends Block implements BlockSoulFire {
 
     @Override
@@ -26,7 +26,7 @@ public class SoulFire extends Block implements BlockSoulFire {
     }
 
     @Override
-    public boolean canBeReplaced( ItemStack item ) {
+    public boolean canBeReplaced(ItemStack item) {
         return true;
     }
 
@@ -46,14 +46,14 @@ public class SoulFire extends Block implements BlockSoulFire {
     }
 
     @Override
-    public void onEntityStanding( EntityLiving entityLiving ) {
-        entityLiving.attack( 1.0f, EntityDamageEvent.DamageSource.FIRE );
-        entityLiving.setBurning( 8, TimeUnit.SECONDS );
+    public void onEntityStanding(EntityLiving entityLiving) {
+        entityLiving.attack(1.0f, EntityDamageEvent.DamageSource.FIRE);
+        entityLiving.setBurning(8, TimeUnit.SECONDS);
     }
 
     @Override
-    public boolean punch(EntityPlayer player, BlockPosition position ) {
-        this.setBlockType( Air.class );
+    public boolean punch(EntityPlayer player) {
+        this.setBlockType(Air.class);
         return true;
     }
 
@@ -63,7 +63,7 @@ public class SoulFire extends Block implements BlockSoulFire {
     }
 
     @Override
-    public List<ItemStack> getDrops(ItemStack itemInHand ) {
+    public List<ItemStack> getDrops(ItemStack itemInHand) {
         return new ArrayList<>();
     }
 

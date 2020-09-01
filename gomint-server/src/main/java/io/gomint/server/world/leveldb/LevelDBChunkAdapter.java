@@ -7,6 +7,7 @@
 
 package io.gomint.server.world.leveldb;
 
+import io.gomint.math.Location;
 import io.gomint.math.MathUtils;
 import io.gomint.server.entity.Entity;
 import io.gomint.server.entity.tileentity.SerializationReason;
@@ -319,8 +320,9 @@ public class LevelDBChunkAdapter extends ChunkAdapter {
                 Entity entity = this.world.getServer().getEntities().create( identifier );
                 if ( entity != null ) {
                     entity.initFromNBT( compound );
-                    entity.setWorld( this.world );
-                    this.addEntity( entity );
+                    Location location = entity.getLocation();
+                    location.setWorld( this.world );
+                    entity.spawn( location );
                 }
             } catch ( IOException | AllocationLimitReachedException e ) {
                 LOGGER.error( "Error in loading entities", e );

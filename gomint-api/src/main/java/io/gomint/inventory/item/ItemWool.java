@@ -1,6 +1,8 @@
 package io.gomint.inventory.item;
 
 import io.gomint.GoMint;
+import io.gomint.inventory.item.data.DyeType;
+import io.gomint.world.block.data.BlockColor;
 
 /**
  * @author geNAZt
@@ -17,5 +19,19 @@ public interface ItemWool extends ItemStack {
     static ItemWool create( int amount ) {
         return GoMint.instance().createItemStack( ItemWool.class, amount );
     }
+
+    /**
+     * Get the color of this wool
+     *
+     * @return color of this wool
+     */
+    BlockColor getColor();
+
+    /**
+     * Set the color of this wool
+     *
+     * @param color which this wool should have
+     */
+    void setColor(BlockColor color);
 
 }

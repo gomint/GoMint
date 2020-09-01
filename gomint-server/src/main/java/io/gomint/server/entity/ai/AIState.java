@@ -29,6 +29,10 @@ public abstract class AIState {
         return ( this.machine.getActiveState() == this );
     }
 
+    public void switchState(AIState state) {
+        this.machine.switchState(state);
+    }
+
     /**
      * Gets called when another AIState wants to notify you for something
      *
@@ -51,8 +55,10 @@ public abstract class AIState {
 
     /**
      * Invoked by the state machine whenever the state is entered.
+     *
+     * @param oldState which was given before, can be null if this is the first state
      */
-    protected void onEnter() {
+    protected void onEnter(AIState oldState) {
 
     }
 
