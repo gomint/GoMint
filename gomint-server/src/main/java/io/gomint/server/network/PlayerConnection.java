@@ -929,6 +929,7 @@ public class PlayerConnection implements ConnectionWithState {
             this.entity.cleanup();
             this.entity.setDead(true);
             this.networkManager.getServer().getPluginManager().callEvent(new PlayerCleanedupEvent(this.entity));
+            this.entity.getWorld().persistPlayer(this.entity);
             this.entity = null;
         }
 

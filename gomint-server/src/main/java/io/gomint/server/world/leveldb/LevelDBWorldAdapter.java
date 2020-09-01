@@ -34,6 +34,8 @@ import io.gomint.world.generator.integrated.NormalGenerator;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.PooledByteBufAllocator;
 import io.netty.buffer.Unpooled;
+import io.netty.buffer.UnpooledByteBufAllocator;
+import org.apache.logging.log4j.core.util.UuidUtil;
 import org.iq80.leveldb.impl.Iq80DBFactory;
 import org.iq80.leveldb.table.BloomFilterPolicy;
 import org.json.simple.JSONArray;
@@ -53,6 +55,7 @@ import java.nio.ByteOrder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * @author geNAZt
@@ -532,17 +535,11 @@ public class LevelDBWorldAdapter extends WorldAdapter {
         }
     }
 
-    @Override
-    public void persistPlayer(EntityPlayer player) {
-
-    }
-
-    @Override
-    public void loadPlayer(EntityPlayer player) {
-        String key = "player_" + player.getUUID().toString();
+    private byte[] getPersistenceId(UUID uuid) {
+        String key = "player_" + uuid.toString();
         byte[] playerInfoNbt = this.db.get(key.getBytes());
         if (playerInfoNbt == null) {
-            return;
+            return null;
         }
 
         ByteBuf buf = Unpooled.wrappedBuffer(playerInfoNbt);
@@ -551,15 +548,61 @@ public class LevelDBWorldAdapter extends WorldAdapter {
             NBTTagCompound playerInfoCompound = reader.parse();
             byte[] serverId = playerInfoCompound.getString("ServerId", "").getBytes();
             if (serverId.length > 0) {
-                byte[] playerNbtData = this.db.get(serverId);
-                buf = Unpooled.wrappedBuffer(playerNbtData);
-                reader = new NBTReader(buf, ByteOrder.LITTLE_ENDIAN);
+                return serverId;
+            }
+        } catch (IOException | AllocationLimitReachedException e) {
+            logger.warn("Could not load player information for loading", e);
+        }
+
+        return null;
+    }
+
+    @Override
+    public void persistPlayer(EntityPlayer player) {
+        ByteBuf buf = UnpooledByteBufAllocator.DEFAULT.heapBuffer();
+
+        NBTTagCompound compound = player.persistToNBT();
+        try {
+            WriteBatch batch = this.db.createWriteBatch();
+
+            compound.writeTo(buf, ByteOrder.LITTLE_ENDIAN);
+            byte[] persistenceId = this.getPersistenceId(player.getUUID());
+            if (persistenceId == null) {
+                UUID uuid = UuidUtil.getTimeBasedUuid();
+
+                NBTTagCompound persistenceIdInformation = new NBTTagCompound("");
+                persistenceIdInformation.addValue("MsaId", player.getUUID().toString());
+                persistenceIdInformation.addValue("SelfSignedId", "");
+                persistenceIdInformation.addValue("ServerId", "player_server_" + uuid.toString());
+
+                ByteBuf pbuf = UnpooledByteBufAllocator.DEFAULT.heapBuffer();
+                persistenceIdInformation.writeTo(pbuf, ByteOrder.LITTLE_ENDIAN);
+
+                persistenceId = ("player_server_" + uuid.toString()).getBytes();
+                batch.put(("player_" + player.getUUID()).getBytes(), pbuf.array());
+            }
+
+            batch.put(persistenceId, buf.array());
+            this.db.write(batch);
+        } catch (IOException e) {
+            logger.warn("Could not persist player information", e);
+        }
+    }
+
+    @Override
+    public void loadPlayer(EntityPlayer player) {
+        try {
+            byte[] persistenceId = this.getPersistenceId(player.getUUID());
+            if (persistenceId != null) {
+                byte[] playerNbtData = this.db.get(persistenceId);
+                ByteBuf buf = Unpooled.wrappedBuffer(playerNbtData);
+                NBTReader reader = new NBTReader(buf, ByteOrder.LITTLE_ENDIAN);
 
                 NBTTagCompound playerNbt = reader.parse();
                 player.initFromNBT(playerNbt);
             }
         } catch (IOException | AllocationLimitReachedException e) {
-            logger.warn("Could not load player information for loading", e);
+            logger.warn("Could not load player information", e);
         }
     }
 
