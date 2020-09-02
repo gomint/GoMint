@@ -135,6 +135,8 @@ public class LevelDBWorldAdapter extends WorldAdapter {
                 .createIfMissing(true)
                 .compressionType(CompressionType.ZLIB_RAW)
                 .filterPolicy(new BloomFilterPolicy(10))
+                .writeBufferSize(512 * 1024)
+                .cacheSize(1024)
                 .blockSize(64 * 1024);
             this.db = Iq80DBFactory.factory.open(new File(this.worldDir, "db"), options);
         } catch (Exception e) {
@@ -407,7 +409,7 @@ public class LevelDBWorldAdapter extends WorldAdapter {
     }
 
     @Override
-    public ChunkAdapter loadChunk0(int x, int z, boolean generate) {
+    public ChunkAdapter loadChunk(int x, int z, boolean generate) {
         ChunkAdapter chunk = this.chunkCache.getChunk(x, z);
         if (chunk == null) {
             Snapshot snapshot = this.db.getSnapshot();

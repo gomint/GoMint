@@ -580,7 +580,7 @@ public class GoMintServer implements GoMint, InventoryHolder {
             foundThread = true;
 
             LOGGER.warn("Remaining thread after shutdown: {} (#{})", thread.getName(), thread.getId());
-            LOGGER.warn("Status: {} - Threadgroup: {}", thread.getState(), thread.getThreadGroup().getName());
+            LOGGER.warn("Status: {} - Threadgroup: {}", thread.getState(), (thread.getThreadGroup() != null) ? thread.getThreadGroup().getName() : "NULL");
             for (StackTraceElement element : thread.getStackTrace()) {
                 LOGGER.warn("  {}", element);
             }

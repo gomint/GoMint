@@ -90,7 +90,7 @@ public class ChunkCache {
             if ( checkChunkSave && chunk.isNeedsPersistence() &&
                 currentTimeMS - chunk.getLastSavedTimestamp() >= this.autoSaveInterval ) {
                 chunk.setLastSavedTimestamp( currentTimeMS );
-                this.world.saveChunkAsynchronously( chunk, false );
+                this.world.saveChunkAsynchronously( chunk );
             }
 
             int currentX = (int) ( entry.getLongKey() >> 32 );
@@ -117,7 +117,7 @@ public class ChunkCache {
                 continue;
             }
 
-            LOGGER.debug( "Cleaning up chunk @ {} / {} ({})", currentX, currentZ, entry.getLongKey() );
+            LOGGER.info( "Cleaning up chunk @ {} / {} ({})", currentX, currentZ, entry.getLongKey() );
 
             // Ask this chunk if he wants to be gced
             this.tempHashes[1].add( entry.getLongKey() );
@@ -131,10 +131,10 @@ public class ChunkCache {
                 if (this.world.getConfig().isSaveOnUnload() &&
                     adapter.isNeedsPersistence()) {
                     adapter.setLastSavedTimestamp( currentTimeMS );
-                    this.world.saveChunkAsynchronously(adapter, true);
-                } else {
-                    adapter.release();
+                    this.world.saveChunk(adapter);
                 }
+
+                adapter.release();
             }
         }
     }
@@ -291,7 +291,8 @@ public class ChunkCache {
             if (this.world.getConfig().isSaveOnUnload() &&
                 adapter.isNeedsPersistence()) {
                 adapter.setLastSavedTimestamp( this.world.server.getCurrentTickTime() );
-                this.world.saveChunkAsynchronously(adapter, true);
+                this.world.saveChunk(adapter);
+                adapter.release();
             } else {
                 adapter.release();
             }

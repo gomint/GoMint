@@ -44,7 +44,7 @@ public final class InMemoryWorldAdapter extends WorldAdapter {
     }
 
     @Override
-    public ChunkAdapter loadChunk0( int x, int z, boolean generate ) {
+    public ChunkAdapter loadChunk( int x, int z, boolean generate ) {
         ChunkAdapter chunkAdapter = this.chunkCache.getChunk( x, z );
         if ( chunkAdapter != null ) {
             return chunkAdapter;

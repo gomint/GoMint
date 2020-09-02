@@ -734,7 +734,7 @@ public abstract class WorldAdapter implements World {
         int amountOfChunksLoaded = 0;
         for (int i = chunkX - spawnRadius; i <= chunkX + spawnRadius; i++) {
             for (int j = chunkZ - spawnRadius; j <= chunkZ + spawnRadius; j++) {
-                this.loadChunk0(i, j, true);
+                this.loadChunk(i, j, true);
                 amountOfChunksLoaded++;
             }
         }
@@ -750,37 +750,7 @@ public abstract class WorldAdapter implements World {
      * @param generate A boolean which decides whether or not the chunk should be generated when not found
      * @return The loaded or generated Chunk
      */
-    public ChunkAdapter loadChunk(int x, int z, boolean generate) {
-        ChunkAdapter chunk = this.chunkCache.getChunk(x,z); // This is a very hot path, get out of there asap
-        if (chunk != null) {
-            return chunk;
-        }
-
-        // If we are on main thread async this for unload order reasons
-        if (this.server.isMainThread()) {
-            Future<ChunkAdapter> chunkAdapter = new Future<>();
-            this.getOrLoadChunk(x, z, generate, chunkAdapter::resolve);
-
-            try {
-                return chunkAdapter.get(500, TimeUnit.MILLISECONDS);
-            } catch (InterruptedException | ExecutionException | TimeoutException e) {
-                logger.warn("Could not load chunk {} / {}", x, z, e);
-                return null;
-            }
-        }
-
-        return loadChunk0(x, z, generate);
-    }
-
-    /**
-     * Load a Chunk from the underlying implementation
-     *
-     * @param x        The x coordinate of the chunk we want to load
-     * @param z        The x coordinate of the chunk we want to load
-     * @param generate A boolean which decides whether or not the chunk should be generated when not found
-     * @return The loaded or generated Chunk
-     */
-    public abstract ChunkAdapter loadChunk0(int x, int z, boolean generate);
+    public abstract ChunkAdapter loadChunk(int x, int z, boolean generate);
 
     /**
      * Saves the given chunk to its respective region file. The respective region file
@@ -794,10 +764,9 @@ public abstract class WorldAdapter implements World {
      * Saves the given chunk to its region file asynchronously.
      *
      * @param chunk            The chunk to save
-     * @param releaseAfterSave should this chunk be freed after saving?
      */
-    void saveChunkAsynchronously(ChunkAdapter chunk, boolean releaseAfterSave) {
-        AsyncChunkSaveTask task = new AsyncChunkSaveTask(chunk, releaseAfterSave);
+    void saveChunkAsynchronously(ChunkAdapter chunk) {
+        AsyncChunkSaveTask task = new AsyncChunkSaveTask(chunk);
         this.asyncChunkTasks.offer(task);
     }
 
@@ -892,10 +861,6 @@ public abstract class WorldAdapter implements World {
                         AsyncChunkSaveTask save = (AsyncChunkSaveTask) task;
                         chunk = save.getChunk();
                         this.saveChunk(chunk);
-
-                        if (save.isReleaseAfterSave()) {
-                            chunk.release();
-                        }
 
                         break;
 
