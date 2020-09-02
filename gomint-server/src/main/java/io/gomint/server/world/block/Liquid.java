@@ -37,7 +37,7 @@ public abstract class Liquid extends Block implements BlockLiquid {
 
     // Temporary storage for update
     private byte adjacentSources;
-    private Map<BlockPosition, FlowState> flowCostVisited = new HashMap<>();
+    private Map<BlockPosition, FlowState> flowCostVisited;
 
     @Override
     public float getFillHeight() {
@@ -264,6 +264,8 @@ public abstract class Liquid extends Block implements BlockLiquid {
     }
 
     private short calculateFlowCost(BlockPosition pos, short accumulatedCost, short maxCost, Direction origin, Direction current) {
+        this.ensureFlowCostVisited();
+
         short cost = 1000;
         for (Direction facing : DIRECTIONS_TO_CHECK) {
             if (facing == current || facing == origin) {
@@ -305,6 +307,8 @@ public abstract class Liquid extends Block implements BlockLiquid {
     }
 
     private boolean[] getOptimalFlowDirections() {
+        this.ensureFlowCostVisited();
+
         short[] flowCost = new short[]{
             1000,
             1000,
@@ -346,6 +350,12 @@ public abstract class Liquid extends Block implements BlockLiquid {
         }
 
         return isOptimalFlowDirection;
+    }
+
+    private void ensureFlowCostVisited() {
+        if (this.flowCostVisited == null) {
+            this.flowCostVisited = new HashMap<>();
+        }
     }
 
     /**

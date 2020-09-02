@@ -7,6 +7,8 @@
 
 package io.gomint.server.world;
 
+import io.gomint.math.BlockPosition;
+
 /**
  * @author BlackyPaw
  * @version 1.0
@@ -69,6 +71,42 @@ public final class CoordinateUtils {
      */
     public static long toLong( int x, int z ) {
         return ( (long) x << 32 ) + z - Integer.MIN_VALUE;
+    }
+
+    /**
+     * Shift three int's together to form a compound key
+     *
+     * @param position which should be used
+     * @return long compound of the three int's
+     */
+    public static long toLong( BlockPosition position ) {
+        return ( ( (long) position.getX() & 0x3FFFFFF ) << 38 ) | ( ( (long) position.getY() & 0xFFF ) << 26 ) | ( (long) position.getZ() & 0x3FFFFFF );
+    }
+
+    /**
+     * Shift three int's together to form a compound key
+     *
+     * @param x
+     * @param y
+     * @param z
+     * @return long compound of the three int's
+     */
+    public static long toLong( int x, int y, int z ) {
+        return ( ( (long) x & 0x3FFFFFF ) << 38 ) | ( ( (long) y & 0xFFF ) << 26 ) | ( (long) z & 0x3FFFFFF );
+    }
+
+    /**
+     * Get the vector which has been encoded into the long
+     *
+     * @param hash The encoded long
+     * @return the decoded BlockPosition
+     */
+    public static BlockPosition fromLong( long hash ) {
+        int x = (int) ( hash >> 38 );
+        int y = (int) ( hash >> 26 ) & 0xFFF;
+        int z = (int) ( hash ) & 0x3FFFFFF;
+
+        return new BlockPosition( x, y, z );
     }
 
 }

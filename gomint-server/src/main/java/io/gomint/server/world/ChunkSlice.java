@@ -6,11 +6,11 @@ import io.gomint.math.MathUtils;
 import io.gomint.server.entity.tileentity.TileEntity;
 import io.gomint.server.util.BlockIdentifier;
 import io.gomint.server.util.Palette;
+import io.gomint.server.world.block.Air;
 import io.gomint.server.world.storage.TemporaryStorage;
 import io.gomint.world.block.Block;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.PooledByteBufAllocator;
-import io.netty.buffer.UnpooledByteBufAllocator;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
 import it.unimi.dsi.fastutil.objects.ObjectIterator;
@@ -40,7 +40,8 @@ public class ChunkSlice {
     });
     private static final ThreadLocal<IntList> RUNTIME_INDEX = ThreadLocal.withInitial(() -> new IntArrayList(4096));
 
-    protected static final short AIR_RUNTIME_ID = (short) BlockRuntimeIDs.toBlockIdentifier("minecraft:air", null).getRuntimeId();
+    protected static final BlockIdentifier AIR_RUNTIME_ID = BlockRuntimeIDs.toBlockIdentifier("minecraft:air", null);
+    private static final ThreadLocal<Air> AIR_BLOCK = new ThreadLocal<>();
 
     private final ChunkAdapter chunk;
     private final int sectionY;
@@ -124,7 +125,7 @@ public class ChunkSlice {
     protected short getRuntimeID(int layer, int index) {
         ByteBuf blockStorage = this.blocks[layer];
         if (blockStorage == null) {
-            return AIR_RUNTIME_ID;
+            return AIR_RUNTIME_ID.getRuntimeId();
         }
 
         return blockStorage.getShort(index << 1);
@@ -139,9 +140,9 @@ public class ChunkSlice {
             blockLocation = this.getBlockLocation(blockX, blockY, blockZ);
         }
 
-        int runtimeID = this.getRuntimeID(layer, index);
-        if (runtimeID == AIR_RUNTIME_ID) {
-            return this.getAirBlockInstance(blockLocation);
+        short runtimeID = this.getRuntimeID(layer, index);
+        if (runtimeID == AIR_RUNTIME_ID.getRuntimeId()) {
+            return (T) this.getAirBlockInstance(blockLocation);
         }
 
         BlockIdentifier identifier = BlockRuntimeIDs.toBlockIdentifier(runtimeID);
@@ -155,9 +156,16 @@ public class ChunkSlice {
         return getBlockInstanceInternal(index, layer, getBlockLocation(x, y, z));
     }
 
-    private <T extends Block> T getAirBlockInstance(Location location) {
-        return (T) this.chunk.getWorld().getServer().getBlocks().get(BlockRuntimeIDs.toBlockIdentifier("minecraft:air", null),
-            (byte) 15, (byte) 15, null, location, 0, null, (short) 0);
+    private Air getAirBlockInstance(Location location) {
+        Air air = AIR_BLOCK.get();
+        if (air == null) {
+            air = this.chunk.getWorld().getServer().getBlocks().get(AIR_RUNTIME_ID,
+                (byte) 15, (byte) 15, null, location, 0, null, (short) 0);
+            AIR_BLOCK.set(air);
+        }
+
+        air.setLocation(location);
+        return air;
     }
 
     private Location getBlockLocation(int x, int y, int z) {
@@ -201,10 +209,10 @@ public class ChunkSlice {
             return;
         }
 
-        if (runtimeID != AIR_RUNTIME_ID && this.blocks[layer] == null) {
+        if (runtimeID != AIR_RUNTIME_ID.getRuntimeId() && this.blocks[layer] == null) {
             this.blocks[layer] = PooledByteBufAllocator.DEFAULT.directBuffer(4096 * 2); // Defaults to all 0
             for (int i = 0; i < 4096; i++) {
-                this.blocks[layer].writeShort(AIR_RUNTIME_ID);
+                this.blocks[layer].writeShort(AIR_RUNTIME_ID.getRuntimeId());
             }
 
             this.isAllAir = false;
@@ -279,6 +287,10 @@ public class ChunkSlice {
             runtimeIndex.clear();
 
             for (short blockIndex = 0; blockIndex < indexIDs.length; blockIndex++) {
+                if (layerBuf == null) {
+                    System.out.println("?");
+                }
+
                 short runtimeID = layerBuf.getShort(blockIndex << 1);
 
                 if (runtimeID != lastRuntimeID) {

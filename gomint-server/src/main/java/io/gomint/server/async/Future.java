@@ -220,7 +220,7 @@ public class Future<T> {
         }
     }
 
-    private void setWhenUnresolved( Object result, byte resolved ) {
+    private synchronized void setWhenUnresolved( Object result, byte resolved ) {
         if ( this.state == UNRESOLVED ) {
             this.state = resolved;
             this.result = result;

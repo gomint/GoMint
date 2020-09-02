@@ -26,9 +26,6 @@ public class PlayerJoinListener implements EventListener {
         // Set to allow all permissions
         event.getPlayer().getPermissionManager().setPermission("*", true);
 
-        EntitySheep sheep = EntitySheep.create();
-        sheep.spawn(event.getPlayer().getLocation());
-
         // Give this player the debug scoreboard
         new DebugScoreboard(this.plugin, event.getPlayer());
 

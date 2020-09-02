@@ -66,6 +66,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -733,7 +734,7 @@ public abstract class WorldAdapter implements World {
         int amountOfChunksLoaded = 0;
         for (int i = chunkX - spawnRadius; i <= chunkX + spawnRadius; i++) {
             for (int j = chunkZ - spawnRadius; j <= chunkZ + spawnRadius; j++) {
-                this.loadChunk(i, j, true);
+                this.loadChunk0(i, j, true);
                 amountOfChunksLoaded++;
             }
         }
@@ -750,14 +751,19 @@ public abstract class WorldAdapter implements World {
      * @return The loaded or generated Chunk
      */
     public ChunkAdapter loadChunk(int x, int z, boolean generate) {
+        ChunkAdapter chunk = this.chunkCache.getChunk(x,z); // This is a very hot path, get out of there asap
+        if (chunk != null) {
+            return chunk;
+        }
+
         // If we are on main thread async this for unload order reasons
         if (this.server.isMainThread()) {
             Future<ChunkAdapter> chunkAdapter = new Future<>();
             this.getOrLoadChunk(x, z, generate, chunkAdapter::resolve);
 
             try {
-                return chunkAdapter.get();
-            } catch (InterruptedException | ExecutionException e) {
+                return chunkAdapter.get(500, TimeUnit.MILLISECONDS);
+            } catch (InterruptedException | ExecutionException | TimeoutException e) {
                 logger.warn("Could not load chunk {} / {}", x, z, e);
                 return null;
             }
@@ -860,14 +866,14 @@ public abstract class WorldAdapter implements World {
      * Main loop of the world's asynchronous worker thread.
      */
     private void asyncWorkerLoop() {
-        // Fast out
         if (!this.asyncWorkerRunning.get()) {
             return;
         }
 
+        // Fast out
         while (!this.asyncChunkTasks.isEmpty()) {
             try {
-                AsyncChunkTask task = this.asyncChunkTasks.poll();
+                AsyncChunkTask task = this.asyncChunkTasks.poll(50, TimeUnit.MILLISECONDS);
                 if (task == null) {
                     return;
                 }

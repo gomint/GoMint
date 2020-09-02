@@ -138,41 +138,6 @@ public class ShapedRecipe extends CraftingRecipe {
 
     @Override
     public int[] isCraftable(Inventory inputInventory) {
-        // Check normal first
-        /*int[] output = this.check(inputInventory);
-        if (output == null) {
-            // vFlip the input
-            Inventory flippedInventory = new CraftingInputInventory(inputInventory.getOwner());
-            if (inputInventory.size() > 4) {
-                flippedInventory.resizeAndClear(inputInventory.size());
-            }
-
-            // Take over and flip the slots
-            for (int i = 0; i < inputInventory.getContentsArray().length; i++) {
-                if (inputInventory.size() == 9) {
-                    if (i == 0 || i == 3 || i == 6) {
-                        // Flip to +2
-                        flippedInventory.setItem(i + 2, inputInventory.getContentsArray()[i]);
-                    } else if (i == 2 || i == 5 || i == 8) {
-                        // Flip to -2
-                        flippedInventory.setItem(i - 2, inputInventory.getContentsArray()[i]);
-                    } else {
-                        // This should be the middle
-                        flippedInventory.setItem(i, inputInventory.getContentsArray()[i]);
-                    }
-                } else {
-                    if (i == 0 || i == 2) {
-                        flippedInventory.setItem(i + 1, inputInventory.getContentsArray()[i]);
-                    } else {
-                        flippedInventory.setItem(i - 1, inputInventory.getContentsArray()[i]);
-                    }
-                }
-            }
-
-            return this.check(flippedInventory);
-        }
-
-        return output;*/
         ItemStack[] inputItems = inputInventory.getContentsArray();
         ItemStack[] ingredients = getIngredients();
         int[] consumeSlots = new int[ingredients.length];

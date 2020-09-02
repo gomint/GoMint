@@ -22,10 +22,10 @@ public class BlockIdentifier {
     private final String blockId;
     private final int blockNumericId;
     private FreezableSortedMap<String, Object> states;
-    private final int runtimeId;
+    private final short runtimeId;
     private NBTTagCompound nbt;
 
-    public BlockIdentifier(String blockId, int blockNumericId, int runtimeId, NBTTagCompound states)  {
+    public BlockIdentifier(String blockId, int blockNumericId, short runtimeId, NBTTagCompound states)  {
         this.blockId = blockId;
         this.blockNumericId = blockNumericId;
         this.runtimeId = runtimeId;
@@ -58,7 +58,7 @@ public class BlockIdentifier {
         this.states = states;
     }
 
-    public int getRuntimeId() {
+    public short getRuntimeId() {
         return runtimeId;
     }
 

@@ -10,10 +10,12 @@ import io.gomint.math.Vector;
 import io.gomint.server.entity.EntityPlayer;
 import io.gomint.server.entity.tileentity.TileEntity;
 import io.gomint.server.maintenance.ReportUploader;
+import io.gomint.server.registry.BlockRegistry;
 import io.gomint.server.registry.Generator;
-import io.gomint.server.registry.StringRegistry;
 import io.gomint.server.util.BlockIdentifier;
 import io.gomint.server.util.ClassPath;
+import io.gomint.server.util.performance.ASMFactoryConstructionFactory;
+import io.gomint.server.util.performance.ConstructionFactory;
 import io.gomint.server.util.performance.LambdaConstructionFactory;
 import io.gomint.server.world.BlockRuntimeIDs;
 import io.gomint.server.world.ChunkSlice;
@@ -36,7 +38,7 @@ public class Blocks {
 
     private static final Logger LOGGER = LoggerFactory.getLogger( Blocks.class );
     private static long lastReport = 0;
-    private final StringRegistry<Block> generators;
+    private final BlockRegistry generators;
     private PacketBuffer packetCache;
 
     /**
@@ -45,8 +47,8 @@ public class Blocks {
      * @param classPath which builds this registry
      */
     public Blocks(ClassPath classPath, List<BlockIdentifier> blockIdentifiers) throws IOException {
-        this.generators = new StringRegistry<>(classPath, (clazz, id) -> {
-            LambdaConstructionFactory<Block> factory = new LambdaConstructionFactory<>(clazz);
+        this.generators = new BlockRegistry(blockIdentifiers, classPath, (clazz, id) -> {
+            ConstructionFactory<Block> factory = ASMFactoryConstructionFactory.create(clazz);
             BlockIdentifier blockIdentifier = BlockRuntimeIDs.toBlockIdentifier(id, null);
 
             return in -> {
@@ -68,7 +70,7 @@ public class Blocks {
 
     public <T extends Block> T get(BlockIdentifier identifier, byte skyLightLevel, byte blockLightLevel,
                                    TileEntity tileEntity, Location location, int layer, ChunkSlice chunkSlice, short index) {
-        Generator<Block> instance = this.generators.getGenerator( identifier.getBlockId() );
+        Generator<Block> instance = this.generators.getGenerator( identifier.getRuntimeId() );
         if ( instance != null ) {
             T block = (T) instance.generate();
             if ( location == null ) {
@@ -81,8 +83,8 @@ public class Blocks {
 
         // Don't spam the report server pls
         if ( System.currentTimeMillis() - lastReport > TimeUnit.SECONDS.toSeconds( 10 ) ) {
-            LOGGER.warn( "Missing block: {}", identifier.getBlockId() );
-            ReportUploader.create().includeWorlds().property( "missing_block", identifier.getBlockId()).upload("Missing block in register");
+            LOGGER.warn( "Missing block: {}", identifier );
+            ReportUploader.create().includeWorlds().property( "missing_block", identifier.toString()).upload("Missing block in register");
             lastReport = System.currentTimeMillis();
         }
 
@@ -90,13 +92,13 @@ public class Blocks {
         return null;
     }
 
-    public Block get( String blockId ) {
-        Generator<Block> instance = this.generators.getGenerator( blockId );
+    public Block get( BlockIdentifier identifier) {
+        Generator<Block> instance = this.generators.getGenerator( identifier.getRuntimeId() );
         if ( instance != null ) {
             return instance.generate();
         }
 
-        LOGGER.warn( "Unknown block {}", blockId );
+        LOGGER.warn( "Unknown block {}", identifier.getBlockId() );
         return null;
     }
 
@@ -110,7 +112,7 @@ public class Blocks {
     }
 
     public String getID( Class<?> block ) {
-        return this.generators.getId( block );
+        return this.generators.getID( block );
     }
 
     public boolean replaceWithItem(EntityPlayer entity, Block clickedBlock, Block block, Facing face, ItemStack item, Vector clickVector ) {
@@ -152,7 +154,6 @@ public class Blocks {
         if ( blockPlaceEvent.isCancelled() ) {
             return false;
         }
-
 
         block = block.setBlockFromPlacementData( data );
         block.afterPlacement( data );

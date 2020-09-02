@@ -15,11 +15,6 @@ import io.gomint.server.registry.RegisterInfo;
 public class Gravel extends Fallable implements BlockGravel {
 
     @Override
-    public String getBlockId() {
-        return "minecraft:gravel";
-    }
-
-    @Override
     public long getBreakTime() {
         return 900;
     }

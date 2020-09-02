@@ -25,5 +25,6 @@
             <AppenderRef ref="File"/>
             <AppenderRef ref="Console"/>
         </Root>
+        <Logger name="io.gomint.server.network.handler.PacketCraftingEventHandler" level="DEBUG" />
     </Loggers>
 </Configuration>

@@ -369,6 +369,7 @@ public abstract class ItemStack implements Cloneable, io.gomint.inventory.item.I
      *
      * @return id for the block when this item is placed
      */
+    // TODO: Refactor this into placement data
     public String getBlockId() {
         return this.material;
     }

@@ -92,7 +92,11 @@ public class BlockPosition implements Cloneable {
 
     @Override
     public int hashCode() {
-        return Objects.hash(x, y, z);
+        int h = 1;
+        h = 31 * h + x;
+        h = 31 * h + y;
+        h = 31 * h + z;
+        return h;
     }
 
 }

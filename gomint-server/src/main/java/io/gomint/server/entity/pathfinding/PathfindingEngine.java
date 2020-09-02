@@ -1,20 +1,29 @@
 package io.gomint.server.entity.pathfinding;
 
+import io.gomint.entity.passive.EntityBat;
+import io.gomint.entity.passive.EntityXPOrb;
 import io.gomint.math.AxisAlignedBB;
 import io.gomint.math.BlockPosition;
 import io.gomint.math.Location;
 import io.gomint.math.Vector;
 import io.gomint.server.entity.Transformable;
+import io.gomint.server.world.CoordinateUtils;
 import io.gomint.server.world.block.Block;
+import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
+import it.unimi.dsi.fastutil.longs.LongSet;
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.PriorityQueue;
+import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 /**
  * A pathfinding engine instance may be used to navigate an object through the game world.
@@ -25,7 +34,8 @@ import java.util.PriorityQueue;
  */
 public class PathfindingEngine {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger( PathfindingEngine.class );
+    private static final Logger LOGGER = LoggerFactory.getLogger(PathfindingEngine.class);
+    private static final int MAXIMUM_NODES_TO_EXPLORE = 200;
 
     // The transform that holds the current position the object is located at:
     private final Transformable transform;
@@ -41,7 +51,7 @@ public class PathfindingEngine {
      *
      * @param transform The transform to modify accordingly
      */
-    public PathfindingEngine( Transformable transform ) {
+    public PathfindingEngine(Transformable transform) {
         this.transform = transform;
         this.dirty = false;
         this.cachedPath = null;
@@ -70,7 +80,7 @@ public class PathfindingEngine {
      *
      * @param goal The goal point to reach
      */
-    public void setGoal( Location goal ) {
+    public void setGoal(Location goal) {
         this.goal = goal;
         this.dirty = true;
     }
@@ -88,7 +98,7 @@ public class PathfindingEngine {
      * @return The current path proposed by the pathfinding engine
      */
     public List<BlockPosition> getPath() {
-        if ( this.dirty ) {
+        if (this.dirty) {
             this.cachedPath = this.calculateShortestPath();
         }
 
@@ -108,70 +118,70 @@ public class PathfindingEngine {
         // Concrete implementation classes of collection types are used to aggressively
         // remind of the data structure actually chosen.
 
-        if ( this.goal == null ) {
+        if (this.goal == null) {
             return null;
         }
 
-        final int MAXIMUM_NODES_TO_EXPLORE = 5000;
-        final BlockPosition goalTriple = new BlockPosition( (int) this.goal.getX(), (int) this.goal.getY(), (int) this.goal.getZ() );
+        final BlockPosition goalTriple = new BlockPosition((int) this.goal.getX(), (int) this.goal.getY(), (int) this.goal.getZ());
 
-        Map<BlockPosition, AStarNode> closedMap = new HashMap<>();
+        LongSet closedSet = new LongOpenHashSet();
         Map<BlockPosition, AStarNode> discoveredMap = new HashMap<>();
         PriorityQueue<AStarNode> discoveredNodes = new PriorityQueue<>();
 
-        AStarNode startNode = new AStarNode( new BlockPosition( (int) this.transform.getPositionX(), (int) this.transform.getPositionY(), (int) this.transform.getPositionZ() ) );
-        startNode.setG( 0.0F );
-        startNode.setF( this.estimateDistance( startNode.getBlockPosition(), this.goal ) );
-        startNode.setK( 1 );
-        startNode.setPredecessor( startNode );
+        AStarNode startNode = new AStarNode(new BlockPosition((int) this.transform.getPositionX(), (int) this.transform.getPositionY(), (int) this.transform.getPositionZ()));
+        startNode.setG(0.0F);
+        startNode.setF(this.estimateDistance(startNode.getBlockPosition(), this.goal));
+        startNode.setK(1);
+        startNode.setPredecessor(startNode);
 
-        discoveredNodes.add( startNode );
-        discoveredMap.put( startNode.getBlockPosition(), startNode );
+        discoveredNodes.add(startNode);
+        discoveredMap.put(startNode.getBlockPosition(), startNode);
 
         int exploredNodesCount = 0;
 
         this.dirty = false;
 
-        while ( !discoveredNodes.isEmpty() && exploredNodesCount < MAXIMUM_NODES_TO_EXPLORE ) {
+        while (!discoveredNodes.isEmpty() && exploredNodesCount < MAXIMUM_NODES_TO_EXPLORE) {
             AStarNode node = discoveredNodes.poll();
-            if ( node.getBlockPosition().equals( goalTriple ) ) {
+            if (node.getBlockPosition().equals(goalTriple)) {
                 // Goal was reached -> reconstruct path and return:
-                ArrayList<BlockPosition> path = new ArrayList<>( node.getK() );
-                while ( true ) {
-                    path.add( node.getBlockPosition() );
+                ArrayList<BlockPosition> path = new ArrayList<>(node.getK());
+                while (true) {
+                    path.add(node.getBlockPosition());
 
-                    if ( node.isStart() ) {
+                    if (node.isStart()) {
                         break;
                     }
 
                     node = node.getPredecessor();
                 }
 
-                Collections.reverse( path );
+                Collections.reverse(path);
                 return path;
             }
 
             // This node will not be examined any further:
-            discoveredMap.remove( node.getBlockPosition() );
-            closedMap.put( node.getBlockPosition(), node );
+            discoveredMap.remove(node.getBlockPosition());
+            closedSet.add(CoordinateUtils.toLong(node.getBlockPosition()));
 
             // Examine neighbour nodes:
-            for ( int i = node.getBlockPosition().getX() - 1; i <= node.getBlockPosition().getX() + 1; ++i ) {
+            for (int i = node.getBlockPosition().getX() - 1; i <= node.getBlockPosition().getX() + 1; ++i) {
                 out:
-                for ( int k = node.getBlockPosition().getZ() - 1; k <= node.getBlockPosition().getZ() + 1; ++k ) {
-                    BlockPosition neighbourTriple = new BlockPosition( i, node.getBlockPosition().getY(), k );
-                    if ( closedMap.containsKey( neighbourTriple ) ) {
+                for (int k = node.getBlockPosition().getZ() - 1; k <= node.getBlockPosition().getZ() + 1; ++k) {
+                    if (closedSet.contains(CoordinateUtils.toLong(i, node.getBlockPosition().getY(), k))) {
                         continue;
                     }
 
+                    BlockPosition neighbourTriple = new BlockPosition(i, node.getBlockPosition().getY(), k);
+
                     // Got to make sure this neighbour is even in reach from this block
                     // Check if the block is walkable or jumpable
-                    Block block = this.getGoal().getWorld().getBlockAt( neighbourTriple.getX(), neighbourTriple.getY(), neighbourTriple.getZ() );
-                    if ( !block.canPassThrough() ) {
-                        for ( AxisAlignedBB bb : block.getBoundingBox() ) {
+                    Block block = this.getGoal().getWorld().getBlockAt(neighbourTriple);
+                    if (!block.canPassThrough()) {
+                        for (AxisAlignedBB bb : block.getBoundingBox()) {
                             double diff = bb.getMaxY() - neighbourTriple.getY();
-                            if ( diff > 0 && diff <= 0.5F ) {
-                                neighbourTriple = new BlockPosition( neighbourTriple.getX(), neighbourTriple.getY() + 1, neighbourTriple.getZ() );
+                            if (diff > 0 && diff <= 0.5F) {
+                                neighbourTriple = new BlockPosition(neighbourTriple.getX(), neighbourTriple.getY() + 1, neighbourTriple.getZ());
                                 break;
                             } else {
                                 continue out;
@@ -180,55 +190,57 @@ public class PathfindingEngine {
                     }
 
                     // We need to account for gravity here
-                    Block blockBeneath = this.getGoal().getWorld().getBlockAt( neighbourTriple.getX(), neighbourTriple.getY() - 1, neighbourTriple.getZ() );
-                    if ( blockBeneath.canPassThrough() ) {
-                        neighbourTriple = new BlockPosition( neighbourTriple.getX(), neighbourTriple.getY() - 1, neighbourTriple.getZ() );
+                    Block blockBeneath = this.getGoal().getWorld().getBlockAt(neighbourTriple.getX(), neighbourTriple.getY() - 1, neighbourTriple.getZ());
+                    if (blockBeneath.canPassThrough()) {
+                        neighbourTriple = new BlockPosition(neighbourTriple.getX(), neighbourTriple.getY() - 1, neighbourTriple.getZ());
                     }
 
                     // This block is a valid neighbour:
-                    AStarNode neighbourNode = discoveredMap.get( neighbourTriple );
-                    if ( neighbourNode != null ) {
-                        double g = node.getG() + this.gridDistance( node.getBlockPosition(), neighbourTriple );
-                        if ( g < neighbourNode.getG() ) {
-                            neighbourNode.setG( g );
-                            neighbourNode.setF( g + this.estimateDistance( neighbourTriple, this.goal ) );
-                            neighbourNode.setK( node.getK() + 1 );
-                            neighbourNode.setPredecessor( node );
+                    AStarNode neighbourNode = discoveredMap.get(neighbourTriple);
+                    if (neighbourNode != null) {
+                        double g = node.getG() + this.gridDistance(node.getBlockPosition(), neighbourTriple);
+                        if (g < neighbourNode.getG()) {
+                            neighbourNode.setG(g);
+                            neighbourNode.setF(g + this.estimateDistance(neighbourTriple, this.goal));
+                            neighbourNode.setK(node.getK() + 1);
+                            neighbourNode.setPredecessor(node);
                         }
                     } else {
-                        neighbourNode = new AStarNode( neighbourTriple );
-                        neighbourNode.setG( node.getG() + this.gridDistance( node.getBlockPosition(), neighbourTriple ) );
-                        neighbourNode.setF( neighbourNode.getG() + this.estimateDistance( neighbourTriple, this.goal ) );
-                        neighbourNode.setK( node.getK() + 1 );
-                        neighbourNode.setPredecessor( node );
-                        discoveredMap.put( neighbourTriple, neighbourNode );
-                        discoveredNodes.add( neighbourNode );
+                        neighbourNode = new AStarNode(neighbourTriple);
+                        neighbourNode.setG(node.getG() + this.gridDistance(node.getBlockPosition(), neighbourTriple));
+                        neighbourNode.setF(neighbourNode.getG() + this.estimateDistance(neighbourTriple, this.goal));
+                        neighbourNode.setK(node.getK() + 1);
+                        neighbourNode.setPredecessor(node);
+                        discoveredMap.put(neighbourTriple, neighbourNode);
+                        discoveredNodes.add(neighbourNode);
                     }
                 }
             }
 
             ++exploredNodesCount;
 
-            if ( exploredNodesCount >= MAXIMUM_NODES_TO_EXPLORE ) {
-                // Debug
-                // Goal was reached -> reconstruct path and return:
-                ArrayList<BlockPosition> path = new ArrayList<>( node.getK() );
-                while ( true ) {
-                    path.add( node.getBlockPosition() );
+            if (exploredNodesCount >= MAXIMUM_NODES_TO_EXPLORE) {
+                if (LOGGER.isDebugEnabled()) {
+                    // Debug
+                    // Goal was reached -> reconstruct path and return:
+                    ArrayList<BlockPosition> path = new ArrayList<>(node.getK());
+                    while (true) {
+                        path.add(node.getBlockPosition());
 
-                    if ( node.isStart() ) {
-                        break;
+                        if (node.isStart()) {
+                            break;
+                        }
+
+                        node = node.getPredecessor();
                     }
 
-                    node = node.getPredecessor();
-                }
+                    Collections.reverse(path);
 
-                Collections.reverse( path );
-
-                LOGGER.debug( "Path selected:" );
-                for ( BlockPosition intTriple : path ) {
-                    Block block = this.getGoal().getWorld().getBlockAt( intTriple.getX(), intTriple.getY(), intTriple.getZ() );
-                    LOGGER.debug( "> " + intTriple + " > " + block.getClass() );
+                    LOGGER.debug("Path selected:");
+                    for (BlockPosition intTriple : path) {
+                        Block block = this.getGoal().getWorld().getBlockAt(intTriple.getX(), intTriple.getY(), intTriple.getZ());
+                        LOGGER.debug("> " + intTriple + " > " + block.getClass());
+                    }
                 }
             }
         }
@@ -238,12 +250,12 @@ public class PathfindingEngine {
         return null;
     }
 
-    private double gridDistance( BlockPosition a, BlockPosition b ) {
-        return ( Math.abs( b.getX() - a.getX() ) + Math.abs( b.getZ() - a.getZ() ) );
+    private double gridDistance(BlockPosition a, BlockPosition b) {
+        return (Math.abs(b.getX() - a.getX()) + Math.abs(b.getZ() - a.getZ()));
     }
 
-    public double estimateDistance( BlockPosition a, Vector b ) {
-        return ( Math.abs( b.getX() - a.getX() ) + Math.abs( b.getY() - a.getY() ) + Math.abs( b.getZ() - a.getZ() ) );
+    public double estimateDistance(BlockPosition a, Vector b) {
+        return (Math.abs(b.getX() - a.getX()) + Math.abs(b.getY() - a.getY()) + Math.abs(b.getZ() - a.getZ()));
     }
 
 }

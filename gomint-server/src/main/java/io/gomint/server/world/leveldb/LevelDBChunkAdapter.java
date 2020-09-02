@@ -288,7 +288,7 @@ public class LevelDBChunkAdapter extends ChunkAdapter {
     void loadTileEntities( byte[] tileEntityData ) {
         ByteBuf data = Allocator.allocate(tileEntityData);
         NBTReader nbtReader = new NBTReader( data, ByteOrder.LITTLE_ENDIAN );
-        while ( data.readableBytes() > 0 ) {
+        while ( data.readableBytes() > 0 && data.getByte(data.readerIndex() + 1) != 0 ) {
             TileEntity tileEntity = null;
 
             try {
@@ -301,7 +301,7 @@ public class LevelDBChunkAdapter extends ChunkAdapter {
                     this.addTileEntity( tileEntity );
                 }
             } catch ( IOException | AllocationLimitReachedException e ) {
-                LOGGER.warn( "Error in loading tile entities", e );
+                LOGGER.debug( "Error in loading tile entities", e );
                 break;
             }
         }

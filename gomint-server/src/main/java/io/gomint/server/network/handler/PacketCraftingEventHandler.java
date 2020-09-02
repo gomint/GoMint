@@ -3,17 +3,10 @@ package io.gomint.server.network.handler;
 import io.gomint.event.player.PlayerCraftingEvent;
 import io.gomint.inventory.item.ItemAir;
 import io.gomint.inventory.item.ItemStack;
-import io.gomint.inventory.item.ItemType;
-import io.gomint.math.MathUtils;
 import io.gomint.server.crafting.Recipe;
-import io.gomint.server.crafting.ShapedRecipe;
-import io.gomint.server.inventory.CraftingInputInventory;
 import io.gomint.server.inventory.Inventory;
 import io.gomint.server.network.PlayerConnection;
 import io.gomint.server.network.packet.PacketCraftingEvent;
-import it.unimi.dsi.fastutil.objects.Object2IntMap;
-import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
-import it.unimi.dsi.fastutil.objects.ObjectIterator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -84,7 +84,6 @@ public abstract class Block implements io.gomint.world.block.Block {
     }
     // CHECKSTYLE:ON
 
-
     public void setIdentifier(BlockIdentifier identifier) {
         this.identifier = identifier;
     }
@@ -324,7 +323,7 @@ public abstract class Block implements io.gomint.world.block.Block {
             return null;
         }
 
-        Block instance = this.world.getServer().getBlocks().get(data.getBlockIdentifier().getBlockId());
+        Block instance = this.world.getServer().getBlocks().get(data.getBlockIdentifier());
         if (instance != null) {
             WorldAdapter worldAdapter = (WorldAdapter) this.location.getWorld();
             worldAdapter.setBlock(pos, this.layer, data.getBlockIdentifier().getRuntimeId());

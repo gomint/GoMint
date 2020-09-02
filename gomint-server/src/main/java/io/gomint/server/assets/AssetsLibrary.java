@@ -8,6 +8,7 @@
 package io.gomint.server.assets;
 
 import io.gomint.GoMint;
+import io.gomint.inventory.item.ItemAir;
 import io.gomint.jraknet.PacketBuffer;
 import io.gomint.server.crafting.Recipe;
 import io.gomint.server.crafting.ShapedRecipe;
@@ -95,7 +96,6 @@ public class AssetsLibrary {
         this.itemIDs = new ArrayList<>();
         for (NBTTagCompound itemLegacyID : itemLegacyIDs) {
             StringShortPair pair = new StringShortPair(itemLegacyID.getString("name", ""), itemLegacyID.getShort("id", (short) 0));
-            System.out.println(pair.getBlockId() + " -> " + pair.getData());
             this.itemIDs.add(pair);
         }
 
@@ -108,7 +108,7 @@ public class AssetsLibrary {
 
         this.blockPalette = new ArrayList<>();
 
-        int runtimeId = 0;
+        short runtimeId = 0;
         for (NBTTagCompound compound : blockPaletteCompounds) {
             String block = compound.getCompound("block", false).getString("name", "minecraft:air");
 
@@ -282,7 +282,7 @@ public class AssetsLibrary {
     private ItemStack loadItemStack(PacketBuffer buffer) throws IOException, AllocationLimitReachedException {
         short id = buffer.readShort();
         if (id == 0) {
-            return null;
+            return this.items == null ? null : this.items.create("minecraft:air", (short) 0, (byte) 0, null);
         }
 
         byte amount = buffer.readByte();
@@ -306,17 +306,6 @@ public class AssetsLibrary {
         this.blockPalette = null;
         this.creativeInventory = null;
     }
-
-    public String getItemID(int id) {
-        for (StringShortPair itemID : this.itemIDs) {
-            if (itemID.getData() == id) {
-                return itemID.getBlockId();
-            }
-        }
-
-        return "UNKNOWN";
-    }
-
 
     public CreativeInventory getCreativeInventory() {
         return creativeInventory;

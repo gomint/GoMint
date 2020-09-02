@@ -8,9 +8,6 @@
 package io.gomint.server.registry;
 
 import io.gomint.server.util.ClassPath;
-import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
-import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,14 +44,17 @@ public class StringRegistry<R> {
 
         @Override
         public int hashCode() {
-            return Objects.hash(id, arguments);
+            int h = 1;
+            h = 31 * h + id.hashCode();
+            h = 31 * h + arguments;
+            return h;
         }
     }
 
     private ClassPath classPath;
     private final GeneratorCallback<R> generatorCallback;
 
-    private final Object2ObjectMap<Lookup, Generator<R>> generators = new Object2ObjectOpenHashMap<>();
+    private final Map<Lookup, Generator<R>> generators = new HashMap<>();
     private final Map<Class<?>, String> apiReferences = new HashMap<>();
 
     /**

@@ -13,8 +13,8 @@ import io.gomint.server.registry.RegisterInfo;
 public class Sunflower extends Block implements BlockSunflower {
 
     @Override
-    public String getBlockId() {
-        return "minecraft:double_plant";
+    public boolean canPassThrough() {
+        return true;
     }
 
     @Override

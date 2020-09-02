@@ -141,23 +141,6 @@ public class LevelDBWorldAdapter extends WorldAdapter {
             throw new WorldLoadException("Could not open leveldb connection: " + e.getMessage());
         }
 
-        DBIterator iterator = this.db.iterator();
-        while (iterator.hasNext()) {
-            Map.Entry<byte[], byte[]> entry = iterator.next();
-            if (entry.getKey().length > 12) {
-                DumpUtil.dumpByteArray(entry.getKey());
-                LOGGER.info(new String(entry.getKey()));
-
-                ByteBuf buf = Unpooled.wrappedBuffer(entry.getValue());
-                NBTReader reader = new NBTReader(buf, ByteOrder.LITTLE_ENDIAN);
-                try {
-                    DumpUtil.dumpNBTCompund(reader.parse());
-                } catch (IOException | AllocationLimitReachedException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-
         this.prepareSpawnRegion();
 
         // Adjust spawn location if needed
@@ -364,8 +347,6 @@ public class LevelDBWorldAdapter extends WorldAdapter {
 
             NBTStream nbtStream = new NBTStream(buf, ByteOrder.LITTLE_ENDIAN);
             nbtStream.addListener((path, value) -> {
-                LOGGER.info("LevelDAT: {} -> {}", path, value);
-
                 switch (path) {
                     case ".GeneratorClass":
                         LevelDBWorldAdapter.this.generatorClass = (Class<? extends ChunkGenerator>) PluginClassloader.find((String) value);
