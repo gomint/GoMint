@@ -287,10 +287,6 @@ public class ChunkSlice {
             runtimeIndex.clear();
 
             for (short blockIndex = 0; blockIndex < indexIDs.length; blockIndex++) {
-                if (layerBuf == null) {
-                    System.out.println("?");
-                }
-
                 short runtimeID = layerBuf.getShort(blockIndex << 1);
 
                 if (runtimeID != lastRuntimeID) {
