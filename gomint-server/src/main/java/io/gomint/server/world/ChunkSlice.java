@@ -4,6 +4,7 @@ import io.gomint.jraknet.PacketBuffer;
 import io.gomint.math.Location;
 import io.gomint.math.MathUtils;
 import io.gomint.server.entity.tileentity.TileEntity;
+import io.gomint.server.maintenance.ReportUploader;
 import io.gomint.server.util.BlockIdentifier;
 import io.gomint.server.util.Palette;
 import io.gomint.server.world.block.Air;
@@ -306,6 +307,14 @@ public class ChunkSlice {
 
             // Get correct wordsize
             int value = indexList.size();
+            if (value == 0) {
+                LOGGER.error("Trying to persist without any blocks");
+                ReportUploader.create().includeWorlds()
+                    .tag("invalid.leveldb.palette.sending")
+                    .property("block.count", String.valueOf(indexIDs.length))
+                    .upload("Invalid amount of runtime index entries");
+            }
+
             float numberOfBits = log2(value) + 1;
 
             // Prepare palette

@@ -180,6 +180,14 @@ public class LevelDBChunkAdapter extends ChunkAdapter {
 
             // Get correct wordsize
             int value = indexList.size();
+            if (value == 0) {
+                LOGGER.error("Trying to persist without any blocks");
+                ReportUploader.create().includeWorlds()
+                    .tag("invalid.leveldb.palette.store")
+                    .property("block.count", String.valueOf(indexIDs.length))
+                    .upload("Invalid amount of runtime index entries");
+            }
+
             int numberOfBits = MathUtils.fastFloor( MathUtils.log2( value ) ) + 1;
 
             // Prepare palette
