@@ -8,13 +8,15 @@
 package io.gomint.server.world.leveldb;
 
 import com.google.common.io.Files;
+import io.gomint.leveldb.DB;
+import io.gomint.leveldb.NativeLoader;
+import io.gomint.leveldb.WriteBatch;
 import io.gomint.math.BlockPosition;
 import io.gomint.math.Location;
 import io.gomint.server.GoMintServer;
 import io.gomint.server.entity.EntityPlayer;
 import io.gomint.server.plugin.PluginClassloader;
 import io.gomint.server.util.Allocator;
-import io.gomint.server.util.DumpUtil;
 import io.gomint.server.world.ChunkAdapter;
 import io.gomint.server.world.ChunkCache;
 import io.gomint.server.world.WorldAdapter;
@@ -36,16 +38,12 @@ import io.netty.buffer.PooledByteBufAllocator;
 import io.netty.buffer.Unpooled;
 import io.netty.buffer.UnpooledByteBufAllocator;
 import org.apache.logging.log4j.core.util.UuidUtil;
-import org.iq80.leveldb.impl.Iq80DBFactory;
-import org.iq80.leveldb.table.BloomFilterPolicy;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import org.iq80.leveldb.*;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -54,7 +52,6 @@ import java.io.IOException;
 import java.nio.ByteOrder;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -64,6 +61,13 @@ import java.util.UUID;
 public class LevelDBWorldAdapter extends WorldAdapter {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LevelDBWorldAdapter.class);
+
+    static {
+        if ( !NativeLoader.load() ) {
+            System.out.println( "Could not load native leveldb. Please be sure you have a supported OS installed" );
+            System.exit( -1 );
+        }
+    }
 
     private DB db;
     private int worldVersion;
@@ -131,14 +135,8 @@ public class LevelDBWorldAdapter extends WorldAdapter {
 
     private void open() throws WorldLoadException {
         try {
-            Options options = new Options()
-                .createIfMissing(true)
-                .compressionType(CompressionType.ZLIB_RAW)
-                .filterPolicy(new BloomFilterPolicy(10))
-                .writeBufferSize(512 * 1024)
-                .cacheSize(1024)
-                .blockSize(64 * 1024);
-            this.db = Iq80DBFactory.factory.open(new File(this.worldDir, "db"), options);
+            this.db = new DB(new File(this.worldDir, "db"));
+            this.db.open();
         } catch (Exception e) {
             throw new WorldLoadException("Could not open leveldb connection: " + e.getMessage());
         }
@@ -319,14 +317,14 @@ public class LevelDBWorldAdapter extends WorldAdapter {
         }
     }
 
-    public byte[] getKey(int chunkX, int chunkZ, byte dataType) {
-        return new byte[]{(byte) chunkX, (byte) (chunkX >>> 8), (byte) (chunkX >>> 16), (byte) (chunkX >>> 24),
-            (byte) chunkZ, (byte) (chunkZ >>> 8), (byte) (chunkZ >>> 16), (byte) (chunkZ >>> 24), dataType};
+    public ByteBuf getKey(int chunkX, int chunkZ, byte dataType) {
+        ByteBuf buf = PooledByteBufAllocator.DEFAULT.directBuffer( 9 );
+        return buf.writeIntLE(chunkX).writeIntLE(chunkZ).writeByte(dataType);
     }
 
-    public byte[] getKeySubChunk(int chunkX, int chunkZ, byte dataType, byte subChunk) {
-        return new byte[]{(byte) chunkX, (byte) (chunkX >>> 8), (byte) (chunkX >>> 16), (byte) (chunkX >>> 24),
-            (byte) chunkZ, (byte) (chunkZ >>> 8), (byte) (chunkZ >>> 16), (byte) (chunkZ >>> 24), dataType, subChunk};
+    public ByteBuf getKeySubChunk(int chunkX, int chunkZ, byte dataType, byte subChunk) {
+        ByteBuf buf = PooledByteBufAllocator.DEFAULT.directBuffer( 10 );
+        return buf.writeIntLE(chunkX).writeIntLE(chunkZ).writeByte(dataType).writeByte(subChunk);
     }
 
     private void loadLevelDat() throws WorldLoadException {
@@ -412,34 +410,27 @@ public class LevelDBWorldAdapter extends WorldAdapter {
     public ChunkAdapter loadChunk(int x, int z, boolean generate) {
         ChunkAdapter chunk = this.chunkCache.getChunk(x, z);
         if (chunk == null) {
-            Snapshot snapshot = this.db.getSnapshot();
-            ReadOptions ro = new ReadOptions().snapshot(snapshot);
+            DB.Snapshot snapshot = this.db.getSnapshot();
 
             // Get version bit
-            byte[] version = this.db.get(this.getKey(x, z, (byte) 0x76), ro);
+            ByteBuf key = this.getKey(x, z, (byte) 0x76);
+            byte[] version = this.db.get(snapshot, key);
+            key.release();
 
             if (version == null) {
                 if (generate) {
-                    try {
-                        snapshot.close();
-                    } catch (IOException e) {
-                        LOGGER.warn("Could not close snapshot", e);
-                    }
-
+                    snapshot.close();
                     return this.generate(x, z, false);
                 } else {
-                    try {
-                        snapshot.close();
-                    } catch (IOException e) {
-                        LOGGER.warn("Could not close snapshot", e);
-                    }
-
+                    snapshot.close();
                     return null;
                 }
             }
 
             // Get the finalized value, only needed for vanilla though, other implementations don't use this (null = true)
-            byte[] finalized = this.db.get(this.getKey(x, z, (byte) 0x36), ro);
+            key = this.getKey(x, z, (byte) 0x36);
+            byte[] finalized = this.db.get(snapshot, key);
+            key.release();
 
             byte v = version[0];
             boolean populated = finalized == null || finalized[0] == 2;
@@ -447,7 +438,9 @@ public class LevelDBWorldAdapter extends WorldAdapter {
             LevelDBChunkAdapter loadingChunk = new LevelDBChunkAdapter(this, x, z, v, populated);
 
             for (int sectionY = 0; sectionY < 16; sectionY++) {
-                byte[] chunkData = this.db.get(this.getKeySubChunk(x, z, (byte) 0x2f, (byte) sectionY), ro);
+                key = this.getKeySubChunk(x, z, (byte) 0x2f, (byte) sectionY);
+                byte[] chunkData = this.db.get(snapshot, key);
+                key.release();
 
                 if (chunkData != null) {
                     loadingChunk.loadSection(sectionY, chunkData);
@@ -456,20 +449,23 @@ public class LevelDBWorldAdapter extends WorldAdapter {
                 }
             }
 
-            byte[] tileEntityData = this.db.get(this.getKey(x, z, (byte) 0x31), ro);
+            key = this.getKey(x, z, (byte) 0x31);
+            byte[] tileEntityData = this.db.get(snapshot, key);
+            key.release();
+
             if (tileEntityData != null) {
                 loadingChunk.loadTileEntities(tileEntityData);
             }
 
-            byte[] biomes = this.db.get(this.getKey(x, z, (byte) 0x2d));
+            key = this.getKey(x, z, (byte) 0x2d);
+            byte[] biomes = this.db.get(snapshot, key);
+            key.release();
+
             if (biomes != null && biomes.length == 768) { // There are 256 bytes versions of this which only contain 0 bytes
                 loadingChunk.loadHeightAndBiomes(biomes);
             } else {
                 loadingChunk.calculateHeightmap(240);
             }
-
-            // Register entities
-            this.registerEntitiesFromChunk(loadingChunk);
 
             // Give it into the chunk cache before we populate
             if (!this.chunkCache.putChunk(loadingChunk)) {
@@ -483,17 +479,15 @@ public class LevelDBWorldAdapter extends WorldAdapter {
             }
 
             // Load entities
-            byte[] entityData = this.db.get(this.getKey(x, z, (byte) 0x32), ro);
+            key = this.getKey(x, z, (byte) 0x32);
+            byte[] entityData = this.db.get(snapshot, key);
+            key.release();
+
             if (entityData != null) {
                 loadingChunk.loadEntities(entityData);
             }
 
-            try {
-                snapshot.close();
-            } catch (IOException e) {
-                LOGGER.warn("Could not close snapshot", e);
-            }
-
+            snapshot.close();
             return loadingChunk;
         }
 
@@ -521,7 +515,11 @@ public class LevelDBWorldAdapter extends WorldAdapter {
 
     private byte[] getPersistenceId(UUID uuid) {
         String key = "player_" + uuid.toString();
-        byte[] playerInfoNbt = this.db.get(key.getBytes());
+
+        ByteBuf playerInfoKey = PooledByteBufAllocator.DEFAULT.directBuffer().writeBytes(key.getBytes());
+        byte[] playerInfoNbt = this.db.get(playerInfoKey);
+        playerInfoKey.release();
+
         if (playerInfoNbt == null) {
             return null;
         }
@@ -543,11 +541,11 @@ public class LevelDBWorldAdapter extends WorldAdapter {
 
     @Override
     public void persistPlayer(EntityPlayer player) {
-        ByteBuf buf = UnpooledByteBufAllocator.DEFAULT.heapBuffer();
+        ByteBuf buf = UnpooledByteBufAllocator.DEFAULT.directBuffer();
 
         NBTTagCompound compound = player.persistToNBT();
         try {
-            WriteBatch batch = this.db.createWriteBatch();
+            WriteBatch batch = new WriteBatch();
 
             compound.writeTo(buf, ByteOrder.LITTLE_ENDIAN);
             byte[] persistenceId = this.getPersistenceId(player.getUUID());
@@ -559,15 +557,18 @@ public class LevelDBWorldAdapter extends WorldAdapter {
                 persistenceIdInformation.addValue("SelfSignedId", "");
                 persistenceIdInformation.addValue("ServerId", "player_server_" + uuid.toString());
 
-                ByteBuf pbuf = UnpooledByteBufAllocator.DEFAULT.heapBuffer();
+                ByteBuf pbuf = UnpooledByteBufAllocator.DEFAULT.directBuffer();
                 persistenceIdInformation.writeTo(pbuf, ByteOrder.LITTLE_ENDIAN);
 
                 persistenceId = ("player_server_" + uuid.toString()).getBytes();
-                batch.put(("player_" + player.getUUID()).getBytes(), pbuf.array());
+                batch.put(PooledByteBufAllocator.DEFAULT.directBuffer().writeBytes(("player_" + player.getUUID()).getBytes()), pbuf);
             }
 
-            batch.put(persistenceId, buf.array());
+            batch.put(PooledByteBufAllocator.DEFAULT.directBuffer().writeBytes(persistenceId), buf);
             this.db.write(batch);
+
+            batch.clear();
+            batch.close();
         } catch (IOException e) {
             logger.warn("Could not persist player information", e);
         }
@@ -578,7 +579,10 @@ public class LevelDBWorldAdapter extends WorldAdapter {
         try {
             byte[] persistenceId = this.getPersistenceId(player.getUUID());
             if (persistenceId != null) {
-                byte[] playerNbtData = this.db.get(persistenceId);
+                ByteBuf playerPersistenceId = PooledByteBufAllocator.DEFAULT.directBuffer().writeBytes(persistenceId);
+                byte[] playerNbtData = this.db.get(playerPersistenceId);
+                playerPersistenceId.release();
+
                 ByteBuf buf = Unpooled.wrappedBuffer(playerNbtData);
                 NBTReader reader = new NBTReader(buf, ByteOrder.LITTLE_ENDIAN);
 

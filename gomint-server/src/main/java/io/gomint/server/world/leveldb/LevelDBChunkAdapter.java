@@ -7,11 +7,14 @@
 
 package io.gomint.server.world.leveldb;
 
+import io.gomint.leveldb.DB;
+import io.gomint.leveldb.WriteBatch;
 import io.gomint.math.Location;
 import io.gomint.math.MathUtils;
 import io.gomint.server.entity.Entity;
 import io.gomint.server.entity.tileentity.SerializationReason;
 import io.gomint.server.entity.tileentity.TileEntity;
+import io.gomint.server.maintenance.ReportUploader;
 import io.gomint.server.util.Allocator;
 import io.gomint.server.util.BlockIdentifier;
 import io.gomint.server.util.Palette;
@@ -34,8 +37,6 @@ import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
-import org.iq80.leveldb.DB;
-import org.iq80.leveldb.WriteBatch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -78,7 +79,7 @@ public class LevelDBChunkAdapter extends ChunkAdapter {
     }
 
     void save( DB db ) {
-        WriteBatch writeBatch = db.createWriteBatch();
+        WriteBatch writeBatch = new WriteBatch();
 
         // We do blocks first
         for ( int i = 0; i < this.chunkSlices.length; i++ ) {
@@ -90,16 +91,17 @@ public class LevelDBChunkAdapter extends ChunkAdapter {
         }
 
         // Save metadata
-        byte[] key = ( (LevelDBWorldAdapter) this.world ).getKey( this.x, this.z, (byte) 0x76 );
-        byte[] val = new byte[]{ (byte) this.chunkVersion };
+        ByteBuf key = ( (LevelDBWorldAdapter) this.world ).getKey( this.x, this.z, (byte) 0x76 );
+        ByteBuf val = PooledByteBufAllocator.DEFAULT.directBuffer(1).writeByte(this.chunkVersion);
         writeBatch.put( key, val );
 
         key = ( (LevelDBWorldAdapter) this.world ).getKey( this.x, this.z, (byte) 0x36 );
-        val = isPopulated() ? new byte[]{ 2, 0, 0, 0 } : new byte[]{ 0, 0, 0, 0 };
+        val = PooledByteBufAllocator.DEFAULT.directBuffer(1).writeByte(isPopulated() ? 2 : 0)
+            .writeByte(0).writeByte(0).writeByte(0);
         writeBatch.put( key, val );
 
         // Save tiles
-        ByteBuf out = PooledByteBufAllocator.DEFAULT.heapBuffer();
+        ByteBuf out = PooledByteBufAllocator.DEFAULT.directBuffer();
         NBTWriter nbtWriter = new NBTWriter( out, ByteOrder.LITTLE_ENDIAN );
         for ( TileEntity tileEntity : this.getTileEntities() ) {
             NBTTagCompound compound = new NBTTagCompound( "" );
@@ -114,11 +116,11 @@ public class LevelDBChunkAdapter extends ChunkAdapter {
 
         if ( out.readableBytes() > 0 ) {
             key = ( (LevelDBWorldAdapter) this.world ).getKey( this.x, this.z, (byte) 0x31 );
-            writeBatch.put( key, out.array() );
+            writeBatch.put( key, out );
         }
 
         // Save biome and height
-        ByteBuf outHB = PooledByteBufAllocator.DEFAULT.heapBuffer(768);
+        ByteBuf outHB = PooledByteBufAllocator.DEFAULT.directBuffer(768);
         key = ( (LevelDBWorldAdapter) this.world ).getKey( this.x, this.z, (byte) 0x2d );
 
         for (short height : this.height) {
@@ -126,22 +128,18 @@ public class LevelDBChunkAdapter extends ChunkAdapter {
         }
 
         outHB.writeBytes(this.biomes.asReadOnly());
-        writeBatch.put( key, out.array() );
+        writeBatch.put( key, out );
 
         db.write( writeBatch );
-        out.release();
-        outHB.release();
 
-        try {
-            writeBatch.close();
-        } catch (IOException e) {
-            LOGGER.warn("Could not close write batch", e);
-        }
+        // Release bound memory
+        writeBatch.clear();
+        writeBatch.close();
     }
 
     private void saveChunkSlice( int i, WriteBatch writeBatch ) {
         ChunkSlice slice = this.chunkSlices[i];
-        ByteBuf buffer = PooledByteBufAllocator.DEFAULT.heapBuffer();
+        ByteBuf buffer = PooledByteBufAllocator.DEFAULT.directBuffer();
 
         buffer.writeByte( (byte) 8 );
         buffer.writeByte( (byte) slice.getAmountOfLayers() );
@@ -212,10 +210,9 @@ public class LevelDBChunkAdapter extends ChunkAdapter {
             }
         }
 
-        byte[] key = ( (LevelDBWorldAdapter) this.world ).getKeySubChunk( this.x, this.z, (byte) 0x2f, (byte) i );
+        ByteBuf key = ( (LevelDBWorldAdapter) this.world ).getKeySubChunk( this.x, this.z, (byte) 0x2f, (byte) i );
         buffer.readerIndex(0);
-        writeBatch.put( key, buffer.array() );
-        buffer.release();
+        writeBatch.put( key, buffer );
     }
 
     void loadSection( int sectionY, byte[] chunkData ) {
@@ -239,6 +236,7 @@ public class LevelDBChunkAdapter extends ChunkAdapter {
                     // Read NBT data
                     int needed = buffer.readIntLE();
                     Int2IntMap chunkPalette = new Int2IntOpenHashMap( needed ); // Varint my ass
+                    chunkPalette.defaultReturnValue(-1);
 
                     int index = 0;
                     NBTReader reader = new NBTReader( buffer, ByteOrder.LITTLE_ENDIAN );
@@ -273,6 +271,12 @@ public class LevelDBChunkAdapter extends ChunkAdapter {
                     ChunkSlice slice = this.ensureSlice( sectionY );
                     for ( short i = 0; i < indexes.length; i++ ) {
                         int runtimeID = chunkPalette.get( indexes[i] );
+                        if (runtimeID == -1) {
+                            LOGGER.error("Invalid runtime in storage");
+                            ReportUploader.create().includeWorlds().tag("invalid.leveldb.palette").upload("Invalid palette entry");
+                            runtimeID = BlockRuntimeIDs.toBlockIdentifier("minecraft:air", null).getRuntimeId();
+                        }
+
                         slice.setRuntimeIdInternal( i, sI, runtimeID );
                     }
 

@@ -10,6 +10,7 @@ module gomint.server {
     requires gomint.api;
     requires gomint.jraknet;
     requires gomint.crypto;
+    requires gomint.leveldb;
 
     // Logging modules
     requires org.apache.logging.log4j;
@@ -38,8 +39,6 @@ module gomint.server {
     requires jline.terminal;
     requires org.apache.commons.text;
     requires org.slf4j;
-    requires leveldb;
-    requires leveldb.api;
 
     // Export logging stuff for log4j2
     exports net.minecrell.terminalconsole to org.apache.logging.log4j, org.apache.logging.log4j.core;

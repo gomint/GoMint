@@ -1513,13 +1513,6 @@ public abstract class WorldAdapter implements World {
         this.chunkCache.saveAll();
     }
 
-    public void registerEntitiesFromChunk(ChunkAdapter chunk) {
-        Long2ObjectMap<Entity> entities = chunk.getEntities();
-        if (entities != null && !entities.isEmpty()) {
-            this.entityManager.addFromChunk(entities);
-        }
-    }
-
     public ChunkCache getChunkCache() {
         return this.chunkCache;
     }
