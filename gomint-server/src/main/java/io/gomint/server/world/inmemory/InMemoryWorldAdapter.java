@@ -84,8 +84,8 @@ public final class InMemoryWorldAdapter extends WorldAdapter {
     }
 
     @Override
-    public void loadPlayer(EntityPlayer player) {
-
+    public boolean loadPlayer(EntityPlayer player) {
+        return false;
     }
 
     @Override

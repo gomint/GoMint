@@ -881,10 +881,8 @@ public class PlayerConnection implements ConnectionWithState {
 
         Location spawn = this.entity.getSpawnLocation() != null ? this.entity.getSpawnLocation() : world.getSpawnLocation();
 
-        packet.setSpawn(spawn.add(0, this.entity.getOffsetY(), 0));
-        packet.setX((int) spawn.getX());
-        packet.setY((int) (spawn.getY() + this.entity.getOffsetY()));
-        packet.setZ((int) spawn.getZ());
+        packet.setLocation(this.entity.getLocation());
+        packet.setSpawn(spawn);
 
         packet.setWorldGamemode(0);
 
@@ -909,7 +907,6 @@ public class PlayerConnection implements ConnectionWithState {
         packet.setItemPalette(this.server.getItems().getPacketCache());
 
         // Set the new location
-        this.entity.setAndRecalcPosition(this.entity.getSpawnLocation() != null ? this.entity.getSpawnLocation() : world.getSpawnLocation());
         this.addToSendQueue(packet);
     }
 

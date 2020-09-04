@@ -664,6 +664,29 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
      * Send all data which the client needs before getting chunks
      */
     public void prepareEntity() {
+        this.windowIds = new Byte2ObjectOpenHashMap<>();
+        this.containerIds = new Object2ByteOpenHashMap<>();
+
+        // Inventories
+        this.inventory = new PlayerInventory(this.world.getServer().getItems(), this);
+        this.armorInventory = new ArmorInventory(this.world.getServer().getItems(), this);
+
+        this.cursorInventory = new CursorInventory(this.world.getServer().getItems(), this);
+        this.offhandInventory = new OffhandInventory(this.world.getServer().getItems(), this);
+        this.enderChestInventory = new EnderChestInventory(this.world.getServer().getItems(),  this );
+
+        this.craftingInventory = new CraftingInputInventory(this.world.getServer().getItems(), this);
+        this.craftingInputInventory = new CraftingInputInventory(this.world.getServer().getItems(), this);
+        this.craftingResultInventory = new OneSlotInventory(this.world.getServer().getItems(), this);
+
+        this.enchantmentOutputInventory = new OneSlotInventory(this.world.getServer().getItems(), this);
+
+        // Load from world
+        if (!this.world.loadPlayer(this)) {
+            // Get default spawn
+            this.setAndRecalcPosition(this.getSpawnLocation() != null ? this.getSpawnLocation() : this.world.getSpawnLocation());
+        }
+
         // Send world init data
         this.connection.sendWorldTime(0);
         this.connection.sendWorldInitialization(this.getEntityId());
@@ -684,27 +707,6 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
 
         // Attributes
         this.updateAttributes();
-
-        this.windowIds = new Byte2ObjectOpenHashMap<>();
-        this.containerIds = new Object2ByteOpenHashMap<>();
-
-        // Inventories
-        this.inventory = new PlayerInventory(this.world.getServer().getItems(), this);
-        this.armorInventory = new ArmorInventory(this.world.getServer().getItems(), this);
-
-        this.cursorInventory = new CursorInventory(this.world.getServer().getItems(), this);
-        this.offhandInventory = new OffhandInventory(this.world.getServer().getItems(), this);
-        this.enderChestInventory = new EnderChestInventory(this.world.getServer().getItems(),  this );
-
-        this.craftingInventory = new CraftingInputInventory(this.world.getServer().getItems(), this);
-        this.craftingInputInventory = new CraftingInputInventory(this.world.getServer().getItems(), this);
-        this.craftingResultInventory = new OneSlotInventory(this.world.getServer().getItems(), this);
-
-        this.enchantmentOutputInventory = new OneSlotInventory(this.world.getServer().getItems(), this);
-
-        // Load from world
-        this.world.loadPlayer(this);
-
 
         this.inventory.addViewer(this);
         this.armorInventory.addViewer(this);
@@ -777,7 +779,7 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
         // Remove from player list
         PacketPlayerlist packetPlayerlist = new PacketPlayerlist();
         packetPlayerlist.setMode((byte) 1);
-        packetPlayerlist.setEntries(new ArrayList<PacketPlayerlist.Entry>() {{
+        packetPlayerlist.setEntries(new ArrayList<>() {{
             add(new PacketPlayerlist.Entry(EntityPlayer.this));
         }});
 

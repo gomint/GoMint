@@ -281,7 +281,6 @@ public class LevelDBChunkAdapter extends ChunkAdapter {
                         int runtimeID = chunkPalette.get( indexes[i] );
                         if (runtimeID == -1) {
                             LOGGER.error("Invalid runtime in storage");
-                            ReportUploader.create().includeWorlds().tag("invalid.leveldb.palette").upload("Invalid palette entry");
                             runtimeID = BlockRuntimeIDs.toBlockIdentifier("minecraft:air", null).getRuntimeId();
                         }
 

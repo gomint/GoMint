@@ -575,7 +575,7 @@ public class LevelDBWorldAdapter extends WorldAdapter {
     }
 
     @Override
-    public void loadPlayer(EntityPlayer player) {
+    public boolean loadPlayer(EntityPlayer player) {
         try {
             byte[] persistenceId = this.getPersistenceId(player.getUUID());
             if (persistenceId != null) {
@@ -588,10 +588,13 @@ public class LevelDBWorldAdapter extends WorldAdapter {
 
                 NBTTagCompound playerNbt = reader.parse();
                 player.initFromNBT(playerNbt);
+                return true;
             }
         } catch (IOException | AllocationLimitReachedException e) {
             logger.warn("Could not load player information", e);
         }
+
+        return false;
     }
 
     @Override

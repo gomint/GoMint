@@ -117,7 +117,9 @@ public class ChunkCache {
                 continue;
             }
 
-            LOGGER.info( "Cleaning up chunk @ {} / {} ({})", currentX, currentZ, entry.getLongKey() );
+            if (LOGGER.isDebugEnabled()) {
+                LOGGER.debug("Cleaning up chunk @ {} / {} ({})", currentX, currentZ, entry.getLongKey());
+            }
 
             // Ask this chunk if he wants to be gced
             this.tempHashes[1].add( entry.getLongKey() );

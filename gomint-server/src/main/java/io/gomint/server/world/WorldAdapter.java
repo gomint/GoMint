@@ -1541,7 +1541,7 @@ public abstract class WorldAdapter implements World {
      *
      * @param player which should be loaded
      */
-    public abstract void loadPlayer(io.gomint.server.entity.EntityPlayer player);
+    public abstract boolean loadPlayer(io.gomint.server.entity.EntityPlayer player);
 
     @Override
     public Block getHighestBlockAt(int x, int z) {

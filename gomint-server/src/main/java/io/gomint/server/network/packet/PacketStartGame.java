@@ -21,7 +21,7 @@ public class PacketStartGame extends Packet {
     private long entityId;
     private long runtimeEntityId;
     private int gamemode;
-    private Location spawn;
+    private Location location;
 
     // Level data
     private int seed;
@@ -29,13 +29,11 @@ public class PacketStartGame extends Packet {
     private short biomeType;
     private String biomeName;
     private int dimension;
+    private Location spawn;
 
     private int generator;
     private int worldGamemode;
     private int difficulty;
-    private int x;
-    private int y;
-    private int z;
     private boolean hasAchievementsDisabled = true;
     private int dayCycleStopTime;
     private int eduEditionOffer;
@@ -86,11 +84,11 @@ public class PacketStartGame extends Packet {
         buffer.writeSignedVarLong(this.entityId); // EntityUnique
         buffer.writeUnsignedVarLong(this.runtimeEntityId); // EntityRuntime
         buffer.writeSignedVarInt(this.gamemode); // VarInt
-        buffer.writeLFloat(this.spawn.getX()); // Vec3
-        buffer.writeLFloat(this.spawn.getY());
-        buffer.writeLFloat(this.spawn.getZ());
-        buffer.writeLFloat(this.spawn.getYaw()); // Vec2
-        buffer.writeLFloat(this.spawn.getPitch());
+        buffer.writeLFloat(this.location.getX()); // Vec3
+        buffer.writeLFloat(this.location.getY());
+        buffer.writeLFloat(this.location.getZ());
+        buffer.writeLFloat(this.location.getYaw()); // Vec2
+        buffer.writeLFloat(this.location.getPitch());
 
         // LevelSettings
         buffer.writeSignedVarInt(this.seed);
@@ -248,30 +246,6 @@ public class PacketStartGame extends Packet {
 
     public void setDifficulty(int difficulty) {
         this.difficulty = difficulty;
-    }
-
-    public int getX() {
-        return x;
-    }
-
-    public void setX(int x) {
-        this.x = x;
-    }
-
-    public int getY() {
-        return y;
-    }
-
-    public void setY(int y) {
-        this.y = y;
-    }
-
-    public int getZ() {
-        return z;
-    }
-
-    public void setZ(int z) {
-        this.z = z;
     }
 
     public boolean isHasAchievementsDisabled() {
@@ -504,5 +478,13 @@ public class PacketStartGame extends Packet {
 
     public void setItemPalette(PacketBuffer itemPalette) {
         this.itemPalette = itemPalette;
+    }
+
+    public Location getLocation() {
+        return location;
+    }
+
+    public void setLocation(Location location) {
+        this.location = location;
     }
 }
