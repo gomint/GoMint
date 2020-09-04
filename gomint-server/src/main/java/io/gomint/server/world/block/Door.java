@@ -97,7 +97,7 @@ public abstract class Door extends Block implements BlockDoor {
 
     @Override
     public void afterPlacement(PlacementData data) {
-        data.setBlockIdentifier(BlockRuntimeIDs.change(data.getBlockIdentifier(), null, new String[]{"upper_block_bit"}, (byte) 1);
+        data.setBlockIdentifier(BlockRuntimeIDs.change(data.getBlockIdentifier(), null, new String[]{"upper_block_bit"}, (byte) 1));
 
         Block above = this.location.getWorld().getBlockAt(this.location.toBlockPosition().add(BlockPosition.UP));
         above.setBlockFromPlacementData(data);
