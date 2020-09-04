@@ -9,18 +9,11 @@ import io.gomint.config.YamlConfig;
  */
 public class ConnectionConfig extends YamlConfig {
 
-    @Comment("Enable connection encryption. It uses AES-128 so it costs a bit of CPU power")
-    private boolean enableEncryption = true;
+    @Comment("Root of certification chain used for JWT")
+    private String jwtRoot = "MHYwEAYHKoZIzj0CAQYFK4EEACIDYgAE8ELkixyLcwlZryUQcu1TvPOmI2B7vX83ndnWRUaXm74wFfa5f/lwQNTfrLVHa2PmenpGI6JhIMUJaWZrjmMj90NoKNFSNBuKdm8rYiXsfaz3K36x/1U26HpG0ZxK/V1V";
 
-    @Comment("Level of compression used for packets. Lower = less CPU / higher traffic; Higher = more CPU / lower traffic")
-    private int compressionLevel = 7;
-
-    public boolean isEnableEncryption() {
-        return enableEncryption;
-    }
-
-    public int getCompressionLevel() {
-        return compressionLevel;
+    public String getJwtRoot() {
+        return jwtRoot;
     }
 
 }

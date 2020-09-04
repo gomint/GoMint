@@ -374,7 +374,7 @@ public class GoMintServer implements GoMint, InventoryHolder {
         int port = args.has("lp") ? (int) args.valueOf("lp") : this.serverConfig.getListener().getPort();
         String host = args.has("lh") ? (String) args.valueOf("lh") : this.serverConfig.getListener().getIp();
 
-        this.encryptionKeyFactory = new EncryptionKeyFactory();
+        this.encryptionKeyFactory = new EncryptionKeyFactory(this.serverConfig.getConnection().getJwtRoot());
         this.networkManager = new NetworkManager(this);
         if (!this.initNetworking(host, port)) {
             this.internalShutdown();
