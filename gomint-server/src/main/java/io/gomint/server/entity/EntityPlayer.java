@@ -88,6 +88,8 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
     private final EntityVisibilityManager entityVisibilityManager = new EntityVisibilityManager(this);
     private int viewDistance = 4;
     private Queue<ChunkAdapter> chunkSendQueue = new LinkedBlockingQueue<>();
+    private boolean hasCompletedLogin;
+
     // EntityPlayer Information
     private Gamemode gamemode = Gamemode.SURVIVAL;
     private AdventureSettings adventureSettings;
@@ -1558,6 +1560,8 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
             }
         }
 
+        this.hasCompletedLogin = true;
+
         // Send network chunk publisher packet after join
         this.world.getServer().getScheduler().schedule(() -> {
             if (isOnline()) {
@@ -1855,6 +1859,10 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
     @Override
     public EnderChestInventory getEnderChestInventory() {
         return enderChestInventory;
+    }
+
+    public boolean hasCompletedLogin() {
+        return this.hasCompletedLogin;
     }
 
 }
