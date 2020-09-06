@@ -80,7 +80,8 @@ public abstract class Packet {
                 // There is no alloc limit needed here, you can't write so much shit in 32kb, so thats ok
                 nbt = nbtReader.parse();
             } catch (IOException | AllocationLimitReachedException e) {
-                return null;
+                LOGGER.error("Could not read item stack because of NBT", e);
+                return ItemAir.create(0);
             }
         } else if (extraLen == -1) {
             // New system uses a byte as amount of nbt tags
@@ -92,7 +93,8 @@ public abstract class Packet {
                     // There is no alloc limit needed here, you can't write so much shit in 32kb, so thats ok
                     nbt = nbtReader.parse();
                 } catch (IOException | AllocationLimitReachedException e) {
-                    return null;
+                    LOGGER.error("Could not read item stack because of NBT", e);
+                    return ItemAir.create(0);
                 }
             }
         }
