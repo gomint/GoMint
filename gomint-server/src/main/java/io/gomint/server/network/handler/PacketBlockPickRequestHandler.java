@@ -45,7 +45,7 @@ public class PacketBlockPickRequestHandler implements PacketHandler<PacketBlockP
                         }
                     }
 
-                    if (block.getBlockId().equals(itemStack.getBlockId())) {
+                    if (block.getBlockId().equals(itemStack.getMaterial())) { // TODO: Fix this for slabs.....
                         if (i < 9) {
                             player.getInventory().setItemInHand(i);
                             return;

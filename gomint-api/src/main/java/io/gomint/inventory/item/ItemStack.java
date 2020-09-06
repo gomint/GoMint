@@ -5,7 +5,7 @@ import io.gomint.enchant.Enchantment;
 /**
  * @author geNAZt
  * @version 1.0
- * @stability 1
+ * @stability 3
  */
 public interface ItemStack {
 
@@ -40,21 +40,6 @@ public interface ItemStack {
      * @return the itemstack instance for further manipulation
      */
     ItemStack setAmount(int amount);
-
-    /**
-     * Get the metadata from this item stack
-     *
-     * @return metadata from this item stack
-     */
-    short getData();
-
-    /**
-     * Set the data of this item stack
-     *
-     * @param data to set into this stack
-     * @return the itemstack instance for further manipulation
-     */
-    ItemStack setData(short data);
 
     /**
      * Set a custom name for this item stack
@@ -118,5 +103,19 @@ public interface ItemStack {
      * @return the itemstack instance for further manipulation
      */
     ItemStack removeEnchantment(Class<? extends Enchantment> clazz);
+
+    /**
+     * Get the damage done to an item. This will return 0 for all non damageable items
+     *
+     * @return 0 is not damaged, 1 is broken
+     */
+    float getDamage();
+
+    /**
+     * Set the damage done to an item. This is a no-op to non damageable items
+     *
+     * @param damage 0 is not damage, 1 is broken
+     */
+    void setDamage(float damage);
 
 }

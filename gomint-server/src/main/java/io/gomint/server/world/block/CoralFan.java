@@ -20,6 +20,7 @@ import io.gomint.world.block.data.RotationDirection;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:coral_fan", def = true )
+@RegisterInfo( sId = "minecraft:coral_fan_dead" )
 public class CoralFan extends Block implements BlockCoralFan {
 
     private enum CoralTypeMagic {
@@ -77,6 +78,20 @@ public class CoralFan extends Block implements BlockCoralFan {
     @Override
     public CoralType getCoralType() {
         return CoralType.valueOf(COLOR.getState(this).name());
+    }
+
+    @Override
+    public boolean isDead() {
+        return this.getBlockId().equals("minecraft:coral_fan_dead");
+    }
+
+    @Override
+    public void setDead(boolean dead) {
+        if (dead) {
+            this.setBlockId("minecraft:coral_fan_dead");
+        } else {
+            this.setBlockId("minecraft:coral_fan");
+        }
     }
 
 }

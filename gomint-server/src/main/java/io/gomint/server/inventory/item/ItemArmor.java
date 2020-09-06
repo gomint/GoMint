@@ -1,15 +1,13 @@
 package io.gomint.server.inventory.item;
 
+import io.gomint.server.inventory.item.annotation.CanBeDamaged;
+
 /**
  * @author geNAZt
  * @version 1.0
  */
+@CanBeDamaged
 public abstract class ItemArmor extends ItemStack {
-
-    @Override
-    public byte getMaximumAmount() {
-        return 1;
-    }
 
     public abstract float getReductionValue();
 

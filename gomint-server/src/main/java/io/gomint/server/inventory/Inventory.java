@@ -300,7 +300,7 @@ public abstract class Inventory implements io.gomint.inventory.Inventory {
         NBTTagCompound compound = new NBTTagCompound("");
         compound.addValue("Damage", itemStack.getData());
         compound.addValue("Count", itemStack.getAmount());
-        compound.addValue("Name", itemStack.getBlockId());
+        compound.addValue("Name", itemStack.getMaterial());
         return compound;
     }
 

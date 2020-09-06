@@ -39,7 +39,7 @@ public class EnumBlockState<E extends Enum<E>, T> extends BlockState<E, T> {
 
     @Override
     public void detectFromPlacement(Block newBlock, EntityPlayer player, ItemStack placedItem, Facing face, Block block, Block clickedBlock, Vector clickPosition) {
-        this.setState(newBlock, this.enumValues[placedItem == null ? 0 : placedItem.getData()]);
+        this.setState(newBlock, this.enumValues[placedItem == null ? 0 : ((io.gomint.server.inventory.item.ItemStack) placedItem).getData()]);
     }
 
     @Override

@@ -7,6 +7,8 @@ import io.gomint.server.registry.StringRegistry;
 import io.gomint.server.util.ClassPath;
 import io.gomint.server.util.StringShortPair;
 import io.gomint.server.util.performance.LambdaConstructionFactory;
+import io.gomint.server.world.block.Block;
+import io.gomint.server.world.block.Blocks;
 import io.gomint.taglib.NBTTagCompound;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
@@ -35,6 +37,7 @@ public class Items {
     private final Int2ObjectMap<String> itemIdToBlockId = new Int2ObjectOpenHashMap<>();
 
     private PacketBuffer packetCache;
+    private Blocks blocks;
 
     /**
      * Create a new item registry
@@ -47,7 +50,7 @@ public class Items {
 
             return in -> {
                 io.gomint.server.inventory.item.ItemStack itemStack = factory.newInstance();
-                itemStack.setMaterial(id).setItems(this);
+                itemStack.setMaterial(id).setItems(this).setBlocks(blocks);
                 return itemStack;
             };
         });
@@ -173,6 +176,10 @@ public class Items {
 
     public int getRuntimeId(String material) {
         return this.blockIdToItemId.getInt(material);
+    }
+
+    public void setBlocks(Blocks blocks) {
+        this.blocks = blocks;
     }
 
 }

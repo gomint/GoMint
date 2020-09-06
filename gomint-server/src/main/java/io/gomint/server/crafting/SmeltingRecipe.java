@@ -57,12 +57,14 @@ public class SmeltingRecipe extends Recipe {
 
     @Override
     public void serialize(PacketBuffer buffer) {
+        io.gomint.server.inventory.item.ItemStack implInput = (io.gomint.server.inventory.item.ItemStack) this.input;
+
         // The type of this recipe is defined after the input metadata
-        buffer.writeSignedVarInt(this.input.getData() == 0 ? 2 : 3);
+        buffer.writeSignedVarInt(implInput.getData() == 0 ? 2 : 3);
 
         // We need to custom write items
-        buffer.writeSignedVarInt(((io.gomint.server.inventory.item.ItemStack) this.input).getRuntimeID());
-        if (this.input.getData() != 0) buffer.writeSignedVarInt(this.input.getData());
+        buffer.writeSignedVarInt(implInput.getRuntimeID());
+        if (implInput.getData() != 0) buffer.writeSignedVarInt(implInput.getData());
 
         Packet.writeItemStack(this.outcome, buffer);
         buffer.writeString(this.block);

@@ -49,6 +49,8 @@ public class BlockRuntimeIDs {
     private static final SwitchBlockStateMapper MAPPER_REGISTRY = new SwitchBlockStateMapper();
 
     public static void init(List<BlockIdentifier> blockPalette, Blocks blocks) throws IOException {
+        BLOCK_ID_TO_NUMERIC.defaultReturnValue(-1);
+
         List<Object> compounds = new ArrayList<>();
 
         PacketBuffer data = new PacketBuffer(blockPalette.size() * 128);
@@ -85,6 +87,10 @@ public class BlockRuntimeIDs {
 
     public static BlockIdentifier toBlockIdentifier(String blockId, FreezableSortedMap<String, Object> states) {
         BlockStateMapper mapper = MAPPER_REGISTRY.get(BLOCK_ID_TO_NUMERIC.getInt(blockId));
+        if (mapper == null) {
+            return null; // There is no block for this block id
+        }
+
         int runeTimeId = mapper.map(states);
         if (runeTimeId == -1) {
             LOGGER.error("Unknown states for block id: {}", blockId);

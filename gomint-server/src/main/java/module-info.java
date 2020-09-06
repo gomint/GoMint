@@ -16,6 +16,7 @@ module gomint.server {
     requires org.apache.logging.log4j;
     requires org.apache.logging.log4j.core;
     requires io.sentry;
+    requires java.scripting;
 
     // Netty modules
     requires io.netty.codec;
@@ -62,4 +63,5 @@ module gomint.server {
     exports io.gomint.server.world to gomint.test;
     exports io.gomint.server.util.collection to gomint.test;
     exports io.gomint.server.util.performance;
+    exports io.gomint.server.inventory.item to gomint.test;
 }

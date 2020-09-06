@@ -60,7 +60,7 @@ public abstract class CraftingRecipe extends Recipe {
         String inputMaterial = iI.getMaterial();
 
         return recipeMaterial.equals(inputMaterial) &&
-            ( recipeItem.getData() == -1 || recipeItem.getData() == invItem.getData() );
+            ( rI.getData() == -1 || rI.getData() == iI.getData() );
     }
 
     public ItemStack[] getOutcome() {

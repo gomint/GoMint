@@ -285,10 +285,6 @@ public abstract class Block implements io.gomint.world.block.Block {
 
     // TODO: Implement overrides for all state blocks
     public PlacementData calculatePlacementData(EntityPlayer entity, ItemStack item, Facing face, Block block, Block clickedBlock, Vector clickVector) {
-        if (item != null && item.getData() > 0) {
-            LOGGER.warn("Block implementation is missing states: {}", this.getClass().getName());
-        }
-
         return new PlacementData(this.identifier, null);
     }
 

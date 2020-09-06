@@ -11,11 +11,6 @@ import io.gomint.server.registry.RegisterInfo;
 public class ItemComposter extends ItemStack implements io.gomint.inventory.item.ItemComposter {
 
     @Override
-    public String getBlockId() {
-        return "minecraft:composter";
-    }
-
-    @Override
     public ItemType getItemType() {
         return ItemType.COMPOSTER;
     }

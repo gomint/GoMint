@@ -1,6 +1,7 @@
 package io.gomint.inventory.item;
 
 import io.gomint.GoMint;
+import io.gomint.world.block.data.LogType;
 
 /**
  * @author geNAZt
@@ -18,9 +19,18 @@ public interface ItemPlank extends ItemStack, ItemBurnable {
         return GoMint.instance().createItemStack( ItemPlank.class, amount );
     }
 
-    @Override
-    default long getBurnTime() {
-        return 15000;
-    }
+    /**
+     * Get plank type
+     *
+     * @return plank type
+     */
+    LogType getPlankType();
+
+    /**
+     * Set the plank type
+     *
+     * @param logType which should be used in this block
+     */
+    void setPlankType( LogType logType);
 
 }

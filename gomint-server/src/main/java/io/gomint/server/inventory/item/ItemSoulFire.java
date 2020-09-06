@@ -11,12 +11,8 @@ import io.gomint.server.registry.RegisterInfo;
 public class ItemSoulFire extends ItemStack implements io.gomint.inventory.item.ItemSoulFire {
 
     @Override
-    public String getBlockId() {
-        return "minecraft:soul_fire";
-    }
-
-    @Override
     public ItemType getItemType() {
         return ItemType.SOUL_FIRE;
     }
+
 }

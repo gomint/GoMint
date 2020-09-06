@@ -91,7 +91,7 @@ public class Sand extends Fallable implements BlockSand {
         PlacementData placementData = super.calculatePlacementData(entity, item, face, block, clickedBlock, clickVector);
         BlockIdentifier identifier = placementData.getBlockIdentifier();
 
-        SandTypeMagic should = item == null || item.getData() == 0 ? SandTypeMagic.NORMAL : SandTypeMagic.RED;
+        SandTypeMagic should = item == null || ((io.gomint.server.inventory.item.ItemStack) item).getData() == 0 ? SandTypeMagic.NORMAL : SandTypeMagic.RED;
         placementData.setBlockIdentifier(BlockRuntimeIDs.change(identifier, null, SAND_TYPE, should.type));
         return placementData;
     }

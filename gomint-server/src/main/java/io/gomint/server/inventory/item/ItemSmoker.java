@@ -11,11 +11,6 @@ import io.gomint.server.registry.RegisterInfo;
 public class ItemSmoker extends ItemStack implements io.gomint.inventory.item.ItemSmoker {
 
     @Override
-    public String getBlockId() {
-        return "minecraft:smoker";
-    }
-
-    @Override
     public ItemType getItemType() {
         return ItemType.SMOKER;
     }

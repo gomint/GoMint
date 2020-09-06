@@ -13,11 +13,6 @@ import io.gomint.taglib.NBTTagCompound;
 public class ItemEmeraldOre extends ItemStack implements io.gomint.inventory.item.ItemEmeraldOre {
 
     @Override
-    public String getBlockId() {
-        return "minecraft:emerald_ore";
-    }
-
-    @Override
     public ItemType getItemType() {
         return ItemType.EMERALD_ORE;
     }

@@ -2,19 +2,12 @@ package io.gomint.server.world.block;
 
 import io.gomint.inventory.item.ItemStack;
 import io.gomint.inventory.item.ItemType;
-import io.gomint.math.Vector;
-import io.gomint.server.entity.EntityPlayer;
-import io.gomint.server.world.PlacementData;
+import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.world.block.helper.ToolPresets;
 import io.gomint.server.world.block.state.EnumBlockState;
 import io.gomint.world.block.BlockStoneSlab;
 import io.gomint.world.block.BlockType;
-
-import io.gomint.server.registry.RegisterInfo;
-import io.gomint.world.block.data.Facing;
 import io.gomint.world.block.data.StoneType;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * @author geNAZt
@@ -28,8 +21,6 @@ import org.slf4j.LoggerFactory;
 @RegisterInfo(sId = "minecraft:polished_blackstone_slab")
 @RegisterInfo(sId = "minecraft:polished_blackstone_brick_slab")
 public class StoneSlab extends Slab implements BlockStoneSlab {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(StoneSlab.class);
 
     private static final String STONE_SLAB_ID = "minecraft:stone_slab";
     private static final String STONE_TYPE = "stone_slab_type";
@@ -99,25 +90,6 @@ public class StoneSlab extends Slab implements BlockStoneSlab {
     }
 
     private static final EnumBlockState<StoneTypeMagic, String> VARIANT = new EnumBlockState<>(v -> {
-        if (v == null) {
-            return new String[]{STONE_TYPE, STONE_TYPE_2, STONE_TYPE_3, STONE_TYPE_4};
-        }
-
-        for (StoneTypeMagic value : StoneTypeMagic.values()) {
-            if (value.value.equals(v)) {
-                switch (value.key) {
-                    case STONE_TYPE:
-                        return new String[]{STONE_TYPE, STONE_TYPE_2, STONE_TYPE_3, STONE_TYPE_4};
-                    case STONE_TYPE_2:
-                        return new String[]{STONE_TYPE_2, STONE_TYPE, STONE_TYPE_3, STONE_TYPE_4};
-                    case STONE_TYPE_3:
-                        return new String[]{STONE_TYPE_3, STONE_TYPE_2, STONE_TYPE, STONE_TYPE_4};
-                    case STONE_TYPE_4:
-                        return new String[]{STONE_TYPE_4, STONE_TYPE_2, STONE_TYPE_3, STONE_TYPE};
-                }
-            }
-        }
-
         return new String[]{STONE_TYPE, STONE_TYPE_2, STONE_TYPE_3, STONE_TYPE_4};
     }, StoneTypeMagic.values(), v -> v.value, v -> {
         for (StoneTypeMagic value : StoneTypeMagic.values()) {
@@ -183,47 +155,6 @@ public class StoneSlab extends Slab implements BlockStoneSlab {
     @Override
     public boolean canBeReplaced(ItemStack item) {
         return item.getItemType() == ItemType.STONE_SLAB;
-    }
-
-    @Override
-    public PlacementData calculatePlacementData(EntityPlayer entity, ItemStack item, Facing face, Block block, Block clickedBlock, Vector clickVector) {
-        short data = (short) (item.getData() % 8);
-        boolean top = item.getData() >= 8;
-
-        TOP.setState(this, top);
-
-        int start = -1;
-
-        switch (this.getBlockId()) {
-            case STONE_SLAB_ID:
-                start = 0;
-                break;
-            case STONE_SLAB2_ID:
-                start = 8;
-                break;
-            case STONE_SLAB3_ID:
-                start = 16;
-                break;
-            case STONE_SLAB4_ID:
-                start = 24;
-                break;
-        }
-
-        if (start > -1) {
-            VARIANT.setState(this, StoneTypeMagic.values()[start + data]);
-        }
-
-        // Check if we replace for double stone
-        if (clickedBlock.getBlockType() == this.getBlockType()) {
-            StoneSlab clicked = (StoneSlab) clickedBlock;
-            if (clicked.getStoneType() == this.getStoneType()) {
-                String[] split = this.getBlockId().split(":");
-                String doubleStoneId = "double_" + split[1];
-                this.setBlockId(split[0] + ":" + doubleStoneId);
-            }
-        }
-
-        return new PlacementData(this.identifier, null);
     }
 
 }

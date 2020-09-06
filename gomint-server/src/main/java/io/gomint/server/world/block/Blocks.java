@@ -115,15 +115,7 @@ public class Blocks {
         return this.generators.getID( block );
     }
 
-    public boolean replaceWithItem(EntityPlayer entity, Block clickedBlock, Block block, Facing face, ItemStack item, Vector clickVector ) {
-        // We need to change the block id first
-        String id = ( (io.gomint.server.inventory.item.ItemStack) item ).getBlockId();
-        if ( id == null ) {
-            return false;
-        }
-
-        Generator<Block> blockGenerator = this.generators.getGenerator( id );
-        Block newBlock = blockGenerator.generate();
+    public boolean replaceWithItem(Block newBlock, EntityPlayer entity, Block clickedBlock, Block block, Facing face, ItemStack item, Vector clickVector ) {
         if ( !newBlock.beforePlacement( entity, item, face, block.location ) ) {
             return false;
         }

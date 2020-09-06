@@ -8,7 +8,6 @@ import io.gomint.math.Location;
 import io.gomint.math.Vector;
 import io.gomint.server.entity.Entity;
 import io.gomint.server.entity.EntityPlayer;
-import io.gomint.server.entity.tileentity.BannerTileEntity;
 import io.gomint.server.entity.tileentity.BedTileEntity;
 import io.gomint.server.entity.tileentity.SerializationReason;
 import io.gomint.server.entity.tileentity.TileEntity;
@@ -19,10 +18,10 @@ import io.gomint.server.world.block.state.BooleanBlockState;
 import io.gomint.server.world.block.state.DirectionBlockState;
 import io.gomint.taglib.NBTTagCompound;
 import io.gomint.world.block.BlockBed;
-import io.gomint.world.block.data.Direction;
-import io.gomint.world.block.data.Facing;
 import io.gomint.world.block.BlockType;
 import io.gomint.world.block.data.BlockColor;
+import io.gomint.world.block.data.Direction;
+import io.gomint.world.block.data.Facing;
 
 import java.util.Collections;
 import java.util.List;
@@ -155,7 +154,7 @@ public class Bed extends Block implements BlockBed {
     @Override
     public PlacementData calculatePlacementData(EntityPlayer entity, ItemStack item, Facing face, Block block, Block clickedBlock, Vector clickVector ) {
         NBTTagCompound compound = new NBTTagCompound( "" );
-        compound.addValue( "color", ( item != null ) ? (byte) item.getData() : (byte) 0);
+        compound.addValue( "color", ( item != null ) ? (byte) ((io.gomint.server.inventory.item.ItemStack) item).getData() : (byte) 0);
 
         // Calc block states
         PlacementData data = super.calculatePlacementData( entity, item, face, block, clickedBlock, clickVector );

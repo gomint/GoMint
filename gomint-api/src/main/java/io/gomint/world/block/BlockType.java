@@ -299,5 +299,7 @@ public enum BlockType {
     CAMERA,
     TURTLE_EGG,
     BLUE_ICE,
+    SCAFFOLDING,
+    LIGHT_BLOCK,
 
 }

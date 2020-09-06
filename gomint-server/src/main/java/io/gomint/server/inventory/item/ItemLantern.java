@@ -11,11 +11,6 @@ import io.gomint.server.registry.RegisterInfo;
 public class ItemLantern extends ItemStack implements io.gomint.inventory.item.ItemLantern {
 
     @Override
-    public String getBlockId() {
-        return "minecraft:lantern";
-    }
-
-    @Override
     public ItemType getItemType() {
         return ItemType.LANTERN;
     }

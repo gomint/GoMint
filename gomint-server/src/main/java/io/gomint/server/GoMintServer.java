@@ -217,6 +217,7 @@ public class GoMintServer implements GoMint, InventoryHolder {
         // Build up registries
         // ------------------------------------ //
         this.blocks = new Blocks(classPath, this.assets.getBlockPalette());
+        this.items.setBlocks(this.blocks);
         this.entities = new Entities(classPath);
         this.effects = new Effects(classPath);
         this.enchantments = new Enchantments(classPath);
@@ -233,6 +234,11 @@ public class GoMintServer implements GoMint, InventoryHolder {
         this.syncTaskManager = new SyncTaskManager();
         this.scheduler = new CoreScheduler(this.getExecutorService(), this.getSyncTaskManager());
         this.worldManager = new WorldManager(this);
+
+        // PluginManager Initialization
+        this.pluginManager = new SimplePluginManager(this);
+        this.pluginManager.detectPlugins();
+        this.pluginManager.loadPlugins(StartupPriority.STARTUP);
     }
 
     public void startAfterRegistryInit(OptionSet args) {
@@ -297,11 +303,6 @@ public class GoMintServer implements GoMint, InventoryHolder {
 
         this.defaultWorld = this.serverConfig.getDefaultWorld();
         this.currentTickTime = System.currentTimeMillis();
-
-        // PluginManager Initialization
-        this.pluginManager = new SimplePluginManager(this);
-        this.pluginManager.detectPlugins();
-        this.pluginManager.loadPlugins(StartupPriority.STARTUP);
 
         if (!this.isRunning()) {
             this.internalShutdown();

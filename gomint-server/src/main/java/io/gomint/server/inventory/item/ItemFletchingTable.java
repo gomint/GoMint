@@ -11,11 +11,6 @@ import io.gomint.server.registry.RegisterInfo;
 public class ItemFletchingTable extends ItemStack implements io.gomint.inventory.item.ItemFletchingTable {
 
     @Override
-    public String getBlockId() {
-        return "minecraft:fletching_table";
-    }
-
-    @Override
     public ItemType getItemType() {
         return ItemType.FLETCHING_TABLE;
     }

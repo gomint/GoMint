@@ -1121,7 +1121,8 @@ public abstract class WorldAdapter implements World {
             .interact(entity, face, clickPosition, clickedBlock);
 
         if ((!interacted && !itemInteracted) || entity.isSneaking()) {
-            boolean canBePlaced = ((io.gomint.server.inventory.item.ItemStack) itemInHand).getBlockId() != null && !(itemInHand instanceof ItemAir);
+            Block block = ((io.gomint.server.inventory.item.ItemStack) itemInHand).getBlock();
+            boolean canBePlaced = block != null && !(itemInHand instanceof ItemAir);
             if (canBePlaced) {
                 Block blockReplace = blockClicked.getSide(face);
                 io.gomint.server.world.block.Block replaceBlock = (io.gomint.server.world.block.Block) blockReplace;
@@ -1134,7 +1135,8 @@ public abstract class WorldAdapter implements World {
 
                 // We got the block we want to replace
                 // Let the item build up the block
-                boolean success = this.server.getBlocks().replaceWithItem(entity, clickedBlock, replaceBlock, face, itemInHand, clickPosition);
+                boolean success = this.server.getBlocks().replaceWithItem((io.gomint.server.world.block.Block) block,
+                    entity, clickedBlock, replaceBlock, face, itemInHand, clickPosition);
                 if (success) {
                     // Play sound
                     io.gomint.server.world.block.Block newBlock = replaceBlock.getLocation().getWorld().getBlockAt(replaceBlock.getLocation().toBlockPosition());

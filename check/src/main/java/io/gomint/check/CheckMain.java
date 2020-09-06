@@ -18,12 +18,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 
 public class CheckMain {
@@ -98,13 +95,13 @@ public class CheckMain {
 
                                 if (!found) {
                                     if (!stateKey.equals("deprecated")) {
-                                        //System.out.println("[X]  Missing state " + stateKey + " (" + stateKeys.get(stateKey).getClass().getSimpleName() + ") in block " + block);
+                                        System.out.println("[X]  Missing state " + stateKey + " (" + stateKeys.get(stateKey).getClass().getSimpleName() + ") in block " + block);
                                         missingStates.incrementAndGet();
                                     }
                                 }
                             } else {
                                 if (!stateKey.equals("deprecated")) {
-                                    //System.out.println("[X]  Missing state " + stateKey + " (" + stateKeys.get(stateKey).getClass().getSimpleName() + ") in block " + block);
+                                    System.out.println("[X]  Missing state " + stateKey + " (" + stateKeys.get(stateKey).getClass().getSimpleName() + ") in block " + block);
                                     missingStates.incrementAndGet();
                                 }
                             }
@@ -120,7 +117,7 @@ public class CheckMain {
 
             for (String stateKey : stateKeys.keySet()) {
                 if (!stateKey.equals("deprecated")) {
-                    //System.out.println("[X]  Missing state " + stateKey + " (" + stateKeys.get(stateKey).getClass().getSimpleName() + ") in block " + block);
+                    System.out.println("[X]  Missing state " + stateKey + " (" + stateKeys.get(stateKey).getClass().getSimpleName() + ") in block " + block);
                     missingStates.incrementAndGet();
                 }
             }

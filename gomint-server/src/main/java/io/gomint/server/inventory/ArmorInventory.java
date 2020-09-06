@@ -9,10 +9,6 @@ import io.gomint.server.network.PlayerConnection;
 import io.gomint.server.network.packet.PacketInventoryContent;
 import io.gomint.server.network.packet.PacketInventorySetSlot;
 import io.gomint.server.network.packet.PacketMobArmorEquipment;
-import io.gomint.taglib.NBTTagCompound;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author geNAZt
@@ -134,12 +130,9 @@ public class ArmorInventory extends Inventory implements io.gomint.inventory.Arm
         // TODO: Modifier for shields?
 
         // Apply damage to all items
-        for ( int i = 0; i < this.contents.length; i++ ) {
-            ItemStack itemStack = this.contents[i];
-            if ( itemStack instanceof ItemArmor ) {
-                itemStack.setData( (short) ( itemStack.getData() + damage ) );
-                this.setItem( i, itemStack );
-            }
+        for (ItemStack itemStack : this.contents) {
+            io.gomint.server.inventory.item.ItemStack implItem = (io.gomint.server.inventory.item.ItemStack) itemStack;
+            implItem.calculateUsageAndUpdate((int) damage);
         }
     }
 

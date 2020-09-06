@@ -6,6 +6,7 @@ import io.gomint.server.entity.EntityPlayer;
 import io.gomint.server.registry.RegisterInfo;
 import io.gomint.world.block.Block;
 import io.gomint.world.block.BlockAir;
+import io.gomint.world.block.BlockFlowingLava;
 import io.gomint.world.block.BlockFlowingWater;
 import io.gomint.world.block.BlockLiquid;
 import io.gomint.world.block.BlockStationaryWater;
@@ -64,16 +65,15 @@ public class ItemBucket extends ItemStack implements io.gomint.inventory.item.It
     }
 
     @Override
-    public String getBlockId() {
+    public Block getBlock() {
         switch ( this.getData() ) {
             case 10:
-                return "minecraft:flowing_lava";
+                return this.blocks.get(BlockFlowingLava.class);
             case 8:
-                return "minecraft:flowing_water";
+                return this.blocks.get(BlockFlowingWater.class);
+            default:
             case 1:
                 return null;  // Its not possible to empty out milk
-            default:
-                return super.getBlockId();
         }
     }
 

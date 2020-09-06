@@ -25,7 +25,7 @@ import io.gomint.world.Gamemode;
  */
 @CanBeDamaged
 @RegisterInfo( sId = "minecraft:crossbow", id = 471 )
-public class ItemCrossbow extends ItemStack implements io.gomint.inventory.item.ItemBow {
+public class ItemCrossbow extends ItemStack implements io.gomint.inventory.item.ItemCrossbow {
 
     @Override
     public long getBurnTime() {

@@ -1,13 +1,14 @@
 package io.gomint.inventory.item;
 
 import io.gomint.GoMint;
+import io.gomint.world.block.data.StoneType;
 
 /**
  * @author geNAZt
  * @version 1.0
- * @stability 1
+ * @stability 3
  */
-public interface ItemStoneSlab extends ItemStack {
+public interface ItemStoneSlab extends ItemSlab {
 
     /**
      * Create a new item stack with given class and amount
@@ -17,5 +18,19 @@ public interface ItemStoneSlab extends ItemStack {
     static ItemStoneSlab create( int amount ) {
         return GoMint.instance().createItemStack( ItemStoneSlab.class, amount );
     }
+
+    /**
+     * Get the type of stone this slab has
+     *
+     * @return type of stone
+     */
+    StoneType getStoneType();
+
+    /**
+     * Set the type of stone for this slab
+     *
+     * @param type which this slab should have
+     */
+    void setStoneType(StoneType type);
 
 }

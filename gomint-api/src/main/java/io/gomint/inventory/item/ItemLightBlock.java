@@ -25,4 +25,18 @@ public interface ItemLightBlock extends ItemStack {
         return GoMint.instance().createItemStack( ItemLightBlock.class, amount );
     }
 
+    /**
+     * Get light intensity, 0 for off, 1 for 100%
+     *
+     * @return 0 to 1
+     */
+    float getIntensity();
+
+    /**
+     * Set the intensity of light
+     *
+     * @param intensity ranging from 0 to 1
+     */
+    void setIntensity(float intensity);
+
 }

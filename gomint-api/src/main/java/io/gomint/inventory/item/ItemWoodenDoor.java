@@ -8,15 +8,15 @@ import io.gomint.world.block.data.LogType;
  * @version 1.0
  * @stability 2
  */
-public interface ItemWoodenButton extends ItemStack, ItemBurnable {
+public interface ItemWoodenDoor extends ItemStack, ItemBurnable {
 
     /**
      * Create a new item stack with given class and amount
      *
      * @param amount which is used for the creation
      */
-    static ItemWoodenButton create( int amount ) {
-        return GoMint.instance().createItemStack( ItemWoodenButton.class, amount );
+    static ItemWoodenDoor create(int amount ) {
+        return GoMint.instance().createItemStack( ItemWoodenDoor.class, amount );
     }
 
     /**

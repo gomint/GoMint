@@ -148,7 +148,7 @@ public abstract class Packet {
         io.gomint.server.inventory.item.ItemStack serverItemStack = (io.gomint.server.inventory.item.ItemStack) itemStack;
 
         buffer.writeSignedVarInt(serverItemStack.getRuntimeID());
-        buffer.writeSignedVarInt(((itemStack.getData() & 0x7fff) << 8) + (itemStack.getAmount() & 0xff));
+        buffer.writeSignedVarInt(((serverItemStack.getData() & 0x7fff) << 8) + (itemStack.getAmount() & 0xff));
 
         NBTTagCompound compound = serverItemStack.getNbtData();
         if (compound == null) {
@@ -181,9 +181,10 @@ public abstract class Packet {
             return;
         }
 
-        int material = ((io.gomint.server.inventory.item.ItemStack) ingredient).getRuntimeID();
+        io.gomint.server.inventory.item.ItemStack impl = ((io.gomint.server.inventory.item.ItemStack) ingredient);
+        int material = impl.getRuntimeID();
         buffer.writeSignedVarInt(material);
-        buffer.writeSignedVarInt(ingredient.getData());
+        buffer.writeSignedVarInt(impl.getData());
         buffer.writeSignedVarInt(ingredient.getAmount());
     }
 

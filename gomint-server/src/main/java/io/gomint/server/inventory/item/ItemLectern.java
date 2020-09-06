@@ -15,9 +15,4 @@ public class ItemLectern extends ItemStack implements io.gomint.inventory.item.I
         return ItemType.LECTERN;
     }
 
-    @Override
-    public String getBlockId() {
-        return "minecraft:lectern";
-    }
-
 }

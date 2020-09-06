@@ -17,13 +17,21 @@ import io.gomint.server.entity.EntityPlayer;
 import io.gomint.server.inventory.Inventory;
 import io.gomint.server.inventory.item.annotation.CanBeDamaged;
 import io.gomint.server.inventory.item.helper.ItemStackPlace;
+import io.gomint.server.util.BlockIdentifier;
+import io.gomint.server.world.BlockRuntimeIDs;
+import io.gomint.server.world.block.Blocks;
 import io.gomint.taglib.NBTTagCompound;
 import io.gomint.world.block.Block;
 import io.gomint.world.block.data.Facing;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 /**
  * Represents a stack of up to 255 items of the same type which may
@@ -50,7 +58,12 @@ public abstract class ItemStack implements Cloneable, io.gomint.inventory.item.I
     private ItemStackPlace itemStackPlace;
 
     // Item constructor factors
-    private Items items;
+    protected Items items;
+    protected Blocks blocks;
+
+    // Damageable
+    private boolean isDamageableCached;
+    private boolean isDamageable;
 
     ItemStack setMaterial(String material) {
         this.material = material;
@@ -104,6 +117,10 @@ public abstract class ItemStack implements Cloneable, io.gomint.inventory.item.I
      * @return maximum amount of items which can be stored in this stack
      */
     public byte getMaximumAmount() {
+        if (canBeDamaged()) {
+            return 1;
+        }
+
         return 64;
     }
 
@@ -365,13 +382,17 @@ public abstract class ItemStack implements Cloneable, io.gomint.inventory.item.I
     }
 
     /**
-     * Return the block id from this item
+     * Return the block from this item
      *
      * @return id for the block when this item is placed
      */
-    // TODO: Refactor this into placement data
-    public String getBlockId() {
-        return this.material;
+    public Block getBlock() {
+        BlockIdentifier identifier = BlockRuntimeIDs.toBlockIdentifier(this.getMaterial(), null);
+        if (identifier == null) {
+            return null;
+        }
+
+        return this.blocks.get(identifier);
     }
 
     /**
@@ -444,26 +465,58 @@ public abstract class ItemStack implements Cloneable, io.gomint.inventory.item.I
         // Default no item uses calculateUsage
         if (canBeDamaged()) {
             // Check if we need to destroy this item stack
-            int currentDamage = this.getOrCreateNBT().getInteger("Damage", 0);
-
+            int currentDamage = this.getDamageFromNBT();
             currentDamage += damage;
-            if (currentDamage >= this.getMaxDamage()) {
-                // Remove one amount
-                if (--this.amount <= 0) {
-                    return true;
-                }
-
-                currentDamage = 0;
-            }
-
-            this.getOrCreateNBT().addValue("Damage", currentDamage);
-            return false;
+            return this.setDamageAndCheckAmount(currentDamage);
         }
 
         return false;
     }
 
+    public boolean setDamageAndCheckAmount(int damage) {
+        int intDamage = damage;
+        if (intDamage >= this.getMaxDamage()) {
+            // Remove one amount
+            if (--this.amount <= 0) {
+                return true;
+            }
+
+            intDamage = 0;
+        }
+
+        this.setDamageToNBT(intDamage);
+        return false;
+    }
+
+    public int getDamageFromNBT() {
+        return this.getOrCreateNBT().getInteger("Damage", 0);
+    }
+
+    public void setDamageToNBT(int damage) {
+        this.getOrCreateNBT().addValue("Damage", damage);
+    }
+
+    @Override
+    public float getDamage() {
+        if (!canBeDamaged()) {
+            return 0;
+        }
+
+        return this.getDamageFromNBT() / (float) this.getMaxDamage();
+    }
+
+    @Override
+    public void setDamage(float damage) {
+        if (canBeDamaged()) {
+            this.setDamageAndCheckAmount((int) (this.getMaxDamage() * damage));
+        }
+    }
+
     private boolean canBeDamaged() {
+        if (this.isDamageableCached) {
+            return this.isDamageable;
+        }
+
         Class current = this.getClass();
         boolean usesData;
 
@@ -471,6 +524,9 @@ public abstract class ItemStack implements Cloneable, io.gomint.inventory.item.I
             usesData = current.isAnnotationPresent(CanBeDamaged.class);
             current = current.getSuperclass();
         } while (!usesData && !Object.class.equals(current));
+
+        this.isDamageable = usesData;
+        this.isDamageableCached = true;
 
         return usesData;
     }
@@ -545,8 +601,9 @@ public abstract class ItemStack implements Cloneable, io.gomint.inventory.item.I
             '}';
     }
 
-    public void setItems(Items items) {
+    public ItemStack setItems(Items items) {
         this.items = items;
+        return this;
     }
 
     @Override
@@ -566,6 +623,10 @@ public abstract class ItemStack implements Cloneable, io.gomint.inventory.item.I
 
     public boolean isAir() {
         return "minecraft:air".equals(this.material);
+    }
+
+    public void setBlocks(Blocks blocks) {
+        this.blocks = blocks;
     }
 
 }

@@ -1,13 +1,13 @@
 package io.gomint.testplugin.listener;
 
-import io.gomint.entity.passive.EntitySheep;
 import io.gomint.event.EventHandler;
 import io.gomint.event.EventListener;
 import io.gomint.event.EventPriority;
 import io.gomint.event.player.PlayerJoinEvent;
-import io.gomint.inventory.item.ItemFlintAndSteel;
+import io.gomint.inventory.item.ItemDoubleStoneSlab;
 import io.gomint.testplugin.TestPlugin;
 import io.gomint.testplugin.scoreboard.DebugScoreboard;
+import io.gomint.world.block.data.StoneType;
 
 /**
  * @author geNAZt
@@ -29,7 +29,9 @@ public class PlayerJoinListener implements EventListener {
         // Give this player the debug scoreboard
         new DebugScoreboard(this.plugin, event.getPlayer());
 
-        event.getPlayer().getInventory().setItem(6, ItemFlintAndSteel.create(1));
+        ItemDoubleStoneSlab doubleStoneSlab = ItemDoubleStoneSlab.create(6);
+        doubleStoneSlab.setStoneType(StoneType.BRICK);
+        event.getPlayer().getInventory().setItem(6, doubleStoneSlab);
     }
 
 }

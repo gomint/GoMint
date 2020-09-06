@@ -11,11 +11,6 @@ import io.gomint.server.registry.RegisterInfo;
 public class ItemSmithingTable extends ItemStack implements io.gomint.inventory.item.ItemSmithingTable {
 
     @Override
-    public String getBlockId() {
-        return "minecraft:smithing_table";
-    }
-
-    @Override
     public ItemType getItemType() {
         return ItemType.SMITHING_TABLE;
     }

@@ -1,13 +1,14 @@
 package io.gomint.inventory.item;
 
 import io.gomint.GoMint;
+import io.gomint.world.block.data.LogType;
 
 /**
  * @author geNAZt
  * @version 1.0
  * @stability 3
  */
-public interface ItemLog extends ItemStack, ItemBurnable {
+public interface ItemLog extends ItemAxis, ItemBurnable {
 
     /**
      * Create a new item stack with given class and amount
@@ -19,45 +20,45 @@ public interface ItemLog extends ItemStack, ItemBurnable {
     }
 
     /**
+     * Is this log stripped
+     *
+     * @return true when stripped, false when not
+     */
+    boolean isStripped();
+
+    /**
+     * Set stripped status of this log
+     *
+     * @param stripped true when the log should be stripped, false if not
+     */
+    void setStripped( boolean stripped );
+
+    /**
      * Set the type of log
      *
      * @param type of log
      */
-    void setLogType( Type type );
+    void setLogType( LogType type );
 
     /**
      * Get the type of this log
      *
      * @return type of log
      */
-    Type getLogType();
+    LogType getLogType();
 
     /**
-     * Set the direction of the log
+     * Add bark textures to all sides or not
      *
-     * @param direction of the log
+     * @param allSides true when bark on all sides, false if not
      */
-    void setLogDirection( Direction direction );
+    void setBarkOnAllSides( boolean allSides );
 
     /**
-     * Get the direction of this log
+     * Is bark on all sides?
      *
-     * @return direction of the log
+     * @return true when bark is on all sides, false when not
      */
-    Direction getLogDirection();
-
-    enum Type {
-        OAK,
-        SPRUCE,
-        BIRCH,
-        JUNGLE
-    }
-
-    enum Direction {
-        UP_DOWN,
-        EAST_WEST,
-        NORTH_SOUTH,
-        BARK
-    }
+    boolean isBarkOnAllSides();
 
 }

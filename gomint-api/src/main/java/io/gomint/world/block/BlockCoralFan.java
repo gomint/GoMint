@@ -45,4 +45,18 @@ public interface BlockCoralFan extends Block {
      */
     CoralType getCoralType();
 
+    /**
+     * Is this coral fan dead?
+     *
+     * @return true when dead, false otherwise
+     */
+    boolean isDead();
+
+    /**
+     * Set if this coral fan is dead or not
+     *
+     * @param dead true when it should be dead, false otherwise
+     */
+    void setDead(boolean dead);
+
 }

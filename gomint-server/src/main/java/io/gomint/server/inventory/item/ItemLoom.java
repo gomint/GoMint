@@ -11,11 +11,6 @@ import io.gomint.server.registry.RegisterInfo;
 public class ItemLoom extends ItemStack implements io.gomint.inventory.item.ItemLoom {
 
     @Override
-    public String getBlockId() {
-        return "minecraft:loom";
-    }
-
-    @Override
     public ItemType getItemType() {
         return ItemType.LOOM;
     }

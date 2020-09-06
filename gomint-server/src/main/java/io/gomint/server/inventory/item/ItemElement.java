@@ -140,7 +140,7 @@ public class ItemElement extends ItemStack implements io.gomint.inventory.item.I
 
     @Override
     public Type getType() {
-        int ord = Integer.parseInt(this.getBlockId().substring(BLOCK_PREFIX_LENGTH));
+        int ord = Integer.parseInt(this.getMaterial().substring(BLOCK_PREFIX_LENGTH));
         return Type.values()[ord];
     }
 
