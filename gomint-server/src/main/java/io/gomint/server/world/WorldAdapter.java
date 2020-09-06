@@ -1280,8 +1280,8 @@ public abstract class WorldAdapter implements World {
             // Break animation (this also plays the break sound in the client)
             sendLevelEvent(position.toVector().add(.5f, .5f, .5f), LevelEvent.PARTICLE_DESTROY, block.getRuntimeId());
 
-            block.setBlockType(BlockAir.class);
-
+            // Schedule neighbour updates
+            scheduleNeighbourUpdates(block.setBlockType(BlockAir.class));
             return true;
         } else {
             return false;

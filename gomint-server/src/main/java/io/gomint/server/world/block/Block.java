@@ -29,6 +29,8 @@ import io.gomint.server.world.WorldAdapter;
 import io.gomint.server.world.storage.TemporaryStorage;
 import io.gomint.taglib.NBTTagCompound;
 import io.gomint.world.Biome;
+import io.gomint.world.Particle;
+import io.gomint.world.ParticleData;
 import io.gomint.world.block.data.Direction;
 import io.gomint.world.block.data.Facing;
 import org.slf4j.Logger;
@@ -832,6 +834,11 @@ public abstract class Block implements io.gomint.world.block.Block {
      */
     protected void setBlockIdOnStateChange(String blockId) {
         this.stateChangeBlockId = blockId;
+    }
+
+    protected void naturalBreak() {
+        this.world.sendParticle(this.location, Particle.BREAK_BLOCK, ParticleData.block(this));
+        this.setBlockType(Air.class);
     }
 
 }

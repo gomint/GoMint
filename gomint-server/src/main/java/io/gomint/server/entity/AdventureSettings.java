@@ -2,8 +2,6 @@ package io.gomint.server.entity;
 
 import io.gomint.server.network.packet.PacketAdventureSettings;
 import io.gomint.server.player.PlayerPermission;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * @author geNAZt

@@ -4,9 +4,11 @@ import io.gomint.inventory.item.ItemTallGrass;
 import io.gomint.inventory.item.ItemShears;
 import io.gomint.inventory.item.ItemStack;
 import io.gomint.server.registry.RegisterInfo;
+import io.gomint.server.world.UpdateReason;
 import io.gomint.server.world.block.state.EnumBlockState;
 import io.gomint.world.block.BlockTallGrass;
 import io.gomint.world.block.BlockType;
+import io.gomint.world.block.data.Facing;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,6 +41,18 @@ public class TallGrass extends Block implements BlockTallGrass {
 
         return null;
     });
+
+    @Override
+    public long update(UpdateReason updateReason, long currentTimeMS, float dT) {
+        if (updateReason == UpdateReason.NEIGHBOUR_UPDATE) {
+            Block down = this.getSide(Facing.DOWN);
+            if (!down.isSolid()) {
+                this.naturalBreak();
+            }
+        }
+
+        return -1;
+    }
 
     @Override
     public String getBlockId() {
@@ -83,7 +97,7 @@ public class TallGrass extends Block implements BlockTallGrass {
     @Override
     public List<ItemStack> getDrops(ItemStack itemInHand) {
         if (isCorrectTool(itemInHand)) {
-            return new ArrayList<ItemStack>() {{
+            return new ArrayList<>() {{
                 add(ItemTallGrass.create(1));
             }};
         }
