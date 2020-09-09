@@ -1,6 +1,6 @@
 package io.gomint.server.world.block;
 
-import com.google.common.collect.Lists;
+import io.gomint.inventory.item.ItemLog;
 import io.gomint.inventory.item.ItemStack;
 import io.gomint.math.Vector;
 import io.gomint.server.entity.Entity;
@@ -10,12 +10,13 @@ import io.gomint.server.world.block.helper.ToolPresets;
 import io.gomint.server.world.block.state.AxisBlockState;
 import io.gomint.server.world.block.state.BooleanBlockState;
 import io.gomint.server.world.block.state.EnumBlockState;
-import io.gomint.world.block.data.Axis;
-import io.gomint.world.block.data.Facing;
 import io.gomint.world.block.BlockLog;
 import io.gomint.world.block.BlockType;
+import io.gomint.world.block.data.Axis;
+import io.gomint.world.block.data.Facing;
 import io.gomint.world.block.data.LogType;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -239,17 +240,11 @@ public class Log extends Block implements BlockLog {
 
     @Override
     public List<ItemStack> getDrops(ItemStack itemInHand) {
-        // TODO: Check for new data values
-        if (this.getBlockId().equals("minecraft:log")) {
-            ItemStack itemStack = this.items.create(getBlockId(), (short) 0, (byte) 1, null);
-            return Lists.newArrayList(itemStack);
-        } else if (this.getBlockId().equals("minecraft:log2")) {
-            ItemStack itemStack = this.items.create(getBlockId(), (short) 0, (byte) 1, null);
-            return Lists.newArrayList(itemStack);
-        } else {
-            ItemStack itemStack = this.items.create(getBlockId(), (short) 0, (byte) 1, null);
-            return Lists.newArrayList(itemStack);
-        }
+        ItemLog item = ItemLog.create(1);
+        item.setBarkOnAllSides(this.isBarkOnAllSides());
+        item.setLogType(this.getLogType());
+        item.setStripped(this.isStripped());
+        return Collections.singletonList(item);
     }
 
 }
