@@ -632,7 +632,7 @@ public class ChunkAdapter implements Chunk {
             compound.addValue("z", fullZ);
 
             // Create new tile entity
-            TileEntity tileEntity = this.tileEntities.construct(compound,
+            TileEntity tileEntity = this.world.getServer().getTileEntities().construct(compound,
                 this.getBlockAt(compound.getInteger("x", 0) & 0xF, compound.getInteger("y", 0), compound.getInteger("z", 0) & 0xF));
             this.setTileEntity(x, y, z, tileEntity);
         }
