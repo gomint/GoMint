@@ -17,7 +17,7 @@ import io.gomint.world.block.data.Direction;
 public interface BlockDirection extends Block {
 
     /**
-     * Set the direction of this block
+     * Set the direction of this block, this block can also hold null as direction (sit on ground)
      *
      * @param direction of this block
      */
@@ -26,7 +26,7 @@ public interface BlockDirection extends Block {
     /**
      * Get the direction in which this block
      *
-     * @return the direction of this block
+     * @return the direction of this block, null when no direction given (sitting on ground)
      */
     Direction getDirection();
 

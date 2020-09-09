@@ -8,10 +8,10 @@
 package io.gomint.server.world.block;
 
 import io.gomint.inventory.item.ItemStack;
+import io.gomint.math.Location;
 import io.gomint.math.Vector;
 import io.gomint.server.entity.Entity;
-import io.gomint.server.entity.EntityPlayer;
-import io.gomint.server.world.PlacementData;
+import io.gomint.server.entity.EntityLiving;
 import io.gomint.server.world.UpdateReason;
 import io.gomint.server.world.block.state.BlockfaceFromPlayerBlockState;
 import io.gomint.server.world.block.state.BooleanBlockState;
@@ -20,10 +20,14 @@ import io.gomint.world.block.data.Facing;
 
 import java.util.concurrent.TimeUnit;
 
+/**
+ * @author geNAZt
+ * @version 1.0
+ */
 public abstract class Button extends Block implements BlockButton {
 
-    private static final BlockfaceFromPlayerBlockState FACING = new BlockfaceFromPlayerBlockState( () -> new String[]{"facing_direction"}, true);
-    private static final BooleanBlockState PRESSED = new BooleanBlockState( () -> new String[]{"button_pressed_bit"});
+    private static final BlockfaceFromPlayerBlockState FACING = new BlockfaceFromPlayerBlockState(() -> new String[]{"facing_direction"}, true);
+    private static final BooleanBlockState PRESSED = new BooleanBlockState(() -> new String[]{"button_pressed_bit"});
 
     @Override
     public boolean interact(Entity entity, Facing face, Vector facePos, ItemStack item) {
@@ -34,15 +38,15 @@ public abstract class Button extends Block implements BlockButton {
     }
 
     @Override
-    public PlacementData calculatePlacementData(EntityPlayer entity, ItemStack item, Facing face, Block block, Block clickedBlock, Vector clickVector) {
-        FACING.detectFromPlacement(this, entity, item, face, block, clickedBlock, clickVector);
-        return super.calculatePlacementData(entity, item, face, block, clickedBlock, clickVector);
+    public boolean beforePlacement(EntityLiving entity, ItemStack item, Facing face, Location location) {
+        FACING.detectFromPlacement(this, entity, item, face);
+        return true;
     }
 
     @Override
     public long update(UpdateReason updateReason, long currentTimeMS, float dT) {
         if (updateReason == UpdateReason.SCHEDULED && isPressed()) {
-            PRESSED.setState(this,false);
+            PRESSED.setState(this, false);
         }
 
         return -1;

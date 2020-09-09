@@ -216,12 +216,12 @@ public class GoMintServer implements GoMint, InventoryHolder {
         // ------------------------------------ //
         // Build up registries
         // ------------------------------------ //
-        this.blocks = new Blocks(classPath, this.assets.getBlockPalette());
+        this.tileEntities = new TileEntities(classPath, this.items);
+        this.blocks = new Blocks(classPath, this.items, this.tileEntities, this.assets.getBlockPalette());
         this.items.setBlocks(this.blocks);
         this.entities = new Entities(classPath);
         this.effects = new Effects(classPath);
         this.enchantments = new Enchantments(classPath);
-        this.tileEntities = new TileEntities(classPath, this.items);
 
         // ------------------------------------ //
         // Configuration Initialization

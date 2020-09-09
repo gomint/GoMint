@@ -3,11 +3,10 @@ package io.gomint.server.world.block;
 import io.gomint.inventory.item.ItemStack;
 import io.gomint.math.Location;
 import io.gomint.math.Vector;
-import io.gomint.server.entity.Entity;
+import io.gomint.server.entity.EntityLiving;
+import io.gomint.server.registry.RegisterInfo;
 import io.gomint.world.block.BlockFlower;
 import io.gomint.world.block.BlockType;
-
-import io.gomint.server.registry.RegisterInfo;
 import io.gomint.world.block.data.Facing;
 
 import java.util.HashSet;
@@ -17,17 +16,17 @@ import java.util.Set;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:red_flower" )
-@RegisterInfo( sId = "minecraft:wither_rose" )
+@RegisterInfo(sId = "minecraft:red_flower")
+@RegisterInfo(sId = "minecraft:wither_rose")
 public class Flower extends Block implements BlockFlower {
 
-    private static final Set<BlockType> ALLOWED_PLACED_ON = new HashSet<>(){{
+    private static final Set<BlockType> ALLOWED_PLACED_ON = new HashSet<>() {{
         add(BlockType.DISPENSER);
         add(BlockType.GRASS_BLOCK);
     }};
 
     @Override
-    public boolean beforePlacement(Entity entity, ItemStack item, Facing face, Location location) {
+    public boolean beforePlacement(EntityLiving entity, ItemStack item, Facing face, Location location) {
         // Check if downwards block is valid
         Block block = entity.getWorld().getBlockAt(location.toBlockPosition().add(Vector.DOWN.toBlockPosition()));
         return ALLOWED_PLACED_ON.contains(block.getBlockType());

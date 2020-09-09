@@ -19,10 +19,10 @@ import org.slf4j.LoggerFactory;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:shulker_box" )
+@RegisterInfo(sId = "minecraft:shulker_box")
 public class ShulkerBox extends Block implements BlockShulkerBox {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger( ShulkerBox.class );
+    private static final Logger LOGGER = LoggerFactory.getLogger(ShulkerBox.class);
 
     @Override
     public String getBlockId() {
@@ -40,25 +40,17 @@ public class ShulkerBox extends Block implements BlockShulkerBox {
     }
 
     @Override
-    public boolean interact(Entity entity, Facing face, Vector facePos, ItemStack item ) {
+    public boolean interact(Entity entity, Facing face, Vector facePos, ItemStack item) {
         ShulkerBoxTileEntity tileEntity = this.getTileEntity();
-        if ( tileEntity != null ) {
-            tileEntity.interact( entity, face, facePos, item );
-        } else {
-            LOGGER.warn( "ShulkerBox @ {} has no tile entity. Generating new tile entity", this.location );
-            tileEntity = (ShulkerBoxTileEntity) this.createTileEntity( new NBTTagCompound( "" ) );
-            this.setTileEntity( tileEntity );
-            this.world.storeTileEntity( this.location.toBlockPosition(), tileEntity );
-            tileEntity.interact( entity, face, facePos, item );
-        }
+        tileEntity.interact(entity, face, facePos, item);
 
         return true;
     }
 
     @Override
-    TileEntity createTileEntity( NBTTagCompound compound ) {
-        super.createTileEntity( compound );
-        return this.world.getServer().getTileEntities().construct(ShulkerBoxTileEntity.class, compound, this, this.world.getServer().getItems());
+    TileEntity createTileEntity(NBTTagCompound compound) {
+        super.createTileEntity(compound);
+        return this.tileEntities.construct(ShulkerBoxTileEntity.class, compound, this, this.items);
     }
 
     @Override

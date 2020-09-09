@@ -5,15 +5,11 @@ import io.gomint.inventory.item.ItemBed;
 import io.gomint.inventory.item.ItemStack;
 import io.gomint.math.AxisAlignedBB;
 import io.gomint.math.Location;
-import io.gomint.math.Vector;
-import io.gomint.server.entity.Entity;
-import io.gomint.server.entity.EntityPlayer;
+import io.gomint.server.entity.EntityLiving;
 import io.gomint.server.entity.tileentity.BedTileEntity;
-import io.gomint.server.entity.tileentity.SerializationReason;
 import io.gomint.server.entity.tileentity.TileEntity;
 import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.util.Bearing;
-import io.gomint.server.world.PlacementData;
 import io.gomint.server.world.block.state.BooleanBlockState;
 import io.gomint.server.world.block.state.DirectionBlockState;
 import io.gomint.taglib.NBTTagCompound;
@@ -30,12 +26,12 @@ import java.util.List;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:bed" )
+@RegisterInfo(sId = "minecraft:bed")
 public class Bed extends Block implements BlockBed {
 
-    private static final DirectionBlockState DIRECTION = new DirectionBlockState( () -> new String[]{"direction"} );
-    private static final BooleanBlockState OCCUPIED = new BooleanBlockState( () -> new String[]{"occupied_bit"} );
-    private static final BooleanBlockState HEAD = new BooleanBlockState( () -> new String[]{"head_piece_bit"} );
+    private static final DirectionBlockState DIRECTION = new DirectionBlockState(() -> new String[]{"direction"});
+    private static final BooleanBlockState OCCUPIED = new BooleanBlockState(() -> new String[]{"occupied_bit"});
+    private static final BooleanBlockState HEAD = new BooleanBlockState(() -> new String[]{"head_piece_bit"});
 
     @Override
     public String getBlockId() {
@@ -58,10 +54,10 @@ public class Bed extends Block implements BlockBed {
     }
 
     @Override
-    public boolean onBreak( boolean creative ) {
+    public boolean onBreak(boolean creative) {
         Bed otherHalf = (Bed) this.getOtherHalf();
-        if ( otherHalf != null ) {
-            otherHalf.setBlockType( Air.class );
+        if (otherHalf != null) {
+            otherHalf.setBlockType(Air.class);
         }
 
         return true;
@@ -80,11 +76,11 @@ public class Bed extends Block implements BlockBed {
     private io.gomint.world.block.Block getOtherBlock() {
         // Select which side we need to check
         Direction facingToOtherHalf = DIRECTION.getState(this);
-        if ( this.isHeadPart() ) {
+        if (this.isHeadPart()) {
             facingToOtherHalf = facingToOtherHalf.opposite();
         }
 
-        return this.getSide( facingToOtherHalf );
+        return this.getSide(facingToOtherHalf);
     }
 
     @Override
@@ -94,9 +90,9 @@ public class Bed extends Block implements BlockBed {
     }
 
     @Override
-    public void setColor( BlockColor color ) {
+    public void setColor(BlockColor color) {
         BedTileEntity tileEntity = this.getTileEntity();
-        tileEntity.setColor( color );
+        tileEntity.setColor(color);
 
         this.updateBlock();
     }
@@ -106,9 +102,9 @@ public class Bed extends Block implements BlockBed {
         io.gomint.world.block.Block otherHalf = getOtherBlock();
 
         // Check if other part is a bed
-        if ( otherHalf != null && otherHalf.getBlockType() == BlockType.BED ) {
+        if (otherHalf != null && otherHalf.getBlockType() == BlockType.BED) {
             Bed otherBedHalf = (Bed) otherHalf;
-            if ( otherBedHalf.isHeadPart() != this.isHeadPart() ) {
+            if (otherBedHalf.isHeadPart() != this.isHeadPart()) {
                 return otherBedHalf;
             }
         }
@@ -122,83 +118,63 @@ public class Bed extends Block implements BlockBed {
     }
 
     @Override
-    public void setHeadPart( boolean value ) {
-        HEAD.setState( this, value );
+    public void setHeadPart(boolean value) {
+        HEAD.setState(this, value);
     }
 
     @Override
-    public boolean needsTileEntity() {
-        return true;
-    }
-
-    @Override
-    public boolean beforePlacement(Entity entity, ItemStack item, Facing face, Location location) {
+    public boolean beforePlacement(EntityLiving entity, ItemStack item, Facing face, Location location) {
         // We need to check if we are placed on a solid block
-        Block block = (Block) location.getWorld().getBlockAt( location.toBlockPosition() ).getSide( Facing.DOWN );
-        if ( block.isSolid() ) {
-            Bearing bearing = Bearing.fromAngle( entity.getYaw() );
+        Block block = (Block) location.getWorld().getBlockAt(location.toBlockPosition()).getSide(Facing.DOWN);
+        if (block.isSolid()) {
+            Bearing bearing = Bearing.fromAngle(entity.getYaw());
 
             // Check for other block
-            Block other = block.getSide( bearing.toDirection() );
-            if ( !other.isSolid() ) {
+            Block other = block.getSide(bearing.toDirection());
+            if (!other.isSolid()) {
                 return false;
             }
 
-            Block replacingHead = other.getSide( Facing.UP );
-            return replacingHead.canBeReplaced( item );
+            Block replacingHead = other.getSide(Facing.UP);
+            return replacingHead.canBeReplaced(item);
         }
 
         return false;
     }
 
     @Override
-    public PlacementData calculatePlacementData(EntityPlayer entity, ItemStack item, Facing face, Block block, Block clickedBlock, Vector clickVector ) {
-        NBTTagCompound compound = new NBTTagCompound( "" );
-        compound.addValue( "color", ( item != null ) ? (byte) ((io.gomint.server.inventory.item.ItemStack) item).getData() : (byte) 0);
-
-        // Calc block states
-        PlacementData data = super.calculatePlacementData( entity, item, face, block, clickedBlock, clickVector );
-        return data.setCompound( compound );
-    }
-
-    @Override
-    public void afterPlacement( PlacementData data ) {
+    public void afterPlacement() {
         Block otherBlock = (Block) this.getOtherBlock();
-        if ( otherBlock != null ) {
-            NBTTagCompound compound = new NBTTagCompound( "" );
-            this.getTileEntity().toCompound( compound, SerializationReason.PERSIST );
-
-            data.setBlockIdentifier( data.getBlockIdentifier() );
-            data.setCompound( compound );
-
-            Bed bed = otherBlock.setBlockFromPlacementData( data );
-            HEAD.setState( bed,true );
+        if (otherBlock != null) {
+            Bed bed = otherBlock.setBlockType(Bed.class);
+            bed.setColor(this.getColor());
+            bed.setHeadPart(true);
         }
     }
 
     @Override
-    TileEntity createTileEntity( NBTTagCompound compound ) {
-        super.createTileEntity( compound );
-        return this.world.getServer().getTileEntities().construct(BedTileEntity.class, compound, this, this.world.getServer().getItems());
+    TileEntity createTileEntity(NBTTagCompound compound) {
+        super.createTileEntity(compound);
+        return this.tileEntities.construct(BedTileEntity.class, compound, this, this.items);
     }
 
     @Override
-    public List<ItemStack> getDrops( ItemStack itemInHand ) {
-        ItemBed bed = ItemBed.create( 1 );
-        bed.setColor( ( (BedTileEntity) this.getTileEntity() ).getColor() );
-        return Lists.newArrayList( bed );
+    public List<ItemStack> getDrops(ItemStack itemInHand) {
+        ItemBed bed = ItemBed.create(1);
+        bed.setColor(((BedTileEntity) this.getTileEntity()).getColor());
+        return Lists.newArrayList(bed);
     }
 
     @Override
     public List<AxisAlignedBB> getBoundingBox() {
-        return Collections.singletonList( new AxisAlignedBB(
+        return Collections.singletonList(new AxisAlignedBB(
             this.location.getX(),
             this.location.getY(),
             this.location.getZ(),
             this.location.getX() + 1,
             this.location.getY() + 0.5625f,
             this.location.getZ() + 1
-        ) );
+        ));
     }
 
 }

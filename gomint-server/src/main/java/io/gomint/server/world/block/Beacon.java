@@ -54,7 +54,7 @@ public class Beacon extends Block implements BlockBeacon {
     @Override
     TileEntity createTileEntity( NBTTagCompound compound ) {
         super.createTileEntity( compound );
-        return this.world.getServer().getTileEntities().construct(BeaconTileEntity.class, compound, this, this.world.getServer().getItems());
+        return this.tileEntities.construct(BeaconTileEntity.class, compound, this, this.items);
     }
 
     @Override

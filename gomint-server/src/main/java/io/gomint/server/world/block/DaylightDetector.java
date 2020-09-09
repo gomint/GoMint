@@ -52,7 +52,7 @@ public class DaylightDetector extends Block implements BlockDaylightDetector {
     @Override
     TileEntity createTileEntity( NBTTagCompound compound ) {
         super.createTileEntity( compound );
-        return this.world.getServer().getTileEntities().construct(DaylightDetectorTileEntity.class, compound, this, this.world.getServer().getItems());
+        return this.tileEntities.construct(DaylightDetectorTileEntity.class, compound, this, this.items);
     }
 
 }

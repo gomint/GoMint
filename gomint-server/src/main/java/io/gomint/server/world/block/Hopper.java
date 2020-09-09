@@ -61,7 +61,7 @@ public class Hopper extends Block implements BlockHopper {
     @Override
     TileEntity createTileEntity(NBTTagCompound compound) {
         super.createTileEntity(compound);
-        return this.world.getServer().getTileEntities().construct(HopperTileEntity.class, compound, this, this.world.getServer().getItems());
+        return this.tileEntities.construct(HopperTileEntity.class, compound, this, this.items);
     }
 
 }

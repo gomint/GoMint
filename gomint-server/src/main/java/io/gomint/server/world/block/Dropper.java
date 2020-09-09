@@ -56,7 +56,7 @@ public class Dropper extends Block implements BlockDropper {
     @Override
     TileEntity createTileEntity( NBTTagCompound compound ) {
         super.createTileEntity( compound );
-        return this.world.getServer().getTileEntities().construct(DropperTileEntity.class, compound, this, this.world.getServer().getItems());
+        return this.tileEntities.construct(DropperTileEntity.class, compound, this, this.items);
     }
 
 }

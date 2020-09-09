@@ -8,10 +8,9 @@
 package io.gomint.server.world.block;
 
 import io.gomint.inventory.item.ItemStack;
-import io.gomint.math.Vector;
-import io.gomint.server.entity.EntityPlayer;
+import io.gomint.math.Location;
+import io.gomint.server.entity.EntityLiving;
 import io.gomint.server.registry.RegisterInfo;
-import io.gomint.server.world.PlacementData;
 import io.gomint.server.world.block.state.BlockfaceFromPlayerBlockState;
 import io.gomint.world.block.BlockJigsaw;
 import io.gomint.world.block.BlockType;
@@ -28,16 +27,15 @@ public class Jigsaw extends Block implements BlockJigsaw {
     }
 
     @Override
-    public PlacementData calculatePlacementData(EntityPlayer entity, ItemStack item, Facing face, Block block, Block clickedBlock, Vector clickVector) {
-        FACING.detectFromPlacement(this, entity, item, face, block, clickedBlock, clickVector);
-        return super.calculatePlacementData(entity, item, face, block, clickedBlock, clickVector);
+    public boolean beforePlacement(EntityLiving entity, ItemStack item, Facing face, Location location) {
+        FACING.detectFromPlacement(this, entity, item, face);
+        return super.beforePlacement(entity, item, face, location);
     }
 
     @Override
     public BlockType getBlockType() {
         return BlockType.JIGSAW;
     }
-
 
     @Override
     public void setFacing(Facing facing) {

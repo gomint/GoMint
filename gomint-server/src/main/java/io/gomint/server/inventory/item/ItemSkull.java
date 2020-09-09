@@ -2,6 +2,9 @@ package io.gomint.server.inventory.item;
 
 import io.gomint.inventory.item.ItemType;
 import io.gomint.server.registry.RegisterInfo;
+import io.gomint.world.block.Block;
+import io.gomint.world.block.BlockSkull;
+import io.gomint.world.block.data.SkullType;
 
 /**
  * @author geNAZt
@@ -13,6 +16,23 @@ public class ItemSkull extends ItemStack implements io.gomint.inventory.item.Ite
     @Override
     public ItemType getItemType() {
         return ItemType.SKULL;
+    }
+
+    @Override
+    public SkullType getSkullType() {
+        return SkullType.values()[this.getData()];
+    }
+
+    @Override
+    public void setSkullType(SkullType type) {
+        this.setData((short) type.ordinal());
+    }
+
+    @Override
+    public Block getBlock() {
+        BlockSkull block = (BlockSkull) super.getBlock();
+        block.setSkullType(this.getSkullType());
+        return block;
     }
 
 }

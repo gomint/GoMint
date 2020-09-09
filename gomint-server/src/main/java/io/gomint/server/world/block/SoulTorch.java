@@ -2,10 +2,9 @@ package io.gomint.server.world.block;
 
 import io.gomint.inventory.item.ItemStack;
 import io.gomint.math.AxisAlignedBB;
-import io.gomint.math.Vector;
-import io.gomint.server.entity.EntityPlayer;
+import io.gomint.math.Location;
+import io.gomint.server.entity.EntityLiving;
 import io.gomint.server.registry.RegisterInfo;
-import io.gomint.server.world.PlacementData;
 import io.gomint.server.world.block.state.BlockfaceBlockState;
 import io.gomint.world.block.BlockSoulTorch;
 import io.gomint.world.block.BlockType;
@@ -18,10 +17,10 @@ import java.util.List;
  * @author KingAli
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:soul_torch" )
+@RegisterInfo(sId = "minecraft:soul_torch")
 public class SoulTorch extends Block implements BlockSoulTorch {
 
-    private static final BlockfaceBlockState FACING = new BlockfaceBlockState( () -> new String[]{"facing_direction"} );
+    private static final BlockfaceBlockState FACING = new BlockfaceBlockState(() -> new String[]{"facing_direction"});
 
     @Override
     public String getBlockId() {
@@ -67,60 +66,58 @@ public class SoulTorch extends Block implements BlockSoulTorch {
     public List<AxisAlignedBB> getBoundingBox() {
         float size = 0.15f;
 
-        switch ( FACING.getState(this) ) {
+        switch (FACING.getState(this)) {
             case EAST:
-                return Collections.singletonList( new AxisAlignedBB(
+                return Collections.singletonList(new AxisAlignedBB(
                     this.location.getX(),
                     this.location.getY() + 0.2f,
                     this.location.getZ() + 0.5f - size,
                     this.location.getX() + size * 2f,
                     this.location.getY() + 0.8f,
                     this.location.getZ() + 0.5f + size
-                ) );
+                ));
             case WEST:
-                return Collections.singletonList( new AxisAlignedBB(
+                return Collections.singletonList(new AxisAlignedBB(
                     this.location.getX() + 1.0f - size * 2f,
                     this.location.getY() + 0.2f,
                     this.location.getZ() + 0.5f - size,
                     this.location.getX() + 1f,
                     this.location.getY() + 0.8f,
                     this.location.getZ() + 0.5f + size
-                ) );
+                ));
             case SOUTH:
-                return Collections.singletonList( new AxisAlignedBB(
+                return Collections.singletonList(new AxisAlignedBB(
                     this.location.getX() + 0.5f - size,
                     this.location.getY() + 0.2f,
                     this.location.getZ(),
                     this.location.getX() + 0.5f + size,
                     this.location.getY() + 0.8f,
                     this.location.getZ() + size * 2f
-                ) );
+                ));
             case NORTH:
-                return Collections.singletonList( new AxisAlignedBB(
+                return Collections.singletonList(new AxisAlignedBB(
                     this.location.getX() + 0.5f - size,
                     this.location.getY() + 0.2f,
                     this.location.getZ() + 1f - size * 2f,
                     this.location.getX() + 0.5f + size,
                     this.location.getY() + 0.8f,
                     this.location.getZ() + 1f
-                ) );
+                ));
+            default:
+                size = 0.1f;
+                return Collections.singletonList(new AxisAlignedBB(
+                    this.location.getX() + 0.5f - size,
+                    this.location.getY() + 0.0f,
+                    this.location.getZ() + 0.5f - size,
+                    this.location.getX() + 0.5f + size,
+                    this.location.getY() + 0.6f,
+                    this.location.getZ() + 0.5f + size
+                ));
         }
-
-        size = 0.1f;
-        return Collections.singletonList( new AxisAlignedBB(
-            this.location.getX() + 0.5f - size,
-            this.location.getY() + 0.0f,
-            this.location.getZ() + 0.5f - size,
-            this.location.getX() + 0.5f + size,
-            this.location.getY() + 0.6f,
-            this.location.getZ() + 0.5f + size
-        ) );
     }
 
     @Override
-    public PlacementData calculatePlacementData(EntityPlayer entity, ItemStack item, Facing face, Block block, Block clickedBlock, Vector clickVector ) {
-        PlacementData data = super.calculatePlacementData(entity, item, face, block, clickedBlock, clickVector);
-
+    public boolean beforePlacement(EntityLiving entity, ItemStack item, Facing face, Location location) {
         Facing[] toCheck = new Facing[]{
             Facing.DOWN,
             Facing.SOUTH,
@@ -131,7 +128,7 @@ public class SoulTorch extends Block implements BlockSoulTorch {
 
         boolean foundSide = false;
         for (Facing toCheckFace : toCheck) {
-            if (!clickedBlock.getSide(toCheckFace).isTransparent()) {
+            if (!this.getSide(toCheckFace).isTransparent()) {
                 FACING.setState(this, toCheckFace.opposite());
                 foundSide = true;
                 break;
@@ -139,12 +136,10 @@ public class SoulTorch extends Block implements BlockSoulTorch {
         }
 
         if (!foundSide) {
-            return null;
+            return false;
         }
 
-        // TODO: Calculate proper state map
-        return new PlacementData(this.identifier, null);
-
+        return super.beforePlacement(entity, item, face, location);
     }
 
 }

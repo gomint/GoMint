@@ -1,8 +1,7 @@
 package io.gomint.server.world.block.state;
 
 import io.gomint.inventory.item.ItemStack;
-import io.gomint.math.Vector;
-import io.gomint.server.entity.EntityPlayer;
+import io.gomint.server.entity.EntityLiving;
 import io.gomint.server.world.block.Block;
 import io.gomint.world.block.data.Facing;
 
@@ -23,13 +22,13 @@ public class DirectValueBlockState<T> extends BlockState<T, T> {
     }
 
     @Override
-    public void detectFromPlacement(Block newBlock, EntityPlayer player, ItemStack placedItem, Facing face, Block block, Block clickedBlock, Vector clickPosition) {
+    public void detectFromPlacement(Block newBlock, EntityLiving player, ItemStack placedItem, Facing face) {
         this.setState(newBlock, this.defaultValue);
     }
 
     @Override
-    public T getState( Block block ) {
-        return this.getValue( block );
+    public T getState(Block block) {
+        return this.getValue(block);
     }
 
 }

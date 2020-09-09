@@ -6,6 +6,7 @@ import io.gomint.world.block.BlockIronDoor;
 import io.gomint.world.block.BlockType;
 
 import io.gomint.server.registry.RegisterInfo;
+import io.gomint.world.block.data.Facing;
 
 /**
  * @author geNAZt
@@ -13,11 +14,6 @@ import io.gomint.server.registry.RegisterInfo;
  */
 @RegisterInfo( sId = "minecraft:iron_door" )
 public class IronDoor extends Door implements BlockIronDoor {
-
-    @Override
-    public String getBlockId() {
-        return "minecraft:iron_door";
-    }
 
     @Override
     public long getBreakTime() {
@@ -37,6 +33,14 @@ public class IronDoor extends Door implements BlockIronDoor {
     @Override
     public boolean canBeBrokenWithHand() {
         return true;
+    }
+
+    @Override
+    public void afterPlacement() {
+        Block above = this.getSide(Facing.UP);
+        IronDoor aDoor = above.setBlockType(IronDoor.class);
+        aDoor.setDirection(this.getDirection());
+        aDoor.setTop(true);
     }
 
     @Override

@@ -2,18 +2,17 @@ package io.gomint.server.world.block;
 
 import io.gomint.inventory.item.ItemStack;
 import io.gomint.math.Location;
-import io.gomint.server.entity.Entity;
-import io.gomint.world.block.BlockLilyPad;
-import io.gomint.world.block.data.Facing;
-import io.gomint.world.block.BlockType;
-
+import io.gomint.server.entity.EntityLiving;
 import io.gomint.server.registry.RegisterInfo;
+import io.gomint.world.block.BlockLilyPad;
+import io.gomint.world.block.BlockType;
+import io.gomint.world.block.data.Facing;
 
 /**
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:waterlily" )
+@RegisterInfo(sId = "minecraft:waterlily")
 public class LilyPad extends Block implements BlockLilyPad {
 
     @Override
@@ -52,13 +51,9 @@ public class LilyPad extends Block implements BlockLilyPad {
     }
 
     @Override
-    public boolean beforePlacement(Entity entity, ItemStack item, Facing face, Location location) {
-        Block block = (Block) location.getWorld().getBlockAt( location.toBlockPosition() ).getSide( Facing.UP );
-        if( block instanceof StationaryWater ) {
-            return true;
-        }
-
-        return false;
+    public boolean beforePlacement(EntityLiving entity, ItemStack item, Facing face, Location location) {
+        Block block = (Block) location.getWorld().getBlockAt(location.toBlockPosition()).getSide(Facing.UP);
+        return block instanceof StationaryWater;
     }
 
 }

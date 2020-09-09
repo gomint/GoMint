@@ -8,8 +8,8 @@
 package io.gomint.server.world.block.state;
 
 import io.gomint.inventory.item.ItemStack;
-import io.gomint.math.Vector;
-import io.gomint.server.entity.EntityPlayer;
+import io.gomint.server.entity.EntityLiving;
+import io.gomint.server.util.Bearing;
 import io.gomint.server.world.block.Block;
 import io.gomint.world.block.data.Facing;
 
@@ -26,17 +26,25 @@ public class BlockfaceFromPlayerBlockState extends BlockfaceBlockState {
     }
 
     @Override
-    public void detectFromPlacement(Block newBlock, EntityPlayer player, ItemStack placedItem, Facing face, Block block, Block clickedBlock, Vector clickPosition) {
-        if (face == null) {
-            this.setState(newBlock, Facing.NORTH);
+    public void detectFromPlacement(Block newBlock, EntityLiving player, ItemStack placedItem, Facing face) {
+        if (player == null) {
+            this.setState(newBlock, Facing.EAST);
             return;
         }
 
-        if (!this.detectUpDown && (face == Facing.UP || face == Facing.DOWN)) {
-            face = Facing.NORTH;
+        if (this.detectUpDown) {
+            if (player.getPitch() < -60) {
+                this.setState(newBlock, Facing.DOWN);
+                return;
+            } else if (player.getPitch() > 60) {
+                this.setState(newBlock, Facing.UP);
+                return;
+            }
         }
 
-        this.setState(newBlock, face);
+        Bearing bearing = Bearing.fromAngle(player.getYaw());
+        bearing = bearing.opposite();
+        this.setState(newBlock, bearing.toBlockFace());
     }
 
 }

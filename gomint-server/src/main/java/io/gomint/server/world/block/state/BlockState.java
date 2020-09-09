@@ -9,6 +9,7 @@ package io.gomint.server.world.block.state;
 
 import io.gomint.inventory.item.ItemStack;
 import io.gomint.math.Vector;
+import io.gomint.server.entity.EntityLiving;
 import io.gomint.server.entity.EntityPlayer;
 import io.gomint.server.world.block.Block;
 import io.gomint.world.block.data.Facing;
@@ -31,10 +32,7 @@ public abstract class BlockState<T, S> {
 
     public void setState(Block block, T state) {
         this.calculateValueFromState(block, state);
-
-        if (block.ready()) {
-            block.updateBlock();
-        }
+        block.updateBlock();
     }
 
     protected abstract void calculateValueFromState(Block block, T state);
@@ -43,14 +41,11 @@ public abstract class BlockState<T, S> {
      * Detect from a player
      *
      * @param newBlock
-     * @param player        from which we generate data
+     * @param entity        from which we generate data
      * @param placedItem    which has been used to get this block
      * @param face          which the client has clicked on
-     * @param block         which should be replaced
-     * @param clickedBlock  which has been clicked by the client
-     * @param clickPosition where the client clicked on the block
      */
-    public abstract void detectFromPlacement(Block newBlock, EntityPlayer player, ItemStack placedItem, Facing face, Block block, Block clickedBlock, Vector clickPosition);
+    public abstract void detectFromPlacement(Block newBlock, EntityLiving entity, ItemStack placedItem, Facing face);
 
     /**
      * Store new value for this block state

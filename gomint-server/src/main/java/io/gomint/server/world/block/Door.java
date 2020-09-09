@@ -5,8 +5,7 @@ import io.gomint.math.BlockPosition;
 import io.gomint.math.Location;
 import io.gomint.math.Vector;
 import io.gomint.server.entity.Entity;
-import io.gomint.server.world.BlockRuntimeIDs;
-import io.gomint.server.world.PlacementData;
+import io.gomint.server.entity.EntityLiving;
 import io.gomint.server.world.block.helper.ToolPresets;
 import io.gomint.server.world.block.state.BooleanBlockState;
 import io.gomint.server.world.block.state.DirectionBlockState;
@@ -29,6 +28,10 @@ public abstract class Door extends Block implements BlockDoor {
     @Override
     public boolean isTop() {
         return TOP.getState(this);
+    }
+
+    protected void setTop(boolean top) {
+        TOP.setState(this, top);
     }
 
     @Override
@@ -62,7 +65,7 @@ public abstract class Door extends Block implements BlockDoor {
     }
 
     @Override
-    public boolean beforePlacement(Entity entity, ItemStack item, Facing face, Location location) {
+    public boolean beforePlacement(EntityLiving entity, ItemStack item, Facing face, Location location) {
         Block above = location.getWorld().getBlockAt(location.toBlockPosition().add(BlockPosition.UP));
         return above.canBeReplaced(item);
     }
@@ -93,14 +96,6 @@ public abstract class Door extends Block implements BlockDoor {
     @Override
     public boolean canBeBrokenWithHand() {
         return true;
-    }
-
-    @Override
-    public void afterPlacement(PlacementData data) {
-        data.setBlockIdentifier(BlockRuntimeIDs.change(data.getBlockIdentifier(), null, new String[]{"upper_block_bit"}, (byte) 1));
-
-        Block above = this.location.getWorld().getBlockAt(this.location.toBlockPosition().add(BlockPosition.UP));
-        above.setBlockFromPlacementData(data);
     }
 
     @Override

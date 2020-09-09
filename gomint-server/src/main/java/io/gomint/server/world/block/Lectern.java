@@ -55,7 +55,7 @@ public class Lectern extends Block implements BlockLectern {
     @Override
     TileEntity createTileEntity(NBTTagCompound compound) {
         super.createTileEntity(compound);
-        return this.world.getServer().getTileEntities().construct(LecternTileEntity.class, compound, this, this.world.getServer().getItems());
+        return this.tileEntities.construct(LecternTileEntity.class, compound, this, this.items);
     }
 
 }

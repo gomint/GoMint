@@ -241,13 +241,13 @@ public class Log extends Block implements BlockLog {
     public List<ItemStack> getDrops(ItemStack itemInHand) {
         // TODO: Check for new data values
         if (this.getBlockId().equals("minecraft:log")) {
-            ItemStack itemStack = this.world.getServer().getItems().create(getBlockId(), (short) 0, (byte) 1, null);
+            ItemStack itemStack = this.items.create(getBlockId(), (short) 0, (byte) 1, null);
             return Lists.newArrayList(itemStack);
         } else if (this.getBlockId().equals("minecraft:log2")) {
-            ItemStack itemStack = this.world.getServer().getItems().create(getBlockId(), (short) 0, (byte) 1, null);
+            ItemStack itemStack = this.items.create(getBlockId(), (short) 0, (byte) 1, null);
             return Lists.newArrayList(itemStack);
         } else {
-            ItemStack itemStack = this.world.getServer().getItems().create(getBlockId(), (short) 0, (byte) 1, null);
+            ItemStack itemStack = this.items.create(getBlockId(), (short) 0, (byte) 1, null);
             return Lists.newArrayList(itemStack);
         }
     }

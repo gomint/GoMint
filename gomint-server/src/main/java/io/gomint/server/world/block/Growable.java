@@ -4,7 +4,7 @@ import io.gomint.inventory.item.ItemStack;
 import io.gomint.math.BlockPosition;
 import io.gomint.math.Location;
 import io.gomint.math.MathUtils;
-import io.gomint.server.entity.Entity;
+import io.gomint.server.entity.EntityLiving;
 import io.gomint.server.util.random.WeightedRandom;
 import io.gomint.server.world.UpdateReason;
 import io.gomint.server.world.block.state.ProgressBlockState;
@@ -38,7 +38,7 @@ public abstract class Growable extends Block {
     });
 
     @Override
-    public boolean beforePlacement(Entity entity, ItemStack item, Facing face, Location location) {
+    public boolean beforePlacement(EntityLiving entity, ItemStack item, Facing face, Location location) {
         // Check if we place on farmland
         return location.getWorld().getBlockAt(location.toBlockPosition().add(BlockPosition.DOWN)).getBlockType() == BlockType.FARMLAND;
     }

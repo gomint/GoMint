@@ -80,7 +80,7 @@ public class UndyedShulkerBox extends Block implements BlockUndyedShulkerBox {
     @Override
     TileEntity createTileEntity( NBTTagCompound compound ) {
         super.createTileEntity( compound );
-        return this.world.getServer().getTileEntities().construct(ShulkerBoxTileEntity.class, compound, this, this.world.getServer().getItems());
+        return this.tileEntities.construct(ShulkerBoxTileEntity.class, compound, this, this.items);
     }
 
     @Override

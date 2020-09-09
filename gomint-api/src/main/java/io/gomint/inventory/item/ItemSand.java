@@ -1,6 +1,7 @@
 package io.gomint.inventory.item;
 
 import io.gomint.GoMint;
+import io.gomint.inventory.item.data.SandType;
 
 /**
  * @author geNAZt
@@ -17,5 +18,19 @@ public interface ItemSand extends ItemStack {
     static ItemSand create( int amount ) {
         return GoMint.instance().createItemStack( ItemSand.class, amount );
     }
+
+    /**
+     * Set type of sand
+     *
+     * @param type of sand
+     */
+    void setType(SandType type);
+
+    /**
+     * Get type of sand
+     *
+     * @return type of sand
+     */
+    SandType getType();
 
 }

@@ -11,7 +11,7 @@ import io.gomint.inventory.item.ItemStack;
 import io.gomint.math.BlockPosition;
 import io.gomint.math.Location;
 import io.gomint.math.Vector;
-import io.gomint.server.entity.Entity;
+import io.gomint.server.entity.EntityLiving;
 import io.gomint.server.world.block.state.EnumBlockState;
 import io.gomint.world.block.BlockType;
 import io.gomint.world.block.data.Facing;
@@ -50,7 +50,7 @@ public abstract class RailBase extends Block {
     }
 
     @Override
-    public boolean beforePlacement(Entity entity, ItemStack item, Facing face, Location location) {
+    public boolean beforePlacement(EntityLiving entity, ItemStack item, Facing face, Location location) {
         Block block = entity.getWorld().getBlockAt(location.toBlockPosition().add(Vector.DOWN.toBlockPosition()));
         return block.isSolid();
     }

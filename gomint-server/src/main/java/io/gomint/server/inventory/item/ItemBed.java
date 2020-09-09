@@ -2,6 +2,8 @@ package io.gomint.server.inventory.item;
 
 import io.gomint.inventory.item.ItemType;
 import io.gomint.server.registry.RegisterInfo;
+import io.gomint.world.block.Block;
+import io.gomint.world.block.BlockBed;
 import io.gomint.world.block.data.BlockColor;
 
 /**
@@ -112,6 +114,14 @@ public class ItemBed extends ItemStack implements io.gomint.inventory.item.ItemB
             default:
                 this.setData((short) 15);
         }
+    }
+
+    @Override
+    public Block getBlock() {
+        BlockBed block = (BlockBed) super.getBlock();
+        block.setColor(this.getColor());
+        block.setHeadPart(false);
+        return block;
     }
 
 }

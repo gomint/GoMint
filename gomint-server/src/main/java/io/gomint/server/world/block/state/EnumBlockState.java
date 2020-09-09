@@ -8,8 +8,7 @@
 package io.gomint.server.world.block.state;
 
 import io.gomint.inventory.item.ItemStack;
-import io.gomint.math.Vector;
-import io.gomint.server.entity.EntityPlayer;
+import io.gomint.server.entity.EntityLiving;
 import io.gomint.server.world.block.Block;
 import io.gomint.world.block.data.Facing;
 
@@ -38,7 +37,7 @@ public class EnumBlockState<E extends Enum<E>, T> extends BlockState<E, T> {
     }
 
     @Override
-    public void detectFromPlacement(Block newBlock, EntityPlayer player, ItemStack placedItem, Facing face, Block block, Block clickedBlock, Vector clickPosition) {
+    public void detectFromPlacement(Block newBlock, EntityLiving player, ItemStack placedItem, Facing face) {
         this.setState(newBlock, this.enumValues[placedItem == null ? 0 : ((io.gomint.server.inventory.item.ItemStack) placedItem).getData()]);
     }
 

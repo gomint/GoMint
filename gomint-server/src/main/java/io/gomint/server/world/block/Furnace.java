@@ -57,7 +57,7 @@ public class Furnace extends Block implements BlockFurnace {
     @Override
     TileEntity createTileEntity(NBTTagCompound compound) {
         super.createTileEntity( compound );
-        return this.world.getServer().getTileEntities().construct(FurnaceTileEntity.class, compound, this, this.world.getServer().getItems());
+        return this.tileEntities.construct(FurnaceTileEntity.class, compound, this, this.items);
     }
 
     @Override

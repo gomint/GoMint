@@ -9,8 +9,7 @@ package io.gomint.server.world.block.state;
 
 import io.gomint.inventory.item.ItemStack;
 import io.gomint.math.MathUtils;
-import io.gomint.math.Vector;
-import io.gomint.server.entity.EntityPlayer;
+import io.gomint.server.entity.EntityLiving;
 import io.gomint.server.world.block.Block;
 import io.gomint.world.block.data.Facing;
 
@@ -35,7 +34,7 @@ public class ProgressBlockState extends BlockState<Float, Integer> {
     }
 
     public boolean progress(Block block) {
-        this.setState(block,this.getState(block) + this.step);
+        this.setState(block, this.getState(block) + this.step);
         if (1f - this.getState(block) <= MathUtils.EPSILON) {
             this.maxedProgressConsumer.accept(block);
             return false;
@@ -50,7 +49,7 @@ public class ProgressBlockState extends BlockState<Float, Integer> {
     }
 
     @Override
-    public void detectFromPlacement(Block newBlock, EntityPlayer player, ItemStack placedItem, Facing face, Block block, Block clickedBlock, Vector clickPosition) {
+    public void detectFromPlacement(Block newBlock, EntityLiving player, ItemStack placedItem, Facing face) {
         this.setState(newBlock, 0f);
     }
 

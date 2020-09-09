@@ -29,7 +29,7 @@ public class ItemFrame extends Block implements BlockItemFrame {
     @Override
     TileEntity createTileEntity(NBTTagCompound compound) {
         super.createTileEntity(compound);
-        return this.world.getServer().getTileEntities().construct(ItemFrameTileEntity.class, compound, this, this.world.getServer().getItems());
+        return this.tileEntities.construct(ItemFrameTileEntity.class, compound, this, this.items);
     }
 
     @Override

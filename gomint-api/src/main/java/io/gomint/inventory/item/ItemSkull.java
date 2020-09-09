@@ -1,6 +1,7 @@
 package io.gomint.inventory.item;
 
 import io.gomint.GoMint;
+import io.gomint.world.block.data.SkullType;
 
 /**
  * @author geNAZt
@@ -17,5 +18,19 @@ public interface ItemSkull extends ItemStack {
     static ItemSkull create( int amount ) {
         return GoMint.instance().createItemStack( ItemSkull.class, amount );
     }
+
+    /**
+     * Get type of skull
+     *
+     * @return type of skull
+     */
+    SkullType getSkullType();
+
+    /**
+     * Set type of skull
+     *
+     * @param type of skull to set
+     */
+    void setSkullType(SkullType type);
 
 }

@@ -40,6 +40,10 @@ public class NibbleArray {
         this.data = UnpooledByteBufAllocator.DEFAULT.directBuffer(( this.length + 1 ) >> 1);
     }
 
+    private int fastModulo(int dividend, int divisor) {
+        return dividend & (divisor - 1);
+    }
+
     /**
      * Sets the entry at the specified index
      *
@@ -49,10 +53,11 @@ public class NibbleArray {
     public void set( int index, byte value ) {
         value &= 0xF;
 
-        byte old = this.data.getByte(index / 2);
-        old &= (byte) ( 0xF << ( ( index + 1 ) % 2 * 4 ) );
-        old |= (byte) ( value << ( index % 2 * 4 ) );
-        this.data.setByte( index / 2, old );
+        int index2 = index >> 1;
+        byte old = this.data.getByte(index2);
+        old &= (byte) ( 0xF << ( fastModulo( index + 1, 2 ) * 4 ) );
+        old |= (byte) ( value << ( fastModulo( index,  2 ) * 4 ) );
+        this.data.setByte( index2, old );
     }
 
     /**

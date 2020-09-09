@@ -5,15 +5,12 @@ import io.gomint.inventory.item.ItemStack;
 import io.gomint.math.BlockPosition;
 import io.gomint.math.Vector;
 import io.gomint.server.entity.Entity;
-import io.gomint.server.entity.EntityPlayer;
-import io.gomint.server.world.BlockRuntimeIDs;
-import io.gomint.server.world.PlacementData;
 import io.gomint.server.world.UpdateReason;
 import io.gomint.server.world.block.state.DirectValueBlockState;
 import io.gomint.world.Sound;
+import io.gomint.world.block.BlockLiquid;
 import io.gomint.world.block.data.Direction;
 import io.gomint.world.block.data.Facing;
-import io.gomint.world.block.BlockLiquid;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -140,12 +137,6 @@ public abstract class Liquid extends Block implements BlockLiquid {
     public abstract int getTickDiff();
 
     public abstract boolean isFlowing();
-
-    @Override
-    public PlacementData calculatePlacementData(EntityPlayer entity, ItemStack item, Facing face, Block block, Block clickedBlock, Vector clickVector) {
-        PlacementData data = super.calculatePlacementData(entity, item, face, block, clickedBlock, clickVector);
-        return data.setBlockIdentifier(BlockRuntimeIDs.change(data.getBlockIdentifier(), null, LIQUID_DEPTH_KEY, 0));
-    }
 
     @Override
     public long update(UpdateReason updateReason, long currentTimeMS, float dT) {
@@ -370,8 +361,8 @@ public abstract class Liquid extends Block implements BlockLiquid {
                 this.world.breakBlock(block.getLocation().toBlockPosition(), block.getDrops(ItemAir.create(0)), false);
             }
 
-            PlacementData data = new PlacementData(BlockRuntimeIDs.change(this.identifier, null, LIQUID_DEPTH_KEY, newFlowDecay), null);
-            block.setBlockFromPlacementData(data);
+            Liquid liquid = block.setBlockType(this.getClass());
+            LIQUID_DEPTH.setState(liquid, newFlowDecay);
         }
     }
 
@@ -424,6 +415,12 @@ public abstract class Liquid extends Block implements BlockLiquid {
     protected void liquidCollide(Block colliding, Class<? extends Block> result) {
         this.setBlockType(result);
         this.world.playSound(this.location.add(0.5f, 0.5f, 0.5f), Sound.FIZZ, (byte) 0);
+    }
+
+    @Override
+    void place() {
+        super.place();
+        LIQUID_DEPTH.setState(this, 0);
     }
 
 }

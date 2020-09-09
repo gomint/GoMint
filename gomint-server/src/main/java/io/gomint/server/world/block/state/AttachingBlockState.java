@@ -8,13 +8,16 @@
 package io.gomint.server.world.block.state;
 
 import io.gomint.inventory.item.ItemStack;
-import io.gomint.math.Vector;
-import io.gomint.server.entity.EntityPlayer;
+import io.gomint.server.entity.EntityLiving;
 import io.gomint.server.world.block.Block;
 import io.gomint.world.block.data.Facing;
 
 import java.util.function.Supplier;
 
+/**
+ * @author geNAZt
+ * @version 1.0
+ */
 public class AttachingBlockState extends DirectValueBlockState<Integer> {
 
     private static final short SOUTH = 1;
@@ -27,8 +30,8 @@ public class AttachingBlockState extends DirectValueBlockState<Integer> {
     }
 
     @Override
-    public void detectFromPlacement(Block newBlock, EntityPlayer player, ItemStack placedItem, Facing face, Block block, Block clickedBlock, Vector clickPosition) {
-        super.detectFromPlacement(newBlock, player, placedItem, face, block, clickedBlock, clickPosition);
+    public void detectFromPlacement(Block newBlock, EntityLiving player, ItemStack placedItem, Facing face) {
+        super.detectFromPlacement(newBlock, player, placedItem, face);
 
         if (face != null) {
             this.enable(newBlock, face.opposite());

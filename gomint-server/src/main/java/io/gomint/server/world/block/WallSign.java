@@ -73,7 +73,7 @@ public class WallSign extends Block implements BlockWallSign {
     @Override
     TileEntity createTileEntity(NBTTagCompound compound) {
         super.createTileEntity( compound );
-        return this.world.getServer().getTileEntities().construct(SignTileEntity.class, compound, this, this.world.getServer().getItems());
+        return this.tileEntities.construct(SignTileEntity.class, compound, this, this.items);
     }
 
     @Override

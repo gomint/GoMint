@@ -16,14 +16,15 @@ import io.gomint.server.entity.Entity;
 import io.gomint.server.entity.EntityLiving;
 import io.gomint.server.entity.EntityPlayer;
 import io.gomint.server.entity.tileentity.SerializationReason;
+import io.gomint.server.entity.tileentity.TileEntities;
 import io.gomint.server.entity.tileentity.TileEntity;
+import io.gomint.server.inventory.item.Items;
 import io.gomint.server.network.PlayerConnection;
 import io.gomint.server.network.packet.PacketTileEntityData;
 import io.gomint.server.network.packet.PacketUpdateBlock;
 import io.gomint.server.util.BlockIdentifier;
 import io.gomint.server.world.BlockRuntimeIDs;
 import io.gomint.server.world.ChunkSlice;
-import io.gomint.server.world.PlacementData;
 import io.gomint.server.world.UpdateReason;
 import io.gomint.server.world.WorldAdapter;
 import io.gomint.server.world.storage.TemporaryStorage;
@@ -62,12 +63,14 @@ public abstract class Block implements io.gomint.world.block.Block {
 
     // Shortcuts
     private ChunkSlice chunkSlice;
-    private short index;
+    private short index = -1;
 
     // Hacky shit for mojangs state stuff
     private String stateChangeBlockId = null;
 
-    private boolean ready;
+    // Factories
+    protected Items items;
+    protected TileEntities tileEntities;
 
     // Set all needed data
     public void setData(BlockIdentifier identifier, TileEntity tileEntity, WorldAdapter worldAdapter, Location location,
@@ -81,8 +84,6 @@ public abstract class Block implements io.gomint.world.block.Block {
         this.layer = layer;
         this.chunkSlice = chunkSlice;
         this.index = index;
-
-        this.ready = true;
     }
     // CHECKSTYLE:ON
 
@@ -197,9 +198,9 @@ public abstract class Block implements io.gomint.world.block.Block {
     /**
      * Called when an entity punches a blockId
      *
-     * @param player   The player which punches it
+     * @param player The player which punches it
      */
-    public boolean punch(EntityPlayer player ) {
+    public boolean punch(EntityPlayer player) {
         return false;
     }
 
@@ -256,17 +257,10 @@ public abstract class Block implements io.gomint.world.block.Block {
     /**
      * Create a tile entity at the blocks location
      *
-     * @param compound which has been prebuilt by {@link #calculatePlacementData(EntityPlayer, ItemStack, Facing, Block, Block, Vector)}
+     * @param compound which has been prebuilt by {@link #beforePlacement(EntityLiving, ItemStack, Facing, Location)}
      * @return new tile entity or null if there is none
      */
     TileEntity createTileEntity(NBTTagCompound compound) {
-        BlockPosition position = this.location.toBlockPosition();
-
-        // Add generic tile entity stuff
-        compound.addValue("x", position.getX());
-        compound.addValue("y", position.getY());
-        compound.addValue("z", position.getZ());
-
         return null;
     }
 
@@ -274,7 +268,7 @@ public abstract class Block implements io.gomint.world.block.Block {
      * Update the blockId for the client
      */
     public void updateBlock() {
-        if (this.location == null || this.chunkSlice == null) {
+        if (!isPlaced()) {
             // No need to update
             return;
         }
@@ -285,14 +279,9 @@ public abstract class Block implements io.gomint.world.block.Block {
         this.world.updateBlock0(this.chunkSlice.getChunk(), pos);
     }
 
-    // TODO: Implement overrides for all state blocks
-    public PlacementData calculatePlacementData(EntityPlayer entity, ItemStack item, Facing face, Block block, Block clickedBlock, Vector clickVector) {
-        return new PlacementData(this.identifier, null);
-    }
-
     @Override
     public boolean isPlaced() {
-        return this.location != null;
+        return this.chunkSlice != null && this.index > -1;
     }
 
     @Override
@@ -303,62 +292,6 @@ public abstract class Block implements io.gomint.world.block.Block {
 
         WorldAdapter worldAdapter = (WorldAdapter) this.location.getWorld();
         return worldAdapter.getBiome(this.location.toBlockPosition());
-    }
-
-    /**
-     * Internal overload for NBT compound calculations
-     *
-     * @param <T>  blockId generic type
-     * @param data optional data for the blockId
-     * @return the new placed blockId
-     */
-    public <T extends io.gomint.world.block.Block> T setBlockFromPlacementData(PlacementData data) {
-        BlockPosition pos = this.location.toBlockPosition();
-
-        // Check if this block can be replaced
-        if (pos.getY() < 0 || pos.getY() > 255) {
-            LOGGER.warn("Invalid block placement @ {}", pos, new Exception());
-            return null;
-        }
-
-        Block instance = this.world.getServer().getBlocks().get(data.getBlockIdentifier());
-        if (instance != null) {
-            WorldAdapter worldAdapter = (WorldAdapter) this.location.getWorld();
-            worldAdapter.setBlock(pos, this.layer, data.getBlockIdentifier().getRuntimeId());
-            worldAdapter.resetTemporaryStorage(pos, this.layer);
-
-            instance.setWorld(worldAdapter);
-            instance.setLocation(this.location);
-
-            // We need to calculate needed states
-            instance.setIdentifier(data.getBlockIdentifier());
-
-            // Check if new blockId needs tile entity
-            if (instance.needsTileEntity()) {
-                // Create new tile entity compound if null
-                if (data.getCompound() == null) {
-                    data.setCompound(new NBTTagCompound(""));
-                }
-
-                TileEntity tileEntityInstance = instance.createTileEntity(data.getCompound());
-                if (tileEntityInstance != null) {
-                    instance.setTileEntity(tileEntityInstance);
-                    worldAdapter.storeTileEntity(pos, tileEntityInstance);
-                }
-            } else {
-                worldAdapter.removeTileEntity(pos);
-            }
-
-            instance = this.world.getBlockAt(pos);
-            long next = instance.update(UpdateReason.BLOCK_ADDED, this.world.getServer().getCurrentTickTime(), 0f);
-            if (next > this.world.getServer().getCurrentTickTime()) {
-                this.world.addTickingBlock(next, pos);
-            }
-
-            worldAdapter.updateBlock(pos);
-        }
-
-        return (T) instance;
     }
 
     @Override
@@ -373,35 +306,35 @@ public abstract class Block implements io.gomint.world.block.Block {
 
         Block instance = this.world.getServer().getBlocks().get(blockType);
         if (instance != null) {
-            PlacementData data = instance.calculatePlacementData(null, null, null, null, null, null);
-
-            WorldAdapter worldAdapter = (WorldAdapter) this.location.getWorld();
-            worldAdapter.setBlock(pos, this.layer, data.getBlockIdentifier().getRuntimeId());
-            worldAdapter.resetTemporaryStorage(pos, this.layer);
-
-            instance.setWorld(worldAdapter);
+            instance.setWorld((WorldAdapter) this.location.getWorld());
             instance.setLocation(this.location);
-
-            // Check if new blockId needs tile entity
-            if (instance.needsTileEntity()) {
-                TileEntity tileEntityInstance = instance.createTileEntity(new NBTTagCompound(""));
-                if (tileEntityInstance != null) {
-                    instance.setTileEntity(tileEntityInstance);
-                    worldAdapter.storeTileEntity(pos, tileEntityInstance);
-                }
-            } else {
-                worldAdapter.removeTileEntity(pos);
-            }
-
-            long next = instance.update(UpdateReason.BLOCK_ADDED, this.world.getServer().getCurrentTickTime(), 0f);
-            if (next > this.world.getServer().getCurrentTickTime()) {
-                this.world.addTickingBlock(next, this.location.toBlockPosition());
-            }
-
-            worldAdapter.updateBlock(pos);
+            instance.setLayer(this.layer);
+            instance.place();
         }
 
         return world.getBlockAt(pos);
+    }
+
+    void place() {
+        BlockPosition pos = this.location.toBlockPosition();
+        WorldAdapter worldAdapter = (WorldAdapter) this.location.getWorld();
+
+        worldAdapter.setBlock(pos, this.layer, this.getRuntimeId());
+        worldAdapter.resetTemporaryStorage(pos, this.layer);
+
+        // Check if new blockId needs tile entity
+        if (this.getTileEntity() != null) {
+            worldAdapter.storeTileEntity(pos, this.getTileEntity());
+        } else {
+            worldAdapter.removeTileEntity(pos);
+        }
+
+        long next = this.update(UpdateReason.BLOCK_ADDED, this.world.getServer().getCurrentTickTime(), 0f);
+        if (next > this.world.getServer().getCurrentTickTime()) {
+            this.world.addTickingBlock(next, this.location.toBlockPosition());
+        }
+
+        worldAdapter.updateBlock(pos);
     }
 
     @Override
@@ -420,23 +353,11 @@ public abstract class Block implements io.gomint.world.block.Block {
             return null;
         }
 
-        WorldAdapter worldAdapter = (WorldAdapter) this.location.getWorld();
-        worldAdapter.setBlock(pos, this.layer, instance.identifier.getRuntimeId());
-        worldAdapter.resetTemporaryStorage(pos, this.layer);
+        instance.setWorld((WorldAdapter) this.location.getWorld());
+        instance.setLocation(this.location);
+        instance.setLayer(this.layer);
+        instance.place();
 
-        // Check if new blockId needs tile entity
-        if (instance.getTileEntity() != null) {
-            worldAdapter.storeTileEntity(pos, instance.getTileEntity());
-        } else {
-            worldAdapter.removeTileEntity(pos);
-        }
-
-        long next = instance.update(UpdateReason.BLOCK_ADDED, this.world.getServer().getCurrentTickTime(), 0f);
-        if (next > this.world.getServer().getCurrentTickTime()) {
-            this.world.addTickingBlock(next, this.location.toBlockPosition());
-        }
-
-        worldAdapter.updateBlock(pos);
         return apiInstance;
     }
 
@@ -467,7 +388,7 @@ public abstract class Block implements io.gomint.world.block.Block {
             compound.addValue("z", pos.getZ());
 
             // Construct new tile entity
-            TileEntity tileEntityInstance = this.world.getServer().getTileEntities().construct(compound, instance);
+            TileEntity tileEntityInstance = this.tileEntities.construct(compound, instance);
             worldAdapter.storeTileEntity(pos, tileEntityInstance);
         } else {
             worldAdapter.removeTileEntity(pos);
@@ -498,19 +419,9 @@ public abstract class Block implements io.gomint.world.block.Block {
      * @return null when there is not tile entity attached, otherwise the stored tile entity
      */
     public <T extends TileEntity> T getTileEntity() {
-        if (!isPlaced()) {
-            return null;
-        }
-
-        // Emergency checking
+        // Ensure tile entity
         if (this.tileEntity == null && needsTileEntity()) {
-            LOGGER.warn("Your world has been corrupted. The blockId {} @ {} has no stored tile entity. Please fix the world {}. The blockId will be repaired now, don't expect it to work like it should!",
-                this.getClass().getSimpleName(), this.location, this.world.getWorldName());
-
             this.tileEntity = createTileEntity(new NBTTagCompound(""));
-            if (this.tileEntity != null) {
-                this.world.storeTileEntity(this.location.toBlockPosition(), this.tileEntity);
-            }
         }
 
         return (T) this.tileEntity;
@@ -580,11 +491,11 @@ public abstract class Block implements io.gomint.world.block.Block {
     }
 
     private Block getRelative(BlockPosition position) {
-        int x = MathUtils.fastFloor( this.location.getX() ) + position.getX();
-        int y = MathUtils.fastFloor( this.location.getY() ) + position.getY();
-        int z = MathUtils.fastFloor( this.location.getZ() ) + position.getZ();
+        int x = MathUtils.fastFloor(this.location.getX()) + position.getX();
+        int y = MathUtils.fastFloor(this.location.getY()) + position.getY();
+        int z = MathUtils.fastFloor(this.location.getZ()) + position.getZ();
 
-        return this.location.getWorld().getBlockAt(x,y,z);
+        return this.location.getWorld().getBlockAt(x, y, z);
     }
 
     /**
@@ -630,11 +541,23 @@ public abstract class Block implements io.gomint.world.block.Block {
         }
     }
 
-    public boolean beforePlacement(Entity entity, ItemStack item, Facing face, Location location) {
+    /**
+     * Hook called before this block should be placed
+     *
+     * @param entity   which wants to place this block
+     * @param item     which has been used to generate this block
+     * @param face     against which this block has been placed
+     * @param location of the placement
+     * @return true when placement can happen, false otherwise
+     */
+    public boolean beforePlacement(EntityLiving entity, ItemStack item, Facing face, Location location) {
         return true;
     }
 
-    public void afterPlacement(PlacementData data) {
+    /**
+     * Hook called when the block has been placed
+     */
+    public void afterPlacement() {
 
     }
 
@@ -757,7 +680,7 @@ public abstract class Block implements io.gomint.world.block.Block {
      */
     public List<ItemStack> getDrops(ItemStack itemInHand) {
         // TODO: New system
-        ItemStack drop = this.world.getServer().getItems().create(this.identifier.getBlockId(), (short) 0, (byte) 1, null);
+        ItemStack drop = this.items.create(this.identifier.getBlockId(), (short) 0, (byte) 1, null);
         return Lists.newArrayList(drop);
     }
 
@@ -783,9 +706,7 @@ public abstract class Block implements io.gomint.world.block.Block {
 
     public void setBlockId(String blockId) {
         this.identifier = BlockRuntimeIDs.change(this.identifier, blockId, null, null);
-        if (isPlaced()) {
-            this.updateBlock();
-        }
+        this.updateBlock();
     }
 
     public boolean canBeFlowedInto() {
@@ -804,10 +725,6 @@ public abstract class Block implements io.gomint.world.block.Block {
         }
 
         return false;
-    }
-
-    public boolean ready() {
-        return this.ready;
     }
 
     public Object getState(String key) {
@@ -839,6 +756,14 @@ public abstract class Block implements io.gomint.world.block.Block {
     protected void naturalBreak() {
         this.world.sendParticle(this.location, Particle.BREAK_BLOCK, ParticleData.block(this));
         this.setBlockType(Air.class);
+    }
+
+    public void setItems(Items items) {
+        this.items = items;
+    }
+
+    public void setTileEntities(TileEntities tileEntities) {
+        this.tileEntities = tileEntities;
     }
 
 }

@@ -88,7 +88,7 @@ public class PacketInventoryTransactionHandler implements PacketHandler<PacketIn
                 ItemStack itemInHand = connection.getEntity().getInventory().getItemInHand();
                 ItemStack packetItemInHand = packet.getItemInHand();
                 if (itemInHand.getItemType() != packetItemInHand.getItemType()) {
-                    LOGGER.warn("{} item in hand does not match: {} / {}", connection.getEntity().getName(), itemInHand, packetItemInHand);
+                    LOGGER.debug("{} item in hand does not match: {} / {}", connection.getEntity().getName(), itemInHand, packetItemInHand);
                     reset(packet, connection);
                     return;
                 }

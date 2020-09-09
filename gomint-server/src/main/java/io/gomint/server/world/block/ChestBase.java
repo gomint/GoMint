@@ -10,24 +10,27 @@ package io.gomint.server.world.block;
 import io.gomint.inventory.Inventory;
 import io.gomint.inventory.item.ItemStack;
 import io.gomint.inventory.item.ItemType;
+import io.gomint.math.Location;
 import io.gomint.math.Vector;
 import io.gomint.server.entity.Entity;
-import io.gomint.server.entity.EntityPlayer;
-import io.gomint.server.entity.tileentity.BannerTileEntity;
+import io.gomint.server.entity.EntityLiving;
 import io.gomint.server.entity.tileentity.ChestTileEntity;
 import io.gomint.server.entity.tileentity.TileEntity;
-import io.gomint.server.world.PlacementData;
 import io.gomint.server.world.block.helper.ToolPresets;
-import io.gomint.server.world.block.state.BlockfaceBlockState;
+import io.gomint.server.world.block.state.BlockfaceFromPlayerBlockState;
 import io.gomint.taglib.NBTTagCompound;
 import io.gomint.world.block.data.Facing;
 
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * @author geNAZt
+ * @version 1.0
+ */
 public abstract class ChestBase extends ContainerBlock {
 
-    protected static final BlockfaceBlockState DIRECTION = new BlockfaceBlockState(() -> new String[]{"facing_direction"});
+    protected static final BlockfaceFromPlayerBlockState DIRECTION = new BlockfaceFromPlayerBlockState(() -> new String[]{"facing_direction"}, false);
 
     @Override
     public long getBreakTime() {
@@ -51,14 +54,15 @@ public abstract class ChestBase extends ContainerBlock {
 
     @Override
     TileEntity createTileEntity(NBTTagCompound compound) {
-        super.createTileEntity( compound );
-        return this.world.getServer().getTileEntities().construct(ChestTileEntity.class, compound, this, this.world.getServer().getItems());
+        super.createTileEntity(compound);
+        return this.tileEntities.construct(ChestTileEntity.class, compound, this, this.items);
     }
 
     @Override
-    public PlacementData calculatePlacementData(EntityPlayer entity, ItemStack item, Facing face, Block block, Block clickedBlock, Vector clickVector) {
-        DIRECTION.detectFromPlacement(this, entity, item, face, block, clickedBlock, clickVector);
-        return new PlacementData(this.identifier, null);
+    public boolean beforePlacement(EntityLiving entity, ItemStack item, Facing face, Location location) {
+        boolean ok = super.beforePlacement(entity, item, face, location);
+        DIRECTION.detectFromPlacement(this, entity, item, face);
+        return ok;
     }
 
     @Override

@@ -1,22 +1,18 @@
 package io.gomint.server.world.block;
 
 import io.gomint.inventory.item.ItemShears;
-import io.gomint.inventory.item.ItemVines;
 import io.gomint.inventory.item.ItemStack;
+import io.gomint.inventory.item.ItemVines;
 import io.gomint.math.AxisAlignedBB;
 import io.gomint.math.BlockPosition;
 import io.gomint.math.Location;
 import io.gomint.math.MathUtils;
-import io.gomint.math.Vector;
-import io.gomint.server.entity.EntityPlayer;
-import io.gomint.server.world.BlockRuntimeIDs;
-import io.gomint.server.world.PlacementData;
+import io.gomint.server.entity.Entity;
+import io.gomint.server.entity.EntityLiving;
+import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.world.UpdateReason;
 import io.gomint.server.world.block.state.AttachingBlockState;
 import io.gomint.world.block.BlockType;
-
-import io.gomint.server.entity.Entity;
-import io.gomint.server.registry.RegisterInfo;
 import io.gomint.world.block.BlockVines;
 import io.gomint.world.block.data.Facing;
 
@@ -44,11 +40,6 @@ public class Vines extends Block implements BlockVines {
     // State
     private static final String[] DIRECTION_KEY = new String[]{"vine_direction_bits"};
     private static final AttachingBlockState ATTACHED_SIDES = new AttachingBlockState(() -> DIRECTION_KEY);
-
-    @Override
-    public String getBlockId() {
-        return "minecraft:vine";
-    }
 
     @Override
     public long getBreakTime() {
@@ -136,8 +127,13 @@ public class Vines extends Block implements BlockVines {
     }
 
     @Override
-    public boolean beforePlacement(Entity entity, ItemStack item, Facing face, Location location) {
-        return face != Facing.UP && face != Facing.DOWN;
+    public boolean beforePlacement(EntityLiving entity, ItemStack item, Facing face, Location location) {
+        boolean ok = face != Facing.UP && face != Facing.DOWN;
+        if (ok) {
+            ATTACHED_SIDES.detectFromPlacement(this, entity, item, face);
+        }
+
+        return ok;
     }
 
     @Override
@@ -211,6 +207,10 @@ public class Vines extends Block implements BlockVines {
     private void spreadIfAttachNotEmpty(Set<Facing> attachTo, Block other) {
         if (!attachTo.isEmpty()) {
             Vines newVines = other.setBlockType(Vines.class);
+            for (Facing value : Facing.values()) {
+                newVines.detach(value);
+            }
+
             for (Facing facing : attachTo) {
                 newVines.attach(facing);
             }
@@ -219,19 +219,6 @@ public class Vines extends Block implements BlockVines {
 
     public void detach(Facing facing) {
         ATTACHED_SIDES.disable(this, facing);
-    }
-
-    @Override
-    public PlacementData calculatePlacementData(EntityPlayer entity, ItemStack item, Facing face, Block block, Block clickedBlock, Vector clickVector) {
-        PlacementData placementData = super.calculatePlacementData(entity, item, face, block, clickedBlock, clickVector);
-        if (face == null && entity == null) {
-            placementData.setBlockIdentifier(BlockRuntimeIDs.change(placementData.getBlockIdentifier(), null, DIRECTION_KEY, 0));
-        } else {
-            ATTACHED_SIDES.detectFromPlacement(this, entity, item, face, block, clickedBlock, clickVector);
-            placementData.setBlockIdentifier(this.identifier);
-        }
-
-        return placementData;
     }
 
     private boolean canSpreadInDirection(Block toCheckBlock, Facing facing) {

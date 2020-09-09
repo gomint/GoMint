@@ -1,15 +1,16 @@
 package io.gomint.server.world.block;
 
 import io.gomint.inventory.item.ItemStack;
+import io.gomint.math.Location;
 import io.gomint.math.Vector;
 import io.gomint.server.entity.Entity;
+import io.gomint.server.entity.EntityLiving;
 import io.gomint.server.entity.EntityPlayer;
 import io.gomint.server.registry.RegisterInfo;
-import io.gomint.server.world.PlacementData;
 import io.gomint.server.world.block.state.ProgressBlockState;
 import io.gomint.world.block.BlockCake;
-import io.gomint.world.block.data.Facing;
 import io.gomint.world.block.BlockType;
+import io.gomint.world.block.data.Facing;
 
 /**
  * @author geNAZt
@@ -58,9 +59,9 @@ public class Cake extends Block implements BlockCake {
     }
 
     @Override
-    public PlacementData calculatePlacementData(EntityPlayer entity, ItemStack item, Facing face, Block block, Block clickedBlock, Vector clickVector) {
-        CAKE_EATEN.detectFromPlacement(this, entity, item, face, block, clickedBlock, clickVector);
-        return new PlacementData(this.identifier, null);
+    public boolean beforePlacement(EntityLiving entity, ItemStack item, Facing face, Location location) {
+        CAKE_EATEN.detectFromPlacement(this, entity, item, face);
+        return super.beforePlacement(entity, item, face, location);
     }
 
     @Override

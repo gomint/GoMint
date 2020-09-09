@@ -8,7 +8,9 @@ import io.gomint.math.AxisAlignedBB;
 import io.gomint.math.Location;
 import io.gomint.math.Vector;
 import io.gomint.server.entity.EntityPlayer;
+import io.gomint.server.entity.tileentity.TileEntities;
 import io.gomint.server.entity.tileentity.TileEntity;
+import io.gomint.server.inventory.item.Items;
 import io.gomint.server.maintenance.ReportUploader;
 import io.gomint.server.registry.BlockRegistry;
 import io.gomint.server.registry.Generator;
@@ -16,10 +18,8 @@ import io.gomint.server.util.BlockIdentifier;
 import io.gomint.server.util.ClassPath;
 import io.gomint.server.util.performance.ASMFactoryConstructionFactory;
 import io.gomint.server.util.performance.ConstructionFactory;
-import io.gomint.server.util.performance.LambdaConstructionFactory;
 import io.gomint.server.world.BlockRuntimeIDs;
 import io.gomint.server.world.ChunkSlice;
-import io.gomint.server.world.PlacementData;
 import io.gomint.server.world.WorldAdapter;
 import io.gomint.world.block.data.Facing;
 import org.slf4j.Logger;
@@ -36,7 +36,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class Blocks {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger( Blocks.class );
+    private static final Logger LOGGER = LoggerFactory.getLogger(Blocks.class);
     private static long lastReport = 0;
     private final BlockRegistry generators;
     private PacketBuffer packetCache;
@@ -46,13 +46,15 @@ public class Blocks {
      *
      * @param classPath which builds this registry
      */
-    public Blocks(ClassPath classPath, List<BlockIdentifier> blockIdentifiers) throws IOException {
+    public Blocks(ClassPath classPath, Items items, TileEntities tileEntities, List<BlockIdentifier> blockIdentifiers) throws IOException {
         this.generators = new BlockRegistry(blockIdentifiers, classPath, (clazz, id) -> {
             ConstructionFactory<Block> factory = ASMFactoryConstructionFactory.create(clazz);
             BlockIdentifier blockIdentifier = BlockRuntimeIDs.toBlockIdentifier(id, null);
 
             return in -> {
                 Block block = factory.newInstance();
+                block.setItems(items);
+                block.setTileEntities(tileEntities);
                 block.setIdentifier(blockIdentifier);
                 return block;
             };
@@ -60,7 +62,7 @@ public class Blocks {
 
         BlockRuntimeIDs.init(blockIdentifiers, this);
 
-        this.generators.register( "io.gomint.server.world.block" );
+        this.generators.register("io.gomint.server.world.block");
         this.generators.cleanup();
     }
 
@@ -70,85 +72,82 @@ public class Blocks {
 
     public <T extends Block> T get(BlockIdentifier identifier, byte skyLightLevel, byte blockLightLevel,
                                    TileEntity tileEntity, Location location, int layer, ChunkSlice chunkSlice, short index) {
-        Generator<Block> instance = this.generators.getGenerator( identifier.getRuntimeId() );
-        if ( instance != null ) {
+        Generator<Block> instance = this.generators.getGenerator(identifier.getRuntimeId());
+        if (instance != null) {
             T block = (T) instance.generate();
-            if ( location == null ) {
+            if (location == null) {
                 return block;
             }
 
-            block.setData( identifier, tileEntity, (WorldAdapter) location.getWorld(), location, layer, skyLightLevel, blockLightLevel, chunkSlice, index );
+            block.setData(identifier, tileEntity, (WorldAdapter) location.getWorld(), location, layer, skyLightLevel, blockLightLevel, chunkSlice, index);
             return block;
         }
 
         // Don't spam the report server pls
-        if ( System.currentTimeMillis() - lastReport > TimeUnit.SECONDS.toSeconds( 10 ) ) {
-            LOGGER.warn( "Missing block: {}", identifier );
-            ReportUploader.create().includeWorlds().property( "missing_block", identifier.toString()).upload("Missing block in register");
+        if (System.currentTimeMillis() - lastReport > TimeUnit.SECONDS.toSeconds(10)) {
+            LOGGER.warn("Missing block: {}", identifier);
+            ReportUploader.create().includeWorlds().property("missing_block", identifier.toString()).upload("Missing block in register");
             lastReport = System.currentTimeMillis();
         }
 
-        LOGGER.warn( "Unknown block {} @ {}", identifier.getBlockId(), location, new Exception() );
+        LOGGER.warn("Unknown block {} @ {}", identifier.getBlockId(), location, new Exception());
         return null;
     }
 
-    public Block get( BlockIdentifier identifier) {
-        Generator<Block> instance = this.generators.getGenerator( identifier.getRuntimeId() );
-        if ( instance != null ) {
+    public Block get(BlockIdentifier identifier) {
+        Generator<Block> instance = this.generators.getGenerator(identifier.getRuntimeId());
+        if (instance != null) {
             return instance.generate();
         }
 
-        LOGGER.warn( "Unknown block {}", identifier.getBlockId() );
+        LOGGER.warn("Unknown block {}", identifier.getBlockId());
         return null;
     }
 
-    public <T extends Block> T get( Class<?> apiInterface ) {
-        Generator<Block> instance = this.generators.getGenerator( apiInterface );
-        if ( instance != null ) {
+    public <T extends Block> T get(Class<?> apiInterface) {
+        Generator<Block> instance = this.generators.getGenerator(apiInterface);
+        if (instance != null) {
             return (T) instance.generate();
         }
 
         return null;
     }
 
-    public String getID( Class<?> block ) {
-        return this.generators.getID( block );
+    public String getID(Class<?> block) {
+        return this.generators.getID(block);
     }
 
-    public boolean replaceWithItem(Block newBlock, EntityPlayer entity, Block clickedBlock, Block block, Facing face, ItemStack item, Vector clickVector ) {
-        if ( !newBlock.beforePlacement( entity, item, face, block.location ) ) {
-            return false;
-        }
-
+    public boolean replaceWithItem(Block newBlock, EntityPlayer entity, Block clickedBlock, Block block, Facing face, ItemStack item, Vector clickVector) {
         WorldAdapter adapter = (WorldAdapter) block.location.getWorld();
-        PlacementData data = newBlock.calculatePlacementData( entity, item, face, block, clickedBlock, clickVector );
-        if ( data == null ) { // Calculating the placement has resulted in nothing (invalid result)
+
+        newBlock.setLocation(block.location);
+        newBlock.setWorld(adapter);
+
+        if (!newBlock.beforePlacement(entity, item, face, block.location)) {
             return false;
         }
 
         // Check only solid blocks for bounding box intersects
-        if ( newBlock.isSolid() ) {
-            newBlock.setLocation( block.location ); // Temp setting, needed for getting bounding boxes
-
-            for ( AxisAlignedBB bb : newBlock.getBoundingBox() ) {
+        if (newBlock.isSolid()) {
+            for (AxisAlignedBB bb : newBlock.getBoundingBox()) {
                 // Check other entities in the bounding box
-                Collection<Entity> collidedWith = adapter.getNearbyEntities( bb, null, null );
-                if ( collidedWith != null ) {
+                Collection<Entity> collidedWith = adapter.getNearbyEntities(bb, null, null);
+                if (collidedWith != null) {
                     return false;
                 }
             }
         }
 
         // We decided that the block would fit
-        BlockPlaceEvent blockPlaceEvent = new BlockPlaceEvent( entity, clickedBlock, block, item, newBlock );
-        block.world.getServer().getPluginManager().callEvent( blockPlaceEvent );
+        BlockPlaceEvent blockPlaceEvent = new BlockPlaceEvent(entity, clickedBlock, block, item, newBlock);
+        block.world.getServer().getPluginManager().callEvent(blockPlaceEvent);
 
-        if ( blockPlaceEvent.isCancelled() ) {
+        if (blockPlaceEvent.isCancelled()) {
             return false;
         }
 
-        block = block.setBlockFromPlacementData( data );
-        block.afterPlacement( data );
+        newBlock.place();
+        newBlock.afterPlacement();
         return true;
     }
 

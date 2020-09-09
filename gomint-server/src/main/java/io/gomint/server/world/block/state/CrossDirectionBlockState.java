@@ -8,8 +8,7 @@
 package io.gomint.server.world.block.state;
 
 import io.gomint.inventory.item.ItemStack;
-import io.gomint.math.Vector;
-import io.gomint.server.entity.EntityPlayer;
+import io.gomint.server.entity.EntityLiving;
 import io.gomint.server.util.Bearing;
 import io.gomint.server.world.block.Block;
 import io.gomint.world.block.data.Direction;
@@ -31,29 +30,29 @@ public class CrossDirectionBlockState extends BlockState<Direction, Integer> {
     protected void calculateValueFromState(Block block, Direction state) {
         switch (state) {
             case NORTH:
-                this.setValue(block,3);
+                this.setValue(block, 3);
                 break;
             case SOUTH:
-                this.setValue(block,2);
+                this.setValue(block, 2);
                 break;
             case WEST:
-                this.setValue(block,1);
+                this.setValue(block, 1);
                 break;
             default:
-                this.setValue(block,0);
+                this.setValue(block, 0);
                 break;
         }
     }
 
     @Override
-    public void detectFromPlacement(Block newBlock, EntityPlayer player, ItemStack placedItem, Facing face, Block block, Block clickedBlock, Vector clickPosition) {
+    public void detectFromPlacement(Block newBlock, EntityLiving player, ItemStack placedItem, Facing face) {
         if (player == null) {
-            this.setState(newBlock,Direction.EAST);
+            this.setState(newBlock, Direction.EAST);
             return;
         }
 
         Bearing bearing = Bearing.fromAngle(player.getYaw());
-        this.setState(newBlock,bearing.toDirection());
+        this.setState(newBlock, bearing.toDirection());
     }
 
     @Override

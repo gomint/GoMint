@@ -61,7 +61,7 @@ public class Cauldron extends Block implements BlockCauldron {
     @Override
     TileEntity createTileEntity( NBTTagCompound compound ) {
         super.createTileEntity( compound );
-        return this.world.getServer().getTileEntities().construct(CauldronTileEntity.class, compound, this, this.world.getServer().getItems());
+        return this.tileEntities.construct(CauldronTileEntity.class, compound, this, this.items);
     }
 
 }

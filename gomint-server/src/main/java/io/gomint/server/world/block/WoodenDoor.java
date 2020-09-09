@@ -8,13 +8,15 @@
 package io.gomint.server.world.block;
 
 import io.gomint.inventory.item.ItemStack;
+import io.gomint.inventory.item.ItemWoodenDoor;
 import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.world.block.helper.ToolPresets;
 import io.gomint.world.block.BlockType;
 import io.gomint.world.block.BlockWoodenDoor;
+import io.gomint.world.block.data.Facing;
 import io.gomint.world.block.data.LogType;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -101,31 +103,18 @@ public class WoodenDoor extends Door implements BlockWoodenDoor {
 
     @Override
     public List<ItemStack> getDrops(ItemStack itemInHand) {
-        int itemId;
-        switch (this.getBlockId()) {
-            case "minecraft:dark_oak_door":
-                itemId = 431;
-                break;
-            case "minecraft:acacia_door":
-                itemId = 430;
-                break;
-            case "minecraft:jungle_door":
-                itemId = 429;
-                break;
-            case "minecraft:birch_door":
-                itemId = 428;
-                break;
-            case "minecraft:spruce_door":
-                itemId = 427;
-                break;
-            case "minecraft:wooden_door":
-            default:
-                itemId = 324;
-        }
+        ItemWoodenDoor item = ItemWoodenDoor.create(1);
+        item.setWoodType(this.getWoodType());
+        return Collections.singletonList(item);
+    }
 
-        return new ArrayList<>() {{
-            add(world.getServer().getItems().create(itemId, (short) 0, (byte) 1, null));
-        }};
+    @Override
+    public void afterPlacement() {
+        Block above = this.getSide(Facing.UP);
+        WoodenDoor aDoor = above.setBlockType(WoodenDoor.class);
+        aDoor.setDirection(this.getDirection());
+        aDoor.setTop(true);
+        aDoor.setWoodType(this.getWoodType());
     }
 
 }
