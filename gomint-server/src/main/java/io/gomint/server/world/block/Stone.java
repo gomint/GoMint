@@ -56,6 +56,7 @@ public class Stone extends Block implements BlockStone {
             return;
         }
 
+        this.setBlockId("minecraft:stone");
         VARIANT.setState(this,type);
     }
 
