@@ -84,21 +84,26 @@ public class StringRegistry<R> {
     }
 
     private void register(Class<? extends R> clazz) {
+        String defId = null;
         for (RegisterInfo info : clazz.getAnnotationsByType(RegisterInfo.class)) {
             String id = info.sId();
+
+            if (defId == null || info.def()) {
+                defId = id;
+            }
 
             Generator<R> generator = this.generatorCallback.generate(clazz, id);
             if (generator != null) {
                 this.storeGeneratorForId(id, generator);
             }
-
-            // Check for API interfaces
-            for (Class<?> apiInter : clazz.getInterfaces()) {
-                this.apiReferences.put(apiInter, id);
-            }
-
-            this.apiReferences.put(clazz, id);
         }
+
+        // Check for API interfaces
+        for (Class<?> apiInter : clazz.getInterfaces()) {
+            this.apiReferences.put(apiInter, defId);
+        }
+
+        this.apiReferences.put(clazz, defId);
     }
 
     private void storeGeneratorForId(String id, Generator<R> generator) {

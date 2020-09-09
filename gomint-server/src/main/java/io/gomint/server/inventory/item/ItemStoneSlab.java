@@ -2,6 +2,8 @@ package io.gomint.server.inventory.item;
 
 import io.gomint.inventory.item.ItemType;
 import io.gomint.server.registry.RegisterInfo;
+import io.gomint.server.util.BlockIdentifier;
+import io.gomint.server.world.BlockRuntimeIDs;
 import io.gomint.world.block.Block;
 import io.gomint.world.block.BlockStoneSlab;
 import io.gomint.world.block.data.StoneType;
@@ -84,7 +86,8 @@ public class ItemStoneSlab extends ItemSlab implements io.gomint.inventory.item.
 
     @Override
     public Block getBlock() {
-        BlockStoneSlab slab = (BlockStoneSlab) super.getBlock();
+        BlockIdentifier identifier = BlockRuntimeIDs.toBlockIdentifier(this.getMaterial().replace("double_", ""), null);
+        BlockStoneSlab slab = (BlockStoneSlab) this.blocks.get(identifier);
         slab.setStoneType(this.getStoneType());
         slab.setTop(this.isTop());
         return slab;

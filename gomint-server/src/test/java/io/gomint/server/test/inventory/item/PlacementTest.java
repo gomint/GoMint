@@ -60,6 +60,7 @@ public class PlacementTest extends IntegrationTest {
             if (stack != null) {
                 block.setBlockType(BlockAir.class);
 
+                System.out.println("Testing stack: " + stack.getClass().getName());
                 Block newBlock = (Block) stack.getBlock();
                 if (newBlock == null) {
                     System.out.println("Item " + stack.getClass().getName() + " did not generate a block");

@@ -153,6 +153,11 @@ public class Bed extends Block implements BlockBed {
     }
 
     @Override
+    public boolean needsTileEntity() {
+        return true;
+    }
+
+    @Override
     TileEntity createTileEntity(NBTTagCompound compound) {
         super.createTileEntity(compound);
         return this.tileEntities.construct(BedTileEntity.class, compound, this, this.items);
