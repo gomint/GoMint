@@ -38,6 +38,18 @@ public final class MathUtils {
      * @param max The maximum value to clamp to
      * @return The clamped value
      */
+    public static short clamp(short v, short min, short max) {
+        return (v < min ? min : (v > max ? max : v));
+    }
+
+    /**
+     * Clamps the specified value into the given range.
+     *
+     * @param v   The value to be clamped
+     * @param min The minimum value to clamp to
+     * @param max The maximum value to clamp to
+     * @return The clamped value
+     */
     public static int clamp(int v, int min, int max) {
         return (v < min ? min : (v > max ? max : v));
     }

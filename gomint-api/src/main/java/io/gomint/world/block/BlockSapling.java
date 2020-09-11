@@ -7,10 +7,28 @@
 
 package io.gomint.world.block;
 
+import io.gomint.world.block.data.LogType;
+
 /**
  * @author geNAZt
  * @version 1.0
- * @stability 2
+ * @stability 3
  */
 public interface BlockSapling extends Block {
+
+    /**
+     * Set the type of sapling
+     *
+     * @param type of sapling
+     */
+    void setLogType( LogType type );
+
+    /**
+     * Get the type of this sapling
+     *
+     * @return type of sapling
+     */
+    LogType getLogType();
+
+
 }

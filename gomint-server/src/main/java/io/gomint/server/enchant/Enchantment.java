@@ -7,6 +7,7 @@
 
 package io.gomint.server.enchant;
 
+import io.gomint.math.MathUtils;
 import io.gomint.server.inventory.item.ItemStack;
 
 /**
@@ -28,7 +29,7 @@ public class Enchantment implements io.gomint.enchant.Enchantment {
     }
 
     void setLevel( short level ) {
-        this.level = level;
+        this.level = MathUtils.clamp(level, (short) 0, this.maxLevel);
     }
 
     public short getMaxLevel() {
