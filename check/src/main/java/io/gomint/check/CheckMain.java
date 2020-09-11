@@ -11,6 +11,7 @@ import io.gomint.taglib.AllocationLimitReachedException;
 import io.gomint.taglib.NBTTagCompound;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.PooledByteBufAllocator;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
 import java.nio.ByteOrder;
@@ -18,9 +19,12 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class CheckMain {
@@ -36,23 +40,33 @@ public class CheckMain {
         NBTTagCompound root = NBTTagCompound.readFrom(buf, ByteOrder.BIG_ENDIAN);
 
         Map<String, Map<String, Object>> knownBlockKeys = new HashMap<>();
+        Map<String, Set<String>> additionalData = new HashMap<>();
 
         List<NBTTagCompound> blockIdentifiers = (List<NBTTagCompound>) ((List) root.getList("blockPalette", false));
         for (NBTTagCompound compound : blockIdentifiers) {
             String block = compound.getCompound("block", false).getString("name", "minecraft:air");
+            NBTTagCompound states = compound.getCompound("block", false).getCompound("states", false);
 
             knownBlockKeys.computeIfAbsent(block, s -> {
-                NBTTagCompound states = compound.getCompound("block", false).getCompound("states", false);
                 if (states != null) {
                     Map<String, Object> keys = new HashMap<>();
                     for (Map.Entry<String, Object> entry : states.entrySet()) {
                         keys.put(entry.getKey(), entry.getValue());
                     }
+
                     return keys;
                 }
 
                 return new HashMap<>();
             });
+
+            if (states != null) {
+                for (Map.Entry<String, Object> entry : states.entrySet()) {
+                    String key = block + "/" + entry.getKey();
+                    Set<String> old = additionalData.computeIfAbsent(key, s -> new HashSet<>());
+                    old.add(String.valueOf(entry.getValue()));
+                }
+            }
         }
 
         // Now we iterate over block implementations to find out whats missing
@@ -96,12 +110,14 @@ public class CheckMain {
                                 if (!found) {
                                     if (!stateKey.equals("deprecated")) {
                                         System.out.println("[X]  Missing state " + stateKey + " (" + stateKeys.get(stateKey).getClass().getSimpleName() + ") in block " + block);
+                                        System.out.println("[X]      " + StringUtils.join(additionalData.get(block + "/" + stateKey), ","));
                                         missingStates.incrementAndGet();
                                     }
                                 }
                             } else {
                                 if (!stateKey.equals("deprecated")) {
                                     System.out.println("[X]  Missing state " + stateKey + " (" + stateKeys.get(stateKey).getClass().getSimpleName() + ") in block " + block);
+                                    System.out.println("[X]      " + StringUtils.join(additionalData.get(block + "/" + stateKey), ","));
                                     missingStates.incrementAndGet();
                                 }
                             }
@@ -118,6 +134,7 @@ public class CheckMain {
             for (String stateKey : stateKeys.keySet()) {
                 if (!stateKey.equals("deprecated")) {
                     System.out.println("[X]  Missing state " + stateKey + " (" + stateKeys.get(stateKey).getClass().getSimpleName() + ") in block " + block);
+                    System.out.println("[X]      " + StringUtils.join(additionalData.get(block + "/" + stateKey), ","));
                     missingStates.incrementAndGet();
                 }
             }

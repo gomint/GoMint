@@ -1,11 +1,12 @@
 package io.gomint.inventory.item;
 
 import io.gomint.GoMint;
+import io.gomint.world.block.data.LogType;
 
 /**
  * @author geNAZt
  * @version 1.0
- * @stability 2
+ * @stability 3
  */
 public interface ItemSapling extends ItemStack, ItemBurnable {
 
@@ -18,9 +19,18 @@ public interface ItemSapling extends ItemStack, ItemBurnable {
         return GoMint.instance().createItemStack( ItemSapling.class, amount );
     }
 
-    @Override
-    default long getBurnTime() {
-        return 5000;
-    }
+    /**
+     * Set the type of sapling
+     *
+     * @param type of sapling
+     */
+    void setLogType( LogType type );
+
+    /**
+     * Get the type of this sapling
+     *
+     * @return type of sapling
+     */
+    LogType getLogType();
 
 }
