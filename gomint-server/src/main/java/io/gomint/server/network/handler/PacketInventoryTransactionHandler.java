@@ -415,7 +415,7 @@ public class PacketInventoryTransactionHandler implements PacketHandler<PacketIn
             case -5:    // Crafting result input
                 inventory = entity.getCraftingInputInventory();
                 if (inventory.getItem(transaction.getSlot()).getItemType() != ItemType.AIR) {
-                    for (int i = 0; i < inventory.getContentsArray().length; i++) {
+                    for (int i = 0; i < inventory.getContents().length; i++) {
                         if (inventory.getItem(i).getItemType() == ItemType.AIR) {
                             transaction.setSlot(i);
                             break;

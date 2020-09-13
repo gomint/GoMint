@@ -43,7 +43,7 @@ public class CraftingInputInventory extends ContainerInventory {
         Location location = player.getLocation();
 
         // Push out all items in the crafting views
-        for (ItemStack stack : player.getCraftingInventory().getContentsArray()) {
+        for (ItemStack stack : player.getCraftingInventory().getContents()) {
             worldAdapter.dropItem(location, stack);
         }
 

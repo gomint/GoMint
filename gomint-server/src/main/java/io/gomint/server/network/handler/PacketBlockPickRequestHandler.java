@@ -36,7 +36,7 @@ public class PacketBlockPickRequestHandler implements PacketHandler<PacketBlockP
             case SURVIVAL:
                 // Check current player inventory
                 byte freeSlot = -1;
-                io.gomint.inventory.item.ItemStack[] items = player.getInventory().getContentsArray();
+                io.gomint.inventory.item.ItemStack[] items = player.getInventory().getContents();
                 for (byte i = 0; i < items.length; i++) {
                     ItemStack itemStack = (ItemStack) items[i];
                     if (freeSlot == -1 && i < 9) {
