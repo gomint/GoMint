@@ -122,13 +122,13 @@ public class PlayerInventory extends ContainerInventory implements io.gomint.inv
         if (windowId >= WindowMagicNumbers.FIRST.getId()) {
             PacketInventoryContent inventory = new PacketInventoryContent();
             inventory.setWindowId(WindowMagicNumbers.PLAYER.getId());
-            inventory.setItems(getContentsArray());
+            inventory.setItems(getContents());
             playerConnection.addToSendQueue(inventory);
         }
 
         PacketInventoryContent inventory = new PacketInventoryContent();
         inventory.setWindowId(WindowMagicNumbers.PLAYER.getId());
-        inventory.setItems(getContentsArray());
+        inventory.setItems(getContents());
         playerConnection.addToSendQueue(inventory);
     }
 

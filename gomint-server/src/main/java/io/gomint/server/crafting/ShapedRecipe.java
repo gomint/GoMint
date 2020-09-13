@@ -138,7 +138,7 @@ public class ShapedRecipe extends CraftingRecipe {
 
     @Override
     public int[] isCraftable(Inventory inputInventory) {
-        ItemStack[] inputItems = inputInventory.getContentsArray();
+        ItemStack[] inputItems = inputInventory.getContents();
         ItemStack[] ingredients = getIngredients();
         int[] consumeSlots = new int[ingredients.length];
         Arrays.fill(consumeSlots, -1);

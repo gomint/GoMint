@@ -76,7 +76,7 @@ public class GeneratorMain {
                         continue;
                     }
                     line = line.replace("\n", "").replace("\r", "");
-                    if (line.contains(className) && line.endsWith("{")) {
+                    if (line.contains("public " + className + "(") && line.endsWith("{")) {
                         String constructor = line.replace("public", "").replace("{", "").trim();
                         String[] parameters = constructor.substring(constructor.indexOf("(") + 1, constructor.indexOf(")")).trim().split(",");
 
