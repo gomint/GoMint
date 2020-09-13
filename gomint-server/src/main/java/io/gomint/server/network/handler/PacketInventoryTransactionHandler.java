@@ -176,22 +176,17 @@ public class PacketInventoryTransactionHandler implements PacketHandler<PacketIn
     }
 
     private void handleConsumeItem(ItemStack itemInHand, PlayerConnection connection, PacketInventoryTransaction packet) {
-        LOGGER.debug("Action Type: " + packet.getActionType());
-        switch (packet.getActionType()) {
-            case 0: // Release item ( shoot bow )
-                // Check if the item is a bow
-                if (itemInHand instanceof ItemBow) {
-                    ((ItemBow) itemInHand).shoot(connection.getEntity());
-                } else if (itemInHand instanceof ItemCrossbow) {
-                    ((ItemCrossbow) itemInHand).shoot(connection.getEntity());
-                }
-
-                break;
-
-            case 1: // Consume item
+        LOGGER.debug("Action Type: {}", packet.getActionType());
+        if (packet.getActionType() == 0) { // Release item ( shoot bow )
+            // Check if the item is a bow
+            if (itemInHand instanceof ItemBow) {
+                ((ItemBow) itemInHand).shoot(connection.getEntity());
+            } else if (itemInHand instanceof ItemCrossbow) {
+                ((ItemCrossbow) itemInHand).shoot(connection.getEntity());
+            } else {
                 // Check if item in hand is consumable
                 if (!(itemInHand instanceof ItemConsumable)) {
-                    LOGGER.info("Player " + connection.getEntity().getName() + " tried to consume " + itemInHand.getClass().getSimpleName());
+                    LOGGER.info("Player {} tried to consume {}", connection.getEntity().getName(), itemInHand.getClass().getSimpleName());
                     connection.getEntity().getInventory().sendContents(connection);
                     connection.getEntity().resendAttributes();
                     return;
@@ -208,16 +203,13 @@ public class PacketInventoryTransactionHandler implements PacketHandler<PacketIn
                 }
 
                 // Consume
-                ((io.gomint.server.inventory.item.category.ItemConsumable) itemInHand).onConsume(connection.getEntity());
+                ((ItemConsumable) itemInHand).onConsume(connection.getEntity());
                 if (itemInHand.getAmount() <= 0) {
                     connection.getEntity().getInventory().setItem(connection.getEntity().getInventory().getItemInHandSlot(), ItemAir.create(0));
                 } else {
                     connection.getEntity().getInventory().setItem(connection.getEntity().getInventory().getItemInHandSlot(), itemInHand);
                 }
-
-                break;
-            default:
-                break;
+            }
         }
 
         connection.getEntity().setUsingItem(false);
