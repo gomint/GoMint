@@ -32,6 +32,7 @@ import io.gomint.taglib.NBTTagCompound;
 import io.gomint.world.Biome;
 import io.gomint.world.Particle;
 import io.gomint.world.ParticleData;
+import io.gomint.world.block.BlockAir;
 import io.gomint.world.block.data.Direction;
 import io.gomint.world.block.data.Facing;
 import org.slf4j.Logger;
@@ -764,6 +765,10 @@ public abstract class Block implements io.gomint.world.block.Block {
 
     public void setTileEntities(TileEntities tileEntities) {
         this.tileEntities = tileEntities;
+    }
+
+    public io.gomint.world.block.Block performBreak(boolean creative) {
+        return this.setBlockType(BlockAir.class);
     }
 
 }
