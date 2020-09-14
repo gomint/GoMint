@@ -11,6 +11,8 @@ import io.gomint.entity.Entity;
 import io.gomint.server.entity.EntityPlayer;
 import io.gomint.server.network.PlayerConnection;
 import io.gomint.server.network.packet.PacketEntityEvent;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author geNAZt
@@ -18,21 +20,24 @@ import io.gomint.server.network.packet.PacketEntityEvent;
  */
 public class PacketEntityEventHandler implements PacketHandler<PacketEntityEvent> {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(PacketEntityEventHandler.class);
+
     @Override
-    public void handle( PacketEntityEvent packet, long currentTimeMillis, PlayerConnection connection ) {
-        switch ( packet.getEventId() ) {
+    public void handle(PacketEntityEvent packet, long currentTimeMillis, PlayerConnection connection) {
+        LOGGER.debug("Got event id: {}", packet.getEntityId());
+        switch (packet.getEventId()) {
             case 34:
-                connection.getEntity().getEnchantmentProcessor().checkEntityEvent( (short) Math.abs( packet.getEventData() ) );
+                connection.getEntity().getEnchantmentProcessor().checkEntityEvent((short) Math.abs(packet.getEventData()));
                 break;
 
             default:
-                for ( Entity entity : connection.getEntity().getAttachedEntities() ) {
-                    if ( entity instanceof EntityPlayer ) {
-                        ( (EntityPlayer) entity ).getConnection().addToSendQueue( packet );
+                for (Entity entity : connection.getEntity().getAttachedEntities()) {
+                    if (entity instanceof EntityPlayer) {
+                        ((EntityPlayer) entity).getConnection().addToSendQueue(packet);
                     }
                 }
 
-                connection.addToSendQueue( packet );
+                connection.addToSendQueue(packet);
         }
     }
 

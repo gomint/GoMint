@@ -320,6 +320,11 @@ public class EntityHuman extends EntityCreature implements io.gomint.entity.pass
         this.setHunger( this.getHunger() + amount );
     }
 
+    public boolean isHungry() {
+        AttributeInstance instance = this.getAttributeInstance( Attribute.HUNGER );
+        return instance.getValue() < instance.getMaxValue();
+    }
+
     @Override
     public void setHunger( float amount ) {
         AttributeInstance instance = this.getAttributeInstance( Attribute.HUNGER );

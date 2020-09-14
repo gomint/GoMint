@@ -1865,4 +1865,8 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
         return this.hasCompletedLogin;
     }
 
+    public void resetActionStart() {
+        this.actionStart = ((GoMintServer) GoMint.instance()).getCurrentTickTime();
+    }
+
 }
