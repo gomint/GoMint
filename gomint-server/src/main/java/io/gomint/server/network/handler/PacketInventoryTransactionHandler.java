@@ -176,40 +176,14 @@ public class PacketInventoryTransactionHandler implements PacketHandler<PacketIn
     }
 
     private void handleConsumeItem(ItemStack itemInHand, PlayerConnection connection, PacketInventoryTransaction packet) {
-        LOGGER.debug("Action Type: {}", packet.getActionType());
-        if (packet.getActionType() == 0) { // Release item ( shoot bow )
-            // Check if the item is a bow
-            if (itemInHand instanceof ItemBow) {
-                ((ItemBow) itemInHand).shoot(connection.getEntity());
-            } else if (itemInHand instanceof ItemCrossbow) {
-                ((ItemCrossbow) itemInHand).shoot(connection.getEntity());
-            } else {
-                // Check if item in hand is consumable
-                if (!(itemInHand instanceof ItemConsumable)) {
-                    LOGGER.info("Player {} tried to consume {}", connection.getEntity().getName(), itemInHand.getClass().getSimpleName());
-                    connection.getEntity().getInventory().sendContents(connection);
-                    connection.getEntity().resendAttributes();
-                    return;
-                }
+        long timeTaken = connection.getServer().getCurrentTickTime() - connection.getEntity().getActionStart();
+        LOGGER.debug("Action Type: {}, time: {} ms", packet.getActionType(), timeTaken);
 
-                // Call event
-                PlayerConsumeItemEvent event = new PlayerConsumeItemEvent(connection.getEntity(), itemInHand);
-                connection.getServer().getPluginManager().callEvent(event);
-
-                if (event.isCancelled()) {
-                    connection.getEntity().getInventory().sendContents(connection);
-                    connection.getEntity().resendAttributes();
-                    return;
-                }
-
-                // Consume
-                ((ItemConsumable) itemInHand).onConsume(connection.getEntity());
-                if (itemInHand.getAmount() <= 0) {
-                    connection.getEntity().getInventory().setItem(connection.getEntity().getInventory().getItemInHandSlot(), ItemAir.create(0));
-                } else {
-                    connection.getEntity().getInventory().setItem(connection.getEntity().getInventory().getItemInHandSlot(), itemInHand);
-                }
-            }
+        // Check if the item is a bow
+        if (itemInHand instanceof ItemBow) {
+            ((ItemBow) itemInHand).shoot(connection.getEntity());
+        } else if (itemInHand instanceof ItemCrossbow) {
+            ((ItemCrossbow) itemInHand).shoot(connection.getEntity());
         }
 
         connection.getEntity().setUsingItem(false);
@@ -245,7 +219,6 @@ public class PacketInventoryTransactionHandler implements PacketHandler<PacketIn
                 if (!event.isCancelled()) {
                     io.gomint.server.inventory.item.ItemStack itemStack = (io.gomint.server.inventory.item.ItemStack) connection.getEntity().getInventory().getItemInHand();
                     itemStack.interact(connection.getEntity(), null, packet.getClickPosition(), null);
-                    connection.getEntity().setUsingItem(true);
                 } else {
                     reset(packet, connection);
                 }
@@ -355,6 +328,7 @@ public class PacketInventoryTransactionHandler implements PacketHandler<PacketIn
             default:
                 break;
         }
+
     }
 
     private boolean checkInteraction(PacketInventoryTransaction packet, PlayerConnection connection) {
@@ -515,6 +489,9 @@ public class PacketInventoryTransactionHandler implements PacketHandler<PacketIn
                 }
             }
         }
+
+        // Resend attributes for consumptions
+        connection.getEntity().resendAttributes();
     }
 
 }
