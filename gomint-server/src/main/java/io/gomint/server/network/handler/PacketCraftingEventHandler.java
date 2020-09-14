@@ -26,7 +26,7 @@ public class PacketCraftingEventHandler implements PacketHandler<PacketCraftingE
         Recipe recipe = connection.getEntity().getWorld().getServer().getRecipeManager().getRecipe(packet.getRecipeId());
         if (recipe == null) {
             // Resend inventory and call it a day
-            for (ItemStack itemStack : connection.getEntity().getCraftingInputInventory().getContentsArray()) {
+            for (ItemStack itemStack : connection.getEntity().getCraftingInputInventory().getContents()) {
                 connection.getEntity().getInventory().addItem(itemStack);
             }
 
@@ -92,7 +92,7 @@ public class PacketCraftingEventHandler implements PacketHandler<PacketCraftingE
         // Do we need to alter the output ?
         if (hadCrafted) {
             // Reset leftovers into players inventory
-            for (ItemStack inputItem : connection.getEntity().getCraftingInputInventory().getContentsArray()) {
+            for (ItemStack inputItem : connection.getEntity().getCraftingInputInventory().getContents()) {
                 if (inputItem instanceof ItemAir) {
                     continue;
                 }
@@ -104,7 +104,7 @@ public class PacketCraftingEventHandler implements PacketHandler<PacketCraftingE
 
             // When shift clicked there is no transaction for the output afterwards => move all results into the players inventory
             connection.getServer().addToMainThread(() -> {
-                for (ItemStack inputItem : connection.getEntity().getCraftingResultInventory().getContentsArray()) {
+                for (ItemStack inputItem : connection.getEntity().getCraftingResultInventory().getContents()) {
                     if (inputItem instanceof ItemAir) {
                         continue;
                     }
@@ -116,7 +116,7 @@ public class PacketCraftingEventHandler implements PacketHandler<PacketCraftingE
             });
         } else {
             // We can't craft => reset inventory
-            for (ItemStack inputItem : connection.getEntity().getCraftingInputInventory().getContentsArray()) {
+            for (ItemStack inputItem : connection.getEntity().getCraftingInputInventory().getContents()) {
                 if (inputItem instanceof ItemAir) {
                     continue;
                 }

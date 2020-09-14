@@ -1281,7 +1281,7 @@ public abstract class WorldAdapter implements World {
             sendLevelEvent(position.toVector().add(.5f, .5f, .5f), LevelEvent.PARTICLE_DESTROY, block.getRuntimeId());
 
             // Schedule neighbour updates
-            scheduleNeighbourUpdates(block.setBlockType(BlockAir.class));
+            scheduleNeighbourUpdates(block.performBreak(creative));
             return true;
         } else {
             return false;

@@ -98,7 +98,7 @@ public abstract class ContainerInventory extends Inventory implements io.gomint.
         if (windowId >= WindowMagicNumbers.FIRST.getId()) {
             PacketInventoryContent inventoryContent = new PacketInventoryContent();
             inventoryContent.setWindowId(windowId);
-            inventoryContent.setItems(this.getContentsArray());
+            inventoryContent.setItems(this.getContents());
             playerConnection.addToSendQueue(inventoryContent);
         }
     }

@@ -176,14 +176,14 @@ public class PacketInventoryTransactionHandler implements PacketHandler<PacketIn
     }
 
     private void handleConsumeItem(ItemStack itemInHand, PlayerConnection connection, PacketInventoryTransaction packet) {
-        long timeTaken = connection.getServer().getCurrentTickTime() - connection.getEntity().getActionStart();
-        LOGGER.debug("Action Type: {}, time: {} ms", packet.getActionType(), timeTaken);
-
-        // Check if the item is a bow
-        if (itemInHand instanceof ItemBow) {
-            ((ItemBow) itemInHand).shoot(connection.getEntity());
-        } else if (itemInHand instanceof ItemCrossbow) {
-            ((ItemCrossbow) itemInHand).shoot(connection.getEntity());
+        LOGGER.debug("Action Type: {}", packet.getActionType());
+        if (packet.getActionType() == 0) { // Release item ( shoot bow )
+            // Check if the item is a bow
+            if (itemInHand instanceof ItemBow) {
+                ((ItemBow) itemInHand).shoot(connection.getEntity());
+            } else if (itemInHand instanceof ItemCrossbow) {
+                ((ItemCrossbow) itemInHand).shoot(connection.getEntity());
+            }
         }
 
         connection.getEntity().setUsingItem(false);
@@ -389,7 +389,7 @@ public class PacketInventoryTransactionHandler implements PacketHandler<PacketIn
             case -5:    // Crafting result input
                 inventory = entity.getCraftingInputInventory();
                 if (inventory.getItem(transaction.getSlot()).getItemType() != ItemType.AIR) {
-                    for (int i = 0; i < inventory.getContentsArray().length; i++) {
+                    for (int i = 0; i < inventory.getContents().length; i++) {
                         if (inventory.getItem(i).getItemType() == ItemType.AIR) {
                             transaction.setSlot(i);
                             break;

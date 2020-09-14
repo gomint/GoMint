@@ -77,7 +77,7 @@ public class Furnace extends Block implements BlockFurnace {
     public boolean onBreak(boolean creative) {
         if (!creative) {
             FurnaceTileEntity tileEntity = this.getTileEntity();
-            for (ItemStack itemStack : tileEntity.getInventory().getContentsArray()) {
+            for (ItemStack itemStack : tileEntity.getInventory().getContents()) {
                 this.world.dropItem(this.location, itemStack);
             }
 

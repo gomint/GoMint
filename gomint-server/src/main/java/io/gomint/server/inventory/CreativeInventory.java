@@ -10,8 +10,6 @@ import io.gomint.server.network.packet.PacketCreativeContent;
  */
 public class CreativeInventory extends Inventory {
 
-    private final PacketCreativeContent inventoryContent = new PacketCreativeContent();;
-
     /**
      * Construct new creative inventory
      *
@@ -20,13 +18,13 @@ public class CreativeInventory extends Inventory {
      */
     public CreativeInventory( InventoryHolder owner, int size ) {
         super( null, owner, size );
-
-        this.inventoryContent.setItems( getContentsArray() );
     }
 
     @Override
     public void sendContents( PlayerConnection playerConnection ) {
-        playerConnection.addToSendQueue( this.inventoryContent );
+        PacketCreativeContent inventoryContent = new PacketCreativeContent();
+        inventoryContent.setItems( getContents() );
+        playerConnection.addToSendQueue( inventoryContent );
     }
 
     @Override

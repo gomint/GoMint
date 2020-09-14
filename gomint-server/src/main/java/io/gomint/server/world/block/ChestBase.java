@@ -19,6 +19,7 @@ import io.gomint.server.entity.tileentity.TileEntity;
 import io.gomint.server.world.block.helper.ToolPresets;
 import io.gomint.server.world.block.state.BlockfaceFromPlayerBlockState;
 import io.gomint.taglib.NBTTagCompound;
+import io.gomint.world.block.data.Direction;
 import io.gomint.world.block.data.Facing;
 
 import java.util.List;
@@ -75,6 +76,19 @@ public abstract class ChestBase extends ContainerBlock {
         return true;
     }
 
+    @Override
+    public void afterPlacement() {
+        // Check for pairing
+        for (Direction value : Direction.values()) {
+            Block side = this.getSide(value);
+            if (side.getBlockType() == this.getBlockType()) {
+                ChestTileEntity tileEntity = this.getTileEntity();
+                tileEntity.pair(((ChestBase) side).getTileEntity());
+                side.updateBlock();
+            }
+        }
+    }
+
     protected Inventory getInventory() {
         ChestTileEntity tileEntity = this.getTileEntity();
         if (tileEntity != null) {
@@ -100,6 +114,7 @@ public abstract class ChestBase extends ContainerBlock {
 
         // We also drop the inventory
         ChestTileEntity chestTileEntity = this.getTileEntity();
+        chestTileEntity.unpair();
         chestTileEntity.getInventory()
             .items()
             .filter(Objects::nonNull)
