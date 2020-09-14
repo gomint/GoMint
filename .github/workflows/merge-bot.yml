@@ -27,4 +27,4 @@ jobs:
           labels: merge
           blocking_labels: do not merge
           checks_enabled: true
-          method: squash
+          method: merge
