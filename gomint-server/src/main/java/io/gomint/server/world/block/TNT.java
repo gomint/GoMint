@@ -98,7 +98,6 @@ public class TNT extends Block implements BlockTNT {
     @Override
     public List<ItemStack> getDrops(ItemStack itemInHand) {
         ItemTNT item = ItemTNT.create(1);
-        item.setType(this.getType());
         return Collections.singletonList(item);
     }
 
