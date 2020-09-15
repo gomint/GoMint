@@ -2,7 +2,9 @@ package io.gomint.server.inventory.item;
 
 import io.gomint.inventory.item.ItemType;
 import io.gomint.server.registry.RegisterInfo;
-import io.gomint.taglib.NBTTagCompound;
+import io.gomint.world.block.Block;
+import io.gomint.world.block.BlockTNT;
+import io.gomint.world.block.data.TNTType;
 
 /**
  * @author geNAZt
@@ -14,6 +16,13 @@ public class ItemTNT extends ItemStack implements io.gomint.inventory.item.ItemT
     @Override
     public ItemType getItemType() {
         return ItemType.TNT;
+    }
+
+    @Override
+    public Block getBlock() {
+        BlockTNT tnt = (BlockTNT) super.getBlock();
+        tnt.setType(TNTType.NORMAL);
+        return tnt;
     }
 
 }

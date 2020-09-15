@@ -7,6 +7,8 @@
 
 package io.gomint.world.block;
 
+import io.gomint.world.block.data.TNTType;
+
 /**
  * @author geNAZt
  * @version 1.0
@@ -20,5 +22,19 @@ public interface BlockTNT extends Block {
      * @param untilExplodeSeconds seconds until the tnt explodes
      */
     void prime( float untilExplodeSeconds );
+
+    /**
+     * Get the type of tnt
+     *
+     * @return tnt type
+     */
+    TNTType getType();
+
+    /**
+     * Set the type of tnt
+     *
+     * @param type which this tnt should have
+     */
+    void setType(TNTType type);
 
 }
