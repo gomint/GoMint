@@ -6,11 +6,14 @@ import io.gomint.enchant.EnchantmentPower;
 import io.gomint.enchant.EnchantmentPunch;
 import io.gomint.event.entity.projectile.ProjectileLaunchEvent;
 import io.gomint.inventory.item.ItemType;
+import io.gomint.math.Vector;
 import io.gomint.server.entity.EntityPlayer;
 import io.gomint.server.entity.projectile.EntityArrow;
 import io.gomint.server.inventory.item.annotation.CanBeDamaged;
 import io.gomint.server.registry.RegisterInfo;
 import io.gomint.world.Gamemode;
+import io.gomint.world.block.Block;
+import io.gomint.world.block.data.Facing;
 
 /**
  * @author geNAZt
@@ -33,6 +36,12 @@ public class ItemBow extends ItemStack implements io.gomint.inventory.item.ItemB
     @Override
     public short getMaxDamage() {
         return 360;
+    }
+
+    @Override
+    public boolean interact(EntityPlayer entity, Facing face, Vector clickPosition, Block clickedBlock) {
+        entity.setUsingItem(true);
+        return super.interact(entity, face, clickPosition, clickedBlock);
     }
 
     /**

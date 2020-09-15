@@ -116,7 +116,7 @@ public class PacketInventoryTransaction extends Packet {
                 this.playerPosition = new Vector( buffer.readLFloat(), buffer.readLFloat(), buffer.readLFloat() );
                 break;
             default:
-                LOGGER.warn( "Unknown transaction type: " + this.type );
+                LOGGER.warn( "Unknown transaction type: {}", this.type );
         }
     }
 

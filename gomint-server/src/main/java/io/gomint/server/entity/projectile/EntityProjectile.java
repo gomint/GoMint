@@ -194,9 +194,9 @@ public abstract class EntityProjectile extends Entity implements io.gomint.entit
         Location position = this.shooter.getLocation();
 
         this.setPosition( position.add(
-            -(float) ( Math.cos( position.getYaw() / 180 * Math.PI ) * 0.16f ),
+            0,
             this.shooter.getEyeHeight() - 0.1f,
-            -(float) ( Math.sin( position.getYaw() / 180 * Math.PI ) * 0.16f )
+            0
         ) );
 
         this.setYaw( position.getYaw() );
