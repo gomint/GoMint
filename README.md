@@ -74,6 +74,7 @@ This project exists thanks to all the people who contribute. [[Contribute](CONTR
 
 Become a financial contributor and help us sustain our community. [[Contribute](https://opencollective.com/GoMint/contribute)]
 
+
 #### Individuals
 
 <a href="https://opencollective.com/GoMint"><img src="https://opencollective.com/GoMint/individuals.svg?width=890"></a>
