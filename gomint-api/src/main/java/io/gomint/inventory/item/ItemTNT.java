@@ -14,8 +14,8 @@ public interface ItemTNT extends ItemStack {
      *
      * @param amount which is used for the creation
      */
-    static ItemTNT create( int amount ) {
-        return GoMint.instance().createItemStack( ItemTNT.class, amount );
+    static ItemTNT create(int amount) {
+        return GoMint.instance().createItemStack(ItemTNT.class, amount);
     }
 
 }
