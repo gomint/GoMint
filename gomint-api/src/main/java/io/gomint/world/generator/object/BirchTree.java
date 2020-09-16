@@ -28,6 +28,7 @@ public class BirchTree extends Tree {
         this.trunkBlock = GoMint.instance().createBlock( BlockLog.class );
         this.trunkBlock.setLogType( LogType.BIRCH );
         this.trunkBlock.setStripped(false);
+        this.trunkBlock.setBarkOnAllSides(false);
         this.trunkBlock.setAxis(Axis.Y);
     }
 
