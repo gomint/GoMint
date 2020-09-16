@@ -74,7 +74,7 @@ public class FlowingLava extends Liquid implements BlockFlowingLava {
             }
 
             Block otherBlock = this.getSide( blockFace );
-            if ( otherBlock.getBlockType() == BlockType.FLOWING_WATER ) {
+            if ( otherBlock.getBlockType() == BlockType.FLOWING_WATER || otherBlock.getBlockType() == BlockType.STATIONARY_WATER ) {
                 colliding = otherBlock;
                 break;
             }
@@ -82,7 +82,7 @@ public class FlowingLava extends Liquid implements BlockFlowingLava {
 
         // Did we find a block we can collide with?
         if ( colliding != null ) {
-            if ( this.getFillHeight() > 4 ) {
+            if ( this.getFillHeight() > 4 || colliding.getBlockType() == BlockType.STATIONARY_WATER ) {
                 this.liquidCollide( colliding, Obsidian.class );
             } else if ( this.getFillHeight() <= 4 ) {
                 this.liquidCollide( colliding, Cobblestone.class );
