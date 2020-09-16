@@ -28,6 +28,7 @@ public class OakTree extends Tree {
         this.trunkBlock = GoMint.instance().createBlock(BlockLog.class);
         this.trunkBlock.setLogType(LogType.OAK);
         this.trunkBlock.setStripped(false);
+        this.trunkBlock.setBarkOnAllSides(false);
         this.trunkBlock.setAxis(Axis.Y);
     }
 
