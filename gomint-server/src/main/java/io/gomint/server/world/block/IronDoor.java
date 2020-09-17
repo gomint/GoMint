@@ -41,6 +41,8 @@ public class IronDoor extends Door implements BlockIronDoor {
         IronDoor aDoor = above.setBlockType(IronDoor.class);
         aDoor.setDirection(this.getDirection());
         aDoor.setTop(true);
+
+        super.afterPlacement();
     }
 
     @Override

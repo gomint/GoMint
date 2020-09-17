@@ -102,40 +102,42 @@ public class EntityXPOrb extends Entity implements io.gomint.entity.passive.Enti
 
         this.lastUpdateDT += dT;
         if ( Values.CLIENT_TICK_RATE - this.lastUpdateDT < MathUtils.EPSILON ) {
-            if ( this.closestPlayer == null || this.closestPlayer.getGamemode() == Gamemode.SPECTATOR ||
-                this.closestPlayer.isDead() || this.closestPlayer.getHealth() <= 0 ||
-                this.closestPlayer.getLocation().distanceSquared( this.getLocation() ) > 64 ) {
-                this.closestPlayer = null;
+            if ( this.world.getServer().getCurrentTickTime() > this.getPickupTime() && !this.isDead() ) {
+                if (this.closestPlayer == null || this.closestPlayer.getGamemode() == Gamemode.SPECTATOR ||
+                    this.closestPlayer.isDead() || this.closestPlayer.getHealth() <= 0 ||
+                    this.closestPlayer.getLocation().distanceSquared(this.getLocation()) > 64) {
+                    this.closestPlayer = null;
 
-                for ( io.gomint.entity.EntityPlayer p: this.world.getPlayers() ) {
-                    if ( p.getGamemode() != Gamemode.SPECTATOR && p.getLocation().distanceSquared( this.getLocation() ) <= 64 ) {
-                        this.closestPlayer = (EntityPlayer) p;
-                        break;
+                    for (io.gomint.entity.EntityPlayer p : this.world.getPlayers()) {
+                        if (p.getGamemode() != Gamemode.SPECTATOR && p.getLocation().distanceSquared(this.getLocation()) <= 64) {
+                            this.closestPlayer = (EntityPlayer) p;
+                            break;
+                        }
+                    }
+                }
+
+                if (this.closestPlayer != null) {
+                    float dX = (this.closestPlayer.getPositionX() - this.getPositionX()) / 8.0f;
+                    float dY = (this.closestPlayer.getPositionY() + this.closestPlayer.getEyeHeight() / 2.0f - this.getPositionY()) / 8.0f;
+                    float dZ = (this.closestPlayer.getPositionZ() - this.getPositionZ()) / 8.0f;
+
+                    float distance = MathUtils.sqrt(dX * dX + dY * dY + dZ * dZ);
+                    float diff = 1.0f - distance;
+
+                    if (diff > 0.0D) {
+                        diff = diff * diff;
+
+                        Vector motion = this.getVelocity();
+                        this.setVelocity(motion.add(
+                            dX / distance * diff * 0.1f,
+                            dY / distance * diff * 0.1f,
+                            dZ / distance * diff * 0.1f
+                        ));
                     }
                 }
             }
 
-            if ( this.closestPlayer != null ) {
-                float dX = ( this.closestPlayer.getPositionX() - this.getPositionX() ) / 8.0f;
-                float dY = ( this.closestPlayer.getPositionY() + this.closestPlayer.getEyeHeight() / 2.0f - this.getPositionY() ) / 8.0f;
-                float dZ = ( this.closestPlayer.getPositionZ() - this.getPositionZ() ) / 8.0f;
-
-                float distance = MathUtils.sqrt( dX * dX + dY * dY + dZ * dZ );
-                float diff = 1.0f - distance;
-
-                if ( diff > 0.0D ) {
-                    diff = diff * diff;
-
-                    Vector motion = this.getVelocity();
-                    this.setVelocity( motion.add(
-                        dX / distance * diff * 0.1f,
-                        dY / distance * diff * 0.1f,
-                        dZ / distance * diff * 0.1f
-                    ) );
-                }
-            }
-
-            if ( this.age > 6000 ) {    // 5 Minutes
+            if (this.age > 6000) {    // 5 Minutes
                 this.despawn();
             }
 

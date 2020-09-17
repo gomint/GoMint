@@ -11,6 +11,8 @@ import io.gomint.inventory.item.ItemStack;
 import io.gomint.server.entity.Entity;
 import io.gomint.server.entity.EntityType;
 import io.gomint.server.entity.metadata.MetadataContainer;
+import io.gomint.server.network.packet.PacketUpdateBlock;
+import io.gomint.server.network.packet.PacketUpdateBlockSynched;
 import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.world.WorldAdapter;
 import io.gomint.server.world.block.Block;
@@ -57,7 +59,7 @@ public class EntityFallingBlock extends Entity implements io.gomint.entity.passi
             this.despawn();
 
             // Check if block can be replaced
-            Block block = this.world.getBlockAt(this.getLocation().toBlockPosition());
+            Block block = this.world.getBlockAt(this.getLocation().add(-(this.getWidth() / 2), this.getHeight(), -(this.getWidth() / 2)).toBlockPosition());
             if ( block.canBeReplaced( null ) ) {
                 block.copyFromBlock(this.block);
             } else {
@@ -90,19 +92,5 @@ public class EntityFallingBlock extends Entity implements io.gomint.entity.passi
         this.block = block1;
         this.metadataContainer.putInt(MetadataContainer.DATA_VARIANT, block1.getRuntimeId());
     }
-
-    /*@Override
-    public void postSpawn(PlayerConnection connection) {
-        if (this.position != null) {
-            PacketUpdateBlockSynched blockSynched = new PacketUpdateBlockSynched();
-            blockSynched.setAction(1);
-            blockSynched.setEntityId(this.getEntityId());
-            blockSynched.setPosition(this.position);
-            blockSynched.setBlockId(this.metadataContainer.getInt(MetadataContainer.DATA_VARIANT));
-            blockSynched.setLayer(0);
-            blockSynched.setFlags(PacketUpdateBlock.FLAG_ALL);
-            connection.addToSendQueue(blockSynched);
-        }
-    }*/
 
 }

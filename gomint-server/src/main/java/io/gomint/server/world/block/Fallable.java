@@ -10,25 +10,33 @@ package io.gomint.server.world.block;
 import io.gomint.entity.passive.EntityFallingBlock;
 import io.gomint.server.world.UpdateReason;
 import io.gomint.world.block.data.Facing;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+/**
+ * @author geNAZt
+ * @version 1.0
+ */
 public abstract class Fallable extends Block {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(Fallable.class);
 
     @Override
     public long update(UpdateReason updateReason, long currentTimeMS, float dT) {
-        if ( updateReason == UpdateReason.NEIGHBOUR_UPDATE ) {
-            // Check if the downside block can be replaced
-            Block downwards = this.getSide(Facing.DOWN);
-            if (downwards.canBeReplaced(null)) {
-                // Create entity
-                EntityFallingBlock entity = EntityFallingBlock.create();
-                entity.setBlock(this);
+        LOGGER.debug("Updating falling state for {}", this.location);
 
-                // Replace block with air
-                this.setBlockType(Air.class);
+        // Check if the downside block can be replaced
+        Block downwards = this.getSide(Facing.DOWN);
+        if (downwards.canBeReplaced(null)) {
+            // Create entity
+            EntityFallingBlock entity = EntityFallingBlock.create();
+            entity.setBlock(this);
 
-                // Spawn entity
-                entity.spawn(this.location);
-            }
+            // Replace block with air
+            this.setBlockType(Air.class);
+
+            // Spawn entity
+            entity.spawn(this.location.add(0.5f, 0, 0.5f));
         }
 
         return -1;

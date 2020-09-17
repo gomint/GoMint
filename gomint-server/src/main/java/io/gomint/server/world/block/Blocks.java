@@ -104,7 +104,7 @@ public class Blocks {
         return null;
     }
 
-    public <T extends Block> T get(Class<?> apiInterface) {
+    public <T extends io.gomint.world.block.Block> T get(Class<T> apiInterface) {
         Generator<Block> instance = this.generators.getGenerator(apiInterface);
         if (instance != null) {
             return (T) instance.generate();
