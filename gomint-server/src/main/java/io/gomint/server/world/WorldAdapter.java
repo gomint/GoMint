@@ -29,6 +29,7 @@ import io.gomint.server.entity.tileentity.TileEntity;
 import io.gomint.server.network.PlayerConnection;
 import io.gomint.server.network.packet.*;
 import io.gomint.server.scheduler.CoreScheduler;
+import io.gomint.server.scheduler.SyncScheduledTask;
 import io.gomint.server.util.EnumConnectors;
 import io.gomint.server.world.block.Air;
 import io.gomint.server.world.storage.TemporaryStorage;
@@ -763,7 +764,7 @@ public abstract class WorldAdapter implements World {
     /**
      * Saves the given chunk to its region file asynchronously.
      *
-     * @param chunk            The chunk to save
+     * @param chunk The chunk to save
      */
     void saveChunkAsynchronously(ChunkAdapter chunk) {
         AsyncChunkSaveTask task = new AsyncChunkSaveTask(chunk);
@@ -1142,9 +1143,6 @@ public abstract class WorldAdapter implements World {
                     io.gomint.server.world.block.Block newBlock = replaceBlock.getLocation().getWorld().getBlockAt(replaceBlock.getLocation().toBlockPosition());
                     playSound(null, newBlock.getLocation(), Sound.PLACE, (byte) 1, BlockRuntimeIDs.toBlockIdentifier(newBlock.getBlockId(), null).getRuntimeId());
 
-                    // Schedule neighbour updates
-                    scheduleNeighbourUpdates(newBlock);
-
                     if (entity.getGamemode() != Gamemode.CREATIVE) {
                         ((io.gomint.server.inventory.item.ItemStack) itemInHand).afterPlacement();
                     }
@@ -1157,7 +1155,12 @@ public abstract class WorldAdapter implements World {
         return interacted || itemInteracted;
     }
 
-    private void scheduleNeighbourUpdates(Block block) {
+    public <T extends Block> T scheduleNeighbourUpdates(T block) {
+        if (!GoMint.instance().isMainThread()) {
+            // We don't update from async
+            return block;
+        }
+
         io.gomint.server.world.block.Block implBlock = (io.gomint.server.world.block.Block) block;
         for (Facing face : Facing.values()) {
             io.gomint.server.world.block.Block neighbourBlock = implBlock.getSide(face);
@@ -1174,6 +1177,8 @@ public abstract class WorldAdapter implements World {
             }
             // CHECKSTYLE:ON
         }
+
+        return block;
     }
 
     public EntityItem createItemDrop(Location location, ItemStack item) {

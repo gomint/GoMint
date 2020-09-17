@@ -87,6 +87,8 @@ public abstract class ChestBase extends ContainerBlock {
                 side.updateBlock();
             }
         }
+
+        super.afterPlacement();
     }
 
     protected Inventory getInventory() {

@@ -150,6 +150,8 @@ public class Bed extends Block implements BlockBed {
             bed.setColor(this.getColor());
             bed.setHeadPart(true);
         }
+
+        super.afterPlacement();
     }
 
     @Override

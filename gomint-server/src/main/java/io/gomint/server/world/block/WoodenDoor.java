@@ -115,6 +115,8 @@ public class WoodenDoor extends Door implements BlockWoodenDoor {
         aDoor.setDirection(this.getDirection());
         aDoor.setTop(true);
         aDoor.setWoodType(this.getWoodType());
+
+        super.afterPlacement();
     }
 
 }

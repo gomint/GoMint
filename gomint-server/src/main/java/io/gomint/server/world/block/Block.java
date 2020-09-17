@@ -305,15 +305,16 @@ public abstract class Block implements io.gomint.world.block.Block {
             return null;
         }
 
-        Block instance = this.world.getServer().getBlocks().get(blockType);
+        T instance = this.world.getServer().getBlocks().get(blockType);
         if (instance != null) {
-            instance.setWorld((WorldAdapter) this.location.getWorld());
-            instance.setLocation(this.location);
-            instance.setLayer(this.layer);
-            instance.place();
+            Block sInstance = (Block) instance;
+            sInstance.setWorld((WorldAdapter) this.location.getWorld());
+            sInstance.setLocation(this.location);
+            sInstance.setLayer(this.layer);
+            sInstance.place();
         }
 
-        return world.getBlockAt(pos);
+        return world.scheduleNeighbourUpdates(instance);
     }
 
     void place() {
@@ -359,6 +360,7 @@ public abstract class Block implements io.gomint.world.block.Block {
         instance.setLayer(this.layer);
         instance.place();
 
+        instance.world.scheduleNeighbourUpdates(instance);
         return apiInstance;
     }
 
@@ -395,13 +397,15 @@ public abstract class Block implements io.gomint.world.block.Block {
             worldAdapter.removeTileEntity(pos);
         }
 
-        long next = instance.update(UpdateReason.BLOCK_ADDED, this.world.getServer().getCurrentTickTime(), 0f);
+        Block copy = worldAdapter.getBlockAt(pos);
+
+        long next = copy.update(UpdateReason.BLOCK_ADDED, this.world.getServer().getCurrentTickTime(), 0f);
         if (next > this.world.getServer().getCurrentTickTime()) {
             this.world.addTickingBlock(next, this.location.toBlockPosition());
         }
 
         worldAdapter.updateBlock(pos);
-        return worldAdapter.getBlockAt(pos);
+        return (T) worldAdapter.scheduleNeighbourUpdates( copy );
     }
 
     /**
@@ -559,7 +563,8 @@ public abstract class Block implements io.gomint.world.block.Block {
      * Hook called when the block has been placed
      */
     public void afterPlacement() {
-
+        // Schedule neighbour updates
+        this.world.scheduleNeighbourUpdates(this);
     }
 
     /**
