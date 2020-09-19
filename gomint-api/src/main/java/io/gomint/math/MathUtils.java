@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, GoMint, BlackyPaw and geNAZt
+ * Copyright (c) 2018 Gomint team
  *
  * This code is licensed under the BSD license found in the
  * LICENSE file in the root directory of this source tree.
@@ -7,16 +7,14 @@
 
 package io.gomint.math;
 
+import org.apache.commons.math3.util.FastMath;
+
 /**
  * @author BlackyPaw
  * @version 1.0
  * @stability 3
  */
 public final class MathUtils {
-
-    private static final int BIG_ENOUGH_INT = 30_000_000;
-    private static final double BIG_ENOUGH_FLOOR = BIG_ENOUGH_INT;
-    private static final double BIG_ENOUGH_ROUND = BIG_ENOUGH_INT + 0.5;
 
     public static final double SQRT_3 = Math.sqrt(3);
     public static final float EPSILON = 1.401298E-45f;
@@ -83,15 +81,15 @@ public final class MathUtils {
     }
 
     public static int fastFloor(float val) {
-        return (int) (val + BIG_ENOUGH_FLOOR) - BIG_ENOUGH_INT;
+        return (int) FastMath.floor(val);
     }
 
     public static int fastRound(float x) {
-        return (int) (x + BIG_ENOUGH_ROUND) - BIG_ENOUGH_INT;
+        return FastMath.round(x);
     }
 
     public static int fastCeil(float x) {
-        return BIG_ENOUGH_INT - (int) (BIG_ENOUGH_FLOOR - x);
+        return (int) FastMath.ceil(x);
     }
 
     /**
