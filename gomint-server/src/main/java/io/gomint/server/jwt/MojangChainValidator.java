@@ -56,7 +56,10 @@ public class MojangChainValidator {
      */
     public boolean validate() {
         this.trustedKeys = new HashMap<>();
-        this.trustedKeys.put( this.encryptionKeyFactory.getRootKeyBase64(), this.encryptionKeyFactory.getRootKey() );
+
+        if (this.encryptionKeyFactory.isKeyGiven()) {
+            this.trustedKeys.put(this.encryptionKeyFactory.getRootKeyBase64(), this.encryptionKeyFactory.getRootKey());
+        }
 
         List<JwtToken> unverified = new ArrayList<>( this.chain );
         boolean hasExtraData = false;
@@ -76,7 +79,7 @@ public class MojangChainValidator {
                     x5u = token.getHeader().getProperty( String.class, "x5u" );
                     if ( x5u == null ) {
                         // This token comes unexpectedly - might be a faker:
-                        return false;
+                        return !this.encryptionKeyFactory.isKeyGiven();
                     }
 
                     if ( this.trustedKeys.containsKey( x5u ) ) {
@@ -87,7 +90,7 @@ public class MojangChainValidator {
 
                 if ( nextToken == null ) {
                     // No further tokens which could be verified -> yet there are still tokens in the unverified set:
-                    return false;
+                    return !this.encryptionKeyFactory.isKeyGiven();
                 }
 
                 try {
@@ -95,11 +98,11 @@ public class MojangChainValidator {
                     // attacks as described here: https://auth0.com/blog/critical-vulnerabilities-in-json-web-token-libraries/
                     if ( !nextToken.validateSignature( JwtAlgorithm.ES384, this.trustedKeys.get( x5u ) ) ) {
                         // Seems to be a forged token:
-                        return false;
+                        return !this.encryptionKeyFactory.isKeyGiven();
                     }
                 } catch ( JwtSignatureException e ) {
                     e.printStackTrace();
-                    return false;
+                    return !this.encryptionKeyFactory.isKeyGiven();
                 }
 
                 unverified.remove( nextToken );
@@ -128,7 +131,7 @@ public class MojangChainValidator {
                     this.loadClientInformation( extraData, false );
                 } else if ( extraData != null ) {
                     // Injected chain element?
-                    return false;
+                    return !this.encryptionKeyFactory.isKeyGiven();
                 }
             }
 

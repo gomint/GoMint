@@ -7,9 +7,6 @@
 
 package io.gomint.server.network;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.security.Key;
 import java.security.KeyFactory;
 import java.security.KeyPair;
@@ -26,45 +23,45 @@ import java.util.Base64;
  */
 public class EncryptionKeyFactory {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger( EncryptionKeyFactory.class );
-
-    private PublicKey rootKey;
+    private PublicKey rootKey = null;
     private String rootKeyBase64;
 
     private KeyFactory keyFactory;
     private KeyPair keyPair;
 
     public EncryptionKeyFactory(String jwtRoot) {
-        X509EncodedKeySpec keySpec = new X509EncodedKeySpec( Base64.getDecoder().decode( jwtRoot ) );
-
         // Create the key factory
         try {
-            this.keyFactory = KeyFactory.getInstance( "EC" );
-        } catch ( NoSuchAlgorithmException e ) {
+            this.keyFactory = KeyFactory.getInstance("EC");
+        } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
-            System.err.println( "Could not find ECDH Key Factory - please ensure that you have installed the latest version of BouncyCastle" );
-            System.exit( -1 );
+            System.err.println("Could not find ECDH Key Factory - please ensure that you have installed the latest version of BouncyCastle");
+            System.exit(-1);
         }
 
-        // Unserialize the Mojang root key
-        try {
-            this.rootKey = this.keyFactory.generatePublic(keySpec);
-        } catch ( InvalidKeySpecException e ) {
-            e.printStackTrace();
-            System.err.println( "Could not generated public key for trusted Mojang key; please report this error in the GoMint.io discord for further assistance" );
-            System.exit( -1 );
-        }
+        if (!jwtRoot.isEmpty()) {
+            X509EncodedKeySpec keySpec = new X509EncodedKeySpec(Base64.getDecoder().decode(jwtRoot));
 
-        this.rootKeyBase64 = jwtRoot;
+            // Unserialize the Mojang root key
+            try {
+                this.rootKey = this.keyFactory.generatePublic(keySpec);
+            } catch (InvalidKeySpecException e) {
+                e.printStackTrace();
+                System.err.println("Could not generated public key for trusted Mojang key; please report this error in the GoMint.io discord for further assistance");
+                System.exit(-1);
+            }
+
+            this.rootKeyBase64 = jwtRoot;
+        }
 
         // Setup KeyPairGenerator:
         KeyPairGenerator generator;
         try {
-            generator = KeyPairGenerator.getInstance( "EC" );
-            generator.initialize( 384 );
-        } catch ( NoSuchAlgorithmException e ) {
-            System.err.println( "It seems you have not installed a recent version of BouncyCastle; please ensure that your version supports EC Key-Pair-Generation using the secp384r1 curve" );
-            System.exit( -1 );
+            generator = KeyPairGenerator.getInstance("EC");
+            generator.initialize(384);
+        } catch (NoSuchAlgorithmException e) {
+            System.err.println("It seems you have not installed a recent version of BouncyCastle; please ensure that your version supports EC Key-Pair-Generation using the secp384r1 curve");
+            System.exit(-1);
             return;
         }
 
@@ -76,10 +73,10 @@ public class EncryptionKeyFactory {
         return this.keyPair;
     }
 
-    public PublicKey createPublicKey( String base64 ) {
+    public PublicKey createPublicKey(String base64) {
         try {
-            return this.keyFactory.generatePublic( new X509EncodedKeySpec( Base64.getDecoder().decode( base64 ) ) );
-        } catch ( InvalidKeySpecException e ) {
+            return this.keyFactory.generatePublic(new X509EncodedKeySpec(Base64.getDecoder().decode(base64)));
+        } catch (InvalidKeySpecException e) {
             e.printStackTrace();
             return null;
         }
@@ -91,6 +88,10 @@ public class EncryptionKeyFactory {
 
     public Key getRootKey() {
         return this.rootKey;
+    }
+
+    public boolean isKeyGiven() {
+        return this.rootKey != null;
     }
 
 }
