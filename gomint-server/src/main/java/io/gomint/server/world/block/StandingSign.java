@@ -2,7 +2,7 @@ package io.gomint.server.world.block;
 
 import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.world.block.state.SignDirectionBlockState;
-import io.gomint.world.block.BlockSignNormal;
+import io.gomint.world.block.BlockStandingSign;
 import io.gomint.world.block.BlockType;
 import io.gomint.world.block.data.LogType;
 import io.gomint.world.block.data.SignDirection;
@@ -19,7 +19,7 @@ import io.gomint.world.block.data.SignDirection;
 @RegisterInfo(sId = "minecraft:darkoak_standing_sign")
 @RegisterInfo(sId = "minecraft:crimson_standing_sign")
 @RegisterInfo(sId = "minecraft:warped_standing_sign")
-public class SignNormal extends Sign implements BlockSignNormal {
+public class StandingSign extends Sign implements BlockStandingSign {
 
     private enum LogTypeMagic {
         OAK("minecraft:standing_sign"),

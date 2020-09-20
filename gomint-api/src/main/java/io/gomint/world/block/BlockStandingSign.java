@@ -14,7 +14,7 @@ import io.gomint.world.block.data.SignDirection;
  * @version 1.0
  * @stability 3
  */
-public interface BlockSignNormal extends BlockSign {
+public interface BlockStandingSign extends BlockSign {
 
     /**
      * Direction of this sign
