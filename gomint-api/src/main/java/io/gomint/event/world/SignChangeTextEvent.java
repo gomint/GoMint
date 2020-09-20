@@ -7,6 +7,7 @@
 
 package io.gomint.event.world;
 
+import com.google.common.base.Preconditions;
 import io.gomint.entity.EntityPlayer;
 import io.gomint.event.player.CancellablePlayerEvent;
 import io.gomint.world.block.Block;
@@ -61,9 +62,7 @@ public class SignChangeTextEvent extends CancellablePlayerEvent {
      *
      * @param line    which should be set
      * @param content which should be set on that line
-     * @deprecated Use {@link #setLines(List)} instead
      */
-    @Deprecated
     public void setLine(int line, String content) {
         // Silently fail when line is incorrect
         if (line > 4 || line < 1) {
@@ -104,7 +103,7 @@ public class SignChangeTextEvent extends CancellablePlayerEvent {
      * @return all lines which the sign previously had
      */
     public List<String> getLines() {
-        return lines;
+        return this.lines;
     }
 
     /**
@@ -113,6 +112,9 @@ public class SignChangeTextEvent extends CancellablePlayerEvent {
      * @param lines the lines the sign should have
      */
     public void setLines(List<String> lines) {
-        this.lines = lines;
+        Preconditions.checkArgument(lines.size() < 4, "Sign may only have 4 lines of text");
+
+        this.lines.clear();
+        this.lines.addAll(lines);
     }
 }
