@@ -1,12 +1,12 @@
-name: Java CI
+name: PR
 
 on:
-  push:
+  pull_request:
     branches:
-    - '!master'
+      - master
 
 jobs:
-  build:
+  build-branch-pr:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
