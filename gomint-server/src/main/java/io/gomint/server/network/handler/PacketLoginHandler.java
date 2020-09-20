@@ -148,13 +148,13 @@ public class PacketLoginHandler implements PacketHandler<PacketLogin> {
             boolean finalValidSkin = validSkin;
             connection.getServer().getSyncTaskManager().addTask(new SyncScheduledTask(connection.getServer().getSyncTaskManager(), () -> {
                 // Invalid skin
-                if (!finalValidSkin && this.serverConfig.isOnlyXBOXLogin()) {
+                if (!finalValidSkin) {
                     connection.disconnect("Skin is invalid or corrupted");
                     return;
                 }
 
                 // Check if valid user (xbox live)
-                if (!valid && this.serverConfig.isOnlyXBOXLogin()) {
+                if (!valid) {
                     connection.disconnect("Only valid XBOX Logins are allowed");
                     return;
                 }

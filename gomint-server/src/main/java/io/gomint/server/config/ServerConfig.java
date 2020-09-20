@@ -32,9 +32,6 @@ public class ServerConfig extends YamlConfig {
     @Comment( "The maximum number of players to play on this server" )
     private int maxPlayers = 10;
 
-    @Comment( "If you want to allow non XBOX logged in users to join this server set this to false" )
-    private boolean onlyXBOXLogin = true;
-
     @Comment( "Motd of this server" )
     private String motd = "§aGoMint §7Development Build";
 
@@ -88,10 +85,6 @@ public class ServerConfig extends YamlConfig {
 
     public int getMaxPlayers() {
         return maxPlayers;
-    }
-
-    public boolean isOnlyXBOXLogin() {
-        return onlyXBOXLogin;
     }
 
     public String getMotd() {
@@ -148,7 +141,6 @@ public class ServerConfig extends YamlConfig {
             "listener=" + listener +
             ", connection=" + connection +
             ", maxPlayers=" + maxPlayers +
-            ", onlyXBOXLogin=" + onlyXBOXLogin +
             ", motd='" + motd + '\'' +
             ", enablePacketDumping=" + enablePacketDumping +
             ", dumpDirectory='" + dumpDirectory + '\'' +
