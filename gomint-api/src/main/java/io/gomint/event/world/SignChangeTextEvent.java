@@ -112,7 +112,7 @@ public class SignChangeTextEvent extends CancellablePlayerEvent {
      * @param lines the lines the sign should have
      */
     public void setLines(List<String> lines) {
-        Preconditions.checkArgument(lines.size() < 4, "Sign may only have 4 lines of text");
+        Preconditions.checkArgument(lines.size() != 4, "Sign may only have 4 lines of text");
 
         this.lines.clear();
         this.lines.addAll(lines);
