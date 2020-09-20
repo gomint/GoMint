@@ -1,4 +1,4 @@
-name: Java CI
+name: Branch and PR
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
     - '!master'
 
 jobs:
-  build:
+  build-branch-pr:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
