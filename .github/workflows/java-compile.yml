@@ -1,9 +1,9 @@
-name: Branch and PR
+name: PR
 
 on:
-  push:
+  pull_request:
     branches:
-    - '!master'
+      - master
 
 jobs:
   build-branch-pr:
