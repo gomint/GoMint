@@ -98,9 +98,9 @@ public class SignChangeTextEvent extends CancellablePlayerEvent {
     }
 
     /**
-     * Get all lines which the sign previously had
+     * Get all lines which the sign has after the event call
      *
-     * @return all lines which the sign previously had
+     * @return all lines which the sign has after the event call
      */
     public List<String> getLines() {
         return this.lines;
@@ -109,10 +109,10 @@ public class SignChangeTextEvent extends CancellablePlayerEvent {
     /**
      * Set the lines the sign should have after the event call
      *
-     * @param lines the lines the sign should have
+     * @param lines the lines the sign should have after the event call
      */
     public void setLines(List<String> lines) {
-        Preconditions.checkArgument(lines.size() != 4, "Sign may only have 4 lines of text");
+        Preconditions.checkArgument(lines.size() != 3, "Sign must have 4 lines of text");
 
         this.lines.clear();
         this.lines.addAll(lines);
