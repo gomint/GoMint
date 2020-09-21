@@ -27,6 +27,7 @@ import io.gomint.gui.FormListener;
 import io.gomint.math.Vector;
 import io.gomint.math.*;
 import io.gomint.player.DeviceInfo;
+import io.gomint.plugin.Plugin;
 import io.gomint.server.GoMintServer;
 import io.gomint.server.enchant.EnchantmentProcessor;
 import io.gomint.server.entity.metadata.MetadataContainer;
@@ -44,6 +45,7 @@ import io.gomint.server.permission.PermissionManager;
 import io.gomint.server.player.EntityVisibilityManager;
 import io.gomint.server.plugin.EventCaller;
 import io.gomint.server.scoreboard.Scoreboard;
+import io.gomint.server.util.CallerDetectorUtil;
 import io.gomint.server.util.EnumConnectors;
 import io.gomint.server.world.ChunkAdapter;
 import io.gomint.server.world.CoordinateUtils;
@@ -84,7 +86,8 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
     private static final Logger LOGGER = LoggerFactory.getLogger(EntityPlayer.class);
 
     private final PlayerConnection connection;
-    private final PermissionManager permissionManager = new PermissionManager(this);
+    private io.gomint.permission.PermissionManager permissionManager;
+    private boolean isUsingDefaultPermissionManager;
     private final EntityVisibilityManager entityVisibilityManager = new EntityVisibilityManager(this);
     private int viewDistance = 4;
     private Queue<ChunkAdapter> chunkSendQueue = new LinkedBlockingQueue<>();
@@ -188,6 +191,10 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
 
         // Performance stuff
         this.loginPerformance = new LoginPerformance();
+
+        // Permission stuff
+        this.permissionManager = new PermissionManager(this);
+        this.isUsingDefaultPermissionManager = true;
     }
 
     // ==================================== ACCESSORS ==================================== //
@@ -530,7 +537,9 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
         super.update(currentTimeMS, dT);
 
         // Update permissions
-        this.permissionManager.update(currentTimeMS, dT);
+        if (this.isUsingDefaultPermissionManager) {
+            ((PermissionManager) this.permissionManager).update(currentTimeMS, dT);
+        }
 
         if (this.isDead() || this.getHealth() <= 0) {
             return;
@@ -912,9 +921,7 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
         return this.permissionManager.hasPermission(permission, defaultValue);
     }
 
-    /**
-     * Send commands to the client
-     */
+    @Override
     public void sendCommands() {
         // Send commands
         PacketAvailableCommands packetAvailableCommands = this.connection.getServer().
@@ -1727,8 +1734,16 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
         return this.connection.knowsChunk(CoordinateUtils.toLong(posX, posZ));
     }
 
-    public PermissionManager getPermissionManager() {
+    public io.gomint.permission.PermissionManager getPermissionManager() {
         return permissionManager;
+    }
+
+    public void setPermissionManager(io.gomint.permission.PermissionManager permissionManager) {
+        Class<? extends Plugin> plugin = CallerDetectorUtil.getCallerPlugin();
+        LOGGER.warn("Plugin {} swapped out permission manager with {}", plugin.getName(), permissionManager.getClass().getName());
+
+        this.permissionManager = permissionManager;
+        this.isUsingDefaultPermissionManager = this.permissionManager instanceof PermissionManager;
     }
 
     public EntityVisibilityManager getEntityVisibilityManager() {

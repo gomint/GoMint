@@ -14,6 +14,7 @@ import io.gomint.server.inventory.item.Items;
 import io.gomint.server.plugin.EventCaller;
 import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.world.block.Block;
+import io.gomint.server.world.block.Sign;
 import io.gomint.taglib.NBTTagCompound;
 
 import java.util.ArrayList;
@@ -28,9 +29,9 @@ import java.util.List;
 @RegisterInfo(sId = "Sign")
 public class SignTileEntity extends TileEntity {
 
-    private static final Joiner CONTENT_JOINER = Joiner.on( "\n" ).skipNulls();
+    private static final Joiner CONTENT_JOINER = Joiner.on("\n").skipNulls();
 
-    private final List<String> lines = new ArrayList<>( 4 );
+    private final List<String> lines = new ArrayList<>(4);
     private final EventCaller eventCaller;
 
     /**
@@ -38,8 +39,8 @@ public class SignTileEntity extends TileEntity {
      *
      * @param block which created this tile
      */
-    public SignTileEntity(Block block, Items items, EventCaller eventCaller ) {
-        super( block, items );
+    public SignTileEntity(Block block, Items items, EventCaller eventCaller) {
+        super(block, items);
         this.eventCaller = eventCaller;
     }
 
@@ -49,21 +50,26 @@ public class SignTileEntity extends TileEntity {
     }
 
     @Override
-    public void fromCompound( NBTTagCompound compound ) {
-        super.fromCompound( compound );
+    public void fromCompound(NBTTagCompound compound) {
+        super.fromCompound(compound);
 
-        if ( compound.containsKey( "Text" ) ) {
-            String text = compound.getString( "Text", "" );
-            this.lines.addAll( Arrays.asList( text.split( "\n" ) ) );
+        if (compound.containsKey("Text")) {
+            String text = compound.getString("Text", "");
+            this.lines.addAll(Arrays.asList(text.split("\n")));
         }
     }
 
     @Override
-    public void toCompound( NBTTagCompound compound, SerializationReason reason ) {
-        super.toCompound( compound, reason );
+    public void toCompound(NBTTagCompound compound, SerializationReason reason) {
+        super.toCompound(compound, reason);
 
-        compound.addValue( "id", "Sign" );
-        compound.addValue( "Text", CONTENT_JOINER.join( this.lines ) );
+        compound.addValue("id", "Sign");
+        compound.addValue("Text", CONTENT_JOINER.join(this.lines));
+    }
+
+    @Override
+    public Sign getBlock() {
+        return (Sign) super.getBlock();
     }
 
     /**
@@ -76,26 +82,26 @@ public class SignTileEntity extends TileEntity {
     }
 
     @Override
-    public void applyClientData( EntityPlayer player, NBTTagCompound compound ) throws Exception {
+    public void applyClientData(EntityPlayer player, NBTTagCompound compound) throws Exception {
         // We only care about the text attribute
-        String text = compound.getString( "Text", "" );
+        String text = compound.getString("Text", "");
 
         // Sanity check for newlines
         int foundNewlines = 0;
 
-        for ( int i = 0; i < text.length(); i++ ) {
-            if ( text.charAt( i ) == '\n' && ++foundNewlines > 3 ) {
-                throw new IllegalArgumentException( "Text contained more than 4 lines" );
+        for (int i = 0; i < text.length(); i++) {
+            if (text.charAt(i) == '\n' && ++foundNewlines > 3) {
+                throw new IllegalArgumentException("Text contained more than 4 lines");
             }
         }
 
         // We can split now since we have checked that we don't blow away our heap :D
-        String[] lines = text.split( "\n" );
+        String[] lines = text.split("\n");
 
         // Sanity checks on all lines
-        for ( String line : lines ) {
-            if ( line.length() > 16 ) {
-                throw new IllegalArgumentException( "Line is longer than 16 chars" );
+        for (String line : lines) {
+            if (line.length() > 16) {
+                throw new IllegalArgumentException("Line is longer than 16 chars");
             }
         }
 
@@ -103,17 +109,18 @@ public class SignTileEntity extends TileEntity {
         List<String> lineList = new ArrayList<>();
         Collections.addAll(lineList, lines);
 
-        if ( this.eventCaller != null ) {
-            SignChangeTextEvent event = new SignChangeTextEvent( player, this.getBlock(), lineList );
-            this.eventCaller.callEvent( event );
+        if (this.eventCaller != null) {
+            SignChangeTextEvent event = new SignChangeTextEvent(player, this.getBlock(), lineList);
+            this.eventCaller.callEvent(event);
 
-            if ( event.isCancelled() ) {
+            if (event.isCancelled()) {
                 return;
             }
 
-            for ( int i = 0; i < 4; i++ ) {
-                if ( event.getLine( i ) != null ) {
-                    this.lines.set( i, event.getLine( i ) );
+            for (int i = 0; i < 4; i++) {
+                String line = event.getLine(i);
+                if (line != null) {
+                    this.lines.set(i, line);
                 }
             }
         }

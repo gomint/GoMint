@@ -12,7 +12,6 @@ import io.gomint.event.EventHandler;
 import io.gomint.event.EventListener;
 import io.gomint.server.maintenance.ReportUploader;
 import io.gomint.server.plugin.PluginClassloader;
-
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
@@ -22,6 +21,7 @@ import org.slf4j.LoggerFactory;
 import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Method;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * @author BlackyPaw
@@ -30,6 +30,8 @@ import java.util.Objects;
 class EventHandlerMethod implements Comparable<EventHandlerMethod> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(EventHandlerMethod.class);
+
+    private static final AtomicInteger PROXY_COUNT = new AtomicInteger(0);
 
     private final EventHandler annotation;
     private EventProxy proxy;
@@ -54,7 +56,7 @@ class EventHandlerMethod implements Comparable<EventHandlerMethod> {
                 ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_FRAMES);
 
                 String listenerClassName = instance.getClass().getName().replace(".", "/");
-                String className = listenerClassName + "Proxy";
+                String className = listenerClassName + "Proxy" + PROXY_COUNT.incrementAndGet();
                 String eventClassName = method.getParameterTypes()[0].getName().replace(".", "/");
 
                 // Define the class

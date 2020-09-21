@@ -168,6 +168,20 @@ public interface EntityPlayer extends EntityHuman {
     PermissionManager getPermissionManager();
 
     /**
+     * Set the players permission manager
+     *
+     * This will print out a warning about replacing the permission manager. Since gomint does not hold
+     * the API contract anymore this warning simply shows that the API may not behave like the contract says
+     * it would.
+     *
+     * If you use a custom permission manager ensure that it calls {@link #sendCommands()} when permissions change
+     * so the client gets its commands corrected.
+     *
+     * @param permissionManager for this player
+     */
+    void setPermissionManager(PermissionManager permissionManager);
+
+    /**
      * Is this player still online?
      *
      * @return true if online, false if not
@@ -385,5 +399,11 @@ public interface EntityPlayer extends EntityHuman {
      * @return ender chest inventory
      */
     EnderChestInventory getEnderChestInventory();
+
+    /**
+     * Update the clients commands. This is needed when permissions change for example or worlds change and custom
+     * handling is involved
+     */
+    void sendCommands();
 
 }

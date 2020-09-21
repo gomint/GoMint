@@ -68,4 +68,9 @@ public interface PermissionManager {
      */
     void removePermission( String permission );
 
+    /**
+     * Toggle the op state of this permission manager
+     */
+    void toggleOp();
+
 }
