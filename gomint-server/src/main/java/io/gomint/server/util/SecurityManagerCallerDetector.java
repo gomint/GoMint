@@ -8,6 +8,9 @@
 package io.gomint.server.util;
 
 import io.gomint.plugin.Plugin;
+import io.gomint.server.plugin.PluginClassloader;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author geNAZt
@@ -15,6 +18,7 @@ import io.gomint.plugin.Plugin;
  */
 public class SecurityManagerCallerDetector implements CallerDetector {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(SecurityManagerCallerDetector.class);
     private static final MySecurityManager SECURITY_MANAGER = new MySecurityManager();
 
     @Override
@@ -33,8 +37,17 @@ public class SecurityManagerCallerDetector implements CallerDetector {
          */
         public Class<? extends Plugin> getCallerPlugin() {
             for ( Class aClass : getClassContext() ) {
-                if ( !aClass.equals( Plugin.class ) && Plugin.class.isAssignableFrom( aClass ) ) {
-                    return aClass;
+                // Get the class loader, if its a plugin one return the main class
+                if (aClass.getClassLoader() instanceof PluginClassloader) {
+                    PluginClassloader cl = (PluginClassloader) aClass.getClassLoader();
+
+                    try {
+                        return (Class<? extends Plugin>) cl.loadClass(cl.getMeta().getMainClass());
+                    } catch (ClassNotFoundException e) {
+                        LOGGER.error("Plugin class could not be found in its own classloader", e);
+                    }
+
+                    return null;
                 }
             }
 
