@@ -35,9 +35,15 @@ public class ItemFlintAndSteel extends ItemStack implements io.gomint.inventory.
             return false; // We clicked in air, ignore
         }
 
-        this.calculateUsageAndUpdate(1);
         clickedBlock.getSide(face).setBlockType(BlockFire.class);
         return true;
     }
 
+    /**
+     * Rather than decrease the amount of the item in the inventory, damage is applied.
+     */
+    @Override
+    public void afterPlacement() {
+        this.calculateUsageAndUpdate(1);
+    }
 }
