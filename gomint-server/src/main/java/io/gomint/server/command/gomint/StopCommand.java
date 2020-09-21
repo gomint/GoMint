@@ -14,16 +14,16 @@ import java.util.Map;
  * @author geNAZt
  * @version 1.0
  */
-@Name( "stop" )
-@Description( "Stops the GoMint server." )
-@Permission( "gomint.command.stop" )
+@Name("stop")
+@Description("Stops the GoMint server.")
+@Permission("gomint.command.stop")
 public class StopCommand extends Command {
 
     // Player execution
     @Override
-    public CommandOutput execute( CommandSender server, String alias, Map<String, Object> arguments ) {
+    public CommandOutput execute(CommandSender server, String alias, Map<String, Object> arguments) {
         GoMint.instance().shutdown();
-        return new CommandOutput().success( "§7[§aSYSTEM§7] §fServer will be stopped" );
+        return CommandOutput.successful("§7[§aSYSTEM§7] §fServer will be stopped");
     }
 
 }
