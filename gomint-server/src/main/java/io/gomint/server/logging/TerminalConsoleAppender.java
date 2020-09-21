@@ -40,10 +40,10 @@ public final class TerminalConsoleAppender extends AbstractAppender {
         if (!initialized) {
             initialized = true;
 
-            boolean dumb = System.getProperty("java.class.path").contains("idea_rt.jar"); // TODO: Check if other IDEs also have virtual terminals with ANSI color support
+            // boolean dumb = System.getProperty("java.class.path").contains("idea_rt.jar"); // TODO: Check if other IDEs also have virtual terminals with ANSI color support
 
             try {
-                terminal = TerminalBuilder.builder().dumb(dumb).build();
+                terminal = TerminalBuilder.builder().dumb(false).build();
             } catch (IllegalStateException e) {
                 LOGGER.warn("Not supported terminal");
             } catch (IOException e) {
