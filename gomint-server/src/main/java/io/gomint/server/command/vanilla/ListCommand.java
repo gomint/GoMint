@@ -4,9 +4,7 @@ import io.gomint.GoMint;
 import io.gomint.command.Command;
 import io.gomint.command.CommandOutput;
 import io.gomint.command.CommandSender;
-import io.gomint.command.annotation.Description;
-import io.gomint.command.annotation.Name;
-import io.gomint.command.annotation.Permission;
+import io.gomint.command.annotation.*;
 import io.gomint.entity.EntityPlayer;
 
 import java.util.Collection;
@@ -17,20 +15,24 @@ import java.util.StringJoiner;
  * @author geNAZt
  * @version 1.0
  */
-@Name("list")
-@Description("List online players")
-@Permission("gomint.command.list")
+@Name( "list" )
+@Description( "List online players" )
+@Permission( "gomint.command.list" )
 public class ListCommand extends Command {
 
     @Override
-    public CommandOutput execute(CommandSender player, String alias, Map<String, Object> arguments) {
+    public CommandOutput execute( CommandSender player, String alias, Map<String, Object> arguments ) {
+        CommandOutput output = new CommandOutput();
+
         Collection<EntityPlayer> players = GoMint.instance().getPlayers();
-        CommandOutput output = CommandOutput.successful("There are %%s/%%s players online:", players.size(), GoMint.instance().getMaxPlayers());
+        output.success( "There are %%s/%%s players online:", players.size(), GoMint.instance().getMaxPlayers() );
 
-        StringJoiner joiner = new StringJoiner(", ");
-        players.forEach((player1) -> joiner.add(player1.getDisplayName()));
+        StringJoiner joiner = new StringJoiner( ", " );
+        players.forEach( ( player1 ) -> {
+            joiner.add( player1.getDisplayName() );
+        } );
 
-        return output.success(joiner.toString());
+        return output.success( joiner.toString() );
     }
 
 }

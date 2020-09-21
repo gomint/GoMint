@@ -61,13 +61,17 @@ public class SubCommand extends Command {
 
                         return commandHolder.getExecutor().execute( sender, alias + " " + entry.getValue(), arg );
                     } else {
-                        return CommandOutput.failure( "No permission for this command" );
+                        CommandOutput commandOutput = new CommandOutput();
+                        commandOutput.fail( "No permission for this command" );
+                        return commandOutput;
                     }
                 }
             }
         }
 
-        return CommandOutput.failure( "Command for input '%s' could not be found", this.getName() );
+        CommandOutput commandOutput = new CommandOutput();
+        commandOutput.fail( "Command for input '%%s' could not be found", this.getName() );
+        return commandOutput;
     }
 
     /**

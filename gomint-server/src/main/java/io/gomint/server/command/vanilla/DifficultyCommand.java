@@ -4,7 +4,11 @@ import io.gomint.command.Command;
 import io.gomint.command.CommandOutput;
 import io.gomint.command.CommandSender;
 import io.gomint.command.PlayerCommandSender;
-import io.gomint.command.annotation.*;
+import io.gomint.command.annotation.Description;
+import io.gomint.command.annotation.Name;
+import io.gomint.command.annotation.Overload;
+import io.gomint.command.annotation.Parameter;
+import io.gomint.command.annotation.Permission;
 import io.gomint.command.validator.EnumValidator;
 import io.gomint.command.validator.IntegerValidator;
 import io.gomint.server.entity.EntityPlayer;
@@ -16,27 +20,29 @@ import java.util.Map;
  * @author Clockw1seLrd
  * @version 1.0
  */
-@Name("difficulty")
-@Description("Sets the difficulty level.")
-@Permission("gomint.command.difficulty")
-@Overload({
-    @Parameter(name = "difficulty", validator = EnumValidator.class, arguments = {"peaceful", "easy", "normal", "hard"})
-})
-@Overload({
-    @Parameter(name = "difficulty", validator = IntegerValidator.class)
-})
+@Name( "difficulty" )
+@Description( "Sets the difficulty level." )
+@Permission( "gomint.command.difficulty" )
+@Overload( {
+    @Parameter( name = "difficulty", validator = EnumValidator.class, arguments = { "peaceful", "easy", "normal", "hard" })
+} )
+@Overload( {
+    @Parameter( name = "difficulty", validator = IntegerValidator.class )
+} )
 public class DifficultyCommand extends Command {
 
     @Override
-    public CommandOutput execute(CommandSender sender, String alias, Map<String, Object> arguments) {
+    public CommandOutput execute( CommandSender sender, String alias, Map<String, Object> arguments ) {
+        CommandOutput output = new CommandOutput();
+
         if (!(sender instanceof PlayerCommandSender)) {
-            return CommandOutput.failure("Executor is required to be a player");
+            return output.fail( "Executor is required to be a player" );
         }
 
-        String difficultyDegree = String.valueOf(arguments.get("difficulty"));
+        String difficultyDegree = String.valueOf( arguments.get( "difficulty" ) );
         Difficulty difficulty;
 
-        switch (difficultyDegree) {
+        switch ( difficultyDegree ) {
             case "0":
             case "peaceful":
                 difficulty = Difficulty.PEACEFUL;
@@ -54,13 +60,13 @@ public class DifficultyCommand extends Command {
                 difficulty = Difficulty.HARD;
                 break;
             default:
-                return CommandOutput.failure(String.format("No such difficulty degree: %s", difficultyDegree));
+                return output.fail( String.format( "No such difficulty degree: %s", difficultyDegree ) );
         }
 
         EntityPlayer executor = (EntityPlayer) sender;
-        executor.getWorld().setDifficulty(difficulty);
+        executor.getWorld().setDifficulty( difficulty );
 
-        return CommandOutput.successful(String.format("Set game difficulty to %s", difficulty.name()));
+        return output.success( String.format( "Set game difficulty to %s", difficulty.name() ) );
     }
 
 }
