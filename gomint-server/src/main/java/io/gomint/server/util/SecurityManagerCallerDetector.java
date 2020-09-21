@@ -36,6 +36,18 @@ public class SecurityManagerCallerDetector implements CallerDetector {
          * @return class of the plugin who called
          */
         public Class<? extends Plugin> getCallerPlugin() {
+            ClassLoader cls = Thread.currentThread().getContextClassLoader();
+            if (cls instanceof PluginClassloader) {
+                PluginClassloader cl = (PluginClassloader) cls;
+                try {
+                    return (Class<? extends Plugin>) cl.loadClass(cl.getMeta().getMainClass());
+                } catch (ClassNotFoundException e) {
+                    LOGGER.error("Plugin class could not be found in its own classloader", e);
+                }
+
+                return null;
+            }
+
             for ( Class aClass : getClassContext() ) {
                 // Get the class loader, if its a plugin one return the main class
                 if (aClass.getClassLoader() instanceof PluginClassloader) {
