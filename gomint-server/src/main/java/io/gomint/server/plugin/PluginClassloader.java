@@ -131,4 +131,8 @@ public class PluginClassloader extends URLClassLoader {
         }
     }
 
+    public PluginMeta getMeta() {
+        return meta;
+    }
+
 }
