@@ -69,14 +69,17 @@ import org.jline.terminal.Terminal;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.function.Supplier;
 import java.util.jar.Manifest;
 
 /**
@@ -268,36 +271,57 @@ public class GoMintServer implements GoMint, InventoryHolder {
         // ------------------------------------ //
         // Setup jLine reader thread
         // ------------------------------------ //
+        Supplier<String> readerFunc;
         if (reader != null) {
             LineReader finalReader = reader;
-            AtomicBoolean reading = new AtomicBoolean(false);
-
-            ThreadGroup threadGroup = new ThreadGroup("gomint-internal");
-            this.readerThread = new Thread(threadGroup, () -> {
-                String line;
-                while (running.get()) {
-                    // Read jLine
-                    reading.set(true);
-                    try {
-                        line = finalReader.readLine("\u001b[32;0mGoMint\u001b[39;0m> ");
-                        inputLines.offer(line);
-                    } catch (UserInterruptException e) {
-                        GoMintServer.this.shutdown();
-                    } catch (Exception e) {
-                        LOGGER.error("jLine failed with following exception", e);
-                    }
+            readerFunc = () -> {
+                return finalReader.readLine("\u001b[32;0mGoMint\u001b[39;0m> ");
+            };
+        } else {
+            BufferedReader stdinReader = new BufferedReader(new InputStreamReader(System.in));
+            readerFunc = () -> {
+                if (System.console() != null) {
+                    return System.console().readLine();
                 }
-            });
 
-            this.readerThread.setName("GoMint CLI reader");
-            this.readerThread.start();
-
-            while (!reading.get()) {
                 try {
-                    Thread.sleep(10);
-                } catch (InterruptedException e) {
-                    // Ignored .-.
+                    return stdinReader.readLine();
+                } catch (IOException e) {
+                    LOGGER.error("Could not read stdin", e);
                 }
+
+                return "";
+            };
+        }
+
+        AtomicBoolean reading = new AtomicBoolean(false);
+
+        this.readerThread = new Thread(() -> {
+            String line;
+            while (running.get()) {
+                // Read jLine
+                reading.set(true);
+                try {
+                    line = readerFunc.get();
+                    if (line != null) {
+                        inputLines.offer(line);
+                    }
+                } catch (UserInterruptException e) {
+                    GoMintServer.this.shutdown();
+                } catch (Exception e) {
+                    LOGGER.error("jLine failed with following exception", e);
+                }
+            }
+        });
+
+        this.readerThread.setName("GoMint CLI reader");
+        this.readerThread.start();
+
+        while (!reading.get()) {
+            try {
+                Thread.sleep(10);
+            } catch (InterruptedException e) {
+                // Ignored .-.
             }
         }
 
@@ -353,7 +377,7 @@ public class GoMintServer implements GoMint, InventoryHolder {
 
                 // Log chunk generator failure
                 LOGGER.warn("No such chunk generator for '{}' - Using {}",
-                    worldConfig.getChunkGenerator(),  NormalGenerator.class.getName());
+                    worldConfig.getChunkGenerator(), NormalGenerator.class.getName());
             }
 
             // Try to generate world
