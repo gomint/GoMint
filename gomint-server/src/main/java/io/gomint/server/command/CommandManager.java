@@ -79,7 +79,7 @@ public class CommandManager {
                 VersionCommand.class,
             } ) {
                 // Check for system only commands
-                Object commandObject = null;
+                Object commandObject;
 
                 // Check for combo command (player + system) and build / register it
                 if ( Command.class.isAssignableFrom( cmdClass.getSuperclass() ) ) {
@@ -148,11 +148,11 @@ public class CommandManager {
         // Check if we selected a command
         if ( selected == null ) {
             // Send CommandOutput with failure
-            return new CommandOutput().fail( "Command for input '%%s' could not be found", command );
+            return CommandOutput.failure( "Command for input '%%s' could not be found", command );
         } else {
             // Check for permission
             if ( selected.getPermission() != null && !sender.hasPermission( selected.getPermission() ) ) {
-                return new CommandOutput().fail( "No permission for this command" );
+                return CommandOutput.failure( "No permission for this command" );
             } else {
                 // Now we need to parse all additional parameters
                 String[] params;
@@ -225,7 +225,7 @@ public class CommandManager {
                         return tryCommandDispatch( sender, selected, canidate.getArguments() );
                     }
 
-                    return new CommandOutput().fail( "Command for input '%%s' could not be found", command );
+                    return CommandOutput.failure( "Command for input '%%s' could not be found", command );
                 } else {
                     return tryCommandDispatch( sender, selected, new HashMap<>() );
                 }
@@ -239,7 +239,7 @@ public class CommandManager {
             return command.getExecutor().execute( sender, command.getName(), arguments );
         } catch ( Exception e ) {
             LOGGER.warn( "Command '{}' failed", command.getName(), e );
-            return new CommandOutput().fail( "Command has thrown an error. Please check the logs" );
+            return CommandOutput.failure( e );
         }
         // CHECKSTYLE:ON
     }
@@ -368,7 +368,7 @@ public class CommandManager {
 
             // We only support one deep sub commands. For the rest using the CommandValidator is recommended
             if ( split.length == 2 ) {
-                SubCommand subCommand = this.subCommands.computeIfAbsent( split[0], new Function<String, SubCommand>() {
+                SubCommand subCommand = this.subCommands.computeIfAbsent( split[0], new Function<>() {
                     @Override
                     public SubCommand apply( String s ) {
                         return new SubCommand( plugin, s );

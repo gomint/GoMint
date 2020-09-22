@@ -14,15 +14,15 @@ import java.util.Map;
  * @author geNAZt
  * @version 1.0
  */
-@Name( "version" )
-@Description( "Prints the version of this server." )
-@Permission( value = "gomint.command.version", def = true )
+@Name("version")
+@Description("Prints the version of this server.")
+@Permission(value = "gomint.command.version", def = true)
 public class VersionCommand extends Command {
 
     // Player execution
     @Override
-    public CommandOutput execute( CommandSender server, String alias, Map<String, Object> arguments ) {
-        return new CommandOutput().success( "§7[§aSYSTEM§7] §fServer version: §a" + GoMint.instance().getVersion() );
+    public CommandOutput execute(CommandSender server, String alias, Map<String, Object> arguments) {
+        return CommandOutput.successful("§7[§aSYSTEM§7] §fServer version: §a" + GoMint.instance().getVersion());
     }
 
 }
