@@ -9,8 +9,10 @@ package io.gomint.world.block;
 
 import io.gomint.inventory.item.ItemStack;
 import io.gomint.math.AxisAlignedBB;
+import io.gomint.math.BlockPosition;
 import io.gomint.math.Location;
 import io.gomint.world.Biome;
+import io.gomint.world.World;
 import io.gomint.world.block.data.Facing;
 
 import java.util.List;
@@ -61,9 +63,24 @@ public interface Block {
     /**
      * Get the current location of this block
      *
+     * @deprecated Use {@link #getPosition()} and {@link #getWorld()} as replacement
      * @return Location of this block
      */
     Location getLocation();
+
+    /**
+     * Get the current block position
+     *
+     * @return Position of this block
+     */
+    BlockPosition getPosition();
+
+    /**
+     * Get the world in which this block is placed
+     *
+     * @return World in which this block is placed
+     */
+    World getWorld();
 
     /**
      * Set the type of this block to another material

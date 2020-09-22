@@ -71,7 +71,7 @@ public class ChestTileEntity extends ContainerTileEntity implements InventoryHol
 
             byte slot = itemCompound.getByte("Slot", (byte) 127);
             if (slot == 127) {
-                LOGGER.warn("Found item without slot information: {} @ {} setting it to the next free slot", itemStack.getMaterial(), this.block.getLocation());
+                LOGGER.warn("Found item without slot information: {} @ {} setting it to the next free slot", itemStack.getMaterial(), this.block.getPosition());
                 this.inventory.addItem(itemStack);
             } else {
                 this.inventory.setItem(slot, itemStack);
@@ -98,8 +98,8 @@ public class ChestTileEntity extends ContainerTileEntity implements InventoryHol
      */
     public boolean isPaired() {
         if (this.findable) {
-            Location location = this.getBlock().getLocation();
-            Block other = location.getWorld().getBlockAt(this.pairX, location.toBlockPosition().getY(), this.pairZ);
+            BlockPosition position = this.getBlock().getPosition();
+            Block other = this.getBlock().getWorld().getBlockAt(this.pairX, position.getY(), this.pairZ);
             return other.getBlockType() == this.getBlock().getBlockType();
         }
 
@@ -113,10 +113,10 @@ public class ChestTileEntity extends ContainerTileEntity implements InventoryHol
      */
     public void pair(ChestTileEntity other) {
         // Get the positions of both sides of the pair
-        BlockPosition otherBP = other.getBlock().getLocation().toBlockPosition();
+        BlockPosition otherBP = other.getBlock().getPosition();
         long otherL = CoordinateUtils.toLong(otherBP.getX(), otherBP.getZ());
 
-        BlockPosition thisBP = this.getBlock().getLocation().toBlockPosition();
+        BlockPosition thisBP = this.getBlock().getPosition();
         long thisL = CoordinateUtils.toLong(thisBP.getX(), thisBP.getZ());
 
         // Order them according to "natural" ordering in the world
@@ -158,8 +158,8 @@ public class ChestTileEntity extends ContainerTileEntity implements InventoryHol
             return null;
         }
 
-        Location location = this.getBlock().getLocation();
-        Chest other = location.getWorld().getBlockAt(this.pairX, location.toBlockPosition().getY(), this.pairZ);
+        BlockPosition position = this.getBlock().getPosition();
+        Chest other = this.getBlock().getWorld().getBlockAt(this.pairX, position.getY(), this.pairZ);
         return other.getTileEntity();
     }
 

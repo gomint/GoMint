@@ -5,6 +5,7 @@ import io.gomint.event.world.BlockPlaceEvent;
 import io.gomint.inventory.item.ItemStack;
 import io.gomint.jraknet.PacketBuffer;
 import io.gomint.math.AxisAlignedBB;
+import io.gomint.math.BlockPosition;
 import io.gomint.math.Location;
 import io.gomint.math.Vector;
 import io.gomint.server.entity.EntityPlayer;
@@ -71,7 +72,7 @@ public class Blocks {
     }
 
     public <T extends Block> T get(BlockIdentifier identifier, byte skyLightLevel, byte blockLightLevel,
-                                   TileEntity tileEntity, Location location, int layer, ChunkSlice chunkSlice, short index) {
+                                   TileEntity tileEntity, Location location, BlockPosition blockPosition, int layer, ChunkSlice chunkSlice, short index) {
         Generator<Block> instance = this.generators.getGenerator(identifier.getRuntimeId());
         if (instance != null) {
             T block = (T) instance.generate();
@@ -79,7 +80,7 @@ public class Blocks {
                 return block;
             }
 
-            block.setData(identifier, tileEntity, (WorldAdapter) location.getWorld(), location, layer, skyLightLevel, blockLightLevel, chunkSlice, index);
+            block.setData(identifier, tileEntity, (WorldAdapter) location.getWorld(), location, blockPosition, layer, skyLightLevel, blockLightLevel, chunkSlice, index);
             return block;
         }
 
@@ -120,8 +121,9 @@ public class Blocks {
     public boolean replaceWithItem(Block newBlock, EntityPlayer entity, Block clickedBlock, Block block, Facing face, ItemStack item, Vector clickVector) {
         WorldAdapter adapter = (WorldAdapter) block.location.getWorld();
 
-        newBlock.setLocation(block.location);
-        newBlock.setWorld(adapter);
+        newBlock.location = block.location;
+        newBlock.position = block.position;
+        newBlock.world = adapter;
 
         if (!newBlock.beforePlacement(entity, item, face, block.location)) {
             return false;

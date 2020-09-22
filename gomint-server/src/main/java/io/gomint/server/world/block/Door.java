@@ -37,7 +37,7 @@ public abstract class Door extends Block implements BlockDoor {
     @Override
     public boolean isOpen() {
         if (isTop()) {
-            Door otherPart = getLocation().getWorld().getBlockAt(getLocation().toBlockPosition().add(BlockPosition.DOWN));
+            Door otherPart = this.world.getBlockAt(this.position.add(BlockPosition.DOWN));
             return otherPart.isOpen();
         }
 
@@ -47,7 +47,7 @@ public abstract class Door extends Block implements BlockDoor {
     @Override
     public void toggle() {
         if (isTop()) {
-            Door otherPart = getLocation().getWorld().getBlockAt(getLocation().toBlockPosition().add(BlockPosition.DOWN));
+            Door otherPart = this.world.getBlockAt(this.position.add(BlockPosition.DOWN));
             otherPart.toggle();
             return;
         }
@@ -66,7 +66,7 @@ public abstract class Door extends Block implements BlockDoor {
 
     @Override
     public boolean beforePlacement(EntityLiving entity, ItemStack item, Facing face, Location location) {
-        Block above = location.getWorld().getBlockAt(location.toBlockPosition().add(BlockPosition.UP));
+        Block above = this.world.getBlockAt(this.position.add(BlockPosition.UP));
         return above.canBeReplaced(item);
     }
 
@@ -83,10 +83,10 @@ public abstract class Door extends Block implements BlockDoor {
     @Override
     public boolean onBreak(boolean creative) {
         if (isTop()) {
-            Block otherPart = getLocation().getWorld().getBlockAt(getLocation().toBlockPosition().add(BlockPosition.DOWN));
+            Block otherPart = this.world.getBlockAt(this.position.add(BlockPosition.DOWN));
             otherPart.setBlockType(BlockAir.class);
         } else {
-            Block otherPart = getLocation().getWorld().getBlockAt(getLocation().toBlockPosition().add(BlockPosition.UP));
+            Block otherPart = this.world.getBlockAt(this.position.add(BlockPosition.UP));
             otherPart.setBlockType(BlockAir.class);
         }
 

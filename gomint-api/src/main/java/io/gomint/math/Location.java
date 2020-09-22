@@ -65,6 +65,10 @@ public class Location extends Vector {
         this.headYaw = headYaw;
     }
 
+    public Location(World world, BlockPosition position) {
+        this( world, position.getX(), position.getY(), position.getZ());
+    }
+
     public void setWorld( World world ) {
         this.world = world;
     }

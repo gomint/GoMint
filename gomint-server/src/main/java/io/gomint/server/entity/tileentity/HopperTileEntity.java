@@ -63,7 +63,7 @@ public class HopperTileEntity extends TileEntity implements InventoryHolder {
 
             byte slot = itemCompound.getByte( "Slot", (byte) 127 );
             if ( slot == 127 ) {
-                LOGGER.warn( "Found item without slot information: {} @ {} setting it to the next free slot", itemStack.getMaterial(), this.getBlock().getLocation() );
+                LOGGER.warn( "Found item without slot information: {} @ {} setting it to the next free slot", itemStack.getMaterial(), this.getBlock().getPosition() );
                 this.inventory.addItem( itemStack );
             } else {
                 this.inventory.setItem( slot, itemStack );

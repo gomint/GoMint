@@ -62,7 +62,7 @@ public class ShulkerBoxTileEntity extends ContainerTileEntity implements Invento
 
             byte slot = itemCompound.getByte( "Slot", (byte) 127 );
             if ( slot == 127 ) {
-                LOGGER.warn( "Found item without slot information: " + itemStack.getMaterial() + " @ " + this.getBlock().getLocation() + " setting it to the next free slot" );
+                LOGGER.warn( "Found item without slot information: {} @ {} setting it to the next free slot", itemStack.getMaterial(), this.getBlock().getPosition() );
                 this.inventory.addItem( itemStack );
             } else {
                 this.inventory.setItem( slot, itemStack );

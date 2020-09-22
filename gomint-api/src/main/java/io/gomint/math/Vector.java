@@ -46,6 +46,10 @@ public class Vector {
         this.z = z;
     }
 
+    public Vector(BlockPosition position) {
+        this(position.getX(), position.getY(), position.getZ());
+    }
+
     public Vector add( float x, float y, float z ) {
         return new Vector( this.x + x, this.y + y, this.z + z );
     }

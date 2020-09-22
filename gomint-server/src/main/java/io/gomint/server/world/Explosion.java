@@ -186,13 +186,12 @@ public class Explosion {
         }
 
         Set<Block> alreadyUpdated = new HashSet<>();
-        List<Vector> send = new ArrayList<>();
         for ( Block block : event.getAffectedBlocks() ) {
             if ( block instanceof BlockTNT ) {
                 ( (BlockTNT) block ).prime( 0.5f + ThreadLocalRandom.current().nextFloat() );
             } else if ( ThreadLocalRandom.current().nextFloat() * 100 < event.getRandomDropChance() ) {
                 for ( ItemStack drop : block.getDrops( ItemAir.create( 0 ) ) ) {
-                    this.source.getWorld().dropItem( block.getLocation().add( 0.5f, 0.5f, 0.5f ), drop );
+                    this.source.getWorld().dropItem( new Vector(block.getPosition()).add( 0.5f, 0.5f, 0.5f ), drop );
                 }
             }
 
@@ -206,9 +205,6 @@ public class Explosion {
                     alreadyUpdated.add( attached );
                 }
             }
-
-            Location blockLocation = block.getLocation();
-            send.add( new Vector( blockLocation.getX() - sourceLocation.getX(), blockLocation.getY() - sourceLocation.getY(), blockLocation.getZ() - sourceLocation.getZ() ) );
         }
 
         // TODO: PacketExplode has been removed

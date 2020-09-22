@@ -1,7 +1,5 @@
 package io.gomint.math;
 
-import java.util.Objects;
-
 /**
  * @author geNAZt
  * @version 1.0
@@ -54,17 +52,11 @@ public class BlockPosition implements Cloneable {
     }
 
     public BlockPosition add( BlockPosition other ) {
-        this.x += other.x;
-        this.y += other.y;
-        this.z += other.z;
-        return this;
+        return new BlockPosition(this.x + other.x, this.y + other.y, this.z + other.z);
     }
 
     public BlockPosition add( int x, int y, int z ) {
-        this.x += x;
-        this.y += y;
-        this.z += z;
-        return this;
+        return new BlockPosition(this.x + x, this.y + y, this.z + z);
     }
 
     @Override
@@ -97,6 +89,15 @@ public class BlockPosition implements Cloneable {
         h = 31 * h + y;
         h = 31 * h + z;
         return h;
+    }
+
+    @Override
+    public String toString() {
+        return "BlockPosition{" +
+            "x=" + x +
+            ", y=" + y +
+            ", z=" + z +
+            '}';
     }
 
 }
