@@ -186,7 +186,7 @@ public class ChunkAdapter implements Chunk {
                 .update(UpdateReason.RANDOM, currentTimeMS, dT);
 
             if (next > currentTimeMS) {
-                this.world.addTickingBlock(next, block.getLocation().toBlockPosition());
+                this.world.addTickingBlock(next, block.getPosition());
             }
         }
     }
@@ -367,7 +367,7 @@ public class ChunkAdapter implements Chunk {
      * @param tileEntity The NBT tag of the tile entity which should be added
      */
     protected void addTileEntity(TileEntity tileEntity) {
-        BlockPosition tileEntityLocation = tileEntity.getBlock().getLocation().toBlockPosition();
+        BlockPosition tileEntityLocation = tileEntity.getBlock().getPosition();
         int xPos = tileEntityLocation.getX() & 0xF;
         int yPos = tileEntityLocation.getY();
         int zPos = tileEntityLocation.getZ() & 0xF;

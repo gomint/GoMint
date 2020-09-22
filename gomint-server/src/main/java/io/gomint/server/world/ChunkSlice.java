@@ -1,6 +1,7 @@
 package io.gomint.server.world;
 
 import io.gomint.jraknet.PacketBuffer;
+import io.gomint.math.BlockPosition;
 import io.gomint.math.Location;
 import io.gomint.math.MathUtils;
 import io.gomint.server.entity.tileentity.TileEntity;
@@ -42,7 +43,6 @@ public class ChunkSlice {
     private static final ThreadLocal<IntList> RUNTIME_INDEX = ThreadLocal.withInitial(() -> new IntArrayList(4096));
 
     protected static final BlockIdentifier AIR_RUNTIME_ID = BlockRuntimeIDs.toBlockIdentifier("minecraft:air", null);
-    private static final ThreadLocal<Air> AIR_BLOCK = new ThreadLocal<>();
 
     private final ChunkAdapter chunk;
     private final int sectionY;
@@ -132,7 +132,7 @@ public class ChunkSlice {
         return blockStorage.getShort(index << 1);
     }
 
-    public <T extends Block> T getBlockInstanceInternal(short index, int layer, Location blockLocation) {
+    public <T extends Block> T getBlockInstanceInternal(short index, int layer, BlockPosition blockLocation) {
         if (blockLocation == null) {
             int blockX = (index >> 8) & 0x0f;
             int blockY = (index) & 0x0f;
@@ -149,7 +149,7 @@ public class ChunkSlice {
         BlockIdentifier identifier = BlockRuntimeIDs.toBlockIdentifier(runtimeID);
         return (T) this.chunk.getWorld().getServer().getBlocks().get(identifier, this.skyLight != null ? this.skyLight.get(index) : 0,
             this.blockLight != null ? this.blockLight.get(index) : 0, this.tileEntities != null ? this.tileEntities.get(index) : null,
-            blockLocation, layer, this, index);
+            new Location(this.chunk.world, blockLocation.getX(), blockLocation.getY(), blockLocation.getZ()), blockLocation, layer, this, index);
     }
 
     <T extends Block> T getBlockInstance(int x, int y, int z, int layer) {
@@ -157,20 +157,14 @@ public class ChunkSlice {
         return getBlockInstanceInternal(index, layer, getBlockLocation(x, y, z));
     }
 
-    private Air getAirBlockInstance(Location location) {
-        Air air = AIR_BLOCK.get();
-        if (air == null) {
-            air = this.chunk.getWorld().getServer().getBlocks().get(AIR_RUNTIME_ID,
-                (byte) 15, (byte) 15, null, location, 0, null, (short) 0);
-            AIR_BLOCK.set(air);
-        }
-
-        air.setLocation(location);
-        return air;
+    private Air getAirBlockInstance(BlockPosition location) {
+        return  this.chunk.getWorld().getServer().getBlocks().get(AIR_RUNTIME_ID,
+                (byte) 15, (byte) 15, null, new Location(this.chunk.world, location.getX(), location.getY(), location.getZ()),
+            location, 0, null, (short) 0);
     }
 
-    private Location getBlockLocation(int x, int y, int z) {
-        return new Location(this.chunk.world, this.shiftedMinX + x, this.shiftedMinY + y, this.shiftedMinZ + z);
+    private BlockPosition getBlockLocation(int x, int y, int z) {
+        return new BlockPosition(this.shiftedMinX + x, this.shiftedMinY + y, this.shiftedMinZ + z);
     }
 
     void removeTileEntity(int x, int y, int z) {

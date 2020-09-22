@@ -143,7 +143,7 @@ public class Vines extends Block implements BlockVines {
                 Facing face = Facing.getRandom();
 
                 Block other = this.getSide(face);
-                if (face == Facing.UP && this.getLocation().getY() < 255 && other.getBlockType() == BlockType.AIR) {
+                if (face == Facing.UP && this.position.getY() < 255 && other.getBlockType() == BlockType.AIR) {
                     Set<Facing> attachTo = new HashSet<>();
                     for (Facing facing : Facing.HORIZONTAL) {
                         if (ThreadLocalRandom.current().nextBoolean() && this.canSpreadInDirection(other, facing.opposite())) {
@@ -152,7 +152,7 @@ public class Vines extends Block implements BlockVines {
                     }
 
                     spreadIfAttachNotEmpty(attachTo, other);
-                } else if (face == Facing.DOWN && this.getLocation().getY() > 1) {
+                } else if (face == Facing.DOWN && this.position.getY() > 1) {
                     if (other.getBlockType() == BlockType.AIR) {
                         Set<Facing> attachTo = new HashSet<>();
                         for (Facing facing : Facing.HORIZONTAL) {

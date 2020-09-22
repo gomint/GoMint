@@ -48,8 +48,8 @@ public class Farmland extends Block implements BlockFarmland {
             } else {
                 blockSearcher = new StatefulBlockSearcher(
                     this.world,
-                    this.location.toBlockPosition().add( new BlockPosition( -4, 0, -4 ) ),
-                    this.location.toBlockPosition().add( new BlockPosition( 4, 1, 4 ) ),
+                    this.position.add( new BlockPosition( -4, 0, -4 ) ),
+                    this.position.add( new BlockPosition( 4, 1, 4 ) ),
                     block -> block instanceof FlowingWater || block instanceof StationaryWater
                 );
 
@@ -73,7 +73,7 @@ public class Farmland extends Block implements BlockFarmland {
 
             return true;
         } else if ( WATER_LEVEL.getState(this) > 0 ) {
-            WATER_LEVEL.setState(this,  WATER_LEVEL.getState(this) - this.WATER_LEVEL.getStep() );
+            WATER_LEVEL.setState(this,  WATER_LEVEL.getState(this) - WATER_LEVEL.getStep() );
         }
 
         return false;

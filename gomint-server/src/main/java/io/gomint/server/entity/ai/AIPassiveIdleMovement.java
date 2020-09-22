@@ -50,7 +50,7 @@ public class AIPassiveIdleMovement extends AIMovementAndLookingState {
 
         Vector position = this.pathfinding.getTransform().getPosition().add((float) x, 0.0F, (float) z);
         Block block = this.selectWalkableBlock(position.toBlockPosition(), 10);
-        return block.getLocation();
+        return new Location(block.getWorld(), block.getPosition());
     }
 
     private Block selectWalkableBlock(BlockPosition pos, int tries) {

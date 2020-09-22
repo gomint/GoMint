@@ -58,7 +58,7 @@ public class BarrelTileEntity extends ContainerTileEntity implements InventoryHo
 
             byte slot = itemCompound.getByte( "Slot", (byte) 127 );
             if ( slot == 127 ) {
-                LOGGER.warn( "Found item without slot information: {} @ {} setting it to the next free slot", itemStack.getMaterial(), this.block.getLocation() );
+                LOGGER.warn( "Found item without slot information: {} @ {} setting it to the next free slot", itemStack.getMaterial(), this.block.getPosition() );
                 this.inventory.addItem( itemStack );
             } else {
                 this.inventory.setItem( slot, itemStack );

@@ -176,11 +176,11 @@ public interface World {
     /**
      * Create a entity drop in the given world
      *
-     * @param location  for the item drop
+     * @param vector  for the item drop
      * @param itemStack which is stored inside the drop
      * @return the created and spawned entity
      */
-    EntityItemDrop createItemDrop( Location location, ItemStack itemStack );
+    EntityItemDrop createItemDrop( Vector vector, ItemStack itemStack );
 
     /**
      * Unload this world. All remaining players in this world get called through the consumer

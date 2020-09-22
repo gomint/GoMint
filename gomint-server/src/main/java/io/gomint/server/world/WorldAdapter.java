@@ -372,13 +372,13 @@ public abstract class WorldAdapter implements World {
         // Secure location
         if (y < 0 || y > 255) {
             return (T) this.server.getBlocks().get(BlockRuntimeIDs.toBlockIdentifier("minecraft:air", null),
-                (byte) (y > 255 ? 15 : 0), (byte) 0, null, new Location(this, x, y, z), layer.ordinal(), null, (short) 0);
+                (byte) (y > 255 ? 15 : 0), (byte) 0, null, new Location(this, x, y, z), new BlockPosition( x, y, z ), layer.ordinal(), null, (short) 0);
         }
 
         ChunkAdapter chunk = this.loadChunk(x >> 4, z >> 4, false);
         if (chunk == null) {
             return (T) this.server.getBlocks().get(BlockRuntimeIDs.toBlockIdentifier("minecraft:air", null),
-                (byte) (y > 255 ? 15 : 0), (byte) 0, null, new Location(this, x, y, z), layer.ordinal(), null, (short) 0);
+                (byte) (y > 255 ? 15 : 0), (byte) 0, null, new Location(this, x, y, z), new BlockPosition( x, y, z ), layer.ordinal(), null, (short) 0);
         }
 
         return chunk.getBlockAt(x & 0xF, y, z & 0xF, layer.ordinal());
@@ -1140,8 +1140,8 @@ public abstract class WorldAdapter implements World {
                     entity, clickedBlock, replaceBlock, face, itemInHand, clickPosition);
                 if (success) {
                     // Play sound
-                    io.gomint.server.world.block.Block newBlock = replaceBlock.getLocation().getWorld().getBlockAt(replaceBlock.getLocation().toBlockPosition());
-                    playSound(null, newBlock.getLocation(), Sound.PLACE, (byte) 1, BlockRuntimeIDs.toBlockIdentifier(newBlock.getBlockId(), null).getRuntimeId());
+                    io.gomint.server.world.block.Block newBlock = replaceBlock.getWorld().getBlockAt(replaceBlock.getPosition());
+                    playSound(null, new Vector(newBlock.getPosition()), Sound.PLACE, (byte) 1, BlockRuntimeIDs.toBlockIdentifier(newBlock.getBlockId(), null).getRuntimeId());
 
                     if (entity.getGamemode() != Gamemode.CREATIVE) {
                         ((io.gomint.server.inventory.item.ItemStack) itemInHand).afterPlacement();
@@ -1169,11 +1169,11 @@ public abstract class WorldAdapter implements World {
             try {
                 long next = neighbourBlock.update(UpdateReason.NEIGHBOUR_UPDATE, this.server.getCurrentTickTime(), 0f);
                 if (next > this.server.getCurrentTickTime()) {
-                    BlockPosition position = neighbourBlock.getLocation().toBlockPosition();
+                    BlockPosition position = neighbourBlock.getPosition();
                     this.tickQueue.add(next, position);
                 }
             } catch (Exception e) {
-                this.logger.error("Exception while updating block @ {}", neighbourBlock.getLocation(), e);
+                this.logger.error("Exception while updating block @ {}", neighbourBlock.getPosition(), e);
             }
             // CHECKSTYLE:ON
         }
@@ -1181,9 +1181,10 @@ public abstract class WorldAdapter implements World {
         return block;
     }
 
-    public EntityItem createItemDrop(Location location, ItemStack item) {
+    @Override
+    public EntityItem createItemDrop(Vector vector, ItemStack item) {
         EntityItem entityItem = new EntityItem(item, this);
-        spawnEntityAt(entityItem, location);
+        spawnEntityAt(entityItem, vector);
         return entityItem;
     }
 
@@ -1277,7 +1278,7 @@ public abstract class WorldAdapter implements World {
         if (block.onBreak(creative)) {
             if (!drops.isEmpty()) {
                 for (ItemStack itemStack : drops) {
-                    EntityItem item = this.createItemDrop(block.getLocation().add(0.5f, 0.5f, 0.5f), itemStack);
+                    EntityItem item = this.createItemDrop(new Vector(block.getPosition()).add(0.5f, 0.5f, 0.5f), itemStack);
                     item.setVelocity(new Vector(ThreadLocalRandom.current().nextFloat() * 0.2f - 0.1f, 0.2f, ThreadLocalRandom.current().nextFloat() * 0.2f - 0.1f));
                 }
             }
@@ -1309,7 +1310,7 @@ public abstract class WorldAdapter implements World {
         this.tickQueue.add(key, position);
     }
 
-    public void dropItem(Location location, ItemStack drop) {
+    public void dropItem(Vector vector, ItemStack drop) {
         if (drop.getItemType() == ItemType.AIR) {
             return;
         }
@@ -1317,7 +1318,7 @@ public abstract class WorldAdapter implements World {
         Vector motion = new Vector(ThreadLocalRandom.current().nextFloat() * 0.2f - 0.1f,
             0.2f, ThreadLocalRandom.current().nextFloat() * 0.2f - 0.1f);
 
-        EntityItem item = this.createItemDrop(location, drop);
+        EntityItem item = this.createItemDrop(vector, drop);
         item.setVelocity(motion);
     }
 

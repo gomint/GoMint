@@ -45,7 +45,7 @@ public class EnderChestTileEntity extends ContainerTileEntity implements Invento
         // Open the chest inventory for the entity
         if ( entity instanceof EntityPlayer ) {
             EntityPlayer player = (EntityPlayer) entity;
-            player.getEnderChestInventory().setContainerPosition( this.block.getLocation().toBlockPosition() );
+            player.getEnderChestInventory().setContainerPosition( this.block.getPosition() );
             player.openInventory( player.getEnderChestInventory() );
         }
     }

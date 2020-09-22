@@ -76,10 +76,8 @@ public class DragonEgg extends Block implements BlockDragonEgg {
 
     @Override
     public void teleport() {
-        BlockPosition pos = this.getLocation().toBlockPosition();
-
         for ( int i = 0; i < 1000; i++ ) {
-            BlockPosition blockPos = pos.add( ThreadLocalRandom.current().nextInt( 16 ) - ThreadLocalRandom.current().nextInt( 16 ),
+            BlockPosition blockPos = this.position.add( ThreadLocalRandom.current().nextInt( 16 ) - ThreadLocalRandom.current().nextInt( 16 ),
                 ThreadLocalRandom.current().nextInt( 8 ) - ThreadLocalRandom.current().nextInt( 8 ),
                 ThreadLocalRandom.current().nextInt( 16 ) - ThreadLocalRandom.current().nextInt( 16 ) );
 
