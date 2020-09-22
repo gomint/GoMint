@@ -24,6 +24,13 @@ public interface BlockLiquid extends Block {
     float getFillHeight();
 
     /**
+     * Set the fill height of the fluid inside this block
+     *
+     * @param height of the fluid
+     */
+    void setFillHeight(float height);
+
+    /**
      * Vector which shows in which direction the liquid is flowing
      *
      * @return vector of flowing direction
