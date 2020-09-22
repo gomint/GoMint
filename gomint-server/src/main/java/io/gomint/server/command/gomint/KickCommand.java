@@ -16,7 +16,7 @@ import java.util.Map;
  */
 
 @Name("kick")
-@Description( "Kick a player from the server." )
+@Description("Kick a player from the server.")
 @Permission("gomint.command.kick")
 @Overload({
     @Parameter(name = "player", validator = TargetValidator.class),
@@ -26,12 +26,11 @@ public class KickCommand extends Command {
 
     @Override
     public CommandOutput execute(CommandSender sender, String alias, Map<String, Object> arguments) {
-        CommandOutput output = new CommandOutput();
         EntityPlayer target = (EntityPlayer) arguments.get("player");
         String reason = "Kicked by an operator.";
 
         if (target == null) {
-            return output.fail("You must provide a player!");
+            return CommandOutput.failure("You must provide a player!");
         }
 
         if (arguments.containsKey("reason")) {
@@ -39,6 +38,6 @@ public class KickCommand extends Command {
         }
 
         target.disconnect(reason);
-        return output.success("Kicked %%s from the server", target.getDisplayName());
+        return CommandOutput.successful("Kicked %%s from the server", target.getDisplayName());
     }
 }
