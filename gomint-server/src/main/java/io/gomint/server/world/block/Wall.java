@@ -2,12 +2,18 @@ package io.gomint.server.world.block;
 
 import io.gomint.inventory.item.ItemStack;
 import io.gomint.math.AxisAlignedBB;
-import io.gomint.server.world.block.helper.ToolPresets;
-import io.gomint.server.world.block.state.EnumBlockState;
-import io.gomint.world.block.BlockWall;
-import io.gomint.world.block.BlockType;
-
+import io.gomint.math.Location;
+import io.gomint.server.entity.EntityLiving;
 import io.gomint.server.registry.RegisterInfo;
+import io.gomint.server.world.UpdateReason;
+import io.gomint.server.world.block.helper.ToolPresets;
+import io.gomint.server.world.block.state.BooleanBlockState;
+import io.gomint.server.world.block.state.EnumBlockState;
+import io.gomint.world.block.BlockType;
+import io.gomint.world.block.BlockWall;
+import io.gomint.world.block.data.ConnectionType;
+import io.gomint.world.block.data.Direction;
+import io.gomint.world.block.data.Facing;
 import io.gomint.world.block.data.StoneType;
 
 import java.util.Collections;
@@ -17,13 +23,27 @@ import java.util.List;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:cobblestone_wall" )
+@RegisterInfo(sId = "minecraft:cobblestone_wall")
 public class Wall extends Block implements BlockWall {
 
     private static final String STONE_SLAB_ID = "minecraft:cobblestone_wall";
     private static final String STONE_TYPE = "wall_block_type";
 
-    public enum StoneTypeMagic {
+    private enum ConnectionTypeMagic {
+
+        SHORT("short"),
+        TALL("tall"),
+        NONE("none");
+
+        private final String type;
+
+        ConnectionTypeMagic(String type) {
+            this.type = type;
+        }
+
+    }
+
+    private enum StoneTypeMagic {
 
         // Slab types 1
         SMOOTH_STONE("", "", ""),
@@ -75,6 +95,7 @@ public class Wall extends Block implements BlockWall {
             this.value = value;
             this.blockId = blockId;
         }
+
     }
 
     private static final EnumBlockState<StoneTypeMagic, String> VARIANT = new EnumBlockState<>(v -> {
@@ -88,6 +109,72 @@ public class Wall extends Block implements BlockWall {
 
         return null;
     });
+    private static final BooleanBlockState POST = new BooleanBlockState(() -> new String[]{"wall_post_bit"});
+
+    // Connection types
+    private static final EnumBlockState<ConnectionTypeMagic, String> SOUTH = new EnumBlockState<>(v -> new String[]{"wall_connection_type_south"}, ConnectionTypeMagic.values(), v -> v.type, s -> {
+        for (ConnectionTypeMagic value : ConnectionTypeMagic.values()) {
+            if (value.type.equals(s)) {
+                return value;
+            }
+        }
+
+        return null;
+    });
+
+    private static final EnumBlockState<ConnectionTypeMagic, String> WEST = new EnumBlockState<>(v -> new String[]{"wall_connection_type_west"}, ConnectionTypeMagic.values(), v -> v.type, s -> {
+        for (ConnectionTypeMagic value : ConnectionTypeMagic.values()) {
+            if (value.type.equals(s)) {
+                return value;
+            }
+        }
+
+        return null;
+    });
+
+    private static final EnumBlockState<ConnectionTypeMagic, String> NORTH = new EnumBlockState<>(v -> new String[]{"wall_connection_type_north"}, ConnectionTypeMagic.values(), v -> v.type, s -> {
+        for (ConnectionTypeMagic value : ConnectionTypeMagic.values()) {
+            if (value.type.equals(s)) {
+                return value;
+            }
+        }
+
+        return null;
+    });
+
+    private static final EnumBlockState<ConnectionTypeMagic, String> EAST = new EnumBlockState<>(v -> new String[]{"wall_connection_type_east"}, ConnectionTypeMagic.values(), v -> v.type, s -> {
+        for (ConnectionTypeMagic value : ConnectionTypeMagic.values()) {
+            if (value.type.equals(s)) {
+                return value;
+            }
+        }
+
+        return null;
+    });
+
+    private void update() {
+        // Check if we have others around and update connections if needed
+        for (Direction value : Direction.values()) {
+            Block block = this.getSide(value);
+
+            setConnection(value, ConnectionType.NONE);
+            if (block.isSolid()) {
+                setConnection(value, ConnectionType.SHORT);
+            }
+        }
+
+        // Check if we need the pole
+        this.setPole(true);
+        if (this.getConnection(Direction.NORTH) == ConnectionType.SHORT &&
+            this.getConnection(Direction.SOUTH) == ConnectionType.SHORT) {
+            this.setPole(this.getConnection(Direction.WEST) != ConnectionType.NONE ||
+                this.getConnection(Direction.EAST) != ConnectionType.NONE);
+        } else if (this.getConnection(Direction.WEST) == ConnectionType.SHORT &&
+            this.getConnection(Direction.EAST) == ConnectionType.SHORT) {
+            this.setPole(this.getConnection(Direction.SOUTH) != ConnectionType.NONE ||
+                this.getConnection(Direction.NORTH) != ConnectionType.NONE);
+        }
+    }
 
     @Override
     public long getBreakTime() {
@@ -121,14 +208,14 @@ public class Wall extends Block implements BlockWall {
 
     @Override
     public List<AxisAlignedBB> getBoundingBox() {
-        return Collections.singletonList( new AxisAlignedBB(
+        return Collections.singletonList(new AxisAlignedBB(
             this.location.getX() + 0.25f,
             this.location.getY(),
-            this.location.getZ() + 0.25f ,
+            this.location.getZ() + 0.25f,
             this.location.getX() + 0.75f,
             this.location.getY() + 1,
             this.location.getZ() + 0.75f
-        ) );
+        ));
     }
 
     @Override
@@ -156,6 +243,70 @@ public class Wall extends Block implements BlockWall {
         VARIANT.setState(this, newState);
     }
 
+    @Override
+    public boolean hasPole() {
+        return POST.getState(this);
+    }
 
+    @Override
+    public void setPole(boolean pole) {
+        POST.setState(this, pole);
+    }
+
+    @Override
+    public void setConnection(Direction direction, ConnectionType connectionType) {
+        ConnectionTypeMagic state = ConnectionTypeMagic.valueOf(connectionType.name());
+        switch (direction) {
+            case SOUTH:
+                SOUTH.setState(this, state);
+                break;
+
+            case EAST:
+                EAST.setState(this, state);
+                break;
+
+            case WEST:
+                WEST.setState(this, state);
+                break;
+
+            case NORTH:
+                NORTH.setState(this, state);
+                break;
+        }
+    }
+
+    @Override
+    public ConnectionType getConnection(Direction direction) {
+        switch (direction) {
+            case SOUTH:
+                return ConnectionType.valueOf(SOUTH.getState(this).name());
+
+            case EAST:
+                return ConnectionType.valueOf(EAST.getState(this).name());
+
+            case WEST:
+                return ConnectionType.valueOf(WEST.getState(this).name());
+
+            case NORTH:
+                return ConnectionType.valueOf(NORTH.getState(this).name());
+        }
+
+        return null;
+    }
+
+    @Override
+    public boolean beforePlacement(EntityLiving entity, ItemStack item, Facing face, Location location) {
+        this.update();
+        return super.beforePlacement(entity, item, face, location);
+    }
+
+    @Override
+    public long update(UpdateReason updateReason, long currentTimeMS, float dT) {
+        if (updateReason == UpdateReason.NEIGHBOUR_UPDATE) {
+            this.update();
+        }
+
+        return super.update(updateReason, currentTimeMS, dT);
+    }
 
 }
