@@ -1,9 +1,13 @@
 package io.gomint.server.world.block;
 
+import io.gomint.inventory.item.ItemStack;
+import io.gomint.math.Location;
+import io.gomint.server.entity.EntityLiving;
 import io.gomint.world.block.BlockNetherWart;
 import io.gomint.world.block.BlockType;
 
 import io.gomint.server.registry.RegisterInfo;
+import io.gomint.world.block.data.Facing;
 
 /**
  * @author geNAZt
@@ -13,8 +17,9 @@ import io.gomint.server.registry.RegisterInfo;
 public class NetherWart extends Block implements BlockNetherWart {
 
     @Override
-    public String getBlockId() {
-        return "minecraft:nether_wart";
+    public boolean beforePlacement(EntityLiving entity, ItemStack item, Facing face, Location location) {
+        Block down = this.getSide(Facing.DOWN);
+        return down.isSolid();
     }
 
     @Override
