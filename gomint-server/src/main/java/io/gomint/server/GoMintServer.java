@@ -280,6 +280,12 @@ public class GoMintServer implements GoMint, InventoryHolder {
         } else {
             BufferedReader stdinReader = new BufferedReader(new InputStreamReader(System.in));
             readerFunc = () -> {
+                try {
+                    Thread.sleep(10);
+                } catch (InterruptedException ignored) {
+                    // Ignore
+                }
+
                 if (System.console() != null) {
                     return System.console().readLine();
                 }
