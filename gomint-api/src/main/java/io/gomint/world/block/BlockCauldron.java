@@ -7,10 +7,42 @@
 
 package io.gomint.world.block;
 
+import io.gomint.world.block.data.LiquidType;
+
 /**
  * @author geNAZt
  * @version 1.0
- * @stability 2
+ * @stability 3
  */
 public interface BlockCauldron extends Block {
+
+    /**
+     * Get type of liquid for this cauldron
+     *
+     * @return type of liquid
+     */
+    LiquidType getType();
+
+    /**
+     * Set the liquid type of this cauldron
+     *
+     * @param type of liquid for this cauldron
+     */
+    void setType(LiquidType type);
+
+    /**
+     * Get the percentage of how high the fluid has been in this block
+     *
+     * @return a value between 0 and 1 where 1 is the whole block full of the given liquid
+     */
+    float getFillHeight();
+
+    /**
+     * Set the fill height of the fluid inside this block. Allowed values range from 0 to 1. Other values
+     * will be silenty ignored
+     *
+     * @param height of the fluid
+     */
+    void setFillHeight(float height);
+
 }

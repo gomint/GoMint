@@ -3,8 +3,11 @@ package io.gomint.server.world.block;
 import io.gomint.inventory.item.ItemAir;
 import io.gomint.inventory.item.ItemStack;
 import io.gomint.math.BlockPosition;
+import io.gomint.math.Location;
+import io.gomint.math.MathUtils;
 import io.gomint.math.Vector;
 import io.gomint.server.entity.Entity;
+import io.gomint.server.entity.EntityLiving;
 import io.gomint.server.world.UpdateReason;
 import io.gomint.server.world.block.state.DirectValueBlockState;
 import io.gomint.world.Sound;
@@ -48,6 +51,15 @@ public abstract class Liquid extends Block implements BlockLiquid {
         }
 
         return (data / 8f);
+    }
+
+    @Override
+    public void setFillHeight(float height) {
+        if (height < 0f || height > 1f) {
+            return;
+        }
+
+        LIQUID_DEPTH.setState(this, MathUtils.fastRound(8f * height));
     }
 
     private short getEffectiveFlowDecay(Block block) {
@@ -418,9 +430,9 @@ public abstract class Liquid extends Block implements BlockLiquid {
     }
 
     @Override
-    void place() {
-        super.place();
-        LIQUID_DEPTH.setState(this, 0);
+    public boolean beforePlacement(EntityLiving entity, ItemStack item, Facing face, Location location) {
+        LIQUID_DEPTH.detectFromPlacement(this, entity, item, face);
+        return super.beforePlacement(entity, item, face, location);
     }
 
 }
