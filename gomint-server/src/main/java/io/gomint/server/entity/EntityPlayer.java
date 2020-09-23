@@ -67,6 +67,7 @@ import it.unimi.dsi.fastutil.objects.Object2ByteOpenHashMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.net.InetSocketAddress;
 import java.util.*;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
@@ -1629,6 +1630,11 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
     @Override
     public DeviceInfo getDeviceInfo() {
         return this.connection.getDeviceInfo();
+    }
+
+    @Override
+    public InetSocketAddress getAddress() {
+        return this.connection.getConnection().getAddress();
     }
 
     @Override
