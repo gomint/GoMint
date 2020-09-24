@@ -2,12 +2,15 @@ package io.gomint.server.world.block;
 
 import io.gomint.inventory.item.ItemSapling;
 import io.gomint.inventory.item.ItemStack;
+import io.gomint.math.Location;
+import io.gomint.server.entity.EntityLiving;
 import io.gomint.server.world.block.state.BooleanBlockState;
 import io.gomint.server.world.block.state.EnumBlockState;
 import io.gomint.world.block.BlockSapling;
 import io.gomint.world.block.BlockType;
 
 import io.gomint.server.registry.RegisterInfo;
+import io.gomint.world.block.data.Facing;
 import io.gomint.world.block.data.LogType;
 
 import java.util.Collections;
@@ -53,6 +56,14 @@ public class Sapling extends Block implements BlockSapling {
     });
 
     private static final BooleanBlockState AGE = new BooleanBlockState(() -> new String[]{"age_bit"});
+
+    @Override
+    public boolean beforePlacement(EntityLiving entity, ItemStack item, Facing face, Location location) {
+        AGE.setState(this, false);
+
+        Block down = this.getSide(Facing.DOWN);
+        return down.isSolid();
+    }
 
     @Override
     public boolean isTransparent() {
