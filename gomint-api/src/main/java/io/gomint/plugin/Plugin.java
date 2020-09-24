@@ -19,12 +19,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * <p>
  * Base class for any plugin to be created for use with the GoMint system. Below you will find an in-depth
  * explanation of the GoMint plugin system.
- * </p>
- * <p>
- * <p>
+ *
  * When creating a plugin you should take care that the plugin implementation class directly inherits from
  * the base Plugin class. It is important that the implementation will not be considered a valid plugin
  * by GoNets plugin loader in case it only indirectly inherits from plugin. There are also several
@@ -36,9 +33,7 @@ import java.util.List;
  * </ul>
  * Furthermore you may specify additional annotation as needed, for example a @Startup annotation to specify
  * upmost priority in loading the specified plugin.
- * </p>
- * <p>
- * <p>
+ *
  * Any plugin will live through up to 4 different stages which will be explained in detail below. Please note
  * that only the very first stage is obligatory (assumed you have been able to put your - correct - implementation,
  * as shown above, into the right folder of the application), that is the DETECTION stage.
@@ -48,7 +43,6 @@ import java.util.List;
  * <li>RUNTIME - The main stage your plugin will (probably) be in most of the time (expect your plugin is full of shit nobody wants to install).</li>
  * <li>UNINSTALLATION - In this stage your plugin will be removed and - as the name obviously indicates - uninstalled.</li>
  * </ol>
- * </p>
  *
  * @author BlackyPaw
  * @version 1.0

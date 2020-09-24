@@ -2,6 +2,8 @@ package io.gomint.server.inventory.item;
 
 import io.gomint.inventory.item.ItemType;
 import io.gomint.server.registry.RegisterInfo;
+import io.gomint.world.block.Block;
+import io.gomint.world.block.BlockWoodenDoor;
 import io.gomint.world.block.data.LogType;
 
 /**
@@ -79,6 +81,13 @@ public class ItemWoodenDoor extends ItemStack implements io.gomint.inventory.ite
             default:
                 this.setBlockId("minecraft:wooden_door");
         }
+    }
+
+    @Override
+    public Block getBlock() {
+        BlockWoodenDoor block = (BlockWoodenDoor) super.getBlock();
+        block.setWoodType(this.getWoodType());
+        return block;
     }
 
 }

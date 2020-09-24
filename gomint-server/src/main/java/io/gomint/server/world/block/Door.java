@@ -13,6 +13,7 @@ import io.gomint.world.block.BlockAir;
 import io.gomint.world.block.BlockDoor;
 import io.gomint.world.block.data.Direction;
 import io.gomint.world.block.data.Facing;
+import io.gomint.world.block.data.HingeSide;
 
 /**
  * @author geNAZt
@@ -36,23 +37,22 @@ public abstract class Door extends Block implements BlockDoor {
 
     @Override
     public boolean isOpen() {
-        if (isTop()) {
-            Door otherPart = this.world.getBlockAt(this.position.add(BlockPosition.DOWN));
-            return otherPart.isOpen();
-        }
-
         return OPEN.getState(this);
     }
 
     @Override
     public void toggle() {
+        boolean toApply = !this.isOpen();
+
         if (isTop()) {
             Door otherPart = this.world.getBlockAt(this.position.add(BlockPosition.DOWN));
-            otherPart.toggle();
-            return;
+            otherPart.setOpen(toApply);
+        } else {
+            Door otherPart = this.world.getBlockAt(this.position.add(BlockPosition.UP));
+            otherPart.setOpen(toApply);
         }
 
-        OPEN.setState(this, !this.isOpen());
+        this.setOpen(toApply);
     }
 
     @Override
@@ -67,7 +67,14 @@ public abstract class Door extends Block implements BlockDoor {
     @Override
     public boolean beforePlacement(EntityLiving entity, ItemStack item, Facing face, Location location) {
         Block above = this.world.getBlockAt(this.position.add(BlockPosition.UP));
-        return above.canBeReplaced(item);
+        if (above.canBeReplaced(item)) {
+            DIRECTION.detectFromPlacement(this, entity, item, face);
+            TOP.setState(this, false);
+            OPEN.setState(this, false);
+            return true;
+        }
+
+        return false;
     }
 
     @Override
@@ -111,6 +118,20 @@ public abstract class Door extends Block implements BlockDoor {
     @Override
     public Direction getDirection() {
         return DIRECTION.getState(this);
+    }
+
+    @Override
+    public void setHingeSide(HingeSide side) {
+        HINGE.setState(this, side == HingeSide.RIGHT);
+    }
+
+    @Override
+    public HingeSide getHingeSide() {
+        return HINGE.getState(this) ? HingeSide.RIGHT : HingeSide.LEFT;
+    }
+
+    protected void setOpen(boolean open) {
+        OPEN.setState(this, open);
     }
 
 }

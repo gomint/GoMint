@@ -53,8 +53,7 @@ public class ResourceManager {
      * and have a Constructor which takes two Arguments, JavaPlugin as first and a String as second Parameter. It also
      * needs to have a empty default Constructor so you can register the ResourceLoader without it having loaded any
      * Resource in it.
-     * <p/>
-     * <p/>
+     *
      * The JavaPlugin will be the Plugin for which this loader should load.
      * The String is the second parameter from {@link LocaleManager#load(Locale, String)}
      *
@@ -198,7 +197,7 @@ public class ResourceManager {
 
     /**
      * Reload all ResourceLoaders
-     * <p/>
+     *
      * If one of the ResourceLoaders reports an error upon reloading it will get printed to the Plugins Logger
      */
     public synchronized void reload() {

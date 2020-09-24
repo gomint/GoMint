@@ -7,6 +7,8 @@
 
 package io.gomint.world.block;
 
+import io.gomint.world.block.data.HingeSide;
+
 /**
  * @author geNAZt
  * @version 1.0
@@ -32,5 +34,19 @@ public interface BlockDoor extends BlockDirection {
      * Open or close a door. The target state depends on the {@link #isOpen()} state
      */
     void toggle();
+
+    /**
+     * Set the side where the hinge is on
+     *
+     * @param side of the hinge
+     */
+    void setHingeSide(HingeSide side);
+
+    /**
+     * Get the side where the hinge is on
+     *
+     * @return side of the hinge
+     */
+    HingeSide getHingeSide();
 
 }

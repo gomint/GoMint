@@ -84,25 +84,27 @@ public enum Bearing {
      */
     public static Bearing fromAngle( float angle ) {
         // Normalize angle
+        angle -= 90;
         angle %= 360;
+
         if ( angle < 0 ) {
             angle += 360.0;
         }
 
         // Check for south, west, north, east
         if ( ( 0 <= angle && angle < 45 ) || ( 315 <= angle && angle < 360 ) ) {
-            return SOUTH;
-        }
-
-        if ( 45 <= angle && angle < 135 ) {
-            return WEST;
-        }
-
-        if ( 135 <= angle && angle < 225 ) {
             return NORTH;
         }
 
-        return EAST;
+        if ( 45 <= angle && angle < 135 ) {
+            return EAST;
+        }
+
+        if ( 135 <= angle && angle < 225 ) {
+            return SOUTH;
+        }
+
+        return WEST;
     }
 
 }

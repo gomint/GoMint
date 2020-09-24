@@ -34,7 +34,7 @@ public interface ItemStack {
 
     /**
      * Set the amount of items in this stack. This is silently capped to {@link #getMaximumAmount()}, also this
-     * item stack returns air when amount is <= 0
+     * item stack returns air when amount is lower or equals 0
      *
      * @param amount of items which should be in this stack
      * @return the itemstack instance for further manipulation

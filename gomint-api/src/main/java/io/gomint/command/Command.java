@@ -151,7 +151,7 @@ public abstract class Command {
     /**
      * Add a version of this command. You can add multiple version of a command using this system. For example:
      * - /list
-     * - /list <filter: string>
+     * - /list [filter: string]
      *
      * @return overload storage for parameter definition
      */

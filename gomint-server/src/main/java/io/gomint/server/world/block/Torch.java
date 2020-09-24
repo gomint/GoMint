@@ -6,6 +6,7 @@ import io.gomint.math.Location;
 import io.gomint.server.entity.EntityLiving;
 import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.world.block.state.BlockfaceBlockState;
+import io.gomint.server.world.block.state.EnumBlockState;
 import io.gomint.world.block.BlockTorch;
 import io.gomint.world.block.BlockType;
 import io.gomint.world.block.data.Facing;
@@ -20,7 +21,30 @@ import java.util.List;
 @RegisterInfo(sId = "minecraft:torch")
 public class Torch extends Block implements BlockTorch {
 
-    private static final BlockfaceBlockState FACING = new BlockfaceBlockState(() -> new String[]{"facing_direction"});
+    private enum FacingMagic {
+        DOWN("down"),
+        UP("top"),
+        EAST("east"),
+        WEST("west"),
+        NORTH("north"),
+        SOUTH("south");
+
+        private final String direction;
+
+        FacingMagic(String direction) {
+            this.direction = direction;
+        }
+    }
+
+    private static final EnumBlockState<FacingMagic, String> FACING = new EnumBlockState<>(v -> new String[]{"torch_facing_direction"}, FacingMagic.values(), v -> v.direction, s -> {
+        for (FacingMagic value : FacingMagic.values()) {
+            if (value.direction.equals(s)) {
+                return value;
+            }
+        }
+
+        return null;
+    });
 
     @Override
     public boolean isTransparent() {
@@ -113,28 +137,12 @@ public class Torch extends Block implements BlockTorch {
 
     @Override
     public boolean beforePlacement(EntityLiving entity, ItemStack item, Facing face, Location location) {
-        Facing[] toCheck = new Facing[]{
-            Facing.DOWN,
-            Facing.SOUTH,
-            Facing.WEST,
-            Facing.NORTH,
-            Facing.EAST
-        };
-
-        boolean foundSide = false;
-        for (Facing toCheckFace : toCheck) {
-            if (!this.getSide(toCheckFace).isTransparent()) {
-                FACING.setState(this, toCheckFace.opposite());
-                foundSide = true;
-                break;
-            }
+        if (!this.getSide(face).isTransparent()) {
+            FACING.setState(this, FacingMagic.valueOf(face.name()));
+            return true;
         }
 
-        if (!foundSide) {
-            return false;
-        }
-
-        return super.beforePlacement(entity, item, face, location);
+        return false;
     }
 
 }

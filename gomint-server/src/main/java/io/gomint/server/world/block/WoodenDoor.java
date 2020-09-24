@@ -14,6 +14,7 @@ import io.gomint.server.world.block.helper.ToolPresets;
 import io.gomint.world.block.BlockType;
 import io.gomint.world.block.BlockWoodenDoor;
 import io.gomint.world.block.data.Facing;
+import io.gomint.world.block.data.HingeSide;
 import io.gomint.world.block.data.LogType;
 
 import java.util.Collections;
@@ -114,7 +115,9 @@ public class WoodenDoor extends Door implements BlockWoodenDoor {
         WoodenDoor aDoor = above.setBlockType(WoodenDoor.class);
         aDoor.setDirection(this.getDirection());
         aDoor.setTop(true);
+        aDoor.setHingeSide(HingeSide.LEFT);
         aDoor.setWoodType(this.getWoodType());
+        aDoor.setOpen(false);
 
         super.afterPlacement();
     }

@@ -55,7 +55,7 @@ public interface CustomForm extends Form<FormResponse> {
      * @param id           of the slider ( important for the response )
      * @param text         for display
      * @param min          value of the slider
-     * @param max          value of the slider (when max < min slider will not be added)
+     * @param max          value of the slider (when max lower min slider will not be added)
      * @param step         in which steps the client will select on this slider
      * @param defaultValue of this slider
      * @return instance for chaining

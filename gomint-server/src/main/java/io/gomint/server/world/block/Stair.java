@@ -1,10 +1,14 @@
 package io.gomint.server.world.block;
 
+import io.gomint.inventory.item.ItemStack;
 import io.gomint.math.AxisAlignedBB;
+import io.gomint.math.Location;
+import io.gomint.server.entity.EntityLiving;
 import io.gomint.server.world.block.state.BooleanBlockState;
 import io.gomint.server.world.block.state.CrossDirectionBlockState;
 import io.gomint.world.block.BlockStair;
 import io.gomint.world.block.data.Direction;
+import io.gomint.world.block.data.Facing;
 
 import java.util.Collections;
 import java.util.List;
@@ -34,6 +38,15 @@ public abstract class Stair extends Block implements BlockStair {
             this.location.getY() + .5f,
             this.location.getZ() + 1
         ));
+    }
+
+    @Override
+    public boolean beforePlacement(EntityLiving entity, ItemStack item, Facing face, Location location) {
+        DIRECTION.detectFromPlacement(this, entity, item, face);
+
+        TOP.setState(this, face == Facing.DOWN);
+
+        return super.beforePlacement(entity, item, face, location);
     }
 
     @Override
