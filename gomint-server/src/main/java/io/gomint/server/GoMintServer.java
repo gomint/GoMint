@@ -741,7 +741,7 @@ public class GoMintServer implements GoMint, InventoryHolder {
      * @return the version of gomint
      */
     public String getVersion() {
-        return "GoMint 1.0.0 (MC:PE " + Protocol.MINECRAFT_PE_NETWORK_VERSION + ") - " + this.gitHash;
+        return "GoMint 1.0.0 (MC:BE " + Protocol.MINECRAFT_PE_NETWORK_VERSION + ") - " + this.gitHash;
     }
 
     @Override

@@ -95,6 +95,11 @@ public enum ChatColor {
     WHITE( 'f' ),
 
     /**
+     * Represents minecoin gold
+     */
+    MINECOIN_GOLD('g'),
+
+    /**
      * Represents magical characters that change around randomly.
      */
     MAGIC( 'k' ),
@@ -157,8 +162,8 @@ public enum ChatColor {
                 if ( input.length() > i + 1 ) {
                     char nc = input.charAt( i + 1 );
                     if ( ( nc >= '0' && nc <= '9' ) ||
-                        ( nc >= 'A' && nc <= 'F' ) ||
-                        ( nc >= 'a' && nc <= 'f' ) ||
+                        ( nc >= 'A' && nc <= 'G' ) ||
+                        ( nc >= 'a' && nc <= 'g' ) ||
                         ( nc >= 'K' && nc <= 'O' ) ||
                         ( nc >= 'k' && nc <= 'o' ) ||
                         nc == 'R' || nc == 'r' ) {
@@ -197,8 +202,8 @@ public enum ChatColor {
                 if ( input.length() > i + 1 ) {
                     char nc = input.charAt( i + 1 );
                     if ( ( nc >= '0' && nc <= '9' ) ||
-                        ( nc >= 'A' && nc <= 'F' ) ||
-                        ( nc >= 'a' && nc <= 'f' ) ||
+                        ( nc >= 'A' && nc <= 'G' ) ||
+                        ( nc >= 'a' && nc <= 'g' ) ||
                         ( nc >= 'K' && nc <= 'O' ) ||
                         ( nc >= 'k' && nc <= 'o' ) ||
                         nc == 'R' || nc == 'r' ) {
