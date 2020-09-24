@@ -25,6 +25,7 @@ import io.gomint.world.ParticleData;
 import io.gomint.world.Sound;
 import io.gomint.world.SoundData;
 
+import java.net.InetSocketAddress;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
@@ -350,6 +351,13 @@ public interface EntityPlayer extends EntityHuman {
      * @return device information from this player
      */
     DeviceInfo getDeviceInfo();
+
+    /**
+     * Get the socket address from the connection of this player
+     *
+     * @return the socket address of this player
+     */
+    InetSocketAddress getAddress();
 
     /**
      * Disptach a command for this player
