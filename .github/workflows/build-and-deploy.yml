@@ -40,10 +40,14 @@ jobs:
       id: create_release
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    - uses: shallwefootball/s3-upload-action@master
+    - name: Upload file to bucket
+      uses: zdurham/s3-upload-github-action@master
       with:
-        aws_key_id: ${{ secrets.S3_ACCESS_KEY }}
-        aws_secret_access_key: ${{ secrets.S3_SECRET_KEY}}
-        aws_bucket: gomint-artifacts
-        source_dir: ./release/server.zip
-        destination_dir: latest.zip
+        args: --acl public-read
+      env:
+        FILE: ./release/server.zip
+        AWS_REGION: 'eu-central-1'
+        S3_BUCKET: gomint-artifacts
+        S3_KEY: latest.zip
+        AWS_ACCESS_KEY_ID: ${{ secrets.S3_ACCESS_KEY }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.S3_SECRET_KEY }}
