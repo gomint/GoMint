@@ -105,7 +105,7 @@ This project's choice of license is **BSD 3-Clause**. You may find the license f
   </a>
   &nbsp;
   <!-- TWITTER -->
-  <a href="https://twitter.com/GomintPe">
+  <a href="https://twitter.com/gomintbe">
     <img width="32" alt="Twitter Logo" src=".github/ASSETS/logo_twitter.png">
   </a>
 
