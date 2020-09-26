@@ -46,13 +46,15 @@ public abstract class EntityProjectile extends Entity implements io.gomint.entit
      */
     protected EntityProjectile( EntityLiving shooter, EntityType type, WorldAdapter world ) {
         super( type, world );
-        this.setHasCollision( false );
-
-        // Gravity
-        GRAVITY = 0.04f;
-        DRAG = 0.08f;
-
         this.shooter = shooter;
+    }
+
+    @Override
+    protected void applyCustomProperties() {
+        super.applyCustomProperties();
+
+        // Collisions
+        this.setHasCollision( false );
     }
 
     public abstract boolean isCritical();
@@ -203,6 +205,57 @@ public abstract class EntityProjectile extends Entity implements io.gomint.entit
         this.setPitch( position.getPitch() );
 
         return position;
+    }
+
+    /**
+     * Set yaw and pitch from current motion
+     */
+    protected void setLookFromMotion() {
+        // Calculate correct yaw / pitch
+        double motionDistance = MathUtils.square( this.getMotionX() ) + MathUtils.square( this.getMotionZ() );
+        float motionForce = (float) Math.sqrt( motionDistance );
+
+        float yaw = (float) ( Math.atan2( this.getMotionX(), this.getMotionZ() ) * 180.0D / Math.PI );
+        float pitch = (float) ( Math.atan2( this.getMotionY(), motionForce ) * 180.0D / Math.PI );
+
+        this.setYaw( yaw );
+        this.setHeadYaw( yaw );
+        this.setPitch( pitch );
+    }
+
+    protected void setMotionFromEntity(Location position, Vector motion, float pitchOffset, float velocity, float inaccuracy) {
+        Vector newMotion = new Vector(
+            (float) (-Math.sin(position.getYaw() * 0.0175f) * Math.cos(position.getPitch() * 0.0175f)),
+            (float) -Math.sin((position.getPitch() + pitchOffset) * 0.0175f),
+            (float) (Math.cos(position.getYaw() * 0.0175f) * Math.cos(position.getPitch() * 0.0175f))
+        );
+
+        this.setMotionFromHeading(newMotion.add(motion), velocity, inaccuracy);
+    }
+
+    protected void setMotionFromPosition(Location position, float pitchOffset, float velocity, float inaccuracy) {
+        Vector motion = new Vector(
+            (float) (-Math.sin(position.getYaw() * 0.0175f) * Math.cos(position.getPitch() * 0.0175f)),
+            (float) -Math.sin((position.getPitch() + pitchOffset) * 0.0175f),
+            (float) (Math.cos(position.getYaw() * 0.0175f) * Math.cos(position.getPitch() * 0.0175f))
+        );
+
+        this.setMotionFromHeading(motion, velocity, inaccuracy);
+    }
+
+    /**
+     * Set the motion from the heading vector
+     *
+     * @param motion
+     * @param velocity
+     * @param inaccuracy
+     */
+    protected void setMotionFromHeading(Vector motion, float velocity, float inaccuracy) {
+        float distanceTravel = (float) Math.sqrt(MathUtils.square(motion.getX()) + MathUtils.square(motion.getY()) + MathUtils.square(motion.getZ()));
+        motion.setX(((float) (((motion.getX() / distanceTravel) + (ThreadLocalRandom.current().nextDouble() * 0.0075f)) * inaccuracy)) * velocity);
+        motion.setY(((float) (((motion.getY() / distanceTravel) + (ThreadLocalRandom.current().nextDouble() * 0.0075f)) * inaccuracy)) * velocity);
+        motion.setZ(((float) (((motion.getZ() / distanceTravel) + (ThreadLocalRandom.current().nextDouble() * 0.0075f)) * inaccuracy)) * velocity);
+        this.setVelocity(motion);
     }
 
 }

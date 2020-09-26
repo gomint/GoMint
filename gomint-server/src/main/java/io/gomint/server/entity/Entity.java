@@ -159,6 +159,15 @@ public abstract class Entity implements io.gomint.entity.Entity {
         this.setHasCollision( true );
         this.setAffectedByGravity( true );
         this.setNameTagVisible( true );
+
+        // Apply custom properties
+        this.applyCustomProperties();
+    }
+
+    /**
+     * Hook which gets called when all default properties are set
+     */
+    protected void applyCustomProperties() {
     }
 
     public void setOnGround(boolean onGround) {
