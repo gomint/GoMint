@@ -15,6 +15,7 @@ import io.gomint.server.command.gomint.VersionCommand;
 import io.gomint.server.command.vanilla.DeopCommand;
 import io.gomint.server.command.vanilla.DifficultyCommand;
 import io.gomint.server.command.vanilla.GamemodeCommand;
+import io.gomint.server.command.vanilla.KillCommand;
 import io.gomint.server.command.vanilla.ListCommand;
 import io.gomint.server.command.vanilla.MeCommand;
 import io.gomint.server.command.vanilla.OpCommand;
@@ -72,6 +73,7 @@ public class CommandManager {
                 SpawnPointCommand.class,
                 TPCommand.class,
                 TellCommand.class,
+                KillCommand.class,
 
                 // GoMint
                 KickCommand.class,
