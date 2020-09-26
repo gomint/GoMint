@@ -7,14 +7,9 @@
 
 package io.gomint.server.entity.projectile;
 
-import io.gomint.math.Location;
-import io.gomint.math.MathUtils;
-import io.gomint.math.Vector;
 import io.gomint.server.entity.EntityLiving;
 import io.gomint.server.entity.EntityType;
 import io.gomint.server.world.WorldAdapter;
-
-import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * @author geNAZt
@@ -29,38 +24,25 @@ public abstract class EntityThrowable extends EntityProjectile {
      * @param type    The type of the Entity
      * @param world   The world in which this entity is in
      */
-    protected EntityThrowable( EntityLiving shooter, EntityType type, WorldAdapter world ) {
-        super( shooter, type, world );
-        this.setSize( 0.25f, 0.25f );
-
-        Location position = this.setPositionFromShooter();
-
-        // Calculate motion
-        Vector motion = new Vector(
-            (float) ( -Math.sin( position.getYaw() / 180.0F * Math.PI ) * Math.cos( position.getPitch() / 180.0F * (float) Math.PI ) * 0.4f ),
-            (float) ( -Math.sin( ( position.getPitch() - 20f ) / 180.0F * (float) Math.PI ) * 0.4f ),
-            (float) ( Math.cos( position.getYaw() / 180.0F * Math.PI ) * Math.cos( position.getPitch() / 180.0F * (float) Math.PI ) * 0.4f )
-        );
-
-        float distanceTravel = (float) Math.sqrt( MathUtils.square( motion.getX() ) + MathUtils.square( motion.getY() ) + MathUtils.square( motion.getZ() ) );
-        motion.setX( (float) ( ( ( motion.getX() / distanceTravel ) + ( ThreadLocalRandom.current().nextDouble() * 0.0075f ) ) * 1.5f ) );
-        motion.setY( (float) ( ( ( motion.getY() / distanceTravel ) + ( ThreadLocalRandom.current().nextDouble() * 0.0075f ) ) * 1.5f ) );
-        motion.setZ( (float) ( ( ( motion.getZ() / distanceTravel ) + ( ThreadLocalRandom.current().nextDouble() * 0.0075f ) ) * 1.5f ) );
-        this.setVelocity( motion );
-
-        // Calculate correct yaw / pitch
-        double motionDistance = MathUtils.square( motion.getX() ) + MathUtils.square( motion.getZ() );
-        float motionForce = (float) Math.sqrt( motionDistance );
-
-        float yaw = (float) ( Math.atan2( motion.getX(), motion.getZ() ) * 180.0D / Math.PI );
-        float pitch = (float) ( Math.atan2( motion.getY(), (double) motionForce ) * 180.0D / Math.PI );
-
-        this.setYaw( yaw );
-        this.setHeadYaw( yaw );
-        this.setPitch( pitch );
+    protected EntityThrowable(EntityLiving shooter, EntityType type, WorldAdapter world) {
+        super(shooter, type, world);
 
         // Set owning entity
-        this.metadataContainer.putLong( 5, shooter.getEntityId() );
+        if (shooter != null) {
+            this.metadataContainer.putLong(5, shooter.getEntityId());
+        }
+    }
+
+    @Override
+    protected void applyCustomProperties() {
+        super.applyCustomProperties();
+
+        // Gravity
+        GRAVITY = 0.03f;
+        DRAG = 0.01f;
+
+        // Set size
+        this.setSize(0.25f, 0.25f);
     }
 
     @Override
