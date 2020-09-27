@@ -26,6 +26,11 @@ public class PluginsCommand extends Command {
     @Override
     public CommandOutput execute(CommandSender commandSender, String alias, Map<String, Object> arguments) {
         Map<String, Plugin> plugins = GoMint.instance().getPluginManager().getPlugins();
+
+        if (plugins.size() == 0) {
+            return CommandOutput.failure("There aren't any plugins on this server.");
+        }
+
         StringBuilder stringBuilder = new StringBuilder("Plugins (" + "§a" + plugins.size() + "§r): ");
 
         for (Plugin plugin : plugins.values()) {
