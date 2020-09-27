@@ -70,7 +70,7 @@ public abstract class Liquid extends Block implements BlockLiquid {
 
         // Get block data and cap by 8
         int data = LIQUID_DEPTH.getState(this);
-        return (short) (data >= 8 ? 0 : data);
+        return (short) (data >= 8 ? data - 8 : data);
     }
 
     @Override

@@ -1025,7 +1025,10 @@ public abstract class WorldAdapter implements World {
                         }
 
                         if (returnBoundingBoxes) {
-                            values.addAll(block.getBoundingBox());
+                            List<AxisAlignedBB> bbs = block.getBoundingBox();
+                            if (bbs != null) {
+                                values.addAll(bbs);
+                            }
                         } else {
                             values.add(block);
                         }

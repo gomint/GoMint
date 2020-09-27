@@ -131,11 +131,14 @@ public class Blocks {
 
         // Check only solid blocks for bounding box intersects
         if (newBlock.isSolid()) {
-            for (AxisAlignedBB bb : newBlock.getBoundingBox()) {
-                // Check other entities in the bounding box
-                Collection<Entity> collidedWith = adapter.getNearbyEntities(bb, null, null);
-                if (collidedWith != null) {
-                    return false;
+            List<AxisAlignedBB> bbs = newBlock.getBoundingBox();
+            if (bbs != null) {
+                for (AxisAlignedBB bb : bbs) {
+                    // Check other entities in the bounding box
+                    Collection<Entity> collidedWith = adapter.getNearbyEntities(bb, null, null);
+                    if (collidedWith != null) {
+                        return false;
+                    }
                 }
             }
         }

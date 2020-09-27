@@ -709,7 +709,12 @@ public abstract class Block implements io.gomint.world.block.Block {
     }
 
     public boolean intersectsWith(AxisAlignedBB boundingBox) {
-        for (AxisAlignedBB axisAlignedBB : getBoundingBox()) {
+        List<AxisAlignedBB> bbs = getBoundingBox();
+        if (bbs == null) {
+            return false;
+        }
+
+        for (AxisAlignedBB axisAlignedBB : bbs) {
             if (axisAlignedBB.intersectsWith(boundingBox)) {
                 return true;
             }
