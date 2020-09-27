@@ -26,6 +26,14 @@ public class PluginsCommand extends Command {
     @Override
     public CommandOutput execute(CommandSender commandSender, String alias, Map<String, Object> arguments) {
         Map<String, Plugin> plugins = GoMint.instance().getPluginManager().getPlugins();
-        return CommandOutput.successful(String.join(", ", plugins.keySet()));
+        StringBuilder stringBuilder = new StringBuilder("Plugins (" + "§a" + plugins.size() + "§r): ");
+
+        for (Plugin plugin : plugins.values()) {
+            stringBuilder.append("§a").append(plugin.getName()).append(" v").append(plugin.getVersion().toString()).append("§r, ");
+        }
+
+        stringBuilder.setLength(stringBuilder.length() - 2);
+
+        return CommandOutput.successful(stringBuilder.toString());
     }
 }
