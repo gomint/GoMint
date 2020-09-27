@@ -37,7 +37,7 @@ public class PluginsCommand extends Command {
             stringBuilder.append(plugin.getName()).append("§r, ");
         }
 
-        stringBuilder.setLength(stringBuilder.length() - 2);
+        stringBuilder.setLength(stringBuilder.length() - 4);
 
         return CommandOutput.successful(stringBuilder.toString());
     }
