@@ -157,6 +157,11 @@ public class EntityDamageEvent extends CancellableEntityEvent {
          */
         API,
 
+        /**
+         * Damage due to kill command
+         */
+        COMMAND,
+
     }
 
 }
