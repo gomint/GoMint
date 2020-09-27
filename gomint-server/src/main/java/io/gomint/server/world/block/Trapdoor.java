@@ -9,8 +9,10 @@ package io.gomint.server.world.block;
 
 import io.gomint.inventory.item.ItemStack;
 import io.gomint.math.AxisAlignedBB;
+import io.gomint.math.Location;
 import io.gomint.math.Vector;
 import io.gomint.server.entity.Entity;
+import io.gomint.server.entity.EntityLiving;
 import io.gomint.server.world.block.state.BooleanBlockState;
 import io.gomint.server.world.block.state.DirectionBlockState;
 import io.gomint.world.block.BlockTrapdoor;
@@ -40,6 +42,12 @@ public abstract class Trapdoor extends Block implements BlockTrapdoor {
     public boolean interact(Entity entity, Facing face, Vector facePos, ItemStack item) {
         toggle();
         return true;
+    }
+
+    @Override
+    public boolean beforePlacement(EntityLiving entity, ItemStack item, Facing face, Location location) {
+        DIRECTION.detectFromPlacement(this, entity, item, face);
+        return super.beforePlacement(entity, item, face, location);
     }
 
     @Override

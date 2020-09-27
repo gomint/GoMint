@@ -178,13 +178,16 @@ public class PathfindingEngine {
                     // Check if the block is walkable or jumpable
                     Block block = this.getGoal().getWorld().getBlockAt(neighbourTriple);
                     if (!block.canPassThrough()) {
-                        for (AxisAlignedBB bb : block.getBoundingBox()) {
-                            double diff = bb.getMaxY() - neighbourTriple.getY();
-                            if (diff > 0 && diff <= 0.5F) {
-                                neighbourTriple = new BlockPosition(neighbourTriple.getX(), neighbourTriple.getY() + 1, neighbourTriple.getZ());
-                                break;
-                            } else {
-                                continue out;
+                        List<AxisAlignedBB> bbs = block.getBoundingBox();
+                        if (bbs != null) {
+                            for (AxisAlignedBB bb : bbs) {
+                                double diff = bb.getMaxY() - neighbourTriple.getY();
+                                if (diff > 0 && diff <= 0.5F) {
+                                    neighbourTriple = new BlockPosition(neighbourTriple.getX(), neighbourTriple.getY() + 1, neighbourTriple.getZ());
+                                    break;
+                                } else {
+                                    continue out;
+                                }
                             }
                         }
                     }

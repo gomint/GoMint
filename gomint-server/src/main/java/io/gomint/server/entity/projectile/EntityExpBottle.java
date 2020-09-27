@@ -38,9 +38,14 @@ public class EntityExpBottle extends EntityThrowable implements io.gomint.entity
     public EntityExpBottle( EntityLiving shooter, WorldAdapter world ) {
         super( shooter, EntityType.EXP_BOTTLE_PROJECTILE, world );
 
-        // Gravity
-        GRAVITY = 0.1f;
-        DRAG = 0.01f;
+        // Get position from the shooter
+        Location position = this.setPositionFromShooter();
+
+        // Calculate motion
+        this.setMotionFromEntity(position, this.shooter.getVelocity(), -20f, 0.7f, 1f);
+
+        // Calculate correct yaw / pitch
+        this.setLookFromMotion();
     }
 
     /**
@@ -48,10 +53,14 @@ public class EntityExpBottle extends EntityThrowable implements io.gomint.entity
      */
     public EntityExpBottle() {
         super( null, EntityType.EXP_BOTTLE_PROJECTILE, null );
-        this.setSize( 0.25f, 0.25f );
+    }
+
+    @Override
+    protected void applyCustomProperties() {
+        super.applyCustomProperties();
 
         // Gravity
-        GRAVITY = 0.1f;
+        GRAVITY = 0.07f;
         DRAG = 0.01f;
     }
 
