@@ -3,6 +3,7 @@ package io.gomint.testplugin.command;
 import io.gomint.command.Command;
 import io.gomint.command.CommandOutput;
 import io.gomint.command.CommandSender;
+import io.gomint.command.annotation.Alias;
 import io.gomint.command.annotation.Description;
 import io.gomint.command.annotation.Name;
 import io.gomint.entity.EntityPlayer;
@@ -16,8 +17,10 @@ import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * @author geNAZt
+ * @version 1.1
  */
 @Name("test")
+@Alias("t")
 @Description("A generic command for testing random stuff")
 public class TestCommand extends Command {
 
