@@ -7,6 +7,7 @@
 
 package io.gomint.server.plugin;
 
+import com.google.common.collect.ImmutableMap;
 import io.gomint.command.Command;
 import io.gomint.event.Event;
 import io.gomint.event.EventListener;
@@ -31,7 +32,6 @@ import org.objectweb.asm.ModuleVisitor;
 import org.objectweb.asm.Opcodes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.google.common.collect.ImmutableMap;
 
 import java.io.DataInputStream;
 import java.io.File;
@@ -41,9 +41,19 @@ import java.lang.module.Configuration;
 import java.lang.module.ModuleDescriptor;
 import java.lang.module.ModuleFinder;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.jar.JarEntry;
@@ -121,7 +131,12 @@ public class SimplePluginManager implements PluginManager, EventCaller {
 
     public void detectPlugins() {
         // Search the plugins folder for valid .jar files
-        for (File file : this.pluginFolder.listFiles(pathname -> (pathname.getAbsolutePath().endsWith(".jar")))) {
+        File[] possiblePlugins = this.pluginFolder.listFiles(pathname -> pathname.getAbsolutePath().endsWith(".jar"));
+        if (possiblePlugins == null) {
+            return;
+        }
+
+        for (File file : possiblePlugins) {
             PluginMeta metadata = getMetadata(file);
             if (metadata != null) {
                 this.metadata.put(metadata.getName(), metadata);
@@ -165,10 +180,13 @@ public class SimplePluginManager implements PluginManager, EventCaller {
 
     private void loadPlugin(PluginMeta pluginMeta) {
         // Check for depends
+        Collection<Module> needsGrant = new ArrayList<>();
         if (pluginMeta.getDepends() != null && !pluginMeta.getDepends().isEmpty()) {
             for (String dependPlugin : pluginMeta.getDepends()) {
                 // If the depend plugin is already loaded, skip it
-                if (this.loadedPlugins.containsKey(dependPlugin)) {
+                Plugin plugin = this.loadedPlugins.get(dependPlugin);
+                if (plugin != null) {
+                    needsGrant.add(plugin.getClass().getModule());
                     continue;
                 }
 
@@ -179,6 +197,11 @@ public class SimplePluginManager implements PluginManager, EventCaller {
                 for (PluginMeta detectedPlugin : new ArrayList<>(this.detectedPlugins)) {
                     if (detectedPlugin.getName().equals(dependPlugin)) {
                         loadPlugin(detectedPlugin);
+
+                        Plugin loadedPlugin = this.loadedPlugins.get(dependPlugin);
+                        if (loadedPlugin != null) {
+                            needsGrant.add(loadedPlugin.getClass().getModule());
+                        }
 
                         // Check if the plugin did shutdown the server
                         if (!this.server.isRunning()) {
@@ -202,14 +225,21 @@ public class SimplePluginManager implements PluginManager, EventCaller {
         if (pluginMeta.getSoftDepends() != null && !pluginMeta.getSoftDepends().isEmpty()) {
             for (String dependPlugin : pluginMeta.getSoftDepends()) {
                 // If the depend plugin is already loaded, skip it
-                if (this.loadedPlugins.containsKey(dependPlugin)) {
+                Plugin plugin = this.loadedPlugins.get(dependPlugin);
+                if (plugin != null) {
+                    needsGrant.add(plugin.getClass().getModule());
                     continue;
                 }
 
                 // We need to check if the depend plugin is detected
                 for (PluginMeta detectedPlugin : new ArrayList<>(this.detectedPlugins)) {
                     if (detectedPlugin.getName().equals(dependPlugin)) {
-                        loadPlugin(pluginMeta);
+                        loadPlugin(detectedPlugin);
+
+                        Plugin loadedPlugin = this.loadedPlugins.get(dependPlugin);
+                        if (loadedPlugin != null) {
+                            needsGrant.add(loadedPlugin.getClass().getModule());
+                        }
 
                         // Check if the plugin did shutdown the server
                         if (!this.server.isRunning()) {
@@ -242,15 +272,13 @@ public class SimplePluginManager implements PluginManager, EventCaller {
             ModuleLayer bootLayer = ModuleLayer.boot();
 
             Configuration configuration = bootLayer.configuration();
-            Configuration newConfiguration = configuration.resolve(finder, empty, new HashSet<>() {{
-                add(pluginMeta.getModuleName());
-            }});
+            Configuration newConfiguration = configuration.resolve(finder, empty, Set.of(pluginMeta.getModuleName()));
 
             PluginClassloader finalLoader = loader;
-            ModuleLayer.Controller moduleLayerController = ModuleLayer.defineModules(newConfiguration, Collections.singletonList(bootLayer), s -> finalLoader);
+            ModuleLayer.Controller moduleLayerController = ModuleLayer.defineModules(newConfiguration, List.of(bootLayer), s -> finalLoader);
 
             ModuleLayer moduleLayer = moduleLayerController.layer();
-            Module pluginModule = moduleLayer.findModule(pluginMeta.getModuleName()).get();
+            Module pluginModule = moduleLayer.findModule(pluginMeta.getModuleName()).orElseThrow();
             Module currentModule = SimplePluginManager.class.getModule();
 
             for (String aPackage : pluginMeta.getPackages()) {
@@ -261,8 +289,12 @@ public class SimplePluginManager implements PluginManager, EventCaller {
                 currentModule.addExports("io.gomint.server.event", pluginModule);
             }
 
-            ClassLoader mLoader = moduleLayer.findLoader(pluginMeta.getModuleName());
+            // Grant read access to (soft-) depend plugins
+            for (Module module : needsGrant) {
+                moduleLayerController.addReads(pluginModule, module);
+            }
 
+            ClassLoader mLoader = moduleLayer.findLoader(pluginMeta.getModuleName());
             Plugin clazz = (Plugin) constructAndInject(pluginMeta.getMainClass(), mLoader);
             if (clazz == null) {
                 return;
@@ -307,7 +339,7 @@ public class SimplePluginManager implements PluginManager, EventCaller {
             Class<?> cl = loader.loadClass(clazz);
 
             try {
-                Object built = cl.newInstance();
+                Object built = cl.getDeclaredConstructor().newInstance();
 
                 // Check all fields for injection
                 for (Field field : cl.getDeclaredFields()) {
@@ -334,7 +366,9 @@ public class SimplePluginManager implements PluginManager, EventCaller {
                 }
 
                 return built;
-            } catch (InstantiationException | IllegalAccessException e) {
+            } catch (NoSuchMethodException e) {
+                LOGGER.error("Plugin main class " + clazz + " does not define a no-args constructor", e);
+            } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
                 e.printStackTrace();
             }
         } catch (ClassNotFoundException e) {
@@ -418,8 +452,8 @@ public class SimplePluginManager implements PluginManager, EventCaller {
                             jar.getInputStream(jarEntry).transferTo(toFile);
                         }
 
-                        if ( meta.getModuleDependencies() == null ) {
-                            meta.setModuleDependencies( new HashSet<>() );
+                        if (meta.getModuleDependencies() == null) {
+                            meta.setModuleDependencies(new HashSet<>());
                         }
 
                         meta.getModuleDependencies().add(jarFile);
@@ -654,7 +688,7 @@ public class SimplePluginManager implements PluginManager, EventCaller {
     }
 
     @Override
-    public Map< String, Plugin > getPlugins() {
+    public Map<String, Plugin> getPlugins() {
         return ImmutableMap.copyOf(this.installedPlugins);
     }
 
