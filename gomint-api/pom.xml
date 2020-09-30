@@ -99,6 +99,9 @@
                             <head>API stability level:</head>
                         </tag>
                     </tags>
+                    <sourceFileExcludes>
+                        <sourceFileExclude>module-info.java</sourceFileExclude>
+                    </sourceFileExcludes>
                 </configuration>
                 <executions>
                     <execution>
