@@ -46,7 +46,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -180,13 +179,10 @@ public class SimplePluginManager implements PluginManager, EventCaller {
 
     private void loadPlugin(PluginMeta pluginMeta) {
         // Check for depends
-        Collection<Module> needsGrant = new ArrayList<>();
         if (pluginMeta.getDepends() != null && !pluginMeta.getDepends().isEmpty()) {
             for (String dependPlugin : pluginMeta.getDepends()) {
                 // If the depend plugin is already loaded, skip it
-                Plugin plugin = this.loadedPlugins.get(dependPlugin);
-                if (plugin != null) {
-                    needsGrant.add(plugin.getClass().getModule());
+                if (this.loadedPlugins.containsKey(dependPlugin)) {
                     continue;
                 }
 
@@ -197,11 +193,6 @@ public class SimplePluginManager implements PluginManager, EventCaller {
                 for (PluginMeta detectedPlugin : new ArrayList<>(this.detectedPlugins)) {
                     if (detectedPlugin.getName().equals(dependPlugin)) {
                         loadPlugin(detectedPlugin);
-
-                        Plugin loadedPlugin = this.loadedPlugins.get(dependPlugin);
-                        if (loadedPlugin != null) {
-                            needsGrant.add(loadedPlugin.getClass().getModule());
-                        }
 
                         // Check if the plugin did shutdown the server
                         if (!this.server.isRunning()) {
@@ -225,9 +216,7 @@ public class SimplePluginManager implements PluginManager, EventCaller {
         if (pluginMeta.getSoftDepends() != null && !pluginMeta.getSoftDepends().isEmpty()) {
             for (String dependPlugin : pluginMeta.getSoftDepends()) {
                 // If the depend plugin is already loaded, skip it
-                Plugin plugin = this.loadedPlugins.get(dependPlugin);
-                if (plugin != null) {
-                    needsGrant.add(plugin.getClass().getModule());
+                if (this.loadedPlugins.containsKey(dependPlugin)) {
                     continue;
                 }
 
@@ -235,11 +224,6 @@ public class SimplePluginManager implements PluginManager, EventCaller {
                 for (PluginMeta detectedPlugin : new ArrayList<>(this.detectedPlugins)) {
                     if (detectedPlugin.getName().equals(dependPlugin)) {
                         loadPlugin(detectedPlugin);
-
-                        Plugin loadedPlugin = this.loadedPlugins.get(dependPlugin);
-                        if (loadedPlugin != null) {
-                            needsGrant.add(loadedPlugin.getClass().getModule());
-                        }
 
                         // Check if the plugin did shutdown the server
                         if (!this.server.isRunning()) {
@@ -289,7 +273,9 @@ public class SimplePluginManager implements PluginManager, EventCaller {
                 currentModule.addExports("io.gomint.server.event", pluginModule);
             }
 
-            // Grant read access to (soft-) depend plugins
+            // Now collect the modules which the plugin may want to access (if it does not contain a module-info.java)
+            Collection<Module> needsGrant = this.collectDependantModules(pluginMeta);
+            // Grant read access to (soft-) depend plugins which does not contain a module-info.java
             for (Module module : needsGrant) {
                 moduleLayerController.addReads(pluginModule, module);
             }
@@ -334,6 +320,39 @@ public class SimplePluginManager implements PluginManager, EventCaller {
         }
     }
 
+    private Collection<Module> collectDependantModules(PluginMeta meta) {
+        if (meta.hasModuleInfo()) {
+            return Set.of();
+        }
+
+        Collection<Module> modules = new ArrayList<>();
+        for (String depend : meta.getDepends()) {
+            PluginMeta pluginMeta = this.metadata.get(depend);
+            if (pluginMeta.hasModuleInfo()) {
+                // The plugin explicitly may want to deny access to some packages (or open them) so skip it
+                continue;
+            }
+
+            modules.add(this.loadedPlugins.get(depend).getClass().getModule()); // Plugin must be loaded because it's a depend
+        }
+
+        for (String softDepend : meta.getSoftDepends()) {
+            PluginMeta pluginMeta = this.metadata.get(softDepend);
+            if (pluginMeta.hasModuleInfo()) {
+                // The plugin explicitly may want to deny access to some packages (or open them) so skip it
+                continue;
+            }
+
+            Plugin plugin = this.loadedPlugins.get(softDepend);
+            if (plugin != null) {
+                // As a soft depend the plugin is not required so nullable
+                modules.add(plugin.getClass().getModule());
+            }
+        }
+
+        return modules;
+    }
+
     private Object constructAndInject(String clazz, ClassLoader loader) {
         try {
             Class<?> cl = loader.loadClass(clazz);
@@ -367,7 +386,7 @@ public class SimplePluginManager implements PluginManager, EventCaller {
 
                 return built;
             } catch (NoSuchMethodException e) {
-                LOGGER.error("Plugin main class " + clazz + " does not define a no-args constructor", e);
+                LOGGER.error("Plugin main class {} does not define a no-args constructor", clazz, e);
             } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
                 e.printStackTrace();
             }
@@ -469,6 +488,7 @@ public class SimplePluginManager implements PluginManager, EventCaller {
                                 @Override
                                 public ModuleVisitor visitModule(String name, int access, String version) {
                                     meta.setModuleName(name);
+                                    meta.setHasModuleInfo(true);
                                     return super.visitModule(name, access, version);
                                 }
                             }, 0);
