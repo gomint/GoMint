@@ -321,7 +321,7 @@ public class SimplePluginManager implements PluginManager, EventCaller {
     }
 
     private Collection<Module> collectDependantModules(PluginMeta meta) {
-        if (meta.hasModuleInfo()) {
+        if (meta.hasModuleInfo() || meta.getDepends() == null || meta.getSoftDepends() == null) {
             return Set.of();
         }
 
