@@ -321,32 +321,36 @@ public class SimplePluginManager implements PluginManager, EventCaller {
     }
 
     private Collection<Module> collectDependantModules(PluginMeta meta) {
-        if (meta.hasModuleInfo() || meta.getDepends() == null || meta.getSoftDepends() == null) {
+        if (meta.hasModuleInfo() || (meta.getDepends() == null && meta.getSoftDepends() == null)) {
             return Set.of();
         }
 
         Collection<Module> modules = new ArrayList<>();
-        for (String depend : meta.getDepends()) {
-            PluginMeta pluginMeta = this.metadata.get(depend);
-            if (pluginMeta.hasModuleInfo()) {
-                // The plugin explicitly may want to deny access to some packages (or open them) so skip it
-                continue;
-            }
+        if (meta.getDepends() != null) {
+            for (String depend : meta.getDepends()) {
+                PluginMeta pluginMeta = this.metadata.get(depend);
+                if (pluginMeta.hasModuleInfo()) {
+                    // The plugin explicitly may want to deny access to some packages (or open them) so skip it
+                    continue;
+                }
 
-            modules.add(this.loadedPlugins.get(depend).getClass().getModule()); // Plugin must be loaded because it's a depend
+                modules.add(this.loadedPlugins.get(depend).getClass().getModule()); // Plugin must be loaded because it's a depend
+            }
         }
 
-        for (String softDepend : meta.getSoftDepends()) {
-            PluginMeta pluginMeta = this.metadata.get(softDepend);
-            if (pluginMeta.hasModuleInfo()) {
-                // The plugin explicitly may want to deny access to some packages (or open them) so skip it
-                continue;
-            }
+        if (meta.getSoftDepends() != null) {
+            for (String softDepend : meta.getSoftDepends()) {
+                PluginMeta pluginMeta = this.metadata.get(softDepend);
+                if (pluginMeta.hasModuleInfo()) {
+                    // The plugin explicitly may want to deny access to some packages (or open them) so skip it
+                    continue;
+                }
 
-            Plugin plugin = this.loadedPlugins.get(softDepend);
-            if (plugin != null) {
-                // As a soft depend the plugin is not required so nullable
-                modules.add(plugin.getClass().getModule());
+                Plugin plugin = this.loadedPlugins.get(softDepend);
+                if (plugin != null) {
+                    // As a soft depend the plugin is not required so nullable
+                    modules.add(plugin.getClass().getModule());
+                }
             }
         }
 
