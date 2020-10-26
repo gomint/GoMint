@@ -34,6 +34,7 @@ public class PluginMeta {
 
     // Module stuff
     private String moduleName;
+    private boolean hasModuleInfo;
     private Set<String> packages;
     private Set<File> moduleDependencies;
 
@@ -111,6 +112,14 @@ public class PluginMeta {
 
     public void setModuleName(String moduleName) {
         this.moduleName = moduleName;
+    }
+
+    public boolean hasModuleInfo() {
+        return hasModuleInfo;
+    }
+
+    public void setHasModuleInfo(boolean hasModuleInfo) {
+        this.hasModuleInfo = hasModuleInfo;
     }
 
     public Set<String> getPackages() {

@@ -1,6 +1,6 @@
 <p align="center">
   
-![GoMint](.github/ASSETS/gomint-banner.png)
+<img src="https://raw.githubusercontent.com/gomint/gomint-branding/main/v3/text/gomint-text-colored-black.svg" alt="GoMint Logo" width="600"/>
 
 </p>
 
