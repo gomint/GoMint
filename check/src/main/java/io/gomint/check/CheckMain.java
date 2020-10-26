@@ -90,6 +90,10 @@ public class CheckMain {
         AtomicInteger missingStates = new AtomicInteger(0);
 
         knownBlockKeys.forEach((block, stateKeys) -> {
+            if (block.equals("minecraft:carved_pumpkin")) {
+                System.out.println("YE");
+            }
+
             for (String content : contents) {
                 if (content.contains("\"" + block + "\"")) {
                     for (String stateKey : stateKeys.keySet()) {
@@ -101,7 +105,7 @@ public class CheckMain {
 
                                 boolean found = false;
                                 for (String s : contents) {
-                                    if (s.contains("class" + parentClass) && s.contains(stateKey)) {
+                                    if (s.contains("class" + parentClass) && s.contains(stateKey) && !s.contains("public abstract class Block")) {
                                         found = true;
                                         break;
                                     }

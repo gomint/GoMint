@@ -39,7 +39,7 @@
         <dependency>
             <groupId>io.gomint</groupId>
             <artifactId>crypto</artifactId>
-            <version>1.0.2-SNAPSHOT</version>
+            <version>1.2.2-SNAPSHOT</version>
         </dependency>
 
         <dependency>
@@ -114,7 +114,7 @@
         <dependency>
             <groupId>io.gomint</groupId>
             <artifactId>jraknet</artifactId>
-            <version>7.0.9-SNAPSHOT</version>
+            <version>7.0.10-SNAPSHOT</version>
         </dependency>
 
         <dependency>

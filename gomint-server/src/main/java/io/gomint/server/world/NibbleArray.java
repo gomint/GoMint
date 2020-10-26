@@ -7,9 +7,7 @@
 
 package io.gomint.server.world;
 
-import io.gomint.server.util.PerformanceHacks;
 import io.netty.buffer.ByteBuf;
-import io.netty.buffer.PooledByteBufAllocator;
 import io.netty.buffer.UnpooledByteBufAllocator;
 
 /**
@@ -23,8 +21,8 @@ public class NibbleArray {
      *
      * @param size The desired length of the array
      */
-    static NibbleArray create( short size ) {
-        return new NibbleArray( size );
+    static NibbleArray create(short size) {
+        return new NibbleArray(size);
     }
 
     private final int length;
@@ -35,9 +33,9 @@ public class NibbleArray {
      *
      * @param length The desired length of the array
      */
-    public NibbleArray( short length ) {
+    public NibbleArray(short length) {
         this.length = length;
-        this.data = UnpooledByteBufAllocator.DEFAULT.directBuffer(( this.length + 1 ) >> 1);
+        this.data = UnpooledByteBufAllocator.DEFAULT.directBuffer((this.length + 1) >> 1);
     }
 
     private int fastModulo(int dividend, int divisor) {
@@ -50,14 +48,14 @@ public class NibbleArray {
      * @param index The index of the nibble to be set
      * @param value The value to set
      */
-    public void set( int index, byte value ) {
+    public void set(int index, byte value) {
         value &= 0xF;
 
         int index2 = index >> 1;
         byte old = this.data.getByte(index2);
-        old &= (byte) ( 0xF << ( fastModulo( index + 1, 2 ) * 4 ) );
-        old |= (byte) ( value << ( fastModulo( index,  2 ) * 4 ) );
-        this.data.setByte( index2, old );
+        old &= (byte) (0xF << (fastModulo(index + 1, 2) * 4));
+        old |= (byte) (value << (fastModulo(index, 2) * 4));
+        this.data.setByte(index2, old);
     }
 
     /**
@@ -66,8 +64,8 @@ public class NibbleArray {
      * @param index The index of the nibble to get
      * @return The nibble's value
      */
-    public byte get( int index ) {
-        return (byte) ( this.data.getByte(index / 2) >> ( ( index & 1 ) << 2 ) & 0xF );
+    public byte get(int index) {
+        return (byte) (this.data.getByte(index / 2) >> ((index & 1) << 2) & 0xF);
     }
 
     /**

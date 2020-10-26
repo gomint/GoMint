@@ -189,7 +189,25 @@ public enum Biome {
     MESA( 37, "Mesa", 2.0D, 0.0D ),
     MESA_PLATEAU_F( 38, "Mesa Plateau D", 2.0D, 0.0D ),
     MESA_PLATEAU( 39, "Mesa Plateau", 2.0D, 0.0D ),
+    DEEP_COLD_OCEAN( 45, "Deep Cold Ocean", -0.5D, 0.5D, 46, 58 ) {
+        @Override
+        public List<Block> getGround() {
+            return Collections.unmodifiableList( Arrays.asList(
+                GoMint.instance().createBlock( BlockGravel.class ),
+                GoMint.instance().createBlock( BlockGravel.class ),
+                GoMint.instance().createBlock( BlockGravel.class ),
+                GoMint.instance().createBlock( BlockGravel.class ),
+                GoMint.instance().createBlock( BlockGravel.class )
+            ) );
+        }
 
+        @Override
+        public List<Populator> getPopulators() {
+            TallGrassPopulator populator = new TallGrassPopulator();
+            populator.setBaseAmount( 5 );
+            return Collections.singletonList( populator );
+        }
+    },
     SUNFLOWER_PLAINS( 51, "Sunflower Plains", 0.8D, 0.4D ),
     DESERT_M( 58, "Desert M", 2.0D, 0.0D ),
     EXTREME_HILLS_M( 69, "Extreme Hills M", 0.2D, 0.3D ),
