@@ -8,6 +8,7 @@ import io.gomint.command.CommandOverload;
 import io.gomint.command.CommandSender;
 import io.gomint.command.ParamValidator;
 import io.gomint.plugin.Plugin;
+import io.gomint.server.command.cli.MemoryDumpCommand;
 import io.gomint.server.command.gomint.KickCommand;
 import io.gomint.server.command.gomint.PluginsCommand;
 import io.gomint.server.command.gomint.StopCommand;
@@ -77,6 +78,9 @@ public class CommandManager {
                 KickCommand.class,
                 StopCommand.class,
                 VersionCommand.class,
+
+                // CLI
+                MemoryDumpCommand.class,
             }) {
                 // Check for system only commands
                 Object commandObject;
@@ -401,10 +405,6 @@ public class CommandManager {
                     player.hasPermission(holder.getPermission(), holder.isPermissionDefault()))) {
                 holders.add(holder);
             }
-        }
-
-        for (CommandHolder holder : holders) {
-            LOGGER.info("Planning to send " + holder.getName() + " to " + player.getName());
         }
 
         CommandPreprocessor preprocessor = new CommandPreprocessor(player, holders);

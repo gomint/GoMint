@@ -12,6 +12,8 @@ import java.util.Base64;
  */
 public class EncryptionRequestForger {
 
+    private static final Base64.Encoder encoder = Base64.getUrlEncoder().withoutPadding();
+
     /**
      * Forge a new Encryption start JWT token
      *
@@ -29,15 +31,19 @@ public class EncryptionRequestForger {
         header.put( "alg", algorithm.getJwtName() );
         header.put( "x5u", serverPublic );
 
+        long timestamp = System.currentTimeMillis() / 1000;
+
         // Construct claims (payload):
         JSONObject claims = new JSONObject();
         claims.put( "salt", Base64.getEncoder().encodeToString( clientSalt ) );
+        claims.put( "nbf", timestamp );
+        claims.put( "exp", timestamp + 24 * 60 * 60 );
 
         // Build it together
         StringBuilder builder = new StringBuilder();
-        builder.append( Base64.getUrlEncoder().encodeToString( StringUtil.getUTF8Bytes( header.toJSONString() ) ) );
+        builder.append( encoder.encodeToString( StringUtil.getUTF8Bytes( header.toJSONString() ) ) );
         builder.append( '.' );
-        builder.append( Base64.getUrlEncoder().encodeToString( StringUtil.getUTF8Bytes( claims.toJSONString() ) ) );
+        builder.append( encoder.encodeToString( StringUtil.getUTF8Bytes( claims.toJSONString() ) ) );
 
         // Sign the token:
         byte[] signatureBytes = StringUtil.getUTF8Bytes( builder.toString() );
@@ -51,7 +57,7 @@ public class EncryptionRequestForger {
         }
 
         builder.append( '.' );
-        builder.append( Base64.getUrlEncoder().encodeToString( signatureDigest ) );
+        builder.append( encoder.encodeToString( signatureDigest ) );
 
         return builder.toString();
     }

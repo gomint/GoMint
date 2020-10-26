@@ -1,6 +1,7 @@
 package io.gomint.inventory.item;
 
 import io.gomint.GoMint;
+import io.gomint.world.block.data.PumpkinType;
 
 /**
  * @author geNAZt
@@ -17,5 +18,19 @@ public interface ItemPumpkin extends ItemStack {
     static ItemPumpkin create( int amount ) {
         return GoMint.instance().createItemStack( ItemPumpkin.class, amount );
     }
+
+    /**
+     * Get the type of pumpkin
+     *
+     * @return type of pumpkin
+     */
+    PumpkinType getType();
+
+    /**
+     * Set the type of pumpkin
+     *
+     * @param type of pumpkin
+     */
+    void setType(PumpkinType type);
 
 }

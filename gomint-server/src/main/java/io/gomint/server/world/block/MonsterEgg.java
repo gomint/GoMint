@@ -13,11 +13,6 @@ import io.gomint.server.registry.RegisterInfo;
 public class MonsterEgg extends Block implements BlockMonsterEgg {
 
     @Override
-    public String getBlockId() {
-        return "minecraft:monster_egg";
-    }
-
-    @Override
     public long getBreakTime() {
         return 1125;
     }

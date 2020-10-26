@@ -90,7 +90,6 @@ public enum ItemType {
     CARROT,
     CARROTS,
     CARTOGRAPHY_TABLE,
-    CARVED_PUMPKIN,
     CAULDRON,
     CHAIN_BOOTS,
     CHAIN_CHESTPLATE,

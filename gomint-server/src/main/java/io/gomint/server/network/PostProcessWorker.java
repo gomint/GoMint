@@ -5,7 +5,6 @@ import io.gomint.server.maintenance.ReportUploader;
 import io.gomint.server.network.packet.Packet;
 import io.gomint.server.network.packet.PacketBatch;
 import io.netty.buffer.ByteBuf;
-import io.netty.buffer.PooledByteBufAllocator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,6 +16,7 @@ import java.util.function.Consumer;
  */
 public class PostProcessWorker implements Runnable {
 
+    private static final byte[] STATIC_VARINT = new byte[]{(byte) 0x80, (byte) 0x80, (byte) 0x80, (byte) 0x80, (byte) 0x0};
     private static final Logger LOGGER = LoggerFactory.getLogger(PostProcessWorker.class);
 
     private final ConnectionWithState connection;
@@ -37,13 +37,9 @@ public class PostProcessWorker implements Runnable {
             return;
         }
 
-        long start = System.nanoTime();
-
         PacketBatch batch = new PacketBatch();
         batch.setPayload(this.connection.getOutputProcessor().process(inBuf));
         this.connection.send(batch);
-
-        LOGGER.debug("Encoding and sending took {} ns", System.nanoTime() - start);
 
         if (this.callback != null) {
             this.callback.accept(null);
@@ -52,22 +48,23 @@ public class PostProcessWorker implements Runnable {
 
     private ByteBuf writePackets(Packet[] packets) {
         // Write all packets into the inBuf for compression
-        PacketBuffer buffer = new PacketBuffer(16);
-        ByteBuf inBuf = newNettyBuffer();
+        PacketBuffer buffer = new PacketBuffer(packets.length * 5 + (packets.length * 8));
+        int currentPosition; // We start at 5 because of the first varint header
 
         for (Packet packet : packets) {
-            buffer.setReadPosition(0);
-            buffer.setWritePosition(0);
-
             // CHECKSTYLE:OFF
             try {
-                LOGGER.debug("Writing (batch) packet: {}", packet.getClass().getName());
+                // We write 4 0x80 and one 0x0 at the end to always result in 0 to have static sized "var" int
+                int lengthPosition = buffer.getWritePosition();
+                buffer.writeBytes(STATIC_VARINT);
+
+                currentPosition = buffer.getWritePosition();
 
                 packet.serializeHeader(buffer);
                 packet.serialize(buffer, this.connection.getProtocolID());
 
-                writeVarInt(buffer.getWritePosition(), inBuf);
-                inBuf.writeBytes(buffer.getBuffer());
+                int writtenBytes = buffer.getWritePosition() - currentPosition;
+                writeVarInt(lengthPosition, writtenBytes, buffer.getBuffer());
             } catch (Exception e) {
                 LOGGER.error("Could not serialize packet", e);
                 ReportUploader.create().tag("network.serialize").exception(e).upload();
@@ -75,20 +72,18 @@ public class PostProcessWorker implements Runnable {
             // CHECKSTYLE:ON
         }
 
-        return inBuf;
+        return buffer.getBuffer();
     }
 
-    private ByteBuf newNettyBuffer() {
-        return PooledByteBufAllocator.DEFAULT.directBuffer();
-    }
+    private void writeVarInt(int start, int value, ByteBuf stream) {
+        int current = start;
 
-    private void writeVarInt(int value, ByteBuf stream) {
         while ((value & -128) != 0) {
-            stream.writeByte(value & 127 | 128);
+            stream.setByte(current++, value & 0x7F | 0x80);
             value >>>= 7;
         }
 
-        stream.writeByte(value);
+        stream.setByte(current, value | 0x80);
     }
 
 }

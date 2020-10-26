@@ -12,7 +12,7 @@ package io.gomint.world.block;
  * @version 1.0
  * @stability 2
  */
-public interface BlockCommandBlock extends Block {
+public interface BlockCommandBlock extends Block, BlockFacing {
 
     /**
      * Set a custom name for this container

@@ -149,7 +149,7 @@ public class PlayerConnection implements ConnectionWithState {
                     newPacket.setPacketData(pureData);
 
                     pureData.release(); // The packet takes over ownership
-                    // packetData.release(); // Since we also consumed the old packet, release it
+                    // We don't need to release the input because the batch packet handler releases it
                     return newPacket;
                 }
 
@@ -232,10 +232,6 @@ public class PlayerConnection implements ConnectionWithState {
 
     public LongSet getPlayerChunks() {
         return playerChunks;
-    }
-
-    public boolean isCachingSupported() {
-        return cachingSupported;
     }
 
     public Cache getCache() {

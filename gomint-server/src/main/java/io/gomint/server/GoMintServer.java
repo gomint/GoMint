@@ -74,6 +74,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.management.BufferPoolMXBean;
+import java.lang.management.ManagementFactory;
 import java.net.URL;
 import java.util.*;
 import java.util.concurrent.*;
@@ -741,7 +743,7 @@ public class GoMintServer implements GoMint, InventoryHolder {
      * @return the version of gomint
      */
     public String getVersion() {
-        return "GoMint 1.0.0 (MC:BE " + Protocol.MINECRAFT_PE_NETWORK_VERSION + ") - " + this.gitHash;
+        return "GoMint 1.0.0 (MC:BE " + Protocol.MINECRAFT_PE_NETWORK_VERSION + " [" + Protocol.MINECRAFT_PE_PROTOCOL_VERSION + "]) - " + this.gitHash;
     }
 
     @Override

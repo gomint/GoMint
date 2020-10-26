@@ -146,7 +146,7 @@ public class ItemElement extends ItemStack implements io.gomint.inventory.item.I
 
     @Override
     public void setType(Type type) {
-        this.setBlockId("minecraft:element_" + type.ordinal());
+        this.setMaterial("minecraft:element_" + type.ordinal());
     }
 
 }
