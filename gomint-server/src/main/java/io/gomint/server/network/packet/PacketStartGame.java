@@ -4,8 +4,15 @@ import io.gomint.jraknet.PacketBuffer;
 import io.gomint.math.Location;
 import io.gomint.server.network.Protocol;
 import io.gomint.server.player.PlayerPermission;
+import io.gomint.server.util.StringShortPair;
+import io.gomint.taglib.AllocationLimitReachedException;
+import io.gomint.taglib.NBTReader;
 import io.gomint.world.Gamerule;
 
+import java.io.IOException;
+import java.nio.ByteOrder;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -71,6 +78,10 @@ public class PacketStartGame extends Packet {
     // Lookup tables
     private PacketBuffer blockPalette;
     private PacketBuffer itemPalette;
+
+    // For the client
+    private List<Object> clientBlockPalette;
+    private List<StringShortPair> clientItemPalette;
 
     /**
      * Create a new start game packet
@@ -157,7 +168,90 @@ public class PacketStartGame extends Packet {
 
     @Override
     public void deserialize(PacketBuffer buffer, int protocolID) {
+        this.entityId = buffer.readSignedVarLong().longValue();
+        this.runtimeEntityId = buffer.readUnsignedVarLong();
+        this.gamemode = buffer.readSignedVarInt();
 
+        this.spawn = new Location( null, buffer.readLFloat(), buffer.readLFloat(), buffer.readLFloat(), buffer.readLFloat(), buffer.readLFloat() );
+
+        this.seed = buffer.readSignedVarInt();
+
+        short biomeType = buffer.readLShort();
+        String biomeName = buffer.readString();
+        this.dimension = buffer.readSignedVarInt();
+
+        this.generator = buffer.readSignedVarInt();
+        this.worldGamemode = buffer.readSignedVarInt();
+        this.difficulty = buffer.readSignedVarInt();
+
+        int spawnX = buffer.readSignedVarInt();
+        int spawnY = buffer.readSignedVarInt();
+        int spawnZ = buffer.readSignedVarInt();
+
+        this.hasAchievementsDisabled = buffer.readBoolean();
+        this.dayCycleStopTime = buffer.readSignedVarInt();
+        int eudOffer = buffer.readSignedVarInt();
+        buffer.readBoolean();
+        String eduProductID = buffer.readString();
+        this.rainLevel = buffer.readLFloat();
+        this.lightningLevel = buffer.readLFloat();
+        buffer.readBoolean();
+        this.isMultiplayerGame = buffer.readBoolean();
+        this.hasLANBroadcast = buffer.readBoolean();
+        buffer.readSignedVarInt();
+        buffer.readSignedVarInt();
+        this.commandsEnabled = buffer.readBoolean();
+        this.isTexturePacksRequired = buffer.readBoolean();
+        this.gamerules = readGamerules( buffer );
+        this.hasBonusChestEnabled = buffer.readBoolean();
+        this.hasStartWithMapEnabled = buffer.readBoolean();
+
+        this.defaultPlayerPermission = buffer.readSignedVarInt();
+        buffer.readInt();
+        buffer.readBoolean();
+        buffer.readBoolean();
+        buffer.readBoolean();
+        buffer.readBoolean();
+        buffer.readBoolean();
+        buffer.readBoolean();
+        buffer.readBoolean();
+
+        buffer.readString();
+
+        buffer.readLInt();
+        buffer.readLInt();
+        buffer.readBoolean();
+        if (buffer.readBoolean()) {
+            buffer.readBoolean();
+        }
+
+        this.levelId = buffer.readString();
+        this.worldName = buffer.readString();
+        buffer.readString();
+        buffer.readBoolean();
+        buffer.readBoolean();
+        this.currentTick = buffer.readLLong();
+        this.enchantmentSeed = buffer.readSignedVarInt();
+
+        NBTReader readerNoBuffer = new NBTReader(buffer.getBuffer(), ByteOrder.LITTLE_ENDIAN);
+        readerNoBuffer.setUseVarint(true);
+
+        try {
+            this.clientBlockPalette = readerNoBuffer.parseList();
+        } catch (IOException | AllocationLimitReachedException e) {
+            e.printStackTrace();
+        }
+
+        this.clientItemPalette = new ArrayList<>();
+        int itemListLength = buffer.readUnsignedVarInt();
+        for (int i = 0; i < itemListLength; i++) {
+            String itemName = buffer.readString();
+            short legacyId = buffer.readLShort();
+            this.clientItemPalette.add(new StringShortPair(itemName, legacyId));
+        }
+
+        buffer.readString();
+        buffer.readBoolean();
     }
 
     public long getEntityId() {
@@ -487,4 +581,9 @@ public class PacketStartGame extends Packet {
     public void setLocation(Location location) {
         this.location = location;
     }
+
+    public List<Object> getClientBlockPalette() {
+        return this.clientBlockPalette;
+    }
+
 }

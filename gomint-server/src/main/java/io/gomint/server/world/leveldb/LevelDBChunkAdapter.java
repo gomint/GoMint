@@ -128,7 +128,7 @@ public class LevelDBChunkAdapter extends ChunkAdapter {
         }
 
         outHB.writeBytes(this.biomes.asReadOnly());
-        writeBatch.put( key, out );
+        writeBatch.put( key, outHB );
 
         db.write( writeBatch );
 

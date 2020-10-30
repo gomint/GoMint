@@ -31,7 +31,6 @@
         <module>gomint-server</module>
         <module>gomint-test-plugin</module>
         <module>gomint-performance-viewer</module>
-        <module>gomint-safeexec</module>
         <module>benchmark</module>
         <module>generator</module>
         <module>check</module>

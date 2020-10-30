@@ -7,21 +7,19 @@
 
 package io.gomint.server.world.generator.vanilla.client;
 
-import com.google.common.util.concurrent.ListenableFuture;
+import com.google.common.util.concurrent.ListenableScheduledFuture;
 import io.gomint.crypto.Processor;
 import io.gomint.jraknet.ClientSocket;
 import io.gomint.jraknet.Connection;
+import io.gomint.jraknet.EncapsulatedPacket;
 import io.gomint.jraknet.PacketBuffer;
 import io.gomint.jraknet.PacketReliability;
 import io.gomint.jraknet.SocketEvent;
 import io.gomint.math.BlockPosition;
 import io.gomint.math.Location;
-import io.gomint.math.MathUtils;
-import io.gomint.server.entity.tileentity.TileEntities;
 import io.gomint.server.entity.tileentity.TileEntity;
 import io.gomint.server.jwt.JwtSignatureException;
 import io.gomint.server.jwt.JwtToken;
-import io.gomint.server.maintenance.ReportUploader;
 import io.gomint.server.network.ConnectionWithState;
 import io.gomint.server.network.EncryptionHandler;
 import io.gomint.server.network.EncryptionKeyFactory;
@@ -32,30 +30,31 @@ import io.gomint.server.network.Protocol;
 import io.gomint.server.network.packet.Packet;
 import io.gomint.server.network.packet.PacketAdventureSettings;
 import io.gomint.server.network.packet.PacketBatch;
-import io.gomint.server.network.packet.PacketConfirmChunkRadius;
+import io.gomint.server.network.packet.PacketClientCacheStatus;
 import io.gomint.server.network.packet.PacketDisconnect;
 import io.gomint.server.network.packet.PacketEncryptionRequest;
 import io.gomint.server.network.packet.PacketEncryptionResponse;
 import io.gomint.server.network.packet.PacketLogin;
 import io.gomint.server.network.packet.PacketMovePlayer;
 import io.gomint.server.network.packet.PacketPlayState;
+import io.gomint.server.network.packet.PacketRequestChunkRadius;
 import io.gomint.server.network.packet.PacketResourcePackResponse;
-import io.gomint.server.network.packet.PacketResourcePackStack;
-import io.gomint.server.network.packet.PacketResourcePacksInfo;
 import io.gomint.server.network.packet.PacketSetLocalPlayerAsInitialized;
 import io.gomint.server.network.packet.PacketStartGame;
 import io.gomint.server.network.packet.PacketWorldChunk;
 import io.gomint.server.resource.ResourceResponseStatus;
 import io.gomint.server.util.BlockIdentifier;
 import io.gomint.server.util.Palette;
+import io.gomint.server.world.BlockRuntimeIDs;
 import io.gomint.server.world.ChunkAdapter;
 import io.gomint.server.world.ChunkSlice;
 import io.gomint.server.world.WorldAdapter;
-import io.gomint.server.world.generator.vanilla.chunk.ChunkSquare;
-import io.gomint.server.world.generator.vanilla.chunk.ChunkSquareCache;
+import io.gomint.server.world.generator.vanilla.chunk.ChunkRequest;
+import io.gomint.server.world.generator.vanilla.debug.UI;
 import io.gomint.taglib.NBTReader;
 import io.gomint.taglib.NBTTagCompound;
 import io.netty.buffer.ByteBuf;
+import org.apache.logging.log4j.core.util.UuidUtil;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -64,15 +63,20 @@ import java.net.SocketException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.security.PublicKey;
+import java.time.Duration;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Queue;
 import java.util.UUID;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
+import static io.gomint.server.network.Protocol.PACKET_DISCONNECT;
 import static io.gomint.server.network.Protocol.PACKET_ENCRYPTION_REQUEST;
 import static io.gomint.server.network.Protocol.PACKET_MOVE_PLAYER;
 import static io.gomint.server.network.Protocol.PACKET_PLAY_STATE;
@@ -87,8 +91,9 @@ import static io.gomint.server.network.Protocol.PACKET_WORLD_CHUNK;
  */
 public class Client implements ConnectionWithState {
 
-    private static final AtomicInteger CLIENT_IDS = new AtomicInteger( 0 );
-    private static final Logger LOGGER = LoggerFactory.getLogger( Client.class );
+    private static final String SKIN = "gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP+AgID/gICA/4CAgP8=";
+    private static final AtomicInteger CLIENT_IDS = new AtomicInteger(0);
+    private static final Logger LOGGER = LoggerFactory.getLogger(Client.class);
 
     private final PostProcessExecutor postProcessExecutor;
     private final EncryptionKeyFactory keyFactory;
@@ -111,8 +116,7 @@ public class Client implements ConnectionWithState {
 
     private List<BlockIdentifier> runtimeIDs;
     private WorldAdapter world;
-    private ChunkSquareCache chunkSquareCache;
-    private boolean spawned;
+    private AtomicBoolean spawned = new AtomicBoolean(false);
 
     private Consumer<Void> disconnectConsumer;
     private boolean disconnected;
@@ -121,65 +125,70 @@ public class Client implements ConnectionWithState {
     private Processor inputProcessor = new Processor(false);
     private Processor outputProcessor = new Processor(true);
 
-    public Client( WorldAdapter world, EncryptionKeyFactory encryptionKeyFactory,
-                   ChunkSquareCache chunkSquareCache, PostProcessExecutor postProcessExecutor ) {
+    // Update thread
+    private ListenableScheduledFuture<?> networkUpdater;
+    private UI debugUI;
+
+    // Chunk processing
+    private final Queue<ChunkRequest> queue;
+    private ChunkRequest current;
+
+    public Client(WorldAdapter world, EncryptionKeyFactory encryptionKeyFactory,
+                  Queue<ChunkRequest> queue, PostProcessExecutor postProcessExecutor, UI debugUI) {
         this.world = world;
         this.keyFactory = encryptionKeyFactory;
         this.postProcessExecutor = postProcessExecutor;
-        this.chunkSquareCache = chunkSquareCache;
+        this.debugUI = debugUI;
+        this.queue = queue;
 
-        this.socket = new ClientSocket( LoggerFactory.getLogger( NetworkManager.class ) );
+        this.networkUpdater = this.world.getServer().getExecutorService().scheduleAtFixedRate(this::update, 50, 50, TimeUnit.MILLISECONDS);
+
+        this.socket = new ClientSocket(LoggerFactory.getLogger(NetworkManager.class));
 
         try {
             this.socket.initialize();
-            this.socket.setMojangModificationEnabled( true );
-            this.socket.setEventHandler( ( socket, socketEvent ) -> {
-                if ( socketEvent.getType() == SocketEvent.Type.CONNECTION_ATTEMPT_SUCCEEDED ) {
+            this.socket.setMojangModificationEnabled(true);
+            this.socket.setEventHandler((socket, socketEvent) -> {
+                if (socketEvent.getType() == SocketEvent.Type.CONNECTION_ATTEMPT_SUCCEEDED) {
                     Client.this.connection = socketEvent.getConnection();
-                    Client.this.connection.addDataProcessor( packetData -> {
-                        if ( packetData.getPacketData().readableBytes() <= 0 ) {
+                    Client.this.connection.addDataProcessor(packetData -> {
+                        if (packetData.getPacketData().readableBytes() <= 0) {
                             // Malformed packet:
                             return packetData;
                         }
 
                         // Check if packet is batched
                         byte packetId = packetData.getPacketData().readByte();
-                        if ( packetId == Protocol.BATCH_MAGIC ) {
+                        if (packetId == Protocol.BATCH_MAGIC) {
                             // Decompress and decrypt
-                            ByteBuf pureData = handleBatchPacket( packetData.getPacketData() );
+                            ByteBuf pureData = handleBatchPacket(packetData.getPacketData());
+                            EncapsulatedPacket newPacket = new EncapsulatedPacket();
+                            newPacket.setPacketData(pureData);
 
-                            Client.this.handleSocketData( new PacketBuffer( pureData ) );
-
-                            // We consumed everything
-                            pureData.release();
-                            packetData.release();
-
-                            return null;
+                            pureData.release(); // The packet takes over ownership
+                            // We don't need to release the input because the batch packet handler releases it
+                            return newPacket;
                         }
 
                         packetData.getPacketData().readerIndex(0);
                         return packetData;
-                    } );
+                    });
 
                     Client.this.login();
-                } else if ( socketEvent.getType() == SocketEvent.Type.CONNECTION_CLOSED || socketEvent.getType() == SocketEvent.Type.CONNECTION_DISCONNECTED ) {
-                    if ( !Client.this.disconnected ) {
+                } else if (socketEvent.getType() == SocketEvent.Type.CONNECTION_CLOSED || socketEvent.getType() == SocketEvent.Type.CONNECTION_DISCONNECTED) {
+                    if (!Client.this.disconnected) {
                         Client.this.disconnected = true;
-                        Client.this.disconnectConsumer.accept( null );
+                        Client.this.disconnectConsumer.accept(null);
                     }
                 }
-            } );
-        } catch ( SocketException e ) {
-            LOGGER.warn( "Exception caught", e );
+            });
+        } catch (SocketException e) {
+            LOGGER.warn("Exception caught", e);
         }
     }
 
     public void setSpawnPointConsumer(Consumer<BlockPosition> spawnPointConsumer) {
         this.spawnPointConsumer = spawnPointConsumer;
-    }
-
-    public Processor getInputProcessor() {
-        return inputProcessor;
     }
 
     /**
@@ -188,8 +197,8 @@ public class Client implements ConnectionWithState {
      * @param ip   of the server
      * @param port of the server
      */
-    public void connect( String ip, int port ) {
-        this.socket.connect( ip, port );
+    public void connect(String ip, int port) {
+        this.socket.connect(ip, port);
     }
 
     /**
@@ -198,34 +207,94 @@ public class Client implements ConnectionWithState {
      * @param buffer The buffer containing the batch packet's data (except packet ID)
      * @return decompressed and decrypted data
      */
-    private ByteBuf handleBatchPacket( ByteBuf buffer ) {
+    private ByteBuf handleBatchPacket(ByteBuf buffer) {
         return this.inputProcessor.process(buffer);
     }
 
-    public void disconnect( String message ) {
-        if ( message != null && message.length() > 0 ) {
+    public void disconnect(String message) {
+        if (message != null && message.length() > 0) {
             PacketDisconnect packet = new PacketDisconnect();
-            packet.setMessage( message );
-            this.send( packet );
+            packet.setMessage(message);
+            this.send(packet);
 
-            Client.this.internalClose( message );
+            Client.this.internalClose(message);
         } else {
-            this.internalClose( message );
+            this.internalClose(message);
         }
     }
 
-    public void send( Packet packet ) {
-        if ( !( packet instanceof PacketBatch ) ) {
-            this.postProcessExecutor.addWork( this, new Packet[]{ packet }, null);
+    public void send(Packet packet) {
+        if (this.connection == null) {
+            return;
+        }
+
+        if (!(packet instanceof PacketBatch)) {
+            this.postProcessExecutor.addWork(this, new Packet[]{packet}, null);
         } else {
             try {
-                PacketBuffer buffer = new PacketBuffer( 32 );
-                packet.serializeHeader( buffer );
-                packet.serialize( buffer, Protocol.MINECRAFT_PE_PROTOCOL_VERSION );
+                PacketBuffer buffer = new PacketBuffer(8);
+                packet.serializeHeader(buffer);
+                packet.serialize(buffer, Protocol.MINECRAFT_PE_PROTOCOL_VERSION);
 
-                this.connection.send( PacketReliability.RELIABLE_ORDERED, packet.orderingChannel(), buffer );
-            } catch ( Exception e ) {
+                this.connection.send(PacketReliability.RELIABLE_ORDERED, packet.orderingChannel(), buffer);
+            } catch (Exception e) {
                 e.printStackTrace();
+            }
+        }
+    }
+
+    private void update() {
+        this.updateNetwork();
+
+        if (this.current != null) {
+            ChunkAdapter chunkAdapter = this.world.getChunkCache().getChunk(this.current.getX(), this.current.getZ());
+            if (chunkAdapter != null) {
+                this.current.getFuture().resolve(chunkAdapter);
+                this.current = null;
+            }
+        }
+
+        // Check if we can consume another chunk request
+        if (this.spawned.get() && this.current == null) {
+            this.current = this.queue.poll();
+            if (this.current != null) {
+                ChunkAdapter adapter = this.world.getChunkCache().getChunk(this.current.getX(), this.current.getZ());
+                if (adapter != null) {
+                    this.current.getFuture().resolve(adapter);
+                    this.current = null;
+                } else {
+                    this.moveToChunk(this.current);
+                }
+            }
+        }
+    }
+
+    private void updateNetwork() {
+        // It seems that movement is sent last, but we need it first to check if player position of other packets align
+        List<PacketBuffer> packetBuffers = null;
+
+        // Receive all waiting packets:
+        EncapsulatedPacket packetData;
+        while ((packetData = this.connection.receive()) != null) {
+            if (packetBuffers == null) {
+                packetBuffers = new ArrayList<>();
+            }
+
+            packetBuffers.add(new PacketBuffer(packetData.getPacketData()));
+            packetData.release(); // The internal buffer took over
+        }
+
+        if (packetBuffers != null) {
+            for (PacketBuffer buffer : packetBuffers) {
+                // CHECKSTYLE:OFF
+                try {
+                    this.handleSocketData(buffer);
+                } catch (Exception e) {
+                    LOGGER.error("Error whilst processing packet: ", e);
+                }
+                // CHECKSTYLE:ON
+
+                buffer.release();
             }
         }
     }
@@ -250,64 +319,79 @@ public class Client implements ConnectionWithState {
         return this.outputProcessor;
     }
 
-    private void internalClose( String message ) {
-        if ( this.connection != null ) {
-            if ( this.connection.isConnected() && !this.connection.isDisconnecting() ) {
-                this.connection.disconnect( message );
+    private void internalClose(String message) {
+        if (this.connection != null) {
+            if (this.connection.isConnected() && !this.connection.isDisconnecting()) {
+                this.connection.disconnect(message);
             }
+
+            this.networkUpdater.cancel(true);
+            this.networkUpdater = null;
+
+            this.connection = null;
         }
     }
 
     private void login() {
-        if ( this.state == PlayerConnectionState.HANDSHAKE ) {
+        if (this.state == PlayerConnectionState.HANDSHAKE) {
             this.state = PlayerConnectionState.LOGIN;
 
             PacketLogin login = new PacketLogin();
-            login.setProtocol( Protocol.MINECRAFT_PE_PROTOCOL_VERSION );
+            login.setProtocol(Protocol.MINECRAFT_PE_PROTOCOL_VERSION);
 
             // Send our handshake to the server -> this will trigger it to respond with a 0x03 ServerHandshake packet:
             MojangLoginForger mojangLoginForger = new MojangLoginForger();
-            mojangLoginForger.setPublicKey( this.keyFactory.getKeyPair().getPublic() );
-            mojangLoginForger.setUsername( this.name = "GoBot_" + CLIENT_IDS.incrementAndGet() );
-            mojangLoginForger.setUuid( UUID.randomUUID() );
-            mojangLoginForger.setSkinData( new JSONObject( new HashMap<Object, Object>() {{
-                put( "ServerAddress", "127.0.0.1:" + connection.getAddress().getPort() );
-                put( "CurrentInputMode", 1 );
-                put( "DefaultInputMode", 1 );
-                put( "ClientRandomId", ThreadLocalRandom.current().nextInt() );
-                put( "GuiScale", 0 );
-                put( "GameVersion", "1.7.1.0" );
-                put( "ThirdPartyName", name );
-                put( "DeviceModel", "GoMintEmulator" );
-                put( "DeviceOS", 7 );
-                put( "CapeData", "" );
-                put( "SkinId", mojangLoginForger.getUuid().toString() + "_Custom" );
-                put( "SkinGeometry", "ew0KICAiZ2VvbWV0cnkuaHVtYW5vaWQiOiB7DQogICAgImJvbmVzIjogWw0KICAgICAgew0KICAgICAgICAibmFtZSI6ICJib2R5IiwNCiAgICAgICAgInBpdm90IjogWyAwLjAsIDI0LjAsIDAuMCBdLA0KICAgICAgICAiY3ViZXMiOiBbDQogICAgICAgICAgew0KICAgICAgICAgICAgIm9yaWdpbiI6IFsgLTQuMCwgMTIuMCwgLTIuMCBdLA0KICAgICAgICAgICAgInNpemUiOiBbIDgsIDEyLCA0IF0sDQogICAgICAgICAgICAidXYiOiBbIDE2LCAxNiBdDQogICAgICAgICAgfQ0KICAgICAgICBdDQogICAgICB9LA0KDQogICAgICB7DQogICAgICAgICJuYW1lIjogIndhaXN0IiwNCiAgICAgICAgIm5ldmVyUmVuZGVyIjogdHJ1ZSwNCiAgICAgICAgInBpdm90IjogWyAwLjAsIDEyLjAsIDAuMCBdDQogICAgICB9LA0KDQogICAgICB7DQogICAgICAgICJuYW1lIjogImhlYWQiLA0KICAgICAgICAicGl2b3QiOiBbIDAuMCwgMjQuMCwgMC4wIF0sDQogICAgICAgICJjdWJlcyI6IFsNCiAgICAgICAgICB7DQogICAgICAgICAgICAib3JpZ2luIjogWyAtNC4wLCAyNC4wLCAtNC4wIF0sDQogICAgICAgICAgICAic2l6ZSI6IFsgOCwgOCwgOCBdLA0KICAgICAgICAgICAgInV2IjogWyAwLCAwIF0NCiAgICAgICAgICB9DQogICAgICAgIF0NCiAgICAgIH0sDQoNCiAgICAgIHsNCiAgICAgICAgIm5hbWUiOiAiaGF0IiwNCiAgICAgICAgInBpdm90IjogWyAwLjAsIDI0LjAsIDAuMCBdLA0KICAgICAgICAiY3ViZXMiOiBbDQogICAgICAgICAgew0KICAgICAgICAgICAgIm9yaWdpbiI6IFsgLTQuMCwgMjQuMCwgLTQuMCBdLA0KICAgICAgICAgICAgInNpemUiOiBbIDgsIDgsIDggXSwNCiAgICAgICAgICAgICJ1diI6IFsgMzIsIDAgXSwNCiAgICAgICAgICAgICJpbmZsYXRlIjogMC41DQogICAgICAgICAgfQ0KICAgICAgICBdLA0KICAgICAgICAibmV2ZXJSZW5kZXIiOiB0cnVlDQogICAgICB9LA0KDQogICAgICB7DQogICAgICAgICJuYW1lIjogInJpZ2h0QXJtIiwNCiAgICAgICAgInBpdm90IjogWyAtNS4wLCAyMi4wLCAwLjAgXSwNCiAgICAgICAgImN1YmVzIjogWw0KICAgICAgICAgIHsNCiAgICAgICAgICAgICJvcmlnaW4iOiBbIC04LjAsIDEyLjAsIC0yLjAgXSwNCiAgICAgICAgICAgICJzaXplIjogWyA0LCAxMiwgNCBdLA0KICAgICAgICAgICAgInV2IjogWyA0MCwgMTYgXQ0KICAgICAgICAgIH0NCiAgICAgICAgXQ0KICAgICAgfSwNCg0KICAgICAgew0KICAgICAgICAibmFtZSI6ICJsZWZ0QXJtIiwNCiAgICAgICAgInBpdm90IjogWyA1LjAsIDIyLjAsIDAuMCBdLA0KICAgICAgICAiY3ViZXMiOiBbDQogICAgICAgICAgew0KICAgICAgICAgICAgIm9yaWdpbiI6IFsgNC4wLCAxMi4wLCAtMi4wIF0sDQogICAgICAgICAgICAic2l6ZSI6IFsgNCwgMTIsIDQgXSwNCiAgICAgICAgICAgICJ1diI6IFsgNDAsIDE2IF0NCiAgICAgICAgICB9DQogICAgICAgIF0sDQogICAgICAgICJtaXJyb3IiOiB0cnVlDQogICAgICB9LA0KDQogICAgICB7DQogICAgICAgICJuYW1lIjogInJpZ2h0TGVnIiwNCiAgICAgICAgInBpdm90IjogWyAtMS45LCAxMi4wLCAwLjAgXSwNCiAgICAgICAgImN1YmVzIjogWw0KICAgICAgICAgIHsNCiAgICAgICAgICAgICJvcmlnaW4iOiBbIC0zLjksIDAuMCwgLTIuMCBdLA0KICAgICAgICAgICAgInNpemUiOiBbIDQsIDEyLCA0IF0sDQogICAgICAgICAgICAidXYiOiBbIDAsIDE2IF0NCiAgICAgICAgICB9DQogICAgICAgIF0NCiAgICAgIH0sDQoNCiAgICAgIHsNCiAgICAgICAgIm5hbWUiOiAibGVmdExlZyIsDQogICAgICAgICJwaXZvdCI6IFsgMS45LCAxMi4wLCAwLjAgXSwNCiAgICAgICAgImN1YmVzIjogWw0KICAgICAgICAgIHsNCiAgICAgICAgICAgICJvcmlnaW4iOiBbIC0wLjEsIDAuMCwgLTIuMCBdLA0KICAgICAgICAgICAgInNpemUiOiBbIDQsIDEyLCA0IF0sDQogICAgICAgICAgICAidXYiOiBbIDAsIDE2IF0NCiAgICAgICAgICB9DQogICAgICAgIF0sDQogICAgICAgICJtaXJyb3IiOiB0cnVlDQogICAgICB9DQogICAgXQ0KICB9LA0KDQogICJnZW9tZXRyeS5jYXBlIjogew0KICAgICJ0ZXh0dXJld2lkdGgiOiA2NCwNCiAgICAidGV4dHVyZWhlaWdodCI6IDMyLA0KDQogICAgImJvbmVzIjogWw0KICAgICAgew0KICAgICAgICAibmFtZSI6ICJjYXBlIiwNCiAgICAgICAgInBpdm90IjogWyAwLjAsIDI0LjAsIC0zLjAgXSwNCiAgICAgICAgImN1YmVzIjogWw0KICAgICAgICAgIHsNCiAgICAgICAgICAgICJvcmlnaW4iOiBbIC01LjAsIDguMCwgLTMuMCBdLA0KICAgICAgICAgICAgInNpemUiOiBbIDEwLCAxNiwgMSBdLA0KICAgICAgICAgICAgInV2IjogWyAwLCAwIF0NCiAgICAgICAgICB9DQogICAgICAgIF0sDQogICAgICAgICJtYXRlcmlhbCI6ICJhbHBoYSINCiAgICAgIH0NCiAgICBdDQogIH0sDQogICJnZW9tZXRyeS5odW1hbm9pZC5jdXN0b206Z2VvbWV0cnkuaHVtYW5vaWQiOiB7DQogICAgImJvbmVzIjogWw0KICAgICAgew0KICAgICAgICAibmFtZSI6ICJoYXQiLA0KICAgICAgICAibmV2ZXJSZW5kZXIiOiBmYWxzZSwNCiAgICAgICAgIm1hdGVyaWFsIjogImFscGhhIiwNCiAgICAgICAgInBpdm90IjogWyAwLjAsIDI0LjAsIDAuMCBdDQogICAgICB9LA0KICAgICAgew0KICAgICAgICAibmFtZSI6ICJsZWZ0QXJtIiwNCiAgICAgICAgInJlc2V0IjogdHJ1ZSwNCiAgICAgICAgIm1pcnJvciI6IGZhbHNlLA0KICAgICAgICAicGl2b3QiOiBbIDUuMCwgMjIuMCwgMC4wIF0sDQogICAgICAgICJjdWJlcyI6IFsNCiAgICAgICAgICB7DQogICAgICAgICAgICAib3JpZ2luIjogWyA0LjAsIDEyLjAsIC0yLjAgXSwNCiAgICAgICAgICAgICJzaXplIjogWyA0LCAxMiwgNCBdLA0KICAgICAgICAgICAgInV2IjogWyAzMiwgNDggXQ0KICAgICAgICAgIH0NCiAgICAgICAgXQ0KICAgICAgfSwNCg0KICAgICAgew0KICAgICAgICAibmFtZSI6ICJyaWdodEFybSIsDQogICAgICAgICJyZXNldCI6IHRydWUsDQogICAgICAgICJwaXZvdCI6IFsgLTUuMCwgMjIuMCwgMC4wIF0sDQogICAgICAgICJjdWJlcyI6IFsNCiAgICAgICAgICB7DQogICAgICAgICAgICAib3JpZ2luIjogWyAtOC4wLCAxMi4wLCAtMi4wIF0sDQogICAgICAgICAgICAic2l6ZSI6IFsgNCwgMTIsIDQgXSwNCiAgICAgICAgICAgICJ1diI6IFsgNDAsIDE2IF0NCiAgICAgICAgICB9DQogICAgICAgIF0NCiAgICAgIH0sDQoNCiAgICAgIHsNCiAgICAgICAgIm5hbWUiOiAicmlnaHRJdGVtIiwNCiAgICAgICAgInBpdm90IjogWyAtNiwgMTUsIDEgXSwNCiAgICAgICAgIm5ldmVyUmVuZGVyIjogdHJ1ZSwNCiAgICAgICAgInBhcmVudCI6ICJyaWdodEFybSINCiAgICAgIH0sDQoNCiAgICAgIHsNCiAgICAgICAgIm5hbWUiOiAibGVmdFNsZWV2ZSIsDQogICAgICAgICJwaXZvdCI6IFsgNS4wLCAyMi4wLCAwLjAgXSwNCiAgICAgICAgImN1YmVzIjogWw0KICAgICAgICAgIHsNCiAgICAgICAgICAgICJvcmlnaW4iOiBbIDQuMCwgMTIuMCwgLTIuMCBdLA0KICAgICAgICAgICAgInNpemUiOiBbIDQsIDEyLCA0IF0sDQogICAgICAgICAgICAidXYiOiBbIDQ4LCA0OCBdLA0KICAgICAgICAgICAgImluZmxhdGUiOiAwLjI1DQogICAgICAgICAgfQ0KICAgICAgICBdLA0KICAgICAgICAibWF0ZXJpYWwiOiAiYWxwaGEiDQogICAgICB9LA0KDQogICAgICB7DQogICAgICAgICJuYW1lIjogInJpZ2h0U2xlZXZlIiwNCiAgICAgICAgInBpdm90IjogWyAtNS4wLCAyMi4wLCAwLjAgXSwNCiAgICAgICAgImN1YmVzIjogWw0KICAgICAgICAgIHsNCiAgICAgICAgICAgICJvcmlnaW4iOiBbIC04LjAsIDEyLjAsIC0yLjAgXSwNCiAgICAgICAgICAgICJzaXplIjogWyA0LCAxMiwgNCBdLA0KICAgICAgICAgICAgInV2IjogWyA0MCwgMzIgXSwNCiAgICAgICAgICAgICJpbmZsYXRlIjogMC4yNQ0KICAgICAgICAgIH0NCiAgICAgICAgXSwNCiAgICAgICAgIm1hdGVyaWFsIjogImFscGhhIg0KICAgICAgfSwNCg0KICAgICAgew0KICAgICAgICAibmFtZSI6ICJsZWZ0TGVnIiwNCiAgICAgICAgInJlc2V0IjogdHJ1ZSwNCiAgICAgICAgIm1pcnJvciI6IGZhbHNlLA0KICAgICAgICAicGl2b3QiOiBbIDEuOSwgMTIuMCwgMC4wIF0sDQogICAgICAgICJjdWJlcyI6IFsNCiAgICAgICAgICB7DQogICAgICAgICAgICAib3JpZ2luIjogWyAtMC4xLCAwLjAsIC0yLjAgXSwNCiAgICAgICAgICAgICJzaXplIjogWyA0LCAxMiwgNCBdLA0KICAgICAgICAgICAgInV2IjogWyAxNiwgNDggXQ0KICAgICAgICAgIH0NCiAgICAgICAgXQ0KICAgICAgfSwNCg0KICAgICAgew0KICAgICAgICAibmFtZSI6ICJsZWZ0UGFudHMiLA0KICAgICAgICAicGl2b3QiOiBbIDEuOSwgMTIuMCwgMC4wIF0sDQogICAgICAgICJjdWJlcyI6IFsNCiAgICAgICAgICB7DQogICAgICAgICAgICAib3JpZ2luIjogWyAtMC4xLCAwLjAsIC0yLjAgXSwNCiAgICAgICAgICAgICJzaXplIjogWyA0LCAxMiwgNCBdLA0KICAgICAgICAgICAgInV2IjogWyAwLCA0OCBdLA0KICAgICAgICAgICAgImluZmxhdGUiOiAwLjI1DQogICAgICAgICAgfQ0KICAgICAgICBdLA0KICAgICAgICAicG9zIjogWyAxLjksIDEyLCAwIF0sDQogICAgICAgICJtYXRlcmlhbCI6ICJhbHBoYSINCiAgICAgIH0sDQoNCiAgICAgIHsNCiAgICAgICAgIm5hbWUiOiAicmlnaHRQYW50cyIsDQogICAgICAgICJwaXZvdCI6IFsgLTEuOSwgMTIuMCwgMC4wIF0sDQogICAgICAgICJjdWJlcyI6IFsNCiAgICAgICAgICB7DQogICAgICAgICAgICAib3JpZ2luIjogWyAtMy45LCAwLjAsIC0yLjAgXSwNCiAgICAgICAgICAgICJzaXplIjogWyA0LCAxMiwgNCBdLA0KICAgICAgICAgICAgInV2IjogWyAwLCAzMiBdLA0KICAgICAgICAgICAgImluZmxhdGUiOiAwLjI1DQogICAgICAgICAgfQ0KICAgICAgICBdLA0KICAgICAgICAicG9zIjogWyAtMS45LCAxMiwgMCBdLA0KICAgICAgICAibWF0ZXJpYWwiOiAiYWxwaGEiDQogICAgICB9LA0KDQogICAgICB7DQogICAgICAgICJuYW1lIjogImphY2tldCIsDQogICAgICAgICJwaXZvdCI6IFsgMC4wLCAyNC4wLCAwLjAgXSwNCiAgICAgICAgImN1YmVzIjogWw0KICAgICAgICAgIHsNCiAgICAgICAgICAgICJvcmlnaW4iOiBbIC00LjAsIDEyLjAsIC0yLjAgXSwNCiAgICAgICAgICAgICJzaXplIjogWyA4LCAxMiwgNCBdLA0KICAgICAgICAgICAgInV2IjogWyAxNiwgMzIgXSwNCiAgICAgICAgICAgICJpbmZsYXRlIjogMC4yNQ0KICAgICAgICAgIH0NCiAgICAgICAgXSwNCiAgICAgICAgIm1hdGVyaWFsIjogImFscGhhIg0KICAgICAgfQ0KICAgIF0NCiAgfSwNCiAgImdlb21ldHJ5Lmh1bWFub2lkLmN1c3RvbVNsaW06Z2VvbWV0cnkuaHVtYW5vaWQiOiB7DQoNCiAgICAiYm9uZXMiOiBbDQogICAgICB7DQogICAgICAgICJuYW1lIjogImhhdCIsDQogICAgICAgICJuZXZlclJlbmRlciI6IGZhbHNlLA0KICAgICAgICAibWF0ZXJpYWwiOiAiYWxwaGEiDQogICAgICB9LA0KICAgICAgew0KICAgICAgICAibmFtZSI6ICJsZWZ0QXJtIiwNCiAgICAgICAgInJlc2V0IjogdHJ1ZSwNCiAgICAgICAgIm1pcnJvciI6IGZhbHNlLA0KICAgICAgICAicGl2b3QiOiBbIDUuMCwgMjEuNSwgMC4wIF0sDQogICAgICAgICJjdWJlcyI6IFsNCiAgICAgICAgICB7DQogICAgICAgICAgICAib3JpZ2luIjogWyA0LjAsIDExLjUsIC0yLjAgXSwNCiAgICAgICAgICAgICJzaXplIjogWyAzLCAxMiwgNCBdLA0KICAgICAgICAgICAgInV2IjogWyAzMiwgNDggXQ0KICAgICAgICAgIH0NCiAgICAgICAgXQ0KICAgICAgfSwNCg0KICAgICAgew0KICAgICAgICAibmFtZSI6ICJyaWdodEFybSIsDQogICAgICAgICJyZXNldCI6IHRydWUsDQogICAgICAgICJwaXZvdCI6IFsgLTUuMCwgMjEuNSwgMC4wIF0sDQogICAgICAgICJjdWJlcyI6IFsNCiAgICAgICAgICB7DQogICAgICAgICAgICAib3JpZ2luIjogWyAtNy4wLCAxMS41LCAtMi4wIF0sDQogICAgICAgICAgICAic2l6ZSI6IFsgMywgMTIsIDQgXSwNCiAgICAgICAgICAgICJ1diI6IFsgNDAsIDE2IF0NCiAgICAgICAgICB9DQogICAgICAgIF0NCiAgICAgIH0sDQoNCiAgICAgIHsNCiAgICAgICAgInBpdm90IjogWyAtNiwgMTQuNSwgMSBdLA0KICAgICAgICAibmV2ZXJSZW5kZXIiOiB0cnVlLA0KICAgICAgICAibmFtZSI6ICJyaWdodEl0ZW0iLA0KICAgICAgICAicGFyZW50IjogInJpZ2h0QXJtIg0KICAgICAgfSwNCg0KICAgICAgew0KICAgICAgICAibmFtZSI6ICJsZWZ0U2xlZXZlIiwNCiAgICAgICAgInBpdm90IjogWyA1LjAsIDIxLjUsIDAuMCBdLA0KICAgICAgICAiY3ViZXMiOiBbDQogICAgICAgICAgew0KICAgICAgICAgICAgIm9yaWdpbiI6IFsgNC4wLCAxMS41LCAtMi4wIF0sDQogICAgICAgICAgICAic2l6ZSI6IFsgMywgMTIsIDQgXSwNCiAgICAgICAgICAgICJ1diI6IFsgNDgsIDQ4IF0sDQogICAgICAgICAgICAiaW5mbGF0ZSI6IDAuMjUNCiAgICAgICAgICB9DQogICAgICAgIF0sDQogICAgICAgICJtYXRlcmlhbCI6ICJhbHBoYSINCiAgICAgIH0sDQoNCiAgICAgIHsNCiAgICAgICAgIm5hbWUiOiAicmlnaHRTbGVldmUiLA0KICAgICAgICAicGl2b3QiOiBbIC01LjAsIDIxLjUsIDAuMCBdLA0KICAgICAgICAiY3ViZXMiOiBbDQogICAgICAgICAgew0KICAgICAgICAgICAgIm9yaWdpbiI6IFsgLTcuMCwgMTEuNSwgLTIuMCBdLA0KICAgICAgICAgICAgInNpemUiOiBbIDMsIDEyLCA0IF0sDQogICAgICAgICAgICAidXYiOiBbIDQwLCAzMiBdLA0KICAgICAgICAgICAgImluZmxhdGUiOiAwLjI1DQogICAgICAgICAgfQ0KICAgICAgICBdLA0KICAgICAgICAibWF0ZXJpYWwiOiAiYWxwaGEiDQogICAgICB9LA0KDQogICAgICB7DQogICAgICAgICJuYW1lIjogImxlZnRMZWciLA0KICAgICAgICAicmVzZXQiOiB0cnVlLA0KICAgICAgICAibWlycm9yIjogZmFsc2UsDQogICAgICAgICJwaXZvdCI6IFsgMS45LCAxMi4wLCAwLjAgXSwNCiAgICAgICAgImN1YmVzIjogWw0KICAgICAgICAgIHsNCiAgICAgICAgICAgICJvcmlnaW4iOiBbIC0wLjEsIDAuMCwgLTIuMCBdLA0KICAgICAgICAgICAgInNpemUiOiBbIDQsIDEyLCA0IF0sDQogICAgICAgICAgICAidXYiOiBbIDE2LCA0OCBdDQogICAgICAgICAgfQ0KICAgICAgICBdDQogICAgICB9LA0KDQogICAgICB7DQogICAgICAgICJuYW1lIjogImxlZnRQYW50cyIsDQogICAgICAgICJwaXZvdCI6IFsgMS45LCAxMi4wLCAwLjAgXSwNCiAgICAgICAgImN1YmVzIjogWw0KICAgICAgICAgIHsNCiAgICAgICAgICAgICJvcmlnaW4iOiBbIC0wLjEsIDAuMCwgLTIuMCBdLA0KICAgICAgICAgICAgInNpemUiOiBbIDQsIDEyLCA0IF0sDQogICAgICAgICAgICAidXYiOiBbIDAsIDQ4IF0sDQogICAgICAgICAgICAiaW5mbGF0ZSI6IDAuMjUNCiAgICAgICAgICB9DQogICAgICAgIF0sDQogICAgICAgICJtYXRlcmlhbCI6ICJhbHBoYSINCiAgICAgIH0sDQoNCiAgICAgIHsNCiAgICAgICAgIm5hbWUiOiAicmlnaHRQYW50cyIsDQogICAgICAgICJwaXZvdCI6IFsgLTEuOSwgMTIuMCwgMC4wIF0sDQogICAgICAgICJjdWJlcyI6IFsNCiAgICAgICAgICB7DQogICAgICAgICAgICAib3JpZ2luIjogWyAtMy45LCAwLjAsIC0yLjAgXSwNCiAgICAgICAgICAgICJzaXplIjogWyA0LCAxMiwgNCBdLA0KICAgICAgICAgICAgInV2IjogWyAwLCAzMiBdLA0KICAgICAgICAgICAgImluZmxhdGUiOiAwLjI1DQogICAgICAgICAgfQ0KICAgICAgICBdLA0KICAgICAgICAibWF0ZXJpYWwiOiAiYWxwaGEiDQogICAgICB9LA0KDQogICAgICB7DQogICAgICAgICJuYW1lIjogImphY2tldCIsDQogICAgICAgICJwaXZvdCI6IFsgMC4wLCAyNC4wLCAwLjAgXSwNCiAgICAgICAgImN1YmVzIjogWw0KICAgICAgICAgIHsNCiAgICAgICAgICAgICJvcmlnaW4iOiBbIC00LjAsIDEyLjAsIC0yLjAgXSwNCiAgICAgICAgICAgICJzaXplIjogWyA4LCAxMiwgNCBdLA0KICAgICAgICAgICAgInV2IjogWyAxNiwgMzIgXSwNCiAgICAgICAgICAgICJpbmZsYXRlIjogMC4yNQ0KICAgICAgICAgIH0NCiAgICAgICAgXSwNCiAgICAgICAgIm1hdGVyaWFsIjogImFscGhhIg0KICAgICAgfQ0KICAgIF0NCiAgfQ0KDQp9DQo=" );
-                put( "SkinData", "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AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAP/YV/8AAAAAAAAAAO3JUf8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAO3JUf/tyVH/1LRJ/+3JUf//2Ff/7clR/wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD/2Ff/7clR/4cdDf+HHQ3/7clR///YV/8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAP/YV//tyVH/1LRJ/+3JUf8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA7clR///YV/8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA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" );
-                put( "SelfSignedId", UUID.randomUUID().toString() );
-                put( "PlatformOnlineId", "" );
-                put( "PlatformOfflineId", "" );
-                put( "LanguageCode", "en_US" );
-                put( "ADRole", 0 );
-                put( "UIProfile", 0 );
-            }} ) );
-            mojangLoginForger.setXuid( String.valueOf( CLIENT_IDS.get() ) );
+            mojangLoginForger.setPublicKey(this.keyFactory.getKeyPair().getPublic());
+            mojangLoginForger.setUsername(this.name = "GoBot_" + CLIENT_IDS.incrementAndGet());
+            mojangLoginForger.setUuid(UUID.randomUUID());
+            mojangLoginForger.setSkinData(new JSONObject(new HashMap<>() {{
+                put("ServerAddress", "127.0.0.1:" + connection.getAddress().getPort());
+                put("CurrentInputMode", 1);
+                put("DefaultInputMode", 1);
+                put("ClientRandomId", ThreadLocalRandom.current().nextInt());
+                put("GuiScale", 0);
+                put("GameVersion", "1.16.40");
+                put("ThirdPartyName", name);
+                put("DeviceModel", "");
+                put("DeviceOS", 1);
+                put("CapeData", "");
+                put("SkinId", mojangLoginForger.getUuid().toString() + "_Alex");
+                put("SkinGeometry", "CnsKICAgImZvcm1hdF92ZXJzaW9uIiA6ICIxLjEyLjAiLAogICAibWluZWNyYWZ0Omdlb21ldHJ5IiA6IFsKICAgICAgewogICAgICAgICAiYm9uZXMiIDogWwogICAgICAgICAgICB7CiAgICAgICAgICAgICAgICJuYW1lIiA6ICJib2R5IiwKICAgICAgICAgICAgICAgInBhcmVudCIgOiAid2Fpc3QiLAogICAgICAgICAgICAgICAicGl2b3QiIDogWyAwLjAsIDI0LjAsIDAuMCBdCiAgICAgICAgICAgIH0sCiAgICAgICAgICAgIHsKICAgICAgICAgICAgICAgIm5hbWUiIDogIndhaXN0IiwKICAgICAgICAgICAgICAgInBpdm90IiA6IFsgMC4wLCAxMi4wLCAwLjAgXQogICAgICAgICAgICB9LAogICAgICAgICAgICB7CiAgICAgICAgICAgICAgICJjdWJlcyIgOiBbCiAgICAgICAgICAgICAgICAgIHsKICAgICAgICAgICAgICAgICAgICAgIm9yaWdpbiIgOiBbIC01LjAsIDguMCwgMy4wIF0sCiAgICAgICAgICAgICAgICAgICAgICJzaXplIiA6IFsgMTAsIDE2LCAxIF0sCiAgICAgICAgICAgICAgICAgICAgICJ1diIgOiBbIDAsIDAgXQogICAgICAgICAgICAgICAgICB9CiAgICAgICAgICAgICAgIF0sCiAgICAgICAgICAgICAgICJuYW1lIiA6ICJjYXBlIiwKICAgICAgICAgICAgICAgInBhcmVudCIgOiAiYm9keSIsCiAgICAgICAgICAgICAgICJwaXZvdCIgOiBbIDAuMCwgMjQuMCwgMy4wIF0sCiAgICAgICAgICAgICAgICJyb3RhdGlvbiIgOiBbIDAuMCwgMTgwLjAsIDAuMCBdCiAgICAgICAgICAgIH0KICAgICAgICAgXSwKICAgICAgICAgImRlc2NyaXB0aW9uIiA6IHsKICAgICAgICAgICAgImlkZW50aWZpZXIiIDogImdlb21ldHJ5LmNhcGUiLAogICAgICAgICAgICAidGV4dHVyZV9oZWlnaHQiIDogMzIsCiAgICAgICAgICAgICJ0ZXh0dXJlX3dpZHRoIiA6IDY0CiAgICAgICAgIH0KICAgICAgfSwKICAgICAgewogICAgICAgICAiYm9uZXMiIDogWwogICAgICAgICAgICB7CiAgICAgICAgICAgICAgICJuYW1lIiA6ICJyb290IiwKICAgICAgICAgICAgICAgInBpdm90IiA6IFsgMC4wLCAwLjAsIDAuMCBdCiAgICAgICAgICAgIH0sCiAgICAgICAgICAgIHsKICAgICAgICAgICAgICAgImN1YmVzIiA6IFsKICAgICAgICAgICAgICAgICAgewogICAgICAgICAgICAgICAgICAgICAib3JpZ2luIiA6IFsgLTQuMCwgMTIuMCwgLTIuMCBdLAogICAgICAgICAgICAgICAgICAgICAic2l6ZSIgOiBbIDgsIDEyLCA0IF0sCiAgICAgICAgICAgICAgICAgICAgICJ1diIgOiBbIDE2LCAxNiBdCiAgICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgICAgXSwKICAgICAgICAgICAgICAgIm5hbWUiIDogImJvZHkiLAogICAgICAgICAgICAgICAicGFyZW50IiA6ICJ3YWlzdCIsCiAgICAgICAgICAgICAgICJwaXZvdCIgOiBbIDAuMCwgMjQuMCwgMC4wIF0KICAgICAgICAgICAgfSwKICAgICAgICAgICAgewogICAgICAgICAgICAgICAibmFtZSIgOiAid2Fpc3QiLAogICAgICAgICAgICAgICAicGFyZW50IiA6ICJyb290IiwKICAgICAgICAgICAgICAgInBpdm90IiA6IFsgMC4wLCAxMi4wLCAwLjAgXQogICAgICAgICAgICB9LAogICAgICAgICAgICB7CiAgICAgICAgICAgICAgICJjdWJlcyIgOiBbCiAgICAgICAgICAgICAgICAgIHsKICAgICAgICAgICAgICAgICAgICAgIm9yaWdpbiIgOiBbIC00LjAsIDI0LjAsIC00LjAgXSwKICAgICAgICAgICAgICAgICAgICAgInNpemUiIDogWyA4LCA4LCA4IF0sCiAgICAgICAgICAgICAgICAgICAgICJ1diIgOiBbIDAsIDAgXQogICAgICAgICAgICAgICAgICB9CiAgICAgICAgICAgICAgIF0sCiAgICAgICAgICAgICAgICJuYW1lIiA6ICJoZWFkIiwKICAgICAgICAgICAgICAgInBhcmVudCIgOiAiYm9keSIsCiAgICAgICAgICAgICAgICJwaXZvdCIgOiBbIDAuMCwgMjQuMCwgMC4wIF0KICAgICAgICAgICAgfSwKICAgICAgICAgICAgewogICAgICAgICAgICAgICAibmFtZSIgOiAiY2FwZSIsCiAgICAgICAgICAgICAgICJwYXJlbnQiIDogImJvZHkiLAogICAgICAgICAgICAgICAicGl2b3QiIDogWyAwLjAsIDI0LCAzLjAgXQogICAgICAgICAgICB9LAogICAgICAgICAgICB7CiAgICAgICAgICAgICAgICJjdWJlcyIgOiBbCiAgICAgICAgICAgICAgICAgIHsKICAgICAgICAgICAgICAgICAgICAgImluZmxhdGUiIDogMC41MCwKICAgICAgICAgICAgICAgICAgICAgIm9yaWdpbiIgOiBbIC00LjAsIDI0LjAsIC00LjAgXSwKICAgICAgICAgICAgICAgICAgICAgInNpemUiIDogWyA4LCA4LCA4IF0sCiAgICAgICAgICAgICAgICAgICAgICJ1diIgOiBbIDMyLCAwIF0KICAgICAgICAgICAgICAgICAgfQogICAgICAgICAgICAgICBdLAogICAgICAgICAgICAgICAibmFtZSIgOiAiaGF0IiwKICAgICAgICAgICAgICAgInBhcmVudCIgOiAiaGVhZCIsCiAgICAgICAgICAgICAgICJwaXZvdCIgOiBbIDAuMCwgMjQuMCwgMC4wIF0KICAgICAgICAgICAgfSwKICAgICAgICAgICAgewogICAgICAgICAgICAgICAiY3ViZXMiIDogWwogICAgICAgICAgICAgICAgICB7CiAgICAgICAgICAgICAgICAgICAgICJvcmlnaW4iIDogWyA0LjAsIDEyLjAsIC0yLjAgXSwKICAgICAgICAgICAgICAgICAgICAgInNpemUiIDogWyA0LCAxMiwgNCBdLAogICAgICAgICAgICAgICAgICAgICAidXYiIDogWyAzMiwgNDggXQogICAgICAgICAgICAgICAgICB9CiAgICAgICAgICAgICAgIF0sCiAgICAgICAgICAgICAgICJuYW1lIiA6ICJsZWZ0QXJtIiwKICAgICAgICAgICAgICAgInBhcmVudCIgOiAiYm9keSIsCiAgICAgICAgICAgICAgICJwaXZvdCIgOiBbIDUuMCwgMjIuMCwgMC4wIF0KICAgICAgICAgICAgfSwKICAgICAgICAgICAgewogICAgICAgICAgICAgICAiY3ViZXMiIDogWwogICAgICAgICAgICAgICAgICB7CiAgICAgICAgICAgICAgICAgICAgICJpbmZsYXRlIiA6IDAuMjUwLAogICAgICAgICAgICAgICAgICAgICAib3JpZ2luIiA6IFsgNC4wLCAxMi4wLCAtMi4wIF0sCiAgICAgICAgICAgICAgICAgICAgICJzaXplIiA6IFsgNCwgMTIsIDQgXSwKICAgICAgICAgICAgICAgICAgICAgInV2IiA6IFsgNDgsIDQ4IF0KICAgICAgICAgICAgICAgICAgfQogICAgICAgICAgICAgICBdLAogICAgICAgICAgICAgICAibmFtZSIgOiAibGVmdFNsZWV2ZSIsCiAgICAgICAgICAgICAgICJwYXJlbnQiIDogImxlZnRBcm0iLAogICAgICAgICAgICAgICAicGl2b3QiIDogWyA1LjAsIDIyLjAsIDAuMCBdCiAgICAgICAgICAgIH0sCiAgICAgICAgICAgIHsKICAgICAgICAgICAgICAgIm5hbWUiIDogImxlZnRJdGVtIiwKICAgICAgICAgICAgICAgInBhcmVudCIgOiAibGVmdEFybSIsCiAgICAgICAgICAgICAgICJwaXZvdCIgOiBbIDYuMCwgMTUuMCwgMS4wIF0KICAgICAgICAgICAgfSwKICAgICAgICAgICAgewogICAgICAgICAgICAgICAiY3ViZXMiIDogWwogICAgICAgICAgICAgICAgICB7CiAgICAgICAgICAgICAgICAgICAgICJvcmlnaW4iIDogWyAtOC4wLCAxMi4wLCAtMi4wIF0sCiAgICAgICAgICAgICAgICAgICAgICJzaXplIiA6IFsgNCwgMTIsIDQgXSwKICAgICAgICAgICAgICAgICAgICAgInV2IiA6IFsgNDAsIDE2IF0KICAgICAgICAgICAgICAgICAgfQogICAgICAgICAgICAgICBdLAogICAgICAgICAgICAgICAibmFtZSIgOiAicmlnaHRBcm0iLAogICAgICAgICAgICAgICAicGFyZW50IiA6ICJib2R5IiwKICAgICAgICAgICAgICAgInBpdm90IiA6IFsgLTUuMCwgMjIuMCwgMC4wIF0KICAgICAgICAgICAgfSwKICAgICAgICAgICAgewogICAgICAgICAgICAgICAiY3ViZXMiIDogWwogICAgICAgICAgICAgICAgICB7CiAgICAgICAgICAgICAgICAgICAgICJpbmZsYXRlIiA6IDAuMjUwLAogICAgICAgICAgICAgICAgICAgICAib3JpZ2luIiA6IFsgLTguMCwgMTIuMCwgLTIuMCBdLAogICAgICAgICAgICAgICAgICAgICAic2l6ZSIgOiBbIDQsIDEyLCA0IF0sCiAgICAgICAgICAgICAgICAgICAgICJ1diIgOiBbIDQwLCAzMiBdCiAgICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgICAgXSwKICAgICAgICAgICAgICAgIm5hbWUiIDogInJpZ2h0U2xlZXZlIiwKICAgICAgICAgICAgICAgInBhcmVudCIgOiAicmlnaHRBcm0iLAogICAgICAgICAgICAgICAicGl2b3QiIDogWyAtNS4wLCAyMi4wLCAwLjAgXQogICAgICAgICAgICB9LAogICAgICAgICAgICB7CiAgICAgICAgICAgICAgICJsb2NhdG9ycyIgOiB7CiAgICAgICAgICAgICAgICAgICJsZWFkX2hvbGQiIDogWyAtNiwgMTUsIDEgXQogICAgICAgICAgICAgICB9LAogICAgICAgICAgICAgICAibmFtZSIgOiAicmlnaHRJdGVtIiwKICAgICAgICAgICAgICAgInBhcmVudCIgOiAicmlnaHRBcm0iLAogICAgICAgICAgICAgICAicGl2b3QiIDogWyAtNiwgMTUsIDEgXQogICAgICAgICAgICB9LAogICAgICAgICAgICB7CiAgICAgICAgICAgICAgICJjdWJlcyIgOiBbCiAgICAgICAgICAgICAgICAgIHsKICAgICAgICAgICAgICAgICAgICAgIm9yaWdpbiIgOiBbIC0wLjEwLCAwLjAsIC0yLjAgXSwKICAgICAgICAgICAgICAgICAgICAgInNpemUiIDogWyA0LCAxMiwgNCBdLAogICAgICAgICAgICAgICAgICAgICAidXYiIDogWyAxNiwgNDggXQogICAgICAgICAgICAgICAgICB9CiAgICAgICAgICAgICAgIF0sCiAgICAgICAgICAgICAgICJuYW1lIiA6ICJsZWZ0TGVnIiwKICAgICAgICAgICAgICAgInBhcmVudCIgOiAicm9vdCIsCiAgICAgICAgICAgICAgICJwaXZvdCIgOiBbIDEuOTAsIDEyLjAsIDAuMCBdCiAgICAgICAgICAgIH0sCiAgICAgICAgICAgIHsKICAgICAgICAgICAgICAgImN1YmVzIiA6IFsKICAgICAgICAgICAgICAgICAgewogICAgICAgICAgICAgICAgICAgICAiaW5mbGF0ZSIgOiAwLjI1MCwKICAgICAgICAgICAgICAgICAgICAgIm9yaWdpbiIgOiBbIC0wLjEwLCAwLjAsIC0yLjAgXSwKICAgICAgICAgICAgICAgICAgICAgInNpemUiIDogWyA0LCAxMiwgNCBdLAogICAgICAgICAgICAgICAgICAgICAidXYiIDogWyAwLCA0OCBdCiAgICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgICAgXSwKICAgICAgICAgICAgICAgIm5hbWUiIDogImxlZnRQYW50cyIsCiAgICAgICAgICAgICAgICJwYXJlbnQiIDogImxlZnRMZWciLAogICAgICAgICAgICAgICAicGl2b3QiIDogWyAxLjkwLCAxMi4wLCAwLjAgXQogICAgICAgICAgICB9LAogICAgICAgICAgICB7CiAgICAgICAgICAgICAgICJjdWJlcyIgOiBbCiAgICAgICAgICAgICAgICAgIHsKICAgICAgICAgICAgICAgICAgICAgIm9yaWdpbiIgOiBbIC0zLjkwLCAwLjAsIC0yLjAgXSwKICAgICAgICAgICAgICAgICAgICAgInNpemUiIDogWyA0LCAxMiwgNCBdLAogICAgICAgICAgICAgICAgICAgICAidXYiIDogWyAwLCAxNiBdCiAgICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgICAgXSwKICAgICAgICAgICAgICAgIm5hbWUiIDogInJpZ2h0TGVnIiwKICAgICAgICAgICAgICAgInBhcmVudCIgOiAicm9vdCIsCiAgICAgICAgICAgICAgICJwaXZvdCIgOiBbIC0xLjkwLCAxMi4wLCAwLjAgXQogICAgICAgICAgICB9LAogICAgICAgICAgICB7CiAgICAgICAgICAgICAgICJjdWJlcyIgOiBbCiAgICAgICAgICAgICAgICAgIHsKICAgICAgICAgICAgICAgICAgICAgImluZmxhdGUiIDogMC4yNTAsCiAgICAgICAgICAgICAgICAgICAgICJvcmlnaW4iIDogWyAtMy45MCwgMC4wLCAtMi4wIF0sCiAgICAgICAgICAgICAgICAgICAgICJzaXplIiA6IFsgNCwgMTIsIDQgXSwKICAgICAgICAgICAgICAgICAgICAgInV2IiA6IFsgMCwgMzIgXQogICAgICAgICAgICAgICAgICB9CiAgICAgICAgICAgICAgIF0sCiAgICAgICAgICAgICAgICJuYW1lIiA6ICJyaWdodFBhbnRzIiwKICAgICAgICAgICAgICAgInBhcmVudCIgOiAicmlnaHRMZWciLAogICAgICAgICAgICAgICAicGl2b3QiIDogWyAtMS45MCwgMTIuMCwgMC4wIF0KICAgICAgICAgICAgfSwKICAgICAgICAgICAgewogICAgICAgICAgICAgICAiY3ViZXMiIDogWwogICAgICAgICAgICAgICAgICB7CiAgICAgICAgICAgICAgICAgICAgICJpbmZsYXRlIiA6IDAuMjUwLAogICAgICAgICAgICAgICAgICAgICAib3JpZ2luIiA6IFsgLTQuMCwgMTIuMCwgLTIuMCBdLAogICAgICAgICAgICAgICAgICAgICAic2l6ZSIgOiBbIDgsIDEyLCA0IF0sCiAgICAgICAgICAgICAgICAgICAgICJ1diIgOiBbIDE2LCAzMiBdCiAgICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgICAgXSwKICAgICAgICAgICAgICAgIm5hbWUiIDogImphY2tldCIsCiAgICAgICAgICAgICAgICJwYXJlbnQiIDogImJvZHkiLAogICAgICAgICAgICAgICAicGl2b3QiIDogWyAwLjAsIDI0LjAsIDAuMCBdCiAgICAgICAgICAgIH0KICAgICAgICAgXSwKICAgICAgICAgImRlc2NyaXB0aW9uIiA6IHsKICAgICAgICAgICAgImlkZW50aWZpZXIiIDogImdlb21ldHJ5Lmh1bWFub2lkLmN1c3RvbSIsCiAgICAgICAgICAgICJ0ZXh0dXJlX2hlaWdodCIgOiA2NCwKICAgICAgICAgICAgInRleHR1cmVfd2lkdGgiIDogNjQsCiAgICAgICAgICAgICJ2aXNpYmxlX2JvdW5kc19oZWlnaHQiIDogMiwKICAgICAgICAgICAgInZpc2libGVfYm91bmRzX29mZnNldCIgOiBbIDAsIDEsIDAgXSwKICAgICAgICAgICAgInZpc2libGVfYm91bmRzX3dpZHRoIiA6IDEKICAgICAgICAgfQogICAgICB9LAogICAgICB7CiAgICAgICAgICJib25lcyIgOiBbCiAgICAgICAgICAgIHsKICAgICAgICAgICAgICAgIm5hbWUiIDogInJvb3QiLAogICAgICAgICAgICAgICAicGl2b3QiIDogWyAwLjAsIDAuMCwgMC4wIF0KICAgICAgICAgICAgfSwKICAgICAgICAgICAgewogICAgICAgICAgICAgICAibmFtZSIgOiAid2Fpc3QiLAogICAgICAgICAgICAgICAicGFyZW50IiA6ICJyb290IiwKICAgICAgICAgICAgICAgInBpdm90IiA6IFsgMC4wLCAxMi4wLCAwLjAgXQogICAgICAgICAgICB9LAogICAgICAgICAgICB7CiAgICAgICAgICAgICAgICJjdWJlcyIgOiBbCiAgICAgICAgICAgICAgICAgIHsKICAgICAgICAgICAgICAgICAgICAgIm9yaWdpbiIgOiBbIC00LjAsIDEyLjAsIC0yLjAgXSwKICAgICAgICAgICAgICAgICAgICAgInNpemUiIDogWyA4LCAxMiwgNCBdLAogICAgICAgICAgICAgICAgICAgICAidXYiIDogWyAxNiwgMTYgXQogICAgICAgICAgICAgICAgICB9CiAgICAgICAgICAgICAgIF0sCiAgICAgICAgICAgICAgICJuYW1lIiA6ICJib2R5IiwKICAgICAgICAgICAgICAgInBhcmVudCIgOiAid2Fpc3QiLAogICAgICAgICAgICAgICAicGl2b3QiIDogWyAwLjAsIDI0LjAsIDAuMCBdCiAgICAgICAgICAgIH0sCiAgICAgICAgICAgIHsKICAgICAgICAgICAgICAgImN1YmVzIiA6IFsKICAgICAgICAgICAgICAgICAgewogICAgICAgICAgICAgICAgICAgICAib3JpZ2luIiA6IFsgLTQuMCwgMjQuMCwgLTQuMCBdLAogICAgICAgICAgICAgICAgICAgICAic2l6ZSIgOiBbIDgsIDgsIDggXSwKICAgICAgICAgICAgICAgICAgICAgInV2IiA6IFsgMCwgMCBdCiAgICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgICAgXSwKICAgICAgICAgICAgICAgIm5hbWUiIDogImhlYWQiLAogICAgICAgICAgICAgICAicGFyZW50IiA6ICJib2R5IiwKICAgICAgICAgICAgICAgInBpdm90IiA6IFsgMC4wLCAyNC4wLCAwLjAgXQogICAgICAgICAgICB9LAogICAgICAgICAgICB7CiAgICAgICAgICAgICAgICJjdWJlcyIgOiBbCiAgICAgICAgICAgICAgICAgIHsKICAgICAgICAgICAgICAgICAgICAgImluZmxhdGUiIDogMC41MCwKICAgICAgICAgICAgICAgICAgICAgIm9yaWdpbiIgOiBbIC00LjAsIDI0LjAsIC00LjAgXSwKICAgICAgICAgICAgICAgICAgICAgInNpemUiIDogWyA4LCA4LCA4IF0sCiAgICAgICAgICAgICAgICAgICAgICJ1diIgOiBbIDMyLCAwIF0KICAgICAgICAgICAgICAgICAgfQogICAgICAgICAgICAgICBdLAogICAgICAgICAgICAgICAibmFtZSIgOiAiaGF0IiwKICAgICAgICAgICAgICAgInBhcmVudCIgOiAiaGVhZCIsCiAgICAgICAgICAgICAgICJwaXZvdCIgOiBbIDAuMCwgMjQuMCwgMC4wIF0KICAgICAgICAgICAgfSwKICAgICAgICAgICAgewogICAgICAgICAgICAgICAiY3ViZXMiIDogWwogICAgICAgICAgICAgICAgICB7CiAgICAgICAgICAgICAgICAgICAgICJvcmlnaW4iIDogWyAtMy45MCwgMC4wLCAtMi4wIF0sCiAgICAgICAgICAgICAgICAgICAgICJzaXplIiA6IFsgNCwgMTIsIDQgXSwKICAgICAgICAgICAgICAgICAgICAgInV2IiA6IFsgMCwgMTYgXQogICAgICAgICAgICAgICAgICB9CiAgICAgICAgICAgICAgIF0sCiAgICAgICAgICAgICAgICJuYW1lIiA6ICJyaWdodExlZyIsCiAgICAgICAgICAgICAgICJwYXJlbnQiIDogInJvb3QiLAogICAgICAgICAgICAgICAicGl2b3QiIDogWyAtMS45MCwgMTIuMCwgMC4wIF0KICAgICAgICAgICAgfSwKICAgICAgICAgICAgewogICAgICAgICAgICAgICAiY3ViZXMiIDogWwogICAgICAgICAgICAgICAgICB7CiAgICAgICAgICAgICAgICAgICAgICJpbmZsYXRlIiA6IDAuMjUwLAogICAgICAgICAgICAgICAgICAgICAib3JpZ2luIiA6IFsgLTMuOTAsIDAuMCwgLTIuMCBdLAogICAgICAgICAgICAgICAgICAgICAic2l6ZSIgOiBbIDQsIDEyLCA0IF0sCiAgICAgICAgICAgICAgICAgICAgICJ1diIgOiBbIDAsIDMyIF0KICAgICAgICAgICAgICAgICAgfQogICAgICAgICAgICAgICBdLAogICAgICAgICAgICAgICAibmFtZSIgOiAicmlnaHRQYW50cyIsCiAgICAgICAgICAgICAgICJwYXJlbnQiIDogInJpZ2h0TGVnIiwKICAgICAgICAgICAgICAgInBpdm90IiA6IFsgLTEuOTAsIDEyLjAsIDAuMCBdCiAgICAgICAgICAgIH0sCiAgICAgICAgICAgIHsKICAgICAgICAgICAgICAgImN1YmVzIiA6IFsKICAgICAgICAgICAgICAgICAgewogICAgICAgICAgICAgICAgICAgICAib3JpZ2luIiA6IFsgLTAuMTAsIDAuMCwgLTIuMCBdLAogICAgICAgICAgICAgICAgICAgICAic2l6ZSIgOiBbIDQsIDEyLCA0IF0sCiAgICAgICAgICAgICAgICAgICAgICJ1diIgOiBbIDE2LCA0OCBdCiAgICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgICAgXSwKICAgICAgICAgICAgICAgIm1pcnJvciIgOiB0cnVlLAogICAgICAgICAgICAgICAibmFtZSIgOiAibGVmdExlZyIsCiAgICAgICAgICAgICAgICJwYXJlbnQiIDogInJvb3QiLAogICAgICAgICAgICAgICAicGl2b3QiIDogWyAxLjkwLCAxMi4wLCAwLjAgXQogICAgICAgICAgICB9LAogICAgICAgICAgICB7CiAgICAgICAgICAgICAgICJjdWJlcyIgOiBbCiAgICAgICAgICAgICAgICAgIHsKICAgICAgICAgICAgICAgICAgICAgImluZmxhdGUiIDogMC4yNTAsCiAgICAgICAgICAgICAgICAgICAgICJvcmlnaW4iIDogWyAtMC4xMCwgMC4wLCAtMi4wIF0sCiAgICAgICAgICAgICAgICAgICAgICJzaXplIiA6IFsgNCwgMTIsIDQgXSwKICAgICAgICAgICAgICAgICAgICAgInV2IiA6IFsgMCwgNDggXQogICAgICAgICAgICAgICAgICB9CiAgICAgICAgICAgICAgIF0sCiAgICAgICAgICAgICAgICJuYW1lIiA6ICJsZWZ0UGFudHMiLAogICAgICAgICAgICAgICAicGFyZW50IiA6ICJsZWZ0TGVnIiwKICAgICAgICAgICAgICAgInBpdm90IiA6IFsgMS45MCwgMTIuMCwgMC4wIF0KICAgICAgICAgICAgfSwKICAgICAgICAgICAgewogICAgICAgICAgICAgICAiY3ViZXMiIDogWwogICAgICAgICAgICAgICAgICB7CiAgICAgICAgICAgICAgICAgICAgICJvcmlnaW4iIDogWyA0LjAsIDExLjUwLCAtMi4wIF0sCiAgICAgICAgICAgICAgICAgICAgICJzaXplIiA6IFsgMywgMTIsIDQgXSwKICAgICAgICAgICAgICAgICAgICAgInV2IiA6IFsgMzIsIDQ4IF0KICAgICAgICAgICAgICAgICAgfQogICAgICAgICAgICAgICBdLAogICAgICAgICAgICAgICAibmFtZSIgOiAibGVmdEFybSIsCiAgICAgICAgICAgICAgICJwYXJlbnQiIDogImJvZHkiLAogICAgICAgICAgICAgICAicGl2b3QiIDogWyA1LjAsIDIxLjUwLCAwLjAgXQogICAgICAgICAgICB9LAogICAgICAgICAgICB7CiAgICAgICAgICAgICAgICJjdWJlcyIgOiBbCiAgICAgICAgICAgICAgICAgIHsKICAgICAgICAgICAgICAgICAgICAgImluZmxhdGUiIDogMC4yNTAsCiAgICAgICAgICAgICAgICAgICAgICJvcmlnaW4iIDogWyA0LjAsIDExLjUwLCAtMi4wIF0sCiAgICAgICAgICAgICAgICAgICAgICJzaXplIiA6IFsgMywgMTIsIDQgXSwKICAgICAgICAgICAgICAgICAgICAgInV2IiA6IFsgNDgsIDQ4IF0KICAgICAgICAgICAgICAgICAgfQogICAgICAgICAgICAgICBdLAogICAgICAgICAgICAgICAibmFtZSIgOiAibGVmdFNsZWV2ZSIsCiAgICAgICAgICAgICAgICJwYXJlbnQiIDogImxlZnRBcm0iLAogICAgICAgICAgICAgICAicGl2b3QiIDogWyA1LjAsIDIxLjUwLCAwLjAgXQogICAgICAgICAgICB9LAogICAgICAgICAgICB7CiAgICAgICAgICAgICAgICJuYW1lIiA6ICJsZWZ0SXRlbSIsCiAgICAgICAgICAgICAgICJwYXJlbnQiIDogImxlZnRBcm0iLAogICAgICAgICAgICAgICAicGl2b3QiIDogWyA2LCAxNC41MCwgMSBdCiAgICAgICAgICAgIH0sCiAgICAgICAgICAgIHsKICAgICAgICAgICAgICAgImN1YmVzIiA6IFsKICAgICAgICAgICAgICAgICAgewogICAgICAgICAgICAgICAgICAgICAib3JpZ2luIiA6IFsgLTcuMCwgMTEuNTAsIC0yLjAgXSwKICAgICAgICAgICAgICAgICAgICAgInNpemUiIDogWyAzLCAxMiwgNCBdLAogICAgICAgICAgICAgICAgICAgICAidXYiIDogWyA0MCwgMTYgXQogICAgICAgICAgICAgICAgICB9CiAgICAgICAgICAgICAgIF0sCiAgICAgICAgICAgICAgICJuYW1lIiA6ICJyaWdodEFybSIsCiAgICAgICAgICAgICAgICJwYXJlbnQiIDogImJvZHkiLAogICAgICAgICAgICAgICAicGl2b3QiIDogWyAtNS4wLCAyMS41MCwgMC4wIF0KICAgICAgICAgICAgfSwKICAgICAgICAgICAgewogICAgICAgICAgICAgICAiY3ViZXMiIDogWwogICAgICAgICAgICAgICAgICB7CiAgICAgICAgICAgICAgICAgICAgICJpbmZsYXRlIiA6IDAuMjUwLAogICAgICAgICAgICAgICAgICAgICAib3JpZ2luIiA6IFsgLTcuMCwgMTEuNTAsIC0yLjAgXSwKICAgICAgICAgICAgICAgICAgICAgInNpemUiIDogWyAzLCAxMiwgNCBdLAogICAgICAgICAgICAgICAgICAgICAidXYiIDogWyA0MCwgMzIgXQogICAgICAgICAgICAgICAgICB9CiAgICAgICAgICAgICAgIF0sCiAgICAgICAgICAgICAgICJuYW1lIiA6ICJyaWdodFNsZWV2ZSIsCiAgICAgICAgICAgICAgICJwYXJlbnQiIDogInJpZ2h0QXJtIiwKICAgICAgICAgICAgICAgInBpdm90IiA6IFsgLTUuMCwgMjEuNTAsIDAuMCBdCiAgICAgICAgICAgIH0sCiAgICAgICAgICAgIHsKICAgICAgICAgICAgICAgImxvY2F0b3JzIiA6IHsKICAgICAgICAgICAgICAgICAgImxlYWRfaG9sZCIgOiBbIC02LCAxNC41MCwgMSBdCiAgICAgICAgICAgICAgIH0sCiAgICAgICAgICAgICAgICJuYW1lIiA6ICJyaWdodEl0ZW0iLAogICAgICAgICAgICAgICAicGFyZW50IiA6ICJyaWdodEFybSIsCiAgICAgICAgICAgICAgICJwaXZvdCIgOiBbIC02LCAxNC41MCwgMSBdCiAgICAgICAgICAgIH0sCiAgICAgICAgICAgIHsKICAgICAgICAgICAgICAgImN1YmVzIiA6IFsKICAgICAgICAgICAgICAgICAgewogICAgICAgICAgICAgICAgICAgICAiaW5mbGF0ZSIgOiAwLjI1MCwKICAgICAgICAgICAgICAgICAgICAgIm9yaWdpbiIgOiBbIC00LjAsIDEyLjAsIC0yLjAgXSwKICAgICAgICAgICAgICAgICAgICAgInNpemUiIDogWyA4LCAxMiwgNCBdLAogICAgICAgICAgICAgICAgICAgICAidXYiIDogWyAxNiwgMzIgXQogICAgICAgICAgICAgICAgICB9CiAgICAgICAgICAgICAgIF0sCiAgICAgICAgICAgICAgICJuYW1lIiA6ICJqYWNrZXQiLAogICAgICAgICAgICAgICAicGFyZW50IiA6ICJib2R5IiwKICAgICAgICAgICAgICAgInBpdm90IiA6IFsgMC4wLCAyNC4wLCAwLjAgXQogICAgICAgICAgICB9LAogICAgICAgICAgICB7CiAgICAgICAgICAgICAgICJuYW1lIiA6ICJjYXBlIiwKICAgICAgICAgICAgICAgInBhcmVudCIgOiAiYm9keSIsCiAgICAgICAgICAgICAgICJwaXZvdCIgOiBbIDAuMCwgMjQsIC0zLjAgXQogICAgICAgICAgICB9CiAgICAgICAgIF0sCiAgICAgICAgICJkZXNjcmlwdGlvbiIgOiB7CiAgICAgICAgICAgICJpZGVudGlmaWVyIiA6ICJnZW9tZXRyeS5odW1hbm9pZC5jdXN0b21TbGltIiwKICAgICAgICAgICAgInRleHR1cmVfaGVpZ2h0IiA6IDY0LAogICAgICAgICAgICAidGV4dHVyZV93aWR0aCIgOiA2NCwKICAgICAgICAgICAgInZpc2libGVfYm91bmRzX2hlaWdodCIgOiAyLAogICAgICAgICAgICAidmlzaWJsZV9ib3VuZHNfb2Zmc2V0IiA6IFsgMCwgMSwgMCBdLAogICAgICAgICAgICAidmlzaWJsZV9ib3VuZHNfd2lkdGgiIDogMQogICAgICAgICB9CiAgICAgIH0KICAgXQp9Cg==");
+                put("SkinData", SKIN);
+                put("SkinResourcePatch", "ewogICAiZ2VvbWV0cnkiIDogewogICAgICAiZGVmYXVsdCIgOiAiZ2VvbWV0cnkuaHVtYW5vaWQuY3VzdG9tIgogICB9Cn0K");
+                put("SkinImageHeight", 32);
+                put("SkinImageWidth", 64);
+                put("SelfSignedId", UuidUtil.getTimeBasedUuid().toString());
+                put("PlatformOnlineId", "");
+                put("PlatformOfflineId", "");
+                put("LanguageCode", "en_US");
+                put("ADRole", 0);
+                put("UIProfile", 0);
+            }}));
+            mojangLoginForger.setXuid(String.valueOf(CLIENT_IDS.get()));
 
-            String jwt = "{\"chain\":[\"" + mojangLoginForger.forge( this.keyFactory.getKeyPair().getPrivate() ) + "\"]}";
-            String skin = mojangLoginForger.forgeSkin( this.keyFactory.getKeyPair().getPrivate() );
+            String jwt = "{\"chain\":[\"" + mojangLoginForger.forge(this.keyFactory.getKeyPair().getPrivate()) + "\"]}";
+            String skin = mojangLoginForger.forgeSkin(this.keyFactory.getKeyPair().getPrivate());
 
             // More data please
-            ByteBuffer byteBuffer = ByteBuffer.allocate( jwt.length() + skin.length() + 8 );
-            byteBuffer.order( ByteOrder.LITTLE_ENDIAN );
-            byteBuffer.putInt( jwt.length() );
-            byteBuffer.put( jwt.getBytes() );
+            ByteBuffer byteBuffer = ByteBuffer.allocate(jwt.length() + skin.length() + 8);
+            byteBuffer.order(ByteOrder.LITTLE_ENDIAN);
+            byteBuffer.putInt(jwt.length());
+            byteBuffer.put(jwt.getBytes());
 
             // We need the skin
-            byteBuffer.putInt( skin.length() );
-            byteBuffer.put( skin.getBytes() );
+            byteBuffer.putInt(skin.length());
+            byteBuffer.put(skin.getBytes());
 
-            login.setPayload( byteBuffer.array() );
-            this.send( login );
+            login.setPayload(byteBuffer.array());
+            this.send(login);
+
+            // Check for termination if server did not respond
+            this.world.getServer().getExecutorService().schedule(() -> {
+                if (this.state == PlayerConnectionState.LOGIN) {
+                    this.disconnect("Not logged in");
+                }
+            }, Duration.ofMillis(5000));
         }
     }
 
@@ -316,82 +400,112 @@ public class Client implements ConnectionWithState {
      *
      * @param buffer The buffer containing the received data
      */
-    private void handleSocketData( PacketBuffer buffer ) {
-        if ( buffer.getRemaining() <= 0 ) {
+    private void handleSocketData(PacketBuffer buffer) {
+        if (buffer.getRemaining() <= 0) {
             // Malformed packet:
             return;
         }
 
-        if ( this.connection != null ) {
-            while ( buffer.getRemaining() > 0 ) {
-                int packetLength = buffer.readUnsignedVarInt();
+        while (buffer.getRemaining() > 0) {
+            int packetLength = buffer.readUnsignedVarInt();
 
-                int currentIndex = buffer.getReadPosition();
-                byte packetID = buffer.getBuffer().getByte(currentIndex);
-                this.handleBufferData(buffer);
-                int consumedByPacket = buffer.getReadPosition() - currentIndex;
+            int currentIndex = buffer.getReadPosition();
+            int packetID = this.handleBufferData(buffer, currentIndex + packetLength);
 
-                if (consumedByPacket != packetLength) {
-                    int remaining = packetLength - consumedByPacket;
-                    LOGGER.error("Malformed batch packet payload: Could not read enclosed packet data correctly: 0x{} remaining {} bytes", Integer.toHexString(packetID), remaining);
-                    ReportUploader.create().tag("network.packet_remaining").property("packet_id", "0x" + Integer.toHexString(packetID)).property("packet_remaining", String.valueOf(remaining)).upload();
-                    return;
-                }
+            int consumedByPacket = buffer.getReadPosition() - currentIndex;
+            if (consumedByPacket != packetLength) {
+                int remaining = packetLength - consumedByPacket;
+                LOGGER.error("Malformed batch packet payload: Could not read enclosed packet data correctly: 0x{} remaining {} bytes", Integer.toHexString(packetID), remaining);
+                return;
             }
-        } else {
-            this.handleBufferData( buffer );
         }
     }
 
-    private void handleBufferData( PacketBuffer buffer ) {
+    private int handleBufferData(PacketBuffer buffer, int skippablePosition) {
         // Grab the packet ID from the packet's data
-        byte packetId = (byte) buffer.readUnsignedVarInt();
+        int rawId = buffer.readUnsignedVarInt();
+        int packetId = rawId & 0x3FF;
 
         // There is some data behind the packet id when non batched packets (2 bytes)
-        if ( packetId == Protocol.BATCH_MAGIC ) {
-            LOGGER.error( "Malformed batch packet payload: Batch packets are not allowed to contain further batch packets" );
+        if (packetId == Protocol.BATCH_MAGIC) {
+            LOGGER.error("Malformed batch packet payload: Batch packets are not allowed to contain further batch packets");
+            return packetId;
+        }
+
+        Packet packet = Protocol.createPacket(packetId);
+        if (packet == null) {
+            packet = AdditionalProtocol.createPacket(packetId);
+            if (packet == null) {
+                // Got to skip
+                buffer.setReadPosition(skippablePosition);
+                return packetId;
+            }
+        }
+
+        try {
+            packet.deserialize(buffer, Protocol.MINECRAFT_PE_PROTOCOL_VERSION);
+            this.handlePacket(packet);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return packetId;
+    }
+
+    private void sendChunkRadius(int radius) {
+        // Send the wanted chunk radius
+        PacketRequestChunkRadius chunkRadius = new PacketRequestChunkRadius();
+        chunkRadius.setChunkRadius(radius);
+        this.send(chunkRadius);
+    }
+
+    private void handlePacket(Packet packet) {
+        if (packet.getId() == PACKET_DISCONNECT) {
+            PacketDisconnect disconnect = (PacketDisconnect) packet;
+            LOGGER.warn("Disconnect: {}", disconnect.getMessage());
             return;
         }
 
-        if ( packetId == PACKET_WORLD_CHUNK ) {
-            PacketWorldChunk chunk = new PacketWorldChunk();
-            chunk.deserialize( buffer, Protocol.MINECRAFT_PE_PROTOCOL_VERSION );
+        if (packet.getId() == PACKET_WORLD_CHUNK) {
+            PacketWorldChunk chunk = (PacketWorldChunk) packet;
 
             int x = chunk.getX();
             int z = chunk.getZ();
 
-            ChunkSquare chunkSquare = this.chunkSquareCache.getChunkSquare( x, z );
+            ChunkAdapter chunkAdapter = this.world.getChunkCache().getChunk(x, z);
 
             // Check if generator needs the chunk
-            if ( chunkSquare.getChunk( x, z ) == null ) {
-                ChunkAdapter chunkAdapter = (ChunkAdapter) this.world.generateEmptyChunk( x, z );
+            if (chunkAdapter == null) {
+                chunkAdapter = (ChunkAdapter) this.world.generateEmptyChunk(x, z);
 
-                PacketBuffer chunkBuffer = new PacketBuffer( chunk.getData() );
+                PacketBuffer chunkBuffer = new PacketBuffer(chunk.getData());
 
-                byte amountOfSubchunks = chunkBuffer.readByte();
-                for ( byte i = 0; i < amountOfSubchunks; i++ ) {
-                    ChunkSlice slice = chunkAdapter.ensureSlice( i );
+                int amountOfSubchunks = chunk.getSubChunkCount();
+                for (int i = 0; i < amountOfSubchunks; i++) {
+                    ChunkSlice slice = chunkAdapter.ensureSlice(i);
 
                     byte subchunkVersion = chunkBuffer.readByte();
                     byte layers = subchunkVersion != 8 ? 1 : chunkBuffer.readByte();
 
-                    for ( byte b = 0; b < layers; b++ ) {
+                    for (byte b = 0; b < layers; b++) {
                         byte paletteWord = chunkBuffer.readByte();
-                        byte wordTemplate = (byte) ( paletteWord >>> 1 ); // Get rid of the last bit (which seems to be the isPresent state)
+                        byte wordTemplate = (byte) (paletteWord >>> 1); // Get rid of the last bit (which seems to be the isPresent state)
 
-                        Palette palette = new Palette( chunkBuffer.getBuffer(), wordTemplate, true );
+                        Palette palette = new Palette(chunkBuffer.getBuffer(), wordTemplate, true);
                         short[] indexes = palette.getIndexes();
 
                         int amountOfRuntimeIds = chunkBuffer.readSignedVarInt();
                         int[] localRuntimes = new int[amountOfRuntimeIds];
-                        for ( int i1 = 0; i1 < amountOfRuntimeIds; i1++ ) {
+                        for (int i1 = 0; i1 < amountOfRuntimeIds; i1++) {
                             localRuntimes[i1] = chunkBuffer.readSignedVarInt();
                         }
 
                         short blockCounter = 0;
-                        for ( short index : indexes ) {
-                            BlockIdentifier blockIdentifier = this.runtimeIDs.get( localRuntimes[index] );
-                            slice.setRuntimeIdInternal( blockCounter, b, blockIdentifier.getRuntimeId() );
+                        for (short index : indexes) {
+                            BlockIdentifier blockIdentifier = this.runtimeIDs.get(localRuntimes[index]);
+                            slice.setRuntimeIdInternal(blockCounter, b,
+                                BlockRuntimeIDs.toBlockIdentifier(blockIdentifier.getBlockId(), blockIdentifier.getStates())
+                                    .getRuntimeId());
                             blockCounter++;
                         }
                     }
@@ -399,235 +513,193 @@ public class Client implements ConnectionWithState {
 
                 // Read biomes
                 byte[] biomes = new byte[256];
-                chunkBuffer.readBytes( biomes );
-                chunkAdapter.setBiomes( biomes );
+                chunkBuffer.readBytes(biomes);
+                chunkAdapter.setBiomes(biomes);
+
+                // Border blocks
+                chunkBuffer.readSignedVarInt();
 
                 // Read tiles
-                if ( chunkBuffer.getRemaining() > 0 ) {
-                    NBTReader reader = new NBTReader(chunkBuffer.getBuffer(), ByteOrder.LITTLE_ENDIAN );
+                if (chunkBuffer.getRemaining() > 0) {
+                    NBTReader reader = new NBTReader(chunkBuffer.getBuffer(), ByteOrder.LITTLE_ENDIAN);
+                    reader.setUseVarint(true);
 
                     loop:
-                    while ( true ) {
+                    while (true) {
                         try {
                             NBTTagCompound compound = reader.parse();
-                            TileEntity tileEntity = this.world.getServer().getTileEntities().construct( compound, chunkAdapter.getBlockAt( compound.getInteger( "x", 0 ) & 0xF, compound.getInteger( "y", 0 ), compound.getInteger( "z", 0 ) & 0xF ) );
-                            if ( tileEntity != null ) {
-                                chunkAdapter.setTileEntity( compound.getInteger( "x", 0 ) & 0xF, compound.getInteger( "y", 0 ), compound.getInteger( "z", 0 ) & 0xF, tileEntity );
+                            TileEntity tileEntity = this.world.getServer().getTileEntities().construct(compound, chunkAdapter.getBlockAt(compound.getInteger("x", 0) & 0xF, compound.getInteger("y", 0), compound.getInteger("z", 0) & 0xF));
+                            if (tileEntity != null) {
+                                chunkAdapter.setTileEntity(compound.getInteger("x", 0) & 0xF, compound.getInteger("y", 0), compound.getInteger("z", 0) & 0xF, tileEntity);
                             }
-                        } catch ( Exception e ) {
+                        } catch (Exception e) {
                             break loop;
                         }
                     }
                 }
 
-                chunkAdapter.setPopulated( true );
-                chunkSquare.storeChunk( chunkAdapter );
-                chunkSquare.isComplete();
+                chunkAdapter.setPopulated(true);
+                this.world.getChunkCache().putChunk(chunkAdapter);
+
+                chunk.release();
+
+                if (this.debugUI != null) {
+                    this.debugUI.loadedChunk(chunkAdapter);
+                }
             }
         }
 
         // If we are still in handshake we only accept certain packets:
-        if ( this.state == PlayerConnectionState.LOGIN ) {
-            if ( packetId == PACKET_PLAY_STATE ) {
-                PacketPlayState packetPlayState = new PacketPlayState();
-                packetPlayState.deserialize( buffer, Protocol.MINECRAFT_PE_PROTOCOL_VERSION );
+        if (this.state == PlayerConnectionState.LOGIN) {
+            if (packet.getId() == PACKET_PLAY_STATE) {
+                PacketPlayState packetPlayState = (PacketPlayState) packet;
 
-                if ( packetPlayState.getState() != PacketPlayState.PlayState.LOGIN_SUCCESS ) {
-                    this.destroy( "Server responded with " + packetPlayState.getState().name() );
+                if (packetPlayState.getState() != PacketPlayState.PlayState.LOGIN_SUCCESS) {
+                    this.destroy("Server responded with " + packetPlayState.getState().name());
                 }
 
                 this.state = PlayerConnectionState.RESOURCE_PACK;
-
                 return;
-            } else if ( packetId == PACKET_ENCRYPTION_REQUEST ) {
-                PacketEncryptionRequest packet = new PacketEncryptionRequest();
-                packet.deserialize( buffer, Protocol.MINECRAFT_PE_PROTOCOL_VERSION );
+            } else if (packet.getId() == PACKET_ENCRYPTION_REQUEST) {
+                PacketEncryptionRequest packetEncryptionRequest = (PacketEncryptionRequest) packet;
 
                 // We need to verify the JWT request
-                JwtToken token = JwtToken.parse( packet.getJwt() );
-                String keyDataBase64 = (String) token.getHeader().getProperty( "x5u" );
-                PublicKey key = this.keyFactory.createPublicKey( keyDataBase64 );
+                JwtToken token = JwtToken.parse(packetEncryptionRequest.getJwt());
+                String keyDataBase64 = (String) token.getHeader().getProperty("x5u");
+                PublicKey key = this.keyFactory.createPublicKey(keyDataBase64);
 
                 try {
-                    if ( token.validateSignature( key ) ) {
-                        LOGGER.debug( "For server: Valid encryption start JWT" );
+                    if (token.validateSignature(key)) {
+                        LOGGER.debug("For server: Valid encryption start JWT");
                     }
-                } catch ( JwtSignatureException e ) {
-                    LOGGER.error( "Invalid JWT signature from server: ", e );
+                } catch (JwtSignatureException e) {
+                    LOGGER.error("Invalid JWT signature from server: ", e);
                 }
 
-                this.encryptionHandler = new EncryptionHandler( this.keyFactory );
-                this.encryptionHandler.setServerPublicKey( key );
-                this.encryptionHandler.beginServersideEncryption( Base64.getDecoder().decode( (String) token.getClaim( "salt" ) ) );
+                this.encryptionHandler = new EncryptionHandler(this.keyFactory);
+                this.encryptionHandler.setServerPublicKey(key);
+                if (this.encryptionHandler.beginServersideEncryption(Base64.getDecoder().decode((String) token.getClaim("salt")))) {
+                    // We need every packet to be encrypted from now on
+                    this.outputProcessor.enableCrypto(encryptionHandler.getServerKey(), encryptionHandler.getServerIv());
+                    this.inputProcessor.enableCrypto(encryptionHandler.getServerKey(), encryptionHandler.getServerIv());
+                }
 
                 // Tell the server that we are ready to receive encrypted packets from now on:
                 PacketEncryptionResponse response = new PacketEncryptionResponse();
-                this.send( response );
-            } else if ( packetId == PACKET_RESOURCEPACK_INFO ) {
+                this.send(response);
+
+                PacketClientCacheStatus cacheStatus = new PacketClientCacheStatus();
+                cacheStatus.setEnabled(false);
+                this.send(cacheStatus);
+            } else if (packet.getId() == PACKET_RESOURCEPACK_INFO) {
                 this.state = PlayerConnectionState.RESOURCE_PACK;
             }
         }
 
         // When we are in resource pack state
-        if ( this.state == PlayerConnectionState.RESOURCE_PACK ) {
-            if ( packetId == PACKET_RESOURCEPACK_INFO ) {
-                PacketResourcePacksInfo packet = new PacketResourcePacksInfo();
-                packet.deserialize( buffer, Protocol.MINECRAFT_PE_PROTOCOL_VERSION );
-
+        if (this.state == PlayerConnectionState.RESOURCE_PACK) {
+            if (packet.getId() == PACKET_RESOURCEPACK_INFO) {
                 PacketResourcePackResponse packetResourcePackResponse = new PacketResourcePackResponse();
-                packetResourcePackResponse.setStatus( ResourceResponseStatus.HAVE_ALL_PACKS );
-                this.send( packetResourcePackResponse );
-            } else if ( packetId == PACKET_RESOURCEPACK_STACK ) {
-                PacketResourcePackStack stack = new PacketResourcePackStack();
-                stack.deserialize( buffer, Protocol.MINECRAFT_PE_PROTOCOL_VERSION );
-
+                packetResourcePackResponse.setStatus(ResourceResponseStatus.HAVE_ALL_PACKS);
+                this.send(packetResourcePackResponse);
+            } else if (packet.getId() == PACKET_RESOURCEPACK_STACK) {
                 PacketResourcePackResponse packetResourcePackResponse = new PacketResourcePackResponse();
-                packetResourcePackResponse.setStatus( ResourceResponseStatus.COMPLETED );
-                this.send( packetResourcePackResponse );
+                packetResourcePackResponse.setStatus(ResourceResponseStatus.COMPLETED);
+                this.send(packetResourcePackResponse);
 
                 this.state = PlayerConnectionState.PLAYING;
+                this.sendChunkRadius(6);
+
+                // Send set local player init
+                PacketSetLocalPlayerAsInitialized packetSetLocalPlayerAsInitialized = new PacketSetLocalPlayerAsInitialized();
+                packetSetLocalPlayerAsInitialized.setEntityId(this.ownId);
+                this.send(packetSetLocalPlayerAsInitialized);
             }
         }
 
-        if ( buffer.getRemaining() > 0 ) {
-            Packet packet = Protocol.createPacket( packetId );
-            if ( packet == null ) {
-                packet = AdditionalProtocol.createPacket( packetId );
-                if ( packet == null ) {
-                    // Got to skip
-                    buffer.skip( buffer.getRemaining() );
-                    return;
-                }
+        if (packet.getId() == PACKET_START_GAME) {
+            PacketStartGame startGame = ((PacketStartGame) packet);
+
+            this.spawn = startGame.getSpawn();
+            this.ownId = startGame.getEntityId();
+            this.runtimeId = startGame.getRuntimeEntityId();
+            this.runtimeIDs = new ArrayList<>();
+
+            // Parse block palette
+            short runtimeId = 0;
+            for (Object o : startGame.getClientBlockPalette()) {
+                NBTTagCompound compound = (NBTTagCompound) o;
+                NBTTagCompound block = compound.getCompound("block", false);
+                String blockId = block.getString("name", "");
+
+                BlockIdentifier blockIdentifier = new BlockIdentifier(blockId, 0, runtimeId++, block.getCompound("states", false));
+                this.runtimeIDs.add(blockIdentifier);
             }
 
-            try {
-                packet.deserialize( buffer, Protocol.MINECRAFT_PE_PROTOCOL_VERSION );
-                this.handlePacket( packet );
-            } catch ( Exception e ) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    private void sendChunkRadius() {
-        // Send the wanted chunk radius
-        PacketConfirmChunkRadius chunkRadius = new PacketConfirmChunkRadius();
-        chunkRadius.setChunkRadius( 32 );
-        this.send( chunkRadius );
-    }
-
-    private void handlePacket( Packet packet ) {
-        if ( packet.getId() == PACKET_START_GAME ) {
-            this.spawn = ( (PacketStartGame) packet ).getSpawn();
-            this.ownId = ( (PacketStartGame) packet ).getEntityId();
-            this.runtimeId = ( (PacketStartGame) packet ).getRuntimeEntityId();
-
-            this.sendChunkRadius();
-
-            // Send set local player init
-            PacketSetLocalPlayerAsInitialized packetSetLocalPlayerAsInitialized = new PacketSetLocalPlayerAsInitialized();
-            packetSetLocalPlayerAsInitialized.setEntityId( this.ownId );
-            this.send( packetSetLocalPlayerAsInitialized );
-        } else if ( packet.getId() == PACKET_PLAY_STATE ) {
-            PacketPlayState.PlayState playState = ( (PacketPlayState) packet ).getState();
-            if ( playState == PacketPlayState.PlayState.SPAWN ) {
+            this.spawnPointConsumer.accept(this.spawn.toBlockPosition());
+        } else if (packet.getId() == PACKET_PLAY_STATE) {
+            PacketPlayState.PlayState playState = ((PacketPlayState) packet).getState();
+            if (playState == PacketPlayState.PlayState.SPAWN) {
                 // Send first movement
-                this.move( this.spawn );
-                this.spawnPointConsumer.accept( this.spawn.toBlockPosition() );
+                this.move(this.spawn);
 
                 // Send flying
                 PacketAdventureSettings packetAdventureSettings = new PacketAdventureSettings();
-                packetAdventureSettings.setFlags( 0x40 | 0x200 );
-                packetAdventureSettings.setEntityId( this.runtimeId );
-                this.send( packetAdventureSettings );
+                packetAdventureSettings.setFlags(0x40 | 0x200);
+                packetAdventureSettings.setEntityId(this.runtimeId);
+                this.send(packetAdventureSettings);
 
                 // Send movement to the top of the map
-                ChunkSquare square = this.chunkSquareCache.getChunkSquare( MathUtils.fastCeil( this.currentPos.getX() / 16 ), MathUtils.fastCeil( this.currentPos.getZ() / 16 ) );
-                BlockPosition targetPos = square.getCenterPosition();
-                Location target = new Location( null, targetPos.getX(), targetPos.getY(), targetPos.getZ(), 0f, 0f );
-                this.move( target );
+                Location target = new Location(null, this.currentPos.getX(), 255, this.currentPos.getZ(), 0f, 0f);
+                this.move(target);
 
                 // Only allow movements now
-                this.spawned = true;
+                this.spawned.set(true);
             }
-        } else if ( packet.getId() == PACKET_MOVE_PLAYER ) {
+        } else if (packet.getId() == PACKET_MOVE_PLAYER) {
             PacketMovePlayer player = (PacketMovePlayer) packet;
-            if ( player.getEntityId() == this.ownId ) {
-                LOGGER.warn( "Server moved us to {}", player );
+            if (player.getEntityId() == this.ownId) {
+                LOGGER.warn("Server moved us to {}", player);
 
-                Location location = new Location( null, player.getX(), player.getY(), player.getZ(), player.getYaw(), player.getPitch() );
-                this.move( location );
+                Location location = new Location(null, player.getX(), player.getY(), player.getZ(), player.getYaw(), player.getPitch());
+                this.move(location);
             }
         }
     }
 
-    private void move( Location target ) {
+    private void move(Location target) {
         // Send movement to server
         PacketMovePlayer movePlayer = new PacketMovePlayer();
-        movePlayer.setEntityId( this.runtimeId );
-        movePlayer.setX( target.getX() );
-        movePlayer.setY( target.getY() );
-        movePlayer.setZ( target.getZ() );
-        movePlayer.setYaw( target.getYaw() );
-        movePlayer.setPitch( target.getPitch() );
-        this.send( movePlayer );
+        movePlayer.setEntityId(this.runtimeId);
+        movePlayer.setX(target.getX());
+        movePlayer.setY(target.getY());
+        movePlayer.setZ(target.getZ());
+        movePlayer.setYaw(target.getYaw());
+        movePlayer.setPitch(target.getPitch());
+        movePlayer.setMode(PacketMovePlayer.MovePlayerMode.TELEPORT);
+        this.send(movePlayer);
 
         // Store our current position
         this.currentPos = target;
     }
 
-    private void destroy( String message ) {
-        LOGGER.error( "CLIENT DESTROY: {}", message );
+    private void destroy(String message) {
+        LOGGER.error("CLIENT DESTROY: {}", message);
         this.socket.close();
     }
 
-    private void ensureSpawned() {
-        while ( !this.spawned ) {
-            try {
-                Thread.sleep( 1 );
-            } catch ( InterruptedException e ) {
-                // Ignored
-            }
-        }
-    }
-
-    private void ensureChunksLoaded() {
-        // Check if current square has been completed
-        ChunkSquare square = this.chunkSquareCache.getChunkSquare( MathUtils.fastCeil( this.currentPos.getX() / 16 ), MathUtils.fastCeil( this.currentPos.getZ() / 16 ) );
-
-        try {
-            square.getFuture().get();
-        } catch ( InterruptedException | ExecutionException e ) {
-            e.printStackTrace();
-        }
-    }
-
-    public ListenableFuture<Boolean> moveToSquareAsync( ChunkSquare chunkSquare ) {
-        this.ensureSpawned();
-        this.ensureChunksLoaded();
-
+    private void moveToChunk(ChunkRequest chunkSquare) {
         BlockPosition targetPos = chunkSquare.getCenterPosition();
-        Location target = new Location( null, targetPos.getX(), targetPos.getY(), targetPos.getZ(), 0f, 0f );
-
-        this.move( target );
-
-        ChunkSquare square = this.getChunkSquare();
-        square.setLoading( true );
-        LOGGER.debug( "Requesting square {} / {}", square.getX(), square.getZ() );
-        return square.getFuture();
+        Location target = new Location(null, targetPos.getX(), targetPos.getY(), targetPos.getZ(), 0f, 0f);
+        this.move(target);
     }
 
-    public void onDisconnect( Consumer<Void> disconnectConsumer ) {
+    public void onDisconnect(Consumer<Void> disconnectConsumer) {
         this.disconnectConsumer = disconnectConsumer;
     }
 
-    public ChunkSquare getChunkSquare() {
-        // Not spawned yet
-        if ( this.currentPos == null ) {
-            return null;
-        }
-
-        return this.chunkSquareCache.getChunkSquare( MathUtils.fastCeil( this.currentPos.getX() / 16 ), MathUtils.fastCeil( this.currentPos.getZ() / 16 ) );
+    public ChunkRequest getCurrentRequest() {
+        return this.current;
     }
 
 }

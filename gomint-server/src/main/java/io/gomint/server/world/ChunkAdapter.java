@@ -528,7 +528,7 @@ public class ChunkAdapter implements Chunk {
 
         // Border blocks
         buffer.writeSignedVarInt(0);
-        buffer.writeSignedVarInt(0);
+        // buffer.writeSignedVarInt(0);
 
         // Write tile entity data
         Collection<TileEntity> tileEntities = this.getTileEntities();

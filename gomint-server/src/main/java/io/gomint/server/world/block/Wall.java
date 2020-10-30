@@ -24,6 +24,7 @@ import java.util.List;
  * @version 1.0
  */
 @RegisterInfo(sId = "minecraft:cobblestone_wall")
+@RegisterInfo(sId = "minecraft:blackstone_wall")
 @RegisterInfo(sId = "minecraft:polished_blackstone_wall")
 @RegisterInfo(sId = "minecraft:polished_blackstone_brick_wall")
 public class Wall extends Block implements BlockWall {

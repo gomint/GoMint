@@ -35,7 +35,8 @@ public class PacketNetworkChunkPublisherUpdate extends Packet {
 
     @Override
     public void deserialize( PacketBuffer buffer, int protocolID ) throws Exception {
-
+        readSignedBlockPosition(buffer);
+        buffer.readUnsignedVarInt();
     }
 
     public BlockPosition getBlockPosition() {

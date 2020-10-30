@@ -16,6 +16,7 @@ import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.util.Base64;
 import java.util.UUID;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * Helper class to create a non-authenticated JWT chain.
@@ -24,6 +25,8 @@ import java.util.UUID;
  * @version 1.0
  */
 public class MojangLoginForger {
+
+    private static final Base64.Encoder ENCODER = Base64.getUrlEncoder().withoutPadding();
 
     private String username;
     private UUID uuid;
@@ -76,16 +79,16 @@ public class MojangLoginForger {
         JSONObject extraData = new JSONObject();
         extraData.put( "displayName", this.username );
         extraData.put( "identity", this.uuid.toString() );
-        extraData.put( "proxprox.xuid", this.xuid );
-        // extraData.put( "XUID", "" ); // Because dylan forgot to check for NULL, poor dylan
+        extraData.put( "XUID", this.xuid );
+        extraData.put( "titleId", "1739947436" );
 
         claims.put( "extraData", extraData );
         claims.put( "identityPublicKey", publicKeyBase64 );
 
         StringBuilder builder = new StringBuilder();
-        builder.append( Base64.getUrlEncoder().withoutPadding().encodeToString( header.toJSONString().getBytes( StandardCharsets.UTF_8 ) ) );
+        builder.append( ENCODER.encodeToString( header.toJSONString().getBytes( StandardCharsets.UTF_8 ) ) );
         builder.append( '.' );
-        builder.append( Base64.getUrlEncoder().withoutPadding().encodeToString( claims.toJSONString().getBytes( StandardCharsets.UTF_8 ) ) );
+        builder.append( ENCODER.encodeToString( claims.toJSONString().getBytes( StandardCharsets.UTF_8 ) ) );
 
         // Sign the token:
         byte[] signatureBytes = builder.toString().getBytes( StandardCharsets.US_ASCII );
@@ -98,7 +101,7 @@ public class MojangLoginForger {
         }
 
         builder.append( '.' );
-        builder.append( Base64.getUrlEncoder().withoutPadding().encodeToString( signatureDigest ) );
+        builder.append( ENCODER.encodeToString( signatureDigest ) );
 
         return builder.toString();
     }
@@ -116,9 +119,9 @@ public class MojangLoginForger {
         header.put( "x5u", publicKeyBase64 );
 
         StringBuilder builder = new StringBuilder();
-        builder.append( Base64.getUrlEncoder().encodeToString( header.toJSONString().getBytes( StandardCharsets.UTF_8 ) ) );
+        builder.append( ENCODER.encodeToString( header.toJSONString().getBytes( StandardCharsets.UTF_8 ) ) );
         builder.append( '.' );
-        builder.append( Base64.getUrlEncoder().encodeToString( this.skinData.toJSONString().getBytes( StandardCharsets.UTF_8 ) ) );
+        builder.append( ENCODER.encodeToString( this.skinData.toJSONString().getBytes( StandardCharsets.UTF_8 ) ) );
 
         // Sign the token:
         byte[] signatureBytes = builder.toString().getBytes( StandardCharsets.US_ASCII );
@@ -131,7 +134,7 @@ public class MojangLoginForger {
         }
 
         builder.append( '.' );
-        builder.append( Base64.getUrlEncoder().encodeToString( signatureDigest ) );
+        builder.append( ENCODER.encodeToString( signatureDigest ) );
 
         return builder.toString();
     }

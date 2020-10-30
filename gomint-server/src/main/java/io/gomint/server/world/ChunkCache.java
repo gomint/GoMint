@@ -163,12 +163,13 @@ public class ChunkCache {
      */
     public synchronized boolean putChunk( ChunkAdapter chunk ) {
         long key = CoordinateUtils.toLong( chunk.getX(), chunk.getZ() );
-        if (this.cachedChunks.containsKey(key)) {
-            return false;
+        ChunkAdapter adapter = this.cachedChunks.get(key);
+        if (adapter == null) {
+            this.cachedChunks.put( key, chunk );
+            return true;
         }
 
-        this.cachedChunks.put( key, chunk );
-        return true;
+        return adapter == chunk; // Yes this is not equals on intention, we need to be sure we have put the same chunk into cache multiple times
     }
 
     // ==================================== AUTOSAVE ==================================== //

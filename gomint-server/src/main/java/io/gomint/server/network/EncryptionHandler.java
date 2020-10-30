@@ -72,6 +72,14 @@ public class EncryptionHandler {
         return iv;
     }
 
+    public byte[] getServerKey() {
+        return serverKey;
+    }
+
+    public byte[] getServerIv() {
+        return serverIv;
+    }
+
     /**
      * Supplies the needed public key of the login to create the right encryption pairs
      *

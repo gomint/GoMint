@@ -17,6 +17,7 @@ import io.gomint.server.GoMintServer;
 import io.gomint.server.entity.EntityLink;
 import io.gomint.server.network.type.CommandOrigin;
 import io.gomint.server.player.PlayerSkin;
+import io.gomint.server.util.DumpUtil;
 import io.gomint.server.util.Things;
 import io.gomint.taglib.AllocationLimitReachedException;
 import io.gomint.taglib.NBTReader;
@@ -29,6 +30,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.nio.ByteOrder;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -61,7 +63,7 @@ public abstract class Packet {
      * @param buffer from the packet
      * @return read item stack
      */
-    static ItemStack readItemStack(PacketBuffer buffer) {
+    public static ItemStack readItemStack(PacketBuffer buffer) {
         int id = buffer.readSignedVarInt();
         if (id == 0) {
             return ItemAir.create(0);
@@ -336,6 +338,34 @@ public abstract class Packet {
                 buffer.writeLFloat((Float) value);
             }
         });
+    }
+
+    public Map<Gamerule, Object> readGamerules(PacketBuffer buffer) {
+        int amount = buffer.readUnsignedVarInt();
+        if (amount == 0) {
+            return null;
+        }
+
+        Map<Gamerule, Object> gamerules = new HashMap<>();
+        for (int i = 0; i < amount; i++) {
+            String name = buffer.readString();
+            byte type = buffer.readByte();
+
+            Object val = null;
+            switch (type) {
+                case 1:
+                    val = buffer.readBoolean();
+                    break;
+                case 2:
+                    val = buffer.readUnsignedVarInt();
+                    break;
+                case 3:
+                    val = buffer.readLFloat();
+                    break;
+            }
+        }
+
+        return gamerules;
     }
 
     void writeSerializedSkin(PlayerSkin skin, PacketBuffer buffer) {

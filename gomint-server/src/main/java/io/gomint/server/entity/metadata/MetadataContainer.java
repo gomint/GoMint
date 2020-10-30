@@ -11,6 +11,7 @@ import io.gomint.jraknet.PacketBuffer;
 import io.gomint.math.Vector;
 import io.gomint.server.entity.EntityFlag;
 import io.gomint.server.inventory.item.ItemStack;
+import io.gomint.taglib.NBTTagCompound;
 import it.unimi.dsi.fastutil.bytes.Byte2ObjectMap;
 import it.unimi.dsi.fastutil.bytes.Byte2ObjectOpenHashMap;
 
@@ -49,9 +50,9 @@ public class MetadataContainer extends Observable {
     static final byte METADATA_STRING = 4;
 
     /**
-     * Internal byte representation for a item meta
+     * Internal byte representation for a NBTTagCompound meta
      */
-    static final byte METADATA_ITEM = 5;
+    static final byte METADATA_NBT = 5;
 
     /**
      * Internal byte representation for a position meta
@@ -446,33 +447,33 @@ public class MetadataContainer extends Observable {
     }
 
     /**
-     * Put a item value into the container.
+     * Put a NBTTagCompound value into the container.
      *
      * @param index The index to put the value into
      * @param value The value to put into the container
      */
-    public void putItem( int index, ItemStack value ) {
-        this.put( index, new MetadataItem( value ) );
+    public void putNBT( int index, NBTTagCompound value ) {
+        this.put( index, new MetadataNBT( value ) );
     }
 
     /**
-     * Gets a item stored inside the specified index.
+     * Gets a NBTTagCompound stored inside the specified index.
      *
      * @param index The index of the value
      * @return The value stored at the specified index
      * @throws IllegalArgumentException Thrown in case no value is stored at the specified index or the value is not a item
      */
-    public ItemStack getItem( int index ) {
+    public NBTTagCompound getNBT( int index ) {
         MetadataValue value = this.get( index );
         if ( value == null ) {
             throw new IllegalArgumentException( "No value stored at index " + index );
         }
 
-        if ( value.getTypeId() != METADATA_ITEM ) {
+        if ( value.getTypeId() != METADATA_NBT) {
             throw new IllegalArgumentException( "Value of different type stored at index " + index );
         }
 
-        return ( (MetadataItem) value ).getValue();
+        return ( (MetadataNBT) value ).getValue();
     }
 
     /**
@@ -611,8 +612,8 @@ public class MetadataContainer extends Observable {
                 case METADATA_STRING:
                     value = new MetadataString();
                     break;
-                case METADATA_ITEM:
-                    value = new MetadataItem();
+                case METADATA_NBT:
+                    value = new MetadataNBT();
                     break;
                 case METADATA_POSITION:
                     value = new MetadataPosition();
