@@ -10,6 +10,7 @@ package io.gomint.server.network.packet;
 import io.gomint.jraknet.PacketBuffer;
 import io.gomint.server.network.Protocol;
 import io.netty.buffer.ByteBuf;
+import io.netty.buffer.PooledByteBufAllocator;
 
 import java.util.Arrays;
 import java.util.Objects;
@@ -54,7 +55,17 @@ public class PacketWorldChunk extends Packet {
 
     @Override
     public void deserialize(PacketBuffer buffer, int protocolID) {
+        this.x = buffer.readSignedVarInt();
+        this.z = buffer.readSignedVarInt();
+        this.subChunkCount = buffer.readUnsignedVarInt();
+        buffer.readBoolean();
 
+        int length = buffer.readUnsignedVarInt();
+        this.data = PooledByteBufAllocator.DEFAULT.directBuffer(length);
+
+        byte[] data = new byte[length];
+        buffer.readBytes(data);
+        this.data.writeBytes(data);
     }
 
     public void release() {

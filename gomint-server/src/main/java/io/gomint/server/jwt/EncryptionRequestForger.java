@@ -12,7 +12,7 @@ import java.util.Base64;
  */
 public class EncryptionRequestForger {
 
-    private static final Base64.Encoder encoder = Base64.getUrlEncoder().withoutPadding();
+    private static final Base64.Encoder ENCODER = Base64.getUrlEncoder().withoutPadding();
 
     /**
      * Forge a new Encryption start JWT token
@@ -41,9 +41,9 @@ public class EncryptionRequestForger {
 
         // Build it together
         StringBuilder builder = new StringBuilder();
-        builder.append( encoder.encodeToString( StringUtil.getUTF8Bytes( header.toJSONString() ) ) );
+        builder.append( ENCODER.encodeToString( StringUtil.getUTF8Bytes( header.toJSONString() ) ) );
         builder.append( '.' );
-        builder.append( encoder.encodeToString( StringUtil.getUTF8Bytes( claims.toJSONString() ) ) );
+        builder.append( ENCODER.encodeToString( StringUtil.getUTF8Bytes( claims.toJSONString() ) ) );
 
         // Sign the token:
         byte[] signatureBytes = StringUtil.getUTF8Bytes( builder.toString() );
@@ -57,7 +57,7 @@ public class EncryptionRequestForger {
         }
 
         builder.append( '.' );
-        builder.append( encoder.encodeToString( signatureDigest ) );
+        builder.append( ENCODER.encodeToString( signatureDigest ) );
 
         return builder.toString();
     }

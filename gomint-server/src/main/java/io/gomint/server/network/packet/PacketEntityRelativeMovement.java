@@ -100,7 +100,32 @@ public class PacketEntityRelativeMovement extends Packet {
 
     @Override
     public void deserialize( PacketBuffer buffer, int protocolID ) {
+        this.entityId = buffer.readUnsignedVarLong();
+        this.flags = buffer.readLShort();
 
+        if ( ( this.flags & 1 ) == 1 ) {
+            this.x = Float.intBitsToFloat(buffer.readSignedVarInt());
+        }
+
+        if ( ( this.flags & 2 ) == 2 ) {
+            this.y = Float.intBitsToFloat(buffer.readSignedVarInt());
+        }
+
+        if ( ( this.flags & 4 ) == 4 ) {
+            this.z = Float.intBitsToFloat(buffer.readSignedVarInt());
+        }
+
+        if ( ( this.flags & 8 ) == 8 ) {
+            this.pitch = readByteRotation(buffer);
+        }
+
+        if ( ( this.flags & 16 ) == 16 ) {
+            this.headYaw = readByteRotation(buffer);
+        }
+
+        if ( ( this.flags & 32 ) == 32 ) {
+            this.yaw = readByteRotation(buffer);
+        }
     }
 
     public long getEntityId() {

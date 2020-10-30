@@ -129,6 +129,7 @@ public enum BlockType {
     GRASS_BLOCK,
     GRASS_PATH,
     GRAVEL,
+    GRINDSTONE,
     HARDENED_CLAY,
     HAY_BALE,
     HEAVY_WEIGHTED_PRESSURE_PLATE,

@@ -105,10 +105,12 @@ public class DumpUtil {
     }
 
     public static void dumpPacketbuffer( PacketBuffer buffer ) {
+        LOGGER.info("-------------------------------------------------------------------");
+
         int pos = buffer.getReadPosition();
 
         StringBuilder lineBuilder = new StringBuilder();
-        StringBuilder stringRepBuilder = new StringBuilder();
+        // StringBuilder stringRepBuilder = new StringBuilder();
         while ( buffer.getRemaining() > 0 ) {
             for ( int i = 0; i < 64 && buffer.getRemaining() > 0; ++i ) {
                 byte b = buffer.readByte();
@@ -117,18 +119,18 @@ public class DumpUtil {
                     hex = "0" + hex;
                 }
 
-                stringRepBuilder.append( (char) ( b & 0xFF ) );
+                // stringRepBuilder.append( (char) ( b & 0xFF ) );
                 lineBuilder.append( hex );
                 if ( i + 1 < 64 && buffer.getRemaining() > 0 ) {
                     lineBuilder.append( " " );
                 }
             }
 
-            lineBuilder.append( " " ).append( stringRepBuilder );
+            // lineBuilder.append( " " ).append( stringRepBuilder );
 
             LOGGER.info( lineBuilder.toString() );
             lineBuilder = new StringBuilder();
-            stringRepBuilder = new StringBuilder();
+            // stringRepBuilder = new StringBuilder();
         }
 
         buffer.setReadPosition(pos);

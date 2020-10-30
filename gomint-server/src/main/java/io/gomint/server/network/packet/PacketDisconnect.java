@@ -24,7 +24,8 @@ public class PacketDisconnect extends Packet {
 
     @Override
     public void deserialize( PacketBuffer buffer, int protocolID ) {
-
+        this.hideDisconnectionScreen = buffer.readBoolean();
+        this.message = buffer.readString();
     }
 
     public boolean isHideDisconnectionScreen() {
