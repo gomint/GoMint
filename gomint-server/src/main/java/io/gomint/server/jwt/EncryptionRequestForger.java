@@ -31,9 +31,13 @@ public class EncryptionRequestForger {
         header.put( "alg", algorithm.getJwtName() );
         header.put( "x5u", serverPublic );
 
+        long timestamp = System.currentTimeMillis() / 1000;
+
         // Construct claims (payload):
         JSONObject claims = new JSONObject();
         claims.put( "salt", Base64.getEncoder().encodeToString( clientSalt ) );
+        claims.put( "nbf", timestamp );
+        claims.put( "exp", timestamp + 24 * 60 * 60 );
 
         // Build it together
         StringBuilder builder = new StringBuilder();

@@ -1215,6 +1215,9 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
             case API:
                 deathMessage = this.getDisplayName() + " was killed by setting health to 0";
                 break;
+            case COMMAND:
+                deathMessage = this.getDisplayName() + " died";
+                break;
             default:
                 deathMessage = this.getDisplayName() + " died for unknown reasons";
                 break;

@@ -19,7 +19,7 @@ import java.util.Map;
 @Description("Displays a message about yourself.")
 @Permission("gomint.command.me")
 @Overload({
-    @Parameter(name = "message", validator = TextValidator.class)
+    @Parameter(name = "message", validator = TextValidator.class, optional = true)
 })
 public class MeCommand extends Command {
 
@@ -27,8 +27,7 @@ public class MeCommand extends Command {
     public CommandOutput execute(CommandSender sender, String alias, Map<String, Object> arguments) {
         String message = (String) arguments.get("message");
 
-        GoMint.instance().getPlayers().forEach(players ->
-            players.sendMessage("* " + (sender instanceof ConsoleCommandSender ? "CONSOLE" : ((EntityPlayer) sender).getName()) + " " + message));
+        GoMint.instance().getPlayers().forEach(players -> players.sendMessage("* " + (sender instanceof ConsoleCommandSender ? "CONSOLE" : ((EntityPlayer) sender).getName()) + " " + (message != null ? message : "")));
 
         return CommandOutput.successful();
     }
