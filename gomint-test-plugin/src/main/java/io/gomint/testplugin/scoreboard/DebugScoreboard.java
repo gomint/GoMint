@@ -10,6 +10,7 @@ package io.gomint.testplugin.scoreboard;
 import io.gomint.ChatColor;
 import io.gomint.GoMint;
 import io.gomint.entity.EntityPlayer;
+import io.gomint.math.MathUtils;
 import io.gomint.testplugin.TestPlugin;
 import io.gomint.scoreboard.DisplayEntry;
 import io.gomint.scoreboard.DisplaySlot;
@@ -18,6 +19,7 @@ import io.gomint.scoreboard.ScoreboardDisplay;
 import io.gomint.world.Chunk;
 
 import java.text.NumberFormat;
+import java.time.Duration;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -31,6 +33,7 @@ public class DebugScoreboard {
 
     private DisplayEntry tpsEntry;
     private DisplayEntry chunkEntry;
+    private DisplayEntry worldTimeEntry;
 
     // Performance caches
     private final NumberFormat format;
@@ -51,6 +54,9 @@ public class DebugScoreboard {
         this.display.addLine( "  ", 3 );
         this.chunkEntry = this.display.addLine( "0 / 0", 4 );
 
+        this.display.addLine( "  ", 5 );
+        this.worldTimeEntry = this.display.addLine( "00:00:00", 6 );
+
         // Performance things
         this.format = NumberFormat.getNumberInstance();
         this.format.setMaximumFractionDigits( 2 );
@@ -66,6 +72,39 @@ public class DebugScoreboard {
     private void update() {
         this.updateTPS();
         this.updateChunk();
+        this.updateWorldTime();
+    }
+
+    private void updateWorldTime() {
+        Duration time = this.player.getWorld().getTime();
+
+        int seconds = (int) time.getSeconds();
+        int minutes = MathUtils.fastFloor(seconds / 60f);
+        seconds -= minutes * 60;
+        int hours = MathUtils.fastFloor(minutes / 60f);
+        minutes -= hours * 60;
+
+        StringBuilder timeString = new StringBuilder();
+        if (hours < 10) {
+            timeString.append("0");
+        }
+
+        timeString.append(hours).append(":");
+
+        if (minutes < 10) {
+            timeString.append("0");
+        }
+
+        timeString.append(minutes).append(":");
+
+        if (seconds < 10) {
+            timeString.append("0");
+        }
+
+        timeString.append(seconds);
+
+        this.display.removeEntry( this.worldTimeEntry );
+        this.worldTimeEntry = this.display.addLine( timeString.toString(), 6 );
     }
 
     private void updateChunk() {

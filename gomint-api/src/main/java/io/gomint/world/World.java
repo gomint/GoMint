@@ -17,6 +17,7 @@ import io.gomint.math.Location;
 import io.gomint.math.Vector;
 import io.gomint.world.block.Block;
 
+import java.time.Duration;
 import java.util.Collection;
 import java.util.List;
 import java.util.function.Consumer;
@@ -276,5 +277,19 @@ public interface World {
      * @param z coordinate of the chunk
      */
     void unloadChunk(int x, int z);
+
+    /**
+     * Set current day/night time. Time in a world is given in 24h format (0 is midnight, 12 is noon, 18 is 6p.m. etc.)
+     *
+     * @param time which should be set
+     */
+    void setTime(Duration time);
+
+    /**
+     * Get the current world time
+     *
+     * @return world time
+     */
+    Duration getTime();
 
 }

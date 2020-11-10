@@ -25,6 +25,7 @@ import io.gomint.server.command.vanilla.SetWorldSpawnCommand;
 import io.gomint.server.command.vanilla.SpawnPointCommand;
 import io.gomint.server.command.vanilla.TPCommand;
 import io.gomint.server.command.vanilla.TellCommand;
+import io.gomint.server.command.vanilla.TimeSetCommand;
 import io.gomint.server.entity.CommandPermission;
 import io.gomint.server.entity.EntityPlayer;
 import io.gomint.server.network.packet.PacketAvailableCommands;
@@ -75,6 +76,7 @@ public class CommandManager {
                 TPCommand.class,
                 TellCommand.class,
                 KillCommand.class,
+                TimeSetCommand.class,
 
                 // GoMint
                 KickCommand.class,

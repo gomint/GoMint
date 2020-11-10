@@ -49,6 +49,7 @@ import io.gomint.server.util.CallerDetectorUtil;
 import io.gomint.server.util.EnumConnectors;
 import io.gomint.server.world.ChunkAdapter;
 import io.gomint.server.world.CoordinateUtils;
+import io.gomint.server.world.LevelEvent;
 import io.gomint.server.world.WorldAdapter;
 import io.gomint.server.world.block.Block;
 import io.gomint.taglib.NBTTagCompound;
@@ -700,10 +701,10 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
         }
 
         // Send world init data
-        this.connection.sendWorldTime(0);
+        this.connection.sendWorldTime(this.world.getTimeAsTicks());
         this.connection.sendWorldInitialization(this.getEntityId());
         this.connection.sendSpawnPosition();
-        this.connection.sendWorldTime(0);
+        // this.connection.sendWorldTime(this.world.getTimeAsTicks());
         this.connection.addToSendQueue(new PacketAvailableEntityIdentifiers());
 
         this.connection.sendDifficulty();
@@ -1554,7 +1555,15 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
     }
 
     public void firstSpawn() {
+        // Set location
         this.getConnection().sendMovePlayer(this.getLocation());
+
+        // Set simulation speed
+        PacketWorldEvent worldEvent = new PacketWorldEvent();
+        worldEvent.setData(0);
+        worldEvent.setEventId(LevelEvent.SIM_SPEED);
+        worldEvent.setPosition(new Vector(1f, 1f, 1f));
+        this.getConnection().addToSendQueue(worldEvent);
 
         // Spawn for others
         this.getWorld().spawnEntityAt(this, this.getPositionX(), this.getPositionY(), this.getPositionZ(), this.getYaw(), this.getPitch());

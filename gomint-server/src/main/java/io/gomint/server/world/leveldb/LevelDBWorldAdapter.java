@@ -29,6 +29,7 @@ import io.gomint.taglib.NBTStream;
 import io.gomint.taglib.NBTTagCompound;
 import io.gomint.world.Chunk;
 import io.gomint.world.Difficulty;
+import io.gomint.world.Gamerule;
 import io.gomint.world.generator.ChunkGenerator;
 import io.gomint.world.generator.GeneratorContext;
 import io.gomint.world.generator.integrated.LayeredGenerator;
@@ -52,6 +53,7 @@ import java.io.IOException;
 import java.nio.ByteOrder;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -63,9 +65,9 @@ public class LevelDBWorldAdapter extends WorldAdapter {
     private static final Logger LOGGER = LoggerFactory.getLogger(LevelDBWorldAdapter.class);
 
     static {
-        if ( !NativeLoader.load() ) {
-            System.out.println( "Could not load native leveldb. Please be sure you have a supported OS installed" );
-            System.exit( -1 );
+        if (!NativeLoader.load()) {
+            System.out.println("Could not load native leveldb. Please be sure you have a supported OS installed");
+            System.exit(-1);
         }
     }
 
@@ -200,6 +202,14 @@ public class LevelDBWorldAdapter extends WorldAdapter {
         // Level name
         compound.addValue("LevelName", this.levelName);
 
+        // Time
+        compound.addValue("Time", (long) this.worldTime);
+
+        // Gamerules
+        for (Map.Entry<Gamerule, Object> entry : this.gamerules.entrySet()) {
+            compound.addValue(entry.getKey().getNbtName(), entry.getKey().createNBTValue(entry.getValue()));
+        }
+
         // Save generator
         this.saveGenerator(compound);
 
@@ -318,12 +328,12 @@ public class LevelDBWorldAdapter extends WorldAdapter {
     }
 
     public ByteBuf getKey(int chunkX, int chunkZ, byte dataType) {
-        ByteBuf buf = PooledByteBufAllocator.DEFAULT.directBuffer( 9 );
+        ByteBuf buf = PooledByteBufAllocator.DEFAULT.directBuffer(9);
         return buf.writeIntLE(chunkX).writeIntLE(chunkZ).writeByte(dataType);
     }
 
     public ByteBuf getKeySubChunk(int chunkX, int chunkZ, byte dataType, byte subChunk) {
-        ByteBuf buf = PooledByteBufAllocator.DEFAULT.directBuffer( 10 );
+        ByteBuf buf = PooledByteBufAllocator.DEFAULT.directBuffer(10);
         return buf.writeIntLE(chunkX).writeIntLE(chunkZ).writeByte(dataType).writeByte(subChunk);
     }
 
@@ -347,7 +357,12 @@ public class LevelDBWorldAdapter extends WorldAdapter {
 
             NBTStream nbtStream = new NBTStream(buf, ByteOrder.LITTLE_ENDIAN);
             nbtStream.addListener((path, value) -> {
+                System.out.println(path + " -> " + value + "(" + value.getClass().getName() + ")");
+
                 switch (path) {
+                    case ".Time":
+                        LevelDBWorldAdapter.this.worldTime = ((Long) value).intValue();
+                        break;
                     case ".GeneratorClass":
                         LevelDBWorldAdapter.this.generatorClass = (Class<? extends ChunkGenerator>) PluginClassloader.find((String) value);
                         break;
@@ -388,6 +403,12 @@ public class LevelDBWorldAdapter extends WorldAdapter {
                         LevelDBWorldAdapter.this.difficulty = Difficulty.valueOf((int) value);
                         break;
                     default:
+                        // Check for game rule
+                        Gamerule gamerule = Gamerule.getByNbtName(path.substring(1));
+                        if (gamerule != null) {
+                            this.setGamerule(gamerule, gamerule.createValueFromString(String.valueOf(value)));
+                        }
+
                         break;
                 }
             });
