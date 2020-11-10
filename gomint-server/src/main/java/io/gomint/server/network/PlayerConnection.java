@@ -881,6 +881,7 @@ public class PlayerConnection implements ConnectionWithState {
         packet.setSpawn(spawn);
 
         packet.setWorldGamemode(0);
+        packet.setDayCycleStopTime(world.getTimeAsTicks());
 
         Biome biome = world.getBiome(spawn.toBlockPosition());
         packet.setBiomeType(PacketStartGame.BIOME_TYPE_DEFAULT);

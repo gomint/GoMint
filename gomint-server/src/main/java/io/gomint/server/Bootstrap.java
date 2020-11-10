@@ -7,11 +7,7 @@
 
 package io.gomint.server;
 
-import io.gomint.jraknet.PacketBuffer;
 import io.gomint.server.maintenance.ReportUploader;
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
-import io.netty.util.ResourceLeakDetector;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 import org.apache.logging.log4j.Level;

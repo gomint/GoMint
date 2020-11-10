@@ -14,12 +14,14 @@ import io.gomint.event.player.PlayerInteractEvent;
 import io.gomint.inventory.item.ItemAir;
 import io.gomint.inventory.item.ItemStack;
 import io.gomint.inventory.item.ItemType;
+import io.gomint.math.AxisAlignedBB;
+import io.gomint.math.BlockPosition;
+import io.gomint.math.Location;
+import io.gomint.math.MathUtils;
 import io.gomint.math.Vector;
-import io.gomint.math.*;
 import io.gomint.server.GoMintServer;
 import io.gomint.server.async.Delegate;
 import io.gomint.server.async.Delegate2;
-import io.gomint.server.async.Future;
 import io.gomint.server.async.MultiOutputDelegate;
 import io.gomint.server.config.WorldConfig;
 import io.gomint.server.entity.passive.EntityItem;
@@ -27,10 +29,17 @@ import io.gomint.server.entity.passive.EntityXPOrb;
 import io.gomint.server.entity.tileentity.SerializationReason;
 import io.gomint.server.entity.tileentity.TileEntity;
 import io.gomint.server.network.PlayerConnection;
-import io.gomint.server.network.packet.*;
+import io.gomint.server.network.packet.Packet;
+import io.gomint.server.network.packet.PacketSetDifficulty;
+import io.gomint.server.network.packet.PacketSetSpawnPosition;
+import io.gomint.server.network.packet.PacketTileEntityData;
+import io.gomint.server.network.packet.PacketUpdateBlock;
+import io.gomint.server.network.packet.PacketWorldEvent;
+import io.gomint.server.network.packet.PacketWorldSoundEvent;
+import io.gomint.server.network.packet.PacketWorldTime;
 import io.gomint.server.scheduler.CoreScheduler;
-import io.gomint.server.scheduler.SyncScheduledTask;
 import io.gomint.server.util.EnumConnectors;
+import io.gomint.server.util.Values;
 import io.gomint.server.world.block.Air;
 import io.gomint.server.world.storage.TemporaryStorage;
 import io.gomint.taglib.NBTTagCompound;
@@ -46,12 +55,10 @@ import io.gomint.world.SoundData;
 import io.gomint.world.World;
 import io.gomint.world.WorldLayer;
 import io.gomint.world.block.Block;
-import io.gomint.world.block.BlockAir;
 import io.gomint.world.block.data.Facing;
 import io.gomint.world.generator.ChunkGenerator;
 import io.gomint.world.generator.GeneratorContext;
 import io.gomint.world.generator.integrated.VoidGenerator;
-import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectMaps;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
@@ -60,14 +67,22 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
-import java.util.*;
+import java.time.Duration;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Queue;
+import java.util.Set;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -91,6 +106,9 @@ public abstract class WorldAdapter implements World {
     protected Location spawn;
     protected Map<Gamerule, Object> gamerules = new HashMap<>();
     private WorldConfig config;
+    protected int worldTime; // Stored in ticks
+    private float lastUpdateDT;
+    private int lastWorldTimeUpdate;
 
     /**
      * Get the difficulty of this world
@@ -372,13 +390,13 @@ public abstract class WorldAdapter implements World {
         // Secure location
         if (y < 0 || y > 255) {
             return (T) this.server.getBlocks().get(BlockRuntimeIDs.toBlockIdentifier("minecraft:air", null),
-                (byte) (y > 255 ? 15 : 0), (byte) 0, null, new Location(this, x, y, z), new BlockPosition( x, y, z ), layer.ordinal(), null, (short) 0);
+                (byte) (y > 255 ? 15 : 0), (byte) 0, null, new Location(this, x, y, z), new BlockPosition(x, y, z), layer.ordinal(), null, (short) 0);
         }
 
         ChunkAdapter chunk = this.loadChunk(x >> 4, z >> 4, false);
         if (chunk == null) {
             return (T) this.server.getBlocks().get(BlockRuntimeIDs.toBlockIdentifier("minecraft:air", null),
-                (byte) (y > 255 ? 15 : 0), (byte) 0, null, new Location(this, x, y, z), new BlockPosition( x, y, z ), layer.ordinal(), null, (short) 0);
+                (byte) (y > 255 ? 15 : 0), (byte) 0, null, new Location(this, x, y, z), new BlockPosition(x, y, z), layer.ordinal(), null, (short) 0);
         }
 
         return chunk.getBlockAt(x & 0xF, y, z & 0xF, layer.ordinal());
@@ -445,7 +463,7 @@ public abstract class WorldAdapter implements World {
     }
 
     private void initGamerules() {
-        this.setGamerule(Gamerule.DO_DAYLIGHT_CYCLE, false);
+        this.setGamerule(Gamerule.DO_DAYLIGHT_CYCLE, true);
     }
 
     @Override
@@ -528,6 +546,20 @@ public abstract class WorldAdapter implements World {
 
         // ---------------------------------------
         // Perform regular updates:
+        this.lastUpdateDT += dT;
+        if ( Values.CLIENT_TICK_RATE - this.lastUpdateDT < MathUtils.EPSILON ) {
+            if (this.getGamerule(Gamerule.DO_DAYLIGHT_CYCLE)) {
+                this.worldTime++;
+                this.correctTime();
+
+                if (this.lastWorldTimeUpdate++ > Values.MAX_SYNC_DELAY) {
+                    this.lastWorldTimeUpdate = 0;
+                    this.sendTime();
+                }
+            }
+
+            this.lastUpdateDT = 0;
+        }
     }
 
     private void tickChunks(long currentTimeMS, float dT, boolean tickRandomBlocks) {
@@ -1582,6 +1614,48 @@ public abstract class WorldAdapter implements World {
     @Override
     public void unloadChunk(int x, int z) {
         this.chunkCache.unload(x, z);
+    }
+
+    @Override
+    public void setTime(Duration time) {
+        // Since 0 is not 0 ticks in MC we need to shift a little bit
+        float tickAt0 = Values.TICKS_ON_ZERO;
+
+        this.worldTime = (int) (tickAt0 + (time.getSeconds() * Values.CYCLE_TICKS_PER_SECOND));
+        this.correctTime();
+        this.sendTime();
+    }
+
+    @Override
+    public Duration getTime() {
+        long seconds = (long) (this.worldTime / Values.CYCLE_TICKS_PER_SECOND);
+
+        // Since 0 is not at 0 we need to offset 6 hours
+        seconds += Values.SECONDS_ON_ZERO;
+
+        if (seconds >= TimeUnit.HOURS.toSeconds(24)) {
+            seconds -= TimeUnit.HOURS.toSeconds(24);
+        }
+
+        return Duration.ofSeconds(seconds);
+    }
+
+    private void correctTime() {
+        while (this.worldTime >= Values.FULL_DAY_CYCLE) {
+            this.worldTime -= Values.FULL_DAY_CYCLE;
+        }
+    }
+
+    private void sendTime() {
+        int ticks = this.getTimeAsTicks();
+
+        for (io.gomint.server.entity.EntityPlayer player : this.players.keySet()) {
+            player.getConnection().sendWorldTime(ticks);
+        }
+    }
+
+    public int getTimeAsTicks() {
+        return this.worldTime;
     }
 
 }

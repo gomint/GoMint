@@ -50,6 +50,7 @@ public class LevelEvent {
     public static final int STOP_RAIN = 3003;
     public static final int STOP_THUNDER = 3004;
     public static final int PAUSE_GAME = 3005;
+    public static final int SIM_SPEED = 3007;
     public static final int REDSTONE_TRIGGER = 3500;
     public static final int CAULDRON_EXPLODE = 3501;
     public static final int CAULDRON_DYE_ARMOR = 3502;

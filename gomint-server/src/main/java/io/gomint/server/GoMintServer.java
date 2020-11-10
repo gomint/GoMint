@@ -45,7 +45,6 @@ import io.gomint.server.scheduler.CoreScheduler;
 import io.gomint.server.scheduler.SyncTaskManager;
 import io.gomint.server.util.ClassPath;
 import io.gomint.server.util.Watchdog;
-import io.gomint.server.world.BlockRuntimeIDs;
 import io.gomint.server.world.WorldAdapter;
 import io.gomint.server.world.WorldLoadException;
 import io.gomint.server.world.WorldManager;
@@ -74,13 +73,22 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.lang.management.BufferPoolMXBean;
-import java.lang.management.ManagementFactory;
-import java.net.URL;
-import java.util.*;
-import java.util.concurrent.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.Executors;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.concurrent.locks.LockSupport;
 import java.util.function.Supplier;
 import java.util.jar.Manifest;
 
@@ -125,6 +133,8 @@ public class GoMintServer implements GoMint, InventoryHolder {
     private ListeningScheduledExecutorService executorService;
     private Thread readerThread;
     private long currentTickTime;
+    private long internalDiffTime;
+    private long sleepBalance;
     private CoreScheduler scheduler;
 
     // Additional informations for API usage
@@ -468,61 +478,78 @@ public class GoMintServer implements GoMint, InventoryHolder {
             targetTPS = 1000;
         }
 
-        long skipMillis = TimeUnit.SECONDS.toMillis(1) / targetTPS;
-        LOGGER.info("Setting skipMillis to: {}", skipMillis);
+        long skipNanos = TimeUnit.SECONDS.toNanos(1) / targetTPS;
+        LOGGER.info("Setting skipNanos to: {}", skipNanos);
 
         // Tick loop
         float lastTickTime = Float.MIN_NORMAL;
 
         while (this.running.get()) {
-            try {
-                // Tick all major subsystems:
-                this.currentTickTime = System.currentTimeMillis();
-                this.watchdog.add(this.currentTickTime, 30, TimeUnit.SECONDS);
+            // Tick all major subsystems:
+            this.currentTickTime = System.currentTimeMillis();
+            this.internalDiffTime = System.nanoTime();
+            this.watchdog.add(this.currentTickTime, 30, TimeUnit.SECONDS);
 
-                // Drain input lines
-                while (!inputLines.isEmpty()) {
-                    String line = inputLines.poll();
-                    if (line != null) {
-                        this.pluginManager.getCommandManager().executeSystem(line);
-                    }
+            // Drain input lines
+            while (!inputLines.isEmpty()) {
+                String line = inputLines.poll();
+                if (line != null) {
+                    this.pluginManager.getCommandManager().executeSystem(line);
                 }
+            }
 
-                // Tick remaining work
-                while (!this.mainThreadWork.isEmpty()) {
-                    Runnable runnable = this.mainThreadWork.poll();
-                    if (runnable != null) {
-                        runnable.run();
-                    }
+            // Tick remaining work
+            while (!this.mainThreadWork.isEmpty()) {
+                Runnable runnable = this.mainThreadWork.poll();
+                if (runnable != null) {
+                    runnable.run();
                 }
+            }
 
-                // Tick networking at every tick
-                this.networkManager.update(this.currentTickTime, lastTickTime);
+            // Tick networking at every tick
+            this.networkManager.update(this.currentTickTime, lastTickTime);
 
-                this.syncTaskManager.update(this.currentTickTime);
-                this.worldManager.update(this.currentTickTime, lastTickTime);
-                this.permissionGroupManager.update(this.currentTickTime, lastTickTime);
+            this.syncTaskManager.update(this.currentTickTime);
+            this.worldManager.update(this.currentTickTime, lastTickTime);
+            this.permissionGroupManager.update(this.currentTickTime, lastTickTime);
 
-                this.watchdog.done();
+            this.watchdog.done();
 
-                // Check if we got shutdown
-                if (!this.running.get()) {
-                    break;
+            // Check if we got shutdown
+            if (!this.running.get()) {
+                break;
+            }
+
+            long startSleep = System.nanoTime();
+            long diff = startSleep - this.internalDiffTime;
+            boolean warn = false;
+            if (diff <= skipNanos) {
+                long sleepNeeded = (skipNanos - diff) - this.sleepBalance;
+                this.sleepBalance = 0;
+
+                LockSupport.parkNanos(sleepNeeded);
+
+                long endSleep = System.nanoTime();
+                long sleptFor = endSleep - startSleep;
+                diff = skipNanos;
+
+                if ( sleptFor > sleepNeeded ) {
+                    this.sleepBalance = sleptFor - sleepNeeded;
                 }
+            } else {
+                warn = true;
+            }
 
-                long diff = System.currentTimeMillis() - this.currentTickTime;
-                if (diff <= skipMillis) {
-                    Thread.sleep(skipMillis - diff);
+            lastTickTime = (float) diff / TimeUnit.SECONDS.toNanos(1);
+            this.tps = (1 / (double) lastTickTime);
 
-                    lastTickTime = (float) skipMillis / TimeUnit.SECONDS.toMillis(1);
-                    this.tps = (1 / (double) lastTickTime);
-                } else {
-                    lastTickTime = (float) diff / TimeUnit.SECONDS.toMillis(1);
-                    this.tps = (1 / (double) lastTickTime);
-                    LOGGER.warn("Running behind: {} / {} tps", this.tps, (1 / (skipMillis / (float) TimeUnit.SECONDS.toMillis(1))));
-                }
-            } catch (InterruptedException e) {
-                // Ignored ._.
+            // Due to the fact that we
+            if ( this.tps > this.serverConfig.getTargetTPS() ) {
+                this.tps = this.serverConfig.getTargetTPS();
+            }
+
+            if (warn) {
+                LOGGER.warn("Running behind: {} / {} tps", this.tps, (1 / (skipNanos / (float) TimeUnit.SECONDS.toNanos(1))));
             }
         }
 

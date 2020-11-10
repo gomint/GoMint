@@ -17,7 +17,7 @@ import org.apache.commons.math3.util.FastMath;
 public final class MathUtils {
 
     public static final double SQRT_3 = Math.sqrt(3);
-    public static final float EPSILON = 1.401298E-45f;
+    public static final float EPSILON = 0.01f;
 
     private MathUtils() {
         throw new AssertionError("Cannot instantiate MathUtils!");
