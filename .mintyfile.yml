@@ -6,7 +6,7 @@ project:
     maintainers:
       - username: Felix 'Omniboy' Scholz
         profile: https://github.com/omniboy
-      - userame: Fabian 'geNAZt' Faßbender
+      - username: Fabian 'geNAZt' Faßbender
         profile: https://github.com/geNAZt
 channels:
   - name: stable
