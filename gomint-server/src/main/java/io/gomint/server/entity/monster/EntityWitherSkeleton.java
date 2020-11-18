@@ -2,11 +2,14 @@ package io.gomint.server.entity.monster;
 
 import io.gomint.server.entity.Attribute;
 import io.gomint.server.entity.EntityLiving;
+import io.gomint.server.entity.EntityTags;
 import io.gomint.server.entity.EntityType;
 import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.world.WorldAdapter;
 
-@RegisterInfo( sId = "minecraft:wither_skeleton" )
+import java.util.Set;
+
+@RegisterInfo(sId = "minecraft:wither_skeleton")
 public class EntityWitherSkeleton extends EntityLiving implements io.gomint.entity.monster.EntityWitherSkeleton {
 
     /**
@@ -14,8 +17,8 @@ public class EntityWitherSkeleton extends EntityLiving implements io.gomint.enti
      *
      * @param world The world in which this entity is in
      */
-    public EntityWitherSkeleton( WorldAdapter world ) {
-        super( EntityType.WITHER_SKELETON, world );
+    public EntityWitherSkeleton(WorldAdapter world) {
+        super(EntityType.WITHER_SKELETON, world);
         this.initEntity();
     }
 
@@ -23,19 +26,25 @@ public class EntityWitherSkeleton extends EntityLiving implements io.gomint.enti
      * Create new entity wither skeleton for API
      */
     public EntityWitherSkeleton() {
-        super( EntityType.WITHER_SKELETON, null );
+        super(EntityType.WITHER_SKELETON, null);
         this.initEntity();
     }
 
     private void initEntity() {
-        this.setSize( 0.7f, 2.4f );
-        this.addAttribute( Attribute.HEALTH );
-        this.setMaxHealth( 20 );
-        this.setHealth( 20 );
+        this.setSize(0.7f, 2.4f);
+        this.addAttribute(Attribute.HEALTH);
+        this.setMaxHealth(20);
+        this.setHealth(20);
     }
 
     @Override
-    public void update( long currentTimeMS, float dT ) {
-        super.update( currentTimeMS, dT );
+    public void update(long currentTimeMS, float dT) {
+        super.update(currentTimeMS, dT);
     }
+
+    @Override
+    public Set<String> getTags() {
+        return EntityTags.RANGED_HOSTILE_MOB;
+    }
+
 }

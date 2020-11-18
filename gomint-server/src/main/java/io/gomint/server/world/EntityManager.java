@@ -472,4 +472,20 @@ public class EntityManager {
         }
     }
 
+    public Set<Entity> findEntities(String tag) {
+        Set<Entity> entities = null;
+        for ( Long2ObjectMap.Entry<Entity> entry : this.entitiesById.long2ObjectEntrySet() ) {
+            Entity entity = entry.getValue();
+            if (entity.getTags().contains(tag)) {
+                if (entities == null) {
+                    entities = new HashSet<>();
+                }
+
+                entities.add(entity);
+            }
+        }
+
+        return entities;
+    }
+
 }

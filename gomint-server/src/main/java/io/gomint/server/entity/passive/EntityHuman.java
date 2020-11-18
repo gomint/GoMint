@@ -24,6 +24,7 @@ import io.gomint.server.entity.AttributeModifierType;
 import io.gomint.server.entity.EntityCreature;
 import io.gomint.server.entity.EntityFlag;
 import io.gomint.server.entity.EntityPlayer;
+import io.gomint.server.entity.EntityTags;
 import io.gomint.server.entity.EntityType;
 import io.gomint.server.entity.metadata.MetadataContainer;
 import io.gomint.server.inventory.ArmorInventory;
@@ -44,6 +45,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -299,6 +301,7 @@ public class EntityHuman extends EntityCreature implements io.gomint.entity.pass
         this.setSaturation( instance.getValue() + amount );
     }
 
+    @Override
     public void setSaturation( float amount ) {
         AttributeInstance instance = this.getAttributeInstance( Attribute.SATURATION );
         float maxVal = instance.getMaxValue();
@@ -662,12 +665,23 @@ public class EntityHuman extends EntityCreature implements io.gomint.entity.pass
             '}';
     }
 
+    @Override
     public String getPlayerListName() {
         return playerListName;
     }
 
+    /**
+     * Get information about the device the player is using
+     *
+     * @return device information from this player
+     */
     public DeviceInfo getDeviceInfo() {
         return deviceInfo;
+    }
+
+    @Override
+    public Set<String> getTags() {
+        return EntityTags.HUMAN;
     }
 
 }

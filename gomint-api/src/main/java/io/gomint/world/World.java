@@ -20,6 +20,7 @@ import io.gomint.world.block.Block;
 import java.time.Duration;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 import java.util.function.Consumer;
 
 /**
@@ -291,5 +292,13 @@ public interface World {
      * @return world time
      */
     Duration getTime();
+
+    /**
+     * Get entities which have the given tag
+     *
+     * @param tag for which we want to search
+     * @return set of entities which have the tag applied
+     */
+    Set<Entity> getEntitiesByTag(String tag);
 
 }

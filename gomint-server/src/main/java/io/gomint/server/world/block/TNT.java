@@ -8,7 +8,7 @@ import io.gomint.math.Vector;
 import io.gomint.server.entity.Entity;
 import io.gomint.server.entity.EntityLiving;
 import io.gomint.server.entity.EntityPlayer;
-import io.gomint.server.entity.active.EntityPrimedTNT;
+import io.gomint.server.entity.passive.EntityPrimedTNT;
 import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.world.block.state.BooleanBlockState;
 import io.gomint.world.block.data.Facing;

@@ -10,6 +10,7 @@ import io.gomint.math.Vector;
 import io.gomint.server.GoMintServer;
 import io.gomint.server.entity.Entity;
 import io.gomint.server.entity.EntityPlayer;
+import io.gomint.server.entity.EntityTags;
 import io.gomint.server.entity.EntityType;
 import io.gomint.server.network.packet.Packet;
 import io.gomint.server.network.packet.PacketAddItemEntity;
@@ -20,6 +21,7 @@ import io.gomint.server.world.WorldAdapter;
 import io.gomint.taglib.NBTTagCompound;
 import io.gomint.world.Gamemode;
 
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -195,6 +197,11 @@ public class EntityItem extends Entity implements EntityItemDrop {
             ", isReset=" + isReset +
             ", lastUpdateDT=" + lastUpdateDT +
             '}';
+    }
+
+    @Override
+    public Set<String> getTags() {
+        return EntityTags.PASSIVE;
     }
 
 }

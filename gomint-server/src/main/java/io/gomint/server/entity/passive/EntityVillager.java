@@ -5,11 +5,14 @@ import io.gomint.math.Vector;
 import io.gomint.server.entity.Attribute;
 import io.gomint.server.entity.EntityAgeable;
 import io.gomint.server.entity.EntityLiving;
+import io.gomint.server.entity.EntityTags;
 import io.gomint.server.entity.EntityType;
 import io.gomint.server.entity.metadata.MetadataContainer;
 import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.world.WorldAdapter;
 import io.gomint.taglib.NBTTagCompound;
+
+import java.util.Set;
 
 /**
  * @author geNAZt
@@ -111,6 +114,11 @@ public class EntityVillager extends EntityAgeable implements io.gomint.entity.pa
             default:
                 return Profession.FARMER;
         }
+    }
+
+    @Override
+    public Set<String> getTags() {
+        return EntityTags.CREATURE;
     }
 
 }

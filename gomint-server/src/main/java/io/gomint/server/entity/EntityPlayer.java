@@ -1902,4 +1902,9 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
         this.actionStart = ((GoMintServer) GoMint.instance()).getCurrentTickTime();
     }
 
+    @Override
+    public Set<String> getTags() {
+        return EntityTags.PLAYER;
+    }
+
 }

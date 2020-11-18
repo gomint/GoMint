@@ -15,11 +15,20 @@ import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 
 import java.util.Set;
 
+/**
+ * @author geNAZt
+ * @version 1.0
+ */
 public class AbstractBiome implements Biome {
 
     private final Object2ObjectMap<Class<?>, Object> components = new Object2ObjectOpenHashMap<>();
     private Set<String> tags;
 
+    /**
+     * New biome with pre constructed components
+     *
+     * @param components which this biome should have
+     */
     public AbstractBiome(Component ... components) {
         for (Component component : components) {
             this.components.put(component.getClass(), component);

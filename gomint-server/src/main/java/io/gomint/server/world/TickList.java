@@ -21,7 +21,7 @@ public class TickList {
     private LongElement head;
 
     /**
-     * Add a new Element to the tasklist
+     * Add a new Element to the task list
      *
      * @param key     which should be used to sort the element
      * @param element which should be stored
@@ -29,7 +29,7 @@ public class TickList {
     public synchronized void add( long key, BlockPosition element ) {
         // Check if we have a head state
         if ( this.head == null ) {
-            this.head = new LongElement( key, null, new LinkedList<BlockPosition>() {{
+            this.head = new LongElement( key, null, new LinkedList<>() {{
                 add( element );
             }} );
         } else {
@@ -44,13 +44,13 @@ public class TickList {
 
             // We are at the end of the chain
             if ( longElement == null ) {
-                previousLongElement.setNext( new LongElement( key, null, new LinkedList<BlockPosition>() {{
+                previousLongElement.setNext( new LongElement( key, null, new LinkedList<>() {{
                     add( element );
                 }} ) );
             } else {
                 // Check if we need to insert a element
                 if ( longElement.getKey() != key ) {
-                    LongElement newLongElement = new LongElement( key, longElement, new LinkedList<BlockPosition>() {{
+                    LongElement newLongElement = new LongElement( key, longElement, new LinkedList<>() {{
                         add( element );
                     }} );
 
@@ -131,6 +131,10 @@ public class TickList {
         } while ( ( element = element.getNext() ) != null );
 
         return false;
+    }
+
+    public void clear() {
+        this.head = null;
     }
 
     private final class LongElement {

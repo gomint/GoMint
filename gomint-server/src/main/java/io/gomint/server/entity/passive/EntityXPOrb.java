@@ -14,19 +14,21 @@ import io.gomint.math.Vector;
 import io.gomint.server.GoMintServer;
 import io.gomint.server.entity.Entity;
 import io.gomint.server.entity.EntityPlayer;
+import io.gomint.server.entity.EntityTags;
 import io.gomint.server.entity.EntityType;
 import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.util.Values;
 import io.gomint.server.world.WorldAdapter;
 import io.gomint.world.Gamemode;
 
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 /**
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:xp_orb" )
+@RegisterInfo(sId = "minecraft:xp_orb")
 public class EntityXPOrb extends Entity implements io.gomint.entity.passive.EntityXPOrb {
 
     private int xpAmount;
@@ -43,25 +45,25 @@ public class EntityXPOrb extends Entity implements io.gomint.entity.passive.Enti
      * @param world    The world in which this entity is in
      * @param xpAmount amount of xp this orb stores
      */
-    public EntityXPOrb( WorldAdapter world, int xpAmount ) {
-        super( EntityType.XP_ORB, world );
-        this.setHasCollision( false );
-        this.setSize( 0.25f, 0.25f );
+    public EntityXPOrb(WorldAdapter world, int xpAmount) {
+        super(EntityType.XP_ORB, world);
+        this.setHasCollision(false);
+        this.setSize(0.25f, 0.25f);
 
         GRAVITY = 0.04f;
         DRAG = 0.02f;
 
         this.xpAmount = xpAmount;
-        setPickupDelay( 1250, TimeUnit.MILLISECONDS );
+        setPickupDelay(1250, TimeUnit.MILLISECONDS);
     }
 
     /**
      * Create entity for API usage
      */
     public EntityXPOrb() {
-        super( EntityType.XP_ORB, null );
-        this.setHasCollision( false );
-        this.setSize( 0.25f, 0.25f );
+        super(EntityType.XP_ORB, null);
+        this.setHasCollision(false);
+        this.setSize(0.25f, 0.25f);
 
         GRAVITY = 0.04f;
         DRAG = 0.02f;
@@ -83,26 +85,26 @@ public class EntityXPOrb extends Entity implements io.gomint.entity.passive.Enti
     }
 
     @Override
-    public void setPickupDelay( long duration, TimeUnit timeUnit ) {
-        this.pickupTime = ( (GoMintServer) GoMint.instance() ).getCurrentTickTime() + timeUnit.toMillis( duration );
+    public void setPickupDelay(long duration, TimeUnit timeUnit) {
+        this.pickupTime = ((GoMintServer) GoMint.instance()).getCurrentTickTime() + timeUnit.toMillis(duration);
     }
 
     @Override
-    public boolean damage( EntityDamageEvent damageEvent ) {
-        return ( damageEvent.getDamageSource() == EntityDamageEvent.DamageSource.VOID ||
+    public boolean damage(EntityDamageEvent damageEvent) {
+        return (damageEvent.getDamageSource() == EntityDamageEvent.DamageSource.VOID ||
             damageEvent.getDamageSource() == EntityDamageEvent.DamageSource.ON_FIRE ||
-            damageEvent.getDamageSource() == EntityDamageEvent.DamageSource.ENTITY_EXPLODE )
-            && super.damage( damageEvent );
+            damageEvent.getDamageSource() == EntityDamageEvent.DamageSource.ENTITY_EXPLODE)
+            && super.damage(damageEvent);
     }
 
     @Override
-    public void update( long currentTimeMS, float dT ) {
+    public void update(long currentTimeMS, float dT) {
         // Entity base tick (movement)
-        super.update( currentTimeMS, dT );
+        super.update(currentTimeMS, dT);
 
         this.lastUpdateDT += dT;
-        if ( Values.CLIENT_TICK_RATE - this.lastUpdateDT < MathUtils.EPSILON ) {
-            if ( this.world.getServer().getCurrentTickTime() > this.getPickupTime() && !this.isDead() ) {
+        if (Values.CLIENT_TICK_RATE - this.lastUpdateDT < MathUtils.EPSILON) {
+            if (this.world.getServer().getCurrentTickTime() > this.getPickupTime() && !this.isDead()) {
                 if (this.closestPlayer == null || this.closestPlayer.getGamemode() == Gamemode.SPECTATOR ||
                     this.closestPlayer.isDead() || this.closestPlayer.getHealth() <= 0 ||
                     this.closestPlayer.getLocation().distanceSquared(this.getLocation()) > 64) {
@@ -151,14 +153,19 @@ public class EntityXPOrb extends Entity implements io.gomint.entity.passive.Enti
     }
 
     @Override
-    public void onCollideWithPlayer( EntityPlayer player ) {
+    public void onCollideWithPlayer(EntityPlayer player) {
         // Check if we can pick it up
-        if ( this.world.getServer().getCurrentTickTime() > this.getPickupTime() && !this.isDead() ) {
-            if ( player.canPickupXP() ) {
-                player.addXP( this.xpAmount );
+        if (this.world.getServer().getCurrentTickTime() > this.getPickupTime() && !this.isDead()) {
+            if (player.canPickupXP()) {
+                player.addXP(this.xpAmount);
                 this.despawn();
             }
         }
+    }
+
+    @Override
+    public Set<String> getTags() {
+        return EntityTags.PASSIVE;
     }
 
 }

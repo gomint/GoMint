@@ -1,7 +1,5 @@
 package io.gomint.server.entity.pathfinding;
 
-import io.gomint.entity.passive.EntityBat;
-import io.gomint.entity.passive.EntityXPOrb;
 import io.gomint.math.AxisAlignedBB;
 import io.gomint.math.BlockPosition;
 import io.gomint.math.Location;
@@ -11,19 +9,15 @@ import io.gomint.server.world.CoordinateUtils;
 import io.gomint.server.world.block.Block;
 import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
 import it.unimi.dsi.fastutil.longs.LongSet;
-import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.PriorityQueue;
-import java.util.Set;
-import java.util.concurrent.TimeUnit;
 
 /**
  * A pathfinding engine instance may be used to navigate an object through the game world.

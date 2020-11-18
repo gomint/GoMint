@@ -263,7 +263,7 @@ public enum EntityType {
     /**
      * Entity type value for a item drop.
      */
-    ITEM_DROP( "item", 64 ), // TODO: check why this has no minecraft: prefix
+    ITEM_DROP( "minecraft:item", 64 ),
 
     /**
      * Entity type value for a primed tnt.
@@ -521,4 +521,5 @@ public enum EntityType {
     public int getNetworkId() {
         return networkId;
     }
+
 }

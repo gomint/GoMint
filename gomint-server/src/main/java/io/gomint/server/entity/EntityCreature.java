@@ -15,7 +15,7 @@ import io.gomint.taglib.NBTTagCompound;
  * @author geNAZt
  * @version 1.0
  */
-public class EntityCreature extends EntityLiving implements io.gomint.entity.EntityCreature {
+public abstract class EntityCreature extends EntityLiving implements io.gomint.entity.EntityCreature {
 
     /**
      * Armor inventory for all creatures
