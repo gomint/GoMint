@@ -655,6 +655,7 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
         }
 
         if (updateAttributes != null) {
+            updateAttributes.setTick(this.getWorld().getServer().getCurrentTickTime() / 50);
             this.connection.addToSendQueue(updateAttributes);
         }
     }
@@ -665,6 +666,7 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
     public void resendAttributes() {
         PacketUpdateAttributes updateAttributes = new PacketUpdateAttributes();
         updateAttributes.setEntityId(this.getEntityId());
+        updateAttributes.setTick(this.getWorld().getServer().getCurrentTickTime() / 50);
 
         for (AttributeInstance instance : attributes.values()) {
             updateAttributes.addAttributeInstance(instance);
@@ -703,6 +705,7 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
         // Send world init data
         this.connection.sendWorldTime(this.world.getTimeAsTicks());
         this.connection.sendWorldInitialization(this.getEntityId());
+        this.connection.addToSendQueue(new PacketItemComponent());
         this.connection.sendSpawnPosition();
         // this.connection.sendWorldTime(this.world.getTimeAsTicks());
         this.connection.addToSendQueue(new PacketAvailableEntityIdentifiers());
@@ -737,17 +740,17 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
         // Send entity metadata
         this.sendData(this);
 
-        PacketPlayerlist playerlist = new PacketPlayerlist();
+        this.connection.getServer().getCreativeInventory().addViewer(this);
+
+       /* PacketPlayerlist playerlist = new PacketPlayerlist();
         playerlist.setMode((byte) 0);
         playerlist.setEntries(new ArrayList<>() {{
             add(new PacketPlayerlist.Entry(EntityPlayer.this));
         }});
-        this.getConnection().addToSendQueue(playerlist);
+        this.getConnection().addToSendQueue(playerlist);*/
 
         // Send all recipes
         this.connection.addToSendQueue(this.world.getServer().getRecipeManager().getCraftingRecipesBatch());
-
-        this.connection.getServer().getCreativeInventory().addViewer(this);
 
         LOGGER.debug("Did send all prepare entity data");
     }

@@ -145,6 +145,7 @@ public class Items {
         for (StringShortPair itemID : itemIDs) {
             buffer.writeString(itemID.getBlockId());
             buffer.writeLShort(itemID.getData());
+            buffer.writeBoolean(false);
 
             Generator<io.gomint.server.inventory.item.ItemStack> item = this.generators.getGenerator(itemID.getBlockId());
             if (item == null) {

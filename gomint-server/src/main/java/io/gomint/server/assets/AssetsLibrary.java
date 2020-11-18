@@ -110,7 +110,7 @@ public class AssetsLibrary {
 
         short runtimeId = 0;
         for (NBTTagCompound compound : blockPaletteCompounds) {
-            String block = compound.getCompound("block", false).getString("name", "minecraft:air");
+            String block = compound.getString("name", "minecraft:air");
 
             Integer id = knownBlocks.get(block);
             if ( id == null ) {
@@ -122,7 +122,7 @@ public class AssetsLibrary {
                 block,
                 id,
                 runtimeId++,
-                compound.getCompound("block", false).getCompound("states", false)
+                compound.getCompound("states", false)
             );
 
             this.blockPalette.add(identifier);

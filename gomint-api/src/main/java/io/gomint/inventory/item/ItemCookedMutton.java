@@ -1,3 +1,10 @@
+/*
+ * Copyright (c) 2018, GoMint, BlackyPaw and geNAZt
+ *
+ * This code is licensed under the BSD license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
 package io.gomint.inventory.item;
 
 import io.gomint.GoMint;
@@ -7,7 +14,7 @@ import io.gomint.GoMint;
  * @version 1.0
  * @stability 1
  */
-public interface ItemCookedMutton extends ItemFood {
+public interface ItemCookedMutton extends ItemStack {
 
     /**
      * Create a new item stack with given class and amount

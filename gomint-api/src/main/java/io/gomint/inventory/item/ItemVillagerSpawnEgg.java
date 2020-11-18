@@ -14,15 +14,15 @@ import io.gomint.GoMint;
  * @version 1.0
  * @stability 1
  */
-public interface ItemLodestonecompass extends ItemStack {
+public interface ItemVillagerSpawnEgg extends ItemStack {
 
     /**
      * Create a new item stack with given class and amount
      *
      * @param amount which is used for the creation
      */
-    static ItemLodestonecompass create( int amount ) {
-        return GoMint.instance().createItemStack( ItemLodestonecompass.class, amount );
+    static ItemVillagerSpawnEgg create( int amount ) {
+        return GoMint.instance().createItemStack( ItemVillagerSpawnEgg.class, amount );
     }
 
 }
