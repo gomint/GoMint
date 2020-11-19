@@ -15,11 +15,21 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:cooked_mutton", id = 541 )
-public class ItemCookedMutton extends ItemStack implements io.gomint.inventory.item.ItemCookedMutton {
+public class ItemCookedMutton extends ItemFood implements io.gomint.inventory.item.ItemCookedMutton {
 
     @Override
     public ItemType getItemType() {
         return ItemType.COOKED_MUTTON;
+    }
+
+    @Override
+    public float getSaturation() {
+        return 0.8f;
+    }
+
+    @Override
+    public float getHunger() {
+        return 6;
     }
 
 }
