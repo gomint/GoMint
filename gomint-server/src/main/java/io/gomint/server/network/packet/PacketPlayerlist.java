@@ -58,10 +58,10 @@ public class PacketPlayerlist extends Packet {
         }
 
         if ( this.mode == 0 ) {
-            for (int i = 0; i < this.entries.size(); i++) {
+            //for (int i = 0; i < this.entries.size(); i++) {
                 // Is skin trusted
                 buffer.writeBoolean( true );
-            }
+            //}
         }
     }
 

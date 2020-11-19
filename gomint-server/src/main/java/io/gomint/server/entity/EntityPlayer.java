@@ -742,12 +742,12 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
 
         this.connection.getServer().getCreativeInventory().addViewer(this);
 
-       /* PacketPlayerlist playerlist = new PacketPlayerlist();
+        PacketPlayerlist playerlist = new PacketPlayerlist();
         playerlist.setMode((byte) 0);
         playerlist.setEntries(new ArrayList<>() {{
             add(new PacketPlayerlist.Entry(EntityPlayer.this));
         }});
-        this.getConnection().addToSendQueue(playerlist);*/
+        this.getConnection().addToSendQueue(playerlist);
 
         // Send all recipes
         this.connection.addToSendQueue(this.world.getServer().getRecipeManager().getCraftingRecipesBatch());

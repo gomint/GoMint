@@ -369,6 +369,7 @@ public abstract class Packet {
                 writeSkinImageData(buffer, animationObj.getWidth(), animationObj.getHeight(), animationObj.getData());
                 buffer.writeLInt(animationObj.getType());
                 buffer.writeLFloat(animationObj.getFrames());
+                buffer.writeLInt(animationObj.getExpression());
             }
         } else {
             buffer.writeLInt(0);
