@@ -1,0 +1,23 @@
+project:
+  name: GoMint
+  page: https://gomint.io
+  repository:
+    page: https://github.com/gomint/gomint
+    maintainers:
+      - username: Felix 'Omniboy' Scholz
+        profile: https://github.com/omniboy
+      - username: Fabian 'geNAZt' Faßbender
+        profile: https://github.com/geNAZt
+channels:
+  - name: stable
+    releases:
+      - label: GoMint 1.0.0 Release Candidate 4 
+        comment: The 4th release candidate for the upcoming GoMint 1.0.0 release
+        learn: https://github.com/gomint/gomint/releases/tag/1.0.0.RC4
+        scm:
+          commit: dd42157f1f88231d9457da75e596e121f82b8ff3
+          branch: master
+          tag: 1.0.0.RC4
+        distribution:
+          vendor: GitHub
+          download: https://github.com/gomint/gomint/releases/download/1.0.0.RC4/gomint-server.zip
