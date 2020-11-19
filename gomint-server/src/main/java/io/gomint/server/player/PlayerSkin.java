@@ -101,6 +101,7 @@ public class PlayerSkin implements io.gomint.player.PlayerSkin {
         private final int height;
         private final int width;
         private final byte[] data;
+        private final int expression;
 
         // Cacheables
         private SoftReference<BufferedImage> image;
@@ -111,6 +112,7 @@ public class PlayerSkin implements io.gomint.player.PlayerSkin {
             this.height = Math.toIntExact((Long) o.get("ImageHeight"));
             this.width = Math.toIntExact((Long) o.get("ImageWidth"));
             this.data = Base64.getDecoder().decode((String) o.get("Image"));
+            this.expression = Math.toIntExact((Long) o.get("AnimationExpression"));
 
             // Some sanity checks
             int size = this.width * this.height * 4;
@@ -161,6 +163,11 @@ public class PlayerSkin implements io.gomint.player.PlayerSkin {
         public SoftReference<BufferedImage> getImage() {
             return image;
         }
+
+        public int getExpression() {
+            return this.expression;
+        }
+
     }
 
 

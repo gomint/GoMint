@@ -75,7 +75,10 @@ public abstract class Packet {
 
         NBTTagCompound nbt = null;
         short extraLen = buffer.readLShort();
-        if (extraLen > 0) {
+        if (extraLen == -1) {
+            // New system uses a byte as amount of nbt tags
+            byte version = buffer.readByte();
+
             try {
                 NBTReader nbtReader = new NBTReader(buffer.getBuffer(), ByteOrder.LITTLE_ENDIAN);
                 nbtReader.setUseVarint(true);
@@ -84,20 +87,6 @@ public abstract class Packet {
             } catch (IOException | AllocationLimitReachedException e) {
                 LOGGER.error("Could not read item stack because of NBT", e);
                 return ItemAir.create(0);
-            }
-        } else if (extraLen == -1) {
-            // New system uses a byte as amount of nbt tags
-            byte count = buffer.readByte();
-            for (byte i = 0; i < count; i++) {
-                try {
-                    NBTReader nbtReader = new NBTReader(buffer.getBuffer(), ByteOrder.LITTLE_ENDIAN);
-                    nbtReader.setUseVarint(true);
-                    // There is no alloc limit needed here, you can't write so much shit in 32kb, so thats ok
-                    nbt = nbtReader.parse();
-                } catch (IOException | AllocationLimitReachedException e) {
-                    LOGGER.error("Could not read item stack because of NBT", e);
-                    return ItemAir.create(0);
-                }
             }
         }
 
@@ -380,6 +369,7 @@ public abstract class Packet {
                 writeSkinImageData(buffer, animationObj.getWidth(), animationObj.getHeight(), animationObj.getData());
                 buffer.writeLInt(animationObj.getType());
                 buffer.writeLFloat(animationObj.getFrames());
+                buffer.writeLInt(animationObj.getExpression());
             }
         } else {
             buffer.writeLInt(0);

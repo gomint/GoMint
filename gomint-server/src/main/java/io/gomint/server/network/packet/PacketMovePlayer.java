@@ -30,6 +30,7 @@ public class PacketMovePlayer extends Packet {
     private long ridingEntityId;
     private int teleportCause;      // Currently i need documentation for values
     private int teleportItemId;
+    private long tick;
 
     public PacketMovePlayer() {
         super( Protocol.PACKET_MOVE_PLAYER );
@@ -52,6 +53,8 @@ public class PacketMovePlayer extends Packet {
             buffer.writeLInt( this.teleportCause );
             buffer.writeLInt( this.teleportItemId );
         }
+
+        buffer.writeUnsignedVarLong( this.tick );
     }
 
     @Override
@@ -71,6 +74,16 @@ public class PacketMovePlayer extends Packet {
             this.teleportCause = buffer.readLInt();
             this.teleportItemId = buffer.readLInt();
         }
+
+        this.tick = buffer.readUnsignedVarLong();
+    }
+
+    public long getTick() {
+        return tick;
+    }
+
+    public void setTick(long tick) {
+        this.tick = tick;
     }
 
     public long getEntityId() {

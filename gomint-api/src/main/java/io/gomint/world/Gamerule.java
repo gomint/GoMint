@@ -89,7 +89,7 @@ public final class Gamerule<T> {
             return (T) (val == 1 ? Boolean.TRUE : Boolean.FALSE);
         }
 
-        return (T) value;
+        return (T) String.valueOf(value);
     }
 
     /**

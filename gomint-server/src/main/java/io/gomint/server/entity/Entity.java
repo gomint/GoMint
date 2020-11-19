@@ -1105,6 +1105,7 @@ public abstract class Entity implements io.gomint.entity.Entity {
         PacketEntityMetadata metadataPacket = new PacketEntityMetadata();
         metadataPacket.setEntityId( this.getEntityId() );
         metadataPacket.setMetadata( this.metadataContainer );
+        metadataPacket.setTick( this.world.getServer().getCurrentTickTime() / 50 );
         player.getConnection().addToSendQueue( metadataPacket );
     }
 

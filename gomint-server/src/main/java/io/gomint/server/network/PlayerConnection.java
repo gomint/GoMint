@@ -847,6 +847,7 @@ public class PlayerConnection implements ConnectionWithState {
         move.setMode(MovePlayerMode.TELEPORT);
         move.setOnGround(this.getEntity().isOnGround());
         move.setRidingEntityId(0);    // TODO: Implement riding entities correctly
+        move.setTick(this.entity.getWorld().getServer().getCurrentTickTime() / 50);
         this.addToSendQueue(move);
     }
 
