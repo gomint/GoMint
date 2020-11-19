@@ -14,7 +14,7 @@ import io.gomint.GoMint;
  * @version 1.0
  * @stability 1
  */
-public interface ItemCookedMutton extends ItemStack {
+public interface ItemCookedMutton extends ItemFood {
 
     /**
      * Create a new item stack with given class and amount

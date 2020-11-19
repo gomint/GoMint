@@ -12,9 +12,9 @@ import io.gomint.GoMint;
 /**
  * @author geNAZt
  * @version 1.0
- * @stability 1
+ * @stability 3
  */
-public interface ItemEnchantedGoldenApple extends ItemStack {
+public interface ItemEnchantedGoldenApple extends ItemFood {
 
     /**
      * Create a new item stack with given class and amount
