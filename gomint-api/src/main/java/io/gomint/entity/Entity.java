@@ -14,6 +14,7 @@ import io.gomint.math.Vector2;
 import io.gomint.world.Chunk;
 import io.gomint.world.World;
 
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -361,5 +362,12 @@ public interface Entity {
      * @return the chunk in which the entity is
      */
     Chunk getChunk();
+
+    /**
+     * Get the tags that this entity has
+     *
+     * @return set of tags this entity has
+     */
+    Set<String> getTags();
 
 }

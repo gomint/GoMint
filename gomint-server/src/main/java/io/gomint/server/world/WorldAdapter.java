@@ -36,10 +36,11 @@ import io.gomint.server.network.packet.PacketTileEntityData;
 import io.gomint.server.network.packet.PacketUpdateBlock;
 import io.gomint.server.network.packet.PacketWorldEvent;
 import io.gomint.server.network.packet.PacketWorldSoundEvent;
-import io.gomint.server.network.packet.PacketWorldTime;
 import io.gomint.server.scheduler.CoreScheduler;
 import io.gomint.server.util.EnumConnectors;
 import io.gomint.server.util.Values;
+import io.gomint.server.util.tick.ClientTickable;
+import io.gomint.server.util.tick.Tickable;
 import io.gomint.server.world.block.Air;
 import io.gomint.server.world.storage.TemporaryStorage;
 import io.gomint.taglib.NBTTagCompound;
@@ -92,7 +93,7 @@ import java.util.function.Predicate;
  * @author BlackyPaw
  * @version 1.0
  */
-public abstract class WorldAdapter implements World {
+public abstract class WorldAdapter extends ClientTickable implements World, Tickable {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(WorldAdapter.class);
 
@@ -107,7 +108,7 @@ public abstract class WorldAdapter implements World {
     protected Map<Gamerule, Object> gamerules = new HashMap<>();
     private WorldConfig config;
     protected int worldTime; // Stored in ticks
-    private float lastUpdateDT;
+
     private int lastWorldTimeUpdate;
 
     /**
@@ -122,6 +123,7 @@ public abstract class WorldAdapter implements World {
 
     // Entity Handling
     private EntityManager entityManager;
+    private EntitySpawner entitySpawner;
 
     // Block ticking
     int lcg = ThreadLocalRandom.current().nextInt();
@@ -148,6 +150,7 @@ public abstract class WorldAdapter implements World {
         this.players = new Object2ObjectOpenHashMap<>();
         this.asyncChunkTasks = new LinkedBlockingQueue<>();
         this.chunkPackageTasks = new ConcurrentLinkedQueue<>();
+        this.entitySpawner = new EntitySpawner(this);
         this.startAsyncWorker(server.getScheduler());
         this.initGamerules();
     }
@@ -479,12 +482,7 @@ public abstract class WorldAdapter implements World {
 
     // ==================================== UPDATING ==================================== //
 
-    /**
-     * Ticks the world and updates what needs to be updated.
-     *
-     * @param currentTimeMS The current time in milliseconds. Used to reduce the number of calls to System#currentTimeMillis()
-     * @param dT            The delta from the full second which has been calculated in the last tick
-     */
+    @Override
     public void update(long currentTimeMS, float dT) {
         // ---------------------------------------
         // Tick the chunk cache to get rid of Chunks
@@ -526,6 +524,7 @@ public abstract class WorldAdapter implements World {
 
         // ---------------------------------------
         // Update all entities
+        this.entitySpawner.update(currentTimeMS, dT);
         this.entityManager.update(currentTimeMS, dT);
 
         // ---------------------------------------
@@ -546,19 +545,19 @@ public abstract class WorldAdapter implements World {
 
         // ---------------------------------------
         // Perform regular updates:
-        this.lastUpdateDT += dT;
-        if ( Values.CLIENT_TICK_RATE - this.lastUpdateDT < MathUtils.EPSILON ) {
-            if (this.getGamerule(Gamerule.DO_DAYLIGHT_CYCLE)) {
-                this.worldTime++;
-                this.correctTime();
+        super.update(currentTimeMS, dT);
+    }
 
-                if (this.lastWorldTimeUpdate++ > Values.MAX_SYNC_DELAY) {
-                    this.lastWorldTimeUpdate = 0;
-                    this.sendTime();
-                }
+    @Override
+    public void updateClientTick() {
+        if (this.getGamerule(Gamerule.DO_DAYLIGHT_CYCLE)) {
+            this.worldTime++;
+            this.correctTime();
+
+            if (this.lastWorldTimeUpdate++ > Values.MAX_SYNC_DELAY) {
+                this.lastWorldTimeUpdate = 0;
+                this.sendTime();
             }
-
-            this.lastUpdateDT = 0;
         }
     }
 
@@ -1656,6 +1655,11 @@ public abstract class WorldAdapter implements World {
 
     public int getTimeAsTicks() {
         return this.worldTime;
+    }
+
+    @Override
+    public Set<Entity> getEntitiesByTag(String tag) {
+        return this.entityManager.findEntities(tag);
     }
 
 }

@@ -8,6 +8,7 @@
 package io.gomint.server;
 
 import io.gomint.server.maintenance.ReportUploader;
+import io.gomint.world.Biome;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 import org.apache.logging.log4j.Level;

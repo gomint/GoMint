@@ -6,11 +6,14 @@ import io.gomint.inventory.item.ItemType;
 import io.gomint.math.Vector;
 import io.gomint.server.entity.Attribute;
 import io.gomint.server.entity.EntityCreature;
+import io.gomint.server.entity.EntityTags;
 import io.gomint.server.entity.EntityType;
 import io.gomint.server.inventory.ArmorInventory;
 import io.gomint.inventory.item.ItemStack;
 import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.world.WorldAdapter;
+
+import java.util.Set;
 
 /**
  * @author geNAZt
@@ -80,6 +83,11 @@ public class EntityArmorStand extends EntityCreature implements io.gomint.entity
     @Override
     public void interact( EntityPlayer player, Vector clickVector ) {
         // TODO: Adding the ability of changing the armor of this armor stand
+    }
+
+    @Override
+    public Set<String> getTags() {
+        return EntityTags.PASSIVE;
     }
 
 }

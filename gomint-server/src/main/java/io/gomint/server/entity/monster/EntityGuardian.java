@@ -2,9 +2,12 @@ package io.gomint.server.entity.monster;
 
 import io.gomint.server.entity.Attribute;
 import io.gomint.server.entity.EntityLiving;
+import io.gomint.server.entity.EntityTags;
 import io.gomint.server.entity.EntityType;
 import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.world.WorldAdapter;
+
+import java.util.Set;
 
 @RegisterInfo( sId = "minecraft:guardian" )
 public class EntityGuardian extends EntityLiving implements io.gomint.entity.monster.EntityGuardian {
@@ -38,4 +41,10 @@ public class EntityGuardian extends EntityLiving implements io.gomint.entity.mon
     public void update( long currentTimeMS, float dT ) {
         super.update( currentTimeMS, dT );
     }
+
+    @Override
+    public Set<String> getTags() {
+        return EntityTags.HOSTILE_MOB;
+    }
+
 }

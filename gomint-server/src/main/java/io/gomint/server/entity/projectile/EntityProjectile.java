@@ -18,11 +18,13 @@ import io.gomint.math.Vector;
 import io.gomint.server.entity.Entity;
 import io.gomint.server.entity.EntityLiving;
 import io.gomint.server.entity.EntityPlayer;
+import io.gomint.server.entity.EntityTags;
 import io.gomint.server.entity.EntityType;
 import io.gomint.server.util.Values;
 import io.gomint.server.world.WorldAdapter;
 
 import java.util.Collection;
+import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
@@ -256,6 +258,11 @@ public abstract class EntityProjectile extends Entity implements io.gomint.entit
         motion.setY(((float) (((motion.getY() / distanceTravel) + (ThreadLocalRandom.current().nextDouble() * 0.0075f)) * inaccuracy)) * velocity);
         motion.setZ(((float) (((motion.getZ() / distanceTravel) + (ThreadLocalRandom.current().nextDouble() * 0.0075f)) * inaccuracy)) * velocity);
         this.setVelocity(motion);
+    }
+
+    @Override
+    public Set<String> getTags() {
+        return EntityTags.PROJECTILE;
     }
 
 }

@@ -9,6 +9,7 @@ package io.gomint.server.entity.passive;
 
 import io.gomint.inventory.item.ItemStack;
 import io.gomint.server.entity.Entity;
+import io.gomint.server.entity.EntityTags;
 import io.gomint.server.entity.EntityType;
 import io.gomint.server.entity.metadata.MetadataContainer;
 import io.gomint.server.network.packet.PacketUpdateBlock;
@@ -16,6 +17,8 @@ import io.gomint.server.network.packet.PacketUpdateBlockSynched;
 import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.world.WorldAdapter;
 import io.gomint.server.world.block.Block;
+
+import java.util.Set;
 
 /**
  * @author geNAZt
@@ -91,6 +94,11 @@ public class EntityFallingBlock extends Entity implements io.gomint.entity.passi
 
         this.block = block1;
         this.metadataContainer.putInt(MetadataContainer.DATA_VARIANT, block1.getRuntimeId());
+    }
+
+    @Override
+    public Set<String> getTags() {
+        return EntityTags.PASSIVE;
     }
 
 }

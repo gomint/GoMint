@@ -28,7 +28,7 @@ public interface Biome {
     /**
      * Tags of this biome
      *
-     * @return
+     * @return set of tags
      */
     Set<String> tags();
 

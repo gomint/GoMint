@@ -2,16 +2,19 @@ package io.gomint.server.entity.monster;
 
 import io.gomint.server.entity.Attribute;
 import io.gomint.server.entity.EntityLiving;
+import io.gomint.server.entity.EntityTags;
 import io.gomint.server.entity.EntityType;
 import io.gomint.server.entity.metadata.MetadataContainer;
 import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.world.WorldAdapter;
 
+import java.util.Set;
+
 /**
  * @author LucGames
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:magma_cube" )
+@RegisterInfo(sId = "minecraft:magma_cube")
 public class EntityMagmaCube extends EntityLiving implements io.gomint.entity.monster.EntityMagmaCube {
 
     /**
@@ -19,8 +22,8 @@ public class EntityMagmaCube extends EntityLiving implements io.gomint.entity.mo
      *
      * @param world The world in which this entity is in
      */
-    public EntityMagmaCube( WorldAdapter world ) {
-        super( EntityType.MAGMA_CUBE, world );
+    public EntityMagmaCube(WorldAdapter world) {
+        super(EntityType.MAGMA_CUBE, world);
         this.initEntity();
     }
 
@@ -28,28 +31,34 @@ public class EntityMagmaCube extends EntityLiving implements io.gomint.entity.mo
      * Create new entity magma cube for API
      */
     public EntityMagmaCube() {
-        super( EntityType.MAGMA_CUBE, null );
+        super(EntityType.MAGMA_CUBE, null);
         this.initEntity();
     }
 
     private void initEntity() {
-        this.addAttribute( Attribute.HEALTH );
+        this.addAttribute(Attribute.HEALTH);
 
-        this.setSizeFactor( 4 );
+        this.setSizeFactor(4);
     }
 
     @Override
-    public void setSizeFactor( int factor ) {
-        float newHealth = (float) Math.pow( 2, factor );
-        this.setMaxHealth( newHealth );
-        this.setHealth( newHealth );
-        this.setSize( factor * 0.51f, factor * 0.51f );
+    public void setSizeFactor(int factor) {
+        float newHealth = (float) Math.pow(2, factor);
+        this.setMaxHealth(newHealth);
+        this.setHealth(newHealth);
+        this.setSize(factor * 0.51f, factor * 0.51f);
 
-        this.metadataContainer.putInt( MetadataContainer.DATA_VARIANT, factor );
+        this.metadataContainer.putInt(MetadataContainer.DATA_VARIANT, factor);
     }
 
     @Override
-    public void update( long currentTimeMS, float dT ) {
-        super.update( currentTimeMS, dT );
+    public void update(long currentTimeMS, float dT) {
+        super.update(currentTimeMS, dT);
     }
+
+    @Override
+    public Set<String> getTags() {
+        return EntityTags.HOSTILE_MOB;
+    }
+
 }

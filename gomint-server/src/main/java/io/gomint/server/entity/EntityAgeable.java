@@ -14,7 +14,7 @@ import io.gomint.server.world.WorldAdapter;
  * @author KCodeYT
  * @version 1.0
  */
-public class EntityAgeable extends EntityLiving implements io.gomint.entity.EntityAgeable {
+public abstract class EntityAgeable extends EntityLiving implements io.gomint.entity.EntityAgeable {
 
     /**
      * Constructs a new EntityLiving

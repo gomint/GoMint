@@ -1,7 +1,7 @@
 package io.gomint.inventory.item;
 
 import io.gomint.GoMint;
-import io.gomint.inventory.item.data.DyeType;
+import io.gomint.world.block.data.BlockColor;
 
 /**
  * @author geNAZt
@@ -15,22 +15,22 @@ public interface ItemDye extends ItemStack {
      *
      * @param amount which is used for the creation
      */
-    static ItemDye create( int amount ) {
-        return GoMint.instance().createItemStack( ItemDye.class, amount );
+    static ItemDye create(int amount) {
+        return GoMint.instance().createItemStack(ItemDye.class, amount);
     }
 
     /**
-     * Set the type of this dye
+     * Set the color of this dye
      *
-     * @param type of dye
+     * @param color of dye
      */
-    void setDyeType( DyeType type );
+    void setColor(BlockColor color);
 
     /**
-     * Get the type of dye
+     * Get the color of dye
      *
-     * @return type of dye
+     * @return color of dye
      */
-    DyeType getDyeType();
+    BlockColor getColor();
 
 }

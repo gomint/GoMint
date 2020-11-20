@@ -26,6 +26,12 @@ public class GroundComponent implements Component, Ground {
         this.max = max;
     }
 
+    public GroundComponent(int min, int max) {
+        this.blocks = null;
+        this.min = min;
+        this.max = max;
+    }
+    
     @Override
     public List<Block> blocks() {
         return this.blocks;

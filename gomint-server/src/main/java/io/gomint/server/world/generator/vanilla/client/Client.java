@@ -539,6 +539,7 @@ public class Client implements ConnectionWithState {
                 }
 
                 chunkAdapter.setPopulated(true);
+                chunkAdapter.calculateHeightmap(240);
                 this.world.getChunkCache().putChunk(chunkAdapter);
 
                 chunk.release();

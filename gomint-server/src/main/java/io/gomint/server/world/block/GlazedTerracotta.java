@@ -92,7 +92,7 @@ public class GlazedTerracotta extends Block implements BlockGlazedTerracotta {
             case GRAY:
                 this.setBlockId( "minecraft:gray_glazed_terracotta" );
                 break;
-            case SILVER:
+            case LIGHT_GRAY:
                 this.setBlockId( "minecraft:silver_glazed_terracotta" );
                 break;
             case CYAN:
@@ -139,7 +139,7 @@ public class GlazedTerracotta extends Block implements BlockGlazedTerracotta {
             case "minecraft:gray_glazed_terracotta":
                 return BlockColor.GRAY;
             case "minecraft:silver_glazed_terracotta":
-                return BlockColor.SILVER;
+                return BlockColor.LIGHT_GRAY;
             case "minecraft:cyan_glazed_terracotta":
                 return BlockColor.CYAN;
             case "minecraft:purple_glazed_terracotta":

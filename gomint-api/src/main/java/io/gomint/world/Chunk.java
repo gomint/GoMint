@@ -106,4 +106,11 @@ public interface Chunk {
      */
     Biome getBiome( int x, int z );
 
+    /**
+     * Get the world from which this chunk comes from
+     *
+     * @return world of this chunk
+     */
+    World getWorld();
+
 }
