@@ -19,6 +19,7 @@ public class PacketEntityMetadata extends Packet {
 
     private long entityId;
     private MetadataContainer metadata;
+    private long tick;
 
     public PacketEntityMetadata() {
         super( Protocol.PACKET_ENTITY_METADATA );
@@ -28,6 +29,7 @@ public class PacketEntityMetadata extends Packet {
     public void serialize( PacketBuffer buffer, int protocolID ) {
         buffer.writeUnsignedVarLong( this.entityId );
         this.metadata.serialize( buffer );
+        buffer.writeUnsignedVarLong(this.tick);
     }
 
     @Override
@@ -35,6 +37,15 @@ public class PacketEntityMetadata extends Packet {
         this.entityId = buffer.readUnsignedVarLong();
         this.metadata = new MetadataContainer();
         this.metadata.deserialize( buffer );
+        this.tick = buffer.readUnsignedVarLong();
+    }
+
+    public long getTick() {
+        return tick;
+    }
+
+    public void setTick(long tick) {
+        this.tick = tick;
     }
 
     public long getEntityId() {

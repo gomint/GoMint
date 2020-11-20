@@ -406,7 +406,7 @@ public class LevelDBWorldAdapter extends WorldAdapter {
                         // Check for game rule
                         Gamerule gamerule = Gamerule.getByNbtName(path.substring(1));
                         if (gamerule != null) {
-                            this.setGamerule(gamerule, gamerule.createValueFromString(String.valueOf(value)));
+                            this.setGamerule(gamerule, gamerule.createValueFromString(value));
                         }
 
                         break;

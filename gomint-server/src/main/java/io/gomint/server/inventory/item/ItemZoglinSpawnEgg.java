@@ -14,12 +14,12 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:lodestonecompass", id = 741 )
-public class ItemLodestonecompass extends ItemStack implements io.gomint.inventory.item.ItemLodestonecompass {
+@RegisterInfo( sId = "minecraft:zoglin_spawn_egg", id = 496 )
+public class ItemZoglinSpawnEgg extends ItemStack implements io.gomint.inventory.item.ItemZoglinSpawnEgg {
 
     @Override
     public ItemType getItemType() {
-        return ItemType.LODESTONECOMPASS;
+        return ItemType.ZOGLIN_SPAWN_EGG;
     }
 
 }
