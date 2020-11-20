@@ -11,12 +11,10 @@ import io.gomint.entity.Entity;
 import io.gomint.entity.EntityPlayer;
 import io.gomint.event.entity.EntityDespawnEvent;
 import io.gomint.event.entity.EntitySpawnEvent;
-import io.gomint.math.Location;
 import io.gomint.server.network.PlayerConnectionState;
 import io.gomint.server.network.packet.Packet;
 import io.gomint.server.network.packet.PacketEntityMetadata;
 import io.gomint.server.network.packet.PacketEntityMotion;
-import io.gomint.server.network.packet.PacketEntityRelativeMovement;
 import io.gomint.server.network.packet.PacketPlayerlist;
 import io.gomint.world.Chunk;
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
@@ -210,32 +208,6 @@ public class EntityManager {
                     }
                 }
 
-                // Check if we need to send a full movement (we send one every second to stop eventual desync)
-                boolean needsFullMovement = movedEntity.needsFullMovement();
-                PacketEntityRelativeMovement relativeMovement = null;
-                if (!needsFullMovement) {
-                    Location old = movedEntity.getOldPosition();
-
-                    relativeMovement = new PacketEntityRelativeMovement();
-                    relativeMovement.setEntityId(movedEntity.getEntityId());
-
-                    relativeMovement.setOldX(old.getX());
-                    relativeMovement.setOldY(old.getY());
-                    relativeMovement.setOldZ(old.getZ());
-                    relativeMovement.setX(movedEntity.getPositionX());
-                    relativeMovement.setY(movedEntity.getPositionY());
-                    relativeMovement.setZ(movedEntity.getPositionZ());
-
-                    relativeMovement.setOldHeadYaw(old.getHeadYaw());
-                    relativeMovement.setOldYaw(old.getYaw());
-                    relativeMovement.setOldPitch(old.getPitch());
-                    relativeMovement.setHeadYaw(movedEntity.getHeadYaw());
-                    relativeMovement.setYaw(movedEntity.getYaw());
-                    relativeMovement.setPitch(movedEntity.getPitch());
-                }
-
-                movedEntity.updateOldPosition();
-
                 // Prepare movement packet
                 Packet packetEntityMovement = movedEntity.getMovementPacket();
 
@@ -256,11 +228,7 @@ public class EntityManager {
 
                     player.getEntityVisibilityManager().updateEntity(movedEntity, chunk);
                     if (player.getEntityVisibilityManager().isVisible(movedEntity)) {
-                        if (needsFullMovement) {
-                            player.getConnection().addToSendQueue(packetEntityMovement);
-                        } else {
-                            player.getConnection().addToSendQueue(relativeMovement);
-                        }
+                        player.getConnection().addToSendQueue(packetEntityMovement);
 
                         if (entityMotion != null) {
                             player.getConnection().addToSendQueue(entityMotion);
@@ -475,7 +443,7 @@ public class EntityManager {
 
     public Set<Entity> findEntities(String tag) {
         Set<Entity> entities = null;
-        for ( Long2ObjectMap.Entry<Entity> entry : this.entitiesById.long2ObjectEntrySet() ) {
+        for (Long2ObjectMap.Entry<Entity> entry : this.entitiesById.long2ObjectEntrySet()) {
             Entity entity = entry.getValue();
             if (entity.getTags().contains(tag)) {
                 if (entities == null) {
