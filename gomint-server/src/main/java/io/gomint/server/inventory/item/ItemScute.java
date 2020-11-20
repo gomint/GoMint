@@ -1,15 +1,25 @@
+/*
+ * Copyright (c) 2018, GoMint, BlackyPaw and geNAZt
+ *
+ * This code is licensed under the BSD license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
 package io.gomint.server.inventory.item;
+
 import io.gomint.inventory.item.ItemType;
 import io.gomint.server.registry.RegisterInfo;
-import io.gomint.taglib.NBTTagCompound;
 
-@RegisterInfo( sId = "minecraft:turtle_shell_piece", id = 468 )
+/**
+ * @author geNAZt
+ * @version 1.0
+ */
+@RegisterInfo( sId = "minecraft:scute", id = 562 )
 public class ItemScute extends ItemStack implements io.gomint.inventory.item.ItemScute {
-
-
 
     @Override
     public ItemType getItemType() {
         return ItemType.SCUTE;
     }
+
 }

@@ -44,8 +44,11 @@ public class PacketResourcePackStack extends Packet {
             }
         }
 
-        buffer.writeBoolean( this.experimental );
         buffer.writeString( Protocol.MINECRAFT_PE_NETWORK_VERSION );
+
+        // Experiments
+        buffer.writeInt(0);
+        buffer.writeBoolean(false);
     }
 
     @Override

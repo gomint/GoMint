@@ -11,6 +11,9 @@ public class PacketTickSyncHandler implements PacketHandler<PacketTickSync> {
 
     @Override
     public void handle(PacketTickSync packet, long currentTimeMillis, PlayerConnection connection) {
-        // No documentation, added to stop Sentry spam.
+        PacketTickSync sync = new PacketTickSync();
+        sync.setServerTiming(packet.getServerTiming());
+        connection.addToSendQueue(sync);
     }
+
 }

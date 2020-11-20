@@ -15,6 +15,7 @@ public class PacketUpdateAttributes extends Packet {
 
     private long entityId;
     private List<AttributeInstance> entries;
+    private long tick;
 
     public PacketUpdateAttributes() {
         super( Protocol.PACKET_UPDATE_ATTRIBUTES );
@@ -36,6 +37,8 @@ public class PacketUpdateAttributes extends Packet {
                 buffer.writeString( entry.getKey() );
             }
         }
+
+        buffer.writeUnsignedVarLong(this.tick);
     }
 
     @Override
@@ -51,9 +54,19 @@ public class PacketUpdateAttributes extends Packet {
 
             System.out.println( key + ": min(" + minValue + ") max(" + maxValue + ") value(" + value + ") default(" + defaultValue + ")");
         }
+
+        this.tick = buffer.readUnsignedVarLong();
     }
 
-    public void addAttributeInstance( AttributeInstance instance ) {
+    public long getTick() {
+        return tick;
+    }
+
+    public void setTick(long tick) {
+        this.tick = tick;
+    }
+
+    public void addAttributeInstance(AttributeInstance instance ) {
         if ( this.entries == null ) {
             this.entries = new ArrayList<>();
         }

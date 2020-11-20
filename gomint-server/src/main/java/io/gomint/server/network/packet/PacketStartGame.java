@@ -130,6 +130,11 @@ public class PacketStartGame extends Packet {
         buffer.writeBoolean(this.commandsEnabled);
         buffer.writeBoolean(this.isTexturePacksRequired);
         writeGamerules(this.gamerules, buffer);
+
+        // Experiments
+        buffer.writeInt(0);
+        buffer.writeBoolean(false);
+
         buffer.writeBoolean(this.hasBonusChestEnabled);
         buffer.writeBoolean(this.hasStartWithMapEnabled);
         buffer.writeSignedVarInt(this.defaultPlayerPermission);
@@ -152,12 +157,13 @@ public class PacketStartGame extends Packet {
         buffer.writeString(this.worldName);
         buffer.writeString(this.templateId);
         buffer.writeBoolean(this.isTrial);
-        buffer.writeBoolean(this.movementServerAuthoritative);
+        buffer.writeUnsignedVarInt(0);
         buffer.writeLLong(this.currentTick);
         buffer.writeSignedVarInt(this.enchantmentSeed);
 
         // Write palette data
-        buffer.writeBytes(this.blockPalette.getBuffer().asReadOnly().readerIndex(0));
+        buffer.writeUnsignedVarInt(0);
+        // buffer.writeBytes(this.blockPalette.getBuffer().asReadOnly().readerIndex(0));
 
         // Item table
         buffer.writeBytes(this.itemPalette.getBuffer().asReadOnly().readerIndex(0));

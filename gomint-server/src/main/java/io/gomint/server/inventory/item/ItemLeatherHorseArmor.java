@@ -1,17 +1,21 @@
-package io.gomint.server.inventory.item;
-import io.gomint.inventory.item.ItemType;
+/*
+ * Copyright (c) 2018, GoMint, BlackyPaw and geNAZt
+ *
+ * This code is licensed under the BSD license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 
+package io.gomint.server.inventory.item;
+
+import io.gomint.inventory.item.ItemType;
 import io.gomint.server.registry.RegisterInfo;
-import io.gomint.taglib.NBTTagCompound;
 
 /**
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:horsearmorleather", id = 416 )
- public class ItemLeatherHorseArmor extends ItemStack implements io.gomint.inventory.item.ItemLeatherHorseArmor {
-
-
+@RegisterInfo( sId = "minecraft:leather_horse_armor", id = 520 )
+public class ItemLeatherHorseArmor extends ItemStack implements io.gomint.inventory.item.ItemLeatherHorseArmor {
 
     @Override
     public ItemType getItemType() {

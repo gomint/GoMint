@@ -216,7 +216,7 @@ public class MetadataContainer extends Observable {
      * @return true when the flag has been set, false when not
      */
     public boolean getDataFlag( int indexId, EntityFlag flagId ) {
-        return ( indexId == DATA_PLAYER_INDEX ? this.getByte( indexId ) & 0xff : this.getLong( indexId ) & ( 1L << flagId.getId() ) ) > 0;
+        return ( indexId == DATA_PLAYER_FLAGS ? this.getByte( indexId ) & 0xff : this.getLong( indexId ) & ( 1L << flagId.getId() ) ) > 0;
     }
 
     /**
@@ -228,7 +228,7 @@ public class MetadataContainer extends Observable {
      */
     public void setDataFlag( int indexId, EntityFlag flagId, boolean value ) {
         if ( this.getDataFlag( indexId, flagId ) != value ) {
-            if ( indexId == DATA_PLAYER_INDEX ) {
+            if ( indexId == DATA_PLAYER_FLAGS ) {
                 byte flags = this.getByte( indexId );
                 flags ^= 1 << flagId.getId();
                 this.putByte( indexId, flags );
