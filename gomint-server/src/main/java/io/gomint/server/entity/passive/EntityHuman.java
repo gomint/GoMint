@@ -630,11 +630,6 @@ public class EntityHuman extends EntityCreature implements io.gomint.entity.pass
     }
 
     @Override
-    public boolean needsFullMovement() {
-        return true; // Due to a "bug" in 1.14.30 there needs to be a PlayerMove packet sent which only has absolute coordinates
-    }
-
-    @Override
     public Packet getMovementPacket() {
         PacketMovePlayer packetMovePlayer = new PacketMovePlayer();
         packetMovePlayer.setEntityId(this.getEntityId());
