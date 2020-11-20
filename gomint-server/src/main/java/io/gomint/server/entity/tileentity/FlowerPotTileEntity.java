@@ -9,6 +9,7 @@ package io.gomint.server.entity.tileentity;
 
 import io.gomint.entity.Entity;
 import io.gomint.math.Vector;
+import io.gomint.server.entity.component.BlockIdentifierComponent;
 import io.gomint.server.inventory.InventoryHolder;
 import io.gomint.server.inventory.item.Items;
 import io.gomint.server.registry.RegisterInfo;
@@ -24,7 +25,7 @@ import io.gomint.world.block.data.Facing;;
 @RegisterInfo(sId = "FlowerPot")
 public class FlowerPotTileEntity extends TileEntity implements InventoryHolder {
 
-    private BlockIdentifier holding;
+    private BlockIdentifierComponent blockIdentifierComponent;
 
     /**
      * Construct new tile entity from position and world data
@@ -32,40 +33,37 @@ public class FlowerPotTileEntity extends TileEntity implements InventoryHolder {
      * @param block which created this tile
      */
     public FlowerPotTileEntity(Block block, Items items) {
-        super( block, items );
+        super(block, items);
+        this.blockIdentifierComponent = new BlockIdentifierComponent(this, items, "PlantBlock");
     }
 
     @Override
-    public void fromCompound( NBTTagCompound compound ) {
-        super.fromCompound( compound );
+    public void fromCompound(NBTTagCompound compound) {
+        super.fromCompound(compound);
 
-        this.holding = getBlockIdentifier( compound.getCompound( "PlantBlock", false ) );
+        this.blockIdentifierComponent.fromCompound(compound);
     }
 
     @Override
-    public void update( long currentMillis, float dT ) {
-
-    }
-
-    @Override
-    public void interact(Entity entity, Facing face, Vector facePos, io.gomint.inventory.item.ItemStack item ) {
+    public void update(long currentMillis, float dT) {
 
     }
 
     @Override
-    public void toCompound( NBTTagCompound compound, SerializationReason reason ) {
-        super.toCompound( compound, reason );
+    public void interact(Entity entity, Facing face, Vector facePos, io.gomint.inventory.item.ItemStack item) {
 
-        compound.addValue( "id", "FlowerPot" );
+    }
 
-        if ( this.holding != null ) {
-            NBTTagCompound block = compound.getCompound( "PlantBlock", true );
-            putBlockIdentifier( this.holding, block );
-        }
+    @Override
+    public void toCompound(NBTTagCompound compound, SerializationReason reason) {
+        super.toCompound(compound, reason);
+
+        compound.addValue("id", "FlowerPot");
+        this.blockIdentifierComponent.toCompound(compound, reason);
     }
 
     public BlockIdentifier getHolding() {
-        return holding;
+        return this.blockIdentifierComponent.getBlockIdentifier();
     }
 
 }

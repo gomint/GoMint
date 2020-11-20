@@ -7,29 +7,27 @@
 
 package io.gomint.server.entity.tileentity;
 
+import io.gomint.entity.Entity;
+import io.gomint.inventory.item.ItemStack;
+import io.gomint.math.Vector;
+import io.gomint.server.entity.component.InventoryComponent;
 import io.gomint.server.inventory.DropperInventory;
 import io.gomint.server.inventory.InventoryHolder;
-import io.gomint.server.inventory.item.ItemAir;
-import io.gomint.server.inventory.item.ItemStack;
 import io.gomint.server.inventory.item.Items;
 import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.world.block.Block;
 import io.gomint.taglib.NBTTagCompound;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.util.ArrayList;
-import java.util.List;
+import io.gomint.world.block.data.Facing;
 
 /**
  * @author geNAZt
  * @version 1.0
  */
 @RegisterInfo(sId = "Dropper")
-public class DropperTileEntity extends TileEntity implements InventoryHolder {
+public class DropperTileEntity extends ContainerTileEntity implements InventoryHolder {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger( DropperTileEntity.class );
     private final DropperInventory inventory;
+    private final InventoryComponent inventoryComponent;
 
     /**
      * Construct new tile entity from position and world data
@@ -37,65 +35,40 @@ public class DropperTileEntity extends TileEntity implements InventoryHolder {
      * @param block which created this tile
      */
     public DropperTileEntity(Block block, Items items) {
-        super( block, items );
+        super(block, items);
 
-        this.inventory = new DropperInventory( items,this );
+        this.inventory = new DropperInventory(items, this);
+        this.inventoryComponent = new InventoryComponent(this, items, this.inventory);
     }
 
     @Override
-    public void fromCompound( NBTTagCompound compound ) {
-        super.fromCompound( compound );
+    public void fromCompound(NBTTagCompound compound) {
+        super.fromCompound(compound);
 
         // Read in items
-        List<Object> itemList = compound.getList( "Items", false );
-        if ( itemList == null ) return;
-
-        for ( Object item : itemList ) {
-            NBTTagCompound itemCompound = (NBTTagCompound) item;
-
-            ItemStack itemStack = getItemStack( itemCompound );
-            if ( itemStack instanceof ItemAir ) {
-                continue;
-            }
-
-            byte slot = itemCompound.getByte( "Slot", (byte) 127 );
-            if ( slot == 127 ) {
-                LOGGER.warn( "Found item without slot information: {} @ {} setting it to the next free slot", itemStack.getMaterial(), this.getBlock().getPosition() );
-                this.inventory.addItem( itemStack );
-            } else {
-                this.inventory.setItem( slot, itemStack );
-            }
-        }
+        this.inventoryComponent.fromCompound(compound);
     }
 
     @Override
-    public void update( long currentMillis, float dT ) {
+    public void interact(Entity entity, Facing face, Vector facePos, ItemStack item) {
+        this.inventoryComponent.interact(entity, face, facePos, item);
+    }
+
+    @Override
+    public void update(long currentMillis, float dT) {
 
     }
 
     @Override
-    public void toCompound( NBTTagCompound compound, SerializationReason reason ) {
-        super.toCompound( compound, reason );
+    public void toCompound(NBTTagCompound compound, SerializationReason reason) {
+        super.toCompound(compound, reason);
 
-        compound.addValue( "id", "Dropper" );
-
-        if ( reason == SerializationReason.PERSIST ) {
-            List<NBTTagCompound> nbtTagCompounds = new ArrayList<>();
-            for ( int i = 0; i < this.inventory.size(); i++ ) {
-                ItemStack itemStack = (ItemStack) this.inventory.getItem( i );
-                if ( itemStack != null ) {
-                    NBTTagCompound nbtTagCompound = new NBTTagCompound( "" );
-                    nbtTagCompound.addValue( "Slot", (byte) i );
-                    putItemStack( itemStack, nbtTagCompound );
-                    nbtTagCompounds.add( nbtTagCompound );
-                }
-            }
-
-            compound.addValue( "Items", nbtTagCompounds );
-        }
+        compound.addValue("id", "Dropper");
+        this.inventoryComponent.toCompound(compound, reason);
     }
 
     public DropperInventory getInventory() {
         return inventory;
     }
+
 }
