@@ -46,62 +46,6 @@ public abstract class TileEntity {
         this.moveable = 1;
     }
 
-    BlockIdentifier getBlockIdentifier( NBTTagCompound compound ) {
-        if ( compound == null ) {
-            return null;
-        }
-
-        NBTTagCompound states = compound.getCompound("states", false);
-        FreezableSortedMap<String, Object> stateMap = null;
-        if (states != null && states.size() > 0) {
-            stateMap = new FreezableSortedMap<>();
-            for (Map.Entry<String, Object> entry : states.entrySet()) {
-                stateMap.put(entry.getKey(), entry.getValue());
-            }
-
-            stateMap.setFrozen(true);
-        }
-
-        return BlockRuntimeIDs.toBlockIdentifier( compound.getString( "name", "minecraft:air" ), stateMap);
-    }
-
-    void putBlockIdentifier( BlockIdentifier identifier, NBTTagCompound compound ) {
-        compound.addValue( "name", identifier.getBlockId() );
-        compound.addValue( "states", identifier.getNbt());
-    }
-
-    io.gomint.server.inventory.item.ItemStack getItemStack( NBTTagCompound compound ) {
-        // Item not there?
-        if ( compound == null ) {
-            return this.items.create( 0, (short) 0, (byte) 0, null );
-        }
-
-        short data = compound.getShort( "Damage", (short) 0 );
-        byte amount = compound.getByte( "Count", (byte) 0 );
-
-        // This is needed since minecraft changed from storing raw ids to string keys somewhere in 1.7 / 1.8
-        try {
-            return this.items.create( compound.getShort( "id", (short) 0 ), data, amount, compound.getCompound( "tag", false ) );
-        } catch ( ClassCastException e ) {
-            try {
-                return this.items.create( compound.getString( "id", "minecraft:air" ), data, amount, compound.getCompound( "tag", false ) );
-            } catch ( ClassCastException e1 ) {
-                return this.items.create( compound.getInteger( "id", 0 ), data, amount, compound.getCompound( "tag", false ) );
-            }
-        }
-    }
-
-    void putItemStack( io.gomint.server.inventory.item.ItemStack itemStack, NBTTagCompound compound ) {
-        compound.addValue( "id", (short) itemStack.getRuntimeID() );
-        compound.addValue( "Damage", itemStack.getData() );
-        compound.addValue( "Count", itemStack.getAmount() );
-
-        if ( itemStack.getNbtData() != null ) {
-            NBTTagCompound itemTag = itemStack.getNbtData().deepClone( "tag" );
-            compound.addValue( "tag", itemTag );
-        }
-    }
-
     /**
      * Tick this tileEntity exactly once per 50 ms
      *
