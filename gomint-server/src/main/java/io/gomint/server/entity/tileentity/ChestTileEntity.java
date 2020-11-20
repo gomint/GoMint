@@ -9,28 +9,20 @@ package io.gomint.server.entity.tileentity;
 
 import io.gomint.entity.Entity;
 import io.gomint.math.BlockPosition;
-import io.gomint.math.Location;
 import io.gomint.math.Vector;
 import io.gomint.server.entity.EntityPlayer;
+import io.gomint.server.entity.component.InventoryComponent;
 import io.gomint.server.inventory.ChestInventory;
 import io.gomint.server.inventory.ContainerInventory;
 import io.gomint.server.inventory.DoubleChestInventory;
 import io.gomint.server.inventory.InventoryHolder;
-import io.gomint.server.inventory.item.ItemAir;
-import io.gomint.server.inventory.item.ItemStack;
 import io.gomint.server.inventory.item.Items;
 import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.world.CoordinateUtils;
 import io.gomint.server.world.block.Block;
 import io.gomint.server.world.block.Chest;
 import io.gomint.taglib.NBTTagCompound;
-import io.gomint.world.block.BlockType;
 import io.gomint.world.block.data.Facing;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author geNAZt
@@ -39,8 +31,8 @@ import java.util.List;
 @RegisterInfo(sId = "Chest")
 public class ChestTileEntity extends ContainerTileEntity implements InventoryHolder {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ChestTileEntity.class);
     private final ChestInventory inventory;
+    private final InventoryComponent inventoryComponent;
 
     private DoubleChestInventory doubleChestInventory;
 
@@ -51,6 +43,7 @@ public class ChestTileEntity extends ContainerTileEntity implements InventoryHol
     public ChestTileEntity(Block block, Items items) {
         super(block, items);
         this.inventory = new ChestInventory(items, this);
+        this.inventoryComponent = new InventoryComponent(this, items, this.inventory);
     }
 
     @Override
@@ -58,25 +51,7 @@ public class ChestTileEntity extends ContainerTileEntity implements InventoryHol
         super.fromCompound(compound);
 
         // Read in items
-        List<Object> itemList = compound.getList("Items", false);
-        if (itemList == null) return;
-
-        for (Object item : itemList) {
-            NBTTagCompound itemCompound = (NBTTagCompound) item;
-
-            io.gomint.server.inventory.item.ItemStack itemStack = getItemStack(itemCompound);
-            if (itemStack instanceof ItemAir) {
-                continue;
-            }
-
-            byte slot = itemCompound.getByte("Slot", (byte) 127);
-            if (slot == 127) {
-                LOGGER.warn("Found item without slot information: {} @ {} setting it to the next free slot", itemStack.getMaterial(), this.block.getPosition());
-                this.inventory.addItem(itemStack);
-            } else {
-                this.inventory.setItem(slot, itemStack);
-            }
-        }
+        this.inventoryComponent.fromCompound(compound);
 
         // Get pair
         this.pairX = compound.getInteger("pairx", 0);
@@ -191,20 +166,7 @@ public class ChestTileEntity extends ContainerTileEntity implements InventoryHol
         super.toCompound(compound, reason);
         compound.addValue("id", "Chest");
 
-        if (reason == SerializationReason.PERSIST) {
-            List<NBTTagCompound> nbtTagCompounds = new ArrayList<>();
-            for (int i = 0; i < this.inventory.size(); i++) {
-                ItemStack itemStack = (ItemStack) this.inventory.getItem(i);
-                if (itemStack != null) {
-                    NBTTagCompound nbtTagCompound = new NBTTagCompound("");
-                    nbtTagCompound.addValue("Slot", (byte) i);
-                    putItemStack(itemStack, nbtTagCompound);
-                    nbtTagCompounds.add(nbtTagCompound);
-                }
-            }
-
-            compound.addValue("Items", nbtTagCompounds);
-        }
+        this.inventoryComponent.toCompound(compound, reason);
 
         compound.addValue("pairx", this.pairX);
         compound.addValue("pairz", this.pairZ);

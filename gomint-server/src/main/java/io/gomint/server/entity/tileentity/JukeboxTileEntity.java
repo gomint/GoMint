@@ -1,6 +1,6 @@
 package io.gomint.server.entity.tileentity;
 
-import io.gomint.inventory.item.ItemType;
+import io.gomint.server.entity.component.ItemComponent;
 import io.gomint.server.inventory.item.ItemStack;
 import io.gomint.server.inventory.item.Items;
 import io.gomint.server.registry.RegisterInfo;
@@ -14,7 +14,7 @@ import io.gomint.taglib.NBTTagCompound;
 @RegisterInfo(sId = "Jukebox")
 public class JukeboxTileEntity extends TileEntity {
 
-    private ItemStack recordItem;
+    private final ItemComponent itemComponent;
 
     /**
      * Construct new tile entity from position and world data
@@ -22,35 +22,31 @@ public class JukeboxTileEntity extends TileEntity {
      * @param block which created this tile
      */
     public JukeboxTileEntity(Block block, Items items) {
-        super( block, items );
+        super(block, items);
+        this.itemComponent = new ItemComponent(this, items, "RecordItem");
     }
 
     @Override
-    public void fromCompound( NBTTagCompound compound ) {
-        super.fromCompound( compound );
-
-        this.recordItem = getItemStack( compound.getCompound( "RecordItem", false ) );
+    public void fromCompound(NBTTagCompound compound) {
+        super.fromCompound(compound);
+        this.itemComponent.fromCompound(compound);
     }
 
     @Override
-    public void update( long currentMillis, float dT ) {
+    public void update(long currentMillis, float dT) {
 
     }
 
-    public void setRecordItem( ItemStack recordItem ) {
-        this.recordItem = recordItem;
+    public void setRecordItem(ItemStack recordItem) {
+        this.itemComponent.setItem(recordItem);
     }
 
     @Override
-    public void toCompound( NBTTagCompound compound, SerializationReason reason ) {
-        super.toCompound( compound, reason );
+    public void toCompound(NBTTagCompound compound, SerializationReason reason) {
+        super.toCompound(compound, reason);
 
-        compound.addValue( "id", "Jukebox" );
-
-        if ( this.recordItem.getItemType() != ItemType.AIR ) {
-            NBTTagCompound itemCompound = compound.getCompound( "RecordItem", true );
-            this.putItemStack( this.recordItem, itemCompound );
-        }
+        compound.addValue("id", "Jukebox");
+        this.itemComponent.toCompound(compound, reason);
     }
 
 }

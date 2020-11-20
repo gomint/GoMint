@@ -8,9 +8,8 @@
 package io.gomint.server.entity.tileentity;
 
 import io.gomint.entity.Entity;
-import io.gomint.inventory.item.ItemAir;
 import io.gomint.math.Vector;
-import io.gomint.server.inventory.item.ItemStack;
+import io.gomint.server.entity.component.ItemComponent;
 import io.gomint.server.inventory.item.Items;
 import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.world.block.Block;
@@ -24,7 +23,7 @@ import io.gomint.world.block.data.Facing;
 @RegisterInfo(sId = "ItemFrame")
 public class ItemFrameTileEntity extends TileEntity {
 
-    private ItemStack holdingItem = (ItemStack) ItemAir.create( 0 );
+    private final ItemComponent itemComponent;
     private float itemDropChance = 1f;
     private float itemRotation;
 
@@ -34,45 +33,45 @@ public class ItemFrameTileEntity extends TileEntity {
      * @param block which created this tile
      */
     public ItemFrameTileEntity(Block block, Items items) {
-        super( block, items );
+        super(block, items);
+        this.itemComponent = new ItemComponent(this, items, "Item");
     }
 
     @Override
-    public void fromCompound( NBTTagCompound compound ) {
-        super.fromCompound( compound );
+    public void fromCompound(NBTTagCompound compound) {
+        super.fromCompound(compound);
 
         //
-        this.itemDropChance = compound.getFloat( "ItemDropChance", 1.0f );
-        this.itemRotation = compound.getFloat( "ItemRotation", 0f );
+        this.itemDropChance = compound.getFloat("ItemDropChance", 1.0f);
+        this.itemRotation = compound.getFloat("ItemRotation", 0f);
 
         //
-        this.holdingItem = getItemStack( compound.getCompound( "Item", false ) );
+        this.itemComponent.fromCompound(compound);
     }
 
     @Override
-    public void update( long currentMillis, float dT ) {
-
-    }
-
-    @Override
-    public void interact(Entity entity, Facing face, Vector facePos, io.gomint.inventory.item.ItemStack item ) {
+    public void update(long currentMillis, float dT) {
 
     }
 
     @Override
-    public void toCompound( NBTTagCompound compound, SerializationReason reason ) {
-        super.toCompound( compound, reason );
+    public void interact(Entity entity, Facing face, Vector facePos, io.gomint.inventory.item.ItemStack item) {
 
-        compound.addValue( "id", "ItemFrame" );
+    }
 
-        if ( reason == SerializationReason.PERSIST ) {
-            compound.addValue( "ItemDropChance", this.itemDropChance );
+    @Override
+    public void toCompound(NBTTagCompound compound, SerializationReason reason) {
+        super.toCompound(compound, reason);
+
+        compound.addValue("id", "ItemFrame");
+
+        if (reason == SerializationReason.PERSIST) {
+            compound.addValue("ItemDropChance", this.itemDropChance);
         }
 
-        compound.addValue( "ItemRotation", this.itemRotation );
+        compound.addValue("ItemRotation", this.itemRotation);
 
-        NBTTagCompound itemCompound = new NBTTagCompound( "Item" );
-        putItemStack( this.holdingItem, itemCompound );
-        compound.addValue( "Item", itemCompound );
+        this.itemComponent.toCompound(compound, reason);
     }
+
 }
