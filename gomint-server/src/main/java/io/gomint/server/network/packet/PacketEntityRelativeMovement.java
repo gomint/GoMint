@@ -74,15 +74,15 @@ public class PacketEntityRelativeMovement extends Packet {
         buffer.writeLShort( flags );
 
         if ( this.x != 0 ) {
-            buffer.writeSignedVarInt( Float.floatToIntBits( this.x ) - Float.floatToIntBits( this.oldX ) );
+            buffer.writeSignedVarInt( Float.floatToIntBits( this.x ) );
         }
 
         if ( this.y != 0 ) {
-            buffer.writeSignedVarInt( Float.floatToIntBits( this.y ) - Float.floatToIntBits( this.oldY ) );
+            buffer.writeSignedVarInt( Float.floatToIntBits( this.y ) );
         }
 
         if ( this.z != 0 ) {
-            buffer.writeSignedVarInt( Float.floatToIntBits( this.z ) - Float.floatToIntBits( this.oldZ ) );
+            buffer.writeSignedVarInt( Float.floatToIntBits( this.z ) );
         }
 
         if ( this.pitch != this.oldPitch ) {

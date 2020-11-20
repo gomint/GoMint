@@ -50,7 +50,7 @@ public class BedTileEntity extends TileEntity {
             case 7:
                 return BlockColor.GRAY;
             case 8:
-                return BlockColor.SILVER;
+                return BlockColor.LIGHT_GRAY;
             case 9:
                 return BlockColor.CYAN;
             case 10:
@@ -95,7 +95,7 @@ public class BedTileEntity extends TileEntity {
             case GRAY:
                 colorId = 7;
                 break;
-            case SILVER:
+            case LIGHT_GRAY:
                 colorId = 8;
                 break;
             case CYAN:

@@ -100,7 +100,7 @@ public class EntitySpawner implements Tickable {
             if (amountOfSpawnedEntities <= amountOfSpawnableEntities) {
                 for (ChunkAdapter spawnableChunk : spawnableChunks) {
                     Block spawnBlock = getRandomChunkBlock(spawnableChunk);
-                    LOGGER.info("Spawning block: {}", spawnBlock.getBlockType());
+                    // LOGGER.info("Spawning block: {}", spawnBlock.getBlockType());
                 }
             }
         }

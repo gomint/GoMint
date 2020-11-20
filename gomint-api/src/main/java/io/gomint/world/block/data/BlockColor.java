@@ -22,7 +22,7 @@ public enum BlockColor {
     LIME,
     PINK,
     GRAY,
-    SILVER,
+    LIGHT_GRAY,
     CYAN,
     PURPLE,
     BLUE,

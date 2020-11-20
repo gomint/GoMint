@@ -1,7 +1,6 @@
 package io.gomint.inventory.item;
 
 import io.gomint.GoMint;
-import io.gomint.inventory.item.data.DyeType;
 import io.gomint.world.block.data.BlockColor;
 
 /**
