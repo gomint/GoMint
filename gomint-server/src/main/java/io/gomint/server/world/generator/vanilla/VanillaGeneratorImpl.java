@@ -35,6 +35,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.DatagramSocket;
+import java.net.InetSocketAddress;
+import java.net.SocketException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -50,6 +53,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -205,9 +209,9 @@ public class VanillaGeneratorImpl extends VanillaGenerator {
 
             // Replace the port
             String portLine = Arrays.stream(data.split("\n")).filter(line -> line.contains("server-port=")).collect(Collectors.joining());
-            data = data.replace(portLine, "server-port=" + (ThreadLocalRandom.current().nextInt(10000) + 50000));
+            data = data.replace(portLine, "server-port=" + this.getRandomPort());
             String portV6Line = Arrays.stream(data.split("\n")).filter(line -> line.contains("server-portv6=")).collect(Collectors.joining());
-            data = data.replace(portV6Line, "server-portv6=" + (ThreadLocalRandom.current().nextInt(10000) + 50000));
+            data = data.replace(portV6Line, "server-portv6=" + this.getRandomPort());
 
             // Disable online mode
             data = data.replace("online-mode=true", "online-mode=false");
@@ -282,6 +286,17 @@ public class VanillaGeneratorImpl extends VanillaGenerator {
         } catch (IOException e) {
             LOGGER.error("Could not start BDS", e);
         }
+    }
+
+    private int getRandomPort() {
+        return IntStream.range(50000, 60000).filter(port -> {
+            try(DatagramSocket datagramSocket = new DatagramSocket()) {
+                datagramSocket.bind(new InetSocketAddress("127.0.0.1", port));
+                return true;
+            } catch(SocketException e) {
+                return false;
+            }
+        }).findFirst().orElseThrow();
     }
 
     private long hashExecutable(File folder, String executable) {
