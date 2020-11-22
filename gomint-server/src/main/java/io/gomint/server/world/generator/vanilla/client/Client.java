@@ -43,9 +43,7 @@ import io.gomint.server.network.packet.PacketSetLocalPlayerAsInitialized;
 import io.gomint.server.network.packet.PacketStartGame;
 import io.gomint.server.network.packet.PacketWorldChunk;
 import io.gomint.server.resource.ResourceResponseStatus;
-import io.gomint.server.util.BlockIdentifier;
 import io.gomint.server.util.Palette;
-import io.gomint.server.world.BlockRuntimeIDs;
 import io.gomint.server.world.ChunkAdapter;
 import io.gomint.server.world.ChunkSlice;
 import io.gomint.server.world.WorldAdapter;
@@ -64,12 +62,12 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.security.PublicKey;
 import java.time.Duration;
-import java.util.ArrayList;
-import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Queue;
 import java.util.UUID;
+import java.util.ArrayList;
+import java.util.Base64;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -77,13 +75,13 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
 import static io.gomint.server.network.Protocol.PACKET_DISCONNECT;
-import static io.gomint.server.network.Protocol.PACKET_ENCRYPTION_REQUEST;
-import static io.gomint.server.network.Protocol.PACKET_MOVE_PLAYER;
+import static io.gomint.server.network.Protocol.PACKET_WORLD_CHUNK;
 import static io.gomint.server.network.Protocol.PACKET_PLAY_STATE;
+import static io.gomint.server.network.Protocol.PACKET_ENCRYPTION_REQUEST;
 import static io.gomint.server.network.Protocol.PACKET_RESOURCEPACK_INFO;
 import static io.gomint.server.network.Protocol.PACKET_RESOURCEPACK_STACK;
 import static io.gomint.server.network.Protocol.PACKET_START_GAME;
-import static io.gomint.server.network.Protocol.PACKET_WORLD_CHUNK;
+import static io.gomint.server.network.Protocol.PACKET_MOVE_PLAYER;
 
 /**
  * @author geNAZt
@@ -114,7 +112,6 @@ public class Client implements ConnectionWithState {
 
     private Consumer<BlockPosition> spawnPointConsumer;
 
-    private List<BlockIdentifier> runtimeIDs;
     private WorldAdapter world;
     private AtomicBoolean spawned = new AtomicBoolean(false);
 
@@ -175,7 +172,7 @@ public class Client implements ConnectionWithState {
                     });
 
                     Client.this.login();
-                } else if (socketEvent.getType() == SocketEvent.Type.CONNECTION_CLOSED || socketEvent.getType() == SocketEvent.Type.CONNECTION_DISCONNECTED) {
+                } else if (socketEvent.getType() == SocketEvent.Type.CONNECTION_CLOSED || socketEvent.getType() == SocketEvent.Type.CONNECTION_DISCONNECTED || socketEvent.getType() == SocketEvent.Type.CONNECTION_ATTEMPT_FAILED) {
                     if (!Client.this.disconnected) {
                         Client.this.disconnected = true;
                         Client.this.disconnectConsumer.accept(null);
@@ -350,7 +347,7 @@ public class Client implements ConnectionWithState {
                 put("DefaultInputMode", 1);
                 put("ClientRandomId", ThreadLocalRandom.current().nextInt());
                 put("GuiScale", 0);
-                put("GameVersion", "1.16.40");
+                put("GameVersion", "1.16.100");
                 put("ThirdPartyName", name);
                 put("DeviceModel", "");
                 put("DeviceOS", 1);
@@ -502,10 +499,7 @@ public class Client implements ConnectionWithState {
 
                         short blockCounter = 0;
                         for (short index : indexes) {
-                            BlockIdentifier blockIdentifier = this.runtimeIDs.get(localRuntimes[index]);
-                            slice.setRuntimeIdInternal(blockCounter, b,
-                                BlockRuntimeIDs.toBlockIdentifier(blockIdentifier.getBlockId(), blockIdentifier.getStates())
-                                    .getRuntimeId());
+                            slice.setRuntimeIdInternal(blockCounter, b, localRuntimes[index]);
                             blockCounter++;
                         }
                     }
@@ -624,18 +618,6 @@ public class Client implements ConnectionWithState {
             this.spawn = startGame.getSpawn();
             this.ownId = startGame.getEntityId();
             this.runtimeId = startGame.getRuntimeEntityId();
-            this.runtimeIDs = new ArrayList<>();
-
-            // Parse block palette
-            short runtimeId = 0;
-            for (Object o : startGame.getClientBlockPalette()) {
-                NBTTagCompound compound = (NBTTagCompound) o;
-                NBTTagCompound block = compound.getCompound("block", false);
-                String blockId = block.getString("name", "");
-
-                BlockIdentifier blockIdentifier = new BlockIdentifier(blockId, 0, runtimeId++, block.getCompound("states", false));
-                this.runtimeIDs.add(blockIdentifier);
-            }
 
             this.spawnPointConsumer.accept(this.spawn.toBlockPosition());
         } else if (packet.getId() == PACKET_PLAY_STATE) {
@@ -678,6 +660,7 @@ public class Client implements ConnectionWithState {
         movePlayer.setYaw(target.getYaw());
         movePlayer.setPitch(target.getPitch());
         movePlayer.setMode(PacketMovePlayer.MovePlayerMode.TELEPORT);
+        movePlayer.setTick(0);
         this.send(movePlayer);
 
         // Store our current position

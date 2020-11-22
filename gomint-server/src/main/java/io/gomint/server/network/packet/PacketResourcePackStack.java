@@ -16,8 +16,6 @@ public class PacketResourcePackStack extends Packet {
     private List<ResourcePack> behaviourPackEntries;
     private List<ResourcePack> resourcePackEntries;
 
-    private boolean experimental;
-
     public PacketResourcePackStack() {
         super( Protocol.PACKET_RESOURCEPACK_STACK );
     }
@@ -69,9 +67,15 @@ public class PacketResourcePackStack extends Packet {
             buffer.readString();
         }
 
-        this.experimental = buffer.readBoolean();
-        // This is gameVersion
         buffer.readString();
+
+        amount = buffer.readLInt();
+        for ( int i = 0; i < amount; i++ ) {
+            buffer.readString();
+            buffer.readBoolean();
+        }
+
+        buffer.readBoolean();
     }
 
     public boolean isMustAccept() {
@@ -96,13 +100,5 @@ public class PacketResourcePackStack extends Packet {
 
     public void setResourcePackEntries(List<ResourcePack> resourcePackEntries) {
         this.resourcePackEntries = resourcePackEntries;
-    }
-
-    public boolean isExperimental() {
-        return experimental;
-    }
-
-    public void setExperimental(boolean experimental) {
-        this.experimental = experimental;
     }
 }
