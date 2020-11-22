@@ -79,10 +79,6 @@ public class PacketStartGame extends Packet {
     private PacketBuffer blockPalette;
     private PacketBuffer itemPalette;
 
-    // For the client
-    private List<Object> clientBlockPalette;
-    private List<StringShortPair> clientItemPalette;
-
     /**
      * Create a new start game packet
      */
@@ -239,21 +235,13 @@ public class PacketStartGame extends Packet {
         this.currentTick = buffer.readLLong();
         this.enchantmentSeed = buffer.readSignedVarInt();
 
-        NBTReader readerNoBuffer = new NBTReader(buffer.getBuffer(), ByteOrder.LITTLE_ENDIAN);
-        readerNoBuffer.setUseVarint(true);
+        buffer.readUnsignedVarInt();
 
-        try {
-            this.clientBlockPalette = readerNoBuffer.parseList();
-        } catch (IOException | AllocationLimitReachedException e) {
-            e.printStackTrace();
-        }
-
-        this.clientItemPalette = new ArrayList<>();
-        int itemListLength = buffer.readUnsignedVarInt();
-        for (int i = 0; i < itemListLength; i++) {
-            String itemName = buffer.readString();
-            short legacyId = buffer.readLShort();
-            this.clientItemPalette.add(new StringShortPair(itemName, legacyId));
+        int itemPaletteAmount = buffer.readUnsignedVarInt();
+        for ( int i = 0; i < itemPaletteAmount; i++ ) {
+            buffer.readString();
+            buffer.readLShort();
+            buffer.readBoolean();
         }
 
         buffer.readString();
@@ -586,10 +574,6 @@ public class PacketStartGame extends Packet {
 
     public void setLocation(Location location) {
         this.location = location;
-    }
-
-    public List<Object> getClientBlockPalette() {
-        return this.clientBlockPalette;
     }
 
 }

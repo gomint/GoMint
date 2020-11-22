@@ -40,6 +40,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.attribute.PosixFilePermissions;
 import java.time.Duration;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.Queue;
@@ -48,6 +49,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -58,8 +60,8 @@ import java.util.zip.ZipInputStream;
 public class VanillaGeneratorImpl extends VanillaGenerator {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(VanillaGenerator.class);
-    private static final String WINDOWS_DIST = "https://minecraft.azureedge.net/bin-win/bedrock-server-1.16.20.03.zip";
-    private static final String LINUX_DIST = "https://minecraft.azureedge.net/bin-linux/bedrock-server-1.16.20.03.zip";
+    private static final String WINDOWS_DIST = "https://minecraft.azureedge.net/bin-win/bedrock-server-1.16.100.04.zip";
+    private static final String LINUX_DIST = "https://minecraft.azureedge.net/bin-linux/bedrock-server-1.16.100.04.zip";
 
     // Chunk loading queue
     private final Queue<ChunkRequest> queue = new LinkedBlockingQueue<>();
@@ -202,8 +204,10 @@ public class VanillaGeneratorImpl extends VanillaGenerator {
             String data = IOUtils.toString(inputStream, StandardCharsets.UTF_8);
 
             // Replace the port
-            data = data.replace("server-port=19132", "server-port=0");
-            data = data.replace("server-portv6=19133", "server-portv6=0");
+            String portLine = Arrays.stream(data.split("\n")).filter(line -> line.contains("server-port=")).collect(Collectors.joining());
+            data = data.replace(portLine, "server-port=" + (ThreadLocalRandom.current().nextInt(10000) + 50000));
+            String portV6Line = Arrays.stream(data.split("\n")).filter(line -> line.contains("server-portv6=")).collect(Collectors.joining());
+            data = data.replace(portV6Line, "server-portv6=" + (ThreadLocalRandom.current().nextInt(10000) + 50000));
 
             // Disable online mode
             data = data.replace("online-mode=true", "online-mode=false");
@@ -227,7 +231,7 @@ public class VanillaGeneratorImpl extends VanillaGenerator {
             data = data.replace("player-idle-timeout=30", "player-idle-timeout=1440");
 
             // Disable server movement
-            data = data.replace("server-authoritative-movement=true", "server-authoritative-movement=false");
+            data = data.replace("server-authoritative-movement=server-auth", "server-authoritative-movement=client-auth");
 
             // Delete old version and write new one
             serverProperties.delete();
