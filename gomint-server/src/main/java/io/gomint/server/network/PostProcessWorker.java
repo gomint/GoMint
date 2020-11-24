@@ -48,7 +48,7 @@ public class PostProcessWorker implements Runnable {
 
     private ByteBuf writePackets(Packet[] packets) {
         // Write all packets into the inBuf for compression
-        PacketBuffer buffer = new PacketBuffer(packets.length * 5 + (packets.length * 8));
+        PacketBuffer buffer = new PacketBuffer(packets.length * 5 + (packets.length * 32));
         int currentPosition; // We start at 5 because of the first varint header
 
         for (Packet packet : packets) {

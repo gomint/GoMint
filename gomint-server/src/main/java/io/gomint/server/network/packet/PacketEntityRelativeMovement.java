@@ -47,15 +47,15 @@ public class PacketEntityRelativeMovement extends Packet {
         buffer.writeUnsignedVarLong( this.entityId );
 
         short flags = 0;
-        if ( this.x != 0 ) {
+        if ( this.x != this.oldX ) {
             flags |= 1;
         }
 
-        if ( this.y != 0 ) {
+        if ( this.y != this.oldY ) {
             flags |= 2;
         }
 
-        if ( this.z != 0 ) {
+        if ( this.z != this.oldZ ) {
             flags |= 4;
         }
 
@@ -73,16 +73,16 @@ public class PacketEntityRelativeMovement extends Packet {
 
         buffer.writeLShort( flags );
 
-        if ( this.x != 0 ) {
-            buffer.writeSignedVarInt( Float.floatToIntBits( this.x ) );
+        if ( this.x != this.oldX ) {
+            buffer.writeLFloat( this.x );
         }
 
-        if ( this.y != 0 ) {
-            buffer.writeSignedVarInt( Float.floatToIntBits( this.y ) );
+        if ( this.y != this.oldY ) {
+            buffer.writeLFloat( this.y );
         }
 
-        if ( this.z != 0 ) {
-            buffer.writeSignedVarInt( Float.floatToIntBits( this.z ) );
+        if ( this.z != this.oldZ ) {
+            buffer.writeLFloat( this.z );
         }
 
         if ( this.pitch != this.oldPitch ) {
@@ -104,15 +104,15 @@ public class PacketEntityRelativeMovement extends Packet {
         this.flags = buffer.readLShort();
 
         if ( ( this.flags & 1 ) == 1 ) {
-            this.x = Float.intBitsToFloat(buffer.readSignedVarInt());
+            this.x = buffer.readLFloat();
         }
 
         if ( ( this.flags & 2 ) == 2 ) {
-            this.y = Float.intBitsToFloat(buffer.readSignedVarInt());
+            this.y = buffer.readLFloat();
         }
 
         if ( ( this.flags & 4 ) == 4 ) {
-            this.z = Float.intBitsToFloat(buffer.readSignedVarInt());
+            this.z = buffer.readLFloat();
         }
 
         if ( ( this.flags & 8 ) == 8 ) {
@@ -239,4 +239,5 @@ public class PacketEntityRelativeMovement extends Packet {
     public void setHeadYaw(float headYaw) {
         this.headYaw = headYaw;
     }
+
 }
