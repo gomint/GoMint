@@ -413,7 +413,7 @@ public class VanillaGeneratorImpl extends VanillaGenerator {
         ChunkRequest request = new ChunkRequest(x, z, new Future<>());
         if (!this.queue.contains(request)) {
             LOGGER.debug("Offering for client to process");
-
+          
             this.queue.offer(request);
 
             try {
