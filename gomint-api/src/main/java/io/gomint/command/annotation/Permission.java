@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018 GoMint team
+ * Copyright (c) 2020 GoMint team
  *
  * This code is licensed under the BSD license found in the
  * LICENSE file in the root directory of this source tree.
