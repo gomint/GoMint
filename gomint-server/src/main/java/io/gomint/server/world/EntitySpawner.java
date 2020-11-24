@@ -79,7 +79,7 @@ public class EntitySpawner implements Tickable {
                     boolean borderChunk = x == -CHUNK_SPAWN_RADIUS || x == CHUNK_SPAWN_RADIUS ||
                         z == -CHUNK_SPAWN_RADIUS || z == CHUNK_SPAWN_RADIUS;
 
-                    ChunkAdapter chunk = this.world.getChunk(x + playerChunk.getX(), z + playerChunk.getZ());
+                    ChunkAdapter chunk = this.world.loadChunk(x + playerChunk.getX(), z + playerChunk.getZ(), true);
                     if (!spawnableChunks.contains(chunk)) {
                         if (!borderChunk) {
                             if (player.knowsChunk(chunk)) {
