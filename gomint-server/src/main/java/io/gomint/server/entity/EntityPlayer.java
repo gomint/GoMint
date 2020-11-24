@@ -1748,6 +1748,8 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
     }
 
     public boolean knowsChunk(ChunkAdapter adapter) {
+        if(adapter == null)
+            return false;
         return this.connection.knowsChunk(adapter.longHashCode());
     }
 
