@@ -11,8 +11,11 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -21,6 +24,12 @@ import java.util.stream.Collectors;
 public class ItemCombiner {
 
     private static final Pattern ID_PATTERN = Pattern.compile("id = ([0-9]+)");
+    private static final Pattern SID_PATTERN = Pattern.compile("sId = ([a-z_:\"]+)");
+
+    private static final Map<String, String> REPLACER = new LinkedHashMap<>(){{
+       put("silver", "light_gray");
+       put("_glazed_terracotta", "");
+    }};
 
     private static class ReadItem {
         private Path path;
@@ -33,7 +42,7 @@ public class ItemCombiner {
     }
 
     public static void main(String[] args) throws IOException {
-        String wantedToFind = "_bed";
+        String wantedToFind = "_glazed";
 
         List<ReadItem> itemFiles = Files
             .walk(Path.of("gomint-server", "src", "main", "java", "io", "gomint", "server", "inventory", "item"))
@@ -82,8 +91,31 @@ public class ItemCombiner {
             }
         });
 
+        List<String> output = new ArrayList<>();
         for (ReadItem itemFile : itemFiles) {
-            System.out.println(itemFile.content);
+            Matcher sIdMatcher = SID_PATTERN.matcher(itemFile.content);
+            String replacement = "";
+            String sId = "";
+
+            if (sIdMatcher.find()) {
+                sId = sIdMatcher.group(1);
+                String blockPart = sId.split(":")[1].replace("\"", "");
+
+                for (Map.Entry<String, String> entry : REPLACER.entrySet()) {
+                    blockPart = blockPart.replace(entry.getKey(), entry.getValue());
+                }
+
+                replacement = blockPart.toUpperCase();
+                output.add("    public static final String " + blockPart.toUpperCase() + " = " + sId + ";");
+            }
+
+            System.out.println(itemFile.content.replace(sId, replacement));
+        }
+
+        System.out.println();
+
+        for (String line : output) {
+            System.out.println(line);
         }
     }
 

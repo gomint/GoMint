@@ -17,6 +17,8 @@ import io.gomint.server.GoMintServer;
 import io.gomint.server.entity.EntityPlayer;
 import io.gomint.server.plugin.PluginClassloader;
 import io.gomint.server.util.Allocator;
+import io.gomint.server.util.BlockIdentifier;
+import io.gomint.server.world.BlockRuntimeIDs;
 import io.gomint.server.world.ChunkAdapter;
 import io.gomint.server.world.ChunkCache;
 import io.gomint.server.world.WorldAdapter;
@@ -230,6 +232,7 @@ public class LevelDBWorldAdapter extends WorldAdapter {
             compound.addValue("RandomSeed", (long) this.chunkGenerator.getContext().get("seed"));
         } else if (this.chunkGenerator instanceof LayeredGenerator) {
             compound.addValue("Generator", 2);
+            compound.addValue("FlatWorldLayers", "{}"); // TODO: Better persist solution for generators
         } else {
             compound.addValue("Generator", -1);
             compound.addValue("GeneratorClass", this.chunkGenerator.getClass().getName());
@@ -300,13 +303,13 @@ public class LevelDBWorldAdapter extends WorldAdapter {
                                     }
 
                                     // TODO: look at new format of the flat layers
-                                    int blockId = ((Long) layerConfig.get("block_id")).intValue();
+                                    String blockId = ((String) layerConfig.get("block_name"));
                                     byte blockData = ((Long) layerConfig.get("block_data")).byteValue();
 
-                                /*Block block = this.server.getBlocks().get( blockId, blockData, (byte) 0, (byte) 0, null, null, 0 );
-                                for ( int i = 0; i < count; i++ ) {
-                                    blocks.add( block );
-                                }*/
+                                    Block block = this.server.getBlocks().get(BlockRuntimeIDs.toBlockIdentifier(blockId, null));
+                                    for ( int i = 0; i < count; i++ ) {
+                                        blocks.add( block );
+                                    }
                                 }
                             }
 

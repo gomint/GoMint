@@ -1468,6 +1468,16 @@ public abstract class Entity implements io.gomint.entity.Entity {
         return false;
     }
 
+    public boolean needsFullMovement() {
+        if ( this.nextFullMovement-- == 0 || this.oldPosition == null ||
+            this.oldPosition.subtract( this.getPosition() ).length() > 20 ) {
+            this.nextFullMovement = 20;
+            return true;
+        }
+
+        return false;
+    }
+
     public void updateOldPosition() {
         this.oldPosition = this.getLocation();
     }
