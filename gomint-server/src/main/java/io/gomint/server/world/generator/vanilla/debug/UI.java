@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018 Gomint team
+ * Copyright (c) 2020 Gomint team
  *
  * This code is licensed under the BSD license found in the
  * LICENSE file in the root directory of this source tree.
@@ -8,7 +8,7 @@
 package io.gomint.server.world.generator.vanilla.debug;
 
 /*
- * Copyright (c) 2017, GoMint, BlackyPaw and geNAZt
+ * Copyright (c) 2020, GoMint, BlackyPaw and geNAZt
  *
  * This code is licensed under the BSD license found in the
  * LICENSE file in the root directory of this source tree.
