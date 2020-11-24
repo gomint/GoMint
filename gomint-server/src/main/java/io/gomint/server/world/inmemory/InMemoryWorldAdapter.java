@@ -35,6 +35,8 @@ public final class InMemoryWorldAdapter extends WorldAdapter {
         this.levelName = name;
         this.generator = generator;
 
+        this.prepareGenerator();
+
         // Generate a spawnpoint
         BlockPosition spawnPoint = this.chunkGenerator.getSpawnPoint();
         this.spawn = new Location( this, spawnPoint.getX(), spawnPoint.getY(), spawnPoint.getZ() );

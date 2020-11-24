@@ -119,7 +119,6 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
     // Chunk Handling
     protected ChunkCache chunkCache;
     protected ChunkGenerator chunkGenerator;
-    private boolean isGeneratorBuilt;
 
     // Entity Handling
     private EntityManager entityManager;
@@ -141,7 +140,6 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
 
     protected WorldAdapter(GoMintServer server, File worldDir, String name) {
         this.name = name;
-        this.chunkGenerator = new VoidGenerator(this, new GeneratorContext());
         this.server = server;
         this.logger = LoggerFactory.getLogger("io.gomint.World-" + worldDir.getName());
         this.worldDir = worldDir;
@@ -892,6 +890,8 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
                     case SAVE:
                         AsyncChunkSaveTask save = (AsyncChunkSaveTask) task;
                         chunk = save.getChunk();
+
+                        LOGGER.debug("Async saving of chunk {} / {}", chunk.getX(), chunk.getZ());
                         this.saveChunk(chunk);
 
                         break;
@@ -1242,19 +1242,12 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
      * @return freshly generated chunk
      */
     public ChunkAdapter generate(int x, int z, boolean syncPopulation) {
-        // Check if we can build up the generator
-        if (!this.isGeneratorBuilt) {
-            this.prepareGenerator();
-            this.isGeneratorBuilt = true;
-        }
-
         if (this.chunkGenerator != null) {
             LOGGER.debug("Generating chunk {} / {}", x, z);
 
             ChunkAdapter chunk = (ChunkAdapter) this.chunkGenerator.generate(x, z);
             if (chunk != null) {
                 chunk.calculateHeightmap(240);
-                chunk.setLastSavedTimestamp(this.server.getCurrentTickTime());
 
                 if (!this.chunkCache.putChunk(chunk)) {
                     chunk.release();

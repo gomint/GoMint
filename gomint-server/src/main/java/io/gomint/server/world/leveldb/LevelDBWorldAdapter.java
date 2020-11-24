@@ -134,6 +134,7 @@ public class LevelDBWorldAdapter extends WorldAdapter {
             throw new WorldLoadException("Version of the world is too old. Please update your MC:PE and import this world. After that you can use the exported version again.");
         }
 
+        this.prepareGenerator();
         this.open();
     }
 
@@ -360,8 +361,6 @@ public class LevelDBWorldAdapter extends WorldAdapter {
 
             NBTStream nbtStream = new NBTStream(buf, ByteOrder.LITTLE_ENDIAN);
             nbtStream.addListener((path, value) -> {
-                System.out.println(path + " -> " + value + "(" + value.getClass().getName() + ")");
-
                 switch (path) {
                     case ".Time":
                         LevelDBWorldAdapter.this.worldTime = ((Long) value).intValue();
