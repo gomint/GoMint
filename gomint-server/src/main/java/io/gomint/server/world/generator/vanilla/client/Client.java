@@ -265,7 +265,6 @@ public class Client implements ConnectionWithState {
                     this.current = null;
                 } else {
                     LOGGER.debug("Moving to chunk request {} / {}", this.current.getX(), this.current.getZ());
-
                     this.moveToChunk(this.current);
                 }
             }
@@ -535,7 +534,7 @@ public class Client implements ConnectionWithState {
                         }
                     }
                 }
-
+              
                 LOGGER.debug("Adding chunk {} / {} to cache", chunkAdapter.getX(), chunkAdapter.getZ());
 
                 chunkAdapter.setPopulated(true);
