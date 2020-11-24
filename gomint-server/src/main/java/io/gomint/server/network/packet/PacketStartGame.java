@@ -205,6 +205,11 @@ public class PacketStartGame extends Packet {
         this.commandsEnabled = buffer.readBoolean();
         this.isTexturePacksRequired = buffer.readBoolean();
         this.gamerules = readGamerules( buffer );
+
+        // Experiments
+        buffer.readInt();
+        buffer.readBoolean();
+
         this.hasBonusChestEnabled = buffer.readBoolean();
         this.hasStartWithMapEnabled = buffer.readBoolean();
 
@@ -223,6 +228,7 @@ public class PacketStartGame extends Packet {
         buffer.readLInt();
         buffer.readLInt();
         buffer.readBoolean();
+
         if (buffer.readBoolean()) {
             buffer.readBoolean();
         }
@@ -231,7 +237,7 @@ public class PacketStartGame extends Packet {
         this.worldName = buffer.readString();
         buffer.readString();
         buffer.readBoolean();
-        buffer.readBoolean();
+        buffer.readUnsignedVarInt();
         this.currentTick = buffer.readLLong();
         this.enchantmentSeed = buffer.readSignedVarInt();
 

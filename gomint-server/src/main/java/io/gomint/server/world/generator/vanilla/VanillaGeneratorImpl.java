@@ -348,6 +348,7 @@ public class VanillaGeneratorImpl extends VanillaGenerator {
 
             ChunkRequest request = newClient.getCurrentRequest();
             if (request != null) {
+                LOGGER.info("There was a request attached: {} / {}", request.getX(), request.getZ());
                 this.queue.offer(request);
             }
 
@@ -407,8 +408,12 @@ public class VanillaGeneratorImpl extends VanillaGenerator {
 
     @Override
     public Chunk generate(int x, int z) {
+        LOGGER.info("Requesting chunk {} / {}", x, z);
+
         ChunkRequest request = new ChunkRequest(x, z, new Future<>());
         if (!this.queue.contains(request)) {
+            LOGGER.info("Offering for client to process");
+
             this.queue.offer(request);
 
             try {
@@ -417,6 +422,8 @@ public class VanillaGeneratorImpl extends VanillaGenerator {
                 e.printStackTrace();
             }
         } else {
+            LOGGER.info("Already in queue");
+
             for (ChunkRequest chunkRequest : this.queue) {
                 if (chunkRequest.equals(request)) {
                     try {

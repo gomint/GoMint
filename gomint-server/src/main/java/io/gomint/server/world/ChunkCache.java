@@ -128,12 +128,23 @@ public class ChunkCache {
         if ( !this.tempHashes[1].isEmpty() ) {
             LongIterator toRemoveCursor = this.tempHashes[1].iterator();
             while ( toRemoveCursor.hasNext() ) {
-                ChunkAdapter adapter = this.cachedChunks.remove( toRemoveCursor.nextLong() );
+                long chunkKey = toRemoveCursor.nextLong();
+                LOGGER.debug("Should remove chunk {}", chunkKey);
+
+                ChunkAdapter adapter = this.cachedChunks.remove( chunkKey );
+                if ( adapter == null ) {
+                    LOGGER.warn("Double unloading chunk {}", chunkKey);
+                    continue;
+                }
+
+                LOGGER.debug("Needs persistence? {}", adapter.isNeedsPersistence());
 
                 if (this.world.getConfig().isSaveOnUnload() &&
                     adapter.isNeedsPersistence()) {
                     adapter.setLastSavedTimestamp( currentTimeMS );
                     this.world.saveChunk(adapter);
+
+                    LOGGER.debug("Persisting chunk {} / {}", adapter.getX(), adapter.getZ());
                 }
 
                 adapter.release();

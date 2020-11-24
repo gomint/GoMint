@@ -246,6 +246,8 @@ public class Client implements ConnectionWithState {
         if (this.current != null) {
             ChunkAdapter chunkAdapter = this.world.getChunkCache().getChunk(this.current.getX(), this.current.getZ());
             if (chunkAdapter != null) {
+                LOGGER.info("Resolving current request {} / {} with a already cached chunk", this.current.getX(), this.current.getZ());
+
                 this.current.getFuture().resolve(chunkAdapter);
                 this.current = null;
             }
@@ -257,9 +259,13 @@ public class Client implements ConnectionWithState {
             if (this.current != null) {
                 ChunkAdapter adapter = this.world.getChunkCache().getChunk(this.current.getX(), this.current.getZ());
                 if (adapter != null) {
+                    LOGGER.info("Resolving current request {} / {} with a already cached chunk", this.current.getX(), this.current.getZ());
+
                     this.current.getFuture().resolve(adapter);
                     this.current = null;
                 } else {
+                    LOGGER.info("Moving to chunk request {} / {}", this.current.getX(), this.current.getZ());
+
                     this.moveToChunk(this.current);
                 }
             }
@@ -424,11 +430,6 @@ public class Client implements ConnectionWithState {
         int packetId = rawId & 0x3FF;
 
         // There is some data behind the packet id when non batched packets (2 bytes)
-        if (packetId == Protocol.BATCH_MAGIC) {
-            LOGGER.error("Malformed batch packet payload: Batch packets are not allowed to contain further batch packets");
-            return packetId;
-        }
-
         Packet packet = Protocol.createPacket(packetId);
         if (packet == null) {
             packet = AdditionalProtocol.createPacket(packetId);
@@ -478,6 +479,9 @@ public class Client implements ConnectionWithState {
                 PacketBuffer chunkBuffer = new PacketBuffer(chunk.getData());
 
                 int amountOfSubchunks = chunk.getSubChunkCount();
+
+                LOGGER.debug("Got {} sub chunks for {} / {}", amountOfSubchunks, chunkAdapter.getX(), chunkAdapter.getZ());
+
                 for (int i = 0; i < amountOfSubchunks; i++) {
                     ChunkSlice slice = chunkAdapter.ensureSlice(i);
 
@@ -531,6 +535,8 @@ public class Client implements ConnectionWithState {
                         }
                     }
                 }
+
+                LOGGER.info("Adding chunk {} / {} to cache", chunkAdapter.getX(), chunkAdapter.getZ());
 
                 chunkAdapter.setPopulated(true);
                 chunkAdapter.calculateHeightmap(240);
