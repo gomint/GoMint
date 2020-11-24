@@ -246,7 +246,7 @@ public class Client implements ConnectionWithState {
         if (this.current != null) {
             ChunkAdapter chunkAdapter = this.world.getChunkCache().getChunk(this.current.getX(), this.current.getZ());
             if (chunkAdapter != null) {
-                LOGGER.info("Resolving current request {} / {} with a already cached chunk", this.current.getX(), this.current.getZ());
+                LOGGER.debug("Resolving current request {} / {} with a already cached chunk", this.current.getX(), this.current.getZ());
 
                 this.current.getFuture().resolve(chunkAdapter);
                 this.current = null;
@@ -259,12 +259,12 @@ public class Client implements ConnectionWithState {
             if (this.current != null) {
                 ChunkAdapter adapter = this.world.getChunkCache().getChunk(this.current.getX(), this.current.getZ());
                 if (adapter != null) {
-                    LOGGER.info("Resolving current request {} / {} with a already cached chunk", this.current.getX(), this.current.getZ());
+                    LOGGER.debug("Resolving current request {} / {} with a already cached chunk", this.current.getX(), this.current.getZ());
 
                     this.current.getFuture().resolve(adapter);
                     this.current = null;
                 } else {
-                    LOGGER.info("Moving to chunk request {} / {}", this.current.getX(), this.current.getZ());
+                    LOGGER.debug("Moving to chunk request {} / {}", this.current.getX(), this.current.getZ());
 
                     this.moveToChunk(this.current);
                 }
@@ -536,7 +536,7 @@ public class Client implements ConnectionWithState {
                     }
                 }
 
-                LOGGER.info("Adding chunk {} / {} to cache", chunkAdapter.getX(), chunkAdapter.getZ());
+                LOGGER.debug("Adding chunk {} / {} to cache", chunkAdapter.getX(), chunkAdapter.getZ());
 
                 chunkAdapter.setPopulated(true);
                 chunkAdapter.calculateHeightmap(240);
