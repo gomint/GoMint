@@ -68,6 +68,7 @@ import it.unimi.dsi.fastutil.objects.Object2ByteOpenHashMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.Nonnull;
 import java.net.InetSocketAddress;
 import java.util.*;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -1747,9 +1748,7 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
         return player.isSpawnPlayers() && super.shouldBeSeen(player);
     }
 
-    public boolean knowsChunk(ChunkAdapter adapter) {
-        if(adapter == null)
-            return false;
+    public boolean knowsChunk(@Nonnull ChunkAdapter adapter) {
         return this.connection.knowsChunk(adapter.longHashCode());
     }
 
