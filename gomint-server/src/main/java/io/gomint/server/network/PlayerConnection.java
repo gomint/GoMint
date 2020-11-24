@@ -257,6 +257,10 @@ public class PlayerConnection implements ConnectionWithState {
             return;
         }
 
+        if (!this.connection.isConnected()) {
+            return;
+        }
+
         if (this.sendQueue == null) {
             this.sendQueue = new ArrayList<>();
         }
