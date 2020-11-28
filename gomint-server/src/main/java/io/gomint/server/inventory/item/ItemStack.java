@@ -281,7 +281,7 @@ public abstract class ItemStack implements Cloneable, io.gomint.inventory.item.I
     }
 
     @Override
-    public io.gomint.inventory.item.ItemStack addEnchantment(Class<? extends Enchantment> clazz, short level) {
+    public io.gomint.inventory.item.ItemStack addEnchantment(Class<? extends Enchantment> clazz, int level) {
         short id = ((GoMintServer) GoMint.instance()).getEnchantments().getId(clazz);
         if (id == -1) {
             LOGGER.warn("Unknown enchantment:{}", clazz.getName());
@@ -296,7 +296,7 @@ public abstract class ItemStack implements Cloneable, io.gomint.inventory.item.I
 
         NBTTagCompound enchCompound = new NBTTagCompound(null);
         enchCompound.addValue("id", id);
-        enchCompound.addValue("lvl", level);
+        enchCompound.addValue("lvl", (short) level);
         enchantmentList.add(enchCompound);
 
         this.dirtyEnchantments = true;
