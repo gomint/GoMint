@@ -10,6 +10,7 @@ import io.gomint.server.network.Protocol;
 public class PacketContainerClose extends Packet {
 
     private byte windowId;
+    private boolean serverSided;
 
     /**
      * Construct new container close packet
@@ -21,11 +22,13 @@ public class PacketContainerClose extends Packet {
     @Override
     public void serialize( PacketBuffer buffer, int protocolID ) {
         buffer.writeByte( this.windowId );
+        buffer.writeBoolean( this.serverSided );
     }
 
     @Override
     public void deserialize( PacketBuffer buffer, int protocolID ) {
         this.windowId = buffer.readByte();
+        this.serverSided = buffer.readBoolean();
     }
 
     public byte getWindowId() {
@@ -34,5 +37,13 @@ public class PacketContainerClose extends Packet {
 
     public void setWindowId(byte windowId) {
         this.windowId = windowId;
+    }
+
+    public boolean isServerSided() {
+        return serverSided;
+    }
+
+    public void setServerSided(boolean serverSided) {
+        this.serverSided = serverSided;
     }
 }

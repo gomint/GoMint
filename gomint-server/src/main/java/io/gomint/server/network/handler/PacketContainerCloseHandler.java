@@ -11,7 +11,7 @@ public class PacketContainerCloseHandler implements PacketHandler<PacketContaine
 
     @Override
     public void handle(PacketContainerClose packet, long currentTimeMillis, PlayerConnection connection) {
-        connection.getEntity().closeInventory(packet.getWindowId());
+        connection.getEntity().closeInventory(packet.getWindowId(), packet.isServerSided());
     }
 
 }
