@@ -585,7 +585,7 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
 
             // We need to generate a window id for the client
             byte foundId = -1;
-            for (byte i = WindowMagicNumbers.FIRST.getId(); i < WindowMagicNumbers.LAST.getId(); i++) {
+            for (byte i = WindowMagicNumbers.FIRST; i < WindowMagicNumbers.LAST; i++) {
                 if (!this.windowIds.containsKey(i)) {
                     foundId = i;
                     break;
@@ -610,12 +610,7 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
         if (inventory instanceof ContainerInventory) {
             byte windowId = this.getWindowId((ContainerInventory) inventory);
             if (windowId != 0) {
-                this.closeInventory(windowId);
-
-                // Tell the client to close it
-                PacketContainerClose packetContainerClose = new PacketContainerClose();
-                packetContainerClose.setWindowId(windowId);
-                this.connection.addToSendQueue(packetContainerClose);
+                this.closeInventory(windowId, true);
             }
         }
     }
@@ -851,7 +846,7 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
      *
      * @param windowId which should be closed
      */
-    public void closeInventory(byte windowId) {
+    public void closeInventory(byte windowId, boolean isServerSided) {
         ContainerInventory containerInventory = this.windowIds.remove(windowId);
         if (containerInventory != null) {
             containerInventory.removeViewer(this);
@@ -862,6 +857,7 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
 
             PacketContainerClose packetContainerClose = new PacketContainerClose();
             packetContainerClose.setWindowId(windowId);
+            packetContainerClose.setServerSided(isServerSided);
             this.connection.addToSendQueue(packetContainerClose);
         }
     }
