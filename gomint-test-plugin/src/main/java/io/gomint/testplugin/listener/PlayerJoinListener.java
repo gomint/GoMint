@@ -4,6 +4,7 @@ import io.gomint.event.EventHandler;
 import io.gomint.event.EventListener;
 import io.gomint.event.EventPriority;
 import io.gomint.event.player.PlayerJoinEvent;
+import io.gomint.inventory.item.ItemDiamondSword;
 import io.gomint.inventory.item.ItemDoubleStoneSlab;
 import io.gomint.testplugin.TestPlugin;
 import io.gomint.testplugin.scoreboard.DebugScoreboard;
@@ -27,11 +28,10 @@ public class PlayerJoinListener implements EventListener {
         event.getPlayer().getPermissionManager().setPermission("*", true);
 
         // Give this player the debug scoreboard
-        new DebugScoreboard(this.plugin, event.getPlayer());
+        // new DebugScoreboard(this.plugin, event.getPlayer());
 
-        ItemDoubleStoneSlab doubleStoneSlab = ItemDoubleStoneSlab.create(6);
-        doubleStoneSlab.setStoneType(StoneType.BRICK);
-        event.getPlayer().getInventory().setItem(6, doubleStoneSlab);
+        ItemDiamondSword sword = ItemDiamondSword.create(1);
+        event.getPlayer().getInventory().setItem(6, sword);
     }
 
 }

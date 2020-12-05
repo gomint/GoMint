@@ -30,10 +30,6 @@ public abstract class CraftingRecipe extends Recipe {
     @Override
     public Collection<ItemStack> createResult() {
         if ( this.outcome.length == 1 ) {
-            if ( this.outcome[0] == null ) {
-                System.out.println("T");
-            }
-
             return Collections.singletonList( ( (io.gomint.server.inventory.item.ItemStack) this.outcome[0] ).clone() );
         } else {
             List<ItemStack> list = new ArrayList<>();

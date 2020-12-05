@@ -32,6 +32,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Represents a stack of up to 255 items of the same type which may
@@ -43,8 +44,9 @@ import java.util.Objects;
 public abstract class ItemStack implements Cloneable, io.gomint.inventory.item.ItemStack {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ItemStack.class);
+    private static final AtomicInteger STACK_ID = new AtomicInteger(2);
 
-    private int id;
+    private int stackId;
     private String material;
     private short data;
     private byte amount;
@@ -67,6 +69,11 @@ public abstract class ItemStack implements Cloneable, io.gomint.inventory.item.I
 
     ItemStack setMaterial(String material) {
         this.material = material;
+
+        if (!this.isAir()) {
+            this.stackId = STACK_ID.getAndAdd(1);
+        }
+
         return this.updateInventories(false);
     }
 
@@ -284,7 +291,7 @@ public abstract class ItemStack implements Cloneable, io.gomint.inventory.item.I
     public io.gomint.inventory.item.ItemStack addEnchantment(Class<? extends Enchantment> clazz, int level) {
         short id = ((GoMintServer) GoMint.instance()).getEnchantments().getId(clazz);
         if (id == -1) {
-            LOGGER.warn("Unknown enchantment:{}", clazz.getName());
+            LOGGER.warn("Unknown enchantment: {}", clazz.getName());
             return this;
         }
 
@@ -375,6 +382,13 @@ public abstract class ItemStack implements Cloneable, io.gomint.inventory.item.I
             clone.amount = this.amount;
             clone.nbt = (this.nbt == null ? null : this.nbt.deepClone(""));
             clone.itemStackPlace = null;
+            clone.items = this.items;
+            clone.blocks = this.blocks;
+
+            if (!clone.isAir()) {
+                clone.stackId = STACK_ID.getAndAdd( 1);
+            }
+
             return clone;
         } catch (CloneNotSupportedException e) {
             throw new AssertionError("Clone of ItemStack failed", e);
@@ -429,11 +443,11 @@ public abstract class ItemStack implements Cloneable, io.gomint.inventory.item.I
     }
 
     public void removeFromHand(EntityPlayer player) {
-        // NormalGenerator items do nothing
+        // Normal items do nothing
     }
 
     public void gotInHand(EntityPlayer player) {
-        // NormalGenerator items do nothing
+        // Normal items do nothing
     }
 
     public boolean interact(EntityPlayer entity, Facing face, Vector clickPosition, Block clickedBlock) {
@@ -570,16 +584,12 @@ public abstract class ItemStack implements Cloneable, io.gomint.inventory.item.I
 
     }
 
-    public int getID() {
-        if (this.id > 1) {
-            return this.id;
-        }
-
-        return this.isAir() ? 0 : 1; // TODO: implement authoritative inventories
+    public int getStackId() {
+        return this.isAir() ? 0 : this.stackId; // TODO: implement authoritative inventories
     }
 
-    public void setID(int id) {
-        this.id = id;
+    public void setStackId(int id) {
+        this.stackId = id;
     }
 
     protected void setBlockId(String blockId) {
@@ -588,17 +598,20 @@ public abstract class ItemStack implements Cloneable, io.gomint.inventory.item.I
 
     @Override
     public String toString() {
-        return "ItemStack{" +
-            "id=" + id +
-            ", material=" + material +
-            ", data=" + data +
-            ", amount=" + amount +
-            ", nbt=" + nbt +
-            ", enchantments=" + enchantments +
-            ", dirtyEnchantments=" + dirtyEnchantments +
-            ", itemStackPlace=" + itemStackPlace +
-            ", items=" + items +
-            '}';
+        return "{\"_class\":\"ItemStack\", " +
+            "\"stackId\":\"" + stackId + "\"" + ", " +
+            "\"material\":" + (material == null ? "null" : "\"" + material + "\"") + ", " +
+            "\"data\":\"" + data + "\"" + ", " +
+            "\"amount\":\"" + amount + "\"" + ", " +
+            "\"nbt\":" + (nbt == null ? "null" : nbt) + ", " +
+            "\"enchantments\":" + (enchantments == null ? "null" : "\"" + enchantments + "\"") + ", " +
+            "\"dirtyEnchantments\":\"" + dirtyEnchantments + "\"" + ", " +
+            "\"itemStackPlace\":" + (itemStackPlace == null ? "null" : itemStackPlace) + ", " +
+            "\"items\":" + (items == null ? "null" : items) + ", " +
+            "\"blocks\":" + (blocks == null ? "null" : blocks) + ", " +
+            "\"isDamageableCached\":\"" + isDamageableCached + "\"" + ", " +
+            "\"isDamageable\":\"" + isDamageable + "\"" +
+            "}";
     }
 
     public ItemStack setItems(Items items) {
@@ -627,6 +640,10 @@ public abstract class ItemStack implements Cloneable, io.gomint.inventory.item.I
 
     public void setBlocks(Blocks blocks) {
         this.blocks = blocks;
+    }
+
+    public ItemStackPlace getItemStackPlace() {
+        return itemStackPlace;
     }
 
 }

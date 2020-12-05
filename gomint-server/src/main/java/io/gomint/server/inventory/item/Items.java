@@ -76,7 +76,7 @@ public class Items {
         }
 
         io.gomint.server.inventory.item.ItemStack itemStack = itemGenerator.generate();
-        itemStack.setNbtData(nbt).setMaterial(id).setData(data);
+        itemStack.setNbtData(nbt).setData(data);
 
         if (amount > 0) {
             return (T) itemStack.setAmount(amount);

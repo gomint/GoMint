@@ -61,18 +61,17 @@ public class PlayerInventory extends ContainerInventory implements io.gomint.inv
 
     @Override
     public void sendContents(int slot, PlayerConnection playerConnection) {
-        byte windowId = playerConnection.getEntity().getWindowId(this);
-        if (windowId >= WindowMagicNumbers.FIRST.getId()) {
+        if (playerConnection.getEntity().getCurrentOpenContainer() == this) {
             PacketInventorySetSlot setSlot = new PacketInventorySetSlot();
             setSlot.setSlot(slot);
-            setSlot.setWindowId(windowId);
+            setSlot.setWindowId(WindowMagicNumbers.OPEN_CONTAINER);
             setSlot.setItemStack(this.contents[slot]);
             playerConnection.addToSendQueue(setSlot);
         }
 
         PacketInventorySetSlot setSlot = new PacketInventorySetSlot();
         setSlot.setSlot(slot);
-        setSlot.setWindowId(WindowMagicNumbers.PLAYER.getId());
+        setSlot.setWindowId(WindowMagicNumbers.PLAYER);
         setSlot.setItemStack(this.contents[slot]);
         playerConnection.addToSendQueue(setSlot);
     }
@@ -118,16 +117,15 @@ public class PlayerInventory extends ContainerInventory implements io.gomint.inv
 
     @Override
     public void sendContents(PlayerConnection playerConnection) {
-        byte windowId = playerConnection.getEntity().getWindowId(this);
-        if (windowId >= WindowMagicNumbers.FIRST.getId()) {
+        if (playerConnection.getEntity().getCurrentOpenContainer() == this) {
             PacketInventoryContent inventory = new PacketInventoryContent();
-            inventory.setWindowId(WindowMagicNumbers.PLAYER.getId());
+            inventory.setWindowId(WindowMagicNumbers.OPEN_CONTAINER);
             inventory.setItems(getContents());
             playerConnection.addToSendQueue(inventory);
         }
 
         PacketInventoryContent inventory = new PacketInventoryContent();
-        inventory.setWindowId(WindowMagicNumbers.PLAYER.getId());
+        inventory.setWindowId(WindowMagicNumbers.PLAYER);
         inventory.setItems(getContents());
         playerConnection.addToSendQueue(inventory);
     }
@@ -162,7 +160,7 @@ public class PlayerInventory extends ContainerInventory implements io.gomint.inv
         PacketMobEquipment packet = new PacketMobEquipment();
         packet.setEntityId(human.getEntityId());
         packet.setStack(this.getItemInHand());
-        packet.setWindowId(WindowMagicNumbers.PLAYER.getId());
+        packet.setWindowId(WindowMagicNumbers.PLAYER);
         packet.setSelectedSlot(this.itemInHandSlot);
         packet.setSlot(this.itemInHandSlot);
         return packet;

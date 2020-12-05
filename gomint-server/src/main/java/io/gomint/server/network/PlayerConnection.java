@@ -43,6 +43,7 @@ import io.gomint.server.network.packet.PacketResourcePacksInfo;
 import io.gomint.server.network.packet.PacketSetCommandsEnabled;
 import io.gomint.server.network.packet.PacketSetDifficulty;
 import io.gomint.server.network.packet.PacketSetSpawnPosition;
+import io.gomint.server.network.packet.PacketSkipable;
 import io.gomint.server.network.packet.PacketStartGame;
 import io.gomint.server.network.packet.PacketWorldTime;
 import io.gomint.server.util.Cache;
@@ -569,6 +570,12 @@ public class PlayerConnection implements ConnectionWithState {
             this.networkManager.notifyUnknownPacket(packetId, buffer);
 
             // Got to skip
+            buffer.setReadPosition(skippablePosition);
+            return packetId;
+        }
+
+        // There are skippables, if we hit one simply forward the data stream and ignore the packet
+        if (packet instanceof PacketSkipable) {
             buffer.setReadPosition(skippablePosition);
             return packetId;
         }

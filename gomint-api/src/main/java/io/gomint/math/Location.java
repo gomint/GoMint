@@ -170,15 +170,15 @@ public class Location extends Vector {
 
     @Override
     public String toString() {
-        return "Location{" +
-            "world=" + world +
-            ", yaw=" + yaw +
-            ", headYaw=" + headYaw +
-            ", pitch=" + pitch +
-            ", x=" + x +
-            ", y=" + y +
-            ", z=" + z +
-            '}';
+        return "{\"_class\":\"Location\", " +
+            "\"world\":" + (world == null ? "null" : world) + ", " +
+            "\"yaw\":\"" + yaw + "\"" + ", " +
+            "\"headYaw\":\"" + headYaw + "\"" + ", " +
+            "\"pitch\":\"" + pitch + "\"" + ", " +
+            "\"x\":\"" + x + "\"" + ", " +
+            "\"y\":\"" + y + "\"" + ", " +
+            "\"z\":\"" + z + "\"" +
+            "}";
     }
 
 }

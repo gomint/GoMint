@@ -67,12 +67,17 @@ public class DropItemTransaction implements Transaction {
     }
 
     @Override
+    public byte getInventoryWindowId() {
+        return 0;
+    }
+
+    @Override
     public String toString() {
-        return "DropItemTransaction{" +
-            "location=" + location +
-            ", velocity=" + velocity +
-            ", targetItem=" + targetItem +
-            '}';
+        return "{\"_class\":\"DropItemTransaction\", " +
+            "\"location\":" + (location == null ? "null" : location) + ", " +
+            "\"velocity\":" + (velocity == null ? "null" : velocity) + ", " +
+            "\"targetItem\":" + (targetItem == null ? "null" : targetItem) +
+            "}";
     }
 
 }

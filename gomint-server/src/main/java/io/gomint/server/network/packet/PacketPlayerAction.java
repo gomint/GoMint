@@ -4,12 +4,16 @@ import io.gomint.jraknet.PacketBuffer;
 import io.gomint.math.BlockPosition;
 import io.gomint.server.network.Protocol;
 import io.gomint.world.block.data.Facing;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author geNAZt
  * @version 1.0
  */
 public class PacketPlayerAction extends Packet {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(PacketPlayerAction.class);
 
     private long entityId;
 
@@ -67,6 +71,16 @@ public class PacketPlayerAction extends Packet {
 
     public void setFace(Facing face) {
         this.face = face;
+    }
+
+    @Override
+    public String toString() {
+        return "PacketPlayerAction{" +
+            "entityId=" + entityId +
+            ", action=" + action +
+            ", position=" + position +
+            ", face=" + face +
+            '}';
     }
 
     public enum PlayerAction {
@@ -164,7 +178,7 @@ public class PacketPlayerAction extends Packet {
                     return INTERACT_BLOCK;
             }
 
-            System.out.println( "Unknown action id: " + actionId );
+            LOGGER.warn( "Unknown action id: {}", actionId );
             return null;
         }
     }

@@ -25,7 +25,6 @@ import io.gomint.server.network.handler.PacketClientCacheBlobStatusHandler;
 import io.gomint.server.network.handler.PacketClientCacheStatusHandler;
 import io.gomint.server.network.handler.PacketCommandRequestHandler;
 import io.gomint.server.network.handler.PacketContainerCloseHandler;
-import io.gomint.server.network.handler.PacketCraftingEventHandler;
 import io.gomint.server.network.handler.PacketEmoteListHandler;
 import io.gomint.server.network.handler.PacketEncryptionResponseHandler;
 import io.gomint.server.network.handler.PacketEntityEventHandler;
@@ -34,6 +33,7 @@ import io.gomint.server.network.handler.PacketHandler;
 import io.gomint.server.network.handler.PacketHotbarHandler;
 import io.gomint.server.network.handler.PacketInteractHandler;
 import io.gomint.server.network.handler.PacketInventoryTransactionHandler;
+import io.gomint.server.network.handler.PacketItemStackRequestHandler;
 import io.gomint.server.network.handler.PacketLoginHandler;
 import io.gomint.server.network.handler.PacketMobArmorEquipmentHandler;
 import io.gomint.server.network.handler.PacketMobEquipmentHandler;
@@ -132,7 +132,6 @@ public class NetworkManager {
         this.packetHandlers[Protocol.PACKET_MOB_ARMOR_EQUIPMENT & 0xff] = new PacketMobArmorEquipmentHandler();
         this.packetHandlers[Protocol.PACKET_ADVENTURE_SETTINGS & 0xff] = new PacketAdventureSettingsHandler();
         this.packetHandlers[Protocol.PACKET_RESOURCEPACK_RESPONSE & 0xff] = new PacketResourcePackResponseHandler();
-        this.packetHandlers[Protocol.PACKET_CRAFTING_EVENT & 0xff] = new PacketCraftingEventHandler();
         this.packetHandlers[Protocol.PACKET_LOGIN & 0xff] = new PacketLoginHandler(this.server.getEncryptionKeyFactory(), this.server.getServerConfig(), this.server);
         this.packetHandlers[Protocol.PACKET_MOB_EQUIPMENT & 0xff] = new PacketMobEquipmentHandler();
         this.packetHandlers[Protocol.PACKET_INTERACT & 0xff] = new PacketInteractHandler();
@@ -160,6 +159,7 @@ public class NetworkManager {
         this.packetHandlers[Protocol.PACKET_EMOTE_LIST & 0xff] = new PacketEmoteListHandler();
         this.packetHandlers[Protocol.PACKET_VIOLATION_WARNING & 0xff] = new PacketViolationWarningHandler();
         this.packetHandlers[Protocol.PACKET_CLIENT_CACHE_BLOB_STATUS & 0xff] = new PacketClientCacheBlobStatusHandler();
+        this.packetHandlers[Protocol.PACKET_ITEM_STACK_REQUEST & 0xff] = new PacketItemStackRequestHandler();
     }
 
     // ======================================= PUBLIC API ======================================= //

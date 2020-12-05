@@ -165,7 +165,7 @@ public class PacketStartGame extends Packet {
         buffer.writeBytes(this.itemPalette.getBuffer().asReadOnly().readerIndex(0));
 
         buffer.writeString(this.correlationId);
-        buffer.writeBoolean(false); // TODO: use new inventory system
+        buffer.writeBoolean(true); // TODO: use new inventory system
     }
 
     @Override

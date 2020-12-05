@@ -17,4 +17,11 @@ public interface Transaction extends io.gomint.inventory.transaction.Transaction
      */
     void revert();
 
+    /**
+     * Get inventory window id
+     *
+     * @return window id
+     */
+    byte getInventoryWindowId();
+
 }
