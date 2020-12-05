@@ -354,7 +354,7 @@ public class PacketInventoryTransactionHandler implements PacketHandler<PacketIn
                 case 0:
                     // Normal inventory stuff
                     InventoryTransaction inventoryTransaction = new InventoryTransaction(connection.getEntity(),
-                        inventory, transaction.getSlot(), transaction.getOldItem(), transaction.getNewItem());
+                        inventory, transaction.getSlot(), transaction.getOldItem(), transaction.getNewItem(), (byte) 0);
                     transactionGroup.addTransaction(inventoryTransaction);
                     break;
                 case 2:
@@ -442,6 +442,9 @@ public class PacketInventoryTransactionHandler implements PacketHandler<PacketIn
                             }
 
                             transaction.setSlot(transaction.getSlot() - 32);
+                        } else if (transaction.getSlot() >= 14 && transaction.getSlot() <= 15) {
+                            inventory = entity.getEnchantmentInputInventory();
+                            transaction.setSlot(transaction.getSlot() - 14);
                         }
                     }
                 } else {
@@ -469,8 +472,8 @@ public class PacketInventoryTransactionHandler implements PacketHandler<PacketIn
         connection.getEntity().getArmorInventory().sendContents(connection);
 
         // Does the viewer currently see any additional inventory?
-        for (ContainerInventory inventory : connection.getEntity().getOpenInventories()) {
-            inventory.sendContents(connection);
+        if (connection.getEntity().getCurrentOpenContainer() != null) {
+            connection.getEntity().getCurrentOpenContainer().sendContents(connection);
         }
 
         // Now check if we need to reset blocks

@@ -26,7 +26,7 @@ public class OffhandInventory extends Inventory {
     @Override
     public void sendContents(PlayerConnection playerConnection) {
         PacketInventoryContent inventory = new PacketInventoryContent();
-        inventory.setWindowId(WindowMagicNumbers.OFFHAND.getId());
+        inventory.setWindowId(WindowMagicNumbers.OFFHAND_DEPRECATED);
         inventory.setItems(getContents());
         playerConnection.addToSendQueue(inventory);
     }
@@ -35,7 +35,7 @@ public class OffhandInventory extends Inventory {
     public void sendContents(int slot, PlayerConnection playerConnection) {
         PacketInventorySetSlot setSlot = new PacketInventorySetSlot();
         setSlot.setSlot(slot);
-        setSlot.setWindowId(WindowMagicNumbers.OFFHAND.getId());
+        setSlot.setWindowId(WindowMagicNumbers.OFFHAND_DEPRECATED);
         setSlot.setItemStack(this.contents[slot]);
         playerConnection.addToSendQueue(setSlot);
     }

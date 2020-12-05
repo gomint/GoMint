@@ -15,13 +15,16 @@ public class InventoryTransaction implements Transaction {
     private final int slot;
     private final ItemStack sourceItem;
     private final ItemStack targetItem;
+    private final byte inventoryWindowId;
 
-    public InventoryTransaction(EntityPlayer owner, Inventory inventory, int slot, ItemStack sourceItem, ItemStack targetItem) {
+    public InventoryTransaction(EntityPlayer owner, Inventory inventory, int slot,
+                                ItemStack sourceItem, ItemStack targetItem, byte inventoryWindowId) {
         this.owner = owner;
         this.inventory = inventory;
         this.slot = slot;
         this.sourceItem = sourceItem;
         this.targetItem = targetItem;
+        this.inventoryWindowId = inventoryWindowId;
     }
 
     public EntityPlayer getOwner() {
@@ -62,14 +65,20 @@ public class InventoryTransaction implements Transaction {
     }
 
     @Override
+    public byte getInventoryWindowId() {
+        return this.inventoryWindowId;
+    }
+
+    @Override
     public String toString() {
-        return "InventoryTransaction{" +
-            "owner=" + owner +
-            ", inventory=" + inventory +
-            ", slot=" + slot +
-            ", sourceItem=" + sourceItem +
-            ", targetItem=" + targetItem +
-            '}';
+        return "{\"_class\":\"InventoryTransaction\", " +
+            "\"owner\":" + (owner == null ? "null" : owner) + ", " +
+            "\"inventory\":" + (inventory == null ? "null" : inventory) + ", " +
+            "\"slot\":\"" + slot + "\"" + ", " +
+            "\"sourceItem\":" + (sourceItem == null ? "null" : sourceItem) + ", " +
+            "\"targetItem\":" + (targetItem == null ? "null" : targetItem) + ", " +
+            "\"inventoryWindowId\":\"" + inventoryWindowId + "\"" +
+            "}";
     }
 
 }

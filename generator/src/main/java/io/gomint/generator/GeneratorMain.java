@@ -95,7 +95,16 @@ public class GeneratorMain {
             }
         }
 
-        Files.writeString(Paths.get("gomint-server", "src", "main", "java", "io", "gomint", "server", "entity", "tileentity", "Registry.java"), registry.append("  }\n\n}").toString());
+        String newContent = registry.append("  }\n\n}").toString();
+        Path registryPath = Paths.get("gomint-server", "src", "main", "java", "io", "gomint", "server", "entity", "tileentity", "Registry.java");
+        if (registryPath.toFile().exists()) {
+            if (!Files.readString(registryPath).equals(newContent)) {
+                Files.writeString(registryPath, newContent);
+            }
+        } else {
+            Files.writeString(registryPath, newContent);
+        }
+
         System.out.println();
     }
 

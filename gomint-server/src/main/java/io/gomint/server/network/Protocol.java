@@ -28,6 +28,7 @@ import io.gomint.server.network.packet.PacketEntityMetadata;
 import io.gomint.server.network.packet.PacketHotbar;
 import io.gomint.server.network.packet.PacketInteract;
 import io.gomint.server.network.packet.PacketInventoryTransaction;
+import io.gomint.server.network.packet.PacketItemStackRequest;
 import io.gomint.server.network.packet.PacketLogin;
 import io.gomint.server.network.packet.PacketMobEquipment;
 import io.gomint.server.network.packet.PacketModalResponse;
@@ -41,6 +42,7 @@ import io.gomint.server.network.packet.PacketRespawnPosition;
 import io.gomint.server.network.packet.PacketServerSettingsRequest;
 import io.gomint.server.network.packet.PacketConfirmChunkRadius;
 import io.gomint.server.network.packet.PacketSetLocalPlayerAsInitialized;
+import io.gomint.server.network.packet.PacketSkipable;
 import io.gomint.server.network.packet.PacketText;
 import io.gomint.server.network.packet.PacketTickSync;
 import io.gomint.server.network.packet.PacketTileEntityData;
@@ -234,6 +236,9 @@ public final class Protocol {
      */
     public static Packet createPacket(int id) {
         switch (id) {
+            case PACKET_ITEM_STACK_REQUEST:
+                return new PacketItemStackRequest();
+
             case PACKET_EMOTE_LIST:
                 return new PacketEmoteList();
 
@@ -316,7 +321,7 @@ public final class Protocol {
                 return new PacketContainerClose();
 
             case PACKET_CRAFTING_EVENT:
-                return new PacketCraftingEvent();
+                return new PacketSkipable(); // new PacketCraftingEvent();
 
             case PACKET_ADVENTURE_SETTINGS:
                 return new PacketAdventureSettings();

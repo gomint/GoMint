@@ -8,7 +8,6 @@
 package io.gomint.server.assets;
 
 import io.gomint.GoMint;
-import io.gomint.inventory.item.ItemAir;
 import io.gomint.jraknet.PacketBuffer;
 import io.gomint.server.crafting.Recipe;
 import io.gomint.server.crafting.ShapedRecipe;
@@ -141,7 +140,7 @@ public class AssetsLibrary {
 
                     ItemStack itemStack = this.loadItemStack(new PacketBuffer(i));
                     if (itemStack != null) {
-                        itemStack.setID(index++);
+                        itemStack.setStackId(index++);
                         this.creativeInventory.addItem(itemStack);
                     }
 
@@ -317,10 +316,6 @@ public class AssetsLibrary {
 
     public List<BlockIdentifier> getBlockPalette() {
         return blockPalette;
-    }
-
-    public List<StringShortPair> getItemIDs() {
-        return itemIDs;
     }
 
 }

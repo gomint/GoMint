@@ -17,7 +17,6 @@ import io.gomint.server.GoMintServer;
 import io.gomint.server.entity.EntityLink;
 import io.gomint.server.network.type.CommandOrigin;
 import io.gomint.server.player.PlayerSkin;
-import io.gomint.server.util.DumpUtil;
 import io.gomint.server.util.Things;
 import io.gomint.taglib.AllocationLimitReachedException;
 import io.gomint.taglib.NBTReader;
@@ -113,7 +112,7 @@ public abstract class Packet {
         int id = buffer.readSignedVarInt();
         io.gomint.server.inventory.item.ItemStack serverItemStack = (io.gomint.server.inventory.item.ItemStack) readItemStack(buffer);
         if (serverItemStack != null) {
-            serverItemStack.setID(id);
+            serverItemStack.setStackId(id);
         }
 
         return serverItemStack;
@@ -122,7 +121,7 @@ public abstract class Packet {
     public static void writeItemStackWithID(ItemStack itemStack, PacketBuffer buffer) {
         io.gomint.server.inventory.item.ItemStack serverItemStack = (io.gomint.server.inventory.item.ItemStack) itemStack;
 
-        buffer.writeSignedVarInt(serverItemStack.getID());
+        buffer.writeSignedVarInt(serverItemStack.getStackId());
         writeItemStack(itemStack, buffer);
     }
 
@@ -240,7 +239,7 @@ public abstract class Packet {
      * @param buffer The buffer to read from
      * @return a list of item stacks
      */
-    ItemStack[] readItemStacks(PacketBuffer buffer) {
+    public static ItemStack[] readItemStacks(PacketBuffer buffer) {
         int count = buffer.readUnsignedVarInt();
         ItemStack[] itemStacks = new ItemStack[count];
 
@@ -276,7 +275,7 @@ public abstract class Packet {
      * @param buffer The buffer to read from
      * @return a list of item stacks
      */
-    ItemStack[] readItemStacksWithIDs(PacketBuffer buffer) {
+    public static ItemStack[] readItemStacksWithIDs(PacketBuffer buffer) {
         int count = buffer.readUnsignedVarInt();
         ItemStack[] itemStacks = new ItemStack[count];
 
