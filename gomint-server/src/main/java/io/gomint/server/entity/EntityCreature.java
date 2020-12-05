@@ -55,4 +55,13 @@ public abstract class EntityCreature extends EntityLiving implements io.gomint.e
         return compound;
     }
 
+    @Override
+    public void detach(EntityPlayer player) {
+        if (this.armorInventory != null) {
+            this.armorInventory.removeViewer(player);
+        }
+
+        super.detach(player);
+    }
+
 }

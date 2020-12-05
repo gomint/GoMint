@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -121,10 +122,21 @@ public class BlockStateSwitchGenerator {
         javaCode.append("        }\n").append("        return null;\n").append("    }\n").append("}\n");
 
         String className = "io/gomint/server/registry/SwitchBlockStateMapper";
+
         try {
-            Files.writeString(Paths.get("gomint-server/src/main/java/" + className + ".java"), javaCode.toString());
+            writeIfNeeded(Paths.get("gomint-server/src/main/java/" + className + ".java"), javaCode.toString());
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    private void writeIfNeeded(Path path, String data) throws IOException {
+        if (path.toFile().exists()) {
+            if (!Files.readString(path).equals(data)) {
+                Files.writeString(path, data);
+            }
+        } else {
+            Files.writeString(path, data);
         }
     }
 
@@ -139,7 +151,7 @@ public class BlockStateSwitchGenerator {
                 File file = new File(outputFile);
                 file.getParentFile().mkdirs();
 
-                Files.writeString(Paths.get(outputFile), template);
+                writeIfNeeded(Paths.get(outputFile), template);
             }
         } catch (IOException e) {
             e.printStackTrace();

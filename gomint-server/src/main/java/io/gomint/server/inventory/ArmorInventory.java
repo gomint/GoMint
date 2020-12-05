@@ -70,7 +70,7 @@ public class ArmorInventory extends Inventory implements io.gomint.inventory.Arm
     public void sendContents( PlayerConnection playerConnection ) {
         if ( playerConnection.getEntity().equals( this.owner ) ) {
             PacketInventoryContent inventory = new PacketInventoryContent();
-            inventory.setWindowId( WindowMagicNumbers.ARMOR.getId() );
+            inventory.setWindowId( WindowMagicNumbers.ARMOR_DEPRECATED );
             inventory.setItems( getContents() );
             playerConnection.addToSendQueue( inventory );
         } else {
@@ -83,7 +83,7 @@ public class ArmorInventory extends Inventory implements io.gomint.inventory.Arm
         if ( playerConnection.getEntity().equals( this.owner ) ) {
             PacketInventorySetSlot setSlot = new PacketInventorySetSlot();
             setSlot.setSlot( slot );
-            setSlot.setWindowId( WindowMagicNumbers.ARMOR.getId() );
+            setSlot.setWindowId( WindowMagicNumbers.ARMOR_DEPRECATED );
             setSlot.setItemStack( this.contents[slot] );
             playerConnection.addToSendQueue( setSlot );
         } else {

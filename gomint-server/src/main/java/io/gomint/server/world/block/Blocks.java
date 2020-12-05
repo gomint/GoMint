@@ -39,15 +39,10 @@ public class Blocks {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Blocks.class);
     private static long lastReport = 0;
-    private final BlockRegistry generators;
+    private BlockRegistry generators;
     private PacketBuffer packetCache;
 
-    /**
-     * Create a new block registry
-     *
-     * @param classPath which builds this registry
-     */
-    public Blocks(ClassPath classPath, Items items, TileEntities tileEntities, List<BlockIdentifier> blockIdentifiers) throws IOException {
+    public void init(ClassPath classPath, Items items, TileEntities tileEntities, List<BlockIdentifier> blockIdentifiers) throws IOException {
         this.generators = new BlockRegistry(blockIdentifiers, classPath, (clazz, id) -> {
             ConstructionFactory<Block> factory = ASMFactoryConstructionFactory.create(clazz);
             BlockIdentifier blockIdentifier = BlockRuntimeIDs.toBlockIdentifier(id, null);

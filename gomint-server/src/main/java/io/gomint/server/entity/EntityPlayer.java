@@ -107,8 +107,7 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
     private Set<Long> hiddenPlayers;
 
     // Container handling
-    private Byte2ObjectMap<ContainerInventory> windowIds;
-    private Object2ByteMap<ContainerInventory> containerIds;
+    private ContainerInventory currentOpenContainer;
 
     // Inventory
     private Inventory cursorInventory;
@@ -583,34 +582,24 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
                 return;
             }
 
-            // We need to generate a window id for the client
-            byte foundId = -1;
-            for (byte i = WindowMagicNumbers.FIRST; i < WindowMagicNumbers.LAST; i++) {
-                if (!this.windowIds.containsKey(i)) {
-                    foundId = i;
-                    break;
-                }
-            }
-
-            // No id found?
-            if (foundId == -1) {
-                return;
+            // Check if we have a open container
+            if (this.currentOpenContainer != null) {
+                this.closeInventory(this.currentOpenContainer);
             }
 
             // Trigger open
             ContainerInventory containerInventory = (ContainerInventory) inventory;
-            this.windowIds.put(foundId, containerInventory);
-            this.containerIds.put(containerInventory, foundId);
-            containerInventory.addViewer(this, foundId);
+            containerInventory.addViewer(this, WindowMagicNumbers.OPEN_CONTAINER);
+
+            this.currentOpenContainer = containerInventory;
         }
     }
 
     @Override
     public void closeInventory(io.gomint.inventory.Inventory inventory) {
         if (inventory instanceof ContainerInventory) {
-            byte windowId = this.getWindowId((ContainerInventory) inventory);
-            if (windowId != 0) {
-                this.closeInventory(windowId, true);
+            if (this.currentOpenContainer == inventory) {
+                this.closeInventory(WindowMagicNumbers.OPEN_CONTAINER, true);
             }
         }
     }
@@ -675,9 +664,6 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
      * Send all data which the client needs before getting chunks
      */
     public void prepareEntity() {
-        this.windowIds = new Byte2ObjectOpenHashMap<>();
-        this.containerIds = new Object2ByteOpenHashMap<>();
-
         // Inventories
         this.inventory = new PlayerInventory(this.world.getServer().getItems(), this);
         this.armorInventory = new ArmorInventory(this.world.getServer().getItems(), this);
@@ -823,22 +809,6 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
                 }
             });
         }
-
-        if (this.containerIds != null) {
-            // Check all open inventories
-            Object2ByteMap.FastEntrySet<ContainerInventory> fastEntrySet = (Object2ByteMap.FastEntrySet<ContainerInventory>) this.containerIds.object2ByteEntrySet();
-            fastEntrySet.fastIterator().forEachRemaining(containerInventoryEntry -> containerInventoryEntry.getKey().removeViewer(EntityPlayer.this));
-        }
-    }
-
-    /**
-     * Get the window id of specified inventory
-     *
-     * @param inventory which we want to get the window id for
-     * @return window id of the container
-     */
-    public byte getWindowId(ContainerInventory inventory) {
-        return this.containerIds.getByte(inventory);
     }
 
     /**
@@ -847,18 +817,18 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
      * @param windowId which should be closed
      */
     public void closeInventory(byte windowId, boolean isServerSided) {
-        ContainerInventory containerInventory = this.windowIds.remove(windowId);
-        if (containerInventory != null) {
-            containerInventory.removeViewer(this);
-            this.containerIds.removeByte(containerInventory);
+        if (this.currentOpenContainer != null) {
+            this.currentOpenContainer.removeViewer(this);
 
-            InventoryCloseEvent inventoryCloseEvent = new InventoryCloseEvent(this, containerInventory);
+            InventoryCloseEvent inventoryCloseEvent = new InventoryCloseEvent(this, this.currentOpenContainer);
             this.getWorld().getServer().getPluginManager().callEvent(inventoryCloseEvent);
 
             PacketContainerClose packetContainerClose = new PacketContainerClose();
             packetContainerClose.setWindowId(windowId);
             packetContainerClose.setServerSided(isServerSided);
             this.connection.addToSendQueue(packetContainerClose);
+
+            this.currentOpenContainer = null;
         }
     }
 
@@ -869,7 +839,11 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
      * @return container inventory or null when not found
      */
     public ContainerInventory getContainerId(byte windowId) {
-        return this.windowIds.get(windowId);
+        if (windowId == WindowMagicNumbers.OPEN_CONTAINER) {
+            return this.currentOpenContainer;
+        }
+
+        return null;
     }
 
     @Override
@@ -1084,15 +1058,6 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
             entityEvent.setEventId(EntityEvent.DEATH.getId());
             player.getConnection().addToSendQueue(entityEvent);
         }
-    }
-
-    @Override
-    public void detach(EntityPlayer player) {
-        if (this.armorInventory != null) {
-            this.armorInventory.removeViewer(player);
-        }
-
-        super.detach(player);
     }
 
     /**
@@ -1719,10 +1684,6 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
         }
     }
 
-    public Collection<ContainerInventory> getOpenInventories() {
-        return this.windowIds.values();
-    }
-
     @Override
     public void initFromNBT(NBTTagCompound compound) {
         super.initFromNBT(compound);
@@ -1905,6 +1866,10 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
     @Override
     public Set<String> getTags() {
         return EntityTags.PLAYER;
+    }
+
+    public Inventory getCurrentOpenContainer() {
+        return this.currentOpenContainer;
     }
 
 }

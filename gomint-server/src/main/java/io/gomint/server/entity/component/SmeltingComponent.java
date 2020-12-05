@@ -18,6 +18,7 @@ import io.gomint.server.crafting.SmeltingRecipe;
 import io.gomint.server.entity.tileentity.SerializationReason;
 import io.gomint.server.entity.tileentity.TileEntity;
 import io.gomint.server.inventory.ContainerInventory;
+import io.gomint.server.inventory.WindowMagicNumbers;
 import io.gomint.server.inventory.item.ItemStack;
 import io.gomint.server.inventory.item.Items;
 import io.gomint.server.network.packet.PacketSetContainerData;
@@ -73,48 +74,42 @@ public class SmeltingComponent extends AbstractTileEntityComponent {
     }
 
     private void sendTickProgress(io.gomint.server.entity.EntityPlayer player) {
-        byte windowId = player.getWindowId(this.inventory);
-
         PacketSetContainerData containerData = new PacketSetContainerData();
-        containerData.setWindowId(windowId);
+        containerData.setWindowId(WindowMagicNumbers.OPEN_CONTAINER);
         containerData.setKey(CONTAINER_PROPERTY_TICK_COUNT);
         containerData.setValue(this.cookTime);
         player.getConnection().addToSendQueue(containerData);
     }
 
     private void sendFuelInfo(io.gomint.server.entity.EntityPlayer player) {
-        byte windowId = player.getWindowId(this.inventory);
-
         PacketSetContainerData containerData = new PacketSetContainerData();
-        containerData.setWindowId(windowId);
+        containerData.setWindowId(WindowMagicNumbers.OPEN_CONTAINER);
         containerData.setKey(CONTAINER_PROPERTY_LIT_TIME);
         containerData.setValue(this.burnTime);
         player.getConnection().addToSendQueue(containerData);
 
         containerData = new PacketSetContainerData();
-        containerData.setWindowId(windowId);
+        containerData.setWindowId(WindowMagicNumbers.OPEN_CONTAINER);
         containerData.setKey(CONTAINER_PROPERTY_LIT_DURATION);
         containerData.setValue(this.burnDuration);
         player.getConnection().addToSendQueue(containerData);
     }
 
     private void sendDataProperties(io.gomint.server.entity.EntityPlayer player) {
-        byte windowId = player.getWindowId(this.inventory);
-
         PacketSetContainerData containerData = new PacketSetContainerData();
-        containerData.setWindowId(windowId);
+        containerData.setWindowId(WindowMagicNumbers.OPEN_CONTAINER);
         containerData.setKey(CONTAINER_PROPERTY_TICK_COUNT);
         containerData.setValue(this.cookTime);
         player.getConnection().addToSendQueue(containerData);
 
         containerData = new PacketSetContainerData();
-        containerData.setWindowId(windowId);
+        containerData.setWindowId(WindowMagicNumbers.OPEN_CONTAINER);
         containerData.setKey(CONTAINER_PROPERTY_LIT_TIME);
         containerData.setValue(this.burnTime);
         player.getConnection().addToSendQueue(containerData);
 
         containerData = new PacketSetContainerData();
-        containerData.setWindowId(windowId);
+        containerData.setWindowId(WindowMagicNumbers.OPEN_CONTAINER);
         containerData.setKey(CONTAINER_PROPERTY_LIT_DURATION);
         containerData.setValue(this.burnDuration);
         player.getConnection().addToSendQueue(containerData);

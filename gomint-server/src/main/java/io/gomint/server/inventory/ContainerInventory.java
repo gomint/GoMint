@@ -94,25 +94,19 @@ public abstract class ContainerInventory extends Inventory implements io.gomint.
 
     @Override
     public void sendContents(PlayerConnection playerConnection) {
-        byte windowId = playerConnection.getEntity().getWindowId(this);
-        if (windowId >= WindowMagicNumbers.FIRST.getId()) {
-            PacketInventoryContent inventoryContent = new PacketInventoryContent();
-            inventoryContent.setWindowId(windowId);
-            inventoryContent.setItems(this.getContents());
-            playerConnection.addToSendQueue(inventoryContent);
-        }
+        PacketInventoryContent inventoryContent = new PacketInventoryContent();
+        inventoryContent.setWindowId(WindowMagicNumbers.OPEN_CONTAINER);
+        inventoryContent.setItems(this.getContents());
+        playerConnection.addToSendQueue(inventoryContent);
     }
 
     @Override
     public void sendContents(int slot, PlayerConnection playerConnection) {
-        byte windowId = playerConnection.getEntity().getWindowId(this);
-        if (windowId >= WindowMagicNumbers.FIRST.getId()) {
-            PacketInventorySetSlot inventorySetSlot = new PacketInventorySetSlot();
-            inventorySetSlot.setWindowId(windowId);
-            inventorySetSlot.setSlot(slot);
-            inventorySetSlot.setItemStack(this.getItem(slot));
-            playerConnection.addToSendQueue(inventorySetSlot);
-        }
+        PacketInventorySetSlot inventorySetSlot = new PacketInventorySetSlot();
+        inventorySetSlot.setWindowId(WindowMagicNumbers.OPEN_CONTAINER);
+        inventorySetSlot.setSlot(slot);
+        inventorySetSlot.setItemStack(this.getItem(slot));
+        playerConnection.addToSendQueue(inventorySetSlot);
     }
 
     @Override

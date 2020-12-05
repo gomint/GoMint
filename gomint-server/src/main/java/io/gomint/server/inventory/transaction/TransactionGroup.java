@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -177,7 +178,7 @@ public class TransactionGroup {
                         this.transactions.remove( transaction );
                     }
 
-                    this.transactions.add( new InventoryTransaction( startTransaction.getOwner(), startTransaction.getInventory(), startTransaction.getSlot(), startTransaction.getSourceItem(), lastTargetItem ) );
+                    this.transactions.add( new InventoryTransaction( startTransaction.getOwner(), startTransaction.getInventory(), startTransaction.getSlot(), startTransaction.getSourceItem(), lastTargetItem, startTransaction.getInventoryWindowId() ) );
                     LOGGER.debug( "Successfully compacted {} actions", original.size() );
                 }
             }
@@ -209,16 +210,30 @@ public class TransactionGroup {
      *
      * @param forceExecute to force execution (like creative mode does)
      */
-    public void execute( boolean forceExecute ) {
+    public boolean execute( boolean forceExecute ) {
         if ( this.canExecute() || forceExecute ) {
             for ( Transaction transaction : this.transactions ) {
                 transaction.commit();
             }
+
+            return true;
         } else {
             for ( Transaction transaction : this.transactions ) {
                 transaction.revert();
             }
         }
+
+        return false;
     }
 
+    @Override
+    public String toString() {
+        return "{\"_class\":\"TransactionGroup\", " +
+            "\"player\":" + (player == null ? "null" : player) + ", " +
+            "\"transactions\":" + (transactions == null ? "null" : Arrays.toString(transactions.toArray())) + ", " +
+            "\"haveItems\":" + (haveItems == null ? "null" : Arrays.toString(transactions.toArray())) + ", " +
+            "\"needItems\":" + (needItems == null ? "null" : Arrays.toString(transactions.toArray())) + ", " +
+            "\"matchItems\":\"" + matchItems + "\"" +
+            "}";
+    }
 }

@@ -1,0 +1,81 @@
+{
+  "_class": "InventoryCraftAction",
+  "recipeId": "157"
+}
+{
+  "_class": "InventoryCraftingResultAction",
+  "resultItems": [
+    {
+      "_class": "ItemStack",
+      "stackId": "15035",
+      "material": "minecraft:wooden_pressure_plate",
+      "data": "0",
+      "amount": "1",
+      "nbt": null,
+      "enchantments": null,
+      "dirtyEnchantments": "false",
+      "itemStackPlace": null,
+      "items": io.gomint.server.inventory.item.Items@66e341e9,
+      "blocks": io.gomint.server.world.block.Blocks@5b48f0f4,
+      "isDamageableCached": "true",
+      "isDamageable": "false"
+    }
+  ],
+  "amount": "2"
+}
+{
+  "_class": "InventoryConsumeAction",
+  "_super": {
+    "InventoryTransferAction": {
+      "hasAmount": "true",
+      "hasDestination": "false",
+      "amount": "2",
+      "source": {
+        "_class": "ItemStackRequestSlotInfo",
+        "windowId": "12",
+        "slot": "9",
+        "itemStackId": "-47"
+      },
+      "destination": null
+    }
+  }
+}
+{
+  "_class": "InventoryConsumeAction",
+  "_super": {
+    "InventoryTransferAction": {
+      "hasAmount": "true",
+      "hasDestination": "false",
+      "amount": "2",
+      "source": {
+        "_class": "ItemStackRequestSlotInfo",
+        "windowId": "12",
+        "slot": "9",
+        "itemStackId": "-49"
+      },
+      "destination": null
+    }
+  }
+}
+{
+  "_class": "InventoryPlaceAction",
+  "_super": {
+    "InventoryTransferAction": {
+      "hasAmount": "true",
+      "hasDestination": "true",
+      "amount": "2",
+      "source": {
+        "_class": "ItemStackRequestSlotInfo",
+        "windowId": "59",
+        "slot": "50",
+        "itemStackId": "-49"
+      },
+      "destination": {
+        "_class": "ItemStackRequestSlotInfo",
+        "windowId": "12",
+        "slot": "0",
+        "itemStackId": "15004"
+      }
+    }
+  }
+}

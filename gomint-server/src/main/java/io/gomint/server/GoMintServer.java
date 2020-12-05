@@ -216,6 +216,8 @@ public class GoMintServer implements GoMint, InventoryHolder {
         ClassPath classPath = new ClassPath("io.gomint.server");
 
         this.items = new Items(classPath);
+        this.blocks = new Blocks();
+        this.items.setBlocks(this.blocks);
 
         // Load assets from file:
         LOGGER.info("Loading assets library...");
@@ -232,8 +234,7 @@ public class GoMintServer implements GoMint, InventoryHolder {
         // Build up registries
         // ------------------------------------ //
         this.tileEntities = new TileEntities(classPath, this.items);
-        this.blocks = new Blocks(classPath, this.items, this.tileEntities, this.assets.getBlockPalette());
-        this.items.setBlocks(this.blocks);
+        this.blocks.init(classPath, this.items, this.tileEntities, this.assets.getBlockPalette());
         this.entities = new Entities(classPath);
         this.effects = new Effects(classPath);
         this.enchantments = new Enchantments(classPath);
@@ -362,8 +363,6 @@ public class GoMintServer implements GoMint, InventoryHolder {
         for (Recipe recipe : this.assets.getRecipes()) {
             this.recipeManager.registerRecipe(recipe);
         }
-
-        this.recipeManager.fixMCPEBugs();
 
         this.creativeInventory = this.assets.getCreativeInventory();
         this.permissionGroupManager = new PermissionGroupManager();

@@ -20,7 +20,7 @@ public class CursorInventory extends Inventory {
     public void sendContents(int slot, PlayerConnection playerConnection) {
         PacketInventorySetSlot setSlot = new PacketInventorySetSlot();
         setSlot.setSlot(slot);
-        setSlot.setWindowId(WindowMagicNumbers.CURSOR.getId());
+        setSlot.setWindowId(WindowMagicNumbers.CURSOR_DEPRECATED);
         setSlot.setItemStack(this.contents[slot]);
         playerConnection.addToSendQueue(setSlot);
     }
@@ -28,7 +28,7 @@ public class CursorInventory extends Inventory {
     @Override
     public void sendContents(PlayerConnection playerConnection) {
         PacketInventoryContent inventory = new PacketInventoryContent();
-        inventory.setWindowId(WindowMagicNumbers.CURSOR.getId());
+        inventory.setWindowId(WindowMagicNumbers.CURSOR_DEPRECATED);
         inventory.setItems(getContents());
         playerConnection.addToSendQueue(inventory);
     }

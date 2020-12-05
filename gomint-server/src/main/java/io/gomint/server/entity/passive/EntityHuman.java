@@ -112,6 +112,14 @@ public class EntityHuman extends EntityCreature implements io.gomint.entity.pass
     }
 
     @Override
+    public String toString() {
+        return "{\"_class\":\"EntityHuman\", " +
+            "\"username\":" + (username == null ? "null" : "\"" + username + "\"") + ", " +
+            "\"uuid\":" + (uuid == null ? "null" : uuid) +
+            "}";
+    }
+
+    @Override
     protected void setSize(float width, float height) {
         super.setSize(width, height);
 
@@ -657,14 +665,6 @@ public class EntityHuman extends EntityCreature implements io.gomint.entity.pass
     @Override
     public int hashCode() {
         return Objects.hash(uuid);
-    }
-
-    @Override
-    public String toString() {
-        return "EntityHuman{" +
-            "username='" + username + '\'' +
-            ", uuid=" + uuid +
-            '}';
     }
 
     @Override
