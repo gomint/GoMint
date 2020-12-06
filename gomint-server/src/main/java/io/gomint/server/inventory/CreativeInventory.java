@@ -1,6 +1,7 @@
 package io.gomint.server.inventory;
 
 import io.gomint.inventory.InventoryType;
+import io.gomint.server.inventory.item.ItemStack;
 import io.gomint.server.network.PlayerConnection;
 import io.gomint.server.network.packet.PacketCreativeContent;
 
@@ -23,7 +24,7 @@ public class CreativeInventory extends Inventory {
     @Override
     public void sendContents( PlayerConnection playerConnection ) {
         PacketCreativeContent inventoryContent = new PacketCreativeContent();
-        inventoryContent.setItems( getContents() );
+        inventoryContent.setItems(getContents());
         playerConnection.addToSendQueue( inventoryContent );
     }
 

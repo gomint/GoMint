@@ -132,7 +132,7 @@ public class AssetsLibrary {
         if (GoMint.instance() != null) {
             this.creativeInventory = new CreativeInventory(null, raw.size());
 
-            int index = 1;
+            int index = 0;
             for (byte[] bytes : raw) {
                 try {
                     ByteBuf i = PooledByteBufAllocator.DEFAULT.directBuffer(bytes.length);
@@ -140,8 +140,9 @@ public class AssetsLibrary {
 
                     ItemStack itemStack = this.loadItemStack(new PacketBuffer(i));
                     if (itemStack != null) {
-                        itemStack.setStackId(index++);
-                        this.creativeInventory.addItem(itemStack);
+                        itemStack.setStackId(index);
+                        this.creativeInventory.setItemWithoutClone(index, itemStack);
+                        index++;
                     }
 
                     i.release(2);

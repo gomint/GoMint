@@ -53,6 +53,10 @@ public abstract class Inventory implements io.gomint.inventory.Inventory {
         this.viewer.remove(player.getConnection());
     }
 
+    public void setItemWithoutClone(int index, ItemStack item) {
+        this.contents[index] = item;
+    }
+
     @Override
     public void setItem(int index, ItemStack item) {
         // Prevent invalid null items
@@ -146,16 +150,16 @@ public abstract class Inventory implements io.gomint.inventory.Inventory {
         return false;
     }
 
-    /**
-     * Add a item into the inventory. Try to merge existing stacks or use the next free slot.
-     *
-     * @param itemStack the item stack which should be added
-     * @return true when it got added, false if not
-     */
+    @Override
     public boolean addItem(ItemStack itemStack) {
+        return this.addItemWithSlot(itemStack) != -1;
+    }
+
+    @Override
+    public int addItemWithSlot(ItemStack itemStack) {
         // Check if we have place for this item
         if (!this.hasPlaceFor(itemStack)) {
-            return false;
+            return -1;
         }
 
         io.gomint.server.inventory.item.ItemStack serverItemStack = (io.gomint.server.inventory.item.ItemStack) itemStack;
@@ -181,7 +185,7 @@ public abstract class Inventory implements io.gomint.inventory.Inventory {
 
                 // We added all of the stack to this inventory
                 if (clone.getAmount() == 0) {
-                    return true;
+                    return i;
                 }
             }
         }
@@ -190,11 +194,11 @@ public abstract class Inventory implements io.gomint.inventory.Inventory {
         for (int i = 0; i < invContents.length; i++) {
             if (invContents[i] instanceof ItemAir) {
                 setItem(i, clone);
-                return true;
+                return i;
             }
         }
 
-        return false;
+        return -1;
     }
 
     @Override

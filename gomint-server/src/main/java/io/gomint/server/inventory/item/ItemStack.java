@@ -585,7 +585,7 @@ public abstract class ItemStack implements Cloneable, io.gomint.inventory.item.I
     }
 
     public int getStackId() {
-        return this.isAir() ? 0 : this.stackId; // TODO: implement authoritative inventories
+        return this.isAir() ? 0 : this.stackId;
     }
 
     public void setStackId(int id) {
