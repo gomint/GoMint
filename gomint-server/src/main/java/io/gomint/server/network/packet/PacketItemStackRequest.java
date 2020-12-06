@@ -13,7 +13,9 @@ import io.gomint.server.network.packet.types.InventoryAction;
 import io.gomint.server.network.packet.types.InventoryConsumeAction;
 import io.gomint.server.network.packet.types.InventoryCraftAction;
 import io.gomint.server.network.packet.types.InventoryCraftingResultAction;
+import io.gomint.server.network.packet.types.InventoryDestroyCreativeAction;
 import io.gomint.server.network.packet.types.InventoryDropAction;
+import io.gomint.server.network.packet.types.InventoryGetCreativeAction;
 import io.gomint.server.network.packet.types.InventoryMoveAction;
 import io.gomint.server.network.packet.types.InventoryPlaceAction;
 import io.gomint.server.network.packet.types.InventorySwapAction;
@@ -50,12 +52,18 @@ public class PacketItemStackRequest extends Packet {
                     case 3:
                         action = new InventoryDropAction();
                         break;
+                    case 4:
+                        action = new InventoryDestroyCreativeAction();
+                        break;
                     case 5:
                         action = new InventoryConsumeAction();
                         break;
                     case 9:
                     case 10:
                         action = new InventoryCraftAction();
+                        break;
+                    case 11:
+                        action = new InventoryGetCreativeAction();
                         break;
                     case 13:
                         action = new InventoryCraftingResultAction();

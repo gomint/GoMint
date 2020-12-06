@@ -8,7 +8,6 @@
 package io.gomint.server.network.handler;
 
 import io.gomint.inventory.item.ItemAir;
-import io.gomint.server.crafting.session.SessionInventory;
 import io.gomint.server.entity.EntityPlayer;
 import io.gomint.server.inventory.Inventory;
 import io.gomint.server.inventory.OneSlotInventory;
@@ -19,26 +18,28 @@ import io.gomint.server.inventory.transaction.InventoryTransaction;
 import io.gomint.server.inventory.transaction.Transaction;
 import io.gomint.server.inventory.transaction.TransactionGroup;
 import io.gomint.server.network.PlayerConnection;
-import io.gomint.server.crafting.session.CraftingSession;
+import io.gomint.server.network.handler.session.CraftingSession;
+import io.gomint.server.network.handler.session.CreativeSession;
+import io.gomint.server.network.handler.session.Session;
 import io.gomint.server.network.packet.PacketItemStackRequest;
 import io.gomint.server.network.packet.PacketItemStackResponse;
 import io.gomint.server.network.packet.types.InventoryAction;
 import io.gomint.server.network.packet.types.InventoryConsumeAction;
 import io.gomint.server.network.packet.types.InventoryCraftAction;
 import io.gomint.server.network.packet.types.InventoryCraftingResultAction;
+import io.gomint.server.network.packet.types.InventoryDestroyCreativeAction;
 import io.gomint.server.network.packet.types.InventoryDropAction;
-import io.gomint.server.network.packet.types.InventoryPlaceAction;
+import io.gomint.server.network.packet.types.InventoryGetCreativeAction;
 import io.gomint.server.network.packet.types.InventoryTransferAction;
 import io.gomint.server.network.packet.types.ItemStackRequestSlotInfo;
+import io.gomint.world.Gamemode;
 import it.unimi.dsi.fastutil.bytes.Byte2ObjectMap;
 import it.unimi.dsi.fastutil.bytes.Byte2ObjectOpenHashMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.function.IntFunction;
 
 public class PacketItemStackRequestHandler implements PacketHandler<PacketItemStackRequest> {
 
@@ -47,7 +48,7 @@ public class PacketItemStackRequestHandler implements PacketHandler<PacketItemSt
     @Override
     public void handle(PacketItemStackRequest packet, long currentTimeMillis, PlayerConnection connection) throws Exception {
         List<PacketItemStackResponse.Response> responses = new ArrayList<>();
-        CraftingSession craftingSession = null;
+        Session session = null;
 
         for (PacketItemStackRequest.Request request : packet.getRequests()) {
             PacketItemStackResponse.Response resp = null;
@@ -55,48 +56,83 @@ public class PacketItemStackRequestHandler implements PacketHandler<PacketItemSt
             Byte2ObjectMap<Byte2ObjectMap<PacketItemStackResponse.StackResponseSlotInfo>> successChanges = new Byte2ObjectOpenHashMap<>();
 
             for (InventoryAction action : request.getActions()) {
-                if (action instanceof InventoryConsumeAction) {
+                if (action instanceof InventoryDestroyCreativeAction) {
+                    if (connection.getEntity().getGamemode() == Gamemode.CREATIVE) {
+                        InventoryDestroyCreativeAction destroyCreativeAction = (InventoryDestroyCreativeAction) action;
+                        ItemStackRequestSlotInfo source = destroyCreativeAction.getSource();
+
+                        ItemStack item = getItemStack(connection.getEntity(), destroyCreativeAction.getSource(), session);
+                        if (destroyCreativeAction.getAmount() <= item.getAmount()) {
+                            int remaining = item.getAmount() - destroyCreativeAction.getAmount();
+                            Inventory inventory = getInventory(connection.getEntity(), source.getWindowId(), session);
+
+                            if (remaining > 0) {
+                                item.setAmount(remaining);
+                            } else {
+                                inventory.setItem(destroyCreativeAction.getSource().getSlot(), ItemAir.create(0));
+                            }
+
+                            item = (ItemStack) inventory.getItem(source.getSlot());
+                            successChanges
+                                .computeIfAbsent(source.getWindowId(), value -> new Byte2ObjectOpenHashMap<>())
+                                .put(source.getSlot(), new PacketItemStackResponse.StackResponseSlotInfo(source.getSlot(), item.getAmount(), item.getStackId()));
+                        }
+                    } else {
+                        resp = new PacketItemStackResponse.Response(PacketItemStackResponse.ResponseResult.PlayerNotInCreativeMode, request.getRequestId(), null);
+                    }
+                } else if (action instanceof InventoryGetCreativeAction) {
+                    if (connection.getEntity().getGamemode() == Gamemode.CREATIVE) {
+                        int slot = ((InventoryGetCreativeAction) action).getCreativeItemId();
+                        ItemStack item = (ItemStack) connection.getServer().getCreativeInventory().getItem(slot);
+                        item = (ItemStack) item.clone().setAmount(64);
+
+                        session = new CreativeSession(connection);
+                        session.addInput(item);
+                    } else {
+                        resp = new PacketItemStackResponse.Response(PacketItemStackResponse.ResponseResult.PlayerNotInCreativeMode, request.getRequestId(), null);
+                    }
+                } else if (action instanceof InventoryConsumeAction) {
                     InventoryConsumeAction consumeAction = (InventoryConsumeAction) action;
 
-                    if (craftingSession == null) {
+                    if (session == null) {
                         resp = new PacketItemStackResponse.Response(PacketItemStackResponse.ResponseResult.InvalidCraftResult, request.getRequestId(), null);
                         break;
                     } else {
                         ItemStackRequestSlotInfo source = ((InventoryConsumeAction) action).getSource();
 
                         // Get the item
-                        ItemStack item = getItemStack(connection.getEntity(), source, craftingSession);
+                        ItemStack item = getItemStack(connection.getEntity(), source, session);
                         if (consumeAction.getAmount() <= item.getAmount()) {
                             item.setAmount(item.getAmount() - consumeAction.getAmount());
                             item = (ItemStack) item.clone().setAmount(consumeAction.getAmount());
                         }
 
-                        craftingSession.addInput(item);
+                        session.addInput(item);
 
-                        item = getItemStack(connection.getEntity(), source, craftingSession);
+                        item = getItemStack(connection.getEntity(), source, session);
                         successChanges
                             .computeIfAbsent(source.getWindowId(), value -> new Byte2ObjectOpenHashMap<>())
                             .put(source.getSlot(), new PacketItemStackResponse.StackResponseSlotInfo(source.getSlot(), item.getAmount(), item.getStackId()));
                     }
                 } else if (action instanceof InventoryTransferAction) {
-                    resp = handleInventoryTransfer((InventoryTransferAction) action, connection, transactionGroup, request, craftingSession);
+                    resp = handleInventoryTransfer((InventoryTransferAction) action, connection, transactionGroup, request, session);
                 } else if (action instanceof InventoryDropAction) {
-                    resp = handleInventoryDrop((InventoryDropAction) action, connection, transactionGroup, request, craftingSession);
+                    resp = handleInventoryDrop((InventoryDropAction) action, connection, transactionGroup, request, session);
                 } else if (action instanceof InventoryCraftAction) {
-                    craftingSession = new CraftingSession(connection);
-                    craftingSession.findRecipe(((InventoryCraftAction) action).getRecipeId());
+                    session = new CraftingSession(connection)
+                        .findRecipe(((InventoryCraftAction) action).getRecipeId());
                 } else if (action instanceof InventoryCraftingResultAction) {
-                    if (craftingSession == null) {
+                    if (session == null) {
                         resp = new PacketItemStackResponse.Response(PacketItemStackResponse.ResponseResult.InvalidCraftResult, request.getRequestId(), null);
                         break;
-                    } else {
-                        craftingSession.setAmountOfCrafts(((InventoryCraftingResultAction) action).getAmount());
+                    } else if (session instanceof CraftingSession) {
+                        ((CraftingSession) session).setAmountOfCrafts(((InventoryCraftingResultAction) action).getAmount());
                     }
                 }
             }
 
             if (resp == null) {
-                if (!transactionGroup.execute(false)) {
+                if (transactionGroup.getTransactions().size() > 0 && !transactionGroup.execute(false)) {
                     LOGGER.warn("Could not commit wanted transaction: {}", transactionGroup);
                     resp = new PacketItemStackResponse.Response(PacketItemStackResponse.ResponseResult.Error, request.getRequestId(), null);
                 } else {
@@ -143,8 +179,8 @@ public class PacketItemStackRequestHandler implements PacketHandler<PacketItemSt
                                                                  PlayerConnection connection,
                                                                  TransactionGroup transactionGroup,
                                                                  PacketItemStackRequest.Request request,
-                                                                 CraftingSession craftingSession) {
-        Inventory inventory = getInventory(connection.getEntity(), dropAction.getSource().getWindowId(), craftingSession);
+                                                                 Session session) {
+        Inventory inventory = getInventory(connection.getEntity(), dropAction.getSource().getWindowId(), session);
         ItemStack source = (ItemStack) inventory.getItem(dropAction.getSource().getSlot());
 
         byte sourceSlot = fixSlotInput(dropAction.getSource());
@@ -179,10 +215,10 @@ public class PacketItemStackRequestHandler implements PacketHandler<PacketItemSt
                                                                      PlayerConnection connection,
                                                                      TransactionGroup transactionGroup,
                                                                      PacketItemStackRequest.Request request,
-                                                                     CraftingSession craftingSession) {
-        Inventory sourceInventory = getInventory(connection.getEntity(), transferAction.getSource().getWindowId(), craftingSession);
+                                                                     Session session) {
+        Inventory sourceInventory = getInventory(connection.getEntity(), transferAction.getSource().getWindowId(), session);
         if (sourceInventory instanceof OneSlotInventory) {
-            if (!craftingSession.craft()) {
+            if (!session.process()) {
                 return new PacketItemStackResponse.Response(PacketItemStackResponse.ResponseResult.InvalidCraftRequest, request.getRequestId(), null);
             }
         }
@@ -190,9 +226,9 @@ public class PacketItemStackRequestHandler implements PacketHandler<PacketItemSt
         byte sourceSlot = fixSlotInput(transferAction.getSource());
         byte destinationSlot = fixSlotInput(transferAction.getDestination());
 
-        ItemStack destination = getItemStack(connection.getEntity(), transferAction.getDestination(), craftingSession);
+        ItemStack destination = getItemStack(connection.getEntity(), transferAction.getDestination(), session);
 
-        ItemStack source = getItemStack(connection.getEntity(), transferAction.getSource(), craftingSession);
+        ItemStack source = getItemStack(connection.getEntity(), transferAction.getSource(), session);
         if (transferAction.hasAmount()) {
             if (transferAction.getAmount() <= source.getAmount()) {
                 int remaining = source.getAmount() - transferAction.getAmount();
@@ -201,13 +237,13 @@ public class PacketItemStackRequestHandler implements PacketHandler<PacketItemSt
                 if (remaining > 0) {
                     // We need to set leftovers back or we are left up with dangling items
                     inventoryTransactionSource = new InventoryTransaction(
-                        connection.getEntity(), getInventory(connection.getEntity(), transferAction.getSource().getWindowId(), craftingSession),
+                        connection.getEntity(), getInventory(connection.getEntity(), transferAction.getSource().getWindowId(), session),
                         sourceSlot, source, source.clone().setAmount(remaining),
                         transferAction.getSource().getWindowId());
 
                 } else {
                     inventoryTransactionSource = new InventoryTransaction(
-                        connection.getEntity(), getInventory(connection.getEntity(), transferAction.getSource().getWindowId(), craftingSession),
+                        connection.getEntity(), getInventory(connection.getEntity(), transferAction.getSource().getWindowId(), session),
                         sourceSlot, source, ItemAir.create(0),
                         transferAction.getSource().getWindowId());
                 }
@@ -222,7 +258,7 @@ public class PacketItemStackRequestHandler implements PacketHandler<PacketItemSt
                 }
 
                 InventoryTransaction inventoryTransactionDestination = new InventoryTransaction(
-                    connection.getEntity(), getInventory(connection.getEntity(), transferAction.getDestination().getWindowId(), craftingSession),
+                    connection.getEntity(), getInventory(connection.getEntity(), transferAction.getDestination().getWindowId(), session),
                     destinationSlot, destination, source,
                     transferAction.getDestination().getWindowId());
 
@@ -232,11 +268,11 @@ public class PacketItemStackRequestHandler implements PacketHandler<PacketItemSt
             }
         } else {
             InventoryTransaction inventoryTransactionSource = new InventoryTransaction(
-                connection.getEntity(), getInventory(connection.getEntity(), transferAction.getSource().getWindowId(), craftingSession),
+                connection.getEntity(), getInventory(connection.getEntity(), transferAction.getSource().getWindowId(), session),
                 sourceSlot, source, destination,
                 transferAction.getSource().getWindowId());
             InventoryTransaction inventoryTransactionDestination = new InventoryTransaction(
-                connection.getEntity(), getInventory(connection.getEntity(), transferAction.getDestination().getWindowId(), craftingSession),
+                connection.getEntity(), getInventory(connection.getEntity(), transferAction.getDestination().getWindowId(), session),
                 destinationSlot, destination, source,
                 transferAction.getDestination().getWindowId());
 
@@ -277,8 +313,8 @@ public class PacketItemStackRequestHandler implements PacketHandler<PacketItemSt
         return (byte) info.getSlot();
     }
 
-    private ItemStack getItemStack(EntityPlayer entityPlayer, ItemStackRequestSlotInfo requestSlotInfo, CraftingSession craftingSession) {
-        Inventory inventory = getInventory(entityPlayer, requestSlotInfo.getWindowId(), craftingSession);
+    private ItemStack getItemStack(EntityPlayer entityPlayer, ItemStackRequestSlotInfo requestSlotInfo, Session session) {
+        Inventory inventory = getInventory(entityPlayer, requestSlotInfo.getWindowId(), session);
         ItemStack itemStack = (ItemStack) inventory.getItem(fixSlotInput(requestSlotInfo));
 
         // TODO: check for item stack id
@@ -286,7 +322,7 @@ public class PacketItemStackRequestHandler implements PacketHandler<PacketItemSt
         return itemStack;
     }
 
-    private Inventory getInventory(EntityPlayer entity, byte windowId, CraftingSession craftingSession) {
+    private Inventory getInventory(EntityPlayer entity, byte windowId, Session session) {
         switch (windowId) {
             case WindowMagicNumbers.ARMOR:
                 return entity.getArmorInventory();
@@ -304,7 +340,7 @@ public class PacketItemStackRequestHandler implements PacketHandler<PacketItemSt
                 return entity.getCraftingInputInventory();
             case WindowMagicNumbers.CRAFTING_OUTPUT:
             case WindowMagicNumbers.CREATED_OUTPUT:
-                return craftingSession.getOutput();
+                return session.getOutput();
             case WindowMagicNumbers.CONTAINER:
                 return entity.getCurrentOpenContainer();
         }

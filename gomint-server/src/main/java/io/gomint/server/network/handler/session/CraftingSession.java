@@ -5,10 +5,11 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-package io.gomint.server.crafting.session;
+package io.gomint.server.network.handler.session;
 
 import io.gomint.event.player.PlayerCraftingEvent;
 import io.gomint.server.crafting.Recipe;
+import io.gomint.server.crafting.session.SessionInventory;
 import io.gomint.server.inventory.Inventory;
 import io.gomint.server.inventory.OneSlotInventory;
 import io.gomint.server.inventory.item.ItemStack;
@@ -16,7 +17,7 @@ import io.gomint.server.network.PlayerConnection;
 
 import java.util.Collection;
 
-public class CraftingSession {
+public class CraftingSession implements Session {
 
     private final PlayerConnection connection;
     private final Inventory inputInventory;
@@ -36,19 +37,22 @@ public class CraftingSession {
             connection.getEntity());
     }
 
-    public void findRecipe(int recipeId) {
+    public CraftingSession findRecipe(int recipeId) {
         this.recipe = this.connection.getServer().getRecipeManager().getRecipe(recipeId);
+        return this;
     }
 
     public void setAmountOfCrafts(byte amount) {
         this.amount = amount;
     }
 
+    @Override
     public void addInput(ItemStack item) {
         this.inputInventory.addItem(item);
     }
 
-    public boolean craft() {
+    @Override
+    public boolean process() {
         // Generate a output stack for compare
         Collection<io.gomint.inventory.item.ItemStack> output = this.recipe.createResult();
 
@@ -90,6 +94,7 @@ public class CraftingSession {
         return true;
     }
 
+    @Override
     public Inventory getOutput() {
         return this.outputInventory;
     }

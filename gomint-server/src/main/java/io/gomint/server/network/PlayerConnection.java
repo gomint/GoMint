@@ -1058,12 +1058,4 @@ public class PlayerConnection implements ConnectionWithState {
         return this.playerChunks.contains(hash);
     }
 
-    public void sendHotbar() {
-        PacketHotbar hotbar = new PacketHotbar();
-        hotbar.setWindowId((byte) 0);
-        hotbar.setSelectedHotbarSlot(this.entity.getInventory().getItemInHandSlot());
-        hotbar.setSelectHotbarSlot(true);
-        this.addToSendQueue(hotbar);
-    }
-
 }

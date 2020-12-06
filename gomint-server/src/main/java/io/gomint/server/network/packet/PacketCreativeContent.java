@@ -7,8 +7,8 @@
 
 package io.gomint.server.network.packet;
 
-import io.gomint.jraknet.PacketBuffer;
 import io.gomint.inventory.item.ItemStack;
+import io.gomint.jraknet.PacketBuffer;
 import io.gomint.server.network.Protocol;
 
 /**
@@ -25,7 +25,11 @@ public class PacketCreativeContent extends Packet {
 
     @Override
     public void serialize(PacketBuffer buffer, int protocolID) {
-        writeItemStacksWithIDs(this.items, buffer);
+        buffer.writeUnsignedVarInt(this.items.length);
+        for (ItemStack item : this.items) {
+            buffer.writeUnsignedVarInt(((io.gomint.server.inventory.item.ItemStack) item).getStackId());
+            writeItemStack(item, buffer);
+        }
     }
 
     @Override
