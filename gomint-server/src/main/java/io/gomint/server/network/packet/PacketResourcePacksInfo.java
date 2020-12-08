@@ -49,6 +49,7 @@ public class PacketResourcePacksInfo extends Packet {
                 buffer.writeString( "" );
                 buffer.writeString( "" );
                 buffer.writeBoolean( false );
+                buffer.writeBoolean( false );
             }
         }
     }

@@ -75,6 +75,12 @@ public class PacketItemStackRequest extends Packet {
                 action.deserialize(buffer, protocolID);
                 this.actions.add(action);
             }
+
+            int amountOfWords = buffer.readUnsignedVarInt();
+            List<String> wordToFilter = new ArrayList<>(amountOfWords);
+            for (int i = 0; i < amountOfWords; i++) {
+                wordToFilter.add(buffer.readString());
+            }
         }
 
         public int getRequestId() {

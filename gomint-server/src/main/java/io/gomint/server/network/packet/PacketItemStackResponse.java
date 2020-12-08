@@ -181,6 +181,7 @@ public class PacketItemStackResponse extends Packet {
                         buffer.writeByte(slotInfo.slot);
                         buffer.writeByte(slotInfo.count);
                         buffer.writeSignedVarInt(slotInfo.itemStackId);
+                        buffer.writeString("");
                     }
                 }
             } else {
