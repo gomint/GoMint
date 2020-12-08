@@ -1,6 +1,6 @@
 <p align="center">
   
-<img src="https://raw.githubusercontent.com/gomint/gomint-branding/main/v3/text/gomint-text-colored-black.svg" alt="GoMint Logo" width="600"/>
+<img src="https://raw.githubusercontent.com/gomint/gomint-brand/latest/text/solid-logo/colored/vibrant/black-text/gomint-text-solid-logo-colored-vibrant-black-text.svg" alt="GoMint Logo" width="600"/>
 
 </p>
 
