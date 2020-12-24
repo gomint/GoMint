@@ -132,6 +132,9 @@ public class PlayerConnection implements ConnectionWithState {
         this.playerChunks = new LongOpenHashSet();
         this.loadingChunks = new LongOpenHashSet();
 
+        // We allow up to 5 MB for login packet due to skin size
+        this.inputProcessor.preallocSize(5 * 1024 * 1024);
+
         // Attach data processor if needed
         if (this.connection != null) {
             this.postProcessorExecutor = networkManager.getPostProcessService().getExecutor();

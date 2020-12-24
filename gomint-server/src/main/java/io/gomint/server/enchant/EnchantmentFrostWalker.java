@@ -7,6 +7,7 @@
 
 package io.gomint.server.enchant;
 
+import io.gomint.enchant.Rarity;
 import io.gomint.server.inventory.item.ItemStack;
 import io.gomint.server.registry.RegisterInfo;
 
@@ -14,29 +15,40 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 25 )
+@RegisterInfo(id = 25)
 public class EnchantmentFrostWalker extends Enchantment implements io.gomint.enchant.EnchantmentFrostWalker {
 
     /**
      * Create new enchantment smite
      */
     public EnchantmentFrostWalker() {
-        super( (short) 2 );
+        super((short) 2);
     }
 
     @Override
-    public byte getMinEnchantAbility( short level ) {
-        return (byte) ( level * 10 );
+    public int getMinEnchantAbility(short level) {
+        return (byte) (level * 10);
     }
 
     @Override
-    public byte getMaxEnchantAbility( short level ) {
-        return (byte) ( getMinEnchantAbility( level ) + 15 );
+    public int getMaxEnchantAbility(short level) {
+        return (byte) (getMinEnchantAbility(level) + 15);
     }
 
     @Override
-    public boolean canBeApplied( ItemStack itemStack ) {
-        return false;
+    public boolean canBeApplied(ItemStack itemStack) {
+        return EnchantmentHelper.canBeAppliedToBoots(itemStack);
+    }
+
+    @Override
+    public Rarity getRarity() {
+        return Rarity.RARE;
+    }
+
+    @Override
+    public boolean collidesWith(Enchantment enchantment) {
+        return enchantment instanceof EnchantmentDepthStrider ||
+            super.collidesWith(enchantment);
     }
 
 }

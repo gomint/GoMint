@@ -1,19 +1,18 @@
 package io.gomint.server.network.handler;
 
-import io.gomint.event.player.*;
+import io.gomint.event.player.PlayerDropItemEvent;
+import io.gomint.event.player.PlayerExhaustEvent;
+import io.gomint.event.player.PlayerInteractEvent;
+import io.gomint.event.player.PlayerInteractWithEntityEvent;
 import io.gomint.event.world.BlockBreakEvent;
-import io.gomint.inventory.item.ItemAir;
 import io.gomint.inventory.item.ItemStack;
 import io.gomint.inventory.item.ItemSword;
-import io.gomint.inventory.item.ItemType;
 import io.gomint.math.Vector;
-import io.gomint.server.enchant.EnchantmentProcessor;
 import io.gomint.server.entity.EntityPlayer;
 import io.gomint.server.inventory.ContainerInventory;
 import io.gomint.server.inventory.Inventory;
 import io.gomint.server.inventory.item.ItemBow;
 import io.gomint.server.inventory.item.ItemCrossbow;
-import io.gomint.server.inventory.item.category.ItemConsumable;
 import io.gomint.server.inventory.transaction.DropItemTransaction;
 import io.gomint.server.inventory.transaction.InventoryTransaction;
 import io.gomint.server.inventory.transaction.TransactionGroup;
@@ -45,13 +44,6 @@ public class PacketInventoryTransactionHandler implements PacketHandler<PacketIn
 
     @Override
     public void handle(PacketInventoryTransaction packet, long currentTimeMillis, PlayerConnection connection) {
-        // Hack for enchantment tables
-        EnchantmentProcessor processor = connection.getEntity().getEnchantmentProcessor();
-        if (processor != null) {
-            processor.addTransaction(packet);
-            return;
-        }
-
         switch (packet.getType()) {
             case PacketInventoryTransaction.TYPE_NORMAL:
                 this.handleTypeNormal(connection, packet);
@@ -383,31 +375,6 @@ public class PacketInventoryTransactionHandler implements PacketHandler<PacketIn
     private Inventory getInventory(PacketInventoryTransaction.NetworkTransaction transaction, EntityPlayer entity) {
         Inventory inventory = null;
         switch (transaction.getWindowId()) {
-            case -4:    // Set output slot
-                inventory = entity.getCraftingResultInventory();
-                break;
-            case -5:    // Crafting result input
-                inventory = entity.getCraftingInputInventory();
-                if (inventory.getItem(transaction.getSlot()).getItemType() != ItemType.AIR) {
-                    for (int i = 0; i < inventory.getContents().length; i++) {
-                        if (inventory.getItem(i).getItemType() == ItemType.AIR) {
-                            transaction.setSlot(i);
-                            break;
-                        }
-                    }
-                }
-
-                break;
-            case -15:   // Input of items which should be enchanted
-                inventory = entity.getEnchantmentInputInventory();
-                break;
-            case -16:   // Lapis input
-                inventory = entity.getEnchantmentInputInventory();
-                transaction.setSlot(1);
-                break;
-            case -100:  // Crafting container dropped contents
-                inventory = entity.getCraftingInventory();
-                break;
             case 0:     // EntityPlayer window id
                 inventory = entity.getInventory();
                 break;
@@ -442,9 +409,6 @@ public class PacketInventoryTransactionHandler implements PacketHandler<PacketIn
                             }
 
                             transaction.setSlot(transaction.getSlot() - 32);
-                        } else if (transaction.getSlot() >= 14 && transaction.getSlot() <= 15) {
-                            inventory = entity.getEnchantmentInputInventory();
-                            transaction.setSlot(transaction.getSlot() - 14);
                         }
                     }
                 } else {

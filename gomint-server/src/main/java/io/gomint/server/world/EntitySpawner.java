@@ -14,6 +14,8 @@ import io.gomint.server.util.tick.Tickable;
 import io.gomint.world.Chunk;
 import io.gomint.world.block.Block;
 import io.gomint.world.block.data.Facing;
+import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
+import it.unimi.dsi.fastutil.longs.LongSet;
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 import it.unimi.dsi.fastutil.objects.ObjectIterator;
 import org.slf4j.Logger;
@@ -62,7 +64,7 @@ public class EntitySpawner implements Tickable {
     public void update(long currentTimeMS, float dT) {
         // ---
         // Get all chunks in which entities can be spawned
-        Set<ChunkAdapter> spawnableChunks = new HashSet<>();
+        LongSet spawnableChunks = new LongOpenHashSet();
 
         // Get all players in that world
         Object2ObjectMap.FastEntrySet<io.gomint.server.entity.EntityPlayer, ChunkAdapter> entrySet =
@@ -79,11 +81,11 @@ public class EntitySpawner implements Tickable {
                     boolean borderChunk = x == -CHUNK_SPAWN_RADIUS || x == CHUNK_SPAWN_RADIUS ||
                         z == -CHUNK_SPAWN_RADIUS || z == CHUNK_SPAWN_RADIUS;
 
-                    ChunkAdapter chunk = this.world.loadChunk(x + playerChunk.getX(), z + playerChunk.getZ(), true);
-                    if (!spawnableChunks.contains(chunk)) {
+                    long chunkHash = CoordinateUtils.toLong(x + playerChunk.getX(), z + playerChunk.getZ());
+                    if (!spawnableChunks.contains(chunkHash)) {
                         if (!borderChunk) {
-                            if (player.knowsChunk(chunk)) {
-                                spawnableChunks.add(chunk);
+                            if (player.knowsChunk(x + playerChunk.getX(), z + playerChunk.getZ())) {
+                                spawnableChunks.add(chunkHash);
                             }
                         }
                     }
@@ -98,9 +100,12 @@ public class EntitySpawner implements Tickable {
             int amountOfSpawnableEntities = value.spawnLimit * spawnableChunks.size() / MOB_COUNT_DIV;
 
             if (amountOfSpawnedEntities <= amountOfSpawnableEntities) {
-                for (ChunkAdapter spawnableChunk : spawnableChunks) {
-                    // Block spawnBlock = getRandomChunkBlock(spawnableChunk);
-                    // LOGGER.info("Spawning block: {}", spawnBlock.getBlockType());
+                for (long spawnableChunk : spawnableChunks) {
+                    Chunk chunk = this.world.getChunk(spawnableChunk);
+                    if (chunk != null) {
+                        // Block spawnBlock = getRandomChunkBlock(spawnableChunk);
+                        // LOGGER.info("Spawning block: {}", spawnBlock.getBlockType());
+                    }
                 }
             }
         }

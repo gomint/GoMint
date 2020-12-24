@@ -21,6 +21,7 @@ import io.gomint.server.network.packet.types.InventoryPlaceAction;
 import io.gomint.server.network.packet.types.InventorySwapAction;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -66,6 +67,7 @@ public class PacketItemStackRequest extends Packet {
                         action = new InventoryGetCreativeAction();
                         break;
                     case 13:
+                    case 14:
                         action = new InventoryCraftingResultAction();
                         break;
                     default:
@@ -93,10 +95,10 @@ public class PacketItemStackRequest extends Packet {
 
         @Override
         public String toString() {
-            return "Request{" +
-                "requestId=" + requestId +
-                ", actions=" + actions +
-                '}';
+            return "{\"_class\":\"Request\", " +
+                "\"requestId\":\"" + requestId + "\"" + ", " +
+                "\"actions\":" + (actions == null ? "null" : Arrays.toString(actions.toArray())) +
+                "}";
         }
     }
 
@@ -131,9 +133,9 @@ public class PacketItemStackRequest extends Packet {
 
     @Override
     public String toString() {
-        return "PacketItemStackRequest{" +
-            "requests=" + requests +
-            '}';
+        return "{\"_class\":\"PacketItemStackRequest\", " +
+            "\"requests\":" + (requests == null ? "null" : Arrays.toString(requests.toArray())) +
+            "}";
     }
 
 }

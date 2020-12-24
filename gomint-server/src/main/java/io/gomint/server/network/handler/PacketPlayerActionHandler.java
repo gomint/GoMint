@@ -1,10 +1,9 @@
 package io.gomint.server.network.handler;
 
 import io.gomint.event.player.*;
-import io.gomint.server.enchant.EnchantmentProcessor;
+import io.gomint.server.enchant.EnchantmentSelector;
 import io.gomint.server.network.PlayerConnection;
 import io.gomint.server.network.packet.PacketPlayerAction;
-import io.gomint.server.world.BlockRuntimeIDs;
 import io.gomint.server.world.LevelEvent;
 import io.gomint.server.world.block.Block;
 import org.slf4j.Logger;
@@ -71,11 +70,6 @@ public class PacketPlayerActionHandler implements PacketHandler<PacketPlayerActi
                     }
                 }
 
-                break;
-
-            case SET_ENCHANT_SEED:
-                // Just ignore the seed, it just announces that we enchanted
-                connection.getEntity().setEnchantmentProcessor( new EnchantmentProcessor( connection.getEntity() ) );
                 break;
 
             case START_BREAK:

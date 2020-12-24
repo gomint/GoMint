@@ -29,7 +29,7 @@ import io.gomint.math.*;
 import io.gomint.player.DeviceInfo;
 import io.gomint.plugin.Plugin;
 import io.gomint.server.GoMintServer;
-import io.gomint.server.enchant.EnchantmentProcessor;
+import io.gomint.server.enchant.EnchantmentSelector;
 import io.gomint.server.entity.metadata.MetadataContainer;
 import io.gomint.server.entity.passive.EntityHuman;
 import io.gomint.server.entity.projectile.EntityFishingHook;
@@ -59,12 +59,8 @@ import io.gomint.world.Particle;
 import io.gomint.world.ParticleData;
 import io.gomint.world.Sound;
 import io.gomint.world.SoundData;
-import it.unimi.dsi.fastutil.bytes.Byte2ObjectMap;
-import it.unimi.dsi.fastutil.bytes.Byte2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
-import it.unimi.dsi.fastutil.objects.Object2ByteMap;
-import it.unimi.dsi.fastutil.objects.Object2ByteOpenHashMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -72,6 +68,7 @@ import javax.annotation.Nonnull;
 import java.net.InetSocketAddress;
 import java.util.*;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -119,11 +116,6 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
     private CraftingInputInventory craftingInputInventory;
     private Inventory craftingResultInventory;
 
-    // Enchantment table
-    private EnchantmentTableInventory enchantmentInputInventory;
-    private Inventory enchantmentOutputInventory;
-    private EnchantmentProcessor enchantmentProcessor;
-
     // Block break data
     private BlockPosition breakVector;
     private long startBreak;
@@ -163,6 +155,7 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
     private Scoreboard scoreboard;
 
     private final EventCaller eventCaller;
+    private long enchantmentSeed;
 
     /**
      * Constructs a new player entity which will be spawned inside the specified world.
@@ -182,8 +175,10 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
                         Locale locale,
                         EventCaller eventCaller) {
         super(EntityType.PLAYER, world);
+
         this.connection = connection;
         this.eventCaller = eventCaller;
+        this.enchantmentSeed = ThreadLocalRandom.current().nextLong();
 
         // EntityHuman stuff
         this.setPlayerData(username, username, xboxId, uuid);
@@ -548,7 +543,7 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
         }
 
         // Look around
-        Collection<Entity> nearbyEntities = this.world.getNearbyEntities(this.boundingBox.grow(1, 0.5f, 1), this, null);
+        Collection<Entity> nearbyEntities = this.world.getNearbyEntities(this.boundingBox.grow(1, 0.5f, 1), this);
         if (nearbyEntities != null) {
             for (Entity nearbyEntity : nearbyEntities) {
                 io.gomint.server.entity.Entity implEntity = (io.gomint.server.entity.Entity) nearbyEntity;
@@ -676,8 +671,6 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
         this.craftingInputInventory = new CraftingInputInventory(this.world.getServer().getItems(), this);
         this.craftingResultInventory = new OneSlotInventory(this.world.getServer().getItems(), this);
 
-        this.enchantmentOutputInventory = new OneSlotInventory(this.world.getServer().getItems(), this);
-
         // Load from world
         if (!this.world.loadPlayer(this)) {
             // Get default spawn
@@ -716,8 +709,6 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
         this.craftingInventory.addViewer(this);
         this.craftingInputInventory.addViewer(this);
         this.craftingResultInventory.addViewer(this);
-
-        this.enchantmentOutputInventory.addViewer(this);
 
         // Send entity metadata
         this.sendData(this);
@@ -1678,7 +1669,7 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
         List<io.gomint.world.block.Block> blockList = this.world.getCollisionBlocks(this, true);
         if (blockList != null) {
             for (io.gomint.world.block.Block block : blockList) {
-                io.gomint.server.world.block.Block implBlock = (io.gomint.server.world.block.Block) block;
+                Block implBlock = (Block) block;
                 implBlock.onEntityCollision(this);
             }
         }
@@ -1749,22 +1740,6 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
         return craftingInputInventory;
     }
 
-    public Inventory getCraftingResultInventory() {
-        return craftingResultInventory;
-    }
-
-    public EnchantmentTableInventory getEnchantmentInputInventory() {
-        return enchantmentInputInventory;
-    }
-
-    public Inventory getEnchantmentOutputInventory() {
-        return enchantmentOutputInventory;
-    }
-
-    public EnchantmentProcessor getEnchantmentProcessor() {
-        return enchantmentProcessor;
-    }
-
     public BlockPosition getBreakVector() {
         return breakVector;
     }
@@ -1783,14 +1758,6 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
 
     public Location getTeleportPosition() {
         return teleportPosition;
-    }
-
-    public void setEnchantmentInputInventory(EnchantmentTableInventory enchantmentInputInventory) {
-        this.enchantmentInputInventory = enchantmentInputInventory;
-    }
-
-    public void setEnchantmentProcessor(EnchantmentProcessor enchantmentProcessor) {
-        this.enchantmentProcessor = enchantmentProcessor;
     }
 
     public void setBreakVector(BlockPosition breakVector) {
@@ -1870,6 +1837,10 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
 
     public Inventory getCurrentOpenContainer() {
         return this.currentOpenContainer;
+    }
+
+    public long getEnchantmentSeed() {
+        return enchantmentSeed;
     }
 
 }

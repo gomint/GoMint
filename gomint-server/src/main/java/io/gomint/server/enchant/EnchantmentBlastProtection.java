@@ -7,6 +7,7 @@
 
 package io.gomint.server.enchant;
 
+import io.gomint.enchant.Rarity;
 import io.gomint.inventory.item.ItemType;
 import io.gomint.server.inventory.item.ItemStack;
 import io.gomint.server.registry.RegisterInfo;
@@ -26,36 +27,31 @@ public class EnchantmentBlastProtection extends Enchantment implements io.gomint
     }
 
     @Override
-    public byte getMinEnchantAbility( short level ) {
+    public int getMinEnchantAbility( short level ) {
         return (byte) ( 5 + ( level - 1 ) * 8 );
     }
 
     @Override
-    public byte getMaxEnchantAbility( short level ) {
+    public int getMaxEnchantAbility( short level ) {
         return (byte) ( getMinEnchantAbility( level ) + 12 );
     }
 
     @Override
     public boolean canBeApplied( ItemStack itemStack ) {
-        return itemStack.getItemType() == ItemType.CHAIN_HELMET ||
-            itemStack.getItemType() == ItemType.DIAMOND_HELMET ||
-            itemStack.getItemType() == ItemType.GOLDEN_HELMET ||
-            itemStack.getItemType() == ItemType.IRON_HELMET ||
-            itemStack.getItemType() == ItemType.LEATHER_HELMET ||
-            itemStack.getItemType() == ItemType.CHAIN_LEGGINGS ||
-            itemStack.getItemType() == ItemType.DIAMOND_LEGGINGS ||
-            itemStack.getItemType() == ItemType.GOLDEN_LEGGINGS ||
-            itemStack.getItemType() == ItemType.IRON_LEGGINGS ||
-            itemStack.getItemType() == ItemType.LEATHER_LEGGINGS ||
-            itemStack.getItemType() == ItemType.CHAIN_CHESTPLATE ||
-            itemStack.getItemType() == ItemType.DIAMOND_CHESTPLATE ||
-            itemStack.getItemType() == ItemType.GOLDEN_CHESTPLATE ||
-            itemStack.getItemType() == ItemType.IRON_CHESTPLATE ||
-            itemStack.getItemType() == ItemType.LEATHER_CHESTPLATE ||
-            itemStack.getItemType() == ItemType.CHAIN_BOOTS ||
-            itemStack.getItemType() == ItemType.DIAMOND_BOOTS ||
-            itemStack.getItemType() == ItemType.GOLDEN_BOOTS ||
-            itemStack.getItemType() == ItemType.IRON_BOOTS ||
-            itemStack.getItemType() == ItemType.LEATHER_BOOTS;
+        return EnchantmentHelper.canBeAppliedArmor(itemStack);
     }
+
+    @Override
+    public Rarity getRarity() {
+        return Rarity.RARE;
+    }
+
+    @Override
+    public boolean collidesWith(Enchantment enchantment) {
+        return enchantment instanceof EnchantmentProtection ||
+            enchantment instanceof EnchantmentFireProtection ||
+            enchantment instanceof EnchantmentProjectileProtection ||
+            super.collidesWith(enchantment);
+    }
+
 }

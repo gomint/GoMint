@@ -25,7 +25,7 @@ public abstract class Growable extends Block {
     /**
      * Randomizer for seed drop output
      */
-    protected static final WeightedRandom<Integer> SEED_RANDOMIZER = new WeightedRandom<>();
+    protected static final WeightedRandom<Integer> SEED_RANDOMIZER = new WeightedRandom<>(ThreadLocalRandom.current());
 
     static {
         SEED_RANDOMIZER.add(0.15, 0);

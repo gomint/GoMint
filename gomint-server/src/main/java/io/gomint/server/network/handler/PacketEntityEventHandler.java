@@ -26,10 +26,6 @@ public class PacketEntityEventHandler implements PacketHandler<PacketEntityEvent
     public void handle(PacketEntityEvent packet, long currentTimeMillis, PlayerConnection connection) {
         LOGGER.debug("Got event id: {}", packet.getEntityId());
         switch (packet.getEventId()) {
-            case 34:
-                connection.getEntity().getEnchantmentProcessor().checkEntityEvent((short) Math.abs(packet.getEventData()));
-                break;
-
             default:
                 for (Entity entity : connection.getEntity().getAttachedEntities()) {
                     if (entity instanceof EntityPlayer) {

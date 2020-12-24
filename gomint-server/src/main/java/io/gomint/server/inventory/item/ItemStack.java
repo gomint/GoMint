@@ -526,7 +526,7 @@ public abstract class ItemStack implements Cloneable, io.gomint.inventory.item.I
         }
     }
 
-    private boolean canBeDamaged() {
+    public boolean canBeDamaged() {
         if (this.isDamageableCached) {
             return this.isDamageable;
         }

@@ -1,10 +1,14 @@
 package io.gomint.server.registry;
 
+import io.gomint.server.enchant.Enchantment;
 import io.gomint.server.util.ClassPath;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author geNAZt
@@ -152,6 +156,24 @@ public class Registry<R> {
 
     public void cleanup() {
         this.classPath = null;
+    }
+
+    public List<R> generateAll() {
+        List<R> all = new ArrayList<>();
+
+        for (Generator<R> generator : this.generators) {
+            if (generator != null) {
+                all.add(generator.generate());
+            }
+        }
+
+        for (Generator<R> generator : this.negativeGenerators) {
+            if (generator != null) {
+                all.add(generator.generate());
+            }
+        }
+
+        return all;
     }
 
 }

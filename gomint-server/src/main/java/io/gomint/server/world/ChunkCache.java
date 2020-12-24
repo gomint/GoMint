@@ -40,7 +40,7 @@ public class ChunkCache {
     // Ticking helper
     private float lastFullTickDT = 0;
     private LongSet alreadyTicked = new LongOpenHashSet();
-    private final LongSet[] tempHashes = { new LongOpenHashSet(), new LongOpenHashSet() }; // 0 => not to delete chunks, 1 => to delete chunks
+    private final LongSet toDeleteHashes = new LongOpenHashSet();
 
     public ChunkCache( WorldAdapter world ) {
         this.world = world;
@@ -63,21 +63,7 @@ public class ChunkCache {
         int spawnAreaSize = this.world.getConfig().getAmountOfChunksForSpawnArea();
 
         // Clear temp sets
-        this.tempHashes[0].clear();
-        this.tempHashes[1].clear();
-
-        // Copy over the current loaded chunk hashes
-        for ( EntityPlayer player : this.world.getPlayers0().keySet() ) {
-            LongIterator chunkIterator = player.getConnection().getPlayerChunks().iterator();
-            while ( chunkIterator.hasNext() ) {
-                this.tempHashes[0].add( chunkIterator.nextLong() );
-            }
-
-            chunkIterator = player.getConnection().getLoadingChunks().iterator();
-            while ( chunkIterator.hasNext() ) {
-                this.tempHashes[0].add( chunkIterator.nextLong() );
-            }
-        }
+        this.toDeleteHashes.clear();
 
         boolean checkChunkSave = this.isAutosaveEnabled() &&
             this.autoSaveInterval > 0;
@@ -87,8 +73,9 @@ public class ChunkCache {
         while ( iterator.hasNext() ) {
             Long2ObjectMap.Entry<ChunkAdapter> entry = iterator.next();
             ChunkAdapter chunk = entry.getValue();
-            if ( checkChunkSave && chunk.isNeedsPersistence() &&
-                currentTimeMS - chunk.getLastSavedTimestamp() >= this.autoSaveInterval ) {
+            if ( checkChunkSave &&
+                currentTimeMS - chunk.getLastSavedTimestamp() >= this.autoSaveInterval &&
+                chunk.isNeedsPersistence() ) {
                 chunk.setLastSavedTimestamp( currentTimeMS );
                 this.world.saveChunkAsynchronously( chunk );
             }
@@ -104,7 +91,7 @@ public class ChunkCache {
             }
 
             // Calculate the hashes which are used by players view distances
-            if ( this.tempHashes[0].contains( entry.getLongKey() ) ) {
+            if ( this.isInAnyViewDistance( entry.getLongKey() ) ) {
                 continue;
             }
 
@@ -122,11 +109,11 @@ public class ChunkCache {
             }
 
             // Ask this chunk if he wants to be gced
-            this.tempHashes[1].add( entry.getLongKey() );
+            this.toDeleteHashes.add( entry.getLongKey() );
         }
 
-        if ( !this.tempHashes[1].isEmpty() ) {
-            LongIterator toRemoveCursor = this.tempHashes[1].iterator();
+        if ( !this.toDeleteHashes.isEmpty() ) {
+            LongIterator toRemoveCursor = this.toDeleteHashes.iterator();
             while ( toRemoveCursor.hasNext() ) {
                 long chunkKey = toRemoveCursor.nextLong();
                 LOGGER.debug("Should remove chunk {}", chunkKey);
@@ -150,6 +137,17 @@ public class ChunkCache {
                 adapter.release();
             }
         }
+    }
+
+    private boolean isInAnyViewDistance( long key ) {
+        for ( EntityPlayer player : this.world.getPlayers0().keySet() ) {
+            if ( player.getConnection().getPlayerChunks().contains( key ) ||
+                player.getConnection().getLoadingChunks().contains( key ) ) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     // ==================================== CHUNK CACHE ==================================== //

@@ -21,4 +21,11 @@ public interface Enchantment {
      */
     short getLevel();
 
+    /**
+     * Get the rarity of this enchantment
+     *
+     * @return rarity of enchantment
+     */
+    Rarity getRarity();
+
 }

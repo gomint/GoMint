@@ -60,9 +60,11 @@ import io.gomint.world.block.data.Facing;
 import io.gomint.world.generator.ChunkGenerator;
 import io.gomint.world.generator.GeneratorContext;
 import io.gomint.world.generator.integrated.VoidGenerator;
+import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectMaps;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -640,6 +642,10 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
         return this.chunkCache.getChunk(x, z);
     }
 
+    public ChunkAdapter getChunk(long hash) {
+        return this.chunkCache.getChunkInternal(hash);
+    }
+
     @Override
     public Chunk getOrGenerateChunk(int x, int z) {
         Chunk chunk = this.getChunk(x, z);
@@ -1003,26 +1009,10 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
      *
      * @param bb        the bounding box which should be used to collect entities in
      * @param exception a entity which should not be included in the list
-     * @param function  which gets called for getting the correct bounding box for this check
      * @return either null if there are no entities or a collection of entities
      */
-    public Collection<Entity> getNearbyEntities(AxisAlignedBB bb, Entity exception, Function<Entity, AxisAlignedBB> function) {
-        final Set[] nearby = new HashSet[1];
-        final Consumer<Entity> consumer = new Consumer<Entity>() {
-            @Override
-            public void accept(Entity entity) {
-                if (!entity.equals(exception)) {
-                    AxisAlignedBB entityBB = function == null ? entity.getBoundingBox() : function.apply(entity);
-                    if (entityBB.intersectsWith(bb)) {
-                        if (nearby[0] == null) {
-                            nearby[0] = new HashSet<>();
-                        }
-
-                        nearby[0].add(entity);
-                    }
-                }
-            }
-        };
+    public Collection<Entity> getNearbyEntities(AxisAlignedBB bb, Entity exception) {
+        Set<Entity> nearby = null;
 
         int minX = MathUtils.fastFloor((bb.getMinX() - 2) / 16);
         int maxX = MathUtils.fastCeil((bb.getMaxX() + 2) / 16);
@@ -1031,14 +1021,26 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
 
         for (int x = minX; x <= maxX; ++x) {
             for (int z = minZ; z <= maxZ; ++z) {
-                Chunk chunk = this.getChunk(x, z);
-                if (chunk != null) {
-                    chunk.iterateEntities(Entity.class, consumer);
+                ChunkAdapter chunk = this.getChunk(x, z);
+                if (chunk != null && chunk.getEntities() != null) {
+                    for (Long2ObjectMap.Entry<io.gomint.entity.Entity> entry : chunk.getEntities().long2ObjectEntrySet()) {
+                        Entity entity = entry.getValue();
+                        if (!entity.equals(exception)) {
+                            AxisAlignedBB entityBB = entity.getBoundingBox();
+                            if (entityBB.intersectsWith(bb)) {
+                                if (nearby == null) {
+                                    nearby = new ObjectOpenHashSet<>();
+                                }
+
+                                nearby.add(entity);
+                            }
+                        }
+                    }
                 }
             }
         }
 
-        return nearby[0];
+        return nearby;
     }
 
     private <T> List<T> iterateBlocks(int minX, int maxX, int minY, int maxY, int minZ, int maxZ, AxisAlignedBB
@@ -1104,7 +1106,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
         List<AxisAlignedBB> collisions = iterateBlocks(minX, maxX, minY, maxY, minZ, maxZ, bb, true, false);
 
         if (includeEntities) {
-            Collection<io.gomint.entity.Entity> entities = getNearbyEntities(bb.grow(0.25f, 0.25f, 0.25f), entity, null);
+            Collection<io.gomint.entity.Entity> entities = getNearbyEntities(bb.grow(0.25f, 0.25f, 0.25f), entity);
             if (entities != null) {
                 for (io.gomint.entity.Entity entity1 : entities) {
                     if (collisions == null) {

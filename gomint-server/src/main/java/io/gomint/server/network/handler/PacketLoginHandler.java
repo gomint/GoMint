@@ -70,6 +70,9 @@ public class PacketLoginHandler implements PacketHandler<PacketLogin> {
 
     @Override
     public void handle(PacketLogin packet, long currentTimeMillis, PlayerConnection connection) {
+        // We set the decompression limit to 500kb
+        connection.getInputProcessor().preallocSize(500 * 1024);
+
         // Check versions
         LOGGER.debug("Trying to login with protocol version: " + packet.getProtocol());
         if (packet.getProtocol() != Protocol.MINECRAFT_PE_PROTOCOL_VERSION

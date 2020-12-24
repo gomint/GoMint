@@ -7,6 +7,7 @@
 
 package io.gomint.server.enchant;
 
+import io.gomint.enchant.Rarity;
 import io.gomint.inventory.item.ItemType;
 import io.gomint.server.inventory.item.ItemStack;
 import io.gomint.server.registry.RegisterInfo;
@@ -19,21 +20,19 @@ import io.gomint.server.registry.RegisterInfo;
 public class EnchantmentFeatherfalling extends Enchantment implements io.gomint.enchant.EnchantmentFeatherfalling {
 
     /**
-     * Create new enchantment smite
-     *
-     * @param level of this enchantment
+     * Create new enchantment feather falling
      */
     public EnchantmentFeatherfalling() {
         super( (short) 4 );
     }
 
     @Override
-    public byte getMinEnchantAbility( short level ) {
+    public int getMinEnchantAbility( short level ) {
         return (byte) ( 5 + ( level - 1 ) * 6 );
     }
 
     @Override
-    public byte getMaxEnchantAbility( short level ) {
+    public int getMaxEnchantAbility( short level ) {
         return (byte) ( getMinEnchantAbility( level ) + 10 );
     }
 
@@ -43,7 +42,13 @@ public class EnchantmentFeatherfalling extends Enchantment implements io.gomint.
             itemStack.getItemType() == ItemType.DIAMOND_BOOTS ||
             itemStack.getItemType() == ItemType.GOLDEN_BOOTS ||
             itemStack.getItemType() == ItemType.IRON_BOOTS ||
-            itemStack.getItemType() == ItemType.LEATHER_BOOTS;
+            itemStack.getItemType() == ItemType.LEATHER_BOOTS ||
+            itemStack.getItemType() == ItemType.NETHERITE_BOOTS;
+    }
+
+    @Override
+    public Rarity getRarity() {
+        return Rarity.UNCOMMON;
     }
 
 }
