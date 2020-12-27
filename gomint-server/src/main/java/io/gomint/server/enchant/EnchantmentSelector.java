@@ -30,7 +30,7 @@ public class EnchantmentSelector {
 
     public static Pair<int[], List<List<Enchantment>>> getEnchantments(Enchantments enchantments, FastRandom random, Location blockLocation, ItemStack toEnchant) {
         // Check if the item can be enchanted at all
-        if (toEnchant.getEnchantAbility() == 0) {
+        if (toEnchant.getEnchantAbility() == 0 || toEnchant.isEnchanted()) {
             return null;
         }
 
@@ -94,6 +94,13 @@ public class EnchantmentSelector {
 
                 selected.add(weightedRandom.next());
                 useLevel /= 2;
+            }
+
+            if (LOGGER.isDebugEnabled()) {
+                LOGGER.debug("Selected enchants: ");
+                for (Enchantment enchantment : selected) {
+                    LOGGER.debug(" > {}: {}", enchantment.getClass().getSimpleName(), enchantment.getLevel() );
+                }
             }
         }
 

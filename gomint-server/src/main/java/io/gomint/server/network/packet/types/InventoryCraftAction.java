@@ -21,6 +21,11 @@ public class InventoryCraftAction implements InventoryAction {
         this.recipeId = buffer.readUnsignedVarInt();
     }
 
+    @Override
+    public int weight() {
+        return 10;
+    }
+
     public int getRecipeId() {
         return recipeId;
     }

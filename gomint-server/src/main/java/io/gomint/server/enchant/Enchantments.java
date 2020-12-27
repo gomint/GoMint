@@ -68,7 +68,6 @@ public class Enchantments {
         return enchantment;
     }
 
-
     public short getId(Class<? extends io.gomint.enchant.Enchantment> clazz) {
         return (short) this.generators.getId(clazz);
     }

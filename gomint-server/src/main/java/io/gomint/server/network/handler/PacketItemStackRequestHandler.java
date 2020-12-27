@@ -9,6 +9,7 @@ package io.gomint.server.network.handler;
 
 import io.gomint.inventory.item.ItemAir;
 import io.gomint.server.entity.EntityPlayer;
+import io.gomint.server.inventory.EnchantmentTableInventory;
 import io.gomint.server.inventory.Inventory;
 import io.gomint.server.inventory.OneSlotInventory;
 import io.gomint.server.inventory.WindowMagicNumbers;
@@ -20,6 +21,7 @@ import io.gomint.server.inventory.transaction.TransactionGroup;
 import io.gomint.server.network.PlayerConnection;
 import io.gomint.server.network.handler.session.CraftingSession;
 import io.gomint.server.network.handler.session.CreativeSession;
+import io.gomint.server.network.handler.session.EnchantingSession;
 import io.gomint.server.network.handler.session.Session;
 import io.gomint.server.network.packet.PacketItemStackRequest;
 import io.gomint.server.network.packet.PacketItemStackResponse;
@@ -39,6 +41,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class PacketItemStackRequestHandler implements PacketHandler<PacketItemStackRequest> {
@@ -54,6 +58,16 @@ public class PacketItemStackRequestHandler implements PacketHandler<PacketItemSt
             PacketItemStackResponse.Response resp = null;
             TransactionGroup transactionGroup = new TransactionGroup(connection.getEntity());
             Byte2ObjectMap<Byte2ObjectMap<PacketItemStackResponse.StackResponseSlotInfo>> successChanges = new Byte2ObjectOpenHashMap<>();
+
+            request.getActions().sort((o1, o2) -> Integer.compare(o2.weight(), o1.weight()));
+
+            if (LOGGER.isDebugEnabled()) {
+                LOGGER.debug("Sorted itemstack request:");
+
+                for (InventoryAction action : request.getActions()) {
+                    LOGGER.debug(" > {}", action);
+                }
+            }
 
             for (InventoryAction action : request.getActions()) {
                 if (action instanceof InventoryDestroyCreativeAction) {
@@ -119,8 +133,14 @@ public class PacketItemStackRequestHandler implements PacketHandler<PacketItemSt
                 } else if (action instanceof InventoryDropAction) {
                     resp = handleInventoryDrop((InventoryDropAction) action, connection, transactionGroup, request, session);
                 } else if (action instanceof InventoryCraftAction) {
-                    session = new CraftingSession(connection)
-                        .findRecipe(((InventoryCraftAction) action).getRecipeId());
+                    if (connection.getEntity().getCurrentOpenContainer() != null &&
+                        connection.getEntity().getCurrentOpenContainer() instanceof EnchantmentTableInventory) {
+                        session = new EnchantingSession(connection)
+                            .selectOption(((InventoryCraftAction) action).getRecipeId());
+                    } else {
+                        session = new CraftingSession(connection)
+                            .findRecipe(((InventoryCraftAction) action).getRecipeId());
+                    }
                 } else if (action instanceof InventoryCraftingResultAction) {
                     if (session == null) {
                         resp = new PacketItemStackResponse.Response(PacketItemStackResponse.ResponseResult.Error, request.getRequestId(), null);
@@ -335,6 +355,7 @@ public class PacketItemStackRequestHandler implements PacketHandler<PacketItemSt
             case WindowMagicNumbers.CURSOR:
                 return entity.getCursorInventory();
             case WindowMagicNumbers.ENCHANTMENT_TABLE_INPUT:
+            case WindowMagicNumbers.ENCHANTMENT_TABLE_MATERIAL:
             case WindowMagicNumbers.CONTAINER:
                 return entity.getCurrentOpenContainer();
             case WindowMagicNumbers.CRAFTING_INPUT:

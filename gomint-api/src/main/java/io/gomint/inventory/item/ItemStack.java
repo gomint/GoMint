@@ -82,8 +82,8 @@ public interface ItemStack {
      * Add enchantment based on class and level
      *
      * @param clazz of the enchantment
-     * @param level of the enchantment
-     * @return the itemstack instance for further manipulation
+     * @param level of the enchantment, starting by one
+     * @return the item stack instance for further manipulation
      */
     ItemStack addEnchantment(Class<? extends Enchantment> clazz, int level);
 

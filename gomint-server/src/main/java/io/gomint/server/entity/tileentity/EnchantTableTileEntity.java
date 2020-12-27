@@ -79,7 +79,7 @@ public class EnchantTableTileEntity extends ContainerTileEntity implements Inven
             }
 
             PacketPlayerEnchantmentOptions.EnchantmentActivation activation = new PacketPlayerEnchantmentOptions.EnchantmentActivation(packetEnchantments);
-            PacketPlayerEnchantmentOptions.EnchantmentItem item = new PacketPlayerEnchantmentOptions.EnchantmentItem(0, Arrays.asList(activation, activation, activation));
+            PacketPlayerEnchantmentOptions.EnchantmentItem item = new PacketPlayerEnchantmentOptions.EnchantmentItem(i, Arrays.asList(activation, activation, activation));
             PacketPlayerEnchantmentOptions.EnchantmentOption option = new PacketPlayerEnchantmentOptions.EnchantmentOption(cost, item, getRandomString(8, random), i);
             options.add(option);
         }

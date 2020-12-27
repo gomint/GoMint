@@ -21,6 +21,11 @@ public class InventoryGetCreativeAction implements InventoryAction {
         this.creativeItemId = buffer.readUnsignedVarInt();
     }
 
+    @Override
+    public int weight() {
+        return 11;
+    }
+
     public int getCreativeItemId() {
         return creativeItemId;
     }

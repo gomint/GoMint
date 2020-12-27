@@ -14,6 +14,11 @@ public class InventoryConsumeAction extends InventoryTransferAction {
     }
 
     @Override
+    public int weight() {
+        return 8;
+    }
+
+    @Override
     public String toString() {
         return "{\"_class\":\"InventoryConsumeAction\", \"_super\": " + super.toString() + "}";
     }

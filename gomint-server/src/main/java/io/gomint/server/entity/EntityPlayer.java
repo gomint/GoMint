@@ -178,7 +178,7 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
 
         this.connection = connection;
         this.eventCaller = eventCaller;
-        this.enchantmentSeed = ThreadLocalRandom.current().nextLong();
+        this.generateNewEnchantmentSeed();
 
         // EntityHuman stuff
         this.setPlayerData(username, username, xboxId, uuid);
@@ -1841,6 +1841,10 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
 
     public long getEnchantmentSeed() {
         return enchantmentSeed;
+    }
+
+    public void generateNewEnchantmentSeed() {
+        this.enchantmentSeed = ThreadLocalRandom.current().nextLong();
     }
 
 }

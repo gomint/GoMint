@@ -17,6 +17,7 @@ import io.gomint.server.GoMintServer;
 import io.gomint.server.entity.EntityLink;
 import io.gomint.server.network.type.CommandOrigin;
 import io.gomint.server.player.PlayerSkin;
+import io.gomint.server.util.DumpUtil;
 import io.gomint.server.util.Things;
 import io.gomint.taglib.AllocationLimitReachedException;
 import io.gomint.taglib.NBTReader;
@@ -83,6 +84,8 @@ public abstract class Packet {
                 nbtReader.setUseVarint(true);
                 // There is no alloc limit needed here, you can't write so much shit in 32kb, so thats ok
                 nbt = nbtReader.parse();
+
+                DumpUtil.dumpNBTCompund(nbt);
             } catch (IOException | AllocationLimitReachedException e) {
                 LOGGER.error("Could not read item stack because of NBT", e);
                 return ItemAir.create(0);
