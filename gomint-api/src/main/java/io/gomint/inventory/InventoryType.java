@@ -18,6 +18,7 @@ public enum InventoryType {
     ARMOR,
     CRAFTING,
     CONTAINER,
+    ENCHANTING_TABLE,
     CREATIVE,
     CURSOR,
     OFFHAND

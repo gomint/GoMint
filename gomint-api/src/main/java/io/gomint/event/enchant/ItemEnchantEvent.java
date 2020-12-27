@@ -15,18 +15,20 @@ import java.util.List;
  *
  * This event gets fired when the player has selected the enchantments it wants on given item.
  */
-public class ItemEnchantmentEvent extends CancellablePlayerEvent {
+public class ItemEnchantEvent extends CancellablePlayerEvent {
 
     private final ItemStack itemToEnchant;
     private final List<Enchantment> enchantments;
     private int levelCost;
-    private int materialCost;
+    private final int materialCost;
+    private int levelRequirement;
 
-    public ItemEnchantmentEvent(EntityPlayer player,
-                                ItemStack itemToEnchant,
-                                int levelCost,
-                                int materialCost,
-                                List<Enchantment> enchantments) {
+    public ItemEnchantEvent(EntityPlayer player,
+                            ItemStack itemToEnchant,
+                            int levelCost,
+                            int materialCost,
+                            List<Enchantment> enchantments,
+                            int levelRequirement) {
         super(player);
         this.itemToEnchant = itemToEnchant;
         this.enchantments = enchantments;
@@ -63,15 +65,6 @@ public class ItemEnchantmentEvent extends CancellablePlayerEvent {
     }
 
     /**
-     * Set the amount of material this enchantment operation should cost
-     *
-     * @param materialCost for this enchantment operation. This can only be positive, including 0
-     */
-    public void setMaterialCost(int materialCost) {
-        this.materialCost = materialCost;
-    }
-
-    /**
      * Get the item which should be enchanted
      *
      * @return item stack which should be enchanted
@@ -88,6 +81,24 @@ public class ItemEnchantmentEvent extends CancellablePlayerEvent {
      */
     public List<Enchantment> getEnchantments() {
         return enchantments;
+    }
+
+    /**
+     * Get the amount of levels the player needs to unlock this enchantment
+     *
+     * @return minimum level the player needs
+     */
+    public int getLevelRequirement() {
+        return levelRequirement;
+    }
+
+    /**
+     * Set the minimum required levels the player needs to unlock this enchantment
+     *
+     * @param levelRequirement which the player needs
+     */
+    public void setLevelRequirement(int levelRequirement) {
+        this.levelRequirement = levelRequirement;
     }
 
 }

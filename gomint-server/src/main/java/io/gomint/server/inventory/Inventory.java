@@ -267,6 +267,12 @@ public abstract class Inventory implements io.gomint.inventory.Inventory {
         }
 
         this.changeObservers.add(consumer);
+
+        // We trigger the new consumer once per item
+        for (int i = 0; i < this.contents.length; i++) {
+            ItemStack item = this.contents[i];
+            consumer.accept(Pair.of(i, item));
+        }
     }
 
     public void clearViewers() {

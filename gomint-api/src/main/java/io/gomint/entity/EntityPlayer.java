@@ -91,15 +91,16 @@ public interface EntityPlayer extends EntityHuman {
      * Opens a inventory for the player
      *
      * @param inventory which should be opened
+     * @return true when the client has opened the inventory, false when not
      */
-    void openInventory( Inventory inventory );
+    boolean openInventory( Inventory inventory );
 
     /**
      * Close the given inventory
      *
      * @param inventory which should be closed
      */
-    void closeInventory( Inventory inventory );
+    boolean closeInventory( Inventory inventory );
 
     /**
      * Send a message to the client, this uses the normal {@link ChatType} enum.

@@ -7,14 +7,14 @@
 
 package io.gomint.server.network.handler.session;
 
+import io.gomint.event.enchant.ItemEnchantEvent;
 import io.gomint.inventory.item.ItemType;
 import io.gomint.math.Location;
+import io.gomint.server.crafting.session.SessionInventory;
 import io.gomint.server.enchant.Enchantment;
-import io.gomint.server.enchant.EnchantmentHelper;
 import io.gomint.server.enchant.EnchantmentSelector;
 import io.gomint.server.inventory.EnchantmentTableInventory;
 import io.gomint.server.inventory.Inventory;
-import io.gomint.server.inventory.OneSlotInventory;
 import io.gomint.server.inventory.item.ItemStack;
 import io.gomint.server.network.PlayerConnection;
 import io.gomint.server.util.Pair;
@@ -24,6 +24,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class EnchantingSession implements Session {
 
@@ -36,10 +37,10 @@ public class EnchantingSession implements Session {
 
     public EnchantingSession(PlayerConnection connection) {
         this.connection = connection;
-        this.inputInventory = new OneSlotInventory(connection.getServer().getItems(),
-            connection.getEntity());
-        this.outputInventory = new OneSlotInventory(connection.getServer().getItems(),
-            connection.getEntity());
+        this.inputInventory = new SessionInventory(connection.getServer().getItems(),
+            connection.getEntity(), 2);
+        this.outputInventory = new SessionInventory(connection.getServer().getItems(),
+            connection.getEntity(), 1);
     }
 
     @Override
@@ -53,6 +54,7 @@ public class EnchantingSession implements Session {
         if (this.selectedEnchantment < 0 ||
             this.selectedEnchantment > 2 ||
             this.connection.getEntity().getGamemode() == Gamemode.SPECTATOR) {
+            LOGGER.debug("Selected enchantment out of range or player is spectator");
             return false;
         }
 
@@ -74,28 +76,41 @@ public class EnchantingSession implements Session {
 
         int cost = enchantments.getFirst()[this.selectedEnchantment];
         List<Enchantment> ench = enchantments.getSecond().get(this.selectedEnchantment);
+        int pay = this.selectedEnchantment + 1;
+
+        ItemEnchantEvent event = this.connection.getEntity().getWorld().getServer().getPluginManager().callEvent(new ItemEnchantEvent(
+            this.connection.getEntity(),
+            this.inputInventory.getItem(0),
+            pay,
+            pay,
+            ench.stream().map(e -> (io.gomint.enchant.Enchantment) e).collect(Collectors.toList()),
+            cost
+        ));
+
+        if (event.isCancelled()) {
+            return false;
+        }
 
         // Player does not have enough levels to cover "costs"
         if (this.connection.getEntity().getGamemode() != Gamemode.CREATIVE &&
-            this.connection.getEntity().getLevel() < cost) {
+            this.connection.getEntity().getLevel() < event.getLevelRequirement()) {
             LOGGER.info("Got enchantment request from {} but has not enough levels, needs {} to cover requirements", this.connection.getEntity(),
                 cost);
             return false;
         }
 
         // Check if the player has enough levels for paying
-        int pay = this.selectedEnchantment + 1;
         if (this.connection.getEntity().getGamemode() != Gamemode.CREATIVE &&
-            this.connection.getEntity().getLevel() < pay) {
+            this.connection.getEntity().getLevel() < event.getLevelCost()) {
             LOGGER.info("Got enchantment request from {} but has not enough levels, needs {} to cover costs", this.connection.getEntity(),
                 pay);
             return false;
         }
 
         // Check if the enchantment table contains enough lapis
-        ItemStack lapis = (ItemStack) this.connection.getEntity().getCurrentOpenContainer().getItem(1);
+        ItemStack lapis = (ItemStack) this.inputInventory.getItem(1);
         if (this.connection.getEntity().getGamemode() != Gamemode.CREATIVE &&
-            (lapis.getItemType() != ItemType.LAPIS_LAZULI || lapis.getAmount() < pay)) {
+            (lapis.getItemType() != ItemType.LAPIS_LAZULI || lapis.getAmount() < event.getMaterialCost())) {
             LOGGER.info("Got enchantment request from {} but has not enough lapis, needs {} to cover costs", this.connection.getEntity(),
                 pay);
             return false;
@@ -103,14 +118,14 @@ public class EnchantingSession implements Session {
 
         // Modify player level and lapis amound if needed
         if (this.connection.getEntity().getGamemode() != Gamemode.CREATIVE) {
-            this.connection.getEntity().setLevel(this.connection.getEntity().getLevel() - pay);
-            lapis.setAmount(lapis.getAmount() - pay);
+            this.connection.getEntity().setLevel(this.connection.getEntity().getLevel() - event.getLevelCost());
+            lapis.setAmount(lapis.getAmount() - event.getMaterialCost());
         }
 
         // Now we can enchant the item in the output slot
         ItemStack toEnchant = (ItemStack) this.inputInventory.getItem(0);
 
-        for (Enchantment enchantment : ench) {
+        for (io.gomint.enchant.Enchantment enchantment : event.getEnchantments()) {
             toEnchant.addEnchantment(enchantment.getClass(), enchantment.getLevel());
         }
 
@@ -123,9 +138,17 @@ public class EnchantingSession implements Session {
     }
 
     @Override
-    public void addInput(ItemStack item) {
-        LOGGER.debug("Got item for enchant: {}", item);
-        this.inputInventory.setItem(0, item);
+    public void addInput(ItemStack item, int slot) {
+        LOGGER.debug("Got item for enchant: {} / {}", item, slot);
+        this.inputInventory.setItem(slot, item);
+    }
+
+    @Override
+    public void postProcess() {
+        // Due to a bug in 1.16.200+ the client displays the enchantment one level to high (you tell it to enchant level
+        // 1 and it displays level 2). To fix this we simply "correct" the client view by forcing the enchanted item
+        // over after the transaction completes
+        this.connection.getEntity().getCurrentOpenContainer().sendContents(0, this.connection);
     }
 
     public Session selectOption(int selection) {

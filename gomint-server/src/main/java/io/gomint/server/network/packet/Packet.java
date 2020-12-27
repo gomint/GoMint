@@ -84,8 +84,6 @@ public abstract class Packet {
                 nbtReader.setUseVarint(true);
                 // There is no alloc limit needed here, you can't write so much shit in 32kb, so thats ok
                 nbt = nbtReader.parse();
-
-                DumpUtil.dumpNBTCompund(nbt);
             } catch (IOException | AllocationLimitReachedException e) {
                 LOGGER.error("Could not read item stack because of NBT", e);
                 return ItemAir.create(0);

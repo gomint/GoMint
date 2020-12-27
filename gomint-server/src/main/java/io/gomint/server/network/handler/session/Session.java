@@ -33,7 +33,13 @@ public interface Session {
      * Called when a transaction wants the session to consume a item
      *
      * @param item which should be consumed
+     * @param slot filled when the consume needs to be in a specific slot
      */
-    void addInput(ItemStack item);
+    void addInput(ItemStack item, int slot);
+
+    /**
+     * Get called when all transactions have been done and some cleanup needs to be done
+     */
+    void postProcess();
 
 }

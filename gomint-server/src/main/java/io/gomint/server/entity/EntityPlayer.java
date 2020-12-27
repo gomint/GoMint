@@ -568,13 +568,13 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
     }
 
     @Override
-    public void openInventory(io.gomint.inventory.Inventory inventory) {
+    public boolean openInventory(io.gomint.inventory.Inventory inventory) {
         if (inventory instanceof ContainerInventory) {
             InventoryOpenEvent event = new InventoryOpenEvent(this, inventory);
             this.getWorld().getServer().getPluginManager().callEvent(event);
 
             if (event.isCancelled()) {
-                return;
+                return false;
             }
 
             // Check if we have a open container
@@ -587,16 +587,22 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
             containerInventory.addViewer(this, WindowMagicNumbers.OPEN_CONTAINER);
 
             this.currentOpenContainer = containerInventory;
+            return true;
         }
+
+        return false;
     }
 
     @Override
-    public void closeInventory(io.gomint.inventory.Inventory inventory) {
+    public boolean closeInventory(io.gomint.inventory.Inventory inventory) {
         if (inventory instanceof ContainerInventory) {
             if (this.currentOpenContainer == inventory) {
                 this.closeInventory(WindowMagicNumbers.OPEN_CONTAINER, true);
+                return true;
             }
         }
+
+        return false;
     }
 
     /**

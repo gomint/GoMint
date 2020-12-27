@@ -1,5 +1,6 @@
 package io.gomint.server.inventory;
 
+import io.gomint.inventory.InventoryType;
 import io.gomint.inventory.item.ItemStack;
 import io.gomint.inventory.item.ItemType;
 import io.gomint.math.Location;
@@ -50,6 +51,11 @@ public class EnchantmentTableInventory extends ContainerInventory {
 
         // Clear this inventory just to be safe
         clear();
+    }
+
+    @Override
+    public InventoryType getInventoryType() {
+        return InventoryType.ENCHANTING_TABLE;
     }
 
 }

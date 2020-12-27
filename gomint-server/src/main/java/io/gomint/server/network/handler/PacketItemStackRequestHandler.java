@@ -8,6 +8,7 @@
 package io.gomint.server.network.handler;
 
 import io.gomint.inventory.item.ItemAir;
+import io.gomint.server.crafting.session.SessionInventory;
 import io.gomint.server.entity.EntityPlayer;
 import io.gomint.server.inventory.EnchantmentTableInventory;
 import io.gomint.server.inventory.Inventory;
@@ -101,7 +102,7 @@ public class PacketItemStackRequestHandler implements PacketHandler<PacketItemSt
                         item = (ItemStack) item.clone().setAmount(64);
 
                         session = new CreativeSession(connection);
-                        session.addInput(item);
+                        session.addInput(item, 0);
                     } else {
                         resp = new PacketItemStackResponse.Response(PacketItemStackResponse.ResponseResult.Error, request.getRequestId(), null);
                     }
@@ -121,7 +122,8 @@ public class PacketItemStackRequestHandler implements PacketHandler<PacketItemSt
                             item = (ItemStack) item.clone().setAmount(consumeAction.getAmount());
                         }
 
-                        session.addInput(item);
+                        byte slot = fixSlotInput(source);
+                        session.addInput(item, slot);
 
                         item = getItemStack(connection.getEntity(), source, session);
                         successChanges
@@ -193,6 +195,10 @@ public class PacketItemStackRequestHandler implements PacketHandler<PacketItemSt
         PacketItemStackResponse response = new PacketItemStackResponse();
         response.setResponses(responses);
         connection.addToSendQueue(response);
+
+        if (session != null) {
+            session.postProcess();
+        }
     }
 
     private PacketItemStackResponse.Response handleInventoryDrop(InventoryDropAction dropAction,
@@ -237,7 +243,7 @@ public class PacketItemStackRequestHandler implements PacketHandler<PacketItemSt
                                                                      PacketItemStackRequest.Request request,
                                                                      Session session) {
         Inventory sourceInventory = getInventory(connection.getEntity(), transferAction.getSource().getWindowId(), session);
-        if (sourceInventory instanceof OneSlotInventory) {
+        if (sourceInventory instanceof SessionInventory) {
             if (!session.process()) {
                 return new PacketItemStackResponse.Response(PacketItemStackResponse.ResponseResult.Error, request.getRequestId(), null);
             }
