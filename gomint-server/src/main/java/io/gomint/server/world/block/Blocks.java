@@ -43,7 +43,7 @@ public class Blocks {
     private PacketBuffer packetCache;
 
     public void init(ClassPath classPath, Items items, TileEntities tileEntities, List<BlockIdentifier> blockIdentifiers) throws IOException {
-        this.generators = new BlockRegistry(blockIdentifiers, classPath, (clazz, id) -> {
+        this.generators = new BlockRegistry(blockIdentifiers, (clazz, id) -> {
             ConstructionFactory<Block> factory = ASMFactoryConstructionFactory.create(clazz);
             BlockIdentifier blockIdentifier = BlockRuntimeIDs.toBlockIdentifier(id, null);
 
@@ -58,7 +58,7 @@ public class Blocks {
 
         BlockRuntimeIDs.init(blockIdentifiers, this);
 
-        this.generators.register("io.gomint.server.world.block");
+        this.generators.register(classPath, "io.gomint.server.world.block");
         this.generators.cleanup();
     }
 

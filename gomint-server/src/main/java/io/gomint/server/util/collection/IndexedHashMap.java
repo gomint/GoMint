@@ -10,15 +10,13 @@ import java.util.List;
  */
 public class IndexedHashMap<K, V> extends LinkedHashMap<K, V> {
 
-    private List<K> index = new ArrayList<>();
+    private final List<K> index = new ArrayList<>();
 
     @Override
     public V put( K key, V value ) {
         V ret = super.put( key, value );
 
-        if ( this.index.contains( key ) ) {
-            this.index.remove( key );
-        }
+        this.index.remove( key );
 
         this.index.add( key );
         return ret;

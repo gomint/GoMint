@@ -51,7 +51,6 @@ public class StringRegistry<R> {
         }
     }
 
-    private ClassPath classPath;
     private final GeneratorCallback<R> generatorCallback;
 
     private final Map<Lookup, Generator<R>> generators = new HashMap<>();
@@ -60,23 +59,22 @@ public class StringRegistry<R> {
     /**
      * Build a new generator registry
      *
-     * @param classPath which reflects the current classes
      * @param callback  which is used to generate a generator for each found element
      */
-    public StringRegistry(ClassPath classPath, GeneratorCallback<R> callback) {
-        this.classPath = classPath;
+    public StringRegistry(GeneratorCallback<R> callback) {
         this.generatorCallback = callback;
     }
 
     /**
      * Register all classes which can be found in given path
      *
+     * @param classPathSearcher which should be used to search classes
      * @param classPath which should be searched
      */
-    public void register(String classPath) {
+    public void register(ClassPath classPathSearcher, String classPath) {
         LOGGER.debug("Going to scan: {}", classPath);
 
-        this.classPath.getTopLevelClasses(classPath, classInfo -> register(classInfo.load()));
+        classPathSearcher.getTopLevelClasses(classPath, classInfo -> register(classInfo.load()));
     }
 
     public void registerAdditionalConstructor(String id, int parameterCount, Function<Object[], R> generator) {
@@ -140,10 +138,6 @@ public class StringRegistry<R> {
 
     public String getId(Class<?> clazz) {
         return this.apiReferences.getOrDefault(clazz, null);
-    }
-
-    public void cleanup() {
-        this.classPath = null;
     }
 
 }

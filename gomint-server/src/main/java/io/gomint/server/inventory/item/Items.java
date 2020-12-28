@@ -45,7 +45,7 @@ public class Items {
      * @param classPath which builds this registry
      */
     public Items(ClassPath classPath) {
-        this.generators = new StringRegistry<>(classPath, (clazz, id) -> {
+        this.generators = new StringRegistry<>((clazz, id) -> {
             LambdaConstructionFactory<io.gomint.server.inventory.item.ItemStack> factory = new LambdaConstructionFactory<>(clazz);
 
             return in -> {
@@ -55,8 +55,7 @@ public class Items {
             };
         });
 
-        this.generators.register("io.gomint.server.inventory.item");
-        this.generators.cleanup();
+        this.generators.register(classPath,"io.gomint.server.inventory.item");
     }
 
     public String getMaterial(int itemId) {
@@ -164,8 +163,9 @@ public class Items {
                 generate("generator/src/main/resources/item_implementation.txt", "gomint-server/src/main/java/io/gomint/server/inventory/item/Item" + className + ".java", replace);
             }
 
-            this.blockIdToItemId.put(itemID.getBlockId(), itemID.getData());
-            this.itemIdToBlockId.put(itemID.getData(), itemID.getBlockId());
+            String internBlockId = itemID.getBlockId().intern();
+            this.blockIdToItemId.put(internBlockId, itemID.getData());
+            this.itemIdToBlockId.put(itemID.getData(), internBlockId);
         }
 
         this.packetCache = buffer;

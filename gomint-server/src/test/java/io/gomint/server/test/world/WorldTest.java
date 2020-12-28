@@ -8,7 +8,7 @@
 package io.gomint.server.test.world;
 
 import io.gomint.server.test.IntegrationTest;
-import io.gomint.server.util.collection.FreezableSortedMap;
+import io.gomint.server.util.collection.FixedReadOnlyMap;
 import io.gomint.server.world.BlockRuntimeIDs;
 import io.gomint.server.world.block.Block;
 import io.gomint.server.world.block.Log;
@@ -23,6 +23,8 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestMethodOrder;
+
+import java.util.HashMap;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -39,41 +41,41 @@ public class WorldTest extends IntegrationTest {
     @Test
     @Order(2)
     public void setLog() {
-        Block block = this.world.getBlockAt(50,50,50);
+        Block block = this.world.getBlockAt(50, 50, 50);
         Log log = block.setBlockType(Log.class);
 
         // Normal Y oak
         testLogState(log, Axis.Y, LogType.OAK, false, false,
-            "minecraft:log", new FreezableSortedMap<>() {{
+            "minecraft:log", new HashMap<>() {{
                 put("old_log_type", "oak");
                 put("pillar_axis", "y");
             }});
 
         // Stripped X acacia
         testLogState(log, Axis.X, LogType.ACACIA, true, false,
-            "minecraft:stripped_acacia_log", new FreezableSortedMap<>() {{
+            "minecraft:stripped_acacia_log", new HashMap<>() {{
                 put("pillar_axis", "x");
             }});
 
         testLogState(log, Axis.Z, LogType.CRIMSON, true, false,
-            "minecraft:stripped_crimson_stem", new FreezableSortedMap<>() {{
+            "minecraft:stripped_crimson_stem", new HashMap<>() {{
                 put("pillar_axis", "z");
             }});
 
         testLogState(log, Axis.Z, LogType.CRIMSON, true, true,
-            "minecraft:stripped_crimson_hyphae", new FreezableSortedMap<>() {{
+            "minecraft:stripped_crimson_hyphae", new HashMap<>() {{
                 put("pillar_axis", "z");
             }});
 
         testLogState(log, Axis.Z, LogType.JUNGLE, true, true,
-            "minecraft:wood", new FreezableSortedMap<>() {{
+            "minecraft:wood", new HashMap<>() {{
                 put("pillar_axis", "z");
                 put("wood_type", "jungle");
                 put("stripped_bit", (byte) 1);
             }});
     }
 
-    private void testLogState(Log log, Axis axis, LogType logType, boolean stripped, boolean barkOnAllSides, String blockId, FreezableSortedMap<String, Object> neededStates) {
+    private void testLogState(Log log, Axis axis, LogType logType, boolean stripped, boolean barkOnAllSides, String blockId, HashMap<String, Object> neededStates) {
         // Set the state on the block instance
         log.setAxis(axis);
         log.setLogType(logType);
@@ -81,7 +83,7 @@ public class WorldTest extends IntegrationTest {
         log.setBarkOnAllSides(barkOnAllSides);
         int currentRuntimeId = log.getRuntimeId();
 
-        int neededRuntimeId = BlockRuntimeIDs.toBlockIdentifier(blockId, neededStates).getRuntimeId();
+        int neededRuntimeId = BlockRuntimeIDs.toBlockIdentifier(blockId, new FixedReadOnlyMap(neededStates.entrySet())).getRuntimeId();
 
         Assertions.assertEquals(neededRuntimeId, currentRuntimeId, "Wanted and current runtime id differ");
     }

@@ -7,6 +7,7 @@
 
 package io.gomint.server.config;
 
+import io.gomint.config.ConfigSection;
 import io.gomint.config.annotation.Comment;
 import io.gomint.config.YamlConfig;
 
@@ -75,6 +76,9 @@ public class ServerConfig extends YamlConfig {
         "data between the chunks and thus delaying it is just letting the player wait longer on login")
     private boolean enableFastJoin = true;
 
+    @Comment( "Enable client side chunk caching if the client supports it." )
+    private boolean enableClientCache = true;
+
     public ListenerConfig getListener() {
         return listener;
     }
@@ -133,6 +137,18 @@ public class ServerConfig extends YamlConfig {
 
     public boolean isEnableFastJoin() {
         return enableFastJoin;
+    }
+
+    public boolean isEnableClientCache() {
+        return enableClientCache;
+    }
+
+    @Override
+    public void update(ConfigSection section) {
+        // Check if we have the new enabledClientCache config
+        if (!section.has("enableClientCache")) {
+            section.set("enableClientCache", true);
+        }
     }
 
     @Override

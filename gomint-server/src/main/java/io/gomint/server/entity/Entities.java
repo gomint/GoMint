@@ -27,7 +27,7 @@ public class Entities {
     private final StringRegistry<io.gomint.server.entity.Entity> generators;
 
     public Entities( ClassPath classPath ) {
-        this.generators = new StringRegistry<>( classPath, (clazz, id) -> {
+        this.generators = new StringRegistry<>( (clazz, id) -> {
             LambdaConstructionFactory<io.gomint.server.entity.Entity> factory = new LambdaConstructionFactory<>(clazz);
             return in -> {
                 return factory.newInstance();
@@ -35,12 +35,11 @@ public class Entities {
         } );
 
         // Register all subgroups
-        this.generators.register( "io.gomint.server.entity" );
-        this.generators.register( "io.gomint.server.entity.active" );
-        this.generators.register( "io.gomint.server.entity.monster" );
-        this.generators.register( "io.gomint.server.entity.passive" );
-        this.generators.register( "io.gomint.server.entity.projectile" );
-        this.generators.cleanup();
+        this.generators.register( classPath,"io.gomint.server.entity" );
+        this.generators.register( classPath,"io.gomint.server.entity.active" );
+        this.generators.register( classPath,"io.gomint.server.entity.monster" );
+        this.generators.register( classPath,"io.gomint.server.entity.passive" );
+        this.generators.register( classPath,"io.gomint.server.entity.projectile" );
     }
 
     public <T extends Entity> T create( Class<T> entityClass ) {

@@ -26,15 +26,14 @@ public class Enchantments {
     private final Registry<Enchantment> generators;
 
     public Enchantments(ClassPath classPath) {
-        this.generators = new Registry<>(classPath, (clazz, id) -> {
+        this.generators = new Registry<>((clazz, id) -> {
             LambdaConstructionFactory<Enchantment> factory = new LambdaConstructionFactory<>(clazz);
             return in -> {
                 return factory.newInstance();
             };
         });
 
-        this.generators.register("io.gomint.server.enchant");
-        this.generators.cleanup();
+        this.generators.register(classPath, "io.gomint.server.enchant");
     }
 
     /**

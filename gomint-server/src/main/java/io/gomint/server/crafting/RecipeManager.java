@@ -24,7 +24,6 @@ public class RecipeManager {
 
     // Lookup stuff
     private Map<ItemStack, SmeltingRecipe> smeltingRecipes;
-    private Map<UUID, Recipe> lookup;
 
     private PacketCraftingRecipes batchPacket;
     private boolean dirty;
@@ -35,7 +34,6 @@ public class RecipeManager {
     public RecipeManager() {
         this.smeltingRecipes = new HashMap<>();
         this.recipes = new ArrayList<>();
-        this.lookup = new HashMap<>();
         this.dirty = true;
     }
 
@@ -67,10 +65,6 @@ public class RecipeManager {
     public void registerRecipe( Recipe recipe ) {
         this.recipes.add( recipe );
 
-        if ( recipe.getUUID() != null ) {
-            this.lookup.put( recipe.getUUID(), recipe );
-        }
-
         // Check if this is a smelting recipe
         if ( recipe instanceof SmeltingRecipe ) {
             SmeltingRecipe smeltingRecipe = (SmeltingRecipe) recipe;
@@ -78,16 +72,6 @@ public class RecipeManager {
         }
 
         this.dirty = true;
-    }
-
-    /**
-     * Get the stored recipe by its id
-     *
-     * @param recipeId The id we should lookup
-     * @return either null when no recipe was found or the recipe
-     */
-    public Recipe getRecipe( UUID recipeId ) {
-        return this.lookup.get( recipeId );
     }
 
     public SmeltingRecipe getSmeltingRecipe( ItemStack input ) {

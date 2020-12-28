@@ -13,14 +13,9 @@ import io.gomint.math.BlockPosition;
 import io.gomint.math.Vector;
 import io.gomint.server.entity.EntityPlayer;
 import io.gomint.server.inventory.item.Items;
-import io.gomint.server.util.BlockIdentifier;
-import io.gomint.server.util.collection.FreezableSortedMap;
-import io.gomint.server.world.BlockRuntimeIDs;
 import io.gomint.server.world.block.Block;
 import io.gomint.taglib.NBTTagCompound;
 import io.gomint.world.block.data.Facing;
-
-import java.util.Map;
 
 /**
  * @author geNAZt
@@ -40,7 +35,7 @@ public abstract class TileEntity {
      *
      * @param block which created this tile
      */
-    TileEntity( Block block, Items items ) {
+    TileEntity(Block block, Items items) {
         this.items = items;
         this.block = block;
         this.moveable = 1;
@@ -51,9 +46,9 @@ public abstract class TileEntity {
      *
      * @param currentMillis The amount of millis to save some CPU
      */
-    public abstract void update( long currentMillis, float dT );
+    public abstract void update(long currentMillis, float dT);
 
-    public void interact(Entity entity, Facing face, Vector facePos, ItemStack item ) {
+    public void interact(Entity entity, Facing face, Vector facePos, ItemStack item) {
 
     }
 
@@ -62,8 +57,8 @@ public abstract class TileEntity {
      *
      * @param compound which holds data for this tile entity
      */
-    public void fromCompound( NBTTagCompound compound ) {
-        this.moveable = compound.getByte( "isMovable", (byte) 1 );
+    public void fromCompound(NBTTagCompound compound) {
+        this.moveable = compound.getByte("isMovable", (byte) 1);
     }
 
     /**
@@ -72,15 +67,15 @@ public abstract class TileEntity {
      * @param compound The Compound which should be used to save the data into
      * @param reason   why should this tile be serialized?
      */
-    public void toCompound( NBTTagCompound compound, SerializationReason reason ) {
+    public void toCompound(NBTTagCompound compound, SerializationReason reason) {
         BlockPosition position = this.block.getPosition();
 
-        compound.addValue( "x", position.getX() );
-        compound.addValue( "y", position.getY() );
-        compound.addValue( "z", position.getZ() );
+        compound.addValue("x", position.getX());
+        compound.addValue("y", position.getY());
+        compound.addValue("z", position.getZ());
 
-        if ( reason == SerializationReason.PERSIST ) {
-            compound.addValue( "isMovable", this.moveable );
+        if (reason == SerializationReason.PERSIST) {
+            compound.addValue("isMovable", this.moveable);
         }
     }
 
@@ -92,7 +87,7 @@ public abstract class TileEntity {
         this.needsPersistence = false;
     }
 
-    public void applyClientData( EntityPlayer player, NBTTagCompound compound ) throws Exception {
+    public void applyClientData(EntityPlayer player, NBTTagCompound compound) throws Exception {
 
     }
 
