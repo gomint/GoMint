@@ -1,6 +1,5 @@
 package io.gomint.server.registry;
 
-import io.gomint.server.enchant.Enchantment;
 import io.gomint.server.util.ClassPath;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
@@ -18,7 +17,6 @@ public class Registry<R> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger( Registry.class );
 
-    private ClassPath classPath;
     private final GeneratorCallback<R> generatorCallback;
 
     private Generator<R>[] generators;
@@ -29,11 +27,9 @@ public class Registry<R> {
     /**
      * Build a new generator registry
      *
-     * @param classPath which reflects the current classes
      * @param callback  which is used to generate a generator for each found element
      */
-    public Registry( ClassPath classPath, GeneratorCallback<R> callback ) {
-        this.classPath = classPath;
+    public Registry( GeneratorCallback<R> callback ) {
         this.generatorCallback = callback;
         this.generators = (Generator<R>[]) new Generator[16];
         this.negativeGenerators = (Generator<R>[]) new Generator[2];
@@ -44,10 +40,10 @@ public class Registry<R> {
      *
      * @param classPath which should be searched
      */
-    public void register( String classPath ) {
+    public void register(ClassPath classPathSearcher, String classPath ) {
         LOGGER.debug( "Going to scan: {}", classPath );
 
-        this.classPath.getTopLevelClasses( classPath, classInfo -> register( classInfo.load() ) );
+        classPathSearcher.getTopLevelClasses( classPath, classInfo -> register( classInfo.load() ) );
     }
 
     private void register( Class<? extends R> clazz ) {
@@ -152,10 +148,6 @@ public class Registry<R> {
                 this.apiReferences.put( clazz, lastId );
             }
         }
-    }
-
-    public void cleanup() {
-        this.classPath = null;
     }
 
     public List<R> generateAll() {
