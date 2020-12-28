@@ -1,5 +1,6 @@
 package io.gomint.server.registry;
 
+import io.gomint.server.enchant.Enchantment;
 import io.gomint.server.util.ClassPath;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
@@ -148,6 +149,24 @@ public class Registry<R> {
                 this.apiReferences.put( clazz, lastId );
             }
         }
+    }
+
+    public List<R> generateAll() {
+        List<R> all = new ArrayList<>();
+
+        for (Generator<R> generator : this.generators) {
+            if (generator != null) {
+                all.add(generator.generate());
+            }
+        }
+
+        for (Generator<R> generator : this.negativeGenerators) {
+            if (generator != null) {
+                all.add(generator.generate());
+            }
+        }
+
+        return all;
     }
 
     public List<R> generateAll() {
