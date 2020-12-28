@@ -10,17 +10,13 @@ package io.gomint.server.world;
 import io.gomint.jraknet.PacketBuffer;
 import io.gomint.server.registry.SwitchBlockStateMapper;
 import io.gomint.server.util.BlockIdentifier;
-import io.gomint.server.util.collection.FreezableSortedMap;
-import io.gomint.server.util.performance.SingleKeyChangeMap;
+import io.gomint.server.util.collection.ReadOnlyMap;
+import io.gomint.server.util.collection.SingleKeyChangeMap;
 import io.gomint.server.world.block.Blocks;
 import io.gomint.server.world.block.mapper.BlockStateMapper;
 import io.gomint.taglib.NBTTagCompound;
 import io.gomint.taglib.NBTWriter;
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.PooledByteBufAllocator;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
-import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
-import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,9 +38,6 @@ public class BlockRuntimeIDs {
 
     private static final Object2IntOpenHashMap<String> BLOCK_ID_TO_NUMERIC = new Object2IntOpenHashMap<>();
 
-    //
-    private static final Object2ObjectMap<String, List<BlockIdentifier>> BLOCK_STATE_IDENTIFIER = new Object2ObjectOpenHashMap<>();
-
     // State jumptables
     private static final SwitchBlockStateMapper MAPPER_REGISTRY = new SwitchBlockStateMapper();
 
@@ -64,10 +57,6 @@ public class BlockRuntimeIDs {
             RUNTIME_TO_BLOCK[runtime] = identifier;
             BLOCK_ID_TO_NUMERIC.put(identifier.getBlockId(), identifier.getBlockNumericId());
 
-            // Store identifier by block id
-            List<BlockIdentifier> identifiers = BLOCK_STATE_IDENTIFIER.computeIfAbsent(identifier.getBlockId(), s -> new ArrayList<>());
-            identifiers.add(identifier);
-
             NBTTagCompound compound = new NBTTagCompound("");
             NBTTagCompound block = new NBTTagCompound("block");
 
@@ -85,7 +74,7 @@ public class BlockRuntimeIDs {
         return RUNTIME_TO_BLOCK[runtimeId];
     }
 
-    public static BlockIdentifier toBlockIdentifier(String blockId, FreezableSortedMap<String, Object> states) {
+    public static BlockIdentifier toBlockIdentifier(String blockId, ReadOnlyMap<String, Object> states) {
         BlockStateMapper mapper = MAPPER_REGISTRY.get(BLOCK_ID_TO_NUMERIC.getInt(blockId));
         if (mapper == null) {
             return null; // There is no block for this block id
@@ -112,7 +101,7 @@ public class BlockRuntimeIDs {
     public static BlockIdentifier change(BlockIdentifier oldState, String newBlockId, String[] changingKey, Object newValue) {
         Map<String, Object> changed;
         if (changingKey != null) {
-            changed = new SingleKeyChangeMap<>(oldState.getStates(), changingKey, newValue);
+            changed = new SingleKeyChangeMap(oldState.getStates(), changingKey, newValue);
         } else {
             changed = oldState.getStates();
         }

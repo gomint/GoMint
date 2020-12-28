@@ -17,6 +17,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author geNAZt
@@ -29,9 +30,13 @@ public class CheckPacketTileEntityTest {
         Assertions.assertThrows(AllocationLimitReachedException.class, () -> {
             // Fill new compound with too much data for the packet
             NBTTagCompound testCompound = new NBTTagCompound( "" );
+            List<String> stuff = new ArrayList<>();
+
             for ( int i = 0; i < 512 * 1024; i++ ) {
-                testCompound.addValue( String.valueOf( i ), new ArrayList() );
+                stuff.add(String.valueOf(i));
             }
+
+            testCompound.addValue( "TEST", stuff );
 
             // Create the packet
             PacketTileEntityData packetTileEntityData = new PacketTileEntityData();

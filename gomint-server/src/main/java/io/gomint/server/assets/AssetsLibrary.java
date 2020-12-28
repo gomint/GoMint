@@ -10,6 +10,7 @@ package io.gomint.server.assets;
 import io.gomint.GoMint;
 import io.gomint.jraknet.PacketBuffer;
 import io.gomint.server.crafting.Recipe;
+import io.gomint.server.crafting.RecipeManager;
 import io.gomint.server.crafting.ShapedRecipe;
 import io.gomint.server.crafting.ShapelessRecipe;
 import io.gomint.server.crafting.SmeltingRecipe;
@@ -20,6 +21,8 @@ import io.gomint.server.util.Allocator;
 import io.gomint.server.util.BlockIdentifier;
 import io.gomint.server.util.StringShortPair;
 import io.gomint.taglib.AllocationLimitReachedException;
+import io.gomint.taglib.NBTStream;
+import io.gomint.taglib.NBTStreamListener;
 import io.gomint.taglib.NBTTagCompound;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.PooledByteBufAllocator;
@@ -48,7 +51,6 @@ public class AssetsLibrary {
     private static final Logger LOGGER = LoggerFactory.getLogger(AssetsLibrary.class);
 
     private CreativeInventory creativeInventory;
-    private List<Recipe> recipes;
 
     private List<BlockIdentifier> blockPalette;
     private List<StringShortPair> itemIDs;
@@ -75,15 +77,14 @@ public class AssetsLibrary {
      * @throws IOException Thrown if an I/O error occurs whilst loading the library
      */
     @SuppressWarnings("unchecked")
-    public void load() throws IOException, AllocationLimitReachedException {
+    public void load(RecipeManager recipeManager) throws IOException, AllocationLimitReachedException {
         InputStream in = this.getClass().getResourceAsStream("/assets.dat");
-        byte[] data = in.readAllBytes();
+        ByteBuf buf = Allocator.allocate(in.readAllBytes());
 
-        ByteBuf buf = Allocator.allocate(data);
         NBTTagCompound root = NBTTagCompound.readFrom(buf, ByteOrder.BIG_ENDIAN);
         if (GoMint.instance() != null) {
             this.loadItemIDs((List<NBTTagCompound>) ((List) root.getList("itemLegacyIDs", false)));
-            this.loadRecipes((List<NBTTagCompound>) ((List) root.getList("recipes", false)));
+            this.loadRecipes(recipeManager, (List<NBTTagCompound>) ((List) root.getList("recipes", false)));
             this.loadCreativeInventory((List<byte[]>) ((List) root.getList("creativeInventory", false)));
             this.loadBlockPalette((List<NBTTagCompound>) ((List) root.getList("blockPalette", false)));
         }
@@ -155,9 +156,7 @@ public class AssetsLibrary {
         }
     }
 
-    private void loadRecipes(List<NBTTagCompound> raw) throws IOException, AllocationLimitReachedException {
-        this.recipes = new ArrayList<>();
-
+    private void loadRecipes(RecipeManager recipeManager, List<NBTTagCompound> raw) throws IOException, AllocationLimitReachedException {
         this.shapelessRecipes = 0;
         this.shapedRecipes = 0;
         this.smeltingRecipes = 0;
@@ -186,7 +185,7 @@ public class AssetsLibrary {
                     continue;
             }
 
-            this.recipes.add(recipe);
+            recipeManager.registerRecipe(recipe);
         }
 
         LOGGER.info("Loaded {} shapeless, {} shaped and {} smelting recipes", this.shapelessRecipes, this.shapedRecipes, this.smeltingRecipes);
@@ -218,7 +217,7 @@ public class AssetsLibrary {
         }
 
         this.shapelessRecipes++;
-        return new ShapelessRecipe(name, block, ingredients, outcome, null, priority);
+        return new ShapelessRecipe(name.intern(), block.intern(), ingredients, outcome, null, priority);
     }
 
     private ShapedRecipe loadShapedRecipe(NBTTagCompound data) throws IOException, AllocationLimitReachedException {
@@ -254,7 +253,7 @@ public class AssetsLibrary {
         }
 
         this.shapedRecipes++;
-        return new ShapedRecipe(name, block, width, height, arrangement, outcome, UUID.fromString(data.getString("u", UUID.randomUUID().toString())), priority);
+        return new ShapedRecipe(name.intern(), block.intern(), width, height, arrangement, outcome, UUID.fromString(data.getString("u", UUID.randomUUID().toString())), priority);
     }
 
     private SmeltingRecipe loadSmeltingRecipe(NBTTagCompound data) throws IOException, AllocationLimitReachedException {
@@ -276,7 +275,7 @@ public class AssetsLibrary {
         outputData.release(2);
 
         this.smeltingRecipes++;
-        return new SmeltingRecipe(block, input, outcome, UUID.fromString(data.getString("u", UUID.randomUUID().toString())), priority);
+        return new SmeltingRecipe(block.intern(), input, outcome, UUID.fromString(data.getString("u", UUID.randomUUID().toString())), priority);
     }
 
     private ItemStack loadItemStack(PacketBuffer buffer) throws IOException, AllocationLimitReachedException {
@@ -297,22 +296,8 @@ public class AssetsLibrary {
         return this.items == null ? null : this.items.create(id, data, amount, compound);
     }
 
-    /**
-     * Cleanup and release resources not needed anymore
-     */
-    public void cleanup() {
-        // Release all references to data which had been loaded to other wrappers
-        this.recipes = null;
-        this.blockPalette = null;
-        this.creativeInventory = null;
-    }
-
     public CreativeInventory getCreativeInventory() {
         return creativeInventory;
-    }
-
-    public List<Recipe> getRecipes() {
-        return recipes;
     }
 
     public List<BlockIdentifier> getBlockPalette() {

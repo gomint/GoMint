@@ -28,11 +28,9 @@ public class BlockRegistry {
     private final Map<Class<?>, String> blockIDs = new HashMap<>();
     private final Object2IntMap<String> idToRuntime = new Object2IntOpenHashMap<>();
 
-    private ClassPath classPath;
     private final GeneratorCallback<Block> generatorCallback;
 
-    public BlockRegistry(List<BlockIdentifier> blockIdentifiers, ClassPath classPath, GeneratorCallback<Block> callback) {
-        this.classPath = classPath;
+    public BlockRegistry(List<BlockIdentifier> blockIdentifiers, GeneratorCallback<Block> callback) {
         this.generatorCallback = callback;
         this.generators = new Generator[blockIdentifiers.size()];
         this.blockIdentifiers = blockIdentifiers;
@@ -43,10 +41,10 @@ public class BlockRegistry {
      *
      * @param classPath which should be searched
      */
-    public void register(String classPath) {
+    public void register(ClassPath classPathSearcher, String classPath) {
         LOGGER.debug("Going to scan: {}", classPath);
 
-        this.classPath.getTopLevelClasses(classPath, classInfo -> register(classInfo.load()));
+        classPathSearcher.getTopLevelClasses(classPath, classInfo -> register(classInfo.load()));
     }
 
     private void register(Class<? extends Block> clazz) {
@@ -81,7 +79,6 @@ public class BlockRegistry {
     }
 
     public void cleanup() {
-        this.classPath = null;
         this.blockIdentifiers = null;
     }
 

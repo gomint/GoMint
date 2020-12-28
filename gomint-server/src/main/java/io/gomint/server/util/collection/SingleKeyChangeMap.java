@@ -5,19 +5,15 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-package io.gomint.server.util.performance;
+package io.gomint.server.util.collection;
 
-import io.gomint.server.util.collection.FreezableSortedMap;
+public class SingleKeyChangeMap extends ReadOnlyMap<String, Object> {
 
-import java.util.Objects;
-
-public class SingleKeyChangeMap<K, V> extends ReadOnlyMap<K, V> {
-
-    private final FreezableSortedMap<K, V> backing;
+    private final FixedReadOnlyMap backing;
     private final int[] keyCode;
-    private final V value;
+    private final Object value;
 
-    public SingleKeyChangeMap(FreezableSortedMap<K, V> backing, K[] key, V value) {
+    public SingleKeyChangeMap(FixedReadOnlyMap backing, String[] key, Object value) {
         this.backing = backing;
         this.keyCode = new int[key.length];
         this.value = value;
@@ -28,7 +24,7 @@ public class SingleKeyChangeMap<K, V> extends ReadOnlyMap<K, V> {
     }
 
     @Override
-    public V get(Object k) {
+    public Object get(Object k) {
         if (k != null) {
             int hashCodeK = k.hashCode();
             for (int hashCode : this.keyCode) {
@@ -63,6 +59,11 @@ public class SingleKeyChangeMap<K, V> extends ReadOnlyMap<K, V> {
         }
 
         return this.backing.containsKey(k);
+    }
+
+    @Override
+    public boolean containsValue(Object value) {
+        return this.backing.containsValue(value);
     }
 
 }

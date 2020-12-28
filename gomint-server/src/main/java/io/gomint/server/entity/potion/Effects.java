@@ -27,15 +27,14 @@ public class Effects {
     private final Registry<Effect> generators;
 
     public Effects( ClassPath classPath ) {
-        this.generators = new Registry<>( classPath, (clazz, id) -> {
+        this.generators = new Registry<>( (clazz, id) -> {
             LambdaConstructionFactory<Effect> factory = new LambdaConstructionFactory<>(clazz);
             return in -> {
                 return factory.newInstance();
             };
         } );
 
-        this.generators.register( "io.gomint.server.entity.potion.effect" );
-        this.generators.cleanup();
+        this.generators.register(classPath, "io.gomint.server.entity.potion.effect" );
     }
 
     public Effect generate( int id, int amplifier, long lengthInMS, EffectManager manager ) {
