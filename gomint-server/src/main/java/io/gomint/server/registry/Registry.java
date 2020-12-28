@@ -169,22 +169,4 @@ public class Registry<R> {
         return all;
     }
 
-    public List<R> generateAll() {
-        List<R> all = new ArrayList<>();
-
-        for (Generator<R> generator : this.generators) {
-            if (generator != null) {
-                all.add(generator.generate());
-            }
-        }
-
-        for (Generator<R> generator : this.negativeGenerators) {
-            if (generator != null) {
-                all.add(generator.generate());
-            }
-        }
-
-        return all;
-    }
-
 }
