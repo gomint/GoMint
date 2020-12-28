@@ -5,25 +5,13 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-package io.gomint.server.util.performance;
+package io.gomint.server.util.collection;
 
 import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 
 public abstract class ReadOnlyMap<K, V> implements Map<K, V> {
-
-
-
-    @Override
-    public boolean containsValue(Object value) {
-        return false;
-    }
-
-    @Override
-    public V get(Object key) {
-        return null;
-    }
 
     @Override
     public V put(K key, V value) {

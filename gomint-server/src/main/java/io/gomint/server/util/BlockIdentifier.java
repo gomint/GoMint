@@ -7,11 +7,8 @@
 
 package io.gomint.server.util;
 
-import io.gomint.server.util.collection.FreezableSortedMap;
+import io.gomint.server.util.collection.FixedReadOnlyMap;
 import io.gomint.taglib.NBTTagCompound;
-
-import java.util.Map;
-import java.util.Objects;
 
 /**
  * @author geNAZt
@@ -21,25 +18,17 @@ public class BlockIdentifier {
 
     private final String blockId;
     private final int blockNumericId;
-    private FreezableSortedMap<String, Object> states;
+    private FixedReadOnlyMap states;
     private final short runtimeId;
-    private NBTTagCompound nbt;
 
-    public BlockIdentifier(String blockId, int blockNumericId, short runtimeId, NBTTagCompound states)  {
-        this.blockId = blockId;
+    public BlockIdentifier(String blockId, int blockNumericId, short runtimeId, NBTTagCompound states) {
+        this.blockId = blockId.intern();
         this.blockNumericId = blockNumericId;
         this.runtimeId = runtimeId;
 
         if (states != null && states.size() > 0) {
-            this.states = new FreezableSortedMap<>();
-            for (Map.Entry<String, Object> entry : states.entrySet()) {
-                this.states.put(entry.getKey(), entry.getValue());
-            }
-
-            this.states.setFrozen(true);
+            this.states = new FixedReadOnlyMap(states.entrySet());
         }
-
-        this.nbt = states;
     }
 
     public String getBlockId() {
@@ -50,12 +39,8 @@ public class BlockIdentifier {
         return blockNumericId;
     }
 
-    public FreezableSortedMap<String, Object> getStates() {
+    public FixedReadOnlyMap getStates() {
         return states;
-    }
-
-    public void setStates(FreezableSortedMap<String, Object> states) {
-        this.states = states;
     }
 
     public short getRuntimeId() {
@@ -63,11 +48,11 @@ public class BlockIdentifier {
     }
 
     public NBTTagCompound getNbt() {
-        return nbt;
-    }
+        if (this.states == null) {
+            return new NBTTagCompound("states");
+        }
 
-    public void setNbt(NBTTagCompound nbt) {
-        this.nbt = nbt;
+        return this.states.toNBT("states");
     }
 
     @Override
@@ -75,16 +60,12 @@ public class BlockIdentifier {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         BlockIdentifier that = (BlockIdentifier) o;
-        return blockNumericId == that.blockNumericId &&
-            runtimeId == that.runtimeId &&
-            Objects.equals(blockId, that.blockId) &&
-            Objects.equals(states, that.states) &&
-            Objects.equals(nbt, that.nbt);
+        return runtimeId == that.runtimeId;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(blockId, blockNumericId, states, runtimeId, nbt);
+        return runtimeId;
     }
 
     @Override
@@ -94,7 +75,6 @@ public class BlockIdentifier {
             ", blockNumericId=" + blockNumericId +
             ", states=" + states +
             ", runtimeId=" + runtimeId +
-            ", nbt=" + nbt +
             '}';
     }
 

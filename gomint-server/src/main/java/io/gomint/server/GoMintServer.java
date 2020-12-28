@@ -26,7 +26,6 @@ import io.gomint.scoreboard.Scoreboard;
 import io.gomint.server.assets.AssetsLibrary;
 import io.gomint.server.config.ServerConfig;
 import io.gomint.server.config.WorldConfig;
-import io.gomint.server.crafting.Recipe;
 import io.gomint.server.crafting.RecipeManager;
 import io.gomint.server.enchant.Enchantments;
 import io.gomint.server.entity.Entities;
@@ -157,8 +156,6 @@ public class GoMintServer implements GoMint, InventoryHolder {
 
     private BlockingQueue<Runnable> mainThreadWork = new LinkedBlockingQueue<>();
 
-    private AssetsLibrary assets;
-
     private long start = System.currentTimeMillis();
 
     /**
@@ -220,12 +217,15 @@ public class GoMintServer implements GoMint, InventoryHolder {
         this.blocks = new Blocks();
         this.items.setBlocks(this.blocks);
 
+        LOGGER.info("Initializing recipes...");
+        this.recipeManager = new RecipeManager();
+
         // Load assets from file:
         LOGGER.info("Loading assets library...");
-        this.assets = new AssetsLibrary(this.items);
+        AssetsLibrary assets = new AssetsLibrary(this.items);
 
         try {
-            this.assets.load();
+            assets.load(this.recipeManager);
         } catch (IOException | AllocationLimitReachedException e) {
             LOGGER.error("Failed to load assets library", e);
             return;
@@ -235,10 +235,11 @@ public class GoMintServer implements GoMint, InventoryHolder {
         // Build up registries
         // ------------------------------------ //
         this.tileEntities = new TileEntities(classPath, this.items);
-        this.blocks.init(classPath, this.items, this.tileEntities, this.assets.getBlockPalette());
+        this.blocks.init(classPath, this.items, this.tileEntities, assets.getBlockPalette());
         this.entities = new Entities(classPath);
         this.effects = new Effects(classPath);
         this.enchantments = new Enchantments(classPath);
+        this.creativeInventory = assets.getCreativeInventory();
 
         // ------------------------------------ //
         // Configuration Initialization
@@ -357,15 +358,6 @@ public class GoMintServer implements GoMint, InventoryHolder {
         // Pre World Initialization
         // ------------------------------------ //
 
-        LOGGER.info("Initializing recipes...");
-        this.recipeManager = new RecipeManager();
-
-        // Add all recipes from asset library:
-        for (Recipe recipe : this.assets.getRecipes()) {
-            this.recipeManager.registerRecipe(recipe);
-        }
-
-        this.creativeInventory = this.assets.getCreativeInventory();
         this.permissionGroupManager = new PermissionGroupManager();
 
         // ------------------------------------ //
@@ -376,7 +368,6 @@ public class GoMintServer implements GoMint, InventoryHolder {
 
         this.encryptionKeyFactory = new EncryptionKeyFactory(this.serverConfig.getConnection().getJwtRoot());
         this.networkManager = new NetworkManager(this);
-
 
         if (!this.initNetworking(host, port)) {
             this.internalShutdown();
@@ -422,9 +413,6 @@ public class GoMintServer implements GoMint, InventoryHolder {
             }
         }
         // CHECKSTYLE:ON
-
-        // We can cleanup the assets now
-        this.assets.cleanup();
 
         if (this.serverConfig.getListener().isUseUPNP()) {
             UPNPClient client = new UPNPClient();
@@ -998,10 +986,6 @@ public class GoMintServer implements GoMint, InventoryHolder {
 
     public String getGitHash() {
         return gitHash;
-    }
-
-    public AssetsLibrary getAssets() {
-        return assets;
     }
 
 }
