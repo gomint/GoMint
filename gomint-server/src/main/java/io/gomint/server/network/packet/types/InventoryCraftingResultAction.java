@@ -28,6 +28,11 @@ public class InventoryCraftingResultAction implements InventoryAction {
     }
 
     @Override
+    public int weight() {
+        return 9;
+    }
+
+    @Override
     public String toString() {
         return "{\"_class\":\"InventoryCraftingResultAction\", " +
             "\"resultItems\":" + Arrays.toString(resultItems) + ", " +

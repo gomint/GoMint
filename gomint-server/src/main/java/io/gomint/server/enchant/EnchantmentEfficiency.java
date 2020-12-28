@@ -7,6 +7,7 @@
 
 package io.gomint.server.enchant;
 
+import io.gomint.enchant.Rarity;
 import io.gomint.inventory.item.ItemType;
 import io.gomint.server.inventory.item.ItemStack;
 import io.gomint.server.registry.RegisterInfo;
@@ -19,41 +20,32 @@ import io.gomint.server.registry.RegisterInfo;
 public class EnchantmentEfficiency extends Enchantment implements io.gomint.enchant.EnchantmentEfficiency {
 
     /**
-     * Create new enchantment smite
-     *
-     * @param level of this enchantment
+     * Create new enchantment efficiency
      */
     public EnchantmentEfficiency() {
         super( (short) 5 );
     }
 
     @Override
-    public byte getMinEnchantAbility( short level ) {
+    public int getMinEnchantAbility( short level ) {
         return (byte) ( 1 + 10 * ( level - 1 ) );
     }
 
     @Override
-    public byte getMaxEnchantAbility( short level ) {
+    public int getMaxEnchantAbility( short level ) {
         return (byte) ( getMinEnchantAbility( level ) + 50 );
     }
 
     @Override
     public boolean canBeApplied( ItemStack itemStack ) {
-        return itemStack.getItemType() == ItemType.DIAMOND_PICKAXE ||
-            itemStack.getItemType() == ItemType.STONE_PICKAXE ||
-            itemStack.getItemType() == ItemType.GOLDEN_PICKAXE ||
-            itemStack.getItemType() == ItemType.IRON_PICKAXE ||
-            itemStack.getItemType() == ItemType.WOODEN_PICKAXE ||
-            itemStack.getItemType() == ItemType.DIAMOND_AXE ||
-            itemStack.getItemType() == ItemType.STONE_AXE ||
-            itemStack.getItemType() == ItemType.GOLDEN_AXE ||
-            itemStack.getItemType() == ItemType.IRON_AXE ||
-            itemStack.getItemType() == ItemType.WOODEN_AXE ||
-            itemStack.getItemType() == ItemType.DIAMOND_SHOVEL ||
-            itemStack.getItemType() == ItemType.STONE_SHOVEL ||
-            itemStack.getItemType() == ItemType.GOLDEN_SHOVEL ||
-            itemStack.getItemType() == ItemType.IRON_SHOVEL ||
-            itemStack.getItemType() == ItemType.WOODEN_SHOVEL;
+        return
+            itemStack.getItemType() == ItemType.SHEARS ||
+            EnchantmentHelper.canBeAppliedToTools(itemStack);
+    }
+
+    @Override
+    public Rarity getRarity() {
+        return Rarity.COMMON;
     }
 
 }

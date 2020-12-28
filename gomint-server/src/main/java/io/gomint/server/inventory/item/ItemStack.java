@@ -301,6 +301,8 @@ public abstract class ItemStack implements Cloneable, io.gomint.inventory.item.I
 
         List<Object> enchantmentList = this.nbt.getList("ench", true);
 
+        LOGGER.info("Enchanting item {} with {} level {}", this, clazz.getName(), level);
+
         NBTTagCompound enchCompound = new NBTTagCompound(null);
         enchCompound.addValue("id", id);
         enchCompound.addValue("lvl", (short) level);
@@ -526,7 +528,7 @@ public abstract class ItemStack implements Cloneable, io.gomint.inventory.item.I
         }
     }
 
-    private boolean canBeDamaged() {
+    public boolean canBeDamaged() {
         if (this.isDamageableCached) {
             return this.isDamageable;
         }
@@ -644,6 +646,14 @@ public abstract class ItemStack implements Cloneable, io.gomint.inventory.item.I
 
     public ItemStackPlace getItemStackPlace() {
         return itemStackPlace;
+    }
+
+    public boolean isEnchanted() {
+        if (this.nbt == null) {
+            return false;
+        }
+
+        return this.nbt.getList("ench", false) != null;
     }
 
 }

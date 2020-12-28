@@ -7,6 +7,7 @@
 
 package io.gomint;
 
+import io.gomint.enchant.Enchantment;
 import io.gomint.entity.Entity;
 import io.gomint.entity.EntityPlayer;
 import io.gomint.gui.ButtonList;
@@ -47,7 +48,7 @@ public interface GoMint {
      *
      * @param motd The MOTD to be set
      */
-    void setMotd( String motd );
+    void setMotd(String motd);
 
     /**
      * Get a world by its name. When the world is not loaded it will be tried to load
@@ -55,7 +56,7 @@ public interface GoMint {
      * @param name The name of the world
      * @return the world or null if there was a error loading it
      */
-    World getWorld( String name );
+    World getWorld(String name);
 
     /**
      * Create a new itemstack with the given item in it
@@ -65,7 +66,17 @@ public interface GoMint {
      * @param <T>       generic type of the itemstack
      * @return fresh generated itemstack of given type with amount of items
      */
-    <T extends ItemStack> T createItemStack( Class<T> itemClass, int amount );
+    <T extends ItemStack> T createItemStack(Class<T> itemClass, int amount);
+
+    /**
+     * Create a new enchantment with the given level
+     *
+     * @param enchantmentClass which should be used to create
+     * @param level which the enchantment should have
+     * @param <T> generic type of the enchantment
+     * @return fresh generated enchantment with the level given
+     */
+    <T extends Enchantment> T createEnchantment(Class<T> enchantmentClass, int level);
 
     /**
      * Create a new entity
@@ -74,7 +85,7 @@ public interface GoMint {
      * @param <T>         generic type of the entity
      * @return fresh generated entity
      */
-    <T extends Entity> T createEntity( Class<T> entityClass );
+    <T extends Entity> T createEntity(Class<T> entityClass);
 
     /**
      * Get a collection of all players on this server
@@ -105,7 +116,7 @@ public interface GoMint {
      * @param target which we want to search
      * @return the player or null if not found
      */
-    EntityPlayer findPlayerByName( String target );
+    EntityPlayer findPlayerByName(String target);
 
     /**
      * Find a player by its uuid
@@ -113,7 +124,7 @@ public interface GoMint {
      * @param target which we want to search
      * @return the player or null if not found
      */
-    EntityPlayer findPlayerByUUID( UUID target );
+    EntityPlayer findPlayerByUUID(UUID target);
 
     /**
      * Get the plugin manager
@@ -154,7 +165,7 @@ public interface GoMint {
      * @param title of the button list
      * @return button list implementation
      */
-    ButtonList createButtonList( String title );
+    ButtonList createButtonList(String title);
 
     /**
      * Create a new modal for form display
@@ -163,7 +174,7 @@ public interface GoMint {
      * @param question for the client
      * @return modal implementation
      */
-    Modal createModal( String title, String question );
+    Modal createModal(String title, String question);
 
     /**
      * Create new custom form for form display
@@ -171,7 +182,7 @@ public interface GoMint {
      * @param title of the custom form
      * @return custom form implementation
      */
-    CustomForm createCustomForm( String title );
+    CustomForm createCustomForm(String title);
 
     /**
      * Check if current thread is GoMints main thread
@@ -186,7 +197,7 @@ public interface GoMint {
      * @param inputStream which should be read
      * @return skin or null on error
      */
-    PlayerSkin createPlayerSkin( InputStream inputStream );
+    PlayerSkin createPlayerSkin(InputStream inputStream);
 
     /**
      * Get the empty player skin
@@ -207,7 +218,7 @@ public interface GoMint {
      *
      * @param world which should be used as default one
      */
-    void setDefaultWorld( World world );
+    void setDefaultWorld(World world);
 
     /**
      * Create a empty block to be placed into the world with {@link Block#copyFromBlock(Block)} or
@@ -217,7 +228,7 @@ public interface GoMint {
      * @param <T>        type of block which the target object should have
      * @return empty, not configured block
      */
-    <T extends Block> T createBlock( Class<T> blockClass );
+    <T extends Block> T createBlock(Class<T> blockClass);
 
     /**
      * Create a new world with the given options
@@ -226,7 +237,7 @@ public interface GoMint {
      * @param options which should be used to generate the world
      * @return new world
      */
-    World createWorld( String name, CreateOptions options );
+    World createWorld(String name, CreateOptions options);
 
     /**
      * Get the chunk generator registry
@@ -247,7 +258,7 @@ public interface GoMint {
      *
      * @param line which should be executed (without the /)
      */
-    void dispatchCommand( String line );
+    void dispatchCommand(String line);
 
     /**
      * Get a collection of all worlds on this server

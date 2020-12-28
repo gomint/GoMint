@@ -20,4 +20,6 @@ public interface InventoryAction {
      */
     void deserialize(PacketBuffer buffer, int protocolID) throws Exception;
 
+    int weight();
+
 }

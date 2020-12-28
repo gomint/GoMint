@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 Gomint team
+ * Copyright (c) 2020, GoMint, BlackyPaw and geNAZt
  *
  * This code is licensed under the BSD license found in the
  * LICENSE file in the root directory of this source tree.
@@ -7,25 +7,113 @@
 
 package io.gomint.server.enchant;
 
-import io.gomint.inventory.item.ItemEnchantable;
-import io.gomint.server.entity.EntityPlayer;
+import io.gomint.math.Location;
+import io.gomint.math.MathUtils;
 import io.gomint.server.inventory.item.ItemStack;
-import io.gomint.server.world.block.EnchantmentTable;
+import io.gomint.server.util.Pair;
+import io.gomint.server.util.random.WeightedRandom;
+import io.gomint.util.random.FastRandom;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
+/**
+ * @author geNAZt
+ * @version 1.0
+ */
 public class EnchantmentSelector {
 
-    public void select(EntityPlayer player, EnchantmentTable table, ItemStack itemStack) {
-        // Check if item is enchantable
-        if (!(itemStack instanceof ItemEnchantable)) {
+    private static final Logger LOGGER = LoggerFactory.getLogger(EnchantmentSelector.class);
 
+    public static Pair<int[], List<List<Enchantment>>> getEnchantments(Enchantments enchantments, FastRandom random, Location blockLocation, ItemStack toEnchant) {
+        // Check if the item can be enchanted at all
+        if (toEnchant.getEnchantAbility() == 0 || toEnchant.isEnchanted()) {
+            return null;
         }
 
-        // Get bookshelf surrounding
+        // Check for bookshelves
+        int bookShelvesAround = EnchantmentHelper.findBookshelves(blockLocation);
 
+        LOGGER.debug("Bookshelves found: {}", bookShelvesAround);
+
+        int base = random.nextInt(8) + 1 +
+            (bookShelvesAround >> 1) +
+            random.nextInt(bookShelvesAround + 1);
+
+        LOGGER.debug("Base: {}", base);
+
+        int upperSlot = Math.max(base / 3, 1);
+        int middleSlot = base * 2 / 3 + 1;
+        int lowerSlot = Math.max(base, bookShelvesAround * 2);
+
+        LOGGER.debug("Upper, middle and lower slots: {}, {}, {}", upperSlot, middleSlot, lowerSlot);
+
+        // Build together enchantment lists per slot
+        List<List<Enchantment>> selectedEnchantments = new ArrayList<>();
+        selectedEnchantments.add(buildEnchantments(enchantments, random, toEnchant, upperSlot));
+        selectedEnchantments.add(buildEnchantments(enchantments, random, toEnchant, middleSlot));
+        selectedEnchantments.add(buildEnchantments(enchantments, random, toEnchant, lowerSlot));
+        return new Pair<>(new int[]{upperSlot, middleSlot, lowerSlot}, selectedEnchantments);
     }
 
-    private int[] getCosts(ItemStack itemStack, int amountOfBookShelves) {
-        return new int[0];
+    private static List<Enchantment> buildEnchantments(Enchantments enchantments, FastRandom random, ItemStack toEnchant, int level) {
+        int useLevel = level + 1 +
+            random.nextInt(toEnchant.getEnchantAbility() / 4 + 1) +
+            random.nextInt(toEnchant.getEnchantAbility() / 4 + 1);
+
+        float f = (random.nextFloat() + random.nextFloat() - 1.0F) * 0.15F;
+
+        useLevel = MathUtils.clamp(Math.round((float) useLevel + (float) useLevel * f), 1, Integer.MAX_VALUE);
+
+        WeightedRandom<Enchantment> weightedRandom = new WeightedRandom<>(random);
+        for (Enchantment enchantment : enchantments.all()) {
+            if (enchantment.canBeApplied(toEnchant)) {
+                for (short i = enchantment.getMaxLevel(); i > enchantment.getMinLevel() - 1; --i) {
+                    if (useLevel >= enchantment.getMinEnchantAbility(i) && useLevel <= enchantment.getMaxEnchantAbility(i)) {
+                        weightedRandom.add(enchantment.getRarity().getWeight(), enchantments.create(enchantment.getClass(), i));
+                        break;
+                    }
+                }
+            }
+        }
+
+        List<Enchantment> selected = new ArrayList<>();
+        if (!weightedRandom.isEmpty()) {
+            selected.add(weightedRandom.next());
+
+            while (random.nextInt(50) <= useLevel) {
+                Enchantment lastItem = selected.get(selected.size() - 1);
+                removeIncompatible(weightedRandom.iterator(), lastItem);
+
+                if (weightedRandom.isEmpty()) {
+                    break;
+                }
+
+                selected.add(weightedRandom.next());
+                useLevel /= 2;
+            }
+
+            if (LOGGER.isDebugEnabled()) {
+                LOGGER.debug("Selected enchants: ");
+                for (Enchantment enchantment : selected) {
+                    LOGGER.debug(" > {}: {}", enchantment.getClass().getSimpleName(), enchantment.getLevel() );
+                }
+            }
+        }
+
+        return selected;
+    }
+
+    private static void removeIncompatible(Iterator<Enchantment> iterator, Enchantment lastItem) {
+        while (iterator.hasNext()) {
+            Enchantment enchantment = iterator.next();
+            if (lastItem.collidesWith(enchantment) || enchantment.collidesWith(lastItem)) {
+                iterator.remove();
+            }
+        }
     }
 
 }

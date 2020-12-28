@@ -152,26 +152,25 @@ public class ChunkAdapter implements Chunk {
         for (int i = 0; i < randomUpdatesPerTick; i++) {
             this.world.lcg = this.world.lcg * 3 + 1013904223;
             short index = (short) ((this.world.lcg >> 2) & 0xfff);
-            String blockId = chunkSlice.getBlock(0, index);
-            this.tickRandomBlock(index, blockId, chunkSlice, currentTimeMS, dT);
+            Block block = chunkSlice.getBlockInstanceInternal(index, 0, null);
+            this.tickRandomBlock(block, currentTimeMS, dT);
         }
     }
 
-    private void tickRandomBlock(short blockHash, String blockId, ChunkSlice chunkSlice, long currentTimeMS, float dT) {
-        switch (blockId) {
-            case "minecraft:beetroot":              // Beetroot
-            case "minecraft:grass":                 // Grass
-            case "minecraft:farmland":              // Farmland
-            case "minecraft:mycelium":              // Mycelium
-            case "minecraft:sapling":               // Sapling
-            case "minecraft:leaves":                // Leaves
-            case "minecraft:leaves2":               // Acacia leaves
-            case "minecraft:snow_layer":            // Top snow
-            case "minecraft:ice":                   // Ice
-            case "minecraft:wheat":
-            case "minecraft:cocoa":
-            case "minecraft:vine":
-                this.updateRandomBlock(chunkSlice, blockHash, currentTimeMS, dT);
+    private void tickRandomBlock(Block block, long currentTimeMS, float dT) {
+        switch (block.getBlockType()) {
+            case BEETROOT:
+            case GRASS_BLOCK:
+            case FARMLAND:
+            case MYCELIUM:
+            case SAPLING:
+            case LEAVES:
+            case SNOW_LAYER:
+            case ICE:
+            case CROPS:
+            case COCOA:
+            case VINES:
+                this.updateRandomBlock(block, currentTimeMS, dT);
                 break;
 
             default:
@@ -179,15 +178,12 @@ public class ChunkAdapter implements Chunk {
         }
     }
 
-    private void updateRandomBlock(ChunkSlice chunkSlice, short index, long currentTimeMS, float dT) {
-        Block block = chunkSlice.getBlockInstanceInternal(index, 0, null);
-        if (block instanceof io.gomint.server.world.block.Block) {
-            long next = ((io.gomint.server.world.block.Block) block)
-                .update(UpdateReason.RANDOM, currentTimeMS, dT);
+    private void updateRandomBlock(Block block, long currentTimeMS, float dT) {
+        long next = ((io.gomint.server.world.block.Block) block)
+            .update(UpdateReason.RANDOM, currentTimeMS, dT);
 
-            if (next > currentTimeMS) {
-                this.world.addTickingBlock(next, block.getPosition());
-            }
+        if (next > currentTimeMS) {
+            this.world.addTickingBlock(next, block.getPosition());
         }
     }
 
@@ -479,7 +475,7 @@ public class ChunkAdapter implements Chunk {
             for (int k = 0; k < 16; ++k) {
                 for (int j = (maxHeight + 16) - 1; j > 0; --j) {
                     if (!this.getBlock(i, j, k, 0).equals("minecraft:air")) { // For height MC uses normal layer (0)
-                        this.setHeight(i, k, (short) ((short) j+1));
+                        this.setHeight(i, k, (short) ((short) j + 1));
                         break;
                     }
                 }
@@ -505,7 +501,7 @@ public class ChunkAdapter implements Chunk {
             }
         }
 
-        PacketBuffer buffer = new PacketBuffer(cached ? topEmpty * 8 + 16 : ( topEmpty + 2 ) * 4096);
+        PacketBuffer buffer = new PacketBuffer(cached ? topEmpty * 8 + 16 : (topEmpty + 2) * 4096);
 
         long[] hashes = new long[topEmpty + 1];
         if (cached) {

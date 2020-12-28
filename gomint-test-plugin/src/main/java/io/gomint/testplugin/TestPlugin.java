@@ -5,6 +5,7 @@ import io.gomint.plugin.PluginName;
 import io.gomint.plugin.Startup;
 import io.gomint.plugin.StartupPriority;
 import io.gomint.plugin.Version;
+import io.gomint.testplugin.listener.InventoryOpenListener;
 import io.gomint.testplugin.listener.PlayerInteractListener;
 import io.gomint.testplugin.listener.PlayerJoinListener;
 import io.gomint.testplugin.listener.PlayerRespawnListener;
@@ -22,7 +23,7 @@ public class TestPlugin extends Plugin {
     public void onInstall() {
         // Register listener
         registerListener(new PlayerJoinListener(this));
-        registerListener(new PlayerInteractListener());
+        registerListener(new InventoryOpenListener());
         registerListener(new PlayerRespawnListener());
     }
 

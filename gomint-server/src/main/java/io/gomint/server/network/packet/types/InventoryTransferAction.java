@@ -59,6 +59,11 @@ public class InventoryTransferAction implements InventoryAction {
     }
 
     @Override
+    public int weight() {
+        return 5;
+    }
+
+    @Override
     public String toString() {
         return "{\"InventoryTransferAction\":{"
             + "\"hasAmount\":\"" + hasAmount + "\""

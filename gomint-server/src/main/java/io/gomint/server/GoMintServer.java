@@ -12,6 +12,7 @@ import com.google.common.util.concurrent.MoreExecutors;
 import io.gomint.GoMint;
 import io.gomint.GoMintInstanceHolder;
 import io.gomint.config.InvalidConfigurationException;
+import io.gomint.enchant.Enchantment;
 import io.gomint.entity.Entity;
 import io.gomint.entity.EntityPlayer;
 import io.gomint.gui.ButtonList;
@@ -751,6 +752,11 @@ public class GoMintServer implements GoMint, InventoryHolder {
     @Override
     public <T extends ItemStack> T createItemStack(Class<T> itemClass, int amount) {
         return this.items.create(itemClass, (byte) amount);
+    }
+
+    @Override
+    public <T extends Enchantment> T createEnchantment(Class<T> enchantmentClass, int level) {
+        return (T) this.enchantments.create(enchantmentClass, (short) (level - 1));
     }
 
     @Override

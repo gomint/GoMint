@@ -7,6 +7,7 @@
 
 package io.gomint.server.enchant;
 
+import io.gomint.enchant.Rarity;
 import io.gomint.inventory.item.ItemType;
 import io.gomint.server.inventory.item.ItemStack;
 import io.gomint.server.registry.RegisterInfo;
@@ -19,48 +20,30 @@ import io.gomint.server.registry.RegisterInfo;
 public class EnchantmentUnbreaking extends Enchantment implements io.gomint.enchant.EnchantmentUnbreaking {
 
     /**
-     * Create new enchantment smite
-     *
-     * @param level of this enchantment
+     * Create new enchantment unbreaking
      */
     public EnchantmentUnbreaking() {
         super( (short) 3 );
     }
 
     @Override
-    public byte getMinEnchantAbility( short level ) {
+    public int getMinEnchantAbility( short level ) {
         return (byte) ( 5 + 8 * ( level - 1 ) );
     }
 
     @Override
-    public byte getMaxEnchantAbility( short level ) {
+    public int getMaxEnchantAbility( short level ) {
         return (byte) ( getMinEnchantAbility( level ) + 50 );
     }
 
     @Override
     public boolean canBeApplied( ItemStack itemStack ) {
-        return itemStack.getItemType() == ItemType.DIAMOND_PICKAXE ||
-            itemStack.getItemType() == ItemType.STONE_PICKAXE ||
-            itemStack.getItemType() == ItemType.GOLDEN_PICKAXE ||
-            itemStack.getItemType() == ItemType.IRON_PICKAXE ||
-            itemStack.getItemType() == ItemType.WOODEN_PICKAXE ||
-            itemStack.getItemType() == ItemType.DIAMOND_AXE ||
-            itemStack.getItemType() == ItemType.STONE_AXE ||
-            itemStack.getItemType() == ItemType.GOLDEN_AXE ||
-            itemStack.getItemType() == ItemType.IRON_AXE ||
-            itemStack.getItemType() == ItemType.WOODEN_AXE ||
-            itemStack.getItemType() == ItemType.DIAMOND_SHOVEL ||
-            itemStack.getItemType() == ItemType.STONE_SHOVEL ||
-            itemStack.getItemType() == ItemType.GOLDEN_SHOVEL ||
-            itemStack.getItemType() == ItemType.IRON_SHOVEL ||
-            itemStack.getItemType() == ItemType.WOODEN_SHOVEL ||
-            itemStack.getItemType() == ItemType.DIAMOND_SWORD ||
-            itemStack.getItemType() == ItemType.STONE_SWORD ||
-            itemStack.getItemType() == ItemType.GOLDEN_SWORD ||
-            itemStack.getItemType() == ItemType.IRON_SWORD ||
-            itemStack.getItemType() == ItemType.WOODEN_SWORD ||
-            itemStack.getItemType() == ItemType.BOW ||
-            itemStack.getItemType() == ItemType.FISHING_ROD;
+        return itemStack.canBeDamaged();
+    }
+
+    @Override
+    public Rarity getRarity() {
+        return Rarity.UNCOMMON;
     }
 
 }

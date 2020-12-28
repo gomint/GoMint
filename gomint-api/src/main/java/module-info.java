@@ -61,4 +61,5 @@ open module gomint.api {
     exports io.gomint.world.biome;
     exports io.gomint.world.biome.component;
     exports io.gomint.entity.animal;
+    exports io.gomint.event.enchant;
 }

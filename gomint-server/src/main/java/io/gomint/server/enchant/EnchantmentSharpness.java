@@ -7,6 +7,7 @@
 
 package io.gomint.server.enchant;
 
+import io.gomint.enchant.Rarity;
 import io.gomint.inventory.item.ItemType;
 import io.gomint.server.inventory.item.ItemStack;
 import io.gomint.server.registry.RegisterInfo;
@@ -15,35 +16,42 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 9 )
+@RegisterInfo(id = 9)
 public class EnchantmentSharpness extends Enchantment implements io.gomint.enchant.EnchantmentSharpness {
 
     /**
-     * Create new enchantment smite
-     *
-     * @param level of this enchantment
+     * Create new enchantment sharpness
      */
     public EnchantmentSharpness() {
-        super( (short) 5 );
+        super((short) 5);
     }
 
     @Override
-    public byte getMinEnchantAbility( short level ) {
-        return (byte) ( 1 + ( level - 1 ) * 11 );
+    public int getMinEnchantAbility(short level) {
+        return (byte) (1 + (level - 1) * 11);
     }
 
     @Override
-    public byte getMaxEnchantAbility( short level ) {
-        return (byte) ( getMinEnchantAbility( level ) + 20 );
+    public int getMaxEnchantAbility(short level) {
+        return (byte) (getMinEnchantAbility(level) + 20);
     }
 
     @Override
-    public boolean canBeApplied( ItemStack itemStack ) {
-        return itemStack.getItemType() == ItemType.DIAMOND_SWORD ||
-            itemStack.getItemType() == ItemType.STONE_SWORD ||
-            itemStack.getItemType() == ItemType.GOLDEN_SWORD ||
-            itemStack.getItemType() == ItemType.IRON_SWORD ||
-            itemStack.getItemType() == ItemType.WOODEN_SWORD;
+    public boolean canBeApplied(ItemStack itemStack) {
+        return EnchantmentHelper.canBeAppliedToSwords(itemStack) ||
+            EnchantmentHelper.canBeAppliedToAxe(itemStack);
+    }
+
+    @Override
+    public Rarity getRarity() {
+        return Rarity.COMMON;
+    }
+
+    @Override
+    public boolean collidesWith(Enchantment enchantment) {
+        return enchantment instanceof EnchantmentBaneOfArthopods ||
+            enchantment instanceof EnchantmentSmite ||
+            super.collidesWith(enchantment);
     }
 
 }

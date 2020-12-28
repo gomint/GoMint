@@ -7,6 +7,7 @@
 
 package io.gomint.server.enchant;
 
+import io.gomint.enchant.Rarity;
 import io.gomint.inventory.item.ItemType;
 import io.gomint.server.inventory.item.ItemStack;
 import io.gomint.server.registry.RegisterInfo;
@@ -26,22 +27,29 @@ public class EnchantmentDepthStrider extends Enchantment implements io.gomint.en
     }
 
     @Override
-    public byte getMinEnchantAbility( short level ) {
+    public int getMinEnchantAbility( short level ) {
         return (byte) ( level * 10 );
     }
 
     @Override
-    public byte getMaxEnchantAbility( short level ) {
+    public int getMaxEnchantAbility( short level ) {
         return (byte) ( getMinEnchantAbility( level ) + 15 );
     }
 
     @Override
     public boolean canBeApplied( ItemStack itemStack ) {
-        return itemStack.getItemType() == ItemType.CHAIN_BOOTS ||
-            itemStack.getItemType() == ItemType.DIAMOND_BOOTS ||
-            itemStack.getItemType() == ItemType.GOLDEN_BOOTS ||
-            itemStack.getItemType() == ItemType.IRON_BOOTS ||
-            itemStack.getItemType() == ItemType.LEATHER_BOOTS;
+        return EnchantmentHelper.canBeAppliedToBoots(itemStack);
+    }
+
+    @Override
+    public Rarity getRarity() {
+        return Rarity.RARE;
+    }
+
+    @Override
+    public boolean collidesWith(Enchantment enchantment) {
+        return enchantment instanceof EnchantmentFrostWalker ||
+            super.collidesWith(enchantment);
     }
 
 }

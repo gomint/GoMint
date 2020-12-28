@@ -7,6 +7,7 @@
 
 package io.gomint.server.enchant;
 
+import io.gomint.enchant.Rarity;
 import io.gomint.inventory.item.ItemType;
 import io.gomint.server.inventory.item.ItemStack;
 import io.gomint.server.registry.RegisterInfo;
@@ -19,27 +20,30 @@ import io.gomint.server.registry.RegisterInfo;
 public class EnchantmentFlame extends Enchantment implements io.gomint.enchant.EnchantmentFlame {
 
     /**
-     * Create new enchantment smite
-     *
-     * @param level of this enchantment
+     * Create new enchantment fire
      */
     public EnchantmentFlame() {
         super( (short) 1 );
     }
 
     @Override
-    public byte getMinEnchantAbility( short level ) {
+    public int getMinEnchantAbility( short level ) {
         return 20;
     }
 
     @Override
-    public byte getMaxEnchantAbility( short level ) {
+    public int getMaxEnchantAbility( short level ) {
         return 50;
     }
 
     @Override
     public boolean canBeApplied( ItemStack itemStack ) {
         return itemStack.getItemType() == ItemType.BOW;
+    }
+
+    @Override
+    public Rarity getRarity() {
+        return Rarity.RARE;
     }
 
 }

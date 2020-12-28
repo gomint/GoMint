@@ -7,6 +7,7 @@
 
 package io.gomint.server.enchant;
 
+import io.gomint.enchant.Rarity;
 import io.gomint.inventory.item.ItemType;
 import io.gomint.server.inventory.item.ItemStack;
 import io.gomint.server.registry.RegisterInfo;
@@ -19,21 +20,19 @@ import io.gomint.server.registry.RegisterInfo;
 public class EnchantmentRespiration extends Enchantment implements io.gomint.enchant.EnchantmentRespiration {
 
     /**
-     * Create new enchantment smite
-     *
-     * @param level of this enchantment
+     * Create new enchantment respiration
      */
     public EnchantmentRespiration() {
         super( (short) 3 );
     }
 
     @Override
-    public byte getMinEnchantAbility( short level ) {
+    public int getMinEnchantAbility( short level ) {
         return (byte) ( level * 10 );
     }
 
     @Override
-    public byte getMaxEnchantAbility( short level ) {
+    public int getMaxEnchantAbility( short level ) {
         return (byte) ( getMinEnchantAbility( level ) + 30 );
     }
 
@@ -43,7 +42,13 @@ public class EnchantmentRespiration extends Enchantment implements io.gomint.enc
             itemStack.getItemType() == ItemType.DIAMOND_HELMET ||
             itemStack.getItemType() == ItemType.GOLDEN_HELMET ||
             itemStack.getItemType() == ItemType.IRON_HELMET ||
-            itemStack.getItemType() == ItemType.LEATHER_HELMET;
+            itemStack.getItemType() == ItemType.LEATHER_HELMET ||
+            itemStack.getItemType() == ItemType.NETHERITE_HELMET;
+    }
+
+    @Override
+    public Rarity getRarity() {
+        return Rarity.RARE;
     }
 
 }

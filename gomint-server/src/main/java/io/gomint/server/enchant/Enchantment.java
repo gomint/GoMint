@@ -7,6 +7,7 @@
 
 package io.gomint.server.enchant;
 
+import io.gomint.enchant.Rarity;
 import io.gomint.math.MathUtils;
 import io.gomint.server.inventory.item.ItemStack;
 
@@ -14,7 +15,7 @@ import io.gomint.server.inventory.item.ItemStack;
  * @author geNAZt
  * @version 1.0
  */
-public class Enchantment implements io.gomint.enchant.Enchantment {
+public abstract class Enchantment implements io.gomint.enchant.Enchantment {
 
     private final short maxLevel;
     private short level;
@@ -47,8 +48,8 @@ public class Enchantment implements io.gomint.enchant.Enchantment {
      * @param level of enchantment
      * @return minimum needed enchant ability
      */
-    public byte getMinEnchantAbility( short level ) {
-        return 0;
+    public int getMinEnchantAbility( short level ) {
+        return 1 + level * 10;
     }
 
     /**
@@ -57,8 +58,8 @@ public class Enchantment implements io.gomint.enchant.Enchantment {
      * @param level of enchantment
      * @return maximum needed enchant ability
      */
-    public byte getMaxEnchantAbility( short level ) {
-        return 0;
+    public int getMaxEnchantAbility( short level ) {
+        return getMinEnchantAbility( level ) + 5;
     }
 
     /**
@@ -69,6 +70,16 @@ public class Enchantment implements io.gomint.enchant.Enchantment {
      */
     public boolean canBeApplied( ItemStack itemStack ) {
         return true;
+    }
+
+    public int getMinLevel() {
+        return 1;
+    }
+
+    public abstract Rarity getRarity();
+
+    public boolean collidesWith(Enchantment enchantment) {
+        return this.getClass() == enchantment.getClass();
     }
 
 }

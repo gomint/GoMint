@@ -659,12 +659,13 @@ public class EntityHuman extends EntityCreature implements io.gomint.entity.pass
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         EntityHuman that = (EntityHuman) o;
-        return Objects.equals(uuid, that.uuid);
+        return uuid.getMostSignificantBits() == that.uuid.getMostSignificantBits() &&
+            uuid.getLeastSignificantBits() == that.uuid.getLeastSignificantBits();
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(uuid);
+        return uuid.hashCode();
     }
 
     @Override

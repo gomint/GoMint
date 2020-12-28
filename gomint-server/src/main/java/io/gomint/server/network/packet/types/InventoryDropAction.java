@@ -23,6 +23,11 @@ public class InventoryDropAction implements InventoryAction {
         this.random = buffer.readBoolean();
     }
 
+    @Override
+    public int weight() {
+        return 5;
+    }
+
     public byte getAmount() {
         return amount;
     }

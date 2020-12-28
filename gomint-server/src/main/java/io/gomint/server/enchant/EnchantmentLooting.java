@@ -7,6 +7,7 @@
 
 package io.gomint.server.enchant;
 
+import io.gomint.enchant.Rarity;
 import io.gomint.inventory.item.ItemType;
 import io.gomint.server.inventory.item.ItemStack;
 import io.gomint.server.registry.RegisterInfo;
@@ -19,31 +20,30 @@ import io.gomint.server.registry.RegisterInfo;
 public class EnchantmentLooting extends Enchantment implements io.gomint.enchant.EnchantmentLooting {
 
     /**
-     * Create new enchantment smite
-     *
-     * @param level of this enchantment
+     * Create new enchantment looting
      */
     public EnchantmentLooting() {
         super( (short) 3 );
     }
 
     @Override
-    public byte getMinEnchantAbility( short level ) {
+    public int getMinEnchantAbility( short level ) {
         return (byte) ( 15 + ( level - 1 ) * 9 );
     }
 
     @Override
-    public byte getMaxEnchantAbility( short level ) {
+    public int getMaxEnchantAbility( short level ) {
         return (byte) ( getMinEnchantAbility( level ) + 50 );
     }
 
     @Override
     public boolean canBeApplied( ItemStack itemStack ) {
-        return itemStack.getItemType() == ItemType.DIAMOND_SWORD ||
-            itemStack.getItemType() == ItemType.STONE_SWORD ||
-            itemStack.getItemType() == ItemType.GOLDEN_SWORD ||
-            itemStack.getItemType() == ItemType.IRON_SWORD ||
-            itemStack.getItemType() == ItemType.WOODEN_SWORD;
+        return EnchantmentHelper.canBeAppliedToSwords(itemStack);
+    }
+
+    @Override
+    public Rarity getRarity() {
+        return Rarity.RARE;
     }
 
 }

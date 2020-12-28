@@ -17,6 +17,7 @@ import io.gomint.server.GoMintServer;
 import io.gomint.server.entity.EntityLink;
 import io.gomint.server.network.type.CommandOrigin;
 import io.gomint.server.player.PlayerSkin;
+import io.gomint.server.util.DumpUtil;
 import io.gomint.server.util.Things;
 import io.gomint.taglib.AllocationLimitReachedException;
 import io.gomint.taglib.NBTReader;

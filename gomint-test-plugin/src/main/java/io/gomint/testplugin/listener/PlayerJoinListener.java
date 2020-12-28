@@ -32,6 +32,8 @@ public class PlayerJoinListener implements EventListener {
 
         ItemDiamondSword sword = ItemDiamondSword.create(1);
         event.getPlayer().getInventory().setItem(6, sword);
+
+        event.getPlayer().setLevel(27);
     }
 
 }

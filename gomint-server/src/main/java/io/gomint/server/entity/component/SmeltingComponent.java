@@ -50,7 +50,7 @@ public class SmeltingComponent extends AbstractTileEntityComponent {
 
         this.inventory = inventory;
         this.inventory.addObserver(pair -> {
-            if (pair.getFirst() == 0) {
+            if (pair.getFirst() == 0 && pair.getSecond() != null) {
                 // Input slot has changed
                 onInputChanged(pair.getSecond());
             }
@@ -143,6 +143,10 @@ public class SmeltingComponent extends AbstractTileEntityComponent {
 
         // Check if there is a smelting recipe present
         GoMintServer server = (GoMintServer) GoMint.instance();
+        if (server.getRecipeManager() == null) {
+            return;
+        }
+
         SmeltingRecipe recipe = server.getRecipeManager().getSmeltingRecipe(input);
         if (recipe != null) {
             for (io.gomint.inventory.item.ItemStack stack : recipe.createResult()) {

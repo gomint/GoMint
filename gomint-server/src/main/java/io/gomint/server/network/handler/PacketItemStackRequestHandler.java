@@ -8,7 +8,9 @@
 package io.gomint.server.network.handler;
 
 import io.gomint.inventory.item.ItemAir;
+import io.gomint.server.crafting.session.SessionInventory;
 import io.gomint.server.entity.EntityPlayer;
+import io.gomint.server.inventory.EnchantmentTableInventory;
 import io.gomint.server.inventory.Inventory;
 import io.gomint.server.inventory.OneSlotInventory;
 import io.gomint.server.inventory.WindowMagicNumbers;
@@ -20,6 +22,7 @@ import io.gomint.server.inventory.transaction.TransactionGroup;
 import io.gomint.server.network.PlayerConnection;
 import io.gomint.server.network.handler.session.CraftingSession;
 import io.gomint.server.network.handler.session.CreativeSession;
+import io.gomint.server.network.handler.session.EnchantingSession;
 import io.gomint.server.network.handler.session.Session;
 import io.gomint.server.network.packet.PacketItemStackRequest;
 import io.gomint.server.network.packet.PacketItemStackResponse;
@@ -39,6 +42,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class PacketItemStackRequestHandler implements PacketHandler<PacketItemStackRequest> {
@@ -54,6 +59,16 @@ public class PacketItemStackRequestHandler implements PacketHandler<PacketItemSt
             PacketItemStackResponse.Response resp = null;
             TransactionGroup transactionGroup = new TransactionGroup(connection.getEntity());
             Byte2ObjectMap<Byte2ObjectMap<PacketItemStackResponse.StackResponseSlotInfo>> successChanges = new Byte2ObjectOpenHashMap<>();
+
+            request.getActions().sort((o1, o2) -> Integer.compare(o2.weight(), o1.weight()));
+
+            if (LOGGER.isDebugEnabled()) {
+                LOGGER.debug("Sorted itemstack request:");
+
+                for (InventoryAction action : request.getActions()) {
+                    LOGGER.debug(" > {}", action);
+                }
+            }
 
             for (InventoryAction action : request.getActions()) {
                 if (action instanceof InventoryDestroyCreativeAction) {
@@ -78,7 +93,7 @@ public class PacketItemStackRequestHandler implements PacketHandler<PacketItemSt
                                 .put(source.getSlot(), new PacketItemStackResponse.StackResponseSlotInfo(source.getSlot(), item.getAmount(), item.getStackId()));
                         }
                     } else {
-                        resp = new PacketItemStackResponse.Response(PacketItemStackResponse.ResponseResult.PlayerNotInCreativeMode, request.getRequestId(), null);
+                        resp = new PacketItemStackResponse.Response(PacketItemStackResponse.ResponseResult.Error, request.getRequestId(), null);
                     }
                 } else if (action instanceof InventoryGetCreativeAction) {
                     if (connection.getEntity().getGamemode() == Gamemode.CREATIVE) {
@@ -87,15 +102,15 @@ public class PacketItemStackRequestHandler implements PacketHandler<PacketItemSt
                         item = (ItemStack) item.clone().setAmount(64);
 
                         session = new CreativeSession(connection);
-                        session.addInput(item);
+                        session.addInput(item, 0);
                     } else {
-                        resp = new PacketItemStackResponse.Response(PacketItemStackResponse.ResponseResult.PlayerNotInCreativeMode, request.getRequestId(), null);
+                        resp = new PacketItemStackResponse.Response(PacketItemStackResponse.ResponseResult.Error, request.getRequestId(), null);
                     }
                 } else if (action instanceof InventoryConsumeAction) {
                     InventoryConsumeAction consumeAction = (InventoryConsumeAction) action;
 
                     if (session == null) {
-                        resp = new PacketItemStackResponse.Response(PacketItemStackResponse.ResponseResult.InvalidCraftResult, request.getRequestId(), null);
+                        resp = new PacketItemStackResponse.Response(PacketItemStackResponse.ResponseResult.Error, request.getRequestId(), null);
                         break;
                     } else {
                         ItemStackRequestSlotInfo source = ((InventoryConsumeAction) action).getSource();
@@ -107,7 +122,8 @@ public class PacketItemStackRequestHandler implements PacketHandler<PacketItemSt
                             item = (ItemStack) item.clone().setAmount(consumeAction.getAmount());
                         }
 
-                        session.addInput(item);
+                        byte slot = fixSlotInput(source);
+                        session.addInput(item, slot);
 
                         item = getItemStack(connection.getEntity(), source, session);
                         successChanges
@@ -119,11 +135,17 @@ public class PacketItemStackRequestHandler implements PacketHandler<PacketItemSt
                 } else if (action instanceof InventoryDropAction) {
                     resp = handleInventoryDrop((InventoryDropAction) action, connection, transactionGroup, request, session);
                 } else if (action instanceof InventoryCraftAction) {
-                    session = new CraftingSession(connection)
-                        .findRecipe(((InventoryCraftAction) action).getRecipeId());
+                    if (connection.getEntity().getCurrentOpenContainer() != null &&
+                        connection.getEntity().getCurrentOpenContainer() instanceof EnchantmentTableInventory) {
+                        session = new EnchantingSession(connection)
+                            .selectOption(((InventoryCraftAction) action).getRecipeId());
+                    } else {
+                        session = new CraftingSession(connection)
+                            .findRecipe(((InventoryCraftAction) action).getRecipeId());
+                    }
                 } else if (action instanceof InventoryCraftingResultAction) {
                     if (session == null) {
-                        resp = new PacketItemStackResponse.Response(PacketItemStackResponse.ResponseResult.InvalidCraftResult, request.getRequestId(), null);
+                        resp = new PacketItemStackResponse.Response(PacketItemStackResponse.ResponseResult.Error, request.getRequestId(), null);
                         break;
                     } else if (session instanceof CraftingSession) {
                         ((CraftingSession) session).setAmountOfCrafts(((InventoryCraftingResultAction) action).getAmount());
@@ -173,6 +195,10 @@ public class PacketItemStackRequestHandler implements PacketHandler<PacketItemSt
         PacketItemStackResponse response = new PacketItemStackResponse();
         response.setResponses(responses);
         connection.addToSendQueue(response);
+
+        if (session != null) {
+            session.postProcess();
+        }
     }
 
     private PacketItemStackResponse.Response handleInventoryDrop(InventoryDropAction dropAction,
@@ -217,9 +243,9 @@ public class PacketItemStackRequestHandler implements PacketHandler<PacketItemSt
                                                                      PacketItemStackRequest.Request request,
                                                                      Session session) {
         Inventory sourceInventory = getInventory(connection.getEntity(), transferAction.getSource().getWindowId(), session);
-        if (sourceInventory instanceof OneSlotInventory) {
+        if (sourceInventory instanceof SessionInventory) {
             if (!session.process()) {
-                return new PacketItemStackResponse.Response(PacketItemStackResponse.ResponseResult.InvalidCraftRequest, request.getRequestId(), null);
+                return new PacketItemStackResponse.Response(PacketItemStackResponse.ResponseResult.Error, request.getRequestId(), null);
             }
         }
 
@@ -264,7 +290,7 @@ public class PacketItemStackRequestHandler implements PacketHandler<PacketItemSt
 
                 transactionGroup.addTransaction(inventoryTransactionDestination);
             } else {
-                return new PacketItemStackResponse.Response(PacketItemStackResponse.ResponseResult.InvalidTransferAmount, request.getRequestId(), null);
+                return new PacketItemStackResponse.Response(PacketItemStackResponse.ResponseResult.Error, request.getRequestId(), null);
             }
         } else {
             InventoryTransaction inventoryTransactionSource = new InventoryTransaction(
@@ -335,14 +361,14 @@ public class PacketItemStackRequestHandler implements PacketHandler<PacketItemSt
             case WindowMagicNumbers.CURSOR:
                 return entity.getCursorInventory();
             case WindowMagicNumbers.ENCHANTMENT_TABLE_INPUT:
-                return entity.getEnchantmentInputInventory();
+            case WindowMagicNumbers.ENCHANTMENT_TABLE_MATERIAL:
+            case WindowMagicNumbers.CONTAINER:
+                return entity.getCurrentOpenContainer();
             case WindowMagicNumbers.CRAFTING_INPUT:
                 return entity.getCraftingInputInventory();
             case WindowMagicNumbers.CRAFTING_OUTPUT:
             case WindowMagicNumbers.CREATED_OUTPUT:
                 return session.getOutput();
-            case WindowMagicNumbers.CONTAINER:
-                return entity.getCurrentOpenContainer();
         }
 
         LOGGER.warn("Unknown inventory window id for item stack request: {}", windowId);

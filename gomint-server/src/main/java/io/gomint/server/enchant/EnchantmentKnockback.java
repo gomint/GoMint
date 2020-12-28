@@ -7,6 +7,7 @@
 
 package io.gomint.server.enchant;
 
+import io.gomint.enchant.Rarity;
 import io.gomint.inventory.item.ItemType;
 import io.gomint.server.inventory.item.ItemStack;
 import io.gomint.server.registry.RegisterInfo;
@@ -20,30 +21,29 @@ public class EnchantmentKnockback extends Enchantment implements io.gomint.encha
 
     /**
      * Create new enchantment smite
-     *
-     * @param level of this enchantment
      */
     public EnchantmentKnockback() {
         super( (short) 2 );
     }
 
     @Override
-    public byte getMinEnchantAbility( short level ) {
+    public int getMinEnchantAbility( short level ) {
         return (byte) ( 5 + ( level - 1 ) * 20 );
     }
 
     @Override
-    public byte getMaxEnchantAbility( short level ) {
+    public int getMaxEnchantAbility( short level ) {
         return (byte) ( getMinEnchantAbility( level ) + 50 );
     }
 
     @Override
     public boolean canBeApplied( ItemStack itemStack ) {
-        return itemStack.getItemType() == ItemType.DIAMOND_SWORD ||
-            itemStack.getItemType() == ItemType.STONE_SWORD ||
-            itemStack.getItemType() == ItemType.GOLDEN_SWORD ||
-            itemStack.getItemType() == ItemType.IRON_SWORD ||
-            itemStack.getItemType() == ItemType.WOODEN_SWORD;
+        return EnchantmentHelper.canBeAppliedToSwords(itemStack);
+    }
+
+    @Override
+    public Rarity getRarity() {
+        return Rarity.UNCOMMON;
     }
 
 }
