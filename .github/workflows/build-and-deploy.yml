@@ -22,12 +22,12 @@ jobs:
       env:
         MAVEN_USERNAME: ${{ secrets.OSSRH_USERNAME }}
         MAVEN_PASSWORD: ${{ secrets.OSSRH_TOKEN }}
-    - run: mkdir -p ./release/modules && cp -r ./gomint-server/target/modules/* ./release/modules/ && cd release && zip -r server.zip ./
+    - run: mkdir -p ./release/modules && cp -r ./gomint-server/target/modules/* ./release/modules/
     - name: Store artifacts
       uses: actions/upload-artifact@v2
       with:
         name: GoMint Server
-        path: ./release/server.zip
+        path: ./release/
     - name: Build and push image
       uses: docker/build-push-action@v1
       with:
@@ -40,6 +40,7 @@ jobs:
       id: create_release
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - run: cd release/ && zip -r server.zip ./
     - name: Upload file to bucket
       uses: zdurham/s3-upload-github-action@master
       with:
