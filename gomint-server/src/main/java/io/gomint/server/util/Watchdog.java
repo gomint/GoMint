@@ -27,74 +27,65 @@ import java.util.concurrent.TimeUnit;
  */
 public class Watchdog implements Runnable {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger( Watchdog.class );
+    private static final Logger LOGGER = LoggerFactory.getLogger(Watchdog.class);
     private final Long2LongMap watchdogMap;
     private final Long2LongMap removed;
 
-    public Watchdog( GoMintServer server ) {
+    public Watchdog(GoMintServer server) {
         this.watchdogMap = new Long2LongOpenHashMap();
         this.removed = new Long2LongOpenHashMap();
 
-        server.getExecutorService().scheduleAtFixedRate( this, 0, 10, TimeUnit.MILLISECONDS );
+        server.getExecutorService().scheduleAtFixedRate(this, 0, 10, TimeUnit.MILLISECONDS);
     }
 
     @Override
     public synchronized void run() {
         long currentTime = System.currentTimeMillis();
 
-        final LongSet[] removeSet = { null };
-        for ( Long2LongMap.Entry entry : this.watchdogMap.long2LongEntrySet() ) {
+        final LongSet[] removeSet = {null};
+        for (Long2LongMap.Entry entry : this.watchdogMap.long2LongEntrySet()) {
             // Check if we are over endTime
-            if ( currentTime > entry.getLongValue() ) {
+            if (currentTime > entry.getLongValue()) {
                 // Get the threads stack
                 ThreadMXBean threadMXBean = ManagementFactory.getThreadMXBean();
-                ThreadInfo threadInfo = threadMXBean.getThreadInfo( entry.getLongKey(), 10 );
+                ThreadInfo threadInfo = threadMXBean.getThreadInfo(entry.getLongKey(), 10);
 
-                LOGGER.warn( "Thread did not work in time: {} (#{})", threadInfo.getThreadName(), threadInfo.getThreadId() );
-                LOGGER.warn( "Status: {}", threadInfo.getThreadState() );
-                for ( StackTraceElement element : threadInfo.getStackTrace() ) {
-                    LOGGER.warn( "  {}", element );
+                LOGGER.warn("Thread did not work in time: {} (#{})", threadInfo.getThreadName(), threadInfo.getThreadId());
+                LOGGER.warn("Status: {}", threadInfo.getThreadState());
+                for (StackTraceElement element : threadInfo.getStackTrace()) {
+                    LOGGER.warn("  {}", element);
                 }
 
-                if ( removeSet[0] == null ) {
+                if (removeSet[0] == null) {
                     removeSet[0] = new LongOpenHashSet();
                 }
 
-                ReportUploader.create()
-                    .tag("thread.too_long")
-                    .property("thread_name", threadInfo.getThreadName())
-                    .property("thread_state", threadInfo.getThreadState().name())
-                    .property("thread_lock", threadInfo.getLockName())
-                    .property("thread_lock_owner", threadInfo.getLockOwnerName())
-                    .stacktrace(threadInfo.getStackTrace())
-                    .upload("Thread did work too long");
-
-                removeSet[0].add( entry.getLongKey() );
+                removeSet[0].add(entry.getLongKey());
             }
         }
 
-        if ( removeSet[0] != null ) {
-            for ( long threadId : removeSet[0] ) {
-                this.removed.put( threadId, this.watchdogMap.remove( threadId ) );
+        if (removeSet[0] != null) {
+            for (long threadId : removeSet[0]) {
+                this.removed.put(threadId, this.watchdogMap.remove(threadId));
             }
         }
     }
 
-    public synchronized void add( long currentTime, long diff, TimeUnit unit ) {
-        this.watchdogMap.put( Thread.currentThread().getId(), currentTime + unit.toMillis( diff ) );
+    public synchronized void add(long currentTime, long diff, TimeUnit unit) {
+        this.watchdogMap.put(Thread.currentThread().getId(), currentTime + unit.toMillis(diff));
     }
 
-    public void add( long diff, TimeUnit unit ) {
+    public void add(long diff, TimeUnit unit) {
         long currentTime = System.currentTimeMillis();
-        this.add( currentTime, diff, unit );
+        this.add(currentTime, diff, unit);
     }
 
     public synchronized void done() {
         long threadId = Thread.currentThread().getId();
-        this.watchdogMap.remove( threadId );
+        this.watchdogMap.remove(threadId);
 
-        if ( this.removed.containsKey( threadId ) ) {
-            LOGGER.info( "Thread {} took {}ms", threadId, ( System.currentTimeMillis() - this.removed.remove( threadId ) ) );
+        if (this.removed.containsKey(threadId)) {
+            LOGGER.info("Thread {} took {}ms", threadId, (System.currentTimeMillis() - this.removed.remove(threadId)));
         }
     }
 
