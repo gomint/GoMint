@@ -45,8 +45,7 @@ GoMint is a modern Minecraft Bedrock Edition server enabling you to let your vis
 - [🟢 Latest tag](https://github.com/gomint/gomint/releases/download/1.0.0-RC6/1.0.0-RC6.zip)
 - [🟡 Latest build](https://gomint-artifacts.s3.amazonaws.com/latest.zip)
 
-### Download One-liners
-⚠ **Download One-liners download the latest build, not the latest tag!**
+⚠ **The following one-liner scripts download the latest build, not the latest tag!**
 
 #### Windows Command Line
 ```bash
