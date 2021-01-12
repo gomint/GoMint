@@ -44,7 +44,7 @@ powershell.exe "$ProgressPreference = 'SilentlyContinue'; $Random = Get-Random -
 
 ### PowerShell
 ```powershell
-$ProgressPreference='SilentlyContinue';$Random=Get-Random -Maximum 0xFFFFFF;Invoke-WebRequest -Uri 'https://gomint-artifacts.s3.amazonaws.com/latest.zip' -OutFile 'gomint-$Random'
+$ProgressPreference = 'SilentlyContinue'; $Random = Get-Random -Maximum 0xFFFFFF; Invoke-WebRequest -Uri 'https://gomint-artifacts.s3.amazonaws.com/latest.zip' -OutFile gomint-$Random.zip; Expand-Archive -LiteralPath gomint-$Random.zip -DestinationPath gomint-$Random
 ```
 
 ### Unix (Curl + Core Utils)
