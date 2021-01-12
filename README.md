@@ -25,7 +25,7 @@
   <img alt="License" src="https://img.shields.io/badge/License-BSD%203--Clause-blue.svg">
 </a>
 
-GoMint is a modern Minecraft Bedrock Edition server enabling you to let your visions come true.
+GoMint is a modern Minecraft Bedrock Edition server enabling you to make your visions come true
 
 ![Start Sequence](https://cdn.discordapp.com/attachments/746763011875799040/798663623547158539/sNgUe2IpW6.gif)
 
