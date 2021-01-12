@@ -39,23 +39,21 @@ GoMint is a modern Minecraft Bedrock Edition server enabling you to let your vis
 
 ### Windows Command Line
 ```bash
-powershell.exe "$ProgressPreference = 'SilentlyContinue'; $Random = Get-Random -Maximum 0xFFFFFF; Invoke-WebRequest -Uri 'https://gomint-artifacts.s3.amazonaws.com/latest.zip' -OutFile gomint-$Random.zip; Expand-Archive -LiteralPath gomint-$Random.zip -DestinationPath gomint-$Random; Write-Output gomint-$Random"
+powershell.exe "$ProgressPreference = 'SilentlyContinue'; Invoke-WebRequest -Uri 'https://gomint-artifacts.s3.amazonaws.com/latest.zip' -OutFile gomint.zip; $Random = Get-Random -Maximum 0xFFFFFF; Expand-Archive -LiteralPath gomint.zip -DestinationPath gomint-$Random; Write-Output gomint-$Random"
 ```
 
 ### PowerShell
 ```powershell
-$ProgressPreference = 'SilentlyContinue'; $Random = Get-Random -Maximum 0xFFFFFF; Invoke-WebRequest -Uri 'https://gomint-artifacts.s3.amazonaws.com/latest.zip' -OutFile gomint-$Random.zip; Expand-Archive -LiteralPath gomint-$Random.zip -DestinationPath gomint-$Random; Write-Output gomint-$Random
+$ProgressPreference = 'SilentlyContinue'; Invoke-WebRequest -Uri 'https://gomint-artifacts.s3.amazonaws.com/latest.zip' -OutFile gomint.zip; $Random = Get-Random -Maximum 0xFFFFFF; Expand-Archive -LiteralPath gomint.zip -DestinationPath gomint-$Random; Write-Output gomint-$Random
 ```
 
 ### Unix (Curl + Core Utils)
 ```bash
-curl --silent -o gomint.zip https://gomint-artifacts.s3.amazonaws.com/latest.zip
-unzip gomint.zip -d gomint-$(cat /dev/urandom | base64 | cut -c 4)
+WORKSPACE=gomint-$(cat /dev/urandom | base64 | cut -c 4) && curl --silent -o gomint.zip https://gomint-artifacts.s3.amazonaws.com/latest.zip && unzip gomint.zip -d $WORKSPACE && echo $WORKSPACE
 ```
 ### Unix (Wget + Core Utils)
 ```bash
-wget --quiet -O gomint.zip https://gomint-artifacts.s3.amazonaws.com/latest.zip
-unzip gomint.zip -d gomint-$(cat /dev/urandom | base64 | cut -c 4)
+WORKSPACE=gomint-$(cat /dev/urandom | base64 | cut -c 4) && wget --quiet -O gomint.zip https://gomint-artifacts.s3.amazonaws.com/latest.zip && unzip gomint.zip -d $WORKSPACE && echo $WORKSPACE
 ```
 
 ## 💠 Integration
