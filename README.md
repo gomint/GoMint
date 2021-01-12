@@ -31,10 +31,10 @@ GoMint is a modern Minecraft Bedrock Edition server enabling you to let your vis
 - 🚄 High performance, fast startup and low resource usage
 - 🔧 Highly configurable via configuration files
 - 🔌 Functionality extendable via plugins
-- 💠 Cryptography implementations in Rust
+- 🗝 Cryptography implementations in Rust
 - 📦 Vanilla says "Hello": Crafting, enchanting, all blocks, all items
 
-## Getting Started
+## ✳ Getting Started
 **You can download the latest build from [here](https://gomint-artifacts.s3.amazonaws.com/latest.zip).**
 
 ### Windows Command Line
@@ -58,10 +58,10 @@ wget --quiet -O gomint.zip https://gomint-artifacts.s3.amazonaws.com/latest.zip
 unzip gomint.zip -d gomint-$(cat /dev/urandom | base64 | cut -c 4)
 ```
 
-## Integration
+## 💠 Integration
 _To be filled_
 
-## Compilation
+## ⚒ Compilation
 **Bundled Maven**
 ```bash
 ./mvnw clean install
@@ -72,7 +72,7 @@ _To be filled_
 mvn clean install
 ```
 
-## Contributors
+## 👥 Contributors
 ### Code Contributors
 This project exists thanks to all the people who contribute. [[Contribute](CONTRIBUTING.md)].
 <a href="https://github.com/GoMint/GoMint/graphs/contributors"><img src="https://opencollective.com/GoMint/contributors.svg?width=890&button=false" /></a>
