@@ -51,11 +51,15 @@ $ProgressPreference = 'SilentlyContinue'; Invoke-WebRequest -Uri 'https://gomint
 
 ### Unix (Curl + Core Utils)
 ```bash
-WORKSPACE=gomint-$(cat /dev/urandom | base64 | cut -c 4) && curl --silent -o gomint.zip https://gomint-artifacts.s3.amazonaws.com/latest.zip && unzip gomint.zip -d $WORKSPACE && echo $WORKSPACE
+WORKSPACE=gomint-$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 6 | head -n 1) && \
+	curl --silent -o gomint.zip https://gomint-artifacts.s3.amazonaws.com/latest.zip && \
+	unzip gomint.zip -d $WORKSPACE && echo $WORKSPACE
 ```
 ### Unix (Wget + Core Utils)
 ```bash
-WORKSPACE=gomint-$(cat /dev/urandom | base64 | cut -c 4) && wget --quiet -O gomint.zip https://gomint-artifacts.s3.amazonaws.com/latest.zip && unzip gomint.zip -d $WORKSPACE && echo $WORKSPACE
+WORKSPACE=gomint-$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 6 | head -n 1) && \
+	wget --quiet -O gomint.zip https://gomint-artifacts.s3.amazonaws.com/latest.zip && \
+	unzip gomint.zip -d $WORKSPACE && echo $WORKSPACE
 ```
 
 ## 💠 Integration
