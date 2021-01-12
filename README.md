@@ -25,41 +25,48 @@
   <img alt="License" src="https://img.shields.io/badge/License-BSD%203--Clause-blue.svg">
 </a>
 
-GoMint is a modern Minecraft Bedrock Edition server enabling you to let your visions become true.
-
-#### Features:
-- 🚄 High performance, fast startup and low resource usage
-- 🔧 Highly configurable via configuration files
-- 🔌 Functionality extendable via plugins
-- 🗝 Cryptography implementations in Rust
-- 📦 Vanilla says "Hello": Crafting, enchanting, all blocks, all items
+GoMint is a modern Minecraft Bedrock Edition server enabling you to let your visions come true.
 
 ![Start Sequence](https://cdn.discordapp.com/attachments/746763011875799040/798663623547158539/sNgUe2IpW6.gif)
 
-## ✳ Getting Started
-**You can download the latest build from [here](https://gomint-artifacts.s3.amazonaws.com/latest.zip).**
+## ❇ Getting Started
+- [🌐 Website](https://gomint.io)
+- [📖 Documentation](https://docs.gomint.io)
+- [🗣 Discord Server](https://discord.com/invite/qC4nJVN)
 
-### Windows Command Line
+## 📦 Features
+- ⚡ High performance, fast startup and low resource usage
+- 🔧 Highly configurable via configuration files
+- 🔌 Functionality extendable via plugins
+- 🗝 Cryptography implementations in Rust
+- 💫 Crafting, enchanting, all blocks, all items
+
+## ⏬ Download
+- [🟢 Latest tag](https://github.com/gomint/gomint/releases/download/1.0.0-RC6/1.0.0-RC6.zip)
+- [🟡 Latest build](https://gomint-artifacts.s3.amazonaws.com/latest.zip)
+
+#### Windows Command Line
 ```bash
 powershell.exe "$ProgressPreference = 'SilentlyContinue'; Invoke-WebRequest -Uri 'https://gomint-artifacts.s3.amazonaws.com/latest.zip' -OutFile gomint.zip; $Random = Get-Random -Maximum 0xFFFFFF; Expand-Archive -LiteralPath gomint.zip -DestinationPath gomint-$Random; Write-Output gomint-$Random"
 ```
 
-### PowerShell
+#### PowerShell
 ```powershell
 $ProgressPreference = 'SilentlyContinue'; `
     Invoke-WebRequest -Uri 'https://gomint-artifacts.s3.amazonaws.com/latest.zip' -OutFile gomint.zip; `
     $Random = Get-Random -Maximum 0xFFFFFF; `
     Expand-Archive -LiteralPath gomint.zip -DestinationPath gomint-$Random; `
-    Write-Output gomint-$Random
+    Write-Out	put gomint-$Random
 ```
 
-### Unix (Curl + Core Utils)
+#### Unix (Curl + Core Utils)
 ```bash
 WORKSPACE=gomint-$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 6 | head -n 1) && \
 	curl --silent -o gomint.zip https://gomint-artifacts.s3.amazonaws.com/latest.zip && \
 	unzip gomint.zip -d $WORKSPACE && echo $WORKSPACE
 ```
-### Unix (Wget + Core Utils)
+
+#### Unix (Wget + Core Utils)
 ```bash
 WORKSPACE=gomint-$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 6 | head -n 1) && \
 	wget --quiet -O gomint.zip https://gomint-artifacts.s3.amazonaws.com/latest.zip && \
@@ -86,17 +93,17 @@ mvn clean install
 ```
 
 ## 👥 Contributors
-### Code Contributors
+#### 📝 Code Contributors
 This project exists thanks to all the people who contribute. [[Contribute](CONTRIBUTING.md)].
 <a href="https://github.com/GoMint/GoMint/graphs/contributors"><img src="https://opencollective.com/GoMint/contributors.svg?width=890&button=false" /></a>
 
-### Financial Contributors
+#### 💸 Financial Contributors
 Become a financial contributor and help us sustain our community. [[Contribute](https://opencollective.com/GoMint/contribute)]
 
-#### Individuals
+##### Individuals
 <a href="https://opencollective.com/GoMint"><img src="https://opencollective.com/GoMint/individuals.svg?width=890"></a>
 
-#### Organizations
+##### Organizations
 Support this project with your organization. Your logo will show up here with a link to your website. [[Contribute](https://opencollective.com/GoMint/contribute)]
 
 <a href="https://opencollective.com/GoMint/organization/0/website"><img src="https://opencollective.com/GoMint/organization/0/avatar.svg"></a>
