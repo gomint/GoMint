@@ -34,6 +34,8 @@ GoMint is a modern Minecraft Bedrock Edition server enabling you to let your vis
 - 🗝 Cryptography implementations in Rust
 - 📦 Vanilla says "Hello": Crafting, enchanting, all blocks, all items
 
+![Start Sequence](https://cdn.discordapp.com/attachments/746763011875799040/798663623547158539/sNgUe2IpW6.gif)
+
 ## ✳ Getting Started
 **You can download the latest build from [here](https://gomint-artifacts.s3.amazonaws.com/latest.zip).**
 
