@@ -76,7 +76,14 @@ WORKSPACE=gomint-$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 6 | head -n 1
 ```
 
 ## 💠 Integration
-_To be filled_
+### CloudNet V3
+_Guide coming soon_
+
+### Docker
+_Guide coming soon_
+
+### Pterodactyl
+_Guide coming soon_
 
 ## ⚒ Compilation
 **Bundled Maven (Windows Command Line)**
