@@ -70,12 +70,17 @@ WORKSPACE=gomint-$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 6 | head -n 1
 _To be filled_
 
 ## ⚒ Compilation
-**Bundled Maven**
+**Bundled Maven (Windows Command Line)**
 ```bash
-./mvnw clean install
+mvnw.cmd clean install
 ```
 
-**Local Maven**
+**Bundled Maven (Shell)**
+```bash
+./mvnw.sh clean install
+```
+
+**Local Maven Installation**
 ```bash
 mvn clean install
 ```
