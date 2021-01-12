@@ -47,12 +47,13 @@ _To be filled_
 mvn clean install
 ```
 
-### Code Contributors
+## Contributors
+### Code
 
 This project exists thanks to all the people who contribute. [[Contribute](CONTRIBUTING.md)].
 <a href="https://github.com/GoMint/GoMint/graphs/contributors"><img src="https://opencollective.com/GoMint/contributors.svg?width=890&button=false" /></a>
 
-### Financial Contributors
+### Financial
 Become a financial contributor and help us sustain our community. [[Contribute](https://opencollective.com/GoMint/contribute)]
 
 #### Individuals
