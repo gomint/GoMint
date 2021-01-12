@@ -58,7 +58,7 @@ $ProgressPreference = 'SilentlyContinue'; `
     Invoke-WebRequest -Uri 'https://gomint-artifacts.s3.amazonaws.com/latest.zip' -OutFile gomint.zip; `
     $Random = Get-Random -Maximum 0xFFFFFF; `
     Expand-Archive -LiteralPath gomint.zip -DestinationPath gomint-$Random; `
-    Write-Out	put gomint-$Random
+    Write-Output gomint-$Random
 ```
 
 #### Unix (Curl + Core Utils)
