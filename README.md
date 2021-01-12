@@ -72,7 +72,7 @@ _To be filled_
 ## ⚒ Compilation
 **Bundled Maven (Windows Command Line)**
 ```bash
-mvnw.cmd clean install
+mvnw clean install
 ```
 
 **Bundled Maven (Shell)**
