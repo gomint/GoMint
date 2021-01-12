@@ -61,6 +61,7 @@ public class Bootstrap {
         if (eventDebuggingWanted()) {
             enableEventDebugging();
         }
+        
         if (networkDebuggingWanted(commandLineOptions)) {
             enableNetworkDebugging();
         }
