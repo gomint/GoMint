@@ -39,12 +39,12 @@ GoMint is a modern Minecraft Bedrock Edition server enabling you to let your vis
 
 ### Windows Command Line
 ```bash
-powershell.exe "$ProgressPreference = 'SilentlyContinue'; $Random = Get-Random -Maximum 0xFFFFFF; Invoke-WebRequest -Uri 'https://gomint-artifacts.s3.amazonaws.com/latest.zip' -OutFile gomint-$Random.zip; Expand-Archive -LiteralPath gomint-$Random.zip -DestinationPath gomint-$Random"
+powershell.exe "$ProgressPreference = 'SilentlyContinue'; $Random = Get-Random -Maximum 0xFFFFFF; Invoke-WebRequest -Uri 'https://gomint-artifacts.s3.amazonaws.com/latest.zip' -OutFile gomint-$Random.zip; Expand-Archive -LiteralPath gomint-$Random.zip -DestinationPath gomint-$Random; Write-Output gomint-$Random"
 ```
 
 ### PowerShell
 ```powershell
-$ProgressPreference = 'SilentlyContinue'; $Random = Get-Random -Maximum 0xFFFFFF; Invoke-WebRequest -Uri 'https://gomint-artifacts.s3.amazonaws.com/latest.zip' -OutFile gomint-$Random.zip; Expand-Archive -LiteralPath gomint-$Random.zip -DestinationPath gomint-$Random
+$ProgressPreference = 'SilentlyContinue'; $Random = Get-Random -Maximum 0xFFFFFF; Invoke-WebRequest -Uri 'https://gomint-artifacts.s3.amazonaws.com/latest.zip' -OutFile gomint-$Random.zip; Expand-Archive -LiteralPath gomint-$Random.zip -DestinationPath gomint-$Random; Write-Output gomint-$Random
 ```
 
 ### Unix (Curl + Core Utils)
