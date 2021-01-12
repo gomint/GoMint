@@ -27,7 +27,7 @@
 
 GoMint is a modern Minecraft Bedrock Edition server enabling you to let your visions become true.
 
-#### Features:
+### Features:
 - 🚄 High performance, fast startup and low resource usage
 - 🔧 Highly configurable via configuration files
 - 🔌 Functionality extendable via plugins
