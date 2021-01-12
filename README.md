@@ -1,4 +1,4 @@
-# gomint
+<img src=".github/ASSETS/gomint-logo-with-text.svg" alt="GoMint">
 
 <!-- BUILD BADGE -->
 <a href="https://github.com/GoMint/GoMint/actions?query=workflow%3A%22Java+CI%22">
