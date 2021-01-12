@@ -32,6 +32,31 @@ GoMint is a modern Minecraft Bedrock Edition server enabling you to let your vis
 - 🔧 Highly configurable via configuration files
 - 🔌 Functionality extendable via plugins
 - 💠 Cryptography implementations in Rust
+- 📦 Vanilla says "Hello": Crafting, enchanting, all blocks, all items
+
+## Getting Started
+**You can download the latest build from [here](https://gomint-artifacts.s3.amazonaws.com/latest.zip).**
+
+### Windows Command Line
+```bash
+powershell.exe "$ProgressPreference = 'SilentlyContinue'; $Random = Get-Random -Maximum 0xFFFFFF; Invoke-WebRequest -Uri 'https://gomint-artifacts.s3.amazonaws.com/latest.zip' -OutFile gomint-$Random.zip; Expand-Archive -LiteralPath gomint-$Random.zip -DestinationPath gomint-$Random"
+```
+
+### PowerShell
+```powershell
+$ProgressPreference='SilentlyContinue';$Random=Get-Random -Maximum 0xFFFFFF;Invoke-WebRequest -Uri 'https://gomint-artifacts.s3.amazonaws.com/latest.zip' -OutFile 'gomint-$Random'
+```
+
+### Unix (Curl + Core Utils)
+```bash
+curl --silent -o gomint.zip https://gomint-artifacts.s3.amazonaws.com/latest.zip
+unzip gomint.zip -d gomint-$(cat /dev/urandom | base64 | cut -c 4)
+```
+### Unix (Wget + Core Utils)
+```bash
+wget --quiet -O gomint.zip https://gomint-artifacts.s3.amazonaws.com/latest.zip
+unzip gomint.zip -d gomint-$(cat /dev/urandom | base64 | cut -c 4)
+```
 
 ## Integration
 _To be filled_
