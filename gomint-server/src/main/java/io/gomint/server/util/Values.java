@@ -20,4 +20,8 @@ public class Values {
     public static final float TICKS_ON_ZERO = 18000f;
     public static final float SECONDS_ON_ZERO = TimeUnit.HOURS.toSeconds(6);
 
+    // Inventory slot offsets
+    public static final int CRAFTING_INPUT_OFFSET = 32;
+    public static final int OUTPUT_OFFSET = 50;
+
 }

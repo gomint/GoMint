@@ -1,7 +1,9 @@
 package io.gomint.server.entity;
 
 import io.gomint.GoMint;
+import io.gomint.entity.passive.EntityHuman;
 import io.gomint.entity.potion.PotionEffect;
+import io.gomint.entity.projectile.EntityProjectile;
 import io.gomint.event.entity.EntityDamageByEntityEvent;
 import io.gomint.event.entity.EntityDamageEvent;
 import io.gomint.event.entity.EntityHealEvent;
@@ -389,6 +391,13 @@ public abstract class EntityLiving extends Entity implements InventoryHolder, io
 
         this.attackCoolDown = 10;
         return true;
+    }
+    
+    protected boolean isLastDamageCausedByPlayer() {
+        var lastDamageEntity = this.lastDamageEntity;
+        return lastDamageEntity instanceof EntityHuman || 
+            (lastDamageEntity instanceof EntityProjectile 
+                && ((EntityProjectile) lastDamageEntity).getShooter() instanceof EntityHuman);
     }
 
     protected float applyEffectReduction(EntityDamageEvent damageEvent, float damage) {
