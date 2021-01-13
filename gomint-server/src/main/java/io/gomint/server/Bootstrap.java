@@ -103,7 +103,7 @@ public class Bootstrap {
     }
 
     private static OptionSet parseCommandLineOptions(String[] args) {
-        OptionParser parser = new OptionParser();
+        var parser = new OptionParser();
         parser.accepts("lp").withRequiredArg().ofType(Integer.class);
         parser.accepts("lh").withRequiredArg();
         parser.accepts("slc");
