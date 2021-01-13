@@ -316,7 +316,7 @@ public class PacketItemStackRequestHandler implements PacketHandler<PacketItemSt
             case WindowMagicNumbers.ENCHANTMENT_TABLE_MATERIAL:
                 return 1;
             case WindowMagicNumbers.CRAFTING_INPUT:
-                return (byte) (info.getSlot() - 28);
+                return (byte) (info.getSlot() - 32);
             case WindowMagicNumbers.CREATED_OUTPUT:
                 return (byte) (info.getSlot() - 50);
         }
@@ -331,7 +331,7 @@ public class PacketItemStackRequestHandler implements PacketHandler<PacketItemSt
             case WindowMagicNumbers.ENCHANTMENT_TABLE_MATERIAL:
                 return 15;
             case WindowMagicNumbers.CRAFTING_INPUT:
-                return (byte) (info.getSlot() + 28);
+                return (byte) (info.getSlot() + 32);
             case WindowMagicNumbers.CREATED_OUTPUT:
                 return (byte) (info.getSlot() + 50);
         }
