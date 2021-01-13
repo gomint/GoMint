@@ -7,10 +7,7 @@
 
 package io.gomint.server.entity.animal;
 
-import io.gomint.inventory.item.ItemBone;
-import io.gomint.inventory.item.ItemCod;
-import io.gomint.inventory.item.ItemCookedCod;
-import io.gomint.inventory.item.ItemStack;
+import io.gomint.inventory.item.ItemString;
 import io.gomint.math.Location;
 import io.gomint.server.entity.Attribute;
 import io.gomint.server.entity.EntityType;
@@ -19,32 +16,40 @@ import io.gomint.server.world.WorldAdapter;
 
 import java.util.concurrent.ThreadLocalRandom;
 
-@RegisterInfo(sId = "minecraft:cod")
-public class EntityCod extends EntityAnimal implements io.gomint.entity.animal.EntityCod {
-
+/**
+ * @author joserobjr
+ * @since 2021-01-12
+ */
+@RegisterInfo(sId = "minecraft:cat")
+public class EntityCat extends EntityAgeableAnimal implements io.gomint.entity.animal.EntityCat {
+    
     /**
-     * Constructs a new EntityLiving
+     * Constructs a new EntityCat
      *
      * @param world The world in which this entity is in
      */
-    public EntityCod(WorldAdapter world) {
-        super(EntityType.COD, world);
+    public EntityCat(WorldAdapter world) {
+        super(EntityType.CAT, world);
         this.initEntity();
     }
 
     /**
-     * Create new entity cod for API
+     * Create new entity wolf for API
      */
-    public EntityCod() {
-        super(EntityType.COD, null);
+    public EntityCat() {
+        super(EntityType.CAT, null);
         this.initEntity();
     }
 
     private void initEntity() {
-        this.setSize(0.5f, 0.3f);
         this.addAttribute(Attribute.HEALTH);
-        this.setMaxHealth(3);
-        this.setHealth(3);
+        this.setMaxHealth(10);
+        this.setHealth(10);
+        if (this.isBaby()) {
+            this.setSize(0.24f, 0.28f);
+        } else {
+            this.setSize(0.48f, 0.56f);
+        }
     }
 
     @Override
@@ -54,19 +59,20 @@ public class EntityCod extends EntityAnimal implements io.gomint.entity.animal.E
         if (isDead()) {
             return;
         }
-
-        // Drop items
-        Location location = this.getLocation();
-        ItemStack cod = isOnFire()? ItemCookedCod.create(1) : ItemCod.create(1);
-        this.world.dropItem(location, cod);
-
-        ThreadLocalRandom random = ThreadLocalRandom.current();
-        if (random.nextInt(4) == 0) {
-            int amount = random.nextInt(1, 3);
-            this.world.dropItem(location, ItemBone.create(amount));
+        
+        if (isBaby()) {
+            return;
         }
-
-        // Drop xp
+        
+        // Entity drops
+        Location location = this.getLocation();
+        
+        ThreadLocalRandom random = ThreadLocalRandom.current();
+        int amount = random.nextInt(3);
+        if (amount > 0) {
+            this.world.dropItem(location, ItemString.create(amount));
+        }
+        
         if (isLastDamageCausedByPlayer()) {
             this.world.createExpOrb(location, random.nextInt(1, 4));
         }

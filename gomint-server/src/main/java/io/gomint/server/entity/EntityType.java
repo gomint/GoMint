@@ -146,6 +146,11 @@ public enum EntityType {
     SPIDER( "minecraft:spider", 35 ),
 
     /**
+     * Entity type value for a zombified piglin.
+     */
+    ZOMBIE_PIGLIN("minecraft:zombie_pigman", 36),
+
+    /**
      * Entity type value for a slime.
      */
     SLIME( "minecraft:slime", 37 ),
@@ -311,6 +316,11 @@ public enum EntityType {
     TURTLE( "minecraft:turtle", 74 ),
 
     /**
+     * Entity type value for a cat.
+     */
+    CAT("minecraft:cat", 75),
+
+    /**
      * Entity type value for a shulker bullet.
      */
     SHULKER_BULLET( "minecraft:shulker_bullet", 76 ),
@@ -471,6 +481,11 @@ public enum EntityType {
     COD( "minecraft:cod", 112 ),
 
     /**
+     * Entity type value for a panda.
+     */
+    PANDA( "minecraft:panda", 113 ),
+
+    /**
      * Entity type value for a Pillager.
      */
     PILLAGER("minecarft:pillager",114),
@@ -503,7 +518,12 @@ public enum EntityType {
     /**
      * Entity type value for a Zoglin.
      */
-    ZOGLIN("minecraft:zoglin", 126);
+    ZOGLIN("minecraft:zoglin", 126),
+
+    /**
+     * Entity type value for a Zoglin.
+     */
+    PIGLIN_BRUTE("minecraft:piglin_brute", 127);
 
 
     private final String persistantId;
