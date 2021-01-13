@@ -883,7 +883,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
         // Fast out
         while (!this.asyncChunkTasks.isEmpty()) {
             try {
-                AsyncChunkTask task = this.asyncChunkTasks.poll(50, TimeUnit.MILLISECONDS);
+                AsyncChunkTask task = this.asyncChunkTasks.poll(Values.CLIENT_TICK_MS, TimeUnit.MILLISECONDS);
                 if (task == null) {
                     return;
                 }

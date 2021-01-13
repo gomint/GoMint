@@ -3,6 +3,7 @@ package io.gomint.server.network.handler;
 import io.gomint.event.player.*;
 import io.gomint.server.network.PlayerConnection;
 import io.gomint.server.network.packet.PacketPlayerAction;
+import io.gomint.server.util.Values;
 import io.gomint.server.world.LevelEvent;
 import io.gomint.server.world.block.Block;
 import org.slf4j.Logger;
@@ -242,7 +243,7 @@ public class PacketPlayerActionHandler implements PacketHandler<PacketPlayerActi
             // Tell the client which break time we want
             if ( breakTime > 0 ) {
                 connection.getEntity().getWorld().sendLevelEvent( packet.getPosition().toVector(),
-                    LevelEvent.BLOCK_START_BREAK, (int) ( 65536 / ( breakTime / 50 ) ) );
+                    LevelEvent.BLOCK_START_BREAK, (int) ( 65536 / ( breakTime / Values.CLIENT_TICK_MS ) ) );
             }
         }
     }

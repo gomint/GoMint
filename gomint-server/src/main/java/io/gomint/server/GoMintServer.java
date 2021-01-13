@@ -77,6 +77,7 @@ import io.gomint.server.scheduler.CoreScheduler;
 import io.gomint.server.scheduler.SyncTaskManager;
 import io.gomint.server.util.ClassPath;
 import io.gomint.server.util.Watchdog;
+import io.gomint.server.util.Values;
 import io.gomint.server.world.WorldAdapter;
 import io.gomint.server.world.WorldLoadException;
 import io.gomint.server.world.WorldManager;
@@ -563,7 +564,7 @@ public class GoMintServer implements GoMint, InventoryHolder {
 
         LOGGER.info("Starting shutdown of the main executor");
 
-        int wait = 50;
+        int wait = Values.CLIENT_TICK_MS;
         this.executorService.shutdown();
         while (!this.executorService.isTerminated() && wait-- > 0) {
             try {

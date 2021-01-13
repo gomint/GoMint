@@ -10,7 +10,8 @@ import java.util.concurrent.TimeUnit;
  */
 public class Values {
 
-    public static final float CLIENT_TICK_RATE = TimeUnit.MILLISECONDS.toNanos( 50 ) / (float) TimeUnit.SECONDS.toNanos( 1 );
+    public static final int CLIENT_TICK_MS = 50; 
+    public static final float CLIENT_TICK_RATE = TimeUnit.MILLISECONDS.toNanos( CLIENT_TICK_MS ) / (float) TimeUnit.SECONDS.toNanos( 1 );
 
     // Day night cycle
     public static final float FULL_DAY_CYCLE = 24000f;

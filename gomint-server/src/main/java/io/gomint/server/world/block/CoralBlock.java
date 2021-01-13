@@ -5,6 +5,7 @@ import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.world.block.helper.ToolPresets;
 import io.gomint.server.world.block.state.BooleanBlockState;
 import io.gomint.server.world.block.state.DirectValueBlockState;
+import io.gomint.server.util.Values;
 import io.gomint.world.block.BlockCoralBlock;
 import io.gomint.world.block.BlockType;
 
@@ -46,7 +47,7 @@ public class CoralBlock extends Block implements BlockCoralBlock {
 
     @Override
     public long getBreakTime() {
-        return 50;
+        return Values.CLIENT_TICK_MS;
     }
 
     @Override

@@ -478,7 +478,7 @@ public abstract class EntityLiving extends Entity implements InventoryHolder, io
 
     @Override
     public void setBurning(long duration, TimeUnit unit) {
-        int newFireTicks = (int) (unit.toMillis(duration) / 50);
+        int newFireTicks = (int) (unit.toMillis(duration) / Values.CLIENT_TICK_MS);
         if (newFireTicks > this.fireTicks) {
             this.fireTicks = newFireTicks;
             setOnFire(true);

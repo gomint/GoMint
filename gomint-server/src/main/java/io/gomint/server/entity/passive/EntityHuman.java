@@ -599,7 +599,7 @@ public class EntityHuman extends EntityCreature implements io.gomint.entity.pass
         PacketEntityMetadata metadata = new PacketEntityMetadata();
         metadata.setEntityId(this.getEntityId());
         metadata.setMetadata(this.metadataContainer);
-        metadata.setTick(this.world.getServer().currentTickTime() / 50);
+        metadata.setTick(this.world.getServer().currentTickTime() / Values.CLIENT_TICK_MS);
         connection.addToSendQueue(metadata);
 
         PacketPlayerlist packetPlayerlist = new PacketPlayerlist();
@@ -648,7 +648,7 @@ public class EntityHuman extends EntityCreature implements io.gomint.entity.pass
 
         packetMovePlayer.setOnGround(this.isOnGround());
         packetMovePlayer.setMode(PacketMovePlayer.MovePlayerMode.NORMAL);
-        packetMovePlayer.setTick(this.world.getServer().currentTickTime() / 50);
+        packetMovePlayer.setTick(this.world.getServer().currentTickTime() / Values.CLIENT_TICK_MS);
 
         return packetMovePlayer;
     }
