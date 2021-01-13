@@ -47,6 +47,7 @@ import io.gomint.server.plugin.EventCaller;
 import io.gomint.server.scoreboard.Scoreboard;
 import io.gomint.server.util.CallerDetectorUtil;
 import io.gomint.server.util.EnumConnectors;
+import io.gomint.server.util.Values;
 import io.gomint.server.world.ChunkAdapter;
 import io.gomint.server.world.CoordinateUtils;
 import io.gomint.server.world.LevelEvent;
@@ -641,7 +642,7 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
         }
 
         if (updateAttributes != null) {
-            updateAttributes.setTick(this.getWorld().getServer().currentTickTime() / 50);
+            updateAttributes.setTick(this.getWorld().getServer().currentTickTime() / Values.CLIENT_TICK_MS);
             this.connection.addToSendQueue(updateAttributes);
         }
     }
@@ -652,7 +653,7 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
     public void resendAttributes() {
         PacketUpdateAttributes updateAttributes = new PacketUpdateAttributes();
         updateAttributes.setEntityId(this.getEntityId());
-        updateAttributes.setTick(this.getWorld().getServer().currentTickTime() / 50);
+        updateAttributes.setTick(this.getWorld().getServer().currentTickTime() / Values.CLIENT_TICK_MS);
 
         for (AttributeInstance instance : attributes.values()) {
             updateAttributes.addAttributeInstance(instance);
@@ -1386,7 +1387,7 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
      * @return
      */
     public boolean canPickupXP() {
-        return this.world.getServer().currentTickTime() - this.lastPickupXP >= 50;
+        return this.world.getServer().currentTickTime() - this.lastPickupXP >= Values.CLIENT_TICK_MS;
     }
 
     private int calculateRequiredExperienceForLevel(int level) {
@@ -1491,18 +1492,18 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
             PacketSetTitle subtitlePacket = new PacketSetTitle();
             subtitlePacket.setType(PacketSetTitle.TitleType.TYPE_SUBTITLE.getId());
             subtitlePacket.setText(subtitle);
-            subtitlePacket.setFadeInTime((int) unit.toMillis(fadein) / 50);
-            subtitlePacket.setStayTime((int) unit.toMillis(duration) / 50);
-            subtitlePacket.setFadeOutTime((int) unit.toMillis(fadeout) / 50);
+            subtitlePacket.setFadeInTime((int) unit.toMillis(fadein) / Values.CLIENT_TICK_MS);
+            subtitlePacket.setStayTime((int) unit.toMillis(duration) / Values.CLIENT_TICK_MS);
+            subtitlePacket.setFadeOutTime((int) unit.toMillis(fadeout) / Values.CLIENT_TICK_MS);
             this.getConnection().addToSendQueue(subtitlePacket);
         }
 
         PacketSetTitle titlePacket = new PacketSetTitle();
         titlePacket.setType(PacketSetTitle.TitleType.TYPE_TITLE.getId());
         titlePacket.setText(title);
-        titlePacket.setFadeInTime((int) unit.toMillis(fadein) / 50);
-        titlePacket.setStayTime((int) unit.toMillis(duration) / 50);
-        titlePacket.setFadeOutTime((int) unit.toMillis(fadeout) / 50);
+        titlePacket.setFadeInTime((int) unit.toMillis(fadein) / Values.CLIENT_TICK_MS);
+        titlePacket.setStayTime((int) unit.toMillis(duration) / Values.CLIENT_TICK_MS);
+        titlePacket.setFadeOutTime((int) unit.toMillis(fadeout) / Values.CLIENT_TICK_MS);
         this.getConnection().addToSendQueue(titlePacket);
     }
 

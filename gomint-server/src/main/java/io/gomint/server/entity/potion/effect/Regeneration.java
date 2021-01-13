@@ -12,6 +12,7 @@ import io.gomint.math.MathUtils;
 import io.gomint.server.entity.EntityLiving;
 import io.gomint.server.player.EffectManager;
 import io.gomint.server.registry.RegisterInfo;
+import io.gomint.server.util.Values;
 
 /**
  * @author geNAZt
@@ -51,7 +52,7 @@ public class Regeneration extends Effect {
     @Override
     public void setData( EffectManager manager, int amplifier, long lengthInMS ) {
         super.setData( manager, amplifier, lengthInMS );
-        this.addHealthEvery = ( 50 >> amplifier ) / 20f;
+        this.addHealthEvery = ( Values.CLIENT_TICK_MS >> amplifier ) / 20f;
     }
 
 }

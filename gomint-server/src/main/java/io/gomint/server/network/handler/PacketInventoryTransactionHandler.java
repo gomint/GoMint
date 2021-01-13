@@ -19,10 +19,12 @@ import io.gomint.server.inventory.transaction.TransactionGroup;
 import io.gomint.server.network.PlayerConnection;
 import io.gomint.server.network.packet.PacketInventoryTransaction;
 import io.gomint.server.plugin.EventCaller;
+import io.gomint.server.util.Values;
 import io.gomint.server.world.block.Block;
 import io.gomint.world.Gamemode;
 import io.gomint.world.block.BlockAir;
 import io.gomint.world.block.data.Facing;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -282,7 +284,7 @@ public class PacketInventoryTransactionHandler implements PacketHandler<PacketIn
 
                     // Check if we can break this block in time
                     long breakTime = block.getFinalBreakTime(connection.getEntity().getInventory().getItemInHand(), connection.getEntity());
-                    if (breakTime > 50 && ((connection.getEntity().getBreakTime() + 50) / (double) breakTime) < 0.75) {
+                    if (breakTime > Values.CLIENT_TICK_MS && ((connection.getEntity().getBreakTime() + Values.CLIENT_TICK_MS) / (double) breakTime) < 0.75) {
                         LOGGER.warn(connection.getEntity().getName() + " broke block too fast: break time: " + (connection.getEntity().getBreakTime() + 50) +
                             "; should: " + breakTime + " for " + block.getClass().getSimpleName() + " with " + itemInHand.getClass().getSimpleName());
                         reset(packet, connection);
@@ -293,7 +295,7 @@ public class PacketInventoryTransactionHandler implements PacketHandler<PacketIn
                             connection.getEntity().exhaust(0.025f, PlayerExhaustEvent.Cause.MINING);
 
                             // Damage the target item
-                            if (breakTime > 50) {
+                            if (breakTime > Values.CLIENT_TICK_MS) {
                                 int damage = 1;
 
                                 // Swords get 2 calculateUsage

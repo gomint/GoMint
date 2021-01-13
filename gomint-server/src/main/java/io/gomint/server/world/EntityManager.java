@@ -18,6 +18,7 @@ import io.gomint.server.network.packet.PacketEntityMetadata;
 import io.gomint.server.network.packet.PacketEntityMotion;
 import io.gomint.server.network.packet.PacketEntityRelativeMovement;
 import io.gomint.server.network.packet.PacketPlayerlist;
+import io.gomint.server.util.Values;
 import io.gomint.world.Chunk;
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
@@ -281,7 +282,7 @@ public class EntityManager {
                 PacketEntityMetadata packetEntityMetadata = new PacketEntityMetadata();
                 packetEntityMetadata.setEntityId(entity.getEntityId());
                 packetEntityMetadata.setMetadata(entity.getMetadata());
-                packetEntityMetadata.setTick(currentTimeMS / 50);
+                packetEntityMetadata.setTick(currentTimeMS / Values.CLIENT_TICK_MS);
 
                 // Send to all players
                 for (io.gomint.server.entity.EntityPlayer entityPlayer : this.world.getPlayers0().keySet()) {

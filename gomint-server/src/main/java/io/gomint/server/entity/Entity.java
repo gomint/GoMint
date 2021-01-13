@@ -1105,7 +1105,7 @@ public abstract class Entity implements io.gomint.entity.Entity {
         PacketEntityMetadata metadataPacket = new PacketEntityMetadata();
         metadataPacket.setEntityId( this.getEntityId() );
         metadataPacket.setMetadata( this.metadataContainer );
-        metadataPacket.setTick( this.world.getServer().currentTickTime() / 50 );
+        metadataPacket.setTick( this.world.getServer().currentTickTime() / Values.CLIENT_TICK_MS );
         player.getConnection().addToSendQueue( metadataPacket );
     }
 
@@ -1277,7 +1277,7 @@ public abstract class Entity implements io.gomint.entity.Entity {
 
     @Override
     public void setAge( long duration, TimeUnit unit ) {
-        this.age = MathUtils.fastFloor( unit.toMillis( duration ) / 50f );
+        this.age = MathUtils.fastFloor( unit.toMillis( duration ) / Values.CLIENT_TICK_MS );
     }
 
     @Override

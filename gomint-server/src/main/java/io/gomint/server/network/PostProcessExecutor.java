@@ -8,6 +8,7 @@
 package io.gomint.server.network;
 
 import io.gomint.server.network.packet.Packet;
+import io.gomint.server.util.Values;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -97,7 +98,7 @@ public class PostProcessExecutor implements Runnable {
                 }
             }
 
-            this.load = ( ( System.currentTimeMillis() - start ) / 50f ) * 100;
+            this.load = ( ( System.currentTimeMillis() - start ) / Values.CLIENT_TICK_MS ) * 100;
             if ( this.load > 60 ) {
                 LOGGER.debug( "Post processor load > 60%: {}", this.load );
             }

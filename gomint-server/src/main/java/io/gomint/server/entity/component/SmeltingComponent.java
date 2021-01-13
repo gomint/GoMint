@@ -22,6 +22,7 @@ import io.gomint.server.inventory.WindowMagicNumbers;
 import io.gomint.server.inventory.item.ItemStack;
 import io.gomint.server.inventory.item.Items;
 import io.gomint.server.network.packet.PacketSetContainerData;
+import io.gomint.server.util.Values;
 import io.gomint.server.world.block.Block;
 import io.gomint.server.world.block.Furnace;
 import io.gomint.taglib.NBTTagCompound;
@@ -272,7 +273,7 @@ public class SmeltingComponent extends AbstractTileEntityComponent {
                     ItemStack itemStack = (ItemStack) fuelItem;
                     itemStack.afterPlacement();
 
-                    this.burnDuration = (short) (duration / 50);
+                    this.burnDuration = (short) (duration / Values.CLIENT_TICK_MS);
                     this.burnTime = this.burnDuration;
 
                     return true;

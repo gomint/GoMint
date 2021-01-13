@@ -44,6 +44,7 @@ import io.gomint.server.network.packet.PacketStartGame;
 import io.gomint.server.network.packet.PacketWorldChunk;
 import io.gomint.server.resource.ResourceResponseStatus;
 import io.gomint.server.util.Palette;
+import io.gomint.server.util.Values;
 import io.gomint.server.world.ChunkAdapter;
 import io.gomint.server.world.ChunkSlice;
 import io.gomint.server.world.WorldAdapter;
@@ -138,7 +139,7 @@ public class Client implements ConnectionWithState {
         this.debugUI = debugUI;
         this.queue = queue;
 
-        this.networkUpdater = this.world.getServer().executorService().scheduleAtFixedRate(this::update, 50, 50, TimeUnit.MILLISECONDS);
+        this.networkUpdater = this.world.getServer().executorService().scheduleAtFixedRate(this::update, Values.CLIENT_TICK_MS, Values.CLIENT_TICK_MS, TimeUnit.MILLISECONDS);
 
         this.socket = new ClientSocket(LoggerFactory.getLogger(NetworkManager.class));
 

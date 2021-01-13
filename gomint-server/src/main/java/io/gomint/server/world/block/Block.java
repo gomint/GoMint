@@ -22,6 +22,7 @@ import io.gomint.server.network.PlayerConnection;
 import io.gomint.server.network.packet.PacketTileEntityData;
 import io.gomint.server.network.packet.PacketUpdateBlock;
 import io.gomint.server.util.BlockIdentifier;
+import io.gomint.server.util.Values;
 import io.gomint.server.world.BlockRuntimeIDs;
 import io.gomint.server.world.ChunkSlice;
 import io.gomint.server.world.UpdateReason;
@@ -567,7 +568,7 @@ public abstract class Block implements io.gomint.world.block.Block {
 
         // Instant break
         if (base <= 0) {
-            return 50;
+            return Values.CLIENT_TICK_MS;
         }
 
         // Check if we need a tool
@@ -643,9 +644,9 @@ public abstract class Block implements io.gomint.world.block.Block {
             result = toolStrength / base / 30F;
         }
 
-        long time = (long) ((1F / result) * 50F);
-        if (time < 50) {
-            time = 50;
+        long time = (long) ((1F / result) * Values.CLIENT_TICK_MS);
+        if (time < Values.CLIENT_TICK_MS) {
+            time = Values.CLIENT_TICK_MS;
         }
 
         return time;
