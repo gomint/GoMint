@@ -143,11 +143,11 @@ public class SmeltingComponent extends AbstractTileEntityComponent {
 
         // Check if there is a smelting recipe present
         GoMintServer server = (GoMintServer) GoMint.instance();
-        if (server.getRecipeManager() == null) {
+        if (server.recipeManager() == null) {
             return;
         }
 
-        SmeltingRecipe recipe = server.getRecipeManager().getSmeltingRecipe(input);
+        SmeltingRecipe recipe = server.recipeManager().getSmeltingRecipe(input);
         if (recipe != null) {
             for (io.gomint.inventory.item.ItemStack stack : recipe.createResult()) {
                 this.output = stack; // Smelting only has one result

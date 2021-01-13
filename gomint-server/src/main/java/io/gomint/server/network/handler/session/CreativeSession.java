@@ -17,7 +17,7 @@ public class CreativeSession implements Session {
     private final Inventory outputInventory;
 
     public CreativeSession(PlayerConnection connection) {
-        this.outputInventory = new SessionInventory(connection.getServer().getItems(),
+        this.outputInventory = new SessionInventory(connection.getServer().items(),
             connection.getEntity(), 1);
     }
 

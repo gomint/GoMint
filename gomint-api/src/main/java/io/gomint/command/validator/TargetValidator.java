@@ -30,7 +30,7 @@ public class TargetValidator extends ParamValidator {
      */
     @Override
     public Object validate( String input, CommandSender commandSender ) {
-        Collection<EntityPlayer> searchPool = GoMint.instance().getPlayers();
+        Collection<EntityPlayer> searchPool = GoMint.instance().onlinePlayers();
         if ( commandSender instanceof PlayerCommandSender ) {
             if ( input.equals( "@s" ) ) {
                 return commandSender;

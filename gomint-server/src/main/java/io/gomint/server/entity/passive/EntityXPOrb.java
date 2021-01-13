@@ -86,7 +86,7 @@ public class EntityXPOrb extends Entity implements io.gomint.entity.passive.Enti
 
     @Override
     public void setPickupDelay(long duration, TimeUnit timeUnit) {
-        this.pickupTime = ((GoMintServer) GoMint.instance()).getCurrentTickTime() + timeUnit.toMillis(duration);
+        this.pickupTime = ((GoMintServer) GoMint.instance()).currentTickTime() + timeUnit.toMillis(duration);
     }
 
     @Override
@@ -104,7 +104,7 @@ public class EntityXPOrb extends Entity implements io.gomint.entity.passive.Enti
 
         this.lastUpdateDT += dT;
         if (Values.CLIENT_TICK_RATE - this.lastUpdateDT < MathUtils.EPSILON) {
-            if (this.world.getServer().getCurrentTickTime() > this.getPickupTime() && !this.isDead()) {
+            if (this.world.getServer().currentTickTime() > this.getPickupTime() && !this.isDead()) {
                 if (this.closestPlayer == null || this.closestPlayer.getGamemode() == Gamemode.SPECTATOR ||
                     this.closestPlayer.isDead() || this.closestPlayer.getHealth() <= 0 ||
                     this.closestPlayer.getLocation().distanceSquared(this.getLocation()) > 64) {
@@ -155,7 +155,7 @@ public class EntityXPOrb extends Entity implements io.gomint.entity.passive.Enti
     @Override
     public void onCollideWithPlayer(EntityPlayer player) {
         // Check if we can pick it up
-        if (this.world.getServer().getCurrentTickTime() > this.getPickupTime() && !this.isDead()) {
+        if (this.world.getServer().currentTickTime() > this.getPickupTime() && !this.isDead()) {
             if (player.canPickupXP()) {
                 player.addXP(this.xpAmount);
                 this.despawn();

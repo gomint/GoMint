@@ -29,16 +29,16 @@ public class CraftingSession implements Session {
         this.connection = connection;
 
         // Check which input size we currently have
-        this.inputInventory = new SessionInventory(connection.getServer().getItems(),
+        this.inputInventory = new SessionInventory(connection.getServer().items(),
             connection.getEntity(),
             connection.getEntity().getCraftingInputInventory().size());
-        this.outputInventory = new SessionInventory(connection.getServer().getItems(),
+        this.outputInventory = new SessionInventory(connection.getServer().items(),
             connection.getEntity(),
             1);
     }
 
     public CraftingSession findRecipe(int recipeId) {
-        this.recipe = this.connection.getServer().getRecipeManager().getRecipe(recipeId);
+        this.recipe = this.connection.getServer().recipeManager().getRecipe(recipeId);
         return this;
     }
 
@@ -71,7 +71,7 @@ public class CraftingSession implements Session {
             }
 
             PlayerCraftingEvent event = new PlayerCraftingEvent(this.connection.getEntity(), this.recipe);
-            this.connection.getEntity().getWorld().getServer().getPluginManager().callEvent(event);
+            this.connection.getEntity().getWorld().getServer().pluginManager().callEvent(event);
 
             if (event.isCancelled()) {
                 return false;

@@ -140,7 +140,7 @@ public class Blocks {
 
         // We decided that the block would fit
         BlockPlaceEvent blockPlaceEvent = new BlockPlaceEvent(entity, clickedBlock, block, item, newBlock);
-        block.world.getServer().getPluginManager().callEvent(blockPlaceEvent);
+        block.world.getServer().pluginManager().callEvent(blockPlaceEvent);
 
         if (blockPlaceEvent.isCancelled()) {
             return false;

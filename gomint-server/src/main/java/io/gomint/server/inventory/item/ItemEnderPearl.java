@@ -28,7 +28,7 @@ public class ItemEnderPearl extends ItemStack implements io.gomint.inventory.ite
         // Spawn ender pearl
         EntityEnderpearl entityEnderpearl = new EntityEnderpearl( entity, entity.getWorld() );
         ProjectileLaunchEvent event = new ProjectileLaunchEvent( entityEnderpearl, ProjectileLaunchEvent.Cause.THROWING_ENDER_PEARL );
-        entity.getWorld().getServer().getPluginManager().callEvent( event );
+        entity.getWorld().getServer().pluginManager().callEvent( event );
 
         if ( !event.isCancelled() ) {
             entity.getWorld().spawnEntityAt( entityEnderpearl, entityEnderpearl.getPositionX(), entityEnderpearl.getPositionY(),

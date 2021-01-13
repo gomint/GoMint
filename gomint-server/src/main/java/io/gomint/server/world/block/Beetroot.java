@@ -44,19 +44,19 @@ public class Beetroot extends Growable implements BlockBeetroot {
     public List<ItemStack> getDrops(ItemStack itemInHand) {
         if (GROWTH.maxed(this)) {
             List<ItemStack> drops = new ArrayList<>() {{
-                add(world.getServer().getItems().create(457, (short) 0, (byte) 1, null)); // Beetroot
+                add(world.getServer().items().create(457, (short) 0, (byte) 1, null)); // Beetroot
             }};
 
             // Randomize seeds
             int amountOfSeeds = SEED_RANDOMIZER.next();
             if (amountOfSeeds > 0) {
-                drops.add(world.getServer().getItems().create(458, (short) 0, (byte) amountOfSeeds, null)); // Seeds
+                drops.add(world.getServer().items().create(458, (short) 0, (byte) amountOfSeeds, null)); // Seeds
             }
 
             return drops;
         } else {
             return new ArrayList<>() {{
-                add(world.getServer().getItems().create(458, (short) 0, (byte) 1, null)); // Seeds
+                add(world.getServer().items().create(458, (short) 0, (byte) 1, null)); // Seeds
             }};
         }
     }

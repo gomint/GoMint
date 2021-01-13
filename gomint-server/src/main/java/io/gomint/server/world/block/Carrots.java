@@ -44,11 +44,11 @@ public class Carrots extends Growable implements BlockCarrots {
     public List<ItemStack> getDrops(ItemStack itemInHand) {
         if (GROWTH.maxed(this)) {
             return new ArrayList<>() {{
-                add(world.getServer().getItems().create(391, (short) 0, (byte) (1 + SEED_RANDOMIZER.next().byteValue()), null)); // Carrot
+                add(world.getServer().items().create(391, (short) 0, (byte) (1 + SEED_RANDOMIZER.next().byteValue()), null)); // Carrot
             }};
         } else {
             return new ArrayList<>() {{
-                add(world.getServer().getItems().create(391, (short) 0, (byte) 1, null)); // Carrot
+                add(world.getServer().items().create(391, (short) 0, (byte) 1, null)); // Carrot
             }};
         }
     }

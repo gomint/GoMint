@@ -45,17 +45,17 @@ public class Potato extends Growable implements BlockPotato {
     public List<ItemStack> getDrops(ItemStack itemInHand) {
         if (GROWTH.maxed(this)) {
             List<ItemStack> drops = new ArrayList<>() {{
-                add(world.getServer().getItems().create(392, (short) 0, (byte) (1 + SEED_RANDOMIZER.next().byteValue()), null)); // Potato
+                add(world.getServer().items().create(392, (short) 0, (byte) (1 + SEED_RANDOMIZER.next().byteValue()), null)); // Potato
             }};
 
             if (ThreadLocalRandom.current().nextDouble() > 0.98) {
-                drops.add(world.getServer().getItems().create(394, (short) 0, (byte) 1, null)); // Poison potato on top!
+                drops.add(world.getServer().items().create(394, (short) 0, (byte) 1, null)); // Poison potato on top!
             }
 
             return drops;
         } else {
             return new ArrayList<>() {{
-                add(world.getServer().getItems().create(392, (short) 0, (byte) 1, null)); // Potato
+                add(world.getServer().items().create(392, (short) 0, (byte) 1, null)); // Potato
             }};
         }
     }

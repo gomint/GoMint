@@ -59,7 +59,7 @@ public final class ReportUploader {
         System.setProperty("stacktrace.app.packages", "");
 
         this.client = SentryClientFactory.sentryClient("https://e5fb5572f7e849b8b4a6fd80e3fa0ebc@o219027.ingest.sentry.io/1362506?async=true");
-        this.client.setRelease(((GoMintServer) GoMint.instance()).getGitHash());
+        this.client.setRelease(((GoMintServer) GoMint.instance()).gitHash());
         this.client.setServerName(HOST);
 
         this.context = this.client.getContext();
@@ -97,7 +97,7 @@ public final class ReportUploader {
      */
     public ReportUploader includeWorlds() {
         GoMintServer server = (GoMintServer) GoMint.instance();
-        for (WorldAdapter adapter : server.getWorldManager().getWorlds()) {
+        for (WorldAdapter adapter : server.worldManager().getWorlds()) {
             this.worlds.put(adapter.getWorldName(), new WorldData(adapter.getChunkCache().size()));
         }
 
@@ -110,7 +110,7 @@ public final class ReportUploader {
      * @return the report uploader for chaining
      */
     public ReportUploader includePlayers() {
-        for (EntityPlayer player : GoMint.instance().getPlayers()) {
+        for (EntityPlayer player : GoMint.instance().onlinePlayers()) {
             String key = player.getName() + ":" + player.getUUID().toString();
             Location location = player.getLocation();
             this.players.put(key, new PlayerReportData(location.getWorld().getWorldName(), location.getX(), location.getY(), location.getZ()));
@@ -154,7 +154,7 @@ public final class ReportUploader {
     public void upload(String message) {
         // Check if reporting has been disabled
         GoMintServer server = (GoMintServer) GoMint.instance();
-        this.context.addExtra("config.server", server.getServerConfig());
+        this.context.addExtra("config.server", server.serverConfig());
 
         if (this.worlds.size() > 0) {
             this.worlds.forEach((worldName, worldData) -> context.addExtra("world." + worldName, worldData));

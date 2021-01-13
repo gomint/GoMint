@@ -146,12 +146,12 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
         this.logger = LoggerFactory.getLogger("io.gomint.World-" + worldDir.getName());
         this.worldDir = worldDir;
         this.entityManager = new EntityManager(this);
-        this.config = this.server.getWorldConfig(name);
+        this.config = this.server.worldConfigOf(name);
         this.players = new Object2ObjectOpenHashMap<>();
         this.asyncChunkTasks = new LinkedBlockingQueue<>();
         this.chunkPackageTasks = new ConcurrentLinkedQueue<>();
         this.entitySpawner = new EntitySpawner(this);
-        this.startAsyncWorker(server.getScheduler());
+        this.startAsyncWorker(server.scheduler());
         this.initGamerules();
     }
 
@@ -249,7 +249,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
                     throw new IllegalArgumentException("Sound " + sound + " needs block sound data");
                 }
 
-                soundData = BlockRuntimeIDs.toBlockIdentifier(this.server.getBlocks().getID(data.getBlock()), null).getRuntimeId();
+                soundData = BlockRuntimeIDs.toBlockIdentifier(this.server.blocks().getID(data.getBlock()), null).getRuntimeId();
                 break;
 
             case NOTE:
@@ -392,13 +392,13 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
     public <T extends Block> T getBlockAt(int x, int y, int z, WorldLayer layer) {
         // Secure location
         if (y < 0 || y > 255) {
-            return (T) this.server.getBlocks().get(BlockRuntimeIDs.toBlockIdentifier("minecraft:air", null),
+            return (T) this.server.blocks().get(BlockRuntimeIDs.toBlockIdentifier("minecraft:air", null),
                 (byte) (y > 255 ? 15 : 0), (byte) 0, null, new Location(this, x, y, z), new BlockPosition(x, y, z), layer.ordinal(), null, (short) 0);
         }
 
         ChunkAdapter chunk = this.loadChunk(x >> 4, z >> 4, false);
         if (chunk == null) {
-            return (T) this.server.getBlocks().get(BlockRuntimeIDs.toBlockIdentifier("minecraft:air", null),
+            return (T) this.server.blocks().get(BlockRuntimeIDs.toBlockIdentifier("minecraft:air", null),
                 (byte) (y > 255 ? 15 : 0), (byte) 0, null, new Location(this, x, y, z), new BlockPosition(x, y, z), layer.ordinal(), null, (short) 0);
         }
 
@@ -1139,7 +1139,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
         }
 
         PlayerInteractEvent interactEvent = new PlayerInteractEvent(entity, PlayerInteractEvent.ClickType.RIGHT, blockClicked);
-        this.server.getPluginManager().callEvent(interactEvent);
+        this.server.pluginManager().callEvent(interactEvent);
 
         if (interactEvent.isCancelled()) {
             return false;
@@ -1172,7 +1172,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
 
                 // We got the block we want to replace
                 // Let the item build up the block
-                boolean success = this.server.getBlocks().replaceWithItem((io.gomint.server.world.block.Block) block,
+                boolean success = this.server.blocks().replaceWithItem((io.gomint.server.world.block.Block) block,
                     entity, clickedBlock, replaceBlock, face, itemInHand, clickPosition);
                 if (success) {
                     // Play sound
@@ -1203,8 +1203,8 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
 
             // CHECKSTYLE:OFF
             try {
-                long next = neighbourBlock.update(UpdateReason.NEIGHBOUR_UPDATE, this.server.getCurrentTickTime(), 0f);
-                if (next > this.server.getCurrentTickTime()) {
+                long next = neighbourBlock.update(UpdateReason.NEIGHBOUR_UPDATE, this.server.currentTickTime(), 0f);
+                if (next > this.server.currentTickTime()) {
                     BlockPosition position = neighbourBlock.getPosition();
                     this.tickQueue.add(next, position);
                 }
@@ -1335,7 +1335,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
 
     public void scheduleBlockUpdate(Location location, long delay, TimeUnit unit) {
         BlockPosition position = location.toBlockPosition();
-        long key = this.server.getCurrentTickTime() + unit.toMillis(delay);
+        long key = this.server.currentTickTime() + unit.toMillis(delay);
         this.tickQueue.add(key, position);
     }
 
@@ -1457,7 +1457,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
         this.closeFDs();
 
         // Remove world from manager
-        this.server.getWorldManager().unloadWorld(this);
+        this.server.worldManager().unloadWorld(this);
     }
 
     protected abstract void closeFDs();
@@ -1465,7 +1465,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
     @Override
     public <T extends Block> void iterateBlocks(Class<T> blockClass, Consumer<T> blockConsumer) {
         // Get the id of the block which we search
-        String blockId = this.server.getBlocks().getID(blockClass);
+        String blockId = this.server.blocks().getID(blockClass);
 
         // Iterate over all chunks
         this.chunkCache.iterateAll(chunkAdapter -> {

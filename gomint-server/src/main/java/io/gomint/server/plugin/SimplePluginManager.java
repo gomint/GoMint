@@ -93,7 +93,7 @@ public class SimplePluginManager implements PluginManager, EventCaller {
      */
     public SimplePluginManager(GoMintServer server) {
         this.server = server;
-        this.scheduler = server.getScheduler();
+        this.scheduler = server.scheduler();
         this.pluginFolder = new File("plugins");
         this.commandManager = new CommandManager();
 

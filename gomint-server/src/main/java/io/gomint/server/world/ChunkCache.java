@@ -282,7 +282,7 @@ public class ChunkCache {
             ChunkAdapter chunkAdapter = this.cachedChunks.get( l );
             if (chunkAdapter.isNeedsPersistence()) {
                 this.world.saveChunk(chunkAdapter);
-                chunkAdapter.setLastSavedTimestamp(this.world.getServer().getCurrentTickTime());
+                chunkAdapter.setLastSavedTimestamp(this.world.getServer().currentTickTime());
             }
         }
     }
@@ -302,7 +302,7 @@ public class ChunkCache {
         if (adapter != null) {
             if (this.world.getConfig().isSaveOnUnload() &&
                 adapter.isNeedsPersistence()) {
-                adapter.setLastSavedTimestamp( this.world.server.getCurrentTickTime() );
+                adapter.setLastSavedTimestamp( this.world.server.currentTickTime() );
                 this.world.saveChunk(adapter);
                 adapter.release();
             } else {

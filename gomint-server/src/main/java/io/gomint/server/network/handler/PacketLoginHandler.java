@@ -96,7 +96,7 @@ public class PacketLoginHandler implements PacketHandler<PacketLogin> {
         connection.setProtocolID(packet.getProtocol());
 
         // Async login sequence
-        connection.getServer().getExecutorService().execute(() -> {
+        connection.getServer().executorService().execute(() -> {
             // More data please
             ByteBuffer byteBuffer = ByteBuffer.wrap(packet.getPayload());
             byteBuffer.order(ByteOrder.LITTLE_ENDIAN);
@@ -149,7 +149,7 @@ public class PacketLoginHandler implements PacketHandler<PacketLogin> {
 
             // Sync up for disconnecting etc.
             boolean finalValidSkin = validSkin;
-            connection.getServer().getSyncTaskManager().addTask(new SyncScheduledTask(connection.getServer().getSyncTaskManager(), () -> {
+            connection.getServer().syncTaskManager().addTask(new SyncScheduledTask(connection.getServer().syncTaskManager(), () -> {
                 // Invalid skin
                 if (!finalValidSkin) {
                     connection.disconnect("Skin is invalid or corrupted");
@@ -175,7 +175,7 @@ public class PacketLoginHandler implements PacketHandler<PacketLogin> {
                 }
 
                 // Check for name / uuid collision
-                for (io.gomint.entity.EntityPlayer player : this.server.getPlayers()) {
+                for (io.gomint.entity.EntityPlayer player : this.server.onlinePlayers()) {
                     if (player.getName().equals(name) ||
                         player.getUUID().equals(chainValidator.getUuid())) {
                         connection.disconnect("Player already logged in on this server");
@@ -243,10 +243,10 @@ public class PacketLoginHandler implements PacketHandler<PacketLogin> {
                 }
 
                 // Create entity:
-                WorldAdapter world = this.server.getDefaultWorld();
+                WorldAdapter world = this.server.defaultWorld();
 
                 EntityPlayer player = new EntityPlayer(world, connection, chainValidator.getUsername(),
-                    chainValidator.getXboxId(), chainValidator.getUuid(), locale, this.server.getPluginManager());
+                    chainValidator.getXboxId(), chainValidator.getUuid(), locale, this.server.pluginManager());
 
                 connection.setEntity(player);
                 connection.getEntity().setSkin(playerSkin);
@@ -256,18 +256,18 @@ public class PacketLoginHandler implements PacketHandler<PacketLogin> {
                 connection.getEntity().getLoginPerformance().setEncryptionStart(currentTimeMillis);
 
                 // Fill in fast access maps
-                connection.getServer().getPlayersByUUID().put(chainValidator.getUuid(), connection.getEntity());
+                connection.getServer().uuidMappedPlayers().put(chainValidator.getUuid(), connection.getEntity());
 
                 // Post login event
                 PlayerLoginEvent event = new PlayerLoginEvent(connection.getEntity());
 
                 // Default deny for maximum amount of players
-                if (connection.getServer().getPlayers().size() >= connection.getServer().getServerConfig().getMaxPlayers()) {
+                if (connection.getServer().onlinePlayers().size() >= connection.getServer().serverConfig().getMaxPlayers()) {
                     event.setCancelled(true);
                     event.setKickMessage("Server is full");
                 }
 
-                this.server.getPluginManager().callEvent(event);
+                this.server.pluginManager().callEvent(event);
                 if (event.isCancelled()) {
                     connection.disconnect(event.getKickMessage());
                     return;
@@ -280,8 +280,8 @@ public class PacketLoginHandler implements PacketHandler<PacketLogin> {
                     connection.initWorldAndResourceSend();
                 } else {
                     // Generating EDCH secrets can take up huge amount of time
-                    connection.getServer().getExecutorService().execute(() -> {
-                        connection.getServer().getWatchdog().add(2, TimeUnit.SECONDS);
+                    connection.getServer().executorService().execute(() -> {
+                        connection.getServer().watchdog().add(2, TimeUnit.SECONDS);
 
                         // Enable encryption
                         EncryptionHandler encryptionHandler = new EncryptionHandler(this.keyFactory);
@@ -307,7 +307,7 @@ public class PacketLoginHandler implements PacketHandler<PacketLogin> {
                             });
                         }
 
-                        connection.getServer().getWatchdog().done();
+                        connection.getServer().watchdog().done();
                     });
 
                 }

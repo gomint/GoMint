@@ -114,7 +114,7 @@ public abstract class EntityProjectile extends Entity implements io.gomint.entit
 
                         // Event to check for custom collision detection
                         EntityCollisionWithEntityEvent event = new EntityCollisionWithEntityEvent( collidedEntity, this );
-                        this.world.getServer().getPluginManager().callEvent( event );
+                        this.world.getServer().pluginManager().callEvent( event );
 
                         if ( !event.isCancelled() ) {
                             double currentDistance = position.distanceSquared( onLineVector );
@@ -129,7 +129,7 @@ public abstract class EntityProjectile extends Entity implements io.gomint.entit
                     if ( hitEntity != null ) {
                         // Event
                         ProjectileHitEntityEvent entityEvent = new ProjectileHitEntityEvent( hitEntity, this );
-                        this.getWorld().getServer().getPluginManager().callEvent( entityEvent );
+                        this.getWorld().getServer().pluginManager().callEvent( entityEvent );
 
                         if ( !entityEvent.isCancelled() ) {
                             // Calculate damage

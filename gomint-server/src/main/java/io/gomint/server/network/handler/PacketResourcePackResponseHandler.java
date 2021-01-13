@@ -58,7 +58,7 @@ public class PacketResourcePackResponseHandler implements PacketHandler<PacketRe
         connection.getEntity().getLoginPerformance().setResourceEnd(currentTimeMillis);
 
         PlayerPreJoinEvent playerPreJoinEvent = new PlayerPreJoinEvent(connection.getEntity());
-        connection.getServer().getPluginManager().callEvent(playerPreJoinEvent);
+        connection.getServer().pluginManager().callEvent(playerPreJoinEvent);
         if (!playerPreJoinEvent.isCancelled()) {
             connection.getEntity().prepareEntity();
         }

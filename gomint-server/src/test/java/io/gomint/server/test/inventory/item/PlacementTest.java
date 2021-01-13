@@ -63,7 +63,7 @@ public class PlacementTest extends IntegrationTest {
                 System.out.println("Testing stack: " + stack.getClass().getName());
                 Block newBlock = (Block) stack.getBlock();
                 if (newBlock != null) {
-                    this.server.getBlocks().replaceWithItem(newBlock, player, downBlock, block, Facing.UP, stack, new Vector(0.5f, 0, 0.5f));
+                    this.server.blocks().replaceWithItem(newBlock, player, downBlock, block, Facing.UP, stack, new Vector(0.5f, 0, 0.5f));
                 }
             } else {
                 System.out.println("Class " + clazz.getName() + " did not generate a item");

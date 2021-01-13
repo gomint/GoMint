@@ -35,38 +35,69 @@ import java.util.UUID;
  * @stability 3
  */
 public interface GoMint {
+    
+    /**
+     * Get the GoMint server instance currently running
+     *
+     * @return the started GoMint server instance
+     */
+    static GoMint instance() {
+        return GoMintInstanceHolder.instance;
+    }
 
     /**
-     * Get the server's message of the day (MOTD)
+     * Set a new default world for this server
      *
-     * @return The server's current MOTD
+     * @param world which should be used as default one
      */
-    String getMotd();
+    void changeDefaultWorld(World world);
+
+    /**
+     * Get the chunk generator registry
+     *
+     * @return the chunk generator registry
+     */
+    ChunkGeneratorRegistry chunkGeneratorRegistry();
 
     /**
      * Sets the server's message of the day (MOTD)
      *
      * @param motd The MOTD to be set
      */
-    void setMotd(String motd);
+    void changeMotd(String motd);
 
     /**
-     * Get a world by its name. When the world is not loaded it will be tried to load
+     * Get the amount of players concurrently logged in on the server
      *
-     * @param name The name of the world
-     * @return the world or null if there was a error loading it
+     * @return amount of players concurrently logged in on the server
      */
-    World getWorld(String name);
+    int concurrentAmountOfPlayers();
 
     /**
-     * Create a new itemstack with the given item in it
+     * Create a empty block to be placed into the world with {@link Block#copyFromBlock(Block)} or
+     * {@link Chunk#setBlock(int, int, int, Block)}
      *
-     * @param itemClass which should be used to create
-     * @param amount    of items in the new created stack
-     * @param <T>       generic type of the itemstack
-     * @return fresh generated itemstack of given type with amount of items
+     * @param blockClass class of the block we want to create
+     * @param <T>        type of block which the target object should have
+     * @return empty, not configured block
      */
-    <T extends ItemStack> T createItemStack(Class<T> itemClass, int amount);
+    <T extends Block> T createBlock(Class<T> blockClass);
+
+    /**
+     * Create new button list for form display
+     *
+     * @param title of the button list
+     * @return button list implementation
+     */
+    ButtonList createButtonList(String title);
+
+    /**
+     * Create new custom form for form display
+     *
+     * @param title of the custom form
+     * @return custom form implementation
+     */
+    CustomForm createCustomForm(String title);
 
     /**
      * Create a new enchantment with the given level
@@ -86,29 +117,70 @@ public interface GoMint {
      * @return fresh generated entity
      */
     <T extends Entity> T createEntity(Class<T> entityClass);
+    
+    /**
+     * Create a new itemstack with the given item in it
+     *
+     * @param itemClass which should be used to create
+     * @param amount    of items in the new created stack
+     * @param <T>       generic type of the itemstack
+     * @return fresh generated itemstack of given type with amount of items
+     */
+    <T extends ItemStack> T createItemStack(Class<T> itemClass, int amount);
 
     /**
-     * Get a collection of all players on this server
+     * Create a new modal for form display
      *
-     * @return collection of online players
+     * @param title    of the modal
+     * @param question for the client
+     * @return modal implementation
      */
-    Collection<EntityPlayer> getPlayers();
+    Modal createModal(String title, String question);
 
     /**
-     * Get the manager which manages permission groups
+     * Create a player skin from the given input stream
      *
-     * @return permission group manager
+     * @param inputStream which should be read
+     * @return skin or null on error
      */
-    GroupManager getGroupManager();
+    PlayerSkin createPlayerSkin(InputStream inputStream);
 
     /**
-     * Get the GoMint server instance currently running
+     * Create a new scoreboard
      *
-     * @return the started GoMint server instance
+     * @return new scoreboard
      */
-    static GoMint instance() {
-        return GoMintInstanceHolder.instance;
-    }
+    Scoreboard createScoreboard();
+
+    /**
+     * Create a new world with the given options
+     *
+     * @param name    of the new world
+     * @param options which should be used to generate the world
+     * @return new world
+     */
+    World createWorld(String name, CreateOptions options);
+
+    /**
+     * Get the default world of this server
+     *
+     * @return default world
+     */
+    World defaultWorld();
+
+    /**
+     * Dispatch a command as console
+     *
+     * @param command which should be executed (without the /)
+     */
+    void dispatchCommand(String command);
+
+    /**
+     * Get the empty player skin
+     *
+     * @return empty player skin
+     */
+    PlayerSkin emptyPlayerSkin();
 
     /**
      * Find a player by its name
@@ -125,64 +197,13 @@ public interface GoMint {
      * @return the player or null if not found
      */
     EntityPlayer findPlayerByUUID(UUID target);
-
+    
     /**
-     * Get the plugin manager
+     * Get the manager which manages permission groups
      *
-     * @return the plugin manager
+     * @return permission group manager
      */
-    PluginManager getPluginManager();
-
-    /**
-     * Get the port this server has bound to
-     *
-     * @return port of this server
-     */
-    int getPort();
-
-    /**
-     * Get the amount of player which will fit on this server before it start declining logins
-     *
-     * @return amount of maximum players
-     */
-    int getMaxPlayers();
-
-    /**
-     * Get current tickrate
-     *
-     * @return tickrate of this server
-     */
-    double getTPS();
-
-    /**
-     * Shutdown this server
-     */
-    void shutdown();
-
-    /**
-     * Create new button list for form display
-     *
-     * @param title of the button list
-     * @return button list implementation
-     */
-    ButtonList createButtonList(String title);
-
-    /**
-     * Create a new modal for form display
-     *
-     * @param title    of the modal
-     * @param question for the client
-     * @return modal implementation
-     */
-    Modal createModal(String title, String question);
-
-    /**
-     * Create new custom form for form display
-     *
-     * @param title of the custom form
-     * @return custom form implementation
-     */
-    CustomForm createCustomForm(String title);
+    GroupManager groupManager();
 
     /**
      * Check if current thread is GoMints main thread
@@ -192,86 +213,72 @@ public interface GoMint {
     boolean isMainThread();
 
     /**
-     * Create a player skin from the given input stream
+     * Get the amount of player which will fit on this server before it start declining logins
      *
-     * @param inputStream which should be read
-     * @return skin or null on error
+     * @return amount of maximum players
      */
-    PlayerSkin createPlayerSkin(InputStream inputStream);
+    int maxAmountOfConcurrentPlayers();
 
     /**
-     * Get the empty player skin
+     * Get the server's message of the day (MOTD)
      *
-     * @return empty player skin
+     * @return The server's current MOTD
      */
-    PlayerSkin getEmptyPlayerSkin();
+    String motd();
 
     /**
-     * Get the default world of this server
+     * Get a collection of all players on this server
      *
-     * @return default world
+     * @return collection of online players
      */
-    World getDefaultWorld();
+    Collection<EntityPlayer> onlinePlayers();
 
     /**
-     * Set a new default world for this server
+     * Get the plugin manager
      *
-     * @param world which should be used as default one
+     * @return the plugin manager
      */
-    void setDefaultWorld(World world);
+    PluginManager pluginManager();
 
     /**
-     * Create a empty block to be placed into the world with {@link Block#copyFromBlock(Block)} or
-     * {@link Chunk#setBlock(int, int, int, Block)}
+     * Get the port this server has bound to
      *
-     * @param blockClass class of the block we want to create
-     * @param <T>        type of block which the target object should have
-     * @return empty, not configured block
+     * @return port of this server
      */
-    <T extends Block> T createBlock(Class<T> blockClass);
+    int port();
 
     /**
-     * Create a new world with the given options
-     *
-     * @param name    of the new world
-     * @param options which should be used to generate the world
-     * @return new world
+     * Shutdown this server
      */
-    World createWorld(String name, CreateOptions options);
+    void shutdown();
 
     /**
-     * Get the chunk generator registry
+     * Get current tickrate
      *
-     * @return the chunk generator registry
+     * @return tickrate of this server
      */
-    ChunkGeneratorRegistry getChunkGeneratorRegistry();
+    double tps();
 
     /**
      * Get the internal version of this server. This contains a git hash so its different on each build
      *
      * @return version of this server
      */
-    String getVersion();
+    String version();
 
     /**
-     * Dispatch a command as console
+     * Get a world by its name. When the world is not loaded it will be tried to load
      *
-     * @param line which should be executed (without the /)
+     * @param name The name of the world
+     * @return the world or null if there was a error loading it
      */
-    void dispatchCommand(String line);
-
+    World world(String name);
+    
     /**
      * Get a collection of all worlds on this server
      *
      * @return collection of worlds
      */
-    Collection<World> getWorlds();
-
-    /**
-     * Create a new scoreboard
-     *
-     * @return new scoreboard
-     */
-    Scoreboard createScoreboard();
+    Collection<World> worlds();
 
 }

@@ -43,19 +43,19 @@ public class Crops extends Growable {
     public List<ItemStack> getDrops(ItemStack itemInHand) {
         if (GROWTH.maxed(this)) {
             List<ItemStack> drops = new ArrayList<>() {{
-                add(world.getServer().getItems().create(296, (short) 0, (byte) 1, null)); // Beetroot
+                add(world.getServer().items().create(296, (short) 0, (byte) 1, null)); // Beetroot
             }};
 
             // Randomize seeds
             int amountOfSeeds = SEED_RANDOMIZER.next();
             if (amountOfSeeds > 0) {
-                drops.add(world.getServer().getItems().create(295, (short) 0, (byte) amountOfSeeds, null)); // Seeds
+                drops.add(world.getServer().items().create(295, (short) 0, (byte) amountOfSeeds, null)); // Seeds
             }
 
             return drops;
         } else {
             return new ArrayList<>() {{
-                add(world.getServer().getItems().create(295, (short) 0, (byte) 1, null)); // Seeds
+                add(world.getServer().items().create(295, (short) 0, (byte) 1, null)); // Seeds
             }};
         }
     }

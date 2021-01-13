@@ -175,10 +175,10 @@ public class Plugin {
      * @return the data folder of this plugin
      */
     public final File getDataFolder() {
-        return new File( getPluginManager().getBaseDirectory(), getName() );
+        return new File( pluginManager().getBaseDirectory(), getName() );
     }
 
-    public PluginManager getPluginManager() {
+    public PluginManager pluginManager() {
         return pluginManager;
     }
 

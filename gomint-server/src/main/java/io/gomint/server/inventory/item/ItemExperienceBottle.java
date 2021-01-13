@@ -20,7 +20,7 @@ public class ItemExperienceBottle extends ItemStack implements io.gomint.invento
         if ( clickedBlock == null ) {
             EntityExpBottle expBottle = new EntityExpBottle( entity, entity.getWorld() );
             ProjectileLaunchEvent event = new ProjectileLaunchEvent( expBottle, ProjectileLaunchEvent.Cause.THROWING_EXP_BOTTLE );
-            entity.getWorld().getServer().getPluginManager().callEvent( event );
+            entity.getWorld().getServer().pluginManager().callEvent( event );
 
             if ( !event.isCancelled() ) {
                 entity.getWorld().spawnEntityAt( expBottle, expBottle.getPositionX(), expBottle.getPositionY(), expBottle.getPositionZ(), expBottle.getYaw(), expBottle.getPitch() );

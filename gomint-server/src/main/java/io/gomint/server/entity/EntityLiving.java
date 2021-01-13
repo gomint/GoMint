@@ -268,7 +268,7 @@ public abstract class EntityLiving extends Entity implements InventoryHolder, io
      */
     public void heal(float amount, EntityHealEvent.Cause cause) {
         EntityHealEvent event = new EntityHealEvent(this, amount, cause);
-        this.world.getServer().getPluginManager().callEvent(event);
+        this.world.getServer().pluginManager().callEvent(event);
 
         if (!event.isCancelled()) {
             this.setHealth(this.getHealth() + amount);
@@ -496,8 +496,8 @@ public abstract class EntityLiving extends Entity implements InventoryHolder, io
     @Override
     public io.gomint.entity.potion.Effect addEffect(PotionEffect effect, int amplifier, long duration, TimeUnit timeUnit) {
         byte effectId = (byte) EnumConnectors.POTION_EFFECT_CONNECTOR.convert(effect).getId();
-        Effect effectInstance = this.world.getServer().getEffects().generate(effectId, amplifier,
-            this.world.getServer().getCurrentTickTime() + timeUnit.toMillis(duration), this.effectManager);
+        Effect effectInstance = this.world.getServer().effects().generate(effectId, amplifier,
+            this.world.getServer().currentTickTime() + timeUnit.toMillis(duration), this.effectManager);
 
         if (effectInstance != null) {
             this.effectManager.addEffect(effectId, effectInstance);

@@ -19,9 +19,9 @@ public class PacketTextHandler implements PacketHandler<PacketText> {
         switch ( packet.getType() ) {
             case PLAYER_CHAT:
                 // Simply relay for now
-                List<EntityPlayer> playerList = new ArrayList<>( connection.getServer().getPlayers() );
+                List<EntityPlayer> playerList = new ArrayList<>( connection.getServer().onlinePlayers() );
                 PlayerChatEvent event = new PlayerChatEvent( connection.getEntity(), connection.getEntity().getDisplayName(), packet.getMessage(), playerList );
-                connection.getServer().getPluginManager().callEvent( event );
+                connection.getServer().pluginManager().callEvent( event );
 
                 if ( !event.isCancelled() ) {
                     packet.setSender( event.getSender() );

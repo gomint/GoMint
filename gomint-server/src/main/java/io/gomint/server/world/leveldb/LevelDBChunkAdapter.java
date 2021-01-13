@@ -67,14 +67,14 @@ public class LevelDBChunkAdapter extends ChunkAdapter {
         super(worldAdapter, x, z);
         this.chunkVersion = chunkVersion;
         this.setPopulated(populated);
-        this.loadedTime = this.lastSavedTimestamp = worldAdapter.getServer().getCurrentTickTime();
+        this.loadedTime = this.lastSavedTimestamp = worldAdapter.getServer().currentTickTime();
     }
 
     public LevelDBChunkAdapter(WorldAdapter worldAdapter, int x, int z) {
         super(worldAdapter, x, z);
         this.chunkVersion = 19;
 
-        this.loadedTime = worldAdapter.getServer().getCurrentTickTime();
+        this.loadedTime = worldAdapter.getServer().currentTickTime();
     }
 
     void save(DB db) {
@@ -300,7 +300,7 @@ public class LevelDBChunkAdapter extends ChunkAdapter {
 
                 Block block = this.getBlockAt(compound.getInteger("x", 0) & 0xF, compound.getInteger("y", 0), compound.getInteger("z", 0) & 0xF);
 
-                tileEntity = this.world.getServer().getTileEntities().construct(compound, block);
+                tileEntity = this.world.getServer().tileEntities().construct(compound, block);
                 if (tileEntity != null) {
                     this.addTileEntity(tileEntity);
                 }
@@ -321,7 +321,7 @@ public class LevelDBChunkAdapter extends ChunkAdapter {
                 NBTTagCompound compound = nbtReader.parse();
                 String identifier = compound.getString("identifier", null);
 
-                Entity entity = this.world.getServer().getEntities().create(identifier);
+                Entity entity = this.world.getServer().entities().create(identifier);
                 if (entity != null) {
                     entity.initFromNBT(compound);
                     Location location = entity.getLocation();

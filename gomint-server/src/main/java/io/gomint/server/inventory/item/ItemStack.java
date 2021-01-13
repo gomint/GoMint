@@ -289,7 +289,7 @@ public abstract class ItemStack implements Cloneable, io.gomint.inventory.item.I
 
     @Override
     public io.gomint.inventory.item.ItemStack addEnchantment(Class<? extends Enchantment> clazz, int level) {
-        short id = ((GoMintServer) GoMint.instance()).getEnchantments().getId(clazz);
+        short id = ((GoMintServer) GoMint.instance()).enchantments().getId(clazz);
         if (id == -1) {
             LOGGER.warn("Unknown enchantment: {}", clazz.getName());
             return this;
@@ -329,7 +329,7 @@ public abstract class ItemStack implements Cloneable, io.gomint.inventory.item.I
             this.enchantments = new HashMap<>();
             for (Object compound : nbtEnchCompounds) {
                 NBTTagCompound enchantCompound = (NBTTagCompound) compound;
-                io.gomint.server.enchant.Enchantment enchantment = ((GoMintServer) GoMint.instance()).getEnchantments().create(
+                io.gomint.server.enchant.Enchantment enchantment = ((GoMintServer) GoMint.instance()).enchantments().create(
                     enchantCompound.getShort("id", (short) 0),
                     enchantCompound.getShort("lvl", (short) 0)
                 );
@@ -343,7 +343,7 @@ public abstract class ItemStack implements Cloneable, io.gomint.inventory.item.I
 
     @Override
     public io.gomint.inventory.item.ItemStack removeEnchantment(Class<? extends Enchantment> clazz) {
-        short id = ((GoMintServer) GoMint.instance()).getEnchantments().getId(clazz);
+        short id = ((GoMintServer) GoMint.instance()).enchantments().getId(clazz);
         if (id == -1) {
             return this;
         }

@@ -172,7 +172,7 @@ public class EntityManager {
                     // The entity moved in a not loaded chunk. We have two options now:
                     // 1. Load the chunk
                     // 2. Don't move the entity
-                    if (this.world.getServer().getServerConfig().isLoadChunksForEntities()) {
+                    if (this.world.getServer().serverConfig().isLoadChunksForEntities()) {
                         chunk = this.world.loadChunk(chunkX, chunkZ, true);
                     } else {
                         // "Revert" movement
@@ -349,7 +349,7 @@ public class EntityManager {
      */
     public synchronized void spawnEntityAt(Entity entity, float positionX, float positionY, float positionZ, float yaw, float pitch) {
         // Give a entity spawn event around
-        EntitySpawnEvent event = this.world.getServer().getPluginManager().callEvent(new EntitySpawnEvent(entity));
+        EntitySpawnEvent event = this.world.getServer().pluginManager().callEvent(new EntitySpawnEvent(entity));
         if (event.isCancelled()) {
             return;
         }
@@ -395,7 +395,7 @@ public class EntityManager {
             PacketPlayerlist playerlist = null;
 
             // Remap all current living entities
-            for (EntityPlayer player : entityPlayer.getWorld().getServer().getPlayers()) {
+            for (EntityPlayer player : entityPlayer.getWorld().getServer().onlinePlayers()) {
                 if (!player.isHidden(entityPlayer) && !player.equals(entityPlayer)) {
                     if (playerlist == null) {
                         playerlist = new PacketPlayerlist();
@@ -447,7 +447,7 @@ public class EntityManager {
 
         // Inform all others
         EntityDespawnEvent entityDespawnEvent = new EntityDespawnEvent(entity);
-        this.world.getServer().getPluginManager().callEvent(entityDespawnEvent);
+        this.world.getServer().pluginManager().callEvent(entityDespawnEvent);
 
         // Remove from chunk
         Chunk chunk = cEntity.getChunk();

@@ -716,7 +716,7 @@ public abstract class Entity implements io.gomint.entity.Entity {
      */
     public void setVelocity( Vector velocity, boolean send ) {
         EntityVelocityEvent event = new EntityVelocityEvent( this, velocity );
-        this.world.getServer().getPluginManager().callEvent( event );
+        this.world.getServer().pluginManager().callEvent( event );
         if ( event.isCancelled() ) {
             return;
         }
@@ -1105,7 +1105,7 @@ public abstract class Entity implements io.gomint.entity.Entity {
         PacketEntityMetadata metadataPacket = new PacketEntityMetadata();
         metadataPacket.setEntityId( this.getEntityId() );
         metadataPacket.setMetadata( this.metadataContainer );
-        metadataPacket.setTick( this.world.getServer().getCurrentTickTime() / 50 );
+        metadataPacket.setTick( this.world.getServer().currentTickTime() / 50 );
         player.getConnection().addToSendQueue( metadataPacket );
     }
 
@@ -1176,7 +1176,7 @@ public abstract class Entity implements io.gomint.entity.Entity {
         }
 
         // First of all we call the event
-        this.world.getServer().getPluginManager().callEvent( damageEvent );
+        this.world.getServer().pluginManager().callEvent( damageEvent );
         return !damageEvent.isCancelled();
     }
 
@@ -1252,7 +1252,7 @@ public abstract class Entity implements io.gomint.entity.Entity {
 
     public void teleport( Location to, EntityTeleportEvent.Cause cause ) {
         EntityTeleportEvent entityTeleportEvent = new EntityTeleportEvent( this, this.getLocation(), to, cause );
-        this.world.getServer().getPluginManager().callEvent( entityTeleportEvent );
+        this.world.getServer().pluginManager().callEvent( entityTeleportEvent );
         if ( entityTeleportEvent.isCancelled() ) {
             return;
         }

@@ -80,7 +80,7 @@ public class EntityItem extends Entity implements EntityItemDrop {
 
     @Override
     public void setPickupDelay( long duration, TimeUnit timeUnit ) {
-        this.pickupTime = ( (GoMintServer) GoMint.instance() ).getCurrentTickTime() + timeUnit.toMillis( duration );
+        this.pickupTime = ( (GoMintServer) GoMint.instance() ).currentTickTime() + timeUnit.toMillis( duration );
     }
 
     @Override
@@ -138,7 +138,7 @@ public class EntityItem extends Entity implements EntityItemDrop {
     @Override
     public void onCollideWithPlayer( EntityPlayer player ) {
         // Check if we can pick it up
-        if ( this.world.getServer().getCurrentTickTime() > this.getPickupTime() && !this.isDead() ) {
+        if ( this.world.getServer().currentTickTime() > this.getPickupTime() && !this.isDead() ) {
             // Check if we have place in out inventory to store this item
             if ( !player.getInventory().hasPlaceFor( this.getItemStack() ) ) {
                 return;
@@ -150,7 +150,7 @@ public class EntityItem extends Entity implements EntityItemDrop {
                 event.setCancelled( true );
             }
 
-            this.world.getServer().getPluginManager().callEvent( event );
+            this.world.getServer().pluginManager().callEvent( event );
 
             if ( !event.isCancelled() ) {
                 // Consume the item

@@ -220,7 +220,7 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
         if (this.connection.getState() == PlayerConnectionState.LOGIN) {
             this.connection.addToSendQueue(new PacketBiomeDefinitionList());
             this.connection.sendPlayState(PacketPlayState.PlayState.SPAWN);
-            this.getLoginPerformance().setChunkStart(this.world.getServer().getCurrentTickTime());
+            this.getLoginPerformance().setChunkStart(this.world.getServer().currentTickTime());
         }
 
         this.connection.onViewDistanceChanged();
@@ -386,7 +386,7 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
         }
 
         EntityTeleportEvent entityTeleportEvent = new EntityTeleportEvent(this, this.getLocation(), to, cause);
-        this.world.getServer().getPluginManager().callEvent(entityTeleportEvent);
+        this.world.getServer().pluginManager().callEvent(entityTeleportEvent);
         if (entityTeleportEvent.isCancelled()) {
             return;
         }
@@ -450,7 +450,7 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
         PlayerFoodLevelChangeEvent foodLevelChangeEvent = new PlayerFoodLevelChangeEvent(
             this, amount
         );
-        this.world.getServer().getPluginManager().callEvent(foodLevelChangeEvent);
+        this.world.getServer().pluginManager().callEvent(foodLevelChangeEvent);
 
         if (!foodLevelChangeEvent.isCancelled()) {
             super.addHunger(amount);
@@ -571,7 +571,7 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
     public boolean openInventory(io.gomint.inventory.Inventory inventory) {
         if (inventory instanceof ContainerInventory) {
             InventoryOpenEvent event = new InventoryOpenEvent(this, inventory);
-            this.getWorld().getServer().getPluginManager().callEvent(event);
+            this.getWorld().getServer().pluginManager().callEvent(event);
 
             if (event.isCancelled()) {
                 return false;
@@ -641,7 +641,7 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
         }
 
         if (updateAttributes != null) {
-            updateAttributes.setTick(this.getWorld().getServer().getCurrentTickTime() / 50);
+            updateAttributes.setTick(this.getWorld().getServer().currentTickTime() / 50);
             this.connection.addToSendQueue(updateAttributes);
         }
     }
@@ -652,7 +652,7 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
     public void resendAttributes() {
         PacketUpdateAttributes updateAttributes = new PacketUpdateAttributes();
         updateAttributes.setEntityId(this.getEntityId());
-        updateAttributes.setTick(this.getWorld().getServer().getCurrentTickTime() / 50);
+        updateAttributes.setTick(this.getWorld().getServer().currentTickTime() / 50);
 
         for (AttributeInstance instance : attributes.values()) {
             updateAttributes.addAttributeInstance(instance);
@@ -666,16 +666,16 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
      */
     public void prepareEntity() {
         // Inventories
-        this.inventory = new PlayerInventory(this.world.getServer().getItems(), this);
-        this.armorInventory = new ArmorInventory(this.world.getServer().getItems(), this);
+        this.inventory = new PlayerInventory(this.world.getServer().items(), this);
+        this.armorInventory = new ArmorInventory(this.world.getServer().items(), this);
 
-        this.cursorInventory = new CursorInventory(this.world.getServer().getItems(), this);
-        this.offhandInventory = new OffhandInventory(this.world.getServer().getItems(), this);
-        this.enderChestInventory = new EnderChestInventory(this.world.getServer().getItems(),  this );
+        this.cursorInventory = new CursorInventory(this.world.getServer().items(), this);
+        this.offhandInventory = new OffhandInventory(this.world.getServer().items(), this);
+        this.enderChestInventory = new EnderChestInventory(this.world.getServer().items(),  this );
 
-        this.craftingInventory = new CraftingInputInventory(this.world.getServer().getItems(), this);
-        this.craftingInputInventory = new CraftingInputInventory(this.world.getServer().getItems(), this);
-        this.craftingResultInventory = new OneSlotInventory(this.world.getServer().getItems(), this);
+        this.craftingInventory = new CraftingInputInventory(this.world.getServer().items(), this);
+        this.craftingInputInventory = new CraftingInputInventory(this.world.getServer().items(), this);
+        this.craftingResultInventory = new OneSlotInventory(this.world.getServer().items(), this);
 
         // Load from world
         if (!this.world.loadPlayer(this)) {
@@ -719,7 +719,7 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
         // Send entity metadata
         this.sendData(this);
 
-        this.connection.getServer().getCreativeInventory().addViewer(this);
+        this.connection.getServer().creativeInventory().addViewer(this);
 
         PacketPlayerlist playerlist = new PacketPlayerlist();
         playerlist.setMode((byte) 0);
@@ -729,7 +729,7 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
         this.getConnection().addToSendQueue(playerlist);
 
         // Send all recipes
-        this.connection.addToSendQueue(this.world.getServer().getRecipeManager().getCraftingRecipesBatch());
+        this.connection.addToSendQueue(this.world.getServer().recipeManager().getCraftingRecipesBatch());
 
         LOGGER.debug("Did send all prepare entity data");
     }
@@ -765,8 +765,8 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
      * Remove player from PlayerList and remove from global inventories etc.
      */
     public void cleanup() {
-        this.connection.getServer().getCreativeInventory().removeViewer(this);
-        this.connection.getServer().getPlayersByUUID().remove(this.getUUID());
+        this.connection.getServer().creativeInventory().removeViewer(this);
+        this.connection.getServer().uuidMappedPlayers().remove(this.getUUID());
 
         Block block = this.world.getBlockAt(this.getPosition().toBlockPosition());
         block.gotOff(this);
@@ -782,7 +782,7 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
         this.entityVisibilityManager.clear();
 
         // Check all entities
-        for (WorldAdapter worldAdapter : this.connection.getServer().getWorldManager().getWorlds()) {
+        for (WorldAdapter worldAdapter : this.connection.getServer().worldManager().getWorlds()) {
             worldAdapter.iterateEntities(Entity.class, entity -> {
                 if (entity instanceof EntityPlayer) {
                     EntityPlayer entityPlayer = (EntityPlayer) entity;
@@ -818,7 +818,7 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
             this.currentOpenContainer.removeViewer(this);
 
             InventoryCloseEvent inventoryCloseEvent = new InventoryCloseEvent(this, this.currentOpenContainer);
-            this.getWorld().getServer().getPluginManager().callEvent(inventoryCloseEvent);
+            this.getWorld().getServer().pluginManager().callEvent(inventoryCloseEvent);
 
             PacketContainerClose packetContainerClose = new PacketContainerClose();
             packetContainerClose.setWindowId(windowId);
@@ -898,7 +898,7 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
     public void sendCommands() {
         // Send commands
         PacketAvailableCommands packetAvailableCommands = this.connection.getServer().
-            getPluginManager().getCommandManager().createPacket(this);
+            pluginManager().getCommandManager().createPacket(this);
         this.connection.addToSendQueue(packetAvailableCommands);
     }
 
@@ -912,7 +912,7 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
     public void exhaust(float amount, PlayerExhaustEvent.Cause cause) {
         if (this.gamemode == Gamemode.SURVIVAL) {
             PlayerExhaustEvent exhaustEvent = new PlayerExhaustEvent(this, amount, cause);
-            this.world.getServer().getPluginManager().callEvent(exhaustEvent);
+            this.world.getServer().pluginManager().callEvent(exhaustEvent);
 
             if (exhaustEvent.isCancelled()) {
                 this.resendAttributes();
@@ -997,7 +997,7 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
                             ownVelo.setZ(ownVelo.getZ() * 0.6F);
                             this.setVelocity(ownVelo);
 
-                            if (!this.world.getServer().getServerConfig().getVanilla().isDisableSprintReset()) {
+                            if (!this.world.getServer().serverConfig().getVanilla().isDisableSprintReset()) {
                                 this.setSprinting(false);
                             }
                         }
@@ -1063,7 +1063,7 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
     public void respawn() {
         // Event first
         PlayerRespawnEvent event = new PlayerRespawnEvent(this, this.respawnPosition);
-        this.connection.getServer().getPluginManager().callEvent(event);
+        this.connection.getServer().pluginManager().callEvent(event);
 
         if (event.isCancelled()) {
             PacketEntityEvent entityEvent = new PacketEntityEvent();
@@ -1189,7 +1189,7 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
         List<io.gomint.inventory.item.ItemStack> drops = this.getDrops();
 
         PlayerDeathEvent event = new PlayerDeathEvent(this, deathMessage, true, drops);
-        this.connection.getServer().getPluginManager().callEvent(event);
+        this.connection.getServer().pluginManager().callEvent(event);
 
         if (event.isDropInventory()) {
             for (io.gomint.inventory.item.ItemStack drop : event.getDrops()) {
@@ -1376,7 +1376,7 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
      * @param xpAmount which should be added
      */
     public void addXP(int xpAmount) {
-        this.lastPickupXP = this.world.getServer().getCurrentTickTime();
+        this.lastPickupXP = this.world.getServer().currentTickTime();
         this.setXP(this.xp + xpAmount);
     }
 
@@ -1386,7 +1386,7 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
      * @return
      */
     public boolean canPickupXP() {
-        return this.world.getServer().getCurrentTickTime() - this.lastPickupXP >= 50;
+        return this.world.getServer().currentTickTime() - this.lastPickupXP >= 50;
     }
 
     private int calculateRequiredExperienceForLevel(int level) {
@@ -1536,7 +1536,7 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
             this.connection.disconnect(event.getKickReason());
         } else {
             if (event.getJoinMessage() != null && !event.getJoinMessage().isEmpty()) {
-                GoMint.instance().getPlayers().forEach((player) -> {
+                GoMint.instance().onlinePlayers().forEach((player) -> {
                     player.sendMessage(event.getJoinMessage());
                 });
             }
@@ -1545,7 +1545,7 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
         this.hasCompletedLogin = true;
 
         // Send network chunk publisher packet after join
-        this.world.getServer().getScheduler().schedule(() -> {
+        this.world.getServer().scheduler().schedule(() -> {
             if (isOnline()) {
                 getConnection().sendNetworkChunkPublisher();
             }
@@ -1635,7 +1635,7 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
 
     @Override
     public CommandOutput dispatchCommand(String command) {
-        return this.getConnection().getServer().getPluginManager().getCommandManager().dispatchCommand(this, command);
+        return this.getConnection().getServer().pluginManager().getCommandManager().dispatchCommand(this, command);
     }
 
     @Override
@@ -1662,7 +1662,7 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
 
     public void setUsingItem(boolean value) {
         if (value) {
-            this.actionStart = ((GoMintServer) GoMint.instance()).getCurrentTickTime();
+            this.actionStart = ((GoMintServer) GoMint.instance()).currentTickTime();
             this.metadataContainer.setDataFlag(MetadataContainer.DATA_INDEX, EntityFlag.ACTION, true);
         } else {
             this.actionStart = -1;
@@ -1833,7 +1833,7 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
     }
 
     public void resetActionStart() {
-        this.actionStart = ((GoMintServer) GoMint.instance()).getCurrentTickTime();
+        this.actionStart = ((GoMintServer) GoMint.instance()).currentTickTime();
     }
 
     @Override

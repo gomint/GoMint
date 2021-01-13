@@ -103,7 +103,7 @@ public class ServerConfig extends YamlConfig {
         return dumpDirectory;
     }
 
-    public String getDefaultWorld() {
+    public String defaultWorld() {
         return defaultWorld;
     }
 

@@ -296,7 +296,7 @@ public class AssetsLibrary {
         return this.items == null ? null : this.items.create(id, data, amount, compound);
     }
 
-    public CreativeInventory getCreativeInventory() {
+    public CreativeInventory creativeInventory() {
         return creativeInventory;
     }
 

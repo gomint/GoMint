@@ -108,7 +108,7 @@ public class NetworkManager {
      */
     public NetworkManager(GoMintServer server) {
         this.server = server;
-        this.postProcessService = new PostProcessExecutorService(server.getExecutorService());
+        this.postProcessService = new PostProcessExecutorService(server.executorService());
         this.initPacketHandlers();
     }
 
@@ -132,12 +132,12 @@ public class NetworkManager {
         this.packetHandlers[Protocol.PACKET_MOB_ARMOR_EQUIPMENT & 0xff] = new PacketMobArmorEquipmentHandler();
         this.packetHandlers[Protocol.PACKET_ADVENTURE_SETTINGS & 0xff] = new PacketAdventureSettingsHandler();
         this.packetHandlers[Protocol.PACKET_RESOURCEPACK_RESPONSE & 0xff] = new PacketResourcePackResponseHandler();
-        this.packetHandlers[Protocol.PACKET_LOGIN & 0xff] = new PacketLoginHandler(this.server.getEncryptionKeyFactory(), this.server.getServerConfig(), this.server);
+        this.packetHandlers[Protocol.PACKET_LOGIN & 0xff] = new PacketLoginHandler(this.server.encryptionKeyFactory(), this.server.serverConfig(), this.server);
         this.packetHandlers[Protocol.PACKET_MOB_EQUIPMENT & 0xff] = new PacketMobEquipmentHandler();
         this.packetHandlers[Protocol.PACKET_INTERACT & 0xff] = new PacketInteractHandler();
         this.packetHandlers[Protocol.PACKET_BLOCK_PICK_REQUEST & 0xff] = new PacketBlockPickRequestHandler();
         this.packetHandlers[Protocol.PACKET_ENCRYPTION_RESPONSE & 0xff] = new PacketEncryptionResponseHandler();
-        this.packetHandlers[Protocol.PACKET_INVENTORY_TRANSACTION & 0xff] = new PacketInventoryTransactionHandler(this.server.getPluginManager());
+        this.packetHandlers[Protocol.PACKET_INVENTORY_TRANSACTION & 0xff] = new PacketInventoryTransactionHandler(this.server.pluginManager());
         this.packetHandlers[Protocol.PACKET_CONTAINER_CLOSE & 0xff] = new PacketContainerCloseHandler();
         this.packetHandlers[Protocol.PACKET_HOTBAR & 0xff] = new PacketHotbarHandler();
         this.packetHandlers[Protocol.PACKET_TEXT & 0xff] = new PacketTextHandler();
@@ -297,7 +297,7 @@ public class NetworkManager {
     private void handleSocketEvent(SocketEvent event) {
         switch (event.getType()) {
             case NEW_INCOMING_CONNECTION:
-                PlayerPreLoginEvent playerPreLoginEvent = this.getServer().getPluginManager().callEvent(
+                PlayerPreLoginEvent playerPreLoginEvent = this.getServer().pluginManager().callEvent(
                     new PlayerPreLoginEvent(event.getConnection().getAddress())
                 );
 
@@ -327,11 +327,11 @@ public class NetworkManager {
 
     private void handleUnconnectedPing(SocketEvent event) {
         // Fire ping event so plugins can modify the motd and player amounts
-        PingEvent pingEvent = this.server.getPluginManager().callEvent(
+        PingEvent pingEvent = this.server.pluginManager().callEvent(
             new PingEvent(
-                this.server.getMotd(),
-                this.server.getAmountOfPlayers(),
-                this.server.getServerConfig().getMaxPlayers()
+                this.server.motd(),
+                this.server.concurrentAmountOfPlayers(),
+                this.server.serverConfig().getMaxPlayers()
             )
         );
 

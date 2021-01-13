@@ -20,7 +20,7 @@ public class PacketAdventureSettingsHandler implements PacketHandler<PacketAdven
             // Fire event
             PlayerToggleFlyEvent playerToggleFlyEvent = new PlayerToggleFlyEvent( connection.getEntity(), adventureSettings.isFlying() );
             playerToggleFlyEvent.setCancelled( !connection.getEntity().getAdventureSettings().isCanFly() );
-            connection.getEntity().getWorld().getServer().getPluginManager().callEvent( playerToggleFlyEvent );
+            connection.getEntity().getWorld().getServer().pluginManager().callEvent( playerToggleFlyEvent );
 
             connection.getEntity().getAdventureSettings().setFlying( playerToggleFlyEvent.isCancelled() ? connection.getEntity().getAdventureSettings().isFlying() : adventureSettings.isFlying() );
             connection.getEntity().getAdventureSettings().update();

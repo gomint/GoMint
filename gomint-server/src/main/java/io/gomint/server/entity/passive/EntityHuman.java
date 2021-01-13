@@ -93,8 +93,8 @@ public class EntityHuman extends EntityCreature implements io.gomint.entity.pass
         super(EntityType.PLAYER, null);
 
         // Init inventories
-        this.inventory = new PlayerInventory(this.world.getServer().getItems(), this);
-        this.armorInventory = new ArmorInventory(this.world.getServer().getItems(), this);
+        this.inventory = new PlayerInventory(this.world.getServer().items(), this);
+        this.armorInventory = new ArmorInventory(this.world.getServer().items(), this);
 
         // Some default values
         this.uuid = UUID.randomUUID();
@@ -383,7 +383,7 @@ public class EntityHuman extends EntityCreature implements io.gomint.entity.pass
                             (io.gomint.entity.EntityPlayer) this, -1
                         );
 
-                        this.world.getServer().getPluginManager().callEvent(foodLevelChangeEvent);
+                        this.world.getServer().pluginManager().callEvent(foodLevelChangeEvent);
                         if (!foodLevelChangeEvent.isCancelled()) {
                             hunger = Math.max(0, hunger - 1);
                             this.setHunger(hunger);
@@ -522,7 +522,7 @@ public class EntityHuman extends EntityCreature implements io.gomint.entity.pass
             removeFromList.setEntries(singleEntry);
         }
 
-        for (io.gomint.entity.EntityPlayer player : this.world.getServer().getPlayers()) {
+        for (io.gomint.entity.EntityPlayer player : this.world.getServer().onlinePlayers()) {
             EntityPlayer other = (EntityPlayer) player;
             other.getConnection().addToSendQueue(packetPlayerlist);
             if (removeFromList != null) {
@@ -600,7 +600,7 @@ public class EntityHuman extends EntityCreature implements io.gomint.entity.pass
         PacketEntityMetadata metadata = new PacketEntityMetadata();
         metadata.setEntityId(this.getEntityId());
         metadata.setMetadata(this.metadataContainer);
-        metadata.setTick(this.world.getServer().getCurrentTickTime() / 50);
+        metadata.setTick(this.world.getServer().currentTickTime() / 50);
         connection.addToSendQueue(metadata);
 
         PacketPlayerlist packetPlayerlist = new PacketPlayerlist();
@@ -649,7 +649,7 @@ public class EntityHuman extends EntityCreature implements io.gomint.entity.pass
 
         packetMovePlayer.setOnGround(this.isOnGround());
         packetMovePlayer.setMode(PacketMovePlayer.MovePlayerMode.NORMAL);
-        packetMovePlayer.setTick(this.world.getServer().getCurrentTickTime() / 50);
+        packetMovePlayer.setTick(this.world.getServer().currentTickTime() / 50);
 
         return packetMovePlayer;
     }

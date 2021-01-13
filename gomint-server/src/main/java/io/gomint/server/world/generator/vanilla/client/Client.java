@@ -138,7 +138,7 @@ public class Client implements ConnectionWithState {
         this.debugUI = debugUI;
         this.queue = queue;
 
-        this.networkUpdater = this.world.getServer().getExecutorService().scheduleAtFixedRate(this::update, 50, 50, TimeUnit.MILLISECONDS);
+        this.networkUpdater = this.world.getServer().executorService().scheduleAtFixedRate(this::update, 50, 50, TimeUnit.MILLISECONDS);
 
         this.socket = new ClientSocket(LoggerFactory.getLogger(NetworkManager.class));
 
@@ -389,7 +389,7 @@ public class Client implements ConnectionWithState {
             this.send(login);
 
             // Check for termination if server did not respond
-            this.world.getServer().getExecutorService().schedule(() -> {
+            this.world.getServer().executorService().schedule(() -> {
                 if (this.state == PlayerConnectionState.LOGIN) {
                     this.disconnect("Not logged in");
                 }
@@ -525,7 +525,7 @@ public class Client implements ConnectionWithState {
                     while (true) {
                         try {
                             NBTTagCompound compound = reader.parse();
-                            TileEntity tileEntity = this.world.getServer().getTileEntities().construct(compound, chunkAdapter.getBlockAt(compound.getInteger("x", 0) & 0xF, compound.getInteger("y", 0), compound.getInteger("z", 0) & 0xF));
+                            TileEntity tileEntity = this.world.getServer().tileEntities().construct(compound, chunkAdapter.getBlockAt(compound.getInteger("x", 0) & 0xF, compound.getInteger("y", 0), compound.getInteger("z", 0) & 0xF));
                             if (tileEntity != null) {
                                 chunkAdapter.setTileEntity(compound.getInteger("x", 0) & 0xF, compound.getInteger("y", 0), compound.getInteger("z", 0) & 0xF, tileEntity);
                             }

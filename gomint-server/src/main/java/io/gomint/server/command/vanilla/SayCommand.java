@@ -28,7 +28,7 @@ public class SayCommand extends Command {
     public CommandOutput execute(CommandSender sender, String alias, Map<String, Object> arguments) {
         String message = (String) arguments.get("message");
 
-        GoMint.instance().getPlayers().forEach(players ->
+        GoMint.instance().onlinePlayers().forEach(players ->
             players.sendMessage(ChatColor.LIGHT_PURPLE + "[" + (sender instanceof ConsoleCommandSender ? "CONSOLE" : ((EntityPlayer) sender).getName()) + "] " + message));
 
         return CommandOutput.successful();

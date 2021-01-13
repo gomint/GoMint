@@ -151,7 +151,7 @@ public class Explosion {
 
         // Call explode event
         EntityExplodeEvent event = new EntityExplodeEvent( this.source, this.affectedBlocks, ( 1f / this.size ) * 100f );
-        this.source.getWorld().getServer().getPluginManager().callEvent( event );
+        this.source.getWorld().getServer().pluginManager().callEvent( event );
         if ( event.isCancelled() ) {
             return;
         }

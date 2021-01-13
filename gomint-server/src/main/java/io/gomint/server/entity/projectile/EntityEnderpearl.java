@@ -85,7 +85,7 @@ public class EntityEnderpearl extends EntityThrowable implements io.gomint.entit
             if ( this.isCollided ) {
                 Set<Block> blocks = new HashSet<>( this.collidedWith );
                 ProjectileHitBlocksEvent hitBlocksEvent = new ProjectileHitBlocksEvent( blocks, this );
-                this.world.getServer().getPluginManager().callEvent( hitBlocksEvent );
+                this.world.getServer().pluginManager().callEvent( hitBlocksEvent );
                 if ( !hitBlocksEvent.isCancelled() ) {
                     // Teleport
                     this.teleportShooter();

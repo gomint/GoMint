@@ -628,7 +628,7 @@ public class ChunkAdapter implements Chunk {
             compound.addValue("z", fullZ);
 
             // Create new tile entity
-            TileEntity tileEntity = this.world.getServer().getTileEntities().construct(compound,
+            TileEntity tileEntity = this.world.getServer().tileEntities().construct(compound,
                 this.getBlockAt(compound.getInteger("x", 0) & 0xF, compound.getInteger("y", 0), compound.getInteger("z", 0) & 0xF));
             this.setTileEntity(x, y, z, tileEntity);
         }
@@ -706,7 +706,7 @@ public class ChunkAdapter implements Chunk {
             this.calculateHeightmap(240);
             this.setPopulated(true);
 
-            this.setLastSavedTimestamp(this.world.getServer().getCurrentTickTime());
+            this.setLastSavedTimestamp(this.world.getServer().currentTickTime());
         }
     }
 

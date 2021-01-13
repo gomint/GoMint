@@ -76,7 +76,7 @@ public class LocationConverter extends BaseConverter {
         float pitch = super.asFloat( locationMap.get( "pitch" ) );
 
         if ( locationMap.containsKey( "world" ) ) {
-            world = GoMint.instance().getWorld( (String) locationMap.get( "world" ) );
+            world = GoMint.instance().world((String) locationMap.get("world"));
         }
 
         if ( locationMap.containsKey( "headYaw" ) ) {

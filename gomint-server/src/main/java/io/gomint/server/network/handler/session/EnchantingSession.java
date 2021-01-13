@@ -37,10 +37,8 @@ public class EnchantingSession implements Session {
 
     public EnchantingSession(PlayerConnection connection) {
         this.connection = connection;
-        this.inputInventory = new SessionInventory(connection.getServer().getItems(),
-            connection.getEntity(), 2);
-        this.outputInventory = new SessionInventory(connection.getServer().getItems(),
-            connection.getEntity(), 1);
+        this.inputInventory = new SessionInventory(connection.getServer().items(), connection.getEntity(), 2);
+        this.outputInventory = new SessionInventory(connection.getServer().items(), connection.getEntity(), 1);
     }
 
     @Override
@@ -63,7 +61,7 @@ public class EnchantingSession implements Session {
         Location location = new Location(inv.getWorld(), inv.getContainerPosition());
 
         // Generate enchantments from helper and get them
-        Pair<int[], List<List<Enchantment>>> enchantments = EnchantmentSelector.getEnchantments(this.connection.getServer().getEnchantments(),
+        Pair<int[], List<List<Enchantment>>> enchantments = EnchantmentSelector.getEnchantments(this.connection.getServer().enchantments(),
             new FastRandom(this.connection.getEntity().getEnchantmentSeed()), location,
             (ItemStack) this.inputInventory.getItem(0));
 
@@ -78,7 +76,7 @@ public class EnchantingSession implements Session {
         List<Enchantment> ench = enchantments.getSecond().get(this.selectedEnchantment);
         int pay = this.selectedEnchantment + 1;
 
-        ItemEnchantEvent event = this.connection.getEntity().getWorld().getServer().getPluginManager().callEvent(new ItemEnchantEvent(
+        ItemEnchantEvent event = this.connection.getEntity().getWorld().getServer().pluginManager().callEvent(new ItemEnchantEvent(
             this.connection.getEntity(),
             this.inputInventory.getItem(0),
             pay,

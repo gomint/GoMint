@@ -9,6 +9,38 @@ package io.gomint.server;
 
 import com.google.common.util.concurrent.ListeningScheduledExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
+import joptsimple.OptionSet;
+import org.jline.reader.LineReader;
+import org.jline.reader.LineReaderBuilder;
+import org.jline.reader.UserInterruptException;
+import org.jline.terminal.Terminal;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.Executors;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicLong;
+import java.util.concurrent.locks.LockSupport;
+import java.util.function.Supplier;
+import java.util.jar.Manifest;
+
 import io.gomint.GoMint;
 import io.gomint.GoMintInstanceHolder;
 import io.gomint.config.InvalidConfigurationException;
@@ -60,37 +92,6 @@ import io.gomint.world.generator.integrated.LayeredGenerator;
 import io.gomint.world.generator.integrated.NormalGenerator;
 import io.gomint.world.generator.integrated.VanillaGenerator;
 import io.gomint.world.generator.integrated.VoidGenerator;
-import joptsimple.OptionSet;
-import org.jline.reader.LineReader;
-import org.jline.reader.LineReaderBuilder;
-import org.jline.reader.UserInterruptException;
-import org.jline.terminal.Terminal;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.Executors;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicLong;
-import java.util.concurrent.locks.LockSupport;
-import java.util.function.Supplier;
-import java.util.jar.Manifest;
 
 /**
  * @author BlackyPaw
@@ -183,10 +184,10 @@ public class GoMintServer implements GoMint, InventoryHolder {
         GoMintInstanceHolder.setInstance(this);
 
         this.chunkGeneratorRegistry = new SimpleChunkGeneratorRegistry();
-        this.getChunkGeneratorRegistry().registerGenerator(LayeredGenerator.NAME, LayeredGenerator.class);
-        this.getChunkGeneratorRegistry().registerGenerator(NormalGenerator.NAME, NormalGenerator.class);
-        this.getChunkGeneratorRegistry().registerGenerator(VoidGenerator.NAME, VoidGenerator.class);
-        this.getChunkGeneratorRegistry().registerGenerator(VanillaGenerator.NAME, VanillaGenerator.class);
+        this.chunkGeneratorRegistry().registerGenerator(LayeredGenerator.NAME, LayeredGenerator.class);
+        this.chunkGeneratorRegistry().registerGenerator(NormalGenerator.NAME, NormalGenerator.class);
+        this.chunkGeneratorRegistry().registerGenerator(VoidGenerator.NAME, VoidGenerator.class);
+        this.chunkGeneratorRegistry().registerGenerator(VanillaGenerator.NAME, VanillaGenerator.class);
 
         // Extract information from the manifest
         String buildVersion = "dev/unsupported";
@@ -206,7 +207,7 @@ public class GoMintServer implements GoMint, InventoryHolder {
 
         this.gitHash = buildVersion;
 
-        LOGGER.info("Starting {}", getVersion());
+        LOGGER.info("Starting {}", version());
         Thread.currentThread().setName("GoMint Main Thread");
 
         LOGGER.info("Loading block, item and entity registers");
@@ -239,7 +240,7 @@ public class GoMintServer implements GoMint, InventoryHolder {
         this.entities = new Entities(classPath);
         this.effects = new Effects(classPath);
         this.enchantments = new Enchantments(classPath);
-        this.creativeInventory = assets.getCreativeInventory();
+        this.creativeInventory = assets.creativeInventory();
 
         // ------------------------------------ //
         // Configuration Initialization
@@ -250,7 +251,7 @@ public class GoMintServer implements GoMint, InventoryHolder {
         // Scheduler + WorldManager
         // ------------------------------------ //
         this.syncTaskManager = new SyncTaskManager();
-        this.scheduler = new CoreScheduler(this.getExecutorService(), this.getSyncTaskManager());
+        this.scheduler = new CoreScheduler(this.executorService(), this.syncTaskManager());
         this.worldManager = new WorldManager(this);
 
         // PluginManager Initialization
@@ -346,7 +347,7 @@ public class GoMintServer implements GoMint, InventoryHolder {
             }
         }
 
-        this.defaultWorld = this.serverConfig.getDefaultWorld();
+        this.defaultWorld = this.serverConfig.defaultWorld();
         this.currentTickTime = System.currentTimeMillis();
 
         if (!this.isRunning()) {
@@ -379,14 +380,14 @@ public class GoMintServer implements GoMint, InventoryHolder {
         // ------------------------------------ //
         // CHECKSTYLE:OFF
         try {
-            this.worldManager.loadWorld(this.serverConfig.getDefaultWorld());
+            this.worldManager.loadWorld(this.serverConfig.defaultWorld());
         } catch (WorldLoadException e) {
             // Get world config of default world
-            WorldConfig worldConfig = this.getWorldConfig(this.defaultWorld);
+            WorldConfig worldConfig = this.worldConfigOf(this.defaultWorld);
 
             // Get chunk generator which might have been changed in the world config
             Class<? extends ChunkGenerator> chunkGenerator;
-            chunkGenerator = this.getChunkGeneratorRegistry().getGeneratorClass(worldConfig.getChunkGenerator());
+            chunkGenerator = this.chunkGeneratorRegistry().getGeneratorClass(worldConfig.getChunkGenerator());
 
             // Create options world generator
             CreateOptions options = new CreateOptions();
@@ -419,7 +420,7 @@ public class GoMintServer implements GoMint, InventoryHolder {
             client.portForward(port);
         }
 
-        setMotd(this.getServerConfig().getMotd());
+        changeMotd(this.serverConfig().getMotd());
 
         // ------------------------------------ //
         // Load plugins with StartupPriority LOAD
@@ -460,7 +461,7 @@ public class GoMintServer implements GoMint, InventoryHolder {
         // ------------------------------------ //
 
         // Calculate the nanoseconds we need for the tick loop
-        int targetTPS = this.getServerConfig().getTargetTPS();
+        int targetTPS = this.serverConfig().getTargetTPS();
         if (targetTPS > 1000) {
             LOGGER.warn("Setting target TPS above 1k is not supported, target TPS has been set to 1k");
             targetTPS = 1000;
@@ -666,13 +667,7 @@ public class GoMintServer implements GoMint, InventoryHolder {
         return true;
     }
 
-    @Override
-    public WorldAdapter getDefaultWorld() {
-        return this.worldManager.getWorld(this.defaultWorld);
-    }
-
-    @Override
-    public void setDefaultWorld(World world) {
+    public void changeDefaultWorld(World world) {
         if (world == null) {
             LOGGER.warn("Can't set default world to null");
             return;
@@ -681,65 +676,31 @@ public class GoMintServer implements GoMint, InventoryHolder {
         this.defaultWorld = world.getWorldName();
     }
 
+    public SimpleChunkGeneratorRegistry chunkGeneratorRegistry() {
+        return chunkGeneratorRegistry;
+    }
+
+    public void changeMotd(String motd) {
+        this.networkManager.setMotd(motd);
+    }
+
+    public int concurrentAmountOfPlayers() {
+        return this.playersByUUID.size();
+    }
+
     @Override
     public <T extends Block> T createBlock(Class<T> blockClass) {
         return (T) this.blocks.get(blockClass);
     }
-
+    
     @Override
-    public World createWorld(String name, CreateOptions options) {
-        return this.worldManager.createWorld(name, options);
-    }
-
-    public RecipeManager getRecipeManager() {
-        return this.recipeManager;
-    }
-
-    private void loadConfig() {
-        this.serverConfig = new ServerConfig();
-
-        try {
-            this.serverConfig.init(new File("server.yml"));
-        } catch (InvalidConfigurationException e) {
-            LOGGER.error("server.cfg is corrupted: ", e);
-            System.exit(-1);
-        }
-
-        LOGGER.info("Loaded config...");
+    public ButtonList createButtonList(String title) {
+        return new io.gomint.server.gui.ButtonList(title);
     }
 
     @Override
-    public String getMotd() {
-        return this.networkManager.getMotd();
-    }
-
-    @Override
-    public void setMotd(String motd) {
-        this.networkManager.setMotd(motd);
-    }
-
-    @Override
-    public World getWorld(String name) {
-        World world = this.worldManager.getWorld(name);
-        if (world == null) {
-            // Try to load the world
-
-            // CHECKSTYLE:OFF
-            try {
-                return this.worldManager.loadWorld(name);
-            } catch (WorldLoadException e) {
-                LOGGER.warn("Failed to load world: " + name, e);
-                return null;
-            }
-            // CHECKSTYLE:ON
-        }
-
-        return world;
-    }
-
-    @Override
-    public <T extends ItemStack> T createItemStack(Class<T> itemClass, int amount) {
-        return this.items.create(itemClass, (byte) amount);
+    public CustomForm createCustomForm(String title) {
+        return new io.gomint.server.gui.CustomForm(title);
     }
 
     @Override
@@ -752,30 +713,24 @@ public class GoMintServer implements GoMint, InventoryHolder {
         return this.entities.create(entityClass);
     }
 
-    /**
-     * Nice shutdown pls
-     */
-    public void shutdown() {
-        this.running.set(false);
-    }
-
-    /**
-     * Get the current version string
-     *
-     * @return the version of gomint
-     */
-    public String getVersion() {
-        return "GoMint 1.0.0 (MC:BE " + Protocol.MINECRAFT_PE_NETWORK_VERSION + " [" + Protocol.MINECRAFT_PE_PROTOCOL_VERSION + "]) - " + this.gitHash;
+    @Override
+    public <T extends ItemStack> T createItemStack(Class<T> itemClass, int amount) {
+        return this.items.create(itemClass, (byte) amount);
     }
 
     @Override
-    public void dispatchCommand(String line) {
-        this.pluginManager.getCommandManager().executeSystem(line);
+    public Modal createModal(String title, String question) {
+        return new io.gomint.server.gui.Modal(title, question);
     }
 
     @Override
-    public Collection<World> getWorlds() {
-        return Collections.unmodifiableCollection(this.worldManager.getWorlds());
+    public PlayerSkin createPlayerSkin(InputStream inputStream) {
+        try {
+            return io.gomint.server.player.PlayerSkin.fromInputStream(inputStream);
+        } catch (IOException e) {
+            LOGGER.error("Could not read skin from input: ", e);
+            return null;
+        }
     }
 
     @Override
@@ -783,22 +738,22 @@ public class GoMintServer implements GoMint, InventoryHolder {
         return new io.gomint.server.scoreboard.Scoreboard();
     }
 
-    /**
-     * Get all online players
-     *
-     * @return all online players
-     */
-    public Collection<EntityPlayer> getPlayers() {
-        List<EntityPlayer> playerList = new ArrayList<>();
+    @Override
+    public World createWorld(String name, CreateOptions options) {
+        return this.worldManager.createWorld(name, options);
+    }
 
-        worldManager.getWorlds().forEach(worldAdapter -> playerList.addAll(worldAdapter.getPlayers()));
-
-        return playerList;
+    public WorldAdapter defaultWorld() {
+        return this.worldManager.getWorld(this.defaultWorld);
     }
 
     @Override
-    public GroupManager getGroupManager() {
-        return this.permissionGroupManager;
+    public void dispatchCommand(String line) {
+        this.pluginManager.getCommandManager().executeSystem(line);
+    }
+
+    public PlayerSkin emptyPlayerSkin() {
+        return io.gomint.server.player.PlayerSkin.emptySkin();
     }
 
     @Override
@@ -819,32 +774,8 @@ public class GoMintServer implements GoMint, InventoryHolder {
         return this.playersByUUID.get(target);
     }
 
-    @Override
-    public int getPort() {
-        return this.networkManager.getPort();
-    }
-
-    @Override
-    public int getMaxPlayers() {
-        return this.serverConfig.getMaxPlayers();
-    }
-
-    @Override
-    public double getTPS() {
-        return this.tps;
-    }
-
-    /**
-     * Get the amount of players currently online
-     *
-     * @return amount of players online
-     */
-    public int getAmountOfPlayers() {
-        return this.playersByUUID.size();
-    }
-
-    public CreativeInventory getCreativeInventory() {
-        return this.creativeInventory;
+    public GroupManager groupManager() {
+        return this.permissionGroupManager;
     }
 
     @Override
@@ -852,48 +783,77 @@ public class GoMintServer implements GoMint, InventoryHolder {
         return GoMintServer.mainThread == Thread.currentThread().getId();
     }
 
+    public int maxAmountOfConcurrentPlayers() {
+        return this.serverConfig.getMaxPlayers();
+    }
+
+    public String motd() {
+        return this.networkManager.getMotd();
+    }
+
+    public Collection<EntityPlayer> onlinePlayers() {
+        var playerList = new ArrayList<EntityPlayer>();
+        worldManager.getWorlds().forEach(world -> playerList.addAll(world.getPlayers()));
+        return playerList;
+    }
+
+    public SimplePluginManager pluginManager() {
+        return pluginManager;
+    }
+
+    public int port() {
+        return this.networkManager.getPort();
+    }
+
     @Override
-    public PlayerSkin createPlayerSkin(InputStream inputStream) {
-        try {
-            return io.gomint.server.player.PlayerSkin.fromInputStream(inputStream);
-        } catch (IOException e) {
-            LOGGER.error("Could not read skin from input: ", e);
-            return null;
+    public void shutdown() {
+        this.running.set(false);
+    }
+
+    public double tps() {
+        return this.tps;
+    }
+
+    public String version() {
+        return "GoMint 1.0.0 (MC:BE "
+            + Protocol.MINECRAFT_PE_NETWORK_VERSION
+            + " ["
+            + Protocol.MINECRAFT_PE_PROTOCOL_VERSION
+            + "]) - "
+            + this.gitHash;
+    }
+
+    public World world(String name) {
+        World world = this.worldManager.getWorld(name);
+        if (world == null) {
+            // Try to load the world
+
+            // CHECKSTYLE:OFF
+            try {
+                return this.worldManager.loadWorld(name);
+            } catch (WorldLoadException e) {
+                LOGGER.warn("Failed to load world: " + name, e);
+                return null;
+            }
+            // CHECKSTYLE:ON
         }
+
+        return world;
     }
 
-    @Override
-    public PlayerSkin getEmptyPlayerSkin() {
-        return io.gomint.server.player.PlayerSkin.emptySkin();
+    public Collection<World> worlds() {
+        return Collections.unmodifiableCollection(this.worldManager.getWorlds());
     }
 
-    public long getCurrentTickTime() {
+    public CreativeInventory creativeInventory() {
+        return this.creativeInventory;
+    }
+
+    public long currentTickTime() {
         return this.currentTickTime;
     }
 
-    // ------ GUI Stuff
-    @Override
-    public ButtonList createButtonList(String title) {
-        return new io.gomint.server.gui.ButtonList(title);
-    }
-
-    @Override
-    public Modal createModal(String title, String question) {
-        return new io.gomint.server.gui.Modal(title, question);
-    }
-
-    @Override
-    public CustomForm createCustomForm(String title) {
-        return new io.gomint.server.gui.CustomForm(title);
-    }
-
-    /**
-     * Get the worlds config
-     *
-     * @param name of the world
-     * @return the config for this world
-     */
-    public WorldConfig getWorldConfig(String name) {
+    public WorldConfig worldConfigOf(String name) {
         for (WorldConfig worldConfig : this.serverConfig.getWorlds()) {
             if (worldConfig.getName().equals(name)) {
                 return worldConfig;
@@ -901,6 +861,10 @@ public class GoMintServer implements GoMint, InventoryHolder {
         }
 
         return new WorldConfig();
+    }
+
+    public RecipeManager recipeManager() {
+        return this.recipeManager;
     }
 
     public boolean isRunning() {
@@ -911,81 +875,85 @@ public class GoMintServer implements GoMint, InventoryHolder {
         this.mainThreadWork.offer(runnable);
     }
 
-    public ServerConfig getServerConfig() {
+    public ServerConfig serverConfig() {
         return serverConfig;
     }
 
-    public NetworkManager getNetworkManager() {
+    public NetworkManager networkManager() {
         return networkManager;
     }
 
-    public EncryptionKeyFactory getEncryptionKeyFactory() {
+    public EncryptionKeyFactory encryptionKeyFactory() {
         return encryptionKeyFactory;
     }
 
-    public Map<UUID, EntityPlayer> getPlayersByUUID() {
+    public Map<UUID, EntityPlayer> uuidMappedPlayers() {
         return playersByUUID;
     }
 
-    public SimpleChunkGeneratorRegistry getChunkGeneratorRegistry() {
-        return chunkGeneratorRegistry;
-    }
-
-    public SimplePluginManager getPluginManager() {
-        return pluginManager;
-    }
-
-    public SyncTaskManager getSyncTaskManager() {
+    public SyncTaskManager syncTaskManager() {
         return syncTaskManager;
     }
 
-    public ListeningScheduledExecutorService getExecutorService() {
+    public ListeningScheduledExecutorService executorService() {
         return executorService;
     }
 
-    public CoreScheduler getScheduler() {
+    public CoreScheduler scheduler() {
         return scheduler;
     }
 
-    public WorldManager getWorldManager() {
+    public WorldManager worldManager() {
         return worldManager;
     }
 
-
-    public Watchdog getWatchdog() {
+    public Watchdog watchdog() {
         return watchdog;
     }
 
-    public Blocks getBlocks() {
+    public Blocks blocks() {
         return blocks;
     }
 
-    public Items getItems() {
+    public Items items() {
         return items;
     }
 
-    public Enchantments getEnchantments() {
+    public Enchantments enchantments() {
         return enchantments;
     }
 
-    public Entities getEntities() {
+    public Entities entities() {
         return entities;
     }
 
-    public Effects getEffects() {
+    public Effects effects() {
         return effects;
     }
 
-    public TileEntities getTileEntities() {
+    public TileEntities tileEntities() {
         return tileEntities;
     }
 
-    public UUID getServerUniqueID() {
+    public UUID serverUniqueID() {
         return serverUniqueID;
     }
 
-    public String getGitHash() {
+    public String gitHash() {
         return gitHash;
+    }
+
+    private void loadConfig() {
+        this.serverConfig = new ServerConfig();
+
+        try {
+            this.serverConfig.init(new File("server.yml"));
+        } catch (InvalidConfigurationException e) {
+            LOGGER.error("server.cfg is corrupted: ", e);
+            System.exit(-1);
+        }
+
+        LOGGER.info("Loaded config...");
     }
 
 }

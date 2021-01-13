@@ -81,10 +81,10 @@ public class EffectManager {
             old.remove( this.living );
 
             sendPacket( PacketMobEffect.EVENT_MODIFY, id, effect.getAmplifier(), effect.isVisible(),
-                MathUtils.fastFloor( ( effect.getRunoutTimer() - this.server.getCurrentTickTime() ) / 50f ) );
+                MathUtils.fastFloor( ( effect.getRunoutTimer() - this.server.currentTickTime() ) / 50f ) );
         } else {
             sendPacket( PacketMobEffect.EVENT_ADD, id, effect.getAmplifier(),
-                effect.isVisible(), MathUtils.fastFloor( ( effect.getRunoutTimer() - this.server.getCurrentTickTime() ) / 50f ) );
+                effect.isVisible(), MathUtils.fastFloor( ( effect.getRunoutTimer() - this.server.currentTickTime() ) / 50f ) );
         }
 
         effect.apply( this.living );
@@ -164,7 +164,7 @@ public class EffectManager {
                 mobEffect.setEffectId( entry.getByteKey() );
                 mobEffect.setAmplifier( entry.getValue().getAmplifier() );
                 mobEffect.setVisible( entry.getValue().isVisible() );
-                mobEffect.setDuration( MathUtils.fastFloor( ( entry.getValue().getRunoutTimer() - this.server.getCurrentTickTime() ) / 50f ) );
+                mobEffect.setDuration( MathUtils.fastFloor( ( entry.getValue().getRunoutTimer() - this.server.currentTickTime() ) / 50f ) );
                 player.getConnection().addToSendQueue( mobEffect );
             }
         }
@@ -172,7 +172,7 @@ public class EffectManager {
 
     public void updateEffect( Effect effect ) {
         sendPacket( PacketMobEffect.EVENT_MODIFY, effect.getId(), effect.getAmplifier(), effect.isVisible(),
-            MathUtils.fastFloor( ( effect.getRunoutTimer() - this.server.getCurrentTickTime() ) / 50f ) );
+            MathUtils.fastFloor( ( effect.getRunoutTimer() - this.server.currentTickTime() ) / 50f ) );
     }
 
     public boolean hasActiveEffect() {
@@ -184,7 +184,7 @@ public class EffectManager {
         for ( Byte2ObjectMap.Entry<Effect> entry : this.effects.byte2ObjectEntrySet() ) {
             NBTTagCompound effect = new NBTTagCompound( "" );
             effect.addValue( "Amplifier", (byte) entry.getValue().getAmplifier() );
-            effect.addValue( "Duration", (int) ( entry.getValue().getRunoutTimer() - this.server.getCurrentTickTime() ) / 50 );
+            effect.addValue( "Duration", (int) ( entry.getValue().getRunoutTimer() - this.server.currentTickTime() ) / 50 );
             effect.addValue( "Id", entry.getByteKey() );
             effect.addValue( "ShowParticles", (byte) ( entry.getValue().isVisible() ? 1 : 0 ) );
             nbtEffects.add( effect );
@@ -201,7 +201,7 @@ public class EffectManager {
 
                 byte effectId = effect.getByte( "Id", (byte) -1 );
                 if ( effectId > -1 ) {
-                    Effect effectInstance = this.server.getEffects().generate( effectId, effect.getByte( "Amplifier", (byte) 0 ),
+                    Effect effectInstance = this.server.effects().generate( effectId, effect.getByte( "Amplifier", (byte) 0 ),
                         effect.getInteger( "Duration", 1 ) * 50, this );
 
                     if ( effect.getByte( "ShowParticles", (byte) 1 ) == 0 ) {

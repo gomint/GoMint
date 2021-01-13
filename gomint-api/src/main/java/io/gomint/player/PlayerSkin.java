@@ -47,7 +47,7 @@ public interface PlayerSkin {
      * @return
      */
     static PlayerSkin empty() {
-        return GoMint.instance().getEmptyPlayerSkin();
+        return GoMint.instance().emptyPlayerSkin();
     }
 
     /**

@@ -23,7 +23,7 @@ public class PacketPlayerActionHandler implements PacketHandler<PacketPlayerActi
             case START_SWIMMING:
                 if ( !connection.getEntity().isSwimming() ) {
                     PlayerSwimEvent playerSwimEvent = new PlayerSwimEvent( connection.getEntity(), true );
-                    connection.getServer().getPluginManager().callEvent( playerSwimEvent );
+                    connection.getServer().pluginManager().callEvent( playerSwimEvent );
                     if ( playerSwimEvent.isCancelled() ) {
                         connection.getEntity().sendData( connection.getEntity() );
                     } else {
@@ -36,7 +36,7 @@ public class PacketPlayerActionHandler implements PacketHandler<PacketPlayerActi
             case STOP_SWIMMING:
                 if ( connection.getEntity().isSwimming() ) {
                     PlayerSwimEvent playerSwimEvent = new PlayerSwimEvent( connection.getEntity(), false );
-                    connection.getServer().getPluginManager().callEvent( playerSwimEvent );
+                    connection.getServer().pluginManager().callEvent( playerSwimEvent );
                     if ( playerSwimEvent.isCancelled() ) {
                         connection.getEntity().sendData( connection.getEntity() );
                     } else {
@@ -49,7 +49,7 @@ public class PacketPlayerActionHandler implements PacketHandler<PacketPlayerActi
             case START_SPIN_ATTACK:
                 if ( !connection.getEntity().isSpinning() ) {
                     PlayerSpinEvent playerSpinEvent = new PlayerSpinEvent( connection.getEntity(), true );
-                    connection.getServer().getPluginManager().callEvent( playerSpinEvent );
+                    connection.getServer().pluginManager().callEvent( playerSpinEvent );
                     if ( playerSpinEvent.isCancelled() ) {
                         connection.getEntity().sendData( connection.getEntity() );
                     } else {
@@ -62,7 +62,7 @@ public class PacketPlayerActionHandler implements PacketHandler<PacketPlayerActi
             case STOP_SPIN_ATTACK:
                 if ( connection.getEntity().isSpinning() ) {
                     PlayerSpinEvent playerSpinEvent = new PlayerSpinEvent( connection.getEntity(), false );
-                    connection.getServer().getPluginManager().callEvent( playerSpinEvent );
+                    connection.getServer().pluginManager().callEvent( playerSpinEvent );
                     if ( playerSpinEvent.isCancelled() ) {
                         connection.getEntity().sendData( connection.getEntity() );
                     } else {
@@ -85,7 +85,7 @@ public class PacketPlayerActionHandler implements PacketHandler<PacketPlayerActi
                 // Sanity checks (against crashes)
                 if ( connection.getEntity().canInteract( packet.getPosition().toVector().add( .5f, .5f, .5f ), 13 ) ) {
                     PlayerInteractEvent event = connection.getServer()
-                        .getPluginManager().callEvent( new PlayerInteractEvent( connection.getEntity(),
+                        .pluginManager().callEvent( new PlayerInteractEvent( connection.getEntity(),
                             PlayerInteractEvent.ClickType.LEFT, connection.getEntity().getWorld().getBlockAt( packet.getPosition() ) ) );
 
                     connection.setStartBreakResult( !event.isCancelled() && connection.getEntity().getStartBreak() == 0 );
@@ -126,7 +126,7 @@ public class PacketPlayerActionHandler implements PacketHandler<PacketPlayerActi
             case START_SNEAK:
                 if ( !connection.getEntity().isSneaking() ) {
                     PlayerToggleSneakEvent playerToggleSneakEvent = new PlayerToggleSneakEvent( connection.getEntity(), true );
-                    connection.getServer().getPluginManager().callEvent( playerToggleSneakEvent );
+                    connection.getServer().pluginManager().callEvent( playerToggleSneakEvent );
                     if ( playerToggleSneakEvent.isCancelled() ) {
                         connection.getEntity().sendData( connection.getEntity() );
                     } else {
@@ -139,7 +139,7 @@ public class PacketPlayerActionHandler implements PacketHandler<PacketPlayerActi
             case STOP_SNEAK:
                 if ( connection.getEntity().isSneaking() ) {
                     PlayerToggleSneakEvent playerToggleSneakEvent = new PlayerToggleSneakEvent( connection.getEntity(), false );
-                    connection.getServer().getPluginManager().callEvent( playerToggleSneakEvent );
+                    connection.getServer().pluginManager().callEvent( playerToggleSneakEvent );
                     if ( playerToggleSneakEvent.isCancelled() ) {
                         connection.getEntity().sendData( connection.getEntity() );
                     } else {
@@ -152,7 +152,7 @@ public class PacketPlayerActionHandler implements PacketHandler<PacketPlayerActi
             case START_SPRINT:
                 if ( !connection.getEntity().isSprinting() ) {
                     PlayerToggleSprintEvent playerToggleSprintEvent = new PlayerToggleSprintEvent( connection.getEntity(), true );
-                    connection.getServer().getPluginManager().callEvent( playerToggleSprintEvent );
+                    connection.getServer().pluginManager().callEvent( playerToggleSprintEvent );
                     if ( playerToggleSprintEvent.isCancelled() ) {
                         connection.getEntity().sendData( connection.getEntity() );
                     } else {
@@ -165,7 +165,7 @@ public class PacketPlayerActionHandler implements PacketHandler<PacketPlayerActi
             case STOP_SPRINT:
                 if ( connection.getEntity().isSprinting() ) {
                     PlayerToggleSprintEvent playerToggleSprintEvent = new PlayerToggleSprintEvent( connection.getEntity(), false );
-                    connection.getServer().getPluginManager().callEvent( playerToggleSprintEvent );
+                    connection.getServer().pluginManager().callEvent( playerToggleSprintEvent );
                     if ( playerToggleSprintEvent.isCancelled() ) {
                         connection.getEntity().sendData( connection.getEntity() );
                     } else {
@@ -201,7 +201,7 @@ public class PacketPlayerActionHandler implements PacketHandler<PacketPlayerActi
                 // Accept client value (to get the dirty state in the metadata)
                 if ( !connection.getEntity().isGliding() ) {
                     PlayerToggleGlideEvent playerToggleGlideEvent = new PlayerToggleGlideEvent( connection.getEntity(), true );
-                    connection.getEntity().getWorld().getServer().getPluginManager().callEvent( playerToggleGlideEvent );
+                    connection.getEntity().getWorld().getServer().pluginManager().callEvent( playerToggleGlideEvent );
                     if ( playerToggleGlideEvent.isCancelled() ) {
                         connection.getEntity().sendData( connection.getEntity() );
                     } else {
@@ -214,7 +214,7 @@ public class PacketPlayerActionHandler implements PacketHandler<PacketPlayerActi
             case STOP_GLIDE:
                 if ( connection.getEntity().isGliding() ) {
                     PlayerToggleGlideEvent playerToggleGlideEvent = new PlayerToggleGlideEvent( connection.getEntity(), false );
-                    connection.getEntity().getWorld().getServer().getPluginManager().callEvent( playerToggleGlideEvent );
+                    connection.getEntity().getWorld().getServer().pluginManager().callEvent( playerToggleGlideEvent );
                     if ( playerToggleGlideEvent.isCancelled() ) {
                         connection.getEntity().sendData( connection.getEntity() );
                     } else {

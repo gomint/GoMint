@@ -25,7 +25,7 @@ public class PluginsCommand extends Command {
 
     @Override
     public CommandOutput execute(CommandSender commandSender, String alias, Map<String, Object> arguments) {
-        Map<String, Plugin> plugins = GoMint.instance().getPluginManager().getPlugins();
+        Map<String, Plugin> plugins = GoMint.instance().pluginManager().getPlugins();
 
         if (plugins.isEmpty()) {
             return CommandOutput.failure("No plugins were loaded.");

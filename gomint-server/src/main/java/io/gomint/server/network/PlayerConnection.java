@@ -310,8 +310,8 @@ public class PlayerConnection implements ConnectionWithState {
                     int sent = 0;
 
 
-                    int maxSent = this.server.getServerConfig().getSendChunksPerTick();
-                    if (this.server.getServerConfig().isEnableFastJoin() && this.state == PlayerConnectionState.LOGIN) {
+                    int maxSent = this.server.serverConfig().getSendChunksPerTick();
+                    if (this.server.serverConfig().isEnableFastJoin() && this.state == PlayerConnectionState.LOGIN) {
                         maxSent = Integer.MAX_VALUE;
                     }
 
@@ -458,7 +458,7 @@ public class PlayerConnection implements ConnectionWithState {
 
             this.state = PlayerConnectionState.PLAYING;
 
-            this.entity.getLoginPerformance().setChunkEnd(this.entity.getWorld().getServer().getCurrentTickTime());
+            this.entity.getLoginPerformance().setChunkEnd(this.entity.getWorld().getServer().currentTickTime());
             this.entity.getLoginPerformance().print();
         }
     }
@@ -805,14 +805,14 @@ public class PlayerConnection implements ConnectionWithState {
      * @param message The message with which the player is going to be kicked
      */
     public void disconnect(String message) {
-        this.networkManager.getServer().getPluginManager().callEvent(new PlayerKickEvent(this.entity, message));
+        this.networkManager.getServer().pluginManager().callEvent(new PlayerKickEvent(this.entity, message));
 
         if (message != null && message.length() > 0) {
             PacketDisconnect packet = new PacketDisconnect();
             packet.setMessage(message);
             this.send(packet);
 
-            this.server.getExecutorService().schedule(() -> PlayerConnection.this.internalClose(message), 3, TimeUnit.SECONDS);
+            this.server.executorService().schedule(() -> PlayerConnection.this.internalClose(message), 3, TimeUnit.SECONDS);
         } else {
             this.internalClose(message);
         }
@@ -861,7 +861,7 @@ public class PlayerConnection implements ConnectionWithState {
         move.setMode(MovePlayerMode.TELEPORT);
         move.setOnGround(this.getEntity().isOnGround());
         move.setRidingEntityId(0);    // TODO: Implement riding entities correctly
-        move.setTick(this.entity.getWorld().getServer().getCurrentTickTime() / 50);
+        move.setTick(this.entity.getWorld().getServer().currentTickTime() / 50);
         this.addToSendQueue(move);
     }
 
@@ -913,10 +913,10 @@ public class PlayerConnection implements ConnectionWithState {
         packet.setTexturePacksRequired(false);
         packet.setCommandsEnabled(true);
         packet.setEnchantmentSeed(ThreadLocalRandom.current().nextInt());
-        packet.setCorrelationId(this.server.getServerUniqueID().toString());
+        packet.setCorrelationId(this.server.serverUniqueID().toString());
 
-        packet.setBlockPalette(this.server.getBlocks().getPacketCache());
-        packet.setItemPalette(this.server.getItems().getPacketCache());
+        packet.setBlockPalette(this.server.blocks().getPacketCache());
+        packet.setItemPalette(this.server.items().getPacketCache());
 
         // Set the new location
         this.addToSendQueue(packet);
@@ -929,16 +929,16 @@ public class PlayerConnection implements ConnectionWithState {
         LOGGER.info("Player {} disconnected", this.entity);
 
         if (this.entity != null && this.entity.getWorld() != null) {
-            PlayerQuitEvent event = this.networkManager.getServer().getPluginManager().callEvent(new PlayerQuitEvent(this.entity, ChatColor.YELLOW + this.entity.getDisplayName() + " left the game."));
+            PlayerQuitEvent event = this.networkManager.getServer().pluginManager().callEvent(new PlayerQuitEvent(this.entity, ChatColor.YELLOW + this.entity.getDisplayName() + " left the game."));
             if (event.getQuitMessage() != null && !event.getQuitMessage().isEmpty()) {
-                this.getServer().getPlayers().forEach((player) -> {
+                this.getServer().onlinePlayers().forEach((player) -> {
                     player.sendMessage(event.getQuitMessage());
                 });
             }
             this.entity.getWorld().removePlayer(this.entity);
             this.entity.cleanup();
             this.entity.setDead(true);
-            this.networkManager.getServer().getPluginManager().callEvent(new PlayerCleanedupEvent(this.entity));
+            this.networkManager.getServer().pluginManager().callEvent(new PlayerCleanedupEvent(this.entity));
 
             if (this.entity.hasCompletedLogin()) {
                 this.entity.getWorld().persistPlayer(this.entity);
@@ -1026,7 +1026,7 @@ public class PlayerConnection implements ConnectionWithState {
 
         // Send player list for all online players
         List<PacketPlayerlist.Entry> listEntry = null;
-        for (io.gomint.entity.EntityPlayer player : this.getServer().getPlayers()) {
+        for (io.gomint.entity.EntityPlayer player : this.getServer().onlinePlayers()) {
             if (!this.entity.isHidden(player) && !this.entity.equals(player)) {
                 if (listEntry == null) {
                     listEntry = new ArrayList<>();

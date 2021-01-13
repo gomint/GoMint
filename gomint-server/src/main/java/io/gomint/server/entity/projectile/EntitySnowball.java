@@ -71,7 +71,7 @@ public class EntitySnowball extends EntityThrowable implements io.gomint.entity.
             if (super.isCollided) {
                 Set<Block> blocks = new HashSet<>(super.collidedWith);
                 ProjectileHitBlocksEvent hitBlocksEvent = new ProjectileHitBlocksEvent(blocks, this);
-                super.world.getServer().getPluginManager().callEvent(hitBlocksEvent);
+                super.world.getServer().pluginManager().callEvent(hitBlocksEvent);
 
                 if (!hitBlocksEvent.isCancelled()) {
                     super.despawn();

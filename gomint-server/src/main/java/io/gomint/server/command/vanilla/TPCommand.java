@@ -67,7 +67,7 @@ public class TPCommand extends Command {
         // Do we have a world given?
         Location to = new Location(source.getWorld(), 0, 0, 0);
         if (arguments.containsKey("world")) {
-            World world = GoMint.instance().getWorld((String) arguments.get("world"));
+            World world = GoMint.instance().world((String) arguments.get("world"));
             if (world == null) {
                 return CommandOutput.failure("World %%s could not be found", arguments.get("world"));
             } else {

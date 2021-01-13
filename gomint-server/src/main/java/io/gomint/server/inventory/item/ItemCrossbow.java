@@ -124,7 +124,7 @@ public class ItemCrossbow extends ItemStack implements io.gomint.inventory.item.
         // Create arrow
         EntityArrow arrow = new EntityArrow( player, player.getWorld(), force, powerModifier, punchModifier, flameModifier );
         ProjectileLaunchEvent event = new ProjectileLaunchEvent( arrow, ProjectileLaunchEvent.Cause.BOW_SHOT );
-        player.getWorld().getServer().getPluginManager().callEvent( event );
+        player.getWorld().getServer().pluginManager().callEvent( event );
         if ( !event.isCancelled() ) {
             // Use the bow
             this.calculateUsageAndUpdate( 1 );
@@ -133,7 +133,7 @@ public class ItemCrossbow extends ItemStack implements io.gomint.inventory.item.
     }
 
     private float calculateForce( EntityPlayer player ) {
-        long currentDraw = player.getWorld().getServer().getCurrentTickTime() - player.getActionStart();
+        long currentDraw = player.getWorld().getServer().currentTickTime() - player.getActionStart();
         float force = (float) currentDraw / 1000f;
         if ( force < 0.1f ) {
             return -1f;

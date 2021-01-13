@@ -142,7 +142,7 @@ public class PacketInventoryTransactionHandler implements PacketHandler<PacketIn
 
                 PlayerInteractWithEntityEvent event = new PlayerInteractWithEntityEvent(connection.getEntity(), entity);
 
-                connection.getServer().getPluginManager().callEvent(event);
+                connection.getServer().pluginManager().callEvent(event);
 
                 if (event.isCancelled()) {
                     break;
@@ -260,7 +260,7 @@ public class PacketInventoryTransactionHandler implements PacketHandler<PacketIn
                     BlockBreakEvent blockBreakEvent = new BlockBreakEvent(connection.getEntity(), block, connection.getEntity().getGamemode() == Gamemode.CREATIVE ? new ArrayList() : block.getDrops(itemInHand));
                     blockBreakEvent.setCancelled(connection.getEntity().getGamemode() == Gamemode.ADVENTURE); // TODO: Better handling for canBreak rules for adventure gamemode
 
-                    connection.getEntity().getWorld().getServer().getPluginManager().callEvent(blockBreakEvent);
+                    connection.getEntity().getWorld().getServer().pluginManager().callEvent(blockBreakEvent);
                     if (blockBreakEvent.isCancelled()) {
                         reset(packet, connection);
                         connection.getEntity().setBreakVector(null);
@@ -352,7 +352,7 @@ public class PacketInventoryTransactionHandler implements PacketHandler<PacketIn
                 case 2:
                     // Drop item
                     PlayerDropItemEvent playerDropItemEvent = new PlayerDropItemEvent(connection.getEntity(), transaction.getNewItem());
-                    connection.getServer().getPluginManager().callEvent(playerDropItemEvent);
+                    connection.getServer().pluginManager().callEvent(playerDropItemEvent);
                     if (!playerDropItemEvent.isCancelled()) {
                         DropItemTransaction dropItemTransaction = new DropItemTransaction(
                             connection.getEntity().getLocation().add(0, connection.getEntity().getEyeHeight(), 0),

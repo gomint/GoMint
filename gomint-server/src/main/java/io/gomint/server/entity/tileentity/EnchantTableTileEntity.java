@@ -61,7 +61,7 @@ public class EnchantTableTileEntity extends ContainerTileEntity implements Inven
 
     private void selectAndSendEnchantments(EntityPlayer player, ItemStack slotItem) {
         FastRandom random = new FastRandom(player.getEnchantmentSeed());
-        Pair<int[], List<List<Enchantment>>> selectedEnchantments = EnchantmentSelector.getEnchantments(this.getBlock().getWorld().getServer().getEnchantments(),
+        Pair<int[], List<List<Enchantment>>> selectedEnchantments = EnchantmentSelector.getEnchantments(this.getBlock().getWorld().getServer().enchantments(),
             random, this.getBlock().getLocation(), (io.gomint.server.inventory.item.ItemStack) slotItem);
 
         if (selectedEnchantments == null) {
@@ -73,7 +73,7 @@ public class EnchantTableTileEntity extends ContainerTileEntity implements Inven
         eventOptions.add(new EnchantmentSelectionEvent.Option(selectedEnchantments.getSecond().get(1).stream().map(e -> (io.gomint.enchant.Enchantment) e).collect(Collectors.toList()), selectedEnchantments.getFirst()[1]));
         eventOptions.add(new EnchantmentSelectionEvent.Option(selectedEnchantments.getSecond().get(2).stream().map(e -> (io.gomint.enchant.Enchantment) e).collect(Collectors.toList()), selectedEnchantments.getFirst()[2]));
 
-        EnchantmentSelectionEvent event = this.getBlock().getWorld().getServer().getPluginManager().callEvent(new EnchantmentSelectionEvent(
+        EnchantmentSelectionEvent event = this.getBlock().getWorld().getServer().pluginManager().callEvent(new EnchantmentSelectionEvent(
             player,
             eventOptions
         ));
@@ -86,14 +86,14 @@ public class EnchantTableTileEntity extends ContainerTileEntity implements Inven
             List<PacketPlayerEnchantmentOptions.Enchantment> packetEnchantments = new ArrayList<>();
 
             for (io.gomint.enchant.Enchantment enchantment : enchantments) {
-                short id = this.block.getWorld().getServer().getEnchantments().getId(enchantment.getClass());
+                short id = this.block.getWorld().getServer().enchantments().getId(enchantment.getClass());
                 PacketPlayerEnchantmentOptions.Enchantment ench = new PacketPlayerEnchantmentOptions.Enchantment((byte) id, (byte) enchantment.getLevel());
                 packetEnchantments.add(ench);
             }
 
-            PacketPlayerEnchantmentOptions.EnchantmentActivation activation = new PacketPlayerEnchantmentOptions.EnchantmentActivation(packetEnchantments);
-            PacketPlayerEnchantmentOptions.EnchantmentItem item = new PacketPlayerEnchantmentOptions.EnchantmentItem(i, Arrays.asList(activation, activation, activation));
-            PacketPlayerEnchantmentOptions.EnchantmentOption packetOption = new PacketPlayerEnchantmentOptions.EnchantmentOption(cost, item, getRandomString(8, random), i);
+            var activation = new PacketPlayerEnchantmentOptions.EnchantmentActivation(packetEnchantments);
+            var item = new PacketPlayerEnchantmentOptions.EnchantmentItem(i, Arrays.asList(activation, activation, activation));
+            var packetOption = new PacketPlayerEnchantmentOptions.EnchantmentOption(cost, item, getRandomString(8, random), i);
             options.add(packetOption);
         }
 

@@ -98,7 +98,7 @@ public class PacketItemStackRequestHandler implements PacketHandler<PacketItemSt
                 } else if (action instanceof InventoryGetCreativeAction) {
                     if (connection.getEntity().getGamemode() == Gamemode.CREATIVE) {
                         int slot = ((InventoryGetCreativeAction) action).getCreativeItemId();
-                        ItemStack item = (ItemStack) connection.getServer().getCreativeInventory().getItem(slot);
+                        ItemStack item = (ItemStack) connection.getServer().creativeInventory().getItem(slot);
                         item = (ItemStack) item.clone().setAmount(64);
 
                         session = new CreativeSession(connection);

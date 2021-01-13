@@ -307,7 +307,7 @@ public class LevelDBWorldAdapter extends WorldAdapter {
                                     String blockId = ((String) layerConfig.get("block_name"));
                                     byte blockData = ((Long) layerConfig.get("block_data")).byteValue();
 
-                                    Block block = this.server.getBlocks().get(BlockRuntimeIDs.toBlockIdentifier(blockId, null));
+                                    Block block = this.server.blocks().get(BlockRuntimeIDs.toBlockIdentifier(blockId, null));
                                     for ( int i = 0; i < count; i++ ) {
                                         blocks.add( block );
                                     }
