@@ -109,8 +109,6 @@ public class Bootstrap {
         parser.accepts("slc");
         parser.accepts("dbg-net");
         parser.accepts("exit-after-boot");
-
-
         return parser.parse(args);
     }
 
