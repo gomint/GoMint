@@ -50,7 +50,7 @@ public interface GoMint {
      *
      * @param world which should be used as default one
      */
-    void changeDefaultWorld(World world);
+    GoMint changeDefaultWorld(World world);
 
     /**
      * Get the chunk generator registry
@@ -64,7 +64,7 @@ public interface GoMint {
      *
      * @param motd The MOTD to be set
      */
-    void changeMotd(String motd);
+    GoMint changeMotd(String motd);
 
     /**
      * Get the amount of players concurrently logged in on the server
@@ -173,7 +173,7 @@ public interface GoMint {
      *
      * @param command which should be executed (without the /)
      */
-    void dispatchCommand(String command);
+    GoMint dispatchCommand(String command);
 
     /**
      * Get the empty player skin
@@ -250,7 +250,7 @@ public interface GoMint {
     /**
      * Shutdown this server
      */
-    void shutdown();
+    GoMint shutdown();
 
     /**
      * Get current tickrate

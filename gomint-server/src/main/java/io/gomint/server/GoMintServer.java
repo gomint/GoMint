@@ -667,21 +667,23 @@ public class GoMintServer implements GoMint, InventoryHolder {
         return true;
     }
 
-    public void changeDefaultWorld(World world) {
+    public GoMint changeDefaultWorld(World world) {
         if (world == null) {
             LOGGER.warn("Can't set default world to null");
-            return;
+            return this;
         }
 
         this.defaultWorld = world.getWorldName();
+        return this;
     }
 
     public SimpleChunkGeneratorRegistry chunkGeneratorRegistry() {
         return chunkGeneratorRegistry;
     }
 
-    public void changeMotd(String motd) {
+    public GoMint changeMotd(String motd) {
         this.networkManager.setMotd(motd);
+        return this;
     }
 
     public int currentPlayerCount() {
@@ -748,8 +750,9 @@ public class GoMintServer implements GoMint, InventoryHolder {
     }
 
     @Override
-    public void dispatchCommand(String line) {
+    public GoMint dispatchCommand(String line) {
         this.pluginManager.getCommandManager().executeSystem(line);
+        return this;
     }
 
     public PlayerSkin emptyPlayerSkin() {
@@ -806,8 +809,9 @@ public class GoMintServer implements GoMint, InventoryHolder {
     }
 
     @Override
-    public void shutdown() {
+    public GoMint shutdown() {
         this.running.set(false);
+        return this;
     }
 
     public double tps() {
