@@ -310,8 +310,8 @@ public class PlayerConnection implements ConnectionWithState {
                     int sent = 0;
 
 
-                    int maxSent = this.server.serverConfig().getSendChunksPerTick();
-                    if (this.server.serverConfig().isEnableFastJoin() && this.state == PlayerConnectionState.LOGIN) {
+                    int maxSent = this.server.serverConfig().sendChunksPerTick();
+                    if (this.server.serverConfig().enableFastJoin() && this.state == PlayerConnectionState.LOGIN) {
                         maxSent = Integer.MAX_VALUE;
                     }
 

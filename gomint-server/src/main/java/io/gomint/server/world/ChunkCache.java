@@ -45,8 +45,8 @@ public class ChunkCache {
     public ChunkCache( WorldAdapter world ) {
         this.world = world;
         this.cachedChunks = new Long2ObjectOpenHashMap<>();
-        this.enableAutoSave = world.getConfig().isAutoSave();
-        this.autoSaveInterval = world.getConfig().getAutoSaveInterval();
+        this.enableAutoSave = world.getConfig().autoSave();
+        this.autoSaveInterval = world.getConfig().autoSaveInterval();
     }
     // CHECKSTYLE:ON
 
@@ -60,7 +60,7 @@ public class ChunkCache {
         int spawnXChunk = CoordinateUtils.fromBlockToChunk( (int) this.world.getSpawnLocation().getX() );
         int spawnZChunk = CoordinateUtils.fromBlockToChunk( (int) this.world.getSpawnLocation().getZ() );
 
-        int spawnAreaSize = this.world.getConfig().getAmountOfChunksForSpawnArea();
+        int spawnAreaSize = this.world.getConfig().amountOfChunksForSpawnArea();
 
         // Clear temp sets
         this.toDeleteHashes.clear();
@@ -126,7 +126,7 @@ public class ChunkCache {
 
                 LOGGER.debug("Needs persistence? {}", adapter.isNeedsPersistence());
 
-                if (this.world.getConfig().isSaveOnUnload() &&
+                if (this.world.getConfig().saveOnUnload() &&
                     adapter.isNeedsPersistence()) {
                     adapter.setLastSavedTimestamp( currentTimeMS );
                     this.world.saveChunk(adapter);
@@ -300,7 +300,7 @@ public class ChunkCache {
     public synchronized void unload(int x, int z) {
         ChunkAdapter adapter = this.cachedChunks.remove(CoordinateUtils.toLong(x, z));
         if (adapter != null) {
-            if (this.world.getConfig().isSaveOnUnload() &&
+            if (this.world.getConfig().saveOnUnload() &&
                 adapter.isNeedsPersistence()) {
                 adapter.setLastSavedTimestamp( this.world.server.currentTickTime() );
                 this.world.saveChunk(adapter);

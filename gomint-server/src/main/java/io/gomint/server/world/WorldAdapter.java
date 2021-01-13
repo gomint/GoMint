@@ -486,7 +486,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
     public void update(long currentTimeMS, float dT) {
         // ---------------------------------------
         // Tick the chunk cache to get rid of Chunks
-        if (!this.config.isDisableChunkGC()) {
+        if (!this.config.disableChunkGC()) {
             this.chunkCache.tick(currentTimeMS);
         }
 
@@ -494,7 +494,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
         // Update all blocks
 
         // Tick chunks (random blocks and tiles)
-        this.tickChunks(currentTimeMS, dT, !this.config.isDisableRandomTicking());
+        this.tickChunks(currentTimeMS, dT, !this.config.disableRandomTicking());
 
         // Scheduled blocks
         while (this.tickQueue.getNextTaskTime() < currentTimeMS) {
@@ -759,7 +759,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
     protected void prepareSpawnRegion() {
         long start = System.currentTimeMillis();
 
-        final int spawnRadius = this.config.getAmountOfChunksForSpawnArea();
+        final int spawnRadius = this.config.amountOfChunksForSpawnArea();
         if (spawnRadius == 0) {
             return;
         }
@@ -1442,7 +1442,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
         // Stop this world
         this.close();
 
-        if (this.config.isSaveOnUnload()) {
+        if (this.config.saveOnUnload()) {
             // Save this world
             this.chunkCache.saveAll();
         }

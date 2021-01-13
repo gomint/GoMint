@@ -25,7 +25,7 @@ public class ListCommand extends Command {
     @Override
     public CommandOutput execute(CommandSender player, String alias, Map<String, Object> arguments) {
         Collection<EntityPlayer> players = GoMint.instance().onlinePlayers();
-        CommandOutput output = CommandOutput.successful("There are %%s/%%s players online:", players.size(), GoMint.instance().maxAmountOfConcurrentPlayers());
+        CommandOutput output = CommandOutput.successful("There are %%s/%%s players online:", players.size(), GoMint.instance().maxPlayerCount());
 
         StringJoiner joiner = new StringJoiner(", ");
         players.forEach((player1) -> joiner.add(player1.getDisplayName()));

@@ -14,20 +14,20 @@ import java.io.File;
  * @version 1.0
  * @stability 3
  */
-public interface Config {
+public interface Config<T> {
 
-    void save() throws InvalidConfigurationException;
+    T save() throws InvalidConfigurationException;
 
-    void save( File file ) throws InvalidConfigurationException;
+    T save( File file ) throws InvalidConfigurationException;
 
-    void init() throws InvalidConfigurationException;
+    T init() throws InvalidConfigurationException;
 
-    void init( File file ) throws InvalidConfigurationException;
+    T init( File file ) throws InvalidConfigurationException;
 
-    void reload() throws InvalidConfigurationException;
+    T reload() throws InvalidConfigurationException;
 
-    void load() throws InvalidConfigurationException;
+    T load() throws InvalidConfigurationException;
 
-    void load( File file ) throws InvalidConfigurationException;
+    T load( File file ) throws InvalidConfigurationException;
 
 }

@@ -79,27 +79,27 @@ public class ServerConfig extends YamlConfig {
     @Comment( "Enable client side chunk caching if the client supports it." )
     private boolean enableClientCache = true;
 
-    public ListenerConfig getListener() {
+    public ListenerConfig listener() {
         return listener;
     }
 
-    public ConnectionConfig getConnection() {
+    public ConnectionConfig connection() {
         return connection;
     }
 
-    public int getMaxPlayers() {
+    public int maxPlayers() {
         return maxPlayers;
     }
 
-    public String getMotd() {
+    public String motd() {
         return motd;
     }
 
-    public boolean isEnablePacketDumping() {
+    public boolean enablePacketDumping() {
         return enablePacketDumping;
     }
 
-    public String getDumpDirectory() {
+    public String dumpDirectory() {
         return dumpDirectory;
     }
 
@@ -107,48 +107,49 @@ public class ServerConfig extends YamlConfig {
         return defaultWorld;
     }
 
-    public boolean isLoadAllWorldsAtStart() {
+    public boolean loadAllWorldsAtStart() {
         return loadAllWorldsAtStart;
     }
 
-    public List<WorldConfig> getWorlds() {
+    public List<WorldConfig> worlds() {
         return worlds;
     }
 
-    public VanillaConfig getVanilla() {
+    public VanillaConfig vanilla() {
         return vanilla;
     }
 
-    public int getTargetTPS() {
+    public int targetTPS() {
         return targetTPS;
     }
 
-    public boolean isDisableGomintReports() {
+    public boolean disableGomintReports() {
         return disableGomintReports;
     }
 
-    public boolean isLoadChunksForEntities() {
+    public boolean loadChunksForEntities() {
         return loadChunksForEntities;
     }
 
-    public int getSendChunksPerTick() {
+    public int sendChunksPerTick() {
         return sendChunksPerTick;
     }
 
-    public boolean isEnableFastJoin() {
+    public boolean enableFastJoin() {
         return enableFastJoin;
     }
 
-    public boolean isEnableClientCache() {
+    public boolean enableClientCache() {
         return enableClientCache;
     }
 
     @Override
-    public void update(ConfigSection section) {
+    public YamlConfig update(ConfigSection section) {
         // Check if we have the new enabledClientCache config
         if (!section.has("enableClientCache")) {
             section.set("enableClientCache", true);
         }
+        return this;
     }
 
     @Override

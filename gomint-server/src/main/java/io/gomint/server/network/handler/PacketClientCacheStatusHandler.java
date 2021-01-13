@@ -16,7 +16,7 @@ public class PacketClientCacheStatusHandler implements PacketHandler<PacketClien
     @Override
     public void handle(PacketClientCacheStatus packet, long currentTimeMillis, PlayerConnection connection) {
         LOGGER.debug("Setting client caching status to {}", packet.isEnabled());
-        connection.setCachingSupported(packet.isEnabled() && connection.getServer().serverConfig().isEnableClientCache());
+        connection.setCachingSupported(packet.isEnabled() && connection.getServer().serverConfig().enableClientCache());
     }
 
 }

@@ -71,7 +71,7 @@ public interface GoMint {
      *
      * @return amount of players concurrently logged in on the server
      */
-    int concurrentAmountOfPlayers();
+    int currentPlayerCount();
 
     /**
      * Create a empty block to be placed into the world with {@link Block#copyFromBlock(Block)} or
@@ -217,7 +217,7 @@ public interface GoMint {
      *
      * @return amount of maximum players
      */
-    int maxAmountOfConcurrentPlayers();
+    int maxPlayerCount();
 
     /**
      * Get the server's message of the day (MOTD)

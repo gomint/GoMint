@@ -145,7 +145,7 @@ public class ChunkAdapter implements Chunk {
     }
 
     private void tickRandomBlocksForSlice(ChunkSlice chunkSlice, long currentTimeMS, float dT) {
-        this.iterateRandomBlocks(chunkSlice, currentTimeMS, dT, this.world.getConfig().getRandomUpdatesPerTick());
+        this.iterateRandomBlocks(chunkSlice, currentTimeMS, dT, this.world.getConfig().randomUpdatesPerTick());
     }
 
     private void iterateRandomBlocks(ChunkSlice chunkSlice, long currentTimeMS, float dT, int randomUpdatesPerTick) {
@@ -321,8 +321,8 @@ public class ChunkAdapter implements Chunk {
      * @return true when it can be gced, false when not
      */
     boolean canBeGCed(long currentTimeMillis) {
-        int secondsAfterLeft = this.world.getConfig().getSecondsUntilGCAfterLastPlayerLeft();
-        int waitAfterLoad = this.world.getConfig().getWaitAfterLoadForGCSeconds();
+        int secondsAfterLeft = this.world.getConfig().secondsUntilGCAfterLastPlayerLeft();
+        int waitAfterLoad = this.world.getConfig().waitAfterLoadForGCSeconds();
 
         return this.refCount.get() == 0 &&
             this.populated && currentTimeMillis - this.loadedTime > TimeUnit.SECONDS.toMillis(waitAfterLoad) &&

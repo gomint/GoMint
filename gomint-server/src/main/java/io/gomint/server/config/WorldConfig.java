@@ -50,51 +50,51 @@ public class WorldConfig extends YamlConfig {
     @Comment( "Disabled chunk gc?" )
     private boolean disableChunkGC = false;
 
-    public String getName() {
+    public String name() {
         return name;
     }
 
-    public String getChunkGenerator() {
+    public String chunkGenerator() {
         return chunkGenerator;
     }
 
-    public int getRandomUpdatesPerTick() {
+    public int randomUpdatesPerTick() {
         return randomUpdatesPerTick;
     }
 
-    public int getAmountOfChunksForSpawnArea() {
+    public int amountOfChunksForSpawnArea() {
         return amountOfChunksForSpawnArea;
     }
 
-    public int getViewDistance() {
+    public int viewDistance() {
         return viewDistance;
     }
 
-    public int getSecondsUntilGCAfterLastPlayerLeft() {
+    public int secondsUntilGCAfterLastPlayerLeft() {
         return secondsUntilGCAfterLastPlayerLeft;
     }
 
-    public int getWaitAfterLoadForGCSeconds() {
+    public int waitAfterLoadForGCSeconds() {
         return waitAfterLoadForGCSeconds;
     }
 
-    public boolean isAutoSave() {
+    public boolean autoSave() {
         return autoSave;
     }
 
-    public boolean isSaveOnUnload() {
+    public boolean saveOnUnload() {
         return saveOnUnload;
     }
 
-    public int getAutoSaveInterval() {
+    public int autoSaveInterval() {
         return autoSaveInterval;
     }
 
-    public boolean isDisableRandomTicking() {
+    public boolean disableRandomTicking() {
         return disableRandomTicking;
     }
 
-    public boolean isDisableChunkGC() {
+    public boolean disableChunkGC() {
         return disableChunkGC;
     }
 

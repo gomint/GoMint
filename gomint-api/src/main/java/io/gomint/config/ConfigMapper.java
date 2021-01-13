@@ -66,7 +66,7 @@ public class ConfigMapper extends BaseConfigMapper {
      * @param clazz which holds the field structure
      * @throws Exception which can be everything
      */
-    public void loadFromMap(Map section, Class clazz) throws Exception {
+    public ConfigMapper loadFromMap(Map section, Class clazz) throws Exception {
         if (!clazz.getSuperclass().equals(YamlConfig.class)) {
             this.loadFromMap(section, clazz.getSuperclass());
         }
@@ -79,6 +79,7 @@ public class ConfigMapper extends BaseConfigMapper {
             String path = this.getPath(field);
             converter.fromConfig((YamlConfig) this, field, ConfigSection.convertFromMap(section), path);
         }
+        return this;
     }
 
     private boolean prepareField(Field field) {

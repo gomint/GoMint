@@ -56,7 +56,7 @@ public class BaseConfigMapper extends BaseConfig {
         this.configureFromSerializeOptionsAnnotation();
     }
 
-    public void addComment(String key, String value) {
+    public BaseConfigMapper addComment(String key, String value) {
         if (!this.comments.containsKey(key)) {
             this.comments.put(key, new ArrayList<>());
         }
@@ -64,13 +64,15 @@ public class BaseConfigMapper extends BaseConfig {
         for (String split : value.split("\n")) {
             this.comments.get(key).add(split);
         }
+        return this;
     }
 
-    public void clearComments() {
+    public BaseConfigMapper clearComments() {
         this.comments.clear();
+        return this;
     }
 
-    public void mergeComments(Map<String, String> comments) {
+    public BaseConfigMapper mergeComments(Map<String, String> comments) {
         for (Map.Entry<String, String> entry : comments.entrySet()) {
             String commentPath = this.commentPrefix + "." + entry.getKey();
 
@@ -78,23 +80,27 @@ public class BaseConfigMapper extends BaseConfig {
                 this.addComment(commentPath, entry.getValue());
             }
         }
+        return this;
     }
 
-    public void resetCommentPrefix(String path) {
+    public BaseConfigMapper resetCommentPrefix(String path) {
         this.commentPrefix = path;
+        return this;
     }
 
-    public void addCommentPrefix(String path) {
+    public BaseConfigMapper addCommentPrefix(String path) {
         this.commentPrefix += "." + path;
+        return this;
     }
 
-    public void removeCommentPrefix(String path) {
+    public BaseConfigMapper removeCommentPrefix(String path) {
         if (this.commentPrefix.endsWith(path)) {
             this.commentPrefix = this.commentPrefix.substring(0, this.commentPrefix.length() - (1 + path.length()));
         }
+        return this;
     }
 
-    protected void loadFromYaml() throws InvalidConfigurationException {
+    protected BaseConfigMapper loadFromYaml() throws InvalidConfigurationException {
         this.root = new ConfigSection();
 
         try (InputStreamReader reader = new InputStreamReader(new FileInputStream(this.configFile), CHARSET)) {
@@ -107,9 +113,10 @@ public class BaseConfigMapper extends BaseConfig {
             throw new InvalidConfigurationException("Failed loading from YAML file " +
                 "\"" + this.configFile.getAbsolutePath() + "\"", cause);
         }
+        return this;
     }
 
-    protected void saveToYaml() throws InvalidConfigurationException {
+    protected BaseConfigMapper saveToYaml() throws InvalidConfigurationException {
         try (OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(this.configFile), CHARSET)) {
             this.writeHeader(writer);
 
@@ -188,9 +195,11 @@ public class BaseConfigMapper extends BaseConfig {
             throw new InvalidConfigurationException("Failed saving to YAML file " +
                 "\"" + this.configFile.getAbsolutePath() + "\"", cause);
         }
+
+        return this;
     }
 
-    private void writeHeader(OutputStreamWriter writer) throws IOException {
+    private BaseConfigMapper writeHeader(OutputStreamWriter writer) throws IOException {
         if (this.configHeader != null) {
             for (String line : this.configHeader) {
                 writer.write("# " + line + "\n");
@@ -198,6 +207,7 @@ public class BaseConfigMapper extends BaseConfig {
 
             writer.write("\n");
         }
+        return this;
     }
 
     private int calcSpaces(String line) {
@@ -213,9 +223,9 @@ public class BaseConfigMapper extends BaseConfig {
         return spaces;
     }
 
-    private void convertMapsToSections(Map<?, ?> input, ConfigSection section) {
+    private BaseConfigMapper convertMapsToSections(Map<?, ?> input, ConfigSection section) {
         if (input == null) {
-            return;
+            return this;
         }
 
         for (Map.Entry<?, ?> entry : input.entrySet()) {
@@ -228,6 +238,8 @@ public class BaseConfigMapper extends BaseConfig {
                 section.set(key, value, false);
             }
         }
+
+        return this;
     }
 
 }

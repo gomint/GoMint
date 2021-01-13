@@ -330,8 +330,8 @@ public class NetworkManager {
         PingEvent pingEvent = this.server.pluginManager().callEvent(
             new PingEvent(
                 this.server.motd(),
-                this.server.concurrentAmountOfPlayers(),
-                this.server.serverConfig().getMaxPlayers()
+                this.server.currentPlayerCount(),
+                this.server.serverConfig().maxPlayers()
             )
         );
 

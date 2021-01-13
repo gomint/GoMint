@@ -212,7 +212,7 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
      * @param viewDistance The view distance to set
      */
     public void setViewDistance(int viewDistance) {
-        int tempViewDistance = Math.min(viewDistance, this.world.getConfig().getViewDistance());
+        int tempViewDistance = Math.min(viewDistance, this.world.getConfig().viewDistance());
         if (this.viewDistance != tempViewDistance) {
             this.viewDistance = tempViewDistance;
         }
@@ -997,7 +997,7 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
                             ownVelo.setZ(ownVelo.getZ() * 0.6F);
                             this.setVelocity(ownVelo);
 
-                            if (!this.world.getServer().serverConfig().getVanilla().isDisableSprintReset()) {
+                            if (!this.world.getServer().serverConfig().vanilla().disableSprintReset()) {
                                 this.setSprinting(false);
                             }
                         }

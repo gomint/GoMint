@@ -172,7 +172,7 @@ public class EntityManager {
                     // The entity moved in a not loaded chunk. We have two options now:
                     // 1. Load the chunk
                     // 2. Don't move the entity
-                    if (this.world.getServer().serverConfig().isLoadChunksForEntities()) {
+                    if (this.world.getServer().serverConfig().loadChunksForEntities()) {
                         chunk = this.world.loadChunk(chunkX, chunkZ, true);
                     } else {
                         // "Revert" movement

@@ -121,13 +121,13 @@ public class DebugScoreboard {
     }
 
     private void updateTPS() {
-        if ( this.oldTPS != GoMint.instance().getTPS() ) {
+        if ( this.oldTPS != GoMint.instance().tps() ) {
             // Remove the old entry
             this.display.removeEntry( this.tpsEntry );
-            this.tpsEntry = this.display.addLine( ChatColor.GREEN + this.format.format( GoMint.instance().getTPS() ), 2 );
+            this.tpsEntry = this.display.addLine( ChatColor.GREEN + this.format.format( GoMint.instance().tps() ), 2 );
 
             // Update cache
-            this.oldTPS = GoMint.instance().getTPS();
+            this.oldTPS = GoMint.instance().tps();
         }
     }
 

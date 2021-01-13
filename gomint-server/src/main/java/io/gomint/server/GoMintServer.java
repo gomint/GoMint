@@ -364,10 +364,10 @@ public class GoMintServer implements GoMint, InventoryHolder {
         // ------------------------------------ //
         // Networking Initialization
         // ------------------------------------ //
-        int port = args.has("lp") ? (int) args.valueOf("lp") : this.serverConfig.getListener().getPort();
-        String host = args.has("lh") ? (String) args.valueOf("lh") : this.serverConfig.getListener().getIp();
+        int    port = args.has("lp") ?    (int) args.valueOf("lp") : this.serverConfig.listener().port();
+        String host = args.has("lh") ? (String) args.valueOf("lh") : this.serverConfig.listener().ip();
 
-        this.encryptionKeyFactory = new EncryptionKeyFactory(this.serverConfig.getConnection().getJwtRoot());
+        this.encryptionKeyFactory = new EncryptionKeyFactory(this.serverConfig.connection().jwtRoot());
         this.networkManager = new NetworkManager(this);
 
         if (!this.initNetworking(host, port)) {
@@ -387,7 +387,7 @@ public class GoMintServer implements GoMint, InventoryHolder {
 
             // Get chunk generator which might have been changed in the world config
             Class<? extends ChunkGenerator> chunkGenerator;
-            chunkGenerator = this.chunkGeneratorRegistry().getGeneratorClass(worldConfig.getChunkGenerator());
+            chunkGenerator = this.chunkGeneratorRegistry().getGeneratorClass(worldConfig.chunkGenerator());
 
             // Create options world generator
             CreateOptions options = new CreateOptions();
@@ -402,7 +402,7 @@ public class GoMintServer implements GoMint, InventoryHolder {
 
                 // Log chunk generator failure
                 LOGGER.warn("No such chunk generator for '{}' - Using {}",
-                    worldConfig.getChunkGenerator(), NormalGenerator.class.getName());
+                    worldConfig.chunkGenerator(), NormalGenerator.class.getName());
             }
 
             // Try to generate world
@@ -415,12 +415,12 @@ public class GoMintServer implements GoMint, InventoryHolder {
         }
         // CHECKSTYLE:ON
 
-        if (this.serverConfig.getListener().isUseUPNP()) {
-            UPNPClient client = new UPNPClient();
+        if (this.serverConfig.listener().useUPNP()) {
+            var client = new UPNPClient();
             client.portForward(port);
         }
 
-        changeMotd(this.serverConfig().getMotd());
+        changeMotd(this.serverConfig().motd());
 
         // ------------------------------------ //
         // Load plugins with StartupPriority LOAD
@@ -461,7 +461,7 @@ public class GoMintServer implements GoMint, InventoryHolder {
         // ------------------------------------ //
 
         // Calculate the nanoseconds we need for the tick loop
-        int targetTPS = this.serverConfig().getTargetTPS();
+        int targetTPS = this.serverConfig().targetTPS();
         if (targetTPS > 1000) {
             LOGGER.warn("Setting target TPS above 1k is not supported, target TPS has been set to 1k");
             targetTPS = 1000;
@@ -533,8 +533,8 @@ public class GoMintServer implements GoMint, InventoryHolder {
             this.tps = (1 / (double) lastTickTime);
 
             // Due to the fact that we
-            if ( this.tps > this.serverConfig.getTargetTPS() ) {
-                this.tps = this.serverConfig.getTargetTPS();
+            if ( this.tps > this.serverConfig.targetTPS() ) {
+                this.tps = this.serverConfig.targetTPS();
             }
 
             if (warn) {
@@ -642,10 +642,10 @@ public class GoMintServer implements GoMint, InventoryHolder {
 
     private boolean initNetworking(String host, int port) {
         try {
-            this.networkManager.initialize(this.serverConfig.getMaxPlayers(), host, port);
+            this.networkManager.initialize(this.serverConfig.maxPlayers(), host, port);
 
-            if (this.serverConfig.isEnablePacketDumping()) {
-                File dumpDirectory = new File(this.serverConfig.getDumpDirectory());
+            if (this.serverConfig.enablePacketDumping()) {
+                File dumpDirectory = new File(this.serverConfig.dumpDirectory());
                 if (!dumpDirectory.exists()) {
                     if (!dumpDirectory.mkdirs()) {
                         LOGGER.error("Failed to create dump directory; please double-check your filesystem permissions");
@@ -684,7 +684,7 @@ public class GoMintServer implements GoMint, InventoryHolder {
         this.networkManager.setMotd(motd);
     }
 
-    public int concurrentAmountOfPlayers() {
+    public int currentPlayerCount() {
         return this.playersByUUID.size();
     }
 
@@ -783,8 +783,8 @@ public class GoMintServer implements GoMint, InventoryHolder {
         return GoMintServer.mainThread == Thread.currentThread().getId();
     }
 
-    public int maxAmountOfConcurrentPlayers() {
-        return this.serverConfig.getMaxPlayers();
+    public int maxPlayerCount() {
+        return this.serverConfig.maxPlayers();
     }
 
     public String motd() {
@@ -854,8 +854,8 @@ public class GoMintServer implements GoMint, InventoryHolder {
     }
 
     public WorldConfig worldConfigOf(String name) {
-        for (WorldConfig worldConfig : this.serverConfig.getWorlds()) {
-            if (worldConfig.getName().equals(name)) {
+        for (WorldConfig worldConfig : this.serverConfig.worlds()) {
+            if (worldConfig.name().equals(name)) {
                 return worldConfig;
             }
         }

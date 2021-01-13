@@ -53,14 +53,15 @@ public class InternalConverter {
         return config;
     }
 
-    public void addConverters(Class... classes ) throws InvalidConverterException {
+    public InternalConverter addConverters(Class... classes ) throws InvalidConverterException {
         for ( Class converterClass : classes ) {
             this.addConverter( converterClass );
         }
+        return this;
     }
 
     @SuppressWarnings( "unchecked" )
-    public void addConverter( Class clazz ) throws InvalidConverterException {
+    public InternalConverter addConverter( Class clazz ) throws InvalidConverterException {
         if ( !Converter.class.isAssignableFrom( clazz ) ) {
             throw new InvalidConverterException( clazz.getName() + " does not implement " + Converter.class );
         }
@@ -80,6 +81,7 @@ public class InternalConverter {
                     "only one parameter of type " + InternalConverter.class, cause );
             }
         }
+        return this;
     }
 
     public Converter getConverter( Class type ) {
@@ -92,7 +94,7 @@ public class InternalConverter {
         return null;
     }
 
-    public void fromConfig( YamlConfig config, Field field, ConfigSection root, String path ) throws Exception {
+    public InternalConverter fromConfig( YamlConfig config, Field field, ConfigSection root, String path ) throws Exception {
         Converter converter;
         Object fieldValue = field.get( config );
 
@@ -107,27 +109,27 @@ public class InternalConverter {
                 // then assure there's the "PreserveStatic" annotation on there!
                 if ( Modifier.isStatic( field.getModifiers() ) ) {
                     if ( !field.isAnnotationPresent( PreserveStatic.class ) ) {
-                        return;
+                        return this;
                     }
 
                     if ( !field.getAnnotation( PreserveStatic.class ).value() ) {
-                        return;
+                        return this;
                     }
 
                     if ( converter instanceof PrimitiveConverter && value == null ) {
-                        return;
+                        return this;
                     }
 
                     field.set( null, value );
-                    return;
+                    return this;
                 }
 
                 if ( converter instanceof PrimitiveConverter && value == null ) {
-                    return;
+                    return this;
                 }
 
                 field.set( config, value );
-                return;
+                return this;
             } else {
                 converter = this.getConverter( field.getType() );
 
@@ -139,27 +141,27 @@ public class InternalConverter {
                     // then assure there's the "PreserveStatic" annotation on there!
                     if ( Modifier.isStatic( field.getModifiers() ) ) {
                         if ( !field.isAnnotationPresent( PreserveStatic.class ) ) {
-                            return;
+                            return this;
                         }
 
                         if ( !field.getAnnotation( PreserveStatic.class ).value() ) {
-                            return;
+                            return this;
                         }
 
                         if ( converter instanceof PrimitiveConverter && value == null ) {
-                            return;
+                            return this;
                         }
 
                         field.set( null, value );
-                        return;
+                        return this;
                     }
 
                     if ( converter instanceof PrimitiveConverter && value == null ) {
-                        return;
+                        return this;
                     }
 
                     field.set( config, value );
-                    return;
+                    return this;
                 }
             }
         } else {
@@ -173,27 +175,27 @@ public class InternalConverter {
                 // then assure there's the "PreserveStatic" annotation on there!
                 if ( Modifier.isStatic( field.getModifiers() ) ) {
                     if ( !field.isAnnotationPresent( PreserveStatic.class ) ) {
-                        return;
+                        return this;
                     }
 
                     if ( !field.getAnnotation( PreserveStatic.class ).value() ) {
-                        return;
+                        return this;
                     }
 
                     if ( converter instanceof PrimitiveConverter && value == null ) {
-                        return;
+                        return this;
                     }
 
                     field.set( null, value );
-                    return;
+                    return this;
                 }
 
                 if ( converter instanceof PrimitiveConverter && value == null ) {
-                    return;
+                    return this;
                 }
 
                 field.set( config, value );
-                return;
+                return this;
             }
         }
 
@@ -201,21 +203,22 @@ public class InternalConverter {
         // then assure there's the "PreserveStatic" annotation on there!
         if ( Modifier.isStatic( field.getModifiers() ) ) {
             if ( !field.isAnnotationPresent( PreserveStatic.class ) ) {
-                return;
+                return this;
             }
 
             if ( !field.getAnnotation( PreserveStatic.class ).value() ) {
-                return;
+                return this;
             }
 
             field.set( null, root.get( path ) );
-            return;
+            return this;
         }
 
         field.set( config, root.get( path ) );
+        return this;
     }
 
-    public void toConfig( YamlConfig config, Field field, ConfigSection root, String path ) throws Exception {
+    public InternalConverter toConfig( YamlConfig config, Field field, ConfigSection root, String path ) throws Exception {
         Converter converter;
         Object fieldValue = field.get( config );
 
@@ -227,26 +230,28 @@ public class InternalConverter {
 
             if ( converter != null ) {
                 root.set( path, converter.toConfig( fieldValue.getClass(), fieldValue, parameterizedType ) );
-                return;
+                return this;
             } else {
                 converter = this.getConverter( field.getType() );
                 if ( converter != null ) {
                     root.set( path, converter.toConfig( field.getType(), fieldValue, parameterizedType ) );
-                    return;
+                    return this;
                 }
             }
         }
 
         root.set( path, fieldValue );
+        return this;
     }
 
     public List<Class> getCustomConverters() {
         return Collections.unmodifiableList( this.customConverters );
     }
 
-    public void addCustomConverter( Class addConverter ) throws InvalidConverterException {
+    public InternalConverter addCustomConverter( Class addConverter ) throws InvalidConverterException {
         this.addConverter( addConverter );
         this.customConverters.add( addConverter );
+        return this;
     }
 
     protected final ParameterizedType evalParameterizedField( Field field ) {
