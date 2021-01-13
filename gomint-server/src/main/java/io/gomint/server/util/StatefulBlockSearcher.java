@@ -53,7 +53,7 @@ public class StatefulBlockSearcher {
         }
 
         // Check if the found block is still valid
-        Block block = this.world.getBlockAt( this.foundPosition );
+        Block block = this.world.blockAt( this.foundPosition );
         if ( !this.predicate.test( block ) ) {
             this.foundPosition = null;
 
@@ -72,7 +72,7 @@ public class StatefulBlockSearcher {
             for ( int y = this.start.getY(); y <= this.end.getY(); y++ ) {
                 for ( int z = this.start.getZ(); z <= this.end.getZ(); z++ ) {
                     // Get the block instance
-                    Block block = this.world.getBlockAt( x, y, z );
+                    Block block = this.world.blockAt( x, y, z );
                     if ( this.predicate.test( block ) ) {
                         this.foundPosition = block.getPosition();
                         return;

@@ -58,7 +58,7 @@ public class UI {
     public void loadedChunk(Chunk chunk) {
         EventQueue.invokeLater(() -> {
             int x = ( SIZE / 2 ) + chunk.getX();
-            int z = ( SIZE / 2 ) + chunk.getZ();
+            int z = ( SIZE / 2 ) + chunk.z();
 
             CellPane pane = panes.get( new Pair<>( x, z ) );
             if ( pane != null ) {

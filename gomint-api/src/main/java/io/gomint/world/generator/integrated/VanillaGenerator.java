@@ -37,7 +37,7 @@ public class VanillaGenerator extends ChunkGenerator {
     }
 
     @Override
-    public BlockPosition getSpawnPoint() {
+    public BlockPosition spawnPoint() {
         return null;
     }
 

@@ -87,7 +87,7 @@ public class TimeSetCommand extends Command {
         Duration time = Duration.ofSeconds(seconds);
 
         World world = ((EntityPlayer) commandSender).getWorld();
-        world.setTime(time);
+        world.time(time);
 
         return CommandOutput.successful("Set time to %%s", formatDuration(time));
     }

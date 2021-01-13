@@ -98,7 +98,7 @@ public final class ReportUploader {
     public ReportUploader includeWorlds() {
         GoMintServer server = (GoMintServer) GoMint.instance();
         for (WorldAdapter adapter : server.worldManager().getWorlds()) {
-            this.worlds.put(adapter.getWorldName(), new WorldData(adapter.getChunkCache().size()));
+            this.worlds.put(adapter.folder(), new WorldData(adapter.getChunkCache().size()));
         }
 
         return this;
@@ -113,7 +113,7 @@ public final class ReportUploader {
         for (EntityPlayer player : GoMint.instance().onlinePlayers()) {
             String key = player.getName() + ":" + player.getUUID().toString();
             Location location = player.getLocation();
-            this.players.put(key, new PlayerReportData(location.getWorld().getWorldName(), location.getX(), location.getY(), location.getZ()));
+            this.players.put(key, new PlayerReportData(location.getWorld().folder(), location.getX(), location.getY(), location.getZ()));
         }
 
         return this;

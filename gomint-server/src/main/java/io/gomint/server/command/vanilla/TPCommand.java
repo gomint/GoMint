@@ -81,6 +81,6 @@ public class TPCommand extends Command {
         to.setZ(position.getZ());
 
         source.teleport(to);
-        return CommandOutput.successful("%%s has been teleported to %%s, %%s, %%s, %%s", source.getName(), to.getWorld().getWorldName(), to.getX(), to.getY(), to.getZ());
+        return CommandOutput.successful("%%s has been teleported to %%s, %%s, %%s, %%s", source.getName(), to.getWorld().name(), to.getX(), to.getY(), to.getZ());
     }
 }

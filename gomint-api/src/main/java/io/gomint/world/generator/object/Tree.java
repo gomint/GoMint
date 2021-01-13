@@ -50,7 +50,7 @@ public abstract class Tree {
 
             for ( int xx = -radiusToCheck; xx < ( radiusToCheck + 1 ); ++xx ) {
                 for ( int zz = -radiusToCheck; zz < ( radiusToCheck + 1 ); ++zz ) {
-                    Block block = world.getBlockAt( x + xx, y + yy, z + zz );
+                    Block block = world.blockAt( x + xx, y + yy, z + zz );
 
                     boolean foundOverride = false;
                     for ( BlockType blockType : OVERRIDABLE ) {
@@ -84,7 +84,7 @@ public abstract class Tree {
                         continue;
                     }
 
-                    Block replace = world.getBlockAt( xx, yy, zz );
+                    Block replace = world.blockAt( xx, yy, zz );
                     if ( !replace.isSolid() ) {
                         replace.copyFromBlock( this.leafBlock );
                     }
@@ -95,13 +95,13 @@ public abstract class Tree {
 
     protected void placeTrunk( World world, int x, int y, int z, FastRandom random, int trunkHeight ) {
         // The base dirt block
-        world.getBlockAt( x, y - 1, z ).setBlockType( BlockDirt.class );
+        world.blockAt( x, y - 1, z ).setBlockType( BlockDirt.class );
         for ( int yy = 0; yy < trunkHeight; ++yy ) {
-            Block block = world.getBlockAt( x, y + yy, z );
+            Block block = world.blockAt( x, y + yy, z );
 
             for ( BlockType type : OVERRIDABLE ) {
                 if ( block.getBlockType() == type ) {
-                    world.getBlockAt( x, y + yy, z ).copyFromBlock( this.trunkBlock );
+                    world.blockAt( x, y + yy, z ).copyFromBlock( this.trunkBlock );
                 }
             }
         }

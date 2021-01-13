@@ -110,7 +110,7 @@ public class EntityXPOrb extends Entity implements io.gomint.entity.passive.Enti
                     this.closestPlayer.getLocation().distanceSquared(this.getLocation()) > 64) {
                     this.closestPlayer = null;
 
-                    for (io.gomint.entity.EntityPlayer p : this.world.getPlayers()) {
+                    for (io.gomint.entity.EntityPlayer p : this.world.onlinePlayers()) {
                         if (p.getGamemode() != Gamemode.SPECTATOR && p.getLocation().distanceSquared(this.getLocation()) <= 64) {
                             this.closestPlayer = (EntityPlayer) p;
                             break;

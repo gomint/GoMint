@@ -57,8 +57,8 @@ public class ChunkCache {
      */
     public synchronized void tick( long currentTimeMS ) {
         // Check for gc
-        int spawnXChunk = CoordinateUtils.fromBlockToChunk( (int) this.world.getSpawnLocation().getX() );
-        int spawnZChunk = CoordinateUtils.fromBlockToChunk( (int) this.world.getSpawnLocation().getZ() );
+        int spawnXChunk = CoordinateUtils.fromBlockToChunk( (int) this.world.spawnLocation().getX() );
+        int spawnZChunk = CoordinateUtils.fromBlockToChunk( (int) this.world.spawnLocation().getZ() );
 
         int spawnAreaSize = this.world.getConfig().amountOfChunksForSpawnArea();
 
@@ -131,7 +131,7 @@ public class ChunkCache {
                     adapter.setLastSavedTimestamp( currentTimeMS );
                     this.world.saveChunk(adapter);
 
-                    LOGGER.debug("Persisting chunk {} / {}", adapter.getX(), adapter.getZ());
+                    LOGGER.debug("Persisting chunk {} / {}", adapter.getX(), adapter.z());
                 }
 
                 adapter.release();
@@ -171,7 +171,7 @@ public class ChunkCache {
      * @return true when chunk has been cached, false otherwise
      */
     public synchronized boolean putChunk( ChunkAdapter chunk ) {
-        long key = CoordinateUtils.toLong( chunk.getX(), chunk.getZ() );
+        long key = CoordinateUtils.toLong( chunk.getX(), chunk.z() );
         ChunkAdapter adapter = this.cachedChunks.get(key);
         if (adapter == null) {
             this.cachedChunks.put( key, chunk );

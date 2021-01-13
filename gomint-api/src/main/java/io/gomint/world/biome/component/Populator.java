@@ -20,6 +20,6 @@ public interface Populator {
      *
      * @return lis of populators
      */
-    List<io.gomint.world.generator.populator.Populator> getPopulators();
+    List<io.gomint.world.generator.populator.Populator> populators();
 
 }

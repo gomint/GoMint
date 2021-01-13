@@ -50,7 +50,7 @@ public final class ParticleData {
      *
      * @return face value
      */
-    public int getFace() {
+    public int face() {
         return this.face;
     }
 
@@ -59,7 +59,7 @@ public final class ParticleData {
      *
      * @return block value
      */
-    public Block getBlock() {
+    public Block block() {
         return this.block;
     }
 
@@ -68,7 +68,7 @@ public final class ParticleData {
      *
      * @return red value
      */
-    public int getRed() {
+    public int red() {
         return this.r;
     }
 
@@ -77,7 +77,7 @@ public final class ParticleData {
      *
      * @return green value
      */
-    public int getGreen() {
+    public int green() {
         return this.g;
     }
 
@@ -86,7 +86,7 @@ public final class ParticleData {
      *
      * @return blue value
      */
-    public int getBlue() {
+    public int blue() {
         return this.b;
     }
 
@@ -95,7 +95,7 @@ public final class ParticleData {
      *
      * @return alpha value
      */
-    public int getAlpha() {
+    public int alpha() {
         return this.a;
     }
 

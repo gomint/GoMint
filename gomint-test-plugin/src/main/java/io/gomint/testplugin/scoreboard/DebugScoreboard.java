@@ -76,7 +76,7 @@ public class DebugScoreboard {
     }
 
     private void updateWorldTime() {
-        Duration time = this.player.getWorld().getTime();
+        Duration time = this.player.getWorld().time();
 
         int seconds = (int) time.getSeconds();
         int minutes = MathUtils.fastFloor(seconds / 60f);
@@ -109,13 +109,13 @@ public class DebugScoreboard {
 
     private void updateChunk() {
         Chunk chunk = this.player.getChunk();
-        if ( chunk.getX() != this.chunkX || chunk.getZ() != this.chunkZ ) {
+        if ( chunk.getX() != this.chunkX || chunk.z() != this.chunkZ ) {
             // Remove the old entry
             this.display.removeEntry( this.chunkEntry );
-            this.chunkEntry = this.display.addLine( chunk.getX() + " / " + chunk.getZ(), 4 );
+            this.chunkEntry = this.display.addLine( chunk.getX() + " / " + chunk.z(), 4 );
 
             // Update cache
-            this.chunkZ = chunk.getZ();
+            this.chunkZ = chunk.z();
             this.chunkX = chunk.getX();
         }
     }

@@ -29,7 +29,6 @@ import io.gomint.math.*;
 import io.gomint.player.DeviceInfo;
 import io.gomint.plugin.Plugin;
 import io.gomint.server.GoMintServer;
-import io.gomint.server.enchant.EnchantmentSelector;
 import io.gomint.server.entity.metadata.MetadataContainer;
 import io.gomint.server.entity.passive.EntityHuman;
 import io.gomint.server.entity.projectile.EntityFishingHook;
@@ -367,7 +366,7 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
             Chunk playerChunk = this.getChunk();
             Chunk chunk = other.getChunk();
             if (Math.abs(playerChunk.getX() - chunk.getX()) <= this.getViewDistance() &&
-                Math.abs(playerChunk.getZ() - chunk.getZ()) <= this.getViewDistance()) {
+                Math.abs(playerChunk.z() - chunk.z()) <= this.getViewDistance()) {
                 this.entityVisibilityManager.addEntity(other);
             }
         }
@@ -421,7 +420,7 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
                     EntityPlayer player = (EntityPlayer) entity;
                     Chunk playerChunk = player.getChunk();
                     if (Math.abs(playerChunk.getX() - chunk.getX()) > player.getViewDistance() &&
-                        Math.abs(playerChunk.getZ() - chunk.getZ()) > player.getViewDistance()) {
+                        Math.abs(playerChunk.z() - chunk.z()) > player.getViewDistance()) {
                         player.getEntityVisibilityManager().removeEntity(this);
                     }
                 }
@@ -521,10 +520,10 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
                 }
 
                 // Check for interaction
-                Block block = from.getWorld().getBlockAt(from.toBlockPosition());
+                Block block = from.getWorld().blockAt(from.toBlockPosition());
                 block.gotOff(this);
 
-                block = to.getWorld().getBlockAt(to.toBlockPosition());
+                block = to.getWorld().blockAt(to.toBlockPosition());
                 block.stepOn(this);
             }
 
@@ -680,7 +679,7 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
         // Load from world
         if (!this.world.loadPlayer(this)) {
             // Get default spawn
-            this.setAndRecalcPosition(this.getSpawnLocation() != null ? this.getSpawnLocation() : this.world.getSpawnLocation());
+            this.setAndRecalcPosition(this.getSpawnLocation() != null ? this.getSpawnLocation() : this.world.spawnLocation());
         }
 
         // Send world init data
@@ -696,7 +695,7 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
 
         // Set spawn
         if (this.connection.getEntity().getSpawnLocation() == null) {
-            this.connection.getEntity().setSpawnLocation(this.connection.getEntity().getWorld().getSpawnLocation());
+            this.connection.getEntity().setSpawnLocation(this.connection.getEntity().getWorld().spawnLocation());
         }
 
         // Send adventure settings
@@ -768,7 +767,7 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
         this.connection.getServer().creativeInventory().removeViewer(this);
         this.connection.getServer().uuidMappedPlayers().remove(this.getUUID());
 
-        Block block = this.world.getBlockAt(this.getPosition().toBlockPosition());
+        Block block = this.world.blockAt(this.getPosition().toBlockPosition());
         block.gotOff(this);
 
         // Remove from player list
@@ -1115,7 +1114,7 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
         entityEvent.setEventId(EntityEvent.RESPAWN.getId());
 
         // Update all other players
-        for (io.gomint.entity.EntityPlayer player : this.world.getPlayers()) {
+        for (io.gomint.entity.EntityPlayer player : this.world.onlinePlayers()) {
             EntityPlayer implPlayer = (EntityPlayer) player;
             implPlayer.getEntityVisibilityManager().updateEntity(this, this.getChunk());
         }
@@ -1206,12 +1205,12 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
         this.craftingResultInventory.clear();
 
         if (event.getDeathMessage() != null && !event.getDeathMessage().isEmpty()) {
-            for (io.gomint.entity.EntityPlayer player : this.world.getPlayers()) {
+            for (io.gomint.entity.EntityPlayer player : this.world.onlinePlayers()) {
                 player.sendMessage(event.getDeathMessage());
             }
         }
 
-        this.respawnPosition = this.world.getSpawnLocation().add(0, this.eyeHeight, 0);
+        this.respawnPosition = this.world.spawnLocation().add(0, this.eyeHeight, 0);
 
         PacketRespawnPosition packetRespawnPosition = new PacketRespawnPosition();
         packetRespawnPosition.setPosition(this.respawnPosition);
@@ -1252,7 +1251,7 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
                 this.boundingBox.getMaxX(), this.boundingBox.getMaxY(), this.boundingBox.getMaxZ());
 
             // Check if we collided with a block
-            this.onGround = this.world.getCollisionCubes(this, bb, false) != null;
+            this.onGround = this.world.collisionCubes(this, bb, false) != null;
         }
 
         this.isCollided = this.onGround;
@@ -1618,7 +1617,7 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
         float dZ = this.getMotionZ();
 
         // Check if we collide with some blocks when we would move that fast
-        List<AxisAlignedBB> collisionList = this.world.getCollisionCubes(this, this.boundingBox.getOffsetBoundingBox(dX, dY, dZ), false);
+        List<AxisAlignedBB> collisionList = this.world.collisionCubes(this, this.boundingBox.getOffsetBoundingBox(dX, dY, dZ), false);
         if (collisionList != null) {
             // Check if we would hit a y border block
             for (AxisAlignedBB axisAlignedBB : collisionList) {

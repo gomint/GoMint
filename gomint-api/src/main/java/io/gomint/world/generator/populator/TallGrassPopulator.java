@@ -43,20 +43,20 @@ public class TallGrassPopulator implements Populator {
             if ( y != -1 && this.canTallGrassStay( chunk, x, y, z ) ) {
                 BlockTallGrass tallGrass = GoMint.instance().createBlock( BlockTallGrass.class );
                 tallGrass.setGrassType( BlockTallGrass.Type.GRASS );
-                chunk.setBlock( x, y, z, tallGrass );
+                chunk.block( x, y, z, tallGrass );
             }
         }
     }
 
     private boolean canTallGrassStay( Chunk chunk, int x, int y, int z ) {
-        Block block = chunk.getBlockAt( x, y, z );
-        return ( block.getBlockType() == BlockType.AIR || block.getBlockType() == BlockType.SNOW_LAYER ) && chunk.getBlockAt( x, y - 1, z ).getBlockType() == BlockType.GRASS_BLOCK;
+        Block block = chunk.blockAt( x, y, z );
+        return ( block.getBlockType() == BlockType.AIR || block.getBlockType() == BlockType.SNOW_LAYER ) && chunk.blockAt( x, y - 1, z ).getBlockType() == BlockType.GRASS_BLOCK;
     }
 
     private int getHighestWorkableBlock( Chunk chunk, int x, int z ) {
         int y = 255;
         for ( ; y >= 0; --y ) {
-            Block block = chunk.getBlockAt( x, y, z );
+            Block block = chunk.blockAt( x, y, z );
             if ( block.getBlockType() != BlockType.AIR && block.getBlockType() != BlockType.LEAVES && block.getBlockType() != BlockType.SNOW_LAYER ) {
                 break;
             }

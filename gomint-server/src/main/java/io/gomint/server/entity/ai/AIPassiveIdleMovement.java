@@ -54,7 +54,7 @@ public class AIPassiveIdleMovement extends AIMovementAndLookingState {
     }
 
     private Block selectWalkableBlock(BlockPosition pos, int tries) {
-        Block block = this.world.getBlockAt(pos);
+        Block block = this.world.blockAt(pos);
         if (tries == 0) {
             return block;
         }

@@ -254,7 +254,7 @@ public class Vines extends Block implements BlockVines {
         for (int x1 = -xStep; x1 <= xStep; x1++) {
             for (int z1 = -zStep; z1 <= xStep; z1++) {
                 for (int y1 = -yStep; y1 <= yStep; y1++) {
-                    if (this.world.getBlockAt(base.clone().add(x1, y1, z1)).getBlockType() == BlockType.VINES) {
+                    if (this.world.blockAt(base.clone().add(x1, y1, z1)).getBlockType() == BlockType.VINES) {
                         amount++;
                     }
                 }

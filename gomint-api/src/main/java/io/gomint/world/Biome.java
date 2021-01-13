@@ -33,7 +33,7 @@ public enum Biome {
     // ==================================== BIOMES ==================================== //
     OCEAN( 0, "Ocean", 0.5D, 0.5D, 46, 58 ) {
         @Override
-        public List<Block> getGround() {
+        public List<Block> ground() {
             return Collections.unmodifiableList( Arrays.asList(
                 GoMint.instance().createBlock( BlockGravel.class ),
                 GoMint.instance().createBlock( BlockGravel.class ),
@@ -44,7 +44,7 @@ public enum Biome {
         }
 
         @Override
-        public List<Populator> getPopulators() {
+        public List<Populator> populators() {
             TallGrassPopulator populator = new TallGrassPopulator();
             populator.setBaseAmount( 5 );
             return Collections.singletonList( populator );
@@ -52,7 +52,7 @@ public enum Biome {
     },
     PLAINS( 1, "Plains", 0.8D, 0.4D, 63, 68 ) {
         @Override
-        public List<Block> getGround() {
+        public List<Block> ground() {
             return Collections.unmodifiableList( Arrays.asList(
                 GoMint.instance().createBlock( BlockGrassBlock.class ),
                 DefinedBlocks.DIRT,
@@ -63,7 +63,7 @@ public enum Biome {
         }
 
         @Override
-        public List<Populator> getPopulators() {
+        public List<Populator> populators() {
             TallGrassPopulator populator = new TallGrassPopulator();
             populator.setBaseAmount( 12 );
             return Collections.singletonList( populator );
@@ -73,7 +73,7 @@ public enum Biome {
     EXTREME_HILLS( 3, "Extreme Hills", 0.2D, 0.3D ),
     FOREST( 4, "Forest", 0.7D, 0.8D, 63, 81 ) {
         @Override
-        public List<Block> getGround() {
+        public List<Block> ground() {
             return Collections.unmodifiableList( Arrays.asList(
                 GoMint.instance().createBlock( BlockGrassBlock.class ),
                 DefinedBlocks.DIRT,
@@ -84,7 +84,7 @@ public enum Biome {
         }
 
         @Override
-        public List<Populator> getPopulators() {
+        public List<Populator> populators() {
             TallGrassPopulator populator = new TallGrassPopulator();
             populator.setBaseAmount( 3 );
 
@@ -96,14 +96,14 @@ public enum Biome {
     TAIGA( 5, "Taiga", 0.05D, 0.8D ),
     SWAMPLAND( 6, "Swampland", 0.8D, 0.9D ) {
         @Override
-        public int getColorRGB( boolean grass, int height ) {
+        public int colorRGB(boolean grass, int height ) {
             // TODO: Implement Perlin noise!
             return 0x4C763C;
         }
     },
     RIVER( 7, "River", 0.5D, 0.5D, 58, 62 ) {
         @Override
-        public List<Block> getGround() {
+        public List<Block> ground() {
             return Collections.unmodifiableList( Arrays.asList(
                 DefinedBlocks.DIRT,
                 DefinedBlocks.DIRT,
@@ -114,7 +114,7 @@ public enum Biome {
         }
 
         @Override
-        public List<Populator> getPopulators() {
+        public List<Populator> populators() {
             TallGrassPopulator populator = new TallGrassPopulator();
             populator.setBaseAmount( 5 );
             return Collections.singletonList( populator );
@@ -141,7 +141,7 @@ public enum Biome {
     COLD_BEACH( 26, "Cold Beach", 0.5D, 0.3D ),
     BIRCH_FOREST( 27, "Birch Forest", 0.6D, 0.6D, 63, 81 ) {
         @Override
-        public List<Block> getGround() {
+        public List<Block> ground() {
             return Collections.unmodifiableList( Arrays.asList(
                 GoMint.instance().createBlock( BlockGrassBlock.class ),
                 DefinedBlocks.DIRT,
@@ -152,7 +152,7 @@ public enum Biome {
         }
 
         @Override
-        public List<Populator> getPopulators() {
+        public List<Populator> populators() {
             TallGrassPopulator populator = new TallGrassPopulator();
             populator.setBaseAmount( 3 );
 
@@ -164,8 +164,8 @@ public enum Biome {
     BIRCH_FOREST_HILLS( 28, "Birch Forest Hills", 0.6D, 0.6D ),
     ROOFED_FOREST( 29, "Roofed Forest", 0.7D, 0.8D ) {
         @Override
-        public int getColorRGB( boolean grass, int height ) {
-            int color = super.getColorRGB( grass, height );
+        public int colorRGB(boolean grass, int height ) {
+            int color = super.colorRGB( grass, height );
             return ( grass ? ( ( ( color & 0xFEFEFE ) + ROOFED_FOREST_MODIFIER ) / 2 ) : color );
         }
     },
@@ -173,13 +173,13 @@ public enum Biome {
     COLD_TAIGA_HILLS( 31, "Cold Taiga Hills", -0.5D, 0.4D ),
     MEGA_TAIGA( 32, "Mega Taiga", 0.3D, 0.8D ) {
         @Override
-        public int getColorRGB( boolean grass, int height ) {
+        public int colorRGB(boolean grass, int height ) {
             return ( grass ? MESA_GRASS_COLOR : MESA_FOLIAGE_COLOR );
         }
     },
     MEGA_TAIGA_HILLS( 33, "Mega Taiga Hills", 0.3D, 0.8D ) {
         @Override
-        public int getColorRGB( boolean grass, int height ) {
+        public int colorRGB(boolean grass, int height ) {
             return ( grass ? MESA_GRASS_COLOR : MESA_FOLIAGE_COLOR );
         }
     },
@@ -191,7 +191,7 @@ public enum Biome {
     MESA_PLATEAU( 39, "Mesa Plateau", 2.0D, 0.0D ),
     DEEP_COLD_OCEAN( 45, "Deep Cold Ocean", -0.5D, 0.5D, 46, 58 ) {
         @Override
-        public List<Block> getGround() {
+        public List<Block> ground() {
             return Collections.unmodifiableList( Arrays.asList(
                 GoMint.instance().createBlock( BlockGravel.class ),
                 GoMint.instance().createBlock( BlockGravel.class ),
@@ -202,7 +202,7 @@ public enum Biome {
         }
 
         @Override
-        public List<Populator> getPopulators() {
+        public List<Populator> populators() {
             TallGrassPopulator populator = new TallGrassPopulator();
             populator.setBaseAmount( 5 );
             return Collections.singletonList( populator );
@@ -215,7 +215,7 @@ public enum Biome {
     TAIGA_M( 60, "Taiga M", 0.5D, 0.8D ),
     SWAMPLAND_M( 52, "Swampland M", 0.8D, 0.9D ) {
         @Override
-        public int getColorRGB( boolean grass, int height ) {
+        public int colorRGB(boolean grass, int height ) {
             // TODO: Implement Perlin noise!
             return 0x4C763C;
         }
@@ -245,8 +245,8 @@ public enum Biome {
     BIRCH_FOREST_HILLS_M( 67, "Birch Forest Hills M", 0.6D, 0.6D ),
     ROOFED_FOREST_M( 57, "Roofed Forest M", 0.7D, 0.8D ) {
         @Override
-        public int getColorRGB( boolean grass, int height ) {
-            int color = super.getColorRGB( grass, height );
+        public int colorRGB(boolean grass, int height ) {
+            int color = super.colorRGB( grass, height );
             return ( grass ? ( ( ( color & 0xFEFEFE ) + ROOFED_FOREST_MODIFIER ) / 2 ) : color );
         }
     },
@@ -256,19 +256,19 @@ public enum Biome {
     SAVANNA_PLATEAU_M( 56, "Savanna Plateau M", 1.0D, 0.0D ),
     MESA_BRYCE( 63, "Mesa (Bryce)", 2.0D, 0.0D ) {
         @Override
-        public int getColorRGB( boolean grass, int height ) {
+        public int colorRGB(boolean grass, int height ) {
             return ( grass ? MESA_GRASS_COLOR : MESA_FOLIAGE_COLOR );
         }
     },
     MESA_PLATEAU_F_M( 64, "Mesa Plateau F M", 2.0D, 0.0D ) {
         @Override
-        public int getColorRGB( boolean grass, int height ) {
+        public int colorRGB(boolean grass, int height ) {
             return ( grass ? MESA_GRASS_COLOR : MESA_FOLIAGE_COLOR );
         }
     },
     MESA_PLATEAU_M( 65, "Mesa Plateau M", 2.0D, 0.0D ) {
         @Override
-        public int getColorRGB( boolean grass, int height ) {
+        public int colorRGB(boolean grass, int height ) {
             return ( grass ? MESA_GRASS_COLOR : MESA_FOLIAGE_COLOR );
         }
     };
@@ -294,7 +294,7 @@ public enum Biome {
 
     static {
         for ( Biome biome : Biome.values() ) {
-            BIOMES_BY_ID.put( biome.getId(), biome );
+            BIOMES_BY_ID.put( biome.id(), biome );
         }
     }
 
@@ -326,7 +326,7 @@ public enum Biome {
      * @param id The ID of the biome
      * @return The biome if found or null otherwise
      */
-    public static Biome getBiomeById( int id ) {
+    public static Biome byId(int id ) {
         Biome biome = BIOMES_BY_ID.get( id );
         if (biome == null) {
             LOGGER.warn("Unknown biome: {}", id);
@@ -340,7 +340,7 @@ public enum Biome {
      *
      * @return The biome's unique ID
      */
-    public int getId() {
+    public int id() {
         return this.id;
     }
 
@@ -349,7 +349,7 @@ public enum Biome {
      *
      * @return The biome's name
      */
-    public String getName() {
+    public String biomeName() {
         return this.name;
     }
 
@@ -358,7 +358,7 @@ public enum Biome {
      *
      * @return The biome's temperature
      */
-    public double getTemperature() {
+    public double temperature() {
         return this.temperature;
     }
 
@@ -367,7 +367,7 @@ public enum Biome {
      *
      * @return The biome's downfall rate
      */
-    public double getDownfall() {
+    public double downfall() {
         return this.downfall;
     }
 
@@ -386,9 +386,9 @@ public enum Biome {
      * @param height The height of the block to get the biome's color for
      * @return An integer encoding the biome color
      */
-    public int getColorRGB( boolean grass, int height ) {
+    public int colorRGB(boolean grass, int height ) {
         // Calculate temperature and downfall rate:
-        double temperature = MathUtils.clamp( this.getTemperature() - ( height > 64 ? ( height - 64 ) * 0.00166667D : 0.0D ), 0.0D, 1.0D );
+        double temperature = MathUtils.clamp( this.temperature() - ( height > 64 ? ( height - 64 ) * 0.00166667D : 0.0D ), 0.0D, 1.0D );
         double tempDownfall = downfall * temperature;
 
         // Interpolate on triangle:
@@ -412,19 +412,19 @@ public enum Biome {
         return ( ri << 16 ) | ( gi << 8 ) | bi;
     }
 
-    public int getMinElevation() {
+    public int minElevation() {
         return this.minElevation;
     }
 
-    public int getMaxElevation() {
+    public int maxElevation() {
         return this.maxElevation;
     }
 
-    public List<Block> getGround() {
+    public List<Block> ground() {
         return null;
     }
 
-    public List<Populator> getPopulators() {
+    public List<Populator> populators() {
         return null;
     }
 

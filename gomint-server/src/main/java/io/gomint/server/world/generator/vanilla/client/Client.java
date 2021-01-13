@@ -479,7 +479,7 @@ public class Client implements ConnectionWithState {
 
                 int amountOfSubchunks = chunk.getSubChunkCount();
 
-                LOGGER.debug("Got {} sub chunks for {} / {}", amountOfSubchunks, chunkAdapter.getX(), chunkAdapter.getZ());
+                LOGGER.debug("Got {} sub chunks for {} / {}", amountOfSubchunks, chunkAdapter.getX(), chunkAdapter.z());
 
                 for (int i = 0; i < amountOfSubchunks; i++) {
                     ChunkSlice slice = chunkAdapter.ensureSlice(i);
@@ -525,7 +525,7 @@ public class Client implements ConnectionWithState {
                     while (true) {
                         try {
                             NBTTagCompound compound = reader.parse();
-                            TileEntity tileEntity = this.world.getServer().tileEntities().construct(compound, chunkAdapter.getBlockAt(compound.getInteger("x", 0) & 0xF, compound.getInteger("y", 0), compound.getInteger("z", 0) & 0xF));
+                            TileEntity tileEntity = this.world.getServer().tileEntities().construct(compound, chunkAdapter.blockAt(compound.getInteger("x", 0) & 0xF, compound.getInteger("y", 0), compound.getInteger("z", 0) & 0xF));
                             if (tileEntity != null) {
                                 chunkAdapter.setTileEntity(compound.getInteger("x", 0) & 0xF, compound.getInteger("y", 0), compound.getInteger("z", 0) & 0xF, tileEntity);
                             }
@@ -535,7 +535,7 @@ public class Client implements ConnectionWithState {
                     }
                 }
               
-                LOGGER.debug("Adding chunk {} / {} to cache", chunkAdapter.getX(), chunkAdapter.getZ());
+                LOGGER.debug("Adding chunk {} / {} to cache", chunkAdapter.getX(), chunkAdapter.z());
 
                 chunkAdapter.setPopulated(true);
                 chunkAdapter.calculateHeightmap(240);

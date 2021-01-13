@@ -324,7 +324,7 @@ public abstract class Entity implements io.gomint.entity.Entity {
                     // Calculate friction
                     float friction = 1 - DRAG;
                     if ( this.onGround && ( Math.abs( this.getMotionX() ) > 0.00001 || Math.abs( this.getMotionZ() ) > 0.00001 ) ) {
-                        friction = this.world.getBlockAt( (int) this.getPositionX(),
+                        friction = this.world.blockAt( (int) this.getPositionX(),
                             (int) ( this.getPositionY() - 1 ),
                             (int) this.getPositionZ() ).getFrictionFactor() * 0.91f;
                     }
@@ -432,13 +432,13 @@ public abstract class Entity implements io.gomint.entity.Entity {
         AxisAlignedBB oldBoundingBox = this.boundingBox.clone();
 
         // Check if we collide with some blocks when we would move that fast
-        List<AxisAlignedBB> collisionList = this.world.getCollisionCubes( this, this.boundingBox.getOffsetBoundingBox( dX, dY, dZ ), false );
+        List<AxisAlignedBB> collisionList = this.world.collisionCubes( this, this.boundingBox.getOffsetBoundingBox( dX, dY, dZ ), false );
         if ( collisionList != null && !this.stuckInBlock ) {
             // Check if we would hit a y border block
             for ( AxisAlignedBB axisAlignedBB : collisionList ) {
                 dY = axisAlignedBB.calculateYOffset( this.boundingBox, dY );
                 if ( dY != movY ) {
-                    Block block = this.world.getBlockAt( (int) axisAlignedBB.getMinX(), (int) axisAlignedBB.getMinY(), (int) axisAlignedBB.getMinZ() );
+                    Block block = this.world.blockAt( (int) axisAlignedBB.getMinX(), (int) axisAlignedBB.getMinY(), (int) axisAlignedBB.getMinZ() );
                     this.collidedWith.add( block );
                 }
             }
@@ -449,7 +449,7 @@ public abstract class Entity implements io.gomint.entity.Entity {
             for ( AxisAlignedBB axisAlignedBB : collisionList ) {
                 dX = axisAlignedBB.calculateXOffset( this.boundingBox, dX );
                 if ( dX != movX ) {
-                    Block block = this.world.getBlockAt( (int) axisAlignedBB.getMinX(), (int) axisAlignedBB.getMinY(), (int) axisAlignedBB.getMinZ() );
+                    Block block = this.world.blockAt( (int) axisAlignedBB.getMinX(), (int) axisAlignedBB.getMinY(), (int) axisAlignedBB.getMinZ() );
                     LOGGER.debug( "Entity {} collided with {}", this, block );
 
                     this.collidedWith.add( block );
@@ -462,7 +462,7 @@ public abstract class Entity implements io.gomint.entity.Entity {
             for ( AxisAlignedBB axisAlignedBB : collisionList ) {
                 dZ = axisAlignedBB.calculateZOffset( this.boundingBox, dZ );
                 if ( dZ != movZ ) {
-                    Block block = this.world.getBlockAt( (int) axisAlignedBB.getMinX(), (int) axisAlignedBB.getMinY(), (int) axisAlignedBB.getMinZ() );
+                    Block block = this.world.blockAt( (int) axisAlignedBB.getMinX(), (int) axisAlignedBB.getMinY(), (int) axisAlignedBB.getMinZ() );
                     LOGGER.debug( "Entity {} collided with {}", this, block );
 
                     this.collidedWith.add( block );
@@ -490,7 +490,7 @@ public abstract class Entity implements io.gomint.entity.Entity {
             this.boundingBox.setBounds( oldBoundingBox );
 
             // Check for collision
-            collisionList = this.world.getCollisionCubes( this, this.boundingBox.addCoordinates( dX, dY, dZ ), false );
+            collisionList = this.world.collisionCubes( this, this.boundingBox.addCoordinates( dX, dY, dZ ), false );
             if ( collisionList != null ) {
                 // Check if we would hit a y border block
                 for ( AxisAlignedBB axisAlignedBB : collisionList ) {
@@ -599,7 +599,7 @@ public abstract class Entity implements io.gomint.entity.Entity {
         int fullBlockZ = MathUtils.fastFloor( this.transform.getPositionZ() );
 
         // Are we stuck inside a block?
-        Block block = this.world.getBlockAt( fullBlockX, fullBlockY, fullBlockZ );
+        Block block = this.world.blockAt( fullBlockX, fullBlockY, fullBlockZ );
         if ( block.isSolid() && block.intersectsWith( this.boundingBox ) ) {
             // We need to check for "smooth" movement when its a player (it climbs .5 steps in .3 -> .420 -> .468 .487 .495 .498 .499 steps
             if ( this instanceof EntityPlayer && ( this.stuckInBlockTicks++ <= 20 || ( (EntityPlayer) this ).getAdventureSettings().isNoClip() ) ) { // Yes we can "smooth" for up to 20 ticks, thanks mojang :D
@@ -618,12 +618,12 @@ public abstract class Entity implements io.gomint.entity.Entity {
             double force = Math.random() * 0.2 + 0.1;
 
             // Check for free blocks
-            boolean freeMinusX = !this.world.getBlockAt( fullBlockX - 1, fullBlockY, fullBlockZ ).isSolid();
-            boolean freePlusX = !this.world.getBlockAt( fullBlockX + 1, fullBlockY, fullBlockZ ).isSolid();
-            boolean freeMinusY = !this.world.getBlockAt( fullBlockX, fullBlockY - 1, fullBlockZ ).isSolid();
-            boolean freePlusY = !this.world.getBlockAt( fullBlockX, fullBlockY + 1, fullBlockZ ).isSolid();
-            boolean freeMinusZ = !this.world.getBlockAt( fullBlockX, fullBlockY, fullBlockZ - 1 ).isSolid();
-            boolean freePlusZ = !this.world.getBlockAt( fullBlockX, fullBlockY, fullBlockZ + 1 ).isSolid();
+            boolean freeMinusX = !this.world.blockAt( fullBlockX - 1, fullBlockY, fullBlockZ ).isSolid();
+            boolean freePlusX = !this.world.blockAt( fullBlockX + 1, fullBlockY, fullBlockZ ).isSolid();
+            boolean freeMinusY = !this.world.blockAt( fullBlockX, fullBlockY - 1, fullBlockZ ).isSolid();
+            boolean freePlusY = !this.world.blockAt( fullBlockX, fullBlockY + 1, fullBlockZ ).isSolid();
+            boolean freeMinusZ = !this.world.blockAt( fullBlockX, fullBlockY, fullBlockZ - 1 ).isSolid();
+            boolean freePlusZ = !this.world.blockAt( fullBlockX, fullBlockY, fullBlockZ + 1 ).isSolid();
 
             // Since we want the lowest amount of push we have to select the smallest side
             byte direction = -1;
@@ -1129,13 +1129,13 @@ public abstract class Entity implements io.gomint.entity.Entity {
 
     protected boolean isOnLadder() {
         Location location = this.getLocation();
-        Block block = location.getWorld().getBlockAt( location.toBlockPosition() );
+        Block block = location.getWorld().blockAt( location.toBlockPosition() );
         return block instanceof Ladder || block instanceof Vines;
     }
 
     public boolean isInsideLiquid() {
         Location eyeLocation = this.getLocation().add( 0, this.eyeHeight, 0 );
-        Block block = eyeLocation.getWorld().getBlockAt( eyeLocation.toBlockPosition() );
+        Block block = eyeLocation.getWorld().blockAt( eyeLocation.toBlockPosition() );
         if ( block instanceof StationaryWater || block instanceof FlowingWater ) {
             float yLiquid = (float) ( block.getPosition().getY() + 1 + ( ( (Liquid) block ).getFillHeight() - 0.12 ) );
             return eyeLocation.getY() < yLiquid;
@@ -1321,7 +1321,7 @@ public abstract class Entity implements io.gomint.entity.Entity {
 
         if ( !this.hideByDefault && value && this.world != null ) {
             // Despawn
-            for ( io.gomint.entity.EntityPlayer entityPlayer : this.world.getPlayers() ) {
+            for ( io.gomint.entity.EntityPlayer entityPlayer : this.world.onlinePlayers() ) {
                 EntityPlayer entityPlayer1 = (EntityPlayer) entityPlayer;
                 entityPlayer1.getEntityVisibilityManager().removeEntity( this );
             }

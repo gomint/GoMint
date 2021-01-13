@@ -170,7 +170,7 @@ public class PathfindingEngine {
 
                     // Got to make sure this neighbour is even in reach from this block
                     // Check if the block is walkable or jumpable
-                    Block block = this.getGoal().getWorld().getBlockAt(neighbourTriple);
+                    Block block = this.getGoal().getWorld().blockAt(neighbourTriple);
                     if (!block.canPassThrough()) {
                         List<AxisAlignedBB> bbs = block.getBoundingBox();
                         if (bbs != null) {
@@ -187,7 +187,7 @@ public class PathfindingEngine {
                     }
 
                     // We need to account for gravity here
-                    Block blockBeneath = this.getGoal().getWorld().getBlockAt(neighbourTriple.getX(), neighbourTriple.getY() - 1, neighbourTriple.getZ());
+                    Block blockBeneath = this.getGoal().getWorld().blockAt(neighbourTriple.getX(), neighbourTriple.getY() - 1, neighbourTriple.getZ());
                     if (blockBeneath.canPassThrough()) {
                         neighbourTriple = new BlockPosition(neighbourTriple.getX(), neighbourTriple.getY() - 1, neighbourTriple.getZ());
                     }
@@ -235,7 +235,7 @@ public class PathfindingEngine {
 
                     LOGGER.debug("Path selected:");
                     for (BlockPosition intTriple : path) {
-                        Block block = this.getGoal().getWorld().getBlockAt(intTriple.getX(), intTriple.getY(), intTriple.getZ());
+                        Block block = this.getGoal().getWorld().blockAt(intTriple.getX(), intTriple.getY(), intTriple.getZ());
                         LOGGER.debug("> " + intTriple + " > " + block.getClass());
                     }
                 }

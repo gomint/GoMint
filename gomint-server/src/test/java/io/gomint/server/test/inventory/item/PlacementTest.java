@@ -14,7 +14,6 @@ import io.gomint.server.inventory.item.ItemStack;
 import io.gomint.server.test.IntegrationTest;
 import io.gomint.server.util.ClassPath;
 import io.gomint.server.world.WorldAdapter;
-import io.gomint.world.World;
 import io.gomint.world.WorldType;
 import io.gomint.server.world.block.Block;
 import io.gomint.world.block.BlockAir;
@@ -46,7 +45,7 @@ public class PlacementTest extends IntegrationTest {
     @Test
     @Order(2)
     public void placeAll() throws IOException {
-        Block block = this.world.getBlockAt(50, 50, 50);
+        Block block = this.world.blockAt(50, 50, 50);
         Block downBlock = block.getSide(Facing.DOWN);
 
         EntityPlayer player = mock(EntityPlayer.class);

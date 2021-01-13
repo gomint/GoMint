@@ -59,7 +59,6 @@ import io.gomint.world.block.Block;
 import io.gomint.world.block.data.Facing;
 import io.gomint.world.generator.ChunkGenerator;
 import io.gomint.world.generator.GeneratorContext;
-import io.gomint.world.generator.integrated.VoidGenerator;
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectMaps;
@@ -88,7 +87,6 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
-import java.util.function.Function;
 import java.util.function.Predicate;
 
 /**
@@ -197,7 +195,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
     }
 
     @Override
-    public Difficulty getDifficulty() {
+    public Difficulty difficulty() {
         return difficulty;
     }
 
@@ -217,13 +215,13 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
      *
      * @return collection of all players online on this world
      */
-    public Collection<EntityPlayer> getPlayers() {
+    public Collection<EntityPlayer> onlinePlayers() {
         return Collections.unmodifiableSet(this.players.keySet());
     }
 
     @Override
-    public void playSound(Vector vector, Sound sound, byte pitch, SoundData data) {
-        this.playSound(null, vector, sound, pitch, data);
+    public WorldAdapter playSound(Vector vector, Sound sound, byte pitch, SoundData data) {
+        return this.playSound(null, vector, sound, pitch, data);
     }
 
     /**
@@ -236,7 +234,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
      * @param data   additional data for the sound
      * @throws IllegalArgumentException when the sound data given is incorrect for the sound wanted to play
      */
-    public void playSound(EntityPlayer player, Vector vector, Sound sound, byte pitch, SoundData data) {
+    public WorldAdapter playSound(EntityPlayer player, Vector vector, Sound sound, byte pitch, SoundData data) {
         int soundData = -1;
 
         switch (sound) {
@@ -245,20 +243,20 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
             case PLACE:
             case HIT:
                 // Need a block
-                if (data.getBlock() == null) {
+                if (data.block() == null) {
                     throw new IllegalArgumentException("Sound " + sound + " needs block sound data");
                 }
 
-                soundData = BlockRuntimeIDs.toBlockIdentifier(this.server.blocks().getID(data.getBlock()), null).getRuntimeId();
+                soundData = BlockRuntimeIDs.toBlockIdentifier(this.server.blocks().getID(data.block()), null).getRuntimeId();
                 break;
 
             case NOTE:
                 // Check if needed data is there
-                if (data.getInstrument() == null) {
+                if (data.instrument() == null) {
                     throw new IllegalArgumentException("Sound NOTE needs instrument sound data");
                 }
 
-                switch (data.getInstrument()) {
+                switch (data.instrument()) {
                     case PIANO:
                         soundData = 0;
                         break;
@@ -285,12 +283,12 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
                 break;
         }
 
-        this.playSound(player, vector, sound, pitch, soundData);
+        return this.playSound(player, vector, sound, pitch, soundData);
     }
 
     @Override
-    public void playSound(Vector vector, Sound sound, byte pitch) {
-        this.playSound(null, vector, sound, pitch, -1);
+    public World playSound(Vector vector, Sound sound, byte pitch) {
+        return this.playSound(null, vector, sound, pitch, -1);
     }
 
     /**
@@ -302,7 +300,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
      * @param pitch     The pitch at which the sound should be played
      * @param extraData any data which should be send to the client to identify the sound
      */
-    public void playSound(EntityPlayer player, Vector vector, Sound sound, byte pitch, int extraData) {
+    public WorldAdapter playSound(EntityPlayer player, Vector vector, Sound sound, byte pitch, int extraData) {
         // There are sounds which don't work but have level event counterparts so we use them for now
         switch (sound) {
             case IMITATE_GHAST:
@@ -325,20 +323,22 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
 
                 break;
         }
+
+        return this;
     }
 
     @Override
-    public String getWorldName() {
+    public String folder() {
         return this.name;
     }
 
     @Override
-    public String getLevelName() {
+    public String name() {
         return this.levelName;
     }
 
     @Override
-    public void setSpawnLocation(Location location) {
+    public WorldAdapter spawnLocation(Location location) {
         this.spawn = Objects.requireNonNull(location, "Failed reassigning spawn location: Param 'location' is null");
 
         for (io.gomint.server.entity.EntityPlayer player : this.players.keySet()) {
@@ -348,26 +348,30 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
             packet.setWorldSpawn(location.toBlockPosition());
             player.getConnection().addToSendQueue(packet);
         }
+
+        return this;
     }
 
     @Override
-    public Location getSpawnLocation() {
+    public Location spawnLocation() {
         return this.spawn;
     }
 
     @Override
-    public void setDifficulty(Difficulty difficulty) {
+    public WorldAdapter difficulty(Difficulty difficulty) {
         this.difficulty = difficulty;
 
         PacketSetDifficulty packet = new PacketSetDifficulty();
         packet.setDifficulty(difficulty.getDifficultyDegree());
 
         this.broadcastPacket(packet);
+
+        return this;
     }
 
     @Override
-    public <T extends Block> T getBlockAt(BlockPosition pos) {
-        return this.getBlockAt(pos.getX(), pos.getY(), pos.getZ());
+    public <T extends Block> T blockAt(BlockPosition pos) {
+        return this.blockAt(pos.getX(), pos.getY(), pos.getZ());
     }
 
     private Block getOptionalBlockAt(BlockPosition position) {
@@ -377,19 +381,19 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
 
         ChunkAdapter chunkAdapter = this.getChunk(position.getX() >> 4, position.getZ() >> 4);
         if (chunkAdapter != null) {
-            return chunkAdapter.getBlockAt(position.getX() & 0xF, position.getY(), position.getZ() & 0xF);
+            return chunkAdapter.blockAt(position.getX() & 0xF, position.getY(), position.getZ() & 0xF);
         }
 
         return null;
     }
 
     @Override
-    public <T extends Block> T getBlockAt(int x, int y, int z) {
-        return this.getBlockAt(x, y, z, WorldLayer.NORMAL);
+    public <T extends Block> T blockAt(int x, int y, int z) {
+        return this.blockAt(x, y, z, WorldLayer.NORMAL);
     }
 
     @Override
-    public <T extends Block> T getBlockAt(int x, int y, int z, WorldLayer layer) {
+    public <T extends Block> T blockAt(int x, int y, int z, WorldLayer layer) {
         // Secure location
         if (y < 0 || y > 255) {
             return (T) this.server.blocks().get(BlockRuntimeIDs.toBlockIdentifier("minecraft:air", null),
@@ -402,7 +406,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
                 (byte) (y > 255 ? 15 : 0), (byte) 0, null, new Location(this, x, y, z), new BlockPosition(x, y, z), layer.ordinal(), null, (short) 0);
         }
 
-        return chunk.getBlockAt(x & 0xF, y, z & 0xF, layer.ordinal());
+        return chunk.blockAt(x & 0xF, y, z & 0xF, layer.ordinal());
     }
 
     public void setBlock(BlockPosition pos, int layer, int runtimeId) {
@@ -411,7 +415,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
             CoordinateUtils.fromBlockToChunk(pos.getZ()),
             true);
 
-        chunk.setBlock(pos.getX() & 0xF, pos.getY(), pos.getZ() & 0xF, layer, runtimeId);
+        chunk.block(pos.getX() & 0xF, pos.getY(), pos.getZ() & 0xF, layer, runtimeId);
     }
 
     public int getRuntimeID(BlockPosition position, int layer) {
@@ -462,21 +466,22 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
         int zChunk = CoordinateUtils.fromBlockToChunk(position.getZ());
 
         final ChunkAdapter chunk = this.loadChunk(xChunk, zChunk, true);
-        return chunk.getBiome(position.getX() & 0xF, position.getZ() & 0xF);
+        return chunk.biome(position.getX() & 0xF, position.getZ() & 0xF);
     }
 
     private void initGamerules() {
-        this.setGamerule(Gamerule.DO_DAYLIGHT_CYCLE, true);
+        this.gamerule(Gamerule.DO_DAYLIGHT_CYCLE, true);
     }
 
     @Override
-    public <T> void setGamerule(Gamerule<T> gamerule, T value) {
+    public <T> WorldAdapter gamerule(Gamerule<T> gamerule, T value) {
         this.gamerules.put(gamerule, value);
+        return this;
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public <T> T getGamerule(Gamerule<T> gamerule) {
+    public <T> T gamerule(Gamerule<T> gamerule) {
         return (T) this.gamerules.get(gamerule);
     }
 
@@ -550,7 +555,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
 
     @Override
     public void updateClientTick() {
-        if (this.getGamerule(Gamerule.DO_DAYLIGHT_CYCLE)) {
+        if (this.gamerule(Gamerule.DO_DAYLIGHT_CYCLE)) {
             this.worldTime++;
             this.correctTime();
 
@@ -827,7 +832,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
      */
     private void packageChunk(ChunkAdapter chunk, Delegate2<Long, ChunkAdapter> callback) {
         chunk.createPackagedData(null, false); // We generate some garbage to warm caches
-        callback.invoke(CoordinateUtils.toLong(chunk.getX(), chunk.getZ()), chunk);
+        callback.invoke(CoordinateUtils.toLong(chunk.getX(), chunk.z()), chunk);
     }
 
     // ==================================== NETWORKING HELPERS ==================================== //
@@ -846,7 +851,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
     }
 
     public void sendToVisible(int posX, int posZ, Packet packet, Predicate<Entity> predicate) {
-        for (EntityPlayer player : this.getPlayers()) {
+        for (EntityPlayer player : this.onlinePlayers()) {
             io.gomint.server.entity.EntityPlayer p = (io.gomint.server.entity.EntityPlayer) player;
 
             if (p.knowsChunk(posX, posZ) &&
@@ -897,7 +902,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
                         AsyncChunkSaveTask save = (AsyncChunkSaveTask) task;
                         chunk = save.getChunk();
 
-                        LOGGER.debug("Async saving of chunk {} / {}", chunk.getX(), chunk.getZ());
+                        LOGGER.debug("Async saving of chunk {} / {}", chunk.getX(), chunk.z());
                         this.saveChunk(chunk);
 
                         break;
@@ -971,7 +976,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
      * @param pos        of the block which should be updated
      */
     public void appendUpdatePackets(PlayerConnection connection, BlockPosition pos) {
-        io.gomint.server.world.block.Block block = getBlockAt(pos);
+        io.gomint.server.world.block.Block block = blockAt(pos);
 
         // Update the block
         PacketUpdateBlock updateBlock = new PacketUpdateBlock();
@@ -1050,7 +1055,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
         for (int z = minZ; z < maxZ; ++z) {
             for (int x = minX; x < maxX; ++x) {
                 for (int y = minY; y < maxY; ++y) {
-                    Block block = this.getBlockAt(x, y, z);
+                    Block block = this.blockAt(x, y, z);
 
                     if ((!block.canPassThrough() || includePassThrough) && block.intersectsWith(bb)) {
                         if (values == null) {
@@ -1094,8 +1099,8 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
     }
 
     @Override
-    public List<AxisAlignedBB> getCollisionCubes(io.gomint.entity.Entity entity, AxisAlignedBB bb,
-                                                 boolean includeEntities) {
+    public List<AxisAlignedBB> collisionCubes(io.gomint.entity.Entity entity, AxisAlignedBB bb,
+                                              boolean includeEntities) {
         int minX = MathUtils.fastFloor(bb.getMinX());
         int minY = MathUtils.fastFloor(bb.getMinY());
         int minZ = MathUtils.fastFloor(bb.getMinZ());
@@ -1133,7 +1138,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
      */
     public boolean useItemOn(ItemStack itemInHand, BlockPosition blockPosition, Facing face, Vector
         clickPosition, io.gomint.server.entity.EntityPlayer entity) {
-        Block blockClicked = this.getBlockAt(blockPosition);
+        Block blockClicked = this.blockAt(blockPosition);
         if (blockClicked instanceof Air) {
             return false;
         }
@@ -1176,7 +1181,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
                     entity, clickedBlock, replaceBlock, face, itemInHand, clickPosition);
                 if (success) {
                     // Play sound
-                    io.gomint.server.world.block.Block newBlock = replaceBlock.getWorld().getBlockAt(replaceBlock.getPosition());
+                    io.gomint.server.world.block.Block newBlock = replaceBlock.getWorld().blockAt(replaceBlock.getPosition());
                     playSound(null, new Vector(newBlock.getPosition()), Sound.PLACE, (byte) 1, BlockRuntimeIDs.toBlockIdentifier(newBlock.getBlockId(), null).getRuntimeId());
 
                     if (entity.getGamemode() != Gamemode.CREATIVE) {
@@ -1277,7 +1282,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
         this.sendLevelEvent(null, position, levelEvent, data);
     }
 
-    public void sendLevelEvent(EntityPlayer player, Vector position, int levelEvent, int data) {
+    public WorldAdapter sendLevelEvent(EntityPlayer player, Vector position, int levelEvent, int data) {
         PacketWorldEvent worldEvent = new PacketWorldEvent();
         worldEvent.setData(data);
         worldEvent.setEventId(levelEvent);
@@ -1288,6 +1293,8 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
         } else {
             sendToVisible(position.toBlockPosition(), worldEvent, entity -> true);
         }
+
+        return this;
     }
 
     public void storeTileEntity(BlockPosition position, TileEntity tileEntity) {
@@ -1303,7 +1310,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
     }
 
     public boolean breakBlock(BlockPosition position, List<ItemStack> drops, boolean creative) {
-        io.gomint.server.world.block.Block block = getBlockAt(position);
+        io.gomint.server.world.block.Block block = blockAt(position);
         if (block.onBreak(creative)) {
             if (!drops.isEmpty()) {
                 for (ItemStack itemStack : drops) {
@@ -1352,11 +1359,11 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
     }
 
     @Override
-    public void sendParticle(Vector location, Particle particle) {
-        this.sendParticle(null, location, particle, 0);
+    public WorldAdapter sendParticle(Vector location, Particle particle) {
+        return this.sendParticle(null, location, particle, 0);
     }
 
-    public void sendParticle(EntityPlayer player, Vector location, Particle particle, int data) {
+    public WorldAdapter sendParticle(EntityPlayer player, Vector location, Particle particle, int data) {
         int eventId;
         switch (particle) {
             case PUNCH_BLOCK:
@@ -1369,52 +1376,52 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
                 eventId = LevelEvent.ADD_PARTICLE_MASK | EnumConnectors.PARTICLE_CONNECTOR.convert(particle).getId();
         }
 
-        sendLevelEvent(player, location, eventId, data);
+        return sendLevelEvent(player, location, eventId, data);
     }
 
     @Override
-    public void sendParticle(Vector location, Particle particle, ParticleData data) {
-        this.sendParticle(null, location, particle, data);
+    public WorldAdapter sendParticle(Vector location, Particle particle, ParticleData data) {
+        return this.sendParticle(null, location, particle, data);
     }
 
-    public void sendParticle(EntityPlayer player, Vector location, Particle particle, ParticleData data) {
+    public WorldAdapter sendParticle(EntityPlayer player, Vector location, Particle particle, ParticleData data) {
         int dataNumber = 0;
 
         switch (particle) {
             case FALLING_DUST:
-                if (data.getRed() == -1 || data.getBlue() == -1 || data.getGreen() == -1 || data.getAlpha() == -1) {
+                if (data.red() == -1 || data.blue() == -1 || data.green() == -1 || data.alpha() == -1) {
                     throw new IllegalArgumentException("Particle data does not reflect color for particle " + particle);
                 }
 
-                dataNumber = ((data.getAlpha() & 0xff) << 24) |
-                    ((data.getRed() & 0xff) << 16) |
-                    ((data.getGreen() & 0xff) << 8) |
-                    (data.getBlue() & 0xff);
+                dataNumber = ((data.alpha() & 0xff) << 24) |
+                    ((data.red() & 0xff) << 16) |
+                    ((data.green() & 0xff) << 8) |
+                    (data.blue() & 0xff);
 
                 break;
 
             case PUNCH_BLOCK:
-                if (data.getBlock() == null || data.getFace() == -1) {
+                if (data.block() == null || data.face() == -1) {
                     throw new IllegalArgumentException("Particle data does not reflect block and face data for particle " + particle);
                 }
 
-                io.gomint.server.world.block.Block block = (io.gomint.server.world.block.Block) data.getBlock();
-                dataNumber = block.getRuntimeId() | (data.getFace() << 24);
+                io.gomint.server.world.block.Block block = (io.gomint.server.world.block.Block) data.block();
+                dataNumber = block.getRuntimeId() | (data.face() << 24);
 
                 break;
 
             case BREAK_BLOCK:
-                if (data.getBlock() == null) {
+                if (data.block() == null) {
                     throw new IllegalArgumentException("Particle data does not reflect block data for particle " + particle);
                 }
 
-                block = (io.gomint.server.world.block.Block) data.getBlock();
+                block = (io.gomint.server.world.block.Block) data.block();
                 dataNumber = block.getRuntimeId();
 
                 break;
         }
 
-        this.sendParticle(player, location, particle, dataNumber);
+        return this.sendParticle(player, location, particle, dataNumber);
     }
 
     public void createExpOrb(Location location, int amount) {
@@ -1463,13 +1470,13 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
     protected abstract void closeFDs();
 
     @Override
-    public <T extends Block> void iterateBlocks(Class<T> blockClass, Consumer<T> blockConsumer) {
+    public <T extends Block> WorldAdapter iterateBlocks(Class<T> blockClass, Consumer<T> blockConsumer) {
         // Get the id of the block which we search
         String blockId = this.server.blocks().getID(blockClass);
 
         // Iterate over all chunks
         this.chunkCache.iterateAll(chunkAdapter -> {
-            int chunkZ = chunkAdapter.getZ();
+            int chunkZ = chunkAdapter.z();
             int chunkX = chunkAdapter.getX();
 
             for (int i = 0; i < 2; i++) {
@@ -1478,7 +1485,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
                         for (int z = 0; z < 16; z++) {
                             String currentBlockId = chunkAdapter.getBlock(x, y, z, i);
                             if (currentBlockId.equals(blockId)) {
-                                T block = getBlockAt((chunkX << 4) + x, y, (chunkZ << 4) + z);
+                                T block = blockAt((chunkX << 4) + x, y, (chunkZ << 4) + z);
                                 blockConsumer.accept(block);
                             }
                         }
@@ -1486,19 +1493,22 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
                 }
             }
         });
+
+        return this;
     }
 
     @Override
-    public void iterateChunks(Consumer<Chunk> chunkConsumer) {
+    public WorldAdapter iterateChunks(Consumer<Chunk> chunkConsumer) {
         // Iterate over all chunks
         this.chunkCache.iterateAll(chunkConsumer::accept);
+        return this;
     }
 
-
     @Override
-    public <T extends Entity> void iterateEntities(Class<T> entityClass, Consumer<T> entityConsumer) {
+    public <T extends Entity> WorldAdapter iterateEntities(Class<T> entityClass, Consumer<T> entityConsumer) {
         // Iterate over all chunks
         this.chunkCache.iterateAll(chunkAdapter -> chunkAdapter.iterateEntities(entityClass, entityConsumer));
+        return this;
     }
 
     /**
@@ -1546,8 +1556,9 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
     }
 
     @Override
-    public void save() {
+    public WorldAdapter save() {
         this.chunkCache.saveAll();
+        return this;
     }
 
     public ChunkCache getChunkCache() {
@@ -1581,21 +1592,21 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
     public abstract boolean loadPlayer(io.gomint.server.entity.EntityPlayer player);
 
     @Override
-    public Block getHighestBlockAt(int x, int z) {
+    public Block highestBlockAt(int x, int z) {
         ChunkAdapter chunk = this.loadChunk(x >> 4, z >> 4, true);
         int y = chunk.getHeight(x & 0xF, z & 0xF);
-        return chunk.getBlockAt(x & 0xF, y - 1, z & 0xF);
+        return chunk.blockAt(x & 0xF, y - 1, z & 0xF);
     }
 
     @Override
-    public Block getHighestBlockAt(int x, int z, WorldLayer layer) {
+    public Block highestBlockAt(int x, int z, WorldLayer layer) {
         ChunkAdapter chunk = this.loadChunk(x >> 4, z >> 4, true);
         int y = chunk.getHeight(x & 0xF, z & 0xF);
-        return chunk.getBlockAt(x & 0xF, y - 1, z & 0xF, layer);
+        return chunk.blockAt(x & 0xF, y - 1, z & 0xF, layer);
     }
 
     protected final void broadcastPacket(Packet packet) {
-        for (EntityPlayer player : this.getPlayers()) {
+        for (EntityPlayer player : this.onlinePlayers()) {
             io.gomint.server.entity.EntityPlayer handle = (io.gomint.server.entity.EntityPlayer) player;
             handle.getConnection().send(packet);
         }
@@ -1606,22 +1617,25 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
     }
 
     @Override
-    public void unloadChunk(int x, int z) {
+    public WorldAdapter unloadChunk(int x, int z) {
         this.chunkCache.unload(x, z);
+        return this;
     }
 
     @Override
-    public void setTime(Duration time) {
+    public WorldAdapter time(Duration time) {
         // Since 0 is not 0 ticks in MC we need to shift a little bit
         float tickAt0 = Values.TICKS_ON_ZERO;
 
         this.worldTime = (int) (tickAt0 + (time.getSeconds() * Values.CYCLE_TICKS_PER_SECOND));
         this.correctTime();
         this.sendTime();
+
+        return this;
     }
 
     @Override
-    public Duration getTime() {
+    public Duration time() {
         long seconds = (long) (this.worldTime / Values.CYCLE_TICKS_PER_SECOND);
 
         // Since 0 is not at 0 we need to offset 6 hours
@@ -1653,7 +1667,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
     }
 
     @Override
-    public Set<Entity> getEntitiesByTag(String tag) {
+    public Set<Entity> entitiesByTag(String tag) {
         return this.entityManager.findEntities(tag);
     }
 

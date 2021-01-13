@@ -41,7 +41,7 @@ public class LocationConverter extends BaseConverter {
         Map<String, Object> saveMap = new HashMap<>();
 
         if ( location.getWorld() != null ) {
-            saveMap.put( "world", location.getWorld().getWorldName() );
+            saveMap.put( "world", location.getWorld().folder() );
         }
 
         saveMap.put( "x", location.getX() );

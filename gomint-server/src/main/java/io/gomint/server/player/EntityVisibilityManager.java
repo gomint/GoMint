@@ -35,7 +35,7 @@ public class EntityVisibilityManager {
     }
 
     public void updateAddedChunk(ChunkAdapter chunk ) {
-        LOGGER.debug( "Checking chunk {}, {}", chunk.getX(), chunk.getZ() );
+        LOGGER.debug( "Checking chunk {}, {}", chunk.getX(), chunk.z() );
 
         // Check if we should be able to see this entity
         chunk.iterateEntities( Entity.class, entity -> {
@@ -56,7 +56,7 @@ public class EntityVisibilityManager {
         int currentZ = CoordinateUtils.fromBlockToChunk( (int) this.player.getPositionZ() );
 
         if ( Math.abs( chunk.getX() - currentX ) > this.player.getViewDistance() ||
-            Math.abs( chunk.getZ() - currentZ ) > this.player.getViewDistance() ) {
+            Math.abs( chunk.z() - currentZ ) > this.player.getViewDistance() ) {
             removeEntity( entity );
         } else {
             addEntity( entity );

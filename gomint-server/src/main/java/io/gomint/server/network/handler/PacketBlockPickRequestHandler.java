@@ -24,7 +24,7 @@ public class PacketBlockPickRequestHandler implements PacketHandler<PacketBlockP
             return;
         }
 
-        Block block = player.getWorld().getBlockAt(packet.getLocation());
+        Block block = player.getWorld().blockAt(packet.getLocation());
         switch (player.getGamemode()) {
             case CREATIVE:
                 // When in creative give this player the block in the inventory

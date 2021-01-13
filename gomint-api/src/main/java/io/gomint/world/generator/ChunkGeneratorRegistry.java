@@ -20,10 +20,10 @@ public interface ChunkGeneratorRegistry {
 
     boolean isGeneratorAvailable( String name );
 
-    Class<? extends ChunkGenerator> getGeneratorClass( String name );
+    Class<? extends ChunkGenerator> generatorClass(String name );
 
-    Collection<String> getRegisteredGenerators();
+    Collection<String> registeredGenerators();
 
-    Collection<Class<? extends ChunkGenerator>> getRegisteredGeneratorClasses();
+    Collection<Class<? extends ChunkGenerator>> registeredGeneratorClasses();
 
 }

@@ -387,7 +387,7 @@ public class GoMintServer implements GoMint, InventoryHolder {
 
             // Get chunk generator which might have been changed in the world config
             Class<? extends ChunkGenerator> chunkGenerator;
-            chunkGenerator = this.chunkGeneratorRegistry().getGeneratorClass(worldConfig.chunkGenerator());
+            chunkGenerator = this.chunkGeneratorRegistry().generatorClass(worldConfig.chunkGenerator());
 
             // Create options world generator
             CreateOptions options = new CreateOptions();
@@ -673,7 +673,7 @@ public class GoMintServer implements GoMint, InventoryHolder {
             return this;
         }
 
-        this.defaultWorld = world.getWorldName();
+        this.defaultWorld = world.folder();
         return this;
     }
 
@@ -762,7 +762,7 @@ public class GoMintServer implements GoMint, InventoryHolder {
     @Override
     public EntityPlayer findPlayerByName(String target) {
         for (WorldAdapter adapter : worldManager.getWorlds()) {
-            for (EntityPlayer player : adapter.getPlayers()) {
+            for (EntityPlayer player : adapter.onlinePlayers()) {
                 if (player.getName().equalsIgnoreCase(target)) {
                     return player;
                 }
@@ -796,7 +796,7 @@ public class GoMintServer implements GoMint, InventoryHolder {
 
     public Collection<EntityPlayer> onlinePlayers() {
         var playerList = new ArrayList<EntityPlayer>();
-        worldManager.getWorlds().forEach(world -> playerList.addAll(world.getPlayers()));
+        worldManager.getWorlds().forEach(world -> playerList.addAll(world.onlinePlayers()));
         return playerList;
     }
 

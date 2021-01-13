@@ -93,7 +93,7 @@ public class WorldManager {
      * @param world The world to be added
      */
     private void addWorld(WorldAdapter world) {
-        this.loadedWorlds.put(world.getWorldName(), world);
+        this.loadedWorlds.put(world.folder(), world);
     }
 
     /**
@@ -178,7 +178,7 @@ public class WorldManager {
      * @param worldAdapter which should be unloaded
      */
     void unloadWorld(WorldAdapter worldAdapter) {
-        this.loadedWorlds.remove(worldAdapter.getWorldName());
+        this.loadedWorlds.remove(worldAdapter.folder());
     }
 
     /**
@@ -225,7 +225,7 @@ public class WorldManager {
                 return null;
         }
 
-        this.loadedWorlds.put(world.getWorldName(), world);
+        this.loadedWorlds.put(world.folder(), world);
         return world;
     }
 

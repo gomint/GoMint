@@ -36,42 +36,42 @@ public interface World {
      *
      * @return The name of the world itself
      */
-    String getWorldName();
+    String folder();
 
     /**
      * Gets the level name of the world. This is the name found inside the NBT data of a world.
      *
      * @return The level name of the world
      */
-    String getLevelName();
+    String name();
 
     /**
      * Sets the spawn location of the world
      *
      * @param location The world's spawn location
      */
-    void setSpawnLocation( Location location );
+    World spawnLocation(Location location);
 
     /**
      * Gets the spawn location of the world.
      *
      * @return The world's spawn location
      */
-    Location getSpawnLocation();
+    Location spawnLocation();
 
     /**
      * Set the difficulty of the world
      *
      * @param difficulty The world's new difficulty
      */
-    void setDifficulty( Difficulty difficulty );
+    World difficulty(Difficulty difficulty);
 
     /**
      * Returns the difficulty of the world
      *
      * @return The world's difficulty
      */
-    Difficulty getDifficulty();
+    Difficulty difficulty();
 
     /**
      * Get the block at that position or null if the position is not loaded in the world.
@@ -79,7 +79,7 @@ public interface World {
      * @param pos of the position
      * @return block which has been found at that position or null
      */
-    <T extends Block> T getBlockAt( BlockPosition pos );
+    <T extends Block> T blockAt(BlockPosition pos);
 
     /**
      * Get the block at that position or air if the position is not loaded in the world.
@@ -89,7 +89,7 @@ public interface World {
      * @param z z coordinate
      * @return block which has been found at that position or air (when chunk has not been loaded)
      */
-    <T extends Block> T getBlockAt( int x, int y, int z );
+    <T extends Block> T blockAt(int x, int y, int z);
 
     /**
      * Get the block at that position or air if the position is not loaded in the world.
@@ -100,7 +100,7 @@ public interface World {
      * @param layer on which layer is this block
      * @return block which has been found at that position or air (when chunk has not been loaded)
      */
-    <T extends Block> T getBlockAt( int x, int y, int z, WorldLayer layer );
+    <T extends Block> T blockAt(int x, int y, int z, WorldLayer layer);
 
     /**
      * Gets the value of the given gamerule set for this world.
@@ -109,7 +109,7 @@ public interface World {
      * @param <T>      The generic type of the gamerule
      * @return The value of the gamerule
      */
-    <T> T getGamerule( Gamerule<T> gamerule );
+    <T> T gamerule(Gamerule<T> gamerule);
 
     /**
      * Sets the value of the given gamerule for this world
@@ -118,14 +118,14 @@ public interface World {
      * @param value    The value which should be set
      * @param <T>      The generic type of the gamerule
      */
-    <T> void setGamerule( Gamerule<T> gamerule, T value );
+    <T> World gamerule(Gamerule<T> gamerule, T value);
 
     /**
      * Get a collection of players which are online on this world
      *
      * @return Collection of players online on this world
      */
-    Collection<EntityPlayer> getPlayers();
+    Collection<EntityPlayer> onlinePlayers();
 
     /**
      * Play a sound at the location given
@@ -136,7 +136,7 @@ public interface World {
      * @param data     additional data for the sound
      * @throws IllegalArgumentException when the sound data given is incorrect for the sound wanted to play
      */
-    void playSound( Vector location, Sound sound, byte pitch, SoundData data );
+    World playSound(Vector location, Sound sound, byte pitch, SoundData data);
 
     /**
      * Play a sound at the location given
@@ -145,7 +145,7 @@ public interface World {
      * @param sound    The sound which should be played
      * @param pitch    The pitch at which the sound should be played
      */
-    void playSound( Vector location, Sound sound, byte pitch );
+    World playSound(Vector location, Sound sound, byte pitch);
 
     /**
      * Send a particle to this world
@@ -153,7 +153,7 @@ public interface World {
      * @param location of the particle in the client
      * @param particle which should be send
      */
-    void sendParticle( Vector location, Particle particle );
+    World sendParticle(Vector location, Particle particle);
 
     /**
      * Send a particle to this world
@@ -163,7 +163,7 @@ public interface World {
      * @param data     data with which this particle should be send
      * @throws IllegalArgumentException when the particle data is incorrect for the particle which should be send
      */
-    void sendParticle( Vector location, Particle particle, ParticleData data );
+    World sendParticle(Vector location, Particle particle, ParticleData data);
 
     /**
      * Get a list of bounding boxes which collide with the given box
@@ -173,23 +173,23 @@ public interface World {
      * @param includeEntities Should we return blocks only or also entities? True for entities, false without entities
      * @return either a list of collisions or null
      */
-    List<AxisAlignedBB> getCollisionCubes( Entity entity, AxisAlignedBB bb, boolean includeEntities );
+    List<AxisAlignedBB> collisionCubes(Entity entity, AxisAlignedBB bb, boolean includeEntities);
 
     /**
      * Create a entity drop in the given world
      *
-     * @param vector  for the item drop
+     * @param vector    for the item drop
      * @param itemStack which is stored inside the drop
      * @return the created and spawned entity
      */
-    EntityItemDrop createItemDrop( Vector vector, ItemStack itemStack );
+    EntityItemDrop createItemDrop(Vector vector, ItemStack itemStack);
 
     /**
      * Unload this world. All remaining players in this world get called through the consumer
      *
      * @param playerConsumer which gets called for every player in this world
      */
-    void unload( Consumer<EntityPlayer> playerConsumer );
+    void unload(Consumer<EntityPlayer> playerConsumer);
 
     /**
      * Iterate over all loaded chunks and find the blocks specified for the blockClass.
@@ -200,7 +200,7 @@ public interface World {
      * @param blockConsumer which gets called for every found block
      * @param <T>           type of block
      */
-    <T extends Block> void iterateBlocks( Class<T> blockClass, Consumer<T> blockConsumer );
+    <T extends Block> World iterateBlocks(Class<T> blockClass, Consumer<T> blockConsumer);
 
     /**
      * Iterate over all loaded chunks and find the entities specified for the entityClass.
@@ -209,14 +209,14 @@ public interface World {
      * @param entityConsumer which gets called for every found entity
      * @param <T>            type of entity
      */
-    <T extends Entity> void iterateEntities( Class<T> entityClass, Consumer<T> entityConsumer );
+    <T extends Entity> World iterateEntities(Class<T> entityClass, Consumer<T> entityConsumer);
 
     /**
      * Iterate over all loaded chunks in this  world
      *
      * @param chunkConsumer which gets called for every chunk loaded
      */
-    void iterateChunks( Consumer<Chunk> chunkConsumer );
+    World iterateChunks(Consumer<Chunk> chunkConsumer);
 
     /**
      * Generate a empty chunk
@@ -225,7 +225,7 @@ public interface World {
      * @param z coordinate of the chunk
      * @return chunk with only air in it
      */
-    Chunk generateEmptyChunk( int x, int z );
+    Chunk generateEmptyChunk(int x, int z);
 
     /**
      * Get the chunk which has been asked
@@ -234,7 +234,7 @@ public interface World {
      * @param z coordinate of the chunk
      * @return chunk or null when not generated
      */
-    Chunk getChunk( int x, int z );
+    Chunk getChunk(int x, int z);
 
     /**
      * Get or generate a chunk
@@ -243,12 +243,12 @@ public interface World {
      * @param z coordinate of the chunk
      * @return chunk
      */
-    Chunk getOrGenerateChunk( int x, int z );
+    Chunk getOrGenerateChunk(int x, int z);
 
     /**
      * Save all data to disk
      */
-    void save();
+    World save();
 
     /**
      * Get the highest block at the given coordinates
@@ -257,19 +257,19 @@ public interface World {
      * @param z coordinate
      * @return highest block at the normal layer
      */
-    Block getHighestBlockAt( int x, int z );
+    Block highestBlockAt(int x, int z);
 
     /**
      * Get the highest block at the given coordinates. Please care this can be wrong, height calculations
      * are always done on the normal layer. So the highest block on the underwater layer may be wrong at all
      * times.
      *
-     * @param x coordinate
-     * @param z coordinate
+     * @param x     coordinate
+     * @param z     coordinate
      * @param layer on which we want to lookup
      * @return highest block at the normal layer
      */
-    Block getHighestBlockAt( int x, int z, WorldLayer layer );
+    Block highestBlockAt(int x, int z, WorldLayer layer);
 
     /**
      * Unload a chunk from memory. This may trigger a save
@@ -277,21 +277,21 @@ public interface World {
      * @param x coordinate of the chunk
      * @param z coordinate of the chunk
      */
-    void unloadChunk(int x, int z);
+    World unloadChunk(int x, int z);
 
     /**
      * Set current day/night time. Time in a world is given in 24h format (0 is midnight, 12 is noon, 18 is 6p.m. etc.)
      *
      * @param time which should be set
      */
-    void setTime(Duration time);
+    World time(Duration time);
 
     /**
      * Get the current world time
      *
      * @return world time
      */
-    Duration getTime();
+    Duration time();
 
     /**
      * Get entities which have the given tag
@@ -299,6 +299,6 @@ public interface World {
      * @param tag for which we want to search
      * @return set of entities which have the tag applied
      */
-    Set<Entity> getEntitiesByTag(String tag);
+    Set<Entity> entitiesByTag(String tag);
 
 }

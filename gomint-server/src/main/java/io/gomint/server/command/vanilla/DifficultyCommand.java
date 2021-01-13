@@ -58,7 +58,7 @@ public class DifficultyCommand extends Command {
         }
 
         EntityPlayer executor = (EntityPlayer) sender;
-        executor.getWorld().setDifficulty(difficulty);
+        executor.getWorld().difficulty(difficulty);
 
         return CommandOutput.successful(String.format("Set game difficulty to %s", difficulty.name()));
     }

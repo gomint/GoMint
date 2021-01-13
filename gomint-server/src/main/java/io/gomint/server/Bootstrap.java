@@ -79,7 +79,7 @@ public class Bootstrap {
     }
 
     private static boolean eventDebuggingWanted() {
-        return System.getProperty("gomint.debug_events").equals("true");
+        return "true".equals(System.getProperty("gomint.debug_events"));
     }
 
     private static void enableEventDebugging() {

@@ -292,7 +292,7 @@ public class EntityManager {
 
                     Chunk playerChunk = entityPlayer.getChunk();
                     if (Math.abs(playerChunk.getX() - chunkX) <= entityPlayer.getViewDistance() &&
-                        Math.abs(playerChunk.getZ() - chunkZ) <= entityPlayer.getViewDistance()) {
+                        Math.abs(playerChunk.z() - chunkZ) <= entityPlayer.getViewDistance()) {
                         entityPlayer.getConnection().addToSendQueue(packetEntityMetadata);
                     }
                 }
@@ -419,7 +419,7 @@ public class EntityManager {
 
             Chunk playerChunk = entityPlayer.getChunk();
             if (Math.abs(playerChunk.getX() - chunk.getX()) <= entityPlayer.getViewDistance() &&
-                Math.abs(playerChunk.getZ() - chunk.getZ()) <= entityPlayer.getViewDistance()) {
+                Math.abs(playerChunk.z() - chunk.z()) <= entityPlayer.getViewDistance()) {
 
                 LOGGER.debug("Spawning {} would be in distance for {}", entity, entityPlayer.getName());
 
@@ -456,7 +456,7 @@ public class EntityManager {
         }
 
         // Broadcast entity despawn
-        for (EntityPlayer player : this.world.getPlayers()) {
+        for (EntityPlayer player : this.world.onlinePlayers()) {
             if (player instanceof io.gomint.server.entity.EntityPlayer) {
                 ((io.gomint.server.entity.EntityPlayer) player).getEntityVisibilityManager().removeEntity(entity);
             }

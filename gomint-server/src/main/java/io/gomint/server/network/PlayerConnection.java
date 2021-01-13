@@ -30,7 +30,6 @@ import io.gomint.server.network.packet.PacketBatch;
 import io.gomint.server.network.packet.PacketConfirmChunkRadius;
 import io.gomint.server.network.packet.PacketDisconnect;
 import io.gomint.server.network.packet.PacketEncryptionResponse;
-import io.gomint.server.network.packet.PacketHotbar;
 import io.gomint.server.network.packet.PacketInventoryTransaction;
 import io.gomint.server.network.packet.PacketLogin;
 import io.gomint.server.network.packet.PacketMovePlayer;
@@ -890,7 +889,7 @@ public class PlayerConnection implements ConnectionWithState {
         packet.setRuntimeEntityId(entityId);
         packet.setGamemode(EnumConnectors.GAMEMODE_CONNECTOR.convert(this.entity.getGamemode()).getMagicNumber());
 
-        Location spawn = this.entity.getSpawnLocation() != null ? this.entity.getSpawnLocation() : world.getSpawnLocation();
+        Location spawn = this.entity.getSpawnLocation() != null ? this.entity.getSpawnLocation() : world.spawnLocation();
 
         packet.setLocation(this.entity.getLocation());
         packet.setSpawn(spawn);
@@ -900,14 +899,14 @@ public class PlayerConnection implements ConnectionWithState {
 
         Biome biome = world.getBiome(spawn.toBlockPosition());
         packet.setBiomeType(PacketStartGame.BIOME_TYPE_DEFAULT);
-        packet.setBiomeName(biome.getName());
+        packet.setBiomeName(biome.biomeName());
         packet.setDimension(0);
 
         packet.setSeed(12345);
         packet.setGenerator(1);
-        packet.setDifficulty(this.entity.getWorld().getDifficulty().getDifficultyDegree());
-        packet.setLevelId(Base64.getEncoder().encodeToString(StringUtil.getUTF8Bytes(world.getWorldName())));
-        packet.setWorldName(world.getWorldName());
+        packet.setDifficulty(this.entity.getWorld().difficulty().getDifficultyDegree());
+        packet.setLevelId(Base64.getEncoder().encodeToString(StringUtil.getUTF8Bytes(world.name())));
+        packet.setWorldName(world.name());
         packet.setTemplateId("");
         packet.setGamerules(world.getGamerules());
         packet.setTexturePacksRequired(false);
@@ -983,7 +982,7 @@ public class PlayerConnection implements ConnectionWithState {
         spawnPosition.setSpawnType(PacketSetSpawnPosition.SpawnType.PLAYER);
         spawnPosition.setPlayerPosition(this.getEntity().getPosition().toBlockPosition());
         spawnPosition.setDimension(this.entity.getWorld().getDimension());
-        spawnPosition.setWorldSpawn(this.getEntity().getWorld().getSpawnLocation().toBlockPosition());
+        spawnPosition.setWorldSpawn(this.getEntity().getWorld().spawnLocation().toBlockPosition());
         addToSendQueue(spawnPosition);
     }
 
@@ -992,13 +991,13 @@ public class PlayerConnection implements ConnectionWithState {
         spawnPosition.setSpawnType(PacketSetSpawnPosition.SpawnType.WORLD);
         spawnPosition.setPlayerPosition(this.getEntity().getPosition().toBlockPosition());
         spawnPosition.setDimension(this.entity.getWorld().getDimension());
-        spawnPosition.setWorldSpawn(this.getEntity().getWorld().getSpawnLocation().toBlockPosition());
+        spawnPosition.setWorldSpawn(this.getEntity().getWorld().spawnLocation().toBlockPosition());
         addToSendQueue(spawnPosition);
     }
 
     public void sendDifficulty() {
         PacketSetDifficulty setDifficulty = new PacketSetDifficulty();
-        setDifficulty.setDifficulty(this.entity.getWorld().getDifficulty().getDifficultyDegree());
+        setDifficulty.setDifficulty(this.entity.getWorld().difficulty().getDifficultyDegree());
         addToSendQueue(setDifficulty);
     }
 
@@ -1011,7 +1010,7 @@ public class PlayerConnection implements ConnectionWithState {
     public void resetQueuedChunks() {
         if (!this.entity.getChunkSendQueue().isEmpty()) {
             for (ChunkAdapter adapter : this.entity.getChunkSendQueue()) {
-                long hash = CoordinateUtils.toLong(adapter.getX(), adapter.getZ());
+                long hash = CoordinateUtils.toLong(adapter.getX(), adapter.z());
                 this.loadingChunks.remove(hash);
                 adapter.releaseForConnection();
             }

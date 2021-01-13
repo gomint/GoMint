@@ -58,7 +58,7 @@ public class PacketInventoryTransactionHandler implements PacketHandler<PacketIn
                 double distance = packetPosition.distanceSquared(playerPosition);
                 double offsetLimit = 0.5;
                 if (distance > offsetLimit) {
-                    Block block = connection.getEntity().getWorld().getBlockAt(playerPosition.toBlockPosition());
+                    Block block = connection.getEntity().getWorld().blockAt(playerPosition.toBlockPosition());
                     LOGGER.warn("Mismatching position: {} -> {} / {}", distance, playerPosition, block.getClass().getSimpleName());
                     reset(packet, connection);
                     return;
@@ -255,7 +255,7 @@ public class PacketInventoryTransactionHandler implements PacketHandler<PacketIn
                 }
 
                 // Transaction seems valid
-                io.gomint.server.world.block.Block block = connection.getEntity().getWorld().getBlockAt(connection.getEntity().getGamemode() == Gamemode.CREATIVE ? packet.getBlockPosition() : connection.getEntity().getBreakVector());
+                io.gomint.server.world.block.Block block = connection.getEntity().getWorld().blockAt(connection.getEntity().getGamemode() == Gamemode.CREATIVE ? packet.getBlockPosition() : connection.getEntity().getBreakVector());
                 if (block != null) {
                     BlockBreakEvent blockBreakEvent = new BlockBreakEvent(connection.getEntity(), block, connection.getEntity().getGamemode() == Gamemode.CREATIVE ? new ArrayList() : block.getDrops(itemInHand));
                     blockBreakEvent.setCancelled(connection.getEntity().getGamemode() == Gamemode.ADVENTURE); // TODO: Better handling for canBreak rules for adventure gamemode
@@ -442,7 +442,7 @@ public class PacketInventoryTransactionHandler implements PacketHandler<PacketIn
 
         // Now check if we need to reset blocks
         if (packet.getBlockPosition() != null) {
-            io.gomint.server.world.block.Block blockClicked = connection.getEntity().getWorld().getBlockAt(packet.getBlockPosition());
+            io.gomint.server.world.block.Block blockClicked = connection.getEntity().getWorld().blockAt(packet.getBlockPosition());
             blockClicked.send(connection);
 
             if (packet.getFace() != null) {

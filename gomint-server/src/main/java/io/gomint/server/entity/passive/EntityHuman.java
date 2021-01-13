@@ -44,7 +44,6 @@ import io.gomint.world.Difficulty;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
@@ -192,7 +191,7 @@ public class EntityHuman extends EntityCreature implements io.gomint.entity.pass
                 float hunger = hungerInstance.getValue();
                 float health = -1;
 
-                Difficulty difficulty = this.world.getDifficulty();
+                Difficulty difficulty = this.world.difficulty();
                 if (difficulty == Difficulty.PEACEFUL && this.foodTicks % 10 == 0) {
                     if (hunger < hungerInstance.getMaxValue()) {
                         this.addHunger(1.0f);

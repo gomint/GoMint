@@ -32,7 +32,7 @@ public class OrePopulator implements Populator {
             for ( int i = 0; i < type.getClusterCount(); i++ ) {
                 int x = random.nextInt( 15 ) + chunk.getX() * 16;
                 int y = random.nextInt( type.getMaxHeight() - type.getMinHeight() ) + type.getMinHeight();
-                int z = random.nextInt( 15 ) + chunk.getZ() * 16;
+                int z = random.nextInt( 15 ) + chunk.z() * 16;
 
                 if ( ore.canPlaceObject( world, x, y, z ) ) {
                     ore.placeObject( world, x, y, z );

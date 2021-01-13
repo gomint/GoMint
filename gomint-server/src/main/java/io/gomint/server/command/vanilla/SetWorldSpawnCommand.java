@@ -44,7 +44,7 @@ public class SetWorldSpawnCommand extends Command {
         }
 
         this.floorLocation(worldSpawnLocation);
-        affectedWorld.setSpawnLocation(worldSpawnLocation);
+        affectedWorld.spawnLocation(worldSpawnLocation);
 
         return CommandOutput.successful(String.format("Set the world spawn point to (%.1f, %.1f, %.1f)",
             worldSpawnLocation.getX(),

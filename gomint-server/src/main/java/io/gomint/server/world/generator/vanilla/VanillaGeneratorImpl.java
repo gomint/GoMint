@@ -162,7 +162,7 @@ public class VanillaGeneratorImpl extends VanillaGenerator {
         boolean needsToCopy = false;
 
         // Ok we have a unpacked server now, we need to copy it over
-        File tempServer = new File(temp, "server-" + world.getWorldName());
+        File tempServer = new File(temp, "server-" + world.folder());
         if (!tempServer.exists()) {
             tempServer.mkdirs();
             needsToCopy = true;
@@ -439,7 +439,7 @@ public class VanillaGeneratorImpl extends VanillaGenerator {
     }
 
     @Override
-    public BlockPosition getSpawnPoint() {
+    public BlockPosition spawnPoint() {
         try {
             return this.spawnPointFuture.get();
         } catch (InterruptedException | ExecutionException e) {

@@ -158,7 +158,7 @@ public class EntityItem extends Entity implements EntityItemDrop {
                 packet.setItemEntityId( this.getEntityId() );
                 packet.setPlayerEntityId( player.getEntityId() );
 
-                for ( io.gomint.entity.EntityPlayer announcePlayer : this.world.getPlayers() ) {
+                for ( io.gomint.entity.EntityPlayer announcePlayer : this.world.onlinePlayers() ) {
                     if ( announcePlayer instanceof EntityPlayer ) {
                         ( (EntityPlayer) announcePlayer ).getConnection().addToSendQueue( packet );
                     }

@@ -119,7 +119,7 @@ public class Location extends Vector {
     }
 
     public <T extends Block> T getBlock() {
-        return this.world.getBlockAt( MathUtils.fastFloor( this.x ), MathUtils.fastFloor( this.y ), MathUtils.fastFloor( this.z ) );
+        return this.world.blockAt( MathUtils.fastFloor( this.x ), MathUtils.fastFloor( this.y ), MathUtils.fastFloor( this.z ) );
     }
 
 

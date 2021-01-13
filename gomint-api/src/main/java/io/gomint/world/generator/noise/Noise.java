@@ -21,9 +21,9 @@ public abstract class Noise {
     protected double persistence;
     protected double expansion;
 
-    public abstract double getNoise2D( double x, double z );
+    public abstract double noise2D(double x, double z );
 
-    public abstract double getNoise3D( double x, double y, double z );
+    public abstract double noise3D(double x, double y, double z );
 
     public double noise2D( double x, double z, boolean normalized ) {
         double result = 0;
@@ -35,7 +35,7 @@ public abstract class Noise {
         z *= this.expansion;
 
         for ( int i = 0; i < this.octaves; ++i ) {
-            result += this.getNoise2D( x * freq, z * freq ) * amp;
+            result += this.noise2D( x * freq, z * freq ) * amp;
             max += amp;
             freq *= 2;
             amp *= this.persistence;
@@ -59,7 +59,7 @@ public abstract class Noise {
         z *= this.expansion;
 
         for ( int i = 0; i < this.octaves; ++i ) {
-            result += this.getNoise3D( x * freq, y * freq, z * freq ) * amp;
+            result += this.noise3D( x * freq, y * freq, z * freq ) * amp;
             max += amp;
             freq *= 2;
             amp *= this.persistence;
@@ -72,7 +72,7 @@ public abstract class Noise {
         return result;
     }
 
-    public double[][][] getFastNoise3D( int xSize, int ySize, int zSize, int xSamplingRate, int ySamplingRate, int zSamplingRate, int x, int y, int z ) {
+    public double[][][] fastNoise3D(int xSize, int ySize, int zSize, int xSamplingRate, int ySamplingRate, int zSamplingRate, int x, int y, int z ) {
         if ( xSamplingRate == 0 ) {
             throw new IllegalArgumentException( "xSamplingRate cannot be 0" );
         }

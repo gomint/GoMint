@@ -1,7 +1,6 @@
 package io.gomint.server.network.handler;
 
 import io.gomint.event.player.*;
-import io.gomint.server.enchant.EnchantmentSelector;
 import io.gomint.server.network.PlayerConnection;
 import io.gomint.server.network.packet.PacketPlayerAction;
 import io.gomint.server.world.LevelEvent;
@@ -86,7 +85,7 @@ public class PacketPlayerActionHandler implements PacketHandler<PacketPlayerActi
                 if ( connection.getEntity().canInteract( packet.getPosition().toVector().add( .5f, .5f, .5f ), 13 ) ) {
                     PlayerInteractEvent event = connection.getServer()
                         .pluginManager().callEvent( new PlayerInteractEvent( connection.getEntity(),
-                            PlayerInteractEvent.ClickType.LEFT, connection.getEntity().getWorld().getBlockAt( packet.getPosition() ) ) );
+                            PlayerInteractEvent.ClickType.LEFT, connection.getEntity().getWorld().blockAt( packet.getPosition() ) ) );
 
                     connection.setStartBreakResult( !event.isCancelled() && connection.getEntity().getStartBreak() == 0 );
 
@@ -178,7 +177,7 @@ public class PacketPlayerActionHandler implements PacketHandler<PacketPlayerActi
             case CONTINUE_BREAK:
                 // Broadcast break effects
                 if ( connection.getEntity().getBreakVector() != null ) {
-                    Block block = connection.getEntity().getWorld().getBlockAt( connection.getEntity().getBreakVector() );
+                    Block block = connection.getEntity().getWorld().blockAt( connection.getEntity().getBreakVector() );
                     int runtimeId = block.getRuntimeId();
 
                     connection.getEntity().getWorld().sendLevelEvent(
@@ -234,7 +233,7 @@ public class PacketPlayerActionHandler implements PacketHandler<PacketPlayerActi
         connection.getEntity().setBreakVector( packet.getPosition() );
         connection.getEntity().setStartBreak( currentTimeMillis );
 
-        Block block = connection.getEntity().getWorld().getBlockAt( packet.getPosition() );
+        Block block = connection.getEntity().getWorld().blockAt( packet.getPosition() );
 
         if ( !block.getSide(packet.getFace()).punch( connection.getEntity() ) ) {
             long breakTime = block.getFinalBreakTime( connection.getEntity().getInventory().getItemInHand(), connection.getEntity() );

@@ -29,7 +29,7 @@ public class PopulatorComponent implements Populator, Component {
     }
 
     @Override
-    public List<io.gomint.world.generator.populator.Populator> getPopulators() {
+    public List<io.gomint.world.generator.populator.Populator> populators() {
         return this.populators;
     }
 

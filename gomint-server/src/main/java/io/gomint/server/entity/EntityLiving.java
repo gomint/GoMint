@@ -182,7 +182,7 @@ public abstract class EntityLiving extends Entity implements InventoryHolder, io
                 }
             }
 
-            io.gomint.server.world.block.Block standingIn = this.world.getBlockAt(this.getPosition().toBlockPosition());
+            io.gomint.server.world.block.Block standingIn = this.world.blockAt(this.getPosition().toBlockPosition());
             standingIn.onEntityStanding(this);
 
             this.lastUpdateDT = 0;

@@ -75,7 +75,7 @@ public interface GoMint {
 
     /**
      * Create a empty block to be placed into the world with {@link Block#copyFromBlock(Block)} or
-     * {@link Chunk#setBlock(int, int, int, Block)}
+     * {@link Chunk#block(int, int, int, Block)}
      *
      * @param blockClass class of the block we want to create
      * @param <T>        type of block which the target object should have

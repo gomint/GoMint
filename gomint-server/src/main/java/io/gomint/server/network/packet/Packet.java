@@ -17,7 +17,6 @@ import io.gomint.server.GoMintServer;
 import io.gomint.server.entity.EntityLink;
 import io.gomint.server.network.type.CommandOrigin;
 import io.gomint.server.player.PlayerSkin;
-import io.gomint.server.util.DumpUtil;
 import io.gomint.server.util.Things;
 import io.gomint.taglib.AllocationLimitReachedException;
 import io.gomint.taglib.NBTReader;
@@ -314,15 +313,15 @@ public abstract class Packet {
 
         buffer.writeUnsignedVarInt(gamerules.size());
         gamerules.forEach((gamerule, value) -> {
-            buffer.writeString(gamerule.getNbtName().toLowerCase());
+            buffer.writeString(gamerule.name().toLowerCase());
 
-            if (gamerule.getValueType() == Boolean.class) {
+            if (gamerule.valueType() == Boolean.class) {
                 buffer.writeByte((byte) 1);
                 buffer.writeBoolean((Boolean) value);
-            } else if (gamerule.getValueType() == Integer.class) {
+            } else if (gamerule.valueType() == Integer.class) {
                 buffer.writeByte((byte) 2);
                 buffer.writeUnsignedVarInt((Integer) value);
-            } else if (gamerule.getValueType() == Float.class) {
+            } else if (gamerule.valueType() == Float.class) {
                 buffer.writeByte((byte) 3);
                 buffer.writeLFloat((Float) value);
             }

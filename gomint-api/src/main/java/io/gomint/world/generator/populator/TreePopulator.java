@@ -45,7 +45,7 @@ public class TreePopulator implements Populator {
             int y = this.getHighestWorkableBlock( chunk, x, z );
 
             if ( y != -1 ) {
-                this.tree.grow( world, chunk.getX() * 16 + x, y, chunk.getZ() * 16 + z, random );
+                this.tree.grow( world, chunk.getX() * 16 + x, y, chunk.z() * 16 + z, random );
             }
         }
     }
@@ -53,7 +53,7 @@ public class TreePopulator implements Populator {
     private int getHighestWorkableBlock( Chunk chunk, int x, int z ) {
         int y = 255;
         for ( ; y > 0; --y ) {
-            Block block = chunk.getBlockAt( x, y, z );
+            Block block = chunk.blockAt( x, y, z );
             if ( block.getBlockType() == BlockType.DIRT || block.getBlockType() == BlockType.GRASS_BLOCK ) {
                 break;
             } else if ( block.getBlockType() != BlockType.AIR && block.getBlockType() != BlockType.SNOW_LAYER ) {

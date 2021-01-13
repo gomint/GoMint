@@ -17,7 +17,6 @@ import io.gomint.server.GoMintServer;
 import io.gomint.server.entity.EntityPlayer;
 import io.gomint.server.plugin.PluginClassloader;
 import io.gomint.server.util.Allocator;
-import io.gomint.server.util.BlockIdentifier;
 import io.gomint.server.world.BlockRuntimeIDs;
 import io.gomint.server.world.ChunkAdapter;
 import io.gomint.server.world.ChunkCache;
@@ -95,7 +94,7 @@ public class LevelDBWorldAdapter extends WorldAdapter {
         this.constructGenerator(generator, context);
 
         // Generate a spawnpoint
-        BlockPosition spawnPoint = this.chunkGenerator.getSpawnPoint();
+        BlockPosition spawnPoint = this.chunkGenerator.spawnPoint();
         this.spawn = new Location(this, spawnPoint.getX(), spawnPoint.getY(), spawnPoint.getZ());
 
         // Take over level name
@@ -210,7 +209,7 @@ public class LevelDBWorldAdapter extends WorldAdapter {
 
         // Gamerules
         for (Map.Entry<Gamerule, Object> entry : this.gamerules.entrySet()) {
-            compound.addValue(entry.getKey().getNbtName(), entry.getKey().createNBTValue(entry.getValue()));
+            compound.addValue(entry.getKey().name(), entry.getKey().createNBTValue(entry.getValue()));
         }
 
         // Save generator
@@ -230,14 +229,14 @@ public class LevelDBWorldAdapter extends WorldAdapter {
     private void saveGenerator(NBTTagCompound compound) {
         if (this.chunkGenerator instanceof NormalGenerator) {
             compound.addValue("Generator", 1);
-            compound.addValue("RandomSeed", (long) this.chunkGenerator.getContext().get("seed"));
+            compound.addValue("RandomSeed", (long) this.chunkGenerator.context().get("seed"));
         } else if (this.chunkGenerator instanceof LayeredGenerator) {
             compound.addValue("Generator", 2);
             compound.addValue("FlatWorldLayers", "{}"); // TODO: Better persist solution for generators
         } else {
             compound.addValue("Generator", -1);
             compound.addValue("GeneratorClass", this.chunkGenerator.getClass().getName());
-            compound.addValue("GeneratorContext", this.chunkGenerator.getContext().toString());
+            compound.addValue("GeneratorContext", this.chunkGenerator.context().toString());
         }
     }
 
@@ -256,15 +255,17 @@ public class LevelDBWorldAdapter extends WorldAdapter {
     }
 
     @Override
-    public void setSpawnLocation(Location location) {
-        super.setSpawnLocation(location);
+    public WorldAdapter spawnLocation(Location location) {
+        super.spawnLocation(location);
         this.sneakySaveLevelDat();
+        return this;
     }
 
     @Override
-    public void setDifficulty(Difficulty difficulty) {
-        super.setDifficulty(difficulty);
+    public WorldAdapter difficulty(Difficulty difficulty) {
+        super.difficulty(difficulty);
         this.sneakySaveLevelDat();
+        return this;
     }
 
     @Override
@@ -406,9 +407,9 @@ public class LevelDBWorldAdapter extends WorldAdapter {
                         break;
                     default:
                         // Check for game rule
-                        Gamerule gamerule = Gamerule.getByNbtName(path.substring(1));
+                        Gamerule gamerule = Gamerule.byNBTName(path.substring(1));
                         if (gamerule != null) {
-                            this.setGamerule(gamerule, gamerule.createValueFromString(value));
+                            this.gamerule(gamerule, gamerule.createValueFromString(value));
                         }
 
                         break;

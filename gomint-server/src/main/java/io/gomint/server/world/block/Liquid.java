@@ -92,7 +92,7 @@ public abstract class Liquid extends Block implements BlockLiquid {
                 }
 
                 // Check if the block under this is a water block so we can connect those two
-                blockDecay = this.getEffectiveFlowDecay(this.world.getBlockAt(other.getPosition().add(0, -1, 0)));
+                blockDecay = this.getEffectiveFlowDecay(this.world.blockAt(other.getPosition().add(0, -1, 0)));
                 if (blockDecay >= 0) {
                     byte realDecay = (byte) (blockDecay - (decay - 8));
                     vector = vector.add((other.getPosition().getX() - this.getPosition().getX()) * (float) realDecay,
@@ -110,14 +110,14 @@ public abstract class Liquid extends Block implements BlockLiquid {
 
         if (LIQUID_DEPTH.getState(this) >= 8) {
             BlockPosition pos = this.getPosition();
-            if (!this.canFlowInto(this.world.getBlockAt(pos = pos.add(0, 0, -1))) ||
-                !this.canFlowInto(this.world.getBlockAt(pos = pos.add(0, 0, 1))) ||
-                !this.canFlowInto(this.world.getBlockAt(pos = pos.add(-1, 0, 0))) ||
-                !this.canFlowInto(this.world.getBlockAt(pos = pos.add(1, 0, 0))) ||
-                !this.canFlowInto(this.world.getBlockAt(pos = pos.add(0, 1, -1))) ||
-                !this.canFlowInto(this.world.getBlockAt(pos = pos.add(0, 1, 1))) ||
-                !this.canFlowInto(this.world.getBlockAt(pos = pos.add(-1, 1, 0))) ||
-                !this.canFlowInto(this.world.getBlockAt(pos.add(1, 1, 0)))) {
+            if (!this.canFlowInto(this.world.blockAt(pos = pos.add(0, 0, -1))) ||
+                !this.canFlowInto(this.world.blockAt(pos = pos.add(0, 0, 1))) ||
+                !this.canFlowInto(this.world.blockAt(pos = pos.add(-1, 0, 0))) ||
+                !this.canFlowInto(this.world.blockAt(pos = pos.add(1, 0, 0))) ||
+                !this.canFlowInto(this.world.blockAt(pos = pos.add(0, 1, -1))) ||
+                !this.canFlowInto(this.world.blockAt(pos = pos.add(0, 1, 1))) ||
+                !this.canFlowInto(this.world.blockAt(pos = pos.add(-1, 1, 0))) ||
+                !this.canFlowInto(this.world.blockAt(pos.add(1, 1, 0)))) {
                 vector = vector.normalize().add(0, -6, 0);
             }
         }
@@ -275,14 +275,14 @@ public abstract class Liquid extends Block implements BlockLiquid {
                 continue;
             }
 
-            Block other = this.world.getBlockAt(pos);
+            Block other = this.world.blockAt(pos);
             Block sideBock = other.getSide(facing);
             BlockPosition checkingPos = sideBock.getPosition();
 
             if (!this.flowCostVisited.containsKey(checkingPos)) {
                 if (!this.canFlowInto(sideBock)) {
                     this.flowCostVisited.put(checkingPos, FlowState.BLOCKED);
-                } else if (((Block) this.world.getBlockAt(checkingPos.add(BlockPosition.DOWN))).canBeFlowedInto()) {
+                } else if (((Block) this.world.blockAt(checkingPos.add(BlockPosition.DOWN))).canBeFlowedInto()) {
                     this.flowCostVisited.put(checkingPos, FlowState.CAN_FLOW_DOWN);
                 } else {
                     this.flowCostVisited.put(checkingPos, FlowState.CAN_FLOW);
@@ -325,7 +325,7 @@ public abstract class Liquid extends Block implements BlockLiquid {
             Block other = this.getSide(face);
             if (!this.canFlowInto(other)) {
                 this.flowCostVisited.put(other.getPosition(), FlowState.BLOCKED);
-            } else if (((Block) this.world.getBlockAt(this.getPosition().add(BlockPosition.DOWN))).canBeFlowedInto()) {
+            } else if (((Block) this.world.blockAt(this.getPosition().add(BlockPosition.DOWN))).canBeFlowedInto()) {
                 this.flowCostVisited.put(other.getPosition(), FlowState.CAN_FLOW_DOWN);
                 flowCost[j] = maxCost = 0;
             } else if (maxCost > 0) {

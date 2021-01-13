@@ -303,7 +303,7 @@ public abstract class Block implements io.gomint.world.block.Block {
             sInstance.place();
         }
 
-        return this.world.scheduleNeighbourUpdates(this.world.getBlockAt(this.position));
+        return this.world.scheduleNeighbourUpdates(this.world.blockAt(this.position));
     }
 
     void place() {
@@ -384,7 +384,7 @@ public abstract class Block implements io.gomint.world.block.Block {
             worldAdapter.removeTileEntity(this.position);
         }
 
-        Block copy = worldAdapter.getBlockAt(this.position);
+        Block copy = worldAdapter.blockAt(this.position);
 
         long next = copy.update(UpdateReason.BLOCK_ADDED, this.world.getServer().currentTickTime(), 0f);
         if (next > this.world.getServer().currentTickTime()) {
@@ -487,7 +487,7 @@ public abstract class Block implements io.gomint.world.block.Block {
         int y = this.position.getY() + position.getY();
         int z = this.position.getZ() + position.getZ();
 
-        return this.world.getBlockAt(x, y, z);
+        return this.world.blockAt(x, y, z);
     }
 
     /**

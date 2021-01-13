@@ -34,17 +34,17 @@ public class SimpleChunkGeneratorRegistry implements ChunkGeneratorRegistry {
     }
 
     @Override
-    public Class<? extends ChunkGenerator> getGeneratorClass( String name ) {
+    public Class<? extends ChunkGenerator> generatorClass(String name ) {
         return this.registeredGenerators.get( name );
     }
 
     @Override
-    public Collection<String> getRegisteredGenerators() {
+    public Collection<String> registeredGenerators() {
         return this.registeredGenerators.keySet();
     }
 
     @Override
-    public Collection<Class<? extends ChunkGenerator>> getRegisteredGeneratorClasses() {
+    public Collection<Class<? extends ChunkGenerator>> registeredGeneratorClasses() {
         return this.registeredGenerators.values();
     }
 

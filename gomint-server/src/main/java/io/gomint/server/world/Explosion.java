@@ -20,8 +20,6 @@ import io.gomint.world.Particle;
 import io.gomint.world.block.Block;
 import io.gomint.world.block.data.Facing;
 import io.gomint.world.block.BlockTNT;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
@@ -110,7 +108,7 @@ public class Explosion {
                         break;
                     }
 
-                    this.currentBlock = this.source.getWorld().getBlockAt( this.tempBlock );
+                    this.currentBlock = this.source.getWorld().blockAt( this.tempBlock );
                 }
 
                 if ( !( this.currentBlock instanceof Air ) ) {

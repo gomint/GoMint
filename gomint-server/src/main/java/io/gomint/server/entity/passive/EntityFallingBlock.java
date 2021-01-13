@@ -12,8 +12,6 @@ import io.gomint.server.entity.Entity;
 import io.gomint.server.entity.EntityTags;
 import io.gomint.server.entity.EntityType;
 import io.gomint.server.entity.metadata.MetadataContainer;
-import io.gomint.server.network.packet.PacketUpdateBlock;
-import io.gomint.server.network.packet.PacketUpdateBlockSynched;
 import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.world.WorldAdapter;
 import io.gomint.server.world.block.Block;
@@ -62,7 +60,7 @@ public class EntityFallingBlock extends Entity implements io.gomint.entity.passi
             this.despawn();
 
             // Check if block can be replaced
-            Block block = this.world.getBlockAt(this.getLocation().add(-(this.getWidth() / 2), this.getHeight(), -(this.getWidth() / 2)).toBlockPosition());
+            Block block = this.world.blockAt(this.getLocation().add(-(this.getWidth() / 2), this.getHeight(), -(this.getWidth() / 2)).toBlockPosition());
             if ( block.canBeReplaced( null ) ) {
                 block.copyFromBlock(this.block);
             } else {

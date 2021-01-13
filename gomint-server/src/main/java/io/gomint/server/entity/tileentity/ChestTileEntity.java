@@ -74,7 +74,7 @@ public class ChestTileEntity extends ContainerTileEntity implements InventoryHol
     public boolean isPaired() {
         if (this.findable) {
             BlockPosition position = this.getBlock().getPosition();
-            Block other = this.getBlock().getWorld().getBlockAt(this.pairX, position.getY(), this.pairZ);
+            Block other = this.getBlock().getWorld().blockAt(this.pairX, position.getY(), this.pairZ);
             return other.getBlockType() == this.getBlock().getBlockType();
         }
 
@@ -134,7 +134,7 @@ public class ChestTileEntity extends ContainerTileEntity implements InventoryHol
         }
 
         BlockPosition position = this.getBlock().getPosition();
-        Chest other = this.getBlock().getWorld().getBlockAt(this.pairX, position.getY(), this.pairZ);
+        Chest other = this.getBlock().getWorld().blockAt(this.pairX, position.getY(), this.pairZ);
         return other.getTileEntity();
     }
 

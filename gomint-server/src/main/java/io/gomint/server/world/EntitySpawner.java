@@ -21,7 +21,6 @@ import it.unimi.dsi.fastutil.objects.ObjectIterator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -81,10 +80,10 @@ public class EntitySpawner implements Tickable {
                     boolean borderChunk = x == -CHUNK_SPAWN_RADIUS || x == CHUNK_SPAWN_RADIUS ||
                         z == -CHUNK_SPAWN_RADIUS || z == CHUNK_SPAWN_RADIUS;
 
-                    long chunkHash = CoordinateUtils.toLong(x + playerChunk.getX(), z + playerChunk.getZ());
+                    long chunkHash = CoordinateUtils.toLong(x + playerChunk.getX(), z + playerChunk.z());
                     if (!spawnableChunks.contains(chunkHash)) {
                         if (!borderChunk) {
-                            if (player.knowsChunk(x + playerChunk.getX(), z + playerChunk.getZ())) {
+                            if (player.knowsChunk(x + playerChunk.getX(), z + playerChunk.z())) {
                                 spawnableChunks.add(chunkHash);
                             }
                         }
@@ -94,7 +93,7 @@ public class EntitySpawner implements Tickable {
         }
 
         for (EntitySpawnTypes value : EntitySpawnTypes.values()) {
-            Set<Entity> entities = this.world.getEntitiesByTag(value.tag);
+            Set<Entity> entities = this.world.entitiesByTag(value.tag);
 
             int amountOfSpawnedEntities = entities == null ? 0 : entities.size();
             int amountOfSpawnableEntities = value.spawnLimit * spawnableChunks.size() / MOB_COUNT_DIV;
@@ -113,11 +112,11 @@ public class EntitySpawner implements Tickable {
 
     private static Block getRandomChunkBlock(Chunk chunk) {
         int x = chunk.getX();
-        int z = chunk.getZ();
+        int z = chunk.z();
 
         int i = x * 16 + ThreadLocalRandom.current().nextInt(16);
         int j = z * 16 + ThreadLocalRandom.current().nextInt(16);
-        return chunk.getWorld().getHighestBlockAt(i, j).getSide(Facing.UP);
+        return chunk.world().highestBlockAt(i, j).getSide(Facing.UP);
     }
 
 }
