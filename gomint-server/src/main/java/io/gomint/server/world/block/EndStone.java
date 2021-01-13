@@ -29,7 +29,7 @@ public class EndStone extends Block implements BlockEndStone {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.END_STONE;
     }
 

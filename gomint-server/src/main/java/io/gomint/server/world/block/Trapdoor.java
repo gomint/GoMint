@@ -51,7 +51,7 @@ public abstract class Trapdoor extends Block implements BlockTrapdoor {
     }
 
     @Override
-    public List<AxisAlignedBB> getBoundingBox() {
+    public List<AxisAlignedBB> boundingBoxes() {
         float defaultHeight = 0.1875f;
 
         // Basis box

@@ -58,7 +58,7 @@ public class Fence extends Block implements BlockFence {
     }
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
@@ -68,7 +68,7 @@ public class Fence extends Block implements BlockFence {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.FENCE;
     }
 

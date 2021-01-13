@@ -22,7 +22,7 @@ public class JackOLantern extends Block implements BlockJackOLantern {
     }
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
@@ -32,7 +32,7 @@ public class JackOLantern extends Block implements BlockJackOLantern {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.JACK_O_LANTERN;
     }
 

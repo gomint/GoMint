@@ -18,12 +18,12 @@ public class PumpkinStem extends Growable implements BlockPumpkinStem {
     }
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
     @Override
-    public boolean isSolid() {
+    public boolean solid() {
         return false;
     }
 
@@ -33,7 +33,7 @@ public class PumpkinStem extends Growable implements BlockPumpkinStem {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.PUMPKIN_STEM;
     }
 

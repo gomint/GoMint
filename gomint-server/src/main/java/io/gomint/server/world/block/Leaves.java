@@ -81,7 +81,7 @@ public class Leaves extends Block implements BlockLeaves {
     }
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
@@ -96,12 +96,12 @@ public class Leaves extends Block implements BlockLeaves {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.LEAVES;
     }
 
     @Override
-    public List<ItemStack> getDrops(ItemStack itemInHand) {
+    public List<ItemStack> drops(ItemStack itemInHand) {
         LogType type = this.getLeaveType();
 
         List<ItemStack> items = new ArrayList<>();

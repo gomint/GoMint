@@ -187,7 +187,7 @@ public class SmeltingComponent extends AbstractTileEntityComponent {
         if (this.output != null && this.burnTime > 0) {
             // Check if visuals are correct!
             Block maybeBurningFurnace = this.getBlock();
-            if (maybeBurningFurnace.getBlockType() == BlockType.FURNACE) {
+            if (maybeBurningFurnace.blockType() == BlockType.FURNACE) {
                 Furnace furnace = (Furnace) maybeBurningFurnace;
                 if (!furnace.isBurning()) {
                     furnace.setBurning(true);

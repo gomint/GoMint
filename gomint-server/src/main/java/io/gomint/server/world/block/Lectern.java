@@ -38,7 +38,7 @@ public class Lectern extends Block implements BlockLectern {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.LECTERN;
     }
 

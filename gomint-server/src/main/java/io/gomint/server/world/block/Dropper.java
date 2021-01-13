@@ -39,7 +39,7 @@ public class Dropper extends Block implements BlockDropper {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.DROPPER;
     }
 

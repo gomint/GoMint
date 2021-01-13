@@ -29,12 +29,12 @@ public class SignTileTest {
             }
 
             @Override
-            public BlockType getBlockType() {
+            public BlockType blockType() {
                 return null;
             }
 
             @Override
-            public Location getLocation() {
+            public Location location() {
                 return new Location( null, 0, 0, 0 );
             }
         };

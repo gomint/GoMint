@@ -30,7 +30,7 @@ public class TNT extends Block implements BlockTNT {
     private static final BooleanBlockState EXPLODE = new BooleanBlockState(() -> new String[]{"explode_bit"});
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
@@ -63,7 +63,7 @@ public class TNT extends Block implements BlockTNT {
         int primeTicks = (int) ( secondsUntilExplosion * 20f );
 
         // Set this to air
-        this.setBlockType( Air.class );
+        this.blockType( Air.class );
 
         // Spawn tnt entity
         EntityPrimedTNT entityTNT = new EntityPrimedTNT( this.world, this.location.add( 0.5f, 0.5f, 0.5f ), primeTicks );
@@ -86,7 +86,7 @@ public class TNT extends Block implements BlockTNT {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.TNT;
     }
 
@@ -96,7 +96,7 @@ public class TNT extends Block implements BlockTNT {
     }
 
     @Override
-    public List<ItemStack> getDrops(ItemStack itemInHand) {
+    public List<ItemStack> drops(ItemStack itemInHand) {
         ItemTNT item = ItemTNT.create(1);
         return Collections.singletonList(item);
     }

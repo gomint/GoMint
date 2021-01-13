@@ -24,12 +24,12 @@ public class StonePressurePlate extends BasePressurePlate implements BlockStoneP
     }
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
     @Override
-    public boolean isSolid() {
+    public boolean solid() {
         return false;
     }
 
@@ -39,7 +39,7 @@ public class StonePressurePlate extends BasePressurePlate implements BlockStoneP
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.STONE_PRESSURE_PLATE;
     }
 

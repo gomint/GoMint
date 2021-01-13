@@ -28,7 +28,7 @@ public class HayBale extends Block implements BlockHayBale {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.HAY_BALE;
     }
 

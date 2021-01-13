@@ -65,7 +65,7 @@ public class Sand extends Fallable implements BlockSand {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.SAND;
     }
 
@@ -81,7 +81,7 @@ public class Sand extends Fallable implements BlockSand {
     }
 
     @Override
-    public List<ItemStack> getDrops(ItemStack itemInHand) {
+    public List<ItemStack> drops(ItemStack itemInHand) {
         ItemSand sand = ItemSand.create(1);
         sand.setType(this.getType());
         return Collections.singletonList(sand);

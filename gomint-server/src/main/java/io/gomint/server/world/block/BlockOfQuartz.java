@@ -59,7 +59,7 @@ public class BlockOfQuartz extends Block implements BlockBlockOfQuartz {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.BLOCK_OF_QUARTZ;
     }
 
@@ -88,9 +88,9 @@ public class BlockOfQuartz extends Block implements BlockBlockOfQuartz {
     }
 
     @Override
-    public List<ItemStack> getDrops(ItemStack itemInHand) {
+    public List<ItemStack> drops(ItemStack itemInHand) {
         if (isCorrectTool(itemInHand)) {
-            return super.getDrops(itemInHand);
+            return super.drops(itemInHand);
         }
 
         return Collections.emptyList();

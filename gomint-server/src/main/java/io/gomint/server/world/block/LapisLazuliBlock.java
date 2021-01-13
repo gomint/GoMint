@@ -30,7 +30,7 @@ public class LapisLazuliBlock extends Block implements BlockLapisLazuliBlock {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.LAPIS_LAZULI_BLOCK;
     }
 

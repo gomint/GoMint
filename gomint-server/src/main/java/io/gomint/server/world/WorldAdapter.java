@@ -1063,7 +1063,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
                         }
 
                         if (returnBoundingBoxes) {
-                            List<AxisAlignedBB> bbs = block.getBoundingBox();
+                            List<AxisAlignedBB> bbs = block.boundingBoxes();
                             if (bbs != null) {
                                 values.addAll(bbs);
                             }
@@ -1166,7 +1166,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
             Block block = ((io.gomint.server.inventory.item.ItemStack) itemInHand).getBlock();
             boolean canBePlaced = block != null && !(itemInHand instanceof ItemAir);
             if (canBePlaced) {
-                Block blockReplace = blockClicked.getSide(face);
+                Block blockReplace = blockClicked.side(face);
                 io.gomint.server.world.block.Block replaceBlock = (io.gomint.server.world.block.Block) blockReplace;
 
                 if (clickedBlock.canBeReplaced(itemInHand)) {
@@ -1181,8 +1181,8 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
                     entity, clickedBlock, replaceBlock, face, itemInHand, clickPosition);
                 if (success) {
                     // Play sound
-                    io.gomint.server.world.block.Block newBlock = replaceBlock.getWorld().blockAt(replaceBlock.getPosition());
-                    playSound(null, new Vector(newBlock.getPosition()), Sound.PLACE, (byte) 1, BlockRuntimeIDs.toBlockIdentifier(newBlock.getBlockId(), null).getRuntimeId());
+                    io.gomint.server.world.block.Block newBlock = replaceBlock.world().blockAt(replaceBlock.position());
+                    playSound(null, new Vector(newBlock.position()), Sound.PLACE, (byte) 1, BlockRuntimeIDs.toBlockIdentifier(newBlock.getBlockId(), null).getRuntimeId());
 
                     if (entity.getGamemode() != Gamemode.CREATIVE) {
                         ((io.gomint.server.inventory.item.ItemStack) itemInHand).afterPlacement();
@@ -1204,17 +1204,17 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
 
         io.gomint.server.world.block.Block implBlock = (io.gomint.server.world.block.Block) block;
         for (Facing face : Facing.values()) {
-            io.gomint.server.world.block.Block neighbourBlock = implBlock.getSide(face);
+            io.gomint.server.world.block.Block neighbourBlock = implBlock.side(face);
 
             // CHECKSTYLE:OFF
             try {
                 long next = neighbourBlock.update(UpdateReason.NEIGHBOUR_UPDATE, this.server.currentTickTime(), 0f);
                 if (next > this.server.currentTickTime()) {
-                    BlockPosition position = neighbourBlock.getPosition();
+                    BlockPosition position = neighbourBlock.position();
                     this.tickQueue.add(next, position);
                 }
             } catch (Exception e) {
-                this.logger.error("Exception while updating block @ {}", neighbourBlock.getPosition(), e);
+                this.logger.error("Exception while updating block @ {}", neighbourBlock.position(), e);
             }
             // CHECKSTYLE:ON
         }
@@ -1314,7 +1314,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
         if (block.onBreak(creative)) {
             if (!drops.isEmpty()) {
                 for (ItemStack itemStack : drops) {
-                    EntityItem item = this.createItemDrop(new Vector(block.getPosition()).add(0.5f, 0.5f, 0.5f), itemStack);
+                    EntityItem item = this.createItemDrop(new Vector(block.position()).add(0.5f, 0.5f, 0.5f), itemStack);
                     item.setVelocity(new Vector(ThreadLocalRandom.current().nextFloat() * 0.2f - 0.1f, 0.2f, ThreadLocalRandom.current().nextFloat() * 0.2f - 0.1f));
                 }
             }

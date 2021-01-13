@@ -22,7 +22,7 @@ public class StickyPistonHead extends Block implements BlockPistonHead {
     }
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
@@ -32,12 +32,12 @@ public class StickyPistonHead extends Block implements BlockPistonHead {
     }
 
     @Override
-    public List<ItemStack> getDrops( ItemStack itemInHand ) {
+    public List<ItemStack> drops(ItemStack itemInHand ) {
         return new ArrayList<>();
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.PISTON_HEAD;
     }
 

@@ -24,7 +24,7 @@ public class Reserved6 extends Block {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.RESERVED6;
     }
 

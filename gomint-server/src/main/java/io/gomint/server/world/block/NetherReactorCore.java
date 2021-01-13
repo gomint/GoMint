@@ -25,7 +25,7 @@ public class NetherReactorCore extends Block implements BlockNetherReactorCore {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.NETHER_REACTOR_CORE;
     }
 

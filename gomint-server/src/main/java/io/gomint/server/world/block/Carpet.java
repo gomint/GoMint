@@ -21,12 +21,12 @@ public class Carpet extends Block implements BlockCarpet {
     }
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
     @Override
-    public List<AxisAlignedBB> getBoundingBox() {
+    public List<AxisAlignedBB> boundingBoxes() {
         return Collections.singletonList( new AxisAlignedBB(
             this.location.getX(),
             this.location.getY(),
@@ -43,7 +43,7 @@ public class Carpet extends Block implements BlockCarpet {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.CARPET;
     }
 

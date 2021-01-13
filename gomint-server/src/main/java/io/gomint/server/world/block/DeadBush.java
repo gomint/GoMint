@@ -18,12 +18,12 @@ public class DeadBush extends Block implements BlockDeadBush {
     }
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
     @Override
-    public boolean isSolid() {
+    public boolean solid() {
         return false;
     }
 
@@ -43,7 +43,7 @@ public class DeadBush extends Block implements BlockDeadBush {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.DEAD_BUSH;
     }
 

@@ -23,7 +23,7 @@ public class SeaLantern extends Block implements BlockSeaLantern {
     }
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
@@ -33,7 +33,7 @@ public class SeaLantern extends Block implements BlockSeaLantern {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.SEA_LANTERN;
     }
 

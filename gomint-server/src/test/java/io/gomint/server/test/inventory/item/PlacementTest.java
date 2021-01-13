@@ -46,7 +46,7 @@ public class PlacementTest extends IntegrationTest {
     @Order(2)
     public void placeAll() throws IOException {
         Block block = this.world.blockAt(50, 50, 50);
-        Block downBlock = block.getSide(Facing.DOWN);
+        Block downBlock = block.side(Facing.DOWN);
 
         EntityPlayer player = mock(EntityPlayer.class);
         when(player.getWorld()).thenReturn(this.world);
@@ -57,7 +57,7 @@ public class PlacementTest extends IntegrationTest {
             Class<? extends ItemStack> clazz = classInfo.load();
             ItemStack stack = this.server.createItemStack(clazz, 1);
             if (stack != null) {
-                block.setBlockType(BlockAir.class);
+                block.blockType(BlockAir.class);
 
                 System.out.println("Testing stack: " + stack.getClass().getName());
                 Block newBlock = (Block) stack.getBlock();

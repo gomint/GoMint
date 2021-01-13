@@ -68,7 +68,7 @@ public abstract class TileEntity {
      * @param reason   why should this tile be serialized?
      */
     public void toCompound(NBTTagCompound compound, SerializationReason reason) {
-        BlockPosition position = this.block.getPosition();
+        BlockPosition position = this.block.position();
 
         compound.addValue("x", position.getX());
         compound.addValue("y", position.getY());

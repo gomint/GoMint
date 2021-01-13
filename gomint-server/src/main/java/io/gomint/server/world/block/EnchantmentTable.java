@@ -35,7 +35,7 @@ public class EnchantmentTable extends Block implements BlockEnchantmentTable {
     }
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
@@ -45,7 +45,7 @@ public class EnchantmentTable extends Block implements BlockEnchantmentTable {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.ENCHANTMENT_TABLE;
     }
 

@@ -39,7 +39,7 @@ public class SoulSoil extends Block implements BlockSoulSoil {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.SOUL_SOIL;
     }
 

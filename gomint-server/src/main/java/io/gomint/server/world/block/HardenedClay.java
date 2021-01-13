@@ -30,7 +30,7 @@ public class HardenedClay extends Block implements BlockHardenedClay {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.HARDENED_CLAY;
     }
 

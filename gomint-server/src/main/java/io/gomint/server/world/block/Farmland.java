@@ -33,7 +33,7 @@ public class Farmland extends Block implements BlockFarmland {
     }
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
@@ -85,7 +85,7 @@ public class Farmland extends Block implements BlockFarmland {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.FARMLAND;
     }
 

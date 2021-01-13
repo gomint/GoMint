@@ -30,7 +30,7 @@ public class MobSpawner extends Block implements BlockMobSpawner {
     }
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
@@ -40,7 +40,7 @@ public class MobSpawner extends Block implements BlockMobSpawner {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.MOB_SPAWNER;
     }
 
@@ -50,7 +50,7 @@ public class MobSpawner extends Block implements BlockMobSpawner {
     }
 
     @Override
-    public List<ItemStack> getDrops( ItemStack itemInHand ) {
+    public List<ItemStack> drops(ItemStack itemInHand ) {
         ((WorldAdapter) this.location.getWorld()).createExpOrb( this.location, ThreadLocalRandom.current().nextInt( 15 ) + ThreadLocalRandom.current().nextInt( 15 ) + 15 );
 
         return new ArrayList<>();

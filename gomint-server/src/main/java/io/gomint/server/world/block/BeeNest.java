@@ -34,7 +34,7 @@ public class BeeNest extends Block {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.BEE_NEST;
     }
 

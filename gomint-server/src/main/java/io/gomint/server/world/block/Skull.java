@@ -36,12 +36,12 @@ public class Skull extends Block implements BlockSkull {
     }
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
     @Override
-    public List<AxisAlignedBB> getBoundingBox() {
+    public List<AxisAlignedBB> boundingBoxes() {
         return Collections.singletonList(new AxisAlignedBB(
             this.location.getX() + 0.25f,
             this.location.getY(),
@@ -83,7 +83,7 @@ public class Skull extends Block implements BlockSkull {
     }
 
     @Override
-    public List<ItemStack> getDrops(ItemStack itemInHand) {
+    public List<ItemStack> drops(ItemStack itemInHand) {
         ItemSkull item = ItemSkull.create(1);
         item.setSkullType(this.getSkullType());
         return Collections.singletonList(item);
@@ -95,7 +95,7 @@ public class Skull extends Block implements BlockSkull {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.SKULL;
     }
 

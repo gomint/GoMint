@@ -326,7 +326,7 @@ public abstract class Entity implements io.gomint.entity.Entity {
                     if ( this.onGround && ( Math.abs( this.getMotionX() ) > 0.00001 || Math.abs( this.getMotionZ() ) > 0.00001 ) ) {
                         friction = this.world.blockAt( (int) this.getPositionX(),
                             (int) ( this.getPositionY() - 1 ),
-                            (int) this.getPositionZ() ).getFrictionFactor() * 0.91f;
+                            (int) this.getPositionZ() ).frictionFactor() * 0.91f;
                     }
 
                     // Calculate new motion
@@ -600,14 +600,14 @@ public abstract class Entity implements io.gomint.entity.Entity {
 
         // Are we stuck inside a block?
         Block block = this.world.blockAt( fullBlockX, fullBlockY, fullBlockZ );
-        if ( block.isSolid() && block.intersectsWith( this.boundingBox ) ) {
+        if ( block.solid() && block.intersectsWith( this.boundingBox ) ) {
             // We need to check for "smooth" movement when its a player (it climbs .5 steps in .3 -> .420 -> .468 .487 .495 .498 .499 steps
             if ( this instanceof EntityPlayer && ( this.stuckInBlockTicks++ <= 20 || ( (EntityPlayer) this ).getAdventureSettings().isNoClip() ) ) { // Yes we can "smooth" for up to 20 ticks, thanks mojang :D
                 return;
             }
 
             LOGGER.debug( "Entity {}({}) [{}] @ {} is stuck in a block {} @ {} -> {}",
-                this.getClass().getSimpleName(), this.getEntityId(), this.stuckInBlockTicks, this.getLocation(), block.getClass().getSimpleName(), block.getPosition(), block.getBoundingBox() );
+                this.getClass().getSimpleName(), this.getEntityId(), this.stuckInBlockTicks, this.getLocation(), block.getClass().getSimpleName(), block.position(), block.boundingBoxes() );
 
             // Calc with how much force we can get out of here, this depends on how far we are in
             float diffX = this.transform.getPositionX() - fullBlockX;
@@ -618,12 +618,12 @@ public abstract class Entity implements io.gomint.entity.Entity {
             double force = Math.random() * 0.2 + 0.1;
 
             // Check for free blocks
-            boolean freeMinusX = !this.world.blockAt( fullBlockX - 1, fullBlockY, fullBlockZ ).isSolid();
-            boolean freePlusX = !this.world.blockAt( fullBlockX + 1, fullBlockY, fullBlockZ ).isSolid();
-            boolean freeMinusY = !this.world.blockAt( fullBlockX, fullBlockY - 1, fullBlockZ ).isSolid();
-            boolean freePlusY = !this.world.blockAt( fullBlockX, fullBlockY + 1, fullBlockZ ).isSolid();
-            boolean freeMinusZ = !this.world.blockAt( fullBlockX, fullBlockY, fullBlockZ - 1 ).isSolid();
-            boolean freePlusZ = !this.world.blockAt( fullBlockX, fullBlockY, fullBlockZ + 1 ).isSolid();
+            boolean freeMinusX = !this.world.blockAt( fullBlockX - 1, fullBlockY, fullBlockZ ).solid();
+            boolean freePlusX = !this.world.blockAt( fullBlockX + 1, fullBlockY, fullBlockZ ).solid();
+            boolean freeMinusY = !this.world.blockAt( fullBlockX, fullBlockY - 1, fullBlockZ ).solid();
+            boolean freePlusY = !this.world.blockAt( fullBlockX, fullBlockY + 1, fullBlockZ ).solid();
+            boolean freeMinusZ = !this.world.blockAt( fullBlockX, fullBlockY, fullBlockZ - 1 ).solid();
+            boolean freePlusZ = !this.world.blockAt( fullBlockX, fullBlockY, fullBlockZ + 1 ).solid();
 
             // Since we want the lowest amount of push we have to select the smallest side
             byte direction = -1;
@@ -1137,7 +1137,7 @@ public abstract class Entity implements io.gomint.entity.Entity {
         Location eyeLocation = this.getLocation().add( 0, this.eyeHeight, 0 );
         Block block = eyeLocation.getWorld().blockAt( eyeLocation.toBlockPosition() );
         if ( block instanceof StationaryWater || block instanceof FlowingWater ) {
-            float yLiquid = (float) ( block.getPosition().getY() + 1 + ( ( (Liquid) block ).getFillHeight() - 0.12 ) );
+            float yLiquid = (float) ( block.position().getY() + 1 + ( ( (Liquid) block ).getFillHeight() - 0.12 ) );
             return eyeLocation.getY() < yLiquid;
         }
 

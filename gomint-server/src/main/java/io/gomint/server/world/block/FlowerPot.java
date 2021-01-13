@@ -18,7 +18,7 @@ public class FlowerPot extends Block implements BlockFlowerPot {
     }
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
@@ -33,7 +33,7 @@ public class FlowerPot extends Block implements BlockFlowerPot {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.FLOWER_POT;
     }
 

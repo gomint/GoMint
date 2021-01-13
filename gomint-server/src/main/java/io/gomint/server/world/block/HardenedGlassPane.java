@@ -25,7 +25,7 @@ public class HardenedGlassPane extends Block implements BlockHardenedGlassPane {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.HARDENED_GLASS_PANE;
     }
 

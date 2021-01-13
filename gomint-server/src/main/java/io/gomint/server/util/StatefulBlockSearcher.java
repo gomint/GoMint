@@ -74,7 +74,7 @@ public class StatefulBlockSearcher {
                     // Get the block instance
                     Block block = this.world.blockAt( x, y, z );
                     if ( this.predicate.test( block ) ) {
-                        this.foundPosition = block.getPosition();
+                        this.foundPosition = block.position();
                         return;
                     }
                 }

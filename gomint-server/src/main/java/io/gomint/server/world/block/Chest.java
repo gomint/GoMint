@@ -14,7 +14,7 @@ import io.gomint.world.block.BlockType;
 public class Chest extends ChestBase implements BlockChest {
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.CHEST;
     }
 

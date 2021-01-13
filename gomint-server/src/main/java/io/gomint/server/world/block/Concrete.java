@@ -33,7 +33,7 @@ public class Concrete extends Block implements BlockConcrete {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.CONCRETE;
     }
 

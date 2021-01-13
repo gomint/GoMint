@@ -30,7 +30,7 @@ public class Cobblestone extends Block implements BlockCobblestone {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.COBBLESTONE;
     }
 

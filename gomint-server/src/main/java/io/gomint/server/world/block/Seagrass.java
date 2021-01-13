@@ -24,7 +24,7 @@ public class Seagrass extends Block implements BlockSeaGrass {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.SEA_GRASS;
     }
 

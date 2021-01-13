@@ -28,7 +28,7 @@ public class PacketBlockPickRequestHandler implements PacketHandler<PacketBlockP
         switch (player.getGamemode()) {
             case CREATIVE:
                 // When in creative give this player the block in the inventory
-                for (io.gomint.inventory.item.ItemStack drop : block.getDrops(null)) {
+                for (io.gomint.inventory.item.ItemStack drop : block.drops(null)) {
                     player.getInventory().addItem(drop);
                 }
 

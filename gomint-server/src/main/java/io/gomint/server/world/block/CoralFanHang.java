@@ -50,7 +50,7 @@ public class CoralFanHang extends Block implements BlockCoralFanHang {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.CORAL_FAN_HANG;
     }
 

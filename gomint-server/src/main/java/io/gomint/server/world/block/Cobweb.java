@@ -29,12 +29,12 @@ public class Cobweb extends Block implements BlockCobweb {
     }
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
     @Override
-    public boolean isSolid() {
+    public boolean solid() {
         return false;
     }
 
@@ -44,7 +44,7 @@ public class Cobweb extends Block implements BlockCobweb {
     }
 
     @Override
-    public List<ItemStack> getDrops( ItemStack itemInHand ) {
+    public List<ItemStack> drops(ItemStack itemInHand ) {
         if ( isCorrectTool( itemInHand ) ) {
             return new ArrayList<ItemStack>() {{
                 add( ItemString.create( 1 ) );
@@ -60,7 +60,7 @@ public class Cobweb extends Block implements BlockCobweb {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.COBWEB;
     }
 

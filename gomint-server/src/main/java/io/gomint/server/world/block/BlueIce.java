@@ -32,7 +32,7 @@ public class BlueIce extends Block implements BlockBlueIce {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.BLUE_ICE;
     }
 

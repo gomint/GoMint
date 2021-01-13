@@ -34,7 +34,7 @@ public class Podzol extends Block implements BlockPodzol {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.PODZOL;
     }
 
@@ -44,7 +44,7 @@ public class Podzol extends Block implements BlockPodzol {
     }
 
     @Override
-    public List<ItemStack> getDrops( ItemStack itemInHand ) {
+    public List<ItemStack> drops(ItemStack itemInHand ) {
         return new ArrayList<ItemStack>(){{
             add( ItemDirt.create( 1 ) );
         }};

@@ -43,7 +43,7 @@ public class BlockSetBenchmark {
         this.world = server.createWorld("test", new CreateOptions().worldType(WorldType.IN_MEMORY));
 
         Block block = this.world.blockAt(50,5,50);
-        this.log = block.setBlockType(BlockDirt.class);
+        this.log = block.blockType(BlockDirt.class);
     }
 
     @Benchmark

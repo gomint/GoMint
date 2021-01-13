@@ -23,12 +23,12 @@ public class EndPortal extends Block implements BlockEndPortal {
     }
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
     @Override
-    public boolean isSolid() {
+    public boolean solid() {
         return false;
     }
 
@@ -38,7 +38,7 @@ public class EndPortal extends Block implements BlockEndPortal {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.END_PORTAL;
     }
 

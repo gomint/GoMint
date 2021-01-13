@@ -23,7 +23,7 @@ public class EndGateway extends Block implements BlockEndGateway {
     }
 
     @Override
-    public boolean isSolid() {
+    public boolean solid() {
         return false;
     }
 
@@ -33,7 +33,7 @@ public class EndGateway extends Block implements BlockEndGateway {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.END_GATEWAY;
     }
 

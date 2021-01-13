@@ -19,7 +19,7 @@ import io.gomint.world.block.data.Facing;
 @RegisterInfo(sId = "minecraft:cake")
 public class Cake extends Block implements BlockCake {
 
-    private static final ProgressBlockState CAKE_EATEN = new ProgressBlockState(() -> new String[]{"bite_counter"}, 6, b -> b.setBlockType(Air.class));
+    private static final ProgressBlockState CAKE_EATEN = new ProgressBlockState(() -> new String[]{"bite_counter"}, 6, b -> b.blockType(Air.class));
 
     @Override
     public String getBlockId() {
@@ -32,12 +32,12 @@ public class Cake extends Block implements BlockCake {
     }
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
     @Override
-    public boolean isSolid() {
+    public boolean solid() {
         return false;
     }
 
@@ -70,7 +70,7 @@ public class Cake extends Block implements BlockCake {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.CAKE;
     }
 

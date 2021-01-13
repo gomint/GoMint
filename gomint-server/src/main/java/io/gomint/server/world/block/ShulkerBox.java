@@ -69,7 +69,7 @@ public class ShulkerBox extends Block implements BlockShulkerBox {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.SHULKER_BOX;
     }
 

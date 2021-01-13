@@ -30,7 +30,7 @@ public class PurpurBlock extends Block implements BlockPurpurBlock {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.PURPUR_BLOCK;
     }
 

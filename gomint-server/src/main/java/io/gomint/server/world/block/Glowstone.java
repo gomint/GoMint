@@ -29,7 +29,7 @@ public class Glowstone extends Block implements BlockGlowstone {
     }
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
@@ -39,7 +39,7 @@ public class Glowstone extends Block implements BlockGlowstone {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.GLOWSTONE;
     }
 
@@ -49,7 +49,7 @@ public class Glowstone extends Block implements BlockGlowstone {
     }
 
     @Override
-    public List<ItemStack> getDrops( ItemStack itemInHand ) {
+    public List<ItemStack> drops(ItemStack itemInHand ) {
         return new ArrayList<ItemStack>() {{
             add( ItemGlowstoneDust.create( ThreadLocalRandom.current().nextBoolean() ? 2 : 4 ) );
         }};

@@ -30,7 +30,7 @@ public class Prismarine extends Block implements BlockPrismarine {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.PRISMARINE;
     }
 

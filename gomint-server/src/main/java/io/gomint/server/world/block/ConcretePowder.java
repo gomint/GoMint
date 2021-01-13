@@ -46,7 +46,7 @@ public class ConcretePowder extends Block implements BlockConcretePowder {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.CONCRETE_POWDER;
     }
 

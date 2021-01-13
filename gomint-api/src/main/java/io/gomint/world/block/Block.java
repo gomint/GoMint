@@ -30,57 +30,57 @@ public interface Block {
      *
      * @return type of this block
      */
-    BlockType getBlockType();
+    BlockType blockType();
 
     /**
      * Get the level of skylight this block has
      *
      * @return The skylight data of this block
      */
-    byte getSkyLightLevel();
+    byte skyLightLevel();
 
     /**
      * get the level of block light
      *
      * @return The block light data
      */
-    byte getBlockLightLevel();
+    byte blockLightLevel();
 
     /**
      * Does this block let sky light shine trough?
      *
      * @return true when it does, false when it does not
      */
-    boolean isTransparent();
+    boolean transparent();
 
     /**
      * Is this block solid?
      *
      * @return true when its solid, false when not
      */
-    boolean isSolid();
+    boolean solid();
 
     /**
      * Get the current location of this block
      *
-     * @deprecated Use {@link #getPosition()} and {@link #getWorld()} as replacement
      * @return Location of this block
+     * @deprecated Use {@link #position()} and {@link #world()} as replacement
      */
-    Location getLocation();
+    Location location();
 
     /**
      * Get the current block position
      *
      * @return Position of this block
      */
-    BlockPosition getPosition();
+    BlockPosition position();
 
     /**
      * Get the world in which this block is placed
      *
      * @return World in which this block is placed
      */
-    World getWorld();
+    World world();
 
     /**
      * Set the type of this block to another material
@@ -89,25 +89,25 @@ public interface Block {
      * @param blockType the new material of this block
      * @return the new placed block
      */
-    <T extends Block> T setBlockType(Class<T> blockType );
+    <T extends Block> T blockType(Class<T> blockType);
 
     /**
      * Set the data and tiles from a block which has been on the same position before
      *
      * @param block which should be set
-     * @param <T> type of block
+     * @param <T>   type of block
      * @return null when location doesn't match, block when set
      */
-    <T extends Block> T setFromBlock( T block );
+    <T extends Block> T fromBlock(T block);
 
     /**
      * Copy all data from the given block to this block
      *
      * @param block which should be set
-     * @param <T> type of block
+     * @param <T>   type of block
      * @return new block
      */
-    <T extends Block> T copyFromBlock( T block );
+    <T extends Block> T copyFromBlock(T block);
 
     /**
      * Can a bounding box pass through this block?
@@ -121,7 +121,7 @@ public interface Block {
      *
      * @return the bounding boxes of this block (can be multiple for stairs etc.)
      */
-    List<AxisAlignedBB> getBoundingBox();
+    List<AxisAlignedBB> boundingBoxes();
 
     /**
      * Check if the block intersects with the given bounding box
@@ -129,14 +129,14 @@ public interface Block {
      * @param bb bounding box to check
      * @return true when it intersects, false when not
      */
-    boolean intersectsWith( AxisAlignedBB bb );
+    boolean intersectsWith(AxisAlignedBB bb);
 
     /**
      * Describes how slippery a block is
      *
      * @return the amount of blocks something can slip on this block
      */
-    float getFrictionFactor();
+    float frictionFactor();
 
     /**
      * Get the block attached to the given side
@@ -144,7 +144,7 @@ public interface Block {
      * @param face for which we want the block
      * @return attached block
      */
-    Block getSide( Facing face );
+    Block side(Facing face);
 
     /**
      * Get a list of drops which will be dropped when using the given tool
@@ -152,11 +152,11 @@ public interface Block {
      * @param toolItem which will be used to generate the drops
      * @return list of item stacks which can be used as drops
      */
-    List<ItemStack> getDrops( ItemStack toolItem );
+    List<ItemStack> drops(ItemStack toolItem);
 
     /**
      * This method tells you if you can modify the block. A block gets unmodifiable
-     * when the block id in the same location differs ({@link #setBlockType(Class)}.
+     * when the block id in the same location differs ({@link #blockType(Class)}.
      *
      * @return true when the block has been placed in the world, false when not
      */
@@ -167,6 +167,6 @@ public interface Block {
      *
      * @return biome of the block
      */
-    Biome getBiome();
+    Biome biome();
 
 }

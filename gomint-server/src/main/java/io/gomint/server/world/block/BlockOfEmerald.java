@@ -34,7 +34,7 @@ public class BlockOfEmerald extends Block implements BlockBlockOfEmerald {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.BLOCK_OF_EMERALD;
     }
 
@@ -48,7 +48,7 @@ public class BlockOfEmerald extends Block implements BlockBlockOfEmerald {
     }
 
     @Override
-    public List<ItemStack> getDrops( ItemStack itemInHand ) {
+    public List<ItemStack> drops(ItemStack itemInHand ) {
         if ( isCorrectTool( itemInHand ) ) {
             return new ArrayList<ItemStack>() {{
                 add( ItemBlockOfEmerald.create( 1 ) );

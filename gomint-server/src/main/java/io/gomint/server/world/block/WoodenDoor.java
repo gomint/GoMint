@@ -45,7 +45,7 @@ public class WoodenDoor extends Door implements BlockWoodenDoor {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.WOODEN_DOOR;
     }
 
@@ -103,7 +103,7 @@ public class WoodenDoor extends Door implements BlockWoodenDoor {
     }
 
     @Override
-    public List<ItemStack> getDrops(ItemStack itemInHand) {
+    public List<ItemStack> drops(ItemStack itemInHand) {
         ItemWoodenDoor item = ItemWoodenDoor.create(1);
         item.setWoodType(this.getWoodType());
         return Collections.singletonList(item);
@@ -111,8 +111,8 @@ public class WoodenDoor extends Door implements BlockWoodenDoor {
 
     @Override
     public void afterPlacement() {
-        Block above = this.getSide(Facing.UP);
-        WoodenDoor aDoor = above.setBlockType(WoodenDoor.class);
+        Block above = this.side(Facing.UP);
+        WoodenDoor aDoor = above.blockType(WoodenDoor.class);
         aDoor.setDirection(this.getDirection());
         aDoor.setTop(true);
         aDoor.setHingeSide(HingeSide.LEFT);

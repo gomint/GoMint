@@ -29,16 +29,16 @@ public class Flower extends Block implements BlockFlower {
     public boolean beforePlacement(EntityLiving entity, ItemStack item, Facing face, Location location) {
         // Check if downwards block is valid
         Block block = entity.getWorld().blockAt(location.toBlockPosition().add(Vector.DOWN.toBlockPosition()));
-        return ALLOWED_PLACED_ON.contains(block.getBlockType());
+        return ALLOWED_PLACED_ON.contains(block.blockType());
     }
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
     @Override
-    public boolean isSolid() {
+    public boolean solid() {
         return false;
     }
 
@@ -58,7 +58,7 @@ public class Flower extends Block implements BlockFlower {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.FLOWER;
     }
 

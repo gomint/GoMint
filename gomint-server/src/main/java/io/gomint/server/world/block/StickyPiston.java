@@ -24,7 +24,7 @@ public class StickyPiston extends Block implements BlockStickyPiston {
     }
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
@@ -34,7 +34,7 @@ public class StickyPiston extends Block implements BlockStickyPiston {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.STICKY_PISTON;
     }
 

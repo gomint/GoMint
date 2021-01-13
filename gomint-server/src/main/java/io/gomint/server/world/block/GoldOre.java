@@ -31,7 +31,7 @@ public class GoldOre extends Block implements BlockGoldOre {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.GOLD_ORE;
     }
 

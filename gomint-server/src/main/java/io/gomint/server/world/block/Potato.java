@@ -22,12 +22,12 @@ public class Potato extends Growable implements BlockPotato {
     }
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
     @Override
-    public boolean isSolid() {
+    public boolean solid() {
         return false;
     }
 
@@ -42,7 +42,7 @@ public class Potato extends Growable implements BlockPotato {
     }
 
     @Override
-    public List<ItemStack> getDrops(ItemStack itemInHand) {
+    public List<ItemStack> drops(ItemStack itemInHand) {
         if (GROWTH.maxed(this)) {
             List<ItemStack> drops = new ArrayList<>() {{
                 add(world.getServer().items().create(392, (short) 0, (byte) (1 + SEED_RANDOMIZER.next().byteValue()), null)); // Potato
@@ -66,7 +66,7 @@ public class Potato extends Growable implements BlockPotato {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.POTATO;
     }
 

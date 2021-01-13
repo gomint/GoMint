@@ -236,7 +236,7 @@ public class PacketPlayerActionHandler implements PacketHandler<PacketPlayerActi
 
         Block block = connection.getEntity().getWorld().blockAt( packet.getPosition() );
 
-        if ( !block.getSide(packet.getFace()).punch( connection.getEntity() ) ) {
+        if ( !block.side(packet.getFace()).punch( connection.getEntity() ) ) {
             long breakTime = block.getFinalBreakTime( connection.getEntity().getInventory().getItemInHand(), connection.getEntity() );
             LOGGER.debug( "Sending break time {} ms", breakTime );
 

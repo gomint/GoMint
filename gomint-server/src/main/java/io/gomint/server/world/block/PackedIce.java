@@ -32,12 +32,12 @@ public class PackedIce extends Block implements BlockPackedIce {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.PACKED_ICE;
     }
 
     @Override
-    public List<ItemStack> getDrops( ItemStack itemInHand ) {
+    public List<ItemStack> drops(ItemStack itemInHand ) {
         return new ArrayList<>();
     }
 

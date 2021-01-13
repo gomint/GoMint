@@ -18,7 +18,7 @@ public class Bell extends Block {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.BELL;
     }
 }

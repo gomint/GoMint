@@ -26,7 +26,7 @@ public abstract class Slab extends Block implements BlockSlab {
     }
 
     @Override
-    public List<AxisAlignedBB> getBoundingBox() {
+    public List<AxisAlignedBB> boundingBoxes() {
         if ( this.isTop() ) {
             return Collections.singletonList( new AxisAlignedBB(
                 this.location.getX(),

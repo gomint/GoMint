@@ -3,7 +3,6 @@ package io.gomint.server.inventory;
 import io.gomint.inventory.InventoryType;
 import io.gomint.inventory.item.ItemStack;
 import io.gomint.inventory.item.ItemType;
-import io.gomint.math.Location;
 import io.gomint.math.Vector;
 import io.gomint.server.entity.EntityPlayer;
 import io.gomint.server.entity.tileentity.EnchantTableTileEntity;
@@ -40,12 +39,12 @@ public class EnchantmentTableInventory extends ContainerInventory {
     public void onClose(EntityPlayer player) {
         // Get the position
         Block enchanter = ((EnchantTableTileEntity) this.owner).getBlock();
-        Vector enchanterVector = new Vector(enchanter.getPosition());
+        Vector enchanterVector = new Vector(enchanter.position());
 
         // Drop the players items
         for (ItemStack content : this.contents) {
             if (content.getItemType() != ItemType.AIR) {
-                enchanter.getWorld().createItemDrop(enchanterVector.add(0, .5f, 0), content);
+                enchanter.world().createItemDrop(enchanterVector.add(0, .5f, 0), content);
             }
         }
 

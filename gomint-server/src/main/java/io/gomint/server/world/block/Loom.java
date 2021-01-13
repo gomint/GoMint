@@ -34,7 +34,7 @@ public class Loom extends Block implements BlockLoom {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.LOOM;
     }
 }

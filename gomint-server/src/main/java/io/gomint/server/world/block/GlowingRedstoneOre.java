@@ -25,7 +25,7 @@ public class GlowingRedstoneOre extends Block implements BlockGlowingRedstoneOre
     }
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
@@ -35,7 +35,7 @@ public class GlowingRedstoneOre extends Block implements BlockGlowingRedstoneOre
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.GLOWING_REDSTONE_ORE;
     }
 

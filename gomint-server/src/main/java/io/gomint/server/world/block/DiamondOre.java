@@ -35,7 +35,7 @@ public class DiamondOre extends Block implements BlockDiamondOre {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.DIAMOND_ORE;
     }
 
@@ -45,7 +45,7 @@ public class DiamondOre extends Block implements BlockDiamondOre {
     }
 
     @Override
-    public List<ItemStack> getDrops( ItemStack itemInHand ) {
+    public List<ItemStack> drops(ItemStack itemInHand ) {
         ArrayList<ItemStack> drops = new ArrayList<>();
         if ( isCorrectTool( itemInHand ) ) {
             ( (WorldAdapter) this.location.getWorld() ).createExpOrb( this.location, ThreadLocalRandom.current().nextInt( 3 ) );

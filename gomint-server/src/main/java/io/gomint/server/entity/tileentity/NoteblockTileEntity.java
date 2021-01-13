@@ -63,7 +63,7 @@ public class NoteblockTileEntity extends TileEntity {
      * Play the sound which this note block has stored
      */
     public void playSound() {
-        this.getBlock().getWorld().playSound( new Vector(this.getBlock().getPosition()), Sound.NOTE, this.note );
+        this.getBlock().world().playSound( new Vector(this.getBlock().position()), Sound.NOTE, this.note );
     }
 
 }

@@ -17,7 +17,7 @@ public class RedTorch extends Torch implements BlockRedTorch {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.RED_TORCH;
     }
 

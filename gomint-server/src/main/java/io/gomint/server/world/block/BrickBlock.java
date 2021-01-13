@@ -30,7 +30,7 @@ public class BrickBlock extends Block implements BlockBrickBlock {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.BRICK_BLOCK;
     }
 

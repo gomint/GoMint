@@ -29,7 +29,7 @@ public class PolishedBlackStone extends Block implements BlockPolishedBlackStone
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.POLISHED_BLACKSTONE;
     }
 

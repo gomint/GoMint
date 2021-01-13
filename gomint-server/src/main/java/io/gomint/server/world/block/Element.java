@@ -150,7 +150,7 @@ public class Element extends Block implements BlockElement {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.ELEMENT;
     }
 

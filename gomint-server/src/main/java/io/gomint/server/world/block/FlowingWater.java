@@ -19,7 +19,7 @@ public class FlowingWater extends Liquid implements BlockFlowingWater {
     }
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
@@ -41,7 +41,7 @@ public class FlowingWater extends Liquid implements BlockFlowingWater {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.FLOWING_WATER;
     }
 

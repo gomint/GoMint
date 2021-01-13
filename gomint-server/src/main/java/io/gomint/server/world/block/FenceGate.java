@@ -47,7 +47,7 @@ public class FenceGate extends Block implements BlockFenceGate {
     }
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
@@ -57,7 +57,7 @@ public class FenceGate extends Block implements BlockFenceGate {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.FENCE_GATE;
     }
 

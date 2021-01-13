@@ -19,12 +19,12 @@ public class NetherWarpedWart extends Block implements BlockNetherWarpedWart {
     }
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
     @Override
-    public boolean isSolid() {
+    public boolean solid() {
         return false;
     }
 
@@ -41,7 +41,7 @@ public class NetherWarpedWart extends Block implements BlockNetherWarpedWart {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.NETHER_WARPED_WART;
     }
 

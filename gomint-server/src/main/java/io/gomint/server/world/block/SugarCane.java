@@ -18,12 +18,12 @@ public class SugarCane extends Block implements BlockSugarCane {
     }
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
     @Override
-    public boolean isSolid() {
+    public boolean solid() {
         return false;
     }
 
@@ -38,7 +38,7 @@ public class SugarCane extends Block implements BlockSugarCane {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.SUGAR_CANE;
     }
 

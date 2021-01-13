@@ -34,7 +34,7 @@ public class Chain extends Block implements BlockChain {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.CHAIN;
     }
 }

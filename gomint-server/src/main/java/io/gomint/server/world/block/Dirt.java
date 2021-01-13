@@ -59,7 +59,7 @@ public class Dirt extends Block implements BlockDirt {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.DIRT;
     }
 

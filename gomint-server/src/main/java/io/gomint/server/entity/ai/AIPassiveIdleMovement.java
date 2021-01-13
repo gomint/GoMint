@@ -50,7 +50,7 @@ public class AIPassiveIdleMovement extends AIMovementAndLookingState {
 
         Vector position = this.pathfinding.getTransform().getPosition().add((float) x, 0.0F, (float) z);
         Block block = this.selectWalkableBlock(position.toBlockPosition(), 10);
-        return new Location(block.getWorld(), block.getPosition());
+        return new Location(block.world(), block.position());
     }
 
     private Block selectWalkableBlock(BlockPosition pos, int tries) {
@@ -59,8 +59,8 @@ public class AIPassiveIdleMovement extends AIMovementAndLookingState {
             return block;
         }
 
-        Block down = block.getSide(Facing.DOWN);
-        if (!down.isSolid()) {
+        Block down = block.side(Facing.DOWN);
+        if (!down.solid()) {
             // We are not on ground
             return selectWalkableBlock(pos.add(BlockPosition.DOWN), tries - 1);
         }

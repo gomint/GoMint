@@ -33,7 +33,7 @@ public class GroundPopulator implements Populator {
                     int y = biome.maxElevation();
                     for ( ; y > 0; --y ) {
                         Block block = chunk.blockAt( x, y, z );
-                        if ( !block.isTransparent() && block.getBlockType() != BlockType.AIR ) {
+                        if ( !block.transparent() && block.blockType() != BlockType.AIR ) {
                             break;
                         }
                     }

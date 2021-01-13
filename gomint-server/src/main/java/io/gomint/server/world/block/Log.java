@@ -97,7 +97,7 @@ public class Log extends Block implements BlockLog {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.LOG;
     }
 
@@ -239,7 +239,7 @@ public class Log extends Block implements BlockLog {
     }
 
     @Override
-    public List<ItemStack> getDrops(ItemStack itemInHand) {
+    public List<ItemStack> drops(ItemStack itemInHand) {
         ItemLog item = ItemLog.create(1);
         item.setBarkOnAllSides(this.isBarkOnAllSides());
         item.setLogType(this.getLogType());

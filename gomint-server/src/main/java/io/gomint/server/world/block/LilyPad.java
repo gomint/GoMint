@@ -26,12 +26,12 @@ public class LilyPad extends Block implements BlockLilyPad {
     }
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
     @Override
-    public boolean isSolid() {
+    public boolean solid() {
         return false;
     }
 
@@ -41,7 +41,7 @@ public class LilyPad extends Block implements BlockLilyPad {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.LILY_PAD;
     }
 
@@ -52,7 +52,7 @@ public class LilyPad extends Block implements BlockLilyPad {
 
     @Override
     public boolean beforePlacement(EntityLiving entity, ItemStack item, Facing face, Location location) {
-        Block block = (Block) location.getWorld().blockAt(location.toBlockPosition()).getSide(Facing.UP);
+        Block block = (Block) location.getWorld().blockAt(location.toBlockPosition()).side(Facing.UP);
         return block instanceof StationaryWater;
     }
 

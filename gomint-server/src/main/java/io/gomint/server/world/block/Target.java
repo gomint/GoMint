@@ -36,7 +36,7 @@ public class Target extends Block implements BlockTarget {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.TARGET;
     }
 }

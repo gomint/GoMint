@@ -22,7 +22,7 @@ public class ItemIronShovel extends ItemReduceTierIron implements io.gomint.inve
     @Override
     public boolean interact(EntityPlayer entity, Facing face, Vector clickPosition, Block clickedBlock ) {
         if ( clickedBlock instanceof GrassBlock ) {
-            clickedBlock.setBlockType( GrassPath.class );
+            clickedBlock.blockType( GrassPath.class );
             this.calculateUsageAndUpdate( 1 );
             return true;
         }

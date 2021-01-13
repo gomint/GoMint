@@ -34,7 +34,7 @@ public class BlackStone extends Block implements BlockBlackStone {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.BLACKSTONE;
     }
 }

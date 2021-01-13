@@ -23,7 +23,7 @@ public class EndPortalFrame extends Block implements BlockEndPortalFrame {
     }
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
@@ -33,7 +33,7 @@ public class EndPortalFrame extends Block implements BlockEndPortalFrame {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.END_PORTAL_FRAME;
     }
 

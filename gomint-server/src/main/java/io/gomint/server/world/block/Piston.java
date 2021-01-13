@@ -28,7 +28,7 @@ public class Piston extends Block implements BlockPiston {
     }
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
@@ -49,7 +49,7 @@ public class Piston extends Block implements BlockPiston {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.PISTON;
     }
 

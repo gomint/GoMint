@@ -26,7 +26,7 @@ public class RedstoneOre extends Block implements BlockRedstoneOre {
     }
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
@@ -36,7 +36,7 @@ public class RedstoneOre extends Block implements BlockRedstoneOre {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.REDSTONE_ORE;
     }
 

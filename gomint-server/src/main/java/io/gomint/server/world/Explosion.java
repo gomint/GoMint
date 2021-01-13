@@ -188,15 +188,15 @@ public class Explosion {
             if ( block instanceof BlockTNT ) {
                 ( (BlockTNT) block ).prime( 0.5f + ThreadLocalRandom.current().nextFloat() );
             } else if ( ThreadLocalRandom.current().nextFloat() * 100 < event.getRandomDropChance() ) {
-                for ( ItemStack drop : block.getDrops( ItemAir.create( 0 ) ) ) {
-                    this.source.getWorld().dropItem( new Vector(block.getPosition()).add( 0.5f, 0.5f, 0.5f ), drop );
+                for ( ItemStack drop : block.drops( ItemAir.create( 0 ) ) ) {
+                    this.source.getWorld().dropItem( new Vector(block.position()).add( 0.5f, 0.5f, 0.5f ), drop );
                 }
             }
 
-            block.setBlockType( Air.class );
+            block.blockType( Air.class );
 
             for ( Facing blockFace : Facing.values() ) {
-                Block attached = block.getSide( blockFace );
+                Block attached = block.side( blockFace );
                 if ( !event.getAffectedBlocks().contains( attached ) && !alreadyUpdated.contains( attached ) ) {
                     io.gomint.server.world.block.Block implBlock = (io.gomint.server.world.block.Block) attached;
                     implBlock.update( UpdateReason.EXPLOSION, currentTimeMS, dT );

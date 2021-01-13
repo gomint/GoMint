@@ -35,7 +35,7 @@ public class Basalt extends Block implements BlockBasalt {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.BASALT;
     }
 }

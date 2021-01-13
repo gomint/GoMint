@@ -15,7 +15,7 @@ import io.gomint.world.block.data.Facing;
 public class TrappedChest extends ChestBase implements BlockTrappedChest {
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.TRAPPED_CHEST;
     }
 

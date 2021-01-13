@@ -18,17 +18,17 @@ public class NetherWart extends Block implements BlockNetherWart {
 
     @Override
     public boolean beforePlacement(EntityLiving entity, ItemStack item, Facing face, Location location) {
-        Block down = this.getSide(Facing.DOWN);
-        return down.isSolid();
+        Block down = this.side(Facing.DOWN);
+        return down.solid();
     }
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
     @Override
-    public boolean isSolid() {
+    public boolean solid() {
         return false;
     }
 
@@ -38,7 +38,7 @@ public class NetherWart extends Block implements BlockNetherWart {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.NETHER_WART;
     }
 

@@ -172,7 +172,7 @@ public class PathfindingEngine {
                     // Check if the block is walkable or jumpable
                     Block block = this.getGoal().getWorld().blockAt(neighbourTriple);
                     if (!block.canPassThrough()) {
-                        List<AxisAlignedBB> bbs = block.getBoundingBox();
+                        List<AxisAlignedBB> bbs = block.boundingBoxes();
                         if (bbs != null) {
                             for (AxisAlignedBB bb : bbs) {
                                 double diff = bb.getMaxY() - neighbourTriple.getY();

@@ -20,12 +20,12 @@ public class Rail extends RailBase implements BlockRail {
     }
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
     @Override
-    public boolean isSolid() {
+    public boolean solid() {
         return false;
     }
 
@@ -35,7 +35,7 @@ public class Rail extends RailBase implements BlockRail {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.RAIL;
     }
 

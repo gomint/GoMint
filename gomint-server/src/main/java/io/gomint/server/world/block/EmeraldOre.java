@@ -35,7 +35,7 @@ public class EmeraldOre extends Block implements BlockEmeraldOre {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.EMERALD_ORE;
     }
 
@@ -45,7 +45,7 @@ public class EmeraldOre extends Block implements BlockEmeraldOre {
     }
 
     @Override
-    public List<ItemStack> getDrops( ItemStack itemInHand ) {
+    public List<ItemStack> drops(ItemStack itemInHand ) {
         List<ItemStack> drops = new ArrayList<>();
         if ( isCorrectTool( itemInHand ) ) {
             ( (WorldAdapter) this.location.getWorld() ).createExpOrb( this.location, ThreadLocalRandom.current().nextInt( 3 ) );

@@ -29,7 +29,7 @@ public class ChiseledPolishedBlackStone extends Block implements BlockChiseledPo
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.CHISELED_POLISHED_BLACKSTONE;
     }
 

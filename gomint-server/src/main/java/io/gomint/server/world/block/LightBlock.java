@@ -23,7 +23,7 @@ public class LightBlock extends Block implements BlockLightBlock {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.LIGHT_BLOCK;
     }
 

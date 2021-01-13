@@ -32,7 +32,7 @@ public class TwistingVines extends Block implements BlockTwistingVines {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.TWISTING_VINES;
     }
 }

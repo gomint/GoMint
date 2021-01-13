@@ -37,7 +37,7 @@ public class ShroomLight extends Block implements BlockShroomLight {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.SHROOMLIGHT;
     }
 }

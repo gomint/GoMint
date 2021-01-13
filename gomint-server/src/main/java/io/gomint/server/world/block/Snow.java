@@ -28,7 +28,7 @@ public class Snow extends Block implements BlockSnow {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.SNOW;
     }
 

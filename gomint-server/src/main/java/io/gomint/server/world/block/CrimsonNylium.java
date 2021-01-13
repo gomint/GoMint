@@ -29,7 +29,7 @@ public class CrimsonNylium extends Block implements BlockCrimsonNylium {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.CRIMSON_NYLIUM;
     }
 

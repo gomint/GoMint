@@ -34,7 +34,7 @@ public class Bookshelf extends Block implements BlockBookshelf {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.BOOKSHELF;
     }
 
@@ -44,7 +44,7 @@ public class Bookshelf extends Block implements BlockBookshelf {
     }
 
     @Override
-    public List<ItemStack> getDrops( ItemStack itemInHand ) {
+    public List<ItemStack> drops(ItemStack itemInHand ) {
         return new ArrayList<ItemStack>(){{
             add( ItemBook.create( 3 ) );
         }};

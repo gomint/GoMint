@@ -38,7 +38,7 @@ public class ItemFrame extends Block implements BlockItemFrame {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.ITEM_FRAME;
     }
 

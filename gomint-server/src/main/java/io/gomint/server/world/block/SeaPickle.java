@@ -24,7 +24,7 @@ public class SeaPickle extends Block implements BlockSeaPickle {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.CORAL;
     }
 

@@ -32,7 +32,7 @@ public class HoneyComb extends Block implements BlockHoneyComb {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.HONEYCOMB;
     }
 }

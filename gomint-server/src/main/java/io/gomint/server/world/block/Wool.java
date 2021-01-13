@@ -34,7 +34,7 @@ public class Wool extends Block implements BlockWool {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.WOOL;
     }
 

@@ -31,7 +31,7 @@ public class BlockOfIron extends Block implements BlockBlockOfIron {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.BLOCK_OF_IRON;
     }
 
@@ -46,7 +46,7 @@ public class BlockOfIron extends Block implements BlockBlockOfIron {
     }
 
     @Override
-    public List<ItemStack> getDrops( ItemStack itemInHand ) {
+    public List<ItemStack> drops(ItemStack itemInHand ) {
         if ( isCorrectTool( itemInHand ) ) {
             return new ArrayList<ItemStack>(){{
                 add( ItemBlockOfIron.create( 1 ) );

@@ -10,7 +10,6 @@ package io.gomint.server.enchant;
 import io.gomint.inventory.item.ItemType;
 import io.gomint.math.Location;
 import io.gomint.server.inventory.item.ItemStack;
-import io.gomint.util.random.FastRandom;
 import io.gomint.world.block.BlockType;
 
 public class EnchantmentHelper {
@@ -82,31 +81,31 @@ public class EnchantmentHelper {
         for (int z = -1; z <= 1; ++z) {
             for (int x = -1; x <= 1; ++x) {
                 if ((z != 0 || x != 0) &&
-                    location.add(x, 0, z).getBlock().getBlockType() == BlockType.AIR &&
-                    location.add(x, 1, z).getBlock().getBlockType() == BlockType.AIR) {
+                    location.add(x, 0, z).getBlock().blockType() == BlockType.AIR &&
+                    location.add(x, 1, z).getBlock().blockType() == BlockType.AIR) {
 
-                    if (location.add(x * 2, 0, z * 2).getBlock().getBlockType() == BlockType.BOOKSHELF) {
+                    if (location.add(x * 2, 0, z * 2).getBlock().blockType() == BlockType.BOOKSHELF) {
                         foundShelves++;
                     }
 
-                    if (location.add(x * 2, 1, z * 2).getBlock().getBlockType() == BlockType.BOOKSHELF) {
+                    if (location.add(x * 2, 1, z * 2).getBlock().blockType() == BlockType.BOOKSHELF) {
                         foundShelves++;
                     }
 
                     if (x != 0 && z != 0) {
-                        if (location.add(x * 2, 0, z).getBlock().getBlockType() == BlockType.BOOKSHELF) {
+                        if (location.add(x * 2, 0, z).getBlock().blockType() == BlockType.BOOKSHELF) {
                             foundShelves++;
                         }
 
-                        if (location.add(x * 2, 1, z).getBlock().getBlockType() == BlockType.BOOKSHELF) {
+                        if (location.add(x * 2, 1, z).getBlock().blockType() == BlockType.BOOKSHELF) {
                             foundShelves++;
                         }
 
-                        if (location.add(x, 0, z * 2).getBlock().getBlockType() == BlockType.BOOKSHELF) {
+                        if (location.add(x, 0, z * 2).getBlock().blockType() == BlockType.BOOKSHELF) {
                             foundShelves++;
                         }
 
-                        if (location.add(x, 1, z * 2).getBlock().getBlockType() == BlockType.BOOKSHELF) {
+                        if (location.add(x, 1, z * 2).getBlock().blockType() == BlockType.BOOKSHELF) {
                             foundShelves++;
                         }
                     }

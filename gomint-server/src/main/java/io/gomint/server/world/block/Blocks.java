@@ -125,8 +125,8 @@ public class Blocks {
         }
 
         // Check only solid blocks for bounding box intersects
-        if (newBlock.isSolid()) {
-            List<AxisAlignedBB> bbs = newBlock.getBoundingBox();
+        if (newBlock.solid()) {
+            List<AxisAlignedBB> bbs = newBlock.boundingBoxes();
             if (bbs != null) {
                 for (AxisAlignedBB bb : bbs) {
                     // Check other entities in the bounding box

@@ -61,7 +61,7 @@ public class GlazedTerracotta extends Block implements BlockGlazedTerracotta {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.GLAZED_TERRACOTTA;
     }
 

@@ -45,7 +45,7 @@ public class Jukebox extends Block implements BlockJukebox {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.JUKEBOX;
     }
 

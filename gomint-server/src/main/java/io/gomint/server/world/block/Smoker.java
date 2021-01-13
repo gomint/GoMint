@@ -28,7 +28,7 @@ public class Smoker extends Block implements BlockSmoker {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.SMOKER;
     }
 

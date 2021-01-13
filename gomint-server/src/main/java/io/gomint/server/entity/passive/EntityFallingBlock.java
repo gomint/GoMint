@@ -65,7 +65,7 @@ public class EntityFallingBlock extends Entity implements io.gomint.entity.passi
                 block.copyFromBlock(this.block);
             } else {
                 // Generate new item drop
-                for (ItemStack drop : this.block.getDrops(null)) {
+                for (ItemStack drop : this.block.drops(null)) {
                     this.world.dropItem(this.getLocation(), drop);
                 }
             }

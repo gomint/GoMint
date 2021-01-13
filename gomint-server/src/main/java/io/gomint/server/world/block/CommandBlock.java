@@ -36,7 +36,7 @@ public class CommandBlock extends ContainerBlock implements BlockCommandBlock {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.COMMAND_BLOCK;
     }
 

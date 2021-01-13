@@ -55,7 +55,7 @@ public class WoodenSlab extends Slab implements BlockWoodenSlab {
     }
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
@@ -65,7 +65,7 @@ public class WoodenSlab extends Slab implements BlockWoodenSlab {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.WOODEN_SLAB;
     }
 

@@ -84,7 +84,7 @@ public class UndyedShulkerBox extends Block implements BlockUndyedShulkerBox {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.UNDYED_SHULKER_BOX;
     }
 

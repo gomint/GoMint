@@ -26,7 +26,7 @@ public class IronDoor extends Door implements BlockIronDoor {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.IRON_DOOR;
     }
 
@@ -37,8 +37,8 @@ public class IronDoor extends Door implements BlockIronDoor {
 
     @Override
     public void afterPlacement() {
-        Block above = this.getSide(Facing.UP);
-        IronDoor aDoor = above.setBlockType(IronDoor.class);
+        Block above = this.side(Facing.UP);
+        IronDoor aDoor = above.blockType(IronDoor.class);
         aDoor.setDirection(this.getDirection());
         aDoor.setTop(true);
 

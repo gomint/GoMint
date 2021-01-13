@@ -68,7 +68,7 @@ public class StandingSign extends Sign implements BlockStandingSign {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.SIGN;
     }
 }

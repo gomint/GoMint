@@ -34,7 +34,7 @@ public class Composter extends Block implements BlockComposter {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.COMPOSTER;
     }
 }

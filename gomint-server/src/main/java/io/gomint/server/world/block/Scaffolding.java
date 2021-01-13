@@ -20,7 +20,7 @@ public class Scaffolding extends Block implements BlockScaffolding {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.SCAFFOLDING;
     }
 

@@ -25,7 +25,7 @@ public class IronTrapdoor extends Trapdoor implements BlockIronTrapdoor {
     }
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
@@ -35,7 +35,7 @@ public class IronTrapdoor extends Trapdoor implements BlockIronTrapdoor {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.IRON_TRAPDOOR;
     }
 

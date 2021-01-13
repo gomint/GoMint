@@ -22,12 +22,12 @@ public class FlowingLava extends Liquid implements BlockFlowingLava {
     }
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
     @Override
-    public boolean isSolid() {
+    public boolean solid() {
         return false;
     }
 
@@ -60,7 +60,7 @@ public class FlowingLava extends Liquid implements BlockFlowingLava {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.FLOWING_LAVA;
     }
 
@@ -73,8 +73,8 @@ public class FlowingLava extends Liquid implements BlockFlowingLava {
                 continue;
             }
 
-            Block otherBlock = this.getSide( blockFace );
-            if ( otherBlock.getBlockType() == BlockType.FLOWING_WATER || otherBlock.getBlockType() == BlockType.STATIONARY_WATER ) {
+            Block otherBlock = this.side( blockFace );
+            if ( otherBlock.blockType() == BlockType.FLOWING_WATER || otherBlock.blockType() == BlockType.STATIONARY_WATER ) {
                 colliding = otherBlock;
                 break;
             }
@@ -82,7 +82,7 @@ public class FlowingLava extends Liquid implements BlockFlowingLava {
 
         // Did we find a block we can collide with?
         if ( colliding != null ) {
-            if ( this.getFillHeight() > 4 || colliding.getBlockType() == BlockType.STATIONARY_WATER ) {
+            if ( this.getFillHeight() > 4 || colliding.blockType() == BlockType.STATIONARY_WATER ) {
                 this.liquidCollide( colliding, Obsidian.class );
             } else if ( this.getFillHeight() <= 4 ) {
                 this.liquidCollide( colliding, Cobblestone.class );
@@ -92,7 +92,7 @@ public class FlowingLava extends Liquid implements BlockFlowingLava {
 
     @Override
     protected void flowIntoBlock( Block block, int newFlowDecay ) {
-        if ( block.getBlockType() == BlockType.FLOWING_WATER ) {
+        if ( block.blockType() == BlockType.FLOWING_WATER ) {
             ( (Liquid) block ).liquidCollide( this, Stone.class );
         } else {
             super.flowIntoBlock( block, newFlowDecay );

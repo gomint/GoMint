@@ -33,12 +33,12 @@ public class Stone extends Block implements BlockStone {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.STONE;
     }
 
     @Override
-    public List<ItemStack> getDrops( ItemStack itemInHand ) {
+    public List<ItemStack> drops(ItemStack itemInHand ) {
         return new ArrayList<>() {{
             add(ItemCobblestone.create(1));
         }};

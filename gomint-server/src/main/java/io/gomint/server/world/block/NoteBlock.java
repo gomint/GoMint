@@ -52,7 +52,7 @@ public class NoteBlock extends Block implements BlockNoteblock {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.NOTE_BLOCK;
     }
 

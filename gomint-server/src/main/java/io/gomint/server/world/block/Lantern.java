@@ -34,7 +34,7 @@ public class Lantern extends Block implements BlockLantern {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.LANTERN;
     }
 

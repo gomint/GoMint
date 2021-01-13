@@ -27,12 +27,12 @@ public class WoodenButton extends Button implements BlockWoodenButton {
     }
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
     @Override
-    public boolean isSolid() {
+    public boolean solid() {
         return false;
     }
 
@@ -101,7 +101,7 @@ public class WoodenButton extends Button implements BlockWoodenButton {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.WOODEN_BUTTON;
     }
 

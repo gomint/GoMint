@@ -29,7 +29,7 @@ public class LodeStone extends Block implements BlockLodeStone {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.LODESTONE;
     }
 

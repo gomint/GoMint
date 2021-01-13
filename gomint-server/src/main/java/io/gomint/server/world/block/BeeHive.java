@@ -43,7 +43,7 @@ public class BeeHive extends Block implements BlockBeeHive {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.BEE_HIVE;
     }
 

@@ -45,8 +45,8 @@ public class TallGrass extends Block implements BlockTallGrass {
     @Override
     public long update(UpdateReason updateReason, long currentTimeMS, float dT) {
         if (updateReason == UpdateReason.NEIGHBOUR_UPDATE) {
-            Block down = this.getSide(Facing.DOWN);
-            if (!down.isSolid()) {
+            Block down = this.side(Facing.DOWN);
+            if (!down.solid()) {
                 this.naturalBreak();
             }
         }
@@ -60,12 +60,12 @@ public class TallGrass extends Block implements BlockTallGrass {
     }
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
     @Override
-    public boolean isSolid() {
+    public boolean solid() {
         return false;
     }
 
@@ -85,7 +85,7 @@ public class TallGrass extends Block implements BlockTallGrass {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.TALL_GRASS;
     }
 
@@ -95,7 +95,7 @@ public class TallGrass extends Block implements BlockTallGrass {
     }
 
     @Override
-    public List<ItemStack> getDrops(ItemStack itemInHand) {
+    public List<ItemStack> drops(ItemStack itemInHand) {
         if (isCorrectTool(itemInHand)) {
             return new ArrayList<>() {{
                 add(ItemTallGrass.create(1));

@@ -18,7 +18,7 @@ public class BlockMovedByPiston extends Block implements BlockBlockMovedByPiston
     }
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
@@ -28,7 +28,7 @@ public class BlockMovedByPiston extends Block implements BlockBlockMovedByPiston
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.BLOCK_MOVED_BY_PISTON;
     }
 

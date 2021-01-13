@@ -32,7 +32,7 @@ public class Honey extends Block implements BlockHoney {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.HONEY_BLOCK;
     }
 }

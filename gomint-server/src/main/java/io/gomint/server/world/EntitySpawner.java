@@ -116,7 +116,7 @@ public class EntitySpawner implements Tickable {
 
         int i = x * 16 + ThreadLocalRandom.current().nextInt(16);
         int j = z * 16 + ThreadLocalRandom.current().nextInt(16);
-        return chunk.world().highestBlockAt(i, j).getSide(Facing.UP);
+        return chunk.world().highestBlockAt(i, j).side(Facing.UP);
     }
 
 }

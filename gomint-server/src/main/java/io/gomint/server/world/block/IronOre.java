@@ -30,7 +30,7 @@ public class IronOre extends Block implements BlockIronOre {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.IRON_ORE;
     }
 

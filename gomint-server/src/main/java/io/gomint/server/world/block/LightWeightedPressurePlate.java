@@ -29,17 +29,17 @@ public class LightWeightedPressurePlate extends Block implements BlockLightWeigh
     }
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
     @Override
-    public boolean isSolid() {
+    public boolean solid() {
         return false;
     }
 
     @Override
-    public List<AxisAlignedBB> getBoundingBox() {
+    public List<AxisAlignedBB> boundingBoxes() {
         return Collections.singletonList( new AxisAlignedBB(
             this.location.getX(),
             this.location.getY(),
@@ -56,7 +56,7 @@ public class LightWeightedPressurePlate extends Block implements BlockLightWeigh
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.LIGHT_WEIGHTED_PRESSURE_PLATE;
     }
 

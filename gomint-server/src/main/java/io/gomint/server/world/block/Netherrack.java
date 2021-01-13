@@ -30,7 +30,7 @@ public class Netherrack extends Block implements BlockNetherrack {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.NETHERRACK;
     }
 

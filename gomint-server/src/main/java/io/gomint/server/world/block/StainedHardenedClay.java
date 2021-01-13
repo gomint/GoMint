@@ -43,7 +43,7 @@ public class StainedHardenedClay extends Block implements BlockStainedHardenedCl
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.STAINED_HARDENED_CLAY;
     }
 

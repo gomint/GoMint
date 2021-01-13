@@ -32,7 +32,7 @@ public class ChemistryTable extends Block {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.CHEMISTRY_TABLE;
     }
 

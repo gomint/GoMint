@@ -42,7 +42,7 @@ public class WorldTest extends IntegrationTest {
     @Order(2)
     public void setLog() {
         Block block = this.world.blockAt(50, 50, 50);
-        Log log = block.setBlockType(Log.class);
+        Log log = block.blockType(Log.class);
 
         // Normal Y oak
         testLogState(log, Axis.Y, LogType.OAK, false, false,

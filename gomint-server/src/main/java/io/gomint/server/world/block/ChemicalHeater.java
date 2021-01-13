@@ -25,7 +25,7 @@ public class ChemicalHeater extends Block implements BlockChemicalHeater {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.CHEMICAL_HEATER;
     }
 

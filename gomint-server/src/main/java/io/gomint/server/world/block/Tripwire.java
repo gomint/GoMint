@@ -22,12 +22,12 @@ public class Tripwire extends Block implements BlockTripwire {
     }
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
     @Override
-    public boolean isSolid() {
+    public boolean solid() {
         return false;
     }
 
@@ -42,7 +42,7 @@ public class Tripwire extends Block implements BlockTripwire {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.TRIPWIRE;
     }
 
@@ -52,7 +52,7 @@ public class Tripwire extends Block implements BlockTripwire {
     }
 
     @Override
-    public List<AxisAlignedBB> getBoundingBox() {
+    public List<AxisAlignedBB> boundingBoxes() {
         return Collections.singletonList( new AxisAlignedBB(
             this.location.getX(),
             this.location.getY(),

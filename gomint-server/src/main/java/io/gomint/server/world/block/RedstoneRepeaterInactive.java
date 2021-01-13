@@ -18,7 +18,7 @@ public class RedstoneRepeaterInactive extends Block implements BlockRedstoneRepe
     }
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
@@ -28,7 +28,7 @@ public class RedstoneRepeaterInactive extends Block implements BlockRedstoneRepe
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.REDSTONE_REPEATER_INACTIVE;
     }
 

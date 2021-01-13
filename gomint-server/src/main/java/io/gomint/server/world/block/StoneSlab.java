@@ -107,7 +107,7 @@ public class StoneSlab extends Slab implements BlockStoneSlab {
     }
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
@@ -117,7 +117,7 @@ public class StoneSlab extends Slab implements BlockStoneSlab {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.STONE_SLAB;
     }
 

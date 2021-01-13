@@ -23,7 +23,7 @@ public class RedstoneLampInactive extends Block implements BlockRedstoneLampInac
     }
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
@@ -33,7 +33,7 @@ public class RedstoneLampInactive extends Block implements BlockRedstoneLampInac
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.REDSTONE_LAMP_INACTIVE;
     }
 

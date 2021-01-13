@@ -29,12 +29,12 @@ public class Ladder extends Block implements BlockLadder {
     }
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
     @Override
-    public boolean isSolid() {
+    public boolean solid() {
         return false;
     }
 
@@ -55,7 +55,7 @@ public class Ladder extends Block implements BlockLadder {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.LADDER;
     }
 

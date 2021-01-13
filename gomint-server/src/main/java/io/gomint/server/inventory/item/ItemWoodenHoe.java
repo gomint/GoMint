@@ -27,7 +27,7 @@ public class ItemWoodenHoe extends ItemReduceTierWooden implements io.gomint.inv
     @Override
     public boolean interact(EntityPlayer entity, Facing face, Vector clickPosition, Block clickedBlock ) {
         if ( clickedBlock instanceof Dirt || clickedBlock instanceof GrassBlock ) {
-            clickedBlock.setBlockType( Farmland.class );
+            clickedBlock.blockType( Farmland.class );
             this.calculateUsageAndUpdate( 1 );
             return true;
         }

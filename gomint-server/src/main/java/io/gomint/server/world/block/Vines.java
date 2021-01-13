@@ -47,12 +47,12 @@ public class Vines extends Block implements BlockVines {
     }
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
     @Override
-    public boolean isSolid() {
+    public boolean solid() {
         return false;
     }
 
@@ -73,7 +73,7 @@ public class Vines extends Block implements BlockVines {
     }
 
     @Override
-    public List<AxisAlignedBB> getBoundingBox() {
+    public List<AxisAlignedBB> boundingBoxes() {
         if (ATTACHED_SIDES.getState(this) == 0) {
             return Collections.singletonList(UP_AABB);
         }
@@ -104,12 +104,12 @@ public class Vines extends Block implements BlockVines {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.VINES;
     }
 
     @Override
-    public List<ItemStack> getDrops(ItemStack itemInHand) {
+    public List<ItemStack> drops(ItemStack itemInHand) {
         if (isCorrectTool(itemInHand)) {
             return new ArrayList<>() {{
                 add(ItemVines.create(1));
@@ -142,8 +142,8 @@ public class Vines extends Block implements BlockVines {
             if (ThreadLocalRandom.current().nextInt(4) == 0) {
                 Facing face = Facing.getRandom();
 
-                Block other = this.getSide(face);
-                if (face == Facing.UP && this.position.getY() < 255 && other.getBlockType() == BlockType.AIR) {
+                Block other = this.side(face);
+                if (face == Facing.UP && this.position.getY() < 255 && other.blockType() == BlockType.AIR) {
                     Set<Facing> attachTo = new HashSet<>();
                     for (Facing facing : Facing.HORIZONTAL) {
                         if (ThreadLocalRandom.current().nextBoolean() && this.canSpreadInDirection(other, facing.opposite())) {
@@ -153,7 +153,7 @@ public class Vines extends Block implements BlockVines {
 
                     spreadIfAttachNotEmpty(attachTo, other);
                 } else if (face == Facing.DOWN && this.position.getY() > 1) {
-                    if (other.getBlockType() == BlockType.AIR) {
+                    if (other.blockType() == BlockType.AIR) {
                         Set<Facing> attachTo = new HashSet<>();
                         for (Facing facing : Facing.HORIZONTAL) {
                             if (ThreadLocalRandom.current().nextBoolean() && ATTACHED_SIDES.enabled(this, facing)) {
@@ -162,7 +162,7 @@ public class Vines extends Block implements BlockVines {
                         }
 
                         spreadIfAttachNotEmpty(attachTo, other);
-                    } else if (other.getBlockType() == BlockType.VINES) {
+                    } else if (other.blockType() == BlockType.VINES) {
                         Vines newVines = (Vines) other;
                         for (Facing facing : Facing.HORIZONTAL) {
                             if (ThreadLocalRandom.current().nextBoolean() && ATTACHED_SIDES.enabled(this, facing)) {
@@ -171,30 +171,30 @@ public class Vines extends Block implements BlockVines {
                         }
                     }
                 } else if (!ATTACHED_SIDES.enabled(this, face) && amountOfVines(9, 3, 9) < 5) {
-                    if (other.getBlockType() == BlockType.AIR) {
+                    if (other.blockType() == BlockType.AIR) {
                         Facing clockwiseY = face.rotateClockWiseOnY();
                         Facing counterClockwiseY = face.rotateCounterClockWiseOnY();
 
                         boolean attachedOnClockwise = ATTACHED_SIDES.enabled(this, clockwiseY);
                         boolean attachedOnCounterClockwise = ATTACHED_SIDES.enabled(this, counterClockwiseY);
 
-                        Block otherClockwise = other.getSide(clockwiseY);
-                        Block otherCounterClockwise = other.getSide(counterClockwiseY);
+                        Block otherClockwise = other.side(clockwiseY);
+                        Block otherCounterClockwise = other.side(counterClockwiseY);
 
-                        if (attachedOnClockwise && this.canSpreadInDirection(otherClockwise.getSide(clockwiseY), clockwiseY)) {
-                            Vines newVines = other.setBlockType(Vines.class);
+                        if (attachedOnClockwise && this.canSpreadInDirection(otherClockwise.side(clockwiseY), clockwiseY)) {
+                            Vines newVines = other.blockType(Vines.class);
                             newVines.attach(clockwiseY);
-                        } else if (attachedOnCounterClockwise && this.canSpreadInDirection(otherCounterClockwise.getSide(counterClockwiseY), counterClockwiseY)) {
-                            Vines newVines = other.setBlockType(Vines.class);
+                        } else if (attachedOnCounterClockwise && this.canSpreadInDirection(otherCounterClockwise.side(counterClockwiseY), counterClockwiseY)) {
+                            Vines newVines = other.blockType(Vines.class);
                             newVines.attach(counterClockwiseY);
-                        } else if (attachedOnClockwise && otherClockwise.getBlockType() == BlockType.AIR && this.canSpreadInDirection(otherClockwise, face)) {
-                            Vines newVines = otherClockwise.setBlockType(Vines.class);
+                        } else if (attachedOnClockwise && otherClockwise.blockType() == BlockType.AIR && this.canSpreadInDirection(otherClockwise, face)) {
+                            Vines newVines = otherClockwise.blockType(Vines.class);
                             newVines.attach(face.opposite());
-                        } else if (attachedOnCounterClockwise && otherCounterClockwise.getBlockType() == BlockType.AIR && this.canSpreadInDirection(otherCounterClockwise, face)) {
-                            Vines newVines = otherCounterClockwise.setBlockType(Vines.class);
+                        } else if (attachedOnCounterClockwise && otherCounterClockwise.blockType() == BlockType.AIR && this.canSpreadInDirection(otherCounterClockwise, face)) {
+                            Vines newVines = otherCounterClockwise.blockType(Vines.class);
                             newVines.attach(face.opposite());
                         }
-                    } else if (other.isSolid()) {
+                    } else if (other.solid()) {
                         this.attach(face);
                     }
                 }
@@ -206,7 +206,7 @@ public class Vines extends Block implements BlockVines {
 
     private void spreadIfAttachNotEmpty(Set<Facing> attachTo, Block other) {
         if (!attachTo.isEmpty()) {
-            Vines newVines = other.setBlockType(Vines.class);
+            Vines newVines = other.blockType(Vines.class);
             for (Facing value : Facing.values()) {
                 newVines.detach(value);
             }
@@ -222,25 +222,25 @@ public class Vines extends Block implements BlockVines {
     }
 
     private boolean canSpreadInDirection(Block toCheckBlock, Facing facing) {
-        Block block = toCheckBlock.getSide(Facing.UP);
-        return this.canBlockBeSpreadOn(toCheckBlock.getSide(facing.opposite())) &&
-            (block.getBlockType() == BlockType.AIR || block.getBlockType() == BlockType.VINES || this.canBlockBeSpreadOn(block));
+        Block block = toCheckBlock.side(Facing.UP);
+        return this.canBlockBeSpreadOn(toCheckBlock.side(facing.opposite())) &&
+            (block.blockType() == BlockType.AIR || block.blockType() == BlockType.VINES || this.canBlockBeSpreadOn(block));
     }
 
     private boolean canBlockBeSpreadOn(Block block) {
-        return block.isSolid() && !canBlockNotBeSpreadOn(block);
+        return block.solid() && !canBlockNotBeSpreadOn(block);
     }
 
     private boolean canBlockNotBeSpreadOn(Block block) {
-        return block.getBlockType() == BlockType.SHULKER_BOX ||
-            block.getBlockType() == BlockType.BEACON ||
-            block.getBlockType() == BlockType.CAULDRON ||
-            block.getBlockType() == BlockType.GLASS ||
-            block.getBlockType() == BlockType.STAINED_GLASS ||
-            block.getBlockType() == BlockType.PISTON ||
-            block.getBlockType() == BlockType.STICKY_PISTON ||
-            block.getBlockType() == BlockType.PISTON_HEAD ||
-            block.getBlockType() == BlockType.TRAPDOOR;
+        return block.blockType() == BlockType.SHULKER_BOX ||
+            block.blockType() == BlockType.BEACON ||
+            block.blockType() == BlockType.CAULDRON ||
+            block.blockType() == BlockType.GLASS ||
+            block.blockType() == BlockType.STAINED_GLASS ||
+            block.blockType() == BlockType.PISTON ||
+            block.blockType() == BlockType.STICKY_PISTON ||
+            block.blockType() == BlockType.PISTON_HEAD ||
+            block.blockType() == BlockType.TRAPDOOR;
     }
 
     private int amountOfVines(int x, int y, int z) {
@@ -254,7 +254,7 @@ public class Vines extends Block implements BlockVines {
         for (int x1 = -xStep; x1 <= xStep; x1++) {
             for (int z1 = -zStep; z1 <= xStep; z1++) {
                 for (int y1 = -yStep; y1 <= yStep; y1++) {
-                    if (this.world.blockAt(base.clone().add(x1, y1, z1)).getBlockType() == BlockType.VINES) {
+                    if (this.world.blockAt(base.clone().add(x1, y1, z1)).blockType() == BlockType.VINES) {
                         amount++;
                     }
                 }

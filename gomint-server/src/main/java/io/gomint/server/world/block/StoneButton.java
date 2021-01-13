@@ -25,12 +25,12 @@ public class StoneButton extends Button implements BlockStoneButton {
     }
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
     @Override
-    public boolean isSolid() {
+    public boolean solid() {
         return false;
     }
 
@@ -45,7 +45,7 @@ public class StoneButton extends Button implements BlockStoneButton {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.STONE_BUTTON;
     }
 

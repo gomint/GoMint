@@ -33,7 +33,7 @@ public class ChainCommandBlock extends ContainerBlock implements BlockChainComma
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.CHAIN_COMMAND_BLOCK;
     }
 

@@ -33,7 +33,7 @@ public class TurtleEgg extends Block implements BlockTurtleEgg {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.TURTLE_EGG;
     }
 

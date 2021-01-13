@@ -30,7 +30,7 @@ public class Clay extends Block implements BlockClay {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.CLAY;
     }
 

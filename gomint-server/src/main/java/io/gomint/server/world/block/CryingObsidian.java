@@ -36,7 +36,7 @@ public class CryingObsidian extends Block implements BlockCryingObsidian {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.CRYING_OBSIDIAN;
     }
 }

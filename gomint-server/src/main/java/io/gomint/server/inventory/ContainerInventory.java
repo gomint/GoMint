@@ -39,13 +39,13 @@ public abstract class ContainerInventory extends Inventory implements io.gomint.
     @Override
     public BlockPosition getContainerPosition() {
         TileEntity tileEntity = (TileEntity) this.owner;
-        return tileEntity.getBlock().getPosition();
+        return tileEntity.getBlock().position();
     }
 
     @Override
     public WorldAdapter getWorld() {
         TileEntity tileEntity = (TileEntity) this.owner;
-        return tileEntity.getBlock().getWorld();
+        return tileEntity.getBlock().world();
     }
 
     /**

@@ -34,7 +34,7 @@ public class FrostedIce extends Block implements BlockFrostedIce {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.FROSTED_ICE;
     }
 

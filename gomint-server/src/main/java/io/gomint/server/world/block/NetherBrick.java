@@ -30,7 +30,7 @@ public class NetherBrick extends Block implements BlockNetherBrick {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.NETHER_BRICK;
     }
 

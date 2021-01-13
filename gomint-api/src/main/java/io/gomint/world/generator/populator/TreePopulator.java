@@ -54,9 +54,9 @@ public class TreePopulator implements Populator {
         int y = 255;
         for ( ; y > 0; --y ) {
             Block block = chunk.blockAt( x, y, z );
-            if ( block.getBlockType() == BlockType.DIRT || block.getBlockType() == BlockType.GRASS_BLOCK ) {
+            if ( block.blockType() == BlockType.DIRT || block.blockType() == BlockType.GRASS_BLOCK ) {
                 break;
-            } else if ( block.getBlockType() != BlockType.AIR && block.getBlockType() != BlockType.SNOW_LAYER ) {
+            } else if ( block.blockType() != BlockType.AIR && block.blockType() != BlockType.SNOW_LAYER ) {
                 return -1;
             }
         }

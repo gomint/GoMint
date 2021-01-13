@@ -30,7 +30,7 @@ public class Mycelium extends Block implements BlockMycelium {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.MYCELIUM;
     }
 

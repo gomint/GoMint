@@ -130,7 +130,7 @@ public class DoubleStoneSlab extends Block implements BlockDoubleStoneSlab {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.DOUBLE_STONE_SLAB;
     }
 

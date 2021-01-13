@@ -25,7 +25,7 @@ public class Anvil extends Block implements BlockAnvil {
     }
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
@@ -40,7 +40,7 @@ public class Anvil extends Block implements BlockAnvil {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.ANVIL;
     }
 

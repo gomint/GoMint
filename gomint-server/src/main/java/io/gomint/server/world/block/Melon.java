@@ -23,7 +23,7 @@ public class Melon extends Block implements BlockMelon {
     }
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
@@ -33,7 +33,7 @@ public class Melon extends Block implements BlockMelon {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.MELON;
     }
 

@@ -259,7 +259,7 @@ public class PacketInventoryTransactionHandler implements PacketHandler<PacketIn
                 // Transaction seems valid
                 io.gomint.server.world.block.Block block = connection.getEntity().getWorld().blockAt(connection.getEntity().getGamemode() == Gamemode.CREATIVE ? packet.getBlockPosition() : connection.getEntity().getBreakVector());
                 if (block != null) {
-                    BlockBreakEvent blockBreakEvent = new BlockBreakEvent(connection.getEntity(), block, connection.getEntity().getGamemode() == Gamemode.CREATIVE ? new ArrayList() : block.getDrops(itemInHand));
+                    BlockBreakEvent blockBreakEvent = new BlockBreakEvent(connection.getEntity(), block, connection.getEntity().getGamemode() == Gamemode.CREATIVE ? new ArrayList() : block.drops(itemInHand));
                     blockBreakEvent.setCancelled(connection.getEntity().getGamemode() == Gamemode.ADVENTURE); // TODO: Better handling for canBreak rules for adventure gamemode
 
                     connection.getEntity().getWorld().getServer().pluginManager().callEvent(blockBreakEvent);
@@ -272,7 +272,7 @@ public class PacketInventoryTransactionHandler implements PacketHandler<PacketIn
                     // Check for special break rights (creative)
                     if (connection.getEntity().getGamemode() == Gamemode.CREATIVE) {
                         if (connection.getEntity().getWorld().breakBlock(packet.getBlockPosition(), blockBreakEvent.getDrops(), true)) {
-                            block.setBlockType(BlockAir.class);
+                            block.blockType(BlockAir.class);
                             connection.getEntity().setBreakVector(null);
                         } else {
                             reset(packet, connection);
@@ -449,11 +449,11 @@ public class PacketInventoryTransactionHandler implements PacketHandler<PacketIn
 
             if (packet.getFace() != null) {
                 // Attach to block send queue
-                io.gomint.server.world.block.Block replacedBlock = blockClicked.getSide(packet.getFace());
+                io.gomint.server.world.block.Block replacedBlock = blockClicked.side(packet.getFace());
                 replacedBlock.send(connection);
 
                 for (Facing face : Facing.values()) {
-                    io.gomint.server.world.block.Block replacedSide = replacedBlock.getSide(face);
+                    io.gomint.server.world.block.Block replacedSide = replacedBlock.side(face);
                     replacedSide.send(connection);
                 }
             }

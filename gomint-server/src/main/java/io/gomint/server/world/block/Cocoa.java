@@ -29,7 +29,7 @@ public class Cocoa extends Growable implements BlockCocoa {
     }
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
@@ -39,7 +39,7 @@ public class Cocoa extends Growable implements BlockCocoa {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.COCOA;
     }
 

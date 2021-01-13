@@ -30,7 +30,7 @@ public class RedSandstone extends Block implements BlockRedSandstone {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.RED_SANDSTONE;
     }
 

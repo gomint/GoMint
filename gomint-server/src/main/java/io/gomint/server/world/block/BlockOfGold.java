@@ -34,7 +34,7 @@ public class BlockOfGold extends Block implements BlockBlockOfGold {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.BLOCK_OF_GOLD;
     }
 
@@ -48,7 +48,7 @@ public class BlockOfGold extends Block implements BlockBlockOfGold {
     }
 
     @Override
-    public List<ItemStack> getDrops( ItemStack itemInHand ) {
+    public List<ItemStack> drops(ItemStack itemInHand ) {
         if ( isCorrectTool( itemInHand ) ) {
             return new ArrayList<ItemStack>() {{
                 add( ItemBlockOfGold.create( 1 ) );

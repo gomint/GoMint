@@ -25,7 +25,7 @@ public class BrewingStand extends Block implements BlockBrewingStand {
     }
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
@@ -35,7 +35,7 @@ public class BrewingStand extends Block implements BlockBrewingStand {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.BREWING_STAND;
     }
 

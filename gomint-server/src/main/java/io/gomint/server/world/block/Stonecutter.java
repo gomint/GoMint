@@ -35,7 +35,7 @@ public class Stonecutter extends Block implements BlockStonecutter {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.STONECUTTER;
     }
 

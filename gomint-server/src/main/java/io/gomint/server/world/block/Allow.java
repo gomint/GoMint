@@ -32,7 +32,7 @@ public class Allow extends Block implements BlockAllow {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.ALLOW;
     }
 

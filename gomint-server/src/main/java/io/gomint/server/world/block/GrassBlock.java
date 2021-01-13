@@ -26,8 +26,8 @@ public class GrassBlock extends Block implements BlockGrassBlock {
 
     @Override
     public long update( UpdateReason updateReason, long currentTimeMS, float dT ) {
-        Block block = this.getSide( Facing.UP );
-        byte lightLevel = block.getSkyLightLevel();
+        Block block = this.side( Facing.UP );
+        byte lightLevel = block.skyLightLevel();
 
         if ( lightLevel >= 9 ) {
 
@@ -47,7 +47,7 @@ public class GrassBlock extends Block implements BlockGrassBlock {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.GRASS_BLOCK;
     }
 
@@ -57,7 +57,7 @@ public class GrassBlock extends Block implements BlockGrassBlock {
     }
 
     @Override
-    public List<ItemStack> getDrops( ItemStack itemInHand ) {
+    public List<ItemStack> drops(ItemStack itemInHand ) {
         return new ArrayList<ItemStack>(){{
             add( ItemDirt.create( 1 ) );
         }};

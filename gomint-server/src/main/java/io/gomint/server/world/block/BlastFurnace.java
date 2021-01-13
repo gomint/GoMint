@@ -30,7 +30,7 @@ public class BlastFurnace extends Block implements BlockBlastFurnace {
     }
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
@@ -40,7 +40,7 @@ public class BlastFurnace extends Block implements BlockBlastFurnace {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.FURNACE;
     }
 

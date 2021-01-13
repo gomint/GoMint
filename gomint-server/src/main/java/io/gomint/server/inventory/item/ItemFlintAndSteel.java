@@ -35,7 +35,7 @@ public class ItemFlintAndSteel extends ItemStack implements io.gomint.inventory.
             return false; // We clicked in air, ignore
         }
 
-        clickedBlock.getSide(face).setBlockType(BlockFire.class);
+        clickedBlock.side(face).blockType(BlockFire.class);
         return true;
     }
 

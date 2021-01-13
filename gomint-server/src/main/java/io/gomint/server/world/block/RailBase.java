@@ -45,14 +45,14 @@ public abstract class RailBase extends Block {
     );
 
     public boolean isRailBlock(Block block) {
-        return block.getBlockType() == BlockType.RAIL || block.getBlockType() == BlockType.POWERED_RAIL ||
-            block.getBlockType() == BlockType.DETECTOR_RAIL || block.getBlockType() == BlockType.ACTIVATOR_RAIL;
+        return block.blockType() == BlockType.RAIL || block.blockType() == BlockType.POWERED_RAIL ||
+            block.blockType() == BlockType.DETECTOR_RAIL || block.blockType() == BlockType.ACTIVATOR_RAIL;
     }
 
     @Override
     public boolean beforePlacement(EntityLiving entity, ItemStack item, Facing face, Location location) {
         Block block = entity.getWorld().blockAt(location.toBlockPosition().add(Vector.DOWN.toBlockPosition()));
-        return block.isSolid();
+        return block.solid();
     }
 
     private RailBase findRailAt(BlockPosition pos) {

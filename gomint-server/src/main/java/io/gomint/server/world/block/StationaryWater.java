@@ -19,7 +19,7 @@ public class StationaryWater extends Liquid implements BlockStationaryWater {
     }
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
@@ -51,7 +51,7 @@ public class StationaryWater extends Liquid implements BlockStationaryWater {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.STATIONARY_WATER;
     }
 

@@ -30,7 +30,7 @@ public class NetherQuartzOre extends Block implements BlockNetherQuartzOre {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.NETHER_QUARTZ_ORE;
     }
 

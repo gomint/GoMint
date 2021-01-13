@@ -33,7 +33,7 @@ public class Jigsaw extends Block implements BlockJigsaw {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.JIGSAW;
     }
 

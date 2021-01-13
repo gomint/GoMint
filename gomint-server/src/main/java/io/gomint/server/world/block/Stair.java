@@ -23,12 +23,12 @@ public abstract class Stair extends Block implements BlockStair {
     private static final BooleanBlockState TOP = new BooleanBlockState(() -> new String[]{"upside_down_bit"});
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
     @Override
-    public List<AxisAlignedBB> getBoundingBox() {
+    public List<AxisAlignedBB> boundingBoxes() {
         // TODO: Fix bounding box when top / directional
         return Collections.singletonList(new AxisAlignedBB(
             this.location.getX(),

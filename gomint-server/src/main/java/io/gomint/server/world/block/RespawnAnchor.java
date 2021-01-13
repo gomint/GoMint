@@ -36,7 +36,7 @@ public class RespawnAnchor extends Block implements BlockRespawnAnchor {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.RESPAWN_ANCHOR;
     }
 }

@@ -25,7 +25,7 @@ public class Cactus extends Block implements BlockCactus {
     }
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
@@ -42,7 +42,7 @@ public class Cactus extends Block implements BlockCactus {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.CACTUS;
     }
 

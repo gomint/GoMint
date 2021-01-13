@@ -34,7 +34,7 @@ public class EnderChest extends ContainerBlock implements BlockEnderChest {
     }
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
@@ -55,7 +55,7 @@ public class EnderChest extends ContainerBlock implements BlockEnderChest {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.ENDER_CHEST;
     }
 
@@ -76,7 +76,7 @@ public class EnderChest extends ContainerBlock implements BlockEnderChest {
     }
 
     @Override
-    public List<ItemStack> getDrops( ItemStack itemInHand ) {
+    public List<ItemStack> drops(ItemStack itemInHand ) {
         return new ArrayList<>() {{
             add(ItemObsidian.create(8));
         }};

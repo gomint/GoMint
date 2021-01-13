@@ -23,7 +23,7 @@ public class MonsterEgg extends Block implements BlockMonsterEgg {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.MONSTER_EGG;
     }
 

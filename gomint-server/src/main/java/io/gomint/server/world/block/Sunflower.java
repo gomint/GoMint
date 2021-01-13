@@ -18,7 +18,7 @@ public class Sunflower extends Block implements BlockSunflower {
     }
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
     
@@ -28,7 +28,7 @@ public class Sunflower extends Block implements BlockSunflower {
     }
 
     @Override
-    public boolean isSolid() {
+    public boolean solid() {
         return false;
     }
 
@@ -38,7 +38,7 @@ public class Sunflower extends Block implements BlockSunflower {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.SUNFLOWER;
     }
 

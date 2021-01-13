@@ -23,7 +23,7 @@ public class RedMushroom extends Block implements BlockRedMushroom {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.RED_MUSHROOM;
     }
 

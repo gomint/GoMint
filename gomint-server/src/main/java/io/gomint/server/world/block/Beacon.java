@@ -27,7 +27,7 @@ public class Beacon extends Block implements BlockBeacon {
     }
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
@@ -42,7 +42,7 @@ public class Beacon extends Block implements BlockBeacon {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.BEACON;
     }
 

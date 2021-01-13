@@ -36,7 +36,7 @@ public class BlockOfNetherite extends Block implements BlockBlockOfNetherite {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.BLACKSTONE;
     }
 }

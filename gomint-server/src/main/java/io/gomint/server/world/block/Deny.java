@@ -32,7 +32,7 @@ public class Deny extends Block implements BlockDeny {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.DENY;
     }
 

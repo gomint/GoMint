@@ -39,7 +39,7 @@ public class Barrel extends Block {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.BARREL;
     }
 

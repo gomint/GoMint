@@ -56,7 +56,7 @@ public class CraftingTable extends Block implements BlockCraftingTable {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.CRAFTING_TABLE;
     }
 

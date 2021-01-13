@@ -25,7 +25,7 @@ public class SlimeBlock extends Block implements BlockSlimeBlock {
     }
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
@@ -35,7 +35,7 @@ public class SlimeBlock extends Block implements BlockSlimeBlock {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.SLIME_BLOCK;
     }
 

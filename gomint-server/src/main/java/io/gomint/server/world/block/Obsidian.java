@@ -30,7 +30,7 @@ public class Obsidian extends Block implements BlockObsidian {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.OBSIDIAN;
     }
 

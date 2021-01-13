@@ -103,12 +103,12 @@ public abstract class Block implements io.gomint.world.block.Block {
     }
 
     @Override
-    public byte getBlockLightLevel() {
+    public byte blockLightLevel() {
         return blockLightLevel;
     }
 
     @Override
-    public byte getSkyLightLevel() {
+    public byte skyLightLevel() {
         return skyLightLevel;
     }
 
@@ -117,7 +117,7 @@ public abstract class Block implements io.gomint.world.block.Block {
     }
 
     @Override
-    public Location getLocation() {
+    public Location location() {
         return location;
     }
 
@@ -229,12 +229,12 @@ public abstract class Block implements io.gomint.world.block.Block {
     }
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return false;
     }
 
     @Override
-    public boolean isSolid() {
+    public boolean solid() {
         return true;
     }
 
@@ -277,7 +277,7 @@ public abstract class Block implements io.gomint.world.block.Block {
     }
 
     @Override
-    public Biome getBiome() {
+    public Biome biome() {
         if (this.position == null) {
             return null;
         }
@@ -287,7 +287,7 @@ public abstract class Block implements io.gomint.world.block.Block {
     }
 
     @Override
-    public <T extends io.gomint.world.block.Block> T setBlockType(Class<T> blockType) {
+    public <T extends io.gomint.world.block.Block> T blockType(Class<T> blockType) {
         // Check if this block can be replaced
         if (this.position.getY() < 0 || this.position.getY() > 255) {
             LOGGER.warn("Invalid block placement @ {}", this.position, new Exception());
@@ -329,9 +329,9 @@ public abstract class Block implements io.gomint.world.block.Block {
     }
 
     @Override
-    public <T extends io.gomint.world.block.Block> T setFromBlock(T apiInstance) {
+    public <T extends io.gomint.world.block.Block> T fromBlock(T apiInstance) {
         // Fast fail when location doesn't match
-        if (!this.position.equals(apiInstance.getPosition()) || !this.world.equals(apiInstance.getWorld())) {
+        if (!this.position.equals(apiInstance.position()) || !this.world.equals(apiInstance.world())) {
             return null;
         }
 
@@ -421,7 +421,7 @@ public abstract class Block implements io.gomint.world.block.Block {
     }
 
     @Override
-    public List<AxisAlignedBB> getBoundingBox() {
+    public List<AxisAlignedBB> boundingBoxes() {
         return Collections.singletonList(new AxisAlignedBB(
             this.position.getX(),
             this.position.getY(),
@@ -433,7 +433,7 @@ public abstract class Block implements io.gomint.world.block.Block {
     }
 
     @Override
-    public float getFrictionFactor() {
+    public float frictionFactor() {
         return 0.6f;
     }
 
@@ -443,7 +443,7 @@ public abstract class Block implements io.gomint.world.block.Block {
     }
 
     @Override
-    public Block getSide(Facing face) {
+    public Block side(Facing face) {
         switch (face) {
             case DOWN:
                 return this.getRelative(BlockPosition.DOWN);
@@ -670,7 +670,7 @@ public abstract class Block implements io.gomint.world.block.Block {
      * @param itemInHand which was used to destroy this blockId
      * @return a list of drops
      */
-    public List<ItemStack> getDrops(ItemStack itemInHand) {
+    public List<ItemStack> drops(ItemStack itemInHand) {
         // TODO: New system
         ItemStack drop = this.items.create(this.identifier.getBlockId(), (short) 0, (byte) 1, null);
         return Lists.newArrayList(drop);
@@ -710,7 +710,7 @@ public abstract class Block implements io.gomint.world.block.Block {
     }
 
     public boolean intersectsWith(AxisAlignedBB boundingBox) {
-        List<AxisAlignedBB> bbs = getBoundingBox();
+        List<AxisAlignedBB> bbs = boundingBoxes();
         if (bbs == null) {
             return false;
         }
@@ -752,7 +752,7 @@ public abstract class Block implements io.gomint.world.block.Block {
 
     protected void naturalBreak() {
         this.world.sendParticle(new Vector(this.position), Particle.BREAK_BLOCK, ParticleData.block(this));
-        this.setBlockType(Air.class);
+        this.blockType(Air.class);
     }
 
     public void setItems(Items items) {
@@ -764,16 +764,16 @@ public abstract class Block implements io.gomint.world.block.Block {
     }
 
     public io.gomint.world.block.Block performBreak(boolean creative) {
-        return this.setBlockType(BlockAir.class);
+        return this.blockType(BlockAir.class);
     }
 
     @Override
-    public WorldAdapter getWorld() {
+    public WorldAdapter world() {
         return this.world;
     }
 
     @Override
-    public BlockPosition getPosition() {
+    public BlockPosition position() {
         return this.position;
     }
 

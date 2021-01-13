@@ -32,7 +32,7 @@ public class WeepingVines extends Block implements BlockWeepingVines {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.WEEPING_VINES;
     }
 }

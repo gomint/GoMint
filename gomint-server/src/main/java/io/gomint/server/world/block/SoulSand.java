@@ -30,7 +30,7 @@ public class SoulSand extends Block implements BlockSoulSand {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.SOUL_SAND;
     }
 

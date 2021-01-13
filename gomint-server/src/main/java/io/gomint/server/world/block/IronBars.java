@@ -25,7 +25,7 @@ public class IronBars extends Block implements BlockIronBars {
     }
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
@@ -35,7 +35,7 @@ public class IronBars extends Block implements BlockIronBars {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.IRON_BARS;
     }
 

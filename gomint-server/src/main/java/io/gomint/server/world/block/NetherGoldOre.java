@@ -29,7 +29,7 @@ public class NetherGoldOre extends Block implements BlockNetherGoldOre {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.NETHER_GOLD_ORE;
     }
 

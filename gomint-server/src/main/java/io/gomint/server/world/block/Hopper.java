@@ -29,7 +29,7 @@ public class Hopper extends Block implements BlockHopper {
     }
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
@@ -39,7 +39,7 @@ public class Hopper extends Block implements BlockHopper {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.HOPPER;
     }
 

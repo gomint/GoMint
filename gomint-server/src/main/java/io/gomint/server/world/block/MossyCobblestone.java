@@ -30,7 +30,7 @@ public class MossyCobblestone extends Block implements BlockMossyCobblestone {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.MOSSY_COBBLESTONE;
     }
 

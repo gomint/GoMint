@@ -20,12 +20,12 @@ public class DetectorRail extends RailBase implements BlockDetectorRail {
     }
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
     @Override
-    public boolean isSolid() {
+    public boolean solid() {
         return false;
     }
 
@@ -35,7 +35,7 @@ public class DetectorRail extends RailBase implements BlockDetectorRail {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.DETECTOR_RAIL;
     }
 

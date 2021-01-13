@@ -20,12 +20,12 @@ public class Crops extends Growable {
     }
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
     @Override
-    public boolean isSolid() {
+    public boolean solid() {
         return false;
     }
 
@@ -40,7 +40,7 @@ public class Crops extends Growable {
     }
 
     @Override
-    public List<ItemStack> getDrops(ItemStack itemInHand) {
+    public List<ItemStack> drops(ItemStack itemInHand) {
         if (GROWTH.maxed(this)) {
             List<ItemStack> drops = new ArrayList<>() {{
                 add(world.getServer().items().create(296, (short) 0, (byte) 1, null)); // Beetroot
@@ -66,7 +66,7 @@ public class Crops extends Growable {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.CROPS;
     }
 

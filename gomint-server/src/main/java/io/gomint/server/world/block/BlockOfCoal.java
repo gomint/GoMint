@@ -32,7 +32,7 @@ public class BlockOfCoal extends Block implements BlockBlockOfCoal {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.BLOCK_OF_COAL;
     }
 
@@ -42,7 +42,7 @@ public class BlockOfCoal extends Block implements BlockBlockOfCoal {
     }
 
     @Override
-    public List<ItemStack> getDrops( ItemStack itemInHand ) {
+    public List<ItemStack> drops(ItemStack itemInHand ) {
         if ( isCorrectTool( itemInHand ) ) {
             return new ArrayList<ItemStack>() {{
                 add( ItemBlockOfCoal.create( 1 ) );

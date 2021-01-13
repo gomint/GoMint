@@ -161,7 +161,7 @@ public class Wall extends Block implements BlockWall {
             Block block = this.getSide(value);
 
             setConnection(value, ConnectionType.NONE);
-            if (block.isSolid()) {
+            if (block.solid()) {
                 setConnection(value, ConnectionType.SHORT);
             }
         }
@@ -185,7 +185,7 @@ public class Wall extends Block implements BlockWall {
     }
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
@@ -195,7 +195,7 @@ public class Wall extends Block implements BlockWall {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.WALL;
     }
 
@@ -210,7 +210,7 @@ public class Wall extends Block implements BlockWall {
     }
 
     @Override
-    public List<AxisAlignedBB> getBoundingBox() {
+    public List<AxisAlignedBB> boundingBoxes() {
         return Collections.singletonList(new AxisAlignedBB(
             this.location.getX() + 0.25f,
             this.location.getY(),

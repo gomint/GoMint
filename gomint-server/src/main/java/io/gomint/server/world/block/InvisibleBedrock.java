@@ -23,7 +23,7 @@ public class InvisibleBedrock extends Block implements BlockInvisibleBedrock {
     }
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
@@ -33,7 +33,7 @@ public class InvisibleBedrock extends Block implements BlockInvisibleBedrock {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.INVISIBLE_BEDROCK;
     }
 

@@ -28,12 +28,12 @@ public class SoulTorch extends Block implements BlockSoulTorch {
     }
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
     @Override
-    public boolean isSolid() {
+    public boolean solid() {
         return false;
     }
 
@@ -43,7 +43,7 @@ public class SoulTorch extends Block implements BlockSoulTorch {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.SOUL_TORCH;
     }
 
@@ -63,7 +63,7 @@ public class SoulTorch extends Block implements BlockSoulTorch {
     }
 
     @Override
-    public List<AxisAlignedBB> getBoundingBox() {
+    public List<AxisAlignedBB> boundingBoxes() {
         float size = 0.15f;
 
         switch (FACING.getState(this)) {
@@ -128,7 +128,7 @@ public class SoulTorch extends Block implements BlockSoulTorch {
 
         boolean foundSide = false;
         for (Facing toCheckFace : toCheck) {
-            if (!this.getSide(toCheckFace).isTransparent()) {
+            if (!this.side(toCheckFace).transparent()) {
                 FACING.setState(this, toCheckFace.opposite());
                 foundSide = true;
                 break;

@@ -39,7 +39,7 @@ public class Campfire extends Block implements BlockCampfire {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.CAMPFIRE;
     }
 }

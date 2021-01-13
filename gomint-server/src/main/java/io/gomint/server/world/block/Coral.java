@@ -53,7 +53,7 @@ public class Coral extends Block implements BlockCoral {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.CORAL;
     }
 

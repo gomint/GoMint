@@ -20,12 +20,12 @@ public class ActivatorRail extends RailBase implements BlockActivatorRail {
     }
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
     @Override
-    public boolean isSolid() {
+    public boolean solid() {
         return false;
     }
 
@@ -40,7 +40,7 @@ public class ActivatorRail extends RailBase implements BlockActivatorRail {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.ACTIVATOR_RAIL;
     }
 
@@ -50,13 +50,14 @@ public class ActivatorRail extends RailBase implements BlockActivatorRail {
     }
 
     @Override
-    public void setDirection(Direction direction) {
+    public BlockActivatorRail direction(Direction direction) {
         RailDirection railDirection = RailDirection.valueOf(direction.name());
         RAIL_DIRECTION.setState(this, railDirection);
+        return this;
     }
 
     @Override
-    public Direction getDirection() {
+    public Direction direction() {
         return Direction.valueOf(RAIL_DIRECTION.getState(this).name());
     }
 

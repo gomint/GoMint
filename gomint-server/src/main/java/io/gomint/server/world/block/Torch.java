@@ -5,7 +5,6 @@ import io.gomint.math.AxisAlignedBB;
 import io.gomint.math.Location;
 import io.gomint.server.entity.EntityLiving;
 import io.gomint.server.registry.RegisterInfo;
-import io.gomint.server.world.block.state.BlockfaceBlockState;
 import io.gomint.server.world.block.state.EnumBlockState;
 import io.gomint.world.block.BlockTorch;
 import io.gomint.world.block.BlockType;
@@ -47,12 +46,12 @@ public class Torch extends Block implements BlockTorch {
     });
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
     @Override
-    public boolean isSolid() {
+    public boolean solid() {
         return false;
     }
 
@@ -62,7 +61,7 @@ public class Torch extends Block implements BlockTorch {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.TORCH;
     }
 
@@ -82,7 +81,7 @@ public class Torch extends Block implements BlockTorch {
     }
 
     @Override
-    public List<AxisAlignedBB> getBoundingBox() {
+    public List<AxisAlignedBB> boundingBoxes() {
         float size = 0.15f;
 
         switch (FACING.getState(this)) {
@@ -137,7 +136,7 @@ public class Torch extends Block implements BlockTorch {
 
     @Override
     public boolean beforePlacement(EntityLiving entity, ItemStack item, Facing face, Location location) {
-        if (!this.getSide(face).isTransparent()) {
+        if (!this.side(face).transparent()) {
             FACING.setState(this, FacingMagic.valueOf(face.name()));
             return true;
         }

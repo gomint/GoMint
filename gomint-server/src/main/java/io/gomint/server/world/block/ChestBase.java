@@ -39,7 +39,7 @@ public abstract class ChestBase extends ContainerBlock {
     }
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
@@ -81,7 +81,7 @@ public abstract class ChestBase extends ContainerBlock {
         // Check for pairing
         for (Direction value : Direction.values()) {
             Block side = this.getSide(value);
-            if (side.getBlockType() == this.getBlockType()) {
+            if (side.blockType() == this.blockType()) {
                 ChestTileEntity tileEntity = this.getTileEntity();
                 tileEntity.pair(((ChestBase) side).getTileEntity());
                 side.updateBlock();
@@ -111,8 +111,8 @@ public abstract class ChestBase extends ContainerBlock {
     }
 
     @Override
-    public List<ItemStack> getDrops(ItemStack itemInHand) {
-        List<ItemStack> items = super.getDrops(itemInHand);
+    public List<ItemStack> drops(ItemStack itemInHand) {
+        List<ItemStack> items = super.drops(itemInHand);
 
         // We also drop the inventory
         ChestTileEntity chestTileEntity = this.getTileEntity();

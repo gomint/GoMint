@@ -21,12 +21,12 @@ public class StationaryLava extends Liquid implements BlockStationaryLava {
     }
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
     @Override
-    public boolean isSolid() {
+    public boolean solid() {
         return false;
     }
 
@@ -63,7 +63,7 @@ public class StationaryLava extends Liquid implements BlockStationaryLava {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.STATIONARY_LAVA;
     }
 

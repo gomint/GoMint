@@ -38,7 +38,7 @@ public class BlockOfBones extends Block implements io.gomint.world.block.BlockOf
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.BLOCK_OF_BONES;
     }
 
@@ -48,7 +48,7 @@ public class BlockOfBones extends Block implements io.gomint.world.block.BlockOf
     }
 
     @Override
-    public List<ItemStack> getDrops( ItemStack itemInHand ) {
+    public List<ItemStack> drops(ItemStack itemInHand ) {
         if ( isCorrectTool( itemInHand ) ) {
             return new ArrayList<ItemStack>() {{
                 add( ItemBlockOfBones.create( 1 ) );

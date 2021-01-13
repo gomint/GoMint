@@ -78,7 +78,7 @@ public abstract class Door extends Block implements BlockDoor {
     }
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
@@ -91,10 +91,10 @@ public abstract class Door extends Block implements BlockDoor {
     public boolean onBreak(boolean creative) {
         if (isTop()) {
             Block otherPart = this.world.blockAt(this.position.add(BlockPosition.DOWN));
-            otherPart.setBlockType(BlockAir.class);
+            otherPart.blockType(BlockAir.class);
         } else {
             Block otherPart = this.world.blockAt(this.position.add(BlockPosition.UP));
-            otherPart.setBlockType(BlockAir.class);
+            otherPart.blockType(BlockAir.class);
         }
 
         return true;

@@ -28,7 +28,7 @@ public class CrackedNetherBrick extends Block {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.CRACKED_NETHER_BRICK;
     }
 

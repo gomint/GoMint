@@ -35,7 +35,7 @@ public class CoalOre extends Block implements BlockCoalOre {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.COAL_ORE;
     }
 
@@ -45,7 +45,7 @@ public class CoalOre extends Block implements BlockCoalOre {
     }
 
     @Override
-    public List<ItemStack> getDrops( ItemStack itemInHand ) {
+    public List<ItemStack> drops(ItemStack itemInHand ) {
         if( isCorrectTool( itemInHand ) ) {
             ((WorldAdapter) this.location.getWorld()).createExpOrb( this.location, ThreadLocalRandom.current().nextInt( 3 ) );
             return new ArrayList<ItemStack>(){{

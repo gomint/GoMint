@@ -34,7 +34,7 @@ public class Dispenser extends Block implements BlockDispenser {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.DISPENSER;
     }
 

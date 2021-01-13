@@ -32,7 +32,7 @@ public class Border extends Block implements BlockBorder {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.BORDER;
     }
 

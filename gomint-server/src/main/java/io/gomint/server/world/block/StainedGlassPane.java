@@ -30,7 +30,7 @@ public class StainedGlassPane extends Block implements BlockStainedGlassPane {
     }
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
@@ -40,7 +40,7 @@ public class StainedGlassPane extends Block implements BlockStainedGlassPane {
     }
 
     @Override
-    public List<ItemStack> getDrops(ItemStack itemInHand) {
+    public List<ItemStack> drops(ItemStack itemInHand) {
         return new ArrayList<>();
     }
 
@@ -50,7 +50,7 @@ public class StainedGlassPane extends Block implements BlockStainedGlassPane {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.STAINED_GLASS_PANE;
     }
 

@@ -29,7 +29,7 @@ public class AncientDebris extends Block implements BlockAncientDebris {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.ANCIENT_DEBRIS;
     }
 

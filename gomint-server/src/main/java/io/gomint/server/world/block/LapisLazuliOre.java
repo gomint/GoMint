@@ -29,7 +29,7 @@ public class LapisLazuliOre extends Block implements BlockLapisLazuliOre {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.LAPIS_LAZULI_ORE;
     }
 

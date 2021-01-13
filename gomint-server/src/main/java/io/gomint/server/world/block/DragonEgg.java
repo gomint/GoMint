@@ -32,7 +32,7 @@ public class DragonEgg extends Block implements BlockDragonEgg {
     }
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
@@ -42,7 +42,7 @@ public class DragonEgg extends Block implements BlockDragonEgg {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.DRAGON_EGG;
     }
 
@@ -69,8 +69,8 @@ public class DragonEgg extends Block implements BlockDragonEgg {
 
     @Override
     public void teleport( BlockPosition blockPosition ) {
-        this.setBlockType( Air.class );
-        this.world.blockAt( blockPosition ).setBlockType( DragonEgg.class );
+        this.blockType( Air.class );
+        this.world.blockAt( blockPosition ).blockType( DragonEgg.class );
         this.world.sendLevelEvent( blockPosition.toVector(), LevelEvent.DRAGON_EGG_TELEPORT, 0 );
     }
 
@@ -81,7 +81,7 @@ public class DragonEgg extends Block implements BlockDragonEgg {
                 ThreadLocalRandom.current().nextInt( 8 ) - ThreadLocalRandom.current().nextInt( 8 ),
                 ThreadLocalRandom.current().nextInt( 16 ) - ThreadLocalRandom.current().nextInt( 16 ) );
 
-            if ( this.world.blockAt( blockPos ).getBlockType() == BlockType.AIR ) {
+            if ( this.world.blockAt( blockPos ).blockType() == BlockType.AIR ) {
                 this.teleport( blockPos );
                 return;
             }

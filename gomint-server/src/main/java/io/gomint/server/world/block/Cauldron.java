@@ -60,7 +60,7 @@ public class Cauldron extends Block implements BlockCauldron {
     }
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
@@ -70,7 +70,7 @@ public class Cauldron extends Block implements BlockCauldron {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.CAULDRON;
     }
 

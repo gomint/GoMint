@@ -35,7 +35,7 @@ public class Gravel extends Fallable implements BlockGravel {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.GRAVEL;
     }
 

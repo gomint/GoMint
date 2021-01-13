@@ -30,12 +30,12 @@ public class Fire extends Block implements BlockFire {
     }
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
     @Override
-    public boolean isSolid() {
+    public boolean solid() {
         return false;
     }
 
@@ -52,7 +52,7 @@ public class Fire extends Block implements BlockFire {
 
     @Override
     public boolean punch( EntityPlayer player ) {
-        this.setBlockType( Air.class );
+        this.blockType( Air.class );
         return true;
     }
 
@@ -62,12 +62,12 @@ public class Fire extends Block implements BlockFire {
     }
 
     @Override
-    public List<ItemStack> getDrops( ItemStack itemInHand ) {
+    public List<ItemStack> drops(ItemStack itemInHand ) {
         return new ArrayList<>();
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.FIRE;
     }
 

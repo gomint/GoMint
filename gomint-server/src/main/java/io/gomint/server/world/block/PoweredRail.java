@@ -20,12 +20,12 @@ public class PoweredRail extends RailBase implements BlockPoweredRail {
     }
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
     @Override
-    public boolean isSolid() {
+    public boolean solid() {
         return false;
     }
 
@@ -35,7 +35,7 @@ public class PoweredRail extends RailBase implements BlockPoweredRail {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.POWERED_RAIL;
     }
 

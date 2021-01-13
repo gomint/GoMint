@@ -35,7 +35,7 @@ public class Pumpkin extends Block implements BlockPumpkin {
     }
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
@@ -45,7 +45,7 @@ public class Pumpkin extends Block implements BlockPumpkin {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.PUMPKIN;
     }
 

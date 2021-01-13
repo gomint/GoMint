@@ -25,7 +25,7 @@ public class SnowLayer extends Block implements BlockSnowLayer {
     }
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
@@ -35,7 +35,7 @@ public class SnowLayer extends Block implements BlockSnowLayer {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.SNOW_LAYER;
     }
 

@@ -41,7 +41,7 @@ public class WoodenTrapdoor extends Trapdoor implements BlockWoodenTrapdoor {
     }
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
@@ -51,7 +51,7 @@ public class WoodenTrapdoor extends Trapdoor implements BlockWoodenTrapdoor {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.TRAPDOOR;
     }
 

@@ -25,7 +25,7 @@ public class NetherBrickFence extends Block implements BlockNetherBrickFence {
     }
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
@@ -35,7 +35,7 @@ public class NetherBrickFence extends Block implements BlockNetherBrickFence {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.NETHER_BRICK_FENCE;
     }
 

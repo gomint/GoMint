@@ -25,7 +25,7 @@ public class ChorusPlant extends Block implements BlockChorusPlant {
     }
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
@@ -44,7 +44,7 @@ public class ChorusPlant extends Block implements BlockChorusPlant {
         return true;
     }
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.CHORUS_PLANT;
     }
 

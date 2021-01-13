@@ -25,7 +25,7 @@ public class DaylightDetector extends Block implements BlockDaylightDetector {
     }
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
@@ -35,7 +35,7 @@ public class DaylightDetector extends Block implements BlockDaylightDetector {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.DAYLIGHT_DETECTOR;
     }
 

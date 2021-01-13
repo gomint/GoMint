@@ -29,7 +29,7 @@ public class WarpedNylium extends Block implements BlockWarpedNylium {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.WARPED_NYLIUM;
     }
 

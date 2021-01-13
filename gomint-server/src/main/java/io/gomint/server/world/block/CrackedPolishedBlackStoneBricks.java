@@ -29,7 +29,7 @@ public class CrackedPolishedBlackStoneBricks extends Block implements BlockCrack
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.CRACKED_POLISHED_BLACKSTONE_BRICKS;
     }
 

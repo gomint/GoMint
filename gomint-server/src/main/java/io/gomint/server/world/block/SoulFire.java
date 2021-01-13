@@ -2,7 +2,6 @@ package io.gomint.server.world.block;
 
 import io.gomint.event.entity.EntityDamageEvent;
 import io.gomint.inventory.item.ItemStack;
-import io.gomint.math.BlockPosition;
 import io.gomint.server.entity.EntityLiving;
 import io.gomint.server.entity.EntityPlayer;
 import io.gomint.server.registry.RegisterInfo;
@@ -31,12 +30,12 @@ public class SoulFire extends Block implements BlockSoulFire {
     }
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
     @Override
-    public boolean isSolid() {
+    public boolean solid() {
         return false;
     }
 
@@ -53,7 +52,7 @@ public class SoulFire extends Block implements BlockSoulFire {
 
     @Override
     public boolean punch(EntityPlayer player) {
-        this.setBlockType(Air.class);
+        this.blockType(Air.class);
         return true;
     }
 
@@ -63,12 +62,12 @@ public class SoulFire extends Block implements BlockSoulFire {
     }
 
     @Override
-    public List<ItemStack> getDrops(ItemStack itemInHand) {
+    public List<ItemStack> drops(ItemStack itemInHand) {
         return new ArrayList<>();
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.SOUL_FIRE;
     }
 }

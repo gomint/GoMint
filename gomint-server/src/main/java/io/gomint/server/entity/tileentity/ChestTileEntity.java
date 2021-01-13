@@ -73,9 +73,9 @@ public class ChestTileEntity extends ContainerTileEntity implements InventoryHol
      */
     public boolean isPaired() {
         if (this.findable) {
-            BlockPosition position = this.getBlock().getPosition();
-            Block other = this.getBlock().getWorld().blockAt(this.pairX, position.getY(), this.pairZ);
-            return other.getBlockType() == this.getBlock().getBlockType();
+            BlockPosition position = this.getBlock().position();
+            Block other = this.getBlock().world().blockAt(this.pairX, position.getY(), this.pairZ);
+            return other.blockType() == this.getBlock().blockType();
         }
 
         return false;
@@ -88,10 +88,10 @@ public class ChestTileEntity extends ContainerTileEntity implements InventoryHol
      */
     public void pair(ChestTileEntity other) {
         // Get the positions of both sides of the pair
-        BlockPosition otherBP = other.getBlock().getPosition();
+        BlockPosition otherBP = other.getBlock().position();
         long otherL = CoordinateUtils.toLong(otherBP.getX(), otherBP.getZ());
 
-        BlockPosition thisBP = this.getBlock().getPosition();
+        BlockPosition thisBP = this.getBlock().position();
         long thisL = CoordinateUtils.toLong(thisBP.getX(), thisBP.getZ());
 
         // Order them according to "natural" ordering in the world
@@ -133,8 +133,8 @@ public class ChestTileEntity extends ContainerTileEntity implements InventoryHol
             return null;
         }
 
-        BlockPosition position = this.getBlock().getPosition();
-        Chest other = this.getBlock().getWorld().blockAt(this.pairX, position.getY(), this.pairZ);
+        BlockPosition position = this.getBlock().position();
+        Chest other = this.getBlock().world().blockAt(this.pairX, position.getY(), this.pairZ);
         return other.getTileEntity();
     }
 
