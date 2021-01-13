@@ -9,6 +9,8 @@ package io.gomint.server.entity.animal;
 
 import io.gomint.inventory.item.ItemBone;
 import io.gomint.inventory.item.ItemCod;
+import io.gomint.inventory.item.ItemCookedCod;
+import io.gomint.inventory.item.ItemStack;
 import io.gomint.math.Location;
 import io.gomint.server.entity.Attribute;
 import io.gomint.server.entity.EntityType;
@@ -49,13 +51,14 @@ public class EntityCod extends EntityAnimal implements io.gomint.entity.animal.E
     protected void kill() {
         super.kill();
 
-        if (deadTimer > 0) {
+        if (isDead()) {
             return;
         }
 
         // Drop items
         Location location = this.getLocation();
-        this.world.dropItem(location, ItemCod.create(1));
+        ItemStack cod = isOnFire()? ItemCookedCod.create(1) : ItemCod.create(1);
+        this.world.dropItem(location, cod);
 
         ThreadLocalRandom random = ThreadLocalRandom.current();
         if (random.nextInt(4) == 0) {
