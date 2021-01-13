@@ -9,11 +9,9 @@ package io.gomint.server.entity;
 
 import io.gomint.entity.Entity;
 import io.gomint.server.registry.Generator;
-import io.gomint.server.registry.Registry;
 import io.gomint.server.registry.StringRegistry;
 import io.gomint.server.util.ClassPath;
 import io.gomint.server.util.performance.LambdaConstructionFactory;
-import io.gomint.server.world.block.Block;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,6 +35,7 @@ public class Entities {
         // Register all subgroups
         this.generators.register( classPath,"io.gomint.server.entity" );
         this.generators.register( classPath,"io.gomint.server.entity.active" );
+        this.generators.register( classPath,"io.gomint.server.entity.animal" );
         this.generators.register( classPath,"io.gomint.server.entity.monster" );
         this.generators.register( classPath,"io.gomint.server.entity.passive" );
         this.generators.register( classPath,"io.gomint.server.entity.projectile" );
