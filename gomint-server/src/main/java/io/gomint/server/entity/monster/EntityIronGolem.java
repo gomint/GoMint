@@ -7,8 +7,8 @@
 
 package io.gomint.server.entity.monster;
 
+import io.gomint.inventory.item.ItemFlower;
 import io.gomint.inventory.item.ItemIronIngot;
-import io.gomint.inventory.item.ItemRedFlower;
 import io.gomint.math.Location;
 import io.gomint.server.entity.Attribute;
 import io.gomint.server.entity.EntityLiving;
@@ -64,11 +64,9 @@ public class EntityIronGolem extends EntityLiving implements io.gomint.entity.mo
         Location location = this.getLocation();
         this.world.dropItem(location, ItemIronIngot.create(random.nextInt(3, 6)));
         
-        if (isLastDamageCausedByPlayer()) {
-            int amount = random.nextInt(3);
-            if (amount > 0) {
-                this.world.dropItem(location, ItemRedFlower.create(amount));
-            }
+        int amount = random.nextInt(3);
+        if (amount > 0) {
+            this.world.dropItem(location, ItemFlower.create(amount));
         }
     }
 
