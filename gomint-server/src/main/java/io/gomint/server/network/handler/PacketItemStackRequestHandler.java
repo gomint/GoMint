@@ -35,6 +35,7 @@ import io.gomint.server.network.packet.types.InventoryDropAction;
 import io.gomint.server.network.packet.types.InventoryGetCreativeAction;
 import io.gomint.server.network.packet.types.InventoryTransferAction;
 import io.gomint.server.network.packet.types.ItemStackRequestSlotInfo;
+import io.gomint.server.util.Values;
 import io.gomint.world.Gamemode;
 import it.unimi.dsi.fastutil.bytes.Byte2ObjectMap;
 import it.unimi.dsi.fastutil.bytes.Byte2ObjectOpenHashMap;
@@ -316,9 +317,9 @@ public class PacketItemStackRequestHandler implements PacketHandler<PacketItemSt
             case WindowMagicNumbers.ENCHANTMENT_TABLE_MATERIAL:
                 return 1;
             case WindowMagicNumbers.CRAFTING_INPUT:
-                return (byte) (info.getSlot() - 28);
+                return (byte) (info.getSlot() - Values.CRAFTING_INPUT_OFFSET);
             case WindowMagicNumbers.CREATED_OUTPUT:
-                return (byte) (info.getSlot() - 50);
+                return (byte) (info.getSlot() - Values.OUTPUT_OFFSET);
         }
 
         return info.getSlot();
@@ -331,9 +332,9 @@ public class PacketItemStackRequestHandler implements PacketHandler<PacketItemSt
             case WindowMagicNumbers.ENCHANTMENT_TABLE_MATERIAL:
                 return 15;
             case WindowMagicNumbers.CRAFTING_INPUT:
-                return (byte) (info.getSlot() + 28);
+                return (byte) (info.getSlot() + Values.CRAFTING_INPUT_OFFSET);
             case WindowMagicNumbers.CREATED_OUTPUT:
-                return (byte) (info.getSlot() + 50);
+                return (byte) (info.getSlot() + Values.OUTPUT_OFFSET);
         }
 
         return (byte) info.getSlot();
