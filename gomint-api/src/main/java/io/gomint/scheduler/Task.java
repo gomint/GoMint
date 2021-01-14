@@ -27,13 +27,13 @@ public interface Task {
      *
      * @param exceptionHandler which should be used to handle Exceptions
      */
-    void onException( ExceptionHandler exceptionHandler );
+    Task onException( ExceptionHandler exceptionHandler );
 
     /**
      * Register a new complete handler to fetch completion of tasks
      *
      * @param completeHandler which should be added to the completion execution list
      */
-    void onComplete( CompleteHandler completeHandler );
+    Task onComplete( CompleteHandler completeHandler );
 
 }

@@ -26,12 +26,13 @@ public class SyncTaskManager {
      *
      * @param task which should be executed
      */
-    public void addTask( SyncScheduledTask task ) {
-        if ( task.getNextExecution() == -1 ) return;
+    public SyncTaskManager addTask( SyncScheduledTask task ) {
+        if ( task.getNextExecution() == -1 ) return this;
 
         synchronized ( this.taskList ) {
             this.taskList.add( new SyncScheduledTaskHolder( task.getNextExecution(), task ) );
         }
+        return this;
     }
 
     /**
@@ -39,10 +40,11 @@ public class SyncTaskManager {
      *
      * @param task The task which should be removed
      */
-    void removeTask( SyncScheduledTask task ) {
+    SyncTaskManager removeTask( SyncScheduledTask task ) {
         synchronized ( this.taskList ) {
             this.taskList.remove( new SyncScheduledTaskHolder( -1, task ) );
         }
+        return this;
     }
 
     /**
@@ -50,18 +52,18 @@ public class SyncTaskManager {
      *
      * @param currentMillis The amount of millis when the update started
      */
-    public void update( long currentMillis ) {
+    public SyncTaskManager update( long currentMillis ) {
         synchronized ( this.taskList ) {
             // Iterate over all Tasks until we find some for later ticks
             while ( this.taskList.peek() != null && this.taskList.peek().execution < currentMillis ) {
                 SyncScheduledTaskHolder holder = this.taskList.poll();
                 if ( holder == null ) {
-                    return;
+                    return this;
                 }
 
                 SyncScheduledTask task = holder.task;
                 if ( task == null ) {
-                    return;
+                    return this;
                 }
 
                 // Check for abort value ( -1 )
@@ -77,6 +79,7 @@ public class SyncTaskManager {
                 }
             }
         }
+        return this;
     }
 
     private static class SyncScheduledTaskHolder {
