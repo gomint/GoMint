@@ -29,22 +29,18 @@ public class ScoreboardDisplay implements io.gomint.scoreboard.ScoreboardDisplay
         this.sortOrder = sortOrder;
     }
 
-    public Scoreboard getScoreboard() {
-        return scoreboard;
-    }
-
     @Override
-    public String getObjectiveName() {
+    public String objective() {
         return objectiveName;
     }
 
     @Override
-    public String getDisplayName() {
+    public String display() {
         return displayName;
     }
 
     @Override
-    public SortOrder getSortOrder() {
+    public SortOrder sortOrder() {
         return sortOrder;
     }
 
@@ -61,8 +57,9 @@ public class ScoreboardDisplay implements io.gomint.scoreboard.ScoreboardDisplay
     }
 
     @Override
-    public void removeEntry( DisplayEntry entry ) {
+    public ScoreboardDisplay removeEntry( DisplayEntry entry ) {
         this.scoreboard.removeScoreEntry( ( (io.gomint.server.scoreboard.DisplayEntry) entry ).getScoreId() );
+        return this;
     }
 
 }

@@ -56,12 +56,12 @@ public class Scoreboard implements io.gomint.scoreboard.Scoreboard {
     }
 
     @Override
-    public io.gomint.scoreboard.ScoreboardDisplay getDisplay( DisplaySlot slot ) {
+    public io.gomint.scoreboard.ScoreboardDisplay display(DisplaySlot slot ) {
         return this.displays.get( slot );
     }
 
     @Override
-    public void removeDisplay( DisplaySlot slot ) {
+    public Scoreboard removeDisplay( DisplaySlot slot ) {
         io.gomint.scoreboard.ScoreboardDisplay display = this.displays.remove( slot );
         if ( display != null ) {
             // Remove all scores on this display
@@ -72,7 +72,7 @@ public class Scoreboard implements io.gomint.scoreboard.Scoreboard {
             ObjectIterator<Long2ObjectMap.Entry<ScoreboardLine>> fastIterator = fastSet.fastIterator();
             while ( fastIterator.hasNext() ) {
                 Long2ObjectMap.Entry<ScoreboardLine> entry = fastIterator.next();
-                if ( entry.getValue().objective.equals( display.getObjectiveName() ) ) {
+                if ( entry.getValue().objective.equals( display.objective() ) ) {
                     validScoreIDs.add( entry.getLongKey() );
                 }
             }
@@ -87,15 +87,17 @@ public class Scoreboard implements io.gomint.scoreboard.Scoreboard {
             // Now get rid of the objective
             this.broadcast( this.constructRemoveDisplayPacket( display ) );
         }
+
+        return this;
     }
 
     private Packet constructDisplayPacket( DisplaySlot slot, io.gomint.scoreboard.ScoreboardDisplay display ) {
         PacketSetObjective packetSetObjective = new PacketSetObjective();
         packetSetObjective.setCriteriaName( "dummy" );
-        packetSetObjective.setDisplayName( display.getDisplayName() );
-        packetSetObjective.setObjectiveName( display.getObjectiveName() );
+        packetSetObjective.setDisplayName( display.display() );
+        packetSetObjective.setObjectiveName( display.objective() );
         packetSetObjective.setDisplaySlot( slot.name().toLowerCase() );
-        packetSetObjective.setSortOrder( display.getSortOrder().ordinal() );
+        packetSetObjective.setSortOrder( display.sortOrder().ordinal() );
         return packetSetObjective;
     }
 
@@ -248,7 +250,7 @@ public class Scoreboard implements io.gomint.scoreboard.Scoreboard {
 
     private Packet constructRemoveDisplayPacket( io.gomint.scoreboard.ScoreboardDisplay display ) {
         PacketRemoveObjective packetRemoveObjective = new PacketRemoveObjective();
-        packetRemoveObjective.setObjectiveName( display.getObjectiveName() );
+        packetRemoveObjective.setObjectiveName( display.objective() );
         return packetRemoveObjective;
     }
 
@@ -271,8 +273,8 @@ public class Scoreboard implements io.gomint.scoreboard.Scoreboard {
     private Packet constructRemoveScores( long scoreId ) {
         PacketSetScore packetSetScore = new PacketSetScore();
         packetSetScore.setType( (byte) 1 );
-        packetSetScore.setEntries( new ArrayList<PacketSetScore.ScoreEntry>() {{
-            add( new PacketSetScore.ScoreEntry( scoreId, "", 0 ) );
+        packetSetScore.setEntries(new ArrayList<>() {{
+            add(new PacketSetScore.ScoreEntry(scoreId, "", 0));
         }} );
         return packetSetScore;
     }
