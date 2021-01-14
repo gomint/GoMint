@@ -27,13 +27,13 @@ public class EnchantmentSmite extends Enchantment implements io.gomint.enchant.E
     }
 
     @Override
-    public int getMinEnchantAbility( short level ) {
+    public int minEnchantAbility( short level ) {
         return (byte) ( 5 + ( level - 1 ) * 8 );
     }
 
     @Override
-    public int getMaxEnchantAbility( short level ) {
-        return (byte) ( getMinEnchantAbility( level ) + 20 );
+    public int maxEnchantAbility( short level ) {
+        return (byte) ( minEnchantAbility( level ) + 20 );
     }
 
     @Override
@@ -43,7 +43,7 @@ public class EnchantmentSmite extends Enchantment implements io.gomint.enchant.E
     }
 
     @Override
-    public Rarity getRarity() {
+    public Rarity rarity() {
         return Rarity.UNCOMMON;
     }
 

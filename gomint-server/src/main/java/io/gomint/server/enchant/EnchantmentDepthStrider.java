@@ -27,13 +27,13 @@ public class EnchantmentDepthStrider extends Enchantment implements io.gomint.en
     }
 
     @Override
-    public int getMinEnchantAbility( short level ) {
+    public int minEnchantAbility( short level ) {
         return (byte) ( level * 10 );
     }
 
     @Override
-    public int getMaxEnchantAbility( short level ) {
-        return (byte) ( getMinEnchantAbility( level ) + 15 );
+    public int maxEnchantAbility( short level ) {
+        return (byte) ( minEnchantAbility( level ) + 15 );
     }
 
     @Override
@@ -42,7 +42,7 @@ public class EnchantmentDepthStrider extends Enchantment implements io.gomint.en
     }
 
     @Override
-    public Rarity getRarity() {
+    public Rarity rarity() {
         return Rarity.RARE;
     }
 

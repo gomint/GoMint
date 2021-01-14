@@ -74,7 +74,7 @@ public class EntityDolphin extends EntityAgeableAnimal implements io.gomint.enti
         if (lastDamageEntity instanceof EntityHuman) {
             Enchantment enchantment = ((EntityHuman) lastDamageEntity).getInventory().getItemInHand().getEnchantment(EnchantmentLooting.class);
             if (enchantment != null) {
-                looting = enchantment.getLevel();
+                looting = enchantment.level();
             }
         }
         

@@ -27,13 +27,13 @@ public class EnchantmentBlastProtection extends Enchantment implements io.gomint
     }
 
     @Override
-    public int getMinEnchantAbility( short level ) {
+    public int minEnchantAbility( short level ) {
         return (byte) ( 5 + ( level - 1 ) * 8 );
     }
 
     @Override
-    public int getMaxEnchantAbility( short level ) {
-        return (byte) ( getMinEnchantAbility( level ) + 12 );
+    public int maxEnchantAbility( short level ) {
+        return (byte) ( minEnchantAbility( level ) + 12 );
     }
 
     @Override
@@ -42,7 +42,7 @@ public class EnchantmentBlastProtection extends Enchantment implements io.gomint
     }
 
     @Override
-    public Rarity getRarity() {
+    public Rarity rarity() {
         return Rarity.RARE;
     }
 

@@ -27,13 +27,13 @@ public class EnchantmentBaneOfArthopods extends Enchantment implements io.gomint
     }
 
     @Override
-    public int getMinEnchantAbility( short level ) {
+    public int minEnchantAbility( short level ) {
         return ( 5 + ( level - 1 ) * 8 );
     }
 
     @Override
-    public int getMaxEnchantAbility( short level ) {
-        return ( getMinEnchantAbility( level ) + 20 );
+    public int maxEnchantAbility( short level ) {
+        return ( minEnchantAbility( level ) + 20 );
     }
 
     @Override
@@ -43,7 +43,7 @@ public class EnchantmentBaneOfArthopods extends Enchantment implements io.gomint
     }
 
     @Override
-    public Rarity getRarity() {
+    public Rarity rarity() {
         return Rarity.UNCOMMON;
     }
 

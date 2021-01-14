@@ -27,13 +27,13 @@ public class EnchantmentFeatherfalling extends Enchantment implements io.gomint.
     }
 
     @Override
-    public int getMinEnchantAbility( short level ) {
+    public int minEnchantAbility( short level ) {
         return (byte) ( 5 + ( level - 1 ) * 6 );
     }
 
     @Override
-    public int getMaxEnchantAbility( short level ) {
-        return (byte) ( getMinEnchantAbility( level ) + 10 );
+    public int maxEnchantAbility( short level ) {
+        return (byte) ( minEnchantAbility( level ) + 10 );
     }
 
     @Override
@@ -47,7 +47,7 @@ public class EnchantmentFeatherfalling extends Enchantment implements io.gomint.
     }
 
     @Override
-    public Rarity getRarity() {
+    public Rarity rarity() {
         return Rarity.UNCOMMON;
     }
 

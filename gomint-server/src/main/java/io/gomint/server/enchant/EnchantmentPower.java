@@ -27,13 +27,13 @@ public class EnchantmentPower extends Enchantment implements io.gomint.enchant.E
     }
 
     @Override
-    public int getMinEnchantAbility( short level ) {
+    public int minEnchantAbility( short level ) {
         return (byte) ( 1 + ( level - 1 ) * 10 );
     }
 
     @Override
-    public int getMaxEnchantAbility( short level ) {
-        return (byte) ( getMinEnchantAbility( level ) + 15 );
+    public int maxEnchantAbility( short level ) {
+        return (byte) ( minEnchantAbility( level ) + 15 );
     }
 
     @Override
@@ -42,7 +42,7 @@ public class EnchantmentPower extends Enchantment implements io.gomint.enchant.E
     }
 
     @Override
-    public Rarity getRarity() {
+    public Rarity rarity() {
         return Rarity.COMMON;
     }
 
