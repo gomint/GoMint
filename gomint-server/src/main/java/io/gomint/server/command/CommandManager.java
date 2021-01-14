@@ -335,7 +335,7 @@ public class CommandManager {
             Plugin originalPlugin = this.commandPlugins.remove(name);
             String cmdName;
             if (originalPlugin != null) {
-                cmdName = originalPlugin.getName() + ":" + name;
+                cmdName = originalPlugin.name() + ":" + name;
             } else {
                 cmdName = "gomint:" + name;
             }

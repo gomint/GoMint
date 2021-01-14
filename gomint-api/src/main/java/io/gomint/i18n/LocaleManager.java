@@ -127,7 +127,7 @@ public class LocaleManager {
      */
     public void initFromLocaleFolder( final File path ) {
         initFromLocaleFolderWithoutAutorefresh( path );
-        this.plugin.getScheduler().schedule( new Runnable() {
+        this.plugin.scheduler().schedule(new Runnable() {
             @Override
             public void run() {
                 initFromLocaleFolderWithoutAutorefresh( path );

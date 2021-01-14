@@ -17,20 +17,22 @@ public class PluginVersion implements Comparable<PluginVersion> {
     private int major;
     private int minor;
 
-    public int getMajor() {
+    public int major() {
         return major;
     }
 
-    public void setMajor(int major) {
+    public PluginVersion major(int major) {
         this.major = major;
+        return this;
     }
 
-    public int getMinor() {
+    public int minor() {
         return minor;
     }
 
-    public void setMinor(int minor) {
+    public PluginVersion minor(int minor) {
         this.minor = minor;
+        return this;
     }
 
     @Override

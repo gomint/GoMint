@@ -383,7 +383,7 @@ public class SimplePluginManager implements PluginManager, EventCaller {
                             }
                         } else {
                             field.setAccessible(true);
-                            field.set(built, getPlugin(plugin));
+                            field.set(built, plugin(plugin));
                         }
                     }
                 }
@@ -413,7 +413,7 @@ public class SimplePluginManager implements PluginManager, EventCaller {
                 this.callEvent(new PluginInstallEvent(plugin));
             } catch (Exception e) {
                 LOGGER.error("Plugin did startup but could not be installed: " + name, e);
-                this.metadata.remove(plugin.getName());
+                this.metadata.remove(plugin.name());
                 ReportUploader.create().exception(e).upload("Plugin could not be installed");
             }
 
@@ -538,10 +538,10 @@ public class SimplePluginManager implements PluginManager, EventCaller {
                                                 public void visit(String key, Object value) {
                                                     switch (key) {
                                                         case "major":
-                                                            version.get().setMajor((Integer) value);
+                                                            version.get().major((Integer) value);
                                                             break;
                                                         case "minor":
-                                                            version.get().setMinor((Integer) value);
+                                                            version.get().minor((Integer) value);
                                                             break;
                                                         default:
                                                             break;
@@ -628,7 +628,7 @@ public class SimplePluginManager implements PluginManager, EventCaller {
     }
 
     @Override
-    public void uninstallPlugin(Plugin plugin) {
+    public PluginManager uninstallPlugin(Plugin plugin) {
         // Check for security
         if (!CallerDetectorUtil.getCallerPlugin().equals(plugin.getClass())) {
             throw new SecurityException("Plugins can only disable themselves");
@@ -636,21 +636,22 @@ public class SimplePluginManager implements PluginManager, EventCaller {
 
         // Check if plugin is enabled
         if (!this.installedPlugins.containsValue(plugin)) {
-            return;
+            return this;
         }
 
         uninstallPlugin0(plugin);
+        return this;
     }
 
     private void uninstallPlugin0(Plugin plugin) {
         // Did we already disable this plugin?
-        if (!this.installedPlugins.containsKey(plugin.getName())) {
+        if (!this.installedPlugins.containsKey(plugin.name())) {
             return;
         }
 
         // Check for plugins with hard depends
         new HashMap<>(this.metadata).forEach((name, meta) -> {
-            if (meta.getDepends() != null && meta.getDepends().contains(plugin.getName())) {
+            if (meta.getDepends() != null && meta.getDepends().contains(plugin.name())) {
                 Plugin pluginToUninstall = installedPlugins.get(name);
                 if (pluginToUninstall != null) {
                     uninstallPlugin0(pluginToUninstall);
@@ -680,16 +681,16 @@ public class SimplePluginManager implements PluginManager, EventCaller {
 
         // CHECKSTYLE:OFF
         try {
-            LOGGER.info("Starting to shutdown {}", plugin.getName());
+            LOGGER.info("Starting to shutdown {}", plugin.name());
             plugin.onUninstall();
         } catch (Exception e) {
-            LOGGER.warn("Plugin throw an exception whilst uninstalling: " + plugin.getName(), e);
+            LOGGER.warn("Plugin throw an exception whilst uninstalling: " + plugin.name(), e);
         }
         // CHECKSTYLE:ON
 
-        LOGGER.info("Uninstalled plugin " + plugin.getName());
-        this.installedPlugins.remove(plugin.getName());
-        this.metadata.remove(plugin.getName());
+        LOGGER.info("Uninstalled plugin " + plugin.name());
+        this.installedPlugins.remove(plugin.name());
+        this.metadata.remove(plugin.name());
 
         // Unload the loader
         PluginClassloader classloader = (PluginClassloader) plugin.getClass().getClassLoader();
@@ -697,12 +698,12 @@ public class SimplePluginManager implements PluginManager, EventCaller {
     }
 
     @Override
-    public String getBaseDirectory() {
+    public String baseDirectory() {
         return this.pluginFolder.getAbsolutePath();
     }
 
     @Override
-    public <T extends Plugin> T getPlugin(String name) {
+    public <T extends Plugin> T plugin(String name) {
         Plugin plugin = this.loadedPlugins.get(name);
         if (plugin != null) {
             return (T) plugin;
@@ -712,7 +713,7 @@ public class SimplePluginManager implements PluginManager, EventCaller {
     }
 
     @Override
-    public Map<String, Plugin> getPlugins() {
+    public Map<String, Plugin> plugins() {
         return ImmutableMap.copyOf(this.installedPlugins);
     }
 
@@ -729,26 +730,29 @@ public class SimplePluginManager implements PluginManager, EventCaller {
     }
 
     @Override
-    public void registerListener(Plugin plugin, EventListener listener) {
+    public PluginManager registerListener(Plugin plugin, EventListener listener) {
         if (!plugin.getClass().getClassLoader().equals(listener.getClass().getClassLoader())) {
             throw new SecurityException("Wanted to register listener for another plugin");
         }
 
         this.eventManager.registerListener(listener);
+        return this;
     }
 
     @Override
-    public void unregisterListener(Plugin plugin, EventListener listener) {
+    public PluginManager unregisterListener(Plugin plugin, EventListener listener) {
         if (!plugin.getClass().getClassLoader().equals(listener.getClass().getClassLoader())) {
             throw new SecurityException("Wanted to unregister listener for another plugin");
         }
 
         this.eventManager.unregisterListener(listener);
+        return this;
     }
 
     @Override
-    public void registerCommand(Plugin plugin, Command command) {
+    public PluginManager registerCommand(Plugin plugin, Command command) {
         this.commandManager.register(plugin, command);
+        return this;
     }
 
     /**

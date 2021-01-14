@@ -29,7 +29,7 @@ public class TestCommand extends Command {
 
     @Override
     public CommandOutput execute(CommandSender commandSender, String alias, Map<String, Object> arguments) {
-        World world = this.plugin.getServer().createWorld(String.valueOf(ThreadLocalRandom.current().nextInt()), new CreateOptions());
+        World world = this.plugin.server().createWorld(String.valueOf(ThreadLocalRandom.current().nextInt()), new CreateOptions());
         EntityPlayer player = (EntityPlayer) commandSender;
         player.teleport(world.spawnLocation());
 

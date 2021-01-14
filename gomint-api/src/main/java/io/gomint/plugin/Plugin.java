@@ -124,8 +124,9 @@ public class Plugin {
      *
      * @param command which should be registered
      */
-    public void registerCommand( Command command ) {
+    public Plugin registerCommand( Command command ) {
         this.pluginManager.registerCommand( this, command );
+        return this;
     }
 
     /**
@@ -133,9 +134,10 @@ public class Plugin {
      *
      * @param listener The listener which should be registered
      */
-    public void registerListener( EventListener listener ) {
+    public Plugin registerListener( EventListener listener ) {
         this.pluginManager.registerListener( this, listener );
         this.listeners.add( listener );
+        return this;
     }
 
     /**
@@ -143,10 +145,12 @@ public class Plugin {
      *
      * @param listener which should be unregistered
      */
-    public void unregisterListener( EventListener listener ) {
+    public Plugin unregisterListener( EventListener listener ) {
         if ( this.listeners.remove( listener ) ) {
             this.pluginManager.unregisterListener( this, listener );
         }
+
+        return this;
     }
 
     /**
@@ -165,7 +169,7 @@ public class Plugin {
      * @return the stream for getting this resource, or null if it does not
      * exist
      */
-    public final InputStream getResourceAsStream( String name ) {
+    public final InputStream resourceAsStream(String name ) {
         return getClass().getClassLoader().getResourceAsStream( name );
     }
 
@@ -174,31 +178,32 @@ public class Plugin {
      *
      * @return the data folder of this plugin
      */
-    public final File getDataFolder() {
-        return new File( pluginManager().getBaseDirectory(), getName() );
+    public final File dataFolder() {
+        return new File( pluginManager().baseDirectory(), name() );
     }
 
     public PluginManager pluginManager() {
         return pluginManager;
     }
 
-    public String getName() {
+    public String name() {
         return name;
     }
 
-    public PluginVersion getVersion() {
+    public PluginVersion version() {
         return version;
     }
 
-    public Logger getLogger() {
+    public Logger logger() {
         return logger;
     }
 
-    public Scheduler getScheduler() {
+    public Scheduler scheduler() {
         return scheduler;
     }
 
-    public GoMint getServer() {
+    public GoMint server() {
         return server;
     }
+
 }

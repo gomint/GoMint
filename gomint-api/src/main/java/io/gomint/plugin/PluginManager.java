@@ -26,7 +26,7 @@ public interface PluginManager {
      * @param plugin which should be disabled
      * @throws SecurityException when somebody else as the Main Class tries to disable a plugin
      */
-    void uninstallPlugin( Plugin plugin );
+    PluginManager uninstallPlugin(Plugin plugin);
 
     /**
      * Absolute path of the plugin Directory. This is used to determinate where the data folders of the Plugins
@@ -34,7 +34,7 @@ public interface PluginManager {
      *
      * @return absolute Path of the plugin folder
      */
-    String getBaseDirectory();
+    String baseDirectory();
 
     /**
      * Get a plugin given by its name. The plugin needs to be loaded or enabled to return in here.
@@ -43,14 +43,14 @@ public interface PluginManager {
      * @param <T>  Type of the plugin
      * @return loaded or enabled plugin or null when the plugin was not found
      */
-    <T extends Plugin> T getPlugin( String name );
+    <T extends Plugin> T plugin(String name);
 
     /**
      * Get the a map containing the plugins.
      *
      * @return loaded or enabled plugin or null when the plugin was not found
      */
-    Map< String, Plugin > getPlugins();
+    Map<String, Plugin> plugins();
 
     /**
      * Check plugin installation status
@@ -58,7 +58,7 @@ public interface PluginManager {
      * @param name Plugin to check
      * @return Plugin installation status
      */
-    boolean isPluginInstalled( String name );
+    boolean isPluginInstalled(String name);
 
     /**
      * Call out a event. This will give it to all handlers attached and return it once its done.
@@ -67,7 +67,7 @@ public interface PluginManager {
      * @param <T>   The type of event which we handle
      * @return the handled and changed event
      */
-    <T extends Event> T callEvent( T event );
+    <T extends Event> T callEvent(T event);
 
     /**
      * Register a new event listener for the given plugin. This only works when you call it from a plugin class.
@@ -76,7 +76,7 @@ public interface PluginManager {
      * @param listener The listener which we want to register
      * @throws SecurityException when somebody else except the plugin registers the listener
      */
-    void registerListener( Plugin plugin, EventListener listener );
+    PluginManager registerListener(Plugin plugin, EventListener listener);
 
     /**
      * Unregister a listener. This listener does not get any more events after this
@@ -85,7 +85,7 @@ public interface PluginManager {
      * @param listener The listener which we want to unregister
      * @throws SecurityException when somebody else except the plugin unregisters the listener
      */
-    void unregisterListener( Plugin plugin, EventListener listener );
+    PluginManager unregisterListener(Plugin plugin, EventListener listener);
 
     /**
      * Register a new command for the given plugin. This only works when you call it from a plugin class.
@@ -93,6 +93,6 @@ public interface PluginManager {
      * @param plugin
      * @param command
      */
-    void registerCommand( Plugin plugin, Command command );
+    PluginManager registerCommand(Plugin plugin, Command command);
 
 }
