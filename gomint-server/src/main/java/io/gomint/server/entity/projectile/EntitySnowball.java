@@ -79,7 +79,7 @@ public class EntitySnowball extends EntityThrowable implements io.gomint.entity.
                 }
             }
 
-            BlockType blockOnPosType = super.getLocation().getBlock().blockType();
+            BlockType blockOnPosType = super.getLocation().block().blockType();
 
             // A snowball projectile is set on fire if it goes through lava (but doesn't ignite hit entities)
             if (blockOnPosType == BlockType.FLOWING_LAVA || blockOnPosType == BlockType.STATIONARY_LAVA) {

@@ -203,8 +203,8 @@ public abstract class EntityProjectile extends Entity implements io.gomint.entit
             0
         ) );
 
-        this.setYaw( position.getYaw() );
-        this.setPitch( position.getPitch() );
+        this.setYaw( position.yaw() );
+        this.setPitch( position.pitch() );
 
         return position;
     }
@@ -227,9 +227,9 @@ public abstract class EntityProjectile extends Entity implements io.gomint.entit
 
     protected void setMotionFromEntity(Location position, Vector motion, float pitchOffset, float velocity, float inaccuracy) {
         Vector newMotion = new Vector(
-            (float) (-Math.sin(position.getYaw() * 0.0175f) * Math.cos(position.getPitch() * 0.0175f)),
-            (float) -Math.sin((position.getPitch() + pitchOffset) * 0.0175f),
-            (float) (Math.cos(position.getYaw() * 0.0175f) * Math.cos(position.getPitch() * 0.0175f))
+            (float) (-Math.sin(position.yaw() * 0.0175f) * Math.cos(position.pitch() * 0.0175f)),
+            (float) -Math.sin((position.pitch() + pitchOffset) * 0.0175f),
+            (float) (Math.cos(position.yaw() * 0.0175f) * Math.cos(position.pitch() * 0.0175f))
         );
 
         this.setMotionFromHeading(newMotion.add(motion), velocity, inaccuracy);
@@ -237,9 +237,9 @@ public abstract class EntityProjectile extends Entity implements io.gomint.entit
 
     protected void setMotionFromPosition(Location position, float pitchOffset, float velocity, float inaccuracy) {
         Vector motion = new Vector(
-            (float) (-Math.sin(position.getYaw() * 0.0175f) * Math.cos(position.getPitch() * 0.0175f)),
-            (float) -Math.sin((position.getPitch() + pitchOffset) * 0.0175f),
-            (float) (Math.cos(position.getYaw() * 0.0175f) * Math.cos(position.getPitch() * 0.0175f))
+            (float) (-Math.sin(position.yaw() * 0.0175f) * Math.cos(position.pitch() * 0.0175f)),
+            (float) -Math.sin((position.pitch() + pitchOffset) * 0.0175f),
+            (float) (Math.cos(position.yaw() * 0.0175f) * Math.cos(position.pitch() * 0.0175f))
         );
 
         this.setMotionFromHeading(motion, velocity, inaccuracy);

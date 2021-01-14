@@ -341,8 +341,8 @@ public class PlayerConnection implements ConnectionWithState {
 
                 if (!this.entity.getBlockUpdates().isEmpty()) {
                     for (BlockPosition position : this.entity.getBlockUpdates()) {
-                        int chunkX = CoordinateUtils.fromBlockToChunk(position.getX());
-                        int chunkZ = CoordinateUtils.fromBlockToChunk(position.getZ());
+                        int chunkX = CoordinateUtils.fromBlockToChunk(position.x());
+                        int chunkZ = CoordinateUtils.fromBlockToChunk(position.z());
                         long chunkHash = CoordinateUtils.toLong(chunkX, chunkZ);
                         if (this.playerChunks.contains(chunkHash)) {
                             this.entity.getWorld().appendUpdatePackets(this, position);
@@ -710,7 +710,7 @@ public class PlayerConnection implements ConnectionWithState {
         if (from != null) {
             int oldChunkX = CoordinateUtils.fromBlockToChunk((int) from.getX());
             int oldChunkZ = CoordinateUtils.fromBlockToChunk((int) from.getZ());
-            if (!from.getWorld().equals(worldAdapter) || oldChunkX != currentXChunk || oldChunkZ != currentZChunk) {
+            if (!from.world().equals(worldAdapter) || oldChunkX != currentXChunk || oldChunkZ != currentZChunk) {
                 worldAdapter.movePlayerToChunk(currentXChunk, currentZChunk, this.entity);
                 this.sendNetworkChunkPublisher();
             }
@@ -854,9 +854,9 @@ public class PlayerConnection implements ConnectionWithState {
         move.setX(location.getX());
         move.setY((float) (location.getY() + 1.62));
         move.setZ(location.getZ());
-        move.setHeadYaw(location.getHeadYaw());
-        move.setYaw(location.getYaw());
-        move.setPitch(location.getPitch());
+        move.setHeadYaw(location.headYaw());
+        move.setYaw(location.yaw());
+        move.setPitch(location.pitch());
         move.setMode(MovePlayerMode.TELEPORT);
         move.setOnGround(this.getEntity().isOnGround());
         move.setRidingEntityId(0);    // TODO: Implement riding entities correctly

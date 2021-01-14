@@ -57,7 +57,7 @@ public class DropItemTransaction implements Transaction {
 
     @Override
     public void commit() {
-        EntityItem item = (EntityItem) this.location.getWorld().createItemDrop( this.location, this.targetItem );
+        EntityItem item = (EntityItem) this.location.world().createItemDrop( this.location, this.targetItem );
         item.setVelocity( this.velocity );
     }
 

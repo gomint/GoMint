@@ -47,7 +47,7 @@ public class CoalOre extends Block implements BlockCoalOre {
     @Override
     public List<ItemStack> drops(ItemStack itemInHand ) {
         if( isCorrectTool( itemInHand ) ) {
-            ((WorldAdapter) this.location.getWorld()).createExpOrb( this.location, ThreadLocalRandom.current().nextInt( 3 ) );
+            ((WorldAdapter) this.location.world()).createExpOrb( this.location, ThreadLocalRandom.current().nextInt( 3 ) );
             return new ArrayList<ItemStack>(){{
                 add( ItemCoal.create( 1 ) );
             }};

@@ -95,16 +95,16 @@ public class Explosion {
                 int newZ = MathUtils.fastFloor( directionZ );
 
                 if ( this.currentBlock == null ||
-                    newX != this.tempBlock.getX() ||
-                    newY != this.tempBlock.getY() ||
-                    newZ != this.tempBlock.getZ() ) {
+                    newX != this.tempBlock.x() ||
+                    newY != this.tempBlock.y() ||
+                    newZ != this.tempBlock.z() ) {
 
-                    this.tempBlock.setX( newX );
-                    this.tempBlock.setY( newY );
-                    this.tempBlock.setZ( newZ );
+                    this.tempBlock.x( newX );
+                    this.tempBlock.y( newY );
+                    this.tempBlock.z( newZ );
 
                     // Break if collision checks go out of world borders
-                    if ( this.tempBlock.getY() < 0 || this.tempBlock.getY() > 255 ) {
+                    if ( this.tempBlock.y() < 0 || this.tempBlock.y() > 255 ) {
                         break;
                     }
 

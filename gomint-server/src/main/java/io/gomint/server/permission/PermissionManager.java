@@ -61,12 +61,12 @@ public class PermissionManager implements io.gomint.permission.PermissionManager
     }
 
     @Override
-    public boolean hasPermission(String permission) {
-        return this.hasPermission(permission, false);
+    public boolean has(String permission) {
+        return this.has(permission, false);
     }
 
     @Override
-    public boolean hasPermission( String permission, boolean defaultValue ) {
+    public boolean has(String permission, boolean defaultValue ) {
         // Check if player is op
         if ( this.player.isOp() ) {
             return true;
@@ -149,38 +149,43 @@ public class PermissionManager implements io.gomint.permission.PermissionManager
     }
 
     @Override
-    public void addGroup( Group group ) {
+    public PermissionManager addGroup( Group group ) {
         this.groups.add( (PermissionGroup) group );
         this.cache.clear();
         this.dirty = true;
+        return this;
     }
 
     @Override
-    public void removeGroup( Group group ) {
+    public PermissionManager removeGroup( Group group ) {
         this.groups.remove( group );
         this.cache.clear();
         this.dirty = true;
+        return this;
     }
 
     @Override
-    public void setPermission( String permission, boolean value ) {
+    public PermissionManager permission(String permission, boolean value ) {
         this.permissions.put( permission.intern(), value );
         this.cache.clear();
         this.dirty = true;
+        return this;
     }
 
     @Override
-    public void removePermission( String permission ) {
+    public PermissionManager remove(String permission ) {
         this.permissions.removeBoolean( permission );
         this.cache.clear();
         this.dirty = true;
+        return this;
     }
 
     /**
      * Notify about op toggle
      */
-    public void toggleOp() {
+    public PermissionManager toggleOp() {
         this.dirty = true;
+        return this;
     }
 
 }

@@ -325,7 +325,7 @@ public class LevelDBChunkAdapter extends ChunkAdapter {
                 if (entity != null) {
                     entity.initFromNBT(compound);
                     Location location = entity.getLocation();
-                    location.setWorld(this.world);
+                    location.world(this.world);
                     entity.spawn(location);
                 }
             } catch (IOException | AllocationLimitReachedException e) {

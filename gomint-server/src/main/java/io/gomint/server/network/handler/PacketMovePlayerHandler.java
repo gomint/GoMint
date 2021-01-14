@@ -1,13 +1,9 @@
 package io.gomint.server.network.handler;
 
-import io.gomint.event.player.PlayerExhaustEvent;
-import io.gomint.event.player.PlayerMoveEvent;
 import io.gomint.math.Location;
-import io.gomint.math.Vector;
 import io.gomint.server.entity.EntityPlayer;
 import io.gomint.server.network.PlayerConnection;
 import io.gomint.server.network.packet.PacketMovePlayer;
-import io.gomint.server.world.block.Block;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,9 +22,9 @@ public class PacketMovePlayerHandler implements PacketHandler<PacketMovePlayer> 
         to.setX( packet.getX() );
         to.setY( packet.getY() - entity.getEyeHeight() ); // Subtract eye height since client sends it at the eyes
         to.setZ( packet.getZ() );
-        to.setHeadYaw( packet.getHeadYaw() );
-        to.setYaw( packet.getYaw() );
-        to.setPitch( packet.getPitch() );
+        to.headYaw( packet.getHeadYaw() );
+        to.yaw( packet.getYaw() );
+        to.pitch( packet.getPitch() );
 
         // Does the entity have a teleport open?
         if ( connection.getEntity().getTeleportPosition() != null ) {
@@ -47,9 +43,9 @@ public class PacketMovePlayerHandler implements PacketHandler<PacketMovePlayer> 
         if ( from.getX() - to.getX() == 0 &&
             from.getY() - to.getY() == 0 &&
             from.getZ() - to.getZ() == 0 &&
-            from.getHeadYaw() - to.getHeadYaw() == 0 &&
-            from.getYaw() - to.getYaw() == 0 &&
-            from.getPitch() - to.getPitch() == 0 ) {
+            from.headYaw() - to.headYaw() == 0 &&
+            from.yaw() - to.yaw() == 0 &&
+            from.pitch() - to.pitch() == 0 ) {
             return;
         }
 

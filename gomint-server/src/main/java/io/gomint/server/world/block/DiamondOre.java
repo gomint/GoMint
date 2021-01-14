@@ -48,7 +48,7 @@ public class DiamondOre extends Block implements BlockDiamondOre {
     public List<ItemStack> drops(ItemStack itemInHand ) {
         ArrayList<ItemStack> drops = new ArrayList<>();
         if ( isCorrectTool( itemInHand ) ) {
-            ( (WorldAdapter) this.location.getWorld() ).createExpOrb( this.location, ThreadLocalRandom.current().nextInt( 3 ) );
+            ( (WorldAdapter) this.location.world() ).createExpOrb( this.location, ThreadLocalRandom.current().nextInt( 3 ) );
             drops.add( ItemDiamond.create( 1 ) );
         }
         return drops;

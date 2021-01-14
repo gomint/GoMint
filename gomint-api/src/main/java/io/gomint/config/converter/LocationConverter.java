@@ -40,15 +40,15 @@ public class LocationConverter extends BaseConverter {
         Location location = (Location) object;
         Map<String, Object> saveMap = new HashMap<>();
 
-        if ( location.getWorld() != null ) {
-            saveMap.put( "world", location.getWorld().folder() );
+        if ( location.world() != null ) {
+            saveMap.put( "world", location.world().folder() );
         }
 
         saveMap.put( "x", location.getX() );
         saveMap.put( "y", location.getY() );
         saveMap.put( "z", location.getZ() );
-        saveMap.put( "yaw", location.getYaw() );
-        saveMap.put( "pitch", location.getPitch() );
+        saveMap.put( "yaw", location.yaw() );
+        saveMap.put( "pitch", location.pitch() );
 
         return saveMap;
     }

@@ -96,16 +96,16 @@ public abstract class Liquid<B> extends Block implements BlockLiquid<B> {
                 blockDecay = this.getEffectiveFlowDecay(this.world.blockAt(other.position().add(0, -1, 0)));
                 if (blockDecay >= 0) {
                     byte realDecay = (byte) (blockDecay - (decay - 8));
-                    vector = vector.add((other.position().getX() - this.position().getX()) * (float) realDecay,
-                        (other.position().getY() - this.position().getY()) * (float) realDecay,
-                        (other.position().getZ() - this.position().getZ()) * (float) realDecay);
+                    vector = vector.add((other.position().x() - this.position().x()) * (float) realDecay,
+                        (other.position().y() - this.position().y()) * (float) realDecay,
+                        (other.position().z() - this.position().z()) * (float) realDecay);
                 }
             } else {
                 // Check if we need to update the other blocks decay
                 byte realDecay = (byte) (blockDecay - decay);
-                vector = vector.add((other.position().getX() - this.position().getX()) * (float) realDecay,
-                    (other.position().getY() - this.position().getY()) * (float) realDecay,
-                    (other.position().getZ() - this.position().getZ()) * (float) realDecay);
+                vector = vector.add((other.position().x() - this.position().x()) * (float) realDecay,
+                    (other.position().y() - this.position().y()) * (float) realDecay,
+                    (other.position().z() - this.position().z()) * (float) realDecay);
             }
         }
 

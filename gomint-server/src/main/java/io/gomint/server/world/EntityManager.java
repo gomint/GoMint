@@ -227,9 +227,9 @@ public class EntityManager {
                     relativeMovement.setY(movedEntity.getPositionY());
                     relativeMovement.setZ(movedEntity.getPositionZ());
 
-                    relativeMovement.setOldHeadYaw(old.getHeadYaw());
-                    relativeMovement.setOldYaw(old.getYaw());
-                    relativeMovement.setOldPitch(old.getPitch());
+                    relativeMovement.setOldHeadYaw(old.headYaw());
+                    relativeMovement.setOldYaw(old.yaw());
+                    relativeMovement.setOldPitch(old.pitch());
                     relativeMovement.setHeadYaw(movedEntity.getHeadYaw());
                     relativeMovement.setYaw(movedEntity.getYaw());
                     relativeMovement.setPitch(movedEntity.getPitch());

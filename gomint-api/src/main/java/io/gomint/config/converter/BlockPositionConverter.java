@@ -38,9 +38,9 @@ public class BlockPositionConverter extends BaseConverter {
         BlockPosition location = (BlockPosition) object;
         Map<String, Object> saveMap = new HashMap<>();
 
-        saveMap.put( "x", location.getX() );
-        saveMap.put( "y", location.getY() );
-        saveMap.put( "z", location.getZ() );
+        saveMap.put( "x", location.x() );
+        saveMap.put( "y", location.y() );
+        saveMap.put( "z", location.z() );
 
         return saveMap;
     }

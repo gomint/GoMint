@@ -48,7 +48,7 @@ public class EmeraldOre extends Block implements BlockEmeraldOre {
     public List<ItemStack> drops(ItemStack itemInHand ) {
         List<ItemStack> drops = new ArrayList<>();
         if ( isCorrectTool( itemInHand ) ) {
-            ( (WorldAdapter) this.location.getWorld() ).createExpOrb( this.location, ThreadLocalRandom.current().nextInt( 3 ) );
+            ( (WorldAdapter) this.location.world() ).createExpOrb( this.location, ThreadLocalRandom.current().nextInt( 3 ) );
             drops.add( ItemEmerald.create( 1 ) );
         }
         return drops;

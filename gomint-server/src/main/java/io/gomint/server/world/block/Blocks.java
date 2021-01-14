@@ -75,7 +75,7 @@ public class Blocks {
                 return block;
             }
 
-            block.setData(identifier, tileEntity, (WorldAdapter) location.getWorld(), location, blockPosition, layer, skyLightLevel, blockLightLevel, chunkSlice, index);
+            block.setData(identifier, tileEntity, (WorldAdapter) location.world(), location, blockPosition, layer, skyLightLevel, blockLightLevel, chunkSlice, index);
             return block;
         }
 
@@ -114,7 +114,7 @@ public class Blocks {
     }
 
     public boolean replaceWithItem(Block newBlock, EntityPlayer entity, Block clickedBlock, Block block, Facing face, ItemStack item, Vector clickVector) {
-        WorldAdapter adapter = (WorldAdapter) block.location.getWorld();
+        WorldAdapter adapter = (WorldAdapter) block.location.world();
 
         newBlock.location = block.location;
         newBlock.position = block.position;

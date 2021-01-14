@@ -38,9 +38,9 @@ public class SetWorldSpawnCommand extends Command {
         // Handling argument: spawnPoint
         BlockPosition spawnPoint = (BlockPosition) arguments.get("spawnPoint");
         if (spawnPoint != null) {
-            worldSpawnLocation.setX(spawnPoint.getX());
-            worldSpawnLocation.setY(spawnPoint.getY());
-            worldSpawnLocation.setZ(spawnPoint.getZ());
+            worldSpawnLocation.setX(spawnPoint.x());
+            worldSpawnLocation.setY(spawnPoint.y());
+            worldSpawnLocation.setZ(spawnPoint.z());
         }
 
         this.floorLocation(worldSpawnLocation);

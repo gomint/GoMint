@@ -435,15 +435,15 @@ public abstract class Packet {
     }
 
     public void writeBlockPosition(BlockPosition position, PacketBuffer buffer) {
-        buffer.writeSignedVarInt(position.getX());
-        buffer.writeUnsignedVarInt(position.getY());
-        buffer.writeSignedVarInt(position.getZ());
+        buffer.writeSignedVarInt(position.x());
+        buffer.writeUnsignedVarInt(position.y());
+        buffer.writeSignedVarInt(position.z());
     }
 
     public void writeSignedBlockPosition(BlockPosition position, PacketBuffer buffer) {
-        buffer.writeSignedVarInt(position.getX());
-        buffer.writeSignedVarInt(position.getY());
-        buffer.writeSignedVarInt(position.getZ());
+        buffer.writeSignedVarInt(position.x());
+        buffer.writeSignedVarInt(position.y());
+        buffer.writeSignedVarInt(position.z());
     }
 
     public void writeEntityLinks(List<EntityLink> links, PacketBuffer buffer) {

@@ -4,15 +4,8 @@ import io.gomint.jraknet.PacketBuffer;
 import io.gomint.math.Location;
 import io.gomint.server.network.Protocol;
 import io.gomint.server.player.PlayerPermission;
-import io.gomint.server.util.StringShortPair;
-import io.gomint.taglib.AllocationLimitReachedException;
-import io.gomint.taglib.NBTReader;
 import io.gomint.world.Gamerule;
 
-import java.io.IOException;
-import java.nio.ByteOrder;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -94,8 +87,8 @@ public class PacketStartGame extends Packet {
         buffer.writeLFloat(this.location.getX()); // Vec3
         buffer.writeLFloat(this.location.getY());
         buffer.writeLFloat(this.location.getZ());
-        buffer.writeLFloat(this.location.getYaw()); // Vec2
-        buffer.writeLFloat(this.location.getPitch());
+        buffer.writeLFloat(this.location.yaw()); // Vec2
+        buffer.writeLFloat(this.location.pitch());
 
         // LevelSettings
         buffer.writeSignedVarInt(this.seed);

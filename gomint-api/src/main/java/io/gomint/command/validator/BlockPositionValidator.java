@@ -43,17 +43,17 @@ public class BlockPositionValidator extends ParamValidator {
         String[] split = input.split( " " );
 
         // Parse x
-        Integer xInt = parsePos( entityPosition.getX(), split[0] );
+        Integer xInt = parsePos( entityPosition.x(), split[0] );
         if ( xInt == null ) {
             return null;
         }
 
-        Integer yInt = parsePos( entityPosition.getY(), split[1] );
+        Integer yInt = parsePos( entityPosition.y(), split[1] );
         if ( yInt == null ) {
             return null;
         }
 
-        Integer zInt = parsePos( entityPosition.getZ(), split[2] );
+        Integer zInt = parsePos( entityPosition.z(), split[2] );
         if ( zInt == null ) {
             return null;
         }

@@ -71,16 +71,16 @@ public class TPCommand extends Command {
             if (world == null) {
                 return CommandOutput.failure("World %%s could not be found", arguments.get("world"));
             } else {
-                to.setWorld(world);
+                to.world(world);
             }
         }
 
         BlockPosition position = (BlockPosition) arguments.get("position");
-        to.setX(position.getX());
-        to.setY(position.getY());
-        to.setZ(position.getZ());
+        to.setX(position.x());
+        to.setY(position.y());
+        to.setZ(position.z());
 
         source.teleport(to);
-        return CommandOutput.successful("%%s has been teleported to %%s, %%s, %%s, %%s", source.getName(), to.getWorld().name(), to.getX(), to.getY(), to.getZ());
+        return CommandOutput.successful("%%s has been teleported to %%s, %%s, %%s, %%s", source.getName(), to.world().name(), to.getX(), to.getY(), to.getZ());
     }
 }

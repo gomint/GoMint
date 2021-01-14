@@ -288,13 +288,13 @@ public class PlayerSkin implements io.gomint.player.PlayerSkin {
     }
 
     @Override
-    public String getGeometryName() {
+    public String geometryName() {
         return "";
         // return this.geometryName;
     }
 
     @Override
-    public String getGeometryData() {
+    public String geometryData() {
         return "";
         // return this.geometryData;
     }

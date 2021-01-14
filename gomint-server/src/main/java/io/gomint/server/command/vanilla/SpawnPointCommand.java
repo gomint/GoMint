@@ -37,9 +37,9 @@ public class SpawnPointCommand extends Command {
         Location location = player.getLocation();
 
         if (spawnPos != null) {
-            location.setX(spawnPos.getX());
-            location.setY(spawnPos.getY());
-            location.setZ(spawnPos.getZ());
+            location.setX(spawnPos.x());
+            location.setY(spawnPos.y());
+            location.setZ(spawnPos.z());
         }
 
         player.setSpawnLocation(location);

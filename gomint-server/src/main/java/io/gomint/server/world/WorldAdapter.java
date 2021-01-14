@@ -371,17 +371,17 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
 
     @Override
     public <T extends Block> T blockAt(BlockPosition pos) {
-        return this.blockAt(pos.getX(), pos.getY(), pos.getZ());
+        return this.blockAt(pos.x(), pos.y(), pos.z());
     }
 
     private Block getOptionalBlockAt(BlockPosition position) {
-        if (position.getY() < 0 || position.getY() > 255) {
+        if (position.y() < 0 || position.y() > 255) {
             return null;
         }
 
-        ChunkAdapter chunkAdapter = this.getChunk(position.getX() >> 4, position.getZ() >> 4);
+        ChunkAdapter chunkAdapter = this.getChunk(position.x() >> 4, position.z() >> 4);
         if (chunkAdapter != null) {
-            return chunkAdapter.blockAt(position.getX() & 0xF, position.getY(), position.getZ() & 0xF);
+            return chunkAdapter.blockAt(position.x() & 0xF, position.y(), position.z() & 0xF);
         }
 
         return null;
@@ -411,26 +411,26 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
 
     public void setBlock(BlockPosition pos, int layer, int runtimeId) {
         final ChunkAdapter chunk = this.loadChunk(
-            CoordinateUtils.fromBlockToChunk(pos.getX()),
-            CoordinateUtils.fromBlockToChunk(pos.getZ()),
+            CoordinateUtils.fromBlockToChunk(pos.x()),
+            CoordinateUtils.fromBlockToChunk(pos.z()),
             true);
 
-        chunk.block(pos.getX() & 0xF, pos.getY(), pos.getZ() & 0xF, layer, runtimeId);
+        chunk.block(pos.x() & 0xF, pos.y(), pos.z() & 0xF, layer, runtimeId);
     }
 
     public int getRuntimeID(BlockPosition position, int layer) {
         // Sanity check
-        if (position.getY() < 0) {
+        if (position.y() < 0) {
             this.logger.warn("Got request for block under y 0", new Exception());
             return 0;
         }
 
         final ChunkAdapter chunk = this.loadChunk(
-            CoordinateUtils.fromBlockToChunk(position.getX()),
-            CoordinateUtils.fromBlockToChunk(position.getZ()),
+            CoordinateUtils.fromBlockToChunk(position.x()),
+            CoordinateUtils.fromBlockToChunk(position.z()),
             true);
 
-        return chunk.getRuntimeID(position.getX() & 0xF, position.getY(), position.getZ() & 0xF, layer);
+        return chunk.getRuntimeID(position.x() & 0xF, position.y(), position.z() & 0xF, layer);
     }
 
     /**
@@ -442,17 +442,17 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
      */
     public String getBlockId(BlockPosition position, int layer) {
         // Sanity check
-        if (position.getY() < 0) {
+        if (position.y() < 0) {
             this.logger.warn("Got request for block under y 0", new Exception());
             return "minecraft:air";
         }
 
         final ChunkAdapter chunk = this.loadChunk(
-            CoordinateUtils.fromBlockToChunk(position.getX()),
-            CoordinateUtils.fromBlockToChunk(position.getZ()),
+            CoordinateUtils.fromBlockToChunk(position.x()),
+            CoordinateUtils.fromBlockToChunk(position.z()),
             true);
 
-        return chunk.getBlock(position.getX() & 0xF, position.getY(), position.getZ() & 0xF, layer);
+        return chunk.getBlock(position.x() & 0xF, position.y(), position.z() & 0xF, layer);
     }
 
     /**
@@ -462,11 +462,11 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
      * @return biome of the block
      */
     public Biome getBiome(BlockPosition position) {
-        int xChunk = CoordinateUtils.fromBlockToChunk(position.getX());
-        int zChunk = CoordinateUtils.fromBlockToChunk(position.getZ());
+        int xChunk = CoordinateUtils.fromBlockToChunk(position.x());
+        int zChunk = CoordinateUtils.fromBlockToChunk(position.z());
 
         final ChunkAdapter chunk = this.loadChunk(xChunk, zChunk, true);
-        return chunk.biome(position.getX() & 0xF, position.getZ() & 0xF);
+        return chunk.biome(position.x() & 0xF, position.z() & 0xF);
     }
 
     private void initGamerules() {
@@ -845,8 +845,8 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
      * @param predicate which decides over each entity if they will get the packet sent or not
      */
     public void sendToVisible(BlockPosition position, Packet packet, Predicate<Entity> predicate) {
-        int posX = CoordinateUtils.fromBlockToChunk(position.getX());
-        int posZ = CoordinateUtils.fromBlockToChunk(position.getZ());
+        int posX = CoordinateUtils.fromBlockToChunk(position.x());
+        int posZ = CoordinateUtils.fromBlockToChunk(position.z());
         this.sendToVisible(posX, posZ, packet, predicate);
     }
 
@@ -936,7 +936,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
      */
     public void updateBlock(BlockPosition pos) {
         // Players can't see unpopulated chunks
-        ChunkAdapter adapter = this.getChunk(pos.getX() >> 4, pos.getZ() >> 4);
+        ChunkAdapter adapter = this.getChunk(pos.x() >> 4, pos.z() >> 4);
         if (!adapter.isPopulated()) {
             return;
         }
@@ -1019,10 +1019,10 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
     public Collection<Entity> getNearbyEntities(AxisAlignedBB bb, Entity exception) {
         Set<Entity> nearby = null;
 
-        int minX = MathUtils.fastFloor((bb.getMinX() - 2) / 16);
-        int maxX = MathUtils.fastCeil((bb.getMaxX() + 2) / 16);
-        int minZ = MathUtils.fastFloor((bb.getMinZ() - 2) / 16);
-        int maxZ = MathUtils.fastCeil((bb.getMaxZ() + 2) / 16);
+        int minX = MathUtils.fastFloor((bb.minX() - 2) / 16);
+        int maxX = MathUtils.fastCeil((bb.maxX() + 2) / 16);
+        int minZ = MathUtils.fastFloor((bb.minZ() - 2) / 16);
+        int maxZ = MathUtils.fastCeil((bb.maxZ() + 2) / 16);
 
         for (int x = minX; x <= maxX; ++x) {
             for (int z = minZ; z <= maxZ; ++z) {
@@ -1088,12 +1088,12 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
     public List<Block> getCollisionBlocks(io.gomint.entity.Entity entity, boolean includePassThrough) {
         AxisAlignedBB bb = entity.getBoundingBox().grow(0.1f, 0.01f, 0.1f);
 
-        int minX = MathUtils.fastFloor(bb.getMinX());
-        int minY = MathUtils.fastFloor(bb.getMinY());
-        int minZ = MathUtils.fastFloor(bb.getMinZ());
-        int maxX = MathUtils.fastCeil(bb.getMaxX());
-        int maxY = MathUtils.fastCeil(bb.getMaxY());
-        int maxZ = MathUtils.fastCeil(bb.getMaxZ());
+        int minX = MathUtils.fastFloor(bb.minX());
+        int minY = MathUtils.fastFloor(bb.minY());
+        int minZ = MathUtils.fastFloor(bb.minZ());
+        int maxX = MathUtils.fastCeil(bb.maxX());
+        int maxY = MathUtils.fastCeil(bb.maxY());
+        int maxZ = MathUtils.fastCeil(bb.maxZ());
 
         return iterateBlocks(minX, maxX, minY, maxY, minZ, maxZ, bb, false, includePassThrough);
     }
@@ -1101,12 +1101,12 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
     @Override
     public List<AxisAlignedBB> collisionCubes(io.gomint.entity.Entity entity, AxisAlignedBB bb,
                                               boolean includeEntities) {
-        int minX = MathUtils.fastFloor(bb.getMinX());
-        int minY = MathUtils.fastFloor(bb.getMinY());
-        int minZ = MathUtils.fastFloor(bb.getMinZ());
-        int maxX = MathUtils.fastCeil(bb.getMaxX());
-        int maxY = MathUtils.fastCeil(bb.getMaxY());
-        int maxZ = MathUtils.fastCeil(bb.getMaxZ());
+        int minX = MathUtils.fastFloor(bb.minX());
+        int minY = MathUtils.fastFloor(bb.minY());
+        int minZ = MathUtils.fastFloor(bb.minZ());
+        int maxX = MathUtils.fastCeil(bb.maxX());
+        int maxY = MathUtils.fastCeil(bb.maxY());
+        int maxZ = MathUtils.fastCeil(bb.maxZ());
 
         List<AxisAlignedBB> collisions = iterateBlocks(minX, maxX, minY, maxY, minZ, maxZ, bb, true, false);
 
@@ -1236,8 +1236,8 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
 
     public TemporaryStorage getTemporaryBlockStorage(BlockPosition position, int layer) {
         // Get chunk
-        ChunkAdapter chunk = this.loadChunk(position.getX() >> 4, position.getZ() >> 4, true);
-        return chunk.getTemporaryStorage(position.getX() & 0xF, position.getY(), position.getZ() & 0xF, layer);
+        ChunkAdapter chunk = this.loadChunk(position.x() >> 4, position.z() >> 4, true);
+        return chunk.getTemporaryStorage(position.x() & 0xF, position.y(), position.z() & 0xF, layer);
     }
 
     /**
@@ -1299,14 +1299,14 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
 
     public void storeTileEntity(BlockPosition position, TileEntity tileEntity) {
         // Get chunk
-        ChunkAdapter chunk = this.loadChunk(position.getX() >> 4, position.getZ() >> 4, true);
-        chunk.setTileEntity(position.getX() & 0xF, position.getY(), position.getZ() & 0xF, tileEntity);
+        ChunkAdapter chunk = this.loadChunk(position.x() >> 4, position.z() >> 4, true);
+        chunk.setTileEntity(position.x() & 0xF, position.y(), position.z() & 0xF, tileEntity);
     }
 
     public void removeTileEntity(BlockPosition position) {
         // Get chunk
-        ChunkAdapter chunk = this.loadChunk(position.getX() >> 4, position.getZ() >> 4, true);
-        chunk.removeTileEntity(position.getX() & 0xF, position.getY(), position.getZ() & 0xF);
+        ChunkAdapter chunk = this.loadChunk(position.x() >> 4, position.z() >> 4, true);
+        chunk.removeTileEntity(position.x() & 0xF, position.y(), position.z() & 0xF);
     }
 
     public boolean breakBlock(BlockPosition position, List<ItemStack> drops, boolean creative) {
@@ -1332,7 +1332,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
 
     public void resetTemporaryStorage(BlockPosition position, int layer) {
         // Get chunk
-        int x = position.getX(), y = position.getY(), z = position.getZ();
+        int x = position.x(), y = position.y(), z = position.z();
         int xChunk = CoordinateUtils.fromBlockToChunk(x);
         int zChunk = CoordinateUtils.fromBlockToChunk(z);
 
@@ -1425,8 +1425,8 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
     }
 
     public void createExpOrb(Location location, int amount) {
-        EntityXPOrb xpOrb = new EntityXPOrb((WorldAdapter) location.getWorld(), amount);
-        spawnEntityAt(xpOrb, location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
+        EntityXPOrb xpOrb = new EntityXPOrb((WorldAdapter) location.world(), amount);
+        spawnEntityAt(xpOrb, location.getX(), location.getY(), location.getZ(), location.yaw(), location.pitch());
     }
 
     public void removeEntity(io.gomint.server.entity.Entity entity) {
@@ -1519,7 +1519,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
 
         BlockPosition check = new BlockPosition((int) this.spawn.getX(), 0, (int) this.spawn.getZ());
         for (int i = 255; i > 0; i--) {
-            check.setY(i);
+            check.y(i);
             if (this.getRuntimeID(check, 0) != airRuntime) {
                 this.spawn.setY(1 + i);
                 break;

@@ -16,7 +16,7 @@ public class Vector2 {
         this.z = z;
     }
 
-    public static Vector2 getDirection2D( double angle ) {
+    public static Vector2 direction(double angle ) {
         return new Vector2( (float) Math.cos( angle ), (float) Math.sin( angle ) );
     }
 
@@ -53,20 +53,22 @@ public class Vector2 {
         return this.x * v.x + this.z * v.z;
     }
 
-    public float getX() {
+    public float x() {
         return x;
     }
 
-    public void setX(float x) {
+    public Vector2 x(float x) {
         this.x = x;
+        return this;
     }
 
-    public float getZ() {
+    public float z() {
         return z;
     }
 
-    public void setZ(float z) {
+    public Vector2 z(float z) {
         this.z = z;
+        return this;
     }
 
     @Override

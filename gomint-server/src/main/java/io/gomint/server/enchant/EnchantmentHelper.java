@@ -81,31 +81,31 @@ public class EnchantmentHelper {
         for (int z = -1; z <= 1; ++z) {
             for (int x = -1; x <= 1; ++x) {
                 if ((z != 0 || x != 0) &&
-                    location.add(x, 0, z).getBlock().blockType() == BlockType.AIR &&
-                    location.add(x, 1, z).getBlock().blockType() == BlockType.AIR) {
+                    location.add(x, 0, z).block().blockType() == BlockType.AIR &&
+                    location.add(x, 1, z).block().blockType() == BlockType.AIR) {
 
-                    if (location.add(x * 2, 0, z * 2).getBlock().blockType() == BlockType.BOOKSHELF) {
+                    if (location.add(x * 2, 0, z * 2).block().blockType() == BlockType.BOOKSHELF) {
                         foundShelves++;
                     }
 
-                    if (location.add(x * 2, 1, z * 2).getBlock().blockType() == BlockType.BOOKSHELF) {
+                    if (location.add(x * 2, 1, z * 2).block().blockType() == BlockType.BOOKSHELF) {
                         foundShelves++;
                     }
 
                     if (x != 0 && z != 0) {
-                        if (location.add(x * 2, 0, z).getBlock().blockType() == BlockType.BOOKSHELF) {
+                        if (location.add(x * 2, 0, z).block().blockType() == BlockType.BOOKSHELF) {
                             foundShelves++;
                         }
 
-                        if (location.add(x * 2, 1, z).getBlock().blockType() == BlockType.BOOKSHELF) {
+                        if (location.add(x * 2, 1, z).block().blockType() == BlockType.BOOKSHELF) {
                             foundShelves++;
                         }
 
-                        if (location.add(x, 0, z * 2).getBlock().blockType() == BlockType.BOOKSHELF) {
+                        if (location.add(x, 0, z * 2).block().blockType() == BlockType.BOOKSHELF) {
                             foundShelves++;
                         }
 
-                        if (location.add(x, 1, z * 2).getBlock().blockType() == BlockType.BOOKSHELF) {
+                        if (location.add(x, 1, z * 2).block().blockType() == BlockType.BOOKSHELF) {
                             foundShelves++;
                         }
                     }

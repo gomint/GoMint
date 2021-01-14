@@ -367,7 +367,7 @@ public abstract class Entity implements io.gomint.entity.Entity {
 
         // Check if we need to update the bounding box
         if ( this.transform.isDirty() ) {
-            this.boundingBox.setBounds(
+            this.boundingBox.bounds(
                 this.getPositionX() - ( this.width / 2 ),
                 this.getPositionY(),
                 this.getPositionZ() - ( this.width / 2 ),
@@ -432,13 +432,13 @@ public abstract class Entity implements io.gomint.entity.Entity {
         AxisAlignedBB oldBoundingBox = this.boundingBox.clone();
 
         // Check if we collide with some blocks when we would move that fast
-        List<AxisAlignedBB> collisionList = this.world.collisionCubes( this, this.boundingBox.getOffsetBoundingBox( dX, dY, dZ ), false );
+        List<AxisAlignedBB> collisionList = this.world.collisionCubes( this, this.boundingBox.offsetBoundingBox( dX, dY, dZ ), false );
         if ( collisionList != null && !this.stuckInBlock ) {
             // Check if we would hit a y border block
             for ( AxisAlignedBB axisAlignedBB : collisionList ) {
                 dY = axisAlignedBB.calculateYOffset( this.boundingBox, dY );
                 if ( dY != movY ) {
-                    Block block = this.world.blockAt( (int) axisAlignedBB.getMinX(), (int) axisAlignedBB.getMinY(), (int) axisAlignedBB.getMinZ() );
+                    Block block = this.world.blockAt( (int) axisAlignedBB.minX(), (int) axisAlignedBB.minY(), (int) axisAlignedBB.minZ() );
                     this.collidedWith.add( block );
                 }
             }
@@ -449,7 +449,7 @@ public abstract class Entity implements io.gomint.entity.Entity {
             for ( AxisAlignedBB axisAlignedBB : collisionList ) {
                 dX = axisAlignedBB.calculateXOffset( this.boundingBox, dX );
                 if ( dX != movX ) {
-                    Block block = this.world.blockAt( (int) axisAlignedBB.getMinX(), (int) axisAlignedBB.getMinY(), (int) axisAlignedBB.getMinZ() );
+                    Block block = this.world.blockAt( (int) axisAlignedBB.minX(), (int) axisAlignedBB.minY(), (int) axisAlignedBB.minZ() );
                     LOGGER.debug( "Entity {} collided with {}", this, block );
 
                     this.collidedWith.add( block );
@@ -462,7 +462,7 @@ public abstract class Entity implements io.gomint.entity.Entity {
             for ( AxisAlignedBB axisAlignedBB : collisionList ) {
                 dZ = axisAlignedBB.calculateZOffset( this.boundingBox, dZ );
                 if ( dZ != movZ ) {
-                    Block block = this.world.blockAt( (int) axisAlignedBB.getMinX(), (int) axisAlignedBB.getMinY(), (int) axisAlignedBB.getMinZ() );
+                    Block block = this.world.blockAt( (int) axisAlignedBB.minX(), (int) axisAlignedBB.minY(), (int) axisAlignedBB.minZ() );
                     LOGGER.debug( "Entity {} collided with {}", this, block );
 
                     this.collidedWith.add( block );
@@ -487,7 +487,7 @@ public abstract class Entity implements io.gomint.entity.Entity {
 
             // Save and restore old bounding box
             AxisAlignedBB oldBoundingBox1 = this.boundingBox.clone();
-            this.boundingBox.setBounds( oldBoundingBox );
+            this.boundingBox.bounds( oldBoundingBox );
 
             // Check for collision
             collisionList = this.world.collisionCubes( this, this.boundingBox.addCoordinates( dX, dY, dZ ), false );
@@ -520,16 +520,16 @@ public abstract class Entity implements io.gomint.entity.Entity {
                 dX = oldDX;
                 dY = oldDY;
                 dZ = oldDZ;
-                this.boundingBox.setBounds( oldBoundingBox1 );
+                this.boundingBox.bounds( oldBoundingBox1 );
             }
         }
 
         if ( dX != 0 || dY != 0 || dZ != 0 ) {
             // Move by new bounding box
             this.transform.setPosition(
-                ( this.boundingBox.getMinX() + this.boundingBox.getMaxX() ) / 2,
-                this.boundingBox.getMinY(),
-                ( this.boundingBox.getMinZ() + this.boundingBox.getMaxZ() ) / 2
+                ( this.boundingBox.minX() + this.boundingBox.maxX() ) / 2,
+                this.boundingBox.minY(),
+                ( this.boundingBox.minZ() + this.boundingBox.maxZ() ) / 2
             );
         }
 
@@ -1129,15 +1129,15 @@ public abstract class Entity implements io.gomint.entity.Entity {
 
     protected boolean isOnLadder() {
         Location location = this.getLocation();
-        Block block = location.getWorld().blockAt( location.toBlockPosition() );
+        Block block = location.world().blockAt( location.toBlockPosition() );
         return block instanceof Ladder || block instanceof Vines;
     }
 
     public boolean isInsideLiquid() {
         Location eyeLocation = this.getLocation().add( 0, this.eyeHeight, 0 );
-        Block block = eyeLocation.getWorld().blockAt( eyeLocation.toBlockPosition() );
+        Block block = eyeLocation.world().blockAt( eyeLocation.toBlockPosition() );
         if ( block instanceof StationaryWater || block instanceof FlowingWater ) {
-            float yLiquid = (float) ( block.position().getY() + 1 + ( ( (Liquid) block ).fillHeight() - 0.12 ) );
+            float yLiquid = (float) ( block.position().y() + 1 + ( ( (Liquid) block ).fillHeight() - 0.12 ) );
             return eyeLocation.getY() < yLiquid;
         }
 
@@ -1200,7 +1200,7 @@ public abstract class Entity implements io.gomint.entity.Entity {
 
         // Update bounding box
         Location location = this.getLocation();
-        getBoundingBox().setBounds(
+        getBoundingBox().bounds(
             location.getX() - ( this.getWidth() / 2 ),
             location.getY(),
             location.getZ() - ( this.getWidth() / 2 ),
@@ -1212,9 +1212,9 @@ public abstract class Entity implements io.gomint.entity.Entity {
 
     public void setAndRecalcPosition( Location to ) {
         setPosition( to );
-        setPitch( to.getPitch() );
-        setYaw( to.getYaw() );
-        setHeadYaw( to.getHeadYaw() );
+        setPitch( to.pitch() );
+        setYaw( to.yaw() );
+        setHeadYaw( to.headYaw() );
         this.recalcBoundingBox();
     }
 
@@ -1241,8 +1241,8 @@ public abstract class Entity implements io.gomint.entity.Entity {
             throw new IllegalStateException( "Entity already spawned" );
         }
 
-        this.world = (WorldAdapter) location.getWorld();
-        this.world.spawnEntityAt( this, location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch() );
+        this.world = (WorldAdapter) location.world();
+        this.world.spawnEntityAt( this, location.getX(), location.getY(), location.getZ(), location.yaw(), location.pitch() );
         this.setupAI();
     }
 
@@ -1261,10 +1261,10 @@ public abstract class Entity implements io.gomint.entity.Entity {
 
         this.setAndRecalcPosition( to );
 
-        if ( !to.getWorld().equals( actualWorld ) ) {
+        if ( !to.world().equals( actualWorld ) ) {
             actualWorld.removeEntity( this );
-            this.setWorld( (WorldAdapter) to.getWorld() );
-            ( (WorldAdapter) to.getWorld() ).spawnEntityAt( this, to.getX(), to.getY(), to.getZ(), to.getYaw(), to.getPitch() );
+            this.setWorld( (WorldAdapter) to.world() );
+            ( (WorldAdapter) to.world() ).spawnEntityAt( this, to.getX(), to.getY(), to.getZ(), to.yaw(), to.pitch() );
         }
 
         this.fallDistance = 0;

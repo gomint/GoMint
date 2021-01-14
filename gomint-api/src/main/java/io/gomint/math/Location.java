@@ -32,122 +32,125 @@ public class Location extends Vector {
     private float headYaw;
     private float pitch;
 
-    public Location(World world ) {
-        this.setWorld( world );
+    public Location(World world) {
+        this.world(world);
     }
 
-    public Location( World world, float x, float y, float z ) {
-        super( x, y, z );
+    public Location(World world, float x, float y, float z) {
+        super(x, y, z);
         this.world = world;
     }
 
-    public Location( World world, Vector vector ) {
-        super( vector.getX(), vector.getY(), vector.getZ() );
+    public Location(World world, Vector vector) {
+        super(vector.getX(), vector.getY(), vector.getZ());
         this.world = world;
     }
 
-    public Location( World world, float x, float y, float z, float yaw, float pitch ) {
-        super( x, y, z );
-        this.setWorld( world );
+    public Location(World world, float x, float y, float z, float yaw, float pitch) {
+        super(x, y, z);
+        this.world(world);
         this.yaw = yaw;
         this.pitch = pitch;
     }
 
-    public Location( World world, Vector vector, float yaw, float pitch ) {
-        super( vector.getX(), vector.getY(), vector.getZ() );
-        this.setWorld( world );
+    public Location(World world, Vector vector, float yaw, float pitch) {
+        super(vector.getX(), vector.getY(), vector.getZ());
+        this.world(world);
         this.yaw = yaw;
         this.pitch = pitch;
     }
 
-    public Location( World world, float x, float y, float z, float headYaw, float yaw, float pitch ) {
-        this( world, x, y, z, yaw, pitch );
+    public Location(World world, float x, float y, float z, float headYaw, float yaw, float pitch) {
+        this(world, x, y, z, yaw, pitch);
         this.headYaw = headYaw;
     }
 
     public Location(World world, BlockPosition position) {
-        this( world, position.getX(), position.getY(), position.getZ());
+        this(world, position.x(), position.y(), position.z());
     }
 
-    public void setWorld( World world ) {
+    public Location world(World world) {
         this.world = world;
+        return this;
     }
 
     @Override
-    public Location add( float x, float y, float z ) {
-        return new Location( this.world, this.x + x, this.y + y, this.z + z, this.headYaw, this.yaw, this.pitch );
+    public Location add(float x, float y, float z) {
+        return new Location(this.world, this.x + x, this.y + y, this.z + z, this.headYaw, this.yaw, this.pitch);
     }
 
     @Override
-    public Location add( Vector v ) {
-        return this.add( v.x, v.y, v.z );
+    public Location add(Vector v) {
+        return this.add(v.x, v.y, v.z);
     }
 
     @Override
-    public Location subtract( float x, float y, float z ) {
-        return new Location( this.world, this.x - x, this.y - y, this.z - z, this.headYaw, this.yaw, this.pitch );
+    public Location subtract(float x, float y, float z) {
+        return new Location(this.world, this.x - x, this.y - y, this.z - z, this.headYaw, this.yaw, this.pitch);
     }
 
     @Override
-    public Location subtract( Vector v ) {
-        return this.subtract( v.x, v.y, v.z );
+    public Location subtract(Vector v) {
+        return this.subtract(v.x, v.y, v.z);
     }
 
     @Override
-    public Location multiply( float x, float y, float z ) {
-        return new Location( this.world, this.x * x, this.y * y, this.z * z, this.headYaw, this.yaw, this.pitch );
+    public Location multiply(float x, float y, float z) {
+        return new Location(this.world, this.x * x, this.y * y, this.z * z, this.headYaw, this.yaw, this.pitch);
     }
 
     @Override
-    public Location multiply( Vector v ) {
-        return this.multiply( v.x, v.y, v.z );
+    public Location multiply(Vector v) {
+        return this.multiply(v.x, v.y, v.z);
     }
 
     @Override
-    public Location divide( float x, float y, float z ) {
-        return new Location( this.world, this.x / x, this.y / y, this.z / z, this.headYaw, this.yaw, this.pitch );
+    public Location divide(float x, float y, float z) {
+        return new Location(this.world, this.x / x, this.y / y, this.z / z, this.headYaw, this.yaw, this.pitch);
     }
 
     @Override
-    public Location divide( Vector v ) {
-        return this.divide( v.x, v.y, v.z );
+    public Location divide(Vector v) {
+        return this.divide(v.x, v.y, v.z);
     }
 
     @Override
-    public Location multiply( float scalar ) {
-        return this.multiply( scalar, scalar, scalar );
+    public Location multiply(float scalar) {
+        return this.multiply(scalar, scalar, scalar);
     }
 
-    public <T extends Block> T getBlock() {
-        return this.world.blockAt( MathUtils.fastFloor( this.x ), MathUtils.fastFloor( this.y ), MathUtils.fastFloor( this.z ) );
+    public <T extends Block> T block() {
+        return this.world.blockAt(MathUtils.fastFloor(this.x), MathUtils.fastFloor(this.y), MathUtils.fastFloor(this.z));
     }
 
-
-    public void setYaw(float yaw) {
+    public Location yaw(float yaw) {
         this.yaw = yaw;
+        return this;
     }
 
-    public void setHeadYaw(float headYaw) {
+    public Location headYaw(float headYaw) {
         this.headYaw = headYaw;
+        return this;
     }
 
-    public void setPitch(float pitch) {
+    public Location pitch(float pitch) {
         this.pitch = pitch;
+        return this;
     }
 
-    public World getWorld() {
+    public World world() {
         return world;
     }
 
-    public float getYaw() {
+    public float yaw() {
         return yaw;
     }
 
-    public float getHeadYaw() {
+    public float headYaw() {
         return headYaw;
     }
 
-    public float getPitch() {
+    public float pitch() {
         return pitch;
     }
 

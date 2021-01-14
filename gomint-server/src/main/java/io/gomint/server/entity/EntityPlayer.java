@@ -397,14 +397,14 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
         this.connection.resetQueuedChunks();
 
         // Check if we need to change worlds
-        if (!to.getWorld().equals(from.getWorld())) {
+        if (!to.world().equals(from.world())) {
             // Despawn entities first
             this.entityVisibilityManager.clear();
 
             // Change worlds
             getWorld().removePlayer(this);
-            this.setWorld((WorldAdapter) to.getWorld());
-            this.world.spawnEntityAt(this, to.getX(), to.getY(), to.getZ(), to.getYaw(), to.getPitch());
+            this.setWorld((WorldAdapter) to.world());
+            this.world.spawnEntityAt(this, to.getX(), to.getY(), to.getZ(), to.yaw(), to.pitch());
 
             // Be sure to get rid of all loaded chunks
             this.connection.resetPlayerChunks();
@@ -483,8 +483,8 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
 
             Location to = playerMoveEvent.getTo();
             if (to.getX() != this.nextMovement.getX() || to.getY() != this.nextMovement.getY() || to.getZ() != this.nextMovement.getZ() ||
-                !to.getWorld().equals(this.nextMovement.getWorld()) || to.getYaw() != this.nextMovement.getYaw() ||
-                to.getPitch() != this.nextMovement.getPitch() || to.getHeadYaw() != this.nextMovement.getHeadYaw()) {
+                !to.world().equals(this.nextMovement.world()) || to.yaw() != this.nextMovement.yaw() ||
+                to.pitch() != this.nextMovement.pitch() || to.headYaw() != this.nextMovement.headYaw()) {
                 this.teleport(to);
             } else {
                 float moveX = to.getX() - from.getX();
@@ -506,12 +506,12 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
                     }
                 }
 
-                this.setPitch(to.getPitch());
-                this.setYaw(to.getYaw());
-                this.setHeadYaw(to.getHeadYaw());
+                this.setPitch(to.pitch());
+                this.setYaw(to.yaw());
+                this.setHeadYaw(to.headYaw());
             }
 
-            boolean changeWorld = !to.getWorld().equals(from.getWorld());
+            boolean changeWorld = !to.world().equals(from.world());
             boolean changeXZ = (int) from.getX() != (int) to.getX() || (int) from.getZ() != (int) to.getZ();
             boolean changeY = (int) from.getY() != (int) to.getY();
 
@@ -521,10 +521,10 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
                 }
 
                 // Check for interaction
-                Block block = from.getWorld().blockAt(from.toBlockPosition());
+                Block block = from.world().blockAt(from.toBlockPosition());
                 block.gotOff(this);
 
-                block = to.getWorld().blockAt(to.toBlockPosition());
+                block = to.world().blockAt(to.toBlockPosition());
                 block.stepOn(this);
             }
 
@@ -847,7 +847,7 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
     public void sendMessage(String message) {
         PacketText packetText = new PacketText();
         packetText.setMessage(message);
-        packetText.setDeviceId(this.getDeviceInfo().getDeviceId());
+        packetText.setDeviceId(this.getDeviceInfo().deviceId());
         packetText.setType(PacketText.Type.CLIENT_MESSAGE);
         this.connection.addToSendQueue(packetText);
     }
@@ -856,7 +856,7 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
     public void sendMessage(ChatType type, String... message) {
         PacketText packetText = new PacketText();
         packetText.setMessage(message[0]);
-        packetText.setDeviceId(this.getDeviceInfo().getDeviceId());
+        packetText.setDeviceId(this.getDeviceInfo().deviceId());
         switch (type) {
             case TIP:
                 packetText.setType(PacketText.Type.TIP_MESSAGE);
@@ -886,12 +886,12 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
 
     @Override
     public boolean hasPermission(String permission) {
-        return this.permissionManager.hasPermission(permission);
+        return this.permissionManager.has(permission);
     }
 
     @Override
     public boolean hasPermission(String permission, boolean defaultValue) {
-        return this.permissionManager.hasPermission(permission, defaultValue);
+        return this.permissionManager.has(permission, defaultValue);
     }
 
     @Override
@@ -1248,8 +1248,8 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
     protected void checkIfCollided(float movX, float movY, float movZ, float dX, float dY, float dZ) {
         // Check if we are not on ground or we moved on y axis
         if (!this.onGround || movY != 0) {
-            AxisAlignedBB bb = new AxisAlignedBB(this.boundingBox.getMinX(), this.boundingBox.getMinY() - 0.2f, this.boundingBox.getMinZ(),
-                this.boundingBox.getMaxX(), this.boundingBox.getMaxY(), this.boundingBox.getMaxZ());
+            AxisAlignedBB bb = new AxisAlignedBB(this.boundingBox.minX(), this.boundingBox.minY() - 0.2f, this.boundingBox.minZ(),
+                this.boundingBox.maxX(), this.boundingBox.maxY(), this.boundingBox.maxZ());
 
             // Check if we collided with a block
             this.onGround = this.world.collisionCubes(this, bb, false) != null;
@@ -1559,7 +1559,7 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
         packetSpawnPlayer.setName(this.getName());
         packetSpawnPlayer.setEntityId(this.getEntityId());
         packetSpawnPlayer.setRuntimeEntityId(this.getEntityId());
-        packetSpawnPlayer.setPlatformChatId(this.getDeviceInfo().getDeviceId());
+        packetSpawnPlayer.setPlatformChatId(this.getDeviceInfo().deviceId());
 
         packetSpawnPlayer.setX(this.getPositionX());
         packetSpawnPlayer.setY(this.getPositionY());
@@ -1575,8 +1575,8 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
 
         packetSpawnPlayer.setItemInHand(this.getInventory().getItemInHand());
         packetSpawnPlayer.setMetadataContainer(this.getMetadata());
-        packetSpawnPlayer.setDeviceId(this.getDeviceInfo().getDeviceId());
-        packetSpawnPlayer.setBuildPlatform(this.getDeviceInfo().getOs().getId());
+        packetSpawnPlayer.setDeviceId(this.getDeviceInfo().deviceId());
+        packetSpawnPlayer.setBuildPlatform(this.getDeviceInfo().OS().id());
 
         return packetSpawnPlayer;
     }
@@ -1618,7 +1618,7 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
         float dZ = this.getMotionZ();
 
         // Check if we collide with some blocks when we would move that fast
-        List<AxisAlignedBB> collisionList = this.world.collisionCubes(this, this.boundingBox.getOffsetBoundingBox(dX, dY, dZ), false);
+        List<AxisAlignedBB> collisionList = this.world.collisionCubes(this, this.boundingBox.offsetBoundingBox(dX, dY, dZ), false);
         if (collisionList != null) {
             // Check if we would hit a y border block
             for (AxisAlignedBB axisAlignedBB : collisionList) {

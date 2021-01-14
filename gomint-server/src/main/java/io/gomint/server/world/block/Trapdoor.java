@@ -83,7 +83,7 @@ public abstract class Trapdoor<B> extends Block implements BlockTrapdoor<B> {
         if (OPEN.getState(this)) {
             switch (DIRECTION.getState(this)) {
                 case NORTH:
-                    bb.setBounds(
+                    bb.bounds(
                         this.location.getX(),
                         this.location.getY(),
                         this.location.getZ() + 1 - defaultHeight,
@@ -95,7 +95,7 @@ public abstract class Trapdoor<B> extends Block implements BlockTrapdoor<B> {
                     break;
 
                 case SOUTH:
-                    bb.setBounds(
+                    bb.bounds(
                         this.location.getX(),
                         this.location.getY(),
                         this.location.getZ(),
@@ -107,7 +107,7 @@ public abstract class Trapdoor<B> extends Block implements BlockTrapdoor<B> {
                     break;
 
                 case WEST:
-                    bb.setBounds(
+                    bb.bounds(
                         this.location.getX() + 1 - defaultHeight,
                         this.location.getY(),
                         this.location.getZ(),
@@ -119,7 +119,7 @@ public abstract class Trapdoor<B> extends Block implements BlockTrapdoor<B> {
                     break;
 
                 case EAST:
-                    bb.setBounds(
+                    bb.bounds(
                         this.location.getX(),
                         this.location.getY(),
                         this.location.getZ(),

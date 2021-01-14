@@ -68,9 +68,9 @@ public class StatefulBlockSearcher {
 
     private void iterate() {
         // Now iterate until we hit the end
-        for ( int x = this.start.getX(); x <= this.end.getX(); x++ ) {
-            for ( int y = this.start.getY(); y <= this.end.getY(); y++ ) {
-                for ( int z = this.start.getZ(); z <= this.end.getZ(); z++ ) {
+        for (int x = this.start.x(); x <= this.end.x(); x++ ) {
+            for (int y = this.start.y(); y <= this.end.y(); y++ ) {
+                for (int z = this.start.z(); z <= this.end.z(); z++ ) {
                     // Get the block instance
                     Block block = this.world.blockAt( x, y, z );
                     if ( this.predicate.test( block ) ) {

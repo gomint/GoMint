@@ -95,7 +95,7 @@ public class LevelDBWorldAdapter extends WorldAdapter {
 
         // Generate a spawnpoint
         BlockPosition spawnPoint = this.chunkGenerator.spawnPoint();
-        this.spawn = new Location(this, spawnPoint.getX(), spawnPoint.getY(), spawnPoint.getZ());
+        this.spawn = new Location(this, spawnPoint.x(), spawnPoint.y(), spawnPoint.z());
 
         // Take over level name
         this.levelName = name;

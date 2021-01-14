@@ -51,7 +51,7 @@ public class MobSpawner extends Block implements BlockMobSpawner {
 
     @Override
     public List<ItemStack> drops(ItemStack itemInHand ) {
-        ((WorldAdapter) this.location.getWorld()).createExpOrb( this.location, ThreadLocalRandom.current().nextInt( 15 ) + ThreadLocalRandom.current().nextInt( 15 ) + 15 );
+        ((WorldAdapter) this.location.world()).createExpOrb( this.location, ThreadLocalRandom.current().nextInt( 15 ) + ThreadLocalRandom.current().nextInt( 15 ) + 15 );
 
         return new ArrayList<>();
     }

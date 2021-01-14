@@ -52,7 +52,7 @@ public class LilyPad extends Block implements BlockLilyPad {
 
     @Override
     public boolean beforePlacement(EntityLiving entity, ItemStack item, Facing face, Location location) {
-        Block block = (Block) location.getWorld().blockAt(location.toBlockPosition()).side(Facing.UP);
+        Block block = (Block) location.world().blockAt(location.toBlockPosition()).side(Facing.UP);
         return block instanceof StationaryWater;
     }
 

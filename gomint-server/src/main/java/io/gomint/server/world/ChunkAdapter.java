@@ -364,9 +364,9 @@ public class ChunkAdapter implements Chunk {
      */
     protected void addTileEntity(TileEntity tileEntity) {
         BlockPosition tileEntityLocation = tileEntity.getBlock().position();
-        int xPos = tileEntityLocation.getX() & 0xF;
-        int yPos = tileEntityLocation.getY();
-        int zPos = tileEntityLocation.getZ() & 0xF;
+        int xPos = tileEntityLocation.x() & 0xF;
+        int yPos = tileEntityLocation.y();
+        int zPos = tileEntityLocation.z() & 0xF;
 
         ChunkSlice slice = ensureSlice(yPos >> 4);
         slice.addTileEntity(xPos, yPos - slice.getSectionY() * 16, zPos, tileEntity);

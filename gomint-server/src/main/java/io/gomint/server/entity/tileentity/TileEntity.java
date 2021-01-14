@@ -70,9 +70,9 @@ public abstract class TileEntity {
     public void toCompound(NBTTagCompound compound, SerializationReason reason) {
         BlockPosition position = this.block.position();
 
-        compound.addValue("x", position.getX());
-        compound.addValue("y", position.getY());
-        compound.addValue("z", position.getZ());
+        compound.addValue("x", position.x());
+        compound.addValue("y", position.y());
+        compound.addValue("z", position.z());
 
         if (reason == SerializationReason.PERSIST) {
             compound.addValue("isMovable", this.moveable);

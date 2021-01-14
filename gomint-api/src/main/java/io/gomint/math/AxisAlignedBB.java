@@ -1,8 +1,5 @@
 package io.gomint.math;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
  * @author geNAZt
  * @version 1.0
@@ -47,7 +44,7 @@ public class AxisAlignedBB implements Cloneable {
      * @param maxZ Maximum Z Coordinate
      * @return the Bounding Box with new bounds
      */
-    public AxisAlignedBB setBounds( float minX, float minY, float minZ, float maxX, float maxY, float maxZ ) {
+    public AxisAlignedBB bounds(float minX, float minY, float minZ, float maxX, float maxY, float maxZ ) {
         this.minX = minX;
         this.minY = minY;
         this.minZ = minZ;
@@ -63,7 +60,7 @@ public class AxisAlignedBB implements Cloneable {
      * @param other the other Bounding Box from which we should copy
      * @return the Bounding Box with new bounds
      */
-    public AxisAlignedBB setBounds( AxisAlignedBB other ) {
+    public AxisAlignedBB bounds(AxisAlignedBB other ) {
         this.minX = other.minX;
         this.minY = other.minY;
         this.minZ = other.minZ;
@@ -199,7 +196,7 @@ public class AxisAlignedBB implements Cloneable {
      * @param z the Z coordinate for how much we should offset
      * @return a new Bounding Box which has been offset
      */
-    public AxisAlignedBB getOffsetBoundingBox( float x, float y, float z ) {
+    public AxisAlignedBB offsetBoundingBox(float x, float y, float z ) {
         return new AxisAlignedBB( this.minX + x, this.minY + y, this.minZ + z, this.maxX + x, this.maxY + y, this.maxZ + z );
     }
 
@@ -329,9 +326,7 @@ public class AxisAlignedBB implements Cloneable {
     public boolean intersectsWith( AxisAlignedBB bb ) {
         if ( bb.maxX - this.minX > MathUtils.EPSILON && this.maxX - bb.minX > MathUtils.EPSILON ) {
             if ( bb.maxY - this.minY > MathUtils.EPSILON && this.maxY - bb.minY > MathUtils.EPSILON ) {
-                if ( bb.maxZ - this.minZ > MathUtils.EPSILON && this.maxZ - bb.minZ > MathUtils.EPSILON ) {
-                    return true;
-                }
+                return bb.maxZ - this.minZ > MathUtils.EPSILON && this.maxZ - bb.minZ > MathUtils.EPSILON;
             }
         }
 
@@ -355,7 +350,7 @@ public class AxisAlignedBB implements Cloneable {
      *
      * @return the average edge length
      */
-    public float getAverageEdgeLength() {
+    public float averageEdgeLength() {
         return ( this.maxX - this.minX + this.maxY - this.minY + this.maxZ - this.minZ ) / 3;
     }
 
@@ -426,33 +421,33 @@ public class AxisAlignedBB implements Cloneable {
     public AxisAlignedBB clone() {
         try {
             AxisAlignedBB clone = (AxisAlignedBB) super.clone();
-            return clone.setBounds( this );
+            return clone.bounds( this );
         } catch ( CloneNotSupportedException e ) {
             return new AxisAlignedBB( this.minX, this.minY, this.minZ, this.maxX, this.maxY, this.maxZ );
         }
     }
 
-    public float getMinX() {
+    public float minX() {
         return minX;
     }
 
-    public float getMinY() {
+    public float minY() {
         return minY;
     }
 
-    public float getMinZ() {
+    public float minZ() {
         return minZ;
     }
 
-    public float getMaxX() {
+    public float maxX() {
         return maxX;
     }
 
-    public float getMaxY() {
+    public float maxY() {
         return maxY;
     }
 
-    public float getMaxZ() {
+    public float maxZ() {
         return maxZ;
     }
 

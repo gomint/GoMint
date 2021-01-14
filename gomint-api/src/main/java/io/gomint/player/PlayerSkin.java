@@ -55,14 +55,14 @@ public interface PlayerSkin {
      *
      * @return geometry name
      */
-    String getGeometryName();
+    String geometryName();
 
     /**
      * Data used for geometry of the skin
      *
      * @return geometry data
      */
-    String getGeometryData();
+    String geometryData();
 
     /**
      * Save the skin to a given file in PNG format

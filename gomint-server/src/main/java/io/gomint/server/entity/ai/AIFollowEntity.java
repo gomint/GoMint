@@ -68,7 +68,7 @@ public class AIFollowEntity extends AIState {
             BlockPosition node = this.path.get( this.currentPathNode );
 
             // Check if we need to jump
-            boolean jump = node.getY() > position.getY();
+            boolean jump = node.y() > position.getY();
 
             Vector direction = node.toVector().add( .5f, 0, .5f ).subtract( position ).normalize().multiply( 4.31f * dT ); // 4.31 is the normal player movement speed per second
             if ( jump ) {

@@ -32,80 +32,80 @@ public class TestPermissions {
     @Test
     public void testNormal() {
         PermissionManager permissionManager = new PermissionManager(mockPlayer(false));
-        permissionManager.setPermission("test.permission.shouldbetrue", true);
-        permissionManager.setPermission("test.permission.shouldfalseforreal", false);
+        permissionManager.permission("test.permission.shouldbetrue", true);
+        permissionManager.permission("test.permission.shouldfalseforreal", false);
 
-        Assertions.assertTrue(permissionManager.hasPermission("test.permission.shouldbetrue"), "Wildcard is false");
-        Assertions.assertFalse(permissionManager.hasPermission("test.permission.shouldfalseforreal"), "Wildcard is true");
+        Assertions.assertTrue(permissionManager.has("test.permission.shouldbetrue"), "Wildcard is false");
+        Assertions.assertFalse(permissionManager.has("test.permission.shouldfalseforreal"), "Wildcard is true");
     }
 
     @Test
     public void testWildcard() {
         PermissionManager permissionManager = new PermissionManager(mockPlayer(false));
-        permissionManager.setPermission("test.permission.*", true);
-        permissionManager.setPermission("test.permission.shouldfalse*", false);
-        permissionManager.setPermission("test.permission.shouldfalseforrealno", true);
+        permissionManager.permission("test.permission.*", true);
+        permissionManager.permission("test.permission.shouldfalse*", false);
+        permissionManager.permission("test.permission.shouldfalseforrealno", true);
 
-        Assertions.assertTrue(permissionManager.hasPermission("test.permission.shouldbetrue"), "Wildcard is false");
-        Assertions.assertFalse(permissionManager.hasPermission("test.permission.shouldfalseforreal"), "Wildcard is true");
-        Assertions.assertTrue(permissionManager.hasPermission("test.permission.shouldfalseforrealno"), "Wildcard is false");
+        Assertions.assertTrue(permissionManager.has("test.permission.shouldbetrue"), "Wildcard is false");
+        Assertions.assertFalse(permissionManager.has("test.permission.shouldfalseforreal"), "Wildcard is true");
+        Assertions.assertTrue(permissionManager.has("test.permission.shouldfalseforrealno"), "Wildcard is false");
     }
 
     @Test
     public void testOneGroup() {
         PermissionGroupManager permissionGroupManager = new PermissionGroupManager();
-        Group groupA = permissionGroupManager.getOrCreateGroup("A");
-        groupA.setPermission("test.permission.*", true);
-        groupA.setPermission("test.permission.shouldfalse*", false);
-        groupA.setPermission("test.permission.shouldfalseforrealno", true);
+        Group groupA = permissionGroupManager.group("A");
+        groupA.permission("test.permission.*", true);
+        groupA.permission("test.permission.shouldfalse*", false);
+        groupA.permission("test.permission.shouldfalseforrealno", true);
 
         PermissionManager permissionManager = new PermissionManager(mockPlayer(false));
         permissionManager.addGroup(groupA);
 
-        Assertions.assertTrue(permissionManager.hasPermission("test.permission.shouldbetrue"), "Wildcard is false");
-        Assertions.assertFalse(permissionManager.hasPermission("test.permission.shouldfalseforreal"), "Wildcard is true");
-        Assertions.assertTrue(permissionManager.hasPermission("test.permission.shouldfalseforrealno"), "Wildcard is false");
+        Assertions.assertTrue(permissionManager.has("test.permission.shouldbetrue"), "Wildcard is false");
+        Assertions.assertFalse(permissionManager.has("test.permission.shouldfalseforreal"), "Wildcard is true");
+        Assertions.assertTrue(permissionManager.has("test.permission.shouldfalseforrealno"), "Wildcard is false");
     }
 
     @Test
     public void testGroupOverride() {
         PermissionGroupManager permissionGroupManager = new PermissionGroupManager();
 
-        Group groupA = permissionGroupManager.getOrCreateGroup("A");
-        groupA.setPermission("test.permission.*", false);
-        groupA.setPermission("test.permission.shouldfalse*", true);
-        groupA.setPermission("test.permission.shouldfalseforrealno", false);
+        Group groupA = permissionGroupManager.group("A");
+        groupA.permission("test.permission.*", false);
+        groupA.permission("test.permission.shouldfalse*", true);
+        groupA.permission("test.permission.shouldfalseforrealno", false);
 
-        Group groupB = permissionGroupManager.getOrCreateGroup("B");
-        groupB.setPermission("test.permission.*", true);
-        groupB.setPermission("test.permission.shouldfalse*", false);
-        groupB.setPermission("test.permission.shouldfalseforrealno", true);
+        Group groupB = permissionGroupManager.group("B");
+        groupB.permission("test.permission.*", true);
+        groupB.permission("test.permission.shouldfalse*", false);
+        groupB.permission("test.permission.shouldfalseforrealno", true);
 
         PermissionManager permissionManager = new PermissionManager(mockPlayer(false));
         permissionManager.addGroup(groupA);
         permissionManager.addGroup(groupB);
 
-        Assertions.assertTrue(permissionManager.hasPermission("test.permission.shouldbetrue"), "Wildcard is false");
-        Assertions.assertFalse(permissionManager.hasPermission("test.permission.shouldfalseforreal"), "Wildcard is true");
-        Assertions.assertTrue(permissionManager.hasPermission("test.permission.shouldfalseforrealno"), "Wildcard is false");
+        Assertions.assertTrue(permissionManager.has("test.permission.shouldbetrue"), "Wildcard is false");
+        Assertions.assertFalse(permissionManager.has("test.permission.shouldfalseforreal"), "Wildcard is true");
+        Assertions.assertTrue(permissionManager.has("test.permission.shouldfalseforrealno"), "Wildcard is false");
     }
 
     @Test
     public void testOp() {
         final PermissionManager permissionManager = new PermissionManager(mockPlayer(true));
-        permissionManager.setPermission("test.permission.*", false);
-        permissionManager.setPermission("test.permission.false*", false);
-        permissionManager.setPermission("test.permission.true", true);
-        permissionManager.setPermission("test.permission.falseforreal", false);
-        permissionManager.setPermission("test.permission.alsofalse", false);
+        permissionManager.permission("test.permission.*", false);
+        permissionManager.permission("test.permission.false*", false);
+        permissionManager.permission("test.permission.true", true);
+        permissionManager.permission("test.permission.falseforreal", false);
+        permissionManager.permission("test.permission.alsofalse", false);
 
-        Assertions.assertTrue(permissionManager.hasPermission("test.otherpermission"));
-        Assertions.assertTrue(permissionManager.hasPermission("test.permission"));
-        Assertions.assertTrue(permissionManager.hasPermission("test.permission.someotherperm"));
-        Assertions.assertTrue(permissionManager.hasPermission("test.permission.shouldfalseforreal"));
-        Assertions.assertTrue(permissionManager.hasPermission("test.permission.true"));
-        Assertions.assertTrue(permissionManager.hasPermission("test.permission.falseforreal"));
-        Assertions.assertTrue(permissionManager.hasPermission("test.permission.alsofalse"));
-        Assertions.assertTrue(permissionManager.hasPermission("test.permission.false123"));
+        Assertions.assertTrue(permissionManager.has("test.otherpermission"));
+        Assertions.assertTrue(permissionManager.has("test.permission"));
+        Assertions.assertTrue(permissionManager.has("test.permission.someotherperm"));
+        Assertions.assertTrue(permissionManager.has("test.permission.shouldfalseforreal"));
+        Assertions.assertTrue(permissionManager.has("test.permission.true"));
+        Assertions.assertTrue(permissionManager.has("test.permission.falseforreal"));
+        Assertions.assertTrue(permissionManager.has("test.permission.alsofalse"));
+        Assertions.assertTrue(permissionManager.has("test.permission.false123"));
     }
 }

@@ -663,8 +663,8 @@ public class Client implements ConnectionWithState {
         movePlayer.setX(target.getX());
         movePlayer.setY(target.getY());
         movePlayer.setZ(target.getZ());
-        movePlayer.setYaw(target.getYaw());
-        movePlayer.setPitch(target.getPitch());
+        movePlayer.setYaw(target.yaw());
+        movePlayer.setPitch(target.pitch());
         movePlayer.setMode(PacketMovePlayer.MovePlayerMode.TELEPORT);
         movePlayer.setTick(0);
         this.send(movePlayer);
@@ -680,7 +680,7 @@ public class Client implements ConnectionWithState {
 
     private void moveToChunk(ChunkRequest chunkSquare) {
         BlockPosition targetPos = chunkSquare.getCenterPosition();
-        Location target = new Location(null, targetPos.getX(), targetPos.getY(), targetPos.getZ(), 0f, 0f);
+        Location target = new Location(null, targetPos.x(), targetPos.y(), targetPos.z(), 0f, 0f);
         this.move(target);
     }
 

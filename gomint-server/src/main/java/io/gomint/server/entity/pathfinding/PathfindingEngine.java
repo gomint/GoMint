@@ -159,25 +159,25 @@ public class PathfindingEngine {
             closedSet.add(CoordinateUtils.toLong(node.getBlockPosition()));
 
             // Examine neighbour nodes:
-            for (int i = node.getBlockPosition().getX() - 1; i <= node.getBlockPosition().getX() + 1; ++i) {
+            for (int i = node.getBlockPosition().x() - 1; i <= node.getBlockPosition().x() + 1; ++i) {
                 out:
-                for (int k = node.getBlockPosition().getZ() - 1; k <= node.getBlockPosition().getZ() + 1; ++k) {
-                    if (closedSet.contains(CoordinateUtils.toLong(i, node.getBlockPosition().getY(), k))) {
+                for (int k = node.getBlockPosition().z() - 1; k <= node.getBlockPosition().z() + 1; ++k) {
+                    if (closedSet.contains(CoordinateUtils.toLong(i, node.getBlockPosition().y(), k))) {
                         continue;
                     }
 
-                    BlockPosition neighbourTriple = new BlockPosition(i, node.getBlockPosition().getY(), k);
+                    BlockPosition neighbourTriple = new BlockPosition(i, node.getBlockPosition().y(), k);
 
                     // Got to make sure this neighbour is even in reach from this block
                     // Check if the block is walkable or jumpable
-                    Block block = this.getGoal().getWorld().blockAt(neighbourTriple);
+                    Block block = this.getGoal().world().blockAt(neighbourTriple);
                     if (!block.canPassThrough()) {
                         List<AxisAlignedBB> bbs = block.boundingBoxes();
                         if (bbs != null) {
                             for (AxisAlignedBB bb : bbs) {
-                                double diff = bb.getMaxY() - neighbourTriple.getY();
+                                double diff = bb.maxY() - neighbourTriple.y();
                                 if (diff > 0 && diff <= 0.5F) {
-                                    neighbourTriple = new BlockPosition(neighbourTriple.getX(), neighbourTriple.getY() + 1, neighbourTriple.getZ());
+                                    neighbourTriple = new BlockPosition(neighbourTriple.x(), neighbourTriple.y() + 1, neighbourTriple.z());
                                     break;
                                 } else {
                                     continue out;
@@ -187,9 +187,9 @@ public class PathfindingEngine {
                     }
 
                     // We need to account for gravity here
-                    Block blockBeneath = this.getGoal().getWorld().blockAt(neighbourTriple.getX(), neighbourTriple.getY() - 1, neighbourTriple.getZ());
+                    Block blockBeneath = this.getGoal().world().blockAt(neighbourTriple.x(), neighbourTriple.y() - 1, neighbourTriple.z());
                     if (blockBeneath.canPassThrough()) {
-                        neighbourTriple = new BlockPosition(neighbourTriple.getX(), neighbourTriple.getY() - 1, neighbourTriple.getZ());
+                        neighbourTriple = new BlockPosition(neighbourTriple.x(), neighbourTriple.y() - 1, neighbourTriple.z());
                     }
 
                     // This block is a valid neighbour:
@@ -235,7 +235,7 @@ public class PathfindingEngine {
 
                     LOGGER.debug("Path selected:");
                     for (BlockPosition intTriple : path) {
-                        Block block = this.getGoal().getWorld().blockAt(intTriple.getX(), intTriple.getY(), intTriple.getZ());
+                        Block block = this.getGoal().world().blockAt(intTriple.x(), intTriple.y(), intTriple.z());
                         LOGGER.debug("> " + intTriple + " > " + block.getClass());
                     }
                 }
@@ -248,11 +248,11 @@ public class PathfindingEngine {
     }
 
     private double gridDistance(BlockPosition a, BlockPosition b) {
-        return (Math.abs(b.getX() - a.getX()) + Math.abs(b.getZ() - a.getZ()));
+        return (Math.abs(b.x() - a.x()) + Math.abs(b.z() - a.z()));
     }
 
     public double estimateDistance(BlockPosition a, Vector b) {
-        return (Math.abs(b.getX() - a.getX()) + Math.abs(b.getY() - a.getY()) + Math.abs(b.getZ() - a.getZ()));
+        return (Math.abs(b.getX() - a.x()) + Math.abs(b.getY() - a.y()) + Math.abs(b.getZ() - a.z()));
     }
 
 }

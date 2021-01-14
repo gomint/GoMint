@@ -34,11 +34,11 @@ public class Ore {
         int clusterSize = this.type.getClusterSize();
         double angle = this.random.nextFloat() * Math.PI;
 
-        Vector2 offset = Vector2.getDirection2D( angle ).multiply( clusterSize / 8 );
-        float x1 = x + 8 + offset.getX();
-        float x2 = x + 8 - offset.getX();
-        float z1 = z + 8 + offset.getZ();
-        float z2 = z + 8 - offset.getZ();
+        Vector2 offset = Vector2.direction( angle ).multiply( clusterSize / 8 );
+        float x1 = x + 8 + offset.x();
+        float x2 = x + 8 - offset.x();
+        float z1 = z + 8 + offset.z();
+        float z2 = z + 8 - offset.z();
 
         int y1 = y + this.random.nextInt( 3 ) + 2;
         int y2 = y + this.random.nextInt( 3 ) + 2;
