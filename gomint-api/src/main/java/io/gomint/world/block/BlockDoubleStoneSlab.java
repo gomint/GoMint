@@ -21,13 +21,13 @@ public interface BlockDoubleStoneSlab extends Block {
      *
      * @return type of stone
      */
-    StoneType getStoneType();
+    StoneType type();
 
     /**
      * Set the type of stone for this block
      *
      * @param stoneType for this block
      */
-    void setStoneType( StoneType stoneType );
+    BlockDoubleStoneSlab type(StoneType stoneType);
 
 }

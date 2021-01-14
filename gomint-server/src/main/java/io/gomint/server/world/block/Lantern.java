@@ -39,18 +39,20 @@ public class Lantern extends Block implements BlockLantern {
     }
 
     @Override
-    public void setLanternType(LanternType type) {
+    public BlockLantern type(LanternType type) {
         switch (type) {
             case NORMAL:
                 this.setBlockId("minecraft:lantern");
-                return;
+                return this;
             default:
                 this.setBlockId("minecraft:soul_lantern");
         }
+
+        return this;
     }
 
     @Override
-    public LanternType getLanternType() {
+    public LanternType type() {
         switch (this.getBlockId()) {
             case "minecraft:lantern":
                 return LanternType.NORMAL;
@@ -60,13 +62,14 @@ public class Lantern extends Block implements BlockLantern {
     }
 
     @Override
-    public boolean isHanging() {
+    public boolean hanging() {
         return HANGING.getState(this);
     }
 
     @Override
-    public void setHanging(boolean hanging) {
+    public BlockLantern hanging(boolean hanging) {
         HANGING.setState(this, hanging);
+        return this;
     }
 
 }

@@ -19,7 +19,7 @@ import io.gomint.world.block.data.HingeSide;
  * @author geNAZt
  * @version 1.0
  */
-public abstract class Door extends Block implements BlockDoor {
+public abstract class Door<B extends BlockDoor> extends Block implements BlockDoor<B> {
 
     private static final BooleanBlockState HINGE = new BooleanBlockState(() -> new String[]{"door_hinge_bit"});
     private static final BooleanBlockState TOP = new BooleanBlockState(() -> new String[]{"upper_block_bit"});
@@ -27,32 +27,33 @@ public abstract class Door extends Block implements BlockDoor {
     private static final DirectionBlockState DIRECTION = new DirectionBlockState(() -> new String[]{"direction"}); // Rotation is always clockwise
 
     @Override
-    public boolean isTop() {
+    public boolean top() {
         return TOP.getState(this);
     }
 
-    protected void setTop(boolean top) {
+    protected B top(boolean top) {
         TOP.setState(this, top);
+        return (B) this;
     }
 
     @Override
-    public boolean isOpen() {
+    public boolean open() {
         return OPEN.getState(this);
     }
 
     @Override
     public void toggle() {
-        boolean toApply = !this.isOpen();
+        boolean toApply = !this.open();
 
-        if (isTop()) {
-            Door otherPart = this.world.blockAt(this.position.add(BlockPosition.DOWN));
-            otherPart.setOpen(toApply);
+        if (top()) {
+            B otherPart = this.world.blockAt(this.position.add(BlockPosition.DOWN));
+            otherPart.open(toApply);
         } else {
-            Door otherPart = this.world.blockAt(this.position.add(BlockPosition.UP));
-            otherPart.setOpen(toApply);
+            B otherPart = this.world.blockAt(this.position.add(BlockPosition.UP));
+            otherPart.open(toApply);
         }
 
-        this.setOpen(toApply);
+        this.open(toApply);
     }
 
     @Override
@@ -89,7 +90,7 @@ public abstract class Door extends Block implements BlockDoor {
 
     @Override
     public boolean onBreak(boolean creative) {
-        if (isTop()) {
+        if (top()) {
             Block otherPart = this.world.blockAt(this.position.add(BlockPosition.DOWN));
             otherPart.blockType(BlockAir.class);
         } else {
@@ -111,27 +112,31 @@ public abstract class Door extends Block implements BlockDoor {
     }
 
     @Override
-    public void setDirection(Direction direction) {
+    public B direction(Direction direction) {
         DIRECTION.setState(this, direction);
+        return (B) this;
     }
 
     @Override
-    public Direction getDirection() {
+    public Direction direction() {
         return DIRECTION.getState(this);
     }
 
     @Override
-    public void setHingeSide(HingeSide side) {
+    public B hingeSide(HingeSide side) {
         HINGE.setState(this, side == HingeSide.RIGHT);
+        return (B) this;
     }
 
     @Override
-    public HingeSide getHingeSide() {
+    public HingeSide hingeSide() {
         return HINGE.getState(this) ? HingeSide.RIGHT : HingeSide.LEFT;
     }
 
-    protected void setOpen(boolean open) {
+    @Override
+    public B open(boolean open) {
         OPEN.setState(this, open);
+        return (B) this;
     }
 
 }

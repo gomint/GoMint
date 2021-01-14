@@ -19,6 +19,6 @@ public interface BlockRedstoneComparator extends Block {
      *
      * @return true when powered, false otherwise
      */
-    boolean isPowered();
+    boolean powered();
 
 }

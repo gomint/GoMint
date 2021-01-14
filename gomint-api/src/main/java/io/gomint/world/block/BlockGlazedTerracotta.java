@@ -14,20 +14,20 @@ import io.gomint.world.block.data.BlockColor;
  * @version 1.0
  * @stability 3
  */
-public interface BlockGlazedTerracotta extends BlockFacing {
+public interface BlockGlazedTerracotta extends BlockFacing<BlockGlazedTerracotta> {
 
     /**
      * Set the color of this block
      *
      * @param color of this block
      */
-    void setColor( BlockColor color );
+    BlockGlazedTerracotta color(BlockColor color );
 
     /**
      * Get the color of this block
      *
      * @return color of this block
      */
-    BlockColor getColor();
+    BlockColor color();
 
 }

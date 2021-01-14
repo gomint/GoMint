@@ -21,34 +21,34 @@ public interface BlockBed extends Block {
      *
      * @return color of this bed
      */
-    BlockColor getColor();
+    BlockColor color();
 
     /**
      * Set the color of this bed
      *
      * @param color which should be used from now on
      */
-    void setColor( BlockColor color );
+    BlockBed color(BlockColor color );
 
     /**
      * Get the other half of this multi block structure,
      *
      * @return the other half of the bed or null when no other half has been found
      */
-    BlockBed getOtherHalf();
+    BlockBed otherHalf();
 
     /**
      * Is this block the head part of this multi block structure?
      *
      * @return true if this is the head part, false if not
      */
-    boolean isHeadPart();
+    boolean head();
 
     /**
      * Set this as top part of the multi block
      *
      * @param value if the block is head or not
      */
-    void setHeadPart( boolean value );
+    BlockBed head(boolean value );
 
 }

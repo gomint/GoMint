@@ -160,22 +160,22 @@ public class Wall extends Block implements BlockWall {
         for (Direction value : Direction.values()) {
             Block block = this.getSide(value);
 
-            setConnection(value, ConnectionType.NONE);
+            connection(value, ConnectionType.NONE);
             if (block.solid()) {
-                setConnection(value, ConnectionType.SHORT);
+                connection(value, ConnectionType.SHORT);
             }
         }
 
         // Check if we need the pole
-        this.setPole(true);
-        if (this.getConnection(Direction.NORTH) == ConnectionType.SHORT &&
-            this.getConnection(Direction.SOUTH) == ConnectionType.SHORT) {
-            this.setPole(this.getConnection(Direction.WEST) != ConnectionType.NONE ||
-                this.getConnection(Direction.EAST) != ConnectionType.NONE);
-        } else if (this.getConnection(Direction.WEST) == ConnectionType.SHORT &&
-            this.getConnection(Direction.EAST) == ConnectionType.SHORT) {
-            this.setPole(this.getConnection(Direction.SOUTH) != ConnectionType.NONE ||
-                this.getConnection(Direction.NORTH) != ConnectionType.NONE);
+        this.pole(true);
+        if (this.connection(Direction.NORTH) == ConnectionType.SHORT &&
+            this.connection(Direction.SOUTH) == ConnectionType.SHORT) {
+            this.pole(this.connection(Direction.WEST) != ConnectionType.NONE ||
+                this.connection(Direction.EAST) != ConnectionType.NONE);
+        } else if (this.connection(Direction.WEST) == ConnectionType.SHORT &&
+            this.connection(Direction.EAST) == ConnectionType.SHORT) {
+            this.pole(this.connection(Direction.SOUTH) != ConnectionType.NONE ||
+                this.connection(Direction.NORTH) != ConnectionType.NONE);
         }
     }
 
@@ -222,7 +222,7 @@ public class Wall extends Block implements BlockWall {
     }
 
     @Override
-    public StoneType getStoneType() {
+    public StoneType type() {
         switch (this.getBlockId()) {
             case "minecraft:blackstone_wall":
                 return StoneType.BLACKSTONE;
@@ -236,28 +236,30 @@ public class Wall extends Block implements BlockWall {
     }
 
     @Override
-    public void setStoneType(StoneType stoneType) {
+    public BlockWall type(StoneType stoneType) {
         StoneTypeMagic newState = StoneTypeMagic.valueOf(stoneType.name());
         if (newState.blockId.isEmpty()) {
-            return;
+            return this;
         }
 
         this.setBlockId(newState.blockId);
         VARIANT.setState(this, newState);
+        return this;
     }
 
     @Override
-    public boolean hasPole() {
+    public boolean pole() {
         return POST.getState(this);
     }
 
     @Override
-    public void setPole(boolean pole) {
+    public BlockWall pole(boolean pole) {
         POST.setState(this, pole);
+        return this;
     }
 
     @Override
-    public void setConnection(Direction direction, ConnectionType connectionType) {
+    public BlockWall connection(Direction direction, ConnectionType connectionType) {
         ConnectionTypeMagic state = ConnectionTypeMagic.valueOf(connectionType.name());
         switch (direction) {
             case SOUTH:
@@ -276,10 +278,12 @@ public class Wall extends Block implements BlockWall {
                 NORTH.setState(this, state);
                 break;
         }
+
+        return this;
     }
 
     @Override
-    public ConnectionType getConnection(Direction direction) {
+    public ConnectionType connection(Direction direction) {
         switch (direction) {
             case SOUTH:
                 return ConnectionType.valueOf(SOUTH.getState(this).name());

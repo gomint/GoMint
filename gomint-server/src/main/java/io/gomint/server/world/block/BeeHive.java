@@ -55,12 +55,13 @@ public class BeeHive extends Block implements BlockBeeHive {
     }
 
     @Override
-    public void setFacing(Facing facing) {
+    public BlockBeeHive facing(Facing facing) {
         FACING.setState(this, facing);
+        return this;
     }
 
     @Override
-    public Facing getFacing() {
+    public Facing facing() {
         return FACING.getState(this);
     }
 

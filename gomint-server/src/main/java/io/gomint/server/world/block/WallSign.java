@@ -19,7 +19,7 @@ import io.gomint.world.block.data.LogType;
 @RegisterInfo(sId = "minecraft:darkoak_wall_sign")
 @RegisterInfo(sId = "minecraft:crimson_wall_sign")
 @RegisterInfo(sId = "minecraft:warped_wall_sign")
-public class WallSign extends Sign implements BlockWallSign {
+public class WallSign extends Sign<BlockWallSign> implements BlockWallSign {
 
     private enum LogTypeMagic {
         OAK("minecraft:wall_sign"),
@@ -41,7 +41,7 @@ public class WallSign extends Sign implements BlockWallSign {
     private static final BlockfaceFromPlayerBlockState FACING = new BlockfaceFromPlayerBlockState(() -> new String[]{"facing_direction"}, false);
 
     @Override
-    public LogType getWoodType() {
+    public LogType type() {
         for (LogTypeMagic value : LogTypeMagic.values()) {
             if (value.blockId.equals(this.getBlockId())) {
                 return LogType.valueOf(value.name());
@@ -52,9 +52,10 @@ public class WallSign extends Sign implements BlockWallSign {
     }
 
     @Override
-    public void setWoodType(LogType logType) {
+    public BlockWallSign type(LogType logType) {
         LogTypeMagic newState = LogTypeMagic.valueOf(logType.name());
         this.setBlockId(newState.blockId);
+        return this;
     }
 
     @Override
@@ -63,12 +64,13 @@ public class WallSign extends Sign implements BlockWallSign {
     }
 
     @Override
-    public void setFacing(Facing facing) {
+    public BlockWallSign facing(Facing facing) {
         FACING.setState(this, facing);
+        return this;
     }
 
     @Override
-    public Facing getFacing() {
+    public Facing facing() {
         return FACING.getState(this);
     }
 

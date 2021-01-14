@@ -39,7 +39,7 @@ public class ItemLightBlock extends ItemStack implements io.gomint.inventory.ite
     @Override
     public Block getBlock() {
         BlockLightBlock block = (BlockLightBlock) super.getBlock();
-        block.setIntensity(this.getIntensity());
+        block.intensity(this.getIntensity());
         return block;
     }
 

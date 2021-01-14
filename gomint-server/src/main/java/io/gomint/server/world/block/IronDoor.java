@@ -13,7 +13,7 @@ import io.gomint.world.block.data.Facing;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:iron_door" )
-public class IronDoor extends Door implements BlockIronDoor {
+public class IronDoor extends Door<BlockIronDoor> implements BlockIronDoor {
 
     @Override
     public long getBreakTime() {
@@ -39,8 +39,8 @@ public class IronDoor extends Door implements BlockIronDoor {
     public void afterPlacement() {
         Block above = this.side(Facing.UP);
         IronDoor aDoor = above.blockType(IronDoor.class);
-        aDoor.setDirection(this.getDirection());
-        aDoor.setTop(true);
+        aDoor.direction(this.direction());
+        aDoor.top(true);
 
         super.afterPlacement();
     }

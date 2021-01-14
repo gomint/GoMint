@@ -30,7 +30,7 @@ public class HardenedGlassPane extends Block implements BlockHardenedGlassPane {
     }
 
     @Override
-    public GlassColor getColor() {
+    public GlassColor color() {
         if ("minecraft:hard_glass_pane".equals(this.getBlockId())) {
             return GlassColor.TRANSPARENT;
         }
@@ -39,13 +39,14 @@ public class HardenedGlassPane extends Block implements BlockHardenedGlassPane {
     }
 
     @Override
-    public void setColor(GlassColor color) {
+    public BlockHardenedGlassPane color(GlassColor color) {
         if (color == GlassColor.TRANSPARENT) {
             this.setBlockId("minecraft:hard_glass_pane");
-            return;
+            return this;
         }
 
         COLOR.setState(this, color);
+        return this;
     }
 
 }

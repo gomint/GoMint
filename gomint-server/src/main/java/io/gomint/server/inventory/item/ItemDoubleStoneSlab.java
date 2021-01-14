@@ -92,7 +92,7 @@ public class ItemDoubleStoneSlab extends ItemStack implements io.gomint.inventor
     @Override
     public Block getBlock() {
         BlockDoubleStoneSlab slab = this.blocks.get(BlockDoubleStoneSlab.class);
-        slab.setStoneType(this.getStoneType());
+        slab.type(this.getStoneType());
         return slab;
     }
 

@@ -14,20 +14,20 @@ import io.gomint.world.block.data.Facing;
  * @version 1.0
  * @stability 3
  */
-public interface BlockFacing extends Block {
+public interface BlockFacing<B> extends Block {
 
     /**
      * Set the facing of this block
      *
      * @param facing of this block
      */
-    void setFacing( Facing facing );
+    B facing(Facing facing );
 
     /**
      * Get the direction in which this block
      *
      * @return the direction of this block
      */
-    Facing getFacing();
+    Facing facing();
 
 }

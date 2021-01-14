@@ -117,9 +117,9 @@ public class ItemCoralFanHang extends ItemStack implements io.gomint.inventory.i
     @Override
     public Block getBlock() {
         BlockCoralFanHang block = (BlockCoralFanHang) super.getBlock();
-        block.setCoralType(this.getCoralType());
-        block.setDirection(this.getDirection());
-        block.setDead(this.isDead());
+        block.coralType(this.getCoralType());
+        block.direction(this.getDirection());
+        block.dead(this.isDead());
         return block;
     }
 

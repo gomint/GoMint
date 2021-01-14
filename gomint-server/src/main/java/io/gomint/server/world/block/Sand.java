@@ -70,20 +70,21 @@ public class Sand extends Fallable implements BlockSand {
     }
 
     @Override
-    public void setType(SandType type) {
+    public BlockSand type(SandType type) {
         SandTypeMagic newState = SandTypeMagic.valueOf(type.name());
         TYPE.setState(this, newState);
+        return this;
     }
 
     @Override
-    public SandType getType() {
+    public SandType type() {
         return SandType.valueOf(TYPE.getState(this).name());
     }
 
     @Override
     public List<ItemStack> drops(ItemStack itemInHand) {
         ItemSand sand = ItemSand.create(1);
-        sand.setType(this.getType());
+        sand.setType(this.type());
         return Collections.singletonList(sand);
     }
 

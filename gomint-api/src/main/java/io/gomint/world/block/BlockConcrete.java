@@ -21,13 +21,13 @@ public interface BlockConcrete extends Block {
      *
      * @return color of this block
      */
-    BlockColor getColor();
+    BlockColor color();
 
     /**
      * Set the color of this block
      *
      * @param color which this block should be
      */
-    void setColor( BlockColor color );
+    BlockConcrete color(BlockColor color);
 
 }

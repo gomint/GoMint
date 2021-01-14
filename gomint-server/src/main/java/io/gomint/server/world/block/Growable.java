@@ -84,7 +84,7 @@ public abstract class Growable extends Block {
                 if (block instanceof Farmland) {
                     currentBlockDivider = 1f;
 
-                    if (((Farmland) block).getMoisture() > MathUtils.EPSILON) {
+                    if (((Farmland) block).moisture() > MathUtils.EPSILON) {
                         currentBlockDivider = 3f;
                     }
                 }

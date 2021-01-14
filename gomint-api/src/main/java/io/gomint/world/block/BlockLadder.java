@@ -21,13 +21,13 @@ public interface BlockLadder extends Block {
      *
      * @param attachSide of this ladder
      */
-    void setAttachSide( Facing attachSide );
+    BlockLadder attachSide(Facing attachSide );
 
     /**
      * Get the side to which this ladder is attached
      *
      * @return attached side of this ladder
      */
-    Facing getAttachSide();
+    Facing attachSide();
 
 }

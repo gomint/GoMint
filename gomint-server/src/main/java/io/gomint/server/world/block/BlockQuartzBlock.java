@@ -5,10 +5,9 @@ import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.world.block.helper.ToolPresets;
 import io.gomint.server.world.block.state.AxisBlockState;
 import io.gomint.server.world.block.state.EnumBlockState;
-import io.gomint.world.block.BlockBlockOfQuartz;
 import io.gomint.world.block.BlockType;
 import io.gomint.world.block.data.Axis;
-import io.gomint.world.block.data.QuartzVariant;
+import io.gomint.world.block.data.QuartzType;
 
 import java.util.Collections;
 import java.util.List;
@@ -19,7 +18,7 @@ import java.util.List;
  */
 @RegisterInfo(sId = "minecraft:quartz_block", def = true)
 @RegisterInfo(sId = "minecraft:quartz_bricks")
-public class BlockOfQuartz extends Block implements BlockBlockOfQuartz {
+public class BlockQuartzBlock extends Block implements io.gomint.world.block.BlockQuartzBlock {
 
     private enum VariantMagic {
         SMOOTH("minecraft:quartz_block","smooth"),
@@ -64,22 +63,23 @@ public class BlockOfQuartz extends Block implements BlockBlockOfQuartz {
     }
 
     @Override
-    public QuartzVariant getVariant() {
+    public QuartzType type() {
         if ("minecraft:quartz_bricks".equals(this.getBlockId())) {
-            return QuartzVariant.BRICKS;
+            return QuartzType.BRICKS;
         }
 
-        return QuartzVariant.valueOf(VARIANT.getState(this).name());
+        return QuartzType.valueOf(VARIANT.getState(this).name());
     }
 
     @Override
-    public void setVariant(QuartzVariant variant) {
-        if (variant == QuartzVariant.BRICKS) {
+    public BlockQuartzBlock type(QuartzType variant) {
+        if (variant == QuartzType.BRICKS) {
             this.setBlockId("minecraft:quartz_bricks");
-            return;
+            return this;
         }
 
         VARIANT.setState(this, VariantMagic.valueOf(variant.name()));
+        return this;
     }
 
     @Override
@@ -97,12 +97,13 @@ public class BlockOfQuartz extends Block implements BlockBlockOfQuartz {
     }
 
     @Override
-    public void setAxis(Axis axis) {
+    public BlockQuartzBlock axis(Axis axis) {
         AXIS.setState(this, axis);
+        return this;
     }
 
     @Override
-    public Axis getAxis() {
+    public Axis axis() {
         return AXIS.getState(this);
     }
 

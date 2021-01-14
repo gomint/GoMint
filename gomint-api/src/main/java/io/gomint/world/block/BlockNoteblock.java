@@ -17,6 +17,6 @@ public interface BlockNoteblock extends Block {
     /**
      * Play the note stored in this block
      */
-    void playNote();
+    BlockNoteblock playNote();
 
 }

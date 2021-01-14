@@ -21,7 +21,7 @@ public class ItemTNT extends ItemStack implements io.gomint.inventory.item.ItemT
     @Override
     public Block getBlock() {
         BlockTNT tnt = (BlockTNT) super.getBlock();
-        tnt.setType(TNTType.NORMAL);
+        tnt.type(TNTType.NORMAL);
         return tnt;
     }
 

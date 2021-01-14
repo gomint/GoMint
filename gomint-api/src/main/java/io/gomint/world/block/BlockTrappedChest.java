@@ -14,27 +14,27 @@ import io.gomint.inventory.Inventory;
  * @version 1.0
  * @stability 3
  */
-public interface BlockTrappedChest extends BlockFacing {
+public interface BlockTrappedChest extends BlockFacing<BlockTrappedChest> {
 
     /**
      * Get the chests inventory
      *
      * @return inventory of this chest
      */
-    Inventory getInventory();
+    Inventory inventory();
 
     /**
      * Set a custom name for this container
      *
      * @param customName which should be used
      */
-    void setCustomName( String customName );
+    BlockTrappedChest customName(String customName );
 
     /**
      * Get the custom name of this container
      *
      * @return custom name of this container
      */
-    String getCustomName();
+    String customName();
 
 }

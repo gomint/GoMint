@@ -6,17 +6,19 @@ import io.gomint.server.entity.tileentity.ContainerTileEntity;
  * @author geNAZt
  * @version 1.0
  */
-public abstract class ContainerBlock extends Block {
+public abstract class ContainerBlock<B> extends Block {
 
-    public void setCustomName( String customName ) {
+    public B customName(String customName ) {
         ContainerTileEntity containerTileEntity = this.getTileEntity();
         if ( containerTileEntity != null ) {
             containerTileEntity.setCustomName( customName );
             this.updateBlock();
         }
+
+        return (B) this;
     }
 
-    public String getCustomName() {
+    public String customName() {
         ContainerTileEntity containerTileEntity = this.getTileEntity();
         if ( containerTileEntity != null ) {
             return containerTileEntity.getCustomName();

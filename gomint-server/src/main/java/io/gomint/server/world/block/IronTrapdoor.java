@@ -12,12 +12,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:iron_trapdoor" )
-public class IronTrapdoor extends Trapdoor implements BlockIronTrapdoor {
-
-    @Override
-    public String getBlockId() {
-        return "minecraft:iron_trapdoor";
-    }
+public class IronTrapdoor extends Trapdoor<BlockIronTrapdoor> implements BlockIronTrapdoor {
 
     @Override
     public long getBreakTime() {

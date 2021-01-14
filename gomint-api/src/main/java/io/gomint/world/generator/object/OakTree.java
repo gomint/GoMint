@@ -23,13 +23,13 @@ public class OakTree extends Tree {
 
     public OakTree() {
         this.leafBlock = GoMint.instance().createBlock(BlockLeaves.class);
-        this.leafBlock.setLeaveType(LogType.OAK);
+        this.leafBlock.type(LogType.OAK);
 
         this.trunkBlock = GoMint.instance().createBlock(BlockLog.class);
-        this.trunkBlock.setLogType(LogType.OAK);
-        this.trunkBlock.setStripped(false);
-        this.trunkBlock.setBarkOnAllSides(false);
-        this.trunkBlock.setAxis(Axis.Y);
+        this.trunkBlock.type(LogType.OAK);
+        this.trunkBlock.stripped(false);
+        this.trunkBlock.barkOnAllSides(false);
+        this.trunkBlock.axis(Axis.Y);
     }
 
     @Override

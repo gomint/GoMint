@@ -14,7 +14,7 @@ import io.gomint.world.block.data.LogType;
  * @version 1.0
  * @stability 3
  */
-public interface BlockFenceGate extends BlockDirection {
+public interface BlockFenceGate extends BlockDirection<BlockFenceGate> {
 
     /**
      * Toggle this fence gate
@@ -26,20 +26,20 @@ public interface BlockFenceGate extends BlockDirection {
      *
      * @return true if open, false if not
      */
-    boolean isOpen();
+    boolean open();
 
     /**
      * Set the type of wood for this fence gate
      *
      * @param logType type of wood
      */
-    void setWoodType( LogType logType );
+    BlockFenceGate type(LogType logType );
 
     /**
      * Get the type of wood from which this fence gate has been made
      *
      * @return type of wood
      */
-    LogType getWoodType();
+    LogType type();
 
 }

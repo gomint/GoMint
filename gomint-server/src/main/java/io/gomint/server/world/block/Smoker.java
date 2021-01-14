@@ -44,26 +44,29 @@ public class Smoker extends Block implements BlockSmoker {
     }
 
     @Override
-    public boolean isBurning() {
+    public boolean burning() {
         return this.getBlockId().equals("minecraft:lit_smoker");
     }
 
     @Override
-    public void setBurning(boolean burning) {
+    public BlockSmoker burning(boolean burning) {
         if (burning) {
             this.setBlockId("minecraft:lit_smoker");
         } else {
             this.setBlockId("minecraft:smoker");
         }
+
+        return this;
     }
 
     @Override
-    public void setFacing(Facing facing) {
+    public BlockSmoker facing(Facing facing) {
         FACING.setState(this, facing);
+        return this;
     }
 
     @Override
-    public Facing getFacing() {
+    public Facing facing() {
         return FACING.getState(this);
     }
 

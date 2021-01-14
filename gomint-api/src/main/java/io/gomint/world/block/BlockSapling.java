@@ -21,14 +21,14 @@ public interface BlockSapling extends Block {
      *
      * @param type of sapling
      */
-    void setLogType( LogType type );
+    BlockSapling type(LogType type );
 
     /**
      * Get the type of this sapling
      *
      * @return type of sapling
      */
-    LogType getLogType();
+    LogType type();
 
 
 }

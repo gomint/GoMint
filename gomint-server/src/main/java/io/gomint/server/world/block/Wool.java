@@ -39,13 +39,14 @@ public class Wool extends Block implements BlockWool {
     }
 
     @Override
-    public BlockColor getColor() {
+    public BlockColor color() {
         return COLOR.getState(this);
     }
 
     @Override
-    public void setColor( BlockColor color ) {
+    public BlockWool color(BlockColor color ) {
         COLOR.setState( this, color );
+        return this;
     }
 
     @Override

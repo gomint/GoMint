@@ -14,27 +14,27 @@ import io.gomint.math.Vector;
  * @version 1.0
  * @stability 3
  */
-public interface BlockLiquid extends Block {
+public interface BlockLiquid<B> extends Block {
 
     /**
      * Get the percentage of how high the fluid has been in this block
      *
      * @return a value between 0 and 1 where 1 is the whole block full of the given liquid
      */
-    float getFillHeight();
+    float fillHeight();
 
     /**
      * Set the fill height of the fluid inside this block
      *
      * @param height of the fluid
      */
-    void setFillHeight(float height);
+    B fillHeight(float height);
 
     /**
      * Vector which shows in which direction the liquid is flowing
      *
      * @return vector of flowing direction
      */
-    Vector getFlowVector();
+    Vector flowVector();
 
 }

@@ -96,29 +96,31 @@ public class Cauldron extends Block implements BlockCauldron {
     }
 
     @Override
-    public LiquidType getType() {
+    public LiquidType type() {
         return LiquidType.valueOf(LIQUID.getState(this).name());
     }
 
     @Override
-    public void setType(LiquidType type) {
+    public BlockCauldron type(LiquidType type) {
         LiquidTypeMagic newState = LiquidTypeMagic.valueOf(type.name());
         this.setBlockId(newState.blockId);
         LIQUID.setState(this, newState);
+        return this;
     }
 
     @Override
-    public float getFillHeight() {
+    public float fillHeight() {
         return FILL_LEVEL.getState(this);
     }
 
     @Override
-    public void setFillHeight(float height) {
+    public BlockCauldron fillHeight(float height) {
         if (height < 0f || height > 1f) {
-            return;
+            return this;
         }
 
         FILL_LEVEL.setState(this, height);
+        return this;
     }
 
 }

@@ -21,21 +21,21 @@ public interface BlockCauldron extends Block {
      *
      * @return type of liquid
      */
-    LiquidType getType();
+    LiquidType type();
 
     /**
      * Set the liquid type of this cauldron
      *
      * @param type of liquid for this cauldron
      */
-    void setType(LiquidType type);
+    BlockCauldron type(LiquidType type);
 
     /**
      * Get the percentage of how high the fluid has been in this block
      *
      * @return a value between 0 and 1 where 1 is the whole block full of the given liquid
      */
-    float getFillHeight();
+    float fillHeight();
 
     /**
      * Set the fill height of the fluid inside this block. Allowed values range from 0 to 1. Other values
@@ -43,6 +43,6 @@ public interface BlockCauldron extends Block {
      *
      * @param height of the fluid
      */
-    void setFillHeight(float height);
+    BlockCauldron fillHeight(float height);
 
 }

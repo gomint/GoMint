@@ -119,8 +119,8 @@ public class ItemBed extends ItemStack implements io.gomint.inventory.item.ItemB
     @Override
     public Block getBlock() {
         BlockBed block = (BlockBed) super.getBlock();
-        block.setColor(this.getColor());
-        block.setHeadPart(false);
+        block.color(this.getColor());
+        block.head(false);
         return block;
     }
 

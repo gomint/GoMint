@@ -9,7 +9,6 @@ import io.gomint.server.entity.tileentity.SkullTileEntity;
 import io.gomint.server.entity.tileentity.TileEntity;
 import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.world.block.state.BlockfaceFromPlayerBlockState;
-import io.gomint.server.world.block.state.EnumBlockState;
 import io.gomint.taglib.NBTTagCompound;
 import io.gomint.world.block.BlockSkull;
 import io.gomint.world.block.BlockType;
@@ -17,7 +16,6 @@ import io.gomint.world.block.data.Direction;
 import io.gomint.world.block.data.Facing;
 import io.gomint.world.block.data.SkullType;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -85,7 +83,7 @@ public class Skull extends Block implements BlockSkull {
     @Override
     public List<ItemStack> drops(ItemStack itemInHand) {
         ItemSkull item = ItemSkull.create(1);
-        item.setSkullType(this.getSkullType());
+        item.setSkullType(this.type());
         return Collections.singletonList(item);
     }
 
@@ -100,28 +98,31 @@ public class Skull extends Block implements BlockSkull {
     }
 
     @Override
-    public SkullType getSkullType() {
+    public SkullType type() {
         SkullTileEntity entity = this.getTileEntity();
         return entity.getSkullType();
     }
 
     @Override
-    public void setSkullType(SkullType type) {
+    public BlockSkull type(SkullType type) {
         SkullTileEntity entity = this.getTileEntity();
         entity.setSkullType(type);
+        return this;
     }
 
     @Override
-    public void setDirection(Direction direction) {
+    public BlockSkull direction(Direction direction) {
         if (direction == null) {
             DIRECTION.setState(this, Facing.UP);
         } else {
             DIRECTION.setState(this, direction.toFacing());
         }
+
+        return this;
     }
 
     @Override
-    public Direction getDirection() {
+    public Direction direction() {
         Facing facing = DIRECTION.getState(this);
         if ( facing == Facing.UP ) {
             return null;

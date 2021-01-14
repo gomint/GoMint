@@ -66,7 +66,7 @@ public class GlazedTerracotta extends Block implements BlockGlazedTerracotta {
     }
 
     @Override
-    public void setColor( BlockColor color ) {
+    public BlockGlazedTerracotta color(BlockColor color ) {
         switch ( color ) {
             case WHITE:
                 this.setBlockId( "minecraft:white_glazed_terracotta" );
@@ -117,10 +117,12 @@ public class GlazedTerracotta extends Block implements BlockGlazedTerracotta {
                 this.setBlockId( "minecraft:black_glazed_terracotta" );
                 break;
         }
+
+        return this;
     }
 
     @Override
-    public BlockColor getColor() {
+    public BlockColor color() {
         switch ( this.getBlockId() ) {
             case "minecraft:white_glazed_terracotta":
                 return BlockColor.WHITE;
@@ -160,12 +162,13 @@ public class GlazedTerracotta extends Block implements BlockGlazedTerracotta {
     }
 
     @Override
-    public void setFacing( Facing facing ) {
+    public BlockGlazedTerracotta facing(Facing facing ) {
         FACING.setState(this,  facing );
+        return this;
     }
 
     @Override
-    public Facing getFacing() {
+    public Facing facing() {
         return FACING.getState(this);
     }
 

@@ -12,20 +12,20 @@ package io.gomint.world.block;
  * @version 1.0
  * @stability 3
  */
-public interface BlockBlastFurnace extends Block, BlockFacing {
+public interface BlockBlastFurnace extends Block, BlockFacing<BlockBlastFurnace> {
 
     /**
      * Check if this furnace is burning
      *
      * @return true if burning, false if not
      */
-    boolean isBurning();
+    boolean burning();
 
     /**
      * Set the burning of this furnace
      *
      * @param burning true when it should burn, false if it shouldn't
      */
-    void setBurning( boolean burning );
+    BlockBlastFurnace burning(boolean burning );
 
 }

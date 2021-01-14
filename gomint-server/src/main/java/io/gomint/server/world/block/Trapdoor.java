@@ -22,20 +22,21 @@ import io.gomint.world.block.data.Facing;
 import java.util.Collections;
 import java.util.List;
 
-public abstract class Trapdoor extends Block implements BlockTrapdoor {
+public abstract class Trapdoor<B> extends Block implements BlockTrapdoor<B> {
 
     private static final DirectionBlockState DIRECTION = new DirectionBlockState( () -> new String[]{"direction"});
     private static final BooleanBlockState TOP = new BooleanBlockState( () -> new String[]{"upside_down_bit"});
     private static final BooleanBlockState OPEN = new BooleanBlockState( () -> new String[]{"open_bit"});
 
     @Override
-    public boolean isOpen() {
+    public boolean open() {
         return OPEN.getState(this);
     }
 
     @Override
-    public void toggle() {
-        OPEN.setState(this, !this.isOpen());
+    public B toggle() {
+        OPEN.setState(this, !this.open());
+        return (B) this;
     }
 
     @Override
@@ -135,12 +136,13 @@ public abstract class Trapdoor extends Block implements BlockTrapdoor {
     }
 
     @Override
-    public void setDirection(Direction direction) {
+    public B direction(Direction direction) {
         DIRECTION.setState(this, direction);
+        return (B) this;
     }
 
     @Override
-    public Direction getDirection() {
+    public Direction direction() {
         return DIRECTION.getState(this);
     }
 

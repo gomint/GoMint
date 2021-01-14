@@ -10,7 +10,7 @@ package io.gomint.world.block;
 /**
  * @author geNAZt
  * @version 1.0
- * @stability 2
+ * @stability 1
  */
 public interface BlockStone extends Block {
 
@@ -30,13 +30,13 @@ public interface BlockStone extends Block {
      *
      * @param type which should be set
      */
-    void setStoneType(Type type);
+    BlockStone type(Type type);
 
     /**
      * Get the type of stone
      *
      * @return type of stone
      */
-    Type getStoneType();
+    Type type();
 
 }

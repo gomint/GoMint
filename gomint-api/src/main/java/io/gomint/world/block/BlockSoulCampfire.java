@@ -10,16 +10,16 @@ package io.gomint.world.block;
 /**
  * @author KingAli
  * @version 1.0
- * @stability 3
+ * @stability 1
  */
-public interface BlockSoulCampfire extends Block, BlockDirection {
+public interface BlockSoulCampfire extends Block, BlockDirection<BlockSoulCampfire> {
 
     /**
      * Set extinguished state for this campfire
      *
      * @param value true when extinguished, false otherwise
      */
-    void setExtinguished(boolean value);
+    BlockSoulCampfire extinguished(boolean value);
 
     /**
      * Check if this campfire is extinguished or not

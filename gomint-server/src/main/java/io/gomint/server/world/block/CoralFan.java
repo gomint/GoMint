@@ -60,38 +60,42 @@ public class CoralFan extends Block implements BlockCoralFan {
     }
 
     @Override
-    public RotationDirection getDirection() {
+    public RotationDirection rotation() {
         return DIRECTION.getState(this);
     }
 
     @Override
-    public void setDirection(RotationDirection direction) {
+    public BlockCoralFan rotation(RotationDirection direction) {
         DIRECTION.setState(this, direction);
+        return this;
     }
 
     @Override
-    public void setCoralType(CoralType type) {
+    public BlockCoralFan coralType(CoralType type) {
         CoralTypeMagic state = CoralTypeMagic.valueOf(type.name());
         COLOR.setState(this, state);
+        return this;
     }
 
     @Override
-    public CoralType getCoralType() {
+    public CoralType coralType() {
         return CoralType.valueOf(COLOR.getState(this).name());
     }
 
     @Override
-    public boolean isDead() {
+    public boolean dead() {
         return this.getBlockId().equals("minecraft:coral_fan_dead");
     }
 
     @Override
-    public void setDead(boolean dead) {
+    public BlockCoralFan dead(boolean dead) {
         if (dead) {
             this.setBlockId("minecraft:coral_fan_dead");
         } else {
             this.setBlockId("minecraft:coral_fan");
         }
+
+        return this;
     }
 
 }

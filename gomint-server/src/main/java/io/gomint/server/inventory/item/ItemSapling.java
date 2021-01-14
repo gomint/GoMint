@@ -65,7 +65,7 @@ public class ItemSapling extends ItemStack implements io.gomint.inventory.item.I
     @Override
     public Block getBlock() {
         BlockSapling sapling = (BlockSapling) super.getBlock();
-        sapling.setLogType(this.getLogType());
+        sapling.type(this.getLogType());
         return sapling;
     }
 

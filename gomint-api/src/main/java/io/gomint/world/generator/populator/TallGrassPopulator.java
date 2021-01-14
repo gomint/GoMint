@@ -42,7 +42,7 @@ public class TallGrassPopulator implements Populator {
 
             if ( y != -1 && this.canTallGrassStay( chunk, x, y, z ) ) {
                 BlockTallGrass tallGrass = GoMint.instance().createBlock( BlockTallGrass.class );
-                tallGrass.setGrassType( BlockTallGrass.Type.GRASS );
+                tallGrass.type( BlockTallGrass.Type.GRASS );
                 chunk.block( x, y, z, tallGrass );
             }
         }

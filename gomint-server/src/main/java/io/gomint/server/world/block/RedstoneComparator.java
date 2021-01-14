@@ -37,7 +37,7 @@ public class RedstoneComparator extends Block implements BlockRedstoneComparator
     }
 
     @Override
-    public boolean isPowered() {
+    public boolean powered() {
         return this.getBlockId().equals("minecraft:powered_comparator");
     }
 

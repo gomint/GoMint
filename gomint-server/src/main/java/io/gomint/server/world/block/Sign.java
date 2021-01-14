@@ -14,7 +14,7 @@ import java.util.List;
  * @author derklaro
  * @version 1.0
  */
-public abstract class Sign extends Block implements BlockSign {
+public abstract class Sign<B> extends Block implements BlockSign<B> {
 
     @Override
     public long getBreakTime() {
@@ -57,21 +57,21 @@ public abstract class Sign extends Block implements BlockSign {
     }
 
     @Override
-    public List<String> getLines() {
+    public List<String> lines() {
         SignTileEntity sign = this.getTileEntity();
         return sign == null ? null : new ArrayList<>(sign.getLines());
     }
 
     @Override
-    public void setLine(int line, String content) {
+    public B line(int line, String content) {
         // Silently fail when line is incorrect
         if (line > 4 || line < 1) {
-            return;
+            return (B) this;
         }
 
         SignTileEntity sign = this.getTileEntity();
         if (sign == null) {
-            return;
+            return (B) this;
         }
 
         if (sign.getLines().size() < line) {
@@ -82,10 +82,11 @@ public abstract class Sign extends Block implements BlockSign {
 
         sign.getLines().set(line - 1, content);
         this.updateBlock();
+        return (B) this;
     }
 
     @Override
-    public String getLine(int line) {
+    public String line(int line) {
         // Silently fail when line is incorrect
         if (line > 4 || line < 1) {
             return null;
@@ -98,4 +99,5 @@ public abstract class Sign extends Block implements BlockSign {
 
         return sign.getLines().size() < line ? null : sign.getLines().get(line - 1);
     }
+
 }

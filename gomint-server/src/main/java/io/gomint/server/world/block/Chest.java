@@ -11,7 +11,7 @@ import io.gomint.world.block.BlockType;
  * @version 1.0
  */
 @RegisterInfo(sId = "minecraft:chest")
-public class Chest extends ChestBase implements BlockChest {
+public class Chest extends ChestBase<BlockChest> implements BlockChest {
 
     @Override
     public BlockType blockType() {
@@ -19,18 +19,19 @@ public class Chest extends ChestBase implements BlockChest {
     }
 
     @Override
-    public void setFacing(Facing facing) {
+    public BlockChest facing(Facing facing) {
         DIRECTION.setState(this, facing);
+        return this;
     }
 
     @Override
-    public Facing getFacing() {
+    public Facing facing() {
         return DIRECTION.getState(this);
     }
 
     @Override
-    public Inventory getInventory() {
-        return super.getInventory();
+    public Inventory inventory() {
+        return super.inventory();
     }
 
 }

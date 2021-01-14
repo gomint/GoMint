@@ -21,9 +21,9 @@ public class ItemCauldron extends ItemStack implements io.gomint.inventory.item.
     @Override
     public Block getBlock() {
         BlockCauldron block = (BlockCauldron) super.getBlock();
-        block.setFillHeight(0f);
-        block.setType(LiquidType.WATER);
-        return block;
+        return block
+            .fillHeight(0f)
+            .type(LiquidType.WATER);
     }
 
 }

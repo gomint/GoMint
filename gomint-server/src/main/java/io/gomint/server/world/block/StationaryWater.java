@@ -11,7 +11,7 @@ import io.gomint.world.block.BlockStationaryWater;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:water" )
-public class StationaryWater extends Liquid implements BlockStationaryWater {
+public class StationaryWater extends Liquid<BlockStationaryWater> implements BlockStationaryWater {
 
     @Override
     public long getBreakTime() {
@@ -24,7 +24,7 @@ public class StationaryWater extends Liquid implements BlockStationaryWater {
     }
 
     @Override
-    public float getFillHeight() {
+    public float fillHeight() {
         return 1f;
     }
 

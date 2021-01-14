@@ -14,7 +14,7 @@ import java.util.concurrent.TimeUnit;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:flowing_lava" )
-public class FlowingLava extends Liquid implements BlockFlowingLava {
+public class FlowingLava extends Liquid<BlockFlowingLava> implements BlockFlowingLava {
 
     @Override
     public long getBreakTime() {
@@ -82,9 +82,9 @@ public class FlowingLava extends Liquid implements BlockFlowingLava {
 
         // Did we find a block we can collide with?
         if ( colliding != null ) {
-            if ( this.getFillHeight() > 4 || colliding.blockType() == BlockType.STATIONARY_WATER ) {
+            if ( this.fillHeight() > 4 || colliding.blockType() == BlockType.STATIONARY_WATER ) {
                 this.liquidCollide( colliding, Obsidian.class );
-            } else if ( this.getFillHeight() <= 4 ) {
+            } else if ( this.fillHeight() <= 4 ) {
                 this.liquidCollide( colliding, Cobblestone.class );
             }
         }

@@ -29,7 +29,7 @@ import java.util.Objects;
  * @author geNAZt
  * @version 1.0
  */
-public abstract class ChestBase extends ContainerBlock {
+public abstract class ChestBase<B> extends ContainerBlock<B> {
 
     protected static final BlockfaceFromPlayerBlockState DIRECTION = new BlockfaceFromPlayerBlockState(() -> new String[]{"facing_direction"}, false);
 
@@ -83,7 +83,7 @@ public abstract class ChestBase extends ContainerBlock {
             Block side = this.getSide(value);
             if (side.blockType() == this.blockType()) {
                 ChestTileEntity tileEntity = this.getTileEntity();
-                tileEntity.pair(((ChestBase) side).getTileEntity());
+                tileEntity.pair(side.getTileEntity());
                 side.updateBlock();
             }
         }
@@ -91,7 +91,7 @@ public abstract class ChestBase extends ContainerBlock {
         super.afterPlacement();
     }
 
-    protected Inventory getInventory() {
+    protected Inventory inventory() {
         ChestTileEntity tileEntity = this.getTileEntity();
         if (tileEntity != null) {
             return tileEntity.getInventory();

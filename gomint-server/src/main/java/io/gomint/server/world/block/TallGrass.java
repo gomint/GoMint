@@ -55,11 +55,6 @@ public class TallGrass extends Block implements BlockTallGrass {
     }
 
     @Override
-    public String getBlockId() {
-        return "minecraft:tallgrass";
-    }
-
-    @Override
     public boolean transparent() {
         return true;
     }
@@ -113,12 +108,13 @@ public class TallGrass extends Block implements BlockTallGrass {
     }
 
     @Override
-    public void setGrassType(Type type) {
+    public BlockTallGrass type(Type type) {
         VARIANT.setState(this, TypeMagic.valueOf(type.name()));
+        return this;
     }
 
     @Override
-    public Type getGrassType() {
+    public Type type() {
         return Type.valueOf(VARIANT.getState(this).name());
     }
 

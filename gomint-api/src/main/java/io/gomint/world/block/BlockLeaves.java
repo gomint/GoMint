@@ -21,13 +21,13 @@ public interface BlockLeaves extends Block {
      *
      * @param type of the leave
      */
-    void setLeaveType( LogType type );
+    BlockLeaves type(LogType type);
 
     /**
      * Get type of leave
      *
      * @return type of leave
      */
-    LogType getLeaveType();
+    LogType type();
 
 }

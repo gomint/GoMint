@@ -91,26 +91,29 @@ public class Furnace extends Block implements BlockFurnace {
     }
 
     @Override
-    public boolean isBurning() {
+    public boolean burning() {
         return this.getBlockId().equals("minecraft:lit_furnace");
     }
 
     @Override
-    public void setBurning(boolean burning) {
+    public BlockFurnace burning(boolean burning) {
         if (burning) {
             this.setBlockId("minecraft:lit_furnace");
         } else {
             this.setBlockId("minecraft:furnace");
         }
+
+        return this;
     }
 
     @Override
-    public void setFacing(Facing facing) {
+    public BlockFurnace facing(Facing facing) {
         FACING.setState(this, facing);
+        return this;
     }
 
     @Override
-    public Facing getFacing() {
+    public Facing facing() {
         return FACING.getState(this);
     }
 

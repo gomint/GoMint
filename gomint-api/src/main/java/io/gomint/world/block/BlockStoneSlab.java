@@ -14,20 +14,20 @@ import io.gomint.world.block.data.StoneType;
  * @version 1.0
  * @stability 3
  */
-public interface BlockStoneSlab extends BlockSlab {
+public interface BlockStoneSlab extends BlockSlab<BlockStoneSlab> {
 
     /**
      * Get the type of stone this slab has
      *
      * @return type of stone
      */
-    StoneType getStoneType();
+    StoneType type();
 
     /**
      * Set the type of stone for this block
      *
      * @param stoneType for this block
      */
-    void setStoneType( StoneType stoneType );
+    BlockStoneSlab type(StoneType stoneType );
 
 }

@@ -83,7 +83,7 @@ public class Fence extends Block implements BlockFence {
     }
 
     @Override
-    public LogType getWoodType() {
+    public LogType type() {
         switch (this.getBlockId()) {
             case "minecraft:crimson_fence":
                 return LogType.CRIMSON;
@@ -95,7 +95,7 @@ public class Fence extends Block implements BlockFence {
     }
 
     @Override
-    public void setWoodType(LogType logType) {
+    public BlockFence type(LogType logType) {
         LogTypeMagic newState = LogTypeMagic.valueOf(logType.name());
 
         if (!newState.value.isEmpty()) {
@@ -105,6 +105,8 @@ public class Fence extends Block implements BlockFence {
         if (!this.getBlockId().equals(newState.blockId)) {
             this.setBlockId(newState.blockId);
         }
+
+        return this;
     }
 
 }

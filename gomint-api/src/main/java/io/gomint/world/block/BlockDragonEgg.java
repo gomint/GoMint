@@ -19,13 +19,13 @@ public interface BlockDragonEgg extends Block {
     /**
      * Teleport this dragon egg to a random location
      */
-    void teleport();
+    BlockDragonEgg teleport();
 
     /**
      * Teleport this dragon egg to the given position
      *
      * @param blockPosition where the egg should be teleported to
      */
-    void teleport( BlockPosition blockPosition );
+    BlockDragonEgg teleport( BlockPosition blockPosition );
 
 }

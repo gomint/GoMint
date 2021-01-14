@@ -38,12 +38,13 @@ public class Jigsaw extends Block implements BlockJigsaw {
     }
 
     @Override
-    public void setFacing(Facing facing) {
+    public BlockJigsaw facing(Facing facing) {
         FACING.setState(this, facing);
+        return this;
     }
 
     @Override
-    public Facing getFacing() {
+    public Facing facing() {
         return FACING.getState(this);
     }
 

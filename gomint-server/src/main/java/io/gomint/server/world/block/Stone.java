@@ -16,8 +16,8 @@ import java.util.List;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:stone", def = true )
-@RegisterInfo( sId = "minecraft:smooth_stone" )
+@RegisterInfo(sId = "minecraft:stone", def = true)
+@RegisterInfo(sId = "minecraft:smooth_stone")
 public class Stone extends Block implements BlockStone {
 
     private static final EnumBlockState<BlockStone.Type, String> VARIANT = new EnumBlockState<>(v -> new String[]{"stone_type"}, BlockStone.Type.values(), e -> e.name().toLowerCase(), v -> BlockStone.Type.valueOf(v.toUpperCase()));
@@ -38,7 +38,7 @@ public class Stone extends Block implements BlockStone {
     }
 
     @Override
-    public List<ItemStack> drops(ItemStack itemInHand ) {
+    public List<ItemStack> drops(ItemStack itemInHand) {
         return new ArrayList<>() {{
             add(ItemCobblestone.create(1));
         }};
@@ -50,18 +50,19 @@ public class Stone extends Block implements BlockStone {
     }
 
     @Override
-    public void setStoneType(Type type) {
+    public BlockStone type(Type type) {
         if (type == Type.STONE_SMOOTH) {
             this.setBlockId("minecraft:smooth_stone");
-            return;
+            return this;
         }
 
         this.setBlockId("minecraft:stone");
-        VARIANT.setState(this,type);
+        VARIANT.setState(this, type);
+        return this;
     }
 
     @Override
-    public Type getStoneType() {
+    public Type type() {
         if ("minecraft:smooth_stone".equals(this.getBlockId())) {
             return Type.STONE_SMOOTH;
         }

@@ -75,7 +75,7 @@ public class ItemPlank extends ItemStack implements io.gomint.inventory.item.Ite
     @Override
     public Block getBlock() {
         BlockPlank plank = (BlockPlank) super.getBlock();
-        plank.setPlankType(this.getPlankType());
+        plank.type(this.getPlankType());
         return plank;
     }
 

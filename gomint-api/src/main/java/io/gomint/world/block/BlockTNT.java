@@ -28,13 +28,13 @@ public interface BlockTNT extends Block {
      *
      * @return tnt type
      */
-    TNTType getType();
+    TNTType type();
 
     /**
      * Set the type of tnt
      *
      * @param type which this tnt should have
      */
-    void setType(TNTType type);
+    BlockTNT type(TNTType type);
 
 }

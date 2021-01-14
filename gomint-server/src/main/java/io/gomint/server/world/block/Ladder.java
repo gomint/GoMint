@@ -70,12 +70,13 @@ public class Ladder extends Block implements BlockLadder {
     }
 
     @Override
-    public void setAttachSide( Facing attachSide ) {
+    public BlockLadder attachSide(Facing attachSide ) {
         ATTACHED.setState( this, attachSide );
+        return this;
     }
 
     @Override
-    public Facing getAttachSide() {
+    public Facing attachSide() {
         return ATTACHED.getState(this);
     }
 

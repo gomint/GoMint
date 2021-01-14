@@ -13,7 +13,7 @@ import java.util.concurrent.TimeUnit;
  * @version 1.0
  */
 @RegisterInfo(sId = "minecraft:lava")
-public class StationaryLava extends Liquid implements BlockStationaryLava {
+public class StationaryLava extends Liquid<BlockStationaryLava> implements BlockStationaryLava {
 
     @Override
     public long getBreakTime() {
@@ -31,7 +31,7 @@ public class StationaryLava extends Liquid implements BlockStationaryLava {
     }
 
     @Override
-    public float getFillHeight() {
+    public float fillHeight() {
         return 1f;
     }
 

@@ -100,13 +100,14 @@ public class Farmland extends Block implements BlockFarmland {
     }
 
     @Override
-    public float getMoisture() {
+    public float moisture() {
         return WATER_LEVEL.getState(this);
     }
 
     @Override
-    public void setMoisture(float moisture) {
+    public BlockFarmland moisture(float moisture) {
         WATER_LEVEL.setState(this, moisture);
+        return this;
     }
 
 }

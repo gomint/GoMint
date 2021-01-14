@@ -24,7 +24,7 @@ import java.util.concurrent.TimeUnit;
  * @author geNAZt
  * @version 1.0
  */
-public abstract class Button extends Block implements BlockButton {
+public abstract class Button<B> extends Block implements BlockButton<B> {
 
     private static final BlockfaceFromPlayerBlockState FACING = new BlockfaceFromPlayerBlockState(() -> new String[]{"facing_direction"}, true);
     private static final BooleanBlockState PRESSED = new BooleanBlockState(() -> new String[]{"button_pressed_bit"});
@@ -45,7 +45,7 @@ public abstract class Button extends Block implements BlockButton {
 
     @Override
     public long update(UpdateReason updateReason, long currentTimeMS, float dT) {
-        if (updateReason == UpdateReason.SCHEDULED && isPressed()) {
+        if (updateReason == UpdateReason.SCHEDULED && pressed()) {
             PRESSED.setState(this, false);
         }
 
@@ -53,14 +53,14 @@ public abstract class Button extends Block implements BlockButton {
     }
 
     @Override
-    public boolean isPressed() {
+    public boolean pressed() {
         return PRESSED.getState(this);
     }
 
     @Override
     public void press() {
         // Check if we need to update
-        if (!isPressed()) {
+        if (!pressed()) {
             PRESSED.setState(this, true);
         }
 
@@ -69,13 +69,14 @@ public abstract class Button extends Block implements BlockButton {
     }
 
     @Override
-    public Facing getAttachedFace() {
+    public Facing facing() {
         return FACING.getState(this);
     }
 
     @Override
-    public void setAttachedFace(Facing face) {
+    public B facing(Facing face) {
         FACING.setState(this, face);
+        return (B) this;
     }
 
 }

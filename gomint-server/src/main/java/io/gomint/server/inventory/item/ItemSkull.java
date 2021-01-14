@@ -31,7 +31,7 @@ public class ItemSkull extends ItemStack implements io.gomint.inventory.item.Ite
     @Override
     public Block getBlock() {
         BlockSkull block = (BlockSkull) super.getBlock();
-        block.setSkullType(this.getSkullType());
+        block.type(this.getSkullType());
         return block;
     }
 

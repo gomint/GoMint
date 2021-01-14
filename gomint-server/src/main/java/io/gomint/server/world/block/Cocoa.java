@@ -54,12 +54,13 @@ public class Cocoa extends Growable implements BlockCocoa {
     }
 
     @Override
-    public void setDirection(Direction direction) {
+    public BlockCocoa direction(Direction direction) {
         DIRECTION.setState(this, direction);
+        return this;
     }
 
     @Override
-    public Direction getDirection() {
+    public Direction direction() {
         return DIRECTION.getState(this);
     }
 

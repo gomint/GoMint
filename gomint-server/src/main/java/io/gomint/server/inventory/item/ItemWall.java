@@ -89,7 +89,7 @@ public class ItemWall extends ItemStack implements io.gomint.inventory.item.Item
     @Override
     public Block getBlock() {
         BlockWall block = (BlockWall) super.getBlock();
-        block.setStoneType(this.getStoneType());
+        block.type(this.getStoneType());
         return block;
     }
 

@@ -39,11 +39,13 @@ public class NoteBlock extends Block implements BlockNoteblock {
     }
 
     @Override
-    public void playNote() {
+    public BlockNoteblock playNote() {
         NoteblockTileEntity tileEntity = getTileEntity();
         if ( tileEntity != null ) {
             tileEntity.playSound();
         }
+
+        return this;
     }
 
     @Override

@@ -12,6 +12,7 @@ import io.gomint.server.world.block.Block;
 import io.gomint.world.World;
 import io.gomint.world.WorldType;
 import io.gomint.world.block.BlockDirt;
+import io.gomint.world.block.data.DirtType;
 import io.gomint.world.generator.CreateOptions;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
@@ -48,7 +49,7 @@ public class BlockSetBenchmark {
 
     @Benchmark
     public void setBlock() {
-        this.log.setDirtType(BlockDirt.Type.NORMAL);
+        this.log.type(DirtType.NORMAL);
     }
 
     @Benchmark

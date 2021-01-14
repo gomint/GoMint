@@ -68,24 +68,26 @@ public class DragonEgg extends Block implements BlockDragonEgg {
     }
 
     @Override
-    public void teleport( BlockPosition blockPosition ) {
+    public BlockDragonEgg teleport( BlockPosition blockPosition ) {
         this.blockType( Air.class );
         this.world.blockAt( blockPosition ).blockType( DragonEgg.class );
         this.world.sendLevelEvent( blockPosition.toVector(), LevelEvent.DRAGON_EGG_TELEPORT, 0 );
+        return this;
     }
 
     @Override
-    public void teleport() {
+    public BlockDragonEgg teleport() {
         for ( int i = 0; i < 1000; i++ ) {
             BlockPosition blockPos = this.position.add( ThreadLocalRandom.current().nextInt( 16 ) - ThreadLocalRandom.current().nextInt( 16 ),
                 ThreadLocalRandom.current().nextInt( 8 ) - ThreadLocalRandom.current().nextInt( 8 ),
                 ThreadLocalRandom.current().nextInt( 16 ) - ThreadLocalRandom.current().nextInt( 16 ) );
 
             if ( this.world.blockAt( blockPos ).blockType() == BlockType.AIR ) {
-                this.teleport( blockPos );
-                return;
+                return this.teleport( blockPos );
             }
         }
+
+        return this;
     }
 
 }

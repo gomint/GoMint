@@ -1,3 +1,10 @@
+/*
+ * Copyright (c) 2020 Gomint team
+ *
+ * This code is licensed under the BSD license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
 package io.gomint.server.world.block;
 
 import io.gomint.inventory.item.ItemStack;
@@ -56,18 +63,20 @@ public class SoulCampfire extends Block implements BlockSoulCampfire {
     }
 
     @Override
-    public void setDirection(Direction direction) {
+    public BlockSoulCampfire direction(Direction direction) {
         DIRECTION.setState(this, direction);
+        return this;
     }
 
     @Override
-    public Direction getDirection() {
+    public Direction direction() {
         return DIRECTION.getState(this);
     }
 
     @Override
-    public void setExtinguished(boolean value) {
+    public BlockSoulCampfire extinguished(boolean value) {
         EXTINGUISHED.setState(this, value);
+        return this;
     }
 
     @Override

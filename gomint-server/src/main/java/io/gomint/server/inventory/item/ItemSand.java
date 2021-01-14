@@ -31,7 +31,7 @@ public class ItemSand extends ItemStack implements io.gomint.inventory.item.Item
     @Override
     public Block getBlock() {
         BlockSand block = (BlockSand) super.getBlock();
-        block.setType(this.getType());
+        block.type(this.getType());
         return block;
     }
 

@@ -5,12 +5,16 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-package io.gomint.world.block;
+package io.gomint.world.block.data;
 
 /**
  * @author geNAZt
  * @version 1.0
- * @stability 2
+ * @stability 3
  */
-public interface BlockJigsaw extends BlockFacing<BlockJigsaw> {
+public enum DirtType {
+
+    NORMAL,
+    COARSE,
+
 }

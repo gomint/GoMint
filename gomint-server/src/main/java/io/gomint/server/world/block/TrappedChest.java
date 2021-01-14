@@ -12,7 +12,7 @@ import io.gomint.world.block.data.Facing;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:trapped_chest" )
-public class TrappedChest extends ChestBase implements BlockTrappedChest {
+public class TrappedChest extends ChestBase<BlockTrappedChest> implements BlockTrappedChest {
 
     @Override
     public BlockType blockType() {
@@ -20,17 +20,18 @@ public class TrappedChest extends ChestBase implements BlockTrappedChest {
     }
 
     @Override
-    public Inventory getInventory() {
-        return super.getInventory();
+    public Inventory inventory() {
+        return super.inventory();
     }
 
     @Override
-    public void setFacing(Facing facing) {
+    public BlockTrappedChest facing(Facing facing) {
         DIRECTION.setState(this, facing);
+        return this;
     }
 
     @Override
-    public Facing getFacing() {
+    public Facing facing() {
         return DIRECTION.getState(this);
     }
 

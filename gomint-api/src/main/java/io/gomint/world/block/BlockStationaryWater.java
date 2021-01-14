@@ -12,8 +12,6 @@ package io.gomint.world.block;
  * @version 1.0
  * @stability 1
  */
-public interface BlockStationaryWater extends BlockLiquid {
-
-
+public interface BlockStationaryWater extends BlockLiquid<BlockStationaryWater> {
 
 }

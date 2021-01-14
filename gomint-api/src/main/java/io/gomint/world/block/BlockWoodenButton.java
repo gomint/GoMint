@@ -14,20 +14,20 @@ import io.gomint.world.block.data.LogType;
  * @version 1.0
  * @stability 3
  */
-public interface BlockWoodenButton extends BlockButton {
+public interface BlockWoodenButton extends BlockButton<BlockWoodenButton> {
 
     /**
      * Get the type of wood from which this button has been made
      *
      * @return type of wood
      */
-    LogType getWoodType();
+    LogType type();
 
     /**
      * Set the type of wood for this button
      *
      * @param logType type of wood
      */
-    void setWoodType(LogType logType);
+    BlockWoodenButton type(LogType logType);
 
 }

@@ -9,13 +9,14 @@ package io.gomint.server.world.block;
 
 import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.world.block.state.GlassColorBlockState;
+import io.gomint.world.block.BlockHardenedGlass;
 import io.gomint.world.block.BlockHardenedGlassPane;
 import io.gomint.world.block.BlockType;
 import io.gomint.world.block.data.GlassColor;
 
 @RegisterInfo(sId = "minecraft:hard_glass", def = true)
 @RegisterInfo(sId = "minecraft:hard_stained_glass")
-public class HardenedGlass extends Block implements BlockHardenedGlassPane {
+public class HardenedGlass extends Block implements BlockHardenedGlass {
 
     private static final GlassColorBlockState COLOR = new GlassColorBlockState(() -> new String[]{"color"});
 
@@ -30,7 +31,7 @@ public class HardenedGlass extends Block implements BlockHardenedGlassPane {
     }
 
     @Override
-    public GlassColor getColor() {
+    public GlassColor color() {
         if ("minecraft:hard_glass".equals(this.getBlockId())) {
             return GlassColor.TRANSPARENT;
         }
@@ -39,13 +40,14 @@ public class HardenedGlass extends Block implements BlockHardenedGlassPane {
     }
 
     @Override
-    public void setColor(GlassColor color) {
+    public BlockHardenedGlass color(GlassColor color) {
         if (color == GlassColor.TRANSPARENT) {
             this.setBlockId("minecraft:hard_glass");
-            return;
+            return this;
         }
 
         COLOR.setState(this, color);
+        return this;
     }
 
 }

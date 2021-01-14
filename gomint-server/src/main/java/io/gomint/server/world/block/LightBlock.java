@@ -28,13 +28,14 @@ public class LightBlock extends Block implements BlockLightBlock {
     }
 
     @Override
-    public float getIntensity() {
+    public float intensity() {
         return LIGHT_LEVEL.getState(this);
     }
 
     @Override
-    public void setIntensity(float intensity) {
+    public BlockLightBlock intensity(float intensity) {
         LIGHT_LEVEL.setState(this, intensity);
+        return this;
     }
 
 }

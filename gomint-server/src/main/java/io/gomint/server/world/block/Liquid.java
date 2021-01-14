@@ -22,7 +22,7 @@ import java.util.Map;
  * @author geNAZt
  * @version 1.0
  */
-public abstract class Liquid extends Block implements BlockLiquid {
+public abstract class Liquid<B> extends Block implements BlockLiquid<B> {
 
     private static final String[] LIQUID_DEPTH_KEY = new String[]{"liquid_depth"};
     private static final Direction[] DIRECTIONS_TO_CHECK = Direction.values();
@@ -40,7 +40,7 @@ public abstract class Liquid extends Block implements BlockLiquid {
     private Map<BlockPosition, FlowState> flowCostVisited;
 
     @Override
-    public float getFillHeight() {
+    public float fillHeight() {
         int data = LIQUID_DEPTH.getState(this);
         if (data >= 8) {
             data = 8;
@@ -54,12 +54,13 @@ public abstract class Liquid extends Block implements BlockLiquid {
     }
 
     @Override
-    public void setFillHeight(float height) {
+    public B fillHeight(float height) {
         if (height < 0f || height > 1f) {
-            return;
+            return (B) this;
         }
 
         LIQUID_DEPTH.setState(this, MathUtils.fastRound(8f * height));
+        return (B) this;
     }
 
     private short getEffectiveFlowDecay(Block block) {
@@ -74,7 +75,7 @@ public abstract class Liquid extends Block implements BlockLiquid {
     }
 
     @Override
-    public Vector getFlowVector() {
+    public Vector flowVector() {
         // Create a new vector and get the capped flow decay of this block
         Vector vector = Vector.ZERO;
         short decay = this.getEffectiveFlowDecay(this);
@@ -246,7 +247,7 @@ public abstract class Liquid extends Block implements BlockLiquid {
             // Did we hit a bottom block and are surrounded by other source blocks? -> convert to source block
             if (this.adjacentSources >= 2 && this instanceof FlowingWater) {
                 Block bottomBlock = this.side(Facing.DOWN);
-                if (bottomBlock.solid() || (bottomBlock instanceof FlowingWater && ((FlowingWater) bottomBlock).getFillHeight() == 1f)) {
+                if (bottomBlock.solid() || (bottomBlock instanceof FlowingWater && ((FlowingWater) bottomBlock).fillHeight() == 1f)) {
                     newDecay = 0;
                 }
             }
@@ -410,12 +411,12 @@ public abstract class Liquid extends Block implements BlockLiquid {
     }
 
     private boolean canFlowInto(Block block) {
-        return block.canBeFlowedInto() && !(block instanceof Liquid && ((Liquid) block).getFillHeight() == 1f);
+        return block.canBeFlowedInto() && !(block instanceof Liquid && ((Liquid) block).fillHeight() == 1f);
     }
 
     @Override
     public Vector addVelocity(Entity entity, Vector pushedByBlocks) {
-        return pushedByBlocks.add(this.getFlowVector());
+        return pushedByBlocks.add(this.flowVector());
     }
 
     /**

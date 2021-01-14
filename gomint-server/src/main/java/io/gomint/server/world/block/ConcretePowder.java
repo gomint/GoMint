@@ -56,13 +56,14 @@ public class ConcretePowder extends Block implements BlockConcretePowder {
     }
 
     @Override
-    public BlockColor getColor() {
+    public BlockColor color() {
         return COLOR.getState(this);
     }
 
     @Override
-    public void setColor( BlockColor color ) {
+    public BlockConcretePowder color(BlockColor color ) {
         COLOR.setState( this, color );
+        return this;
     }
 
 }

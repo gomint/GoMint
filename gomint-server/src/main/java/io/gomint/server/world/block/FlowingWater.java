@@ -11,7 +11,7 @@ import io.gomint.world.block.BlockFlowingWater;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:flowing_water" )
-public class FlowingWater extends Liquid implements BlockFlowingWater {
+public class FlowingWater extends Liquid<BlockFlowingWater> implements BlockFlowingWater {
 
     @Override
     public long getBreakTime() {

@@ -21,12 +21,7 @@ import java.util.List;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:ender_chest" )
-public class EnderChest extends ContainerBlock implements BlockEnderChest {
-
-    @Override
-    public String getBlockId() {
-        return "minecraft:ender_chest";
-    }
+public class EnderChest extends ContainerBlock<BlockEnderChest> implements BlockEnderChest {
 
     @Override
     public long getBreakTime() {
@@ -86,4 +81,5 @@ public class EnderChest extends ContainerBlock implements BlockEnderChest {
     public Class<? extends ItemStack>[] getToolInterfaces() {
         return ToolPresets.PICKAXE;
     }
+    
 }

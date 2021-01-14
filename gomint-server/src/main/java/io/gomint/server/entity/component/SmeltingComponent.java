@@ -189,8 +189,8 @@ public class SmeltingComponent extends AbstractTileEntityComponent {
             Block maybeBurningFurnace = this.getBlock();
             if (maybeBurningFurnace.blockType() == BlockType.FURNACE) {
                 Furnace furnace = (Furnace) maybeBurningFurnace;
-                if (!furnace.isBurning()) {
-                    furnace.setBurning(true);
+                if (!furnace.burning()) {
+                    furnace.burning(true);
                 }
             }
 
@@ -229,8 +229,8 @@ public class SmeltingComponent extends AbstractTileEntityComponent {
                     this.broadcastFuelInfo();
                 } else {
                     Furnace furnace = (Furnace) this.getBlock();
-                    if (furnace.isBurning()) {
-                        furnace.setBurning(false);
+                    if (furnace.burning()) {
+                        furnace.burning(false);
                     }
                 }
             }

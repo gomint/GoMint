@@ -12,5 +12,5 @@ package io.gomint.world.block;
  * @version 1.0
  * @stability 2
  */
-public interface BlockIronDoor extends Block {
+public interface BlockIronDoor extends BlockDoor<BlockIronDoor> {
 }

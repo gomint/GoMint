@@ -78,9 +78,9 @@ public class ItemCoralFan extends ItemStack implements io.gomint.inventory.item.
     @Override
     public Block getBlock() {
         BlockCoralFan block = (BlockCoralFan) super.getBlock();
-        block.setCoralType(this.getCoralType());
-        block.setDirection(this.getDirection());
-        block.setDead(this.isDead());
+        block.coralType(this.getCoralType());
+        block.rotation(this.getDirection());
+        block.dead(this.isDead());
         return block;
     }
 

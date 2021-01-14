@@ -86,7 +86,7 @@ public class ItemWoodenDoor extends ItemStack implements io.gomint.inventory.ite
     @Override
     public Block getBlock() {
         BlockWoodenDoor block = (BlockWoodenDoor) super.getBlock();
-        block.setWoodType(this.getWoodType());
+        block.type(this.getWoodType());
         return block;
     }
 

@@ -12,12 +12,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:stone_button" )
-public class StoneButton extends Button implements BlockStoneButton {
-
-    @Override
-    public String getBlockId() {
-        return "minecraft:stone_button";
-    }
+public class StoneButton extends Button<BlockStoneButton> implements BlockStoneButton {
 
     @Override
     public long getBreakTime() {

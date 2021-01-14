@@ -145,7 +145,7 @@ public class DoubleStoneSlab extends Block implements BlockDoubleStoneSlab {
     }
 
     @Override
-    public StoneType getStoneType() {
+    public StoneType type() {
         switch (this.getBlockId()) {
             case "minecraft:blackstone_slab":
                 return StoneType.BLACKSTONE;
@@ -157,10 +157,11 @@ public class DoubleStoneSlab extends Block implements BlockDoubleStoneSlab {
     }
 
     @Override
-    public void setStoneType(StoneType stoneType) {
+    public BlockDoubleStoneSlab type(StoneType stoneType) {
         StoneTypeMagic newState = StoneTypeMagic.valueOf(stoneType.name());
         this.setBlockId(newState.blockId);
         VARIANT.setState(this, newState);
+        return this;
     }
 
 }

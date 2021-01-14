@@ -42,12 +42,13 @@ public class JackOLantern extends Block implements BlockJackOLantern {
     }
 
     @Override
-    public void setDirection(Direction direction) {
+    public BlockJackOLantern direction(Direction direction) {
         DIRECTION.setState(this, direction);
+        return this;
     }
 
     @Override
-    public Direction getDirection() {
+    public Direction direction() {
         return DIRECTION.getState(this);
     }
 

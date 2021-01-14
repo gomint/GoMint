@@ -96,19 +96,20 @@ public class Sapling extends Block implements BlockSapling {
     }
 
     @Override
-    public void setLogType(LogType type) {
+    public BlockSapling type(LogType type) {
         TYPE.setState(this, LogTypeMagic.valueOf(type.name()));
+        return this;
     }
 
     @Override
-    public LogType getLogType() {
+    public LogType type() {
         return LogType.valueOf(TYPE.getState(this).name());
     }
 
     @Override
     public List<ItemStack> drops(ItemStack itemInHand) {
         ItemSapling sapling = ItemSapling.create(1);
-        sapling.setLogType(this.getLogType());
+        sapling.setLogType(this.type());
         return Collections.singletonList(sapling);
     }
 

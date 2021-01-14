@@ -14,20 +14,20 @@ import io.gomint.world.block.data.LogType;
  * @version 1.0
  * @stability 3
  */
-public interface BlockWoodenSlab extends BlockSlab {
+public interface BlockWoodenSlab extends BlockSlab<BlockWoodenSlab> {
 
     /**
      * Get the type of wood
      *
      * @return type of wood
      */
-    LogType getWoodType();
+    LogType type();
 
     /**
      * Set the type of wood
      *
      * @param logType for this block
      */
-    void setWoodType( LogType logType);
+    BlockWoodenSlab type(LogType logType);
 
 }

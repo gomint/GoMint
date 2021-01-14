@@ -14,20 +14,20 @@ import io.gomint.world.block.data.SignDirection;
  * @version 1.0
  * @stability 3
  */
-public interface BlockStandingSign extends BlockSign {
+public interface BlockStandingSign extends BlockSign<BlockStandingSign> {
 
     /**
      * Direction of this sign
      *
      * @return sign direction
      */
-    SignDirection getSignDirection();
+    SignDirection direction();
 
     /**
      * Set the direction of this sign
      *
      * @param direction of this sign
      */
-    void setSignDirection(SignDirection direction);
+    BlockStandingSign direction(SignDirection direction);
 
 }

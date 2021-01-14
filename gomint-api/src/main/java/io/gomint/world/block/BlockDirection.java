@@ -14,20 +14,20 @@ import io.gomint.world.block.data.Direction;
  * @version 1.0
  * @stability 3
  */
-public interface BlockDirection extends Block {
+public interface BlockDirection<B> extends Block {
 
     /**
      * Set the direction of this block, this block can also hold null as direction (sit on ground)
      *
      * @param direction of this block
      */
-    void setDirection( Direction direction );
+    B direction(Direction direction );
 
     /**
      * Get the direction in which this block
      *
      * @return the direction of this block, null when no direction given (sitting on ground)
      */
-    Direction getDirection();
+    Direction direction();
 
 }

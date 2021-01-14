@@ -88,8 +88,8 @@ public class ItemStoneSlab extends ItemSlab implements io.gomint.inventory.item.
     public Block getBlock() {
         BlockIdentifier identifier = BlockRuntimeIDs.toBlockIdentifier(this.getMaterial().replace("double_", ""), null);
         BlockStoneSlab slab = (BlockStoneSlab) this.blocks.get(identifier);
-        slab.setStoneType(this.getStoneType());
-        slab.setTop(this.isTop());
+        slab.type(this.getStoneType());
+        slab.top(this.isTop());
         return slab;
     }
 

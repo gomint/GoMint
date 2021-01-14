@@ -23,13 +23,13 @@ public class BirchTree extends Tree {
 
     public BirchTree() {
         this.leafBlock = GoMint.instance().createBlock( BlockLeaves.class );
-        this.leafBlock.setLeaveType( LogType.BIRCH );
+        this.leafBlock.type( LogType.BIRCH );
 
         this.trunkBlock = GoMint.instance().createBlock( BlockLog.class );
-        this.trunkBlock.setLogType( LogType.BIRCH );
-        this.trunkBlock.setStripped(false);
-        this.trunkBlock.setBarkOnAllSides(false);
-        this.trunkBlock.setAxis(Axis.Y);
+        this.trunkBlock.type( LogType.BIRCH );
+        this.trunkBlock.stripped(false);
+        this.trunkBlock.barkOnAllSides(false);
+        this.trunkBlock.axis(Axis.Y);
     }
 
     @Override

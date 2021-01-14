@@ -102,7 +102,7 @@ public class Leaves extends Block implements BlockLeaves {
 
     @Override
     public List<ItemStack> drops(ItemStack itemInHand) {
-        LogType type = this.getLeaveType();
+        LogType type = this.type();
 
         List<ItemStack> items = new ArrayList<>();
 
@@ -151,18 +151,19 @@ public class Leaves extends Block implements BlockLeaves {
     }
 
     @Override
-    public void setLeaveType(LogType type) {
+    public BlockLeaves type(LogType type) {
         if (type == LogType.CRIMSON || type == LogType.WARPED) {
-            return;
+            return this;
         }
 
         LeaveTypeMagic newState = LeaveTypeMagic.valueOf(type.name());
         this.setBlockIdOnStateChange(newState.blockId); // We ignore the two keys here to get a known wrong value, the set state below will select the correct runtime id
         VARIANT.setState(this, newState);
+        return this;
     }
 
     @Override
-    public LogType getLeaveType() {
+    public LogType type() {
         return LogType.valueOf(VARIANT.getState(this).name());
     }
 

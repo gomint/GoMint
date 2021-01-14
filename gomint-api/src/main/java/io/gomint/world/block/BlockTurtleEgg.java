@@ -21,27 +21,27 @@ public interface BlockTurtleEgg extends Block {
      *
      * @param amountOfEggs from 1 - 4 capped on either side
      */
-    void setAmountOfEggs(int amountOfEggs);
+    BlockTurtleEgg amountOfEggs(int amountOfEggs);
 
     /**
      * Get the amount of eggs
      *
      * @return 1 - 4 eggs
      */
-    int getAmountOfEggs();
+    int amountOfEggs();
 
     /**
      * Set the cracked status
      *
      * @param status which should be set
      */
-    void setCrackStatus(CrackStatus status);
+    BlockTurtleEgg crackStatus(CrackStatus status);
 
     /**
      * Get the cracked status
      *
      * @return crack status
      */
-    CrackStatus getCrackStatus();
+    CrackStatus crackStatus();
 
 }

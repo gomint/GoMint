@@ -37,11 +37,6 @@ public class FenceGate extends Block implements BlockFenceGate {
     private final BooleanBlockState IN_WALL = new BooleanBlockState( () -> new String[]{"in_wall_bit"});
 
     @Override
-    public String getBlockId() {
-        return "minecraft:fence_gate";
-    }
-
-    @Override
     public long getBreakTime() {
         return 3000;
     }
@@ -73,16 +68,16 @@ public class FenceGate extends Block implements BlockFenceGate {
 
     @Override
     public void toggle() {
-        OPEN.setState(this, !this.isOpen());
+        OPEN.setState(this, !this.open());
     }
 
     @Override
-    public boolean isOpen() {
+    public boolean open() {
         return OPEN.getState(this);
     }
 
     @Override
-    public LogType getWoodType() {
+    public LogType type() {
         switch (this.getBlockId()) {
             case "minecraft:fence_gate":
                 return LogType.OAK;
@@ -106,7 +101,7 @@ public class FenceGate extends Block implements BlockFenceGate {
     }
 
     @Override
-    public void setWoodType(LogType logType) {
+    public BlockFenceGate type(LogType logType) {
         switch (logType) {
             case OAK:
                 this.setBlockId("minecraft:fence_gate");
@@ -133,15 +128,18 @@ public class FenceGate extends Block implements BlockFenceGate {
                 this.setBlockId("minecraft:crimson_fence_gate");
                 break;
         }
+
+        return this;
     }
 
     @Override
-    public void setDirection(Direction direction) {
+    public BlockFenceGate direction(Direction direction) {
         DIRECTION.setState(this, direction);
+        return this;
     }
 
     @Override
-    public Direction getDirection() {
+    public Direction direction() {
         return DIRECTION.getState(this);
     }
 

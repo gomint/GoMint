@@ -11,23 +11,24 @@ import java.util.List;
  * @author geNAZt
  * @version 1.0
  */
-public abstract class Slab extends Block implements BlockSlab {
+public abstract class Slab<B> extends Block implements BlockSlab<B> {
 
     protected static final BooleanBlockState TOP = new BooleanBlockState( () -> new String[]{"top_slot_bit"} );
 
     @Override
-    public void setTop( boolean top ) {
+    public B top(boolean top ) {
         TOP.setState( this, top );
+        return (B) this;
     }
 
     @Override
-    public boolean isTop() {
+    public boolean top() {
         return TOP.getState( this );
     }
 
     @Override
     public List<AxisAlignedBB> boundingBoxes() {
-        if ( this.isTop() ) {
+        if ( this.top() ) {
             return Collections.singletonList( new AxisAlignedBB(
                 this.location.getX(),
                 this.location.getY() + 0.5f,

@@ -55,7 +55,7 @@ public class Bed extends Block implements BlockBed {
 
     @Override
     public boolean onBreak(boolean creative) {
-        Bed otherHalf = (Bed) this.getOtherHalf();
+        Bed otherHalf = (Bed) this.otherHalf();
         if (otherHalf != null) {
             otherHalf.blockType(Air.class);
         }
@@ -76,7 +76,7 @@ public class Bed extends Block implements BlockBed {
     private io.gomint.world.block.Block getOtherBlock() {
         // Select which side we need to check
         Direction facingToOtherHalf = DIRECTION.getState(this);
-        if (this.isHeadPart()) {
+        if (this.head()) {
             facingToOtherHalf = facingToOtherHalf.opposite();
         }
 
@@ -84,27 +84,28 @@ public class Bed extends Block implements BlockBed {
     }
 
     @Override
-    public BlockColor getColor() {
+    public BlockColor color() {
         BedTileEntity tileEntity = this.getTileEntity();
         return tileEntity.getColor();
     }
 
     @Override
-    public void setColor(BlockColor color) {
+    public BlockBed color(BlockColor color) {
         BedTileEntity tileEntity = this.getTileEntity();
         tileEntity.setColor(color);
 
         this.updateBlock();
+        return this;
     }
 
     @Override
-    public BlockBed getOtherHalf() {
+    public BlockBed otherHalf() {
         io.gomint.world.block.Block otherHalf = getOtherBlock();
 
         // Check if other part is a bed
         if (otherHalf != null && otherHalf.blockType() == BlockType.BED) {
             Bed otherBedHalf = (Bed) otherHalf;
-            if (otherBedHalf.isHeadPart() != this.isHeadPart()) {
+            if (otherBedHalf.head() != this.head()) {
                 return otherBedHalf;
             }
         }
@@ -113,13 +114,14 @@ public class Bed extends Block implements BlockBed {
     }
 
     @Override
-    public boolean isHeadPart() {
+    public boolean head() {
         return HEAD.getState(this);
     }
 
     @Override
-    public void setHeadPart(boolean value) {
+    public BlockBed head(boolean value) {
         HEAD.setState(this, value);
+        return this;
     }
 
     @Override
@@ -147,8 +149,8 @@ public class Bed extends Block implements BlockBed {
         Block otherBlock = (Block) this.getOtherBlock();
         if (otherBlock != null) {
             Bed bed = otherBlock.blockType(Bed.class);
-            bed.setColor(this.getColor());
-            bed.setHeadPart(true);
+            bed.color(this.color());
+            bed.head(true);
         }
 
         super.afterPlacement();

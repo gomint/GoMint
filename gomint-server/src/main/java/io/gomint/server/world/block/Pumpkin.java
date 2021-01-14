@@ -55,22 +55,24 @@ public class Pumpkin extends Block implements BlockPumpkin {
     }
 
     @Override
-    public PumpkinType getType() {
+    public PumpkinType type() {
         return this.getBlockId().equals("minecraft:pumpkin") ? PumpkinType.NORMAL : PumpkinType.CARVED;
     }
 
     @Override
-    public void setType(PumpkinType type) {
+    public BlockPumpkin type(PumpkinType type) {
         this.setBlockId(type == PumpkinType.NORMAL ? "minecraft:pumpkin" : "minecraft:carved_pumpkin");
+        return this;
     }
 
     @Override
-    public void setDirection(Direction direction) {
+    public BlockPumpkin direction(Direction direction) {
         DIRECTION.setState(this, direction);
+        return this;
     }
 
     @Override
-    public Direction getDirection() {
+    public Direction direction() {
         return DIRECTION.getState(this);
     }
 

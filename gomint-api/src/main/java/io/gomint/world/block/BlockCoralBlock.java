@@ -7,38 +7,41 @@
 
 package io.gomint.world.block;
 
+import io.gomint.world.block.data.CoralType;
+
 /**
  * @author Kaooot
  * @version 1.0
- * @stability 1
+ * @stability 2
  */
 public interface BlockCoralBlock extends Block {
 
     /**
-     * Get coral type
+     * Should this coral be dead?
      *
-     * @return coral type
+     * @param dead true when dead, false otherwise
      */
-    CoralType getCoralType();
+    BlockCoralBlock dead(boolean dead);
 
     /**
-     * Set the coral type
+     * Check if this coral is dead
      *
-     * @param coralType which should be used in this block
+     * @return true when dead, false otherwise
      */
-    void setCoralType( CoralType coralType );
+    boolean dead();
 
-    enum CoralType {
-        TUBE,
-        BRAIN,
-        BUBBLE,
-        FIRE,
-        HORN,
-        DEAD_TUBE,
-        DEAD_BRAIN,
-        DEAD_BUBBLE,
-        DEAD_FIRE,
-        DEAD_HORN;
-    }
+    /**
+     * Set coral type
+     *
+     * @param type of coral
+     */
+    BlockCoralBlock type(CoralType type);
+
+    /**
+     * Get type of coral
+     *
+     * @return type of coral
+     */
+    CoralType type();
 
 }

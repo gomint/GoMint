@@ -12,10 +12,12 @@ package io.gomint.world.block.data;
  * @version 1.0
  * @stability 3
  */
-public enum QuartzVariant {
+public enum QuartzType {
+
     SMOOTH,
     LINES,
     DEFAULT,
     CHISELED,
     BRICKS
+
 }

@@ -32,7 +32,7 @@ public class ItemPumpkin extends ItemStack implements io.gomint.inventory.item.I
     @Override
     public Block getBlock() {
         BlockPumpkin pumpkin = (BlockPumpkin) super.getBlock();
-        pumpkin.setType(this.getType());
+        pumpkin.type(this.getType());
         return pumpkin;
     }
 

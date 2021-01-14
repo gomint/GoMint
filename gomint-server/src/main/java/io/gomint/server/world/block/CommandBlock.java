@@ -18,7 +18,7 @@ import io.gomint.world.block.data.Facing;
  * @version 1.0
  */
 @RegisterInfo(sId = "minecraft:command_block")
-public class CommandBlock extends ContainerBlock implements BlockCommandBlock {
+public class CommandBlock extends ContainerBlock<BlockCommandBlock> implements BlockCommandBlock {
 
     private static final BooleanBlockState CONDITIONAL = new BooleanBlockState(() -> new String[]{"conditional_bit"});
     private static final BlockfaceBlockState FACING = new BlockfaceBlockState( () -> new String[]{"facing_direction"});
@@ -57,12 +57,13 @@ public class CommandBlock extends ContainerBlock implements BlockCommandBlock {
     }
 
     @Override
-    public void setFacing(Facing facing) {
+    public BlockCommandBlock facing(Facing facing) {
         FACING.setState(this, facing);
+        return this;
     }
 
     @Override
-    public Facing getFacing() {
+    public Facing facing() {
         return FACING.getState(this);
     }
 
