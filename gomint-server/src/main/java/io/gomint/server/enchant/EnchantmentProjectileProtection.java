@@ -26,13 +26,13 @@ public class EnchantmentProjectileProtection extends Enchantment implements io.g
     }
 
     @Override
-    public int getMinEnchantAbility(short level) {
+    public int minEnchantAbility(short level) {
         return (byte) (3 + (level - 1) * 6);
     }
 
     @Override
-    public int getMaxEnchantAbility(short level) {
-        return (byte) (getMinEnchantAbility(level) + 15);
+    public int maxEnchantAbility(short level) {
+        return (byte) (minEnchantAbility(level) + 15);
     }
 
     @Override
@@ -41,7 +41,7 @@ public class EnchantmentProjectileProtection extends Enchantment implements io.g
     }
 
     @Override
-    public Rarity getRarity() {
+    public Rarity rarity() {
         return Rarity.UNCOMMON;
     }
 

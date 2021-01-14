@@ -50,24 +50,24 @@ public class Enchantments {
             return null;
         }
 
-        Enchantment enchantment = enchantmentGenerator.generate();
-        enchantment.setLevel(lvl);
-        return enchantment;
+        return enchantmentGenerator
+            .generate()
+            .changeLevel(lvl);
     }
 
     public Enchantment create(Class<? extends io.gomint.enchant.Enchantment> clazz, short lvl) {
-        Generator<Enchantment> enchantmentGenerator = this.generators.getGenerator(this.getId(clazz));
+        Generator<Enchantment> enchantmentGenerator = this.generators.getGenerator(this.idOf(clazz));
         if (enchantmentGenerator == null) {
             LOGGER.warn("Unknown enchant {}", clazz.getName());
             return null;
         }
 
-        Enchantment enchantment = enchantmentGenerator.generate();
-        enchantment.setLevel(lvl);
-        return enchantment;
+        return enchantmentGenerator
+            .generate()
+            .changeLevel(lvl);
     }
 
-    public short getId(Class<? extends io.gomint.enchant.Enchantment> clazz) {
+    public short idOf(Class<? extends io.gomint.enchant.Enchantment> clazz) {
         return (short) this.generators.getId(clazz);
     }
 

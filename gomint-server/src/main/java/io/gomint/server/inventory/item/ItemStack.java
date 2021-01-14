@@ -289,7 +289,7 @@ public abstract class ItemStack implements Cloneable, io.gomint.inventory.item.I
 
     @Override
     public io.gomint.inventory.item.ItemStack addEnchantment(Class<? extends Enchantment> clazz, int level) {
-        short id = ((GoMintServer) GoMint.instance()).enchantments().getId(clazz);
+        short id = ((GoMintServer) GoMint.instance()).enchantments().idOf(clazz);
         if (id == -1) {
             LOGGER.warn("Unknown enchantment: {}", clazz.getName());
             return this;
@@ -343,7 +343,7 @@ public abstract class ItemStack implements Cloneable, io.gomint.inventory.item.I
 
     @Override
     public io.gomint.inventory.item.ItemStack removeEnchantment(Class<? extends Enchantment> clazz) {
-        short id = ((GoMintServer) GoMint.instance()).enchantments().getId(clazz);
+        short id = ((GoMintServer) GoMint.instance()).enchantments().idOf(clazz);
         if (id == -1) {
             return this;
         }

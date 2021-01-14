@@ -108,8 +108,8 @@ public class Leaves extends Block implements BlockLeaves {
 
         int dropChance = type == LogType.JUNGLE ? 40 : 20;
         EnchantmentFortune fortune = itemInHand.getEnchantment(EnchantmentFortune.class);
-        if (fortune != null && fortune.getLevel() > 0) {
-            dropChance -= 2 << fortune.getLevel();
+        if (fortune != null && fortune.level() > 0) {
+            dropChance -= 2 << fortune.level();
             if (dropChance < 10) {
                 dropChance = 10;
             }
@@ -123,8 +123,8 @@ public class Leaves extends Block implements BlockLeaves {
 
         if (type == LogType.OAK || type == LogType.DARK_OAK) {
             dropChance = 100;
-            if (fortune != null && fortune.getLevel() > 0) {
-                dropChance -= 10 << fortune.getLevel();
+            if (fortune != null && fortune.level() > 0) {
+                dropChance -= 10 << fortune.level();
                 if (dropChance < 40) {
                     dropChance = 40;
                 }

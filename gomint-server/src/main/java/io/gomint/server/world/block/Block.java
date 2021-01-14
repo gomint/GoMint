@@ -592,8 +592,8 @@ public abstract class Block implements io.gomint.world.block.Block {
         // Check for efficiency
         if (toolStrength > 1.0F) {
             EnchantmentEfficiency enchantment = item.getEnchantment(EnchantmentEfficiency.class);
-            if (enchantment != null && enchantment.getLevel() > 0) {
-                toolStrength += (enchantment.getLevel() * enchantment.getLevel() + 1);
+            if (enchantment != null && enchantment.level() > 0) {
+                toolStrength += (enchantment.level() * enchantment.level() + 1);
             }
         }
 
