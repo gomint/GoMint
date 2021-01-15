@@ -42,7 +42,7 @@ class AddonZipFileContext extends AddonContext {
     }
 
     @Override
-    public Stream<? extends String> entries() {
+    public Stream<String> entries() {
         Enumeration<? extends ZipEntry> e = this.zipFile.entries();
         Stream<? extends ZipEntry> stream = StreamSupport.stream(
                 new Spliterators.AbstractSpliterator<>(Long.MAX_VALUE, Spliterator.ORDERED) {

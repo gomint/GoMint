@@ -1,6 +1,7 @@
-package io.gomint.server.addons;
+package io.gomint.server.blocks;
 
 import io.gomint.addons.components.Component;
+import io.gomint.server.addons.Addon;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -19,9 +20,13 @@ public class BlockDefinition implements io.gomint.addons.BlockDefinition {
      */
 
     /**
+     * The addon that registered this block
+     */
+    private final Addon addon;
+    /**
      * The block's unique name including its namespace
      */
-    private final String name;
+    private final String identifier;
 
 
     /*
@@ -33,31 +38,31 @@ public class BlockDefinition implements io.gomint.addons.BlockDefinition {
      */
 
     // Default taken from addon documentation
-    private int lightAbsorption = 0;
+    int lightAbsorption = 0;
     // Default taken from addon documentation
-    private float lightEmission = 0.0F;
+    float lightEmission = 0.0F;
     // Educated guess, see above
-    private boolean breakOnPush = false;
+    boolean breakOnPush = false;
     // Default taken from addon documentation
-    private boolean breathable = false;
+    boolean breathable = false;
     // Default taken from addon documentation
-    private float destroyTime = 0.0F;
+    float destroyTime = 0.0F;
     // Default taken from addon documentation
-    private float explosionResistance = 0.0F;
+    float explosionResistance = 0.0F;
     // Default taken from addon documentation
-    private int burnOdds = 0;
+    int burnOdds = 0;
     // Default taken from addon documentation
-    private int flameOdds = 0;
+    int flameOdds = 0;
     // Default taken from addon documentation
-    private float friction = 0.1F;
+    float friction = 0.1F;
     // Educated guess, see above
-    private boolean immovable = false;
+    boolean immovable = false;
     // Educated guess, see above
-    private boolean pistonPushOnly = false;
+    boolean pistonPushOnly = false;
     // Educated guess, see above
-    private boolean preventsJumping = false;
+    boolean preventsJumping = false;
     // Educated guess, see above
-    private boolean unwalkable = false;
+    boolean unwalkable = false;
 
     /*
      * Custom components
@@ -67,15 +72,21 @@ public class BlockDefinition implements io.gomint.addons.BlockDefinition {
 
     private Map<Class<? extends Component>, Component> additionalComponents;
 
-    public BlockDefinition(String name) {
-        this.name = name;
+    public BlockDefinition(Addon addon, String identifier) {
+        this.addon = addon;
+        this.identifier = identifier;
         this.additionalComponents = new HashMap<>();
     }
 
 
     @Override
-    public String name() {
-        return null;
+    public Addon addon() {
+        return this.addon;
+    }
+
+    @Override
+    public String identifier() {
+        return this.identifier;
     }
 
     @Override

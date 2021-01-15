@@ -16,9 +16,14 @@ import io.gomint.addons.components.ComponentHolder;
 public interface BlockDefinition extends ComponentHolder {
 
     /**
+     * @return The addon that registered this block
+     */
+    Addon addon();
+
+    /**
      * @return The block's unique name, including its namespace
      */
-    String name();
+    String identifier();
 
     /**
      * @return The amount of light this block will absorb

@@ -1,10 +1,12 @@
 package io.gomint.server.addons;
 
+import io.gomint.server.blocks.BlockCatalogue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.zip.ZipFile;
@@ -27,6 +29,11 @@ public class AddonRegistry {
     private static final File ADDON_FOLDER = new File("addons");
 
     /*
+     * Catalogues required for addon activation
+     */
+    private final BlockCatalogue blockCatalogue;
+
+    /*
      * Miscellaneous
      */
     private final Logger logger = LoggerFactory.getLogger(AddonRegistry.class);
@@ -39,7 +46,9 @@ public class AddonRegistry {
     private boolean hasSearchedInstalledAddons;
 
 
-    public AddonRegistry() {
+    public AddonRegistry(BlockCatalogue blockCatalogue) {
+        this.blockCatalogue = blockCatalogue;
+
         this.addonFolder = ADDON_FOLDER;
         this.installedAddons = new HashSet<>();
         this.hasSearchedInstalledAddons = false;
@@ -92,6 +101,42 @@ public class AddonRegistry {
         }
 
         this.hasSearchedInstalledAddons = true;
+    }
+
+    /**
+     * @return Whether or not the list of installed addons has been searched previously
+     */
+    public boolean hasSearchedInstalledAddons() {
+        return this.hasSearchedInstalledAddons;
+    }
+
+    /**
+     * Returns an unmodifiable set of installed addons. If no search for installed addons was
+     * conducted before invoking this method, one will be performed before returning the result
+     * set.
+     *
+     * @return The set of installed addons
+     */
+    public Set<Addon> installedAddons() {
+        if (!this.hasSearchedInstalledAddons) {
+            try {
+                this.searchInstalledAddons();
+            } catch (IOException e) {
+                this.logger.error("Failed to search installed addons");
+                return Collections.emptySet();
+            }
+        }
+
+        return Collections.unmodifiableSet(this.installedAddons);
+    }
+
+    /**
+     * Attempts to load the given set of addons.
+     *
+     * @param addons The addons to load
+     */
+    public void loadAddons(Set<Addon> addons) {
+        // TODO: Actually load addons here
     }
 
 }

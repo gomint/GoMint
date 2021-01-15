@@ -48,7 +48,7 @@ public abstract class AddonContext implements Closeable {
      * @return A list of all entries within this context
      * @throws IOException Thrown if the list of entries could not be retrieved
      */
-    public abstract Stream<? extends String> entries() throws IOException;
+    public abstract Stream<String> entries() throws IOException;
 
     /**
      * Creates an addon by parsing its manifest found in this context.

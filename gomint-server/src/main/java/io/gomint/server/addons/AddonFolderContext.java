@@ -36,7 +36,7 @@ class AddonFolderContext extends AddonContext {
     }
 
     @Override
-    public Stream<? extends String> entries() throws IOException {
+    public Stream<String> entries() throws IOException {
         final Path addonPath = Paths.get(this.addonFolder.getAbsolutePath());
         return Files.walk(addonPath)
                 .filter(Files::isRegularFile)
