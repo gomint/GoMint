@@ -7,6 +7,8 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 /**
@@ -26,7 +28,7 @@ class AddonFolderContext extends AddonContext {
 
     @Override
     public InputStream openEntry(String path) throws IOException {
-        File entryFile = new File(this.addonFolder.getCanonicalPath() + File.separator + path);
+        File entryFile = new File(this.addonFolder.getCanonicalPath() + File.separator + path.replaceAll("/", Matcher.quoteReplacement(File.separator)));
         if (entryFile.exists() && entryFile.isFile()) {
             return new FileInputStream(entryFile);
         }
@@ -36,7 +38,11 @@ class AddonFolderContext extends AddonContext {
     @Override
     public Stream<? extends String> entries() throws IOException {
         final Path addonPath = Paths.get(this.addonFolder.getAbsolutePath());
-        return Files.walk(addonPath).filter(Files::isRegularFile).map(addonPath::relativize).map(Path::toString);
+        return Files.walk(addonPath)
+                .filter(Files::isRegularFile)
+                .map(addonPath::relativize)
+                .map(Path::toString)
+                .map(entry -> entry.replaceAll(Pattern.quote(File.separator), "/"));
     }
 
     @Override
