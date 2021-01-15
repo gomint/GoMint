@@ -199,7 +199,7 @@ public class TransactionGroup {
         if ( matched ) {
             List<io.gomint.inventory.transaction.Transaction<?, ?, ?>> transactionList = new ArrayList<>( this.transactions );
             InventoryTransactionEvent transactionEvent = new InventoryTransactionEvent( this.player, transactionList );
-            this.player.getWorld().getServer().pluginManager().callEvent( transactionEvent );
+            this.player.world().getServer().pluginManager().callEvent( transactionEvent );
             return !transactionEvent.cancelled();
         }
 

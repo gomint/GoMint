@@ -80,10 +80,10 @@ public class EntitySpawner implements Tickable {
                     boolean borderChunk = x == -CHUNK_SPAWN_RADIUS || x == CHUNK_SPAWN_RADIUS ||
                         z == -CHUNK_SPAWN_RADIUS || z == CHUNK_SPAWN_RADIUS;
 
-                    long chunkHash = CoordinateUtils.toLong(x + playerChunk.getX(), z + playerChunk.z());
+                    long chunkHash = CoordinateUtils.toLong(x + playerChunk.x(), z + playerChunk.z());
                     if (!spawnableChunks.contains(chunkHash)) {
                         if (!borderChunk) {
-                            if (player.knowsChunk(x + playerChunk.getX(), z + playerChunk.z())) {
+                            if (player.knowsChunk(x + playerChunk.x(), z + playerChunk.z())) {
                                 spawnableChunks.add(chunkHash);
                             }
                         }
@@ -93,7 +93,7 @@ public class EntitySpawner implements Tickable {
         }
 
         for (EntitySpawnTypes value : EntitySpawnTypes.values()) {
-            Set<Entity> entities = this.world.entitiesByTag(value.tag);
+            Set<Entity<?>> entities = this.world.entitiesByTag(value.tag);
 
             int amountOfSpawnedEntities = entities == null ? 0 : entities.size();
             int amountOfSpawnableEntities = value.spawnLimit * spawnableChunks.size() / MOB_COUNT_DIV;
@@ -111,7 +111,7 @@ public class EntitySpawner implements Tickable {
     }
 
     private static Block getRandomChunkBlock(Chunk chunk) {
-        int x = chunk.getX();
+        int x = chunk.x();
         int z = chunk.z();
 
         int i = x * 16 + ThreadLocalRandom.current().nextInt(16);

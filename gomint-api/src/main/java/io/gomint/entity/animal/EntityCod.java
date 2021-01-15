@@ -15,7 +15,7 @@ import io.gomint.entity.EntityLiving;
  * @version 1.0
  * @stability 3
  */
-public interface EntityCod extends EntityLiving {
+public interface EntityCod extends EntityLiving<EntityCod> {
 
     /**
      * Create a new cod with no config

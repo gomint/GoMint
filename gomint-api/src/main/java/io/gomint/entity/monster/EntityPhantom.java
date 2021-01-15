@@ -14,7 +14,7 @@ import io.gomint.entity.EntityLiving;
  * @author joserobjr
  * @since 2021-01-12
  */
-public interface EntityPhantom extends EntityLiving {
+public interface EntityPhantom extends EntityLiving<EntityPhantom> {
     /**
      * Create a new entity phantom with no config
      *
@@ -23,4 +23,5 @@ public interface EntityPhantom extends EntityLiving {
     static EntityPhantom create() {
         return GoMint.instance().createEntity( EntityPhantom.class );
     }
+
 }

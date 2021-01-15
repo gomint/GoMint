@@ -25,7 +25,7 @@ import java.util.concurrent.ThreadLocalRandom;
  * @since 2021-01-12
  */
 @RegisterInfo( sId = "minecraft:iron_golem" )
-public class EntityIronGolem extends EntityLiving implements io.gomint.entity.monster.EntityIronGolem {
+public class EntityIronGolem extends EntityLiving<io.gomint.entity.monster.EntityIronGolem> implements io.gomint.entity.monster.EntityIronGolem {
     /**
      * Constructs a new EntityIronGolem
      *
@@ -45,23 +45,23 @@ public class EntityIronGolem extends EntityLiving implements io.gomint.entity.mo
     }
 
     private void initEntity() {
-        this.addAttribute(Attribute.HEALTH);
-        this.setMaxHealth(100);
-        this.setHealth(100);
-        this.setSize(1.4f, 2.9f);
+        this.attribute(Attribute.HEALTH);
+        this.maxHealth(100);
+        this.health(100);
+        this.size(1.4f, 2.9f);
     }
 
     @Override
     protected void kill() {
         super.kill();
         
-        if (isDead()) {
+        if (dead()) {
             return;
         }
         
         // Item drops
         ThreadLocalRandom random = ThreadLocalRandom.current();
-        Location location = this.getLocation();
+        Location location = this.location();
         this.world.dropItem(location, ItemIronIngot.create(random.nextInt(3, 6)));
         
         int amount = random.nextInt(3);
@@ -76,7 +76,7 @@ public class EntityIronGolem extends EntityLiving implements io.gomint.entity.mo
     }
 
     @Override
-    public Set<String> getTags() {
+    public Set<String> tags() {
         return EntityTags.HOSTILE_MOB;
     }
 }

@@ -48,7 +48,7 @@ public class BeeHive extends Block implements BlockBeeHive {
     }
 
     @Override
-    public boolean beforePlacement(EntityLiving entity, ItemStack<?> item, Facing face, Location location) {
+    public boolean beforePlacement(EntityLiving<?> entity, ItemStack<?> item, Facing face, Location location) {
         FACING.detectFromPlacement(this, entity, item, face);
         HONEY_LEVEL.detectFromPlacement(this, entity, item, face);
         return super.beforePlacement(entity, item, face, location);

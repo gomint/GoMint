@@ -42,14 +42,14 @@ public class Cake extends Block implements BlockCake {
     }
 
     @Override
-    public boolean interact(Entity entity, Facing face, Vector facePos, ItemStack<?> item) {
+    public boolean interact(Entity<?> entity, Facing face, Vector facePos, ItemStack<?> item) {
         if (entity instanceof EntityPlayer) {
             EntityPlayer player = (EntityPlayer) entity;
-            if (player.getHunger() < 20) {
+            if (player.hunger() < 20) {
                 player.addHunger(2);
 
-                float saturation = Math.min(player.getSaturation() + (2 * 0.1f * 2.0f), player.getHunger());
-                player.setSaturation(saturation);
+                float saturation = Math.min(player.saturation() + (2 * 0.1f * 2.0f), player.hunger());
+                player.saturation(saturation);
 
                 CAKE_EATEN.progress(this);
             }
@@ -59,7 +59,7 @@ public class Cake extends Block implements BlockCake {
     }
 
     @Override
-    public boolean beforePlacement(EntityLiving entity, ItemStack<?> item, Facing face, Location location) {
+    public boolean beforePlacement(EntityLiving<?> entity, ItemStack<?> item, Facing face, Location location) {
         CAKE_EATEN.detectFromPlacement(this, entity, item, face);
         return super.beforePlacement(entity, item, face, location);
     }

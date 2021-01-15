@@ -107,7 +107,7 @@ public class Log extends Block implements BlockLog {
     }
 
     @Override
-    public boolean interact(Entity entity, Facing face, Vector facePos, ItemStack<?> item) {
+    public boolean interact(Entity<?> entity, Facing face, Vector facePos, ItemStack<?> item) {
         if (entity instanceof EntityPlayer && this.isCorrectTool(item) && !this.stripped()) {
             this.stripped(true);
             return true;

@@ -21,7 +21,7 @@ public class VersionCommand extends Command {
 
     // Player execution
     @Override
-    public CommandOutput execute(CommandSender server, String alias, Map<String, Object> arguments) {
+    public CommandOutput execute(CommandSender<?> server, String alias, Map<String, Object> arguments) {
         return CommandOutput.successful("§7[§aSYSTEM§7] §fServer version: §a" + GoMint.instance().version());
     }
 

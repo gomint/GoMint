@@ -22,7 +22,7 @@ public class DirectValueBlockState<T> extends BlockState<T, T> {
     }
 
     @Override
-    public void detectFromPlacement(Block newBlock, EntityLiving player, ItemStack<?> placedItem, Facing face) {
+    public void detectFromPlacement(Block newBlock, EntityLiving<?> player, ItemStack<?> placedItem, Facing face) {
         this.setState(newBlock, this.defaultValue);
     }
 

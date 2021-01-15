@@ -21,6 +21,7 @@ import io.gomint.server.util.Values;
 import io.gomint.server.world.WorldAdapter;
 import io.gomint.world.Gamemode;
 
+import java.time.Instant;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
@@ -29,7 +30,7 @@ import java.util.concurrent.TimeUnit;
  * @version 1.0
  */
 @RegisterInfo(sId = "minecraft:xp_orb")
-public class EntityXPOrb extends Entity implements io.gomint.entity.passive.EntityXPOrb {
+public class EntityXPOrb extends Entity<io.gomint.entity.passive.EntityXPOrb> implements io.gomint.entity.passive.EntityXPOrb {
 
     private int xpAmount;
     private long pickupTime;
@@ -47,14 +48,14 @@ public class EntityXPOrb extends Entity implements io.gomint.entity.passive.Enti
      */
     public EntityXPOrb(WorldAdapter world, int xpAmount) {
         super(EntityType.XP_ORB, world);
-        this.setHasCollision(false);
-        this.setSize(0.25f, 0.25f);
+        this.collision(false);
+        this.size(0.25f, 0.25f);
 
         GRAVITY = 0.04f;
         DRAG = 0.02f;
 
         this.xpAmount = xpAmount;
-        setPickupDelay(1250, TimeUnit.MILLISECONDS);
+        pickupDelay(1250, TimeUnit.MILLISECONDS);
     }
 
     /**
@@ -62,31 +63,33 @@ public class EntityXPOrb extends Entity implements io.gomint.entity.passive.Enti
      */
     public EntityXPOrb() {
         super(EntityType.XP_ORB, null);
-        this.setHasCollision(false);
-        this.setSize(0.25f, 0.25f);
+        this.collision(false);
+        this.size(0.25f, 0.25f);
 
         GRAVITY = 0.04f;
         DRAG = 0.02f;
     }
 
     @Override
-    public int getXpAmount() {
+    public int xpAmount() {
         return xpAmount;
     }
 
     @Override
-    public void setXpAmount(int xpAmount) {
+    public EntityXPOrb xpAmount(int xpAmount) {
         this.xpAmount = xpAmount;
+        return this;
     }
 
     @Override
-    public long getPickupTime() {
-        return pickupTime;
+    public Instant pickupTime() {
+        return Instant.ofEpochMilli(pickupTime);
     }
 
     @Override
-    public void setPickupDelay(long duration, TimeUnit timeUnit) {
+    public EntityXPOrb pickupDelay(long duration, TimeUnit timeUnit) {
         this.pickupTime = ((GoMintServer) GoMint.instance()).currentTickTime() + timeUnit.toMillis(duration);
+        return this;
     }
 
     @Override
@@ -104,14 +107,14 @@ public class EntityXPOrb extends Entity implements io.gomint.entity.passive.Enti
 
         this.lastUpdateDT += dT;
         if (Values.CLIENT_TICK_RATE - this.lastUpdateDT < MathUtils.EPSILON) {
-            if (this.world.getServer().currentTickTime() > this.getPickupTime() && !this.isDead()) {
-                if (this.closestPlayer == null || this.closestPlayer.getGamemode() == Gamemode.SPECTATOR ||
-                    this.closestPlayer.isDead() || this.closestPlayer.getHealth() <= 0 ||
-                    this.closestPlayer.getLocation().distanceSquared(this.getLocation()) > 64) {
+            if (this.world.getServer().currentTickTime() > this.pickupTime().toEpochMilli() && !this.dead()) {
+                if (this.closestPlayer == null || this.closestPlayer.gamemode() == Gamemode.SPECTATOR ||
+                    this.closestPlayer.dead() || this.closestPlayer.health() <= 0 ||
+                    this.closestPlayer.location().distanceSquared(this.location()) > 64) {
                     this.closestPlayer = null;
 
                     for (io.gomint.entity.EntityPlayer p : this.world.onlinePlayers()) {
-                        if (p.getGamemode() != Gamemode.SPECTATOR && p.getLocation().distanceSquared(this.getLocation()) <= 64) {
+                        if (p.gamemode() != Gamemode.SPECTATOR && p.location().distanceSquared(this.location()) <= 64) {
                             this.closestPlayer = (EntityPlayer) p;
                             break;
                         }
@@ -119,9 +122,9 @@ public class EntityXPOrb extends Entity implements io.gomint.entity.passive.Enti
                 }
 
                 if (this.closestPlayer != null) {
-                    float dX = (this.closestPlayer.getPositionX() - this.getPositionX()) / 8.0f;
-                    float dY = (this.closestPlayer.getPositionY() + this.closestPlayer.getEyeHeight() / 2.0f - this.getPositionY()) / 8.0f;
-                    float dZ = (this.closestPlayer.getPositionZ() - this.getPositionZ()) / 8.0f;
+                    float dX = (this.closestPlayer.positionX() - this.positionX()) / 8.0f;
+                    float dY = (this.closestPlayer.positionY() + this.closestPlayer.eyeHeight() / 2.0f - this.positionY()) / 8.0f;
+                    float dZ = (this.closestPlayer.positionZ() - this.positionZ()) / 8.0f;
 
                     float distance = MathUtils.sqrt(dX * dX + dY * dY + dZ * dZ);
                     float diff = 1.0f - distance;
@@ -129,8 +132,8 @@ public class EntityXPOrb extends Entity implements io.gomint.entity.passive.Enti
                     if (diff > 0.0D) {
                         diff = diff * diff;
 
-                        Vector motion = this.getVelocity();
-                        this.setVelocity(motion.add(
+                        Vector motion = this.velocity();
+                        this.velocity(motion.add(
                             dX / distance * diff * 0.1f,
                             dY / distance * diff * 0.1f,
                             dZ / distance * diff * 0.1f
@@ -148,14 +151,14 @@ public class EntityXPOrb extends Entity implements io.gomint.entity.passive.Enti
     }
 
     @Override
-    protected void fall() {
-
+    protected EntityXPOrb fall() {
+        return this;
     }
 
     @Override
     public void onCollideWithPlayer(EntityPlayer player) {
         // Check if we can pick it up
-        if (this.world.getServer().currentTickTime() > this.getPickupTime() && !this.isDead()) {
+        if (this.world.getServer().currentTickTime() > this.pickupTime().toEpochMilli() && !this.dead()) {
             if (player.canPickupXP()) {
                 player.addXP(this.xpAmount);
                 this.despawn();
@@ -164,7 +167,7 @@ public class EntityXPOrb extends Entity implements io.gomint.entity.passive.Enti
     }
 
     @Override
-    public Set<String> getTags() {
+    public Set<String> tags() {
         return EntityTags.PASSIVE;
     }
 

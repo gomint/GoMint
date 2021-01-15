@@ -16,7 +16,7 @@ import io.gomint.server.world.WorldAdapter;
 import java.util.Set;
 
 @RegisterInfo(sId = "minecraft:pufferfish")
-public class EntityPufferfish extends EntityAnimal implements io.gomint.entity.animal.EntityPufferfish {
+public class EntityPufferfish extends EntityAnimal<io.gomint.entity.animal.EntityPufferfish> implements io.gomint.entity.animal.EntityPufferfish {
 
     /**
      * Constructs a new EntityLiving
@@ -37,10 +37,10 @@ public class EntityPufferfish extends EntityAnimal implements io.gomint.entity.a
     }
 
     private void initEntity() {
-        this.setSize(0.35f, 0.35f);
-        this.addAttribute(Attribute.HEALTH);
-        this.setMaxHealth(3);
-        this.setHealth(3);
+        this.size(0.35f, 0.35f);
+        this.attribute(Attribute.HEALTH);
+        this.maxHealth(3);
+        this.health(3);
     }
 
     @Override
@@ -49,7 +49,7 @@ public class EntityPufferfish extends EntityAnimal implements io.gomint.entity.a
     }
 
     @Override
-    public Set<String> getTags() {
+    public Set<String> tags() {
         return EntityTags.ANIMAL;
     }
 

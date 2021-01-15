@@ -25,7 +25,7 @@ public class ProjectileLaunchEvent extends CancellableEntityEvent<ProjectileLaun
      * @param entity for which this event is
      * @param cause  why this projectile will get launched
      */
-    public ProjectileLaunchEvent( EntityProjectile entity, Cause cause ) {
+    public ProjectileLaunchEvent( EntityProjectile<?> entity, Cause cause ) {
         super( entity );
         this.cause = cause;
     }
@@ -40,8 +40,8 @@ public class ProjectileLaunchEvent extends CancellableEntityEvent<ProjectileLaun
     }
 
     @Override
-    public EntityProjectile entity() {
-        return (EntityProjectile) super.entity();
+    public EntityProjectile<?> entity() {
+        return (EntityProjectile<?>) super.entity();
     }
 
     public enum Cause {

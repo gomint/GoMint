@@ -31,13 +31,13 @@ import java.util.concurrent.ThreadLocalRandom;
  * @author geNAZt
  * @version 1.0
  */
-public abstract class EntityProjectile extends Entity implements io.gomint.entity.projectile.EntityProjectile {
+public abstract class EntityProjectile<E extends io.gomint.entity.Entity<E>> extends Entity<E> implements io.gomint.entity.projectile.EntityProjectile<E> {
 
-    protected final EntityLiving shooter;
+    protected final EntityLiving<?> shooter;
     private float lastUpdateDT;
 
     // Hit state tracking
-    protected Entity hitEntity;
+    protected Entity<?> hitEntity;
 
     /**
      * Construct a new Entity
@@ -46,8 +46,8 @@ public abstract class EntityProjectile extends Entity implements io.gomint.entit
      * @param type    The type of the Entity
      * @param world   The world in which this entity is in
      */
-    protected EntityProjectile( EntityLiving shooter, EntityType type, WorldAdapter world ) {
-        super( type, world );
+    protected EntityProjectile(EntityLiving<?> shooter, EntityType type, WorldAdapter world) {
+        super(type, world);
         this.shooter = shooter;
     }
 
@@ -56,95 +56,96 @@ public abstract class EntityProjectile extends Entity implements io.gomint.entit
         super.applyCustomProperties();
 
         // Collisions
-        this.setHasCollision( false );
+        this.collision(false);
     }
 
-    public abstract boolean isCritical();
-    public abstract float getDamage();
+    public abstract boolean critical();
+
+    public abstract float damage();
 
     @Override
-    public void update( long currentTimeMS, float dT ) {
-        super.update( currentTimeMS, dT );
+    public void update(long currentTimeMS, float dT) {
+        super.update(currentTimeMS, dT);
 
         // Reset hit entity on death
-        if ( this.hitEntity != null && this.hitEntity.isDead() ) {
+        if (this.hitEntity != null && this.hitEntity.dead()) {
             this.hitEntity = null;
         }
 
         this.lastUpdateDT += dT;
-        if ( Values.CLIENT_TICK_RATE - this.lastUpdateDT < MathUtils.EPSILON ) {
-            if ( this.hitEntity != null ) {
-                this.setPosition( this.hitEntity.getPosition().add( 0, this.hitEntity.getEyeHeight() + this.getHeight(), 0 ) );
+        if (Values.CLIENT_TICK_RATE - this.lastUpdateDT < MathUtils.EPSILON) {
+            if (this.hitEntity != null) {
+                this.position(this.hitEntity.position().add(0, this.hitEntity.eyeHeight() + this.height(), 0));
             } else {
-                Vector position = this.getPosition();
-                Vector nextTickMovement = new Vector( this.getPositionX() + this.getMotionX(), this.getPositionY() + this.getMotionY(), this.getPositionZ() + this.getMotionZ() );
-                AxisAlignedBB bb = this.boundingBox.addCoordinates( this.getMotionX(), this.getMotionY(), this.getMotionZ() ).grow( 1, 1, 1 );
-                Collection<io.gomint.entity.Entity> collidedEntities = this.world.getNearbyEntities( bb, this );
-                if ( collidedEntities != null ) {
+                Vector position = this.position();
+                Vector nextTickMovement = new Vector(this.positionX() + this.getMotionX(), this.positionY() + this.getMotionY(), this.positionZ() + this.getMotionZ());
+                AxisAlignedBB bb = this.boundingBox.addCoordinates(this.getMotionX(), this.getMotionY(), this.getMotionZ()).grow(1, 1, 1);
+                Collection<io.gomint.entity.Entity<?>> collidedEntities = this.world.getNearbyEntities(bb, this);
+                if (collidedEntities != null) {
                     double savedDistance = 0.0D;
-                    Entity hitEntity = null;
+                    Entity<?> hitEntity = null;
 
-                    for ( io.gomint.entity.Entity collidedEntity : collidedEntities ) {
-                        Entity implEntity = (Entity) collidedEntity;
+                    for (io.gomint.entity.Entity<?> collidedEntity : collidedEntities) {
+                        Entity<?> implEntity = (Entity<?>) collidedEntity;
 
                         // Does this entity support colliding?
-                        if ( !implEntity.hasCollision() ) {
+                        if (!implEntity.collision()) {
                             continue;
                         }
 
                         // Skip own entity until we moved far enough
-                        if ( collidedEntity.equals( this.shooter ) && this.age < 5 ) {
+                        if (collidedEntity.equals(this.shooter) && this.age < 5) {
                             continue;
                         }
 
                         // Check for spectator game mode / no clip
-                        if ( collidedEntity instanceof EntityPlayer ) {
+                        if (collidedEntity instanceof EntityPlayer) {
                             EntityPlayer otherPlayer = (EntityPlayer) collidedEntity;
-                            if ( otherPlayer.getAdventureSettings().isNoClip() ) {
+                            if (otherPlayer.adventureSettings().isNoClip()) {
                                 continue;
                             }
                         }
 
                         // Check if entity intercepts with next movement
-                        AxisAlignedBB entityBB = collidedEntity.getBoundingBox().grow( 0.3f, 0.3f, 0.3f );
-                        Vector onLineVector = entityBB.calculateIntercept( position, nextTickMovement );
-                        if ( onLineVector == null ) {
+                        AxisAlignedBB entityBB = collidedEntity.boundingBox().grow(0.3f, 0.3f, 0.3f);
+                        Vector onLineVector = entityBB.calculateIntercept(position, nextTickMovement);
+                        if (onLineVector == null) {
                             continue;
                         }
 
                         // Event to check for custom collision detection
-                        EntityCollisionWithEntityEvent event = new EntityCollisionWithEntityEvent( collidedEntity, this );
-                        this.world.getServer().pluginManager().callEvent( event );
+                        EntityCollisionWithEntityEvent event = new EntityCollisionWithEntityEvent(collidedEntity, this);
+                        this.world.getServer().pluginManager().callEvent(event);
 
-                        if ( !event.cancelled() ) {
-                            double currentDistance = position.distanceSquared( onLineVector );
-                            if ( currentDistance < savedDistance || savedDistance == 0.0 ) {
-                                hitEntity = (Entity) collidedEntity;
+                        if (!event.cancelled()) {
+                            double currentDistance = position.distanceSquared(onLineVector);
+                            if (currentDistance < savedDistance || savedDistance == 0.0) {
+                                hitEntity = (Entity<?>) collidedEntity;
                                 savedDistance = currentDistance;
                             }
                         }
                     }
 
                     // Check if we hit a entity
-                    if ( hitEntity != null ) {
+                    if (hitEntity != null) {
                         // Event
-                        ProjectileHitEntityEvent entityEvent = new ProjectileHitEntityEvent( hitEntity, this );
-                        this.getWorld().getServer().pluginManager().callEvent( entityEvent );
+                        ProjectileHitEntityEvent entityEvent = new ProjectileHitEntityEvent(hitEntity, this);
+                        this.world().getServer().pluginManager().callEvent(entityEvent);
 
-                        if ( !entityEvent.cancelled() ) {
+                        if (!entityEvent.cancelled()) {
                             // Calculate damage
-                            float motion = (float) Math.sqrt( MathUtils.square( this.getMotionX() ) + MathUtils.square( this.getMotionY() ) + MathUtils.square( this.getMotionZ() ) );
-                            int damage = MathUtils.fastCeil( motion * getDamage() );
+                            float motion = (float) Math.sqrt(MathUtils.square(this.getMotionX()) + MathUtils.square(this.getMotionY()) + MathUtils.square(this.getMotionZ()));
+                            int damage = MathUtils.fastCeil(motion * damage());
 
                             // Critical?
-                            if ( isCritical() ) {
-                                damage += ThreadLocalRandom.current().nextInt( damage / 2 + 2 );
+                            if (critical()) {
+                                damage += ThreadLocalRandom.current().nextInt(damage / 2 + 2);
                             }
 
-                            EntityDamageByEntityEvent event = new EntityDamageByEntityEvent( hitEntity, this, EntityDamageEvent.DamageSource.PROJECTILE, damage );
-                            if ( hitEntity.damage( event ) ) {
-                                this.applyCustomKnockback( hitEntity );
-                                this.applyCustomDamageEffects( hitEntity );
+                            EntityDamageByEntityEvent event = new EntityDamageByEntityEvent(hitEntity, this, EntityDamageEvent.DamageSource.PROJECTILE, damage);
+                            if (hitEntity.damage(event)) {
+                                this.applyCustomKnockback(hitEntity);
+                                this.applyCustomDamageEffects(hitEntity);
                             }
 
                             // Store entity
@@ -163,7 +164,7 @@ public abstract class EntityProjectile extends Entity implements io.gomint.entit
      *
      * @param hitEntity which has been hit
      */
-    protected void applyCustomDamageEffects( Entity hitEntity ) {
+    protected void applyCustomDamageEffects(Entity<?> hitEntity) {
 
     }
 
@@ -172,18 +173,18 @@ public abstract class EntityProjectile extends Entity implements io.gomint.entit
      *
      * @param hitEntity which has been hit
      */
-    protected void applyCustomKnockback( Entity hitEntity ) {
+    protected void applyCustomKnockback(Entity<?> hitEntity) {
 
     }
 
     @Override
-    protected void fall() {
-
+    protected E fall() {
+        return (E) this;
     }
 
     @Override
-    public io.gomint.entity.EntityLiving getShooter() {
-        if ( this.shooter == null || this.shooter.isDead() ) {
+    public io.gomint.entity.EntityLiving<?> shooter() {
+        if (this.shooter == null || this.shooter.dead()) {
             return null;
         }
 
@@ -193,18 +194,18 @@ public abstract class EntityProjectile extends Entity implements io.gomint.entit
     /**
      * Set the position based on the position of the shooter
      */
-    Location setPositionFromShooter() {
+    Location positionFromShooter() {
         // Calculate starting position
-        Location position = this.shooter.getLocation();
+        Location position = this.shooter.location();
 
-        this.setPosition( position.add(
+        this.position(position.add(
             0,
-            this.shooter.getEyeHeight() - 0.1f,
+            this.shooter.eyeHeight() - 0.1f,
             0
-        ) );
+        ));
 
-        this.setYaw( position.yaw() );
-        this.setPitch( position.pitch() );
+        this.yaw(position.yaw());
+        this.pitch(position.pitch());
 
         return position;
     }
@@ -212,37 +213,39 @@ public abstract class EntityProjectile extends Entity implements io.gomint.entit
     /**
      * Set yaw and pitch from current motion
      */
-    protected void setLookFromMotion() {
+    protected E lookFromMotion() {
         // Calculate correct yaw / pitch
-        double motionDistance = MathUtils.square( this.getMotionX() ) + MathUtils.square( this.getMotionZ() );
-        float motionForce = (float) Math.sqrt( motionDistance );
+        double motionDistance = MathUtils.square(this.getMotionX()) + MathUtils.square(this.getMotionZ());
+        float motionForce = (float) Math.sqrt(motionDistance);
 
-        float yaw = (float) ( Math.atan2( this.getMotionX(), this.getMotionZ() ) * 180.0D / Math.PI );
-        float pitch = (float) ( Math.atan2( this.getMotionY(), motionForce ) * 180.0D / Math.PI );
+        float yaw = (float) (Math.atan2(this.getMotionX(), this.getMotionZ()) * 180.0D / Math.PI);
+        float pitch = (float) (Math.atan2(this.getMotionY(), motionForce) * 180.0D / Math.PI);
 
-        this.setYaw( yaw );
-        this.setHeadYaw( yaw );
-        this.setPitch( pitch );
+        this.yaw(yaw);
+        this.headYaw(yaw);
+        this.pitch(pitch);
+
+        return (E) this;
     }
 
-    protected void setMotionFromEntity(Location position, Vector motion, float pitchOffset, float velocity, float inaccuracy) {
+    protected E motionFromEntity(Location position, Vector motion, float pitchOffset, float velocity, float inaccuracy) {
         Vector newMotion = new Vector(
             (float) (-Math.sin(position.yaw() * 0.0175f) * Math.cos(position.pitch() * 0.0175f)),
             (float) -Math.sin((position.pitch() + pitchOffset) * 0.0175f),
             (float) (Math.cos(position.yaw() * 0.0175f) * Math.cos(position.pitch() * 0.0175f))
         );
 
-        this.setMotionFromHeading(newMotion.add(motion), velocity, inaccuracy);
+        return this.motionFromHeading(newMotion.add(motion), velocity, inaccuracy);
     }
 
-    protected void setMotionFromPosition(Location position, float pitchOffset, float velocity, float inaccuracy) {
+    protected E motionFromPosition(Location position, float pitchOffset, float velocity, float inaccuracy) {
         Vector motion = new Vector(
             (float) (-Math.sin(position.yaw() * 0.0175f) * Math.cos(position.pitch() * 0.0175f)),
             (float) -Math.sin((position.pitch() + pitchOffset) * 0.0175f),
             (float) (Math.cos(position.yaw() * 0.0175f) * Math.cos(position.pitch() * 0.0175f))
         );
 
-        this.setMotionFromHeading(motion, velocity, inaccuracy);
+        return this.motionFromHeading(motion, velocity, inaccuracy);
     }
 
     /**
@@ -252,16 +255,16 @@ public abstract class EntityProjectile extends Entity implements io.gomint.entit
      * @param velocity
      * @param inaccuracy
      */
-    protected void setMotionFromHeading(Vector motion, float velocity, float inaccuracy) {
+    protected E motionFromHeading(Vector motion, float velocity, float inaccuracy) {
         float distanceTravel = (float) Math.sqrt(MathUtils.square(motion.getX()) + MathUtils.square(motion.getY()) + MathUtils.square(motion.getZ()));
         motion.setX(((float) (((motion.getX() / distanceTravel) + (ThreadLocalRandom.current().nextDouble() * 0.0075f)) * inaccuracy)) * velocity);
         motion.setY(((float) (((motion.getY() / distanceTravel) + (ThreadLocalRandom.current().nextDouble() * 0.0075f)) * inaccuracy)) * velocity);
         motion.setZ(((float) (((motion.getZ() / distanceTravel) + (ThreadLocalRandom.current().nextDouble() * 0.0075f)) * inaccuracy)) * velocity);
-        this.setVelocity(motion);
+        return this.velocity(motion);
     }
 
     @Override
-    public Set<String> getTags() {
+    public Set<String> tags() {
         return EntityTags.PROJECTILE;
     }
 

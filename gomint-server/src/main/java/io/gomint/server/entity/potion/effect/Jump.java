@@ -24,7 +24,7 @@ public class Jump extends Effect {
     }
 
     @Override
-    public void apply( EntityLiving entity ) {
+    public void apply( EntityLiving<?> entity ) {
 
     }
 
@@ -34,7 +34,7 @@ public class Jump extends Effect {
     }
 
     @Override
-    public void remove( EntityLiving entity ) {
+    public void remove( EntityLiving<?> entity ) {
 
     }
 

@@ -50,7 +50,7 @@ public class DropperTileEntity extends ContainerTileEntity implements InventoryH
     }
 
     @Override
-    public void interact(Entity entity, Facing face, Vector facePos, ItemStack<?> item) {
+    public void interact(Entity<?> entity, Facing face, Vector facePos, ItemStack<?> item) {
         this.inventoryComponent.interact(entity, face, facePos, item);
     }
 

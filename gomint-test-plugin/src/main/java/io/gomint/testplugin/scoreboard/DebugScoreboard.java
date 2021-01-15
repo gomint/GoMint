@@ -66,7 +66,7 @@ public class DebugScoreboard {
         plugin.scheduler().schedule( this::update, 1, 1, TimeUnit.MILLISECONDS );
 
         // Add player to scoreboard
-        player.setScoreboard( scoreboard );
+        player.scoreboard( scoreboard );
     }
 
     private void update() {
@@ -76,7 +76,7 @@ public class DebugScoreboard {
     }
 
     private void updateWorldTime() {
-        Duration time = this.player.getWorld().time();
+        Duration time = this.player.world().time();
 
         int seconds = (int) time.getSeconds();
         int minutes = MathUtils.fastFloor(seconds / 60f);
@@ -108,15 +108,15 @@ public class DebugScoreboard {
     }
 
     private void updateChunk() {
-        Chunk chunk = this.player.getChunk();
-        if ( chunk.getX() != this.chunkX || chunk.z() != this.chunkZ ) {
+        Chunk chunk = this.player.chunk();
+        if ( chunk.x() != this.chunkX || chunk.z() != this.chunkZ ) {
             // Remove the old entry
             this.display.removeEntry( this.chunkEntry );
-            this.chunkEntry = this.display.addLine( chunk.getX() + " / " + chunk.z(), 4 );
+            this.chunkEntry = this.display.addLine( chunk.x() + " / " + chunk.z(), 4 );
 
             // Update cache
             this.chunkZ = chunk.z();
-            this.chunkX = chunk.getX();
+            this.chunkX = chunk.x();
         }
     }
 

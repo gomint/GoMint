@@ -18,7 +18,7 @@ import io.gomint.event.entity.CancellableEntityEvent;
  */
 public class ProjectileHitEntityEvent extends CancellableEntityEvent<ProjectileHitEntityEvent> {
 
-    private final EntityProjectile projectile;
+    private final EntityProjectile<?> projectile;
 
     /**
      * Create a new entity based cancellable event
@@ -26,7 +26,7 @@ public class ProjectileHitEntityEvent extends CancellableEntityEvent<ProjectileH
      * @param entity     for which this event is
      * @param projectile which hit the entity
      */
-    public ProjectileHitEntityEvent( Entity entity, EntityProjectile projectile ) {
+    public ProjectileHitEntityEvent( Entity<?> entity, EntityProjectile<?> projectile ) {
         super( entity );
         this.projectile = projectile;
     }
@@ -36,7 +36,7 @@ public class ProjectileHitEntityEvent extends CancellableEntityEvent<ProjectileH
      *
      * @return projectile which hit the entity
      */
-    public EntityProjectile projectile() {
+    public EntityProjectile<?> projectile() {
         return this.projectile;
     }
 

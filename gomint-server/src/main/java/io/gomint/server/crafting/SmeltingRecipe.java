@@ -46,7 +46,7 @@ public class SmeltingRecipe extends Recipe {
     }
 
     @Override
-    public ItemStack<?>[] getIngredients() {
+    public ItemStack<?>[] ingredients() {
         return new ItemStack[]{this.input};
     }
 

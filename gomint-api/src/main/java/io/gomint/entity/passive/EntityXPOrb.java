@@ -10,6 +10,7 @@ package io.gomint.entity.passive;
 import io.gomint.GoMint;
 import io.gomint.entity.Entity;
 
+import java.time.Instant;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -17,7 +18,7 @@ import java.util.concurrent.TimeUnit;
  * @version 1.0
  * @stability 3
  */
-public interface EntityXPOrb extends Entity {
+public interface EntityXPOrb extends Entity<EntityXPOrb> {
 
     /**
      * Create a new entity xp orb with no config
@@ -34,27 +35,27 @@ public interface EntityXPOrb extends Entity {
      * @param duration the amount of timeUnit to wait
      * @param timeUnit the unit of time to wait
      */
-    void setPickupDelay( long duration, TimeUnit timeUnit );
+    EntityXPOrb pickupDelay(long duration, TimeUnit timeUnit );
 
     /**
      * Get the time when the item drop is allowed to be picked up
      *
      * @return the unix timestamp in millis when the item drop can be picked up
      */
-    long getPickupTime();
+    Instant pickupTime();
 
     /**
      * Set new xp amount
      *
      * @param xpAmount which should be used when collected
      */
-    void setXpAmount( int xpAmount );
+    EntityXPOrb xpAmount(int xpAmount );
 
     /**
      * Amount of XP currently in this orb
      *
      * @return xp in this orb
      */
-    int getXpAmount();
+    int xpAmount();
 
 }

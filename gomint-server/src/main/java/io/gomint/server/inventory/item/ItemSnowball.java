@@ -24,7 +24,7 @@ public class ItemSnowball extends ItemStack< io.gomint.inventory.item.ItemSnowba
     @Override
     public boolean interact(EntityPlayer entity, Facing face, Vector clickPosition, Block clickedBlock ) {
         // Spawn snowball projectile
-        WorldAdapter world = entity.getWorld();
+        WorldAdapter world = entity.world();
         EntitySnowball snowball = new EntitySnowball( entity, world );
 
         ProjectileLaunchEvent launchEvent = new ProjectileLaunchEvent( snowball, Cause.THROWING_SNOWBALL );
@@ -32,21 +32,21 @@ public class ItemSnowball extends ItemStack< io.gomint.inventory.item.ItemSnowba
 
         if ( !launchEvent.cancelled() ) {
             world.spawnEntityAt( snowball,
-                                snowball.getPositionX(),
-                                snowball.getPositionY(),
-                                snowball.getPositionZ(),
-                                snowball.getYaw(),
-                                snowball.getPitch() );
+                                snowball.positionX(),
+                                snowball.positionY(),
+                                snowball.positionZ(),
+                                snowball.yaw(),
+                                snowball.pitch() );
         }
 
-        if ( entity.getGamemode() != Gamemode.CREATIVE ) {
+        if ( entity.gamemode() != Gamemode.CREATIVE ) {
             // Subtract amount
             int newAmount = this.amount() - 1;
             if ( newAmount == 0 ) {
-                entity.getInventory().item( entity.getInventory().itemInHandSlot(), ItemAir.create( 0 ) );
+                entity.inventory().item( entity.inventory().itemInHandSlot(), ItemAir.create( 0 ) );
             } else {
                 this.amount( newAmount );
-                entity.getInventory().item( entity.getInventory().itemInHandSlot(), this );
+                entity.inventory().item( entity.inventory().itemInHandSlot(), this );
             }
         }
 

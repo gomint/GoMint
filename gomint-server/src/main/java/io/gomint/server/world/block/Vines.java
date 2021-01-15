@@ -67,7 +67,7 @@ public class Vines extends Block implements BlockVines {
     }
 
     @Override
-    public void stepOn(Entity entity) {
+    public void stepOn(Entity<?> entity) {
         // Reset fall distance
         entity.resetFallDistance();
     }
@@ -127,7 +127,7 @@ public class Vines extends Block implements BlockVines {
     }
 
     @Override
-    public boolean beforePlacement(EntityLiving entity, ItemStack<?> item, Facing face, Location location) {
+    public boolean beforePlacement(EntityLiving<?> entity, ItemStack<?> item, Facing face, Location location) {
         boolean ok = face != Facing.UP && face != Facing.DOWN;
         if (ok) {
             ATTACHED_SIDES.detectFromPlacement(this, entity, item, face);

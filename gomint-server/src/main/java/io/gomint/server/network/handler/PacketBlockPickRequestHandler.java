@@ -18,25 +18,25 @@ public class PacketBlockPickRequestHandler implements PacketHandler<PacketBlockP
         EntityPlayer player = connection.getEntity();
 
         // Crash check
-        float dist = player.getLocation().distance(packet.getLocation().toVector());
+        float dist = player.location().distance(packet.getLocation().toVector());
         if (dist > 100) {
-            LOGGER.warn("Player {} tried to reach {} blocks wide", player.getName(), dist);
+            LOGGER.warn("Player {} tried to reach {} blocks wide", player.name(), dist);
             return;
         }
 
-        Block block = player.getWorld().blockAt(packet.getLocation());
-        switch (player.getGamemode()) {
+        Block block = player.world().blockAt(packet.getLocation());
+        switch (player.gamemode()) {
             case CREATIVE:
                 // When in creative give this player the block in the inventory
                 for (io.gomint.inventory.item.ItemStack<?> drop : block.drops(null)) {
-                    player.getInventory().addItem(drop);
+                    player.inventory().addItem(drop);
                 }
 
                 break;
             case SURVIVAL:
                 // Check current player inventory
                 byte freeSlot = -1;
-                ItemStack<?>[] items = player.getInventory().contents();
+                ItemStack<?>[] items = player.inventory().contents();
                 for (byte i = 0; i < items.length; i++) {
                     ItemStack<?> itemStack = items[i];
                     if (freeSlot == -1 && i < 9) {
@@ -47,13 +47,13 @@ public class PacketBlockPickRequestHandler implements PacketHandler<PacketBlockP
 
                     if (block.getBlockId().equals(((io.gomint.server.inventory.item.ItemStack<?>) itemStack).material())) { // TODO: Fix this for slabs.....
                         if (i < 9) {
-                            player.getInventory().setItemInHand(i);
+                            player.inventory().setItemInHand(i);
                             return;
                         } else if (freeSlot > -1) {
                             // Set item into free slot
-                            player.getInventory().item(freeSlot, itemStack);
-                            player.getInventory().item(i, ItemAir.create(1));
-                            player.getInventory().setItemInHand(freeSlot);
+                            player.inventory().item(freeSlot, itemStack);
+                            player.inventory().item(i, ItemAir.create(1));
+                            player.inventory().setItemInHand(freeSlot);
 
                             return;
                         }

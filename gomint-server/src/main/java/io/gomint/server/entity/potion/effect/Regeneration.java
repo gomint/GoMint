@@ -18,10 +18,10 @@ import io.gomint.server.util.Values;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = 10 )
+@RegisterInfo(id = 10)
 public class Regeneration extends Effect {
 
-    private EntityLiving player;
+    private EntityLiving<?> player;
     private float addHealthEvery;
     private float lastUpdatedT;
 
@@ -31,28 +31,28 @@ public class Regeneration extends Effect {
     }
 
     @Override
-    public void apply( EntityLiving player ) {
+    public void apply(EntityLiving<?> player) {
         this.player = player;
     }
 
     @Override
-    public void update( long currentTimeMillis, float dT ) {
+    public void update(long currentTimeMillis, float dT) {
         this.lastUpdatedT += dT;
-        if ( this.addHealthEvery - this.lastUpdatedT < MathUtils.EPSILON ) {
-            this.player.heal( 1f, EntityHealEvent.Cause.REGENERATION_EFFECT );
+        if (this.addHealthEvery - this.lastUpdatedT < MathUtils.EPSILON) {
+            this.player.heal(1f, EntityHealEvent.Cause.REGENERATION_EFFECT);
             this.lastUpdatedT = 0;
         }
     }
 
     @Override
-    public void remove( EntityLiving player ) {
+    public void remove(EntityLiving<?> player) {
         this.player = null;
     }
 
     @Override
-    public void setData( EffectManager manager, int amplifier, long lengthInMS ) {
-        super.setData( manager, amplifier, lengthInMS );
-        this.addHealthEvery = ( Values.CLIENT_TICK_MS >> amplifier ) / 20f;
+    public void setData(EffectManager manager, int amplifier, long lengthInMS) {
+        super.setData(manager, amplifier, lengthInMS);
+        this.addHealthEvery = (((int) Values.CLIENT_TICK_MS) >> amplifier) / 20f;
     }
 
 }

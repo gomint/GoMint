@@ -135,7 +135,7 @@ public class Torch extends Block implements BlockTorch {
     }
 
     @Override
-    public boolean beforePlacement(EntityLiving entity, ItemStack<?> item, Facing face, Location location) {
+    public boolean beforePlacement(EntityLiving<?> entity, ItemStack<?> item, Facing face, Location location) {
         if (!this.side(face).transparent()) {
             FACING.setState(this, FacingMagic.valueOf(face.name()));
             return true;

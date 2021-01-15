@@ -13,7 +13,7 @@ import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.world.WorldAdapter;
 
 @RegisterInfo(sId = "minecraft:zombie_horse")
-public class EntityZombieHorse extends EntityAnimal implements io.gomint.entity.animal.EntityZombieHorse {
+public class EntityZombieHorse extends EntityAnimal<io.gomint.entity.animal.EntityZombieHorse> implements io.gomint.entity.animal.EntityZombieHorse {
 
     /**
      * Constructs a new EntityLiving
@@ -34,14 +34,15 @@ public class EntityZombieHorse extends EntityAnimal implements io.gomint.entity.
     }
 
     private void initEntity() {
-        this.setSize(1.3965f, 1.6f);
-        this.addAttribute(Attribute.HEALTH);
-        this.setMaxHealth(30);
-        this.setHealth(30);
+        this.size(1.3965f, 1.6f);
+        this.attribute(Attribute.HEALTH);
+        this.maxHealth(30);
+        this.health(30);
     }
 
     @Override
     public void update(long currentTimeMS, float dT) {
         super.update(currentTimeMS, dT);
     }
+
 }

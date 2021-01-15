@@ -82,7 +82,7 @@ public abstract class AbstractTileEntityComponent implements TileEntityComponent
         return this.entity.getBlock();
     }
 
-    public abstract void interact(Entity entity, Facing face, Vector facePos, ItemStack<?> item);
+    public abstract void interact(Entity<?> entity, Facing face, Vector facePos, ItemStack<?> item);
 
     protected void readInventory(NBTTagCompound compound, ContainerInventory<?> inventory) {
         // Read in items
@@ -123,7 +123,7 @@ public abstract class AbstractTileEntityComponent implements TileEntityComponent
     }
 
     protected void writeItem(NBTTagCompound compound, String key, ItemStack<?> holdingItem) {
-        putItemStack((io.gomint.server.inventory.item.ItemStack<?>) holdingItem, compound.getCompound(key, true));
+        putItemStack(holdingItem, compound.getCompound(key, true));
     }
 
     protected ItemStack<?> readItem(NBTTagCompound compound, String key) {

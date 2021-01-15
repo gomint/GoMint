@@ -7,6 +7,7 @@
 
 package io.gomint.server.entity.passive;
 
+import io.gomint.entity.Entity;
 import io.gomint.entity.potion.PotionEffect;
 import io.gomint.event.entity.EntityDamageEvent;
 import io.gomint.event.entity.EntityHealEvent;
@@ -52,7 +53,7 @@ import java.util.UUID;
  * @version 1.0
  */
 @RegisterInfo(sId = "minecraft:player")
-public class EntityHuman extends EntityCreature implements io.gomint.entity.passive.EntityHuman {
+public class EntityHuman<E extends Entity<E>> extends EntityCreature<E> implements io.gomint.entity.passive.EntityHuman<E> {
 
     private static final int DATA_PLAYER_BED_POSITION = 29;
 
@@ -119,16 +120,18 @@ public class EntityHuman extends EntityCreature implements io.gomint.entity.pass
     }
 
     @Override
-    protected void setSize(float width, float height) {
-        super.setSize(width, height);
+    protected E size(float width, float height) {
+        super.size(width, height);
 
         if (height > 1.61f) {
             this.eyeHeight = 1.62f;
         }
+
+        return (E) this;
     }
 
     private void initEntity() {
-        this.setSize(0.6f, 1.8f);
+        this.size(0.6f, 1.8f);
         this.offsetY = this.eyeHeight + 0.0001f;
         this.stepHeight = 0.6f;
 
@@ -139,39 +142,40 @@ public class EntityHuman extends EntityCreature implements io.gomint.entity.pass
         this.metadataContainer.setDataFlag(MetadataContainer.DATA_INDEX, EntityFlag.BREATHING, true);
 
         // Sleeping stuff
-        this.setPlayerFlag(EntityFlag.SLEEPING, false);
+        this.playerFlag(EntityFlag.SLEEPING, false);
         this.metadataContainer.putPosition(DATA_PLAYER_BED_POSITION, 0, 0, 0);
 
         // Exhaustion, saturation and food
-        addAttribute(Attribute.HUNGER);
-        addAttribute(Attribute.SATURATION);
-        addAttribute(Attribute.EXHAUSTION);
-        addAttribute(Attribute.EXPERIENCE_LEVEL);
-        addAttribute(Attribute.EXPERIENCE);
+        attribute(Attribute.HUNGER);
+        attribute(Attribute.SATURATION);
+        attribute(Attribute.EXHAUSTION);
+        attribute(Attribute.EXPERIENCE_LEVEL);
+        attribute(Attribute.EXPERIENCE);
 
-        this.setNameTagAlwaysVisible(true);
-        this.setCanClimb(true);
+        this.nameTagAlwaysVisible(true);
+        this.canClimb(true);
 
-        this.playerListName = this.getName();
+        this.playerListName = this.name();
     }
 
     @Override
-    public void setPlayerListName(String newPlayerListName) {
+    public E playerListName(String newPlayerListName) {
         if (newPlayerListName == null) {
-            return;
+            return (E) this;
         }
 
         this.playerListName = newPlayerListName;
         this.updatePlayerList();
+        return (E) this;
     }
 
     @Override
-    public String getName() {
+    public String name() {
         return this.username;
     }
 
     @Override
-    public UUID getUUID() {
+    public UUID uuid() {
         return this.uuid;
     }
 
@@ -179,15 +183,15 @@ public class EntityHuman extends EntityCreature implements io.gomint.entity.pass
     public void update(long currentTimeMS, float dT) {
         super.update(currentTimeMS, dT);
 
-        if (this.isDead() || this.getHealth() <= 0) {
+        if (this.dead() || this.health() <= 0) {
             return;
         }
 
         // Food tick
         this.lastUpdateDT += dT;
         if (Values.CLIENT_TICK_RATE - this.lastUpdateDT < MathUtils.EPSILON) {
-            if (!this.isDead() && this.shouldTickHunger()) {
-                AttributeInstance hungerInstance = this.getAttributeInstance(Attribute.HUNGER);
+            if (!this.dead() && this.shouldTickHunger()) {
+                AttributeInstance hungerInstance = this.attributeInstance(Attribute.HUNGER);
                 float hunger = hungerInstance.getValue();
                 float health = -1;
 
@@ -198,8 +202,8 @@ public class EntityHuman extends EntityCreature implements io.gomint.entity.pass
                     }
 
                     if (this.foodTicks % 20 == 0) {
-                        health = this.getHealth();
-                        if (health < this.getMaxHealth()) {
+                        health = this.health();
+                        if (health < this.maxHealth()) {
                             this.heal(1, EntityHealEvent.Cause.SATURATION);
                         }
                     }
@@ -209,16 +213,16 @@ public class EntityHuman extends EntityCreature implements io.gomint.entity.pass
                     // Check for regeneration
                     if (hunger >= 18) {
                         if (health == -1) {
-                            health = this.getHealth();
+                            health = this.health();
                         }
 
-                        if (health < this.getMaxHealth()) {
+                        if (health < this.maxHealth()) {
                             this.heal(1, EntityHealEvent.Cause.SATURATION);
                             this.exhaust(3f, PlayerExhaustEvent.Cause.REGENERATION);
                         }
                     } else if (hunger <= 0) {
                         if (health == -1) {
-                            health = this.getHealth();
+                            health = this.health();
                         }
 
                         if ((health > 10 && difficulty == Difficulty.NORMAL) ||
@@ -271,31 +275,25 @@ public class EntityHuman extends EntityCreature implements io.gomint.entity.pass
      * @param flag  which should be set
      * @param value to what it should be set, true or false
      */
-    public void setPlayerFlag(EntityFlag flag, boolean value) {
+    public E playerFlag(EntityFlag flag, boolean value) {
         this.metadataContainer.setDataFlag(MetadataContainer.DATA_PLAYER_FLAGS, flag, value);
-    }
-
-    /**
-     * Get the exhaustion level
-     *
-     * @return exhaustion level
-     */
-    public float getExhaustion() {
-        return this.getAttribute(Attribute.EXHAUSTION);
-    }
-
-    /**
-     * Set exhaustion level
-     *
-     * @param amount of exhaustion
-     */
-    public void setExhaustion(float amount) {
-        this.setAttribute(Attribute.EXHAUSTION, amount);
+        return (E) this;
     }
 
     @Override
-    public float getSaturation() {
-        return this.getAttribute(Attribute.SATURATION);
+    public float exhaustion() {
+        return this.attribute(Attribute.EXHAUSTION);
+    }
+
+    @Override
+    public E exhaustion(float amount) {
+        this.attribute(Attribute.EXHAUSTION, amount);
+        return (E) this;
+    }
+
+    @Override
+    public float saturation() {
+        return this.attribute(Attribute.SATURATION);
     }
 
     /**
@@ -303,22 +301,23 @@ public class EntityHuman extends EntityCreature implements io.gomint.entity.pass
      *
      * @param amount which should be added to the saturation
      */
-    public void addSaturation(float amount) {
-        AttributeInstance instance = this.getAttributeInstance(Attribute.SATURATION);
-        this.setSaturation(instance.getValue() + amount);
+    public E addSaturation(float amount) {
+        AttributeInstance instance = this.attributeInstance(Attribute.SATURATION);
+        return this.saturation(instance.getValue() + amount);
     }
 
     @Override
-    public void setSaturation(float amount) {
-        AttributeInstance instance = this.getAttributeInstance(Attribute.SATURATION);
+    public E saturation(float amount) {
+        AttributeInstance instance = this.attributeInstance(Attribute.SATURATION);
         float maxVal = instance.getMaxValue();
         float minVal = instance.getMinValue();
-        this.setAttribute(Attribute.SATURATION, MathUtils.clamp(amount, minVal, maxVal));
+        this.attribute(Attribute.SATURATION, MathUtils.clamp(amount, minVal, maxVal));
+        return (E) this;
     }
 
     @Override
-    public float getHunger() {
-        return this.getAttribute(Attribute.HUNGER);
+    public float hunger() {
+        return this.attribute(Attribute.HUNGER);
     }
 
     /**
@@ -326,26 +325,28 @@ public class EntityHuman extends EntityCreature implements io.gomint.entity.pass
      *
      * @param amount which should be added to the hunger
      */
-    public void addHunger(float amount) {
-        this.setHunger(this.getHunger() + amount);
+    public E addHunger(float amount) {
+        return this.hunger(this.hunger() + amount);
     }
 
     public boolean isHungry() {
-        AttributeInstance instance = this.getAttributeInstance(Attribute.HUNGER);
+        AttributeInstance instance = this.attributeInstance(Attribute.HUNGER);
         return instance.getValue() < instance.getMaxValue();
     }
 
     @Override
-    public void setHunger(float amount) {
-        AttributeInstance instance = this.getAttributeInstance(Attribute.HUNGER);
+    public E hunger(float amount) {
+        AttributeInstance instance = this.attributeInstance(Attribute.HUNGER);
         float old = instance.getValue();
-        this.setAttribute(Attribute.HUNGER, MathUtils.clamp(amount, instance.getMinValue(), instance.getMaxValue()));
+        this.attribute(Attribute.HUNGER, MathUtils.clamp(amount, instance.getMinValue(), instance.getMaxValue()));
 
         if ((old < 17 && amount >= 17) ||
             (old < 6 && amount >= 6) ||
             (old > 0 && amount == 0)) {
             this.foodTicks = 0;
         }
+
+        return (E) this;
     }
 
     /**
@@ -354,8 +355,8 @@ public class EntityHuman extends EntityCreature implements io.gomint.entity.pass
      * @param amount of exhaustion
      * @param cause  of the exhaustion
      */
-    public void exhaust(float amount, PlayerExhaustEvent.Cause cause) {
-        this.exhaust(amount);
+    public E exhaust(float amount, PlayerExhaustEvent.Cause cause) {
+        return this.exhaust(amount);
     }
 
     /**
@@ -363,19 +364,19 @@ public class EntityHuman extends EntityCreature implements io.gomint.entity.pass
      *
      * @param amount of exhaust
      */
-    public void exhaust(float amount) {
-        float exhaustion = this.getExhaustion() + amount;
+    public E exhaust(float amount) {
+        float exhaustion = this.exhaustion() + amount;
 
         // When exhaustion is over 4 we decrease saturation
         while (exhaustion >= 4) {
             exhaustion -= 4;
 
-            float saturation = this.getSaturation();
+            float saturation = this.saturation();
             if (saturation > 0) {
                 saturation = Math.max(0, saturation - 1);
-                this.setSaturation(saturation);
+                this.saturation(saturation);
             } else {
-                float hunger = this.getHunger();
+                float hunger = this.hunger();
                 if (hunger > 0) {
                     if (this instanceof EntityPlayer) {
                         PlayerFoodLevelChangeEvent foodLevelChangeEvent = new PlayerFoodLevelChangeEvent(
@@ -385,90 +386,98 @@ public class EntityHuman extends EntityCreature implements io.gomint.entity.pass
                         this.world.getServer().pluginManager().callEvent(foodLevelChangeEvent);
                         if (!foodLevelChangeEvent.cancelled()) {
                             hunger = Math.max(0, hunger - 1);
-                            this.setHunger(hunger);
+                            this.hunger(hunger);
                         } else {
                             ((EntityPlayer) this).resendAttributes();
                         }
                     } else {
                         hunger = Math.max(0, hunger - 1);
-                        this.setHunger(hunger);
+                        this.hunger(hunger);
                     }
                 }
             }
         }
 
-        this.setExhaustion(exhaustion);
+        return this.exhaustion(exhaustion);
     }
 
     @Override
-    public void setSprinting(boolean value) {
+    public E sprinting(boolean value) {
         // Alter movement speed if needed
-        if (value != isSprinting()) {
+        if (value != sprinting()) {
             this.metadataContainer.setDataFlag(MetadataContainer.DATA_INDEX, EntityFlag.SPRINTING, value);
-            AttributeInstance movementSpeed = this.getAttributeInstance(Attribute.MOVEMENT_SPEED);
+            AttributeInstance movementSpeed = this.attributeInstance(Attribute.MOVEMENT_SPEED);
             if (value) {
                 movementSpeed.setModifier(AttributeModifier.SPRINT, AttributeModifierType.ADDITION_MULTIPLY, 0.3f);
             } else {
                 movementSpeed.removeModifier(AttributeModifier.SPRINT);
             }
         }
+
+        return (E) this;
     }
 
     @Override
-    public boolean isSprinting() {
+    public boolean sprinting() {
         return this.metadataContainer.getDataFlag(MetadataContainer.DATA_INDEX, EntityFlag.SPRINTING);
     }
 
     @Override
-    public void setSneaking(boolean value) {
-        if (value != isSneaking()) {
+    public E sneaking(boolean value) {
+        if (value != sneaking()) {
             this.metadataContainer.setDataFlag(MetadataContainer.DATA_INDEX, EntityFlag.SNEAKING, value);
             if (value) {
-                this.setSize(0.6f, 1.62f);
+                this.size(0.6f, 1.62f);
             } else {
-                this.setSize(0.6f, 1.8f);
+                this.size(0.6f, 1.8f);
             }
         }
+
+        return (E) this;
     }
 
     @Override
-    public boolean isSneaking() {
+    public boolean sneaking() {
         return this.metadataContainer.getDataFlag(MetadataContainer.DATA_INDEX, EntityFlag.SNEAKING);
     }
 
     @Override
-    public void setSwimming(boolean value) {
-        if (value != isSwimming()) {
+    public E swimming(boolean value) {
+        if (value != swimming()) {
             if (value) {
-                this.setSize(0.6f, 0.6f);
+                this.size(0.6f, 0.6f);
             } else {
-                this.setSize(0.6f, 1.8f);
+                this.size(0.6f, 1.8f);
             }
 
             this.metadataContainer.setDataFlag(MetadataContainer.DATA_INDEX, EntityFlag.SWIMMING, value);
         }
+
+        return (E) this;
     }
 
     @Override
-    public boolean isSwimming() {
+    public boolean swimming() {
         return this.metadataContainer.getDataFlag(MetadataContainer.DATA_INDEX, EntityFlag.SWIMMING);
     }
 
     @Override
-    public void setSpinning(boolean value) {
-        if (value != isSpinning()) {
+    public E spinning(boolean value) {
+        if (value != spinning()) {
             if (value) {
-                this.setSize(0.6f, 0.6f);
+                this.size(0.6f, 0.6f);
             } else {
-                this.setSize(0.6f, 1.8f);
+                this.size(0.6f, 1.8f);
             }
 
             this.metadataContainer.setDataFlag(MetadataContainer.DATA_INDEX, EntityFlag.SPINNING, value);
         }
+
+        return (E) this;
     }
 
     @Override
-    public boolean isSpinning() {
+    public boolean spinning() {
         return this.metadataContainer.getDataFlag(MetadataContainer.DATA_INDEX, EntityFlag.SPINNING);
     }
 
@@ -478,33 +487,36 @@ public class EntityHuman extends EntityCreature implements io.gomint.entity.pass
     }
 
     @Override
-    public io.gomint.player.PlayerSkin getSkin() {
+    public io.gomint.player.PlayerSkin skin() {
         return this.skin;
     }
 
     @Override
-    public String getXboxID() {
+    public String xboxID() {
         return this.xboxId;
     }
 
     @Override
-    public String getDisplayName() {
+    public String displayName() {
         return this.displayName;
     }
 
     @Override
-    public void setDisplayName(String displayName) {
+    public E displayName(String displayName) {
         this.displayName = displayName;
+        return (E) this;
     }
 
     @Override
-    public void setSkin(PlayerSkin skin) {
+    public E skin(PlayerSkin skin) {
         if (this.skin != null) {
             this.skin = skin;
             this.updatePlayerList();
         } else {
             this.skin = skin;
         }
+
+        return (E) this;
     }
 
     private void updatePlayerList() {
@@ -523,15 +535,15 @@ public class EntityHuman extends EntityCreature implements io.gomint.entity.pass
 
         for (io.gomint.entity.EntityPlayer player : this.world.getServer().onlinePlayers()) {
             EntityPlayer other = (EntityPlayer) player;
-            other.getConnection().addToSendQueue(packetPlayerlist);
+            other.connection().addToSendQueue(packetPlayerlist);
             if (removeFromList != null) {
-                other.getConnection().addToSendQueue(removeFromList);
+                other.connection().addToSendQueue(removeFromList);
             }
         }
     }
 
     @Override
-    public PlayerInventory getInventory() {
+    public PlayerInventory inventory() {
         return inventory;
     }
 
@@ -556,26 +568,26 @@ public class EntityHuman extends EntityCreature implements io.gomint.entity.pass
     @Override
     public Packet createSpawnPacket(EntityPlayer receiver) {
         PacketSpawnPlayer packetSpawnPlayer = new PacketSpawnPlayer();
-        packetSpawnPlayer.setUuid(this.getUUID());
+        packetSpawnPlayer.setUuid(this.uuid());
         packetSpawnPlayer.setName(this.username);
-        packetSpawnPlayer.setEntityId(this.getEntityId());
-        packetSpawnPlayer.setRuntimeEntityId(this.getEntityId());
-        packetSpawnPlayer.setPlatformChatId(this.getUUID().toString());
+        packetSpawnPlayer.setEntityId(this.id());
+        packetSpawnPlayer.setRuntimeEntityId(this.id());
+        packetSpawnPlayer.setPlatformChatId(this.uuid().toString());
 
-        packetSpawnPlayer.setX(this.getPositionX());
-        packetSpawnPlayer.setY(this.getPositionY());
-        packetSpawnPlayer.setZ(this.getPositionZ());
+        packetSpawnPlayer.setX(this.positionX());
+        packetSpawnPlayer.setY(this.positionY());
+        packetSpawnPlayer.setZ(this.positionZ());
 
         packetSpawnPlayer.setVelocityX(this.getMotionX());
         packetSpawnPlayer.setVelocityY(this.getMotionY());
         packetSpawnPlayer.setVelocityZ(this.getMotionZ());
 
-        packetSpawnPlayer.setPitch(this.getPitch());
-        packetSpawnPlayer.setYaw(this.getYaw());
-        packetSpawnPlayer.setHeadYaw(this.getHeadYaw());
+        packetSpawnPlayer.setPitch(this.pitch());
+        packetSpawnPlayer.setYaw(this.yaw());
+        packetSpawnPlayer.setHeadYaw(this.headYaw());
 
-        packetSpawnPlayer.setItemInHand(this.getInventory().itemInHand());
-        packetSpawnPlayer.setMetadataContainer(this.getMetadata());
+        packetSpawnPlayer.setItemInHand(this.inventory().itemInHand());
+        packetSpawnPlayer.setMetadataContainer(this.metadata());
         packetSpawnPlayer.setDeviceId("");
         packetSpawnPlayer.setBuildPlatform(0);
 
@@ -597,9 +609,9 @@ public class EntityHuman extends EntityCreature implements io.gomint.entity.pass
     public void postSpawn(PlayerConnection connection) {
         // TODO: Remove this, its a client bug in 1.2.13
         PacketEntityMetadata metadata = new PacketEntityMetadata();
-        metadata.setEntityId(this.getEntityId());
+        metadata.setEntityId(this.id());
         metadata.setMetadata(this.metadataContainer);
-        metadata.setTick(this.world.getServer().currentTickTime() / Values.CLIENT_TICK_MS);
+        metadata.setTick(this.world.getServer().currentTickTime() / (int) Values.CLIENT_TICK_MS);
         connection.addToSendQueue(metadata);
 
         PacketPlayerlist packetPlayerlist = new PacketPlayerlist();
@@ -636,19 +648,19 @@ public class EntityHuman extends EntityCreature implements io.gomint.entity.pass
     @Override
     public Packet getMovementPacket() {
         PacketMovePlayer packetMovePlayer = new PacketMovePlayer();
-        packetMovePlayer.setEntityId(this.getEntityId());
+        packetMovePlayer.setEntityId(this.id());
 
-        packetMovePlayer.setX(this.getPositionX());
-        packetMovePlayer.setY(this.getPositionY() + this.getOffsetY());
-        packetMovePlayer.setZ(this.getPositionZ());
+        packetMovePlayer.setX(this.positionX());
+        packetMovePlayer.setY(this.positionY() + this.offsetY());
+        packetMovePlayer.setZ(this.positionZ());
 
-        packetMovePlayer.setYaw(this.getYaw());
-        packetMovePlayer.setHeadYaw(this.getHeadYaw());
-        packetMovePlayer.setPitch(this.getPitch());
+        packetMovePlayer.setYaw(this.yaw());
+        packetMovePlayer.setHeadYaw(this.headYaw());
+        packetMovePlayer.setPitch(this.pitch());
 
-        packetMovePlayer.setOnGround(this.isOnGround());
+        packetMovePlayer.setOnGround(this.onGround());
         packetMovePlayer.setMode(PacketMovePlayer.MovePlayerMode.NORMAL);
-        packetMovePlayer.setTick(this.world.getServer().currentTickTime() / Values.CLIENT_TICK_MS);
+        packetMovePlayer.setTick(this.world.getServer().currentTickTime() / (int) Values.CLIENT_TICK_MS);
 
         return packetMovePlayer;
     }
@@ -657,7 +669,7 @@ public class EntityHuman extends EntityCreature implements io.gomint.entity.pass
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        EntityHuman that = (EntityHuman) o;
+        EntityHuman<?> that = (EntityHuman<?>) o;
         return uuid.getMostSignificantBits() == that.uuid.getMostSignificantBits() &&
             uuid.getLeastSignificantBits() == that.uuid.getLeastSignificantBits();
     }
@@ -668,7 +680,7 @@ public class EntityHuman extends EntityCreature implements io.gomint.entity.pass
     }
 
     @Override
-    public String getPlayerListName() {
+    public String playerListName() {
         return playerListName;
     }
 
@@ -677,12 +689,12 @@ public class EntityHuman extends EntityCreature implements io.gomint.entity.pass
      *
      * @return device information from this player
      */
-    public DeviceInfo getDeviceInfo() {
+    public DeviceInfo deviceInfo() {
         return deviceInfo;
     }
 
     @Override
-    public Set<String> getTags() {
+    public Set<String> tags() {
         return EntityTags.HUMAN;
     }
 

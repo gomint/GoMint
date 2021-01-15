@@ -25,7 +25,7 @@ public class AIFollowEntity extends AIState {
     private int currentPathNode;
     private List<BlockPosition> path;
 
-    private Entity followEntity;
+    private Entity<?> followEntity;
 
     /**
      * Constructs a new AIState that will belong to the given state machine.
@@ -45,7 +45,7 @@ public class AIFollowEntity extends AIState {
      *
      * @param entity the new entity to follow
      */
-    public void setFollowEntity( Entity entity ) {
+    public void setFollowEntity( Entity<?> entity ) {
         this.followEntity = entity;
     }
 
@@ -82,10 +82,10 @@ public class AIFollowEntity extends AIState {
             if ( blockPosition.equals( node ) ) {
                 this.currentPathNode++;
             }
-        } else if ( this.followEntity.isOnGround() ) {
-            LOGGER.debug( "Current follow position: {}", this.followEntity.getLocation() );
+        } else if ( this.followEntity.onGround() ) {
+            LOGGER.debug( "Current follow position: {}", this.followEntity.location() );
 
-            this.pathfinding.setGoal( this.followEntity.getLocation() );
+            this.pathfinding.setGoal( this.followEntity.location() );
             this.path = this.pathfinding.getPath();
             this.currentPathNode = 0;
         }

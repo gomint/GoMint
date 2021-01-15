@@ -50,8 +50,8 @@ public abstract class RailBase extends Block {
     }
 
     @Override
-    public boolean beforePlacement(EntityLiving entity, ItemStack<?> item, Facing face, Location location) {
-        Block block = entity.getWorld().blockAt(location.toBlockPosition().add(Vector.DOWN.toBlockPosition()));
+    public boolean beforePlacement(EntityLiving<?> entity, ItemStack<?> item, Facing face, Location location) {
+        Block block = entity.world().blockAt(location.toBlockPosition().add(Vector.DOWN.toBlockPosition()));
         return block.solid();
     }
 

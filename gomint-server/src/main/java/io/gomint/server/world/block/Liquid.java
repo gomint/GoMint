@@ -137,7 +137,7 @@ public abstract class Liquid<B> extends Block implements BlockLiquid<B> {
     }
 
     @Override
-    public void stepOn(Entity entity) {
+    public void stepOn(Entity<?> entity) {
         // Reset fall distance
         entity.resetFallDistance();
     }
@@ -415,7 +415,7 @@ public abstract class Liquid<B> extends Block implements BlockLiquid<B> {
     }
 
     @Override
-    public Vector addVelocity(Entity entity, Vector pushedByBlocks) {
+    public Vector addVelocity(Entity<?> entity, Vector pushedByBlocks) {
         return pushedByBlocks.add(this.flowVector());
     }
 
@@ -431,7 +431,7 @@ public abstract class Liquid<B> extends Block implements BlockLiquid<B> {
     }
 
     @Override
-    public boolean beforePlacement(EntityLiving entity, ItemStack<?> item, Facing face, Location location) {
+    public boolean beforePlacement(EntityLiving<?> entity, ItemStack<?> item, Facing face, Location location) {
         LIQUID_DEPTH.detectFromPlacement(this, entity, item, face);
         return super.beforePlacement(entity, item, face, location);
     }

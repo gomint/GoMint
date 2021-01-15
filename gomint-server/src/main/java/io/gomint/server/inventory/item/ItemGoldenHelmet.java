@@ -22,10 +22,10 @@ public class ItemGoldenHelmet extends ItemGoldenArmor<io.gomint.inventory.item.I
     @Override
     public boolean interact(EntityPlayer entity, Facing face, Vector clickPosition, Block clickedBlock ) {
         if ( clickedBlock == null ) {
-            if ( isBetter( (ItemStack<?>) entity.getArmorInventory().helmet() ) ) {
-                ItemStack<?> old = (ItemStack<?>) entity.getArmorInventory().helmet();
-                entity.getArmorInventory().helmet( this );
-                entity.getInventory().item( entity.getInventory().itemInHandSlot(), old );
+            if ( isBetter( (ItemStack<?>) entity.armorInventory().helmet() ) ) {
+                ItemStack<?> old = (ItemStack<?>) entity.armorInventory().helmet();
+                entity.armorInventory().helmet( this );
+                entity.inventory().item( entity.inventory().itemInHandSlot(), old );
             }
         }
 

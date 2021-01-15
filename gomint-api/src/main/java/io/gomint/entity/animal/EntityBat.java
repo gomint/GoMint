@@ -15,7 +15,7 @@ import io.gomint.entity.EntityLiving;
  * @version 1.0
  * @stability 3
  */
-public interface EntityBat extends EntityLiving {
+public interface EntityBat extends EntityLiving<EntityBat> {
 
     /**
      * Create a new entity bat with no config

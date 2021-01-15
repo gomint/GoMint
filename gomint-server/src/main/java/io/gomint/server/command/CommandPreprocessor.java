@@ -91,9 +91,9 @@ public class CommandPreprocessor {
         for (CommandHolder command : commands) {
             if (command.getOverload() != null) {
                 for (CommandOverload overload : command.getOverload()) {
-                    if (overload.getPermission().isEmpty() || player.hasPermission(overload.getPermission())) {
-                        if (overload.getParameters() != null) {
-                            for (Map.Entry<String, ParamValidator> entry : overload.getParameters().entrySet()) {
+                    if (overload.permission().isEmpty() || player.hasPermission(overload.permission())) {
+                        if (overload.parameters() != null) {
+                            for (Map.Entry<String, ParamValidator<?>> entry : overload.parameters().entrySet()) {
                                 if (entry.getValue().hasValues()) {
                                     for (String s : entry.getValue().values()) {
                                         this.addEnum(command.getName() + "#" + entry.getKey(), s);
@@ -102,8 +102,8 @@ public class CommandPreprocessor {
                                     this.enumIndexes.put(command.getName() + "#" + entry.getKey(), this.enums.getIndex(command.getName() + "#" + entry.getKey()));
                                 }
 
-                                if (entry.getValue().getPostfix() != null && !this.postfixes.contains(entry.getValue().getPostfix())) {
-                                    this.postfixes.add(entry.getValue().getPostfix());
+                                if (entry.getValue().postfix() != null && !this.postfixes.contains(entry.getValue().postfix())) {
+                                    this.postfixes.add(entry.getValue().postfix());
                                 }
                             }
                         }
@@ -135,18 +135,18 @@ public class CommandPreprocessor {
 
             if (command.getOverload() != null) {
                 for (CommandOverload overload : command.getOverload()) {
-                    if (overload.getPermission().isEmpty() || player.hasPermission(overload.getPermission())) {
+                    if (overload.permission().isEmpty() || player.hasPermission(overload.permission())) {
                         List<CommandData.Parameter> parameters = new ArrayList<>();
-                        if (overload.getParameters() != null) {
-                            for (Map.Entry<String, ParamValidator> entry : overload.getParameters().entrySet()) {
+                        if (overload.parameters() != null) {
+                            for (Map.Entry<String, ParamValidator<?>> entry : overload.parameters().entrySet()) {
                                 // Build together type
                                 int paramType = 0; // We don't support postfixes yet
 
-                                switch (entry.getValue().getType()) {
+                                switch (entry.getValue().type()) {
                                     case INT:
-                                        if (entry.getValue().getPostfix() != null) {
+                                        if (entry.getValue().postfix() != null) {
                                             paramType |= ARG_FLAG_POSTFIX;
-                                            paramType |= this.postfixes.indexOf(entry.getValue().getPostfix());
+                                            paramType |= this.postfixes.indexOf(entry.getValue().postfix());
                                         } else {
                                             paramType |= ARG_FLAG_VALID;
                                             paramType |= ARG_TYPE_INT;
@@ -189,7 +189,7 @@ public class CommandPreprocessor {
                                         paramType |= ARG_TYPE_VALUE;
                                 }
 
-                                parameters.add(new CommandData.Parameter(entry.getKey(), paramType, entry.getValue().isOptional()));
+                                parameters.add(new CommandData.Parameter(entry.getKey(), paramType, entry.getValue().optional()));
                             }
                         }
 

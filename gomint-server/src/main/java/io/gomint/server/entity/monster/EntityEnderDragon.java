@@ -10,7 +10,7 @@ import io.gomint.server.world.WorldAdapter;
 import java.util.Set;
 
 @RegisterInfo(sId = "minecraft:ender_dragon")
-public class EntityEnderDragon extends EntityLiving implements io.gomint.entity.monster.EntityEnderDragon {
+public class EntityEnderDragon extends EntityLiving<io.gomint.entity.monster.EntityEnderDragon> implements io.gomint.entity.monster.EntityEnderDragon {
 
     /**
      * Constructs a new EntityLiving
@@ -31,10 +31,10 @@ public class EntityEnderDragon extends EntityLiving implements io.gomint.entity.
     }
 
     private void initEntity() {
-        this.setSize(13.0f, 4.0f);
-        this.addAttribute(Attribute.HEALTH);
-        this.setMaxHealth(200);
-        this.setHealth(200);
+        this.size(13.0f, 4.0f);
+        this.attribute(Attribute.HEALTH);
+        this.maxHealth(200);
+        this.health(200);
     }
 
     @Override
@@ -43,7 +43,7 @@ public class EntityEnderDragon extends EntityLiving implements io.gomint.entity.
     }
 
     @Override
-    public Set<String> getTags() {
+    public Set<String> tags() {
         return EntityTags.HOSTILE_MOB;
     }
 

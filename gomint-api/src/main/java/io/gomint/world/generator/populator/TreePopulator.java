@@ -45,7 +45,7 @@ public class TreePopulator implements Populator {
             int y = this.getHighestWorkableBlock( chunk, x, z );
 
             if ( y != -1 ) {
-                this.tree.grow( world, chunk.getX() * 16 + x, y, chunk.z() * 16 + z, random );
+                this.tree.grow( world, chunk.x() * 16 + x, y, chunk.z() * 16 + z, random );
             }
         }
     }

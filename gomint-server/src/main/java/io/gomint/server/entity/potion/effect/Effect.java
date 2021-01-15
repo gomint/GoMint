@@ -35,13 +35,13 @@ public abstract class Effect implements io.gomint.entity.potion.Effect {
 
     public abstract byte getId();
 
-    public abstract void apply( EntityLiving entity );
+    public abstract void apply( EntityLiving<?> entity );
 
     public abstract void update( long currentTimeMillis, float dT );
 
-    public abstract void remove( EntityLiving entity );
+    public abstract void remove( EntityLiving<?> entity );
 
-    public void setVisible( boolean value ) {
+    public void visible(boolean value ) {
         this.visible = value;
         this.manager.updateEffect( this );
     }

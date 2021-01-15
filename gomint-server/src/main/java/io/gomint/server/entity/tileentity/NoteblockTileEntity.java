@@ -41,7 +41,7 @@ public class NoteblockTileEntity extends TileEntity {
     }
 
     @Override
-    public void interact(Entity entity, Facing face, Vector facePos, ItemStack<?> item ) {
+    public void interact(Entity<?> entity, Facing face, Vector facePos, ItemStack<?> item ) {
         if ( this.note == 24 ) {
             this.note = 0;
         } else {

@@ -164,7 +164,7 @@ public abstract class Block implements io.gomint.world.block.Block {
      *
      * @param entity which stepped on the blockId
      */
-    public void stepOn(Entity entity) {
+    public void stepOn(Entity<?> entity) {
 
     }
 
@@ -173,7 +173,7 @@ public abstract class Block implements io.gomint.world.block.Block {
      *
      * @param entity which got off the blockId
      */
-    public void gotOff(Entity entity) {
+    public void gotOff(Entity<?> entity) {
 
     }
 
@@ -186,7 +186,7 @@ public abstract class Block implements io.gomint.world.block.Block {
      * @param item    The item with which the entity interacted, can be null
      * @return true when the blockId has made a action for interaction, false when not
      */
-    public boolean interact(Entity entity, Facing face, Vector facePos, ItemStack<?> item) {
+    public boolean interact(Entity<?> entity, Facing face, Vector facePos, ItemStack<?> item) {
         return false;
     }
 
@@ -541,7 +541,7 @@ public abstract class Block implements io.gomint.world.block.Block {
      * @param location of the placement
      * @return true when placement can happen, false otherwise
      */
-    public boolean beforePlacement(EntityLiving entity, ItemStack<?> item, Facing face, Location location) {
+    public boolean beforePlacement(EntityLiving<?> entity, ItemStack<?> item, Facing face, Location location) {
         return true;
     }
 
@@ -568,7 +568,7 @@ public abstract class Block implements io.gomint.world.block.Block {
 
         // Instant break
         if (base <= 0) {
-            return Values.CLIENT_TICK_MS;
+            return (long) Values.CLIENT_TICK_MS;
         }
 
         // Check if we need a tool
@@ -598,13 +598,13 @@ public abstract class Block implements io.gomint.world.block.Block {
         }
 
         // Haste effect
-        int hasteAmplifier = player.getEffectAmplifier(PotionEffect.HASTE);
+        int hasteAmplifier = player.effect(PotionEffect.HASTE);
         if (hasteAmplifier != -1) {
             toolStrength *= 1F + (hasteAmplifier + 1) * 0.2F;
         }
 
         // Mining fatigue effect
-        int miningFatigueAmplifier = player.getEffectAmplifier(PotionEffect.MINING_FATIGUE);
+        int miningFatigueAmplifier = player.effect(PotionEffect.MINING_FATIGUE);
         if (miningFatigueAmplifier != -1) {
             switch (miningFatigueAmplifier) {
                 case 0:
@@ -627,12 +627,12 @@ public abstract class Block implements io.gomint.world.block.Block {
         }
 
         // When in water
-        if (player.isInsideLiquid() && player.getArmorInventory().helmet().enchantment(EnchantmentAquaAffinity.class) == null) {
+        if (player.isInsideLiquid() && player.armorInventory().helmet().enchantment(EnchantmentAquaAffinity.class) == null) {
             toolStrength /= 5.0F;
         }
 
         // When not onground
-        if (!player.isOnGround()) {
+        if (!player.onGround()) {
             toolStrength /= 5.0F;
         }
 
@@ -646,7 +646,7 @@ public abstract class Block implements io.gomint.world.block.Block {
 
         long time = (long) ((1F / result) * Values.CLIENT_TICK_MS);
         if (time < Values.CLIENT_TICK_MS) {
-            time = Values.CLIENT_TICK_MS;
+            time = (long) Values.CLIENT_TICK_MS;
         }
 
         return time;
@@ -676,11 +676,11 @@ public abstract class Block implements io.gomint.world.block.Block {
         return Lists.newArrayList(drop);
     }
 
-    public void onEntityCollision(Entity entity) {
+    public void onEntityCollision(Entity<?> entity) {
 
     }
 
-    public void onEntityStanding(EntityLiving entityLiving) {
+    public void onEntityStanding(EntityLiving<?> entityLiving) {
 
     }
 
@@ -705,7 +705,7 @@ public abstract class Block implements io.gomint.world.block.Block {
         return false;
     }
 
-    public Vector addVelocity(Entity entity, Vector pushedByBlocks) {
+    public Vector addVelocity(Entity<?> entity, Vector pushedByBlocks) {
         return pushedByBlocks;
     }
 

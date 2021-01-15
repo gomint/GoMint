@@ -30,7 +30,7 @@ public class OrePopulator implements Populator {
         for ( OreType type : this.oreTypes ) {
             Ore ore = new Ore( random, type );
             for ( int i = 0; i < type.getClusterCount(); i++ ) {
-                int x = random.nextInt( 15 ) + chunk.getX() * 16;
+                int x = random.nextInt( 15 ) + chunk.x() * 16;
                 int y = random.nextInt( type.getMaxHeight() - type.getMinHeight() ) + type.getMinHeight();
                 int z = random.nextInt( 15 ) + chunk.z() * 16;
 

@@ -15,13 +15,13 @@ import io.gomint.entity.EntityLiving;
  * @version 1.0
  * @stability 3
  */
-public interface EntityProjectile extends Entity {
+public interface EntityProjectile<E> extends Entity<E> {
 
     /**
      * Get the shooter of this projectile
      *
      * @return shooter of this projectile or null when shooter has died
      */
-    EntityLiving getShooter();
+    EntityLiving<?> shooter();
 
 }

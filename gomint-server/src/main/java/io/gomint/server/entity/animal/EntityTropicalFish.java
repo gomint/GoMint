@@ -13,7 +13,7 @@ import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.world.WorldAdapter;
 
 @RegisterInfo(sId = "minecraft:tropicalfish")
-public class EntityTropicalFish extends EntityAnimal implements io.gomint.entity.animal.EntityTropicalFish {
+public class EntityTropicalFish extends EntityAnimal<io.gomint.entity.animal.EntityTropicalFish> implements io.gomint.entity.animal.EntityTropicalFish {
 
     /**
      * Constructs a new EntityLiving
@@ -34,10 +34,10 @@ public class EntityTropicalFish extends EntityAnimal implements io.gomint.entity
     }
 
     private void initEntity() {
-        this.setSize(0.5f, 0.4f);
-        this.addAttribute(Attribute.HEALTH);
-        this.setMaxHealth(3);
-        this.setHealth(3);
+        this.size(0.5f, 0.4f);
+        this.attribute(Attribute.HEALTH);
+        this.maxHealth(3);
+        this.health(3);
     }
 
     @Override

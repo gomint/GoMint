@@ -321,10 +321,10 @@ public class LevelDBChunkAdapter extends ChunkAdapter {
                 NBTTagCompound compound = nbtReader.parse();
                 String identifier = compound.getString("identifier", null);
 
-                Entity entity = this.world.getServer().entities().create(identifier);
+                var entity = this.world.getServer().entities().create(identifier);
                 if (entity != null) {
-                    entity.initFromNBT(compound);
-                    Location location = entity.getLocation();
+                    ((Entity<?>) entity).initFromNBT(compound);
+                    Location location = entity.location();
                     location.world(this.world);
                     entity.spawn(location);
                 }

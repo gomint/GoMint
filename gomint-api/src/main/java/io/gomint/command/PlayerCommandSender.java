@@ -12,5 +12,5 @@ package io.gomint.command;
  * @version 1.0
  * @stability 3
  */
-public interface PlayerCommandSender extends CommandSender {
+public interface PlayerCommandSender<E> extends CommandSender<E> {
 }

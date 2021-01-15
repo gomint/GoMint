@@ -20,10 +20,10 @@ import java.util.Objects;
  */
 public class PlayerPickupItemEvent extends CancellablePlayerEvent<PlayerPickupItemEvent> {
 
-    private final Entity holdingEntity;
+    private final Entity<?> holdingEntity;
     private final ItemStack<?> itemStack;
 
-    public PlayerPickupItemEvent( EntityPlayer player, Entity holdingEntity, ItemStack<?> itemStack ) {
+    public PlayerPickupItemEvent( EntityPlayer player, Entity<?> holdingEntity, ItemStack<?> itemStack ) {
         super( player );
         this.itemStack = itemStack;
         this.holdingEntity = holdingEntity;
@@ -43,7 +43,7 @@ public class PlayerPickupItemEvent extends CancellablePlayerEvent<PlayerPickupIt
      *
      * @return the entity which currently holds the item
      */
-    public Entity holdingEntity() {
+    public Entity<?> holdingEntity() {
         return this.holdingEntity;
     }
 

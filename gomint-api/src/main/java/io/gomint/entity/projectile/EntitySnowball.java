@@ -12,7 +12,7 @@ import io.gomint.GoMint;
  * @version 1.0
  * @stability 3
  */
-public interface EntitySnowball extends EntityProjectile {
+public interface EntitySnowball extends EntityProjectile<EntitySnowball> {
 
     /**
      * Creates a new instance of a snowball projectile.

@@ -10,7 +10,7 @@ import io.gomint.server.world.WorldAdapter;
 import java.util.Set;
 
 @RegisterInfo(sId = "minecraft:endermite")
-public class EntityEndermite extends EntityLiving implements io.gomint.entity.monster.EntityEndermite {
+public class EntityEndermite extends EntityLiving<io.gomint.entity.monster.EntityEndermite> implements io.gomint.entity.monster.EntityEndermite {
 
     /**
      * Constructs a new EntityLiving
@@ -31,10 +31,10 @@ public class EntityEndermite extends EntityLiving implements io.gomint.entity.mo
     }
 
     private void initEntity() {
-        this.setSize(0.4f, 0.3f);
-        this.addAttribute(Attribute.HEALTH);
-        this.setMaxHealth(8);
-        this.setHealth(8);
+        this.size(0.4f, 0.3f);
+        this.attribute(Attribute.HEALTH);
+        this.maxHealth(8);
+        this.health(8);
     }
 
     @Override
@@ -43,7 +43,7 @@ public class EntityEndermite extends EntityLiving implements io.gomint.entity.mo
     }
 
     @Override
-    public Set<String> getTags() {
+    public Set<String> tags() {
         return EntityTags.HOSTILE_MOB;
     }
 

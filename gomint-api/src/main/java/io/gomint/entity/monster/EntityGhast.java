@@ -8,7 +8,7 @@ import io.gomint.entity.EntityLiving;
  * @version 1.0
  * @stability 3
  */
-public interface EntityGhast extends EntityLiving {
+public interface EntityGhast extends EntityLiving<EntityGhast> {
 
     /**
      * Create a new entity ghast with no config

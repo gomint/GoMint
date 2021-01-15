@@ -15,7 +15,7 @@ import io.gomint.entity.EntityAgeable;
  * @version 1.0
  * @stability 3
  */
-public interface EntityMule extends EntityAgeable {
+public interface EntityMule extends EntityAgeable<EntityMule> {
 
     /**
      * Create a new entity mule with no config

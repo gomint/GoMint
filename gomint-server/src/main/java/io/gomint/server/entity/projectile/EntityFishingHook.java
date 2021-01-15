@@ -24,7 +24,7 @@ import java.util.concurrent.ThreadLocalRandom;
  * @version 1.0
  */
 @RegisterInfo(sId = "minecraft:fishing_hook")
-public class EntityFishingHook extends EntityProjectile implements io.gomint.entity.projectile.EntityFishingHook {
+public class EntityFishingHook extends EntityProjectile<io.gomint.entity.projectile.EntityFishingHook> implements io.gomint.entity.projectile.EntityFishingHook {
 
     private static final Vector WATER_FLOATING_MOTION = new Vector(0, 0.1f, 0);
 
@@ -47,16 +47,16 @@ public class EntityFishingHook extends EntityProjectile implements io.gomint.ent
     public EntityFishingHook(EntityPlayer player, WorldAdapter world) {
         super(player, EntityType.FISHING_HOOK, world);
 
-        Location position = this.setPositionFromShooter();
+        Location position = this.positionFromShooter();
 
         // Calc new motion
-        this.setMotionFromEntity(position, this.shooter.getVelocity(), 0f, 0.4f, 1f);
+        this.motionFromEntity(position, this.shooter.velocity(), 0f, 0.4f, 1f);
 
         // Calculate correct yaw / pitch
-        this.setLookFromMotion();
+        this.lookFromMotion();
 
         // Set owning entity (this draws the rod line)
-        this.metadataContainer.putLong(5, player.getEntityId());
+        this.metadataContainer.putLong(5, player.id());
     }
 
     @Override
@@ -64,17 +64,19 @@ public class EntityFishingHook extends EntityProjectile implements io.gomint.ent
         super.applyCustomProperties();
 
         // Set size
-        this.setSize(0.25f, 0.25f);
+        this.size(0.25f, 0.25f);
     }
 
     @Override
-    protected void setMotionFromHeading(Vector motion, float velocity, float inaccuracy) {
+    protected EntityFishingHook motionFromHeading(Vector motion, float velocity, float inaccuracy) {
         float distanceTravel = (float) Math.sqrt(MathUtils.square(motion.getX()) + MathUtils.square(motion.getY()) + MathUtils.square(motion.getZ()));
-        this.setVelocity(motion.multiply(
+        this.velocity(motion.multiply(
             0.6f / distanceTravel + 0.5f + ThreadLocalRandom.current().nextFloat() * 0.0045f,
             0.6f / distanceTravel + 0.5f + ThreadLocalRandom.current().nextFloat() * 0.0045f,
             0.6f / distanceTravel + 0.5f + ThreadLocalRandom.current().nextFloat() * 0.0045f
         ));
+
+        return this;
     }
 
     /**
@@ -88,12 +90,12 @@ public class EntityFishingHook extends EntityProjectile implements io.gomint.ent
     }
 
     @Override
-    public boolean isCritical() {
+    public boolean critical() {
         return false;
     }
 
     @Override
-    public float getDamage() {
+    public float damage() {
         return 0;
     }
 
@@ -101,22 +103,22 @@ public class EntityFishingHook extends EntityProjectile implements io.gomint.ent
     public void update(long currentTimeMS, float dT) {
         super.update(currentTimeMS, dT);
 
-        if (this.shooter.isDead() || ((EntityPlayer) this.shooter).getInventory().itemInHand().itemType() != ItemType.FISHING_ROD) {
+        if (this.shooter.dead() || ((EntityPlayer) this.shooter).inventory().itemInHand().itemType() != ItemType.FISHING_ROD) {
             this.despawn();
         }
 
         // TODO: MJ BUG / 1.2.13 / Fishing hooks get applied noclip and gravity in the client, to circumvent we need to send the position every tick
-        this.getTransform().setPosition(this.getPosition());
+        this.getTransform().setPosition(this.position());
 
         this.lastUpdateDT += dT;
         if (Values.CLIENT_TICK_RATE - this.lastUpdateDT < MathUtils.EPSILON) {
             if (this.isCollided && this.isInsideLiquid()) {
-                if (!this.getVelocity().equals(WATER_FLOATING_MOTION)) {
-                    this.setVelocity(WATER_FLOATING_MOTION);
+                if (!this.velocity().equals(WATER_FLOATING_MOTION)) {
+                    this.velocity(WATER_FLOATING_MOTION);
                 }
             } else if (this.isCollided) {
-                if (!this.isReset && this.getVelocity().length() < 0.0025) {
-                    this.setVelocity(Vector.ZERO);
+                if (!this.isReset && this.velocity().length() < 0.0025) {
+                    this.velocity(Vector.ZERO);
                     this.isReset = true;
                 }
             }

@@ -21,7 +21,7 @@ import java.util.Set;
 public class ProjectileHitBlocksEvent extends CancellableEvent<ProjectileHitBlocksEvent> {
 
     private final Set<Block> blocks;
-    private final EntityProjectile projectile;
+    private final EntityProjectile<?> projectile;
 
     /**
      * Create a new entity based cancellable event
@@ -29,7 +29,7 @@ public class ProjectileHitBlocksEvent extends CancellableEvent<ProjectileHitBloc
      * @param blocks     which got hit by the projectile
      * @param projectile which hit the entity
      */
-    public ProjectileHitBlocksEvent( Set<Block> blocks, EntityProjectile projectile ) {
+    public ProjectileHitBlocksEvent( Set<Block> blocks, EntityProjectile<?> projectile ) {
         this.blocks = blocks;
         this.projectile = projectile;
     }
@@ -39,7 +39,7 @@ public class ProjectileHitBlocksEvent extends CancellableEvent<ProjectileHitBloc
      *
      * @return projectile which hit the entity
      */
-    public EntityProjectile projectile() {
+    public EntityProjectile<?> projectile() {
         return this.projectile;
     }
 

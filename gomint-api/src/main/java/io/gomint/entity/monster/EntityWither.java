@@ -8,7 +8,7 @@ import io.gomint.entity.EntityLiving;
  * @version 1.0
  * @stability 3
  */
-public interface EntityWither extends EntityLiving {
+public interface EntityWither extends EntityLiving<EntityWither> {
 
     /**
      * Create a new entity wither with no config

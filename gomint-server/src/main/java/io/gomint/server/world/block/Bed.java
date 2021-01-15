@@ -125,11 +125,11 @@ public class Bed extends Block implements BlockBed {
     }
 
     @Override
-    public boolean beforePlacement(EntityLiving entity, ItemStack<?> item, Facing face, Location location) {
+    public boolean beforePlacement(EntityLiving<?> entity, ItemStack<?> item, Facing face, Location location) {
         // We need to check if we are placed on a solid block
         Block block = (Block) location.world().blockAt(location.toBlockPosition()).side(Facing.DOWN);
         if (block.solid()) {
-            Bearing bearing = Bearing.fromAngle(entity.getYaw());
+            Bearing bearing = Bearing.fromAngle(entity.yaw());
 
             // Check for other block
             Block other = block.side(bearing.toDirection());

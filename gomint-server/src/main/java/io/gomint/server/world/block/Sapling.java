@@ -58,7 +58,7 @@ public class Sapling extends Block implements BlockSapling {
     private static final BooleanBlockState AGE = new BooleanBlockState(() -> new String[]{"age_bit"});
 
     @Override
-    public boolean beforePlacement(EntityLiving entity, ItemStack<?> item, Facing face, Location location) {
+    public boolean beforePlacement(EntityLiving<?> entity, ItemStack<?> item, Facing face, Location location) {
         AGE.setState(this, false);
 
         Block down = this.side(Facing.DOWN);

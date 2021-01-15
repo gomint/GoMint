@@ -179,7 +179,7 @@ public interface World {
      * @param includeEntities Should we return blocks only or also entities? True for entities, false without entities
      * @return either a list of collisions or null
      */
-    List<AxisAlignedBB> collisionCubes(Entity entity, AxisAlignedBB bb, boolean includeEntities);
+    List<AxisAlignedBB> collisionCubes(Entity<?> entity, AxisAlignedBB bb, boolean includeEntities);
 
     /**
      * Create a entity drop in the given world
@@ -217,7 +217,7 @@ public interface World {
      * @param <T>            type of entity
      * @return world for chaining
      */
-    <T extends Entity> World iterateEntities(Class<T> entityClass, Consumer<T> entityConsumer);
+    <T extends Entity<T>> World iterateEntities(Class<T> entityClass, Consumer<T> entityConsumer);
 
     /**
      * Iterate over all loaded chunks in this  world
@@ -312,6 +312,6 @@ public interface World {
      * @param tag for which we want to search
      * @return set of entities which have the tag applied
      */
-    Set<Entity> entitiesByTag(String tag);
+    Set<Entity<?>> entitiesByTag(String tag);
 
 }

@@ -7,8 +7,8 @@
 
 package io.gomint.server.permission;
 
+import io.gomint.entity.EntityPlayer;
 import io.gomint.permission.Group;
-import io.gomint.server.entity.EntityPlayer;
 import it.unimi.dsi.fastutil.objects.Object2BooleanMap;
 import it.unimi.dsi.fastutil.objects.Object2BooleanOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectSet;
@@ -68,7 +68,7 @@ public class PermissionManager implements io.gomint.permission.PermissionManager
     @Override
     public boolean has(String permission, boolean defaultValue ) {
         // Check if player is op
-        if ( this.player.isOp() ) {
+        if ( this.player.op() ) {
             return true;
         }
 

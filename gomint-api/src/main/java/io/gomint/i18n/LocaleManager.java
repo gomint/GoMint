@@ -271,7 +271,7 @@ public class LocaleManager {
      *
      * @param loader which is used to load specific locale resources
      */
-    public void registerLoader( ResourceLoader loader ) {
+    public void registerLoader( ResourceLoader<?> loader ) {
         resourceManager.registerLoader( loader );
     }
 

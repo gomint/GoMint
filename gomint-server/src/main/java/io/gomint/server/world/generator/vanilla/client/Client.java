@@ -139,7 +139,7 @@ public class Client implements ConnectionWithState {
         this.debugUI = debugUI;
         this.queue = queue;
 
-        this.networkUpdater = this.world.getServer().executorService().scheduleAtFixedRate(this::update, Values.CLIENT_TICK_MS, Values.CLIENT_TICK_MS, TimeUnit.MILLISECONDS);
+        this.networkUpdater = this.world.getServer().executorService().scheduleAtFixedRate(this::update, (int) Values.CLIENT_TICK_MS, (int) Values.CLIENT_TICK_MS, TimeUnit.MILLISECONDS);
 
         this.socket = new ClientSocket(LoggerFactory.getLogger(NetworkManager.class));
 
@@ -480,7 +480,7 @@ public class Client implements ConnectionWithState {
 
                 int amountOfSubchunks = chunk.getSubChunkCount();
 
-                LOGGER.debug("Got {} sub chunks for {} / {}", amountOfSubchunks, chunkAdapter.getX(), chunkAdapter.z());
+                LOGGER.debug("Got {} sub chunks for {} / {}", amountOfSubchunks, chunkAdapter.x(), chunkAdapter.z());
 
                 for (int i = 0; i < amountOfSubchunks; i++) {
                     ChunkSlice slice = chunkAdapter.ensureSlice(i);
@@ -536,7 +536,7 @@ public class Client implements ConnectionWithState {
                     }
                 }
               
-                LOGGER.debug("Adding chunk {} / {} to cache", chunkAdapter.getX(), chunkAdapter.z());
+                LOGGER.debug("Adding chunk {} / {} to cache", chunkAdapter.x(), chunkAdapter.z());
 
                 chunkAdapter.setPopulated(true);
                 chunkAdapter.calculateHeightmap(240);

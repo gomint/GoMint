@@ -8,7 +8,7 @@ import io.gomint.entity.EntityLiving;
  * @version 1.0
  * @stability 3
  */
-public interface EntitySilverfish extends EntityLiving {
+public interface EntitySilverfish extends EntityLiving<EntitySilverfish> {
 
     /**
      * Create a new entity silverfish with no config

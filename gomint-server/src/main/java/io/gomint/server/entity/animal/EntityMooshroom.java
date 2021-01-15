@@ -13,7 +13,7 @@ import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.world.WorldAdapter;
 
 @RegisterInfo(sId = "minecraft:mooshroom")
-public class EntityMooshroom extends EntityAgeableAnimal implements io.gomint.entity.animal.EntityMooshroom {
+public class EntityMooshroom extends EntityAgeableAnimal<io.gomint.entity.animal.EntityMooshroom> implements io.gomint.entity.animal.EntityMooshroom {
     /**
      * Constructs a new EntityLiving
      *
@@ -33,13 +33,13 @@ public class EntityMooshroom extends EntityAgeableAnimal implements io.gomint.en
     }
 
     private void initEntity() {
-        this.addAttribute(Attribute.HEALTH);
-        this.setMaxHealth(20);
-        this.setHealth(20);
-        if (this.isBaby()) {
-            this.setSize(0.45f, 0.7f);
+        this.attribute(Attribute.HEALTH);
+        this.maxHealth(20);
+        this.health(20);
+        if (this.baby()) {
+            this.size(0.45f, 0.7f);
         } else {
-            this.setSize(0.9f, 1.4f);
+            this.size(0.9f, 1.4f);
         }
     }
 

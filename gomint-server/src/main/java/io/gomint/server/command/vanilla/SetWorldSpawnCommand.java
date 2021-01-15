@@ -26,14 +26,14 @@ import java.util.Map;
 public class SetWorldSpawnCommand extends Command {
 
     @Override
-    public CommandOutput execute(CommandSender sender, String alias, Map<String, Object> arguments) {
+    public CommandOutput execute(CommandSender<?> sender, String alias, Map<String, Object> arguments) {
         if (!(sender instanceof PlayerCommandSender)) {
             return CommandOutput.failure("Executor is required to be a player");
         }
 
         EntityPlayer executor = (EntityPlayer) sender;
-        WorldAdapter affectedWorld = executor.getWorld();
-        Location worldSpawnLocation = executor.getLocation();
+        WorldAdapter affectedWorld = executor.world();
+        Location worldSpawnLocation = executor.location();
 
         // Handling argument: spawnPoint
         BlockPosition spawnPoint = (BlockPosition) arguments.get("spawnPoint");

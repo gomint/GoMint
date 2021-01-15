@@ -50,7 +50,7 @@ public class SmokerTileEntity extends TileEntity implements InventoryHolder {
     }
 
     @Override
-    public void interact(Entity entity, Facing face, Vector facePos, ItemStack<?> item) {
+    public void interact(Entity<?> entity, Facing face, Vector facePos, ItemStack<?> item) {
         if (entity instanceof EntityPlayer) {
             ((EntityPlayer) entity).openInventory(this.inventory);
             this.smeltingComponent.interact(entity, face, facePos, item);

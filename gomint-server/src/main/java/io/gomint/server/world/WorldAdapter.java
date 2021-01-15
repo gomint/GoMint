@@ -318,7 +318,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
                     sendToVisible(vector.toBlockPosition(), soundPacket, entity -> true);
                 } else {
                     io.gomint.server.entity.EntityPlayer implPlayer = (io.gomint.server.entity.EntityPlayer) player;
-                    implPlayer.getConnection().addToSendQueue(soundPacket);
+                    implPlayer.connection().addToSendQueue(soundPacket);
                 }
 
                 break;
@@ -344,9 +344,9 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
         for (io.gomint.server.entity.EntityPlayer player : this.players.keySet()) {
             PacketSetSpawnPosition packet = new PacketSetSpawnPosition();
             packet.setSpawnType(PacketSetSpawnPosition.SpawnType.WORLD);
-            packet.setPlayerPosition(player.getPosition().toBlockPosition());
+            packet.setPlayerPosition(player.position().toBlockPosition());
             packet.setWorldSpawn(location.toBlockPosition());
-            player.getConnection().addToSendQueue(packet);
+            player.connection().addToSendQueue(packet);
         }
 
         return this;
@@ -600,7 +600,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
      * @param entityId The entity's unique ID
      * @return The entity if found or null otherwise
      */
-    public Entity findEntity(long entityId) {
+    public Entity<?> findEntity(long entityId) {
         return this.entityManager.findEntity(entityId);
     }
 
@@ -610,7 +610,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
      * @param entity The entity to spawn
      * @param vector The vector which contains the position of the spawn
      */
-    public void spawnEntityAt(Entity entity, Vector vector) {
+    public void spawnEntityAt(Entity<?> entity, Vector vector) {
         this.spawnEntityAt(entity, vector.getX(), vector.getY(), vector.getZ());
     }
 
@@ -622,7 +622,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
      * @param positionY The y coordinate to spawn the entity at
      * @param positionZ The z coordinate to spawn the entity at
      */
-    public void spawnEntityAt(Entity entity, float positionX, float positionY, float positionZ) {
+    public void spawnEntityAt(Entity<?> entity, float positionX, float positionY, float positionZ) {
         this.entityManager.spawnEntityAt(entity, positionX, positionY, positionZ);
     }
 
@@ -636,7 +636,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
      * @param yaw       The yaw value of the entity ; will be applied to both the entity's body and head
      * @param pitch     The pitch value of the entity
      */
-    public void spawnEntityAt(Entity entity, float positionX, float positionY, float positionZ, float yaw, float pitch) {
+    public void spawnEntityAt(Entity<?> entity, float positionX, float positionY, float positionZ, float yaw, float pitch) {
         this.entityManager.spawnEntityAt(entity, positionX, positionY, positionZ, yaw, pitch);
     }
 
@@ -832,7 +832,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
      */
     private void packageChunk(ChunkAdapter chunk, Delegate2<Long, ChunkAdapter> callback) {
         chunk.createPackagedData(null, false); // We generate some garbage to warm caches
-        callback.invoke(CoordinateUtils.toLong(chunk.getX(), chunk.z()), chunk);
+        callback.invoke(CoordinateUtils.toLong(chunk.x(), chunk.z()), chunk);
     }
 
     // ==================================== NETWORKING HELPERS ==================================== //
@@ -844,19 +844,19 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
      * @param packet    which should be sent
      * @param predicate which decides over each entity if they will get the packet sent or not
      */
-    public void sendToVisible(BlockPosition position, Packet packet, Predicate<Entity> predicate) {
+    public void sendToVisible(BlockPosition position, Packet packet, Predicate<Entity<?>> predicate) {
         int posX = CoordinateUtils.fromBlockToChunk(position.x());
         int posZ = CoordinateUtils.fromBlockToChunk(position.z());
         this.sendToVisible(posX, posZ, packet, predicate);
     }
 
-    public void sendToVisible(int posX, int posZ, Packet packet, Predicate<Entity> predicate) {
+    public void sendToVisible(int posX, int posZ, Packet packet, Predicate<Entity<?>> predicate) {
         for (EntityPlayer player : this.onlinePlayers()) {
             io.gomint.server.entity.EntityPlayer p = (io.gomint.server.entity.EntityPlayer) player;
 
             if (p.knowsChunk(posX, posZ) &&
                 predicate.test(player)) {
-                ((io.gomint.server.entity.EntityPlayer) player).getConnection().addToSendQueue(packet);
+                ((io.gomint.server.entity.EntityPlayer) player).connection().addToSendQueue(packet);
             }
         }
     }
@@ -883,7 +883,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
         // Fast out
         while (!this.asyncChunkTasks.isEmpty()) {
             try {
-                AsyncChunkTask task = this.asyncChunkTasks.poll(Values.CLIENT_TICK_MS, TimeUnit.MILLISECONDS);
+                AsyncChunkTask task = this.asyncChunkTasks.poll((long) Values.CLIENT_TICK_MS, TimeUnit.MILLISECONDS);
                 if (task == null) {
                     return;
                 }
@@ -902,7 +902,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
                         AsyncChunkSaveTask save = (AsyncChunkSaveTask) task;
                         chunk = save.getChunk();
 
-                        LOGGER.debug("Async saving of chunk {} / {}", chunk.getX(), chunk.z());
+                        LOGGER.debug("Async saving of chunk {} / {}", chunk.x(), chunk.z());
                         this.saveChunk(chunk);
 
                         break;
@@ -963,7 +963,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
                 Object2ObjectMap.Entry<io.gomint.server.entity.EntityPlayer, ChunkAdapter> entry = iterator.next();
                 io.gomint.server.entity.EntityPlayer player = entry.getKey();
                 if (player.knowsChunk(adapter)) {
-                    player.getBlockUpdates().add(pos);
+                    player.blockUpdates().add(pos);
                 }
             }
         }
@@ -1016,8 +1016,8 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
      * @param exception a entity which should not be included in the list
      * @return either null if there are no entities or a collection of entities
      */
-    public Collection<Entity> getNearbyEntities(AxisAlignedBB bb, Entity exception) {
-        Set<Entity> nearby = null;
+    public Collection<Entity<?>> getNearbyEntities(AxisAlignedBB bb, Entity<?> exception) {
+        Set<Entity<?>> nearby = null;
 
         int minX = MathUtils.fastFloor((bb.minX() - 2) / 16);
         int maxX = MathUtils.fastCeil((bb.maxX() + 2) / 16);
@@ -1028,10 +1028,10 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
             for (int z = minZ; z <= maxZ; ++z) {
                 ChunkAdapter chunk = this.getChunk(x, z);
                 if (chunk != null && chunk.getEntities() != null) {
-                    for (Long2ObjectMap.Entry<io.gomint.entity.Entity> entry : chunk.getEntities().long2ObjectEntrySet()) {
-                        Entity entity = entry.getValue();
+                    for (Long2ObjectMap.Entry<io.gomint.entity.Entity<?>> entry : chunk.getEntities().long2ObjectEntrySet()) {
+                        Entity<?> entity = entry.getValue();
                         if (!entity.equals(exception)) {
-                            AxisAlignedBB entityBB = entity.getBoundingBox();
+                            AxisAlignedBB entityBB = entity.boundingBox();
                             if (entityBB.intersectsWith(bb)) {
                                 if (nearby == null) {
                                     nearby = new ObjectOpenHashSet<>();
@@ -1085,8 +1085,8 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
      * @param includePassThrough if the result should also include blocks which can normally be passed through
      * @return list of blocks with which the entity collides, or null when no block has been found
      */
-    public List<Block> getCollisionBlocks(io.gomint.entity.Entity entity, boolean includePassThrough) {
-        AxisAlignedBB bb = entity.getBoundingBox().grow(0.1f, 0.01f, 0.1f);
+    public List<Block> getCollisionBlocks(io.gomint.entity.Entity<?> entity, boolean includePassThrough) {
+        AxisAlignedBB bb = entity.boundingBox().grow(0.1f, 0.01f, 0.1f);
 
         int minX = MathUtils.fastFloor(bb.minX());
         int minY = MathUtils.fastFloor(bb.minY());
@@ -1099,7 +1099,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
     }
 
     @Override
-    public List<AxisAlignedBB> collisionCubes(io.gomint.entity.Entity entity, AxisAlignedBB bb,
+    public List<AxisAlignedBB> collisionCubes(io.gomint.entity.Entity<?> entity, AxisAlignedBB bb,
                                               boolean includeEntities) {
         int minX = MathUtils.fastFloor(bb.minX());
         int minY = MathUtils.fastFloor(bb.minY());
@@ -1111,14 +1111,14 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
         List<AxisAlignedBB> collisions = iterateBlocks(minX, maxX, minY, maxY, minZ, maxZ, bb, true, false);
 
         if (includeEntities) {
-            Collection<io.gomint.entity.Entity> entities = getNearbyEntities(bb.grow(0.25f, 0.25f, 0.25f), entity);
+            Collection<io.gomint.entity.Entity<?>> entities = getNearbyEntities(bb.grow(0.25f, 0.25f, 0.25f), entity);
             if (entities != null) {
-                for (io.gomint.entity.Entity entity1 : entities) {
+                for (io.gomint.entity.Entity<?> entity1 : entities) {
                     if (collisions == null) {
                         collisions = new ArrayList<>();
                     }
 
-                    collisions.add(entity1.getBoundingBox());
+                    collisions.add(entity1.boundingBox());
                 }
             }
         }
@@ -1154,7 +1154,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
 
         io.gomint.server.world.block.Block clickedBlock = (io.gomint.server.world.block.Block) blockClicked;
         boolean interacted = false;
-        if (!entity.isSneaking()) {
+        if (!entity.sneaking()) {
             interacted = clickedBlock.interact(entity, face, clickPosition, itemInHand);
         }
 
@@ -1162,7 +1162,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
         boolean itemInteracted = ((io.gomint.server.inventory.item.ItemStack<?>) itemInHand)
             .interact(entity, face, clickPosition, clickedBlock);
 
-        if ((!interacted && !itemInteracted) || entity.isSneaking()) {
+        if ((!interacted && !itemInteracted) || entity.sneaking()) {
             Block block = ((io.gomint.server.inventory.item.ItemStack<?>) itemInHand).block();
             boolean canBePlaced = block != null && !(itemInHand instanceof ItemAir);
             if (canBePlaced) {
@@ -1184,7 +1184,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
                     io.gomint.server.world.block.Block newBlock = replaceBlock.world().blockAt(replaceBlock.position());
                     playSound(null, new Vector(newBlock.position()), Sound.PLACE, (byte) 1, BlockRuntimeIDs.toBlockIdentifier(newBlock.getBlockId(), null).getRuntimeId());
 
-                    if (entity.getGamemode() != Gamemode.CREATIVE) {
+                    if (entity.gamemode() != Gamemode.CREATIVE) {
                         ((io.gomint.server.inventory.item.ItemStack<?>) itemInHand).afterPlacement();
                     }
                 }
@@ -1289,7 +1289,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
         worldEvent.setPosition(position);
 
         if (player != null) {
-            ((io.gomint.server.entity.EntityPlayer) player).getConnection().addToSendQueue(worldEvent);
+            ((io.gomint.server.entity.EntityPlayer) player).connection().addToSendQueue(worldEvent);
         } else {
             sendToVisible(position.toBlockPosition(), worldEvent, entity -> true);
         }
@@ -1315,7 +1315,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
             if (!drops.isEmpty()) {
                 for (ItemStack<?> itemStack : drops) {
                     EntityItem item = this.createItemDrop(new Vector(block.position()).add(0.5f, 0.5f, 0.5f), itemStack);
-                    item.setVelocity(new Vector(ThreadLocalRandom.current().nextFloat() * 0.2f - 0.1f, 0.2f, ThreadLocalRandom.current().nextFloat() * 0.2f - 0.1f));
+                    item.velocity(new Vector(ThreadLocalRandom.current().nextFloat() * 0.2f - 0.1f, 0.2f, ThreadLocalRandom.current().nextFloat() * 0.2f - 0.1f));
                 }
             }
 
@@ -1355,7 +1355,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
             0.2f, ThreadLocalRandom.current().nextFloat() * 0.2f - 0.1f);
 
         EntityItem item = this.createItemDrop(vector, drop);
-        item.setVelocity(motion);
+        item.velocity(motion);
     }
 
     @Override
@@ -1429,7 +1429,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
         spawnEntityAt(xpOrb, location.getX(), location.getY(), location.getZ(), location.yaw(), location.pitch());
     }
 
-    public void removeEntity(io.gomint.server.entity.Entity entity) {
+    public void removeEntity(io.gomint.server.entity.Entity<?> entity) {
         // Just tell the entity manager, it will handle the rest
         this.entityManager.despawnEntity(entity);
     }
@@ -1477,7 +1477,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
         // Iterate over all chunks
         this.chunkCache.iterateAll(chunkAdapter -> {
             int chunkZ = chunkAdapter.z();
-            int chunkX = chunkAdapter.getX();
+            int chunkX = chunkAdapter.x();
 
             for (int i = 0; i < 2; i++) {
                 for (int x = 0; x < 16; x++) {
@@ -1505,7 +1505,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
     }
 
     @Override
-    public <T extends Entity> WorldAdapter iterateEntities(Class<T> entityClass, Consumer<T> entityConsumer) {
+    public <T extends Entity<T>> WorldAdapter iterateEntities(Class<T> entityClass, Consumer<T> entityConsumer) {
         // Iterate over all chunks
         this.chunkCache.iterateAll(chunkAdapter -> chunkAdapter.iterateEntities(entityClass, entityConsumer));
         return this;
@@ -1574,7 +1574,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
         // Set difficulty
         PacketSetDifficulty packetSetDifficulty = new PacketSetDifficulty();
         packetSetDifficulty.setDifficulty(this.difficulty.getDifficultyDegree());
-        player.getConnection().addToSendQueue(packetSetDifficulty);
+        player.connection().addToSendQueue(packetSetDifficulty);
     }
 
     /**
@@ -1608,7 +1608,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
     protected final void broadcastPacket(Packet packet) {
         for (EntityPlayer player : this.onlinePlayers()) {
             io.gomint.server.entity.EntityPlayer handle = (io.gomint.server.entity.EntityPlayer) player;
-            handle.getConnection().send(packet);
+            handle.connection().send(packet);
         }
     }
 
@@ -1658,7 +1658,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
         int ticks = this.getTimeAsTicks();
 
         for (io.gomint.server.entity.EntityPlayer player : this.players.keySet()) {
-            player.getConnection().sendWorldTime(ticks);
+            player.connection().sendWorldTime(ticks);
         }
     }
 
@@ -1667,7 +1667,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
     }
 
     @Override
-    public Set<Entity> entitiesByTag(String tag) {
+    public Set<Entity<?>> entitiesByTag(String tag) {
         return this.entityManager.findEntities(tag);
     }
 

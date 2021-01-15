@@ -564,7 +564,7 @@ public class GoMintServer implements GoMint, InventoryHolder {
 
         LOGGER.info("Starting shutdown of the main executor");
 
-        int wait = Values.CLIENT_TICK_MS;
+        int wait = (int) Values.CLIENT_TICK_MS;
         this.executorService.shutdown();
         while (!this.executorService.isTerminated() && wait-- > 0) {
             try {
@@ -712,7 +712,7 @@ public class GoMintServer implements GoMint, InventoryHolder {
     }
 
     @Override
-    public <T extends Entity> T createEntity(Class<T> entityClass) {
+    public <T extends Entity<T>> T createEntity(Class<T> entityClass) {
         return this.entities.create(entityClass);
     }
 
@@ -764,7 +764,7 @@ public class GoMintServer implements GoMint, InventoryHolder {
     public EntityPlayer findPlayerByName(String target) {
         for (WorldAdapter adapter : worldManager.getWorlds()) {
             for (EntityPlayer player : adapter.onlinePlayers()) {
-                if (player.getName().equalsIgnoreCase(target)) {
+                if (player.name().equalsIgnoreCase(target)) {
                     return player;
                 }
             }

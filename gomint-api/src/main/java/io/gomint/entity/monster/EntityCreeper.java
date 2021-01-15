@@ -8,7 +8,7 @@ import io.gomint.entity.EntityLiving;
  * @version 1.0
  * @stability 3
  */
-public interface EntityCreeper extends EntityLiving {
+public interface EntityCreeper extends EntityLiving<EntityCreeper> {
 
     /**
      * Create a new entity creeper with no config
@@ -24,13 +24,13 @@ public interface EntityCreeper extends EntityLiving {
      *
      * @param value true if this creeper should be charged, false if not
      */
-    void setCharged( boolean value );
+    EntityCreeper charged(boolean value );
 
     /**
      * Is the creeper charged?
      *
      * @return true if this creeper is charged, false if not
      */
-    boolean isCharged();
+    boolean charged();
 
 }

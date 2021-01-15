@@ -22,15 +22,15 @@ public class PlayerJoinListener implements EventListener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerJoin(PlayerJoinEvent event) {
         // Set to allow all permissions
-        event.player().getPermissionManager().permission("*", true);
+        event.player().permissionManager().permission("*", true);
 
         // Give this player the debug scoreboard
         // new DebugScoreboard(this.plugin, event.getPlayer());
 
         ItemDiamondSword sword = ItemDiamondSword.create(1);
-        event.player().getInventory().item(6, sword);
+        event.player().inventory().item(6, sword);
 
-        event.player().setLevel(27);
+        event.player().level(27);
     }
 
 }

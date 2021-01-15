@@ -10,7 +10,7 @@ import io.gomint.server.world.WorldAdapter;
 import java.util.Set;
 
 @RegisterInfo(sId = "minecraft:drowned")
-public class EntityDrowned extends EntityAgeable implements io.gomint.entity.monster.EntityDrowned {
+public class EntityDrowned extends EntityAgeable<io.gomint.entity.monster.EntityDrowned> implements io.gomint.entity.monster.EntityDrowned {
 
     /**
      * Constructs a new EntityLiving
@@ -31,13 +31,13 @@ public class EntityDrowned extends EntityAgeable implements io.gomint.entity.mon
     }
 
     private void initEntity() {
-        this.addAttribute(Attribute.HEALTH);
-        this.setMaxHealth(20);
-        this.setHealth(20);
-        if (this.isBaby()) {
-            this.setSize(0.3f, 0.975f);
+        this.attribute(Attribute.HEALTH);
+        this.maxHealth(20);
+        this.health(20);
+        if (this.baby()) {
+            this.size(0.3f, 0.975f);
         } else {
-            this.setSize(0.6f, 1.95f);
+            this.size(0.6f, 1.95f);
         }
     }
 
@@ -47,7 +47,7 @@ public class EntityDrowned extends EntityAgeable implements io.gomint.entity.mon
     }
 
     @Override
-    public Set<String> getTags() {
+    public Set<String> tags() {
         return EntityTags.HOSTILE_MOB;
     }
 

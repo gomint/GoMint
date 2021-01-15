@@ -43,7 +43,7 @@ public class EnderChestInventory extends ContainerInventory<io.gomint.inventory.
 
     @Override
     public WorldAdapter world() {
-        return ((EntityPlayer) this.owner).getWorld();
+        return ((EntityPlayer) this.owner).world();
     }
 
     @Override

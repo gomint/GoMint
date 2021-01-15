@@ -44,7 +44,7 @@ public class Ladder extends Block implements BlockLadder {
     }
 
     @Override
-    public void stepOn( Entity entity ) {
+    public void stepOn(Entity<?> entity ) {
         // Reset fall distance
         entity.resetFallDistance();
     }

@@ -40,13 +40,13 @@ public class TNT extends Block implements BlockTNT {
     }
 
     @Override
-    public boolean beforePlacement(EntityLiving entity, ItemStack<?> item, Facing face, Location location) {
+    public boolean beforePlacement(EntityLiving<?> entity, ItemStack<?> item, Facing face, Location location) {
         EXPLODE.setState(this, false); // Don't explode on breakage
         return super.beforePlacement(entity, item, face, location);
     }
 
     @Override
-    public boolean interact(Entity entity, Facing face, Vector facePos, ItemStack<?> item ) {
+    public boolean interact(Entity<?> entity, Facing face, Vector facePos, ItemStack<?> item ) {
         if ( entity instanceof EntityPlayer && item instanceof ItemFlintAndSteel ) {
             io.gomint.server.inventory.item.ItemStack<?> itemStack = (io.gomint.server.inventory.item.ItemStack<?>) item;
             itemStack.afterPlacement();
@@ -67,7 +67,7 @@ public class TNT extends Block implements BlockTNT {
 
         // Spawn tnt entity
         EntityPrimedTNT entityTNT = new EntityPrimedTNT( this.world, this.location.add( 0.5f, 0.5f, 0.5f ), primeTicks );
-        this.world.spawnEntityAt( entityTNT, entityTNT.getPositionX(), entityTNT.getPositionY(), entityTNT.getPositionZ() );
+        this.world.spawnEntityAt( entityTNT, entityTNT.positionX(), entityTNT.positionY(), entityTNT.positionZ() );
     }
 
     @Override

@@ -572,12 +572,12 @@ public class LevelDBWorldAdapter extends WorldAdapter {
             WriteBatch batch = new WriteBatch();
 
             compound.writeTo(buf, ByteOrder.LITTLE_ENDIAN);
-            byte[] persistenceId = this.getPersistenceId(player.getUUID());
+            byte[] persistenceId = this.getPersistenceId(player.uuid());
             if (persistenceId == null) {
                 UUID uuid = UuidUtil.getTimeBasedUuid();
 
                 NBTTagCompound persistenceIdInformation = new NBTTagCompound("");
-                persistenceIdInformation.addValue("MsaId", player.getUUID().toString());
+                persistenceIdInformation.addValue("MsaId", player.uuid().toString());
                 persistenceIdInformation.addValue("SelfSignedId", "");
                 persistenceIdInformation.addValue("ServerId", "player_server_" + uuid.toString());
 
@@ -585,7 +585,7 @@ public class LevelDBWorldAdapter extends WorldAdapter {
                 persistenceIdInformation.writeTo(pbuf, ByteOrder.LITTLE_ENDIAN);
 
                 persistenceId = ("player_server_" + uuid.toString()).getBytes();
-                batch.put(PooledByteBufAllocator.DEFAULT.directBuffer().writeBytes(("player_" + player.getUUID()).getBytes()), pbuf);
+                batch.put(PooledByteBufAllocator.DEFAULT.directBuffer().writeBytes(("player_" + player.uuid()).getBytes()), pbuf);
             }
 
             batch.put(PooledByteBufAllocator.DEFAULT.directBuffer().writeBytes(persistenceId), buf);
@@ -601,7 +601,7 @@ public class LevelDBWorldAdapter extends WorldAdapter {
     @Override
     public boolean loadPlayer(EntityPlayer player) {
         try {
-            byte[] persistenceId = this.getPersistenceId(player.getUUID());
+            byte[] persistenceId = this.getPersistenceId(player.uuid());
             if (persistenceId != null) {
                 ByteBuf playerPersistenceId = PooledByteBufAllocator.DEFAULT.directBuffer().writeBytes(persistenceId);
                 byte[] playerNbtData = this.db.get(playerPersistenceId);

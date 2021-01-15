@@ -29,7 +29,7 @@ public class NoteBlock extends Block implements BlockNoteblock {
     }
 
     @Override
-    public boolean interact(Entity entity, Facing face, Vector facePos, ItemStack<?> item ) {
+    public boolean interact(Entity<?> entity, Facing face, Vector facePos, ItemStack<?> item ) {
         NoteblockTileEntity tileEntity = tileEntity();
         if ( tileEntity != null ) {
             tileEntity.interact( entity, face, facePos, item );

@@ -46,9 +46,9 @@ public class StationaryLava extends Liquid<BlockStationaryLava> implements Block
     }
 
     @Override
-    public void onEntityStanding(EntityLiving entityLiving) {
+    public void onEntityStanding(EntityLiving<?> entityLiving) {
         entityLiving.attack(4.0f, EntityDamageEvent.DamageSource.LAVA);
-        entityLiving.setBurning(15, TimeUnit.SECONDS);
+        entityLiving.burning(15, TimeUnit.SECONDS);
         entityLiving.multiplyFallDistance(0.5f);
     }
 

@@ -26,22 +26,22 @@ public class ItemEnderPearl extends ItemStack< io.gomint.inventory.item.ItemEnde
     @Override
     public boolean interact(EntityPlayer entity, Facing face, Vector clickPosition, Block clickedBlock ) {
         // Spawn ender pearl
-        EntityEnderpearl entityEnderpearl = new EntityEnderpearl( entity, entity.getWorld() );
+        EntityEnderpearl entityEnderpearl = new EntityEnderpearl( entity, entity.world() );
         ProjectileLaunchEvent event = new ProjectileLaunchEvent( entityEnderpearl, ProjectileLaunchEvent.Cause.THROWING_ENDER_PEARL );
-        entity.getWorld().getServer().pluginManager().callEvent( event );
+        entity.world().getServer().pluginManager().callEvent( event );
 
         if ( !event.cancelled() ) {
-            entity.getWorld().spawnEntityAt( entityEnderpearl, entityEnderpearl.getPositionX(), entityEnderpearl.getPositionY(),
-                entityEnderpearl.getPositionZ(), entityEnderpearl.getYaw(), entityEnderpearl.getPitch() );
+            entity.world().spawnEntityAt( entityEnderpearl, entityEnderpearl.positionX(), entityEnderpearl.positionY(),
+                entityEnderpearl.positionZ(), entityEnderpearl.yaw(), entityEnderpearl.pitch() );
         }
 
         // Subtract amount
         int newAmount = this.amount() - 1;
         if ( newAmount == 0 ) {
-            entity.getInventory().item( entity.getInventory().itemInHandSlot(), ItemAir.create( 0 ) );
+            entity.inventory().item( entity.inventory().itemInHandSlot(), ItemAir.create( 0 ) );
         } else {
             this.amount( newAmount );
-            entity.getInventory().item( entity.getInventory().itemInHandSlot(), this );
+            entity.inventory().item( entity.inventory().itemInHandSlot(), this );
         }
 
         return true;

@@ -23,10 +23,10 @@ public class ItemChainChestplate extends ItemChainArmor<io.gomint.inventory.item
     @Override
     public boolean interact(EntityPlayer entity, Facing face, Vector clickPosition, Block clickedBlock ) {
         if ( clickedBlock == null ) {
-            if ( isBetter( (ItemStack<?>) entity.getArmorInventory().chestplate() ) ) {
-                ItemStack<?> old = (ItemStack<?>) entity.getArmorInventory().chestplate();
-                entity.getArmorInventory().chestplate( this );
-                entity.getInventory().item( entity.getInventory().itemInHandSlot(), old );
+            if ( isBetter( (ItemStack<?>) entity.armorInventory().chestplate() ) ) {
+                ItemStack<?> old = (ItemStack<?>) entity.armorInventory().chestplate();
+                entity.armorInventory().chestplate( this );
+                entity.inventory().item( entity.inventory().itemInHandSlot(), old );
             }
         }
 

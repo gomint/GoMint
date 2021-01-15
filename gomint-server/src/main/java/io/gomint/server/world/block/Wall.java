@@ -302,7 +302,7 @@ public class Wall extends Block implements BlockWall {
     }
 
     @Override
-    public boolean beforePlacement(EntityLiving entity, ItemStack<?> item, Facing face, Location location) {
+    public boolean beforePlacement(EntityLiving<?> entity, ItemStack<?> item, Facing face, Location location) {
         this.update();
         return super.beforePlacement(entity, item, face, location);
     }

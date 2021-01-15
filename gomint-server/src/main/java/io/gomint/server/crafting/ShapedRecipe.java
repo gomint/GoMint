@@ -9,7 +9,6 @@ package io.gomint.server.crafting;
 
 import io.gomint.inventory.item.ItemAir;
 import io.gomint.inventory.item.ItemStack;
-import io.gomint.inventory.item.ItemType;
 import io.gomint.jraknet.PacketBuffer;
 import io.gomint.server.inventory.Inventory;
 import io.gomint.server.network.packet.Packet;
@@ -85,7 +84,7 @@ public class ShapedRecipe extends CraftingRecipe {
     }
 
     @Override
-    public ItemStack<?>[] getIngredients() {
+    public ItemStack<?>[] ingredients() {
         if (this.ingredients == null) {
             // Got to sort out possible AIR slots and combine types:
             this.ingredients = new ArrayList<>();
@@ -129,7 +128,7 @@ public class ShapedRecipe extends CraftingRecipe {
         }
 
         // Write recipe UUID
-        buffer.writeUUID(this.getUUID());
+        buffer.writeUUID(this.uuid());
         buffer.writeString(this.block);
         buffer.writeSignedVarInt(this.getPriority());
         buffer.writeUnsignedVarInt(this.id);
@@ -138,7 +137,7 @@ public class ShapedRecipe extends CraftingRecipe {
     @Override
     public int[] isCraftable(Inventory<?> inputInventory) {
         ItemStack<?>[] inputItems = inputInventory.contents();
-        ItemStack<?>[] ingredients = getIngredients();
+        ItemStack<?>[] ingredients = this.ingredients();
         int[] consumeSlots = new int[ingredients.length];
         Arrays.fill(consumeSlots, -1);
 

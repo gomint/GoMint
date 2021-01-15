@@ -26,7 +26,7 @@ public interface Chunk {
      *
      * @return x coordinate of the chunk
      */
-    int getX();
+    int x();
 
     /**
      * Z coordinate of the chunk
@@ -63,7 +63,7 @@ public interface Chunk {
      * @param entityConsumer which gets called for every found entity
      * @param <T>            type of entity
      */
-    <T extends Entity> Chunk iterateEntities( Class<T> entityClass, Consumer<T> entityConsumer );
+    <T extends Entity<?>> Chunk iterateEntities( Class<T> entityClass, Consumer<T> entityConsumer );
 
     /**
      * Set the block at the position to the one given in this method call. Please only use this in

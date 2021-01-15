@@ -10,7 +10,7 @@ import io.gomint.entity.EntityPlayer;
  */
 public class PlayerInteractWithEntityEvent extends CancellablePlayerEvent<PlayerInteractWithEntityEvent> {
 
-    private final Entity entity;
+    private final Entity<?> entity;
 
     /**
      * Create a new interaction event
@@ -18,7 +18,7 @@ public class PlayerInteractWithEntityEvent extends CancellablePlayerEvent<Player
      * @param player    which interacted with the entity
      * @param entity    the entity with which the player interacted
      */
-    public PlayerInteractWithEntityEvent( EntityPlayer player, Entity entity ) {
+    public PlayerInteractWithEntityEvent( EntityPlayer player, Entity<?> entity ) {
         super( player );
         this.entity = entity;
     }
@@ -28,7 +28,7 @@ public class PlayerInteractWithEntityEvent extends CancellablePlayerEvent<Player
      *
      * @return entity which was interacted
      */
-    public Entity entity() {
+    public Entity<?> entity() {
         return entity;
     }
 

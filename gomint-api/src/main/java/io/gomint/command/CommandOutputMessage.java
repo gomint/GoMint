@@ -16,9 +16,9 @@ import java.util.List;
  */
 public class CommandOutputMessage {
 
-    private boolean success;
-    private String format;
-    private List<String> parameters;
+    private final boolean success;
+    private final String format;
+    private final List<String> parameters;
 
     public CommandOutputMessage(boolean success, String format, List<String> parameters) {
         this.success = success;
@@ -26,15 +26,15 @@ public class CommandOutputMessage {
         this.parameters = parameters;
     }
 
-    public boolean isSuccess() {
+    public boolean success() {
         return success;
     }
 
-    public String getFormat() {
+    public String format() {
         return format;
     }
 
-    public List<String> getParameters() {
+    public List<String> parameters() {
         return parameters;
     }
 

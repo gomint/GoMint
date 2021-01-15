@@ -8,7 +8,7 @@ import io.gomint.entity.EntityLiving;
  * @version 1.0
  * @stability 3
  */
-public interface EntityBlaze extends EntityLiving {
+public interface EntityBlaze extends EntityLiving<EntityBlaze> {
 
     /**
      * Create a new entity blaze with no config

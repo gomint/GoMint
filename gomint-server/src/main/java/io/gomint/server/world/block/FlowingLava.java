@@ -42,10 +42,10 @@ public class FlowingLava extends Liquid<BlockFlowingLava> implements BlockFlowin
     }
 
     @Override
-    public void onEntityStanding( EntityLiving entityLiving ) {
+    public void onEntityStanding(EntityLiving<?> entityLiving ) {
         EntityDamageEvent damageEvent = new EntityDamageEvent( entityLiving, EntityDamageEvent.DamageSource.LAVA, 4.0f );
         entityLiving.damage( damageEvent );
-        entityLiving.setBurning( 15, TimeUnit.SECONDS );
+        entityLiving.burning( 15, TimeUnit.SECONDS );
         entityLiving.multiplyFallDistance( 0.5f );
     }
 

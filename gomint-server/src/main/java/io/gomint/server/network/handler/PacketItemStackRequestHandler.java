@@ -70,7 +70,7 @@ public class PacketItemStackRequestHandler implements PacketHandler<PacketItemSt
 
             for (InventoryAction action : request.getActions()) {
                 if (action instanceof InventoryDestroyCreativeAction) {
-                    if (connection.getEntity().getGamemode() == Gamemode.CREATIVE) {
+                    if (connection.getEntity().gamemode() == Gamemode.CREATIVE) {
                         InventoryDestroyCreativeAction destroyCreativeAction = (InventoryDestroyCreativeAction) action;
                         ItemStackRequestSlotInfo source = destroyCreativeAction.getSource();
 
@@ -94,7 +94,7 @@ public class PacketItemStackRequestHandler implements PacketHandler<PacketItemSt
                         resp = new PacketItemStackResponse.Response(PacketItemStackResponse.ResponseResult.Error, request.getRequestId(), null);
                     }
                 } else if (action instanceof InventoryGetCreativeAction) {
-                    if (connection.getEntity().getGamemode() == Gamemode.CREATIVE) {
+                    if (connection.getEntity().gamemode() == Gamemode.CREATIVE) {
                         int slot = ((InventoryGetCreativeAction) action).getCreativeItemId();
                         ItemStack<?> item = (ItemStack<?>) connection.getServer().creativeInventory().item(slot);
                         item = (ItemStack<?>) item.clone().amount(64);
@@ -133,8 +133,8 @@ public class PacketItemStackRequestHandler implements PacketHandler<PacketItemSt
                 } else if (action instanceof InventoryDropAction) {
                     resp = handleInventoryDrop((InventoryDropAction) action, connection, transactionGroup, request, session);
                 } else if (action instanceof InventoryCraftAction) {
-                    if (connection.getEntity().getCurrentOpenContainer() != null &&
-                        connection.getEntity().getCurrentOpenContainer() instanceof EnchantmentTableInventory) {
+                    if (connection.getEntity().currentOpenContainer() != null &&
+                        connection.getEntity().currentOpenContainer() instanceof EnchantmentTableInventory) {
                         session = new EnchantingSession(connection)
                             .selectOption(((InventoryCraftAction) action).getRecipeId());
                     } else {
@@ -225,8 +225,8 @@ public class PacketItemStackRequestHandler implements PacketHandler<PacketItemSt
         }
 
         DropItemTransaction<?> dropItemTransaction = new DropItemTransaction<>(
-            connection.getEntity().getLocation().add(0, connection.getEntity().getEyeHeight(), 0),
-            connection.getEntity().getDirection().normalize().multiply(0.4f),
+            connection.getEntity().location().add(0, connection.getEntity().eyeHeight(), 0),
+            connection.getEntity().direction().normalize().multiply(0.4f),
             source.clone().amount(dropAction.getAmount()));
 
         transactionGroup.addTransaction(inventoryTransactionSource);
@@ -349,21 +349,21 @@ public class PacketItemStackRequestHandler implements PacketHandler<PacketItemSt
     private Inventory<?> getInventory(EntityPlayer entity, byte windowId, Session session) {
         switch (windowId) {
             case WindowMagicNumbers.ARMOR:
-                return entity.getArmorInventory();
+                return entity.armorInventory();
             case WindowMagicNumbers.OFFHAND:
                 return entity.getOffhandInventory();
             case WindowMagicNumbers.HOTBAR:
             case WindowMagicNumbers.INVENTORY:
             case WindowMagicNumbers.COMBINED_INVENTORY:
-                return entity.getInventory();
+                return entity.inventory();
             case WindowMagicNumbers.CURSOR:
                 return entity.getCursorInventory();
             case WindowMagicNumbers.ENCHANTMENT_TABLE_INPUT:
             case WindowMagicNumbers.ENCHANTMENT_TABLE_MATERIAL:
             case WindowMagicNumbers.CONTAINER:
-                return entity.getCurrentOpenContainer();
+                return entity.currentOpenContainer();
             case WindowMagicNumbers.CRAFTING_INPUT:
-                return entity.getCraftingInputInventory();
+                return entity.craftingInputInventory();
             case WindowMagicNumbers.CRAFTING_OUTPUT:
             case WindowMagicNumbers.CREATED_OUTPUT:
                 return session.getOutput();

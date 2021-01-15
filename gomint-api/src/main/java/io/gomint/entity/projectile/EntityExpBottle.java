@@ -14,7 +14,7 @@ import io.gomint.GoMint;
  * @version 1.0
  * @stability 3
  */
-public interface EntityExpBottle extends EntityProjectile {
+public interface EntityExpBottle extends EntityProjectile<EntityExpBottle> {
 
     /**
      * Create a new entity exp bottle

@@ -32,7 +32,7 @@ public class Explosion {
 
     private static final float STEP_LENGTH = 0.3f;
     private final float size;
-    private final Entity source;
+    private final Entity<?> source;
 
     // Temporary values
     private final Vector tempRay = new Vector( 0, 0, 0 );
@@ -40,7 +40,7 @@ public class Explosion {
     private final Set<Block> affectedBlocks = new HashSet<>();
     private Block currentBlock;
 
-    public Explosion(float size, Entity source) {
+    public Explosion(float size, Entity<?> source) {
         this.size = size;
         this.source = source;
     }
@@ -85,9 +85,9 @@ public class Explosion {
             this.tempRay.setY( ( this.tempRay.getY() / distanceToBorder ) * STEP_LENGTH );
             this.tempRay.setZ( ( this.tempRay.getZ() / distanceToBorder ) * STEP_LENGTH );
 
-            float directionX = this.source.getPositionX();
-            float directionY = this.source.getPositionY();
-            float directionZ = this.source.getPositionZ();
+            float directionX = this.source.positionX();
+            float directionY = this.source.positionY();
+            float directionZ = this.source.positionZ();
 
             for (double blastForce = this.size * ( 0.7f + ThreadLocalRandom.current().nextFloat() * 0.6f ); blastForce > 0; blastForce -= 0.225f ) {
                 int newX = MathUtils.fastFloor( directionX );
@@ -108,7 +108,7 @@ public class Explosion {
                         break;
                     }
 
-                    this.currentBlock = this.source.getWorld().blockAt( this.tempBlock );
+                    this.currentBlock = this.source.world().blockAt( this.tempBlock );
                 }
 
                 if ( !( this.currentBlock instanceof Air ) ) {
@@ -149,26 +149,26 @@ public class Explosion {
 
         // Call explode event
         EntityExplodeEvent event = new EntityExplodeEvent( this.source, this.affectedBlocks, ( 1f / this.size ) * 100f );
-        this.source.getWorld().getServer().pluginManager().callEvent( event );
+        this.source.world().getServer().pluginManager().callEvent( event );
         if ( event.cancelled() ) {
             return;
         }
 
-        Location sourceLocation = this.source.getLocation();
+        Location sourceLocation = this.source.location();
         float explosionDiameter = this.size * 2f;
 
-        float minX = MathUtils.fastFloor( this.source.getPositionX() - explosionDiameter - 1 );
-        float maxX = MathUtils.fastCeil( this.source.getPositionX() + explosionDiameter + 1 );
-        float minY = MathUtils.fastFloor( this.source.getPositionY() - explosionDiameter - 1 );
-        float maxY = MathUtils.fastCeil( this.source.getPositionY() + explosionDiameter + 1 );
-        float minZ = MathUtils.fastFloor( this.source.getPositionZ() - explosionDiameter - 1 );
-        float maxZ = MathUtils.fastCeil( this.source.getPositionZ() + explosionDiameter + 1 );
+        float minX = MathUtils.fastFloor( this.source.positionX() - explosionDiameter - 1 );
+        float maxX = MathUtils.fastCeil( this.source.positionX() + explosionDiameter + 1 );
+        float minY = MathUtils.fastFloor( this.source.positionY() - explosionDiameter - 1 );
+        float maxY = MathUtils.fastCeil( this.source.positionY() + explosionDiameter + 1 );
+        float minZ = MathUtils.fastFloor( this.source.positionZ() - explosionDiameter - 1 );
+        float maxZ = MathUtils.fastCeil( this.source.positionZ() + explosionDiameter + 1 );
 
         AxisAlignedBB explosionBox = new AxisAlignedBB( minX, minY, minZ, maxX, maxY, maxZ );
-        Collection<io.gomint.entity.Entity> entities = this.source.getWorld().getNearbyEntities( explosionBox, this.source );
+        Collection<io.gomint.entity.Entity<?>> entities = this.source.world().getNearbyEntities( explosionBox, this.source );
         if ( entities != null ) {
-            for ( io.gomint.entity.Entity entity : entities ) {
-                Location entityLocation = entity.getLocation();
+            for ( io.gomint.entity.Entity<?> entity : entities ) {
+                Location entityLocation = entity.location();
                 float distance = ( entityLocation.distance( sourceLocation ) / explosionDiameter );
                 if ( distance <= 1 ) {
                     Vector motion = entityLocation.subtract( sourceLocation ).normalize();
@@ -176,9 +176,9 @@ public class Explosion {
                     int damage = (int) ( ( ( impact * impact + impact ) / 2 ) * 8 * explosionDiameter + 1 );
 
                     EntityDamageByEntityEvent damageEvent = new EntityDamageByEntityEvent( entity, this.source, EntityDamageEvent.DamageSource.ENTITY_EXPLODE, damage );
-                    ( (Entity) entity ).damage( damageEvent );
+                    ( (Entity<?>) entity ).damage( damageEvent );
 
-                    entity.setVelocity( motion.multiply( impact ) );
+                    entity.velocity( motion.multiply( impact ) );
                 }
             }
         }
@@ -189,7 +189,7 @@ public class Explosion {
                 ( (BlockTNT) block ).prime( 0.5f + ThreadLocalRandom.current().nextFloat() );
             } else if ( ThreadLocalRandom.current().nextFloat() * 100 < event.randomDropChance() ) {
                 for ( ItemStack<?> drop : block.drops( ItemAir.create( 0 ) ) ) {
-                    this.source.getWorld().dropItem( new Vector(block.position()).add( 0.5f, 0.5f, 0.5f ), drop );
+                    this.source.world().dropItem( new Vector(block.position()).add( 0.5f, 0.5f, 0.5f ), drop );
                 }
             }
 
@@ -207,8 +207,8 @@ public class Explosion {
 
         // TODO: PacketExplode has been removed
 
-        this.source.getWorld().sendParticle( sourceLocation, Particle.HUGE_EXPLODE_SEED );
-        this.source.getWorld().sendLevelEvent( sourceLocation, LevelEvent.CAULDRON_EXPLODE, 0 );
+        this.source.world().sendParticle( sourceLocation, Particle.HUGE_EXPLODE_SEED );
+        this.source.world().sendLevelEvent( sourceLocation, LevelEvent.CAULDRON_EXPLODE, 0 );
     }
 
 }

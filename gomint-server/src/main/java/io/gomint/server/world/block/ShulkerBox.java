@@ -39,7 +39,7 @@ public class ShulkerBox extends Block implements BlockShulkerBox {
     }
 
     @Override
-    public boolean interact(Entity entity, Facing face, Vector facePos, ItemStack<?> item) {
+    public boolean interact(Entity<?> entity, Facing face, Vector facePos, ItemStack<?> item) {
         ShulkerBoxTileEntity tileEntity = this.tileEntity();
         tileEntity.interact(entity, face, facePos, item);
 

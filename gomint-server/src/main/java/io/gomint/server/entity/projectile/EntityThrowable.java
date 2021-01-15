@@ -7,6 +7,7 @@
 
 package io.gomint.server.entity.projectile;
 
+import io.gomint.entity.Entity;
 import io.gomint.server.entity.EntityLiving;
 import io.gomint.server.entity.EntityType;
 import io.gomint.server.world.WorldAdapter;
@@ -15,7 +16,7 @@ import io.gomint.server.world.WorldAdapter;
  * @author geNAZt
  * @version 1.0
  */
-public abstract class EntityThrowable extends EntityProjectile {
+public abstract class EntityThrowable<E extends Entity<E>> extends EntityProjectile<E> {
 
     /**
      * Construct a new Entity
@@ -24,12 +25,12 @@ public abstract class EntityThrowable extends EntityProjectile {
      * @param type    The type of the Entity
      * @param world   The world in which this entity is in
      */
-    protected EntityThrowable(EntityLiving shooter, EntityType type, WorldAdapter world) {
+    protected EntityThrowable(EntityLiving<?> shooter, EntityType type, WorldAdapter world) {
         super(shooter, type, world);
 
         // Set owning entity
         if (shooter != null) {
-            this.metadataContainer.putLong(5, shooter.getEntityId());
+            this.metadataContainer.putLong(5, shooter.id());
         }
     }
 
@@ -42,16 +43,16 @@ public abstract class EntityThrowable extends EntityProjectile {
         DRAG = 0.01f;
 
         // Set size
-        this.setSize(0.25f, 0.25f);
+        this.size(0.25f, 0.25f);
     }
 
     @Override
-    public boolean isCritical() {
+    public boolean critical() {
         return false;
     }
 
     @Override
-    public float getDamage() {
+    public float damage() {
         return 0;
     }
 

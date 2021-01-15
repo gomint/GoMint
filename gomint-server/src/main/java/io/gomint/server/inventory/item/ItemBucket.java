@@ -95,7 +95,7 @@ public class ItemBucket extends ItemStack<io.gomint.inventory.item.ItemBucket> i
                 if ( ( (BlockLiquid<?>) clickedBlock ).fillHeight() > 0.9f ) {
                     this.content( clickedBlock instanceof BlockFlowingWater || clickedBlock instanceof BlockStationaryWater ?
                         Content.WATER : Content.LAVA );
-                    entity.getInventory().item( entity.getInventory().itemInHandSlot(), this );
+                    entity.inventory().item( entity.inventory().itemInHandSlot(), this );
                     clickedBlock.blockType( BlockAir.class );
                     return true;
                 }

@@ -28,7 +28,7 @@ public class TestCommand extends Command {
     private TestPlugin plugin;
 
     @Override
-    public CommandOutput execute(CommandSender commandSender, String alias, Map<String, Object> arguments) {
+    public CommandOutput execute(CommandSender<?> commandSender, String alias, Map<String, Object> arguments) {
         World world = this.plugin.server().createWorld(String.valueOf(ThreadLocalRandom.current().nextInt()), new CreateOptions());
         EntityPlayer player = (EntityPlayer) commandSender;
         player.teleport(world.spawnLocation());

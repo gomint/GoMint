@@ -48,7 +48,7 @@ public class SubCommand extends Command {
     }
 
     @Override
-    public CommandOutput execute( CommandSender sender, String alias, Map<String, Object> arguments ) {
+    public CommandOutput execute(CommandSender<?> sender, String alias, Map<String, Object> arguments ) {
         // Look out for subCmd# keys
         for ( Map.Entry<String, Object> entry : arguments.entrySet() ) {
             if ( entry.getKey().equals( entry.getValue() ) && this.subCommands.containsKey( entry.getKey() ) ) {
@@ -87,7 +87,7 @@ public class SubCommand extends Command {
                         CommandValidator commandValidator = new CommandValidator();
                         overload.param( entry.getKey(), commandValidator );
 
-                        for ( Map.Entry<String, ParamValidator> validatorEntry : commandOverload.getParameters().entrySet() ) {
+                        for ( Map.Entry<String, ParamValidator<?>> validatorEntry : commandOverload.parameters().entrySet() ) {
                             overload.param( validatorEntry.getKey(), validatorEntry.getValue() );
                         }
 

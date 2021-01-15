@@ -27,13 +27,13 @@ public class PacketCommandRequestHandler implements PacketHandler<PacketCommandR
         if ( commandOutput != null ) {
 
             PacketCommandOutput packetCommandOutput = new PacketCommandOutput();
-            packetCommandOutput.setSuccess(commandOutput.isSuccess());
+            packetCommandOutput.setSuccess(commandOutput.success());
             packetCommandOutput.setOrigin(packet.getCommandOrigin().setType((byte) 3));
 
             // Remap outputs
             List<OutputMessage> outputMessages = new ArrayList<>();
-            for (CommandOutputMessage commandOutputMessage : commandOutput.getMessages()) {
-                outputMessages.add(new OutputMessage(commandOutputMessage.getFormat(), commandOutputMessage.isSuccess(), commandOutputMessage.getParameters()));
+            for (CommandOutputMessage commandOutputMessage : commandOutput.messages()) {
+                outputMessages.add(new OutputMessage(commandOutputMessage.format(), commandOutputMessage.success(), commandOutputMessage.parameters()));
             }
 
             packetCommandOutput.setOutputs(outputMessages);

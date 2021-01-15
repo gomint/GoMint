@@ -43,7 +43,7 @@ public class ShapelessRecipe extends CraftingRecipe {
     }
 
     @Override
-    public ItemStack<?>[] getIngredients() {
+    public ItemStack<?>[] ingredients() {
         return this.ingredients;
     }
 
@@ -62,7 +62,7 @@ public class ShapelessRecipe extends CraftingRecipe {
             Packet.writeItemStack(itemStack, buffer);
         }
 
-        buffer.writeUUID(this.getUUID());
+        buffer.writeUUID(this.uuid());
         buffer.writeString(this.block);
         buffer.writeSignedVarInt(this.getPriority());
         buffer.writeUnsignedVarInt(this.id);
@@ -71,7 +71,7 @@ public class ShapelessRecipe extends CraftingRecipe {
     @Override
     public int[] isCraftable(Inventory<?> inputInventory) {
         ItemStack<?>[] inputItems = inputInventory.contents();
-        ItemStack<?>[] ingredients = getIngredients();
+        ItemStack<?>[] ingredients = ingredients();
         int[] consumeSlots = new int[ingredients.length];
         Arrays.fill(consumeSlots, -1);
 

@@ -8,7 +8,7 @@ import io.gomint.entity.EntityAgeable;
  * @version 1.0
  * @stability 3
  */
-public interface EntityZoglin extends EntityAgeable {
+public interface EntityZoglin extends EntityAgeable<EntityZoglin> {
 
     /**
      * Create a new entity piglin with no config

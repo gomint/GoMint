@@ -24,7 +24,7 @@ import java.util.concurrent.ThreadLocalRandom;
  * @since 2021-01-12
  */
 @RegisterInfo(sId = "minecraft:piglin_brute")
-public class EntityPiglinBrute extends EntityLiving implements io.gomint.entity.monster.EntityPiglinBrute {
+public class EntityPiglinBrute extends EntityLiving<io.gomint.entity.monster.EntityPiglinBrute> implements io.gomint.entity.monster.EntityPiglinBrute {
 
     /**
      * Constructs a new EntityPiglinBrute
@@ -45,17 +45,17 @@ public class EntityPiglinBrute extends EntityLiving implements io.gomint.entity.
     }
 
     private void initEntity() {
-        this.setSize( 0.6f, 1.9f );
-        this.addAttribute( Attribute.HEALTH );
-        this.setMaxHealth( 50 );
-        this.setHealth( 50 );
+        this.size( 0.6f, 1.9f );
+        this.attribute( Attribute.HEALTH );
+        this.maxHealth( 50 );
+        this.health( 50 );
     }
 
     @Override
     protected void kill() {
         super.kill();
 
-        if (isDead()) {
+        if (dead()) {
             return;
         }
 
@@ -64,11 +64,11 @@ public class EntityPiglinBrute extends EntityLiving implements io.gomint.entity.
         if (random.nextDouble() <= 0.085) {
             ItemStack<?> goldenAxe = (ItemStack<?>) ItemGoldenAxe.create(1);
             goldenAxe.damage(1 + random.nextInt(goldenAxe.maxDamage()));
-            this.world.dropItem(this.getLocation(), goldenAxe);
+            this.world.dropItem(this.location(), goldenAxe);
         }
         
         if (isLastDamageCausedByPlayer()) {
-            this.world.createExpOrb(this.getLocation(), 20);
+            this.world.createExpOrb(this.location(), 20);
         }
     }
 
@@ -78,7 +78,7 @@ public class EntityPiglinBrute extends EntityLiving implements io.gomint.entity.
     }
 
     @Override
-    public Set<String> getTags() {
+    public Set<String> tags() {
         return EntityTags.HOSTILE_MOB;
     }
 

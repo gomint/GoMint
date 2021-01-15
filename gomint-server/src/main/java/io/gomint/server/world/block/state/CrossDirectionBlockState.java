@@ -45,13 +45,13 @@ public class CrossDirectionBlockState extends BlockState<Direction, Integer> {
     }
 
     @Override
-    public void detectFromPlacement(Block newBlock, EntityLiving player, ItemStack<?> placedItem, Facing face) {
+    public void detectFromPlacement(Block newBlock, EntityLiving<?> player, ItemStack<?> placedItem, Facing face) {
         if (player == null) {
             this.setState(newBlock, Direction.EAST);
             return;
         }
 
-        Bearing bearing = Bearing.fromAngle(player.getYaw());
+        Bearing bearing = Bearing.fromAngle(player.yaw());
         this.setState(newBlock, bearing.toDirection());
     }
 

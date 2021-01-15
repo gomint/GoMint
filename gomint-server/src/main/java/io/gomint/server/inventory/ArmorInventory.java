@@ -106,7 +106,7 @@ public class ArmorInventory extends Inventory<io.gomint.inventory.ArmorInventory
         mobArmorEquipment.setLeggings( this.contents[2] );
         mobArmorEquipment.setChestplate( this.contents[1] );
         mobArmorEquipment.setHelmet( this.contents[0] );
-        mobArmorEquipment.setEntityId( ( (Entity) this.owner ).getEntityId() );
+        mobArmorEquipment.setEntityId( ( (Entity<?>) this.owner ).id() );
         playerConnection.addToSendQueue( mobArmorEquipment );
     }
 

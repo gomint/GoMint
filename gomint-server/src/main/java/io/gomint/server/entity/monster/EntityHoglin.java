@@ -14,7 +14,7 @@ import java.util.Set;
  * @version 1.0
  */
 @RegisterInfo(sId = "minecraft:hoglin")
-public class EntityHoglin extends EntityAgeable implements io.gomint.entity.monster.EntityHoglin {
+public class EntityHoglin extends EntityAgeable<io.gomint.entity.monster.EntityHoglin> implements io.gomint.entity.monster.EntityHoglin {
 
     /**
      * Constructs a new EntityLiving
@@ -32,13 +32,13 @@ public class EntityHoglin extends EntityAgeable implements io.gomint.entity.mons
     }
 
     private void initEntity() {
-        this.addAttribute(Attribute.HEALTH);
-        this.setHealth(40);
-        this.setMaxHealth(40);
-        if (this.isBaby()) {
-            this.setSize(0.45f, 0.45f);
+        this.attribute(Attribute.HEALTH);
+        this.health(40);
+        this.maxHealth(40);
+        if (this.baby()) {
+            this.size(0.45f, 0.45f);
         } else {
-            this.setSize(0.9f, 0.9f);
+            this.size(0.9f, 0.9f);
         }
     }
 
@@ -48,7 +48,7 @@ public class EntityHoglin extends EntityAgeable implements io.gomint.entity.mons
     }
 
     @Override
-    public Set<String> getTags() {
+    public Set<String> tags() {
         return EntityTags.HOSTILE_MOB;
     }
 

@@ -35,49 +35,49 @@ import java.util.concurrent.TimeUnit;
  * @version 1.0
  * @stability 3
  */
-public interface EntityPlayer extends EntityHuman {
+public interface EntityPlayer extends EntityHuman<EntityPlayer> {
 
     /**
      * Set the new gamemode for this player
      *
      * @param gamemode The new gamemode to be used
      */
-    void setGamemode( Gamemode gamemode );
+    EntityPlayer gamemode(Gamemode gamemode );
 
     /**
      * Get the current gamemode
      *
      * @return The gamemode the player is in
      */
-    Gamemode getGamemode();
+    Gamemode gamemode();
 
     /**
      * Is this player op'ed?
      *
      * @return true when op'ed, false when not
      */
-    boolean isOp();
+    boolean op();
 
     /**
      * Set the player's operator status
      *
      * @param value true when op, false otherwise
      */
-    void setOp( boolean value );
+    EntityPlayer op(boolean value );
 
     /**
      * Hide another player from this player
      *
      * @param player The player which should be hidden
      */
-    void hidePlayer( EntityPlayer player );
+    EntityPlayer hidePlayer( EntityPlayer player );
 
     /**
      * Show a hidden player again
      *
      * @param player The player which should be shown again
      */
-    void showPlayer( EntityPlayer player );
+    EntityPlayer showPlayer( EntityPlayer player );
 
     /**
      * Check if given player is hidden to this player
@@ -108,7 +108,7 @@ public interface EntityPlayer extends EntityHuman {
      *
      * @param message which should be send to the client
      */
-    void sendMessage( String message );
+    EntityPlayer sendMessage( String message );
 
     /**
      * Send a message with a given type to the client
@@ -116,14 +116,14 @@ public interface EntityPlayer extends EntityHuman {
      * @param message which should be send
      * @param type    of the message
      */
-    void sendMessage( ChatType type, String... message );
+    EntityPlayer sendMessage( ChatType type, String... message );
 
     /**
      * Get the view distance of this player
      *
      * @return radius of chunks this player can see
      */
-    int getViewDistance();
+    int viewDistance();
 
     /**
      * Transfer player to another server
@@ -131,14 +131,14 @@ public interface EntityPlayer extends EntityHuman {
      * @param host IP or Hostname for the user to connect to
      * @param port Of the new Server
      */
-    void transfer( String host, int port );
+    EntityPlayer transfer( String host, int port );
 
     /**
      * Return the network latency
      *
      * @return network latency in ms
      */
-    int getPing();
+    int ping();
 
     /**
      * Display new form and get a listener for the response
@@ -156,19 +156,19 @@ public interface EntityPlayer extends EntityHuman {
      * @param <R>  type of return value from the response
      * @return form listener to attaching for response
      */
-    <R> FormListener<R> setSettingsForm( Form<R> form );
+    <R> FormListener<R> settingsForm(Form<R> form );
 
     /**
      * Remove the current stored settings form
      */
-    void removeSettingsForm();
+    EntityPlayer removeSettingsForm();
 
     /**
      * Get the players permission manager
      *
      * @return permission manager
      */
-    PermissionManager getPermissionManager();
+    PermissionManager permissionManager();
 
     /**
      * Set the players permission manager
@@ -182,63 +182,63 @@ public interface EntityPlayer extends EntityHuman {
      *
      * @param permissionManager for this player
      */
-    void setPermissionManager(PermissionManager permissionManager);
+    EntityPlayer permissionManager(PermissionManager permissionManager);
 
     /**
      * Is this player still online?
      *
      * @return true if online, false if not
      */
-    boolean isOnline();
+    boolean online();
 
     /**
      * Locale of this player
      *
      * @return locale of the players client
      */
-    Locale getLocale();
+    Locale locale();
 
     /**
      * Disconnect a player for the given reason
      *
      * @param reason for disconnect
      */
-    void disconnect( String reason );
+    EntityPlayer disconnect( String reason );
 
     /**
      * Get absolute amount of xp in this entity
      *
      * @return absolute amount of xp
      */
-    int getXP();
+    int xp();
 
     /**
      * Percentage of xp for next level
      *
      * @return percentage of next level
      */
-    float getXPPercentage();
+    float xpPercentage();
 
     /**
      * Set the amount of xp this entity has
      *
      * @param xp of this entity
      */
-    void setXP( int xp );
+    EntityPlayer xp(int xp );
 
     /**
      * Get exp level of this entity
      *
      * @return exp level
      */
-    int getLevel();
+    int level();
 
     /**
      * Set the level of the exp bar
      *
      * @param level of this entity
      */
-    void setLevel( int level );
+    EntityPlayer level(int level );
 
     /**
      * Play a sound for this player
@@ -248,7 +248,7 @@ public interface EntityPlayer extends EntityHuman {
      * @param pitch    The pitch at which the sound should be played
      * @param data     additional data for the sound
      */
-    void playSound(Vector location, Sound sound, byte pitch, SoundData data );
+    EntityPlayer playSound(Vector location, Sound sound, byte pitch, SoundData data );
 
     /**
      * Play a sound for this player
@@ -257,7 +257,7 @@ public interface EntityPlayer extends EntityHuman {
      * @param sound    The sound which should be played
      * @param pitch    The pitch at which the sound should be played
      */
-    void playSound( Vector location, Sound sound, byte pitch );
+    EntityPlayer playSound( Vector location, Sound sound, byte pitch );
 
     /**
      * Send a particle to this player
@@ -265,7 +265,7 @@ public interface EntityPlayer extends EntityHuman {
      * @param location of the particle in the client
      * @param particle which should be send
      */
-    void sendParticle( Vector location, Particle particle );
+    EntityPlayer sendParticle( Vector location, Particle particle );
 
     /**
      * Send a particle to this player
@@ -274,35 +274,35 @@ public interface EntityPlayer extends EntityHuman {
      * @param particle which should be send
      * @param data     which should be used to construct additional data needed to display the particle
      */
-    void sendParticle( Vector location, Particle particle, ParticleData data );
+    EntityPlayer sendParticle( Vector location, Particle particle, ParticleData data );
 
     /**
      * Allow flying for the client
      *
      * @param value if true the client can fly, if false the client can't fly
      */
-    void setAllowFlight( boolean value );
+    EntityPlayer allowFlight(boolean value );
 
     /**
      * Get the setting for allowing flight
      *
      * @return true when the player can fly, false when not
      */
-    boolean getAllowFlight();
+    boolean allowFlight();
 
     /**
      * Set flying state of the player
      *
      * @param value if true the player is flying, if false the player doesn't fly
      */
-    void setFlying( boolean value );
+    EntityPlayer flying(boolean value );
 
     /**
      * Check if this player is flying
      *
      * @return true when flying otherwise false
      */
-    boolean getFlying();
+    boolean flying();
 
     /**
      * Send a title text to the user's screen, with an optional subtitle.
@@ -314,14 +314,14 @@ public interface EntityPlayer extends EntityHuman {
      * @param fadeout  duration for the fade out effect
      * @param unit     of duration multiplier
      */
-    void sendTitle( String title, String subtitle, long fadein, long duration, long fadeout, TimeUnit unit );
+    EntityPlayer sendTitle( String title, String subtitle, long fadein, long duration, long fadeout, TimeUnit unit );
 
     /**
      * Send a title without subtitle.
      *
      * @param title Big text displayed in the middle of the screen
      */
-    void sendTitle( String title );
+    EntityPlayer sendTitle( String title );
 
     /**
      * Send a title with title and subtitle.
@@ -331,35 +331,35 @@ public interface EntityPlayer extends EntityHuman {
      *                 <p>
      *                 Default time for fadein and duration is 1 second
      */
-    void sendTitle( String title, String subtitle );
+    EntityPlayer sendTitle( String title, String subtitle );
 
     /**
      * Toggle gliding status of the player
      *
      * @param value true for gliding, false for not gliding
      */
-    void setGliding( boolean value );
+    EntityPlayer gliding(boolean value );
 
     /**
      * Is the player currently gliding?
      *
      * @return true when gliding, false when not
      */
-    boolean isGliding();
+    boolean gliding();
 
     /**
      * Get information about the device the player is using
      *
      * @return device information from this player
      */
-    DeviceInfo getDeviceInfo();
+    DeviceInfo deviceInfo();
 
     /**
      * Get the socket address from the connection of this player
      *
      * @return the socket address of this player
      */
-    InetSocketAddress getAddress();
+    InetSocketAddress address();
 
     /**
      * Disptach a command for this player
@@ -375,45 +375,45 @@ public interface EntityPlayer extends EntityHuman {
      *
      * @param spawnLocation which should be used for this player
      */
-    void setSpawnLocation( Location spawnLocation );
+    EntityPlayer spawnLocation(Location spawnLocation );
 
     /**
      * Get the location of the spawn
      *
      * @return location of spawn
      */
-    Location getSpawnLocation();
+    Location spawnLocation();
 
     /**
      * Set a new scoreboard
      *
      * @param scoreboard which should be displayed to this player
      */
-    void setScoreboard( Scoreboard scoreboard );
+    EntityPlayer scoreboard(Scoreboard scoreboard );
 
     /**
      * Get the current scoreboard of a player
      *
      * @return the scoreboard of this player or null
      */
-    Scoreboard getScoreboard();
+    Scoreboard scoreboard();
 
     /**
      * Remove the current scoreboard
      */
-    void removeScoreboard();
+    EntityPlayer removeScoreboard();
 
     /**
      * Get the ender chest inventory for this player
      *
      * @return ender chest inventory
      */
-    EnderChestInventory getEnderChestInventory();
+    EnderChestInventory enderChestInventory();
 
     /**
      * Update the clients commands. This is needed when permissions change for example or worlds change and custom
      * handling is involved
      */
-    void sendCommands();
+    EntityPlayer sendCommands();
 
 }

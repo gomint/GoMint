@@ -17,7 +17,7 @@ public class PacketWorldSoundEventHandler implements PacketHandler<PacketWorldSo
         }
 
         // Relay to all other players which can see this entity
-        connection.getEntity().getWorld().sendToVisible( packet.getPosition().toBlockPosition(), packet, entity -> true );
+        connection.getEntity().world().sendToVisible( packet.getPosition().toBlockPosition(), packet, entity -> true );
     }
 
 }

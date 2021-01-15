@@ -25,7 +25,7 @@ public class InventoryOpenListener implements EventListener {
             event.inventory().item(0, diamondSword);
             event.inventory().item(1, lapisLazuli);
 
-            event.player().setLevel(30);
+            event.player().level(30);
         }
     }
 

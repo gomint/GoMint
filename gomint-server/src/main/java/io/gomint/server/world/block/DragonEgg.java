@@ -52,14 +52,14 @@ public class DragonEgg extends Block implements BlockDragonEgg {
     }
 
     @Override
-    public boolean interact(Entity entity, Facing face, Vector facePos, ItemStack<?> item ) {
+    public boolean interact(Entity<?> entity, Facing face, Vector facePos, ItemStack<?> item ) {
         this.teleport();
         return true;
     }
 
     @Override
     public boolean punch( EntityPlayer player ) {
-        if ( player.getGamemode() != Gamemode.CREATIVE ) {
+        if ( player.gamemode() != Gamemode.CREATIVE ) {
             this.teleport();
             return true;
         }

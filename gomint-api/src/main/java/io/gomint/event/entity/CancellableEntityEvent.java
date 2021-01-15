@@ -17,14 +17,14 @@ import io.gomint.event.CancellableEvent;
  */
 public class CancellableEntityEvent<E> extends CancellableEvent<E> {
 
-    private final Entity entity;
+    private final Entity<?> entity;
 
     /**
      * Create a new entity based cancellable event
      *
      * @param entity for which this event is
      */
-    public CancellableEntityEvent( Entity entity ) {
+    public CancellableEntityEvent( Entity<?> entity ) {
         this.entity = entity;
     }
 
@@ -33,7 +33,7 @@ public class CancellableEntityEvent<E> extends CancellableEvent<E> {
      *
      * @return the player which is affected by this event
      */
-    public Entity entity() {
+    public Entity<?> entity() {
         return this.entity;
     }
 

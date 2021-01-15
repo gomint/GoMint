@@ -17,7 +17,7 @@ import io.gomint.server.world.WorldAdapter;
  * @version 1.0
  */
 @RegisterInfo(sId = "minecraft:fox")
-public class EntityFox extends EntityAgeableAnimal implements io.gomint.entity.animal.EntityFox {
+public class EntityFox extends EntityAgeableAnimal<io.gomint.entity.animal.EntityFox> implements io.gomint.entity.animal.EntityFox {
 
     /**
      * Constructs a new EntityLiving
@@ -35,10 +35,10 @@ public class EntityFox extends EntityAgeableAnimal implements io.gomint.entity.a
     }
 
     private void initEntity() {
-        this.addAttribute(Attribute.HEALTH);
-        this.setMaxHealth(20);
-        this.setHealth(20);
-        this.setSize(0.7f, 0.6f);
+        this.attribute(Attribute.HEALTH);
+        this.maxHealth(20);
+        this.health(20);
+        this.size(0.7f, 0.6f);
         //No Information for baby size ??
     }
 

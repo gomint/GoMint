@@ -14,7 +14,8 @@ import io.gomint.entity.EntityLiving;
  * @author joserobjr
  * @since 2021-01-12
  */
-public interface EntitySnowGolem extends EntityLiving {
+public interface EntitySnowGolem extends EntityLiving<EntitySnowGolem> {
+
     /**
      * Create a new entity snow golem with no config
      *
@@ -23,4 +24,5 @@ public interface EntitySnowGolem extends EntityLiving {
     static EntitySnowGolem create() {
         return GoMint.instance().createEntity( EntitySnowGolem.class );
     }
+
 }

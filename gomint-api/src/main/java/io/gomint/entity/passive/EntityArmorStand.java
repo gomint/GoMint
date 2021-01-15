@@ -8,7 +8,7 @@ import io.gomint.entity.EntityCreature;
  * @version 1.0
  * @stability 3
  */
-public interface EntityArmorStand extends EntityCreature {
+public interface EntityArmorStand extends EntityCreature<EntityArmorStand> {
 
     /**
      * Create a new entity armor stand with no config

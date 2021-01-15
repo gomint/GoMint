@@ -15,7 +15,7 @@ import io.gomint.entity.EntityAgeable;
  * @version 1.0
  * @stability 3
  */
-public interface EntityMooshroom extends EntityAgeable {
+public interface EntityMooshroom extends EntityAgeable<EntityMooshroom> {
 
     /**
      * Create a new entity mooshroom with no config

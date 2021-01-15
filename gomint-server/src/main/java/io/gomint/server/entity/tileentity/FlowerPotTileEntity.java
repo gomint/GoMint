@@ -51,7 +51,7 @@ public class FlowerPotTileEntity extends TileEntity implements InventoryHolder {
     }
 
     @Override
-    public void interact(Entity entity, Facing face, Vector facePos, ItemStack<?> item) {
+    public void interact(Entity<?> entity, Facing face, Vector facePos, ItemStack<?> item) {
 
     }
 

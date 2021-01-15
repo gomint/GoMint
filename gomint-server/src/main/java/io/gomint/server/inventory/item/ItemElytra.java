@@ -23,9 +23,9 @@ public class ItemElytra extends ItemStack< io.gomint.inventory.item.ItemElytra> 
     @Override
     public boolean interact(EntityPlayer entity, Facing face, Vector clickPosition, Block clickedBlock ) {
         if ( clickedBlock == null ) {
-            ItemStack<?> old = (ItemStack<?>) entity.getArmorInventory().chestplate();
-            entity.getArmorInventory().chestplate( this );
-            entity.getInventory().item( entity.getInventory().itemInHandSlot(), old );
+            ItemStack<?> old = (ItemStack<?>) entity.armorInventory().chestplate();
+            entity.armorInventory().chestplate( this );
+            entity.inventory().item( entity.inventory().itemInHandSlot(), old );
         }
 
         return false;

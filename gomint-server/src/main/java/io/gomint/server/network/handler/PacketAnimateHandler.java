@@ -28,9 +28,9 @@ public class PacketAnimateHandler implements PacketHandler<PacketAnimate> {
 
         connection.getServer().pluginManager().callEvent( playerAnimationEvent );
         if ( !playerAnimationEvent.cancelled() ) {
-            for ( Entity entity : connection.getEntity().getAttachedEntities() ) {
+            for ( Entity<?> entity : connection.getEntity().getAttachedEntities() ) {
                 if ( entity instanceof EntityPlayer ) {
-                    ( (EntityPlayer) entity ).getConnection().addToSendQueue( packet );
+                    ( (EntityPlayer) entity ).connection().addToSendQueue( packet );
                 }
             }
         }

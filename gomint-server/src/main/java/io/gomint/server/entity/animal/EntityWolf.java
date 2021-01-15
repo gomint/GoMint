@@ -13,7 +13,7 @@ import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.world.WorldAdapter;
 
 @RegisterInfo(sId = "minecraft:wolf")
-public class EntityWolf extends EntityAgeableAnimal implements io.gomint.entity.animal.EntityWolf {
+public class EntityWolf extends EntityAgeableAnimal<io.gomint.entity.animal.EntityWolf> implements io.gomint.entity.animal.EntityWolf {
 
     /**
      * Constructs a new EntityLiving
@@ -34,13 +34,13 @@ public class EntityWolf extends EntityAgeableAnimal implements io.gomint.entity.
     }
 
     private void initEntity() {
-        this.addAttribute(Attribute.HEALTH);
-        this.setMaxHealth(16);
-        this.setHealth(16);
-        if (this.isBaby()) {
-            this.setSize(0.3f, 0.425f);
+        this.attribute(Attribute.HEALTH);
+        this.maxHealth(16);
+        this.health(16);
+        if (this.baby()) {
+            this.size(0.3f, 0.425f);
         } else {
-            this.setSize(0.6f, 0.85f);
+            this.size(0.6f, 0.85f);
         }
     }
 

@@ -13,7 +13,7 @@ import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.world.WorldAdapter;
 
 @RegisterInfo(sId = "minecraft:skeleton_horse")
-public class EntitySkeletonHorse extends EntityAnimal implements io.gomint.entity.animal.EntitySkeletonHorse {
+public class EntitySkeletonHorse extends EntityAnimal<io.gomint.entity.animal.EntitySkeletonHorse> implements io.gomint.entity.animal.EntitySkeletonHorse {
 
     /**
      * Constructs a new EntityLiving
@@ -34,10 +34,10 @@ public class EntitySkeletonHorse extends EntityAnimal implements io.gomint.entit
     }
 
     private void initEntity() {
-        this.setSize(1.3965f, 1.6f);
-        this.addAttribute(Attribute.HEALTH);
-        this.setMaxHealth(30);
-        this.setHealth(30);
+        this.size(1.3965f, 1.6f);
+        this.attribute(Attribute.HEALTH);
+        this.maxHealth(30);
+        this.health(30);
     }
 
     @Override

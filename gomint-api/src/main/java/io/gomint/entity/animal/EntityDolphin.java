@@ -14,7 +14,7 @@ import io.gomint.entity.EntityAgeable;
  * @author joserobjr
  * @since 2021-01-12
  */
-public interface EntityDolphin extends EntityAgeable {
+public interface EntityDolphin extends EntityAgeable<EntityDolphin> {
     /**
      * Create a new entity dolphin with no config
      *

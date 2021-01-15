@@ -16,42 +16,47 @@ import io.gomint.server.network.packet.PacketBossBar;
  */
 public class BossBar implements io.gomint.entity.BossBar {
 
-    private final Entity entity;
+    private final Entity<?> entity;
 
-    public BossBar(Entity entity) {
+    public BossBar(Entity<?> entity) {
         this.entity = entity;
     }
 
     @Override
-    public void addPlayer( EntityPlayer player ) {
+    public BossBar addPlayer(EntityPlayer player ) {
         io.gomint.server.entity.EntityPlayer p =  ( (io.gomint.server.entity.EntityPlayer) player );
-        if ( p.getEntityVisibilityManager().isVisible( this.entity ) ) {
+        if ( p.entityVisibilityManager().isVisible( this.entity ) ) {
             PacketBossBar packet = new PacketBossBar();
-            packet.setEntityId( this.entity.getEntityId() );
+            packet.setEntityId( this.entity.id() );
             packet.setType( PacketBossBar.Type.SHOW );
-            p.getConnection().addToSendQueue( packet );
+            p.connection().addToSendQueue( packet );
         }
+
+        return this;
     }
 
     @Override
-    public void removePlayer( EntityPlayer player ) {
+    public BossBar removePlayer( EntityPlayer player ) {
         io.gomint.server.entity.EntityPlayer p =  ( (io.gomint.server.entity.EntityPlayer) player );
-        if ( p.getEntityVisibilityManager().isVisible( this.entity ) ) {
+        if ( p.entityVisibilityManager().isVisible( this.entity ) ) {
             PacketBossBar packet = new PacketBossBar();
-            packet.setEntityId( this.entity.getEntityId() );
+            packet.setEntityId( this.entity.id() );
             packet.setType( PacketBossBar.Type.HIDE );
-            p.getConnection().addToSendQueue( packet );
+            p.connection().addToSendQueue( packet );
         }
+
+        return this;
     }
 
     @Override
-    public void setTitle( String title ) {
-        this.entity.setNameTag( title );
+    public BossBar title(String title ) {
+        this.entity.nameTag( title );
+        return this;
     }
 
     @Override
-    public String getTitle() {
-        return this.entity.getNameTag();
+    public String title() {
+        return this.entity.nameTag();
     }
 
 }

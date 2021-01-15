@@ -19,7 +19,7 @@ import java.util.List;
  * @version 1.0
  * @stability 3
  */
-public class TextValidator extends ParamValidator {
+public class TextValidator extends ParamValidator<TextValidator> {
 
     /**
      * {@inheritDoc}
@@ -42,7 +42,7 @@ public class TextValidator extends ParamValidator {
      * {@inheritDoc}
      */
     @Override
-    public Object validate( String input, CommandSender commandSender ) {
+    public Object validate(String input, CommandSender<?> commandSender ) {
         return input;
     }
 
@@ -50,7 +50,7 @@ public class TextValidator extends ParamValidator {
      * {@inheritDoc}
      */
     @Override
-    public ParamType getType() {
+    public ParamType type() {
         return ParamType.TEXT;
     }
 
@@ -74,7 +74,7 @@ public class TextValidator extends ParamValidator {
      * {@inheritDoc}
      */
     @Override
-    public String getHelpText() {
+    public String helpText() {
         return "text";
     }
 

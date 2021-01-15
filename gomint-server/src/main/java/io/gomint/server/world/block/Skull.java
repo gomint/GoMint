@@ -61,7 +61,7 @@ public class Skull extends Block implements BlockSkull {
     }
 
     @Override
-    public boolean beforePlacement(EntityLiving entity, ItemStack<?> item, Facing face, Location location) {
+    public boolean beforePlacement(EntityLiving<?> entity, ItemStack<?> item, Facing face, Location location) {
         DIRECTION.detectFromPlacement(this, entity, item, face);
 
         // We skip downwards facing
@@ -70,7 +70,7 @@ public class Skull extends Block implements BlockSkull {
         }
 
         SkullTileEntity tileEntity = this.tileEntity();
-        tileEntity.setRotation(entity.getYaw());
+        tileEntity.setRotation(entity.yaw());
         return super.beforePlacement(entity, item, face, location);
     }
 

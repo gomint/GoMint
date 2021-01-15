@@ -44,12 +44,12 @@ public abstract class Recipe implements io.gomint.crafting.Recipe {
     }
 
     @Override
-    public UUID getUUID() {
+    public UUID uuid() {
         return this.uuid;
     }
 
     @Override
-    public abstract ItemStack<?>[] getIngredients();
+    public abstract ItemStack<?>[] ingredients();
 
     /**
      * Creates a collections of items stacks which represent the

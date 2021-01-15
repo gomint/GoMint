@@ -16,7 +16,7 @@ import io.gomint.entity.Entity;
  */
 public class EntityCollisionWithEntityEvent extends CancellableEntityEvent<EntityCollisionWithEntityEvent> {
 
-    private final Entity collidesWith;
+    private final Entity<?> collidesWith;
 
     /**
      * Create a new entity based cancellable event
@@ -24,7 +24,7 @@ public class EntityCollisionWithEntityEvent extends CancellableEntityEvent<Entit
      * @param entity       for which this event is
      * @param collidesWith which collides with the other entity
      */
-    public EntityCollisionWithEntityEvent( Entity entity, Entity collidesWith ) {
+    public EntityCollisionWithEntityEvent( Entity<?> entity, Entity<?> collidesWith ) {
         super( entity );
         this.collidesWith = collidesWith;
     }
@@ -35,7 +35,7 @@ public class EntityCollisionWithEntityEvent extends CancellableEntityEvent<Entit
      *
      * @return entity which collides with the target entity
      */
-    public Entity collidesWith() {
+    public Entity<?> collidesWith() {
         return this.collidesWith;
     }
 

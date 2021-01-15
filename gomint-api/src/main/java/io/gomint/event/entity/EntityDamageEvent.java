@@ -27,7 +27,7 @@ public class EntityDamageEvent extends CancellableEntityEvent<EntityDamageEvent>
      * @param damageSource where the damage comes from
      * @param damage       which should be dealt
      */
-    public EntityDamageEvent( Entity entity, DamageSource damageSource, float damage ) {
+    public EntityDamageEvent( Entity<?> entity, DamageSource damageSource, float damage ) {
         super( entity );
         this.damageSource = damageSource;
         this.damage = damage;

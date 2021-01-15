@@ -74,7 +74,7 @@ public abstract class ContainerInventory<I> extends Inventory<I> implements io.g
         containerOpen.setWindowId(windowId);
         containerOpen.setType(this.getType().getId());
         containerOpen.setLocation(this.containerPosition());
-        player.getConnection().addToSendQueue(containerOpen);
+        player.connection().addToSendQueue(containerOpen);
 
         // Add viewer and send contents
         super.addViewer(player);

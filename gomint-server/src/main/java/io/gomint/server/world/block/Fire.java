@@ -45,9 +45,9 @@ public class Fire extends Block implements BlockFire {
     }
 
     @Override
-    public void onEntityStanding( EntityLiving entityLiving ) {
+    public void onEntityStanding(EntityLiving<?> entityLiving ) {
         entityLiving.attack( 1.0f, EntityDamageEvent.DamageSource.FIRE );
-        entityLiving.setBurning( 8, TimeUnit.SECONDS );
+        entityLiving.burning( 8, TimeUnit.SECONDS );
     }
 
     @Override

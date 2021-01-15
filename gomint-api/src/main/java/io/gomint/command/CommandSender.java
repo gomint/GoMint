@@ -14,14 +14,14 @@ import io.gomint.player.ChatType;
  * @version 1.0
  * @stability 3
  */
-public interface CommandSender {
+public interface CommandSender<E> {
 
     /**
      * Send a message to the client, this uses the normal {@link ChatType} enum.
      *
      * @param message which should be send to the client
      */
-    void sendMessage(String message);
+    E sendMessage(String message);
 
     /**
      * Send a message with a given type to the client
@@ -29,7 +29,7 @@ public interface CommandSender {
      * @param message which should be send
      * @param type    of the message
      */
-    void sendMessage(ChatType type, String... message);
+    E sendMessage(ChatType type, String... message);
 
     /**
      * Check if player has a specific permission

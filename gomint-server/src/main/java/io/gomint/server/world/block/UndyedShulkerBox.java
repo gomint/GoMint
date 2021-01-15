@@ -61,7 +61,7 @@ public class UndyedShulkerBox extends Block implements BlockUndyedShulkerBox {
     }
 
     @Override
-    public boolean interact(Entity entity, Facing face, Vector facePos, ItemStack<?> item ) {
+    public boolean interact(Entity<?> entity, Facing face, Vector facePos, ItemStack<?> item ) {
         ShulkerBoxTileEntity tileEntity = this.tileEntity();
         if ( tileEntity != null ) {
             tileEntity.interact( entity, face, facePos, item );

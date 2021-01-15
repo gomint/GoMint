@@ -15,7 +15,7 @@ import io.gomint.entity.EntityAgeable;
  * @version 1.0
  * @stability 3
  */
-public interface EntityTurtle extends EntityAgeable {
+public interface EntityTurtle extends EntityAgeable<EntityTurtle> {
 
     /**
      * Create new entity turtle with no config

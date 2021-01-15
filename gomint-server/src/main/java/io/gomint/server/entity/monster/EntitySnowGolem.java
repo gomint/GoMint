@@ -23,7 +23,7 @@ import java.util.concurrent.ThreadLocalRandom;
  * @since 2021-01-12
  */
 @RegisterInfo( sId = "minecraft:snow_golem" )
-public class EntitySnowGolem extends EntityLiving implements io.gomint.entity.monster.EntitySnowGolem {
+public class EntitySnowGolem extends EntityLiving<io.gomint.entity.monster.EntitySnowGolem> implements io.gomint.entity.monster.EntitySnowGolem {
     /**
      * Constructs a new EntitySnowGolem
      *
@@ -43,24 +43,24 @@ public class EntitySnowGolem extends EntityLiving implements io.gomint.entity.mo
     }
 
     private void initEntity() {
-        this.addAttribute(Attribute.HEALTH);
-        this.setMaxHealth(4);
-        this.setHealth(4);
-        this.setSize(0.4f, 1.8f);
+        this.attribute(Attribute.HEALTH);
+        this.maxHealth(4);
+        this.health(4);
+        this.size(0.4f, 1.8f);
     }
 
     @Override
     protected void kill() {
         super.kill();
 
-        if (isDead()) {
+        if (dead()) {
             return;
         }
         
         // Item drops
         int amount = ThreadLocalRandom.current().nextInt(16);
         if (amount > 0) {
-            this.world.dropItem(this.getLocation(), ItemSnowball.create(amount));
+            this.world.dropItem(this.location(), ItemSnowball.create(amount));
         }
     }
 
@@ -70,7 +70,7 @@ public class EntitySnowGolem extends EntityLiving implements io.gomint.entity.mo
     }
 
     @Override
-    public Set<String> getTags() {
+    public Set<String> tags() {
         return EntityTags.RANGED_HOSTILE_MOB;
     }
 }

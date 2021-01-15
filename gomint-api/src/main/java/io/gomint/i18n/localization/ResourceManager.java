@@ -25,13 +25,13 @@ import java.util.Locale;
 public class ResourceManager {
 
     // Save all loaded Locales with their loadString
-    private final HashMap<Locale, String> loadedLocaleLoadStrings = new HashMap<Locale, String>();
+    private final HashMap<Locale, String> loadedLocaleLoadStrings = new HashMap<>();
 
     // Save all loaded Locales
-    private final HashMap<Locale, SoftReference<ResourceLoader>> loadedLocales = new HashMap<Locale, SoftReference<ResourceLoader>>();
+    private final HashMap<Locale, SoftReference<ResourceLoader<?>>> loadedLocales = new HashMap<>();
 
     // The list of all available ResourceLoaders
-    private final ArrayList<ResourceLoader> registerdLoaders = new ArrayList<ResourceLoader>();
+    private final ArrayList<ResourceLoader<?>> registerdLoaders = new ArrayList<>();
 
     // Construct a object which can be locked on
     private final Object sharedLock = new Object();
@@ -59,7 +59,7 @@ public class ResourceManager {
      *
      * @param loader New loader which can be used to load Resources
      */
-    public synchronized void registerLoader( ResourceLoader loader ) {
+    public synchronized void registerLoader( ResourceLoader<?> loader ) {
         synchronized ( sharedLock ) {
             registerdLoaders.add( loader );
         }
@@ -104,7 +104,7 @@ public class ResourceManager {
         if ( loadedLocales.containsKey( locale ) ) {
             synchronized ( sharedLock ) {
                 //Unload the locale and get the new one
-                ResourceLoader loader = loadedLocales.get( locale ).get();
+                ResourceLoader<?> loader = loadedLocales.get( locale ).get();
                 if ( loader != null ) {
                     loader.cleanup();
                 }
@@ -186,10 +186,10 @@ public class ResourceManager {
      * @return A hopefully new ResourceLoader
      * @throws RuntimeException
      */
-    private synchronized ResourceLoader buildNewResourceLoader( ResourceLoader loader, String argument ) {
+    private synchronized ResourceLoader<?> buildNewResourceLoader( ResourceLoader<?> loader, String argument ) {
         try {
             Constructor<?> constructor = loader.getClass().getConstructor( ClassLoader.class, String.class );
-            return (ResourceLoader) constructor.newInstance( this.classLoader, argument );
+            return (ResourceLoader<?>) constructor.newInstance( this.classLoader, argument );
         } catch ( NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalAccessException e ) {
             throw new RuntimeException( "Could not construct new ResourceLoader", e );
         }
@@ -202,7 +202,7 @@ public class ResourceManager {
      */
     public synchronized void reload() {
         //Reload all ResourceLoaders
-        for ( SoftReference<ResourceLoader> loader : loadedLocales.values() ) {
+        for ( SoftReference<ResourceLoader<?>> loader : loadedLocales.values() ) {
             try {
                 if ( loader != null && loader.get() != null ) {
                     loader.get().reload();
@@ -218,7 +218,7 @@ public class ResourceManager {
      */
     public synchronized void cleanup() {
         //Cleanup all ResourceLoaders
-        for ( SoftReference<ResourceLoader> loader : loadedLocales.values() ) {
+        for ( SoftReference<ResourceLoader<?>> loader : loadedLocales.values() ) {
             if ( loader != null && loader.get() != null ) {
                 loader.get().cleanup();
             }

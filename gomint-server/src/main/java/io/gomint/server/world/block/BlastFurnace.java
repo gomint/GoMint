@@ -65,7 +65,7 @@ public class BlastFurnace extends Block implements BlockBlastFurnace {
     }
 
     @Override
-    public boolean interact(Entity entity, Facing face, Vector facePos, ItemStack<?> item ) {
+    public boolean interact(Entity<?> entity, Facing face, Vector facePos, ItemStack<?> item ) {
         FurnaceTileEntity tileEntity = this.tileEntity();
         tileEntity.interact( entity, face, facePos, item );
 

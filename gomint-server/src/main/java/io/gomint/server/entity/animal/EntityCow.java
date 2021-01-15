@@ -18,7 +18,7 @@ import io.gomint.server.world.WorldAdapter;
  * @version 1.2
  */
 @RegisterInfo(sId = "minecraft:cow")
-public class EntityCow extends EntityAgeableAnimal implements io.gomint.entity.animal.EntityCow {
+public class EntityCow extends EntityAgeableAnimal<io.gomint.entity.animal.EntityCow> implements io.gomint.entity.animal.EntityCow {
 
     /**
      * Constructs a new EntityLiving
@@ -39,13 +39,13 @@ public class EntityCow extends EntityAgeableAnimal implements io.gomint.entity.a
     }
 
     private void initEntity() {
-        this.addAttribute(Attribute.HEALTH);
-        this.setMaxHealth(20);
-        this.setHealth(20);
-        if (this.isBaby()) {
-            this.setSize(0.45f, 0.7f);
+        this.attribute(Attribute.HEALTH);
+        this.maxHealth(20);
+        this.health(20);
+        if (this.baby()) {
+            this.size(0.45f, 0.7f);
         } else {
-            this.setSize(0.9f, 1.4f);
+            this.size(0.9f, 1.4f);
         }
     }
 

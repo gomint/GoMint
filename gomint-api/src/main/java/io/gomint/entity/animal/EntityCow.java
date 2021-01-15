@@ -15,7 +15,7 @@ import io.gomint.entity.EntityAgeable;
  * @version 1.0
  * @stability 3
  */
-public interface EntityCow extends EntityAgeable {
+public interface EntityCow extends EntityAgeable<EntityCow> {
 
     /**
      * Create a new entity cow with no config

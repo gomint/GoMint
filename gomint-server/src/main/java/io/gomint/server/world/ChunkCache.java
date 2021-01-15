@@ -131,7 +131,7 @@ public class ChunkCache {
                     adapter.setLastSavedTimestamp( currentTimeMS );
                     this.world.saveChunk(adapter);
 
-                    LOGGER.debug("Persisting chunk {} / {}", adapter.getX(), adapter.z());
+                    LOGGER.debug("Persisting chunk {} / {}", adapter.x(), adapter.z());
                 }
 
                 adapter.release();
@@ -141,8 +141,8 @@ public class ChunkCache {
 
     private boolean isInAnyViewDistance( long key ) {
         for ( EntityPlayer player : this.world.getPlayers0().keySet() ) {
-            if ( player.getConnection().getPlayerChunks().contains( key ) ||
-                player.getConnection().getLoadingChunks().contains( key ) ) {
+            if ( player.connection().getPlayerChunks().contains( key ) ||
+                player.connection().getLoadingChunks().contains( key ) ) {
                 return true;
             }
         }
@@ -171,7 +171,7 @@ public class ChunkCache {
      * @return true when chunk has been cached, false otherwise
      */
     public synchronized boolean putChunk( ChunkAdapter chunk ) {
-        long key = CoordinateUtils.toLong( chunk.getX(), chunk.z() );
+        long key = CoordinateUtils.toLong( chunk.x(), chunk.z() );
         ChunkAdapter adapter = this.cachedChunks.get(key);
         if (adapter == null) {
             this.cachedChunks.put( key, chunk );

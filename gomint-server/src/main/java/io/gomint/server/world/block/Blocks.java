@@ -130,7 +130,7 @@ public class Blocks {
             if (bbs != null) {
                 for (AxisAlignedBB bb : bbs) {
                     // Check other entities in the bounding box
-                    Collection<Entity> collidedWith = adapter.getNearbyEntities(bb, null);
+                    Collection<Entity<?>> collidedWith = adapter.getNearbyEntities(bb, null);
                     if (collidedWith != null) {
                         return false;
                     }

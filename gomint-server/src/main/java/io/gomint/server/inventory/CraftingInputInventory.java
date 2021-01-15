@@ -39,17 +39,17 @@ public class CraftingInputInventory extends ContainerInventory<CraftingInputInve
 
     @Override
     public void onClose(EntityPlayer player) {
-        WorldAdapter worldAdapter = player.getWorld();
-        Location location = player.getLocation();
+        WorldAdapter worldAdapter = player.world();
+        Location location = player.location();
 
         // Push out all items in the crafting views
-        for (ItemStack<?> stack : player.getCraftingInventory().contents()) {
+        for (ItemStack<?> stack : player.craftingInventory().contents()) {
             worldAdapter.dropItem(location, stack);
         }
 
         // Client closed its crafting view
-        player.getCraftingInventory().resizeAndClear(4);
-        player.getCraftingInputInventory().resizeAndClear(4);
+        player.craftingInventory().resizeAndClear(4);
+        player.craftingInputInventory().resizeAndClear(4);
     }
 
     @Override

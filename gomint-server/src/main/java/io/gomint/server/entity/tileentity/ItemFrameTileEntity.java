@@ -56,7 +56,7 @@ public class ItemFrameTileEntity extends TileEntity {
     }
 
     @Override
-    public void interact(Entity entity, Facing face, Vector facePos, ItemStack<?> item) {
+    public void interact(Entity<?> entity, Facing face, Vector facePos, ItemStack<?> item) {
 
     }
 

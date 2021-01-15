@@ -60,7 +60,7 @@ public class ItemCrossbow extends ItemStack< io.gomint.inventory.item.ItemCrossb
      */
     public void shoot( EntityPlayer player ) {
         // Check if player did start
-        if ( player.getActionStart() == -1 ) {
+        if ( player.actionStart() == -1 ) {
             return;
         }
 
@@ -74,8 +74,8 @@ public class ItemCrossbow extends ItemStack< io.gomint.inventory.item.ItemCrossb
 
         // Check for arrows in inventory
         boolean foundArrow = false;
-        for ( int i = 0; i < player.getInventory().size(); i++ ) {
-            ItemStack<?> itemStack = (ItemStack<?>) player.getInventory().item( i );
+        for (int i = 0; i < player.inventory().size(); i++ ) {
+            ItemStack<?> itemStack = (ItemStack<?>) player.inventory().item( i );
             if ( itemStack instanceof ItemArrow ) {
                 foundArrow = true;
 
@@ -88,7 +88,7 @@ public class ItemCrossbow extends ItemStack< io.gomint.inventory.item.ItemCrossb
         // Check offhand if not found
         if ( !foundArrow ) {
             for ( int i = 0; i < player.getOffhandInventory().size(); i++ ) {
-                ItemStack<?> itemStack = (ItemStack<?>) player.getInventory().item( i );
+                ItemStack<?> itemStack = (ItemStack<?>) player.inventory().item( i );
                 if ( itemStack instanceof ItemArrow ) {
                     foundArrow = true;
 
@@ -100,7 +100,7 @@ public class ItemCrossbow extends ItemStack< io.gomint.inventory.item.ItemCrossb
         }
 
         // Don't shoot without arrow
-        if ( !foundArrow && player.getGamemode() != Gamemode.CREATIVE ) {
+        if ( !foundArrow && player.gamemode() != Gamemode.CREATIVE ) {
             return;
         }
 
@@ -124,18 +124,18 @@ public class ItemCrossbow extends ItemStack< io.gomint.inventory.item.ItemCrossb
         }
 
         // Create arrow
-        EntityArrow arrow = new EntityArrow( player, player.getWorld(), force, powerModifier, punchModifier, flameModifier );
+        EntityArrow arrow = new EntityArrow( player, player.world(), force, powerModifier, punchModifier, flameModifier );
         ProjectileLaunchEvent event = new ProjectileLaunchEvent( arrow, ProjectileLaunchEvent.Cause.BOW_SHOT );
-        player.getWorld().getServer().pluginManager().callEvent( event );
+        player.world().getServer().pluginManager().callEvent( event );
         if ( !event.cancelled() ) {
             // Use the bow
             this.calculateUsageAndUpdate( 1 );
-            player.getWorld().spawnEntityAt( arrow, arrow.getPositionX(), arrow.getPositionY(), arrow.getPositionZ(), arrow.getYaw(), arrow.getPitch() );
+            player.world().spawnEntityAt( arrow, arrow.positionX(), arrow.positionY(), arrow.positionZ(), arrow.yaw(), arrow.pitch() );
         }
     }
 
     private float calculateForce( EntityPlayer player ) {
-        long currentDraw = player.getWorld().getServer().currentTickTime() - player.getActionStart();
+        long currentDraw = player.world().getServer().currentTickTime() - player.actionStart();
         float force = (float) currentDraw / 1000f;
         if ( force < 0.1f ) {
             return -1f;

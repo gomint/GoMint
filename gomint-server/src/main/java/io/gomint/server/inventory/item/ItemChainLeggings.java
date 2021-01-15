@@ -22,10 +22,10 @@ public class ItemChainLeggings extends ItemChainArmor<io.gomint.inventory.item.I
     @Override
     public boolean interact(EntityPlayer entity, Facing face, Vector clickPosition, Block clickedBlock ) {
         if ( clickedBlock == null ) {
-            if ( isBetter( (ItemStack<?>) entity.getArmorInventory().leggings() ) ) {
-                ItemStack<?> old = (ItemStack<?>) entity.getArmorInventory().leggings();
-                entity.getArmorInventory().leggings( this );
-                entity.getInventory().item( entity.getInventory().itemInHandSlot(), old );
+            if ( isBetter( (ItemStack<?>) entity.armorInventory().leggings() ) ) {
+                ItemStack<?> old = (ItemStack<?>) entity.armorInventory().leggings();
+                entity.armorInventory().leggings( this );
+                entity.inventory().item( entity.inventory().itemInHandSlot(), old );
             }
         }
 

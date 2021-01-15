@@ -24,10 +24,10 @@ public abstract class ItemFood<I extends io.gomint.inventory.item.ItemStack<I>> 
         // TODO: Check fo planting
 
         if (entity.isHungry() && clickedBlock == null) {
-            if (entity.getActionStart() > -1) {
+            if (entity.actionStart() > -1) {
                 // Call event
                 PlayerConsumeItemEvent consumeItemEvent = new PlayerConsumeItemEvent(entity, this);
-                entity.getWorld().getServer().pluginManager().callEvent(consumeItemEvent);
+                entity.world().getServer().pluginManager().callEvent(consumeItemEvent);
 
                 if (consumeItemEvent.cancelled()) {
                     return false;
@@ -49,8 +49,8 @@ public abstract class ItemFood<I extends io.gomint.inventory.item.ItemStack<I>> 
         if (player.isHungry()) {
             player.addHunger(getHunger());
 
-            float saturation = Math.min(player.getSaturation() + (getHunger() * getSaturation() * 2.0f), player.getHunger());
-            player.setSaturation(saturation);
+            float saturation = Math.min(player.saturation() + (getHunger() * getSaturation() * 2.0f), player.hunger());
+            player.saturation(saturation);
 
             // Default manipulation
             this.afterPlacement();

@@ -155,7 +155,7 @@ public class ChestTileEntity extends ContainerTileEntity implements InventoryHol
     }
 
     @Override
-    public void interact(Entity entity, Facing face, Vector facePos, ItemStack<?> item) {
+    public void interact(Entity<?> entity, Facing face, Vector facePos, ItemStack<?> item) {
         // Open the chest inventory for the entity
         if (entity instanceof EntityPlayer) {
             ((EntityPlayer) entity).openInventory(this.inventory());

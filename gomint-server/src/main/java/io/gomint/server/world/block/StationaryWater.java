@@ -44,8 +44,8 @@ public class StationaryWater extends Liquid<BlockStationaryWater> implements Blo
     }
 
     @Override
-    public void onEntityStanding( EntityLiving entityLiving ) {
-        if ( entityLiving.isOnFire() ) {
+    public void onEntityStanding(EntityLiving<?> entityLiving ) {
+        if ( entityLiving.burning() ) {
             entityLiving.extinguish();
         }
     }

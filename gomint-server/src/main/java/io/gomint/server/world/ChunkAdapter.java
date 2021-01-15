@@ -75,7 +75,7 @@ public class ChunkAdapter implements Chunk {
     private AtomicInteger refCount = new AtomicInteger(0);
 
     // Entities
-    protected Long2ObjectMap<io.gomint.entity.Entity> entities = null;
+    protected Long2ObjectMap<io.gomint.entity.Entity<?>> entities = null;
 
     // State saving flag
     private boolean populated;
@@ -223,7 +223,7 @@ public class ChunkAdapter implements Chunk {
             this.entities = new Long2ObjectOpenHashMap<>();
         }
 
-        this.entities.put(player.getEntityId(), player);
+        this.entities.put(player.id(), player);
     }
 
     /**
@@ -239,7 +239,7 @@ public class ChunkAdapter implements Chunk {
             return;
         }
 
-        this.entities.remove(player.getEntityId());
+        this.entities.remove(player.id());
         if (this.entities.size() == 0) {
             this.entities = null;
         }
@@ -250,12 +250,12 @@ public class ChunkAdapter implements Chunk {
      *
      * @param entity The entity which should be added
      */
-    protected void addEntity(Entity entity) {
+    protected void addEntity(Entity<?> entity) {
         if (this.entities == null) {
             this.entities = new Long2ObjectOpenHashMap<>();
         }
 
-        this.entities.put(entity.getEntityId(), entity);
+        this.entities.put(entity.id(), entity);
     }
 
     /**
@@ -263,12 +263,12 @@ public class ChunkAdapter implements Chunk {
      *
      * @param entity The entity which should be removed
      */
-    void removeEntity(Entity entity) {
+    void removeEntity(Entity<?> entity) {
         if (this.entities == null) {
             return;
         }
 
-        this.entities.remove(entity.getEntityId());
+        this.entities.remove(entity.id());
         if (this.entities.size() == 0) {
             this.entities = null;
         }
@@ -344,7 +344,7 @@ public class ChunkAdapter implements Chunk {
      *
      * @return The chunk's x-coordinate
      */
-    public int getX() {
+    public int x() {
         return this.x;
     }
 
@@ -583,15 +583,15 @@ public class ChunkAdapter implements Chunk {
      * @param entity The entity which should be checked for
      * @return true if the chunk contains that entity, false if not
      */
-    public boolean knowsEntity(Entity entity) {
-        return this.entities != null && this.entities.containsKey(entity.getEntityId());
+    public boolean knowsEntity(Entity<?> entity) {
+        return this.entities != null && this.entities.containsKey(entity.id());
     }
 
     @Override
-    public <T extends io.gomint.entity.Entity> ChunkAdapter iterateEntities(Class<T> entityClass, Consumer<T> entityConsumer) {
+    public <T extends io.gomint.entity.Entity<?>> ChunkAdapter iterateEntities(Class<T> entityClass, Consumer<T> entityConsumer) {
         // Iterate over all chunks
         if (this.entities != null) {
-            for (Long2ObjectMap.Entry<io.gomint.entity.Entity> entry : this.entities.long2ObjectEntrySet()) {
+            for (Long2ObjectMap.Entry<io.gomint.entity.Entity<?>> entry : this.entities.long2ObjectEntrySet()) {
                 if (entityClass.isAssignableFrom(entry.getValue().getClass())) {
                     entityConsumer.accept((T) entry.getValue());
                 }
@@ -653,7 +653,7 @@ public class ChunkAdapter implements Chunk {
         return CoordinateUtils.toLong(this.x, this.z);
     }
 
-    public Long2ObjectMap<io.gomint.entity.Entity> getEntities() {
+    public Long2ObjectMap<io.gomint.entity.Entity<?>> getEntities() {
         return this.entities;
     }
 
@@ -705,7 +705,7 @@ public class ChunkAdapter implements Chunk {
 
     public void populate() {
         if (!this.isPopulated()) {
-            LOGGER.debug("Starting populating chunk {} / {}", this.getX(), this.z());
+            LOGGER.debug("Starting populating chunk {} / {}", this.x(), this.z());
 
             this.world.chunkGenerator.populate(this);
             this.calculateHeightmap(240);

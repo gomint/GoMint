@@ -116,7 +116,7 @@ public interface GoMint {
      * @param <T>         generic type of the entity
      * @return fresh generated entity
      */
-    <T extends Entity> T createEntity(Class<T> entityClass);
+    <T extends Entity<T>> T createEntity(Class<T> entityClass);
     
     /**
      * Create a new itemstack with the given item in it

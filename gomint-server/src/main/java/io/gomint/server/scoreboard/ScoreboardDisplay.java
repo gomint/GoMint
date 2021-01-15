@@ -45,8 +45,8 @@ public class ScoreboardDisplay implements io.gomint.scoreboard.ScoreboardDisplay
     }
 
     @Override
-    public DisplayEntry addEntity( Entity entity, int score ) {
-        long scoreId = this.scoreboard.addOrUpdateEntity( (io.gomint.server.entity.Entity) entity, this.objectiveName, score );
+    public DisplayEntry addEntity( Entity<?> entity, int score ) {
+        long scoreId = this.scoreboard.addOrUpdateEntity( (io.gomint.server.entity.Entity<?>) entity, this.objectiveName, score );
         return new io.gomint.server.scoreboard.DisplayEntry( this.scoreboard, scoreId );
     }
 

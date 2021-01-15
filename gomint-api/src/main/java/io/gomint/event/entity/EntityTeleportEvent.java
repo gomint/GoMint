@@ -23,7 +23,7 @@ public class EntityTeleportEvent extends CancellableEntityEvent<EntityTeleportEv
      * @param to     which location this entity will be transfered
      * @param cause  of the teleport
      */
-    public EntityTeleportEvent( Entity entity, Location from, Location to, Cause cause ) {
+    public EntityTeleportEvent( Entity<?> entity, Location from, Location to, Cause cause ) {
         super( entity );
 
         this.from = from;

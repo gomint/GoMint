@@ -24,7 +24,7 @@ import java.util.Map;
 public class PluginsCommand extends Command {
 
     @Override
-    public CommandOutput execute(CommandSender commandSender, String alias, Map<String, Object> arguments) {
+    public CommandOutput execute(CommandSender<?> commandSender, String alias, Map<String, Object> arguments) {
         Map<String, Plugin> plugins = GoMint.instance().pluginManager().plugins();
 
         if (plugins.isEmpty()) {

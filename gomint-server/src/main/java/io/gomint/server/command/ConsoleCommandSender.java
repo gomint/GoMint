@@ -17,7 +17,7 @@ import org.slf4j.LoggerFactory;
  */
 public class ConsoleCommandSender implements io.gomint.command.ConsoleCommandSender {
 
-    private Logger commandLogger;
+    private final Logger commandLogger;
 
     /**
      * Construct a new console command sender for the given command
@@ -29,15 +29,18 @@ public class ConsoleCommandSender implements io.gomint.command.ConsoleCommandSen
     }
 
     @Override
-    public void sendMessage( String message ) {
+    public ConsoleCommandSender sendMessage( String message ) {
         this.commandLogger.info( message );
+        return this;
     }
 
     @Override
-    public void sendMessage( ChatType type, String... message ) {
+    public ConsoleCommandSender sendMessage( ChatType type, String... message ) {
         for ( String s : message ) {
             this.commandLogger.info( s );
         }
+
+        return this;
     }
 
     @Override

@@ -20,7 +20,7 @@ public class PacketTextHandler implements PacketHandler<PacketText> {
             case PLAYER_CHAT:
                 // Simply relay for now
                 List<EntityPlayer> playerList = new ArrayList<>( connection.getServer().onlinePlayers() );
-                PlayerChatEvent event = new PlayerChatEvent( connection.getEntity(), connection.getEntity().getDisplayName(), packet.getMessage(), playerList );
+                PlayerChatEvent event = new PlayerChatEvent( connection.getEntity(), connection.getEntity().displayName(), packet.getMessage(), playerList );
                 connection.getServer().pluginManager().callEvent( event );
 
                 if ( !event.cancelled() ) {
@@ -29,7 +29,7 @@ public class PacketTextHandler implements PacketHandler<PacketText> {
 
                     for ( EntityPlayer player : playerList ) {
                         if ( player instanceof io.gomint.server.entity.EntityPlayer ) {
-                            ( (io.gomint.server.entity.EntityPlayer) player ).getConnection().addToSendQueue( packet );
+                            ( (io.gomint.server.entity.EntityPlayer) player ).connection().addToSendQueue( packet );
                         }
                     }
                 }

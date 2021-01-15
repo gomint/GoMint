@@ -50,8 +50,8 @@ public class PlacementTest extends IntegrationTest {
         Block downBlock = block.side(Facing.DOWN);
 
         EntityPlayer player = mock(EntityPlayer.class);
-        when(player.getWorld()).thenReturn(this.world);
-        when(player.getLocation()).thenReturn(new Location(this.world, 51, 50, 50, 10, 20));
+        when(player.world()).thenReturn(this.world);
+        when(player.location()).thenReturn(new Location(this.world, 51, 50, 50, 10, 20));
 
         ClassPath classPath = new ClassPath("io.gomint");
         classPath.getTopLevelClasses("io.gomint.inventory.item", classInfo -> {

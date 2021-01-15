@@ -14,7 +14,7 @@ import io.gomint.entity.EntityAgeable;
  * @author joserobjr
  * @since 2021-01-12
  */
-public interface EntityPanda extends EntityAgeable {
+public interface EntityPanda extends EntityAgeable<EntityPanda> {
     /**
      * Create a new entity panda with no config
      *

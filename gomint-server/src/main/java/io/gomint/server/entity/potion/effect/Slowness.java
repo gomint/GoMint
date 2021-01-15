@@ -26,8 +26,8 @@ public class Slowness extends Effect {
     }
 
     @Override
-    public void apply( EntityLiving player ) {
-        player.getAttributeInstance( Attribute.MOVEMENT_SPEED )
+    public void apply( EntityLiving<?> player ) {
+        player.attributeInstance( Attribute.MOVEMENT_SPEED )
             .setModifier( AttributeModifier.SLOWNESS_EFFECT, AttributeModifierType.ADDITION, -( ( this.amplifier + 1 ) * 0.15f ) );
     }
 
@@ -37,8 +37,8 @@ public class Slowness extends Effect {
     }
 
     @Override
-    public void remove( EntityLiving player ) {
-        player.getAttributeInstance( Attribute.MOVEMENT_SPEED )
+    public void remove( EntityLiving<?> player ) {
+        player.attributeInstance( Attribute.MOVEMENT_SPEED )
             .removeModifier( AttributeModifier.SLOWNESS_EFFECT );
     }
 

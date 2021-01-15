@@ -10,7 +10,7 @@ import io.gomint.server.world.WorldAdapter;
 import java.util.Set;
 
 @RegisterInfo( sId = "minecraft:silverfish" )
-public class EntitySilverfish extends EntityLiving implements io.gomint.entity.monster.EntitySilverfish {
+public class EntitySilverfish extends EntityLiving<io.gomint.entity.monster.EntitySilverfish> implements io.gomint.entity.monster.EntitySilverfish {
 
     /**
      * Constructs a new EntityLiving
@@ -31,10 +31,10 @@ public class EntitySilverfish extends EntityLiving implements io.gomint.entity.m
     }
 
     private void initEntity() {
-        this.setSize( 0.4f, 0.3f );
-        this.addAttribute( Attribute.HEALTH );
-        this.setMaxHealth( 8 );
-        this.setHealth( 8 );
+        this.size( 0.4f, 0.3f );
+        this.attribute( Attribute.HEALTH );
+        this.maxHealth( 8 );
+        this.health( 8 );
     }
 
     @Override
@@ -43,7 +43,7 @@ public class EntitySilverfish extends EntityLiving implements io.gomint.entity.m
     }
 
     @Override
-    public Set<String> getTags() {
+    public Set<String> tags() {
         return EntityTags.HOSTILE_MOB;
     }
 

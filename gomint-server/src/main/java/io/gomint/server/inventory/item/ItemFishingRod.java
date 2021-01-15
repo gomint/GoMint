@@ -39,12 +39,12 @@ public class ItemFishingRod extends ItemStack< io.gomint.inventory.item.ItemFish
     @Override
     public boolean interact(EntityPlayer entity, Facing face, Vector clickPosition, Block clickedBlock ) {
         if ( entity.getFishingHook() == null ) {
-            EntityFishingHook hook = new EntityFishingHook( entity, entity.getWorld() );
+            EntityFishingHook hook = new EntityFishingHook( entity, entity.world() );
             ProjectileLaunchEvent event = new ProjectileLaunchEvent( hook, ProjectileLaunchEvent.Cause.FISHING_ROD );
-            entity.getWorld().getServer().pluginManager().callEvent( event );
+            entity.world().getServer().pluginManager().callEvent( event );
 
             if ( !event.cancelled() ) {
-                entity.getWorld().spawnEntityAt( hook, hook.getPositionX(), hook.getPositionY(), hook.getPositionZ(), hook.getYaw(), hook.getPitch() );
+                entity.world().spawnEntityAt( hook, hook.positionX(), hook.positionY(), hook.positionZ(), hook.yaw(), hook.pitch() );
                 entity.setFishingHook( hook );
             }
         } else {

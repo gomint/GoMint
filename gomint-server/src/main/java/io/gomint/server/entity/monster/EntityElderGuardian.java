@@ -12,7 +12,7 @@ import io.gomint.server.world.WorldAdapter;
 import java.util.Set;
 
 @RegisterInfo( sId = "minecraft:elder_guardian" )
-public class EntityElderGuardian extends EntityLiving implements io.gomint.entity.monster.EntityElderGuardian {
+public class EntityElderGuardian extends EntityLiving<io.gomint.entity.monster.EntityElderGuardian> implements io.gomint.entity.monster.EntityElderGuardian {
 
     /**
      * Constructs a new EntityLiving
@@ -33,10 +33,10 @@ public class EntityElderGuardian extends EntityLiving implements io.gomint.entit
     }
 
     private void initEntity() {
-        this.setSize( 1.9975f, 1.9975f );
-        this.addAttribute( Attribute.HEALTH );
-        this.setMaxHealth( 80 );
-        this.setHealth( 80 );
+        this.size( 1.9975f, 1.9975f );
+        this.attribute( Attribute.HEALTH );
+        this.maxHealth( 80 );
+        this.health( 80 );
     }
 
     @Override
@@ -45,12 +45,13 @@ public class EntityElderGuardian extends EntityLiving implements io.gomint.entit
     }
 
     @Override
-    public void setTarget( Entity entity ) {
-        this.metadataContainer.putLong( MetadataContainer.DATA_TARGET_EID, entity.getEntityId() );
+    public EntityElderGuardian target(Entity<?> entity ) {
+        this.metadataContainer.putLong( MetadataContainer.DATA_TARGET_EID, entity.id() );
+        return this;
     }
 
     @Override
-    public Set<String> getTags() {
+    public Set<String> tags() {
         return EntityTags.RANGED_HOSTILE_MOB;
     }
 

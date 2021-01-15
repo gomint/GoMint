@@ -68,7 +68,7 @@ public class RecipeManager {
         // Check if this is a smelting recipe
         if ( recipe instanceof SmeltingRecipe ) {
             SmeltingRecipe smeltingRecipe = (SmeltingRecipe) recipe;
-            this.smeltingRecipes.put( smeltingRecipe.getIngredients()[0], smeltingRecipe );
+            this.smeltingRecipes.put( smeltingRecipe.ingredients()[0], smeltingRecipe );
         }
 
         this.dirty = true;

@@ -140,7 +140,7 @@ public class CommandOutput {
      *
      * @return if the current output is successful or not.
      */
-    public boolean isSuccess() {
+    public boolean success() {
         return this.success;
     }
 
@@ -151,7 +151,7 @@ public class CommandOutput {
      *
      * @return all messages which are sent to the command sender.
      */
-    public Collection<CommandOutputMessage> getMessages() {
+    public Collection<CommandOutputMessage> messages() {
         return Collections.unmodifiableCollection(this.messages);
     }
 
@@ -163,4 +163,5 @@ public class CommandOutput {
 
         return stringParams;
     }
+
 }

@@ -7,7 +7,7 @@ import io.gomint.GoMint;
  * @version 1.0
  * @stability 3
  */
-public interface EntityEnderpearl extends EntityProjectile {
+public interface EntityEnderpearl extends EntityProjectile<EntityEnderpearl> {
 
     /**
      * Create a new thrown enderpearl entity

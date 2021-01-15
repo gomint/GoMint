@@ -13,7 +13,7 @@ import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.world.WorldAdapter;
 
 @RegisterInfo(sId = "minecraft:pig")
-public class EntityPig extends EntityAgeableAnimal implements io.gomint.entity.animal.EntityPig {
+public class EntityPig extends EntityAgeableAnimal<io.gomint.entity.animal.EntityPig> implements io.gomint.entity.animal.EntityPig {
 
     /**
      * Constructs a new EntityLiving
@@ -34,13 +34,13 @@ public class EntityPig extends EntityAgeableAnimal implements io.gomint.entity.a
     }
 
     private void initEntity() {
-        this.addAttribute(Attribute.HEALTH);
-        this.setMaxHealth(20);
-        this.setHealth(20);
-        if (this.isBaby()) {
-            this.setSize(0.45f, 0.45f);
+        this.attribute(Attribute.HEALTH);
+        this.maxHealth(20);
+        this.health(20);
+        if (this.baby()) {
+            this.size(0.45f, 0.45f);
         } else {
-            this.setSize(0.9f, 0.9f);
+            this.size(0.9f, 0.9f);
         }
     }
 

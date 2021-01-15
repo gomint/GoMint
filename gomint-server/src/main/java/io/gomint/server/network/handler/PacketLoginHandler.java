@@ -176,8 +176,8 @@ public class PacketLoginHandler implements PacketHandler<PacketLogin> {
 
                 // Check for name / uuid collision
                 for (io.gomint.entity.EntityPlayer player : this.server.onlinePlayers()) {
-                    if (player.getName().equals(name) ||
-                        player.getUUID().equals(chainValidator.getUuid())) {
+                    if (player.name().equals(name) ||
+                        player.uuid().equals(chainValidator.getUuid())) {
                         connection.disconnect("Player already logged in on this server");
                         return;
                     }
@@ -249,11 +249,11 @@ public class PacketLoginHandler implements PacketHandler<PacketLogin> {
                     chainValidator.getXboxId(), chainValidator.getUuid(), locale, this.server.pluginManager());
 
                 connection.setEntity(player);
-                connection.getEntity().setSkin(playerSkin);
-                connection.getEntity().setNameTagVisible(true);
-                connection.getEntity().setNameTagAlwaysVisible(true);
-                connection.getEntity().getLoginPerformance().setLoginPacket(currentTimeMillis);
-                connection.getEntity().getLoginPerformance().setEncryptionStart(currentTimeMillis);
+                connection.getEntity().skin(playerSkin);
+                connection.getEntity().nameTagVisible(true);
+                connection.getEntity().nameTagAlwaysVisible(true);
+                connection.getEntity().loginPerformance().setLoginPacket(currentTimeMillis);
+                connection.getEntity().loginPerformance().setEncryptionStart(currentTimeMillis);
 
                 // Fill in fast access maps
                 connection.getServer().uuidMappedPlayers().put(chainValidator.getUuid(), connection.getEntity());

@@ -18,26 +18,26 @@ public class PacketMovePlayerHandler implements PacketHandler<PacketMovePlayer> 
     @Override
     public void handle( PacketMovePlayer packet, long currentTimeMillis, PlayerConnection connection ) {
         EntityPlayer entity = connection.getEntity();
-        Location to = entity.getLocation();
+        Location to = entity.location();
         to.setX( packet.getX() );
-        to.setY( packet.getY() - entity.getEyeHeight() ); // Subtract eye height since client sends it at the eyes
+        to.setY( packet.getY() - entity.eyeHeight() ); // Subtract eye height since client sends it at the eyes
         to.setZ( packet.getZ() );
         to.headYaw( packet.getHeadYaw() );
         to.yaw( packet.getYaw() );
         to.pitch( packet.getPitch() );
 
         // Does the entity have a teleport open?
-        if ( connection.getEntity().getTeleportPosition() != null ) {
-            if ( connection.getEntity().getTeleportPosition().distanceSquared( to ) > 0.2 ) {
-                LOGGER.warn( "Player {} did not teleport to {}", connection.getEntity().getName(), connection.getEntity().getTeleportPosition(), to );
-                connection.sendMovePlayer( connection.getEntity().getTeleportPosition() );
+        if ( connection.getEntity().teleportPosition() != null ) {
+            if ( connection.getEntity().teleportPosition().distanceSquared( to ) > 0.2 ) {
+                LOGGER.warn( "Player {} did not teleport to {}", connection.getEntity().name(), connection.getEntity().teleportPosition(), to );
+                connection.sendMovePlayer( connection.getEntity().teleportPosition() );
                 return;
             } else {
                 connection.getEntity().setTeleportPosition( null );
             }
         }
 
-        Location from = entity.getLocation();
+        Location from = entity.location();
 
         // The packet did not contain any movement? skip it
         if ( from.getX() - to.getX() == 0 &&

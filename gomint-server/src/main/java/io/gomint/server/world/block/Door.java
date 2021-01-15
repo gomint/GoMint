@@ -57,7 +57,7 @@ public abstract class Door<B extends BlockDoor<B>> extends Block implements Bloc
     }
 
     @Override
-    public boolean interact(Entity entity, Facing face, Vector facePos, ItemStack<?> item) {
+    public boolean interact(Entity<?> entity, Facing face, Vector facePos, ItemStack<?> item) {
         // Open / Close the door
         // TODO: Door events
         toggle();
@@ -66,7 +66,7 @@ public abstract class Door<B extends BlockDoor<B>> extends Block implements Bloc
     }
 
     @Override
-    public boolean beforePlacement(EntityLiving entity, ItemStack<?> item, Facing face, Location location) {
+    public boolean beforePlacement(EntityLiving<?> entity, ItemStack<?> item, Facing face, Location location) {
         Block above = this.world.blockAt(this.position.add(BlockPosition.UP));
         if (above.canBeReplaced(item)) {
             DIRECTION.detectFromPlacement(this, entity, item, face);

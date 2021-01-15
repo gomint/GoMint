@@ -31,11 +31,11 @@ import java.util.List;
  */
 public class EffectManager {
 
-    private final EntityLiving living;
+    private final EntityLiving<?> living;
     private final GoMintServer server = (GoMintServer) GoMint.instance();
     private final Byte2ObjectMap<Effect> effects = new Byte2ObjectOpenHashMap<>();
 
-    public EffectManager(EntityLiving living) {
+    public EffectManager(EntityLiving<?> living) {
         this.living = living;
     }
 
@@ -129,7 +129,7 @@ public class EffectManager {
 
     private void sendPacket( byte mode, byte id, int amplifier, boolean visible, int duration ) {
         PacketMobEffect mobEffect = new PacketMobEffect();
-        mobEffect.setEntityId( this.living.getEntityId() );
+        mobEffect.setEntityId( this.living.id() );
         mobEffect.setAction( mode );
         mobEffect.setEffectId( id );
         mobEffect.setAmplifier( amplifier );
@@ -137,12 +137,12 @@ public class EffectManager {
         mobEffect.setDuration( duration );
 
         if ( this.living instanceof EntityPlayer ) {
-            ( (EntityPlayer) this.living ).getConnection().addToSendQueue( mobEffect );
+            ( (EntityPlayer) this.living ).connection().addToSendQueue( mobEffect );
         }
 
-        for ( Entity entity : this.living.getAttachedEntities() ) {
+        for ( Entity<?> entity : this.living.getAttachedEntities() ) {
             if ( entity instanceof EntityPlayer ) {
-                ( (EntityPlayer) entity ).getConnection().addToSendQueue( mobEffect );
+                ( (EntityPlayer) entity ).connection().addToSendQueue( mobEffect );
             }
         }
     }
@@ -160,13 +160,13 @@ public class EffectManager {
         for ( Byte2ObjectMap.Entry<Effect> entry : this.effects.byte2ObjectEntrySet() ) {
             if ( entry.getValue().isVisible() ) {
                 PacketMobEffect mobEffect = new PacketMobEffect();
-                mobEffect.setEntityId( this.living.getEntityId() );
+                mobEffect.setEntityId( this.living.id() );
                 mobEffect.setAction( PacketMobEffect.EVENT_ADD );
                 mobEffect.setEffectId( entry.getByteKey() );
                 mobEffect.setAmplifier( entry.getValue().getAmplifier() );
                 mobEffect.setVisible( entry.getValue().isVisible() );
                 mobEffect.setDuration( MathUtils.fastFloor( ( entry.getValue().getRunoutTimer() - this.server.currentTickTime() ) / Values.CLIENT_TICK_MS ) );
-                player.getConnection().addToSendQueue( mobEffect );
+                player.connection().addToSendQueue( mobEffect );
             }
         }
     }
@@ -203,10 +203,10 @@ public class EffectManager {
                 byte effectId = effect.getByte( "Id", (byte) -1 );
                 if ( effectId > -1 ) {
                     Effect effectInstance = this.server.effects().generate( effectId, effect.getByte( "Amplifier", (byte) 0 ),
-                        effect.getInteger( "Duration", 1 ) * Values.CLIENT_TICK_MS, this );
+                        effect.getInteger( "Duration", 1 ) * (int) Values.CLIENT_TICK_MS, this );
 
                     if ( effect.getByte( "ShowParticles", (byte) 1 ) == 0 ) {
-                        effectInstance.setVisible( false );
+                        effectInstance.visible( false );
                     }
 
                     this.addEffect( effectId, effectInstance );

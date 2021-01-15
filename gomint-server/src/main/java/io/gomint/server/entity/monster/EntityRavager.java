@@ -14,7 +14,7 @@ import java.util.Set;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:ravager" )
-public class EntityRavager extends EntityLiving implements io.gomint.entity.monster.EntityRavager {
+public class EntityRavager extends EntityLiving<io.gomint.entity.monster.EntityRavager> implements io.gomint.entity.monster.EntityRavager {
 
     /**
      * Constructs a new EntityLiving
@@ -32,10 +32,10 @@ public class EntityRavager extends EntityLiving implements io.gomint.entity.mons
     }
 
     private void initEntity() {
-        this.setSize( 1.95f, 2.2f );
-        this.addAttribute( Attribute.HEALTH );
-        this.setMaxHealth( 100 );
-        this.setHealth( 100 );
+        this.size( 1.95f, 2.2f );
+        this.attribute( Attribute.HEALTH );
+        this.maxHealth( 100 );
+        this.health( 100 );
     }
 
     @Override
@@ -44,7 +44,7 @@ public class EntityRavager extends EntityLiving implements io.gomint.entity.mons
     }
 
     @Override
-    public Set<String> getTags() {
+    public Set<String> tags() {
         return EntityTags.HOSTILE_MOB;
     }
 

@@ -30,9 +30,9 @@ public class Cactus extends Block implements BlockCactus {
     }
 
     @Override
-    public void onEntityCollision( Entity entity ) {
+    public void onEntityCollision(Entity<?> entity ) {
         if ( entity instanceof EntityLiving ) {
-            ( (EntityLiving) entity ).attack( 1.0f, EntityDamageEvent.DamageSource.CACTUS );
+            ( (EntityLiving<?>) entity ).attack( 1.0f, EntityDamageEvent.DamageSource.CACTUS );
         }
     }
 

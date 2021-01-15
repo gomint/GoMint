@@ -15,7 +15,7 @@ import io.gomint.entity.EntityLiving;
  * @version 1.0
  * @stability 3
  */
-public interface EntityZombieHorse extends EntityLiving {
+public interface EntityZombieHorse extends EntityLiving<EntityZombieHorse> {
 
     /**
      * Create a new entity zombie horse with no config

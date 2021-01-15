@@ -52,9 +52,9 @@ public class SoulFire extends Block implements BlockSoulFire {
     }
 
     @Override
-    public void onEntityStanding(EntityLiving entityLiving) {
+    public void onEntityStanding(EntityLiving<?> entityLiving) {
         entityLiving.attack(1.0f, EntityDamageEvent.DamageSource.FIRE);
-        entityLiving.setBurning(8, TimeUnit.SECONDS);
+        entityLiving.burning(8, TimeUnit.SECONDS);
     }
 
     @Override

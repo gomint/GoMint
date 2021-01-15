@@ -103,7 +103,7 @@ public class Scoreboard implements io.gomint.scoreboard.Scoreboard {
 
     private void broadcast( Packet packet ) {
         for ( EntityPlayer viewer : this.viewers ) {
-            viewer.getConnection().addToSendQueue( packet );
+            viewer.connection().addToSendQueue( packet );
         }
     }
 
@@ -142,20 +142,20 @@ public class Scoreboard implements io.gomint.scoreboard.Scoreboard {
      * @param objective which should be used
      * @param score     which should be used to register
      */
-    long addOrUpdateEntity( Entity entity, String objective, int score ) {
+    long addOrUpdateEntity( Entity<?> entity, String objective, int score ) {
         // Check if we already have this registered
         Long2ObjectMap.FastEntrySet<ScoreboardLine> fastEntrySet = (Long2ObjectMap.FastEntrySet<ScoreboardLine>) this.scoreboardLines.long2ObjectEntrySet();
         ObjectIterator<Long2ObjectMap.Entry<ScoreboardLine>> fastIterator = fastEntrySet.fastIterator();
         while ( fastIterator.hasNext() ) {
             Long2ObjectMap.Entry<ScoreboardLine> entry = fastIterator.next();
-            if ( entry.getValue().entityId == entity.getEntityId() && entry.getValue().objective.equals( objective ) ) {
+            if ( entry.getValue().entityId == entity.id() && entry.getValue().objective.equals( objective ) ) {
                 return entry.getLongKey();
             }
         }
 
         // Add this score
         long newId = this.scoreIdCounter++;
-        ScoreboardLine scoreboardLine = new ScoreboardLine( (byte) ( ( entity instanceof EntityPlayer ) ? 1 : 2 ), entity.getEntityId(), "", objective, score );
+        ScoreboardLine scoreboardLine = new ScoreboardLine( (byte) ( ( entity instanceof EntityPlayer ) ? 1 : 2 ), entity.id(), "", objective, score );
         this.scoreboardLines.put( newId, scoreboardLine );
 
         // Broadcast entry
@@ -168,8 +168,8 @@ public class Scoreboard implements io.gomint.scoreboard.Scoreboard {
         PacketSetScore packetSetScore = new PacketSetScore();
         packetSetScore.setType( (byte) 0 );
 
-        packetSetScore.setEntries( new ArrayList<PacketSetScore.ScoreEntry>() {{
-            add( new PacketSetScore.ScoreEntry( newId, line.objective, line.score, line.type, line.fakeName, line.entityId ) );
+        packetSetScore.setEntries(new ArrayList<>() {{
+            add(new PacketSetScore.ScoreEntry(newId, line.objective, line.score, line.type, line.fakeName, line.entityId));
         }} );
 
         return packetSetScore;
@@ -200,11 +200,11 @@ public class Scoreboard implements io.gomint.scoreboard.Scoreboard {
         if ( this.viewers.add( player ) ) {
             // We send display information first
             for ( Map.Entry<DisplaySlot, io.gomint.scoreboard.ScoreboardDisplay> entry : this.displays.entrySet() ) {
-                player.getConnection().addToSendQueue( this.constructDisplayPacket( entry.getKey(), entry.getValue() ) );
+                player.connection().addToSendQueue( this.constructDisplayPacket( entry.getKey(), entry.getValue() ) );
             }
 
             // Send scores
-            player.getConnection().addToSendQueue( this.constructSetScore() );
+            player.connection().addToSendQueue( this.constructSetScore() );
         }
     }
 
@@ -226,11 +226,11 @@ public class Scoreboard implements io.gomint.scoreboard.Scoreboard {
             }
 
             // Remove all scores
-            player.getConnection().addToSendQueue( this.constructRemoveScores( validScoreIDs ) );
+            player.connection().addToSendQueue( this.constructRemoveScores( validScoreIDs ) );
 
             // Remove all known displays
             for ( Map.Entry<DisplaySlot, io.gomint.scoreboard.ScoreboardDisplay> entry : this.displays.entrySet() ) {
-                player.getConnection().addToSendQueue( this.constructRemoveDisplayPacket( entry.getValue() ) );
+                player.connection().addToSendQueue( this.constructRemoveDisplayPacket( entry.getValue() ) );
             }
         }
     }

@@ -8,7 +8,7 @@ import io.gomint.entity.EntityAgeable;
  * @version 1.0
  * @stability 3
  */
-public interface EntityHoglin extends EntityAgeable {
+public interface EntityHoglin extends EntityAgeable<EntityHoglin> {
 
     /**
      * Create a new entity hoglin with no config

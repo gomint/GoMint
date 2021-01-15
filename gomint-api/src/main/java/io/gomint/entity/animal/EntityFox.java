@@ -15,7 +15,7 @@ import io.gomint.entity.EntityAgeable;
  * @version 1.0
  * @stability 3
  */
-public interface EntityFox extends EntityAgeable {
+public interface EntityFox extends EntityAgeable<EntityFox> {
 
     /**
      * Create a new entity horse with no config

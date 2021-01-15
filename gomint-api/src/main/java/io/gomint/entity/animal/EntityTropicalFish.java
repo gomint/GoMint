@@ -15,7 +15,7 @@ import io.gomint.entity.EntityLiving;
  * @version 1.0
  * @stability 3
  */
-public interface EntityTropicalFish extends EntityLiving {
+public interface EntityTropicalFish extends EntityLiving<EntityTropicalFish> {
 
     /**
      * Create a new entity tropical fish with no config

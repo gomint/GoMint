@@ -227,7 +227,7 @@ public class NormalGenerator extends ChunkGenerator {
     @Override
     public void populate( Chunk chunk ) {
         // Reset the seed
-        this.random.setSeed( 0xdeadbeef ^ ((long) chunk.getX() << 8 ) ^ chunk.z() ^ this.seed );
+        this.random.setSeed( 0xdeadbeef ^ ((long) chunk.x() << 8 ) ^ chunk.z() ^ this.seed );
 
         // Let the normal populators work
         for ( Populator populator : this.populators ) {

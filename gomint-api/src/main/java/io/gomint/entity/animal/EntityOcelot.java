@@ -15,7 +15,7 @@ import io.gomint.entity.EntityLiving;
  * @version 1.0
  * @stability 3
  */
-public interface EntityOcelot extends EntityLiving {
+public interface EntityOcelot extends EntityLiving<EntityOcelot> {
 
     /**
      * Create a new entity ocelot with no config

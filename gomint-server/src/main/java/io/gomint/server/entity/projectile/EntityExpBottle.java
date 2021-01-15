@@ -25,7 +25,7 @@ import java.util.concurrent.ThreadLocalRandom;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:xp_bottle" )
-public class EntityExpBottle extends EntityThrowable implements io.gomint.entity.projectile.EntityExpBottle {
+public class EntityExpBottle extends EntityThrowable<io.gomint.entity.projectile.EntityExpBottle> implements io.gomint.entity.projectile.EntityExpBottle {
 
     private float lastUpdateDT;
 
@@ -35,17 +35,17 @@ public class EntityExpBottle extends EntityThrowable implements io.gomint.entity
      * @param shooter of this entity
      * @param world   The world in which this entity is in
      */
-    public EntityExpBottle( EntityLiving shooter, WorldAdapter world ) {
+    public EntityExpBottle( EntityLiving<?>shooter, WorldAdapter world ) {
         super( shooter, EntityType.EXP_BOTTLE_PROJECTILE, world );
 
         // Get position from the shooter
-        Location position = this.setPositionFromShooter();
+        Location position = this.positionFromShooter();
 
         // Calculate motion
-        this.setMotionFromEntity(position, this.shooter.getVelocity(), -20f, 0.7f, 1f);
+        this.motionFromEntity(position, this.shooter.velocity(), -20f, 0.7f, 1f);
 
         // Calculate correct yaw / pitch
-        this.setLookFromMotion();
+        this.lookFromMotion();
     }
 
     /**
@@ -90,7 +90,7 @@ public class EntityExpBottle extends EntityThrowable implements io.gomint.entity
     }
 
     private void breakBottle() {
-        Location location = this.getLocation();
+        Location location = this.location();
         this.world.sendParticle( location, Particle.MOB_SPELL );
         this.world.sendLevelEvent( location, LevelEvent.PARTICLE_SPLASH, 0x00385dc6 );
 
@@ -108,16 +108,6 @@ public class EntityExpBottle extends EntityThrowable implements io.gomint.entity
             damageEvent.damageSource() == EntityDamageEvent.DamageSource.ON_FIRE ||
             damageEvent.damageSource() == EntityDamageEvent.DamageSource.ENTITY_EXPLODE )
             && super.damage( damageEvent );
-    }
-
-    @Override
-    public boolean isCritical() {
-        return false;
-    }
-
-    @Override
-    public float getDamage() {
-        return 0;
     }
 
 }

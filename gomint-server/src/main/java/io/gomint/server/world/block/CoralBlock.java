@@ -52,7 +52,7 @@ public class CoralBlock extends Block implements BlockCoralBlock {
 
     @Override
     public long breakTime() {
-        return Values.CLIENT_TICK_MS;
+        return 0;
     }
 
     @Override

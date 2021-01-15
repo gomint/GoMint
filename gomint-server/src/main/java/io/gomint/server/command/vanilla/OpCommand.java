@@ -23,7 +23,7 @@ import java.util.Map;
 public class OpCommand extends Command {
 
     @Override
-    public CommandOutput execute(CommandSender sender, String alias, Map<String, Object> arguments) {
+    public CommandOutput execute(CommandSender<?> sender, String alias, Map<String, Object> arguments) {
         EntityPlayer target = (EntityPlayer) arguments.get("player");
         if (target == null) {
             if (sender instanceof PlayerCommandSender) {
@@ -33,12 +33,12 @@ public class OpCommand extends Command {
             }
         }
 
-        if (target.isOp()) {
-            return CommandOutput.failure("Could not op (already op or higher): " + target.getName());
+        if (target.op()) {
+            return CommandOutput.failure("Could not op (already op or higher): " + target.name());
         }
 
-        target.setOp(true);
+        target.op(true);
         target.sendMessage("You have been opped");
-        return CommandOutput.successful("Opped: " + target.getName());
+        return CommandOutput.successful("Opped: " + target.name());
     }
 }

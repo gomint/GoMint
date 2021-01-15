@@ -9,7 +9,6 @@ package io.gomint.server.entity.component;
 
 import io.gomint.GoMint;
 import io.gomint.entity.Entity;
-import io.gomint.inventory.FurnaceInventory;
 import io.gomint.inventory.item.ItemAir;
 import io.gomint.inventory.item.ItemBurnable;
 import io.gomint.inventory.item.ItemStack;
@@ -65,7 +64,7 @@ public class SmeltingComponent extends AbstractTileEntityComponent {
         if (this.cookTime > 0) {
             this.cookTime = 0;
 
-            for (Entity viewer : this.inventory.viewers()) {
+            for (Entity<?> viewer : this.inventory.viewers()) {
                 if (viewer instanceof io.gomint.server.entity.EntityPlayer) {
                     this.sendTickProgress((io.gomint.server.entity.EntityPlayer) viewer);
                 }
@@ -81,7 +80,7 @@ public class SmeltingComponent extends AbstractTileEntityComponent {
         containerData.setWindowId(WindowMagicNumbers.OPEN_CONTAINER);
         containerData.setKey(CONTAINER_PROPERTY_TICK_COUNT);
         containerData.setValue(this.cookTime);
-        player.getConnection().addToSendQueue(containerData);
+        player.connection().addToSendQueue(containerData);
     }
 
     private void sendFuelInfo(io.gomint.server.entity.EntityPlayer player) {
@@ -89,13 +88,13 @@ public class SmeltingComponent extends AbstractTileEntityComponent {
         containerData.setWindowId(WindowMagicNumbers.OPEN_CONTAINER);
         containerData.setKey(CONTAINER_PROPERTY_LIT_TIME);
         containerData.setValue(this.burnTime);
-        player.getConnection().addToSendQueue(containerData);
+        player.connection().addToSendQueue(containerData);
 
         containerData = new PacketSetContainerData();
         containerData.setWindowId(WindowMagicNumbers.OPEN_CONTAINER);
         containerData.setKey(CONTAINER_PROPERTY_LIT_DURATION);
         containerData.setValue(this.burnDuration);
-        player.getConnection().addToSendQueue(containerData);
+        player.connection().addToSendQueue(containerData);
     }
 
     private void sendDataProperties(io.gomint.server.entity.EntityPlayer player) {
@@ -103,19 +102,19 @@ public class SmeltingComponent extends AbstractTileEntityComponent {
         containerData.setWindowId(WindowMagicNumbers.OPEN_CONTAINER);
         containerData.setKey(CONTAINER_PROPERTY_TICK_COUNT);
         containerData.setValue(this.cookTime);
-        player.getConnection().addToSendQueue(containerData);
+        player.connection().addToSendQueue(containerData);
 
         containerData = new PacketSetContainerData();
         containerData.setWindowId(WindowMagicNumbers.OPEN_CONTAINER);
         containerData.setKey(CONTAINER_PROPERTY_LIT_TIME);
         containerData.setValue(this.burnTime);
-        player.getConnection().addToSendQueue(containerData);
+        player.connection().addToSendQueue(containerData);
 
         containerData = new PacketSetContainerData();
         containerData.setWindowId(WindowMagicNumbers.OPEN_CONTAINER);
         containerData.setKey(CONTAINER_PROPERTY_LIT_DURATION);
         containerData.setValue(this.burnDuration);
-        player.getConnection().addToSendQueue(containerData);
+        player.connection().addToSendQueue(containerData);
     }
 
     @Override
@@ -249,7 +248,7 @@ public class SmeltingComponent extends AbstractTileEntityComponent {
     }
 
     private void broadcastCookTime() {
-        for (Entity viewer : this.inventory.viewers()) {
+        for (Entity<?> viewer : this.inventory.viewers()) {
             if (viewer instanceof io.gomint.server.entity.EntityPlayer) {
                 this.sendTickProgress((io.gomint.server.entity.EntityPlayer) viewer);
             }
@@ -257,7 +256,7 @@ public class SmeltingComponent extends AbstractTileEntityComponent {
     }
 
     private void broadcastFuelInfo() {
-        for (Entity viewer : this.inventory.viewers()) {
+        for (Entity<?> viewer : this.inventory.viewers()) {
             if (viewer instanceof io.gomint.server.entity.EntityPlayer) {
                 this.sendFuelInfo((io.gomint.server.entity.EntityPlayer) viewer);
             }
@@ -308,7 +307,7 @@ public class SmeltingComponent extends AbstractTileEntityComponent {
     }
 
     @Override
-    public void interact(Entity entity, Facing face, Vector facePos, io.gomint.inventory.item.ItemStack<?> item) {
+    public void interact(Entity<?> entity, Facing face, Vector facePos, ItemStack<?> item) {
         // Send the needed container data
         this.sendDataProperties((io.gomint.server.entity.EntityPlayer) entity);
     }

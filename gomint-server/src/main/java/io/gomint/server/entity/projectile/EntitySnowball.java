@@ -25,7 +25,7 @@ import java.util.Set;
  * @see io.gomint.entity.projectile.EntitySnowball
  */
 @RegisterInfo(sId = "minecraft:snowball")
-public class EntitySnowball extends EntityThrowable implements io.gomint.entity.projectile.EntitySnowball {
+public class EntitySnowball extends EntityThrowable<io.gomint.entity.projectile.EntitySnowball> implements io.gomint.entity.projectile.EntitySnowball {
 
     private float lastUpdatedTime;
 
@@ -42,18 +42,18 @@ public class EntitySnowball extends EntityThrowable implements io.gomint.entity.
      * @param shooter Shooter of this projectile
      * @param world   World in which the projectile is being spawned
      */
-    public EntitySnowball(EntityLiving shooter, WorldAdapter world) {
+    public EntitySnowball(EntityLiving<?> shooter, WorldAdapter world) {
         super(shooter, EntityType.SNOWBALL, world);
 
-        Location position = super.setPositionFromShooter(); // Starting position of snowball projectile
+        Location position = super.positionFromShooter(); // Starting position of snowball projectile
 
         // Calculate motion
-        this.setMotionFromEntity(position, this.shooter.getVelocity(), 0f, 1.5f, 1f);
+        this.motionFromEntity(position, this.shooter.velocity(), 0f, 1.5f, 1f);
 
         // Calculate correct yaw / pitch
-        this.setLookFromMotion();
+        this.lookFromMotion();
 
-        super.metadataContainer.putLong(5, shooter.getEntityId()); // Set owning entity
+        super.metadataContainer.putLong(5, shooter.id()); // Set owning entity
     }
 
     @Override
@@ -75,17 +75,17 @@ public class EntitySnowball extends EntityThrowable implements io.gomint.entity.
 
                 if (!hitBlocksEvent.cancelled()) {
                     super.despawn();
-                    this.displaySnowballPoofParticle(super.getLocation());
+                    this.displaySnowballPoofParticle(super.location());
                 }
             }
 
-            BlockType blockOnPosType = super.getLocation().block().blockType();
+            BlockType blockOnPosType = super.location().block().blockType();
 
             // A snowball projectile is set on fire if it goes through lava (but doesn't ignite hit entities)
             if (blockOnPosType == BlockType.FLOWING_LAVA || blockOnPosType == BlockType.STATIONARY_LAVA) {
                 // Avoid sending metadata updates; If not on fire, update
-                if (!super.isOnFire()) {
-                    super.setOnFire(true);
+                if (!super.burning()) {
+                    super.burning(true);
                 }
             }
 
@@ -95,16 +95,16 @@ public class EntitySnowball extends EntityThrowable implements io.gomint.entity.
             }
 
             // Update yaw and pitch if neede
-            this.setLookFromMotion();
+            this.lookFromMotion();
         }
     }
 
     @Override
-    protected void applyCustomDamageEffects(Entity hitEntity) {
-        switch (hitEntity.getType()) {
+    protected void applyCustomDamageEffects(Entity<?> hitEntity) {
+        switch (hitEntity.type()) {
             case BLAZE:
                 // Damages Blazes; 3 health points (1.5 hearts)
-                ((EntityLiving) hitEntity).attack(3f, DamageSource.PROJECTILE);
+                ((EntityLiving<?>) hitEntity).attack(3f, DamageSource.PROJECTILE);
                 break;
             case ENDER_CRYSTAL:
                 // Destroys a ender crystal if hit by a snowball projectile
@@ -113,19 +113,9 @@ public class EntitySnowball extends EntityThrowable implements io.gomint.entity.
         }
     }
 
-    @Override
-    public boolean isCritical() {
-        return false;
-    }
-
-    @Override
-    public float getDamage() {
-        return 0;
-    }
-
     protected void displaySnowballPoofParticle(Location location) {
         for (int i = 0; i < 6; i++) {
-            super.getWorld().sendParticle(location.add(0f, 0.5f, 0f), Particle.SNOWBALL_POOF);
+            super.world().sendParticle(location.add(0f, 0.5f, 0f), Particle.SNOWBALL_POOF);
         }
     }
 

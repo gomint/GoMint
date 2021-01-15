@@ -111,8 +111,8 @@ public final class ReportUploader {
      */
     public ReportUploader includePlayers() {
         for (EntityPlayer player : GoMint.instance().onlinePlayers()) {
-            String key = player.getName() + ":" + player.getUUID().toString();
-            Location location = player.getLocation();
+            String key = player.name() + ":" + player.uuid().toString();
+            Location location = player.location();
             this.players.put(key, new PlayerReportData(location.world().folder(), location.getX(), location.getY(), location.getZ()));
         }
 

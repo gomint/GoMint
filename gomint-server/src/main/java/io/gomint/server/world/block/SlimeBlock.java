@@ -40,8 +40,8 @@ public class SlimeBlock extends Block implements BlockSlimeBlock {
     }
 
     @Override
-    public void stepOn( Entity entity ) {
-        if( !((EntityPlayer) entity).isSneaking() ) {
+    public void stepOn(Entity<?> entity ) {
+        if( !((EntityPlayer) entity).sneaking() ) {
             entity.resetFallDistance();
         }
     }

@@ -8,7 +8,6 @@
 package io.gomint.server.entity.potion.effect;
 
 import io.gomint.server.entity.EntityLiving;
-import io.gomint.server.player.EffectManager;
 import io.gomint.server.registry.RegisterInfo;
 
 /**
@@ -24,8 +23,8 @@ public class Invisibility extends Effect {
     }
 
     @Override
-    public void apply( EntityLiving entity ) {
-        entity.setInvisible( true );
+    public void apply( EntityLiving<?> entity ) {
+        entity.invisible( true );
     }
 
     @Override
@@ -34,8 +33,8 @@ public class Invisibility extends Effect {
     }
 
     @Override
-    public void remove( EntityLiving entity ) {
-        entity.setInvisible( false );
+    public void remove( EntityLiving<?> entity ) {
+        entity.invisible( false );
     }
 
 }

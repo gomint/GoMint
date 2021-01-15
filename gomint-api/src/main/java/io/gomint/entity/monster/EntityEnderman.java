@@ -8,7 +8,7 @@ import io.gomint.entity.EntityLiving;
  * @version 1.0
  * @stability 3
  */
-public interface EntityEnderman extends EntityLiving {
+public interface EntityEnderman extends EntityLiving<EntityEnderman> {
 
     /**
      * Create a new entity enderman with no config

@@ -16,14 +16,14 @@ public class PacketAdventureSettingsHandler implements PacketHandler<PacketAdven
         // This is sent when the client wants a change to its flying status
         AdventureSettings adventureSettings = new AdventureSettings( packet.getFlags(), packet.getFlags2() );
 
-        if ( connection.getEntity().getAdventureSettings().isFlying() != adventureSettings.isFlying() ) {
+        if ( connection.getEntity().adventureSettings().isFlying() != adventureSettings.isFlying() ) {
             // Fire event
             PlayerToggleFlyEvent playerToggleFlyEvent = new PlayerToggleFlyEvent( connection.getEntity(), adventureSettings.isFlying() );
-            playerToggleFlyEvent.cancelled( !connection.getEntity().getAdventureSettings().isCanFly() );
-            connection.getEntity().getWorld().getServer().pluginManager().callEvent( playerToggleFlyEvent );
+            playerToggleFlyEvent.cancelled( !connection.getEntity().adventureSettings().isCanFly() );
+            connection.getEntity().world().getServer().pluginManager().callEvent( playerToggleFlyEvent );
 
-            connection.getEntity().getAdventureSettings().setFlying( playerToggleFlyEvent.cancelled() ? connection.getEntity().getAdventureSettings().isFlying() : adventureSettings.isFlying() );
-            connection.getEntity().getAdventureSettings().update();
+            connection.getEntity().adventureSettings().setFlying( playerToggleFlyEvent.cancelled() ? connection.getEntity().adventureSettings().isFlying() : adventureSettings.isFlying() );
+            connection.getEntity().adventureSettings().update();
         }
     }
     

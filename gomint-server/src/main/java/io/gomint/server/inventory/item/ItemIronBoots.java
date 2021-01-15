@@ -22,10 +22,10 @@ public class ItemIronBoots extends ItemIronArmor<io.gomint.inventory.item.ItemIr
     @Override
     public boolean interact(EntityPlayer entity, Facing face, Vector clickPosition, Block clickedBlock ) {
         if ( clickedBlock == null ) {
-            if ( isBetter( (ItemStack<?>) entity.getArmorInventory().boots() ) ) {
-                ItemStack<?> old = (ItemStack<?>) entity.getArmorInventory().boots();
-                entity.getArmorInventory().boots( this );
-                entity.getInventory().item( entity.getInventory().itemInHandSlot(), old );
+            if ( isBetter( (ItemStack<?>) entity.armorInventory().boots() ) ) {
+                ItemStack<?> old = (ItemStack<?>) entity.armorInventory().boots();
+                entity.armorInventory().boots( this );
+                entity.inventory().item( entity.inventory().itemInHandSlot(), old );
             }
         }
 

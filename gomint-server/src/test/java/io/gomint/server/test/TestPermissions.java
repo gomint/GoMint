@@ -7,8 +7,8 @@
 
 package io.gomint.server.test;
 
+import io.gomint.entity.EntityPlayer;
 import io.gomint.permission.Group;
-import io.gomint.server.entity.EntityPlayer;
 import io.gomint.server.permission.PermissionGroupManager;
 import io.gomint.server.permission.PermissionManager;
 import org.junit.jupiter.api.Assertions;
@@ -25,7 +25,7 @@ public class TestPermissions {
 
     private EntityPlayer mockPlayer(boolean op) {
         final EntityPlayer player = mock(EntityPlayer.class);
-        when(player.isOp()).thenReturn(op);
+        when(player.op()).thenReturn(op);
         return player;
     }
 

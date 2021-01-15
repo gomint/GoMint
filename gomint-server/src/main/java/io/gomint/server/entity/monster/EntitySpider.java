@@ -10,7 +10,7 @@ import io.gomint.server.world.WorldAdapter;
 import java.util.Set;
 
 @RegisterInfo( sId = "minecraft:spider" )
-public class EntitySpider extends EntityLiving implements io.gomint.entity.monster.EntitySpider {
+public class EntitySpider extends EntityLiving<io.gomint.entity.monster.EntitySpider> implements io.gomint.entity.monster.EntitySpider {
 
     /**
      * Constructs a new EntityLiving
@@ -31,10 +31,10 @@ public class EntitySpider extends EntityLiving implements io.gomint.entity.monst
     }
 
     private void initEntity() {
-        this.setSize( 1.4f, 0.9f );
-        this.addAttribute( Attribute.HEALTH );
-        this.setMaxHealth( 16 );
-        this.setHealth( 16 );
+        this.size( 1.4f, 0.9f );
+        this.attribute( Attribute.HEALTH );
+        this.maxHealth( 16 );
+        this.health( 16 );
     }
 
     @Override
@@ -43,7 +43,7 @@ public class EntitySpider extends EntityLiving implements io.gomint.entity.monst
     }
 
     @Override
-    public Set<String> getTags() {
+    public Set<String> tags() {
         return EntityTags.HOSTILE_MOB;
     }
 

@@ -15,7 +15,7 @@ import java.util.Set;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:slime" )
-public class EntitySlime extends EntityLiving implements io.gomint.entity.monster.EntitySlime {
+public class EntitySlime extends EntityLiving<io.gomint.entity.monster.EntitySlime> implements io.gomint.entity.monster.EntitySlime {
 
     /**
      * Constructs a new EntityLiving
@@ -36,19 +36,20 @@ public class EntitySlime extends EntityLiving implements io.gomint.entity.monste
     }
 
     private void initEntity() {
-        this.addAttribute( Attribute.HEALTH );
+        this.attribute( Attribute.HEALTH );
 
-        this.setSizeFactor( 4 );
+        this.sizeFactor( 4 );
     }
 
     @Override
-    public void setSizeFactor( int factor ) {
+    public EntitySlime sizeFactor(int factor ) {
         float newHealth = (float) Math.pow( 2, factor );
-        this.setMaxHealth( newHealth );
-        this.setHealth( newHealth );
-        this.setSize( factor * 0.51f, factor * 0.51f );
+        this.maxHealth( newHealth );
+        this.health( newHealth );
+        this.size( factor * 0.51f, factor * 0.51f );
 
         this.metadataContainer.putInt( MetadataContainer.DATA_VARIANT, factor );
+        return this;
     }
 
     @Override
@@ -57,7 +58,7 @@ public class EntitySlime extends EntityLiving implements io.gomint.entity.monste
     }
 
     @Override
-    public Set<String> getTags() {
+    public Set<String> tags() {
         return EntityTags.HOSTILE_MOB;
     }
 

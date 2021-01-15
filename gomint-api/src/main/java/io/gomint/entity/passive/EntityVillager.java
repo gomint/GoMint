@@ -8,7 +8,7 @@ import io.gomint.entity.EntityAgeable;
  * @version 1.0
  * @stability 3
  */
-public interface EntityVillager extends EntityAgeable {
+public interface EntityVillager extends EntityAgeable<EntityVillager> {
 
     /**
      * Create a new entity villager with no config
@@ -24,14 +24,14 @@ public interface EntityVillager extends EntityAgeable {
      *
      * @param profession of the villager
      */
-    void setProfession( Profession profession );
+    EntityVillager profession(Profession profession );
 
     /**
      * Get the current profession of a villager
      *
      * @return profession of this villager
      */
-    Profession getProfession();
+    Profession profession();
 
     enum Profession {
         FARMER,

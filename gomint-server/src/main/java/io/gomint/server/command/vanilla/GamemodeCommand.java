@@ -31,7 +31,7 @@ import java.util.Map;
 public class GamemodeCommand extends Command {
 
     @Override
-    public CommandOutput execute(CommandSender sender, String alias, Map<String, Object> arguments) {
+    public CommandOutput execute(CommandSender<?> sender, String alias, Map<String, Object> arguments) {
         EntityPlayer target;
         Gamemode mode;
 
@@ -69,13 +69,13 @@ public class GamemodeCommand extends Command {
                 return CommandOutput.failure("Unknown game mode");
         }
 
-        target.setGamemode(mode);
+        target.gamemode(mode);
         target.sendMessage("Your game mode has been updated to " + this.getGamemodeName(mode));
 
         if (target == sender) {
             return CommandOutput.successful("Set own game mode to %%s", this.getGamemodeName(mode));
         } else {
-            return CommandOutput.successful("Set %%s's game mode to %%s", target.getDisplayName(), this.getGamemodeName(mode));
+            return CommandOutput.successful("Set %%s's game mode to %%s", target.displayName(), this.getGamemodeName(mode));
         }
     }
 

@@ -15,7 +15,7 @@ import io.gomint.entity.EntityLiving;
  * @version 1.0
  * @stability 3
  */
-public interface EntitySquid extends EntityLiving {
+public interface EntitySquid extends EntityLiving<EntitySquid> {
 
     /**
      * Create a new entity squid with no config

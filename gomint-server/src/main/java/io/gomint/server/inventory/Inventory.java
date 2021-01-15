@@ -37,20 +37,20 @@ public abstract class Inventory<I> implements io.gomint.inventory.Inventory<I> {
     }
 
     public void addViewer(EntityPlayer player) {
-        this.sendContents(player.getConnection());
-        this.viewer.add(player.getConnection());
+        this.sendContents(player.connection());
+        this.viewer.add(player.connection());
     }
 
     public void addViewerWithoutAction(EntityPlayer player) {
-        this.viewer.add(player.getConnection());
+        this.viewer.add(player.connection());
     }
 
     public void removeViewerWithoutAction(EntityPlayer player) {
-        this.viewer.remove(player.getConnection());
+        this.viewer.remove(player.connection());
     }
 
     public void removeViewer(EntityPlayer player) {
-        this.viewer.remove(player.getConnection());
+        this.viewer.remove(player.connection());
     }
 
     public void setItemWithoutClone(int index, ItemStack<?> item) {
@@ -236,8 +236,8 @@ public abstract class Inventory<I> implements io.gomint.inventory.Inventory<I> {
     }
 
     @Override
-    public Collection<Entity> viewers() {
-        Set<Entity> viewers = new HashSet<>();
+    public Collection<Entity<?>> viewers() {
+        Set<Entity<?>> viewers = new HashSet<>();
 
         for (PlayerConnection playerConnection : this.viewer) {
             viewers.add(playerConnection.getEntity());

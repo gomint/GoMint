@@ -30,7 +30,7 @@ public abstract class Fallable extends Block {
         if (downwards.canBeReplaced(null)) {
             // Create entity
             EntityFallingBlock entity = EntityFallingBlock.create();
-            entity.setBlock(this);
+            entity.block(this);
 
             // Replace block with air
             this.blockType(Air.class);

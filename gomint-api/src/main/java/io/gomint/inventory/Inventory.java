@@ -69,7 +69,7 @@ public interface Inventory<I> {
      *
      * @return collection of viewers
      */
-    Collection<Entity> viewers();
+    Collection<Entity<?>> viewers();
 
     /**
      * Get the type of this inventory

@@ -61,7 +61,7 @@ public class InventoryTransaction<I, S, T> implements Transaction<I, S, T> {
 
     @Override
     public void revert() {
-        this.inventory.sendContents( this.owner.getConnection() );
+        this.inventory.sendContents( this.owner.connection() );
     }
 
     @Override

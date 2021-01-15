@@ -70,7 +70,7 @@ public class Cobweb extends Block implements BlockCobweb {
     }
 
     @Override
-    public void stepOn( Entity entity ) {
+    public void stepOn(Entity<?> entity ) {
         // Reset fall distance
         entity.resetFallDistance();
     }
