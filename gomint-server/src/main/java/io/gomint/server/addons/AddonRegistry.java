@@ -48,6 +48,12 @@ public class AddonRegistry {
 
     // ======================================= Addon Installation
 
+    /**
+     * Searches the server's addon directory for any installed addons and compiles
+     * them into a list for further reference. Addons may be loaded once detected.
+     *
+     * @throws IOException Thrown an error occurs during addon detection
+     */
     public void searchInstalledAddons() throws IOException {
         this.installedAddons.clear();
 
