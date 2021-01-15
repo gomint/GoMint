@@ -27,12 +27,12 @@ public class EnchantmentAquaAffinity extends Enchantment implements io.gomint.en
     }
 
     @Override
-    public int getMinEnchantAbility( short level ) {
+    public int minEnchantAbility( short level ) {
         return 1;
     }
 
     @Override
-    public int getMaxEnchantAbility( short level ) {
+    public int maxEnchantAbility( short level ) {
         return 41;
     }
 
@@ -47,7 +47,7 @@ public class EnchantmentAquaAffinity extends Enchantment implements io.gomint.en
     }
 
     @Override
-    public Rarity getRarity() {
+    public Rarity rarity() {
         return Rarity.RARE;
     }
 

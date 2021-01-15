@@ -61,7 +61,7 @@ public class EnchantTableTileEntity extends ContainerTileEntity implements Inven
 
     private void selectAndSendEnchantments(EntityPlayer player, ItemStack<?> slotItem) {
         FastRandom random = new FastRandom(player.getEnchantmentSeed());
-        Pair<int[], List<List<Enchantment>>> selectedEnchantments = EnchantmentSelector.getEnchantments(this.getBlock().world().getServer().enchantments(),
+        Pair<int[], List<List<Enchantment>>> selectedEnchantments = EnchantmentSelector.determineAvailable(this.getBlock().world().getServer().enchantments(),
             random, this.getBlock().location(), (io.gomint.server.inventory.item.ItemStack<?>) slotItem);
 
         if (selectedEnchantments == null) {
@@ -86,8 +86,8 @@ public class EnchantTableTileEntity extends ContainerTileEntity implements Inven
             List<PacketPlayerEnchantmentOptions.Enchantment> packetEnchantments = new ArrayList<>();
 
             for (io.gomint.enchant.Enchantment enchantment : enchantments) {
-                short id = this.block.world().getServer().enchantments().getId(enchantment.getClass());
-                PacketPlayerEnchantmentOptions.Enchantment ench = new PacketPlayerEnchantmentOptions.Enchantment((byte) id, (byte) enchantment.getLevel());
+                short id = this.block.world().getServer().enchantments().idOf(enchantment.getClass());
+                PacketPlayerEnchantmentOptions.Enchantment ench = new PacketPlayerEnchantmentOptions.Enchantment((byte) id, (byte) enchantment.level());
                 packetEnchantments.add(ench);
             }
 

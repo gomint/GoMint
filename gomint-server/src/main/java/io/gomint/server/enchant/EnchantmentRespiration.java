@@ -27,13 +27,13 @@ public class EnchantmentRespiration extends Enchantment implements io.gomint.enc
     }
 
     @Override
-    public int getMinEnchantAbility( short level ) {
+    public int minEnchantAbility( short level ) {
         return (byte) ( level * 10 );
     }
 
     @Override
-    public int getMaxEnchantAbility( short level ) {
-        return (byte) ( getMinEnchantAbility( level ) + 30 );
+    public int maxEnchantAbility( short level ) {
+        return (byte) ( minEnchantAbility( level ) + 30 );
     }
 
     @Override
@@ -47,7 +47,7 @@ public class EnchantmentRespiration extends Enchantment implements io.gomint.enc
     }
 
     @Override
-    public Rarity getRarity() {
+    public Rarity rarity() {
         return Rarity.RARE;
     }
 

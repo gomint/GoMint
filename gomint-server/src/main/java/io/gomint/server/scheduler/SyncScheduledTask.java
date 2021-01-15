@@ -24,7 +24,7 @@ import java.util.concurrent.TimeUnit;
 public class SyncScheduledTask implements Task, Runnable {
 
     private static final Logger LOGGER = LoggerFactory.getLogger( SyncScheduledTask.class );
-    private final Runnable task;
+    private final Runnable runnable;
     private long period;          // -1 means no reschedule
     private long nextExecution; // -1 is cancelled
     private ExceptionHandler exceptionHandler;
@@ -35,20 +35,20 @@ public class SyncScheduledTask implements Task, Runnable {
      * Constructs a new SyncScheduledTask. It needs to be executed via a normal {@link java.util.concurrent.ExecutorService}
      *
      * @param manager which schedules this task
-     * @param task    The runnable which should be executed
+     * @param runnable The runnable which should be executed
      * @param delay   Amount of time units to wait until the invocation of this execution
      * @param period  Amount of time units for the delay after execution to run the runnable again
      * @param unit    of time
      */
-    public SyncScheduledTask( SyncTaskManager manager, Runnable task, long delay, long period, TimeUnit unit ) {
-        this.task = task;
+    public SyncScheduledTask( SyncTaskManager manager, Runnable runnable, long delay, long period, TimeUnit unit ) {
+        this.runnable = runnable;
         this.period = ( period >= 0 ) ? unit.toMillis( period ) : -1;
         this.nextExecution = ( delay >= 0 ) ? System.currentTimeMillis() + unit.toMillis( delay ) : -1;
         this.manager = manager;
     }
 
-    public Runnable getTask() {
-        return task;
+    public Runnable runnable() {
+        return runnable;
     }
 
     public long getNextExecution() {
@@ -58,7 +58,7 @@ public class SyncScheduledTask implements Task, Runnable {
     @Override
     public String toString() {
         return "SyncScheduledTask{" +
-            "task=" + task +
+            "runnable=" + runnable +
             ", period=" + period +
             ", nextExecution=" + nextExecution +
             '}';
@@ -68,7 +68,7 @@ public class SyncScheduledTask implements Task, Runnable {
     public void run() {
         // CHECKSTYLE:OFF
         try {
-            this.task.run();
+            this.runnable.run();
         } catch ( Exception e ) {
             if ( this.exceptionHandler != null ) {
                 if ( !this.exceptionHandler.onException( e ) ) {
@@ -96,17 +96,19 @@ public class SyncScheduledTask implements Task, Runnable {
     }
 
     @Override
-    public void onException( ExceptionHandler exceptionHandler ) {
+    public SyncScheduledTask onException( ExceptionHandler exceptionHandler ) {
         this.exceptionHandler = exceptionHandler;
+        return this;
     }
 
     @Override
-    public void onComplete( CompleteHandler completeHandler ) {
+    public SyncScheduledTask onComplete( CompleteHandler completeHandler ) {
         if ( this.completeHandlerList == null ) {
             this.completeHandlerList = new ArrayList<>();
         }
 
         this.completeHandlerList.add( completeHandler );
+        return this;
     }
 
     private void fireCompleteHandlers() {

@@ -959,7 +959,7 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
 
                 EnchantmentSharpness sharpness = this.getInventory().itemInHand().enchantment(EnchantmentSharpness.class);
                 if (sharpness != null) {
-                    damage += sharpness.getLevel() * 1.25f;
+                    damage += sharpness.level() * 1.25f;
                 }
 
                 // Check for knockback stuff
@@ -971,7 +971,7 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
 
                 EnchantmentKnockback knockback = this.getInventory().itemInHand().enchantment(EnchantmentKnockback.class);
                 if (knockback != null) {
-                    knockbackLevel += knockback.getLevel();
+                    knockbackLevel += knockback.level();
                 }
 
                 if (damage > 0) {

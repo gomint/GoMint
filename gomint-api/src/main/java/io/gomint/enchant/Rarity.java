@@ -25,7 +25,7 @@ public enum Rarity {
         this.weight = rarityWeight;
     }
 
-    public int getWeight() {
+    public int weight() {
         return this.weight;
     }
 

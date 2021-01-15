@@ -61,7 +61,7 @@ public class EnchantingSession implements Session {
         Location location = new Location(inv.world(), inv.containerPosition());
 
         // Generate enchantments from helper and get them
-        Pair<int[], List<List<Enchantment>>> enchantments = EnchantmentSelector.getEnchantments(this.connection.getServer().enchantments(),
+        Pair<int[], List<List<Enchantment>>> enchantments = EnchantmentSelector.determineAvailable(this.connection.getServer().enchantments(),
             new FastRandom(this.connection.getEntity().getEnchantmentSeed()), location,
             (ItemStack<?>) this.inputInventory.item(0));
 
@@ -124,7 +124,7 @@ public class EnchantingSession implements Session {
         ItemStack<?> toEnchant = (ItemStack<?>) this.inputInventory.item(0);
 
         for (io.gomint.enchant.Enchantment enchantment : event.getEnchantments()) {
-            toEnchant.enchant(enchantment.getClass(), enchantment.getLevel());
+            toEnchant.enchant(enchantment.getClass(), enchantment.level());
         }
 
         this.outputInventory.item(0, toEnchant);

@@ -77,7 +77,7 @@ public class EntityZombiePiglin extends EntityAgeable implements io.gomint.entit
         if (lastDamageEntity instanceof EntityHuman) {
             Enchantment enchantment = ((EntityHuman) lastDamageEntity).getInventory().itemInHand().enchantment(EnchantmentLooting.class);
             if (enchantment != null) {
-                looting = enchantment.getLevel();
+                looting = enchantment.level();
             }
         }
 

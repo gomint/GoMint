@@ -272,7 +272,7 @@ public abstract class ItemStack<I extends io.gomint.inventory.item.ItemStack<I>>
 
     @Override
     public I enchant(Class<? extends Enchantment> clazz, int level) {
-        short id = ((GoMintServer) GoMint.instance()).enchantments().getId(clazz);
+        short id = ((GoMintServer) GoMint.instance()).enchantments().idOf(clazz);
         if (id == -1) {
             LOGGER.warn("Unknown enchantment: {}", clazz.getName());
             return (I) this;
@@ -322,7 +322,7 @@ public abstract class ItemStack<I extends io.gomint.inventory.item.ItemStack<I>>
 
     @Override
     public I removeEnchantment(Class<? extends Enchantment> clazz) {
-        short id = ((GoMintServer) GoMint.instance()).enchantments().getId(clazz);
+        short id = ((GoMintServer) GoMint.instance()).enchantments().idOf(clazz);
         if (id == -1) {
             return (I) this;
         }

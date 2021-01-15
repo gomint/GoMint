@@ -27,12 +27,12 @@ public class EnchantmentInfinity extends Enchantment implements io.gomint.enchan
     }
 
     @Override
-    public int getMinEnchantAbility( short level ) {
+    public int minEnchantAbility( short level ) {
         return 20;
     }
 
     @Override
-    public int getMaxEnchantAbility( short level ) {
+    public int maxEnchantAbility( short level ) {
         return 50;
     }
 
@@ -42,7 +42,7 @@ public class EnchantmentInfinity extends Enchantment implements io.gomint.enchan
     }
 
     @Override
-    public Rarity getRarity() {
+    public Rarity rarity() {
         return Rarity.VERY_RARE;
     }
 

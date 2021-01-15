@@ -108,19 +108,19 @@ public class ItemCrossbow extends ItemStack< io.gomint.inventory.item.ItemCrossb
         int powerModifier = 0;
         EnchantmentPower power = this.enchantment( EnchantmentPower.class );
         if ( power != null ) {
-            powerModifier = power.getLevel();
+            powerModifier = power.level();
         }
 
         int punchModifier = 0;
         EnchantmentPunch punch = this.enchantment( EnchantmentPunch.class );
         if ( punch != null ) {
-            punchModifier = punch.getLevel();
+            punchModifier = punch.level();
         }
 
         int flameModifier = 0;
         EnchantmentFlame flame = this.enchantment( EnchantmentFlame.class );
         if ( flame != null ) {
-            flameModifier = flame.getLevel();
+            flameModifier = flame.level();
         }
 
         // Create arrow
