@@ -73,7 +73,7 @@ public class CraftingSession implements Session {
             PlayerCraftingEvent event = new PlayerCraftingEvent(this.connection.getEntity(), this.recipe);
             this.connection.getEntity().getWorld().getServer().pluginManager().callEvent(event);
 
-            if (event.isCancelled()) {
+            if (event.cancelled()) {
                 return false;
             }
 

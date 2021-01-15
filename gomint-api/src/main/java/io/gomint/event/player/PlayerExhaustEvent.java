@@ -14,9 +14,9 @@ import io.gomint.entity.EntityPlayer;
  * @version 1.0
  * @stability 3
  */
-public class PlayerExhaustEvent extends CancellablePlayerEvent {
+public class PlayerExhaustEvent extends CancellablePlayerEvent<PlayerExhaustEvent> {
 
-    private Cause cause;
+    private final Cause cause;
     private float additionalAmount;
 
     /**
@@ -37,7 +37,7 @@ public class PlayerExhaustEvent extends CancellablePlayerEvent {
      *
      * @return additional exhaustion level
      */
-    public float getAdditionalAmount() {
+    public float additionalAmount() {
         return this.additionalAmount;
     }
 
@@ -46,8 +46,9 @@ public class PlayerExhaustEvent extends CancellablePlayerEvent {
      *
      * @param additionalAmount which should be added to the exhaustion
      */
-    public void setAdditionalAmount( float additionalAmount ) {
+    public PlayerExhaustEvent additionalAmount(float additionalAmount ) {
         this.additionalAmount = additionalAmount;
+        return this;
     }
 
     /**
@@ -55,7 +56,7 @@ public class PlayerExhaustEvent extends CancellablePlayerEvent {
      *
      * @return cause of exhausting
      */
-    public Cause getCause() {
+    public Cause cause() {
         return this.cause;
     }
 

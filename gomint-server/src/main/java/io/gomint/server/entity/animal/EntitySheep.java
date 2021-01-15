@@ -66,9 +66,9 @@ public class EntitySheep extends EntityAgeableAnimal implements io.gomint.entity
     @Override
     public boolean damage(EntityDamageEvent damageEvent) {
         // Run away from attacker
-        if (damageEvent.getDamageSource() == EntityDamageEvent.DamageSource.ENTITY_ATTACK) {
+        if (damageEvent.damageSource() == EntityDamageEvent.DamageSource.ENTITY_ATTACK) {
             EntityDamageByEntityEvent edbee = (EntityDamageByEntityEvent) damageEvent;
-            Entity attacker = edbee.getAttacker();
+            Entity attacker = edbee.attacker();
             this.switchToAttackMovement(attacker);
         }
 

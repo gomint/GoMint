@@ -7,20 +7,21 @@ import io.gomint.entity.EntityPlayer;
  * @version 1.0
  * @stability 3
  */
-public class PlayerAnimationEvent extends CancellablePlayerEvent {
+public class PlayerAnimationEvent extends CancellablePlayerEvent<PlayerAnimationEvent> {
 
-    private Animation animation;
+    private final Animation animation;
 
     public PlayerAnimationEvent( EntityPlayer player, Animation animation ) {
         super(player);
         this.animation = animation;
     }
 
-    public Animation getAnimation() { return animation; }
+    public Animation animation() { return animation; }
 
     public enum Animation {
 
         SWING
 
     }
+
 }

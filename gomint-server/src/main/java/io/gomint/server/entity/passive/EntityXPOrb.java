@@ -91,9 +91,9 @@ public class EntityXPOrb extends Entity implements io.gomint.entity.passive.Enti
 
     @Override
     public boolean damage(EntityDamageEvent damageEvent) {
-        return (damageEvent.getDamageSource() == EntityDamageEvent.DamageSource.VOID ||
-            damageEvent.getDamageSource() == EntityDamageEvent.DamageSource.ON_FIRE ||
-            damageEvent.getDamageSource() == EntityDamageEvent.DamageSource.ENTITY_EXPLODE)
+        return (damageEvent.damageSource() == EntityDamageEvent.DamageSource.VOID ||
+            damageEvent.damageSource() == EntityDamageEvent.DamageSource.ON_FIRE ||
+            damageEvent.damageSource() == EntityDamageEvent.DamageSource.ENTITY_EXPLODE)
             && super.damage(damageEvent);
     }
 

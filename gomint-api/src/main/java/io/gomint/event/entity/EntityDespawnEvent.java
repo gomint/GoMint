@@ -33,7 +33,7 @@ public class EntityDespawnEvent extends Event {
      *
      * @return the player which is affected by this event
      */
-    public Entity getEntity() {
+    public Entity entity() {
         return this.entity;
     }
 

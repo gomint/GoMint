@@ -21,7 +21,7 @@ public class PlayerDeathEvent extends PlayerEvent {
 
     private String deathMessage;
     private boolean dropInventory;
-    private List<ItemStack<?>> drops;
+    private final List<ItemStack<?>> drops;
 
     public PlayerDeathEvent( EntityPlayer player, String deathMessage, boolean dropInventory, List<ItemStack<?>> drops ) {
         super( player );
@@ -35,7 +35,7 @@ public class PlayerDeathEvent extends PlayerEvent {
      *
      * @return death message, can be null
      */
-    public String getDeathMessage() {
+    public String deathMessage() {
         return this.deathMessage;
     }
 
@@ -44,8 +44,9 @@ public class PlayerDeathEvent extends PlayerEvent {
      *
      * @param deathMessage which will be used, can be null or empty string to not display anything
      */
-    public void setDeathMessage( String deathMessage ) {
+    public PlayerDeathEvent deathMessage(String deathMessage ) {
         this.deathMessage = deathMessage;
+        return this;
     }
 
     /**
@@ -53,7 +54,7 @@ public class PlayerDeathEvent extends PlayerEvent {
      *
      * @return true when if will be dropped, false when not
      */
-    public boolean isDropInventory() {
+    public boolean dropInventory() {
         return this.dropInventory;
     }
 
@@ -62,16 +63,17 @@ public class PlayerDeathEvent extends PlayerEvent {
      *
      * @param dropInventory false will not drop the inventory, true will drop the inventory
      */
-    public void setDropInventory( boolean dropInventory ) {
+    public PlayerDeathEvent dropInventory(boolean dropInventory ) {
         this.dropInventory = dropInventory;
+        return this;
     }
 
     /**
-     * A list of items which will be dropped if {@link #isDropInventory()} returns true
+     * A list of items which will be dropped if {@link #dropInventory()} returns true
      *
      * @return list of items
      */
-    public List<ItemStack<?>> getDrops() {
+    public List<ItemStack<?>> drops() {
         return drops;
     }
 

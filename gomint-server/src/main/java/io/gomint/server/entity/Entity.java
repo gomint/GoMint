@@ -717,12 +717,12 @@ public abstract class Entity implements io.gomint.entity.Entity {
     public void setVelocity( Vector velocity, boolean send ) {
         EntityVelocityEvent event = new EntityVelocityEvent( this, velocity );
         this.world.getServer().pluginManager().callEvent( event );
-        if ( event.isCancelled() ) {
+        if ( event.cancelled() ) {
             return;
         }
 
-        LOGGER.debug( "New motion for {}: {}", this, event.getVelocity() );
-        this.transform.setMotion( event.getVelocity().getX(), event.getVelocity().getY(), event.getVelocity().getZ() );
+        LOGGER.debug( "New motion for {}: {}", this, event.velocity() );
+        this.transform.setMotion( event.velocity().getX(), event.velocity().getY(), event.velocity().getZ() );
         this.fallDistance = 0;
 
         if ( send ) {
@@ -1177,7 +1177,7 @@ public abstract class Entity implements io.gomint.entity.Entity {
 
         // First of all we call the event
         this.world.getServer().pluginManager().callEvent( damageEvent );
-        return !damageEvent.isCancelled();
+        return !damageEvent.cancelled();
     }
 
     public void interact( io.gomint.entity.EntityPlayer player, Vector clickVector ) {
@@ -1253,7 +1253,7 @@ public abstract class Entity implements io.gomint.entity.Entity {
     public void teleport( Location to, EntityTeleportEvent.Cause cause ) {
         EntityTeleportEvent entityTeleportEvent = new EntityTeleportEvent( this, this.getLocation(), to, cause );
         this.world.getServer().pluginManager().callEvent( entityTeleportEvent );
-        if ( entityTeleportEvent.isCancelled() ) {
+        if ( entityTeleportEvent.cancelled() ) {
             return;
         }
 

@@ -29,7 +29,7 @@ public class PlayerKickEvent extends PlayerEvent {
      *
      * @return the message with which is the user kicked
      */
-    public String getMessage() {
+    public String message() {
         return this.message;
     }
 

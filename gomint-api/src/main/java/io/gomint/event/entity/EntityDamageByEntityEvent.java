@@ -36,7 +36,7 @@ public class EntityDamageByEntityEvent extends EntityDamageEvent {
      *
      * @return attacking entity
      */
-    public Entity getAttacker() {
+    public Entity attacker() {
         return this.attacker;
     }
 

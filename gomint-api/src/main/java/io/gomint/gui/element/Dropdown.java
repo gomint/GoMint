@@ -13,7 +13,7 @@ public interface Dropdown {
      * @param option to add
      * @return dropdown instance for chaining
      */
-    Dropdown addOption( String option );
+    Dropdown option(String option );
 
     /**
      * Add a new option with the option to select this as default
@@ -22,6 +22,6 @@ public interface Dropdown {
      * @param defaultOption true when this should be default, false when not
      * @return dropdown instance for chaining
      */
-    Dropdown addOption( String option, boolean defaultOption );
+    Dropdown option(String option, boolean defaultOption );
 
 }

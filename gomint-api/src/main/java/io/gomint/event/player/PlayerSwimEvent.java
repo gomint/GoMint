@@ -7,7 +7,7 @@ import io.gomint.entity.EntityPlayer;
  * @version 1.0
  * @stability 3
  */
-public class PlayerSwimEvent extends CancellablePlayerEvent {
+public class PlayerSwimEvent extends CancellablePlayerEvent<PlayerSwimEvent> {
 
     private final boolean newStatus;
 
@@ -21,7 +21,8 @@ public class PlayerSwimEvent extends CancellablePlayerEvent {
      *
      * @return true when the client wants to start swimming, false otherwise
      */
-    public boolean getNewStatus() {
+    public boolean newStatus() {
         return this.newStatus;
     }
+
 }

@@ -15,7 +15,7 @@ import io.gomint.event.entity.CancellableEntityEvent;
  * @version 1.0
  * @stability 3
  */
-public class ProjectileLaunchEvent extends CancellableEntityEvent {
+public class ProjectileLaunchEvent extends CancellableEntityEvent<ProjectileLaunchEvent> {
 
     private final Cause cause;
 
@@ -35,13 +35,13 @@ public class ProjectileLaunchEvent extends CancellableEntityEvent {
      *
      * @return cause of launching
      */
-    public Cause getCause() {
+    public Cause cause() {
         return this.cause;
     }
 
     @Override
-    public EntityProjectile getEntity() {
-        return (EntityProjectile) super.getEntity();
+    public EntityProjectile entity() {
+        return (EntityProjectile) super.entity();
     }
 
     public enum Cause {

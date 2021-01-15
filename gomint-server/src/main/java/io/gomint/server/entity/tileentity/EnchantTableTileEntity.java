@@ -80,9 +80,9 @@ public class EnchantTableTileEntity extends ContainerTileEntity implements Inven
 
         List<PacketPlayerEnchantmentOptions.EnchantmentOption> options = new ArrayList<>();
         for (int i = 0; i < 3; i++) {
-            EnchantmentSelectionEvent.Option option = event.getEnchantmentOptions().get(i);
-            int cost = option.getMinimumRequirement();
-            List<io.gomint.enchant.Enchantment> enchantments = option.getEnchantments();
+            EnchantmentSelectionEvent.Option option = event.enchantmentOptions().get(i);
+            int cost = option.minimumRequirement();
+            List<io.gomint.enchant.Enchantment> enchantments = option.enchantments();
             List<PacketPlayerEnchantmentOptions.Enchantment> packetEnchantments = new ArrayList<>();
 
             for (io.gomint.enchant.Enchantment enchantment : enchantments) {

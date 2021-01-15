@@ -146,7 +146,7 @@ public class EntityArrow extends EntityProjectile implements io.gomint.entity.pr
                 Set<Block> blocks = new HashSet<>(this.collidedWith);
                 ProjectileHitBlocksEvent hitBlockEvent = new ProjectileHitBlocksEvent(blocks, this);
                 this.world.getServer().pluginManager().callEvent(hitBlockEvent);
-                if (!hitBlockEvent.isCancelled()) {
+                if (!hitBlockEvent.cancelled()) {
                     this.canBePickedup = true;
                 }
             }
@@ -177,7 +177,7 @@ public class EntityArrow extends EntityProjectile implements io.gomint.entity.pr
 
             PlayerPickupItemEvent pickupItemEvent = new PlayerPickupItemEvent(player, this, arrow);
             player.getWorld().getServer().pluginManager().callEvent(pickupItemEvent);
-            if (pickupItemEvent.isCancelled()) {
+            if (pickupItemEvent.cancelled()) {
                 return;
             }
 

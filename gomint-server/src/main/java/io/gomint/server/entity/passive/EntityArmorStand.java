@@ -51,7 +51,7 @@ public class EntityArmorStand extends EntityCreature implements io.gomint.entity
     @Override
     public boolean damage( EntityDamageEvent damageEvent ) {
         this.world.getServer().pluginManager().callEvent( damageEvent );
-        if( damageEvent.isCancelled() || !this.isDamageEffective( damageEvent.getDamageSource() ) ) {
+        if( damageEvent.cancelled() || !this.isDamageEffective( damageEvent.damageSource() ) ) {
             return false;
         }
 

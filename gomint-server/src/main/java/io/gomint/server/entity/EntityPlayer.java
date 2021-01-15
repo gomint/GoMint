@@ -387,7 +387,7 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
 
         EntityTeleportEvent entityTeleportEvent = new EntityTeleportEvent(this, this.getLocation(), to, cause);
         this.world.getServer().pluginManager().callEvent(entityTeleportEvent);
-        if (entityTeleportEvent.isCancelled()) {
+        if (entityTeleportEvent.cancelled()) {
             return;
         }
 
@@ -452,7 +452,7 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
         );
         this.world.getServer().pluginManager().callEvent(foodLevelChangeEvent);
 
-        if (!foodLevelChangeEvent.isCancelled()) {
+        if (!foodLevelChangeEvent.cancelled()) {
             super.addHunger(amount);
         } else {
             this.resendAttributes();
@@ -477,11 +477,11 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
             Location from = this.getLocation();
             PlayerMoveEvent playerMoveEvent = this.eventCaller.callEvent(new PlayerMoveEvent(this, from, this.nextMovement));
 
-            if (playerMoveEvent.isCancelled()) {
-                playerMoveEvent.setTo(playerMoveEvent.getFrom());
+            if (playerMoveEvent.cancelled()) {
+                playerMoveEvent.to(playerMoveEvent.from());
             }
 
-            Location to = playerMoveEvent.getTo();
+            Location to = playerMoveEvent.to();
             if (to.getX() != this.nextMovement.getX() || to.getY() != this.nextMovement.getY() || to.getZ() != this.nextMovement.getZ() ||
                 !to.world().equals(this.nextMovement.world()) || to.yaw() != this.nextMovement.yaw() ||
                 to.pitch() != this.nextMovement.pitch() || to.headYaw() != this.nextMovement.headYaw()) {
@@ -573,7 +573,7 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
             InventoryOpenEvent event = new InventoryOpenEvent(this, inventory);
             this.getWorld().getServer().pluginManager().callEvent(event);
 
-            if (event.isCancelled()) {
+            if (event.cancelled()) {
                 return false;
             }
 
@@ -914,12 +914,12 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
             PlayerExhaustEvent exhaustEvent = new PlayerExhaustEvent(this, amount, cause);
             this.world.getServer().pluginManager().callEvent(exhaustEvent);
 
-            if (exhaustEvent.isCancelled()) {
+            if (exhaustEvent.cancelled()) {
                 this.resendAttributes();
                 return;
             }
 
-            super.exhaust(exhaustEvent.getAdditionalAmount());
+            super.exhaust(exhaustEvent.additionalAmount());
         } else {
             if (this.getExhaustion() != 0) {
                 this.setExhaustion(0);
@@ -1017,7 +1017,7 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
     @Override
     public boolean damage(EntityDamageEvent damageEvent) {
         // When allowFlight is on we don't need falling damage
-        if (this.adventureSettings.isCanFly() && damageEvent.getDamageSource() == EntityDamageEvent.DamageSource.FALL) {
+        if (this.adventureSettings.isCanFly() && damageEvent.damageSource() == EntityDamageEvent.DamageSource.FALL) {
             return false;
         }
 
@@ -1027,13 +1027,13 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
 
     @Override
     protected float applyArmorReduction(EntityDamageEvent damageEvent, boolean damageArmor) {
-        if (damageEvent.getDamageSource() == EntityDamageEvent.DamageSource.FALL ||
-            damageEvent.getDamageSource() == EntityDamageEvent.DamageSource.VOID ||
-            damageEvent.getDamageSource() == EntityDamageEvent.DamageSource.DROWNING) {
-            return damageEvent.getDamage();
+        if (damageEvent.damageSource() == EntityDamageEvent.DamageSource.FALL ||
+            damageEvent.damageSource() == EntityDamageEvent.DamageSource.VOID ||
+            damageEvent.damageSource() == EntityDamageEvent.DamageSource.DROWNING) {
+            return damageEvent.damage();
         }
 
-        float damage = damageEvent.getDamage();
+        float damage = damageEvent.damage();
         float maxReductionDiff = 25 - this.armorInventory.getTotalArmorValue();
         float amplifiedDamage = damage * maxReductionDiff;
         if (damageArmor) {
@@ -1065,7 +1065,7 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
         PlayerRespawnEvent event = new PlayerRespawnEvent(this, this.respawnPosition);
         this.connection.getServer().pluginManager().callEvent(event);
 
-        if (event.isCancelled()) {
+        if (event.cancelled()) {
             PacketEntityEvent entityEvent = new PacketEntityEvent();
             entityEvent.setEntityId(this.getEntityId());
             entityEvent.setEventId(EntityEvent.DEATH.getId());
@@ -1099,7 +1099,7 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
         this.removeAllEffects();
 
         // Check for new chunks
-        this.teleport(event.getRespawnLocation());
+        this.teleport(event.respawnLocation());
         this.respawnPosition = null;
 
         // Reset motion
@@ -1191,8 +1191,8 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
         PlayerDeathEvent event = new PlayerDeathEvent(this, deathMessage, true, drops);
         this.connection.getServer().pluginManager().callEvent(event);
 
-        if (event.isDropInventory()) {
-            for (io.gomint.inventory.item.ItemStack<?> drop : event.getDrops()) {
+        if (event.dropInventory()) {
+            for (io.gomint.inventory.item.ItemStack<?> drop : event.drops()) {
                 this.world.dropItem(this.getLocation(), drop);
             }
 
@@ -1205,9 +1205,9 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
         this.craftingInputInventory.clear();
         this.craftingResultInventory.clear();
 
-        if (event.getDeathMessage() != null && !event.getDeathMessage().isEmpty()) {
+        if (event.deathMessage() != null && !event.deathMessage().isEmpty()) {
             for (io.gomint.entity.EntityPlayer player : this.world.onlinePlayers()) {
-                player.sendMessage(event.getDeathMessage());
+                player.sendMessage(event.deathMessage());
             }
         }
 
@@ -1532,12 +1532,12 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
 
         // Now its time for the join event since the player is fully loaded
         PlayerJoinEvent event = this.eventCaller.callEvent(new PlayerJoinEvent(this, ChatColor.YELLOW + this.getDisplayName() + " joined the game."));
-        if (event.isCancelled()) {
-            this.connection.disconnect(event.getKickReason());
+        if (event.cancelled()) {
+            this.connection.disconnect(event.kickReason());
         } else {
-            if (event.getJoinMessage() != null && !event.getJoinMessage().isEmpty()) {
+            if (event.joinMessage() != null && !event.joinMessage().isEmpty()) {
                 GoMint.instance().onlinePlayers().forEach((player) -> {
-                    player.sendMessage(event.getJoinMessage());
+                    player.sendMessage(event.joinMessage());
                 });
             }
         }

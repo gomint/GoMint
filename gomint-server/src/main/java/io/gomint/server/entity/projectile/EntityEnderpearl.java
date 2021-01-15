@@ -12,7 +12,6 @@ import io.gomint.event.entity.EntityTeleportEvent;
 import io.gomint.event.entity.projectile.ProjectileHitBlocksEvent;
 import io.gomint.math.Location;
 import io.gomint.math.MathUtils;
-import io.gomint.math.Vector;
 import io.gomint.server.entity.EntityPlayer;
 import io.gomint.server.entity.EntityType;
 import io.gomint.server.registry.RegisterInfo;
@@ -22,7 +21,6 @@ import io.gomint.world.block.Block;
 
 import java.util.HashSet;
 import java.util.Set;
-import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * @author geNAZt
@@ -86,7 +84,7 @@ public class EntityEnderpearl extends EntityThrowable implements io.gomint.entit
                 Set<Block> blocks = new HashSet<>( this.collidedWith );
                 ProjectileHitBlocksEvent hitBlocksEvent = new ProjectileHitBlocksEvent( blocks, this );
                 this.world.getServer().pluginManager().callEvent( hitBlocksEvent );
-                if ( !hitBlocksEvent.isCancelled() ) {
+                if ( !hitBlocksEvent.cancelled() ) {
                     // Teleport
                     this.teleportShooter();
                     this.despawn();

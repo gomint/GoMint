@@ -113,7 +113,7 @@ public class EntityPrimedTNT extends Entity implements io.gomint.entity.active.E
 
     @Override
     public boolean damage( EntityDamageEvent damageEvent ) {
-        if ( damageEvent.getDamageSource() == EntityDamageEvent.DamageSource.VOID && super.damage( damageEvent ) ) {
+        if ( damageEvent.damageSource() == EntityDamageEvent.DamageSource.VOID && super.damage( damageEvent ) ) {
             this.despawn();
             return true;
         }

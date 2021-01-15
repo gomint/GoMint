@@ -928,9 +928,9 @@ public class PlayerConnection implements ConnectionWithState {
 
         if (this.entity != null && this.entity.getWorld() != null) {
             PlayerQuitEvent event = this.networkManager.getServer().pluginManager().callEvent(new PlayerQuitEvent(this.entity, ChatColor.YELLOW + this.entity.getDisplayName() + " left the game."));
-            if (event.getQuitMessage() != null && !event.getQuitMessage().isEmpty()) {
+            if (event.quitMessage() != null && !event.quitMessage().isEmpty()) {
                 this.getServer().onlinePlayers().forEach((player) -> {
-                    player.sendMessage(event.getQuitMessage());
+                    player.sendMessage(event.quitMessage());
                 });
             }
             this.entity.getWorld().removePlayer(this.entity);

@@ -30,7 +30,7 @@ public class ItemSnowball extends ItemStack< io.gomint.inventory.item.ItemSnowba
         ProjectileLaunchEvent launchEvent = new ProjectileLaunchEvent( snowball, Cause.THROWING_SNOWBALL );
         world.getServer().pluginManager().callEvent( launchEvent );
 
-        if ( !launchEvent.isCancelled() ) {
+        if ( !launchEvent.cancelled() ) {
             world.spawnEntityAt( snowball,
                                 snowball.getPositionX(),
                                 snowball.getPositionY(),

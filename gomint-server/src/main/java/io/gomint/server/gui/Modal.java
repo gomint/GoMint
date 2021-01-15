@@ -18,13 +18,13 @@ public class Modal extends Form<Boolean> implements io.gomint.gui.Modal {
     }
 
     @Override
-    public void setTrueButtonText( String text ) {
+    public void trueText(String text ) {
         this.trueButtonText = text;
         this.dirty = true;
     }
 
     @Override
-    public void setFalseButtonText( String text ) {
+    public void falseText(String text ) {
         this.falseButtonText = text;
         this.dirty = true;
     }

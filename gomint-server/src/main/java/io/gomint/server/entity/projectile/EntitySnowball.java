@@ -73,7 +73,7 @@ public class EntitySnowball extends EntityThrowable implements io.gomint.entity.
                 ProjectileHitBlocksEvent hitBlocksEvent = new ProjectileHitBlocksEvent(blocks, this);
                 super.world.getServer().pluginManager().callEvent(hitBlocksEvent);
 
-                if (!hitBlocksEvent.isCancelled()) {
+                if (!hitBlocksEvent.cancelled()) {
                     super.despawn();
                     this.displaySnowballPoofParticle(super.getLocation());
                 }

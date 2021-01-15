@@ -8,10 +8,10 @@ import io.gomint.world.block.Block;
  * @version 1.0
  * @stability 3
  */
-public class PlayerInteractEvent extends CancellablePlayerEvent {
+public class PlayerInteractEvent extends CancellablePlayerEvent<PlayerInteractEvent> {
 
-    private ClickType clickType;
-    private Block block;
+    private final ClickType clickType;
+    private final Block block;
 
     /**
      * Create a new interaction event
@@ -31,7 +31,7 @@ public class PlayerInteractEvent extends CancellablePlayerEvent {
      *
      * @return enum value of the click type
      */
-    public ClickType getClickType() {
+    public ClickType clickType() {
         return clickType;
     }
 
@@ -40,7 +40,7 @@ public class PlayerInteractEvent extends CancellablePlayerEvent {
      *
      * @return block which the player interacted with
      */
-    public Block getBlock() {
+    public Block block() {
         return block;
     }
 

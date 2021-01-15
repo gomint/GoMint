@@ -12,13 +12,13 @@ import java.util.Objects;
  */
 public class PluginEvent extends Event {
 
-    private Plugin plugin;
+    private final Plugin plugin;
 
     public PluginEvent( Plugin plugin ) {
         this.plugin = plugin;
     }
 
-    public Plugin getPlugin() {
+    public Plugin plugin() {
         return plugin;
     }
 

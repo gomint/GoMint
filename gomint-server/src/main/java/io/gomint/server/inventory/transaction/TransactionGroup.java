@@ -200,7 +200,7 @@ public class TransactionGroup {
             List<io.gomint.inventory.transaction.Transaction<?, ?, ?>> transactionList = new ArrayList<>( this.transactions );
             InventoryTransactionEvent transactionEvent = new InventoryTransactionEvent( this.player, transactionList );
             this.player.getWorld().getServer().pluginManager().callEvent( transactionEvent );
-            return !transactionEvent.isCancelled();
+            return !transactionEvent.cancelled();
         }
 
         return false;

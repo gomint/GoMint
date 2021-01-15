@@ -13,7 +13,7 @@ public interface FormResponse {
      * @param id for which we need the value
      * @return null when not found or the value given from the client
      */
-    Boolean getToggle( String id );
+    Boolean toggle(String id );
 
     /**
      * Get the value of the step slider given
@@ -21,7 +21,7 @@ public interface FormResponse {
      * @param id for which we need the value
      * @return null when not found or the value given from the client
      */
-    String getStepSlider( String id );
+    String stepSlider(String id );
 
     /**
      * Get the value of the slider given
@@ -29,7 +29,7 @@ public interface FormResponse {
      * @param id for which we need the value
      * @return null when not found or the value given from the client
      */
-    Float getSlider( String id );
+    Float slider(String id );
 
     /**
      * Get the value of the input given
@@ -37,7 +37,7 @@ public interface FormResponse {
      * @param id for which we need the value
      * @return null when not found or the value given from the client
      */
-    String getInput( String id );
+    String input(String id );
 
     /**
      * Get the value of the dropbox given
@@ -45,6 +45,6 @@ public interface FormResponse {
      * @param id for which we need the value
      * @return null when not found or the value given from the client
      */
-    String getDropbox( String id );
+    String dropbox(String id );
 
 }

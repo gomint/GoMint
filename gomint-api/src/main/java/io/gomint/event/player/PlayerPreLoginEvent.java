@@ -14,7 +14,7 @@ import java.util.Objects;
  * is a network level operation you can't provide a reason which is printed in the client. If this is needed please use
  * the {@link PlayerLoginEvent}.
  */
-public class PlayerPreLoginEvent extends CancellableEvent {
+public class PlayerPreLoginEvent extends CancellableEvent<PlayerPreLoginEvent> {
 
     private final InetSocketAddress clientAddress;
 
@@ -32,7 +32,7 @@ public class PlayerPreLoginEvent extends CancellableEvent {
      *
      * @return the internet address of the client
      */
-    public InetSocketAddress getClientAddress() {
+    public InetSocketAddress clientAddress() {
         return this.clientAddress;
     }
 

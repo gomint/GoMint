@@ -351,7 +351,7 @@ public class EntityManager {
     public synchronized void spawnEntityAt(Entity entity, float positionX, float positionY, float positionZ, float yaw, float pitch) {
         // Give a entity spawn event around
         EntitySpawnEvent event = this.world.getServer().pluginManager().callEvent(new EntitySpawnEvent(entity));
-        if (event.isCancelled()) {
+        if (event.cancelled()) {
             return;
         }
 

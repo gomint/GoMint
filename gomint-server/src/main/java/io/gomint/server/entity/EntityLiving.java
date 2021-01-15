@@ -272,7 +272,7 @@ public abstract class EntityLiving extends Entity implements InventoryHolder, io
         EntityHealEvent event = new EntityHealEvent(this, amount, cause);
         this.world.getServer().pluginManager().callEvent(event);
 
-        if (!event.isCancelled()) {
+        if (!event.cancelled()) {
             this.setHealth(this.getHealth() + amount);
         }
     }
@@ -292,9 +292,9 @@ public abstract class EntityLiving extends Entity implements InventoryHolder, io
 
         // Check for effect blocking
         if (hasEffect(PotionEffect.FIRE_RESISTANCE) && (
-            damageEvent.getDamageSource() == EntityDamageEvent.DamageSource.FIRE ||
-                damageEvent.getDamageSource() == EntityDamageEvent.DamageSource.LAVA ||
-                damageEvent.getDamageSource() == EntityDamageEvent.DamageSource.ON_FIRE
+            damageEvent.damageSource() == EntityDamageEvent.DamageSource.FIRE ||
+                damageEvent.damageSource() == EntityDamageEvent.DamageSource.LAVA ||
+                damageEvent.damageSource() == EntityDamageEvent.DamageSource.ON_FIRE
         )) {
             return false;
         }
@@ -315,15 +315,15 @@ public abstract class EntityLiving extends Entity implements InventoryHolder, io
         }
 
         // Call event
-        damageEvent.setFinalDamage(damage);
+        damageEvent.finalDamage(damage);
         if (!super.damage(damageEvent)) {
             return false;
         }
 
         // Did the final damage change?
         float damageToBeDealt;
-        if (damage != damageEvent.getFinalDamage()) {
-            damageToBeDealt = damageEvent.getFinalDamage();
+        if (damage != damageEvent.finalDamage()) {
+            damageToBeDealt = damageEvent.finalDamage();
         } else {
             damageToBeDealt = applyArmorReduction(damageEvent, true);
             damageToBeDealt = applyEffectReduction(damageEvent, damageToBeDealt);
@@ -356,7 +356,7 @@ public abstract class EntityLiving extends Entity implements InventoryHolder, io
 
         if (damageEvent instanceof EntityDamageByEntityEvent) {
             // Knockback
-            Entity entity = (Entity) ((EntityDamageByEntityEvent) damageEvent).getAttacker();
+            Entity entity = (Entity) ((EntityDamageByEntityEvent) damageEvent).attacker();
             float diffX = this.getPositionX() - entity.getPositionX();
             float diffZ = this.getPositionZ() - entity.getPositionZ();
 
@@ -383,8 +383,8 @@ public abstract class EntityLiving extends Entity implements InventoryHolder, io
         }
 
         this.lastDamage = damage;
-        this.lastDamageSource = damageEvent.getDamageSource();
-        this.lastDamageEntity = (damageEvent instanceof EntityDamageByEntityEvent) ? ((EntityDamageByEntityEvent) damageEvent).getAttacker() : null;
+        this.lastDamageSource = damageEvent.damageSource();
+        this.lastDamageEntity = (damageEvent instanceof EntityDamageByEntityEvent) ? ((EntityDamageByEntityEvent) damageEvent).attacker() : null;
 
         // Set health
         this.setHealthInternal(health <= 0 ? 0 : health);
@@ -402,12 +402,12 @@ public abstract class EntityLiving extends Entity implements InventoryHolder, io
 
     protected float applyEffectReduction(EntityDamageEvent damageEvent, float damage) {
         // Starve is absolute damage
-        if (damageEvent.getDamageSource() == EntityDamageEvent.DamageSource.STARVE) {
+        if (damageEvent.damageSource() == EntityDamageEvent.DamageSource.STARVE) {
             return damage;
         }
 
         int damageResistanceAmplifier = getEffectAmplifier(PotionEffect.DAMAGE_RESISTANCE);
-        if (damageResistanceAmplifier != -1 && damageEvent.getDamageSource() != EntityDamageEvent.DamageSource.VOID) {
+        if (damageResistanceAmplifier != -1 && damageEvent.damageSource() != EntityDamageEvent.DamageSource.VOID) {
             float maxReductionDiff = 25f - ((damageResistanceAmplifier + 1) * 5);
             float amplifiedDamage = damage * maxReductionDiff;
             damage = amplifiedDamage / 25.0F;
@@ -450,7 +450,7 @@ public abstract class EntityLiving extends Entity implements InventoryHolder, io
      * @return damage left over after removing armor reductions
      */
     protected float applyArmorReduction(EntityDamageEvent damageEvent, boolean damageArmor) {
-        return damageEvent.getDamage();
+        return damageEvent.damage();
     }
 
     @Override

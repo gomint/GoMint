@@ -8,9 +8,9 @@ import io.gomint.entity.EntityPlayer;
  * @version 1.0
  * @stability 3
  */
-public class PlayerInteractWithEntityEvent extends CancellablePlayerEvent {
+public class PlayerInteractWithEntityEvent extends CancellablePlayerEvent<PlayerInteractWithEntityEvent> {
 
-    private Entity entity;
+    private final Entity entity;
 
     /**
      * Create a new interaction event
@@ -28,7 +28,7 @@ public class PlayerInteractWithEntityEvent extends CancellablePlayerEvent {
      *
      * @return entity which was interacted
      */
-    public Entity getEntity() {
+    public Entity entity() {
         return entity;
     }
 

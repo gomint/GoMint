@@ -15,7 +15,7 @@ import io.gomint.inventory.item.ItemStack;
  * @version 1.0
  * @stability 3
  */
-public class PlayerConsumeItemEvent extends CancellablePlayerEvent {
+public class PlayerConsumeItemEvent extends CancellablePlayerEvent<PlayerConsumeItemEvent> {
 
     private final ItemStack<?> itemStack;
 
@@ -35,7 +35,7 @@ public class PlayerConsumeItemEvent extends CancellablePlayerEvent {
      *
      * @return itemstack which should be consumed
      */
-    public ItemStack<?> getItemStack() {
+    public ItemStack<?> itemStack() {
         return this.itemStack;
     }
 

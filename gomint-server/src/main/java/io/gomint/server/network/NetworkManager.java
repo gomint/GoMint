@@ -302,7 +302,7 @@ public class NetworkManager {
                     new PlayerPreLoginEvent(event.getConnection().getAddress())
                 );
 
-                if (playerPreLoginEvent.isCancelled()) {
+                if (playerPreLoginEvent.cancelled()) {
                     // Since the user has not gotten any packets we are not able to be sure if we can send him a disconnect notification
                     // so we decide to close the raknet connection without any notice
                     event.getConnection().disconnect(null);
@@ -336,8 +336,8 @@ public class NetworkManager {
             )
         );
 
-        event.getPingPongInfo().setMotd("MCPE;" + pingEvent.getMotd() + ";" + Protocol.MINECRAFT_PE_PROTOCOL_VERSION +
-            ";" + Protocol.MINECRAFT_PE_NETWORK_VERSION + ";" + pingEvent.getOnlinePlayers() + ";" + pingEvent.getMaxPlayers() + ";" + this.socket.getGuid());
+        event.getPingPongInfo().setMotd("MCPE;" + pingEvent.motd() + ";" + Protocol.MINECRAFT_PE_PROTOCOL_VERSION +
+            ";" + Protocol.MINECRAFT_PE_NETWORK_VERSION + ";" + pingEvent.onlinePlayers() + ";" + pingEvent.maxPlayers() + ";" + this.socket.getGuid());
     }
 
     /**

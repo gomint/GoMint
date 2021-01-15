@@ -74,8 +74,8 @@ public class ResourceManager {
      */
     private synchronized void loadLocale( Locale locale, String param ) throws ResourceLoadFailedException {
         //Get the correct loader for this param
-        for ( ResourceLoader loader : registerdLoaders ) {
-            for ( String ending : loader.getFormats() ) {
+        for ( ResourceLoader<?> loader : registerdLoaders ) {
+            for ( String ending : loader.formats() ) {
                 if ( param.endsWith( ending ) ) {
                     try {
                         synchronized ( sharedLock ) {
@@ -147,7 +147,7 @@ public class ResourceManager {
             //Check if this Locale contains the key searched for
             reloadIfGCCleared( locale );
 
-            if ( loadedLocales.get( locale ).get().getKeys().contains( key ) ) {
+            if ( loadedLocales.get( locale ).get().keys().contains( key ) ) {
                 return loadedLocales.get( locale ).get().get( key );
             }
         }
@@ -160,7 +160,7 @@ public class ResourceManager {
             //Check if this Locale contains the key searched for
             reloadIfGCCleared( baseLocale );
 
-            if ( loadedLocales.get( baseLocale ).get().getKeys().contains( key ) ) {
+            if ( loadedLocales.get( baseLocale ).get().keys().contains( key ) ) {
                 return loadedLocales.get( baseLocale ).get().get( key );
             }
         }

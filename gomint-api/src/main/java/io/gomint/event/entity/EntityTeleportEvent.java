@@ -8,7 +8,7 @@ import io.gomint.math.Location;
  * @version 1.0
  * @stability 3
  */
-public class EntityTeleportEvent extends CancellableEntityEvent {
+public class EntityTeleportEvent extends CancellableEntityEvent<EntityTeleportEvent> {
 
     private final Location from;
     private final Location to;
@@ -36,7 +36,7 @@ public class EntityTeleportEvent extends CancellableEntityEvent {
      *
      * @return the from location
      */
-    public Location getFrom() {
+    public Location from() {
         return this.from;
     }
 
@@ -45,7 +45,7 @@ public class EntityTeleportEvent extends CancellableEntityEvent {
      *
      * @return the to location
      */
-    public Location getTo() {
+    public Location to() {
         return this.to;
     }
 
@@ -54,7 +54,7 @@ public class EntityTeleportEvent extends CancellableEntityEvent {
      *
      * @return the cause why this teleport happens
      */
-    public Cause getCause() {
+    public Cause cause() {
         return this.cause;
     }
 

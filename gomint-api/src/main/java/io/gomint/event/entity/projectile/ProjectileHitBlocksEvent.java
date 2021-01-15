@@ -18,7 +18,7 @@ import java.util.Set;
  * @version 1.0
  * @stability 3
  */
-public class ProjectileHitBlocksEvent extends CancellableEvent {
+public class ProjectileHitBlocksEvent extends CancellableEvent<ProjectileHitBlocksEvent> {
 
     private final Set<Block> blocks;
     private final EntityProjectile projectile;
@@ -39,7 +39,7 @@ public class ProjectileHitBlocksEvent extends CancellableEvent {
      *
      * @return projectile which hit the entity
      */
-    public EntityProjectile getProjectile() {
+    public EntityProjectile projectile() {
         return this.projectile;
     }
 
@@ -48,7 +48,8 @@ public class ProjectileHitBlocksEvent extends CancellableEvent {
      *
      * @return blocks which got hit
      */
-    public Set<Block> getBlocks() {
+    public Set<Block> blocks() {
         return this.blocks;
     }
+
 }

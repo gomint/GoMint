@@ -146,7 +146,7 @@ public class PacketInventoryTransactionHandler implements PacketHandler<PacketIn
 
                 connection.getServer().pluginManager().callEvent(event);
 
-                if (event.isCancelled()) {
+                if (event.cancelled()) {
                     break;
                 }
 
@@ -210,7 +210,7 @@ public class PacketInventoryTransactionHandler implements PacketHandler<PacketIn
                 PlayerInteractEvent event = new PlayerInteractEvent(connection.getEntity(), PlayerInteractEvent.ClickType.RIGHT, null);
                 this.eventCaller.callEvent(event);
 
-                if (!event.isCancelled()) {
+                if (!event.cancelled()) {
                     io.gomint.server.inventory.item.ItemStack<?> itemStack = (io.gomint.server.inventory.item.ItemStack<?>) connection.getEntity().getInventory().itemInHand();
                     itemStack.interact(connection.getEntity(), null, packet.getClickPosition(), null);
                 } else {
@@ -260,10 +260,10 @@ public class PacketInventoryTransactionHandler implements PacketHandler<PacketIn
                 io.gomint.server.world.block.Block block = connection.getEntity().getWorld().blockAt(connection.getEntity().getGamemode() == Gamemode.CREATIVE ? packet.getBlockPosition() : connection.getEntity().getBreakVector());
                 if (block != null) {
                     BlockBreakEvent blockBreakEvent = new BlockBreakEvent(connection.getEntity(), block, connection.getEntity().getGamemode() == Gamemode.CREATIVE ? new ArrayList<>() : block.drops(itemInHand));
-                    blockBreakEvent.setCancelled(connection.getEntity().getGamemode() == Gamemode.ADVENTURE); // TODO: Better handling for canBreak rules for adventure gamemode
+                    blockBreakEvent.cancelled(connection.getEntity().getGamemode() == Gamemode.ADVENTURE); // TODO: Better handling for canBreak rules for adventure gamemode
 
                     connection.getEntity().getWorld().getServer().pluginManager().callEvent(blockBreakEvent);
-                    if (blockBreakEvent.isCancelled()) {
+                    if (blockBreakEvent.cancelled()) {
                         reset(packet, connection);
                         connection.getEntity().setBreakVector(null);
                         return;
@@ -271,7 +271,7 @@ public class PacketInventoryTransactionHandler implements PacketHandler<PacketIn
 
                     // Check for special break rights (creative)
                     if (connection.getEntity().getGamemode() == Gamemode.CREATIVE) {
-                        if (connection.getEntity().getWorld().breakBlock(packet.getBlockPosition(), blockBreakEvent.getDrops(), true)) {
+                        if (connection.getEntity().getWorld().breakBlock(packet.getBlockPosition(), blockBreakEvent.drops(), true)) {
                             block.blockType(BlockAir.class);
                             connection.getEntity().setBreakVector(null);
                         } else {
@@ -290,7 +290,7 @@ public class PacketInventoryTransactionHandler implements PacketHandler<PacketIn
                         reset(packet, connection);
                         connection.getEntity().setBreakVector(null);
                     } else {
-                        if (connection.getEntity().getWorld().breakBlock(connection.getEntity().getBreakVector(), blockBreakEvent.getDrops(), false)) {
+                        if (connection.getEntity().getWorld().breakBlock(connection.getEntity().getBreakVector(), blockBreakEvent.drops(), false)) {
                             // Add exhaustion
                             connection.getEntity().exhaust(0.025f, PlayerExhaustEvent.Cause.MINING);
 
@@ -355,7 +355,7 @@ public class PacketInventoryTransactionHandler implements PacketHandler<PacketIn
                     // Drop item
                     PlayerDropItemEvent playerDropItemEvent = new PlayerDropItemEvent(connection.getEntity(), transaction.getNewItem());
                     connection.getServer().pluginManager().callEvent(playerDropItemEvent);
-                    if (!playerDropItemEvent.isCancelled()) {
+                    if (!playerDropItemEvent.cancelled()) {
                         DropItemTransaction<?> dropItemTransaction = new DropItemTransaction<>(
                             connection.getEntity().getLocation().add(0, connection.getEntity().getEyeHeight(), 0),
                             connection.getEntity().getDirection().normalize().multiply(0.4f),

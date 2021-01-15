@@ -13,7 +13,7 @@ import java.util.Objects;
  * to be sent to other players (become visible). If you cancel this event the player will never be spawned but it has loaded
  * world chunks and got all resource pack data.
  */
-public class PlayerJoinEvent extends CancellablePlayerEvent {
+public class PlayerJoinEvent extends CancellablePlayerEvent<PlayerJoinEvent> {
 
     private String kickReason;
     private String joinMessage;
@@ -28,8 +28,9 @@ public class PlayerJoinEvent extends CancellablePlayerEvent {
      *
      * @param joinMessage the message to display
      */
-    public void setJoinMessage( String joinMessage ) {
+    public PlayerJoinEvent joinMessage(String joinMessage ) {
         this.joinMessage = joinMessage;
+        return this;
     }
 
     /**
@@ -37,7 +38,7 @@ public class PlayerJoinEvent extends CancellablePlayerEvent {
      *
      * @return the message that will be displayed
      */
-    public String getJoinMessage() {
+    public String joinMessage() {
         return joinMessage;
     }
 
@@ -46,8 +47,9 @@ public class PlayerJoinEvent extends CancellablePlayerEvent {
      *
      * @param kickReason which is used to kick the player
      */
-    public void setKickReason( String kickReason ) {
+    public PlayerJoinEvent kickReason(String kickReason ) {
         this.kickReason = kickReason;
+        return this;
     }
 
     /**
@@ -55,7 +57,7 @@ public class PlayerJoinEvent extends CancellablePlayerEvent {
      *
      * @return reason for kick
      */
-    public String getKickReason() {
+    public String kickReason() {
         return kickReason;
     }
 

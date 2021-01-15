@@ -30,7 +30,7 @@ public class ItemEnderPearl extends ItemStack< io.gomint.inventory.item.ItemEnde
         ProjectileLaunchEvent event = new ProjectileLaunchEvent( entityEnderpearl, ProjectileLaunchEvent.Cause.THROWING_ENDER_PEARL );
         entity.getWorld().getServer().pluginManager().callEvent( event );
 
-        if ( !event.isCancelled() ) {
+        if ( !event.cancelled() ) {
             entity.getWorld().spawnEntityAt( entityEnderpearl, entityEnderpearl.getPositionX(), entityEnderpearl.getPositionY(),
                 entityEnderpearl.getPositionZ(), entityEnderpearl.getYaw(), entityEnderpearl.getPitch() );
         }

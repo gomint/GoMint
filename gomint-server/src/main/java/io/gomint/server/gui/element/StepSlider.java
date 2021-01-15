@@ -23,20 +23,20 @@ public class StepSlider extends Element implements io.gomint.gui.element.StepSli
     }
 
     @Override
-    public io.gomint.gui.element.StepSlider addStep( String step ) {
+    public io.gomint.gui.element.StepSlider step(String step ) {
         this.steps.add( step );
-        this.form.setDirty();
+        this.form.dirty();
         return this;
     }
 
     @Override
-    public io.gomint.gui.element.StepSlider addStep( String step, boolean defaultStep ) {
+    public io.gomint.gui.element.StepSlider step(String step, boolean defaultStep ) {
         if ( defaultStep ) {
             this.defaultStep = this.steps.size();
         }
 
         this.steps.add( step );
-        this.form.setDirty();
+        this.form.dirty();
         return null;
     }
 

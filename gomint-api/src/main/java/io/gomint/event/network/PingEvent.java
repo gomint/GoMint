@@ -6,7 +6,7 @@ import io.gomint.event.Event;
  * @author geNAZt
  * @version 1.0
  * @stability 3
- *
+ * <p>
  * This event gets fired when a unconnected Client pings the server. This can happen very often so care about putting
  * heavy calculation on this event since it may slow down other connections by a huge amount.
  */
@@ -16,7 +16,7 @@ public class PingEvent extends Event {
     private int onlinePlayers;
     private int maxPlayers;
 
-    public PingEvent( String motd, int onlinePlayers, int maxPlayers ) {
+    public PingEvent(String motd, int onlinePlayers, int maxPlayers) {
         this.motd = motd;
         this.onlinePlayers = onlinePlayers;
         this.maxPlayers = maxPlayers;
@@ -27,7 +27,7 @@ public class PingEvent extends Event {
      *
      * @return MOTD of this server
      */
-    public String getMotd() {
+    public String motd() {
         return this.motd;
     }
 
@@ -36,8 +36,9 @@ public class PingEvent extends Event {
      *
      * @param motd to set
      */
-    public void setMotd( String motd ) {
+    public PingEvent motd(String motd) {
         this.motd = motd;
+        return this;
     }
 
     /**
@@ -45,7 +46,7 @@ public class PingEvent extends Event {
      *
      * @return amount of users
      */
-    public int getOnlinePlayers() {
+    public int onlinePlayers() {
         return this.onlinePlayers;
     }
 
@@ -54,16 +55,18 @@ public class PingEvent extends Event {
      *
      * @param onlinePlayers amount which should be shown
      */
-    public void setOnlinePlayers( int onlinePlayers ) {
+    public PingEvent onlinePlayers(int onlinePlayers) {
         this.onlinePlayers = onlinePlayers;
+        return this;
     }
 
-    public int getMaxPlayers() {
+    public int maxPlayers() {
         return this.maxPlayers;
     }
 
-    public void setMaxPlayers( int maxPlayers ) {
+    public PingEvent maxPlayers(int maxPlayers) {
         this.maxPlayers = maxPlayers;
+        return this;
     }
 
 }

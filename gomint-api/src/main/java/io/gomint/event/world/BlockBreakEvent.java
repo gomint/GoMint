@@ -19,7 +19,7 @@ import java.util.List;
  * @version 1.0
  * @stability 3
  */
-public class BlockBreakEvent extends CancellablePlayerEvent {
+public class BlockBreakEvent extends CancellablePlayerEvent<BlockBreakEvent> {
 
     private final Block breakBlock;
     private final List<ItemStack<?>> drops;
@@ -42,7 +42,7 @@ public class BlockBreakEvent extends CancellablePlayerEvent {
      *
      * @return drops which can be manipulated
      */
-    public List<ItemStack<?>> getDrops() {
+    public List<ItemStack<?>> drops() {
         return this.drops;
     }
 
@@ -51,7 +51,7 @@ public class BlockBreakEvent extends CancellablePlayerEvent {
      *
      * @return block which should be broken
      */
-    public Block getBreakBlock() {
+    public Block breakBlock() {
         return this.breakBlock;
     }
 

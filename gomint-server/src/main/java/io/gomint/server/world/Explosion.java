@@ -150,7 +150,7 @@ public class Explosion {
         // Call explode event
         EntityExplodeEvent event = new EntityExplodeEvent( this.source, this.affectedBlocks, ( 1f / this.size ) * 100f );
         this.source.getWorld().getServer().pluginManager().callEvent( event );
-        if ( event.isCancelled() ) {
+        if ( event.cancelled() ) {
             return;
         }
 
@@ -184,10 +184,10 @@ public class Explosion {
         }
 
         Set<Block> alreadyUpdated = new HashSet<>();
-        for ( Block block : event.getAffectedBlocks() ) {
+        for ( Block block : event.affectedBlocks() ) {
             if ( block instanceof BlockTNT ) {
                 ( (BlockTNT) block ).prime( 0.5f + ThreadLocalRandom.current().nextFloat() );
-            } else if ( ThreadLocalRandom.current().nextFloat() * 100 < event.getRandomDropChance() ) {
+            } else if ( ThreadLocalRandom.current().nextFloat() * 100 < event.randomDropChance() ) {
                 for ( ItemStack<?> drop : block.drops( ItemAir.create( 0 ) ) ) {
                     this.source.getWorld().dropItem( new Vector(block.position()).add( 0.5f, 0.5f, 0.5f ), drop );
                 }
@@ -197,7 +197,7 @@ public class Explosion {
 
             for ( Facing blockFace : Facing.values() ) {
                 Block attached = block.side( blockFace );
-                if ( !event.getAffectedBlocks().contains( attached ) && !alreadyUpdated.contains( attached ) ) {
+                if ( !event.affectedBlocks().contains( attached ) && !alreadyUpdated.contains( attached ) ) {
                     io.gomint.server.world.block.Block implBlock = (io.gomint.server.world.block.Block) attached;
                     implBlock.update( UpdateReason.EXPLOSION, currentTimeMS, dT );
                     alreadyUpdated.add( attached );

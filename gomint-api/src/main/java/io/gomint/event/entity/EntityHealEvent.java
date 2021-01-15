@@ -14,7 +14,7 @@ import io.gomint.entity.Entity;
  * @version 1.0
  * @stability 3
  */
-public class EntityHealEvent extends CancellableEntityEvent {
+public class EntityHealEvent extends CancellableEntityEvent<EntityHealEvent> {
 
     private final Cause cause;
     private double healAmount;
@@ -37,7 +37,7 @@ public class EntityHealEvent extends CancellableEntityEvent {
      *
      * @return cause of this healing
      */
-    public Cause getCause() {
+    public Cause cause() {
         return this.cause;
     }
 
@@ -46,7 +46,7 @@ public class EntityHealEvent extends CancellableEntityEvent {
      *
      * @return amount of heal
      */
-    public double getHealAmount() {
+    public double healAmount() {
         return this.healAmount;
     }
 
@@ -55,8 +55,9 @@ public class EntityHealEvent extends CancellableEntityEvent {
      *
      * @param healAmount which should be added to the entity due to this event
      */
-    public void setHealAmount( double healAmount ) {
+    public EntityHealEvent healAmount(double healAmount ) {
         this.healAmount = healAmount;
+        return this;
     }
 
     public enum Cause {

@@ -113,12 +113,12 @@ public class SignTileEntity extends TileEntity {
             SignChangeTextEvent event = new SignChangeTextEvent(player, this.getBlock(), lineList);
             this.eventCaller.callEvent(event);
 
-            if (event.isCancelled()) {
+            if (event.cancelled()) {
                 return;
             }
 
             for (int i = 0; i < 4; i++) {
-                String line = event.getLine(i);
+                String line = event.line(i);
                 if (line != null) {
                     this.lines.set(i, line);
                 }

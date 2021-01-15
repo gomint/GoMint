@@ -18,7 +18,7 @@ import java.util.Objects;
  * @version 1.0
  * @stability 3
  */
-public class PlayerPickupItemEvent extends CancellablePlayerEvent {
+public class PlayerPickupItemEvent extends CancellablePlayerEvent<PlayerPickupItemEvent> {
 
     private final Entity holdingEntity;
     private final ItemStack<?> itemStack;
@@ -34,7 +34,7 @@ public class PlayerPickupItemEvent extends CancellablePlayerEvent {
      *
      * @return item stack which should be picked up
      */
-    public ItemStack<?> getItemStack() {
+    public ItemStack<?> itemStack() {
         return this.itemStack;
     }
 
@@ -43,7 +43,7 @@ public class PlayerPickupItemEvent extends CancellablePlayerEvent {
      *
      * @return the entity which currently holds the item
      */
-    public Entity getHoldingEntity() {
+    public Entity holdingEntity() {
         return this.holdingEntity;
     }
 

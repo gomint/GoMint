@@ -14,7 +14,7 @@ import io.gomint.entity.Entity;
  * @version 1.0
  * @stability 3
  */
-public class EntityDamageEvent extends CancellableEntityEvent {
+public class EntityDamageEvent extends CancellableEntityEvent<EntityDamageEvent> {
 
     private final DamageSource damageSource;
     private float damage;
@@ -38,8 +38,9 @@ public class EntityDamageEvent extends CancellableEntityEvent {
      *
      * @param damage which should be dealt
      */
-    public void setFinalDamage( float damage ) {
+    public EntityDamageEvent finalDamage(float damage ) {
         this.finalDamage = damage;
+        return this;
     }
 
     /**
@@ -47,7 +48,7 @@ public class EntityDamageEvent extends CancellableEntityEvent {
      *
      * @return damage which should be dealt
      */
-    public float getFinalDamage() {
+    public float finalDamage() {
         return this.finalDamage;
     }
 
@@ -58,8 +59,9 @@ public class EntityDamageEvent extends CancellableEntityEvent {
      *
      * @param damage which should be used to calculate the final damage
      */
-    public void setDamage( float damage ) {
+    public EntityDamageEvent damage(float damage ) {
         this.damage = damage;
+        return this;
     }
 
     /**
@@ -68,7 +70,7 @@ public class EntityDamageEvent extends CancellableEntityEvent {
      *
      * @return damage which is used in the final calculation
      */
-    public float getDamage() {
+    public float damage() {
         return this.damage;
     }
 
@@ -77,7 +79,7 @@ public class EntityDamageEvent extends CancellableEntityEvent {
      *
      * @return source of damage
      */
-    public DamageSource getDamageSource() {
+    public DamageSource damageSource() {
         return this.damageSource;
     }
 

@@ -110,9 +110,9 @@ public class EntityItem extends Entity implements EntityItemDrop {
 
     @Override
     public boolean damage( EntityDamageEvent damageEvent ) {
-        if ( damageEvent.getDamageSource() == EntityDamageEvent.DamageSource.FALL ||
-            damageEvent.getDamageSource() == EntityDamageEvent.DamageSource.FIRE ||
-            damageEvent.getDamageSource() == EntityDamageEvent.DamageSource.ENTITY_EXPLODE ) {
+        if ( damageEvent.damageSource() == EntityDamageEvent.DamageSource.FALL ||
+            damageEvent.damageSource() == EntityDamageEvent.DamageSource.FIRE ||
+            damageEvent.damageSource() == EntityDamageEvent.DamageSource.ENTITY_EXPLODE ) {
             this.despawn();
             return true;
         }
@@ -147,12 +147,12 @@ public class EntityItem extends Entity implements EntityItemDrop {
             // Ask the API is we can pickup
             PlayerPickupItemEvent event = new PlayerPickupItemEvent( player, this, this.getItemStack() );
             if ( player.getGamemode() == Gamemode.SPECTATOR ) {
-                event.setCancelled( true );
+                event.cancelled( true );
             }
 
             this.world.getServer().pluginManager().callEvent( event );
 
-            if ( !event.isCancelled() ) {
+            if ( !event.cancelled() ) {
                 // Consume the item
                 PacketPickupItemEntity packet = new PacketPickupItemEntity();
                 packet.setItemEntityId( this.getEntityId() );
@@ -165,7 +165,7 @@ public class EntityItem extends Entity implements EntityItemDrop {
                 }
 
                 // Manipulate inventory
-                player.getInventory().addItem( event.getItemStack() );
+                player.getInventory().addItem( event.itemStack() );
                 this.despawn();
             }
         }

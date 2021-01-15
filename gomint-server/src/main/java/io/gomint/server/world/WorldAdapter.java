@@ -1146,7 +1146,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
         PlayerInteractEvent interactEvent = new PlayerInteractEvent(entity, PlayerInteractEvent.ClickType.RIGHT, blockClicked);
         this.server.pluginManager().callEvent(interactEvent);
 
-        if (interactEvent.isCancelled()) {
+        if (interactEvent.cancelled()) {
             return false;
         }
 

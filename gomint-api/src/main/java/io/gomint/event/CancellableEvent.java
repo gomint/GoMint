@@ -14,7 +14,7 @@ import java.util.Objects;
  * @version 1.0
  * @stability 3
  */
-public class CancellableEvent extends Event {
+public class CancellableEvent<E> extends Event {
 
     private boolean cancelled = false;
 
@@ -23,7 +23,7 @@ public class CancellableEvent extends Event {
      *
      * @return true when cancelled, false when not
      */
-    public boolean isCancelled() {
+    public boolean cancelled() {
         return this.cancelled;
     }
 
@@ -32,7 +32,7 @@ public class CancellableEvent extends Event {
      *
      * @param cancelled The state of this event
      */
-    public void setCancelled( boolean cancelled ) {
+    public void cancelled(boolean cancelled ) {
         this.cancelled = cancelled;
     }
 
@@ -40,7 +40,7 @@ public class CancellableEvent extends Event {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        CancellableEvent that = (CancellableEvent) o;
+        CancellableEvent<?> that = (CancellableEvent<?>) o;
         return cancelled == that.cancelled;
     }
 

@@ -43,9 +43,6 @@ public class LocaleManager {
     // The fallback Locale to use
     private Locale defaultLocale = Locale.US;
 
-    // Whether to use the default locale also for untranslated messages
-    private boolean useDefaultLocaleForMessages = true;
-
     // Plugin for which we have this
     private final Plugin plugin;
 
@@ -107,7 +104,7 @@ public class LocaleManager {
      * @param path The path of the file to query.
      * @return A list of supported locales as well as their meta-information or null on faillure.
      */
-    public List<Locale> getAvailableLocales( File path ) {
+    public List<Locale> availableLocales(File path ) {
         File[] files = path.listFiles();
         if ( files == null ) return null;
 
@@ -175,7 +172,7 @@ public class LocaleManager {
      * @return The String stored in the ResourceLoader
      * @throws ResourceLoadFailedException If the Resource was cleared out and could not be reloaded into the Cache
      */
-    private String getTranslationString( Locale locale, String key ) throws ResourceLoadFailedException {
+    private String translation(Locale locale, String key ) throws ResourceLoadFailedException {
         return resourceManager.get( locale, key );
     }
 
@@ -198,9 +195,11 @@ public class LocaleManager {
      * It must be loaded before a Locale can be set as default.
      *
      * @param locale Locale which should be used as default Fallback
+     * @return locale manager for chaining
      */
-    public void setDefaultLocale( Locale locale ) {
+    public LocaleManager defaultLocale(Locale locale ) {
         defaultLocale = locale;
+        return this;
     }
 
     /**
@@ -219,10 +218,10 @@ public class LocaleManager {
 
         String translationString = null;
         try {
-            translationString = getTranslationString( playerLocale, translationKey );
+            translationString = translation( playerLocale, translationKey );
         } catch ( ResourceLoadFailedException e ) {
             try {
-                translationString = getTranslationString( playerLocale = defaultLocale, translationKey );
+                translationString = translation( playerLocale = defaultLocale, translationKey );
             } catch ( ResourceLoadFailedException e1 ) {
                 // Ignore .-.
             }
@@ -252,7 +251,7 @@ public class LocaleManager {
         //Get the resource and translate
         String translationString = null;
         try {
-            translationString = getTranslationString( defaultLocale, translationKey );
+            translationString = translation( defaultLocale, translationKey );
         } catch ( ResourceLoadFailedException e ) {
             // Ignore .-.
         }
@@ -281,7 +280,7 @@ public class LocaleManager {
      *
      * @return Unmodifiable List
      */
-    public List<Locale> getLoadedLocales() {
+    public List<Locale> loadedLocales() {
         return Collections.unmodifiableList( resourceManager.getLoadedLocales() );
     }
 
@@ -300,16 +299,8 @@ public class LocaleManager {
         resourceManager = null;
     }
 
-    public Locale getDefaultLocale() {
+    public Locale defaultLocale() {
         return defaultLocale;
-    }
-
-    public boolean isUseDefaultLocaleForMessages() {
-        return useDefaultLocaleForMessages;
-    }
-
-    public void setUseDefaultLocaleForMessages(boolean useDefaultLocaleForMessages) {
-        this.useDefaultLocaleForMessages = useDefaultLocaleForMessages;
     }
 
 }

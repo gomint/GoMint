@@ -7,7 +7,7 @@ import io.gomint.entity.EntityPlayer;
  * @version 1.0
  * @stability 3
  */
-public class PlayerToggleSneakEvent extends CancellablePlayerEvent {
+public class PlayerToggleSneakEvent extends CancellablePlayerEvent<PlayerToggleSneakEvent> {
 
     private final boolean newStatus;
 
@@ -21,7 +21,7 @@ public class PlayerToggleSneakEvent extends CancellablePlayerEvent {
      *
      * @return true when the client wants to start sneaking, false otherwise
      */
-    public boolean getNewStatus() {
+    public boolean newStatus() {
         return this.newStatus;
     }
 

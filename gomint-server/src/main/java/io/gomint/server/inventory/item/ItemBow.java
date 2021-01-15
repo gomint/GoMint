@@ -120,7 +120,7 @@ public class ItemBow extends ItemStack< io.gomint.inventory.item.ItemBow> implem
         EntityArrow arrow = new EntityArrow( player, player.getWorld(), force, powerModifier, punchModifier, flameModifier );
         ProjectileLaunchEvent event = new ProjectileLaunchEvent( arrow, ProjectileLaunchEvent.Cause.BOW_SHOT );
         player.getWorld().getServer().pluginManager().callEvent( event );
-        if ( !event.isCancelled() ) {
+        if ( !event.cancelled() ) {
             // Use the bow
             this.calculateUsageAndUpdate( 1 );
             player.getWorld().spawnEntityAt( arrow, arrow.getPositionX(), arrow.getPositionY(), arrow.getPositionZ(), arrow.getYaw(), arrow.getPitch() );

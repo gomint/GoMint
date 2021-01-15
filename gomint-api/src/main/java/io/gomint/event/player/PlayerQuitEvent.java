@@ -29,8 +29,9 @@ public class PlayerQuitEvent extends PlayerEvent {
      *
      * @param quitMessage the message to display
      */
-    public void setQuitMessage( String quitMessage ) {
+    public PlayerQuitEvent quitMessage(String quitMessage ) {
         this.quitMessage = quitMessage;
+        return this;
     }
 
     /**
@@ -38,7 +39,7 @@ public class PlayerQuitEvent extends PlayerEvent {
      *
      * @return the message that will be displayed
      */
-    public String getQuitMessage() {
+    public String quitMessage() {
         return quitMessage;
     }
 

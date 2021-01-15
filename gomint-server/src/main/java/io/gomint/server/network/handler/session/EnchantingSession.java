@@ -85,13 +85,13 @@ public class EnchantingSession implements Session {
             cost
         ));
 
-        if (event.isCancelled()) {
+        if (event.cancelled()) {
             return false;
         }
 
         // Player does not have enough levels to cover "costs"
         if (this.connection.getEntity().getGamemode() != Gamemode.CREATIVE &&
-            this.connection.getEntity().getLevel() < event.getLevelRequirement()) {
+            this.connection.getEntity().getLevel() < event.levelRequirement()) {
             LOGGER.info("Got enchantment request from {} but has not enough levels, needs {} to cover requirements", this.connection.getEntity(),
                 cost);
             return false;
@@ -99,7 +99,7 @@ public class EnchantingSession implements Session {
 
         // Check if the player has enough levels for paying
         if (this.connection.getEntity().getGamemode() != Gamemode.CREATIVE &&
-            this.connection.getEntity().getLevel() < event.getLevelCost()) {
+            this.connection.getEntity().getLevel() < event.levelCost()) {
             LOGGER.info("Got enchantment request from {} but has not enough levels, needs {} to cover costs", this.connection.getEntity(),
                 pay);
             return false;
@@ -108,7 +108,7 @@ public class EnchantingSession implements Session {
         // Check if the enchantment table contains enough lapis
         ItemStack<?> lapis = (ItemStack<?>) this.inputInventory.item(1);
         if (this.connection.getEntity().getGamemode() != Gamemode.CREATIVE &&
-            (lapis.itemType() != ItemType.LAPIS_LAZULI || lapis.amount() < event.getMaterialCost())) {
+            (lapis.itemType() != ItemType.LAPIS_LAZULI || lapis.amount() < event.materialCost())) {
             LOGGER.info("Got enchantment request from {} but has not enough lapis, needs {} to cover costs", this.connection.getEntity(),
                 pay);
             return false;
@@ -116,14 +116,14 @@ public class EnchantingSession implements Session {
 
         // Modify player level and lapis amound if needed
         if (this.connection.getEntity().getGamemode() != Gamemode.CREATIVE) {
-            this.connection.getEntity().setLevel(this.connection.getEntity().getLevel() - event.getLevelCost());
-            lapis.amount(lapis.amount() - event.getMaterialCost());
+            this.connection.getEntity().setLevel(this.connection.getEntity().getLevel() - event.levelCost());
+            lapis.amount(lapis.amount() - event.materialCost());
         }
 
         // Now we can enchant the item in the output slot
         ItemStack<?> toEnchant = (ItemStack<?>) this.inputInventory.item(0);
 
-        for (io.gomint.enchant.Enchantment enchantment : event.getEnchantments()) {
+        for (io.gomint.enchant.Enchantment enchantment : event.enchantments()) {
             toEnchant.enchant(enchantment.getClass(), enchantment.level());
         }
 

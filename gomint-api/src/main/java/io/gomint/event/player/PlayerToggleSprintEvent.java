@@ -7,7 +7,7 @@ import io.gomint.entity.EntityPlayer;
  * @version 1.0
  * @stability 3
  */
-public class PlayerToggleSprintEvent extends CancellablePlayerEvent {
+public class PlayerToggleSprintEvent extends CancellablePlayerEvent<PlayerToggleSprintEvent> {
 
     private final boolean newStatus;
 
@@ -21,7 +21,7 @@ public class PlayerToggleSprintEvent extends CancellablePlayerEvent {
      *
      * @return true when the client wants to start sprinting, false otherwise
      */
-    public boolean getNewStatus() {
+    public boolean newStatus() {
         return this.newStatus;
     }
 }

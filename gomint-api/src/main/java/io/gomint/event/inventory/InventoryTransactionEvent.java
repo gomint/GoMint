@@ -19,7 +19,7 @@ import java.util.Objects;
  * @version 1.0
  * @stability 3
  */
-public class InventoryTransactionEvent extends CancellablePlayerEvent {
+public class InventoryTransactionEvent extends CancellablePlayerEvent<InventoryTransactionEvent> {
 
     private final List<Transaction<?, ?, ?>> transactions;
 
@@ -39,7 +39,7 @@ public class InventoryTransactionEvent extends CancellablePlayerEvent {
      *
      * @return transactions which may be applied
      */
-    public List<Transaction<?, ?, ?>> getTransactions() {
+    public List<Transaction<?, ?, ?>> transactions() {
         return this.transactions;
     }
 

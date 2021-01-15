@@ -142,7 +142,7 @@ public class Blocks {
         BlockPlaceEvent blockPlaceEvent = new BlockPlaceEvent(entity, clickedBlock, block, item, newBlock);
         block.world.getServer().pluginManager().callEvent(blockPlaceEvent);
 
-        if (blockPlaceEvent.isCancelled()) {
+        if (blockPlaceEvent.cancelled()) {
             return false;
         }
 

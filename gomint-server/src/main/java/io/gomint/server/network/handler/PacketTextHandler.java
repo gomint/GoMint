@@ -23,9 +23,9 @@ public class PacketTextHandler implements PacketHandler<PacketText> {
                 PlayerChatEvent event = new PlayerChatEvent( connection.getEntity(), connection.getEntity().getDisplayName(), packet.getMessage(), playerList );
                 connection.getServer().pluginManager().callEvent( event );
 
-                if ( !event.isCancelled() ) {
-                    packet.setSender( event.getSender() );
-                    packet.setMessage( event.getText() );
+                if ( !event.cancelled() ) {
+                    packet.setSender( event.sender() );
+                    packet.setMessage( event.text() );
 
                     for ( EntityPlayer player : playerList ) {
                         if ( player instanceof io.gomint.server.entity.EntityPlayer ) {

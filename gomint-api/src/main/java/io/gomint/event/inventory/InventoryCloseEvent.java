@@ -29,7 +29,7 @@ public class InventoryCloseEvent extends PlayerEvent {
      *
      * @return inventory which used
      */
-    public Inventory<?> getInventory() {
+    public Inventory<?> inventory() {
         return this.inventory;
     }
 

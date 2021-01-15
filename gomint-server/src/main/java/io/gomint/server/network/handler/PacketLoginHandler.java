@@ -263,13 +263,13 @@ public class PacketLoginHandler implements PacketHandler<PacketLogin> {
 
                 // Default deny for maximum amount of players
                 if (connection.getServer().onlinePlayers().size() >= connection.getServer().serverConfig().maxPlayers()) {
-                    event.setCancelled(true);
-                    event.setKickMessage("Server is full");
+                    event.cancelled(true);
+                    event.kickMessage("Server is full");
                 }
 
                 this.server.pluginManager().callEvent(event);
-                if (event.isCancelled()) {
-                    connection.disconnect(event.getKickMessage());
+                if (event.cancelled()) {
+                    connection.disconnect(event.kickMessage());
                     return;
                 }
 

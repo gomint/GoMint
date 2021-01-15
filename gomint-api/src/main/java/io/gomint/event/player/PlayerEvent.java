@@ -30,7 +30,7 @@ public class PlayerEvent extends Event {
      *
      * @return the player which is affected by this event
      */
-    public EntityPlayer getPlayer() {
+    public EntityPlayer player() {
         return this.player;
     }
 

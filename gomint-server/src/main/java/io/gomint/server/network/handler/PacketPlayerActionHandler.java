@@ -24,10 +24,10 @@ public class PacketPlayerActionHandler implements PacketHandler<PacketPlayerActi
                 if ( !connection.getEntity().isSwimming() ) {
                     PlayerSwimEvent playerSwimEvent = new PlayerSwimEvent( connection.getEntity(), true );
                     connection.getServer().pluginManager().callEvent( playerSwimEvent );
-                    if ( playerSwimEvent.isCancelled() ) {
+                    if ( playerSwimEvent.cancelled() ) {
                         connection.getEntity().sendData( connection.getEntity() );
                     } else {
-                        connection.getEntity().setSwimming( playerSwimEvent.getNewStatus() );
+                        connection.getEntity().setSwimming( playerSwimEvent.newStatus() );
                     }
                 }
 
@@ -37,10 +37,10 @@ public class PacketPlayerActionHandler implements PacketHandler<PacketPlayerActi
                 if ( connection.getEntity().isSwimming() ) {
                     PlayerSwimEvent playerSwimEvent = new PlayerSwimEvent( connection.getEntity(), false );
                     connection.getServer().pluginManager().callEvent( playerSwimEvent );
-                    if ( playerSwimEvent.isCancelled() ) {
+                    if ( playerSwimEvent.cancelled() ) {
                         connection.getEntity().sendData( connection.getEntity() );
                     } else {
-                        connection.getEntity().setSwimming( playerSwimEvent.getNewStatus() );
+                        connection.getEntity().setSwimming( playerSwimEvent.newStatus() );
                     }
                 }
 
@@ -50,10 +50,10 @@ public class PacketPlayerActionHandler implements PacketHandler<PacketPlayerActi
                 if ( !connection.getEntity().isSpinning() ) {
                     PlayerSpinEvent playerSpinEvent = new PlayerSpinEvent( connection.getEntity(), true );
                     connection.getServer().pluginManager().callEvent( playerSpinEvent );
-                    if ( playerSpinEvent.isCancelled() ) {
+                    if ( playerSpinEvent.cancelled() ) {
                         connection.getEntity().sendData( connection.getEntity() );
                     } else {
-                        connection.getEntity().setSpinning( playerSpinEvent.getNewStatus() );
+                        connection.getEntity().setSpinning( playerSpinEvent.newStatus() );
                     }
                 }
 
@@ -63,10 +63,10 @@ public class PacketPlayerActionHandler implements PacketHandler<PacketPlayerActi
                 if ( connection.getEntity().isSpinning() ) {
                     PlayerSpinEvent playerSpinEvent = new PlayerSpinEvent( connection.getEntity(), false );
                     connection.getServer().pluginManager().callEvent( playerSpinEvent );
-                    if ( playerSpinEvent.isCancelled() ) {
+                    if ( playerSpinEvent.cancelled() ) {
                         connection.getEntity().sendData( connection.getEntity() );
                     } else {
-                        connection.getEntity().setSpinning( playerSpinEvent.getNewStatus() );
+                        connection.getEntity().setSpinning( playerSpinEvent.newStatus() );
                     }
                 }
 
@@ -88,9 +88,9 @@ public class PacketPlayerActionHandler implements PacketHandler<PacketPlayerActi
                         .pluginManager().callEvent( new PlayerInteractEvent( connection.getEntity(),
                             PlayerInteractEvent.ClickType.LEFT, connection.getEntity().getWorld().blockAt( packet.getPosition() ) ) );
 
-                    connection.setStartBreakResult( !event.isCancelled() && connection.getEntity().getStartBreak() == 0 );
+                    connection.setStartBreakResult( !event.cancelled() && connection.getEntity().getStartBreak() == 0 );
 
-                    if ( !event.isCancelled() && connection.getEntity().getStartBreak() == 0 ) {
+                    if ( !event.cancelled() && connection.getEntity().getStartBreak() == 0 ) {
                         handleBreakStart( connection, currentTimeMillis, packet );
                     }
 
@@ -127,7 +127,7 @@ public class PacketPlayerActionHandler implements PacketHandler<PacketPlayerActi
                 if ( !connection.getEntity().isSneaking() ) {
                     PlayerToggleSneakEvent playerToggleSneakEvent = new PlayerToggleSneakEvent( connection.getEntity(), true );
                     connection.getServer().pluginManager().callEvent( playerToggleSneakEvent );
-                    if ( playerToggleSneakEvent.isCancelled() ) {
+                    if ( playerToggleSneakEvent.cancelled() ) {
                         connection.getEntity().sendData( connection.getEntity() );
                     } else {
                         connection.getEntity().setSneaking( true );
@@ -140,7 +140,7 @@ public class PacketPlayerActionHandler implements PacketHandler<PacketPlayerActi
                 if ( connection.getEntity().isSneaking() ) {
                     PlayerToggleSneakEvent playerToggleSneakEvent = new PlayerToggleSneakEvent( connection.getEntity(), false );
                     connection.getServer().pluginManager().callEvent( playerToggleSneakEvent );
-                    if ( playerToggleSneakEvent.isCancelled() ) {
+                    if ( playerToggleSneakEvent.cancelled() ) {
                         connection.getEntity().sendData( connection.getEntity() );
                     } else {
                         connection.getEntity().setSneaking( false );
@@ -153,7 +153,7 @@ public class PacketPlayerActionHandler implements PacketHandler<PacketPlayerActi
                 if ( !connection.getEntity().isSprinting() ) {
                     PlayerToggleSprintEvent playerToggleSprintEvent = new PlayerToggleSprintEvent( connection.getEntity(), true );
                     connection.getServer().pluginManager().callEvent( playerToggleSprintEvent );
-                    if ( playerToggleSprintEvent.isCancelled() ) {
+                    if ( playerToggleSprintEvent.cancelled() ) {
                         connection.getEntity().sendData( connection.getEntity() );
                     } else {
                         connection.getEntity().setSprinting( true );
@@ -166,7 +166,7 @@ public class PacketPlayerActionHandler implements PacketHandler<PacketPlayerActi
                 if ( connection.getEntity().isSprinting() ) {
                     PlayerToggleSprintEvent playerToggleSprintEvent = new PlayerToggleSprintEvent( connection.getEntity(), false );
                     connection.getServer().pluginManager().callEvent( playerToggleSprintEvent );
-                    if ( playerToggleSprintEvent.isCancelled() ) {
+                    if ( playerToggleSprintEvent.cancelled() ) {
                         connection.getEntity().sendData( connection.getEntity() );
                     } else {
                         connection.getEntity().setSprinting( false );
@@ -202,7 +202,7 @@ public class PacketPlayerActionHandler implements PacketHandler<PacketPlayerActi
                 if ( !connection.getEntity().isGliding() ) {
                     PlayerToggleGlideEvent playerToggleGlideEvent = new PlayerToggleGlideEvent( connection.getEntity(), true );
                     connection.getEntity().getWorld().getServer().pluginManager().callEvent( playerToggleGlideEvent );
-                    if ( playerToggleGlideEvent.isCancelled() ) {
+                    if ( playerToggleGlideEvent.cancelled() ) {
                         connection.getEntity().sendData( connection.getEntity() );
                     } else {
                         connection.getEntity().setGliding( true );
@@ -215,7 +215,7 @@ public class PacketPlayerActionHandler implements PacketHandler<PacketPlayerActi
                 if ( connection.getEntity().isGliding() ) {
                     PlayerToggleGlideEvent playerToggleGlideEvent = new PlayerToggleGlideEvent( connection.getEntity(), false );
                     connection.getEntity().getWorld().getServer().pluginManager().callEvent( playerToggleGlideEvent );
-                    if ( playerToggleGlideEvent.isCancelled() ) {
+                    if ( playerToggleGlideEvent.cancelled() ) {
                         connection.getEntity().sendData( connection.getEntity() );
                     } else {
                         connection.getEntity().setGliding( false );

@@ -383,7 +383,7 @@ public class EntityHuman extends EntityCreature implements io.gomint.entity.pass
                         );
 
                         this.world.getServer().pluginManager().callEvent(foodLevelChangeEvent);
-                        if (!foodLevelChangeEvent.isCancelled()) {
+                        if (!foodLevelChangeEvent.cancelled()) {
                             hunger = Math.max(0, hunger - 1);
                             this.setHunger(hunger);
                         } else {
