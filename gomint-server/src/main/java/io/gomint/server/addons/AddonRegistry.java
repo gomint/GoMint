@@ -35,7 +35,7 @@ public class AddonRegistry {
      * Fields related to Addon installation
      */
     private final File addonFolder; // Replicated here so it can be made configurable at some time
-    private Set<AddonPack> installedAddons;
+    private Set<Addon> installedAddons;
     private boolean hasSearchedInstalledAddons;
 
 
@@ -82,7 +82,7 @@ public class AddonRegistry {
                 continue;
             }
 
-            AddonPack addon = addonContext.createAddonPackFromManifest();
+            Addon addon = addonContext.createAddonFromManifest();
             if (addon != null) {
                 this.logger.info("Detected installed addon '{}' [uuid={}]", addon.name(), addon.uuid());
                 this.installedAddons.add(addon);

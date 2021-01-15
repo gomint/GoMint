@@ -14,7 +14,7 @@ import java.util.UUID;
  * @version 1.0
  * @stability experimental
  */
-public class AddonPack implements io.gomint.addons.AddonPack {
+public class Addon implements io.gomint.addons.Addon {
 
     /*
      * Metadata from the addon's manifest
@@ -40,14 +40,14 @@ public class AddonPack implements io.gomint.addons.AddonPack {
      * @param dependencies         A set of dependencies required by the addon
      * @param context              The addon's context
      */
-    public AddonPack(UUID uuid,
-                     String name,
-                     String description,
-                     SemanticVersion version,
-                     SemanticVersion minimumEngineVersion,
-                     Set<AddonModule> modules,
-                     Set<AddonDependency> dependencies,
-                     AddonContext context) {
+    public Addon(UUID uuid,
+                 String name,
+                 String description,
+                 SemanticVersion version,
+                 SemanticVersion minimumEngineVersion,
+                 Set<AddonModule> modules,
+                 Set<AddonDependency> dependencies,
+                 AddonContext context) {
         this.uuid = uuid;
         this.name = name;
         this.description = description;

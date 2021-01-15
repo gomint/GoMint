@@ -16,7 +16,7 @@ import java.util.UUID;
  * @version 1.0
  * @stability 1
  */
-public interface AddonPack {
+public interface Addon {
 
     /**
      * @return The addon pack's name given in its manifest

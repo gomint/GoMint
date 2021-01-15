@@ -50,7 +50,13 @@ public abstract class AddonContext implements Closeable {
      */
     public abstract Stream<? extends String> entries() throws IOException;
 
-    AddonPack createAddonPackFromManifest() throws IOException {
+    /**
+     * Creates an addon by parsing its manifest found in this context.
+     *
+     * @return The created addon on success or null if the manifest was incomplete
+     * @throws IOException Thrown if an I/O error occurs while parsing the addon's manifest
+     */
+    Addon createAddonFromManifest() throws IOException {
         // Obligatory addon metadata
         String addonDescription = null;
         String addonName = null;
@@ -172,7 +178,7 @@ public abstract class AddonContext implements Closeable {
                 return null;
             }
 
-            return new AddonPack(addonUuid,
+            return new Addon(addonUuid,
                     addonName,
                     addonDescription,
                     addonVersion,
