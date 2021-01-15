@@ -28,6 +28,9 @@ module gomint.server {
     requires com.fasterxml.jackson.core;
     requires org.objectweb.asm;
 
+    // JSON
+    requires jsoniter;
+
     // Automatic modules (libs without module-info)
     requires it.unimi.dsi.fastutil;
     requires jopt.simple;

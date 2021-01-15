@@ -9,6 +9,10 @@ package io.gomint.server;
 
 import com.google.common.util.concurrent.ListeningScheduledExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
+import com.jsoniter.JsonIterator;
+import com.jsoniter.output.EncodingMode;
+import com.jsoniter.output.JsonStream;
+import com.jsoniter.spi.DecodingMode;
 import io.gomint.GoMint;
 import io.gomint.GoMintInstanceHolder;
 import io.gomint.config.InvalidConfigurationException;
@@ -23,6 +27,7 @@ import io.gomint.permission.GroupManager;
 import io.gomint.player.PlayerSkin;
 import io.gomint.plugin.StartupPriority;
 import io.gomint.scoreboard.Scoreboard;
+import io.gomint.server.addons.AddonRegistry;
 import io.gomint.server.assets.AssetsLibrary;
 import io.gomint.server.config.ServerConfig;
 import io.gomint.server.config.WorldConfig;
@@ -123,6 +128,9 @@ public class GoMintServer implements GoMint, InventoryHolder {
     private CreativeInventory creativeInventory;
     private PermissionGroupManager permissionGroupManager;
 
+    // Addons
+    private AddonRegistry addonRegistry;
+
     // Plugin Management
     private SimplePluginManager pluginManager;
 
@@ -162,6 +170,12 @@ public class GoMintServer implements GoMint, InventoryHolder {
      * Starts the GoMint server
      */
     public GoMintServer() throws IOException {
+        // ------------------------------------ //
+        // Library Setup
+        // ------------------------------------ //
+        JsonIterator.setMode(DecodingMode.DYNAMIC_MODE_AND_MATCH_FIELD_WITH_HASH);
+        JsonStream.setMode(EncodingMode.DYNAMIC_MODE);
+
         // ------------------------------------ //
         // Executor Initialization
         // ------------------------------------ //
@@ -230,6 +244,12 @@ public class GoMintServer implements GoMint, InventoryHolder {
             LOGGER.error("Failed to load assets library", e);
             return;
         }
+
+        // ------------------------------------ //
+        // Initialize addons
+        // ------------------------------------ //
+        this.addonRegistry = new AddonRegistry();
+        this.addonRegistry.searchInstalledAddons();
 
         // ------------------------------------ //
         // Build up registries

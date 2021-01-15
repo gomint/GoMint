@@ -9,7 +9,8 @@ package io.gomint.world;
 
 /**
  * @author geNAZt
- * @version 1.0
+ * @author CielDeVille
+ * @version 1.1
  * @stability 2
  */
 public enum Sound {
@@ -198,6 +199,6 @@ public enum Sound {
     CAMPFIRES,
     RAIDS,
     GRINDSTONES,
-    LANTERNS,
+    LANTERNS;
 
 }

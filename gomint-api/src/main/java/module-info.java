@@ -8,6 +8,8 @@ open module gomint.api {
     requires commons.math3;
 
     exports io.gomint;
+    exports io.gomint.addons;
+    exports io.gomint.addons.components;
     exports io.gomint.command;
     exports io.gomint.command.annotation;
     exports io.gomint.command.validator;
