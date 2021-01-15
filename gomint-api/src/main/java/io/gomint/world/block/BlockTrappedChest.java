@@ -7,6 +7,7 @@
 
 package io.gomint.world.block;
 
+import io.gomint.inventory.ChestInventory;
 import io.gomint.inventory.Inventory;
 
 /**
@@ -21,14 +22,15 @@ public interface BlockTrappedChest extends BlockFacing<BlockTrappedChest> {
      *
      * @return inventory of this chest
      */
-    Inventory inventory();
+    Inventory<ChestInventory> inventory();
 
     /**
      * Set a custom name for this container
      *
      * @param customName which should be used
+     * @return block for chaining
      */
-    BlockTrappedChest customName(String customName );
+    BlockTrappedChest customName(String customName);
 
     /**
      * Get the custom name of this container

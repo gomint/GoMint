@@ -23,6 +23,8 @@ public interface BlockTrapdoor<B> extends BlockDirection<B> {
 
     /**
      * Open or close a trapdoor. The target state depends on the {@link #open()} state
+     *
+     * @return block for chaining
      */
     B toggle();
 

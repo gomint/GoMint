@@ -27,7 +27,8 @@ public interface BlockConcretePowder extends Block {
      * Set the color of this block
      *
      * @param color which this block should be
+     * @return block for chaining
      */
-    BlockConcretePowder color(BlockColor color );
+    BlockConcretePowder color(BlockColor color);
 
 }

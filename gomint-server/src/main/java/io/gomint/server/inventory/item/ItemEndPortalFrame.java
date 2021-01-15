@@ -10,10 +10,10 @@ import io.gomint.taglib.NBTTagCompound;
  * @version 1.0
  */
 @RegisterInfo(sId = "minecraft:end_portal_frame", id = 120)
-public class ItemEndPortalFrame extends ItemStack implements io.gomint.inventory.item.ItemEndPortalFrame {
+public class ItemEndPortalFrame extends ItemStack< io.gomint.inventory.item.ItemEndPortalFrame> implements io.gomint.inventory.item.ItemEndPortalFrame {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.END_PORTAL_FRAME;
     }
 

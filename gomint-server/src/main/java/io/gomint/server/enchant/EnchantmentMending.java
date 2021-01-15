@@ -36,7 +36,7 @@ public class EnchantmentMending extends Enchantment implements io.gomint.enchant
     }
 
     @Override
-    public boolean canBeApplied( ItemStack itemStack ) {
+    public boolean canBeApplied(ItemStack<?> itemStack ) {
         return itemStack.canBeDamaged();
     }
 

@@ -17,8 +17,7 @@ import io.gomint.world.block.data.Facing;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:diamond_shovel", id = 277 )
-public class ItemDiamondShovel extends ItemReduceTierDiamond implements io.gomint.inventory.item.ItemDiamondShovel {
-
+public class ItemDiamondShovel extends ItemReduceTierDiamond<io.gomint.inventory.item.ItemDiamondShovel> implements io.gomint.inventory.item.ItemDiamondShovel {
 
     @Override
     public boolean interact(EntityPlayer entity, Facing face, Vector clickPosition, Block clickedBlock ) {
@@ -46,7 +45,7 @@ public class ItemDiamondShovel extends ItemReduceTierDiamond implements io.gomin
     }
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.DIAMOND_SHOVEL;
     }
 

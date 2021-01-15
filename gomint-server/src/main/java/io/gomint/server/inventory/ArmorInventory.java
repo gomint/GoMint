@@ -14,7 +14,7 @@ import io.gomint.server.network.packet.PacketMobArmorEquipment;
  * @author geNAZt
  * @version 1.0
  */
-public class ArmorInventory extends Inventory implements io.gomint.inventory.ArmorInventory {
+public class ArmorInventory extends Inventory<io.gomint.inventory.ArmorInventory> implements io.gomint.inventory.ArmorInventory {
 
     /**
      * Construct a inventory for holding armor items
@@ -27,42 +27,46 @@ public class ArmorInventory extends Inventory implements io.gomint.inventory.Arm
     }
 
     @Override
-    public void setHelmet( ItemStack itemStack ) {
-        this.setItem( 0, itemStack );
+    public io.gomint.inventory.ArmorInventory helmet(ItemStack<?> itemStack ) {
+        this.item( 0, itemStack );
+        return this;
     }
 
     @Override
-    public void setChestplate( ItemStack itemStack ) {
-        this.setItem( 1, itemStack );
+    public io.gomint.inventory.ArmorInventory chestplate(ItemStack<?> itemStack ) {
+        this.item( 1, itemStack );
+        return this;
     }
 
     @Override
-    public void setLeggings( ItemStack itemStack ) {
-        this.setItem( 2, itemStack );
+    public io.gomint.inventory.ArmorInventory leggings(ItemStack<?> itemStack ) {
+        this.item( 2, itemStack );
+        return this;
     }
 
     @Override
-    public void setBoots( ItemStack itemStack ) {
-        this.setItem( 3, itemStack );
+    public io.gomint.inventory.ArmorInventory boots(ItemStack<?> itemStack ) {
+        this.item( 3, itemStack );
+        return this;
     }
 
     @Override
-    public ItemStack getHelmet() {
+    public ItemStack<?> helmet() {
         return this.contents[0];
     }
 
     @Override
-    public ItemStack getChestplate() {
+    public ItemStack<?> chestplate() {
         return this.contents[1];
     }
 
     @Override
-    public ItemStack getLeggings() {
+    public ItemStack<?> leggings() {
         return this.contents[2];
     }
 
     @Override
-    public ItemStack getBoots() {
+    public ItemStack<?> boots() {
         return this.contents[3];
     }
 
@@ -71,7 +75,7 @@ public class ArmorInventory extends Inventory implements io.gomint.inventory.Arm
         if ( playerConnection.getEntity().equals( this.owner ) ) {
             PacketInventoryContent inventory = new PacketInventoryContent();
             inventory.setWindowId( WindowMagicNumbers.ARMOR_DEPRECATED );
-            inventory.setItems( getContents() );
+            inventory.setItems( contents() );
             playerConnection.addToSendQueue( inventory );
         } else {
             this.sendMobArmor( playerConnection );
@@ -92,7 +96,7 @@ public class ArmorInventory extends Inventory implements io.gomint.inventory.Arm
     }
 
     @Override
-    public InventoryType getInventoryType() {
+    public InventoryType inventoryType() {
         return InventoryType.ARMOR;
     }
 
@@ -109,9 +113,9 @@ public class ArmorInventory extends Inventory implements io.gomint.inventory.Arm
     public float getTotalArmorValue() {
         float armorValue = 0;
 
-        for ( ItemStack itemStack : this.contents ) {
+        for ( ItemStack<?> itemStack : this.contents ) {
             if ( itemStack instanceof ItemArmor ) {
-                armorValue += ( (ItemArmor) itemStack ).getReductionValue();
+                armorValue += ( (ItemArmor<?>) itemStack ).getReductionValue();
             }
         }
 
@@ -130,8 +134,8 @@ public class ArmorInventory extends Inventory implements io.gomint.inventory.Arm
         // TODO: Modifier for shields?
 
         // Apply damage to all items
-        for (ItemStack itemStack : this.contents) {
-            io.gomint.server.inventory.item.ItemStack implItem = (io.gomint.server.inventory.item.ItemStack) itemStack;
+        for (ItemStack<?> itemStack : this.contents) {
+            io.gomint.server.inventory.item.ItemStack<?> implItem = (io.gomint.server.inventory.item.ItemStack<?>) itemStack;
             implItem.calculateUsageAndUpdate((int) damage);
         }
     }

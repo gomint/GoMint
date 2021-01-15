@@ -12,7 +12,7 @@ import io.gomint.server.network.Protocol;
 public class PacketAddItemEntity extends Packet {
 
     private long entityId;
-    private ItemStack itemStack;
+    private ItemStack<?> itemStack;
     private float x;
     private float y;
     private float z;
@@ -64,11 +64,11 @@ public class PacketAddItemEntity extends Packet {
         this.entityId = entityId;
     }
 
-    public ItemStack getItemStack() {
+    public ItemStack<?> getItemStack() {
         return itemStack;
     }
 
-    public void setItemStack(ItemStack itemStack) {
+    public void setItemStack(ItemStack<?> itemStack) {
         this.itemStack = itemStack;
     }
 

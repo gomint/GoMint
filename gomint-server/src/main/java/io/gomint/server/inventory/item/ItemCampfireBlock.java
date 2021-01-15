@@ -15,10 +15,10 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:item.campfire", id = -209 )
-public class ItemCampfireBlock extends ItemStack {
+public class ItemCampfireBlock extends ItemStack<ItemCampfireBlock> {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.CAMPFIRE;
     }
 

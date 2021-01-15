@@ -8,10 +8,10 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo(id = -221, sId = "minecraft:honeycomb_block")
-public class ItemHoneyCombBlock extends ItemStack implements io.gomint.inventory.item.ItemHoneyCombBlock {
+public class ItemHoneyCombBlock extends ItemStack< io.gomint.inventory.item.ItemHoneyCombBlock> implements io.gomint.inventory.item.ItemHoneyCombBlock {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.HONEYCOMBBLOCK;
     }
 }

@@ -11,16 +11,17 @@ package io.gomint.server.inventory.item;
  * @author geNAZt
  * @version 1.0
  */
-public abstract class ItemSlab extends ItemStack implements io.gomint.inventory.item.ItemSlab {
+public abstract class ItemSlab<I extends io.gomint.inventory.item.ItemStack<I>> extends ItemStack<I> implements io.gomint.inventory.item.ItemSlab<I> {
 
     @Override
-    public boolean isTop() {
-        return this.getDamage() >= 8;
+    public boolean top() {
+        return this.damage() >= 8;
     }
 
     @Override
-    public void setTop(boolean top) {
-        this.setData((short) (this.getData() ^ 8));
+    public I top(boolean top) {
+        this.data((short) (this.data() ^ 8));
+        return (I) this;
     }
 
 }

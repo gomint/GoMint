@@ -27,7 +27,7 @@ public class CrimsonRoots extends Block implements BlockCrimsonRoots {
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 0;
     }
 

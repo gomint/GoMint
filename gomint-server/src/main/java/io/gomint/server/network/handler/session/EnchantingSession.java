@@ -30,8 +30,8 @@ public class EnchantingSession implements Session {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(EnchantingSession.class);
 
-    private final Inventory inputInventory;
-    private final Inventory outputInventory;
+    private final Inventory<?> inputInventory;
+    private final Inventory<?> outputInventory;
     private final PlayerConnection connection;
     private int selectedEnchantment;
 
@@ -42,7 +42,7 @@ public class EnchantingSession implements Session {
     }
 
     @Override
-    public Inventory getOutput() {
+    public Inventory<?> getOutput() {
         return this.outputInventory;
     }
 
@@ -58,17 +58,17 @@ public class EnchantingSession implements Session {
 
         // Get enchantment table
         EnchantmentTableInventory inv = (EnchantmentTableInventory) this.connection.getEntity().getCurrentOpenContainer();
-        Location location = new Location(inv.getWorld(), inv.getContainerPosition());
+        Location location = new Location(inv.world(), inv.containerPosition());
 
         // Generate enchantments from helper and get them
         Pair<int[], List<List<Enchantment>>> enchantments = EnchantmentSelector.getEnchantments(this.connection.getServer().enchantments(),
             new FastRandom(this.connection.getEntity().getEnchantmentSeed()), location,
-            (ItemStack) this.inputInventory.getItem(0));
+            (ItemStack<?>) this.inputInventory.item(0));
 
         // Item is not enchantable => return
         if (enchantments == null) {
             LOGGER.warn("Got enchantment request from {} on a non enchantable item {}", this.connection.getEntity(),
-                this.inputInventory.getItem(0));
+                this.inputInventory.item(0));
             return false;
         }
 
@@ -78,7 +78,7 @@ public class EnchantingSession implements Session {
 
         ItemEnchantEvent event = this.connection.getEntity().getWorld().getServer().pluginManager().callEvent(new ItemEnchantEvent(
             this.connection.getEntity(),
-            this.inputInventory.getItem(0),
+            this.inputInventory.item(0),
             pay,
             pay,
             ench.stream().map(e -> (io.gomint.enchant.Enchantment) e).collect(Collectors.toList()),
@@ -106,9 +106,9 @@ public class EnchantingSession implements Session {
         }
 
         // Check if the enchantment table contains enough lapis
-        ItemStack lapis = (ItemStack) this.inputInventory.getItem(1);
+        ItemStack<?> lapis = (ItemStack<?>) this.inputInventory.item(1);
         if (this.connection.getEntity().getGamemode() != Gamemode.CREATIVE &&
-            (lapis.getItemType() != ItemType.LAPIS_LAZULI || lapis.getAmount() < event.getMaterialCost())) {
+            (lapis.itemType() != ItemType.LAPIS_LAZULI || lapis.amount() < event.getMaterialCost())) {
             LOGGER.info("Got enchantment request from {} but has not enough lapis, needs {} to cover costs", this.connection.getEntity(),
                 pay);
             return false;
@@ -117,17 +117,17 @@ public class EnchantingSession implements Session {
         // Modify player level and lapis amound if needed
         if (this.connection.getEntity().getGamemode() != Gamemode.CREATIVE) {
             this.connection.getEntity().setLevel(this.connection.getEntity().getLevel() - event.getLevelCost());
-            lapis.setAmount(lapis.getAmount() - event.getMaterialCost());
+            lapis.amount(lapis.amount() - event.getMaterialCost());
         }
 
         // Now we can enchant the item in the output slot
-        ItemStack toEnchant = (ItemStack) this.inputInventory.getItem(0);
+        ItemStack<?> toEnchant = (ItemStack<?>) this.inputInventory.item(0);
 
         for (io.gomint.enchant.Enchantment enchantment : event.getEnchantments()) {
-            toEnchant.addEnchantment(enchantment.getClass(), enchantment.getLevel());
+            toEnchant.enchant(enchantment.getClass(), enchantment.getLevel());
         }
 
-        this.outputInventory.setItem(0, toEnchant);
+        this.outputInventory.item(0, toEnchant);
 
         // Generate new enchant seed
         this.connection.getEntity().generateNewEnchantmentSeed();
@@ -136,9 +136,9 @@ public class EnchantingSession implements Session {
     }
 
     @Override
-    public void addInput(ItemStack item, int slot) {
+    public void addInput(ItemStack<?> item, int slot) {
         LOGGER.debug("Got item for enchant: {} / {}", item, slot);
-        this.inputInventory.setItem(slot, item);
+        this.inputInventory.item(slot, item);
     }
 
     @Override

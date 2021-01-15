@@ -18,7 +18,7 @@ public class Snow extends Block implements BlockSnow {
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 300;
     }
 

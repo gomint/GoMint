@@ -27,6 +27,7 @@ public interface BlockStoneStair extends BlockStair<BlockStoneStair> {
      * Set the type of stone for this stair
      *
      * @param stoneType type of stone
+     * @return block for chaining
      */
     BlockStoneStair type(StoneType stoneType);
 

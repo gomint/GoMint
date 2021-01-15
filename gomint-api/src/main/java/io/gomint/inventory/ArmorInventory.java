@@ -14,62 +14,62 @@ import io.gomint.inventory.item.ItemStack;
  * @version 1.0
  * @stability 3
  */
-public interface ArmorInventory extends Inventory {
+public interface ArmorInventory extends Inventory<ArmorInventory> {
 
     /**
      * Set the helmet of the inventory
      *
      * @param item which should be used
      */
-    void setHelmet( ItemStack item );
+    ArmorInventory helmet(ItemStack<?> item );
 
     /**
      * Set the chest plate of the inventory
      *
      * @param item which should be used
      */
-    void setChestplate( ItemStack item );
+    ArmorInventory chestplate(ItemStack<?> item );
 
     /**
      * Set the leggings of the inventory
      *
      * @param item which should be used
      */
-    void setLeggings( ItemStack item );
+    ArmorInventory leggings(ItemStack<?> item );
 
     /**
      * Set the boots of the inventory
      *
      * @param item which should be used
      */
-    void setBoots( ItemStack item );
+    ArmorInventory boots(ItemStack<?> item );
 
     /**
      * Get the helmet in this inventory
      *
      * @return helmet
      */
-    ItemStack getHelmet();
+    ItemStack<?> helmet();
 
     /**
      * Get the chest plate in this inventory
      *
      * @return chest plate
      */
-    ItemStack getChestplate();
+    ItemStack<?> chestplate();
 
     /**
      * Get the leggings in this inventory
      *
      * @return leggings
      */
-    ItemStack getLeggings();
+    ItemStack<?> leggings();
 
     /**
      * Get the boots in this inventory
      *
      * @return boots
      */
-    ItemStack getBoots();
+    ItemStack<?> boots();
 
 }

@@ -9,12 +9,12 @@ import io.gomint.taglib.NBTTagCompound;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:lead", id = 420 )
- public class ItemLead extends ItemStack implements io.gomint.inventory.item.ItemLead {
+ public class ItemLead extends ItemStack< io.gomint.inventory.item.ItemLead> implements io.gomint.inventory.item.ItemLead {
 
 
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.LEAD;
     }
 

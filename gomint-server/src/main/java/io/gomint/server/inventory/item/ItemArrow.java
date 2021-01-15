@@ -8,10 +8,10 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:arrow", id = 262 )
-public class ItemArrow extends ItemStack implements io.gomint.inventory.item.ItemArrow {
+public class ItemArrow extends ItemStack< io.gomint.inventory.item.ItemArrow> implements io.gomint.inventory.item.ItemArrow {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.ARROW;
     }
 

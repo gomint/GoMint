@@ -23,7 +23,7 @@ public class Concrete extends Block implements BlockConcrete {
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 2700;
     }
 
@@ -43,7 +43,7 @@ public class Concrete extends Block implements BlockConcrete {
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return ToolPresets.PICKAXE;
     }
 

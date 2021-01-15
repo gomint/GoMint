@@ -54,7 +54,7 @@ public class WoodenDoubleSlab extends Block implements BlockWoodenDoubleSlab {
     });
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 3000;
     }
 
@@ -79,7 +79,7 @@ public class WoodenDoubleSlab extends Block implements BlockWoodenDoubleSlab {
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return ToolPresets.AXE;
     }
 

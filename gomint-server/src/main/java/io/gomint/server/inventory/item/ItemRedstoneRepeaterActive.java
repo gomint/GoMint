@@ -9,10 +9,10 @@ import io.gomint.taglib.NBTTagCompound;
  * @version 1.0
  */
 @RegisterInfo(sId = "minecraft:powered_repeater", id = 94)
-public class ItemRedstoneRepeaterActive extends ItemStack {
+public class ItemRedstoneRepeaterActive extends ItemStack<ItemRedstoneRepeaterActive> {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.REDSTONE_REPEATER_ACTIVE;
     }
 

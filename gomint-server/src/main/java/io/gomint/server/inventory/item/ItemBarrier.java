@@ -15,10 +15,10 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( id = -161, sId = "minecraft:barrier")
-public class ItemBarrier extends ItemStack implements io.gomint.inventory.item.ItemBarrier {
+public class ItemBarrier extends ItemStack< io.gomint.inventory.item.ItemBarrier> implements io.gomint.inventory.item.ItemBarrier {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.BARRIER;
     }
 

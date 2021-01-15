@@ -17,7 +17,7 @@ import java.util.concurrent.TimeUnit;
 public class FlowingLava extends Liquid<BlockFlowingLava> implements BlockFlowingLava {
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 150000;
     }
 
@@ -93,7 +93,7 @@ public class FlowingLava extends Liquid<BlockFlowingLava> implements BlockFlowin
     @Override
     protected void flowIntoBlock( Block block, int newFlowDecay ) {
         if ( block.blockType() == BlockType.FLOWING_WATER ) {
-            ( (Liquid) block ).liquidCollide( this, Stone.class );
+            ( (Liquid<?>) block ).liquidCollide( this, Stone.class );
         } else {
             super.flowIntoBlock( block, newFlowDecay );
         }

@@ -17,7 +17,7 @@ public class JackOLantern extends Block implements BlockJackOLantern {
     private static final DirectionBlockState DIRECTION = new DirectionBlockState(() -> new String[]{"direction"});
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 1500;
     }
 

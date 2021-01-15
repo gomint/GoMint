@@ -7,7 +7,7 @@ import io.gomint.GoMint;
  * @version 1.0
  * @stability 3
  */
-public interface ItemCartographyTable extends ItemStack {
+public interface ItemCartographyTable extends ItemStack<ItemCartographyTable> {
 
     /**
      * Create a new item stack with given class and amount

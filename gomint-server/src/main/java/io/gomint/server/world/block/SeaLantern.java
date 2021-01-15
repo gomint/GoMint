@@ -18,7 +18,7 @@ public class SeaLantern extends Block implements BlockSeaLantern {
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 450;
     }
 

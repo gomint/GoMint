@@ -27,7 +27,7 @@ public class DragonEgg extends Block implements BlockDragonEgg {
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 4500;
     }
 
@@ -52,7 +52,7 @@ public class DragonEgg extends Block implements BlockDragonEgg {
     }
 
     @Override
-    public boolean interact(Entity entity, Facing face, Vector facePos, ItemStack item ) {
+    public boolean interact(Entity entity, Facing face, Vector facePos, ItemStack<?> item ) {
         this.teleport();
         return true;
     }

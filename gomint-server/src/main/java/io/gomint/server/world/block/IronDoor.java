@@ -16,7 +16,7 @@ import io.gomint.world.block.data.Facing;
 public class IronDoor extends Door<BlockIronDoor> implements BlockIronDoor {
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 7500;
     }
 
@@ -46,7 +46,7 @@ public class IronDoor extends Door<BlockIronDoor> implements BlockIronDoor {
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return ToolPresets.PICKAXE;
     }
 

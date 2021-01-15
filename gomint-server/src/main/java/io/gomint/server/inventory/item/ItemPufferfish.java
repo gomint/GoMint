@@ -9,7 +9,7 @@ import io.gomint.taglib.NBTTagCompound;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:pufferfish", id = 462 )
-public class ItemPufferfish extends ItemFood implements io.gomint.inventory.item.ItemPufferfish {
+public class ItemPufferfish extends ItemFood<io.gomint.inventory.item.ItemPufferfish> implements io.gomint.inventory.item.ItemPufferfish {
 
 
 
@@ -24,7 +24,7 @@ public class ItemPufferfish extends ItemFood implements io.gomint.inventory.item
     }
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.PUFFERFISH;
     }
 

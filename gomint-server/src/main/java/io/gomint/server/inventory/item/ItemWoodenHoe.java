@@ -12,16 +12,18 @@ import io.gomint.server.world.block.GrassBlock;
 import io.gomint.world.block.Block;
 import io.gomint.world.block.data.Facing;
 
+import java.time.Duration;
+
 /**
  * @author geNAZt
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:wooden_hoe", id = 290 )
-public class ItemWoodenHoe extends ItemReduceTierWooden implements io.gomint.inventory.item.ItemWoodenHoe {
+public class ItemWoodenHoe extends ItemReduceTierWooden<io.gomint.inventory.item.ItemWoodenHoe> implements io.gomint.inventory.item.ItemWoodenHoe {
 
     @Override
-    public long getBurnTime() {
-        return 10000;
+    public Duration burnTime() {
+        return Duration.ofMillis(10000);
     }
 
     @Override
@@ -50,7 +52,7 @@ public class ItemWoodenHoe extends ItemReduceTierWooden implements io.gomint.inv
     }
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.WOODEN_HOE;
     }
 

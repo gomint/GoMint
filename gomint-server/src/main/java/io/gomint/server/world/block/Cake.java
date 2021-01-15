@@ -27,7 +27,7 @@ public class Cake extends Block implements BlockCake {
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 750;
     }
 
@@ -42,7 +42,7 @@ public class Cake extends Block implements BlockCake {
     }
 
     @Override
-    public boolean interact(Entity entity, Facing face, Vector facePos, ItemStack item) {
+    public boolean interact(Entity entity, Facing face, Vector facePos, ItemStack<?> item) {
         if (entity instanceof EntityPlayer) {
             EntityPlayer player = (EntityPlayer) entity;
             if (player.getHunger() < 20) {
@@ -59,7 +59,7 @@ public class Cake extends Block implements BlockCake {
     }
 
     @Override
-    public boolean beforePlacement(EntityLiving entity, ItemStack item, Facing face, Location location) {
+    public boolean beforePlacement(EntityLiving entity, ItemStack<?> item, Facing face, Location location) {
         CAKE_EATEN.detectFromPlacement(this, entity, item, face);
         return super.beforePlacement(entity, item, face, location);
     }

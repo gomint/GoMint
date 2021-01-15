@@ -7,7 +7,7 @@ import io.gomint.GoMint;
  * @version 1.0
  * @stability 3
  */
-public interface ItemTNT extends ItemStack {
+public interface ItemTNT extends ItemStack<ItemTNT> {
 
     /**
      * Create a new item stack with given class and amount

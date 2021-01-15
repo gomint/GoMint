@@ -102,7 +102,7 @@ public class StoneSlab extends Slab<BlockStoneSlab> implements BlockStoneSlab {
     });
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 3000;
     }
 
@@ -127,7 +127,7 @@ public class StoneSlab extends Slab<BlockStoneSlab> implements BlockStoneSlab {
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return ToolPresets.PICKAXE;
     }
 
@@ -154,8 +154,8 @@ public class StoneSlab extends Slab<BlockStoneSlab> implements BlockStoneSlab {
     }
 
     @Override
-    public boolean canBeReplaced(ItemStack item) {
-        return item.getItemType() == ItemType.STONE_SLAB;
+    public boolean canBeReplaced(ItemStack<?> item) {
+        return item.itemType() == ItemType.STONE_SLAB;
     }
 
 }

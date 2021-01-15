@@ -21,7 +21,7 @@ import io.gomint.world.block.data.Direction;
 @RegisterInfo(sId = "minecraft:coral_fan_hang", id = -135, def = true)
 @RegisterInfo(sId = "minecraft:coral_fan_hang2", id = -136)
 @RegisterInfo(sId = "minecraft:coral_fan_hang3", id = -137)
-public class ItemCoralFanHang extends ItemStack implements io.gomint.inventory.item.ItemCoralFanHang {
+public class ItemCoralFanHang extends ItemStack<io.gomint.inventory.item.ItemCoralFanHang> implements io.gomint.inventory.item.ItemCoralFanHang {
 
     private enum DirectionMagic {
         SOUTH((short) 12),
@@ -53,22 +53,23 @@ public class ItemCoralFanHang extends ItemStack implements io.gomint.inventory.i
     }
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.CORAL_FAN_HANG;
     }
 
     @Override
-    public void setCoralType(CoralType type) {
-        this.calculate(this.getDirection(), type, this.isDead());
+    public ItemCoralFanHang coralType(CoralType type) {
+        this.calculate(this.direction(), type, this.dead());
+        return this;
     }
 
     @Override
-    public CoralType getCoralType() {
-        short directionValue = DirectionMagic.valueOf(this.getDirection().name()).value;
-        short type = (short) (directionValue - (this.isDead() ? 2 : 0));
+    public CoralType coralType() {
+        short directionValue = DirectionMagic.valueOf(this.direction().name()).value;
+        short type = (short) (directionValue - (this.dead() ? 2 : 0));
 
         for (CoralTypeMagic value : CoralTypeMagic.values()) {
-            if (this.getMaterial().equals(value.id) && type == value.value) {
+            if (this.material().equals(value.id) && type == value.value) {
                 return CoralType.valueOf(value.name());
             }
         }
@@ -77,14 +78,15 @@ public class ItemCoralFanHang extends ItemStack implements io.gomint.inventory.i
     }
 
     @Override
-    public void setDirection(Direction direction) {
-        this.calculate(direction, this.getCoralType(), this.isDead());
+    public ItemCoralFanHang direction(Direction direction) {
+        this.calculate(direction, this.coralType(), this.dead());
+        return this;
     }
 
     @Override
-    public Direction getDirection() {
+    public Direction direction() {
         for (DirectionMagic value : DirectionMagic.values()) {
-            if (this.getData() >= value.value) {
+            if (this.data() >= value.value) {
                 return Direction.valueOf(value.name());
             }
         }
@@ -93,14 +95,15 @@ public class ItemCoralFanHang extends ItemStack implements io.gomint.inventory.i
     }
 
     @Override
-    public boolean isDead() {
-        short directionValue = DirectionMagic.valueOf(this.getDirection().name()).value;
-        return this.getData() - directionValue >= 2;
+    public boolean dead() {
+        short directionValue = DirectionMagic.valueOf(this.direction().name()).value;
+        return this.data() - directionValue >= 2;
     }
 
     @Override
-    public void setDead(boolean dead) {
-        this.calculate(this.getDirection(), this.getCoralType(), dead);
+    public ItemCoralFanHang dead(boolean dead) {
+        this.calculate(this.direction(), this.coralType(), dead);
+        return this;
     }
 
     private void calculate(Direction direction, CoralType type, boolean isDead) {
@@ -110,16 +113,16 @@ public class ItemCoralFanHang extends ItemStack implements io.gomint.inventory.i
         val += coralTypeMagic.value;
         val += isDead ? 2 : 0;
 
-        this.setMaterial(coralTypeMagic.id);
-        this.setData(val);
+        this.material(coralTypeMagic.id);
+        this.data(val);
     }
 
     @Override
-    public Block getBlock() {
-        BlockCoralFanHang block = (BlockCoralFanHang) super.getBlock();
-        block.coralType(this.getCoralType());
-        block.direction(this.getDirection());
-        block.dead(this.isDead());
+    public Block block() {
+        BlockCoralFanHang block = (BlockCoralFanHang) super.block();
+        block.coralType(this.coralType());
+        block.direction(this.direction());
+        block.dead(this.dead());
         return block;
     }
 

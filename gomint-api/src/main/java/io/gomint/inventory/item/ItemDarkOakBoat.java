@@ -14,12 +14,13 @@ import io.gomint.GoMint;
  * @version 1.0
  * @stability 1
  */
-public interface ItemDarkOakBoat extends ItemStack {
+public interface ItemDarkOakBoat extends ItemStack<ItemDarkOakBoat> {
 
     /**
      * Create a new item stack with given class and amount
      *
      * @param amount which is used for the creation
+	 * @return freshly generated item
      */
     static ItemDarkOakBoat create( int amount ) {
         return GoMint.instance().createItemStack( ItemDarkOakBoat.class, amount );

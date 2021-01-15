@@ -30,7 +30,7 @@ public class SoulCampfire extends Block implements BlockSoulCampfire {
     private static final BooleanBlockState EXTINGUISHED = new BooleanBlockState(() -> new String[]{"extinguished"});
 
     @Override
-    public boolean beforePlacement(EntityLiving entity, ItemStack item, Facing face, Location location) {
+    public boolean beforePlacement(EntityLiving entity, ItemStack<?> item, Facing face, Location location) {
         super.beforePlacement(entity, item, face, location);
         DIRECTION.detectFromPlacement(this, entity, item, face);
         EXTINGUISHED.setState(this, false);
@@ -38,7 +38,7 @@ public class SoulCampfire extends Block implements BlockSoulCampfire {
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 3000;
     }
 
@@ -53,7 +53,7 @@ public class SoulCampfire extends Block implements BlockSoulCampfire {
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return ToolPresets.AXE;
     }
 

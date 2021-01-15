@@ -23,7 +23,7 @@ public class TurtleEgg extends Block implements BlockTurtleEgg {
         crackStatus -> crackStatus.name().toLowerCase(), s -> CrackStatus.valueOf(s.toUpperCase()));
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 750;
     }
 

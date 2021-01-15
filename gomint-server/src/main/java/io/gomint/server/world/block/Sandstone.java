@@ -20,12 +20,12 @@ public class Sandstone extends Block implements BlockSandstone {
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 1200;
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return ToolPresets.PICKAXE;
     }
 

@@ -7,12 +7,13 @@ import io.gomint.GoMint;
  * @version 1.0
  * @stability 1
  */
-public interface ItemRedTorch extends ItemStack {
+public interface ItemRedTorch extends ItemStack<ItemRedTorch> {
 
     /**
      * Create a new item stack with given class and amount
      *
      * @param amount which is used for the creation
+	 * @return freshly generated item
      */
     static ItemRedTorch create( int amount ) {
         return GoMint.instance().createItemStack( ItemRedTorch.class, amount );

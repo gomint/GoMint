@@ -25,7 +25,8 @@ public interface BlockSmoker extends Block, BlockFacing<BlockSmoker> {
      * Set the burning of this furnace
      *
      * @param burning true when it should burn, false if it shouldn't
+     * @return block for chaining
      */
-    BlockSmoker burning(boolean burning );
+    BlockSmoker burning(boolean burning);
 
 }

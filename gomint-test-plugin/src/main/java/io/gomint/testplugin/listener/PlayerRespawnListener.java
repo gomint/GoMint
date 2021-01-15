@@ -21,7 +21,7 @@ public class PlayerRespawnListener implements EventListener {
     @EventHandler
     public void onRespawn( PlayerRespawnEvent event ) {
         event.getPlayer().getInventory().clear();
-        event.getPlayer().getInventory().setItem( 0, ItemDiamond.create( 1 ) );
+        event.getPlayer().getInventory().item( 0, ItemDiamond.create( 1 ) );
     }
 
 }

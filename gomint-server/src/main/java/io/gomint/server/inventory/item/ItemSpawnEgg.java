@@ -9,15 +9,15 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:spawn_egg", id = 383 )
-public class ItemSpawnEgg extends ItemStack implements io.gomint.inventory.item.ItemSpawnEgg {
+public class ItemSpawnEgg extends ItemStack< io.gomint.inventory.item.ItemSpawnEgg> implements io.gomint.inventory.item.ItemSpawnEgg {
 
     @Override
-    public byte getMaximumAmount() {
+    public byte maximumAmount() {
         return 1;
     }
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.SPAWN_EGG;
     }
 

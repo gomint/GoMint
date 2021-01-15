@@ -37,7 +37,7 @@ public class JukeboxTileEntity extends TileEntity {
 
     }
 
-    public void setRecordItem(ItemStack recordItem) {
+    public void setRecordItem(ItemStack<?> recordItem) {
         this.itemComponent.setItem(recordItem);
     }
 

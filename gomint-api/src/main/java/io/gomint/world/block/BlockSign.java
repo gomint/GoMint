@@ -32,6 +32,7 @@ public interface BlockSign<B> extends Block {
      *
      * @param line    which should be set
      * @param content which should be set on that line
+     * @return block for chaining
      */
     B line(int line, String content);
 
@@ -54,6 +55,7 @@ public interface BlockSign<B> extends Block {
      * Set the type of wood for this button
      *
      * @param logType type of wood
+     * @return block for chaining
      */
     B type(LogType logType);
 

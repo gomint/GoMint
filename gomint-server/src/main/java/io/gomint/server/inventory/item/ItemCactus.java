@@ -10,10 +10,10 @@ import io.gomint.taglib.NBTTagCompound;
  * @version 1.0
  */
 @RegisterInfo(sId = "minecraft:cactus", id = 81)
-public class ItemCactus extends ItemStack implements io.gomint.inventory.item.ItemCactus {
+public class ItemCactus extends ItemStack< io.gomint.inventory.item.ItemCactus> implements io.gomint.inventory.item.ItemCactus {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.CACTUS;
     }
 

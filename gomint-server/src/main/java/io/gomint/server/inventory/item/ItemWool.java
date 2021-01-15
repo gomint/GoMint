@@ -9,21 +9,22 @@ import io.gomint.world.block.data.BlockColor;
  * @version 1.0
  */
 @RegisterInfo(sId = "minecraft:wool", id = 35)
-public class ItemWool extends ItemStack implements io.gomint.inventory.item.ItemWool {
+public class ItemWool extends ItemStack< io.gomint.inventory.item.ItemWool> implements io.gomint.inventory.item.ItemWool {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.WOOL;
     }
 
     @Override
-    public BlockColor getColor() {
-        return BlockColor.values()[this.getData()];
+    public BlockColor color() {
+        return BlockColor.values()[this.data()];
     }
 
     @Override
-    public void setColor(BlockColor color) {
-        this.setData((short) color.ordinal());
+    public ItemWool color(BlockColor color) {
+        this.data((short) color.ordinal());
+        return this;
     }
 
 }

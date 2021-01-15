@@ -18,7 +18,7 @@ public class HayBale extends Block implements BlockHayBale {
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 750;
     }
 

@@ -16,7 +16,7 @@ import io.gomint.server.network.type.WindowType;
  * @author geNAZt
  * @version 1.0
  */
-public class DispenserInventory extends ContainerInventory {
+public class DispenserInventory extends ContainerInventory<DispenserInventory> {
 
     public DispenserInventory(Items items, InventoryHolder owner) {
         super(items, owner, 9);

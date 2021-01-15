@@ -104,17 +104,17 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
     private Set<Long> hiddenPlayers;
 
     // Container handling
-    private ContainerInventory currentOpenContainer;
+    private ContainerInventory<?> currentOpenContainer;
 
     // Inventory
-    private Inventory cursorInventory;
-    private Inventory offhandInventory;
+    private Inventory<?> cursorInventory;
+    private Inventory<?> offhandInventory;
     private EnderChestInventory enderChestInventory;
 
     // Crafting
-    private Inventory craftingInventory;
+    private Inventory<?> craftingInventory;
     private CraftingInputInventory craftingInputInventory;
-    private Inventory craftingResultInventory;
+    private Inventory<?> craftingResultInventory;
 
     // Block break data
     private BlockPosition breakVector;
@@ -127,8 +127,8 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
 
     // Form stuff
     private int formId;
-    private Int2ObjectMap<io.gomint.server.gui.Form> forms = new Int2ObjectOpenHashMap<>();
-    private Int2ObjectMap<io.gomint.server.gui.FormListener> formListeners = new Int2ObjectOpenHashMap<>();
+    private Int2ObjectMap<io.gomint.server.gui.Form<?>> forms = new Int2ObjectOpenHashMap<>();
+    private Int2ObjectMap<io.gomint.server.gui.FormListener<?>> formListeners = new Int2ObjectOpenHashMap<>();
 
     // Server settings
     private int serverSettingsForm = -1;
@@ -568,7 +568,7 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
     }
 
     @Override
-    public boolean openInventory(io.gomint.inventory.Inventory inventory) {
+    public boolean openInventory(io.gomint.inventory.Inventory<?> inventory) {
         if (inventory instanceof ContainerInventory) {
             InventoryOpenEvent event = new InventoryOpenEvent(this, inventory);
             this.getWorld().getServer().pluginManager().callEvent(event);
@@ -583,7 +583,7 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
             }
 
             // Trigger open
-            ContainerInventory containerInventory = (ContainerInventory) inventory;
+            ContainerInventory<?> containerInventory = (ContainerInventory<?>) inventory;
             containerInventory.addViewer(this, WindowMagicNumbers.OPEN_CONTAINER);
 
             this.currentOpenContainer = containerInventory;
@@ -594,7 +594,7 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
     }
 
     @Override
-    public boolean closeInventory(io.gomint.inventory.Inventory inventory) {
+    public boolean closeInventory(io.gomint.inventory.Inventory<?> inventory) {
         if (inventory instanceof ContainerInventory) {
             if (this.currentOpenContainer == inventory) {
                 this.closeInventory(WindowMagicNumbers.OPEN_CONTAINER, true);
@@ -610,7 +610,7 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
      *
      * @return the players cursor item
      */
-    public Inventory getCursorInventory() {
+    public Inventory<?> getCursorInventory() {
         return this.cursorInventory;
     }
 
@@ -619,7 +619,7 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
      *
      * @return current offhand inventory
      */
-    public Inventory getOffhandInventory() {
+    public Inventory<?> getOffhandInventory() {
         return this.offhandInventory;
     }
 
@@ -835,7 +835,7 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
      * @param windowId which should be looked up
      * @return container inventory or null when not found
      */
-    public ContainerInventory getContainerId(byte windowId) {
+    public ContainerInventory<?> getContainerId(byte windowId) {
         if (windowId == WindowMagicNumbers.OPEN_CONTAINER) {
             return this.currentOpenContainer;
         }
@@ -957,7 +957,7 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
                 EntityDamageEvent.DamageSource damageSource = EntityDamageEvent.DamageSource.ENTITY_ATTACK;
                 float damage = this.getAttribute(Attribute.ATTACK_DAMAGE);
 
-                EnchantmentSharpness sharpness = this.getInventory().getItemInHand().getEnchantment(EnchantmentSharpness.class);
+                EnchantmentSharpness sharpness = this.getInventory().itemInHand().enchantment(EnchantmentSharpness.class);
                 if (sharpness != null) {
                     damage += sharpness.getLevel() * 1.25f;
                 }
@@ -969,7 +969,7 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
                     knockbackLevel++;
                 }
 
-                EnchantmentKnockback knockback = this.getInventory().getItemInHand().getEnchantment(EnchantmentKnockback.class);
+                EnchantmentKnockback knockback = this.getInventory().itemInHand().enchantment(EnchantmentKnockback.class);
                 if (knockback != null) {
                     knockbackLevel += knockback.getLevel();
                 }
@@ -1121,7 +1121,7 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
         }
 
         // Apply item in hand stuff
-        ItemStack itemInHand = (ItemStack) this.inventory.getItemInHand();
+        ItemStack<?> itemInHand = (ItemStack<?>) this.inventory.itemInHand();
         itemInHand.gotInHand(this);
     }
 
@@ -1186,13 +1186,13 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
                 break;
         }
 
-        List<io.gomint.inventory.item.ItemStack> drops = this.getDrops();
+        List<io.gomint.inventory.item.ItemStack<?>> drops = this.getDrops();
 
         PlayerDeathEvent event = new PlayerDeathEvent(this, deathMessage, true, drops);
         this.connection.getServer().pluginManager().callEvent(event);
 
         if (event.isDropInventory()) {
-            for (io.gomint.inventory.item.ItemStack drop : event.getDrops()) {
+            for (io.gomint.inventory.item.ItemStack<?> drop : event.getDrops()) {
                 this.world.dropItem(this.getLocation(), drop);
             }
 
@@ -1220,22 +1220,22 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
         this.getConnection().addToSendQueue(packetRespawnPosition);
     }
 
-    private List<io.gomint.inventory.item.ItemStack> getDrops() {
-        List<io.gomint.inventory.item.ItemStack> drops = new ArrayList<>();
+    private List<io.gomint.inventory.item.ItemStack<?>> getDrops() {
+        List<io.gomint.inventory.item.ItemStack<?>> drops = new ArrayList<>();
 
-        for (io.gomint.inventory.item.ItemStack itemStack : this.inventory.getContents()) {
+        for (io.gomint.inventory.item.ItemStack<?> itemStack : this.inventory.contents()) {
             if (!(itemStack instanceof ItemAir)) {
                 drops.add(itemStack);
             }
         }
 
-        for (io.gomint.inventory.item.ItemStack itemStack : this.offhandInventory.getContents()) {
+        for (io.gomint.inventory.item.ItemStack<?> itemStack : this.offhandInventory.contents()) {
             if (!(itemStack instanceof ItemAir)) {
                 drops.add(itemStack);
             }
         }
 
-        for (io.gomint.inventory.item.ItemStack itemStack : this.armorInventory.getContents()) {
+        for (io.gomint.inventory.item.ItemStack<?> itemStack : this.armorInventory.contents()) {
             if (!(itemStack instanceof ItemAir)) {
                 drops.add(itemStack);
             }
@@ -1276,7 +1276,7 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
     // ------- GUI stuff
     public void sendServerSettings() {
         if (this.serverSettingsForm != -1) {
-            io.gomint.server.gui.Form form = this.forms.get(this.serverSettingsForm);
+            io.gomint.server.gui.Form<?> form = this.forms.get(this.serverSettingsForm);
 
             PacketServerSettingsResponse response = new PacketServerSettingsResponse();
             response.setFormId(this.serverSettingsForm);
@@ -1290,11 +1290,11 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
     @Override
     public <R> FormListener<R> showForm(Form<R> form) {
         int formId = this.formId++;
-        io.gomint.server.gui.Form implForm = (io.gomint.server.gui.Form) form;
+        io.gomint.server.gui.Form<R> implForm = (io.gomint.server.gui.Form<R>) form;
 
         this.forms.put(formId, implForm);
 
-        io.gomint.server.gui.FormListener formListener = new io.gomint.server.gui.FormListener<R>();
+        io.gomint.server.gui.FormListener<R> formListener = new io.gomint.server.gui.FormListener<R>();
 
         this.formListeners.put(formId, formListener);
 
@@ -1335,12 +1335,12 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
         }
     }
 
-    public void parseGUIResponse(int formId, String json) {
+    public <R> void parseGUIResponse(int formId, String json) {
         // Get the listener and the form
-        Form form = this.forms.get(formId);
+        Form<?> form = this.forms.get(formId);
         if (form != null) {
             // Get listener
-            io.gomint.server.gui.FormListener formListener = this.formListeners.get(formId);
+            io.gomint.server.gui.FormListener<R> formListener = (io.gomint.server.gui.FormListener<R>) this.formListeners.get(formId);
 
             if (this.serverSettingsForm != formId) {
                 this.forms.remove(formId);
@@ -1350,8 +1350,8 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
             if (json.equals("null")) {
                 formListener.getCloseConsumer().accept(null);
             } else {
-                io.gomint.server.gui.Form implForm = (io.gomint.server.gui.Form) form;
-                Object resp = implForm.parseResponse(json);
+                io.gomint.server.gui.Form<R> implForm = (io.gomint.server.gui.Form<R>) form;
+                R resp = implForm.parseResponse(json);
                 if (resp == null) {
                     formListener.getCloseConsumer().accept(null);
                 } else {
@@ -1573,7 +1573,7 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
         packetSpawnPlayer.setYaw(this.getYaw());
         packetSpawnPlayer.setHeadYaw(this.getHeadYaw());
 
-        packetSpawnPlayer.setItemInHand(this.getInventory().getItemInHand());
+        packetSpawnPlayer.setItemInHand(this.getInventory().itemInHand());
         packetSpawnPlayer.setMetadataContainer(this.getMetadata());
         packetSpawnPlayer.setDeviceId(this.getDeviceInfo().deviceId());
         packetSpawnPlayer.setBuildPlatform(this.getDeviceInfo().OS().id());
@@ -1738,7 +1738,7 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
         this.hoverEntity = hoverEntity;
     }
 
-    public Inventory getCraftingInventory() {
+    public Inventory<?> getCraftingInventory() {
         return craftingInventory;
     }
 
@@ -1841,7 +1841,7 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
         return EntityTags.PLAYER;
     }
 
-    public Inventory getCurrentOpenContainer() {
+    public Inventory<?> getCurrentOpenContainer() {
         return this.currentOpenContainer;
     }
 

@@ -33,8 +33,8 @@ public class ListConverter implements Converter {
     @Override
     @SuppressWarnings( "unchecked" )
     public Object toConfig( Class<?> type, Object object, ParameterizedType parameterizedType ) throws Exception {
-        List values = (List) object;
-        List converted = new ArrayList();
+        List<?> values = (List<?>) object;
+        List<Object> converted = new ArrayList<>();
 
         if ( this.internalConverter.getConfig() instanceof BaseConfigMapper ) {
             BaseConfigMapper baseConfigMapper = (BaseConfigMapper) this.internalConverter.getConfig();
@@ -64,19 +64,19 @@ public class ListConverter implements Converter {
      */
     @Override
     @SuppressWarnings( "unchecked" )
-    public Object fromConfig( Class type, Object object, ParameterizedType parameterizedType ) throws Exception {
-        List converted = new ArrayList();
+    public Object fromConfig( Class<?> type, Object object, ParameterizedType parameterizedType ) throws Exception {
+        List<Object> converted = new ArrayList<>();
 
         try {
-            converted = ( (List) type.getDeclaredConstructor().newInstance() );
+            converted = ( (List<Object>) type.getDeclaredConstructor().newInstance() );
         } catch ( Exception ignored ) {
 
         }
 
-        List values = (List) object;
+        List<Object> values = (List<Object>) object;
 
         if ( parameterizedType != null && parameterizedType.getActualTypeArguments()[0] instanceof Class ) {
-            Class actualTypeArgument = (Class) parameterizedType.getActualTypeArguments()[0];
+            Class<?> actualTypeArgument = (Class<?>) parameterizedType.getActualTypeArguments()[0];
             Converter converter = this.internalConverter.getConverter( actualTypeArgument );
 
             if ( converter != null ) {

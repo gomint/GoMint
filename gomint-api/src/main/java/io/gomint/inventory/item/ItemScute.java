@@ -14,14 +14,15 @@ import io.gomint.GoMint;
  * @version 1.0
  * @stability 3
  */
-public interface ItemScute extends ItemStack {
+public interface ItemScute extends ItemStack<ItemScute> {
 
     /**
      * Create a new item stack with given class and amount
      *
      * @param amount which is used for the creation
+	 * @return freshly generated item
      */
-    static ItemScute create( int amount ) {
+    static ItemScute create( int amount ) {	
         return GoMint.instance().createItemStack( ItemScute.class, amount );
     }
 

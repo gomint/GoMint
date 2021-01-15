@@ -69,15 +69,15 @@ public class ConfigConverter implements Converter {
      * {@inheritDoc}
      */
     @Override
-    public Object fromConfig( Class type, Object object, ParameterizedType parameterizedType ) throws Exception {
+    public Object fromConfig( Class<?> type, Object object, ParameterizedType parameterizedType ) throws Exception {
         YamlConfig yamlConfig = (YamlConfig) newInstance( type );
 
         // Inject converter stack into sub config
-        for ( Class customConverter : this.internalConverter.getCustomConverters() ) {
+        for ( Class<?> customConverter : this.internalConverter.getCustomConverters() ) {
             yamlConfig.addConverter( customConverter );
         }
 
-        yamlConfig.loadFromMap( object instanceof Map ? (Map) object : ( (ConfigSection) object ).getRawMap(), type );
+        yamlConfig.loadFromMap( object instanceof Map ? (Map<?, ?>) object : ( (ConfigSection) object ).getRawMap(), type );
         return yamlConfig;
     }
 
@@ -91,9 +91,8 @@ public class ConfigConverter implements Converter {
         return YamlConfig.class.isAssignableFrom( type );
     }
 
-    @SuppressWarnings( "unchecked" )
-    private Object newInstance( Class type ) throws Exception {
-        Class enclosingClass = type.getEnclosingClass();
+    private Object newInstance( Class<?> type ) throws Exception {
+        Class<?> enclosingClass = type.getEnclosingClass();
 
         if ( enclosingClass != null ) {
             Object instanceOfEnclosingClass = newInstance( enclosingClass );

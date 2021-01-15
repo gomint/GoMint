@@ -27,6 +27,7 @@ public interface BlockPlank extends Block {
      * Set the plank type
      *
      * @param logType which should be used in this block
+     * @return block for chaining
      */
     BlockPlank type(LogType logType);
 

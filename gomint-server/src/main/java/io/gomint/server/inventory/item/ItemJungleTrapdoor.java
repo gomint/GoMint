@@ -10,20 +10,22 @@ package io.gomint.server.inventory.item;
 import io.gomint.inventory.item.ItemType;
 import io.gomint.server.registry.RegisterInfo;
 
+import java.time.Duration;
+
 /**
  * @author geNAZt
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:jungle_trapdoor", id = -148 )
-public class ItemJungleTrapdoor extends ItemStack implements io.gomint.inventory.item.ItemJungleTrapdoor {
+public class ItemJungleTrapdoor extends ItemStack< io.gomint.inventory.item.ItemJungleTrapdoor> implements io.gomint.inventory.item.ItemJungleTrapdoor {
 
     @Override
-    public long getBurnTime() {
-        return 15000;
+    public Duration burnTime() {
+        return Duration.ofMillis(15000);
     }
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.JUNGLE_TRAPDOOR;
     }
 

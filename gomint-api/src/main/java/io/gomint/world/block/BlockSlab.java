@@ -25,6 +25,7 @@ public interface BlockSlab<B> extends Block {
      * Set this slab to the top or bottom
      *
      * @param top if true this slab if on the top, false on the bottom
+     * @return block for chaining
      */
     B top(boolean top);
 

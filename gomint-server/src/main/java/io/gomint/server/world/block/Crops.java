@@ -35,14 +35,14 @@ public class Crops extends Growable {
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 0;
     }
 
     @Override
-    public List<ItemStack> drops(ItemStack itemInHand) {
+    public List<ItemStack<?>> drops(ItemStack<?> itemInHand) {
         if (GROWTH.maxed(this)) {
-            List<ItemStack> drops = new ArrayList<>() {{
+            List<ItemStack<?>> drops = new ArrayList<>() {{
                 add(world.getServer().items().create(296, (short) 0, (byte) 1, null)); // Beetroot
             }};
 

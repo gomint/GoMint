@@ -9,10 +9,10 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo(sId = "minecraft:bedrock", id = 7)
-public class ItemBedrock extends ItemStack implements io.gomint.inventory.item.ItemBedrock {
+public class ItemBedrock extends ItemStack< io.gomint.inventory.item.ItemBedrock> implements io.gomint.inventory.item.ItemBedrock {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.BEDROCK;
     }
 

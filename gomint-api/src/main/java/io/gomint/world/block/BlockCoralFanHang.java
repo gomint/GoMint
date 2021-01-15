@@ -22,6 +22,7 @@ public interface BlockCoralFanHang extends Block, BlockDirection<BlockCoralFanHa
      * Set coral type
      *
      * @param type of coral
+     * @return block for chaining
      */
     BlockCoralFanHang coralType(CoralType type);
 
@@ -43,6 +44,7 @@ public interface BlockCoralFanHang extends Block, BlockDirection<BlockCoralFanHa
      * Set if this coral fan is dead or not
      *
      * @param dead true when it should be dead, false otherwise
+     * @return block for chaining
      */
     BlockCoralFanHang dead(boolean dead);
 

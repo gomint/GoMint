@@ -7,14 +7,15 @@ import io.gomint.GoMint;
  * @version 1.0
  * @stability 3
  */
-public interface ItemGravel extends ItemStack {
+public interface ItemGravel extends ItemStack<ItemGravel> {
 
     /**
      * Create a new item stack with given class and amount
      *
      * @param amount which is used for the creation
+	 * @return freshly generated item
      */
-    static ItemGravel create( int amount ) {
+    static ItemGravel create( int amount ) {	
         return GoMint.instance().createItemStack( ItemGravel.class, amount );
     }
 

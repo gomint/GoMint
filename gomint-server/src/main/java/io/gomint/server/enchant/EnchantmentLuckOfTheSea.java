@@ -37,8 +37,8 @@ public class EnchantmentLuckOfTheSea extends Enchantment implements io.gomint.en
     }
 
     @Override
-    public boolean canBeApplied( ItemStack itemStack ) {
-        return itemStack.getItemType() == ItemType.FISHING_ROD;
+    public boolean canBeApplied(ItemStack<?> itemStack ) {
+        return itemStack.itemType() == ItemType.FISHING_ROD;
     }
 
     @Override

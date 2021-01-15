@@ -8,12 +8,12 @@ import io.gomint.taglib.NBTTagCompound;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:lingering_potion", id = 441 )
-public class ItemLingeringPotion extends ItemStack implements io.gomint.inventory.item.ItemLingeringPotion {
+public class ItemLingeringPotion extends ItemStack< io.gomint.inventory.item.ItemLingeringPotion> implements io.gomint.inventory.item.ItemLingeringPotion {
 
 
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.LINGERING_POTION;
     }
 

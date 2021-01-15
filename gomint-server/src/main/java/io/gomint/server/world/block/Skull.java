@@ -29,7 +29,7 @@ public class Skull extends Block implements BlockSkull {
     private static final BlockfaceFromPlayerBlockState DIRECTION = new BlockfaceFromPlayerBlockState(() -> new String[]{"facing_direction"}, true);
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 1500;
     }
 
@@ -61,7 +61,7 @@ public class Skull extends Block implements BlockSkull {
     }
 
     @Override
-    public boolean beforePlacement(EntityLiving entity, ItemStack item, Facing face, Location location) {
+    public boolean beforePlacement(EntityLiving entity, ItemStack<?> item, Facing face, Location location) {
         DIRECTION.detectFromPlacement(this, entity, item, face);
 
         // We skip downwards facing
@@ -69,7 +69,7 @@ public class Skull extends Block implements BlockSkull {
             DIRECTION.setState(this, Facing.UP);
         }
 
-        SkullTileEntity tileEntity = this.getTileEntity();
+        SkullTileEntity tileEntity = this.tileEntity();
         tileEntity.setRotation(entity.getYaw());
         return super.beforePlacement(entity, item, face, location);
     }
@@ -81,9 +81,9 @@ public class Skull extends Block implements BlockSkull {
     }
 
     @Override
-    public List<ItemStack> drops(ItemStack itemInHand) {
+    public List<ItemStack<?>> drops(ItemStack<?> itemInHand) {
         ItemSkull item = ItemSkull.create(1);
-        item.setSkullType(this.type());
+        item.type(this.type());
         return Collections.singletonList(item);
     }
 
@@ -99,13 +99,13 @@ public class Skull extends Block implements BlockSkull {
 
     @Override
     public SkullType type() {
-        SkullTileEntity entity = this.getTileEntity();
+        SkullTileEntity entity = this.tileEntity();
         return entity.getSkullType();
     }
 
     @Override
     public BlockSkull type(SkullType type) {
-        SkullTileEntity entity = this.getTileEntity();
+        SkullTileEntity entity = this.tileEntity();
         entity.setSkullType(type);
         return this;
     }

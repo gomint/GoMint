@@ -113,7 +113,7 @@ public class Blocks {
         return this.generators.getID(block);
     }
 
-    public boolean replaceWithItem(Block newBlock, EntityPlayer entity, Block clickedBlock, Block block, Facing face, ItemStack item, Vector clickVector) {
+    public boolean replaceWithItem(Block newBlock, EntityPlayer entity, Block clickedBlock, Block block, Facing face, ItemStack<?> item, Vector clickVector) {
         WorldAdapter adapter = (WorldAdapter) block.location.world();
 
         newBlock.location = block.location;

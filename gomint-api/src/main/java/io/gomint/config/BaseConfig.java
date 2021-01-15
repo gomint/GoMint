@@ -34,11 +34,10 @@ public class BaseConfig implements Serializable {
      *
      * @param section The root ConfigSection with all sub-nodes loaded into
      */
-    public BaseConfig update( ConfigSection section ) {
+    public void update( ConfigSection section ) {
         /*
          * This is a hook point for custom classes to overwrite when needed to specify a update path
          */
-        return this;
     }
 
     /**
@@ -47,22 +46,22 @@ public class BaseConfig implements Serializable {
      *
      * @param converter converter to be added
      * @throws InvalidConverterException If the converter has any errors this Exception tells you what
+     * @return base config for chaining
      */
-    public BaseConfig addConverter( Class converter ) throws InvalidConverterException {
+    public BaseConfig addConverter( Class<?> converter ) throws InvalidConverterException {
         this.converter.addCustomConverter( converter );
         return this;
     }
 
-    protected BaseConfig configureFromSerializeOptionsAnnotation() {
+    protected void configureFromSerializeOptionsAnnotation() {
         if ( !this.getClass().isAnnotationPresent( SerializeOptions.class ) ) {
-            return this;
+            return;
         }
 
         SerializeOptions options = this.getClass().getAnnotation( SerializeOptions.class );
         this.configHeader = options.configHeader();
         this.configMode = options.configMode();
         this.skipFailedObjects = options.skipFailedObjects();
-        return this;
     }
 
     /**

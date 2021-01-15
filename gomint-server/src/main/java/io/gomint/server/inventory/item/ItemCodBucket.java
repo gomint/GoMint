@@ -15,10 +15,10 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:cod_bucket", id = 364 )
-public class ItemCodBucket extends ItemStack implements io.gomint.inventory.item.ItemCodBucket {
+public class ItemCodBucket extends ItemStack< io.gomint.inventory.item.ItemCodBucket> implements io.gomint.inventory.item.ItemCodBucket {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.COD_BUCKET;
     }
 

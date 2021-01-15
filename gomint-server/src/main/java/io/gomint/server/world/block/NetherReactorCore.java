@@ -35,7 +35,7 @@ public class NetherReactorCore extends Block implements BlockNetherReactorCore {
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return ToolPresets.PICKAXE;
     }
 

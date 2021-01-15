@@ -14,12 +14,13 @@ import io.gomint.GoMint;
  * @version 1.0
  * @stability 1
  */
-public interface ItemLightBlock extends ItemStack {
+public interface ItemLightBlock extends ItemStack<ItemLightBlock> {
 
     /**
      * Create a new item stack with given class and amount
      *
      * @param amount which is used for the creation
+	 * @return freshly generated item
      */
     static ItemLightBlock create( int amount ) {
         return GoMint.instance().createItemStack( ItemLightBlock.class, amount );
@@ -30,13 +31,13 @@ public interface ItemLightBlock extends ItemStack {
      *
      * @return 0 to 1
      */
-    float getIntensity();
+    float intensity();
 
     /**
      * Set the intensity of light
      *
      * @param intensity ranging from 0 to 1
      */
-    void setIntensity(float intensity);
+    ItemLightBlock intensity(float intensity);
 
 }

@@ -15,10 +15,10 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:structure_void", id = 217 )
-public class ItemStructureVoid extends ItemStack implements io.gomint.inventory.item.ItemStructureVoid {
+public class ItemStructureVoid extends ItemStack< io.gomint.inventory.item.ItemStructureVoid> implements io.gomint.inventory.item.ItemStructureVoid {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.STRUCTURE_VOID;
     }
 

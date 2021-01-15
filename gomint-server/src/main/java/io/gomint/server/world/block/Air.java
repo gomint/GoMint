@@ -39,7 +39,7 @@ public class Air extends Block implements BlockAir {
     }
 
     @Override
-    public boolean canBeReplaced( ItemStack item ) {
+    public boolean canBeReplaced(ItemStack<?> item ) {
         return this.location.getY() > -1 && this.location.getY() < 256;
     }
 

@@ -17,7 +17,7 @@ import java.util.List;
 public class StickyPistonHead extends Block implements BlockPistonHead {
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 750;
     }
 
@@ -32,7 +32,7 @@ public class StickyPistonHead extends Block implements BlockPistonHead {
     }
 
     @Override
-    public List<ItemStack> drops(ItemStack itemInHand ) {
+    public List<ItemStack<?>> drops(ItemStack<?> itemInHand ) {
         return new ArrayList<>();
     }
 
@@ -47,7 +47,7 @@ public class StickyPistonHead extends Block implements BlockPistonHead {
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return ToolPresets.PICKAXE;
     }
 

@@ -38,7 +38,7 @@ public abstract class Growable extends Block {
     });
 
     @Override
-    public boolean beforePlacement(EntityLiving entity, ItemStack item, Facing face, Location location) {
+    public boolean beforePlacement(EntityLiving entity, ItemStack<?> item, Facing face, Location location) {
         // Check if we place on farmland
         return location.world().blockAt(location.toBlockPosition().add(BlockPosition.DOWN)).blockType() == BlockType.FARMLAND;
     }

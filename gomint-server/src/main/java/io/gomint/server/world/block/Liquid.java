@@ -82,7 +82,7 @@ public abstract class Liquid<B> extends Block implements BlockLiquid<B> {
 
         // Check all 4 sides if we can flow into that
         for (Direction face : Direction.values()) {
-            Block other = this.getSide(face);
+            Block other = this.side(face);
             short blockDecay = this.getEffectiveFlowDecay(other);
 
             // Do we have decay?
@@ -143,7 +143,7 @@ public abstract class Liquid<B> extends Block implements BlockLiquid<B> {
     }
 
     @Override
-    public boolean canBeReplaced(ItemStack item) {
+    public boolean canBeReplaced(ItemStack<?> item) {
         return true;
     }
 
@@ -277,7 +277,7 @@ public abstract class Liquid<B> extends Block implements BlockLiquid<B> {
             }
 
             Block other = this.world.blockAt(pos);
-            Block sideBock = other.getSide(facing);
+            Block sideBock = other.side(facing);
             BlockPosition checkingPos = sideBock.position();
 
             if (!this.flowCostVisited.containsKey(checkingPos)) {
@@ -323,7 +323,7 @@ public abstract class Liquid<B> extends Block implements BlockLiquid<B> {
         short maxCost = (short) (4 / this.getFlowDecayPerBlock());
         int j = 0;
         for (Direction face : DIRECTIONS_TO_CHECK) {
-            Block other = this.getSide(face);
+            Block other = this.side(face);
             if (!this.canFlowInto(other)) {
                 this.flowCostVisited.put(other.position(), FlowState.BLOCKED);
             } else if (((Block) this.world.blockAt(this.position().add(BlockPosition.DOWN))).canBeFlowedInto()) {
@@ -374,7 +374,7 @@ public abstract class Liquid<B> extends Block implements BlockLiquid<B> {
                 this.world.breakBlock(block.position(), block.drops(ItemAir.create(0)), false);
             }
 
-            Liquid liquid = block.blockType(this.getClass());
+            Liquid<?> liquid = block.blockType(this.getClass());
             LIQUID_DEPTH.setState(liquid, newFlowDecay);
         }
     }
@@ -411,7 +411,7 @@ public abstract class Liquid<B> extends Block implements BlockLiquid<B> {
     }
 
     private boolean canFlowInto(Block block) {
-        return block.canBeFlowedInto() && !(block instanceof Liquid && ((Liquid) block).fillHeight() == 1f);
+        return block.canBeFlowedInto() && !(block instanceof Liquid && ((Liquid<?>) block).fillHeight() == 1f);
     }
 
     @Override
@@ -431,7 +431,7 @@ public abstract class Liquid<B> extends Block implements BlockLiquid<B> {
     }
 
     @Override
-    public boolean beforePlacement(EntityLiving entity, ItemStack item, Facing face, Location location) {
+    public boolean beforePlacement(EntityLiving entity, ItemStack<?> item, Facing face, Location location) {
         LIQUID_DEPTH.detectFromPlacement(this, entity, item, face);
         return super.beforePlacement(entity, item, face, location);
     }

@@ -15,10 +15,10 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:melon_slice", id = 272 )
-public class ItemMelonSlice extends ItemStack implements io.gomint.inventory.item.ItemMelonSlice {
+public class ItemMelonSlice extends ItemStack< io.gomint.inventory.item.ItemMelonSlice> implements io.gomint.inventory.item.ItemMelonSlice {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.MELON_SLICE;
     }
 

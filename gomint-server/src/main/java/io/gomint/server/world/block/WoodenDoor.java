@@ -35,7 +35,7 @@ import java.util.List;
 public class WoodenDoor extends Door<BlockWoodenDoor> implements BlockWoodenDoor {
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return ToolPresets.AXE;
     }
 
@@ -105,9 +105,9 @@ public class WoodenDoor extends Door<BlockWoodenDoor> implements BlockWoodenDoor
     }
 
     @Override
-    public List<ItemStack> drops(ItemStack itemInHand) {
+    public List<ItemStack<?>> drops(ItemStack<?> itemInHand) {
         ItemWoodenDoor item = ItemWoodenDoor.create(1);
-        item.setWoodType(this.type());
+        item.type(this.type());
         return Collections.singletonList(item);
     }
 

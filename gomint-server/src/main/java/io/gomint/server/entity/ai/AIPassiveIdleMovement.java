@@ -69,7 +69,7 @@ public class AIPassiveIdleMovement extends AIMovementAndLookingState {
             for (Direction value : Direction.values()) {
                 Block other = block;
                 for (int i = 0; i < 3; i++) {
-                    other = other.getSide(value);
+                    other = other.side(value);
                     if (other.canPassThrough()) {
                         return other;
                     }

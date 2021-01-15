@@ -152,7 +152,7 @@ public interface Block {
      * @param toolItem which will be used to generate the drops
      * @return list of item stacks which can be used as drops
      */
-    List<ItemStack> drops(ItemStack toolItem);
+    List<ItemStack<?>> drops(ItemStack<?> toolItem);
 
     /**
      * This method tells you if you can modify the block. A block gets unmodifiable

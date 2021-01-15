@@ -13,7 +13,7 @@ import java.util.concurrent.TimeUnit;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:golden_apple", id = 322 )
-public class ItemGoldenApple extends ItemFood implements io.gomint.inventory.item.ItemGoldenApple {
+public class ItemGoldenApple extends ItemFood<io.gomint.inventory.item.ItemGoldenApple> implements io.gomint.inventory.item.ItemGoldenApple {
 
 
 
@@ -37,7 +37,7 @@ public class ItemGoldenApple extends ItemFood implements io.gomint.inventory.ite
     }
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.GOLDEN_APPLE;
     }
 

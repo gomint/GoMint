@@ -15,10 +15,10 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:mule_spawn_egg", id = 464 )
-public class ItemMuleSpawnEgg extends ItemStack implements io.gomint.inventory.item.ItemMuleSpawnEgg {
+public class ItemMuleSpawnEgg extends ItemStack< io.gomint.inventory.item.ItemMuleSpawnEgg> implements io.gomint.inventory.item.ItemMuleSpawnEgg {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.MULE_SPAWN_EGG;
     }
 

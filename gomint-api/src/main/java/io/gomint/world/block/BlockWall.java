@@ -29,6 +29,7 @@ public interface BlockWall extends Block {
      * Set the type of stone for this wall
      *
      * @param stoneType type of stone
+     * @return block for chaining
      */
     BlockWall type(StoneType stoneType);
 
@@ -43,14 +44,16 @@ public interface BlockWall extends Block {
      * Set if this wall has a pole
      *
      * @param pole true when it should, false otherwise
+     * @return block for chaining
      */
     BlockWall pole(boolean pole);
 
     /**
      * Set connection type for this direction
      *
-     * @param direction for which we want to set the connection type
+     * @param direction      for which we want to set the connection type
      * @param connectionType to set
+     * @return block for chaining
      */
     BlockWall connection(Direction direction, ConnectionType connectionType);
 

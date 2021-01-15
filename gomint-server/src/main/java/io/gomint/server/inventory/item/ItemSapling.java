@@ -6,6 +6,8 @@ import io.gomint.world.block.Block;
 import io.gomint.world.block.BlockSapling;
 import io.gomint.world.block.data.LogType;
 
+import java.time.Duration;
+
 /**
  * @author geNAZt
  * @version 1.0
@@ -13,7 +15,7 @@ import io.gomint.world.block.data.LogType;
 @RegisterInfo(sId = "minecraft:sapling", id = 6)
 @RegisterInfo( sId = "minecraft:crimson_fungus", id = -228 )
 @RegisterInfo( sId = "minecraft:warped_fungus", id = -229 )
-public class ItemSapling extends ItemStack implements io.gomint.inventory.item.ItemSapling {
+public class ItemSapling extends ItemStack< io.gomint.inventory.item.ItemSapling> implements io.gomint.inventory.item.ItemSapling {
 
     private enum LogTypeMagic {
         OAK("minecraft:sapling", (short) 0),
@@ -34,27 +36,28 @@ public class ItemSapling extends ItemStack implements io.gomint.inventory.item.I
     }
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.SAPLING;
     }
 
     @Override
-    public long getBurnTime() {
-        LogType type = this.getLogType();
-        return (type == LogType.CRIMSON || type == LogType.WARPED) ? 0 : 5000;
+    public Duration burnTime() {
+        LogType type = this.type();
+        return (type == LogType.CRIMSON || type == LogType.WARPED) ? null : Duration.ofMillis(5000);
     }
 
     @Override
-    public void setLogType(LogType type) {
+    public ItemSapling type(LogType type) {
         LogTypeMagic magic = LogTypeMagic.valueOf(type.name());
-        this.setMaterial(magic.id);
-        this.setData(magic.data);
+        this.material(magic.id);
+        this.data(magic.data);
+        return this;
     }
 
     @Override
-    public LogType getLogType() {
+    public LogType type() {
         for (LogTypeMagic value : LogTypeMagic.values()) {
-            if (value.data == this.getData() && value.id.equals(this.getMaterial())) {
+            if (value.data == this.data() && value.id.equals(this.material())) {
                 return LogType.valueOf(value.name());
             }
         }
@@ -63,9 +66,9 @@ public class ItemSapling extends ItemStack implements io.gomint.inventory.item.I
     }
 
     @Override
-    public Block getBlock() {
-        BlockSapling sapling = (BlockSapling) super.getBlock();
-        sapling.type(this.getLogType());
+    public Block block() {
+        BlockSapling sapling = (BlockSapling) super.block();
+        sapling.type(this.type());
         return sapling;
     }
 

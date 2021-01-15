@@ -3,7 +3,6 @@ package io.gomint.server.world.block;
 import io.gomint.inventory.item.*;
 import io.gomint.math.Vector;
 import io.gomint.server.entity.Entity;
-import io.gomint.server.entity.tileentity.CommandBlockTileEntity;
 import io.gomint.server.entity.tileentity.ShulkerBoxTileEntity;
 import io.gomint.server.entity.tileentity.TileEntity;
 import io.gomint.server.registry.RegisterInfo;
@@ -30,7 +29,7 @@ public class ShulkerBox extends Block implements BlockShulkerBox {
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 9000;
     }
 
@@ -40,8 +39,8 @@ public class ShulkerBox extends Block implements BlockShulkerBox {
     }
 
     @Override
-    public boolean interact(Entity entity, Facing face, Vector facePos, ItemStack item) {
-        ShulkerBoxTileEntity tileEntity = this.getTileEntity();
+    public boolean interact(Entity entity, Facing face, Vector facePos, ItemStack<?> item) {
+        ShulkerBoxTileEntity tileEntity = this.tileEntity();
         tileEntity.interact(entity, face, facePos, item);
 
         return true;
@@ -59,7 +58,7 @@ public class ShulkerBox extends Block implements BlockShulkerBox {
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return ToolPresets.PICKAXE;
     }
 

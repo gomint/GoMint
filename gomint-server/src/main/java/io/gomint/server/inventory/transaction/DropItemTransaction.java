@@ -10,13 +10,13 @@ import io.gomint.server.inventory.Inventory;
  * @author geNAZt
  * @version 1.0
  */
-public class DropItemTransaction implements Transaction {
+public class DropItemTransaction<T> implements Transaction<Void, Void, T> {
 
     private final Location location;
     private final Vector velocity;
-    private final ItemStack targetItem;
+    private final ItemStack<T> targetItem;
 
-    public DropItemTransaction(Location location, Vector velocity, ItemStack targetItem) {
+    public DropItemTransaction(Location location, Vector velocity, ItemStack<T> targetItem) {
         this.location = location;
         this.velocity = velocity;
         this.targetItem = targetItem;
@@ -31,7 +31,7 @@ public class DropItemTransaction implements Transaction {
     }
 
     @Override
-    public ItemStack getTargetItem() {
+    public ItemStack<T> targetItem() {
         return targetItem;
     }
 
@@ -41,17 +41,17 @@ public class DropItemTransaction implements Transaction {
     }
 
     @Override
-    public ItemStack getSourceItem() {
+    public ItemStack<Void> sourceItem() {
         return null;
     }
 
     @Override
-    public Inventory getInventory() {
+    public Inventory<Void> inventory() {
         return null;
     }
 
     @Override
-    public int getSlot() {
+    public int slot() {
         return -1;
     }
 

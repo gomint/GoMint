@@ -19,8 +19,8 @@ import org.openjdk.jmh.annotations.State;
 @Fork(value = 1, warmups = 1)
 public class ConstructionFactoryBenchmark {
 
-    private ObjectConstructionFactory objectConstructionFactory = new ObjectConstructionFactory(Air.class);
-    private LambdaConstructionFactory lambdaConstructionFactory = new LambdaConstructionFactory(Air.class);
+    private final ObjectConstructionFactory<?> objectConstructionFactory = new ObjectConstructionFactory<>(Air.class);
+    private final LambdaConstructionFactory<?> lambdaConstructionFactory = new LambdaConstructionFactory<>(Air.class);
 
     @Benchmark
     public Air lambdaConstruction() {

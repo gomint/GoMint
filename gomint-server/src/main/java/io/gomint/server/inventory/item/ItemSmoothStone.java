@@ -15,10 +15,10 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo(id = -183, sId = "minecraft:smooth_stone")
-public class ItemSmoothStone extends ItemStack implements io.gomint.inventory.item.ItemSmoothStone {
+public class ItemSmoothStone extends ItemStack< io.gomint.inventory.item.ItemSmoothStone> implements io.gomint.inventory.item.ItemSmoothStone {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.SMOOTH_STONE;
     }
 

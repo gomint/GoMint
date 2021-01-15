@@ -8,7 +8,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:baked_potato", id = 393 )
-public class ItemBakedPotato extends ItemFood implements io.gomint.inventory.item.ItemBakedPotato {
+public class ItemBakedPotato extends ItemFood<io.gomint.inventory.item.ItemBakedPotato> implements io.gomint.inventory.item.ItemBakedPotato {
 
     @Override
     public float getSaturation() {
@@ -21,7 +21,7 @@ public class ItemBakedPotato extends ItemFood implements io.gomint.inventory.ite
     }
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.BAKED_POTATO;
     }
 

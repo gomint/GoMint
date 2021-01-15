@@ -8,12 +8,13 @@ import io.gomint.world.block.data.SkullType;
  * @version 1.0
  * @stability 3
  */
-public interface ItemSkull extends ItemStack {
+public interface ItemSkull extends ItemStack<ItemSkull> {
 
     /**
      * Create a new item stack with given class and amount
      *
      * @param amount which is used for the creation
+	 * @return freshly generated item
      */
     static ItemSkull create( int amount ) {
         return GoMint.instance().createItemStack( ItemSkull.class, amount );
@@ -24,13 +25,13 @@ public interface ItemSkull extends ItemStack {
      *
      * @return type of skull
      */
-    SkullType getSkullType();
+    SkullType type();
 
     /**
      * Set type of skull
      *
      * @param type of skull to set
      */
-    void setSkullType(SkullType type);
+    ItemSkull type(SkullType type);
 
 }

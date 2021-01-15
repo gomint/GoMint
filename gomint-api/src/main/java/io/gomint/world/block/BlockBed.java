@@ -27,8 +27,9 @@ public interface BlockBed extends Block {
      * Set the color of this bed
      *
      * @param color which should be used from now on
+     * @return block for chaining
      */
-    BlockBed color(BlockColor color );
+    BlockBed color(BlockColor color);
 
     /**
      * Get the other half of this multi block structure,
@@ -48,7 +49,8 @@ public interface BlockBed extends Block {
      * Set this as top part of the multi block
      *
      * @param value if the block is head or not
+     * @return block for chaining
      */
-    BlockBed head(boolean value );
+    BlockBed head(boolean value);
 
 }

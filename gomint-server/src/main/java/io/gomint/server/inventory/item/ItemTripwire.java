@@ -15,10 +15,10 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:tripwire", id = 132 )
-public class ItemTripwire extends ItemStack implements io.gomint.inventory.item.ItemTripwire {
+public class ItemTripwire extends ItemStack< io.gomint.inventory.item.ItemTripwire> implements io.gomint.inventory.item.ItemTripwire {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.TRIPWIRE;
     }
 

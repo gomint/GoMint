@@ -55,10 +55,10 @@ public class EntityArmorStand extends EntityCreature implements io.gomint.entity
             return false;
         }
 
-        ItemStack[] inventoryContent = this.armorInventory.getContents();
+        ItemStack<?>[] inventoryContent = this.armorInventory.contents();
 
-        for ( ItemStack itemStack : inventoryContent ) {
-            if ( itemStack.getItemType() != ItemType.AIR ) {
+        for ( ItemStack<?> itemStack : inventoryContent ) {
+            if ( itemStack.itemType() != ItemType.AIR ) {
                 this.getWorld().dropItem(this.getLocation(), itemStack);
             }
         }

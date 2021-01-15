@@ -11,7 +11,6 @@ import io.gomint.inventory.item.*;
 import io.gomint.math.Vector;
 import io.gomint.server.entity.Entity;
 import io.gomint.server.entity.tileentity.ShulkerBoxTileEntity;
-import io.gomint.server.entity.tileentity.SkullTileEntity;
 import io.gomint.server.entity.tileentity.TileEntity;
 import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.world.block.helper.ToolPresets;
@@ -42,7 +41,7 @@ public class UndyedShulkerBox extends Block implements BlockUndyedShulkerBox {
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return ToolPresets.PICKAXE;
     }
 
@@ -52,7 +51,7 @@ public class UndyedShulkerBox extends Block implements BlockUndyedShulkerBox {
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 9000;
     }
 
@@ -62,8 +61,8 @@ public class UndyedShulkerBox extends Block implements BlockUndyedShulkerBox {
     }
 
     @Override
-    public boolean interact(Entity entity, Facing face, Vector facePos, ItemStack item ) {
-        ShulkerBoxTileEntity tileEntity = this.getTileEntity();
+    public boolean interact(Entity entity, Facing face, Vector facePos, ItemStack<?> item ) {
+        ShulkerBoxTileEntity tileEntity = this.tileEntity();
         if ( tileEntity != null ) {
             tileEntity.interact( entity, face, facePos, item );
         } else {

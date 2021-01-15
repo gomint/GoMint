@@ -18,8 +18,9 @@ public interface BlockCommandBlock extends Block, BlockFacing<BlockCommandBlock>
      * Set a custom name for this container
      *
      * @param customName which should be used
+     * @return block for chaining
      */
-    BlockCommandBlock customName(String customName );
+    BlockCommandBlock customName(String customName);
 
     /**
      * Get the custom name of this container

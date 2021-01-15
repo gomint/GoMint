@@ -33,7 +33,7 @@ public class SugarCane extends Block implements BlockSugarCane {
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 0;
     }
 

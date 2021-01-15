@@ -24,7 +24,7 @@ public class GrassPath extends Block implements BlockGrassPath {
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 900;
     }
 
@@ -44,7 +44,7 @@ public class GrassPath extends Block implements BlockGrassPath {
     }
 
     @Override
-    public List<ItemStack> drops(ItemStack itemInHand) {
+    public List<ItemStack<?>> drops(ItemStack<?> itemInHand) {
         return new ArrayList<>() {{
             add(ItemDirt.create(1));
         }};
@@ -56,7 +56,7 @@ public class GrassPath extends Block implements BlockGrassPath {
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return ToolPresets.SHOVEL;
     }
 }

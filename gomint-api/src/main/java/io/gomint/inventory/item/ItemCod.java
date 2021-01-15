@@ -14,14 +14,15 @@ import io.gomint.GoMint;
  * @version 1.0
  * @stability 1
  */
-public interface ItemCod extends ItemStack {
+public interface ItemCod extends ItemStack<ItemCod> {
 
     /**
      * Create a new item stack with given class and amount
      *
      * @param amount which is used for the creation
+	 * @return freshly generated item
      */
-    static ItemCod create( int amount ) {
+    static ItemCod create( int amount ) {	
         return GoMint.instance().createItemStack( ItemCod.class, amount );
     }
 

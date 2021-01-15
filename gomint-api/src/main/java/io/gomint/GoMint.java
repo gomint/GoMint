@@ -126,7 +126,7 @@ public interface GoMint {
      * @param <T>       generic type of the itemstack
      * @return fresh generated itemstack of given type with amount of items
      */
-    <T extends ItemStack> T createItemStack(Class<T> itemClass, int amount);
+    <T extends ItemStack<T>> T createItemStack(Class<T> itemClass, int amount);
 
     /**
      * Create a new modal for form display

@@ -15,7 +15,7 @@ import io.gomint.server.registry.RegisterInfo;
 public class IronTrapdoor extends Trapdoor<BlockIronTrapdoor> implements BlockIronTrapdoor {
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 7500;
     }
 
@@ -40,7 +40,7 @@ public class IronTrapdoor extends Trapdoor<BlockIronTrapdoor> implements BlockIr
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return ToolPresets.PICKAXE;
     }
 

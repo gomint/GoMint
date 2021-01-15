@@ -7,7 +7,7 @@ import io.gomint.GoMint;
  * @version 1.0
  * @stability 3
  */
-public interface ItemLectern extends ItemStack {
+public interface ItemLectern extends ItemStack<ItemLectern> {
 
     /**
      * Create a new item stack with given class and amount

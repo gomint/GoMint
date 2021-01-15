@@ -18,7 +18,7 @@ public class InvertedDaylightSensor extends Block implements BlockInvertedDaylig
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 300;
     }
 

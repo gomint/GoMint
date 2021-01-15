@@ -18,7 +18,7 @@ import io.gomint.server.network.PlayerConnection;
  *
  * This inventory is used to hold items which are "consumed" by the crafting action issued
  */
-public class SessionInventory extends Inventory {
+public class SessionInventory extends Inventory<SessionInventory> {
 
     public SessionInventory(Items items, InventoryHolder owner, int size) {
         super(items, owner, size);
@@ -35,7 +35,7 @@ public class SessionInventory extends Inventory {
     }
 
     @Override
-    public InventoryType getInventoryType() {
+    public InventoryType inventoryType() {
         return InventoryType.CRAFTING;
     }
 

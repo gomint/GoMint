@@ -15,10 +15,10 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:sugar_cane", id = 383 )
-public class ItemSugarCane extends ItemStack implements io.gomint.inventory.item.ItemSugarCane {
+public class ItemSugarCane extends ItemStack< io.gomint.inventory.item.ItemSugarCane> implements io.gomint.inventory.item.ItemSugarCane {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.SUGAR_CANE;
     }
 

@@ -14,7 +14,7 @@ import io.gomint.server.network.PlayerConnection;
 
 public class CreativeSession implements Session {
 
-    private final Inventory outputInventory;
+    private final Inventory<?> outputInventory;
 
     public CreativeSession(PlayerConnection connection) {
         this.outputInventory = new SessionInventory(connection.getServer().items(),
@@ -22,7 +22,7 @@ public class CreativeSession implements Session {
     }
 
     @Override
-    public Inventory getOutput() {
+    public Inventory<?> getOutput() {
         return this.outputInventory;
     }
 
@@ -32,7 +32,7 @@ public class CreativeSession implements Session {
     }
 
     @Override
-    public void addInput(ItemStack item, int slot) {
+    public void addInput(ItemStack<?> item, int slot) {
         this.outputInventory.addItem(item);
     }
 

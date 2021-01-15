@@ -24,7 +24,7 @@ import java.util.List;
 public class EnderChest extends ContainerBlock<BlockEnderChest> implements BlockEnderChest {
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 33750;
     }
 
@@ -34,8 +34,8 @@ public class EnderChest extends ContainerBlock<BlockEnderChest> implements Block
     }
 
     @Override
-    public boolean interact(Entity entity, Facing face, Vector facePos, ItemStack item ) {
-        EnderChestTileEntity tileEntity = this.getTileEntity();
+    public boolean interact(Entity entity, Facing face, Vector facePos, ItemStack<?> item ) {
+        EnderChestTileEntity tileEntity = this.tileEntity();
         if ( tileEntity != null ) {
             tileEntity.interact( entity, face, facePos, item );
             return true;
@@ -71,14 +71,14 @@ public class EnderChest extends ContainerBlock<BlockEnderChest> implements Block
     }
 
     @Override
-    public List<ItemStack> drops(ItemStack itemInHand ) {
+    public List<ItemStack<?>> drops(ItemStack<?> itemInHand ) {
         return new ArrayList<>() {{
             add(ItemObsidian.create(8));
         }};
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return ToolPresets.PICKAXE;
     }
     

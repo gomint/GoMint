@@ -14,20 +14,20 @@ import io.gomint.world.block.data.Axis;
  * @version 1.0
  * @stability 3
  */
-public interface ItemAxis extends ItemStack {
+public interface ItemAxis<I> extends ItemStack<I> {
 
     /**
      * Set the axis of the log
      *
      * @param axis of the log
      */
-    void setAxis( Axis axis );
+    I axis(Axis axis );
 
     /**
      * Get the axis of this log
      *
      * @return axis of the log
      */
-    Axis getAxis();
+    Axis axis();
 
 }

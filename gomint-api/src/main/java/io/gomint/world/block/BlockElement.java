@@ -27,6 +27,7 @@ public interface BlockElement extends Block {
      * Set type of element for this block
      *
      * @param type of element
+     * @return block for chaining
      */
     BlockElement type(ElementType type);
 

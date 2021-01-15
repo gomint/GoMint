@@ -58,7 +58,7 @@ public class LocationConverter extends BaseConverter {
      */
     @Override
     @SuppressWarnings( "unchecked" )
-    public Object fromConfig( Class type, Object object, ParameterizedType parameterizedType ) {
+    public Object fromConfig( Class<?> type, Object object, ParameterizedType parameterizedType ) {
         World world = null;
         Float headYaw = null;
         Map<String, Object> locationMap;

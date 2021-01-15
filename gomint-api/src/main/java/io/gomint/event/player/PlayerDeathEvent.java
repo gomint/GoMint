@@ -21,9 +21,9 @@ public class PlayerDeathEvent extends PlayerEvent {
 
     private String deathMessage;
     private boolean dropInventory;
-    private List<ItemStack> drops;
+    private List<ItemStack<?>> drops;
 
-    public PlayerDeathEvent( EntityPlayer player, String deathMessage, boolean dropInventory, List<ItemStack> drops ) {
+    public PlayerDeathEvent( EntityPlayer player, String deathMessage, boolean dropInventory, List<ItemStack<?>> drops ) {
         super( player );
         this.deathMessage = deathMessage;
         this.dropInventory = dropInventory;
@@ -71,7 +71,7 @@ public class PlayerDeathEvent extends PlayerEvent {
      *
      * @return list of items
      */
-    public List<ItemStack> getDrops() {
+    public List<ItemStack<?>> getDrops() {
         return drops;
     }
 

@@ -44,7 +44,7 @@ public class Registry<R> {
     public void register(ClassPath classPathSearcher, String classPath ) {
         LOGGER.debug( "Going to scan: {}", classPath );
 
-        classPathSearcher.getTopLevelClasses( classPath, classInfo -> register( classInfo.load() ) );
+        classPathSearcher.getTopLevelClasses( classPath, classInfo -> register( (Class<? extends R>) classInfo.load() ) );
     }
 
     private void register( Class<? extends R> clazz ) {

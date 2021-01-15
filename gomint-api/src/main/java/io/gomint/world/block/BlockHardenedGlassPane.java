@@ -27,6 +27,7 @@ public interface BlockHardenedGlassPane extends Block {
      * Set the color of this block
      *
      * @param color which this block should be
+     * @return block for chaining
      */
     BlockHardenedGlassPane color(GlassColor color);
 

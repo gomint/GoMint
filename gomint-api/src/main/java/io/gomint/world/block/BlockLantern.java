@@ -20,6 +20,7 @@ public interface BlockLantern extends Block {
      * Set type of lantern
      *
      * @param type of lantern
+     * @return block for chaining
      */
     BlockLantern type(LanternType type);
 
@@ -41,6 +42,7 @@ public interface BlockLantern extends Block {
      * Should this lantern hang or stand?
      *
      * @param hanging true when hanging, false otherwise
+     * @return block for chaining
      */
     BlockLantern hanging(boolean hanging);
 

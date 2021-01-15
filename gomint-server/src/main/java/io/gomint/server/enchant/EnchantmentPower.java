@@ -37,8 +37,8 @@ public class EnchantmentPower extends Enchantment implements io.gomint.enchant.E
     }
 
     @Override
-    public boolean canBeApplied( ItemStack itemStack ) {
-        return itemStack.getItemType() == ItemType.BOW;
+    public boolean canBeApplied(ItemStack<?> itemStack ) {
+        return itemStack.itemType() == ItemType.BOW;
     }
 
     @Override

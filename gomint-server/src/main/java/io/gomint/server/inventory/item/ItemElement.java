@@ -129,24 +129,25 @@ import io.gomint.server.registry.RegisterInfo;
 @RegisterInfo( sId = "minecraft:element_16", id = -27 )
 @RegisterInfo( sId = "minecraft:element_99", id = -110 )
 @RegisterInfo( sId = "minecraft:element_18", id = -29 )
-public class ItemElement extends ItemStack implements io.gomint.inventory.item.ItemElement {
+public class ItemElement extends ItemStack< io.gomint.inventory.item.ItemElement> implements io.gomint.inventory.item.ItemElement {
 
     private static final int BLOCK_PREFIX_LENGTH = 18; // minecraft:element_
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.ELEMENT;
     }
 
     @Override
-    public Type getType() {
-        int ord = Integer.parseInt(this.getMaterial().substring(BLOCK_PREFIX_LENGTH));
+    public Type type() {
+        int ord = Integer.parseInt(this.material().substring(BLOCK_PREFIX_LENGTH));
         return Type.values()[ord];
     }
 
     @Override
-    public void setType(Type type) {
-        this.setMaterial("minecraft:element_" + type.ordinal());
+    public ItemElement type(Type type) {
+        this.material("minecraft:element_" + type.ordinal());
+        return this;
     }
 
 }

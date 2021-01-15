@@ -1137,7 +1137,7 @@ public abstract class Entity implements io.gomint.entity.Entity {
         Location eyeLocation = this.getLocation().add( 0, this.eyeHeight, 0 );
         Block block = eyeLocation.world().blockAt( eyeLocation.toBlockPosition() );
         if ( block instanceof StationaryWater || block instanceof FlowingWater ) {
-            float yLiquid = (float) ( block.position().y() + 1 + ( ( (Liquid) block ).fillHeight() - 0.12 ) );
+            float yLiquid = (float) ( block.position().y() + 1 + ( ( (Liquid<?>) block ).fillHeight() - 0.12 ) );
             return eyeLocation.getY() < yLiquid;
         }
 

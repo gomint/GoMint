@@ -43,7 +43,7 @@ public class EnchantTableTileEntity extends ContainerTileEntity implements Inven
     }
 
     @Override
-    public void interact(Entity entity, Facing face, Vector facePos, ItemStack item) {
+    public void interact(Entity entity, Facing face, Vector facePos, ItemStack<?> item) {
         // Open the chest inventory for the entity
         if (entity instanceof EntityPlayer) {
             EntityPlayer player = (EntityPlayer) entity;
@@ -59,10 +59,10 @@ public class EnchantTableTileEntity extends ContainerTileEntity implements Inven
         }
     }
 
-    private void selectAndSendEnchantments(EntityPlayer player, ItemStack slotItem) {
+    private void selectAndSendEnchantments(EntityPlayer player, ItemStack<?> slotItem) {
         FastRandom random = new FastRandom(player.getEnchantmentSeed());
         Pair<int[], List<List<Enchantment>>> selectedEnchantments = EnchantmentSelector.getEnchantments(this.getBlock().world().getServer().enchantments(),
-            random, this.getBlock().location(), (io.gomint.server.inventory.item.ItemStack) slotItem);
+            random, this.getBlock().location(), (io.gomint.server.inventory.item.ItemStack<?>) slotItem);
 
         if (selectedEnchantments == null) {
             return;

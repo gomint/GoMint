@@ -20,12 +20,12 @@ public class ShroomLight extends Block implements BlockShroomLight {
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 1500;
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return new Class[]{
             ItemHoe.class
         };

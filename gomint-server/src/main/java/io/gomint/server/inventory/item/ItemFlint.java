@@ -9,12 +9,12 @@ import io.gomint.taglib.NBTTagCompound;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:flint", id = 318 )
- public class ItemFlint extends ItemStack implements io.gomint.inventory.item.ItemFlint {
+ public class ItemFlint extends ItemStack< io.gomint.inventory.item.ItemFlint> implements io.gomint.inventory.item.ItemFlint {
 
 
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.FLINT;
     }
 

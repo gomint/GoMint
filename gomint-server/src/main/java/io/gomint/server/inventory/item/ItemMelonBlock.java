@@ -10,10 +10,10 @@ import io.gomint.taglib.NBTTagCompound;
  * @version 1.0
  */
 @RegisterInfo(sId = "minecraft:melon_block", id = 103)
-public class ItemMelonBlock extends ItemStack implements io.gomint.inventory.item.ItemMelonBlock {
+public class ItemMelonBlock extends ItemStack< io.gomint.inventory.item.ItemMelonBlock> implements io.gomint.inventory.item.ItemMelonBlock {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.MELON_BLOCK;
     }
 

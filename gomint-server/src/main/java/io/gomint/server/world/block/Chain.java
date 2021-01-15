@@ -19,12 +19,12 @@ public class Chain extends Block implements BlockChain {
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 7500;
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return ToolPresets.PICKAXE;
     }
 

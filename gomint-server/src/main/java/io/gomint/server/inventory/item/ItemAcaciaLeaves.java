@@ -8,10 +8,10 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:leaves2", id = 161)
-public class ItemAcaciaLeaves extends ItemStack implements io.gomint.inventory.item.ItemAcaciaLeaves {
+public class ItemAcaciaLeaves extends ItemStack< io.gomint.inventory.item.ItemAcaciaLeaves> implements io.gomint.inventory.item.ItemAcaciaLeaves {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.ACACIA_LEAVES;
     }
 

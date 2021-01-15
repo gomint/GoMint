@@ -20,67 +20,72 @@ import io.gomint.world.block.data.RotationDirection;
  */
 @RegisterInfo( sId = "minecraft:coral_fan", id = -133, def = true )
 @RegisterInfo(sId = "minecraft:coral_fan_dead", id = -134)
-public class ItemCoralFan extends ItemStack implements io.gomint.inventory.item.ItemCoralFan {
+public class ItemCoralFan extends ItemStack< io.gomint.inventory.item.ItemCoralFan> implements io.gomint.inventory.item.ItemCoralFan {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.CORAL_FAN;
     }
 
     @Override
-    public RotationDirection getDirection() {
-        return this.getData() >= 8 ? RotationDirection.NORTH_SOUTH : RotationDirection.EAST_WEST;
+    public RotationDirection direction() {
+        return this.data() >= 8 ? RotationDirection.NORTH_SOUTH : RotationDirection.EAST_WEST;
     }
 
     @Override
-    public void setDirection(RotationDirection direction) {
+    public ItemCoralFan direction(RotationDirection direction) {
         if (direction == RotationDirection.NORTH_SOUTH) {
-            if (this.getData() < 8) {
-                this.setData((short) (this.getData() + 8));
+            if (this.data() < 8) {
+                this.data((short) (this.data() + 8));
             }
         } else {
-            if (this.getData() >= 8) {
-                this.setData((short) (this.getData() - 8));
+            if (this.data() >= 8) {
+                this.data((short) (this.data() - 8));
             }
         }
+
+        return this;
     }
 
     @Override
-    public void setCoralType(CoralType type) {
+    public ItemCoralFan coralType(CoralType type) {
         short data = (short) type.ordinal();
-        if (this.getDirection() == RotationDirection.NORTH_SOUTH) {
+        if (this.direction() == RotationDirection.NORTH_SOUTH) {
             data += 8;
         }
 
-        this.setData(data);
+        this.data(data);
+        return this;
     }
 
     @Override
-    public CoralType getCoralType() {
-        short type = (short) (this.getData() % 8);
+    public CoralType coralType() {
+        short type = (short) (this.data() % 8);
         return CoralType.values()[type];
     }
 
     @Override
-    public boolean isDead() {
-        return this.getMaterial().equals("minecraft:coral_fan_dead");
+    public boolean dead() {
+        return this.material().equals("minecraft:coral_fan_dead");
     }
 
     @Override
-    public void setDead(boolean dead) {
+    public ItemCoralFan dead(boolean dead) {
         if (dead) {
-            this.setMaterial("minecraft:coral_fan_dead");
+            this.material("minecraft:coral_fan_dead");
         } else {
-            this.setMaterial("minecraft:coral_fan");
+            this.material("minecraft:coral_fan");
         }
+
+        return this;
     }
 
     @Override
-    public Block getBlock() {
-        BlockCoralFan block = (BlockCoralFan) super.getBlock();
-        block.coralType(this.getCoralType());
-        block.rotation(this.getDirection());
-        block.dead(this.isDead());
+    public Block block() {
+        BlockCoralFan block = (BlockCoralFan) super.block();
+        block.coralType(this.coralType());
+        block.rotation(this.direction());
+        block.dead(this.dead());
         return block;
     }
 

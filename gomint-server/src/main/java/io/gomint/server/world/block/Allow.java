@@ -17,7 +17,7 @@ public class Allow extends Block implements BlockAllow {
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return -1;
     }
 

@@ -14,14 +14,15 @@ import io.gomint.GoMint;
  * @version 1.0
  * @stability 1
  */
-public interface ItemSpiderSpawnEgg extends ItemStack {
+public interface ItemSpiderSpawnEgg extends ItemStack<ItemSpiderSpawnEgg> {
 
     /**
      * Create a new item stack with given class and amount
      *
      * @param amount which is used for the creation
+	 * @return freshly generated item
      */
-    static ItemSpiderSpawnEgg create( int amount ) {
+    static ItemSpiderSpawnEgg create( int amount ) {	
         return GoMint.instance().createItemStack( ItemSpiderSpawnEgg.class, amount );
     }
 

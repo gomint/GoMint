@@ -7,6 +7,7 @@
 
 package io.gomint.server.inventory;
 
+import io.gomint.inventory.ChestInventory;
 import io.gomint.inventory.item.ItemStack;
 import io.gomint.math.BlockPosition;
 import io.gomint.server.entity.EntityPlayer;
@@ -20,10 +21,10 @@ import io.gomint.world.Sound;
  * @author geNAZt
  * @version 1.0
  */
-public class DoubleChestInventory extends ContainerInventory {
+public class DoubleChestInventory extends ContainerInventory<ChestInventory> implements ChestInventory {
 
-    private final ContainerInventory left;
-    private final ContainerInventory right;
+    private final ContainerInventory<ChestInventory> left;
+    private final ContainerInventory<ChestInventory> right;
 
     /**
      * Create new chest inventory
@@ -33,15 +34,17 @@ public class DoubleChestInventory extends ContainerInventory {
      * @param right side of the inventory
      * @param owner tile entity of the chest
      */
-    public DoubleChestInventory(Items items, ContainerInventory left, ContainerInventory right, InventoryHolder owner) {
+    public DoubleChestInventory(Items items, ContainerInventory<ChestInventory> left, ContainerInventory<ChestInventory> right, InventoryHolder owner) {
         super(items, owner, left.size() + right.size());
         this.left = left;
         this.right = right;
     }
 
     @Override
-    public void clear() {
-        // We don't clear this, both sides need to be cleared on their own
+    public ChestInventory clear() {
+        this.right.clear();
+        this.left.clear();
+        return this;
     }
 
     @Override
@@ -50,18 +53,19 @@ public class DoubleChestInventory extends ContainerInventory {
     }
 
     @Override
-    public void setItem(int slot, ItemStack item) {
+    public ChestInventory item(int slot, ItemStack<?> item) {
         if ( slot < this.left.size() ) {
-            this.left.setItem(slot, item);
-            return;
+            this.left.item(slot, item);
+            return this;
         }
 
-        this.right.setItem(slot - this.left.size(), item);
+        this.right.item(slot - this.left.size(), item);
+        return this;
     }
 
     @Override
-    public ItemStack getItem(int slot) {
-        return slot < this.left.size() ? this.left.getItem(slot) : this.right.getItem(slot - this.left.size());
+    public ItemStack<?> item(int slot) {
+        return slot < this.left.size() ? this.left.item(slot) : this.right.item(slot - this.left.size());
     }
 
     @Override
@@ -70,10 +74,10 @@ public class DoubleChestInventory extends ContainerInventory {
     }
 
     @Override
-    public ItemStack[] getContents() {
-        ItemStack[] contents = new ItemStack[this.left.size() + this.right.size()];
-        System.arraycopy(this.left.getContents(), 0, contents, 0, this.left.size());
-        System.arraycopy(this.right.getContents(), 0, contents, this.left.size(), this.right.size());
+    public ItemStack<?>[] contents() {
+        ItemStack<?>[] contents = new ItemStack[this.left.size() + this.right.size()];
+        System.arraycopy(this.left.contents(), 0, contents, 0, this.left.size());
+        System.arraycopy(this.right.contents(), 0, contents, this.left.size(), this.right.size());
         return contents;
     }
 
@@ -81,8 +85,8 @@ public class DoubleChestInventory extends ContainerInventory {
     public void onOpen(EntityPlayer player) {
         // Sound and open animation
         if (this.viewer.size() == 1) {
-            BlockPosition position = this.getContainerPosition();
-            WorldAdapter world = this.getWorld();
+            BlockPosition position = this.containerPosition();
+            WorldAdapter world = this.world();
 
             PacketBlockEvent blockEvent = new PacketBlockEvent();
             blockEvent.setPosition(position);
@@ -98,8 +102,8 @@ public class DoubleChestInventory extends ContainerInventory {
     public void onClose(EntityPlayer player) {
         // Sound and close animation
         if (this.viewer.size() == 1) {
-            BlockPosition position = this.getContainerPosition();
-            WorldAdapter world = this.getWorld();
+            BlockPosition position = this.containerPosition();
+            WorldAdapter world = this.world();
 
             PacketBlockEvent blockEvent = new PacketBlockEvent();
             blockEvent.setPosition(position);

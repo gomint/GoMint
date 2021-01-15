@@ -8,10 +8,10 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( id = -208, sId = "minecraft:lantern" )
-public class ItemLantern extends ItemStack implements io.gomint.inventory.item.ItemLantern {
+public class ItemLantern extends ItemStack< io.gomint.inventory.item.ItemLantern> implements io.gomint.inventory.item.ItemLantern {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.LANTERN;
     }
 

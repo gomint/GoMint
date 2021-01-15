@@ -10,10 +10,10 @@ import io.gomint.taglib.NBTTagCompound;
  * @version 1.0
  */
 @RegisterInfo(sId = "minecraft:yellow_flower", id = 37)
-public class ItemDandelion extends ItemStack implements io.gomint.inventory.item.ItemDandelion {
+public class ItemDandelion extends ItemStack< io.gomint.inventory.item.ItemDandelion> implements io.gomint.inventory.item.ItemDandelion {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.DANDELION;
     }
 

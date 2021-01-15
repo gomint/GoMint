@@ -8,15 +8,15 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:book", id = 340 )
-public class ItemBook extends ItemStack implements io.gomint.inventory.item.ItemBook {
+public class ItemBook extends ItemStack< io.gomint.inventory.item.ItemBook> implements io.gomint.inventory.item.ItemBook {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.BOOK;
     }
 
     @Override
-    public int getEnchantAbility() {
+    public int enchantAbility() {
         return 1;
     }
 

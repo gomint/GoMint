@@ -122,7 +122,7 @@ public class YamlConfig extends ConfigMapper implements Config<YamlConfig> {
         return this;
     }
 
-    private YamlConfig internalSave( Class clazz ) throws InvalidConfigurationException {
+    private YamlConfig internalSave( Class<?> clazz ) throws InvalidConfigurationException {
         if ( !clazz.getSuperclass().equals( YamlConfig.class ) ) {
             this.internalSave( clazz.getSuperclass() );
         }
@@ -193,7 +193,7 @@ public class YamlConfig extends ConfigMapper implements Config<YamlConfig> {
         return this;
     }
 
-    private YamlConfig internalLoad( Class clazz ) throws InvalidConfigurationException {
+    private YamlConfig internalLoad( Class<?> clazz ) throws InvalidConfigurationException {
         if ( !clazz.getSuperclass().equals( YamlConfig.class ) ) {
             this.internalLoad( clazz.getSuperclass() );
         }

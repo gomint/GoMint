@@ -29,6 +29,7 @@ public interface BlockCoralFan extends Block {
      * Set the direction of this coral fan
      *
      * @param direction in which this coral fan should face
+     * @return block for chaining
      */
     BlockCoralFan rotation(RotationDirection direction);
 
@@ -36,6 +37,7 @@ public interface BlockCoralFan extends Block {
      * Set coral type
      *
      * @param type of coral
+     * @return block for chaining
      */
     BlockCoralFan coralType(CoralType type);
 
@@ -57,6 +59,7 @@ public interface BlockCoralFan extends Block {
      * Set if this coral fan is dead or not
      *
      * @param dead true when it should be dead, false otherwise
+     * @return block for chaining
      */
     BlockCoralFan dead(boolean dead);
 

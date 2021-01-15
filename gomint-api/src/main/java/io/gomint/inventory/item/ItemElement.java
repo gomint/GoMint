@@ -7,7 +7,7 @@ import io.gomint.GoMint;
  * @version 1.0
  * @stability 2
  */
-public interface ItemElement extends ItemStack {
+public interface ItemElement extends ItemStack<ItemElement> {
 
     /**
      * Create a new item stack with given class and amount
@@ -145,13 +145,14 @@ public interface ItemElement extends ItemStack {
      *
      * @return type of element
      */
-    Type getType();
+    Type type();
 
     /**
      * Set type of element for this block
      *
      * @param type of element
+     * @return item for chaining
      */
-    void setType(Type type);
+    ItemElement type(Type type);
 
 }

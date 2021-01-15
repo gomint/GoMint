@@ -15,10 +15,10 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:netherite_shovel", id = 744 )
-public class ItemNetheriteShovel extends ItemStack implements io.gomint.inventory.item.ItemNetheriteShovel {
+public class ItemNetheriteShovel extends ItemStack< io.gomint.inventory.item.ItemNetheriteShovel> implements io.gomint.inventory.item.ItemNetheriteShovel {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.NETHERITE_SHOVEL;
     }
 

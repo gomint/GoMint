@@ -8,10 +8,10 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:nautilus_shell", id = 465 )
-public class ItemNautilusShell extends ItemStack implements io.gomint.inventory.item.ItemNautilusShell {
+public class ItemNautilusShell extends ItemStack< io.gomint.inventory.item.ItemNautilusShell> implements io.gomint.inventory.item.ItemNautilusShell {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.NAUTILUS_SHELL;
     }
 

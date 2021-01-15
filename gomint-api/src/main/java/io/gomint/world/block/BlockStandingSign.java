@@ -27,6 +27,7 @@ public interface BlockStandingSign extends BlockSign<BlockStandingSign> {
      * Set the direction of this sign
      *
      * @param direction of this sign
+     * @return block for chaining
      */
     BlockStandingSign direction(SignDirection direction);
 

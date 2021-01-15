@@ -18,7 +18,7 @@ public class RedstoneLampInactive extends Block implements BlockRedstoneLampInac
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 450;
     }
 

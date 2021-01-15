@@ -10,10 +10,10 @@ import io.gomint.taglib.NBTTagCompound;
  * @version 1.0
  */
 @RegisterInfo(sId = "minecraft:lava", id = 11)
-public class ItemStationaryLava extends ItemStack implements io.gomint.inventory.item.ItemStationaryLava {
+public class ItemStationaryLava extends ItemStack< io.gomint.inventory.item.ItemStationaryLava> implements io.gomint.inventory.item.ItemStationaryLava {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.STATIONARY_LAVA;
     }
 

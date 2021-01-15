@@ -17,7 +17,7 @@ public class WeepingVines extends Block implements BlockWeepingVines {
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 0;
     }
 

@@ -27,6 +27,7 @@ public interface BlockWoodenButton extends BlockButton<BlockWoodenButton> {
      * Set the type of wood for this button
      *
      * @param logType type of wood
+     * @return block for chaining
      */
     BlockWoodenButton type(LogType logType);
 

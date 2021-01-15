@@ -27,6 +27,7 @@ public interface BlockQuartzBlock extends Block, BlockAxis<BlockQuartzBlock> {
      * Set the variant of this block
      *
      * @param variant which should be used
+     * @return block for chaining
      */
     BlockQuartzBlock type(QuartzType variant);
 

@@ -15,10 +15,10 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:fire_charge", id = 499 )
-public class ItemFireCharge extends ItemStack implements io.gomint.inventory.item.ItemFireCharge {
+public class ItemFireCharge extends ItemStack< io.gomint.inventory.item.ItemFireCharge> implements io.gomint.inventory.item.ItemFireCharge {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.FIRE_CHARGE;
     }
 

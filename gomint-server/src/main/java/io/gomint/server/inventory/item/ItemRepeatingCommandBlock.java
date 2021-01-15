@@ -15,10 +15,10 @@ import io.gomint.taglib.NBTTagCompound;
  * @version 1.0
  */
 @RegisterInfo(sId = "minecraft:repeating_command_block", id = 188)
-public class ItemRepeatingCommandBlock extends ItemStack implements io.gomint.inventory.item.ItemRepeatingCommandBlock {
+public class ItemRepeatingCommandBlock extends ItemStack< io.gomint.inventory.item.ItemRepeatingCommandBlock> implements io.gomint.inventory.item.ItemRepeatingCommandBlock {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.REPEATING_COMMAND_BLOCK;
     }
 

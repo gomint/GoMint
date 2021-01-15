@@ -33,7 +33,7 @@ public class Dandelion extends Block implements BlockDandelion {
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 0;
     }
 

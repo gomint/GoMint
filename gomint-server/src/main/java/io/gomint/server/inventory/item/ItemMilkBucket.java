@@ -15,10 +15,10 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:milk_bucket", id = 361 )
-public class ItemMilkBucket extends ItemStack implements io.gomint.inventory.item.ItemMilkBucket {
+public class ItemMilkBucket extends ItemStack< io.gomint.inventory.item.ItemMilkBucket> implements io.gomint.inventory.item.ItemMilkBucket {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.MILK_BUCKET;
     }
 

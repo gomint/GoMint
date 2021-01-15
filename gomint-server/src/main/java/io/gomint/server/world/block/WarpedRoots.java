@@ -27,7 +27,7 @@ public class WarpedRoots extends Block implements BlockWarpedRoots {
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 0;
     }
 

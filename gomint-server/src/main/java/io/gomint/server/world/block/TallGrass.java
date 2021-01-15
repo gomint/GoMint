@@ -70,7 +70,7 @@ public class TallGrass extends Block implements BlockTallGrass {
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 0;
     }
 
@@ -90,7 +90,7 @@ public class TallGrass extends Block implements BlockTallGrass {
     }
 
     @Override
-    public List<ItemStack> drops(ItemStack itemInHand) {
+    public List<ItemStack<?>> drops(ItemStack<?> itemInHand) {
         if (isCorrectTool(itemInHand)) {
             return new ArrayList<>() {{
                 add(ItemTallGrass.create(1));
@@ -101,7 +101,7 @@ public class TallGrass extends Block implements BlockTallGrass {
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return new Class[]{
             ItemShears.class
         };
@@ -119,7 +119,7 @@ public class TallGrass extends Block implements BlockTallGrass {
     }
 
     @Override
-    public boolean canBeReplaced(ItemStack item) {
+    public boolean canBeReplaced(ItemStack<?> item) {
         return true;
     }
 

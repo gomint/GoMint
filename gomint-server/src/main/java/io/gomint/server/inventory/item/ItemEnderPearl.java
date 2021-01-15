@@ -14,12 +14,12 @@ import io.gomint.world.block.data.Facing;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:ender_pearl", id = 368 )
-public class ItemEnderPearl extends ItemStack implements io.gomint.inventory.item.ItemEnderPearl {
+public class ItemEnderPearl extends ItemStack< io.gomint.inventory.item.ItemEnderPearl> implements io.gomint.inventory.item.ItemEnderPearl {
 
 
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.ENDER_PEARL;
     }
 
@@ -36,19 +36,19 @@ public class ItemEnderPearl extends ItemStack implements io.gomint.inventory.ite
         }
 
         // Subtract amount
-        int newAmount = this.getAmount() - 1;
+        int newAmount = this.amount() - 1;
         if ( newAmount == 0 ) {
-            entity.getInventory().setItem( entity.getInventory().getItemInHandSlot(), ItemAir.create( 0 ) );
+            entity.getInventory().item( entity.getInventory().itemInHandSlot(), ItemAir.create( 0 ) );
         } else {
-            this.setAmount( newAmount );
-            entity.getInventory().setItem( entity.getInventory().getItemInHandSlot(), this );
+            this.amount( newAmount );
+            entity.getInventory().item( entity.getInventory().itemInHandSlot(), this );
         }
 
         return true;
     }
 
     @Override
-    public byte getMaximumAmount() {
+    public byte maximumAmount() {
         return 16;
     }
 

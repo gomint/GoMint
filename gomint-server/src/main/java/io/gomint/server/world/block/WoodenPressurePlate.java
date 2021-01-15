@@ -39,7 +39,7 @@ public class WoodenPressurePlate extends BasePressurePlate implements BlockWoode
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 750;
     }
 
@@ -69,7 +69,7 @@ public class WoodenPressurePlate extends BasePressurePlate implements BlockWoode
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return ToolPresets.AXE;
     }
 

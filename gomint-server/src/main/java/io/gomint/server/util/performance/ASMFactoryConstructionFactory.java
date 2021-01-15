@@ -69,7 +69,7 @@ public class ASMFactoryConstructionFactory {
         byte[] data = cw.toByteArray();
 
         try {
-            Class<? extends ConstructionFactory> proxyClass = (Class<? extends ConstructionFactory>) privateLookup.defineClass(data);
+            Class<? extends ConstructionFactory<T>> proxyClass = (Class<? extends ConstructionFactory<T>>) privateLookup.defineClass(data);
             return proxyClass.getDeclaredConstructor().newInstance();
         } catch (IllegalAccessException | NoSuchMethodException | InvocationTargetException | InstantiationException e) {
             e.printStackTrace();

@@ -7,14 +7,15 @@ import io.gomint.GoMint;
  * @version 1.0
  * @stability 3
  */
-public interface ItemChorusPlant extends ItemStack {
+public interface ItemChorusPlant extends ItemStack<ItemChorusPlant> {
 
     /**
      * Create a new item stack with given class and amount
      *
      * @param amount which is used for the creation
+	 * @return freshly generated item
      */
-    static ItemChorusPlant create( int amount ) {
+    static ItemChorusPlant create( int amount ) {	
         return GoMint.instance().createItemStack( ItemChorusPlant.class, amount );
     }
 

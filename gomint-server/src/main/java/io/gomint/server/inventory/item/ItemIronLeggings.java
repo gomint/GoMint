@@ -12,7 +12,7 @@ import io.gomint.world.block.data.Facing;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:iron_leggings", id = 308 )
-public class ItemIronLeggings extends ItemIronArmor implements io.gomint.inventory.item.ItemIronLeggings {
+public class ItemIronLeggings extends ItemIronArmor<io.gomint.inventory.item.ItemIronLeggings> implements io.gomint.inventory.item.ItemIronLeggings {
 
     @Override
     public float getReductionValue() {
@@ -22,10 +22,10 @@ public class ItemIronLeggings extends ItemIronArmor implements io.gomint.invento
     @Override
     public boolean interact(EntityPlayer entity, Facing face, Vector clickPosition, Block clickedBlock ) {
         if ( clickedBlock == null ) {
-            if ( isBetter( (ItemStack) entity.getArmorInventory().getLeggings() ) ) {
-                ItemStack old = (ItemStack) entity.getArmorInventory().getLeggings();
-                entity.getArmorInventory().setLeggings( this );
-                entity.getInventory().setItem( entity.getInventory().getItemInHandSlot(), old );
+            if ( isBetter( (ItemStack<?>) entity.getArmorInventory().leggings() ) ) {
+                ItemStack<?> old = (ItemStack<?>) entity.getArmorInventory().leggings();
+                entity.getArmorInventory().leggings( this );
+                entity.getInventory().item( entity.getInventory().itemInHandSlot(), old );
             }
         }
 
@@ -33,7 +33,7 @@ public class ItemIronLeggings extends ItemIronArmor implements io.gomint.invento
     }
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.IRON_LEGGINGS;
     }
 

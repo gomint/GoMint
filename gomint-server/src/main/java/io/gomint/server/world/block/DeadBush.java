@@ -33,7 +33,7 @@ public class DeadBush extends Block implements BlockDeadBush {
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 0;
     }
 

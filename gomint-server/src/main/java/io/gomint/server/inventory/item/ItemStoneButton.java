@@ -10,10 +10,10 @@ import io.gomint.taglib.NBTTagCompound;
  * @version 1.0
  */
 @RegisterInfo(sId = "minecraft:stone_button", id = 77)
-public class ItemStoneButton extends ItemStack implements io.gomint.inventory.item.ItemStoneButton {
+public class ItemStoneButton extends ItemStack< io.gomint.inventory.item.ItemStoneButton> implements io.gomint.inventory.item.ItemStoneButton {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.STONE_BUTTON;
     }
 

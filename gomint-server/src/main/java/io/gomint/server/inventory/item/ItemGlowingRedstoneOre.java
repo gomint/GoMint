@@ -10,10 +10,10 @@ import io.gomint.taglib.NBTTagCompound;
  * @version 1.0
  */
 @RegisterInfo(sId = "minecraft:lit_redstone_ore", id = 74)
-public class ItemGlowingRedstoneOre extends ItemStack implements io.gomint.inventory.item.ItemGlowingRedstoneOre {
+public class ItemGlowingRedstoneOre extends ItemStack< io.gomint.inventory.item.ItemGlowingRedstoneOre> implements io.gomint.inventory.item.ItemGlowingRedstoneOre {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.GLOWING_REDSTONE_ORE;
     }
 

@@ -19,7 +19,7 @@ import io.gomint.world.block.data.HingeSide;
  * @author geNAZt
  * @version 1.0
  */
-public abstract class Door<B extends BlockDoor> extends Block implements BlockDoor<B> {
+public abstract class Door<B extends BlockDoor<B>> extends Block implements BlockDoor<B> {
 
     private static final BooleanBlockState HINGE = new BooleanBlockState(() -> new String[]{"door_hinge_bit"});
     private static final BooleanBlockState TOP = new BooleanBlockState(() -> new String[]{"upper_block_bit"});
@@ -57,7 +57,7 @@ public abstract class Door<B extends BlockDoor> extends Block implements BlockDo
     }
 
     @Override
-    public boolean interact(Entity entity, Facing face, Vector facePos, ItemStack item) {
+    public boolean interact(Entity entity, Facing face, Vector facePos, ItemStack<?> item) {
         // Open / Close the door
         // TODO: Door events
         toggle();
@@ -66,7 +66,7 @@ public abstract class Door<B extends BlockDoor> extends Block implements BlockDo
     }
 
     @Override
-    public boolean beforePlacement(EntityLiving entity, ItemStack item, Facing face, Location location) {
+    public boolean beforePlacement(EntityLiving entity, ItemStack<?> item, Facing face, Location location) {
         Block above = this.world.blockAt(this.position.add(BlockPosition.UP));
         if (above.canBeReplaced(item)) {
             DIRECTION.detectFromPlacement(this, entity, item, face);
@@ -84,7 +84,7 @@ public abstract class Door<B extends BlockDoor> extends Block implements BlockDo
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 4500;
     }
 
@@ -107,7 +107,7 @@ public abstract class Door<B extends BlockDoor> extends Block implements BlockDo
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return ToolPresets.AXE;
     }
 

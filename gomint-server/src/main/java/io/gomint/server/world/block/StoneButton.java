@@ -15,7 +15,7 @@ import io.gomint.server.registry.RegisterInfo;
 public class StoneButton extends Button<BlockStoneButton> implements BlockStoneButton {
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 750;
     }
 
@@ -45,7 +45,7 @@ public class StoneButton extends Button<BlockStoneButton> implements BlockStoneB
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return ToolPresets.PICKAXE;
     }
 

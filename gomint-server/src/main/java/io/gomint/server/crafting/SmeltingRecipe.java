@@ -26,8 +26,8 @@ public class SmeltingRecipe extends Recipe {
 
     private final String block;
 
-    private final ItemStack input;
-    private final ItemStack outcome;
+    private final ItemStack<?> input;
+    private final ItemStack<?> outcome;
 
     /**
      * Create new smelting recipe
@@ -36,7 +36,7 @@ public class SmeltingRecipe extends Recipe {
      * @param outcome of this recipe
      * @param uuid    of the recipe
      */
-    public SmeltingRecipe(String block, ItemStack input, ItemStack outcome, UUID uuid, int priority) {
+    public SmeltingRecipe(String block, ItemStack<?> input, ItemStack<?> outcome, UUID uuid, int priority) {
         super(uuid, priority);
 
         this.block = block;
@@ -46,32 +46,32 @@ public class SmeltingRecipe extends Recipe {
     }
 
     @Override
-    public ItemStack[] getIngredients() {
+    public ItemStack<?>[] getIngredients() {
         return new ItemStack[]{this.input};
     }
 
     @Override
-    public Collection<ItemStack> createResult() {
-        return Collections.singletonList(((io.gomint.server.inventory.item.ItemStack) this.outcome).clone());
+    public Collection<ItemStack<?>> createResult() {
+        return Collections.singletonList(((io.gomint.server.inventory.item.ItemStack<?>) this.outcome).clone());
     }
 
     @Override
     public void serialize(PacketBuffer buffer) {
-        io.gomint.server.inventory.item.ItemStack implInput = (io.gomint.server.inventory.item.ItemStack) this.input;
+        io.gomint.server.inventory.item.ItemStack<?> implInput = (io.gomint.server.inventory.item.ItemStack<?>) this.input;
 
         // The type of this recipe is defined after the input metadata
-        buffer.writeSignedVarInt(implInput.getData() == 0 ? 2 : 3);
+        buffer.writeSignedVarInt(implInput.data() == 0 ? 2 : 3);
 
         // We need to custom write items
-        buffer.writeSignedVarInt(implInput.getRuntimeID());
-        if (implInput.getData() != 0) buffer.writeSignedVarInt(implInput.getData());
+        buffer.writeSignedVarInt(implInput.runtimeID());
+        if (implInput.data() != 0) buffer.writeSignedVarInt(implInput.data());
 
         Packet.writeItemStack(this.outcome, buffer);
         buffer.writeString(this.block);
     }
 
     @Override
-    public int[] isCraftable(Inventory inputInventory) {
+    public int[] isCraftable(Inventory<?> inputInventory) {
         return new int[0];
     }
 

@@ -60,7 +60,7 @@ public class ChunkSlice {
     private final NibbleArray skyLight = null; // NibbleArray.create( (short) 4096 )
 
     private Short2ObjectOpenHashMap<TileEntity> tileEntities = null;
-    private final Short2ObjectOpenHashMap[] temporaryStorages = new Short2ObjectOpenHashMap[2];   // MC currently supports two layers, we init them as we need
+    private final Short2ObjectOpenHashMap<TemporaryStorage>[] temporaryStorages = new Short2ObjectOpenHashMap[2];   // MC currently supports two layers, we init them as we need
 
     private boolean needsPersistence;
     private boolean isReleased;

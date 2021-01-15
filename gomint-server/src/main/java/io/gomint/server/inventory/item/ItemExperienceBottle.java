@@ -13,7 +13,7 @@ import io.gomint.world.block.data.Facing;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:experience_bottle", id = 384 )
-public class ItemExperienceBottle extends ItemStack implements io.gomint.inventory.item.ItemExperienceBottle {
+public class ItemExperienceBottle extends ItemStack< io.gomint.inventory.item.ItemExperienceBottle> implements io.gomint.inventory.item.ItemExperienceBottle {
 
     @Override
     public boolean interact(EntityPlayer entity, Facing face, Vector clickPosition, Block clickedBlock ) {
@@ -34,7 +34,7 @@ public class ItemExperienceBottle extends ItemStack implements io.gomint.invento
     }
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.EXPERIENCE_BOTTLE;
     }
 

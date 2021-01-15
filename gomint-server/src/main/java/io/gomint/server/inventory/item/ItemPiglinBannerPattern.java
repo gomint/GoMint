@@ -15,10 +15,10 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:piglin_banner_pattern", id = 577 )
-public class ItemPiglinBannerPattern extends ItemStack implements io.gomint.inventory.item.ItemPiglinBannerPattern {
+public class ItemPiglinBannerPattern extends ItemStack< io.gomint.inventory.item.ItemPiglinBannerPattern> implements io.gomint.inventory.item.ItemPiglinBannerPattern {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.PIGLIN_BANNER_PATTERN;
     }
 

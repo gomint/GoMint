@@ -9,12 +9,12 @@ import io.gomint.taglib.NBTTagCompound;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:clay_ball", id = 337 )
- public class ItemClayBall extends ItemStack implements io.gomint.inventory.item.ItemClayBall {
+ public class ItemClayBall extends ItemStack< io.gomint.inventory.item.ItemClayBall> implements io.gomint.inventory.item.ItemClayBall {
 
 
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.CLAY_BALL;
     }
 

@@ -15,10 +15,10 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:crimson_stairs", id = -254 )
-public class ItemCrimsonStairs extends ItemStack implements io.gomint.inventory.item.ItemCrimsonStairs {
+public class ItemCrimsonStairs extends ItemStack< io.gomint.inventory.item.ItemCrimsonStairs> implements io.gomint.inventory.item.ItemCrimsonStairs {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.CRIMSON_STAIRS;
     }
 

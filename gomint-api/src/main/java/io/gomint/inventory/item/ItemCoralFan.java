@@ -16,12 +16,13 @@ import io.gomint.world.block.data.RotationDirection;
  * @version 1.0
  * @stability 3
  */
-public interface ItemCoralFan extends ItemStack {
+public interface ItemCoralFan extends ItemStack<ItemCoralFan> {
 
     /**
      * Creates a new item stack with given class and amount
      *
      * @param amount which is used for the creation
+	 * @return freshly generated item
      */
     static ItemCoralFan create( int amount ) {
         return GoMint.instance().createItemStack( ItemCoralFan.class, amount );
@@ -32,41 +33,41 @@ public interface ItemCoralFan extends ItemStack {
      *
      * @return direction of the coral
      */
-    RotationDirection getDirection();
+    RotationDirection direction();
 
     /**
      * Set the direction of this coral fan
      *
      * @param direction in which this coral fan should face
      */
-    void setDirection(RotationDirection direction);
+    ItemCoralFan direction(RotationDirection direction);
 
     /**
      * Set coral type
      *
      * @param type of coral
      */
-    void setCoralType(CoralType type);
+    ItemCoralFan coralType(CoralType type);
 
     /**
      * Get type of coral
      *
      * @return type of coral
      */
-    CoralType getCoralType();
+    CoralType coralType();
 
     /**
      * Is this coral fan dead?
      *
      * @return true when dead, false otherwise
      */
-    boolean isDead();
+    boolean dead();
 
     /**
      * Set if this coral fan is dead or not
      *
      * @param dead true when it should be dead, false otherwise
      */
-    void setDead(boolean dead);
+    ItemCoralFan dead(boolean dead);
 
 }

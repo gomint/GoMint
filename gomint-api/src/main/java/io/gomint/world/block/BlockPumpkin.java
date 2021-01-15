@@ -27,6 +27,7 @@ public interface BlockPumpkin extends Block, BlockDirection<BlockPumpkin> {
      * Set the type of pumpkin
      *
      * @param type of pumpkin
+     * @return block for chaining
      */
     BlockPumpkin type(PumpkinType type);
 

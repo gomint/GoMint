@@ -25,6 +25,7 @@ public interface BlockLightBlock extends Block {
      * Set the intensity of light
      *
      * @param intensity ranging from 0 to 1
+     * @return block for chaining
      */
     BlockLightBlock intensity(float intensity);
 

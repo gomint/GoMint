@@ -144,12 +144,11 @@ public class ServerConfig extends YamlConfig {
     }
 
     @Override
-    public YamlConfig update(ConfigSection section) {
+    public void update(ConfigSection section) {
         // Check if we have the new enabledClientCache config
         if (!section.has("enableClientCache")) {
             section.set("enableClientCache", true);
         }
-        return this;
     }
 
     @Override

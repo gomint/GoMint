@@ -18,7 +18,7 @@ public class EndGateway extends Block implements BlockEndGateway {
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return -1;
     }
 

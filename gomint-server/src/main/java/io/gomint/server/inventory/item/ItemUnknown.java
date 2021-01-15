@@ -15,10 +15,10 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:unknown", id = -305 )
-public class ItemUnknown extends ItemStack {
+public class ItemUnknown extends ItemStack<ItemUnknown> {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.UNKNOWN;
     }
 

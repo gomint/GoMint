@@ -31,7 +31,7 @@ import java.util.concurrent.TimeUnit;
 @RegisterInfo( sId = "item" )
 public class EntityItem extends Entity implements EntityItemDrop {
 
-    private ItemStack itemStack;
+    private ItemStack<?> itemStack;
     private long pickupTime;
     private boolean isReset;
 
@@ -43,7 +43,7 @@ public class EntityItem extends Entity implements EntityItemDrop {
      * @param itemStack The itemstack which should be dropped
      * @param world     The world in which this entity is in
      */
-    public EntityItem( ItemStack itemStack, WorldAdapter world ) {
+    public EntityItem( ItemStack<?> itemStack, WorldAdapter world ) {
         super( EntityType.ITEM_DROP, world );
         this.itemStack = itemStack;
         this.initEntity();
@@ -67,12 +67,12 @@ public class EntityItem extends Entity implements EntityItemDrop {
     }
 
     @Override
-    public <T extends ItemStack> T getItemStack() {
-        return (T) ( (io.gomint.server.inventory.item.ItemStack) this.itemStack ).clone();
+    public <T extends ItemStack<T>> T getItemStack() {
+        return (T) ( (io.gomint.server.inventory.item.ItemStack<T>) this.itemStack ).clone();
     }
 
     @Override
-    public void setItemStack( ItemStack itemStack ) {
+    public <T extends ItemStack<T>> void setItemStack( T itemStack ) {
         if ( this.world == null ) {
             this.itemStack = itemStack.clone();
         }

@@ -22,7 +22,7 @@ public class GlassPane extends Block implements BlockGlassPane {
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 450;
     }
 
@@ -37,7 +37,7 @@ public class GlassPane extends Block implements BlockGlassPane {
     }
 
     @Override
-    public List<ItemStack> drops(ItemStack itemInHand ) {
+    public List<ItemStack<?>> drops(ItemStack<?> itemInHand ) {
         return new ArrayList<>();
     }
 

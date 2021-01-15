@@ -17,7 +17,7 @@ import java.util.List;
 public abstract class Sign<B> extends Block implements BlockSign<B> {
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 1500;
     }
 
@@ -52,13 +52,13 @@ public abstract class Sign<B> extends Block implements BlockSign<B> {
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return ToolPresets.AXE;
     }
 
     @Override
     public List<String> lines() {
-        SignTileEntity sign = this.getTileEntity();
+        SignTileEntity sign = this.tileEntity();
         return sign == null ? null : new ArrayList<>(sign.getLines());
     }
 
@@ -69,7 +69,7 @@ public abstract class Sign<B> extends Block implements BlockSign<B> {
             return (B) this;
         }
 
-        SignTileEntity sign = this.getTileEntity();
+        SignTileEntity sign = this.tileEntity();
         if (sign == null) {
             return (B) this;
         }
@@ -92,7 +92,7 @@ public abstract class Sign<B> extends Block implements BlockSign<B> {
             return null;
         }
 
-        SignTileEntity sign = this.getTileEntity();
+        SignTileEntity sign = this.tileEntity();
         if (sign == null) {
             return null;
         }

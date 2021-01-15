@@ -8,10 +8,10 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo(sId = "minecraft:item.hopper", id = 154)
-public class ItemHopperBlock extends ItemStack {
+public class ItemHopperBlock extends ItemStack<ItemHopperBlock> {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.HOPPER;
     }
 

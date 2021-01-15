@@ -7,12 +7,13 @@ import io.gomint.GoMint;
  * @version 1.0
  * @stability 1
  */
-public interface ItemCookedSalmon extends ItemFood {
+public interface ItemCookedSalmon extends ItemFood<ItemCookedSalmon> {
 
     /**
      * Create a new item stack with given class and amount
      *
      * @param amount which is used for the creation
+	 * @return freshly generated item
      */
     static ItemCookedSalmon create( int amount ) {
         return GoMint.instance().createItemStack( ItemCookedSalmon.class, amount );

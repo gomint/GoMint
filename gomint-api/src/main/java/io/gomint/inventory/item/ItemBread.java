@@ -7,12 +7,13 @@ import io.gomint.GoMint;
  * @version 1.0
  * @stability 3
  */
-public interface ItemBread extends ItemFood {
+public interface ItemBread extends ItemFood<ItemBread> {
 
     /**
      * Create a new item stack with given class and amount
      *
      * @param amount which is used for the creation
+	 * @return freshly generated item
      */
     static ItemBread create( int amount ) {
         return GoMint.instance().createItemStack( ItemBread.class, amount );

@@ -9,12 +9,12 @@ import io.gomint.taglib.NBTTagCompound;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:end_crystal", id = 426 )
- public class ItemEndCrystal extends ItemStack implements io.gomint.inventory.item.ItemEndCrystal {
+ public class ItemEndCrystal extends ItemStack< io.gomint.inventory.item.ItemEndCrystal> implements io.gomint.inventory.item.ItemEndCrystal {
 
 
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.END_CRYSTAL;
     }
 

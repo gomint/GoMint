@@ -35,9 +35,9 @@ public class Explosion {
     private final Entity source;
 
     // Temporary values
-    private Vector tempRay = new Vector( 0, 0, 0 );
-    private BlockPosition tempBlock = new BlockPosition( 0, 0, 0 );
-    private Set<Block> affectedBlocks = new HashSet<>();
+    private final Vector tempRay = new Vector( 0, 0, 0 );
+    private final BlockPosition tempBlock = new BlockPosition( 0, 0, 0 );
+    private final Set<Block> affectedBlocks = new HashSet<>();
     private Block currentBlock;
 
     public Explosion(float size, Entity source) {
@@ -188,7 +188,7 @@ public class Explosion {
             if ( block instanceof BlockTNT ) {
                 ( (BlockTNT) block ).prime( 0.5f + ThreadLocalRandom.current().nextFloat() );
             } else if ( ThreadLocalRandom.current().nextFloat() * 100 < event.getRandomDropChance() ) {
-                for ( ItemStack drop : block.drops( ItemAir.create( 0 ) ) ) {
+                for ( ItemStack<?> drop : block.drops( ItemAir.create( 0 ) ) ) {
                     this.source.getWorld().dropItem( new Vector(block.position()).add( 0.5f, 0.5f, 0.5f ), drop );
                 }
             }
@@ -206,11 +206,6 @@ public class Explosion {
         }
 
         // TODO: PacketExplode has been removed
-//        PacketExplode explode = new PacketExplode();
-//        explode.setSource( sourceLocation );
-//        explode.setRadius( this.size );
-//        explode.setAffectedBlocksRelative( send );
-//        this.source.getWorld().sendToVisible( sourceLocation.toBlockPosition(), explode, entity -> true );
 
         this.source.getWorld().sendParticle( sourceLocation, Particle.HUGE_EXPLODE_SEED );
         this.source.getWorld().sendLevelEvent( sourceLocation, LevelEvent.CAULDRON_EXPLODE, 0 );

@@ -188,7 +188,7 @@ public class ResourceManager {
      */
     private synchronized ResourceLoader buildNewResourceLoader( ResourceLoader loader, String argument ) {
         try {
-            Constructor constructor = loader.getClass().getConstructor( ClassLoader.class, String.class );
+            Constructor<?> constructor = loader.getClass().getConstructor( ClassLoader.class, String.class );
             return (ResourceLoader) constructor.newInstance( this.classLoader, argument );
         } catch ( NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalAccessException e ) {
             throw new RuntimeException( "Could not construct new ResourceLoader", e );

@@ -27,6 +27,7 @@ public interface BlockCauldron extends Block {
      * Set the liquid type of this cauldron
      *
      * @param type of liquid for this cauldron
+     * @return block for chaining
      */
     BlockCauldron type(LiquidType type);
 
@@ -39,9 +40,10 @@ public interface BlockCauldron extends Block {
 
     /**
      * Set the fill height of the fluid inside this block. Allowed values range from 0 to 1. Other values
-     * will be silenty ignored
+     * will be silently ignored
      *
      * @param height of the fluid
+     * @return block for chaining
      */
     BlockCauldron fillHeight(float height);
 

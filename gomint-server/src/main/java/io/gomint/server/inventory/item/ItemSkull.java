@@ -11,27 +11,28 @@ import io.gomint.world.block.data.SkullType;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:skull", id = 397 )
-public class ItemSkull extends ItemStack implements io.gomint.inventory.item.ItemSkull {
+public class ItemSkull extends ItemStack< io.gomint.inventory.item.ItemSkull> implements io.gomint.inventory.item.ItemSkull {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.SKULL;
     }
 
     @Override
-    public SkullType getSkullType() {
-        return SkullType.values()[this.getData()];
+    public SkullType type() {
+        return SkullType.values()[this.data()];
     }
 
     @Override
-    public void setSkullType(SkullType type) {
-        this.setData((short) type.ordinal());
+    public ItemSkull type(SkullType type) {
+        this.data((short) type.ordinal());
+        return this;
     }
 
     @Override
-    public Block getBlock() {
-        BlockSkull block = (BlockSkull) super.getBlock();
-        block.type(this.getSkullType());
+    public Block block() {
+        BlockSkull block = (BlockSkull) super.block();
+        block.type(this.type());
         return block;
     }
 

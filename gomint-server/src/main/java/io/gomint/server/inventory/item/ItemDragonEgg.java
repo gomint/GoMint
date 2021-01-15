@@ -10,10 +10,10 @@ import io.gomint.taglib.NBTTagCompound;
  * @version 1.0
  */
 @RegisterInfo(sId = "minecraft:dragon_egg", id = 122)
-public class ItemDragonEgg extends ItemStack implements io.gomint.inventory.item.ItemDragonEgg {
+public class ItemDragonEgg extends ItemStack< io.gomint.inventory.item.ItemDragonEgg> implements io.gomint.inventory.item.ItemDragonEgg {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.DRAGON_EGG;
     }
 

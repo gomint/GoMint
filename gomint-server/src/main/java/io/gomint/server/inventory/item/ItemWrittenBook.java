@@ -9,12 +9,12 @@ import io.gomint.taglib.NBTTagCompound;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:written_book", id = 387 )
-public class ItemWrittenBook extends ItemStack implements io.gomint.inventory.item.ItemWrittenBook {
+public class ItemWrittenBook extends ItemStack< io.gomint.inventory.item.ItemWrittenBook> implements io.gomint.inventory.item.ItemWrittenBook {
 
 
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.WRITTEN_BOOK;
     }
 

@@ -20,7 +20,7 @@ public class IronBars extends Block implements BlockIronBars {
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 7500;
     }
 
@@ -45,7 +45,7 @@ public class IronBars extends Block implements BlockIronBars {
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return ToolPresets.PICKAXE;
     }
 

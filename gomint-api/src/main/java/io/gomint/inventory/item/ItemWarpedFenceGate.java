@@ -14,12 +14,13 @@ import io.gomint.GoMint;
  * @version 1.0
  * @stability 1
  */
-public interface ItemWarpedFenceGate extends ItemStack {
+public interface ItemWarpedFenceGate extends ItemStack<ItemWarpedFenceGate> {
 
     /**
      * Create a new item stack with given class and amount
      *
      * @param amount which is used for the creation
+	 * @return freshly generated item
      */
     static ItemWarpedFenceGate create( int amount ) {
         return GoMint.instance().createItemStack( ItemWarpedFenceGate.class, amount );

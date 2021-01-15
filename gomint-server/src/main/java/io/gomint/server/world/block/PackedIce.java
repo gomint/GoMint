@@ -22,7 +22,7 @@ public class PackedIce extends Block implements BlockPackedIce {
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 750;
     }
 
@@ -37,7 +37,7 @@ public class PackedIce extends Block implements BlockPackedIce {
     }
 
     @Override
-    public List<ItemStack> drops(ItemStack itemInHand ) {
+    public List<ItemStack<?>> drops(ItemStack<?> itemInHand ) {
         return new ArrayList<>();
     }
 

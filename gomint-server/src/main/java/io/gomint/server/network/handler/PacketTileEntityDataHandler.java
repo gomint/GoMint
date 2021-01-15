@@ -20,8 +20,8 @@ public class PacketTileEntityDataHandler implements PacketHandler<PacketTileEnti
     @Override
     public void handle( PacketTileEntityData packet, long currentTimeMillis, PlayerConnection connection ) throws Exception {
         Block block = connection.getEntity().getWorld().blockAt( packet.getPosition() );
-        if ( block.getTileEntity() != null ) {
-            block.getTileEntity().applyClientData( connection.getEntity(), packet.getCompound() );
+        if ( block.tileEntity() != null ) {
+            block.tileEntity().applyClientData( connection.getEntity(), packet.getCompound() );
         }
     }
 

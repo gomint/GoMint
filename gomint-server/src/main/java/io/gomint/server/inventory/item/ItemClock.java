@@ -9,12 +9,12 @@ import io.gomint.taglib.NBTTagCompound;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:clock", id = 347 )
- public class ItemClock extends ItemStack implements io.gomint.inventory.item.ItemClock {
+ public class ItemClock extends ItemStack< io.gomint.inventory.item.ItemClock> implements io.gomint.inventory.item.ItemClock {
 
 
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.CLOCK;
     }
 

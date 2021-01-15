@@ -31,7 +31,7 @@ import io.gomint.world.block.data.BlockColor;
 @RegisterInfo(sId = ItemGlazedTerracotta.GREEN, id = 233)
 @RegisterInfo(sId = ItemGlazedTerracotta.RED, id = 234)
 @RegisterInfo(sId = ItemGlazedTerracotta.BLACK, id = 235)
-public class ItemGlazedTerracotta extends ItemStack implements io.gomint.inventory.item.ItemGlazedTerracotta {
+public class ItemGlazedTerracotta extends ItemStack< io.gomint.inventory.item.ItemGlazedTerracotta> implements io.gomint.inventory.item.ItemGlazedTerracotta {
 
     public static final String PURPLE = "minecraft:purple_glazed_terracotta";
     public static final String WHITE = "minecraft:white_glazed_terracotta";
@@ -51,67 +51,69 @@ public class ItemGlazedTerracotta extends ItemStack implements io.gomint.invento
     public static final String BLACK = "minecraft:black_glazed_terracotta";
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.GLAZED_TERRACOTTA;
     }
 
     @Override
-    public void setColor(BlockColor type) {
+    public ItemGlazedTerracotta color(BlockColor type) {
         switch (type) {
             case BLACK:
-                this.setMaterial(ItemGlazedTerracotta.BLACK);
+                this.material(ItemGlazedTerracotta.BLACK);
                 break;
             case RED:
-                this.setMaterial(ItemGlazedTerracotta.RED);
+                this.material(ItemGlazedTerracotta.RED);
                 break;
             case GREEN:
-                this.setMaterial(ItemGlazedTerracotta.GREEN);
+                this.material(ItemGlazedTerracotta.GREEN);
                 break;
             case BROWN:
-                this.setMaterial(ItemGlazedTerracotta.BROWN);
+                this.material(ItemGlazedTerracotta.BROWN);
                 break;
             case BLUE:
-                this.setMaterial(ItemGlazedTerracotta.BLUE);
+                this.material(ItemGlazedTerracotta.BLUE);
                 break;
             case PURPLE:
-                this.setMaterial(ItemGlazedTerracotta.PURPLE);
+                this.material(ItemGlazedTerracotta.PURPLE);
                 break;
             case CYAN:
-                this.setMaterial(ItemGlazedTerracotta.CYAN);
+                this.material(ItemGlazedTerracotta.CYAN);
                 break;
             case LIGHT_GRAY:
-                this.setMaterial(ItemGlazedTerracotta.LIGHT_GRAY);
+                this.material(ItemGlazedTerracotta.LIGHT_GRAY);
                 break;
             case GRAY:
-                this.setMaterial(ItemGlazedTerracotta.GRAY);
+                this.material(ItemGlazedTerracotta.GRAY);
                 break;
             case PINK:
-                this.setMaterial(ItemGlazedTerracotta.PINK);
+                this.material(ItemGlazedTerracotta.PINK);
                 break;
             case LIME:
-                this.setMaterial(ItemGlazedTerracotta.LIME);
+                this.material(ItemGlazedTerracotta.LIME);
                 break;
             case YELLOW:
-                this.setMaterial(ItemGlazedTerracotta.YELLOW);
+                this.material(ItemGlazedTerracotta.YELLOW);
                 break;
             case LIGHT_BLUE:
-                this.setMaterial(ItemGlazedTerracotta.LIGHT_BLUE);
+                this.material(ItemGlazedTerracotta.LIGHT_BLUE);
                 break;
             case MAGENTA:
-                this.setMaterial(ItemGlazedTerracotta.MAGENTA);
+                this.material(ItemGlazedTerracotta.MAGENTA);
                 break;
             case ORANGE:
-                this.setMaterial(ItemGlazedTerracotta.ORANGE);
+                this.material(ItemGlazedTerracotta.ORANGE);
                 break;
             case WHITE:
-                this.setMaterial(ItemGlazedTerracotta.WHITE);
+                this.material(ItemGlazedTerracotta.WHITE);
                 break;
         }
+
+        return this;
     }
 
     @Override
-    public BlockColor getColor() {
-        String data = this.getMaterial();
+    public BlockColor color() {
+        String data = this.material();
         switch (data) {
             case ItemGlazedTerracotta.BLACK:
                 return BlockColor.BLACK;

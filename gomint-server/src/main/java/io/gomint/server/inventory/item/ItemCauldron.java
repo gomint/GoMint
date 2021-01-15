@@ -11,16 +11,16 @@ import io.gomint.world.block.data.LiquidType;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:cauldron", id = 380 )
-public class ItemCauldron extends ItemStack implements io.gomint.inventory.item.ItemCauldron {
+public class ItemCauldron extends ItemStack< io.gomint.inventory.item.ItemCauldron> implements io.gomint.inventory.item.ItemCauldron {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.CAULDRON;
     }
 
     @Override
-    public Block getBlock() {
-        BlockCauldron block = (BlockCauldron) super.getBlock();
+    public Block block() {
+        BlockCauldron block = (BlockCauldron) super.block();
         return block
             .fillHeight(0f)
             .type(LiquidType.WATER);

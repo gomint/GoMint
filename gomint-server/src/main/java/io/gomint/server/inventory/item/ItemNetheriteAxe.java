@@ -12,7 +12,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:netherite_axe", id = 746 )
-public class ItemNetheriteAxe extends ItemReduceTierNetherite implements io.gomint.inventory.item.ItemNetheriteAxe {
+public class ItemNetheriteAxe extends ItemReduceTierNetherite<io.gomint.inventory.item.ItemNetheriteAxe> implements io.gomint.inventory.item.ItemNetheriteAxe {
 
     @Override
     public void gotInHand( EntityPlayer player ) {
@@ -29,7 +29,7 @@ public class ItemNetheriteAxe extends ItemReduceTierNetherite implements io.gomi
     }
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.NETHERITE_AXE;
     }
 }

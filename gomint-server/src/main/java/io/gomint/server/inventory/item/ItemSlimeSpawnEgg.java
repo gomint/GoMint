@@ -15,10 +15,10 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:slime_spawn_egg", id = 443 )
-public class ItemSlimeSpawnEgg extends ItemStack implements io.gomint.inventory.item.ItemSlimeSpawnEgg {
+public class ItemSlimeSpawnEgg extends ItemStack< io.gomint.inventory.item.ItemSlimeSpawnEgg> implements io.gomint.inventory.item.ItemSlimeSpawnEgg {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.SLIME_SPAWN_EGG;
     }
 

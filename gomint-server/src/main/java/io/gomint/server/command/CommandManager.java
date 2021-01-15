@@ -61,7 +61,7 @@ public class CommandManager {
     public CommandManager() {
         // Register all internal commands
         try {
-            for (Class cmdClass : new Class[]{
+            for (Class<? extends Command> cmdClass : new Class[]{
                 // Vanilla
                 DeopCommand.class,
                 DifficultyCommand.class,
@@ -87,13 +87,12 @@ public class CommandManager {
                 MemoryDumpCommand.class,
             }) {
                 // Check for system only commands
-                Object commandObject;
+                Command commandObject;
 
                 // Check for combo command (player + system) and build / register it
                 if (Command.class.isAssignableFrom(cmdClass.getSuperclass())) {
-                    Class<? extends Command> nonSystem = (Class<? extends Command>) cmdClass;
-                    commandObject = nonSystem.getConstructor().newInstance();
-                    register(null, (Command) commandObject);
+                    commandObject = cmdClass.getConstructor().newInstance();
+                    register(null, commandObject);
                 }
             }
         } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {

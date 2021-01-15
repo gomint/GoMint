@@ -18,6 +18,7 @@ public interface BlockSoulCampfire extends Block, BlockDirection<BlockSoulCampfi
      * Set extinguished state for this campfire
      *
      * @param value true when extinguished, false otherwise
+     * @return block for chaining
      */
     BlockSoulCampfire extinguished(boolean value);
 

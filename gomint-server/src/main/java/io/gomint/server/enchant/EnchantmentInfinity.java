@@ -37,8 +37,8 @@ public class EnchantmentInfinity extends Enchantment implements io.gomint.enchan
     }
 
     @Override
-    public boolean canBeApplied( ItemStack itemStack ) {
-        return itemStack.getItemType() == ItemType.BOW;
+    public boolean canBeApplied(ItemStack<?> itemStack ) {
+        return itemStack.itemType() == ItemType.BOW;
     }
 
     @Override

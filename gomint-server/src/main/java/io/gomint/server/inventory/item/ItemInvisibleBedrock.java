@@ -15,10 +15,10 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:invisiblebedrock", id = 95 )
-public class ItemInvisibleBedrock extends ItemStack implements io.gomint.inventory.item.ItemInvisibleBedrock {
+public class ItemInvisibleBedrock extends ItemStack< io.gomint.inventory.item.ItemInvisibleBedrock> implements io.gomint.inventory.item.ItemInvisibleBedrock {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.INVISIBLEBEDROCK;
     }
 

@@ -8,10 +8,10 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:item.cake", id = 92 )
-public class ItemCakeBlock extends ItemStack {
+public class ItemCakeBlock extends ItemStack<ItemCakeBlock> {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.CAKE;
     }
 

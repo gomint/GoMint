@@ -24,7 +24,7 @@ public class Cobweb extends Block implements BlockCobweb {
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 6000;
     }
 
@@ -39,14 +39,14 @@ public class Cobweb extends Block implements BlockCobweb {
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return ToolPresets.SWORD;
     }
 
     @Override
-    public List<ItemStack> drops(ItemStack itemInHand ) {
+    public List<ItemStack<?>> drops(ItemStack<?> itemInHand ) {
         if ( isCorrectTool( itemInHand ) ) {
-            return new ArrayList<ItemStack>() {{
+            return new ArrayList<>() {{
                 add( ItemString.create( 1 ) );
             }};
         }

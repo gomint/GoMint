@@ -44,7 +44,12 @@ public class BlockRegistry {
     public void register(ClassPath classPathSearcher, String classPath) {
         LOGGER.debug("Going to scan: {}", classPath);
 
-        classPathSearcher.getTopLevelClasses(classPath, classInfo -> register(classInfo.load()));
+        classPathSearcher.getTopLevelClasses(classPath, classInfo -> {
+            Class<?> clz = classInfo.load();
+            if (Block.class.isAssignableFrom(clz)) {
+                register((Class<? extends Block>) clz);
+            }
+        });
     }
 
     private void register(Class<? extends Block> clazz) {

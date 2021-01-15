@@ -105,7 +105,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
     protected final File worldDir;
     protected String levelName;
     protected Location spawn;
-    protected Map<Gamerule, Object> gamerules = new HashMap<>();
+    protected Map<Gamerule<?>, Object> gamerules = new HashMap<>();
     private WorldConfig config;
     protected int worldTime; // Stored in ticks
 
@@ -186,7 +186,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
         return worldDir;
     }
 
-    public Map<Gamerule, Object> getGamerules() {
+    public Map<Gamerule<?>, Object> getGamerules() {
         return gamerules;
     }
 
@@ -474,7 +474,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
     }
 
     @Override
-    public <T> WorldAdapter gamerule(Gamerule<T> gamerule, T value) {
+    public WorldAdapter gamerule(Gamerule<?> gamerule, Object value) {
         this.gamerules.put(gamerule, value);
         return this;
     }
@@ -988,12 +988,12 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
         connection.addToSendQueue(updateBlock);
 
         // Check for tile entity
-        if (block.getTileEntity() != null) {
+        if (block.tileEntity() != null) {
             PacketTileEntityData tileEntityData = new PacketTileEntityData();
             tileEntityData.setPosition(pos);
 
             NBTTagCompound compound = new NBTTagCompound("");
-            block.getTileEntity().toCompound(compound, SerializationReason.NETWORK);
+            block.tileEntity().toCompound(compound, SerializationReason.NETWORK);
 
             tileEntityData.setCompound(compound);
             connection.addToSendQueue(tileEntityData);
@@ -1050,7 +1050,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
 
     private <T> List<T> iterateBlocks(int minX, int maxX, int minY, int maxY, int minZ, int maxZ, AxisAlignedBB
         bb, boolean returnBoundingBoxes, boolean includePassThrough) {
-        List values = null;
+        List<T> values = null;
 
         for (int z = minZ; z < maxZ; ++z) {
             for (int x = minX; x < maxX; ++x) {
@@ -1065,10 +1065,10 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
                         if (returnBoundingBoxes) {
                             List<AxisAlignedBB> bbs = block.boundingBoxes();
                             if (bbs != null) {
-                                values.addAll(bbs);
+                                values.addAll((Collection<? extends T>) bbs);
                             }
                         } else {
-                            values.add(block);
+                            values.add((T) block);
                         }
                     }
                 }
@@ -1136,7 +1136,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
      * @param entity        which interacts with the block
      * @return true when interaction was successful, false when not
      */
-    public boolean useItemOn(ItemStack itemInHand, BlockPosition blockPosition, Facing face, Vector
+    public boolean useItemOn(ItemStack<?> itemInHand, BlockPosition blockPosition, Facing face, Vector
         clickPosition, io.gomint.server.entity.EntityPlayer entity) {
         Block blockClicked = this.blockAt(blockPosition);
         if (blockClicked instanceof Air) {
@@ -1159,11 +1159,11 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
         }
 
         // Let the item interact
-        boolean itemInteracted = ((io.gomint.server.inventory.item.ItemStack) itemInHand)
+        boolean itemInteracted = ((io.gomint.server.inventory.item.ItemStack<?>) itemInHand)
             .interact(entity, face, clickPosition, clickedBlock);
 
         if ((!interacted && !itemInteracted) || entity.isSneaking()) {
-            Block block = ((io.gomint.server.inventory.item.ItemStack) itemInHand).getBlock();
+            Block block = ((io.gomint.server.inventory.item.ItemStack<?>) itemInHand).block();
             boolean canBePlaced = block != null && !(itemInHand instanceof ItemAir);
             if (canBePlaced) {
                 Block blockReplace = blockClicked.side(face);
@@ -1185,7 +1185,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
                     playSound(null, new Vector(newBlock.position()), Sound.PLACE, (byte) 1, BlockRuntimeIDs.toBlockIdentifier(newBlock.getBlockId(), null).getRuntimeId());
 
                     if (entity.getGamemode() != Gamemode.CREATIVE) {
-                        ((io.gomint.server.inventory.item.ItemStack) itemInHand).afterPlacement();
+                        ((io.gomint.server.inventory.item.ItemStack<?>) itemInHand).afterPlacement();
                     }
                 }
 
@@ -1223,7 +1223,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
     }
 
     @Override
-    public EntityItem createItemDrop(Vector vector, ItemStack item) {
+    public EntityItem createItemDrop(Vector vector, ItemStack<?> item) {
         EntityItem entityItem = new EntityItem(item, this);
         spawnEntityAt(entityItem, vector);
         return entityItem;
@@ -1309,11 +1309,11 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
         chunk.removeTileEntity(position.x() & 0xF, position.y(), position.z() & 0xF);
     }
 
-    public boolean breakBlock(BlockPosition position, List<ItemStack> drops, boolean creative) {
+    public boolean breakBlock(BlockPosition position, List<ItemStack<?>> drops, boolean creative) {
         io.gomint.server.world.block.Block block = blockAt(position);
         if (block.onBreak(creative)) {
             if (!drops.isEmpty()) {
-                for (ItemStack itemStack : drops) {
+                for (ItemStack<?> itemStack : drops) {
                     EntityItem item = this.createItemDrop(new Vector(block.position()).add(0.5f, 0.5f, 0.5f), itemStack);
                     item.setVelocity(new Vector(ThreadLocalRandom.current().nextFloat() * 0.2f - 0.1f, 0.2f, ThreadLocalRandom.current().nextFloat() * 0.2f - 0.1f));
                 }
@@ -1346,8 +1346,8 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
         this.tickQueue.add(key, position);
     }
 
-    public void dropItem(Vector vector, ItemStack drop) {
-        if (drop.getItemType() == ItemType.AIR) {
+    public void dropItem(Vector vector, ItemStack<?> drop) {
+        if (drop.itemType() == ItemType.AIR) {
             return;
         }
 

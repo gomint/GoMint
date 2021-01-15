@@ -15,10 +15,10 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:structure_block", id = 252 )
-public class ItemStructureBlock extends ItemStack implements io.gomint.inventory.item.ItemStructureBlock {
+public class ItemStructureBlock extends ItemStack< io.gomint.inventory.item.ItemStructureBlock> implements io.gomint.inventory.item.ItemStructureBlock {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.STRUCTURE_BLOCK;
     }
 

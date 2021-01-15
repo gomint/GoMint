@@ -15,10 +15,10 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:cod", id = 264 )
-public class ItemCod extends ItemStack implements io.gomint.inventory.item.ItemCod {
+public class ItemCod extends ItemStack< io.gomint.inventory.item.ItemCod> implements io.gomint.inventory.item.ItemCod {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.COD;
     }
 

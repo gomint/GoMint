@@ -12,7 +12,7 @@ import io.gomint.world.block.data.Facing;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:iron_chestplate", id = 307 )
-public class ItemIronChestplate extends ItemIronArmor implements io.gomint.inventory.item.ItemIronChestplate {
+public class ItemIronChestplate extends ItemIronArmor<io.gomint.inventory.item.ItemIronChestplate> implements io.gomint.inventory.item.ItemIronChestplate {
 
     @Override
     public float getReductionValue() {
@@ -22,10 +22,10 @@ public class ItemIronChestplate extends ItemIronArmor implements io.gomint.inven
     @Override
     public boolean interact(EntityPlayer entity, Facing face, Vector clickPosition, Block clickedBlock ) {
         if ( clickedBlock == null ) {
-            if ( isBetter( (ItemStack) entity.getArmorInventory().getChestplate() ) ) {
-                ItemStack old = (ItemStack) entity.getArmorInventory().getChestplate();
-                entity.getArmorInventory().setChestplate( this );
-                entity.getInventory().setItem( entity.getInventory().getItemInHandSlot(), old );
+            if ( isBetter( (ItemStack<?>) entity.getArmorInventory().chestplate() ) ) {
+                ItemStack<?> old = (ItemStack<?>) entity.getArmorInventory().chestplate();
+                entity.getArmorInventory().chestplate( this );
+                entity.getInventory().item( entity.getInventory().itemInHandSlot(), old );
             }
         }
 
@@ -33,7 +33,7 @@ public class ItemIronChestplate extends ItemIronArmor implements io.gomint.inven
     }
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.IRON_CHESTPLATE;
     }
 

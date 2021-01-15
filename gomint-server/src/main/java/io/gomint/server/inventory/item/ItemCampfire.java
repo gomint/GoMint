@@ -15,15 +15,15 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo(id = 720, sId = "minecraft:campfire")
-public class ItemCampfire extends ItemStack implements io.gomint.inventory.item.ItemCampfire {
+public class ItemCampfire extends ItemStack< io.gomint.inventory.item.ItemCampfire> implements io.gomint.inventory.item.ItemCampfire {
 
     @Override
-    public byte getMaximumAmount() {
+    public byte maximumAmount() {
         return 1;
     }
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.CAMPFIRE;
     }
 

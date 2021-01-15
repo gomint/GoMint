@@ -1,7 +1,6 @@
 package io.gomint.server.inventory;
 
 import io.gomint.inventory.InventoryType;
-import io.gomint.server.inventory.item.ItemStack;
 import io.gomint.server.network.PlayerConnection;
 import io.gomint.server.network.packet.PacketCreativeContent;
 
@@ -9,7 +8,7 @@ import io.gomint.server.network.packet.PacketCreativeContent;
  * @author geNAZt
  * @version 1.0
  */
-public class CreativeInventory extends Inventory {
+public class CreativeInventory extends Inventory<CreativeInventory> {
 
     /**
      * Construct new creative inventory
@@ -24,7 +23,7 @@ public class CreativeInventory extends Inventory {
     @Override
     public void sendContents( PlayerConnection playerConnection ) {
         PacketCreativeContent inventoryContent = new PacketCreativeContent();
-        inventoryContent.setItems(getContents());
+        inventoryContent.setItems(contents());
         playerConnection.addToSendQueue( inventoryContent );
     }
 
@@ -34,7 +33,7 @@ public class CreativeInventory extends Inventory {
     }
 
     @Override
-    public InventoryType getInventoryType() {
+    public InventoryType inventoryType() {
         return InventoryType.CREATIVE;
     }
 

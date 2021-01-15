@@ -15,10 +15,10 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:lava_cauldron", id = -210 )
-public class ItemLavaCauldron extends ItemStack implements io.gomint.inventory.item.ItemLavaCauldron {
+public class ItemLavaCauldron extends ItemStack< io.gomint.inventory.item.ItemLavaCauldron> implements io.gomint.inventory.item.ItemLavaCauldron {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.LAVA_CAULDRON;
     }
 

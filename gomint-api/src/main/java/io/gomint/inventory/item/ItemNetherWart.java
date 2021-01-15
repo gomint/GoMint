@@ -7,12 +7,13 @@ import io.gomint.GoMint;
  * @version 1.0
  * @stability 2
  */
-public interface ItemNetherWart extends ItemStack {
+public interface ItemNetherWart extends ItemStack<ItemNetherWart> {
 
     /**
      * Create a new item stack with given class and amount
      *
      * @param amount which is used for the creation
+	 * @return freshly generated item
      */
     static ItemNetherWart create( int amount ) {
         return GoMint.instance().createItemStack( ItemNetherWart.class, amount );

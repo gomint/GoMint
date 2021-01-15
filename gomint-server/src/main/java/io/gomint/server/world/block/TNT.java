@@ -35,20 +35,20 @@ public class TNT extends Block implements BlockTNT {
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 0;
     }
 
     @Override
-    public boolean beforePlacement(EntityLiving entity, ItemStack item, Facing face, Location location) {
+    public boolean beforePlacement(EntityLiving entity, ItemStack<?> item, Facing face, Location location) {
         EXPLODE.setState(this, false); // Don't explode on breakage
         return super.beforePlacement(entity, item, face, location);
     }
 
     @Override
-    public boolean interact(Entity entity, Facing face, Vector facePos, ItemStack item ) {
+    public boolean interact(Entity entity, Facing face, Vector facePos, ItemStack<?> item ) {
         if ( entity instanceof EntityPlayer && item instanceof ItemFlintAndSteel ) {
-            io.gomint.server.inventory.item.ItemStack itemStack = (io.gomint.server.inventory.item.ItemStack) item;
+            io.gomint.server.inventory.item.ItemStack<?> itemStack = (io.gomint.server.inventory.item.ItemStack<?>) item;
             itemStack.afterPlacement();
 
             prime( 4 );
@@ -97,7 +97,7 @@ public class TNT extends Block implements BlockTNT {
     }
 
     @Override
-    public List<ItemStack> drops(ItemStack itemInHand) {
+    public List<ItemStack<?>> drops(ItemStack<?> itemInHand) {
         ItemTNT item = ItemTNT.create(1);
         return Collections.singletonList(item);
     }

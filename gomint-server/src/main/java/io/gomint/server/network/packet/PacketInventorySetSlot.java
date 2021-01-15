@@ -12,7 +12,7 @@ public class PacketInventorySetSlot extends Packet {
 
     private int windowId;
     private int slot;
-    private ItemStack itemStack;
+    private ItemStack<?> itemStack;
 
     public PacketInventorySetSlot() {
         super( Protocol.PACKET_INVENTORY_SET_SLOT );
@@ -48,11 +48,11 @@ public class PacketInventorySetSlot extends Packet {
         this.slot = slot;
     }
 
-    public ItemStack getItemStack() {
+    public ItemStack<?> getItemStack() {
         return itemStack;
     }
 
-    public void setItemStack(ItemStack itemStack) {
+    public void setItemStack(ItemStack<?> itemStack) {
         this.itemStack = itemStack;
     }
 }

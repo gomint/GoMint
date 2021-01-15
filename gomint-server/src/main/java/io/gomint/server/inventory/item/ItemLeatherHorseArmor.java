@@ -15,10 +15,10 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:leather_horse_armor", id = 520 )
-public class ItemLeatherHorseArmor extends ItemStack implements io.gomint.inventory.item.ItemLeatherHorseArmor {
+public class ItemLeatherHorseArmor extends ItemStack< io.gomint.inventory.item.ItemLeatherHorseArmor> implements io.gomint.inventory.item.ItemLeatherHorseArmor {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.LEATHER_HORSE_ARMOR;
     }
 

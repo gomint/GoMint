@@ -611,9 +611,8 @@ public class PlayerConnection implements ConnectionWithState {
      * @param currentTimeMillis The time this packet arrived at the network manager
      * @param packet            The packet to handle
      */
-    @SuppressWarnings("unchecked")  // Needed for generic types not matching
-    private void handlePacket(long currentTimeMillis, Packet packet) throws Exception {
-        PacketHandler handler = this.networkManager.getPacketHandler(packet.getId() & 0xff);
+    private <T extends Packet> void handlePacket(long currentTimeMillis, T packet) throws Exception {
+        PacketHandler<T> handler = this.networkManager.getPacketHandler(packet.getId() & 0xff);
         if (handler != null) {
             LOGGER.debug("Packet: {}", packet);
             handler.handle(packet, currentTimeMillis, this);

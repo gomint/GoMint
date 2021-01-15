@@ -616,10 +616,10 @@ public class ChunkAdapter implements Chunk {
         this.block(x, y, z, layerID, implBlock.getRuntimeId());
 
         // Copy NBT
-        if (implBlock.getTileEntity() != null) {
+        if (implBlock.tileEntity() != null) {
             // Get compound
             NBTTagCompound compound = new NBTTagCompound("");
-            implBlock.getTileEntity().toCompound(compound, SerializationReason.PERSIST);
+            implBlock.tileEntity().toCompound(compound, SerializationReason.PERSIST);
 
             // Change position
             int fullX = CoordinateUtils.getChunkMin(this.x) + x;

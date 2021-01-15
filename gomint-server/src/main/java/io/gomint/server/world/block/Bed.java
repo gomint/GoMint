@@ -39,7 +39,7 @@ public class Bed extends Block implements BlockBed {
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 300;
     }
 
@@ -80,18 +80,18 @@ public class Bed extends Block implements BlockBed {
             facingToOtherHalf = facingToOtherHalf.opposite();
         }
 
-        return this.getSide(facingToOtherHalf);
+        return this.side(facingToOtherHalf);
     }
 
     @Override
     public BlockColor color() {
-        BedTileEntity tileEntity = this.getTileEntity();
+        BedTileEntity tileEntity = this.tileEntity();
         return tileEntity.getColor();
     }
 
     @Override
     public BlockBed color(BlockColor color) {
-        BedTileEntity tileEntity = this.getTileEntity();
+        BedTileEntity tileEntity = this.tileEntity();
         tileEntity.setColor(color);
 
         this.updateBlock();
@@ -125,14 +125,14 @@ public class Bed extends Block implements BlockBed {
     }
 
     @Override
-    public boolean beforePlacement(EntityLiving entity, ItemStack item, Facing face, Location location) {
+    public boolean beforePlacement(EntityLiving entity, ItemStack<?> item, Facing face, Location location) {
         // We need to check if we are placed on a solid block
         Block block = (Block) location.world().blockAt(location.toBlockPosition()).side(Facing.DOWN);
         if (block.solid()) {
             Bearing bearing = Bearing.fromAngle(entity.getYaw());
 
             // Check for other block
-            Block other = block.getSide(bearing.toDirection());
+            Block other = block.side(bearing.toDirection());
             if (!other.solid()) {
                 return false;
             }
@@ -168,10 +168,10 @@ public class Bed extends Block implements BlockBed {
     }
 
     @Override
-    public List<ItemStack> drops(ItemStack itemInHand) {
+    public List<ItemStack<?>> drops(ItemStack<?> itemInHand) {
         ItemBed bed = ItemBed.create(1);
-        bed.setColor(((BedTileEntity) this.getTileEntity()).getColor());
-        return Lists.newArrayList(bed);
+        bed.color(((BedTileEntity) this.tileEntity()).getColor());
+        return Lists.<ItemStack<?>>newArrayList(bed);
     }
 
     @Override

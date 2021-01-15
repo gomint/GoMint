@@ -27,6 +27,7 @@ public interface BlockFence extends Block {
      * Set the type of wood for this button
      *
      * @param logType type of wood
+     * @return block for chaining
      */
     BlockFence type(LogType logType);
 

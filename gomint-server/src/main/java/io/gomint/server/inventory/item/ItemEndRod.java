@@ -10,10 +10,10 @@ import io.gomint.taglib.NBTTagCompound;
  * @version 1.0
  */
 @RegisterInfo(sId = "minecraft:end_rod", id = 208)
-public class ItemEndRod extends ItemStack implements io.gomint.inventory.item.ItemEndRod {
+public class ItemEndRod extends ItemStack< io.gomint.inventory.item.ItemEndRod> implements io.gomint.inventory.item.ItemEndRod {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.END_ROD;
     }
 

@@ -19,7 +19,7 @@ import io.gomint.world.block.data.Facing;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:snowball", id = 332 )
-public class ItemSnowball extends ItemStack implements io.gomint.inventory.item.ItemSnowball {
+public class ItemSnowball extends ItemStack< io.gomint.inventory.item.ItemSnowball> implements io.gomint.inventory.item.ItemSnowball {
 
     @Override
     public boolean interact(EntityPlayer entity, Facing face, Vector clickPosition, Block clickedBlock ) {
@@ -41,12 +41,12 @@ public class ItemSnowball extends ItemStack implements io.gomint.inventory.item.
 
         if ( entity.getGamemode() != Gamemode.CREATIVE ) {
             // Subtract amount
-            int newAmount = this.getAmount() - 1;
+            int newAmount = this.amount() - 1;
             if ( newAmount == 0 ) {
-                entity.getInventory().setItem( entity.getInventory().getItemInHandSlot(), ItemAir.create( 0 ) );
+                entity.getInventory().item( entity.getInventory().itemInHandSlot(), ItemAir.create( 0 ) );
             } else {
-                this.setAmount( newAmount );
-                entity.getInventory().setItem( entity.getInventory().getItemInHandSlot(), this );
+                this.amount( newAmount );
+                entity.getInventory().item( entity.getInventory().itemInHandSlot(), this );
             }
         }
 
@@ -54,12 +54,12 @@ public class ItemSnowball extends ItemStack implements io.gomint.inventory.item.
     }
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.SNOWBALL;
     }
 
     @Override
-    public byte getMaximumAmount() {
+    public byte maximumAmount() {
         return 16;
     }
 }

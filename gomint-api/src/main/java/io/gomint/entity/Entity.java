@@ -284,6 +284,7 @@ public interface Entity {
      * Handle a entity interaction from a player
      *
      * @param player the player which has interacted with the entity
+     * @param clickVector position where this entity has been interacted at
      */
     void interact( EntityPlayer player, Vector clickVector );
 

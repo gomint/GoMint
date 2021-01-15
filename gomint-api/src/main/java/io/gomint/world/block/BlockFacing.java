@@ -20,8 +20,9 @@ public interface BlockFacing<B> extends Block {
      * Set the facing of this block
      *
      * @param facing of this block
+     * @return block for chaining
      */
-    B facing(Facing facing );
+    B facing(Facing facing);
 
     /**
      * Get the direction in which this block

@@ -12,7 +12,7 @@ import io.gomint.world.block.data.Facing;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:golden_boots", id = 317 )
-public class ItemGoldenBoots extends ItemGoldenArmor implements io.gomint.inventory.item.ItemGoldenBoots {
+public class ItemGoldenBoots extends ItemGoldenArmor<io.gomint.inventory.item.ItemGoldenBoots> implements io.gomint.inventory.item.ItemGoldenBoots {
 
     @Override
     public float getReductionValue() {
@@ -22,10 +22,10 @@ public class ItemGoldenBoots extends ItemGoldenArmor implements io.gomint.invent
     @Override
     public boolean interact(EntityPlayer entity, Facing face, Vector clickPosition, Block clickedBlock ) {
         if ( clickedBlock == null ) {
-            if ( isBetter( (ItemStack) entity.getArmorInventory().getBoots() ) ) {
-                ItemStack old = (ItemStack) entity.getArmorInventory().getBoots();
-                entity.getArmorInventory().setBoots( this );
-                entity.getInventory().setItem( entity.getInventory().getItemInHandSlot(), old );
+            if ( isBetter( (ItemStack<?>) entity.getArmorInventory().boots() ) ) {
+                ItemStack<?> old = (ItemStack<?>) entity.getArmorInventory().boots();
+                entity.getArmorInventory().boots( this );
+                entity.getInventory().item( entity.getInventory().itemInHandSlot(), old );
             }
         }
 
@@ -33,7 +33,7 @@ public class ItemGoldenBoots extends ItemGoldenArmor implements io.gomint.invent
     }
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.GOLDEN_BOOTS;
     }
 

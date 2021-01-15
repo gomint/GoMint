@@ -8,7 +8,6 @@
 package io.gomint.server.enchant;
 
 import io.gomint.enchant.Rarity;
-import io.gomint.inventory.item.ItemType;
 import io.gomint.server.inventory.item.ItemStack;
 import io.gomint.server.registry.RegisterInfo;
 
@@ -37,7 +36,7 @@ public class EnchantmentLooting extends Enchantment implements io.gomint.enchant
     }
 
     @Override
-    public boolean canBeApplied( ItemStack itemStack ) {
+    public boolean canBeApplied(ItemStack<?> itemStack ) {
         return EnchantmentHelper.canBeAppliedToSwords(itemStack);
     }
 

@@ -41,7 +41,7 @@ public abstract class Stair<B> extends Block implements BlockStair<B> {
     }
 
     @Override
-    public boolean beforePlacement(EntityLiving entity, ItemStack item, Facing face, Location location) {
+    public boolean beforePlacement(EntityLiving entity, ItemStack<?> item, Facing face, Location location) {
         DIRECTION.detectFromPlacement(this, entity, item, face);
 
         TOP.setState(this, face == Facing.DOWN);

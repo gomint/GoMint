@@ -15,7 +15,7 @@ import io.gomint.world.block.data.BlockColor;
  * @version 1.0
  * @stability 1
  */
-public interface ItemGlazedTerracotta extends ItemStack {
+public interface ItemGlazedTerracotta extends ItemStack<ItemGlazedTerracotta> {
 
     /**
      * Create a new item stack with given class and amount
@@ -30,14 +30,15 @@ public interface ItemGlazedTerracotta extends ItemStack {
      * Set the color of this dye
      *
      * @param color of dye
+     * @return item for chaining
      */
-    void setColor(BlockColor color);
+    ItemGlazedTerracotta color(BlockColor color);
 
     /**
      * Get the color of dye
      *
      * @return color of dye
      */
-    BlockColor getColor();
+    BlockColor color();
 
 }

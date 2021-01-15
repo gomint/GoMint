@@ -50,7 +50,7 @@ public class BlockPositionConverter extends BaseConverter {
      */
     @Override
     @SuppressWarnings( "unchecked" )
-    public Object fromConfig( Class type, Object object, ParameterizedType parameterizedType ) {
+    public Object fromConfig( Class<?> type, Object object, ParameterizedType parameterizedType ) {
         Map<String, Object> locationMap;
 
         if ( object instanceof Map ) {

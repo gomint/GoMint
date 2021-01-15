@@ -10,10 +10,10 @@ import io.gomint.taglib.NBTTagCompound;
  * @version 1.0
  */
 @RegisterInfo(sId = "minecraft:double_plant", id = 175)
-public class ItemSunflower extends ItemStack implements io.gomint.inventory.item.ItemSunflower {
+public class ItemSunflower extends ItemStack< io.gomint.inventory.item.ItemSunflower> implements io.gomint.inventory.item.ItemSunflower {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.SUNFLOWER;
     }
 

@@ -37,9 +37,9 @@ public class EnchantmentSilkTouch extends Enchantment implements io.gomint.encha
     }
 
     @Override
-    public boolean canBeApplied( ItemStack itemStack ) {
+    public boolean canBeApplied(ItemStack<?> itemStack ) {
         return EnchantmentHelper.canBeAppliedToTools(itemStack) ||
-            itemStack.getItemType() == ItemType.SHEARS;
+            itemStack.itemType() == ItemType.SHEARS;
     }
 
     @Override

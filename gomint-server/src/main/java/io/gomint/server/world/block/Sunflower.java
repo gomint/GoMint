@@ -23,7 +23,7 @@ public class Sunflower extends Block implements BlockSunflower {
     }
     
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 0;
     }
 

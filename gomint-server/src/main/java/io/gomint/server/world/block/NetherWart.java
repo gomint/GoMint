@@ -17,7 +17,7 @@ import io.gomint.world.block.data.Facing;
 public class NetherWart extends Block implements BlockNetherWart {
 
     @Override
-    public boolean beforePlacement(EntityLiving entity, ItemStack item, Facing face, Location location) {
+    public boolean beforePlacement(EntityLiving entity, ItemStack<?> item, Facing face, Location location) {
         Block down = this.side(Facing.DOWN);
         return down.solid();
     }

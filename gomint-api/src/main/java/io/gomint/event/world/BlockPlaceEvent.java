@@ -21,7 +21,7 @@ public class BlockPlaceEvent extends CancellablePlayerEvent {
 
     private final Block placedAgainst;
     private final Block shouldReplace;
-    private final ItemStack item;
+    private final ItemStack<?> item;
     private final Block replacingBlock;
 
     /**
@@ -33,7 +33,7 @@ public class BlockPlaceEvent extends CancellablePlayerEvent {
      * @param itemStack      which should replace above block
      * @param replacingBlock get the block which will replace the shouldReplace block
      */
-    public BlockPlaceEvent( EntityPlayer player, Block placedAgainst, Block shouldReplace, ItemStack itemStack, Block replacingBlock ) {
+    public BlockPlaceEvent( EntityPlayer player, Block placedAgainst, Block shouldReplace, ItemStack<?> itemStack, Block replacingBlock ) {
         super( player );
         this.placedAgainst = placedAgainst;
         this.shouldReplace = shouldReplace;
@@ -75,7 +75,7 @@ public class BlockPlaceEvent extends CancellablePlayerEvent {
      *
      * @return item which should replace the block
      */
-    public ItemStack getItem() {
+    public ItemStack<?> getItem() {
         return this.item;
     }
 

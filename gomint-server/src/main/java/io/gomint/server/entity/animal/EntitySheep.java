@@ -86,12 +86,12 @@ public class EntitySheep extends EntityAgeableAnimal implements io.gomint.entity
 
         // Drop items
         ItemWool wool = ItemWool.create(1);
-        wool.setColor(BlockColor.WHITE); // TODO: Implement sheep colors
+        wool.color(BlockColor.WHITE); // TODO: Implement sheep colors
 
         this.world.dropItem(this.getLocation(), wool);
 
         int amount = 1 + ThreadLocalRandom.current().nextInt(2);
-        ItemStack mutton;
+        ItemStack<?> mutton;
 
         if (this.lastDamageSource == EntityDamageEvent.DamageSource.ON_FIRE) {
             mutton = ItemCookedMutton.create(amount);

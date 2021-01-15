@@ -9,10 +9,10 @@ import io.gomint.taglib.NBTTagCompound;
  * @version 1.0
  */
 @RegisterInfo(sId = "minecraft:lit_pumpkin", id = 91)
-public class ItemJackOLantern extends ItemStack implements io.gomint.inventory.item.ItemJackOLantern {
+public class ItemJackOLantern extends ItemStack< io.gomint.inventory.item.ItemJackOLantern> implements io.gomint.inventory.item.ItemJackOLantern {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.JACK_O_LANTERN;
     }
 

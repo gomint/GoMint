@@ -13,7 +13,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:stone_sword", id = 272 )
-public class ItemStoneSword extends ItemReduceTierSpecial implements io.gomint.inventory.item.ItemStoneSword, ItemSword {
+public class ItemStoneSword extends ItemReduceTierSpecial<io.gomint.inventory.item.ItemStoneSword> implements io.gomint.inventory.item.ItemStoneSword, ItemSword {
 
     @Override
     public void gotInHand( EntityPlayer player ) {
@@ -30,12 +30,12 @@ public class ItemStoneSword extends ItemReduceTierSpecial implements io.gomint.i
     }
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.STONE_SWORD;
     }
 
     @Override
-    public int getEnchantAbility() {
+    public int enchantAbility() {
         return 5;
     }
 

@@ -20,7 +20,7 @@ public class Clay extends Block implements BlockClay {
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 900;
     }
 
@@ -40,7 +40,7 @@ public class Clay extends Block implements BlockClay {
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return ToolPresets.SHOVEL;
     }
 }

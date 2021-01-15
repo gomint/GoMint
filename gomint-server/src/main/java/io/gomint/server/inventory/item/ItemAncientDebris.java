@@ -15,10 +15,10 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:ancient_debris", id = -271 )
-public class ItemAncientDebris extends ItemStack implements io.gomint.inventory.item.ItemAncientDebris {
+public class ItemAncientDebris extends ItemStack< io.gomint.inventory.item.ItemAncientDebris> implements io.gomint.inventory.item.ItemAncientDebris {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.ANCIENT_DEBRIS;
     }
 

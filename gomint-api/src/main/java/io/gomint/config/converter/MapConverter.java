@@ -22,7 +22,7 @@ import java.util.Map;
  */
 public class MapConverter implements Converter {
 
-    private InternalConverter internalConverter;
+    private final InternalConverter internalConverter;
 
     public MapConverter( InternalConverter internalConverter ) {
         this.internalConverter = internalConverter;
@@ -34,14 +34,14 @@ public class MapConverter implements Converter {
     @Override
     @SuppressWarnings( "unchecked" )
     public Object toConfig( Class<?> type, Object object, ParameterizedType genericType ) throws Exception {
-        Map<Object, Object> result = (Map) object;
+        Map<Object, Object> result = (Map<Object, Object>) object;
 
         for ( Map.Entry<Object, Object> entry : result.entrySet() ) {
             if ( entry.getValue() == null ) {
                 continue;
             }
 
-            Class clazz = entry.getValue().getClass();
+            Class<?> clazz = entry.getValue().getClass();
             Converter converter = this.internalConverter.getConverter( clazz );
             Object value = entry.getValue();
 
@@ -62,28 +62,28 @@ public class MapConverter implements Converter {
      */
     @Override
     @SuppressWarnings( "unchecked" )
-    public Object fromConfig( Class type, Object object, ParameterizedType genericType ) throws Exception {
+    public Object fromConfig( Class<?> type, Object object, ParameterizedType genericType ) throws Exception {
         if ( genericType != null ) {
-            Map result = new HashMap();
+            Map<Object, Object> result = new HashMap<>();
 
             try {
-                result = (Map) ( (Class) genericType.getRawType() ).getDeclaredConstructor().newInstance();
+                result = (Map<Object, Object>) ( (Class<?>) genericType.getRawType() ).getDeclaredConstructor().newInstance();
             } catch ( InstantiationException ignored ) {
 
             }
 
             if ( genericType.getActualTypeArguments().length == 2 ) {
-                Class keyClass = (Class) genericType.getActualTypeArguments()[0];
+                Class<?> keyClass = (Class<?>) genericType.getActualTypeArguments()[0];
 
                 if ( object == null ) {
                     object = new HashMap<>();
                 }
 
-                Map<?, ?> map = object instanceof Map ? (Map) object : ( (ConfigSection) object ).getRawMap();
+                Map<?, ?> map = object instanceof Map ? (Map<?,?>) object : ( (ConfigSection) object ).getRawMap();
 
                 for ( Map.Entry<?, ?> entry : map.entrySet() ) {
                     Object key;
-                    Class clazz;
+                    Class<?> clazz;
 
                     if ( keyClass.equals( Integer.class ) && !( entry.getKey() instanceof Integer ) ) {
                         key = Integer.valueOf( (String) entry.getKey() );
@@ -102,9 +102,9 @@ public class MapConverter implements Converter {
                     Type argument = genericType.getActualTypeArguments()[1];
 
                     if ( argument instanceof ParameterizedType ) {
-                        clazz = (Class) ( (ParameterizedType) argument ).getRawType();
+                        clazz = (Class<?>) ( (ParameterizedType) argument ).getRawType();
                     } else {
-                        clazz = (Class) argument;
+                        clazz = (Class<?>) argument;
                     }
 
                     // Ternary operators have been stripped to if statements for readability purposes
@@ -124,13 +124,13 @@ public class MapConverter implements Converter {
                     result.put( key, value );
                 }
             } else {
-                Converter converter = this.internalConverter.getConverter( (Class) genericType.getRawType() );
+                Converter converter = this.internalConverter.getConverter( (Class<?>) genericType.getRawType() );
 
                 if ( converter != null ) {
-                    return converter.fromConfig( (Class) genericType.getRawType(), object, null );
+                    return converter.fromConfig( (Class<?>) genericType.getRawType(), object, null );
                 }
 
-                return object instanceof Map ? (Map) object : ( (ConfigSection) object ).getRawMap();
+                return object instanceof Map ? (Map<?,?>) object : ( (ConfigSection) object ).getRawMap();
             }
 
             return result;

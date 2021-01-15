@@ -25,7 +25,7 @@ public class StainedGlassPane extends Block implements BlockStainedGlassPane {
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 450;
     }
 
@@ -40,7 +40,7 @@ public class StainedGlassPane extends Block implements BlockStainedGlassPane {
     }
 
     @Override
-    public List<ItemStack> drops(ItemStack itemInHand) {
+    public List<ItemStack<?>> drops(ItemStack<?> itemInHand) {
         return new ArrayList<>();
     }
 

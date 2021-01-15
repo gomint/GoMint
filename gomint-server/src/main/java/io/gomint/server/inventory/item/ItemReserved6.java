@@ -9,10 +9,10 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo(sId = "minecraft:reserved6", id = 255)
-public class ItemReserved6 extends ItemStack {
+public class ItemReserved6 extends ItemStack<ItemReserved6> {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.AIR;
     }
 

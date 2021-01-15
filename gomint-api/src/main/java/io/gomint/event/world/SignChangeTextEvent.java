@@ -24,10 +24,10 @@ import java.util.List;
  */
 public class SignChangeTextEvent extends CancellablePlayerEvent {
 
-    private final BlockSign sign;
-    private List<String> lines;
+    private final BlockSign<?> sign;
+    private final List<String> lines;
 
-    public SignChangeTextEvent(EntityPlayer player, BlockSign sign, List<String> lines) {
+    public SignChangeTextEvent(EntityPlayer player, BlockSign<?> sign, List<String> lines) {
         super(player);
 
         this.sign = sign;
@@ -52,7 +52,7 @@ public class SignChangeTextEvent extends CancellablePlayerEvent {
      *
      * @return the sign block which should be changed
      */
-    public BlockSign getSign() {
+    public BlockSign<?> getSign() {
         return this.sign;
     }
 
@@ -117,4 +117,5 @@ public class SignChangeTextEvent extends CancellablePlayerEvent {
         this.lines.clear();
         this.lines.addAll(lines);
     }
+
 }

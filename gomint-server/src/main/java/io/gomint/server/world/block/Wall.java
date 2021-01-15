@@ -158,7 +158,7 @@ public class Wall extends Block implements BlockWall {
     private void update() {
         // Check if we have others around and update connections if needed
         for (Direction value : Direction.values()) {
-            Block block = this.getSide(value);
+            Block block = this.side(value);
 
             connection(value, ConnectionType.NONE);
             if (block.solid()) {
@@ -180,7 +180,7 @@ public class Wall extends Block implements BlockWall {
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 3000;
     }
 
@@ -205,7 +205,7 @@ public class Wall extends Block implements BlockWall {
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return ToolPresets.PICKAXE;
     }
 
@@ -302,7 +302,7 @@ public class Wall extends Block implements BlockWall {
     }
 
     @Override
-    public boolean beforePlacement(EntityLiving entity, ItemStack item, Facing face, Location location) {
+    public boolean beforePlacement(EntityLiving entity, ItemStack<?> item, Facing face, Location location) {
         this.update();
         return super.beforePlacement(entity, item, face, location);
     }

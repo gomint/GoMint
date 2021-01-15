@@ -28,7 +28,7 @@ public class FlowerPot extends Block implements BlockFlowerPot {
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 0;
     }
 

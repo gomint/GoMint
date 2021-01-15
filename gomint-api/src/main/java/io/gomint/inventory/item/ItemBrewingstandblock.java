@@ -14,12 +14,13 @@ import io.gomint.GoMint;
  * @version 1.0
  * @stability 1
  */
-public interface ItemBrewingstandblock extends ItemStack {
+public interface ItemBrewingstandblock extends ItemStack<ItemBrewingstandblock> {
 
     /**
      * Create a new item stack with given class and amount
      *
      * @param amount which is used for the creation
+	 * @return freshly generated item
      */
     static ItemBrewingstandblock create( int amount ) {
         return GoMint.instance().createItemStack( ItemBrewingstandblock.class, amount );

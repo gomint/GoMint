@@ -15,10 +15,10 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:lodestone_compass", id = 590 )
-public class ItemLodestoneCompass extends ItemStack implements io.gomint.inventory.item.ItemLodestoneCompass {
+public class ItemLodestoneCompass extends ItemStack< io.gomint.inventory.item.ItemLodestoneCompass> implements io.gomint.inventory.item.ItemLodestoneCompass {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.LODESTONE_COMPASS;
     }
 

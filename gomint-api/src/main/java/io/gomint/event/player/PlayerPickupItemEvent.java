@@ -21,9 +21,9 @@ import java.util.Objects;
 public class PlayerPickupItemEvent extends CancellablePlayerEvent {
 
     private final Entity holdingEntity;
-    private final ItemStack itemStack;
+    private final ItemStack<?> itemStack;
 
-    public PlayerPickupItemEvent( EntityPlayer player, Entity holdingEntity, ItemStack itemStack ) {
+    public PlayerPickupItemEvent( EntityPlayer player, Entity holdingEntity, ItemStack<?> itemStack ) {
         super( player );
         this.itemStack = itemStack;
         this.holdingEntity = holdingEntity;
@@ -34,7 +34,7 @@ public class PlayerPickupItemEvent extends CancellablePlayerEvent {
      *
      * @return item stack which should be picked up
      */
-    public ItemStack getItemStack() {
+    public ItemStack<?> getItemStack() {
         return this.itemStack;
     }
 

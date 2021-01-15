@@ -36,7 +36,7 @@ public class EnchantmentFrostWalker extends Enchantment implements io.gomint.enc
     }
 
     @Override
-    public boolean canBeApplied(ItemStack itemStack) {
+    public boolean canBeApplied(ItemStack<?> itemStack) {
         return EnchantmentHelper.canBeAppliedToBoots(itemStack);
     }
 

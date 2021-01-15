@@ -10,10 +10,10 @@ import io.gomint.taglib.NBTTagCompound;
  * @version 1.0
  */
 @RegisterInfo(sId = "minecraft:tripwire_hook", id = 131)
-public class ItemTripwireHook extends ItemStack implements io.gomint.inventory.item.ItemTripwireHook {
+public class ItemTripwireHook extends ItemStack< io.gomint.inventory.item.ItemTripwireHook> implements io.gomint.inventory.item.ItemTripwireHook {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.TRIPWIRE_HOOK;
     }
 

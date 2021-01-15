@@ -15,10 +15,10 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:jungle_wall_sign", id = -189 )
-public class ItemJungleWallSign extends ItemStack implements io.gomint.inventory.item.ItemJungleWallSign {
+public class ItemJungleWallSign extends ItemStack< io.gomint.inventory.item.ItemJungleWallSign> implements io.gomint.inventory.item.ItemJungleWallSign {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.JUNGLE_WALL_SIGN;
     }
 

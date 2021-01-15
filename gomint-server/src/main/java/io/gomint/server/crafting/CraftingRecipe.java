@@ -20,21 +20,21 @@ import java.util.*;
  */
 public abstract class CraftingRecipe extends Recipe {
 
-    private final ItemStack[] outcome;
+    private final ItemStack<?>[] outcome;
 
-    CraftingRecipe( ItemStack[] outcome, UUID uuid, int priority ) {
+    CraftingRecipe( ItemStack<?>[] outcome, UUID uuid, int priority ) {
         super( uuid, priority );
         this.outcome = outcome;
     }
 
     @Override
-    public Collection<ItemStack> createResult() {
+    public Collection<ItemStack<?>> createResult() {
         if ( this.outcome.length == 1 ) {
-            return Collections.singletonList( ( (io.gomint.server.inventory.item.ItemStack) this.outcome[0] ).clone() );
+            return Collections.singletonList( ( (io.gomint.server.inventory.item.ItemStack<?>) this.outcome[0] ).clone() );
         } else {
-            List<ItemStack> list = new ArrayList<>();
-            for ( ItemStack stack : this.outcome ) {
-                list.add( ( (io.gomint.server.inventory.item.ItemStack) stack ).clone() );
+            List<ItemStack<?>> list = new ArrayList<>();
+            for ( ItemStack<?> stack : this.outcome ) {
+                list.add( ( (io.gomint.server.inventory.item.ItemStack<?>) stack ).clone() );
             }
 
             return list;
@@ -48,18 +48,18 @@ public abstract class CraftingRecipe extends Recipe {
      * @param invItem of the inventory
      * @return
      */
-    protected boolean canBeUsedForCrafting( ItemStack recipeItem, ItemStack invItem ) {
-        io.gomint.server.inventory.item.ItemStack rI = (io.gomint.server.inventory.item.ItemStack) recipeItem;
-        io.gomint.server.inventory.item.ItemStack iI = (io.gomint.server.inventory.item.ItemStack) invItem;
+    protected boolean canBeUsedForCrafting( ItemStack<?> recipeItem, ItemStack<?> invItem ) {
+        io.gomint.server.inventory.item.ItemStack<?> rI = (io.gomint.server.inventory.item.ItemStack<?>) recipeItem;
+        io.gomint.server.inventory.item.ItemStack<?> iI = (io.gomint.server.inventory.item.ItemStack<?>) invItem;
 
-        String recipeMaterial = rI.getMaterial();
-        String inputMaterial = iI.getMaterial();
+        String recipeMaterial = rI.material();
+        String inputMaterial = iI.material();
 
         return recipeMaterial.equals(inputMaterial) &&
-            ( rI.getData() == -1 || rI.getData() == iI.getData() );
+            ( rI.data() == -1 || rI.data() == iI.data() );
     }
 
-    public ItemStack[] getOutcome() {
+    public ItemStack<?>[] getOutcome() {
         return outcome;
     }
 

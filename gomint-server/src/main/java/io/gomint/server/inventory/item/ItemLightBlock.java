@@ -17,29 +17,30 @@ import io.gomint.world.block.BlockLightBlock;
  * @version 1.0
  */
 @RegisterInfo(sId = "minecraft:light_block", id = -215)
-public class ItemLightBlock extends ItemStack implements io.gomint.inventory.item.ItemLightBlock {
+public class ItemLightBlock extends ItemStack< io.gomint.inventory.item.ItemLightBlock> implements io.gomint.inventory.item.ItemLightBlock {
 
     private static final float DIVIDER = 1f / 15;
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.LIGHT_BLOCK;
     }
 
     @Override
-    public float getIntensity() {
-        return this.getData() * DIVIDER;
+    public float intensity() {
+        return this.data() * DIVIDER;
     }
 
     @Override
-    public void setIntensity(float intensity) {
-        this.setData((short) (intensity * 15));
+    public ItemLightBlock intensity(float intensity) {
+        this.data((short) (intensity * 15));
+        return this;
     }
 
     @Override
-    public Block getBlock() {
-        BlockLightBlock block = (BlockLightBlock) super.getBlock();
-        block.intensity(this.getIntensity());
+    public Block block() {
+        BlockLightBlock block = (BlockLightBlock) super.block();
+        block.intensity(this.intensity());
         return block;
     }
 

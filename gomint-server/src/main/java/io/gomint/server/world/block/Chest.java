@@ -1,5 +1,6 @@
 package io.gomint.server.world.block;
 
+import io.gomint.inventory.ChestInventory;
 import io.gomint.inventory.Inventory;
 import io.gomint.server.registry.RegisterInfo;
 import io.gomint.world.block.BlockChest;
@@ -30,7 +31,7 @@ public class Chest extends ChestBase<BlockChest> implements BlockChest {
     }
 
     @Override
-    public Inventory inventory() {
+    public Inventory<ChestInventory> inventory() {
         return super.inventory();
     }
 

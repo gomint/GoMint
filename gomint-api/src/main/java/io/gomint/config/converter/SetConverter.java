@@ -35,7 +35,7 @@ public class SetConverter implements Converter {
     @SuppressWarnings( "unchecked" )
     public Object toConfig( Class<?> type, Object object, ParameterizedType parameterizedType ) throws Exception {
         Set<Object> values = (Set<Object>) object;
-        List result = new ArrayList();
+        List<Object> result = new ArrayList<>();
 
         for ( Object value : values ) {
             Converter converter = this.internalConverter.getConverter( value.getClass() );
@@ -55,7 +55,7 @@ public class SetConverter implements Converter {
      */
     @Override
     @SuppressWarnings( "unchecked" )
-    public Object fromConfig( Class type, Object object, ParameterizedType parameterizedType ) throws Exception {
+    public Object fromConfig( Class<?> type, Object object, ParameterizedType parameterizedType ) throws Exception {
         List<Object> values = (List<Object>) object;
         Set<Object> result = new HashSet<>();
 
@@ -66,7 +66,7 @@ public class SetConverter implements Converter {
         }
 
         if ( parameterizedType != null && parameterizedType.getActualTypeArguments()[0] instanceof Class ) {
-            Class actualTypeArgument = (Class) parameterizedType.getActualTypeArguments()[0];
+            Class<?> actualTypeArgument = (Class<?>) parameterizedType.getActualTypeArguments()[0];
             Converter converter = this.internalConverter.getConverter( actualTypeArgument );
 
             if ( converter != null ) {

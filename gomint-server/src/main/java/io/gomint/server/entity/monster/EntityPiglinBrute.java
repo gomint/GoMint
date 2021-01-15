@@ -62,8 +62,8 @@ public class EntityPiglinBrute extends EntityLiving implements io.gomint.entity.
         // Item drop
         ThreadLocalRandom random = ThreadLocalRandom.current();
         if (random.nextDouble() <= 0.085) {
-            ItemStack goldenAxe = (ItemStack) ItemGoldenAxe.create(1);
-            goldenAxe.setDamage(1 + random.nextInt(goldenAxe.getMaxDamage()));
+            ItemStack<?> goldenAxe = (ItemStack<?>) ItemGoldenAxe.create(1);
+            goldenAxe.damage(1 + random.nextInt(goldenAxe.maxDamage()));
             this.world.dropItem(this.getLocation(), goldenAxe);
         }
         

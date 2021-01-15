@@ -69,7 +69,7 @@ public class EntityPanda extends EntityAgeableAnimal implements io.gomint.entity
         Entity lastDamageEntity = this.lastDamageEntity;
         int looting = 0;
         if (lastDamageEntity instanceof EntityHuman) {
-            Enchantment enchantment = ((EntityHuman) lastDamageEntity).getInventory().getItemInHand().getEnchantment(EnchantmentLooting.class);
+            Enchantment enchantment = ((EntityHuman) lastDamageEntity).getInventory().itemInHand().enchantment(EnchantmentLooting.class);
             if (enchantment != null) {
                 looting = enchantment.getLevel();
             }
@@ -79,7 +79,7 @@ public class EntityPanda extends EntityAgeableAnimal implements io.gomint.entity
         int amount = random.nextInt(3 + looting);
         Location location = this.getLocation();
         if (amount > 0) {
-            ItemStack drop = ItemBamboo.create(amount);
+            ItemStack<?> drop = ItemBamboo.create(amount);
             this.world.dropItem(location, drop);
         }
 

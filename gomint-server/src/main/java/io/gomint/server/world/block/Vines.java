@@ -42,7 +42,7 @@ public class Vines extends Block implements BlockVines {
     private static final AttachingBlockState ATTACHED_SIDES = new AttachingBlockState(() -> DIRECTION_KEY);
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 300;
     }
 
@@ -109,7 +109,7 @@ public class Vines extends Block implements BlockVines {
     }
 
     @Override
-    public List<ItemStack> drops(ItemStack itemInHand) {
+    public List<ItemStack<?>> drops(ItemStack<?> itemInHand) {
         if (isCorrectTool(itemInHand)) {
             return new ArrayList<>() {{
                 add(ItemVines.create(1));
@@ -120,14 +120,14 @@ public class Vines extends Block implements BlockVines {
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return new Class[]{
             ItemShears.class
         };
     }
 
     @Override
-    public boolean beforePlacement(EntityLiving entity, ItemStack item, Facing face, Location location) {
+    public boolean beforePlacement(EntityLiving entity, ItemStack<?> item, Facing face, Location location) {
         boolean ok = face != Facing.UP && face != Facing.DOWN;
         if (ok) {
             ATTACHED_SIDES.detectFromPlacement(this, entity, item, face);

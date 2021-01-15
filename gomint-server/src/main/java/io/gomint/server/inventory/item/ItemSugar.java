@@ -9,12 +9,12 @@ import io.gomint.taglib.NBTTagCompound;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:sugar", id = 353 )
- public class ItemSugar extends ItemStack implements io.gomint.inventory.item.ItemSugar {
+ public class ItemSugar extends ItemStack< io.gomint.inventory.item.ItemSugar> implements io.gomint.inventory.item.ItemSugar {
 
 
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.SUGAR;
     }
 

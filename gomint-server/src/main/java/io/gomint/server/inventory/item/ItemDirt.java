@@ -10,10 +10,10 @@ import io.gomint.taglib.NBTTagCompound;
  * @version 1.0
  */
 @RegisterInfo(sId = "minecraft:dirt", id = 3)
-public class ItemDirt extends ItemStack implements io.gomint.inventory.item.ItemDirt {
+public class ItemDirt extends ItemStack< io.gomint.inventory.item.ItemDirt> implements io.gomint.inventory.item.ItemDirt {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.DIRT;
     }
 

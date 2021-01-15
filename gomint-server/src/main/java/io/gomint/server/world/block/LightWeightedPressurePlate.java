@@ -24,7 +24,7 @@ public class LightWeightedPressurePlate extends Block implements BlockLightWeigh
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 750;
     }
 
@@ -66,7 +66,7 @@ public class LightWeightedPressurePlate extends Block implements BlockLightWeigh
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return ToolPresets.PICKAXE;
     }
 

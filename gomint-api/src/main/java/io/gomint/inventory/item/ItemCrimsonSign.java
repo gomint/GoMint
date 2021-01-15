@@ -14,14 +14,15 @@ import io.gomint.GoMint;
  * @version 1.0
  * @stability 1
  */
-public interface ItemCrimsonSign extends ItemStack {
+public interface ItemCrimsonSign extends ItemStack<ItemCrimsonSign> {
 
     /**
      * Create a new item stack with given class and amount
      *
      * @param amount which is used for the creation
+	 * @return freshly generated item
      */
-    static ItemCrimsonSign create( int amount ) {
+    static ItemCrimsonSign create( int amount ) {	
         return GoMint.instance().createItemStack( ItemCrimsonSign.class, amount );
     }
 

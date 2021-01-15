@@ -97,7 +97,7 @@ public class StoneStair extends Stair<BlockStoneStair> implements BlockStoneStai
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 3000;
     }
 
@@ -117,7 +117,7 @@ public class StoneStair extends Stair<BlockStoneStair> implements BlockStoneStai
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return ToolPresets.PICKAXE;
     }
 

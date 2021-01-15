@@ -20,7 +20,7 @@ public class NetherQuartzOre extends Block implements BlockNetherQuartzOre {
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 4500;
     }
 
@@ -40,7 +40,7 @@ public class NetherQuartzOre extends Block implements BlockNetherQuartzOre {
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return ToolPresets.PICKAXE;
     }
 

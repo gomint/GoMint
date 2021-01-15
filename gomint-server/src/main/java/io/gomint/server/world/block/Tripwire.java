@@ -37,7 +37,7 @@ public class Tripwire extends Block implements BlockTripwire {
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 0;
     }
 

@@ -10,10 +10,10 @@ import io.gomint.taglib.NBTTagCompound;
  * @version 1.0
  */
 @RegisterInfo(sId = "minecraft:dispenser", id = 23)
-public class ItemDispenser extends ItemStack implements io.gomint.inventory.item.ItemDispenser {
+public class ItemDispenser extends ItemStack< io.gomint.inventory.item.ItemDispenser> implements io.gomint.inventory.item.ItemDispenser {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.DISPENSER;
     }
 

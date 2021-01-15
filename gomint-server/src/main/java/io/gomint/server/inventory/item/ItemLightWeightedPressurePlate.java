@@ -10,10 +10,10 @@ import io.gomint.taglib.NBTTagCompound;
  * @version 1.0
  */
 @RegisterInfo(sId = "minecraft:light_weighted_pressure_plate", id = 147)
-public class ItemLightWeightedPressurePlate extends ItemStack implements io.gomint.inventory.item.ItemLightWeightedPressurePlate {
+public class ItemLightWeightedPressurePlate extends ItemStack< io.gomint.inventory.item.ItemLightWeightedPressurePlate> implements io.gomint.inventory.item.ItemLightWeightedPressurePlate {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.LIGHT_WEIGHTED_PRESSURE_PLATE;
     }
 

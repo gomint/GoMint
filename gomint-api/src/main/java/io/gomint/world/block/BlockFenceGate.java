@@ -32,8 +32,9 @@ public interface BlockFenceGate extends BlockDirection<BlockFenceGate> {
      * Set the type of wood for this fence gate
      *
      * @param logType type of wood
+     * @return block for chaining
      */
-    BlockFenceGate type(LogType logType );
+    BlockFenceGate type(LogType logType);
 
     /**
      * Get the type of wood from which this fence gate has been made

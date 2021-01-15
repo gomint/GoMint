@@ -37,7 +37,7 @@ public class ChemistryTable extends Block {
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 12500;
     }
 

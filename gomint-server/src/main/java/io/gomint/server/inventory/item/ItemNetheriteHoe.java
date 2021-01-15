@@ -18,7 +18,7 @@ import io.gomint.world.block.data.Facing;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:netherite_hoe", id = 747 )
-public class ItemNetheriteHoe extends ItemReduceTierNetherite implements io.gomint.inventory.item.ItemNetheriteHoe {
+public class ItemNetheriteHoe extends ItemReduceTierNetherite<io.gomint.inventory.item.ItemNetheriteHoe> implements io.gomint.inventory.item.ItemNetheriteHoe {
 
     @Override
     public boolean interact(EntityPlayer entity, Facing face, Vector clickPosition, Block clickedBlock ) {
@@ -46,7 +46,7 @@ public class ItemNetheriteHoe extends ItemReduceTierNetherite implements io.gomi
     }
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.NETHERITE_HOE;
     }
 }

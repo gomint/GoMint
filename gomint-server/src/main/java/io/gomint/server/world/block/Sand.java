@@ -45,7 +45,7 @@ public class Sand extends Fallable implements BlockSand {
     });
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 750;
     }
 
@@ -55,7 +55,7 @@ public class Sand extends Fallable implements BlockSand {
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return ToolPresets.SHOVEL;
     }
 
@@ -82,9 +82,9 @@ public class Sand extends Fallable implements BlockSand {
     }
 
     @Override
-    public List<ItemStack> drops(ItemStack itemInHand) {
+    public List<ItemStack<?>> drops(ItemStack<?> itemInHand) {
         ItemSand sand = ItemSand.create(1);
-        sand.setType(this.type());
+        sand.type(this.type());
         return Collections.singletonList(sand);
     }
 

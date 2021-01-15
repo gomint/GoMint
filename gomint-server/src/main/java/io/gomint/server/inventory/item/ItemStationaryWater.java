@@ -10,10 +10,10 @@ import io.gomint.taglib.NBTTagCompound;
  * @version 1.0
  */
 @RegisterInfo(sId = "minecraft:water", id = 9)
-public class ItemStationaryWater extends ItemStack implements io.gomint.inventory.item.ItemStationaryWater {
+public class ItemStationaryWater extends ItemStack< io.gomint.inventory.item.ItemStationaryWater> implements io.gomint.inventory.item.ItemStationaryWater {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.STATIONARY_WATER;
     }
 

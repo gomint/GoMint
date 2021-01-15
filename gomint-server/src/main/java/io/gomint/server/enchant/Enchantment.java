@@ -68,7 +68,7 @@ public abstract class Enchantment implements io.gomint.enchant.Enchantment {
      * @param itemStack which wants this enchantment applied
      * @return true when it can be applied, false otherwise
      */
-    public boolean canBeApplied( ItemStack itemStack ) {
+    public boolean canBeApplied(ItemStack<?> itemStack ) {
         return true;
     }
 

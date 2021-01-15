@@ -14,14 +14,15 @@ import io.gomint.GoMint;
  * @version 1.0
  * @stability 3
  */
-public interface ItemShulkerBox extends ItemStack {
+public interface ItemShulkerBox extends ItemStack<ItemShulkerBox> {
 
     /**
      * Create a new item stack with given class and amount
      *
      * @param amount which is used for the creation
+	 * @return freshly generated item
      */
-    static ItemShulkerBox create( int amount ) {
+    static ItemShulkerBox create( int amount ) {	
         return GoMint.instance().createItemStack( ItemShulkerBox.class, amount );
     }
 

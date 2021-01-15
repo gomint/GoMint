@@ -15,10 +15,10 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:charcoal", id = 303 )
-public class ItemCharcoal extends ItemStack implements io.gomint.inventory.item.ItemCharcoal {
+public class ItemCharcoal extends ItemStack< io.gomint.inventory.item.ItemCharcoal> implements io.gomint.inventory.item.ItemCharcoal {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.CHARCOAL;
     }
 

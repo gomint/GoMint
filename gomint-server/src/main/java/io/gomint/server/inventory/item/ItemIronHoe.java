@@ -18,7 +18,7 @@ import io.gomint.world.block.data.Facing;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:iron_hoe", id = 292 )
-public class ItemIronHoe extends ItemReduceTierIron implements io.gomint.inventory.item.ItemIronHoe {
+public class ItemIronHoe extends ItemReduceTierIron<io.gomint.inventory.item.ItemIronHoe> implements io.gomint.inventory.item.ItemIronHoe {
 
     @Override
     public boolean interact(EntityPlayer entity, Facing face, Vector clickPosition, Block clickedBlock ) {
@@ -46,7 +46,7 @@ public class ItemIronHoe extends ItemReduceTierIron implements io.gomint.invento
     }
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.IRON_HOE;
     }
 

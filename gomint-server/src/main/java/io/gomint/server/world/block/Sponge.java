@@ -18,7 +18,7 @@ public class Sponge extends Block implements BlockSponge {
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 900;
     }
 

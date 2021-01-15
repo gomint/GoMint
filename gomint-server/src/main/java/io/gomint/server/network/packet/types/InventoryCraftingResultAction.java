@@ -18,7 +18,7 @@ import java.util.Arrays;
  */
 public class InventoryCraftingResultAction implements InventoryAction {
 
-    private ItemStack[] resultItems;
+    private ItemStack<?>[] resultItems;
     private byte amount;
 
     @Override

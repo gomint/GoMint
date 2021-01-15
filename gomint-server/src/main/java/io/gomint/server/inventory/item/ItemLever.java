@@ -10,10 +10,10 @@ import io.gomint.taglib.NBTTagCompound;
  * @version 1.0
  */
 @RegisterInfo(sId = "minecraft:lever", id = 69)
-public class ItemLever extends ItemStack implements io.gomint.inventory.item.ItemLever {
+public class ItemLever extends ItemStack< io.gomint.inventory.item.ItemLever> implements io.gomint.inventory.item.ItemLever {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.LEVER;
     }
 

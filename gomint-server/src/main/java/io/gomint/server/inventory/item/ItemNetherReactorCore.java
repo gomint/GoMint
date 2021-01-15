@@ -9,10 +9,10 @@ import io.gomint.taglib.NBTTagCompound;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:netherreactor", id = 247 )
- public class ItemNetherReactorCore extends ItemStack implements io.gomint.inventory.item.ItemNetherReactorCore {
+ public class ItemNetherReactorCore extends ItemStack< io.gomint.inventory.item.ItemNetherReactorCore> implements io.gomint.inventory.item.ItemNetherReactorCore {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.NETHER_REACTOR_CORE;
     }
 

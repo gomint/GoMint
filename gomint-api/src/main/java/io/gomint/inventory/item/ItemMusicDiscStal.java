@@ -14,14 +14,15 @@ import io.gomint.GoMint;
  * @version 1.0
  * @stability 1
  */
-public interface ItemMusicDiscStal extends ItemStack {
+public interface ItemMusicDiscStal extends ItemStack<ItemMusicDiscStal> {
 
     /**
      * Create a new item stack with given class and amount
      *
      * @param amount which is used for the creation
+	 * @return freshly generated item
      */
-    static ItemMusicDiscStal create( int amount ) {
+    static ItemMusicDiscStal create( int amount ) {	
         return GoMint.instance().createItemStack( ItemMusicDiscStal.class, amount );
     }
 

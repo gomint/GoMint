@@ -20,8 +20,9 @@ public interface BlockGlazedTerracotta extends BlockFacing<BlockGlazedTerracotta
      * Set the color of this block
      *
      * @param color of this block
+     * @return block for chaining
      */
-    BlockGlazedTerracotta color(BlockColor color );
+    BlockGlazedTerracotta color(BlockColor color);
 
     /**
      * Get the color of this block

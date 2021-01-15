@@ -15,10 +15,10 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:chemical_heat", id = 192 )
-public class ItemChemicalHeat extends ItemStack implements io.gomint.inventory.item.ItemChemicalHeat {
+public class ItemChemicalHeat extends ItemStack< io.gomint.inventory.item.ItemChemicalHeat> implements io.gomint.inventory.item.ItemChemicalHeat {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.CHEMICAL_HEAT;
     }
 

@@ -18,8 +18,9 @@ public interface BlockEnderChest extends Block {
      * Set a custom name for this container
      *
      * @param customName which should be used
+     * @return block for chaining
      */
-    BlockEnderChest customName(String customName );
+    BlockEnderChest customName(String customName);
 
     /**
      * Get the custom name of this container

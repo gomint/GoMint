@@ -9,12 +9,12 @@ import io.gomint.taglib.NBTTagCompound;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:gunpowder", id = 289 )
- public class ItemGunpowder extends ItemStack implements io.gomint.inventory.item.ItemGunpowder {
+ public class ItemGunpowder extends ItemStack< io.gomint.inventory.item.ItemGunpowder> implements io.gomint.inventory.item.ItemGunpowder {
 
 
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.GUNPOWDER;
     }
 

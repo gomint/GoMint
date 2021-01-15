@@ -24,7 +24,7 @@ public class Dropper extends Block implements BlockDropper {
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 5250;
     }
 
@@ -34,7 +34,7 @@ public class Dropper extends Block implements BlockDropper {
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return ToolPresets.PICKAXE;
     }
 

@@ -1,3 +1,10 @@
+/*
+ * Copyright (c) 2020 Gomint team
+ *
+ * This code is licensed under the BSD license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
 package io.gomint.server.world.block;
 
 import io.gomint.event.entity.EntityDamageEvent;
@@ -25,7 +32,7 @@ public class SoulFire extends Block implements BlockSoulFire {
     }
 
     @Override
-    public boolean canBeReplaced(ItemStack item) {
+    public boolean canBeReplaced(ItemStack<?> item) {
         return true;
     }
 
@@ -62,7 +69,7 @@ public class SoulFire extends Block implements BlockSoulFire {
     }
 
     @Override
-    public List<ItemStack> drops(ItemStack itemInHand) {
+    public List<ItemStack<?>> drops(ItemStack<?> itemInHand) {
         return new ArrayList<>();
     }
 

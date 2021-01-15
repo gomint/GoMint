@@ -15,10 +15,10 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:bone_meal", id = 409 )
-public class ItemBoneMeal extends ItemStack implements io.gomint.inventory.item.ItemBoneMeal {
+public class ItemBoneMeal extends ItemStack< io.gomint.inventory.item.ItemBoneMeal> implements io.gomint.inventory.item.ItemBoneMeal {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.BONE_MEAL;
     }
 

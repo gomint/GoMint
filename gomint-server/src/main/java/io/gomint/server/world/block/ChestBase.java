@@ -7,6 +7,7 @@
 
 package io.gomint.server.world.block;
 
+import io.gomint.inventory.ChestInventory;
 import io.gomint.inventory.Inventory;
 import io.gomint.inventory.item.ItemStack;
 import io.gomint.inventory.item.ItemType;
@@ -34,7 +35,7 @@ public abstract class ChestBase<B> extends ContainerBlock<B> {
     protected static final BlockfaceFromPlayerBlockState DIRECTION = new BlockfaceFromPlayerBlockState(() -> new String[]{"facing_direction"}, false);
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 3750;
     }
 
@@ -60,15 +61,15 @@ public abstract class ChestBase<B> extends ContainerBlock<B> {
     }
 
     @Override
-    public boolean beforePlacement(EntityLiving entity, ItemStack item, Facing face, Location location) {
+    public boolean beforePlacement(EntityLiving entity, ItemStack<?> item, Facing face, Location location) {
         boolean ok = super.beforePlacement(entity, item, face, location);
         DIRECTION.detectFromPlacement(this, entity, item, face);
         return ok;
     }
 
     @Override
-    public boolean interact(Entity entity, Facing face, Vector facePos, ItemStack item) {
-        ChestTileEntity tileEntity = this.getTileEntity();
+    public boolean interact(Entity entity, Facing face, Vector facePos, ItemStack<?> item) {
+        ChestTileEntity tileEntity = this.tileEntity();
         if (tileEntity != null) {
             tileEntity.interact(entity, face, facePos, item);
         }
@@ -80,10 +81,10 @@ public abstract class ChestBase<B> extends ContainerBlock<B> {
     public void afterPlacement() {
         // Check for pairing
         for (Direction value : Direction.values()) {
-            Block side = this.getSide(value);
+            Block side = this.side(value);
             if (side.blockType() == this.blockType()) {
-                ChestTileEntity tileEntity = this.getTileEntity();
-                tileEntity.pair(side.getTileEntity());
+                ChestTileEntity tileEntity = this.tileEntity();
+                tileEntity.pair(side.tileEntity());
                 side.updateBlock();
             }
         }
@@ -91,10 +92,10 @@ public abstract class ChestBase<B> extends ContainerBlock<B> {
         super.afterPlacement();
     }
 
-    protected Inventory inventory() {
-        ChestTileEntity tileEntity = this.getTileEntity();
+    protected Inventory<ChestInventory> inventory() {
+        ChestTileEntity tileEntity = this.tileEntity();
         if (tileEntity != null) {
-            return tileEntity.getInventory();
+            return tileEntity.inventory();
         }
 
         return null;
@@ -106,21 +107,21 @@ public abstract class ChestBase<B> extends ContainerBlock<B> {
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return ToolPresets.AXE;
     }
 
     @Override
-    public List<ItemStack> drops(ItemStack itemInHand) {
-        List<ItemStack> items = super.drops(itemInHand);
+    public List<ItemStack<?>> drops(ItemStack<?> itemInHand) {
+        List<ItemStack<?>> items = super.drops(itemInHand);
 
         // We also drop the inventory
-        ChestTileEntity chestTileEntity = this.getTileEntity();
+        ChestTileEntity chestTileEntity = this.tileEntity();
         chestTileEntity.unpair();
-        chestTileEntity.getInventory()
+        chestTileEntity.inventory()
             .items()
             .filter(Objects::nonNull)
-            .filter(item -> item.getItemType() != ItemType.AIR)
+            .filter(item -> item.itemType() != ItemType.AIR)
             .forEach(items::add);
 
         return items;

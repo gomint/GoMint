@@ -24,7 +24,7 @@ public class CommandBlock extends ContainerBlock<BlockCommandBlock> implements B
     private static final BlockfaceBlockState FACING = new BlockfaceBlockState( () -> new String[]{"facing_direction"});
 
     @Override
-    public boolean beforePlacement(EntityLiving entity, ItemStack item, Facing face, Location location) {
+    public boolean beforePlacement(EntityLiving entity, ItemStack<?> item, Facing face, Location location) {
         FACING.detectFromPlacement(this, entity, item, face);
         CONDITIONAL.setState(this, false);
         return super.beforePlacement(entity, item, face, location);

@@ -68,8 +68,8 @@ public class SignTileEntity extends TileEntity {
     }
 
     @Override
-    public Sign getBlock() {
-        return (Sign) super.getBlock();
+    public Sign<?> getBlock() {
+        return (Sign<?>) super.getBlock();
     }
 
     /**

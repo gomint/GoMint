@@ -38,7 +38,7 @@ public abstract class AbstractTileEntityComponent implements TileEntityComponent
         this.items = items;
     }
 
-    io.gomint.server.inventory.item.ItemStack getItemStack(NBTTagCompound compound) {
+    ItemStack<?> getItemStack(NBTTagCompound compound) {
         // Item not there?
         if (compound == null) {
             return this.items.create(0, (short) 0, (byte) 0, null);
@@ -65,13 +65,15 @@ public abstract class AbstractTileEntityComponent implements TileEntityComponent
         }
     }
 
-    void putItemStack(io.gomint.server.inventory.item.ItemStack itemStack, NBTTagCompound compound) {
-        compound.addValue("Name", itemStack.getMaterial());
-        compound.addValue("Damage", itemStack.getData());
-        compound.addValue("Count", itemStack.getAmount());
+    void putItemStack(ItemStack<?> itemStack, NBTTagCompound compound) {
+        io.gomint.server.inventory.item.ItemStack<?> sStack = (io.gomint.server.inventory.item.ItemStack<?>) itemStack;
 
-        if (itemStack.getNbtData() != null) {
-            NBTTagCompound itemTag = itemStack.getNbtData().deepClone("tag");
+        compound.addValue("Name", sStack.material());
+        compound.addValue("Damage", sStack.data());
+        compound.addValue("Count", sStack.amount());
+
+        if (sStack.nbtData() != null) {
+            NBTTagCompound itemTag = sStack.nbtData().deepClone("tag");
             compound.addValue("tag", itemTag);
         }
     }
@@ -80,9 +82,9 @@ public abstract class AbstractTileEntityComponent implements TileEntityComponent
         return this.entity.getBlock();
     }
 
-    public abstract void interact(Entity entity, Facing face, Vector facePos, ItemStack item);
+    public abstract void interact(Entity entity, Facing face, Vector facePos, ItemStack<?> item);
 
-    protected void readInventory(NBTTagCompound compound, ContainerInventory inventory) {
+    protected void readInventory(NBTTagCompound compound, ContainerInventory<?> inventory) {
         // Read in items
         List<Object> itemList = compound.getList("Items", false);
         if (itemList == null) return;
@@ -90,25 +92,25 @@ public abstract class AbstractTileEntityComponent implements TileEntityComponent
         for (Object item : itemList) {
             NBTTagCompound itemCompound = (NBTTagCompound) item;
 
-            io.gomint.server.inventory.item.ItemStack itemStack = getItemStack(itemCompound);
+            ItemStack<?> itemStack = getItemStack(itemCompound);
             if (itemStack instanceof ItemAir) {
                 continue;
             }
 
             byte slot = itemCompound.getByte("Slot", (byte) 127);
             if (slot == 127) {
-                LOGGER.warn("Found item without slot information: {} @ {} setting it to the next free slot", itemStack.getMaterial(), this.getBlock().position());
+                LOGGER.warn("Found item without slot information: {} @ {} setting it to the next free slot", ((io.gomint.server.inventory.item.ItemStack<?>) itemStack).material(), this.getBlock().position());
                 inventory.addItem(itemStack);
             } else {
-                inventory.setItem(slot, itemStack);
+                inventory.item(slot, itemStack);
             }
         }
     }
 
-    protected void writeInventory(NBTTagCompound compound, ContainerInventory inventory) {
+    protected void writeInventory(NBTTagCompound compound, ContainerInventory<?> inventory) {
         List<NBTTagCompound> nbtTagCompounds = new ArrayList<>();
         for (int i = 0; i < inventory.size(); i++) {
-            io.gomint.server.inventory.item.ItemStack itemStack = (io.gomint.server.inventory.item.ItemStack) inventory.getItem(i);
+            io.gomint.server.inventory.item.ItemStack<?> itemStack = (io.gomint.server.inventory.item.ItemStack<?>) inventory.item(i);
             if (itemStack != null) {
                 NBTTagCompound nbtTagCompound = new NBTTagCompound("");
                 nbtTagCompound.addValue("Slot", (byte) i);
@@ -120,11 +122,11 @@ public abstract class AbstractTileEntityComponent implements TileEntityComponent
         compound.addValue("Items", nbtTagCompounds);
     }
 
-    protected void writeItem(NBTTagCompound compound, String key, ItemStack holdingItem) {
-        putItemStack((io.gomint.server.inventory.item.ItemStack) holdingItem, compound.getCompound(key, true));
+    protected void writeItem(NBTTagCompound compound, String key, ItemStack<?> holdingItem) {
+        putItemStack((io.gomint.server.inventory.item.ItemStack<?>) holdingItem, compound.getCompound(key, true));
     }
 
-    protected ItemStack readItem(NBTTagCompound compound, String key) {
+    protected ItemStack<?> readItem(NBTTagCompound compound, String key) {
         return getItemStack(compound.getCompound(key, false));
     }
 

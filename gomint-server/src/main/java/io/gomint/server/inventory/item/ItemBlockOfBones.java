@@ -15,10 +15,10 @@ import io.gomint.taglib.NBTTagCompound;
  * @version 1.0
  */
 @RegisterInfo(sId = "minecraft:bone_block", id = 216)
-public class ItemBlockOfBones extends ItemStack implements io.gomint.inventory.item.ItemBlockOfBones {
+public class ItemBlockOfBones extends ItemStack< io.gomint.inventory.item.ItemBlockOfBones> implements io.gomint.inventory.item.ItemBlockOfBones {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.BLOCK_OF_BONES;
     }
 

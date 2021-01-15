@@ -49,12 +49,12 @@ public class Plank extends Block implements BlockPlank {
     });
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 3000;
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return ToolPresets.AXE;
     }
 

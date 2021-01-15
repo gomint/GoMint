@@ -23,7 +23,7 @@ public class Lectern extends Block implements BlockLectern {
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 3750;
     }
 
@@ -43,7 +43,7 @@ public class Lectern extends Block implements BlockLectern {
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return ToolPresets.AXE;
     }
 

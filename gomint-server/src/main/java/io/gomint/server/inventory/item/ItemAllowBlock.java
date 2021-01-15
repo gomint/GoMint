@@ -8,10 +8,10 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo(id = 210 ,sId = "minecraft:allow" )
-public class ItemAllowBlock extends ItemStack implements io.gomint.inventory.item.ItemAllowBlock {
+public class ItemAllowBlock extends ItemStack< io.gomint.inventory.item.ItemAllowBlock> implements io.gomint.inventory.item.ItemAllowBlock {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.ALLOW;
     }
 }

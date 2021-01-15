@@ -72,7 +72,7 @@ public class EntityDolphin extends EntityAgeableAnimal implements io.gomint.enti
         Entity lastDamageEntity = this.lastDamageEntity;
         int looting = 0;
         if (lastDamageEntity instanceof EntityHuman) {
-            Enchantment enchantment = ((EntityHuman) lastDamageEntity).getInventory().getItemInHand().getEnchantment(EnchantmentLooting.class);
+            Enchantment enchantment = ((EntityHuman) lastDamageEntity).getInventory().itemInHand().enchantment(EnchantmentLooting.class);
             if (enchantment != null) {
                 looting = enchantment.getLevel();
             }
@@ -81,7 +81,7 @@ public class EntityDolphin extends EntityAgeableAnimal implements io.gomint.enti
         int amount = ThreadLocalRandom.current().nextInt(2 + looting);
         if (amount > 0) {
             
-            ItemStack drop;
+            ItemStack<?> drop;
             if (this.isOnFire()) {
                 drop = ItemCookedCod.create(amount);
             } else {

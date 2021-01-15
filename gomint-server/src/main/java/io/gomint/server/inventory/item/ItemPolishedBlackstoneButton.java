@@ -15,10 +15,10 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:polished_blackstone_button", id = -296 )
-public class ItemPolishedBlackstoneButton extends ItemStack implements io.gomint.inventory.item.ItemPolishedBlackstoneButton {
+public class ItemPolishedBlackstoneButton extends ItemStack< io.gomint.inventory.item.ItemPolishedBlackstoneButton> implements io.gomint.inventory.item.ItemPolishedBlackstoneButton {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.POLISHED_BLACKSTONE_BUTTON;
     }
 

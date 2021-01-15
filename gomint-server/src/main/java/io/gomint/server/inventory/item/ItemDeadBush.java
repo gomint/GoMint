@@ -10,10 +10,10 @@ import io.gomint.taglib.NBTTagCompound;
  * @version 1.0
  */
 @RegisterInfo(sId = "minecraft:deadbush", id = 32)
-public class ItemDeadBush extends ItemStack implements io.gomint.inventory.item.ItemDeadBush {
+public class ItemDeadBush extends ItemStack< io.gomint.inventory.item.ItemDeadBush> implements io.gomint.inventory.item.ItemDeadBush {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.DEAD_BUSH;
     }
 

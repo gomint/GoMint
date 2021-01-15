@@ -37,8 +37,8 @@ public class EnchantmentLure extends Enchantment implements io.gomint.enchant.En
     }
 
     @Override
-    public boolean canBeApplied( ItemStack itemStack ) {
-        return itemStack.getItemType() == ItemType.FISHING_ROD;
+    public boolean canBeApplied(ItemStack<?> itemStack ) {
+        return itemStack.itemType() == ItemType.FISHING_ROD;
     }
 
     @Override

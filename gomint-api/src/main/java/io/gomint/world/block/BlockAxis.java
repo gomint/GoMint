@@ -20,8 +20,9 @@ public interface BlockAxis<B> {
      * Set the axis of the log
      *
      * @param axis of the log
+     * @return block for chaining
      */
-    B axis(Axis axis );
+    B axis(Axis axis);
 
     /**
      * Get the axis of this log

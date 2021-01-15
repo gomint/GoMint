@@ -20,7 +20,7 @@ public class BrewingStand extends Block implements BlockBrewingStand {
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 750;
     }
 
@@ -45,7 +45,7 @@ public class BrewingStand extends Block implements BlockBrewingStand {
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return ToolPresets.PICKAXE;
     }
 

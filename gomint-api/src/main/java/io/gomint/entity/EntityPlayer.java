@@ -61,7 +61,7 @@ public interface EntityPlayer extends EntityHuman {
     /**
      * Set the player's operator status
      *
-     * @param value
+     * @param value true when op, false otherwise
      */
     void setOp( boolean value );
 
@@ -93,14 +93,15 @@ public interface EntityPlayer extends EntityHuman {
      * @param inventory which should be opened
      * @return true when the client has opened the inventory, false when not
      */
-    boolean openInventory( Inventory inventory );
+    boolean openInventory(Inventory<?> inventory );
 
     /**
      * Close the given inventory
      *
      * @param inventory which should be closed
+     * @return true when inventory has been close, false otherwise
      */
-    boolean closeInventory( Inventory inventory );
+    boolean closeInventory(Inventory<?> inventory );
 
     /**
      * Send a message to the client, this uses the normal {@link ChatType} enum.

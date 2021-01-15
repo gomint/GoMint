@@ -8,15 +8,16 @@ import io.gomint.world.block.data.BlockColor;
  * @version 1.0
  * @stability 3
  */
-public interface ItemBed extends ItemStack {
+public interface ItemBed extends ItemStack<ItemBed> {
 
     /**
      * Create a new item stack with given class and amount
      *
      * @param amount which is used for the creation
+     * @return freshly generated item
      */
-    static ItemBed create( int amount ) {
-        return GoMint.instance().createItemStack( ItemBed.class, amount );
+    static ItemBed create(int amount) {
+        return GoMint.instance().createItemStack(ItemBed.class, amount);
     }
 
     /**
@@ -24,13 +25,14 @@ public interface ItemBed extends ItemStack {
      *
      * @return color of this bed
      */
-    BlockColor getColor();
+    BlockColor color();
 
     /**
      * Set the color of this bed
      *
      * @param color which this bed should be
+     * @return item for chaining
      */
-    void setColor( BlockColor color );
+    ItemBed color(BlockColor color);
 
 }

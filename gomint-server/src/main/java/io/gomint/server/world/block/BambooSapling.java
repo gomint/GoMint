@@ -24,7 +24,7 @@ public class BambooSapling extends Block implements BlockBambooSapling {
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 0;
     }
 

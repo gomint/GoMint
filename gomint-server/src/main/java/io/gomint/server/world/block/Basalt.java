@@ -20,12 +20,12 @@ public class Basalt extends Block implements BlockBasalt {
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 1900;
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return ToolPresets.PICKAXE;
     }
 

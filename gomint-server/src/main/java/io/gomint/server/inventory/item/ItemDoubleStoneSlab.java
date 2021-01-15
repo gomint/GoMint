@@ -24,7 +24,7 @@ import io.gomint.world.block.data.StoneType;
 @RegisterInfo(sId = "minecraft:blackstone_double_slab", id = -283)
 @RegisterInfo(sId = "minecraft:polished_blackstone_double_slab", id = -294)
 @RegisterInfo(sId = "minecraft:polished_blackstone_brick_double_slab", id = -285)
-public class ItemDoubleStoneSlab extends ItemStack implements io.gomint.inventory.item.ItemDoubleStoneSlab {
+public class ItemDoubleStoneSlab extends ItemStack< io.gomint.inventory.item.ItemDoubleStoneSlab> implements io.gomint.inventory.item.ItemDoubleStoneSlab {
 
     private static final String STONE_SLAB_ID = "minecraft:real_double_stone_slab";
     private static final String STONE_SLAB2_ID = "minecraft:real_double_stone_slab2";
@@ -85,21 +85,21 @@ public class ItemDoubleStoneSlab extends ItemStack implements io.gomint.inventor
     }
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.DOUBLE_STONE_SLAB;
     }
 
     @Override
-    public Block getBlock() {
+    public Block block() {
         BlockDoubleStoneSlab slab = this.blocks.get(BlockDoubleStoneSlab.class);
-        slab.type(this.getStoneType());
+        slab.type(this.type());
         return slab;
     }
 
     @Override
-    public StoneType getStoneType() {
+    public StoneType type() {
         for (StoneTypeMagic value : StoneTypeMagic.values()) {
-            if (value.id.equals(this.getMaterial()) && value.data == this.getData()) {
+            if (value.id.equals(this.material()) && value.data == this.data()) {
                 return StoneType.valueOf(value.name());
             }
         }
@@ -108,10 +108,11 @@ public class ItemDoubleStoneSlab extends ItemStack implements io.gomint.inventor
     }
 
     @Override
-    public void setStoneType(StoneType type) {
+    public ItemDoubleStoneSlab type(StoneType type) {
         StoneTypeMagic state = StoneTypeMagic.valueOf(type.name());
-        this.setMaterial(state.id);
-        this.setData(state.data);
+        this.material(state.id);
+        this.data(state.data);
+        return this;
     }
 
 }

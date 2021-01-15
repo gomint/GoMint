@@ -9,10 +9,10 @@ import io.gomint.taglib.NBTTagCompound;
  * @version 1.0
  */
 @RegisterInfo(sId = "minecraft:chorus_plant", id = 240)
-public class ItemChorusPlant extends ItemStack implements io.gomint.inventory.item.ItemChorusPlant {
+public class ItemChorusPlant extends ItemStack< io.gomint.inventory.item.ItemChorusPlant> implements io.gomint.inventory.item.ItemChorusPlant {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.CHORUS_PLANT;
     }
 

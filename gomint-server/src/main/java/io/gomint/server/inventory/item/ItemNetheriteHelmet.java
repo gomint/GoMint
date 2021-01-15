@@ -12,7 +12,7 @@ import io.gomint.world.block.data.Facing;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:netherite_helmet", id = 748 )
-public class ItemNetheriteHelmet extends ItemNetheriteArmor implements io.gomint.inventory.item.ItemNetheriteHelmet {
+public class ItemNetheriteHelmet extends ItemNetheriteArmor<io.gomint.inventory.item.ItemNetheriteHelmet> implements io.gomint.inventory.item.ItemNetheriteHelmet {
 
     @Override
     public float getReductionValue() {
@@ -22,10 +22,10 @@ public class ItemNetheriteHelmet extends ItemNetheriteArmor implements io.gomint
     @Override
     public boolean interact(EntityPlayer entity, Facing face, Vector clickPosition, Block clickedBlock ) {
         if ( clickedBlock == null ) {
-            if ( isBetter( (ItemStack) entity.getArmorInventory().getHelmet() ) ) {
-                ItemStack old = (ItemStack) entity.getArmorInventory().getHelmet();
-                entity.getArmorInventory().setHelmet( this );
-                entity.getInventory().setItem( entity.getInventory().getItemInHandSlot(), old );
+            if ( isBetter( (ItemStack<?>) entity.getArmorInventory().helmet() ) ) {
+                ItemStack<?> old = (ItemStack<?>) entity.getArmorInventory().helmet();
+                entity.getArmorInventory().helmet( this );
+                entity.getInventory().item( entity.getInventory().itemInHandSlot(), old );
             }
         }
 
@@ -33,7 +33,7 @@ public class ItemNetheriteHelmet extends ItemNetheriteArmor implements io.gomint
     }
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.NETHERITE_HELMET;
     }
 }

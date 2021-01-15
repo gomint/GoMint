@@ -17,14 +17,14 @@ import java.util.List;
  */
 public class ItemEnchantEvent extends CancellablePlayerEvent {
 
-    private final ItemStack itemToEnchant;
+    private final ItemStack<?> itemToEnchant;
     private final List<Enchantment> enchantments;
     private int levelCost;
     private final int materialCost;
     private int levelRequirement;
 
     public ItemEnchantEvent(EntityPlayer player,
-                            ItemStack itemToEnchant,
+                            ItemStack<?> itemToEnchant,
                             int levelCost,
                             int materialCost,
                             List<Enchantment> enchantments,
@@ -69,7 +69,7 @@ public class ItemEnchantEvent extends CancellablePlayerEvent {
      *
      * @return item stack which should be enchanted
      */
-    public ItemStack getItemToEnchant() {
+    public ItemStack<?> getItemToEnchant() {
         return itemToEnchant;
     }
 

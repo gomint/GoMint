@@ -20,6 +20,7 @@ public interface BlockLeaves extends Block {
      * Set the type of leave
      *
      * @param type of the leave
+     * @return block for chaining
      */
     BlockLeaves type(LogType type);
 

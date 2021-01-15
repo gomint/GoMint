@@ -22,7 +22,7 @@ import io.gomint.world.block.data.LogType;
 public class WoodenButton extends Button<BlockWoodenButton> implements BlockWoodenButton {
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 750;
     }
 
@@ -108,7 +108,7 @@ public class WoodenButton extends Button<BlockWoodenButton> implements BlockWood
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return ToolPresets.AXE;
     }
 

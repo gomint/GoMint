@@ -29,7 +29,7 @@ public class NetherWartBlock extends Block implements BlockNetherWartBlock {
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 1500;
     }
 

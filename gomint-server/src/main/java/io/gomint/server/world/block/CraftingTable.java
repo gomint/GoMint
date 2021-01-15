@@ -28,12 +28,12 @@ public class CraftingTable extends Block implements BlockCraftingTable {
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 3750;
     }
 
     @Override
-    public boolean interact(Entity entity, Facing face, Vector facePos, ItemStack item ) {
+    public boolean interact(Entity entity, Facing face, Vector facePos, ItemStack<?> item ) {
         if ( entity instanceof EntityPlayer ) {
             EntityPlayer player = (EntityPlayer) entity;
 
@@ -66,7 +66,7 @@ public class CraftingTable extends Block implements BlockCraftingTable {
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return ToolPresets.AXE;
     }
 

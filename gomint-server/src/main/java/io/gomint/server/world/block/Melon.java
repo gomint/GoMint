@@ -18,7 +18,7 @@ public class Melon extends Block implements BlockMelon {
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 1500;
     }
 

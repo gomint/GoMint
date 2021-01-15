@@ -15,10 +15,10 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:wall_sign", id = 68 )
-public class ItemWallSign extends ItemStack implements io.gomint.inventory.item.ItemWallSign {
+public class ItemWallSign extends ItemStack< io.gomint.inventory.item.ItemWallSign> implements io.gomint.inventory.item.ItemWallSign {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.WALL_SIGN;
     }
 

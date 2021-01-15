@@ -19,8 +19,8 @@ import java.util.Collection;
 public class CraftingSession implements Session {
 
     private final PlayerConnection connection;
-    private final Inventory inputInventory;
-    private final Inventory outputInventory;
+    private final Inventory<?> inputInventory;
+    private final Inventory<?> outputInventory;
 
     private Recipe recipe;
     private byte amount;
@@ -47,7 +47,7 @@ public class CraftingSession implements Session {
     }
 
     @Override
-    public void addInput(ItemStack item, int slot) {
+    public void addInput(ItemStack<?> item, int slot) {
         this.inputInventory.addItem(item);
     }
 
@@ -59,7 +59,7 @@ public class CraftingSession implements Session {
     @Override
     public boolean process() {
         // Generate a output stack for compare
-        Collection<io.gomint.inventory.item.ItemStack> output = this.recipe.createResult();
+        Collection<io.gomint.inventory.item.ItemStack<?>> output = this.recipe.createResult();
 
         // Craft the amount wanted
         for (byte i = 0; i < this.amount; i++) {
@@ -78,7 +78,7 @@ public class CraftingSession implements Session {
             }
 
             // We can craft this
-            for (io.gomint.inventory.item.ItemStack itemStack : output) {
+            for (io.gomint.inventory.item.ItemStack<?> itemStack : output) {
                 if (!this.outputInventory.hasPlaceFor(itemStack)) {
                     return false;
                 }
@@ -86,12 +86,12 @@ public class CraftingSession implements Session {
 
             // Consume items
             for (int slot : consumeSlots) {
-                io.gomint.server.inventory.item.ItemStack itemStack = (io.gomint.server.inventory.item.ItemStack) this.inputInventory.getItem(slot);
+                io.gomint.server.inventory.item.ItemStack<?> itemStack = (io.gomint.server.inventory.item.ItemStack<?>) this.inputInventory.item(slot);
                 itemStack.afterPlacement();
             }
 
             // We can craft this
-            for (io.gomint.inventory.item.ItemStack itemStack : output) {
+            for (io.gomint.inventory.item.ItemStack<?> itemStack : output) {
                 this.outputInventory.addItem(itemStack);
             }
         }
@@ -100,7 +100,7 @@ public class CraftingSession implements Session {
     }
 
     @Override
-    public Inventory getOutput() {
+    public Inventory<?> getOutput() {
         return this.outputInventory;
     }
 

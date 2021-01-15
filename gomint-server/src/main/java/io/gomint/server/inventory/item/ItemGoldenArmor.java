@@ -7,14 +7,16 @@
 
 package io.gomint.server.inventory.item;
 
+import io.gomint.inventory.item.ItemStack;
+
 /**
  * @author geNAZt
  * @version 1.0
  */
-public abstract class ItemGoldenArmor extends ItemArmor {
+public abstract class ItemGoldenArmor<I extends ItemStack<I>> extends ItemArmor<I> {
 
     @Override
-    public int getEnchantAbility() {
+    public int enchantAbility() {
         return 25;
     }
 

@@ -51,7 +51,7 @@ public class PrimitiveConverter implements Converter {
      * {@inheritDoc}
      */
     @Override
-    public Object fromConfig(Class type, Object object, ParameterizedType parameterizedType) {
+    public Object fromConfig(Class<?> type, Object object, ParameterizedType parameterizedType) {
         switch (type.getSimpleName()) {
             case "short":
                 return (object instanceof Short) ? object : Integer.valueOf((int) object).shortValue();

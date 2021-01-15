@@ -57,7 +57,7 @@ public class EntityCod extends EntityAnimal implements io.gomint.entity.animal.E
 
         // Drop items
         Location location = this.getLocation();
-        ItemStack cod = isOnFire()? ItemCookedCod.create(1) : ItemCod.create(1);
+        ItemStack<?> cod = isOnFire() ? ItemCookedCod.create(1) : ItemCod.create(1);
         this.world.dropItem(location, cod);
 
         ThreadLocalRandom random = ThreadLocalRandom.current();

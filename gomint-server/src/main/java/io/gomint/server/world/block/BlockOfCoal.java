@@ -22,7 +22,7 @@ public class BlockOfCoal extends Block implements BlockBlockOfCoal {
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 7500;
     }
 
@@ -37,14 +37,14 @@ public class BlockOfCoal extends Block implements BlockBlockOfCoal {
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return ToolPresets.PICKAXE;
     }
 
     @Override
-    public List<ItemStack> drops(ItemStack itemInHand ) {
+    public List<ItemStack<?>> drops(ItemStack<?> itemInHand ) {
         if ( isCorrectTool( itemInHand ) ) {
-            return new ArrayList<ItemStack>() {{
+            return new ArrayList<>() {{
                 add( ItemBlockOfCoal.create( 1 ) );
             }};
         }

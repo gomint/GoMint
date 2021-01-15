@@ -20,7 +20,7 @@ public class RedSandstone extends Block implements BlockRedSandstone {
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 1200;
     }
 
@@ -40,7 +40,7 @@ public class RedSandstone extends Block implements BlockRedSandstone {
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return ToolPresets.SHOVEL;
     }
 

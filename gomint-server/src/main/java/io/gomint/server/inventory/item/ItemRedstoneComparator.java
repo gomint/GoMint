@@ -8,12 +8,12 @@ import io.gomint.taglib.NBTTagCompound;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:comparator", id = 404 )
-public class ItemRedstoneComparator extends ItemStack implements io.gomint.inventory.item.ItemRedstoneComparator {
+public class ItemRedstoneComparator extends ItemStack< io.gomint.inventory.item.ItemRedstoneComparator> implements io.gomint.inventory.item.ItemRedstoneComparator {
 
 
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.COMPARATOR;
     }
 

@@ -15,10 +15,10 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:wandering_trader_spawn_egg", id = 490 )
-public class ItemWanderingTraderSpawnEgg extends ItemStack implements io.gomint.inventory.item.ItemWanderingTraderSpawnEgg {
+public class ItemWanderingTraderSpawnEgg extends ItemStack< io.gomint.inventory.item.ItemWanderingTraderSpawnEgg> implements io.gomint.inventory.item.ItemWanderingTraderSpawnEgg {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.WANDERING_TRADER_SPAWN_EGG;
     }
 

@@ -41,7 +41,7 @@ public class GlazedTerracotta extends Block implements BlockGlazedTerracotta {
     private static final BlockfaceBlockState FACING = new BlockfaceBlockState( () -> new String[]{"facing_direction"} );
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 2100;
     }
 
@@ -56,7 +56,7 @@ public class GlazedTerracotta extends Block implements BlockGlazedTerracotta {
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return ToolPresets.PICKAXE;
     }
 

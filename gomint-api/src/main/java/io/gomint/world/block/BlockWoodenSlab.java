@@ -27,6 +27,7 @@ public interface BlockWoodenSlab extends BlockSlab<BlockWoodenSlab> {
      * Set the type of wood
      *
      * @param logType for this block
+     * @return block for chaining
      */
     BlockWoodenSlab type(LogType logType);
 

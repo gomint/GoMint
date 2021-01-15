@@ -21,7 +21,7 @@ public class BlockOfIron extends Block implements BlockBlockOfIron {
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 7500;
     }
 
@@ -36,7 +36,7 @@ public class BlockOfIron extends Block implements BlockBlockOfIron {
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         // Only stone, iron and up
         return new Class[]{
             ItemIronPickaxe.class,
@@ -46,9 +46,9 @@ public class BlockOfIron extends Block implements BlockBlockOfIron {
     }
 
     @Override
-    public List<ItemStack> drops(ItemStack itemInHand ) {
+    public List<ItemStack<?>> drops(ItemStack<?> itemInHand ) {
         if ( isCorrectTool( itemInHand ) ) {
-            return new ArrayList<ItemStack>(){{
+            return new ArrayList<>(){{
                 add( ItemBlockOfIron.create( 1 ) );
             }};
         }

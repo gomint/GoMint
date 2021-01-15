@@ -21,14 +21,15 @@ public interface BlockChest extends BlockFacing<BlockChest> {
      *
      * @return inventory of this chest
      */
-    Inventory inventory();
+    Inventory<?> inventory();
 
     /**
      * Set a custom name for this container
      *
      * @param customName which should be used
+     * @return block for chaining
      */
-    BlockChest customName(String customName );
+    BlockChest customName(String customName);
 
     /**
      * Get the custom name of this container

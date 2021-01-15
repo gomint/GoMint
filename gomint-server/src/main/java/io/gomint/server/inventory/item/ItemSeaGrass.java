@@ -8,10 +8,10 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo(sId = "minecraft:seagrass", id = -130)
-public class ItemSeaGrass extends ItemStack implements io.gomint.inventory.item.ItemSeaGrass {
+public class ItemSeaGrass extends ItemStack< io.gomint.inventory.item.ItemSeaGrass> implements io.gomint.inventory.item.ItemSeaGrass {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.SEA_GRASS;
     }
 

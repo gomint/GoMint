@@ -9,10 +9,10 @@ import io.gomint.taglib.NBTTagCompound;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:command_block", id = 137 )
-public class ItemCommandBlock extends ItemStack {
+public class ItemCommandBlock extends ItemStack<ItemCommandBlock> {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.COMMAND_BLOCK;
     }
 

@@ -15,10 +15,10 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:shulker_spawn_egg", id = 467 )
-public class ItemShulkerSpawnEgg extends ItemStack implements io.gomint.inventory.item.ItemShulkerSpawnEgg {
+public class ItemShulkerSpawnEgg extends ItemStack< io.gomint.inventory.item.ItemShulkerSpawnEgg> implements io.gomint.inventory.item.ItemShulkerSpawnEgg {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.SHULKER_SPAWN_EGG;
     }
 

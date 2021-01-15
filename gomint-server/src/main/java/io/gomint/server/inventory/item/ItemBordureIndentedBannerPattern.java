@@ -15,10 +15,10 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:bordure_indented_banner_pattern", id = 576 )
-public class ItemBordureIndentedBannerPattern extends ItemStack implements io.gomint.inventory.item.ItemBordureIndentedBannerPattern {
+public class ItemBordureIndentedBannerPattern extends ItemStack< io.gomint.inventory.item.ItemBordureIndentedBannerPattern> implements io.gomint.inventory.item.ItemBordureIndentedBannerPattern {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.BORDURE_INDENTED_BANNER_PATTERN;
     }
 

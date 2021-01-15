@@ -136,7 +136,7 @@ public class Element extends Block implements BlockElement {
     private static final int BLOCK_PREFIX_LENGTH = 18; // minecraft:element_
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 0;
     }
 

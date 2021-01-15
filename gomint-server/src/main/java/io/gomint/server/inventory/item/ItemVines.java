@@ -10,10 +10,10 @@ import io.gomint.taglib.NBTTagCompound;
  * @version 1.0
  */
 @RegisterInfo(sId = "minecraft:vine", id = 106)
-public class ItemVines extends ItemStack implements io.gomint.inventory.item.ItemVines {
+public class ItemVines extends ItemStack< io.gomint.inventory.item.ItemVines> implements io.gomint.inventory.item.ItemVines {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.VINES;
     }
 

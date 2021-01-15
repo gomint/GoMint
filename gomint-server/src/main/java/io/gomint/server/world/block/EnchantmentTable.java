@@ -3,7 +3,6 @@ package io.gomint.server.world.block;
 import io.gomint.inventory.item.ItemStack;
 import io.gomint.math.Vector;
 import io.gomint.server.entity.Entity;
-import io.gomint.server.entity.tileentity.CommandBlockTileEntity;
 import io.gomint.server.entity.tileentity.EnchantTableTileEntity;
 import io.gomint.server.entity.tileentity.TileEntity;
 import io.gomint.server.registry.RegisterInfo;
@@ -30,7 +29,7 @@ public class EnchantmentTable extends Block implements BlockEnchantmentTable {
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 7500;
     }
 
@@ -66,14 +65,14 @@ public class EnchantmentTable extends Block implements BlockEnchantmentTable {
     }
 
     @Override
-    public boolean interact(Entity entity, Facing face, Vector facePos, ItemStack item ) {
-        EnchantTableTileEntity tileEntity = this.getTileEntity();
+    public boolean interact(Entity entity, Facing face, Vector facePos, ItemStack<?> item ) {
+        EnchantTableTileEntity tileEntity = this.tileEntity();
         tileEntity.interact( entity, face, facePos, item );
         return true;
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return ToolPresets.PICKAXE;
     }
 

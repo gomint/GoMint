@@ -58,7 +58,7 @@ public class Sapling extends Block implements BlockSapling {
     private static final BooleanBlockState AGE = new BooleanBlockState(() -> new String[]{"age_bit"});
 
     @Override
-    public boolean beforePlacement(EntityLiving entity, ItemStack item, Facing face, Location location) {
+    public boolean beforePlacement(EntityLiving entity, ItemStack<?> item, Facing face, Location location) {
         AGE.setState(this, false);
 
         Block down = this.side(Facing.DOWN);
@@ -91,7 +91,7 @@ public class Sapling extends Block implements BlockSapling {
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 0;
     }
 
@@ -107,9 +107,9 @@ public class Sapling extends Block implements BlockSapling {
     }
 
     @Override
-    public List<ItemStack> drops(ItemStack itemInHand) {
+    public List<ItemStack<?>> drops(ItemStack<?> itemInHand) {
         ItemSapling sapling = ItemSapling.create(1);
-        sapling.setLogType(this.type());
+        sapling.type(this.type());
         return Collections.singletonList(sapling);
     }
 

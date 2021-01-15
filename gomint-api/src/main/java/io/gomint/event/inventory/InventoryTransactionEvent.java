@@ -21,7 +21,7 @@ import java.util.Objects;
  */
 public class InventoryTransactionEvent extends CancellablePlayerEvent {
 
-    private final List<Transaction> transactions;
+    private final List<Transaction<?, ?, ?>> transactions;
 
     /**
      * Create a transaction event to control inventory movements
@@ -29,7 +29,7 @@ public class InventoryTransactionEvent extends CancellablePlayerEvent {
      * @param player       which has executed this transaction
      * @param transactions which should be executed
      */
-    public InventoryTransactionEvent( EntityPlayer player, List<Transaction> transactions ) {
+    public InventoryTransactionEvent( EntityPlayer player, List<Transaction<?, ?, ?>> transactions ) {
         super( player );
         this.transactions = transactions;
     }
@@ -39,7 +39,7 @@ public class InventoryTransactionEvent extends CancellablePlayerEvent {
      *
      * @return transactions which may be applied
      */
-    public List<Transaction> getTransactions() {
+    public List<Transaction<?, ?, ?>> getTransactions() {
         return this.transactions;
     }
 

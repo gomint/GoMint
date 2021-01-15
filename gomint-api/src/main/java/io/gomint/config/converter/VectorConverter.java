@@ -50,7 +50,7 @@ public class VectorConverter extends BaseConverter {
      */
     @Override
     @SuppressWarnings( "unchecked" )
-    public Object fromConfig( Class type, Object object, ParameterizedType parameterizedType ) {
+    public Object fromConfig( Class<?> type, Object object, ParameterizedType parameterizedType ) {
         Map<String, Object> vectorMap;
 
         if ( object instanceof Map ) {

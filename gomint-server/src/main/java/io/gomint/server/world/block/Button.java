@@ -30,7 +30,7 @@ public abstract class Button<B> extends Block implements BlockButton<B> {
     private static final BooleanBlockState PRESSED = new BooleanBlockState(() -> new String[]{"button_pressed_bit"});
 
     @Override
-    public boolean interact(Entity entity, Facing face, Vector facePos, ItemStack item) {
+    public boolean interact(Entity entity, Facing face, Vector facePos, ItemStack<?> item) {
         // Press the button
         this.press();
 
@@ -38,7 +38,7 @@ public abstract class Button<B> extends Block implements BlockButton<B> {
     }
 
     @Override
-    public boolean beforePlacement(EntityLiving entity, ItemStack item, Facing face, Location location) {
+    public boolean beforePlacement(EntityLiving entity, ItemStack<?> item, Facing face, Location location) {
         FACING.detectFromPlacement(this, entity, item, face);
         return true;
     }

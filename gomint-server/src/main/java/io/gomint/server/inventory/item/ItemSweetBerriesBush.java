@@ -8,10 +8,10 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo(sId = "minecraft:sweet_burry_bush", id = 462)
-public class ItemSweetBerriesBush extends ItemStack implements io.gomint.inventory.item.ItemSweetBerriesBush {
+public class ItemSweetBerriesBush extends ItemStack< io.gomint.inventory.item.ItemSweetBerriesBush> implements io.gomint.inventory.item.ItemSweetBerriesBush {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.SWEETBERRIESBUSH;
     }
 

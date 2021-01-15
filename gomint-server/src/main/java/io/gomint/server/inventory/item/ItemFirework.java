@@ -15,12 +15,12 @@ import io.gomint.taglib.NBTTagCompound;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:fireworks", id = 401 )
-public class ItemFirework extends ItemStack implements io.gomint.inventory.item.ItemFirework {
+public class ItemFirework extends ItemStack< io.gomint.inventory.item.ItemFirework> implements io.gomint.inventory.item.ItemFirework {
 
 
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.FIREWORK;
     }
 

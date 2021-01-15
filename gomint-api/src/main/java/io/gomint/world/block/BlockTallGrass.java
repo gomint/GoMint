@@ -24,8 +24,9 @@ public interface BlockTallGrass extends Block {
      * Set the grass type of this tall grass block
      *
      * @param type of this block
+     * @return block for chaining
      */
-    BlockTallGrass type(Type type );
+    BlockTallGrass type(Type type);
 
     /**
      * Get the type of this tall grass block

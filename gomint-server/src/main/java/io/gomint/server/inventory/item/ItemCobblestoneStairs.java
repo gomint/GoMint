@@ -10,10 +10,10 @@ import io.gomint.taglib.NBTTagCompound;
  * @version 1.0
  */
 @RegisterInfo(sId = "minecraft:stone_stairs", id = 67)
-public class ItemCobblestoneStairs extends ItemStack implements io.gomint.inventory.item.ItemCobblestoneStairs {
+public class ItemCobblestoneStairs extends ItemStack< io.gomint.inventory.item.ItemCobblestoneStairs> implements io.gomint.inventory.item.ItemCobblestoneStairs {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.COBBLESTONE_STAIRS;
     }
 

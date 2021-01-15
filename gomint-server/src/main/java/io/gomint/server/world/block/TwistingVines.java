@@ -17,7 +17,7 @@ public class TwistingVines extends Block implements BlockTwistingVines {
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 0;
     }
 

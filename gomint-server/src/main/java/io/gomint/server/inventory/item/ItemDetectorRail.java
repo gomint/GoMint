@@ -10,10 +10,10 @@ import io.gomint.taglib.NBTTagCompound;
  * @version 1.0
  */
 @RegisterInfo(sId = "minecraft:detector_rail", id = 28)
-public class ItemDetectorRail extends ItemStack implements io.gomint.inventory.item.ItemDetectorRail {
+public class ItemDetectorRail extends ItemStack< io.gomint.inventory.item.ItemDetectorRail> implements io.gomint.inventory.item.ItemDetectorRail {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.DETECTOR_RAIL;
     }
 

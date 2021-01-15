@@ -24,7 +24,7 @@ public class Cocoa extends Growable implements BlockCocoa {
     });
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 300;
     }
 
@@ -49,7 +49,7 @@ public class Cocoa extends Growable implements BlockCocoa {
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return ToolPresets.AXE;
     }
 

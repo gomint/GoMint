@@ -37,13 +37,13 @@ public class EnchantmentRespiration extends Enchantment implements io.gomint.enc
     }
 
     @Override
-    public boolean canBeApplied( ItemStack itemStack ) {
-        return itemStack.getItemType() == ItemType.CHAIN_HELMET ||
-            itemStack.getItemType() == ItemType.DIAMOND_HELMET ||
-            itemStack.getItemType() == ItemType.GOLDEN_HELMET ||
-            itemStack.getItemType() == ItemType.IRON_HELMET ||
-            itemStack.getItemType() == ItemType.LEATHER_HELMET ||
-            itemStack.getItemType() == ItemType.NETHERITE_HELMET;
+    public boolean canBeApplied(ItemStack<?> itemStack ) {
+        return itemStack.itemType() == ItemType.CHAIN_HELMET ||
+            itemStack.itemType() == ItemType.DIAMOND_HELMET ||
+            itemStack.itemType() == ItemType.GOLDEN_HELMET ||
+            itemStack.itemType() == ItemType.IRON_HELMET ||
+            itemStack.itemType() == ItemType.LEATHER_HELMET ||
+            itemStack.itemType() == ItemType.NETHERITE_HELMET;
     }
 
     @Override

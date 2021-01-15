@@ -20,7 +20,7 @@ public class Obsidian extends Block implements BlockObsidian {
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 75000;
     }
 
@@ -40,7 +40,7 @@ public class Obsidian extends Block implements BlockObsidian {
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return new Class[]{
             ItemDiamondPickaxe.class
         };

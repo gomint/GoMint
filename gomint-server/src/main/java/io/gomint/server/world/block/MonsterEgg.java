@@ -13,7 +13,7 @@ import io.gomint.server.registry.RegisterInfo;
 public class MonsterEgg extends Block implements BlockMonsterEgg {
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 1125;
     }
 

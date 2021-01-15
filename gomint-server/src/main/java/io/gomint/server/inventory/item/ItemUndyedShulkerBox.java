@@ -15,10 +15,10 @@ import io.gomint.taglib.NBTTagCompound;
  * @version 1.0
  */
 @RegisterInfo(sId = "minecraft:undyed_shulker_box", id = 205)
-public class ItemUndyedShulkerBox extends ItemStack implements io.gomint.inventory.item.ItemUndyedShulkerBox {
+public class ItemUndyedShulkerBox extends ItemStack< io.gomint.inventory.item.ItemUndyedShulkerBox> implements io.gomint.inventory.item.ItemUndyedShulkerBox {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.UNDYED_SHULKER_BOX;
     }
 

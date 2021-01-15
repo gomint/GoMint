@@ -74,7 +74,7 @@ public class EntityPhantom extends EntityLiving implements io.gomint.entity.mons
         Entity lastDamageEntity = this.lastDamageEntity;
         int looting = 0;
         if (lastDamageEntity instanceof EntityHuman) {
-            Enchantment enchantment = ((EntityHuman) lastDamageEntity).getInventory().getItemInHand().getEnchantment(EnchantmentLooting.class);
+            Enchantment enchantment = ((EntityHuman) lastDamageEntity).getInventory().itemInHand().enchantment(EnchantmentLooting.class);
             if (enchantment != null) {
                 looting = enchantment.getLevel();
             }
@@ -82,7 +82,7 @@ public class EntityPhantom extends EntityLiving implements io.gomint.entity.mons
 
         int amount = ThreadLocalRandom.current().nextInt(3 + Math.min(looting, 3));
         if (amount > 0) {
-            ItemStack drop = ItemPhantomMembrane.create(amount);
+            ItemStack<?> drop = ItemPhantomMembrane.create(amount);
             this.world.dropItem(this.getLocation(), drop);
         }
         

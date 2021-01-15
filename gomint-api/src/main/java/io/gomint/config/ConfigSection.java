@@ -17,7 +17,7 @@ import java.util.Map;
  */
 public class ConfigSection {
 
-    public static ConfigSection convertFromMap( Map config ) {
+    public static ConfigSection convertFromMap( Map<?, ?> config ) {
         ConfigSection configSection = new ConfigSection();
         configSection.map.putAll( config );
 
@@ -180,7 +180,7 @@ public class ConfigSection {
         }
     }
 
-    public Map getRawMap() {
+    public Map<?, ?> getRawMap() {
         return this.map;
     }
 

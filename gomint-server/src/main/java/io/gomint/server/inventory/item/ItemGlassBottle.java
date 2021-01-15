@@ -9,12 +9,12 @@ import io.gomint.taglib.NBTTagCompound;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:glass_bottle", id = 374 )
- public class ItemGlassBottle extends ItemStack implements io.gomint.inventory.item.ItemGlassBottle {
+ public class ItemGlassBottle extends ItemStack< io.gomint.inventory.item.ItemGlassBottle> implements io.gomint.inventory.item.ItemGlassBottle {
 
 
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.GLASS_BOTTLE;
     }
 

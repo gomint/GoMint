@@ -40,13 +40,13 @@ public abstract class Trapdoor<B> extends Block implements BlockTrapdoor<B> {
     }
 
     @Override
-    public boolean interact(Entity entity, Facing face, Vector facePos, ItemStack item) {
+    public boolean interact(Entity entity, Facing face, Vector facePos, ItemStack<?> item) {
         toggle();
         return true;
     }
 
     @Override
-    public boolean beforePlacement(EntityLiving entity, ItemStack item, Facing face, Location location) {
+    public boolean beforePlacement(EntityLiving entity, ItemStack<?> item, Facing face, Location location) {
         DIRECTION.detectFromPlacement(this, entity, item, face);
         return super.beforePlacement(entity, item, face, location);
     }

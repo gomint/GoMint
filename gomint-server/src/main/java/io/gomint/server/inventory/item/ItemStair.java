@@ -21,10 +21,10 @@ import io.gomint.server.registry.RegisterInfo;
 @RegisterInfo( id = -180, sId = "minecraft:normal_stone_stairs", def = true)
 @RegisterInfo( id = -184, sId = "minecraft:red_nether_brick_stairs")
 @RegisterInfo( id = -185, sId = "minecraft:smooth_quartz_stairs")
-public class ItemStair extends ItemStack implements io.gomint.inventory.item.ItemStair {
+public class ItemStair extends ItemStack< io.gomint.inventory.item.ItemStair> implements io.gomint.inventory.item.ItemStair {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.STAIR;
     }
 

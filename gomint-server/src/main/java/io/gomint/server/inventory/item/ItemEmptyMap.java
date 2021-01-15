@@ -15,10 +15,10 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:empty_map", id = 505 )
-public class ItemEmptyMap extends ItemStack implements io.gomint.inventory.item.ItemEmptyMap {
+public class ItemEmptyMap extends ItemStack< io.gomint.inventory.item.ItemEmptyMap> implements io.gomint.inventory.item.ItemEmptyMap {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.EMPTY_MAP;
     }
 

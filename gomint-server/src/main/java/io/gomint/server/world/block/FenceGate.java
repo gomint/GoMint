@@ -37,7 +37,7 @@ public class FenceGate extends Block implements BlockFenceGate {
     private final BooleanBlockState IN_WALL = new BooleanBlockState( () -> new String[]{"in_wall_bit"});
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 3000;
     }
 
@@ -62,7 +62,7 @@ public class FenceGate extends Block implements BlockFenceGate {
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return ToolPresets.AXE;
     }
 

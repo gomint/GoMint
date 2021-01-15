@@ -208,7 +208,7 @@ public class LevelDBWorldAdapter extends WorldAdapter {
         compound.addValue("Time", (long) this.worldTime);
 
         // Gamerules
-        for (Map.Entry<Gamerule, Object> entry : this.gamerules.entrySet()) {
+        for (Map.Entry<Gamerule<?>, Object> entry : this.gamerules.entrySet()) {
             compound.addValue(entry.getKey().name(), entry.getKey().createNBTValue(entry.getValue()));
         }
 
@@ -407,7 +407,7 @@ public class LevelDBWorldAdapter extends WorldAdapter {
                         break;
                     default:
                         // Check for game rule
-                        Gamerule gamerule = Gamerule.byNBTName(path.substring(1));
+                        Gamerule<?> gamerule = Gamerule.byNBTName(path.substring(1));
                         if (gamerule != null) {
                             this.gamerule(gamerule, gamerule.createValueFromString(value));
                         }

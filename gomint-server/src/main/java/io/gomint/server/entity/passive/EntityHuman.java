@@ -574,7 +574,7 @@ public class EntityHuman extends EntityCreature implements io.gomint.entity.pass
         packetSpawnPlayer.setYaw(this.getYaw());
         packetSpawnPlayer.setHeadYaw(this.getHeadYaw());
 
-        packetSpawnPlayer.setItemInHand(this.getInventory().getItemInHand());
+        packetSpawnPlayer.setItemInHand(this.getInventory().itemInHand());
         packetSpawnPlayer.setMetadataContainer(this.getMetadata());
         packetSpawnPlayer.setDeviceId("");
         packetSpawnPlayer.setBuildPlatform(0);

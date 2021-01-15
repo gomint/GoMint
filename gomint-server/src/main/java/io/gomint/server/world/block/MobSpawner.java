@@ -25,7 +25,7 @@ public class MobSpawner extends Block implements BlockMobSpawner {
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 7500;
     }
 
@@ -50,14 +50,14 @@ public class MobSpawner extends Block implements BlockMobSpawner {
     }
 
     @Override
-    public List<ItemStack> drops(ItemStack itemInHand ) {
+    public List<ItemStack<?>> drops(ItemStack<?> itemInHand ) {
         ((WorldAdapter) this.location.world()).createExpOrb( this.location, ThreadLocalRandom.current().nextInt( 15 ) + ThreadLocalRandom.current().nextInt( 15 ) + 15 );
 
         return new ArrayList<>();
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return ToolPresets.PICKAXE;
     }
 

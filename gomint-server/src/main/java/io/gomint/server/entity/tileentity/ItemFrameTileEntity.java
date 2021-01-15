@@ -8,6 +8,7 @@
 package io.gomint.server.entity.tileentity;
 
 import io.gomint.entity.Entity;
+import io.gomint.inventory.item.ItemStack;
 import io.gomint.math.Vector;
 import io.gomint.server.entity.component.ItemComponent;
 import io.gomint.server.inventory.item.Items;
@@ -55,7 +56,7 @@ public class ItemFrameTileEntity extends TileEntity {
     }
 
     @Override
-    public void interact(Entity entity, Facing face, Vector facePos, io.gomint.inventory.item.ItemStack item) {
+    public void interact(Entity entity, Facing face, Vector facePos, ItemStack<?> item) {
 
     }
 

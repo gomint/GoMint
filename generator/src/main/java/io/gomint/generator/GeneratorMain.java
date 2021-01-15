@@ -36,7 +36,7 @@ public class GeneratorMain {
 
         // Generate switches
         BlockStateSwitchGenerator stateSwitchGenerator = new BlockStateSwitchGenerator();
-        stateSwitchGenerator.generateSwitchNode((List<NBTTagCompound>) ((List) root.getList("blockPalette", false)));
+        stateSwitchGenerator.generateSwitchNode((List<NBTTagCompound>) ((List<?>) root.getList("blockPalette", false)));
 
         //
         Path tileEntities = Paths.get("gomint-server", "src", "main", "java", "io", "gomint", "server", "entity", "tileentity");

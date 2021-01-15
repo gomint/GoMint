@@ -15,10 +15,10 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:pufferfish_spawn_egg", id = 479 )
-public class ItemPufferfishSpawnEgg extends ItemStack implements io.gomint.inventory.item.ItemPufferfishSpawnEgg {
+public class ItemPufferfishSpawnEgg extends ItemStack< io.gomint.inventory.item.ItemPufferfishSpawnEgg> implements io.gomint.inventory.item.ItemPufferfishSpawnEgg {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.PUFFERFISH_SPAWN_EGG;
     }
 

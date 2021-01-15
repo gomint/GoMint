@@ -27,6 +27,7 @@ public interface BlockDoubleStoneSlab extends Block {
      * Set the type of stone for this block
      *
      * @param stoneType for this block
+     * @return block for chaining
      */
     BlockDoubleStoneSlab type(StoneType stoneType);
 

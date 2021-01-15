@@ -2,8 +2,9 @@ package io.gomint.server.inventory.item;
 
 import io.gomint.inventory.item.ItemType;
 import io.gomint.server.registry.RegisterInfo;
-import io.gomint.world.block.Block;
 import io.gomint.world.block.data.LogType;
+
+import java.time.Duration;
 
 /**
  * @author geNAZt
@@ -17,21 +18,21 @@ import io.gomint.world.block.data.LogType;
 @RegisterInfo(sId = "minecraft:spruce_button", id = -144)
 @RegisterInfo(sId = "minecraft:crimson_button", id = -260)
 @RegisterInfo(sId = "minecraft:warped_button", id = -261)
-public class ItemWoodenButton extends ItemStack implements io.gomint.inventory.item.ItemWoodenButton {
+public class ItemWoodenButton extends ItemStack< io.gomint.inventory.item.ItemWoodenButton> implements io.gomint.inventory.item.ItemWoodenButton {
 
     @Override
-    public long getBurnTime() {
-        return 15000;
+    public Duration burnTime() {
+        return Duration.ofMillis(15000);
     }
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.WOODEN_BUTTON;
     }
 
     @Override
-    public LogType getWoodType() {
-        switch (this.getMaterial()) {
+    public LogType type() {
+        switch (this.material()) {
             case "minecraft:crimson_button":
                 return LogType.CRIMSON;
             case "minecraft:warped_button":
@@ -54,33 +55,35 @@ public class ItemWoodenButton extends ItemStack implements io.gomint.inventory.i
     }
 
     @Override
-    public void setWoodType(LogType logType) {
+    public ItemWoodenButton type(LogType logType) {
         switch (logType) {
             case CRIMSON:
-                this.setBlockId("minecraft:crimson_button");
+                this.blockId("minecraft:crimson_button");
                 break;
             case WARPED:
-                this.setBlockId("minecraft:warped_button");
+                this.blockId("minecraft:warped_button");
                 break;
             case OAK:
-                this.setBlockId("minecraft:wooden_button");
+                this.blockId("minecraft:wooden_button");
                 break;
             case SPRUCE:
-                this.setBlockId("minecraft:spruce_button");
+                this.blockId("minecraft:spruce_button");
                 break;
             case BIRCH:
-                this.setBlockId("minecraft:birch_button");
+                this.blockId("minecraft:birch_button");
                 break;
             case DARK_OAK:
-                this.setBlockId("minecraft:dark_oak_button");
+                this.blockId("minecraft:dark_oak_button");
                 break;
             case JUNGLE:
-                this.setBlockId("minecraft:jungle_button");
+                this.blockId("minecraft:jungle_button");
                 break;
             case ACACIA:
-                this.setBlockId("minecraft:acacia_button");
+                this.blockId("minecraft:acacia_button");
                 break;
         }
+
+        return this;
     }
 
 }

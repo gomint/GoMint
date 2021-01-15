@@ -12,5 +12,5 @@ package io.gomint.inventory;
  * @version 1.0
  * @stability 2
  */
-public interface EnderChestInventory extends ContainerInventory {
+public interface EnderChestInventory extends ContainerInventory<EnderChestInventory> {
 }

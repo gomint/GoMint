@@ -18,7 +18,7 @@ public class InvisibleBedrock extends Block implements BlockInvisibleBedrock {
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return -1;
     }
 

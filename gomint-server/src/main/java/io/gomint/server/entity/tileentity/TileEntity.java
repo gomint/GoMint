@@ -48,7 +48,7 @@ public abstract class TileEntity {
      */
     public abstract void update(long currentMillis, float dT);
 
-    public void interact(Entity entity, Facing face, Vector facePos, ItemStack item) {
+    public void interact(Entity entity, Facing face, Vector facePos, ItemStack<?> item) {
 
     }
 

@@ -53,7 +53,7 @@ public class SoulTorch extends Block implements BlockSoulTorch {
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 0;
     }
 
@@ -117,7 +117,7 @@ public class SoulTorch extends Block implements BlockSoulTorch {
     }
 
     @Override
-    public boolean beforePlacement(EntityLiving entity, ItemStack item, Facing face, Location location) {
+    public boolean beforePlacement(EntityLiving entity, ItemStack<?> item, Facing face, Location location) {
         Facing[] toCheck = new Facing[]{
             Facing.DOWN,
             Facing.SOUTH,

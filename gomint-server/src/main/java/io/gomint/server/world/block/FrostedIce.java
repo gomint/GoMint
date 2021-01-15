@@ -24,7 +24,7 @@ public class FrostedIce extends Block implements BlockFrostedIce {
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 750;
     }
 

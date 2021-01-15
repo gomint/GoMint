@@ -12,7 +12,7 @@ import io.gomint.world.block.data.Facing;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:leather_leggings", id = 300 )
-public class ItemLeatherLeggings extends ItemLeatherArmor implements io.gomint.inventory.item.ItemLeatherLeggings {
+public class ItemLeatherLeggings extends ItemLeatherArmor<io.gomint.inventory.item.ItemLeatherLeggings> implements io.gomint.inventory.item.ItemLeatherLeggings {
 
     @Override
     public float getReductionValue() {
@@ -22,10 +22,10 @@ public class ItemLeatherLeggings extends ItemLeatherArmor implements io.gomint.i
     @Override
     public boolean interact(EntityPlayer entity, Facing face, Vector clickPosition, Block clickedBlock ) {
         if ( clickedBlock == null ) {
-            if ( isBetter( (ItemStack) entity.getArmorInventory().getLeggings() ) ) {
-                ItemStack old = (ItemStack) entity.getArmorInventory().getLeggings();
-                entity.getArmorInventory().setLeggings( this );
-                entity.getInventory().setItem( entity.getInventory().getItemInHandSlot(), old );
+            if ( isBetter( (ItemStack<?>) entity.getArmorInventory().leggings() ) ) {
+                ItemStack<?> old = (ItemStack<?>) entity.getArmorInventory().leggings();
+                entity.getArmorInventory().leggings( this );
+                entity.getInventory().item( entity.getInventory().itemInHandSlot(), old );
             }
         }
 
@@ -33,7 +33,7 @@ public class ItemLeatherLeggings extends ItemLeatherArmor implements io.gomint.i
     }
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.LEATHER_LEGGINGS;
     }
 

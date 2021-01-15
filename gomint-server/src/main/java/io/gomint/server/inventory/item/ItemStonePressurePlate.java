@@ -10,10 +10,10 @@ import io.gomint.taglib.NBTTagCompound;
  * @version 1.0
  */
 @RegisterInfo(sId = "minecraft:stone_pressure_plate", id = 70)
-public class ItemStonePressurePlate extends ItemStack implements io.gomint.inventory.item.ItemStonePressurePlate {
+public class ItemStonePressurePlate extends ItemStack<io.gomint.inventory.item.ItemStonePressurePlate> implements io.gomint.inventory.item.ItemStonePressurePlate {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.STONE_PRESSURE_PLATE;
     }
 

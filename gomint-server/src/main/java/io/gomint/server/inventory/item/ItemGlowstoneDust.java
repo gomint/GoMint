@@ -9,12 +9,12 @@ import io.gomint.taglib.NBTTagCompound;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:glowstone_dust", id = 348 )
- public class ItemGlowstoneDust extends ItemStack implements io.gomint.inventory.item.ItemGlowstoneDust {
+ public class ItemGlowstoneDust extends ItemStack< io.gomint.inventory.item.ItemGlowstoneDust> implements io.gomint.inventory.item.ItemGlowstoneDust {
 
 
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.GLOWSTONE_DUST;
     }
 

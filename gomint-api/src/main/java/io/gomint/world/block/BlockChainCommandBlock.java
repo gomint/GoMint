@@ -18,8 +18,9 @@ public interface BlockChainCommandBlock extends Block {
      * Set a custom name for this container
      *
      * @param customName which should be used
+     * @return block for chaining
      */
-    BlockChainCommandBlock customName(String customName );
+    BlockChainCommandBlock customName(String customName);
 
     /**
      * Get the custom name of this container

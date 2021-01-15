@@ -74,7 +74,7 @@ public class StringRegistry<R> {
     public void register(ClassPath classPathSearcher, String classPath) {
         LOGGER.debug("Going to scan: {}", classPath);
 
-        classPathSearcher.getTopLevelClasses(classPath, classInfo -> register(classInfo.load()));
+        classPathSearcher.getTopLevelClasses(classPath, classInfo -> register((Class<? extends R>) classInfo.load()));
     }
 
     public void registerAdditionalConstructor(String id, int parameterCount, Function<Object[], R> generator) {

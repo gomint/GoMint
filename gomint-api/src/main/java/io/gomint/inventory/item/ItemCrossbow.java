@@ -14,12 +14,13 @@ import io.gomint.GoMint;
  * @version 1.0
  * @stability 3
  */
-public interface ItemCrossbow extends ItemStack, ItemBurnable {
+public interface ItemCrossbow extends ItemStack<ItemCrossbow>, ItemBurnable {
 
     /**
      * Create a new item stack with given class and amount
      *
      * @param amount which is used for the creation
+	 * @return freshly generated item
      */
     static ItemCrossbow create( int amount ) {
         return GoMint.instance().createItemStack( ItemCrossbow.class, amount );

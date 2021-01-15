@@ -14,7 +14,7 @@ import io.gomint.world.block.data.StoneType;
 @RegisterInfo( sId = "minecraft:polished_blackstone_brick_wall", id = -278 )
 @RegisterInfo( sId = "minecraft:polished_blackstone_wall", id = -297 )
 @RegisterInfo( sId = "minecraft:blackstone_wall", id = -277 )
-public class ItemWall extends ItemStack implements io.gomint.inventory.item.ItemWall {
+public class ItemWall extends ItemStack< io.gomint.inventory.item.ItemWall> implements io.gomint.inventory.item.ItemWall {
 
     private static final String WALL_ID = "minecraft:cobblestone_wall";
 
@@ -64,14 +64,14 @@ public class ItemWall extends ItemStack implements io.gomint.inventory.item.Item
     }
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.WALL;
     }
 
     @Override
-    public StoneType getStoneType() {
+    public StoneType type() {
         for (StoneTypeMagic value : StoneTypeMagic.values()) {
-            if (value.wallId.equals(this.getMaterial()) && value.data == this.getData()) {
+            if (value.wallId.equals(this.material()) && value.data == this.data()) {
                 return StoneType.valueOf(value.name());
             }
         }
@@ -80,16 +80,17 @@ public class ItemWall extends ItemStack implements io.gomint.inventory.item.Item
     }
 
     @Override
-    public void setStoneType(StoneType stoneType) {
+    public ItemWall type(StoneType stoneType) {
         StoneTypeMagic state = StoneTypeMagic.valueOf(stoneType.name());
-        this.setMaterial(state.wallId);
-        this.setData(state.data);
+        this.material(state.wallId);
+        this.data(state.data);
+        return this;
     }
 
     @Override
-    public Block getBlock() {
-        BlockWall block = (BlockWall) super.getBlock();
-        block.type(this.getStoneType());
+    public Block block() {
+        BlockWall block = (BlockWall) super.block();
+        block.type(this.type());
         return block;
     }
 

@@ -7,10 +7,11 @@
 
 package io.gomint.server.test.inventory.item;
 
+import io.gomint.inventory.item.ItemStack;
 import io.gomint.math.Location;
 import io.gomint.server.entity.EntityPlayer;
 import io.gomint.math.Vector;
-import io.gomint.server.inventory.item.ItemStack;
+
 import io.gomint.server.test.IntegrationTest;
 import io.gomint.server.util.ClassPath;
 import io.gomint.server.world.WorldAdapter;
@@ -55,12 +56,12 @@ public class PlacementTest extends IntegrationTest {
         ClassPath classPath = new ClassPath("io.gomint");
         classPath.getTopLevelClasses("io.gomint.inventory.item", classInfo -> {
             Class<? extends ItemStack> clazz = classInfo.load();
-            ItemStack stack = this.server.createItemStack(clazz, 1);
+            ItemStack<?> stack = this.server.createItemStack(clazz, 1);
             if (stack != null) {
                 block.blockType(BlockAir.class);
 
                 System.out.println("Testing stack: " + stack.getClass().getName());
-                Block newBlock = (Block) stack.getBlock();
+                Block newBlock = (Block) ((io.gomint.server.inventory.item.ItemStack<?>) stack).block();
                 if (newBlock != null) {
                     this.server.blocks().replaceWithItem(newBlock, player, downBlock, block, Facing.UP, stack, new Vector(0.5f, 0, 0.5f));
                 }

@@ -25,6 +25,7 @@ public interface BlockStair<B> extends BlockDirection<B> {
      * Set if base of the stair is on top or not
      *
      * @param top true if base is on top, false otherwise
+     * @return block for chaining
      */
     B top(boolean top);
 

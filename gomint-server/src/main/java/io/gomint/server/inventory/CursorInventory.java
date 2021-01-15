@@ -10,7 +10,7 @@ import io.gomint.server.network.packet.PacketInventorySetSlot;
  * @author geNAZt
  * @version 1.0
  */
-public class CursorInventory extends Inventory {
+public class CursorInventory extends Inventory<CursorInventory> {
 
     public CursorInventory(Items items, InventoryHolder owner) {
         super(items, owner, 1);
@@ -29,12 +29,12 @@ public class CursorInventory extends Inventory {
     public void sendContents(PlayerConnection playerConnection) {
         PacketInventoryContent inventory = new PacketInventoryContent();
         inventory.setWindowId(WindowMagicNumbers.CURSOR_DEPRECATED);
-        inventory.setItems(getContents());
+        inventory.setItems(contents());
         playerConnection.addToSendQueue(inventory);
     }
 
     @Override
-    public InventoryType getInventoryType() {
+    public InventoryType inventoryType() {
         return InventoryType.CURSOR;
     }
 

@@ -24,13 +24,13 @@ public class NoteBlock extends Block implements BlockNoteblock {
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 1200;
     }
 
     @Override
-    public boolean interact(Entity entity, Facing face, Vector facePos, ItemStack item ) {
-        NoteblockTileEntity tileEntity = getTileEntity();
+    public boolean interact(Entity entity, Facing face, Vector facePos, ItemStack<?> item ) {
+        NoteblockTileEntity tileEntity = tileEntity();
         if ( tileEntity != null ) {
             tileEntity.interact( entity, face, facePos, item );
         }
@@ -40,7 +40,7 @@ public class NoteBlock extends Block implements BlockNoteblock {
 
     @Override
     public BlockNoteblock playNote() {
-        NoteblockTileEntity tileEntity = getTileEntity();
+        NoteblockTileEntity tileEntity = tileEntity();
         if ( tileEntity != null ) {
             tileEntity.playSound();
         }
@@ -64,7 +64,7 @@ public class NoteBlock extends Block implements BlockNoteblock {
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return ToolPresets.PICKAXE;
     }
 

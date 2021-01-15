@@ -14,12 +14,13 @@ import io.gomint.GoMint;
  * @version 1.0
  * @stability 1
  */
-public interface ItemCryingObsidian extends ItemStack {
+public interface ItemCryingObsidian extends ItemStack<ItemCryingObsidian> {
 
     /**
      * Create a new item stack with given class and amount
      *
      * @param amount which is used for the creation
+	 * @return freshly generated item
      */
     static ItemCryingObsidian create( int amount ) {
         return GoMint.instance().createItemStack( ItemCryingObsidian.class, amount );

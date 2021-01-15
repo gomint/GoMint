@@ -23,6 +23,6 @@ public interface Recipe {
      *
      * @return The array of ingredients required by this recipe
      */
-    ItemStack[] getIngredients();
+    ItemStack<?>[] getIngredients();
 
 }

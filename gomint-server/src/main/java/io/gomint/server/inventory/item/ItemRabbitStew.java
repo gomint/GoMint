@@ -9,7 +9,7 @@ import io.gomint.taglib.NBTTagCompound;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:rabbit_stew", id = 413 )
-public class ItemRabbitStew extends ItemFood implements io.gomint.inventory.item.ItemRabbitStew {
+public class ItemRabbitStew extends ItemFood<io.gomint.inventory.item.ItemRabbitStew> implements io.gomint.inventory.item.ItemRabbitStew {
 
 
 
@@ -24,7 +24,7 @@ public class ItemRabbitStew extends ItemFood implements io.gomint.inventory.item
     }
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.RABBIT_STEW;
     }
 

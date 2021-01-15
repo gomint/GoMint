@@ -14,14 +14,15 @@ import io.gomint.GoMint;
  * @version 1.0
  * @stability 1
  */
-public interface ItemSweetBerryBush extends ItemStack {
+public interface ItemSweetBerryBush extends ItemStack<ItemSweetBerryBush> {
 
     /**
      * Create a new item stack with given class and amount
      *
      * @param amount which is used for the creation
+	 * @return freshly generated item
      */
-    static ItemSweetBerryBush create( int amount ) {
+    static ItemSweetBerryBush create( int amount ) {	
         return GoMint.instance().createItemStack( ItemSweetBerryBush.class, amount );
     }
 

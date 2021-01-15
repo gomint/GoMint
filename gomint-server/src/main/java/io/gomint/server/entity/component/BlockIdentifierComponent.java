@@ -32,7 +32,7 @@ public class BlockIdentifierComponent extends AbstractTileEntityComponent {
     }
 
     @Override
-    public void interact(Entity entity, Facing face, Vector facePos, ItemStack item) {
+    public void interact(Entity entity, Facing face, Vector facePos, ItemStack<?> item) {
 
     }
 

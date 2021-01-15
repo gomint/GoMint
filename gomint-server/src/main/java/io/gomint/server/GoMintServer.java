@@ -717,7 +717,7 @@ public class GoMintServer implements GoMint, InventoryHolder {
     }
 
     @Override
-    public <T extends ItemStack> T createItemStack(Class<T> itemClass, int amount) {
+    public <T extends ItemStack<T>> T createItemStack(Class<T> itemClass, int amount) {
         return this.items.create(itemClass, (byte) amount);
     }
 

@@ -40,11 +40,11 @@ public class EnderChestTileEntity extends ContainerTileEntity implements Invento
     }
 
     @Override
-    public void interact(Entity entity, Facing face, Vector facePos, ItemStack item ) {
+    public void interact(Entity entity, Facing face, Vector facePos, ItemStack<?> item ) {
         // Open the chest inventory for the entity
         if ( entity instanceof EntityPlayer ) {
             EntityPlayer player = (EntityPlayer) entity;
-            player.getEnderChestInventory().setContainerPosition( this.block.position() );
+            player.getEnderChestInventory().containerPosition( this.block.position() );
             player.openInventory( player.getEnderChestInventory() );
         }
     }

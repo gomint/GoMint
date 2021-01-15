@@ -8,6 +8,7 @@
 package io.gomint.server.entity.tileentity;
 
 import io.gomint.entity.Entity;
+import io.gomint.inventory.item.ItemStack;
 import io.gomint.math.Vector;
 import io.gomint.server.entity.component.InventoryComponent;
 import io.gomint.server.inventory.BarrelInventory;
@@ -46,7 +47,7 @@ public class BarrelTileEntity extends ContainerTileEntity implements InventoryHo
     }
 
     @Override
-    public void interact(Entity entity, Facing face, Vector facePos, io.gomint.inventory.item.ItemStack item) {
+    public void interact(Entity entity, Facing face, Vector facePos, ItemStack<?> item) {
         this.inventoryComponent.interact(entity, face, facePos, item);
     }
 

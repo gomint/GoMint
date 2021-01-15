@@ -19,7 +19,7 @@ public class NetherGoldOre extends Block implements BlockNetherGoldOre {
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 4500;
     }
 
@@ -39,7 +39,7 @@ public class NetherGoldOre extends Block implements BlockNetherGoldOre {
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return ToolPresets.PICKAXE;
     }
 }

@@ -15,10 +15,10 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:tropical_fish_bucket", id = 366 )
-public class ItemTropicalFishBucket extends ItemStack implements io.gomint.inventory.item.ItemTropicalFishBucket {
+public class ItemTropicalFishBucket extends ItemStack< io.gomint.inventory.item.ItemTropicalFishBucket> implements io.gomint.inventory.item.ItemTropicalFishBucket {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.TROPICAL_FISH_BUCKET;
     }
 

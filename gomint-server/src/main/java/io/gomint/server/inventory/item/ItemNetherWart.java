@@ -14,10 +14,10 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:nether_wart", id = 372 )
-public class ItemNetherWart extends ItemStack implements io.gomint.inventory.item.ItemNetherWart {
+public class ItemNetherWart extends ItemStack< io.gomint.inventory.item.ItemNetherWart> implements io.gomint.inventory.item.ItemNetherWart {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.NETHER_WART;
     }
 

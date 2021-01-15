@@ -8,10 +8,10 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo(sId = "minecraft:item.skull", id = 144)
-public class ItemSkullBlock extends ItemStack {
+public class ItemSkullBlock extends ItemStack<ItemSkullBlock> {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.SKULL;
     }
 

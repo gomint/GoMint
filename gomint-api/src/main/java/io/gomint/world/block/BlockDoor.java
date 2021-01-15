@@ -47,6 +47,7 @@ public interface BlockDoor<B> extends BlockDirection<B> {
      * Set the side where the hinge is on
      *
      * @param side of the hinge
+     * @return block for chaining
      */
     B hingeSide(HingeSide side);
 

@@ -12,7 +12,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:golden_pickaxe", id = 285 )
-public class ItemGoldenPickaxe extends ItemReduceTierGolden implements io.gomint.inventory.item.ItemGoldenPickaxe {
+public class ItemGoldenPickaxe extends ItemReduceTierGolden<io.gomint.inventory.item.ItemGoldenPickaxe> implements io.gomint.inventory.item.ItemGoldenPickaxe {
 
     @Override
     public void gotInHand( EntityPlayer player ) {
@@ -29,7 +29,7 @@ public class ItemGoldenPickaxe extends ItemReduceTierGolden implements io.gomint
     }
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.GOLDEN_PICKAXE;
     }
 

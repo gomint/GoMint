@@ -34,7 +34,7 @@ public class NetherWarpedWart extends Block implements BlockNetherWarpedWart {
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return new Class[]{
             ItemHoe.class
         };

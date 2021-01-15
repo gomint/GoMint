@@ -8,7 +8,7 @@ import io.gomint.world.block.data.StoneType;
  * @version 1.0
  * @stability 3
  */
-public interface ItemWall extends ItemStack {
+public interface ItemWall extends ItemStack<ItemWall> {
 
     /**
      * Create a new item stack with given class and amount
@@ -24,13 +24,13 @@ public interface ItemWall extends ItemStack {
      *
      * @return type of stone
      */
-    StoneType getStoneType();
+    StoneType type();
 
     /**
      * Set the type of stone for this wall
      *
      * @param stoneType type of stone
      */
-    void setStoneType(StoneType stoneType);
+    ItemWall type(StoneType stoneType);
 
 }

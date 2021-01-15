@@ -27,6 +27,7 @@ public interface BlockWoodenStair extends BlockStair<BlockWoodenStair> {
      * Set the type of wood for this button
      *
      * @param logType type of wood
+     * @return block for chaining
      */
     BlockWoodenStair type(LogType logType);
 

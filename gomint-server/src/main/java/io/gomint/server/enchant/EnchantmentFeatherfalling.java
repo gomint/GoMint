@@ -37,13 +37,13 @@ public class EnchantmentFeatherfalling extends Enchantment implements io.gomint.
     }
 
     @Override
-    public boolean canBeApplied( ItemStack itemStack ) {
-        return itemStack.getItemType() == ItemType.CHAIN_BOOTS ||
-            itemStack.getItemType() == ItemType.DIAMOND_BOOTS ||
-            itemStack.getItemType() == ItemType.GOLDEN_BOOTS ||
-            itemStack.getItemType() == ItemType.IRON_BOOTS ||
-            itemStack.getItemType() == ItemType.LEATHER_BOOTS ||
-            itemStack.getItemType() == ItemType.NETHERITE_BOOTS;
+    public boolean canBeApplied(ItemStack<?> itemStack ) {
+        return itemStack.itemType() == ItemType.CHAIN_BOOTS ||
+            itemStack.itemType() == ItemType.DIAMOND_BOOTS ||
+            itemStack.itemType() == ItemType.GOLDEN_BOOTS ||
+            itemStack.itemType() == ItemType.IRON_BOOTS ||
+            itemStack.itemType() == ItemType.LEATHER_BOOTS ||
+            itemStack.itemType() == ItemType.NETHERITE_BOOTS;
     }
 
     @Override

@@ -1,13 +1,16 @@
 package io.gomint.server.inventory.item;
 
+import io.gomint.inventory.item.ItemStack;
+
 /**
  * @author KingAli
  * @version 1.0
  */
-public abstract class ItemNetheriteArmor extends ItemArmor {
+public abstract class ItemNetheriteArmor<I extends ItemStack<I>> extends ItemArmor<I> {
 
     @Override
-    public int getEnchantAbility() {
+    public int enchantAbility() {
         return 15;
     }
+
 }

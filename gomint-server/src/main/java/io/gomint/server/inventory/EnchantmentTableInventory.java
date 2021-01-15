@@ -14,7 +14,7 @@ import io.gomint.server.world.block.Block;
  * @author geNAZt
  * @version 1.0
  */
-public class EnchantmentTableInventory extends ContainerInventory {
+public class EnchantmentTableInventory extends ContainerInventory<io.gomint.inventory.EnchantmentTableInventory> implements io.gomint.inventory.EnchantmentTableInventory {
 
     /**
      * Construct a new container inventory
@@ -42,8 +42,8 @@ public class EnchantmentTableInventory extends ContainerInventory {
         Vector enchanterVector = new Vector(enchanter.position());
 
         // Drop the players items
-        for (ItemStack content : this.contents) {
-            if (content.getItemType() != ItemType.AIR) {
+        for (ItemStack<?> content : this.contents) {
+            if (content.itemType() != ItemType.AIR) {
                 enchanter.world().createItemDrop(enchanterVector.add(0, .5f, 0), content);
             }
         }
@@ -53,7 +53,7 @@ public class EnchantmentTableInventory extends ContainerInventory {
     }
 
     @Override
-    public InventoryType getInventoryType() {
+    public InventoryType inventoryType() {
         return InventoryType.ENCHANTING_TABLE;
     }
 

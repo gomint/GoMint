@@ -21,7 +21,7 @@ public interface BlockTNT extends Block {
      *
      * @param untilExplodeSeconds seconds until the tnt explodes
      */
-    void prime( float untilExplodeSeconds );
+    void prime(float untilExplodeSeconds);
 
     /**
      * Get the type of tnt
@@ -34,6 +34,7 @@ public interface BlockTNT extends Block {
      * Set the type of tnt
      *
      * @param type which this tnt should have
+     * @return block for chaining
      */
     BlockTNT type(TNTType type);
 

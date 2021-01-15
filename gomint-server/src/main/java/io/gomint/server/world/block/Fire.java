@@ -25,7 +25,7 @@ public class Fire extends Block implements BlockFire {
     }
 
     @Override
-    public boolean canBeReplaced( ItemStack item ) {
+    public boolean canBeReplaced(ItemStack<?> item ) {
         return true;
     }
 
@@ -62,7 +62,7 @@ public class Fire extends Block implements BlockFire {
     }
 
     @Override
-    public List<ItemStack> drops(ItemStack itemInHand ) {
+    public List<ItemStack<?>> drops(ItemStack<?> itemInHand ) {
         return new ArrayList<>();
     }
 

@@ -22,12 +22,12 @@ public class StainedHardenedClay extends Block implements BlockStainedHardenedCl
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 1875;
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return new Class[]{
             ItemWoodenPickaxe.class,
             ItemIronPickaxe.class,

@@ -186,7 +186,7 @@ public abstract class Block implements io.gomint.world.block.Block {
      * @param item    The item with which the entity interacted, can be null
      * @return true when the blockId has made a action for interaction, false when not
      */
-    public boolean interact(Entity entity, Facing face, Vector facePos, ItemStack item) {
+    public boolean interact(Entity entity, Facing face, Vector facePos, ItemStack<?> item) {
         return false;
     }
 
@@ -314,8 +314,8 @@ public abstract class Block implements io.gomint.world.block.Block {
         worldAdapter.resetTemporaryStorage(this.position, this.layer);
 
         // Check if new blockId needs tile entity
-        if (this.getTileEntity() != null) {
-            worldAdapter.storeTileEntity(this.position, this.getTileEntity());
+        if (this.tileEntity() != null) {
+            worldAdapter.storeTileEntity(this.position, this.tileEntity());
         } else {
             worldAdapter.removeTileEntity(this.position);
         }
@@ -368,10 +368,10 @@ public abstract class Block implements io.gomint.world.block.Block {
         worldAdapter.resetTemporaryStorage(this.position, this.layer);
 
         // Check if new blockId needs tile entity
-        if (instance.getTileEntity() != null) {
+        if (instance.tileEntity() != null) {
             // We need to copy the tile entity and change its location
             NBTTagCompound compound = new NBTTagCompound("");
-            instance.getTileEntity().toCompound(compound, SerializationReason.PERSIST);
+            instance.tileEntity().toCompound(compound, SerializationReason.PERSIST);
 
             // Change the position
             compound.addValue("x", this.position.x());
@@ -401,7 +401,7 @@ public abstract class Block implements io.gomint.world.block.Block {
      *
      * @return time in milliseconds it needs to break this blockId
      */
-    public long getBreakTime() {
+    public long breakTime() {
         return 250;
     }
 
@@ -411,7 +411,7 @@ public abstract class Block implements io.gomint.world.block.Block {
      * @param <T> The type of the tile entity
      * @return null when there is not tile entity attached, otherwise the stored tile entity
      */
-    public <T extends TileEntity> T getTileEntity() {
+    public <T extends TileEntity> T tileEntity() {
         // Ensure tile entity
         if (this.tileEntity == null && needsTileEntity()) {
             this.tileEntity = createTileEntity(new NBTTagCompound(""));
@@ -446,17 +446,17 @@ public abstract class Block implements io.gomint.world.block.Block {
     public Block side(Facing face) {
         switch (face) {
             case DOWN:
-                return this.getRelative(BlockPosition.DOWN);
+                return this.relative(BlockPosition.DOWN);
             case UP:
-                return this.getRelative(BlockPosition.UP);
+                return this.relative(BlockPosition.UP);
             case NORTH:
-                return this.getRelative(BlockPosition.NORTH);
+                return this.relative(BlockPosition.NORTH);
             case SOUTH:
-                return this.getRelative(BlockPosition.SOUTH);
+                return this.relative(BlockPosition.SOUTH);
             case WEST:
-                return this.getRelative(BlockPosition.WEST);
+                return this.relative(BlockPosition.WEST);
             case EAST:
-                return this.getRelative(BlockPosition.EAST);
+                return this.relative(BlockPosition.EAST);
             default:
                 return null;
         }
@@ -468,22 +468,22 @@ public abstract class Block implements io.gomint.world.block.Block {
      * @param direction which side we want to get
      * @return blockId attached to the side given
      */
-    public Block getSide(Direction direction) {
+    public Block side(Direction direction) {
         switch (direction) {
             case SOUTH:
-                return this.getRelative(BlockPosition.SOUTH);
+                return this.relative(BlockPosition.SOUTH);
             case NORTH:
-                return this.getRelative(BlockPosition.NORTH);
+                return this.relative(BlockPosition.NORTH);
             case EAST:
-                return this.getRelative(BlockPosition.EAST);
+                return this.relative(BlockPosition.EAST);
             case WEST:
-                return this.getRelative(BlockPosition.WEST);
+                return this.relative(BlockPosition.WEST);
             default:
                 return null;
         }
     }
 
-    private Block getRelative(BlockPosition position) {
+    private Block relative(BlockPosition position) {
         int x = this.position.x() + position.x();
         int y = this.position.y() + position.y();
         int z = this.position.z() + position.z();
@@ -497,7 +497,7 @@ public abstract class Block implements io.gomint.world.block.Block {
      * @param item which may replace this blockId
      * @return true if this blockId can be replaced with the item, false when not
      */
-    public boolean canBeReplaced(ItemStack item) {
+    public boolean canBeReplaced(ItemStack<?> item) {
         return false;
     }
 
@@ -519,12 +519,12 @@ public abstract class Block implements io.gomint.world.block.Block {
         connection.addToSendQueue(updateBlock);
 
         // Also reset tile entity when needed
-        if (this.getTileEntity() != null) {
+        if (this.tileEntity() != null) {
             PacketTileEntityData tileEntityData = new PacketTileEntityData();
             tileEntityData.setPosition(this.position);
 
             NBTTagCompound compound = new NBTTagCompound("");
-            this.getTileEntity().toCompound(compound, SerializationReason.NETWORK);
+            this.tileEntity().toCompound(compound, SerializationReason.NETWORK);
 
             tileEntityData.setCompound(compound);
 
@@ -541,7 +541,7 @@ public abstract class Block implements io.gomint.world.block.Block {
      * @param location of the placement
      * @return true when placement can happen, false otherwise
      */
-    public boolean beforePlacement(EntityLiving entity, ItemStack item, Facing face, Location location) {
+    public boolean beforePlacement(EntityLiving entity, ItemStack<?> item, Facing face, Location location) {
         return true;
     }
 
@@ -561,9 +561,9 @@ public abstract class Block implements io.gomint.world.block.Block {
      * @param player which should destroy the blockId
      * @return break time in milliseconds
      */
-    public long getFinalBreakTime(ItemStack item, EntityPlayer player) {
+    public long getFinalBreakTime(ItemStack<?> item, EntityPlayer player) {
         // Get basis break time ( breaking with right tool )
-        float base = (getBreakTime() / 1500F);
+        float base = (breakTime() / 1500F);
         float toolStrength = 1.0F;
 
         // Instant break
@@ -574,11 +574,11 @@ public abstract class Block implements io.gomint.world.block.Block {
         // Check if we need a tool
         boolean foundInterface = false;
 
-        Class<? extends ItemStack>[] interfacez = getToolInterfaces();
+        Class<? extends ItemStack<?>>[] interfacez = getToolInterfaces();
         if (interfacez != null) {
-            for (Class<? extends ItemStack> aClass : interfacez) {
+            for (Class<? extends ItemStack<?>> aClass : interfacez) {
                 if (aClass.isAssignableFrom(item.getClass())) {
-                    toolStrength = ((ItemReduceBreaktime) item).getDivisor();
+                    toolStrength = ((ItemReduceBreaktime<?>) item).divisor();
                     foundInterface = true;
                 }
             }
@@ -591,7 +591,7 @@ public abstract class Block implements io.gomint.world.block.Block {
 
         // Check for efficiency
         if (toolStrength > 1.0F) {
-            EnchantmentEfficiency enchantment = item.getEnchantment(EnchantmentEfficiency.class);
+            EnchantmentEfficiency enchantment = item.enchantment(EnchantmentEfficiency.class);
             if (enchantment != null && enchantment.getLevel() > 0) {
                 toolStrength += (enchantment.getLevel() * enchantment.getLevel() + 1);
             }
@@ -627,7 +627,7 @@ public abstract class Block implements io.gomint.world.block.Block {
         }
 
         // When in water
-        if (player.isInsideLiquid() && player.getArmorInventory().getHelmet().getEnchantment(EnchantmentAquaAffinity.class) == null) {
+        if (player.isInsideLiquid() && player.getArmorInventory().helmet().enchantment(EnchantmentAquaAffinity.class) == null) {
             toolStrength /= 5.0F;
         }
 
@@ -652,7 +652,7 @@ public abstract class Block implements io.gomint.world.block.Block {
         return time;
     }
 
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return null;
     }
 
@@ -670,9 +670,9 @@ public abstract class Block implements io.gomint.world.block.Block {
      * @param itemInHand which was used to destroy this blockId
      * @return a list of drops
      */
-    public List<ItemStack> drops(ItemStack itemInHand) {
+    public List<ItemStack<?>> drops(ItemStack<?> itemInHand) {
         // TODO: New system
-        ItemStack drop = this.items.create(this.identifier.getBlockId(), (short) 0, (byte) 1, null);
+        ItemStack<?> drop = this.items.create(this.identifier.getBlockId(), (short) 0, (byte) 1, null);
         return Lists.newArrayList(drop);
     }
 
@@ -684,8 +684,8 @@ public abstract class Block implements io.gomint.world.block.Block {
 
     }
 
-    boolean isCorrectTool(ItemStack itemInHand) {
-        for (Class<? extends ItemStack> aClass : getToolInterfaces()) {
+    boolean isCorrectTool(ItemStack<?> itemInHand) {
+        for (Class<? extends ItemStack<?>> aClass : getToolInterfaces()) {
             if (aClass.isAssignableFrom(itemInHand.getClass())) {
                 return true;
             }

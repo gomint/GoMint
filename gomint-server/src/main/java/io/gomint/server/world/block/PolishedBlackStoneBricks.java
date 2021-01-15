@@ -19,7 +19,7 @@ public class PolishedBlackStoneBricks extends Block implements BlockPolishedBlac
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 2300;
     }
 
@@ -39,7 +39,7 @@ public class PolishedBlackStoneBricks extends Block implements BlockPolishedBlac
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return ToolPresets.PICKAXE;
     }
 }

@@ -10,10 +10,10 @@ import io.gomint.taglib.NBTTagCompound;
  * @version 1.0
  */
 @RegisterInfo(sId = "minecraft:iron_trapdoor", id = 167)
-public class ItemIronTrapdoor extends ItemStack implements io.gomint.inventory.item.ItemIronTrapdoor {
+public class ItemIronTrapdoor extends ItemStack< io.gomint.inventory.item.ItemIronTrapdoor> implements io.gomint.inventory.item.ItemIronTrapdoor {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.IRON_TRAPDOOR;
     }
 

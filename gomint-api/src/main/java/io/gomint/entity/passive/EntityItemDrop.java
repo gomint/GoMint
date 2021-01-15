@@ -29,14 +29,14 @@ public interface EntityItemDrop extends Entity {
      * @param <T> generic type of the item stack
      * @return the ItemStack which has been stored
      */
-    <T extends ItemStack> T getItemStack();
+    <T extends ItemStack<T>> T getItemStack();
 
     /**
      * Item stack which should be used by this entity. This will silenty fail when the entity is already spawned
      *
      * @param itemStack which should be used in this entity
      */
-    void setItemStack( ItemStack itemStack );
+    <T extends ItemStack<T>> void setItemStack( T itemStack );
 
     /**
      * Set a new pickup delay

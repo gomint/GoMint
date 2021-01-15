@@ -16,10 +16,10 @@ import io.gomint.server.registry.RegisterInfo;
  */
 @RegisterInfo(sId = "minecraft:frame", id = 389, def = true)
 @RegisterInfo(sId = "minecraft:item.frame", id = 199)
-public class ItemFrame extends ItemStack implements io.gomint.inventory.item.ItemFrame {
+public class ItemFrame extends ItemStack< io.gomint.inventory.item.ItemFrame> implements io.gomint.inventory.item.ItemFrame {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.FRAME;
     }
 

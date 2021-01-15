@@ -7,14 +7,15 @@ import io.gomint.GoMint;
  * @version 1.0
  * @stability 3
  */
-public interface ItemLeatherLeggings extends ItemColoredArmor {
+public interface ItemLeatherLeggings extends ItemColoredArmor<ItemLeatherLeggings> {
 
     /**
      * Create a new item stack with given class and amount
      *
      * @param amount which is used for the creation
+	 * @return freshly generated item
      */
-    static ItemLeatherLeggings create( int amount ) {
+    static ItemLeatherLeggings create( int amount ) {	
         return GoMint.instance().createItemStack( ItemLeatherLeggings.class, amount );
     }
 

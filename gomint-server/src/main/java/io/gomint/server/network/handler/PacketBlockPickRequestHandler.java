@@ -1,8 +1,8 @@
 package io.gomint.server.network.handler;
 
 import io.gomint.inventory.item.ItemAir;
+import io.gomint.inventory.item.ItemStack;
 import io.gomint.server.entity.EntityPlayer;
-import io.gomint.server.inventory.item.ItemStack;
 import io.gomint.server.network.PlayerConnection;
 import io.gomint.server.network.packet.PacketBlockPickRequest;
 import io.gomint.server.world.block.Block;
@@ -28,7 +28,7 @@ public class PacketBlockPickRequestHandler implements PacketHandler<PacketBlockP
         switch (player.getGamemode()) {
             case CREATIVE:
                 // When in creative give this player the block in the inventory
-                for (io.gomint.inventory.item.ItemStack drop : block.drops(null)) {
+                for (io.gomint.inventory.item.ItemStack<?> drop : block.drops(null)) {
                     player.getInventory().addItem(drop);
                 }
 
@@ -36,23 +36,23 @@ public class PacketBlockPickRequestHandler implements PacketHandler<PacketBlockP
             case SURVIVAL:
                 // Check current player inventory
                 byte freeSlot = -1;
-                io.gomint.inventory.item.ItemStack[] items = player.getInventory().getContents();
+                ItemStack<?>[] items = player.getInventory().contents();
                 for (byte i = 0; i < items.length; i++) {
-                    ItemStack itemStack = (ItemStack) items[i];
+                    ItemStack<?> itemStack = items[i];
                     if (freeSlot == -1 && i < 9) {
                         if (itemStack instanceof ItemAir) {
                             freeSlot = i;
                         }
                     }
 
-                    if (block.getBlockId().equals(itemStack.getMaterial())) { // TODO: Fix this for slabs.....
+                    if (block.getBlockId().equals(((io.gomint.server.inventory.item.ItemStack<?>) itemStack).material())) { // TODO: Fix this for slabs.....
                         if (i < 9) {
                             player.getInventory().setItemInHand(i);
                             return;
                         } else if (freeSlot > -1) {
                             // Set item into free slot
-                            player.getInventory().setItem(freeSlot, itemStack);
-                            player.getInventory().setItem(i, ItemAir.create(1));
+                            player.getInventory().item(freeSlot, itemStack);
+                            player.getInventory().item(i, ItemAir.create(1));
                             player.getInventory().setItemInHand(freeSlot);
 
                             return;

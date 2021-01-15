@@ -19,7 +19,7 @@ import java.util.List;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:writable_book", id = 386 )
-public class ItemWritableBook extends ItemStack implements io.gomint.inventory.item.ItemWritableBook {
+public class ItemWritableBook extends ItemStack< io.gomint.inventory.item.ItemWritableBook> implements io.gomint.inventory.item.ItemWritableBook {
 
     private static final String PAGE_TAG = "pages";
     private static final String PAGE_CONTENT_TAG = "text";
@@ -30,18 +30,18 @@ public class ItemWritableBook extends ItemStack implements io.gomint.inventory.i
     private static final String AUTHOR_TAG = "author";
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.WRITABLE_BOOK;
     }
 
     public BookPage getPage( int index ) {
         // Check if we have a NBT tag
-        if ( this.getNbtData() == null ) {
+        if ( this.nbtData() == null ) {
             return null;
         }
 
         // We have a NBT tag but no pages?
-        List<Object> pages = this.getNbtData().getList( PAGE_TAG, false );
+        List<Object> pages = this.nbtData().getList( PAGE_TAG, false );
         if ( pages == null ) {
             return null;
         }
@@ -64,7 +64,7 @@ public class ItemWritableBook extends ItemStack implements io.gomint.inventory.i
 
     public void createPage( int index ) {
         // We ignore sanity checks since we only call this from
-        List<Object> pages = this.getOrCreateNBT().getList( PAGE_TAG, true );
+        List<Object> pages = this.nbt().getList( PAGE_TAG, true );
         if ( pages.size() <= index ) {
             for ( int i = pages.size(); i < index + 1; i++ ) {
                 NBTTagCompound emptyPage = new NBTTagCompound( "" );
@@ -77,7 +77,7 @@ public class ItemWritableBook extends ItemStack implements io.gomint.inventory.i
 
     public void setPageContent( int index, String content ) {
         // We ignore sanity checks since we only call this from
-        List<Object> pages = this.getNbtData().getList( PAGE_TAG, false );
+        List<Object> pages = this.nbtData().getList( PAGE_TAG, false );
         if ( pages == null ) {
             return;
         }
@@ -105,7 +105,7 @@ public class ItemWritableBook extends ItemStack implements io.gomint.inventory.i
      * @param index of the page we want to insert
      */
     public void addBlankPage( int index ) {
-        List<Object> pages = this.getOrCreateNBT().getList( PAGE_TAG, true );
+        List<Object> pages = this.nbt().getList( PAGE_TAG, true );
         NBTTagCompound emptyPage = new NBTTagCompound( "" );
         emptyPage.addValue( PHOTO_TAG, "" );
         emptyPage.addValue( PAGE_CONTENT_TAG, "" );
@@ -113,8 +113,8 @@ public class ItemWritableBook extends ItemStack implements io.gomint.inventory.i
     }
 
     public void deletePage( int index ) {
-        if ( this.getNbtData() != null ) {
-            List<Object> pages = this.getNbtData().getList( PAGE_TAG, false );
+        if ( this.nbtData() != null ) {
+            List<Object> pages = this.nbtData().getList( PAGE_TAG, false );
             if ( pages != null ) {
                 if ( index > 0 && index < pages.size() ) {
                     pages.remove( index );
@@ -124,14 +124,14 @@ public class ItemWritableBook extends ItemStack implements io.gomint.inventory.i
     }
 
     public ItemWrittenBook sign( String title, String author, String xuid ) {
-        this.getOrCreateNBT().addValue( TITLE_TAG, title );
-        this.getOrCreateNBT().addValue( AUTHOR_TAG, author );
-        this.getOrCreateNBT().addValue( XUID_TAG, xuid );
-        this.getOrCreateNBT().addValue( GENERATION_TAG, 0 );
+        this.nbt().addValue( TITLE_TAG, title );
+        this.nbt().addValue( AUTHOR_TAG, author );
+        this.nbt().addValue( XUID_TAG, xuid );
+        this.nbt().addValue( GENERATION_TAG, 0 );
 
         // Create final version of the book
         ItemWrittenBook writtenBook = (ItemWrittenBook) GoMint.instance().createItemStack( io.gomint.inventory.item.ItemWrittenBook.class, 1 );
-        writtenBook.setNbtData( this.getNbtData() );
+        writtenBook.nbtData( this.nbtData() );
         return writtenBook;
     }
 

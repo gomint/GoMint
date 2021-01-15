@@ -14,12 +14,12 @@ import java.util.List;
  */
 public class PlayerEnchantItemEvent extends CancellablePlayerEvent {
 
-    private final ItemStack item;
+    private final ItemStack<?> item;
     private final List<Enchantment> enchantments;
     private final int levelCost;
     private final int lapisCost;
 
-    public PlayerEnchantItemEvent( EntityPlayer player, ItemStack item, List<Enchantment> enchantments, int levelCost, int lapisCost ) {
+    public PlayerEnchantItemEvent( EntityPlayer player, ItemStack<?> item, List<Enchantment> enchantments, int levelCost, int lapisCost ) {
         super( player );
         this.item = item;
         this.enchantments = Collections.unmodifiableList( enchantments );
@@ -32,7 +32,7 @@ public class PlayerEnchantItemEvent extends CancellablePlayerEvent {
      *
      * @return the item which should get enchanted
      */
-    public ItemStack getItem() {
+    public ItemStack<?> getItem() {
         return this.item;
     }
 

@@ -18,7 +18,7 @@ public class EndPortalFrame extends Block implements BlockEndPortalFrame {
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return -1;
     }
 

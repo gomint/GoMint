@@ -26,16 +26,16 @@ public class DumpUtil {
 
     private static final Logger LOGGER = LoggerFactory.getLogger( DumpUtil.class );
 
-    public static void dumpInventory( Inventory inventory ) {
+    public static void dumpInventory( Inventory<?> inventory ) {
         LOGGER.info( "Inventory: {} - Size: {}", inventory.getClass().getName(), inventory.size() );
 
         if ( inventory.size() == 1 ) {
             StringBuilder builder = new StringBuilder( "  " );
-            ItemStack item = (ItemStack) inventory.getItem( 0 );
+            ItemStack<?> item = (ItemStack<?>) inventory.item( 0 );
             String slotName = String.valueOf( 0 );
-            String itemName = String.valueOf( item.getMaterial() );
-            String dataName = String.valueOf( item.getData() );
-            String amountName = String.valueOf( item.getAmount() );
+            String itemName = String.valueOf( item.material() );
+            String dataName = String.valueOf( item.data() );
+            String amountName = String.valueOf( item.amount() );
             int itemDataNameLength = itemName.length() + dataName.length() + amountName.length();
 
             builder
@@ -55,11 +55,11 @@ public class DumpUtil {
                 StringBuilder builder = new StringBuilder( "  " );
 
                 for ( int j = 0; j < 9; j++ ) {
-                    ItemStack item = (ItemStack) inventory.getItem( i * 9 + j );
+                    ItemStack<?> item = (ItemStack<?>) inventory.item( i * 9 + j );
                     String slotName = String.valueOf( i * 9 + j );
-                    String itemName = String.valueOf( item.getMaterial() );
-                    String dataName = String.valueOf( item.getData() );
-                    String amountName = String.valueOf( item.getAmount() );
+                    String itemName = String.valueOf( item.material() );
+                    String dataName = String.valueOf( item.data() );
+                    String amountName = String.valueOf( item.amount() );
                     int itemDataNameLength = itemName.length() + dataName.length() + amountName.length();
 
                     builder
@@ -81,11 +81,11 @@ public class DumpUtil {
                 StringBuilder builder = new StringBuilder( "  " );
 
                 for ( int j = 0; j < rowSize; j++ ) {
-                    ItemStack item = (ItemStack) inventory.getItem( i * rowSize + j );
+                    ItemStack<?> item = (ItemStack<?>) inventory.item( i * rowSize + j );
                     String slotName = String.valueOf( i * rowSize + j );
-                    String itemName = String.valueOf( item.getMaterial() );
-                    String dataName = String.valueOf( item.getData() );
-                    String amountName = String.valueOf( item.getAmount() );
+                    String itemName = String.valueOf( item.material() );
+                    String dataName = String.valueOf( item.data() );
+                    String amountName = String.valueOf( item.amount() );
                     int itemDataNameLength = itemName.length() + dataName.length() + amountName.length();
 
                     builder
@@ -212,7 +212,7 @@ public class DumpUtil {
             if ( obj instanceof List ) {
                 LOGGER.info( Strings.repeat( " ", depth * 2 ) + stringObjectEntry.getKey() + ": [" );
 
-                List v = (List) obj;
+                List<?> v = (List<?>) obj;
                 if ( v.size() > 0 ) {
                     LOGGER.info( Strings.repeat( " ", ( depth + 1 ) * 2 ) + "-----------" );
                 }

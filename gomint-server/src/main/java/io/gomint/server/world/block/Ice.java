@@ -17,7 +17,7 @@ import java.util.List;
 public class Ice extends Block implements BlockIce {
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 750;
     }
 
@@ -37,7 +37,7 @@ public class Ice extends Block implements BlockIce {
     }
 
     @Override
-    public List<ItemStack> drops(ItemStack itemInHand) {
+    public List<ItemStack<?>> drops(ItemStack<?> itemInHand) {
         return new ArrayList<>();
     }
 

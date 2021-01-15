@@ -15,12 +15,12 @@ import io.gomint.taglib.NBTTagCompound;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:record_mall", id = 505 )
-public class ItemRecordMall extends ItemStack implements io.gomint.inventory.item.ItemRecordMall {
+public class ItemRecordMall extends ItemStack< io.gomint.inventory.item.ItemRecordMall> implements io.gomint.inventory.item.ItemRecordMall {
 
 
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.RECORD_MALL;
     }
 

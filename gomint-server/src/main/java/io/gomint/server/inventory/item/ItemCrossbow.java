@@ -22,26 +22,28 @@ import io.gomint.world.Gamemode;
 import io.gomint.world.block.Block;
 import io.gomint.world.block.data.Facing;
 
+import java.time.Duration;
+
 /**
  * @author geNAZt
  * @version 1.0
  */
 @CanBeDamaged
 @RegisterInfo( sId = "minecraft:crossbow", id = 471 )
-public class ItemCrossbow extends ItemStack implements io.gomint.inventory.item.ItemCrossbow {
+public class ItemCrossbow extends ItemStack< io.gomint.inventory.item.ItemCrossbow> implements io.gomint.inventory.item.ItemCrossbow {
 
     @Override
-    public long getBurnTime() {
-        return 10000;
+    public Duration burnTime() {
+        return Duration.ofMillis(10000);
     }
 
     @Override
-    public byte getMaximumAmount() {
+    public byte maximumAmount() {
         return 1;
     }
 
     @Override
-    public short getMaxDamage() {
+    public short maxDamage() {
         return 360;
     }
 
@@ -73,11 +75,11 @@ public class ItemCrossbow extends ItemStack implements io.gomint.inventory.item.
         // Check for arrows in inventory
         boolean foundArrow = false;
         for ( int i = 0; i < player.getInventory().size(); i++ ) {
-            ItemStack itemStack = (ItemStack) player.getInventory().getItem( i );
+            ItemStack<?> itemStack = (ItemStack<?>) player.getInventory().item( i );
             if ( itemStack instanceof ItemArrow ) {
                 foundArrow = true;
 
-                if ( this.getEnchantment( EnchantmentInfinity.class ) == null ) {
+                if ( this.enchantment( EnchantmentInfinity.class ) == null ) {
                     itemStack.afterPlacement();
                 }
             }
@@ -86,11 +88,11 @@ public class ItemCrossbow extends ItemStack implements io.gomint.inventory.item.
         // Check offhand if not found
         if ( !foundArrow ) {
             for ( int i = 0; i < player.getOffhandInventory().size(); i++ ) {
-                ItemStack itemStack = (ItemStack) player.getInventory().getItem( i );
+                ItemStack<?> itemStack = (ItemStack<?>) player.getInventory().item( i );
                 if ( itemStack instanceof ItemArrow ) {
                     foundArrow = true;
 
-                    if ( this.getEnchantment( EnchantmentInfinity.class ) == null ) {
+                    if ( this.enchantment( EnchantmentInfinity.class ) == null ) {
                         itemStack.afterPlacement();
                     }
                 }
@@ -104,19 +106,19 @@ public class ItemCrossbow extends ItemStack implements io.gomint.inventory.item.
 
         // Get bow enchantments
         int powerModifier = 0;
-        EnchantmentPower power = this.getEnchantment( EnchantmentPower.class );
+        EnchantmentPower power = this.enchantment( EnchantmentPower.class );
         if ( power != null ) {
             powerModifier = power.getLevel();
         }
 
         int punchModifier = 0;
-        EnchantmentPunch punch = this.getEnchantment( EnchantmentPunch.class );
+        EnchantmentPunch punch = this.enchantment( EnchantmentPunch.class );
         if ( punch != null ) {
             punchModifier = punch.getLevel();
         }
 
         int flameModifier = 0;
-        EnchantmentFlame flame = this.getEnchantment( EnchantmentFlame.class );
+        EnchantmentFlame flame = this.enchantment( EnchantmentFlame.class );
         if ( flame != null ) {
             flameModifier = flame.getLevel();
         }
@@ -147,12 +149,12 @@ public class ItemCrossbow extends ItemStack implements io.gomint.inventory.item.
     }
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.BOW;
     }
 
     @Override
-    public int getEnchantAbility() {
+    public int enchantAbility() {
         return 1;
     }
 

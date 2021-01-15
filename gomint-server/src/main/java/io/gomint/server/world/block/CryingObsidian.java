@@ -19,12 +19,12 @@ public class CryingObsidian extends Block implements BlockCryingObsidian {
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 75200;
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return new Class[]{
             ItemDiamondPickaxe.class
         };

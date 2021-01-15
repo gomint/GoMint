@@ -35,7 +35,7 @@ public class GlowingObsidian extends Block implements BlockGlowingObsidian {
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return ToolPresets.PICKAXE;
     }
 

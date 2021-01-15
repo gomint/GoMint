@@ -49,13 +49,13 @@ public class Cauldron extends Block implements BlockCauldron {
     }
 
     @Override
-    public boolean beforePlacement(EntityLiving entity, ItemStack item, Facing face, Location location) {
+    public boolean beforePlacement(EntityLiving entity, ItemStack<?> item, Facing face, Location location) {
         FILL_LEVEL.setState(this, 0f);
         return super.beforePlacement(entity, item, face, location);
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 3000;
     }
 
@@ -80,7 +80,7 @@ public class Cauldron extends Block implements BlockCauldron {
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return ToolPresets.PICKAXE;
     }
 

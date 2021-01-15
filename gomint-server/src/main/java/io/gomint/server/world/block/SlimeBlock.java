@@ -20,7 +20,7 @@ public class SlimeBlock extends Block implements BlockSlimeBlock {
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 0;
     }
 

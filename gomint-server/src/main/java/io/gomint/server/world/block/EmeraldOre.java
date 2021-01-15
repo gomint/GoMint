@@ -25,7 +25,7 @@ public class EmeraldOre extends Block implements BlockEmeraldOre {
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 4500;
     }
 
@@ -45,8 +45,8 @@ public class EmeraldOre extends Block implements BlockEmeraldOre {
     }
 
     @Override
-    public List<ItemStack> drops(ItemStack itemInHand ) {
-        List<ItemStack> drops = new ArrayList<>();
+    public List<ItemStack<?>> drops(ItemStack<?> itemInHand ) {
+        List<ItemStack<?>> drops = new ArrayList<>();
         if ( isCorrectTool( itemInHand ) ) {
             ( (WorldAdapter) this.location.world() ).createExpOrb( this.location, ThreadLocalRandom.current().nextInt( 3 ) );
             drops.add( ItemEmerald.create( 1 ) );
@@ -55,7 +55,7 @@ public class EmeraldOre extends Block implements BlockEmeraldOre {
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return ToolPresets.PICKAXE;
     }
 

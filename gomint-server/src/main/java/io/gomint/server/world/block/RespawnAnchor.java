@@ -19,12 +19,12 @@ public class RespawnAnchor extends Block implements BlockRespawnAnchor {
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 75200;
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return new Class[]{
             ItemDiamondPickaxe.class
         };

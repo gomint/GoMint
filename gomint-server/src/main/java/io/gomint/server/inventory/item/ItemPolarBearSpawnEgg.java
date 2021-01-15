@@ -15,10 +15,10 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:polar_bear_spawn_egg", id = 470 )
-public class ItemPolarBearSpawnEgg extends ItemStack implements io.gomint.inventory.item.ItemPolarBearSpawnEgg {
+public class ItemPolarBearSpawnEgg extends ItemStack< io.gomint.inventory.item.ItemPolarBearSpawnEgg> implements io.gomint.inventory.item.ItemPolarBearSpawnEgg {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.POLAR_BEAR_SPAWN_EGG;
     }
 

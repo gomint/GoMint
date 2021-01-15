@@ -50,6 +50,7 @@ import io.gomint.server.network.handler.PacketTickSyncHandler;
 import io.gomint.server.network.handler.PacketTileEntityDataHandler;
 import io.gomint.server.network.handler.PacketViolationWarningHandler;
 import io.gomint.server.network.handler.PacketWorldSoundEventHandler;
+import io.gomint.server.network.packet.Packet;
 import io.netty.util.ResourceLeakDetector;
 import io.netty.util.ThreadDeathWatcher;
 import io.netty.util.concurrent.GlobalEventExecutor;
@@ -81,7 +82,7 @@ public class NetworkManager {
     private static final Logger LOGGER = LoggerFactory.getLogger(NetworkManager.class);
     private final GoMintServer server;
     
-    private final PacketHandler[] packetHandlers = new PacketHandler[256];
+    private final PacketHandler<? extends Packet>[] packetHandlers = new PacketHandler[256];
     
     // Connections which were closed and should be removed during next tick:
     private final LongSet closedConnections = new LongOpenHashSet();
@@ -442,8 +443,8 @@ public class NetworkManager {
         LOGGER.info("Shutdown of network completed");
     }
 
-    public PacketHandler getPacketHandler(int packetId) {
-        return this.packetHandlers[packetId];
+    public <T extends Packet> PacketHandler<T> getPacketHandler(int packetId) {
+        return (PacketHandler<T>) this.packetHandlers[packetId];
     }
 
 }

@@ -27,6 +27,7 @@ public interface BlockSkull extends Block, BlockDirection<BlockSkull> {
      * Set type of skull
      *
      * @param type of skull to set
+     * @return block for chaining
      */
     BlockSkull type(SkullType type);
 

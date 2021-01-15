@@ -25,7 +25,7 @@ public class DiamondOre extends Block implements BlockDiamondOre {
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 4500;
     }
 
@@ -45,17 +45,18 @@ public class DiamondOre extends Block implements BlockDiamondOre {
     }
 
     @Override
-    public List<ItemStack> drops(ItemStack itemInHand ) {
-        ArrayList<ItemStack> drops = new ArrayList<>();
+    public List<ItemStack<?>> drops(ItemStack<?> itemInHand ) {
+        List<ItemStack<?>> drops = new ArrayList<>();
         if ( isCorrectTool( itemInHand ) ) {
             ( (WorldAdapter) this.location.world() ).createExpOrb( this.location, ThreadLocalRandom.current().nextInt( 3 ) );
             drops.add( ItemDiamond.create( 1 ) );
         }
+
         return drops;
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return ToolPresets.PICKAXE;
     }
 

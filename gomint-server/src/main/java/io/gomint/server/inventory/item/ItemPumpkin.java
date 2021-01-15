@@ -12,27 +12,28 @@ import io.gomint.world.block.data.PumpkinType;
  */
 @RegisterInfo(sId = "minecraft:pumpkin", id = 86, def = true)
 @RegisterInfo(sId = "minecraft:carved_pumpkin", id = -155)
-public class ItemPumpkin extends ItemStack implements io.gomint.inventory.item.ItemPumpkin {
+public class ItemPumpkin extends ItemStack< io.gomint.inventory.item.ItemPumpkin> implements io.gomint.inventory.item.ItemPumpkin {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.PUMPKIN;
     }
 
     @Override
-    public PumpkinType getType() {
-        return this.getMaterial().equals("minecraft:pumpkin") ? PumpkinType.NORMAL : PumpkinType.CARVED;
+    public PumpkinType type() {
+        return this.material().equals("minecraft:pumpkin") ? PumpkinType.NORMAL : PumpkinType.CARVED;
     }
 
     @Override
-    public void setType(PumpkinType type) {
-        this.setMaterial(type == PumpkinType.NORMAL ? "minecraft:pumpkin" : "minecraft:carved_pumpkin");
+    public ItemPumpkin type(PumpkinType type) {
+        this.material(type == PumpkinType.NORMAL ? "minecraft:pumpkin" : "minecraft:carved_pumpkin");
+        return this;
     }
 
     @Override
-    public Block getBlock() {
-        BlockPumpkin pumpkin = (BlockPumpkin) super.getBlock();
-        pumpkin.type(this.getType());
+    public Block block() {
+        BlockPumpkin pumpkin = (BlockPumpkin) super.block();
+        pumpkin.type(this.type());
         return pumpkin;
     }
 

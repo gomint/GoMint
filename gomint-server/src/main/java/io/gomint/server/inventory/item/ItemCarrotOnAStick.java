@@ -10,10 +10,10 @@ import io.gomint.taglib.NBTTagCompound;
  * @version 1.0
  */
 @RegisterInfo(sId = "minecraft:carrot_on_a_stick", id = 398)
-public class ItemCarrotOnAStick extends ItemStack implements io.gomint.inventory.item.ItemCarrotOnAStick {
+public class ItemCarrotOnAStick extends ItemStack< io.gomint.inventory.item.ItemCarrotOnAStick> implements io.gomint.inventory.item.ItemCarrotOnAStick {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.CARROT_ON_A_STICK;
     }
 

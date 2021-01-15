@@ -76,7 +76,7 @@ public class Leaves extends Block implements BlockLeaves {
     private static final BooleanBlockState PERSISTENT = new BooleanBlockState( () -> new String[]{"persistent_bit"});
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 300;
     }
 
@@ -101,13 +101,13 @@ public class Leaves extends Block implements BlockLeaves {
     }
 
     @Override
-    public List<ItemStack> drops(ItemStack itemInHand) {
+    public List<ItemStack<?>> drops(ItemStack<?> itemInHand) {
         LogType type = this.type();
 
-        List<ItemStack> items = new ArrayList<>();
+        List<ItemStack<?>> items = new ArrayList<>();
 
         int dropChance = type == LogType.JUNGLE ? 40 : 20;
-        EnchantmentFortune fortune = itemInHand.getEnchantment(EnchantmentFortune.class);
+        EnchantmentFortune fortune = itemInHand.enchantment(EnchantmentFortune.class);
         if (fortune != null && fortune.getLevel() > 0) {
             dropChance -= 2 << fortune.getLevel();
             if (dropChance < 10) {
@@ -117,7 +117,7 @@ public class Leaves extends Block implements BlockLeaves {
 
         if (ThreadLocalRandom.current().nextInt(dropChance) == 0) {
             ItemSapling sapling = ItemSapling.create(1);
-            sapling.setLogType(type);
+            sapling.type(type);
             items.add(sapling);
         }
 
@@ -144,7 +144,7 @@ public class Leaves extends Block implements BlockLeaves {
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return new Class[]{
             ItemShears.class
         };

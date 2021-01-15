@@ -27,6 +27,7 @@ public interface BlockWoodenTrapdoor extends BlockTrapdoor<BlockWoodenTrapdoor> 
      * Set the type of wood for this button
      *
      * @param logType type of wood
+     * @return block for chaining
      */
     BlockWoodenTrapdoor type(LogType logType);
 

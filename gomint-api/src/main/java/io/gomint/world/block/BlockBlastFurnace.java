@@ -25,7 +25,8 @@ public interface BlockBlastFurnace extends Block, BlockFacing<BlockBlastFurnace>
      * Set the burning of this furnace
      *
      * @param burning true when it should burn, false if it shouldn't
+     * @return block for chaining
      */
-    BlockBlastFurnace burning(boolean burning );
+    BlockBlastFurnace burning(boolean burning);
 
 }

@@ -14,7 +14,7 @@ import io.gomint.GoMint;
  * @version 1.0
  * @stability 3
  */
-public interface ItemBeeNest extends ItemStack {
+public interface ItemBeeNest extends ItemStack<ItemBeeNest> {
 
     /**
      * Create a new item stack with given class and amount

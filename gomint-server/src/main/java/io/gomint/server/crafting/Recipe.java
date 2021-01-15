@@ -49,7 +49,7 @@ public abstract class Recipe implements io.gomint.crafting.Recipe {
     }
 
     @Override
-    public abstract ItemStack[] getIngredients();
+    public abstract ItemStack<?>[] getIngredients();
 
     /**
      * Creates a collections of items stacks which represent the
@@ -62,7 +62,7 @@ public abstract class Recipe implements io.gomint.crafting.Recipe {
      *
      * @return The newly created resulting item stacks
      */
-    public abstract Collection<ItemStack> createResult();
+    public abstract Collection<ItemStack<?>> createResult();
 
     /**
      * Serializes the recipe into the given packet buffer.
@@ -71,7 +71,7 @@ public abstract class Recipe implements io.gomint.crafting.Recipe {
      */
     public abstract void serialize( PacketBuffer buffer );
 
-    public abstract int[] isCraftable( Inventory inputInventory );
+    public abstract int[] isCraftable(Inventory<?> inputInventory );
 
     public int getPriority() {
         return priority;

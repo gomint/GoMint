@@ -50,7 +50,7 @@ public class WoodenSlab extends Slab<BlockWoodenSlab> implements BlockWoodenSlab
     });
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 3000;
     }
 
@@ -75,7 +75,7 @@ public class WoodenSlab extends Slab<BlockWoodenSlab> implements BlockWoodenSlab
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return ToolPresets.AXE;
     }
 

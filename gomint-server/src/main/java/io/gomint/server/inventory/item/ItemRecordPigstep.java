@@ -15,10 +15,10 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:record_pigstep", id = 759 )
-public class ItemRecordPigstep extends ItemStack implements io.gomint.inventory.item.ItemRecordPigstep {
+public class ItemRecordPigstep extends ItemStack< io.gomint.inventory.item.ItemRecordPigstep> implements io.gomint.inventory.item.ItemRecordPigstep {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.RECORD_PIGSTEP;
     }
 

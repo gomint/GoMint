@@ -24,8 +24,8 @@ public class PacketBookEditHandler implements PacketHandler<PacketBookEdit> {
     @Override
     public void handle( PacketBookEdit packet, long currentTimeMillis, PlayerConnection connection ) {
         // Get the item in hand and check if its the correct item
-        ItemStack stack = (ItemStack) connection.getEntity().getInventory().getItemInHand();
-        if ( stack.getItemType() != ItemType.WRITABLE_BOOK ) {
+        ItemStack<?> stack = (ItemStack<?>) connection.getEntity().getInventory().itemInHand();
+        if ( stack.itemType() != ItemType.WRITABLE_BOOK ) {
             return;
         }
 
@@ -55,7 +55,7 @@ public class PacketBookEditHandler implements PacketHandler<PacketBookEdit> {
                 break;
             case 4:
                 ItemWrittenBook writtenBook = writableBook.sign( packet.getTitle(), packet.getAuthor(), packet.getXuid() );
-                connection.getEntity().getInventory().setItem( connection.getEntity().getInventory().getItemInHandSlot(), writtenBook );
+                connection.getEntity().getInventory().item( connection.getEntity().getInventory().itemInHandSlot(), writtenBook );
                 break;
         }
     }

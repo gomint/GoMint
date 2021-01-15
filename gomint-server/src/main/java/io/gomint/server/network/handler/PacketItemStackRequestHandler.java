@@ -12,7 +12,6 @@ import io.gomint.server.crafting.session.SessionInventory;
 import io.gomint.server.entity.EntityPlayer;
 import io.gomint.server.inventory.EnchantmentTableInventory;
 import io.gomint.server.inventory.Inventory;
-import io.gomint.server.inventory.OneSlotInventory;
 import io.gomint.server.inventory.WindowMagicNumbers;
 import io.gomint.server.inventory.item.ItemStack;
 import io.gomint.server.inventory.transaction.DropItemTransaction;
@@ -43,8 +42,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 public class PacketItemStackRequestHandler implements PacketHandler<PacketItemStackRequest> {
@@ -77,21 +74,21 @@ public class PacketItemStackRequestHandler implements PacketHandler<PacketItemSt
                         InventoryDestroyCreativeAction destroyCreativeAction = (InventoryDestroyCreativeAction) action;
                         ItemStackRequestSlotInfo source = destroyCreativeAction.getSource();
 
-                        ItemStack item = getItemStack(connection.getEntity(), destroyCreativeAction.getSource(), session);
-                        if (destroyCreativeAction.getAmount() <= item.getAmount()) {
-                            int remaining = item.getAmount() - destroyCreativeAction.getAmount();
-                            Inventory inventory = getInventory(connection.getEntity(), source.getWindowId(), session);
+                        ItemStack<?> item = getItemStack(connection.getEntity(), destroyCreativeAction.getSource(), session);
+                        if (destroyCreativeAction.getAmount() <= item.amount()) {
+                            int remaining = item.amount() - destroyCreativeAction.getAmount();
+                            Inventory<?> inventory = getInventory(connection.getEntity(), source.getWindowId(), session);
 
                             if (remaining > 0) {
-                                item.setAmount(remaining);
+                                item.amount(remaining);
                             } else {
-                                inventory.setItem(destroyCreativeAction.getSource().getSlot(), ItemAir.create(0));
+                                inventory.item(destroyCreativeAction.getSource().getSlot(), ItemAir.create(0));
                             }
 
-                            item = (ItemStack) inventory.getItem(source.getSlot());
+                            item = (ItemStack<?>) inventory.item(source.getSlot());
                             successChanges
                                 .computeIfAbsent(source.getWindowId(), value -> new Byte2ObjectOpenHashMap<>())
-                                .put(source.getSlot(), new PacketItemStackResponse.StackResponseSlotInfo(source.getSlot(), item.getAmount(), item.getStackId()));
+                                .put(source.getSlot(), new PacketItemStackResponse.StackResponseSlotInfo(source.getSlot(), item.amount(), item.stackId()));
                         }
                     } else {
                         resp = new PacketItemStackResponse.Response(PacketItemStackResponse.ResponseResult.Error, request.getRequestId(), null);
@@ -99,8 +96,8 @@ public class PacketItemStackRequestHandler implements PacketHandler<PacketItemSt
                 } else if (action instanceof InventoryGetCreativeAction) {
                     if (connection.getEntity().getGamemode() == Gamemode.CREATIVE) {
                         int slot = ((InventoryGetCreativeAction) action).getCreativeItemId();
-                        ItemStack item = (ItemStack) connection.getServer().creativeInventory().getItem(slot);
-                        item = (ItemStack) item.clone().setAmount(64);
+                        ItemStack<?> item = (ItemStack<?>) connection.getServer().creativeInventory().item(slot);
+                        item = (ItemStack<?>) item.clone().amount(64);
 
                         session = new CreativeSession(connection);
                         session.addInput(item, 0);
@@ -117,10 +114,10 @@ public class PacketItemStackRequestHandler implements PacketHandler<PacketItemSt
                         ItemStackRequestSlotInfo source = ((InventoryConsumeAction) action).getSource();
 
                         // Get the item
-                        ItemStack item = getItemStack(connection.getEntity(), source, session);
-                        if (consumeAction.getAmount() <= item.getAmount()) {
-                            item.setAmount(item.getAmount() - consumeAction.getAmount());
-                            item = (ItemStack) item.clone().setAmount(consumeAction.getAmount());
+                        ItemStack<?> item = getItemStack(connection.getEntity(), source, session);
+                        if (consumeAction.getAmount() <= item.amount()) {
+                            item.amount(item.amount() - consumeAction.getAmount());
+                            item = (ItemStack<?>) item.clone().amount(consumeAction.getAmount());
                         }
 
                         byte slot = fixSlotInput(source);
@@ -129,7 +126,7 @@ public class PacketItemStackRequestHandler implements PacketHandler<PacketItemSt
                         item = getItemStack(connection.getEntity(), source, session);
                         successChanges
                             .computeIfAbsent(source.getWindowId(), value -> new Byte2ObjectOpenHashMap<>())
-                            .put(source.getSlot(), new PacketItemStackResponse.StackResponseSlotInfo(source.getSlot(), item.getAmount(), item.getStackId()));
+                            .put(source.getSlot(), new PacketItemStackResponse.StackResponseSlotInfo(source.getSlot(), item.amount(), item.stackId()));
                     }
                 } else if (action instanceof InventoryTransferAction) {
                     resp = handleInventoryTransfer((InventoryTransferAction) action, connection, transactionGroup, request, session);
@@ -160,14 +157,14 @@ public class PacketItemStackRequestHandler implements PacketHandler<PacketItemSt
                     resp = new PacketItemStackResponse.Response(PacketItemStackResponse.ResponseResult.Error, request.getRequestId(), null);
                 } else {
                     // We need to tell the client the new stack ids (for whatever reason)
-                    for (Transaction transaction : transactionGroup.getTransactions()) {
-                        ItemStack target = (ItemStack) transaction.getTargetItem();
+                    for (Transaction<?,?,?> transaction : transactionGroup.getTransactions()) {
+                        ItemStack<?> target = (ItemStack<?>) transaction.targetItem();
 
                         byte fixedSlot = fixSlotOutput(transaction);
 
                         successChanges
                             .computeIfAbsent(transaction.getInventoryWindowId(), value -> new Byte2ObjectOpenHashMap<>())
-                            .put(fixedSlot, new PacketItemStackResponse.StackResponseSlotInfo(fixedSlot, target.getAmount(), target.getStackId()));
+                            .put(fixedSlot, new PacketItemStackResponse.StackResponseSlotInfo(fixedSlot, target.amount(), target.stackId()));
                     }
 
                     List<PacketItemStackResponse.StackResponseContainerInfo> changes = new ArrayList<>();
@@ -207,30 +204,30 @@ public class PacketItemStackRequestHandler implements PacketHandler<PacketItemSt
                                                                  TransactionGroup transactionGroup,
                                                                  PacketItemStackRequest.Request request,
                                                                  Session session) {
-        Inventory inventory = getInventory(connection.getEntity(), dropAction.getSource().getWindowId(), session);
-        ItemStack source = (ItemStack) inventory.getItem(dropAction.getSource().getSlot());
+        Inventory<?> inventory = getInventory(connection.getEntity(), dropAction.getSource().getWindowId(), session);
+        ItemStack<?> source = (ItemStack<?>) inventory.item(dropAction.getSource().getSlot());
 
         byte sourceSlot = fixSlotInput(dropAction.getSource());
 
         // Create new item with the correct drop amount
-        InventoryTransaction inventoryTransactionSource;
-        if (dropAction.getAmount() == source.getAmount()) {
+        InventoryTransaction<?,?,?> inventoryTransactionSource;
+        if (dropAction.getAmount() == source.amount()) {
             // We need to replace the source with air
-            inventoryTransactionSource = new InventoryTransaction(
+            inventoryTransactionSource = new InventoryTransaction<>(
                 connection.getEntity(), inventory,
                 sourceSlot, source, ItemAir.create(0),
                 dropAction.getSource().getWindowId());
         } else {
-            inventoryTransactionSource = new InventoryTransaction(
+            inventoryTransactionSource = new InventoryTransaction<>(
                 connection.getEntity(), inventory,
-                sourceSlot, source, source.clone().setAmount(source.getAmount() - dropAction.getAmount()),
+                sourceSlot, source, source.clone().amount(source.amount() - dropAction.getAmount()),
                 dropAction.getSource().getWindowId());
         }
 
-        DropItemTransaction dropItemTransaction = new DropItemTransaction(
+        DropItemTransaction<?> dropItemTransaction = new DropItemTransaction<>(
             connection.getEntity().getLocation().add(0, connection.getEntity().getEyeHeight(), 0),
             connection.getEntity().getDirection().normalize().multiply(0.4f),
-            source.clone().setAmount(dropAction.getAmount()));
+            source.clone().amount(dropAction.getAmount()));
 
         transactionGroup.addTransaction(inventoryTransactionSource);
         transactionGroup.addTransaction(dropItemTransaction);
@@ -243,7 +240,7 @@ public class PacketItemStackRequestHandler implements PacketHandler<PacketItemSt
                                                                      TransactionGroup transactionGroup,
                                                                      PacketItemStackRequest.Request request,
                                                                      Session session) {
-        Inventory sourceInventory = getInventory(connection.getEntity(), transferAction.getSource().getWindowId(), session);
+        Inventory<?> sourceInventory = getInventory(connection.getEntity(), transferAction.getSource().getWindowId(), session);
         if (sourceInventory instanceof SessionInventory) {
             if (!session.process()) {
                 return new PacketItemStackResponse.Response(PacketItemStackResponse.ResponseResult.Error, request.getRequestId(), null);
@@ -253,23 +250,23 @@ public class PacketItemStackRequestHandler implements PacketHandler<PacketItemSt
         byte sourceSlot = fixSlotInput(transferAction.getSource());
         byte destinationSlot = fixSlotInput(transferAction.getDestination());
 
-        ItemStack destination = getItemStack(connection.getEntity(), transferAction.getDestination(), session);
+        ItemStack<?> destination = getItemStack(connection.getEntity(), transferAction.getDestination(), session);
 
-        ItemStack source = getItemStack(connection.getEntity(), transferAction.getSource(), session);
+        ItemStack<?> source = getItemStack(connection.getEntity(), transferAction.getSource(), session);
         if (transferAction.hasAmount()) {
-            if (transferAction.getAmount() <= source.getAmount()) {
-                int remaining = source.getAmount() - transferAction.getAmount();
-                InventoryTransaction inventoryTransactionSource;
+            if (transferAction.getAmount() <= source.amount()) {
+                int remaining = source.amount() - transferAction.getAmount();
+                InventoryTransaction<?,?,?> inventoryTransactionSource;
 
                 if (remaining > 0) {
                     // We need to set leftovers back or we are left up with dangling items
-                    inventoryTransactionSource = new InventoryTransaction(
+                    inventoryTransactionSource = new InventoryTransaction<>(
                         connection.getEntity(), getInventory(connection.getEntity(), transferAction.getSource().getWindowId(), session),
-                        sourceSlot, source, source.clone().setAmount(remaining),
+                        sourceSlot, source, source.clone().amount(remaining),
                         transferAction.getSource().getWindowId());
 
                 } else {
-                    inventoryTransactionSource = new InventoryTransaction(
+                    inventoryTransactionSource = new InventoryTransaction<>(
                         connection.getEntity(), getInventory(connection.getEntity(), transferAction.getSource().getWindowId(), session),
                         sourceSlot, source, ItemAir.create(0),
                         transferAction.getSource().getWindowId());
@@ -278,13 +275,13 @@ public class PacketItemStackRequestHandler implements PacketHandler<PacketItemSt
                 transactionGroup.addTransaction(inventoryTransactionSource);
 
                 source = source.clone();
-                source.setAmount(transferAction.getAmount());
+                source.amount(transferAction.getAmount());
 
                 if (source.equals(destination)) {
-                    source.setAmount(destination.getAmount() + source.getAmount());
+                    source.amount(destination.amount() + source.amount());
                 }
 
-                InventoryTransaction inventoryTransactionDestination = new InventoryTransaction(
+                InventoryTransaction<?,?,?> inventoryTransactionDestination = new InventoryTransaction<>(
                     connection.getEntity(), getInventory(connection.getEntity(), transferAction.getDestination().getWindowId(), session),
                     destinationSlot, destination, source,
                     transferAction.getDestination().getWindowId());
@@ -294,11 +291,11 @@ public class PacketItemStackRequestHandler implements PacketHandler<PacketItemSt
                 return new PacketItemStackResponse.Response(PacketItemStackResponse.ResponseResult.Error, request.getRequestId(), null);
             }
         } else {
-            InventoryTransaction inventoryTransactionSource = new InventoryTransaction(
+            InventoryTransaction<?,?,?> inventoryTransactionSource = new InventoryTransaction<>(
                 connection.getEntity(), getInventory(connection.getEntity(), transferAction.getSource().getWindowId(), session),
                 sourceSlot, source, destination,
                 transferAction.getSource().getWindowId());
-            InventoryTransaction inventoryTransactionDestination = new InventoryTransaction(
+            InventoryTransaction<?,?,?> inventoryTransactionDestination = new InventoryTransaction<>(
                 connection.getEntity(), getInventory(connection.getEntity(), transferAction.getDestination().getWindowId(), session),
                 destinationSlot, destination, source,
                 transferAction.getDestination().getWindowId());
@@ -325,31 +322,31 @@ public class PacketItemStackRequestHandler implements PacketHandler<PacketItemSt
         return info.getSlot();
     }
 
-    private byte fixSlotOutput(Transaction info) {
+    private byte fixSlotOutput(Transaction<?,?,?> info) {
         switch (info.getInventoryWindowId()) {
             case WindowMagicNumbers.ENCHANTMENT_TABLE_INPUT:
                 return 14;
             case WindowMagicNumbers.ENCHANTMENT_TABLE_MATERIAL:
                 return 15;
             case WindowMagicNumbers.CRAFTING_INPUT:
-                return (byte) (info.getSlot() + Values.CRAFTING_INPUT_OFFSET);
+                return (byte) (info.slot() + Values.CRAFTING_INPUT_OFFSET);
             case WindowMagicNumbers.CREATED_OUTPUT:
-                return (byte) (info.getSlot() + Values.OUTPUT_OFFSET);
+                return (byte) (info.slot() + Values.OUTPUT_OFFSET);
         }
 
-        return (byte) info.getSlot();
+        return (byte) info.slot();
     }
 
-    private ItemStack getItemStack(EntityPlayer entityPlayer, ItemStackRequestSlotInfo requestSlotInfo, Session session) {
-        Inventory inventory = getInventory(entityPlayer, requestSlotInfo.getWindowId(), session);
-        ItemStack itemStack = (ItemStack) inventory.getItem(fixSlotInput(requestSlotInfo));
+    private ItemStack<?> getItemStack(EntityPlayer entityPlayer, ItemStackRequestSlotInfo requestSlotInfo, Session session) {
+        Inventory<?> inventory = getInventory(entityPlayer, requestSlotInfo.getWindowId(), session);
+        ItemStack<?> itemStack = (ItemStack<?>) inventory.item(fixSlotInput(requestSlotInfo));
 
         // TODO: check for item stack id
 
         return itemStack;
     }
 
-    private Inventory getInventory(EntityPlayer entity, byte windowId, Session session) {
+    private Inventory<?> getInventory(EntityPlayer entity, byte windowId, Session session) {
         switch (windowId) {
             case WindowMagicNumbers.ARMOR:
                 return entity.getArmorInventory();

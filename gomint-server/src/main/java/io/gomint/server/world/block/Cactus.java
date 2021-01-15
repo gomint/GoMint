@@ -20,7 +20,7 @@ public class Cactus extends Block implements BlockCactus {
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 600;
     }
 

@@ -27,6 +27,7 @@ public interface BlockLiquid<B> extends Block {
      * Set the fill height of the fluid inside this block
      *
      * @param height of the fluid
+     * @return block for chaining
      */
     B fillHeight(float height);
 

@@ -10,10 +10,10 @@ import io.gomint.taglib.NBTTagCompound;
  * @version 1.0
  */
 @RegisterInfo(sId = "minecraft:piston", id = 33)
-public class ItemPiston extends ItemStack implements io.gomint.inventory.item.ItemPiston {
+public class ItemPiston extends ItemStack< io.gomint.inventory.item.ItemPiston> implements io.gomint.inventory.item.ItemPiston {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.PISTON;
     }
 

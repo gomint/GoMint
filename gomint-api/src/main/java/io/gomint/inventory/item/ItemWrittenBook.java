@@ -14,14 +14,15 @@ import io.gomint.GoMint;
  * @version 1.0
  * @stability 1
  */
-public interface ItemWrittenBook extends ItemStack {
+public interface ItemWrittenBook extends ItemStack<ItemWrittenBook> {
 
     /**
      * Create a new item stack with given class and amount
      *
      * @param amount which is used for the creation
+	 * @return freshly generated item
      */
-    static ItemWrittenBook create( int amount ) {
+    static ItemWrittenBook create( int amount ) {	
         return GoMint.instance().createItemStack( ItemWrittenBook.class, amount );
     }
 

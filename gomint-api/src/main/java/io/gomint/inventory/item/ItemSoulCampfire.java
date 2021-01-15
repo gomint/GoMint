@@ -14,12 +14,13 @@ import io.gomint.GoMint;
  * @version 1.0
  * @stability 1
  */
-public interface ItemSoulCampfire extends ItemStack {
+public interface ItemSoulCampfire extends ItemStack<ItemSoulCampfire> {
 
     /**
      * Create a new item stack with given class and amount
      *
      * @param amount which is used for the creation
+	 * @return freshly generated item
      */
     static ItemSoulCampfire create( int amount ) {
         return GoMint.instance().createItemStack( ItemSoulCampfire.class, amount );

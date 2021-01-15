@@ -28,9 +28,9 @@ public class EnchantmentSelector {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(EnchantmentSelector.class);
 
-    public static Pair<int[], List<List<Enchantment>>> getEnchantments(Enchantments enchantments, FastRandom random, Location blockLocation, ItemStack toEnchant) {
+    public static Pair<int[], List<List<Enchantment>>> getEnchantments(Enchantments enchantments, FastRandom random, Location blockLocation, ItemStack<?> toEnchant) {
         // Check if the item can be enchanted at all
-        if (toEnchant.getEnchantAbility() == 0 || toEnchant.isEnchanted()) {
+        if (toEnchant.enchantAbility() == 0 || toEnchant.isEnchanted()) {
             return null;
         }
 
@@ -59,10 +59,10 @@ public class EnchantmentSelector {
         return new Pair<>(new int[]{upperSlot, middleSlot, lowerSlot}, selectedEnchantments);
     }
 
-    private static List<Enchantment> buildEnchantments(Enchantments enchantments, FastRandom random, ItemStack toEnchant, int level) {
+    private static List<Enchantment> buildEnchantments(Enchantments enchantments, FastRandom random, ItemStack<?> toEnchant, int level) {
         int useLevel = level + 1 +
-            random.nextInt(toEnchant.getEnchantAbility() / 4 + 1) +
-            random.nextInt(toEnchant.getEnchantAbility() / 4 + 1);
+            random.nextInt(toEnchant.enchantAbility() / 4 + 1) +
+            random.nextInt(toEnchant.enchantAbility() / 4 + 1);
 
         float f = (random.nextFloat() + random.nextFloat() - 1.0F) * 0.15F;
 

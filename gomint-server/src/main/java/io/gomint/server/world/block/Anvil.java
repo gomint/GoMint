@@ -20,7 +20,7 @@ public class Anvil extends Block implements BlockAnvil {
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 7500;
     }
 
@@ -30,7 +30,7 @@ public class Anvil extends Block implements BlockAnvil {
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return ToolPresets.PICKAXE;
     }
 

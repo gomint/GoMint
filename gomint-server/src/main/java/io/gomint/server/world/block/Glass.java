@@ -22,7 +22,7 @@ public class Glass extends Block implements BlockGlass {
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 450;
     }
 
@@ -37,7 +37,7 @@ public class Glass extends Block implements BlockGlass {
     }
 
     @Override
-    public List<ItemStack> drops(ItemStack itemInHand ) {
+    public List<ItemStack<?>> drops(ItemStack<?> itemInHand ) {
         return new ArrayList<>();
     }
 

@@ -36,7 +36,7 @@ public class EnchantmentProjectileProtection extends Enchantment implements io.g
     }
 
     @Override
-    public boolean canBeApplied(ItemStack itemStack) {
+    public boolean canBeApplied(ItemStack<?> itemStack) {
         return EnchantmentHelper.canBeAppliedArmor(itemStack);
     }
 

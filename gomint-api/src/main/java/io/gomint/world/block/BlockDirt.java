@@ -20,6 +20,7 @@ public interface BlockDirt extends Block {
      * Set type of dirt
      *
      * @param type which should be set
+     * @return block for chaining
      */
     BlockDirt type(DirtType type);
 

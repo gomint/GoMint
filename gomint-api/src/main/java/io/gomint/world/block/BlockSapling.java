@@ -20,8 +20,9 @@ public interface BlockSapling extends Block {
      * Set the type of sapling
      *
      * @param type of sapling
+     * @return block for chaining
      */
-    BlockSapling type(LogType type );
+    BlockSapling type(LogType type);
 
     /**
      * Get the type of this sapling

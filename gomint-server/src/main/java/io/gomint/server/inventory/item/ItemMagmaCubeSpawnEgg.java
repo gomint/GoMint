@@ -15,10 +15,10 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:magma_cube_spawn_egg", id = 453 )
-public class ItemMagmaCubeSpawnEgg extends ItemStack implements io.gomint.inventory.item.ItemMagmaCubeSpawnEgg {
+public class ItemMagmaCubeSpawnEgg extends ItemStack< io.gomint.inventory.item.ItemMagmaCubeSpawnEgg> implements io.gomint.inventory.item.ItemMagmaCubeSpawnEgg {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.MAGMA_CUBE_SPAWN_EGG;
     }
 

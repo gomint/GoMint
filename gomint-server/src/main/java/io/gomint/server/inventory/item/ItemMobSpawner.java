@@ -10,10 +10,10 @@ import io.gomint.taglib.NBTTagCompound;
  * @version 1.0
  */
 @RegisterInfo(sId = "minecraft:mob_spawner", id = 52)
-public class ItemMobSpawner extends ItemStack implements io.gomint.inventory.item.ItemMobSpawner {
+public class ItemMobSpawner extends ItemStack< io.gomint.inventory.item.ItemMobSpawner> implements io.gomint.inventory.item.ItemMobSpawner {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.MOB_SPAWNER;
     }
 

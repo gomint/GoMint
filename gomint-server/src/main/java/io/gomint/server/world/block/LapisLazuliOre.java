@@ -19,7 +19,7 @@ public class LapisLazuliOre extends Block implements BlockLapisLazuliOre {
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 4500;
     }
 
@@ -39,7 +39,7 @@ public class LapisLazuliOre extends Block implements BlockLapisLazuliOre {
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return new Class[]{
             ItemDiamondPickaxe.class,
             ItemIronPickaxe.class,

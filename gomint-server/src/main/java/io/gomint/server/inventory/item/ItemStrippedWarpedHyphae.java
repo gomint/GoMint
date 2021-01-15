@@ -15,10 +15,10 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:stripped_warped_hyphae", id = -301 )
-public class ItemStrippedWarpedHyphae extends ItemStack implements io.gomint.inventory.item.ItemStrippedWarpedHyphae {
+public class ItemStrippedWarpedHyphae extends ItemStack< io.gomint.inventory.item.ItemStrippedWarpedHyphae> implements io.gomint.inventory.item.ItemStrippedWarpedHyphae {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.STRIPPED_WARPED_HYPHAE;
     }
 

@@ -20,6 +20,7 @@ public interface BlockTurtleEgg extends Block {
      * Set the amount of eggs, if over 4 its capped to 4
      *
      * @param amountOfEggs from 1 - 4 capped on either side
+     * @return block for chaining
      */
     BlockTurtleEgg amountOfEggs(int amountOfEggs);
 
@@ -34,6 +35,7 @@ public interface BlockTurtleEgg extends Block {
      * Set the cracked status
      *
      * @param status which should be set
+     * @return block for chaining
      */
     BlockTurtleEgg crackStatus(CrackStatus status);
 

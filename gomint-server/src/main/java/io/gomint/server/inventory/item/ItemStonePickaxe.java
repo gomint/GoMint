@@ -12,7 +12,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:stone_pickaxe", id = 274 )
-public class ItemStonePickaxe extends ItemReduceTierStone implements io.gomint.inventory.item.ItemStonePickaxe {
+public class ItemStonePickaxe extends ItemReduceTierStone<io.gomint.inventory.item.ItemStonePickaxe> implements io.gomint.inventory.item.ItemStonePickaxe {
 
     @Override
     public void gotInHand( EntityPlayer player ) {
@@ -29,7 +29,7 @@ public class ItemStonePickaxe extends ItemReduceTierStone implements io.gomint.i
     }
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.STONE_PICKAXE;
     }
 

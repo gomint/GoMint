@@ -27,6 +27,7 @@ public interface BlockLog extends Block, BlockAxis<BlockLog> {
      * Set stripped status of this log
      *
      * @param stripped true when the log should be stripped, false if not
+     * @return block for chaining
      */
     BlockLog stripped(boolean stripped);
 
@@ -34,6 +35,7 @@ public interface BlockLog extends Block, BlockAxis<BlockLog> {
      * Set the type of log
      *
      * @param type of log
+     * @return block for chaining
      */
     BlockLog type(LogType type);
 
@@ -48,6 +50,7 @@ public interface BlockLog extends Block, BlockAxis<BlockLog> {
      * Add bark textures to all sides or not
      *
      * @param allSides true when bark on all sides, false if not
+     * @return block for chaining
      */
     BlockLog barkOnAllSides(boolean allSides);
 

@@ -20,8 +20,9 @@ public interface BlockDirection<B> extends Block {
      * Set the direction of this block, this block can also hold null as direction (sit on ground)
      *
      * @param direction of this block
+     * @return block for chaining
      */
-    B direction(Direction direction );
+    B direction(Direction direction);
 
     /**
      * Get the direction in which this block

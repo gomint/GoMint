@@ -27,6 +27,7 @@ public interface BlockWoodenDoor extends BlockDoor<BlockWoodenDoor> {
      * Set a new type of wood for this door
      *
      * @param logType which should be the new wood for the door
+     * @return block for chaining
      */
     BlockWoodenDoor type(LogType logType);
 

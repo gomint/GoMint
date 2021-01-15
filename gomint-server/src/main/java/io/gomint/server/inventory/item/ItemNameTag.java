@@ -9,12 +9,12 @@ import io.gomint.taglib.NBTTagCompound;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:name_tag", id = 421 )
- public class ItemNameTag extends ItemStack implements io.gomint.inventory.item.ItemNameTag {
+ public class ItemNameTag extends ItemStack< io.gomint.inventory.item.ItemNameTag> implements io.gomint.inventory.item.ItemNameTag {
 
 
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.NAME_TAG;
     }
 

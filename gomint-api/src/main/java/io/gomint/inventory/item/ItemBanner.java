@@ -14,12 +14,13 @@ import io.gomint.GoMint;
  * @version 1.0
  * @stability 2
  */
-public interface ItemBanner extends ItemStack, ItemBurnable {
+public interface ItemBanner extends ItemStack<ItemBanner>, ItemBurnable {
 
     /**
      * Create a new item stack with given class and amount
      *
      * @param amount which is used for the creation
+	 * @return freshly generated item
      */
     static ItemBanner create( int amount ) {
         return GoMint.instance().createItemStack( ItemBanner.class, amount );

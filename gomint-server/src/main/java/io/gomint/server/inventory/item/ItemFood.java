@@ -17,7 +17,7 @@ import io.gomint.world.block.data.Facing;
  * @author geNAZt
  * @version 1.0
  */
-public abstract class ItemFood extends ItemStack implements io.gomint.inventory.item.ItemFood, ItemConsumable {
+public abstract class ItemFood<I extends io.gomint.inventory.item.ItemStack<I>> extends ItemStack<I> implements io.gomint.inventory.item.ItemFood<I>, ItemConsumable {
 
     @Override
     public boolean interact(EntityPlayer entity, Facing face, Vector clickPosition, Block clickedBlock) {

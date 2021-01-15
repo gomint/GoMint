@@ -15,10 +15,10 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:lit_smoker", id = -199 )
-public class ItemLitSmoker extends ItemStack implements io.gomint.inventory.item.ItemLitSmoker {
+public class ItemLitSmoker extends ItemStack< io.gomint.inventory.item.ItemLitSmoker> implements io.gomint.inventory.item.ItemLitSmoker {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.LIT_SMOKER;
     }
 

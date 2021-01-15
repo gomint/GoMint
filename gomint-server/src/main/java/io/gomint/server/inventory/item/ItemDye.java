@@ -25,7 +25,7 @@ import io.gomint.world.block.data.BlockColor;
 @RegisterInfo(sId = ItemDye.ORANGE, id = 407)
 @RegisterInfo(sId = ItemDye.WHITE, id = 408)
 @RegisterInfo(sId = "minecraft:dye", id = 612) // Only for vanilla conversion
-public class ItemDye extends ItemStack implements io.gomint.inventory.item.ItemDye {
+public class ItemDye extends ItemStack< io.gomint.inventory.item.ItemDye> implements io.gomint.inventory.item.ItemDye {
 
     public static final String BLACK = "minecraft:black_dye";
     public static final String RED = "minecraft:red_dye";
@@ -45,76 +45,78 @@ public class ItemDye extends ItemStack implements io.gomint.inventory.item.ItemD
     public static final String WHITE = "minecraft:white_dye";
 
     @Override
-    public String getMaterial() {
-        if (super.getMaterial().equals("minecraft:dye")) {
+    public String material() {
+        if (super.material().equals("minecraft:dye")) {
             return ItemDye.BLACK;
         }
 
-        return super.getMaterial();
+        return super.material();
     }
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.DYE;
     }
 
     @Override
-    public void setColor(BlockColor type) {
+    public ItemDye color(BlockColor type) {
         switch (type) {
             case BLACK:
-                this.setMaterial(ItemDye.BLACK);
+                this.material(ItemDye.BLACK);
                 break;
             case RED:
-                this.setMaterial(ItemDye.RED);
+                this.material(ItemDye.RED);
                 break;
             case GREEN:
-                this.setMaterial(ItemDye.GREEN);
+                this.material(ItemDye.GREEN);
                 break;
             case BROWN:
-                this.setMaterial(ItemDye.BROWN);
+                this.material(ItemDye.BROWN);
                 break;
             case BLUE:
-                this.setMaterial(ItemDye.BLUE);
+                this.material(ItemDye.BLUE);
                 break;
             case PURPLE:
-                this.setMaterial(ItemDye.PURPLE);
+                this.material(ItemDye.PURPLE);
                 break;
             case CYAN:
-                this.setMaterial(ItemDye.CYAN);
+                this.material(ItemDye.CYAN);
                 break;
             case LIGHT_GRAY:
-                this.setMaterial(ItemDye.LIGHT_GRAY);
+                this.material(ItemDye.LIGHT_GRAY);
                 break;
             case GRAY:
-                this.setMaterial(ItemDye.GRAY);
+                this.material(ItemDye.GRAY);
                 break;
             case PINK:
-                this.setMaterial(ItemDye.PINK);
+                this.material(ItemDye.PINK);
                 break;
             case LIME:
-                this.setMaterial(ItemDye.LIME);
+                this.material(ItemDye.LIME);
                 break;
             case YELLOW:
-                this.setMaterial(ItemDye.YELLOW);
+                this.material(ItemDye.YELLOW);
                 break;
             case LIGHT_BLUE:
-                this.setMaterial(ItemDye.LIGHT_BLUE);
+                this.material(ItemDye.LIGHT_BLUE);
                 break;
             case MAGENTA:
-                this.setMaterial(ItemDye.MAGENTA);
+                this.material(ItemDye.MAGENTA);
                 break;
             case ORANGE:
-                this.setMaterial(ItemDye.ORANGE);
+                this.material(ItemDye.ORANGE);
                 break;
             case WHITE:
-                this.setMaterial(ItemDye.WHITE);
+                this.material(ItemDye.WHITE);
                 break;
         }
+
+        return this;
     }
 
     @Override
-    public BlockColor getColor() {
-        String data = this.getMaterial();
+    public BlockColor color() {
+        String data = this.material();
         switch (data) {
             case ItemDye.BLACK:
                 return BlockColor.BLACK;

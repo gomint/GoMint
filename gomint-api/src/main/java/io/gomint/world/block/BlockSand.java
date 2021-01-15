@@ -20,6 +20,7 @@ public interface BlockSand extends Block {
      * Set type of sand
      *
      * @param type of sand
+     * @return block for chaining
      */
     BlockSand type(SandType type);
 

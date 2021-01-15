@@ -20,7 +20,7 @@ public class SoulSand extends Block implements BlockSoulSand {
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 750;
     }
 
@@ -40,7 +40,7 @@ public class SoulSand extends Block implements BlockSoulSand {
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return ToolPresets.SHOVEL;
     }
 

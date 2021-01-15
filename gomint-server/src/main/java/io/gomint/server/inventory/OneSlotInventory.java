@@ -15,7 +15,7 @@ import io.gomint.server.network.PlayerConnection;
  * @author geNAZt
  * @version 1.0
  */
-public class OneSlotInventory extends Inventory {
+public class OneSlotInventory extends Inventory<OneSlotInventory> {
 
     public OneSlotInventory(Items items, InventoryHolder owner) {
         super(items, owner, 1);
@@ -32,7 +32,7 @@ public class OneSlotInventory extends Inventory {
     }
 
     @Override
-    public InventoryType getInventoryType() {
+    public InventoryType inventoryType() {
         return InventoryType.CRAFTING;
     }
 

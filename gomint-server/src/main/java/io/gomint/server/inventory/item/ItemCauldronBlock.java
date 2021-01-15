@@ -8,10 +8,10 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo(sId = "minecraft:item.cauldron", id = 118)
-public class ItemCauldronBlock extends ItemStack {
+public class ItemCauldronBlock extends ItemStack<ItemCauldronBlock> {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.CAULDRON;
     }
 

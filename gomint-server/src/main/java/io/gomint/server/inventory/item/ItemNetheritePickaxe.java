@@ -12,7 +12,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:netherite_pickaxe", id = 745 )
-public class ItemNetheritePickaxe extends ItemReduceTierNetherite implements io.gomint.inventory.item.ItemNetheritePickaxe {
+public class ItemNetheritePickaxe extends ItemReduceTierNetherite<io.gomint.inventory.item.ItemNetheritePickaxe> implements io.gomint.inventory.item.ItemNetheritePickaxe {
 
     @Override
     public void gotInHand( EntityPlayer player ) {
@@ -29,7 +29,7 @@ public class ItemNetheritePickaxe extends ItemReduceTierNetherite implements io.
     }
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.NETHERITE_PICKAXE;
     }
 }

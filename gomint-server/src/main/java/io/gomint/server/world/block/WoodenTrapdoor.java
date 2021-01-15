@@ -36,7 +36,7 @@ public class WoodenTrapdoor extends Trapdoor<BlockWoodenTrapdoor> implements Blo
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 4500;
     }
 
@@ -61,7 +61,7 @@ public class WoodenTrapdoor extends Trapdoor<BlockWoodenTrapdoor> implements Blo
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return ToolPresets.AXE;
     }
 

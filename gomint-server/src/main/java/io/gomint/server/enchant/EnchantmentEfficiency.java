@@ -37,9 +37,9 @@ public class EnchantmentEfficiency extends Enchantment implements io.gomint.ench
     }
 
     @Override
-    public boolean canBeApplied( ItemStack itemStack ) {
+    public boolean canBeApplied(ItemStack<?> itemStack ) {
         return
-            itemStack.getItemType() == ItemType.SHEARS ||
+            itemStack.itemType() == ItemType.SHEARS ||
             EnchantmentHelper.canBeAppliedToTools(itemStack);
     }
 

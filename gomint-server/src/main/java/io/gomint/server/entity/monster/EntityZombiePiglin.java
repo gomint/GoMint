@@ -75,7 +75,7 @@ public class EntityZombiePiglin extends EntityAgeable implements io.gomint.entit
         Entity lastDamageEntity = this.lastDamageEntity;
         int looting = 0;
         if (lastDamageEntity instanceof EntityHuman) {
-            Enchantment enchantment = ((EntityHuman) lastDamageEntity).getInventory().getItemInHand().getEnchantment(EnchantmentLooting.class);
+            Enchantment enchantment = ((EntityHuman) lastDamageEntity).getInventory().itemInHand().enchantment(EnchantmentLooting.class);
             if (enchantment != null) {
                 looting = enchantment.getLevel();
             }
@@ -101,8 +101,8 @@ public class EntityZombiePiglin extends EntityAgeable implements io.gomint.entit
         
         chance = 0.085 + chanceIncrease;
         if (random.nextDouble() <= chance) {
-            ItemStack drop = (ItemStack) ItemGoldenSword.create(1);
-            drop.setDamage(random.nextInt(drop.getMaxDamage()));
+            ItemStack<?> drop = (ItemStack<?>) ItemGoldenSword.create(1);
+            drop.damage(random.nextInt(drop.maxDamage()));
             this.world.dropItem(location, drop);
         }
         

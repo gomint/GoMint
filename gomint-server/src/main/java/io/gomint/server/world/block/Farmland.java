@@ -28,7 +28,7 @@ public class Farmland extends Block implements BlockFarmland {
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 900;
     }
 
@@ -95,7 +95,7 @@ public class Farmland extends Block implements BlockFarmland {
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return ToolPresets.SHOVEL;
     }
 

@@ -26,7 +26,7 @@ public class BlockfaceFromPlayerBlockState extends BlockfaceBlockState {
     }
 
     @Override
-    public void detectFromPlacement(Block newBlock, EntityLiving player, ItemStack placedItem, Facing face) {
+    public void detectFromPlacement(Block newBlock, EntityLiving player, ItemStack<?> placedItem, Facing face) {
         if (player == null) {
             this.setState(newBlock, Facing.EAST);
             return;

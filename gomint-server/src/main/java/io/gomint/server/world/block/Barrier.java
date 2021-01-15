@@ -24,7 +24,7 @@ public class Barrier extends Block implements BlockBarrier {
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return -1;
     }
 

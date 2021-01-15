@@ -10,10 +10,10 @@ import io.gomint.taglib.NBTTagCompound;
  * @version 1.0
  */
 @RegisterInfo(sId = "minecraft:snow_layer", id = 78)
-public class ItemSnowLayer extends ItemStack implements io.gomint.inventory.item.ItemSnowLayer {
+public class ItemSnowLayer extends ItemStack< io.gomint.inventory.item.ItemSnowLayer> implements io.gomint.inventory.item.ItemSnowLayer {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.SNOW_LAYER;
     }
 

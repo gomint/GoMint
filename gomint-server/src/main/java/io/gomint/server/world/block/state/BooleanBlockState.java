@@ -30,7 +30,7 @@ public class BooleanBlockState extends BlockState<Boolean, Byte> {
     }
 
     @Override
-    public void detectFromPlacement(Block newBlock, EntityLiving player, ItemStack placedItem, Facing face) {
+    public void detectFromPlacement(Block newBlock, EntityLiving player, ItemStack<?> placedItem, Facing face) {
         this.setState(newBlock, false);
     }
 

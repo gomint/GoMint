@@ -19,12 +19,12 @@ public class Lantern extends Block implements BlockLantern {
     private static final BooleanBlockState HANGING = new BooleanBlockState(() -> new String[]{"hanging"});
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 17500;
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return ToolPresets.PICKAXE;
     }
 

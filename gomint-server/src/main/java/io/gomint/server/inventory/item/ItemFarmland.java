@@ -10,10 +10,10 @@ import io.gomint.taglib.NBTTagCompound;
  * @version 1.0
  */
 @RegisterInfo(sId = "minecraft:farmland", id = 60)
-public class ItemFarmland extends ItemStack implements io.gomint.inventory.item.ItemFarmland {
+public class ItemFarmland extends ItemStack< io.gomint.inventory.item.ItemFarmland> implements io.gomint.inventory.item.ItemFarmland {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.FARMLAND;
     }
 

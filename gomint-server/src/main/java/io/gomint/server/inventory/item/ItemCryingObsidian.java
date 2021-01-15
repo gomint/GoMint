@@ -15,10 +15,10 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:crying_obsidian", id = -289 )
-public class ItemCryingObsidian extends ItemStack implements io.gomint.inventory.item.ItemCryingObsidian {
+public class ItemCryingObsidian extends ItemStack< io.gomint.inventory.item.ItemCryingObsidian> implements io.gomint.inventory.item.ItemCryingObsidian {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.CRYING_OBSIDIAN;
     }
 

@@ -46,7 +46,7 @@ public class PacketStartGame extends Packet {
     private boolean isTexturePacksRequired;
 
     // Gamerule data
-    private Map<Gamerule, Object> gamerules;
+    private Map<Gamerule<?>, Object> gamerules;
     private boolean hasBonusChestEnabled;
     private boolean hasStartWithMapEnabled;
     private boolean hasTrustPlayersEnabled;
@@ -415,11 +415,11 @@ public class PacketStartGame extends Packet {
         isTexturePacksRequired = texturePacksRequired;
     }
 
-    public Map<Gamerule, Object> getGamerules() {
+    public Map<Gamerule<?>, Object> getGamerules() {
         return gamerules;
     }
 
-    public void setGamerules(Map<Gamerule, Object> gamerules) {
+    public void setGamerules(Map<Gamerule<?>, Object> gamerules) {
         this.gamerules = gamerules;
     }
 

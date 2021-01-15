@@ -12,15 +12,15 @@ import io.gomint.inventory.item.ItemReduceBreaktime;
  * @author geNAZt
  * @version 1.0
  */
-public abstract class ItemReduceTierSpecial extends ItemStack implements ItemReduceBreaktime {
+public abstract class ItemReduceTierSpecial<I extends io.gomint.inventory.item.ItemStack<I>> extends ItemStack<I> implements ItemReduceBreaktime<I> {
 
     @Override
-    public byte getMaximumAmount() {
+    public byte maximumAmount() {
         return 1;
     }
 
     @Override
-    public float getDivisor() {
+    public float divisor() {
         return 15;
     }
 

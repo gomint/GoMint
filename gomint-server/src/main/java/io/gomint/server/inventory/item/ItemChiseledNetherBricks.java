@@ -15,10 +15,10 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:chiseled_nether_bricks", id = -302 )
-public class ItemChiseledNetherBricks extends ItemStack implements io.gomint.inventory.item.ItemChiseledNetherBricks {
+public class ItemChiseledNetherBricks extends ItemStack< io.gomint.inventory.item.ItemChiseledNetherBricks> implements io.gomint.inventory.item.ItemChiseledNetherBricks {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.CHISELED_NETHER_BRICKS;
     }
 

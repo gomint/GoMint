@@ -15,7 +15,7 @@ import io.gomint.server.registry.RegisterInfo;
 public class Rail extends RailBase implements BlockRail {
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 1050;
     }
 
@@ -45,7 +45,7 @@ public class Rail extends RailBase implements BlockRail {
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return ToolPresets.PICKAXE;
     }
 

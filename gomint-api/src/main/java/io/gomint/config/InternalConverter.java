@@ -24,8 +24,8 @@ import java.util.*;
 public class InternalConverter {
 
     private final BaseConfig config;
-    private Set<Converter> converters;
-    private List<Class> customConverters;
+    private final Set<Converter> converters;
+    private final List<Class<?>> customConverters;
 
     public InternalConverter( BaseConfig config ) {
         this.config = config;
@@ -53,15 +53,15 @@ public class InternalConverter {
         return config;
     }
 
-    public InternalConverter addConverters(Class... classes ) throws InvalidConverterException {
-        for ( Class converterClass : classes ) {
+    public InternalConverter addConverters(Class<?> ... classes ) throws InvalidConverterException {
+        for ( Class<?> converterClass : classes ) {
             this.addConverter( converterClass );
         }
+
         return this;
     }
 
-    @SuppressWarnings( "unchecked" )
-    public InternalConverter addConverter( Class clazz ) throws InvalidConverterException {
+    public InternalConverter addConverter( Class<?> clazz ) throws InvalidConverterException {
         if ( !Converter.class.isAssignableFrom( clazz ) ) {
             throw new InvalidConverterException( clazz.getName() + " does not implement " + Converter.class );
         }
@@ -84,7 +84,7 @@ public class InternalConverter {
         return this;
     }
 
-    public Converter getConverter( Class type ) {
+    public Converter getConverter( Class<?> type ) {
         for ( Converter converter : converters ) {
             if ( converter.supports( type ) ) {
                 return converter;
@@ -244,11 +244,11 @@ public class InternalConverter {
         return this;
     }
 
-    public List<Class> getCustomConverters() {
+    public List<Class<?>> getCustomConverters() {
         return Collections.unmodifiableList( this.customConverters );
     }
 
-    public InternalConverter addCustomConverter( Class addConverter ) throws InvalidConverterException {
+    public InternalConverter addCustomConverter( Class<?> addConverter ) throws InvalidConverterException {
         this.addConverter( addConverter );
         this.customConverters.add( addConverter );
         return this;

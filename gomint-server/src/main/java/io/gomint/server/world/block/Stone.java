@@ -23,7 +23,7 @@ public class Stone extends Block implements BlockStone {
     private static final EnumBlockState<BlockStone.Type, String> VARIANT = new EnumBlockState<>(v -> new String[]{"stone_type"}, BlockStone.Type.values(), e -> e.name().toLowerCase(), v -> BlockStone.Type.valueOf(v.toUpperCase()));
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 2250;
     }
 
@@ -38,14 +38,14 @@ public class Stone extends Block implements BlockStone {
     }
 
     @Override
-    public List<ItemStack> drops(ItemStack itemInHand) {
+    public List<ItemStack<?>> drops(ItemStack<?> itemInHand) {
         return new ArrayList<>() {{
             add(ItemCobblestone.create(1));
         }};
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return ToolPresets.PICKAXE;
     }
 

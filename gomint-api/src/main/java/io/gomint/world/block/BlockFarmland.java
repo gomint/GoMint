@@ -25,6 +25,7 @@ public interface BlockFarmland extends Block {
      * Set moisture level of this block
      *
      * @param moisture level of this block
+     * @return block for chaining
      */
     BlockFarmland moisture(float moisture);
 

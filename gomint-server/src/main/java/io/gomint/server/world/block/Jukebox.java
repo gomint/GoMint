@@ -30,7 +30,7 @@ public class Jukebox extends Block implements BlockJukebox {
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 3000;
     }
 
@@ -50,7 +50,7 @@ public class Jukebox extends Block implements BlockJukebox {
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return ToolPresets.AXE;
     }
 

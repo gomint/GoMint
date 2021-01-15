@@ -8,10 +8,10 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:item.iron_door", id = 71 )
-public class ItemIronDoorBlock extends ItemStack {
+public class ItemIronDoorBlock extends ItemStack<ItemIronDoorBlock> {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.IRON_DOOR;
     }
 

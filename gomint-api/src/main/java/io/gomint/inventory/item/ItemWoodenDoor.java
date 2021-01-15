@@ -8,7 +8,7 @@ import io.gomint.world.block.data.LogType;
  * @version 1.0
  * @stability 2
  */
-public interface ItemWoodenDoor extends ItemStack, ItemBurnable {
+public interface ItemWoodenDoor extends ItemStack<ItemWoodenDoor>, ItemBurnable {
 
     /**
      * Create a new item stack with given class and amount
@@ -24,13 +24,13 @@ public interface ItemWoodenDoor extends ItemStack, ItemBurnable {
      *
      * @return type of wood
      */
-    LogType getWoodType();
+    LogType type();
 
     /**
      * Set the type of wood for this button
      *
      * @param logType type of wood
      */
-    void setWoodType(LogType logType);
+    ItemWoodenDoor type(LogType logType);
 
 }

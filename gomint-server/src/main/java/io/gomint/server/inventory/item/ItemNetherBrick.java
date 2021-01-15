@@ -9,12 +9,12 @@ import io.gomint.taglib.NBTTagCompound;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:netherbrick", id = 405 )
- public class ItemNetherBrick extends ItemStack implements io.gomint.inventory.item.ItemNetherBrick {
+ public class ItemNetherBrick extends ItemStack< io.gomint.inventory.item.ItemNetherBrick> implements io.gomint.inventory.item.ItemNetherBrick {
 
 
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.NETHER_BRICK;
     }
 

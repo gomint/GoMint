@@ -29,6 +29,7 @@ public interface BlockStone extends Block {
      * Set type of stone
      *
      * @param type which should be set
+     * @return block for chaining
      */
     BlockStone type(Type type);
 

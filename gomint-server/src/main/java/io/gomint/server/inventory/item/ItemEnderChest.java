@@ -10,10 +10,10 @@ import io.gomint.taglib.NBTTagCompound;
  * @version 1.0
  */
 @RegisterInfo(sId = "minecraft:ender_chest", id = 130)
-public class ItemEnderChest extends ItemStack implements io.gomint.inventory.item.ItemEnderChest {
+public class ItemEnderChest extends ItemStack< io.gomint.inventory.item.ItemEnderChest> implements io.gomint.inventory.item.ItemEnderChest {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.ENDER_CHEST;
     }
 

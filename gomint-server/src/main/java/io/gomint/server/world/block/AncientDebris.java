@@ -19,7 +19,7 @@ public class AncientDebris extends Block implements BlockAncientDebris {
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 45200;
     }
 
@@ -34,7 +34,7 @@ public class AncientDebris extends Block implements BlockAncientDebris {
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return new Class[]{
             ItemDiamondPickaxe.class
         };

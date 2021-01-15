@@ -14,7 +14,7 @@ import io.gomint.world.block.BlockFlowingWater;
 public class FlowingWater extends Liquid<BlockFlowingWater> implements BlockFlowingWater {
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 150000;
     }
 

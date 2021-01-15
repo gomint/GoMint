@@ -49,6 +49,7 @@ public interface World {
      * Sets the spawn location of the world
      *
      * @param location The world's spawn location
+     * @return world for chaining
      */
     World spawnLocation(Location location);
 
@@ -63,6 +64,7 @@ public interface World {
      * Set the difficulty of the world
      *
      * @param difficulty The world's new difficulty
+     * @return world for chaining
      */
     World difficulty(Difficulty difficulty);
 
@@ -116,9 +118,9 @@ public interface World {
      *
      * @param gamerule The gamerule to set a value for
      * @param value    The value which should be set
-     * @param <T>      The generic type of the gamerule
+     * @return world for chaining
      */
-    <T> World gamerule(Gamerule<T> gamerule, T value);
+    World gamerule(Gamerule<?> gamerule, Object value);
 
     /**
      * Get a collection of players which are online on this world
@@ -134,6 +136,7 @@ public interface World {
      * @param sound    The sound which should be played
      * @param pitch    The pitch at which the sound should be played
      * @param data     additional data for the sound
+     * @return world for chaining
      * @throws IllegalArgumentException when the sound data given is incorrect for the sound wanted to play
      */
     World playSound(Vector location, Sound sound, byte pitch, SoundData data);
@@ -144,6 +147,7 @@ public interface World {
      * @param location The location where the sound should be played
      * @param sound    The sound which should be played
      * @param pitch    The pitch at which the sound should be played
+     * @return world for chaining
      */
     World playSound(Vector location, Sound sound, byte pitch);
 
@@ -152,6 +156,7 @@ public interface World {
      *
      * @param location of the particle in the client
      * @param particle which should be send
+     * @return world for chaining
      */
     World sendParticle(Vector location, Particle particle);
 
@@ -161,6 +166,7 @@ public interface World {
      * @param location of the particle in the client
      * @param particle which should be send
      * @param data     data with which this particle should be send
+     * @return world for chaining
      * @throws IllegalArgumentException when the particle data is incorrect for the particle which should be send
      */
     World sendParticle(Vector location, Particle particle, ParticleData data);
@@ -182,7 +188,7 @@ public interface World {
      * @param itemStack which is stored inside the drop
      * @return the created and spawned entity
      */
-    EntityItemDrop createItemDrop(Vector vector, ItemStack itemStack);
+    EntityItemDrop createItemDrop(Vector vector, ItemStack<?> itemStack);
 
     /**
      * Unload this world. All remaining players in this world get called through the consumer
@@ -199,6 +205,7 @@ public interface World {
      * @param blockClass    for which we search
      * @param blockConsumer which gets called for every found block
      * @param <T>           type of block
+     * @return world for chaining
      */
     <T extends Block> World iterateBlocks(Class<T> blockClass, Consumer<T> blockConsumer);
 
@@ -208,6 +215,7 @@ public interface World {
      * @param entityClass    for which we search
      * @param entityConsumer which gets called for every found entity
      * @param <T>            type of entity
+     * @return world for chaining
      */
     <T extends Entity> World iterateEntities(Class<T> entityClass, Consumer<T> entityConsumer);
 
@@ -215,6 +223,7 @@ public interface World {
      * Iterate over all loaded chunks in this  world
      *
      * @param chunkConsumer which gets called for every chunk loaded
+     * @return world for chaining
      */
     World iterateChunks(Consumer<Chunk> chunkConsumer);
 
@@ -247,6 +256,8 @@ public interface World {
 
     /**
      * Save all data to disk
+     *
+     * @return world for chaining
      */
     World save();
 
@@ -276,6 +287,7 @@ public interface World {
      *
      * @param x coordinate of the chunk
      * @param z coordinate of the chunk
+     * @return world for chaining
      */
     World unloadChunk(int x, int z);
 
@@ -283,6 +295,7 @@ public interface World {
      * Set current day/night time. Time in a world is given in 24h format (0 is midnight, 12 is noon, 18 is 6p.m. etc.)
      *
      * @param time which should be set
+     * @return world for chaining
      */
     World time(Duration time);
 

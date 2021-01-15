@@ -7,14 +7,15 @@ import io.gomint.GoMint;
  * @version 1.0
  * @stability 3
  */
-public interface ItemCake extends ItemStack {
+public interface ItemCake extends ItemStack<ItemCake> {
 
     /**
      * Create a new item stack with given class and amount
      *
      * @param amount which is used for the creation
+	 * @return freshly generated item
      */
-    static ItemCake create( int amount ) {
+    static ItemCake create( int amount ) {	
         return GoMint.instance().createItemStack( ItemCake.class, amount );
     }
 

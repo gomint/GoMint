@@ -140,7 +140,7 @@ public class DoubleStoneSlab extends Block implements BlockDoubleStoneSlab {
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return ToolPresets.PICKAXE;
     }
 

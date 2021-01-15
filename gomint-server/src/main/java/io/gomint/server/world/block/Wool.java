@@ -24,7 +24,7 @@ public class Wool extends Block implements BlockWool {
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 1200;
     }
 
@@ -55,7 +55,7 @@ public class Wool extends Block implements BlockWool {
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return new Class[]{
             ItemShears.class
         };

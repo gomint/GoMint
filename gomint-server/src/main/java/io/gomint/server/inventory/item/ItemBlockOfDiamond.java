@@ -10,10 +10,10 @@ import io.gomint.taglib.NBTTagCompound;
  * @version 1.0
  */
 @RegisterInfo(sId = "minecraft:diamond_block", id = 57)
-public class ItemBlockOfDiamond extends ItemStack implements io.gomint.inventory.item.ItemBlockOfDiamond {
+public class ItemBlockOfDiamond extends ItemStack< io.gomint.inventory.item.ItemBlockOfDiamond> implements io.gomint.inventory.item.ItemBlockOfDiamond {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.BLOCK_OF_DIAMOND;
     }
 

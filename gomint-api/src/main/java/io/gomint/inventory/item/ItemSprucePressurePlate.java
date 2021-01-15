@@ -14,20 +14,16 @@ import io.gomint.GoMint;
  * @version 1.0
  * @stability 1
  */
-public interface ItemSprucePressurePlate extends ItemStack, ItemBurnable {
+public interface ItemSprucePressurePlate extends ItemStack<ItemSprucePressurePlate>, ItemBurnable {
 
     /**
      * Create a new item stack with given class and amount
      *
      * @param amount which is used for the creation
+	 * @return freshly generated item
      */
     static ItemSprucePressurePlate create( int amount ) {
         return GoMint.instance().createItemStack( ItemSprucePressurePlate.class, amount );
-    }
-
-    @Override
-    default long getBurnTime() {
-        return 15000;
     }
 
 }

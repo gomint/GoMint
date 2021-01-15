@@ -7,7 +7,7 @@ import io.gomint.GoMint;
  * @version 1.0
  * @stability 1
  */
-public interface ItemStair extends ItemStack {
+public interface ItemStair extends ItemStack<ItemStair> {
 
     /**
      * Create a new item stack with given class and amount

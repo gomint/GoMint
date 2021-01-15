@@ -1,4 +1,5 @@
 package io.gomint.server.inventory.item;
+
 import io.gomint.inventory.item.ItemType;
 import io.gomint.math.Vector;
 import io.gomint.server.entity.EntityPlayer;
@@ -6,10 +7,8 @@ import io.gomint.server.registry.RegisterInfo;
 import io.gomint.world.block.Block;
 import io.gomint.world.block.data.Facing;
 
-@RegisterInfo( sId = "minecraft:turtle_helmet", id = 469 )
-public class ItemTurtleShell extends ItemArmor implements io.gomint.inventory.item.ItemTurtleShell {
-
-
+@RegisterInfo(sId = "minecraft:turtle_helmet", id = 469)
+public class ItemTurtleShell extends ItemArmor<io.gomint.inventory.item.ItemTurtleShell> implements io.gomint.inventory.item.ItemTurtleShell {
 
     @Override
     public float getReductionValue() {
@@ -17,12 +16,12 @@ public class ItemTurtleShell extends ItemArmor implements io.gomint.inventory.it
     }
 
     @Override
-    public boolean interact(EntityPlayer entity, Facing face, Vector clickPosition, Block clickedBlock ) {
-        if ( clickedBlock == null ) {
-            if ( isBetter( (ItemStack) entity.getArmorInventory().getHelmet() ) ) {
-                ItemStack old = (ItemStack) entity.getArmorInventory().getHelmet();
-                entity.getArmorInventory().setHelmet( this );
-                entity.getInventory().setItem( entity.getInventory().getItemInHandSlot(), old );
+    public boolean interact(EntityPlayer entity, Facing face, Vector clickPosition, Block clickedBlock) {
+        if (clickedBlock == null) {
+            if (isBetter((ItemStack<?>) entity.getArmorInventory().helmet())) {
+                ItemStack<?> old = (ItemStack<?>) entity.getArmorInventory().helmet();
+                entity.getArmorInventory().helmet(this);
+                entity.getInventory().item(entity.getInventory().itemInHandSlot(), old);
             }
         }
 
@@ -30,7 +29,8 @@ public class ItemTurtleShell extends ItemArmor implements io.gomint.inventory.it
     }
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.TURTLE_SHELL;
     }
+
 }

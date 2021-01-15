@@ -27,7 +27,7 @@ public class PlayerInteractListener implements EventListener {
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent e) {
         EntityPlayer player = e.getPlayer();
-        ItemStack itemStack = player.getInventory().getItemInHand();
+        ItemStack<?> itemStack = player.getInventory().itemInHand();
         player.sendMessage(Objects.toString(itemStack));
 
         if (itemStack instanceof ItemArrow) {
