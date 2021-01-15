@@ -26,6 +26,7 @@ public class AddonPack implements io.gomint.addons.AddonPack {
     private final SemanticVersion minimumEngineVersion;
     private final Set<AddonModule> modules;
     private final Set<AddonDependency> dependencies;
+    private final AddonContext context;
 
     /**
      * Constructs a new addon pack given all required information from its manifest.
@@ -37,6 +38,7 @@ public class AddonPack implements io.gomint.addons.AddonPack {
      * @param minimumEngineVersion The minimum version of Minecraft's engine required by the addon
      * @param modules              The addon's modules
      * @param dependencies         A set of dependencies required by the addon
+     * @param context              The addon's context
      */
     public AddonPack(UUID uuid,
                      String name,
@@ -44,7 +46,8 @@ public class AddonPack implements io.gomint.addons.AddonPack {
                      SemanticVersion version,
                      SemanticVersion minimumEngineVersion,
                      Set<AddonModule> modules,
-                     Set<AddonDependency> dependencies) {
+                     Set<AddonDependency> dependencies,
+                     AddonContext context) {
         this.uuid = uuid;
         this.name = name;
         this.description = description;
@@ -52,6 +55,7 @@ public class AddonPack implements io.gomint.addons.AddonPack {
         this.minimumEngineVersion = minimumEngineVersion;
         this.modules = modules;
         this.dependencies = dependencies;
+        this.context = context;
     }
 
 
