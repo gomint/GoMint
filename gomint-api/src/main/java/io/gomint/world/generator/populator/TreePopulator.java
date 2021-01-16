@@ -18,7 +18,7 @@ import io.gomint.world.generator.object.Tree;
  * @author geNAZt
  * @version 1.0
  */
-public class TreePopulator implements Populator {
+public class TreePopulator implements Populator<TreePopulator> {
 
     private final Tree tree;
     private int randomAmount;
@@ -39,20 +39,22 @@ public class TreePopulator implements Populator {
     }
 
     @Override
-    public void populate( World world, Chunk chunk, FastRandom random ) {
+    public TreePopulator populate( World world, Chunk chunk, FastRandom random ) {
         int amount = random.nextInt( this.randomAmount + 1 ) + this.baseAmount;
         for ( int i = 0; i < amount; ++i ) {
             int x = random.nextInt( 15 );
             int z = random.nextInt( 15 );
-            int y = this.getHighestWorkableBlock( chunk, x, z );
+            int y = this.highestWorkableBlock( chunk, x, z );
 
             if ( y != -1 ) {
                 this.tree.grow( world, chunk.x() * 16 + x, y, chunk.z() * 16 + z, random );
             }
         }
+
+        return this;
     }
 
-    private int getHighestWorkableBlock( Chunk chunk, int x, int z ) {
+    private int highestWorkableBlock(Chunk chunk, int x, int z ) {
         int y = 255;
         for ( ; y > 0; --y ) {
             Block block = chunk.blockAt( x, y, z );

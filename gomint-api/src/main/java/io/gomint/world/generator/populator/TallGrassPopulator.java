@@ -19,7 +19,7 @@ import io.gomint.world.block.BlockType;
  * @author geNAZt
  * @version 1.0
  */
-public class TallGrassPopulator implements Populator {
+public class TallGrassPopulator implements Populator<TallGrassPopulator> {
 
     private int randomAmount;
     private int baseAmount;
@@ -35,7 +35,7 @@ public class TallGrassPopulator implements Populator {
     }
 
     @Override
-    public void populate( World world, Chunk chunk, FastRandom random ) {
+    public TallGrassPopulator populate( World world, Chunk chunk, FastRandom random ) {
         int amount = random.nextInt( this.randomAmount + 1 ) + this.baseAmount;
         for ( int i = 0; i < amount; ++i ) {
             int x = random.nextInt( 15 );
@@ -48,6 +48,8 @@ public class TallGrassPopulator implements Populator {
                 chunk.block( x, y, z, tallGrass );
             }
         }
+
+        return this;
     }
 
     private boolean canTallGrassStay( Chunk chunk, int x, int y, int z ) {

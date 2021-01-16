@@ -20,10 +20,10 @@ import java.util.List;
  * @author geNAZt
  * @version 1.0
  */
-public class GroundPopulator implements Populator {
+public class GroundPopulator implements Populator<GroundPopulator> {
 
     @Override
-    public void populate( World world, Chunk chunk, FastRandom random ) {
+    public GroundPopulator populate( World world, Chunk chunk, FastRandom random ) {
         for ( int x = 0; x < 16; ++x ) {
             for ( int z = 0; z < 16; ++z ) {
                 Biome biome = chunk.biome( x, z );
@@ -47,6 +47,8 @@ public class GroundPopulator implements Populator {
                 }
             }
         }
+
+        return this;
     }
 
 }
