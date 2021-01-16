@@ -13,7 +13,7 @@ public interface StepSlider {
      * @param step to add
      * @return StepSlider instance for chaining
      */
-    StepSlider addStep( String step );
+    StepSlider step(String step);
 
     /**
      * Add a new step with the option to select this as default
@@ -22,6 +22,6 @@ public interface StepSlider {
      * @param defaultStep true when this should be default, false when not
      * @return StepSlider instance for chaining
      */
-    StepSlider addStep( String step, boolean defaultStep );
+    StepSlider step(String step, boolean defaultStep);
 
 }

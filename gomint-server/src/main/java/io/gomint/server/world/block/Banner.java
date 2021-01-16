@@ -20,7 +20,7 @@ public abstract class Banner extends Block {
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 1500;
     }
 
@@ -30,7 +30,7 @@ public abstract class Banner extends Block {
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return ToolPresets.AXE;
     }
 

@@ -26,35 +26,35 @@ import java.util.Map;
 public class SetWorldSpawnCommand extends Command {
 
     @Override
-    public CommandOutput execute(CommandSender sender, String alias, Map<String, Object> arguments) {
+    public CommandOutput execute(CommandSender<?> sender, String alias, Map<String, Object> arguments) {
         if (!(sender instanceof PlayerCommandSender)) {
             return CommandOutput.failure("Executor is required to be a player");
         }
 
         EntityPlayer executor = (EntityPlayer) sender;
-        WorldAdapter affectedWorld = executor.getWorld();
-        Location worldSpawnLocation = executor.getLocation();
+        WorldAdapter affectedWorld = executor.world();
+        Location worldSpawnLocation = executor.location();
 
         // Handling argument: spawnPoint
         BlockPosition spawnPoint = (BlockPosition) arguments.get("spawnPoint");
         if (spawnPoint != null) {
-            worldSpawnLocation.setX(spawnPoint.getX());
-            worldSpawnLocation.setY(spawnPoint.getY());
-            worldSpawnLocation.setZ(spawnPoint.getZ());
+            worldSpawnLocation.x(spawnPoint.x());
+            worldSpawnLocation.y(spawnPoint.y());
+            worldSpawnLocation.z(spawnPoint.z());
         }
 
         this.floorLocation(worldSpawnLocation);
-        affectedWorld.setSpawnLocation(worldSpawnLocation);
+        affectedWorld.spawnLocation(worldSpawnLocation);
 
         return CommandOutput.successful(String.format("Set the world spawn point to (%.1f, %.1f, %.1f)",
-            worldSpawnLocation.getX(),
-            worldSpawnLocation.getY(),
-            worldSpawnLocation.getZ()));
+            worldSpawnLocation.x(),
+            worldSpawnLocation.y(),
+            worldSpawnLocation.z()));
     }
 
     private void floorLocation(Location location) {
-        location.setX((float) Math.floor(location.getX()));
-        location.setY((float) Math.floor(location.getY()));
-        location.setZ((float) Math.floor(location.getZ()));
+        location.x((float) Math.floor(location.x()));
+        location.y((float) Math.floor(location.y()));
+        location.z((float) Math.floor(location.z()));
     }
 }

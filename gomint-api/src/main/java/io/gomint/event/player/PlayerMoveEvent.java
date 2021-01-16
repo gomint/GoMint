@@ -10,7 +10,7 @@ import java.util.Objects;
  * @version 1.0
  * @stability 3
  */
-public class PlayerMoveEvent extends CancellablePlayerEvent {
+public class PlayerMoveEvent extends CancellablePlayerEvent<PlayerMoveEvent> {
 
     private final Location from;
     private Location to;
@@ -36,7 +36,7 @@ public class PlayerMoveEvent extends CancellablePlayerEvent {
      *
      * @return the from location
      */
-    public Location getFrom() {
+    public Location from() {
         return this.from;
     }
 
@@ -45,7 +45,7 @@ public class PlayerMoveEvent extends CancellablePlayerEvent {
      *
      * @return the to location
      */
-    public Location getTo() {
+    public Location to() {
         return this.to;
     }
 
@@ -55,8 +55,9 @@ public class PlayerMoveEvent extends CancellablePlayerEvent {
      *
      * @param to the new to location
      */
-    public void setTo( Location to ) {
+    public PlayerMoveEvent to(Location to ) {
         this.to = to;
+        return this;
     }
 
     @Override

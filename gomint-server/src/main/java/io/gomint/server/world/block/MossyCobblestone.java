@@ -20,7 +20,7 @@ public class MossyCobblestone extends Block implements BlockMossyCobblestone {
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 3000;
     }
 
@@ -30,7 +30,7 @@ public class MossyCobblestone extends Block implements BlockMossyCobblestone {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.MOSSY_COBBLESTONE;
     }
 
@@ -40,7 +40,7 @@ public class MossyCobblestone extends Block implements BlockMossyCobblestone {
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return ToolPresets.PICKAXE;
     }
 

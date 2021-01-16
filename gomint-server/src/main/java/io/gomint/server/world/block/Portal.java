@@ -18,7 +18,7 @@ public class Portal extends Block implements BlockPortal {
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return -1;
     }
 
@@ -28,7 +28,7 @@ public class Portal extends Block implements BlockPortal {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.PORTAL;
     }
 

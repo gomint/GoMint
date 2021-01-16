@@ -8,12 +8,13 @@ import io.gomint.world.block.data.StoneType;
  * @version 1.0
  * @stability 3
  */
-public interface ItemStoneSlab extends ItemSlab {
+public interface ItemStoneSlab extends ItemSlab<ItemStoneSlab> {
 
     /**
      * Create a new item stack with given class and amount
      *
      * @param amount which is used for the creation
+	 * @return freshly generated item
      */
     static ItemStoneSlab create( int amount ) {
         return GoMint.instance().createItemStack( ItemStoneSlab.class, amount );
@@ -24,13 +25,13 @@ public interface ItemStoneSlab extends ItemSlab {
      *
      * @return type of stone
      */
-    StoneType getStoneType();
+    StoneType type();
 
     /**
      * Set the type of stone for this slab
      *
      * @param type which this slab should have
      */
-    void setStoneType(StoneType type);
+    ItemStoneSlab type(StoneType type);
 
 }

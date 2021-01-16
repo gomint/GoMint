@@ -26,12 +26,12 @@ public class AILookingState extends AIState {
     }
 
     public void look(Vector direction) {
-        double horizontalDistance = MathUtils.sqrt(direction.getX() * direction.getX() + direction.getZ() * direction.getZ());
-        float yaw = (float) ((Math.atan2(direction.getZ(), direction.getX()) * (180D / Math.PI)) - 90.0F);
-        float pitch = (float) -(Math.atan2(direction.getY(), horizontalDistance) * (180D / Math.PI));
+        double horizontalDistance = MathUtils.sqrt(direction.x() * direction.x() + direction.z() * direction.z());
+        float yaw = (float) ((Math.atan2(direction.z(), direction.x()) * (180D / Math.PI)) - 90.0F);
+        float pitch = (float) -(Math.atan2(direction.y(), horizontalDistance) * (180D / Math.PI));
 
-        this.pathfinding.getTransform().setHeadYaw(this.updateRotation(this.pathfinding.getTransform().getHeadYaw(), yaw, 10));
-        this.pathfinding.getTransform().setPitch(this.updateRotation(this.pathfinding.getTransform().getPitch(), pitch, 40));
+        this.pathfinding.transform().headYaw(this.updateRotation(this.pathfinding.transform().headYaw(), yaw, 10));
+        this.pathfinding.transform().pitch(this.updateRotation(this.pathfinding.transform().pitch(), pitch, 40));
     }
 
     private float updateRotation(float current, float add, float max) {

@@ -21,13 +21,14 @@ public interface BlockHardenedGlass extends Block {
      *
      * @return color of this block
      */
-    GlassColor getColor();
+    GlassColor color();
 
     /**
      * Set the color of this block
      *
      * @param color which this block should be
+     * @return block for chaining
      */
-    void setColor( GlassColor color );
+    BlockHardenedGlass color(GlassColor color);
 
 }

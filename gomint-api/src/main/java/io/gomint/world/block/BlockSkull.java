@@ -14,20 +14,21 @@ import io.gomint.world.block.data.SkullType;
  * @version 1.0
  * @stability 2
  */
-public interface BlockSkull extends Block, BlockDirection {
+public interface BlockSkull extends Block, BlockDirection<BlockSkull> {
 
     /**
      * Get type of skull
      *
      * @return type of skull
      */
-    SkullType getSkullType();
+    SkullType type();
 
     /**
      * Set type of skull
      *
      * @param type of skull to set
+     * @return block for chaining
      */
-    void setSkullType(SkullType type);
+    BlockSkull type(SkullType type);
 
 }

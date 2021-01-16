@@ -11,20 +11,20 @@ import io.gomint.world.block.BlockStationaryWater;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:water" )
-public class StationaryWater extends Liquid implements BlockStationaryWater {
+public class StationaryWater extends Liquid<BlockStationaryWater> implements BlockStationaryWater {
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 150000;
     }
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
     @Override
-    public float getFillHeight() {
+    public float fillHeight() {
         return 1f;
     }
 
@@ -44,14 +44,14 @@ public class StationaryWater extends Liquid implements BlockStationaryWater {
     }
 
     @Override
-    public void onEntityStanding( EntityLiving entityLiving ) {
-        if ( entityLiving.isOnFire() ) {
+    public void onEntityStanding(EntityLiving<?> entityLiving ) {
+        if ( entityLiving.burning() ) {
             entityLiving.extinguish();
         }
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.STATIONARY_WATER;
     }
 

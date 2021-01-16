@@ -12,7 +12,7 @@ import io.gomint.server.world.WorldAdapter;
 import java.util.Set;
 
 @RegisterInfo( sId = "minecraft:creeper" )
-public class EntityCreeper extends EntityLiving implements io.gomint.entity.monster.EntityCreeper {
+public class EntityCreeper extends EntityLiving<io.gomint.entity.monster.EntityCreeper> implements io.gomint.entity.monster.EntityCreeper {
 
     /**
      * Constructs a new EntityLiving
@@ -33,20 +33,21 @@ public class EntityCreeper extends EntityLiving implements io.gomint.entity.mons
     }
 
     private void initEntity() {
-        this.setSize( 0.6f, 1.7f );
-        this.addAttribute( Attribute.HEALTH );
-        this.setMaxHealth( 20 );
-        this.setHealth( 20 );
+        this.size( 0.6f, 1.7f );
+        this.attribute( Attribute.HEALTH );
+        this.maxHealth( 20 );
+        this.health( 20 );
     }
 
     @Override
-    public boolean isCharged() {
+    public boolean charged() {
         return this.metadataContainer.getDataFlag( MetadataContainer.DATA_INDEX, EntityFlag.CHARGED );
     }
 
     @Override
-    public void setCharged( boolean value ) {
+    public EntityCreeper charged(boolean value ) {
         this.metadataContainer.setDataFlag( MetadataContainer.DATA_INDEX, EntityFlag.CHARGED, value );
+        return this;
     }
 
     @Override
@@ -55,7 +56,7 @@ public class EntityCreeper extends EntityLiving implements io.gomint.entity.mons
     }
 
     @Override
-    public Set<String> getTags() {
+    public Set<String> tags() {
         return EntityTags.HOSTILE_MOB;
     }
 

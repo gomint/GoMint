@@ -31,12 +31,12 @@ public class Magma extends Block implements BlockMagma {
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 750;
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.MAGMA;
     }
 
@@ -46,7 +46,7 @@ public class Magma extends Block implements BlockMagma {
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return ToolPresets.PICKAXE;
     }
 

@@ -14,14 +14,15 @@ import io.gomint.GoMint;
  * @version 1.0
  * @stability 1
  */
-public interface ItemZombieVillagerSpawnEgg extends ItemStack {
+public interface ItemZombieVillagerSpawnEgg extends ItemStack<ItemZombieVillagerSpawnEgg> {
 
     /**
      * Create a new item stack with given class and amount
      *
      * @param amount which is used for the creation
+	 * @return freshly generated item
      */
-    static ItemZombieVillagerSpawnEgg create( int amount ) {
+    static ItemZombieVillagerSpawnEgg create( int amount ) {	
         return GoMint.instance().createItemStack( ItemZombieVillagerSpawnEgg.class, amount );
     }
 

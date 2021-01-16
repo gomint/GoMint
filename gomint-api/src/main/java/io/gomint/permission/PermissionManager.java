@@ -17,7 +17,7 @@ public interface PermissionManager {
      * group B has set "testpermission" to false. You inserted it with {@link PermissionManager#addGroup(Group)}
      * A first, second B you will get false as result.
      * <p>
-     * When you insert A second you will get true as result, same when you use {@link PermissionManager#setPermission(String, boolean)}
+     * When you insert A second you will get true as result, same when you use {@link PermissionManager#permission(String, boolean)}
      * which adds a player based override.
      * <p>
      * This manager also supports basic usage of the astrix wildcard (*). In the case of wildcard checking, all full
@@ -28,30 +28,30 @@ public interface PermissionManager {
      * @param permission asked for
      * @return true if this manager has the permission, false if not
      */
-    boolean hasPermission( String permission );
+    boolean has(String permission );
 
     /**
-     * Same behaviour as {@link #hasPermission(String)} but with another return behaviour
+     * Same behaviour as {@link #has(String)} but with another return behaviour
      *
      * @param permission asked for
      * @param defaultValue which will be returned when no permission setting has been found
      * @return true if this manager has the permission, defaultValue if not
      */
-    boolean hasPermission( String permission, boolean defaultValue );
+    boolean has(String permission, boolean defaultValue );
 
     /**
      * Add a new permission group to this manager
      *
      * @param group which should be added
      */
-    void addGroup( Group group );
+    PermissionManager addGroup( Group group );
 
     /**
      * Remove a group from the manager
      *
      * @param group which should be removed
      */
-    void removeGroup( Group group );
+    PermissionManager removeGroup( Group group );
 
     /**
      * Add a manager permission. This is the highest override level you can get
@@ -59,18 +59,18 @@ public interface PermissionManager {
      * @param permission which should be set
      * @param value      for the permission, true for grant, false for revoke
      */
-    void setPermission( String permission, boolean value );
+    PermissionManager permission(String permission, boolean value );
 
     /**
      * Remove permission from this manager
      *
      * @param permission which should be removed
      */
-    void removePermission( String permission );
+    PermissionManager remove(String permission );
 
     /**
      * Toggle the op state of this permission manager
      */
-    void toggleOp();
+    PermissionManager toggleOp();
 
 }

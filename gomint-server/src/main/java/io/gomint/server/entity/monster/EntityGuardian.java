@@ -10,7 +10,7 @@ import io.gomint.server.world.WorldAdapter;
 import java.util.Set;
 
 @RegisterInfo( sId = "minecraft:guardian" )
-public class EntityGuardian extends EntityLiving implements io.gomint.entity.monster.EntityGuardian {
+public class EntityGuardian extends EntityLiving<io.gomint.entity.monster.EntityGuardian> implements io.gomint.entity.monster.EntityGuardian {
 
     /**
      * Constructs a new EntityLiving
@@ -31,10 +31,10 @@ public class EntityGuardian extends EntityLiving implements io.gomint.entity.mon
     }
 
     private void initEntity() {
-        this.setSize( 0.85f, 0.85f );
-        this.addAttribute( Attribute.HEALTH );
-        this.setMaxHealth( 30 );
-        this.setHealth( 30 );
+        this.size( 0.85f, 0.85f );
+        this.attribute( Attribute.HEALTH );
+        this.maxHealth( 30 );
+        this.health( 30 );
     }
 
     @Override
@@ -43,7 +43,7 @@ public class EntityGuardian extends EntityLiving implements io.gomint.entity.mon
     }
 
     @Override
-    public Set<String> getTags() {
+    public Set<String> tags() {
         return EntityTags.HOSTILE_MOB;
     }
 

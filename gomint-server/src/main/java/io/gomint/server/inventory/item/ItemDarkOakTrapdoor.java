@@ -10,20 +10,22 @@ package io.gomint.server.inventory.item;
 import io.gomint.inventory.item.ItemType;
 import io.gomint.server.registry.RegisterInfo;
 
+import java.time.Duration;
+
 /**
  * @author geNAZt
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:dark_oak_trapdoor", id = -147 )
-public class ItemDarkOakTrapdoor extends ItemStack implements io.gomint.inventory.item.ItemDarkOakTrapdoor {
+public class ItemDarkOakTrapdoor extends ItemStack< io.gomint.inventory.item.ItemDarkOakTrapdoor> implements io.gomint.inventory.item.ItemDarkOakTrapdoor {
 
     @Override
-    public long getBurnTime() {
-        return 15000;
+    public Duration burnTime() {
+        return Duration.ofMillis(15000);
     }
     
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.DARK_OAK_TRAPDOOR;
     }
 

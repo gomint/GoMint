@@ -25,7 +25,7 @@ import java.util.Map;
  * @version 1.0
  * @stability 3
  */
-public class YamlResourceLoader extends FileResourceLoader implements ResourceLoader {
+public class YamlResourceLoader extends FileResourceLoader implements ResourceLoader<YamlResourceLoader> {
 
     private Map<String, Object> lookup;
     private String file;
@@ -56,7 +56,7 @@ public class YamlResourceLoader extends FileResourceLoader implements ResourceLo
         InputStreamReader stream = null;
         try {
             // Get the correct InputStreamReader for this file
-            stream = getFileInputStreamReader( file );
+            stream = fileInputStreamReader( file );
 
             // Read from the InputStreamReader till he is empty
             BufferedReader br = new BufferedReader( stream );
@@ -92,7 +92,7 @@ public class YamlResourceLoader extends FileResourceLoader implements ResourceLo
      * @return List of keys available
      */
     @Override
-    public List<String> getKeys() {
+    public List<String> keys() {
         List<String> keys = new ArrayList<>();
         addKeys( keys, "", this.lookup );
         return keys;
@@ -153,7 +153,7 @@ public class YamlResourceLoader extends FileResourceLoader implements ResourceLo
      * @return A List of String as formats this Loader supports
      */
     @Override
-    public List<String> getFormats() {
+    public List<String> formats() {
         return Arrays.asList( ".yml" );
     }
 
@@ -163,8 +163,9 @@ public class YamlResourceLoader extends FileResourceLoader implements ResourceLo
      * @throws ResourceLoadFailedException
      */
     @Override
-    public void reload() throws ResourceLoadFailedException {
+    public YamlResourceLoader reload() throws ResourceLoadFailedException {
         this.load();
+        return this;
     }
 
     /**
@@ -177,4 +178,5 @@ public class YamlResourceLoader extends FileResourceLoader implements ResourceLo
 
         super.cleanup();
     }
+
 }

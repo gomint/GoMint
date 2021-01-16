@@ -18,7 +18,7 @@ import java.util.stream.Stream;
  * @version 1.0
  * @stability 3
  */
-public interface Inventory {
+public interface Inventory<I> {
 
     /**
      * Gets the item out of this inventory
@@ -26,7 +26,7 @@ public interface Inventory {
      * @param slot The slot which we want to lookup
      * @return The item stack or null if the slot is empty
      */
-    ItemStack getItem( int slot );
+    ItemStack<?> item(int slot );
 
     /**
      * Set the item into the slot of this inventory
@@ -34,7 +34,7 @@ public interface Inventory {
      * @param slot      The slot in which we want to set this item
      * @param itemStack The item which we want to set into that slot
      */
-    void setItem( int slot, ItemStack itemStack );
+    I item(int slot, ItemStack<?> itemStack );
 
     /**
      * Add a item to the next free slot in this inventory
@@ -42,7 +42,7 @@ public interface Inventory {
      * @param itemStack which should be added to the inventory
      * @return true if it was stored, false when not
      */
-    boolean addItem( ItemStack itemStack );
+    boolean addItem( ItemStack<?> itemStack );
 
     /**
      * Add a item to the next free slot in this inventory
@@ -50,7 +50,7 @@ public interface Inventory {
      * @param itemStack which should be added to the inventory
      * @return slot which was used for this item, -1 if no slot has been found
      */
-    int addItemWithSlot( ItemStack itemStack );
+    int addItemWithSlot( ItemStack<?> itemStack );
 
     /**
      * Get the size of this inventory
@@ -62,28 +62,28 @@ public interface Inventory {
     /**
      * Set all items in this inventory to air
      */
-    void clear();
+    I clear();
 
     /**
      * Get a collection of all entities currently viewing this inventory
      *
      * @return collection of viewers
      */
-    Collection<Entity> getViewers();
+    Collection<Entity<?>> viewers();
 
     /**
      * Get the type of this inventory
      *
      * @return type of inventory
      */
-    InventoryType getInventoryType();
+    InventoryType inventoryType();
 
     /**
      * Get the contents of this inventory
      *
      * @return array copy of item stacks, none of which can be null
      */
-    ItemStack[] getContents();
+    ItemStack<?>[] contents();
 
     /**
      * Check if the inventory holds an instance of the asked item stack
@@ -91,13 +91,13 @@ public interface Inventory {
      * @param itemStack which should be checked against
      * @return true if inventory contains, false if not
      */
-    boolean contains( ItemStack itemStack );
+    boolean contains( ItemStack<?> itemStack );
 
     /**
      * Get a stream of items inside this inventory
      *
      * @return stream of items
      */
-    Stream<ItemStack> items();
+    Stream<ItemStack<?>> items();
 
 }

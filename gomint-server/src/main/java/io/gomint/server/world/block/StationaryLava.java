@@ -13,25 +13,25 @@ import java.util.concurrent.TimeUnit;
  * @version 1.0
  */
 @RegisterInfo(sId = "minecraft:lava")
-public class StationaryLava extends Liquid implements BlockStationaryLava {
+public class StationaryLava extends Liquid<BlockStationaryLava> implements BlockStationaryLava {
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 150000;
     }
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
     @Override
-    public boolean isSolid() {
+    public boolean solid() {
         return false;
     }
 
     @Override
-    public float getFillHeight() {
+    public float fillHeight() {
         return 1f;
     }
 
@@ -46,9 +46,9 @@ public class StationaryLava extends Liquid implements BlockStationaryLava {
     }
 
     @Override
-    public void onEntityStanding(EntityLiving entityLiving) {
+    public void onEntityStanding(EntityLiving<?> entityLiving) {
         entityLiving.attack(4.0f, EntityDamageEvent.DamageSource.LAVA);
-        entityLiving.setBurning(15, TimeUnit.SECONDS);
+        entityLiving.burning(15, TimeUnit.SECONDS);
         entityLiving.multiplyFallDistance(0.5f);
     }
 
@@ -63,7 +63,7 @@ public class StationaryLava extends Liquid implements BlockStationaryLava {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.STATIONARY_LAVA;
     }
 

@@ -17,31 +17,31 @@ import java.util.List;
  * @author geNAZt
  * @version 1.0
  */
-public abstract class Stair extends Block implements BlockStair {
+public abstract class Stair<B> extends Block implements BlockStair<B> {
 
     private static final CrossDirectionBlockState DIRECTION = new CrossDirectionBlockState(() -> new String[]{"weirdo_direction"});
     private static final BooleanBlockState TOP = new BooleanBlockState(() -> new String[]{"upside_down_bit"});
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
     @Override
-    public List<AxisAlignedBB> getBoundingBox() {
+    public List<AxisAlignedBB> boundingBoxes() {
         // TODO: Fix bounding box when top / directional
         return Collections.singletonList(new AxisAlignedBB(
-            this.location.getX(),
-            this.location.getY(),
-            this.location.getZ(),
-            this.location.getX() + 1,
-            this.location.getY() + .5f,
-            this.location.getZ() + 1
+            this.location.x(),
+            this.location.y(),
+            this.location.z(),
+            this.location.x() + 1,
+            this.location.y() + .5f,
+            this.location.z() + 1
         ));
     }
 
     @Override
-    public boolean beforePlacement(EntityLiving entity, ItemStack item, Facing face, Location location) {
+    public boolean beforePlacement(EntityLiving<?> entity, ItemStack<?> item, Facing face, Location location) {
         DIRECTION.detectFromPlacement(this, entity, item, face);
 
         TOP.setState(this, face == Facing.DOWN);
@@ -50,23 +50,25 @@ public abstract class Stair extends Block implements BlockStair {
     }
 
     @Override
-    public void setDirection(Direction direction) {
+    public B direction(Direction direction) {
         DIRECTION.setState(this, direction);
+        return (B) this;
     }
 
     @Override
-    public Direction getDirection() {
+    public Direction direction() {
         return DIRECTION.getState(this);
     }
 
     @Override
-    public boolean isTop() {
+    public boolean top() {
         return TOP.getState(this);
     }
 
     @Override
-    public void setTop(boolean top) {
+    public B top(boolean top) {
         TOP.setState(this, top);
+        return (B) this;
     }
 
 }

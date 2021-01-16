@@ -11,7 +11,7 @@ import io.gomint.server.entity.EntityPlayer;
 import io.gomint.server.inventory.item.Items;
 import io.gomint.server.network.type.WindowType;
 
-public class BarrelInventory extends ContainerInventory {
+public class BarrelInventory extends ContainerInventory<io.gomint.inventory.BarrelInventory> implements io.gomint.inventory.BarrelInventory {
 
     /**
      * Create new chest inventory

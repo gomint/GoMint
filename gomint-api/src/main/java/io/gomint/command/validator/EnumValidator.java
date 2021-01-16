@@ -21,7 +21,7 @@ import java.util.List;
  * @version 1.0
  * @stability 3
  */
-public class EnumValidator extends ParamValidator {
+public class EnumValidator extends ParamValidator<EnumValidator> {
 
     private final List<String> values = new ArrayList<>();
 
@@ -47,7 +47,7 @@ public class EnumValidator extends ParamValidator {
      * {@inheritDoc}
      */
     @Override
-    public Object validate( String input, CommandSender commandSender ) {
+    public Object validate(String input, CommandSender<?> commandSender ) {
         if ( this.values.contains( input ) ) {
             return input;
         }
@@ -59,7 +59,7 @@ public class EnumValidator extends ParamValidator {
      * {@inheritDoc}
      */
     @Override
-    public ParamType getType() {
+    public ParamType type() {
         return ParamType.STRING_ENUM;
     }
 
@@ -83,7 +83,7 @@ public class EnumValidator extends ParamValidator {
      * {@inheritDoc}
      */
     @Override
-    public String getHelpText() {
+    public String helpText() {
         return Joiner.on( " | " ).join( this.values );
     }
 

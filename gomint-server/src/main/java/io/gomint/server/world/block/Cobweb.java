@@ -24,29 +24,29 @@ public class Cobweb extends Block implements BlockCobweb {
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 6000;
     }
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
     @Override
-    public boolean isSolid() {
+    public boolean solid() {
         return false;
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return ToolPresets.SWORD;
     }
 
     @Override
-    public List<ItemStack> getDrops( ItemStack itemInHand ) {
+    public List<ItemStack<?>> drops(ItemStack<?> itemInHand ) {
         if ( isCorrectTool( itemInHand ) ) {
-            return new ArrayList<ItemStack>() {{
+            return new ArrayList<>() {{
                 add( ItemString.create( 1 ) );
             }};
         }
@@ -60,7 +60,7 @@ public class Cobweb extends Block implements BlockCobweb {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.COBWEB;
     }
 
@@ -70,7 +70,7 @@ public class Cobweb extends Block implements BlockCobweb {
     }
 
     @Override
-    public void stepOn( Entity entity ) {
+    public void stepOn(Entity<?> entity ) {
         // Reset fall distance
         entity.resetFallDistance();
     }

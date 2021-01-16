@@ -41,7 +41,7 @@ public class NoteblockTileEntity extends TileEntity {
     }
 
     @Override
-    public void interact(Entity entity, Facing face, Vector facePos, ItemStack item ) {
+    public void interact(Entity<?> entity, Facing face, Vector facePos, ItemStack<?> item ) {
         if ( this.note == 24 ) {
             this.note = 0;
         } else {
@@ -63,7 +63,7 @@ public class NoteblockTileEntity extends TileEntity {
      * Play the sound which this note block has stored
      */
     public void playSound() {
-        this.getBlock().getWorld().playSound( new Vector(this.getBlock().getPosition()), Sound.NOTE, this.note );
+        this.getBlock().world().playSound( new Vector(this.getBlock().position()), Sound.NOTE, this.note );
     }
 
 }

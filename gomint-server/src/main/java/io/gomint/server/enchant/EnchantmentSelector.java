@@ -28,9 +28,9 @@ public class EnchantmentSelector {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(EnchantmentSelector.class);
 
-    public static Pair<int[], List<List<Enchantment>>> getEnchantments(Enchantments enchantments, FastRandom random, Location blockLocation, ItemStack toEnchant) {
+    public static Pair<int[], List<List<Enchantment>>> determineAvailable(Enchantments enchantments, FastRandom random, Location blockLocation, ItemStack<?> toEnchant) {
         // Check if the item can be enchanted at all
-        if (toEnchant.getEnchantAbility() == 0 || toEnchant.isEnchanted()) {
+        if (toEnchant.enchantAbility() == 0 || toEnchant.isEnchanted()) {
             return null;
         }
 
@@ -59,10 +59,10 @@ public class EnchantmentSelector {
         return new Pair<>(new int[]{upperSlot, middleSlot, lowerSlot}, selectedEnchantments);
     }
 
-    private static List<Enchantment> buildEnchantments(Enchantments enchantments, FastRandom random, ItemStack toEnchant, int level) {
+    private static List<Enchantment> buildEnchantments(Enchantments enchantments, FastRandom random, ItemStack<?> toEnchant, int level) {
         int useLevel = level + 1 +
-            random.nextInt(toEnchant.getEnchantAbility() / 4 + 1) +
-            random.nextInt(toEnchant.getEnchantAbility() / 4 + 1);
+            random.nextInt(toEnchant.enchantAbility() / 4 + 1) +
+            random.nextInt(toEnchant.enchantAbility() / 4 + 1);
 
         float f = (random.nextFloat() + random.nextFloat() - 1.0F) * 0.15F;
 
@@ -71,9 +71,9 @@ public class EnchantmentSelector {
         WeightedRandom<Enchantment> weightedRandom = new WeightedRandom<>(random);
         for (Enchantment enchantment : enchantments.all()) {
             if (enchantment.canBeApplied(toEnchant)) {
-                for (short i = enchantment.getMaxLevel(); i > enchantment.getMinLevel() - 1; --i) {
-                    if (useLevel >= enchantment.getMinEnchantAbility(i) && useLevel <= enchantment.getMaxEnchantAbility(i)) {
-                        weightedRandom.add(enchantment.getRarity().getWeight(), enchantments.create(enchantment.getClass(), i));
+                for (short i = enchantment.maxLevel(); i > enchantment.minLevel() - 1; --i) {
+                    if (useLevel >= enchantment.minEnchantAbility(i) && useLevel <= enchantment.maxEnchantAbility(i)) {
+                        weightedRandom.add(enchantment.rarity().weight(), enchantments.create(enchantment.getClass(), i));
                         break;
                     }
                 }
@@ -99,7 +99,7 @@ public class EnchantmentSelector {
             if (LOGGER.isDebugEnabled()) {
                 LOGGER.debug("Selected enchants: ");
                 for (Enchantment enchantment : selected) {
-                    LOGGER.debug(" > {}: {}", enchantment.getClass().getSimpleName(), enchantment.getLevel() );
+                    LOGGER.debug(" > {}: {}", enchantment.getClass().getSimpleName(), enchantment.level() );
                 }
             }
         }

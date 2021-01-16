@@ -45,27 +45,27 @@ public abstract class RailBase extends Block {
     );
 
     public boolean isRailBlock(Block block) {
-        return block.getBlockType() == BlockType.RAIL || block.getBlockType() == BlockType.POWERED_RAIL ||
-            block.getBlockType() == BlockType.DETECTOR_RAIL || block.getBlockType() == BlockType.ACTIVATOR_RAIL;
+        return block.blockType() == BlockType.RAIL || block.blockType() == BlockType.POWERED_RAIL ||
+            block.blockType() == BlockType.DETECTOR_RAIL || block.blockType() == BlockType.ACTIVATOR_RAIL;
     }
 
     @Override
-    public boolean beforePlacement(EntityLiving entity, ItemStack item, Facing face, Location location) {
-        Block block = entity.getWorld().getBlockAt(location.toBlockPosition().add(Vector.DOWN.toBlockPosition()));
-        return block.isSolid();
+    public boolean beforePlacement(EntityLiving<?> entity, ItemStack<?> item, Facing face, Location location) {
+        Block block = entity.world().blockAt(location.toBlockPosition().add(Vector.DOWN.toBlockPosition()));
+        return block.solid();
     }
 
     private RailBase findRailAt(BlockPosition pos) {
-        Block block = this.world.getBlockAt(pos);
+        Block block = this.world.blockAt(pos);
 
         if (this.isRailBlock(block)) {
             return (RailBase) block;
         } else {
-            Block otherBlock = this.world.getBlockAt(pos.clone().add(BlockPosition.UP));
+            Block otherBlock = this.world.blockAt(pos.clone().add(BlockPosition.UP));
             if (this.isRailBlock(otherBlock)) {
                 return (RailBase) otherBlock;
             } else {
-                otherBlock = this.world.getBlockAt(pos.clone().add(BlockPosition.DOWN));
+                otherBlock = this.world.blockAt(pos.clone().add(BlockPosition.DOWN));
                 return this.isRailBlock(otherBlock) ? (RailBase) otherBlock : null;
             }
         }

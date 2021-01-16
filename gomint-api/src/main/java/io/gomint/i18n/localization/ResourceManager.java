@@ -25,13 +25,13 @@ import java.util.Locale;
 public class ResourceManager {
 
     // Save all loaded Locales with their loadString
-    private final HashMap<Locale, String> loadedLocaleLoadStrings = new HashMap<Locale, String>();
+    private final HashMap<Locale, String> loadedLocaleLoadStrings = new HashMap<>();
 
     // Save all loaded Locales
-    private final HashMap<Locale, SoftReference<ResourceLoader>> loadedLocales = new HashMap<Locale, SoftReference<ResourceLoader>>();
+    private final HashMap<Locale, SoftReference<ResourceLoader<?>>> loadedLocales = new HashMap<>();
 
     // The list of all available ResourceLoaders
-    private final ArrayList<ResourceLoader> registerdLoaders = new ArrayList<ResourceLoader>();
+    private final ArrayList<ResourceLoader<?>> registerdLoaders = new ArrayList<>();
 
     // Construct a object which can be locked on
     private final Object sharedLock = new Object();
@@ -59,10 +59,12 @@ public class ResourceManager {
      *
      * @param loader New loader which can be used to load Resources
      */
-    public synchronized void registerLoader( ResourceLoader loader ) {
+    public synchronized ResourceManager registerLoader( ResourceLoader<?> loader ) {
         synchronized ( sharedLock ) {
             registerdLoaders.add( loader );
         }
+
+        return this;
     }
 
     /**
@@ -72,10 +74,10 @@ public class ResourceManager {
      * @param param  The param which the ResourceLoader should load
      * @throws ResourceLoadFailedException when loading failed
      */
-    private synchronized void loadLocale( Locale locale, String param ) throws ResourceLoadFailedException {
+    private synchronized ResourceManager loadLocale( Locale locale, String param ) throws ResourceLoadFailedException {
         //Get the correct loader for this param
-        for ( ResourceLoader loader : registerdLoaders ) {
-            for ( String ending : loader.getFormats() ) {
+        for ( ResourceLoader<?> loader : registerdLoaders ) {
+            for ( String ending : loader.formats() ) {
                 if ( param.endsWith( ending ) ) {
                     try {
                         synchronized ( sharedLock ) {
@@ -88,6 +90,8 @@ public class ResourceManager {
                 }
             }
         }
+
+        return this;
     }
 
     /**
@@ -99,12 +103,12 @@ public class ResourceManager {
      * @param param  The param from {@link LocaleManager#load(Locale, String)}
      * @throws ResourceLoadFailedException when loading failed
      */
-    public synchronized void load( Locale locale, String param ) throws ResourceLoadFailedException {
+    public synchronized ResourceManager load( Locale locale, String param ) throws ResourceLoadFailedException {
         //Check if locale has already been loaded
         if ( loadedLocales.containsKey( locale ) ) {
             synchronized ( sharedLock ) {
                 //Unload the locale and get the new one
-                ResourceLoader loader = loadedLocales.get( locale ).get();
+                ResourceLoader<?> loader = loadedLocales.get( locale ).get();
                 if ( loader != null ) {
                     loader.cleanup();
                 }
@@ -114,7 +118,7 @@ public class ResourceManager {
             }
         }
 
-        loadLocale( locale, param );
+        return loadLocale( locale, param );
     }
 
     /**
@@ -147,7 +151,7 @@ public class ResourceManager {
             //Check if this Locale contains the key searched for
             reloadIfGCCleared( locale );
 
-            if ( loadedLocales.get( locale ).get().getKeys().contains( key ) ) {
+            if ( loadedLocales.get( locale ).get().keys().contains( key ) ) {
                 return loadedLocales.get( locale ).get().get( key );
             }
         }
@@ -160,7 +164,7 @@ public class ResourceManager {
             //Check if this Locale contains the key searched for
             reloadIfGCCleared( baseLocale );
 
-            if ( loadedLocales.get( baseLocale ).get().getKeys().contains( key ) ) {
+            if ( loadedLocales.get( baseLocale ).get().keys().contains( key ) ) {
                 return loadedLocales.get( baseLocale ).get().get( key );
             }
         }
@@ -186,10 +190,10 @@ public class ResourceManager {
      * @return A hopefully new ResourceLoader
      * @throws RuntimeException
      */
-    private synchronized ResourceLoader buildNewResourceLoader( ResourceLoader loader, String argument ) {
+    private synchronized ResourceLoader<?> buildNewResourceLoader( ResourceLoader<?> loader, String argument ) {
         try {
-            Constructor constructor = loader.getClass().getConstructor( ClassLoader.class, String.class );
-            return (ResourceLoader) constructor.newInstance( this.classLoader, argument );
+            Constructor<?> constructor = loader.getClass().getConstructor( ClassLoader.class, String.class );
+            return (ResourceLoader<?>) constructor.newInstance( this.classLoader, argument );
         } catch ( NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalAccessException e ) {
             throw new RuntimeException( "Could not construct new ResourceLoader", e );
         }
@@ -200,9 +204,9 @@ public class ResourceManager {
      *
      * If one of the ResourceLoaders reports an error upon reloading it will get printed to the Plugins Logger
      */
-    public synchronized void reload() {
+    public synchronized ResourceManager reload() {
         //Reload all ResourceLoaders
-        for ( SoftReference<ResourceLoader> loader : loadedLocales.values() ) {
+        for ( SoftReference<ResourceLoader<?>> loader : loadedLocales.values() ) {
             try {
                 if ( loader != null && loader.get() != null ) {
                     loader.get().reload();
@@ -211,20 +215,22 @@ public class ResourceManager {
                 e.printStackTrace();
             }
         }
+
+        return this;
     }
 
     /**
      * If the Plugin should be unloaded remove all loaded Things and unref the plugin
      */
     public synchronized void cleanup() {
-        //Cleanup all ResourceLoaders
-        for ( SoftReference<ResourceLoader> loader : loadedLocales.values() ) {
+        // Cleanup all ResourceLoaders
+        for ( SoftReference<ResourceLoader<?>> loader : loadedLocales.values() ) {
             if ( loader != null && loader.get() != null ) {
                 loader.get().cleanup();
             }
         }
 
-        //Remove all refs
+        // Remove all refs
         classLoader = null;
     }
 

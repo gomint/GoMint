@@ -16,7 +16,7 @@ import io.gomint.server.world.WorldAdapter;
  * @author geNAZt
  * @version 1.0
  */
-public abstract class ContainerInventory extends Inventory implements io.gomint.inventory.ContainerInventory {
+public abstract class ContainerInventory<I> extends Inventory<I> implements io.gomint.inventory.ContainerInventory<I> {
 
     /**
      * Construct a new container inventory
@@ -37,15 +37,15 @@ public abstract class ContainerInventory extends Inventory implements io.gomint.
     public abstract WindowType getType();
 
     @Override
-    public BlockPosition getContainerPosition() {
+    public BlockPosition containerPosition() {
         TileEntity tileEntity = (TileEntity) this.owner;
-        return tileEntity.getBlock().getPosition();
+        return tileEntity.getBlock().position();
     }
 
     @Override
-    public WorldAdapter getWorld() {
+    public WorldAdapter world() {
         TileEntity tileEntity = (TileEntity) this.owner;
-        return tileEntity.getBlock().getWorld();
+        return tileEntity.getBlock().world();
     }
 
     /**
@@ -73,8 +73,8 @@ public abstract class ContainerInventory extends Inventory implements io.gomint.
         PacketContainerOpen containerOpen = new PacketContainerOpen();
         containerOpen.setWindowId(windowId);
         containerOpen.setType(this.getType().getId());
-        containerOpen.setLocation(this.getContainerPosition());
-        player.getConnection().addToSendQueue(containerOpen);
+        containerOpen.setLocation(this.containerPosition());
+        player.connection().addToSendQueue(containerOpen);
 
         // Add viewer and send contents
         super.addViewer(player);
@@ -96,7 +96,7 @@ public abstract class ContainerInventory extends Inventory implements io.gomint.
     public void sendContents(PlayerConnection playerConnection) {
         PacketInventoryContent inventoryContent = new PacketInventoryContent();
         inventoryContent.setWindowId(WindowMagicNumbers.OPEN_CONTAINER);
-        inventoryContent.setItems(this.getContents());
+        inventoryContent.setItems(this.contents());
         playerConnection.addToSendQueue(inventoryContent);
     }
 
@@ -105,12 +105,12 @@ public abstract class ContainerInventory extends Inventory implements io.gomint.
         PacketInventorySetSlot inventorySetSlot = new PacketInventorySetSlot();
         inventorySetSlot.setWindowId(WindowMagicNumbers.OPEN_CONTAINER);
         inventorySetSlot.setSlot(slot);
-        inventorySetSlot.setItemStack(this.getItem(slot));
+        inventorySetSlot.setItemStack(this.item(slot));
         playerConnection.addToSendQueue(inventorySetSlot);
     }
 
     @Override
-    public InventoryType getInventoryType() {
+    public InventoryType inventoryType() {
         return InventoryType.CONTAINER;
     }
 

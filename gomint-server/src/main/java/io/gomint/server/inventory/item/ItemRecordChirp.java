@@ -15,12 +15,12 @@ import io.gomint.taglib.NBTTagCompound;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:record_chirp", id = 503 )
-public class ItemRecordChirp extends ItemStack implements io.gomint.inventory.item.ItemRecordChirp {
+public class ItemRecordChirp extends ItemStack< io.gomint.inventory.item.ItemRecordChirp> implements io.gomint.inventory.item.ItemRecordChirp {
 
 
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.RECORD_CHIRP;
     }
 

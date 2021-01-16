@@ -15,10 +15,10 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:warped_fence", id = -257 )
-public class ItemWarpedFence extends ItemStack implements io.gomint.inventory.item.ItemWarpedFence {
+public class ItemWarpedFence extends ItemStack< io.gomint.inventory.item.ItemWarpedFence> implements io.gomint.inventory.item.ItemWarpedFence {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.WARPED_FENCE;
     }
 

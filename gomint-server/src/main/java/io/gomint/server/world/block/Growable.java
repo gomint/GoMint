@@ -38,16 +38,16 @@ public abstract class Growable extends Block {
     });
 
     @Override
-    public boolean beforePlacement(EntityLiving entity, ItemStack item, Facing face, Location location) {
+    public boolean beforePlacement(EntityLiving<?> entity, ItemStack<?> item, Facing face, Location location) {
         // Check if we place on farmland
-        return location.getWorld().getBlockAt(location.toBlockPosition().add(BlockPosition.DOWN)).getBlockType() == BlockType.FARMLAND;
+        return location.world().blockAt(location.toBlockPosition().add(BlockPosition.DOWN)).blockType() == BlockType.FARMLAND;
     }
 
     @Override
     public long update(UpdateReason updateReason, long currentTimeMS, float dT) {
         if (updateReason == UpdateReason.NEIGHBOUR_UPDATE) {
             // Check if farmland is still under us
-            if (this.world.getBlockAt(this.location.toBlockPosition().add(BlockPosition.DOWN)).getBlockType() != BlockType.FARMLAND) {
+            if (this.world.blockAt(this.location.toBlockPosition().add(BlockPosition.DOWN)).blockType() != BlockType.FARMLAND) {
                 this.world.breakBlock(this.location.toBlockPosition(), new ArrayList<>(), false);
             }
         } else if (updateReason == UpdateReason.RANDOM) {
@@ -80,11 +80,11 @@ public abstract class Growable extends Block {
             for (int z = -1; z <= 1; ++z) {
                 float currentBlockDivider = 0f;
 
-                Block block = this.world.getBlockAt(underCrops.add(new BlockPosition(x, 0, z)));
+                Block block = this.world.blockAt(underCrops.add(new BlockPosition(x, 0, z)));
                 if (block instanceof Farmland) {
                     currentBlockDivider = 1f;
 
-                    if (((Farmland) block).getMoisture() > MathUtils.EPSILON) {
+                    if (((Farmland) block).moisture() > MathUtils.EPSILON) {
                         currentBlockDivider = 3f;
                     }
                 }
@@ -101,14 +101,14 @@ public abstract class Growable extends Block {
         // Check if there are similar crops around (slow down bigger farms)
         // We check in a pattern which goes up and clockwise around
         BlockPosition start = this.location.toBlockPosition().add(BlockPosition.NORTH);
-        if (this.world.getBlockAt(start).getBlockType() == getBlockType() ||
-            this.world.getBlockAt(start.add(BlockPosition.EAST)).getBlockType() == getBlockType() ||
-            this.world.getBlockAt(start.add(BlockPosition.SOUTH)).getBlockType() == getBlockType() ||
-            this.world.getBlockAt(start.add(BlockPosition.SOUTH)).getBlockType() == getBlockType() ||
-            this.world.getBlockAt(start.add(BlockPosition.WEST)).getBlockType() == getBlockType() ||
-            this.world.getBlockAt(start.add(BlockPosition.WEST)).getBlockType() == getBlockType() ||
-            this.world.getBlockAt(start.add(BlockPosition.NORTH)).getBlockType() == getBlockType() ||
-            this.world.getBlockAt(start.add(BlockPosition.NORTH)).getBlockType() == getBlockType()) {
+        if (this.world.blockAt(start).blockType() == blockType() ||
+            this.world.blockAt(start.add(BlockPosition.EAST)).blockType() == blockType() ||
+            this.world.blockAt(start.add(BlockPosition.SOUTH)).blockType() == blockType() ||
+            this.world.blockAt(start.add(BlockPosition.SOUTH)).blockType() == blockType() ||
+            this.world.blockAt(start.add(BlockPosition.WEST)).blockType() == blockType() ||
+            this.world.blockAt(start.add(BlockPosition.WEST)).blockType() == blockType() ||
+            this.world.blockAt(start.add(BlockPosition.NORTH)).blockType() == blockType() ||
+            this.world.blockAt(start.add(BlockPosition.NORTH)).blockType() == blockType()) {
             divider /= 2f;
         }
 

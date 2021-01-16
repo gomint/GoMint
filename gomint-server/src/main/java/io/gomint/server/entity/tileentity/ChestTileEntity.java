@@ -8,6 +8,7 @@
 package io.gomint.server.entity.tileentity;
 
 import io.gomint.entity.Entity;
+import io.gomint.inventory.item.ItemStack;
 import io.gomint.math.BlockPosition;
 import io.gomint.math.Vector;
 import io.gomint.server.entity.EntityPlayer;
@@ -73,9 +74,9 @@ public class ChestTileEntity extends ContainerTileEntity implements InventoryHol
      */
     public boolean isPaired() {
         if (this.findable) {
-            BlockPosition position = this.getBlock().getPosition();
-            Block other = this.getBlock().getWorld().getBlockAt(this.pairX, position.getY(), this.pairZ);
-            return other.getBlockType() == this.getBlock().getBlockType();
+            BlockPosition position = this.getBlock().position();
+            Block other = this.getBlock().world().blockAt(this.pairX, position.y(), this.pairZ);
+            return other.blockType() == this.getBlock().blockType();
         }
 
         return false;
@@ -88,17 +89,17 @@ public class ChestTileEntity extends ContainerTileEntity implements InventoryHol
      */
     public void pair(ChestTileEntity other) {
         // Get the positions of both sides of the pair
-        BlockPosition otherBP = other.getBlock().getPosition();
-        long otherL = CoordinateUtils.toLong(otherBP.getX(), otherBP.getZ());
+        BlockPosition otherBP = other.getBlock().position();
+        long otherL = CoordinateUtils.toLong(otherBP.x(), otherBP.z());
 
-        BlockPosition thisBP = this.getBlock().getPosition();
-        long thisL = CoordinateUtils.toLong(thisBP.getX(), thisBP.getZ());
+        BlockPosition thisBP = this.getBlock().position();
+        long thisL = CoordinateUtils.toLong(thisBP.x(), thisBP.z());
 
         // Order them according to "natural" ordering in the world
         if (otherL > thisL) {
-            this.doubleChestInventory = new DoubleChestInventory(this.items, other.getInventory(), this.inventory, this);
+            this.doubleChestInventory = new DoubleChestInventory(this.items, other.inventory(), this.inventory, this);
         } else {
-            this.doubleChestInventory = new DoubleChestInventory(this.items, this.inventory, other.getInventory(), other);
+            this.doubleChestInventory = new DoubleChestInventory(this.items, this.inventory, other.inventory(), other);
         }
 
         other.setDoubleChestInventory(this.doubleChestInventory);
@@ -133,15 +134,15 @@ public class ChestTileEntity extends ContainerTileEntity implements InventoryHol
             return null;
         }
 
-        BlockPosition position = this.getBlock().getPosition();
-        Chest other = this.getBlock().getWorld().getBlockAt(this.pairX, position.getY(), this.pairZ);
-        return other.getTileEntity();
+        BlockPosition position = this.getBlock().position();
+        Chest other = this.getBlock().world().blockAt(this.pairX, position.y(), this.pairZ);
+        return other.tileEntity();
     }
 
     private void setPair(BlockPosition otherBP) {
         this.findable = true;
-        this.pairZ = otherBP.getZ();
-        this.pairX = otherBP.getX();
+        this.pairZ = otherBP.z();
+        this.pairX = otherBP.x();
     }
 
     private void setDoubleChestInventory(DoubleChestInventory doubleChestInventory) {
@@ -154,10 +155,10 @@ public class ChestTileEntity extends ContainerTileEntity implements InventoryHol
     }
 
     @Override
-    public void interact(Entity entity, Facing face, Vector facePos, io.gomint.inventory.item.ItemStack item) {
+    public void interact(Entity<?> entity, Facing face, Vector facePos, ItemStack<?> item) {
         // Open the chest inventory for the entity
         if (entity instanceof EntityPlayer) {
-            ((EntityPlayer) entity).openInventory(this.getInventory());
+            ((EntityPlayer) entity).openInventory(this.inventory());
         }
     }
 
@@ -178,7 +179,7 @@ public class ChestTileEntity extends ContainerTileEntity implements InventoryHol
      *
      * @return inventory of this tile
      */
-    public ContainerInventory getInventory() {
+    public ContainerInventory<io.gomint.inventory.ChestInventory> inventory() {
         return this.doubleChestInventory != null ? this.doubleChestInventory : this.inventory;
     }
 

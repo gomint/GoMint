@@ -10,10 +10,10 @@ import io.gomint.taglib.NBTTagCompound;
  * @version 1.0
  */
 @RegisterInfo(sId = "minecraft:sponge", id = 19)
-public class ItemSponge extends ItemStack implements io.gomint.inventory.item.ItemSponge {
+public class ItemSponge extends ItemStack< io.gomint.inventory.item.ItemSponge> implements io.gomint.inventory.item.ItemSponge {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.SPONGE;
     }
 

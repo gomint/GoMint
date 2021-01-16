@@ -20,12 +20,12 @@ public class DaylightDetector extends Block implements BlockDaylightDetector {
     private static final RedstoneSignalStrength SIGNAL_STRENGTH = new RedstoneSignalStrength(() -> new String[]{"redstone_signal"});
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 300;
     }
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
@@ -35,7 +35,7 @@ public class DaylightDetector extends Block implements BlockDaylightDetector {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.DAYLIGHT_DETECTOR;
     }
 

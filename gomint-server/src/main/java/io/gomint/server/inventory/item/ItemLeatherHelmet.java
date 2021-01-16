@@ -12,7 +12,7 @@ import io.gomint.world.block.data.Facing;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:leather_helmet", id = 298 )
-public class ItemLeatherHelmet extends ItemLeatherArmor implements io.gomint.inventory.item.ItemLeatherHelmet {
+public class ItemLeatherHelmet extends ItemLeatherArmor<io.gomint.inventory.item.ItemLeatherHelmet> implements io.gomint.inventory.item.ItemLeatherHelmet {
 
     @Override
     public float getReductionValue() {
@@ -22,10 +22,10 @@ public class ItemLeatherHelmet extends ItemLeatherArmor implements io.gomint.inv
     @Override
     public boolean interact(EntityPlayer entity, Facing face, Vector clickPosition, Block clickedBlock ) {
         if ( clickedBlock == null ) {
-            if ( isBetter( (ItemStack) entity.getArmorInventory().getHelmet() ) ) {
-                ItemStack old = (ItemStack) entity.getArmorInventory().getHelmet();
-                entity.getArmorInventory().setHelmet( this );
-                entity.getInventory().setItem( entity.getInventory().getItemInHandSlot(), old );
+            if ( isBetter( (ItemStack<?>) entity.armorInventory().helmet() ) ) {
+                ItemStack<?> old = (ItemStack<?>) entity.armorInventory().helmet();
+                entity.armorInventory().helmet( this );
+                entity.inventory().item( entity.inventory().itemInHandSlot(), old );
             }
         }
 
@@ -33,7 +33,7 @@ public class ItemLeatherHelmet extends ItemLeatherArmor implements io.gomint.inv
     }
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.LEATHER_HELMET;
     }
 

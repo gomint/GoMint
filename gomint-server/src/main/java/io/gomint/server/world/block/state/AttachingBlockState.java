@@ -30,7 +30,7 @@ public class AttachingBlockState extends DirectValueBlockState<Integer> {
     }
 
     @Override
-    public void detectFromPlacement(Block newBlock, EntityLiving player, ItemStack placedItem, Facing face) {
+    public void detectFromPlacement(Block newBlock, EntityLiving<?> player, ItemStack<?> placedItem, Facing face) {
         super.detectFromPlacement(newBlock, player, placedItem, face);
 
         if (face != null) {

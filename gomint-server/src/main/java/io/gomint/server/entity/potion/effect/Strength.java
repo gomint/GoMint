@@ -26,8 +26,8 @@ public class Strength extends Effect {
     }
 
     @Override
-    public void apply( EntityLiving player ) {
-        player.getAttributeInstance( Attribute.ATTACK_DAMAGE )
+    public void apply( EntityLiving<?> player ) {
+        player.attributeInstance( Attribute.ATTACK_DAMAGE )
             .setModifier( AttributeModifier.STRENGTH_EFFECT, AttributeModifierType.ADDITION, 1.3f * ( this.amplifier + 1 ) );
     }
 
@@ -37,8 +37,8 @@ public class Strength extends Effect {
     }
 
     @Override
-    public void remove( EntityLiving player ) {
-        player.getAttributeInstance( Attribute.ATTACK_DAMAGE )
+    public void remove( EntityLiving<?> player ) {
+        player.attributeInstance( Attribute.ATTACK_DAMAGE )
             .removeModifier( AttributeModifier.STRENGTH_EFFECT );
     }
 

@@ -37,7 +37,7 @@ public class AxisBlockState extends BlockState<Axis, String> {
     }
 
     @Override
-    public void detectFromPlacement(Block newBlock, EntityLiving player, ItemStack placedItem, Facing face) {
+    public void detectFromPlacement(Block newBlock, EntityLiving<?> player, ItemStack<?> placedItem, Facing face) {
         if (face == null) {
             this.setState(newBlock, Axis.Z);
             return;

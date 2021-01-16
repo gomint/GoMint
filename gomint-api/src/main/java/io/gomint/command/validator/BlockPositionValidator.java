@@ -22,13 +22,13 @@ import java.util.List;
  * @version 1.0
  * @stability 3
  */
-public class BlockPositionValidator extends ParamValidator {
+public class BlockPositionValidator extends ParamValidator<BlockPositionValidator> {
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public Object validate( String input, CommandSender sender ) {
+    public Object validate(String input, CommandSender<?> sender ) {
         // 0 -> x
         // 1 -> y
         // 2 -> z
@@ -36,24 +36,24 @@ public class BlockPositionValidator extends ParamValidator {
         BlockPosition entityPosition = new BlockPosition(0, 0, 0);
         if ( sender instanceof PlayerCommandSender ) {
             // Mojang decided that ~ is the current entity position
-            entityPosition = ( (EntityPlayer) sender ).getLocation().toBlockPosition();
+            entityPosition = ( (EntityPlayer) sender ).location().toBlockPosition();
         }
 
         // Split string
         String[] split = input.split( " " );
 
         // Parse x
-        Integer xInt = parsePos( entityPosition.getX(), split[0] );
+        Integer xInt = parsePos( entityPosition.x(), split[0] );
         if ( xInt == null ) {
             return null;
         }
 
-        Integer yInt = parsePos( entityPosition.getY(), split[1] );
+        Integer yInt = parsePos( entityPosition.y(), split[1] );
         if ( yInt == null ) {
             return null;
         }
 
-        Integer zInt = parsePos( entityPosition.getZ(), split[2] );
+        Integer zInt = parsePos( entityPosition.z(), split[2] );
         if ( zInt == null ) {
             return null;
         }
@@ -82,7 +82,7 @@ public class BlockPositionValidator extends ParamValidator {
      * {@inheritDoc}
      */
     @Override
-    public ParamType getType() {
+    public ParamType type() {
         return ParamType.BLOCK_POS;
     }
 
@@ -106,7 +106,7 @@ public class BlockPositionValidator extends ParamValidator {
      * {@inheritDoc}
      */
     @Override
-    public String getHelpText() {
+    public String helpText() {
         return "blockpos:x y z";
     }
 

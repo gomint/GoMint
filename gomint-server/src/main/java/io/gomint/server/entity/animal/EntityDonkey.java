@@ -17,7 +17,7 @@ import io.gomint.server.world.WorldAdapter;
  * @version 1.0
  */
 @RegisterInfo(sId = "minecraft:donkey")
-public class EntityDonkey extends EntityAgeableAnimal implements io.gomint.entity.animal.EntityDonkey {
+public class EntityDonkey extends EntityAgeableAnimal<io.gomint.entity.animal.EntityDonkey> implements io.gomint.entity.animal.EntityDonkey {
 
     /**
      * Constructs a new EntityLiving
@@ -38,13 +38,13 @@ public class EntityDonkey extends EntityAgeableAnimal implements io.gomint.entit
     }
 
     private void initEntity() {
-        this.addAttribute(Attribute.HEALTH);
-        this.setMaxHealth(30);
-        this.setHealth(30);
-        if (this.isBaby()) {
-            this.setSize(0.6982f, 0.75f);
+        this.attribute(Attribute.HEALTH);
+        this.maxHealth(30);
+        this.health(30);
+        if (this.baby()) {
+            this.size(0.6982f, 0.75f);
         } else {
-            this.setSize(1.3965f, 1.5f);
+            this.size(1.3965f, 1.5f);
         }
     }
 

@@ -15,10 +15,10 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:chain", id = 758 )
-public class ItemChain extends ItemStack implements io.gomint.inventory.item.ItemChain {
+public class ItemChain extends ItemStack< io.gomint.inventory.item.ItemChain> implements io.gomint.inventory.item.ItemChain {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.CHAIN;
     }
 

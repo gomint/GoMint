@@ -49,7 +49,7 @@ public final class MathUtils {
      * @return The clamped value
      */
     public static int clamp(int v, int min, int max) {
-        return (v < min ? min : (v > max ? max : v));
+        return (v < min ? min : (Math.min(v, max)));
     }
 
     /**
@@ -61,7 +61,7 @@ public final class MathUtils {
      * @return The clamped value
      */
     public static float clamp(float v, float min, float max) {
-        return (v < min ? min : (v > max ? max : v));
+        return (v < min ? min : (Math.min(v, max)));
     }
 
     /**
@@ -73,7 +73,7 @@ public final class MathUtils {
      * @return The clamped value
      */
     public static double clamp(double v, double min, double max) {
-        return (v < min ? min : (v > max ? max : v));
+        return (v < min ? min : (Math.min(v, max)));
     }
 
     public static float square(float in) {

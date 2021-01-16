@@ -15,10 +15,10 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:crimson_fence", id = -256 )
-public class ItemCrimsonFence extends ItemStack implements io.gomint.inventory.item.ItemCrimsonFence {
+public class ItemCrimsonFence extends ItemStack< io.gomint.inventory.item.ItemCrimsonFence> implements io.gomint.inventory.item.ItemCrimsonFence {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.CRIMSON_FENCE;
     }
 

@@ -15,7 +15,7 @@ import java.util.List;
  * @version 1.0
  * @stability 3
  */
-public abstract class ParamValidator {
+public abstract class ParamValidator<P> {
 
     private boolean optional;
     private String postfix;
@@ -27,7 +27,7 @@ public abstract class ParamValidator {
      * @param commandSender which submitted the command
      * @return non null object of validation on success (string for example) or null when validation failed
      */
-    public abstract Object validate( String input, CommandSender commandSender );
+    public abstract Object validate(String input, CommandSender<?> commandSender );
 
     /**
      * Consume all parts this validator needs as input from the command
@@ -42,7 +42,7 @@ public abstract class ParamValidator {
      *
      * @return type of param
      */
-    public abstract ParamType getType();
+    public abstract ParamType type();
 
     /**
      * Get the values when {@link #hasValues()} is true.
@@ -64,7 +64,7 @@ public abstract class ParamValidator {
      *
      * @return true when its optional, false when not
      */
-    public boolean isOptional() {
+    public boolean optional() {
         return this.optional;
     }
 
@@ -73,8 +73,9 @@ public abstract class ParamValidator {
      *
      * @param optional true when this parameter is optional, false when not
      */
-    public void setOptional( boolean optional ) {
+    public P optional(boolean optional ) {
         this.optional = optional;
+        return (P) this;
     }
 
     /**
@@ -82,7 +83,7 @@ public abstract class ParamValidator {
      *
      * @return postfix of this validator
      */
-    public String getPostfix() {
+    public String postfix() {
         return this.postfix;
     }
 
@@ -92,8 +93,9 @@ public abstract class ParamValidator {
      *
      * @param postfix which should be used
      */
-    public void setPostfix( String postfix ) {
+    public P postfix(String postfix ) {
         this.postfix = postfix;
+        return (P) this;
     }
 
     /**
@@ -101,7 +103,7 @@ public abstract class ParamValidator {
      *
      * @return help text for the console
      */
-    public String getHelpText() {
+    public String helpText() {
         return "NO HELP";
     }
 

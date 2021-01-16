@@ -45,7 +45,7 @@ import java.util.concurrent.TimeUnit;
 public class TimeSetCommand extends Command {
 
     @Override
-    public CommandOutput execute(CommandSender commandSender, String alias, Map<String, Object> arguments) {
+    public CommandOutput execute(CommandSender<?> commandSender, String alias, Map<String, Object> arguments) {
         if (commandSender instanceof ConsoleCommandSender) {
             return CommandOutput.failure("Only players can set the time in a world");
         }
@@ -86,8 +86,8 @@ public class TimeSetCommand extends Command {
 
         Duration time = Duration.ofSeconds(seconds);
 
-        World world = ((EntityPlayer) commandSender).getWorld();
-        world.setTime(time);
+        World world = ((EntityPlayer) commandSender).world();
+        world.time(time);
 
         return CommandOutput.successful("Set time to %%s", formatDuration(time));
     }

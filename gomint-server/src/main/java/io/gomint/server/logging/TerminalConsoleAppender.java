@@ -87,11 +87,6 @@ public final class TerminalConsoleAppender extends AbstractAppender {
         if (terminal != null) {
             terminal.reader().shutdown();
 
-            /*try {
-                terminal.close();
-            } finally {
-                terminal = null;
-            }*/
         }
     }
 

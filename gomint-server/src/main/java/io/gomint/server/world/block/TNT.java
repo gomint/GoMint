@@ -30,25 +30,25 @@ public class TNT extends Block implements BlockTNT {
     private static final BooleanBlockState EXPLODE = new BooleanBlockState(() -> new String[]{"explode_bit"});
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 0;
     }
 
     @Override
-    public boolean beforePlacement(EntityLiving entity, ItemStack item, Facing face, Location location) {
+    public boolean beforePlacement(EntityLiving<?> entity, ItemStack<?> item, Facing face, Location location) {
         EXPLODE.setState(this, false); // Don't explode on breakage
         return super.beforePlacement(entity, item, face, location);
     }
 
     @Override
-    public boolean interact(Entity entity, Facing face, Vector facePos, ItemStack item ) {
+    public boolean interact(Entity<?> entity, Facing face, Vector facePos, ItemStack<?> item ) {
         if ( entity instanceof EntityPlayer && item instanceof ItemFlintAndSteel ) {
-            io.gomint.server.inventory.item.ItemStack itemStack = (io.gomint.server.inventory.item.ItemStack) item;
+            io.gomint.server.inventory.item.ItemStack<?> itemStack = (io.gomint.server.inventory.item.ItemStack<?>) item;
             itemStack.afterPlacement();
 
             prime( 4 );
@@ -63,21 +63,22 @@ public class TNT extends Block implements BlockTNT {
         int primeTicks = (int) ( secondsUntilExplosion * 20f );
 
         // Set this to air
-        this.setBlockType( Air.class );
+        this.blockType( Air.class );
 
         // Spawn tnt entity
         EntityPrimedTNT entityTNT = new EntityPrimedTNT( this.world, this.location.add( 0.5f, 0.5f, 0.5f ), primeTicks );
-        this.world.spawnEntityAt( entityTNT, entityTNT.getPositionX(), entityTNT.getPositionY(), entityTNT.getPositionZ() );
+        this.world.spawnEntityAt( entityTNT, entityTNT.positionX(), entityTNT.positionY(), entityTNT.positionZ() );
     }
 
     @Override
-    public TNTType getType() {
+    public TNTType type() {
         return UNDER_WATER.getState(this) ? TNTType.UNDER_WATER : TNTType.NORMAL;
     }
 
     @Override
-    public void setType(TNTType type) {
+    public BlockTNT type(TNTType type) {
         UNDER_WATER.setState(this, type == TNTType.UNDER_WATER);
+        return this;
     }
 
     @Override
@@ -86,7 +87,7 @@ public class TNT extends Block implements BlockTNT {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.TNT;
     }
 
@@ -96,7 +97,7 @@ public class TNT extends Block implements BlockTNT {
     }
 
     @Override
-    public List<ItemStack> getDrops(ItemStack itemInHand) {
+    public List<ItemStack<?>> drops(ItemStack<?> itemInHand) {
         ItemTNT item = ItemTNT.create(1);
         return Collections.singletonList(item);
     }

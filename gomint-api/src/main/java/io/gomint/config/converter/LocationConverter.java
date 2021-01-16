@@ -40,15 +40,15 @@ public class LocationConverter extends BaseConverter {
         Location location = (Location) object;
         Map<String, Object> saveMap = new HashMap<>();
 
-        if ( location.getWorld() != null ) {
-            saveMap.put( "world", location.getWorld().getWorldName() );
+        if ( location.world() != null ) {
+            saveMap.put( "world", location.world().folder() );
         }
 
-        saveMap.put( "x", location.getX() );
-        saveMap.put( "y", location.getY() );
-        saveMap.put( "z", location.getZ() );
-        saveMap.put( "yaw", location.getYaw() );
-        saveMap.put( "pitch", location.getPitch() );
+        saveMap.put( "x", location.x() );
+        saveMap.put( "y", location.y() );
+        saveMap.put( "z", location.z() );
+        saveMap.put( "yaw", location.yaw() );
+        saveMap.put( "pitch", location.pitch() );
 
         return saveMap;
     }
@@ -58,7 +58,7 @@ public class LocationConverter extends BaseConverter {
      */
     @Override
     @SuppressWarnings( "unchecked" )
-    public Object fromConfig( Class type, Object object, ParameterizedType parameterizedType ) {
+    public Object fromConfig( Class<?> type, Object object, ParameterizedType parameterizedType ) {
         World world = null;
         Float headYaw = null;
         Map<String, Object> locationMap;
@@ -76,7 +76,7 @@ public class LocationConverter extends BaseConverter {
         float pitch = super.asFloat( locationMap.get( "pitch" ) );
 
         if ( locationMap.containsKey( "world" ) ) {
-            world = GoMint.instance().getWorld( (String) locationMap.get( "world" ) );
+            world = GoMint.instance().world((String) locationMap.get("world"));
         }
 
         if ( locationMap.containsKey( "headYaw" ) ) {

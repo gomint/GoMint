@@ -10,7 +10,7 @@ import io.gomint.server.world.WorldAdapter;
 import java.util.Set;
 
 @RegisterInfo(sId = "minecraft:evocation_illager")
-public class EntityEvoker extends EntityLiving implements io.gomint.entity.monster.EntityEvoker {
+public class EntityEvoker extends EntityLiving<io.gomint.entity.monster.EntityEvoker> implements io.gomint.entity.monster.EntityEvoker {
 
     /**
      * Constructs a new EntityLiving
@@ -31,10 +31,10 @@ public class EntityEvoker extends EntityLiving implements io.gomint.entity.monst
     }
 
     private void initEntity() {
-        this.setSize(0.6f, 1.96f);
-        this.addAttribute(Attribute.HEALTH);
-        this.setMaxHealth(24);
-        this.setHealth(24);
+        this.size(0.6f, 1.96f);
+        this.attribute(Attribute.HEALTH);
+        this.maxHealth(24);
+        this.health(24);
     }
 
     @Override
@@ -43,7 +43,7 @@ public class EntityEvoker extends EntityLiving implements io.gomint.entity.monst
     }
 
     @Override
-    public Set<String> getTags() {
+    public Set<String> tags() {
         return EntityTags.RANGED_HOSTILE_MOB;
     }
 

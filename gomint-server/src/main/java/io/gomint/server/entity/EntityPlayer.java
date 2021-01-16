@@ -29,7 +29,6 @@ import io.gomint.math.*;
 import io.gomint.player.DeviceInfo;
 import io.gomint.plugin.Plugin;
 import io.gomint.server.GoMintServer;
-import io.gomint.server.enchant.EnchantmentSelector;
 import io.gomint.server.entity.metadata.MetadataContainer;
 import io.gomint.server.entity.passive.EntityHuman;
 import io.gomint.server.entity.projectile.EntityFishingHook;
@@ -47,6 +46,7 @@ import io.gomint.server.plugin.EventCaller;
 import io.gomint.server.scoreboard.Scoreboard;
 import io.gomint.server.util.CallerDetectorUtil;
 import io.gomint.server.util.EnumConnectors;
+import io.gomint.server.util.Values;
 import io.gomint.server.world.ChunkAdapter;
 import io.gomint.server.world.CoordinateUtils;
 import io.gomint.server.world.LevelEvent;
@@ -81,7 +81,7 @@ import java.util.concurrent.TimeUnit;
  * @author BlackyPaw
  * @version 1.0
  */
-public class EntityPlayer extends EntityHuman implements io.gomint.entity.EntityPlayer, InventoryHolder, PlayerCommandSender {
+public class EntityPlayer extends EntityHuman<io.gomint.entity.EntityPlayer> implements io.gomint.entity.EntityPlayer, InventoryHolder, PlayerCommandSender<EntityPlayer> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(EntityPlayer.class);
 
@@ -96,7 +96,7 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
     // EntityPlayer Information
     private Gamemode gamemode = Gamemode.SURVIVAL;
     private AdventureSettings adventureSettings;
-    private Entity hoverEntity;
+    private Entity<?> hoverEntity;
     private Location respawnPosition = null;
     private Locale locale;
 
@@ -104,17 +104,17 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
     private Set<Long> hiddenPlayers;
 
     // Container handling
-    private ContainerInventory currentOpenContainer;
+    private ContainerInventory<?> currentOpenContainer;
 
     // Inventory
-    private Inventory cursorInventory;
-    private Inventory offhandInventory;
+    private Inventory<?> cursorInventory;
+    private Inventory<?> offhandInventory;
     private EnderChestInventory enderChestInventory;
 
     // Crafting
-    private Inventory craftingInventory;
+    private Inventory<?> craftingInventory;
     private CraftingInputInventory craftingInputInventory;
-    private Inventory craftingResultInventory;
+    private Inventory<?> craftingResultInventory;
 
     // Block break data
     private BlockPosition breakVector;
@@ -127,8 +127,8 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
 
     // Form stuff
     private int formId;
-    private Int2ObjectMap<io.gomint.server.gui.Form> forms = new Int2ObjectOpenHashMap<>();
-    private Int2ObjectMap<io.gomint.server.gui.FormListener> formListeners = new Int2ObjectOpenHashMap<>();
+    private Int2ObjectMap<io.gomint.server.gui.Form<?>> forms = new Int2ObjectOpenHashMap<>();
+    private Int2ObjectMap<io.gomint.server.gui.FormListener<?>> formListeners = new Int2ObjectOpenHashMap<>();
 
     // Server settings
     private int serverSettingsForm = -1;
@@ -202,7 +202,7 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
      * @return The view distance set by the player
      */
     @Override
-    public int getViewDistance() {
+    public int viewDistance() {
         return this.viewDistance;
     }
 
@@ -212,7 +212,7 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
      * @param viewDistance The view distance to set
      */
     public void setViewDistance(int viewDistance) {
-        int tempViewDistance = Math.min(viewDistance, this.world.getConfig().getViewDistance());
+        int tempViewDistance = Math.min(viewDistance, this.world.getConfig().viewDistance());
         if (this.viewDistance != tempViewDistance) {
             this.viewDistance = tempViewDistance;
         }
@@ -220,22 +220,23 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
         if (this.connection.getState() == PlayerConnectionState.LOGIN) {
             this.connection.addToSendQueue(new PacketBiomeDefinitionList());
             this.connection.sendPlayState(PacketPlayState.PlayState.SPAWN);
-            this.getLoginPerformance().setChunkStart(this.world.getServer().getCurrentTickTime());
+            this.loginPerformance().setChunkStart(this.world.getServer().currentTickTime());
         }
 
         this.connection.onViewDistanceChanged();
     }
 
     @Override
-    public void transfer(String host, int port) {
+    public EntityPlayer transfer(String host, int port) {
         PacketTransfer packetTransfer = new PacketTransfer();
         packetTransfer.setAddress(host);
         packetTransfer.setPort(port);
         this.connection.addToSendQueue(packetTransfer);
+        return this;
     }
 
     @Override
-    public int getPing() {
+    public int ping() {
         return this.connection.getPing();
     }
 
@@ -244,7 +245,7 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
      *
      * @return The connection associated with this player entity
      */
-    public PlayerConnection getConnection() {
+    public PlayerConnection connection() {
         return this.connection;
     }
 
@@ -263,11 +264,11 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
 
         // Set invis
         if (this.gamemode == Gamemode.SPECTATOR) {
-            this.setInvisible(true);
+            this.invisible(true);
         } else {
             // Check for invis potion effect
             if (!this.hasEffect(PotionEffect.INVISIBILITY)) {
-                this.setInvisible(false);
+                this.invisible(false);
             }
         }
     }
@@ -290,36 +291,38 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
     }
 
     @Override
-    public Gamemode getGamemode() {
+    public Gamemode gamemode() {
         return this.gamemode;
     }
 
     @Override
-    public void setGamemode(Gamemode gamemode) {
+    public EntityPlayer gamemode(Gamemode gamemode) {
         this.gamemode = gamemode;
         this.updateGamemode();
+        return this;
     }
 
     @Override
-    public boolean isOp() {
+    public boolean op() {
         return this.adventureSettings.isOperator();
     }
 
     @Override
-    public void setOp(boolean value) {
+    public EntityPlayer op(boolean value) {
         this.adventureSettings.setOperator(value);
         this.sendAdventureSettings();
 
         // Grant all permissions / notify the permission manager
         this.permissionManager.toggleOp();
+        return this;
     }
 
     @Override
-    public void hidePlayer(io.gomint.entity.EntityPlayer player) {
+    public EntityPlayer hidePlayer(io.gomint.entity.EntityPlayer player) {
         // Never hide myself (client crashes when this is done)
         if (player.equals(this)) {
             LOGGER.warn("You can't hide a player itself. Please tell the plugin author to remove the hidePlayer call");
-            return;
+            return this;
         }
 
         EntityPlayer other = (EntityPlayer) player;
@@ -328,9 +331,9 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
             this.hiddenPlayers = new HashSet<>();
         }
 
-        this.hiddenPlayers.add(other.getEntityId());
+        this.hiddenPlayers.add(other.id());
 
-        LOGGER.debug("Player {} hides {} from now on", this.getName(), player.getName());
+        LOGGER.debug("Player {} hides {} from now on", this.name(), player.name());
 
         // Remove the entity clientside
         this.entityVisibilityManager.removeEntity(other);
@@ -341,17 +344,19 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
         packetPlayerlist.setEntries(new ArrayList<>() {{
             add(new PacketPlayerlist.Entry(other));
         }});
-        getConnection().addToSendQueue(packetPlayerlist);
+        connection().addToSendQueue(packetPlayerlist);
+
+        return this;
     }
 
     @Override
-    public void showPlayer(io.gomint.entity.EntityPlayer player) {
+    public EntityPlayer showPlayer(io.gomint.entity.EntityPlayer player) {
         if (this.hiddenPlayers == null) {
-            return;
+            return this;
         }
 
-        if (this.hiddenPlayers.remove(player.getEntityId())) {
-            LOGGER.debug("Player {} shows {} from now on", this.getName(), player.getName());
+        if (this.hiddenPlayers.remove(player.id())) {
+            LOGGER.debug("Player {} shows {} from now on", this.name(), player.name());
 
             EntityPlayer other = (EntityPlayer) player;
 
@@ -361,50 +366,52 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
             packetPlayerlist.setEntries(new ArrayList<>() {{
                 add(new PacketPlayerlist.Entry(other));
             }});
-            getConnection().addToSendQueue(packetPlayerlist);
+            connection().addToSendQueue(packetPlayerlist);
 
             // Check bounds
-            Chunk playerChunk = this.getChunk();
-            Chunk chunk = other.getChunk();
-            if (Math.abs(playerChunk.getX() - chunk.getX()) <= this.getViewDistance() &&
-                Math.abs(playerChunk.getZ() - chunk.getZ()) <= this.getViewDistance()) {
+            Chunk playerChunk = this.chunk();
+            Chunk chunk = other.chunk();
+            if (Math.abs(playerChunk.x() - chunk.x()) <= this.viewDistance() &&
+                Math.abs(playerChunk.z() - chunk.z()) <= this.viewDistance()) {
                 this.entityVisibilityManager.addEntity(other);
             }
         }
+
+        return this;
     }
 
     @Override
     public boolean isHidden(io.gomint.entity.EntityPlayer player) {
-        return this.hiddenPlayers != null && this.hiddenPlayers.contains(player.getEntityId());
+        return this.hiddenPlayers != null && this.hiddenPlayers.contains(player.id());
     }
 
     @Override
-    public void teleport(Location to, EntityTeleportEvent.Cause cause) {
+    public EntityPlayer teleport(Location to, EntityTeleportEvent.Cause cause) {
         // Only teleport when online
-        if (!isOnline()) {
-            return;
+        if (!online()) {
+            return this;
         }
 
-        EntityTeleportEvent entityTeleportEvent = new EntityTeleportEvent(this, this.getLocation(), to, cause);
-        this.world.getServer().getPluginManager().callEvent(entityTeleportEvent);
-        if (entityTeleportEvent.isCancelled()) {
-            return;
+        EntityTeleportEvent entityTeleportEvent = new EntityTeleportEvent(this, this.location(), to, cause);
+        this.world.getServer().pluginManager().callEvent(entityTeleportEvent);
+        if (entityTeleportEvent.cancelled()) {
+            return this;
         }
 
-        Location from = getLocation();
+        Location from = location();
 
         // Reset chunks
         this.connection.resetQueuedChunks();
 
         // Check if we need to change worlds
-        if (!to.getWorld().equals(from.getWorld())) {
+        if (!to.world().equals(from.world())) {
             // Despawn entities first
             this.entityVisibilityManager.clear();
 
             // Change worlds
-            getWorld().removePlayer(this);
-            this.setWorld((WorldAdapter) to.getWorld());
-            this.world.spawnEntityAt(this, to.getX(), to.getY(), to.getZ(), to.getYaw(), to.getPitch());
+            world().removePlayer(this);
+            this.world((WorldAdapter) to.world());
+            this.world.spawnEntityAt(this, to.x(), to.y(), to.z(), to.yaw(), to.pitch());
 
             // Be sure to get rid of all loaded chunks
             this.connection.resetPlayerChunks();
@@ -415,14 +422,14 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
 
         // Check for attached entities
         if (!this.getAttachedEntities().isEmpty()) {
-            Chunk chunk = this.getChunk();
-            for (Entity entity : new HashSet<>(this.getAttachedEntities())) {
+            Chunk chunk = this.chunk();
+            for (Entity<?> entity : new HashSet<>(this.getAttachedEntities())) {
                 if (entity instanceof EntityPlayer) {
                     EntityPlayer player = (EntityPlayer) entity;
-                    Chunk playerChunk = player.getChunk();
-                    if (Math.abs(playerChunk.getX() - chunk.getX()) > player.getViewDistance() &&
-                        Math.abs(playerChunk.getZ() - chunk.getZ()) > player.getViewDistance()) {
-                        player.getEntityVisibilityManager().removeEntity(this);
+                    Chunk playerChunk = player.chunk();
+                    if (Math.abs(playerChunk.x() - chunk.x()) > player.viewDistance() &&
+                        Math.abs(playerChunk.z() - chunk.z()) > player.viewDistance()) {
+                        player.entityVisibilityManager().removeEntity(this);
                     }
                 }
             }
@@ -432,7 +439,7 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
         this.setAndRecalcPosition(to);
 
         // Force load the new spawn chunk
-        this.getChunk(); // This getChunk uses loadChunk so it will generate or load from disc if needed
+        this.chunk(); // This getChunk uses loadChunk so it will generate or load from disc if needed
 
         // Move the client
         this.connection.sendMovePlayer(to);
@@ -443,20 +450,24 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
 
         // Tell the movement handler to force this position to the client
         this.teleportPosition = to;
+
+        return this;
     }
 
     @Override
-    public void addHunger(float amount) {
+    public EntityPlayer addHunger(float amount) {
         PlayerFoodLevelChangeEvent foodLevelChangeEvent = new PlayerFoodLevelChangeEvent(
             this, amount
         );
-        this.world.getServer().getPluginManager().callEvent(foodLevelChangeEvent);
+        this.world.getServer().pluginManager().callEvent(foodLevelChangeEvent);
 
-        if (!foodLevelChangeEvent.isCancelled()) {
+        if (!foodLevelChangeEvent.cancelled()) {
             super.addHunger(amount);
         } else {
             this.resendAttributes();
         }
+
+        return this;
     }
 
     /**
@@ -464,7 +475,7 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
      *
      * @return queue with chunks to be sent to the client
      */
-    public Queue<ChunkAdapter> getChunkSendQueue() {
+    public Queue<ChunkAdapter> chunkSendQueue() {
         return this.chunkSendQueue;
     }
 
@@ -474,46 +485,46 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
     public void update(long currentTimeMS, float dT) {
         // Move first
         if (this.nextMovement != null) {
-            Location from = this.getLocation();
+            Location from = this.location();
             PlayerMoveEvent playerMoveEvent = this.eventCaller.callEvent(new PlayerMoveEvent(this, from, this.nextMovement));
 
-            if (playerMoveEvent.isCancelled()) {
-                playerMoveEvent.setTo(playerMoveEvent.getFrom());
+            if (playerMoveEvent.cancelled()) {
+                playerMoveEvent.to(playerMoveEvent.from());
             }
 
-            Location to = playerMoveEvent.getTo();
-            if (to.getX() != this.nextMovement.getX() || to.getY() != this.nextMovement.getY() || to.getZ() != this.nextMovement.getZ() ||
-                !to.getWorld().equals(this.nextMovement.getWorld()) || to.getYaw() != this.nextMovement.getYaw() ||
-                to.getPitch() != this.nextMovement.getPitch() || to.getHeadYaw() != this.nextMovement.getHeadYaw()) {
+            Location to = playerMoveEvent.to();
+            if (to.x() != this.nextMovement.x() || to.y() != this.nextMovement.y() || to.z() != this.nextMovement.z() ||
+                !to.world().equals(this.nextMovement.world()) || to.yaw() != this.nextMovement.yaw() ||
+                to.pitch() != this.nextMovement.pitch() || to.headYaw() != this.nextMovement.headYaw()) {
                 this.teleport(to);
             } else {
-                float moveX = to.getX() - from.getX();
-                float moveY = to.getY() - from.getY();
-                float moveZ = to.getZ() - from.getZ();
+                float moveX = to.x() - from.x();
+                float moveY = to.y() - from.y();
+                float moveZ = to.z() - from.z();
 
                 // Try to at least move the gravitation down
                 Vector moved = this.safeMove(moveX, moveY, moveZ);
 
                 // Exhaustion
-                float distance = (float) Math.sqrt(moved.getX() * moved.getX() + moved.getZ() * moved.getZ());
+                float distance = (float) Math.sqrt(moved.x() * moved.x() + moved.z() * moved.z());
                 if (distance > 0.01f) {
                     if (this.onGround) {
-                        if (this.isSprinting()) {
+                        if (this.sprinting()) {
                             this.exhaust((0.1f * distance), PlayerExhaustEvent.Cause.SPRINTING);
-                        } else if (this.isOnGround()) {
+                        } else if (this.onGround()) {
                             this.exhaust((0.01f * distance), PlayerExhaustEvent.Cause.WALKING);
                         }
                     }
                 }
 
-                this.setPitch(to.getPitch());
-                this.setYaw(to.getYaw());
-                this.setHeadYaw(to.getHeadYaw());
+                this.pitch(to.pitch());
+                this.yaw(to.yaw());
+                this.headYaw(to.headYaw());
             }
 
-            boolean changeWorld = !to.getWorld().equals(from.getWorld());
-            boolean changeXZ = (int) from.getX() != (int) to.getX() || (int) from.getZ() != (int) to.getZ();
-            boolean changeY = (int) from.getY() != (int) to.getY();
+            boolean changeWorld = !to.world().equals(from.world());
+            boolean changeXZ = (int) from.x() != (int) to.x() || (int) from.z() != (int) to.z();
+            boolean changeY = (int) from.y() != (int) to.y();
 
             if (changeWorld || changeXZ || changeY) {
                 if (changeWorld || changeXZ) {
@@ -521,10 +532,10 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
                 }
 
                 // Check for interaction
-                Block block = from.getWorld().getBlockAt(from.toBlockPosition());
+                Block block = from.world().blockAt(from.toBlockPosition());
                 block.gotOff(this);
 
-                block = to.getWorld().getBlockAt(to.toBlockPosition());
+                block = to.world().blockAt(to.toBlockPosition());
                 block.stepOn(this);
             }
 
@@ -538,15 +549,15 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
             ((PermissionManager) this.permissionManager).update(currentTimeMS, dT);
         }
 
-        if (this.isDead() || this.getHealth() <= 0) {
+        if (this.dead() || this.health() <= 0) {
             return;
         }
 
         // Look around
-        Collection<Entity> nearbyEntities = this.world.getNearbyEntities(this.boundingBox.grow(1, 0.5f, 1), this);
+        Collection<Entity<?>> nearbyEntities = this.world.getNearbyEntities(this.boundingBox.grow(1, 0.5f, 1), this);
         if (nearbyEntities != null) {
-            for (Entity nearbyEntity : nearbyEntities) {
-                io.gomint.server.entity.Entity implEntity = (io.gomint.server.entity.Entity) nearbyEntity;
+            for (Entity<?> nearbyEntity : nearbyEntities) {
+                io.gomint.server.entity.Entity<?> implEntity = (io.gomint.server.entity.Entity<?>) nearbyEntity;
                 implEntity.onCollideWithPlayer(this);
             }
         }
@@ -555,25 +566,25 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
         this.updateAttributes();
 
         // Check for sprint, skip if player is in Creative mode
-        if (this.getGamemode() != Gamemode.CREATIVE) {
-            if (this.getHunger() <= 6 && this.isSprinting()) {
-                this.setSprinting(false);
+        if (this.gamemode() != Gamemode.CREATIVE) {
+            if (this.hunger() <= 6 && this.sprinting()) {
+                this.sprinting(false);
             }
         }
     }
 
     @Override
-    public AxisAlignedBB getBoundingBox() {
+    public AxisAlignedBB boundingBox() {
         return this.boundingBox;
     }
 
     @Override
-    public boolean openInventory(io.gomint.inventory.Inventory inventory) {
+    public boolean openInventory(io.gomint.inventory.Inventory<?> inventory) {
         if (inventory instanceof ContainerInventory) {
             InventoryOpenEvent event = new InventoryOpenEvent(this, inventory);
-            this.getWorld().getServer().getPluginManager().callEvent(event);
+            this.world().getServer().pluginManager().callEvent(event);
 
-            if (event.isCancelled()) {
+            if (event.cancelled()) {
                 return false;
             }
 
@@ -583,7 +594,7 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
             }
 
             // Trigger open
-            ContainerInventory containerInventory = (ContainerInventory) inventory;
+            ContainerInventory<?> containerInventory = (ContainerInventory<?>) inventory;
             containerInventory.addViewer(this, WindowMagicNumbers.OPEN_CONTAINER);
 
             this.currentOpenContainer = containerInventory;
@@ -594,7 +605,7 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
     }
 
     @Override
-    public boolean closeInventory(io.gomint.inventory.Inventory inventory) {
+    public boolean closeInventory(io.gomint.inventory.Inventory<?> inventory) {
         if (inventory instanceof ContainerInventory) {
             if (this.currentOpenContainer == inventory) {
                 this.closeInventory(WindowMagicNumbers.OPEN_CONTAINER, true);
@@ -610,7 +621,7 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
      *
      * @return the players cursor item
      */
-    public Inventory getCursorInventory() {
+    public Inventory<?> getCursorInventory() {
         return this.cursorInventory;
     }
 
@@ -619,7 +630,7 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
      *
      * @return current offhand inventory
      */
-    public Inventory getOffhandInventory() {
+    public Inventory<?> getOffhandInventory() {
         return this.offhandInventory;
     }
 
@@ -633,7 +644,7 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
             if (instance.isDirty()) {
                 if (updateAttributes == null) {
                     updateAttributes = new PacketUpdateAttributes();
-                    updateAttributes.setEntityId(this.getEntityId());
+                    updateAttributes.setEntityId(this.id());
                 }
 
                 updateAttributes.addAttributeInstance(instance);
@@ -641,7 +652,7 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
         }
 
         if (updateAttributes != null) {
-            updateAttributes.setTick(this.getWorld().getServer().getCurrentTickTime() / 50);
+            updateAttributes.setTick(this.world().getServer().currentTickTime() / (int) Values.CLIENT_TICK_MS);
             this.connection.addToSendQueue(updateAttributes);
         }
     }
@@ -651,8 +662,8 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
      */
     public void resendAttributes() {
         PacketUpdateAttributes updateAttributes = new PacketUpdateAttributes();
-        updateAttributes.setEntityId(this.getEntityId());
-        updateAttributes.setTick(this.getWorld().getServer().getCurrentTickTime() / 50);
+        updateAttributes.setEntityId(this.id());
+        updateAttributes.setTick(this.world().getServer().currentTickTime() / (int) Values.CLIENT_TICK_MS);
 
         for (AttributeInstance instance : attributes.values()) {
             updateAttributes.addAttributeInstance(instance);
@@ -666,26 +677,26 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
      */
     public void prepareEntity() {
         // Inventories
-        this.inventory = new PlayerInventory(this.world.getServer().getItems(), this);
-        this.armorInventory = new ArmorInventory(this.world.getServer().getItems(), this);
+        this.inventory = new PlayerInventory(this.world.getServer().items(), this);
+        this.armorInventory = new ArmorInventory(this.world.getServer().items(), this);
 
-        this.cursorInventory = new CursorInventory(this.world.getServer().getItems(), this);
-        this.offhandInventory = new OffhandInventory(this.world.getServer().getItems(), this);
-        this.enderChestInventory = new EnderChestInventory(this.world.getServer().getItems(),  this );
+        this.cursorInventory = new CursorInventory(this.world.getServer().items(), this);
+        this.offhandInventory = new OffhandInventory(this.world.getServer().items(), this);
+        this.enderChestInventory = new EnderChestInventory(this.world.getServer().items(), this);
 
-        this.craftingInventory = new CraftingInputInventory(this.world.getServer().getItems(), this);
-        this.craftingInputInventory = new CraftingInputInventory(this.world.getServer().getItems(), this);
-        this.craftingResultInventory = new OneSlotInventory(this.world.getServer().getItems(), this);
+        this.craftingInventory = new CraftingInputInventory(this.world.getServer().items(), this);
+        this.craftingInputInventory = new CraftingInputInventory(this.world.getServer().items(), this);
+        this.craftingResultInventory = new OneSlotInventory(this.world.getServer().items(), this);
 
         // Load from world
         if (!this.world.loadPlayer(this)) {
             // Get default spawn
-            this.setAndRecalcPosition(this.getSpawnLocation() != null ? this.getSpawnLocation() : this.world.getSpawnLocation());
+            this.setAndRecalcPosition(this.spawnLocation() != null ? this.spawnLocation() : this.world.spawnLocation());
         }
 
         // Send world init data
         this.connection.sendWorldTime(this.world.getTimeAsTicks());
-        this.connection.sendWorldInitialization(this.getEntityId());
+        this.connection.sendWorldInitialization(this.id());
         this.connection.addToSendQueue(new PacketItemComponent());
         this.connection.sendSpawnPosition();
         // this.connection.sendWorldTime(this.world.getTimeAsTicks());
@@ -695,8 +706,8 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
         this.connection.sendCommandsEnabled();
 
         // Set spawn
-        if (this.connection.getEntity().getSpawnLocation() == null) {
-            this.connection.getEntity().setSpawnLocation(this.connection.getEntity().getWorld().getSpawnLocation());
+        if (this.connection.getEntity().spawnLocation() == null) {
+            this.connection.getEntity().spawnLocation(this.connection.getEntity().world().spawnLocation());
         }
 
         // Send adventure settings
@@ -719,17 +730,17 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
         // Send entity metadata
         this.sendData(this);
 
-        this.connection.getServer().getCreativeInventory().addViewer(this);
+        this.connection.getServer().creativeInventory().addViewer(this);
 
         PacketPlayerlist playerlist = new PacketPlayerlist();
         playerlist.setMode((byte) 0);
         playerlist.setEntries(new ArrayList<>() {{
             add(new PacketPlayerlist.Entry(EntityPlayer.this));
         }});
-        this.getConnection().addToSendQueue(playerlist);
+        this.connection().addToSendQueue(playerlist);
 
         // Send all recipes
-        this.connection.addToSendQueue(this.world.getServer().getRecipeManager().getCraftingRecipesBatch());
+        this.connection.addToSendQueue(this.world.getServer().recipeManager().getCraftingRecipesBatch());
 
         LOGGER.debug("Did send all prepare entity data");
     }
@@ -748,16 +759,16 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
      */
     public boolean canInteract(Vector position, int maxDistance) {
         // Distance
-        Vector eyePosition = this.getPosition().add(0, this.getEyeHeight(), 0);
+        Vector eyePosition = this.position().add(0, this.eyeHeight(), 0);
         if (eyePosition.distanceSquared(position) > MathUtils.square(maxDistance)) {
             return false;
         }
 
         // Direction
-        Vector playerPosition = this.getPosition();
-        Vector2 directionPlane = this.getDirectionPlane();
-        float dot = directionPlane.dot(new Vector2(eyePosition.getX(), eyePosition.getZ()));
-        float dot1 = directionPlane.dot(new Vector2(playerPosition.getX(), playerPosition.getZ()));
+        Vector playerPosition = this.position();
+        Vector2 directionPlane = this.directionPlane();
+        float dot = directionPlane.dot(new Vector2(eyePosition.x(), eyePosition.z()));
+        float dot1 = directionPlane.dot(new Vector2(playerPosition.x(), playerPosition.z()));
         return (dot1 - dot) >= -(MathUtils.SQRT_3 / 2);
     }
 
@@ -765,10 +776,10 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
      * Remove player from PlayerList and remove from global inventories etc.
      */
     public void cleanup() {
-        this.connection.getServer().getCreativeInventory().removeViewer(this);
-        this.connection.getServer().getPlayersByUUID().remove(this.getUUID());
+        this.connection.getServer().creativeInventory().removeViewer(this);
+        this.connection.getServer().uuidMappedPlayers().remove(this.uuid());
 
-        Block block = this.world.getBlockAt(this.getPosition().toBlockPosition());
+        Block block = this.world.blockAt(this.position().toBlockPosition());
         block.gotOff(this);
 
         // Remove from player list
@@ -782,17 +793,17 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
         this.entityVisibilityManager.clear();
 
         // Check all entities
-        for (WorldAdapter worldAdapter : this.connection.getServer().getWorldManager().getWorlds()) {
+        for (WorldAdapter worldAdapter : this.connection.getServer().worldManager().getWorlds()) {
             worldAdapter.iterateEntities(Entity.class, entity -> {
                 if (entity instanceof EntityPlayer) {
                     EntityPlayer entityPlayer = (EntityPlayer) entity;
                     if (!entityPlayer.equals(EntityPlayer.this)) {
-                        entityPlayer.getConnection().addToSendQueue(packetPlayerlist);
+                        entityPlayer.connection().addToSendQueue(packetPlayerlist);
                     }
 
                     // Check if player did hide this one
                     if (entityPlayer.hiddenPlayers != null) {
-                        entityPlayer.hiddenPlayers.remove(getEntityId());
+                        entityPlayer.hiddenPlayers.remove(id());
                     }
 
                     // Check if mouseover is the entity
@@ -818,7 +829,7 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
             this.currentOpenContainer.removeViewer(this);
 
             InventoryCloseEvent inventoryCloseEvent = new InventoryCloseEvent(this, this.currentOpenContainer);
-            this.getWorld().getServer().getPluginManager().callEvent(inventoryCloseEvent);
+            this.world().getServer().pluginManager().callEvent(inventoryCloseEvent);
 
             PacketContainerClose packetContainerClose = new PacketContainerClose();
             packetContainerClose.setWindowId(windowId);
@@ -835,7 +846,7 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
      * @param windowId which should be looked up
      * @return container inventory or null when not found
      */
-    public ContainerInventory getContainerId(byte windowId) {
+    public ContainerInventory<?> getContainerId(byte windowId) {
         if (windowId == WindowMagicNumbers.OPEN_CONTAINER) {
             return this.currentOpenContainer;
         }
@@ -844,19 +855,20 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
     }
 
     @Override
-    public void sendMessage(String message) {
+    public EntityPlayer sendMessage(String message) {
         PacketText packetText = new PacketText();
         packetText.setMessage(message);
-        packetText.setDeviceId(this.getDeviceInfo().getDeviceId());
+        packetText.setDeviceId(this.deviceInfo().deviceId());
         packetText.setType(PacketText.Type.CLIENT_MESSAGE);
         this.connection.addToSendQueue(packetText);
+        return this;
     }
 
     @Override
-    public void sendMessage(ChatType type, String... message) {
+    public EntityPlayer sendMessage(ChatType type, String... message) {
         PacketText packetText = new PacketText();
         packetText.setMessage(message[0]);
-        packetText.setDeviceId(this.getDeviceInfo().getDeviceId());
+        packetText.setDeviceId(this.deviceInfo().deviceId());
         switch (type) {
             case TIP:
                 packetText.setType(PacketText.Type.TIP_MESSAGE);
@@ -882,24 +894,26 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
         }
 
         this.connection.addToSendQueue(packetText);
+        return this;
     }
 
     @Override
     public boolean hasPermission(String permission) {
-        return this.permissionManager.hasPermission(permission);
+        return this.permissionManager.has(permission);
     }
 
     @Override
     public boolean hasPermission(String permission, boolean defaultValue) {
-        return this.permissionManager.hasPermission(permission, defaultValue);
+        return this.permissionManager.has(permission, defaultValue);
     }
 
     @Override
-    public void sendCommands() {
+    public EntityPlayer sendCommands() {
         // Send commands
         PacketAvailableCommands packetAvailableCommands = this.connection.getServer().
-            getPluginManager().getCommandManager().createPacket(this);
+            pluginManager().getCommandManager().createPacket(this);
         this.connection.addToSendQueue(packetAvailableCommands);
+        return this;
     }
 
     /**
@@ -909,22 +923,24 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
      * @param cause  of exhaustion
      */
     @Override
-    public void exhaust(float amount, PlayerExhaustEvent.Cause cause) {
+    public EntityPlayer exhaust(float amount, PlayerExhaustEvent.Cause cause) {
         if (this.gamemode == Gamemode.SURVIVAL) {
             PlayerExhaustEvent exhaustEvent = new PlayerExhaustEvent(this, amount, cause);
-            this.world.getServer().getPluginManager().callEvent(exhaustEvent);
+            this.world.getServer().pluginManager().callEvent(exhaustEvent);
 
-            if (exhaustEvent.isCancelled()) {
+            if (exhaustEvent.cancelled()) {
                 this.resendAttributes();
-                return;
+                return this;
             }
 
-            super.exhaust(exhaustEvent.getAdditionalAmount());
+            super.exhaust(exhaustEvent.additionalAmount());
         } else {
-            if (this.getExhaustion() != 0) {
-                this.setExhaustion(0);
+            if (this.exhaustion() != 0) {
+                this.exhaustion(0);
             }
         }
+
+        return this;
     }
 
     /**
@@ -932,7 +948,7 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
      */
     public void jump() {
         // Jumping is only handled for exhaustion it seems
-        if (this.isSprinting()) {
+        if (this.sprinting()) {
             this.exhaust(0.8f, PlayerExhaustEvent.Cause.SPRINT_JUMP);
         } else {
             this.exhaust(0.2f, PlayerExhaustEvent.Cause.JUMP);
@@ -945,9 +961,9 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
      * @param target which should be attacked
      * @return true when damage has been dealt, false when not
      */
-    public boolean attackWithItemInHand(Entity target) {
+    public boolean attackWithItemInHand(Entity<?> target) {
         if (target instanceof io.gomint.server.entity.Entity) {
-            io.gomint.server.entity.Entity targetEntity = (io.gomint.server.entity.Entity) target;
+            io.gomint.server.entity.Entity<?> targetEntity = (io.gomint.server.entity.Entity<?>) target;
 
             // Check if the target can be attacked
             if (targetEntity.canBeAttackedWithAnItem() && !targetEntity.isInvulnerableFrom(this)) {
@@ -955,23 +971,23 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
 
                 // Get this entity attack damage
                 EntityDamageEvent.DamageSource damageSource = EntityDamageEvent.DamageSource.ENTITY_ATTACK;
-                float damage = this.getAttribute(Attribute.ATTACK_DAMAGE);
+                float damage = this.attribute(Attribute.ATTACK_DAMAGE);
 
-                EnchantmentSharpness sharpness = this.getInventory().getItemInHand().getEnchantment(EnchantmentSharpness.class);
+                EnchantmentSharpness sharpness = this.inventory().itemInHand().enchantment(EnchantmentSharpness.class);
                 if (sharpness != null) {
-                    damage += sharpness.getLevel() * 1.25f;
+                    damage += sharpness.level() * 1.25f;
                 }
 
                 // Check for knockback stuff
                 int knockbackLevel = 0;
 
-                if (this.isSprinting()) {
+                if (this.sprinting()) {
                     knockbackLevel++;
                 }
 
-                EnchantmentKnockback knockback = this.getInventory().getItemInHand().getEnchantment(EnchantmentKnockback.class);
+                EnchantmentKnockback knockback = this.inventory().itemInHand().enchantment(EnchantmentKnockback.class);
                 if (knockback != null) {
-                    knockbackLevel += knockback.getLevel();
+                    knockbackLevel += knockback.level();
                 }
 
                 if (damage > 0) {
@@ -985,20 +1001,20 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
                         // Apply knockback
                         if (knockbackLevel > 0) {
                             // Modify target velocity
-                            Vector targetVelo = targetEntity.getVelocity();
-                            targetEntity.setVelocity(targetVelo.add(
-                                (float) (-Math.sin(this.getYaw() * (float) Math.PI / 180.0F) * (float) knockbackLevel * 0.5F),
+                            Vector targetVelo = targetEntity.velocity();
+                            targetEntity.velocity(targetVelo.add(
+                                (float) (-Math.sin(this.yaw() * (float) Math.PI / 180.0F) * (float) knockbackLevel * 0.5F),
                                 0.1f,
-                                (float) (Math.cos(this.getYaw() * (float) Math.PI / 180.0F) * (float) knockbackLevel * 0.5F)));
+                                (float) (Math.cos(this.yaw() * (float) Math.PI / 180.0F) * (float) knockbackLevel * 0.5F)));
 
                             // Modify our velocity / movement
-                            Vector ownVelo = this.getVelocity();
-                            ownVelo.setX(ownVelo.getX() * 0.6F);
-                            ownVelo.setZ(ownVelo.getZ() * 0.6F);
-                            this.setVelocity(ownVelo);
+                            Vector ownVelo = this.velocity();
+                            ownVelo.x(ownVelo.x() * 0.6F);
+                            ownVelo.z(ownVelo.z() * 0.6F);
+                            this.velocity(ownVelo);
 
-                            if (!this.world.getServer().getServerConfig().getVanilla().isDisableSprintReset()) {
-                                this.setSprinting(false);
+                            if (!this.world.getServer().serverConfig().vanilla().disableSprintReset()) {
+                                this.sprinting(false);
                             }
                         }
 
@@ -1017,7 +1033,7 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
     @Override
     public boolean damage(EntityDamageEvent damageEvent) {
         // When allowFlight is on we don't need falling damage
-        if (this.adventureSettings.isCanFly() && damageEvent.getDamageSource() == EntityDamageEvent.DamageSource.FALL) {
+        if (this.adventureSettings.isCanFly() && damageEvent.damageSource() == EntityDamageEvent.DamageSource.FALL) {
             return false;
         }
 
@@ -1027,13 +1043,13 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
 
     @Override
     protected float applyArmorReduction(EntityDamageEvent damageEvent, boolean damageArmor) {
-        if (damageEvent.getDamageSource() == EntityDamageEvent.DamageSource.FALL ||
-            damageEvent.getDamageSource() == EntityDamageEvent.DamageSource.VOID ||
-            damageEvent.getDamageSource() == EntityDamageEvent.DamageSource.DROWNING) {
-            return damageEvent.getDamage();
+        if (damageEvent.damageSource() == EntityDamageEvent.DamageSource.FALL ||
+            damageEvent.damageSource() == EntityDamageEvent.DamageSource.VOID ||
+            damageEvent.damageSource() == EntityDamageEvent.DamageSource.DROWNING) {
+            return damageEvent.damage();
         }
 
-        float damage = damageEvent.getDamage();
+        float damage = damageEvent.damage();
         float maxReductionDiff = 25 - this.armorInventory.getTotalArmorValue();
         float amplifiedDamage = damage * maxReductionDiff;
         if (damageArmor) {
@@ -1049,11 +1065,11 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
         this.armorInventory.addViewer(player);
 
         // Send death animation if needed
-        if (this.getHealth() <= 0) {
+        if (this.health() <= 0) {
             PacketEntityEvent entityEvent = new PacketEntityEvent();
-            entityEvent.setEntityId(this.getEntityId());
+            entityEvent.setEntityId(this.id());
             entityEvent.setEventId(EntityEvent.DEATH.getId());
-            player.getConnection().addToSendQueue(entityEvent);
+            player.connection().addToSendQueue(entityEvent);
         }
     }
 
@@ -1063,11 +1079,11 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
     public void respawn() {
         // Event first
         PlayerRespawnEvent event = new PlayerRespawnEvent(this, this.respawnPosition);
-        this.connection.getServer().getPluginManager().callEvent(event);
+        this.connection.getServer().pluginManager().callEvent(event);
 
-        if (event.isCancelled()) {
+        if (event.cancelled()) {
             PacketEntityEvent entityEvent = new PacketEntityEvent();
-            entityEvent.setEntityId(this.getEntityId());
+            entityEvent.setEntityId(this.id());
             entityEvent.setEventId(EntityEvent.DEATH.getId());
             this.connection.addToSendQueue(entityEvent);
 
@@ -1099,11 +1115,11 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
         this.removeAllEffects();
 
         // Check for new chunks
-        this.teleport(event.getRespawnLocation());
+        this.teleport(event.respawnLocation());
         this.respawnPosition = null;
 
         // Reset motion
-        this.setVelocity(new Vector(0, 0, 0));
+        this.velocity(new Vector(0, 0, 0));
 
         // Send all inventories
         this.inventory.sendContents(this.connection);
@@ -1111,17 +1127,17 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
         this.armorInventory.sendContents(this.connection);
 
         PacketEntityEvent entityEvent = new PacketEntityEvent();
-        entityEvent.setEntityId(this.getEntityId());
+        entityEvent.setEntityId(this.id());
         entityEvent.setEventId(EntityEvent.RESPAWN.getId());
 
         // Update all other players
-        for (io.gomint.entity.EntityPlayer player : this.world.getPlayers()) {
+        for (io.gomint.entity.EntityPlayer player : this.world.onlinePlayers()) {
             EntityPlayer implPlayer = (EntityPlayer) player;
-            implPlayer.getEntityVisibilityManager().updateEntity(this, this.getChunk());
+            implPlayer.entityVisibilityManager().updateEntity(this, this.chunk());
         }
 
         // Apply item in hand stuff
-        ItemStack itemInHand = (ItemStack) this.inventory.getItemInHand();
+        ItemStack<?> itemInHand = (ItemStack<?>) this.inventory.itemInHand();
         itemInHand.gotInHand(this);
     }
 
@@ -1137,63 +1153,63 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
 
         // Prepare a death message
         String deathMessage = "";
-        EntityDamageEvent.DamageSource cause = this.getLastDamageSource();
+        EntityDamageEvent.DamageSource cause = this.lastDamageSource();
         switch (cause) {
             case ENTITY_ATTACK:
-                deathMessage = this.getDisplayName() + " was slain by " + this.getLastDamageEntity().getNameTag();
+                deathMessage = this.displayName() + " was slain by " + this.lastDamageEntity().nameTag();
                 break;
             case FALL:
-                deathMessage = this.getDisplayName() + " fell from a high place";
+                deathMessage = this.displayName() + " fell from a high place";
                 break;
             case LAVA:
-                deathMessage = this.getDisplayName() + " tried to swim in lava";
+                deathMessage = this.displayName() + " tried to swim in lava";
                 break;
             case FIRE:
-                deathMessage = this.getDisplayName() + " went up in flames";
+                deathMessage = this.displayName() + " went up in flames";
                 break;
             case VOID:
-                deathMessage = this.getDisplayName() + " fell out of the world";
+                deathMessage = this.displayName() + " fell out of the world";
                 break;
             case CACTUS:
-                deathMessage = this.getDisplayName() + " was pricked to death";
+                deathMessage = this.displayName() + " was pricked to death";
                 break;
             case STARVE:
-                deathMessage = this.getDisplayName() + " starved to death";
+                deathMessage = this.displayName() + " starved to death";
                 break;
             case ON_FIRE:
-                deathMessage = this.getDisplayName() + " burned to death";
+                deathMessage = this.displayName() + " burned to death";
                 break;
             case DROWNING:
-                deathMessage = this.getDisplayName() + " drowned";
+                deathMessage = this.displayName() + " drowned";
                 break;
             case HARM_EFFECT:
-                deathMessage = this.getDisplayName() + " was killed by magic";
+                deathMessage = this.displayName() + " was killed by magic";
                 break;
             case ENTITY_EXPLODE:
-                deathMessage = this.getDisplayName() + " blew up";
+                deathMessage = this.displayName() + " blew up";
                 break;
             case PROJECTILE:
-                deathMessage = this.getDisplayName() + " has been shot";
+                deathMessage = this.displayName() + " has been shot";
                 break;
             case API:
-                deathMessage = this.getDisplayName() + " was killed by setting health to 0";
+                deathMessage = this.displayName() + " was killed by setting health to 0";
                 break;
             case COMMAND:
-                deathMessage = this.getDisplayName() + " died";
+                deathMessage = this.displayName() + " died";
                 break;
             default:
-                deathMessage = this.getDisplayName() + " died for unknown reasons";
+                deathMessage = this.displayName() + " died for unknown reasons";
                 break;
         }
 
-        List<io.gomint.inventory.item.ItemStack> drops = this.getDrops();
+        List<io.gomint.inventory.item.ItemStack<?>> drops = this.getDrops();
 
         PlayerDeathEvent event = new PlayerDeathEvent(this, deathMessage, true, drops);
-        this.connection.getServer().getPluginManager().callEvent(event);
+        this.connection.getServer().pluginManager().callEvent(event);
 
-        if (event.isDropInventory()) {
-            for (io.gomint.inventory.item.ItemStack drop : event.getDrops()) {
-                this.world.dropItem(this.getLocation(), drop);
+        if (event.dropInventory()) {
+            for (io.gomint.inventory.item.ItemStack<?> drop : event.drops()) {
+                this.world.dropItem(this.location(), drop);
             }
 
             this.inventory.clear();
@@ -1205,37 +1221,37 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
         this.craftingInputInventory.clear();
         this.craftingResultInventory.clear();
 
-        if (event.getDeathMessage() != null && !event.getDeathMessage().isEmpty()) {
-            for (io.gomint.entity.EntityPlayer player : this.world.getPlayers()) {
-                player.sendMessage(event.getDeathMessage());
+        if (event.deathMessage() != null && !event.deathMessage().isEmpty()) {
+            for (io.gomint.entity.EntityPlayer player : this.world.onlinePlayers()) {
+                player.sendMessage(event.deathMessage());
             }
         }
 
-        this.respawnPosition = this.world.getSpawnLocation().add(0, this.eyeHeight, 0);
+        this.respawnPosition = this.world.spawnLocation().add(0, this.eyeHeight, 0);
 
         PacketRespawnPosition packetRespawnPosition = new PacketRespawnPosition();
         packetRespawnPosition.setPosition(this.respawnPosition);
-        packetRespawnPosition.setEntityId(this.getEntityId());
+        packetRespawnPosition.setEntityId(this.id());
         packetRespawnPosition.setState(RespawnState.SEARCHING_FOR_SPAWN);
-        this.getConnection().addToSendQueue(packetRespawnPosition);
+        this.connection().addToSendQueue(packetRespawnPosition);
     }
 
-    private List<io.gomint.inventory.item.ItemStack> getDrops() {
-        List<io.gomint.inventory.item.ItemStack> drops = new ArrayList<>();
+    private List<io.gomint.inventory.item.ItemStack<?>> getDrops() {
+        List<io.gomint.inventory.item.ItemStack<?>> drops = new ArrayList<>();
 
-        for (io.gomint.inventory.item.ItemStack itemStack : this.inventory.getContents()) {
+        for (io.gomint.inventory.item.ItemStack<?> itemStack : this.inventory.contents()) {
             if (!(itemStack instanceof ItemAir)) {
                 drops.add(itemStack);
             }
         }
 
-        for (io.gomint.inventory.item.ItemStack itemStack : this.offhandInventory.getContents()) {
+        for (io.gomint.inventory.item.ItemStack<?> itemStack : this.offhandInventory.contents()) {
             if (!(itemStack instanceof ItemAir)) {
                 drops.add(itemStack);
             }
         }
 
-        for (io.gomint.inventory.item.ItemStack itemStack : this.armorInventory.getContents()) {
+        for (io.gomint.inventory.item.ItemStack<?> itemStack : this.armorInventory.contents()) {
             if (!(itemStack instanceof ItemAir)) {
                 drops.add(itemStack);
             }
@@ -1248,35 +1264,36 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
     protected void checkIfCollided(float movX, float movY, float movZ, float dX, float dY, float dZ) {
         // Check if we are not on ground or we moved on y axis
         if (!this.onGround || movY != 0) {
-            AxisAlignedBB bb = new AxisAlignedBB(this.boundingBox.getMinX(), this.boundingBox.getMinY() - 0.2f, this.boundingBox.getMinZ(),
-                this.boundingBox.getMaxX(), this.boundingBox.getMaxY(), this.boundingBox.getMaxZ());
+            AxisAlignedBB bb = new AxisAlignedBB(this.boundingBox.minX(), this.boundingBox.minY() - 0.2f, this.boundingBox.minZ(),
+                this.boundingBox.maxX(), this.boundingBox.maxY(), this.boundingBox.maxZ());
 
             // Check if we collided with a block
-            this.onGround = this.world.getCollisionCubes(this, bb, false) != null;
+            this.onGround = this.world.collisionCubes(this, bb, false) != null;
         }
 
         this.isCollided = this.onGround;
     }
 
     @Override
-    public boolean isOnline() {
+    public boolean online() {
         return this.connection.getEntity() != null;
     }
 
     @Override
-    public Locale getLocale() {
+    public Locale locale() {
         return this.locale;
     }
 
     @Override
-    public void disconnect(String reason) {
+    public EntityPlayer disconnect(String reason) {
         this.connection.disconnect(reason);
+        return this;
     }
 
     // ------- GUI stuff
     public void sendServerSettings() {
         if (this.serverSettingsForm != -1) {
-            io.gomint.server.gui.Form form = this.forms.get(this.serverSettingsForm);
+            io.gomint.server.gui.Form<?> form = this.forms.get(this.serverSettingsForm);
 
             PacketServerSettingsResponse response = new PacketServerSettingsResponse();
             response.setFormId(this.serverSettingsForm);
@@ -1286,15 +1303,14 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
         }
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public <R> FormListener<R> showForm(Form<R> form) {
         int formId = this.formId++;
-        io.gomint.server.gui.Form implForm = (io.gomint.server.gui.Form) form;
+        io.gomint.server.gui.Form<R> implForm = (io.gomint.server.gui.Form<R>) form;
 
         this.forms.put(formId, implForm);
 
-        io.gomint.server.gui.FormListener formListener = new io.gomint.server.gui.FormListener<R>();
+        io.gomint.server.gui.FormListener<R> formListener = new io.gomint.server.gui.FormListener<R>();
 
         this.formListeners.put(formId, formListener);
 
@@ -1309,7 +1325,7 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
     }
 
     @Override
-    public <R> FormListener<R> setSettingsForm(Form<R> form) {
+    public <R> FormListener<R> settingsForm(Form<R> form) {
         if (this.serverSettingsForm != -1) {
             this.removeSettingsForm();
         }
@@ -1327,20 +1343,22 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
     }
 
     @Override
-    public void removeSettingsForm() {
+    public EntityPlayer removeSettingsForm() {
         if (this.serverSettingsForm != -1) {
             this.forms.remove(this.serverSettingsForm);
             this.formListeners.remove(this.serverSettingsForm);
             this.serverSettingsForm = -1;
         }
+
+        return this;
     }
 
-    public void parseGUIResponse(int formId, String json) {
+    public <R> void parseGUIResponse(int formId, String json) {
         // Get the listener and the form
-        Form form = this.forms.get(formId);
+        Form<?> form = this.forms.get(formId);
         if (form != null) {
             // Get listener
-            io.gomint.server.gui.FormListener formListener = this.formListeners.get(formId);
+            io.gomint.server.gui.FormListener<R> formListener = (io.gomint.server.gui.FormListener<R>) this.formListeners.get(formId);
 
             if (this.serverSettingsForm != formId) {
                 this.forms.remove(formId);
@@ -1350,8 +1368,8 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
             if (json.equals("null")) {
                 formListener.getCloseConsumer().accept(null);
             } else {
-                io.gomint.server.gui.Form implForm = (io.gomint.server.gui.Form) form;
-                Object resp = implForm.parseResponse(json);
+                io.gomint.server.gui.Form<R> implForm = (io.gomint.server.gui.Form<R>) form;
+                R resp = implForm.parseResponse(json);
                 if (resp == null) {
                     formListener.getCloseConsumer().accept(null);
                 } else {
@@ -1363,9 +1381,9 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
 
     @Override
     public void despawn() {
-        for (Entity entity : new HashSet<>(this.getAttachedEntities())) {
+        for (Entity<?> entity : new HashSet<>(this.getAttachedEntities())) {
             if (entity instanceof EntityPlayer) {
-                ((EntityPlayer) entity).getEntityVisibilityManager().removeEntity(this);
+                ((EntityPlayer) entity).entityVisibilityManager().removeEntity(this);
             }
         }
     }
@@ -1376,8 +1394,8 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
      * @param xpAmount which should be added
      */
     public void addXP(int xpAmount) {
-        this.lastPickupXP = this.world.getServer().getCurrentTickTime();
-        this.setXP(this.xp + xpAmount);
+        this.lastPickupXP = this.world.getServer().currentTickTime();
+        this.xp(this.xp + xpAmount);
     }
 
     /**
@@ -1386,7 +1404,7 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
      * @return
      */
     public boolean canPickupXP() {
-        return this.world.getServer().getCurrentTickTime() - this.lastPickupXP >= 50;
+        return this.world.getServer().currentTickTime() - this.lastPickupXP >= Values.CLIENT_TICK_MS;
     }
 
     private int calculateRequiredExperienceForLevel(int level) {
@@ -1400,27 +1418,28 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
     }
 
     @Override
-    public float getXPPercentage() {
-        return this.getAttribute(Attribute.EXPERIENCE);
+    public float xpPercentage() {
+        return this.attribute(Attribute.EXPERIENCE);
     }
 
     @Override
-    public int getXP() {
+    public int xp() {
         return this.xp;
     }
 
     @Override
-    public void setXP(int xp) {
+    public EntityPlayer xp(int xp) {
         // Iterate levels until we have a new xp percentage value to set
         int neededXP, tempXP = xp, level = 0;
-        while (tempXP > (neededXP = calculateRequiredExperienceForLevel(getLevel()))) {
+        while (tempXP > (neededXP = calculateRequiredExperienceForLevel(level()))) {
             tempXP -= neededXP;
             level++;
         }
 
         this.xp = xp;
-        this.setAttribute(Attribute.EXPERIENCE, tempXP / (float) neededXP);
-        this.setLevel(level);
+        this.attribute(Attribute.EXPERIENCE, tempXP / (float) neededXP);
+        this.level(level);
+        return this;
     }
 
     protected boolean shouldTickHunger() {
@@ -1428,60 +1447,67 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
     }
 
     @Override
-    public int getLevel() {
-        return (int) this.getAttribute(Attribute.EXPERIENCE_LEVEL);
+    public int level() {
+        return (int) this.attribute(Attribute.EXPERIENCE_LEVEL);
     }
 
     @Override
-    public void setLevel(int level) {
-        this.setAttribute(Attribute.EXPERIENCE_LEVEL, level);
+    public EntityPlayer level(int level) {
+        this.attribute(Attribute.EXPERIENCE_LEVEL, level);
+        return this;
     }
 
     @Override
-    public void playSound(Vector location, Sound sound, byte pitch, SoundData data) {
+    public EntityPlayer playSound(Vector location, Sound sound, byte pitch, SoundData data) {
         this.world.playSound(this, location, sound, pitch, data);
+        return this;
     }
 
     @Override
-    public void playSound(Vector location, Sound sound, byte pitch) {
+    public EntityPlayer playSound(Vector location, Sound sound, byte pitch) {
         this.world.playSound(this, location, sound, pitch, -1);
+        return this;
     }
 
     @Override
-    public void sendParticle(Vector location, Particle particle) {
+    public EntityPlayer sendParticle(Vector location, Particle particle) {
         this.world.sendParticle(this, location, particle, 0);
+        return this;
     }
 
     @Override
-    public void sendParticle(Vector location, Particle particle, ParticleData data) {
+    public EntityPlayer sendParticle(Vector location, Particle particle, ParticleData data) {
         this.world.sendParticle(this, location, particle, data);
+        return this;
     }
 
     @Override
-    public boolean getAllowFlight() {
+    public boolean allowFlight() {
         return this.adventureSettings.isCanFly();
     }
 
     @Override
-    public void setAllowFlight(boolean value) {
+    public EntityPlayer allowFlight(boolean value) {
         this.metadataContainer.setDataFlag(MetadataContainer.DATA_INDEX, EntityFlag.CAN_FLY, value);
         this.adventureSettings.setCanFly(value);
         this.adventureSettings.update();
+        return this;
     }
 
     @Override
-    public boolean getFlying() {
+    public boolean flying() {
         return this.adventureSettings.isFlying();
     }
 
     @Override
-    public void setFlying(boolean value) {
+    public EntityPlayer flying(boolean value) {
         this.adventureSettings.setFlying(value);
         this.adventureSettings.update();
+        return this;
     }
 
     @Override
-    public void sendTitle(String title, String subtitle, long fadein, long duration, long fadeout, TimeUnit unit) {
+    public EntityPlayer sendTitle(String title, String subtitle, long fadein, long duration, long fadeout, TimeUnit unit) {
         // NPE check
         if (title == null) {
             title = "";
@@ -1491,53 +1517,54 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
             PacketSetTitle subtitlePacket = new PacketSetTitle();
             subtitlePacket.setType(PacketSetTitle.TitleType.TYPE_SUBTITLE.getId());
             subtitlePacket.setText(subtitle);
-            subtitlePacket.setFadeInTime((int) unit.toMillis(fadein) / 50);
-            subtitlePacket.setStayTime((int) unit.toMillis(duration) / 50);
-            subtitlePacket.setFadeOutTime((int) unit.toMillis(fadeout) / 50);
-            this.getConnection().addToSendQueue(subtitlePacket);
+            subtitlePacket.setFadeInTime((int) unit.toMillis(fadein) / (int) Values.CLIENT_TICK_MS);
+            subtitlePacket.setStayTime((int) unit.toMillis(duration) / (int) Values.CLIENT_TICK_MS);
+            subtitlePacket.setFadeOutTime((int) unit.toMillis(fadeout) / (int) Values.CLIENT_TICK_MS);
+            this.connection().addToSendQueue(subtitlePacket);
         }
 
         PacketSetTitle titlePacket = new PacketSetTitle();
         titlePacket.setType(PacketSetTitle.TitleType.TYPE_TITLE.getId());
         titlePacket.setText(title);
-        titlePacket.setFadeInTime((int) unit.toMillis(fadein) / 50);
-        titlePacket.setStayTime((int) unit.toMillis(duration) / 50);
-        titlePacket.setFadeOutTime((int) unit.toMillis(fadeout) / 50);
-        this.getConnection().addToSendQueue(titlePacket);
+        titlePacket.setFadeInTime((int) unit.toMillis(fadein) / (int) Values.CLIENT_TICK_MS);
+        titlePacket.setStayTime((int) unit.toMillis(duration) / (int) Values.CLIENT_TICK_MS);
+        titlePacket.setFadeOutTime((int) unit.toMillis(fadeout) / (int) Values.CLIENT_TICK_MS);
+        this.connection().addToSendQueue(titlePacket);
+        return this;
     }
 
     @Override
-    public void sendTitle(String title) {
-        this.sendTitle(title, "", 1, 1, (long) 0.5, TimeUnit.SECONDS);
+    public EntityPlayer sendTitle(String title) {
+        return this.sendTitle(title, "", 1, 1, (long) 0.5, TimeUnit.SECONDS);
     }
 
     @Override
-    public void sendTitle(String title, String subtitle) {
-        this.sendTitle(title, subtitle, 1, 1, (long) 0.5, TimeUnit.SECONDS);
+    public EntityPlayer sendTitle(String title, String subtitle) {
+        return this.sendTitle(title, subtitle, 1, 1, (long) 0.5, TimeUnit.SECONDS);
     }
 
     public void firstSpawn() {
         // Set location
-        this.getConnection().sendMovePlayer(this.getLocation());
+        this.connection().sendMovePlayer(this.location());
 
         // Set simulation speed
         PacketWorldEvent worldEvent = new PacketWorldEvent();
         worldEvent.setData(0);
         worldEvent.setEventId(LevelEvent.SIM_SPEED);
         worldEvent.setPosition(new Vector(1f, 1f, 1f));
-        this.getConnection().addToSendQueue(worldEvent);
+        this.connection().addToSendQueue(worldEvent);
 
         // Spawn for others
-        this.getWorld().spawnEntityAt(this, this.getPositionX(), this.getPositionY(), this.getPositionZ(), this.getYaw(), this.getPitch());
+        this.world().spawnEntityAt(this, this.positionX(), this.positionY(), this.positionZ(), this.yaw(), this.pitch());
 
         // Now its time for the join event since the player is fully loaded
-        PlayerJoinEvent event = this.eventCaller.callEvent(new PlayerJoinEvent(this, ChatColor.YELLOW + this.getDisplayName() + " joined the game."));
-        if (event.isCancelled()) {
-            this.connection.disconnect(event.getKickReason());
+        PlayerJoinEvent event = this.eventCaller.callEvent(new PlayerJoinEvent(this, ChatColor.YELLOW + this.displayName() + " joined the game."));
+        if (event.cancelled()) {
+            this.connection.disconnect(event.kickReason());
         } else {
-            if (event.getJoinMessage() != null && !event.getJoinMessage().isEmpty()) {
-                GoMint.instance().getPlayers().forEach((player) -> {
-                    player.sendMessage(event.getJoinMessage());
+            if (event.joinMessage() != null && !event.joinMessage().isEmpty()) {
+                GoMint.instance().onlinePlayers().forEach((player) -> {
+                    player.sendMessage(event.joinMessage());
                 });
             }
         }
@@ -1545,9 +1572,9 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
         this.hasCompletedLogin = true;
 
         // Send network chunk publisher packet after join
-        this.world.getServer().getScheduler().schedule(() -> {
-            if (isOnline()) {
-                getConnection().sendNetworkChunkPublisher();
+        this.world.getServer().scheduler().schedule(() -> {
+            if (online()) {
+                connection().sendNetworkChunkPublisher();
             }
         }, 250, TimeUnit.MILLISECONDS);
     }
@@ -1555,28 +1582,28 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
     @Override
     public Packet createSpawnPacket(EntityPlayer receiver) {
         PacketSpawnPlayer packetSpawnPlayer = new PacketSpawnPlayer();
-        packetSpawnPlayer.setUuid(this.getUUID());
-        packetSpawnPlayer.setName(this.getName());
-        packetSpawnPlayer.setEntityId(this.getEntityId());
-        packetSpawnPlayer.setRuntimeEntityId(this.getEntityId());
-        packetSpawnPlayer.setPlatformChatId(this.getDeviceInfo().getDeviceId());
+        packetSpawnPlayer.setUuid(this.uuid());
+        packetSpawnPlayer.setName(this.name());
+        packetSpawnPlayer.setEntityId(this.id());
+        packetSpawnPlayer.setRuntimeEntityId(this.id());
+        packetSpawnPlayer.setPlatformChatId(this.deviceInfo().deviceId());
 
-        packetSpawnPlayer.setX(this.getPositionX());
-        packetSpawnPlayer.setY(this.getPositionY());
-        packetSpawnPlayer.setZ(this.getPositionZ());
+        packetSpawnPlayer.setX(this.positionX());
+        packetSpawnPlayer.setY(this.positionY());
+        packetSpawnPlayer.setZ(this.positionZ());
 
         packetSpawnPlayer.setVelocityX(this.getMotionX());
         packetSpawnPlayer.setVelocityY(this.getMotionY());
         packetSpawnPlayer.setVelocityZ(this.getMotionZ());
 
-        packetSpawnPlayer.setPitch(this.getPitch());
-        packetSpawnPlayer.setYaw(this.getYaw());
-        packetSpawnPlayer.setHeadYaw(this.getHeadYaw());
+        packetSpawnPlayer.setPitch(this.pitch());
+        packetSpawnPlayer.setYaw(this.yaw());
+        packetSpawnPlayer.setHeadYaw(this.headYaw());
 
-        packetSpawnPlayer.setItemInHand(this.getInventory().getItemInHand());
-        packetSpawnPlayer.setMetadataContainer(this.getMetadata());
-        packetSpawnPlayer.setDeviceId(this.getDeviceInfo().getDeviceId());
-        packetSpawnPlayer.setBuildPlatform(this.getDeviceInfo().getOs().getId());
+        packetSpawnPlayer.setItemInHand(this.inventory().itemInHand());
+        packetSpawnPlayer.setMetadataContainer(this.metadata());
+        packetSpawnPlayer.setDeviceId(this.deviceInfo().deviceId());
+        packetSpawnPlayer.setBuildPlatform(this.deviceInfo().OS().id());
 
         return packetSpawnPlayer;
     }
@@ -1592,22 +1619,23 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
     }
 
     @Override
-    public boolean isGliding() {
+    public boolean gliding() {
         return this.metadataContainer.getDataFlag(MetadataContainer.DATA_INDEX, EntityFlag.GLIDING);
     }
 
     @Override
-    public void setGliding(boolean value) {
+    public EntityPlayer gliding(boolean value) {
         this.metadataContainer.setDataFlag(MetadataContainer.DATA_INDEX, EntityFlag.GLIDING, value);
+        return this;
     }
 
     @Override
-    public DeviceInfo getDeviceInfo() {
+    public DeviceInfo deviceInfo() {
         return this.connection.getDeviceInfo();
     }
 
     @Override
-    public InetSocketAddress getAddress() {
+    public InetSocketAddress address() {
         return this.connection.getConnection().getAddress();
     }
 
@@ -1618,7 +1646,7 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
         float dZ = this.getMotionZ();
 
         // Check if we collide with some blocks when we would move that fast
-        List<AxisAlignedBB> collisionList = this.world.getCollisionCubes(this, this.boundingBox.getOffsetBoundingBox(dX, dY, dZ), false);
+        List<AxisAlignedBB> collisionList = this.world.collisionCubes(this, this.boundingBox.offsetBoundingBox(dX, dY, dZ), false);
         if (collisionList != null) {
             // Check if we would hit a y border block
             for (AxisAlignedBB axisAlignedBB : collisionList) {
@@ -1629,40 +1657,44 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
                 dY = 0;
             }
 
-            this.getTransform().setMotion(dX, dY, dZ);
+            this.getTransform().motion(dX, dY, dZ);
         }
     }
 
     @Override
     public CommandOutput dispatchCommand(String command) {
-        return this.getConnection().getServer().getPluginManager().getCommandManager().dispatchCommand(this, command);
+        return this.connection().getServer().pluginManager().getCommandManager().dispatchCommand(this, command);
     }
 
     @Override
-    public void setSpawnLocation(Location spawnLocation) {
+    public EntityPlayer spawnLocation(Location spawnLocation) {
         this.spawnLocation = spawnLocation;
         this.connection.sendPlayerSpawnPosition();
+        return this;
     }
 
     @Override
-    public void setScoreboard(io.gomint.scoreboard.Scoreboard scoreboard) {
+    public EntityPlayer scoreboard(io.gomint.scoreboard.Scoreboard scoreboard) {
         this.removeScoreboard();
 
         this.scoreboard = (Scoreboard) scoreboard;
         this.scoreboard.showFor(this);
+        return this;
     }
 
     @Override
-    public void removeScoreboard() {
+    public EntityPlayer removeScoreboard() {
         if (this.scoreboard != null) {
             this.scoreboard.hideFor(this);
             this.scoreboard = null;
         }
+
+        return this;
     }
 
     public void setUsingItem(boolean value) {
         if (value) {
-            this.actionStart = ((GoMintServer) GoMint.instance()).getCurrentTickTime();
+            this.actionStart = ((GoMintServer) GoMint.instance()).currentTickTime();
             this.metadataContainer.setDataFlag(MetadataContainer.DATA_INDEX, EntityFlag.ACTION, true);
         } else {
             this.actionStart = -1;
@@ -1710,63 +1742,64 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
         return this.connection.knowsChunk(CoordinateUtils.toLong(posX, posZ));
     }
 
-    public io.gomint.permission.PermissionManager getPermissionManager() {
+    public io.gomint.permission.PermissionManager permissionManager() {
         return permissionManager;
     }
 
-    public void setPermissionManager(io.gomint.permission.PermissionManager permissionManager) {
+    public EntityPlayer permissionManager(io.gomint.permission.PermissionManager permissionManager) {
         Class<? extends Plugin> plugin = CallerDetectorUtil.getCallerPlugin();
         LOGGER.warn("Plugin {} swapped out permission manager with {}", plugin.getName(), permissionManager.getClass().getName());
 
         this.permissionManager = permissionManager;
         this.isUsingDefaultPermissionManager = this.permissionManager instanceof PermissionManager;
+        return this;
     }
 
-    public EntityVisibilityManager getEntityVisibilityManager() {
+    public EntityVisibilityManager entityVisibilityManager() {
         return entityVisibilityManager;
     }
 
-    public AdventureSettings getAdventureSettings() {
+    public AdventureSettings adventureSettings() {
         return adventureSettings;
     }
 
-    public Entity getHoverEntity() {
+    public Entity<?> hoverEntity() {
         return hoverEntity;
     }
 
-    public void setHoverEntity(Entity hoverEntity) {
+    public void hoverEntity(Entity <?>hoverEntity) {
         this.hoverEntity = hoverEntity;
     }
 
-    public Inventory getCraftingInventory() {
+    public Inventory<?> craftingInventory() {
         return craftingInventory;
     }
 
-    public CraftingInputInventory getCraftingInputInventory() {
+    public CraftingInputInventory craftingInputInventory() {
         return craftingInputInventory;
     }
 
-    public BlockPosition getBreakVector() {
+    public BlockPosition breakVector() {
         return breakVector;
     }
 
-    public long getStartBreak() {
+    public long startBreak() {
         return startBreak;
     }
 
-    public long getBreakTime() {
+    public long breakTime() {
         return breakTime;
     }
 
-    public Set<BlockPosition> getBlockUpdates() {
+    public Set<BlockPosition> blockUpdates() {
         return blockUpdates;
     }
 
-    public Location getTeleportPosition() {
+    public Location teleportPosition() {
         return teleportPosition;
     }
 
-    public void setBreakVector(BlockPosition breakVector) {
+    public void breakVector(BlockPosition breakVector) {
         this.breakVector = breakVector;
     }
 
@@ -1781,7 +1814,6 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
     public void setTeleportPosition(Location teleportPosition) {
         this.teleportPosition = teleportPosition;
     }
-
 
     public void setFishingHook(EntityFishingHook fishingHook) {
         this.fishingHook = fishingHook;
@@ -1799,15 +1831,16 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
         return fishingHook;
     }
 
-    public Location getSpawnLocation() {
+    @Override
+    public Location spawnLocation() {
         return spawnLocation;
     }
 
-    public long getActionStart() {
+    public long actionStart() {
         return actionStart;
     }
 
-    public LoginPerformance getLoginPerformance() {
+    public LoginPerformance loginPerformance() {
         return loginPerformance;
     }
 
@@ -1819,12 +1852,13 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
         return spawnPlayers;
     }
 
-    public Scoreboard getScoreboard() {
+    @Override
+    public Scoreboard scoreboard() {
         return scoreboard;
     }
 
     @Override
-    public EnderChestInventory getEnderChestInventory() {
+    public EnderChestInventory enderChestInventory() {
         return enderChestInventory;
     }
 
@@ -1833,19 +1867,19 @@ public class EntityPlayer extends EntityHuman implements io.gomint.entity.Entity
     }
 
     public void resetActionStart() {
-        this.actionStart = ((GoMintServer) GoMint.instance()).getCurrentTickTime();
+        this.actionStart = ((GoMintServer) GoMint.instance()).currentTickTime();
     }
 
     @Override
-    public Set<String> getTags() {
+    public Set<String> tags() {
         return EntityTags.PLAYER;
     }
 
-    public Inventory getCurrentOpenContainer() {
+    public Inventory<?> currentOpenContainer() {
         return this.currentOpenContainer;
     }
 
-    public long getEnchantmentSeed() {
+    public long enchantmentSeed() {
         return enchantmentSeed;
     }
 

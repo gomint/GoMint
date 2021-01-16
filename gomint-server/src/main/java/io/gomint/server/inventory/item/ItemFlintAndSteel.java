@@ -22,10 +22,10 @@ import io.gomint.world.block.data.Facing;
  */
 @CanBeDamaged
 @RegisterInfo( sId = "minecraft:flint_and_steel", id = 259 )
-public class ItemFlintAndSteel extends ItemStack implements io.gomint.inventory.item.ItemFlintAndSteel {
+public class ItemFlintAndSteel extends ItemStack< io.gomint.inventory.item.ItemFlintAndSteel> implements io.gomint.inventory.item.ItemFlintAndSteel {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.FLINT_AND_STEEL;
     }
 
@@ -35,7 +35,7 @@ public class ItemFlintAndSteel extends ItemStack implements io.gomint.inventory.
             return false; // We clicked in air, ignore
         }
 
-        clickedBlock.getSide(face).setBlockType(BlockFire.class);
+        clickedBlock.side(face).blockType(BlockFire.class);
         return true;
     }
 
@@ -43,7 +43,9 @@ public class ItemFlintAndSteel extends ItemStack implements io.gomint.inventory.
      * Rather than decrease the amount of the item in the inventory, damage is applied.
      */
     @Override
-    public void afterPlacement() {
+    public io.gomint.inventory.item.ItemFlintAndSteel afterPlacement() {
         this.calculateUsageAndUpdate(1);
+        return this;
     }
+
 }

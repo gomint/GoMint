@@ -10,21 +10,23 @@ package io.gomint.server.inventory.item;
 import io.gomint.inventory.item.ItemType;
 import io.gomint.server.registry.RegisterInfo;
 
+import java.time.Duration;
+
 /**
  * @author Kaooot
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:dried_kelp_block", id = -139 )
-public class ItemDriedKelpBlock extends ItemStack implements io.gomint.inventory.item.ItemDriedKelpBlock {
+public class ItemDriedKelpBlock extends ItemStack< io.gomint.inventory.item.ItemDriedKelpBlock> implements io.gomint.inventory.item.ItemDriedKelpBlock {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.DRIED_KELP_BLOCK;
     }
 
     @Override
-    public long getBurnTime() {
-        return 200000;
+    public Duration burnTime() {
+        return Duration.ofMillis(200000);
     }
 
 }

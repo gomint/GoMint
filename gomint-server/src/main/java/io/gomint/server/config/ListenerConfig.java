@@ -21,15 +21,15 @@ public class ListenerConfig extends YamlConfig {
     private int port = 19132;
     private boolean useUPNP = true;
 
-    public boolean isUseUPNP() {
+    public boolean useUPNP() {
         return useUPNP;
     }
 
-    public String getIp() {
+    public String ip() {
         return ip;
     }
 
-    public int getPort() {
+    public int port() {
         return port;
     }
 

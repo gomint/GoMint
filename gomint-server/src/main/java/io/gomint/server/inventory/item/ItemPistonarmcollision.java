@@ -15,10 +15,10 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:pistonarmcollision", id = 34 )
-public class ItemPistonarmcollision extends ItemStack implements io.gomint.inventory.item.ItemPistonarmcollision {
+public class ItemPistonarmcollision extends ItemStack< io.gomint.inventory.item.ItemPistonarmcollision> implements io.gomint.inventory.item.ItemPistonarmcollision {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.PISTONARMCOLLISION;
     }
 

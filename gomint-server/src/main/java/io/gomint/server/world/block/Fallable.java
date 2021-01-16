@@ -26,14 +26,14 @@ public abstract class Fallable extends Block {
         LOGGER.debug("Updating falling state for {}", this.location);
 
         // Check if the downside block can be replaced
-        Block downwards = this.getSide(Facing.DOWN);
+        Block downwards = this.side(Facing.DOWN);
         if (downwards.canBeReplaced(null)) {
             // Create entity
             EntityFallingBlock entity = EntityFallingBlock.create();
-            entity.setBlock(this);
+            entity.block(this);
 
             // Replace block with air
-            this.setBlockType(Air.class);
+            this.blockType(Air.class);
 
             // Spawn entity
             entity.spawn(this.location.add(0.5f, 0, 0.5f));

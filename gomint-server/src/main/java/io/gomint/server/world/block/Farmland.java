@@ -28,12 +28,12 @@ public class Farmland extends Block implements BlockFarmland {
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 900;
     }
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
@@ -85,7 +85,7 @@ public class Farmland extends Block implements BlockFarmland {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.FARMLAND;
     }
 
@@ -95,18 +95,19 @@ public class Farmland extends Block implements BlockFarmland {
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return ToolPresets.SHOVEL;
     }
 
     @Override
-    public float getMoisture() {
+    public float moisture() {
         return WATER_LEVEL.getState(this);
     }
 
     @Override
-    public void setMoisture(float moisture) {
+    public BlockFarmland moisture(float moisture) {
         WATER_LEVEL.setState(this, moisture);
+        return this;
     }
 
 }

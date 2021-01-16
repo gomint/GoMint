@@ -15,7 +15,7 @@ import io.gomint.entity.EntityAgeable;
  * @version 1.0
  * @stability 3
  */
-public interface EntityWolf extends EntityAgeable {
+public interface EntityWolf extends EntityAgeable<EntityWolf> {
 
     /**
      * Create a new entity wolf with no config

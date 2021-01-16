@@ -20,19 +20,19 @@ public class Cactus extends Block implements BlockCactus {
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 600;
     }
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
     @Override
-    public void onEntityCollision( Entity entity ) {
+    public void onEntityCollision(Entity<?> entity ) {
         if ( entity instanceof EntityLiving ) {
-            ( (EntityLiving) entity ).attack( 1.0f, EntityDamageEvent.DamageSource.CACTUS );
+            ( (EntityLiving<?>) entity ).attack( 1.0f, EntityDamageEvent.DamageSource.CACTUS );
         }
     }
 
@@ -42,7 +42,7 @@ public class Cactus extends Block implements BlockCactus {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.CACTUS;
     }
 

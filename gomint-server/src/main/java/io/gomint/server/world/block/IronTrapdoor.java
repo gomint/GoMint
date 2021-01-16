@@ -12,20 +12,15 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:iron_trapdoor" )
-public class IronTrapdoor extends Trapdoor implements BlockIronTrapdoor {
+public class IronTrapdoor extends Trapdoor<BlockIronTrapdoor> implements BlockIronTrapdoor {
 
     @Override
-    public String getBlockId() {
-        return "minecraft:iron_trapdoor";
-    }
-
-    @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 7500;
     }
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
@@ -35,7 +30,7 @@ public class IronTrapdoor extends Trapdoor implements BlockIronTrapdoor {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.IRON_TRAPDOOR;
     }
 
@@ -45,7 +40,7 @@ public class IronTrapdoor extends Trapdoor implements BlockIronTrapdoor {
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return ToolPresets.PICKAXE;
     }
 

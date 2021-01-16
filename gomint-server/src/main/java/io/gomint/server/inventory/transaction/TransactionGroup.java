@@ -23,11 +23,11 @@ public class TransactionGroup {
     private static final Logger LOGGER = LoggerFactory.getLogger( TransactionGroup.class );
 
     private final EntityPlayer player;
-    private final List<Transaction> transactions = new ArrayList<>();
+    private final List<Transaction<?, ?, ?>> transactions = new ArrayList<>();
 
     // Need / have for this transactions
-    private List<ItemStack> haveItems = new ArrayList<>();
-    private List<ItemStack> needItems = new ArrayList<>();
+    private List<ItemStack<?>> haveItems = new ArrayList<>();
+    private List<ItemStack<?>> needItems = new ArrayList<>();
 
     // Matched
     private boolean matchItems;
@@ -36,7 +36,7 @@ public class TransactionGroup {
         this.player = player;
     }
 
-    public List<Transaction> getTransactions() {
+    public List<Transaction<?, ?, ?>> getTransactions() {
         return transactions;
     }
 
@@ -45,7 +45,7 @@ public class TransactionGroup {
      *
      * @param transaction The transaction which should be added
      */
-    public void addTransaction( Transaction transaction ) {
+    public void addTransaction( Transaction<?, ?, ?> transaction ) {
         // Check if not already added
         if ( this.transactions.contains( transaction ) ) {
             return;
@@ -62,17 +62,17 @@ public class TransactionGroup {
 
 
         // Check all transactions for needed and having items
-        for ( Transaction ts : this.transactions ) {
-            if ( !( ts.getTargetItem() instanceof ItemAir ) ) {
-                this.needItems.add( ( (io.gomint.server.inventory.item.ItemStack) ts.getTargetItem() ).clone() );
+        for ( Transaction<?, ?, ?> ts : this.transactions ) {
+            if ( !( ts.targetItem() instanceof ItemAir ) ) {
+                this.needItems.add( ( (io.gomint.server.inventory.item.ItemStack<?>) ts.targetItem() ).clone() );
             }
 
-            ItemStack sourceItem = ts.getSourceItem() != null ? ( (io.gomint.server.inventory.item.ItemStack) ts.getSourceItem() ).clone() : null;
+            ItemStack<?> sourceItem = ts.sourceItem() != null ? ( (io.gomint.server.inventory.item.ItemStack<?>) ts.sourceItem() ).clone() : null;
             if ( ts.hasInventory() && sourceItem != null ) {
-                ItemStack checkSourceItem = ts.getInventory().getItem( ts.getSlot() );
+                ItemStack<?> checkSourceItem = ts.inventory().item( ts.slot() );
 
                 // Check if source inventory changed during transaction
-                if ( !checkSourceItem.equals( sourceItem ) || sourceItem.getAmount() != checkSourceItem.getAmount() ) {
+                if ( !checkSourceItem.equals( sourceItem ) || sourceItem.amount() != checkSourceItem.amount() ) {
                     this.matchItems = false;
                     return;
                 }
@@ -84,18 +84,18 @@ public class TransactionGroup {
         }
 
         // Now check if we have items left which are needed
-        for ( ItemStack needItem : new ArrayList<>( this.needItems ) ) {
-            for ( ItemStack haveItem : new ArrayList<>( this.haveItems ) ) {
+        for ( ItemStack<?> needItem : new ArrayList<>( this.needItems ) ) {
+            for ( ItemStack<?> haveItem : new ArrayList<>( this.haveItems ) ) {
                 if ( needItem.equals( haveItem ) ) {
-                    int amount = Math.min( haveItem.getAmount(), needItem.getAmount() );
-                    needItem.setAmount( needItem.getAmount() - amount );
-                    haveItem.setAmount( haveItem.getAmount() - amount );
+                    int amount = Math.min( haveItem.amount(), needItem.amount() );
+                    needItem.amount( needItem.amount() - amount );
+                    haveItem.amount( haveItem.amount() - amount );
 
-                    if ( haveItem.getAmount() == 0 ) {
+                    if ( haveItem.amount() == 0 ) {
                         this.haveItems.remove( haveItem );
                     }
 
-                    if ( needItem.getAmount() == 0 ) {
+                    if ( needItem.amount() == 0 ) {
                         this.needItems.remove( needItem );
                         break;
                     }
@@ -107,37 +107,37 @@ public class TransactionGroup {
     }
 
     private void mergeTransactions() {
-        Map<Inventory, Map<Integer, List<Transaction>>> mergedTransactions = new HashMap<>();
+        Map<Inventory<?>, Map<Integer, List<Transaction<?, ?, ?>>>> mergedTransactions = new HashMap<>();
 
-        for ( Transaction transaction : this.transactions ) {
+        for ( Transaction<?, ?, ?> transaction : this.transactions ) {
             if ( transaction.hasInventory() ) {
-                Map<Integer, List<Transaction>> slotTransactions = mergedTransactions.computeIfAbsent( transaction.getInventory(), inventory -> new HashMap<>() );
-                slotTransactions.computeIfAbsent( transaction.getSlot(), integer -> new ArrayList<>() ).add( transaction );
+                Map<Integer, List<Transaction<?, ?, ?>>> slotTransactions = mergedTransactions.computeIfAbsent( transaction.inventory(), inventory -> new HashMap<>() );
+                slotTransactions.computeIfAbsent( transaction.slot(), integer -> new ArrayList<>() ).add( transaction );
             }
         }
 
-        for ( Map.Entry<Inventory, Map<Integer, List<Transaction>>> inventoryMapEntry : mergedTransactions.entrySet() ) {
-            for ( Map.Entry<Integer, List<Transaction>> slotEntry : inventoryMapEntry.getValue().entrySet() ) {
+        for ( Map.Entry<Inventory<?>, Map<Integer, List<Transaction<?, ?, ?>>>> inventoryMapEntry : mergedTransactions.entrySet() ) {
+            for ( Map.Entry<Integer, List<Transaction<?, ?, ?>>> slotEntry : inventoryMapEntry.getValue().entrySet() ) {
                 if ( slotEntry.getValue().size() > 1 ) {
                     LOGGER.debug( "Merging slot {} for inventory {}", slotEntry.getKey(), inventoryMapEntry.getKey() );
 
-                    List<Transaction> transactions = slotEntry.getValue();
-                    List<Transaction> original = new ArrayList<>( transactions );
-                    ItemStack lastTargetItem = null;
-                    InventoryTransaction startTransaction = null;
+                    List<Transaction<?, ?, ?>> transactions = slotEntry.getValue();
+                    List<Transaction<?, ?, ?>> original = new ArrayList<>( transactions );
+                    ItemStack<?> lastTargetItem = null;
+                    InventoryTransaction<?, ?, ?> startTransaction = null;
 
                     for ( int i = 0; i < transactions.size(); i++ ) {
-                        Transaction ts = transactions.get( i );
+                        Transaction<?, ?, ?> ts = transactions.get( i );
 
-                        ItemStack sourceItem = ts.getSourceItem() != null ? ( (io.gomint.server.inventory.item.ItemStack) ts.getSourceItem() ).clone() : null;
+                        ItemStack<?> sourceItem = ts.sourceItem() != null ? ( (io.gomint.server.inventory.item.ItemStack<?>) ts.sourceItem() ).clone() : null;
                         if ( ts.hasInventory() && sourceItem != null ) {
-                            ItemStack checkSourceItem = ts.getInventory().getItem( ts.getSlot() );
+                            ItemStack<?> checkSourceItem = ts.inventory().item( ts.slot() );
 
                             // Check if source inventory changed during transaction
-                            if ( checkSourceItem.equals( sourceItem ) && sourceItem.getAmount() == checkSourceItem.getAmount() ) {
+                            if ( checkSourceItem.equals( sourceItem ) && sourceItem.amount() == checkSourceItem.amount() ) {
                                 transactions.remove( i );
-                                startTransaction = (InventoryTransaction) ts;
-                                lastTargetItem = ts.getTargetItem();
+                                startTransaction = (InventoryTransaction<?, ?, ?>) ts;
+                                lastTargetItem = ts.targetItem();
                                 break;
                             }
                         }
@@ -152,17 +152,17 @@ public class TransactionGroup {
                     do {
                         sortedThisLoop = 0;
                         for ( int i = 0; i < transactions.size(); i++ ) {
-                            Transaction ts = transactions.get( i );
+                            Transaction<?, ?, ?> ts = transactions.get( i );
 
-                            ItemStack actionSource = ts.getSourceItem();
-                            if ( actionSource.equals( lastTargetItem ) && actionSource.getAmount() == lastTargetItem.getAmount() ) {
-                                lastTargetItem = ts.getTargetItem();
+                            ItemStack<?> actionSource = ts.sourceItem();
+                            if ( actionSource.equals( lastTargetItem ) && actionSource.amount() == lastTargetItem.amount() ) {
+                                lastTargetItem = ts.targetItem();
                                 transactions.remove( i );
                                 sortedThisLoop++;
                             } else if ( actionSource.equals( lastTargetItem ) ) {
-                                lastTargetItem.setAmount( lastTargetItem.getAmount() - actionSource.getAmount() );
+                                lastTargetItem.amount( lastTargetItem.amount() - actionSource.amount() );
                                 transactions.remove( i );
-                                if ( lastTargetItem.getAmount() == 0 ) {
+                                if ( lastTargetItem.amount() == 0 ) {
                                     sortedThisLoop++;
                                 }
                             }
@@ -174,11 +174,12 @@ public class TransactionGroup {
                         return;
                     }
 
-                    for ( Transaction transaction : original ) {
+                    for ( Transaction<?, ?, ?> transaction : original ) {
                         this.transactions.remove( transaction );
                     }
 
-                    this.transactions.add( new InventoryTransaction( startTransaction.getOwner(), startTransaction.getInventory(), startTransaction.getSlot(), startTransaction.getSourceItem(), lastTargetItem, startTransaction.getInventoryWindowId() ) );
+                    this.transactions.add( new InventoryTransaction<>( startTransaction.getOwner(), startTransaction.inventory(),
+                        startTransaction.slot(), startTransaction.sourceItem(), lastTargetItem, startTransaction.getInventoryWindowId() ) );
                     LOGGER.debug( "Successfully compacted {} actions", original.size() );
                 }
             }
@@ -196,10 +197,10 @@ public class TransactionGroup {
 
         boolean matched = this.matchItems && this.haveItems.isEmpty() && this.needItems.isEmpty() && !this.transactions.isEmpty();
         if ( matched ) {
-            List<io.gomint.inventory.transaction.Transaction> transactionList = new ArrayList<>( this.transactions );
+            List<io.gomint.inventory.transaction.Transaction<?, ?, ?>> transactionList = new ArrayList<>( this.transactions );
             InventoryTransactionEvent transactionEvent = new InventoryTransactionEvent( this.player, transactionList );
-            this.player.getWorld().getServer().getPluginManager().callEvent( transactionEvent );
-            return !transactionEvent.isCancelled();
+            this.player.world().getServer().pluginManager().callEvent( transactionEvent );
+            return !transactionEvent.cancelled();
         }
 
         return false;
@@ -212,13 +213,13 @@ public class TransactionGroup {
      */
     public boolean execute( boolean forceExecute ) {
         if ( this.canExecute() || forceExecute ) {
-            for ( Transaction transaction : this.transactions ) {
+            for ( Transaction<?, ?, ?> transaction : this.transactions ) {
                 transaction.commit();
             }
 
             return true;
         } else {
-            for ( Transaction transaction : this.transactions ) {
+            for ( Transaction<?, ?, ?> transaction : this.transactions ) {
                 transaction.revert();
             }
         }

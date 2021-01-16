@@ -53,12 +53,12 @@ public class Fence extends Block implements BlockFence {
     });
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 3000;
     }
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
@@ -68,7 +68,7 @@ public class Fence extends Block implements BlockFence {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.FENCE;
     }
 
@@ -78,12 +78,12 @@ public class Fence extends Block implements BlockFence {
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return ToolPresets.AXE;
     }
 
     @Override
-    public LogType getWoodType() {
+    public LogType type() {
         switch (this.getBlockId()) {
             case "minecraft:crimson_fence":
                 return LogType.CRIMSON;
@@ -95,7 +95,7 @@ public class Fence extends Block implements BlockFence {
     }
 
     @Override
-    public void setWoodType(LogType logType) {
+    public BlockFence type(LogType logType) {
         LogTypeMagic newState = LogTypeMagic.valueOf(logType.name());
 
         if (!newState.value.isEmpty()) {
@@ -105,6 +105,8 @@ public class Fence extends Block implements BlockFence {
         if (!this.getBlockId().equals(newState.blockId)) {
             this.setBlockId(newState.blockId);
         }
+
+        return this;
     }
 
 }

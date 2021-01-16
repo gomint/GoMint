@@ -28,18 +28,19 @@ public abstract class Form<R> implements io.gomint.gui.Form<R> {
     public abstract String getFormType();
 
     @Override
-    public void setIcon( String icon ) {
+    public Form<R> icon(String icon ) {
         this.icon = icon;
         this.dirty = true;
+        return this;
     }
 
     @Override
-    public String getIcon() {
+    public String icon() {
         return this.icon;
     }
 
     @Override
-    public String getTitle() {
+    public String title() {
         return this.title;
     }
 
@@ -52,7 +53,7 @@ public abstract class Form<R> implements io.gomint.gui.Form<R> {
         // Basic data
         JSONObject obj = new JSONObject();
         obj.put( "type", this.getFormType() );
-        obj.put( "title", this.getTitle() );
+        obj.put( "title", this.title() );
         obj.put( "content", new JSONArray() );
 
         // Check if we have a icon
@@ -74,8 +75,9 @@ public abstract class Form<R> implements io.gomint.gui.Form<R> {
      */
     public abstract R parseResponse( String json );
 
-    public void setDirty() {
+    public Form<R> dirty() {
         this.dirty = true;
+        return this;
     }
 
 }

@@ -17,7 +17,6 @@ import io.gomint.server.GoMintServer;
 import io.gomint.server.entity.EntityPlayer;
 import io.gomint.server.plugin.PluginClassloader;
 import io.gomint.server.util.Allocator;
-import io.gomint.server.util.BlockIdentifier;
 import io.gomint.server.world.BlockRuntimeIDs;
 import io.gomint.server.world.ChunkAdapter;
 import io.gomint.server.world.ChunkCache;
@@ -95,8 +94,8 @@ public class LevelDBWorldAdapter extends WorldAdapter {
         this.constructGenerator(generator, context);
 
         // Generate a spawnpoint
-        BlockPosition spawnPoint = this.chunkGenerator.getSpawnPoint();
-        this.spawn = new Location(this, spawnPoint.getX(), spawnPoint.getY(), spawnPoint.getZ());
+        BlockPosition spawnPoint = this.chunkGenerator.spawnPoint();
+        this.spawn = new Location(this, spawnPoint.x(), spawnPoint.y(), spawnPoint.z());
 
         // Take over level name
         this.levelName = name;
@@ -197,9 +196,9 @@ public class LevelDBWorldAdapter extends WorldAdapter {
         compound.addValue("StorageVersion", 8);
 
         // Spawn
-        compound.addValue("SpawnX", (int) this.spawn.getX());
-        compound.addValue("SpawnY", (int) this.spawn.getY());
-        compound.addValue("SpawnZ", (int) this.spawn.getZ());
+        compound.addValue("SpawnX", (int) this.spawn.x());
+        compound.addValue("SpawnY", (int) this.spawn.y());
+        compound.addValue("SpawnZ", (int) this.spawn.z());
         compound.addValue("Difficulty", this.difficulty.getDifficultyDegree());
 
         // Level name
@@ -209,8 +208,8 @@ public class LevelDBWorldAdapter extends WorldAdapter {
         compound.addValue("Time", (long) this.worldTime);
 
         // Gamerules
-        for (Map.Entry<Gamerule, Object> entry : this.gamerules.entrySet()) {
-            compound.addValue(entry.getKey().getNbtName(), entry.getKey().createNBTValue(entry.getValue()));
+        for (Map.Entry<Gamerule<?>, Object> entry : this.gamerules.entrySet()) {
+            compound.addValue(entry.getKey().name(), entry.getKey().createNBTValue(entry.getValue()));
         }
 
         // Save generator
@@ -230,14 +229,14 @@ public class LevelDBWorldAdapter extends WorldAdapter {
     private void saveGenerator(NBTTagCompound compound) {
         if (this.chunkGenerator instanceof NormalGenerator) {
             compound.addValue("Generator", 1);
-            compound.addValue("RandomSeed", (long) this.chunkGenerator.getContext().get("seed"));
+            compound.addValue("RandomSeed", (long) this.chunkGenerator.context().get("seed"));
         } else if (this.chunkGenerator instanceof LayeredGenerator) {
             compound.addValue("Generator", 2);
             compound.addValue("FlatWorldLayers", "{}"); // TODO: Better persist solution for generators
         } else {
             compound.addValue("Generator", -1);
             compound.addValue("GeneratorClass", this.chunkGenerator.getClass().getName());
-            compound.addValue("GeneratorContext", this.chunkGenerator.getContext().toString());
+            compound.addValue("GeneratorContext", this.chunkGenerator.context().toString());
         }
     }
 
@@ -256,15 +255,17 @@ public class LevelDBWorldAdapter extends WorldAdapter {
     }
 
     @Override
-    public void setSpawnLocation(Location location) {
-        super.setSpawnLocation(location);
+    public WorldAdapter spawnLocation(Location location) {
+        super.spawnLocation(location);
         this.sneakySaveLevelDat();
+        return this;
     }
 
     @Override
-    public void setDifficulty(Difficulty difficulty) {
-        super.setDifficulty(difficulty);
+    public WorldAdapter difficulty(Difficulty difficulty) {
+        super.difficulty(difficulty);
         this.sneakySaveLevelDat();
+        return this;
     }
 
     @Override
@@ -307,7 +308,7 @@ public class LevelDBWorldAdapter extends WorldAdapter {
                                     String blockId = ((String) layerConfig.get("block_name"));
                                     byte blockData = ((Long) layerConfig.get("block_data")).byteValue();
 
-                                    Block block = this.server.getBlocks().get(BlockRuntimeIDs.toBlockIdentifier(blockId, null));
+                                    Block block = this.server.blocks().get(BlockRuntimeIDs.toBlockIdentifier(blockId, null));
                                     for ( int i = 0; i < count; i++ ) {
                                         blocks.add( block );
                                     }
@@ -390,13 +391,13 @@ public class LevelDBWorldAdapter extends WorldAdapter {
                         LevelDBWorldAdapter.this.levelName = (String) value;
                         break;
                     case ".SpawnX":
-                        LevelDBWorldAdapter.this.spawn.setX((int) value);
+                        LevelDBWorldAdapter.this.spawn.x((int) value);
                         break;
                     case ".SpawnY":
-                        LevelDBWorldAdapter.this.spawn.setY((int) value);
+                        LevelDBWorldAdapter.this.spawn.y((int) value);
                         break;
                     case ".SpawnZ":
-                        LevelDBWorldAdapter.this.spawn.setZ((int) value);
+                        LevelDBWorldAdapter.this.spawn.z((int) value);
                         break;
                     case ".StorageVersion":
                         LevelDBWorldAdapter.this.worldVersion = (int) value;
@@ -406,9 +407,9 @@ public class LevelDBWorldAdapter extends WorldAdapter {
                         break;
                     default:
                         // Check for game rule
-                        Gamerule gamerule = Gamerule.getByNbtName(path.substring(1));
+                        Gamerule<?> gamerule = Gamerule.byNBTName(path.substring(1));
                         if (gamerule != null) {
-                            this.setGamerule(gamerule, gamerule.createValueFromString(value));
+                            this.gamerule(gamerule, gamerule.createValueFromString(value));
                         }
 
                         break;
@@ -571,12 +572,12 @@ public class LevelDBWorldAdapter extends WorldAdapter {
             WriteBatch batch = new WriteBatch();
 
             compound.writeTo(buf, ByteOrder.LITTLE_ENDIAN);
-            byte[] persistenceId = this.getPersistenceId(player.getUUID());
+            byte[] persistenceId = this.getPersistenceId(player.uuid());
             if (persistenceId == null) {
                 UUID uuid = UuidUtil.getTimeBasedUuid();
 
                 NBTTagCompound persistenceIdInformation = new NBTTagCompound("");
-                persistenceIdInformation.addValue("MsaId", player.getUUID().toString());
+                persistenceIdInformation.addValue("MsaId", player.uuid().toString());
                 persistenceIdInformation.addValue("SelfSignedId", "");
                 persistenceIdInformation.addValue("ServerId", "player_server_" + uuid.toString());
 
@@ -584,7 +585,7 @@ public class LevelDBWorldAdapter extends WorldAdapter {
                 persistenceIdInformation.writeTo(pbuf, ByteOrder.LITTLE_ENDIAN);
 
                 persistenceId = ("player_server_" + uuid.toString()).getBytes();
-                batch.put(PooledByteBufAllocator.DEFAULT.directBuffer().writeBytes(("player_" + player.getUUID()).getBytes()), pbuf);
+                batch.put(PooledByteBufAllocator.DEFAULT.directBuffer().writeBytes(("player_" + player.uuid()).getBytes()), pbuf);
             }
 
             batch.put(PooledByteBufAllocator.DEFAULT.directBuffer().writeBytes(persistenceId), buf);
@@ -600,7 +601,7 @@ public class LevelDBWorldAdapter extends WorldAdapter {
     @Override
     public boolean loadPlayer(EntityPlayer player) {
         try {
-            byte[] persistenceId = this.getPersistenceId(player.getUUID());
+            byte[] persistenceId = this.getPersistenceId(player.uuid());
             if (persistenceId != null) {
                 ByteBuf playerPersistenceId = PooledByteBufAllocator.DEFAULT.directBuffer().writeBytes(persistenceId);
                 byte[] playerNbtData = this.db.get(playerPersistenceId);

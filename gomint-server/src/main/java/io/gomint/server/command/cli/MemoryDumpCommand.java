@@ -28,7 +28,7 @@ import java.util.Map;
 public class MemoryDumpCommand extends Command {
 
     @Override
-    public CommandOutput execute(CommandSender commandSender, String alias, Map<String, Object> arguments) {
+    public CommandOutput execute(CommandSender<?> commandSender, String alias, Map<String, Object> arguments) {
         //
         System.out.println("==========================================");
         System.out.println("BufferPoolMXBean");

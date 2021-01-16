@@ -15,10 +15,10 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:jigsaw", id = -211 )
-public class ItemJigsaw extends ItemStack implements io.gomint.inventory.item.ItemJigsaw {
+public class ItemJigsaw extends ItemStack< io.gomint.inventory.item.ItemJigsaw> implements io.gomint.inventory.item.ItemJigsaw {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.JIGSAW;
     }
 

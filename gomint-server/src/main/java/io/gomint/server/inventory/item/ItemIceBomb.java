@@ -15,10 +15,10 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:ice_bomb", id = 453 )
-public class ItemIceBomb extends ItemStack implements io.gomint.inventory.item.ItemIceBomb {
+public class ItemIceBomb extends ItemStack< io.gomint.inventory.item.ItemIceBomb> implements io.gomint.inventory.item.ItemIceBomb {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.ICE_BOMB;
     }
 

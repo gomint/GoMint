@@ -15,10 +15,10 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:nether_star", id = 508 )
-public class ItemNetherStar extends ItemStack implements io.gomint.inventory.item.ItemNetherStar {
+public class ItemNetherStar extends ItemStack< io.gomint.inventory.item.ItemNetherStar> implements io.gomint.inventory.item.ItemNetherStar {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.NETHER_STAR;
     }
 

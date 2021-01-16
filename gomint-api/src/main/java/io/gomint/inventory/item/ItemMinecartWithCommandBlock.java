@@ -14,14 +14,15 @@ import io.gomint.GoMint;
  * @version 1.0
  * @stability 3
  */
-public interface ItemMinecartWithCommandBlock extends ItemStack {
+public interface ItemMinecartWithCommandBlock extends ItemStack<ItemMinecartWithCommandBlock> {
 
     /**
      * Create a new item stack with given class and amount
      *
      * @param amount which is used for the creation
+	 * @return freshly generated item
      */
-    static ItemMinecartWithCommandBlock create( int amount ) {
+    static ItemMinecartWithCommandBlock create( int amount ) {	
         return GoMint.instance().createItemStack( ItemMinecartWithCommandBlock.class, amount );
     }
 

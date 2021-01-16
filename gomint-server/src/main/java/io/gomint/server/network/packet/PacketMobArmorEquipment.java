@@ -11,10 +11,10 @@ import io.gomint.server.network.Protocol;
 public class PacketMobArmorEquipment extends Packet {
 
     private long entityId;
-    private ItemStack helmet;
-    private ItemStack chestplate;
-    private ItemStack leggings;
-    private ItemStack boots;
+    private ItemStack<?> helmet;
+    private ItemStack<?> chestplate;
+    private ItemStack<?> leggings;
+    private ItemStack<?> boots;
 
     public PacketMobArmorEquipment() {
         super( Protocol.PACKET_MOB_ARMOR_EQUIPMENT );
@@ -46,35 +46,36 @@ public class PacketMobArmorEquipment extends Packet {
         this.entityId = entityId;
     }
 
-    public ItemStack getHelmet() {
+    public ItemStack<?> getHelmet() {
         return helmet;
     }
 
-    public void setHelmet(ItemStack helmet) {
+    public void setHelmet(ItemStack<?> helmet) {
         this.helmet = helmet;
     }
 
-    public ItemStack getChestplate() {
+    public ItemStack<?> getChestplate() {
         return chestplate;
     }
 
-    public void setChestplate(ItemStack chestplate) {
+    public void setChestplate(ItemStack<?> chestplate) {
         this.chestplate = chestplate;
     }
 
-    public ItemStack getLeggings() {
+    public ItemStack<?> getLeggings() {
         return leggings;
     }
 
-    public void setLeggings(ItemStack leggings) {
+    public void setLeggings(ItemStack<?> leggings) {
         this.leggings = leggings;
     }
 
-    public ItemStack getBoots() {
+    public ItemStack<?> getBoots() {
         return boots;
     }
 
-    public void setBoots(ItemStack boots) {
+    public void setBoots(ItemStack<?> boots) {
         this.boots = boots;
     }
+
 }

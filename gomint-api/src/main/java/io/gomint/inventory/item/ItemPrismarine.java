@@ -7,14 +7,15 @@ import io.gomint.GoMint;
  * @version 1.0
  * @stability 3
  */
-public interface ItemPrismarine extends ItemStack {
+public interface ItemPrismarine extends ItemStack<ItemPrismarine> {
 
     /**
      * Create a new item stack with given class and amount
      *
      * @param amount which is used for the creation
+	 * @return freshly generated item
      */
-    static ItemPrismarine create( int amount ) {
+    static ItemPrismarine create( int amount ) {	
         return GoMint.instance().createItemStack( ItemPrismarine.class, amount );
     }
 

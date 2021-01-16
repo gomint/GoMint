@@ -20,17 +20,17 @@ public class Observer extends Block implements BlockObserver {
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 5250;
     }
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return ToolPresets.PICKAXE;
     }
 
@@ -40,7 +40,7 @@ public class Observer extends Block implements BlockObserver {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.OBSERVER;
     }
 

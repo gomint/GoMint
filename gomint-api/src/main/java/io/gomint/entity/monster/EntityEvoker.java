@@ -8,7 +8,7 @@ import io.gomint.entity.EntityLiving;
  * @version 1.0
  * @stability 3
  */
-public interface EntityEvoker extends EntityLiving {
+public interface EntityEvoker extends EntityLiving<EntityEvoker> {
 
     /**
      * create a new entity evoker with no config

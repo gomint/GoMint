@@ -12,20 +12,20 @@ package io.gomint.inventory.item;
  * @version 1.0
  * @stability 3
  */
-public interface ItemSlab extends ItemStack {
+public interface ItemSlab<I> extends ItemStack<I> {
 
     /**
      * Is this slab on the top part of the block
      *
      * @return true if top, false if not
      */
-    boolean isTop();
+    boolean top();
 
     /**
      * Set this slab to the top or bottom
      *
      * @param top if true this slab if on the top, false on the bottom
      */
-    void setTop( boolean top );
+    I top(boolean top );
 
 }

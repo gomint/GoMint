@@ -49,7 +49,7 @@ public abstract class FileResourceLoader {
      * @return An InputStreamReader for the Resource (either from out of the JAR or from disk)
      * @throws ResourceLoadFailedException if the Encoding is wrong or the File was not found
      */
-    protected InputStreamReader getFileInputStreamReader( String path ) throws ResourceLoadFailedException {
+    protected InputStreamReader fileInputStreamReader(String path ) throws ResourceLoadFailedException {
         try {
             if ( !path.startsWith( "file://" ) ) {
                 InputStream resourceAsStream = module.getResourceAsStream( path );

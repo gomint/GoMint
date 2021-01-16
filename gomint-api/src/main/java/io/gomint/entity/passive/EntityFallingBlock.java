@@ -16,7 +16,7 @@ import io.gomint.world.block.Block;
  * @version 1.0
  * @stability 3
  */
-public interface EntityFallingBlock extends Entity {
+public interface EntityFallingBlock extends Entity<EntityFallingBlock> {
 
     /**
      * Create a new entity falling block with no config
@@ -32,6 +32,6 @@ public interface EntityFallingBlock extends Entity {
      *
      * @param block which should be transported
      */
-    void setBlock( Block block );
+    EntityFallingBlock block(Block block );
 
 }

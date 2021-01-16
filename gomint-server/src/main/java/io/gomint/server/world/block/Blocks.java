@@ -75,7 +75,7 @@ public class Blocks {
                 return block;
             }
 
-            block.setData(identifier, tileEntity, (WorldAdapter) location.getWorld(), location, blockPosition, layer, skyLightLevel, blockLightLevel, chunkSlice, index);
+            block.setData(identifier, tileEntity, (WorldAdapter) location.world(), location, blockPosition, layer, skyLightLevel, blockLightLevel, chunkSlice, index);
             return block;
         }
 
@@ -113,8 +113,8 @@ public class Blocks {
         return this.generators.getID(block);
     }
 
-    public boolean replaceWithItem(Block newBlock, EntityPlayer entity, Block clickedBlock, Block block, Facing face, ItemStack item, Vector clickVector) {
-        WorldAdapter adapter = (WorldAdapter) block.location.getWorld();
+    public boolean replaceWithItem(Block newBlock, EntityPlayer entity, Block clickedBlock, Block block, Facing face, ItemStack<?> item, Vector clickVector) {
+        WorldAdapter adapter = (WorldAdapter) block.location.world();
 
         newBlock.location = block.location;
         newBlock.position = block.position;
@@ -125,12 +125,12 @@ public class Blocks {
         }
 
         // Check only solid blocks for bounding box intersects
-        if (newBlock.isSolid()) {
-            List<AxisAlignedBB> bbs = newBlock.getBoundingBox();
+        if (newBlock.solid()) {
+            List<AxisAlignedBB> bbs = newBlock.boundingBoxes();
             if (bbs != null) {
                 for (AxisAlignedBB bb : bbs) {
                     // Check other entities in the bounding box
-                    Collection<Entity> collidedWith = adapter.getNearbyEntities(bb, null);
+                    Collection<Entity<?>> collidedWith = adapter.getNearbyEntities(bb, null);
                     if (collidedWith != null) {
                         return false;
                     }
@@ -140,9 +140,9 @@ public class Blocks {
 
         // We decided that the block would fit
         BlockPlaceEvent blockPlaceEvent = new BlockPlaceEvent(entity, clickedBlock, block, item, newBlock);
-        block.world.getServer().getPluginManager().callEvent(blockPlaceEvent);
+        block.world.getServer().pluginManager().callEvent(blockPlaceEvent);
 
-        if (blockPlaceEvent.isCancelled()) {
+        if (blockPlaceEvent.cancelled()) {
             return false;
         }
 

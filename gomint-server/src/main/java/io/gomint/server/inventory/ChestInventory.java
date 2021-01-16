@@ -19,7 +19,7 @@ import io.gomint.world.Sound;
  * @author geNAZt
  * @version 1.0
  */
-public class ChestInventory extends ContainerInventory implements io.gomint.inventory.ChestInventory {
+public class ChestInventory extends ContainerInventory<io.gomint.inventory.ChestInventory> implements io.gomint.inventory.ChestInventory {
 
     /**
      * Create new chest inventory
@@ -39,8 +39,8 @@ public class ChestInventory extends ContainerInventory implements io.gomint.inve
     public void onOpen(EntityPlayer player) {
         // Sound and open animation
         if (this.viewer.size() == 1) {
-            BlockPosition position = this.getContainerPosition();
-            WorldAdapter world = this.getWorld();
+            BlockPosition position = this.containerPosition();
+            WorldAdapter world = this.world();
 
             PacketBlockEvent blockEvent = new PacketBlockEvent();
             blockEvent.setPosition(position);
@@ -56,8 +56,8 @@ public class ChestInventory extends ContainerInventory implements io.gomint.inve
     public void onClose(EntityPlayer player) {
         // Sound and close animation
         if (this.viewer.size() == 1) {
-            BlockPosition position = this.getContainerPosition();
-            WorldAdapter world = this.getWorld();
+            BlockPosition position = this.containerPosition();
+            WorldAdapter world = this.world();
 
             PacketBlockEvent blockEvent = new PacketBlockEvent();
             blockEvent.setPosition(position);

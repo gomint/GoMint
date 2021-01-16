@@ -26,14 +26,14 @@ public class PlayerInteractListener implements EventListener {
 
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent e) {
-        EntityPlayer player = e.getPlayer();
-        ItemStack itemStack = player.getInventory().getItemInHand();
+        EntityPlayer player = e.player();
+        ItemStack<?> itemStack = player.inventory().itemInHand();
         player.sendMessage(Objects.toString(itemStack));
 
         if (itemStack instanceof ItemArrow) {
             EntityArrow entityArrow = GoMint.instance().createEntity(EntityArrow.class);
-            entityArrow.spawn(player.getLocation().add(0, (float) 1.5, 0));
-            entityArrow.setVelocity(player.getDirection().multiply(2));
+            entityArrow.spawn(player.location().add(0, (float) 1.5, 0));
+            entityArrow.velocity(player.direction().multiply(2));
         }
     }
 

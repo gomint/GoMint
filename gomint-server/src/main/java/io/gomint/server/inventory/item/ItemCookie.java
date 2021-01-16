@@ -9,7 +9,7 @@ import io.gomint.taglib.NBTTagCompound;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:cookie", id = 357 )
-public class ItemCookie extends ItemFood implements io.gomint.inventory.item.ItemCookie {
+public class ItemCookie extends ItemFood<io.gomint.inventory.item.ItemCookie> implements io.gomint.inventory.item.ItemCookie {
 
 
 
@@ -24,7 +24,7 @@ public class ItemCookie extends ItemFood implements io.gomint.inventory.item.Ite
     }
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.COOKIE;
     }
 

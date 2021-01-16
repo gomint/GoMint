@@ -10,10 +10,10 @@ import io.gomint.taglib.NBTTagCompound;
  * @version 1.0
  */
 @RegisterInfo(sId = "minecraft:quartz_block", id = 155)
-public class ItemBlockOfQuartz extends ItemStack implements io.gomint.inventory.item.ItemBlockOfQuartz {
+public class ItemBlockOfQuartz extends ItemStack< io.gomint.inventory.item.ItemBlockOfQuartz> implements io.gomint.inventory.item.ItemBlockOfQuartz {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.BLOCK_OF_QUARTZ;
     }
 

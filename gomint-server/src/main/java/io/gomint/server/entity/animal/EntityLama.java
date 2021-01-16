@@ -13,7 +13,7 @@ import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.world.WorldAdapter;
 
 @RegisterInfo(sId = "minecraft:llama")
-public class EntityLama extends EntityAgeableAnimal implements io.gomint.entity.animal.EntityLama {
+public class EntityLama extends EntityAgeableAnimal<io.gomint.entity.animal.EntityLama> implements io.gomint.entity.animal.EntityLama {
 
     /**
      * Constructs a new EntityLiving
@@ -34,13 +34,13 @@ public class EntityLama extends EntityAgeableAnimal implements io.gomint.entity.
     }
 
     private void initEntity() {
-        this.addAttribute(Attribute.HEALTH);
-        this.setMaxHealth(30);
-        this.setHealth(30);
-        if (this.isBaby()) {
-            this.setSize(0.9f, 1.87f);
+        this.attribute(Attribute.HEALTH);
+        this.maxHealth(30);
+        this.health(30);
+        if (this.baby()) {
+            this.size(0.9f, 1.87f);
         } else {
-            this.setSize(0.45f, 0.935f);
+            this.size(0.45f, 0.935f);
         }
     }
 
@@ -48,4 +48,5 @@ public class EntityLama extends EntityAgeableAnimal implements io.gomint.entity.
     public void update(long currentTimeMS, float dT) {
         super.update(currentTimeMS, dT);
     }
+
 }

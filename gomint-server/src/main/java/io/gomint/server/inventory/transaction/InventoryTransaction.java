@@ -8,17 +8,17 @@ import io.gomint.server.inventory.Inventory;
  * @author geNAZt
  * @version 1.0
  */
-public class InventoryTransaction implements Transaction {
+public class InventoryTransaction<I, S, T> implements Transaction<I, S, T> {
 
     private final EntityPlayer owner;
-    private final Inventory inventory;
+    private final Inventory<I> inventory;
     private final int slot;
-    private final ItemStack sourceItem;
-    private final ItemStack targetItem;
+    private final ItemStack<S> sourceItem;
+    private final ItemStack<T> targetItem;
     private final byte inventoryWindowId;
 
-    public InventoryTransaction(EntityPlayer owner, Inventory inventory, int slot,
-                                ItemStack sourceItem, ItemStack targetItem, byte inventoryWindowId) {
+    public InventoryTransaction(EntityPlayer owner, Inventory<I> inventory, int slot,
+                                ItemStack<S> sourceItem, ItemStack<T> targetItem, byte inventoryWindowId) {
         this.owner = owner;
         this.inventory = inventory;
         this.slot = slot;
@@ -31,19 +31,19 @@ public class InventoryTransaction implements Transaction {
         return owner;
     }
 
-    public Inventory getInventory() {
+    public Inventory<I> inventory() {
         return inventory;
     }
 
-    public int getSlot() {
+    public int slot() {
         return slot;
     }
 
-    public ItemStack getSourceItem() {
+    public ItemStack<S> sourceItem() {
         return sourceItem;
     }
 
-    public ItemStack getTargetItem() {
+    public ItemStack<T> targetItem() {
         return targetItem;
     }
 
@@ -55,13 +55,13 @@ public class InventoryTransaction implements Transaction {
     @Override
     public void commit() {
         this.inventory.removeViewerWithoutAction( this.owner );
-        this.inventory.setItem( this.slot, this.targetItem );
+        this.inventory.item( this.slot, this.targetItem );
         this.inventory.addViewerWithoutAction( this.owner );
     }
 
     @Override
     public void revert() {
-        this.inventory.sendContents( this.owner.getConnection() );
+        this.inventory.sendContents( this.owner.connection() );
     }
 
     @Override

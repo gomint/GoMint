@@ -15,7 +15,7 @@ import io.gomint.server.network.type.WindowType;
  * @author geNAZt
  * @version 1.0
  */
-public class FurnaceInventory extends ContainerInventory {
+public class FurnaceInventory extends ContainerInventory<io.gomint.inventory.FurnaceInventory> implements io.gomint.inventory.FurnaceInventory {
 
     public FurnaceInventory(Items items, InventoryHolder owner) {
         super(items, owner, 3);

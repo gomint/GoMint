@@ -14,15 +14,16 @@ import io.gomint.GoMint;
  * @version 1.0
  * @stability 1
  */
-public interface ItemDarkoakStandingSign extends ItemStack {
+public interface ItemDarkOakWallSign extends ItemStack<ItemDarkOakWallSign> {
 
     /**
      * Create a new item stack with given class and amount
      *
      * @param amount which is used for the creation
+	 * @return freshly generated item
      */
-    static ItemDarkoakStandingSign create( int amount ) {
-        return GoMint.instance().createItemStack( ItemDarkoakStandingSign.class, amount );
+    static ItemDarkOakWallSign create(int amount ) {
+        return GoMint.instance().createItemStack( ItemDarkOakWallSign.class, amount );
     }
 
 }

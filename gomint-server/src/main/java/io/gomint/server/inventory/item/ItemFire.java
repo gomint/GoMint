@@ -10,10 +10,10 @@ import io.gomint.taglib.NBTTagCompound;
  * @version 1.0
  */
 @RegisterInfo(sId = "minecraft:fire", id = 51)
-public class ItemFire extends ItemStack implements io.gomint.inventory.item.ItemFire {
+public class ItemFire extends ItemStack< io.gomint.inventory.item.ItemFire> implements io.gomint.inventory.item.ItemFire {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.FIRE;
     }
 

@@ -16,10 +16,10 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:shield", id = 513 )
-public class ItemShield extends ItemStack implements io.gomint.inventory.item.ItemShield {
+public class ItemShield extends ItemStack< io.gomint.inventory.item.ItemShield> implements io.gomint.inventory.item.ItemShield {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.SHIELD;
     }
 

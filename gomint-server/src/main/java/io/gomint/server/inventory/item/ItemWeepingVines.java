@@ -15,10 +15,10 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:weeping_vines", id = -231 )
-public class ItemWeepingVines extends ItemStack implements io.gomint.inventory.item.ItemWeepingVines {
+public class ItemWeepingVines extends ItemStack< io.gomint.inventory.item.ItemWeepingVines> implements io.gomint.inventory.item.ItemWeepingVines {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.WEEPING_VINES;
     }
 

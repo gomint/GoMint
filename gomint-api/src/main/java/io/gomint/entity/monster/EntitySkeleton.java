@@ -8,7 +8,7 @@ import io.gomint.entity.EntityLiving;
  * @version 1.0
  * @stability 3
  */
-public interface EntitySkeleton extends EntityLiving {
+public interface EntitySkeleton extends EntityLiving<EntitySkeleton> {
 
     /**
      * Create a new entity skeleton with no config

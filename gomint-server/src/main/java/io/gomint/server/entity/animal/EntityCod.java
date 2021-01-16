@@ -20,7 +20,7 @@ import io.gomint.server.world.WorldAdapter;
 import java.util.concurrent.ThreadLocalRandom;
 
 @RegisterInfo(sId = "minecraft:cod")
-public class EntityCod extends EntityAnimal implements io.gomint.entity.animal.EntityCod {
+public class EntityCod extends EntityAnimal<io.gomint.entity.animal.EntityCod> implements io.gomint.entity.animal.EntityCod {
 
     /**
      * Constructs a new EntityLiving
@@ -41,23 +41,23 @@ public class EntityCod extends EntityAnimal implements io.gomint.entity.animal.E
     }
 
     private void initEntity() {
-        this.setSize(0.5f, 0.3f);
-        this.addAttribute(Attribute.HEALTH);
-        this.setMaxHealth(3);
-        this.setHealth(3);
+        this.size(0.5f, 0.3f);
+        this.attribute(Attribute.HEALTH);
+        this.maxHealth(3);
+        this.health(3);
     }
 
     @Override
     protected void kill() {
         super.kill();
 
-        if (isDead()) {
+        if (dead()) {
             return;
         }
 
         // Drop items
-        Location location = this.getLocation();
-        ItemStack cod = isOnFire()? ItemCookedCod.create(1) : ItemCod.create(1);
+        Location location = this.location();
+        ItemStack<?> cod = burning() ? ItemCookedCod.create(1) : ItemCod.create(1);
         this.world.dropItem(location, cod);
 
         ThreadLocalRandom random = ThreadLocalRandom.current();

@@ -15,10 +15,10 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:mooshroom_spawn_egg", id = 438 )
-public class ItemMooshroomSpawnEgg extends ItemStack implements io.gomint.inventory.item.ItemMooshroomSpawnEgg {
+public class ItemMooshroomSpawnEgg extends ItemStack< io.gomint.inventory.item.ItemMooshroomSpawnEgg> implements io.gomint.inventory.item.ItemMooshroomSpawnEgg {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.MOOSHROOM_SPAWN_EGG;
     }
 

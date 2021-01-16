@@ -15,12 +15,12 @@ import io.gomint.taglib.NBTTagCompound;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:iron_nugget", id = 452 )
-public class ItemIronNugget extends ItemStack implements io.gomint.inventory.item.ItemIronNugget {
+public class ItemIronNugget extends ItemStack< io.gomint.inventory.item.ItemIronNugget> implements io.gomint.inventory.item.ItemIronNugget {
 
 
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.IRON_NUGGET;
     }
 

@@ -10,10 +10,10 @@ import io.gomint.taglib.NBTTagCompound;
  * @version 1.0
  */
 @RegisterInfo(sId = "minecraft:glowingobsidian", id = 246)
-public class ItemGlowingObsidian extends ItemStack implements io.gomint.inventory.item.ItemGlowingObsidian {
+public class ItemGlowingObsidian extends ItemStack< io.gomint.inventory.item.ItemGlowingObsidian> implements io.gomint.inventory.item.ItemGlowingObsidian {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.GLOWING_OBSIDIAN;
     }
 

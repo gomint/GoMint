@@ -5,5 +5,5 @@ package io.gomint.inventory;
  * @version 1.0
  * @stability 2
  */
-public interface ShulkerBoxInventory extends ContainerInventory {
+public interface ShulkerBoxInventory extends ContainerInventory<ShulkerBoxInventory> {
 }

@@ -16,48 +16,36 @@ import io.gomint.world.block.data.RotationDirection;
  * @version 1.0
  * @stability 3
  */
-public interface BlockCoralFanHang extends Block {
-
-    /**
-     * Get the direction of this coral fan
-     *
-     * @return direction of the coral
-     */
-    Direction getDirection();
-
-    /**
-     * Set the direction of this coral fan
-     *
-     * @param direction in which this coral fan should face
-     */
-    void setDirection(Direction direction);
+public interface BlockCoralFanHang extends Block, BlockDirection<BlockCoralFanHang> {
 
     /**
      * Set coral type
      *
      * @param type of coral
+     * @return block for chaining
      */
-    void setCoralType(CoralType type);
+    BlockCoralFanHang coralType(CoralType type);
 
     /**
      * Get type of coral
      *
      * @return type of coral
      */
-    CoralType getCoralType();
+    CoralType coralType();
 
     /**
      * Is this coral fan dead?
      *
      * @return true when dead, false otherwise
      */
-    boolean isDead();
+    boolean dead();
 
     /**
      * Set if this coral fan is dead or not
      *
      * @param dead true when it should be dead, false otherwise
+     * @return block for chaining
      */
-    void setDead(boolean dead);
+    BlockCoralFanHang dead(boolean dead);
 
 }

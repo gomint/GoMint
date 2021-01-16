@@ -20,12 +20,12 @@ public class Crops extends Growable {
     }
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
     @Override
-    public boolean isSolid() {
+    public boolean solid() {
         return false;
     }
 
@@ -35,27 +35,27 @@ public class Crops extends Growable {
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 0;
     }
 
     @Override
-    public List<ItemStack> getDrops(ItemStack itemInHand) {
+    public List<ItemStack<?>> drops(ItemStack<?> itemInHand) {
         if (GROWTH.maxed(this)) {
-            List<ItemStack> drops = new ArrayList<>() {{
-                add(world.getServer().getItems().create(296, (short) 0, (byte) 1, null)); // Beetroot
+            List<ItemStack<?>> drops = new ArrayList<>() {{
+                add(world.getServer().items().create(296, (short) 0, (byte) 1, null)); // Beetroot
             }};
 
             // Randomize seeds
             int amountOfSeeds = SEED_RANDOMIZER.next();
             if (amountOfSeeds > 0) {
-                drops.add(world.getServer().getItems().create(295, (short) 0, (byte) amountOfSeeds, null)); // Seeds
+                drops.add(world.getServer().items().create(295, (short) 0, (byte) amountOfSeeds, null)); // Seeds
             }
 
             return drops;
         } else {
             return new ArrayList<>() {{
-                add(world.getServer().getItems().create(295, (short) 0, (byte) 1, null)); // Seeds
+                add(world.getServer().items().create(295, (short) 0, (byte) 1, null)); // Seeds
             }};
         }
     }
@@ -66,7 +66,7 @@ public class Crops extends Growable {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.CROPS;
     }
 

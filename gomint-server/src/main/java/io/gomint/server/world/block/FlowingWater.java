@@ -11,15 +11,15 @@ import io.gomint.world.block.BlockFlowingWater;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:flowing_water" )
-public class FlowingWater extends Liquid implements BlockFlowingWater {
+public class FlowingWater extends Liquid<BlockFlowingWater> implements BlockFlowingWater {
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 150000;
     }
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
@@ -34,14 +34,14 @@ public class FlowingWater extends Liquid implements BlockFlowingWater {
     }
 
     @Override
-    public void onEntityStanding( EntityLiving entityLiving ) {
-        if ( entityLiving.isOnFire() ) {
+    public void onEntityStanding(EntityLiving<?> entityLiving ) {
+        if ( entityLiving.burning() ) {
             entityLiving.extinguish();
         }
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.FLOWING_WATER;
     }
 

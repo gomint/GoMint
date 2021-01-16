@@ -7,27 +7,28 @@
 
 package io.gomint.world.block;
 
-import io.gomint.world.block.data.QuartzVariant;
+import io.gomint.world.block.data.QuartzType;
 
 /**
  * @author geNAZt
  * @version 1.0
  * @stability 3
  */
-public interface BlockBlockOfQuartz extends Block, BlockAxis {
+public interface BlockQuartzBlock extends Block, BlockAxis<BlockQuartzBlock> {
 
     /**
      * Get the variant of this quartz block
      *
      * @return variant of this block
      */
-    QuartzVariant getVariant();
+    QuartzType type();
 
     /**
      * Set the variant of this block
      *
      * @param variant which should be used
+     * @return block for chaining
      */
-    void setVariant( QuartzVariant variant );
+    BlockQuartzBlock type(QuartzType variant);
 
 }

@@ -39,13 +39,13 @@ public interface Scoreboard {
      * @param slot for the display
      * @return the display or null when no display has been added to this slot
      */
-    ScoreboardDisplay getDisplay( DisplaySlot slot );
+    ScoreboardDisplay display( DisplaySlot slot );
 
     /**
      * Remove a display
      *
      * @param slot which should be removed
      */
-    void removeDisplay( DisplaySlot slot );
+    Scoreboard removeDisplay( DisplaySlot slot );
 
 }

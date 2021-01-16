@@ -27,12 +27,12 @@ public class DragonEgg extends Block implements BlockDragonEgg {
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 4500;
     }
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
@@ -42,7 +42,7 @@ public class DragonEgg extends Block implements BlockDragonEgg {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.DRAGON_EGG;
     }
 
@@ -52,14 +52,14 @@ public class DragonEgg extends Block implements BlockDragonEgg {
     }
 
     @Override
-    public boolean interact(Entity entity, Facing face, Vector facePos, ItemStack item ) {
+    public boolean interact(Entity<?> entity, Facing face, Vector facePos, ItemStack<?> item ) {
         this.teleport();
         return true;
     }
 
     @Override
     public boolean punch( EntityPlayer player ) {
-        if ( player.getGamemode() != Gamemode.CREATIVE ) {
+        if ( player.gamemode() != Gamemode.CREATIVE ) {
             this.teleport();
             return true;
         }
@@ -68,24 +68,26 @@ public class DragonEgg extends Block implements BlockDragonEgg {
     }
 
     @Override
-    public void teleport( BlockPosition blockPosition ) {
-        this.setBlockType( Air.class );
-        this.world.getBlockAt( blockPosition ).setBlockType( DragonEgg.class );
+    public BlockDragonEgg teleport( BlockPosition blockPosition ) {
+        this.blockType( Air.class );
+        this.world.blockAt( blockPosition ).blockType( DragonEgg.class );
         this.world.sendLevelEvent( blockPosition.toVector(), LevelEvent.DRAGON_EGG_TELEPORT, 0 );
+        return this;
     }
 
     @Override
-    public void teleport() {
+    public BlockDragonEgg teleport() {
         for ( int i = 0; i < 1000; i++ ) {
             BlockPosition blockPos = this.position.add( ThreadLocalRandom.current().nextInt( 16 ) - ThreadLocalRandom.current().nextInt( 16 ),
                 ThreadLocalRandom.current().nextInt( 8 ) - ThreadLocalRandom.current().nextInt( 8 ),
                 ThreadLocalRandom.current().nextInt( 16 ) - ThreadLocalRandom.current().nextInt( 16 ) );
 
-            if ( this.world.getBlockAt( blockPos ).getBlockType() == BlockType.AIR ) {
-                this.teleport( blockPos );
-                return;
+            if ( this.world.blockAt( blockPos ).blockType() == BlockType.AIR ) {
+                return this.teleport( blockPos );
             }
         }
+
+        return this;
     }
 
 }

@@ -7,6 +7,7 @@
 
 package io.gomint.server.entity.animal;
 
+import io.gomint.entity.Entity;
 import io.gomint.server.entity.EntityAgeable;
 import io.gomint.server.entity.EntityTags;
 import io.gomint.server.entity.EntityType;
@@ -18,7 +19,7 @@ import java.util.Set;
  * @author geNAZt
  * @version 1.0
  */
-public abstract class EntityAgeableAnimal extends EntityAgeable {
+public abstract class EntityAgeableAnimal<E extends Entity<E>> extends EntityAgeable<E> {
 
     /**
      * Constructs a new EntityLiving
@@ -31,7 +32,7 @@ public abstract class EntityAgeableAnimal extends EntityAgeable {
     }
 
     @Override
-    public Set<String> getTags() {
+    public Set<String> tags() {
         return EntityTags.AGEABLE_ANIMAL;
     }
 

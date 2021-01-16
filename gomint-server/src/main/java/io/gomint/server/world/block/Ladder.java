@@ -24,17 +24,17 @@ public class Ladder extends Block implements BlockLadder {
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 600;
     }
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
     @Override
-    public boolean isSolid() {
+    public boolean solid() {
         return false;
     }
 
@@ -44,7 +44,7 @@ public class Ladder extends Block implements BlockLadder {
     }
 
     @Override
-    public void stepOn( Entity entity ) {
+    public void stepOn(Entity<?> entity ) {
         // Reset fall distance
         entity.resetFallDistance();
     }
@@ -55,7 +55,7 @@ public class Ladder extends Block implements BlockLadder {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.LADDER;
     }
 
@@ -65,17 +65,18 @@ public class Ladder extends Block implements BlockLadder {
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return ToolPresets.AXE;
     }
 
     @Override
-    public void setAttachSide( Facing attachSide ) {
+    public BlockLadder attachSide(Facing attachSide ) {
         ATTACHED.setState( this, attachSide );
+        return this;
     }
 
     @Override
-    public Facing getAttachSide() {
+    public Facing attachSide() {
         return ATTACHED.getState(this);
     }
 

@@ -13,7 +13,4 @@ package io.gomint.world.block.data.banner;
  */
 public class Pattern {
 
-    /*private final PatternType type;
-    private final BlockColor color;*/
-
 }

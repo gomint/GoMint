@@ -8,7 +8,7 @@ import io.gomint.entity.EntityPlayer;
  * @version 1.0
  * @stability 3
  */
-public class PlayerCraftingEvent extends CancellablePlayerEvent {
+public class PlayerCraftingEvent extends CancellablePlayerEvent<PlayerCraftingEvent> {
 
     private final Recipe recipe;
 
@@ -22,7 +22,7 @@ public class PlayerCraftingEvent extends CancellablePlayerEvent {
      *
      * @return recipe which has been crafted
      */
-    public Recipe getRecipe() {
+    public Recipe recipe() {
         return this.recipe;
     }
 

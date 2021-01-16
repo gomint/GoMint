@@ -58,7 +58,7 @@ public class Simplex extends Noise {
     }
 
     @Override
-    public double getNoise3D( double x, double y, double z ) {
+    public double noise3D(double x, double y, double z ) {
         x += this.offsetX;
         y += this.offsetY;
         z += this.offsetZ;
@@ -181,7 +181,7 @@ public class Simplex extends Noise {
     }
 
     @Override
-    public double getNoise2D( double x, double y ) {
+    public double noise2D(double x, double y ) {
         x += this.offsetX;
         y += this.offsetY;
 

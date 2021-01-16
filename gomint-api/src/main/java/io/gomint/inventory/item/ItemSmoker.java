@@ -7,7 +7,7 @@ import io.gomint.GoMint;
  * @version 1.0
  * @stability 3
  */
-public interface ItemSmoker extends ItemStack {
+public interface ItemSmoker extends ItemStack<ItemSmoker> {
 
     /**
      * Create a new item stack with given class and amount

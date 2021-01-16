@@ -19,7 +19,7 @@ public class ChiseledPolishedBlackStone extends Block implements BlockChiseledPo
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 3000;
     }
 
@@ -29,7 +29,7 @@ public class ChiseledPolishedBlackStone extends Block implements BlockChiseledPo
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.CHISELED_POLISHED_BLACKSTONE;
     }
 
@@ -39,7 +39,7 @@ public class ChiseledPolishedBlackStone extends Block implements BlockChiseledPo
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return ToolPresets.PICKAXE;
     }
 }

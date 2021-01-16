@@ -32,10 +32,10 @@ import java.util.List;
 @RegisterInfo(sId = "minecraft:dark_oak_door")
 @RegisterInfo(sId = "minecraft:warped_door")
 @RegisterInfo(sId = "minecraft:crimson_door")
-public class WoodenDoor extends Door implements BlockWoodenDoor {
+public class WoodenDoor extends Door<BlockWoodenDoor> implements BlockWoodenDoor {
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return ToolPresets.AXE;
     }
 
@@ -45,12 +45,12 @@ public class WoodenDoor extends Door implements BlockWoodenDoor {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.WOODEN_DOOR;
     }
 
     @Override
-    public LogType getWoodType() {
+    public LogType type() {
         switch (this.getBlockId()) {
             case "minecraft:crimson_door":
                 return LogType.CRIMSON;
@@ -73,7 +73,7 @@ public class WoodenDoor extends Door implements BlockWoodenDoor {
     }
 
     @Override
-    public void setWoodType(LogType logType) {
+    public BlockWoodenDoor type(LogType logType) {
         switch (logType) {
             case CRIMSON:
                 this.setBlockId("minecraft:crimson_door");
@@ -100,24 +100,26 @@ public class WoodenDoor extends Door implements BlockWoodenDoor {
             default:
                 this.setBlockId("minecraft:wooden_door");
         }
+
+        return this;
     }
 
     @Override
-    public List<ItemStack> getDrops(ItemStack itemInHand) {
+    public List<ItemStack<?>> drops(ItemStack<?> itemInHand) {
         ItemWoodenDoor item = ItemWoodenDoor.create(1);
-        item.setWoodType(this.getWoodType());
+        item.type(this.type());
         return Collections.singletonList(item);
     }
 
     @Override
     public void afterPlacement() {
-        Block above = this.getSide(Facing.UP);
-        WoodenDoor aDoor = above.setBlockType(WoodenDoor.class);
-        aDoor.setDirection(this.getDirection());
-        aDoor.setTop(true);
-        aDoor.setHingeSide(HingeSide.LEFT);
-        aDoor.setWoodType(this.getWoodType());
-        aDoor.setOpen(false);
+        Block above = this.side(Facing.UP);
+        WoodenDoor aDoor = above.blockType(WoodenDoor.class);
+        aDoor.direction(this.direction());
+        aDoor.top(true);
+        aDoor.hingeSide(HingeSide.LEFT);
+        aDoor.type(this.type());
+        aDoor.open(false);
 
         super.afterPlacement();
     }

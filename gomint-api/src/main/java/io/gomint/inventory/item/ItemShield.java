@@ -14,7 +14,7 @@ import io.gomint.GoMint;
  * @version 1.0
  * @stability 3
  */
-public interface ItemShield extends ItemStack {
+public interface ItemShield extends ItemStack<ItemShield> {
 
     /**
      * Create a new item stack with given class and amount

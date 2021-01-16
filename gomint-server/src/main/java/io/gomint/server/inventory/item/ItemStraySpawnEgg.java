@@ -15,10 +15,10 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:stray_spawn_egg", id = 460 )
-public class ItemStraySpawnEgg extends ItemStack implements io.gomint.inventory.item.ItemStraySpawnEgg {
+public class ItemStraySpawnEgg extends ItemStack< io.gomint.inventory.item.ItemStraySpawnEgg> implements io.gomint.inventory.item.ItemStraySpawnEgg {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.STRAY_SPAWN_EGG;
     }
 

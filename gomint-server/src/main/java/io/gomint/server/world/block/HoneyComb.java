@@ -17,7 +17,7 @@ public class HoneyComb extends Block implements BlockHoneyComb {
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 900;
     }
 
@@ -32,7 +32,7 @@ public class HoneyComb extends Block implements BlockHoneyComb {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.HONEYCOMB;
     }
 }

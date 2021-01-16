@@ -15,12 +15,12 @@ import io.gomint.taglib.NBTTagCompound;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:command_block_minecart", id = 443 )
-public class ItemMinecartWithCommandBlock extends ItemStack implements io.gomint.inventory.item.ItemMinecartWithCommandBlock {
+public class ItemMinecartWithCommandBlock extends ItemStack< io.gomint.inventory.item.ItemMinecartWithCommandBlock> implements io.gomint.inventory.item.ItemMinecartWithCommandBlock {
 
 
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.MINECART_WITH_COMMAND_BLOCK;
     }
 

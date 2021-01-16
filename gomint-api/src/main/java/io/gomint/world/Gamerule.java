@@ -18,7 +18,7 @@ import java.util.Map;
  */
 public final class Gamerule<T> {
 
-    private static final Map<String, Gamerule> BY_NBT = new HashMap<>();
+    private static final Map<String, Gamerule<?>> BY_NBT = new HashMap<>();
 
     public static final Gamerule<Boolean> COMMANDBLOCK_OUTPUT = new Gamerule<>("commandblockoutput", Boolean.class);
     public static final Gamerule<Boolean> DO_DAYLIGHT_CYCLE = new Gamerule<>("dodaylightcycle", Boolean.class);
@@ -55,8 +55,8 @@ public final class Gamerule<T> {
      * @param nbtName The NBT name of the gamerule
      * @return The gamerule on success or null if no gamerule according to the NBT name was found
      */
-    public static Gamerule getByNbtName(String nbtName) {
-        return BY_NBT.get(nbtName);
+    public static <T> Gamerule<T> byNBTName(String nbtName) {
+        return (Gamerule<T>) BY_NBT.get(nbtName);
     }
 
     /**
@@ -64,7 +64,7 @@ public final class Gamerule<T> {
      *
      * @return The name of the gamerule as it appears inside NBT files
      */
-    public String getNbtName() {
+    public String name() {
         return this.nbtName;
     }
 
@@ -73,7 +73,7 @@ public final class Gamerule<T> {
      *
      * @return The type of value this gamerule expects
      */
-    public Class<?> getValueType() {
+    public Class<?> valueType() {
         return this.valueType;
     }
 
@@ -98,7 +98,7 @@ public final class Gamerule<T> {
      * @param value of the gamerule
      * @return object for nbt saving
      */
-    public Object createNBTValue(T value) {
+    public Object createNBTValue(Object value) {
         if (this.valueType == Boolean.class) {
             Boolean val = (Boolean) value;
             return val ? (byte) 1 : (byte) 0;

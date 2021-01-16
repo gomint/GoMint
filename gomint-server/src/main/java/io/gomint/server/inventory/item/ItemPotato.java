@@ -16,10 +16,10 @@ import io.gomint.server.registry.RegisterInfo;
  */
 @RegisterInfo(sId = "minecraft:potato", id = 392, def = true)
 @RegisterInfo(sId = "minecraft:potatoes", id = 142)
-public class ItemPotato extends ItemStack implements io.gomint.inventory.item.ItemPotato {
+public class ItemPotato extends ItemStack< io.gomint.inventory.item.ItemPotato> implements io.gomint.inventory.item.ItemPotato {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.POTATO;
     }
 

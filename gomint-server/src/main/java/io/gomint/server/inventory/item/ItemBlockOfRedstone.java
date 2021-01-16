@@ -10,10 +10,10 @@ import io.gomint.taglib.NBTTagCompound;
  * @version 1.0
  */
 @RegisterInfo(sId = "minecraft:redstone_block", id = 152)
-public class ItemBlockOfRedstone extends ItemStack implements io.gomint.inventory.item.ItemBlockOfRedstone {
+public class ItemBlockOfRedstone extends ItemStack< io.gomint.inventory.item.ItemBlockOfRedstone> implements io.gomint.inventory.item.ItemBlockOfRedstone {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.BLOCK_OF_REDSTONE;
     }
 

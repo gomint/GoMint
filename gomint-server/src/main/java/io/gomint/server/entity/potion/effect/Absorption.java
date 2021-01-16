@@ -23,8 +23,8 @@ public class Absorption extends Effect {
     }
 
     @Override
-    public void apply( EntityLiving player ) {
-        player.setAbsorptionHearts( player.getAbsorptionHearts() + 4 * ( this.amplifier + 1 ) );
+    public void apply( EntityLiving<?> player ) {
+        player.absorptionHearts( player.absorptionHearts() + 4 * ( this.amplifier + 1 ) );
     }
 
     /**
@@ -39,8 +39,8 @@ public class Absorption extends Effect {
     }
 
     @Override
-    public void remove( EntityLiving player ) {
-        player.setAbsorptionHearts( player.getAbsorptionHearts() - ( 4 * ( this.amplifier + 1 ) ) );
+    public void remove( EntityLiving<?> player ) {
+        player.absorptionHearts( player.absorptionHearts() - ( 4 * ( this.amplifier + 1 ) ) );
     }
 
 }

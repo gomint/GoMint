@@ -13,7 +13,7 @@ import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.world.WorldAdapter;
 
 @RegisterInfo(sId = "minecraft:ocelot")
-public class EntityOcelot extends EntityAnimal implements io.gomint.entity.animal.EntityOcelot {
+public class EntityOcelot extends EntityAnimal<io.gomint.entity.animal.EntityOcelot> implements io.gomint.entity.animal.EntityOcelot {
 
     /**
      * Constructs a new EntityLiving
@@ -34,14 +34,15 @@ public class EntityOcelot extends EntityAnimal implements io.gomint.entity.anima
     }
 
     private void initEntity() {
-        this.setSize(0.6f, 0.7f);
-        this.addAttribute(Attribute.HEALTH);
-        this.setMaxHealth(16);
-        this.setHealth(16);
+        this.size(0.6f, 0.7f);
+        this.attribute(Attribute.HEALTH);
+        this.maxHealth(16);
+        this.health(16);
     }
 
     @Override
     public void update(long currentTimeMS, float dT) {
         super.update(currentTimeMS, dT);
     }
+
 }

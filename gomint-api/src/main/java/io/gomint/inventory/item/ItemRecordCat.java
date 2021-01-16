@@ -14,12 +14,13 @@ import io.gomint.GoMint;
  * @version 1.0
  * @stability 1
  */
-public interface ItemRecordCat extends ItemStack {
+public interface ItemRecordCat extends ItemStack<ItemRecordCat> {
 
     /**
      * Create a new item stack with given class and amount
      *
      * @param amount which is used for the creation
+	 * @return freshly generated item
      */
     static ItemRecordCat create( int amount ) {
         return GoMint.instance().createItemStack( ItemRecordCat.class, amount );

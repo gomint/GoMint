@@ -47,7 +47,7 @@ public class Vector {
     }
 
     public Vector(BlockPosition position) {
-        this(position.getX(), position.getY(), position.getZ());
+        this(position.x(), position.y(), position.z());
     }
 
     public Vector add( float x, float y, float z ) {
@@ -119,7 +119,7 @@ public class Vector {
      * @param x     which may on the line or not
      * @return vector with x set or null when x is not on a line with this and the other vector
      */
-    public Vector getVectorWhenXIsOnLine( Vector other, float x ) {
+    public Vector vectorWhenXIsOnLine(Vector other, float x ) {
         float xDiff = other.x - this.x;
         float yDiff = other.y - this.y;
         float zDiff = other.z - this.z;
@@ -136,7 +136,7 @@ public class Vector {
      * @param y     which may on the line or not
      * @return vector with y set or null when y is not on a line with this and the other vector
      */
-    public Vector getVectorWhenYIsOnLine( Vector other, float y ) {
+    public Vector vectorWhenYIsOnLine(Vector other, float y ) {
         float xDiff = other.x - this.x;
         float yDiff = other.y - this.y;
         float zDiff = other.z - this.z;
@@ -153,7 +153,7 @@ public class Vector {
      * @param z     which may on the line or not
      * @return vector with y set or null when y is not on a line with this and the other vector
      */
-    public Vector getVectorWhenZIsOnLine( Vector other, float z ) {
+    public Vector vectorWhenZIsOnLine(Vector other, float z ) {
         float xDiff = other.x - this.x;
         float yDiff = other.y - this.y;
         float zDiff = other.z - this.z;
@@ -162,28 +162,31 @@ public class Vector {
         return ( f >= 0F && f <= 1F ) ? new Vector( this.x + xDiff * f, this.y + yDiff * f, this.z + zDiff * f ) : null;
     }
 
-    public float getX() {
+    public float x() {
         return x;
     }
 
-    public float getY() {
+    public float y() {
         return y;
     }
 
-    public float getZ() {
+    public float z() {
         return z;
     }
 
-    public void setX(float x) {
+    public Vector x(float x) {
         this.x = x;
+        return this;
     }
 
-    public void setY(float y) {
+    public Vector y(float y) {
         this.y = y;
+        return this;
     }
 
-    public void setZ(float z) {
+    public Vector z(float z) {
         this.z = z;
+        return this;
     }
 
     @Override

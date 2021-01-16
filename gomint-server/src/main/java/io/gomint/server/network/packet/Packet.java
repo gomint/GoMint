@@ -17,7 +17,6 @@ import io.gomint.server.GoMintServer;
 import io.gomint.server.entity.EntityLink;
 import io.gomint.server.network.type.CommandOrigin;
 import io.gomint.server.player.PlayerSkin;
-import io.gomint.server.util.DumpUtil;
 import io.gomint.server.util.Things;
 import io.gomint.taglib.AllocationLimitReachedException;
 import io.gomint.taglib.NBTReader;
@@ -63,7 +62,7 @@ public abstract class Packet {
      * @param buffer from the packet
      * @return read item stack
      */
-    public static ItemStack readItemStack(PacketBuffer buffer) {
+    public static ItemStack<?> readItemStack(PacketBuffer buffer) {
         int id = buffer.readSignedVarInt();
         if (id == 0) {
             return ItemAir.create(0);
@@ -101,28 +100,28 @@ public abstract class Packet {
             buffer.readString();    // TODO: Implement proper support once we know the string values
         }
 
-        io.gomint.server.inventory.item.ItemStack itemStack = ((GoMintServer) GoMint.instance()).getItems().create(id, data, amount, nbt);
+        ItemStack<?> itemStack = ((GoMintServer) GoMint.instance()).items().create(id, data, amount, nbt);
 
         // New item data system?
-        itemStack.readAdditionalData(buffer);
+        ((io.gomint.server.inventory.item.ItemStack<?>) itemStack).readAdditionalData(buffer);
 
         return itemStack;
     }
 
-    public static ItemStack readItemStackWithID(PacketBuffer buffer) {
+    public static ItemStack<?> readItemStackWithID(PacketBuffer buffer) {
         int id = buffer.readSignedVarInt();
-        io.gomint.server.inventory.item.ItemStack serverItemStack = (io.gomint.server.inventory.item.ItemStack) readItemStack(buffer);
+        io.gomint.server.inventory.item.ItemStack<?> serverItemStack = (io.gomint.server.inventory.item.ItemStack<?>) readItemStack(buffer);
         if (serverItemStack != null) {
-            serverItemStack.setStackId(id);
+            serverItemStack.stackId(id);
         }
 
         return serverItemStack;
     }
 
-    public static void writeItemStackWithID(ItemStack itemStack, PacketBuffer buffer) {
-        io.gomint.server.inventory.item.ItemStack serverItemStack = (io.gomint.server.inventory.item.ItemStack) itemStack;
+    public static void writeItemStackWithID(ItemStack<?> itemStack, PacketBuffer buffer) {
+        io.gomint.server.inventory.item.ItemStack<?> serverItemStack = (io.gomint.server.inventory.item.ItemStack<?>) itemStack;
 
-        buffer.writeSignedVarInt(serverItemStack.getStackId());
+        buffer.writeSignedVarInt(serverItemStack.stackId());
         writeItemStack(itemStack, buffer);
     }
 
@@ -132,18 +131,18 @@ public abstract class Packet {
      * @param itemStack which should be written
      * @param buffer    which should be used to write to
      */
-    public static void writeItemStack(ItemStack itemStack, PacketBuffer buffer) {
+    public static void writeItemStack(ItemStack<?> itemStack, PacketBuffer buffer) {
         if (itemStack instanceof ItemAir) {
             buffer.writeSignedVarInt(0);
             return;
         }
 
-        io.gomint.server.inventory.item.ItemStack serverItemStack = (io.gomint.server.inventory.item.ItemStack) itemStack;
+        io.gomint.server.inventory.item.ItemStack<?> serverItemStack = (io.gomint.server.inventory.item.ItemStack<?>) itemStack;
 
-        buffer.writeSignedVarInt(serverItemStack.getRuntimeID());
-        buffer.writeSignedVarInt(((serverItemStack.getData() & 0x7fff) << 8) + (itemStack.getAmount() & 0xff));
+        buffer.writeSignedVarInt(serverItemStack.runtimeID());
+        buffer.writeSignedVarInt(((serverItemStack.data() & 0x7fff) << 8) + (itemStack.amount() & 0xff));
 
-        NBTTagCompound compound = serverItemStack.getNbtData();
+        NBTTagCompound compound = serverItemStack.nbtData();
         if (compound == null) {
             buffer.writeLShort((short) 0);
         } else {
@@ -165,20 +164,20 @@ public abstract class Packet {
         buffer.writeSignedVarInt(0);
         buffer.writeSignedVarInt(0);
 
-        ((io.gomint.server.inventory.item.ItemStack) itemStack).writeAdditionalData(buffer);
+        ((io.gomint.server.inventory.item.ItemStack<?>) itemStack).writeAdditionalData(buffer);
     }
 
-    public static void writeRecipeInput(ItemStack ingredient, PacketBuffer buffer) {
+    public static void writeRecipeInput(ItemStack<?> ingredient, PacketBuffer buffer) {
         if (ingredient == null) {
             buffer.writeSignedVarInt(0);
             return;
         }
 
-        io.gomint.server.inventory.item.ItemStack impl = ((io.gomint.server.inventory.item.ItemStack) ingredient);
-        int material = impl.getRuntimeID();
+        io.gomint.server.inventory.item.ItemStack<?> impl = ((io.gomint.server.inventory.item.ItemStack<?>) ingredient);
+        int material = impl.runtimeID();
         buffer.writeSignedVarInt(material);
-        buffer.writeSignedVarInt(impl.getData());
-        buffer.writeSignedVarInt(ingredient.getAmount());
+        buffer.writeSignedVarInt(impl.data());
+        buffer.writeSignedVarInt(ingredient.amount());
     }
 
     /**
@@ -221,7 +220,7 @@ public abstract class Packet {
      * @param itemStacks which should be written to the buffer
      * @param buffer     which should be written to
      */
-    void writeItemStacks(ItemStack[] itemStacks, PacketBuffer buffer) {
+    void writeItemStacks(ItemStack<?>[] itemStacks, PacketBuffer buffer) {
         if (itemStacks == null || itemStacks.length == 0) {
             buffer.writeUnsignedVarInt(0);
             return;
@@ -229,7 +228,7 @@ public abstract class Packet {
 
         buffer.writeUnsignedVarInt(itemStacks.length);
 
-        for (ItemStack itemStack : itemStacks) {
+        for (ItemStack<?> itemStack : itemStacks) {
             writeItemStack(itemStack, buffer);
         }
     }
@@ -240,9 +239,9 @@ public abstract class Packet {
      * @param buffer The buffer to read from
      * @return a list of item stacks
      */
-    public static ItemStack[] readItemStacks(PacketBuffer buffer) {
+    public static ItemStack<?>[] readItemStacks(PacketBuffer buffer) {
         int count = buffer.readUnsignedVarInt();
-        ItemStack[] itemStacks = new ItemStack[count];
+        ItemStack<?>[] itemStacks = new ItemStack[count];
 
         for (int i = 0; i < count; i++) {
             itemStacks[i] = readItemStack(buffer);
@@ -257,7 +256,7 @@ public abstract class Packet {
      * @param itemStacks which should be written to the buffer
      * @param buffer     which should be written to
      */
-    void writeItemStacksWithIDs(ItemStack[] itemStacks, PacketBuffer buffer) {
+    void writeItemStacksWithIDs(ItemStack<?>[] itemStacks, PacketBuffer buffer) {
         if (itemStacks == null || itemStacks.length == 0) {
             buffer.writeUnsignedVarInt(0);
             return;
@@ -265,7 +264,7 @@ public abstract class Packet {
 
         buffer.writeUnsignedVarInt(itemStacks.length);
 
-        for (ItemStack itemStack : itemStacks) {
+        for (ItemStack<?> itemStack : itemStacks) {
             writeItemStackWithID(itemStack, buffer);
         }
     }
@@ -276,9 +275,9 @@ public abstract class Packet {
      * @param buffer The buffer to read from
      * @return a list of item stacks
      */
-    public static ItemStack[] readItemStacksWithIDs(PacketBuffer buffer) {
+    public static ItemStack<?>[] readItemStacksWithIDs(PacketBuffer buffer) {
         int count = buffer.readUnsignedVarInt();
-        ItemStack[] itemStacks = new ItemStack[count];
+        ItemStack<?>[] itemStacks = new ItemStack[count];
 
         for (int i = 0; i < count; i++) {
             itemStacks[i] = readItemStackWithID(buffer);
@@ -306,7 +305,7 @@ public abstract class Packet {
         }
     }
 
-    public void writeGamerules(Map<Gamerule, Object> gamerules, PacketBuffer buffer) {
+    public void writeGamerules(Map<Gamerule<?>, Object> gamerules, PacketBuffer buffer) {
         if (gamerules == null) {
             buffer.writeUnsignedVarInt(0);
             return;
@@ -314,28 +313,28 @@ public abstract class Packet {
 
         buffer.writeUnsignedVarInt(gamerules.size());
         gamerules.forEach((gamerule, value) -> {
-            buffer.writeString(gamerule.getNbtName().toLowerCase());
+            buffer.writeString(gamerule.name().toLowerCase());
 
-            if (gamerule.getValueType() == Boolean.class) {
+            if (gamerule.valueType() == Boolean.class) {
                 buffer.writeByte((byte) 1);
                 buffer.writeBoolean((Boolean) value);
-            } else if (gamerule.getValueType() == Integer.class) {
+            } else if (gamerule.valueType() == Integer.class) {
                 buffer.writeByte((byte) 2);
                 buffer.writeUnsignedVarInt((Integer) value);
-            } else if (gamerule.getValueType() == Float.class) {
+            } else if (gamerule.valueType() == Float.class) {
                 buffer.writeByte((byte) 3);
                 buffer.writeLFloat((Float) value);
             }
         });
     }
 
-    public Map<Gamerule, Object> readGamerules(PacketBuffer buffer) {
+    public Map<Gamerule<?>, Object> readGamerules(PacketBuffer buffer) {
         int amount = buffer.readUnsignedVarInt();
         if (amount == 0) {
             return null;
         }
 
-        Map<Gamerule, Object> gamerules = new HashMap<>();
+        Map<Gamerule<?>, Object> gamerules = new HashMap<>();
         for (int i = 0; i < amount; i++) {
             String name = buffer.readString();
             byte type = buffer.readByte();
@@ -436,15 +435,15 @@ public abstract class Packet {
     }
 
     public void writeBlockPosition(BlockPosition position, PacketBuffer buffer) {
-        buffer.writeSignedVarInt(position.getX());
-        buffer.writeUnsignedVarInt(position.getY());
-        buffer.writeSignedVarInt(position.getZ());
+        buffer.writeSignedVarInt(position.x());
+        buffer.writeUnsignedVarInt(position.y());
+        buffer.writeSignedVarInt(position.z());
     }
 
     public void writeSignedBlockPosition(BlockPosition position, PacketBuffer buffer) {
-        buffer.writeSignedVarInt(position.getX());
-        buffer.writeSignedVarInt(position.getY());
-        buffer.writeSignedVarInt(position.getZ());
+        buffer.writeSignedVarInt(position.x());
+        buffer.writeSignedVarInt(position.y());
+        buffer.writeSignedVarInt(position.z());
     }
 
     public void writeEntityLinks(List<EntityLink> links, PacketBuffer buffer) {
@@ -462,9 +461,9 @@ public abstract class Packet {
     }
 
     void writeVector(Vector vector, PacketBuffer buffer) {
-        buffer.writeLFloat(vector.getX());
-        buffer.writeLFloat(vector.getY());
-        buffer.writeLFloat(vector.getZ());
+        buffer.writeLFloat(vector.x());
+        buffer.writeLFloat(vector.y());
+        buffer.writeLFloat(vector.z());
     }
 
     Vector readVector(PacketBuffer buffer) {

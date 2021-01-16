@@ -14,12 +14,13 @@ import io.gomint.GoMint;
  * @version 1.0
  * @stability 3
  */
-public interface ItemChain extends ItemStack {
+public interface ItemChain extends ItemStack<ItemChain> {
 
     /**
      * Create a new item stack with given class and amount
      *
      * @param amount which is used for the creation
+	 * @return freshly generated item
      */
     static ItemChain create( int amount ) {
         return GoMint.instance().createItemStack( ItemChain.class, amount );

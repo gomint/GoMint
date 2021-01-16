@@ -8,7 +8,6 @@
 package io.gomint.server.enchant;
 
 import io.gomint.enchant.Rarity;
-import io.gomint.inventory.item.ItemType;
 import io.gomint.server.inventory.item.ItemStack;
 import io.gomint.server.registry.RegisterInfo;
 
@@ -27,22 +26,22 @@ public class EnchantmentFireProtection extends Enchantment implements io.gomint.
     }
 
     @Override
-    public int getMinEnchantAbility(short level) {
+    public int minEnchantAbility(short level) {
         return (byte) (10 + (level - 1) * 8);
     }
 
     @Override
-    public int getMaxEnchantAbility(short level) {
-        return (byte) (getMinEnchantAbility(level) + 12);
+    public int maxEnchantAbility(short level) {
+        return (byte) (minEnchantAbility(level) + 12);
     }
 
     @Override
-    public boolean canBeApplied(ItemStack itemStack) {
+    public boolean canBeApplied(ItemStack<?> itemStack) {
         return EnchantmentHelper.canBeAppliedArmor(itemStack);
     }
 
     @Override
-    public Rarity getRarity() {
+    public Rarity rarity() {
         return Rarity.UNCOMMON;
     }
 

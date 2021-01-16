@@ -13,6 +13,7 @@ import io.gomint.world.block.BlockBedrock;
 import io.gomint.world.block.BlockDirt;
 import io.gomint.world.block.BlockStationaryWater;
 import io.gomint.world.block.BlockStone;
+import io.gomint.world.block.data.DirtType;
 
 /**
  * @author geNAZt
@@ -22,14 +23,14 @@ import io.gomint.world.block.BlockStone;
 public class DefinedBlocks {
 
     // Used blocks for terrain
-    public static final Block WATER = GoMint.instance().createBlock( BlockStationaryWater.class );
-    public static final Block BEDROCK = GoMint.instance().createBlock( BlockBedrock.class );
-    public static final BlockStone STONE = GoMint.instance().createBlock( BlockStone.class );
-    public static final BlockDirt DIRT = GoMint.instance().createBlock( BlockDirt.class );
+    public static final Block WATER = GoMint.instance().createBlock(BlockStationaryWater.class);
+    public static final Block BEDROCK = GoMint.instance().createBlock(BlockBedrock.class);
+    public static final BlockStone STONE = GoMint.instance().createBlock(BlockStone.class);
+    public static final BlockDirt DIRT = GoMint.instance().createBlock(BlockDirt.class);
 
     static {
-        DIRT.setDirtType(BlockDirt.Type.NORMAL);
-        STONE.setStoneType(BlockStone.Type.STONE);
+        DIRT.type(DirtType.NORMAL);
+        STONE.type(BlockStone.Type.STONE);
     }
 
 }

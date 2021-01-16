@@ -7,6 +7,8 @@
 
 package io.gomint.world.block;
 
+import io.gomint.world.block.data.DirtType;
+
 /**
  * @author geNAZt
  * @version 1.0
@@ -14,23 +16,19 @@ package io.gomint.world.block;
  */
 public interface BlockDirt extends Block {
 
-    enum Type {
-        NORMAL,
-        COARSE,
-    }
-
     /**
      * Set type of dirt
      *
      * @param type which should be set
+     * @return block for chaining
      */
-    void setDirtType(Type type);
+    BlockDirt type(DirtType type);
 
     /**
      * Get the type of dirt
      *
      * @return type of dirt
      */
-    Type getDirtType();
+    DirtType type();
 
 }

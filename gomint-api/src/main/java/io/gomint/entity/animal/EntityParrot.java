@@ -15,7 +15,7 @@ import io.gomint.entity.EntityLiving;
  * @version 1.0
  * @stability 3
  */
-public interface EntityParrot extends EntityLiving {
+public interface EntityParrot extends EntityLiving<EntityParrot> {
 
     /**
      * Create new entity parrot with no config
@@ -31,13 +31,13 @@ public interface EntityParrot extends EntityLiving {
      *
      * @param value true if this parrot should be dancing, false if not
      */
-    void setDancing( boolean value );
+    EntityParrot dancing(boolean value );
 
     /**
      * Is the parrot dancing?
      *
      * @return true if this parrot is dancing, false if not
      */
-    boolean isDancing();
+    boolean dancing();
 
 }

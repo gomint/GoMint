@@ -10,10 +10,10 @@ import io.gomint.taglib.NBTTagCompound;
  * @version 1.0
  */
 @RegisterInfo(sId = "minecraft:hardened_clay", id = 172)
-public class ItemHardenedClay extends ItemStack implements io.gomint.inventory.item.ItemHardenedClay {
+public class ItemHardenedClay extends ItemStack< io.gomint.inventory.item.ItemHardenedClay> implements io.gomint.inventory.item.ItemHardenedClay {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.HARDENED_CLAY;
     }
 

@@ -20,7 +20,7 @@ public class Netherrack extends Block implements BlockNetherrack {
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 600;
     }
 
@@ -30,7 +30,7 @@ public class Netherrack extends Block implements BlockNetherrack {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.NETHERRACK;
     }
 
@@ -40,7 +40,7 @@ public class Netherrack extends Block implements BlockNetherrack {
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return ToolPresets.PICKAXE;
     }
 

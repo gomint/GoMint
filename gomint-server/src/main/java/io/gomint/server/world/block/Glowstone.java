@@ -24,12 +24,12 @@ public class Glowstone extends Block implements BlockGlowstone {
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 450;
     }
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
@@ -39,7 +39,7 @@ public class Glowstone extends Block implements BlockGlowstone {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.GLOWSTONE;
     }
 
@@ -49,8 +49,8 @@ public class Glowstone extends Block implements BlockGlowstone {
     }
 
     @Override
-    public List<ItemStack> getDrops( ItemStack itemInHand ) {
-        return new ArrayList<ItemStack>() {{
+    public List<ItemStack<?>> drops(ItemStack<?> itemInHand ) {
+        return new ArrayList<>() {{
             add( ItemGlowstoneDust.create( ThreadLocalRandom.current().nextBoolean() ? 2 : 4 ) );
         }};
     }

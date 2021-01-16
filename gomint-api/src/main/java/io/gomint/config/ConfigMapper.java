@@ -30,7 +30,7 @@ public class ConfigMapper extends BaseConfigMapper {
      * @throws Exception which can be everything
      */
     @SuppressWarnings("unchecked")
-    public Map<String, Object> saveToMap(Class clazz) throws Exception {
+    public Map<String, Object> saveToMap(Class<?> clazz) throws Exception {
         Map<String, Object> returnMap = new HashMap<>();
 
         if (!clazz.getSuperclass().equals(YamlConfig.class) && !clazz.getSuperclass().equals(Object.class)) {
@@ -65,8 +65,9 @@ public class ConfigMapper extends BaseConfigMapper {
      * @param section map containing all paths as keys and value
      * @param clazz which holds the field structure
      * @throws Exception which can be everything
+     * @return config mapper for chaining
      */
-    public void loadFromMap(Map section, Class clazz) throws Exception {
+    public ConfigMapper loadFromMap(Map<?, ?> section, Class<?> clazz) throws Exception {
         if (!clazz.getSuperclass().equals(YamlConfig.class)) {
             this.loadFromMap(section, clazz.getSuperclass());
         }
@@ -79,6 +80,7 @@ public class ConfigMapper extends BaseConfigMapper {
             String path = this.getPath(field);
             converter.fromConfig((YamlConfig) this, field, ConfigSection.convertFromMap(section), path);
         }
+        return this;
     }
 
     private boolean prepareField(Field field) {

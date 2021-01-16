@@ -20,7 +20,7 @@ public class HardenedClay extends Block implements BlockHardenedClay {
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 1875;
     }
 
@@ -30,7 +30,7 @@ public class HardenedClay extends Block implements BlockHardenedClay {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.HARDENED_CLAY;
     }
 
@@ -40,7 +40,7 @@ public class HardenedClay extends Block implements BlockHardenedClay {
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return ToolPresets.PICKAXE;
     }
 

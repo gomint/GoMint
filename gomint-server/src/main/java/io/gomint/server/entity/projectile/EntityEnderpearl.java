@@ -12,7 +12,6 @@ import io.gomint.event.entity.EntityTeleportEvent;
 import io.gomint.event.entity.projectile.ProjectileHitBlocksEvent;
 import io.gomint.math.Location;
 import io.gomint.math.MathUtils;
-import io.gomint.math.Vector;
 import io.gomint.server.entity.EntityPlayer;
 import io.gomint.server.entity.EntityType;
 import io.gomint.server.registry.RegisterInfo;
@@ -22,14 +21,13 @@ import io.gomint.world.block.Block;
 
 import java.util.HashSet;
 import java.util.Set;
-import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * @author geNAZt
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:ender_pearl" )
-public class EntityEnderpearl extends EntityThrowable implements io.gomint.entity.projectile.EntityEnderpearl {
+public class EntityEnderpearl extends EntityThrowable<io.gomint.entity.projectile.EntityEnderpearl> implements io.gomint.entity.projectile.EntityEnderpearl {
 
     private float lastUpdateDT;
 
@@ -50,23 +48,13 @@ public class EntityEnderpearl extends EntityThrowable implements io.gomint.entit
         super( player, EntityType.THROWN_ENDERPEARL, world );
 
         // Calculate starting position
-        Location position = this.setPositionFromShooter();
+        Location position = this.positionFromShooter();
 
         // Calculate motion
-        this.setMotionFromEntity(position, this.shooter.getVelocity(), 0f, 1.5f, 1f);
+        this.motionFromEntity(position, this.shooter.velocity(), 0f, 1.5f, 1f);
 
         // Calculate correct yaw / pitch
-        this.setLookFromMotion();
-    }
-
-    @Override
-    public boolean isCritical() {
-        return false;
-    }
-
-    @Override
-    public float getDamage() {
-        return 0;
+        this.lookFromMotion();
     }
 
     @Override
@@ -85,8 +73,8 @@ public class EntityEnderpearl extends EntityThrowable implements io.gomint.entit
             if ( this.isCollided ) {
                 Set<Block> blocks = new HashSet<>( this.collidedWith );
                 ProjectileHitBlocksEvent hitBlocksEvent = new ProjectileHitBlocksEvent( blocks, this );
-                this.world.getServer().getPluginManager().callEvent( hitBlocksEvent );
-                if ( !hitBlocksEvent.isCancelled() ) {
+                this.world.getServer().pluginManager().callEvent( hitBlocksEvent );
+                if ( !hitBlocksEvent.cancelled() ) {
                     // Teleport
                     this.teleportShooter();
                     this.despawn();
@@ -104,7 +92,7 @@ public class EntityEnderpearl extends EntityThrowable implements io.gomint.entit
 
     private void teleportShooter() {
         this.shooter.attack( 5.0f, EntityDamageEvent.DamageSource.FALL );
-        this.shooter.teleport( this.getLocation(), EntityTeleportEvent.Cause.ENDERPEARL );
+        this.shooter.teleport( this.location(), EntityTeleportEvent.Cause.ENDERPEARL );
     }
 
 }

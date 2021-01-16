@@ -47,7 +47,7 @@ public class PluginScheduler implements Scheduler {
 
         Task task = coreScheduler.executeAsync( runnable );
         task.onException( e -> {
-            plugin.getLogger().warn( "A task thrown a Exception", e );
+            plugin.logger().warn( "A task thrown a Exception", e );
             return true;
         } );
 
@@ -65,7 +65,7 @@ public class PluginScheduler implements Scheduler {
 
         Task task = coreScheduler.scheduleAsync( runnable, delay, timeUnit );
         task.onException( e -> {
-            plugin.getLogger().warn( "A task thrown a Exception", e );
+            plugin.logger().warn( "A task thrown a Exception", e );
             return true;
         } );
 
@@ -83,7 +83,7 @@ public class PluginScheduler implements Scheduler {
 
         Task task = coreScheduler.scheduleAsync( runnable, delay, period, timeUnit );
         task.onException( e -> {
-            plugin.getLogger().warn( "A task thrown a Exception", e );
+            plugin.logger().warn( "A task thrown a Exception", e );
             return true;
         } );
 
@@ -101,7 +101,7 @@ public class PluginScheduler implements Scheduler {
 
         Task task = coreScheduler.execute( runnable );
         task.onException( e -> {
-            plugin.getLogger().warn( "A task thrown a Exception", e );
+            plugin.logger().warn( "A task thrown a Exception", e );
             return true;
         } );
 
@@ -119,7 +119,7 @@ public class PluginScheduler implements Scheduler {
 
         Task task = coreScheduler.schedule( runnable, delay, timeUnit );
         task.onException( e -> {
-            plugin.getLogger().warn( "A task thrown a Exception", e );
+            plugin.logger().warn( "A task thrown a Exception", e );
             return true;
         } );
 
@@ -137,7 +137,7 @@ public class PluginScheduler implements Scheduler {
 
         Task task = coreScheduler.schedule( runnable, delay, period, timeUnit );
         task.onException( e -> {
-            plugin.getLogger().warn( "A task thrown a Exception", e );
+            plugin.logger().warn( "A task thrown a Exception", e );
             return true;
         } );
 

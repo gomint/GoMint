@@ -18,12 +18,12 @@ public class Melon extends Block implements BlockMelon {
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 1500;
     }
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
@@ -33,7 +33,7 @@ public class Melon extends Block implements BlockMelon {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.MELON;
     }
 

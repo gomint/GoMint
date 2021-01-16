@@ -36,7 +36,7 @@ import java.util.concurrent.TimeUnit;
  * @author BlackyPaw
  * @version 1.0
  */
-public abstract class EntityLiving extends Entity implements InventoryHolder, io.gomint.entity.EntityLiving {
+public abstract class EntityLiving<E extends io.gomint.entity.Entity<E>> extends Entity<E> implements InventoryHolder, io.gomint.entity.EntityLiving<E> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(EntityLiving.class);
 
@@ -48,7 +48,7 @@ public abstract class EntityLiving extends Entity implements InventoryHolder, io
     protected Map<String, AttributeInstance> attributes = new HashMap<>();
 
     private float lastUpdateDT = 0;
-    private final Set<io.gomint.entity.Entity> attachedEntities = new HashSet<>();
+    private final Set<io.gomint.entity.Entity<?>> attachedEntities = new HashSet<>();
 
     private byte attackCoolDown = 0;
 
@@ -58,7 +58,7 @@ public abstract class EntityLiving extends Entity implements InventoryHolder, io
     // Damage stats
     protected float lastDamage = 0;
     protected EntityDamageEvent.DamageSource lastDamageSource;
-    protected io.gomint.entity.Entity lastDamageEntity;
+    protected io.gomint.entity.Entity<?> lastDamageEntity;
 
     // Effects
     private final EffectManager effectManager = new EffectManager(this);
@@ -79,34 +79,30 @@ public abstract class EntityLiving extends Entity implements InventoryHolder, io
     }
 
     private void initAttributes() {
-        addAttribute(Attribute.ABSORPTION);
-        addAttribute(Attribute.ATTACK_DAMAGE);
-        addAttribute(Attribute.FOLLOW_RANGE);
-        addAttribute(Attribute.HEALTH);
-        addAttribute(Attribute.MOVEMENT_SPEED);
-        addAttribute(Attribute.KNOCKBACK_RESISTANCE);
+        attribute(Attribute.ABSORPTION);
+        attribute(Attribute.ATTACK_DAMAGE);
+        attribute(Attribute.FOLLOW_RANGE);
+        attribute(Attribute.HEALTH);
+        attribute(Attribute.MOVEMENT_SPEED);
+        attribute(Attribute.KNOCKBACK_RESISTANCE);
     }
 
-    protected float addAttribute(Attribute attribute) {
-        AttributeInstance instance = attribute.create();
-        this.attributes.put(instance.getKey(), instance);
-        return instance.getValue();
-    }
-
-    public float getAttribute(Attribute attribute) {
+    public float attribute(Attribute attribute) {
         AttributeInstance instance = this.attributes.get(attribute.getKey());
         if (instance != null) {
             return instance.getValue();
         }
 
-        return addAttribute(attribute);
+        instance = attribute.create();
+        this.attributes.put(instance.getKey(), instance);
+        return instance.getValue();
     }
 
-    public AttributeInstance getAttributeInstance(Attribute attribute) {
+    public AttributeInstance attributeInstance(Attribute attribute) {
         return this.attributes.get(attribute.getKey());
     }
 
-    public void setAttribute(Attribute attribute, float value) {
+    public void attribute(Attribute attribute, float value) {
         AttributeInstance instance = this.attributes.get(attribute.getKey());
         if (instance != null) {
             instance.setValue(value);
@@ -114,10 +110,10 @@ public abstract class EntityLiving extends Entity implements InventoryHolder, io
     }
 
     @Override
-    protected void fall() {
+    protected E fall() {
         // Check for jump potion
         float distanceReduce = 0.0f;
-        int jumpAmplifier = getEffectAmplifier(PotionEffect.JUMP);
+        int jumpAmplifier = effect(PotionEffect.JUMP);
         if (jumpAmplifier != -1) {
             distanceReduce = jumpAmplifier + 1;
         }
@@ -126,24 +122,26 @@ public abstract class EntityLiving extends Entity implements InventoryHolder, io
         if (damage > 0) {
             this.attack(damage, EntityDamageEvent.DamageSource.FALL);
         }
+
+        return (E) this;
     }
 
     // ==================================== UPDATING ==================================== //
 
     @Override
     public void update(long currentTimeMS, float dT) {
-        if (!(this.isDead() || this.getHealth() <= 0)) {
+        if (!(this.dead() || this.health() <= 0)) {
             super.update(currentTimeMS, dT);
             this.behaviour.update(currentTimeMS, dT);
         }
 
         // Check if last hit entity is still alive
-        if (this.lastDamageEntity != null && this.lastDamageEntity.isDead()) {
+        if (this.lastDamageEntity != null && this.lastDamageEntity.dead()) {
             this.lastDamageEntity = null;
         }
 
         // Only update when alive
-        if (!(this.isDead() || this.getHealth() <= 0)) {
+        if (!(this.dead() || this.health() <= 0)) {
             // Update effects
             this.effectManager.update(currentTimeMS, dT);
         }
@@ -152,7 +150,7 @@ public abstract class EntityLiving extends Entity implements InventoryHolder, io
         this.lastUpdateDT += dT;
         if (Values.CLIENT_TICK_RATE - this.lastUpdateDT < MathUtils.EPSILON) {
             // Calc death stuff
-            if (this.getHealth() <= 0) {
+            if (this.health() <= 0) {
                 if (this.deadTimer > 0 && this.deadTimer-- > 1) {
                     despawn();
                     this.deadTimer = 0;
@@ -161,7 +159,7 @@ public abstract class EntityLiving extends Entity implements InventoryHolder, io
                 this.deadTimer = 0;
             }
 
-            if (this.isDead() || this.getHealth() <= 0) {
+            if (this.dead() || this.health() <= 0) {
                 this.lastUpdateDT = 0;
                 return;
             }
@@ -180,11 +178,11 @@ public abstract class EntityLiving extends Entity implements InventoryHolder, io
 
                 this.fireTicks--;
                 if (this.fireTicks == 0) {
-                    setOnFire(false);
+                    burning(false);
                 }
             }
 
-            io.gomint.server.world.block.Block standingIn = this.world.getBlockAt(this.getPosition().toBlockPosition());
+            io.gomint.server.world.block.Block standingIn = this.world.blockAt(this.position().toBlockPosition());
             standingIn.onEntityStanding(this);
 
             this.lastUpdateDT = 0;
@@ -206,7 +204,7 @@ public abstract class EntityLiving extends Entity implements InventoryHolder, io
     }
 
     @Override
-    public void setHealth(float amount) {
+    public E health(float amount) {
         if (amount <= 0) {
             this.lastDamageSource = EntityDamageEvent.DamageSource.API;
             this.lastDamage = 999999;
@@ -214,11 +212,12 @@ public abstract class EntityLiving extends Entity implements InventoryHolder, io
         }
 
         this.setHealthInternal(amount);
+        return (E) this;
     }
 
     @Override
-    public float getHealth() {
-        return this.getAttribute(Attribute.HEALTH);
+    public float health() {
+        return this.attribute(Attribute.HEALTH);
     }
 
     @Override
@@ -227,74 +226,74 @@ public abstract class EntityLiving extends Entity implements InventoryHolder, io
         PacketSpawnEntity packet = new PacketSpawnEntity();
         packet.setEntityId(this.id);
         packet.setEntityType(this.type);
-        packet.setX(this.getPositionX());
-        packet.setY(this.getPositionY());
-        packet.setZ(this.getPositionZ());
+        packet.setX(this.positionX());
+        packet.setY(this.positionY());
+        packet.setZ(this.positionZ());
         packet.setVelocityX(this.getMotionX());
         packet.setVelocityY(this.getMotionY());
         packet.setVelocityZ(this.getMotionZ());
-        packet.setPitch(this.getPitch());
-        packet.setYaw(this.getYaw());
-        packet.setHeadYaw(this.getHeadYaw());
+        packet.setPitch(this.pitch());
+        packet.setYaw(this.yaw());
+        packet.setHeadYaw(this.headYaw());
         packet.setAttributes(this.attributes.values());
-        packet.setMetadata(this.getMetadata());
+        packet.setMetadata(this.metadata());
         return packet;
     }
 
     @Override
-    public void setAbsorptionHearts(float amount) {
+    public E absorptionHearts(float amount) {
         AttributeInstance attributeInstance = this.attributes.get(Attribute.ABSORPTION.getKey());
         attributeInstance.setValue(MathUtils.clamp(amount, attributeInstance.getMinValue(), attributeInstance.getMaxValue()));
+        return (E) this;
     }
 
     @Override
-    public float getAbsorptionHearts() {
-        return this.getAttribute(Attribute.ABSORPTION);
+    public float absorptionHearts() {
+        return this.attribute(Attribute.ABSORPTION);
     }
 
     @Override
-    public void setMaxHealth(float amount) {
-        this.getAttributeInstance(Attribute.HEALTH).setMaxValue(amount);
+    public E maxHealth(float amount) {
+        this.attributeInstance(Attribute.HEALTH).setMaxValue(amount);
+        return (E) this;
     }
 
     @Override
-    public float getMaxHealth() {
-        return this.getAttributeInstance(Attribute.HEALTH).getMaxValue();
+    public float maxHealth() {
+        return this.attributeInstance(Attribute.HEALTH).getMaxValue();
     }
 
-    /**
-     * Heal this entity by given amount and cause
-     *
-     * @param amount of heal
-     * @param cause  of this heal
-     */
-    public void heal(float amount, EntityHealEvent.Cause cause) {
+    @Override
+    public E heal(float amount, EntityHealEvent.Cause cause) {
         EntityHealEvent event = new EntityHealEvent(this, amount, cause);
-        this.world.getServer().getPluginManager().callEvent(event);
+        this.world.getServer().pluginManager().callEvent(event);
 
-        if (!event.isCancelled()) {
-            this.setHealth(this.getHealth() + amount);
+        if (!event.cancelled()) {
+            this.health(this.health() + amount);
         }
+
+        return (E) this;
     }
 
     @Override
-    public void attack(float damage, EntityDamageEvent.DamageSource source) {
+    public E attack(float damage, EntityDamageEvent.DamageSource source) {
         EntityDamageEvent damageEvent = new EntityDamageEvent(this, source, damage);
         this.damage(damageEvent);
+        return (E) this;
     }
 
     @Override
     public boolean damage(EntityDamageEvent damageEvent) {
         // Don't damage dead entities
-        if (this.getHealth() <= 0) {
+        if (this.health() <= 0) {
             return false;
         }
 
         // Check for effect blocking
         if (hasEffect(PotionEffect.FIRE_RESISTANCE) && (
-            damageEvent.getDamageSource() == EntityDamageEvent.DamageSource.FIRE ||
-                damageEvent.getDamageSource() == EntityDamageEvent.DamageSource.LAVA ||
-                damageEvent.getDamageSource() == EntityDamageEvent.DamageSource.ON_FIRE
+            damageEvent.damageSource() == EntityDamageEvent.DamageSource.FIRE ||
+                damageEvent.damageSource() == EntityDamageEvent.DamageSource.LAVA ||
+                damageEvent.damageSource() == EntityDamageEvent.DamageSource.ON_FIRE
         )) {
             return false;
         }
@@ -304,7 +303,7 @@ public abstract class EntityLiving extends Entity implements InventoryHolder, io
         damage = applyEffectReduction(damageEvent, damage);
 
         // Absorption
-        float absorptionHearts = this.getAbsorptionHearts();
+        float absorptionHearts = this.absorptionHearts();
         if (absorptionHearts > 0) {
             damage = Math.max(damage - absorptionHearts, 0f);
         }
@@ -315,28 +314,28 @@ public abstract class EntityLiving extends Entity implements InventoryHolder, io
         }
 
         // Call event
-        damageEvent.setFinalDamage(damage);
+        damageEvent.finalDamage(damage);
         if (!super.damage(damageEvent)) {
             return false;
         }
 
         // Did the final damage change?
         float damageToBeDealt;
-        if (damage != damageEvent.getFinalDamage()) {
-            damageToBeDealt = damageEvent.getFinalDamage();
+        if (damage != damageEvent.finalDamage()) {
+            damageToBeDealt = damageEvent.finalDamage();
         } else {
             damageToBeDealt = applyArmorReduction(damageEvent, true);
             damageToBeDealt = applyEffectReduction(damageEvent, damageToBeDealt);
 
-            absorptionHearts = this.getAbsorptionHearts();
+            absorptionHearts = this.absorptionHearts();
             if (absorptionHearts > 0) {
                 float oldDamage = damageToBeDealt;
                 damageToBeDealt = Math.max(damage - absorptionHearts, 0f);
-                this.setAbsorptionHearts(absorptionHearts - (oldDamage - damageToBeDealt));
+                this.absorptionHearts(absorptionHearts - (oldDamage - damageToBeDealt));
             }
         }
 
-        float health = MathUtils.fastCeil(this.getHealth() - damageToBeDealt);
+        float health = MathUtils.fastCeil(this.health() - damageToBeDealt);
 
         // Send animation
         if (health > 0) {
@@ -344,21 +343,21 @@ public abstract class EntityLiving extends Entity implements InventoryHolder, io
             entityEvent.setEntityId(this.id);
             entityEvent.setEventId(EntityEvent.HURT.getId());
 
-            for (io.gomint.entity.Entity attachedEntity : this.attachedEntities) {
+            for (io.gomint.entity.Entity<?> attachedEntity : this.attachedEntities) {
                 EntityPlayer entityPlayer = (EntityPlayer) attachedEntity;
-                entityPlayer.getConnection().addToSendQueue(entityEvent);
+                entityPlayer.connection().addToSendQueue(entityEvent);
             }
 
             if (this instanceof EntityPlayer) {
-                ((EntityPlayer) this).getConnection().addToSendQueue(entityEvent);
+                ((EntityPlayer) this).connection().addToSendQueue(entityEvent);
             }
         }
 
         if (damageEvent instanceof EntityDamageByEntityEvent) {
             // Knockback
-            Entity entity = (Entity) ((EntityDamageByEntityEvent) damageEvent).getAttacker();
-            float diffX = this.getPositionX() - entity.getPositionX();
-            float diffZ = this.getPositionZ() - entity.getPositionZ();
+            Entity<?> entity = (Entity<?>) ((EntityDamageByEntityEvent) damageEvent).attacker();
+            float diffX = this.positionX() - entity.positionX();
+            float diffZ = this.positionZ() - entity.positionZ();
 
             float distance = (float) Math.sqrt(diffX * diffX + diffZ * diffZ);
             if (distance > 0.0) {
@@ -366,7 +365,7 @@ public abstract class EntityLiving extends Entity implements InventoryHolder, io
 
                 distance = 1 / distance;
 
-                Vector motion = this.getVelocity();
+                Vector motion = this.velocity();
                 motion = motion.divide(2f, 2f, 2f);
                 motion = motion.add(
                     (diffX * distance * baseModifier),
@@ -374,17 +373,17 @@ public abstract class EntityLiving extends Entity implements InventoryHolder, io
                     (diffZ * distance * baseModifier)
                 );
 
-                if (motion.getY() > baseModifier) {
-                    motion.setY(baseModifier);
+                if (motion.y() > baseModifier) {
+                    motion.y(baseModifier);
                 }
 
-                this.setVelocity(motion, true);
+                this.velocity(motion, true);
             }
         }
 
         this.lastDamage = damage;
-        this.lastDamageSource = damageEvent.getDamageSource();
-        this.lastDamageEntity = (damageEvent instanceof EntityDamageByEntityEvent) ? ((EntityDamageByEntityEvent) damageEvent).getAttacker() : null;
+        this.lastDamageSource = damageEvent.damageSource();
+        this.lastDamageEntity = (damageEvent instanceof EntityDamageByEntityEvent) ? ((EntityDamageByEntityEvent) damageEvent).attacker() : null;
 
         // Set health
         this.setHealthInternal(health <= 0 ? 0 : health);
@@ -397,27 +396,23 @@ public abstract class EntityLiving extends Entity implements InventoryHolder, io
         var lastDamageEntity = this.lastDamageEntity;
         return lastDamageEntity instanceof EntityHuman || 
             (lastDamageEntity instanceof EntityProjectile 
-                && ((EntityProjectile) lastDamageEntity).getShooter() instanceof EntityHuman);
+                && ((EntityProjectile<?>) lastDamageEntity).shooter() instanceof EntityHuman);
     }
 
     protected float applyEffectReduction(EntityDamageEvent damageEvent, float damage) {
         // Starve is absolute damage
-        if (damageEvent.getDamageSource() == EntityDamageEvent.DamageSource.STARVE) {
+        if (damageEvent.damageSource() == EntityDamageEvent.DamageSource.STARVE) {
             return damage;
         }
 
-        int damageResistanceAmplifier = getEffectAmplifier(PotionEffect.DAMAGE_RESISTANCE);
-        if (damageResistanceAmplifier != -1 && damageEvent.getDamageSource() != EntityDamageEvent.DamageSource.VOID) {
+        int damageResistanceAmplifier = effect(PotionEffect.DAMAGE_RESISTANCE);
+        if (damageResistanceAmplifier != -1 && damageEvent.damageSource() != EntityDamageEvent.DamageSource.VOID) {
             float maxReductionDiff = 25f - ((damageResistanceAmplifier + 1) * 5);
             float amplifiedDamage = damage * maxReductionDiff;
             damage = amplifiedDamage / 25.0F;
         }
 
-        if (damage <= 0.0f) {
-            return 0.0f;
-        }
-
-        return damage;
+        return Math.max(damage, 0.0f);
     }
 
     /**
@@ -431,13 +426,13 @@ public abstract class EntityLiving extends Entity implements InventoryHolder, io
         entityEvent.setEntityId(this.id);
         entityEvent.setEventId(EntityEvent.DEATH.getId());
 
-        for (io.gomint.entity.Entity attachedEntity : this.attachedEntities) {
+        for (io.gomint.entity.Entity<?> attachedEntity : this.attachedEntities) {
             EntityPlayer entityPlayer = (EntityPlayer) attachedEntity;
-            entityPlayer.getConnection().addToSendQueue(entityEvent);
+            entityPlayer.connection().addToSendQueue(entityEvent);
         }
 
         this.fireTicks = 0;
-        setOnFire(false);
+        burning(false);
 
         this.effectManager.removeAll();
     }
@@ -450,12 +445,12 @@ public abstract class EntityLiving extends Entity implements InventoryHolder, io
      * @return damage left over after removing armor reductions
      */
     protected float applyArmorReduction(EntityDamageEvent damageEvent, boolean damageArmor) {
-        return damageEvent.getDamage();
+        return damageEvent.damage();
     }
 
     @Override
     public void attach(EntityPlayer player) {
-        if (!GoMint.instance().isMainThread()) {
+        if (!GoMint.instance().mainThread()) {
             LOGGER.warn("Attaching entities from another thread than the main one can cause crashes", new Exception());
         }
 
@@ -465,7 +460,7 @@ public abstract class EntityLiving extends Entity implements InventoryHolder, io
 
     @Override
     public void detach(EntityPlayer player) {
-        if (!GoMint.instance().isMainThread()) {
+        if (!GoMint.instance().mainThread()) {
             LOGGER.warn("Detaching entities from another thread than the main one can cause crashes", new Exception());
         }
 
@@ -486,27 +481,30 @@ public abstract class EntityLiving extends Entity implements InventoryHolder, io
     }
 
     @Override
-    public void setBurning(long duration, TimeUnit unit) {
-        int newFireTicks = (int) (unit.toMillis(duration) / 50);
+    public E burning(long duration, TimeUnit unit) {
+        int newFireTicks = (int) (unit.toMillis(duration) / Values.CLIENT_TICK_MS);
         if (newFireTicks > this.fireTicks) {
             this.fireTicks = newFireTicks;
-            setOnFire(true);
+            burning(true);
         } else if (newFireTicks == 0) {
             this.fireTicks = 0;
-            setOnFire(false);
+            burning(false);
         }
+
+        return (E) this;
     }
 
     @Override
-    public void extinguish() {
-        this.setBurning(0, TimeUnit.SECONDS);
+    public E extinguish() {
+        this.burning(0, TimeUnit.SECONDS);
+        return (E) this;
     }
 
     @Override
-    public io.gomint.entity.potion.Effect addEffect(PotionEffect effect, int amplifier, long duration, TimeUnit timeUnit) {
+    public io.gomint.entity.potion.Effect effect(PotionEffect effect, int amplifier, long duration, TimeUnit timeUnit) {
         byte effectId = (byte) EnumConnectors.POTION_EFFECT_CONNECTOR.convert(effect).getId();
-        Effect effectInstance = this.world.getServer().getEffects().generate(effectId, amplifier,
-            this.world.getServer().getCurrentTickTime() + timeUnit.toMillis(duration), this.effectManager);
+        Effect effectInstance = this.world.getServer().effects().generate(effectId, amplifier,
+            this.world.getServer().currentTickTime() + timeUnit.toMillis(duration), this.effectManager);
 
         if (effectInstance != null) {
             this.effectManager.addEffect(effectId, effectInstance);
@@ -522,30 +520,33 @@ public abstract class EntityLiving extends Entity implements InventoryHolder, io
     }
 
     @Override
-    public int getEffectAmplifier(PotionEffect effect) {
+    public int effect(PotionEffect effect) {
         byte effectId = (byte) EnumConnectors.POTION_EFFECT_CONNECTOR.convert(effect).getId();
         return this.effectManager.getEffectAmplifier(effectId);
     }
 
     @Override
-    public void removeEffect(PotionEffect effect) {
+    public E removeEffect(PotionEffect effect) {
         byte effectId = (byte) EnumConnectors.POTION_EFFECT_CONNECTOR.convert(effect).getId();
         this.effectManager.removeEffect(effectId);
+        return (E) this;
     }
 
     @Override
-    public void removeAllEffects() {
+    public E removeAllEffects() {
         this.effectManager.removeAll();
+        return (E) this;
     }
 
     @Override
-    public float getMovementSpeed() {
-        return this.getAttribute(Attribute.MOVEMENT_SPEED);
+    public float movementSpeed() {
+        return this.attribute(Attribute.MOVEMENT_SPEED);
     }
 
     @Override
-    public void setMovementSpeed(float value) {
-        this.setAttribute(Attribute.MOVEMENT_SPEED, value);
+    public E movementSpeed(float value) {
+        this.attribute(Attribute.MOVEMENT_SPEED, value);
+        return (E) this;
     }
 
     @Override
@@ -553,7 +554,7 @@ public abstract class EntityLiving extends Entity implements InventoryHolder, io
         super.initFromNBT(compound);
 
         if (compound.containsKey("AbsorptionAmount")) {
-            this.setAbsorptionHearts(compound.getFloat("AbsorptionAmount", 0.0f));
+            this.absorptionHearts(compound.getFloat("AbsorptionAmount", 0.0f));
         }
 
         this.effectManager.initFromNBT(compound);
@@ -588,8 +589,8 @@ public abstract class EntityLiving extends Entity implements InventoryHolder, io
     public NBTTagCompound persistToNBT() {
         NBTTagCompound compound = super.persistToNBT();
 
-        if (this.getAbsorptionHearts() > 0) {
-            compound.addValue("AbsorptionAmount", this.getAbsorptionHearts());
+        if (this.absorptionHearts() > 0) {
+            compound.addValue("AbsorptionAmount", this.absorptionHearts());
         }
 
         if (this.effectManager.hasActiveEffect()) {
@@ -608,15 +609,15 @@ public abstract class EntityLiving extends Entity implements InventoryHolder, io
         return compound;
     }
 
-    public Set<io.gomint.entity.Entity> getAttachedEntities() {
+    public Set<io.gomint.entity.Entity<?>> getAttachedEntities() {
         return attachedEntities;
     }
 
-    public EntityDamageEvent.DamageSource getLastDamageSource() {
+    public EntityDamageEvent.DamageSource lastDamageSource() {
         return lastDamageSource;
     }
 
-    public io.gomint.entity.Entity getLastDamageEntity() {
+    public io.gomint.entity.Entity<?> lastDamageEntity() {
         return lastDamageEntity;
     }
 

@@ -16,14 +16,14 @@ import java.util.List;
  * <p>
  * Any ResourceLoader must implement this Interface.
  */
-public interface ResourceLoader {
+public interface ResourceLoader<R> {
 
     /**
      * Get all Keys this Resource has
      *
      * @return A List of Strings (if no keys are there it should return an empty (size 0) list)
      */
-    List<String> getKeys();
+    List<String> keys();
 
     /**
      * Get the translatable message out of the Resource
@@ -39,14 +39,14 @@ public interface ResourceLoader {
      *
      * @return The list of supported File/Format endings
      */
-    List<String> getFormats();
+    List<String> formats();
 
     /**
      * Reload the Resource. This is issued if the ResourceManager wants to reload all loaded Resources to get a actual Cache
      *
      * @throws ResourceLoadFailedException when the Resource could not be reloaded
      */
-    void reload() throws ResourceLoadFailedException;
+    R reload() throws ResourceLoadFailedException;
 
     /**
      * Remove and cleanup this Resource. This is called when the ResourceManager no longer needs this Resource

@@ -17,7 +17,7 @@ import io.gomint.world.generator.object.OreType;
  * @author geNAZt
  * @version 1.0
  */
-public class OrePopulator implements Populator {
+public class OrePopulator implements Populator<OrePopulator> {
 
     private final OreType[] oreTypes;
 
@@ -26,19 +26,21 @@ public class OrePopulator implements Populator {
     }
 
     @Override
-    public void populate( World world, Chunk chunk, FastRandom random ) {
+    public OrePopulator populate( World world, Chunk chunk, FastRandom random ) {
         for ( OreType type : this.oreTypes ) {
             Ore ore = new Ore( random, type );
             for ( int i = 0; i < type.getClusterCount(); i++ ) {
-                int x = random.nextInt( 15 ) + chunk.getX() * 16;
+                int x = random.nextInt( 15 ) + chunk.x() * 16;
                 int y = random.nextInt( type.getMaxHeight() - type.getMinHeight() ) + type.getMinHeight();
-                int z = random.nextInt( 15 ) + chunk.getZ() * 16;
+                int z = random.nextInt( 15 ) + chunk.z() * 16;
 
                 if ( ore.canPlaceObject( world, x, y, z ) ) {
                     ore.placeObject( world, x, y, z );
                 }
             }
         }
+
+        return this;
     }
 
 }

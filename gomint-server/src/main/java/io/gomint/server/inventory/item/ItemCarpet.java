@@ -10,10 +10,10 @@ import io.gomint.taglib.NBTTagCompound;
  * @version 1.0
  */
 @RegisterInfo(sId = "minecraft:carpet", id = 171)
-public class ItemCarpet extends ItemStack implements io.gomint.inventory.item.ItemCarpet {
+public class ItemCarpet extends ItemStack< io.gomint.inventory.item.ItemCarpet> implements io.gomint.inventory.item.ItemCarpet {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.CARPET;
     }
 

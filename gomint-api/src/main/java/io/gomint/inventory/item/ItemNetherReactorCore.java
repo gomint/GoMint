@@ -7,12 +7,13 @@ import io.gomint.GoMint;
  * @version 1.0
  * @stability 3
  */
-public interface ItemNetherReactorCore extends ItemStack {
+public interface ItemNetherReactorCore extends ItemStack<ItemNetherReactorCore> {
 
     /**
      * Create a new item stack with given class and amount
      *
      * @param amount which is used for the creation
+	 * @return freshly generated item
      */
     static ItemNetherReactorCore create( int amount ) {
         return GoMint.instance().createItemStack( ItemNetherReactorCore.class, amount );

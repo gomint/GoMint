@@ -10,10 +10,10 @@ import io.gomint.taglib.NBTTagCompound;
  * @version 1.0
  */
 @RegisterInfo(sId = "minecraft:podzol", id = 243)
-public class ItemPodzol extends ItemStack implements io.gomint.inventory.item.ItemPodzol {
+public class ItemPodzol extends ItemStack< io.gomint.inventory.item.ItemPodzol> implements io.gomint.inventory.item.ItemPodzol {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.PODZOL;
     }
 

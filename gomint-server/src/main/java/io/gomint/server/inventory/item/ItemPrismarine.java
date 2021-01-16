@@ -10,10 +10,10 @@ import io.gomint.taglib.NBTTagCompound;
  * @version 1.0
  */
 @RegisterInfo(sId = "minecraft:prismarine", id = 168)
-public class ItemPrismarine extends ItemStack implements io.gomint.inventory.item.ItemPrismarine {
+public class ItemPrismarine extends ItemStack< io.gomint.inventory.item.ItemPrismarine> implements io.gomint.inventory.item.ItemPrismarine {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.PRISMARINE;
     }
 

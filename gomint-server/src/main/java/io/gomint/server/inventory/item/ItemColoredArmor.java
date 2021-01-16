@@ -1,5 +1,6 @@
 package io.gomint.server.inventory.item;
 
+import io.gomint.inventory.item.ItemStack;
 import io.gomint.world.block.data.BlockColor;
 
 import java.awt.*;
@@ -8,19 +9,19 @@ import java.awt.*;
  * @author geNAZt
  * @version 1.0
  */
-public abstract class ItemColoredArmor extends ItemArmor implements io.gomint.inventory.item.ItemColoredArmor {
+public abstract class ItemColoredArmor<I extends ItemStack<I>> extends ItemArmor<I> implements io.gomint.inventory.item.ItemColoredArmor<I> {
 
     private static final String NBT_CUSTOM_COLOR_TAG = "customColor";
 
     @Override
-    public Color getColor() {
+    public Color color() {
         // Do we have a NBT tag?
-        if (this.getNbtData() == null) {
+        if (this.nbtData() == null) {
             return null;
         }
 
         // Do we have color data?
-        int rgb = this.getNbtData().getInteger(NBT_CUSTOM_COLOR_TAG, -1);
+        int rgb = this.nbtData().getInteger(NBT_CUSTOM_COLOR_TAG, -1);
         if (rgb == -1) {
             return null;
         }
@@ -30,62 +31,65 @@ public abstract class ItemColoredArmor extends ItemArmor implements io.gomint.in
     }
 
     @Override
-    public void setColor(Color color) {
+    public I color(Color color) {
         int rgb = color.getRed() << 16 | color.getGreen() << 8 | color.getBlue();
-        this.getOrCreateNBT().addValue(NBT_CUSTOM_COLOR_TAG, rgb);
+        this.nbt().addValue(NBT_CUSTOM_COLOR_TAG, rgb);
+        return (I) this;
     }
 
     @Override
-    public void setColor(BlockColor dyeColor) {
+    public I color(BlockColor dyeColor) {
         switch (dyeColor) {
             case BLACK:
-                this.setColor(hex2Rgb("#1D1D21"));
-                return;
+                this.color(hex2Rgb("#1D1D21"));
+                return (I) this;
             case RED:
-                this.setColor(hex2Rgb("#B02E26"));
-                return;
+                this.color(hex2Rgb("#B02E26"));
+                return (I) this;
             case GREEN:
-                this.setColor(hex2Rgb("#5E7C16"));
-                return;
+                this.color(hex2Rgb("#5E7C16"));
+                return (I) this;
             case BROWN:
-                this.setColor(hex2Rgb("#835432"));
-                return;
+                this.color(hex2Rgb("#835432"));
+                return (I) this;
             case BLUE:
-                this.setColor(hex2Rgb("#3C44AA"));
-                return;
+                this.color(hex2Rgb("#3C44AA"));
+                return (I) this;
             case PURPLE:
-                this.setColor(hex2Rgb("#8932B8"));
-                return;
+                this.color(hex2Rgb("#8932B8"));
+                return (I) this;
             case CYAN:
-                this.setColor(hex2Rgb("#169C9C"));
-                return;
+                this.color(hex2Rgb("#169C9C"));
+                return (I) this;
             case LIGHT_GRAY:
-                this.setColor(hex2Rgb("#9D9D97"));
-                return;
+                this.color(hex2Rgb("#9D9D97"));
+                return (I) this;
             case GRAY:
-                this.setColor(hex2Rgb("#474F52"));
-                return;
+                this.color(hex2Rgb("#474F52"));
+                return (I) this;
             case PINK:
-                this.setColor(hex2Rgb("#F38BAA"));
-                return;
+                this.color(hex2Rgb("#F38BAA"));
+                return (I) this;
             case LIME:
-                this.setColor(hex2Rgb("#80C71F"));
-                return;
+                this.color(hex2Rgb("#80C71F"));
+                return (I) this;
             case YELLOW:
-                this.setColor(hex2Rgb("#FED83D"));
-                return;
+                this.color(hex2Rgb("#FED83D"));
+                return (I) this;
             case LIGHT_BLUE:
-                this.setColor(hex2Rgb("#3AB3DA"));
-                return;
+                this.color(hex2Rgb("#3AB3DA"));
+                return (I) this;
             case MAGENTA:
-                this.setColor(hex2Rgb("#C74EBD"));
-                return;
+                this.color(hex2Rgb("#C74EBD"));
+                return (I) this;
             case ORANGE:
-                this.setColor(hex2Rgb("#F9801D"));
-                return;
+                this.color(hex2Rgb("#F9801D"));
+                return (I) this;
             case WHITE:
-                this.setColor(hex2Rgb("#F9FFFE"));
+                this.color(hex2Rgb("#F9FFFE"));
         }
+
+        return (I) this;
     }
 
     private Color hex2Rgb(String colorStr) {

@@ -41,7 +41,7 @@ public class GlazedTerracotta extends Block implements BlockGlazedTerracotta {
     private static final BlockfaceBlockState FACING = new BlockfaceBlockState( () -> new String[]{"facing_direction"} );
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 2100;
     }
 
@@ -56,17 +56,17 @@ public class GlazedTerracotta extends Block implements BlockGlazedTerracotta {
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return ToolPresets.PICKAXE;
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.GLAZED_TERRACOTTA;
     }
 
     @Override
-    public void setColor( BlockColor color ) {
+    public BlockGlazedTerracotta color(BlockColor color ) {
         switch ( color ) {
             case WHITE:
                 this.setBlockId( "minecraft:white_glazed_terracotta" );
@@ -117,10 +117,12 @@ public class GlazedTerracotta extends Block implements BlockGlazedTerracotta {
                 this.setBlockId( "minecraft:black_glazed_terracotta" );
                 break;
         }
+
+        return this;
     }
 
     @Override
-    public BlockColor getColor() {
+    public BlockColor color() {
         switch ( this.getBlockId() ) {
             case "minecraft:white_glazed_terracotta":
                 return BlockColor.WHITE;
@@ -160,12 +162,13 @@ public class GlazedTerracotta extends Block implements BlockGlazedTerracotta {
     }
 
     @Override
-    public void setFacing( Facing facing ) {
+    public BlockGlazedTerracotta facing(Facing facing ) {
         FACING.setState(this,  facing );
+        return this;
     }
 
     @Override
-    public Facing getFacing() {
+    public Facing facing() {
         return FACING.getState(this);
     }
 

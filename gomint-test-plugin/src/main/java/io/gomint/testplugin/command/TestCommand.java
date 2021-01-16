@@ -28,11 +28,12 @@ public class TestCommand extends Command {
     private TestPlugin plugin;
 
     @Override
-    public CommandOutput execute(CommandSender commandSender, String alias, Map<String, Object> arguments) {
-        World world = this.plugin.getServer().createWorld(String.valueOf(ThreadLocalRandom.current().nextInt()), new CreateOptions());
+    public CommandOutput execute(CommandSender<?> commandSender, String alias, Map<String, Object> arguments) {
+        World world = this.plugin.server().createWorld(String.valueOf(ThreadLocalRandom.current().nextInt()), new CreateOptions());
         EntityPlayer player = (EntityPlayer) commandSender;
-        player.teleport(world.getSpawnLocation());
+        player.teleport(world.spawnLocation());
 
-        return CommandOutput.successful("Did teleport to %%s", world.getWorldName());
+        return CommandOutput.successful("Did teleport to %%s", world.name());
     }
+
 }

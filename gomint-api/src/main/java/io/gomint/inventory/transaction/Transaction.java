@@ -15,7 +15,7 @@ import io.gomint.inventory.item.ItemStack;
  * @version 1.0
  * @stability 3
  */
-public interface Transaction {
+public interface Transaction<I, S, T> {
 
     /**
      * Does this transaction have a source inventory?
@@ -30,27 +30,27 @@ public interface Transaction {
      *
      * @return the item source or null if there is none
      */
-    ItemStack getSourceItem();
+    ItemStack<S> sourceItem();
 
     /**
      * Get the target (consuming) item of this transaction
      *
      * @return the target of this transaction
      */
-    ItemStack getTargetItem();
+    ItemStack<T> targetItem();
 
     /**
      * Get the source inventory. This is null when {@link #hasInventory()} is false
      *
      * @return the source inventory or null
      */
-    Inventory getInventory();
+    Inventory<I> inventory();
 
     /**
      * Get the source slot from the source inventory. This will be -1 if {@link #hasInventory()} is false
      *
      * @return the slot number or -1
      */
-    int getSlot();
+    int slot();
 
 }

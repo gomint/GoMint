@@ -15,10 +15,10 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:warped_standing_sign", id = -251 )
-public class ItemWarpedStandingSign extends ItemStack implements io.gomint.inventory.item.ItemWarpedStandingSign {
+public class ItemWarpedStandingSign extends ItemStack< io.gomint.inventory.item.ItemWarpedStandingSign> implements io.gomint.inventory.item.ItemWarpedStandingSign {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.WARPED_STANDING_SIGN;
     }
 

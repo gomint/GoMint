@@ -12,8 +12,6 @@ import io.gomint.server.entity.Entity;
 import io.gomint.server.entity.EntityTags;
 import io.gomint.server.entity.EntityType;
 import io.gomint.server.entity.metadata.MetadataContainer;
-import io.gomint.server.network.packet.PacketUpdateBlock;
-import io.gomint.server.network.packet.PacketUpdateBlockSynched;
 import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.world.WorldAdapter;
 import io.gomint.server.world.block.Block;
@@ -25,7 +23,7 @@ import java.util.Set;
  * @version 1.0
  */
 @RegisterInfo(sId = "minecraft:falling_block")
-public class EntityFallingBlock extends Entity implements io.gomint.entity.passive.EntityFallingBlock {
+public class EntityFallingBlock extends Entity<io.gomint.entity.passive.EntityFallingBlock> implements io.gomint.entity.passive.EntityFallingBlock {
 
     private Block block;
 
@@ -38,7 +36,7 @@ public class EntityFallingBlock extends Entity implements io.gomint.entity.passi
     public EntityFallingBlock(Block block, WorldAdapter world) {
         super(EntityType.FALLING_BLOCK, world);
         this.initEntity();
-        this.setBlock(block);
+        this.block(block);
     }
 
     /**
@@ -51,7 +49,7 @@ public class EntityFallingBlock extends Entity implements io.gomint.entity.passi
 
     @Override
     public void update(long currentTimeMS, float dT) {
-        if (this.isDead()) {
+        if (this.dead()) {
             return;
         }
 
@@ -62,26 +60,27 @@ public class EntityFallingBlock extends Entity implements io.gomint.entity.passi
             this.despawn();
 
             // Check if block can be replaced
-            Block block = this.world.getBlockAt(this.getLocation().add(-(this.getWidth() / 2), this.getHeight(), -(this.getWidth() / 2)).toBlockPosition());
+            Block block = this.world.blockAt(this.location().add(-(this.width() / 2), this.height(), -(this.width() / 2)).toBlockPosition());
             if ( block.canBeReplaced( null ) ) {
                 block.copyFromBlock(this.block);
             } else {
                 // Generate new item drop
-                for (ItemStack drop : this.block.getDrops(null)) {
-                    this.world.dropItem(this.getLocation(), drop);
+                for (ItemStack<?> drop : this.block.drops(null)) {
+                    this.world.dropItem(this.location(), drop);
                 }
             }
         }
     }
 
     @Override
-    protected void fall() {
+    protected EntityFallingBlock fall() {
         // We don't need fall damage here
         this.fallDistance = 0;
+        return this;
     }
 
     private void initEntity() {
-        this.setSize(0.98f, 0.98f);
+        this.size(0.98f, 0.98f);
         this.offsetY = 0.49f;
 
         GRAVITY = 0.04f;
@@ -89,15 +88,16 @@ public class EntityFallingBlock extends Entity implements io.gomint.entity.passi
     }
 
     @Override
-    public void setBlock(io.gomint.world.block.Block block) {
+    public EntityFallingBlock block(io.gomint.world.block.Block block) {
         Block block1 = (Block) block;
 
         this.block = block1;
         this.metadataContainer.putInt(MetadataContainer.DATA_VARIANT, block1.getRuntimeId());
+        return this;
     }
 
     @Override
-    public Set<String> getTags() {
+    public Set<String> tags() {
         return EntityTags.PASSIVE;
     }
 

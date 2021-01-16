@@ -9,7 +9,7 @@ import io.gomint.entity.EntityLiving;
  * @version 1.0
  * @stability 3
  */
-public interface EntityElderGuardian extends EntityLiving {
+public interface EntityElderGuardian extends EntityLiving<EntityElderGuardian> {
 
     /**
      * Create a new entity elder guardian with no config
@@ -25,6 +25,6 @@ public interface EntityElderGuardian extends EntityLiving {
      *
      * @param entity which should be used to shoot the laser to
      */
-    void setTarget( Entity entity );
+    EntityElderGuardian target(Entity<?> entity );
 
 }

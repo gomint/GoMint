@@ -13,7 +13,7 @@ import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.world.WorldAdapter;
 
 @RegisterInfo(sId = "minecraft:turtle")
-public class EntityTurtle extends EntityAgeableAnimal implements io.gomint.entity.animal.EntityTurtle {
+public class EntityTurtle extends EntityAgeableAnimal<io.gomint.entity.animal.EntityTurtle> implements io.gomint.entity.animal.EntityTurtle {
 
     /**
      * Constructs a new EntityLiving
@@ -34,13 +34,13 @@ public class EntityTurtle extends EntityAgeableAnimal implements io.gomint.entit
     }
 
     private void initEntity() {
-        this.addAttribute(Attribute.HEALTH);
-        this.setMaxHealth(30);
-        this.setHealth(30);
-        if (this.isBaby()) {
-            this.setSize(0.36f, 0.12f);
+        this.attribute(Attribute.HEALTH);
+        this.maxHealth(30);
+        this.health(30);
+        if (this.baby()) {
+            this.size(0.36f, 0.12f);
         } else {
-            this.setSize(1.2f, 0.4f);
+            this.size(1.2f, 0.4f);
         }
     }
 

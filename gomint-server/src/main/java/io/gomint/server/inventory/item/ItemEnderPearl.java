@@ -14,41 +14,41 @@ import io.gomint.world.block.data.Facing;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:ender_pearl", id = 368 )
-public class ItemEnderPearl extends ItemStack implements io.gomint.inventory.item.ItemEnderPearl {
+public class ItemEnderPearl extends ItemStack< io.gomint.inventory.item.ItemEnderPearl> implements io.gomint.inventory.item.ItemEnderPearl {
 
 
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.ENDER_PEARL;
     }
 
     @Override
     public boolean interact(EntityPlayer entity, Facing face, Vector clickPosition, Block clickedBlock ) {
         // Spawn ender pearl
-        EntityEnderpearl entityEnderpearl = new EntityEnderpearl( entity, entity.getWorld() );
+        EntityEnderpearl entityEnderpearl = new EntityEnderpearl( entity, entity.world() );
         ProjectileLaunchEvent event = new ProjectileLaunchEvent( entityEnderpearl, ProjectileLaunchEvent.Cause.THROWING_ENDER_PEARL );
-        entity.getWorld().getServer().getPluginManager().callEvent( event );
+        entity.world().getServer().pluginManager().callEvent( event );
 
-        if ( !event.isCancelled() ) {
-            entity.getWorld().spawnEntityAt( entityEnderpearl, entityEnderpearl.getPositionX(), entityEnderpearl.getPositionY(),
-                entityEnderpearl.getPositionZ(), entityEnderpearl.getYaw(), entityEnderpearl.getPitch() );
+        if ( !event.cancelled() ) {
+            entity.world().spawnEntityAt( entityEnderpearl, entityEnderpearl.positionX(), entityEnderpearl.positionY(),
+                entityEnderpearl.positionZ(), entityEnderpearl.yaw(), entityEnderpearl.pitch() );
         }
 
         // Subtract amount
-        int newAmount = this.getAmount() - 1;
+        int newAmount = this.amount() - 1;
         if ( newAmount == 0 ) {
-            entity.getInventory().setItem( entity.getInventory().getItemInHandSlot(), ItemAir.create( 0 ) );
+            entity.inventory().item( entity.inventory().itemInHandSlot(), ItemAir.create( 0 ) );
         } else {
-            this.setAmount( newAmount );
-            entity.getInventory().setItem( entity.getInventory().getItemInHandSlot(), this );
+            this.amount( newAmount );
+            entity.inventory().item( entity.inventory().itemInHandSlot(), this );
         }
 
         return true;
     }
 
     @Override
-    public byte getMaximumAmount() {
+    public byte maximumAmount() {
         return 16;
     }
 

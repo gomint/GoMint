@@ -19,13 +19,13 @@ import java.util.List;
  * @version 1.0
  * @stability 3
  */
-public class FloatValidator extends ParamValidator {
+public class FloatValidator extends ParamValidator<FloatValidator> {
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public Object validate( String input, CommandSender commandSender ) {
+    public Object validate(String input, CommandSender<?> commandSender ) {
         try {
             return Float.parseFloat( input );
         } catch ( NumberFormatException e ) {
@@ -49,7 +49,7 @@ public class FloatValidator extends ParamValidator {
      * {@inheritDoc}
      */
     @Override
-    public ParamType getType() {
+    public ParamType type() {
         return ParamType.FLOAT;
     }
 
@@ -73,7 +73,7 @@ public class FloatValidator extends ParamValidator {
      * {@inheritDoc}
      */
     @Override
-    public String getHelpText() {
+    public String helpText() {
         return "float";
     }
 

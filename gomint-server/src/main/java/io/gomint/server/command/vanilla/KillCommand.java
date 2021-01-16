@@ -3,7 +3,6 @@ package io.gomint.server.command.vanilla;
 import io.gomint.command.Command;
 import io.gomint.command.CommandOutput;
 import io.gomint.command.CommandSender;
-import io.gomint.command.ConsoleCommandSender;
 import io.gomint.command.annotation.Description;
 import io.gomint.command.annotation.Name;
 import io.gomint.command.annotation.Overload;
@@ -28,15 +27,15 @@ import java.util.Map;
 public class KillCommand extends Command {
 
     @Override
-    public CommandOutput execute(CommandSender commandSender, String alias, Map<String, Object> arguments) {
+    public CommandOutput execute(CommandSender<?> commandSender, String alias, Map<String, Object> arguments) {
         EntityPlayer target = (EntityPlayer) arguments.getOrDefault("target", commandSender);
 
         if (target == null) {
             return CommandOutput.failure("No targets matched selector.");
         }
 
-        target.attack(target.getMaxHealth(), EntityDamageEvent.DamageSource.COMMAND);
+        target.attack(target.maxHealth(), EntityDamageEvent.DamageSource.COMMAND);
 
-        return CommandOutput.successful("Killed " + target.getName());
+        return CommandOutput.successful("Killed " + target.name());
     }
 }

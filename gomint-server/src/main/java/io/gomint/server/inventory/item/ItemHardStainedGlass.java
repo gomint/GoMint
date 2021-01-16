@@ -15,10 +15,10 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:hard_stained_glass", id = 254 )
-public class ItemHardStainedGlass extends ItemStack implements io.gomint.inventory.item.ItemHardStainedGlass {
+public class ItemHardStainedGlass extends ItemStack< io.gomint.inventory.item.ItemHardStainedGlass> implements io.gomint.inventory.item.ItemHardStainedGlass {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.HARD_STAINED_GLASS;
     }
 

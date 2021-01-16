@@ -18,7 +18,7 @@ class InMemoryChunkAdapter extends ChunkAdapter {
 
     public InMemoryChunkAdapter( WorldAdapter worldAdapter, int x, int z ) {
         super( worldAdapter, x, z );
-        this.loadedTime = worldAdapter.getServer().getCurrentTickTime();
+        this.loadedTime = worldAdapter.getServer().currentTickTime();
     }
 
 }

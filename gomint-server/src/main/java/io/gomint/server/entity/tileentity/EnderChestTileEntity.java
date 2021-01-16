@@ -11,7 +11,6 @@ import io.gomint.entity.Entity;
 import io.gomint.inventory.item.ItemStack;
 import io.gomint.math.Vector;
 import io.gomint.server.entity.EntityPlayer;
-import io.gomint.server.inventory.EnderChestInventory;
 import io.gomint.server.inventory.InventoryHolder;
 import io.gomint.server.inventory.item.Items;
 import io.gomint.server.registry.RegisterInfo;
@@ -41,12 +40,12 @@ public class EnderChestTileEntity extends ContainerTileEntity implements Invento
     }
 
     @Override
-    public void interact(Entity entity, Facing face, Vector facePos, ItemStack item ) {
+    public void interact(Entity<?> entity, Facing face, Vector facePos, ItemStack<?> item ) {
         // Open the chest inventory for the entity
         if ( entity instanceof EntityPlayer ) {
             EntityPlayer player = (EntityPlayer) entity;
-            player.getEnderChestInventory().setContainerPosition( this.block.getPosition() );
-            player.openInventory( player.getEnderChestInventory() );
+            player.enderChestInventory().containerPosition( this.block.position() );
+            player.openInventory( player.enderChestInventory() );
         }
     }
 

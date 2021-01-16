@@ -2,7 +2,6 @@ package io.gomint.server.entity.monster;
 
 import io.gomint.server.entity.Attribute;
 import io.gomint.server.entity.EntityAgeable;
-import io.gomint.server.entity.EntityLiving;
 import io.gomint.server.entity.EntityTags;
 import io.gomint.server.entity.EntityType;
 import io.gomint.server.registry.RegisterInfo;
@@ -11,7 +10,7 @@ import io.gomint.server.world.WorldAdapter;
 import java.util.Set;
 
 @RegisterInfo( sId = "minecraft:zombie" )
-public class EntityZombie extends EntityAgeable implements io.gomint.entity.monster.EntityZombie {
+public class EntityZombie extends EntityAgeable<io.gomint.entity.monster.EntityZombie> implements io.gomint.entity.monster.EntityZombie {
 
     /**
      * Constructs a new EntityLiving
@@ -32,13 +31,13 @@ public class EntityZombie extends EntityAgeable implements io.gomint.entity.mons
     }
 
     private void initEntity() {
-        this.addAttribute(Attribute.HEALTH);
-        this.setMaxHealth(20);
-        this.setHealth(20);
-        if(this.isBaby()) {
-            this.setSize(0.3f, 0.975f);
+        this.attribute(Attribute.HEALTH);
+        this.maxHealth(20);
+        this.health(20);
+        if(this.baby()) {
+            this.size(0.3f, 0.975f);
         }else{
-            this.setSize(0.6f, 1.95f);
+            this.size(0.6f, 1.95f);
         }
     }
 
@@ -48,7 +47,7 @@ public class EntityZombie extends EntityAgeable implements io.gomint.entity.mons
     }
 
     @Override
-    public Set<String> getTags() {
+    public Set<String> tags() {
         return EntityTags.HOSTILE_MOB;
     }
 

@@ -12,5 +12,5 @@ package io.gomint.entity.projectile;
  * @version 1.0
  * @stability 3
  */
-public interface EntityFishingHook extends EntityProjectile {
+public interface EntityFishingHook extends EntityProjectile<EntityFishingHook> {
 }

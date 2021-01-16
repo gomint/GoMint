@@ -19,7 +19,7 @@ import io.gomint.world.block.data.HingeSide;
  * @author geNAZt
  * @version 1.0
  */
-public abstract class Door extends Block implements BlockDoor {
+public abstract class Door<B extends BlockDoor<B>> extends Block implements BlockDoor<B> {
 
     private static final BooleanBlockState HINGE = new BooleanBlockState(() -> new String[]{"door_hinge_bit"});
     private static final BooleanBlockState TOP = new BooleanBlockState(() -> new String[]{"upper_block_bit"});
@@ -27,36 +27,38 @@ public abstract class Door extends Block implements BlockDoor {
     private static final DirectionBlockState DIRECTION = new DirectionBlockState(() -> new String[]{"direction"}); // Rotation is always clockwise
 
     @Override
-    public boolean isTop() {
+    public boolean top() {
         return TOP.getState(this);
     }
 
-    protected void setTop(boolean top) {
+    protected B top(boolean top) {
         TOP.setState(this, top);
+        return (B) this;
     }
 
     @Override
-    public boolean isOpen() {
+    public boolean open() {
         return OPEN.getState(this);
     }
 
     @Override
-    public void toggle() {
-        boolean toApply = !this.isOpen();
+    public B toggle() {
+        boolean toApply = !this.open();
 
-        if (isTop()) {
-            Door otherPart = this.world.getBlockAt(this.position.add(BlockPosition.DOWN));
-            otherPart.setOpen(toApply);
+        if (top()) {
+            B otherPart = this.world.blockAt(this.position.add(BlockPosition.DOWN));
+            otherPart.open(toApply);
         } else {
-            Door otherPart = this.world.getBlockAt(this.position.add(BlockPosition.UP));
-            otherPart.setOpen(toApply);
+            B otherPart = this.world.blockAt(this.position.add(BlockPosition.UP));
+            otherPart.open(toApply);
         }
 
-        this.setOpen(toApply);
+        this.open(toApply);
+        return (B) this;
     }
 
     @Override
-    public boolean interact(Entity entity, Facing face, Vector facePos, ItemStack item) {
+    public boolean interact(Entity<?> entity, Facing face, Vector facePos, ItemStack<?> item) {
         // Open / Close the door
         // TODO: Door events
         toggle();
@@ -65,8 +67,8 @@ public abstract class Door extends Block implements BlockDoor {
     }
 
     @Override
-    public boolean beforePlacement(EntityLiving entity, ItemStack item, Facing face, Location location) {
-        Block above = this.world.getBlockAt(this.position.add(BlockPosition.UP));
+    public boolean beforePlacement(EntityLiving<?> entity, ItemStack<?> item, Facing face, Location location) {
+        Block above = this.world.blockAt(this.position.add(BlockPosition.UP));
         if (above.canBeReplaced(item)) {
             DIRECTION.detectFromPlacement(this, entity, item, face);
             TOP.setState(this, false);
@@ -78,23 +80,23 @@ public abstract class Door extends Block implements BlockDoor {
     }
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 4500;
     }
 
     @Override
     public boolean onBreak(boolean creative) {
-        if (isTop()) {
-            Block otherPart = this.world.getBlockAt(this.position.add(BlockPosition.DOWN));
-            otherPart.setBlockType(BlockAir.class);
+        if (top()) {
+            Block otherPart = this.world.blockAt(this.position.add(BlockPosition.DOWN));
+            otherPart.blockType(BlockAir.class);
         } else {
-            Block otherPart = this.world.getBlockAt(this.position.add(BlockPosition.UP));
-            otherPart.setBlockType(BlockAir.class);
+            Block otherPart = this.world.blockAt(this.position.add(BlockPosition.UP));
+            otherPart.blockType(BlockAir.class);
         }
 
         return true;
@@ -106,32 +108,36 @@ public abstract class Door extends Block implements BlockDoor {
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return ToolPresets.AXE;
     }
 
     @Override
-    public void setDirection(Direction direction) {
+    public B direction(Direction direction) {
         DIRECTION.setState(this, direction);
+        return (B) this;
     }
 
     @Override
-    public Direction getDirection() {
+    public Direction direction() {
         return DIRECTION.getState(this);
     }
 
     @Override
-    public void setHingeSide(HingeSide side) {
+    public B hingeSide(HingeSide side) {
         HINGE.setState(this, side == HingeSide.RIGHT);
+        return (B) this;
     }
 
     @Override
-    public HingeSide getHingeSide() {
+    public HingeSide hingeSide() {
         return HINGE.getState(this) ? HingeSide.RIGHT : HingeSide.LEFT;
     }
 
-    protected void setOpen(boolean open) {
+    @Override
+    public B open(boolean open) {
         OPEN.setState(this, open);
+        return (B) this;
     }
 
 }

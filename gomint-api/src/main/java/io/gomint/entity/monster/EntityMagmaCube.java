@@ -8,7 +8,7 @@ import io.gomint.entity.EntityLiving;
  * @version 1.0
  * @stability 3
  */
-public interface EntityMagmaCube extends EntityLiving {
+public interface EntityMagmaCube extends EntityLiving<EntityMagmaCube> {
 
     /**
      * Create a new entity magma cube with no config
@@ -25,6 +25,6 @@ public interface EntityMagmaCube extends EntityLiving {
      *
      * @param factor of this magma cube
      */
-    void setSizeFactor( int factor );
+    EntityMagmaCube sizeFactor(int factor );
 
 }

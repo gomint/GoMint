@@ -24,7 +24,7 @@ public interface GroupManager {
      * @param name for the group
      * @return new or existing group for the name
      */
-    Group getOrCreateGroup( String name );
+    Group group(String name );
 
     /**
      * Remove given group from the group manager. This does not remove references from {@link PermissionManager}
@@ -33,6 +33,6 @@ public interface GroupManager {
      *
      * @param group which should be removed
      */
-    void removeGroup( Group group );
+    GroupManager remove(Group group );
 
 }

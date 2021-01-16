@@ -26,7 +26,7 @@ import io.gomint.world.block.data.BlockColor;
 import java.util.concurrent.ThreadLocalRandom;
 
 @RegisterInfo(sId = "minecraft:sheep")
-public class EntitySheep extends EntityAgeableAnimal implements io.gomint.entity.animal.EntitySheep {
+public class EntitySheep extends EntityAgeableAnimal<io.gomint.entity.animal.EntitySheep> implements io.gomint.entity.animal.EntitySheep {
 
     /**
      * Constructs a new EntityLiving
@@ -47,14 +47,14 @@ public class EntitySheep extends EntityAgeableAnimal implements io.gomint.entity
     }
 
     private void initEntity() {
-        this.addAttribute(Attribute.HEALTH);
-        this.setMaxHealth(16);
-        this.setHealth(16);
+        this.attribute(Attribute.HEALTH);
+        this.maxHealth(16);
+        this.health(16);
 
-        if (this.isBaby()) {
-            this.setSize(0.45f, 0.65f);
+        if (this.baby()) {
+            this.size(0.45f, 0.65f);
         } else {
-            this.setSize(0.9f, 1.3f);
+            this.size(0.9f, 1.3f);
         }
     }
 
@@ -66,9 +66,9 @@ public class EntitySheep extends EntityAgeableAnimal implements io.gomint.entity
     @Override
     public boolean damage(EntityDamageEvent damageEvent) {
         // Run away from attacker
-        if (damageEvent.getDamageSource() == EntityDamageEvent.DamageSource.ENTITY_ATTACK) {
+        if (damageEvent.damageSource() == EntityDamageEvent.DamageSource.ENTITY_ATTACK) {
             EntityDamageByEntityEvent edbee = (EntityDamageByEntityEvent) damageEvent;
-            Entity attacker = edbee.getAttacker();
+            Entity<?> attacker = edbee.attacker();
             this.switchToAttackMovement(attacker);
         }
 
@@ -80,18 +80,18 @@ public class EntitySheep extends EntityAgeableAnimal implements io.gomint.entity
         super.kill();
 
         // Babies don't drop
-        if (this.isBaby()) {
+        if (this.baby()) {
             return;
         }
 
         // Drop items
         ItemWool wool = ItemWool.create(1);
-        wool.setColor(BlockColor.WHITE); // TODO: Implement sheep colors
+        wool.color(BlockColor.WHITE); // TODO: Implement sheep colors
 
-        this.world.dropItem(this.getLocation(), wool);
+        this.world.dropItem(this.location(), wool);
 
         int amount = 1 + ThreadLocalRandom.current().nextInt(2);
-        ItemStack mutton;
+        ItemStack<?> mutton;
 
         if (this.lastDamageSource == EntityDamageEvent.DamageSource.ON_FIRE) {
             mutton = ItemCookedMutton.create(amount);
@@ -99,15 +99,15 @@ public class EntitySheep extends EntityAgeableAnimal implements io.gomint.entity
             mutton = ItemRawMutton.create(amount);
         }
 
-        this.world.dropItem(this.getLocation(), mutton);
+        this.world.dropItem(this.location(), mutton);
 
         // Drop xp
-        this.world.createExpOrb(this.getLocation(), 1 + ThreadLocalRandom.current().nextInt(3));
+        this.world.createExpOrb(this.location(), 1 + ThreadLocalRandom.current().nextInt(3));
     }
 
-    private void switchToAttackMovement(Entity attacker) {
+    private void switchToAttackMovement(Entity<?> attacker) {
         this.behaviour.getMachine().switchState(new AIAfterHitMovement(this.behaviour.getMachine(), this.world,
-            attacker.getDirection(), new PathfindingEngine(this.getTransform())));
+            attacker.direction(), new PathfindingEngine(this.getTransform())));
     }
 
     private void switchToIdleMovement() {

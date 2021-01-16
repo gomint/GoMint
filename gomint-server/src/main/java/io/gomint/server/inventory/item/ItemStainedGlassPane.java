@@ -10,10 +10,10 @@ import io.gomint.taglib.NBTTagCompound;
  * @version 1.0
  */
 @RegisterInfo(sId = "minecraft:stained_glass_pane", id = 160)
-public class ItemStainedGlassPane extends ItemStack implements io.gomint.inventory.item.ItemStainedGlassPane {
+public class ItemStainedGlassPane extends ItemStack< io.gomint.inventory.item.ItemStainedGlassPane> implements io.gomint.inventory.item.ItemStainedGlassPane {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.STAINED_GLASS_PANE;
     }
 

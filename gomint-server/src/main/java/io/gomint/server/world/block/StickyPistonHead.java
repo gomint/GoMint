@@ -17,12 +17,12 @@ import java.util.List;
 public class StickyPistonHead extends Block implements BlockPistonHead {
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 750;
     }
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
@@ -32,12 +32,12 @@ public class StickyPistonHead extends Block implements BlockPistonHead {
     }
 
     @Override
-    public List<ItemStack> getDrops( ItemStack itemInHand ) {
+    public List<ItemStack<?>> drops(ItemStack<?> itemInHand ) {
         return new ArrayList<>();
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.PISTON_HEAD;
     }
 
@@ -47,7 +47,7 @@ public class StickyPistonHead extends Block implements BlockPistonHead {
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return ToolPresets.PICKAXE;
     }
 

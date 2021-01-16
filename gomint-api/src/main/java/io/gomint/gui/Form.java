@@ -13,20 +13,20 @@ public interface Form<R> {
      *
      * @return title of this form
      */
-    String getTitle();
+    String title();
 
     /**
      * Get the current configured icon
      *
      * @return path of the icon or null when none has been set
      */
-    String getIcon();
+    String icon();
 
     /**
      * Set new icon for this
      *
      * @param icon which should be used ( can be http / https )
      */
-    void setIcon( String icon );
+    Form<R> icon(String icon );
 
 }

@@ -19,12 +19,12 @@ public class Loom extends Block implements BlockLoom {
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 3750;
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return ToolPresets.AXE;
     }
 
@@ -34,7 +34,7 @@ public class Loom extends Block implements BlockLoom {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.LOOM;
     }
 }

@@ -9,7 +9,7 @@ import io.gomint.taglib.NBTTagCompound;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:chorus_fruit", id = 432 )
-public class ItemChorusFruit extends ItemFood implements io.gomint.inventory.item.ItemChorusFruit {
+public class ItemChorusFruit extends ItemFood<io.gomint.inventory.item.ItemChorusFruit> implements io.gomint.inventory.item.ItemChorusFruit {
 
 
 
@@ -24,7 +24,7 @@ public class ItemChorusFruit extends ItemFood implements io.gomint.inventory.ite
     }
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.CHORUS_FRUIT;
     }
 

@@ -22,12 +22,12 @@ public class StainedHardenedClay extends Block implements BlockStainedHardenedCl
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 1875;
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return new Class[]{
             ItemWoodenPickaxe.class,
             ItemIronPickaxe.class,
@@ -43,18 +43,19 @@ public class StainedHardenedClay extends Block implements BlockStainedHardenedCl
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.STAINED_HARDENED_CLAY;
     }
 
     @Override
-    public BlockColor getColor() {
+    public BlockColor color() {
         return COLOR.getState(this);
     }
 
     @Override
-    public void setColor( BlockColor color ) {
+    public BlockStainedHardenedClay color(BlockColor color ) {
         COLOR.setState(this, color );
+        return this;
     }
 
     @Override

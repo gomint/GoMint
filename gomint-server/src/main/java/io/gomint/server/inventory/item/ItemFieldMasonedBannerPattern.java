@@ -15,10 +15,10 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:field_masoned_banner_pattern", id = 575 )
-public class ItemFieldMasonedBannerPattern extends ItemStack implements io.gomint.inventory.item.ItemFieldMasonedBannerPattern {
+public class ItemFieldMasonedBannerPattern extends ItemStack< io.gomint.inventory.item.ItemFieldMasonedBannerPattern> implements io.gomint.inventory.item.ItemFieldMasonedBannerPattern {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.FIELD_MASONED_BANNER_PATTERN;
     }
 

@@ -12,5 +12,5 @@ package io.gomint.inventory.item;
  * @version 1.0
  * @stability 3
  */
-public interface ItemDoor extends ItemStack {
+public interface ItemDoor<I> extends ItemStack<I> {
 }

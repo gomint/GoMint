@@ -15,7 +15,7 @@ import io.gomint.entity.EntityAgeable;
  * @version 1.0
  * @stability 3
  */
-public interface EntityBee extends EntityAgeable {
+public interface EntityBee extends EntityAgeable<EntityBee> {
 
     /**
      * Create a new entity horse with no config

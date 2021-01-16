@@ -24,7 +24,7 @@ public class Wool extends Block implements BlockWool {
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 1200;
     }
 
@@ -34,18 +34,19 @@ public class Wool extends Block implements BlockWool {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.WOOL;
     }
 
     @Override
-    public BlockColor getColor() {
+    public BlockColor color() {
         return COLOR.getState(this);
     }
 
     @Override
-    public void setColor( BlockColor color ) {
+    public BlockWool color(BlockColor color ) {
         COLOR.setState( this, color );
+        return this;
     }
 
     @Override
@@ -54,7 +55,7 @@ public class Wool extends Block implements BlockWool {
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return new Class[]{
             ItemShears.class
         };

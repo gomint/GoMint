@@ -22,36 +22,37 @@ import io.gomint.world.block.data.Facing;
 import java.util.Collections;
 import java.util.List;
 
-public abstract class Trapdoor extends Block implements BlockTrapdoor {
+public abstract class Trapdoor<B> extends Block implements BlockTrapdoor<B> {
 
     private static final DirectionBlockState DIRECTION = new DirectionBlockState( () -> new String[]{"direction"});
     private static final BooleanBlockState TOP = new BooleanBlockState( () -> new String[]{"upside_down_bit"});
     private static final BooleanBlockState OPEN = new BooleanBlockState( () -> new String[]{"open_bit"});
 
     @Override
-    public boolean isOpen() {
+    public boolean open() {
         return OPEN.getState(this);
     }
 
     @Override
-    public void toggle() {
-        OPEN.setState(this, !this.isOpen());
+    public B toggle() {
+        OPEN.setState(this, !this.open());
+        return (B) this;
     }
 
     @Override
-    public boolean interact(Entity entity, Facing face, Vector facePos, ItemStack item) {
+    public boolean interact(Entity<?> entity, Facing face, Vector facePos, ItemStack<?> item) {
         toggle();
         return true;
     }
 
     @Override
-    public boolean beforePlacement(EntityLiving entity, ItemStack item, Facing face, Location location) {
+    public boolean beforePlacement(EntityLiving<?> entity, ItemStack<?> item, Facing face, Location location) {
         DIRECTION.detectFromPlacement(this, entity, item, face);
         return super.beforePlacement(entity, item, face, location);
     }
 
     @Override
-    public List<AxisAlignedBB> getBoundingBox() {
+    public List<AxisAlignedBB> boundingBoxes() {
         float defaultHeight = 0.1875f;
 
         // Basis box
@@ -59,22 +60,22 @@ public abstract class Trapdoor extends Block implements BlockTrapdoor {
         if (TOP.getState(this)) {
             // Top closed box
             bb = new AxisAlignedBB(
-                this.location.getX(),
-                this.location.getY() + 1 - defaultHeight,
-                this.location.getZ(),
-                this.location.getX() + 1,
-                this.location.getY() + 1,
-                this.location.getZ() + 1
+                this.location.x(),
+                this.location.y() + 1 - defaultHeight,
+                this.location.z(),
+                this.location.x() + 1,
+                this.location.y() + 1,
+                this.location.z() + 1
             );
         } else {
             // Bottom closed box
             bb = new AxisAlignedBB(
-                this.location.getX(),
-                this.location.getY(),
-                this.location.getZ(),
-                this.location.getX() + 1,
-                this.location.getY() + defaultHeight,
-                this.location.getZ() + 1
+                this.location.x(),
+                this.location.y(),
+                this.location.z(),
+                this.location.x() + 1,
+                this.location.y() + defaultHeight,
+                this.location.z() + 1
             );
         }
 
@@ -82,49 +83,49 @@ public abstract class Trapdoor extends Block implements BlockTrapdoor {
         if (OPEN.getState(this)) {
             switch (DIRECTION.getState(this)) {
                 case NORTH:
-                    bb.setBounds(
-                        this.location.getX(),
-                        this.location.getY(),
-                        this.location.getZ() + 1 - defaultHeight,
-                        this.location.getX() + 1,
-                        this.location.getY() + 1,
-                        this.location.getZ() + 1
+                    bb.bounds(
+                        this.location.x(),
+                        this.location.y(),
+                        this.location.z() + 1 - defaultHeight,
+                        this.location.x() + 1,
+                        this.location.y() + 1,
+                        this.location.z() + 1
                     );
 
                     break;
 
                 case SOUTH:
-                    bb.setBounds(
-                        this.location.getX(),
-                        this.location.getY(),
-                        this.location.getZ(),
-                        this.location.getX() + 1,
-                        this.location.getY() + 1,
-                        this.location.getZ() + defaultHeight
+                    bb.bounds(
+                        this.location.x(),
+                        this.location.y(),
+                        this.location.z(),
+                        this.location.x() + 1,
+                        this.location.y() + 1,
+                        this.location.z() + defaultHeight
                     );
 
                     break;
 
                 case WEST:
-                    bb.setBounds(
-                        this.location.getX() + 1 - defaultHeight,
-                        this.location.getY(),
-                        this.location.getZ(),
-                        this.location.getX() + 1,
-                        this.location.getY() + 1,
-                        this.location.getZ() + 1
+                    bb.bounds(
+                        this.location.x() + 1 - defaultHeight,
+                        this.location.y(),
+                        this.location.z(),
+                        this.location.x() + 1,
+                        this.location.y() + 1,
+                        this.location.z() + 1
                     );
 
                     break;
 
                 case EAST:
-                    bb.setBounds(
-                        this.location.getX(),
-                        this.location.getY(),
-                        this.location.getZ(),
-                        this.location.getX() + defaultHeight,
-                        this.location.getY() + 1,
-                        this.location.getZ() + 1
+                    bb.bounds(
+                        this.location.x(),
+                        this.location.y(),
+                        this.location.z(),
+                        this.location.x() + defaultHeight,
+                        this.location.y() + 1,
+                        this.location.z() + 1
                     );
 
                     break;
@@ -135,12 +136,13 @@ public abstract class Trapdoor extends Block implements BlockTrapdoor {
     }
 
     @Override
-    public void setDirection(Direction direction) {
+    public B direction(Direction direction) {
         DIRECTION.setState(this, direction);
+        return (B) this;
     }
 
     @Override
-    public Direction getDirection() {
+    public Direction direction() {
         return DIRECTION.getState(this);
     }
 

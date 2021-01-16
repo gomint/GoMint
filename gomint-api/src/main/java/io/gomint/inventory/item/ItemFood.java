@@ -12,7 +12,7 @@ package io.gomint.inventory.item;
  * @version 1.0
  * @stability 3
  */
-public interface ItemFood extends ItemStack {
+public interface ItemFood<I> extends ItemStack<I> {
 
     /**
      * Get the amount of saturation this item regenerates

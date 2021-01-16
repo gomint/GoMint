@@ -7,14 +7,15 @@ import io.gomint.GoMint;
  * @version 1.0
  * @stability 1
  */
-public interface ItemBrownMushroom extends ItemStack {
+public interface ItemBrownMushroom extends ItemStack<ItemBrownMushroom> {
 
     /**
      * Create a new item stack with given class and amount
      *
      * @param amount which is used for the creation
+	 * @return freshly generated item
      */
-    static ItemBrownMushroom create( int amount ) {
+    static ItemBrownMushroom create( int amount ) {	
         return GoMint.instance().createItemStack( ItemBrownMushroom.class, amount );
     }
 

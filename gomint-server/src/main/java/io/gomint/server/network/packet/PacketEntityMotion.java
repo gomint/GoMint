@@ -27,9 +27,9 @@ public class PacketEntityMotion extends Packet {
     @Override
     public void serialize( PacketBuffer buffer, int protocolID ) {
         buffer.writeUnsignedVarLong( this.entityId );
-        buffer.writeLFloat( this.velocity.getX() );
-        buffer.writeLFloat( this.velocity.getY() );
-        buffer.writeLFloat( this.velocity.getZ() );
+        buffer.writeLFloat( this.velocity.x() );
+        buffer.writeLFloat( this.velocity.y() );
+        buffer.writeLFloat( this.velocity.z() );
     }
 
     @Override

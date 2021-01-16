@@ -24,29 +24,29 @@ public class HeavyWeightedPressurePlate extends Block implements BlockHeavyWeigh
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 750;
     }
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
     @Override
-    public boolean isSolid() {
+    public boolean solid() {
         return false;
     }
 
     @Override
-    public List<AxisAlignedBB> getBoundingBox() {
+    public List<AxisAlignedBB> boundingBoxes() {
         return Collections.singletonList( new AxisAlignedBB(
-            this.location.getX(),
-            this.location.getY(),
-            this.location.getZ(),
-            this.location.getX() + 1,
-            this.location.getY() + 0.1f,
-            this.location.getZ() + 1
+            this.location.x(),
+            this.location.y(),
+            this.location.z(),
+            this.location.x() + 1,
+            this.location.y() + 0.1f,
+            this.location.z() + 1
         ) );
     }
 
@@ -56,7 +56,7 @@ public class HeavyWeightedPressurePlate extends Block implements BlockHeavyWeigh
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.HEAVY_WEIGHTED_PRESSURE_PLATE;
     }
 
@@ -66,7 +66,7 @@ public class HeavyWeightedPressurePlate extends Block implements BlockHeavyWeigh
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return ToolPresets.PICKAXE;
     }
 }

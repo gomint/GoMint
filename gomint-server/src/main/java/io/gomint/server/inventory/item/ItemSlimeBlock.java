@@ -10,10 +10,10 @@ import io.gomint.taglib.NBTTagCompound;
  * @version 1.0
  */
 @RegisterInfo(sId = "minecraft:slime", id = 165)
-public class ItemSlimeBlock extends ItemStack implements io.gomint.inventory.item.ItemSlimeBlock {
+public class ItemSlimeBlock extends ItemStack< io.gomint.inventory.item.ItemSlimeBlock> implements io.gomint.inventory.item.ItemSlimeBlock {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.SLIME_BLOCK;
     }
 

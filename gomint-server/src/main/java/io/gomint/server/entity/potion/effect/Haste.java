@@ -24,7 +24,7 @@ public class Haste extends Effect {
     }
 
     @Override
-    public void apply( EntityLiving player ) {
+    public void apply( EntityLiving<?> player ) {
 
     }
 
@@ -34,7 +34,7 @@ public class Haste extends Effect {
     }
 
     @Override
-    public void remove( EntityLiving player ) {
+    public void remove( EntityLiving<?> player ) {
 
     }
 

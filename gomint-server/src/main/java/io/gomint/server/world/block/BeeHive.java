@@ -23,7 +23,7 @@ public class BeeHive extends Block implements BlockBeeHive {
     });
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 450;
     }
 
@@ -38,29 +38,30 @@ public class BeeHive extends Block implements BlockBeeHive {
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return ToolPresets.AXE;
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.BEE_HIVE;
     }
 
     @Override
-    public boolean beforePlacement(EntityLiving entity, ItemStack item, Facing face, Location location) {
+    public boolean beforePlacement(EntityLiving<?> entity, ItemStack<?> item, Facing face, Location location) {
         FACING.detectFromPlacement(this, entity, item, face);
         HONEY_LEVEL.detectFromPlacement(this, entity, item, face);
         return super.beforePlacement(entity, item, face, location);
     }
 
     @Override
-    public void setFacing(Facing facing) {
+    public BlockBeeHive facing(Facing facing) {
         FACING.setState(this, facing);
+        return this;
     }
 
     @Override
-    public Facing getFacing() {
+    public Facing facing() {
         return FACING.getState(this);
     }
 

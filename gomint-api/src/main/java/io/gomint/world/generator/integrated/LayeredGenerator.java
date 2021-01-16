@@ -61,7 +61,7 @@ public class LayeredGenerator extends ChunkGenerator {
         }
     }
 
-    public List<Block> getLayers() {
+    public List<Block> layers() {
         return layers;
     }
 
@@ -74,7 +74,7 @@ public class LayeredGenerator extends ChunkGenerator {
         for ( Block layer : this.layers ) {
             for ( int xBlock = 0; xBlock < 16; xBlock++ ) {
                 for ( int zBlock = 0; zBlock < 16; zBlock++ ) {
-                    chunk.setBlock( xBlock, y, zBlock, layer );
+                    chunk.block( xBlock, y, zBlock, layer );
                 }
             }
 
@@ -85,7 +85,7 @@ public class LayeredGenerator extends ChunkGenerator {
     }
 
     @Override
-    public BlockPosition getSpawnPoint() {
+    public BlockPosition spawnPoint() {
         return new BlockPosition( (int) ( Math.random() * 2000 ), this.layers.size(), (int) ( Math.random() * 2000 ) );
     }
 

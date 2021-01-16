@@ -12,8 +12,7 @@ import io.gomint.world.block.data.Facing;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:chainmail_helmet", id = 302 )
-public class ItemChainHelmet extends ItemChainArmor implements io.gomint.inventory.item.ItemChainHelmet {
-
+public class ItemChainHelmet extends ItemChainArmor<io.gomint.inventory.item.ItemChainHelmet> implements io.gomint.inventory.item.ItemChainHelmet {
 
     @Override
     public float getReductionValue() {
@@ -23,10 +22,10 @@ public class ItemChainHelmet extends ItemChainArmor implements io.gomint.invento
     @Override
     public boolean interact(EntityPlayer entity, Facing face, Vector clickPosition, Block clickedBlock ) {
         if ( clickedBlock == null ) {
-            if ( isBetter( (ItemStack) entity.getArmorInventory().getHelmet() ) ) {
-                ItemStack old = (ItemStack) entity.getArmorInventory().getHelmet();
-                entity.getArmorInventory().setHelmet( this );
-                entity.getInventory().setItem( entity.getInventory().getItemInHandSlot(), old );
+            if ( isBetter( (ItemStack<?>) entity.armorInventory().helmet() ) ) {
+                ItemStack<?> old = (ItemStack<?>) entity.armorInventory().helmet();
+                entity.armorInventory().helmet( this );
+                entity.inventory().item( entity.inventory().itemInHandSlot(), old );
             }
         }
 
@@ -34,7 +33,7 @@ public class ItemChainHelmet extends ItemChainArmor implements io.gomint.invento
     }
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.CHAIN_HELMET;
     }
 

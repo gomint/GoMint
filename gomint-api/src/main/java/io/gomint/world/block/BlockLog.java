@@ -14,48 +14,51 @@ import io.gomint.world.block.data.LogType;
  * @version 1.0
  * @stability 3
  */
-public interface BlockLog extends Block, BlockAxis {
+public interface BlockLog extends Block, BlockAxis<BlockLog> {
 
     /**
      * Is this log stripped
      *
      * @return true when stripped, false when not
      */
-    boolean isStripped();
+    boolean stripped();
 
     /**
      * Set stripped status of this log
      *
      * @param stripped true when the log should be stripped, false if not
+     * @return block for chaining
      */
-    void setStripped( boolean stripped );
+    BlockLog stripped(boolean stripped);
 
     /**
      * Set the type of log
      *
      * @param type of log
+     * @return block for chaining
      */
-    void setLogType( LogType type );
+    BlockLog type(LogType type);
 
     /**
      * Get the type of this log
      *
      * @return type of log
      */
-    LogType getLogType();
+    LogType type();
 
     /**
      * Add bark textures to all sides or not
      *
      * @param allSides true when bark on all sides, false if not
+     * @return block for chaining
      */
-    void setBarkOnAllSides( boolean allSides );
+    BlockLog barkOnAllSides(boolean allSides);
 
     /**
      * Is bark on all sides?
      *
      * @return true when bark is on all sides, false when not
      */
-    boolean isBarkOnAllSides();
+    boolean barkOnAllSides();
 
 }

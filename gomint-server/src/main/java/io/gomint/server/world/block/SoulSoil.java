@@ -19,7 +19,7 @@ public class SoulSoil extends Block implements BlockSoulSoil {
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 800;
     }
 
@@ -34,12 +34,12 @@ public class SoulSoil extends Block implements BlockSoulSoil {
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return ToolPresets.SHOVEL;
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.SOUL_SOIL;
     }
 

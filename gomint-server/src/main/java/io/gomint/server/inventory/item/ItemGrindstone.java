@@ -8,10 +8,10 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo(id = -195, sId = "minecraft:grindstone")
-public class ItemGrindstone extends ItemStack implements io.gomint.inventory.item.ItemGrindstone {
+public class ItemGrindstone extends ItemStack< io.gomint.inventory.item.ItemGrindstone> implements io.gomint.inventory.item.ItemGrindstone {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.GRINDSTONE;
     }
 

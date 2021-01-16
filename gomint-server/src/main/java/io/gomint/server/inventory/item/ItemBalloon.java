@@ -15,10 +15,10 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:balloon", id = 448 )
-public class ItemBalloon extends ItemStack implements io.gomint.inventory.item.ItemBalloon {
+public class ItemBalloon extends ItemStack< io.gomint.inventory.item.ItemBalloon> implements io.gomint.inventory.item.ItemBalloon {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.BALLOON;
     }
 

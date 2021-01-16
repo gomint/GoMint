@@ -15,10 +15,10 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:cod_spawn_egg", id = 478 )
-public class ItemCodSpawnEgg extends ItemStack implements io.gomint.inventory.item.ItemCodSpawnEgg {
+public class ItemCodSpawnEgg extends ItemStack< io.gomint.inventory.item.ItemCodSpawnEgg> implements io.gomint.inventory.item.ItemCodSpawnEgg {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.COD_SPAWN_EGG;
     }
 

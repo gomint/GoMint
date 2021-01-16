@@ -20,20 +20,20 @@ import java.util.List;
  * @author geNAZt
  * @version 1.0
  */
-public class GroundPopulator implements Populator {
+public class GroundPopulator implements Populator<GroundPopulator> {
 
     @Override
-    public void populate( World world, Chunk chunk, FastRandom random ) {
+    public GroundPopulator populate( World world, Chunk chunk, FastRandom random ) {
         for ( int x = 0; x < 16; ++x ) {
             for ( int z = 0; z < 16; ++z ) {
-                Biome biome = chunk.getBiome( x, z );
-                List<Block> ground = biome.getGround();
+                Biome biome = chunk.biome( x, z );
+                List<Block> ground = biome.ground();
                 if ( ground != null ) {
                     // Find highest point in column
-                    int y = biome.getMaxElevation();
+                    int y = biome.maxElevation();
                     for ( ; y > 0; --y ) {
-                        Block block = chunk.getBlockAt( x, y, z );
-                        if ( !block.isTransparent() && block.getBlockType() != BlockType.AIR ) {
+                        Block block = chunk.blockAt( x, y, z );
+                        if ( !block.transparent() && block.blockType() != BlockType.AIR ) {
                             break;
                         }
                     }
@@ -42,11 +42,13 @@ public class GroundPopulator implements Populator {
                     int endY = startY - ground.size();
                     for ( y = startY; y > endY && y >= 0; --y ) {
                         Block block = ground.get( startY - y );
-                        chunk.setBlock( x, y, z, block );
+                        chunk.block( x, y, z, block );
                     }
                 }
             }
         }
+
+        return this;
     }
 
 }

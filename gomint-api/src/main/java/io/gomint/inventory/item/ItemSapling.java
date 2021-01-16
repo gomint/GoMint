@@ -8,12 +8,13 @@ import io.gomint.world.block.data.LogType;
  * @version 1.0
  * @stability 3
  */
-public interface ItemSapling extends ItemStack, ItemBurnable {
+public interface ItemSapling extends ItemStack<ItemSapling>, ItemBurnable {
 
     /**
      * Create a new item stack with given class and amount
      *
      * @param amount which is used for the creation
+	 * @return freshly generated item
      */
     static ItemSapling create( int amount ) {
         return GoMint.instance().createItemStack( ItemSapling.class, amount );
@@ -24,13 +25,13 @@ public interface ItemSapling extends ItemStack, ItemBurnable {
      *
      * @param type of sapling
      */
-    void setLogType( LogType type );
+    ItemSapling type(LogType type );
 
     /**
      * Get the type of this sapling
      *
      * @return type of sapling
      */
-    LogType getLogType();
+    LogType type();
 
 }

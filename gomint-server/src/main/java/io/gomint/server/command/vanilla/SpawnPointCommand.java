@@ -27,22 +27,22 @@ import java.util.Map;
 public class SpawnPointCommand extends Command {
 
     @Override
-    public CommandOutput execute(CommandSender sender, String alias, Map<String, Object> arguments) {
+    public CommandOutput execute(CommandSender<?> sender, String alias, Map<String, Object> arguments) {
         if (!(sender instanceof PlayerCommandSender)) {
             return CommandOutput.failure("Executor is required to be a player");
         }
 
         EntityPlayer player = (EntityPlayer) arguments.getOrDefault("player", sender);
         BlockPosition spawnPos = (BlockPosition) arguments.get("spawnPos");
-        Location location = player.getLocation();
+        Location location = player.location();
 
         if (spawnPos != null) {
-            location.setX(spawnPos.getX());
-            location.setY(spawnPos.getY());
-            location.setZ(spawnPos.getZ());
+            location.x(spawnPos.x());
+            location.y(spawnPos.y());
+            location.z(spawnPos.z());
         }
 
-        player.setSpawnLocation(location);
-        return CommandOutput.successful(String.format("Set %s's spawn point to (%.1f, %.1f, %.1f)", player.getName(), location.getX(), location.getY(), location.getZ()));
+        player.spawnLocation(location);
+        return CommandOutput.successful(String.format("Set %s's spawn point to (%.1f, %.1f, %.1f)", player.name(), location.x(), location.y(), location.z()));
     }
 }

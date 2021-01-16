@@ -8,10 +8,10 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo(sId = "minecraft:brewing_stand", id = 379)
-public class ItemBrewingStand extends ItemStack implements io.gomint.inventory.item.ItemBrewingStand {
+public class ItemBrewingStand extends ItemStack< io.gomint.inventory.item.ItemBrewingStand> implements io.gomint.inventory.item.ItemBrewingStand {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.BREWING_STAND;
     }
 

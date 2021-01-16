@@ -15,7 +15,7 @@ import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.world.WorldAdapter;
 
 @RegisterInfo(sId = "minecraft:parrot")
-public class EntityParrot extends EntityAnimal implements io.gomint.entity.animal.EntityParrot {
+public class EntityParrot extends EntityAnimal<io.gomint.entity.animal.EntityParrot> implements io.gomint.entity.animal.EntityParrot {
 
     /**
      * Constructs a new EntityLiving
@@ -36,20 +36,21 @@ public class EntityParrot extends EntityAnimal implements io.gomint.entity.anima
     }
 
     private void initEntity() {
-        this.setSize(0.5f, 0.9f);
-        this.addAttribute(Attribute.HEALTH);
-        this.setMaxHealth(6);
-        this.setHealth(6);
+        this.size(0.5f, 0.9f);
+        this.attribute(Attribute.HEALTH);
+        this.maxHealth(6);
+        this.health(6);
     }
 
     @Override
-    public boolean isDancing() {
+    public boolean dancing() {
         return this.metadataContainer.getDataFlag(MetadataContainer.DATA_INDEX, EntityFlag.DANCING);
     }
 
     @Override
-    public void setDancing(boolean value) {
+    public EntityParrot dancing(boolean value) {
         this.metadataContainer.setDataFlag(MetadataContainer.DATA_INDEX, EntityFlag.DANCING, value);
+        return this;
     }
 
     @Override

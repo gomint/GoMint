@@ -16,7 +16,7 @@ import io.gomint.entity.Entity;
  */
 public class EntityDamageByEntityEvent extends EntityDamageEvent {
 
-    private final Entity attacker;
+    private final Entity<?> attacker;
 
     /**
      * Create a new entity based cancellable event
@@ -26,7 +26,7 @@ public class EntityDamageByEntityEvent extends EntityDamageEvent {
      * @param damageSource with which the entity should be attacked
      * @param damage which should be dealt
      */
-    public EntityDamageByEntityEvent( Entity entity, Entity attacker, DamageSource damageSource, float damage ) {
+    public EntityDamageByEntityEvent( Entity<?> entity, Entity<?> attacker, DamageSource damageSource, float damage ) {
         super( entity, damageSource, damage );
         this.attacker = attacker;
     }
@@ -36,7 +36,7 @@ public class EntityDamageByEntityEvent extends EntityDamageEvent {
      *
      * @return attacking entity
      */
-    public Entity getAttacker() {
+    public Entity<?> attacker() {
         return this.attacker;
     }
 

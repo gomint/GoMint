@@ -15,10 +15,10 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:birch_standing_sign", id = -186 )
-public class ItemBirchStandingSign extends ItemStack implements io.gomint.inventory.item.ItemBirchStandingSign {
+public class ItemBirchStandingSign extends ItemStack< io.gomint.inventory.item.ItemBirchStandingSign> implements io.gomint.inventory.item.ItemBirchStandingSign {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.BIRCH_STANDING_SIGN;
     }
 

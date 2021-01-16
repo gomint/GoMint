@@ -14,14 +14,15 @@ import io.gomint.GoMint;
  * @version 1.0
  * @stability 1
  */
-public interface ItemLodestoneCompass extends ItemStack {
+public interface ItemLodestoneCompass extends ItemStack<ItemLodestoneCompass> {
 
     /**
      * Create a new item stack with given class and amount
      *
      * @param amount which is used for the creation
+	 * @return freshly generated item
      */
-    static ItemLodestoneCompass create( int amount ) {
+    static ItemLodestoneCompass create( int amount ) {	
         return GoMint.instance().createItemStack( ItemLodestoneCompass.class, amount );
     }
 

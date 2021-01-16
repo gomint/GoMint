@@ -45,17 +45,17 @@ public class TransformComponent implements EntityComponent, Transformable {
     }
 
     @Override
-    public float getMotionX() {
+    public float motionX() {
         return this.motionX;
     }
 
     @Override
-    public float getMotionY() {
+    public float motionY() {
         return this.motionY;
     }
 
     @Override
-    public float getMotionZ() {
+    public float motionZ() {
         return this.motionZ;
     }
 
@@ -72,68 +72,72 @@ public class TransformComponent implements EntityComponent, Transformable {
     }
 
     @Override
-    public float getPositionX() {
+    public float positionX() {
         return this.posX;
     }
 
     @Override
-    public float getPositionY() {
+    public float positionY() {
         return this.posY;
     }
 
     @Override
-    public float getPositionZ() {
+    public float positionZ() {
         return this.posZ;
     }
 
     @Override
-    public Vector getPosition() {
+    public Vector position() {
         return new Vector( this.posX, this.posY, this.posZ );
     }
 
     @Override
-    public void setPosition( Vector position ) {
-        this.posX = position.getX();
-        this.posY = position.getY();
-        this.posZ = position.getZ();
+    public Transformable position(Vector position ) {
+        this.posX = position.x();
+        this.posY = position.y();
+        this.posZ = position.z();
         this.dirty = true;
+        return this;
     }
 
     @Override
-    public float getYaw() {
+    public float yaw() {
         return this.yaw;
     }
 
     @Override
-    public void setYaw( float yaw ) {
+    public Transformable yaw(float yaw ) {
         this.yaw = yaw;
         this.dirty = true;
+        return this;
     }
 
     @Override
-    public float getHeadYaw() {
+    public float headYaw() {
         return this.headYaw;
     }
 
     @Override
-    public void setHeadYaw( float headYaw ) {
+    public Transformable headYaw(float headYaw ) {
         this.headYaw = headYaw;
         this.dirty = true;
+        return this;
     }
 
     @Override
-    public float getPitch() {
+    public float pitch() {
         return this.pitch;
     }
 
     @Override
-    public void setPitch( float pitch ) {
+    public Transformable pitch(float pitch ) {
         this.pitch = pitch;
         this.dirty = true;
+        return this;
     }
 
     @Override
-    public Vector getDirection() {
+    public Vector direction() {
         double rY = Math.toRadians( this.yaw );
         double rP = Math.toRadians( this.pitch );
 
@@ -147,7 +151,7 @@ public class TransformComponent implements EntityComponent, Transformable {
     }
 
     @Override
-    public Vector getHeadDirection() {
+    public Vector headDirection() {
         double rY = Math.toRadians( this.headYaw );
         double rP = Math.toRadians( this.pitch );
         double sinY = Math.sin( rY );
@@ -159,62 +163,69 @@ public class TransformComponent implements EntityComponent, Transformable {
     }
 
     @Override
-    public void setMotion( float motionX, float motionY, float motionZ ) {
+    public Transformable motion(float motionX, float motionY, float motionZ ) {
         this.motionX = motionX;
         this.motionY = motionY;
         this.motionZ = motionZ;
+        return this;
     }
 
     @Override
-    public void manipulateMotion( float x, float y, float z ) {
+    public Transformable manipulateMotion( float x, float y, float z ) {
         this.motionX += x;
         this.motionY += y;
         this.motionZ += z;
+        return this;
     }
 
     @Override
-    public void setPosition( float positionX, float positionY, float positionZ ) {
+    public Transformable position(float positionX, float positionY, float positionZ ) {
         this.posX = positionX;
         this.posY = positionY;
         this.posZ = positionZ;
         this.dirty = true;
+        return this;
     }
 
     @Override
-    public void move( float offsetX, float offsetY, float offsetZ ) {
+    public Transformable move( float offsetX, float offsetY, float offsetZ ) {
         this.posX += offsetX;
         this.posY += offsetY;
         this.posZ += offsetZ;
         this.dirty = true;
+        return this;
     }
 
     @Override
-    public void move( Vector offset ) {
-        move( offset.getX(), offset.getY(), offset.getZ() );
+    public Transformable move( Vector offset ) {
+        return move( offset.x(), offset.y(), offset.z() );
     }
 
     @Override
-    public void rotateYaw( float yaw ) {
+    public Transformable rotateYaw( float yaw ) {
         // Add yaw rotation and normalize immediately:
         this.yaw += yaw;
         this.normalizeYaw();
         this.dirty = true;
+        return this;
     }
 
     @Override
-    public void rotateHeadYaw( float headYaw ) {
+    public Transformable rotateHeadYaw( float headYaw ) {
         // Add head yaw rotation and normalize immediately:
         this.headYaw += headYaw;
         this.normalizeHeadYaw();
         this.dirty = true;
+        return this;
     }
 
     @Override
-    public void rotatePitch( float pitch ) {
+    public Transformable rotatePitch( float pitch ) {
         // Add pitch rotation and normalize immediately:
         this.pitch += pitch;
         this.normalizePitch();
         this.dirty = true;
+        return this;
     }
 
     @Override
@@ -223,25 +234,26 @@ public class TransformComponent implements EntityComponent, Transformable {
     }
 
     @Override
-    public boolean isDirty() {
+    public boolean dirty() {
         boolean result = this.dirty;
         this.dirty = false;
         return result;
     }
 
     @Override
-    public Vector getMotion() {
+    public Vector motion() {
         return new Vector( this.motionX, this.motionY, this.motionZ );
     }
 
     @Override
-    public boolean hasMotionBeenSent() {
+    public boolean motionBeenSent() {
         return this.sentMotion;
     }
 
     @Override
-    public void markMotionSent() {
+    public Transformable markMotionSent() {
         this.sentMotion = true;
+        return this;
     }
 
     /**

@@ -8,12 +8,12 @@ import io.gomint.taglib.NBTTagCompound;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:repeater", id = 356 )
-public class ItemRedstoneRepeater extends ItemStack implements io.gomint.inventory.item.ItemRedstoneRepeater {
+public class ItemRedstoneRepeater extends ItemStack< io.gomint.inventory.item.ItemRedstoneRepeater> implements io.gomint.inventory.item.ItemRedstoneRepeater {
 
 
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.REDSTONE_REPEATER;
     }
 

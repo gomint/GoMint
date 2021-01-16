@@ -15,10 +15,10 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:item.reeds", id = 83 )
-public class ItemReedsBlock extends ItemStack  {
+public class ItemReedsBlock extends ItemStack<ItemReedsBlock>  {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.REEDS;
     }
 

@@ -17,14 +17,14 @@ import io.gomint.event.Event;
  */
 public class EntityDespawnEvent extends Event {
 
-    private final Entity entity;
+    private final Entity<?> entity;
 
     /**
      * Create a new event for announcing a entity despawn
      *
      * @param entity for which this event is
      */
-    public EntityDespawnEvent( Entity entity ) {
+    public EntityDespawnEvent( Entity<?> entity ) {
         this.entity = entity;
     }
 
@@ -33,7 +33,7 @@ public class EntityDespawnEvent extends Event {
      *
      * @return the player which is affected by this event
      */
-    public Entity getEntity() {
+    public Entity<?> entity() {
         return this.entity;
     }
 

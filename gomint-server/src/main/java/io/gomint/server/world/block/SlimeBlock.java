@@ -20,12 +20,12 @@ public class SlimeBlock extends Block implements BlockSlimeBlock {
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 0;
     }
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
@@ -35,13 +35,13 @@ public class SlimeBlock extends Block implements BlockSlimeBlock {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.SLIME_BLOCK;
     }
 
     @Override
-    public void stepOn( Entity entity ) {
-        if( !((EntityPlayer) entity).isSneaking() ) {
+    public void stepOn(Entity<?> entity ) {
+        if( !((EntityPlayer) entity).sneaking() ) {
             entity.resetFallDistance();
         }
     }

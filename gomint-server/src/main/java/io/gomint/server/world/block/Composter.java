@@ -19,12 +19,12 @@ public class Composter extends Block implements BlockComposter {
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 900;
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return ToolPresets.AXE;
     }
 
@@ -34,7 +34,7 @@ public class Composter extends Block implements BlockComposter {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.COMPOSTER;
     }
 }

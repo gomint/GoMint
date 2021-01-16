@@ -17,7 +17,7 @@ import io.gomint.server.network.packet.PacketInventorySetSlot;
  * @author geNAZt
  * @version 1.0
  */
-public class OffhandInventory extends Inventory {
+public class OffhandInventory extends Inventory<OffhandInventory> {
 
     public OffhandInventory(Items items, InventoryHolder owner) {
         super(items, owner, 1);
@@ -27,7 +27,7 @@ public class OffhandInventory extends Inventory {
     public void sendContents(PlayerConnection playerConnection) {
         PacketInventoryContent inventory = new PacketInventoryContent();
         inventory.setWindowId(WindowMagicNumbers.OFFHAND_DEPRECATED);
-        inventory.setItems(getContents());
+        inventory.setItems(contents());
         playerConnection.addToSendQueue(inventory);
     }
 
@@ -41,7 +41,7 @@ public class OffhandInventory extends Inventory {
     }
 
     @Override
-    public InventoryType getInventoryType() {
+    public InventoryType inventoryType() {
         return InventoryType.OFFHAND;
     }
 

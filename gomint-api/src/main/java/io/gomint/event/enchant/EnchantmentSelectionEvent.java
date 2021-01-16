@@ -32,7 +32,7 @@ public class EnchantmentSelectionEvent extends PlayerEvent {
          *
          * @return minimum requirement of levels
          */
-        public int getMinimumRequirement() {
+        public int minimumRequirement() {
             return minimumRequirement;
         }
 
@@ -41,8 +41,9 @@ public class EnchantmentSelectionEvent extends PlayerEvent {
          *
          * @param minimumRequirement needed to unlock this enchantments
          */
-        public void setMinimumRequirement(int minimumRequirement) {
+        public Option minimumRequirement(int minimumRequirement) {
             this.minimumRequirement = minimumRequirement;
+            return this;
         }
 
         /**
@@ -51,7 +52,7 @@ public class EnchantmentSelectionEvent extends PlayerEvent {
          *
          * @return list of enchantments in this option
          */
-        public List<Enchantment> getEnchantments() {
+        public List<Enchantment> enchantments() {
             return enchantments;
         }
 
@@ -72,7 +73,7 @@ public class EnchantmentSelectionEvent extends PlayerEvent {
      *
      * @return list of enchantment options
      */
-    public List<Option> getEnchantmentOptions() {
+    public List<Option> enchantmentOptions() {
         return Collections.unmodifiableList(enchantmentOptions);
     }
 

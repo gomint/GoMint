@@ -13,10 +13,10 @@ import io.gomint.world.block.data.Facing;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:iron_door" )
-public class IronDoor extends Door implements BlockIronDoor {
+public class IronDoor extends Door<BlockIronDoor> implements BlockIronDoor {
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 7500;
     }
 
@@ -26,7 +26,7 @@ public class IronDoor extends Door implements BlockIronDoor {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.IRON_DOOR;
     }
 
@@ -37,16 +37,16 @@ public class IronDoor extends Door implements BlockIronDoor {
 
     @Override
     public void afterPlacement() {
-        Block above = this.getSide(Facing.UP);
-        IronDoor aDoor = above.setBlockType(IronDoor.class);
-        aDoor.setDirection(this.getDirection());
-        aDoor.setTop(true);
+        Block above = this.side(Facing.UP);
+        IronDoor aDoor = above.blockType(IronDoor.class);
+        aDoor.direction(this.direction());
+        aDoor.top(true);
 
         super.afterPlacement();
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return ToolPresets.PICKAXE;
     }
 

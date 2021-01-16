@@ -15,10 +15,10 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:ocelot_spawn_egg", id = 449 )
-public class ItemOcelotSpawnEgg extends ItemStack implements io.gomint.inventory.item.ItemOcelotSpawnEgg {
+public class ItemOcelotSpawnEgg extends ItemStack< io.gomint.inventory.item.ItemOcelotSpawnEgg> implements io.gomint.inventory.item.ItemOcelotSpawnEgg {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.OCELOT_SPAWN_EGG;
     }
 

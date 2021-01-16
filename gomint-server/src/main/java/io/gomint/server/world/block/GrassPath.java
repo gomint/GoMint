@@ -24,12 +24,12 @@ public class GrassPath extends Block implements BlockGrassPath {
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 900;
     }
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
@@ -39,12 +39,12 @@ public class GrassPath extends Block implements BlockGrassPath {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.GRASS_PATH;
     }
 
     @Override
-    public List<ItemStack> getDrops(ItemStack itemInHand) {
+    public List<ItemStack<?>> drops(ItemStack<?> itemInHand) {
         return new ArrayList<>() {{
             add(ItemDirt.create(1));
         }};
@@ -56,7 +56,7 @@ public class GrassPath extends Block implements BlockGrassPath {
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return ToolPresets.SHOVEL;
     }
 }

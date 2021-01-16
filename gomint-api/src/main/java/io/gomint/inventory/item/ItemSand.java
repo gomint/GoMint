@@ -8,12 +8,13 @@ import io.gomint.inventory.item.data.SandType;
  * @version 1.0
  * @stability 3
  */
-public interface ItemSand extends ItemStack {
+public interface ItemSand extends ItemStack<ItemSand> {
 
     /**
      * Create a new item stack with given class and amount
      *
      * @param amount which is used for the creation
+	 * @return freshly generated item
      */
     static ItemSand create( int amount ) {
         return GoMint.instance().createItemStack( ItemSand.class, amount );
@@ -24,13 +25,13 @@ public interface ItemSand extends ItemStack {
      *
      * @param type of sand
      */
-    void setType(SandType type);
+    ItemSand type(SandType type);
 
     /**
      * Get type of sand
      *
      * @return type of sand
      */
-    SandType getType();
+    SandType type();
 
 }

@@ -25,18 +25,16 @@ import java.util.ArrayList;
  * @version 1.0
  * @stability 3
  */
-public class YamlConfig extends ConfigMapper implements Config {
+public class YamlConfig extends ConfigMapper implements Config<YamlConfig> {
 
-    public YamlConfig() {
-
-    }
+    public YamlConfig() {}
 
     public YamlConfig( String filename ) {
         this.configFile = new File(filename + ( filename.endsWith(".yml" ) ? "" : ".yml" ) );
     }
 
     @Override
-    public void save() throws InvalidConfigurationException {
+    public YamlConfig save() throws InvalidConfigurationException {
         Preconditions.checkNotNull(this.configFile, "Cannot save config file: Local field 'configFile' is null" );
 
         if ( this.root == null ) {
@@ -46,21 +44,25 @@ public class YamlConfig extends ConfigMapper implements Config {
         this.clearComments();
         this.internalSave( this.getClass() );
         this.saveToYaml();
+
+        return this;
     }
 
     @Override
-    public void save( File file ) throws InvalidConfigurationException {
+    public YamlConfig save( File file ) throws InvalidConfigurationException {
         Preconditions.checkNotNull( file, Messages.paramIsNull( "file" ) );
 
         this.configFile = file;
         this.save();
+
+        return this;
     }
 
     @Override
-    public void init() throws InvalidConfigurationException {
+    public YamlConfig init() throws InvalidConfigurationException {
         if ( this.configFile.exists() ) {
             this.load();
-            return;
+            return this;
         }
 
         File parentFile = this.configFile.getParentFile();
@@ -78,40 +80,49 @@ public class YamlConfig extends ConfigMapper implements Config {
         } catch ( IOException cause ) {
             throw new InvalidConfigurationException( "Failed saving new empty config file", cause );
         }
+
+        return this;
     }
 
     @Override
-    public void init( File file ) throws InvalidConfigurationException {
+    public YamlConfig init( File file ) throws InvalidConfigurationException {
         Preconditions.checkNotNull( file, Messages.paramIsNull( "file" ) );
 
         this.configFile = file;
         this.init();
+
+        return this;
     }
 
     @Override
-    public void reload() throws InvalidConfigurationException {
+    public YamlConfig reload() throws InvalidConfigurationException {
         this.loadFromYaml();
         this.internalLoad( this.getClass() );
+        return this;
     }
 
     @Override
-    public void load() throws InvalidConfigurationException {
+    public YamlConfig load() throws InvalidConfigurationException {
         Preconditions.checkNotNull(this.configFile, "Cannot load config file: Local field 'configFile' is null" );
 
         this.loadFromYaml();
         this.update( this.root );
         this.internalLoad( this.getClass() );
+
+        return this;
     }
 
     @Override
-    public void load( File file ) throws InvalidConfigurationException {
+    public YamlConfig load( File file ) throws InvalidConfigurationException {
         Preconditions.checkNotNull( file, Messages.paramIsNull( "file" ) );
 
         this.configFile = file;
         this.load();
+
+        return this;
     }
 
-    private void internalSave( Class clazz ) throws InvalidConfigurationException {
+    private YamlConfig internalSave( Class<?> clazz ) throws InvalidConfigurationException {
         if ( !clazz.getSuperclass().equals( YamlConfig.class ) ) {
             this.internalSave( clazz.getSuperclass() );
         }
@@ -179,9 +190,10 @@ public class YamlConfig extends ConfigMapper implements Config {
                 }
             }
         }
+        return this;
     }
 
-    private void internalLoad( Class clazz ) throws InvalidConfigurationException {
+    private YamlConfig internalLoad( Class<?> clazz ) throws InvalidConfigurationException {
         if ( !clazz.getSuperclass().equals( YamlConfig.class ) ) {
             this.internalLoad( clazz.getSuperclass() );
         }
@@ -246,6 +258,8 @@ public class YamlConfig extends ConfigMapper implements Config {
         if ( save ) {
             this.saveToYaml();
         }
+
+        return this;
     }
 
 }

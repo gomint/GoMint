@@ -15,10 +15,10 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:crimson_nylium", id = -232 )
-public class ItemCrimsonNylium extends ItemStack implements io.gomint.inventory.item.ItemCrimsonNylium {
+public class ItemCrimsonNylium extends ItemStack< io.gomint.inventory.item.ItemCrimsonNylium> implements io.gomint.inventory.item.ItemCrimsonNylium {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.CRIMSON_NYLIUM;
     }
 

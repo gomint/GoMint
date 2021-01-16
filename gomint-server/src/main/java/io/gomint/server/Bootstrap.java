@@ -38,44 +38,78 @@ public class Bootstrap {
      * @param args The command-line arguments to be passed to the entryClass
      */
     public static void main(String[] args) throws InterruptedException {
-        // Enable reflection access to JDK NIO buffers for netty
-        System.setProperty("io.netty.tryReflectionSetAccessible", "true");
-        System.setProperty("io.netty.maxDirectMemory", "0");
+        try {
+            bootstrap(args);
+        } catch (Throwable cause) {
+            LOGGER.error("GoMint crashed: ", cause);
+            reportExceptionToSentry(cause);
+        } 
+    }
 
-        // Setup additional debug
-        if ("true".equals(System.getProperty("gomint.debug_events"))) {
-            Configurator.setLevel("io.gomint.server.event.EventHandlerList", Level.DEBUG);
+    private static void reportExceptionToSentry(Throwable cause) {
+        ReportUploader.create()
+            .exception(cause)
+            .property("crash", "true")
+            .upload();
+    }
+
+    private static void bootstrap(String[] args) throws Exception {
+        var commandLineOptions = parseCommandLineOptions(args);
+
+        enableNettyReflectionAccess();
+
+        if (eventDebuggingWanted()) {
+            enableEventDebugging();
+        }
+        
+        if (networkDebuggingWanted(commandLineOptions)) {
+            enableNetworkDebugging();
         }
 
-        // Performance hacks
+        disableSecurityManager();
+        assignCustomHTTPAgent();
+
+        var server = new GoMintServer();
+        server.startAfterRegistryInit(commandLineOptions);
+    }
+
+    private static void enableNettyReflectionAccess() {
+        System.setProperty("io.netty.tryReflectionSetAccessible", "true");
+        System.setProperty("io.netty.maxDirectMemory", "0");
+    }
+
+    private static boolean eventDebuggingWanted() {
+        return "true".equals(System.getProperty("gomint.debug_events"));
+    }
+
+    private static void enableEventDebugging() {
+       Configurator.setLevel("io.gomint.server.event.EventHandlerList", Level.DEBUG); 
+    }
+
+    private static boolean networkDebuggingWanted(OptionSet options) {
+        return options.has("dbg-net");
+    }
+
+    private static void enableNetworkDebugging() {
+        Configurator.setLevel("io.gomint.server.network.NetworkManager", Level.TRACE);
+    }
+
+    private static void disableSecurityManager() {
         System.setSecurityManager(null);
+    }
 
-        // User agent
+    private static void assignCustomHTTPAgent() {
         System.setProperty("http.agent", "GoMint/1.0");
+    }
 
-        // Parse options first
-        OptionParser parser = new OptionParser();
+    private static OptionSet parseCommandLineOptions(String[] args) {
+        var parser = new OptionParser();
         parser.accepts("lp").withRequiredArg().ofType(Integer.class);
         parser.accepts("lh").withRequiredArg();
         parser.accepts("slc");
         parser.accepts("dbg-net");
         parser.accepts("exit-after-boot");
-
-        OptionSet options = parser.parse(args);
-
-        // Set custom log level
-        if (options.has("dbg-net")) {
-            Configurator.setLevel("io.gomint.server.network.NetworkManager", Level.TRACE);
-        }
-
-        // Load the Class entrypoint
-        try {
-            GoMintServer server = new GoMintServer();
-            server.startAfterRegistryInit(options);
-        } catch (Throwable t) {
-            LOGGER.error("GoMint crashed: ", t);
-            ReportUploader.create().exception(t).property("crash", "true").upload();
-        }
+        return parser.parse(args);
     }
 
 }

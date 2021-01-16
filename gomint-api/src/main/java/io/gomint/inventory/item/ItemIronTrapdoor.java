@@ -7,14 +7,15 @@ import io.gomint.GoMint;
  * @version 1.0
  * @stability 3
  */
-public interface ItemIronTrapdoor extends ItemStack {
+public interface ItemIronTrapdoor extends ItemStack<ItemIronTrapdoor> {
 
     /**
      * Create a new item stack with given class and amount
      *
      * @param amount which is used for the creation
+	 * @return freshly generated item
      */
-    static ItemIronTrapdoor create( int amount ) {
+    static ItemIronTrapdoor create( int amount ) {	
         return GoMint.instance().createItemStack( ItemIronTrapdoor.class, amount );
     }
 

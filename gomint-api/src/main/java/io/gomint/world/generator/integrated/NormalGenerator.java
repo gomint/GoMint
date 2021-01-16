@@ -62,15 +62,14 @@ public class NormalGenerator extends ChunkGenerator {
         }
     }
 
-    private List<Populator> populators = new ArrayList<>();
-    private List<Populator> generationPopulators = new ArrayList<>();
-    private int waterHeight = 62;
+    private final List<Populator> populators = new ArrayList<>();
+    private final List<Populator> generationPopulators = new ArrayList<>();
 
-    private FastRandom random;
-    private Simplex noise;
-    private long seed;
+    private final FastRandom random;
+    private final Simplex noise;
+    private final long seed;
 
-    private BiomeSelector selector;
+    private final BiomeSelector selector;
 
     /**
      * Create a new chunk generator
@@ -135,7 +134,7 @@ public class NormalGenerator extends ChunkGenerator {
 
     @Override
     public Chunk generate( int chunkX, int chunkZ ) {
-        this.random.setSeed( 0xdeadbeef ^ ( chunkX << 8 ) ^ chunkZ ^ this.seed );
+        this.random.setSeed( 0xdeadbeef ^ ((long) chunkX << 8 ) ^ chunkZ ^ this.seed );
 
         Chunk chunk = this.world.generateEmptyChunk( chunkX, chunkZ );
 
@@ -152,13 +151,13 @@ public class NormalGenerator extends ChunkGenerator {
                 double weightSum = 0;
 
                 Biome biome = this.pickBiome( chunkX * 16 + x, chunkZ * 16 + z ); // For testing we only use plains now
-                chunk.setBiome( x, z, biome );
+                chunk.biome( x, z, biome );
 
                 for ( int sx = -SMOOTH_SIZE; sx <= SMOOTH_SIZE; ++sx ) {
                     for ( int sz = -SMOOTH_SIZE; sz <= SMOOTH_SIZE; ++sz ) {
                         double weight = GAUSSIAN[sx + SMOOTH_SIZE][sz + SMOOTH_SIZE];
 
-                        Biome adjacent = null;
+                        Biome adjacent;
                         if ( sx == 0 && sz == 0 ) {
                             adjacent = biome;
                         } else {
@@ -171,8 +170,8 @@ public class NormalGenerator extends ChunkGenerator {
                             }
                         }
 
-                        minSum += ( adjacent.getMinElevation() - 1 ) * weight;
-                        maxSum += adjacent.getMaxElevation() * weight;
+                        minSum += ( adjacent.minElevation() - 1 ) * weight;
+                        maxSum += adjacent.maxElevation() * weight;
                         weightSum += weight;
                     }
                 }
@@ -195,22 +194,23 @@ public class NormalGenerator extends ChunkGenerator {
             correctedMax = 256;
         }
 
-        double[][][] noiseValues = this.noise.getFastNoise3D( 16, correctedMax, 16, 4, 8, 4, chunkX * 16, 0, chunkZ * 16 );
+        double[][][] noiseValues = this.noise.fastNoise3D( 16, correctedMax, 16, 4, 8, 4, chunkX * 16, 0, chunkZ * 16 );
 
         for ( int x = 0; x < 16; x++ ) {
             for ( int z = 0; z < 16; z++ ) {
                 // We currently only care about noise generation with stones
                 for ( int y = 0; y < correctedMax; ++y ) {
                     if ( y == 0 ) {
-                        chunk.setBlock( x, y, z, WorldLayer.NORMAL, DefinedBlocks.BEDROCK);
+                        chunk.block( x, y, z, WorldLayer.NORMAL, DefinedBlocks.BEDROCK);
                         continue;
                     }
 
                     double noiseValue = noiseValues[x][z][y] - 1 / smoothHeight[x][z] * ( y - smoothHeight[x][z] - minHeight[x][z] );
+                    int waterHeight = 62;
                     if ( noiseValue > 0 ) {
-                        chunk.setBlock( x, y, z, DefinedBlocks.STONE );
-                    } else if ( y <= this.waterHeight ) {
-                        chunk.setBlock( x, y, z, DefinedBlocks.WATER );
+                        chunk.block( x, y, z, DefinedBlocks.STONE );
+                    } else if ( y <= waterHeight) {
+                        chunk.block( x, y, z, DefinedBlocks.WATER );
                     }
                 }
             }
@@ -227,7 +227,7 @@ public class NormalGenerator extends ChunkGenerator {
     @Override
     public void populate( Chunk chunk ) {
         // Reset the seed
-        this.random.setSeed( 0xdeadbeef ^ ( chunk.getX() << 8 ) ^ chunk.getZ() ^ this.seed );
+        this.random.setSeed( 0xdeadbeef ^ ((long) chunk.x() << 8 ) ^ chunk.z() ^ this.seed );
 
         // Let the normal populators work
         for ( Populator populator : this.populators ) {
@@ -235,8 +235,8 @@ public class NormalGenerator extends ChunkGenerator {
         }
 
         // Let the biome populators work
-        Biome toWorkFor = chunk.getBiome( 7, 7 );
-        List<Populator> biomePopulators = toWorkFor.getPopulators();
+        Biome toWorkFor = chunk.biome( 7, 7 );
+        List<Populator> biomePopulators = toWorkFor.populators();
         if ( biomePopulators != null ) {
             for ( Populator populator : biomePopulators ) {
                 populator.populate( this.world, chunk, this.random );
@@ -245,7 +245,7 @@ public class NormalGenerator extends ChunkGenerator {
     }
 
     private Biome pickBiome( int x, int z ) {
-        long hash = x * 2345803 ^ z * 9236449 ^ this.seed;
+        long hash = x * 2345803L ^ z * 9236449L ^ this.seed;
         hash *= hash + 223;
 
         byte xNoise = (byte) ( hash >> 20 & 3 );
@@ -267,7 +267,7 @@ public class NormalGenerator extends ChunkGenerator {
     }
 
     @Override
-    public BlockPosition getSpawnPoint() {
+    public BlockPosition spawnPoint() {
         return new BlockPosition( 150, 75, 150 );
     }
 

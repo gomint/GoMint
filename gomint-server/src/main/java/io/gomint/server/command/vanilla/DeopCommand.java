@@ -23,7 +23,7 @@ import java.util.Map;
 public class DeopCommand extends Command {
 
     @Override
-    public CommandOutput execute(CommandSender sender, String alias, Map<String, Object> arguments) {
+    public CommandOutput execute(CommandSender<?> sender, String alias, Map<String, Object> arguments) {
         EntityPlayer target = (EntityPlayer) arguments.get("player");
         if (target == null) {
             if (sender instanceof PlayerCommandSender) {
@@ -33,12 +33,12 @@ public class DeopCommand extends Command {
             }
         }
 
-        if (!target.isOp()) {
-            return CommandOutput.failure("Could not deop (already not op): " + target.getName());
+        if (!target.op()) {
+            return CommandOutput.failure("Could not deop (already not op): " + target.name());
         }
 
-        target.setOp(false);
+        target.op(false);
         target.sendMessage("You have been de-opped");
-        return CommandOutput.successful("De-opped: " + target.getName());
+        return CommandOutput.successful("De-opped: " + target.name());
     }
 }

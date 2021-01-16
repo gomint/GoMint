@@ -53,29 +53,30 @@ public class Coral extends Block implements BlockCoral {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.CORAL;
     }
 
     @Override
-    public void setDead(boolean dead) {
+    public BlockCoral dead(boolean dead) {
         DEAD.setState(this, dead);
+        return this;
     }
 
     @Override
-    public boolean isDead() {
+    public boolean dead() {
         return DEAD.getState(this);
     }
 
-
     @Override
-    public void setCoralType(CoralType type) {
+    public BlockCoral type(CoralType type) {
         CoralTypeMagic state = CoralTypeMagic.valueOf(type.name());
         COLOR.setState(this, state);
+        return this;
     }
 
     @Override
-    public CoralType getCoralType() {
+    public CoralType type() {
         return CoralType.valueOf(COLOR.getState(this).name());
     }
 

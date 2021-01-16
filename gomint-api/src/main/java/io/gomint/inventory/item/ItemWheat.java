@@ -7,12 +7,13 @@ import io.gomint.GoMint;
  * @version 1.0
  * @stability 3
  */
-public interface ItemWheat extends ItemStack {
+public interface ItemWheat extends ItemStack<ItemWheat> {
 
     /**
      * Create a new item stack with given class and amount
      *
      * @param amount which is used for the creation
+	 * @return freshly generated item
      */
     static ItemWheat create( int amount ) {
         return GoMint.instance().createItemStack( ItemWheat.class, amount );

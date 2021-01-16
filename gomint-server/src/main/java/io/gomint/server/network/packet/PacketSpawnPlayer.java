@@ -33,7 +33,7 @@ public class PacketSpawnPlayer extends Packet {
     private float headYaw;
     private float yaw;
 
-    private ItemStack itemInHand;
+    private ItemStack<?> itemInHand;
     private MetadataContainer metadataContainer;
 
     // Some adventure stuff? Yep this is adventure setting stuff
@@ -212,11 +212,11 @@ public class PacketSpawnPlayer extends Packet {
         this.yaw = yaw;
     }
 
-    public ItemStack getItemInHand() {
+    public ItemStack<?> getItemInHand() {
         return itemInHand;
     }
 
-    public void setItemInHand(ItemStack itemInHand) {
+    public void setItemInHand(ItemStack<?> itemInHand) {
         this.itemInHand = itemInHand;
     }
 

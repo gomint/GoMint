@@ -12,20 +12,21 @@ package io.gomint.world.block;
  * @version 1.0
  * @stability 3
  */
-public interface BlockStair extends BlockDirection {
+public interface BlockStair<B> extends BlockDirection<B> {
 
     /**
      * Get if the base of the stair on the top or not
      *
      * @return true if base is on top, false otherwise
      */
-    boolean isTop();
+    boolean top();
 
     /**
      * Set if base of the stair is on top or not
      *
      * @param top true if base is on top, false otherwise
+     * @return block for chaining
      */
-    void setTop(boolean top);
+    B top(boolean top);
 
 }

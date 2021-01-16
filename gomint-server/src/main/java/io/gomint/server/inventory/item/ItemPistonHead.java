@@ -10,10 +10,10 @@ import io.gomint.taglib.NBTTagCompound;
  * @version 1.0
  */
 @RegisterInfo(sId = "minecraft:pistonArmCollision", id = 34)
-public class ItemPistonHead extends ItemStack {
+public class ItemPistonHead extends ItemStack<ItemPistonHead> {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.PISTON_HEAD;
     }
 

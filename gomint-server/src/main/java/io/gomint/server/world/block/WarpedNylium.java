@@ -19,7 +19,7 @@ public class WarpedNylium extends Block implements BlockWarpedNylium {
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 1500;
     }
 
@@ -29,7 +29,7 @@ public class WarpedNylium extends Block implements BlockWarpedNylium {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.WARPED_NYLIUM;
     }
 
@@ -39,7 +39,7 @@ public class WarpedNylium extends Block implements BlockWarpedNylium {
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return ToolPresets.PICKAXE;
     }
 }

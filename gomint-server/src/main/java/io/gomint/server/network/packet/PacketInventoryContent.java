@@ -10,7 +10,7 @@ import io.gomint.server.network.Protocol;
 public class PacketInventoryContent extends Packet {
 
     private int windowId;
-    private ItemStack[] items;
+    private ItemStack<?>[] items;
 
     public PacketInventoryContent() {
         super( Protocol.PACKET_INVENTORY_CONTENT_PACKET );
@@ -36,11 +36,11 @@ public class PacketInventoryContent extends Packet {
         this.windowId = windowId;
     }
 
-    public ItemStack[] getItems() {
+    public ItemStack<?>[] getItems() {
         return items;
     }
 
-    public void setItems(ItemStack[] items) {
+    public void setItems(ItemStack<?>[] items) {
         this.items = items;
     }
 }

@@ -15,7 +15,7 @@ import io.gomint.world.block.BlockType;
 public class ChemicalHeater extends Block implements BlockChemicalHeater {
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 12500;
     }
 
@@ -25,7 +25,7 @@ public class ChemicalHeater extends Block implements BlockChemicalHeater {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.CHEMICAL_HEATER;
     }
 

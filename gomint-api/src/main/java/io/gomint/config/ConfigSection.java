@@ -17,7 +17,7 @@ import java.util.Map;
  */
 public class ConfigSection {
 
-    public static ConfigSection convertFromMap( Map config ) {
+    public static ConfigSection convertFromMap( Map<?, ?> config ) {
         ConfigSection configSection = new ConfigSection();
         configSection.map.putAll( config );
 
@@ -70,11 +70,11 @@ public class ConfigSection {
         return section.create( key );
     }
 
-    public void set( String path, Object value ) {
-        this.set( path, value, true );
+    public ConfigSection set( String path, Object value ) {
+        return this.set( path, value, true );
     }
 
-    public void set( String path, Object value, boolean searchForSubNodes ) {
+    public ConfigSection set( String path, Object value, boolean searchForSubNodes ) {
         if ( path == null ) {
             throw new IllegalArgumentException( "Cannot set a value at empty path" );
         }
@@ -107,6 +107,7 @@ public class ConfigSection {
         } else {
             section.set( key, value );
         }
+        return this;
     }
 
     public Map<Object, Object> getValues( boolean deep ) {
@@ -116,8 +117,8 @@ public class ConfigSection {
         return result;
     }
 
-    public void remove( String path ) {
-        this.set( path, null );
+    public ConfigSection remove( String path ) {
+        return this.set( path, null );
     }
 
     public boolean has( String path ) {
@@ -179,11 +180,11 @@ public class ConfigSection {
         }
     }
 
-    public Map getRawMap() {
+    public Map<?, ?> getRawMap() {
         return this.map;
     }
 
-    protected void mapChildrenValues( Map<Object, Object> output, ConfigSection section, boolean deep ) {
+    protected ConfigSection mapChildrenValues( Map<Object, Object> output, ConfigSection section, boolean deep ) {
         if ( section != null ) {
             for ( Map.Entry<Object, Object> entry : section.map.entrySet() ) {
                 if ( entry.getValue() instanceof ConfigSection ) {
@@ -199,6 +200,7 @@ public class ConfigSection {
                 }
             }
         }
+        return this;
     }
 
     private ConfigSection getConfigSection( String node ) {

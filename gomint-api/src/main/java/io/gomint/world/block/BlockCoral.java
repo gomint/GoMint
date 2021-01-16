@@ -20,28 +20,30 @@ public interface BlockCoral extends Block {
      * Should this coral be dead?
      *
      * @param dead true when dead, false otherwise
+     * @return block for chaining
      */
-    void setDead(boolean dead);
+    BlockCoral dead(boolean dead);
 
     /**
      * Check if this coral is dead
      *
      * @return true when dead, false otherwise
      */
-    boolean isDead();
+    boolean dead();
 
     /**
      * Set coral type
      *
      * @param type of coral
+     * @return block for chaining
      */
-    void setCoralType(CoralType type);
+    BlockCoral type(CoralType type);
 
     /**
      * Get type of coral
      *
      * @return type of coral
      */
-    CoralType getCoralType();
+    CoralType type();
 
 }

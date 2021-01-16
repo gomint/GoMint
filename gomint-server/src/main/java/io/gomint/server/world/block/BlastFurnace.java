@@ -3,7 +3,6 @@ package io.gomint.server.world.block;
 import io.gomint.inventory.item.ItemStack;
 import io.gomint.math.Vector;
 import io.gomint.server.entity.Entity;
-import io.gomint.server.entity.tileentity.BannerTileEntity;
 import io.gomint.server.entity.tileentity.FurnaceTileEntity;
 import io.gomint.server.entity.tileentity.TileEntity;
 import io.gomint.server.registry.RegisterInfo;
@@ -25,12 +24,12 @@ public class BlastFurnace extends Block implements BlockBlastFurnace {
     private static final BlockfaceBlockState FACING = new BlockfaceBlockState( () -> new String[]{"facing_direction"} );
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 5250;
     }
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
@@ -40,7 +39,7 @@ public class BlastFurnace extends Block implements BlockBlastFurnace {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.FURNACE;
     }
 
@@ -50,7 +49,7 @@ public class BlastFurnace extends Block implements BlockBlastFurnace {
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return ToolPresets.PICKAXE;
     }
 
@@ -66,8 +65,8 @@ public class BlastFurnace extends Block implements BlockBlastFurnace {
     }
 
     @Override
-    public boolean interact(Entity entity, Facing face, Vector facePos, ItemStack item ) {
-        FurnaceTileEntity tileEntity = this.getTileEntity();
+    public boolean interact(Entity<?> entity, Facing face, Vector facePos, ItemStack<?> item ) {
+        FurnaceTileEntity tileEntity = this.tileEntity();
         tileEntity.interact( entity, face, facePos, item );
 
         return true;
@@ -76,8 +75,8 @@ public class BlastFurnace extends Block implements BlockBlastFurnace {
     @Override
     public boolean onBreak( boolean creative ) {
         if ( !creative ) {
-            FurnaceTileEntity tileEntity = this.getTileEntity();
-            for ( ItemStack itemStack : tileEntity.getInventory().getContents() ) {
+            FurnaceTileEntity tileEntity = this.tileEntity();
+            for ( ItemStack<?> itemStack : tileEntity.getInventory().contents() ) {
                 this.world.dropItem( this.location, itemStack );
             }
 
@@ -91,26 +90,29 @@ public class BlastFurnace extends Block implements BlockBlastFurnace {
     }
 
     @Override
-    public boolean isBurning() {
+    public boolean burning() {
         return this.getBlockId().equals( "minecraft:lit_furnace" );
     }
 
     @Override
-    public void setBurning( boolean burning ) {
+    public BlockBlastFurnace burning(boolean burning ) {
         if ( burning ) {
             this.setBlockId( "minecraft:lit_furnace" );
         } else {
             this.setBlockId( "minecraft:furnace" );
         }
+
+        return this;
     }
 
     @Override
-    public void setFacing(Facing facing) {
+    public BlockBlastFurnace facing(Facing facing) {
         FACING.setState(this, facing);
+        return this;
     }
 
     @Override
-    public Facing getFacing() {
+    public Facing facing() {
         return FACING.getState(this);
     }
 

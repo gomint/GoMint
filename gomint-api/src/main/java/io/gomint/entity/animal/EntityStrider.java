@@ -15,7 +15,7 @@ import io.gomint.entity.EntityAgeable;
  * @version 1.0
  * @stability 3
  */
-public interface EntityStrider extends EntityAgeable {
+public interface EntityStrider extends EntityAgeable<EntityStrider> {
 
     /**
      * Create a new entity strider with no config

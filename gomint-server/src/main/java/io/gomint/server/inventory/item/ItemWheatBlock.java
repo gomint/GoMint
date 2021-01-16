@@ -15,10 +15,10 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:item.wheat", id = 59 )
-public class ItemWheatBlock extends ItemStack {
+public class ItemWheatBlock extends ItemStack<ItemWheatBlock> {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.WHEAT;
     }
 

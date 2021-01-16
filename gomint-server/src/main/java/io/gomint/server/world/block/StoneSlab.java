@@ -20,7 +20,7 @@ import io.gomint.world.block.data.StoneType;
 @RegisterInfo(sId = "minecraft:blackstone_slab")
 @RegisterInfo(sId = "minecraft:polished_blackstone_slab")
 @RegisterInfo(sId = "minecraft:polished_blackstone_brick_slab")
-public class StoneSlab extends Slab implements BlockStoneSlab {
+public class StoneSlab extends Slab<BlockStoneSlab> implements BlockStoneSlab {
 
     private static final String STONE_SLAB_ID = "minecraft:stone_slab";
     private static final String STONE_TYPE = "stone_slab_type";
@@ -102,12 +102,12 @@ public class StoneSlab extends Slab implements BlockStoneSlab {
     });
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 3000;
     }
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
@@ -117,7 +117,7 @@ public class StoneSlab extends Slab implements BlockStoneSlab {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.STONE_SLAB;
     }
 
@@ -127,12 +127,12 @@ public class StoneSlab extends Slab implements BlockStoneSlab {
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return ToolPresets.PICKAXE;
     }
 
     @Override
-    public StoneType getStoneType() {
+    public StoneType type() {
         switch (this.getBlockId()) {
             case "minecraft:blackstone_slab":
                 return StoneType.BLACKSTONE;
@@ -146,15 +146,16 @@ public class StoneSlab extends Slab implements BlockStoneSlab {
     }
 
     @Override
-    public void setStoneType(StoneType stoneType) {
+    public BlockStoneSlab type(StoneType stoneType) {
         StoneTypeMagic newState = StoneTypeMagic.valueOf(stoneType.name());
         this.setBlockId(newState.blockId);
         VARIANT.setState(this, newState);
+        return this;
     }
 
     @Override
-    public boolean canBeReplaced(ItemStack item) {
-        return item.getItemType() == ItemType.STONE_SLAB;
+    public boolean canBeReplaced(ItemStack<?> item) {
+        return item.itemType() == ItemType.STONE_SLAB;
     }
 
 }

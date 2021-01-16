@@ -24,12 +24,12 @@ public class Hopper extends Block implements BlockHopper {
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 4500;
     }
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
@@ -39,7 +39,7 @@ public class Hopper extends Block implements BlockHopper {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.HOPPER;
     }
 
@@ -49,7 +49,7 @@ public class Hopper extends Block implements BlockHopper {
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return ToolPresets.PICKAXE;
     }
 

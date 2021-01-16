@@ -7,39 +7,23 @@
 
 package io.gomint.world.block;
 
-import io.gomint.world.block.data.Facing;
-
 /**
  * @author geNAZt
  * @version 1.0
  * @stability 3
  */
-public interface BlockButton extends Block {
+public interface BlockButton<B> extends Block, BlockFacing<B> {
 
     /**
      * Get the state of this button
      *
      * @return true when currently pressed, false otherwise
      */
-    boolean isPressed();
+    boolean pressed();
 
     /**
      * Press the button (it will release after 1 second)
      */
-    void press();
-
-    /**
-     * Get the attached facing which has been used to attach this button to a block
-     *
-     * @return attached face
-     */
-    Facing getAttachedFace();
-
-    /**
-     * Set the attached facing of this button
-     *
-     * @param face which is attached to a block
-     */
-    void setAttachedFace(Facing face);
+    B press();
 
 }

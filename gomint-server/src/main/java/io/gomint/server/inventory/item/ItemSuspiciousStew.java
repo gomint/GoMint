@@ -8,10 +8,10 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:suspicious_stew", id = 734 )
-public class ItemSuspiciousStew extends ItemFood implements io.gomint.inventory.item.ItemSuspiciousStew {
+public class ItemSuspiciousStew extends ItemFood<io.gomint.inventory.item.ItemSuspiciousStew> implements io.gomint.inventory.item.ItemSuspiciousStew {
 
     @Override
-    public byte getMaximumAmount() {
+    public byte maximumAmount() {
         return 1;
     }
 
@@ -26,7 +26,7 @@ public class ItemSuspiciousStew extends ItemFood implements io.gomint.inventory.
     }
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.SUSPICIOUSSTEW;
     }
 }

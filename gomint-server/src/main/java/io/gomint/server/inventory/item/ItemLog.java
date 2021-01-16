@@ -5,6 +5,8 @@ import io.gomint.server.registry.RegisterInfo;
 import io.gomint.world.block.data.Axis;
 import io.gomint.world.block.data.LogType;
 
+import java.time.Duration;
+
 /**
  * @author geNAZt
  * @version 1.0
@@ -24,7 +26,7 @@ import io.gomint.world.block.data.LogType;
 @RegisterInfo(sId = "minecraft:stripped_warped_stem", id = -241)
 @RegisterInfo(sId = "minecraft:warped_hyphae", id = -298)
 @RegisterInfo(sId = "minecraft:crimson_hyphae", id = -299)
-public class ItemLog extends ItemStack implements io.gomint.inventory.item.ItemLog {
+public class ItemLog extends ItemStack<io.gomint.inventory.item.ItemLog> implements io.gomint.inventory.item.ItemLog {
 
     private enum LogTypeMagic {
         OAK("minecraft:log", "minecraft:stripped_oak_log", (short) 0, "minecraft:wood", (short) 0, (short) 8),
@@ -66,81 +68,113 @@ public class ItemLog extends ItemStack implements io.gomint.inventory.item.ItemL
     }
 
     @Override
-    public long getBurnTime() {
-        return 15000;
+    public Duration burnTime() {
+        return Duration.ofMillis(15000);
     }
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.LOG;
     }
 
     @Override
-    public boolean isStripped() {
-        return this.getMaterial().startsWith("minecraft:stripped_");
-    }
+    public boolean stripped() {
+        for (LogTypeMagic value : LogTypeMagic.values()) {
+            if (value.strippedLogBlockId.equals(this.material()) ||
+                (value.strippedWoodDataValue > -1 && value.woodBlockId.equals(this.material()) && (this.data() & value.strippedWoodDataValue) == value.strippedWoodDataValue) ||
+                value.strippedWoodBlockId.equals(this.material())) {
+                return true;
+            }
+        }
 
-    @Override
-    public void setStripped(boolean stripped) {
-
-    }
-
-    @Override
-    public void setLogType(LogType type) {
-
-    }
-
-    @Override
-    public LogType getLogType() {
-        return null;
-    }
-
-    @Override
-    public void setBarkOnAllSides(boolean allSides) {
-
-    }
-
-    @Override
-    public boolean isBarkOnAllSides() {
         return false;
     }
 
     @Override
-    public void setAxis(Axis axis) {
-
+    public ItemLog stripped(boolean stripped) {
+        return this.calculate(LogTypeMagic.valueOf(this.type().name()), this.axis(), stripped, this.barkOnAllSides());
     }
 
     @Override
-    public Axis getAxis() {
+    public ItemLog type(LogType type) {
+        return this.calculate(LogTypeMagic.valueOf(type.name()), this.axis(), this.stripped(), this.barkOnAllSides());
+    }
+
+    @Override
+    public LogType type() {
+        for (LogTypeMagic value : LogTypeMagic.values()) {
+            if ((value.logBlockId.equals(this.material()) && (this.data() & value.dataValue) == value.dataValue) ||
+                (value.strippedLogBlockId.equals(this.material()) && (this.data() & value.dataValue) == value.dataValue) ||
+                (value.woodBlockId.equals(this.material()) && (value.woodDataValue == -1 || (this.data() & value.woodDataValue) == value.woodDataValue)) ||
+                (value.woodBlockId.equals(this.material()) && (value.strippedWoodDataValue == -1 || (this.data() & value.strippedWoodDataValue) == value.strippedWoodDataValue)) ||
+                value.strippedWoodBlockId.equals(this.material())) {
+                return LogType.valueOf(value.name());
+            }
+        }
+
         return null;
     }
 
-    private void calculate(LogTypeMagic type, Axis axis, boolean stripped, boolean bark) {
+    @Override
+    public io.gomint.inventory.item.ItemLog barkOnAllSides(boolean allSides) {
+        return this.calculate(LogTypeMagic.valueOf(this.type().name()), this.axis(), this.stripped(), allSides);
+    }
+
+    @Override
+    public boolean barkOnAllSides() {
+        for (LogTypeMagic value : LogTypeMagic.values()) {
+            if (value.woodBlockId.equals(this.material()) || value.strippedWoodBlockId.equals(this.material())) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    @Override
+    public ItemLog axis(Axis axis) {
+        return this.calculate(LogTypeMagic.valueOf(this.type().name()), axis, this.stripped(), this.barkOnAllSides());
+    }
+
+    @Override
+    public Axis axis() {
+        if (this.data() == 1 || (this.data() & 4) == 4) {
+            return Axis.X;
+        }
+
+        if (this.data() == 2 || (this.data() & 5) == 5) {
+            return Axis.Z;
+        }
+
+        return Axis.Y;
+    }
+
+    private ItemLog calculate(LogTypeMagic type, Axis axis, boolean stripped, boolean bark) {
         if (stripped) {
             if (bark) {
                 if (type.strippedWoodDataValue > -1) {
-                    this.setMaterial(type.woodBlockId);
-                    this.setData(type.strippedWoodDataValue);
+                    this.material(type.woodBlockId);
+                    this.data(type.strippedWoodDataValue);
                 } else {
-                    this.setMaterial(type.strippedWoodBlockId);
-                    this.setData((short) 0);
+                    this.material(type.strippedWoodBlockId);
+                    this.data((short) 0);
                 }
             } else {
-                this.setMaterial(type.strippedLogBlockId);
-                this.setData((short) 0);
+                this.material(type.strippedLogBlockId);
+                this.data((short) 0);
             }
         } else {
             if (bark) {
-                this.setMaterial(type.woodBlockId);
+                this.material(type.woodBlockId);
 
                 if (type.woodDataValue > -1) {
-                    this.setData(type.woodDataValue);
+                    this.data(type.woodDataValue);
                 } else {
-                    this.setData((short) 0);
+                    this.data((short) 0);
                 }
             } else {
-                this.setMaterial(type.logBlockId);
-                this.setData(type.dataValue);
+                this.material(type.logBlockId);
+                this.data(type.dataValue);
             }
         }
 
@@ -148,23 +182,25 @@ public class ItemLog extends ItemStack implements io.gomint.inventory.item.ItemL
             if (stripped) {
                 switch (axis) {
                     case X:
-                        this.setData((short) 1);
+                        this.data((short) 1);
                         break;
                     case Z:
-                        this.setData((short) 2);
+                        this.data((short) 2);
                         break;
                 }
             } else {
                 switch (axis) {
                     case X:
-                        this.setData((short) (this.getData() + 4));
+                        this.data((short) (this.data() + 4));
                         break;
                     case Z:
-                        this.setData((short) (this.getData() + 5));
+                        this.data((short) (this.data() + 5));
                         break;
                 }
             }
         }
+
+        return this;
     }
 
 }

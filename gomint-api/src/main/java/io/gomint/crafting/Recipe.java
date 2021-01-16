@@ -16,13 +16,13 @@ public interface Recipe {
      *
      * @return The UUID of this recipe
      */
-    UUID getUUID();
+    UUID uuid();
 
     /**
      * Returns a array of ingredients required by this recipe.
      *
      * @return The array of ingredients required by this recipe
      */
-    ItemStack[] getIngredients();
+    ItemStack<?>[] ingredients();
 
 }

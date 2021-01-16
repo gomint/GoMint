@@ -24,7 +24,7 @@ public class Bookshelf extends Block implements BlockBookshelf {
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 2250;
     }
 
@@ -34,7 +34,7 @@ public class Bookshelf extends Block implements BlockBookshelf {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.BOOKSHELF;
     }
 
@@ -44,14 +44,14 @@ public class Bookshelf extends Block implements BlockBookshelf {
     }
 
     @Override
-    public List<ItemStack> getDrops( ItemStack itemInHand ) {
-        return new ArrayList<ItemStack>(){{
+    public List<ItemStack<?>> drops(ItemStack<?> itemInHand ) {
+        return new ArrayList<>(){{
             add( ItemBook.create( 3 ) );
         }};
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return ToolPresets.AXE;
     }
 

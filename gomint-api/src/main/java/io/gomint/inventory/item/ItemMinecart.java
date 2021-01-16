@@ -7,12 +7,13 @@ import io.gomint.GoMint;
  * @version 1.0
  * @stability 3
  */
-public interface ItemMinecart extends ItemStack {
+public interface ItemMinecart extends ItemStack<ItemMinecart> {
 
     /**
      * Create a new item stack with given class and amount
      *
      * @param amount which is used for the creation
+	 * @return freshly generated item
      */
     static ItemMinecart create( int amount ) {
         return GoMint.instance().createItemStack( ItemMinecart.class, amount );

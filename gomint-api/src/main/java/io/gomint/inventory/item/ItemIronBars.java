@@ -7,12 +7,13 @@ import io.gomint.GoMint;
  * @version 1.0
  * @stability 3
  */
-public interface ItemIronBars extends ItemStack {
+public interface ItemIronBars extends ItemStack<ItemIronBars> {
 
     /**
      * Create a new item stack with given class and amount
      *
      * @param amount which is used for the creation
+	 * @return freshly generated item
      */
     static ItemIronBars create( int amount ) {
         return GoMint.instance().createItemStack( ItemIronBars.class, amount );

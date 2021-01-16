@@ -11,21 +11,21 @@ import io.gomint.world.block.data.Facing;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:elytra", id = 444 )
-public class ItemElytra extends ItemStack implements io.gomint.inventory.item.ItemElytra {
+public class ItemElytra extends ItemStack< io.gomint.inventory.item.ItemElytra> implements io.gomint.inventory.item.ItemElytra {
 
 
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.ELYTRA;
     }
 
     @Override
     public boolean interact(EntityPlayer entity, Facing face, Vector clickPosition, Block clickedBlock ) {
         if ( clickedBlock == null ) {
-            ItemStack old = (ItemStack) entity.getArmorInventory().getChestplate();
-            entity.getArmorInventory().setChestplate( this );
-            entity.getInventory().setItem( entity.getInventory().getItemInHandSlot(), old );
+            ItemStack<?> old = (ItemStack<?>) entity.armorInventory().chestplate();
+            entity.armorInventory().chestplate( this );
+            entity.inventory().item( entity.inventory().itemInHandSlot(), old );
         }
 
         return false;

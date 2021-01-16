@@ -15,17 +15,17 @@ import io.gomint.server.registry.RegisterInfo;
 public class Rail extends RailBase implements BlockRail {
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 1050;
     }
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
     @Override
-    public boolean isSolid() {
+    public boolean solid() {
         return false;
     }
 
@@ -35,7 +35,7 @@ public class Rail extends RailBase implements BlockRail {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.RAIL;
     }
 
@@ -45,7 +45,7 @@ public class Rail extends RailBase implements BlockRail {
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return ToolPresets.PICKAXE;
     }
 

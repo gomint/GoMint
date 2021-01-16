@@ -115,7 +115,7 @@ public class VanillaGeneratorImpl extends VanillaGenerator {
             System.exit(-1);
         }
 
-        this.networkManager = ((WorldAdapter) world).getServer().getNetworkManager();
+        this.networkManager = ((WorldAdapter) world).getServer().networkManager();
 
         this.ensureSeed();
 
@@ -162,7 +162,7 @@ public class VanillaGeneratorImpl extends VanillaGenerator {
         boolean needsToCopy = false;
 
         // Ok we have a unpacked server now, we need to copy it over
-        File tempServer = new File(temp, "server-" + world.getWorldName());
+        File tempServer = new File(temp, "server-" + world.folder());
         if (!tempServer.exists()) {
             tempServer.mkdirs();
             needsToCopy = true;
@@ -328,14 +328,14 @@ public class VanillaGeneratorImpl extends VanillaGenerator {
         for (int i = 0; i < 2; i++) {
             this.networkManager
                 .getServer()
-                .getExecutorService()
+                .executorService()
                 .schedule(() -> this.connectClient(worldAdapter), Duration.ofMillis((i + 1) * 2000));
         }
     }
 
     private Client connectClient(WorldAdapter worldAdapter) {
         PostProcessExecutor executor = this.networkManager.getPostProcessService().getExecutor();
-        Client newClient = new Client(worldAdapter, worldAdapter.getServer().getEncryptionKeyFactory(),
+        Client newClient = new Client(worldAdapter, worldAdapter.getServer().encryptionKeyFactory(),
             this.queue, executor, null);
 
         newClient.onDisconnect(aVoid -> {
@@ -354,7 +354,7 @@ public class VanillaGeneratorImpl extends VanillaGenerator {
 
             this.client.remove(newClient);
 
-            this.networkManager.getServer().getExecutorService().schedule(() -> {
+            this.networkManager.getServer().executorService().schedule(() -> {
                 Client client = this.connectClient(worldAdapter);
                 this.client.add(client);
             }, Duration.ofMillis(500));
@@ -439,7 +439,7 @@ public class VanillaGeneratorImpl extends VanillaGenerator {
     }
 
     @Override
-    public BlockPosition getSpawnPoint() {
+    public BlockPosition spawnPoint() {
         try {
             return this.spawnPointFuture.get();
         } catch (InterruptedException | ExecutionException e) {

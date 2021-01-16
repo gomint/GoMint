@@ -14,7 +14,8 @@ import io.gomint.entity.EntityLiving;
  * @author joserobjr
  * @since 2021-01-12
  */
-public interface EntityIronGolem extends EntityLiving {
+public interface EntityIronGolem extends EntityLiving<EntityIronGolem> {
+
     /**
      * Create a new entity iron golem with no config
      *
@@ -23,4 +24,5 @@ public interface EntityIronGolem extends EntityLiving {
     static EntityIronGolem create() {
         return GoMint.instance().createEntity( EntityIronGolem.class );
     }
+
 }

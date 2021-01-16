@@ -19,12 +19,12 @@ public class BlockOfNetherite extends Block implements BlockBlockOfNetherite {
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 75200;
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return new Class[]{
             ItemDiamondPickaxe.class
         };
@@ -36,7 +36,7 @@ public class BlockOfNetherite extends Block implements BlockBlockOfNetherite {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.BLACKSTONE;
     }
 }

@@ -8,10 +8,10 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo(sId = "minecraft:air", id = 0)
-public class ItemAir extends ItemStack implements io.gomint.inventory.item.ItemAir {
+public class ItemAir extends ItemStack< io.gomint.inventory.item.ItemAir> implements io.gomint.inventory.item.ItemAir {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.AIR;
     }
 

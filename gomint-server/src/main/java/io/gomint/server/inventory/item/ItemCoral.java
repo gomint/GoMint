@@ -8,10 +8,10 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo(sId = "minecraft:coral", id = -131)
-public class ItemCoral extends ItemStack implements io.gomint.inventory.item.ItemCoral {
+public class ItemCoral extends ItemStack< io.gomint.inventory.item.ItemCoral> implements io.gomint.inventory.item.ItemCoral {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.CORAL;
     }
 }

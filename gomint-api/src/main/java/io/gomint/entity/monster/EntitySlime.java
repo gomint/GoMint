@@ -8,7 +8,7 @@ import io.gomint.entity.EntityLiving;
  * @version 1.0
  * @stability 3
  */
-public interface EntitySlime extends EntityLiving {
+public interface EntitySlime extends EntityLiving<EntitySlime> {
 
     /**
      * Create a new entity slime with no config
@@ -25,6 +25,6 @@ public interface EntitySlime extends EntityLiving {
      *
      * @param factor of this slime
      */
-    void setSizeFactor( int factor );
+    EntitySlime sizeFactor(int factor );
 
 }

@@ -12,38 +12,42 @@ import io.gomint.world.block.BlockLiquid;
 import io.gomint.world.block.BlockStationaryWater;
 import io.gomint.world.block.data.Facing;
 
+import java.time.Duration;
+
 /**
  * @author geNAZt
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:bucket", id = 325 )
-public class ItemBucket extends ItemStack implements io.gomint.inventory.item.ItemBucket {
+public class ItemBucket extends ItemStack<io.gomint.inventory.item.ItemBucket> implements io.gomint.inventory.item.ItemBucket {
 
     @Override
-    public byte getMaximumAmount() {
+    public byte maximumAmount() {
         return 1;
     }
 
     @Override
-    public void setContent( Content type ) {
+    public io.gomint.inventory.item.ItemBucket content(Content type ) {
         switch ( type ) {
             case LAVA:
-                this.setData( (short) 10 );
+                this.data( (short) 10 );
                 break;
             case WATER:
-                this.setData( (short) 8 );
+                this.data( (short) 8 );
                 break;
             case MILK:
-                this.setData( (short) 1 );
+                this.data( (short) 1 );
                 break;
             default:
-                this.setData( (short) 0 );
+                this.data( (short) 0 );
         }
+
+        return this;
     }
 
     @Override
-    public Content getContent() {
-        switch ( this.getData() ) {
+    public Content content() {
+        switch ( this.data() ) {
             case 10:
                 return Content.LAVA;
             case 8:
@@ -56,17 +60,17 @@ public class ItemBucket extends ItemStack implements io.gomint.inventory.item.It
     }
 
     /**
-     * Returns {@code -1} if the the content type of this bucket
+     * Returns null if the the content type of this bucket
      * is not equal to {@link Content#LAVA}
      */
     @Override
-    public long getBurnTime() {
-        return this.getContent() == Content.LAVA ? 1000000 : -1;
+    public Duration burnTime() {
+        return this.content() == Content.LAVA ? Duration.ofMillis(1000000) : null;
     }
 
     @Override
-    public Block getBlock() {
-        switch ( this.getData() ) {
+    public Block block() {
+        switch ( this.data() ) {
             case 10:
                 return this.blocks.get(BlockFlowingLava.class);
             case 8:
@@ -78,21 +82,21 @@ public class ItemBucket extends ItemStack implements io.gomint.inventory.item.It
     }
 
     @Override
-    public void afterPlacement() {
+    public io.gomint.inventory.item.ItemBucket afterPlacement() {
         // We transform into an empty bucket
-        this.setData( (short) 0 );
-        this.updateInventories( false );
+        this.data( (short) 0 );
+        return this.updateInventories( false );
     }
 
     @Override
     public boolean interact(EntityPlayer entity, Facing face, Vector clickPosition, Block clickedBlock ) {
         if ( clickedBlock != null ) {
             if ( clickedBlock instanceof BlockLiquid) {
-                if ( ( (BlockLiquid) clickedBlock ).getFillHeight() > 0.9f ) {
-                    this.setContent( clickedBlock instanceof BlockFlowingWater || clickedBlock instanceof BlockStationaryWater ?
+                if ( ( (BlockLiquid<?>) clickedBlock ).fillHeight() > 0.9f ) {
+                    this.content( clickedBlock instanceof BlockFlowingWater || clickedBlock instanceof BlockStationaryWater ?
                         Content.WATER : Content.LAVA );
-                    entity.getInventory().setItem( entity.getInventory().getItemInHandSlot(), this );
-                    clickedBlock.setBlockType( BlockAir.class );
+                    entity.inventory().item( entity.inventory().itemInHandSlot(), this );
+                    clickedBlock.blockType( BlockAir.class );
                     return true;
                 }
             }
@@ -102,7 +106,7 @@ public class ItemBucket extends ItemStack implements io.gomint.inventory.item.It
     }
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.BUCKET;
     }
 

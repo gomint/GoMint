@@ -38,9 +38,9 @@ public class VectorConverter extends BaseConverter {
         Vector vector = (Vector) object;
         Map<String, Object> saveMap = new HashMap<>();
 
-        saveMap.put( "x", vector.getX() );
-        saveMap.put( "y", vector.getY() );
-        saveMap.put( "z", vector.getZ() );
+        saveMap.put( "x", vector.x() );
+        saveMap.put( "y", vector.y() );
+        saveMap.put( "z", vector.z() );
 
         return saveMap;
     }
@@ -50,7 +50,7 @@ public class VectorConverter extends BaseConverter {
      */
     @Override
     @SuppressWarnings( "unchecked" )
-    public Object fromConfig( Class type, Object object, ParameterizedType parameterizedType ) {
+    public Object fromConfig( Class<?> type, Object object, ParameterizedType parameterizedType ) {
         Map<String, Object> vectorMap;
 
         if ( object instanceof Map ) {

@@ -27,23 +27,23 @@ public class EnchantmentSilkTouch extends Enchantment implements io.gomint.encha
     }
 
     @Override
-    public int getMinEnchantAbility( short level ) {
+    public int minEnchantAbility( short level ) {
         return 15;
     }
 
     @Override
-    public int getMaxEnchantAbility( short level ) {
+    public int maxEnchantAbility( short level ) {
         return 65;
     }
 
     @Override
-    public boolean canBeApplied( ItemStack itemStack ) {
+    public boolean canBeApplied(ItemStack<?> itemStack ) {
         return EnchantmentHelper.canBeAppliedToTools(itemStack) ||
-            itemStack.getItemType() == ItemType.SHEARS;
+            itemStack.itemType() == ItemType.SHEARS;
     }
 
     @Override
-    public Rarity getRarity() {
+    public Rarity rarity() {
         return Rarity.VERY_RARE;
     }
 

@@ -14,12 +14,13 @@ import io.gomint.GoMint;
  * @version 1.0
  * @stability 1
  */
-public interface ItemEvokerSpawnEgg extends ItemStack {
+public interface ItemEvokerSpawnEgg extends ItemStack<ItemEvokerSpawnEgg> {
 
     /**
      * Create a new item stack with given class and amount
      *
      * @param amount which is used for the creation
+	 * @return freshly generated item
      */
     static ItemEvokerSpawnEgg create( int amount ) {
         return GoMint.instance().createItemStack( ItemEvokerSpawnEgg.class, amount );

@@ -32,7 +32,7 @@ import java.util.concurrent.ThreadLocalRandom;
  * @since 2021-01-12
  */
 @RegisterInfo(sId = "minecraft:zombie_pigman")
-public class EntityZombiePiglin extends EntityAgeable implements io.gomint.entity.monster.EntityZombiePiglin {
+public class EntityZombiePiglin extends EntityAgeable<io.gomint.entity.monster.EntityZombiePiglin> implements io.gomint.entity.monster.EntityZombiePiglin {
 
     /**
      * Constructs a new EntityZombiePiglin
@@ -53,13 +53,13 @@ public class EntityZombiePiglin extends EntityAgeable implements io.gomint.entit
     }
 
     private void initEntity() {
-        this.addAttribute(Attribute.HEALTH);
-        this.setMaxHealth(20);
-        this.setHealth(20);
-        if(this.isBaby()) {
-            this.setSize(0.3f, 0.95f);
+        this.attribute(Attribute.HEALTH);
+        this.maxHealth(20);
+        this.health(20);
+        if(this.baby()) {
+            this.size(0.3f, 0.95f);
         }else{
-            this.setSize(0.6f, 1.9f);
+            this.size(0.6f, 1.9f);
         }
     }
 
@@ -67,21 +67,21 @@ public class EntityZombiePiglin extends EntityAgeable implements io.gomint.entit
     protected void kill() {
         super.kill();
 
-        if (isDead()) {
+        if (dead()) {
             return;
         }
 
         // Drop items
-        Entity lastDamageEntity = this.lastDamageEntity;
+        Entity<?> lastDamageEntity = this.lastDamageEntity;
         int looting = 0;
         if (lastDamageEntity instanceof EntityHuman) {
-            Enchantment enchantment = ((EntityHuman) lastDamageEntity).getInventory().getItemInHand().getEnchantment(EnchantmentLooting.class);
+            Enchantment enchantment = ((EntityHuman<?>) lastDamageEntity).inventory().itemInHand().enchantment(EnchantmentLooting.class);
             if (enchantment != null) {
-                looting = enchantment.getLevel();
+                looting = enchantment.level();
             }
         }
 
-        Location location = this.getLocation();
+        Location location = this.location();
         ThreadLocalRandom random = ThreadLocalRandom.current();
         int amount = random.nextInt(2 + Math.min(looting, 3));
         if (amount > 0) {
@@ -101,13 +101,13 @@ public class EntityZombiePiglin extends EntityAgeable implements io.gomint.entit
         
         chance = 0.085 + chanceIncrease;
         if (random.nextDouble() <= chance) {
-            ItemStack drop = (ItemStack) ItemGoldenSword.create(1);
-            drop.setDamage(random.nextInt(drop.getMaxDamage()));
+            ItemStack<?> drop = (ItemStack<?>) ItemGoldenSword.create(1);
+            drop.damage(random.nextInt(drop.maxDamage()));
             this.world.dropItem(location, drop);
         }
         
         if (isLastDamageCausedByPlayer()) {
-            if (isBaby()) {
+            if (baby()) {
                 this.world.createExpOrb(location, 12);
             } else {
                 this.world.createExpOrb(location, 5);
@@ -121,7 +121,7 @@ public class EntityZombiePiglin extends EntityAgeable implements io.gomint.entit
     }
 
     @Override
-    public Set<String> getTags() {
+    public Set<String> tags() {
         return EntityTags.HOSTILE_MOB;
     }
     

@@ -15,10 +15,10 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:pufferfish_bucket", id = 367 )
-public class ItemPufferfishBucket extends ItemStack implements io.gomint.inventory.item.ItemPufferfishBucket {
+public class ItemPufferfishBucket extends ItemStack< io.gomint.inventory.item.ItemPufferfishBucket> implements io.gomint.inventory.item.ItemPufferfishBucket {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.PUFFERFISH_BUCKET;
     }
 

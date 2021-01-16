@@ -15,10 +15,10 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:nether_gold_ore", id = -288 )
-public class ItemNetherGoldOre extends ItemStack implements io.gomint.inventory.item.ItemNetherGoldOre {
+public class ItemNetherGoldOre extends ItemStack< io.gomint.inventory.item.ItemNetherGoldOre> implements io.gomint.inventory.item.ItemNetherGoldOre {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.NETHER_GOLD_ORE;
     }
 

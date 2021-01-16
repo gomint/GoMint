@@ -27,22 +27,22 @@ public class EnchantmentLure extends Enchantment implements io.gomint.enchant.En
     }
 
     @Override
-    public int getMinEnchantAbility( short level ) {
+    public int minEnchantAbility( short level ) {
         return (byte) ( 15 + ( level - 1 ) * 9 );
     }
 
     @Override
-    public int getMaxEnchantAbility( short level ) {
-        return (byte) ( getMinEnchantAbility( level ) + 50 );
+    public int maxEnchantAbility( short level ) {
+        return (byte) ( minEnchantAbility( level ) + 50 );
     }
 
     @Override
-    public boolean canBeApplied( ItemStack itemStack ) {
-        return itemStack.getItemType() == ItemType.FISHING_ROD;
+    public boolean canBeApplied(ItemStack<?> itemStack ) {
+        return itemStack.itemType() == ItemType.FISHING_ROD;
     }
 
     @Override
-    public Rarity getRarity() {
+    public Rarity rarity() {
         return Rarity.RARE;
     }
 

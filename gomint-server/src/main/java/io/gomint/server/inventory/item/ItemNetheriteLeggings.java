@@ -12,7 +12,7 @@ import io.gomint.world.block.data.Facing;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:netherite_leggings", id = 750 )
-public class ItemNetheriteLeggings extends ItemNetheriteArmor implements io.gomint.inventory.item.ItemNetheriteLeggings {
+public class ItemNetheriteLeggings extends ItemNetheriteArmor<io.gomint.inventory.item.ItemNetheriteLeggings> implements io.gomint.inventory.item.ItemNetheriteLeggings {
 
     @Override
     public float getReductionValue() {
@@ -22,10 +22,10 @@ public class ItemNetheriteLeggings extends ItemNetheriteArmor implements io.gomi
     @Override
     public boolean interact(EntityPlayer entity, Facing face, Vector clickPosition, Block clickedBlock ) {
         if ( clickedBlock == null ) {
-            if ( isBetter( (ItemStack) entity.getArmorInventory().getLeggings() ) ) {
-                ItemStack old = (ItemStack) entity.getArmorInventory().getLeggings();
-                entity.getArmorInventory().setLeggings( this );
-                entity.getInventory().setItem( entity.getInventory().getItemInHandSlot(), old );
+            if ( isBetter( (ItemStack<?>) entity.armorInventory().leggings() ) ) {
+                ItemStack<?> old = (ItemStack<?>) entity.armorInventory().leggings();
+                entity.armorInventory().leggings( this );
+                entity.inventory().item( entity.inventory().itemInHandSlot(), old );
             }
         }
 
@@ -33,7 +33,7 @@ public class ItemNetheriteLeggings extends ItemNetheriteArmor implements io.gomi
     }
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.NETHERITE_LEGGINGS;
     }
 }

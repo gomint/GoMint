@@ -27,27 +27,27 @@ public class EnchantmentAquaAffinity extends Enchantment implements io.gomint.en
     }
 
     @Override
-    public int getMinEnchantAbility( short level ) {
+    public int minEnchantAbility( short level ) {
         return 1;
     }
 
     @Override
-    public int getMaxEnchantAbility( short level ) {
+    public int maxEnchantAbility( short level ) {
         return 41;
     }
 
     @Override
-    public boolean canBeApplied( ItemStack itemStack ) {
-        return itemStack.getItemType() == ItemType.CHAIN_HELMET ||
-            itemStack.getItemType() == ItemType.DIAMOND_HELMET ||
-            itemStack.getItemType() == ItemType.GOLDEN_HELMET ||
-            itemStack.getItemType() == ItemType.IRON_HELMET ||
-            itemStack.getItemType() == ItemType.LEATHER_HELMET ||
-            itemStack.getItemType() == ItemType.NETHERITE_HELMET;
+    public boolean canBeApplied(ItemStack<?> itemStack ) {
+        return itemStack.itemType() == ItemType.CHAIN_HELMET ||
+            itemStack.itemType() == ItemType.DIAMOND_HELMET ||
+            itemStack.itemType() == ItemType.GOLDEN_HELMET ||
+            itemStack.itemType() == ItemType.IRON_HELMET ||
+            itemStack.itemType() == ItemType.LEATHER_HELMET ||
+            itemStack.itemType() == ItemType.NETHERITE_HELMET;
     }
 
     @Override
-    public Rarity getRarity() {
+    public Rarity rarity() {
         return Rarity.RARE;
     }
 

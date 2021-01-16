@@ -21,7 +21,7 @@ public class Bedrock extends Block implements BlockBedrock {
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return -1;
     }
 
@@ -36,7 +36,7 @@ public class Bedrock extends Block implements BlockBedrock {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.BEDROCK;
     }
 

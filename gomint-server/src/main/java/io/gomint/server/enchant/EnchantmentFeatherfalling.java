@@ -27,27 +27,27 @@ public class EnchantmentFeatherfalling extends Enchantment implements io.gomint.
     }
 
     @Override
-    public int getMinEnchantAbility( short level ) {
+    public int minEnchantAbility( short level ) {
         return (byte) ( 5 + ( level - 1 ) * 6 );
     }
 
     @Override
-    public int getMaxEnchantAbility( short level ) {
-        return (byte) ( getMinEnchantAbility( level ) + 10 );
+    public int maxEnchantAbility( short level ) {
+        return (byte) ( minEnchantAbility( level ) + 10 );
     }
 
     @Override
-    public boolean canBeApplied( ItemStack itemStack ) {
-        return itemStack.getItemType() == ItemType.CHAIN_BOOTS ||
-            itemStack.getItemType() == ItemType.DIAMOND_BOOTS ||
-            itemStack.getItemType() == ItemType.GOLDEN_BOOTS ||
-            itemStack.getItemType() == ItemType.IRON_BOOTS ||
-            itemStack.getItemType() == ItemType.LEATHER_BOOTS ||
-            itemStack.getItemType() == ItemType.NETHERITE_BOOTS;
+    public boolean canBeApplied(ItemStack<?> itemStack ) {
+        return itemStack.itemType() == ItemType.CHAIN_BOOTS ||
+            itemStack.itemType() == ItemType.DIAMOND_BOOTS ||
+            itemStack.itemType() == ItemType.GOLDEN_BOOTS ||
+            itemStack.itemType() == ItemType.IRON_BOOTS ||
+            itemStack.itemType() == ItemType.LEATHER_BOOTS ||
+            itemStack.itemType() == ItemType.NETHERITE_BOOTS;
     }
 
     @Override
-    public Rarity getRarity() {
+    public Rarity rarity() {
         return Rarity.UNCOMMON;
     }
 

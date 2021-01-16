@@ -12,7 +12,7 @@ import io.gomint.world.block.data.Facing;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:chainmail_boots", id = 305 )
-public class ItemChainBoots extends ItemChainArmor implements io.gomint.inventory.item.ItemChainBoots {
+public class ItemChainBoots extends ItemChainArmor<io.gomint.inventory.item.ItemChainBoots> implements io.gomint.inventory.item.ItemChainBoots {
 
     @Override
     public float getReductionValue() {
@@ -22,10 +22,10 @@ public class ItemChainBoots extends ItemChainArmor implements io.gomint.inventor
     @Override
     public boolean interact(EntityPlayer entity, Facing face, Vector clickPosition, Block clickedBlock ) {
         if ( clickedBlock == null ) {
-            if ( isBetter( (ItemStack) entity.getArmorInventory().getBoots() ) ) {
-                ItemStack old = (ItemStack) entity.getArmorInventory().getBoots();
-                entity.getArmorInventory().setBoots( this );
-                entity.getInventory().setItem( entity.getInventory().getItemInHandSlot(), old );
+            if ( isBetter( (ItemStack<?>) entity.armorInventory().boots() ) ) {
+                ItemStack<?> old = (ItemStack<?>) entity.armorInventory().boots();
+                entity.armorInventory().boots( this );
+                entity.inventory().item( entity.inventory().itemInHandSlot(), old );
             }
         }
 
@@ -33,7 +33,7 @@ public class ItemChainBoots extends ItemChainArmor implements io.gomint.inventor
     }
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.CHAIN_BOOTS;
     }
 

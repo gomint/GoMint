@@ -24,7 +24,7 @@ public class Dispenser extends Block implements BlockDispenser {
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 5250;
     }
 
@@ -34,7 +34,7 @@ public class Dispenser extends Block implements BlockDispenser {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.DISPENSER;
     }
 
@@ -55,7 +55,7 @@ public class Dispenser extends Block implements BlockDispenser {
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return ToolPresets.PICKAXE;
     }
 

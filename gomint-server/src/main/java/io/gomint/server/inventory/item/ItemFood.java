@@ -17,19 +17,19 @@ import io.gomint.world.block.data.Facing;
  * @author geNAZt
  * @version 1.0
  */
-public abstract class ItemFood extends ItemStack implements io.gomint.inventory.item.ItemFood, ItemConsumable {
+public abstract class ItemFood<I extends io.gomint.inventory.item.ItemStack<I>> extends ItemStack<I> implements io.gomint.inventory.item.ItemFood<I>, ItemConsumable {
 
     @Override
     public boolean interact(EntityPlayer entity, Facing face, Vector clickPosition, Block clickedBlock) {
         // TODO: Check fo planting
 
         if (entity.isHungry() && clickedBlock == null) {
-            if (entity.getActionStart() > -1) {
+            if (entity.actionStart() > -1) {
                 // Call event
                 PlayerConsumeItemEvent consumeItemEvent = new PlayerConsumeItemEvent(entity, this);
-                entity.getWorld().getServer().getPluginManager().callEvent(consumeItemEvent);
+                entity.world().getServer().pluginManager().callEvent(consumeItemEvent);
 
-                if (consumeItemEvent.isCancelled()) {
+                if (consumeItemEvent.cancelled()) {
                     return false;
                 }
 
@@ -49,8 +49,8 @@ public abstract class ItemFood extends ItemStack implements io.gomint.inventory.
         if (player.isHungry()) {
             player.addHunger(getHunger());
 
-            float saturation = Math.min(player.getSaturation() + (getHunger() * getSaturation() * 2.0f), player.getHunger());
-            player.setSaturation(saturation);
+            float saturation = Math.min(player.saturation() + (getHunger() * getSaturation() * 2.0f), player.hunger());
+            player.saturation(saturation);
 
             // Default manipulation
             this.afterPlacement();

@@ -15,7 +15,7 @@ import io.gomint.entity.EntityLiving;
  * @version 1.0
  * @stability 3
  */
-public interface EntityRabbit extends EntityLiving {
+public interface EntityRabbit extends EntityLiving<EntityRabbit> {
 
     /**
      * Create a new entity rabbit with no config

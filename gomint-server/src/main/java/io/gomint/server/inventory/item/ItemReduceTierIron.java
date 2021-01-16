@@ -8,25 +8,25 @@ import io.gomint.server.inventory.item.annotation.CanBeDamaged;
  * @version 1.0
  */
 @CanBeDamaged
-public abstract class ItemReduceTierIron extends ItemStack implements ItemReduceBreaktime {
+public abstract class ItemReduceTierIron<I extends io.gomint.inventory.item.ItemStack<I>> extends ItemStack<I> implements ItemReduceBreaktime<I> {
 
     @Override
-    public byte getMaximumAmount() {
+    public byte maximumAmount() {
         return 1;
     }
 
     @Override
-    public float getDivisor() {
+    public float divisor() {
         return 6;
     }
 
     @Override
-    public short getMaxDamage() {
+    public short maxDamage() {
         return 250;
     }
 
     @Override
-    public int getEnchantAbility() {
+    public int enchantAbility() {
         return 14;
     }
 

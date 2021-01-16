@@ -9,10 +9,10 @@ import io.gomint.taglib.NBTTagCompound;
  * @version 1.0
  */
 @RegisterInfo(sId = "minecraft:info_update2", id = 249)
-public class ItemUpdateGameBlockUpdate2 extends ItemStack {
+public class ItemUpdateGameBlockUpdate2 extends ItemStack<ItemUpdateGameBlockUpdate2> {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.AIR;
     }
 

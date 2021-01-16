@@ -12,9 +12,8 @@ import io.gomint.server.world.block.Block;
 import io.gomint.world.World;
 import io.gomint.world.WorldType;
 import io.gomint.world.block.BlockDirt;
+import io.gomint.world.block.data.DirtType;
 import io.gomint.world.generator.CreateOptions;
-import joptsimple.OptionParser;
-import joptsimple.OptionSet;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
 import org.openjdk.jmh.annotations.Fork;
@@ -44,18 +43,18 @@ public class BlockSetBenchmark {
 
         this.world = server.createWorld("test", new CreateOptions().worldType(WorldType.IN_MEMORY));
 
-        Block block = this.world.getBlockAt(50,5,50);
-        this.log = block.setBlockType(BlockDirt.class);
+        Block block = this.world.blockAt(50,5,50);
+        this.log = block.blockType(BlockDirt.class);
     }
 
     @Benchmark
     public void setBlock() {
-        this.log.setDirtType(BlockDirt.Type.NORMAL);
+        this.log.type(DirtType.NORMAL);
     }
 
     @Benchmark
     public Block getBlock() {
-        return this.world.getBlockAt(50,5,50);
+        return this.world.blockAt(50,5,50);
     }
 
     @TearDown

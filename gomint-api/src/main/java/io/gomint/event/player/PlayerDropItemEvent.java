@@ -15,11 +15,11 @@ import io.gomint.inventory.item.ItemStack;
  * @version 1.0
  * @stability 3
  */
-public class PlayerDropItemEvent extends CancellablePlayerEvent {
+public class PlayerDropItemEvent extends CancellablePlayerEvent<PlayerDropItemEvent> {
 
-    private final ItemStack itemStack;
+    private final ItemStack<?> itemStack;
 
-    public PlayerDropItemEvent( EntityPlayer player, ItemStack itemStack ) {
+    public PlayerDropItemEvent( EntityPlayer player, ItemStack<?> itemStack ) {
         super( player );
         this.itemStack = itemStack;
     }
@@ -29,7 +29,7 @@ public class PlayerDropItemEvent extends CancellablePlayerEvent {
      *
      * @return item stack which should be dropped
      */
-    public ItemStack getItemStack() {
+    public ItemStack<?> itemStack() {
         return this.itemStack;
     }
 

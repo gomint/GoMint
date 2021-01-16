@@ -15,10 +15,10 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:lava_bucket", id = 363 )
-public class ItemLavaBucket extends ItemStack implements io.gomint.inventory.item.ItemLavaBucket {
+public class ItemLavaBucket extends ItemStack< io.gomint.inventory.item.ItemLavaBucket> implements io.gomint.inventory.item.ItemLavaBucket {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.LAVA_BUCKET;
     }
 

@@ -7,7 +7,6 @@
 
 package io.gomint.world.block;
 
-import io.gomint.world.block.data.BlockColor;
 import io.gomint.world.block.data.GlassColor;
 
 /**
@@ -22,13 +21,14 @@ public interface BlockHardenedGlassPane extends Block {
      *
      * @return color of this block
      */
-    GlassColor getColor();
+    GlassColor color();
 
     /**
      * Set the color of this block
      *
      * @param color which this block should be
+     * @return block for chaining
      */
-    void setColor( GlassColor color );
+    BlockHardenedGlassPane color(GlassColor color);
 
 }

@@ -12,7 +12,7 @@ import io.gomint.world.block.data.Facing;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:chainmail_chestplate", id = 303 )
-public class ItemChainChestplate extends ItemChainArmor implements io.gomint.inventory.item.ItemChainChestplate {
+public class ItemChainChestplate extends ItemChainArmor<io.gomint.inventory.item.ItemChainChestplate> implements io.gomint.inventory.item.ItemChainChestplate {
 
 
     @Override
@@ -23,10 +23,10 @@ public class ItemChainChestplate extends ItemChainArmor implements io.gomint.inv
     @Override
     public boolean interact(EntityPlayer entity, Facing face, Vector clickPosition, Block clickedBlock ) {
         if ( clickedBlock == null ) {
-            if ( isBetter( (ItemStack) entity.getArmorInventory().getChestplate() ) ) {
-                ItemStack old = (ItemStack) entity.getArmorInventory().getChestplate();
-                entity.getArmorInventory().setChestplate( this );
-                entity.getInventory().setItem( entity.getInventory().getItemInHandSlot(), old );
+            if ( isBetter( (ItemStack<?>) entity.armorInventory().chestplate() ) ) {
+                ItemStack<?> old = (ItemStack<?>) entity.armorInventory().chestplate();
+                entity.armorInventory().chestplate( this );
+                entity.inventory().item( entity.inventory().itemInHandSlot(), old );
             }
         }
 
@@ -34,7 +34,7 @@ public class ItemChainChestplate extends ItemChainArmor implements io.gomint.inv
     }
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.CHAIN_CHESTPLATE;
     }
 

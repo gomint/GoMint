@@ -17,12 +17,12 @@ import java.util.List;
 public class Ice extends Block implements BlockIce {
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 750;
     }
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
@@ -32,12 +32,12 @@ public class Ice extends Block implements BlockIce {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.ICE;
     }
 
     @Override
-    public List<ItemStack> getDrops(ItemStack itemInHand) {
+    public List<ItemStack<?>> drops(ItemStack<?> itemInHand) {
         return new ArrayList<>();
     }
 
@@ -48,9 +48,9 @@ public class Ice extends Block implements BlockIce {
 
     @Override
     public io.gomint.world.block.Block performBreak(boolean creative) {
-        Block below = this.world.getBlockAt(this.location.toBlockPosition().add(BlockPosition.DOWN));
-        if (!creative || below.getBlockType() != BlockType.AIR) {
-            return this.setBlockType(FlowingWater.class);
+        Block below = this.world.blockAt(this.location.toBlockPosition().add(BlockPosition.DOWN));
+        if (!creative || below.blockType() != BlockType.AIR) {
+            return this.blockType(FlowingWater.class);
         }
 
         return super.performBreak(creative);

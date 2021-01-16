@@ -40,7 +40,7 @@ public class PermissionGroupManager implements GroupManager {
     }
 
     @Override
-    public Group getOrCreateGroup( String name ) {
+    public Group group(String name ) {
         // Check if this is the first group we get/create
         if ( this.groupMap == null ) {
             this.groupMap = new Object2ObjectOpenHashMap<>();
@@ -60,8 +60,9 @@ public class PermissionGroupManager implements GroupManager {
     }
 
     @Override
-    public void removeGroup( Group group ) {
-        this.groupMap.remove( group.getName() );
+    public GroupManager remove(Group group ) {
+        this.groupMap.remove( group.name() );
+        return this;
     }
 
     public void setDirty(boolean dirty) {

@@ -18,12 +18,12 @@ public class InvertedDaylightSensor extends Block implements BlockInvertedDaylig
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 300;
     }
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
@@ -33,7 +33,7 @@ public class InvertedDaylightSensor extends Block implements BlockInvertedDaylig
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.INVERTED_DAYLIGHT_SENSOR;
     }
 

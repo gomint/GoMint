@@ -25,7 +25,7 @@ import java.util.Map;
 public class KickCommand extends Command {
 
     @Override
-    public CommandOutput execute(CommandSender sender, String alias, Map<String, Object> arguments) {
+    public CommandOutput execute(CommandSender<?> sender, String alias, Map<String, Object> arguments) {
         EntityPlayer target = (EntityPlayer) arguments.get("player");
         String reason = "Kicked by an operator.";
 
@@ -38,6 +38,6 @@ public class KickCommand extends Command {
         }
 
         target.disconnect(reason);
-        return CommandOutput.successful("Kicked %%s from the server", target.getDisplayName());
+        return CommandOutput.successful("Kicked %%s from the server", target.displayName());
     }
 }

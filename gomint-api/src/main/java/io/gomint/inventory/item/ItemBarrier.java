@@ -14,14 +14,15 @@ import io.gomint.GoMint;
  * @version 1.0
  * @stability 3
  */
-public interface ItemBarrier extends ItemStack {
+public interface ItemBarrier extends ItemStack<ItemBarrier> {
 
     /**
      * Create a new item stack with given class and amount
      *
      * @param amount which is used for the creation
+	 * @return freshly generated item
      */
-    static ItemBarrier create( int amount ) {
+    static ItemBarrier create( int amount ) {	
         return GoMint.instance().createItemStack( ItemBarrier.class, amount );
     }
 

@@ -15,20 +15,20 @@ import io.gomint.world.World;
  * @version 1.0
  * @stability 3
  */
-public interface ContainerInventory {
+public interface ContainerInventory<I> extends Inventory<I> {
 
     /**
      * Get the position of the container
      *
      * @return block position of this container
      */
-    BlockPosition getContainerPosition();
+    BlockPosition containerPosition();
 
     /**
      * Get the world in which this container has been placed
      *
      * @return world of this container
      */
-    World getWorld();
+    World world();
 
 }

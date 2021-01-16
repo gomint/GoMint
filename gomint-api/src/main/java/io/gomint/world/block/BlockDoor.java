@@ -14,39 +14,48 @@ import io.gomint.world.block.data.HingeSide;
  * @version 1.0
  * @stability 3
  */
-public interface BlockDoor extends BlockDirection {
+public interface BlockDoor<B> extends BlockDirection<B> {
 
     /**
      * Is the door part top or bottom?
      *
      * @return true when its the top part, false when not
      */
-    boolean isTop();
+    boolean top();
 
     /**
      * Is the door open or closed?
      *
      * @return true when the door is open, false when not
      */
-    boolean isOpen();
+    boolean open();
 
     /**
-     * Open or close a door. The target state depends on the {@link #isOpen()} state
+     * Open the door or close it
+     *
+     * @param open or close the door
+     * @return block for chaining
      */
-    void toggle();
+    B open(boolean open);
+
+    /**
+     * Open or close a door. The target state depends on the {@link #open()} state
+     */
+    B toggle();
 
     /**
      * Set the side where the hinge is on
      *
      * @param side of the hinge
+     * @return block for chaining
      */
-    void setHingeSide(HingeSide side);
+    B hingeSide(HingeSide side);
 
     /**
      * Get the side where the hinge is on
      *
      * @return side of the hinge
      */
-    HingeSide getHingeSide();
+    HingeSide hingeSide();
 
 }

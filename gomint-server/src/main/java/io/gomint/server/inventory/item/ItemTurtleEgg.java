@@ -8,10 +8,10 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo(sId = "minecraft:turtle_egg", id = -159)
-public class ItemTurtleEgg extends ItemStack implements io.gomint.inventory.item.ItemTurtleEgg {
+public class ItemTurtleEgg extends ItemStack< io.gomint.inventory.item.ItemTurtleEgg> implements io.gomint.inventory.item.ItemTurtleEgg {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.TURTLE_EGG;
     }
 

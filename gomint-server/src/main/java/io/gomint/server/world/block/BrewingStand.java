@@ -20,12 +20,12 @@ public class BrewingStand extends Block implements BlockBrewingStand {
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 750;
     }
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
@@ -35,7 +35,7 @@ public class BrewingStand extends Block implements BlockBrewingStand {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.BREWING_STAND;
     }
 
@@ -45,7 +45,7 @@ public class BrewingStand extends Block implements BlockBrewingStand {
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return ToolPresets.PICKAXE;
     }
 

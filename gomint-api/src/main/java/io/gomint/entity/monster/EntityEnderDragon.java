@@ -8,7 +8,7 @@ import io.gomint.entity.EntityLiving;
  * @version 1.0
  * @stability 3
  */
-public interface EntityEnderDragon extends EntityLiving {
+public interface EntityEnderDragon extends EntityLiving<EntityEnderDragon> {
 
     /**
      * Create a new entity ender dragon with no config

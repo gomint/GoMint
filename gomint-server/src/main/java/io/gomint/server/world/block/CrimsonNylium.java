@@ -19,7 +19,7 @@ public class CrimsonNylium extends Block implements BlockCrimsonNylium {
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 1500;
     }
 
@@ -29,7 +29,7 @@ public class CrimsonNylium extends Block implements BlockCrimsonNylium {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.CRIMSON_NYLIUM;
     }
 
@@ -39,7 +39,7 @@ public class CrimsonNylium extends Block implements BlockCrimsonNylium {
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return ToolPresets.PICKAXE;
     }
 }

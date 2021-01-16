@@ -13,7 +13,7 @@ import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.world.WorldAdapter;
 
 @RegisterInfo(sId = "minecraft:mule")
-public class EntityMule extends EntityAgeableAnimal implements io.gomint.entity.animal.EntityMule {
+public class EntityMule extends EntityAgeableAnimal<io.gomint.entity.animal.EntityMule> implements io.gomint.entity.animal.EntityMule {
 
     /**
      * Constructs a new EntityLiving
@@ -34,13 +34,13 @@ public class EntityMule extends EntityAgeableAnimal implements io.gomint.entity.
     }
 
     private void initEntity() {
-        this.addAttribute(Attribute.HEALTH);
-        this.setMaxHealth(30);
-        this.setHealth(30);
-        if (this.isBaby()) {
-            this.setSize(0.6982f, 0.8f);
+        this.attribute(Attribute.HEALTH);
+        this.maxHealth(30);
+        this.health(30);
+        if (this.baby()) {
+            this.size(0.6982f, 0.8f);
         } else {
-            this.setSize(1.3965f, 1.6f);
+            this.size(1.3965f, 1.6f);
         }
     }
 

@@ -19,10 +19,10 @@ import java.util.concurrent.TimeUnit;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:enchanted_golden_apple", id = 259 )
-public class ItemEnchantedGoldenApple extends ItemFood implements io.gomint.inventory.item.ItemEnchantedGoldenApple {
+public class ItemEnchantedGoldenApple extends ItemFood<io.gomint.inventory.item.ItemEnchantedGoldenApple> implements io.gomint.inventory.item.ItemEnchantedGoldenApple {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.ENCHANTED_GOLDEN_APPLE;
     }
 
@@ -41,10 +41,10 @@ public class ItemEnchantedGoldenApple extends ItemFood implements io.gomint.inve
         super.onConsume( player );
 
         // Apply effects
-        player.addEffect( PotionEffect.REGENERATION, 4, 30, TimeUnit.SECONDS );
-        player.addEffect( PotionEffect.DAMAGE_RESISTANCE, 0, 5, TimeUnit.MINUTES );
-        player.addEffect( PotionEffect.FIRE_RESISTANCE, 0, 5, TimeUnit.MINUTES );
-        player.addEffect( PotionEffect.ABSORPTION, 3, 2, TimeUnit.MINUTES );
+        player.effect( PotionEffect.REGENERATION, 4, 30, TimeUnit.SECONDS );
+        player.effect( PotionEffect.DAMAGE_RESISTANCE, 0, 5, TimeUnit.MINUTES );
+        player.effect( PotionEffect.FIRE_RESISTANCE, 0, 5, TimeUnit.MINUTES );
+        player.effect( PotionEffect.ABSORPTION, 3, 2, TimeUnit.MINUTES );
     }
 
 }

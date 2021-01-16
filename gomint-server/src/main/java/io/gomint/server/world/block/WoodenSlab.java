@@ -16,7 +16,7 @@ import io.gomint.world.block.data.LogType;
 @RegisterInfo(sId = "minecraft:wooden_slab", def = true)
 @RegisterInfo(sId = "minecraft:warped_slab")
 @RegisterInfo(sId = "minecraft:crimson_slab")
-public class WoodenSlab extends Slab implements BlockWoodenSlab {
+public class WoodenSlab extends Slab<BlockWoodenSlab> implements BlockWoodenSlab {
 
     private static final String WOODEN_ID = "minecraft:wooden_slab";
 
@@ -50,12 +50,12 @@ public class WoodenSlab extends Slab implements BlockWoodenSlab {
     });
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 3000;
     }
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
@@ -65,7 +65,7 @@ public class WoodenSlab extends Slab implements BlockWoodenSlab {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.WOODEN_SLAB;
     }
 
@@ -75,12 +75,12 @@ public class WoodenSlab extends Slab implements BlockWoodenSlab {
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return ToolPresets.AXE;
     }
 
     @Override
-    public LogType getWoodType() {
+    public LogType type() {
         switch (this.getBlockId()) {
             case "minecraft:crimson_slab":
                 return LogType.CRIMSON;
@@ -92,7 +92,7 @@ public class WoodenSlab extends Slab implements BlockWoodenSlab {
     }
 
     @Override
-    public void setWoodType(LogType logType) {
+    public BlockWoodenSlab type(LogType logType) {
         LogTypeMagic newState = LogTypeMagic.valueOf(logType.name());
 
         if (!newState.value.isEmpty()) {
@@ -102,6 +102,8 @@ public class WoodenSlab extends Slab implements BlockWoodenSlab {
         if (!this.getBlockId().equals(newState.blockId)) {
             this.setBlockId(newState.blockId);
         }
+
+        return this;
     }
 
 }

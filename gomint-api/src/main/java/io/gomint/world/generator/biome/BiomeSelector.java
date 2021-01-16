@@ -17,10 +17,10 @@ import io.gomint.world.generator.noise.Simplex;
  */
 public abstract class BiomeSelector {
 
-    private Simplex temperature;
-    private Simplex downfall;
+    private final Simplex temperature;
+    private final Simplex downfall;
 
-    private Biome[] lookup = new Biome[4096];
+    private final Biome[] lookup = new Biome[4096];
 
     public BiomeSelector( FastRandom random ) {
         this.temperature = new Simplex( random, 2, 0.0625, 0.001953125 );   // These two noises are different because the random seed changes!

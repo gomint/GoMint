@@ -10,7 +10,7 @@ package io.gomint.world.block;
 /**
  * @author geNAZt
  * @version 1.0
- * @stability 2
+ * @stability 1
  */
 public interface BlockTallGrass extends Block {
 
@@ -24,14 +24,15 @@ public interface BlockTallGrass extends Block {
      * Set the grass type of this tall grass block
      *
      * @param type of this block
+     * @return block for chaining
      */
-    void setGrassType( Type type );
+    BlockTallGrass type(Type type);
 
     /**
      * Get the type of this tall grass block
      *
      * @return type of this block
      */
-    Type getGrassType();
+    Type type();
 
 }

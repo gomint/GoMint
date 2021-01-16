@@ -17,24 +17,25 @@ import io.gomint.world.block.data.TNTType;
 public interface BlockTNT extends Block {
 
     /**
-     * Prime this tnt
+     * Prime this tnt. This block will be set to air due to this
      *
      * @param untilExplodeSeconds seconds until the tnt explodes
      */
-    void prime( float untilExplodeSeconds );
+    void prime(float untilExplodeSeconds);
 
     /**
      * Get the type of tnt
      *
      * @return tnt type
      */
-    TNTType getType();
+    TNTType type();
 
     /**
      * Set the type of tnt
      *
      * @param type which this tnt should have
+     * @return block for chaining
      */
-    void setType(TNTType type);
+    BlockTNT type(TNTType type);
 
 }

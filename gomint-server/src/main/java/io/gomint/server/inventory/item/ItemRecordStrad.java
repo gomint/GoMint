@@ -15,12 +15,12 @@ import io.gomint.taglib.NBTTagCompound;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:record_strad", id = 508 )
-public class ItemRecordStrad extends ItemStack implements io.gomint.inventory.item.ItemRecordStrad {
+public class ItemRecordStrad extends ItemStack< io.gomint.inventory.item.ItemRecordStrad> implements io.gomint.inventory.item.ItemRecordStrad {
 
 
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.RECORD_STRAD;
     }
 

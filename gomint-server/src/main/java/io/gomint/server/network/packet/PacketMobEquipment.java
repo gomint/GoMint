@@ -12,7 +12,7 @@ public class PacketMobEquipment extends Packet {
 
     private long entityId;
 
-    private ItemStack stack;
+    private ItemStack<?> stack;
     private byte slot;
     private byte selectedSlot;
     private byte windowId;
@@ -50,11 +50,11 @@ public class PacketMobEquipment extends Packet {
         this.entityId = entityId;
     }
 
-    public ItemStack getStack() {
+    public ItemStack<?> getStack() {
         return stack;
     }
 
-    public void setStack(ItemStack stack) {
+    public void setStack(ItemStack<?> stack) {
         this.stack = stack;
     }
 

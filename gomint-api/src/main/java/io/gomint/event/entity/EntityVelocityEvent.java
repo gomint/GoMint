@@ -15,7 +15,7 @@ import io.gomint.math.Vector;
  * @version 1.0
  * @stability 3
  */
-public class EntityVelocityEvent extends CancellableEntityEvent {
+public class EntityVelocityEvent extends CancellableEntityEvent<EntityVelocityEvent> {
 
     private Vector velocity;
 
@@ -25,7 +25,7 @@ public class EntityVelocityEvent extends CancellableEntityEvent {
      * @param entity for which this event is
      * @param velocity which should be applied to the given entity
      */
-    public EntityVelocityEvent( Entity entity, Vector velocity ) {
+    public EntityVelocityEvent( Entity<?> entity, Vector velocity ) {
         super( entity );
         this.velocity = velocity;
     }
@@ -35,7 +35,7 @@ public class EntityVelocityEvent extends CancellableEntityEvent {
      *
      * @return the applied velocity
      */
-    public Vector getVelocity() {
+    public Vector velocity() {
         return this.velocity;
     }
 
@@ -44,8 +44,9 @@ public class EntityVelocityEvent extends CancellableEntityEvent {
      *
      * @param velocity which should be applied to the entity
      */
-    public void setVelocity( Vector velocity ) {
+    public EntityVelocityEvent velocity(Vector velocity ) {
         this.velocity = velocity;
+        return this;
     }
 
 }

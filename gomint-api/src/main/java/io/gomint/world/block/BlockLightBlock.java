@@ -19,13 +19,14 @@ public interface BlockLightBlock extends Block {
      *
      * @return 0 to 1
      */
-    float getIntensity();
+    float intensity();
 
     /**
      * Set the intensity of light
      *
      * @param intensity ranging from 0 to 1
+     * @return block for chaining
      */
-    void setIntensity(float intensity);
+    BlockLightBlock intensity(float intensity);
 
 }

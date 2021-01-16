@@ -15,10 +15,10 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:beetroot_seeds", id = 458 )
-public class ItemBeetrootSeeds extends ItemStack implements io.gomint.inventory.item.ItemBeetrootSeeds {
+public class ItemBeetrootSeeds extends ItemStack< io.gomint.inventory.item.ItemBeetrootSeeds> implements io.gomint.inventory.item.ItemBeetrootSeeds {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.BEETROOT_SEEDS;
     }
 

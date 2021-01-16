@@ -15,10 +15,10 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:dark_oak_sign", id = 570 )
-public class ItemDarkOakSign extends ItemStack implements io.gomint.inventory.item.ItemDarkOakSign {
+public class ItemDarkOakSign extends ItemStack< io.gomint.inventory.item.ItemDarkOakSign> implements io.gomint.inventory.item.ItemDarkOakSign {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.DARK_OAK_SIGN;
     }
 

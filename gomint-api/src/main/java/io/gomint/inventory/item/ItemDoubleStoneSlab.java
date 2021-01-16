@@ -15,14 +15,15 @@ import io.gomint.world.block.data.StoneType;
  * @version 1.0
  * @stability 3
  */
-public interface ItemDoubleStoneSlab extends ItemStack {
+public interface ItemDoubleStoneSlab extends ItemStack<ItemDoubleStoneSlab> {
 
     /**
      * Create a new item stack with given class and amount
      *
      * @param amount which is used for the creation
+	 * @return freshly generated item
      */
-    static ItemDoubleStoneSlab create( int amount ) {
+    static ItemDoubleStoneSlab create( int amount ) {	
         return GoMint.instance().createItemStack( ItemDoubleStoneSlab.class, amount );
     }
 
@@ -31,13 +32,14 @@ public interface ItemDoubleStoneSlab extends ItemStack {
      *
      * @return type of stone
      */
-    StoneType getStoneType();
+    StoneType type();
 
     /**
      * Set the type of stone for this double slab
      *
      * @param type which this slab should have
+     * @return item for chaining
      */
-    void setStoneType(StoneType type);
+    ItemDoubleStoneSlab type(StoneType type);
 
 }

@@ -15,10 +15,10 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:quartz_bricks", id = -304 )
-public class ItemQuartzBricks extends ItemStack implements io.gomint.inventory.item.ItemQuartzBricks {
+public class ItemQuartzBricks extends ItemStack< io.gomint.inventory.item.ItemQuartzBricks> implements io.gomint.inventory.item.ItemQuartzBricks {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.QUARTZ_BRICKS;
     }
 

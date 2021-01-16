@@ -50,11 +50,6 @@ public class TickListBenchmark {
         this.tickList.add(ThreadLocalRandom.current().nextBoolean() ? 1500 : 2500, POS);
     }
 
-    /*@Benchmark
-    public void fillPrioQueue() {
-        this.priorityQueue.add(new TickableBlockPosition(ThreadLocalRandom.current().nextBoolean() ? 1500 : 2500, POS));
-    }*/
-
     @TearDown
     public void teardown() {
         this.priorityQueue.clear();

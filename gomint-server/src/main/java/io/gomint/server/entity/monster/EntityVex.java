@@ -10,7 +10,7 @@ import io.gomint.server.world.WorldAdapter;
 import java.util.Set;
 
 @RegisterInfo(sId = "minecraft:vex")
-public class EntityVex extends EntityLiving implements io.gomint.entity.monster.EntityVex {
+public class EntityVex extends EntityLiving<io.gomint.entity.monster.EntityVex> implements io.gomint.entity.monster.EntityVex {
 
     /**
      * Constructs a new EntityLiving
@@ -31,10 +31,10 @@ public class EntityVex extends EntityLiving implements io.gomint.entity.monster.
     }
 
     private void initEntity() {
-        this.setSize(0.4f, 0.8f);
-        this.addAttribute(Attribute.HEALTH);
-        this.setMaxHealth(14);
-        this.setHealth(14);
+        this.size(0.4f, 0.8f);
+        this.attribute(Attribute.HEALTH);
+        this.maxHealth(14);
+        this.health(14);
     }
 
     @Override
@@ -43,7 +43,7 @@ public class EntityVex extends EntityLiving implements io.gomint.entity.monster.
     }
 
     @Override
-    public Set<String> getTags() {
+    public Set<String> tags() {
         return EntityTags.HOSTILE_MOB;
     }
 

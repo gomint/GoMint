@@ -4,15 +4,8 @@ import io.gomint.jraknet.PacketBuffer;
 import io.gomint.math.Location;
 import io.gomint.server.network.Protocol;
 import io.gomint.server.player.PlayerPermission;
-import io.gomint.server.util.StringShortPair;
-import io.gomint.taglib.AllocationLimitReachedException;
-import io.gomint.taglib.NBTReader;
 import io.gomint.world.Gamerule;
 
-import java.io.IOException;
-import java.nio.ByteOrder;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -53,7 +46,7 @@ public class PacketStartGame extends Packet {
     private boolean isTexturePacksRequired;
 
     // Gamerule data
-    private Map<Gamerule, Object> gamerules;
+    private Map<Gamerule<?>, Object> gamerules;
     private boolean hasBonusChestEnabled;
     private boolean hasStartWithMapEnabled;
     private boolean hasTrustPlayersEnabled;
@@ -91,11 +84,11 @@ public class PacketStartGame extends Packet {
         buffer.writeSignedVarLong(this.entityId); // EntityUnique
         buffer.writeUnsignedVarLong(this.runtimeEntityId); // EntityRuntime
         buffer.writeSignedVarInt(this.gamemode); // VarInt
-        buffer.writeLFloat(this.location.getX()); // Vec3
-        buffer.writeLFloat(this.location.getY());
-        buffer.writeLFloat(this.location.getZ());
-        buffer.writeLFloat(this.location.getYaw()); // Vec2
-        buffer.writeLFloat(this.location.getPitch());
+        buffer.writeLFloat(this.location.x()); // Vec3
+        buffer.writeLFloat(this.location.y());
+        buffer.writeLFloat(this.location.z());
+        buffer.writeLFloat(this.location.yaw()); // Vec2
+        buffer.writeLFloat(this.location.pitch());
 
         // LevelSettings
         buffer.writeSignedVarInt(this.seed);
@@ -108,9 +101,9 @@ public class PacketStartGame extends Packet {
         buffer.writeSignedVarInt(this.generator);
         buffer.writeSignedVarInt(this.worldGamemode);
         buffer.writeSignedVarInt(this.difficulty);
-        buffer.writeSignedVarInt((int) this.spawn.getX());
-        buffer.writeUnsignedVarInt((int) this.spawn.getY());
-        buffer.writeSignedVarInt((int) this.spawn.getZ());
+        buffer.writeSignedVarInt((int) this.spawn.x());
+        buffer.writeUnsignedVarInt((int) this.spawn.y());
+        buffer.writeSignedVarInt((int) this.spawn.z());
         buffer.writeBoolean(this.hasAchievementsDisabled);
         buffer.writeSignedVarInt(this.dayCycleStopTime);
         buffer.writeSignedVarInt(this.eduEditionOffer);
@@ -422,11 +415,11 @@ public class PacketStartGame extends Packet {
         isTexturePacksRequired = texturePacksRequired;
     }
 
-    public Map<Gamerule, Object> getGamerules() {
+    public Map<Gamerule<?>, Object> getGamerules() {
         return gamerules;
     }
 
-    public void setGamerules(Map<Gamerule, Object> gamerules) {
+    public void setGamerules(Map<Gamerule<?>, Object> gamerules) {
         this.gamerules = gamerules;
     }
 

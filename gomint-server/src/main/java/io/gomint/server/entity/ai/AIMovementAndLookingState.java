@@ -35,13 +35,13 @@ public abstract class AIMovementAndLookingState extends AILookingState {
     @Override
     public void update( long currentTimeMS, float dT ) {
         if ( this.path != null && this.currentPathNode < this.path.size() ) {
-            Vector position = this.pathfinding.getTransform().getPosition();
+            Vector position = this.pathfinding.transform().position();
             BlockPosition blockPosition = position.toBlockPosition();
 
             BlockPosition node = this.path.get( this.currentPathNode );
 
             Vector direction = node.toVector().add( .5f, 0, .5f ).subtract( position ).normalize().multiply( this.movementSpeed * dT );
-            this.pathfinding.getTransform().setMotion( direction.getX(), direction.getY(), direction.getZ() );
+            this.pathfinding.transform().motion( direction.x(), direction.y(), direction.z() );
             this.look(direction);
 
             if ( blockPosition.equals( node ) ) {
@@ -49,13 +49,13 @@ public abstract class AIMovementAndLookingState extends AILookingState {
                 this.currentPathNode++;
             } else if ( currentTimeMS - this.lastPointReachedTime > TimeUnit.SECONDS.toMillis( 5 ) ) {
                 // Generating new goal due to entity being stuck in movement loop
-                this.pathfinding.setGoal( this.generateGoal() );
-                this.path = this.pathfinding.getPath();
+                this.pathfinding.goal( this.generateGoal() );
+                this.path = this.pathfinding.path();
                 this.currentPathNode = 0;
             }
         } else {
-            this.pathfinding.setGoal( this.generateGoal() );
-            this.path = this.pathfinding.getPath();
+            this.pathfinding.goal( this.generateGoal() );
+            this.path = this.pathfinding.path();
             this.currentPathNode = 0;
             this.lastPointReachedTime = currentTimeMS;
         }

@@ -24,8 +24,8 @@ import java.util.Map;
 public class PluginsCommand extends Command {
 
     @Override
-    public CommandOutput execute(CommandSender commandSender, String alias, Map<String, Object> arguments) {
-        Map<String, Plugin> plugins = GoMint.instance().getPluginManager().getPlugins();
+    public CommandOutput execute(CommandSender<?> commandSender, String alias, Map<String, Object> arguments) {
+        Map<String, Plugin> plugins = GoMint.instance().pluginManager().plugins();
 
         if (plugins.isEmpty()) {
             return CommandOutput.failure("No plugins were loaded.");
@@ -34,7 +34,7 @@ public class PluginsCommand extends Command {
         StringBuilder stringBuilder = new StringBuilder("Plugins (§a" + plugins.size() + "§r): §a");
 
         for (Plugin plugin : plugins.values()) {
-            stringBuilder.append(plugin.getName()).append("§r, ");
+            stringBuilder.append(plugin.name()).append("§r, ");
         }
 
         stringBuilder.setLength(stringBuilder.length() - 4);

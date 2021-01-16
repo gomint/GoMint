@@ -54,12 +54,12 @@ public class WoodenDoubleSlab extends Block implements BlockWoodenDoubleSlab {
     });
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 3000;
     }
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
@@ -69,7 +69,7 @@ public class WoodenDoubleSlab extends Block implements BlockWoodenDoubleSlab {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.WOODEN_DOUBLE_SLAB;
     }
 
@@ -79,12 +79,12 @@ public class WoodenDoubleSlab extends Block implements BlockWoodenDoubleSlab {
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return ToolPresets.AXE;
     }
 
     @Override
-    public LogType getWoodType() {
+    public LogType type() {
         switch (this.getBlockId()) {
             case "minecraft:crimson_slab":
                 return LogType.CRIMSON;
@@ -96,7 +96,7 @@ public class WoodenDoubleSlab extends Block implements BlockWoodenDoubleSlab {
     }
 
     @Override
-    public void setWoodType(LogType logType) {
+    public BlockWoodenDoubleSlab type(LogType logType) {
         LogTypeMagic newState = LogTypeMagic.valueOf(logType.name());
 
         if (!newState.value.isEmpty()) {
@@ -106,6 +106,8 @@ public class WoodenDoubleSlab extends Block implements BlockWoodenDoubleSlab {
         if (!this.getBlockId().equals(newState.blockId)) {
             this.setBlockId(newState.blockId);
         }
+
+        return this;
     }
 
 }

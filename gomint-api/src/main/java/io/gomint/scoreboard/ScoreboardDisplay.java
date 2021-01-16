@@ -21,21 +21,21 @@ public interface ScoreboardDisplay {
      *
      * @return display name
      */
-    String getDisplayName();
+    String display();
 
     /**
      * Get the name of the objective
      *
      * @return objective name
      */
-    String getObjectiveName();
+    String objective();
 
     /**
      * Get the order in which the ids should be sorted
      *
      * @return the order in which the ids should be sorted
      */
-    SortOrder getSortOrder();
+    SortOrder sortOrder();
 
     /**
      * Add a new entity to the display
@@ -43,7 +43,7 @@ public interface ScoreboardDisplay {
      * @param entity which should be displayed
      * @param score which should be displayed with the entity
      */
-    DisplayEntry addEntity( Entity entity, int score );
+    DisplayEntry addEntity( Entity<?> entity, int score );
 
     /**
      * Add a new line to the display
@@ -58,6 +58,6 @@ public interface ScoreboardDisplay {
      *
      * @param entry which should be removed
      */
-    void removeEntry( DisplayEntry entry );
+    ScoreboardDisplay removeEntry( DisplayEntry entry );
 
 }

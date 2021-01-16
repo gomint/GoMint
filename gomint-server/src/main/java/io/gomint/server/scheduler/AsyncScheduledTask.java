@@ -24,7 +24,7 @@ import java.util.concurrent.Future;
 public class AsyncScheduledTask implements Task, Runnable {
 
     private static final Logger LOGGER = LoggerFactory.getLogger( AsyncScheduledTask.class );
-    private final Runnable task;
+    private final Runnable runnable;
 
     private ExceptionHandler exceptionHandler;
     private List<CompleteHandler> completeHandlerList;
@@ -34,10 +34,10 @@ public class AsyncScheduledTask implements Task, Runnable {
     /**
      * Constructs a new AsyncScheduledTask. It needs to be executed via a normal {@link java.util.concurrent.ExecutorService}
      *
-     * @param task runnable which should be executed
+     * @param runnable runnable which should be executed
      */
-    public AsyncScheduledTask( Runnable task ) {
-        this.task = task;
+    public AsyncScheduledTask( Runnable runnable ) {
+        this.runnable = runnable;
     }
 
     @Override
@@ -46,24 +46,26 @@ public class AsyncScheduledTask implements Task, Runnable {
     }
 
     @Override
-    public void onException( ExceptionHandler exceptionHandler ) {
+    public AsyncScheduledTask onException( ExceptionHandler exceptionHandler ) {
         this.exceptionHandler = exceptionHandler;
+        return this;
     }
 
     @Override
-    public void onComplete( CompleteHandler completeHandler ) {
+    public AsyncScheduledTask onComplete( CompleteHandler completeHandler ) {
         if ( this.completeHandlerList == null ) {
             this.completeHandlerList = new ArrayList<>();
         }
 
         this.completeHandlerList.add( completeHandler );
+        return this;
     }
 
     @Override
     public void run() {
         // CHECKSTYLE:OFF
         try {
-            this.task.run();
+            this.runnable.run();
         } catch ( Exception e ) {
             if ( this.exceptionHandler != null ) {
                 if ( !this.exceptionHandler.onException( e ) ) {
@@ -92,12 +94,12 @@ public class AsyncScheduledTask implements Task, Runnable {
      *
      * @param future of this task
      */
-    void setFuture( Future<?> future ) {
+    void assignFuture( Future<?> future ) {
         this.future = future;
     }
 
-    public Runnable getTask() {
-        return task;
+    public Runnable runnable() {
+        return runnable;
     }
 
 }

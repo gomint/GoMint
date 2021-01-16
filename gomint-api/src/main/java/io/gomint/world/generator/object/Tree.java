@@ -19,7 +19,7 @@ import io.gomint.world.block.BlockType;
  * @author geNAZt
  * @version 1.0
  */
-public abstract class Tree {
+public abstract class Tree<E> {
 
     private static final BlockType[] OVERRIDABLE = new BlockType[]{
         BlockType.AIR, BlockType.SAPLING, BlockType.LOG, BlockType.LEAVES, BlockType.SNOW_LAYER
@@ -29,7 +29,7 @@ public abstract class Tree {
     protected BlockLog trunkBlock;
     protected BlockLeaves leafBlock;
 
-    public abstract void grow(World world, int x, int y, int z, FastRandom random);
+    public abstract E grow(World world, int x, int y, int z, FastRandom random);
 
     /**
      * Check if we can place given object
@@ -50,11 +50,11 @@ public abstract class Tree {
 
             for ( int xx = -radiusToCheck; xx < ( radiusToCheck + 1 ); ++xx ) {
                 for ( int zz = -radiusToCheck; zz < ( radiusToCheck + 1 ); ++zz ) {
-                    Block block = world.getBlockAt( x + xx, y + yy, z + zz );
+                    Block block = world.blockAt( x + xx, y + yy, z + zz );
 
                     boolean foundOverride = false;
                     for ( BlockType blockType : OVERRIDABLE ) {
-                        if ( block.getBlockType() == blockType ) {
+                        if ( block.blockType() == blockType ) {
                             foundOverride = true;
                             break;
                         }
@@ -70,7 +70,7 @@ public abstract class Tree {
         return true;
     }
 
-    public void placeObject( World world, int x, int y, int z, FastRandom random ) {
+    public E placeObject( World world, int x, int y, int z, FastRandom random ) {
         this.placeTrunk( world, x, y, z, random, this.treeHeight - 1 );
         for ( int yy = y - 3 + this.treeHeight; yy <= y + this.treeHeight; ++yy ) {
             int yOff = yy - ( y + this.treeHeight );
@@ -84,24 +84,26 @@ public abstract class Tree {
                         continue;
                     }
 
-                    Block replace = world.getBlockAt( xx, yy, zz );
-                    if ( !replace.isSolid() ) {
+                    Block replace = world.blockAt( xx, yy, zz );
+                    if ( !replace.solid() ) {
                         replace.copyFromBlock( this.leafBlock );
                     }
                 }
             }
         }
+
+        return (E) this;
     }
 
     protected void placeTrunk( World world, int x, int y, int z, FastRandom random, int trunkHeight ) {
         // The base dirt block
-        world.getBlockAt( x, y - 1, z ).setBlockType( BlockDirt.class );
+        world.blockAt( x, y - 1, z ).blockType( BlockDirt.class );
         for ( int yy = 0; yy < trunkHeight; ++yy ) {
-            Block block = world.getBlockAt( x, y + yy, z );
+            Block block = world.blockAt( x, y + yy, z );
 
             for ( BlockType type : OVERRIDABLE ) {
-                if ( block.getBlockType() == type ) {
-                    world.getBlockAt( x, y + yy, z ).copyFromBlock( this.trunkBlock );
+                if ( block.blockType() == type ) {
+                    world.blockAt( x, y + yy, z ).copyFromBlock( this.trunkBlock );
                 }
             }
         }

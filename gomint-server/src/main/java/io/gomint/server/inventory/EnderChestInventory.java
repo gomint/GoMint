@@ -12,7 +12,7 @@ import io.gomint.world.Sound;
  * @author geNAZt
  * @version 1.0
  */
-public class EnderChestInventory extends ContainerInventory implements io.gomint.inventory.EnderChestInventory {
+public class EnderChestInventory extends ContainerInventory<io.gomint.inventory.EnderChestInventory> implements io.gomint.inventory.EnderChestInventory {
 
     private BlockPosition position;
 
@@ -32,26 +32,26 @@ public class EnderChestInventory extends ContainerInventory implements io.gomint
         return WindowType.CONTAINER;
     }
 
-    public void setContainerPosition(BlockPosition position) {
+    public void containerPosition(BlockPosition position) {
         this.position = position;
     }
 
     @Override
-    public BlockPosition getContainerPosition() {
+    public BlockPosition containerPosition() {
         return this.position;
     }
 
     @Override
-    public WorldAdapter getWorld() {
-        return ((EntityPlayer) this.owner).getWorld();
+    public WorldAdapter world() {
+        return ((EntityPlayer) this.owner).world();
     }
 
     @Override
     public void onOpen(EntityPlayer player) {
         // Sound and open animation
         if (this.viewer.size() == 1) {
-            BlockPosition position = this.getContainerPosition();
-            WorldAdapter world = this.getWorld();
+            BlockPosition position = this.containerPosition();
+            WorldAdapter world = this.world();
 
             PacketBlockEvent blockEvent = new PacketBlockEvent();
             blockEvent.setPosition(position);
@@ -67,8 +67,8 @@ public class EnderChestInventory extends ContainerInventory implements io.gomint
     public void onClose(EntityPlayer player) {
         // Sound and close animation
         if (this.viewer.size() == 1) {
-            BlockPosition position = this.getContainerPosition();
-            WorldAdapter world = this.getWorld();
+            BlockPosition position = this.containerPosition();
+            WorldAdapter world = this.world();
 
             PacketBlockEvent blockEvent = new PacketBlockEvent();
             blockEvent.setPosition(position);

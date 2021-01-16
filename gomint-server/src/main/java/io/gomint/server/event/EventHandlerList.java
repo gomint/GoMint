@@ -115,11 +115,11 @@ class EventHandlerList {
         LOGGER.debug( "Starting to handle event: {}", event );
 
         if ( event instanceof CancellableEvent ) {
-            CancellableEvent cancelableEvent = (CancellableEvent) event;
+            CancellableEvent<?> cancelableEvent = (CancellableEvent<?>) event;
             for ( EventHandlerMethod handler : this.sortedHandlerList ) {
                 LOGGER.debug( "Checking handler {} with event {}", handler, cancelableEvent );
-                if ( cancelableEvent.isCancelled() && handler.ignoreCancelled() ) {
-                    LOGGER.debug( "Handler wants to ignore cancelled events", handler, cancelableEvent );
+                if ( cancelableEvent.cancelled() && handler.ignoreCancelled() ) {
+                    LOGGER.debug( "Handler wants to ignore cancelled events {}: {}", handler, cancelableEvent );
                     continue;
                 }
 

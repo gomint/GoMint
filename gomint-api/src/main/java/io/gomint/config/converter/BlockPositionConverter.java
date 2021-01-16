@@ -38,9 +38,9 @@ public class BlockPositionConverter extends BaseConverter {
         BlockPosition location = (BlockPosition) object;
         Map<String, Object> saveMap = new HashMap<>();
 
-        saveMap.put( "x", location.getX() );
-        saveMap.put( "y", location.getY() );
-        saveMap.put( "z", location.getZ() );
+        saveMap.put( "x", location.x() );
+        saveMap.put( "y", location.y() );
+        saveMap.put( "z", location.z() );
 
         return saveMap;
     }
@@ -50,7 +50,7 @@ public class BlockPositionConverter extends BaseConverter {
      */
     @Override
     @SuppressWarnings( "unchecked" )
-    public Object fromConfig( Class type, Object object, ParameterizedType parameterizedType ) {
+    public Object fromConfig( Class<?> type, Object object, ParameterizedType parameterizedType ) {
         Map<String, Object> locationMap;
 
         if ( object instanceof Map ) {

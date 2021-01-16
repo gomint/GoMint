@@ -8,12 +8,13 @@ import io.gomint.world.block.data.LogType;
  * @version 1.0
  * @stability 3
  */
-public interface ItemLog extends ItemAxis, ItemBurnable {
+public interface ItemLog extends ItemAxis<ItemLog>, ItemBurnable {
 
     /**
      * Create a new item stack with given class and amount
      *
      * @param amount which is used for the creation
+	 * @return freshly generated item
      */
     static ItemLog create( int amount ) {
         return GoMint.instance().createItemStack( ItemLog.class, amount );
@@ -24,41 +25,41 @@ public interface ItemLog extends ItemAxis, ItemBurnable {
      *
      * @return true when stripped, false when not
      */
-    boolean isStripped();
+    boolean stripped();
 
     /**
      * Set stripped status of this log
      *
      * @param stripped true when the log should be stripped, false if not
      */
-    void setStripped( boolean stripped );
+    ItemLog stripped(boolean stripped );
 
     /**
      * Set the type of log
      *
      * @param type of log
      */
-    void setLogType( LogType type );
+    ItemLog type(LogType type );
 
     /**
      * Get the type of this log
      *
      * @return type of log
      */
-    LogType getLogType();
+    LogType type();
 
     /**
      * Add bark textures to all sides or not
      *
      * @param allSides true when bark on all sides, false if not
      */
-    void setBarkOnAllSides( boolean allSides );
+    ItemLog barkOnAllSides(boolean allSides );
 
     /**
      * Is bark on all sides?
      *
      * @return true when bark is on all sides, false when not
      */
-    boolean isBarkOnAllSides();
+    boolean barkOnAllSides();
 
 }

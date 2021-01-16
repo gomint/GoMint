@@ -14,14 +14,14 @@ import io.gomint.entity.Entity;
  * @version 1.0
  * @stability 3
  */
-public class EntitySpawnEvent extends CancellableEntityEvent {
+public class EntitySpawnEvent extends CancellableEntityEvent<EntitySpawnEvent> {
 
     /**
      * Create a new entity based cancellable event
      *
      * @param entity for which this event is
      */
-    public EntitySpawnEvent( Entity entity ) {
+    public EntitySpawnEvent( Entity<?> entity ) {
         super( entity );
     }
 

@@ -15,15 +15,15 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo(id = -200, sId = "minecraft:cartography_table")
-public class ItemCartographyTable extends ItemStack implements io.gomint.inventory.item.ItemCartographyTable {
+public class ItemCartographyTable extends ItemStack< io.gomint.inventory.item.ItemCartographyTable> implements io.gomint.inventory.item.ItemCartographyTable {
 
     @Override
-    public byte getMaximumAmount() {
+    public byte maximumAmount() {
         return 1;
     }
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.CARTOGRAPHY_TABLE;
     }
 

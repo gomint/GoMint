@@ -10,10 +10,10 @@ import io.gomint.taglib.NBTTagCompound;
  * @version 1.0
  */
 @RegisterInfo(sId = "minecraft:mossy_cobblestone", id = 48)
-public class ItemMossyCobblestone extends ItemStack implements io.gomint.inventory.item.ItemMossyCobblestone {
+public class ItemMossyCobblestone extends ItemStack< io.gomint.inventory.item.ItemMossyCobblestone> implements io.gomint.inventory.item.ItemMossyCobblestone {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.MOSSY_COBBLESTONE;
     }
 

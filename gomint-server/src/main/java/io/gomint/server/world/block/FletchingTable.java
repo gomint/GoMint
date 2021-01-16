@@ -24,7 +24,7 @@ public class FletchingTable extends Block implements BlockFletchingTable {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.FLETCHING_TABLE;
     }
 

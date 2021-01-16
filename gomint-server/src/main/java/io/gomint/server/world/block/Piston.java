@@ -23,12 +23,12 @@ public class Piston extends Block implements BlockPiston {
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 750;
     }
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
@@ -49,7 +49,7 @@ public class Piston extends Block implements BlockPiston {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.PISTON;
     }
 
@@ -59,7 +59,7 @@ public class Piston extends Block implements BlockPiston {
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return ToolPresets.PICKAXE;
     }
 

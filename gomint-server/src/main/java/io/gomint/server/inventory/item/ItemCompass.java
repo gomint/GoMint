@@ -9,12 +9,12 @@ import io.gomint.taglib.NBTTagCompound;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:compass", id = 345 )
- public class ItemCompass extends ItemStack implements io.gomint.inventory.item.ItemCompass {
+ public class ItemCompass extends ItemStack< io.gomint.inventory.item.ItemCompass> implements io.gomint.inventory.item.ItemCompass {
 
 
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.COMPASS;
     }
 

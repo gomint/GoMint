@@ -16,7 +16,7 @@ import io.gomint.server.world.WorldAdapter;
 import java.util.Set;
 
 @RegisterInfo(sId = "minecraft:squid")
-public class EntitySquid extends EntityAnimal implements io.gomint.entity.animal.EntitySquid {
+public class EntitySquid extends EntityAnimal<io.gomint.entity.animal.EntitySquid> implements io.gomint.entity.animal.EntitySquid {
 
     /**
      * Constructs a new EntityLiving
@@ -37,10 +37,10 @@ public class EntitySquid extends EntityAnimal implements io.gomint.entity.animal
     }
 
     private void initEntity() {
-        this.setSize(0.8f, 0.8f);
-        this.addAttribute(Attribute.HEALTH);
-        this.setMaxHealth(20);
-        this.setHealth(20);
+        this.size(0.8f, 0.8f);
+        this.attribute(Attribute.HEALTH);
+        this.maxHealth(20);
+        this.health(20);
     }
 
     @Override
@@ -49,7 +49,7 @@ public class EntitySquid extends EntityAnimal implements io.gomint.entity.animal
     }
 
     @Override
-    public Set<String> getTags() {
+    public Set<String> tags() {
         return EntityTags.WATER_CREATURE;
     }
 

@@ -5,8 +5,12 @@ import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.world.block.helper.ToolPresets;
 import io.gomint.server.world.block.state.BooleanBlockState;
 import io.gomint.server.world.block.state.DirectValueBlockState;
+import io.gomint.server.util.Values;
+import io.gomint.server.world.block.state.EnumBlockState;
+import io.gomint.world.block.BlockCoral;
 import io.gomint.world.block.BlockCoralBlock;
 import io.gomint.world.block.BlockType;
+import io.gomint.world.block.data.CoralType;
 
 /**
  * @author Kaooot
@@ -16,28 +20,30 @@ import io.gomint.world.block.BlockType;
 public class CoralBlock extends Block implements BlockCoralBlock {
 
     private enum CoralTypeMagic {
-        TUBE(false, "blue"),
-        BRAIN(false, "pink"),
-        BUBBLE(false, "purple"),
-        FIRE(false, "red"),
-        HORN(false, "yellow"),
-        DEAD_TUBE(true, "blue"),
-        DEAD_BRAIN(true, "pink"),
-        DEAD_BUBBLE(true, "purple"),
-        DEAD_FIRE(true, "red"),
-        DEAD_HORN(true, "yellow");
+        TUBE("blue"),
+        BRAIN("pink"),
+        BUBBLE("purple"),
+        FIRE("red"),
+        HORN("yellow"),
+        ;
 
-        private final boolean dead;
         private final String color;
-
-        CoralTypeMagic(boolean dead, String color) {
-            this.dead = dead;
+        CoralTypeMagic(String color) {
             this.color = color;
         }
     }
 
     private static final BooleanBlockState DEAD = new BooleanBlockState(() -> new String[]{"dead_bit"});
-    private static final DirectValueBlockState<String> COLOR = new DirectValueBlockState<>(() -> new String[]{"coral_color"}, "blue");
+    private static final EnumBlockState<CoralBlock.CoralTypeMagic, String> COLOR = new EnumBlockState<>(t -> new String[]{"coral_color"},
+        CoralBlock.CoralTypeMagic.values(), coralTypeMagic -> coralTypeMagic.color, s -> {
+        for (CoralBlock.CoralTypeMagic value : CoralBlock.CoralTypeMagic.values()) {
+            if (value.color.equals(s)) {
+                return value;
+            }
+        }
+
+        return null;
+    });
 
     @Override
     public String getBlockId() {
@@ -45,12 +51,12 @@ public class CoralBlock extends Block implements BlockCoralBlock {
     }
 
     @Override
-    public long getBreakTime() {
-        return 50;
+    public long breakTime() {
+        return 0;
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return ToolPresets.PICKAXE;
     }
 
@@ -60,7 +66,7 @@ public class CoralBlock extends Block implements BlockCoralBlock {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.CORAL_BLOCK;
     }
 
@@ -70,23 +76,26 @@ public class CoralBlock extends Block implements BlockCoralBlock {
     }
 
     @Override
-    public CoralType getCoralType() {
-        String c = COLOR.getState(this);
-        boolean d = DEAD.getState(this);
-        for (CoralTypeMagic value : CoralTypeMagic.values()) {
-            if (value.dead == d && c.equals(value.color)) {
-                return CoralType.valueOf(value.name());
-            }
-        }
-
-        return CoralType.TUBE;
+    public BlockCoralBlock dead(boolean dead) {
+        DEAD.setState(this, dead);
+        return this;
     }
 
     @Override
-    public void setCoralType(CoralType coralType) {
-        CoralTypeMagic newState = CoralTypeMagic.valueOf(coralType.name());
-        DEAD.setState(this, newState.dead);
-        COLOR.setState(this, newState.color);
+    public boolean dead() {
+        return DEAD.getState(this);
+    }
+
+    @Override
+    public BlockCoralBlock type(CoralType type) {
+        CoralBlock.CoralTypeMagic state = CoralBlock.CoralTypeMagic.valueOf(type.name());
+        COLOR.setState(this, state);
+        return this;
+    }
+
+    @Override
+    public CoralType type() {
+        return CoralType.valueOf(COLOR.getState(this).name());
     }
 
 }

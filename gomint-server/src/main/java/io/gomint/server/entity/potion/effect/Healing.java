@@ -29,7 +29,7 @@ public class Healing extends Effect {
     }
 
     @Override
-    public void apply( EntityLiving player ) {
+    public void apply( EntityLiving<?> player ) {
         // TODO: Implement undead effect
         player.heal( 4 << this.amplifier, EntityHealEvent.Cause.HEALING_EFFECT );
     }
@@ -40,7 +40,7 @@ public class Healing extends Effect {
     }
 
     @Override
-    public void remove( EntityLiving player ) {
+    public void remove( EntityLiving<?> player ) {
 
     }
 

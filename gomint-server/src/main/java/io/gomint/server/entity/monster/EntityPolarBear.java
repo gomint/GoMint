@@ -2,7 +2,6 @@ package io.gomint.server.entity.monster;
 
 import io.gomint.server.entity.Attribute;
 import io.gomint.server.entity.EntityAgeable;
-import io.gomint.server.entity.EntityLiving;
 import io.gomint.server.entity.EntityTags;
 import io.gomint.server.entity.EntityType;
 import io.gomint.server.registry.RegisterInfo;
@@ -11,7 +10,7 @@ import io.gomint.server.world.WorldAdapter;
 import java.util.Set;
 
 @RegisterInfo( sId = "minecraft:polar_bear" )
-public class EntityPolarBear extends EntityAgeable implements io.gomint.entity.monster.EntityPolarBear {
+public class EntityPolarBear extends EntityAgeable<io.gomint.entity.monster.EntityPolarBear> implements io.gomint.entity.monster.EntityPolarBear {
 
     /**
      * Constructs a new EntityLiving
@@ -32,13 +31,13 @@ public class EntityPolarBear extends EntityAgeable implements io.gomint.entity.m
     }
 
     private void initEntity() {
-        this.addAttribute(Attribute.HEALTH);
-        this.setMaxHealth(30);
-        this.setHealth(30);
-        if(this.isBaby()) {
-            this.setSize(0.7f, 0.7f);
+        this.attribute(Attribute.HEALTH);
+        this.maxHealth(30);
+        this.health(30);
+        if(this.baby()) {
+            this.size(0.7f, 0.7f);
         }else{
-            this.setSize(1.3f, 1.4f);
+            this.size(1.3f, 1.4f);
         }
     }
 
@@ -48,7 +47,7 @@ public class EntityPolarBear extends EntityAgeable implements io.gomint.entity.m
     }
 
     @Override
-    public Set<String> getTags() {
+    public Set<String> tags() {
         return EntityTags.HOSTILE_MOB;
     }
 

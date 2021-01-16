@@ -15,10 +15,10 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:bleach", id = 451 )
-public class ItemBleach extends ItemStack implements io.gomint.inventory.item.ItemBleach {
+public class ItemBleach extends ItemStack< io.gomint.inventory.item.ItemBleach> implements io.gomint.inventory.item.ItemBleach {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.BLEACH;
     }
 

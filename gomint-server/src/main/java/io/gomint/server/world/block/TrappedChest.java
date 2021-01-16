@@ -1,5 +1,6 @@
 package io.gomint.server.world.block;
 
+import io.gomint.inventory.ChestInventory;
 import io.gomint.inventory.Inventory;
 import io.gomint.world.block.BlockTrappedChest;
 import io.gomint.world.block.BlockType;
@@ -12,25 +13,26 @@ import io.gomint.world.block.data.Facing;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:trapped_chest" )
-public class TrappedChest extends ChestBase implements BlockTrappedChest {
+public class TrappedChest extends ChestBase<BlockTrappedChest> implements BlockTrappedChest {
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.TRAPPED_CHEST;
     }
 
     @Override
-    public Inventory getInventory() {
-        return super.getInventory();
+    public Inventory<ChestInventory> inventory() {
+        return super.inventory();
     }
 
     @Override
-    public void setFacing(Facing facing) {
+    public BlockTrappedChest facing(Facing facing) {
         DIRECTION.setState(this, facing);
+        return this;
     }
 
     @Override
-    public Facing getFacing() {
+    public Facing facing() {
         return DIRECTION.getState(this);
     }
 

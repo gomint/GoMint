@@ -1,3 +1,10 @@
+/*
+ * Copyright (c) 2020 Gomint team
+ *
+ * This code is licensed under the BSD license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
 package io.gomint.server.world.block;
 
 import io.gomint.inventory.item.ItemStack;
@@ -20,7 +27,7 @@ public class BrickBlock extends Block implements BlockBrickBlock {
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 3000;
     }
 
@@ -30,7 +37,7 @@ public class BrickBlock extends Block implements BlockBrickBlock {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.BRICK_BLOCK;
     }
 
@@ -40,7 +47,7 @@ public class BrickBlock extends Block implements BlockBrickBlock {
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return ToolPresets.PICKAXE;
     }
 

@@ -15,7 +15,7 @@ import io.gomint.server.network.type.WindowType;
  * @author geNAZt
  * @version 1.0
  */
-public class SmokerInventory extends ContainerInventory {
+public class SmokerInventory extends ContainerInventory<SmokerInventory> {
 
     /**
      * Construct a new container inventory

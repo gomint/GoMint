@@ -13,29 +13,29 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:netherite_sword", id = 743 )
-public class ItemNetheriteSword extends ItemReduceTierNetherite implements io.gomint.inventory.item.ItemNetheriteSword, ItemSword {
+public class ItemNetheriteSword extends ItemReduceTierNetherite<io.gomint.inventory.item.ItemNetheriteSword> implements io.gomint.inventory.item.ItemNetheriteSword, ItemSword {
 
     @Override
     public void gotInHand( EntityPlayer player ) {
         player
-            .getAttributeInstance( Attribute.ATTACK_DAMAGE )
+            .attributeInstance( Attribute.ATTACK_DAMAGE )
             .setModifier( AttributeModifier.ITEM_ATTACK_DAMAGE, AttributeModifierType.ADDITION, 8 );
     }
 
     @Override
     public void removeFromHand( EntityPlayer player ) {
         player
-            .getAttributeInstance( Attribute.ATTACK_DAMAGE )
+            .attributeInstance( Attribute.ATTACK_DAMAGE )
             .removeModifier( AttributeModifier.ITEM_ATTACK_DAMAGE );
     }
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.NETHERITE_SWORD;
     }
 
     @Override
-    public int getEnchantAbility() {
+    public int enchantAbility() {
         return 15;
     }
 

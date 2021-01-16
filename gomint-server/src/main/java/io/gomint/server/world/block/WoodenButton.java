@@ -19,20 +19,20 @@ import io.gomint.world.block.data.LogType;
 @RegisterInfo(sId = "minecraft:acacia_button")
 @RegisterInfo(sId = "minecraft:warped_button")
 @RegisterInfo(sId = "minecraft:crimson_button")
-public class WoodenButton extends Button implements BlockWoodenButton {
+public class WoodenButton extends Button<BlockWoodenButton> implements BlockWoodenButton {
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 750;
     }
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
     @Override
-    public boolean isSolid() {
+    public boolean solid() {
         return false;
     }
 
@@ -42,7 +42,7 @@ public class WoodenButton extends Button implements BlockWoodenButton {
     }
 
     @Override
-    public LogType getWoodType() {
+    public LogType type() {
         switch (this.getBlockId()) {
             case "minecraft:crimson_button":
                 return LogType.CRIMSON;
@@ -66,7 +66,7 @@ public class WoodenButton extends Button implements BlockWoodenButton {
     }
 
     @Override
-    public void setWoodType(LogType logType) {
+    public BlockWoodenButton type(LogType logType) {
         switch (logType) {
             case CRIMSON:
                 this.setBlockId("minecraft:crimson_button");
@@ -93,6 +93,8 @@ public class WoodenButton extends Button implements BlockWoodenButton {
                 this.setBlockId("minecraft:acacia_button");
                 break;
         }
+
+        return this;
     }
 
     @Override
@@ -101,12 +103,12 @@ public class WoodenButton extends Button implements BlockWoodenButton {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.WOODEN_BUTTON;
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return ToolPresets.AXE;
     }
 

@@ -14,20 +14,21 @@ import io.gomint.world.block.data.PumpkinType;
  * @version 1.0
  * @stability 3
  */
-public interface BlockPumpkin extends Block, BlockDirection {
+public interface BlockPumpkin extends Block, BlockDirection<BlockPumpkin> {
 
     /**
      * Get the type of pumpkin
      *
      * @return type of pumpkin
      */
-    PumpkinType getType();
+    PumpkinType type();
 
     /**
      * Set the type of pumpkin
      *
      * @param type of pumpkin
+     * @return block for chaining
      */
-    void setType(PumpkinType type);
+    BlockPumpkin type(PumpkinType type);
 
 }

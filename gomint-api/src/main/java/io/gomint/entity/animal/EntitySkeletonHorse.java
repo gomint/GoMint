@@ -15,7 +15,7 @@ import io.gomint.entity.EntityLiving;
  * @version 1.0
  * @stability 3
  */
-public interface EntitySkeletonHorse extends EntityLiving {
+public interface EntitySkeletonHorse extends EntityLiving<EntitySkeletonHorse> {
 
     /**
      * Create a new entity skeleton horse with no config

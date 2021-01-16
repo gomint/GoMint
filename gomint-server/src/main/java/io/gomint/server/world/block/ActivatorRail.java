@@ -15,17 +15,17 @@ import io.gomint.server.registry.RegisterInfo;
 public class ActivatorRail extends RailBase implements BlockActivatorRail {
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 1050;
     }
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
     @Override
-    public boolean isSolid() {
+    public boolean solid() {
         return false;
     }
 
@@ -40,23 +40,24 @@ public class ActivatorRail extends RailBase implements BlockActivatorRail {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.ACTIVATOR_RAIL;
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return ToolPresets.PICKAXE;
     }
 
     @Override
-    public void setDirection(Direction direction) {
+    public BlockActivatorRail direction(Direction direction) {
         RailDirection railDirection = RailDirection.valueOf(direction.name());
         RAIL_DIRECTION.setState(this, railDirection);
+        return this;
     }
 
     @Override
-    public Direction getDirection() {
+    public Direction direction() {
         return Direction.valueOf(RAIL_DIRECTION.getState(this).name());
     }
 

@@ -37,10 +37,10 @@ public class PacketPlayerlist extends Packet {
                 buffer.writeString( entry.xboxId );
 
                 // Player device UUID
-                buffer.writeString( entry.deviceInfo.getDeviceId() );
+                buffer.writeString( entry.deviceInfo.deviceId() );
 
                 // Player device ID
-                buffer.writeLInt( entry.deviceInfo.getOs().getId() );
+                buffer.writeLInt( entry.deviceInfo.OS().id() );
 
                 // Write skin
                 writeSerializedSkin( (io.gomint.server.player.PlayerSkin) entry.skin, buffer );
@@ -94,8 +94,8 @@ public class PacketPlayerlist extends Packet {
         private String xboxId = "";
         private PlayerSkin skin;
 
-        public Entry( EntityHuman human ) {
-            this( human.getUUID(), human.getEntityId(), human.getPlayerListName(), human.getDeviceInfo() , human.getXboxID(), human.getSkin() );
+        public Entry( EntityHuman<?> human ) {
+            this( human.uuid(), human.id(), human.playerListName(), human.deviceInfo() , human.xboxID(), human.skin() );
         }
 
         public Entry(UUID uuid, long entityId, String playerListName, DeviceInfo deviceInfo, String xboxID, PlayerSkin skin) {

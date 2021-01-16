@@ -15,10 +15,10 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:chemistry_table", id = 238 )
-public class ItemChemistryTable extends ItemStack implements io.gomint.inventory.item.ItemChemistryTable {
+public class ItemChemistryTable extends ItemStack< io.gomint.inventory.item.ItemChemistryTable> implements io.gomint.inventory.item.ItemChemistryTable {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.CHEMISTRY_TABLE;
     }
 

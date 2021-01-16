@@ -19,14 +19,14 @@ import java.util.UUID;
  * @version 1.0
  * @stability 3
  */
-public interface EntityHuman extends EntityCreature {
+public interface EntityHuman<E> extends EntityCreature<E> {
 
     /**
      * Create a new entity human with no config
      *
      * @return empty, fresh human
      */
-    static EntityHuman create() {
+    static EntityHuman<?> create() {
         return GoMint.instance().createEntity( EntityHuman.class );
     }
 
@@ -37,7 +37,7 @@ public interface EntityHuman extends EntityCreature {
      *
      * @return The name player's name
      */
-    String getName();
+    String name();
 
     /**
      * Gets the player's UUID. It has yet to be researched how unique this
@@ -45,146 +45,169 @@ public interface EntityHuman extends EntityCreature {
      *
      * @return The player's UUID.
      */
-    UUID getUUID();
+    UUID uuid();
 
     /**
      * Get the skin of a player. This is readonly access currently since we figure out how to change the skin.
      *
      * @return skin which the client has sent on login
      */
-    PlayerSkin getSkin();
+    PlayerSkin skin();
 
     /**
      * Set the skin of this human
      *
      * @param skin which should be set
+     * @return entity for chaining
      */
-    void setSkin( PlayerSkin skin );
+    E skin(PlayerSkin skin );
 
     /**
      * Get the name which is listed in the tablist (displayName)
      *
      * @return display name
      */
-    String getDisplayName();
+    String displayName();
 
     /**
      * Set a new display name
      *
      * @param displayName which should be used
+     * @return entity for chaining
      */
-    void setDisplayName( String displayName );
+    E displayName(String displayName );
 
     /**
      * Get the unique XBOX live id. Is empty string if not in xbox live mode
      *
      * @return xbox live id or empty string
      */
-    String getXboxID();
+    String xboxID();
 
     /**
      * Get the players inventory
      *
      * @return players inventory
      */
-    PlayerInventory getInventory();
+    PlayerInventory inventory();
 
     /**
      * Set hunger level
      *
      * @param amount of hunger
+     * @return entity for chaining
      */
-    void setHunger( float amount );
+    E hunger(float amount );
 
     /**
      * Get the hunger level
      *
      * @return hunger level
      */
-    float getHunger();
+    float hunger();
 
     /**
      * Set saturation level
      *
      * @param amount of saturation
+     * @return entity for chaining
      */
-    void setSaturation( float amount );
+    E saturation(float amount );
 
     /**
      * Get the saturation level
      *
      * @return saturation level
      */
-    float getSaturation();
+    float saturation();
 
     /**
      * Set player sneaking or not
      *
      * @param value true for sneaking, false for not sneaking
+     * @return entity for chaining
      */
-    void setSneaking( boolean value );
+    E sneaking(boolean value );
 
     /**
      * Is this player sneaking?
      *
      * @return true when sneaking, false when not
      */
-    boolean isSneaking();
+    boolean sneaking();
 
     /**
      * Set player sprinting or not
      *
      * @param value true for sprinting, false for not sprinting
+     * @return entity for chaining
      */
-    void setSprinting( boolean value );
+    E sprinting(boolean value );
 
     /**
      * Check if entity is sprinting
      *
      * @return true when sprinting, false when not
      */
-    boolean isSprinting();
+    boolean sprinting();
 
     /**
      * Set player swimming or not
      *
      * @param value true for swimming, false for not swimming
+     * @return entity for chaining
      */
-    void setSwimming( boolean value );
+    E swimming(boolean value );
 
     /**
      * Check if entity is swimming
      *
      * @return true when swimming, false when not
      */
-    boolean isSwimming();
+    boolean swimming();
 
     /**
      * Set player spinning or not
      *
      * @param value true for spinning, false for not spinning
+     * @return entity for chaining
      */
-    void setSpinning( boolean value );
+    E spinning(boolean value );
 
     /**
      * Check if entity is spinning
      *
      * @return true when spinning, false when not
      */
-    boolean isSpinning();
+    boolean spinning();
 
     /**
      * Get the current player list name
      *
      * @return entry of the player list
      */
-    String getPlayerListName();
+    String playerListName();
 
     /**
      * Set a new player list name. This auto updates for players.
      *
      * @param newPlayerListName new player list name
+     * @return entity for chaining
      */
-    void setPlayerListName( String newPlayerListName );
+    E playerListName(String newPlayerListName );
+
+    /**
+     * Get the exhaustion level
+     *
+     * @return exhaustion level
+     */
+    float exhaustion();
+
+    /**
+     * Set exhaustion level
+     *
+     * @param amount of exhaustion
+     */
+    E exhaustion(float amount);
 
 }

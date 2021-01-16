@@ -15,10 +15,10 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:jungle_standing_sign", id = -188 )
-public class ItemJungleStandingSign extends ItemStack implements io.gomint.inventory.item.ItemJungleStandingSign {
+public class ItemJungleStandingSign extends ItemStack< io.gomint.inventory.item.ItemJungleStandingSign> implements io.gomint.inventory.item.ItemJungleStandingSign {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.JUNGLE_STANDING_SIGN;
     }
 

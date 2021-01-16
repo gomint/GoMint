@@ -19,25 +19,27 @@ import io.gomint.world.block.data.LogType;
  * @author geNAZt
  * @version 1.0
  */
-public class BirchTree extends Tree {
+public class BirchTree extends Tree<BirchTree> {
 
     public BirchTree() {
         this.leafBlock = GoMint.instance().createBlock( BlockLeaves.class );
-        this.leafBlock.setLeaveType( LogType.BIRCH );
+        this.leafBlock.type( LogType.BIRCH );
 
         this.trunkBlock = GoMint.instance().createBlock( BlockLog.class );
-        this.trunkBlock.setLogType( LogType.BIRCH );
-        this.trunkBlock.setStripped(false);
-        this.trunkBlock.setBarkOnAllSides(false);
-        this.trunkBlock.setAxis(Axis.Y);
+        this.trunkBlock.type( LogType.BIRCH );
+        this.trunkBlock.stripped(false);
+        this.trunkBlock.barkOnAllSides(false);
+        this.trunkBlock.axis(Axis.Y);
     }
 
     @Override
-    public void grow( World world, int x, int y, int z, FastRandom random ) {
+    public BirchTree grow( World world, int x, int y, int z, FastRandom random ) {
         this.treeHeight = random.nextInt( 3 ) + 4;
         if ( this.canPlaceObject( world, x, y, z, random ) ) {
             this.placeObject( world, x, y, z, random );
         }
+
+        return this;
     }
 
 }

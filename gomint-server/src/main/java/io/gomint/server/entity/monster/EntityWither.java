@@ -10,7 +10,7 @@ import io.gomint.server.world.WorldAdapter;
 import java.util.Set;
 
 @RegisterInfo(sId = "minecraft:wither")
-public class EntityWither extends EntityLiving implements io.gomint.entity.monster.EntityWither {
+public class EntityWither extends EntityLiving<io.gomint.entity.monster.EntityWither> implements io.gomint.entity.monster.EntityWither {
 
     /**
      * Constructs a new EntityLiving
@@ -31,10 +31,10 @@ public class EntityWither extends EntityLiving implements io.gomint.entity.monst
     }
 
     private void initEntity() {
-        this.setSize(0.9f, 3.5f);
-        this.addAttribute(Attribute.HEALTH);
-        this.setMaxHealth(600);
-        this.setHealth(600);
+        this.size(0.9f, 3.5f);
+        this.attribute(Attribute.HEALTH);
+        this.maxHealth(600);
+        this.health(600);
     }
 
     @Override
@@ -43,7 +43,7 @@ public class EntityWither extends EntityLiving implements io.gomint.entity.monst
     }
 
     @Override
-    public Set<String> getTags() {
+    public Set<String> tags() {
         return EntityTags.RANGED_HOSTILE_MOB;
     }
 

@@ -7,6 +7,7 @@
 
 package io.gomint.server.entity;
 
+import io.gomint.entity.Entity;
 import io.gomint.server.inventory.ArmorInventory;
 import io.gomint.server.world.WorldAdapter;
 import io.gomint.taglib.NBTTagCompound;
@@ -15,7 +16,7 @@ import io.gomint.taglib.NBTTagCompound;
  * @author geNAZt
  * @version 1.0
  */
-public abstract class EntityCreature extends EntityLiving implements io.gomint.entity.EntityCreature {
+public abstract class EntityCreature<E extends Entity<E>> extends EntityLiving<E> implements io.gomint.entity.EntityCreature<E> {
 
     /**
      * Armor inventory for all creatures
@@ -35,7 +36,7 @@ public abstract class EntityCreature extends EntityLiving implements io.gomint.e
     }
 
     @Override
-    public ArmorInventory getArmorInventory() {
+    public ArmorInventory armorInventory() {
         return this.armorInventory;
     }
 

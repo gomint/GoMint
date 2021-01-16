@@ -7,6 +7,7 @@
 
 package io.gomint.server.entity;
 
+import io.gomint.entity.Entity;
 import io.gomint.server.entity.metadata.MetadataContainer;
 import io.gomint.server.world.WorldAdapter;
 
@@ -14,7 +15,7 @@ import io.gomint.server.world.WorldAdapter;
  * @author KCodeYT
  * @version 1.0
  */
-public abstract class EntityAgeable extends EntityLiving implements io.gomint.entity.EntityAgeable {
+public abstract class EntityAgeable<E extends Entity<E>> extends EntityLiving<E> implements io.gomint.entity.EntityAgeable<E> {
 
     /**
      * Constructs a new EntityLiving
@@ -27,13 +28,14 @@ public abstract class EntityAgeable extends EntityLiving implements io.gomint.en
     }
 
     @Override
-    public boolean isBaby() {
+    public boolean baby() {
         return this.metadataContainer.getDataFlag( MetadataContainer.DATA_INDEX, EntityFlag.BABY );
     }
 
     @Override
-    public void setBaby( boolean value ) {
+    public E baby(boolean value ) {
         this.metadataContainer.setDataFlag( MetadataContainer.DATA_INDEX, EntityFlag.BABY, value );
+        return (E) this;
     }
 
 }

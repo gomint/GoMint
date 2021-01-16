@@ -15,10 +15,10 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:spruce_wall_sign", id = -182 )
-public class ItemSpruceWallSign extends ItemStack implements io.gomint.inventory.item.ItemSpruceWallSign {
+public class ItemSpruceWallSign extends ItemStack< io.gomint.inventory.item.ItemSpruceWallSign> implements io.gomint.inventory.item.ItemSpruceWallSign {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.SPRUCE_WALL_SIGN;
     }
 

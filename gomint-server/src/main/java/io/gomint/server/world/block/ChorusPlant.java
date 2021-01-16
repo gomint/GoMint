@@ -20,12 +20,12 @@ public class ChorusPlant extends Block implements BlockChorusPlant {
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 600;
     }
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
@@ -35,7 +35,7 @@ public class ChorusPlant extends Block implements BlockChorusPlant {
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return ToolPresets.AXE;
     }
 
@@ -44,7 +44,7 @@ public class ChorusPlant extends Block implements BlockChorusPlant {
         return true;
     }
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.CHORUS_PLANT;
     }
 

@@ -10,6 +10,7 @@ package io.gomint.server.world.block;
 import io.gomint.server.registry.RegisterInfo;
 import io.gomint.world.block.BlockElement;
 import io.gomint.world.block.BlockType;
+import io.gomint.world.block.data.ElementType;
 
 @RegisterInfo(sId = "minecraft:element_118")
 @RegisterInfo(sId = "minecraft:element_112")
@@ -135,7 +136,7 @@ public class Element extends Block implements BlockElement {
     private static final int BLOCK_PREFIX_LENGTH = 18; // minecraft:element_
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 0;
     }
 
@@ -150,19 +151,20 @@ public class Element extends Block implements BlockElement {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.ELEMENT;
     }
 
     @Override
-    public Type getType() {
+    public ElementType type() {
         int ord = Integer.parseInt(this.getBlockId().substring(BLOCK_PREFIX_LENGTH));
-        return Type.values()[ord];
+        return ElementType.values()[ord];
     }
 
     @Override
-    public void setType(Type type) {
+    public BlockElement type(ElementType type) {
         this.setBlockId("minecraft:element_" + type.ordinal());
+        return this;
     }
 
 }

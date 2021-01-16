@@ -8,10 +8,10 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo(id = -198, sId = "minecraft:smoker")
-public class ItemSmoker extends ItemStack implements io.gomint.inventory.item.ItemSmoker {
+public class ItemSmoker extends ItemStack< io.gomint.inventory.item.ItemSmoker> implements io.gomint.inventory.item.ItemSmoker {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.SMOKER;
     }
 

@@ -14,12 +14,13 @@ import io.gomint.GoMint;
  * @version 1.0
  * @stability 1
  */
-public interface ItemJungleTrapdoor extends ItemStack, ItemBurnable {
+public interface ItemJungleTrapdoor extends ItemStack<ItemJungleTrapdoor>, ItemBurnable {
 
     /**
      * Create a new item stack with given class and amount
      *
      * @param amount which is used for the creation
+	 * @return freshly generated item
      */
     static ItemJungleTrapdoor create( int amount ) {
         return GoMint.instance().createItemStack( ItemJungleTrapdoor.class, amount );

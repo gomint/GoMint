@@ -33,9 +33,11 @@ public class PathfindingEngine {
 
     // The transform that holds the current position the object is located at:
     private final Transformable transform;
+
     // The goal point the pathfinding engine is supposed to navigate to:
     private Location goal;
     private boolean dirty;
+
     // The path to the goal if cached:
     private List<BlockPosition> cachedPath;
 
@@ -56,7 +58,7 @@ public class PathfindingEngine {
      *
      * @return The transform attached to the pathfinding engine
      */
-    public Transformable getTransform() {
+    public Transformable transform() {
         return this.transform;
     }
 
@@ -65,7 +67,7 @@ public class PathfindingEngine {
      *
      * @return The goal the pathfinding engine is trying to navigate to
      */
-    public Location getGoal() {
+    public Location goal() {
         return this.goal;
     }
 
@@ -74,9 +76,10 @@ public class PathfindingEngine {
      *
      * @param goal The goal point to reach
      */
-    public void setGoal(Location goal) {
+    public PathfindingEngine goal(Location goal) {
         this.goal = goal;
         this.dirty = true;
+        return this;
     }
 
     /**
@@ -91,7 +94,7 @@ public class PathfindingEngine {
      *
      * @return The current path proposed by the pathfinding engine
      */
-    public List<BlockPosition> getPath() {
+    public List<BlockPosition> path() {
         if (this.dirty) {
             this.cachedPath = this.calculateShortestPath();
         }
@@ -116,13 +119,13 @@ public class PathfindingEngine {
             return null;
         }
 
-        final BlockPosition goalTriple = new BlockPosition((int) this.goal.getX(), (int) this.goal.getY(), (int) this.goal.getZ());
+        final BlockPosition goalTriple = new BlockPosition((int) this.goal.x(), (int) this.goal.y(), (int) this.goal.z());
 
         LongSet closedSet = new LongOpenHashSet();
         Map<BlockPosition, AStarNode> discoveredMap = new HashMap<>();
         PriorityQueue<AStarNode> discoveredNodes = new PriorityQueue<>();
 
-        AStarNode startNode = new AStarNode(new BlockPosition((int) this.transform.getPositionX(), (int) this.transform.getPositionY(), (int) this.transform.getPositionZ()));
+        AStarNode startNode = new AStarNode(new BlockPosition((int) this.transform.positionX(), (int) this.transform.positionY(), (int) this.transform.positionZ()));
         startNode.setG(0.0F);
         startNode.setF(this.estimateDistance(startNode.getBlockPosition(), this.goal));
         startNode.setK(1);
@@ -159,25 +162,25 @@ public class PathfindingEngine {
             closedSet.add(CoordinateUtils.toLong(node.getBlockPosition()));
 
             // Examine neighbour nodes:
-            for (int i = node.getBlockPosition().getX() - 1; i <= node.getBlockPosition().getX() + 1; ++i) {
+            for (int i = node.getBlockPosition().x() - 1; i <= node.getBlockPosition().x() + 1; ++i) {
                 out:
-                for (int k = node.getBlockPosition().getZ() - 1; k <= node.getBlockPosition().getZ() + 1; ++k) {
-                    if (closedSet.contains(CoordinateUtils.toLong(i, node.getBlockPosition().getY(), k))) {
+                for (int k = node.getBlockPosition().z() - 1; k <= node.getBlockPosition().z() + 1; ++k) {
+                    if (closedSet.contains(CoordinateUtils.toLong(i, node.getBlockPosition().y(), k))) {
                         continue;
                     }
 
-                    BlockPosition neighbourTriple = new BlockPosition(i, node.getBlockPosition().getY(), k);
+                    BlockPosition neighbourTriple = new BlockPosition(i, node.getBlockPosition().y(), k);
 
                     // Got to make sure this neighbour is even in reach from this block
                     // Check if the block is walkable or jumpable
-                    Block block = this.getGoal().getWorld().getBlockAt(neighbourTriple);
+                    Block block = this.goal().world().blockAt(neighbourTriple);
                     if (!block.canPassThrough()) {
-                        List<AxisAlignedBB> bbs = block.getBoundingBox();
+                        List<AxisAlignedBB> bbs = block.boundingBoxes();
                         if (bbs != null) {
                             for (AxisAlignedBB bb : bbs) {
-                                double diff = bb.getMaxY() - neighbourTriple.getY();
+                                double diff = bb.maxY() - neighbourTriple.y();
                                 if (diff > 0 && diff <= 0.5F) {
-                                    neighbourTriple = new BlockPosition(neighbourTriple.getX(), neighbourTriple.getY() + 1, neighbourTriple.getZ());
+                                    neighbourTriple = new BlockPosition(neighbourTriple.x(), neighbourTriple.y() + 1, neighbourTriple.z());
                                     break;
                                 } else {
                                     continue out;
@@ -187,9 +190,9 @@ public class PathfindingEngine {
                     }
 
                     // We need to account for gravity here
-                    Block blockBeneath = this.getGoal().getWorld().getBlockAt(neighbourTriple.getX(), neighbourTriple.getY() - 1, neighbourTriple.getZ());
+                    Block blockBeneath = this.goal().world().blockAt(neighbourTriple.x(), neighbourTriple.y() - 1, neighbourTriple.z());
                     if (blockBeneath.canPassThrough()) {
-                        neighbourTriple = new BlockPosition(neighbourTriple.getX(), neighbourTriple.getY() - 1, neighbourTriple.getZ());
+                        neighbourTriple = new BlockPosition(neighbourTriple.x(), neighbourTriple.y() - 1, neighbourTriple.z());
                     }
 
                     // This block is a valid neighbour:
@@ -235,7 +238,7 @@ public class PathfindingEngine {
 
                     LOGGER.debug("Path selected:");
                     for (BlockPosition intTriple : path) {
-                        Block block = this.getGoal().getWorld().getBlockAt(intTriple.getX(), intTriple.getY(), intTriple.getZ());
+                        Block block = this.goal().world().blockAt(intTriple.x(), intTriple.y(), intTriple.z());
                         LOGGER.debug("> " + intTriple + " > " + block.getClass());
                     }
                 }
@@ -248,11 +251,11 @@ public class PathfindingEngine {
     }
 
     private double gridDistance(BlockPosition a, BlockPosition b) {
-        return (Math.abs(b.getX() - a.getX()) + Math.abs(b.getZ() - a.getZ()));
+        return (Math.abs(b.x() - a.x()) + Math.abs(b.z() - a.z()));
     }
 
     public double estimateDistance(BlockPosition a, Vector b) {
-        return (Math.abs(b.getX() - a.getX()) + Math.abs(b.getY() - a.getY()) + Math.abs(b.getZ() - a.getZ()));
+        return (Math.abs(b.x() - a.x()) + Math.abs(b.y() - a.y()) + Math.abs(b.z() - a.z()));
     }
 
 }

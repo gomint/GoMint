@@ -12,18 +12,20 @@ package io.gomint.world.block;
  * @version 1.0
  * @stability 3
  */
-public interface BlockTrapdoor extends BlockDirection {
+public interface BlockTrapdoor<B> extends BlockDirection<B> {
 
     /**
      * Is the trapdoor open or closed?
      *
      * @return true when the trapdoor is open, false when not
      */
-    boolean isOpen();
+    boolean open();
 
     /**
-     * Open or close a trapdoor. The target state depends on the {@link #isOpen()} state
+     * Open or close a trapdoor. The target state depends on the {@link #open()} state
+     *
+     * @return block for chaining
      */
-    void toggle();
+    B toggle();
 
 }

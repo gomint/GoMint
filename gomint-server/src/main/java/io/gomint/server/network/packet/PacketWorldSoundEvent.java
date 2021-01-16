@@ -25,9 +25,9 @@ public class PacketWorldSoundEvent extends Packet {
     @Override
     public void serialize( PacketBuffer buffer, int protocolID ) {
         buffer.writeUnsignedVarInt( this.type.getSoundId() );
-        buffer.writeLFloat( this.position.getX() );
-        buffer.writeLFloat( this.position.getY() );
-        buffer.writeLFloat( this.position.getZ() );
+        buffer.writeLFloat( this.position.x() );
+        buffer.writeLFloat( this.position.y() );
+        buffer.writeLFloat( this.position.z() );
         buffer.writeSignedVarInt( this.extraData );
         buffer.writeString( this.entityId );
         buffer.writeBoolean( this.isBabyMob );

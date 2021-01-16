@@ -7,7 +7,7 @@ import io.gomint.enchant.Enchantment;
  * @version 1.0
  * @stability 3
  */
-public interface ItemStack {
+public interface ItemStack<I> {
 
     /**
      * Get the type of this item stack. This should only be used for fast lookup in switch tables. When you need
@@ -16,30 +16,30 @@ public interface ItemStack {
      *
      * @return type of the item
      */
-    ItemType getItemType();
+    ItemType itemType();
 
     /**
      * Get the amount of items in this stack
      *
      * @return amount of items in stack
      */
-    byte getAmount();
+    byte amount();
 
     /**
      * Get maximum amount which should be possible to store in this stack
      *
      * @return maximum amount of items possible
      */
-    byte getMaximumAmount();
+    byte maximumAmount();
 
     /**
-     * Set the amount of items in this stack. This is silently capped to {@link #getMaximumAmount()}, also this
+     * Set the amount of items in this stack. This is silently capped to {@link #maximumAmount()}, also this
      * item stack returns air when amount is lower or equals 0
      *
      * @param amount of items which should be in this stack
      * @return the itemstack instance for further manipulation
      */
-    ItemStack setAmount(int amount);
+    I amount(int amount);
 
     /**
      * Set a custom name for this item stack
@@ -47,14 +47,14 @@ public interface ItemStack {
      * @param name of this item stack
      * @return the itemstack instance for further manipulation
      */
-    ItemStack setCustomName(String name);
+    I customName(String name);
 
     /**
      * Get the custom name of this item
      *
      * @return custom name or null when there is none
      */
-    String getCustomName();
+    String customName();
 
     /**
      * Set the lore of this item stack
@@ -62,21 +62,21 @@ public interface ItemStack {
      * @param lore which should be used in this item stack
      * @return the itemstack instance for further manipulation
      */
-    ItemStack setLore(String... lore);
+    I lore(String... lore);
 
     /**
      * Get the lore of this item stack
      *
      * @return lore of this item stack or null when there is none
      */
-    String[] getLore();
+    String[] lore();
 
     /**
      * Clone this item stack
      *
      * @return cloned item stack
      */
-    ItemStack clone();
+    ItemStack<I> clone();
 
     /**
      * Add enchantment based on class and level
@@ -85,7 +85,7 @@ public interface ItemStack {
      * @param level of the enchantment, starting by one
      * @return the item stack instance for further manipulation
      */
-    ItemStack addEnchantment(Class<? extends Enchantment> clazz, int level);
+    I enchant(Class<? extends Enchantment> clazz, int level);
 
     /**
      * Get the enchantment or null
@@ -94,7 +94,7 @@ public interface ItemStack {
      * @param <T>   type of enchantment object
      * @return enchantment object or null
      */
-    <T extends Enchantment> T getEnchantment(Class<? extends Enchantment> clazz);
+    <T extends Enchantment> T enchantment(Class<? extends Enchantment> clazz);
 
     /**
      * Remove a enchantment from this item stack
@@ -102,20 +102,20 @@ public interface ItemStack {
      * @param clazz of the enchantment
      * @return the itemstack instance for further manipulation
      */
-    ItemStack removeEnchantment(Class<? extends Enchantment> clazz);
+    I removeEnchantment(Class<? extends Enchantment> clazz);
 
     /**
      * Get the damage done to an item. This will return 0 for all non damageable items
      *
      * @return 0 is not damaged, 1 is broken
      */
-    float getDamage();
+    float damage();
 
     /**
      * Set the damage done to an item. This is a no-op to non damageable items
      *
      * @param damage 0 is not damage, 1 is broken
      */
-    void setDamage(float damage);
+    I damage(float damage);
 
 }

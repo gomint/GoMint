@@ -8,7 +8,7 @@ import io.gomint.entity.EntityAgeable;
  * @version 1.0
  * @stability 3
  */
-public interface EntityZombieVillager extends EntityAgeable {
+public interface EntityZombieVillager extends EntityAgeable<EntityZombieVillager> {
 
     /**
      * Create a new entity zombie villager with no config

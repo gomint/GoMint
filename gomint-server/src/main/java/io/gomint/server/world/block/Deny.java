@@ -17,7 +17,7 @@ public class Deny extends Block implements BlockDeny {
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return -1;
     }
 
@@ -32,7 +32,7 @@ public class Deny extends Block implements BlockDeny {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.DENY;
     }
 

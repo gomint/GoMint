@@ -27,7 +27,7 @@ public class CommandValidator extends EnumValidator {
      * {@inheritDoc}
      */
     @Override
-    public Object validate( String input, CommandSender commandSender ) {
+    public Object validate(String input, CommandSender<?> commandSender ) {
         return input.equals( values().get( 0 ) ) ? true : null;
     }
 
@@ -47,7 +47,7 @@ public class CommandValidator extends EnumValidator {
      * {@inheritDoc}
      */
     @Override
-    public ParamType getType() {
+    public ParamType type() {
         return ParamType.COMMAND;
     }
 
@@ -55,7 +55,7 @@ public class CommandValidator extends EnumValidator {
      * {@inheritDoc}
      */
     @Override
-    public String getHelpText() {
+    public String helpText() {
         return "commandName";
     }
 

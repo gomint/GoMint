@@ -8,7 +8,7 @@ import io.gomint.entity.EntityLiving;
  * @version 1.0
  * @stability 3
  */
-public interface EntityWitch extends EntityLiving {
+public interface EntityWitch extends EntityLiving<EntityWitch> {
 
     /**
      * Create a new entity witch with no config

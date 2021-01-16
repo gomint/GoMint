@@ -10,10 +10,10 @@ import io.gomint.taglib.NBTTagCompound;
  * @version 1.0
  */
 @RegisterInfo(sId = "minecraft:gold_ore", id = 14)
-public class ItemGoldOre extends ItemStack implements io.gomint.inventory.item.ItemGoldOre {
+public class ItemGoldOre extends ItemStack< io.gomint.inventory.item.ItemGoldOre> implements io.gomint.inventory.item.ItemGoldOre {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.GOLD_ORE;
     }
 

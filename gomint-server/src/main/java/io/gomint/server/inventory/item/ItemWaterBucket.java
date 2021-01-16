@@ -15,10 +15,10 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo(sId = "minecraft:water_bucket", id = 362)
-public class ItemWaterBucket extends ItemStack implements io.gomint.inventory.item.ItemWaterBucket {
+public class ItemWaterBucket extends ItemStack< io.gomint.inventory.item.ItemWaterBucket> implements io.gomint.inventory.item.ItemWaterBucket {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.WATER_BUCKET;
     }
 

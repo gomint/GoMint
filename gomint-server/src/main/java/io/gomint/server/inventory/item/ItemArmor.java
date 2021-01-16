@@ -7,7 +7,7 @@ import io.gomint.server.inventory.item.annotation.CanBeDamaged;
  * @version 1.0
  */
 @CanBeDamaged
-public abstract class ItemArmor extends ItemStack {
+public abstract class ItemArmor<I extends io.gomint.inventory.item.ItemStack<I>> extends ItemStack<I> {
 
     public abstract float getReductionValue();
 
@@ -17,13 +17,13 @@ public abstract class ItemArmor extends ItemStack {
      * @param oldItem old armor piece
      * @return true if this is better, false if not
      */
-    protected boolean isBetter( ItemStack oldItem ) {
+    protected boolean isBetter( ItemStack<?> oldItem ) {
         // Armor is better than no armor!
         if ( !( oldItem instanceof ItemArmor ) ) {
             return true;
         }
 
-        return ( (ItemArmor) oldItem ).getReductionValue() < this.getReductionValue();
+        return ( (ItemArmor<?>) oldItem ).getReductionValue() < this.getReductionValue();
     }
 
 }

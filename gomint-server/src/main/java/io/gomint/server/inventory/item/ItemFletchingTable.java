@@ -8,10 +8,10 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( id = -201, sId = "minecraft:fletching_table")
-public class ItemFletchingTable extends ItemStack implements io.gomint.inventory.item.ItemFletchingTable {
+public class ItemFletchingTable extends ItemStack< io.gomint.inventory.item.ItemFletchingTable> implements io.gomint.inventory.item.ItemFletchingTable {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.FLETCHING_TABLE;
     }
 

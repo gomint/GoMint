@@ -18,12 +18,12 @@ public class RedstoneLampActive extends Block implements BlockRedstoneLampActive
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 450;
     }
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
@@ -33,7 +33,7 @@ public class RedstoneLampActive extends Block implements BlockRedstoneLampActive
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.REDSTONE_LAMP_ACTIVE;
     }
 

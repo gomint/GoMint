@@ -15,10 +15,10 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:warped_pressure_plate", id = -263 )
-public class ItemWarpedPressurePlate extends ItemStack implements io.gomint.inventory.item.ItemWarpedPressurePlate {
+public class ItemWarpedPressurePlate extends ItemStack< io.gomint.inventory.item.ItemWarpedPressurePlate> implements io.gomint.inventory.item.ItemWarpedPressurePlate {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.WARPED_PRESSURE_PLATE;
     }
 

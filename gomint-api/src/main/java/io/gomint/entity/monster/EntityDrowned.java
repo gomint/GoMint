@@ -8,7 +8,7 @@ import io.gomint.entity.EntityAgeable;
  * @version 1.0
  * @stability 3
  */
-public interface EntityDrowned extends EntityAgeable {
+public interface EntityDrowned extends EntityAgeable<EntityDrowned> {
 
     /**
      * Create a new entity drowned with no config

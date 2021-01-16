@@ -15,10 +15,10 @@ import io.gomint.taglib.NBTTagCompound;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:magma", id = 213 )
-public class ItemMagma extends ItemStack implements io.gomint.inventory.item.ItemMagmaCream {
+public class ItemMagma extends ItemStack< io.gomint.inventory.item.ItemMagmaCream> implements io.gomint.inventory.item.ItemMagmaCream {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.MAGMA;
     }
 

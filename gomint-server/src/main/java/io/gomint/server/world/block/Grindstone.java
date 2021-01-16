@@ -19,7 +19,7 @@ public class Grindstone extends Block {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.GRINDSTONE;
     }
 

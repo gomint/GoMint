@@ -10,20 +10,22 @@ package io.gomint.server.inventory.item;
 import io.gomint.inventory.item.ItemType;
 import io.gomint.server.registry.RegisterInfo;
 
+import java.time.Duration;
+
 /**
  * @author geNAZt
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:bamboo", id = -163 )
-public class ItemBamboo extends ItemStack implements io.gomint.inventory.item.ItemBamboo {
+public class ItemBamboo extends ItemStack< io.gomint.inventory.item.ItemBamboo> implements io.gomint.inventory.item.ItemBamboo {
 
     @Override
-    public long getBurnTime() {
-        return 2500;
+    public Duration burnTime() {
+        return Duration.ofMillis(2500);
     }
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.BAMBOO;
     }
 

@@ -15,10 +15,10 @@ import io.gomint.server.registry.RegisterInfo;
 @RegisterInfo(sId = "minecraft:item.dark_oak_door", id = 197)
 @RegisterInfo(sId = "minecraft:item.jungle_door", id = 195)
 @RegisterInfo(sId = "minecraft:item.spruce_door", id = 193)
-public class ItemWoodenDoorBlock extends ItemStack {
+public class ItemWoodenDoorBlock extends ItemStack<ItemWoodenDoorBlock> {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.WOODEN_DOOR;
     }
 

@@ -11,27 +11,28 @@ import io.gomint.world.block.BlockSand;
  * @version 1.0
  */
 @RegisterInfo(sId = "minecraft:sand", id = 12)
-public class ItemSand extends ItemStack implements io.gomint.inventory.item.ItemSand {
+public class ItemSand extends ItemStack< io.gomint.inventory.item.ItemSand> implements io.gomint.inventory.item.ItemSand {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.SAND;
     }
 
     @Override
-    public void setType(SandType type) {
-        this.setData((short) type.ordinal());
+    public ItemSand type(SandType type) {
+        this.data((short) type.ordinal());
+        return this;
     }
 
     @Override
-    public SandType getType() {
-        return SandType.values()[this.getData()];
+    public SandType type() {
+        return SandType.values()[this.data()];
     }
 
     @Override
-    public Block getBlock() {
-        BlockSand block = (BlockSand) super.getBlock();
-        block.setType(this.getType());
+    public Block block() {
+        BlockSand block = (BlockSand) super.block();
+        block.type(this.type());
         return block;
     }
 

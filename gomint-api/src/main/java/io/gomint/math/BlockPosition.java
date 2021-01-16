@@ -23,28 +23,31 @@ public class BlockPosition implements Cloneable {
         this.z = z;
     }
 
-    public int getX() {
+    public int x() {
         return x;
     }
 
-    public void setX(int x) {
+    public BlockPosition x(int x) {
         this.x = x;
+        return this;
     }
 
-    public int getY() {
+    public int y() {
         return y;
     }
 
-    public void setY(int y) {
+    public BlockPosition y(int y) {
         this.y = y;
+        return this;
     }
 
-    public int getZ() {
+    public int z() {
         return z;
     }
 
-    public void setZ(int z) {
+    public BlockPosition z(int z) {
         this.z = z;
+        return this;
     }
 
     public Vector toVector() {

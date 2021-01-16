@@ -8,10 +8,10 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:dried_kelp", id = 464 )
-public class ItemDriedKelp extends ItemStack implements io.gomint.inventory.item.ItemDriedKelp {
+public class ItemDriedKelp extends ItemStack< io.gomint.inventory.item.ItemDriedKelp> implements io.gomint.inventory.item.ItemDriedKelp {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.DRIED_KELP;
     }
 

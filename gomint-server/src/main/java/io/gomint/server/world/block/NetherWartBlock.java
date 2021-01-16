@@ -29,7 +29,7 @@ public class NetherWartBlock extends Block implements BlockNetherWartBlock {
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 1500;
     }
 
@@ -39,7 +39,7 @@ public class NetherWartBlock extends Block implements BlockNetherWartBlock {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.NETHER_WART_BLOCK;
     }
 

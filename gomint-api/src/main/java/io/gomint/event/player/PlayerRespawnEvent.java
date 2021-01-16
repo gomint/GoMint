@@ -15,7 +15,7 @@ import io.gomint.math.Location;
  * @version 1.0
  * @stability 3
  */
-public class PlayerRespawnEvent extends CancellablePlayerEvent {
+public class PlayerRespawnEvent extends CancellablePlayerEvent<PlayerRespawnEvent> {
 
     private Location respawnLocation;
 
@@ -29,7 +29,7 @@ public class PlayerRespawnEvent extends CancellablePlayerEvent {
      *
      * @return location of respawn
      */
-    public Location getRespawnLocation() {
+    public Location respawnLocation() {
         return this.respawnLocation;
     }
 
@@ -38,8 +38,9 @@ public class PlayerRespawnEvent extends CancellablePlayerEvent {
      *
      * @param respawnLocation which should be used to this respawn
      */
-    public void setRespawnLocation( Location respawnLocation ) {
+    public PlayerRespawnEvent respawnLocation(Location respawnLocation ) {
         this.respawnLocation = respawnLocation;
+        return this;
     }
 
 }

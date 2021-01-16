@@ -24,15 +24,15 @@ import io.gomint.world.block.data.Facing;
  */
 public class InventoryComponent extends AbstractTileEntityComponent {
 
-    private final ContainerInventory inventory;
+    private final ContainerInventory<?> inventory;
 
-    public InventoryComponent(TileEntity entity, Items items, ContainerInventory inventory) {
+    public InventoryComponent(TileEntity entity, Items items, ContainerInventory<?> inventory) {
         super(entity, items);
         this.inventory = inventory;
     }
 
     @Override
-    public void interact(Entity entity, Facing face, Vector facePos, ItemStack item) {
+    public void interact(Entity<?> entity, Facing face, Vector facePos, ItemStack<?> item) {
         // Open the chest inventory for the entity
         if ( entity instanceof EntityPlayer) {
             ( (EntityPlayer) entity ).openInventory( this.inventory );

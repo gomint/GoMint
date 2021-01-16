@@ -33,7 +33,7 @@ public abstract class ChunkGenerator {
         this.context = context;
     }
 
-    public GeneratorContext getContext() {
+    public GeneratorContext context() {
         return context;
     }
 
@@ -53,7 +53,7 @@ public abstract class ChunkGenerator {
      *
      * @return block position of the spawn of this new world
      */
-    public abstract BlockPosition getSpawnPoint();
+    public abstract BlockPosition spawnPoint();
 
     /**
      * Populate (generate additional objects) for the given chunk

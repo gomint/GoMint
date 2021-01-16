@@ -22,12 +22,12 @@ public class Potato extends Growable implements BlockPotato {
     }
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
     @Override
-    public boolean isSolid() {
+    public boolean solid() {
         return false;
     }
 
@@ -37,25 +37,25 @@ public class Potato extends Growable implements BlockPotato {
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 0;
     }
 
     @Override
-    public List<ItemStack> getDrops(ItemStack itemInHand) {
+    public List<ItemStack<?>> drops(ItemStack<?> itemInHand) {
         if (GROWTH.maxed(this)) {
-            List<ItemStack> drops = new ArrayList<>() {{
-                add(world.getServer().getItems().create(392, (short) 0, (byte) (1 + SEED_RANDOMIZER.next().byteValue()), null)); // Potato
+            List<ItemStack<?>> drops = new ArrayList<>() {{
+                add(world.getServer().items().create(392, (short) 0, (byte) (1 + SEED_RANDOMIZER.next().byteValue()), null)); // Potato
             }};
 
             if (ThreadLocalRandom.current().nextDouble() > 0.98) {
-                drops.add(world.getServer().getItems().create(394, (short) 0, (byte) 1, null)); // Poison potato on top!
+                drops.add(world.getServer().items().create(394, (short) 0, (byte) 1, null)); // Poison potato on top!
             }
 
             return drops;
         } else {
             return new ArrayList<>() {{
-                add(world.getServer().getItems().create(392, (short) 0, (byte) 1, null)); // Potato
+                add(world.getServer().items().create(392, (short) 0, (byte) 1, null)); // Potato
             }};
         }
     }
@@ -66,7 +66,7 @@ public class Potato extends Growable implements BlockPotato {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.POTATO;
     }
 

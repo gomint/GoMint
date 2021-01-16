@@ -7,14 +7,14 @@
 
 package io.gomint.server.test.inventory.item;
 
+import io.gomint.inventory.item.ItemStack;
 import io.gomint.math.Location;
 import io.gomint.server.entity.EntityPlayer;
 import io.gomint.math.Vector;
-import io.gomint.server.inventory.item.ItemStack;
+
 import io.gomint.server.test.IntegrationTest;
 import io.gomint.server.util.ClassPath;
 import io.gomint.server.world.WorldAdapter;
-import io.gomint.world.World;
 import io.gomint.world.WorldType;
 import io.gomint.server.world.block.Block;
 import io.gomint.world.block.BlockAir;
@@ -46,24 +46,24 @@ public class PlacementTest extends IntegrationTest {
     @Test
     @Order(2)
     public void placeAll() throws IOException {
-        Block block = this.world.getBlockAt(50, 50, 50);
-        Block downBlock = block.getSide(Facing.DOWN);
+        Block block = this.world.blockAt(50, 50, 50);
+        Block downBlock = block.side(Facing.DOWN);
 
         EntityPlayer player = mock(EntityPlayer.class);
-        when(player.getWorld()).thenReturn(this.world);
-        when(player.getLocation()).thenReturn(new Location(this.world, 51, 50, 50, 10, 20));
+        when(player.world()).thenReturn(this.world);
+        when(player.location()).thenReturn(new Location(this.world, 51, 50, 50, 10, 20));
 
         ClassPath classPath = new ClassPath("io.gomint");
         classPath.getTopLevelClasses("io.gomint.inventory.item", classInfo -> {
             Class<? extends ItemStack> clazz = classInfo.load();
-            ItemStack stack = this.server.createItemStack(clazz, 1);
+            ItemStack<?> stack = this.server.createItemStack(clazz, 1);
             if (stack != null) {
-                block.setBlockType(BlockAir.class);
+                block.blockType(BlockAir.class);
 
                 System.out.println("Testing stack: " + stack.getClass().getName());
-                Block newBlock = (Block) stack.getBlock();
+                Block newBlock = (Block) ((io.gomint.server.inventory.item.ItemStack<?>) stack).block();
                 if (newBlock != null) {
-                    this.server.getBlocks().replaceWithItem(newBlock, player, downBlock, block, Facing.UP, stack, new Vector(0.5f, 0, 0.5f));
+                    this.server.blocks().replaceWithItem(newBlock, player, downBlock, block, Facing.UP, stack, new Vector(0.5f, 0, 0.5f));
                 }
             } else {
                 System.out.println("Class " + clazz.getName() + " did not generate a item");

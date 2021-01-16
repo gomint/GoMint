@@ -13,17 +13,17 @@ import io.gomint.world.block.data.Facing;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:experience_bottle", id = 384 )
-public class ItemExperienceBottle extends ItemStack implements io.gomint.inventory.item.ItemExperienceBottle {
+public class ItemExperienceBottle extends ItemStack< io.gomint.inventory.item.ItemExperienceBottle> implements io.gomint.inventory.item.ItemExperienceBottle {
 
     @Override
     public boolean interact(EntityPlayer entity, Facing face, Vector clickPosition, Block clickedBlock ) {
         if ( clickedBlock == null ) {
-            EntityExpBottle expBottle = new EntityExpBottle( entity, entity.getWorld() );
+            EntityExpBottle expBottle = new EntityExpBottle( entity, entity.world() );
             ProjectileLaunchEvent event = new ProjectileLaunchEvent( expBottle, ProjectileLaunchEvent.Cause.THROWING_EXP_BOTTLE );
-            entity.getWorld().getServer().getPluginManager().callEvent( event );
+            entity.world().getServer().pluginManager().callEvent( event );
 
-            if ( !event.isCancelled() ) {
-                entity.getWorld().spawnEntityAt( expBottle, expBottle.getPositionX(), expBottle.getPositionY(), expBottle.getPositionZ(), expBottle.getYaw(), expBottle.getPitch() );
+            if ( !event.cancelled() ) {
+                entity.world().spawnEntityAt( expBottle, expBottle.positionX(), expBottle.positionY(), expBottle.positionZ(), expBottle.yaw(), expBottle.pitch() );
                 this.afterPlacement();
             }
 
@@ -34,7 +34,7 @@ public class ItemExperienceBottle extends ItemStack implements io.gomint.invento
     }
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.EXPERIENCE_BOTTLE;
     }
 

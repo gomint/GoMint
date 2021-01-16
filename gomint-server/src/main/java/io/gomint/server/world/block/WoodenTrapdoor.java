@@ -17,7 +17,7 @@ import io.gomint.world.block.data.LogType;
 @RegisterInfo(sId = "minecraft:acacia_trapdoor")
 @RegisterInfo(sId = "minecraft:dark_oak_trapdoor")
 @RegisterInfo(sId = "minecraft:birch_trapdoor")
-public class WoodenTrapdoor extends Trapdoor implements BlockWoodenTrapdoor {
+public class WoodenTrapdoor extends Trapdoor<BlockWoodenTrapdoor> implements BlockWoodenTrapdoor {
 
     private enum LogTypeMagic {
         OAK("minecraft:trapdoor"),
@@ -36,12 +36,12 @@ public class WoodenTrapdoor extends Trapdoor implements BlockWoodenTrapdoor {
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 4500;
     }
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
@@ -51,7 +51,7 @@ public class WoodenTrapdoor extends Trapdoor implements BlockWoodenTrapdoor {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.TRAPDOOR;
     }
 
@@ -61,12 +61,12 @@ public class WoodenTrapdoor extends Trapdoor implements BlockWoodenTrapdoor {
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return ToolPresets.AXE;
     }
 
     @Override
-    public LogType getWoodType() {
+    public LogType type() {
         for (LogTypeMagic value : LogTypeMagic.values()) {
             if (value.blockId.equals(this.getBlockId())) {
                 return LogType.valueOf(value.name());
@@ -77,9 +77,10 @@ public class WoodenTrapdoor extends Trapdoor implements BlockWoodenTrapdoor {
     }
 
     @Override
-    public void setWoodType(LogType logType) {
+    public BlockWoodenTrapdoor type(LogType logType) {
         LogTypeMagic newState = LogTypeMagic.valueOf(logType.name());
         this.setBlockId(newState.blockId);
+        return this;
     }
 
 }

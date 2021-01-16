@@ -50,29 +50,31 @@ public class CoralFanHang extends Block implements BlockCoralFanHang {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.CORAL_FAN_HANG;
     }
 
     @Override
-    public Direction getDirection() {
+    public Direction direction() {
         return DIRECTION.getState(this);
     }
 
     @Override
-    public void setDirection(Direction direction) {
+    public BlockCoralFanHang direction(Direction direction) {
         DIRECTION.setState(this, direction);
+        return this;
     }
 
     @Override
-    public void setCoralType(CoralType type) {
+    public BlockCoralFanHang coralType(CoralType type) {
         CoralTypeMagic m = CoralTypeMagic.valueOf(type.name());
         this.setBlockId(m.id);
         TYPE.setState(this, m.type);
+        return this;
     }
 
     @Override
-    public CoralType getCoralType() {
+    public CoralType coralType() {
         boolean type = TYPE.getState(this);
         for (CoralTypeMagic value : CoralTypeMagic.values()) {
             if (value.type == type && value.id.equals(this.getBlockId())) {
@@ -84,13 +86,14 @@ public class CoralFanHang extends Block implements BlockCoralFanHang {
     }
 
     @Override
-    public boolean isDead() {
+    public boolean dead() {
         return DEAD.getState(this);
     }
 
     @Override
-    public void setDead(boolean dead) {
+    public BlockCoralFanHang dead(boolean dead) {
         DEAD.setState(this, dead);
+        return this;
     }
 
 }

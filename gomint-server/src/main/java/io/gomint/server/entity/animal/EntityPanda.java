@@ -26,7 +26,7 @@ import java.util.concurrent.ThreadLocalRandom;
  * @since 2021-01-12
  */
 @RegisterInfo(sId = "minecraft:panda")
-public class EntityPanda extends EntityAgeableAnimal implements io.gomint.entity.animal.EntityPanda {
+public class EntityPanda extends EntityAgeableAnimal<io.gomint.entity.animal.EntityPanda> implements io.gomint.entity.animal.EntityPanda {
 
     /**
      * Constructs a new EntityPanda
@@ -47,13 +47,13 @@ public class EntityPanda extends EntityAgeableAnimal implements io.gomint.entity
     }
 
     private void initEntity() {
-        this.addAttribute(Attribute.HEALTH);
-        this.setMaxHealth(20);
-        this.setHealth(20);
-        if (this.isBaby()) {
-            this.setSize(0.68f, 0.6f);
+        this.attribute(Attribute.HEALTH);
+        this.maxHealth(20);
+        this.health(20);
+        if (this.baby()) {
+            this.size(0.68f, 0.6f);
         } else {
-            this.setSize(1.7f, 1.5f);
+            this.size(1.7f, 1.5f);
         }
     }
 
@@ -61,25 +61,25 @@ public class EntityPanda extends EntityAgeableAnimal implements io.gomint.entity
     protected void kill() {
         super.kill();
 
-        if (isDead()) {
+        if (dead()) {
             return;
         }
 
         // Drop items
-        Entity lastDamageEntity = this.lastDamageEntity;
+        Entity<?> lastDamageEntity = this.lastDamageEntity;
         int looting = 0;
         if (lastDamageEntity instanceof EntityHuman) {
-            Enchantment enchantment = ((EntityHuman) lastDamageEntity).getInventory().getItemInHand().getEnchantment(EnchantmentLooting.class);
+            Enchantment enchantment = ((EntityHuman<?>) lastDamageEntity).inventory().itemInHand().enchantment(EnchantmentLooting.class);
             if (enchantment != null) {
-                looting = enchantment.getLevel();
+                looting = enchantment.level();
             }
         }
 
         ThreadLocalRandom random = ThreadLocalRandom.current();
         int amount = random.nextInt(3 + looting);
-        Location location = this.getLocation();
+        Location location = this.location();
         if (amount > 0) {
-            ItemStack drop = ItemBamboo.create(amount);
+            ItemStack<?> drop = ItemBamboo.create(amount);
             this.world.dropItem(location, drop);
         }
 

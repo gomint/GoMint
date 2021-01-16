@@ -86,20 +86,20 @@ public class CoreScheduler implements Scheduler {
         return this.scheduleAsync( runnable, delay, -1, timeUnit );
     }
 
-    private Runnable wrapRunnable( AsyncScheduledTask runnable ) {
+    private Runnable wrapRunnable( AsyncScheduledTask task ) {
         return () -> {
             long val = System.currentTimeMillis();
 
             synchronized ( threads ) {
-                threadRunnables.put( Thread.currentThread(), runnable.getTask() );
+                threadRunnables.put( Thread.currentThread(), task.runnable() );
                 threads.put( Thread.currentThread(), val );
             }
 
-            runnable.run();
+            task.run();
 
             synchronized ( threads ) {
                 threads.remove( Thread.currentThread(), val );
-                threadRunnables.remove( Thread.currentThread(), runnable.getTask() );
+                threadRunnables.remove( Thread.currentThread(), task.runnable() );
                 alreadyAlerted.remove( Thread.currentThread() );
             }
         };
@@ -118,7 +118,7 @@ public class CoreScheduler implements Scheduler {
             future = this.executorService.submit( wrapRunnable( task ) );
         }
 
-        task.setFuture( future );
+        task.assignFuture( future );
         return task;
     }
 

@@ -15,10 +15,10 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:chiseled_polished_blackstone", id = -279 )
-public class ItemChiseledPolishedBlackstone extends ItemStack implements io.gomint.inventory.item.ItemChiseledPolishedBlackstone {
+public class ItemChiseledPolishedBlackstone extends ItemStack< io.gomint.inventory.item.ItemChiseledPolishedBlackstone> implements io.gomint.inventory.item.ItemChiseledPolishedBlackstone {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.CHISELED_POLISHED_BLACKSTONE;
     }
 

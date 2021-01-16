@@ -19,7 +19,7 @@ public class Target extends Block implements BlockTarget {
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 800;
     }
 
@@ -29,14 +29,14 @@ public class Target extends Block implements BlockTarget {
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return new Class[]{
             ItemHoe.class
         };
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.TARGET;
     }
 }

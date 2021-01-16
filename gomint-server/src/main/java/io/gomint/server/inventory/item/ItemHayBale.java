@@ -10,10 +10,10 @@ import io.gomint.taglib.NBTTagCompound;
  * @version 1.0
  */
 @RegisterInfo(sId = "minecraft:hay_block", id = 170)
-public class ItemHayBale extends ItemStack implements io.gomint.inventory.item.ItemHayBale {
+public class ItemHayBale extends ItemStack< io.gomint.inventory.item.ItemHayBale> implements io.gomint.inventory.item.ItemHayBale {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.HAY_BALE;
     }
 

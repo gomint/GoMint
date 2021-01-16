@@ -29,7 +29,7 @@ public class Harm extends Effect {
     }
 
     @Override
-    public void apply( EntityLiving entity ) {
+    public void apply( EntityLiving<?> entity ) {
         // TODO: Effect for undead
         entity.attack( 6 << this.amplifier, EntityDamageEvent.DamageSource.HARM_EFFECT );
     }
@@ -40,7 +40,7 @@ public class Harm extends Effect {
     }
 
     @Override
-    public void remove( EntityLiving entity ) {
+    public void remove( EntityLiving<?> entity ) {
 
     }
 

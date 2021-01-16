@@ -26,22 +26,22 @@ public class EnchantmentFrostWalker extends Enchantment implements io.gomint.enc
     }
 
     @Override
-    public int getMinEnchantAbility(short level) {
+    public int minEnchantAbility(short level) {
         return (byte) (level * 10);
     }
 
     @Override
-    public int getMaxEnchantAbility(short level) {
-        return (byte) (getMinEnchantAbility(level) + 15);
+    public int maxEnchantAbility(short level) {
+        return (byte) (minEnchantAbility(level) + 15);
     }
 
     @Override
-    public boolean canBeApplied(ItemStack itemStack) {
+    public boolean canBeApplied(ItemStack<?> itemStack) {
         return EnchantmentHelper.canBeAppliedToBoots(itemStack);
     }
 
     @Override
-    public Rarity getRarity() {
+    public Rarity rarity() {
         return Rarity.RARE;
     }
 

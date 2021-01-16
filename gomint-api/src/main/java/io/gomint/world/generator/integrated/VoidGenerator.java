@@ -37,7 +37,7 @@ public class VoidGenerator extends ChunkGenerator {
     }
 
     @Override
-    public BlockPosition getSpawnPoint() {
+    public BlockPosition spawnPoint() {
         return new BlockPosition( 0, 20, 0 );
     }
 

@@ -6,6 +6,8 @@ import io.gomint.world.block.Block;
 import io.gomint.world.block.BlockPlank;
 import io.gomint.world.block.data.LogType;
 
+import java.time.Duration;
+
 /**
  * @author geNAZt
  * @version 1.0
@@ -13,7 +15,7 @@ import io.gomint.world.block.data.LogType;
 @RegisterInfo(id = 5, sId = ItemPlank.PLANK_ID1)
 @RegisterInfo(sId = ItemPlank.CRIMSON_ID, id = -242)
 @RegisterInfo(sId = ItemPlank.WARPED_ID, id = -243)
-public class ItemPlank extends ItemStack implements io.gomint.inventory.item.ItemPlank {
+public class ItemPlank extends ItemStack< io.gomint.inventory.item.ItemPlank> implements io.gomint.inventory.item.ItemPlank {
 
     /**
      * Item id for normal planks
@@ -50,14 +52,14 @@ public class ItemPlank extends ItemStack implements io.gomint.inventory.item.Ite
     }
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.PLANK;
     }
 
     @Override
-    public LogType getPlankType() {
+    public LogType type() {
         for (LogTypeMagic value : LogTypeMagic.values()) {
-            if (value.id.equals(this.getMaterial()) && value.data == this.getData()) {
+            if (value.id.equals(this.material()) && value.data == this.data()) {
                 return LogType.valueOf(value.name());
             }
         }
@@ -66,22 +68,24 @@ public class ItemPlank extends ItemStack implements io.gomint.inventory.item.Ite
     }
 
     @Override
-    public void setPlankType(LogType type) {
+    public ItemPlank type(LogType type) {
         LogTypeMagic state = LogTypeMagic.valueOf(type.name());
-        this.setMaterial(state.id);
-        this.setData(state.data);
+        this.material(state.id);
+        this.data(state.data);
+        return this;
     }
 
     @Override
-    public Block getBlock() {
-        BlockPlank plank = (BlockPlank) super.getBlock();
-        plank.setPlankType(this.getPlankType());
+    public Block block() {
+        BlockPlank plank = (BlockPlank) super.block();
+        plank.type(this.type());
         return plank;
     }
 
     @Override
-    public long getBurnTime() {
-        boolean isNether = (this.getPlankType() == LogType.CRIMSON || this.getPlankType() == LogType.WARPED);
-        return !isNether ? 15000 : 0;
+    public Duration burnTime() {
+        boolean isNether = (this.type() == LogType.CRIMSON || this.type() == LogType.WARPED);
+        return !isNether ? Duration.ofMillis(15000) : null;
     }
+
 }

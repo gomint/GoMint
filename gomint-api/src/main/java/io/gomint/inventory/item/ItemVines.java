@@ -7,12 +7,13 @@ import io.gomint.GoMint;
  * @version 1.0
  * @stability 2
  */
-public interface ItemVines extends ItemStack {
+public interface ItemVines extends ItemStack<ItemVines> {
 
     /**
      * Create a new item stack with given class and amount
      *
      * @param amount which is used for the creation
+	 * @return freshly generated item
      */
     static ItemVines create( int amount ) {
         return GoMint.instance().createItemStack( ItemVines.class, amount );

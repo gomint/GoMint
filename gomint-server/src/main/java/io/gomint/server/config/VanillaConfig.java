@@ -12,7 +12,7 @@ public class VanillaConfig extends YamlConfig {
     @Comment( "Disable the sprint reset when you hit something?")
     private boolean disableSprintReset = false;
 
-    public boolean isDisableSprintReset() {
+    public boolean disableSprintReset() {
         return disableSprintReset;
     }
 }

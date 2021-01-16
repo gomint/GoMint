@@ -7,7 +7,6 @@ import io.gomint.server.registry.StringRegistry;
 import io.gomint.server.util.ClassPath;
 import io.gomint.server.util.StringShortPair;
 import io.gomint.server.util.performance.LambdaConstructionFactory;
-import io.gomint.server.world.block.Block;
 import io.gomint.server.world.block.Blocks;
 import io.gomint.taglib.NBTTagCompound;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
@@ -32,7 +31,7 @@ import java.util.Map;
 public class Items {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Items.class);
-    private final StringRegistry<io.gomint.server.inventory.item.ItemStack> generators;
+    private final StringRegistry<ItemStack<? extends ItemStack<?>>> generators;
     private final Object2IntMap<String> blockIdToItemId = new Object2IntOpenHashMap<>();
     private final Int2ObjectMap<String> itemIdToBlockId = new Int2ObjectOpenHashMap<>();
 
@@ -46,24 +45,28 @@ public class Items {
      */
     public Items(ClassPath classPath) {
         this.generators = new StringRegistry<>((clazz, id) -> {
-            LambdaConstructionFactory<io.gomint.server.inventory.item.ItemStack> factory = new LambdaConstructionFactory<>(clazz);
+            LambdaConstructionFactory<ItemStack<? extends ItemStack<?>>> factory = new LambdaConstructionFactory<>(clazz);
 
             return in -> {
-                io.gomint.server.inventory.item.ItemStack itemStack = factory.newInstance();
-                itemStack.setMaterial(id).setItems(this).setBlocks(blocks);
+                ItemStack<? extends ItemStack<?>> itemStack = factory.newInstance();
+
+                io.gomint.server.inventory.item.ItemStack<?> sStack = (io.gomint.server.inventory.item.ItemStack<?>) itemStack;
+                sStack.items(this);
+                sStack.blocks(blocks);
+                sStack.material(id);
                 return itemStack;
             };
         });
 
-        this.generators.register(classPath,"io.gomint.server.inventory.item");
+        this.generators.register(classPath, "io.gomint.server.inventory.item");
     }
 
     public String getMaterial(int itemId) {
         return this.itemIdToBlockId.get(itemId);
     }
 
-    public <T extends ItemStack> T create(String id, short data, byte amount, NBTTagCompound nbt) {
-        Generator<io.gomint.server.inventory.item.ItemStack> itemGenerator = this.generators.getGenerator(id);
+    public <T extends ItemStack<T>> T create(String id, short data, byte amount, NBTTagCompound nbt) {
+        Generator<T> itemGenerator = (Generator<T>) this.generators.getGenerator(id);
         if (itemGenerator == null) {
             LOGGER.error("Unknown item generator for id {}", id);
             return null;
@@ -74,14 +77,16 @@ public class Items {
             nbt = nbt.deepClone("");
         }
 
-        io.gomint.server.inventory.item.ItemStack itemStack = itemGenerator.generate();
-        itemStack.setNbtData(nbt).setData(data);
+        T itemStack = itemGenerator.generate();
+        io.gomint.server.inventory.item.ItemStack<?> sStack = (io.gomint.server.inventory.item.ItemStack<?>) itemStack;
+        sStack.nbtData(nbt);
+        sStack.data(data);
 
         if (amount > 0) {
-            return (T) itemStack.setAmount(amount);
+            return itemStack.amount(amount);
         }
 
-        return (T) itemStack;
+        return itemStack;
     }
 
     /**
@@ -94,7 +99,7 @@ public class Items {
      * @param <T>    type of item stack
      * @return generated item stack
      */
-    public <T extends ItemStack> T create(int id, short data, byte amount, NBTTagCompound nbt) {
+    public <T extends ItemStack<T>> T create(int id, short data, byte amount, NBTTagCompound nbt) {
         if (id == 0) {
             return null;
         }
@@ -124,18 +129,18 @@ public class Items {
      * @param <T>       type of item stack
      * @return generated item stack
      */
-    public <T extends ItemStack> T create(Class<T> itemClass, byte amount) {
-        Generator<io.gomint.server.inventory.item.ItemStack> itemGenerator = this.generators.getGenerator(itemClass);
+    public <T extends ItemStack<T>> T create(Class<T> itemClass, byte amount) {
+        Generator<T> itemGenerator = (Generator<T>) this.generators.getGenerator(itemClass);
         if (itemGenerator == null) {
             return null;
         }
 
-        io.gomint.server.inventory.item.ItemStack itemStack = itemGenerator.generate();
+        T itemStack = itemGenerator.generate();
         if (amount > 0) {
-            itemStack.setAmount(amount);
+            itemStack.amount(amount);
         }
 
-        return (T) itemStack.setData((short) 0);
+        return itemStack;
     }
 
     public void initItemIDs(List<StringShortPair> itemIDs) {
@@ -146,7 +151,7 @@ public class Items {
             buffer.writeLShort(itemID.getData());
             buffer.writeBoolean(false);
 
-            Generator<io.gomint.server.inventory.item.ItemStack> item = this.generators.getGenerator(itemID.getBlockId());
+            Generator<ItemStack<? extends ItemStack<?>>> item = this.generators.getGenerator(itemID.getBlockId());
             if (item == null) {
                 LOGGER.warn("Unknown item {} ({})", itemID.getData(), itemID.getBlockId());
 

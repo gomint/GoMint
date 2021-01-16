@@ -154,7 +154,7 @@ class EventHandlerMethod implements Comparable<EventHandlerMethod> {
 
     @Override
     public int compareTo(EventHandlerMethod o) {
-        return (Byte.compare(this.annotation.priority().getValue(), o.annotation.priority().getValue()));
+        return (Byte.compare(this.annotation.priority().value(), o.annotation.priority().value()));
     }
 
 }

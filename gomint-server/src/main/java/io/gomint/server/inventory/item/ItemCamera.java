@@ -15,10 +15,10 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:camera", id = 498 )
-public class ItemCamera extends ItemStack implements io.gomint.inventory.item.ItemCamera {
+public class ItemCamera extends ItemStack< io.gomint.inventory.item.ItemCamera> implements io.gomint.inventory.item.ItemCamera {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.CAMERA;
     }
 

@@ -13,7 +13,7 @@ import io.gomint.entity.EntityPlayer;
  * @version 1.0
  * @stability 3
  */
-public class PlayerFoodLevelChangeEvent extends CancellablePlayerEvent {
+public class PlayerFoodLevelChangeEvent extends CancellablePlayerEvent<PlayerFoodLevelChangeEvent> {
 
     private final float change;
 
@@ -33,7 +33,7 @@ public class PlayerFoodLevelChangeEvent extends CancellablePlayerEvent {
      *
      * @return amount of change
      */
-    public float getChange() {
+    public float change() {
         return this.change;
     }
 

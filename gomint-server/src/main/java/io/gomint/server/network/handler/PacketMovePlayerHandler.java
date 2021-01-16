@@ -1,13 +1,9 @@
 package io.gomint.server.network.handler;
 
-import io.gomint.event.player.PlayerExhaustEvent;
-import io.gomint.event.player.PlayerMoveEvent;
 import io.gomint.math.Location;
-import io.gomint.math.Vector;
 import io.gomint.server.entity.EntityPlayer;
 import io.gomint.server.network.PlayerConnection;
 import io.gomint.server.network.packet.PacketMovePlayer;
-import io.gomint.server.world.block.Block;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,34 +18,34 @@ public class PacketMovePlayerHandler implements PacketHandler<PacketMovePlayer> 
     @Override
     public void handle( PacketMovePlayer packet, long currentTimeMillis, PlayerConnection connection ) {
         EntityPlayer entity = connection.getEntity();
-        Location to = entity.getLocation();
-        to.setX( packet.getX() );
-        to.setY( packet.getY() - entity.getEyeHeight() ); // Subtract eye height since client sends it at the eyes
-        to.setZ( packet.getZ() );
-        to.setHeadYaw( packet.getHeadYaw() );
-        to.setYaw( packet.getYaw() );
-        to.setPitch( packet.getPitch() );
+        Location to = entity.location();
+        to.x( packet.getX() );
+        to.y( packet.getY() - entity.eyeHeight() ); // Subtract eye height since client sends it at the eyes
+        to.z( packet.getZ() );
+        to.headYaw( packet.getHeadYaw() );
+        to.yaw( packet.getYaw() );
+        to.pitch( packet.getPitch() );
 
         // Does the entity have a teleport open?
-        if ( connection.getEntity().getTeleportPosition() != null ) {
-            if ( connection.getEntity().getTeleportPosition().distanceSquared( to ) > 0.2 ) {
-                LOGGER.warn( "Player {} did not teleport to {}", connection.getEntity().getName(), connection.getEntity().getTeleportPosition(), to );
-                connection.sendMovePlayer( connection.getEntity().getTeleportPosition() );
+        if ( connection.getEntity().teleportPosition() != null ) {
+            if ( connection.getEntity().teleportPosition().distanceSquared( to ) > 0.2 ) {
+                LOGGER.warn( "Player {} did not teleport to {}", connection.getEntity().name(), connection.getEntity().teleportPosition(), to );
+                connection.sendMovePlayer( connection.getEntity().teleportPosition() );
                 return;
             } else {
                 connection.getEntity().setTeleportPosition( null );
             }
         }
 
-        Location from = entity.getLocation();
+        Location from = entity.location();
 
         // The packet did not contain any movement? skip it
-        if ( from.getX() - to.getX() == 0 &&
-            from.getY() - to.getY() == 0 &&
-            from.getZ() - to.getZ() == 0 &&
-            from.getHeadYaw() - to.getHeadYaw() == 0 &&
-            from.getYaw() - to.getYaw() == 0 &&
-            from.getPitch() - to.getPitch() == 0 ) {
+        if ( from.x() - to.x() == 0 &&
+            from.y() - to.y() == 0 &&
+            from.z() - to.z() == 0 &&
+            from.headYaw() - to.headYaw() == 0 &&
+            from.yaw() - to.yaw() == 0 &&
+            from.pitch() - to.pitch() == 0 ) {
             return;
         }
 

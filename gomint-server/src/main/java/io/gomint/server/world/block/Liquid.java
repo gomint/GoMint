@@ -22,7 +22,7 @@ import java.util.Map;
  * @author geNAZt
  * @version 1.0
  */
-public abstract class Liquid extends Block implements BlockLiquid {
+public abstract class Liquid<B> extends Block implements BlockLiquid<B> {
 
     private static final String[] LIQUID_DEPTH_KEY = new String[]{"liquid_depth"};
     private static final Direction[] DIRECTIONS_TO_CHECK = Direction.values();
@@ -40,7 +40,7 @@ public abstract class Liquid extends Block implements BlockLiquid {
     private Map<BlockPosition, FlowState> flowCostVisited;
 
     @Override
-    public float getFillHeight() {
+    public float fillHeight() {
         int data = LIQUID_DEPTH.getState(this);
         if (data >= 8) {
             data = 8;
@@ -54,17 +54,18 @@ public abstract class Liquid extends Block implements BlockLiquid {
     }
 
     @Override
-    public void setFillHeight(float height) {
+    public B fillHeight(float height) {
         if (height < 0f || height > 1f) {
-            return;
+            return (B) this;
         }
 
         LIQUID_DEPTH.setState(this, MathUtils.fastRound(8f * height));
+        return (B) this;
     }
 
     private short getEffectiveFlowDecay(Block block) {
         // Block changed type?
-        if (block.getBlockType() != this.getBlockType()) {
+        if (block.blockType() != this.blockType()) {
             return -1;
         }
 
@@ -74,14 +75,14 @@ public abstract class Liquid extends Block implements BlockLiquid {
     }
 
     @Override
-    public Vector getFlowVector() {
+    public Vector flowVector() {
         // Create a new vector and get the capped flow decay of this block
         Vector vector = Vector.ZERO;
         short decay = this.getEffectiveFlowDecay(this);
 
         // Check all 4 sides if we can flow into that
         for (Direction face : Direction.values()) {
-            Block other = this.getSide(face);
+            Block other = this.side(face);
             short blockDecay = this.getEffectiveFlowDecay(other);
 
             // Do we have decay?
@@ -92,32 +93,32 @@ public abstract class Liquid extends Block implements BlockLiquid {
                 }
 
                 // Check if the block under this is a water block so we can connect those two
-                blockDecay = this.getEffectiveFlowDecay(this.world.getBlockAt(other.getPosition().add(0, -1, 0)));
+                blockDecay = this.getEffectiveFlowDecay(this.world.blockAt(other.position().add(0, -1, 0)));
                 if (blockDecay >= 0) {
                     byte realDecay = (byte) (blockDecay - (decay - 8));
-                    vector = vector.add((other.getPosition().getX() - this.getPosition().getX()) * (float) realDecay,
-                        (other.getPosition().getY() - this.getPosition().getY()) * (float) realDecay,
-                        (other.getPosition().getZ() - this.getPosition().getZ()) * (float) realDecay);
+                    vector = vector.add((other.position().x() - this.position().x()) * (float) realDecay,
+                        (other.position().y() - this.position().y()) * (float) realDecay,
+                        (other.position().z() - this.position().z()) * (float) realDecay);
                 }
             } else {
                 // Check if we need to update the other blocks decay
                 byte realDecay = (byte) (blockDecay - decay);
-                vector = vector.add((other.getPosition().getX() - this.getPosition().getX()) * (float) realDecay,
-                    (other.getPosition().getY() - this.getPosition().getY()) * (float) realDecay,
-                    (other.getPosition().getZ() - this.getPosition().getZ()) * (float) realDecay);
+                vector = vector.add((other.position().x() - this.position().x()) * (float) realDecay,
+                    (other.position().y() - this.position().y()) * (float) realDecay,
+                    (other.position().z() - this.position().z()) * (float) realDecay);
             }
         }
 
         if (LIQUID_DEPTH.getState(this) >= 8) {
-            BlockPosition pos = this.getPosition();
-            if (!this.canFlowInto(this.world.getBlockAt(pos = pos.add(0, 0, -1))) ||
-                !this.canFlowInto(this.world.getBlockAt(pos = pos.add(0, 0, 1))) ||
-                !this.canFlowInto(this.world.getBlockAt(pos = pos.add(-1, 0, 0))) ||
-                !this.canFlowInto(this.world.getBlockAt(pos = pos.add(1, 0, 0))) ||
-                !this.canFlowInto(this.world.getBlockAt(pos = pos.add(0, 1, -1))) ||
-                !this.canFlowInto(this.world.getBlockAt(pos = pos.add(0, 1, 1))) ||
-                !this.canFlowInto(this.world.getBlockAt(pos = pos.add(-1, 1, 0))) ||
-                !this.canFlowInto(this.world.getBlockAt(pos.add(1, 1, 0)))) {
+            BlockPosition pos = this.position();
+            if (!this.canFlowInto(this.world.blockAt(pos = pos.add(0, 0, -1))) ||
+                !this.canFlowInto(this.world.blockAt(pos = pos.add(0, 0, 1))) ||
+                !this.canFlowInto(this.world.blockAt(pos = pos.add(-1, 0, 0))) ||
+                !this.canFlowInto(this.world.blockAt(pos = pos.add(1, 0, 0))) ||
+                !this.canFlowInto(this.world.blockAt(pos = pos.add(0, 1, -1))) ||
+                !this.canFlowInto(this.world.blockAt(pos = pos.add(0, 1, 1))) ||
+                !this.canFlowInto(this.world.blockAt(pos = pos.add(-1, 1, 0))) ||
+                !this.canFlowInto(this.world.blockAt(pos.add(1, 1, 0)))) {
                 vector = vector.normalize().add(0, -6, 0);
             }
         }
@@ -126,7 +127,7 @@ public abstract class Liquid extends Block implements BlockLiquid {
     }
 
     @Override
-    public boolean isSolid() {
+    public boolean solid() {
         return false;
     }
 
@@ -136,13 +137,13 @@ public abstract class Liquid extends Block implements BlockLiquid {
     }
 
     @Override
-    public void stepOn(Entity entity) {
+    public void stepOn(Entity<?> entity) {
         // Reset fall distance
         entity.resetFallDistance();
     }
 
     @Override
-    public boolean canBeReplaced(ItemStack item) {
+    public boolean canBeReplaced(ItemStack<?> item) {
         return true;
     }
 
@@ -178,8 +179,8 @@ public abstract class Liquid extends Block implements BlockLiquid {
     }
 
     private void checkSpread(int decay) {
-        if (decay >= 0 && this.location.getY() > 0) {
-            Block bottomBlock = this.getSide(Facing.DOWN);
+        if (decay >= 0 && this.location.y() > 0) {
+            Block bottomBlock = this.side(Facing.DOWN);
             this.flowIntoBlock(bottomBlock, decay | 0x08);
             if (decay == 0 || !bottomBlock.canBeFlowedInto()) {
                 int adjacentDecay;
@@ -192,19 +193,19 @@ public abstract class Liquid extends Block implements BlockLiquid {
                 if (adjacentDecay < 8) {
                     boolean[] flags = this.getOptimalFlowDirections();
                     if (flags[0]) {
-                        this.flowIntoBlock(this.getSide(Facing.WEST), adjacentDecay);
+                        this.flowIntoBlock(this.side(Facing.WEST), adjacentDecay);
                     }
 
                     if (flags[1]) {
-                        this.flowIntoBlock(this.getSide(Facing.EAST), adjacentDecay);
+                        this.flowIntoBlock(this.side(Facing.EAST), adjacentDecay);
                     }
 
                     if (flags[2]) {
-                        this.flowIntoBlock(this.getSide(Facing.NORTH), adjacentDecay);
+                        this.flowIntoBlock(this.side(Facing.NORTH), adjacentDecay);
                     }
 
                     if (flags[3]) {
-                        this.flowIntoBlock(this.getSide(Facing.SOUTH), adjacentDecay);
+                        this.flowIntoBlock(this.side(Facing.SOUTH), adjacentDecay);
                     }
                 }
             }
@@ -226,10 +227,10 @@ public abstract class Liquid extends Block implements BlockLiquid {
             this.adjacentSources = 0;
 
             // Check for neighbour decay
-            smallestFlowDecay = this.getSmallestFlowDecay(this.getSide(Facing.NORTH), smallestFlowDecay);
-            smallestFlowDecay = this.getSmallestFlowDecay(this.getSide(Facing.SOUTH), smallestFlowDecay);
-            smallestFlowDecay = this.getSmallestFlowDecay(this.getSide(Facing.WEST), smallestFlowDecay);
-            smallestFlowDecay = this.getSmallestFlowDecay(this.getSide(Facing.EAST), smallestFlowDecay);
+            smallestFlowDecay = this.getSmallestFlowDecay(this.side(Facing.NORTH), smallestFlowDecay);
+            smallestFlowDecay = this.getSmallestFlowDecay(this.side(Facing.SOUTH), smallestFlowDecay);
+            smallestFlowDecay = this.getSmallestFlowDecay(this.side(Facing.WEST), smallestFlowDecay);
+            smallestFlowDecay = this.getSmallestFlowDecay(this.side(Facing.EAST), smallestFlowDecay);
 
             int newDecay = smallestFlowDecay + this.getFlowDecayPerBlock();
             if (newDecay >= 8 || smallestFlowDecay < 0) { // There is no neighbour?
@@ -238,15 +239,15 @@ public abstract class Liquid extends Block implements BlockLiquid {
             }
 
             // Check if there is a block on top (flowing from top downwards)
-            int topFlowDecay = this.getFlowDecay(this.getSide(Facing.UP));
+            int topFlowDecay = this.getFlowDecay(this.side(Facing.UP));
             if (topFlowDecay >= 0) {
                 newDecay = topFlowDecay | 0x08;
             }
 
             // Did we hit a bottom block and are surrounded by other source blocks? -> convert to source block
             if (this.adjacentSources >= 2 && this instanceof FlowingWater) {
-                Block bottomBlock = this.getSide(Facing.DOWN);
-                if (bottomBlock.isSolid() || (bottomBlock instanceof FlowingWater && ((FlowingWater) bottomBlock).getFillHeight() == 1f)) {
+                Block bottomBlock = this.side(Facing.DOWN);
+                if (bottomBlock.solid() || (bottomBlock instanceof FlowingWater && ((FlowingWater) bottomBlock).fillHeight() == 1f)) {
                     newDecay = 0;
                 }
             }
@@ -258,7 +259,7 @@ public abstract class Liquid extends Block implements BlockLiquid {
                 // Did we fully decay?
                 boolean decayed = decay < 0;
                 if (decayed) {
-                    this.setBlockType(Air.class);
+                    this.blockType(Air.class);
                 } else {
                     LIQUID_DEPTH.setState(this, decay);
                 }
@@ -275,14 +276,14 @@ public abstract class Liquid extends Block implements BlockLiquid {
                 continue;
             }
 
-            Block other = this.world.getBlockAt(pos);
-            Block sideBock = other.getSide(facing);
-            BlockPosition checkingPos = sideBock.getPosition();
+            Block other = this.world.blockAt(pos);
+            Block sideBock = other.side(facing);
+            BlockPosition checkingPos = sideBock.position();
 
             if (!this.flowCostVisited.containsKey(checkingPos)) {
                 if (!this.canFlowInto(sideBock)) {
                     this.flowCostVisited.put(checkingPos, FlowState.BLOCKED);
-                } else if (((Block) this.world.getBlockAt(checkingPos.add(BlockPosition.DOWN))).canBeFlowedInto()) {
+                } else if (((Block) this.world.blockAt(checkingPos.add(BlockPosition.DOWN))).canBeFlowedInto()) {
                     this.flowCostVisited.put(checkingPos, FlowState.CAN_FLOW_DOWN);
                 } else {
                     this.flowCostVisited.put(checkingPos, FlowState.CAN_FLOW);
@@ -322,14 +323,14 @@ public abstract class Liquid extends Block implements BlockLiquid {
         short maxCost = (short) (4 / this.getFlowDecayPerBlock());
         int j = 0;
         for (Direction face : DIRECTIONS_TO_CHECK) {
-            Block other = this.getSide(face);
+            Block other = this.side(face);
             if (!this.canFlowInto(other)) {
-                this.flowCostVisited.put(other.getPosition(), FlowState.BLOCKED);
-            } else if (((Block) this.world.getBlockAt(this.getPosition().add(BlockPosition.DOWN))).canBeFlowedInto()) {
-                this.flowCostVisited.put(other.getPosition(), FlowState.CAN_FLOW_DOWN);
+                this.flowCostVisited.put(other.position(), FlowState.BLOCKED);
+            } else if (((Block) this.world.blockAt(this.position().add(BlockPosition.DOWN))).canBeFlowedInto()) {
+                this.flowCostVisited.put(other.position(), FlowState.CAN_FLOW_DOWN);
                 flowCost[j] = maxCost = 0;
             } else if (maxCost > 0) {
-                BlockPosition pos = other.getPosition();
+                BlockPosition pos = other.position();
                 this.flowCostVisited.put(pos, FlowState.CAN_FLOW);
                 flowCost[j] = this.calculateFlowCost(pos, (short) 1, maxCost, face, face);
                 maxCost = (short) Math.min(maxCost, flowCost[j]);
@@ -370,10 +371,10 @@ public abstract class Liquid extends Block implements BlockLiquid {
     protected void flowIntoBlock(Block block, int newFlowDecay) {
         if (this.canFlowInto(block) && !(block instanceof Liquid)) {
             if (!block.getBlockId().equals("minecraft:air")) {
-                this.world.breakBlock(block.getPosition(), block.getDrops(ItemAir.create(0)), false);
+                this.world.breakBlock(block.position(), block.drops(ItemAir.create(0)), false);
             }
 
-            Liquid liquid = block.setBlockType(this.getClass());
+            Liquid<?> liquid = block.blockType(this.getClass());
             LIQUID_DEPTH.setState(liquid, newFlowDecay);
         }
     }
@@ -397,7 +398,7 @@ public abstract class Liquid extends Block implements BlockLiquid {
     }
 
     private short getFlowDecay(Block block) {
-        if (block.getBlockType() != this.getBlockType()) {
+        if (block.blockType() != this.blockType()) {
             return -1;
         }
 
@@ -410,12 +411,12 @@ public abstract class Liquid extends Block implements BlockLiquid {
     }
 
     private boolean canFlowInto(Block block) {
-        return block.canBeFlowedInto() && !(block instanceof Liquid && ((Liquid) block).getFillHeight() == 1f);
+        return block.canBeFlowedInto() && !(block instanceof Liquid && ((Liquid<?>) block).fillHeight() == 1f);
     }
 
     @Override
-    public Vector addVelocity(Entity entity, Vector pushedByBlocks) {
-        return pushedByBlocks.add(this.getFlowVector());
+    public Vector addVelocity(Entity<?> entity, Vector pushedByBlocks) {
+        return pushedByBlocks.add(this.flowVector());
     }
 
     /**
@@ -425,12 +426,12 @@ public abstract class Liquid extends Block implements BlockLiquid {
      * @param result    of the collision
      */
     protected void liquidCollide(Block colliding, Class<? extends Block> result) {
-        this.setBlockType(result);
+        this.blockType(result);
         this.world.playSound(this.location.add(0.5f, 0.5f, 0.5f), Sound.FIZZ, (byte) 0);
     }
 
     @Override
-    public boolean beforePlacement(EntityLiving entity, ItemStack item, Facing face, Location location) {
+    public boolean beforePlacement(EntityLiving<?> entity, ItemStack<?> item, Facing face, Location location) {
         LIQUID_DEPTH.detectFromPlacement(this, entity, item, face);
         return super.beforePlacement(entity, item, face, location);
     }

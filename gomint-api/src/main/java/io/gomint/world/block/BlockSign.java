@@ -16,7 +16,7 @@ import java.util.List;
  * @version 1.0
  * @stability 3
  */
-public interface BlockSign extends Block {
+public interface BlockSign<B> extends Block {
 
     /**
      * Get a copy of all lines on this sign. The maximum size of
@@ -24,7 +24,7 @@ public interface BlockSign extends Block {
      *
      * @return list of all lines
      */
-    List<String> getLines();
+    List<String> lines();
 
     /**
      * Set a specific line to new content. When you set line 2 and there is no other line
@@ -32,8 +32,9 @@ public interface BlockSign extends Block {
      *
      * @param line    which should be set
      * @param content which should be set on that line
+     * @return block for chaining
      */
-    void setLine(int line, String content);
+    B line(int line, String content);
 
     /**
      * Get a specific line of the sign content
@@ -41,19 +42,21 @@ public interface BlockSign extends Block {
      * @param line which you want to get
      * @return string or null when not set
      */
-    String getLine(int line);
+    String line(int line);
 
     /**
      * Get the type of wood from which this button has been made
      *
      * @return type of wood
      */
-    LogType getWoodType();
+    LogType type();
 
     /**
      * Set the type of wood for this button
      *
      * @param logType type of wood
+     * @return block for chaining
      */
-    void setWoodType(LogType logType);
+    B type(LogType logType);
+
 }

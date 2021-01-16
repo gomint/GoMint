@@ -9,10 +9,10 @@ import io.gomint.server.registry.RegisterInfo;
  */
 @RegisterInfo(sId = "minecraft:flower_pot", id = 390, def = true)
 @RegisterInfo(sId = "minecraft:item.flower_pot", id = 140)
-public class ItemFlowerPot extends ItemStack implements io.gomint.inventory.item.ItemFlowerPot {
+public class ItemFlowerPot extends ItemStack< io.gomint.inventory.item.ItemFlowerPot> implements io.gomint.inventory.item.ItemFlowerPot {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.FLOWER_POT;
     }
 

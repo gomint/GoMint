@@ -18,7 +18,7 @@ import io.gomint.server.network.type.WindowType;
  * @author geNAZt
  * @version 1.0
  */
-public class PlayerInventory extends ContainerInventory implements io.gomint.inventory.PlayerInventory {
+public class PlayerInventory extends ContainerInventory<io.gomint.inventory.PlayerInventory> implements io.gomint.inventory.PlayerInventory {
 
     private byte itemInHandSlot;
 
@@ -27,7 +27,7 @@ public class PlayerInventory extends ContainerInventory implements io.gomint.inv
      *
      * @param player for which this inventory is
      */
-    public PlayerInventory(Items items, EntityHuman player) {
+    public PlayerInventory(Items items, EntityHuman<?> player) {
         super(items, player, 36);
     }
 
@@ -36,32 +36,34 @@ public class PlayerInventory extends ContainerInventory implements io.gomint.inv
      *
      * @return the itemstack the player is holding
      */
-    public ItemStack getItemInHand() {
+    public ItemStack<?> itemInHand() {
         return this.contents[this.itemInHandSlot];
     }
 
     @Override
-    public void setItem(int index, ItemStack item) {
-        ItemStack oldItem = getItem(index);
-        super.setItem(index, item);
+    public io.gomint.inventory.PlayerInventory item(int index, ItemStack<?> item) {
+        ItemStack<?> oldItem = item(index);
+        super.item(index, item);
 
         if (index == this.itemInHandSlot && this.owner instanceof EntityPlayer) {
             // Inform the old item it got deselected
-            io.gomint.server.inventory.item.ItemStack oldItemInHand = (io.gomint.server.inventory.item.ItemStack) oldItem;
+            io.gomint.server.inventory.item.ItemStack<?> oldItemInHand = (io.gomint.server.inventory.item.ItemStack<?>) oldItem;
             oldItemInHand.removeFromHand((EntityPlayer) this.owner);
 
             // Inform the item it got selected
-            io.gomint.server.inventory.item.ItemStack newItemInHand = (io.gomint.server.inventory.item.ItemStack) item;
+            io.gomint.server.inventory.item.ItemStack<?> newItemInHand = (io.gomint.server.inventory.item.ItemStack<?>) item;
             newItemInHand.gotInHand((EntityPlayer) this.owner);
 
             // Update the item for everyone else
             this.updateItemInHand();
         }
+
+        return this;
     }
 
     @Override
     public void sendContents(int slot, PlayerConnection playerConnection) {
-        if (playerConnection.getEntity().getCurrentOpenContainer() == this) {
+        if (playerConnection.getEntity().currentOpenContainer() == this) {
             PacketInventorySetSlot setSlot = new PacketInventorySetSlot();
             setSlot.setSlot(slot);
             setSlot.setWindowId(WindowMagicNumbers.OPEN_CONTAINER);
@@ -103,7 +105,7 @@ public class PlayerInventory extends ContainerInventory implements io.gomint.inv
         containerOpen.setWindowId(windowId);
         containerOpen.setType(this.getType().getId());
         containerOpen.setLocation(Vector.ZERO.toBlockPosition());
-        player.getConnection().addToSendQueue(containerOpen);
+        player.connection().addToSendQueue(containerOpen);
 
         // Trigger additional actions for the container
         this.onOpen(player);
@@ -117,16 +119,16 @@ public class PlayerInventory extends ContainerInventory implements io.gomint.inv
 
     @Override
     public void sendContents(PlayerConnection playerConnection) {
-        if (playerConnection.getEntity().getCurrentOpenContainer() == this) {
+        if (playerConnection.getEntity().currentOpenContainer() == this) {
             PacketInventoryContent inventory = new PacketInventoryContent();
             inventory.setWindowId(WindowMagicNumbers.OPEN_CONTAINER);
-            inventory.setItems(getContents());
+            inventory.setItems(contents());
             playerConnection.addToSendQueue(inventory);
         }
 
         PacketInventoryContent inventory = new PacketInventoryContent();
         inventory.setWindowId(WindowMagicNumbers.PLAYER);
-        inventory.setItems(getContents());
+        inventory.setItems(contents());
         playerConnection.addToSendQueue(inventory);
     }
 
@@ -144,22 +146,22 @@ public class PlayerInventory extends ContainerInventory implements io.gomint.inv
     }
 
     private void updateItemInHand() {
-        EntityHuman player = (EntityHuman) this.owner;
+        EntityHuman<?> player = (EntityHuman<?>) this.owner;
 
         PacketMobEquipment packet = this.createMobEquipmentPacket(player);
 
         // Relay packet
-        for (Entity entity : player.getAttachedEntities()) {
+        for (Entity<?> entity : player.getAttachedEntities()) {
             if (entity instanceof EntityPlayer) {
-                ((EntityPlayer) entity).getConnection().addToSendQueue(packet);
+                ((EntityPlayer) entity).connection().addToSendQueue(packet);
             }
         }
     }
 
-    private PacketMobEquipment createMobEquipmentPacket(EntityHuman human) {
+    private PacketMobEquipment createMobEquipmentPacket(EntityHuman<?> human) {
         PacketMobEquipment packet = new PacketMobEquipment();
-        packet.setEntityId(human.getEntityId());
-        packet.setStack(this.getItemInHand());
+        packet.setEntityId(human.id());
+        packet.setStack(this.itemInHand());
         packet.setWindowId(WindowMagicNumbers.PLAYER);
         packet.setSelectedSlot(this.itemInHandSlot);
         packet.setSlot(this.itemInHandSlot);
@@ -171,31 +173,32 @@ public class PlayerInventory extends ContainerInventory implements io.gomint.inv
      *
      * @return the slot number for the in hand item
      */
-    public byte getItemInHandSlot() {
+    public byte itemInHandSlot() {
         return this.itemInHandSlot;
     }
 
     @Override
-    public void setItemInHandSlot(byte slot) {
+    public io.gomint.inventory.PlayerInventory itemInHandSlot(byte slot) {
         if (slot > 8 || slot < 0) {
-            return;
+            return this;
         }
 
         this.itemInHandSlot = slot;
         this.updateItemInHand();
+        return this;
     }
 
     public void updateItemInHandWithItem(byte slot) {
         // Inform the old item it got deselected
-        io.gomint.server.inventory.item.ItemStack oldItemInHand = (io.gomint.server.inventory.item.ItemStack) this.getItemInHand();
+        io.gomint.server.inventory.item.ItemStack<?> oldItemInHand = (io.gomint.server.inventory.item.ItemStack<?>) this.itemInHand();
         oldItemInHand.removeFromHand((EntityPlayer) this.owner);
 
         // Set item in hand index
         this.itemInHandSlot = slot;
 
         // Inform the item it got selected
-        io.gomint.server.inventory.item.ItemStack newItemInHand =
-            (io.gomint.server.inventory.item.ItemStack) this.getItemInHand();
+        io.gomint.server.inventory.item.ItemStack<?> newItemInHand =
+            (io.gomint.server.inventory.item.ItemStack<?>) this.itemInHand();
         newItemInHand.gotInHand((EntityPlayer) this.owner);
     }
 
@@ -205,25 +208,25 @@ public class PlayerInventory extends ContainerInventory implements io.gomint.inv
 
         if (slot == this.itemInHandSlot && this.owner instanceof EntityPlayer) {
             // Inform the old item it got deselected
-            io.gomint.server.inventory.item.ItemStack oldItemInHand = (io.gomint.server.inventory.item.ItemStack) this.getItem(slot);
+            io.gomint.server.inventory.item.ItemStack<?> oldItemInHand = (io.gomint.server.inventory.item.ItemStack<?>) this.item(slot);
             oldItemInHand.removeFromHand((EntityPlayer) this.owner);
         }
     }
 
     @Override
-    public InventoryType getInventoryType() {
+    public InventoryType inventoryType() {
         return InventoryType.PLAYER;
     }
 
     public void sendItemInHand() {
-        EntityHuman player = (EntityHuman) this.owner;
+        EntityHuman<?> player = (EntityHuman<?>) this.owner;
 
         PacketMobEquipment packet = this.createMobEquipmentPacket(player);
 
         // Send it to our own if needed
         if ( player instanceof EntityPlayer ) {
             EntityPlayer p = (EntityPlayer) player;
-            p.getConnection().addToSendQueue(packet);
+            p.connection().addToSendQueue(packet);
         }
     }
 

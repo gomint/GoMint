@@ -6,6 +6,8 @@ import io.gomint.world.block.Block;
 import io.gomint.world.block.BlockWoodenDoor;
 import io.gomint.world.block.data.LogType;
 
+import java.time.Duration;
+
 /**
  * @author geNAZt
  * @version 1.0
@@ -18,21 +20,21 @@ import io.gomint.world.block.data.LogType;
 @RegisterInfo(sId = "minecraft:warped_door", id = 756)
 @RegisterInfo(sId = "minecraft:crimson_door", id = 755)
 @RegisterInfo(sId = "minecraft:spruce_door", id = 427)
-public class ItemWoodenDoor extends ItemStack implements io.gomint.inventory.item.ItemWoodenDoor {
+public class ItemWoodenDoor extends ItemStack< io.gomint.inventory.item.ItemWoodenDoor> implements io.gomint.inventory.item.ItemWoodenDoor {
 
     @Override
-    public long getBurnTime() {
-        return 10000;
+    public Duration burnTime() {
+        return Duration.ofMillis(10000);
     }
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.WOODEN_DOOR;
     }
 
     @Override
-    public LogType getWoodType() {
-        switch (this.getMaterial()) {
+    public LogType type() {
+        switch (this.material()) {
             case "minecraft:crimson_door":
                 return LogType.CRIMSON;
             case "minecraft:warped_door":
@@ -54,39 +56,41 @@ public class ItemWoodenDoor extends ItemStack implements io.gomint.inventory.ite
     }
 
     @Override
-    public void setWoodType(LogType logType) {
+    public ItemWoodenDoor type(LogType logType) {
         switch (logType) {
             case CRIMSON:
-                this.setBlockId("minecraft:crimson_door");
+                this.blockId("minecraft:crimson_door");
                 break;
             case WARPED:
-                this.setBlockId("minecraft:warped_door");
+                this.blockId("minecraft:warped_door");
                 break;
             case DARK_OAK:
-                this.setBlockId("minecraft:dark_oak_door");
+                this.blockId("minecraft:dark_oak_door");
                 break;
             case ACACIA:
-                this.setBlockId("minecraft:acacia_door");
+                this.blockId("minecraft:acacia_door");
                 break;
             case JUNGLE:
-                this.setBlockId("minecraft:jungle_door");
+                this.blockId("minecraft:jungle_door");
                 break;
             case BIRCH:
-                this.setBlockId("minecraft:birch_door");
+                this.blockId("minecraft:birch_door");
                 break;
             case SPRUCE:
-                this.setBlockId("minecraft:spruce_door");
+                this.blockId("minecraft:spruce_door");
                 break;
             case OAK:
             default:
-                this.setBlockId("minecraft:wooden_door");
+                this.blockId("minecraft:wooden_door");
         }
+
+        return this;
     }
 
     @Override
-    public Block getBlock() {
-        BlockWoodenDoor block = (BlockWoodenDoor) super.getBlock();
-        block.setWoodType(this.getWoodType());
+    public Block block() {
+        BlockWoodenDoor block = (BlockWoodenDoor) super.block();
+        block.type(this.type());
         return block;
     }
 

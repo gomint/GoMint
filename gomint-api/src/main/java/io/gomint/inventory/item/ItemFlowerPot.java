@@ -7,12 +7,13 @@ import io.gomint.GoMint;
  * @version 1.0
  * @stability 3
  */
-public interface ItemFlowerPot extends ItemStack {
+public interface ItemFlowerPot extends ItemStack<ItemFlowerPot> {
 
     /**
      * Create a new item stack with given class and amount
      *
      * @param amount which is used for the creation
+	 * @return freshly generated item
      */
     static ItemFlowerPot create( int amount ) {
         return GoMint.instance().createItemStack( ItemFlowerPot.class, amount );

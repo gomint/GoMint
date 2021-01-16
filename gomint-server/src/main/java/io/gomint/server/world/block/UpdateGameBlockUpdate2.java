@@ -22,7 +22,7 @@ public class UpdateGameBlockUpdate2 extends Block {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.UPDATE_GAME_BLOCK_UPDATE2;
     }
 

@@ -15,10 +15,10 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:skull_banner_pattern", id = 573 )
-public class ItemSkullBannerPattern extends ItemStack implements io.gomint.inventory.item.ItemSkullBannerPattern {
+public class ItemSkullBannerPattern extends ItemStack< io.gomint.inventory.item.ItemSkullBannerPattern> implements io.gomint.inventory.item.ItemSkullBannerPattern {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.SKULL_BANNER_PATTERN;
     }
 

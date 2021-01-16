@@ -9,12 +9,12 @@ import io.gomint.taglib.NBTTagCompound;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:emptymap", id = 395 )
- public class ItemMap extends ItemStack implements io.gomint.inventory.item.ItemMap {
+ public class ItemMap extends ItemStack< io.gomint.inventory.item.ItemMap> implements io.gomint.inventory.item.ItemMap {
 
 
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.MAP;
     }
 

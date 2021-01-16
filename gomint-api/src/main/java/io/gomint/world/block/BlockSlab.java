@@ -12,20 +12,21 @@ package io.gomint.world.block;
  * @version 1.0
  * @stability 3
  */
-public interface BlockSlab extends Block {
+public interface BlockSlab<B> extends Block {
 
     /**
      * Is this slab on the top part of the block
      *
      * @return true if top, false if not
      */
-    boolean isTop();
+    boolean top();
 
     /**
      * Set this slab to the top or bottom
      *
      * @param top if true this slab if on the top, false on the bottom
+     * @return block for chaining
      */
-    void setTop( boolean top );
+    B top(boolean top);
 
 }

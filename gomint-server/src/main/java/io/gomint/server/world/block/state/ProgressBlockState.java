@@ -49,7 +49,7 @@ public class ProgressBlockState extends BlockState<Float, Integer> {
     }
 
     @Override
-    public void detectFromPlacement(Block newBlock, EntityLiving player, ItemStack placedItem, Facing face) {
+    public void detectFromPlacement(Block newBlock, EntityLiving<?> player, ItemStack<?> placedItem, Facing face) {
         this.setState(newBlock, 0f);
     }
 

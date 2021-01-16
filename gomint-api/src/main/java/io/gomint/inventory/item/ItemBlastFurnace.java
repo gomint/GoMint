@@ -7,7 +7,7 @@ import io.gomint.GoMint;
  * @version 1.0
  * @stability 3
  */
-public interface ItemBlastFurnace extends ItemStack {
+public interface ItemBlastFurnace extends ItemStack<ItemBlastFurnace> {
 
     /**
      * Create a new item stack with given class and amount

@@ -165,8 +165,8 @@ public class AdventureSettings {
         adventureSettingsPacket.setFlags2( flags2 );
         adventureSettingsPacket.setCommandPermission( this.commandPermission.getId() );
         adventureSettingsPacket.setPlayerPermission( this.playerPermission.getId() );
-        adventureSettingsPacket.setEntityId( this.player.getEntityId() );
-        this.player.getConnection().addToSendQueue( adventureSettingsPacket );
+        adventureSettingsPacket.setEntityId( this.player.id() );
+        this.player.connection().addToSendQueue( adventureSettingsPacket );
     }
 
     public CommandPermission getCommandPermission() {

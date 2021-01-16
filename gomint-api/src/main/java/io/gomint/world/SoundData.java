@@ -32,7 +32,7 @@ public final class SoundData {
      *
      * @return instrument selected or null
      */
-    public Instrument getInstrument() {
+    public Instrument instrument() {
         return this.instrument;
     }
 
@@ -41,7 +41,7 @@ public final class SoundData {
      *
      * @return block selected or null
      */
-    public Class<? extends Block> getBlock() {
+    public Class<? extends Block> block() {
         return this.block;
     }
 

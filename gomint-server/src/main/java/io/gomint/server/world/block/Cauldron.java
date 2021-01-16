@@ -49,18 +49,18 @@ public class Cauldron extends Block implements BlockCauldron {
     }
 
     @Override
-    public boolean beforePlacement(EntityLiving entity, ItemStack item, Facing face, Location location) {
+    public boolean beforePlacement(EntityLiving<?> entity, ItemStack<?> item, Facing face, Location location) {
         FILL_LEVEL.setState(this, 0f);
         return super.beforePlacement(entity, item, face, location);
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 3000;
     }
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
@@ -70,7 +70,7 @@ public class Cauldron extends Block implements BlockCauldron {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.CAULDRON;
     }
 
@@ -80,7 +80,7 @@ public class Cauldron extends Block implements BlockCauldron {
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return ToolPresets.PICKAXE;
     }
 
@@ -96,29 +96,31 @@ public class Cauldron extends Block implements BlockCauldron {
     }
 
     @Override
-    public LiquidType getType() {
+    public LiquidType type() {
         return LiquidType.valueOf(LIQUID.getState(this).name());
     }
 
     @Override
-    public void setType(LiquidType type) {
+    public BlockCauldron type(LiquidType type) {
         LiquidTypeMagic newState = LiquidTypeMagic.valueOf(type.name());
         this.setBlockId(newState.blockId);
         LIQUID.setState(this, newState);
+        return this;
     }
 
     @Override
-    public float getFillHeight() {
+    public float fillHeight() {
         return FILL_LEVEL.getState(this);
     }
 
     @Override
-    public void setFillHeight(float height) {
+    public BlockCauldron fillHeight(float height) {
         if (height < 0f || height > 1f) {
-            return;
+            return this;
         }
 
         FILL_LEVEL.setState(this, height);
+        return this;
     }
 
 }

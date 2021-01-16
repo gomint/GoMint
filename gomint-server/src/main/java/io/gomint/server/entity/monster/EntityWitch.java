@@ -10,7 +10,7 @@ import io.gomint.server.world.WorldAdapter;
 import java.util.Set;
 
 @RegisterInfo( sId = "minecraft:witch" )
-public class EntityWitch extends EntityLiving implements io.gomint.entity.monster.EntityWitch {
+public class EntityWitch extends EntityLiving<io.gomint.entity.monster.EntityWitch> implements io.gomint.entity.monster.EntityWitch {
 
     /**
      * Constructs a new EntityLiving
@@ -31,10 +31,10 @@ public class EntityWitch extends EntityLiving implements io.gomint.entity.monste
     }
 
     private void initEntity() {
-        this.setSize( 0.6f, 1.95f );
-        this.addAttribute( Attribute.HEALTH );
-        this.setMaxHealth( 26 );
-        this.setHealth( 26 );
+        this.size( 0.6f, 1.95f );
+        this.attribute( Attribute.HEALTH );
+        this.maxHealth( 26 );
+        this.health( 26 );
     }
 
     @Override
@@ -43,7 +43,7 @@ public class EntityWitch extends EntityLiving implements io.gomint.entity.monste
     }
 
     @Override
-    public Set<String> getTags() {
+    public Set<String> tags() {
         return EntityTags.RANGED_HOSTILE_MOB;
     }
 

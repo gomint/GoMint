@@ -27,27 +27,27 @@ public class EnchantmentFireAspect extends Enchantment implements io.gomint.ench
     }
 
     @Override
-    public int getMinEnchantAbility( short level ) {
+    public int minEnchantAbility( short level ) {
         return (byte) ( 10 + ( level - 1 ) * 20 );
     }
 
     @Override
-    public int getMaxEnchantAbility( short level ) {
-        return (byte) ( getMinEnchantAbility( level ) + 50 );
+    public int maxEnchantAbility( short level ) {
+        return (byte) ( minEnchantAbility( level ) + 50 );
     }
 
     @Override
-    public boolean canBeApplied( ItemStack itemStack ) {
-        return itemStack.getItemType() == ItemType.DIAMOND_SWORD ||
-            itemStack.getItemType() == ItemType.STONE_SWORD ||
-            itemStack.getItemType() == ItemType.GOLDEN_SWORD ||
-            itemStack.getItemType() == ItemType.IRON_SWORD ||
-            itemStack.getItemType() == ItemType.WOODEN_SWORD ||
-            itemStack.getItemType() == ItemType.NETHERITE_SWORD;
+    public boolean canBeApplied(ItemStack<?> itemStack ) {
+        return itemStack.itemType() == ItemType.DIAMOND_SWORD ||
+            itemStack.itemType() == ItemType.STONE_SWORD ||
+            itemStack.itemType() == ItemType.GOLDEN_SWORD ||
+            itemStack.itemType() == ItemType.IRON_SWORD ||
+            itemStack.itemType() == ItemType.WOODEN_SWORD ||
+            itemStack.itemType() == ItemType.NETHERITE_SWORD;
     }
 
     @Override
-    public Rarity getRarity() {
+    public Rarity rarity() {
         return Rarity.RARE;
     }
 

@@ -14,7 +14,7 @@ import io.gomint.server.world.WorldAdapter;
  * @author geNAZt
  * @version 1.0
  */
-public class CraftingInputInventory extends ContainerInventory {
+public class CraftingInputInventory extends ContainerInventory<CraftingInputInventory> {
 
     private BlockPosition position;
 
@@ -33,23 +33,23 @@ public class CraftingInputInventory extends ContainerInventory {
     }
 
     @Override
-    public BlockPosition getContainerPosition() {
+    public BlockPosition containerPosition() {
         return this.position;
     }
 
     @Override
     public void onClose(EntityPlayer player) {
-        WorldAdapter worldAdapter = player.getWorld();
-        Location location = player.getLocation();
+        WorldAdapter worldAdapter = player.world();
+        Location location = player.location();
 
         // Push out all items in the crafting views
-        for (ItemStack stack : player.getCraftingInventory().getContents()) {
+        for (ItemStack<?> stack : player.craftingInventory().contents()) {
             worldAdapter.dropItem(location, stack);
         }
 
         // Client closed its crafting view
-        player.getCraftingInventory().resizeAndClear(4);
-        player.getCraftingInputInventory().resizeAndClear(4);
+        player.craftingInventory().resizeAndClear(4);
+        player.craftingInputInventory().resizeAndClear(4);
     }
 
     @Override
@@ -63,7 +63,7 @@ public class CraftingInputInventory extends ContainerInventory {
     }
 
     @Override
-    public InventoryType getInventoryType() {
+    public InventoryType inventoryType() {
         return InventoryType.CRAFTING;
     }
 

@@ -18,12 +18,12 @@ public class Dandelion extends Block implements BlockDandelion {
     }
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
     @Override
-    public boolean isSolid() {
+    public boolean solid() {
         return false;
     }
 
@@ -33,7 +33,7 @@ public class Dandelion extends Block implements BlockDandelion {
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 0;
     }
 
@@ -43,7 +43,7 @@ public class Dandelion extends Block implements BlockDandelion {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.DANDELION;
     }
 

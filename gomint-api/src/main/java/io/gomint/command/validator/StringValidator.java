@@ -20,7 +20,7 @@ import java.util.regex.Pattern;
  * @version 1.0
  * @stability 3
  */
-public class StringValidator extends ParamValidator {
+public class StringValidator extends ParamValidator<StringValidator> {
 
     private final Pattern pattern;
 
@@ -32,7 +32,7 @@ public class StringValidator extends ParamValidator {
      * {@inheritDoc}
      */
     @Override
-    public Object validate( String input, CommandSender commandSender ) {
+    public Object validate(String input, CommandSender<?> commandSender ) {
         if ( this.pattern.matcher( input ).matches() ) {
             return input;
         }
@@ -56,7 +56,7 @@ public class StringValidator extends ParamValidator {
      * {@inheritDoc}
      */
     @Override
-    public ParamType getType() {
+    public ParamType type() {
         return ParamType.STRING;
     }
 
@@ -80,7 +80,7 @@ public class StringValidator extends ParamValidator {
      * {@inheritDoc}
      */
     @Override
-    public String getHelpText() {
+    public String helpText() {
         return "string:" + this.pattern.pattern();
     }
 

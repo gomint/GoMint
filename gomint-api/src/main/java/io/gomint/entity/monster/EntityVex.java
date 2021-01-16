@@ -8,7 +8,7 @@ import io.gomint.entity.EntityLiving;
  * @version 1.0
  * @stability 3
  */
-public interface EntityVex extends EntityLiving {
+public interface EntityVex extends EntityLiving<EntityVex> {
 
     /**
      * Create a new entity vex with no config

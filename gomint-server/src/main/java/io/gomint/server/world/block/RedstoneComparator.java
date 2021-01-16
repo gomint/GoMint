@@ -17,7 +17,7 @@ import io.gomint.world.block.BlockType;
 public class RedstoneComparator extends Block implements BlockRedstoneComparator {
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
@@ -27,7 +27,7 @@ public class RedstoneComparator extends Block implements BlockRedstoneComparator
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.REDSTONE_COMPARATOR;
     }
 
@@ -37,7 +37,7 @@ public class RedstoneComparator extends Block implements BlockRedstoneComparator
     }
 
     @Override
-    public boolean isPowered() {
+    public boolean powered() {
         return this.getBlockId().equals("minecraft:powered_comparator");
     }
 

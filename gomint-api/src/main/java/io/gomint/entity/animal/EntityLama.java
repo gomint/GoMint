@@ -15,7 +15,7 @@ import io.gomint.entity.EntityAgeable;
  * @version 1.0
  * @stability 3
  */
-public interface EntityLama extends EntityAgeable {
+public interface EntityLama extends EntityAgeable<EntityLama> {
 
     /**
      * Create a new entity lama with no config

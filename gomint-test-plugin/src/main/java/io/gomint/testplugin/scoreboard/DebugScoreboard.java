@@ -63,10 +63,10 @@ public class DebugScoreboard {
         this.format.setMinimumFractionDigits( 2 );
 
         // Schedule updated for this scoreboard
-        plugin.getScheduler().schedule( this::update, 1, 1, TimeUnit.MILLISECONDS );
+        plugin.scheduler().schedule( this::update, 1, 1, TimeUnit.MILLISECONDS );
 
         // Add player to scoreboard
-        player.setScoreboard( scoreboard );
+        player.scoreboard( scoreboard );
     }
 
     private void update() {
@@ -76,7 +76,7 @@ public class DebugScoreboard {
     }
 
     private void updateWorldTime() {
-        Duration time = this.player.getWorld().getTime();
+        Duration time = this.player.world().time();
 
         int seconds = (int) time.getSeconds();
         int minutes = MathUtils.fastFloor(seconds / 60f);
@@ -108,26 +108,26 @@ public class DebugScoreboard {
     }
 
     private void updateChunk() {
-        Chunk chunk = this.player.getChunk();
-        if ( chunk.getX() != this.chunkX || chunk.getZ() != this.chunkZ ) {
+        Chunk chunk = this.player.chunk();
+        if ( chunk.x() != this.chunkX || chunk.z() != this.chunkZ ) {
             // Remove the old entry
             this.display.removeEntry( this.chunkEntry );
-            this.chunkEntry = this.display.addLine( chunk.getX() + " / " + chunk.getZ(), 4 );
+            this.chunkEntry = this.display.addLine( chunk.x() + " / " + chunk.z(), 4 );
 
             // Update cache
-            this.chunkZ = chunk.getZ();
-            this.chunkX = chunk.getX();
+            this.chunkZ = chunk.z();
+            this.chunkX = chunk.x();
         }
     }
 
     private void updateTPS() {
-        if ( this.oldTPS != GoMint.instance().getTPS() ) {
+        if ( this.oldTPS != GoMint.instance().tps() ) {
             // Remove the old entry
             this.display.removeEntry( this.tpsEntry );
-            this.tpsEntry = this.display.addLine( ChatColor.GREEN + this.format.format( GoMint.instance().getTPS() ), 2 );
+            this.tpsEntry = this.display.addLine( ChatColor.GREEN + this.format.format( GoMint.instance().tps() ), 2 );
 
             // Update cache
-            this.oldTPS = GoMint.instance().getTPS();
+            this.oldTPS = GoMint.instance().tps();
         }
     }
 

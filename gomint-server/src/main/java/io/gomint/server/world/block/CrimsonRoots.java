@@ -17,7 +17,7 @@ public class CrimsonRoots extends Block implements BlockCrimsonRoots {
     }
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
@@ -27,12 +27,12 @@ public class CrimsonRoots extends Block implements BlockCrimsonRoots {
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 0;
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.CRIMSON_ROOTS;
     }
 

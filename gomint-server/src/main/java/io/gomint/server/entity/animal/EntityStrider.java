@@ -17,7 +17,7 @@ import io.gomint.server.world.WorldAdapter;
  * @version 1.0
  */
 @RegisterInfo(sId = "minecraft:strider")
-public class EntityStrider extends EntityAgeableAnimal implements io.gomint.entity.animal.EntityStrider {
+public class EntityStrider extends EntityAgeableAnimal<io.gomint.entity.animal.EntityStrider> implements io.gomint.entity.animal.EntityStrider {
 
     /**
      * Constructs a new EntityLiving
@@ -36,13 +36,13 @@ public class EntityStrider extends EntityAgeableAnimal implements io.gomint.enti
     }
 
     private void initEntity() {
-        this.addAttribute(Attribute.HEALTH);
-        this.setHealth(15);
-        this.setMaxHealth(15);
-        if (this.isBaby()) {
-            this.setSize(0.45f, 0.85f);
+        this.attribute(Attribute.HEALTH);
+        this.health(15);
+        this.maxHealth(15);
+        if (this.baby()) {
+            this.size(0.45f, 0.85f);
         } else {
-            this.setSize(0.9f, 1.7f);
+            this.size(0.9f, 1.7f);
         }
     }
 

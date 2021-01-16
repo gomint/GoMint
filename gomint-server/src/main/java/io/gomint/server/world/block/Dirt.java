@@ -7,6 +7,7 @@ import io.gomint.world.block.BlockType;
 import io.gomint.inventory.item.*;
 import io.gomint.server.registry.RegisterInfo;
 import io.gomint.world.block.BlockDirt;
+import io.gomint.world.block.data.DirtType;
 
 /**
  * @author geNAZt
@@ -39,12 +40,12 @@ public class Dirt extends Block implements BlockDirt {
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 750;
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return ToolPresets.SHOVEL;
     }
 
@@ -59,18 +60,19 @@ public class Dirt extends Block implements BlockDirt {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.DIRT;
     }
 
     @Override
-    public void setDirtType(Type type) {
+    public BlockDirt type(DirtType type) {
         VARIANT.setState(this, TypeMagic.valueOf(type.name()));
+        return this;
     }
 
     @Override
-    public Type getDirtType() {
-        return Type.valueOf(VARIANT.getState(this).name());
+    public DirtType type() {
+        return DirtType.valueOf(VARIANT.getState(this).name());
     }
 
 }

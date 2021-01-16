@@ -15,10 +15,10 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:sparkler", id = 442 )
-public class ItemSparkler extends ItemStack implements io.gomint.inventory.item.ItemSparkler {
+public class ItemSparkler extends ItemStack< io.gomint.inventory.item.ItemSparkler> implements io.gomint.inventory.item.ItemSparkler {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.SPARKLER;
     }
 

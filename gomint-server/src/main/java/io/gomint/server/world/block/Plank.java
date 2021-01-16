@@ -49,12 +49,12 @@ public class Plank extends Block implements BlockPlank {
     });
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 3000;
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return ToolPresets.AXE;
     }
 
@@ -64,7 +64,7 @@ public class Plank extends Block implements BlockPlank {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.PLANK;
     }
 
@@ -74,7 +74,7 @@ public class Plank extends Block implements BlockPlank {
     }
 
     @Override
-    public LogType getPlankType() {
+    public LogType type() {
         switch (this.getBlockId()) {
             case "minecraft:crimson_planks":
                 return LogType.CRIMSON;
@@ -86,7 +86,7 @@ public class Plank extends Block implements BlockPlank {
     }
 
     @Override
-    public void setPlankType(LogType logType) {
+    public BlockPlank type(LogType logType) {
         LogTypeMagic newState = LogTypeMagic.valueOf(logType.name());
 
         if (!newState.value.isEmpty()) {
@@ -96,6 +96,8 @@ public class Plank extends Block implements BlockPlank {
         if (!this.getBlockId().equals(newState.blockId)) {
             this.setBlockId(newState.blockId);
         }
+
+        return this;
     }
 
 }

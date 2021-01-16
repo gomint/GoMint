@@ -10,10 +10,10 @@ import io.gomint.taglib.NBTTagCompound;
  * @version 1.0
  */
 @RegisterInfo(sId = "minecraft:end_stone", id = 121)
-public class ItemEndStone extends ItemStack implements io.gomint.inventory.item.ItemEndStone {
+public class ItemEndStone extends ItemStack< io.gomint.inventory.item.ItemEndStone> implements io.gomint.inventory.item.ItemEndStone {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.END_STONE;
     }
 

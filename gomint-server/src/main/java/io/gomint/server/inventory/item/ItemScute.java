@@ -15,10 +15,10 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:scute", id = 562 )
-public class ItemScute extends ItemStack implements io.gomint.inventory.item.ItemScute {
+public class ItemScute extends ItemStack< io.gomint.inventory.item.ItemScute> implements io.gomint.inventory.item.ItemScute {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.SCUTE;
     }
 

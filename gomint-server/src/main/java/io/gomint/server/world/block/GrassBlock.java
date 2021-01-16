@@ -26,8 +26,8 @@ public class GrassBlock extends Block implements BlockGrassBlock {
 
     @Override
     public long update( UpdateReason updateReason, long currentTimeMS, float dT ) {
-        Block block = this.getSide( Facing.UP );
-        byte lightLevel = block.getSkyLightLevel();
+        Block block = this.side( Facing.UP );
+        byte lightLevel = block.skyLightLevel();
 
         if ( lightLevel >= 9 ) {
 
@@ -37,7 +37,7 @@ public class GrassBlock extends Block implements BlockGrassBlock {
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 900;
     }
 
@@ -47,7 +47,7 @@ public class GrassBlock extends Block implements BlockGrassBlock {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.GRASS_BLOCK;
     }
 
@@ -57,14 +57,14 @@ public class GrassBlock extends Block implements BlockGrassBlock {
     }
 
     @Override
-    public List<ItemStack> getDrops( ItemStack itemInHand ) {
-        return new ArrayList<ItemStack>(){{
+    public List<ItemStack<?>> drops(ItemStack<?> itemInHand ) {
+        return new ArrayList<>(){{
             add( ItemDirt.create( 1 ) );
         }};
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return ToolPresets.SHOVEL;
     }
 

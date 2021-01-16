@@ -17,98 +17,98 @@ public interface Transformable {
      *
      * @return The motion of the object on the x axis
      */
-    float getMotionX();
+    float motionX();
 
     /**
      * Gets the motion of the object on the y axis.
      *
      * @return The motion of the object on the y axis
      */
-    float getMotionY();
+    float motionY();
 
     /**
      * Gets the motion of the object on the z axis.
      *
      * @return The motion of the object on the z axis
      */
-    float getMotionZ();
+    float motionZ();
 
     /**
      * Gets the position of the object on the x axis.
      *
      * @return The position of the object on the x axis
      */
-    float getPositionX();
+    float positionX();
 
     /**
      * Gets the position of the object on the y axis.
      *
      * @return The position of the object on the y axis
      */
-    float getPositionY();
+    float positionY();
 
     /**
      * Gets the position of the object on the z axis.
      *
      * @return The position of the object on the z axis
      */
-    float getPositionZ();
+    float positionZ();
 
     /**
      * Gets the position of the object as a vector.
      *
      * @return The position of the object as a vector
      */
-    Vector getPosition();
+    Vector position();
 
     /**
      * Sets the object's position given a vector.
      *
      * @param position The position to set
      */
-    void setPosition( Vector position );
+    Transformable position(Vector position );
 
     /**
      * Gets the yaw angle of the object's body.
      *
      * @return The yaw angle of the object's body
      */
-    float getYaw();
+    float yaw();
 
     /**
      * Sets the yaw angle of the object's body.
      *
      * @param yaw The yaw angle to set
      */
-    void setYaw( float yaw );
+    Transformable yaw(float yaw );
 
     /**
      * Gets the yaw angle of the object's head.
      *
      * @return The yaw angle of the object's head
      */
-    float getHeadYaw();
+    float headYaw();
 
     /**
      * Sets the yaw angle of the object's head.
      *
      * @param headYaw The yaw angle to set
      */
-    void setHeadYaw( float headYaw );
+    Transformable headYaw(float headYaw );
 
     /**
      * Gets the pitch angle of the object's head.
      *
      * @return The pitch angle of the object's head
      */
-    float getPitch();
+    float pitch();
 
     /**
      * Sets the pitch angle of the object's head.
      *
      * @param pitch The pitch angle to set.
      */
-    void setPitch( float pitch );
+    Transformable pitch(float pitch );
 
     /**
      * Gets the direction the object's body is facing as a normalized vector.
@@ -117,14 +117,14 @@ public interface Transformable {
      *
      * @return The direction vector the object's body is facing
      */
-    Vector getDirection();
+    Vector direction();
 
     /**
      * Gets the direction the object's head is facing as a normalized vector.
      *
      * @return The direction vector the object's head is facing
      */
-    Vector getHeadDirection();
+    Vector headDirection();
 
     /**
      * Manipulate the motion set by offsets
@@ -133,7 +133,7 @@ public interface Transformable {
      * @param y the y offset for the motion
      * @param z the z offset for the motion
      */
-    void manipulateMotion( float x, float y, float z );
+    Transformable manipulateMotion( float x, float y, float z );
 
     /**
      * Sets the object's motion given the respective coordinates on the 3 axes.
@@ -142,7 +142,7 @@ public interface Transformable {
      * @param motionY The y coordinate of the motion
      * @param motionZ The z coordinate of the motion
      */
-    void setMotion( float motionX, float motionY, float motionZ );
+    Transformable motion(float motionX, float motionY, float motionZ );
 
     /**
      * Sets the object's position given the respective coordinates on the 3 axes.
@@ -151,7 +151,7 @@ public interface Transformable {
      * @param positionY The y coordinate of the position
      * @param positionZ The z coordinate of the position
      */
-    void setPosition( float positionX, float positionY, float positionZ );
+    Transformable position(float positionX, float positionY, float positionZ );
 
     /**
      * Moves the object by the given offset vector. Produces the same result as
@@ -165,7 +165,7 @@ public interface Transformable {
      * @param offsetY The y component of the offset
      * @param offsetZ The z component of the offset
      */
-    void move( float offsetX, float offsetY, float offsetZ );
+    Transformable move( float offsetX, float offsetY, float offsetZ );
 
     /**
      * Moves the object by the given offset vector. Produces the same result as
@@ -177,28 +177,28 @@ public interface Transformable {
      *
      * @param offset The offset vector to apply to the object
      */
-    void move( Vector offset );
+    Transformable move( Vector offset );
 
     /**
      * Rotates the object's body around the yaw axis (vertical axis).
      *
      * @param yaw The yaw value by which to rotate the object
      */
-    void rotateYaw( float yaw );
+    Transformable rotateYaw( float yaw );
 
     /**
      * Rotates the object's head around the yaw axis (vertical axis).
      *
      * @param headYaw The yaw value by which to rotate the object's head
      */
-    void rotateHeadYaw( float headYaw );
+    Transformable rotateHeadYaw( float headYaw );
 
     /**
      * Rotates the object's head around the pitch axis (transverse axis).
      *
      * @param pitch The pitch value by which to rotate the object's head
      */
-    void rotatePitch( float pitch );
+    Transformable rotatePitch( float pitch );
 
     /**
      * Converts the transformable into a location instance. The world the location
@@ -217,25 +217,25 @@ public interface Transformable {
      *
      * @return Whether or not any changes have been made
      */
-    boolean isDirty();
+    boolean dirty();
 
     /**
      * The motion (velocity) this transformable has
      *
      * @return
      */
-    Vector getMotion();
+    Vector motion();
 
     /**
      * Check if the motion has been sent to the clients
      *
      * @return true when it has been sent, false when not
      */
-    boolean hasMotionBeenSent();
+    boolean motionBeenSent();
 
     /**
      * Mark the motion as sent
      */
-    void markMotionSent();
+    Transformable markMotionSent();
 
 }

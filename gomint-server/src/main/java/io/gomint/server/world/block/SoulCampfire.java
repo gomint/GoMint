@@ -1,3 +1,10 @@
+/*
+ * Copyright (c) 2020 Gomint team
+ *
+ * This code is licensed under the BSD license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
 package io.gomint.server.world.block;
 
 import io.gomint.inventory.item.ItemStack;
@@ -23,7 +30,7 @@ public class SoulCampfire extends Block implements BlockSoulCampfire {
     private static final BooleanBlockState EXTINGUISHED = new BooleanBlockState(() -> new String[]{"extinguished"});
 
     @Override
-    public boolean beforePlacement(EntityLiving entity, ItemStack item, Facing face, Location location) {
+    public boolean beforePlacement(EntityLiving<?> entity, ItemStack<?> item, Facing face, Location location) {
         super.beforePlacement(entity, item, face, location);
         DIRECTION.detectFromPlacement(this, entity, item, face);
         EXTINGUISHED.setState(this, false);
@@ -31,7 +38,7 @@ public class SoulCampfire extends Block implements BlockSoulCampfire {
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 3000;
     }
 
@@ -46,28 +53,30 @@ public class SoulCampfire extends Block implements BlockSoulCampfire {
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return ToolPresets.AXE;
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.SOUL_CAMPFIRE;
     }
 
     @Override
-    public void setDirection(Direction direction) {
+    public BlockSoulCampfire direction(Direction direction) {
         DIRECTION.setState(this, direction);
+        return this;
     }
 
     @Override
-    public Direction getDirection() {
+    public Direction direction() {
         return DIRECTION.getState(this);
     }
 
     @Override
-    public void setExtinguished(boolean value) {
+    public BlockSoulCampfire extinguished(boolean value) {
         EXTINGUISHED.setState(this, value);
+        return this;
     }
 
     @Override

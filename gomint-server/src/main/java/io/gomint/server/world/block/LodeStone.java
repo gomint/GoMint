@@ -19,7 +19,7 @@ public class LodeStone extends Block implements BlockLodeStone {
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 5300;
     }
 
@@ -29,7 +29,7 @@ public class LodeStone extends Block implements BlockLodeStone {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.LODESTONE;
     }
 
@@ -39,7 +39,7 @@ public class LodeStone extends Block implements BlockLodeStone {
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return ToolPresets.PICKAXE;
     }
 

@@ -23,7 +23,7 @@ public class EndRod extends Block implements BlockEndRod {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.END_ROD;
     }
 

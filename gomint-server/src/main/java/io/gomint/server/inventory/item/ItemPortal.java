@@ -9,10 +9,10 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo(sId = "minecraft:portal", id = 90)
-public class ItemPortal extends ItemStack implements io.gomint.inventory.item.ItemPortal {
+public class ItemPortal extends ItemStack< io.gomint.inventory.item.ItemPortal> implements io.gomint.inventory.item.ItemPortal {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.PORTAL;
     }
 

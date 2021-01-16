@@ -20,7 +20,7 @@ import java.util.Objects;
  * into the client. This event can be used when you need to be sure the play status has been reached (like redirecting
  * a player to another server without ever touching this one)
  */
-public class PlayerPreJoinEvent extends CancellablePlayerEvent {
+public class PlayerPreJoinEvent extends CancellablePlayerEvent<PlayerPreJoinEvent> {
 
     private String kickReason;
 
@@ -33,8 +33,9 @@ public class PlayerPreJoinEvent extends CancellablePlayerEvent {
      *
      * @param kickReason which is used to kick the player
      */
-    public void setKickReason( String kickReason ) {
+    public PlayerPreJoinEvent kickReason(String kickReason ) {
         this.kickReason = kickReason;
+        return this;
     }
 
     /**
@@ -42,7 +43,7 @@ public class PlayerPreJoinEvent extends CancellablePlayerEvent {
      *
      * @return reason for kick
      */
-    public String getKickReason() {
+    public String kickReason() {
         return kickReason;
     }
 

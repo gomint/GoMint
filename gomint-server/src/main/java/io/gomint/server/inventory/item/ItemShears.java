@@ -10,15 +10,15 @@ import io.gomint.taglib.NBTTagCompound;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:shears", id = 359 )
-public class ItemShears extends ItemStack implements io.gomint.inventory.item.ItemShears {
+public class ItemShears extends ItemStack< io.gomint.inventory.item.ItemShears> implements io.gomint.inventory.item.ItemShears {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.SHEARS;
     }
 
     @Override
-    public float getDivisor() {
+    public float divisor() {
         return 6;
     }
 

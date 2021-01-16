@@ -1,5 +1,7 @@
 package io.gomint.inventory.item;
 
+import java.time.Duration;
+
 /**
  * @author geNAZt
  * @version 1.0
@@ -12,6 +14,6 @@ public interface ItemBurnable {
      *
      * @return amount of milliseconds this item can burn for, 0 when not burnable
      */
-    long getBurnTime();
+    Duration burnTime();
 
 }

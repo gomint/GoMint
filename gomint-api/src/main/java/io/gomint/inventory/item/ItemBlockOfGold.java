@@ -7,12 +7,13 @@ import io.gomint.GoMint;
  * @version 1.0
  * @stability 3
  */
-public interface ItemBlockOfGold extends ItemStack {
+public interface ItemBlockOfGold extends ItemStack<ItemBlockOfGold> {
 
     /**
      * Create a new item stack with given class and amount
      *
      * @param amount which is used for the creation
+	 * @return freshly generated item
      */
     static ItemBlockOfGold create( int amount ) {
         return GoMint.instance().createItemStack( ItemBlockOfGold.class, amount );

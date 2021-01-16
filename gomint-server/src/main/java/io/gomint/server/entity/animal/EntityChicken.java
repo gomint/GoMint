@@ -17,7 +17,7 @@ import io.gomint.server.world.WorldAdapter;
  * @version 1.0
  */
 @RegisterInfo(sId = "minecraft:chicken")
-public class EntityChicken extends EntityAgeableAnimal implements io.gomint.entity.animal.EntityChicken {
+public class EntityChicken extends EntityAgeableAnimal<io.gomint.entity.animal.EntityChicken> implements io.gomint.entity.animal.EntityChicken {
 
     /**
      * Constructs a new EntityLiving
@@ -38,13 +38,13 @@ public class EntityChicken extends EntityAgeableAnimal implements io.gomint.enti
     }
 
     private void initEntity() {
-        this.addAttribute(Attribute.HEALTH);
-        this.setMaxHealth(8);
-        this.setHealth(8);
-        if (this.isBaby()) {
-            this.setSize(0.2f, 0.35f);
+        this.attribute(Attribute.HEALTH);
+        this.maxHealth(8);
+        this.health(8);
+        if (this.baby()) {
+            this.size(0.2f, 0.35f);
         } else {
-            this.setSize(0.4f, 0.7f);
+            this.size(0.4f, 0.7f);
         }
     }
 

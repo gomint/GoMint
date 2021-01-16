@@ -18,17 +18,17 @@ public class EndPortal extends Block implements BlockEndPortal {
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return -1;
     }
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
     @Override
-    public boolean isSolid() {
+    public boolean solid() {
         return false;
     }
 
@@ -38,7 +38,7 @@ public class EndPortal extends Block implements BlockEndPortal {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.END_PORTAL;
     }
 

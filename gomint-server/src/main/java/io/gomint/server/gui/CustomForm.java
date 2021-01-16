@@ -22,7 +22,7 @@ public class CustomForm extends Form<io.gomint.gui.FormResponse> implements io.g
     }
 
     @Override
-    public Dropdown createDropdown( String id, String text ) {
+    public Dropdown dropdown(String id, String text ) {
         io.gomint.server.gui.element.Dropdown dropdown = new io.gomint.server.gui.element.Dropdown( this, id, text );
         this.elements.add( dropdown );
         this.dirty = true;
@@ -30,7 +30,7 @@ public class CustomForm extends Form<io.gomint.gui.FormResponse> implements io.g
     }
 
     @Override
-    public io.gomint.gui.CustomForm addInputField( String id, String text, String placeHolder, String defaultValue ) {
+    public io.gomint.gui.CustomForm input(String id, String text, String placeHolder, String defaultValue ) {
         Input input = new Input( id, text, placeHolder, defaultValue );
         this.elements.add( input );
         this.dirty = true;
@@ -38,7 +38,7 @@ public class CustomForm extends Form<io.gomint.gui.FormResponse> implements io.g
     }
 
     @Override
-    public io.gomint.gui.CustomForm addLabel( String text ) {
+    public io.gomint.gui.CustomForm label(String text ) {
         Label label = new Label( "", text );
         this.elements.add( label );
         this.dirty = true;
@@ -46,7 +46,7 @@ public class CustomForm extends Form<io.gomint.gui.FormResponse> implements io.g
     }
 
     @Override
-    public io.gomint.gui.CustomForm addSlider( String id, String text, float min, float max, float step, float defaultValue ) {
+    public io.gomint.gui.CustomForm slider(String id, String text, float min, float max, float step, float defaultValue ) {
         Slider slider = new Slider( id, text, min, max, step, defaultValue );
         this.elements.add( slider );
         this.dirty = true;
@@ -54,7 +54,7 @@ public class CustomForm extends Form<io.gomint.gui.FormResponse> implements io.g
     }
 
     @Override
-    public io.gomint.gui.element.StepSlider createStepSlider( String id, String text ) {
+    public io.gomint.gui.element.StepSlider stepSlider(String id, String text ) {
         StepSlider stepSlider = new StepSlider( this, id, text );
         this.elements.add( stepSlider );
         this.dirty = true;
@@ -62,7 +62,7 @@ public class CustomForm extends Form<io.gomint.gui.FormResponse> implements io.g
     }
 
     @Override
-    public io.gomint.gui.CustomForm addToggle( String id, String text, boolean value ) {
+    public io.gomint.gui.CustomForm toggle(String id, String text, boolean value ) {
         Toggle toggle = new Toggle( id, text, value );
         this.elements.add( toggle );
         this.dirty = true;

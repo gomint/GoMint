@@ -7,7 +7,7 @@ import io.gomint.entity.EntityPlayer;
  * @version 1.0
  * @stability 3
  */
-public class PlayerSpinEvent extends CancellablePlayerEvent {
+public class PlayerSpinEvent extends CancellablePlayerEvent<PlayerSpinEvent> {
 
     private final boolean newStatus;
 
@@ -21,7 +21,8 @@ public class PlayerSpinEvent extends CancellablePlayerEvent {
      *
      * @return true when the client wants to start spinning, false otherwise
      */
-    public boolean getNewStatus() {
+    public boolean newStatus() {
         return this.newStatus;
     }
+
 }

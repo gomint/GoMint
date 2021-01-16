@@ -1,8 +1,8 @@
 package io.gomint.server.network.handler;
 
 import io.gomint.inventory.item.ItemAir;
+import io.gomint.inventory.item.ItemStack;
 import io.gomint.server.entity.EntityPlayer;
-import io.gomint.server.inventory.item.ItemStack;
 import io.gomint.server.network.PlayerConnection;
 import io.gomint.server.network.packet.PacketBlockPickRequest;
 import io.gomint.server.world.block.Block;
@@ -18,42 +18,42 @@ public class PacketBlockPickRequestHandler implements PacketHandler<PacketBlockP
         EntityPlayer player = connection.getEntity();
 
         // Crash check
-        float dist = player.getLocation().distance(packet.getLocation().toVector());
+        float dist = player.location().distance(packet.getLocation().toVector());
         if (dist > 100) {
-            LOGGER.warn("Player {} tried to reach {} blocks wide", player.getName(), dist);
+            LOGGER.warn("Player {} tried to reach {} blocks wide", player.name(), dist);
             return;
         }
 
-        Block block = player.getWorld().getBlockAt(packet.getLocation());
-        switch (player.getGamemode()) {
+        Block block = player.world().blockAt(packet.getLocation());
+        switch (player.gamemode()) {
             case CREATIVE:
                 // When in creative give this player the block in the inventory
-                for (io.gomint.inventory.item.ItemStack drop : block.getDrops(null)) {
-                    player.getInventory().addItem(drop);
+                for (io.gomint.inventory.item.ItemStack<?> drop : block.drops(null)) {
+                    player.inventory().addItem(drop);
                 }
 
                 break;
             case SURVIVAL:
                 // Check current player inventory
                 byte freeSlot = -1;
-                io.gomint.inventory.item.ItemStack[] items = player.getInventory().getContents();
+                ItemStack<?>[] items = player.inventory().contents();
                 for (byte i = 0; i < items.length; i++) {
-                    ItemStack itemStack = (ItemStack) items[i];
+                    ItemStack<?> itemStack = items[i];
                     if (freeSlot == -1 && i < 9) {
                         if (itemStack instanceof ItemAir) {
                             freeSlot = i;
                         }
                     }
 
-                    if (block.getBlockId().equals(itemStack.getMaterial())) { // TODO: Fix this for slabs.....
+                    if (block.getBlockId().equals(((io.gomint.server.inventory.item.ItemStack<?>) itemStack).material())) { // TODO: Fix this for slabs.....
                         if (i < 9) {
-                            player.getInventory().setItemInHand(i);
+                            player.inventory().setItemInHand(i);
                             return;
                         } else if (freeSlot > -1) {
                             // Set item into free slot
-                            player.getInventory().setItem(freeSlot, itemStack);
-                            player.getInventory().setItem(i, ItemAir.create(1));
-                            player.getInventory().setItemInHand(freeSlot);
+                            player.inventory().item(freeSlot, itemStack);
+                            player.inventory().item(i, ItemAir.create(1));
+                            player.inventory().setItemInHand(freeSlot);
 
                             return;
                         }

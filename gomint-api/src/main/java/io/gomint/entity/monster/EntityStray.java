@@ -8,7 +8,7 @@ import io.gomint.entity.EntityLiving;
  * @version 1.0
  * @stability 3
  */
-public interface EntityStray extends EntityLiving {
+public interface EntityStray extends EntityLiving<EntityStray> {
 
     /**
      * Create a new entity stray with no config

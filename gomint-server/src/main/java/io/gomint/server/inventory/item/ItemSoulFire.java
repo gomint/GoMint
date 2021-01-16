@@ -8,10 +8,10 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo(id = 492, sId = "minecraft:soul_fire")
-public class ItemSoulFire extends ItemStack implements io.gomint.inventory.item.ItemSoulFire {
+public class ItemSoulFire extends ItemStack< io.gomint.inventory.item.ItemSoulFire> implements io.gomint.inventory.item.ItemSoulFire {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.SOUL_FIRE;
     }
 

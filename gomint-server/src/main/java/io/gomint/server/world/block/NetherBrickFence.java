@@ -20,12 +20,12 @@ public class NetherBrickFence extends Block implements BlockNetherBrickFence {
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 3000;
     }
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
@@ -35,7 +35,7 @@ public class NetherBrickFence extends Block implements BlockNetherBrickFence {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.NETHER_BRICK_FENCE;
     }
 
@@ -45,7 +45,7 @@ public class NetherBrickFence extends Block implements BlockNetherBrickFence {
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return ToolPresets.PICKAXE;
     }
 

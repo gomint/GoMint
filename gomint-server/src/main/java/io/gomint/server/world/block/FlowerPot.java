@@ -18,7 +18,7 @@ public class FlowerPot extends Block implements BlockFlowerPot {
     }
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
@@ -28,12 +28,12 @@ public class FlowerPot extends Block implements BlockFlowerPot {
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 0;
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.FLOWER_POT;
     }
 

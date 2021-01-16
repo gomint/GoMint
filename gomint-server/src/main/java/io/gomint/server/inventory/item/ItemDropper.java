@@ -10,10 +10,10 @@ import io.gomint.taglib.NBTTagCompound;
  * @version 1.0
  */
 @RegisterInfo(sId = "minecraft:dropper", id = 125)
-public class ItemDropper extends ItemStack implements io.gomint.inventory.item.ItemDropper {
+public class ItemDropper extends ItemStack< io.gomint.inventory.item.ItemDropper> implements io.gomint.inventory.item.ItemDropper {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.DROPPER;
     }
 

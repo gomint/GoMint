@@ -24,12 +24,12 @@ public class Cocoa extends Growable implements BlockCocoa {
     });
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 300;
     }
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
@@ -39,7 +39,7 @@ public class Cocoa extends Growable implements BlockCocoa {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.COCOA;
     }
 
@@ -49,17 +49,18 @@ public class Cocoa extends Growable implements BlockCocoa {
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return ToolPresets.AXE;
     }
 
     @Override
-    public void setDirection(Direction direction) {
+    public BlockCocoa direction(Direction direction) {
         DIRECTION.setState(this, direction);
+        return this;
     }
 
     @Override
-    public Direction getDirection() {
+    public Direction direction() {
         return DIRECTION.getState(this);
     }
 

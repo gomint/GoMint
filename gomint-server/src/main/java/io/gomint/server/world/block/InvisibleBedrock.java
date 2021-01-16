@@ -18,12 +18,12 @@ public class InvisibleBedrock extends Block implements BlockInvisibleBedrock {
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return -1;
     }
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
@@ -33,7 +33,7 @@ public class InvisibleBedrock extends Block implements BlockInvisibleBedrock {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.INVISIBLE_BEDROCK;
     }
 

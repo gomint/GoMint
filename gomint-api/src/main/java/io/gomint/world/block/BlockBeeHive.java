@@ -12,5 +12,5 @@ package io.gomint.world.block;
  * @version 1.0
  * @stability 1
  */
-public interface BlockBeeHive extends BlockFacing, Block {
+public interface BlockBeeHive extends BlockFacing<BlockBeeHive>, Block {
 }

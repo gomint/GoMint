@@ -24,7 +24,7 @@ public class NetherSprouts extends Block implements BlockNetherSprouts {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.GILDED_BLACKSTONE;
     }
 
@@ -34,7 +34,7 @@ public class NetherSprouts extends Block implements BlockNetherSprouts {
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return new Class[]{
             ItemShears.class
         };

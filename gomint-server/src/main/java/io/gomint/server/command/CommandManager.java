@@ -61,7 +61,7 @@ public class CommandManager {
     public CommandManager() {
         // Register all internal commands
         try {
-            for (Class cmdClass : new Class[]{
+            for (Class<? extends Command> cmdClass : new Class[]{
                 // Vanilla
                 DeopCommand.class,
                 DifficultyCommand.class,
@@ -87,13 +87,12 @@ public class CommandManager {
                 MemoryDumpCommand.class,
             }) {
                 // Check for system only commands
-                Object commandObject;
+                Command commandObject;
 
                 // Check for combo command (player + system) and build / register it
                 if (Command.class.isAssignableFrom(cmdClass.getSuperclass())) {
-                    Class<? extends Command> nonSystem = (Class<? extends Command>) cmdClass;
-                    commandObject = nonSystem.getConstructor().newInstance();
-                    register(null, (Command) commandObject);
+                    commandObject = cmdClass.getConstructor().newInstance();
+                    register(null, commandObject);
                 }
             }
         } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
@@ -110,11 +109,11 @@ public class CommandManager {
         ConsoleCommandSender consoleCommandSender = new ConsoleCommandSender(line);
         CommandOutput output = this.dispatchCommand(consoleCommandSender, "/" + line);
         if (output != null) {
-            for (CommandOutputMessage message : output.getMessages()) {
-                if (message.isSuccess()) {
-                    consoleCommandSender.sendMessage(CommandOutputParser.parse(message.getFormat(), message.getParameters()));
+            for (CommandOutputMessage message : output.messages()) {
+                if (message.success()) {
+                    consoleCommandSender.sendMessage(CommandOutputParser.parse(message.format(), message.parameters()));
                 } else {
-                    consoleCommandSender.sendMessage(ChatColor.RED + CommandOutputParser.parse(message.getFormat(), message.getParameters()));
+                    consoleCommandSender.sendMessage(ChatColor.RED + CommandOutputParser.parse(message.format(), message.parameters()));
                 }
             }
         }
@@ -127,7 +126,7 @@ public class CommandManager {
      * @param command which should be executed
      * @return command output
      */
-    public CommandOutput dispatchCommand(CommandSender sender, String command) {
+    public CommandOutput dispatchCommand(CommandSender<?> sender, String command) {
         // Search for correct command holder
         String[] commandParts = command.substring(1).split(" ");
         int consumed = 0;
@@ -175,10 +174,10 @@ public class CommandManager {
                 if (selected.getOverload() != null && params.length > 0) {
                     List<CommandCanidate> commandCanidates = new ArrayList<>();
                     for (CommandOverload overload : selected.getOverload()) {
-                        if (overload.getPermission().isEmpty() || sender.hasPermission(overload.getPermission())) {
+                        if (overload.permission().isEmpty() || sender.hasPermission(overload.permission())) {
                             Iterator<String> paramIterator = Arrays.asList(params).iterator();
 
-                            if (!paramIterator.hasNext() && overload.getParameters() == null) {
+                            if (!paramIterator.hasNext() && overload.parameters() == null) {
                                 commandCanidates.add(new CommandCanidate(overload, new HashMap<>(), true, true));
                             } else {
                                 Map<String, Object> commandInput = new HashMap<>();
@@ -186,13 +185,13 @@ public class CommandManager {
                                 boolean completed = true;
                                 boolean completedOptionals = true;
 
-                                if (overload.getParameters() != null) {
-                                    for (Map.Entry<String, ParamValidator> entry : overload.getParameters().entrySet()) {
-                                        ParamValidator validator = entry.getValue();
+                                if (overload.parameters() != null) {
+                                    for (Map.Entry<String, ParamValidator<?>> entry : overload.parameters().entrySet()) {
+                                        ParamValidator<?> validator = entry.getValue();
 
                                         String forValidator = validator.consume(paramIterator);
                                         if (forValidator == null) {
-                                            if (!validator.isOptional()) {
+                                            if (!validator.optional()) {
                                                 completed = false;
                                                 break;
                                             } else {
@@ -242,7 +241,7 @@ public class CommandManager {
         }
     }
 
-    private CommandOutput tryCommandDispatch(CommandSender sender, CommandHolder command, Map<String, Object> arguments) {
+    private CommandOutput tryCommandDispatch(CommandSender<?> sender, CommandHolder command, Map<String, Object> arguments) {
         // CHECKSTYLE:OFF
         try {
             return command.getExecutor().execute(sender, command.getName(), arguments);
@@ -305,9 +304,9 @@ public class CommandManager {
         List<String> commandNames = new ArrayList<>();
         for (CommandOverload overload : selected.getOverload()) {
             StringBuilder help = new StringBuilder(selected.getName()).append(" ");
-            if (overload.getParameters() != null) {
-                for (Map.Entry<String, ParamValidator> entry : overload.getParameters().entrySet()) {
-                    help.append(entry.getKey()).append(entry.getValue().isOptional() ? "<" : " [").append(entry.getValue().getHelpText()).append(entry.getValue().isOptional() ? ">" : "]").append(" ");
+            if (overload.parameters() != null) {
+                for (Map.Entry<String, ParamValidator<?>> entry : overload.parameters().entrySet()) {
+                    help.append(entry.getKey()).append(entry.getValue().optional() ? "<" : " [").append(entry.getValue().helpText()).append(entry.getValue().optional() ? ">" : "]").append(" ");
                 }
             }
 
@@ -335,7 +334,7 @@ public class CommandManager {
             Plugin originalPlugin = this.commandPlugins.remove(name);
             String cmdName;
             if (originalPlugin != null) {
-                cmdName = originalPlugin.getName() + ":" + name;
+                cmdName = originalPlugin.name() + ":" + name;
             } else {
                 cmdName = "gomint:" + name;
             }

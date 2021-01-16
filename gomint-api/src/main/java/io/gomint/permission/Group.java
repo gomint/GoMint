@@ -22,23 +22,23 @@ public interface Group {
      *
      * @return name of this group
      */
-    String getName();
+    String name();
 
     /**
      * Set a permission for this group. For further documentation on how permissions are checked
-     * see {@link PermissionManager#hasPermission(String)}.
+     * see {@link PermissionManager#has(String)}.
      *
      * @param permission which should be set
      * @param value      of this permission, true when granted, false when revoked
      */
-    void setPermission( String permission, boolean value );
+    Group permission(String permission, boolean value );
 
     /**
      * Remove a permission completely
      *
      * @param permission which should be removed
      */
-    void removePermission( String permission );
+    Group removePermission( String permission );
 
     /**
      * Get a iterator for all configured permissions

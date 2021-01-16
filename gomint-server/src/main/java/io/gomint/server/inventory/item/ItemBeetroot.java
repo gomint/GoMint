@@ -9,7 +9,7 @@ import io.gomint.server.registry.RegisterInfo;
  */
 @RegisterInfo(sId = "minecraft:beetroot", id = 457, def = true)
 @RegisterInfo(sId = "minecraft:item.beetroot", id = 244)
-public class ItemBeetroot extends ItemFood implements io.gomint.inventory.item.ItemBeetroot {
+public class ItemBeetroot extends ItemFood<io.gomint.inventory.item.ItemBeetroot> implements io.gomint.inventory.item.ItemBeetroot {
 
     @Override
     public float getSaturation() {
@@ -22,7 +22,7 @@ public class ItemBeetroot extends ItemFood implements io.gomint.inventory.item.I
     }
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.BEETROOT;
     }
 

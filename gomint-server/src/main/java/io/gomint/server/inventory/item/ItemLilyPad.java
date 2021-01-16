@@ -10,10 +10,10 @@ import io.gomint.taglib.NBTTagCompound;
  * @version 1.0
  */
 @RegisterInfo(sId = "minecraft:waterlily", id = 111)
-public class ItemLilyPad extends ItemStack implements io.gomint.inventory.item.ItemLilyPad {
+public class ItemLilyPad extends ItemStack< io.gomint.inventory.item.ItemLilyPad> implements io.gomint.inventory.item.ItemLilyPad {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.LILY_PAD;
     }
 

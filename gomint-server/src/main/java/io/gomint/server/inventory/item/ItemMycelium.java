@@ -10,10 +10,10 @@ import io.gomint.taglib.NBTTagCompound;
  * @version 1.0
  */
 @RegisterInfo(sId = "minecraft:mycelium", id = 110)
-public class ItemMycelium extends ItemStack implements io.gomint.inventory.item.ItemMycelium {
+public class ItemMycelium extends ItemStack< io.gomint.inventory.item.ItemMycelium> implements io.gomint.inventory.item.ItemMycelium {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.MYCELIUM;
     }
 

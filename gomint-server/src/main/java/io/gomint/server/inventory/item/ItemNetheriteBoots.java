@@ -12,7 +12,7 @@ import io.gomint.world.block.data.Facing;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:netherite_boots", id = 751 )
-public class ItemNetheriteBoots extends ItemNetheriteArmor implements io.gomint.inventory.item.ItemNetheriteBoots {
+public class ItemNetheriteBoots extends ItemNetheriteArmor<io.gomint.inventory.item.ItemNetheriteBoots> implements io.gomint.inventory.item.ItemNetheriteBoots {
 
     @Override
     public float getReductionValue() {
@@ -22,10 +22,10 @@ public class ItemNetheriteBoots extends ItemNetheriteArmor implements io.gomint.
     @Override
     public boolean interact(EntityPlayer entity, Facing face, Vector clickPosition, Block clickedBlock ) {
         if ( clickedBlock == null ) {
-            if ( isBetter( (ItemStack) entity.getArmorInventory().getBoots() ) ) {
-                ItemStack old = (ItemStack) entity.getArmorInventory().getBoots();
-                entity.getArmorInventory().setBoots( this );
-                entity.getInventory().setItem( entity.getInventory().getItemInHandSlot(), old );
+            if ( isBetter( (ItemStack<?>) entity.armorInventory().boots() ) ) {
+                ItemStack<?> old = (ItemStack<?>) entity.armorInventory().boots();
+                entity.armorInventory().boots( this );
+                entity.inventory().item( entity.inventory().itemInHandSlot(), old );
             }
         }
 
@@ -33,7 +33,7 @@ public class ItemNetheriteBoots extends ItemNetheriteArmor implements io.gomint.
     }
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.NETHERITE_BOOTS;
     }
 }

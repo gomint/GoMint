@@ -39,12 +39,12 @@ public class Bed extends Block implements BlockBed {
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 300;
     }
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
@@ -55,9 +55,9 @@ public class Bed extends Block implements BlockBed {
 
     @Override
     public boolean onBreak(boolean creative) {
-        Bed otherHalf = (Bed) this.getOtherHalf();
+        Bed otherHalf = (Bed) this.otherHalf();
         if (otherHalf != null) {
-            otherHalf.setBlockType(Air.class);
+            otherHalf.blockType(Air.class);
         }
 
         return true;
@@ -69,42 +69,43 @@ public class Bed extends Block implements BlockBed {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.BED;
     }
 
     private io.gomint.world.block.Block getOtherBlock() {
         // Select which side we need to check
         Direction facingToOtherHalf = DIRECTION.getState(this);
-        if (this.isHeadPart()) {
+        if (this.head()) {
             facingToOtherHalf = facingToOtherHalf.opposite();
         }
 
-        return this.getSide(facingToOtherHalf);
+        return this.side(facingToOtherHalf);
     }
 
     @Override
-    public BlockColor getColor() {
-        BedTileEntity tileEntity = this.getTileEntity();
+    public BlockColor color() {
+        BedTileEntity tileEntity = this.tileEntity();
         return tileEntity.getColor();
     }
 
     @Override
-    public void setColor(BlockColor color) {
-        BedTileEntity tileEntity = this.getTileEntity();
+    public BlockBed color(BlockColor color) {
+        BedTileEntity tileEntity = this.tileEntity();
         tileEntity.setColor(color);
 
         this.updateBlock();
+        return this;
     }
 
     @Override
-    public BlockBed getOtherHalf() {
+    public BlockBed otherHalf() {
         io.gomint.world.block.Block otherHalf = getOtherBlock();
 
         // Check if other part is a bed
-        if (otherHalf != null && otherHalf.getBlockType() == BlockType.BED) {
+        if (otherHalf != null && otherHalf.blockType() == BlockType.BED) {
             Bed otherBedHalf = (Bed) otherHalf;
-            if (otherBedHalf.isHeadPart() != this.isHeadPart()) {
+            if (otherBedHalf.head() != this.head()) {
                 return otherBedHalf;
             }
         }
@@ -113,29 +114,30 @@ public class Bed extends Block implements BlockBed {
     }
 
     @Override
-    public boolean isHeadPart() {
+    public boolean head() {
         return HEAD.getState(this);
     }
 
     @Override
-    public void setHeadPart(boolean value) {
+    public BlockBed head(boolean value) {
         HEAD.setState(this, value);
+        return this;
     }
 
     @Override
-    public boolean beforePlacement(EntityLiving entity, ItemStack item, Facing face, Location location) {
+    public boolean beforePlacement(EntityLiving<?> entity, ItemStack<?> item, Facing face, Location location) {
         // We need to check if we are placed on a solid block
-        Block block = (Block) location.getWorld().getBlockAt(location.toBlockPosition()).getSide(Facing.DOWN);
-        if (block.isSolid()) {
-            Bearing bearing = Bearing.fromAngle(entity.getYaw());
+        Block block = (Block) location.world().blockAt(location.toBlockPosition()).side(Facing.DOWN);
+        if (block.solid()) {
+            Bearing bearing = Bearing.fromAngle(entity.yaw());
 
             // Check for other block
-            Block other = block.getSide(bearing.toDirection());
-            if (!other.isSolid()) {
+            Block other = block.side(bearing.toDirection());
+            if (!other.solid()) {
                 return false;
             }
 
-            Block replacingHead = other.getSide(Facing.UP);
+            Block replacingHead = other.side(Facing.UP);
             return replacingHead.canBeReplaced(item);
         }
 
@@ -146,9 +148,9 @@ public class Bed extends Block implements BlockBed {
     public void afterPlacement() {
         Block otherBlock = (Block) this.getOtherBlock();
         if (otherBlock != null) {
-            Bed bed = otherBlock.setBlockType(Bed.class);
-            bed.setColor(this.getColor());
-            bed.setHeadPart(true);
+            Bed bed = otherBlock.blockType(Bed.class);
+            bed.color(this.color());
+            bed.head(true);
         }
 
         super.afterPlacement();
@@ -166,21 +168,21 @@ public class Bed extends Block implements BlockBed {
     }
 
     @Override
-    public List<ItemStack> getDrops(ItemStack itemInHand) {
+    public List<ItemStack<?>> drops(ItemStack<?> itemInHand) {
         ItemBed bed = ItemBed.create(1);
-        bed.setColor(((BedTileEntity) this.getTileEntity()).getColor());
-        return Lists.newArrayList(bed);
+        bed.color(((BedTileEntity) this.tileEntity()).getColor());
+        return Lists.<ItemStack<?>>newArrayList(bed);
     }
 
     @Override
-    public List<AxisAlignedBB> getBoundingBox() {
+    public List<AxisAlignedBB> boundingBoxes() {
         return Collections.singletonList(new AxisAlignedBB(
-            this.location.getX(),
-            this.location.getY(),
-            this.location.getZ(),
-            this.location.getX() + 1,
-            this.location.getY() + 0.5625f,
-            this.location.getZ() + 1
+            this.location.x(),
+            this.location.y(),
+            this.location.z(),
+            this.location.x() + 1,
+            this.location.y() + 0.5625f,
+            this.location.z() + 1
         ));
     }
 

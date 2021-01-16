@@ -15,7 +15,7 @@ import io.gomint.entity.EntityLiving;
  * @version 1.0
  * @stability 3
  */
-public interface EntityPufferfish extends EntityLiving {
+public interface EntityPufferfish extends EntityLiving<EntityPufferfish> {
 
     /**
      * Create a new entity puffer fish with no config

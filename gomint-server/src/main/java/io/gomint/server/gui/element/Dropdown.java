@@ -23,20 +23,20 @@ public class Dropdown extends Element implements io.gomint.gui.element.Dropdown 
     }
 
     @Override
-    public io.gomint.gui.element.Dropdown addOption( String option ) {
+    public io.gomint.gui.element.Dropdown option(String option ) {
         this.options.add( option );
-        this.form.setDirty();
+        this.form.dirty();
         return this;
     }
 
     @Override
-    public io.gomint.gui.element.Dropdown addOption( String option, boolean defaultOption ) {
+    public io.gomint.gui.element.Dropdown option(String option, boolean defaultOption ) {
         if ( defaultOption ) {
             this.defaultOption = this.options.size();
         }
 
         this.options.add( option );
-        this.form.setDirty();
+        this.form.dirty();
         return this;
     }
 

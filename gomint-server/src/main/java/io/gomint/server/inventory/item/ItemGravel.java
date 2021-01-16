@@ -10,10 +10,10 @@ import io.gomint.taglib.NBTTagCompound;
  * @version 1.0
  */
 @RegisterInfo(sId = "minecraft:gravel", id = 13)
-public class ItemGravel extends ItemStack implements io.gomint.inventory.item.ItemGravel {
+public class ItemGravel extends ItemStack< io.gomint.inventory.item.ItemGravel> implements io.gomint.inventory.item.ItemGravel {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.GRAVEL;
     }
 

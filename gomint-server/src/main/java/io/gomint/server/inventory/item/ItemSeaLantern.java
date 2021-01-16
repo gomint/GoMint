@@ -15,10 +15,10 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:sealantern", id = 169 )
-public class ItemSeaLantern extends ItemStack implements io.gomint.inventory.item.ItemSeaLantern {
+public class ItemSeaLantern extends ItemStack< io.gomint.inventory.item.ItemSeaLantern> implements io.gomint.inventory.item.ItemSeaLantern {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.SEALANTERN;
     }
 

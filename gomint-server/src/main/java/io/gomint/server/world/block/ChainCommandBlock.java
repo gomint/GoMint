@@ -7,7 +7,6 @@
 
 package io.gomint.server.world.block;
 
-import io.gomint.server.entity.tileentity.BannerTileEntity;
 import io.gomint.server.entity.tileentity.CommandBlockTileEntity;
 import io.gomint.server.entity.tileentity.TileEntity;
 import io.gomint.server.registry.RegisterInfo;
@@ -19,8 +18,8 @@ import io.gomint.world.block.BlockType;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:chain_command_block" )
-public class ChainCommandBlock extends ContainerBlock implements BlockChainCommandBlock {
+@RegisterInfo(sId = "minecraft:chain_command_block")
+public class ChainCommandBlock extends ContainerBlock<BlockChainCommandBlock> implements BlockChainCommandBlock {
 
     @Override
     public String getBlockId() {
@@ -33,7 +32,7 @@ public class ChainCommandBlock extends ContainerBlock implements BlockChainComma
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.CHAIN_COMMAND_BLOCK;
     }
 
@@ -48,8 +47,8 @@ public class ChainCommandBlock extends ContainerBlock implements BlockChainComma
     }
 
     @Override
-    TileEntity createTileEntity( NBTTagCompound compound ) {
-        super.createTileEntity( compound );
+    TileEntity createTileEntity(NBTTagCompound compound) {
+        super.createTileEntity(compound);
         return this.tileEntities.construct(CommandBlockTileEntity.class, compound, this, this.items);
     }
 

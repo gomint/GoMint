@@ -20,7 +20,7 @@ public class Prismarine extends Block implements BlockPrismarine {
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 2250;
     }
 
@@ -30,7 +30,7 @@ public class Prismarine extends Block implements BlockPrismarine {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.PRISMARINE;
     }
 
@@ -40,7 +40,7 @@ public class Prismarine extends Block implements BlockPrismarine {
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return ToolPresets.PICKAXE;
     }
 

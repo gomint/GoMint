@@ -26,11 +26,11 @@ public class PacketAnimateHandler implements PacketHandler<PacketAnimate> {
                 return;
         }
 
-        connection.getServer().getPluginManager().callEvent( playerAnimationEvent );
-        if ( !playerAnimationEvent.isCancelled() ) {
-            for ( Entity entity : connection.getEntity().getAttachedEntities() ) {
+        connection.getServer().pluginManager().callEvent( playerAnimationEvent );
+        if ( !playerAnimationEvent.cancelled() ) {
+            for ( Entity<?> entity : connection.getEntity().getAttachedEntities() ) {
                 if ( entity instanceof EntityPlayer ) {
-                    ( (EntityPlayer) entity ).getConnection().addToSendQueue( packet );
+                    ( (EntityPlayer) entity ).connection().addToSendQueue( packet );
                 }
             }
         }

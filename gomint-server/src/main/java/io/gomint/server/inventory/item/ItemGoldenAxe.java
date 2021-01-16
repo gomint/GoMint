@@ -12,24 +12,24 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:golden_axe", id = 286 )
-public class ItemGoldenAxe extends ItemReduceTierGolden implements io.gomint.inventory.item.ItemGoldenAxe {
+public class ItemGoldenAxe extends ItemReduceTierGolden<io.gomint.inventory.item.ItemGoldenAxe> implements io.gomint.inventory.item.ItemGoldenAxe {
 
     @Override
     public void gotInHand( EntityPlayer player ) {
         player
-            .getAttributeInstance( Attribute.ATTACK_DAMAGE )
+            .attributeInstance( Attribute.ATTACK_DAMAGE )
             .setModifier( AttributeModifier.ITEM_ATTACK_DAMAGE, AttributeModifierType.ADDITION, 3 ); // 3 from axe type
     }
 
     @Override
     public void removeFromHand( EntityPlayer player ) {
         player
-            .getAttributeInstance( Attribute.ATTACK_DAMAGE )
+            .attributeInstance( Attribute.ATTACK_DAMAGE )
             .removeModifier( AttributeModifier.ITEM_ATTACK_DAMAGE );
     }
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.GOLDEN_AXE;
     }
 

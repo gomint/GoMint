@@ -23,12 +23,12 @@ public class CrackedNetherBrick extends Block {
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 3000;
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.CRACKED_NETHER_BRICK;
     }
 
@@ -38,7 +38,7 @@ public class CrackedNetherBrick extends Block {
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return ToolPresets.PICKAXE;
     }
 }

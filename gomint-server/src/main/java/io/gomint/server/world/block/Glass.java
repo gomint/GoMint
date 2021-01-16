@@ -22,12 +22,12 @@ public class Glass extends Block implements BlockGlass {
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 450;
     }
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
@@ -37,7 +37,7 @@ public class Glass extends Block implements BlockGlass {
     }
 
     @Override
-    public List<ItemStack> getDrops( ItemStack itemInHand ) {
+    public List<ItemStack<?>> drops(ItemStack<?> itemInHand ) {
         return new ArrayList<>();
     }
 
@@ -47,7 +47,7 @@ public class Glass extends Block implements BlockGlass {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.GLASS;
     }
 

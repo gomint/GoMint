@@ -37,13 +37,12 @@ public abstract class BlockState<T, S> {
 
     /**
      * Detect from a player
-     *
      * @param newBlock
      * @param entity        from which we generate data
      * @param placedItem    which has been used to get this block
      * @param face          which the client has clicked on
      */
-    public abstract void detectFromPlacement(Block newBlock, EntityLiving entity, ItemStack placedItem, Facing face);
+    public abstract void detectFromPlacement(Block newBlock, EntityLiving<?> entity, ItemStack<?> placedItem, Facing face);
 
     /**
      * Store new value for this block state

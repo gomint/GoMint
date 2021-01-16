@@ -16,7 +16,7 @@ public class FormResponse implements io.gomint.gui.FormResponse {
     }
 
     @Override
-    public Boolean getToggle( String id ) {
+    public Boolean toggle(String id ) {
         Object val = this.answers.get( id );
         if ( val != null ) {
             if ( val instanceof Boolean ) {
@@ -28,7 +28,7 @@ public class FormResponse implements io.gomint.gui.FormResponse {
     }
 
     @Override
-    public String getStepSlider( String id ) {
+    public String stepSlider(String id ) {
         Object val = this.answers.get( id );
         if ( val != null ) {
             if ( val instanceof String ) {
@@ -40,7 +40,7 @@ public class FormResponse implements io.gomint.gui.FormResponse {
     }
 
     @Override
-    public Float getSlider( String id ) {
+    public Float slider(String id ) {
         Object val = this.answers.get( id );
         if ( val != null ) {
             if ( val instanceof Double ) {
@@ -52,7 +52,7 @@ public class FormResponse implements io.gomint.gui.FormResponse {
     }
 
     @Override
-    public String getInput( String id ) {
+    public String input(String id ) {
         Object val = this.answers.get( id );
         if ( val != null ) {
             if ( val instanceof String ) {
@@ -64,7 +64,7 @@ public class FormResponse implements io.gomint.gui.FormResponse {
     }
 
     @Override
-    public String getDropbox( String id ) {
+    public String dropbox(String id ) {
         Object val = this.answers.get( id );
         if ( val != null ) {
             if ( val instanceof String ) {

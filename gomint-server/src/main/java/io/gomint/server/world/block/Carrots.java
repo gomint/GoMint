@@ -21,12 +21,12 @@ public class Carrots extends Growable implements BlockCarrots {
     }
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
     @Override
-    public boolean isSolid() {
+    public boolean solid() {
         return false;
     }
 
@@ -36,19 +36,19 @@ public class Carrots extends Growable implements BlockCarrots {
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 0;
     }
 
     @Override
-    public List<ItemStack> getDrops(ItemStack itemInHand) {
+    public List<ItemStack<?>> drops(ItemStack<?> itemInHand) {
         if (GROWTH.maxed(this)) {
             return new ArrayList<>() {{
-                add(world.getServer().getItems().create(391, (short) 0, (byte) (1 + SEED_RANDOMIZER.next().byteValue()), null)); // Carrot
+                add(world.getServer().items().create(391, (short) 0, (byte) (1 + SEED_RANDOMIZER.next().byteValue()), null)); // Carrot
             }};
         } else {
             return new ArrayList<>() {{
-                add(world.getServer().getItems().create(391, (short) 0, (byte) 1, null)); // Carrot
+                add(world.getServer().items().create(391, (short) 0, (byte) 1, null)); // Carrot
             }};
         }
     }
@@ -59,7 +59,7 @@ public class Carrots extends Growable implements BlockCarrots {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.CARROTS;
     }
 

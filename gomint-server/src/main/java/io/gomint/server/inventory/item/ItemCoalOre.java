@@ -10,10 +10,10 @@ import io.gomint.taglib.NBTTagCompound;
  * @version 1.0
  */
 @RegisterInfo(sId = "minecraft:coal_ore", id = 16)
-public class ItemCoalOre extends ItemStack implements io.gomint.inventory.item.ItemCoalOre {
+public class ItemCoalOre extends ItemStack< io.gomint.inventory.item.ItemCoalOre> implements io.gomint.inventory.item.ItemCoalOre {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.COAL_ORE;
     }
 

@@ -15,10 +15,10 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:glow_stick", id = 166 )
-public class ItemGlowStick extends ItemStack implements io.gomint.inventory.item.ItemGlowStick {
+public class ItemGlowStick extends ItemStack< io.gomint.inventory.item.ItemGlowStick> implements io.gomint.inventory.item.ItemGlowStick {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.GLOW_STICK;
     }
 

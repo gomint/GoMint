@@ -31,6 +31,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Consumer;
@@ -49,12 +50,12 @@ public class ClassPath {
     private final Set<ClassInfo> classes = new HashSet<>();
 
     public ClassPath( String preFilter ) throws IOException {
-        UnmodifiableIterator var2 = getClassPathEntries( ClassPath.class.getClassLoader() ).entrySet().iterator();
+        UnmodifiableIterator<?> var2 = getClassPathEntries( ClassPath.class.getClassLoader() ).entrySet().iterator();
 
         preFilter = preFilter.replace( ".", "/" );
 
         while ( var2.hasNext() ) {
-            Map.Entry<File, ClassLoader> entry = (Map.Entry) var2.next();
+            Map.Entry<File, ClassLoader> entry = (Map.Entry<File, ClassLoader>) var2.next();
             this.scan( preFilter, entry.getKey() );
         }
     }
@@ -89,13 +90,13 @@ public class ClassPath {
             return;
         }
 
-        Enumeration entries = file.entries();
+        Enumeration<?> entries = file.entries();
         while ( entries.hasMoreElements() ) {
             JarEntry entry = (JarEntry) entries.nextElement();
             if ( !entry.isDirectory() && entry.getName().endsWith( ".class" ) ) {
                 String className = entry.getName();
                 if ( className.startsWith( preFilter ) ) {
-                    this.classes.add( new ClassInfo( className.replace( "/", "." ).replace( ".class", "" ) ) );
+                    this.classes.add(new ClassInfo(className.replace("/", ".").replace(".class", "")));
                 }
             }
         }
@@ -112,23 +113,21 @@ public class ClassPath {
         if ( files == null ) {
             LOGGER.warn( "Cannot read directory {}", directory );
         } else {
-            File[] var6 = files;
             int var7 = files.length;
 
-            for ( int var8 = 0; var8 < var7; ++var8 ) {
-                File f = var6[var8];
+            for (File f : files) {
                 String name = f.getName();
-                if ( f.isDirectory() ) {
+                if (f.isDirectory()) {
                     File deref = f.getCanonicalFile();
-                    if ( currentPath.add( deref ) ) {
-                        this.scanDirectory( preFilter, deref, packagePrefix + name + "/", currentPath );
-                        currentPath.remove( deref );
+                    if (currentPath.add(deref)) {
+                        this.scanDirectory(preFilter, deref, packagePrefix + name + "/", currentPath);
+                        currentPath.remove(deref);
                     }
                 } else {
                     String resourceName = packagePrefix + name;
-                    if ( !resourceName.equals( "META-INF/MANIFEST.MF" ) && resourceName.endsWith( ".class" ) ) {
-                        if ( resourceName.startsWith( preFilter ) ) {
-                            this.classes.add( new ClassInfo( resourceName.replace( "/", "." ).replace( ".class", "" ) ) );
+                    if (!resourceName.equals("META-INF/MANIFEST.MF") && resourceName.endsWith(".class")) {
+                        if (resourceName.startsWith(preFilter)) {
+                            this.classes.add(new ClassInfo(resourceName.replace("/", ".").replace(".class", "")));
                         }
                     }
                 }
@@ -174,14 +173,11 @@ public class ClassPath {
             entries.putAll( getClassPathEntries( parent ) );
         }
 
-        UnmodifiableIterator var3 = getClassLoaderUrls( classloader ).iterator();
-
-        while ( var3.hasNext() ) {
-            URL url = (URL) var3.next();
-            if ( url.getProtocol().equals( "file" ) ) {
-                File file = toFile( url );
-                if ( !entries.containsKey( file ) ) {
-                    entries.put( file, classloader );
+        for (URL url : getClassLoaderUrls(classloader)) {
+            if (url.getProtocol().equals("file")) {
+                File file = toFile(url);
+                if (!entries.containsKey(file)) {
+                    entries.put(file, classloader);
                 }
             }
         }
@@ -201,18 +197,18 @@ public class ClassPath {
         com.google.common.collect.ImmutableList.Builder<URL> urls = ImmutableList.builder();
 
         // Scan classpath first
-        Iterator var1 = Splitter.on( StandardSystemProperty.PATH_SEPARATOR.value() ).split( StandardSystemProperty.JAVA_CLASS_PATH.value() ).iterator();
-        while ( var1.hasNext() ) {
-            String entry = (String) var1.next();
 
+        for (String entry : Splitter
+            .on(Objects.requireNonNull(StandardSystemProperty.PATH_SEPARATOR.value()))
+            .split(Objects.requireNonNull(StandardSystemProperty.JAVA_CLASS_PATH.value()))) {
             try {
                 try {
-                    urls.add( ( new File( entry ) ).toURI().toURL() );
-                } catch ( SecurityException var4 ) {
-                    urls.add( new URL( "file", null, ( new File( entry ) ).getAbsolutePath() ) );
+                    urls.add((new File(entry)).toURI().toURL());
+                } catch (SecurityException var4) {
+                    urls.add(new URL("file", null, (new File(entry)).getAbsolutePath()));
                 }
-            } catch ( MalformedURLException var5 ) {
-                LOGGER.warn( "malformed classpath entry: {}", entry, var5 );
+            } catch (MalformedURLException var5) {
+                LOGGER.warn("malformed classpath entry: {}", entry, var5);
             }
         }
 
@@ -247,16 +243,16 @@ public class ClassPath {
         }
     }
 
-    public class ClassInfo {
+    public static class ClassInfo {
         private final String className;
 
         public ClassInfo(String className) {
             this.className = className;
         }
 
-        public Class load() {
+        public <T extends Class<T>> Class<T> load() {
             try {
-                return Class.forName( this.className );
+                return (T) Class.forName( this.className );
             } catch ( ClassNotFoundException e ) {
                 // Ignored
             }

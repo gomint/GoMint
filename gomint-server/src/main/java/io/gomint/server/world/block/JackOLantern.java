@@ -17,12 +17,12 @@ public class JackOLantern extends Block implements BlockJackOLantern {
     private static final DirectionBlockState DIRECTION = new DirectionBlockState(() -> new String[]{"direction"});
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 1500;
     }
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
@@ -32,7 +32,7 @@ public class JackOLantern extends Block implements BlockJackOLantern {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.JACK_O_LANTERN;
     }
 
@@ -42,12 +42,13 @@ public class JackOLantern extends Block implements BlockJackOLantern {
     }
 
     @Override
-    public void setDirection(Direction direction) {
+    public BlockJackOLantern direction(Direction direction) {
         DIRECTION.setState(this, direction);
+        return this;
     }
 
     @Override
-    public Direction getDirection() {
+    public Direction direction() {
         return DIRECTION.getState(this);
     }
 

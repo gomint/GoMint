@@ -20,14 +20,15 @@ public interface BlockLeaves extends Block {
      * Set the type of leave
      *
      * @param type of the leave
+     * @return block for chaining
      */
-    void setLeaveType( LogType type );
+    BlockLeaves type(LogType type);
 
     /**
      * Get type of leave
      *
      * @return type of leave
      */
-    LogType getLeaveType();
+    LogType type();
 
 }

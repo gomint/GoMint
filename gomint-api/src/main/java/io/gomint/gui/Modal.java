@@ -25,13 +25,13 @@ public interface Modal extends Form<Boolean> {
      *
      * @param text which should be used for button labeling
      */
-    void setTrueButtonText( String text );
+    Modal trueText(String text );
 
     /**
      * Set the button text for the false button
      *
      * @param text which should be used for button labeling
      */
-    void setFalseButtonText( String text );
+    Modal falseText(String text );
 
 }

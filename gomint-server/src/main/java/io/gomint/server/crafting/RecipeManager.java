@@ -23,7 +23,7 @@ public class RecipeManager {
     private List<Recipe> recipes;
 
     // Lookup stuff
-    private Map<ItemStack, SmeltingRecipe> smeltingRecipes;
+    private Map<ItemStack<?>, SmeltingRecipe> smeltingRecipes;
 
     private PacketCraftingRecipes batchPacket;
     private boolean dirty;
@@ -68,13 +68,13 @@ public class RecipeManager {
         // Check if this is a smelting recipe
         if ( recipe instanceof SmeltingRecipe ) {
             SmeltingRecipe smeltingRecipe = (SmeltingRecipe) recipe;
-            this.smeltingRecipes.put( smeltingRecipe.getIngredients()[0], smeltingRecipe );
+            this.smeltingRecipes.put( smeltingRecipe.ingredients()[0], smeltingRecipe );
         }
 
         this.dirty = true;
     }
 
-    public SmeltingRecipe getSmeltingRecipe( ItemStack input ) {
+    public SmeltingRecipe getSmeltingRecipe( ItemStack<?> input ) {
         return this.smeltingRecipes.get( input );
     }
 

@@ -19,12 +19,12 @@ public class Air extends Block implements BlockAir {
     }
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
     @Override
-    public boolean isSolid() {
+    public boolean solid() {
         return false;
     }
 
@@ -39,8 +39,8 @@ public class Air extends Block implements BlockAir {
     }
 
     @Override
-    public boolean canBeReplaced( ItemStack item ) {
-        return this.location.getY() > -1 && this.location.getY() < 256;
+    public boolean canBeReplaced(ItemStack<?> item ) {
+        return this.location.y() > -1 && this.location.y() < 256;
     }
 
     @Override
@@ -49,7 +49,7 @@ public class Air extends Block implements BlockAir {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.AIR;
     }
 

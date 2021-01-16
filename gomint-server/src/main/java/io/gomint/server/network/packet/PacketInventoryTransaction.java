@@ -31,7 +31,7 @@ public class PacketInventoryTransaction extends Packet {
     // Generic
     private int actionType;
     private int hotbarSlot;
-    private ItemStack itemInHand;
+    private ItemStack<?> itemInHand;
 
     // Type USE_ITEM / RELEASE_ITEM
     private BlockPosition blockPosition;
@@ -120,7 +120,7 @@ public class PacketInventoryTransaction extends Packet {
         }
     }
 
-    public class ChangeSlot {
+    public static class ChangeSlot {
         private byte containerId;
         private byte[] changedSlots;
 
@@ -154,7 +154,7 @@ public class PacketInventoryTransaction extends Packet {
         }
     }
 
-    public class NetworkTransaction {
+    public static class NetworkTransaction {
 
         private static final int SOURCE_CONTAINER = 0;
         private static final int SOURCE_WORLD = 2;
@@ -166,8 +166,8 @@ public class PacketInventoryTransaction extends Packet {
         private int windowId;
         private int unknown; // Maybe entity id?
         private int slot;
-        private ItemStack oldItem;
-        private ItemStack newItem;
+        private ItemStack<?> oldItem;
+        private ItemStack<?> newItem;
 
         // Itemstack id for the new item (1.16)
         private int newItemStackID;
@@ -236,19 +236,19 @@ public class PacketInventoryTransaction extends Packet {
             this.slot = slot;
         }
 
-        public ItemStack getOldItem() {
+        public ItemStack<?> getOldItem() {
             return oldItem;
         }
 
-        public void setOldItem(ItemStack oldItem) {
+        public void setOldItem(ItemStack<?> oldItem) {
             this.oldItem = oldItem;
         }
 
-        public ItemStack getNewItem() {
+        public ItemStack<?> getNewItem() {
             return newItem;
         }
 
-        public void setNewItem(ItemStack newItem) {
+        public void setNewItem(ItemStack<?> newItem) {
             this.newItem = newItem;
         }
 
@@ -306,11 +306,11 @@ public class PacketInventoryTransaction extends Packet {
         this.hotbarSlot = hotbarSlot;
     }
 
-    public ItemStack getItemInHand() {
+    public ItemStack<?> getItemInHand() {
         return itemInHand;
     }
 
-    public void setItemInHand(ItemStack itemInHand) {
+    public void setItemInHand(ItemStack<?> itemInHand) {
         this.itemInHand = itemInHand;
     }
 

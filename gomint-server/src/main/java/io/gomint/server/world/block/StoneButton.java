@@ -12,25 +12,20 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:stone_button" )
-public class StoneButton extends Button implements BlockStoneButton {
+public class StoneButton extends Button<BlockStoneButton> implements BlockStoneButton {
 
     @Override
-    public String getBlockId() {
-        return "minecraft:stone_button";
-    }
-
-    @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 750;
     }
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
     @Override
-    public boolean isSolid() {
+    public boolean solid() {
         return false;
     }
 
@@ -45,12 +40,12 @@ public class StoneButton extends Button implements BlockStoneButton {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.STONE_BUTTON;
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return ToolPresets.PICKAXE;
     }
 

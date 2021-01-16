@@ -24,7 +24,7 @@ public class Kelp extends Block implements BlockKelp {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.KELP;
     }
 

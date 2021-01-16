@@ -19,10 +19,10 @@ import java.util.List;
  * @version 1.0
  * @stability 3
  */
-public class BlockBreakEvent extends CancellablePlayerEvent {
+public class BlockBreakEvent extends CancellablePlayerEvent<BlockBreakEvent> {
 
     private final Block breakBlock;
-    private final List<ItemStack> drops;
+    private final List<ItemStack<?>> drops;
 
     /**
      * Create new block break event. This event gets called when a player decides to break a block
@@ -31,7 +31,7 @@ public class BlockBreakEvent extends CancellablePlayerEvent {
      * @param breakBlock which should be broken
      * @param drops   which should be dropped
      */
-    public BlockBreakEvent( EntityPlayer player, Block breakBlock, List<ItemStack> drops ) {
+    public BlockBreakEvent( EntityPlayer player, Block breakBlock, List<ItemStack<?>> drops ) {
         super( player );
         this.breakBlock = breakBlock;
         this.drops = drops;
@@ -42,7 +42,7 @@ public class BlockBreakEvent extends CancellablePlayerEvent {
      *
      * @return drops which can be manipulated
      */
-    public List<ItemStack> getDrops() {
+    public List<ItemStack<?>> drops() {
         return this.drops;
     }
 
@@ -51,7 +51,7 @@ public class BlockBreakEvent extends CancellablePlayerEvent {
      *
      * @return block which should be broken
      */
-    public Block getBreakBlock() {
+    public Block breakBlock() {
         return this.breakBlock;
     }
 

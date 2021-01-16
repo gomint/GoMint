@@ -44,6 +44,7 @@ import io.gomint.server.network.packet.PacketStartGame;
 import io.gomint.server.network.packet.PacketWorldChunk;
 import io.gomint.server.resource.ResourceResponseStatus;
 import io.gomint.server.util.Palette;
+import io.gomint.server.util.Values;
 import io.gomint.server.world.ChunkAdapter;
 import io.gomint.server.world.ChunkSlice;
 import io.gomint.server.world.WorldAdapter;
@@ -138,7 +139,7 @@ public class Client implements ConnectionWithState {
         this.debugUI = debugUI;
         this.queue = queue;
 
-        this.networkUpdater = this.world.getServer().getExecutorService().scheduleAtFixedRate(this::update, 50, 50, TimeUnit.MILLISECONDS);
+        this.networkUpdater = this.world.getServer().executorService().scheduleAtFixedRate(this::update, (int) Values.CLIENT_TICK_MS, (int) Values.CLIENT_TICK_MS, TimeUnit.MILLISECONDS);
 
         this.socket = new ClientSocket(LoggerFactory.getLogger(NetworkManager.class));
 
@@ -389,7 +390,7 @@ public class Client implements ConnectionWithState {
             this.send(login);
 
             // Check for termination if server did not respond
-            this.world.getServer().getExecutorService().schedule(() -> {
+            this.world.getServer().executorService().schedule(() -> {
                 if (this.state == PlayerConnectionState.LOGIN) {
                     this.disconnect("Not logged in");
                 }
@@ -479,7 +480,7 @@ public class Client implements ConnectionWithState {
 
                 int amountOfSubchunks = chunk.getSubChunkCount();
 
-                LOGGER.debug("Got {} sub chunks for {} / {}", amountOfSubchunks, chunkAdapter.getX(), chunkAdapter.getZ());
+                LOGGER.debug("Got {} sub chunks for {} / {}", amountOfSubchunks, chunkAdapter.x(), chunkAdapter.z());
 
                 for (int i = 0; i < amountOfSubchunks; i++) {
                     ChunkSlice slice = chunkAdapter.ensureSlice(i);
@@ -525,7 +526,7 @@ public class Client implements ConnectionWithState {
                     while (true) {
                         try {
                             NBTTagCompound compound = reader.parse();
-                            TileEntity tileEntity = this.world.getServer().getTileEntities().construct(compound, chunkAdapter.getBlockAt(compound.getInteger("x", 0) & 0xF, compound.getInteger("y", 0), compound.getInteger("z", 0) & 0xF));
+                            TileEntity tileEntity = this.world.getServer().tileEntities().construct(compound, chunkAdapter.blockAt(compound.getInteger("x", 0) & 0xF, compound.getInteger("y", 0), compound.getInteger("z", 0) & 0xF));
                             if (tileEntity != null) {
                                 chunkAdapter.setTileEntity(compound.getInteger("x", 0) & 0xF, compound.getInteger("y", 0), compound.getInteger("z", 0) & 0xF, tileEntity);
                             }
@@ -535,7 +536,7 @@ public class Client implements ConnectionWithState {
                     }
                 }
               
-                LOGGER.debug("Adding chunk {} / {} to cache", chunkAdapter.getX(), chunkAdapter.getZ());
+                LOGGER.debug("Adding chunk {} / {} to cache", chunkAdapter.x(), chunkAdapter.z());
 
                 chunkAdapter.setPopulated(true);
                 chunkAdapter.calculateHeightmap(240);
@@ -638,7 +639,7 @@ public class Client implements ConnectionWithState {
                 this.send(packetAdventureSettings);
 
                 // Send movement to the top of the map
-                Location target = new Location(null, this.currentPos.getX(), 255, this.currentPos.getZ(), 0f, 0f);
+                Location target = new Location(null, this.currentPos.x(), 255, this.currentPos.z(), 0f, 0f);
                 this.move(target);
 
                 // Only allow movements now
@@ -659,11 +660,11 @@ public class Client implements ConnectionWithState {
         // Send movement to server
         PacketMovePlayer movePlayer = new PacketMovePlayer();
         movePlayer.setEntityId(this.runtimeId);
-        movePlayer.setX(target.getX());
-        movePlayer.setY(target.getY());
-        movePlayer.setZ(target.getZ());
-        movePlayer.setYaw(target.getYaw());
-        movePlayer.setPitch(target.getPitch());
+        movePlayer.setX(target.x());
+        movePlayer.setY(target.y());
+        movePlayer.setZ(target.z());
+        movePlayer.setYaw(target.yaw());
+        movePlayer.setPitch(target.pitch());
         movePlayer.setMode(PacketMovePlayer.MovePlayerMode.TELEPORT);
         movePlayer.setTick(0);
         this.send(movePlayer);
@@ -679,7 +680,7 @@ public class Client implements ConnectionWithState {
 
     private void moveToChunk(ChunkRequest chunkSquare) {
         BlockPosition targetPos = chunkSquare.getCenterPosition();
-        Location target = new Location(null, targetPos.getX(), targetPos.getY(), targetPos.getZ(), 0f, 0f);
+        Location target = new Location(null, targetPos.x(), targetPos.y(), targetPos.z(), 0f, 0f);
         this.move(target);
     }
 

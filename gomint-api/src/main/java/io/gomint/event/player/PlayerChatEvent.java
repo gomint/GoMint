@@ -9,10 +9,10 @@ import java.util.List;
  * @version 1.0
  * @stability 3
  */
-public class PlayerChatEvent extends CancellablePlayerEvent {
+public class PlayerChatEvent extends CancellablePlayerEvent<PlayerChatEvent> {
 
     private String text;
-    private List<EntityPlayer> recipients;
+    private final List<EntityPlayer> recipients;
     private String sender;
 
     /**
@@ -33,7 +33,7 @@ public class PlayerChatEvent extends CancellablePlayerEvent {
      *
      * @return text of this chat event
      */
-    public String getText() {
+    public String text() {
         return this.text;
     }
 
@@ -42,8 +42,9 @@ public class PlayerChatEvent extends CancellablePlayerEvent {
      *
      * @param text to display as a result of this chat event
      */
-    public void setText( String text ) {
+    public PlayerChatEvent text(String text ) {
         this.text = text;
+        return this;
     }
 
     /**
@@ -51,7 +52,7 @@ public class PlayerChatEvent extends CancellablePlayerEvent {
      *
      * @return list of players which will see this
      */
-    public List<EntityPlayer> getRecipients() {
+    public List<EntityPlayer> recipients() {
         return this.recipients;
     }
 
@@ -60,7 +61,7 @@ public class PlayerChatEvent extends CancellablePlayerEvent {
      *
      * @return sender of the message
      */
-    public String getSender() {
+    public String sender() {
         return this.sender;
     }
 
@@ -69,8 +70,9 @@ public class PlayerChatEvent extends CancellablePlayerEvent {
      *
      * @param sender which will be used to display in the client
      */
-    public void setSender( String sender ) {
+    public PlayerChatEvent sender(String sender ) {
         this.sender = sender;
+        return this;
     }
 
 }

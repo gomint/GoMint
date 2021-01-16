@@ -8,7 +8,7 @@ import io.gomint.entity.EntityLiving;
  * @version 1.0
  * @stability 3
  */
-public interface EntityCaveSpider extends EntityLiving {
+public interface EntityCaveSpider extends EntityLiving<EntityCaveSpider> {
 
     /**
      * Create a new entity cave spider with no config

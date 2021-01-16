@@ -17,7 +17,7 @@ import java.util.Set;
  * @version 1.0
  * @stability 3
  */
-public class EntityExplodeEvent extends CancellableEntityEvent {
+public class EntityExplodeEvent extends CancellableEntityEvent<EntityExplodeEvent> {
 
     private final Set<Block> affectedBlocks;
     private float randomDropChance;
@@ -29,7 +29,7 @@ public class EntityExplodeEvent extends CancellableEntityEvent {
      * @param affectedBlocks   which will be destroyed during this explosion
      * @param randomDropChance which will be used to determinate if a affected block will drop
      */
-    public EntityExplodeEvent( Entity entity, Set<Block> affectedBlocks, float randomDropChance ) {
+    public EntityExplodeEvent( Entity<?> entity, Set<Block> affectedBlocks, float randomDropChance ) {
         super( entity );
         this.affectedBlocks = affectedBlocks;
         this.randomDropChance = randomDropChance;
@@ -40,7 +40,7 @@ public class EntityExplodeEvent extends CancellableEntityEvent {
      *
      * @return affected blocks
      */
-    public Set<Block> getAffectedBlocks() {
+    public Set<Block> affectedBlocks() {
         return this.affectedBlocks;
     }
 
@@ -49,7 +49,7 @@ public class EntityExplodeEvent extends CancellableEntityEvent {
      *
      * @return random drop chance
      */
-    public float getRandomDropChance() {
+    public float randomDropChance() {
         return this.randomDropChance;
     }
 
@@ -58,8 +58,9 @@ public class EntityExplodeEvent extends CancellableEntityEvent {
      *
      * @param randomDropChance which will be used instead of the old value
      */
-    public void setRandomDropChance( float randomDropChance ) {
+    public EntityExplodeEvent randomDropChance(float randomDropChance ) {
         this.randomDropChance = randomDropChance;
+        return this;
     }
 
 }

@@ -17,7 +17,7 @@ public class StandingBanner extends Banner {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.STANDING_BANNER;
     }
 

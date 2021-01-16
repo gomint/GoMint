@@ -64,24 +64,6 @@ public class PistonArmTileEntity extends TileEntity {
 
     @Override
     public void update( long currentMillis, float dT ) {
-        /*Block piston = this.getBlock();
-        Facing facing = Things.convertFromDataToBlockFace( piston.getBlockData() );
-
-        if ( this.isExtended() ) {
-            // We need a PistonHead
-            Block above = piston.getSide( facing );
-            if ( above.getType() != BlockType.PISTON_HEAD ) {
-                PistonHead head = above.setType( PistonHead.class );
-                // TODO: Check how the block is stored now
-                // head.setBlockData( piston.getBlockData() );
-            }
-        } else if ( !this.isExtended() ) {
-            // We need air above
-            Block above = piston.getSide( facing );
-            if ( above.getType() == BlockType.PISTON_HEAD ) {
-                above.setType( Air.class );
-            }
-        }*/
     }
 
     @Override

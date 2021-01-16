@@ -9,12 +9,12 @@ import io.gomint.taglib.NBTTagCompound;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:speckled_melon", id = 382 )
- public class ItemGlisteringMelon extends ItemStack implements io.gomint.inventory.item.ItemGlisteringMelon {
+ public class ItemGlisteringMelon extends ItemStack< io.gomint.inventory.item.ItemGlisteringMelon> implements io.gomint.inventory.item.ItemGlisteringMelon {
 
 
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.GLISTERING_MELON;
     }
 

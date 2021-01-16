@@ -10,10 +10,10 @@ import io.gomint.taglib.NBTTagCompound;
  * @version 1.0
  */
 @RegisterInfo(sId = "minecraft:unlit_redstone_torch", id = 75)
-public class ItemRedstoneTorchInactive extends ItemStack {
+public class ItemRedstoneTorchInactive extends ItemStack<ItemRedstoneTorchInactive> {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.REDSTONE_TORCH_INACTIVE;
     }
 

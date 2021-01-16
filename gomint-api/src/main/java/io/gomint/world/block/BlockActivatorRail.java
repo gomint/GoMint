@@ -27,14 +27,15 @@ public interface BlockActivatorRail extends Block {
      * Direction of the rail
      *
      * @param direction which this rail should be oriented by
+     * @return block for chaining
      */
-    void setDirection(Direction direction);
+    BlockActivatorRail direction(Direction direction);
 
     /**
      * Get direction of the rail
      *
      * @return direction of this rail
      */
-    Direction getDirection();
+    Direction direction();
 
 }

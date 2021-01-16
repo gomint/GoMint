@@ -21,12 +21,12 @@ public class RedstoneOre extends Block implements BlockRedstoneOre {
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 4500;
     }
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
@@ -36,7 +36,7 @@ public class RedstoneOre extends Block implements BlockRedstoneOre {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.REDSTONE_ORE;
     }
 
@@ -46,7 +46,7 @@ public class RedstoneOre extends Block implements BlockRedstoneOre {
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return new Class[]{
             ItemDiamondPickaxe.class,
             ItemIronPickaxe.class

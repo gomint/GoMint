@@ -19,7 +19,7 @@ import io.gomint.world.block.data.SignDirection;
 @RegisterInfo(sId = "minecraft:darkoak_standing_sign")
 @RegisterInfo(sId = "minecraft:crimson_standing_sign")
 @RegisterInfo(sId = "minecraft:warped_standing_sign")
-public class StandingSign extends Sign implements BlockStandingSign {
+public class StandingSign extends Sign<BlockStandingSign> implements BlockStandingSign {
 
     private enum LogTypeMagic {
         OAK("minecraft:standing_sign"),
@@ -41,7 +41,7 @@ public class StandingSign extends Sign implements BlockStandingSign {
     private static final SignDirectionBlockState DIRECTION = new SignDirectionBlockState(() -> new String[]{"ground_sign_direction"});
 
     @Override
-    public LogType getWoodType() {
+    public LogType type() {
         for (LogTypeMagic value : LogTypeMagic.values()) {
             if (value.blockId.equals(this.getBlockId())) {
                 return LogType.valueOf(value.name());
@@ -52,23 +52,25 @@ public class StandingSign extends Sign implements BlockStandingSign {
     }
 
     @Override
-    public void setWoodType(LogType logType) {
+    public BlockStandingSign type(LogType logType) {
         LogTypeMagic newState = LogTypeMagic.valueOf(logType.name());
         this.setBlockId(newState.blockId);
+        return this;
     }
 
     @Override
-    public SignDirection getSignDirection() {
+    public SignDirection direction() {
         return DIRECTION.getState(this);
     }
 
     @Override
-    public void setSignDirection(SignDirection direction) {
+    public BlockStandingSign direction(SignDirection direction) {
         DIRECTION.setState(this, direction);
+        return this;
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.SIGN;
     }
 }

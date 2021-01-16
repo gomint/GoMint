@@ -20,12 +20,12 @@ public class SnowLayer extends Block implements BlockSnowLayer {
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 300;
     }
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
@@ -35,7 +35,7 @@ public class SnowLayer extends Block implements BlockSnowLayer {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.SNOW_LAYER;
     }
 
@@ -45,7 +45,7 @@ public class SnowLayer extends Block implements BlockSnowLayer {
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return ToolPresets.SHOVEL;
     }
 

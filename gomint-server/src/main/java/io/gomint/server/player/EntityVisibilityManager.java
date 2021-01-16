@@ -28,35 +28,35 @@ public class EntityVisibilityManager {
 
     private static final Logger LOGGER = LoggerFactory.getLogger( EntityVisibilityManager.class );
     private final EntityPlayer player;
-    private final ObjectSet<Entity> visible = new ObjectOpenHashSet<>();
+    private final ObjectSet<Entity<?>> visible = new ObjectOpenHashSet<>();
 
     public EntityVisibilityManager(EntityPlayer player) {
         this.player = player;
     }
 
     public void updateAddedChunk(ChunkAdapter chunk ) {
-        LOGGER.debug( "Checking chunk {}, {}", chunk.getX(), chunk.getZ() );
+        LOGGER.debug( "Checking chunk {}, {}", chunk.x(), chunk.z() );
 
         // Check if we should be able to see this entity
         chunk.iterateEntities( Entity.class, entity -> {
             LOGGER.debug( "Found entity {}", entity );
 
-            if ( ( (io.gomint.server.entity.Entity) entity ).shouldBeSeen( EntityVisibilityManager.this.player ) ) {
+            if ( ( (io.gomint.server.entity.Entity<?>) entity ).shouldBeSeen( EntityVisibilityManager.this.player ) ) {
                 EntityVisibilityManager.this.addEntity( entity );
             }
         } );
     }
 
-    public void updateEntity( Entity entity, Chunk chunk ) {
-        if ( !( (io.gomint.server.entity.Entity) entity ).shouldBeSeen( this.player ) ) {
+    public void updateEntity( Entity<?> entity, Chunk chunk ) {
+        if ( !( (io.gomint.server.entity.Entity<?>) entity ).shouldBeSeen( this.player ) ) {
             return;
         }
 
-        int currentX = CoordinateUtils.fromBlockToChunk( (int) this.player.getPositionX() );
-        int currentZ = CoordinateUtils.fromBlockToChunk( (int) this.player.getPositionZ() );
+        int currentX = CoordinateUtils.fromBlockToChunk( (int) this.player.positionX() );
+        int currentZ = CoordinateUtils.fromBlockToChunk( (int) this.player.positionZ() );
 
-        if ( Math.abs( chunk.getX() - currentX ) > this.player.getViewDistance() ||
-            Math.abs( chunk.getZ() - currentZ ) > this.player.getViewDistance() ) {
+        if ( Math.abs( chunk.x() - currentX ) > this.player.viewDistance() ||
+            Math.abs( chunk.z() - currentZ ) > this.player.viewDistance() ) {
             removeEntity( entity );
         } else {
             addEntity( entity );
@@ -68,30 +68,30 @@ public class EntityVisibilityManager {
         chunk.iterateEntities( Entity.class, EntityVisibilityManager.this::removeEntity );
     }
 
-    public void removeEntity( Entity entity ) {
+    public void removeEntity( Entity<?> entity ) {
         if ( this.visible.remove( entity ) && !this.player.equals( entity ) ) {
-            io.gomint.server.entity.Entity implEntity = (io.gomint.server.entity.Entity) entity;
+            io.gomint.server.entity.Entity<?> implEntity = (io.gomint.server.entity.Entity<?>) entity;
             this.despawnEntity( implEntity );
         }
     }
 
-    private void despawnEntity( io.gomint.server.entity.Entity entity ) {
-        LOGGER.debug( "Removing entity {} for {}", entity, this.player.getName() );
+    private void despawnEntity( io.gomint.server.entity.Entity<?> entity ) {
+        LOGGER.debug( "Removing entity {} for {}", entity, this.player.name() );
         entity.detach( this.player );
 
         PacketDespawnEntity despawnEntity = new PacketDespawnEntity();
-        despawnEntity.setEntityId( entity.getEntityId() );
-        this.player.getConnection().addToSendQueue( despawnEntity );
+        despawnEntity.setEntityId( entity.id() );
+        this.player.connection().addToSendQueue( despawnEntity );
     }
 
-    public void addEntity( Entity entity ) {
+    public void addEntity( Entity<?> entity ) {
         if ( !this.visible.contains( entity ) && !this.player.equals( entity ) ) {
-            LOGGER.debug( "Spawning entity {} for {}", entity, this.player.getName() );
-            io.gomint.server.entity.Entity implEntity = (io.gomint.server.entity.Entity) entity;
+            LOGGER.debug( "Spawning entity {} for {}", entity, this.player.name() );
+            io.gomint.server.entity.Entity<?> implEntity = (io.gomint.server.entity.Entity<?>) entity;
 
-            implEntity.preSpawn( this.player.getConnection() );
-            this.player.getConnection().addToSendQueue( implEntity.createSpawnPacket( this.player ) );
-            implEntity.postSpawn( this.player.getConnection() );
+            implEntity.preSpawn( this.player.connection() );
+            this.player.connection().addToSendQueue( implEntity.createSpawnPacket( this.player ) );
+            implEntity.postSpawn( this.player.connection() );
 
             implEntity.attach( this.player );
             this.visible.add( entity );
@@ -99,16 +99,16 @@ public class EntityVisibilityManager {
     }
 
     public void clear() {
-        for ( Entity curr : this.visible ) {
+        for ( Entity<?> curr : this.visible ) {
             if ( curr instanceof io.gomint.server.entity.Entity ) {
-                this.despawnEntity( (io.gomint.server.entity.Entity) curr );
+                this.despawnEntity( (io.gomint.server.entity.Entity<?>) curr );
             }
         }
 
         this.visible.clear();
     }
 
-    public boolean isVisible( Entity entity ) {
+    public boolean isVisible( Entity<?> entity ) {
         return Objects.equals( entity, this.player ) || this.visible.contains( entity );
     }
 

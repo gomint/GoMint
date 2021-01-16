@@ -15,10 +15,10 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( id = -219, sId = "minecraft:beehive")
-public class ItemBeeHive extends ItemStack implements io.gomint.inventory.item.ItemBeeHive {
+public class ItemBeeHive extends ItemStack< io.gomint.inventory.item.ItemBeeHive> implements io.gomint.inventory.item.ItemBeeHive {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.BEEHIVE;
     }
 

@@ -17,8 +17,8 @@ public interface CustomForm extends Form<FormResponse> {
      * @param title of the form
      * @return fresh custom form
      */
-    static CustomForm create( String title ) {
-        return GoMint.instance().createCustomForm( title );
+    static CustomForm create(String title) {
+        return GoMint.instance().createCustomForm(title);
     }
 
     /**
@@ -28,7 +28,7 @@ public interface CustomForm extends Form<FormResponse> {
      * @param text for display
      * @return new dropbox where you can add options
      */
-    Dropdown createDropdown( String id, String text );
+    Dropdown dropdown(String id, String text);
 
     /**
      * Add a new input box
@@ -39,7 +39,7 @@ public interface CustomForm extends Form<FormResponse> {
      * @param defaultValue of the input box
      * @return instance for chaining
      */
-    CustomForm addInputField( String id, String text, String placeHolder, String defaultValue );
+    CustomForm input(String id, String text, String placeHolder, String defaultValue);
 
     /**
      * Add a new label
@@ -47,7 +47,7 @@ public interface CustomForm extends Form<FormResponse> {
      * @param text to display
      * @return instance for chaning
      */
-    CustomForm addLabel( String text );
+    CustomForm label(String text);
 
     /**
      * Add a range slider
@@ -60,7 +60,7 @@ public interface CustomForm extends Form<FormResponse> {
      * @param defaultValue of this slider
      * @return instance for chaining
      */
-    CustomForm addSlider( String id, String text, float min, float max, float step, float defaultValue );
+    CustomForm slider(String id, String text, float min, float max, float step, float defaultValue);
 
     /**
      * Create a new step slider
@@ -69,7 +69,7 @@ public interface CustomForm extends Form<FormResponse> {
      * @param text for display
      * @return new step slider where you can add steps
      */
-    StepSlider createStepSlider( String id, String text );
+    StepSlider stepSlider(String id, String text);
 
     /**
      * Add a toggle
@@ -79,6 +79,6 @@ public interface CustomForm extends Form<FormResponse> {
      * @param value true when checked, false when not
      * @return instance for chaining
      */
-    CustomForm addToggle( String id, String text, boolean value );
+    CustomForm toggle(String id, String text, boolean value);
 
 }

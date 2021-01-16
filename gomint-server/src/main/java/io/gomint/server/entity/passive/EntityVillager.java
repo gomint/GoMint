@@ -4,7 +4,6 @@ import io.gomint.entity.EntityPlayer;
 import io.gomint.math.Vector;
 import io.gomint.server.entity.Attribute;
 import io.gomint.server.entity.EntityAgeable;
-import io.gomint.server.entity.EntityLiving;
 import io.gomint.server.entity.EntityTags;
 import io.gomint.server.entity.EntityType;
 import io.gomint.server.entity.metadata.MetadataContainer;
@@ -19,7 +18,7 @@ import java.util.Set;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:villager" )
-public class EntityVillager extends EntityAgeable implements io.gomint.entity.passive.EntityVillager {
+public class EntityVillager extends EntityAgeable<io.gomint.entity.passive.EntityVillager> implements io.gomint.entity.passive.EntityVillager {
 
     /**
      * Constructs a new EntityLiving
@@ -41,14 +40,14 @@ public class EntityVillager extends EntityAgeable implements io.gomint.entity.pa
 
     private void initEntity() {
         this.eyeHeight = 1.62f;
-        this.addAttribute(Attribute.HEALTH);
-        this.setMaxHealth(20);
-        this.setHealth(20);
-        this.setProfession(Profession.FARMER);
-        if(this.isBaby()) {
-            this.setSize(0.3f, 0.975f);
+        this.attribute(Attribute.HEALTH);
+        this.maxHealth(20);
+        this.health(20);
+        this.profession(Profession.FARMER);
+        if(this.baby()) {
+            this.size(0.3f, 0.975f);
         }else{
-            this.setSize(0.6f, 1.95f);
+            this.size(0.6f, 1.95f);
         }
     }
 
@@ -70,12 +69,13 @@ public class EntityVillager extends EntityAgeable implements io.gomint.entity.pa
     }
 
     @Override
-    public void interact( EntityPlayer player, Vector clickVector ) {
+    public EntityVillager interact( EntityPlayer player, Vector clickVector ) {
         // TODO: Adding the ability of open the villager shop inventory for the player
+        return this;
     }
 
     @Override
-    public void setProfession( Profession profession ) {
+    public EntityVillager profession(Profession profession ) {
         int variant = 0;
         switch ( profession ) {
             case BUTCHER:
@@ -96,10 +96,11 @@ public class EntityVillager extends EntityAgeable implements io.gomint.entity.pa
         }
 
         this.metadataContainer.putInt( MetadataContainer.DATA_VARIANT, variant );
+        return this;
     }
 
     @Override
-    public Profession getProfession() {
+    public Profession profession() {
         int variant = this.metadataContainer.getInt( MetadataContainer.DATA_VARIANT );
         switch ( variant ) {
             case 4:
@@ -117,7 +118,7 @@ public class EntityVillager extends EntityAgeable implements io.gomint.entity.pa
     }
 
     @Override
-    public Set<String> getTags() {
+    public Set<String> tags() {
         return EntityTags.CREATURE;
     }
 

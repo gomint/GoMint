@@ -25,7 +25,7 @@ public class AIFollowEntity extends AIState {
     private int currentPathNode;
     private List<BlockPosition> path;
 
-    private Entity followEntity;
+    private Entity<?> followEntity;
 
     /**
      * Constructs a new AIState that will belong to the given state machine.
@@ -45,8 +45,9 @@ public class AIFollowEntity extends AIState {
      *
      * @param entity the new entity to follow
      */
-    public void setFollowEntity( Entity entity ) {
+    public AIFollowEntity followEntity(Entity<?> entity ) {
         this.followEntity = entity;
+        return this;
     }
 
     @Override
@@ -57,36 +58,38 @@ public class AIFollowEntity extends AIState {
         }
 
         if ( this.path != null && this.currentPathNode < this.path.size() ) {
-            Vector position = this.pathfinding.getTransform().getPosition();
+            Vector position = this.pathfinding.transform().position();
 
             BlockPosition blockPosition = new BlockPosition(
-                MathUtils.fastFloor( position.getX() ),
-                MathUtils.fastFloor( position.getY() ),
-                MathUtils.fastFloor( position.getZ() )
+                MathUtils.fastFloor( position.x() ),
+                MathUtils.fastFloor( position.y() ),
+                MathUtils.fastFloor( position.z() )
             );
 
             BlockPosition node = this.path.get( this.currentPathNode );
 
             // Check if we need to jump
-            boolean jump = node.getY() > position.getY();
+            boolean jump = node.y() > position.y();
 
             Vector direction = node.toVector().add( .5f, 0, .5f ).subtract( position ).normalize().multiply( 4.31f * dT ); // 4.31 is the normal player movement speed per second
             if ( jump ) {
-                direction.setY( 1f ); // Default jump height
+                direction.y( 1f ); // Default jump height
             }
 
-            this.pathfinding.getTransform().setMotion( direction.getX(), direction.getY(), direction.getZ() );
+            this.pathfinding.transform().motion( direction.x(), direction.y(), direction.z() );
 
             LOGGER.debug( "Current pos: {}; Needed: {}; Direction: {}", position, node, direction );
 
             if ( blockPosition.equals( node ) ) {
                 this.currentPathNode++;
             }
-        } else if ( this.followEntity.isOnGround() ) {
-            LOGGER.debug( "Current follow position: {}", this.followEntity.getLocation() );
+        } else if ( this.followEntity.onGround() ) {
+            LOGGER.debug( "Current follow position: {}", this.followEntity.location() );
 
-            this.pathfinding.setGoal( this.followEntity.getLocation() );
-            this.path = this.pathfinding.getPath();
+            this.path = this.pathfinding
+                .goal( this.followEntity.location() )
+                .path();
+
             this.currentPathNode = 0;
         }
     }

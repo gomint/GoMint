@@ -14,20 +14,21 @@ import io.gomint.world.block.data.Axis;
  * @version 1.0
  * @stability 3
  */
-public interface BlockAxis {
+public interface BlockAxis<B> {
 
     /**
      * Set the axis of the log
      *
      * @param axis of the log
+     * @return block for chaining
      */
-    void setAxis( Axis axis );
+    B axis(Axis axis);
 
     /**
      * Get the axis of this log
      *
      * @return axis of the log
      */
-    Axis getAxis();
+    Axis axis();
 
 }

@@ -15,10 +15,10 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( id = -203, sId = "minecraft:barrel")
-public class ItemBarrel extends ItemStack implements io.gomint.inventory.item.ItemBarrel {
+public class ItemBarrel extends ItemStack< io.gomint.inventory.item.ItemBarrel> implements io.gomint.inventory.item.ItemBarrel {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.BARREL;
     }
 

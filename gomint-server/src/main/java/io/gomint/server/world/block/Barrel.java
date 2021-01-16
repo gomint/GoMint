@@ -24,7 +24,7 @@ import io.gomint.world.block.BlockType;
 public class Barrel extends Block {
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return -1;
     }
 
@@ -39,7 +39,7 @@ public class Barrel extends Block {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.BARREL;
     }
 

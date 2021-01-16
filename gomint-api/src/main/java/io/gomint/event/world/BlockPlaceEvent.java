@@ -17,11 +17,11 @@ import io.gomint.world.block.Block;
  * @version 1.0
  * @stability 3
  */
-public class BlockPlaceEvent extends CancellablePlayerEvent {
+public class BlockPlaceEvent extends CancellablePlayerEvent<BlockPlaceEvent> {
 
     private final Block placedAgainst;
     private final Block shouldReplace;
-    private final ItemStack item;
+    private final ItemStack<?> item;
     private final Block replacingBlock;
 
     /**
@@ -33,7 +33,7 @@ public class BlockPlaceEvent extends CancellablePlayerEvent {
      * @param itemStack      which should replace above block
      * @param replacingBlock get the block which will replace the shouldReplace block
      */
-    public BlockPlaceEvent( EntityPlayer player, Block placedAgainst, Block shouldReplace, ItemStack itemStack, Block replacingBlock ) {
+    public BlockPlaceEvent( EntityPlayer player, Block placedAgainst, Block shouldReplace, ItemStack<?> itemStack, Block replacingBlock ) {
         super( player );
         this.placedAgainst = placedAgainst;
         this.shouldReplace = shouldReplace;
@@ -42,13 +42,13 @@ public class BlockPlaceEvent extends CancellablePlayerEvent {
     }
 
     /**
-     * Get the block which replaced the {@link #getShouldReplace()} block after this event. This block
+     * Get the block which replaced the {@link #shouldReplace()} block after this event. This block
      * can NOT be modified (well you can but the server won't place the block with the modifications made in
      * this event)
      *
      * @return block which replaces the should replace block
      */
-    public Block getReplacingBlock() {
+    public Block replacingBlock() {
         return this.replacingBlock;
     }
 
@@ -57,7 +57,7 @@ public class BlockPlaceEvent extends CancellablePlayerEvent {
      *
      * @return block which got placed against
      */
-    public Block getPlacedAgainst() {
+    public Block placedAgainst() {
         return this.placedAgainst;
     }
 
@@ -66,7 +66,7 @@ public class BlockPlaceEvent extends CancellablePlayerEvent {
      *
      * @return block which should be replaced
      */
-    public Block getShouldReplace() {
+    public Block shouldReplace() {
         return this.shouldReplace;
     }
 
@@ -75,7 +75,7 @@ public class BlockPlaceEvent extends CancellablePlayerEvent {
      *
      * @return item which should replace the block
      */
-    public ItemStack getItem() {
+    public ItemStack<?> item() {
         return this.item;
     }
 

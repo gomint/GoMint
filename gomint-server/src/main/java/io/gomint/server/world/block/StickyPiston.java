@@ -19,12 +19,12 @@ public class StickyPiston extends Block implements BlockStickyPiston {
     private static final BlockfaceBlockState FACING = new BlockfaceBlockState(() -> new String[]{"facing_direction"});
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 750;
     }
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
@@ -34,7 +34,7 @@ public class StickyPiston extends Block implements BlockStickyPiston {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.STICKY_PISTON;
     }
 
@@ -44,17 +44,18 @@ public class StickyPiston extends Block implements BlockStickyPiston {
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return ToolPresets.PICKAXE;
     }
 
     @Override
-    public void setFacing(Facing facing) {
+    public BlockStickyPiston facing(Facing facing) {
         FACING.setState(this, facing);
+        return this;
     }
 
     @Override
-    public Facing getFacing() {
+    public Facing facing() {
         return FACING.getState(this);
     }
 

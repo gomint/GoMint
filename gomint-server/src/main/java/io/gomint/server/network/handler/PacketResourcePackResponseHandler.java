@@ -53,13 +53,13 @@ public class PacketResourcePackResponseHandler implements PacketHandler<PacketRe
     private void switchToLogin(PlayerConnection connection, long currentTimeMillis) {
         // Proceed with login
         connection.setState(PlayerConnectionState.LOGIN);
-        LOGGER.info("Logging in as " + connection.getEntity().getName() + " with id " + connection.getEntity().getEntityId());
+        LOGGER.info("Logging in as " + connection.getEntity().name() + " with id " + connection.getEntity().id());
 
-        connection.getEntity().getLoginPerformance().setResourceEnd(currentTimeMillis);
+        connection.getEntity().loginPerformance().setResourceEnd(currentTimeMillis);
 
         PlayerPreJoinEvent playerPreJoinEvent = new PlayerPreJoinEvent(connection.getEntity());
-        connection.getServer().getPluginManager().callEvent(playerPreJoinEvent);
-        if (!playerPreJoinEvent.isCancelled()) {
+        connection.getServer().pluginManager().callEvent(playerPreJoinEvent);
+        if (!playerPreJoinEvent.cancelled()) {
             connection.getEntity().prepareEntity();
         }
     }

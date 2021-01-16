@@ -58,20 +58,20 @@ public class Sapling extends Block implements BlockSapling {
     private static final BooleanBlockState AGE = new BooleanBlockState(() -> new String[]{"age_bit"});
 
     @Override
-    public boolean beforePlacement(EntityLiving entity, ItemStack item, Facing face, Location location) {
+    public boolean beforePlacement(EntityLiving<?> entity, ItemStack<?> item, Facing face, Location location) {
         AGE.setState(this, false);
 
-        Block down = this.getSide(Facing.DOWN);
-        return down.isSolid();
+        Block down = this.side(Facing.DOWN);
+        return down.solid();
     }
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
     @Override
-    public boolean isSolid() {
+    public boolean solid() {
         return false;
     }
 
@@ -81,7 +81,7 @@ public class Sapling extends Block implements BlockSapling {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.SAPLING;
     }
 
@@ -91,24 +91,25 @@ public class Sapling extends Block implements BlockSapling {
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 0;
     }
 
     @Override
-    public void setLogType(LogType type) {
+    public BlockSapling type(LogType type) {
         TYPE.setState(this, LogTypeMagic.valueOf(type.name()));
+        return this;
     }
 
     @Override
-    public LogType getLogType() {
+    public LogType type() {
         return LogType.valueOf(TYPE.getState(this).name());
     }
 
     @Override
-    public List<ItemStack> getDrops(ItemStack itemInHand) {
+    public List<ItemStack<?>> drops(ItemStack<?> itemInHand) {
         ItemSapling sapling = ItemSapling.create(1);
-        sapling.setLogType(this.getLogType());
+        sapling.type(this.type());
         return Collections.singletonList(sapling);
     }
 

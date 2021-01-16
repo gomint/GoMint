@@ -15,9 +15,9 @@ import io.gomint.inventory.item.ItemStack;
  * @version 1.0
  * @stability 3
  */
-public class PlayerConsumeItemEvent extends CancellablePlayerEvent {
+public class PlayerConsumeItemEvent extends CancellablePlayerEvent<PlayerConsumeItemEvent> {
 
-    private final ItemStack itemStack;
+    private final ItemStack<?> itemStack;
 
     /**
      * Create a new consumer item event which gets called when a player tires to eat/drink a item
@@ -25,7 +25,7 @@ public class PlayerConsumeItemEvent extends CancellablePlayerEvent {
      * @param player    which consumes the item
      * @param itemStack which gets consumed
      */
-    public PlayerConsumeItemEvent( EntityPlayer player, ItemStack itemStack ) {
+    public PlayerConsumeItemEvent( EntityPlayer player, ItemStack<?> itemStack ) {
         super( player );
         this.itemStack = itemStack;
     }
@@ -35,7 +35,7 @@ public class PlayerConsumeItemEvent extends CancellablePlayerEvent {
      *
      * @return itemstack which should be consumed
      */
-    public ItemStack getItemStack() {
+    public ItemStack<?> itemStack() {
         return this.itemStack;
     }
 

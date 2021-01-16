@@ -9,10 +9,10 @@ import io.gomint.taglib.NBTTagCompound;
  * @version 1.0
  */
 @RegisterInfo(sId = "minecraft:redstone_wire", id = 55)
-public class ItemRedstoneWire extends ItemStack {
+public class ItemRedstoneWire extends ItemStack<ItemRedstoneWire> {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.REDSTONE_WIRE;
     }
 

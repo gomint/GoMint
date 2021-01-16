@@ -21,19 +21,19 @@ public class Carpet extends Block implements BlockCarpet {
     }
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
     @Override
-    public List<AxisAlignedBB> getBoundingBox() {
+    public List<AxisAlignedBB> boundingBoxes() {
         return Collections.singletonList( new AxisAlignedBB(
-            this.location.getX(),
-            this.location.getY(),
-            this.location.getZ(),
-            this.location.getX() + 1,
-            this.location.getY() + 0.0625f,
-            this.location.getZ() + 1
+            this.location.x(),
+            this.location.y(),
+            this.location.z(),
+            this.location.x() + 1,
+            this.location.y() + 0.0625f,
+            this.location.z() + 1
         ) );
     }
 
@@ -43,7 +43,7 @@ public class Carpet extends Block implements BlockCarpet {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.CARPET;
     }
 

@@ -12,7 +12,7 @@ import io.gomint.world.block.data.Facing;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:golden_chestplate", id = 315 )
-public class ItemGoldenChestplate extends ItemGoldenArmor implements io.gomint.inventory.item.ItemGoldenChestplate {
+public class ItemGoldenChestplate extends ItemGoldenArmor<io.gomint.inventory.item.ItemGoldenChestplate> implements io.gomint.inventory.item.ItemGoldenChestplate {
 
     @Override
     public float getReductionValue() {
@@ -22,10 +22,10 @@ public class ItemGoldenChestplate extends ItemGoldenArmor implements io.gomint.i
     @Override
     public boolean interact(EntityPlayer entity, Facing face, Vector clickPosition, Block clickedBlock ) {
         if ( clickedBlock == null ) {
-            if ( isBetter( (ItemStack) entity.getArmorInventory().getChestplate() ) ) {
-                ItemStack old = (ItemStack) entity.getArmorInventory().getChestplate();
-                entity.getArmorInventory().setChestplate( this );
-                entity.getInventory().setItem( entity.getInventory().getItemInHandSlot(), old );
+            if ( isBetter( (ItemStack<?>) entity.armorInventory().chestplate() ) ) {
+                ItemStack<?> old = (ItemStack<?>) entity.armorInventory().chestplate();
+                entity.armorInventory().chestplate( this );
+                entity.inventory().item( entity.inventory().itemInHandSlot(), old );
             }
         }
 
@@ -33,7 +33,7 @@ public class ItemGoldenChestplate extends ItemGoldenArmor implements io.gomint.i
     }
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.GOLDEN_CHESTPLATE;
     }
 

@@ -12,24 +12,24 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:diamond_axe", id = 279 )
-public class ItemDiamondAxe extends ItemReduceTierDiamond implements io.gomint.inventory.item.ItemDiamondAxe {
+public class ItemDiamondAxe extends ItemReduceTierDiamond<io.gomint.inventory.item.ItemDiamondAxe> implements io.gomint.inventory.item.ItemDiamondAxe {
 
     @Override
     public void gotInHand( EntityPlayer player ) {
         player
-            .getAttributeInstance( Attribute.ATTACK_DAMAGE )
+            .attributeInstance( Attribute.ATTACK_DAMAGE )
             .setModifier( AttributeModifier.ITEM_ATTACK_DAMAGE, AttributeModifierType.ADDITION, 6 ); // 3 from Axe type, 3 from diamond material
     }
 
     @Override
     public void removeFromHand( EntityPlayer player ) {
         player
-            .getAttributeInstance( Attribute.ATTACK_DAMAGE )
+            .attributeInstance( Attribute.ATTACK_DAMAGE )
             .removeModifier( AttributeModifier.ITEM_ATTACK_DAMAGE );
     }
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.DIAMOND_AXE;
     }
 

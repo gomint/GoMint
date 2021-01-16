@@ -15,10 +15,10 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:vex_spawn_egg", id = 474 )
-public class ItemVexSpawnEgg extends ItemStack implements io.gomint.inventory.item.ItemVexSpawnEgg {
+public class ItemVexSpawnEgg extends ItemStack< io.gomint.inventory.item.ItemVexSpawnEgg> implements io.gomint.inventory.item.ItemVexSpawnEgg {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.VEX_SPAWN_EGG;
     }
 

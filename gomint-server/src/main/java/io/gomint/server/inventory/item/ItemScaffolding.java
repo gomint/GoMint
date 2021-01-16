@@ -10,20 +10,22 @@ package io.gomint.server.inventory.item;
 import io.gomint.inventory.item.ItemType;
 import io.gomint.server.registry.RegisterInfo;
 
+import java.time.Duration;
+
 /**
  * @author geNAZt
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:scaffolding", id = -165 )
-public class ItemScaffolding extends ItemStack implements io.gomint.inventory.item.ItemScaffolding {
+public class ItemScaffolding extends ItemStack< io.gomint.inventory.item.ItemScaffolding> implements io.gomint.inventory.item.ItemScaffolding {
 
     @Override
-    public long getBurnTime() {
-        return 60000;
+    public Duration burnTime() {
+        return Duration.ofMillis(60000);
     }
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.SCAFFOLDING;
     }
 

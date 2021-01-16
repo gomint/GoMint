@@ -35,7 +35,7 @@ public class Watchdog implements Runnable {
         this.watchdogMap = new Long2LongOpenHashMap();
         this.removed = new Long2LongOpenHashMap();
 
-        server.getExecutorService().scheduleAtFixedRate(this, 0, 10, TimeUnit.MILLISECONDS);
+        server.executorService().scheduleAtFixedRate(this, 0, 10, TimeUnit.MILLISECONDS);
     }
 
     @Override

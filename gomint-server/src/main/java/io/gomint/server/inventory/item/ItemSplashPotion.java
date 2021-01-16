@@ -9,12 +9,12 @@ import io.gomint.taglib.NBTTagCompound;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:splash_potion", id = 438 )
- public class ItemSplashPotion extends ItemStack implements io.gomint.inventory.item.ItemSplashPotion {
+ public class ItemSplashPotion extends ItemStack< io.gomint.inventory.item.ItemSplashPotion> implements io.gomint.inventory.item.ItemSplashPotion {
 
 
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.SPLASH_POTION;
     }
 

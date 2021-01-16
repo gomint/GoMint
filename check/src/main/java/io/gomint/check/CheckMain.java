@@ -42,10 +42,10 @@ public class CheckMain {
         Map<String, Map<String, Object>> knownBlockKeys = new HashMap<>();
         Map<String, Set<String>> additionalData = new HashMap<>();
 
-        List<NBTTagCompound> blockIdentifiers = (List<NBTTagCompound>) ((List) root.getList("blockPalette", false));
+        List<NBTTagCompound> blockIdentifiers = (List<NBTTagCompound>) ((List<?>) root.getList("blockPalette", false));
         for (NBTTagCompound compound : blockIdentifiers) {
-            String block = compound.getCompound("block", false).getString("name", "minecraft:air");
-            NBTTagCompound states = compound.getCompound("block", false).getCompound("states", false);
+            String block = compound.getString("name", "minecraft:air");
+            NBTTagCompound states = compound.getCompound("states", false);
 
             knownBlockKeys.computeIfAbsent(block, s -> {
                 if (states != null) {

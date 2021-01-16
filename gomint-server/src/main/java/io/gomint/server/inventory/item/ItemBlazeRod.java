@@ -4,21 +4,23 @@ import io.gomint.inventory.item.ItemType;
 
 import io.gomint.server.registry.RegisterInfo;
 
+import java.time.Duration;
+
 /**
  * @author geNAZt
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:blaze_rod", id = 369 )
-public class ItemBlazeRod extends ItemStack implements io.gomint.inventory.item.ItemBlazeRod {
+public class ItemBlazeRod extends ItemStack< io.gomint.inventory.item.ItemBlazeRod> implements io.gomint.inventory.item.ItemBlazeRod {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.BLAZE_ROD;
     }
 
     @Override
-    public long getBurnTime() {
-        return 120000;
+    public Duration burnTime() {
+        return Duration.ofMillis(120000);
     }
 
 }

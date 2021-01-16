@@ -21,26 +21,21 @@ import java.util.List;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:ender_chest" )
-public class EnderChest extends ContainerBlock implements BlockEnderChest {
+public class EnderChest extends ContainerBlock<BlockEnderChest> implements BlockEnderChest {
 
     @Override
-    public String getBlockId() {
-        return "minecraft:ender_chest";
-    }
-
-    @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 33750;
     }
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
     @Override
-    public boolean interact(Entity entity, Facing face, Vector facePos, ItemStack item ) {
-        EnderChestTileEntity tileEntity = this.getTileEntity();
+    public boolean interact(Entity<?> entity, Facing face, Vector facePos, ItemStack<?> item ) {
+        EnderChestTileEntity tileEntity = this.tileEntity();
         if ( tileEntity != null ) {
             tileEntity.interact( entity, face, facePos, item );
             return true;
@@ -55,7 +50,7 @@ public class EnderChest extends ContainerBlock implements BlockEnderChest {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.ENDER_CHEST;
     }
 
@@ -76,14 +71,15 @@ public class EnderChest extends ContainerBlock implements BlockEnderChest {
     }
 
     @Override
-    public List<ItemStack> getDrops( ItemStack itemInHand ) {
+    public List<ItemStack<?>> drops(ItemStack<?> itemInHand ) {
         return new ArrayList<>() {{
             add(ItemObsidian.create(8));
         }};
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return ToolPresets.PICKAXE;
     }
+    
 }

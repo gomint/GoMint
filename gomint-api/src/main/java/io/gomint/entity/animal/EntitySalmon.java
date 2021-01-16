@@ -15,7 +15,7 @@ import io.gomint.entity.EntityLiving;
  * @version 1.0
  * @stability 3
  */
-public interface EntitySalmon extends EntityLiving {
+public interface EntitySalmon extends EntityLiving<EntitySalmon> {
 
     /**
      * Create a new entity salmon with no config

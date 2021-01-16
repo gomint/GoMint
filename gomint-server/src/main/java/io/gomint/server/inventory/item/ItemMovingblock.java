@@ -15,10 +15,10 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:movingblock", id = 250 )
-public class ItemMovingblock extends ItemStack implements io.gomint.inventory.item.ItemMovingblock {
+public class ItemMovingblock extends ItemStack< io.gomint.inventory.item.ItemMovingblock> implements io.gomint.inventory.item.ItemMovingblock {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.MOVINGBLOCK;
     }
 

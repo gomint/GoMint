@@ -5,6 +5,6 @@ package io.gomint.inventory.item;
  * @version 1.0
  * @stability 3
  */
-public interface ItemShovel extends ItemTool {
+public interface ItemShovel<I> extends ItemTool<I> {
 
 }

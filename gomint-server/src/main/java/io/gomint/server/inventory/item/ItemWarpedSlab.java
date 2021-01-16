@@ -15,10 +15,10 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:warped_slab", id = -265 )
-public class ItemWarpedSlab extends ItemStack implements io.gomint.inventory.item.ItemWarpedSlab {
+public class ItemWarpedSlab extends ItemStack< io.gomint.inventory.item.ItemWarpedSlab> implements io.gomint.inventory.item.ItemWarpedSlab {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.WARPED_SLAB;
     }
 

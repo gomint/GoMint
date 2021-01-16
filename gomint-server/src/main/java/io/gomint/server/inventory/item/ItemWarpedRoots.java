@@ -15,10 +15,10 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:warped_roots", id = -224 )
-public class ItemWarpedRoots extends ItemStack implements io.gomint.inventory.item.ItemWarpedRoots {
+public class ItemWarpedRoots extends ItemStack< io.gomint.inventory.item.ItemWarpedRoots> implements io.gomint.inventory.item.ItemWarpedRoots {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.WARPED_ROOTS;
     }
 

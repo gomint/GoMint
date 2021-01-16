@@ -27,18 +27,18 @@ public class Ore {
     }
 
     public boolean canPlaceObject( World world, int x, int y, int z ) {
-        return world.getBlockAt( x, y, z ).getBlockType() == BlockType.STONE;
+        return world.blockAt( x, y, z ).blockType() == BlockType.STONE;
     }
 
     public void placeObject( World world, int x, int y, int z ) {
         int clusterSize = this.type.getClusterSize();
         double angle = this.random.nextFloat() * Math.PI;
 
-        Vector2 offset = Vector2.getDirection2D( angle ).multiply( clusterSize / 8 );
-        float x1 = x + 8 + offset.getX();
-        float x2 = x + 8 - offset.getX();
-        float z1 = z + 8 + offset.getZ();
-        float z2 = z + 8 - offset.getZ();
+        Vector2 offset = Vector2.direction( angle ).multiply( clusterSize / 8 );
+        float x1 = x + 8 + offset.x();
+        float x2 = x + 8 - offset.x();
+        float z1 = z + 8 + offset.z();
+        float z2 = z + 8 - offset.z();
 
         int y1 = y + this.random.nextInt( 3 ) + 2;
         int y2 = y + this.random.nextInt( 3 ) + 2;
@@ -67,8 +67,8 @@ public class Ore {
                             for ( z = startZ; z <= endZ; ++z ) {
                                 double sizeZ = ( z + 0.5 - seedZ ) / size;
                                 sizeZ *= sizeZ;
-                                if ( ( sizeX + sizeY + sizeZ ) < 1 && world.getBlockAt( x, y, z ).getBlockType() == BlockType.STONE ) {
-                                    world.getBlockAt( x, y, z ).copyFromBlock( this.type.getBlock() );
+                                if ( ( sizeX + sizeY + sizeZ ) < 1 && world.blockAt( x, y, z ).blockType() == BlockType.STONE ) {
+                                    world.blockAt( x, y, z ).copyFromBlock( this.type.getBlock() );
                                 }
                             }
                         }

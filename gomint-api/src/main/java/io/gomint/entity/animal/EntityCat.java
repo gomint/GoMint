@@ -14,7 +14,7 @@ import io.gomint.entity.EntityAgeable;
  * @author joserobjr
  * @since 2021-01-12
  */
-public interface EntityCat extends EntityAgeable {
+public interface EntityCat extends EntityAgeable<EntityCat> {
     /**
      * Create a new entity cat with no config
      *

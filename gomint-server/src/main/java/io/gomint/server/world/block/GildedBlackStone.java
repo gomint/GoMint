@@ -19,7 +19,7 @@ public class GildedBlackStone extends Block implements BlockGildedBlackStone {
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 2300;
     }
 
@@ -29,7 +29,7 @@ public class GildedBlackStone extends Block implements BlockGildedBlackStone {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.GILDED_BLACKSTONE;
     }
 
@@ -39,7 +39,7 @@ public class GildedBlackStone extends Block implements BlockGildedBlackStone {
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return ToolPresets.PICKAXE;
     }
 }

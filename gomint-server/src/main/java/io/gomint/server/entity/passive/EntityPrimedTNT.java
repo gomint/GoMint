@@ -29,7 +29,7 @@ import java.util.Set;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:tnt" )
-public class EntityPrimedTNT extends Entity implements io.gomint.entity.active.EntityPrimedTNT {
+public class EntityPrimedTNT extends Entity<io.gomint.entity.active.EntityPrimedTNT> implements io.gomint.entity.active.EntityPrimedTNT {
 
     private float lastUpdateDT;
     private int fuse;
@@ -48,7 +48,7 @@ public class EntityPrimedTNT extends Entity implements io.gomint.entity.active.E
         this.initEntity();
 
         this.world.sendLevelEvent( position, LevelEvent.SOUND_IGNITE, 0 );
-        this.setPosition( position );
+        this.position( position );
     }
 
     /**
@@ -62,7 +62,7 @@ public class EntityPrimedTNT extends Entity implements io.gomint.entity.active.E
     }
 
     private void initEntity() {
-        this.setSize( 0.98f, 0.98f );
+        this.size( 0.98f, 0.98f );
 
         this.metadataContainer.setDataFlag( MetadataContainer.DATA_INDEX, EntityFlag.IGNITED, true );
         this.metadataContainer.putInt( MetadataContainer.DATA_FUSE_LENGTH, this.fuse );
@@ -71,12 +71,13 @@ public class EntityPrimedTNT extends Entity implements io.gomint.entity.active.E
     }
 
     @Override
-    public void setFuse( float fuseInSeconds ) {
+    public EntityPrimedTNT fuse(float fuseInSeconds ) {
         this.fuse = (int) ( fuseInSeconds * 20f );
+        return this;
     }
 
     @Override
-    public float getFuse() {
+    public float fuse() {
         return this.fuse / 20f;
     }
 
@@ -92,8 +93,8 @@ public class EntityPrimedTNT extends Entity implements io.gomint.entity.active.E
             }
 
             if ( this.onGround ) {
-                Vector motion = this.getVelocity();
-                this.setVelocity( motion.multiply( new Vector( 0.7f, -0.5f, 0.7f ) ) );
+                Vector motion = this.velocity();
+                this.velocity( motion.multiply( new Vector( 0.7f, -0.5f, 0.7f ) ) );
             }
 
             this.fuse--;
@@ -107,13 +108,13 @@ public class EntityPrimedTNT extends Entity implements io.gomint.entity.active.E
     }
 
     @Override
-    protected void fall() {
-
+    protected EntityPrimedTNT fall() {
+        return this;
     }
 
     @Override
     public boolean damage( EntityDamageEvent damageEvent ) {
-        if ( damageEvent.getDamageSource() == EntityDamageEvent.DamageSource.VOID && super.damage( damageEvent ) ) {
+        if ( damageEvent.damageSource() == EntityDamageEvent.DamageSource.VOID && super.damage( damageEvent ) ) {
             this.despawn();
             return true;
         }
@@ -122,14 +123,15 @@ public class EntityPrimedTNT extends Entity implements io.gomint.entity.active.E
     }
 
     @Override
-    public void spawn( Location location ) {
+    public EntityPrimedTNT spawn( Location location ) {
         super.spawn( location );
 
         this.world.sendLevelEvent( location, LevelEvent.SOUND_IGNITE, 0 );
+        return this;
     }
 
     @Override
-    public Set<String> getTags() {
+    public Set<String> tags() {
         return EntityTags.PASSIVE;
     }
 

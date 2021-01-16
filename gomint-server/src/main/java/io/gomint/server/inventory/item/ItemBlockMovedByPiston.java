@@ -10,10 +10,10 @@ import io.gomint.taglib.NBTTagCompound;
  * @version 1.0
  */
 @RegisterInfo(sId = "minecraft:movingBlock", id = 250)
-public class ItemBlockMovedByPiston extends ItemStack {
+public class ItemBlockMovedByPiston extends ItemStack<ItemBlockMovedByPiston> {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.BLOCK_MOVED_BY_PISTON;
     }
 

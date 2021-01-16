@@ -18,12 +18,12 @@ public class TripwireHook extends Block implements BlockTripwireHook {
     }
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
     @Override
-    public boolean isSolid() {
+    public boolean solid() {
         return false;
     }
 
@@ -33,7 +33,7 @@ public class TripwireHook extends Block implements BlockTripwireHook {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.TRIPWIRE_HOOK;
     }
 

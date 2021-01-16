@@ -46,7 +46,7 @@ import java.util.Map;
 public class TPCommand extends Command {
 
     @Override
-    public CommandOutput execute(CommandSender sender, String alias, Map<String, Object> arguments) {
+    public CommandOutput execute(CommandSender<?> sender, String alias, Map<String, Object> arguments) {
         // Check for source
         EntityPlayer source = (sender instanceof PlayerCommandSender) ? (EntityPlayer) sender : null;
         if (arguments.containsKey("target")) {
@@ -60,27 +60,27 @@ public class TPCommand extends Command {
         // Check for entity teleportation
         if (arguments.containsKey("toTarget")) {
             EntityPlayer entity = (EntityPlayer) arguments.get("toTarget");
-            source.teleport(entity.getLocation());
-            return CommandOutput.successful("%%s has been teleported to %%s", source.getName(), entity.getName());
+            source.teleport(entity.location());
+            return CommandOutput.successful("%%s has been teleported to %%s", source.name(), entity.name());
         }
 
         // Do we have a world given?
-        Location to = new Location(source.getWorld(), 0, 0, 0);
+        Location to = new Location(source.world(), 0, 0, 0);
         if (arguments.containsKey("world")) {
-            World world = GoMint.instance().getWorld((String) arguments.get("world"));
+            World world = GoMint.instance().world((String) arguments.get("world"));
             if (world == null) {
                 return CommandOutput.failure("World %%s could not be found", arguments.get("world"));
             } else {
-                to.setWorld(world);
+                to.world(world);
             }
         }
 
         BlockPosition position = (BlockPosition) arguments.get("position");
-        to.setX(position.getX());
-        to.setY(position.getY());
-        to.setZ(position.getZ());
+        to.x(position.x());
+        to.y(position.y());
+        to.z(position.z());
 
         source.teleport(to);
-        return CommandOutput.successful("%%s has been teleported to %%s, %%s, %%s, %%s", source.getName(), to.getWorld().getWorldName(), to.getX(), to.getY(), to.getZ());
+        return CommandOutput.successful("%%s has been teleported to %%s, %%s, %%s, %%s", source.name(), to.world().name(), to.x(), to.y(), to.z());
     }
 }

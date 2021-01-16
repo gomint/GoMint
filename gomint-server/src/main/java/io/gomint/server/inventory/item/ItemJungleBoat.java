@@ -15,10 +15,10 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:jungle_boat", id = 375 )
-public class ItemJungleBoat extends ItemStack implements io.gomint.inventory.item.ItemJungleBoat {
+public class ItemJungleBoat extends ItemStack< io.gomint.inventory.item.ItemJungleBoat> implements io.gomint.inventory.item.ItemJungleBoat {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.JUNGLE_BOAT;
     }
 

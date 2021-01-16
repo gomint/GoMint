@@ -19,7 +19,7 @@ import io.gomint.world.block.data.StoneType;
 @RegisterInfo(sId = "minecraft:blackstone_slab", id = -282)
 @RegisterInfo(id = -293, sId = "minecraft:polished_blackstone_slab")
 @RegisterInfo(id = -284, sId = "minecraft:polished_blackstone_brick_slab")
-public class ItemStoneSlab extends ItemSlab implements io.gomint.inventory.item.ItemStoneSlab {
+public class ItemStoneSlab extends ItemSlab<io.gomint.inventory.item.ItemStoneSlab> implements io.gomint.inventory.item.ItemStoneSlab {
 
     private static final String STONE_SLAB_ID = "minecraft:double_stone_slab";
     private static final String STONE_SLAB2_ID = "minecraft:double_stone_slab2";
@@ -80,23 +80,23 @@ public class ItemStoneSlab extends ItemSlab implements io.gomint.inventory.item.
     }
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.STONE_SLAB;
     }
 
     @Override
-    public Block getBlock() {
-        BlockIdentifier identifier = BlockRuntimeIDs.toBlockIdentifier(this.getMaterial().replace("double_", ""), null);
+    public Block block() {
+        BlockIdentifier identifier = BlockRuntimeIDs.toBlockIdentifier(this.material().replace("double_", ""), null);
         BlockStoneSlab slab = (BlockStoneSlab) this.blocks.get(identifier);
-        slab.setStoneType(this.getStoneType());
-        slab.setTop(this.isTop());
+        slab.type(this.type());
+        slab.top(this.top());
         return slab;
     }
 
     @Override
-    public StoneType getStoneType() {
+    public StoneType type() {
         for (StoneTypeMagic value : StoneTypeMagic.values()) {
-            if (value.id.equals(this.getMaterial()) && value.data == this.getData()) {
+            if (value.id.equals(this.material()) && value.data == this.data()) {
                 return StoneType.valueOf(value.name());
             }
         }
@@ -105,10 +105,11 @@ public class ItemStoneSlab extends ItemSlab implements io.gomint.inventory.item.
     }
 
     @Override
-    public void setStoneType(StoneType type) {
+    public io.gomint.inventory.item.ItemStoneSlab type(StoneType type) {
         StoneTypeMagic state = StoneTypeMagic.valueOf(type.name());
-        this.setMaterial(state.id);
-        this.setData(state.data);
+        this.material(state.id);
+        this.data(state.data);
+        return this;
     }
 
 }

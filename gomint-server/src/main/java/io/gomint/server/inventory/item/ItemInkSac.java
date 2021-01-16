@@ -15,10 +15,10 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:ink_sac", id = 411 )
-public class ItemInkSac extends ItemStack implements io.gomint.inventory.item.ItemInkSac {
+public class ItemInkSac extends ItemStack< io.gomint.inventory.item.ItemInkSac> implements io.gomint.inventory.item.ItemInkSac {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.INK_SAC;
     }
 

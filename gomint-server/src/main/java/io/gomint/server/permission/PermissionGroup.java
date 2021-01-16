@@ -42,12 +42,12 @@ public class PermissionGroup implements Group {
     }
 
     @Override
-    public String getName() {
+    public String name() {
         return this.name;
     }
 
     @Override
-    public void setPermission( String permission, boolean value ) {
+    public Group permission(String permission, boolean value ) {
         if ( this.permissions == null ) {
             this.permissions = new Object2BooleanOpenHashMap<>();
         }
@@ -55,16 +55,18 @@ public class PermissionGroup implements Group {
         this.permissions.put( permission.intern(), value );
         this.dirty = true;
         this.manager.setDirty( true );
+        return this;
     }
 
     @Override
-    public void removePermission( String permission ) {
+    public Group removePermission( String permission ) {
         if ( this.permissions != null ) {
             this.permissions.remove( permission.intern() );
         }
 
         this.dirty = true;
         this.manager.setDirty( true );
+        return this;
     }
 
     @Override

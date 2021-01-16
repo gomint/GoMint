@@ -17,11 +17,11 @@ import java.util.Objects;
  * @version 1.0
  * @stability 3
  */
-public class CancellablePlayerEvent extends CancellableEvent {
+public class CancellablePlayerEvent<E> extends CancellableEvent<E> {
 
     private final EntityPlayer player;
 
-    public CancellablePlayerEvent( EntityPlayer player ) {
+    public CancellablePlayerEvent(EntityPlayer player) {
         this.player = player;
     }
 
@@ -30,7 +30,7 @@ public class CancellablePlayerEvent extends CancellableEvent {
      *
      * @return the player which is affected by this event
      */
-    public EntityPlayer getPlayer() {
+    public EntityPlayer player() {
         return this.player;
     }
 
@@ -39,7 +39,7 @@ public class CancellablePlayerEvent extends CancellableEvent {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
-        CancellablePlayerEvent that = (CancellablePlayerEvent) o;
+        CancellablePlayerEvent<?> that = (CancellablePlayerEvent<?>) o;
         return Objects.equals(player, that.player);
     }
 

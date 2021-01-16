@@ -15,10 +15,10 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:target", id = -239 )
-public class ItemTarget extends ItemStack implements io.gomint.inventory.item.ItemTarget {
+public class ItemTarget extends ItemStack< io.gomint.inventory.item.ItemTarget> implements io.gomint.inventory.item.ItemTarget {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.TARGET;
     }
 

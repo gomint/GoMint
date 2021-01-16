@@ -21,7 +21,7 @@ import java.util.concurrent.ThreadLocalRandom;
  * @since 2021-01-12
  */
 @RegisterInfo(sId = "minecraft:cat")
-public class EntityCat extends EntityAgeableAnimal implements io.gomint.entity.animal.EntityCat {
+public class EntityCat extends EntityAgeableAnimal<io.gomint.entity.animal.EntityCat> implements io.gomint.entity.animal.EntityCat {
     
     /**
      * Constructs a new EntityCat
@@ -42,13 +42,13 @@ public class EntityCat extends EntityAgeableAnimal implements io.gomint.entity.a
     }
 
     private void initEntity() {
-        this.addAttribute(Attribute.HEALTH);
-        this.setMaxHealth(10);
-        this.setHealth(10);
-        if (this.isBaby()) {
-            this.setSize(0.24f, 0.28f);
+        this.attribute(Attribute.HEALTH);
+        this.maxHealth(10);
+        this.health(10);
+        if (this.baby()) {
+            this.size(0.24f, 0.28f);
         } else {
-            this.setSize(0.48f, 0.56f);
+            this.size(0.48f, 0.56f);
         }
     }
 
@@ -56,16 +56,12 @@ public class EntityCat extends EntityAgeableAnimal implements io.gomint.entity.a
     protected void kill() {
         super.kill();
 
-        if (isDead()) {
-            return;
-        }
-        
-        if (isBaby()) {
+        if (dead() || baby()) {
             return;
         }
         
         // Entity drops
-        Location location = this.getLocation();
+        Location location = this.location();
         
         ThreadLocalRandom random = ThreadLocalRandom.current();
         int amount = random.nextInt(3);

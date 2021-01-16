@@ -15,7 +15,7 @@ import io.gomint.server.network.type.WindowType;
  * @author geNAZt
  * @version 1.0
  */
-public class HopperInventory extends ContainerInventory {
+public class HopperInventory extends ContainerInventory<HopperInventory> {
 
     public HopperInventory(Items items, InventoryHolder owner) {
         super(items, owner, 5);

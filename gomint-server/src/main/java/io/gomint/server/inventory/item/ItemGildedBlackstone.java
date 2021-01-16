@@ -15,10 +15,10 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:gilded_blackstone", id = -281 )
-public class ItemGildedBlackstone extends ItemStack implements io.gomint.inventory.item.ItemGildedBlackstone {
+public class ItemGildedBlackstone extends ItemStack< io.gomint.inventory.item.ItemGildedBlackstone> implements io.gomint.inventory.item.ItemGildedBlackstone {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.GILDED_BLACKSTONE;
     }
 

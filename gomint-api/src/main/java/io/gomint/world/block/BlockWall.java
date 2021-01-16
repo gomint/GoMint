@@ -23,36 +23,39 @@ public interface BlockWall extends Block {
      *
      * @return type of stone
      */
-    StoneType getStoneType();
+    StoneType type();
 
     /**
      * Set the type of stone for this wall
      *
      * @param stoneType type of stone
+     * @return block for chaining
      */
-    void setStoneType(StoneType stoneType);
+    BlockWall type(StoneType stoneType);
 
     /**
      * Does this wall have a center pole
      *
      * @return true when it has, false otherwise
      */
-    boolean hasPole();
+    boolean pole();
 
     /**
      * Set if this wall has a pole
      *
      * @param pole true when it should, false otherwise
+     * @return block for chaining
      */
-    void setPole(boolean pole);
+    BlockWall pole(boolean pole);
 
     /**
      * Set connection type for this direction
      *
-     * @param direction for which we want to set the connection type
+     * @param direction      for which we want to set the connection type
      * @param connectionType to set
+     * @return block for chaining
      */
-    void setConnection(Direction direction, ConnectionType connectionType);
+    BlockWall connection(Direction direction, ConnectionType connectionType);
 
     /**
      * Get the connection type for the given directions
@@ -60,6 +63,6 @@ public interface BlockWall extends Block {
      * @param direction which we want to get the connection type for
      * @return connection type of this direction
      */
-    ConnectionType getConnection(Direction direction);
+    ConnectionType connection(Direction direction);
 
 }

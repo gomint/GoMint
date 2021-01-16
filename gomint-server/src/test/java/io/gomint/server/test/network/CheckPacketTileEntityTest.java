@@ -58,7 +58,7 @@ public class CheckPacketTileEntityTest {
         // Fill new compound with too much data for the packet
         NBTTagCompound testCompound = new NBTTagCompound( "" );
         for ( int i = 0; i < 4; i++ ) {
-            testCompound.addValue( String.valueOf( i ), new ArrayList() );
+            testCompound.addValue( String.valueOf( i ), new ArrayList<>() );
         }
 
         // Create the packet

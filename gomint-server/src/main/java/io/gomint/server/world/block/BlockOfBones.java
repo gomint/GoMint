@@ -28,7 +28,7 @@ public class BlockOfBones extends Block implements io.gomint.world.block.BlockOf
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 3000;
     }
 
@@ -38,20 +38,20 @@ public class BlockOfBones extends Block implements io.gomint.world.block.BlockOf
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.BLOCK_OF_BONES;
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return ToolPresets.PICKAXE;
     }
 
     @Override
-    public List<ItemStack> getDrops( ItemStack itemInHand ) {
+    public List<ItemStack<?>> drops(ItemStack<?> itemInHand ) {
         if ( isCorrectTool( itemInHand ) ) {
-            return new ArrayList<ItemStack>() {{
-                add( ItemBlockOfBones.create( 1 ) );
+            return new ArrayList<>() {{
+                add(ItemBlockOfBones.create(1));
             }};
         }
 

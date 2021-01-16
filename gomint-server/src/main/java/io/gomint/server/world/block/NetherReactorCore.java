@@ -25,7 +25,7 @@ public class NetherReactorCore extends Block implements BlockNetherReactorCore {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.NETHER_REACTOR_CORE;
     }
 
@@ -35,7 +35,7 @@ public class NetherReactorCore extends Block implements BlockNetherReactorCore {
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return ToolPresets.PICKAXE;
     }
 

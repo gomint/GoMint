@@ -20,7 +20,7 @@ public class PurpurBlock extends Block implements BlockPurpurBlock {
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 2250;
     }
 
@@ -30,7 +30,7 @@ public class PurpurBlock extends Block implements BlockPurpurBlock {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.PURPUR_BLOCK;
     }
 
@@ -40,7 +40,7 @@ public class PurpurBlock extends Block implements BlockPurpurBlock {
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return ToolPresets.PICKAXE;
     }
 

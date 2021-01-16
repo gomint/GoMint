@@ -16,9 +16,9 @@ import io.gomint.inventory.Inventory;
  * @version 1.0
  * @stability 3
  */
-public class InventoryOpenEvent extends CancellablePlayerEvent {
+public class InventoryOpenEvent extends CancellablePlayerEvent<InventoryOpenEvent> {
 
-    private Inventory inventory;
+    private Inventory<?> inventory;
 
     /**
      * Create new inventory open event
@@ -26,7 +26,7 @@ public class InventoryOpenEvent extends CancellablePlayerEvent {
      * @param player    who opened the inventory
      * @param inventory which should be opened
      */
-    public InventoryOpenEvent( EntityPlayer player, Inventory inventory ) {
+    public InventoryOpenEvent( EntityPlayer player, Inventory<?> inventory ) {
         super( player );
         this.inventory = inventory;
     }
@@ -36,7 +36,8 @@ public class InventoryOpenEvent extends CancellablePlayerEvent {
      *
      * @return inventory which used
      */
-    public Inventory getInventory() {
+    public Inventory<?> inventory() {
         return this.inventory;
     }
+
 }

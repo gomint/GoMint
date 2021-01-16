@@ -10,16 +10,23 @@ package io.gomint.server.inventory.item;
 import io.gomint.inventory.item.ItemType;
 import io.gomint.server.registry.RegisterInfo;
 
+import java.time.Duration;
+
 /**
  * @author geNAZt
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:birch_pressure_plate", id = -151 )
-public class ItemBirchPressurePlate extends ItemStack implements io.gomint.inventory.item.ItemBirchPressurePlate {
+public class ItemBirchPressurePlate extends ItemStack<io.gomint.inventory.item.ItemBirchPressurePlate> implements io.gomint.inventory.item.ItemBirchPressurePlate {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.BIRCH_PRESSURE_PLATE;
+    }
+
+    @Override
+    public Duration burnTime() {
+        return Duration.ofMillis(15000);
     }
 
 }

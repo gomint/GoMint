@@ -21,13 +21,14 @@ public interface BlockWool extends Block {
      *
      * @return color of this block
      */
-    BlockColor getColor();
+    BlockColor color();
 
     /**
      * Set the color of this block
      *
      * @param color which this block should be
+     * @return block for chaining
      */
-    void setColor( BlockColor color );
+    BlockWool color(BlockColor color);
 
 }

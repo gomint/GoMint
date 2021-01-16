@@ -23,7 +23,7 @@ import java.util.Properties;
  * @version 1.0
  * @stability 3
  */
-public class PropertiesResourceLoader extends FileResourceLoader implements ResourceLoader {
+public class PropertiesResourceLoader extends FileResourceLoader implements ResourceLoader<PropertiesResourceLoader> {
 
     private Properties pro;
     private String file;
@@ -55,7 +55,7 @@ public class PropertiesResourceLoader extends FileResourceLoader implements Reso
         InputStreamReader stream = null;
         try {
             //Get the correct InputStreamReader for this file
-            stream = getFileInputStreamReader(file);
+            stream = fileInputStreamReader(file);
 
             //Try to parse the properties
             pro = new Properties();
@@ -89,7 +89,7 @@ public class PropertiesResourceLoader extends FileResourceLoader implements Reso
      * @return List of keys available
      */
     @Override
-    public List<String> getKeys() {
+    public List<String> keys() {
         return keys;
     }
 
@@ -110,7 +110,7 @@ public class PropertiesResourceLoader extends FileResourceLoader implements Reso
      * @return A List of String as formats this Loader supports
      */
     @Override
-    public List<String> getFormats() {
+    public List<String> formats() {
         return Arrays.asList(".properties");
     }
 
@@ -120,8 +120,9 @@ public class PropertiesResourceLoader extends FileResourceLoader implements Reso
      * @throws ResourceLoadFailedException
      */
     @Override
-    public void reload() throws ResourceLoadFailedException {
+    public PropertiesResourceLoader reload() throws ResourceLoadFailedException {
         this.load();
+        return this;
     }
 
     /**

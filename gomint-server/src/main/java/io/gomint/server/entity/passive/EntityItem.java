@@ -29,9 +29,9 @@ import java.util.concurrent.TimeUnit;
  * @version 1.0
  */
 @RegisterInfo( sId = "item" )
-public class EntityItem extends Entity implements EntityItemDrop {
+public class EntityItem extends Entity<EntityItemDrop> implements EntityItemDrop {
 
-    private ItemStack itemStack;
+    private ItemStack<?> itemStack;
     private long pickupTime;
     private boolean isReset;
 
@@ -43,7 +43,7 @@ public class EntityItem extends Entity implements EntityItemDrop {
      * @param itemStack The itemstack which should be dropped
      * @param world     The world in which this entity is in
      */
-    public EntityItem( ItemStack itemStack, WorldAdapter world ) {
+    public EntityItem( ItemStack<?> itemStack, WorldAdapter world ) {
         super( EntityType.ITEM_DROP, world );
         this.itemStack = itemStack;
         this.initEntity();
@@ -58,8 +58,8 @@ public class EntityItem extends Entity implements EntityItemDrop {
     }
 
     private void initEntity() {
-        this.setSize( 0.25f, 0.25f );
-        setPickupDelay( 500, TimeUnit.MILLISECONDS );
+        this.size( 0.25f, 0.25f );
+        pickupDelay( 500, TimeUnit.MILLISECONDS );
 
 
         GRAVITY = 0.04f;
@@ -67,20 +67,23 @@ public class EntityItem extends Entity implements EntityItemDrop {
     }
 
     @Override
-    public <T extends ItemStack> T getItemStack() {
-        return (T) ( (io.gomint.server.inventory.item.ItemStack) this.itemStack ).clone();
+    public <T extends ItemStack<T>> T itemStack() {
+        return (T) ( (io.gomint.server.inventory.item.ItemStack<T>) this.itemStack ).clone();
     }
 
     @Override
-    public void setItemStack( ItemStack itemStack ) {
+    public <T extends ItemStack<T>> EntityItem itemStack(T itemStack ) {
         if ( this.world == null ) {
             this.itemStack = itemStack.clone();
         }
+
+        return this;
     }
 
     @Override
-    public void setPickupDelay( long duration, TimeUnit timeUnit ) {
-        this.pickupTime = ( (GoMintServer) GoMint.instance() ).getCurrentTickTime() + timeUnit.toMillis( duration );
+    public EntityItem pickupDelay(long duration, TimeUnit timeUnit ) {
+        this.pickupTime = ( (GoMintServer) GoMint.instance() ).currentTickTime() + timeUnit.toMillis( duration );
+        return this;
     }
 
     @Override
@@ -90,8 +93,8 @@ public class EntityItem extends Entity implements EntityItemDrop {
 
         this.lastUpdateDT += dT;
         if ( Values.CLIENT_TICK_RATE - this.lastUpdateDT < MathUtils.EPSILON ) {
-            if ( this.isCollided && !this.isReset && this.getVelocity().length() < 0.01f ) {
-                this.setVelocity( Vector.ZERO ); // Reset velocity
+            if ( this.isCollided && !this.isReset && this.velocity().length() < 0.01f ) {
+                this.velocity( Vector.ZERO ); // Reset velocity
                 this.isReset = true;
             }
 
@@ -104,15 +107,15 @@ public class EntityItem extends Entity implements EntityItemDrop {
     }
 
     @Override
-    protected void fall() {
-
+    protected EntityItem fall() {
+        return this;
     }
 
     @Override
     public boolean damage( EntityDamageEvent damageEvent ) {
-        if ( damageEvent.getDamageSource() == EntityDamageEvent.DamageSource.FALL ||
-            damageEvent.getDamageSource() == EntityDamageEvent.DamageSource.FIRE ||
-            damageEvent.getDamageSource() == EntityDamageEvent.DamageSource.ENTITY_EXPLODE ) {
+        if ( damageEvent.damageSource() == EntityDamageEvent.DamageSource.FALL ||
+            damageEvent.damageSource() == EntityDamageEvent.DamageSource.FIRE ||
+            damageEvent.damageSource() == EntityDamageEvent.DamageSource.ENTITY_EXPLODE ) {
             this.despawn();
             return true;
         }
@@ -123,49 +126,49 @@ public class EntityItem extends Entity implements EntityItemDrop {
     @Override
     public Packet createSpawnPacket( EntityPlayer receiver ) {
         PacketAddItemEntity packetAddItemEntity = new PacketAddItemEntity();
-        packetAddItemEntity.setEntityId( this.getEntityId() );
+        packetAddItemEntity.setEntityId( this.id() );
         packetAddItemEntity.setItemStack( this.itemStack );
-        packetAddItemEntity.setX( this.getPositionX() );
-        packetAddItemEntity.setY( this.getPositionY() );
-        packetAddItemEntity.setZ( this.getPositionZ() );
+        packetAddItemEntity.setX( this.positionX() );
+        packetAddItemEntity.setY( this.positionY() );
+        packetAddItemEntity.setZ( this.positionZ() );
         packetAddItemEntity.setMotionX( this.getMotionX() );
         packetAddItemEntity.setMotionY( this.getMotionY() );
         packetAddItemEntity.setMotionZ( this.getMotionZ() );
-        packetAddItemEntity.setMetadata( this.getMetadata() );
+        packetAddItemEntity.setMetadata( this.metadata() );
         return packetAddItemEntity;
     }
 
     @Override
     public void onCollideWithPlayer( EntityPlayer player ) {
         // Check if we can pick it up
-        if ( this.world.getServer().getCurrentTickTime() > this.getPickupTime() && !this.isDead() ) {
+        if ( this.world.getServer().currentTickTime() > this.pickupTime() && !this.dead() ) {
             // Check if we have place in out inventory to store this item
-            if ( !player.getInventory().hasPlaceFor( this.getItemStack() ) ) {
+            if ( !player.inventory().hasPlaceFor( this.itemStack() ) ) {
                 return;
             }
 
             // Ask the API is we can pickup
-            PlayerPickupItemEvent event = new PlayerPickupItemEvent( player, this, this.getItemStack() );
-            if ( player.getGamemode() == Gamemode.SPECTATOR ) {
-                event.setCancelled( true );
+            PlayerPickupItemEvent event = new PlayerPickupItemEvent( player, this, this.itemStack() );
+            if ( player.gamemode() == Gamemode.SPECTATOR ) {
+                event.cancelled( true );
             }
 
-            this.world.getServer().getPluginManager().callEvent( event );
+            this.world.getServer().pluginManager().callEvent( event );
 
-            if ( !event.isCancelled() ) {
+            if ( !event.cancelled() ) {
                 // Consume the item
                 PacketPickupItemEntity packet = new PacketPickupItemEntity();
-                packet.setItemEntityId( this.getEntityId() );
-                packet.setPlayerEntityId( player.getEntityId() );
+                packet.setItemEntityId( this.id() );
+                packet.setPlayerEntityId( player.id() );
 
-                for ( io.gomint.entity.EntityPlayer announcePlayer : this.world.getPlayers() ) {
+                for ( io.gomint.entity.EntityPlayer announcePlayer : this.world.onlinePlayers() ) {
                     if ( announcePlayer instanceof EntityPlayer ) {
-                        ( (EntityPlayer) announcePlayer ).getConnection().addToSendQueue( packet );
+                        ( (EntityPlayer) announcePlayer ).connection().addToSendQueue( packet );
                     }
                 }
 
                 // Manipulate inventory
-                player.getInventory().addItem( event.getItemStack() );
+                player.inventory().addItem( event.itemStack() );
                 this.despawn();
             }
         }
@@ -185,7 +188,7 @@ public class EntityItem extends Entity implements EntityItemDrop {
     }
 
     @Override
-    public long getPickupTime() {
+    public long pickupTime() {
         return pickupTime;
     }
 
@@ -200,7 +203,7 @@ public class EntityItem extends Entity implements EntityItemDrop {
     }
 
     @Override
-    public Set<String> getTags() {
+    public Set<String> tags() {
         return EntityTags.PASSIVE;
     }
 

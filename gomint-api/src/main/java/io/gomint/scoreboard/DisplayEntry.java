@@ -19,13 +19,13 @@ public interface DisplayEntry {
      *
      * @param score which should be used
      */
-    void setScore( int score );
+    DisplayEntry score(int score );
 
     /**
      * Get the score of this entry
      *
      * @return score of this entry
      */
-    int getScore();
+    int score();
 
 }

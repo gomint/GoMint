@@ -14,20 +14,20 @@ import java.util.List;
  * @author derklaro
  * @version 1.0
  */
-public abstract class Sign extends Block implements BlockSign {
+public abstract class Sign<B> extends Block implements BlockSign<B> {
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 1500;
     }
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
     @Override
-    public boolean isSolid() {
+    public boolean solid() {
         return false;
     }
 
@@ -52,26 +52,26 @@ public abstract class Sign extends Block implements BlockSign {
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return ToolPresets.AXE;
     }
 
     @Override
-    public List<String> getLines() {
-        SignTileEntity sign = this.getTileEntity();
+    public List<String> lines() {
+        SignTileEntity sign = this.tileEntity();
         return sign == null ? null : new ArrayList<>(sign.getLines());
     }
 
     @Override
-    public void setLine(int line, String content) {
+    public B line(int line, String content) {
         // Silently fail when line is incorrect
         if (line > 4 || line < 1) {
-            return;
+            return (B) this;
         }
 
-        SignTileEntity sign = this.getTileEntity();
+        SignTileEntity sign = this.tileEntity();
         if (sign == null) {
-            return;
+            return (B) this;
         }
 
         if (sign.getLines().size() < line) {
@@ -82,20 +82,22 @@ public abstract class Sign extends Block implements BlockSign {
 
         sign.getLines().set(line - 1, content);
         this.updateBlock();
+        return (B) this;
     }
 
     @Override
-    public String getLine(int line) {
+    public String line(int line) {
         // Silently fail when line is incorrect
         if (line > 4 || line < 1) {
             return null;
         }
 
-        SignTileEntity sign = this.getTileEntity();
+        SignTileEntity sign = this.tileEntity();
         if (sign == null) {
             return null;
         }
 
         return sign.getLines().size() < line ? null : sign.getLines().get(line - 1);
     }
+
 }

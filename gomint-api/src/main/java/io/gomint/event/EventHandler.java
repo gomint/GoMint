@@ -17,13 +17,13 @@ import java.lang.annotation.Target;
  * @version 1.0
  * @stability 3
  */
-@Retention( RetentionPolicy.RUNTIME )
-@Target( ElementType.METHOD )
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.METHOD)
 public @interface EventHandler {
 
     /**
      * Define the priority of the event handler.
-     *
+     * <p>
      * Event handlers are called in order of priority:
      * <ol>
      * <li>LOWEST</li>
@@ -32,11 +32,16 @@ public @interface EventHandler {
      * <li>HIGH</li>
      * <li>HIGHEST</li>
      * </ol>
+     *
+     * @return priority order by which event handlers are invoked
      */
     EventPriority priority() default EventPriority.NORMAL;
 
     /**
      * Define to true if you don't want to get cancelled Events
+     *
+     * @return true when this listener ignores the cancelled state of cancelled events and wants to handle them,
+     * false otherwise
      */
     boolean ignoreCancelled() default false;
 

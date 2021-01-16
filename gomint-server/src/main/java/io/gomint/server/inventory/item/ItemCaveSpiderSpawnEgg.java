@@ -15,10 +15,10 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:cave_spider_spawn_egg", id = 455 )
-public class ItemCaveSpiderSpawnEgg extends ItemStack implements io.gomint.inventory.item.ItemCaveSpiderSpawnEgg {
+public class ItemCaveSpiderSpawnEgg extends ItemStack< io.gomint.inventory.item.ItemCaveSpiderSpawnEgg> implements io.gomint.inventory.item.ItemCaveSpiderSpawnEgg {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.CAVE_SPIDER_SPAWN_EGG;
     }
 

@@ -23,19 +23,19 @@ public class Pumpkin extends Block implements BlockPumpkin {
     private static final DirectionBlockState DIRECTION = new DirectionBlockState(() -> new String[]{"direction"}); // Rotation is always clockwise
 
     @Override
-    public boolean beforePlacement(EntityLiving entity, ItemStack item, Facing face, Location location) {
+    public boolean beforePlacement(EntityLiving<?> entity, ItemStack<?> item, Facing face, Location location) {
         super.beforePlacement(entity, item, face, location);
         DIRECTION.detectFromPlacement(this, entity, item, face);
         return true;
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 1500;
     }
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
@@ -45,7 +45,7 @@ public class Pumpkin extends Block implements BlockPumpkin {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.PUMPKIN;
     }
 
@@ -55,22 +55,24 @@ public class Pumpkin extends Block implements BlockPumpkin {
     }
 
     @Override
-    public PumpkinType getType() {
+    public PumpkinType type() {
         return this.getBlockId().equals("minecraft:pumpkin") ? PumpkinType.NORMAL : PumpkinType.CARVED;
     }
 
     @Override
-    public void setType(PumpkinType type) {
+    public BlockPumpkin type(PumpkinType type) {
         this.setBlockId(type == PumpkinType.NORMAL ? "minecraft:pumpkin" : "minecraft:carved_pumpkin");
+        return this;
     }
 
     @Override
-    public void setDirection(Direction direction) {
+    public BlockPumpkin direction(Direction direction) {
         DIRECTION.setState(this, direction);
+        return this;
     }
 
     @Override
-    public Direction getDirection() {
+    public Direction direction() {
         return DIRECTION.getState(this);
     }
 

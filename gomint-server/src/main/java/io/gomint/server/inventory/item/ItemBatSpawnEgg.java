@@ -15,10 +15,10 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:bat_spawn_egg", id = 451 )
-public class ItemBatSpawnEgg extends ItemStack implements io.gomint.inventory.item.ItemBatSpawnEgg {
+public class ItemBatSpawnEgg extends ItemStack< io.gomint.inventory.item.ItemBatSpawnEgg> implements io.gomint.inventory.item.ItemBatSpawnEgg {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.BAT_SPAWN_EGG;
     }
 

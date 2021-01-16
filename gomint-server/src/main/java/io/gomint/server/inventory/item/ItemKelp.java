@@ -9,10 +9,10 @@ import io.gomint.server.registry.RegisterInfo;
  */
 @RegisterInfo( sId = "minecraft:kelp", id = 335, def = true )
 @RegisterInfo( sId = "minecraft:item.kelp", id = -138 )
-public class ItemKelp extends ItemStack implements io.gomint.inventory.item.ItemKelp {
+public class ItemKelp extends ItemStack< io.gomint.inventory.item.ItemKelp> implements io.gomint.inventory.item.ItemKelp {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.KELP;
     }
 

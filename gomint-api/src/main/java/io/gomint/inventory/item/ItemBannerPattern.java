@@ -7,7 +7,7 @@ import io.gomint.GoMint;
  * @version 1.0
  * @stability 2
  */
-public interface ItemBannerPattern extends ItemStack {
+public interface ItemBannerPattern extends ItemStack<ItemBannerPattern> {
 
     /**
      * Create a new item stack with given class and amount

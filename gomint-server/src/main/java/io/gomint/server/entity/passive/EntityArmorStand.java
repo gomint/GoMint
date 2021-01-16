@@ -20,7 +20,7 @@ import java.util.Set;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:armor_stand" )
-public class EntityArmorStand extends EntityCreature implements io.gomint.entity.passive.EntityArmorStand {
+public class EntityArmorStand extends EntityCreature<io.gomint.entity.passive.EntityArmorStand> implements io.gomint.entity.passive.EntityArmorStand {
 
     /**
      * Constructs a new EntityLiving
@@ -41,25 +41,25 @@ public class EntityArmorStand extends EntityCreature implements io.gomint.entity
     }
 
     private void initEntity() {
-        this.setSize( 0.5f, 1.975f );
-        this.addAttribute( Attribute.HEALTH );
-        this.setMaxHealth( 20 );
-        this.setHealth( 20 );
-        this.armorInventory = new ArmorInventory(this.world == null ? null : this.world.getServer().getItems(), this );
+        this.size( 0.5f, 1.975f );
+        this.attribute( Attribute.HEALTH );
+        this.maxHealth( 20 );
+        this.health( 20 );
+        this.armorInventory = new ArmorInventory(this.world == null ? null : this.world.getServer().items(), this );
     }
 
     @Override
     public boolean damage( EntityDamageEvent damageEvent ) {
-        this.world.getServer().getPluginManager().callEvent( damageEvent );
-        if( damageEvent.isCancelled() || !this.isDamageEffective( damageEvent.getDamageSource() ) ) {
+        this.world.getServer().pluginManager().callEvent( damageEvent );
+        if( damageEvent.cancelled() || !this.isDamageEffective( damageEvent.damageSource() ) ) {
             return false;
         }
 
-        ItemStack[] inventoryContent = this.armorInventory.getContents();
+        ItemStack<?>[] inventoryContent = this.armorInventory.contents();
 
-        for ( ItemStack itemStack : inventoryContent ) {
-            if ( itemStack.getItemType() != ItemType.AIR ) {
-                this.getWorld().dropItem(this.getLocation(), itemStack);
+        for ( ItemStack<?> itemStack : inventoryContent ) {
+            if ( itemStack.itemType() != ItemType.AIR ) {
+                this.world().dropItem(this.location(), itemStack);
             }
         }
 
@@ -81,12 +81,13 @@ public class EntityArmorStand extends EntityCreature implements io.gomint.entity
     }
 
     @Override
-    public void interact( EntityPlayer player, Vector clickVector ) {
+    public EntityArmorStand interact( EntityPlayer player, Vector clickVector ) {
         // TODO: Adding the ability of changing the armor of this armor stand
+        return this;
     }
 
     @Override
-    public Set<String> getTags() {
+    public Set<String> tags() {
         return EntityTags.PASSIVE;
     }
 

@@ -12,5 +12,5 @@ package io.gomint.world.block;
  * @version 1.0
  * @stability 1
  */
-public interface BlockWallSign extends BlockSign, BlockFacing {
+public interface BlockWallSign extends BlockSign<BlockWallSign>, BlockFacing<BlockWallSign> {
 }

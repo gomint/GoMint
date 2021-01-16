@@ -10,7 +10,7 @@ import io.gomint.server.world.WorldAdapter;
 import java.util.Set;
 
 @RegisterInfo(sId = "minecraft:shulker")
-public class EntityShulker extends EntityLiving implements io.gomint.entity.monster.EntityShulker {
+public class EntityShulker extends EntityLiving<io.gomint.entity.monster.EntityShulker> implements io.gomint.entity.monster.EntityShulker {
 
     /**
      * Constructs a new EntityLiving
@@ -31,10 +31,10 @@ public class EntityShulker extends EntityLiving implements io.gomint.entity.mons
     }
 
     private void initEntity() {
-        this.setSize(1.0f, 1.0f);
-        this.addAttribute(Attribute.HEALTH);
-        this.setMaxHealth(30);
-        this.setHealth(30);
+        this.size(1.0f, 1.0f);
+        this.attribute(Attribute.HEALTH);
+        this.maxHealth(30);
+        this.health(30);
     }
 
     @Override
@@ -43,7 +43,7 @@ public class EntityShulker extends EntityLiving implements io.gomint.entity.mons
     }
 
     @Override
-    public Set<String> getTags() {
+    public Set<String> tags() {
         return EntityTags.RANGED_HOSTILE_MOB;
     }
 

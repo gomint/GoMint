@@ -24,8 +24,8 @@ public class PacketBookEditHandler implements PacketHandler<PacketBookEdit> {
     @Override
     public void handle( PacketBookEdit packet, long currentTimeMillis, PlayerConnection connection ) {
         // Get the item in hand and check if its the correct item
-        ItemStack stack = (ItemStack) connection.getEntity().getInventory().getItemInHand();
-        if ( stack.getItemType() != ItemType.WRITABLE_BOOK ) {
+        ItemStack<?> stack = (ItemStack<?>) connection.getEntity().inventory().itemInHand();
+        if ( stack.itemType() != ItemType.WRITABLE_BOOK ) {
             return;
         }
 
@@ -47,15 +47,15 @@ public class PacketBookEditHandler implements PacketHandler<PacketBookEdit> {
                 if ( old != null ) {
                     BookPage swapWith = writableBook.getPage( packet.getSwapWithPageNumber() );
                     if ( swapWith != null ) {
-                        writableBook.changeContent( packet.getPageNumber(), swapWith.getContent() );
-                        writableBook.changeContent( packet.getSwapWithPageNumber(), old.getContent() );
+                        writableBook.changeContent( packet.getPageNumber(), swapWith.content() );
+                        writableBook.changeContent( packet.getSwapWithPageNumber(), old.content() );
                     }
                 }
 
                 break;
             case 4:
                 ItemWrittenBook writtenBook = writableBook.sign( packet.getTitle(), packet.getAuthor(), packet.getXuid() );
-                connection.getEntity().getInventory().setItem( connection.getEntity().getInventory().getItemInHandSlot(), writtenBook );
+                connection.getEntity().inventory().item( connection.getEntity().inventory().itemInHandSlot(), writtenBook );
                 break;
         }
     }

@@ -4,7 +4,6 @@ import io.gomint.inventory.item.ItemType;
 import io.gomint.entity.potion.PotionEffect;
 import io.gomint.server.entity.EntityPlayer;
 import io.gomint.server.registry.RegisterInfo;
-import io.gomint.taglib.NBTTagCompound;
 
 import java.util.concurrent.TimeUnit;
 
@@ -13,7 +12,7 @@ import java.util.concurrent.TimeUnit;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:golden_apple", id = 322 )
-public class ItemGoldenApple extends ItemFood implements io.gomint.inventory.item.ItemGoldenApple {
+public class ItemGoldenApple extends ItemFood<io.gomint.inventory.item.ItemGoldenApple> implements io.gomint.inventory.item.ItemGoldenApple {
 
 
 
@@ -32,12 +31,12 @@ public class ItemGoldenApple extends ItemFood implements io.gomint.inventory.ite
         super.onConsume( player );
 
         // Apply effects
-        player.addEffect( PotionEffect.ABSORPTION, 0, 2, TimeUnit.MINUTES );
-        player.addEffect( PotionEffect.REGENERATION, 1, 5, TimeUnit.SECONDS );
+        player.effect( PotionEffect.ABSORPTION, 0, 2, TimeUnit.MINUTES );
+        player.effect( PotionEffect.REGENERATION, 1, 5, TimeUnit.SECONDS );
     }
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.GOLDEN_APPLE;
     }
 

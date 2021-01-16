@@ -20,12 +20,12 @@ public class GlowingRedstoneOre extends Block implements BlockGlowingRedstoneOre
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 4500;
     }
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
@@ -35,7 +35,7 @@ public class GlowingRedstoneOre extends Block implements BlockGlowingRedstoneOre
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.GLOWING_REDSTONE_ORE;
     }
 
@@ -45,7 +45,7 @@ public class GlowingRedstoneOre extends Block implements BlockGlowingRedstoneOre
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return ToolPresets.PICKAXE;
     }
 

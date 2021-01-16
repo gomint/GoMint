@@ -50,6 +50,7 @@ import io.gomint.server.network.handler.PacketTickSyncHandler;
 import io.gomint.server.network.handler.PacketTileEntityDataHandler;
 import io.gomint.server.network.handler.PacketViolationWarningHandler;
 import io.gomint.server.network.handler.PacketWorldSoundEventHandler;
+import io.gomint.server.network.packet.Packet;
 import io.netty.util.ResourceLeakDetector;
 import io.netty.util.ThreadDeathWatcher;
 import io.netty.util.concurrent.GlobalEventExecutor;
@@ -81,7 +82,7 @@ public class NetworkManager {
     private static final Logger LOGGER = LoggerFactory.getLogger(NetworkManager.class);
     private final GoMintServer server;
     
-    private final PacketHandler[] packetHandlers = new PacketHandler[256];
+    private final PacketHandler<? extends Packet>[] packetHandlers = new PacketHandler[256];
     
     // Connections which were closed and should be removed during next tick:
     private final LongSet closedConnections = new LongOpenHashSet();
@@ -108,7 +109,7 @@ public class NetworkManager {
      */
     public NetworkManager(GoMintServer server) {
         this.server = server;
-        this.postProcessService = new PostProcessExecutorService(server.getExecutorService());
+        this.postProcessService = new PostProcessExecutorService(server.executorService());
         this.initPacketHandlers();
     }
 
@@ -132,12 +133,12 @@ public class NetworkManager {
         this.packetHandlers[Protocol.PACKET_MOB_ARMOR_EQUIPMENT & 0xff] = new PacketMobArmorEquipmentHandler();
         this.packetHandlers[Protocol.PACKET_ADVENTURE_SETTINGS & 0xff] = new PacketAdventureSettingsHandler();
         this.packetHandlers[Protocol.PACKET_RESOURCEPACK_RESPONSE & 0xff] = new PacketResourcePackResponseHandler();
-        this.packetHandlers[Protocol.PACKET_LOGIN & 0xff] = new PacketLoginHandler(this.server.getEncryptionKeyFactory(), this.server.getServerConfig(), this.server);
+        this.packetHandlers[Protocol.PACKET_LOGIN & 0xff] = new PacketLoginHandler(this.server.encryptionKeyFactory(), this.server.serverConfig(), this.server);
         this.packetHandlers[Protocol.PACKET_MOB_EQUIPMENT & 0xff] = new PacketMobEquipmentHandler();
         this.packetHandlers[Protocol.PACKET_INTERACT & 0xff] = new PacketInteractHandler();
         this.packetHandlers[Protocol.PACKET_BLOCK_PICK_REQUEST & 0xff] = new PacketBlockPickRequestHandler();
         this.packetHandlers[Protocol.PACKET_ENCRYPTION_RESPONSE & 0xff] = new PacketEncryptionResponseHandler();
-        this.packetHandlers[Protocol.PACKET_INVENTORY_TRANSACTION & 0xff] = new PacketInventoryTransactionHandler(this.server.getPluginManager());
+        this.packetHandlers[Protocol.PACKET_INVENTORY_TRANSACTION & 0xff] = new PacketInventoryTransactionHandler(this.server.pluginManager());
         this.packetHandlers[Protocol.PACKET_CONTAINER_CLOSE & 0xff] = new PacketContainerCloseHandler();
         this.packetHandlers[Protocol.PACKET_HOTBAR & 0xff] = new PacketHotbarHandler();
         this.packetHandlers[Protocol.PACKET_TEXT & 0xff] = new PacketTextHandler();
@@ -297,11 +298,11 @@ public class NetworkManager {
     private void handleSocketEvent(SocketEvent event) {
         switch (event.getType()) {
             case NEW_INCOMING_CONNECTION:
-                PlayerPreLoginEvent playerPreLoginEvent = this.getServer().getPluginManager().callEvent(
+                PlayerPreLoginEvent playerPreLoginEvent = this.getServer().pluginManager().callEvent(
                     new PlayerPreLoginEvent(event.getConnection().getAddress())
                 );
 
-                if (playerPreLoginEvent.isCancelled()) {
+                if (playerPreLoginEvent.cancelled()) {
                     // Since the user has not gotten any packets we are not able to be sure if we can send him a disconnect notification
                     // so we decide to close the raknet connection without any notice
                     event.getConnection().disconnect(null);
@@ -327,16 +328,16 @@ public class NetworkManager {
 
     private void handleUnconnectedPing(SocketEvent event) {
         // Fire ping event so plugins can modify the motd and player amounts
-        PingEvent pingEvent = this.server.getPluginManager().callEvent(
+        PingEvent pingEvent = this.server.pluginManager().callEvent(
             new PingEvent(
-                this.server.getMotd(),
-                this.server.getAmountOfPlayers(),
-                this.server.getServerConfig().getMaxPlayers()
+                this.server.motd(),
+                this.server.currentPlayerCount(),
+                this.server.serverConfig().maxPlayers()
             )
         );
 
-        event.getPingPongInfo().setMotd("MCPE;" + pingEvent.getMotd() + ";" + Protocol.MINECRAFT_PE_PROTOCOL_VERSION +
-            ";" + Protocol.MINECRAFT_PE_NETWORK_VERSION + ";" + pingEvent.getOnlinePlayers() + ";" + pingEvent.getMaxPlayers() + ";" + this.socket.getGuid());
+        event.getPingPongInfo().setMotd("MCPE;" + pingEvent.motd() + ";" + Protocol.MINECRAFT_PE_PROTOCOL_VERSION +
+            ";" + Protocol.MINECRAFT_PE_NETWORK_VERSION + ";" + pingEvent.onlinePlayers() + ";" + pingEvent.maxPlayers() + ";" + this.socket.getGuid());
     }
 
     /**
@@ -442,8 +443,8 @@ public class NetworkManager {
         LOGGER.info("Shutdown of network completed");
     }
 
-    public PacketHandler getPacketHandler(int packetId) {
-        return this.packetHandlers[packetId];
+    public <T extends Packet> PacketHandler<T> getPacketHandler(int packetId) {
+        return (PacketHandler<T>) this.packetHandlers[packetId];
     }
 
 }

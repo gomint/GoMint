@@ -25,7 +25,7 @@ public class StructureBlock extends Block implements BlockStructureBlock {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.STRUCTURE_BLOCK;
     }
 
@@ -35,7 +35,7 @@ public class StructureBlock extends Block implements BlockStructureBlock {
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return ToolPresets.PICKAXE;
     }
 

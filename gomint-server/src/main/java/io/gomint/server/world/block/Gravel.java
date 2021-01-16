@@ -15,12 +15,12 @@ import io.gomint.server.registry.RegisterInfo;
 public class Gravel extends Fallable implements BlockGravel {
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 900;
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return ToolPresets.SHOVEL;
     }
 
@@ -35,7 +35,7 @@ public class Gravel extends Fallable implements BlockGravel {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.GRAVEL;
     }
 

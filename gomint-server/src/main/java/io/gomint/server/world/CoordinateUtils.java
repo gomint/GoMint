@@ -80,7 +80,7 @@ public final class CoordinateUtils {
      * @return long compound of the three int's
      */
     public static long toLong( BlockPosition position ) {
-        return ( ( (long) position.getX() & 0x3FFFFFF ) << 38 ) | ( ( (long) position.getY() & 0xFFF ) << 26 ) | ( (long) position.getZ() & 0x3FFFFFF );
+        return ( ( (long) position.x() & 0x3FFFFFF ) << 38 ) | ( ( (long) position.y() & 0xFFF ) << 26 ) | ( (long) position.z() & 0x3FFFFFF );
     }
 
     /**

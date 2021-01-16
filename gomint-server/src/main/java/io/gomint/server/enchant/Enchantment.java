@@ -25,20 +25,21 @@ public abstract class Enchantment implements io.gomint.enchant.Enchantment {
      *
      * @param maxLevel which should be used to cap enchantment
      */
-    Enchantment( short maxLevel ) {
+    Enchantment(short maxLevel) {
         this.maxLevel = maxLevel;
     }
 
-    void setLevel( short level ) {
+    Enchantment changeLevel(short level) {
         this.level = MathUtils.clamp(level, (short) 0, this.maxLevel);
+        return this;
     }
 
-    public short getMaxLevel() {
+    public short maxLevel() {
         return maxLevel;
     }
 
     @Override
-    public short getLevel() {
+    public short level() {
         return this.level;
     }
 
@@ -48,7 +49,7 @@ public abstract class Enchantment implements io.gomint.enchant.Enchantment {
      * @param level of enchantment
      * @return minimum needed enchant ability
      */
-    public int getMinEnchantAbility( short level ) {
+    public int minEnchantAbility( short level ) {
         return 1 + level * 10;
     }
 
@@ -58,8 +59,8 @@ public abstract class Enchantment implements io.gomint.enchant.Enchantment {
      * @param level of enchantment
      * @return maximum needed enchant ability
      */
-    public int getMaxEnchantAbility( short level ) {
-        return getMinEnchantAbility( level ) + 5;
+    public int maxEnchantAbility( short level ) {
+        return minEnchantAbility( level ) + 5;
     }
 
     /**
@@ -68,15 +69,15 @@ public abstract class Enchantment implements io.gomint.enchant.Enchantment {
      * @param itemStack which wants this enchantment applied
      * @return true when it can be applied, false otherwise
      */
-    public boolean canBeApplied( ItemStack itemStack ) {
+    public boolean canBeApplied(ItemStack<?> itemStack ) {
         return true;
     }
 
-    public int getMinLevel() {
+    public int minLevel() {
         return 1;
     }
 
-    public abstract Rarity getRarity();
+    public abstract Rarity rarity();
 
     public boolean collidesWith(Enchantment enchantment) {
         return this.getClass() == enchantment.getClass();

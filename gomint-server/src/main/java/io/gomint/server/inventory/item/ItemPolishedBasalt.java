@@ -15,10 +15,10 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:polished_basalt", id = -235 )
-public class ItemPolishedBasalt extends ItemStack implements io.gomint.inventory.item.ItemPolishedBasalt {
+public class ItemPolishedBasalt extends ItemStack< io.gomint.inventory.item.ItemPolishedBasalt> implements io.gomint.inventory.item.ItemPolishedBasalt {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.POLISHED_BASALT;
     }
 

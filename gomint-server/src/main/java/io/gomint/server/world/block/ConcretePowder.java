@@ -31,7 +31,7 @@ public class ConcretePowder extends Block implements BlockConcretePowder {
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 750;
     }
 
@@ -46,23 +46,24 @@ public class ConcretePowder extends Block implements BlockConcretePowder {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.CONCRETE_POWDER;
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return ToolPresets.PICKAXE;
     }
 
     @Override
-    public BlockColor getColor() {
+    public BlockColor color() {
         return COLOR.getState(this);
     }
 
     @Override
-    public void setColor( BlockColor color ) {
+    public BlockConcretePowder color(BlockColor color ) {
         COLOR.setState( this, color );
+        return this;
     }
 
 }

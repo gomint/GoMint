@@ -18,14 +18,14 @@ public class InventoryOpenListener implements EventListener {
 
     @EventHandler
     public void onInventoryOpen(InventoryOpenEvent event) {
-        if (event.getInventory().getInventoryType() == InventoryType.ENCHANTING_TABLE) {
+        if (event.inventory().inventoryType() == InventoryType.ENCHANTING_TABLE) {
             ItemLapisLazuli lapisLazuli = ItemLapisLazuli.create(3);
             ItemDiamondSword diamondSword = ItemDiamondSword.create(1);
 
-            event.getInventory().setItem(0, diamondSword);
-            event.getInventory().setItem(1, lapisLazuli);
+            event.inventory().item(0, diamondSword);
+            event.inventory().item(1, lapisLazuli);
 
-            event.getPlayer().setLevel(30);
+            event.player().level(30);
         }
     }
 

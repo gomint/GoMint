@@ -26,8 +26,8 @@ public class Weakness extends Effect {
     }
 
     @Override
-    public void apply( EntityLiving entity ) {
-        entity.getAttributeInstance( Attribute.ATTACK_DAMAGE )
+    public void apply( EntityLiving<?> entity ) {
+        entity.attributeInstance( Attribute.ATTACK_DAMAGE )
             .setModifier( AttributeModifier.WEAKNESS_EFFECT, AttributeModifierType.MULTIPLY, -( 0.5f * ( this.amplifier + 1 ) ) );
     }
 
@@ -37,8 +37,8 @@ public class Weakness extends Effect {
     }
 
     @Override
-    public void remove( EntityLiving entity ) {
-        entity.getAttributeInstance( Attribute.ATTACK_DAMAGE )
+    public void remove( EntityLiving<?> entity ) {
+        entity.attributeInstance( Attribute.ATTACK_DAMAGE )
             .removeModifier( AttributeModifier.WEAKNESS_EFFECT );
     }
 

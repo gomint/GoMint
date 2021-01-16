@@ -20,7 +20,7 @@ import java.util.Set;
  * @version 1.0
  */
 @RegisterInfo(sId = "minecraft:bat")
-public class EntityBat extends EntityAnimal implements io.gomint.entity.animal.EntityBat {
+public class EntityBat extends EntityAnimal<io.gomint.entity.animal.EntityBat> implements io.gomint.entity.animal.EntityBat {
 
     /**
      * Constructs a new EntityLiving
@@ -41,10 +41,10 @@ public class EntityBat extends EntityAnimal implements io.gomint.entity.animal.E
     }
 
     private void initEntity() {
-        this.setSize(0.5f, 0.9f);
-        this.addAttribute(Attribute.HEALTH);
-        this.setMaxHealth(12);
-        this.setHealth(12);
+        this.size(0.5f, 0.9f);
+        this.attribute(Attribute.HEALTH);
+        this.maxHealth(12);
+        this.health(12);
     }
 
     @Override
@@ -53,7 +53,7 @@ public class EntityBat extends EntityAnimal implements io.gomint.entity.animal.E
     }
 
     @Override
-    public Set<String> getTags() {
+    public Set<String> tags() {
         return EntityTags.CREATURE;
     }
 

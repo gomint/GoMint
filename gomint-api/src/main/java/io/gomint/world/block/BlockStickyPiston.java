@@ -12,5 +12,5 @@ package io.gomint.world.block;
  * @version 1.0
  * @stability 2
  */
-public interface BlockStickyPiston extends BlockFacing {
+public interface BlockStickyPiston extends BlockFacing<BlockStickyPiston> {
 }

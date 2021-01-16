@@ -41,7 +41,7 @@ import io.gomint.world.block.data.StoneType;
 @RegisterInfo(sId = "minecraft:smooth_red_sandstone_stairs")
 @RegisterInfo(sId = "minecraft:smooth_quartz_stairs")
 @RegisterInfo(sId = "minecraft:polished_blackstone_stairs")
-public class StoneStair extends Stair implements BlockStoneStair {
+public class StoneStair extends Stair<BlockStoneStair> implements BlockStoneStair {
 
     private enum StoneTypeMagic {
 
@@ -97,7 +97,7 @@ public class StoneStair extends Stair implements BlockStoneStair {
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 3000;
     }
 
@@ -107,7 +107,7 @@ public class StoneStair extends Stair implements BlockStoneStair {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.STONE_STAIR;
     }
 
@@ -117,12 +117,12 @@ public class StoneStair extends Stair implements BlockStoneStair {
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return ToolPresets.PICKAXE;
     }
 
     @Override
-    public StoneType getStoneType() {
+    public StoneType type() {
         for (StoneTypeMagic value : StoneTypeMagic.values()) {
             if (this.getBlockId().equals(value.blockId)) {
                 return StoneType.valueOf(value.name());
@@ -133,11 +133,13 @@ public class StoneStair extends Stair implements BlockStoneStair {
     }
 
     @Override
-    public void setStoneType(StoneType stoneType) {
+    public BlockStoneStair type(StoneType stoneType) {
         StoneTypeMagic newState = StoneTypeMagic.valueOf(stoneType.name());
         if (newState.blockId != null) {
             this.setBlockId(newState.blockId);
         }
+
+        return this;
     }
 
 }

@@ -8,7 +8,7 @@ import io.gomint.entity.EntityLiving;
  * @version 1.0
  * @stability 3
  */
-public interface EntityRavager extends EntityLiving {
+public interface EntityRavager extends EntityLiving<EntityRavager> {
 
     /**
      * Create a new entity rabbit with no config

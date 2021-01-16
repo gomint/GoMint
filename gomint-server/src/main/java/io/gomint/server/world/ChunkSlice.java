@@ -60,7 +60,7 @@ public class ChunkSlice {
     private final NibbleArray skyLight = null; // NibbleArray.create( (short) 4096 )
 
     private Short2ObjectOpenHashMap<TileEntity> tileEntities = null;
-    private final Short2ObjectOpenHashMap[] temporaryStorages = new Short2ObjectOpenHashMap[2];   // MC currently supports two layers, we init them as we need
+    private final Short2ObjectOpenHashMap<TemporaryStorage>[] temporaryStorages = new Short2ObjectOpenHashMap[2];   // MC currently supports two layers, we init them as we need
 
     private boolean needsPersistence;
     private boolean isReleased;
@@ -147,9 +147,9 @@ public class ChunkSlice {
         }
 
         BlockIdentifier identifier = BlockRuntimeIDs.toBlockIdentifier(runtimeID);
-        return (T) this.chunk.getWorld().getServer().getBlocks().get(identifier, this.skyLight != null ? this.skyLight.get(index) : 0,
+        return (T) this.chunk.world().getServer().blocks().get(identifier, this.skyLight != null ? this.skyLight.get(index) : 0,
             this.blockLight != null ? this.blockLight.get(index) : 0, this.tileEntities != null ? this.tileEntities.get(index) : null,
-            new Location(this.chunk.world, blockLocation.getX(), blockLocation.getY(), blockLocation.getZ()), blockLocation, layer, this, index);
+            new Location(this.chunk.world, blockLocation.x(), blockLocation.y(), blockLocation.z()), blockLocation, layer, this, index);
     }
 
     <T extends Block> T getBlockInstance(int x, int y, int z, int layer) {
@@ -158,8 +158,8 @@ public class ChunkSlice {
     }
 
     private Air getAirBlockInstance(BlockPosition location) {
-        return  this.chunk.getWorld().getServer().getBlocks().get(AIR_RUNTIME_ID,
-                (byte) 15, (byte) 15, null, new Location(this.chunk.world, location.getX(), location.getY(), location.getZ()),
+        return  this.chunk.world().getServer().blocks().get(AIR_RUNTIME_ID,
+                (byte) 15, (byte) 15, null, new Location(this.chunk.world, location.x(), location.y(), location.z()),
             location, 0, null, (short) 0);
     }
 

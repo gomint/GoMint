@@ -9,7 +9,6 @@ import io.gomint.server.entity.tileentity.SkullTileEntity;
 import io.gomint.server.entity.tileentity.TileEntity;
 import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.world.block.state.BlockfaceFromPlayerBlockState;
-import io.gomint.server.world.block.state.EnumBlockState;
 import io.gomint.taglib.NBTTagCompound;
 import io.gomint.world.block.BlockSkull;
 import io.gomint.world.block.BlockType;
@@ -17,7 +16,6 @@ import io.gomint.world.block.data.Direction;
 import io.gomint.world.block.data.Facing;
 import io.gomint.world.block.data.SkullType;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -31,24 +29,24 @@ public class Skull extends Block implements BlockSkull {
     private static final BlockfaceFromPlayerBlockState DIRECTION = new BlockfaceFromPlayerBlockState(() -> new String[]{"facing_direction"}, true);
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 1500;
     }
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
     @Override
-    public List<AxisAlignedBB> getBoundingBox() {
+    public List<AxisAlignedBB> boundingBoxes() {
         return Collections.singletonList(new AxisAlignedBB(
-            this.location.getX() + 0.25f,
-            this.location.getY(),
-            this.location.getZ() + 0.25f,
-            this.location.getX() + 0.75f,
-            this.location.getY() + 0.5f,
-            this.location.getZ() + 0.75f
+            this.location.x() + 0.25f,
+            this.location.y(),
+            this.location.z() + 0.25f,
+            this.location.x() + 0.75f,
+            this.location.y() + 0.5f,
+            this.location.z() + 0.75f
         ));
     }
 
@@ -63,7 +61,7 @@ public class Skull extends Block implements BlockSkull {
     }
 
     @Override
-    public boolean beforePlacement(EntityLiving entity, ItemStack item, Facing face, Location location) {
+    public boolean beforePlacement(EntityLiving<?> entity, ItemStack<?> item, Facing face, Location location) {
         DIRECTION.detectFromPlacement(this, entity, item, face);
 
         // We skip downwards facing
@@ -71,8 +69,8 @@ public class Skull extends Block implements BlockSkull {
             DIRECTION.setState(this, Facing.UP);
         }
 
-        SkullTileEntity tileEntity = this.getTileEntity();
-        tileEntity.setRotation(entity.getYaw());
+        SkullTileEntity tileEntity = this.tileEntity();
+        tileEntity.setRotation(entity.yaw());
         return super.beforePlacement(entity, item, face, location);
     }
 
@@ -83,9 +81,9 @@ public class Skull extends Block implements BlockSkull {
     }
 
     @Override
-    public List<ItemStack> getDrops(ItemStack itemInHand) {
+    public List<ItemStack<?>> drops(ItemStack<?> itemInHand) {
         ItemSkull item = ItemSkull.create(1);
-        item.setSkullType(this.getSkullType());
+        item.type(this.type());
         return Collections.singletonList(item);
     }
 
@@ -95,33 +93,36 @@ public class Skull extends Block implements BlockSkull {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.SKULL;
     }
 
     @Override
-    public SkullType getSkullType() {
-        SkullTileEntity entity = this.getTileEntity();
+    public SkullType type() {
+        SkullTileEntity entity = this.tileEntity();
         return entity.getSkullType();
     }
 
     @Override
-    public void setSkullType(SkullType type) {
-        SkullTileEntity entity = this.getTileEntity();
+    public BlockSkull type(SkullType type) {
+        SkullTileEntity entity = this.tileEntity();
         entity.setSkullType(type);
+        return this;
     }
 
     @Override
-    public void setDirection(Direction direction) {
+    public BlockSkull direction(Direction direction) {
         if (direction == null) {
             DIRECTION.setState(this, Facing.UP);
         } else {
             DIRECTION.setState(this, direction.toFacing());
         }
+
+        return this;
     }
 
     @Override
-    public Direction getDirection() {
+    public Direction direction() {
         Facing facing = DIRECTION.getState(this);
         if ( facing == Facing.UP ) {
             return null;

@@ -15,10 +15,10 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:squid_spawn_egg", id = 448 )
-public class ItemSquidSpawnEgg extends ItemStack implements io.gomint.inventory.item.ItemSquidSpawnEgg {
+public class ItemSquidSpawnEgg extends ItemStack< io.gomint.inventory.item.ItemSquidSpawnEgg> implements io.gomint.inventory.item.ItemSquidSpawnEgg {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.SQUID_SPAWN_EGG;
     }
 

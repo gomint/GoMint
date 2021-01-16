@@ -10,10 +10,10 @@ import io.gomint.taglib.NBTTagCompound;
  * @version 1.0
  */
 @RegisterInfo(sId = "minecraft:observer", id = 251)
-public class ItemObserver extends ItemStack implements io.gomint.inventory.item.ItemObserver {
+public class ItemObserver extends ItemStack< io.gomint.inventory.item.ItemObserver> implements io.gomint.inventory.item.ItemObserver {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.OBSERVER;
     }
 

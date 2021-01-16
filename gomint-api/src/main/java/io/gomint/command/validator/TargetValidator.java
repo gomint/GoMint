@@ -23,14 +23,14 @@ import java.util.List;
  * @version 1.0
  * @stability 3
  */
-public class TargetValidator extends ParamValidator {
+public class TargetValidator extends ParamValidator<TargetValidator> {
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public Object validate( String input, CommandSender commandSender ) {
-        Collection<EntityPlayer> searchPool = GoMint.instance().getPlayers();
+    public Object validate(String input, CommandSender<?> commandSender ) {
+        Collection<EntityPlayer> searchPool = GoMint.instance().onlinePlayers();
         if ( commandSender instanceof PlayerCommandSender ) {
             if ( input.equals( "@s" ) ) {
                 return commandSender;
@@ -38,7 +38,7 @@ public class TargetValidator extends ParamValidator {
         }
 
         for ( EntityPlayer player : searchPool ) {
-            if ( player.getPlayerListName().equals( input ) || player.getName().equalsIgnoreCase( input ) ) {
+            if ( player.playerListName().equals( input ) || player.name().equalsIgnoreCase( input ) ) {
                 return player;
             }
         }
@@ -84,7 +84,7 @@ public class TargetValidator extends ParamValidator {
      * {@inheritDoc}
      */
     @Override
-    public ParamType getType() {
+    public ParamType type() {
         return ParamType.TARGET;
     }
 
@@ -108,7 +108,7 @@ public class TargetValidator extends ParamValidator {
      * {@inheritDoc}
      */
     @Override
-    public String getHelpText() {
+    public String helpText() {
         return "target:player";
     }
 

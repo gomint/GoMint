@@ -8,10 +8,10 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo(sId = "minecraft:underwater_torch", id = 239)
-public class ItemUnderwaterTorch extends ItemStack implements io.gomint.inventory.item.ItemUnderwaterTorch {
+public class ItemUnderwaterTorch extends ItemStack< io.gomint.inventory.item.ItemUnderwaterTorch> implements io.gomint.inventory.item.ItemUnderwaterTorch {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.UNDERWATER_TORCH;
     }
 }

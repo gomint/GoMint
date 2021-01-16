@@ -10,10 +10,10 @@ import io.gomint.taglib.NBTTagCompound;
  * @version 1.0
  */
 @RegisterInfo(sId = "minecraft:purpur_block", id = 201)
-public class ItemPurpurBlock extends ItemStack implements io.gomint.inventory.item.ItemPurpurBlock {
+public class ItemPurpurBlock extends ItemStack< io.gomint.inventory.item.ItemPurpurBlock> implements io.gomint.inventory.item.ItemPurpurBlock {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.PURPUR_BLOCK;
     }
 

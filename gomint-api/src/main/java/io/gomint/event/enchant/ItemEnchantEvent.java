@@ -15,16 +15,16 @@ import java.util.List;
  *
  * This event gets fired when the player has selected the enchantments it wants on given item.
  */
-public class ItemEnchantEvent extends CancellablePlayerEvent {
+public class ItemEnchantEvent extends CancellablePlayerEvent<ItemEnchantEvent> {
 
-    private final ItemStack itemToEnchant;
+    private final ItemStack<?> itemToEnchant;
     private final List<Enchantment> enchantments;
     private int levelCost;
     private final int materialCost;
     private int levelRequirement;
 
     public ItemEnchantEvent(EntityPlayer player,
-                            ItemStack itemToEnchant,
+                            ItemStack<?> itemToEnchant,
                             int levelCost,
                             int materialCost,
                             List<Enchantment> enchantments,
@@ -41,7 +41,7 @@ public class ItemEnchantEvent extends CancellablePlayerEvent {
      *
      * @return amount of levels this enchantment operation costs
      */
-    public int getLevelCost() {
+    public int levelCost() {
         return levelCost;
     }
 
@@ -50,9 +50,10 @@ public class ItemEnchantEvent extends CancellablePlayerEvent {
      *
      * @param levelCost for this enchantment operation. This can only be positive, including 0
      */
-    public void setLevelCost(int levelCost) {
+    public ItemEnchantEvent levelCost(int levelCost) {
         Preconditions.checkArgument(levelCost > 0, "Only positive level costs, including 0, are allowed");
         this.levelCost = levelCost;
+        return this;
     }
 
     /**
@@ -60,7 +61,7 @@ public class ItemEnchantEvent extends CancellablePlayerEvent {
      *
      * @return amount of material this enchantment operation costs
      */
-    public int getMaterialCost() {
+    public int materialCost() {
         return materialCost;
     }
 
@@ -69,7 +70,7 @@ public class ItemEnchantEvent extends CancellablePlayerEvent {
      *
      * @return item stack which should be enchanted
      */
-    public ItemStack getItemToEnchant() {
+    public ItemStack<?> itemToEnchant() {
         return itemToEnchant;
     }
 
@@ -79,7 +80,7 @@ public class ItemEnchantEvent extends CancellablePlayerEvent {
      *
      * @return list of enchantments
      */
-    public List<Enchantment> getEnchantments() {
+    public List<Enchantment> enchantments() {
         return enchantments;
     }
 
@@ -88,7 +89,7 @@ public class ItemEnchantEvent extends CancellablePlayerEvent {
      *
      * @return minimum level the player needs
      */
-    public int getLevelRequirement() {
+    public int levelRequirement() {
         return levelRequirement;
     }
 
@@ -97,8 +98,9 @@ public class ItemEnchantEvent extends CancellablePlayerEvent {
      *
      * @param levelRequirement which the player needs
      */
-    public void setLevelRequirement(int levelRequirement) {
+    public ItemEnchantEvent levelRequirement(int levelRequirement) {
         this.levelRequirement = levelRequirement;
+        return this;
     }
 
 }

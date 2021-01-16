@@ -87,7 +87,7 @@ public class Log extends Block implements BlockLog {
     private static final BooleanBlockState STRIPPED = new BooleanBlockState(() -> new String[]{"stripped_bit"});
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 3000;
     }
 
@@ -97,7 +97,7 @@ public class Log extends Block implements BlockLog {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.LOG;
     }
 
@@ -107,9 +107,9 @@ public class Log extends Block implements BlockLog {
     }
 
     @Override
-    public boolean interact(Entity entity, Facing face, Vector facePos, ItemStack item) {
-        if (entity instanceof EntityPlayer && this.isCorrectTool(item) && !this.isStripped()) {
-            this.setStripped(true);
+    public boolean interact(Entity<?> entity, Facing face, Vector facePos, ItemStack<?> item) {
+        if (entity instanceof EntityPlayer && this.isCorrectTool(item) && !this.stripped()) {
+            this.stripped(true);
             return true;
         }
 
@@ -117,11 +117,11 @@ public class Log extends Block implements BlockLog {
     }
 
     @Override
-    public boolean isStripped() {
+    public boolean stripped() {
         return this.getBlockId().startsWith("minecraft:stripped_");
     }
 
-    private void update(LogType type, boolean stripped, boolean fullTexture) {
+    private BlockLog update(LogType type, boolean stripped, boolean fullTexture) {
         LogTypeMagic state = LogTypeMagic.valueOf(type.name());
         STRIPPED.setState(this, stripped);
 
@@ -131,21 +131,23 @@ public class Log extends Block implements BlockLog {
         } else {
             this.setBlockIdFromType(state, fullTexture);
         }
+
+        return this;
     }
 
     @Override
-    public void setStripped(boolean stripped) {
-        boolean isCurrentlyStripped = this.isStripped();
+    public BlockLog stripped(boolean stripped) {
+        boolean isCurrentlyStripped = this.stripped();
         if (stripped == isCurrentlyStripped) {
-            return;
+            return this;
         }
 
-        this.update(this.getLogType(), stripped, this.isBarkOnAllSides());
+        return this.update(this.type(), stripped, this.barkOnAllSides());
     }
 
     @Override
-    public void setLogType(LogType type) {
-        this.update(type, this.isStripped(), this.isBarkOnAllSides());
+    public BlockLog type(LogType type) {
+        return this.update(type, this.stripped(), this.barkOnAllSides());
     }
 
     private void setBlockIdFromType(LogTypeMagic type, boolean fullTexture) {
@@ -178,7 +180,7 @@ public class Log extends Block implements BlockLog {
     }
 
     @Override
-    public LogType getLogType() {
+    public LogType type() {
         switch (this.getBlockId()) {
             default:
                 return LogType.valueOf(VARIANT.getState(this).name());
@@ -208,42 +210,43 @@ public class Log extends Block implements BlockLog {
     }
 
     @Override
-    public void setBarkOnAllSides(boolean allSides) {
-        boolean isAllSides = this.isBarkOnAllSides();
+    public BlockLog barkOnAllSides(boolean allSides) {
+        boolean isAllSides = this.barkOnAllSides();
         if (allSides == isAllSides) {
-            return;
+            return this;
         }
 
-        this.update(this.getLogType(), this.isStripped(), allSides);
+        return this.update(this.type(), this.stripped(), allSides);
     }
 
     @Override
-    public boolean isBarkOnAllSides() {
+    public boolean barkOnAllSides() {
         return this.getBlockId().equals(OLD_WOOD_ID) ||
             this.getBlockId().endsWith("_hyphae");
     }
 
     @Override
-    public void setAxis(Axis axis) {
+    public BlockLog axis(Axis axis) {
         AXIS.setState(this, axis);
+        return this;
     }
 
     @Override
-    public Axis getAxis() {
+    public Axis axis() {
         return AXIS.getState(this);
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return ToolPresets.AXE;
     }
 
     @Override
-    public List<ItemStack> getDrops(ItemStack itemInHand) {
+    public List<ItemStack<?>> drops(ItemStack<?> itemInHand) {
         ItemLog item = ItemLog.create(1);
-        item.setBarkOnAllSides(this.isBarkOnAllSides());
-        item.setLogType(this.getLogType());
-        item.setStripped(this.isStripped());
+        item.barkOnAllSides(this.barkOnAllSides());
+        item.type(this.type());
+        item.stripped(this.stripped());
         return Collections.singletonList(item);
     }
 

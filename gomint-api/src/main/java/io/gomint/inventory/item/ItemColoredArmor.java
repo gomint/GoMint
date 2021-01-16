@@ -9,27 +9,27 @@ import java.awt.Color;
  * @version 1.0
  * @stability 3
  */
-public interface ItemColoredArmor extends ItemStack {
+public interface ItemColoredArmor<I> extends ItemStack<I> {
 
     /**
      * Get the color of this item
      *
      * @return color of this item
      */
-    Color getColor();
+    Color color();
 
     /**
      * Set the color of this item
      *
      * @param color which should be used to color this item
      */
-    void setColor( Color color );
+    I color(Color color );
 
     /**
      * Set the color based on the dye type used
      *
      * @param dyeColor which should be used to calculate the color
      */
-    void setColor( BlockColor dyeColor );
+    I color(BlockColor dyeColor );
 
 }

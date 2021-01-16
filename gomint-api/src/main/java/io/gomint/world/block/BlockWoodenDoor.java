@@ -14,20 +14,21 @@ import io.gomint.world.block.data.LogType;
  * @version 1.0
  * @stability 3
  */
-public interface BlockWoodenDoor extends BlockDoor {
+public interface BlockWoodenDoor extends BlockDoor<BlockWoodenDoor> {
 
     /**
      * Get the type of wood which this door has
      *
      * @return type of wood for this door
      */
-    LogType getWoodType();
+    LogType type();
 
     /**
      * Set a new type of wood for this door
      *
      * @param logType which should be the new wood for the door
+     * @return block for chaining
      */
-    void setWoodType( LogType logType);
+    BlockWoodenDoor type(LogType logType);
 
 }

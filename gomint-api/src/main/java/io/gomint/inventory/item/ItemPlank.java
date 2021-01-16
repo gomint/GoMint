@@ -8,7 +8,7 @@ import io.gomint.world.block.data.LogType;
  * @version 1.0
  * @stability 2
  */
-public interface ItemPlank extends ItemStack, ItemBurnable {
+public interface ItemPlank extends ItemStack<ItemPlank>, ItemBurnable {
 
     /**
      * Create a new item stack with given class and amount
@@ -24,13 +24,13 @@ public interface ItemPlank extends ItemStack, ItemBurnable {
      *
      * @return plank type
      */
-    LogType getPlankType();
+    LogType type();
 
     /**
      * Set the plank type
      *
      * @param logType which should be used in this block
      */
-    void setPlankType( LogType logType);
+    ItemPlank type(LogType logType);
 
 }

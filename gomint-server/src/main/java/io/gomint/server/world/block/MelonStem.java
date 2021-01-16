@@ -18,12 +18,12 @@ public class MelonStem extends Growable implements BlockMelonStem {
     }
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
     @Override
-    public boolean isSolid() {
+    public boolean solid() {
         return false;
     }
 
@@ -33,7 +33,7 @@ public class MelonStem extends Growable implements BlockMelonStem {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.MELON_STEM;
     }
 

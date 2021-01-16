@@ -8,10 +8,10 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( id = -194, sId = "minecraft:lectern")
-public class ItemLectern extends ItemStack implements io.gomint.inventory.item.ItemLectern {
+public class ItemLectern extends ItemStack< io.gomint.inventory.item.ItemLectern> implements io.gomint.inventory.item.ItemLectern {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.LECTERN;
     }
 

@@ -29,7 +29,8 @@ public enum EventPriority {
         this.order = value;
     }
 
-    public byte getValue() {
+    public byte value() {
         return this.order;
     }
+
 }

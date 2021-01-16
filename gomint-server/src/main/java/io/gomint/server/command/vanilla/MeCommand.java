@@ -24,11 +24,9 @@ import java.util.Map;
 public class MeCommand extends Command {
 
     @Override
-    public CommandOutput execute(CommandSender sender, String alias, Map<String, Object> arguments) {
+    public CommandOutput execute(CommandSender<?> sender, String alias, Map<String, Object> arguments) {
         String message = (String) arguments.get("message");
-
-        GoMint.instance().getPlayers().forEach(players -> players.sendMessage("* " + (sender instanceof ConsoleCommandSender ? "CONSOLE" : ((EntityPlayer) sender).getName()) + " " + (message != null ? message : "")));
-
+        GoMint.instance().onlinePlayers().forEach(players -> players.sendMessage("* " + (sender instanceof ConsoleCommandSender ? "CONSOLE" : ((EntityPlayer) sender).name()) + " " + (message != null ? message : "")));
         return CommandOutput.successful();
     }
 }

@@ -23,7 +23,7 @@ public class Concrete extends Block implements BlockConcrete {
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 2700;
     }
 
@@ -33,7 +33,7 @@ public class Concrete extends Block implements BlockConcrete {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.CONCRETE;
     }
 
@@ -43,18 +43,19 @@ public class Concrete extends Block implements BlockConcrete {
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return ToolPresets.PICKAXE;
     }
 
     @Override
-    public BlockColor getColor() {
+    public BlockColor color() {
         return COLOR.getState(this);
     }
 
     @Override
-    public void setColor( BlockColor color ) {
+    public BlockConcrete color(BlockColor color ) {
         COLOR.setState( this, color );
+        return this;
     }
 
 }

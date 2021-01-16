@@ -5,7 +5,7 @@ package io.gomint.server.inventory.transaction;
  * @author geNAZt
  * @version 1.0
  */
-public interface Transaction extends io.gomint.inventory.transaction.Transaction {
+public interface Transaction<I, S, T> extends io.gomint.inventory.transaction.Transaction<I, S, T> {
 
     /**
      * Called when the transaction has been a success

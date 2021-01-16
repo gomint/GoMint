@@ -45,8 +45,8 @@ public class TallGrass extends Block implements BlockTallGrass {
     @Override
     public long update(UpdateReason updateReason, long currentTimeMS, float dT) {
         if (updateReason == UpdateReason.NEIGHBOUR_UPDATE) {
-            Block down = this.getSide(Facing.DOWN);
-            if (!down.isSolid()) {
+            Block down = this.side(Facing.DOWN);
+            if (!down.solid()) {
                 this.naturalBreak();
             }
         }
@@ -55,17 +55,12 @@ public class TallGrass extends Block implements BlockTallGrass {
     }
 
     @Override
-    public String getBlockId() {
-        return "minecraft:tallgrass";
-    }
-
-    @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
     @Override
-    public boolean isSolid() {
+    public boolean solid() {
         return false;
     }
 
@@ -75,7 +70,7 @@ public class TallGrass extends Block implements BlockTallGrass {
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 0;
     }
 
@@ -85,7 +80,7 @@ public class TallGrass extends Block implements BlockTallGrass {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.TALL_GRASS;
     }
 
@@ -95,7 +90,7 @@ public class TallGrass extends Block implements BlockTallGrass {
     }
 
     @Override
-    public List<ItemStack> getDrops(ItemStack itemInHand) {
+    public List<ItemStack<?>> drops(ItemStack<?> itemInHand) {
         if (isCorrectTool(itemInHand)) {
             return new ArrayList<>() {{
                 add(ItemTallGrass.create(1));
@@ -106,24 +101,25 @@ public class TallGrass extends Block implements BlockTallGrass {
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return new Class[]{
             ItemShears.class
         };
     }
 
     @Override
-    public void setGrassType(Type type) {
+    public BlockTallGrass type(Type type) {
         VARIANT.setState(this, TypeMagic.valueOf(type.name()));
+        return this;
     }
 
     @Override
-    public Type getGrassType() {
+    public Type type() {
         return Type.valueOf(VARIANT.getState(this).name());
     }
 
     @Override
-    public boolean canBeReplaced(ItemStack item) {
+    public boolean canBeReplaced(ItemStack<?> item) {
         return true;
     }
 

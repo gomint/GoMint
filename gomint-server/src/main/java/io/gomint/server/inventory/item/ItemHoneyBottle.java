@@ -8,15 +8,15 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( id = 737, sId = "minecraft:honey_bottle")
-public class ItemHoneyBottle extends ItemFood implements io.gomint.inventory.item.ItemHoneyBottle {
+public class ItemHoneyBottle extends ItemFood<io.gomint.inventory.item.ItemHoneyBottle> implements io.gomint.inventory.item.ItemHoneyBottle {
 
     @Override
-    public byte getMaximumAmount() {
+    public byte maximumAmount() {
         return 16;
     }
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.HONEY_BOTTLE;
     }
 

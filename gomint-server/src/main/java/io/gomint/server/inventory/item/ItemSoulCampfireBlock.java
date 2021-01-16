@@ -15,10 +15,10 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:item.soul_campfire", id = -290 )
-public class ItemSoulCampfireBlock extends ItemStack {
+public class ItemSoulCampfireBlock extends ItemStack<ItemSoulCampfireBlock> {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.SOUL_CAMPFIRE;
     }
 

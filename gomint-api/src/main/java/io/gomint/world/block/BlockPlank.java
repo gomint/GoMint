@@ -21,13 +21,14 @@ public interface BlockPlank extends Block {
      *
      * @return plank type
      */
-    LogType getPlankType();
+    LogType type();
 
     /**
      * Set the plank type
      *
      * @param logType which should be used in this block
+     * @return block for chaining
      */
-    void setPlankType( LogType logType);
+    BlockPlank type(LogType logType);
 
 }

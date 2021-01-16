@@ -8,10 +8,10 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo(sId = "minecraft:lapis_block", id = 22)
-public class ItemBlockOfLapisLazuli extends ItemStack implements io.gomint.inventory.item.ItemBlockOfLapisLazuli {
+public class ItemBlockOfLapisLazuli extends ItemStack< io.gomint.inventory.item.ItemBlockOfLapisLazuli> implements io.gomint.inventory.item.ItemBlockOfLapisLazuli {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.LAPIS_LAZULI_BLOCK;
     }
 

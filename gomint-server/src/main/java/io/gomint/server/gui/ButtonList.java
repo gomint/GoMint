@@ -22,14 +22,14 @@ public class ButtonList extends Form<String> implements io.gomint.gui.ButtonList
     }
 
     @Override
-    public io.gomint.gui.ButtonList setContent( String content ) {
+    public io.gomint.gui.ButtonList content(String content ) {
         this.content = content;
         this.dirty = true;
         return this;
     }
 
     @Override
-    public io.gomint.gui.ButtonList addButton( String id, String text ) {
+    public io.gomint.gui.ButtonList button(String id, String text ) {
         Button button = new Button( id, text );
         this.buttons.add( button );
         this.dirty = true;
@@ -37,7 +37,7 @@ public class ButtonList extends Form<String> implements io.gomint.gui.ButtonList
     }
 
     @Override
-    public io.gomint.gui.ButtonList addImageButton( String id, String text, String imagePath ) {
+    public io.gomint.gui.ButtonList imageButton(String id, String text, String imagePath ) {
         ImageButton imageButton = new ImageButton( id, text, imagePath );
         this.buttons.add( imageButton );
         this.dirty = true;

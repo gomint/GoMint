@@ -46,9 +46,11 @@ public class BaseConfig implements Serializable {
      *
      * @param converter converter to be added
      * @throws InvalidConverterException If the converter has any errors this Exception tells you what
+     * @return base config for chaining
      */
-    public void addConverter( Class converter ) throws InvalidConverterException {
+    public BaseConfig addConverter( Class<?> converter ) throws InvalidConverterException {
         this.converter.addCustomConverter( converter );
+        return this;
     }
 
     protected void configureFromSerializeOptionsAnnotation() {

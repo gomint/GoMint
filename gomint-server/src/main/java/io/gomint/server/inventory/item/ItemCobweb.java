@@ -10,10 +10,10 @@ import io.gomint.taglib.NBTTagCompound;
  * @version 1.0
  */
 @RegisterInfo(sId = "minecraft:web", id = 30)
-public class ItemCobweb extends ItemStack implements io.gomint.inventory.item.ItemCobweb {
+public class ItemCobweb extends ItemStack< io.gomint.inventory.item.ItemCobweb> implements io.gomint.inventory.item.ItemCobweb {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.COBWEB;
     }
 

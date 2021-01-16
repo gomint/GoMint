@@ -76,12 +76,12 @@ public class Leaves extends Block implements BlockLeaves {
     private static final BooleanBlockState PERSISTENT = new BooleanBlockState( () -> new String[]{"persistent_bit"});
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 300;
     }
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
@@ -96,20 +96,20 @@ public class Leaves extends Block implements BlockLeaves {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.LEAVES;
     }
 
     @Override
-    public List<ItemStack> getDrops(ItemStack itemInHand) {
-        LogType type = this.getLeaveType();
+    public List<ItemStack<?>> drops(ItemStack<?> itemInHand) {
+        LogType type = this.type();
 
-        List<ItemStack> items = new ArrayList<>();
+        List<ItemStack<?>> items = new ArrayList<>();
 
         int dropChance = type == LogType.JUNGLE ? 40 : 20;
-        EnchantmentFortune fortune = itemInHand.getEnchantment(EnchantmentFortune.class);
-        if (fortune != null && fortune.getLevel() > 0) {
-            dropChance -= 2 << fortune.getLevel();
+        EnchantmentFortune fortune = itemInHand.enchantment(EnchantmentFortune.class);
+        if (fortune != null && fortune.level() > 0) {
+            dropChance -= 2 << fortune.level();
             if (dropChance < 10) {
                 dropChance = 10;
             }
@@ -117,14 +117,14 @@ public class Leaves extends Block implements BlockLeaves {
 
         if (ThreadLocalRandom.current().nextInt(dropChance) == 0) {
             ItemSapling sapling = ItemSapling.create(1);
-            sapling.setLogType(type);
+            sapling.type(type);
             items.add(sapling);
         }
 
         if (type == LogType.OAK || type == LogType.DARK_OAK) {
             dropChance = 100;
-            if (fortune != null && fortune.getLevel() > 0) {
-                dropChance -= 10 << fortune.getLevel();
+            if (fortune != null && fortune.level() > 0) {
+                dropChance -= 10 << fortune.level();
                 if (dropChance < 40) {
                     dropChance = 40;
                 }
@@ -144,25 +144,26 @@ public class Leaves extends Block implements BlockLeaves {
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return new Class[]{
             ItemShears.class
         };
     }
 
     @Override
-    public void setLeaveType(LogType type) {
+    public BlockLeaves type(LogType type) {
         if (type == LogType.CRIMSON || type == LogType.WARPED) {
-            return;
+            return this;
         }
 
         LeaveTypeMagic newState = LeaveTypeMagic.valueOf(type.name());
         this.setBlockIdOnStateChange(newState.blockId); // We ignore the two keys here to get a known wrong value, the set state below will select the correct runtime id
         VARIANT.setState(this, newState);
+        return this;
     }
 
     @Override
-    public LogType getLeaveType() {
+    public LogType type() {
         return LogType.valueOf(VARIANT.getState(this).name());
     }
 

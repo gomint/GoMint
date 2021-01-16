@@ -20,7 +20,7 @@ public class Camera extends Block implements BlockCamera {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.CAMERA;
     }
 

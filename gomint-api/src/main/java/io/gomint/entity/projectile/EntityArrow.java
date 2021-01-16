@@ -12,13 +12,13 @@ package io.gomint.entity.projectile;
  * @version 1.0
  * @stability 3
  */
-public interface EntityArrow extends EntityProjectile {
+public interface EntityArrow extends EntityProjectile<EntityArrow> {
 
     /**
      * Is this arrow fired with full force (critical)?
      *
      * @return true when dealing critical damage on impact, false when not
      */
-    boolean isCritical();
+    boolean critical();
 
 }

@@ -22,12 +22,12 @@ public class Beacon extends Block implements BlockBeacon {
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 4500;
     }
 
     @Override
-    public boolean isTransparent() {
+    public boolean transparent() {
         return true;
     }
 
@@ -42,7 +42,7 @@ public class Beacon extends Block implements BlockBeacon {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.BEACON;
     }
 
@@ -58,7 +58,7 @@ public class Beacon extends Block implements BlockBeacon {
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return ToolPresets.PICKAXE;
     }
 

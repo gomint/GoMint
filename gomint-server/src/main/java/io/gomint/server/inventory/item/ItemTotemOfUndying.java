@@ -15,10 +15,10 @@ import io.gomint.server.registry.RegisterInfo;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:totem_of_undying", id = 558 )
-public class ItemTotemOfUndying extends ItemStack implements io.gomint.inventory.item.ItemTotemOfUndying {
+public class ItemTotemOfUndying extends ItemStack< io.gomint.inventory.item.ItemTotemOfUndying> implements io.gomint.inventory.item.ItemTotemOfUndying {
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.TOTEM_OF_UNDYING;
     }
 

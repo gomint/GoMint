@@ -10,7 +10,7 @@ import io.gomint.server.world.WorldAdapter;
 import java.util.Set;
 
 @RegisterInfo( sId = "minecraft:ghast" )
-public class EntityGhast extends EntityLiving implements io.gomint.entity.monster.EntityGhast {
+public class EntityGhast extends EntityLiving<io.gomint.entity.monster.EntityGhast> implements io.gomint.entity.monster.EntityGhast {
 
     /**
      * Constructs a new EntityLiving
@@ -31,10 +31,10 @@ public class EntityGhast extends EntityLiving implements io.gomint.entity.monste
     }
 
     private void initEntity() {
-        this.setSize( 4.0f, 4.0f );
-        this.addAttribute( Attribute.HEALTH );
-        this.setMaxHealth( 10);
-        this.setHealth( 10 );
+        this.size( 4.0f, 4.0f );
+        this.attribute( Attribute.HEALTH );
+        this.maxHealth( 10);
+        this.health( 10 );
     }
 
     @Override
@@ -43,7 +43,7 @@ public class EntityGhast extends EntityLiving implements io.gomint.entity.monste
     }
 
     @Override
-    public Set<String> getTags() {
+    public Set<String> tags() {
         return EntityTags.RANGED_HOSTILE_MOB;
     }
 

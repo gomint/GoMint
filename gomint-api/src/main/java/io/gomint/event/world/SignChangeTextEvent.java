@@ -22,12 +22,12 @@ import java.util.List;
  * @version 1.0
  * @stability 3
  */
-public class SignChangeTextEvent extends CancellablePlayerEvent {
+public class SignChangeTextEvent extends CancellablePlayerEvent<SignChangeTextEvent> {
 
-    private final BlockSign sign;
-    private List<String> lines;
+    private final BlockSign<?> sign;
+    private final List<String> lines;
 
-    public SignChangeTextEvent(EntityPlayer player, BlockSign sign, List<String> lines) {
+    public SignChangeTextEvent(EntityPlayer player, BlockSign<?> sign, List<String> lines) {
         super(player);
 
         this.sign = sign;
@@ -38,21 +38,9 @@ public class SignChangeTextEvent extends CancellablePlayerEvent {
      * Get the sign block which should get its text changed. This returned block can be of {@link BlockStandingSign}
      * or {@link BlockWallSign} type.
      *
-     * @return the block which should be changed
-     * @deprecated Use {@link #getSign()} instead
-     */
-    @Deprecated
-    public Block getBlock() {
-        return this.sign;
-    }
-
-    /**
-     * Get the sign block which should get its text changed. This returned block can be of {@link BlockStandingSign}
-     * or {@link BlockWallSign} type.
-     *
      * @return the sign block which should be changed
      */
-    public BlockSign getSign() {
+    public BlockSign<?> sign() {
         return this.sign;
     }
 
@@ -63,10 +51,10 @@ public class SignChangeTextEvent extends CancellablePlayerEvent {
      * @param line    which should be set
      * @param content which should be set on that line
      */
-    public void setLine(int line, String content) {
+    public SignChangeTextEvent line(int line, String content) {
         // Silently fail when line is incorrect
         if (line > 4 || line < 1) {
-            return;
+            return this;
         }
 
         if (this.lines.size() < line) {
@@ -76,6 +64,7 @@ public class SignChangeTextEvent extends CancellablePlayerEvent {
         }
 
         this.lines.set(line - 1, content);
+        return this;
     }
 
     /**
@@ -84,7 +73,7 @@ public class SignChangeTextEvent extends CancellablePlayerEvent {
      * @param line which you want to get
      * @return string or null when not set
      */
-    public String getLine(int line) {
+    public String line(int line) {
         // Silently fail when line is incorrect
         if (line > 4 || line < 1) {
             return null;
@@ -102,7 +91,7 @@ public class SignChangeTextEvent extends CancellablePlayerEvent {
      *
      * @return all lines which the sign has after the event call
      */
-    public List<String> getLines() {
+    public List<String> lines() {
         return this.lines;
     }
 
@@ -111,10 +100,12 @@ public class SignChangeTextEvent extends CancellablePlayerEvent {
      *
      * @param lines the lines the sign should have after the event call
      */
-    public void setLines(List<String> lines) {
+    public SignChangeTextEvent lines(List<String> lines) {
         Preconditions.checkArgument(lines.size() == 4, "Sign must have 4 lines of text");
 
         this.lines.clear();
         this.lines.addAll(lines);
+        return this;
     }
+
 }

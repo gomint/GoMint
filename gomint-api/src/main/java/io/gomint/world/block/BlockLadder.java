@@ -20,14 +20,15 @@ public interface BlockLadder extends Block {
      * Set the rotation of the ladder. The attach side defines to which block the ladder should connect
      *
      * @param attachSide of this ladder
+     * @return block for chaining
      */
-    void setAttachSide( Facing attachSide );
+    BlockLadder attachSide(Facing attachSide);
 
     /**
      * Get the side to which this ladder is attached
      *
      * @return attached side of this ladder
      */
-    Facing getAttachSide();
+    Facing attachSide();
 
 }

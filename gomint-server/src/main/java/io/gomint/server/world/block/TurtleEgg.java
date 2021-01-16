@@ -23,7 +23,7 @@ public class TurtleEgg extends Block implements BlockTurtleEgg {
         crackStatus -> crackStatus.name().toLowerCase(), s -> CrackStatus.valueOf(s.toUpperCase()));
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 750;
     }
 
@@ -33,12 +33,12 @@ public class TurtleEgg extends Block implements BlockTurtleEgg {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.TURTLE_EGG;
     }
 
     @Override
-    public void setAmountOfEggs(int amountOfEggs) {
+    public BlockTurtleEgg amountOfEggs(int amountOfEggs) {
         int capped = MathUtils.clamp(amountOfEggs, 1, 4);
         switch (capped) {
             case 1:
@@ -55,10 +55,12 @@ public class TurtleEgg extends Block implements BlockTurtleEgg {
                 EGG_COUNT.setState(this, "four_egg");
                 break;
         }
+
+        return this;
     }
 
     @Override
-    public int getAmountOfEggs() {
+    public int amountOfEggs() {
         switch (EGG_COUNT.getState(this)) {
             case "one_egg":
                 return 1;
@@ -73,12 +75,13 @@ public class TurtleEgg extends Block implements BlockTurtleEgg {
     }
 
     @Override
-    public void setCrackStatus(CrackStatus status) {
+    public BlockTurtleEgg crackStatus(CrackStatus status) {
         CRACK_STATUS.setState(this, status);
+        return this;
     }
 
     @Override
-    public CrackStatus getCrackStatus() {
+    public CrackStatus crackStatus() {
         return CRACK_STATUS.getState(this);
     }
 

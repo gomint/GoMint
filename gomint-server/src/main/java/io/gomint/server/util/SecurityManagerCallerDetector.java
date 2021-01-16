@@ -48,7 +48,7 @@ public class SecurityManagerCallerDetector implements CallerDetector {
                 return null;
             }
 
-            for ( Class aClass : getClassContext() ) {
+            for ( Class<?> aClass : getClassContext() ) {
                 // Get the class loader, if its a plugin one return the main class
                 if (aClass.getClassLoader() instanceof PluginClassloader) {
                     PluginClassloader cl = (PluginClassloader) aClass.getClassLoader();

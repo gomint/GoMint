@@ -19,34 +19,34 @@ import io.gomint.world.block.data.Facing;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:snowball", id = 332 )
-public class ItemSnowball extends ItemStack implements io.gomint.inventory.item.ItemSnowball {
+public class ItemSnowball extends ItemStack< io.gomint.inventory.item.ItemSnowball> implements io.gomint.inventory.item.ItemSnowball {
 
     @Override
     public boolean interact(EntityPlayer entity, Facing face, Vector clickPosition, Block clickedBlock ) {
         // Spawn snowball projectile
-        WorldAdapter world = entity.getWorld();
+        WorldAdapter world = entity.world();
         EntitySnowball snowball = new EntitySnowball( entity, world );
 
         ProjectileLaunchEvent launchEvent = new ProjectileLaunchEvent( snowball, Cause.THROWING_SNOWBALL );
-        world.getServer().getPluginManager().callEvent( launchEvent );
+        world.getServer().pluginManager().callEvent( launchEvent );
 
-        if ( !launchEvent.isCancelled() ) {
+        if ( !launchEvent.cancelled() ) {
             world.spawnEntityAt( snowball,
-                                snowball.getPositionX(),
-                                snowball.getPositionY(),
-                                snowball.getPositionZ(),
-                                snowball.getYaw(),
-                                snowball.getPitch() );
+                                snowball.positionX(),
+                                snowball.positionY(),
+                                snowball.positionZ(),
+                                snowball.yaw(),
+                                snowball.pitch() );
         }
 
-        if ( entity.getGamemode() != Gamemode.CREATIVE ) {
+        if ( entity.gamemode() != Gamemode.CREATIVE ) {
             // Subtract amount
-            int newAmount = this.getAmount() - 1;
+            int newAmount = this.amount() - 1;
             if ( newAmount == 0 ) {
-                entity.getInventory().setItem( entity.getInventory().getItemInHandSlot(), ItemAir.create( 0 ) );
+                entity.inventory().item( entity.inventory().itemInHandSlot(), ItemAir.create( 0 ) );
             } else {
-                this.setAmount( newAmount );
-                entity.getInventory().setItem( entity.getInventory().getItemInHandSlot(), this );
+                this.amount( newAmount );
+                entity.inventory().item( entity.inventory().itemInHandSlot(), this );
             }
         }
 
@@ -54,12 +54,12 @@ public class ItemSnowball extends ItemStack implements io.gomint.inventory.item.
     }
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.SNOWBALL;
     }
 
     @Override
-    public byte getMaximumAmount() {
+    public byte maximumAmount() {
         return 16;
     }
 }

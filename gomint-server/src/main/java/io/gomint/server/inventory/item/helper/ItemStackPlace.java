@@ -17,10 +17,10 @@ import java.util.Objects;
  */
 public class ItemStackPlace {
 
-    private int slot;
-    private Inventory inventory;
+    private final int slot;
+    private final Inventory<?> inventory;
 
-    public ItemStackPlace(int slot, Inventory inventory) {
+    public ItemStackPlace(int slot, Inventory<?> inventory) {
         this.slot = slot;
         this.inventory = inventory;
     }
@@ -29,7 +29,7 @@ public class ItemStackPlace {
         return slot;
     }
 
-    public Inventory getInventory() {
+    public Inventory<?> getInventory() {
         return inventory;
     }
 

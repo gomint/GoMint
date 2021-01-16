@@ -17,12 +17,12 @@ import io.gomint.world.block.data.Facing;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:diamond_hoe", id = 293 )
-public class ItemDiamondHoe extends ItemReduceTierDiamond implements io.gomint.inventory.item.ItemDiamondHoe {
+public class ItemDiamondHoe extends ItemReduceTierDiamond<io.gomint.inventory.item.ItemDiamondHoe> implements io.gomint.inventory.item.ItemDiamondHoe {
 
     @Override
     public boolean interact(EntityPlayer entity, Facing face, Vector clickPosition, Block clickedBlock ) {
         if ( clickedBlock instanceof Dirt || clickedBlock instanceof GrassBlock ) {
-            clickedBlock.setBlockType( Farmland.class );
+            clickedBlock.blockType( Farmland.class );
             this.calculateUsageAndUpdate( 1 );
             return true;
         }
@@ -33,19 +33,19 @@ public class ItemDiamondHoe extends ItemReduceTierDiamond implements io.gomint.i
     @Override
     public void gotInHand( EntityPlayer player ) {
         player
-            .getAttributeInstance( Attribute.ATTACK_DAMAGE )
+            .attributeInstance( Attribute.ATTACK_DAMAGE )
             .setModifier( AttributeModifier.ITEM_ATTACK_DAMAGE, AttributeModifierType.ADDITION, 4 );
     }
 
     @Override
     public void removeFromHand( EntityPlayer player ) {
         player
-            .getAttributeInstance( Attribute.ATTACK_DAMAGE )
+            .attributeInstance( Attribute.ATTACK_DAMAGE )
             .removeModifier( AttributeModifier.ITEM_ATTACK_DAMAGE );
     }
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.DIAMOND_HOE;
     }
 

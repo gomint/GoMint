@@ -27,22 +27,22 @@ public class EnchantmentFlame extends Enchantment implements io.gomint.enchant.E
     }
 
     @Override
-    public int getMinEnchantAbility( short level ) {
+    public int minEnchantAbility( short level ) {
         return 20;
     }
 
     @Override
-    public int getMaxEnchantAbility( short level ) {
+    public int maxEnchantAbility( short level ) {
         return 50;
     }
 
     @Override
-    public boolean canBeApplied( ItemStack itemStack ) {
-        return itemStack.getItemType() == ItemType.BOW;
+    public boolean canBeApplied(ItemStack<?> itemStack ) {
+        return itemStack.itemType() == ItemType.BOW;
     }
 
     @Override
-    public Rarity getRarity() {
+    public Rarity rarity() {
         return Rarity.RARE;
     }
 

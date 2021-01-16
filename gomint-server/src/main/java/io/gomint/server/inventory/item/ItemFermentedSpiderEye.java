@@ -9,12 +9,12 @@ import io.gomint.taglib.NBTTagCompound;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:fermented_spider_eye", id = 376 )
- public class ItemFermentedSpiderEye extends ItemStack implements io.gomint.inventory.item.ItemFermentedSpiderEye {
+ public class ItemFermentedSpiderEye extends ItemStack< io.gomint.inventory.item.ItemFermentedSpiderEye> implements io.gomint.inventory.item.ItemFermentedSpiderEye {
 
 
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.FERMENTED_SPIDER_EYE;
     }
 

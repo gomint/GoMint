@@ -14,7 +14,7 @@ import io.gomint.entity.EntityPlayer;
  * @version 1.0
  * @stability 3
  */
-public class PlayerToggleGlideEvent extends CancellablePlayerEvent {
+public class PlayerToggleGlideEvent extends CancellablePlayerEvent<PlayerToggleFlyEvent> {
 
     private final boolean newStatus;
 
@@ -28,7 +28,7 @@ public class PlayerToggleGlideEvent extends CancellablePlayerEvent {
      *
      * @return true when the client wants to start flying, false otherwise
      */
-    public boolean getNewStatus() {
+    public boolean newStatus() {
         return this.newStatus;
     }
 

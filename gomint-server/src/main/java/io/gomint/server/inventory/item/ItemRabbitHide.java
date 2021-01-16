@@ -9,12 +9,12 @@ import io.gomint.taglib.NBTTagCompound;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:rabbit_hide", id = 415 )
- public class ItemRabbitHide extends ItemStack implements io.gomint.inventory.item.ItemRabbitHide {
+ public class ItemRabbitHide extends ItemStack< io.gomint.inventory.item.ItemRabbitHide> implements io.gomint.inventory.item.ItemRabbitHide {
 
 
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.RABBIT_HIDE;
     }
 

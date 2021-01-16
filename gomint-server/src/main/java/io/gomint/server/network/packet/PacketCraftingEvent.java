@@ -15,8 +15,8 @@ public class PacketCraftingEvent extends Packet {
     private byte windowId;
     private int recipeType;
     private UUID recipeId;
-    private ItemStack[] input;
-    private ItemStack[] output;
+    private ItemStack<?>[] input;
+    private ItemStack<?>[] output;
 
     public PacketCraftingEvent() {
         super( Protocol.PACKET_CRAFTING_EVENT );
@@ -60,19 +60,19 @@ public class PacketCraftingEvent extends Packet {
         this.recipeId = recipeId;
     }
 
-    public ItemStack[] getInput() {
+    public ItemStack<?>[] getInput() {
         return input;
     }
 
-    public void setInput(ItemStack[] input) {
+    public void setInput(ItemStack<?>[] input) {
         this.input = input;
     }
 
-    public ItemStack[] getOutput() {
+    public ItemStack<?>[] getOutput() {
         return output;
     }
 
-    public void setOutput(ItemStack[] output) {
+    public void setOutput(ItemStack<?>[] output) {
         this.output = output;
     }
 }

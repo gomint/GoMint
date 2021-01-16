@@ -26,7 +26,7 @@ import java.util.concurrent.ThreadLocalRandom;
  * @since 2021-01-12
  */
 @RegisterInfo(sId = "minecraft:dolphin")
-public class EntityDolphin extends EntityAgeableAnimal implements io.gomint.entity.animal.EntityDolphin {
+public class EntityDolphin extends EntityAgeableAnimal<io.gomint.entity.animal.EntityDolphin> implements io.gomint.entity.animal.EntityDolphin {
     /**
      * Constructs a new EntityDolphin
      *
@@ -46,49 +46,49 @@ public class EntityDolphin extends EntityAgeableAnimal implements io.gomint.enti
     }
 
     private void initEntity() {
-        if (isBaby()) {
-            this.setSize(0.585f, 0.39f);
+        if (baby()) {
+            this.size(0.585f, 0.39f);
         } else {
-            this.setSize(0.9f, 0.6f);
+            this.size(0.9f, 0.6f);
         }
-        this.addAttribute(Attribute.HEALTH);
-        this.setMaxHealth(10);
-        this.setHealth(10);
+        this.attribute(Attribute.HEALTH);
+        this.maxHealth(10);
+        this.health(10);
     }
 
     @Override
     protected void kill() {
         super.kill();
 
-        if (isDead()) {
+        if (dead()) {
             return;
         }
         
-        if (this.isBaby()) {
+        if (this.baby()) {
             return;
         }
 
         // Drop items
-        Entity lastDamageEntity = this.lastDamageEntity;
+        Entity<?> lastDamageEntity = this.lastDamageEntity;
         int looting = 0;
         if (lastDamageEntity instanceof EntityHuman) {
-            Enchantment enchantment = ((EntityHuman) lastDamageEntity).getInventory().getItemInHand().getEnchantment(EnchantmentLooting.class);
+            Enchantment enchantment = ((EntityHuman<?>) lastDamageEntity).inventory().itemInHand().enchantment(EnchantmentLooting.class);
             if (enchantment != null) {
-                looting = enchantment.getLevel();
+                looting = enchantment.level();
             }
         }
         
         int amount = ThreadLocalRandom.current().nextInt(2 + looting);
         if (amount > 0) {
             
-            ItemStack drop;
-            if (this.isOnFire()) {
+            ItemStack<?> drop;
+            if (this.burning()) {
                 drop = ItemCookedCod.create(amount);
             } else {
                 drop = ItemCod.create(amount);
             }
             
-            this.world.dropItem(this.getLocation(), drop);
+            this.world.dropItem(this.location(), drop);
         }
     }
 
@@ -96,4 +96,5 @@ public class EntityDolphin extends EntityAgeableAnimal implements io.gomint.enti
     public void update(long currentTimeMS, float dT) {
         super.update(currentTimeMS, dT);
     }
+
 }

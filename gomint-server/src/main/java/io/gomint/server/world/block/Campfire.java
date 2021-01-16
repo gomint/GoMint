@@ -19,7 +19,7 @@ public class Campfire extends Block implements BlockCampfire {
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 3000;
     }
 
@@ -34,12 +34,12 @@ public class Campfire extends Block implements BlockCampfire {
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return ToolPresets.AXE;
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.CAMPFIRE;
     }
 }

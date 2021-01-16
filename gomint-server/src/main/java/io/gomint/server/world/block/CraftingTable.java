@@ -28,23 +28,23 @@ public class CraftingTable extends Block implements BlockCraftingTable {
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 3750;
     }
 
     @Override
-    public boolean interact(Entity entity, Facing face, Vector facePos, ItemStack item ) {
+    public boolean interact(Entity<?> entity, Facing face, Vector facePos, ItemStack<?> item ) {
         if ( entity instanceof EntityPlayer ) {
             EntityPlayer player = (EntityPlayer) entity;
 
             // This should be a container open
-            LOGGER.debug( "Changing to 3x3 crafting grid for player " + player.getName() );
-            player.getCraftingInventory().resizeAndClear( 9 );
-            player.getCraftingInputInventory().resizeAndClear( 9 );
+            LOGGER.debug( "Changing to 3x3 crafting grid for player " + player.name() );
+            player.craftingInventory().resizeAndClear( 9 );
+            player.craftingInputInventory().resizeAndClear( 9 );
 
             // Open the crafting table
-            player.getCraftingInputInventory().setPosition(this.location.toBlockPosition());
-            player.openInventory(player.getCraftingInputInventory());
+            player.craftingInputInventory().setPosition(this.location.toBlockPosition());
+            player.openInventory(player.craftingInputInventory());
         }
 
         return true;
@@ -56,7 +56,7 @@ public class CraftingTable extends Block implements BlockCraftingTable {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.CRAFTING_TABLE;
     }
 
@@ -66,7 +66,7 @@ public class CraftingTable extends Block implements BlockCraftingTable {
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return ToolPresets.AXE;
     }
 

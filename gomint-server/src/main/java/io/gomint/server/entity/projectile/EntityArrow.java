@@ -31,7 +31,7 @@ import java.util.concurrent.TimeUnit;
  * @version 1.0
  */
 @RegisterInfo(sId = "minecraft:arrow")
-public class EntityArrow extends EntityProjectile implements io.gomint.entity.projectile.EntityArrow {
+public class EntityArrow extends EntityProjectile<io.gomint.entity.projectile.EntityArrow> implements io.gomint.entity.projectile.EntityArrow {
 
     private boolean firedHitEvent = false;
     private boolean isReset = false;
@@ -70,16 +70,16 @@ public class EntityArrow extends EntityProjectile implements io.gomint.entity.pr
 
         this.critical = force == 1.0f;
 
-        Location position = this.setPositionFromShooter();
+        Location position = this.positionFromShooter();
 
         // Calc new motion
-        this.setMotionFromEntity(position, this.shooter.getVelocity(), 0f, force * 3f, 1f);
+        this.motionFromEntity(position, this.shooter.velocity(), 0f, force * 3f, 1f);
 
         // Calculate correct yaw / pitch
-        this.setLookFromMotion();
+        this.lookFromMotion();
 
         // Set owning entity
-        this.metadataContainer.putLong(5, player.getEntityId());
+        this.metadataContainer.putLong(5, player.id());
     }
 
     @Override
@@ -87,16 +87,16 @@ public class EntityArrow extends EntityProjectile implements io.gomint.entity.pr
         super.applyCustomProperties();
 
         // Set size
-        this.setSize(0.5f, 0.5f);
+        this.size(0.5f, 0.5f);
     }
 
     @Override
-    public boolean isCritical() {
+    public boolean critical() {
         return this.critical;
     }
 
     @Override
-    protected void applyCustomKnockback(Entity hitEntity) {
+    protected void applyCustomKnockback(Entity<?> hitEntity) {
         if (this.punchModifier > 0) {
             float sqrtMotion = (float) Math.sqrt(this.getMotionX() * this.getMotionX() + this.getMotionZ() * this.getMotionZ());
             if (sqrtMotion > 0.0F) {
@@ -106,20 +106,20 @@ public class EntityArrow extends EntityProjectile implements io.gomint.entity.pr
                     this.getMotionZ() * this.punchModifier * 0.6f / sqrtMotion
                 );
 
-                hitEntity.setVelocity(hitEntity.getVelocity().add(toAdd));
+                hitEntity.velocity(hitEntity.velocity().add(toAdd));
             }
         }
     }
 
     @Override
-    protected void applyCustomDamageEffects(Entity hitEntity) {
+    protected void applyCustomDamageEffects(Entity<?> hitEntity) {
         if (this.flameModifier > 0 && hitEntity instanceof EntityLiving) {
-            ((EntityLiving) hitEntity).setBurning(5, TimeUnit.SECONDS);
+            ((EntityLiving<?>) hitEntity).burning(5, TimeUnit.SECONDS);
         }
     }
 
     @Override
-    public float getDamage() {
+    public float damage() {
         if (this.powerModifier > 0) {
             return 2 + (this.powerModifier * 0.5f + 0.5f);
         }
@@ -139,20 +139,20 @@ public class EntityArrow extends EntityProjectile implements io.gomint.entity.pr
         this.lastUpdateDT += dT;
         if (Values.CLIENT_TICK_RATE - this.lastUpdateDT < MathUtils.EPSILON) {
             // Calculate correct yaw / pitch
-            this.setLookFromMotion();
+            this.lookFromMotion();
 
             if (this.isCollided && !this.canBePickedup && !this.firedHitEvent) { // this.canBePickedup indicates if a event got cancelled
                 // Remap
                 Set<Block> blocks = new HashSet<>(this.collidedWith);
                 ProjectileHitBlocksEvent hitBlockEvent = new ProjectileHitBlocksEvent(blocks, this);
-                this.world.getServer().getPluginManager().callEvent(hitBlockEvent);
-                if (!hitBlockEvent.isCancelled()) {
+                this.world.getServer().pluginManager().callEvent(hitBlockEvent);
+                if (!hitBlockEvent.cancelled()) {
                     this.canBePickedup = true;
                 }
             }
 
-            if (this.canBePickedup && !this.isReset && this.getVelocity().length() < 0.0025) {
-                this.setVelocity(Vector.ZERO);
+            if (this.canBePickedup && !this.isReset && this.velocity().length() < 0.0025) {
+                this.velocity(Vector.ZERO);
                 this.isReset = true;
             }
 
@@ -167,21 +167,21 @@ public class EntityArrow extends EntityProjectile implements io.gomint.entity.pr
 
     @Override
     public void onCollideWithPlayer(EntityPlayer player) {
-        if (this.canBePickedup && !this.isDead()) {
+        if (this.canBePickedup && !this.dead()) {
             ItemArrow arrow = ItemArrow.create(1);
 
             // Check if we have place in out inventory to store this item
-            if (!player.getInventory().hasPlaceFor(arrow)) {
+            if (!player.inventory().hasPlaceFor(arrow)) {
                 return;
             }
 
             PlayerPickupItemEvent pickupItemEvent = new PlayerPickupItemEvent(player, this, arrow);
-            player.getWorld().getServer().getPluginManager().callEvent(pickupItemEvent);
-            if (pickupItemEvent.isCancelled()) {
+            player.world().getServer().pluginManager().callEvent(pickupItemEvent);
+            if (pickupItemEvent.cancelled()) {
                 return;
             }
 
-            player.getInventory().addItem(arrow);
+            player.inventory().addItem(arrow);
             this.despawn();
         }
     }

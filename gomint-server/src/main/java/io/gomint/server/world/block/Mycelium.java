@@ -20,7 +20,7 @@ public class Mycelium extends Block implements BlockMycelium {
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 900;
     }
 
@@ -30,7 +30,7 @@ public class Mycelium extends Block implements BlockMycelium {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.MYCELIUM;
     }
 
@@ -40,7 +40,7 @@ public class Mycelium extends Block implements BlockMycelium {
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return ToolPresets.SHOVEL;
     }
 }

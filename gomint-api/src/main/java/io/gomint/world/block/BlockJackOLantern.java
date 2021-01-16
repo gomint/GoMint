@@ -12,6 +12,6 @@ package io.gomint.world.block;
  * @version 1.0
  * @stability 3
  */
-public interface BlockJackOLantern extends BlockDirection {
+public interface BlockJackOLantern extends BlockDirection<BlockJackOLantern> {
 
 }

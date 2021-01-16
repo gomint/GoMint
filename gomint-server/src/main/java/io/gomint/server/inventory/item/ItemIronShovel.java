@@ -17,12 +17,12 @@ import io.gomint.world.block.data.Facing;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:iron_shovel", id = 256 )
-public class ItemIronShovel extends ItemReduceTierIron implements io.gomint.inventory.item.ItemIronShovel {
+public class ItemIronShovel extends ItemReduceTierIron<io.gomint.inventory.item.ItemIronShovel> implements io.gomint.inventory.item.ItemIronShovel {
 
     @Override
     public boolean interact(EntityPlayer entity, Facing face, Vector clickPosition, Block clickedBlock ) {
         if ( clickedBlock instanceof GrassBlock ) {
-            clickedBlock.setBlockType( GrassPath.class );
+            clickedBlock.blockType( GrassPath.class );
             this.calculateUsageAndUpdate( 1 );
             return true;
         }
@@ -33,19 +33,19 @@ public class ItemIronShovel extends ItemReduceTierIron implements io.gomint.inve
     @Override
     public void gotInHand( EntityPlayer player ) {
         player
-            .getAttributeInstance( Attribute.ATTACK_DAMAGE )
+            .attributeInstance( Attribute.ATTACK_DAMAGE )
             .setModifier( AttributeModifier.ITEM_ATTACK_DAMAGE, AttributeModifierType.ADDITION, 4 );
     }
 
     @Override
     public void removeFromHand( EntityPlayer player ) {
         player
-            .getAttributeInstance( Attribute.ATTACK_DAMAGE )
+            .attributeInstance( Attribute.ATTACK_DAMAGE )
             .removeModifier( AttributeModifier.ITEM_ATTACK_DAMAGE );
     }
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.IRON_SHOVEL;
     }
 

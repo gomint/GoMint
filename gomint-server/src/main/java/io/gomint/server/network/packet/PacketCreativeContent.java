@@ -17,7 +17,7 @@ import io.gomint.server.network.Protocol;
  */
 public class PacketCreativeContent extends Packet {
 
-    private ItemStack[] items;
+    private ItemStack<?>[] items;
 
     public PacketCreativeContent() {
         super(Protocol.PACKET_CREATIVE_CONTENT);
@@ -26,8 +26,8 @@ public class PacketCreativeContent extends Packet {
     @Override
     public void serialize(PacketBuffer buffer, int protocolID) {
         buffer.writeUnsignedVarInt(this.items.length);
-        for (ItemStack item : this.items) {
-            buffer.writeUnsignedVarInt(((io.gomint.server.inventory.item.ItemStack) item).getStackId());
+        for (ItemStack<?> item : this.items) {
+            buffer.writeUnsignedVarInt(((io.gomint.server.inventory.item.ItemStack<?>) item).stackId());
             writeItemStack(item, buffer);
         }
     }
@@ -37,11 +37,11 @@ public class PacketCreativeContent extends Packet {
 
     }
 
-    public ItemStack[] getItems() {
+    public ItemStack<?>[] getItems() {
         return items;
     }
 
-    public void setItems(ItemStack[] items) {
+    public void setItems(ItemStack<?>[] items) {
         this.items = items;
     }
 

@@ -20,7 +20,7 @@ public class LapisLazuliBlock extends Block implements BlockLapisLazuliBlock {
     }
 
     @Override
-    public long getBreakTime() {
+    public long breakTime() {
         return 4500;
     }
 
@@ -30,7 +30,7 @@ public class LapisLazuliBlock extends Block implements BlockLapisLazuliBlock {
     }
 
     @Override
-    public BlockType getBlockType() {
+    public BlockType blockType() {
         return BlockType.LAPIS_LAZULI_BLOCK;
     }
 
@@ -40,7 +40,7 @@ public class LapisLazuliBlock extends Block implements BlockLapisLazuliBlock {
     }
 
     @Override
-    public Class<? extends ItemStack>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
         return ToolPresets.PICKAXE;
     }
 

@@ -15,7 +15,7 @@ import io.gomint.entity.Entity;
  * @version 1.0
  * @stability 3
  */
-public interface EntityPrimedTNT extends Entity {
+public interface EntityPrimedTNT extends Entity<EntityPrimedTNT> {
 
     /**
      * Create a new EntityPrimedTNT without any configuration. It will use default values when not configured and spawned
@@ -31,13 +31,13 @@ public interface EntityPrimedTNT extends Entity {
      *
      * @param fuseInSeconds fuse time in seconds
      */
-    void setFuse( float fuseInSeconds );
+    EntityPrimedTNT fuse(float fuseInSeconds );
 
     /**
      * Get time until explosion in seconds
      *
      * @return time until explosion
      */
-    float getFuse();
+    float fuse();
 
 }

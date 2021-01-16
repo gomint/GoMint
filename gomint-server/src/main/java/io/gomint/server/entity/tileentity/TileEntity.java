@@ -48,7 +48,7 @@ public abstract class TileEntity {
      */
     public abstract void update(long currentMillis, float dT);
 
-    public void interact(Entity entity, Facing face, Vector facePos, ItemStack item) {
+    public void interact(Entity<?> entity, Facing face, Vector facePos, ItemStack<?> item) {
 
     }
 
@@ -68,11 +68,11 @@ public abstract class TileEntity {
      * @param reason   why should this tile be serialized?
      */
     public void toCompound(NBTTagCompound compound, SerializationReason reason) {
-        BlockPosition position = this.block.getPosition();
+        BlockPosition position = this.block.position();
 
-        compound.addValue("x", position.getX());
-        compound.addValue("y", position.getY());
-        compound.addValue("z", position.getZ());
+        compound.addValue("x", position.x());
+        compound.addValue("y", position.y());
+        compound.addValue("z", position.z());
 
         if (reason == SerializationReason.PERSIST) {
             compound.addValue("isMovable", this.moveable);

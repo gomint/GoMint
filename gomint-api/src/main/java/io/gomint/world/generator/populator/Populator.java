@@ -15,7 +15,7 @@ import io.gomint.world.World;
  * @author geNAZt
  * @version 1.0
  */
-public interface Populator {
+public interface Populator<E> {
 
     /**
      * Populate additional structures for a chunk
@@ -24,6 +24,6 @@ public interface Populator {
      * @param chunk  which should be populated
      * @param random random instance with which the chunk has been generated
      */
-    void populate( World world, Chunk chunk, FastRandom random );
+    E populate( World world, Chunk chunk, FastRandom random );
 
 }

@@ -9,12 +9,12 @@ import io.gomint.taglib.NBTTagCompound;
  * @version 1.0
  */
 @RegisterInfo( sId = "minecraft:gold_nugget", id = 371 )
- public class ItemGoldNugget extends ItemStack implements io.gomint.inventory.item.ItemGoldNugget {
+ public class ItemGoldNugget extends ItemStack< io.gomint.inventory.item.ItemGoldNugget> implements io.gomint.inventory.item.ItemGoldNugget {
 
 
 
     @Override
-    public ItemType getItemType() {
+    public ItemType itemType() {
         return ItemType.GOLD_NUGGET;
     }
 

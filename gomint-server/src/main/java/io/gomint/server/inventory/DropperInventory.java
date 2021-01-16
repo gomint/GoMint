@@ -16,7 +16,7 @@ import io.gomint.server.network.type.WindowType;
  * @author geNAZt
  * @version 1.0
  */
-public class DropperInventory extends ContainerInventory {
+public class DropperInventory extends ContainerInventory<DropperInventory> {
 
     public DropperInventory(Items items, InventoryHolder owner) {
         super(items, owner, 9);
