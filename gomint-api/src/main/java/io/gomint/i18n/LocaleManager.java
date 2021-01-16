@@ -122,14 +122,10 @@ public class LocaleManager {
      *
      * @param path The path of the file to query.
      */
-    public void initFromLocaleFolder( final File path ) {
+    public LocaleManager initFromLocaleFolder( final File path ) {
         initFromLocaleFolderWithoutAutorefresh( path );
-        this.plugin.scheduler().schedule(new Runnable() {
-            @Override
-            public void run() {
-                initFromLocaleFolderWithoutAutorefresh( path );
-            }
-        }, 5, 5, TimeUnit.MINUTES );
+        this.plugin.scheduler().schedule(() -> initFromLocaleFolderWithoutAutorefresh( path ), 5, 5, TimeUnit.MINUTES );
+        return this;
     }
 
     /**
@@ -137,9 +133,9 @@ public class LocaleManager {
      *
      * @param path The path of the file to query.
      */
-    public void initFromLocaleFolderWithoutAutorefresh( File path ) {
+    public LocaleManager initFromLocaleFolderWithoutAutorefresh( File path ) {
         File[] files = path.listFiles();
-        if ( files == null ) return;
+        if ( files == null ) return this;
 
         for ( File file : files ) {
             String[] locale = file.getName().substring( 0, 5 ).split( "_" );
@@ -150,6 +146,8 @@ public class LocaleManager {
                 LOGGER.warn( "Could not load i18n file {}", file.getAbsolutePath(), e );
             }
         }
+
+        return this;
     }
 
     /**
@@ -159,8 +157,9 @@ public class LocaleManager {
      * @param param  The param which should be given to the ResourceLoader
      * @throws ResourceLoadFailedException if the loading has thrown any Error
      */
-    public synchronized void load( Locale locale, String param ) throws ResourceLoadFailedException {
+    public synchronized LocaleManager load( Locale locale, String param ) throws ResourceLoadFailedException {
         resourceManager.load( locale, param );
+        return this;
     }
 
     /**
@@ -271,8 +270,9 @@ public class LocaleManager {
      *
      * @param loader which is used to load specific locale resources
      */
-    public void registerLoader( ResourceLoader<?> loader ) {
+    public LocaleManager registerLoader( ResourceLoader<?> loader ) {
         resourceManager.registerLoader( loader );
+        return this;
     }
 
     /**
@@ -287,8 +287,9 @@ public class LocaleManager {
     /**
      * Tells the ResourceManager to reload all Locale Resources which has been loaded by this Plugin
      */
-    public synchronized void reload() {
+    public synchronized LocaleManager reload() {
         resourceManager.reload();
+        return this;
     }
 
     /**

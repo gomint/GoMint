@@ -59,10 +59,12 @@ public class ResourceManager {
      *
      * @param loader New loader which can be used to load Resources
      */
-    public synchronized void registerLoader( ResourceLoader<?> loader ) {
+    public synchronized ResourceManager registerLoader( ResourceLoader<?> loader ) {
         synchronized ( sharedLock ) {
             registerdLoaders.add( loader );
         }
+
+        return this;
     }
 
     /**
@@ -72,7 +74,7 @@ public class ResourceManager {
      * @param param  The param which the ResourceLoader should load
      * @throws ResourceLoadFailedException when loading failed
      */
-    private synchronized void loadLocale( Locale locale, String param ) throws ResourceLoadFailedException {
+    private synchronized ResourceManager loadLocale( Locale locale, String param ) throws ResourceLoadFailedException {
         //Get the correct loader for this param
         for ( ResourceLoader<?> loader : registerdLoaders ) {
             for ( String ending : loader.formats() ) {
@@ -88,6 +90,8 @@ public class ResourceManager {
                 }
             }
         }
+
+        return this;
     }
 
     /**
@@ -99,7 +103,7 @@ public class ResourceManager {
      * @param param  The param from {@link LocaleManager#load(Locale, String)}
      * @throws ResourceLoadFailedException when loading failed
      */
-    public synchronized void load( Locale locale, String param ) throws ResourceLoadFailedException {
+    public synchronized ResourceManager load( Locale locale, String param ) throws ResourceLoadFailedException {
         //Check if locale has already been loaded
         if ( loadedLocales.containsKey( locale ) ) {
             synchronized ( sharedLock ) {
@@ -114,7 +118,7 @@ public class ResourceManager {
             }
         }
 
-        loadLocale( locale, param );
+        return loadLocale( locale, param );
     }
 
     /**
@@ -200,7 +204,7 @@ public class ResourceManager {
      *
      * If one of the ResourceLoaders reports an error upon reloading it will get printed to the Plugins Logger
      */
-    public synchronized void reload() {
+    public synchronized ResourceManager reload() {
         //Reload all ResourceLoaders
         for ( SoftReference<ResourceLoader<?>> loader : loadedLocales.values() ) {
             try {
@@ -211,20 +215,22 @@ public class ResourceManager {
                 e.printStackTrace();
             }
         }
+
+        return this;
     }
 
     /**
      * If the Plugin should be unloaded remove all loaded Things and unref the plugin
      */
     public synchronized void cleanup() {
-        //Cleanup all ResourceLoaders
+        // Cleanup all ResourceLoaders
         for ( SoftReference<ResourceLoader<?>> loader : loadedLocales.values() ) {
             if ( loader != null && loader.get() != null ) {
                 loader.get().cleanup();
             }
         }
 
-        //Remove all refs
+        // Remove all refs
         classLoader = null;
     }
 
