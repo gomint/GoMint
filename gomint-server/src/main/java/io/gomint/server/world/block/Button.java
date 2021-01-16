@@ -58,7 +58,7 @@ public abstract class Button<B> extends Block implements BlockButton<B> {
     }
 
     @Override
-    public void press() {
+    public B press() {
         // Check if we need to update
         if (!pressed()) {
             PRESSED.setState(this, true);
@@ -66,6 +66,7 @@ public abstract class Button<B> extends Block implements BlockButton<B> {
 
         // Schedule release in 1 second
         this.world.scheduleBlockUpdate(this.location, 1, TimeUnit.SECONDS);
+        return (B) this;
     }
 
     @Override

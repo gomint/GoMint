@@ -19,7 +19,7 @@ import io.gomint.world.block.BlockType;
  * @author geNAZt
  * @version 1.0
  */
-public abstract class Tree {
+public abstract class Tree<E> {
 
     private static final BlockType[] OVERRIDABLE = new BlockType[]{
         BlockType.AIR, BlockType.SAPLING, BlockType.LOG, BlockType.LEAVES, BlockType.SNOW_LAYER
@@ -29,7 +29,7 @@ public abstract class Tree {
     protected BlockLog trunkBlock;
     protected BlockLeaves leafBlock;
 
-    public abstract void grow(World world, int x, int y, int z, FastRandom random);
+    public abstract E grow(World world, int x, int y, int z, FastRandom random);
 
     /**
      * Check if we can place given object
@@ -70,7 +70,7 @@ public abstract class Tree {
         return true;
     }
 
-    public void placeObject( World world, int x, int y, int z, FastRandom random ) {
+    public E placeObject( World world, int x, int y, int z, FastRandom random ) {
         this.placeTrunk( world, x, y, z, random, this.treeHeight - 1 );
         for ( int yy = y - 3 + this.treeHeight; yy <= y + this.treeHeight; ++yy ) {
             int yOff = yy - ( y + this.treeHeight );
@@ -91,6 +91,8 @@ public abstract class Tree {
                 }
             }
         }
+
+        return (E) this;
     }
 
     protected void placeTrunk( World world, int x, int y, int z, FastRandom random, int trunkHeight ) {

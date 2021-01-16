@@ -18,30 +18,32 @@ import java.util.Set;
  */
 public class SpawnableEntitiesComponent implements SpawnableEntities, Component {
 
-    private final Set<Class<? extends Entity>> spawnables;
+    private final Set<Class<? extends Entity<?>>> spawnables;
 
     /**
      * Create a new spawnable component
      *
      * @param spawnables which are allowed per default
      */
-    public SpawnableEntitiesComponent(Set<Class<? extends Entity>> spawnables) {
+    public SpawnableEntitiesComponent(Set<Class<? extends Entity<?>>> spawnables) {
         this.spawnables = spawnables;
     }
 
     @Override
-    public boolean canSpawn(Class<? extends Entity> entityClass) {
+    public boolean canSpawn(Class<? extends Entity<?>> entityClass) {
         return this.spawnables.contains(entityClass);
     }
 
     @Override
-    public void add(Class<? extends Entity> entityClass) {
+    public SpawnableEntities add(Class<? extends Entity<?>> entityClass) {
         this.spawnables.add(entityClass);
+        return this;
     }
 
     @Override
-    public void remove(Class<? extends Entity> entityClass) {
+    public SpawnableEntities remove(Class<? extends Entity<?>> entityClass) {
         this.spawnables.remove(entityClass);
+        return this;
     }
 
 }

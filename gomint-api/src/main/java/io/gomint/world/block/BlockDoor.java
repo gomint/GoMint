@@ -41,7 +41,7 @@ public interface BlockDoor<B> extends BlockDirection<B> {
     /**
      * Open or close a door. The target state depends on the {@link #open()} state
      */
-    void toggle();
+    B toggle();
 
     /**
      * Set the side where the hinge is on

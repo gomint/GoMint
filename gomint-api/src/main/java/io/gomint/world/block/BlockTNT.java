@@ -17,7 +17,7 @@ import io.gomint.world.block.data.TNTType;
 public interface BlockTNT extends Block {
 
     /**
-     * Prime this tnt
+     * Prime this tnt. This block will be set to air due to this
      *
      * @param untilExplodeSeconds seconds until the tnt explodes
      */

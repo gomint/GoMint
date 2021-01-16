@@ -67,8 +67,9 @@ public class FenceGate extends Block implements BlockFenceGate {
     }
 
     @Override
-    public void toggle() {
+    public BlockFenceGate toggle() {
         OPEN.setState(this, !this.open());
+        return this;
     }
 
     @Override

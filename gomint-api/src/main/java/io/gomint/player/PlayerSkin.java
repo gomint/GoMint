@@ -69,7 +69,8 @@ public interface PlayerSkin {
      *
      * @param out stream to which the image should be saved
      * @throws IOException which can be thrown in case of errors while saving
+     * @return player skin for chaining
      */
-    void saveSkinTo( OutputStream out ) throws IOException;
+    PlayerSkin saveSkinTo( OutputStream out ) throws IOException;
 
 }

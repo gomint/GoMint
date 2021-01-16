@@ -21,20 +21,20 @@ public interface SpawnableEntities {
      * @param entityClass which should be spawned
      * @return true when it can be spawned, false otherwise
      */
-    boolean canSpawn(Class<? extends Entity> entityClass);
+    boolean canSpawn(Class<? extends Entity<?>> entityClass);
 
     /**
      * Add a new entity class for spawning
      *
      * @param entityClass which should become spawnable
      */
-    void add(Class<? extends Entity> entityClass);
+    SpawnableEntities add(Class<? extends Entity<?>> entityClass);
 
     /**
      * Remove a entity from the spawnable list
      *
      * @param entityClass which should be removed
      */
-    void remove(Class<? extends Entity> entityClass);
+    SpawnableEntities remove(Class<? extends Entity<?>> entityClass);
 
 }

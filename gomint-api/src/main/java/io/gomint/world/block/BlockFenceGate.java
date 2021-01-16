@@ -19,7 +19,7 @@ public interface BlockFenceGate extends BlockDirection<BlockFenceGate> {
     /**
      * Toggle this fence gate
      */
-    void toggle();
+    BlockFenceGate toggle();
 
     /**
      * Check if this fence gate is open

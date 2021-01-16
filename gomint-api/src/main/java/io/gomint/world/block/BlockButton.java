@@ -24,6 +24,6 @@ public interface BlockButton<B> extends Block, BlockFacing<B> {
     /**
      * Press the button (it will release after 1 second)
      */
-    void press();
+    B press();
 
 }

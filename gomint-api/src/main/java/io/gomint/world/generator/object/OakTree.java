@@ -19,7 +19,7 @@ import io.gomint.world.block.data.LogType;
  * @author geNAZt
  * @version 1.0
  */
-public class OakTree extends Tree {
+public class OakTree extends Tree<OakTree> {
 
     public OakTree() {
         this.leafBlock = GoMint.instance().createBlock(BlockLeaves.class);
@@ -33,11 +33,13 @@ public class OakTree extends Tree {
     }
 
     @Override
-    public void grow(World world, int x, int y, int z, FastRandom random) {
+    public OakTree grow(World world, int x, int y, int z, FastRandom random) {
         this.treeHeight = random.nextInt(3) + 4;
         if (this.canPlaceObject(world, x, y, z, random)) {
             this.placeObject(world, x, y, z, random);
         }
+
+        return this;
     }
 
 }

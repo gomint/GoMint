@@ -136,8 +136,9 @@ public class PlayerSkin implements io.gomint.player.PlayerSkin {
         }
 
         @Override
-        public void saveTo(OutputStream out) throws IOException {
+        public AnimationFrame saveTo(OutputStream out) throws IOException {
             ImageIO.write(this.createImage(), "PNG", out);
+            return this;
         }
 
         public float getFrames() {
@@ -300,8 +301,9 @@ public class PlayerSkin implements io.gomint.player.PlayerSkin {
     }
 
     @Override
-    public void saveSkinTo(OutputStream out) throws IOException {
+    public PlayerSkin saveSkinTo(OutputStream out) throws IOException {
         ImageIO.write(this.createImageFromSkinData(), "PNG", out);
+        return this;
     }
 
     /*

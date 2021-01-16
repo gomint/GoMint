@@ -42,7 +42,7 @@ public abstract class Door<B extends BlockDoor<B>> extends Block implements Bloc
     }
 
     @Override
-    public void toggle() {
+    public B toggle() {
         boolean toApply = !this.open();
 
         if (top()) {
@@ -54,6 +54,7 @@ public abstract class Door<B extends BlockDoor<B>> extends Block implements Bloc
         }
 
         this.open(toApply);
+        return (B) this;
     }
 
     @Override

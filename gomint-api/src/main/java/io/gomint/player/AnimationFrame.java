@@ -22,7 +22,8 @@ public interface AnimationFrame {
      *
      * @param out stream to which the image should be saved
      * @throws IOException which can be thrown in case of errors while saving
+     * @return animation frame for chaining
      */
-    void saveTo( OutputStream out ) throws IOException;
+    AnimationFrame saveTo( OutputStream out ) throws IOException;
 
 }
