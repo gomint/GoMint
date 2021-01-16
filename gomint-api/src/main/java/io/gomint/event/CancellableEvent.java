@@ -32,8 +32,9 @@ public class CancellableEvent<E> extends Event {
      *
      * @param cancelled The state of this event
      */
-    public void cancelled(boolean cancelled ) {
+    public E cancelled(boolean cancelled ) {
         this.cancelled = cancelled;
+        return (E) this;
     }
 
     @Override
