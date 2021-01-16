@@ -26,6 +26,10 @@ public class Addon implements io.gomint.addons.Addon {
     private final SemanticVersion minimumEngineVersion;
     private final Set<AddonModule> modules;
     private final Set<AddonDependency> dependencies;
+
+    /*
+     * The addon's context which may be used to retrieve the addon's entries.
+     */
     private final AddonContext context;
 
     /**
@@ -59,7 +63,16 @@ public class Addon implements io.gomint.addons.Addon {
     }
 
 
-    // ======================================= Accessors
+    // ======================================= Internal Accessors
+
+    /**
+     * @return The addon's context from which entries may be retrieved
+     */
+    AddonContext context() {
+        return this.context;
+    }
+
+    // ======================================= API Accessors
 
     @Override
     public String name() {

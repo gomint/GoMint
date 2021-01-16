@@ -28,7 +28,11 @@ import io.gomint.player.PlayerSkin;
 import io.gomint.plugin.StartupPriority;
 import io.gomint.scoreboard.Scoreboard;
 import io.gomint.server.addons.AddonRegistry;
+import io.gomint.server.addons.AddonsIncompatibleException;
+import io.gomint.server.addons.AddonsMissingException;
+import io.gomint.server.addons.CyclicAddonDependenciesException;
 import io.gomint.server.assets.AssetsLibrary;
+import io.gomint.server.blocks.BlockCatalogue;
 import io.gomint.server.config.ServerConfig;
 import io.gomint.server.config.WorldConfig;
 import io.gomint.server.crafting.RecipeManager;
@@ -248,8 +252,14 @@ public class GoMintServer implements GoMint, InventoryHolder {
         // ------------------------------------ //
         // Initialize addons
         // ------------------------------------ //
-        this.addonRegistry = new AddonRegistry();
+        this.addonRegistry = new AddonRegistry(new BlockCatalogue());
         this.addonRegistry.searchInstalledAddons();
+
+        try {
+            this.addonRegistry.loadAddons(this.addonRegistry.installedAddons());
+        } catch (AddonsMissingException | CyclicAddonDependenciesException | AddonsIncompatibleException | IOException e) {
+            LOGGER.error("Failed to load addons", e);
+        }
 
         // ------------------------------------ //
         // Build up registries

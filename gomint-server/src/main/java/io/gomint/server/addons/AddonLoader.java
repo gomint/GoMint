@@ -27,74 +27,77 @@ class AddonLoader {
 
     private final Logger logger = LoggerFactory.getLogger(AddonLoader.class);
 
-    private boolean loaded;
-
     AddonLoader(BlockCatalogue blockCatalogue) {
         this.blockCatalogue = blockCatalogue;
-        this.loaded = false;
     }
 
     /**
      * Attempts to load the addon module into memory.
      *
-     * @param addon   The addon to be loaded
-     * @param context The addon's context
+     * @param addon The addon to be loaded
      * @throws IOException Thrown if loading the addon failed
      */
-    public void load(Addon addon, AddonContext context) throws IOException {
-        if (this.loaded) {
-            return;
+    public boolean load(Addon addon) throws IOException {
+        AddonContext context = addon.context();
+
+        try {
+            context
+                    .entries()
+                    .forEach(entry -> {
+                        try {
+                            this.loadEntry(addon, context, entry);
+                        } catch (IOException e) {
+                            // TODO: Decide if this exception should escalate and produce false as return
+                            this.logger.error("Failed to load entry '{}'", entry, e);
+                        }
+                    });
+        } catch (IOException e) {
+            throw new IOException("Could not retrieve list of entries", e);
         }
 
-        context.entries()
-                .forEach(entry -> {
-                    try {
-                        switch (entry) {
-                            case "blocks.json":
-                                this.parseBlockDefinitionList(addon, context, entry);
-                                break;
-                            case "sounds/music_definitions.json":
-                            case "sounds/sound_definitions.json":
-                                // TODO: Implement loading of sounds
-//                                this.loadSoundDefinitionList(addon, context, entry);
-                                break;
-                            default:
-                                // TODO: Implement loading of translation strings
-//                                if (entry.startsWith("texts/")) {
-//                                    this.loadTranslationStrings(addon, context, entry);
-//                                }
-
-                                // TODO: Implement loading of items
-//                                if (entry.startsWith("items/")) {
-//                                    this.loadItemDefinition(addon, context, entry);
-//                                }
-
-                                if (entry.startsWith("blocks/")) {
-                                    this.parseBlockDefinitionFile(addon, context, entry);
-                                }
-                                break;
-                        }
-                    } catch (IOException e) {
-                        this.logger.error("Failed to load entry '{}'", entry, e);
-                    }
-                });
-
-        this.loaded = true;
+        return true;
     }
 
     /**
      * If the addon is currently loaded into memory, unloads all resources previously loaded.
      *
-     * @param addon   The addon to be unloaded
-     * @param context The addon's context
+     * @param addon The addon to be unloaded
      * @throws IOException Thrown if unloading the addon failed
      */
-    public void unload(Addon addon, AddonContext context) throws IOException {
+    public void unload(Addon addon) throws IOException {
         this.blockCatalogue.removeDefinitionsOfAddon(addon);
     }
 
 
     // ================================= Loading
+
+    private void loadEntry(Addon addon, AddonContext context, String entry) throws IOException {
+        switch (entry) {
+            case "blocks.json":
+                this.parseBlockDefinitionList(addon, context, entry);
+                break;
+            case "sounds/music_definitions.json":
+            case "sounds/sound_definitions.json":
+                // TODO: Implement loading of sounds
+//                                this.loadSoundDefinitionList(addon, context, entry);
+                break;
+            default:
+                // TODO: Implement loading of translation strings
+//                                if (entry.startsWith("texts/")) {
+//                                    this.loadTranslationStrings(addon, context, entry);
+//                                }
+
+                // TODO: Implement loading of items
+//                                if (entry.startsWith("items/")) {
+//                                    this.loadItemDefinition(addon, context, entry);
+//                                }
+
+                if (entry.startsWith("blocks/")) {
+                    this.parseBlockDefinitionFile(addon, context, entry);
+                }
+                break;
+        }
+    }
 
     private JsonIterator openJsonEntry(AddonContext context, String entry) throws IOException {
         return JsonIterator.parse(context.openEntry(entry), 4096);
