@@ -45,8 +45,9 @@ public class AIFollowEntity extends AIState {
      *
      * @param entity the new entity to follow
      */
-    public void setFollowEntity( Entity<?> entity ) {
+    public AIFollowEntity followEntity(Entity<?> entity ) {
         this.followEntity = entity;
+        return this;
     }
 
     @Override
