@@ -50,7 +50,7 @@ public class Ocean extends AbstractBiome {
 
     private static PopulatorComponent createPopulators() {
         TallGrassPopulator populator = new TallGrassPopulator();
-        populator.setBaseAmount( 5 );
+        populator.baseAmount( 5 );
         return new PopulatorComponent(Collections.singletonList(populator));
     }
 

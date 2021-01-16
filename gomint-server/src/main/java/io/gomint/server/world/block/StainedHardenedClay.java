@@ -48,13 +48,14 @@ public class StainedHardenedClay extends Block implements BlockStainedHardenedCl
     }
 
     @Override
-    public BlockColor getColor() {
+    public BlockColor color() {
         return COLOR.getState(this);
     }
 
     @Override
-    public void setColor( BlockColor color ) {
+    public BlockStainedHardenedClay color(BlockColor color ) {
         COLOR.setState(this, color );
+        return this;
     }
 
     @Override

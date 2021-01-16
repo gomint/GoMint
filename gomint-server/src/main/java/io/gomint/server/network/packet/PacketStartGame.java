@@ -84,9 +84,9 @@ public class PacketStartGame extends Packet {
         buffer.writeSignedVarLong(this.entityId); // EntityUnique
         buffer.writeUnsignedVarLong(this.runtimeEntityId); // EntityRuntime
         buffer.writeSignedVarInt(this.gamemode); // VarInt
-        buffer.writeLFloat(this.location.getX()); // Vec3
-        buffer.writeLFloat(this.location.getY());
-        buffer.writeLFloat(this.location.getZ());
+        buffer.writeLFloat(this.location.x()); // Vec3
+        buffer.writeLFloat(this.location.y());
+        buffer.writeLFloat(this.location.z());
         buffer.writeLFloat(this.location.yaw()); // Vec2
         buffer.writeLFloat(this.location.pitch());
 
@@ -101,9 +101,9 @@ public class PacketStartGame extends Packet {
         buffer.writeSignedVarInt(this.generator);
         buffer.writeSignedVarInt(this.worldGamemode);
         buffer.writeSignedVarInt(this.difficulty);
-        buffer.writeSignedVarInt((int) this.spawn.getX());
-        buffer.writeUnsignedVarInt((int) this.spawn.getY());
-        buffer.writeSignedVarInt((int) this.spawn.getZ());
+        buffer.writeSignedVarInt((int) this.spawn.x());
+        buffer.writeUnsignedVarInt((int) this.spawn.y());
+        buffer.writeSignedVarInt((int) this.spawn.z());
         buffer.writeBoolean(this.hasAchievementsDisabled);
         buffer.writeSignedVarInt(this.dayCycleStopTime);
         buffer.writeSignedVarInt(this.eduEditionOffer);

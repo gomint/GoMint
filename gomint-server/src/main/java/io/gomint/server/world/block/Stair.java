@@ -31,12 +31,12 @@ public abstract class Stair<B> extends Block implements BlockStair<B> {
     public List<AxisAlignedBB> boundingBoxes() {
         // TODO: Fix bounding box when top / directional
         return Collections.singletonList(new AxisAlignedBB(
-            this.location.getX(),
-            this.location.getY(),
-            this.location.getZ(),
-            this.location.getX() + 1,
-            this.location.getY() + .5f,
-            this.location.getZ() + 1
+            this.location.x(),
+            this.location.y(),
+            this.location.z(),
+            this.location.x() + 1,
+            this.location.y() + .5f,
+            this.location.z() + 1
         ));
     }
 

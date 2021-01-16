@@ -41,12 +41,12 @@ public class LightWeightedPressurePlate extends Block implements BlockLightWeigh
     @Override
     public List<AxisAlignedBB> boundingBoxes() {
         return Collections.singletonList( new AxisAlignedBB(
-            this.location.getX(),
-            this.location.getY(),
-            this.location.getZ(),
-            this.location.getX() + 1,
-            this.location.getY() + 0.1f,
-            this.location.getZ() + 1
+            this.location.x(),
+            this.location.y(),
+            this.location.z(),
+            this.location.x() + 1,
+            this.location.y() + 0.1f,
+            this.location.z() + 1
         ) );
     }
 

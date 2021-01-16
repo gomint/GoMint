@@ -64,7 +64,7 @@ public class WorldManager {
      * @return A collection of all worlds held by the world manager
      */
     public Collection<WorldAdapter> getWorlds() {
-        if (!GoMint.instance().isMainThread()) {
+        if (!GoMint.instance().mainThread()) {
             LOGGER.warn("Getting worlds from an async thread. This is not safe and can lead to CME", new Exception());
         }
 
@@ -79,7 +79,7 @@ public class WorldManager {
      * @return The world if found or null otherwise
      */
     public WorldAdapter getWorld(String name) {
-        if (!GoMint.instance().isMainThread()) {
+        if (!GoMint.instance().mainThread()) {
             LOGGER.warn("Getting a world from an async thread. This is not safe and can lead to CME", new Exception());
         }
 
@@ -106,7 +106,7 @@ public class WorldManager {
      * @throws WorldLoadException Thrown in case the world could not be loaded
      */
     public World loadWorld(String path) throws WorldLoadException {
-        if (!GoMint.instance().isMainThread()) {
+        if (!GoMint.instance().mainThread()) {
             LOGGER.warn("Loading worlds from an async thread. This is not safe and can lead to CME", new Exception());
         }
 
@@ -161,7 +161,7 @@ public class WorldManager {
      * Close and save all worlds
      */
     public void close() {
-        if (!GoMint.instance().isMainThread()) {
+        if (!GoMint.instance().mainThread()) {
             LOGGER.warn("Closing worlds from an async thread. This is not safe and can lead to CME", new Exception());
         }
 
@@ -189,7 +189,7 @@ public class WorldManager {
      * @return generated world
      */
     public World createWorld(String name, CreateOptions options) {
-        if (!GoMint.instance().isMainThread()) {
+        if (!GoMint.instance().mainThread()) {
             LOGGER.warn("Creating worlds from an async thread. This is not safe and can lead to CME", new Exception());
         }
 

@@ -21,13 +21,13 @@ public interface BlockWoodenDoubleSlab extends Block {
      *
      * @return type of wood
      */
-    LogType getWoodType();
+    LogType type();
 
     /**
      * Set the type of wood
      *
      * @param logType for this block
      */
-    void setWoodType( LogType logType);
+    BlockWoodenDoubleSlab type(LogType logType);
 
 }

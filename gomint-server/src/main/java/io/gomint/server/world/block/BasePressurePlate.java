@@ -55,12 +55,12 @@ public abstract class BasePressurePlate extends Block {
     @Override
     public List<AxisAlignedBB> boundingBoxes() {
         return Collections.singletonList(new AxisAlignedBB(
-            this.location.getX() + 0.0625f,
-            this.location.getY(),
-            this.location.getZ() + 0.0625f,
-            this.location.getX() + 0.9375f,
-            this.location.getY() + 0.0625f,
-            this.location.getZ() + 0.9375f
+            this.location.x() + 0.0625f,
+            this.location.y(),
+            this.location.z() + 0.0625f,
+            this.location.x() + 0.9375f,
+            this.location.y() + 0.0625f,
+            this.location.z() + 0.9375f
         ));
     }
 

@@ -75,15 +75,15 @@ public class Explosion {
             y == 0 || y == 15 ||
             z == 0 || z == 15 ) {
 
-            this.tempRay.setX( x / (float) 15 * 2f - 1 );
-            this.tempRay.setY( y / (float) 15 * 2f - 1 );
-            this.tempRay.setZ( z / (float) 15 * 2f - 1 );
+            this.tempRay.x( x / (float) 15 * 2f - 1 );
+            this.tempRay.y( y / (float) 15 * 2f - 1 );
+            this.tempRay.z( z / (float) 15 * 2f - 1 );
 
             float distanceToBorder = this.tempRay.length();
 
-            this.tempRay.setX( ( this.tempRay.getX() / distanceToBorder ) * STEP_LENGTH );
-            this.tempRay.setY( ( this.tempRay.getY() / distanceToBorder ) * STEP_LENGTH );
-            this.tempRay.setZ( ( this.tempRay.getZ() / distanceToBorder ) * STEP_LENGTH );
+            this.tempRay.x( ( this.tempRay.x() / distanceToBorder ) * STEP_LENGTH );
+            this.tempRay.y( ( this.tempRay.y() / distanceToBorder ) * STEP_LENGTH );
+            this.tempRay.z( ( this.tempRay.z() / distanceToBorder ) * STEP_LENGTH );
 
             float directionX = this.source.positionX();
             float directionY = this.source.positionY();
@@ -118,9 +118,9 @@ public class Explosion {
                     }
                 }
 
-                directionX += this.tempRay.getX();
-                directionY += this.tempRay.getY();
-                directionZ += this.tempRay.getZ();
+                directionX += this.tempRay.x();
+                directionY += this.tempRay.y();
+                directionZ += this.tempRay.z();
             }
         }
     }

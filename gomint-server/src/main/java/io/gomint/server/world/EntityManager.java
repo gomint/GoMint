@@ -220,9 +220,9 @@ public class EntityManager {
                     relativeMovement = new PacketEntityRelativeMovement();
                     relativeMovement.setEntityId(movedEntity.id());
 
-                    relativeMovement.setOldX(old.getX());
-                    relativeMovement.setOldY(old.getY());
-                    relativeMovement.setOldZ(old.getZ());
+                    relativeMovement.setOldX(old.x());
+                    relativeMovement.setOldY(old.y());
+                    relativeMovement.setOldZ(old.z());
                     relativeMovement.setX(movedEntity.positionX());
                     relativeMovement.setY(movedEntity.positionY());
                     relativeMovement.setZ(movedEntity.positionZ());

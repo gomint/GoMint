@@ -51,7 +51,7 @@ public class AIAfterHitMovement extends AIMovementAndLookingState {
         this.fired = true;
 
         Vector direction = this.direction.normalize().multiply(10);
-        direction.setY(0);
+        direction.y(0);
 
         Vector position = this.pathfinding.transform().position().add(direction);
         return new Location(this.world, position);

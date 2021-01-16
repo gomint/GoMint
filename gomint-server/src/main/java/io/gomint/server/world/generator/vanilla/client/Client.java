@@ -639,7 +639,7 @@ public class Client implements ConnectionWithState {
                 this.send(packetAdventureSettings);
 
                 // Send movement to the top of the map
-                Location target = new Location(null, this.currentPos.getX(), 255, this.currentPos.getZ(), 0f, 0f);
+                Location target = new Location(null, this.currentPos.x(), 255, this.currentPos.z(), 0f, 0f);
                 this.move(target);
 
                 // Only allow movements now
@@ -660,9 +660,9 @@ public class Client implements ConnectionWithState {
         // Send movement to server
         PacketMovePlayer movePlayer = new PacketMovePlayer();
         movePlayer.setEntityId(this.runtimeId);
-        movePlayer.setX(target.getX());
-        movePlayer.setY(target.getY());
-        movePlayer.setZ(target.getZ());
+        movePlayer.setX(target.x());
+        movePlayer.setY(target.y());
+        movePlayer.setZ(target.z());
         movePlayer.setYaw(target.yaw());
         movePlayer.setPitch(target.pitch());
         movePlayer.setMode(PacketMovePlayer.MovePlayerMode.TELEPORT);

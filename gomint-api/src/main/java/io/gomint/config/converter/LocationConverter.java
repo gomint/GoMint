@@ -44,9 +44,9 @@ public class LocationConverter extends BaseConverter {
             saveMap.put( "world", location.world().folder() );
         }
 
-        saveMap.put( "x", location.getX() );
-        saveMap.put( "y", location.getY() );
-        saveMap.put( "z", location.getZ() );
+        saveMap.put( "x", location.x() );
+        saveMap.put( "y", location.y() );
+        saveMap.put( "z", location.z() );
         saveMap.put( "yaw", location.yaw() );
         saveMap.put( "pitch", location.pitch() );
 

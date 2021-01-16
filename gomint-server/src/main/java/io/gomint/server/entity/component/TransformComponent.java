@@ -93,9 +93,9 @@ public class TransformComponent implements EntityComponent, Transformable {
 
     @Override
     public Transformable position(Vector position ) {
-        this.posX = position.getX();
-        this.posY = position.getY();
-        this.posZ = position.getZ();
+        this.posX = position.x();
+        this.posY = position.y();
+        this.posZ = position.z();
         this.dirty = true;
         return this;
     }
@@ -198,7 +198,7 @@ public class TransformComponent implements EntityComponent, Transformable {
 
     @Override
     public Transformable move( Vector offset ) {
-        return move( offset.getX(), offset.getY(), offset.getZ() );
+        return move( offset.x(), offset.y(), offset.z() );
     }
 
     @Override

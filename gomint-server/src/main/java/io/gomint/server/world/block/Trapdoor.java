@@ -60,22 +60,22 @@ public abstract class Trapdoor<B> extends Block implements BlockTrapdoor<B> {
         if (TOP.getState(this)) {
             // Top closed box
             bb = new AxisAlignedBB(
-                this.location.getX(),
-                this.location.getY() + 1 - defaultHeight,
-                this.location.getZ(),
-                this.location.getX() + 1,
-                this.location.getY() + 1,
-                this.location.getZ() + 1
+                this.location.x(),
+                this.location.y() + 1 - defaultHeight,
+                this.location.z(),
+                this.location.x() + 1,
+                this.location.y() + 1,
+                this.location.z() + 1
             );
         } else {
             // Bottom closed box
             bb = new AxisAlignedBB(
-                this.location.getX(),
-                this.location.getY(),
-                this.location.getZ(),
-                this.location.getX() + 1,
-                this.location.getY() + defaultHeight,
-                this.location.getZ() + 1
+                this.location.x(),
+                this.location.y(),
+                this.location.z(),
+                this.location.x() + 1,
+                this.location.y() + defaultHeight,
+                this.location.z() + 1
             );
         }
 
@@ -84,48 +84,48 @@ public abstract class Trapdoor<B> extends Block implements BlockTrapdoor<B> {
             switch (DIRECTION.getState(this)) {
                 case NORTH:
                     bb.bounds(
-                        this.location.getX(),
-                        this.location.getY(),
-                        this.location.getZ() + 1 - defaultHeight,
-                        this.location.getX() + 1,
-                        this.location.getY() + 1,
-                        this.location.getZ() + 1
+                        this.location.x(),
+                        this.location.y(),
+                        this.location.z() + 1 - defaultHeight,
+                        this.location.x() + 1,
+                        this.location.y() + 1,
+                        this.location.z() + 1
                     );
 
                     break;
 
                 case SOUTH:
                     bb.bounds(
-                        this.location.getX(),
-                        this.location.getY(),
-                        this.location.getZ(),
-                        this.location.getX() + 1,
-                        this.location.getY() + 1,
-                        this.location.getZ() + defaultHeight
+                        this.location.x(),
+                        this.location.y(),
+                        this.location.z(),
+                        this.location.x() + 1,
+                        this.location.y() + 1,
+                        this.location.z() + defaultHeight
                     );
 
                     break;
 
                 case WEST:
                     bb.bounds(
-                        this.location.getX() + 1 - defaultHeight,
-                        this.location.getY(),
-                        this.location.getZ(),
-                        this.location.getX() + 1,
-                        this.location.getY() + 1,
-                        this.location.getZ() + 1
+                        this.location.x() + 1 - defaultHeight,
+                        this.location.y(),
+                        this.location.z(),
+                        this.location.x() + 1,
+                        this.location.y() + 1,
+                        this.location.z() + 1
                     );
 
                     break;
 
                 case EAST:
                     bb.bounds(
-                        this.location.getX(),
-                        this.location.getY(),
-                        this.location.getZ(),
-                        this.location.getX() + defaultHeight,
-                        this.location.getY() + 1,
-                        this.location.getZ() + 1
+                        this.location.x(),
+                        this.location.y(),
+                        this.location.z(),
+                        this.location.x() + defaultHeight,
+                        this.location.y() + 1,
+                        this.location.z() + 1
                     );
 
                     break;

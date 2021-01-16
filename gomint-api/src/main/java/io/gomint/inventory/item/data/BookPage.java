@@ -19,13 +19,13 @@ public interface BookPage {
      *
      * @return content of this page
      */
-    String getContent();
+    String content();
 
     /**
      * Set the content of this book page
      *
      * @param content of the page
      */
-    void setContent( String content );
+    BookPage content(String content );
 
 }

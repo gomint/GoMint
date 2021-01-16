@@ -46,7 +46,7 @@ public enum Biome {
         @Override
         public List<Populator> populators() {
             TallGrassPopulator populator = new TallGrassPopulator();
-            populator.setBaseAmount( 5 );
+            populator.baseAmount( 5 );
             return Collections.singletonList( populator );
         }
     },
@@ -65,7 +65,7 @@ public enum Biome {
         @Override
         public List<Populator> populators() {
             TallGrassPopulator populator = new TallGrassPopulator();
-            populator.setBaseAmount( 12 );
+            populator.baseAmount( 12 );
             return Collections.singletonList( populator );
         }
     },
@@ -86,10 +86,10 @@ public enum Biome {
         @Override
         public List<Populator> populators() {
             TallGrassPopulator populator = new TallGrassPopulator();
-            populator.setBaseAmount( 3 );
+            populator.baseAmount( 3 );
 
             TreePopulator treePopulator = new TreePopulator( new OakTree() );
-            treePopulator.setBaseAmount( 5 );
+            treePopulator.baseAmount( 5 );
             return Collections.unmodifiableList( Arrays.asList( populator, treePopulator ) );
         }
     },
@@ -116,7 +116,7 @@ public enum Biome {
         @Override
         public List<Populator> populators() {
             TallGrassPopulator populator = new TallGrassPopulator();
-            populator.setBaseAmount( 5 );
+            populator.baseAmount( 5 );
             return Collections.singletonList( populator );
         }
     },
@@ -154,10 +154,10 @@ public enum Biome {
         @Override
         public List<Populator> populators() {
             TallGrassPopulator populator = new TallGrassPopulator();
-            populator.setBaseAmount( 3 );
+            populator.baseAmount( 3 );
 
             TreePopulator treePopulator = new TreePopulator( new BirchTree() );
-            treePopulator.setBaseAmount( 5 );
+            treePopulator.baseAmount( 5 );
             return Collections.unmodifiableList( Arrays.asList( populator, treePopulator ) );
         }
     },
@@ -204,7 +204,7 @@ public enum Biome {
         @Override
         public List<Populator> populators() {
             TallGrassPopulator populator = new TallGrassPopulator();
-            populator.setBaseAmount( 5 );
+            populator.baseAmount( 5 );
             return Collections.singletonList( populator );
         }
     },

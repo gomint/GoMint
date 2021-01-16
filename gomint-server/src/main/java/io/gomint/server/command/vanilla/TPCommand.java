@@ -76,11 +76,11 @@ public class TPCommand extends Command {
         }
 
         BlockPosition position = (BlockPosition) arguments.get("position");
-        to.setX(position.x());
-        to.setY(position.y());
-        to.setZ(position.z());
+        to.x(position.x());
+        to.y(position.y());
+        to.z(position.z());
 
         source.teleport(to);
-        return CommandOutput.successful("%%s has been teleported to %%s, %%s, %%s, %%s", source.name(), to.world().name(), to.getX(), to.getY(), to.getZ());
+        return CommandOutput.successful("%%s has been teleported to %%s, %%s, %%s, %%s", source.name(), to.world().name(), to.x(), to.y(), to.z());
     }
 }

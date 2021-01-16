@@ -47,8 +47,8 @@ public class PacketBookEditHandler implements PacketHandler<PacketBookEdit> {
                 if ( old != null ) {
                     BookPage swapWith = writableBook.getPage( packet.getSwapWithPageNumber() );
                     if ( swapWith != null ) {
-                        writableBook.changeContent( packet.getPageNumber(), swapWith.getContent() );
-                        writableBook.changeContent( packet.getSwapWithPageNumber(), old.getContent() );
+                        writableBook.changeContent( packet.getPageNumber(), swapWith.content() );
+                        writableBook.changeContent( packet.getSwapWithPageNumber(), old.content() );
                     }
                 }
 

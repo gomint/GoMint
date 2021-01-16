@@ -37,12 +37,12 @@ public class SpawnPointCommand extends Command {
         Location location = player.location();
 
         if (spawnPos != null) {
-            location.setX(spawnPos.x());
-            location.setY(spawnPos.y());
-            location.setZ(spawnPos.z());
+            location.x(spawnPos.x());
+            location.y(spawnPos.y());
+            location.z(spawnPos.z());
         }
 
         player.spawnLocation(location);
-        return CommandOutput.successful(String.format("Set %s's spawn point to (%.1f, %.1f, %.1f)", player.name(), location.getX(), location.getY(), location.getZ()));
+        return CommandOutput.successful(String.format("Set %s's spawn point to (%.1f, %.1f, %.1f)", player.name(), location.x(), location.y(), location.z()));
     }
 }

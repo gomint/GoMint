@@ -212,12 +212,12 @@ public class Wall extends Block implements BlockWall {
     @Override
     public List<AxisAlignedBB> boundingBoxes() {
         return Collections.singletonList(new AxisAlignedBB(
-            this.location.getX() + 0.25f,
-            this.location.getY(),
-            this.location.getZ() + 0.25f,
-            this.location.getX() + 0.75f,
-            this.location.getY() + 1,
-            this.location.getZ() + 0.75f
+            this.location.x() + 0.25f,
+            this.location.y(),
+            this.location.z() + 0.25f,
+            this.location.x() + 0.75f,
+            this.location.y() + 1,
+            this.location.z() + 0.75f
         ));
     }
 

@@ -41,7 +41,7 @@ public abstract class AIMovementAndLookingState extends AILookingState {
             BlockPosition node = this.path.get( this.currentPathNode );
 
             Vector direction = node.toVector().add( .5f, 0, .5f ).subtract( position ).normalize().multiply( this.movementSpeed * dT );
-            this.pathfinding.transform().motion( direction.getX(), direction.getY(), direction.getZ() );
+            this.pathfinding.transform().motion( direction.x(), direction.y(), direction.z() );
             this.look(direction);
 
             if ( blockPosition.equals( node ) ) {

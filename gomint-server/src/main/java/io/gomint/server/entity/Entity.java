@@ -342,15 +342,15 @@ public abstract class Entity<E extends io.gomint.entity.Entity<E>> implements io
 
                 if ( moved != null ) {
                     // We did not move so we collided, set motion to 0 to escape hell
-                    if ( movX != moved.getX() ) {
+                    if ( movX != moved.x() ) {
                         this.transform.setMotionX( 0 );
                     }
 
-                    if ( movY != moved.getY() ) {
+                    if ( movY != moved.y() ) {
                         this.transform.setMotionY( 0 );
                     }
 
-                    if ( movZ != moved.getZ() ) {
+                    if ( movZ != moved.z() ) {
                         this.transform.setMotionZ( 0 );
                     }
                 }
@@ -396,7 +396,7 @@ public abstract class Entity<E extends io.gomint.entity.Entity<E>> implements io
             if ( pushedByBlocks.length() > 0 ) {
                 pushedByBlocks = pushedByBlocks.normalize().multiply( 0.014f );
                 Vector newMotion = this.transform.motion().add( pushedByBlocks );
-                this.transform.motion( newMotion.getX(), newMotion.getY(), newMotion.getZ() );
+                this.transform.motion( newMotion.x(), newMotion.y(), newMotion.z() );
                 this.broadCastMotion();
             }
         }
@@ -724,7 +724,7 @@ public abstract class Entity<E extends io.gomint.entity.Entity<E>> implements io
         }
 
         LOGGER.debug( "New motion for {}: {}", this, event.velocity() );
-        this.transform.motion( event.velocity().getX(), event.velocity().getY(), event.velocity().getZ() );
+        this.transform.motion( event.velocity().x(), event.velocity().y(), event.velocity().z() );
         this.fallDistance = 0;
 
         if ( send ) {
@@ -1158,7 +1158,7 @@ public abstract class Entity<E extends io.gomint.entity.Entity<E>> implements io
         Block block = eyeLocation.world().blockAt( eyeLocation.toBlockPosition() );
         if ( block instanceof StationaryWater || block instanceof FlowingWater ) {
             float yLiquid = (float) ( block.position().y() + 1 + ( ( (Liquid<?>) block ).fillHeight() - 0.12 ) );
-            return eyeLocation.getY() < yLiquid;
+            return eyeLocation.y() < yLiquid;
         }
 
         return false;
@@ -1221,12 +1221,12 @@ public abstract class Entity<E extends io.gomint.entity.Entity<E>> implements io
         // Update bounding box
         Location location = this.location();
         boundingBox().bounds(
-            location.getX() - ( this.width() / 2 ),
-            location.getY(),
-            location.getZ() - ( this.width() / 2 ),
-            location.getX() + ( this.width() / 2 ),
-            location.getY() + this.height(),
-            location.getZ() + ( this.width() / 2 )
+            location.x() - ( this.width() / 2 ),
+            location.y(),
+            location.z() - ( this.width() / 2 ),
+            location.x() + ( this.width() / 2 ),
+            location.y() + this.height(),
+            location.z() + ( this.width() / 2 )
         );
     }
 
@@ -1264,7 +1264,7 @@ public abstract class Entity<E extends io.gomint.entity.Entity<E>> implements io
         }
 
         this.world = (WorldAdapter) location.world();
-        this.world.spawnEntityAt( this, location.getX(), location.getY(), location.getZ(), location.yaw(), location.pitch() );
+        this.world.spawnEntityAt( this, location.x(), location.y(), location.z(), location.yaw(), location.pitch() );
         this.setupAI();
 
         return (E) this;
@@ -1288,7 +1288,7 @@ public abstract class Entity<E extends io.gomint.entity.Entity<E>> implements io
         if ( !to.world().equals( actualWorld ) ) {
             actualWorld.removeEntity( this );
             this.world( (WorldAdapter) to.world() );
-            ( (WorldAdapter) to.world() ).spawnEntityAt( this, to.getX(), to.getY(), to.getZ(), to.yaw(), to.pitch() );
+            ( (WorldAdapter) to.world() ).spawnEntityAt( this, to.x(), to.y(), to.z(), to.yaw(), to.pitch() );
         }
 
         this.fallDistance = 0;

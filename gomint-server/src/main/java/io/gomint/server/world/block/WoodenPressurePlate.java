@@ -74,7 +74,7 @@ public class WoodenPressurePlate extends BasePressurePlate implements BlockWoode
     }
 
     @Override
-    public LogType getWoodType() {
+    public LogType type() {
         for (LogTypeMagic value : LogTypeMagic.values()) {
             if (value.blockId.equals(this.getBlockId())) {
                 return LogType.valueOf(value.name());
@@ -85,9 +85,10 @@ public class WoodenPressurePlate extends BasePressurePlate implements BlockWoode
     }
 
     @Override
-    public void setWoodType(LogType logType) {
+    public BlockWoodenPressurePlate type(LogType logType) {
         LogTypeMagic newState = LogTypeMagic.valueOf(logType.name());
         this.setBlockId(newState.blockId);
+        return this;
     }
 
 }

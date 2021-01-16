@@ -42,7 +42,7 @@ public class Location extends Vector {
     }
 
     public Location(World world, Vector vector) {
-        super(vector.getX(), vector.getY(), vector.getZ());
+        super(vector.x(), vector.y(), vector.z());
         this.world = world;
     }
 
@@ -54,7 +54,7 @@ public class Location extends Vector {
     }
 
     public Location(World world, Vector vector, float yaw, float pitch) {
-        super(vector.getX(), vector.getY(), vector.getZ());
+        super(vector.x(), vector.y(), vector.z());
         this.world(world);
         this.yaw = yaw;
         this.pitch = pitch;

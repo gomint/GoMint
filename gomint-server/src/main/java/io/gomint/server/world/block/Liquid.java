@@ -179,7 +179,7 @@ public abstract class Liquid<B> extends Block implements BlockLiquid<B> {
     }
 
     private void checkSpread(int decay) {
-        if (decay >= 0 && this.location.getY() > 0) {
+        if (decay >= 0 && this.location.y() > 0) {
             Block bottomBlock = this.side(Facing.DOWN);
             this.flowIntoBlock(bottomBlock, decay | 0x08);
             if (decay == 0 || !bottomBlock.canBeFlowedInto()) {

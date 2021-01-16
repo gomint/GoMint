@@ -24,12 +24,14 @@ public class TallGrassPopulator implements Populator {
     private int randomAmount;
     private int baseAmount;
 
-    public void setRandomAmount( int amount ) {
+    public TallGrassPopulator randomAmount(int amount ) {
         this.randomAmount = amount;
+        return this;
     }
 
-    public void setBaseAmount( int amount ) {
+    public TallGrassPopulator baseAmount(int amount ) {
         this.baseAmount = amount;
+        return this;
     }
 
     @Override

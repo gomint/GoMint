@@ -55,13 +55,14 @@ public class StainedGlass extends Block implements BlockStainedGlass {
     }
 
     @Override
-    public BlockColor getColor() {
+    public BlockColor color() {
         return COLOR.getState(this);
     }
 
     @Override
-    public void setColor(BlockColor color) {
+    public BlockStainedGlass color(BlockColor color) {
         COLOR.setState(this, color);
+        return this;
     }
 
 }

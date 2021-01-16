@@ -75,7 +75,7 @@ public class ItemWritableBook extends ItemStack< io.gomint.inventory.item.ItemWr
         }
     }
 
-    public void setPageContent( int index, String content ) {
+    public void pageContent(int index, String content ) {
         // We ignore sanity checks since we only call this from
         List<Object> pages = this.nbtData().getList( PAGE_TAG, false );
         if ( pages == null ) {
@@ -90,12 +90,12 @@ public class ItemWritableBook extends ItemStack< io.gomint.inventory.item.ItemWr
         // Check if we can simply use a old NBT compound
         BookPage page = this.getPage( index );
         if ( page != null ) {
-            page.setContent( content );
+            page.content( content );
         } else {
             this.createPage( index );
 
             page = this.getPage( index );
-            page.setContent( content );
+            page.content( content );
         }
     }
 

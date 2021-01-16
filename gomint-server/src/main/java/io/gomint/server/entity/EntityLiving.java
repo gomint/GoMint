@@ -373,8 +373,8 @@ public abstract class EntityLiving<E extends io.gomint.entity.Entity<E>> extends
                     (diffZ * distance * baseModifier)
                 );
 
-                if (motion.getY() > baseModifier) {
-                    motion.setY(baseModifier);
+                if (motion.y() > baseModifier) {
+                    motion.y(baseModifier);
                 }
 
                 this.velocity(motion, true);
@@ -450,7 +450,7 @@ public abstract class EntityLiving<E extends io.gomint.entity.Entity<E>> extends
 
     @Override
     public void attach(EntityPlayer player) {
-        if (!GoMint.instance().isMainThread()) {
+        if (!GoMint.instance().mainThread()) {
             LOGGER.warn("Attaching entities from another thread than the main one can cause crashes", new Exception());
         }
 
@@ -460,7 +460,7 @@ public abstract class EntityLiving<E extends io.gomint.entity.Entity<E>> extends
 
     @Override
     public void detach(EntityPlayer player) {
-        if (!GoMint.instance().isMainThread()) {
+        if (!GoMint.instance().mainThread()) {
             LOGGER.warn("Detaching entities from another thread than the main one can cause crashes", new Exception());
         }
 

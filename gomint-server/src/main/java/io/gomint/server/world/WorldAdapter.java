@@ -611,7 +611,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
      * @param vector The vector which contains the position of the spawn
      */
     public void spawnEntityAt(Entity<?> entity, Vector vector) {
-        this.spawnEntityAt(entity, vector.getX(), vector.getY(), vector.getZ());
+        this.spawnEntityAt(entity, vector.x(), vector.y(), vector.z());
     }
 
     /**
@@ -769,8 +769,8 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
             return;
         }
 
-        final int chunkX = CoordinateUtils.fromBlockToChunk((int) this.spawn.getX());
-        final int chunkZ = CoordinateUtils.fromBlockToChunk((int) this.spawn.getZ());
+        final int chunkX = CoordinateUtils.fromBlockToChunk((int) this.spawn.x());
+        final int chunkZ = CoordinateUtils.fromBlockToChunk((int) this.spawn.z());
 
         int amountOfChunksLoaded = 0;
         for (int i = chunkX - spawnRadius; i <= chunkX + spawnRadius; i++) {
@@ -941,7 +941,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
             return;
         }
 
-        if (!GoMint.instance().isMainThread()) {
+        if (!GoMint.instance().mainThread()) {
             this.server.addToMainThread(() -> {
                 updateBlock0(adapter, pos);
             });
@@ -1197,7 +1197,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
     }
 
     public <T extends Block> T scheduleNeighbourUpdates(T block) {
-        if (!GoMint.instance().isMainThread()) {
+        if (!GoMint.instance().mainThread()) {
             // We don't update from async
             return block;
         }
@@ -1426,7 +1426,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
 
     public void createExpOrb(Location location, int amount) {
         EntityXPOrb xpOrb = new EntityXPOrb((WorldAdapter) location.world(), amount);
-        spawnEntityAt(xpOrb, location.getX(), location.getY(), location.getZ(), location.yaw(), location.pitch());
+        spawnEntityAt(xpOrb, location.x(), location.y(), location.z(), location.yaw(), location.pitch());
     }
 
     public void removeEntity(io.gomint.server.entity.Entity<?> entity) {
@@ -1436,7 +1436,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
 
     @Override
     public void unload(Consumer<EntityPlayer> playerConsumer) {
-        if (!GoMint.instance().isMainThread()) {
+        if (!GoMint.instance().mainThread()) {
             this.logger.warn("Unloading worlds from an async thread. This is not safe and can lead to CME");
         }
 
@@ -1517,11 +1517,11 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
     protected void adjustSpawn() {
         int airRuntime = BlockRuntimeIDs.toBlockIdentifier("minecraft:air", null).getRuntimeId();
 
-        BlockPosition check = new BlockPosition((int) this.spawn.getX(), 0, (int) this.spawn.getZ());
+        BlockPosition check = new BlockPosition((int) this.spawn.x(), 0, (int) this.spawn.z());
         for (int i = 255; i > 0; i--) {
             check.y(i);
             if (this.getRuntimeID(check, 0) != airRuntime) {
-                this.spawn.setY(1 + i);
+                this.spawn.y(1 + i);
                 break;
             }
         }

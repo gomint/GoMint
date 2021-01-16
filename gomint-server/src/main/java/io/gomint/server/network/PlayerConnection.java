@@ -255,7 +255,7 @@ public class PlayerConnection implements ConnectionWithState {
      * @param packet The packet which should be queued
      */
     public void addToSendQueue(Packet packet) {
-        if (!GoMint.instance().isMainThread()) {
+        if (!GoMint.instance().mainThread()) {
             LOGGER.warn("Add packet async to send queue - canceling sending", new Exception());
             return;
         }
@@ -447,8 +447,8 @@ public class PlayerConnection implements ConnectionWithState {
 
     public void checkForSpawning() {
         if (this.state == PlayerConnectionState.LOGIN && this.loadingChunks.isEmpty() && (!this.cachingSupported || this.cache.isEmpty())) {
-            int spawnXChunk = CoordinateUtils.fromBlockToChunk((int) this.entity.location().getX());
-            int spawnZChunk = CoordinateUtils.fromBlockToChunk((int) this.entity.location().getZ());
+            int spawnXChunk = CoordinateUtils.fromBlockToChunk((int) this.entity.location().x());
+            int spawnZChunk = CoordinateUtils.fromBlockToChunk((int) this.entity.location().z());
 
             WorldAdapter worldAdapter = this.entity.world();
             worldAdapter.movePlayerToChunk(spawnXChunk, spawnZChunk, this.entity);
@@ -632,8 +632,8 @@ public class PlayerConnection implements ConnectionWithState {
     public void checkForNewChunks(Location from, boolean forceResendEntities) {
         WorldAdapter worldAdapter = this.entity.world();
 
-        int currentXChunk = CoordinateUtils.fromBlockToChunk((int) this.entity.location().getX());
-        int currentZChunk = CoordinateUtils.fromBlockToChunk((int) this.entity.location().getZ());
+        int currentXChunk = CoordinateUtils.fromBlockToChunk((int) this.entity.location().x());
+        int currentZChunk = CoordinateUtils.fromBlockToChunk((int) this.entity.location().z());
 
         int viewDistance = this.entity.viewDistance();
 
@@ -707,8 +707,8 @@ public class PlayerConnection implements ConnectionWithState {
 
         // Move the player to this chunk
         if (from != null) {
-            int oldChunkX = CoordinateUtils.fromBlockToChunk((int) from.getX());
-            int oldChunkZ = CoordinateUtils.fromBlockToChunk((int) from.getZ());
+            int oldChunkX = CoordinateUtils.fromBlockToChunk((int) from.x());
+            int oldChunkZ = CoordinateUtils.fromBlockToChunk((int) from.z());
             if (!from.world().equals(worldAdapter) || oldChunkX != currentXChunk || oldChunkZ != currentZChunk) {
                 worldAdapter.movePlayerToChunk(currentXChunk, currentZChunk, this.entity);
                 this.sendNetworkChunkPublisher();
@@ -850,9 +850,9 @@ public class PlayerConnection implements ConnectionWithState {
     public void sendMovePlayer(Location location) {
         PacketMovePlayer move = new PacketMovePlayer();
         move.setEntityId(this.entity.id());
-        move.setX(location.getX());
-        move.setY((float) (location.getY() + 1.62));
-        move.setZ(location.getZ());
+        move.setX(location.x());
+        move.setY((float) (location.y() + 1.62));
+        move.setZ(location.z());
         move.setHeadYaw(location.headYaw());
         move.setYaw(location.yaw());
         move.setPitch(location.pitch());

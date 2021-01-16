@@ -411,7 +411,7 @@ public class EntityPlayer extends EntityHuman<io.gomint.entity.EntityPlayer> imp
             // Change worlds
             world().removePlayer(this);
             this.world((WorldAdapter) to.world());
-            this.world.spawnEntityAt(this, to.getX(), to.getY(), to.getZ(), to.yaw(), to.pitch());
+            this.world.spawnEntityAt(this, to.x(), to.y(), to.z(), to.yaw(), to.pitch());
 
             // Be sure to get rid of all loaded chunks
             this.connection.resetPlayerChunks();
@@ -493,20 +493,20 @@ public class EntityPlayer extends EntityHuman<io.gomint.entity.EntityPlayer> imp
             }
 
             Location to = playerMoveEvent.to();
-            if (to.getX() != this.nextMovement.getX() || to.getY() != this.nextMovement.getY() || to.getZ() != this.nextMovement.getZ() ||
+            if (to.x() != this.nextMovement.x() || to.y() != this.nextMovement.y() || to.z() != this.nextMovement.z() ||
                 !to.world().equals(this.nextMovement.world()) || to.yaw() != this.nextMovement.yaw() ||
                 to.pitch() != this.nextMovement.pitch() || to.headYaw() != this.nextMovement.headYaw()) {
                 this.teleport(to);
             } else {
-                float moveX = to.getX() - from.getX();
-                float moveY = to.getY() - from.getY();
-                float moveZ = to.getZ() - from.getZ();
+                float moveX = to.x() - from.x();
+                float moveY = to.y() - from.y();
+                float moveZ = to.z() - from.z();
 
                 // Try to at least move the gravitation down
                 Vector moved = this.safeMove(moveX, moveY, moveZ);
 
                 // Exhaustion
-                float distance = (float) Math.sqrt(moved.getX() * moved.getX() + moved.getZ() * moved.getZ());
+                float distance = (float) Math.sqrt(moved.x() * moved.x() + moved.z() * moved.z());
                 if (distance > 0.01f) {
                     if (this.onGround) {
                         if (this.sprinting()) {
@@ -523,8 +523,8 @@ public class EntityPlayer extends EntityHuman<io.gomint.entity.EntityPlayer> imp
             }
 
             boolean changeWorld = !to.world().equals(from.world());
-            boolean changeXZ = (int) from.getX() != (int) to.getX() || (int) from.getZ() != (int) to.getZ();
-            boolean changeY = (int) from.getY() != (int) to.getY();
+            boolean changeXZ = (int) from.x() != (int) to.x() || (int) from.z() != (int) to.z();
+            boolean changeY = (int) from.y() != (int) to.y();
 
             if (changeWorld || changeXZ || changeY) {
                 if (changeWorld || changeXZ) {
@@ -767,8 +767,8 @@ public class EntityPlayer extends EntityHuman<io.gomint.entity.EntityPlayer> imp
         // Direction
         Vector playerPosition = this.position();
         Vector2 directionPlane = this.directionPlane();
-        float dot = directionPlane.dot(new Vector2(eyePosition.getX(), eyePosition.getZ()));
-        float dot1 = directionPlane.dot(new Vector2(playerPosition.getX(), playerPosition.getZ()));
+        float dot = directionPlane.dot(new Vector2(eyePosition.x(), eyePosition.z()));
+        float dot1 = directionPlane.dot(new Vector2(playerPosition.x(), playerPosition.z()));
         return (dot1 - dot) >= -(MathUtils.SQRT_3 / 2);
     }
 
@@ -1009,8 +1009,8 @@ public class EntityPlayer extends EntityHuman<io.gomint.entity.EntityPlayer> imp
 
                             // Modify our velocity / movement
                             Vector ownVelo = this.velocity();
-                            ownVelo.setX(ownVelo.getX() * 0.6F);
-                            ownVelo.setZ(ownVelo.getZ() * 0.6F);
+                            ownVelo.x(ownVelo.x() * 0.6F);
+                            ownVelo.z(ownVelo.z() * 0.6F);
                             this.velocity(ownVelo);
 
                             if (!this.world.getServer().serverConfig().vanilla().disableSprintReset()) {

@@ -256,10 +256,10 @@ public abstract class EntityProjectile<E extends io.gomint.entity.Entity<E>> ext
      * @param inaccuracy
      */
     protected E motionFromHeading(Vector motion, float velocity, float inaccuracy) {
-        float distanceTravel = (float) Math.sqrt(MathUtils.square(motion.getX()) + MathUtils.square(motion.getY()) + MathUtils.square(motion.getZ()));
-        motion.setX(((float) (((motion.getX() / distanceTravel) + (ThreadLocalRandom.current().nextDouble() * 0.0075f)) * inaccuracy)) * velocity);
-        motion.setY(((float) (((motion.getY() / distanceTravel) + (ThreadLocalRandom.current().nextDouble() * 0.0075f)) * inaccuracy)) * velocity);
-        motion.setZ(((float) (((motion.getZ() / distanceTravel) + (ThreadLocalRandom.current().nextDouble() * 0.0075f)) * inaccuracy)) * velocity);
+        float distanceTravel = (float) Math.sqrt(MathUtils.square(motion.x()) + MathUtils.square(motion.y()) + MathUtils.square(motion.z()));
+        motion.x(((float) (((motion.x() / distanceTravel) + (ThreadLocalRandom.current().nextDouble() * 0.0075f)) * inaccuracy)) * velocity);
+        motion.y(((float) (((motion.y() / distanceTravel) + (ThreadLocalRandom.current().nextDouble() * 0.0075f)) * inaccuracy)) * velocity);
+        motion.z(((float) (((motion.z() / distanceTravel) + (ThreadLocalRandom.current().nextDouble() * 0.0075f)) * inaccuracy)) * velocity);
         return this.velocity(motion);
     }
 

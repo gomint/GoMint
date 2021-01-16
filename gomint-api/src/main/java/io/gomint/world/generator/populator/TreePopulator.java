@@ -28,12 +28,14 @@ public class TreePopulator implements Populator {
         this.tree = tree;
     }
 
-    public void setRandomAmount( int amount ) {
+    public TreePopulator randomAmount(int amount ) {
         this.randomAmount = amount;
+        return this;
     }
 
-    public void setBaseAmount( int amount ) {
+    public TreePopulator baseAmount(int amount ) {
         this.baseAmount = amount;
+        return this;
     }
 
     @Override

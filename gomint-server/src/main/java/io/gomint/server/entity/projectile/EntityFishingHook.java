@@ -69,7 +69,7 @@ public class EntityFishingHook extends EntityProjectile<io.gomint.entity.project
 
     @Override
     protected EntityFishingHook motionFromHeading(Vector motion, float velocity, float inaccuracy) {
-        float distanceTravel = (float) Math.sqrt(MathUtils.square(motion.getX()) + MathUtils.square(motion.getY()) + MathUtils.square(motion.getZ()));
+        float distanceTravel = (float) Math.sqrt(MathUtils.square(motion.x()) + MathUtils.square(motion.y()) + MathUtils.square(motion.z()));
         this.velocity(motion.multiply(
             0.6f / distanceTravel + 0.5f + ThreadLocalRandom.current().nextFloat() * 0.0045f,
             0.6f / distanceTravel + 0.5f + ThreadLocalRandom.current().nextFloat() * 0.0045f,

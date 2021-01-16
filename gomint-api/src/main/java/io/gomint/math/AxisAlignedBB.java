@@ -377,12 +377,12 @@ public class AxisAlignedBB implements Cloneable {
      * @return null when not on line or vector we found
      */
     public Vector calculateIntercept( Vector pos1, Vector pos2 ) {
-        Vector v1 = pos1.getVectorWhenXIsOnLine( pos2, this.minX );
-        Vector v2 = pos1.getVectorWhenXIsOnLine( pos2, this.maxX );
-        Vector v3 = pos1.getVectorWhenYIsOnLine( pos2, this.minY );
-        Vector v4 = pos1.getVectorWhenYIsOnLine( pos2, this.maxY );
-        Vector v5 = pos1.getVectorWhenZIsOnLine( pos2, this.minZ );
-        Vector v6 = pos1.getVectorWhenZIsOnLine( pos2, this.maxZ );
+        Vector v1 = pos1.vectorWhenXIsOnLine( pos2, this.minX );
+        Vector v2 = pos1.vectorWhenXIsOnLine( pos2, this.maxX );
+        Vector v3 = pos1.vectorWhenYIsOnLine( pos2, this.minY );
+        Vector v4 = pos1.vectorWhenYIsOnLine( pos2, this.maxY );
+        Vector v5 = pos1.vectorWhenZIsOnLine( pos2, this.minZ );
+        Vector v6 = pos1.vectorWhenZIsOnLine( pos2, this.maxZ );
 
         Vector resultVector = null;
         if ( v1 != null && this.isVectorInYZ( v1 ) ) {

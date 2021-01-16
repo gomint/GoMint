@@ -461,9 +461,9 @@ public abstract class Packet {
     }
 
     void writeVector(Vector vector, PacketBuffer buffer) {
-        buffer.writeLFloat(vector.getX());
-        buffer.writeLFloat(vector.getY());
-        buffer.writeLFloat(vector.getZ());
+        buffer.writeLFloat(vector.x());
+        buffer.writeLFloat(vector.y());
+        buffer.writeLFloat(vector.z());
     }
 
     Vector readVector(PacketBuffer buffer) {

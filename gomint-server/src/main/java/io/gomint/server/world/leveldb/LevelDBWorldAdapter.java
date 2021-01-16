@@ -196,9 +196,9 @@ public class LevelDBWorldAdapter extends WorldAdapter {
         compound.addValue("StorageVersion", 8);
 
         // Spawn
-        compound.addValue("SpawnX", (int) this.spawn.getX());
-        compound.addValue("SpawnY", (int) this.spawn.getY());
-        compound.addValue("SpawnZ", (int) this.spawn.getZ());
+        compound.addValue("SpawnX", (int) this.spawn.x());
+        compound.addValue("SpawnY", (int) this.spawn.y());
+        compound.addValue("SpawnZ", (int) this.spawn.z());
         compound.addValue("Difficulty", this.difficulty.getDifficultyDegree());
 
         // Level name
@@ -391,13 +391,13 @@ public class LevelDBWorldAdapter extends WorldAdapter {
                         LevelDBWorldAdapter.this.levelName = (String) value;
                         break;
                     case ".SpawnX":
-                        LevelDBWorldAdapter.this.spawn.setX((int) value);
+                        LevelDBWorldAdapter.this.spawn.x((int) value);
                         break;
                     case ".SpawnY":
-                        LevelDBWorldAdapter.this.spawn.setY((int) value);
+                        LevelDBWorldAdapter.this.spawn.y((int) value);
                         break;
                     case ".SpawnZ":
-                        LevelDBWorldAdapter.this.spawn.setZ((int) value);
+                        LevelDBWorldAdapter.this.spawn.z((int) value);
                         break;
                     case ".StorageVersion":
                         LevelDBWorldAdapter.this.worldVersion = (int) value;

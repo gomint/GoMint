@@ -61,22 +61,22 @@ public class AIFollowEntity extends AIState {
             Vector position = this.pathfinding.transform().position();
 
             BlockPosition blockPosition = new BlockPosition(
-                MathUtils.fastFloor( position.getX() ),
-                MathUtils.fastFloor( position.getY() ),
-                MathUtils.fastFloor( position.getZ() )
+                MathUtils.fastFloor( position.x() ),
+                MathUtils.fastFloor( position.y() ),
+                MathUtils.fastFloor( position.z() )
             );
 
             BlockPosition node = this.path.get( this.currentPathNode );
 
             // Check if we need to jump
-            boolean jump = node.y() > position.getY();
+            boolean jump = node.y() > position.y();
 
             Vector direction = node.toVector().add( .5f, 0, .5f ).subtract( position ).normalize().multiply( 4.31f * dT ); // 4.31 is the normal player movement speed per second
             if ( jump ) {
-                direction.setY( 1f ); // Default jump height
+                direction.y( 1f ); // Default jump height
             }
 
-            this.pathfinding.transform().motion( direction.getX(), direction.getY(), direction.getZ() );
+            this.pathfinding.transform().motion( direction.x(), direction.y(), direction.z() );
 
             LOGGER.debug( "Current pos: {}; Needed: {}; Direction: {}", position, node, direction );
 

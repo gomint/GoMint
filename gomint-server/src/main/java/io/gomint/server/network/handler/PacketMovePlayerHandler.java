@@ -19,9 +19,9 @@ public class PacketMovePlayerHandler implements PacketHandler<PacketMovePlayer> 
     public void handle( PacketMovePlayer packet, long currentTimeMillis, PlayerConnection connection ) {
         EntityPlayer entity = connection.getEntity();
         Location to = entity.location();
-        to.setX( packet.getX() );
-        to.setY( packet.getY() - entity.eyeHeight() ); // Subtract eye height since client sends it at the eyes
-        to.setZ( packet.getZ() );
+        to.x( packet.getX() );
+        to.y( packet.getY() - entity.eyeHeight() ); // Subtract eye height since client sends it at the eyes
+        to.z( packet.getZ() );
         to.headYaw( packet.getHeadYaw() );
         to.yaw( packet.getYaw() );
         to.pitch( packet.getPitch() );
@@ -40,9 +40,9 @@ public class PacketMovePlayerHandler implements PacketHandler<PacketMovePlayer> 
         Location from = entity.location();
 
         // The packet did not contain any movement? skip it
-        if ( from.getX() - to.getX() == 0 &&
-            from.getY() - to.getY() == 0 &&
-            from.getZ() - to.getZ() == 0 &&
+        if ( from.x() - to.x() == 0 &&
+            from.y() - to.y() == 0 &&
+            from.z() - to.z() == 0 &&
             from.headYaw() - to.headYaw() == 0 &&
             from.yaw() - to.yaw() == 0 &&
             from.pitch() - to.pitch() == 0 ) {

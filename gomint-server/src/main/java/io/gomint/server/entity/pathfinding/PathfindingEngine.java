@@ -119,7 +119,7 @@ public class PathfindingEngine {
             return null;
         }
 
-        final BlockPosition goalTriple = new BlockPosition((int) this.goal.getX(), (int) this.goal.getY(), (int) this.goal.getZ());
+        final BlockPosition goalTriple = new BlockPosition((int) this.goal.x(), (int) this.goal.y(), (int) this.goal.z());
 
         LongSet closedSet = new LongOpenHashSet();
         Map<BlockPosition, AStarNode> discoveredMap = new HashMap<>();
@@ -255,7 +255,7 @@ public class PathfindingEngine {
     }
 
     public double estimateDistance(BlockPosition a, Vector b) {
-        return (Math.abs(b.getX() - a.x()) + Math.abs(b.getY() - a.y()) + Math.abs(b.getZ() - a.z()));
+        return (Math.abs(b.x() - a.x()) + Math.abs(b.y() - a.y()) + Math.abs(b.z() - a.z()));
     }
 
 }

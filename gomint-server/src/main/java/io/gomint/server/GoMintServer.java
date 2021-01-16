@@ -421,7 +421,7 @@ public class GoMintServer implements GoMint, InventoryHolder {
             client.portForward(port);
         }
 
-        changeMotd(this.serverConfig().motd());
+        motd(this.serverConfig().motd());
 
         // ------------------------------------ //
         // Load plugins with StartupPriority LOAD
@@ -682,7 +682,7 @@ public class GoMintServer implements GoMint, InventoryHolder {
         return chunkGeneratorRegistry;
     }
 
-    public GoMint changeMotd(String motd) {
+    public GoMint motd(String motd) {
         this.networkManager.setMotd(motd);
         return this;
     }
@@ -783,7 +783,7 @@ public class GoMintServer implements GoMint, InventoryHolder {
     }
 
     @Override
-    public boolean isMainThread() {
+    public boolean mainThread() {
         return GoMintServer.mainThread == Thread.currentThread().getId();
     }
 

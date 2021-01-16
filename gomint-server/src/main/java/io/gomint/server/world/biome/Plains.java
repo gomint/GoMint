@@ -62,7 +62,7 @@ public class Plains extends AbstractBiome {
 
     private static PopulatorComponent createPopulators() {
         TallGrassPopulator populator = new TallGrassPopulator();
-        populator.setBaseAmount( 12 );
+        populator.baseAmount( 12 );
         return new PopulatorComponent(Collections.singletonList(populator));
     }
 

@@ -64,7 +64,7 @@ public interface GoMint {
      *
      * @param motd The MOTD to be set
      */
-    GoMint changeMotd(String motd);
+    GoMint motd(String motd);
 
     /**
      * Get the amount of players concurrently logged in on the server
@@ -210,7 +210,7 @@ public interface GoMint {
      *
      * @return true if main thread, false if not
      */
-    boolean isMainThread();
+    boolean mainThread();
 
     /**
      * Get the amount of player which will fit on this server before it start declining logins

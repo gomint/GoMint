@@ -57,8 +57,8 @@ public class ChunkCache {
      */
     public synchronized void tick( long currentTimeMS ) {
         // Check for gc
-        int spawnXChunk = CoordinateUtils.fromBlockToChunk( (int) this.world.spawnLocation().getX() );
-        int spawnZChunk = CoordinateUtils.fromBlockToChunk( (int) this.world.spawnLocation().getZ() );
+        int spawnXChunk = CoordinateUtils.fromBlockToChunk( (int) this.world.spawnLocation().x() );
+        int spawnZChunk = CoordinateUtils.fromBlockToChunk( (int) this.world.spawnLocation().z() );
 
         int spawnAreaSize = this.world.getConfig().amountOfChunksForSpawnArea();
 

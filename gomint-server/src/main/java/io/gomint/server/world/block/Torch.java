@@ -87,50 +87,50 @@ public class Torch extends Block implements BlockTorch {
         switch (FACING.getState(this)) {
             case EAST:
                 return Collections.singletonList(new AxisAlignedBB(
-                    this.location.getX(),
-                    this.location.getY() + 0.2f,
-                    this.location.getZ() + 0.5f - size,
-                    this.location.getX() + size * 2f,
-                    this.location.getY() + 0.8f,
-                    this.location.getZ() + 0.5f + size
+                    this.location.x(),
+                    this.location.y() + 0.2f,
+                    this.location.z() + 0.5f - size,
+                    this.location.x() + size * 2f,
+                    this.location.y() + 0.8f,
+                    this.location.z() + 0.5f + size
                 ));
             case WEST:
                 return Collections.singletonList(new AxisAlignedBB(
-                    this.location.getX() + 1.0f - size * 2f,
-                    this.location.getY() + 0.2f,
-                    this.location.getZ() + 0.5f - size,
-                    this.location.getX() + 1f,
-                    this.location.getY() + 0.8f,
-                    this.location.getZ() + 0.5f + size
+                    this.location.x() + 1.0f - size * 2f,
+                    this.location.y() + 0.2f,
+                    this.location.z() + 0.5f - size,
+                    this.location.x() + 1f,
+                    this.location.y() + 0.8f,
+                    this.location.z() + 0.5f + size
                 ));
             case SOUTH:
                 return Collections.singletonList(new AxisAlignedBB(
-                    this.location.getX() + 0.5f - size,
-                    this.location.getY() + 0.2f,
-                    this.location.getZ(),
-                    this.location.getX() + 0.5f + size,
-                    this.location.getY() + 0.8f,
-                    this.location.getZ() + size * 2f
+                    this.location.x() + 0.5f - size,
+                    this.location.y() + 0.2f,
+                    this.location.z(),
+                    this.location.x() + 0.5f + size,
+                    this.location.y() + 0.8f,
+                    this.location.z() + size * 2f
                 ));
             case NORTH:
                 return Collections.singletonList(new AxisAlignedBB(
-                    this.location.getX() + 0.5f - size,
-                    this.location.getY() + 0.2f,
-                    this.location.getZ() + 1f - size * 2f,
-                    this.location.getX() + 0.5f + size,
-                    this.location.getY() + 0.8f,
-                    this.location.getZ() + 1f
+                    this.location.x() + 0.5f - size,
+                    this.location.y() + 0.2f,
+                    this.location.z() + 1f - size * 2f,
+                    this.location.x() + 0.5f + size,
+                    this.location.y() + 0.8f,
+                    this.location.z() + 1f
                 ));
         }
 
         size = 0.1f;
         return Collections.singletonList(new AxisAlignedBB(
-            this.location.getX() + 0.5f - size,
-            this.location.getY() + 0.0f,
-            this.location.getZ() + 0.5f - size,
-            this.location.getX() + 0.5f + size,
-            this.location.getY() + 0.6f,
-            this.location.getZ() + 0.5f + size
+            this.location.x() + 0.5f - size,
+            this.location.y() + 0.0f,
+            this.location.z() + 0.5f - size,
+            this.location.x() + 0.5f + size,
+            this.location.y() + 0.6f,
+            this.location.z() + 0.5f + size
         ));
     }
 

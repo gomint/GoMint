@@ -26,14 +26,15 @@ public class BookPage implements io.gomint.inventory.item.data.BookPage {
     }
 
     @Override
-    public String getContent() {
+    public String content() {
         return this.content;
     }
 
     @Override
-    public void setContent( String content ) {
-        this.book.setPageContent( this.index, content );
+    public BookPage content(String content ) {
+        this.book.pageContent( this.index, content );
         this.content = content;
+        return this;
     }
 
 }

@@ -84,7 +84,7 @@ public class WoodenDoubleSlab extends Block implements BlockWoodenDoubleSlab {
     }
 
     @Override
-    public LogType getWoodType() {
+    public LogType type() {
         switch (this.getBlockId()) {
             case "minecraft:crimson_slab":
                 return LogType.CRIMSON;
@@ -96,7 +96,7 @@ public class WoodenDoubleSlab extends Block implements BlockWoodenDoubleSlab {
     }
 
     @Override
-    public void setWoodType(LogType logType) {
+    public BlockWoodenDoubleSlab type(LogType logType) {
         LogTypeMagic newState = LogTypeMagic.valueOf(logType.name());
 
         if (!newState.value.isEmpty()) {
@@ -106,6 +106,8 @@ public class WoodenDoubleSlab extends Block implements BlockWoodenDoubleSlab {
         if (!this.getBlockId().equals(newState.blockId)) {
             this.setBlockId(newState.blockId);
         }
+
+        return this;
     }
 
 }

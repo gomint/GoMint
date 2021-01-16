@@ -38,23 +38,23 @@ public class SetWorldSpawnCommand extends Command {
         // Handling argument: spawnPoint
         BlockPosition spawnPoint = (BlockPosition) arguments.get("spawnPoint");
         if (spawnPoint != null) {
-            worldSpawnLocation.setX(spawnPoint.x());
-            worldSpawnLocation.setY(spawnPoint.y());
-            worldSpawnLocation.setZ(spawnPoint.z());
+            worldSpawnLocation.x(spawnPoint.x());
+            worldSpawnLocation.y(spawnPoint.y());
+            worldSpawnLocation.z(spawnPoint.z());
         }
 
         this.floorLocation(worldSpawnLocation);
         affectedWorld.spawnLocation(worldSpawnLocation);
 
         return CommandOutput.successful(String.format("Set the world spawn point to (%.1f, %.1f, %.1f)",
-            worldSpawnLocation.getX(),
-            worldSpawnLocation.getY(),
-            worldSpawnLocation.getZ()));
+            worldSpawnLocation.x(),
+            worldSpawnLocation.y(),
+            worldSpawnLocation.z()));
     }
 
     private void floorLocation(Location location) {
-        location.setX((float) Math.floor(location.getX()));
-        location.setY((float) Math.floor(location.getY()));
-        location.setZ((float) Math.floor(location.getZ()));
+        location.x((float) Math.floor(location.x()));
+        location.y((float) Math.floor(location.y()));
+        location.z((float) Math.floor(location.z()));
     }
 }

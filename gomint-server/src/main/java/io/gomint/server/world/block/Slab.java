@@ -30,21 +30,21 @@ public abstract class Slab<B> extends Block implements BlockSlab<B> {
     public List<AxisAlignedBB> boundingBoxes() {
         if ( this.top() ) {
             return Collections.singletonList( new AxisAlignedBB(
-                this.location.getX(),
-                this.location.getY() + 0.5f,
-                this.location.getZ(),
-                this.location.getX() + 1,
-                this.location.getY() + 1,
-                this.location.getZ() + 1
+                this.location.x(),
+                this.location.y() + 0.5f,
+                this.location.z(),
+                this.location.x() + 1,
+                this.location.y() + 1,
+                this.location.z() + 1
             ) );
         } else {
             return Collections.singletonList( new AxisAlignedBB(
-                this.location.getX(),
-                this.location.getY(),
-                this.location.getZ(),
-                this.location.getX() + 1,
-                this.location.getY() + 0.5f,
-                this.location.getZ() + 1
+                this.location.x(),
+                this.location.y(),
+                this.location.z(),
+                this.location.x() + 1,
+                this.location.y() + 0.5f,
+                this.location.z() + 1
             ) );
         }
     }
