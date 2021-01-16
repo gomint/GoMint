@@ -1657,7 +1657,7 @@ public class EntityPlayer extends EntityHuman<io.gomint.entity.EntityPlayer> imp
                 dY = 0;
             }
 
-            this.getTransform().setMotion(dX, dY, dZ);
+            this.getTransform().motion(dX, dY, dZ);
         }
     }
 

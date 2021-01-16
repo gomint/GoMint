@@ -48,7 +48,7 @@ public class AIPassiveIdleMovement extends AIMovementAndLookingState {
         double x = r * Math.cos(t);
         double z = r * Math.sin(t);
 
-        Vector position = this.pathfinding.getTransform().getPosition().add((float) x, 0.0F, (float) z);
+        Vector position = this.pathfinding.transform().position().add((float) x, 0.0F, (float) z);
         Block block = this.selectWalkableBlock(position.toBlockPosition(), 10);
         return new Location(block.world(), block.position());
     }

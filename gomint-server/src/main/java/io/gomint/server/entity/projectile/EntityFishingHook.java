@@ -108,7 +108,7 @@ public class EntityFishingHook extends EntityProjectile<io.gomint.entity.project
         }
 
         // TODO: MJ BUG / 1.2.13 / Fishing hooks get applied noclip and gravity in the client, to circumvent we need to send the position every tick
-        this.getTransform().setPosition(this.position());
+        this.getTransform().position(this.position());
 
         this.lastUpdateDT += dT;
         if (Values.CLIENT_TICK_RATE - this.lastUpdateDT < MathUtils.EPSILON) {

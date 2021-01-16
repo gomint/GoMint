@@ -87,7 +87,7 @@ public class EntityManager {
                     }
 
                     // Check if entity moved via external teleport
-                    if (entity.getTransform().isDirty()) {
+                    if (entity.getTransform().dirty()) {
                         ChunkAdapter current = (ChunkAdapter) entity.chunk();
 
                         if (movedEntities == null) {
@@ -117,7 +117,7 @@ public class EntityManager {
                             metadataChangedEntities.add(entity);
                         }
 
-                        if (entity.getTransform().isDirty()) {
+                        if (entity.getTransform().dirty()) {
                             if (movedEntities == null) {
                                 movedEntities = new HashSet<>();
                             }

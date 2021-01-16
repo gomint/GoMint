@@ -332,11 +332,11 @@ public abstract class Entity<E extends io.gomint.entity.Entity<E>> implements io
                     }
 
                     // Calculate new motion
-                    float newMovX = this.transform.getMotionX() * friction;
-                    float newMovY = this.transform.getMotionY() * ( 1 - DRAG );
-                    float newMovZ = this.transform.getMotionZ() * friction;
+                    float newMovX = this.transform.motionX() * friction;
+                    float newMovY = this.transform.motionY() * ( 1 - DRAG );
+                    float newMovZ = this.transform.motionZ() * friction;
 
-                    this.transform.setMotion( newMovX, newMovY, newMovZ );
+                    this.transform.motion( newMovX, newMovY, newMovZ );
                     this.checkAfterGravity();
                 }
 
@@ -368,7 +368,7 @@ public abstract class Entity<E extends io.gomint.entity.Entity<E>> implements io
         }
 
         // Check if we need to update the bounding box
-        if ( this.transform.isDirty() ) {
+        if ( this.transform.dirty() ) {
             this.boundingBox.bounds(
                 this.positionX() - ( this.width / 2 ),
                 this.positionY(),
@@ -395,8 +395,8 @@ public abstract class Entity<E extends io.gomint.entity.Entity<E>> implements io
 
             if ( pushedByBlocks.length() > 0 ) {
                 pushedByBlocks = pushedByBlocks.normalize().multiply( 0.014f );
-                Vector newMotion = this.transform.getMotion().add( pushedByBlocks );
-                this.transform.setMotion( newMotion.getX(), newMotion.getY(), newMotion.getZ() );
+                Vector newMotion = this.transform.motion().add( pushedByBlocks );
+                this.transform.motion( newMotion.getX(), newMotion.getY(), newMotion.getZ() );
                 this.broadCastMotion();
             }
         }
@@ -528,7 +528,7 @@ public abstract class Entity<E extends io.gomint.entity.Entity<E>> implements io
 
         if ( dX != 0 || dY != 0 || dZ != 0 ) {
             // Move by new bounding box
-            this.transform.setPosition(
+            this.transform.position(
                 ( this.boundingBox.minX() + this.boundingBox.maxX() ) / 2,
                 this.boundingBox.minY(),
                 ( this.boundingBox.minZ() + this.boundingBox.maxZ() ) / 2
@@ -596,9 +596,9 @@ public abstract class Entity<E extends io.gomint.entity.Entity<E>> implements io
 
     private void checkInsideBlock() {
         // Check in which block we are
-        int fullBlockX = MathUtils.fastFloor( this.transform.getPositionX() );
-        int fullBlockY = MathUtils.fastFloor( this.transform.getPositionY() );
-        int fullBlockZ = MathUtils.fastFloor( this.transform.getPositionZ() );
+        int fullBlockX = MathUtils.fastFloor( this.transform.positionX() );
+        int fullBlockY = MathUtils.fastFloor( this.transform.positionY() );
+        int fullBlockZ = MathUtils.fastFloor( this.transform.positionZ() );
 
         // Are we stuck inside a block?
         Block block = this.world.blockAt( fullBlockX, fullBlockY, fullBlockZ );
@@ -612,9 +612,9 @@ public abstract class Entity<E extends io.gomint.entity.Entity<E>> implements io
                 this.getClass().getSimpleName(), this.id(), this.stuckInBlockTicks, this.location(), block.getClass().getSimpleName(), block.position(), block.boundingBoxes() );
 
             // Calc with how much force we can get out of here, this depends on how far we are in
-            float diffX = this.transform.getPositionX() - fullBlockX;
-            float diffY = this.transform.getPositionY() - fullBlockY;
-            float diffZ = this.transform.getPositionZ() - fullBlockZ;
+            float diffX = this.transform.positionX() - fullBlockX;
+            float diffY = this.transform.positionY() - fullBlockY;
+            float diffZ = this.transform.positionZ() - fullBlockZ;
 
             // Random out the force
             double force = Math.random() * 0.2 + 0.1;
@@ -669,22 +669,22 @@ public abstract class Entity<E extends io.gomint.entity.Entity<E>> implements io
             // Push to the side we selected
             switch ( direction ) {
                 case 0:
-                    this.transform.setMotion( (float) -force, 0, 0 );
+                    this.transform.motion( (float) -force, 0, 0 );
                     break;
                 case 1:
-                    this.transform.setMotion( (float) force, 0, 0 );
+                    this.transform.motion( (float) force, 0, 0 );
                     break;
                 case 2:
-                    this.transform.setMotion( 0, (float) -force, 0 );
+                    this.transform.motion( 0, (float) -force, 0 );
                     break;
                 case 3:
-                    this.transform.setMotion( 0, (float) force, 0 );
+                    this.transform.motion( 0, (float) force, 0 );
                     break;
                 case 4:
-                    this.transform.setMotion( 0, 0, (float) -force );
+                    this.transform.motion( 0, 0, (float) -force );
                     break;
                 case 5:
-                    this.transform.setMotion( 0, 0, (float) force );
+                    this.transform.motion( 0, 0, (float) force );
                     break;
             }
 
@@ -724,7 +724,7 @@ public abstract class Entity<E extends io.gomint.entity.Entity<E>> implements io
         }
 
         LOGGER.debug( "New motion for {}: {}", this, event.velocity() );
-        this.transform.setMotion( event.velocity().getX(), event.velocity().getY(), event.velocity().getZ() );
+        this.transform.motion( event.velocity().getX(), event.velocity().getY(), event.velocity().getZ() );
         this.fallDistance = 0;
 
         if ( send ) {
@@ -740,9 +740,9 @@ public abstract class Entity<E extends io.gomint.entity.Entity<E>> implements io
     void broadCastMotion() {
         PacketEntityMotion motion = new PacketEntityMotion();
         motion.setEntityId( this.id() );
-        motion.setVelocity( this.transform.getMotion() );
+        motion.setVelocity( this.transform.motion() );
 
-        this.world.sendToVisible( this.transform.getPosition().toBlockPosition(), motion,
+        this.world.sendToVisible( this.transform.position().toBlockPosition(), motion,
             entity -> entity instanceof EntityPlayer && ( (EntityPlayer) entity ).entityVisibilityManager().isVisible( Entity.this ) );
     }
 
@@ -752,7 +752,7 @@ public abstract class Entity<E extends io.gomint.entity.Entity<E>> implements io
      * @return The motion of the entity on the x axis
      */
     public float getMotionX() {
-        return this.transform.getMotionX();
+        return this.transform.motionX();
     }
 
     /**
@@ -761,7 +761,7 @@ public abstract class Entity<E extends io.gomint.entity.Entity<E>> implements io
      * @return The motion of the entity on the y axis
      */
     public float getMotionY() {
-        return this.transform.getMotionY();
+        return this.transform.motionY();
     }
 
     /**
@@ -770,7 +770,7 @@ public abstract class Entity<E extends io.gomint.entity.Entity<E>> implements io
      * @return The motion of the entity on the z axis
      */
     public float getMotionZ() {
-        return this.transform.getMotionZ();
+        return this.transform.motionZ();
     }
 
     /**
@@ -779,7 +779,7 @@ public abstract class Entity<E extends io.gomint.entity.Entity<E>> implements io
      * @return The position of the entity on the x axis
      */
     public float positionX() {
-        return this.transform.getPositionX();
+        return this.transform.positionX();
     }
 
     /**
@@ -788,7 +788,7 @@ public abstract class Entity<E extends io.gomint.entity.Entity<E>> implements io
      * @return The position of the entity on the y axis
      */
     public float positionY() {
-        return this.transform.getPositionY();
+        return this.transform.positionY();
     }
 
     /**
@@ -797,7 +797,7 @@ public abstract class Entity<E extends io.gomint.entity.Entity<E>> implements io
      * @return The position of the entity on the z axis
      */
     public float positionZ() {
-        return this.transform.getPositionZ();
+        return this.transform.positionZ();
     }
 
     /**
@@ -806,7 +806,7 @@ public abstract class Entity<E extends io.gomint.entity.Entity<E>> implements io
      * @return The position of the entity as a vector
      */
     public Vector position() {
-        return this.transform.getPosition();
+        return this.transform.position();
     }
 
     /**
@@ -815,7 +815,7 @@ public abstract class Entity<E extends io.gomint.entity.Entity<E>> implements io
      * @param position The position to set
      */
     public E position(Vector position ) {
-        this.transform.setPosition( position );
+        this.transform.position( position );
         this.recalcBoundingBox();
         return (E) this;
     }
@@ -826,7 +826,7 @@ public abstract class Entity<E extends io.gomint.entity.Entity<E>> implements io
      * @return The yaw angle of the entity's body
      */
     public float yaw() {
-        return this.transform.getYaw();
+        return this.transform.yaw();
     }
 
     /**
@@ -835,7 +835,7 @@ public abstract class Entity<E extends io.gomint.entity.Entity<E>> implements io
      * @param yaw The yaw angle to set
      */
     public E yaw(float yaw ) {
-        this.transform.setYaw( yaw );
+        this.transform.yaw( yaw );
         return (E) this;
     }
 
@@ -845,7 +845,7 @@ public abstract class Entity<E extends io.gomint.entity.Entity<E>> implements io
      * @return The yaw angle of the entity's head
      */
     public float headYaw() {
-        return this.transform.getHeadYaw();
+        return this.transform.headYaw();
     }
 
     /**
@@ -854,7 +854,7 @@ public abstract class Entity<E extends io.gomint.entity.Entity<E>> implements io
      * @param headYaw The yaw angle to set
      */
     public E headYaw(float headYaw ) {
-        this.transform.setHeadYaw( headYaw );
+        this.transform.headYaw( headYaw );
         return (E) this;
     }
 
@@ -864,7 +864,7 @@ public abstract class Entity<E extends io.gomint.entity.Entity<E>> implements io
      * @return The pitch angle of the entity's head
      */
     public float pitch() {
-        return this.transform.getPitch();
+        return this.transform.pitch();
     }
 
     /**
@@ -873,19 +873,19 @@ public abstract class Entity<E extends io.gomint.entity.Entity<E>> implements io
      * @param pitch The pitch angle to set.
      */
     public E pitch(float pitch ) {
-        this.transform.setPitch( pitch );
+        this.transform.pitch( pitch );
         return (E) this;
     }
 
     @Override
     public Vector direction() {
-        return this.transform.getDirection();
+        return this.transform.direction();
     }
 
     @Override
     public Vector2 directionPlane() {
-        return ( new Vector2( (float) -Math.cos( Math.toRadians( this.transform.getYaw() ) - ( Math.PI / 2 ) ),
-            (float) -Math.sin( Math.toRadians( this.transform.getYaw() ) - ( Math.PI / 2 ) ) ) ).normalize();
+        return ( new Vector2( (float) -Math.cos( Math.toRadians( this.transform.yaw() ) - ( Math.PI / 2 ) ),
+            (float) -Math.sin( Math.toRadians( this.transform.yaw() ) - ( Math.PI / 2 ) ) ) ).normalize();
     }
 
     /**
@@ -894,7 +894,7 @@ public abstract class Entity<E extends io.gomint.entity.Entity<E>> implements io
      * @return The direction vector the entity's head is facing
      */
     public Vector headDirection() {
-        return this.transform.getHeadDirection();
+        return this.transform.headDirection();
     }
 
     /**
@@ -905,7 +905,7 @@ public abstract class Entity<E extends io.gomint.entity.Entity<E>> implements io
      * @param positionZ The z coordinate of the position
      */
     public E position(float positionX, float positionY, float positionZ ) {
-        this.transform.setPosition( positionX, positionY, positionZ );
+        this.transform.position( positionX, positionY, positionZ );
         this.recalcBoundingBox();
         return (E) this;
     }
@@ -1105,16 +1105,16 @@ public abstract class Entity<E extends io.gomint.entity.Entity<E>> implements io
         PacketSpawnEntity spawnEntity = new PacketSpawnEntity();
         spawnEntity.setEntityId( this.id() );
         spawnEntity.setMetadata( this.metadataContainer );
-        spawnEntity.setX( this.transform.getPositionX() );
-        spawnEntity.setY( this.transform.getPositionY() + this.eyeHeight );
-        spawnEntity.setZ( this.transform.getPositionZ() );
+        spawnEntity.setX( this.transform.positionX() );
+        spawnEntity.setY( this.transform.positionY() + this.eyeHeight );
+        spawnEntity.setZ( this.transform.positionZ() );
         spawnEntity.setEntityType( this.type() );
-        spawnEntity.setVelocityX( this.transform.getMotionX() );
-        spawnEntity.setVelocityY( this.transform.getMotionY() );
-        spawnEntity.setVelocityZ( this.transform.getMotionZ() );
-        spawnEntity.setYaw( this.transform.getYaw() );
-        spawnEntity.setHeadYaw( this.transform.getHeadYaw() );
-        spawnEntity.setPitch( this.transform.getPitch() );
+        spawnEntity.setVelocityX( this.transform.motionX() );
+        spawnEntity.setVelocityY( this.transform.motionY() );
+        spawnEntity.setVelocityZ( this.transform.motionZ() );
+        spawnEntity.setYaw( this.transform.yaw() );
+        spawnEntity.setHeadYaw( this.transform.headYaw() );
+        spawnEntity.setPitch( this.transform.pitch() );
         return spawnEntity;
     }
 
@@ -1138,7 +1138,7 @@ public abstract class Entity<E extends io.gomint.entity.Entity<E>> implements io
 
     @Override
     public Vector velocity() {
-        return this.transform.getMotion();
+        return this.transform.motion();
     }
 
     @Override
@@ -1427,7 +1427,7 @@ public abstract class Entity<E extends io.gomint.entity.Entity<E>> implements io
             float y = MathUtils.ensureFloat( motion.get( 1 ) );
             float z = MathUtils.ensureFloat( motion.get( 2 ) );
 
-            this.transform.setMotion( x, y, z );
+            this.transform.motion( x, y, z );
         }
 
         // Read rotation

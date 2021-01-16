@@ -58,7 +58,7 @@ public class AIFollowEntity extends AIState {
         }
 
         if ( this.path != null && this.currentPathNode < this.path.size() ) {
-            Vector position = this.pathfinding.getTransform().getPosition();
+            Vector position = this.pathfinding.transform().position();
 
             BlockPosition blockPosition = new BlockPosition(
                 MathUtils.fastFloor( position.getX() ),
@@ -76,7 +76,7 @@ public class AIFollowEntity extends AIState {
                 direction.setY( 1f ); // Default jump height
             }
 
-            this.pathfinding.getTransform().setMotion( direction.getX(), direction.getY(), direction.getZ() );
+            this.pathfinding.transform().motion( direction.getX(), direction.getY(), direction.getZ() );
 
             LOGGER.debug( "Current pos: {}; Needed: {}; Direction: {}", position, node, direction );
 
@@ -86,8 +86,10 @@ public class AIFollowEntity extends AIState {
         } else if ( this.followEntity.onGround() ) {
             LOGGER.debug( "Current follow position: {}", this.followEntity.location() );
 
-            this.pathfinding.setGoal( this.followEntity.location() );
-            this.path = this.pathfinding.getPath();
+            this.path = this.pathfinding
+                .goal( this.followEntity.location() )
+                .path();
+
             this.currentPathNode = 0;
         }
     }
