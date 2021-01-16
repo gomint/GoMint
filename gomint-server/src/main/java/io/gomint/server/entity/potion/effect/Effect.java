@@ -41,9 +41,10 @@ public abstract class Effect implements io.gomint.entity.potion.Effect {
 
     public abstract void remove( EntityLiving<?> entity );
 
-    public void visible(boolean value ) {
+    public Effect visible(boolean value ) {
         this.visible = value;
         this.manager.updateEffect( this );
+        return this;
     }
 
     public void setData( EffectManager manager, int amplifier, long lengthInMS ) {

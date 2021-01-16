@@ -12,6 +12,6 @@ public interface Effect {
      *
      * @param value true when it should show particles, false when it shouldn't
      */
-    void visible(boolean value );
+    Effect visible(boolean value );
 
 }
