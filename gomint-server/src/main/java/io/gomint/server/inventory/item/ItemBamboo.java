@@ -16,7 +16,7 @@ import java.time.Duration;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:bamboo", id = -163 )
+@RegisterInfo( sId = "minecraft:bamboo" )
 public class ItemBamboo extends ItemStack< io.gomint.inventory.item.ItemBamboo> implements io.gomint.inventory.item.ItemBamboo {
 
     @Override

@@ -19,12 +19,12 @@ import io.gomint.world.block.BlockType;
 public class Bamboo extends Block implements BlockBamboo {
 
     @Override
-    public String getBlockId() {
+    public String blockId() {
         return "minecraft:bamboo";
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 0;
     }
 

@@ -14,7 +14,7 @@ import io.gomint.world.block.BlockType;
 public class SoulSoil extends Block implements BlockSoulSoil {
 
     @Override
-    public String getBlockId() {
+    public String blockId() {
         return "minecraft:soul_soil";
     }
 
@@ -29,12 +29,12 @@ public class SoulSoil extends Block implements BlockSoulSoil {
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 2.5f;
     }
 
     @Override
-    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] toolInterfaces() {
         return ToolPresets.SHOVEL;
     }
 

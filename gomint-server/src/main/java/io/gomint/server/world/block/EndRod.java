@@ -13,12 +13,12 @@ import io.gomint.server.registry.RegisterInfo;
 public class EndRod extends Block implements BlockEndRod {
 
     @Override
-    public String getBlockId() {
+    public String blockId() {
         return "minecraft:end_rod";
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 0.0f;
     }
 

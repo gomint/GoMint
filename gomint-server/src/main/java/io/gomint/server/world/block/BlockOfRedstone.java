@@ -17,7 +17,7 @@ import java.util.List;
 public class BlockOfRedstone extends Block implements BlockBlockOfRedstone {
 
     @Override
-    public String getBlockId() {
+    public String blockId() {
         return "minecraft:redstone_block";
     }
 
@@ -27,7 +27,7 @@ public class BlockOfRedstone extends Block implements BlockBlockOfRedstone {
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 10.0f;
     }
 
@@ -37,7 +37,7 @@ public class BlockOfRedstone extends Block implements BlockBlockOfRedstone {
     }
 
     @Override
-    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] toolInterfaces() {
         return ToolPresets.PICKAXE;
     }
 

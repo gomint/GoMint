@@ -14,7 +14,7 @@ import io.gomint.world.block.BlockType;
 public class CryingObsidian extends Block implements BlockCryingObsidian {
 
     @Override
-    public String getBlockId() {
+    public String blockId() {
         return "minecraft:crying_obsidian";
     }
 
@@ -24,14 +24,14 @@ public class CryingObsidian extends Block implements BlockCryingObsidian {
     }
 
     @Override
-    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] toolInterfaces() {
         return new Class[]{
             ItemDiamondPickaxe.class
         };
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 6000.0f;
     }
 

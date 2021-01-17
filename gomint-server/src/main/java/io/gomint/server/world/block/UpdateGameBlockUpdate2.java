@@ -12,12 +12,12 @@ import io.gomint.server.registry.RegisterInfo;
 public class UpdateGameBlockUpdate2 extends Block {
 
     @Override
-    public String getBlockId() {
+    public String blockId() {
         return "minecraft:info_update2";
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 1.8E7f;
     }
 

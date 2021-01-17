@@ -17,7 +17,7 @@ import java.util.List;
 public class GlassPane extends Block implements BlockGlassPane {
 
     @Override
-    public String getBlockId() {
+    public String blockId() {
         return "minecraft:glass_pane";
     }
 
@@ -42,7 +42,7 @@ public class GlassPane extends Block implements BlockGlassPane {
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 1.5f;
     }
 

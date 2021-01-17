@@ -35,12 +35,12 @@ import java.util.List;
 public class WoodenDoor extends Door<BlockWoodenDoor> implements BlockWoodenDoor {
 
     @Override
-    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] toolInterfaces() {
         return ToolPresets.AXE;
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 15.0f;
     }
 
@@ -51,7 +51,7 @@ public class WoodenDoor extends Door<BlockWoodenDoor> implements BlockWoodenDoor
 
     @Override
     public LogType type() {
-        switch (this.getBlockId()) {
+        switch (this.blockId()) {
             case "minecraft:crimson_door":
                 return LogType.CRIMSON;
             case "minecraft:warped_door":
@@ -76,29 +76,29 @@ public class WoodenDoor extends Door<BlockWoodenDoor> implements BlockWoodenDoor
     public BlockWoodenDoor type(LogType logType) {
         switch (logType) {
             case CRIMSON:
-                this.setBlockId("minecraft:crimson_door");
+                this.blockId("minecraft:crimson_door");
                 break;
             case WARPED:
-                this.setBlockId("minecraft:warped_door");
+                this.blockId("minecraft:warped_door");
                 break;
             case DARK_OAK:
-                this.setBlockId("minecraft:dark_oak_door");
+                this.blockId("minecraft:dark_oak_door");
                 break;
             case ACACIA:
-                this.setBlockId("minecraft:acacia_door");
+                this.blockId("minecraft:acacia_door");
                 break;
             case JUNGLE:
-                this.setBlockId("minecraft:jungle_door");
+                this.blockId("minecraft:jungle_door");
                 break;
             case BIRCH:
-                this.setBlockId("minecraft:birch_door");
+                this.blockId("minecraft:birch_door");
                 break;
             case SPRUCE:
-                this.setBlockId("minecraft:spruce_door");
+                this.blockId("minecraft:spruce_door");
                 break;
             case OAK:
             default:
-                this.setBlockId("minecraft:wooden_door");
+                this.blockId("minecraft:wooden_door");
         }
 
         return this;

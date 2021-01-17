@@ -9,7 +9,7 @@ import io.gomint.taglib.NBTTagCompound;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo(sId = "minecraft:hay_block", id = 170)
+@RegisterInfo(sId = "minecraft:hay_block")
 public class ItemHayBale extends ItemStack< io.gomint.inventory.item.ItemHayBale> implements io.gomint.inventory.item.ItemHayBale {
 
     @Override

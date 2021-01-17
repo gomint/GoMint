@@ -14,7 +14,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:rapid_fertilizer", id = 449 )
+@RegisterInfo( sId = "minecraft:rapid_fertilizer" )
 public class ItemRapidFertilizer extends ItemStack< io.gomint.inventory.item.ItemRapidFertilizer> implements io.gomint.inventory.item.ItemRapidFertilizer {
 
     @Override

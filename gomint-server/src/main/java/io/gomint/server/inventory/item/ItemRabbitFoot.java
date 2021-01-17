@@ -8,7 +8,7 @@ import io.gomint.taglib.NBTTagCompound;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:rabbit_foot", id = 414 )
+@RegisterInfo( sId = "minecraft:rabbit_foot" )
  public class ItemRabbitFoot extends ItemStack< io.gomint.inventory.item.ItemRabbitFoot> implements io.gomint.inventory.item.ItemRabbitFoot {
 
 

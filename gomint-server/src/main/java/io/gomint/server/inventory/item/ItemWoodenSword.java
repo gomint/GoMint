@@ -14,7 +14,7 @@ import java.time.Duration;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:wooden_sword", id = 268 )
+@RegisterInfo( sId = "minecraft:wooden_sword" )
 public class ItemWoodenSword extends ItemReduceTierSpecial<io.gomint.inventory.item.ItemWoodenSword> implements io.gomint.inventory.item.ItemWoodenSword, ItemSword {
 
     @Override

@@ -45,7 +45,7 @@ public class CoralFanHang extends Block implements BlockCoralFanHang {
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 0.1f;
     }
 
@@ -56,28 +56,28 @@ public class CoralFanHang extends Block implements BlockCoralFanHang {
 
     @Override
     public Direction direction() {
-        return DIRECTION.getState(this);
+        return DIRECTION.state(this);
     }
 
     @Override
     public BlockCoralFanHang direction(Direction direction) {
-        DIRECTION.setState(this, direction);
+        DIRECTION.state(this, direction);
         return this;
     }
 
     @Override
     public BlockCoralFanHang coralType(CoralType type) {
         CoralTypeMagic m = CoralTypeMagic.valueOf(type.name());
-        this.setBlockId(m.id);
-        TYPE.setState(this, m.type);
+        this.blockId(m.id);
+        TYPE.state(this, m.type);
         return this;
     }
 
     @Override
     public CoralType coralType() {
-        boolean type = TYPE.getState(this);
+        boolean type = TYPE.state(this);
         for (CoralTypeMagic value : CoralTypeMagic.values()) {
-            if (value.type == type && value.id.equals(this.getBlockId())) {
+            if (value.type == type && value.id.equals(this.blockId())) {
                 return CoralType.valueOf(value.name());
             }
         }
@@ -87,12 +87,12 @@ public class CoralFanHang extends Block implements BlockCoralFanHang {
 
     @Override
     public boolean dead() {
-        return DEAD.getState(this);
+        return DEAD.state(this);
     }
 
     @Override
     public BlockCoralFanHang dead(boolean dead) {
-        DEAD.setState(this, dead);
+        DEAD.state(this, dead);
         return this;
     }
 

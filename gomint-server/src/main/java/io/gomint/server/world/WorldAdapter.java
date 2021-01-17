@@ -247,7 +247,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
                     throw new IllegalArgumentException("Sound " + sound + " needs block sound data");
                 }
 
-                soundData = BlockRuntimeIDs.toBlockIdentifier(this.server.blocks().getID(data.block()), null).getRuntimeId();
+                soundData = BlockRuntimeIDs.toBlockIdentifier(this.server.blocks().getID(data.block()), null).runtimeId();
                 break;
 
             case NOTE:
@@ -982,7 +982,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
         PacketUpdateBlock updateBlock = new PacketUpdateBlock();
         updateBlock.setPosition(pos);
 
-        updateBlock.setBlockId(block.getRuntimeId());
+        updateBlock.setBlockId(block.runtimeId());
         updateBlock.setFlags(PacketUpdateBlock.FLAG_ALL);
 
         connection.addToSendQueue(updateBlock);
@@ -1182,7 +1182,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
                 if (success) {
                     // Play sound
                     io.gomint.server.world.block.Block newBlock = replaceBlock.world().blockAt(replaceBlock.position());
-                    playSound(null, new Vector(newBlock.position()), Sound.PLACE, (byte) 1, BlockRuntimeIDs.toBlockIdentifier(newBlock.getBlockId(), null).getRuntimeId());
+                    playSound(null, new Vector(newBlock.position()), Sound.PLACE, (byte) 1, BlockRuntimeIDs.toBlockIdentifier(newBlock.blockId(), null).runtimeId());
 
                     if (entity.gamemode() != Gamemode.CREATIVE) {
                         ((io.gomint.server.inventory.item.ItemStack<?>) itemInHand).afterPlacement();
@@ -1320,7 +1320,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
             }
 
             // Break animation (this also plays the break sound in the client)
-            sendLevelEvent(position.toVector().add(.5f, .5f, .5f), LevelEvent.PARTICLE_DESTROY, block.getRuntimeId());
+            sendLevelEvent(position.toVector().add(.5f, .5f, .5f), LevelEvent.PARTICLE_DESTROY, block.runtimeId());
 
             // Schedule neighbour updates
             scheduleNeighbourUpdates(block.performBreak(creative));
@@ -1406,7 +1406,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
                 }
 
                 io.gomint.server.world.block.Block block = (io.gomint.server.world.block.Block) data.block();
-                dataNumber = block.getRuntimeId() | (data.face() << 24);
+                dataNumber = block.runtimeId() | (data.face() << 24);
 
                 break;
 
@@ -1416,7 +1416,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
                 }
 
                 block = (io.gomint.server.world.block.Block) data.block();
-                dataNumber = block.getRuntimeId();
+                dataNumber = block.runtimeId();
 
                 break;
         }
@@ -1515,7 +1515,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
      * Adjust the spawn level to the first in air block
      */
     protected void adjustSpawn() {
-        int airRuntime = BlockRuntimeIDs.toBlockIdentifier("minecraft:air", null).getRuntimeId();
+        int airRuntime = BlockRuntimeIDs.toBlockIdentifier("minecraft:air", null).runtimeId();
 
         BlockPosition check = new BlockPosition((int) this.spawn.x(), 0, (int) this.spawn.z());
         for (int i = 255; i > 0; i--) {

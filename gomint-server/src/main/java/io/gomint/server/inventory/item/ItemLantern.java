@@ -7,7 +7,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = -208, sId = "minecraft:lantern" )
+@RegisterInfo( sId = "minecraft:lantern" )
 public class ItemLantern extends ItemStack< io.gomint.inventory.item.ItemLantern> implements io.gomint.inventory.item.ItemLantern {
 
     @Override

@@ -13,7 +13,7 @@ import java.time.Duration;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:wooden_pickaxe", id = 270 )
+@RegisterInfo( sId = "minecraft:wooden_pickaxe" )
 public class ItemWoodenPickaxe extends ItemReduceTierWooden<io.gomint.inventory.item.ItemWoodenPickaxe> implements io.gomint.inventory.item.ItemWoodenPickaxe {
 
     @Override

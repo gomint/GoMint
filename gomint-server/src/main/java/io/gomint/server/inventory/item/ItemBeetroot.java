@@ -7,8 +7,8 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo(sId = "minecraft:beetroot", id = 457, def = true)
-@RegisterInfo(sId = "minecraft:item.beetroot", id = 244)
+@RegisterInfo(sId = "minecraft:beetroot", def = true)
+@RegisterInfo(sId = "minecraft:item.beetroot")
 public class ItemBeetroot extends ItemFood<io.gomint.inventory.item.ItemBeetroot> implements io.gomint.inventory.item.ItemBeetroot {
 
     @Override

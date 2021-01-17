@@ -14,7 +14,7 @@ import io.gomint.taglib.NBTTagCompound;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:record_11", id = 510 )
+@RegisterInfo( sId = "minecraft:record_11" )
 public class ItemRecord11 extends ItemStack< io.gomint.inventory.item.ItemRecord11> implements io.gomint.inventory.item.ItemRecord11 {
 
 

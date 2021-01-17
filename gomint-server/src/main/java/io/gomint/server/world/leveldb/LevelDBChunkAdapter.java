@@ -159,7 +159,7 @@ public class LevelDBChunkAdapter extends ChunkAdapter {
             int runtimeIdCounter = 0;
 
             for (short blockIndex = 0; blockIndex < indexIDs.length; blockIndex++) {
-                int blockId = blocks.get(blockIndex).getRuntimeId();
+                int blockId = blocks.get(blockIndex).runtimeId();
 
                 if (lastBlockId != blockId) {
                     foundIndex = indexList.indexOf(blockId);
@@ -205,8 +205,8 @@ public class LevelDBChunkAdapter extends ChunkAdapter {
                 BlockIdentifier blockIdentifier = block.get(value1);
 
                 NBTTagCompound compound = new NBTTagCompound("");
-                compound.addValue("name", blockIdentifier.getBlockId());
-                compound.addValue("states", blockIdentifier.getNbt());
+                compound.addValue("name", blockIdentifier.blockId());
+                compound.addValue("states", blockIdentifier.nbt());
                 compound.addValue("version", BLOCK_VERSION);
 
                 try {
@@ -259,9 +259,9 @@ public class LevelDBChunkAdapter extends ChunkAdapter {
                                     LOGGER.error("Unknown block / state config: {} / {}", blockId, states);
                                 }
 
-                                chunkPalette.put(index++, identifier.getRuntimeId());
+                                chunkPalette.put(index++, identifier.runtimeId());
                             } else {
-                                chunkPalette.put(index++, BlockRuntimeIDs.toBlockIdentifier(blockId, null).getRuntimeId());
+                                chunkPalette.put(index++, BlockRuntimeIDs.toBlockIdentifier(blockId, null).runtimeId());
                             }
                         } catch (IOException | AllocationLimitReachedException e) {
                             LOGGER.error("Error in loading tile entities", e);
@@ -274,7 +274,7 @@ public class LevelDBChunkAdapter extends ChunkAdapter {
                         int runtimeID = chunkPalette.get(indexes[i]);
                         if (runtimeID == -1) {
                             LOGGER.error("Invalid runtime in storage");
-                            runtimeID = BlockRuntimeIDs.toBlockIdentifier("minecraft:air", null).getRuntimeId();
+                            runtimeID = BlockRuntimeIDs.toBlockIdentifier("minecraft:air", null).runtimeId();
                         }
 
                         slice.setRuntimeIdInternal(i, sI, runtimeID);

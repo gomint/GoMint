@@ -43,7 +43,7 @@ public class WallSign extends Sign<BlockWallSign> implements BlockWallSign {
     @Override
     public LogType type() {
         for (LogTypeMagic value : LogTypeMagic.values()) {
-            if (value.blockId.equals(this.getBlockId())) {
+            if (value.blockId.equals(this.blockId())) {
                 return LogType.valueOf(value.name());
             }
         }
@@ -54,7 +54,7 @@ public class WallSign extends Sign<BlockWallSign> implements BlockWallSign {
     @Override
     public BlockWallSign type(LogType logType) {
         LogTypeMagic newState = LogTypeMagic.valueOf(logType.name());
-        this.setBlockId(newState.blockId);
+        this.blockId(newState.blockId);
         return this;
     }
 
@@ -65,13 +65,13 @@ public class WallSign extends Sign<BlockWallSign> implements BlockWallSign {
 
     @Override
     public BlockWallSign facing(Facing facing) {
-        FACING.setState(this, facing);
+        FACING.state(this, facing);
         return this;
     }
 
     @Override
     public Facing facing() {
-        return FACING.getState(this);
+        return FACING.state(this);
     }
 
 }

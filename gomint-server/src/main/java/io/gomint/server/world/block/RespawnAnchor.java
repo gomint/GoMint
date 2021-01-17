@@ -14,7 +14,7 @@ import io.gomint.world.block.BlockType;
 public class RespawnAnchor extends Block implements BlockRespawnAnchor {
 
     @Override
-    public String getBlockId() {
+    public String blockId() {
         return "minecraft:respawn_anchor";
     }
 
@@ -24,14 +24,14 @@ public class RespawnAnchor extends Block implements BlockRespawnAnchor {
     }
 
     @Override
-    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] toolInterfaces() {
         return new Class[]{
             ItemDiamondPickaxe.class
         };
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 6000.0f;
     }
 

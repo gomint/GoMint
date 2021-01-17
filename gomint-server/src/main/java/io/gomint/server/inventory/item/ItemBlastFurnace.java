@@ -7,7 +7,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo(id = -196, sId = "minecraft:blast_furnace")
+@RegisterInfo(sId = "minecraft:blast_furnace")
 public class ItemBlastFurnace extends ItemStack< io.gomint.inventory.item.ItemBlastFurnace> implements io.gomint.inventory.item.ItemBlastFurnace {
 
     @Override

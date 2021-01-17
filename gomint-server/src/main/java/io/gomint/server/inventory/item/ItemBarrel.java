@@ -14,7 +14,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = -203, sId = "minecraft:barrel")
+@RegisterInfo( sId = "minecraft:barrel")
 public class ItemBarrel extends ItemStack< io.gomint.inventory.item.ItemBarrel> implements io.gomint.inventory.item.ItemBarrel {
 
     @Override

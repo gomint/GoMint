@@ -70,10 +70,13 @@ public class Items {
     }
 
     public <T extends ItemStack<T>> T create(String id, short data, byte amount, NBTTagCompound nbt) {
-        Generator<T> itemGenerator = (Generator<T>) this.generators.getGenerator(id);
+        Generator<T> itemGenerator = (Generator<T>) this.generators.getGenerator(id + "[" + data + "]");
         if (itemGenerator == null) {
-            LOGGER.error("Unknown item generator for id {}", id);
-            return null;
+            itemGenerator = (Generator<T>) this.generators.getGenerator(id);
+            if (itemGenerator == null) {
+                LOGGER.error("Unknown item generator for id {}", id);
+                return null;
+            }
         }
 
         // Cleanup NBT tag, root must be empty string

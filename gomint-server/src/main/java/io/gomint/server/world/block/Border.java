@@ -12,7 +12,7 @@ import io.gomint.world.block.BlockType;
 public class Border extends Block implements BlockBorder {
 
     @Override
-    public String getBlockId() {
+    public String blockId() {
         return "minecraft:border_block";
     }
 
@@ -22,7 +22,7 @@ public class Border extends Block implements BlockBorder {
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 1.8E7f;
     }
 

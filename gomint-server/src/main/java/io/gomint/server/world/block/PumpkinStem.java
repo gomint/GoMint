@@ -13,7 +13,7 @@ import io.gomint.server.registry.RegisterInfo;
 public class PumpkinStem extends Growable implements BlockPumpkinStem {
 
     @Override
-    public String getBlockId() {
+    public String blockId() {
         return "minecraft:pumpkin_stem";
     }
 
@@ -28,7 +28,7 @@ public class PumpkinStem extends Growable implements BlockPumpkinStem {
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 0.0f;
     }
 

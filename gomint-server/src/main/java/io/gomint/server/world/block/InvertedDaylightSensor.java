@@ -13,7 +13,7 @@ import io.gomint.server.registry.RegisterInfo;
 public class InvertedDaylightSensor extends Block implements BlockInvertedDaylightSensor {
 
     @Override
-    public String getBlockId() {
+    public String blockId() {
         return "minecraft:daylight_detector_inverted";
     }
 
@@ -28,7 +28,7 @@ public class InvertedDaylightSensor extends Block implements BlockInvertedDaylig
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 1.0f;
     }
 

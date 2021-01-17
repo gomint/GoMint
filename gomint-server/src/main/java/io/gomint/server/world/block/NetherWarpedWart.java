@@ -14,7 +14,7 @@ import io.gomint.world.block.BlockType;
 public class NetherWarpedWart extends Block implements BlockNetherWarpedWart {
 
     @Override
-    public String getBlockId() {
+    public String blockId() {
         return "minecraft:warped_wart_block";
     }
 
@@ -29,12 +29,12 @@ public class NetherWarpedWart extends Block implements BlockNetherWarpedWart {
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 0.0f;
     }
 
     @Override
-    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] toolInterfaces() {
         return new Class[]{
             ItemHoe.class
         };

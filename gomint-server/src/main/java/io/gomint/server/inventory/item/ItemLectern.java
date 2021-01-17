@@ -7,7 +7,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( id = -194, sId = "minecraft:lectern")
+@RegisterInfo( sId = "minecraft:lectern")
 public class ItemLectern extends ItemStack< io.gomint.inventory.item.ItemLectern> implements io.gomint.inventory.item.ItemLectern {
 
     @Override

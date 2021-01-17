@@ -8,7 +8,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo(sId = "minecraft:bedrock", id = 7)
+@RegisterInfo(sId = "minecraft:bedrock")
 public class ItemBedrock extends ItemStack< io.gomint.inventory.item.ItemBedrock> implements io.gomint.inventory.item.ItemBedrock {
 
     @Override

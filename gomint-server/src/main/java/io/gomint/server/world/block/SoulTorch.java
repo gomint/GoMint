@@ -23,7 +23,7 @@ public class SoulTorch extends Block implements BlockSoulTorch {
     private static final BlockfaceBlockState FACING = new BlockfaceBlockState(() -> new String[]{"facing_direction"});
 
     @Override
-    public String getBlockId() {
+    public String blockId() {
         return "minecraft:soul_torch";
     }
 
@@ -38,7 +38,7 @@ public class SoulTorch extends Block implements BlockSoulTorch {
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 0.0f;
     }
 
@@ -66,7 +66,7 @@ public class SoulTorch extends Block implements BlockSoulTorch {
     public List<AxisAlignedBB> boundingBoxes() {
         float size = 0.15f;
 
-        switch (FACING.getState(this)) {
+        switch (FACING.state(this)) {
             case EAST:
                 return Collections.singletonList(new AxisAlignedBB(
                     this.location.x(),
@@ -129,7 +129,7 @@ public class SoulTorch extends Block implements BlockSoulTorch {
         boolean foundSide = false;
         for (Facing toCheckFace : toCheck) {
             if (!this.side(toCheckFace).transparent()) {
-                FACING.setState(this, toCheckFace.opposite());
+                FACING.state(this, toCheckFace.opposite());
                 foundSide = true;
                 break;
             }

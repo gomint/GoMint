@@ -18,7 +18,7 @@ import java.util.concurrent.TimeUnit;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:enchanted_golden_apple", id = 259 )
+@RegisterInfo( sId = "minecraft:enchanted_golden_apple" )
 public class ItemEnchantedGoldenApple extends ItemFood<io.gomint.inventory.item.ItemEnchantedGoldenApple> implements io.gomint.inventory.item.ItemEnchantedGoldenApple {
 
     @Override

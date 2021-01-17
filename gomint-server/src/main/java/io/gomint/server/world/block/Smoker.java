@@ -23,7 +23,7 @@ public class Smoker extends Block implements BlockSmoker {
     private static final BlockfaceBlockState FACING = new BlockfaceBlockState(() -> new String[]{"facing_direction"});
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 0;
     }
 
@@ -45,15 +45,15 @@ public class Smoker extends Block implements BlockSmoker {
 
     @Override
     public boolean burning() {
-        return this.getBlockId().equals("minecraft:lit_smoker");
+        return this.blockId().equals("minecraft:lit_smoker");
     }
 
     @Override
     public BlockSmoker burning(boolean burning) {
         if (burning) {
-            this.setBlockId("minecraft:lit_smoker");
+            this.blockId("minecraft:lit_smoker");
         } else {
-            this.setBlockId("minecraft:smoker");
+            this.blockId("minecraft:smoker");
         }
 
         return this;
@@ -61,13 +61,13 @@ public class Smoker extends Block implements BlockSmoker {
 
     @Override
     public BlockSmoker facing(Facing facing) {
-        FACING.setState(this, facing);
+        FACING.state(this, facing);
         return this;
     }
 
     @Override
     public Facing facing() {
-        return FACING.getState(this);
+        return FACING.state(this);
     }
 
 }

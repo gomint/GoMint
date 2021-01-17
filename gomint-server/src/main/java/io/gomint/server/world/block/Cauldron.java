@@ -50,7 +50,7 @@ public class Cauldron extends Block implements BlockCauldron {
 
     @Override
     public boolean beforePlacement(EntityLiving<?> entity, ItemStack<?> item, Facing face, Location location) {
-        FILL_LEVEL.setState(this, 0f);
+        FILL_LEVEL.state(this, 0f);
         return super.beforePlacement(entity, item, face, location);
     }
 
@@ -65,7 +65,7 @@ public class Cauldron extends Block implements BlockCauldron {
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 10.0f;
     }
 
@@ -80,7 +80,7 @@ public class Cauldron extends Block implements BlockCauldron {
     }
 
     @Override
-    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] toolInterfaces() {
         return ToolPresets.PICKAXE;
     }
 
@@ -97,20 +97,20 @@ public class Cauldron extends Block implements BlockCauldron {
 
     @Override
     public LiquidType type() {
-        return LiquidType.valueOf(LIQUID.getState(this).name());
+        return LiquidType.valueOf(LIQUID.state(this).name());
     }
 
     @Override
     public BlockCauldron type(LiquidType type) {
         LiquidTypeMagic newState = LiquidTypeMagic.valueOf(type.name());
-        this.setBlockId(newState.blockId);
-        LIQUID.setState(this, newState);
+        this.blockId(newState.blockId);
+        LIQUID.state(this, newState);
         return this;
     }
 
     @Override
     public float fillHeight() {
-        return FILL_LEVEL.getState(this);
+        return FILL_LEVEL.state(this);
     }
 
     @Override
@@ -119,7 +119,7 @@ public class Cauldron extends Block implements BlockCauldron {
             return this;
         }
 
-        FILL_LEVEL.setState(this, height);
+        FILL_LEVEL.state(this, height);
         return this;
     }
 

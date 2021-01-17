@@ -8,7 +8,7 @@ import io.gomint.taglib.NBTTagCompound;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo(sId = "minecraft:glowstone", id = 89)
+@RegisterInfo(sId = "minecraft:glowstone")
 public class ItemGlowstone extends ItemStack< io.gomint.inventory.item.ItemGlowstone> implements io.gomint.inventory.item.ItemGlowstone {
 
     @Override

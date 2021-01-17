@@ -14,7 +14,7 @@ import io.gomint.world.block.BlockType;
 public class LodeStone extends Block implements BlockLodeStone {
 
     @Override
-    public String getBlockId() {
+    public String blockId() {
         return "minecraft:lodestone";
     }
 
@@ -24,7 +24,7 @@ public class LodeStone extends Block implements BlockLodeStone {
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 17.5f;
     }
 
@@ -39,7 +39,7 @@ public class LodeStone extends Block implements BlockLodeStone {
     }
 
     @Override
-    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] toolInterfaces() {
         return ToolPresets.PICKAXE;
     }
 

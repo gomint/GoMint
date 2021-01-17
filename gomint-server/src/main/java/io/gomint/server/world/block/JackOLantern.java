@@ -27,7 +27,7 @@ public class JackOLantern extends Block implements BlockJackOLantern {
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 5.0f;
     }
 
@@ -43,13 +43,13 @@ public class JackOLantern extends Block implements BlockJackOLantern {
 
     @Override
     public BlockJackOLantern direction(Direction direction) {
-        DIRECTION.setState(this, direction);
+        DIRECTION.state(this, direction);
         return this;
     }
 
     @Override
     public Direction direction() {
-        return DIRECTION.getState(this);
+        return DIRECTION.state(this);
     }
 
 }

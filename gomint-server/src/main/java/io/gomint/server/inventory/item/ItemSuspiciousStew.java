@@ -7,7 +7,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @author KingAli
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:suspicious_stew", id = 734 )
+@RegisterInfo( sId = "minecraft:suspicious_stew" )
 public class ItemSuspiciousStew extends ItemFood<io.gomint.inventory.item.ItemSuspiciousStew> implements io.gomint.inventory.item.ItemSuspiciousStew {
 
     @Override

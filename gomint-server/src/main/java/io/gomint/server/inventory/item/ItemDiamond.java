@@ -7,7 +7,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo(sId = "minecraft:diamond", id = 264)
+@RegisterInfo(sId = "minecraft:diamond")
 public class ItemDiamond extends ItemStack< io.gomint.inventory.item.ItemDiamond> implements io.gomint.inventory.item.ItemDiamond {
 
     @Override

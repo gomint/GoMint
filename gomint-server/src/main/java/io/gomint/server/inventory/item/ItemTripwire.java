@@ -14,7 +14,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:tripwire", id = 132 )
+@RegisterInfo( sId = "minecraft:tripwire" )
 public class ItemTripwire extends ItemStack< io.gomint.inventory.item.ItemTripwire> implements io.gomint.inventory.item.ItemTripwire {
 
     @Override

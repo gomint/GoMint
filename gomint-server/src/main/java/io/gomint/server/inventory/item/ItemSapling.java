@@ -12,9 +12,9 @@ import java.time.Duration;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo(sId = "minecraft:sapling", id = 6)
-@RegisterInfo( sId = "minecraft:crimson_fungus", id = -228 )
-@RegisterInfo( sId = "minecraft:warped_fungus", id = -229 )
+@RegisterInfo(sId = "minecraft:sapling")
+@RegisterInfo( sId = "minecraft:crimson_fungus" )
+@RegisterInfo( sId = "minecraft:warped_fungus" )
 public class ItemSapling extends ItemStack< io.gomint.inventory.item.ItemSapling> implements io.gomint.inventory.item.ItemSapling {
 
     private enum LogTypeMagic {

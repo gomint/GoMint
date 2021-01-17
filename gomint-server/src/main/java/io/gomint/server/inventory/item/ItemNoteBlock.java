@@ -11,7 +11,7 @@ import java.time.Duration;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo(sId = "minecraft:noteblock", id = 25)
+@RegisterInfo(sId = "minecraft:noteblock")
 public class ItemNoteBlock extends ItemStack< io.gomint.inventory.item.ItemNoteBlock> implements io.gomint.inventory.item.ItemNoteBlock {
 
     @Override

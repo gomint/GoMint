@@ -35,7 +35,7 @@ public class Dirt extends Block implements BlockDirt {
     });
 
     @Override
-    public String getBlockId() {
+    public String blockId() {
         return "minecraft:dirt";
     }
 
@@ -45,7 +45,7 @@ public class Dirt extends Block implements BlockDirt {
     }
 
     @Override
-    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] toolInterfaces() {
         return ToolPresets.SHOVEL;
     }
 
@@ -55,7 +55,7 @@ public class Dirt extends Block implements BlockDirt {
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 2.5f;
     }
 
@@ -66,13 +66,13 @@ public class Dirt extends Block implements BlockDirt {
 
     @Override
     public BlockDirt type(DirtType type) {
-        VARIANT.setState(this, TypeMagic.valueOf(type.name()));
+        VARIANT.state(this, TypeMagic.valueOf(type.name()));
         return this;
     }
 
     @Override
     public DirtType type() {
-        return DirtType.valueOf(VARIANT.getState(this).name());
+        return DirtType.valueOf(VARIANT.state(this).name());
     }
 
 }

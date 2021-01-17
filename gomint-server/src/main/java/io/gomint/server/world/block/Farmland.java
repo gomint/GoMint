@@ -23,7 +23,7 @@ public class Farmland extends Block implements BlockFarmland {
     private static final ProgressBlockState WATER_LEVEL = new ProgressBlockState( () -> new String[]{"moisturized_amount"}, 7, aVoid -> {} );
 
     @Override
-    public String getBlockId() {
+    public String blockId() {
         return "minecraft:farmland";
     }
 
@@ -67,20 +67,20 @@ public class Farmland extends Block implements BlockFarmland {
     private boolean recalc( StatefulBlockSearcher blockSearcher ) {
         BlockPosition waterBlock = blockSearcher.validate();
         if ( waterBlock != null ) {
-            if ( WATER_LEVEL.getState(this) < 1f ) {
-                WATER_LEVEL.setState(this,  1f );
+            if ( WATER_LEVEL.state(this) < 1f ) {
+                WATER_LEVEL.state(this,  1f );
             }
 
             return true;
-        } else if ( WATER_LEVEL.getState(this) > 0 ) {
-            WATER_LEVEL.setState(this,  WATER_LEVEL.getState(this) - WATER_LEVEL.getStep() );
+        } else if ( WATER_LEVEL.state(this) > 0 ) {
+            WATER_LEVEL.state(this,  WATER_LEVEL.state(this) - WATER_LEVEL.getStep() );
         }
 
         return false;
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 3.0f;
     }
 
@@ -95,18 +95,18 @@ public class Farmland extends Block implements BlockFarmland {
     }
 
     @Override
-    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] toolInterfaces() {
         return ToolPresets.SHOVEL;
     }
 
     @Override
     public float moisture() {
-        return WATER_LEVEL.getState(this);
+        return WATER_LEVEL.state(this);
     }
 
     @Override
     public BlockFarmland moisture(float moisture) {
-        WATER_LEVEL.setState(this, moisture);
+        WATER_LEVEL.state(this, moisture);
         return this;
     }
 

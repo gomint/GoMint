@@ -1,6 +1,5 @@
 package io.gomint.server.world.block;
 
-import io.gomint.server.entity.tileentity.CommandBlockTileEntity;
 import io.gomint.server.entity.tileentity.ComparatorTileEntity;
 import io.gomint.server.entity.tileentity.TileEntity;
 import io.gomint.server.registry.RegisterInfo;
@@ -22,7 +21,7 @@ public class RedstoneComparator extends Block implements BlockRedstoneComparator
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 0.0f;
     }
 
@@ -38,7 +37,7 @@ public class RedstoneComparator extends Block implements BlockRedstoneComparator
 
     @Override
     public boolean powered() {
-        return this.getBlockId().equals("minecraft:powered_comparator");
+        return this.blockId().equals("minecraft:powered_comparator");
     }
 
     @Override

@@ -13,7 +13,7 @@ import io.gomint.world.block.BlockType;
 @RegisterInfo(sId = "minecraft:bell")
 public class Bell extends Block {
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 0;
     }
 

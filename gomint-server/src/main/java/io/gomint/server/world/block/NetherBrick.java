@@ -22,7 +22,7 @@ import io.gomint.server.registry.RegisterInfo;
 public class NetherBrick extends Block implements BlockNetherBrick {
 
     @Override
-    public String getBlockId() {
+    public String blockId() {
         return "minecraft:nether_brick";
     }
 
@@ -32,7 +32,7 @@ public class NetherBrick extends Block implements BlockNetherBrick {
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 10.0f;
     }
 
@@ -47,7 +47,7 @@ public class NetherBrick extends Block implements BlockNetherBrick {
     }
 
     @Override
-    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] toolInterfaces() {
         return ToolPresets.PICKAXE;
     }
 

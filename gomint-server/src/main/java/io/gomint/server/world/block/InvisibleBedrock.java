@@ -13,7 +13,7 @@ import io.gomint.server.registry.RegisterInfo;
 public class InvisibleBedrock extends Block implements BlockInvisibleBedrock {
 
     @Override
-    public String getBlockId() {
+    public String blockId() {
         return "minecraft:invisibleBedrock";
     }
 
@@ -28,7 +28,7 @@ public class InvisibleBedrock extends Block implements BlockInvisibleBedrock {
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 1.8E7f;
     }
 

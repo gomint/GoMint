@@ -9,7 +9,7 @@ import io.gomint.taglib.NBTTagCompound;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo(sId = "minecraft:waterlily", id = 111)
+@RegisterInfo(sId = "minecraft:waterlily")
 public class ItemLilyPad extends ItemStack< io.gomint.inventory.item.ItemLilyPad> implements io.gomint.inventory.item.ItemLilyPad {
 
     @Override

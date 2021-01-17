@@ -9,7 +9,7 @@ import io.gomint.taglib.NBTTagCompound;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo(sId = "minecraft:sandstone_stairs", id = 128)
+@RegisterInfo(sId = "minecraft:sandstone_stairs")
 public class ItemSandstoneStairs extends ItemStack< io.gomint.inventory.item.ItemSandstoneStairs> implements io.gomint.inventory.item.ItemSandstoneStairs {
 
     @Override

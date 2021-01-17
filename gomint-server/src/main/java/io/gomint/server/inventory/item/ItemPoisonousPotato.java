@@ -8,7 +8,7 @@ import io.gomint.taglib.NBTTagCompound;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:poisonous_potato", id = 394 )
+@RegisterInfo( sId = "minecraft:poisonous_potato" )
 public class ItemPoisonousPotato extends ItemFood<io.gomint.inventory.item.ItemPoisonousPotato> implements io.gomint.inventory.item.ItemPoisonousPotato {
 
 

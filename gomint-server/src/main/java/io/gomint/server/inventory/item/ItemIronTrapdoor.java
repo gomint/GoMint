@@ -9,7 +9,7 @@ import io.gomint.taglib.NBTTagCompound;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo(sId = "minecraft:iron_trapdoor", id = 167)
+@RegisterInfo(sId = "minecraft:iron_trapdoor")
 public class ItemIronTrapdoor extends ItemStack< io.gomint.inventory.item.ItemIronTrapdoor> implements io.gomint.inventory.item.ItemIronTrapdoor {
 
     @Override

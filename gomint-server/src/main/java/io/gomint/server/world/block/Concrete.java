@@ -18,7 +18,7 @@ public class Concrete extends Block implements BlockConcrete {
     private static final BlockColorBlockState COLOR = new BlockColorBlockState(() -> new String[]{"color"});
 
     @Override
-    public String getBlockId() {
+    public String blockId() {
         return "minecraft:concrete";
     }
 
@@ -28,7 +28,7 @@ public class Concrete extends Block implements BlockConcrete {
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 9.0f;
     }
 
@@ -43,18 +43,18 @@ public class Concrete extends Block implements BlockConcrete {
     }
 
     @Override
-    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] toolInterfaces() {
         return ToolPresets.PICKAXE;
     }
 
     @Override
     public BlockColor color() {
-        return COLOR.getState(this);
+        return COLOR.state(this);
     }
 
     @Override
     public BlockConcrete color(BlockColor color ) {
-        COLOR.setState( this, color );
+        COLOR.state( this, color );
         return this;
     }
 

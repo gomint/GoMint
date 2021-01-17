@@ -14,12 +14,12 @@ import io.gomint.server.registry.RegisterInfo;
 public class Reserved6 extends Block {
 
     @Override
-    public String getBlockId() {
+    public String blockId() {
         return "minecraft:reserved6";
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 1.8E7f;
     }
 
@@ -34,7 +34,7 @@ public class Reserved6 extends Block {
     }
 
     @Override
-    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] toolInterfaces() {
         return ToolPresets.PICKAXE;
     }
 }

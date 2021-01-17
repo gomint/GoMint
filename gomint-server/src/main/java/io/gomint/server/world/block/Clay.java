@@ -15,7 +15,7 @@ import io.gomint.server.registry.RegisterInfo;
 public class Clay extends Block implements BlockClay {
 
     @Override
-    public String getBlockId() {
+    public String blockId() {
         return "minecraft:clay";
     }
 
@@ -25,7 +25,7 @@ public class Clay extends Block implements BlockClay {
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 3.0f;
     }
 
@@ -40,7 +40,7 @@ public class Clay extends Block implements BlockClay {
     }
 
     @Override
-    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] toolInterfaces() {
         return ToolPresets.SHOVEL;
     }
 }

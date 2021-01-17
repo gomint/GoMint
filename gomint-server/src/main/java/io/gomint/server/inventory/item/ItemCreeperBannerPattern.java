@@ -14,7 +14,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:creeper_banner_pattern", id = 572 )
+@RegisterInfo( sId = "minecraft:creeper_banner_pattern" )
 public class ItemCreeperBannerPattern extends ItemStack< io.gomint.inventory.item.ItemCreeperBannerPattern> implements io.gomint.inventory.item.ItemCreeperBannerPattern {
 
     @Override

@@ -40,7 +40,7 @@ public class Pumpkin extends Block implements BlockPumpkin {
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 5.0f;
     }
 
@@ -56,24 +56,24 @@ public class Pumpkin extends Block implements BlockPumpkin {
 
     @Override
     public PumpkinType type() {
-        return this.getBlockId().equals("minecraft:pumpkin") ? PumpkinType.NORMAL : PumpkinType.CARVED;
+        return this.blockId().equals("minecraft:pumpkin") ? PumpkinType.NORMAL : PumpkinType.CARVED;
     }
 
     @Override
     public BlockPumpkin type(PumpkinType type) {
-        this.setBlockId(type == PumpkinType.NORMAL ? "minecraft:pumpkin" : "minecraft:carved_pumpkin");
+        this.blockId(type == PumpkinType.NORMAL ? "minecraft:pumpkin" : "minecraft:carved_pumpkin");
         return this;
     }
 
     @Override
     public BlockPumpkin direction(Direction direction) {
-        DIRECTION.setState(this, direction);
+        DIRECTION.state(this, direction);
         return this;
     }
 
     @Override
     public Direction direction() {
-        return DIRECTION.getState(this);
+        return DIRECTION.state(this);
     }
 
 }

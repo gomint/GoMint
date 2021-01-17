@@ -15,7 +15,7 @@ import io.gomint.server.registry.RegisterInfo;
 public class Anvil extends Block implements BlockAnvil {
 
     @Override
-    public String getBlockId() {
+    public String blockId() {
         return "minecraft:anvil";
     }
 
@@ -30,12 +30,12 @@ public class Anvil extends Block implements BlockAnvil {
     }
 
     @Override
-    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] toolInterfaces() {
         return ToolPresets.PICKAXE;
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 6000.0f;
     }
 

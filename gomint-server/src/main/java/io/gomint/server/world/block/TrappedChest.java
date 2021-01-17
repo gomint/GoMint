@@ -27,13 +27,13 @@ public class TrappedChest extends ChestBase<BlockTrappedChest> implements BlockT
 
     @Override
     public BlockTrappedChest facing(Facing facing) {
-        DIRECTION.setState(this, facing);
+        DIRECTION.state(this, facing);
         return this;
     }
 
     @Override
     public Facing facing() {
-        return DIRECTION.getState(this);
+        return DIRECTION.state(this);
     }
 
 }

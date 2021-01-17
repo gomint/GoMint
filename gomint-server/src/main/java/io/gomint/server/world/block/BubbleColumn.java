@@ -18,12 +18,12 @@ import io.gomint.world.block.BlockType;
 public class BubbleColumn extends Block {
 
     @Override
-    public String getBlockId() {
+    public String blockId() {
         return "minecraft:bubble_column";
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 0;
     }
 

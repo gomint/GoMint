@@ -9,7 +9,7 @@ import io.gomint.taglib.NBTTagCompound;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo(sId = "minecraft:diamond_ore", id = 56)
+@RegisterInfo(sId = "minecraft:diamond_ore")
 public class ItemDiamondOre extends ItemStack< io.gomint.inventory.item.ItemDiamondOre> implements io.gomint.inventory.item.ItemDiamondOre {
 
     @Override

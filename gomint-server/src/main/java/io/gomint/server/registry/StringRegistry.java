@@ -52,7 +52,7 @@ public class StringRegistry<R> {
         }
     }
 
-    private final GeneratorCallback<R> generatorCallback;
+    private final GeneratorCallback<R, String> generatorCallback;
 
     private final Map<Lookup, Generator<R>> generators = new HashMap<>();
     private final Map<Class<?>, String> apiReferences = new HashMap<>();
@@ -62,7 +62,7 @@ public class StringRegistry<R> {
      *
      * @param callback  which is used to generate a generator for each found element
      */
-    public StringRegistry(GeneratorCallback<R> callback) {
+    public StringRegistry(GeneratorCallback<R, String> callback) {
         this.generatorCallback = callback;
     }
 

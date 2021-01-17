@@ -20,7 +20,7 @@ import java.util.concurrent.ThreadLocalRandom;
 public class MobSpawner extends Block implements BlockMobSpawner {
 
     @Override
-    public String getBlockId() {
+    public String blockId() {
         return "minecraft:mob_spawner";
     }
 
@@ -35,7 +35,7 @@ public class MobSpawner extends Block implements BlockMobSpawner {
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 25.0f;
     }
 
@@ -57,7 +57,7 @@ public class MobSpawner extends Block implements BlockMobSpawner {
     }
 
     @Override
-    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] toolInterfaces() {
         return ToolPresets.PICKAXE;
     }
 

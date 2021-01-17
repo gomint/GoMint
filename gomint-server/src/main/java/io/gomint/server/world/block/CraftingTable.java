@@ -23,7 +23,7 @@ public class CraftingTable extends Block implements BlockCraftingTable {
     private static final Logger LOGGER = LoggerFactory.getLogger( CraftingTable.class );
 
     @Override
-    public String getBlockId() {
+    public String blockId() {
         return "minecraft:crafting_table";
     }
 
@@ -51,7 +51,7 @@ public class CraftingTable extends Block implements BlockCraftingTable {
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 15.0f;
     }
 
@@ -66,7 +66,7 @@ public class CraftingTable extends Block implements BlockCraftingTable {
     }
 
     @Override
-    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] toolInterfaces() {
         return ToolPresets.AXE;
     }
 

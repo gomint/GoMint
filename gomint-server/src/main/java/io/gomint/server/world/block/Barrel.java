@@ -34,7 +34,7 @@ public class Barrel extends Block {
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 1.8E7f;
     }
 

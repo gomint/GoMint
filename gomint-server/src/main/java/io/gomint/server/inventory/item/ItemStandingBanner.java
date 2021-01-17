@@ -11,7 +11,7 @@ import java.time.Duration;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:standing_banner", id = 176 )
+@RegisterInfo( sId = "minecraft:standing_banner" )
 public class ItemStandingBanner extends ItemStack<ItemBanner> implements ItemBanner {
 
     @Override

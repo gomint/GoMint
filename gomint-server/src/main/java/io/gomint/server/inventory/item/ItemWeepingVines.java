@@ -14,7 +14,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:weeping_vines", id = -231 )
+@RegisterInfo( sId = "minecraft:weeping_vines" )
 public class ItemWeepingVines extends ItemStack< io.gomint.inventory.item.ItemWeepingVines> implements io.gomint.inventory.item.ItemWeepingVines {
 
     @Override

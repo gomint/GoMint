@@ -8,7 +8,7 @@ import io.gomint.taglib.NBTTagCompound;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:rabbit_hide", id = 415 )
+@RegisterInfo( sId = "minecraft:rabbit_hide" )
  public class ItemRabbitHide extends ItemStack< io.gomint.inventory.item.ItemRabbitHide> implements io.gomint.inventory.item.ItemRabbitHide {
 
 

@@ -26,17 +26,17 @@ public class BooleanBlockState extends BlockState<Boolean, Byte> {
 
     @Override
     protected void calculateValueFromState(Block block, Boolean state) {
-        this.setValue(block, (byte) (state ? 1 : 0));
+        this.value(block, (byte) (state ? 1 : 0));
     }
 
     @Override
     public void detectFromPlacement(Block newBlock, EntityLiving<?> player, ItemStack<?> placedItem, Facing face) {
-        this.setState(newBlock, false);
+        this.state(newBlock, false);
     }
 
     @Override
-    public Boolean getState(Block block) {
-        Byte val = this.getValue(block);
+    public Boolean state(Block block) {
+        Byte val = this.value(block);
         return val != null && val == 1;
     }
 

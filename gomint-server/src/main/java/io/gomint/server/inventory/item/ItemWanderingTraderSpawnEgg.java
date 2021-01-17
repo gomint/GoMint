@@ -14,7 +14,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:wandering_trader_spawn_egg", id = 490 )
+@RegisterInfo( sId = "minecraft:wandering_trader_spawn_egg" )
 public class ItemWanderingTraderSpawnEgg extends ItemStack< io.gomint.inventory.item.ItemWanderingTraderSpawnEgg> implements io.gomint.inventory.item.ItemWanderingTraderSpawnEgg {
 
     @Override

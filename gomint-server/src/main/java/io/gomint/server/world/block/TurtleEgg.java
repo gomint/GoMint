@@ -28,7 +28,7 @@ public class TurtleEgg extends Block implements BlockTurtleEgg {
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 0.5f;
     }
 
@@ -42,17 +42,17 @@ public class TurtleEgg extends Block implements BlockTurtleEgg {
         int capped = MathUtils.clamp(amountOfEggs, 1, 4);
         switch (capped) {
             case 1:
-                EGG_COUNT.setState(this, "one_egg");
+                EGG_COUNT.state(this, "one_egg");
                 break;
             case 2:
-                EGG_COUNT.setState(this, "two_egg");
+                EGG_COUNT.state(this, "two_egg");
                 break;
             case 3:
-                EGG_COUNT.setState(this, "three_egg");
+                EGG_COUNT.state(this, "three_egg");
                 break;
             default:
             case 4:
-                EGG_COUNT.setState(this, "four_egg");
+                EGG_COUNT.state(this, "four_egg");
                 break;
         }
 
@@ -61,7 +61,7 @@ public class TurtleEgg extends Block implements BlockTurtleEgg {
 
     @Override
     public int amountOfEggs() {
-        switch (EGG_COUNT.getState(this)) {
+        switch (EGG_COUNT.state(this)) {
             case "one_egg":
                 return 1;
             case "two_egg":
@@ -76,13 +76,13 @@ public class TurtleEgg extends Block implements BlockTurtleEgg {
 
     @Override
     public BlockTurtleEgg crackStatus(CrackStatus status) {
-        CRACK_STATUS.setState(this, status);
+        CRACK_STATUS.state(this, status);
         return this;
     }
 
     @Override
     public CrackStatus crackStatus() {
-        return CRACK_STATUS.getState(this);
+        return CRACK_STATUS.state(this);
     }
 
 }

@@ -9,7 +9,7 @@ import io.gomint.taglib.NBTTagCompound;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo(sId = "minecraft:flowing_water", id = 8)
+@RegisterInfo(sId = "minecraft:flowing_water")
 public class ItemFlowingWater extends ItemStack< io.gomint.inventory.item.ItemFlowingWater> implements io.gomint.inventory.item.ItemFlowingWater {
 
     @Override

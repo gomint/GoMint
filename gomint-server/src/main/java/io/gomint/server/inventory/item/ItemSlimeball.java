@@ -8,7 +8,7 @@ import io.gomint.taglib.NBTTagCompound;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:slime_ball", id = 341 )
+@RegisterInfo( sId = "minecraft:slime_ball" )
  public class ItemSlimeball extends ItemStack< io.gomint.inventory.item.ItemSlimeball> implements io.gomint.inventory.item.ItemSlimeball {
 
 

@@ -14,7 +14,7 @@ import io.gomint.server.registry.RegisterInfo;
 public class LapisLazuliOre extends Block implements BlockLapisLazuliOre {
 
     @Override
-    public String getBlockId() {
+    public String blockId() {
         return "minecraft:lapis_ore";
     }
 
@@ -24,7 +24,7 @@ public class LapisLazuliOre extends Block implements BlockLapisLazuliOre {
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 5.0f;
     }
 
@@ -39,7 +39,7 @@ public class LapisLazuliOre extends Block implements BlockLapisLazuliOre {
     }
 
     @Override
-    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] toolInterfaces() {
         return new Class[]{
             ItemDiamondPickaxe.class,
             ItemIronPickaxe.class,

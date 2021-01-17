@@ -14,7 +14,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:movingblock", id = 250 )
+@RegisterInfo( sId = "minecraft:movingblock" )
 public class ItemMovingblock extends ItemStack< io.gomint.inventory.item.ItemMovingblock> implements io.gomint.inventory.item.ItemMovingblock {
 
     @Override

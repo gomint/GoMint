@@ -44,30 +44,30 @@ public abstract class Stair<B> extends Block implements BlockStair<B> {
     public boolean beforePlacement(EntityLiving<?> entity, ItemStack<?> item, Facing face, Location location) {
         DIRECTION.detectFromPlacement(this, entity, item, face);
 
-        TOP.setState(this, face == Facing.DOWN);
+        TOP.state(this, face == Facing.DOWN);
 
         return super.beforePlacement(entity, item, face, location);
     }
 
     @Override
     public B direction(Direction direction) {
-        DIRECTION.setState(this, direction);
+        DIRECTION.state(this, direction);
         return (B) this;
     }
 
     @Override
     public Direction direction() {
-        return DIRECTION.getState(this);
+        return DIRECTION.state(this);
     }
 
     @Override
     public boolean top() {
-        return TOP.getState(this);
+        return TOP.state(this);
     }
 
     @Override
     public B top(boolean top) {
-        TOP.setState(this, top);
+        TOP.state(this, top);
         return (B) this;
     }
 

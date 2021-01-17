@@ -14,7 +14,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:cooked_mutton", id = 541 )
+@RegisterInfo( sId = "minecraft:cooked_mutton" )
 public class ItemCookedMutton extends ItemFood<io.gomint.inventory.item.ItemCookedMutton> implements io.gomint.inventory.item.ItemCookedMutton {
 
     @Override

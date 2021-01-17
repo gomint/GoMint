@@ -14,7 +14,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:item.wheat", id = 59 )
+@RegisterInfo( sId = "minecraft:item.wheat" )
 public class ItemWheatBlock extends ItemStack<ItemWheatBlock> {
 
     @Override

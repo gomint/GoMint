@@ -19,7 +19,7 @@ import io.gomint.server.registry.RegisterInfo;
 public class Hopper extends Block implements BlockHopper {
 
     @Override
-    public String getBlockId() {
+    public String blockId() {
         return "minecraft:hopper";
     }
 
@@ -34,7 +34,7 @@ public class Hopper extends Block implements BlockHopper {
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 24.0f;
     }
 
@@ -49,7 +49,7 @@ public class Hopper extends Block implements BlockHopper {
     }
 
     @Override
-    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] toolInterfaces() {
         return ToolPresets.PICKAXE;
     }
 

@@ -12,7 +12,7 @@ import io.gomint.world.block.BlockType;
 public class RedTorch extends Torch implements BlockRedTorch {
 
     @Override
-    public String getBlockId() {
+    public String blockId() {
         return "minecraft:colored_torch_rg";
     }
 

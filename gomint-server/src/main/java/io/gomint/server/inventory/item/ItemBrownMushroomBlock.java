@@ -11,7 +11,7 @@ import java.time.Duration;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo(sId = "minecraft:brown_mushroom_block", id = 99)
+@RegisterInfo(sId = "minecraft:brown_mushroom_block")
 public class ItemBrownMushroomBlock extends ItemStack< io.gomint.inventory.item.ItemBrownMushroomBlock> implements io.gomint.inventory.item.ItemBrownMushroomBlock {
 
     @Override

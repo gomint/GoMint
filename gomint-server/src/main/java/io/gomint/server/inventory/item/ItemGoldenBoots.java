@@ -11,7 +11,7 @@ import io.gomint.world.block.data.Facing;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:golden_boots", id = 317 )
+@RegisterInfo( sId = "minecraft:golden_boots" )
 public class ItemGoldenBoots extends ItemGoldenArmor<io.gomint.inventory.item.ItemGoldenBoots> implements io.gomint.inventory.item.ItemGoldenBoots {
 
     @Override

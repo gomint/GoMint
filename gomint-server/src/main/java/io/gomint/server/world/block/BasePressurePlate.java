@@ -32,7 +32,7 @@ public abstract class BasePressurePlate extends Block {
             return old + 1;
         });
 
-        if (amountOfEntitiesOn > 0 && SIGNAL.getState(this) <= MathUtils.EPSILON) {
+        if (amountOfEntitiesOn > 0 && SIGNAL.state(this) <= MathUtils.EPSILON) {
             SIGNAL.on(this);
         }
     }
@@ -47,7 +47,7 @@ public abstract class BasePressurePlate extends Block {
             return old - 1;
         });
 
-        if (amountOfEntitiesOn == null && SIGNAL.getState(this) > MathUtils.EPSILON) {
+        if (amountOfEntitiesOn == null && SIGNAL.state(this) > MathUtils.EPSILON) {
             SIGNAL.off(this);
         }
     }

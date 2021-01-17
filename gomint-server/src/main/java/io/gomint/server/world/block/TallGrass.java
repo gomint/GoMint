@@ -75,7 +75,7 @@ public class TallGrass extends Block implements BlockTallGrass {
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 0.0f;
     }
 
@@ -101,7 +101,7 @@ public class TallGrass extends Block implements BlockTallGrass {
     }
 
     @Override
-    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] toolInterfaces() {
         return new Class[]{
             ItemShears.class
         };
@@ -109,13 +109,13 @@ public class TallGrass extends Block implements BlockTallGrass {
 
     @Override
     public BlockTallGrass type(Type type) {
-        VARIANT.setState(this, TypeMagic.valueOf(type.name()));
+        VARIANT.state(this, TypeMagic.valueOf(type.name()));
         return this;
     }
 
     @Override
     public Type type() {
-        return Type.valueOf(VARIANT.getState(this).name());
+        return Type.valueOf(VARIANT.state(this).name());
     }
 
     @Override

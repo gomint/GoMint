@@ -8,7 +8,7 @@ import io.gomint.taglib.NBTTagCompound;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:written_book", id = 387 )
+@RegisterInfo( sId = "minecraft:written_book" )
 public class ItemWrittenBook extends ItemStack< io.gomint.inventory.item.ItemWrittenBook> implements io.gomint.inventory.item.ItemWrittenBook {
 
 

@@ -14,7 +14,7 @@ import io.gomint.world.block.BlockType;
 public class Chain extends Block implements BlockChain {
 
     @Override
-    public String getBlockId() {
+    public String blockId() {
         return "minecraft:chain";
     }
 
@@ -24,12 +24,12 @@ public class Chain extends Block implements BlockChain {
     }
 
     @Override
-    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] toolInterfaces() {
         return ToolPresets.PICKAXE;
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 30.0f;
     }
 

@@ -20,7 +20,7 @@ public class ChemicalHeater extends Block implements BlockChemicalHeater {
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 0;
     }
 

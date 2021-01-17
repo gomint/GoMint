@@ -18,17 +18,17 @@ public class DirectValueBlockState<T> extends BlockState<T, T> {
 
     @Override
     protected void calculateValueFromState(Block block, T state) {
-        this.setValue(block, state);
+        this.value(block, state);
     }
 
     @Override
     public void detectFromPlacement(Block newBlock, EntityLiving<?> player, ItemStack<?> placedItem, Facing face) {
-        this.setState(newBlock, this.defaultValue);
+        this.state(newBlock, this.defaultValue);
     }
 
     @Override
-    public T getState(Block block) {
-        return this.getValue(block);
+    public T state(Block block) {
+        return this.value(block);
     }
 
 }

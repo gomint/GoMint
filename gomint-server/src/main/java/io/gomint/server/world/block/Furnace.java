@@ -34,7 +34,7 @@ public class Furnace extends Block implements BlockFurnace {
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 17.5f;
     }
 
@@ -49,7 +49,7 @@ public class Furnace extends Block implements BlockFurnace {
     }
 
     @Override
-    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] toolInterfaces() {
         return ToolPresets.PICKAXE;
     }
 
@@ -91,15 +91,15 @@ public class Furnace extends Block implements BlockFurnace {
 
     @Override
     public boolean burning() {
-        return this.getBlockId().equals("minecraft:lit_furnace");
+        return this.blockId().equals("minecraft:lit_furnace");
     }
 
     @Override
     public BlockFurnace burning(boolean burning) {
         if (burning) {
-            this.setBlockId("minecraft:lit_furnace");
+            this.blockId("minecraft:lit_furnace");
         } else {
-            this.setBlockId("minecraft:furnace");
+            this.blockId("minecraft:furnace");
         }
 
         return this;
@@ -107,13 +107,13 @@ public class Furnace extends Block implements BlockFurnace {
 
     @Override
     public BlockFurnace facing(Facing facing) {
-        FACING.setState(this, facing);
+        FACING.state(this, facing);
         return this;
     }
 
     @Override
     public Facing facing() {
-        return FACING.getState(this);
+        return FACING.state(this);
     }
 
 }

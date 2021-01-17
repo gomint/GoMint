@@ -190,7 +190,7 @@ public class Wall extends Block implements BlockWall {
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 30.0f;
     }
 
@@ -205,7 +205,7 @@ public class Wall extends Block implements BlockWall {
     }
 
     @Override
-    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] toolInterfaces() {
         return ToolPresets.PICKAXE;
     }
 
@@ -223,7 +223,7 @@ public class Wall extends Block implements BlockWall {
 
     @Override
     public StoneType type() {
-        switch (this.getBlockId()) {
+        switch (this.blockId()) {
             case "minecraft:blackstone_wall":
                 return StoneType.BLACKSTONE;
             case "minecraft:polished_blackstone_wall":
@@ -232,7 +232,7 @@ public class Wall extends Block implements BlockWall {
                 return StoneType.POLISHED_BLACKSTONE_BRICK;
         }
 
-        return StoneType.valueOf(VARIANT.getState(this).name());
+        return StoneType.valueOf(VARIANT.state(this).name());
     }
 
     @Override
@@ -242,19 +242,19 @@ public class Wall extends Block implements BlockWall {
             return this;
         }
 
-        this.setBlockId(newState.blockId);
-        VARIANT.setState(this, newState);
+        this.blockId(newState.blockId);
+        VARIANT.state(this, newState);
         return this;
     }
 
     @Override
     public boolean pole() {
-        return POST.getState(this);
+        return POST.state(this);
     }
 
     @Override
     public BlockWall pole(boolean pole) {
-        POST.setState(this, pole);
+        POST.state(this, pole);
         return this;
     }
 
@@ -263,19 +263,19 @@ public class Wall extends Block implements BlockWall {
         ConnectionTypeMagic state = ConnectionTypeMagic.valueOf(connectionType.name());
         switch (direction) {
             case SOUTH:
-                SOUTH.setState(this, state);
+                SOUTH.state(this, state);
                 break;
 
             case EAST:
-                EAST.setState(this, state);
+                EAST.state(this, state);
                 break;
 
             case WEST:
-                WEST.setState(this, state);
+                WEST.state(this, state);
                 break;
 
             case NORTH:
-                NORTH.setState(this, state);
+                NORTH.state(this, state);
                 break;
         }
 
@@ -286,16 +286,16 @@ public class Wall extends Block implements BlockWall {
     public ConnectionType connection(Direction direction) {
         switch (direction) {
             case SOUTH:
-                return ConnectionType.valueOf(SOUTH.getState(this).name());
+                return ConnectionType.valueOf(SOUTH.state(this).name());
 
             case EAST:
-                return ConnectionType.valueOf(EAST.getState(this).name());
+                return ConnectionType.valueOf(EAST.state(this).name());
 
             case WEST:
-                return ConnectionType.valueOf(WEST.getState(this).name());
+                return ConnectionType.valueOf(WEST.state(this).name());
 
             case NORTH:
-                return ConnectionType.valueOf(NORTH.getState(this).name());
+                return ConnectionType.valueOf(NORTH.state(this).name());
         }
 
         return null;

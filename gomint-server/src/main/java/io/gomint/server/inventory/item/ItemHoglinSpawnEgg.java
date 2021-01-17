@@ -14,7 +14,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:hoglin_spawn_egg", id = 494 )
+@RegisterInfo( sId = "minecraft:hoglin_spawn_egg" )
 public class ItemHoglinSpawnEgg extends ItemStack< io.gomint.inventory.item.ItemHoglinSpawnEgg> implements io.gomint.inventory.item.ItemHoglinSpawnEgg {
 
     @Override

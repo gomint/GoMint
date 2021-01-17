@@ -24,7 +24,7 @@ public class EnchantmentTable extends Block implements BlockEnchantmentTable {
     private static final Logger LOGGER = LoggerFactory.getLogger( EnchantmentTable.class );
 
     @Override
-    public String getBlockId() {
+    public String blockId() {
         return "minecraft:enchanting_table";
     }
 
@@ -39,7 +39,7 @@ public class EnchantmentTable extends Block implements BlockEnchantmentTable {
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 6000.0f;
     }
 
@@ -72,7 +72,7 @@ public class EnchantmentTable extends Block implements BlockEnchantmentTable {
     }
 
     @Override
-    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] toolInterfaces() {
         return ToolPresets.PICKAXE;
     }
 

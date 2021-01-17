@@ -28,7 +28,7 @@ public class PistonHead extends Block implements BlockPistonHead {
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 2.5f;
     }
 
@@ -48,7 +48,7 @@ public class PistonHead extends Block implements BlockPistonHead {
     }
 
     @Override
-    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] toolInterfaces() {
         return ToolPresets.PICKAXE;
     }
 

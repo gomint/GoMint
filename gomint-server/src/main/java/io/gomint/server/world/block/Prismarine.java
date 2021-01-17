@@ -15,7 +15,7 @@ import io.gomint.server.registry.RegisterInfo;
 public class Prismarine extends Block implements BlockPrismarine {
 
     @Override
-    public String getBlockId() {
+    public String blockId() {
         return "minecraft:prismarine";
     }
 
@@ -25,7 +25,7 @@ public class Prismarine extends Block implements BlockPrismarine {
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 30.0f;
     }
 
@@ -40,7 +40,7 @@ public class Prismarine extends Block implements BlockPrismarine {
     }
 
     @Override
-    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] toolInterfaces() {
         return ToolPresets.PICKAXE;
     }
 

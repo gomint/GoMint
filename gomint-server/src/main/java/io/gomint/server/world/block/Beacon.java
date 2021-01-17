@@ -17,7 +17,7 @@ import io.gomint.world.block.BlockType;
 public class Beacon extends Block implements BlockBeacon {
 
     @Override
-    public String getBlockId() {
+    public String blockId() {
         return "minecraft:beacon";
     }
 
@@ -37,7 +37,7 @@ public class Beacon extends Block implements BlockBeacon {
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 15.0f;
     }
 
@@ -58,7 +58,7 @@ public class Beacon extends Block implements BlockBeacon {
     }
 
     @Override
-    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] toolInterfaces() {
         return ToolPresets.PICKAXE;
     }
 

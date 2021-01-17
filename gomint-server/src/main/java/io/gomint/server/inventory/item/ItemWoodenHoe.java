@@ -18,7 +18,7 @@ import java.time.Duration;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:wooden_hoe", id = 290 )
+@RegisterInfo( sId = "minecraft:wooden_hoe" )
 public class ItemWoodenHoe extends ItemReduceTierWooden<io.gomint.inventory.item.ItemWoodenHoe> implements io.gomint.inventory.item.ItemWoodenHoe {
 
     @Override

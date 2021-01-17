@@ -9,7 +9,7 @@ import io.gomint.taglib.NBTTagCompound;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo(sId = "minecraft:slime", id = 165)
+@RegisterInfo(sId = "minecraft:slime")
 public class ItemSlimeBlock extends ItemStack< io.gomint.inventory.item.ItemSlimeBlock> implements io.gomint.inventory.item.ItemSlimeBlock {
 
     @Override

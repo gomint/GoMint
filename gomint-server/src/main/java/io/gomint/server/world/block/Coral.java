@@ -48,7 +48,7 @@ public class Coral extends Block implements BlockCoral {
     });
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 0.1f;
     }
 
@@ -59,25 +59,25 @@ public class Coral extends Block implements BlockCoral {
 
     @Override
     public BlockCoral dead(boolean dead) {
-        DEAD.setState(this, dead);
+        DEAD.state(this, dead);
         return this;
     }
 
     @Override
     public boolean dead() {
-        return DEAD.getState(this);
+        return DEAD.state(this);
     }
 
     @Override
     public BlockCoral type(CoralType type) {
         CoralTypeMagic state = CoralTypeMagic.valueOf(type.name());
-        COLOR.setState(this, state);
+        COLOR.state(this, state);
         return this;
     }
 
     @Override
     public CoralType type() {
-        return CoralType.valueOf(COLOR.getState(this).name());
+        return CoralType.valueOf(COLOR.state(this).name());
     }
 
 }

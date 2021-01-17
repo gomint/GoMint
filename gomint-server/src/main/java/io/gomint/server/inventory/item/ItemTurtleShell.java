@@ -7,7 +7,7 @@ import io.gomint.server.registry.RegisterInfo;
 import io.gomint.world.block.Block;
 import io.gomint.world.block.data.Facing;
 
-@RegisterInfo(sId = "minecraft:turtle_helmet", id = 469)
+@RegisterInfo(sId = "minecraft:turtle_helmet")
 public class ItemTurtleShell extends ItemArmor<io.gomint.inventory.item.ItemTurtleShell> implements io.gomint.inventory.item.ItemTurtleShell {
 
     @Override

@@ -9,7 +9,7 @@ import io.gomint.taglib.NBTTagCompound;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo(sId = "minecraft:dirt", id = 3)
+@RegisterInfo(sId = "minecraft:dirt")
 public class ItemDirt extends ItemStack< io.gomint.inventory.item.ItemDirt> implements io.gomint.inventory.item.ItemDirt {
 
     @Override

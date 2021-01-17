@@ -15,7 +15,7 @@ import io.gomint.server.registry.RegisterInfo;
 public class GlowingRedstoneOre extends Block implements BlockGlowingRedstoneOre {
 
     @Override
-    public String getBlockId() {
+    public String blockId() {
         return "minecraft:lit_redstone_ore";
     }
 
@@ -30,7 +30,7 @@ public class GlowingRedstoneOre extends Block implements BlockGlowingRedstoneOre
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 15.0f;
     }
 
@@ -45,7 +45,7 @@ public class GlowingRedstoneOre extends Block implements BlockGlowingRedstoneOre
     }
 
     @Override
-    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] toolInterfaces() {
         return ToolPresets.PICKAXE;
     }
 

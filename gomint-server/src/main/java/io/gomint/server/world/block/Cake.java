@@ -22,7 +22,7 @@ public class Cake extends Block implements BlockCake {
     private static final ProgressBlockState CAKE_EATEN = new ProgressBlockState(() -> new String[]{"bite_counter"}, 6, b -> b.blockType(Air.class));
 
     @Override
-    public String getBlockId() {
+    public String blockId() {
         return "minecraft:cake";
     }
 
@@ -65,7 +65,7 @@ public class Cake extends Block implements BlockCake {
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 2.5f;
     }
 

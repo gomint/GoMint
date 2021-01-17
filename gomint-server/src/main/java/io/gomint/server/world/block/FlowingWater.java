@@ -24,7 +24,7 @@ public class FlowingWater extends Liquid<BlockFlowingWater> implements BlockFlow
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 500.0f;
     }
 

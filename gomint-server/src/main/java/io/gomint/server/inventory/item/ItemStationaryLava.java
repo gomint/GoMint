@@ -9,7 +9,7 @@ import io.gomint.taglib.NBTTagCompound;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo(sId = "minecraft:lava", id = 11)
+@RegisterInfo(sId = "minecraft:lava")
 public class ItemStationaryLava extends ItemStack< io.gomint.inventory.item.ItemStationaryLava> implements io.gomint.inventory.item.ItemStationaryLava {
 
     @Override

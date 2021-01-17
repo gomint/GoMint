@@ -13,12 +13,12 @@ import io.gomint.world.block.BlockType;
 public class ChiseledNetherBrick extends Block {
 
     @Override
-    public String getBlockId() {
+    public String blockId() {
         return "minecraft:chiseled_nether_brick";
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 30.0f;
     }
 
@@ -38,7 +38,7 @@ public class ChiseledNetherBrick extends Block {
     }
 
     @Override
-    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] toolInterfaces() {
         return ToolPresets.PICKAXE;
     }
 }

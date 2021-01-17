@@ -19,7 +19,7 @@ import java.util.concurrent.ThreadLocalRandom;
 public class Potato extends Growable implements BlockPotato {
 
     @Override
-    public String getBlockId() {
+    public String blockId() {
         return "minecraft:potatoes";
     }
 
@@ -63,7 +63,7 @@ public class Potato extends Growable implements BlockPotato {
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 0.0f;
     }
 

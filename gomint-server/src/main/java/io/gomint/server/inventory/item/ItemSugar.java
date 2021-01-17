@@ -8,7 +8,7 @@ import io.gomint.taglib.NBTTagCompound;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:sugar", id = 353 )
+@RegisterInfo( sId = "minecraft:sugar" )
  public class ItemSugar extends ItemStack< io.gomint.inventory.item.ItemSugar> implements io.gomint.inventory.item.ItemSugar {
 
 

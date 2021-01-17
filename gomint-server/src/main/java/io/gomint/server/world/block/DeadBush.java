@@ -13,7 +13,7 @@ import io.gomint.server.registry.RegisterInfo;
 public class DeadBush extends Block implements BlockDeadBush {
 
     @Override
-    public String getBlockId() {
+    public String blockId() {
         return "minecraft:deadbush";
     }
 
@@ -38,7 +38,7 @@ public class DeadBush extends Block implements BlockDeadBush {
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 0.0f;
     }
 

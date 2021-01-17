@@ -92,7 +92,7 @@ public class Log extends Block implements BlockLog {
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 10.0f;
     }
 
@@ -118,16 +118,16 @@ public class Log extends Block implements BlockLog {
 
     @Override
     public boolean stripped() {
-        return this.getBlockId().startsWith("minecraft:stripped_");
+        return this.blockId().startsWith("minecraft:stripped_");
     }
 
     private BlockLog update(LogType type, boolean stripped, boolean fullTexture) {
         LogTypeMagic state = LogTypeMagic.valueOf(type.name());
-        STRIPPED.setState(this, stripped);
+        STRIPPED.state(this, stripped);
 
         if (!stripped) {
-            this.setBlockIdOnStateChange(fullTexture ? state.fullTextureBlockId : state.blockId);
-            VARIANT.setState(this, state);
+            this.blockIdOnStateChange(fullTexture ? state.fullTextureBlockId : state.blockId);
+            VARIANT.state(this, state);
         } else {
             this.setBlockIdFromType(state, fullTexture);
         }
@@ -153,37 +153,37 @@ public class Log extends Block implements BlockLog {
     private void setBlockIdFromType(LogTypeMagic type, boolean fullTexture) {
         switch (type) {
             case OAK:
-                this.setBlockId(fullTexture ? type.fullTextureBlockId : "minecraft:stripped_oak_log");
+                this.blockId(fullTexture ? type.fullTextureBlockId : "minecraft:stripped_oak_log");
                 break;
             case BIRCH:
-                this.setBlockId(fullTexture ? type.fullTextureBlockId : "minecraft:stripped_birch_log");
+                this.blockId(fullTexture ? type.fullTextureBlockId : "minecraft:stripped_birch_log");
                 break;
             case JUNGLE:
-                this.setBlockId(fullTexture ? type.fullTextureBlockId : "minecraft:stripped_jungle_log");
+                this.blockId(fullTexture ? type.fullTextureBlockId : "minecraft:stripped_jungle_log");
                 break;
             case SPRUCE:
-                this.setBlockId(fullTexture ? type.fullTextureBlockId : "minecraft:stripped_spruce_log");
+                this.blockId(fullTexture ? type.fullTextureBlockId : "minecraft:stripped_spruce_log");
                 break;
             case ACACIA:
-                this.setBlockId(fullTexture ? type.fullTextureBlockId : "minecraft:stripped_acacia_log");
+                this.blockId(fullTexture ? type.fullTextureBlockId : "minecraft:stripped_acacia_log");
                 break;
             case DARK_OAK:
-                this.setBlockId(fullTexture ? type.fullTextureBlockId : "minecraft:stripped_dark_oak_log");
+                this.blockId(fullTexture ? type.fullTextureBlockId : "minecraft:stripped_dark_oak_log");
                 break;
             case CRIMSON:
-                this.setBlockId(fullTexture ? "minecraft:stripped_crimson_hyphae" : "minecraft:stripped_crimson_stem");
+                this.blockId(fullTexture ? "minecraft:stripped_crimson_hyphae" : "minecraft:stripped_crimson_stem");
                 break;
             case WARPED:
-                this.setBlockId(fullTexture ? "minecraft:stripped_warped_hyphae" : "minecraft:stripped_warped_stem");
+                this.blockId(fullTexture ? "minecraft:stripped_warped_hyphae" : "minecraft:stripped_warped_stem");
                 break;
         }
     }
 
     @Override
     public LogType type() {
-        switch (this.getBlockId()) {
+        switch (this.blockId()) {
             default:
-                return LogType.valueOf(VARIANT.getState(this).name());
+                return LogType.valueOf(VARIANT.state(this).name());
             case "minecraft:stripped_oak_log":
                 return LogType.OAK;
             case "minecraft:stripped_birch_log":
@@ -221,23 +221,23 @@ public class Log extends Block implements BlockLog {
 
     @Override
     public boolean barkOnAllSides() {
-        return this.getBlockId().equals(OLD_WOOD_ID) ||
-            this.getBlockId().endsWith("_hyphae");
+        return this.blockId().equals(OLD_WOOD_ID) ||
+            this.blockId().endsWith("_hyphae");
     }
 
     @Override
     public BlockLog axis(Axis axis) {
-        AXIS.setState(this, axis);
+        AXIS.state(this, axis);
         return this;
     }
 
     @Override
     public Axis axis() {
-        return AXIS.getState(this);
+        return AXIS.state(this);
     }
 
     @Override
-    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] toolInterfaces() {
         return ToolPresets.AXE;
     }
 

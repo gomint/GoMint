@@ -90,16 +90,19 @@ public abstract class Block implements io.gomint.world.block.Block {
     }
     // CHECKSTYLE:ON
 
-    public void setIdentifier(BlockIdentifier identifier) {
+    public Block identifier(BlockIdentifier identifier) {
         this.identifier = identifier;
+        return this;
     }
 
-    public void setLayer(int layer) {
+    public Block layer(int layer) {
         this.layer = layer;
+        return this;
     }
 
-    public void setTileEntity(TileEntity tileEntity) {
+    public Block tileEntity(TileEntity tileEntity) {
         this.tileEntity = tileEntity;
+        return this;
     }
 
     @Override
@@ -112,7 +115,7 @@ public abstract class Block implements io.gomint.world.block.Block {
         return skyLightLevel;
     }
 
-    public int getLayer() {
+    public int layer() {
         return layer;
     }
 
@@ -121,7 +124,7 @@ public abstract class Block implements io.gomint.world.block.Block {
         return location;
     }
 
-    public BlockIdentifier getIdentifier() {
+    public BlockIdentifier identifier() {
         return identifier;
     }
 
@@ -267,7 +270,7 @@ public abstract class Block implements io.gomint.world.block.Block {
         }
 
         // Update the chunk slice
-        this.chunkSlice.setRuntimeIdInternal(this.index, this.layer, this.identifier.getRuntimeId());
+        this.chunkSlice.setRuntimeIdInternal(this.index, this.layer, this.identifier.runtimeId());
         this.world.updateBlock0(this.chunkSlice.getChunk(), this.position);
     }
 
@@ -300,7 +303,7 @@ public abstract class Block implements io.gomint.world.block.Block {
             sInstance.world = this.world;
             sInstance.location = this.location;
             sInstance.position = this.position;
-            sInstance.setLayer(this.layer);
+            sInstance.layer(this.layer);
             sInstance.place();
         }
 
@@ -310,7 +313,7 @@ public abstract class Block implements io.gomint.world.block.Block {
     void place() {
         WorldAdapter worldAdapter = (WorldAdapter) this.location.world();
 
-        worldAdapter.setBlock(this.position, this.layer, this.getRuntimeId());
+        worldAdapter.setBlock(this.position, this.layer, this.runtimeId());
         worldAdapter.resetTemporaryStorage(this.position, this.layer);
 
         // Check if new blockId needs tile entity
@@ -346,7 +349,7 @@ public abstract class Block implements io.gomint.world.block.Block {
         instance.world = this.world;
         instance.location = this.location;
         instance.position = this.position;
-        instance.setLayer(this.layer);
+        instance.layer(this.layer);
         instance.place();
 
         instance.world.scheduleNeighbourUpdates(instance);
@@ -364,7 +367,7 @@ public abstract class Block implements io.gomint.world.block.Block {
         }
 
         WorldAdapter worldAdapter = (WorldAdapter) this.location.world();
-        worldAdapter.setBlock(this.position, this.layer, instance.identifier.getRuntimeId());
+        worldAdapter.setBlock(this.position, this.layer, instance.identifier.runtimeId());
         worldAdapter.resetTemporaryStorage(this.position, this.layer);
 
         // Check if new blockId needs tile entity
@@ -513,7 +516,7 @@ public abstract class Block implements io.gomint.world.block.Block {
 
         PacketUpdateBlock updateBlock = new PacketUpdateBlock();
         updateBlock.setPosition(this.position);
-        updateBlock.setBlockId(this.identifier.getRuntimeId());
+        updateBlock.setBlockId(this.identifier.runtimeId());
         updateBlock.setFlags(PacketUpdateBlock.FLAG_ALL_PRIORITY);
 
         connection.addToSendQueue(updateBlock);
@@ -561,7 +564,7 @@ public abstract class Block implements io.gomint.world.block.Block {
      * @param player which should destroy the blockId
      * @return break time in milliseconds
      */
-    public long getFinalBreakTime(ItemStack<?> item, EntityPlayer player) {
+    public long finalBreakTime(ItemStack<?> item, EntityPlayer player) {
         // Get basis break time ( breaking with right tool )
         float base = (breakTime() / 1500F);
         float toolStrength = 1.0F;
@@ -574,7 +577,7 @@ public abstract class Block implements io.gomint.world.block.Block {
         // Check if we need a tool
         boolean foundInterface = false;
 
-        Class<? extends ItemStack<?>>[] interfacez = getToolInterfaces();
+        Class<? extends ItemStack<?>>[] interfacez = toolInterfaces();
         if (interfacez != null) {
             for (Class<? extends ItemStack<?>> aClass : interfacez) {
                 if (aClass.isAssignableFrom(item.getClass())) {
@@ -652,7 +655,7 @@ public abstract class Block implements io.gomint.world.block.Block {
         return time;
     }
 
-    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] toolInterfaces() {
         return null;
     }
 
@@ -672,7 +675,7 @@ public abstract class Block implements io.gomint.world.block.Block {
      */
     public List<ItemStack<?>> drops(ItemStack<?> itemInHand) {
         // TODO: New system
-        ItemStack<?> drop = this.items.create(this.identifier.getBlockId(), (short) 0, (byte) 1, null);
+        ItemStack<?> drop = this.items.create(this.identifier.blockId(), (short) 0, (byte) 1, null);
         return Lists.newArrayList(drop);
     }
 
@@ -685,7 +688,7 @@ public abstract class Block implements io.gomint.world.block.Block {
     }
 
     boolean isCorrectTool(ItemStack<?> itemInHand) {
-        for (Class<? extends ItemStack<?>> aClass : getToolInterfaces()) {
+        for (Class<? extends ItemStack<?>> aClass : toolInterfaces()) {
             if (aClass.isAssignableFrom(itemInHand.getClass())) {
                 return true;
             }
@@ -694,9 +697,9 @@ public abstract class Block implements io.gomint.world.block.Block {
         return false;
     }
 
-    public abstract float getBlastResistance();
+    public abstract float blastResistance();
 
-    public void setBlockId(String blockId) {
+    public void blockId(String blockId) {
         this.identifier = BlockRuntimeIDs.change(this.identifier, blockId, null, null);
         this.updateBlock();
     }
@@ -724,21 +727,22 @@ public abstract class Block implements io.gomint.world.block.Block {
         return false;
     }
 
-    public Object getState(String key) {
-        return this.identifier.getStates().get(key);
+    public <S> S state(String key) {
+        return (S) this.identifier.states().get(key);
     }
 
-    public <S> void setState(String[] key, S value) {
+    public <S> Block state(String[] key, S value) {
         this.identifier = BlockRuntimeIDs.change(this.identifier, this.stateChangeBlockId, key, value);
         this.stateChangeBlockId = null;
+        return this;
     }
 
-    public int getRuntimeId() {
-        return this.identifier.getRuntimeId();
+    public int runtimeId() {
+        return this.identifier.runtimeId();
     }
 
-    public String getBlockId() {
-        return this.identifier.getBlockId();
+    public String blockId() {
+        return this.identifier.blockId();
     }
 
     /**
@@ -746,7 +750,7 @@ public abstract class Block implements io.gomint.world.block.Block {
      *
      * @param blockId
      */
-    protected void setBlockIdOnStateChange(String blockId) {
+    protected void blockIdOnStateChange(String blockId) {
         this.stateChangeBlockId = blockId;
     }
 
@@ -755,12 +759,14 @@ public abstract class Block implements io.gomint.world.block.Block {
         this.blockType(Air.class);
     }
 
-    public void setItems(Items items) {
+    public Block items(Items items) {
         this.items = items;
+        return this;
     }
 
-    public void setTileEntities(TileEntities tileEntities) {
+    public Block tileEntities(TileEntities tileEntities) {
         this.tileEntities = tileEntities;
+        return this;
     }
 
     public io.gomint.world.block.Block performBreak(boolean creative) {

@@ -17,7 +17,7 @@ import java.util.List;
 public class BlockOfCoal extends Block implements BlockBlockOfCoal {
 
     @Override
-    public String getBlockId() {
+    public String blockId() {
         return "minecraft:coal_block";
     }
 
@@ -27,7 +27,7 @@ public class BlockOfCoal extends Block implements BlockBlockOfCoal {
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 30.0f;
     }
 
@@ -37,7 +37,7 @@ public class BlockOfCoal extends Block implements BlockBlockOfCoal {
     }
 
     @Override
-    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] toolInterfaces() {
         return ToolPresets.PICKAXE;
     }
 

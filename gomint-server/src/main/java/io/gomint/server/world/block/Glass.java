@@ -17,7 +17,7 @@ import java.util.List;
 public class Glass extends Block implements BlockGlass {
 
     @Override
-    public String getBlockId() {
+    public String blockId() {
         return "minecraft:glass";
     }
 
@@ -42,7 +42,7 @@ public class Glass extends Block implements BlockGlass {
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 1.5f;
     }
 

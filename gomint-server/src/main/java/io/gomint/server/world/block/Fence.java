@@ -63,7 +63,7 @@ public class Fence extends Block implements BlockFence {
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 15.0f;
     }
 
@@ -78,20 +78,20 @@ public class Fence extends Block implements BlockFence {
     }
 
     @Override
-    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] toolInterfaces() {
         return ToolPresets.AXE;
     }
 
     @Override
     public LogType type() {
-        switch (this.getBlockId()) {
+        switch (this.blockId()) {
             case "minecraft:crimson_fence":
                 return LogType.CRIMSON;
             case "minecraft:warped_fence":
                 return LogType.WARPED;
         }
 
-        return LogType.valueOf(VARIANT.getState(this).name());
+        return LogType.valueOf(VARIANT.state(this).name());
     }
 
     @Override
@@ -99,11 +99,11 @@ public class Fence extends Block implements BlockFence {
         LogTypeMagic newState = LogTypeMagic.valueOf(logType.name());
 
         if (!newState.value.isEmpty()) {
-            VARIANT.setState(this, newState);
+            VARIANT.state(this, newState);
         }
 
-        if (!this.getBlockId().equals(newState.blockId)) {
-            this.setBlockId(newState.blockId);
+        if (!this.blockId().equals(newState.blockId)) {
+            this.blockId(newState.blockId);
         }
 
         return this;

@@ -58,7 +58,7 @@ public class StationaryLava extends Liquid<BlockStationaryLava> implements Block
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 500.0f;
     }
 

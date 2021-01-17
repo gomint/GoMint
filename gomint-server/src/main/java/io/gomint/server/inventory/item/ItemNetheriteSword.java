@@ -12,7 +12,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @author KingAli
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:netherite_sword", id = 743 )
+@RegisterInfo( sId = "minecraft:netherite_sword" )
 public class ItemNetheriteSword extends ItemReduceTierNetherite<io.gomint.inventory.item.ItemNetheriteSword> implements io.gomint.inventory.item.ItemNetheriteSword, ItemSword {
 
     @Override

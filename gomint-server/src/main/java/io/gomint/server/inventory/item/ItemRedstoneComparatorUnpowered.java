@@ -7,7 +7,7 @@ import io.gomint.taglib.NBTTagCompound;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:unpowered_comparator", id = 149 )
+@RegisterInfo( sId = "minecraft:unpowered_comparator" )
 public class ItemRedstoneComparatorUnpowered extends ItemStack<ItemRedstoneComparatorUnpowered> {
 
     @Override

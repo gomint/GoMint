@@ -15,7 +15,7 @@ import io.gomint.server.registry.RegisterInfo;
 public class Mycelium extends Block implements BlockMycelium {
 
     @Override
-    public String getBlockId() {
+    public String blockId() {
         return "minecraft:mycelium";
     }
 
@@ -25,7 +25,7 @@ public class Mycelium extends Block implements BlockMycelium {
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 2.5f;
     }
 
@@ -40,7 +40,7 @@ public class Mycelium extends Block implements BlockMycelium {
     }
 
     @Override
-    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] toolInterfaces() {
         return ToolPresets.SHOVEL;
     }
 }

@@ -66,7 +66,7 @@ public class Skull extends Block implements BlockSkull {
 
         // We skip downwards facing
         if (face == Facing.DOWN || face == Facing.UP) {
-            DIRECTION.setState(this, Facing.UP);
+            DIRECTION.state(this, Facing.UP);
         }
 
         SkullTileEntity tileEntity = this.tileEntity();
@@ -88,7 +88,7 @@ public class Skull extends Block implements BlockSkull {
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 5.0f;
     }
 
@@ -113,9 +113,9 @@ public class Skull extends Block implements BlockSkull {
     @Override
     public BlockSkull direction(Direction direction) {
         if (direction == null) {
-            DIRECTION.setState(this, Facing.UP);
+            DIRECTION.state(this, Facing.UP);
         } else {
-            DIRECTION.setState(this, direction.toFacing());
+            DIRECTION.state(this, direction.toFacing());
         }
 
         return this;
@@ -123,7 +123,7 @@ public class Skull extends Block implements BlockSkull {
 
     @Override
     public Direction direction() {
-        Facing facing = DIRECTION.getState(this);
+        Facing facing = DIRECTION.state(this);
         if ( facing == Facing.UP ) {
             return null;
         }

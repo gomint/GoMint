@@ -9,7 +9,7 @@ import java.time.Duration;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:banner", id = 446 )
+@RegisterInfo( sId = "minecraft:banner" )
 public class ItemBanner extends ItemStack<io.gomint.inventory.item.ItemBanner> implements io.gomint.inventory.item.ItemBanner {
 
     @Override

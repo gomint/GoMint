@@ -28,9 +28,10 @@ public abstract class BlockState<T, S> {
         this.key = key;
     }
 
-    public void setState(Block block, T state) {
+    public BlockState<T, S> state(Block block, T state) {
         this.calculateValueFromState(block, state);
         block.updateBlock();
+        return this;
     }
 
     protected abstract void calculateValueFromState(Block block, T state);
@@ -49,13 +50,14 @@ public abstract class BlockState<T, S> {
      *
      * @param value
      */
-    protected void setValue(Block block, S value) {
-        block.setState(this.key.apply(value), value);
+    protected BlockState<T, S> value(Block block, S value) {
+        block.state(this.key.apply(value), value);
+        return this;
     }
 
-    protected S getValue(Block block) {
+    protected S value(Block block) {
         for (String s : this.key.apply(null)) {
-            S v = (S) block.getState(s);
+            S v = block.state(s);
             if (v != null) {
                 return v;
             }
@@ -64,6 +66,6 @@ public abstract class BlockState<T, S> {
         return null;
     }
 
-    public abstract T getState( Block block );
+    public abstract T state(Block block );
 
 }

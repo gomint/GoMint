@@ -81,9 +81,9 @@ public class WorldTest extends IntegrationTest {
         log.type(logType);
         log.stripped(stripped);
         log.barkOnAllSides(barkOnAllSides);
-        int currentRuntimeId = log.getRuntimeId();
+        int currentRuntimeId = log.runtimeId();
 
-        int neededRuntimeId = BlockRuntimeIDs.toBlockIdentifier(blockId, new FixedReadOnlyMap(neededStates.entrySet())).getRuntimeId();
+        int neededRuntimeId = BlockRuntimeIDs.toBlockIdentifier(blockId, new FixedReadOnlyMap(neededStates.entrySet())).runtimeId();
 
         Assertions.assertEquals(neededRuntimeId, currentRuntimeId, "Wanted and current runtime id differ");
     }

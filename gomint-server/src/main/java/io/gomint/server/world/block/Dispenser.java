@@ -19,7 +19,7 @@ import io.gomint.server.registry.RegisterInfo;
 public class Dispenser extends Block implements BlockDispenser {
 
     @Override
-    public String getBlockId() {
+    public String blockId() {
         return "minecraft:dispenser";
     }
 
@@ -29,7 +29,7 @@ public class Dispenser extends Block implements BlockDispenser {
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 1.0f;
     }
 
@@ -55,7 +55,7 @@ public class Dispenser extends Block implements BlockDispenser {
     }
 
     @Override
-    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] toolInterfaces() {
         return ToolPresets.PICKAXE;
     }
 

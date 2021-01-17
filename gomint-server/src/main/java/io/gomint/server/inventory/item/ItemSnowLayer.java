@@ -9,7 +9,7 @@ import io.gomint.taglib.NBTTagCompound;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo(sId = "minecraft:snow_layer", id = 78)
+@RegisterInfo(sId = "minecraft:snow_layer")
 public class ItemSnowLayer extends ItemStack< io.gomint.inventory.item.ItemSnowLayer> implements io.gomint.inventory.item.ItemSnowLayer {
 
     @Override

@@ -16,7 +16,7 @@ import java.time.Duration;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:scaffolding", id = -165 )
+@RegisterInfo( sId = "minecraft:scaffolding" )
 public class ItemScaffolding extends ItemStack< io.gomint.inventory.item.ItemScaffolding> implements io.gomint.inventory.item.ItemScaffolding {
 
     @Override

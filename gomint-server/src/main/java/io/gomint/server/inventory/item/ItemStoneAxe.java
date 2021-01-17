@@ -11,7 +11,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:stone_axe", id = 275 )
+@RegisterInfo( sId = "minecraft:stone_axe" )
 public class ItemStoneAxe extends ItemReduceTierStone<io.gomint.inventory.item.ItemStoneAxe> implements io.gomint.inventory.item.ItemStoneAxe {
 
     @Override

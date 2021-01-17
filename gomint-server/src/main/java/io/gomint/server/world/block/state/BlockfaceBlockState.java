@@ -36,29 +36,29 @@ public class BlockfaceBlockState extends BlockState<Facing, Integer> {
         switch (state) {
             case DOWN:
             default:
-                this.setValue(block, 0);
+                this.value(block, 0);
                 return;
             case UP:
-                this.setValue(block, 1);
+                this.value(block, 1);
                 return;
             case NORTH:
-                this.setValue(block, 2);
+                this.value(block, 2);
                 return;
             case SOUTH:
-                this.setValue(block, 3);
+                this.value(block, 3);
                 return;
             case WEST:
-                this.setValue(block, 4);
+                this.value(block, 4);
                 return;
             case EAST:
-                this.setValue(block, 5);
+                this.value(block, 5);
         }
     }
 
     @Override
     public void detectFromPlacement(Block newBlock, EntityLiving<?> player, ItemStack<?> placedItem, Facing face) {
         if (face == null) {
-            this.setState(newBlock, Facing.NORTH);
+            this.state(newBlock, Facing.NORTH);
             return;
         }
 
@@ -66,12 +66,12 @@ public class BlockfaceBlockState extends BlockState<Facing, Integer> {
             face = Facing.NORTH;
         }
 
-        this.setState(newBlock, face);
+        this.state(newBlock, face);
     }
 
     @Override
-    public Facing getState(Block block) {
-        switch (this.getValue(block)) {
+    public Facing state(Block block) {
+        switch (this.value(block)) {
             case 0:
             default:
                 return Facing.DOWN;

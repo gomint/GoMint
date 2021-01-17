@@ -19,23 +19,23 @@ public class RedstoneSignalStrength extends ProgressBlockState {
     }
 
     public void decrease(Block block) {
-        if (this.getState(block) - this.getStep() <= MathUtils.EPSILON) {
-            this.setState(block,this.getState(block) - this.getStep());
+        if (this.state(block) - this.getStep() <= MathUtils.EPSILON) {
+            this.state(block,this.state(block) - this.getStep());
         }
     }
 
     public void increase(Block block) {
-        if (1f - this.getState(block) <= MathUtils.EPSILON) {
-            this.setState(block, this.getState(block) + this.getStep());
+        if (1f - this.state(block) <= MathUtils.EPSILON) {
+            this.state(block, this.state(block) + this.getStep());
         }
     }
 
     public void on(Block block) {
-        this.setState(block,1f);
+        this.state(block,1f);
     }
 
     public void off(Block block) {
-        this.setState(block,0f);
+        this.state(block,0f);
     }
 
 }

@@ -16,7 +16,7 @@ import java.time.Duration;
  * @author Kaooot
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:dried_kelp_block", id = -139 )
+@RegisterInfo( sId = "minecraft:dried_kelp_block" )
 public class ItemDriedKelpBlock extends ItemStack< io.gomint.inventory.item.ItemDriedKelpBlock> implements io.gomint.inventory.item.ItemDriedKelpBlock {
 
     @Override

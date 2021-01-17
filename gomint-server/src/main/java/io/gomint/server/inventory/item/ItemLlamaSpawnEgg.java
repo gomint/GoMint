@@ -14,7 +14,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:llama_spawn_egg", id = 471 )
+@RegisterInfo( sId = "minecraft:llama_spawn_egg" )
 public class ItemLlamaSpawnEgg extends ItemStack< io.gomint.inventory.item.ItemLlamaSpawnEgg> implements io.gomint.inventory.item.ItemLlamaSpawnEgg {
 
     @Override

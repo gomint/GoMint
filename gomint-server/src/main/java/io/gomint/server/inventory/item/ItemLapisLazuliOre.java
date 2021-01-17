@@ -9,7 +9,7 @@ import io.gomint.taglib.NBTTagCompound;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo(sId = "minecraft:lapis_ore", id = 21)
+@RegisterInfo(sId = "minecraft:lapis_ore")
 public class ItemLapisLazuliOre extends ItemStack< io.gomint.inventory.item.ItemLapisLazuliOre> implements io.gomint.inventory.item.ItemLapisLazuliOre {
 
     @Override

@@ -22,7 +22,7 @@ import io.gomint.server.registry.RegisterInfo;
 public class StoneBrick extends Block implements BlockStoneBrick {
 
     @Override
-    public String getBlockId() {
+    public String blockId() {
         return "minecraft:stonebrick";
     }
 
@@ -32,7 +32,7 @@ public class StoneBrick extends Block implements BlockStoneBrick {
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 30.0f;
     }
 
@@ -47,7 +47,7 @@ public class StoneBrick extends Block implements BlockStoneBrick {
     }
 
     @Override
-    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] toolInterfaces() {
         return ToolPresets.PICKAXE;
     }
 

@@ -12,7 +12,7 @@ import io.gomint.server.registry.RegisterInfo;
 public class WallBanner extends Banner {
 
     @Override
-    public String getBlockId() {
+    public String blockId() {
         return "minecraft:wall_banner";
     }
 

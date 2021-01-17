@@ -14,7 +14,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:tropical_fish_spawn_egg", id = 477 )
+@RegisterInfo( sId = "minecraft:tropical_fish_spawn_egg" )
 public class ItemTropicalFishSpawnEgg extends ItemStack< io.gomint.inventory.item.ItemTropicalFishSpawnEgg> implements io.gomint.inventory.item.ItemTropicalFishSpawnEgg {
 
     @Override

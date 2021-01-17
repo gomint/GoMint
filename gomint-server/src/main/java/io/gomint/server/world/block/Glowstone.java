@@ -19,7 +19,7 @@ import java.util.concurrent.ThreadLocalRandom;
 public class Glowstone extends Block implements BlockGlowstone {
 
     @Override
-    public String getBlockId() {
+    public String blockId() {
         return "minecraft:glowstone";
     }
 
@@ -34,7 +34,7 @@ public class Glowstone extends Block implements BlockGlowstone {
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 1.5f;
     }
 

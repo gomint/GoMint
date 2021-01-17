@@ -13,7 +13,7 @@ import io.gomint.server.registry.RegisterInfo;
 public class SeaLantern extends Block implements BlockSeaLantern {
 
     @Override
-    public String getBlockId() {
+    public String blockId() {
         return "minecraft:seaLantern";
     }
 
@@ -28,7 +28,7 @@ public class SeaLantern extends Block implements BlockSeaLantern {
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 1.5f;
     }
 

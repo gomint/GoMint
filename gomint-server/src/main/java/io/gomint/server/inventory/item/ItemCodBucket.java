@@ -14,7 +14,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:cod_bucket", id = 364 )
+@RegisterInfo( sId = "minecraft:cod_bucket" )
 public class ItemCodBucket extends ItemStack< io.gomint.inventory.item.ItemCodBucket> implements io.gomint.inventory.item.ItemCodBucket {
 
     @Override

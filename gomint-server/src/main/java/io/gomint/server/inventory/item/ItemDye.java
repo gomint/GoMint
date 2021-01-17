@@ -8,23 +8,23 @@ import io.gomint.world.block.data.BlockColor;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo(sId = ItemDye.BLACK, id = 393, def = true)
-@RegisterInfo(sId = ItemDye.RED, id = 394)
-@RegisterInfo(sId = ItemDye.GREEN, id = 395)
-@RegisterInfo(sId = ItemDye.BROWN, id = 396)
-@RegisterInfo(sId = ItemDye.BLUE, id = 397)
-@RegisterInfo(sId = ItemDye.PURPLE, id = 398)
-@RegisterInfo(sId = ItemDye.CYAN, id = 399)
-@RegisterInfo(sId = ItemDye.LIGHT_GRAY, id = 400)
-@RegisterInfo(sId = ItemDye.GRAY, id = 401)
-@RegisterInfo(sId = ItemDye.PINK, id = 402)
-@RegisterInfo(sId = ItemDye.LIME, id = 403)
-@RegisterInfo(sId = ItemDye.YELLOW, id = 404)
-@RegisterInfo(sId = ItemDye.LIGHT_BLUE, id = 405)
-@RegisterInfo(sId = ItemDye.MAGENTA, id = 406)
-@RegisterInfo(sId = ItemDye.ORANGE, id = 407)
-@RegisterInfo(sId = ItemDye.WHITE, id = 408)
-@RegisterInfo(sId = "minecraft:dye", id = 612) // Only for vanilla conversion
+@RegisterInfo(sId = ItemDye.BLACK, def = true)
+@RegisterInfo(sId = ItemDye.RED)
+@RegisterInfo(sId = ItemDye.GREEN)
+@RegisterInfo(sId = ItemDye.BROWN)
+@RegisterInfo(sId = ItemDye.BLUE)
+@RegisterInfo(sId = ItemDye.PURPLE)
+@RegisterInfo(sId = ItemDye.CYAN)
+@RegisterInfo(sId = ItemDye.LIGHT_GRAY)
+@RegisterInfo(sId = ItemDye.GRAY)
+@RegisterInfo(sId = ItemDye.PINK)
+@RegisterInfo(sId = ItemDye.LIME)
+@RegisterInfo(sId = ItemDye.YELLOW)
+@RegisterInfo(sId = ItemDye.LIGHT_BLUE)
+@RegisterInfo(sId = ItemDye.MAGENTA)
+@RegisterInfo(sId = ItemDye.ORANGE)
+@RegisterInfo(sId = ItemDye.WHITE)
+@RegisterInfo(sId = "minecraft:dye") // Only for vanilla conversion
 public class ItemDye extends ItemStack< io.gomint.inventory.item.ItemDye> implements io.gomint.inventory.item.ItemDye {
 
     public static final String BLACK = "minecraft:black_dye";

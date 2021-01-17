@@ -9,7 +9,7 @@ import java.time.Duration;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:stick", id = 280 )
+@RegisterInfo( sId = "minecraft:stick" )
 public class ItemStick extends ItemStack< io.gomint.inventory.item.ItemStick> implements io.gomint.inventory.item.ItemStick {
 
     @Override

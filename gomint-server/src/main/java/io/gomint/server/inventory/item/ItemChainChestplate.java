@@ -11,7 +11,7 @@ import io.gomint.world.block.data.Facing;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:chainmail_chestplate", id = 303 )
+@RegisterInfo( sId = "minecraft:chainmail_chestplate" )
 public class ItemChainChestplate extends ItemChainArmor<io.gomint.inventory.item.ItemChainChestplate> implements io.gomint.inventory.item.ItemChainChestplate {
 
 

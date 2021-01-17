@@ -146,7 +146,7 @@ public class Element extends Block implements BlockElement {
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 0;
     }
 
@@ -157,13 +157,13 @@ public class Element extends Block implements BlockElement {
 
     @Override
     public ElementType type() {
-        int ord = Integer.parseInt(this.getBlockId().substring(BLOCK_PREFIX_LENGTH));
+        int ord = Integer.parseInt(this.blockId().substring(BLOCK_PREFIX_LENGTH));
         return ElementType.values()[ord];
     }
 
     @Override
     public BlockElement type(ElementType type) {
-        this.setBlockId("minecraft:element_" + type.ordinal());
+        this.blockId("minecraft:element_" + type.ordinal());
         return this;
     }
 

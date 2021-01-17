@@ -9,7 +9,7 @@ import io.gomint.taglib.NBTTagCompound;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo(sId = "minecraft:netherrack", id = 87)
+@RegisterInfo(sId = "minecraft:netherrack")
 public class ItemNetherrack extends ItemStack< io.gomint.inventory.item.ItemNetherrack> implements io.gomint.inventory.item.ItemNetherrack {
 
     @Override

@@ -17,7 +17,7 @@ import java.util.List;
 public class Tripwire extends Block implements BlockTripwire {
 
     @Override
-    public String getBlockId() {
+    public String blockId() {
         return "minecraft:tripWire";
     }
 
@@ -32,7 +32,7 @@ public class Tripwire extends Block implements BlockTripwire {
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 0.0f;
     }
 

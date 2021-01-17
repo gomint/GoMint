@@ -7,7 +7,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:item.cake", id = 92 )
+@RegisterInfo( sId = "minecraft:item.cake" )
 public class ItemCakeBlock extends ItemStack<ItemCakeBlock> {
 
     @Override

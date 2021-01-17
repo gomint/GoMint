@@ -14,7 +14,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:concrete_powder", id = 237 )
+@RegisterInfo( sId = "minecraft:concrete_powder" )
 public class ItemConcretePowder extends ItemStack< io.gomint.inventory.item.ItemConcretePowder> implements io.gomint.inventory.item.ItemConcretePowder {
 
     @Override

@@ -14,7 +14,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:dark_prismarine_stairs", id = -3 )
+@RegisterInfo( sId = "minecraft:dark_prismarine_stairs" )
 public class ItemDarkPrismarineStairs extends ItemStack< io.gomint.inventory.item.ItemDarkPrismarineStairs> implements io.gomint.inventory.item.ItemDarkPrismarineStairs {
 
     @Override

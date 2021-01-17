@@ -19,7 +19,7 @@ import java.util.List;
 public class Bookshelf extends Block implements BlockBookshelf {
 
     @Override
-    public String getBlockId() {
+    public String blockId() {
         return "minecraft:bookshelf";
     }
 
@@ -29,7 +29,7 @@ public class Bookshelf extends Block implements BlockBookshelf {
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 7.5f;
     }
 
@@ -51,7 +51,7 @@ public class Bookshelf extends Block implements BlockBookshelf {
     }
 
     @Override
-    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] toolInterfaces() {
         return ToolPresets.AXE;
     }
 

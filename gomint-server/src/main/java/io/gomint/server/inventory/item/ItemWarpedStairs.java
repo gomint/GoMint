@@ -14,7 +14,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:warped_stairs", id = -255 )
+@RegisterInfo( sId = "minecraft:warped_stairs" )
 public class ItemWarpedStairs extends ItemStack< io.gomint.inventory.item.ItemWarpedStairs> implements io.gomint.inventory.item.ItemWarpedStairs {
 
     @Override

@@ -45,7 +45,7 @@ public class PacketBlockPickRequestHandler implements PacketHandler<PacketBlockP
                         }
                     }
 
-                    if (block.getBlockId().equals(((io.gomint.server.inventory.item.ItemStack<?>) itemStack).material())) { // TODO: Fix this for slabs.....
+                    if (block.blockId().equals(((io.gomint.server.inventory.item.ItemStack<?>) itemStack).material())) { // TODO: Fix this for slabs.....
                         if (i < 9) {
                             player.inventory().setItemInHand(i);
                             return;

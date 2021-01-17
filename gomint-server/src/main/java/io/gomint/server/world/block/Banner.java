@@ -15,7 +15,7 @@ import io.gomint.taglib.NBTTagCompound;
 public abstract class Banner extends Block {
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 5f;
     }
 
@@ -30,7 +30,7 @@ public abstract class Banner extends Block {
     }
 
     @Override
-    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] toolInterfaces() {
         return ToolPresets.AXE;
     }
 

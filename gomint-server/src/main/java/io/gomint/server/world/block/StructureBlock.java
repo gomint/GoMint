@@ -15,12 +15,12 @@ import io.gomint.server.registry.RegisterInfo;
 public class StructureBlock extends Block implements BlockStructureBlock {
 
     @Override
-    public String getBlockId() {
+    public String blockId() {
         return "minecraft:structure_block";
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 1.8E7f;
     }
 
@@ -35,7 +35,7 @@ public class StructureBlock extends Block implements BlockStructureBlock {
     }
 
     @Override
-    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] toolInterfaces() {
         return ToolPresets.PICKAXE;
     }
 

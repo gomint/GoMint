@@ -11,7 +11,7 @@ import java.time.Duration;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo(sId = "minecraft:daylight_detector_inverted", id = 178)
+@RegisterInfo(sId = "minecraft:daylight_detector_inverted")
 public class ItemInvertedDaylightSensor extends ItemStack< io.gomint.inventory.item.ItemInvertedDaylightSensor> implements io.gomint.inventory.item.ItemInvertedDaylightSensor {
 
     @Override

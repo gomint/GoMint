@@ -8,7 +8,7 @@ import io.gomint.taglib.NBTTagCompound;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:brick", id = 336 )
+@RegisterInfo( sId = "minecraft:brick" )
  public class ItemBrick extends ItemStack< io.gomint.inventory.item.ItemBrick> implements io.gomint.inventory.item.ItemBrick {
 
 

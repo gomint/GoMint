@@ -9,7 +9,7 @@ import java.time.Duration;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:acacia_fence_gate", id = 187 )
+@RegisterInfo( sId = "minecraft:acacia_fence_gate" )
 public class ItemAcaciaWoodFenceGate extends ItemStack<io.gomint.inventory.item.ItemAcaciaWoodFenceGate> implements io.gomint.inventory.item.ItemAcaciaWoodFenceGate {
 
     @Override

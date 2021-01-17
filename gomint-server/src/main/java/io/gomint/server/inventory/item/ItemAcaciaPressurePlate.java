@@ -16,7 +16,7 @@ import java.time.Duration;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:acacia_pressure_plate", id = -150 )
+@RegisterInfo( sId = "minecraft:acacia_pressure_plate" )
 public class ItemAcaciaPressurePlate extends ItemStack<io.gomint.inventory.item.ItemAcaciaPressurePlate> implements io.gomint.inventory.item.ItemAcaciaPressurePlate {
 
     @Override

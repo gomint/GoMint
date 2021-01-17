@@ -13,7 +13,7 @@ import io.gomint.server.registry.RegisterInfo;
 public class Sponge extends Block implements BlockSponge {
 
     @Override
-    public String getBlockId() {
+    public String blockId() {
         return "minecraft:sponge";
     }
 
@@ -23,7 +23,7 @@ public class Sponge extends Block implements BlockSponge {
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 3.0f;
     }
 

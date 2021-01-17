@@ -15,7 +15,7 @@ import io.gomint.server.registry.RegisterInfo;
 public class ChorusPlant extends Block implements BlockChorusPlant {
 
     @Override
-    public String getBlockId() {
+    public String blockId() {
         return "minecraft:chorus_plant";
     }
 
@@ -30,12 +30,12 @@ public class ChorusPlant extends Block implements BlockChorusPlant {
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 2.0f;
     }
 
     @Override
-    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] toolInterfaces() {
         return ToolPresets.AXE;
     }
 

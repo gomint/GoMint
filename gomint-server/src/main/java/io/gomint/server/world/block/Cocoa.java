@@ -34,7 +34,7 @@ public class Cocoa extends Growable implements BlockCocoa {
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 15.0f;
     }
 
@@ -49,25 +49,25 @@ public class Cocoa extends Growable implements BlockCocoa {
     }
 
     @Override
-    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] toolInterfaces() {
         return ToolPresets.AXE;
     }
 
     @Override
     public BlockCocoa direction(Direction direction) {
-        DIRECTION.setState(this, direction);
+        DIRECTION.state(this, direction);
         return this;
     }
 
     @Override
     public Direction direction() {
-        return DIRECTION.getState(this);
+        return DIRECTION.state(this);
     }
 
     @Override
     protected void grow() {
         // Check for growth state
-        if (AGE.getState(this) < 1f) {
+        if (AGE.state(this) < 1f) {
             float growthDivider = getGrowthDivider();
             int random = ThreadLocalRandom.current().nextInt((int) ((25f / growthDivider) + 1));
 

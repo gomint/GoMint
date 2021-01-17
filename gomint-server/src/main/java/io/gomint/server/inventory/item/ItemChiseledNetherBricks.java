@@ -14,7 +14,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:chiseled_nether_bricks", id = -302 )
+@RegisterInfo( sId = "minecraft:chiseled_nether_bricks" )
 public class ItemChiseledNetherBricks extends ItemStack< io.gomint.inventory.item.ItemChiseledNetherBricks> implements io.gomint.inventory.item.ItemChiseledNetherBricks {
 
     @Override

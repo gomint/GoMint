@@ -92,7 +92,7 @@ public class StoneStair extends Stair<BlockStoneStair> implements BlockStoneStai
     }
 
     @Override
-    public String getBlockId() {
+    public String blockId() {
         return "minecraft:brick_stairs";
     }
 
@@ -102,7 +102,7 @@ public class StoneStair extends Stair<BlockStoneStair> implements BlockStoneStai
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 30.0f;
     }
 
@@ -117,14 +117,14 @@ public class StoneStair extends Stair<BlockStoneStair> implements BlockStoneStai
     }
 
     @Override
-    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] toolInterfaces() {
         return ToolPresets.PICKAXE;
     }
 
     @Override
     public StoneType type() {
         for (StoneTypeMagic value : StoneTypeMagic.values()) {
-            if (this.getBlockId().equals(value.blockId)) {
+            if (this.blockId().equals(value.blockId)) {
                 return StoneType.valueOf(value.name());
             }
         }
@@ -136,7 +136,7 @@ public class StoneStair extends Stair<BlockStoneStair> implements BlockStoneStai
     public BlockStoneStair type(StoneType stoneType) {
         StoneTypeMagic newState = StoneTypeMagic.valueOf(stoneType.name());
         if (newState.blockId != null) {
-            this.setBlockId(newState.blockId);
+            this.blockId(newState.blockId);
         }
 
         return this;

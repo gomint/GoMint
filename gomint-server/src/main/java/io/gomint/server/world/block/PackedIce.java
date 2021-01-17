@@ -17,7 +17,7 @@ import java.util.List;
 public class PackedIce extends Block implements BlockPackedIce {
 
     @Override
-    public String getBlockId() {
+    public String blockId() {
         return "minecraft:packed_ice";
     }
 
@@ -27,7 +27,7 @@ public class PackedIce extends Block implements BlockPackedIce {
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 2.5f;
     }
 

@@ -13,7 +13,7 @@ import io.gomint.server.registry.RegisterInfo;
 public class EndPortalFrame extends Block implements BlockEndPortalFrame {
 
     @Override
-    public String getBlockId() {
+    public String blockId() {
         return "minecraft:end_portal_frame";
     }
 
@@ -28,7 +28,7 @@ public class EndPortalFrame extends Block implements BlockEndPortalFrame {
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 1.8E7f;
     }
 

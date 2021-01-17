@@ -13,12 +13,12 @@ import io.gomint.server.registry.RegisterInfo;
 public class BrownMushroomBlock extends Block implements BlockBrownMushroomBlock {
 
     @Override
-    public String getBlockId() {
+    public String blockId() {
         return "minecraft:brown_mushroom_block";
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 1.0f;
     }
 

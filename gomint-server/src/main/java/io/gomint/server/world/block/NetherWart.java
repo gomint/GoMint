@@ -33,7 +33,7 @@ public class NetherWart extends Block implements BlockNetherWart {
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 0.0f;
     }
 

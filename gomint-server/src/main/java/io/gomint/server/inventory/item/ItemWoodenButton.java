@@ -10,14 +10,14 @@ import java.time.Duration;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo(sId = "minecraft:wooden_button", id = 143, def = true)
-@RegisterInfo(sId = "minecraft:acacia_button", id = -140)
-@RegisterInfo(sId = "minecraft:birch_button", id = -141)
-@RegisterInfo(sId = "minecraft:dark_oak_button", id = -142)
-@RegisterInfo(sId = "minecraft:jungle_button", id = -143)
-@RegisterInfo(sId = "minecraft:spruce_button", id = -144)
-@RegisterInfo(sId = "minecraft:crimson_button", id = -260)
-@RegisterInfo(sId = "minecraft:warped_button", id = -261)
+@RegisterInfo(sId = "minecraft:wooden_button", def = true)
+@RegisterInfo(sId = "minecraft:acacia_button")
+@RegisterInfo(sId = "minecraft:birch_button")
+@RegisterInfo(sId = "minecraft:dark_oak_button")
+@RegisterInfo(sId = "minecraft:jungle_button")
+@RegisterInfo(sId = "minecraft:spruce_button")
+@RegisterInfo(sId = "minecraft:crimson_button")
+@RegisterInfo(sId = "minecraft:warped_button")
 public class ItemWoodenButton extends ItemStack< io.gomint.inventory.item.ItemWoodenButton> implements io.gomint.inventory.item.ItemWoodenButton {
 
     @Override

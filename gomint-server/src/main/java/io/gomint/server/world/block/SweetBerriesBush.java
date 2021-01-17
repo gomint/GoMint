@@ -12,12 +12,12 @@ import io.gomint.world.block.BlockType;
 public class SweetBerriesBush extends Growable implements BlockSweetBerriesBush {
 
     @Override
-    public String getBlockId() {
+    public String blockId() {
         return "minecraft:sweet_berry_bush";
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 0;
     }
 

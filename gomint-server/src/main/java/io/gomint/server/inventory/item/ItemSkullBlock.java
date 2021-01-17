@@ -7,7 +7,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo(sId = "minecraft:item.skull", id = 144)
+@RegisterInfo(sId = "minecraft:item.skull")
 public class ItemSkullBlock extends ItemStack<ItemSkullBlock> {
 
     @Override

@@ -16,7 +16,7 @@ import java.util.List;
 public class BlockOfIron extends Block implements BlockBlockOfIron {
 
     @Override
-    public String getBlockId() {
+    public String blockId() {
         return "minecraft:iron_block";
     }
 
@@ -26,7 +26,7 @@ public class BlockOfIron extends Block implements BlockBlockOfIron {
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 10.0f;
     }
 
@@ -36,7 +36,7 @@ public class BlockOfIron extends Block implements BlockBlockOfIron {
     }
 
     @Override
-    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] toolInterfaces() {
         // Only stone, iron and up
         return new Class[]{
             ItemIronPickaxe.class,

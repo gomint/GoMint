@@ -8,7 +8,7 @@ import io.gomint.taglib.NBTTagCompound;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:speckled_melon", id = 382 )
+@RegisterInfo( sId = "minecraft:speckled_melon" )
  public class ItemGlisteringMelon extends ItemStack< io.gomint.inventory.item.ItemGlisteringMelon> implements io.gomint.inventory.item.ItemGlisteringMelon {
 
 

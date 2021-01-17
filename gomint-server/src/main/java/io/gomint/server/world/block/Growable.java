@@ -59,7 +59,7 @@ public abstract class Growable extends Block {
 
     protected void grow() {
         // Check for growth state
-        if (GROWTH.getState(this) < 1f) {
+        if (GROWTH.state(this) < 1f) {
             float growthDivider = getGrowthDivider();
             int random = ThreadLocalRandom.current().nextInt((int) ((25f / growthDivider) + 1));
 

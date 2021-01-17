@@ -27,7 +27,7 @@ public class Ice extends Block implements BlockIce {
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 2.5f;
     }
 

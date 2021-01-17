@@ -16,7 +16,7 @@ public class Bedrock extends Block implements BlockBedrock {
     private static final BooleanBlockState INFINI_BURN = new BooleanBlockState(() -> new String[]{"infiniburn_bit"});
 
     @Override
-    public String getBlockId() {
+    public String blockId() {
         return "minecraft:bedrock";
     }
 
@@ -31,7 +31,7 @@ public class Bedrock extends Block implements BlockBedrock {
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 1.8E7f;
     }
 

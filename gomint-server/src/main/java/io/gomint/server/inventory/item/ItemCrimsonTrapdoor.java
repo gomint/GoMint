@@ -14,7 +14,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:crimson_trapdoor", id = -246 )
+@RegisterInfo( sId = "minecraft:crimson_trapdoor" )
 public class ItemCrimsonTrapdoor extends ItemStack< io.gomint.inventory.item.ItemCrimsonTrapdoor> implements io.gomint.inventory.item.ItemCrimsonTrapdoor {
 
     @Override

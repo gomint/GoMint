@@ -14,7 +14,7 @@ import io.gomint.world.block.BlockType;
 public class Composter extends Block implements BlockComposter {
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 3.5f;
     }
 
@@ -24,7 +24,7 @@ public class Composter extends Block implements BlockComposter {
     }
 
     @Override
-    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] toolInterfaces() {
         return ToolPresets.AXE;
     }
 

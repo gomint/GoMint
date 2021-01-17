@@ -9,7 +9,7 @@ import io.gomint.taglib.NBTTagCompound;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo(sId = "minecraft:stone_pressure_plate", id = 70)
+@RegisterInfo(sId = "minecraft:stone_pressure_plate")
 public class ItemStonePressurePlate extends ItemStack<io.gomint.inventory.item.ItemStonePressurePlate> implements io.gomint.inventory.item.ItemStonePressurePlate {
 
     @Override

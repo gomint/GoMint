@@ -9,7 +9,7 @@ import io.gomint.taglib.NBTTagCompound;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo(sId = "minecraft:enchanting_table", id = 116)
+@RegisterInfo(sId = "minecraft:enchanting_table")
 public class ItemEnchantmentTable extends ItemStack< io.gomint.inventory.item.ItemEnchantmentTable> implements io.gomint.inventory.item.ItemEnchantmentTable {
 
     @Override

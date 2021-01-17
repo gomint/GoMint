@@ -14,7 +14,7 @@ import io.gomint.world.block.BlockType;
 public class GildedBlackStone extends Block implements BlockGildedBlackStone {
 
     @Override
-    public String getBlockId() {
+    public String blockId() {
         return "minecraft:gilded_blackstone";
     }
 
@@ -24,7 +24,7 @@ public class GildedBlackStone extends Block implements BlockGildedBlackStone {
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 30.0f;
     }
 
@@ -39,7 +39,7 @@ public class GildedBlackStone extends Block implements BlockGildedBlackStone {
     }
 
     @Override
-    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] toolInterfaces() {
         return ToolPresets.PICKAXE;
     }
 }

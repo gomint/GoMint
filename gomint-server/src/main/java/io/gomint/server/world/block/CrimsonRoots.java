@@ -12,7 +12,7 @@ import io.gomint.world.block.BlockType;
 public class CrimsonRoots extends Block implements BlockCrimsonRoots {
 
     @Override
-    public String getBlockId() {
+    public String blockId() {
         return "minecraft:crimson_roots";
     }
 
@@ -22,7 +22,7 @@ public class CrimsonRoots extends Block implements BlockCrimsonRoots {
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 0;
     }
 

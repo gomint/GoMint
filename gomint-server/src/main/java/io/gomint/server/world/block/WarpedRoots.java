@@ -12,7 +12,7 @@ import io.gomint.world.block.BlockWarpedRoots;
 public class WarpedRoots extends Block implements BlockWarpedRoots {
 
     @Override
-    public String getBlockId() {
+    public String blockId() {
         return "minecraft:warped_roots";
     }
 
@@ -22,7 +22,7 @@ public class WarpedRoots extends Block implements BlockWarpedRoots {
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 0;
     }
 

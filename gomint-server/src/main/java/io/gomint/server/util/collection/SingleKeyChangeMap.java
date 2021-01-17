@@ -7,16 +7,21 @@
 
 package io.gomint.server.util.collection;
 
+import java.util.Arrays;
+import java.util.Set;
+
 public class SingleKeyChangeMap extends ReadOnlyMap<String, Object> {
 
     private final FixedReadOnlyMap backing;
     private final int[] keyCode;
+    private final String[] keys;
     private final Object value;
 
     public SingleKeyChangeMap(FixedReadOnlyMap backing, String[] key, Object value) {
         this.backing = backing;
         this.keyCode = new int[key.length];
         this.value = value;
+        this.keys = key;
 
         for (int i = 0; i < key.length; i++) {
             this.keyCode[i] = key[i].hashCode();
@@ -64,6 +69,13 @@ public class SingleKeyChangeMap extends ReadOnlyMap<String, Object> {
     @Override
     public boolean containsValue(Object value) {
         return this.backing.containsValue(value);
+    }
+
+    @Override
+    public Set<String> keySet() {
+        Set<String> keys = this.backing.keySet();
+        keys.addAll(Arrays.asList(this.keys));
+        return keys;
     }
 
 }

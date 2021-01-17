@@ -15,7 +15,7 @@ import io.gomint.server.registry.RegisterInfo;
 public class Observer extends Block implements BlockObserver {
 
     @Override
-    public String getBlockId() {
+    public String blockId() {
         return "minecraft:observer";
     }
 
@@ -30,12 +30,12 @@ public class Observer extends Block implements BlockObserver {
     }
 
     @Override
-    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] toolInterfaces() {
         return ToolPresets.PICKAXE;
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 17.5f;
     }
 

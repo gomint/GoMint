@@ -14,7 +14,7 @@ import io.gomint.world.block.BlockType;
 public class CrimsonNylium extends Block implements BlockCrimsonNylium {
 
     @Override
-    public String getBlockId() {
+    public String blockId() {
         return "minecraft:crimson_nylium";
     }
 
@@ -24,7 +24,7 @@ public class CrimsonNylium extends Block implements BlockCrimsonNylium {
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 5.0f;
     }
 
@@ -39,7 +39,7 @@ public class CrimsonNylium extends Block implements BlockCrimsonNylium {
     }
 
     @Override
-    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] toolInterfaces() {
         return ToolPresets.PICKAXE;
     }
 }

@@ -8,7 +8,7 @@ import io.gomint.taglib.NBTTagCompound;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo(sId = "minecraft:info_update2", id = 249)
+@RegisterInfo(sId = "minecraft:info_update2")
 public class ItemUpdateGameBlockUpdate2 extends ItemStack<ItemUpdateGameBlockUpdate2> {
 
     @Override

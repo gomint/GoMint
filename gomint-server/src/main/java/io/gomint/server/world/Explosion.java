@@ -112,7 +112,7 @@ public class Explosion {
                 }
 
                 if ( !( this.currentBlock instanceof Air ) ) {
-                    blastForce -= ( ( ( (io.gomint.server.world.block.Block) this.currentBlock ).getBlastResistance() / 5 ) + 0.3f ) * STEP_LENGTH;
+                    blastForce -= ( ( ( (io.gomint.server.world.block.Block) this.currentBlock ).blastResistance() / 5 ) + 0.3f ) * STEP_LENGTH;
                     if ( blastForce > 0 ) {
                         this.affectedBlocks.add( this.currentBlock );
                     }

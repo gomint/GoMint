@@ -5,7 +5,7 @@ package io.gomint.server.registry;
  * @author geNAZt
  * @version 1.0
  */
-public interface GeneratorCallback<T> {
+public interface GeneratorCallback<T, I> {
 
     /**
      * Generate a ASM generator for the given id and class
@@ -14,6 +14,6 @@ public interface GeneratorCallback<T> {
      * @param id for which we generate
      * @return generator for the given class
      */
-    Generator<T> generate( Class<? extends T> clazz, String id );
+    Generator<T> generate( Class<? extends T> clazz, I id );
 
 }

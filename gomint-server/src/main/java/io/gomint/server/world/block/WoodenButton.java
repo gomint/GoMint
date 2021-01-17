@@ -43,7 +43,7 @@ public class WoodenButton extends Button<BlockWoodenButton> implements BlockWood
 
     @Override
     public LogType type() {
-        switch (this.getBlockId()) {
+        switch (this.blockId()) {
             case "minecraft:crimson_button":
                 return LogType.CRIMSON;
             case "minecraft:warped_button":
@@ -69,28 +69,28 @@ public class WoodenButton extends Button<BlockWoodenButton> implements BlockWood
     public BlockWoodenButton type(LogType logType) {
         switch (logType) {
             case CRIMSON:
-                this.setBlockId("minecraft:crimson_button");
+                this.blockId("minecraft:crimson_button");
                 break;
             case WARPED:
-                this.setBlockId("minecraft:warped_button");
+                this.blockId("minecraft:warped_button");
                 break;
             case OAK:
-                this.setBlockId("minecraft:wooden_button");
+                this.blockId("minecraft:wooden_button");
                 break;
             case SPRUCE:
-                this.setBlockId("minecraft:spruce_button");
+                this.blockId("minecraft:spruce_button");
                 break;
             case BIRCH:
-                this.setBlockId("minecraft:birch_button");
+                this.blockId("minecraft:birch_button");
                 break;
             case DARK_OAK:
-                this.setBlockId("minecraft:dark_oak_button");
+                this.blockId("minecraft:dark_oak_button");
                 break;
             case JUNGLE:
-                this.setBlockId("minecraft:jungle_button");
+                this.blockId("minecraft:jungle_button");
                 break;
             case ACACIA:
-                this.setBlockId("minecraft:acacia_button");
+                this.blockId("minecraft:acacia_button");
                 break;
         }
 
@@ -98,7 +98,7 @@ public class WoodenButton extends Button<BlockWoodenButton> implements BlockWood
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 2.5f;
     }
 
@@ -108,7 +108,7 @@ public class WoodenButton extends Button<BlockWoodenButton> implements BlockWood
     }
 
     @Override
-    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] toolInterfaces() {
         return ToolPresets.AXE;
     }
 

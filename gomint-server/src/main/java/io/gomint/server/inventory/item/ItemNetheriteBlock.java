@@ -14,7 +14,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:netherite_block", id = -270 )
+@RegisterInfo( sId = "minecraft:netherite_block" )
 public class ItemNetheriteBlock extends ItemStack< io.gomint.inventory.item.ItemNetheriteBlock> implements io.gomint.inventory.item.ItemNetheriteBlock {
 
     @Override

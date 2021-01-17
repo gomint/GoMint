@@ -15,7 +15,7 @@ import io.gomint.world.block.BlockType;
 public class Scaffolding extends Block implements BlockScaffolding {
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 0;
     }
 

@@ -14,7 +14,7 @@ import io.gomint.world.block.BlockType;
 public class BlockOfNetherite extends Block implements BlockBlockOfNetherite {
 
     @Override
-    public String getBlockId() {
+    public String blockId() {
         return "minecraft:netherite_block";
     }
 
@@ -24,14 +24,14 @@ public class BlockOfNetherite extends Block implements BlockBlockOfNetherite {
     }
 
     @Override
-    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] toolInterfaces() {
         return new Class[]{
             ItemDiamondPickaxe.class
         };
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 6000.0f;
     }
 

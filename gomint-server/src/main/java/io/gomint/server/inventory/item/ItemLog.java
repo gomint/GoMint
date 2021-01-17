@@ -11,21 +11,21 @@ import java.time.Duration;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo(id = -212, sId = "minecraft:wood")
-@RegisterInfo(sId = "minecraft:log", id = 17, def = true)
-@RegisterInfo(sId = "minecraft:log2", id = 162)
-@RegisterInfo(sId = "minecraft:crimson_stem", id = -225)
-@RegisterInfo(sId = "minecraft:warped_stem", id = -226)
-@RegisterInfo(sId = "minecraft:stripped_oak_log", id = -10)
-@RegisterInfo(sId = "minecraft:stripped_spruce_log", id = -5)
-@RegisterInfo(sId = "minecraft:stripped_birch_log", id = -6)
-@RegisterInfo(sId = "minecraft:stripped_jungle_log", id = -7)
-@RegisterInfo(sId = "minecraft:stripped_dark_oak_log", id = -9)
-@RegisterInfo(sId = "minecraft:stripped_acacia_log", id = -8)
-@RegisterInfo(sId = "minecraft:stripped_crimson_stem", id = -240)
-@RegisterInfo(sId = "minecraft:stripped_warped_stem", id = -241)
-@RegisterInfo(sId = "minecraft:warped_hyphae", id = -298)
-@RegisterInfo(sId = "minecraft:crimson_hyphae", id = -299)
+@RegisterInfo(sId = "minecraft:wood")
+@RegisterInfo(sId = "minecraft:log", def = true)
+@RegisterInfo(sId = "minecraft:log2")
+@RegisterInfo(sId = "minecraft:crimson_stem")
+@RegisterInfo(sId = "minecraft:warped_stem")
+@RegisterInfo(sId = "minecraft:stripped_oak_log")
+@RegisterInfo(sId = "minecraft:stripped_spruce_log")
+@RegisterInfo(sId = "minecraft:stripped_birch_log")
+@RegisterInfo(sId = "minecraft:stripped_jungle_log")
+@RegisterInfo(sId = "minecraft:stripped_dark_oak_log")
+@RegisterInfo(sId = "minecraft:stripped_acacia_log")
+@RegisterInfo(sId = "minecraft:stripped_crimson_stem")
+@RegisterInfo(sId = "minecraft:stripped_warped_stem")
+@RegisterInfo(sId = "minecraft:warped_hyphae")
+@RegisterInfo(sId = "minecraft:crimson_hyphae")
 public class ItemLog extends ItemStack<io.gomint.inventory.item.ItemLog> implements io.gomint.inventory.item.ItemLog {
 
     private enum LogTypeMagic {
@@ -82,7 +82,7 @@ public class ItemLog extends ItemStack<io.gomint.inventory.item.ItemLog> impleme
         for (LogTypeMagic value : LogTypeMagic.values()) {
             if (value.strippedLogBlockId.equals(this.material()) ||
                 (value.strippedWoodDataValue > -1 && value.woodBlockId.equals(this.material()) && (this.data() & value.strippedWoodDataValue) == value.strippedWoodDataValue) ||
-                value.strippedWoodBlockId.equals(this.material())) {
+                this.material().equals(value.strippedWoodBlockId)) {
                 return true;
             }
         }
@@ -107,7 +107,7 @@ public class ItemLog extends ItemStack<io.gomint.inventory.item.ItemLog> impleme
                 (value.strippedLogBlockId.equals(this.material()) && (this.data() & value.dataValue) == value.dataValue) ||
                 (value.woodBlockId.equals(this.material()) && (value.woodDataValue == -1 || (this.data() & value.woodDataValue) == value.woodDataValue)) ||
                 (value.woodBlockId.equals(this.material()) && (value.strippedWoodDataValue == -1 || (this.data() & value.strippedWoodDataValue) == value.strippedWoodDataValue)) ||
-                value.strippedWoodBlockId.equals(this.material())) {
+                this.material().equals(value.strippedWoodBlockId)) {
                 return LogType.valueOf(value.name());
             }
         }

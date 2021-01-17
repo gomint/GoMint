@@ -22,7 +22,7 @@ import java.util.concurrent.ThreadLocalRandom;
 public class DragonEgg extends Block implements BlockDragonEgg {
 
     @Override
-    public String getBlockId() {
+    public String blockId() {
         return "minecraft:dragon_egg";
     }
 
@@ -37,7 +37,7 @@ public class DragonEgg extends Block implements BlockDragonEgg {
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 45.0f;
     }
 

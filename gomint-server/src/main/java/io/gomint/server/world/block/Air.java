@@ -14,7 +14,7 @@ import io.gomint.world.block.BlockAir;
 public class Air extends Block implements BlockAir {
 
     @Override
-    public String getBlockId() {
+    public String blockId() {
         return "minecraft:air";
     }
 
@@ -44,7 +44,7 @@ public class Air extends Block implements BlockAir {
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 0.0f;
     }
 

@@ -9,7 +9,7 @@ import io.gomint.taglib.NBTTagCompound;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo(sId = "minecraft:sponge", id = 19)
+@RegisterInfo(sId = "minecraft:sponge")
 public class ItemSponge extends ItemStack< io.gomint.inventory.item.ItemSponge> implements io.gomint.inventory.item.ItemSponge {
 
     @Override

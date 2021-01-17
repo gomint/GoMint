@@ -7,7 +7,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:sea_pickle", id = -156 )
+@RegisterInfo( sId = "minecraft:sea_pickle" )
 public class ItemSeaPickle extends ItemStack< io.gomint.inventory.item.ItemSeaPickle> implements io.gomint.inventory.item.ItemSeaPickle {
 
     @Override

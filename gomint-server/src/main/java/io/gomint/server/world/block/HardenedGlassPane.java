@@ -20,7 +20,7 @@ public class HardenedGlassPane extends Block implements BlockHardenedGlassPane {
     private static final GlassColorBlockState COLOR = new GlassColorBlockState(() -> new String[]{"color"});
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 0;
     }
 
@@ -31,21 +31,21 @@ public class HardenedGlassPane extends Block implements BlockHardenedGlassPane {
 
     @Override
     public GlassColor color() {
-        if ("minecraft:hard_glass_pane".equals(this.getBlockId())) {
+        if ("minecraft:hard_glass_pane".equals(this.blockId())) {
             return GlassColor.TRANSPARENT;
         }
 
-        return COLOR.getState(this);
+        return COLOR.state(this);
     }
 
     @Override
     public BlockHardenedGlassPane color(GlassColor color) {
         if (color == GlassColor.TRANSPARENT) {
-            this.setBlockId("minecraft:hard_glass_pane");
+            this.blockId("minecraft:hard_glass_pane");
             return this;
         }
 
-        COLOR.setState(this, color);
+        COLOR.state(this, color);
         return this;
     }
 

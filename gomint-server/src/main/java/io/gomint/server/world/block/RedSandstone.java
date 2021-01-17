@@ -15,7 +15,7 @@ import io.gomint.server.registry.RegisterInfo;
 public class RedSandstone extends Block implements BlockRedSandstone {
 
     @Override
-    public String getBlockId() {
+    public String blockId() {
         return "minecraft:red_sandstone";
     }
 
@@ -25,7 +25,7 @@ public class RedSandstone extends Block implements BlockRedSandstone {
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 4.0f;
     }
 
@@ -40,7 +40,7 @@ public class RedSandstone extends Block implements BlockRedSandstone {
     }
 
     @Override
-    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] toolInterfaces() {
         return ToolPresets.SHOVEL;
     }
 

@@ -16,7 +16,7 @@ import java.util.List;
 public class Carpet extends Block implements BlockCarpet {
 
     @Override
-    public String getBlockId() {
+    public String blockId() {
         return "minecraft:carpet";
     }
 
@@ -38,7 +38,7 @@ public class Carpet extends Block implements BlockCarpet {
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 0.5f;
     }
 

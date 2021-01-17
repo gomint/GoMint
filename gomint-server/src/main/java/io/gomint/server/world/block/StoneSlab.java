@@ -112,7 +112,7 @@ public class StoneSlab extends Slab<BlockStoneSlab> implements BlockStoneSlab {
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 30.0f;
     }
 
@@ -127,13 +127,13 @@ public class StoneSlab extends Slab<BlockStoneSlab> implements BlockStoneSlab {
     }
 
     @Override
-    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] toolInterfaces() {
         return ToolPresets.PICKAXE;
     }
 
     @Override
     public StoneType type() {
-        switch (this.getBlockId()) {
+        switch (this.blockId()) {
             case "minecraft:blackstone_slab":
                 return StoneType.BLACKSTONE;
             case "minecraft:polished_blackstone_slab":
@@ -142,14 +142,14 @@ public class StoneSlab extends Slab<BlockStoneSlab> implements BlockStoneSlab {
                 return StoneType.POLISHED_BLACKSTONE_BRICK;
         }
 
-        return StoneType.valueOf(VARIANT.getState(this).name());
+        return StoneType.valueOf(VARIANT.state(this).name());
     }
 
     @Override
     public BlockStoneSlab type(StoneType stoneType) {
         StoneTypeMagic newState = StoneTypeMagic.valueOf(stoneType.name());
-        this.setBlockId(newState.blockId);
-        VARIANT.setState(this, newState);
+        this.blockId(newState.blockId);
+        VARIANT.state(this, newState);
         return this;
     }
 

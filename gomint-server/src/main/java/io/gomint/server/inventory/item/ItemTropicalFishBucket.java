@@ -14,7 +14,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:tropical_fish_bucket", id = 366 )
+@RegisterInfo( sId = "minecraft:tropical_fish_bucket" )
 public class ItemTropicalFishBucket extends ItemStack< io.gomint.inventory.item.ItemTropicalFishBucket> implements io.gomint.inventory.item.ItemTropicalFishBucket {
 
     @Override

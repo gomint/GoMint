@@ -8,7 +8,7 @@ import io.gomint.taglib.NBTTagCompound;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:glass_bottle", id = 374 )
+@RegisterInfo( sId = "minecraft:glass_bottle" )
  public class ItemGlassBottle extends ItemStack< io.gomint.inventory.item.ItemGlassBottle> implements io.gomint.inventory.item.ItemGlassBottle {
 
 

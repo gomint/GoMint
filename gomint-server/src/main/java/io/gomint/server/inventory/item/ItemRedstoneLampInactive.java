@@ -9,7 +9,7 @@ import io.gomint.taglib.NBTTagCompound;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo(sId = "minecraft:redstone_lamp", id = 123)
+@RegisterInfo(sId = "minecraft:redstone_lamp")
 public class ItemRedstoneLampInactive extends ItemStack<ItemRedstoneLampInactive> {
 
     @Override

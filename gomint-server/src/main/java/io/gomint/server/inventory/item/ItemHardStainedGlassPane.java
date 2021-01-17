@@ -14,7 +14,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:hard_stained_glass_pane", id = 191 )
+@RegisterInfo( sId = "minecraft:hard_stained_glass_pane" )
 public class ItemHardStainedGlassPane extends ItemStack< io.gomint.inventory.item.ItemHardStainedGlassPane> implements io.gomint.inventory.item.ItemHardStainedGlassPane {
 
     @Override

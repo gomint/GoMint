@@ -28,9 +28,9 @@ public class BlockRegistry {
     private final Map<Class<?>, String> blockIDs = new HashMap<>();
     private final Object2IntMap<String> idToRuntime = new Object2IntOpenHashMap<>();
 
-    private final GeneratorCallback<Block> generatorCallback;
+    private final GeneratorCallback<Block, BlockIdentifierPredicate> generatorCallback;
 
-    public BlockRegistry(List<BlockIdentifier> blockIdentifiers, GeneratorCallback<Block> callback) {
+    public BlockRegistry(List<BlockIdentifier> blockIdentifiers, GeneratorCallback<Block, BlockIdentifierPredicate> callback) {
         this.generatorCallback = callback;
         this.generators = new Generator[blockIdentifiers.size()];
         this.blockIdentifiers = blockIdentifiers;
@@ -56,16 +56,23 @@ public class BlockRegistry {
         for (RegisterInfo info : clazz.getAnnotationsByType(RegisterInfo.class)) {
             String id = info.sId();
 
-            Generator<Block> generator = this.generatorCallback.generate(clazz, id);
+            BlockIdentifierPredicate predicate = this.parseId(id);
+
+            Generator<Block> generator = this.generatorCallback.generate(clazz, predicate);
             if (generator != null) {
                 int runtimeId = -1;
                 for (BlockIdentifier blockIdentifier : this.blockIdentifiers) {
-                    if (blockIdentifier.getBlockId().equals(id)) {
+                    if (this.generators[blockIdentifier.runtimeId()] != null &&
+                        !predicate.testsStates()) {
+                        continue;
+                    }
+
+                    if (predicate.test(blockIdentifier)) {
                         if (runtimeId == -1) {
-                            runtimeId = blockIdentifier.getRuntimeId();
+                            runtimeId = blockIdentifier.runtimeId();
                         }
 
-                        this.generators[blockIdentifier.getRuntimeId()] = generator;
+                        this.generators[blockIdentifier.runtimeId()] = generator;
                     }
                 }
 
@@ -81,6 +88,46 @@ public class BlockRegistry {
                 this.blockIDs.put(clazz, id);
             }
         }
+    }
+
+    /**
+     * This method should parse additional information out of the given id. A id can contain additional state selectors
+     * the following formats:
+     * <p>
+     * - minecraft:stone_slab2[stone_slab_type_2=prismarine_rough,prismarine_dark,prismarine_brick]
+     * - minecraft:stone_slab2[stone_slab_type_2=purpur;direction=x]
+     * - minecraft:stone_slab2
+     *
+     * @param id which should be parsed
+     * @return a predicate which decides which runtime id it wants to bind to
+     */
+    private BlockIdentifierPredicate parseId(String id) {
+        // Check if we have a [
+        int index = id.indexOf("[");
+        if (index == -1) {
+            return new BlockIdentifierPredicate(id);
+        }
+
+        String blockId = id.substring(0, index);
+        if (blockId.length() == id.length()) {
+            return new BlockIdentifierPredicate(blockId);
+        }
+
+        // We assume that the last char is a ]
+        if (!id.endsWith("]")) {
+            throw new RuntimeException("We found a state selector but it doesn't end with ]");
+        }
+
+        BlockIdentifierPredicate predicate = new BlockIdentifierPredicate(blockId);
+        String[] keyValues = id.substring(index + 1, id.length() - 1).split(";");
+        for (String keyValue : keyValues) {
+            String[] keyAndValue = keyValue.split("=");
+            String key = keyAndValue[0];
+            String[] values = keyAndValue[1].split(",");
+            predicate.keyValues(key, values);
+        }
+
+        return predicate;
     }
 
     public void cleanup() {

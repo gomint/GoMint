@@ -19,7 +19,7 @@ import java.util.List;
 public class BlockOfDiamond extends Block implements BlockBlockOfDiamond {
 
     @Override
-    public String getBlockId() {
+    public String blockId() {
         return "minecraft:diamond_block";
     }
 
@@ -29,7 +29,7 @@ public class BlockOfDiamond extends Block implements BlockBlockOfDiamond {
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 30.0f;
     }
 
@@ -39,7 +39,7 @@ public class BlockOfDiamond extends Block implements BlockBlockOfDiamond {
     }
 
     @Override
-    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] toolInterfaces() {
         // Only iron and up
         return new Class[]{
             ItemIronPickaxe.class,

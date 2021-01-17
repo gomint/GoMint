@@ -283,7 +283,7 @@ public class PacketInventoryTransactionHandler implements PacketHandler<PacketIn
                     }
 
                     // Check if we can break this block in time
-                    long breakTime = block.getFinalBreakTime(connection.getEntity().inventory().itemInHand(), connection.getEntity());
+                    long breakTime = block.finalBreakTime(connection.getEntity().inventory().itemInHand(), connection.getEntity());
                     if (breakTime > Values.CLIENT_TICK_MS && ((connection.getEntity().breakTime() + Values.CLIENT_TICK_MS) / (double) breakTime) < 0.75) {
                         LOGGER.warn(connection.getEntity().name() + " broke block too fast: break time: " + (connection.getEntity().breakTime() + Values.CLIENT_TICK_MS) +
                             "; should: " + breakTime + " for " + block.getClass().getSimpleName() + " with " + itemInHand.getClass().getSimpleName());

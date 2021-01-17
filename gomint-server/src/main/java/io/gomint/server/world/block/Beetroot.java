@@ -59,7 +59,7 @@ public class Beetroot extends Growable implements BlockBeetroot {
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 0.0f;
     }
 

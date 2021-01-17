@@ -11,7 +11,7 @@ import java.time.Duration;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo(sId = "minecraft:trapdoor", id = 96)
+@RegisterInfo(sId = "minecraft:trapdoor")
 public class ItemTrapdoor extends ItemStack< io.gomint.inventory.item.ItemTrapdoor> implements io.gomint.inventory.item.ItemTrapdoor {
 
     @Override

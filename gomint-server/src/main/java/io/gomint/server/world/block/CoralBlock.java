@@ -4,10 +4,7 @@ import io.gomint.inventory.item.ItemStack;
 import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.world.block.helper.ToolPresets;
 import io.gomint.server.world.block.state.BooleanBlockState;
-import io.gomint.server.world.block.state.DirectValueBlockState;
-import io.gomint.server.util.Values;
 import io.gomint.server.world.block.state.EnumBlockState;
-import io.gomint.world.block.BlockCoral;
 import io.gomint.world.block.BlockCoralBlock;
 import io.gomint.world.block.BlockType;
 import io.gomint.world.block.data.CoralType;
@@ -46,7 +43,7 @@ public class CoralBlock extends Block implements BlockCoralBlock {
     });
 
     @Override
-    public String getBlockId() {
+    public String blockId() {
         return "minecraft:coral_block";
     }
 
@@ -56,12 +53,12 @@ public class CoralBlock extends Block implements BlockCoralBlock {
     }
 
     @Override
-    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] toolInterfaces() {
         return ToolPresets.PICKAXE;
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 30;
     }
 
@@ -77,25 +74,25 @@ public class CoralBlock extends Block implements BlockCoralBlock {
 
     @Override
     public BlockCoralBlock dead(boolean dead) {
-        DEAD.setState(this, dead);
+        DEAD.state(this, dead);
         return this;
     }
 
     @Override
     public boolean dead() {
-        return DEAD.getState(this);
+        return DEAD.state(this);
     }
 
     @Override
     public BlockCoralBlock type(CoralType type) {
         CoralBlock.CoralTypeMagic state = CoralBlock.CoralTypeMagic.valueOf(type.name());
-        COLOR.setState(this, state);
+        COLOR.state(this, state);
         return this;
     }
 
     @Override
     public CoralType type() {
-        return CoralType.valueOf(COLOR.getState(this).name());
+        return CoralType.valueOf(COLOR.state(this).name());
     }
 
 }

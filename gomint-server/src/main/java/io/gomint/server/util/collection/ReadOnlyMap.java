@@ -34,11 +34,6 @@ public abstract class ReadOnlyMap<K, V> implements Map<K, V> {
     }
 
     @Override
-    public Set<K> keySet() {
-        return null;
-    }
-
-    @Override
     public Collection<V> values() {
         return null;
     }
