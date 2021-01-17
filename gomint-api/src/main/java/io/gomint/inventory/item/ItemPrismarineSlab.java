@@ -15,7 +15,7 @@ import io.gomint.world.block.data.PrismarineType;
  * @version 1.0
  * @stability 3
  */
-public interface ItemPrismarineDoubleSlab extends ItemStack<ItemPrismarineDoubleSlab> {
+public interface ItemPrismarineSlab extends ItemStack<ItemPrismarineSlab> {
 
     /**
      * Create a new item stack with given class and amount
@@ -23,8 +23,8 @@ public interface ItemPrismarineDoubleSlab extends ItemStack<ItemPrismarineDouble
      * @param amount which is used for the creation
      * @return freshly generated item
      */
-    static ItemPrismarineDoubleSlab create( int amount ) {
-        return GoMint.instance().createItemStack( ItemPrismarineDoubleSlab.class, amount );
+    static ItemPrismarineSlab create( int amount ) {
+        return GoMint.instance().createItemStack( ItemPrismarineSlab.class, amount );
     }
 
     /**
@@ -40,7 +40,7 @@ public interface ItemPrismarineDoubleSlab extends ItemStack<ItemPrismarineDouble
      * @param type for this item
      * @return item for chaining
      */
-    ItemPrismarineDoubleSlab type(PrismarineType type);
+    ItemPrismarineSlab type(PrismarineType type);
 
 
 }

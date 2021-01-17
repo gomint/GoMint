@@ -60,9 +60,7 @@ public class Wall extends Block implements BlockWall {
         // Slab types 2
         RED_SANDSTONE(STONE_SLAB_ID, STONE_TYPE, "red_sandstone"),
         PURPUR("", "", ""),
-        PRISMARINE_ROUGH(STONE_SLAB_ID, STONE_TYPE, "prismarine"),
-        PRISMARINE_DARK("", "", ""),
-        PRISMARINE_BRICK(STONE_SLAB_ID, STONE_TYPE, ""),
+
         MOSSY_COBBLESTONE(STONE_SLAB_ID, STONE_TYPE, "mossy_cobblestone"),
         SMOOTH_SANDSTONE("", "", ""),
         RED_NETHER_BRICK(STONE_SLAB_ID, STONE_TYPE, "red_nether_brick"),

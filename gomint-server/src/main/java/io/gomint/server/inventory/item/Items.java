@@ -51,13 +51,19 @@ public class Items {
         this.generators = new StringRegistry<>((clazz, id) -> {
             LambdaConstructionFactory<ItemStack<? extends ItemStack<?>>> factory = new LambdaConstructionFactory<>(clazz);
 
+            int index = id.indexOf("[");
+            if (index != -1) {
+                id = id.substring(0, index);
+            }
+
+            String finalId = id;
             return in -> {
                 ItemStack<? extends ItemStack<?>> itemStack = factory.newInstance();
 
                 io.gomint.server.inventory.item.ItemStack<?> sStack = (io.gomint.server.inventory.item.ItemStack<?>) itemStack;
                 sStack.items(this);
                 sStack.blocks(blocks);
-                sStack.material(id);
+                sStack.material(finalId);
                 return itemStack;
             };
         });

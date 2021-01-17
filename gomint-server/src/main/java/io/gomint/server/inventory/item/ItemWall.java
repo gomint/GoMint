@@ -27,9 +27,6 @@ public class ItemWall extends ItemStack< io.gomint.inventory.item.ItemWall> impl
         QUARTZ(WALL_ID, (short) 0),
         SMOOTH_STONE(WALL_ID, (short) 0),
 
-        PRISMARINE_ROUGH(WALL_ID, (short) 11),
-        PRISMARINE_BRICK(WALL_ID, (short) 11),
-        PRISMARINE_DARK(WALL_ID, (short) 11),
         MOSSY_COBBLESTONE(WALL_ID, (short) 1),
         RED_SANDSTONE(WALL_ID, (short) 12),
         SMOOTH_SANDSTONE(WALL_ID, (short) 5),

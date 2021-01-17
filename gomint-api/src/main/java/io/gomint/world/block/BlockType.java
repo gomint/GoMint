@@ -192,6 +192,7 @@ public enum BlockType {
     POTATO,
     POWERED_RAIL,
     PRISMARINE,
+    PRISMARINE_WALL,
     PUMPKIN_STEM,
     PUMPKIN,
     PURPUR_BLOCK,
@@ -301,5 +302,6 @@ public enum BlockType {
     SCAFFOLDING,
     LIGHT_BLOCK,
     PRISMARINE_SLAB,
+    PRISMARINE_DOUBLE_SLAB,
 
 }

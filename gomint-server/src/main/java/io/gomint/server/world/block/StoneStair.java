@@ -53,9 +53,6 @@ public class StoneStair extends Stair<BlockStoneStair> implements BlockStoneStai
         QUARTZ("minecraft:quartz_stairs"),
         SMOOTH_STONE,
 
-        PRISMARINE_BRICK("minecraft:prismarine_bricks_stairs"),
-        PRISMARINE_ROUGH("minecraft:prismarine_stairs"),
-        PRISMARINE_DARK("minecraft:dark_prismarine_stairs"),
         MOSSY_COBBLESTONE("minecraft:mossy_cobblestone_stairs"),
         RED_SANDSTONE("minecraft:red_sandstone_stairs"),
         SMOOTH_SANDSTONE("minecraft:smooth_sandstone_stairs"),

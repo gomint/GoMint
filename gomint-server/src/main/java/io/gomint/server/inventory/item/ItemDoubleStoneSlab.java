@@ -46,9 +46,7 @@ public class ItemDoubleStoneSlab extends ItemStack< io.gomint.inventory.item.Ite
         // Slab types 2
         RED_SANDSTONE(STONE_SLAB2_ID, (short) 0),
         PURPUR(STONE_SLAB2_ID, (short) 1),
-        PRISMARINE_ROUGH(STONE_SLAB2_ID, (short) 2),
-        PRISMARINE_DARK(STONE_SLAB2_ID, (short) 3),
-        PRISMARINE_BRICK(STONE_SLAB2_ID, (short) 4),
+
         MOSSY_COBBLESTONE(STONE_SLAB2_ID, (short) 5),
         SMOOTH_SANDSTONE(STONE_SLAB2_ID, (short) 6),
         RED_NETHER_BRICK(STONE_SLAB2_ID, (short) 7),

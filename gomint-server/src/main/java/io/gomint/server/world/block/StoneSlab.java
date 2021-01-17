@@ -49,9 +49,7 @@ public class StoneSlab extends Slab<BlockStoneSlab> implements BlockStoneSlab {
         // Slab types 2
         RED_SANDSTONE(STONE_SLAB2_ID, STONE_TYPE_2, "red_sandstone"),
         PURPUR(STONE_SLAB2_ID, STONE_TYPE_2, "purpur"),
-        PRISMARINE_ROUGH(STONE_SLAB2_ID, STONE_TYPE_2, "prismarine_rough"),
-        PRISMARINE_DARK(STONE_SLAB2_ID, STONE_TYPE_2, "prismarine_dark"),
-        PRISMARINE_BRICK(STONE_SLAB2_ID, STONE_TYPE_2, "prismarine_brick"),
+
         MOSSY_COBBLESTONE(STONE_SLAB2_ID, STONE_TYPE_2, "mossy_cobblestone"),
         SMOOTH_SANDSTONE(STONE_SLAB2_ID, STONE_TYPE_2, "smooth_sandstone"),
         RED_NETHER_BRICK(STONE_SLAB2_ID, STONE_TYPE_2, "red_nether_brick"),

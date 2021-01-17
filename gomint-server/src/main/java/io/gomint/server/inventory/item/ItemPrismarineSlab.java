@@ -10,13 +10,13 @@ package io.gomint.server.inventory.item;
 import io.gomint.inventory.item.ItemType;
 import io.gomint.server.registry.RegisterInfo;
 import io.gomint.world.block.Block;
-import io.gomint.world.block.BlockPrismarineDoubleSlab;
+import io.gomint.world.block.BlockPrismarineSlab;
 import io.gomint.world.block.data.PrismarineType;
 
-@RegisterInfo(sId = "minecraft:real_double_stone_slab2[2]", def = true)
-@RegisterInfo(sId = "minecraft:real_double_stone_slab2[3]")
-@RegisterInfo(sId = "minecraft:real_double_stone_slab2[4]")
-public class ItemPrismarineDoubleSlab extends ItemStack<io.gomint.inventory.item.ItemPrismarineDoubleSlab> implements io.gomint.inventory.item.ItemPrismarineDoubleSlab {
+@RegisterInfo(sId = "minecraft:double_stone_slab2[2]", def = true)
+@RegisterInfo(sId = "minecraft:double_stone_slab2[3]")
+@RegisterInfo(sId = "minecraft:double_stone_slab2[4]")
+public class ItemPrismarineSlab extends ItemStack<io.gomint.inventory.item.ItemPrismarineSlab> implements io.gomint.inventory.item.ItemPrismarineSlab {
 
     @Override
     public PrismarineType type() {
@@ -33,7 +33,7 @@ public class ItemPrismarineDoubleSlab extends ItemStack<io.gomint.inventory.item
     }
 
     @Override
-    public io.gomint.inventory.item.ItemPrismarineDoubleSlab type(PrismarineType type) {
+    public io.gomint.inventory.item.ItemPrismarineSlab type(PrismarineType type) {
         switch (type) {
             case NORMAL:
                 return this.data((short) 2);
@@ -48,13 +48,13 @@ public class ItemPrismarineDoubleSlab extends ItemStack<io.gomint.inventory.item
 
     @Override
     public ItemType itemType() {
-        return ItemType.PRISMARINE_DOUBLE_SLAB;
+        return ItemType.PRISMARINE_SLAB;
     }
 
     @Override
     public Block block() {
         return this.blocks
-            .get(BlockPrismarineDoubleSlab.class)
+            .get(BlockPrismarineSlab.class)
             .type(this.type());
     }
 

@@ -8,11 +8,12 @@
 package io.gomint.inventory.item;
 
 import io.gomint.GoMint;
+import io.gomint.world.block.data.PrismarineType;
 
 /**
  * @author geNAZt
  * @version 1.0
- * @stability 1
+ * @stability 3
  */
 public interface ItemPrismarineStairs extends ItemStack<ItemPrismarineStairs> {
 
@@ -25,5 +26,20 @@ public interface ItemPrismarineStairs extends ItemStack<ItemPrismarineStairs> {
     static ItemPrismarineStairs create( int amount ) {
         return GoMint.instance().createItemStack( ItemPrismarineStairs.class, amount );
     }
+
+    /**
+     * Get the type of prismarine this slab has
+     *
+     * @return type of prismarine
+     */
+    PrismarineType type();
+
+    /**
+     * Set the type of prismarine for this item
+     *
+     * @param type for this item
+     * @return item for chaining
+     */
+    ItemPrismarineStairs type(PrismarineType type);
 
 }
