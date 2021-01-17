@@ -7,6 +7,7 @@
 
 package io.gomint.server.entity.component;
 
+import com.google.common.base.Preconditions;
 import io.gomint.entity.Entity;
 import io.gomint.inventory.item.ItemAir;
 import io.gomint.inventory.item.ItemStack;
@@ -51,7 +52,8 @@ public class ItemComponent extends AbstractTileEntityComponent {
 
     }
 
-    public void setItem(ItemStack<?> item) {
+    public void item(ItemStack<?> item) {
+        Preconditions.checkArgument(item != null, "Item needs to be not null");
         this.holdingItem = item;
     }
 

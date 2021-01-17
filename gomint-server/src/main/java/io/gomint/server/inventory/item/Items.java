@@ -1,5 +1,6 @@
 package io.gomint.server.inventory.item;
 
+import io.gomint.inventory.item.ItemAir;
 import io.gomint.inventory.item.ItemStack;
 import io.gomint.jraknet.PacketBuffer;
 import io.gomint.server.registry.Generator;
@@ -100,10 +101,6 @@ public class Items {
      * @return generated item stack
      */
     public <T extends ItemStack<T>> T create(int id, short data, byte amount, NBTTagCompound nbt) {
-        if (id == 0) {
-            return null;
-        }
-
         // Resolve the item id and create as ever
         return this.create(this.getMaterial(id), data, amount, nbt);
     }

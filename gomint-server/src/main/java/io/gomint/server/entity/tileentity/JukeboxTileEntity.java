@@ -7,6 +7,8 @@ import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.world.block.Block;
 import io.gomint.taglib.NBTTagCompound;
 
+import javax.annotation.Nonnull;
+
 /**
  * @author geNAZt
  * @version 1.0
@@ -37,8 +39,8 @@ public class JukeboxTileEntity extends TileEntity {
 
     }
 
-    public void setRecordItem(ItemStack<?> recordItem) {
-        this.itemComponent.setItem(recordItem);
+    public void recordItem(@Nonnull ItemStack<?> recordItem) {
+        this.itemComponent.item(recordItem);
     }
 
     @Override
