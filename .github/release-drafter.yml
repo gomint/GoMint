@@ -2,6 +2,9 @@ name-template: '$RESOLVED_VERSION 🌈'
 tag-template: '$RESOLVED_VERSION'
 prerelease: true
 categories:
+  - title: '🔧 Refactor'
+    labels:
+      - 'refactoring'
   - title: '🚀 Features'
     labels:
       - 'feature'
