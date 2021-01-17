@@ -1,5 +1,6 @@
 package io.gomint.server.world.block;
 
+import io.gomint.inventory.item.ItemCarrot;
 import io.gomint.inventory.item.ItemStack;
 import io.gomint.server.registry.RegisterInfo;
 import io.gomint.world.block.BlockCarrots;
@@ -44,11 +45,11 @@ public class Carrots extends Growable implements BlockCarrots {
     public List<ItemStack<?>> drops(ItemStack<?> itemInHand) {
         if (GROWTH.maxed(this)) {
             return new ArrayList<>() {{
-                add(world.getServer().items().create(391, (short) 0, (byte) (1 + SEED_RANDOMIZER.next().byteValue()), null)); // Carrot
+                add(ItemCarrot.create(1 + SEED_RANDOMIZER.next().byteValue())); // Carrot
             }};
         } else {
             return new ArrayList<>() {{
-                add(world.getServer().items().create(391, (short) 0, (byte) 1, null)); // Carrot
+                add(ItemCarrot.create(1)); // Carrot
             }};
         }
     }

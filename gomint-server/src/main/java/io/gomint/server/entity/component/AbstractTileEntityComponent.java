@@ -41,7 +41,7 @@ public abstract class AbstractTileEntityComponent implements TileEntityComponent
     ItemStack<?> getItemStack(NBTTagCompound compound) {
         // Item not there?
         if (compound == null) {
-            return this.items.create(0, (short) 0, (byte) 0, null);
+            return this.items.create("minecraft:air", (short) 0, (byte) 0, null);
         }
 
         short data = compound.getShort("Damage", (short) 0);
@@ -55,12 +55,12 @@ public abstract class AbstractTileEntityComponent implements TileEntityComponent
 
         // This is needed since minecraft changed from storing raw ids to string keys somewhere in 1.7 / 1.8
         try {
-            return this.items.create(compound.getShort("id", (short) 0), data, amount, tag);
+            return this.items.create(compound.getShort("id", (short) this.items.getRuntimeId("minecraft:air")), data, amount, tag);
         } catch (ClassCastException e) {
             try {
                 return this.items.create(compound.getString("id", "minecraft:air"), data, amount, tag);
             } catch (ClassCastException e1) {
-                return this.items.create(compound.getInteger("id", 0), data, amount, tag);
+                return this.items.create(compound.getInteger("id", this.items.getRuntimeId("minecraft:air")), data, amount, tag);
             }
         }
     }
