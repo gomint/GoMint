@@ -9,7 +9,7 @@ import io.gomint.taglib.NBTTagCompound;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo(sId = "minecraft:end_portal_frame", id = 120)
+@RegisterInfo(sId = "minecraft:end_portal_frame")
 public class ItemEndPortalFrame extends ItemStack< io.gomint.inventory.item.ItemEndPortalFrame> implements io.gomint.inventory.item.ItemEndPortalFrame {
 
     @Override

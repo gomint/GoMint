@@ -11,7 +11,7 @@ import java.time.Duration;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo(sId = "minecraft:crafting_table", id = 58)
+@RegisterInfo(sId = "minecraft:crafting_table")
 public class ItemCraftingTable extends ItemStack< io.gomint.inventory.item.ItemCraftingTable> implements io.gomint.inventory.item.ItemCraftingTable {
 
     @Override

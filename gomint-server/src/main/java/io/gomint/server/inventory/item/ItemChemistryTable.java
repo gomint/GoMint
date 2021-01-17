@@ -14,7 +14,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:chemistry_table", id = 238 )
+@RegisterInfo( sId = "minecraft:chemistry_table" )
 public class ItemChemistryTable extends ItemStack< io.gomint.inventory.item.ItemChemistryTable> implements io.gomint.inventory.item.ItemChemistryTable {
 
     @Override

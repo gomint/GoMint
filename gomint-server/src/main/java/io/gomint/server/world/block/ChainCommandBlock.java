@@ -22,12 +22,12 @@ import io.gomint.world.block.BlockType;
 public class ChainCommandBlock extends ContainerBlock<BlockChainCommandBlock> implements BlockChainCommandBlock {
 
     @Override
-    public String getBlockId() {
+    public String blockId() {
         return "minecraft:chain_command_block";
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 18000000.0f;
     }
 

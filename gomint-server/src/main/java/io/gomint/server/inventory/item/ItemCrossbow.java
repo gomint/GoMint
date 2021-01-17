@@ -29,7 +29,7 @@ import java.time.Duration;
  * @version 1.0
  */
 @CanBeDamaged
-@RegisterInfo( sId = "minecraft:crossbow", id = 471 )
+@RegisterInfo( sId = "minecraft:crossbow" )
 public class ItemCrossbow extends ItemStack< io.gomint.inventory.item.ItemCrossbow> implements io.gomint.inventory.item.ItemCrossbow {
 
     @Override

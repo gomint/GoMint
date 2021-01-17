@@ -10,7 +10,7 @@ import io.gomint.world.block.data.TNTType;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo(sId = "minecraft:tnt", id = 46)
+@RegisterInfo(sId = "minecraft:tnt")
 public class ItemTNT extends ItemStack< io.gomint.inventory.item.ItemTNT> implements io.gomint.inventory.item.ItemTNT {
 
     @Override

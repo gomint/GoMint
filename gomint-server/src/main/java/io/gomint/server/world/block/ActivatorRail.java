@@ -35,7 +35,7 @@ public class ActivatorRail extends RailBase implements BlockActivatorRail {
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 3.5f;
     }
 
@@ -45,20 +45,20 @@ public class ActivatorRail extends RailBase implements BlockActivatorRail {
     }
 
     @Override
-    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] toolInterfaces() {
         return ToolPresets.PICKAXE;
     }
 
     @Override
     public BlockActivatorRail direction(Direction direction) {
         RailDirection railDirection = RailDirection.valueOf(direction.name());
-        RAIL_DIRECTION.setState(this, railDirection);
+        RAIL_DIRECTION.state(this, railDirection);
         return this;
     }
 
     @Override
     public Direction direction() {
-        return Direction.valueOf(RAIL_DIRECTION.getState(this).name());
+        return Direction.valueOf(RAIL_DIRECTION.state(this).name());
     }
 
 }

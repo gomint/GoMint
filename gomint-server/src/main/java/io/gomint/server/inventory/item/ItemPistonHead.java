@@ -9,7 +9,7 @@ import io.gomint.taglib.NBTTagCompound;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo(sId = "minecraft:pistonArmCollision", id = 34)
+@RegisterInfo(sId = "minecraft:pistonArmCollision")
 public class ItemPistonHead extends ItemStack<ItemPistonHead> {
 
     @Override

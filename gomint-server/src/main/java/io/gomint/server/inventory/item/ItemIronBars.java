@@ -9,7 +9,7 @@ import io.gomint.taglib.NBTTagCompound;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo(sId = "minecraft:iron_bars", id = 101)
+@RegisterInfo(sId = "minecraft:iron_bars")
 public class ItemIronBars extends ItemStack< io.gomint.inventory.item.ItemIronBars> implements io.gomint.inventory.item.ItemIronBars {
 
     @Override

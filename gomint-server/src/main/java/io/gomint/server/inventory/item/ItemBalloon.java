@@ -14,7 +14,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:balloon", id = 448 )
+@RegisterInfo( sId = "minecraft:balloon" )
 public class ItemBalloon extends ItemStack< io.gomint.inventory.item.ItemBalloon> implements io.gomint.inventory.item.ItemBalloon {
 
     @Override

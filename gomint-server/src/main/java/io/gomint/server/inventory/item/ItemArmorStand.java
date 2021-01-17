@@ -14,7 +14,7 @@ import io.gomint.taglib.NBTTagCompound;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:armor_stand", id = 425 )
+@RegisterInfo( sId = "minecraft:armor_stand" )
 public class ItemArmorStand extends ItemStack< io.gomint.inventory.item.ItemArmorStand> implements io.gomint.inventory.item.ItemArmorStand {
 
 

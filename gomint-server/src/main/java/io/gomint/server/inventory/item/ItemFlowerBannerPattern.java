@@ -14,7 +14,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:flower_banner_pattern", id = 571 )
+@RegisterInfo( sId = "minecraft:flower_banner_pattern" )
 public class ItemFlowerBannerPattern extends ItemStack< io.gomint.inventory.item.ItemFlowerBannerPattern> implements io.gomint.inventory.item.ItemFlowerBannerPattern {
 
     @Override

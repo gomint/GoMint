@@ -9,7 +9,7 @@ import io.gomint.taglib.NBTTagCompound;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo(sId = "minecraft:glass_pane", id = 102)
+@RegisterInfo(sId = "minecraft:glass_pane")
 public class ItemGlassPane extends ItemStack< io.gomint.inventory.item.ItemGlassPane> implements io.gomint.inventory.item.ItemGlassPane {
 
     @Override

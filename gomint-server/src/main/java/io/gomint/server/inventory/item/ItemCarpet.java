@@ -9,7 +9,7 @@ import io.gomint.taglib.NBTTagCompound;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo(sId = "minecraft:carpet", id = 171)
+@RegisterInfo(sId = "minecraft:carpet")
 public class ItemCarpet extends ItemStack< io.gomint.inventory.item.ItemCarpet> implements io.gomint.inventory.item.ItemCarpet {
 
     @Override

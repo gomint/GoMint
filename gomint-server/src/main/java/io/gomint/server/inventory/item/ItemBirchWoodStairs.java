@@ -11,7 +11,7 @@ import java.time.Duration;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo(sId = "minecraft:birch_stairs", id = 135)
+@RegisterInfo(sId = "minecraft:birch_stairs")
 public class ItemBirchWoodStairs extends ItemStack<io.gomint.inventory.item.ItemBirchWoodStairs> implements io.gomint.inventory.item.ItemBirchWoodStairs {
 
     @Override

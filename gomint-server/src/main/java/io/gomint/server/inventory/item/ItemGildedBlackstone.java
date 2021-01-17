@@ -14,7 +14,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:gilded_blackstone", id = -281 )
+@RegisterInfo( sId = "minecraft:gilded_blackstone" )
 public class ItemGildedBlackstone extends ItemStack< io.gomint.inventory.item.ItemGildedBlackstone> implements io.gomint.inventory.item.ItemGildedBlackstone {
 
     @Override

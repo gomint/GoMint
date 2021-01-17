@@ -18,7 +18,7 @@ public class LightBlock extends Block implements BlockLightBlock {
     private static final ProgressBlockState LIGHT_LEVEL = new ProgressBlockState(() -> new String[]{"block_light_level"}, 15, a -> {});
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 0;
     }
 
@@ -29,12 +29,12 @@ public class LightBlock extends Block implements BlockLightBlock {
 
     @Override
     public float intensity() {
-        return LIGHT_LEVEL.getState(this);
+        return LIGHT_LEVEL.state(this);
     }
 
     @Override
     public BlockLightBlock intensity(float intensity) {
-        LIGHT_LEVEL.setState(this, intensity);
+        LIGHT_LEVEL.state(this, intensity);
         return this;
     }
 

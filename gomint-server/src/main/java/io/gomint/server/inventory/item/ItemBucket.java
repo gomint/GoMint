@@ -18,7 +18,7 @@ import java.time.Duration;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:bucket", id = 325 )
+@RegisterInfo( sId = "minecraft:bucket" )
 public class ItemBucket extends ItemStack<io.gomint.inventory.item.ItemBucket> implements io.gomint.inventory.item.ItemBucket {
 
     @Override

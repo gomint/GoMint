@@ -46,7 +46,7 @@ public class WoodenTrapdoor extends Trapdoor<BlockWoodenTrapdoor> implements Blo
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 15.0f;
     }
 
@@ -61,14 +61,14 @@ public class WoodenTrapdoor extends Trapdoor<BlockWoodenTrapdoor> implements Blo
     }
 
     @Override
-    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] toolInterfaces() {
         return ToolPresets.AXE;
     }
 
     @Override
     public LogType type() {
         for (LogTypeMagic value : LogTypeMagic.values()) {
-            if (value.blockId.equals(this.getBlockId())) {
+            if (value.blockId.equals(this.blockId())) {
                 return LogType.valueOf(value.name());
             }
         }
@@ -79,7 +79,7 @@ public class WoodenTrapdoor extends Trapdoor<BlockWoodenTrapdoor> implements Blo
     @Override
     public BlockWoodenTrapdoor type(LogType logType) {
         LogTypeMagic newState = LogTypeMagic.valueOf(logType.name());
-        this.setBlockId(newState.blockId);
+        this.blockId(newState.blockId);
         return this;
     }
 

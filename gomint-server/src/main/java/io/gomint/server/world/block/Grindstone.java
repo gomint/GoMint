@@ -14,7 +14,7 @@ import io.gomint.world.block.BlockType;
 public class Grindstone extends Block {
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 0;
     }
 

@@ -13,7 +13,7 @@ import io.gomint.server.registry.RegisterInfo;
 public class HayBale extends Block implements BlockHayBale {
 
     @Override
-    public String getBlockId() {
+    public String blockId() {
         return "minecraft:hay_block";
     }
 
@@ -23,7 +23,7 @@ public class HayBale extends Block implements BlockHayBale {
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 2.5f;
     }
 

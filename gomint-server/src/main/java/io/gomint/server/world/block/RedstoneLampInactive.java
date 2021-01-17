@@ -13,7 +13,7 @@ import io.gomint.server.registry.RegisterInfo;
 public class RedstoneLampInactive extends Block implements BlockRedstoneLampInactive {
 
     @Override
-    public String getBlockId() {
+    public String blockId() {
         return "minecraft:redstone_lamp";
     }
 
@@ -28,7 +28,7 @@ public class RedstoneLampInactive extends Block implements BlockRedstoneLampInac
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 1.5f;
     }
 

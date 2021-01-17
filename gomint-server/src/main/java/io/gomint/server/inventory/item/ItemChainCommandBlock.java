@@ -14,7 +14,7 @@ import io.gomint.taglib.NBTTagCompound;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo(sId = "minecraft:chain_command_block", id = 189)
+@RegisterInfo(sId = "minecraft:chain_command_block")
 public class ItemChainCommandBlock extends ItemStack< io.gomint.inventory.item.ItemChainCommandBlock> implements io.gomint.inventory.item.ItemChainCommandBlock {
 
     @Override

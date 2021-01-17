@@ -19,7 +19,7 @@ import io.gomint.world.block.BlockType;
 public class Seagrass extends Block implements BlockSeaGrass {
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 0.1f;
     }
 

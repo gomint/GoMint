@@ -11,7 +11,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @author KingAli
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:netherite_axe", id = 746 )
+@RegisterInfo( sId = "minecraft:netherite_axe" )
 public class ItemNetheriteAxe extends ItemReduceTierNetherite<io.gomint.inventory.item.ItemNetheriteAxe> implements io.gomint.inventory.item.ItemNetheriteAxe {
 
     @Override

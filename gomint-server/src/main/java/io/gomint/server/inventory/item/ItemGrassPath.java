@@ -9,7 +9,7 @@ import io.gomint.taglib.NBTTagCompound;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo(sId = "minecraft:grass_path", id = 198)
+@RegisterInfo(sId = "minecraft:grass_path")
 public class ItemGrassPath extends ItemStack< io.gomint.inventory.item.ItemGrassPath> implements io.gomint.inventory.item.ItemGrassPath {
 
     @Override

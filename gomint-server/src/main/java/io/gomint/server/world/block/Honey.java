@@ -12,7 +12,7 @@ import io.gomint.world.block.BlockType;
 public class Honey extends Block implements BlockHoney {
 
     @Override
-    public String getBlockId() {
+    public String blockId() {
         return "minecraft:honey_block";
     }
 
@@ -27,7 +27,7 @@ public class Honey extends Block implements BlockHoney {
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 0;
     }
 

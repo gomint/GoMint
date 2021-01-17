@@ -34,8 +34,8 @@ public class ProgressBlockState extends BlockState<Float, Integer> {
     }
 
     public boolean progress(Block block) {
-        this.setState(block, this.getState(block) + this.step);
-        if (1f - this.getState(block) <= MathUtils.EPSILON) {
+        this.state(block, this.state(block) + this.step);
+        if (1f - this.state(block) <= MathUtils.EPSILON) {
             this.maxedProgressConsumer.accept(block);
             return false;
         }
@@ -45,21 +45,21 @@ public class ProgressBlockState extends BlockState<Float, Integer> {
 
     @Override
     protected void calculateValueFromState(Block block, Float state) {
-        this.setValue(block, Math.round(state * this.max));
+        this.value(block, Math.round(state * this.max));
     }
 
     @Override
     public void detectFromPlacement(Block newBlock, EntityLiving<?> player, ItemStack<?> placedItem, Facing face) {
-        this.setState(newBlock, 0f);
+        this.state(newBlock, 0f);
     }
 
     @Override
-    public Float getState(Block block) {
-        return this.getValue(block) * this.step;
+    public Float state(Block block) {
+        return this.value(block) * this.step;
     }
 
     public boolean maxed(Block block) {
-        return 1f - this.getState(block) <= MathUtils.EPSILON;
+        return 1f - this.state(block) <= MathUtils.EPSILON;
     }
 
     public float getStep() {

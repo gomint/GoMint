@@ -17,7 +17,7 @@ import io.gomint.world.block.BlockType;
 public class BlueIce extends Block implements BlockBlueIce {
 
     @Override
-    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] toolInterfaces() {
         return ToolPresets.PICKAXE;
     }
 
@@ -27,7 +27,7 @@ public class BlueIce extends Block implements BlockBlueIce {
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 2.8f;
     }
 

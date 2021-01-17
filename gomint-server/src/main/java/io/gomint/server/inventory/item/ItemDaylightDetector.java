@@ -11,7 +11,7 @@ import java.time.Duration;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo(sId = "minecraft:daylight_detector", id = 151)
+@RegisterInfo(sId = "minecraft:daylight_detector")
 public class ItemDaylightDetector extends ItemStack< io.gomint.inventory.item.ItemDaylightDetector> implements io.gomint.inventory.item.ItemDaylightDetector {
 
     @Override

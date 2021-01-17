@@ -12,7 +12,7 @@ import io.gomint.world.block.BlockWeepingVines;
 public class WeepingVines extends Block implements BlockWeepingVines {
 
     @Override
-    public String getBlockId() {
+    public String blockId() {
         return "minecraft:weeping_vines";
     }
 
@@ -22,7 +22,7 @@ public class WeepingVines extends Block implements BlockWeepingVines {
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 0;
     }
 

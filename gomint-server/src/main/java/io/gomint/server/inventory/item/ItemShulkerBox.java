@@ -14,7 +14,7 @@ import io.gomint.taglib.NBTTagCompound;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo(sId = "minecraft:shulker_box", id = 218)
+@RegisterInfo(sId = "minecraft:shulker_box")
 public class ItemShulkerBox extends ItemStack< io.gomint.inventory.item.ItemShulkerBox> implements io.gomint.inventory.item.ItemShulkerBox {
 
     @Override

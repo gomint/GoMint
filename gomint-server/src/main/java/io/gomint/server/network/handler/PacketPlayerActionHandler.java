@@ -179,7 +179,7 @@ public class PacketPlayerActionHandler implements PacketHandler<PacketPlayerActi
                 // Broadcast break effects
                 if ( connection.getEntity().breakVector() != null ) {
                     Block block = connection.getEntity().world().blockAt( connection.getEntity().breakVector() );
-                    int runtimeId = block.getRuntimeId();
+                    int runtimeId = block.runtimeId();
 
                     connection.getEntity().world().sendLevelEvent(
                         connection.getEntity().breakVector().toVector(),
@@ -237,7 +237,7 @@ public class PacketPlayerActionHandler implements PacketHandler<PacketPlayerActi
         Block block = connection.getEntity().world().blockAt( packet.getPosition() );
 
         if ( !block.side(packet.getFace()).punch( connection.getEntity() ) ) {
-            long breakTime = block.getFinalBreakTime( connection.getEntity().inventory().itemInHand(), connection.getEntity() );
+            long breakTime = block.finalBreakTime( connection.getEntity().inventory().itemInHand(), connection.getEntity() );
             LOGGER.debug( "Sending break time {} ms", breakTime );
 
             // Tell the client which break time we want

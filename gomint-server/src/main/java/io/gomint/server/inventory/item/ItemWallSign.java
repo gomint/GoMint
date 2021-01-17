@@ -14,7 +14,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:wall_sign", id = 68 )
+@RegisterInfo( sId = "minecraft:wall_sign" )
 public class ItemWallSign extends ItemStack< io.gomint.inventory.item.ItemWallSign> implements io.gomint.inventory.item.ItemWallSign {
 
     @Override

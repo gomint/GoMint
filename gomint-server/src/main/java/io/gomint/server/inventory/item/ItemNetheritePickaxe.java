@@ -11,7 +11,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @author KingAli
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:netherite_pickaxe", id = 745 )
+@RegisterInfo( sId = "minecraft:netherite_pickaxe" )
 public class ItemNetheritePickaxe extends ItemReduceTierNetherite<io.gomint.inventory.item.ItemNetheritePickaxe> implements io.gomint.inventory.item.ItemNetheritePickaxe {
 
     @Override

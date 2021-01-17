@@ -22,7 +22,7 @@ import io.gomint.server.registry.RegisterInfo;
 public class Cobblestone extends Block implements BlockCobblestone {
 
     @Override
-    public String getBlockId() {
+    public String blockId() {
         return "minecraft:cobblestone";
     }
 
@@ -32,7 +32,7 @@ public class Cobblestone extends Block implements BlockCobblestone {
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 30.0f;
     }
 
@@ -47,7 +47,7 @@ public class Cobblestone extends Block implements BlockCobblestone {
     }
 
     @Override
-    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] toolInterfaces() {
         return ToolPresets.PICKAXE;
     }
 

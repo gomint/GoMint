@@ -14,7 +14,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:crimson_sign", id = 753 )
+@RegisterInfo( sId = "minecraft:crimson_sign" )
 public class ItemCrimsonSign extends ItemStack< io.gomint.inventory.item.ItemCrimsonSign> implements io.gomint.inventory.item.ItemCrimsonSign {
 
     @Override

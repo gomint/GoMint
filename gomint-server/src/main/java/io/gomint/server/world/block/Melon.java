@@ -13,7 +13,7 @@ import io.gomint.server.registry.RegisterInfo;
 public class Melon extends Block implements BlockMelon {
 
     @Override
-    public String getBlockId() {
+    public String blockId() {
         return "minecraft:melon_block";
     }
 
@@ -28,7 +28,7 @@ public class Melon extends Block implements BlockMelon {
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 5.0f;
     }
 

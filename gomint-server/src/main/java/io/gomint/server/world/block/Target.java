@@ -14,7 +14,7 @@ import io.gomint.world.block.BlockType;
 public class Target extends Block implements BlockTarget {
 
     @Override
-    public String getBlockId() {
+    public String blockId() {
         return "minecraft:target";
     }
 
@@ -24,12 +24,12 @@ public class Target extends Block implements BlockTarget {
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 2.5f;
     }
 
     @Override
-    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] toolInterfaces() {
         return new Class[]{
             ItemHoe.class
         };

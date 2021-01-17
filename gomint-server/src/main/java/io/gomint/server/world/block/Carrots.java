@@ -17,7 +17,7 @@ import java.util.List;
 public class Carrots extends Growable implements BlockCarrots {
 
     @Override
-    public String getBlockId() {
+    public String blockId() {
         return "minecraft:carrots";
     }
 
@@ -55,7 +55,7 @@ public class Carrots extends Growable implements BlockCarrots {
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 0.0f;
     }
 

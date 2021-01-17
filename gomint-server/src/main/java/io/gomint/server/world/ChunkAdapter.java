@@ -613,7 +613,7 @@ public class ChunkAdapter implements Chunk {
         io.gomint.server.world.block.Block implBlock = (io.gomint.server.world.block.Block) block;
 
         // Copy block id
-        this.block(x, y, z, layerID, implBlock.getRuntimeId());
+        this.block(x, y, z, layerID, implBlock.runtimeId());
 
         // Copy NBT
         if (implBlock.tileEntity() != null) {

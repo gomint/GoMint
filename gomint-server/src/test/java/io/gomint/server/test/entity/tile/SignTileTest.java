@@ -24,7 +24,7 @@ public class SignTileTest {
     private Block getBlock() {
         return new Block() {
             @Override
-            public float getBlastResistance() {
+            public float blastResistance() {
                 return 0;
             }
 

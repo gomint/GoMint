@@ -15,7 +15,7 @@ import io.gomint.server.registry.RegisterInfo;
 public class Stonecutter extends Block implements BlockStonecutter {
 
     @Override
-    public String getBlockId() {
+    public String blockId() {
         return "minecraft:stonecutter";
     }
 
@@ -25,12 +25,12 @@ public class Stonecutter extends Block implements BlockStonecutter {
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 17.5f;
     }
 
     @Override
-    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] toolInterfaces() {
         return ToolPresets.PICKAXE;
     }
 

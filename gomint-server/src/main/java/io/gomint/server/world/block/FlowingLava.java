@@ -55,7 +55,7 @@ public class FlowingLava extends Liquid<BlockFlowingLava> implements BlockFlowin
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 500.0f;
     }
 

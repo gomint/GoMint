@@ -30,17 +30,17 @@ public class DirectionBlockState extends BlockState<Direction, Integer> {
     protected void calculateValueFromState(Block block, Direction state) {
         switch (state) {
             case NORTH:
-                this.setValue(block, 2);
+                this.value(block, 2);
                 break;
             case EAST:
-                this.setValue(block, 3);
+                this.value(block, 3);
                 break;
             case WEST:
-                this.setValue(block, 1);
+                this.value(block, 1);
                 break;
             case SOUTH:
             default:
-                this.setValue(block, 0);
+                this.value(block, 0);
                 break;
         }
     }
@@ -48,17 +48,17 @@ public class DirectionBlockState extends BlockState<Direction, Integer> {
     @Override
     public void detectFromPlacement(Block newBlock, EntityLiving<?> player, ItemStack<?> placedItem, Facing face) {
         if (player == null) {
-            this.setState(newBlock, Direction.SOUTH);
+            this.state(newBlock, Direction.SOUTH);
             return;
         }
 
         Bearing bearing = Bearing.fromAngle(player.yaw());
-        this.setState(newBlock, bearing.toDirection());
+        this.state(newBlock, bearing.toDirection());
     }
 
     @Override
-    public Direction getState(Block block) {
-        switch (this.getValue(block)) {
+    public Direction state(Block block) {
+        switch (this.value(block)) {
             case 0:
             default:
                 return Direction.SOUTH;

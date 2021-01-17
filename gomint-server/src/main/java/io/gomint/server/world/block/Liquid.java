@@ -41,7 +41,7 @@ public abstract class Liquid<B> extends Block implements BlockLiquid<B> {
 
     @Override
     public float fillHeight() {
-        int data = LIQUID_DEPTH.getState(this);
+        int data = LIQUID_DEPTH.state(this);
         if (data >= 8) {
             data = 8;
         }
@@ -59,7 +59,7 @@ public abstract class Liquid<B> extends Block implements BlockLiquid<B> {
             return (B) this;
         }
 
-        LIQUID_DEPTH.setState(this, MathUtils.fastRound(8f * height));
+        LIQUID_DEPTH.state(this, MathUtils.fastRound(8f * height));
         return (B) this;
     }
 
@@ -70,7 +70,7 @@ public abstract class Liquid<B> extends Block implements BlockLiquid<B> {
         }
 
         // Get block data and cap by 8
-        int data = LIQUID_DEPTH.getState(this);
+        int data = LIQUID_DEPTH.state(this);
         return (short) (data >= 8 ? data - 8 : data);
     }
 
@@ -109,7 +109,7 @@ public abstract class Liquid<B> extends Block implements BlockLiquid<B> {
             }
         }
 
-        if (LIQUID_DEPTH.getState(this) >= 8) {
+        if (LIQUID_DEPTH.state(this) >= 8) {
             BlockPosition pos = this.position();
             if (!this.canFlowInto(this.world.blockAt(pos = pos.add(0, 0, -1))) ||
                 !this.canFlowInto(this.world.blockAt(pos = pos.add(0, 0, 1))) ||
@@ -261,7 +261,7 @@ public abstract class Liquid<B> extends Block implements BlockLiquid<B> {
                 if (decayed) {
                     this.blockType(Air.class);
                 } else {
-                    LIQUID_DEPTH.setState(this, decay);
+                    LIQUID_DEPTH.state(this, decay);
                 }
             }
         }
@@ -370,12 +370,12 @@ public abstract class Liquid<B> extends Block implements BlockLiquid<B> {
      */
     protected void flowIntoBlock(Block block, int newFlowDecay) {
         if (this.canFlowInto(block) && !(block instanceof Liquid)) {
-            if (!block.getBlockId().equals("minecraft:air")) {
+            if (!block.blockId().equals("minecraft:air")) {
                 this.world.breakBlock(block.position(), block.drops(ItemAir.create(0)), false);
             }
 
             Liquid<?> liquid = block.blockType(this.getClass());
-            LIQUID_DEPTH.setState(liquid, newFlowDecay);
+            LIQUID_DEPTH.state(liquid, newFlowDecay);
         }
     }
 
@@ -402,7 +402,7 @@ public abstract class Liquid<B> extends Block implements BlockLiquid<B> {
             return -1;
         }
 
-        return LIQUID_DEPTH.getState(block).shortValue();
+        return LIQUID_DEPTH.state(block).shortValue();
     }
 
     @Override

@@ -33,12 +33,12 @@ public class BeeHive extends Block implements BlockBeeHive {
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 0.6f;
     }
 
     @Override
-    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] toolInterfaces() {
         return ToolPresets.AXE;
     }
 
@@ -56,13 +56,13 @@ public class BeeHive extends Block implements BlockBeeHive {
 
     @Override
     public BlockBeeHive facing(Facing facing) {
-        FACING.setState(this, facing);
+        FACING.state(this, facing);
         return this;
     }
 
     @Override
     public Facing facing() {
-        return FACING.getState(this);
+        return FACING.state(this);
     }
 
 }

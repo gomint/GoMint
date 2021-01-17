@@ -20,7 +20,7 @@ public class StainedGlassPane extends Block implements BlockStainedGlassPane {
     private static final EnumBlockState<BlockColor, String> COLOR = new EnumBlockState<>(v -> new String[]{"color"}, BlockColor.values(), e -> e.name().toLowerCase(), v -> BlockColor.valueOf(v.toUpperCase()));
 
     @Override
-    public String getBlockId() {
+    public String blockId() {
         return "minecraft:stained_glass_pane";
     }
 
@@ -45,7 +45,7 @@ public class StainedGlassPane extends Block implements BlockStainedGlassPane {
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 1.5f;
     }
 
@@ -56,12 +56,12 @@ public class StainedGlassPane extends Block implements BlockStainedGlassPane {
 
     @Override
     public BlockColor color() {
-        return COLOR.getState(this);
+        return COLOR.state(this);
     }
 
     @Override
     public BlockStainedGlassPane color(BlockColor color) {
-        COLOR.setState(this, color);
+        COLOR.state(this, color);
         return this;
     }
 

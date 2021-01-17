@@ -14,7 +14,7 @@ import io.gomint.taglib.NBTTagCompound;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:fireworks", id = 401 )
+@RegisterInfo( sId = "minecraft:fireworks" )
 public class ItemFirework extends ItemStack< io.gomint.inventory.item.ItemFirework> implements io.gomint.inventory.item.ItemFirework {
 
 

@@ -12,13 +12,13 @@ import io.gomint.world.block.data.StoneType;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo(id = 44, sId = "minecraft:double_stone_slab", def = true)
-@RegisterInfo(id = 182, sId = "minecraft:double_stone_slab2")
-@RegisterInfo(id = -162, sId = "minecraft:double_stone_slab3")
-@RegisterInfo(id = -166, sId = "minecraft:double_stone_slab4")
-@RegisterInfo(sId = "minecraft:blackstone_slab", id = -282)
-@RegisterInfo(id = -293, sId = "minecraft:polished_blackstone_slab")
-@RegisterInfo(id = -284, sId = "minecraft:polished_blackstone_brick_slab")
+@RegisterInfo(sId = "minecraft:double_stone_slab", def = true)
+@RegisterInfo(sId = "minecraft:double_stone_slab2")
+@RegisterInfo(sId = "minecraft:double_stone_slab3")
+@RegisterInfo(sId = "minecraft:double_stone_slab4")
+@RegisterInfo(sId = "minecraft:blackstone_slab")
+@RegisterInfo(sId = "minecraft:polished_blackstone_slab")
+@RegisterInfo(sId = "minecraft:polished_blackstone_brick_slab")
 public class ItemStoneSlab extends ItemSlab<io.gomint.inventory.item.ItemStoneSlab> implements io.gomint.inventory.item.ItemStoneSlab {
 
     private static final String STONE_SLAB_ID = "minecraft:double_stone_slab";

@@ -14,7 +14,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:netherite_shovel", id = 744 )
+@RegisterInfo( sId = "minecraft:netherite_shovel" )
 public class ItemNetheriteShovel extends ItemStack< io.gomint.inventory.item.ItemNetheriteShovel> implements io.gomint.inventory.item.ItemNetheriteShovel {
 
     @Override

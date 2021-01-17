@@ -15,7 +15,7 @@ import io.gomint.world.block.BlockType;
 public class Camera extends Block implements BlockCamera {
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 0;
     }
 

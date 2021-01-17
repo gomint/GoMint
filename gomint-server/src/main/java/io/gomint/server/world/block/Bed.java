@@ -34,7 +34,7 @@ public class Bed extends Block implements BlockBed {
     private static final BooleanBlockState HEAD = new BooleanBlockState(() -> new String[]{"head_piece_bit"});
 
     @Override
-    public String getBlockId() {
+    public String blockId() {
         return "minecraft:bed";
     }
 
@@ -64,7 +64,7 @@ public class Bed extends Block implements BlockBed {
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 1.0f;
     }
 
@@ -75,7 +75,7 @@ public class Bed extends Block implements BlockBed {
 
     private io.gomint.world.block.Block getOtherBlock() {
         // Select which side we need to check
-        Direction facingToOtherHalf = DIRECTION.getState(this);
+        Direction facingToOtherHalf = DIRECTION.state(this);
         if (this.head()) {
             facingToOtherHalf = facingToOtherHalf.opposite();
         }
@@ -115,12 +115,12 @@ public class Bed extends Block implements BlockBed {
 
     @Override
     public boolean head() {
-        return HEAD.getState(this);
+        return HEAD.state(this);
     }
 
     @Override
     public BlockBed head(boolean value) {
-        HEAD.setState(this, value);
+        HEAD.state(this, value);
         return this;
     }
 

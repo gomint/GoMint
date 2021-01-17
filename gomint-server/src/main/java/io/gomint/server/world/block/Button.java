@@ -46,7 +46,7 @@ public abstract class Button<B> extends Block implements BlockButton<B> {
     @Override
     public long update(UpdateReason updateReason, long currentTimeMS, float dT) {
         if (updateReason == UpdateReason.SCHEDULED && pressed()) {
-            PRESSED.setState(this, false);
+            PRESSED.state(this, false);
         }
 
         return -1;
@@ -54,14 +54,14 @@ public abstract class Button<B> extends Block implements BlockButton<B> {
 
     @Override
     public boolean pressed() {
-        return PRESSED.getState(this);
+        return PRESSED.state(this);
     }
 
     @Override
     public B press() {
         // Check if we need to update
         if (!pressed()) {
-            PRESSED.setState(this, true);
+            PRESSED.state(this, true);
         }
 
         // Schedule release in 1 second
@@ -71,12 +71,12 @@ public abstract class Button<B> extends Block implements BlockButton<B> {
 
     @Override
     public Facing facing() {
-        return FACING.getState(this);
+        return FACING.state(this);
     }
 
     @Override
     public B facing(Facing face) {
-        FACING.setState(this, face);
+        FACING.state(this, face);
         return (B) this;
     }
 

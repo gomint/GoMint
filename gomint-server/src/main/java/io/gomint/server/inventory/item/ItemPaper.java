@@ -8,7 +8,7 @@ import io.gomint.taglib.NBTTagCompound;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:paper", id = 339 )
+@RegisterInfo( sId = "minecraft:paper" )
  public class ItemPaper extends ItemStack< io.gomint.inventory.item.ItemPaper> implements io.gomint.inventory.item.ItemPaper {
 
 

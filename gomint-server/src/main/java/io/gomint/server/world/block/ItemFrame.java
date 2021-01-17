@@ -17,7 +17,7 @@ import io.gomint.taglib.NBTTagCompound;
 public class ItemFrame extends Block implements BlockItemFrame {
 
     @Override
-    public String getBlockId() {
+    public String blockId() {
         return "minecraft:frame";
     }
 
@@ -33,7 +33,7 @@ public class ItemFrame extends Block implements BlockItemFrame {
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 1.0f;
     }
 

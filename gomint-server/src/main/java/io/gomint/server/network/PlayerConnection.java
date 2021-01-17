@@ -913,7 +913,7 @@ public class PlayerConnection implements ConnectionWithState {
         packet.setEnchantmentSeed(ThreadLocalRandom.current().nextInt());
         packet.setCorrelationId(this.server.serverUniqueID().toString());
 
-        packet.setBlockPalette(this.server.blocks().getPacketCache());
+        packet.setBlockPalette(this.server.blocks().packetCache());
         packet.setItemPalette(this.server.items().getPacketCache());
 
         // Set the new location

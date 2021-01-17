@@ -17,13 +17,13 @@ public abstract class Slab<B> extends Block implements BlockSlab<B> {
 
     @Override
     public B top(boolean top ) {
-        TOP.setState( this, top );
+        TOP.state( this, top );
         return (B) this;
     }
 
     @Override
     public boolean top() {
-        return TOP.getState( this );
+        return TOP.state( this );
     }
 
     @Override

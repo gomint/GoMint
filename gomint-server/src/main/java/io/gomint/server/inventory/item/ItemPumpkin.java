@@ -10,8 +10,8 @@ import io.gomint.world.block.data.PumpkinType;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo(sId = "minecraft:pumpkin", id = 86, def = true)
-@RegisterInfo(sId = "minecraft:carved_pumpkin", id = -155)
+@RegisterInfo(sId = "minecraft:pumpkin", def = true)
+@RegisterInfo(sId = "minecraft:carved_pumpkin")
 public class ItemPumpkin extends ItemStack< io.gomint.inventory.item.ItemPumpkin> implements io.gomint.inventory.item.ItemPumpkin {
 
     @Override

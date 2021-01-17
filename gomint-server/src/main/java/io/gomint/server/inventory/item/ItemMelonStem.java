@@ -9,7 +9,7 @@ import io.gomint.taglib.NBTTagCompound;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo(sId = "minecraft:melon_stem", id = 105)
+@RegisterInfo(sId = "minecraft:melon_stem")
 public class ItemMelonStem extends ItemStack< io.gomint.inventory.item.ItemMelonStem> implements io.gomint.inventory.item.ItemMelonStem {
 
     @Override

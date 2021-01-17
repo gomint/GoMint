@@ -11,7 +11,7 @@ import java.time.Duration;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo(sId = "minecraft:dark_oak_fence_gate", id = 186)
+@RegisterInfo(sId = "minecraft:dark_oak_fence_gate")
 public class ItemDarkOakWoodFenceGate extends ItemStack<io.gomint.inventory.item.ItemDarkOakWoodFenceGate> implements io.gomint.inventory.item.ItemDarkOakWoodFenceGate {
 
     @Override

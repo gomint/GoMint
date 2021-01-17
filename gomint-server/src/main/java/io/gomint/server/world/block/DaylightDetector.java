@@ -30,7 +30,7 @@ public class DaylightDetector extends Block implements BlockDaylightDetector {
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 1.0f;
     }
 

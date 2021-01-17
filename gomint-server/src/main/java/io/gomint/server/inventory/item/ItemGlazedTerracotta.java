@@ -15,22 +15,22 @@ import io.gomint.world.block.data.BlockColor;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo(sId = ItemGlazedTerracotta.PURPLE, id = 219)
-@RegisterInfo(sId = ItemGlazedTerracotta.WHITE, id = 220, def = true)
-@RegisterInfo(sId = ItemGlazedTerracotta.ORANGE, id = 221)
-@RegisterInfo(sId = ItemGlazedTerracotta.MAGENTA, id = 222)
-@RegisterInfo(sId = ItemGlazedTerracotta.LIGHT_BLUE, id = 223)
-@RegisterInfo(sId = ItemGlazedTerracotta.YELLOW, id = 224)
-@RegisterInfo(sId = ItemGlazedTerracotta.LIME, id = 225)
-@RegisterInfo(sId = ItemGlazedTerracotta.PINK, id = 226)
-@RegisterInfo(sId = ItemGlazedTerracotta.GRAY, id = 227)
-@RegisterInfo(sId = ItemGlazedTerracotta.LIGHT_GRAY, id = 228)
-@RegisterInfo(sId = ItemGlazedTerracotta.CYAN, id = 229)
-@RegisterInfo(sId = ItemGlazedTerracotta.BLUE, id = 231)
-@RegisterInfo(sId = ItemGlazedTerracotta.BROWN, id = 232)
-@RegisterInfo(sId = ItemGlazedTerracotta.GREEN, id = 233)
-@RegisterInfo(sId = ItemGlazedTerracotta.RED, id = 234)
-@RegisterInfo(sId = ItemGlazedTerracotta.BLACK, id = 235)
+@RegisterInfo(sId = ItemGlazedTerracotta.PURPLE)
+@RegisterInfo(sId = ItemGlazedTerracotta.WHITE, def = true)
+@RegisterInfo(sId = ItemGlazedTerracotta.ORANGE)
+@RegisterInfo(sId = ItemGlazedTerracotta.MAGENTA)
+@RegisterInfo(sId = ItemGlazedTerracotta.LIGHT_BLUE)
+@RegisterInfo(sId = ItemGlazedTerracotta.YELLOW)
+@RegisterInfo(sId = ItemGlazedTerracotta.LIME)
+@RegisterInfo(sId = ItemGlazedTerracotta.PINK)
+@RegisterInfo(sId = ItemGlazedTerracotta.GRAY)
+@RegisterInfo(sId = ItemGlazedTerracotta.LIGHT_GRAY)
+@RegisterInfo(sId = ItemGlazedTerracotta.CYAN)
+@RegisterInfo(sId = ItemGlazedTerracotta.BLUE)
+@RegisterInfo(sId = ItemGlazedTerracotta.BROWN)
+@RegisterInfo(sId = ItemGlazedTerracotta.GREEN)
+@RegisterInfo(sId = ItemGlazedTerracotta.RED)
+@RegisterInfo(sId = ItemGlazedTerracotta.BLACK)
 public class ItemGlazedTerracotta extends ItemStack< io.gomint.inventory.item.ItemGlazedTerracotta> implements io.gomint.inventory.item.ItemGlazedTerracotta {
 
     public static final String PURPLE = "minecraft:purple_glazed_terracotta";

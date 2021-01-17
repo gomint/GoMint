@@ -9,7 +9,7 @@ import io.gomint.taglib.NBTTagCompound;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo(sId = "minecraft:lever", id = 69)
+@RegisterInfo(sId = "minecraft:lever")
 public class ItemLever extends ItemStack< io.gomint.inventory.item.ItemLever> implements io.gomint.inventory.item.ItemLever {
 
     @Override

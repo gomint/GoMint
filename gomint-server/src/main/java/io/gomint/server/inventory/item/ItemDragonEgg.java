@@ -9,7 +9,7 @@ import io.gomint.taglib.NBTTagCompound;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo(sId = "minecraft:dragon_egg", id = 122)
+@RegisterInfo(sId = "minecraft:dragon_egg")
 public class ItemDragonEgg extends ItemStack< io.gomint.inventory.item.ItemDragonEgg> implements io.gomint.inventory.item.ItemDragonEgg {
 
     @Override

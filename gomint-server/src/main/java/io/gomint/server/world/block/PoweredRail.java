@@ -30,7 +30,7 @@ public class PoweredRail extends RailBase implements BlockPoweredRail {
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 3.5f;
     }
 
@@ -45,7 +45,7 @@ public class PoweredRail extends RailBase implements BlockPoweredRail {
     }
 
     @Override
-    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] toolInterfaces() {
         return ToolPresets.PICKAXE;
     }
 

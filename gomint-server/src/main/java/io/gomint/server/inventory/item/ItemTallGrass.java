@@ -9,7 +9,7 @@ import io.gomint.taglib.NBTTagCompound;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo(sId = "minecraft:tallgrass", id = 31)
+@RegisterInfo(sId = "minecraft:tallgrass")
 public class ItemTallGrass extends ItemStack< io.gomint.inventory.item.ItemTallGrass> implements io.gomint.inventory.item.ItemTallGrass {
 
     @Override

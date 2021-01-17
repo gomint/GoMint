@@ -56,7 +56,7 @@ public class Torch extends Block implements BlockTorch {
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 0.0f;
     }
 
@@ -84,7 +84,7 @@ public class Torch extends Block implements BlockTorch {
     public List<AxisAlignedBB> boundingBoxes() {
         float size = 0.15f;
 
-        switch (FACING.getState(this)) {
+        switch (FACING.state(this)) {
             case EAST:
                 return Collections.singletonList(new AxisAlignedBB(
                     this.location.x(),
@@ -137,7 +137,7 @@ public class Torch extends Block implements BlockTorch {
     @Override
     public boolean beforePlacement(EntityLiving<?> entity, ItemStack<?> item, Facing face, Location location) {
         if (!this.side(face).transparent()) {
-            FACING.setState(this, FacingMagic.valueOf(face.name()));
+            FACING.state(this, FacingMagic.valueOf(face.name()));
             return true;
         }
 

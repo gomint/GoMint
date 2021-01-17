@@ -8,7 +8,7 @@ import io.gomint.taglib.NBTTagCompound;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:netherbrick", id = 405 )
+@RegisterInfo( sId = "minecraft:netherbrick" )
  public class ItemNetherBrick extends ItemStack< io.gomint.inventory.item.ItemNetherBrick> implements io.gomint.inventory.item.ItemNetherBrick {
 
 

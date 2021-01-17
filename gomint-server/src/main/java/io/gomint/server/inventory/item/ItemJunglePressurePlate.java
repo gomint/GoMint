@@ -16,7 +16,7 @@ import java.time.Duration;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo(sId = "minecraft:jungle_pressure_plate", id = -153)
+@RegisterInfo(sId = "minecraft:jungle_pressure_plate")
 public class ItemJunglePressurePlate extends ItemStack<io.gomint.inventory.item.ItemJunglePressurePlate> implements io.gomint.inventory.item.ItemJunglePressurePlate {
 
     @Override

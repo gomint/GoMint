@@ -12,14 +12,14 @@ import java.time.Duration;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo(sId = "minecraft:wooden_door", id = 324, def = true)
-@RegisterInfo(sId = "minecraft:acacia_door", id = 430)
-@RegisterInfo(sId = "minecraft:birch_door", id = 428)
-@RegisterInfo(sId = "minecraft:dark_oak_door", id = 431)
-@RegisterInfo(sId = "minecraft:jungle_door", id = 429)
-@RegisterInfo(sId = "minecraft:warped_door", id = 756)
-@RegisterInfo(sId = "minecraft:crimson_door", id = 755)
-@RegisterInfo(sId = "minecraft:spruce_door", id = 427)
+@RegisterInfo(sId = "minecraft:wooden_door", def = true)
+@RegisterInfo(sId = "minecraft:acacia_door")
+@RegisterInfo(sId = "minecraft:birch_door")
+@RegisterInfo(sId = "minecraft:dark_oak_door")
+@RegisterInfo(sId = "minecraft:jungle_door")
+@RegisterInfo(sId = "minecraft:warped_door")
+@RegisterInfo(sId = "minecraft:crimson_door")
+@RegisterInfo(sId = "minecraft:spruce_door")
 public class ItemWoodenDoor extends ItemStack< io.gomint.inventory.item.ItemWoodenDoor> implements io.gomint.inventory.item.ItemWoodenDoor {
 
     @Override

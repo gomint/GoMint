@@ -13,7 +13,7 @@ import io.gomint.server.registry.RegisterInfo;
 public class TripwireHook extends Block implements BlockTripwireHook {
 
     @Override
-    public String getBlockId() {
+    public String blockId() {
         return "minecraft:tripwire_hook";
     }
 
@@ -28,7 +28,7 @@ public class TripwireHook extends Block implements BlockTripwireHook {
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 0.0f;
     }
 

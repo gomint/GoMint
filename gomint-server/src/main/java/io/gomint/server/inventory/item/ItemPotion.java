@@ -10,7 +10,7 @@ import io.gomint.taglib.NBTTagCompound;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo(sId = "minecraft:potion", id = 373)
+@RegisterInfo(sId = "minecraft:potion")
 public class ItemPotion extends ItemStack<io.gomint.inventory.item.ItemPotion> implements io.gomint.inventory.item.ItemPotion, ItemConsumable {
 
     @Override

@@ -14,7 +14,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:ancient_debris", id = -271 )
+@RegisterInfo( sId = "minecraft:ancient_debris" )
 public class ItemAncientDebris extends ItemStack< io.gomint.inventory.item.ItemAncientDebris> implements io.gomint.inventory.item.ItemAncientDebris {
 
     @Override

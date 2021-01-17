@@ -14,7 +14,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:stripped_crimson_hyphae", id = -300 )
+@RegisterInfo( sId = "minecraft:stripped_crimson_hyphae" )
 public class ItemStrippedCrimsonHyphae extends ItemStack< io.gomint.inventory.item.ItemStrippedCrimsonHyphae> implements io.gomint.inventory.item.ItemStrippedCrimsonHyphae {
 
     @Override

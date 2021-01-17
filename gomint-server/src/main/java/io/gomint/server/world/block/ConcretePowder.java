@@ -11,7 +11,6 @@ import io.gomint.inventory.item.ItemStack;
 import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.world.block.helper.ToolPresets;
 import io.gomint.server.world.block.state.BlockColorBlockState;
-import io.gomint.server.world.block.state.EnumBlockState;
 import io.gomint.world.block.BlockConcretePowder;
 import io.gomint.world.block.BlockType;
 import io.gomint.world.block.data.BlockColor;
@@ -26,7 +25,7 @@ public class ConcretePowder extends Block implements BlockConcretePowder {
     private static final BlockColorBlockState COLOR = new BlockColorBlockState(() -> new String[]{"color"});
 
     @Override
-    public String getBlockId() {
+    public String blockId() {
         return "minecraft:concretePowder";
     }
 
@@ -36,7 +35,7 @@ public class ConcretePowder extends Block implements BlockConcretePowder {
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 2.5f;
     }
 
@@ -51,18 +50,18 @@ public class ConcretePowder extends Block implements BlockConcretePowder {
     }
 
     @Override
-    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] toolInterfaces() {
         return ToolPresets.PICKAXE;
     }
 
     @Override
     public BlockColor color() {
-        return COLOR.getState(this);
+        return COLOR.state(this);
     }
 
     @Override
     public BlockConcretePowder color(BlockColor color ) {
-        COLOR.setState( this, color );
+        COLOR.state( this, color );
         return this;
     }
 

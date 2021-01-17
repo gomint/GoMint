@@ -11,7 +11,7 @@ import java.time.Duration;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:ladder", id = 65)
+@RegisterInfo( sId = "minecraft:ladder")
 public class ItemLadder extends ItemStack< io.gomint.inventory.item.ItemLadder> implements io.gomint.inventory.item.ItemLadder {
 
     @Override

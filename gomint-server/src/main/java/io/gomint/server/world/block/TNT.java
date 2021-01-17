@@ -41,7 +41,7 @@ public class TNT extends Block implements BlockTNT {
 
     @Override
     public boolean beforePlacement(EntityLiving<?> entity, ItemStack<?> item, Facing face, Location location) {
-        EXPLODE.setState(this, false); // Don't explode on breakage
+        EXPLODE.state(this, false); // Don't explode on breakage
         return super.beforePlacement(entity, item, face, location);
     }
 
@@ -72,17 +72,17 @@ public class TNT extends Block implements BlockTNT {
 
     @Override
     public TNTType type() {
-        return UNDER_WATER.getState(this) ? TNTType.UNDER_WATER : TNTType.NORMAL;
+        return UNDER_WATER.state(this) ? TNTType.UNDER_WATER : TNTType.NORMAL;
     }
 
     @Override
     public BlockTNT type(TNTType type) {
-        UNDER_WATER.setState(this, type == TNTType.UNDER_WATER);
+        UNDER_WATER.state(this, type == TNTType.UNDER_WATER);
         return this;
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 0.0f;
     }
 

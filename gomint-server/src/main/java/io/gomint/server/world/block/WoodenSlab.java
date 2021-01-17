@@ -60,7 +60,7 @@ public class WoodenSlab extends Slab<BlockWoodenSlab> implements BlockWoodenSlab
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 15.0f;
     }
 
@@ -75,20 +75,20 @@ public class WoodenSlab extends Slab<BlockWoodenSlab> implements BlockWoodenSlab
     }
 
     @Override
-    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] toolInterfaces() {
         return ToolPresets.AXE;
     }
 
     @Override
     public LogType type() {
-        switch (this.getBlockId()) {
+        switch (this.blockId()) {
             case "minecraft:crimson_slab":
                 return LogType.CRIMSON;
             case "minecraft:warped_slab":
                 return LogType.WARPED;
         }
 
-        return LogType.valueOf(VARIANT.getState(this).name());
+        return LogType.valueOf(VARIANT.state(this).name());
     }
 
     @Override
@@ -96,11 +96,11 @@ public class WoodenSlab extends Slab<BlockWoodenSlab> implements BlockWoodenSlab
         LogTypeMagic newState = LogTypeMagic.valueOf(logType.name());
 
         if (!newState.value.isEmpty()) {
-            VARIANT.setState(this, newState);
+            VARIANT.state(this, newState);
         }
 
-        if (!this.getBlockId().equals(newState.blockId)) {
-            this.setBlockId(newState.blockId);
+        if (!this.blockId().equals(newState.blockId)) {
+            this.blockId(newState.blockId);
         }
 
         return this;

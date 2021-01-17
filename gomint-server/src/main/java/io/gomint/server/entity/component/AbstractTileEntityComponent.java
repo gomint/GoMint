@@ -145,8 +145,8 @@ public abstract class AbstractTileEntityComponent implements TileEntityComponent
     }
 
     protected void putBlockIdentifier(BlockIdentifier identifier, NBTTagCompound compound) {
-        compound.addValue("name", identifier.getBlockId());
-        compound.addValue("states", identifier.getNbt());
+        compound.addValue("name", identifier.blockId());
+        compound.addValue("states", identifier.nbt());
     }
 
 }

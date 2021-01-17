@@ -22,7 +22,7 @@ public class Jigsaw extends Block implements BlockJigsaw {
     private static final BlockfaceFromPlayerBlockState FACING = new BlockfaceFromPlayerBlockState(() -> new String[]{"facing_direction"}, true);
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 3600000;
     }
 
@@ -39,13 +39,13 @@ public class Jigsaw extends Block implements BlockJigsaw {
 
     @Override
     public BlockJigsaw facing(Facing facing) {
-        FACING.setState(this, facing);
+        FACING.state(this, facing);
         return this;
     }
 
     @Override
     public Facing facing() {
-        return FACING.getState(this);
+        return FACING.state(this);
     }
 
 }

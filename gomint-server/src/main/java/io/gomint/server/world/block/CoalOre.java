@@ -20,7 +20,7 @@ import java.util.concurrent.ThreadLocalRandom;
 public class CoalOre extends Block implements BlockCoalOre {
 
     @Override
-    public String getBlockId() {
+    public String blockId() {
         return "minecraft:coal_ore";
     }
 
@@ -30,7 +30,7 @@ public class CoalOre extends Block implements BlockCoalOre {
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 15.0f;
     }
 
@@ -57,7 +57,7 @@ public class CoalOre extends Block implements BlockCoalOre {
     }
 
     @Override
-    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] toolInterfaces() {
         return ToolPresets.PICKAXE;
     }
 

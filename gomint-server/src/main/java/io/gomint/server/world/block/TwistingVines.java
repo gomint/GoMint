@@ -12,7 +12,7 @@ import io.gomint.world.block.BlockType;
 public class TwistingVines extends Block implements BlockTwistingVines {
 
     @Override
-    public String getBlockId() {
+    public String blockId() {
         return "minecraft:twisting_vines";
     }
 
@@ -22,7 +22,7 @@ public class TwistingVines extends Block implements BlockTwistingVines {
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 0;
     }
 

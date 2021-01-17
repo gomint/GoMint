@@ -9,7 +9,7 @@ import io.gomint.taglib.NBTTagCompound;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo(sId = "minecraft:sticky_piston", id = 29)
+@RegisterInfo(sId = "minecraft:sticky_piston")
 public class ItemStickyPiston extends ItemStack< io.gomint.inventory.item.ItemStickyPiston> implements io.gomint.inventory.item.ItemStickyPiston {
 
     @Override

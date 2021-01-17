@@ -9,7 +9,7 @@ import io.gomint.taglib.NBTTagCompound;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:pumpkin_seeds", id = 361 )
+@RegisterInfo( sId = "minecraft:pumpkin_seeds" )
 public class ItemPumpkinSeeds extends ItemStack< io.gomint.inventory.item.ItemPumpkinSeeds> implements io.gomint.inventory.item.ItemPumpkinSeeds {
 
     @Override

@@ -45,7 +45,7 @@ public class EnderChest extends ContainerBlock<BlockEnderChest> implements Block
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 3000.0f;
     }
 
@@ -78,7 +78,7 @@ public class EnderChest extends ContainerBlock<BlockEnderChest> implements Block
     }
 
     @Override
-    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] toolInterfaces() {
         return ToolPresets.PICKAXE;
     }
     

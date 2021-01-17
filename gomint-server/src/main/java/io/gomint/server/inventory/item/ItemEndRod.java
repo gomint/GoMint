@@ -9,7 +9,7 @@ import io.gomint.taglib.NBTTagCompound;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo(sId = "minecraft:end_rod", id = 208)
+@RegisterInfo(sId = "minecraft:end_rod")
 public class ItemEndRod extends ItemStack< io.gomint.inventory.item.ItemEndRod> implements io.gomint.inventory.item.ItemEndRod {
 
     @Override

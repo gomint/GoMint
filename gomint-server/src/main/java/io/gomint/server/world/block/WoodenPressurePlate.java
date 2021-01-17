@@ -54,7 +54,7 @@ public class WoodenPressurePlate extends BasePressurePlate implements BlockWoode
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 2.5f;
     }
 
@@ -69,14 +69,14 @@ public class WoodenPressurePlate extends BasePressurePlate implements BlockWoode
     }
 
     @Override
-    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] toolInterfaces() {
         return ToolPresets.AXE;
     }
 
     @Override
     public LogType type() {
         for (LogTypeMagic value : LogTypeMagic.values()) {
-            if (value.blockId.equals(this.getBlockId())) {
+            if (value.blockId.equals(this.blockId())) {
                 return LogType.valueOf(value.name());
             }
         }
@@ -87,7 +87,7 @@ public class WoodenPressurePlate extends BasePressurePlate implements BlockWoode
     @Override
     public BlockWoodenPressurePlate type(LogType logType) {
         LogTypeMagic newState = LogTypeMagic.valueOf(logType.name());
-        this.setBlockId(newState.blockId);
+        this.blockId(newState.blockId);
         return this;
     }
 

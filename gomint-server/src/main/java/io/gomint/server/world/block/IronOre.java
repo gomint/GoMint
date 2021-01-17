@@ -15,7 +15,7 @@ import io.gomint.server.registry.RegisterInfo;
 public class IronOre extends Block implements BlockIronOre {
 
     @Override
-    public String getBlockId() {
+    public String blockId() {
         return "minecraft:iron_ore";
     }
 
@@ -25,7 +25,7 @@ public class IronOre extends Block implements BlockIronOre {
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 5.0f;
     }
 
@@ -40,7 +40,7 @@ public class IronOre extends Block implements BlockIronOre {
     }
 
     @Override
-    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] toolInterfaces() {
         return ToolPresets.PICKAXE;
     }
 

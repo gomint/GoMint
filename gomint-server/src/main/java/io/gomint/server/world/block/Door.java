@@ -28,17 +28,17 @@ public abstract class Door<B extends BlockDoor<B>> extends Block implements Bloc
 
     @Override
     public boolean top() {
-        return TOP.getState(this);
+        return TOP.state(this);
     }
 
     protected B top(boolean top) {
-        TOP.setState(this, top);
+        TOP.state(this, top);
         return (B) this;
     }
 
     @Override
     public boolean open() {
-        return OPEN.getState(this);
+        return OPEN.state(this);
     }
 
     @Override
@@ -71,8 +71,8 @@ public abstract class Door<B extends BlockDoor<B>> extends Block implements Bloc
         Block above = this.world.blockAt(this.position.add(BlockPosition.UP));
         if (above.canBeReplaced(item)) {
             DIRECTION.detectFromPlacement(this, entity, item, face);
-            TOP.setState(this, false);
-            OPEN.setState(this, false);
+            TOP.state(this, false);
+            OPEN.state(this, false);
             return true;
         }
 
@@ -108,35 +108,35 @@ public abstract class Door<B extends BlockDoor<B>> extends Block implements Bloc
     }
 
     @Override
-    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] toolInterfaces() {
         return ToolPresets.AXE;
     }
 
     @Override
     public B direction(Direction direction) {
-        DIRECTION.setState(this, direction);
+        DIRECTION.state(this, direction);
         return (B) this;
     }
 
     @Override
     public Direction direction() {
-        return DIRECTION.getState(this);
+        return DIRECTION.state(this);
     }
 
     @Override
     public B hingeSide(HingeSide side) {
-        HINGE.setState(this, side == HingeSide.RIGHT);
+        HINGE.state(this, side == HingeSide.RIGHT);
         return (B) this;
     }
 
     @Override
     public HingeSide hingeSide() {
-        return HINGE.getState(this) ? HingeSide.RIGHT : HingeSide.LEFT;
+        return HINGE.state(this) ? HingeSide.RIGHT : HingeSide.LEFT;
     }
 
     @Override
     public B open(boolean open) {
-        OPEN.setState(this, open);
+        OPEN.state(this, open);
         return (B) this;
     }
 

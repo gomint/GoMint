@@ -21,12 +21,12 @@ import io.gomint.world.block.BlockType;
 public class Magma extends Block implements BlockMagma {
 
     @Override
-    public String getBlockId() {
+    public String blockId() {
         return "minecraft:magma";
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 2.5f;
     }
 
@@ -46,7 +46,7 @@ public class Magma extends Block implements BlockMagma {
     }
 
     @Override
-    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] toolInterfaces() {
         return ToolPresets.PICKAXE;
     }
 

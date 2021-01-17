@@ -14,7 +14,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:sparkler", id = 442 )
+@RegisterInfo( sId = "minecraft:sparkler" )
 public class ItemSparkler extends ItemStack< io.gomint.inventory.item.ItemSparkler> implements io.gomint.inventory.item.ItemSparkler {
 
     @Override

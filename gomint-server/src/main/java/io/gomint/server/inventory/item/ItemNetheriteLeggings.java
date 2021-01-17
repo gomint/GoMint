@@ -11,7 +11,7 @@ import io.gomint.world.block.data.Facing;
  * @author KingAli
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:netherite_leggings", id = 750 )
+@RegisterInfo( sId = "minecraft:netherite_leggings" )
 public class ItemNetheriteLeggings extends ItemNetheriteArmor<io.gomint.inventory.item.ItemNetheriteLeggings> implements io.gomint.inventory.item.ItemNetheriteLeggings {
 
     @Override

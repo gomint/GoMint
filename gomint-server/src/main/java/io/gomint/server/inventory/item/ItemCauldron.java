@@ -10,7 +10,7 @@ import io.gomint.world.block.data.LiquidType;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:cauldron", id = 380 )
+@RegisterInfo( sId = "minecraft:cauldron" )
 public class ItemCauldron extends ItemStack< io.gomint.inventory.item.ItemCauldron> implements io.gomint.inventory.item.ItemCauldron {
 
     @Override

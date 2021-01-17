@@ -35,7 +35,7 @@ public class StoneButton extends Button<BlockStoneButton> implements BlockStoneB
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 2.5f;
     }
 
@@ -45,7 +45,7 @@ public class StoneButton extends Button<BlockStoneButton> implements BlockStoneB
     }
 
     @Override
-    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] toolInterfaces() {
         return ToolPresets.PICKAXE;
     }
 

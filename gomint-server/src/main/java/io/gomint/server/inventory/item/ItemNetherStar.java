@@ -14,7 +14,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:nether_star", id = 508 )
+@RegisterInfo( sId = "minecraft:nether_star" )
 public class ItemNetherStar extends ItemStack< io.gomint.inventory.item.ItemNetherStar> implements io.gomint.inventory.item.ItemNetherStar {
 
     @Override

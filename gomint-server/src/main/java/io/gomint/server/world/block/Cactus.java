@@ -15,7 +15,7 @@ import io.gomint.world.block.BlockType;
 public class Cactus extends Block implements BlockCactus {
 
     @Override
-    public String getBlockId() {
+    public String blockId() {
         return "minecraft:cactus";
     }
 
@@ -37,7 +37,7 @@ public class Cactus extends Block implements BlockCactus {
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 2.0f;
     }
 

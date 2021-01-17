@@ -12,9 +12,9 @@ import java.time.Duration;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo(id = 5, sId = ItemPlank.PLANK_ID1)
-@RegisterInfo(sId = ItemPlank.CRIMSON_ID, id = -242)
-@RegisterInfo(sId = ItemPlank.WARPED_ID, id = -243)
+@RegisterInfo(sId = ItemPlank.PLANK_ID1)
+@RegisterInfo(sId = ItemPlank.CRIMSON_ID)
+@RegisterInfo(sId = ItemPlank.WARPED_ID)
 public class ItemPlank extends ItemStack< io.gomint.inventory.item.ItemPlank> implements io.gomint.inventory.item.ItemPlank {
 
     /**

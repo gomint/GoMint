@@ -12,7 +12,7 @@ import io.gomint.server.registry.RegisterInfo;
 public class StandingBanner extends Banner {
 
     @Override
-    public String getBlockId() {
+    public String blockId() {
         return "minecraft:standing_banner";
     }
 

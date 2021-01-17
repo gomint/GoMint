@@ -28,23 +28,23 @@ public class BlockfaceFromPlayerBlockState extends BlockfaceBlockState {
     @Override
     public void detectFromPlacement(Block newBlock, EntityLiving<?> player, ItemStack<?> placedItem, Facing face) {
         if (player == null) {
-            this.setState(newBlock, Facing.EAST);
+            this.state(newBlock, Facing.EAST);
             return;
         }
 
         if (this.detectUpDown) {
             if (player.pitch() < -60) {
-                this.setState(newBlock, Facing.DOWN);
+                this.state(newBlock, Facing.DOWN);
                 return;
             } else if (player.pitch() > 60) {
-                this.setState(newBlock, Facing.UP);
+                this.state(newBlock, Facing.UP);
                 return;
             }
         }
 
         Bearing bearing = Bearing.fromAngle(player.yaw());
         bearing = bearing.opposite();
-        this.setState(newBlock, bearing.toBlockFace());
+        this.state(newBlock, bearing.toBlockFace());
     }
 
 }

@@ -107,7 +107,7 @@ public class ChunkSlice {
     String getBlock(int layer, int index) {
         int runtimeId = this.getRuntimeID(layer, index);
         BlockIdentifier identifier = BlockRuntimeIDs.toBlockIdentifier(runtimeId);
-        return identifier.getBlockId();
+        return identifier.blockId();
     }
 
     /**
@@ -126,7 +126,7 @@ public class ChunkSlice {
     protected short getRuntimeID(int layer, int index) {
         ByteBuf blockStorage = this.blocks[layer];
         if (blockStorage == null) {
-            return AIR_RUNTIME_ID.getRuntimeId();
+            return AIR_RUNTIME_ID.runtimeId();
         }
 
         return blockStorage.getShort(index << 1);
@@ -142,7 +142,7 @@ public class ChunkSlice {
         }
 
         short runtimeID = this.getRuntimeID(layer, index);
-        if (runtimeID == AIR_RUNTIME_ID.getRuntimeId()) {
+        if (runtimeID == AIR_RUNTIME_ID.runtimeId()) {
             return (T) this.getAirBlockInstance(blockLocation);
         }
 
@@ -204,10 +204,10 @@ public class ChunkSlice {
             return;
         }
 
-        if (runtimeID != AIR_RUNTIME_ID.getRuntimeId() && this.blocks[layer] == null) {
+        if (runtimeID != AIR_RUNTIME_ID.runtimeId() && this.blocks[layer] == null) {
             this.blocks[layer] = PooledByteBufAllocator.DEFAULT.directBuffer(4096 * 2); // Defaults to all 0
             for (int i = 0; i < 4096; i++) {
-                this.blocks[layer].writeShort(AIR_RUNTIME_ID.getRuntimeId());
+                this.blocks[layer].writeShort(AIR_RUNTIME_ID.runtimeId());
             }
 
             this.isAllAir = false;

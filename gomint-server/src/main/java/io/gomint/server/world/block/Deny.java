@@ -12,7 +12,7 @@ import io.gomint.world.block.BlockType;
 public class Deny extends Block implements BlockDeny {
 
     @Override
-    public String getBlockId() {
+    public String blockId() {
         return "minecraft:deny";
     }
 
@@ -27,7 +27,7 @@ public class Deny extends Block implements BlockDeny {
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 1.8E7f;
     }
 

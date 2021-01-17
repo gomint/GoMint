@@ -10,7 +10,7 @@ import java.time.Duration;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:blaze_rod", id = 369 )
+@RegisterInfo( sId = "minecraft:blaze_rod" )
 public class ItemBlazeRod extends ItemStack< io.gomint.inventory.item.ItemBlazeRod> implements io.gomint.inventory.item.ItemBlazeRod {
 
     @Override

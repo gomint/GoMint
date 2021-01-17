@@ -30,12 +30,12 @@ public abstract class Trapdoor<B> extends Block implements BlockTrapdoor<B> {
 
     @Override
     public boolean open() {
-        return OPEN.getState(this);
+        return OPEN.state(this);
     }
 
     @Override
     public B toggle() {
-        OPEN.setState(this, !this.open());
+        OPEN.state(this, !this.open());
         return (B) this;
     }
 
@@ -57,7 +57,7 @@ public abstract class Trapdoor<B> extends Block implements BlockTrapdoor<B> {
 
         // Basis box
         AxisAlignedBB bb;
-        if (TOP.getState(this)) {
+        if (TOP.state(this)) {
             // Top closed box
             bb = new AxisAlignedBB(
                 this.location.x(),
@@ -80,8 +80,8 @@ public abstract class Trapdoor<B> extends Block implements BlockTrapdoor<B> {
         }
 
         // Check for open state
-        if (OPEN.getState(this)) {
-            switch (DIRECTION.getState(this)) {
+        if (OPEN.state(this)) {
+            switch (DIRECTION.state(this)) {
                 case NORTH:
                     bb.bounds(
                         this.location.x(),
@@ -137,13 +137,13 @@ public abstract class Trapdoor<B> extends Block implements BlockTrapdoor<B> {
 
     @Override
     public B direction(Direction direction) {
-        DIRECTION.setState(this, direction);
+        DIRECTION.state(this, direction);
         return (B) this;
     }
 
     @Override
     public Direction direction() {
-        return DIRECTION.getState(this);
+        return DIRECTION.state(this);
     }
 
 }

@@ -8,7 +8,7 @@ import io.gomint.world.block.data.BlockColor;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo(sId = "minecraft:wool", id = 35)
+@RegisterInfo(sId = "minecraft:wool")
 public class ItemWool extends ItemStack< io.gomint.inventory.item.ItemWool> implements io.gomint.inventory.item.ItemWool {
 
     @Override

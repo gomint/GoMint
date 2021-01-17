@@ -14,7 +14,7 @@ import io.gomint.taglib.NBTTagCompound;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo(sId = "minecraft:frosted_ice", id = 207)
+@RegisterInfo(sId = "minecraft:frosted_ice")
 public class ItemFrostedIce extends ItemStack< io.gomint.inventory.item.ItemFrostedIce> implements io.gomint.inventory.item.ItemFrostedIce {
 
     @Override

@@ -14,8 +14,8 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo(sId = "minecraft:frame", id = 389, def = true)
-@RegisterInfo(sId = "minecraft:item.frame", id = 199)
+@RegisterInfo(sId = "minecraft:frame", def = true)
+@RegisterInfo(sId = "minecraft:item.frame")
 public class ItemFrame extends ItemStack< io.gomint.inventory.item.ItemFrame> implements io.gomint.inventory.item.ItemFrame {
 
     @Override

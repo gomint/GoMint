@@ -9,7 +9,7 @@ import io.gomint.taglib.NBTTagCompound;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo(sId = "minecraft:lit_redstone_ore", id = 74)
+@RegisterInfo(sId = "minecraft:lit_redstone_ore")
 public class ItemGlowingRedstoneOre extends ItemStack< io.gomint.inventory.item.ItemGlowingRedstoneOre> implements io.gomint.inventory.item.ItemGlowingRedstoneOre {
 
     @Override

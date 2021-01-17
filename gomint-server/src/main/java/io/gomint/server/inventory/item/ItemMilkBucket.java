@@ -14,7 +14,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:milk_bucket", id = 361 )
+@RegisterInfo( sId = "minecraft:milk_bucket" )
 public class ItemMilkBucket extends ItemStack< io.gomint.inventory.item.ItemMilkBucket> implements io.gomint.inventory.item.ItemMilkBucket {
 
     @Override

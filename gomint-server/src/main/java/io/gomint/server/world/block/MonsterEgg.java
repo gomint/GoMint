@@ -18,7 +18,7 @@ public class MonsterEgg extends Block implements BlockMonsterEgg {
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 3.75f;
     }
 

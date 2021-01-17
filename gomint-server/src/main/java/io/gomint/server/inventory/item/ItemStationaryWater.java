@@ -9,7 +9,7 @@ import io.gomint.taglib.NBTTagCompound;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo(sId = "minecraft:water", id = 9)
+@RegisterInfo(sId = "minecraft:water")
 public class ItemStationaryWater extends ItemStack< io.gomint.inventory.item.ItemStationaryWater> implements io.gomint.inventory.item.ItemStationaryWater {
 
     @Override

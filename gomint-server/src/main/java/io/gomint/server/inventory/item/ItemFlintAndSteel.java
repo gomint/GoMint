@@ -21,7 +21,7 @@ import io.gomint.world.block.data.Facing;
  * @version 1.0
  */
 @CanBeDamaged
-@RegisterInfo( sId = "minecraft:flint_and_steel", id = 259 )
+@RegisterInfo( sId = "minecraft:flint_and_steel" )
 public class ItemFlintAndSteel extends ItemStack< io.gomint.inventory.item.ItemFlintAndSteel> implements io.gomint.inventory.item.ItemFlintAndSteel {
 
     @Override

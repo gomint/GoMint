@@ -19,7 +19,7 @@ public class Ladder extends Block implements BlockLadder {
     private static final BlockfaceBlockState ATTACHED = new BlockfaceBlockState( () -> new String[]{"facing_direction"} );
 
     @Override
-    public String getBlockId() {
+    public String blockId() {
         return "minecraft:ladder";
     }
 
@@ -50,7 +50,7 @@ public class Ladder extends Block implements BlockLadder {
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 2.0f;
     }
 
@@ -65,19 +65,19 @@ public class Ladder extends Block implements BlockLadder {
     }
 
     @Override
-    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] toolInterfaces() {
         return ToolPresets.AXE;
     }
 
     @Override
     public BlockLadder attachSide(Facing attachSide ) {
-        ATTACHED.setState( this, attachSide );
+        ATTACHED.state( this, attachSide );
         return this;
     }
 
     @Override
     public Facing attachSide() {
-        return ATTACHED.getState(this);
+        return ATTACHED.state(this);
     }
 
 }

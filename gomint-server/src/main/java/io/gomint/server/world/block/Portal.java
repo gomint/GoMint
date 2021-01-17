@@ -13,7 +13,7 @@ import io.gomint.server.registry.RegisterInfo;
 public class Portal extends Block implements BlockPortal {
 
     @Override
-    public String getBlockId() {
+    public String blockId() {
         return "minecraft:portal";
     }
 
@@ -23,7 +23,7 @@ public class Portal extends Block implements BlockPortal {
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 0.0f;
     }
 

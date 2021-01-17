@@ -14,7 +14,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:ice_bomb", id = 453 )
+@RegisterInfo( sId = "minecraft:ice_bomb" )
 public class ItemIceBomb extends ItemStack< io.gomint.inventory.item.ItemIceBomb> implements io.gomint.inventory.item.ItemIceBomb {
 
     @Override

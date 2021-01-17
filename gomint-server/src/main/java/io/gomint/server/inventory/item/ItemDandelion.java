@@ -9,7 +9,7 @@ import io.gomint.taglib.NBTTagCompound;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo(sId = "minecraft:yellow_flower", id = 37)
+@RegisterInfo(sId = "minecraft:yellow_flower")
 public class ItemDandelion extends ItemStack< io.gomint.inventory.item.ItemDandelion> implements io.gomint.inventory.item.ItemDandelion {
 
     @Override

@@ -10,7 +10,7 @@ import java.time.Duration;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:bowl", id = 281 )
+@RegisterInfo( sId = "minecraft:bowl" )
  public class ItemBowl extends ItemStack< io.gomint.inventory.item.ItemBowl> implements io.gomint.inventory.item.ItemBowl {
 
     @Override

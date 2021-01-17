@@ -22,7 +22,7 @@ import java.time.Duration;
  * @version 1.0
  */
 @CanBeDamaged
-@RegisterInfo( sId = "minecraft:bow", id = 261 )
+@RegisterInfo( sId = "minecraft:bow" )
 public class ItemBow extends ItemStack< io.gomint.inventory.item.ItemBow> implements io.gomint.inventory.item.ItemBow {
 
     @Override

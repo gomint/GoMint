@@ -19,12 +19,12 @@ import io.gomint.world.block.BlockType;
 public class NetherWartBlock extends Block implements BlockNetherWartBlock {
 
     @Override
-    public String getBlockId() {
+    public String blockId() {
         return "minecraft:nether_wart_block";
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 5f;
     }
 

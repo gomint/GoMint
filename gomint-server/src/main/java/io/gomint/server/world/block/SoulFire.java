@@ -27,7 +27,7 @@ import java.util.concurrent.TimeUnit;
 public class SoulFire extends Block implements BlockSoulFire {
 
     @Override
-    public String getBlockId() {
+    public String blockId() {
         return "minecraft:soul_fire";
     }
 
@@ -64,7 +64,7 @@ public class SoulFire extends Block implements BlockSoulFire {
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 0.0f;
     }
 

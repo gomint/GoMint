@@ -8,7 +8,7 @@ import io.gomint.taglib.NBTTagCompound;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:netherreactor", id = 247 )
+@RegisterInfo( sId = "minecraft:netherreactor" )
  public class ItemNetherReactorCore extends ItemStack< io.gomint.inventory.item.ItemNetherReactorCore> implements io.gomint.inventory.item.ItemNetherReactorCore {
 
     @Override

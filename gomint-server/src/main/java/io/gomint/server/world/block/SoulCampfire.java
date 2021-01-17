@@ -33,7 +33,7 @@ public class SoulCampfire extends Block implements BlockSoulCampfire {
     public boolean beforePlacement(EntityLiving<?> entity, ItemStack<?> item, Facing face, Location location) {
         super.beforePlacement(entity, item, face, location);
         DIRECTION.detectFromPlacement(this, entity, item, face);
-        EXTINGUISHED.setState(this, false);
+        EXTINGUISHED.state(this, false);
         return true;
     }
 
@@ -48,12 +48,12 @@ public class SoulCampfire extends Block implements BlockSoulCampfire {
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 10.0f;
     }
 
     @Override
-    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] toolInterfaces() {
         return ToolPresets.AXE;
     }
 
@@ -64,24 +64,24 @@ public class SoulCampfire extends Block implements BlockSoulCampfire {
 
     @Override
     public BlockSoulCampfire direction(Direction direction) {
-        DIRECTION.setState(this, direction);
+        DIRECTION.state(this, direction);
         return this;
     }
 
     @Override
     public Direction direction() {
-        return DIRECTION.getState(this);
+        return DIRECTION.state(this);
     }
 
     @Override
     public BlockSoulCampfire extinguished(boolean value) {
-        EXTINGUISHED.setState(this, value);
+        EXTINGUISHED.state(this, value);
         return this;
     }
 
     @Override
     public boolean isExtinguished() {
-        return EXTINGUISHED.getState(this);
+        return EXTINGUISHED.state(this);
     }
 
 }

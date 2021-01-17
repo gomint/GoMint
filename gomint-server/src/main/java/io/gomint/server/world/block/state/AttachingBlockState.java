@@ -58,13 +58,13 @@ public class AttachingBlockState extends DirectValueBlockState<Integer> {
             return;
         }
 
-        int value = this.getState(block);
+        int value = this.state(block);
         value -= this.mapValue(face);
-        this.setState(block, value);
+        this.state(block, value);
     }
 
     public boolean enabled(Block block, Facing face) {
-        return (this.getState(block) & this.mapValue(face)) != 0;
+        return (this.state(block) & this.mapValue(face)) != 0;
     }
 
     public void enable(Block block, Facing face) {
@@ -72,9 +72,9 @@ public class AttachingBlockState extends DirectValueBlockState<Integer> {
             return;
         }
 
-        int value = this.getState(block);
+        int value = this.state(block);
         value += this.mapValue(face);
-        this.setState(block, value);
+        this.state(block, value);
     }
 
 }

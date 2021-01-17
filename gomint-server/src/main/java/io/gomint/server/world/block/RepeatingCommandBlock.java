@@ -19,12 +19,12 @@ import io.gomint.world.block.BlockType;
 public class RepeatingCommandBlock extends Block implements BlockRepeatingCommandBlock {
 
     @Override
-    public String getBlockId() {
+    public String blockId() {
         return "minecraft:repeating_command_block";
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 18000000.0f;
     }
 

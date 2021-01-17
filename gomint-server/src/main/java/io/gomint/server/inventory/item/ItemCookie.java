@@ -8,7 +8,7 @@ import io.gomint.taglib.NBTTagCompound;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:cookie", id = 357 )
+@RegisterInfo( sId = "minecraft:cookie" )
 public class ItemCookie extends ItemFood<io.gomint.inventory.item.ItemCookie> implements io.gomint.inventory.item.ItemCookie {
 
 

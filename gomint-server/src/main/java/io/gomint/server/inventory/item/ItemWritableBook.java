@@ -18,7 +18,7 @@ import java.util.List;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:writable_book", id = 386 )
+@RegisterInfo( sId = "minecraft:writable_book" )
 public class ItemWritableBook extends ItemStack< io.gomint.inventory.item.ItemWritableBook> implements io.gomint.inventory.item.ItemWritableBook {
 
     private static final String PAGE_TAG = "pages";

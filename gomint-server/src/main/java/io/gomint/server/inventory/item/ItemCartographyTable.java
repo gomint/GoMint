@@ -14,7 +14,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @author KingAli
  * @version 1.0
  */
-@RegisterInfo(id = -200, sId = "minecraft:cartography_table")
+@RegisterInfo(sId = "minecraft:cartography_table")
 public class ItemCartographyTable extends ItemStack< io.gomint.inventory.item.ItemCartographyTable> implements io.gomint.inventory.item.ItemCartographyTable {
 
     @Override

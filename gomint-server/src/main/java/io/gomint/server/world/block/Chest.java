@@ -21,13 +21,13 @@ public class Chest extends ChestBase<BlockChest> implements BlockChest {
 
     @Override
     public BlockChest facing(Facing facing) {
-        DIRECTION.setState(this, facing);
+        DIRECTION.state(this, facing);
         return this;
     }
 
     @Override
     public Facing facing() {
-        return DIRECTION.getState(this);
+        return DIRECTION.state(this);
     }
 
     @Override

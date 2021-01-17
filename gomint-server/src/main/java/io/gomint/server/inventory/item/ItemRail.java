@@ -9,7 +9,7 @@ import io.gomint.taglib.NBTTagCompound;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo(sId = "minecraft:rail", id = 66)
+@RegisterInfo(sId = "minecraft:rail")
 public class ItemRail extends ItemStack< io.gomint.inventory.item.ItemRail> implements io.gomint.inventory.item.ItemRail {
 
     @Override

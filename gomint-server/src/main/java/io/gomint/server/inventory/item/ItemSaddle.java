@@ -8,7 +8,7 @@ import io.gomint.taglib.NBTTagCompound;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:saddle", id = 329 )
+@RegisterInfo( sId = "minecraft:saddle" )
  public class ItemSaddle extends ItemStack< io.gomint.inventory.item.ItemSaddle> implements io.gomint.inventory.item.ItemSaddle {
 
 

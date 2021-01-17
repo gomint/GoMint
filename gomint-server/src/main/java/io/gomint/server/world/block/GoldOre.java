@@ -16,7 +16,7 @@ import io.gomint.server.registry.RegisterInfo;
 public class GoldOre extends Block implements BlockGoldOre {
 
     @Override
-    public String getBlockId() {
+    public String blockId() {
         return "minecraft:gold_ore";
     }
 
@@ -26,7 +26,7 @@ public class GoldOre extends Block implements BlockGoldOre {
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 15.0f;
     }
 
@@ -41,7 +41,7 @@ public class GoldOre extends Block implements BlockGoldOre {
     }
 
     @Override
-    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] toolInterfaces() {
         return new Class[]{
             ItemDiamondPickaxe.class,
             ItemIronPickaxe.class

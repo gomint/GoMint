@@ -9,7 +9,7 @@ import io.gomint.taglib.NBTTagCompound;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo(sId = "minecraft:hardened_clay", id = 172)
+@RegisterInfo(sId = "minecraft:hardened_clay")
 public class ItemHardenedClay extends ItemStack< io.gomint.inventory.item.ItemHardenedClay> implements io.gomint.inventory.item.ItemHardenedClay {
 
     @Override

@@ -45,14 +45,13 @@ public class Blocks {
     public void init(ClassPath classPath, Items items, TileEntities tileEntities, List<BlockIdentifier> blockIdentifiers) throws IOException {
         this.generators = new BlockRegistry(blockIdentifiers, (clazz, id) -> {
             ConstructionFactory<Block> factory = ASMFactoryConstructionFactory.create(clazz);
-            BlockIdentifier blockIdentifier = BlockRuntimeIDs.toBlockIdentifier(id, null);
 
             return in -> {
-                Block block = factory.newInstance();
-                block.setItems(items);
-                block.setTileEntities(tileEntities);
-                block.setIdentifier(blockIdentifier);
-                return block;
+                return factory
+                    .newInstance()
+                    .items(items)
+                    .tileEntities(tileEntities)
+                    .identifier(id.blockIdentifier());
             };
         });
 
@@ -62,13 +61,13 @@ public class Blocks {
         this.generators.cleanup();
     }
 
-    public PacketBuffer getPacketCache() {
+    public PacketBuffer packetCache() {
         return packetCache;
     }
 
     public <T extends Block> T get(BlockIdentifier identifier, byte skyLightLevel, byte blockLightLevel,
                                    TileEntity tileEntity, Location location, BlockPosition blockPosition, int layer, ChunkSlice chunkSlice, short index) {
-        Generator<Block> instance = this.generators.getGenerator(identifier.getRuntimeId());
+        Generator<Block> instance = this.generators.getGenerator(identifier.runtimeId());
         if (instance != null) {
             T block = (T) instance.generate();
             if (location == null) {
@@ -86,17 +85,17 @@ public class Blocks {
             lastReport = System.currentTimeMillis();
         }
 
-        LOGGER.warn("Unknown block {} @ {}", identifier.getBlockId(), location, new Exception());
+        LOGGER.warn("Unknown block {} @ {}", identifier.blockId(), location, new Exception());
         return null;
     }
 
     public Block get(BlockIdentifier identifier) {
-        Generator<Block> instance = this.generators.getGenerator(identifier.getRuntimeId());
+        Generator<Block> instance = this.generators.getGenerator(identifier.runtimeId());
         if (instance != null) {
             return instance.generate();
         }
 
-        LOGGER.warn("Unknown block {}", identifier.getBlockId());
+        LOGGER.warn("Unknown block {}", identifier.blockId());
         return null;
     }
 

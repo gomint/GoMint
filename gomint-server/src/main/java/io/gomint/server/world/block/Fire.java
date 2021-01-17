@@ -20,7 +20,7 @@ import java.util.concurrent.TimeUnit;
 public class Fire extends Block implements BlockFire {
 
     @Override
-    public String getBlockId() {
+    public String blockId() {
         return "minecraft:fire";
     }
 
@@ -57,7 +57,7 @@ public class Fire extends Block implements BlockFire {
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 0.0f;
     }
 

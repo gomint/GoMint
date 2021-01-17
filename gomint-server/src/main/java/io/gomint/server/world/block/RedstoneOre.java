@@ -16,7 +16,7 @@ import io.gomint.server.registry.RegisterInfo;
 public class RedstoneOre extends Block implements BlockRedstoneOre {
 
     @Override
-    public String getBlockId() {
+    public String blockId() {
         return "minecraft:redstone_ore";
     }
 
@@ -31,7 +31,7 @@ public class RedstoneOre extends Block implements BlockRedstoneOre {
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 15.0f;
     }
 
@@ -46,7 +46,7 @@ public class RedstoneOre extends Block implements BlockRedstoneOre {
     }
 
     @Override
-    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] toolInterfaces() {
         return new Class[]{
             ItemDiamondPickaxe.class,
             ItemIronPickaxe.class

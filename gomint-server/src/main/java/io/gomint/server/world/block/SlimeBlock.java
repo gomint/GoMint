@@ -15,7 +15,7 @@ import io.gomint.server.registry.RegisterInfo;
 public class SlimeBlock extends Block implements BlockSlimeBlock {
 
     @Override
-    public String getBlockId() {
+    public String blockId() {
         return "minecraft:slime";
     }
 
@@ -30,7 +30,7 @@ public class SlimeBlock extends Block implements BlockSlimeBlock {
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 0.0f;
     }
 

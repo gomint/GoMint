@@ -12,7 +12,7 @@ import io.gomint.world.block.BlockType;
 public class HoneyComb extends Block implements BlockHoneyComb {
 
     @Override
-    public String getBlockId() {
+    public String blockId() {
         return "minecraft:honeycomb_block";
     }
 
@@ -27,7 +27,7 @@ public class HoneyComb extends Block implements BlockHoneyComb {
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 3;
     }
 

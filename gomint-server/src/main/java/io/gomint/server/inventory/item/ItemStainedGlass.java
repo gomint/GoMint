@@ -9,7 +9,7 @@ import io.gomint.taglib.NBTTagCompound;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo(sId = "minecraft:stained_glass", id = 241)
+@RegisterInfo(sId = "minecraft:stained_glass")
 public class ItemStainedGlass extends ItemStack< io.gomint.inventory.item.ItemStainedGlass> implements io.gomint.inventory.item.ItemStainedGlass {
 
     @Override

@@ -12,7 +12,7 @@ import java.time.Duration;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo(sId = "minecraft:wall_banner", id = 177)
+@RegisterInfo(sId = "minecraft:wall_banner")
 public class ItemWallBanner extends ItemStack<ItemBanner> implements ItemBanner {
 
     @Override

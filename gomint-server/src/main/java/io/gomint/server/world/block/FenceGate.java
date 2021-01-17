@@ -47,7 +47,7 @@ public class FenceGate extends Block implements BlockFenceGate {
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 15.0f;
     }
 
@@ -62,24 +62,24 @@ public class FenceGate extends Block implements BlockFenceGate {
     }
 
     @Override
-    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] toolInterfaces() {
         return ToolPresets.AXE;
     }
 
     @Override
     public BlockFenceGate toggle() {
-        OPEN.setState(this, !this.open());
+        OPEN.state(this, !this.open());
         return this;
     }
 
     @Override
     public boolean open() {
-        return OPEN.getState(this);
+        return OPEN.state(this);
     }
 
     @Override
     public LogType type() {
-        switch (this.getBlockId()) {
+        switch (this.blockId()) {
             case "minecraft:fence_gate":
                 return LogType.OAK;
             case "minecraft:spruce_fence_gate":
@@ -105,28 +105,28 @@ public class FenceGate extends Block implements BlockFenceGate {
     public BlockFenceGate type(LogType logType) {
         switch (logType) {
             case OAK:
-                this.setBlockId("minecraft:fence_gate");
+                this.blockId("minecraft:fence_gate");
                 break;
             case SPRUCE:
-                this.setBlockId("minecraft:spruce_fence_gate");
+                this.blockId("minecraft:spruce_fence_gate");
                 break;
             case BIRCH:
-                this.setBlockId("minecraft:birch_fence_gate");
+                this.blockId("minecraft:birch_fence_gate");
                 break;
             case DARK_OAK:
-                this.setBlockId("minecraft:dark_oak_fence_gate");
+                this.blockId("minecraft:dark_oak_fence_gate");
                 break;
             case JUNGLE:
-                this.setBlockId("minecraft:jungle_fence_gate");
+                this.blockId("minecraft:jungle_fence_gate");
                 break;
             case ACACIA:
-                this.setBlockId("minecraft:acacia_fence_gate");
+                this.blockId("minecraft:acacia_fence_gate");
                 break;
             case WARPED:
-                this.setBlockId("minecraft:warped_fence_gate");
+                this.blockId("minecraft:warped_fence_gate");
                 break;
             case CRIMSON:
-                this.setBlockId("minecraft:crimson_fence_gate");
+                this.blockId("minecraft:crimson_fence_gate");
                 break;
         }
 
@@ -135,13 +135,13 @@ public class FenceGate extends Block implements BlockFenceGate {
 
     @Override
     public BlockFenceGate direction(Direction direction) {
-        DIRECTION.setState(this, direction);
+        DIRECTION.state(this, direction);
         return this;
     }
 
     @Override
     public Direction direction() {
-        return DIRECTION.getState(this);
+        return DIRECTION.state(this);
     }
 
 }

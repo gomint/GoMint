@@ -4,7 +4,6 @@ import io.gomint.inventory.item.ItemShears;
 import io.gomint.inventory.item.ItemStack;
 import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.world.block.state.BlockColorBlockState;
-import io.gomint.server.world.block.state.EnumBlockState;
 import io.gomint.world.block.BlockType;
 import io.gomint.world.block.BlockWool;
 import io.gomint.world.block.data.BlockColor;
@@ -19,7 +18,7 @@ public class Wool extends Block implements BlockWool {
     private static final BlockColorBlockState COLOR = new BlockColorBlockState(() -> new String[]{"color"});
 
     @Override
-    public String getBlockId() {
+    public String blockId() {
         return "minecraft:wool";
     }
 
@@ -29,7 +28,7 @@ public class Wool extends Block implements BlockWool {
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 4.0f;
     }
 
@@ -40,12 +39,12 @@ public class Wool extends Block implements BlockWool {
 
     @Override
     public BlockColor color() {
-        return COLOR.getState(this);
+        return COLOR.state(this);
     }
 
     @Override
     public BlockWool color(BlockColor color ) {
-        COLOR.setState( this, color );
+        COLOR.state( this, color );
         return this;
     }
 
@@ -55,7 +54,7 @@ public class Wool extends Block implements BlockWool {
     }
 
     @Override
-    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] toolInterfaces() {
         return new Class[]{
             ItemShears.class
         };

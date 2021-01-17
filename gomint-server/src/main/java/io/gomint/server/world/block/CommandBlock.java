@@ -26,12 +26,12 @@ public class CommandBlock extends ContainerBlock<BlockCommandBlock> implements B
     @Override
     public boolean beforePlacement(EntityLiving<?> entity, ItemStack<?> item, Facing face, Location location) {
         FACING.detectFromPlacement(this, entity, item, face);
-        CONDITIONAL.setState(this, false);
+        CONDITIONAL.state(this, false);
         return super.beforePlacement(entity, item, face, location);
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 1.8E7f;
     }
 
@@ -58,13 +58,13 @@ public class CommandBlock extends ContainerBlock<BlockCommandBlock> implements B
 
     @Override
     public BlockCommandBlock facing(Facing facing) {
-        FACING.setState(this, facing);
+        FACING.state(this, facing);
         return this;
     }
 
     @Override
     public Facing facing() {
-        return FACING.getState(this);
+        return FACING.state(this);
     }
 
 }

@@ -44,7 +44,7 @@ public class WoodenStair extends Stair<BlockWoodenStair> implements BlockWoodenS
     }
 
     @Override
-    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] toolInterfaces() {
         return ToolPresets.AXE;
     }
 
@@ -54,7 +54,7 @@ public class WoodenStair extends Stair<BlockWoodenStair> implements BlockWoodenS
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 15.0f;
     }
 
@@ -66,7 +66,7 @@ public class WoodenStair extends Stair<BlockWoodenStair> implements BlockWoodenS
     @Override
     public LogType type() {
         for (LogTypeMagic value : LogTypeMagic.values()) {
-            if (this.getBlockId().equals(value.blockId)) {
+            if (this.blockId().equals(value.blockId)) {
                 return LogType.valueOf(value.name());
             }
         }
@@ -77,7 +77,7 @@ public class WoodenStair extends Stair<BlockWoodenStair> implements BlockWoodenS
     @Override
     public BlockWoodenStair type(LogType logType) {
         LogTypeMagic newState = LogTypeMagic.valueOf(logType.name());
-        this.setBlockId(newState.blockId);
+        this.blockId(newState.blockId);
         return this;
     }
 

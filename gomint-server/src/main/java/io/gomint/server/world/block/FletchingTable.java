@@ -19,7 +19,7 @@ import io.gomint.world.block.BlockType;
 public class FletchingTable extends Block implements BlockFletchingTable {
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 2.5f;
     }
 

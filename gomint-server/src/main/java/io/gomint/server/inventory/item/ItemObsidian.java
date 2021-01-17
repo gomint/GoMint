@@ -9,7 +9,7 @@ import io.gomint.taglib.NBTTagCompound;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo(sId = "minecraft:obsidian", id = 49)
+@RegisterInfo(sId = "minecraft:obsidian")
 public class ItemObsidian extends ItemStack< io.gomint.inventory.item.ItemObsidian> implements io.gomint.inventory.item.ItemObsidian {
 
     @Override

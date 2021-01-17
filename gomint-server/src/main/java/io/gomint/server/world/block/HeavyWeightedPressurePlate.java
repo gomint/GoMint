@@ -19,7 +19,7 @@ import java.util.List;
 public class HeavyWeightedPressurePlate extends Block implements BlockHeavyWeightedPressurePlate {
 
     @Override
-    public String getBlockId() {
+    public String blockId() {
         return "minecraft:heavy_weighted_pressure_plate";
     }
 
@@ -51,7 +51,7 @@ public class HeavyWeightedPressurePlate extends Block implements BlockHeavyWeigh
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 2.5f;
     }
 
@@ -66,7 +66,7 @@ public class HeavyWeightedPressurePlate extends Block implements BlockHeavyWeigh
     }
 
     @Override
-    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] toolInterfaces() {
         return ToolPresets.PICKAXE;
     }
 }

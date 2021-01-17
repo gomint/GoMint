@@ -14,7 +14,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:item.reeds", id = 83 )
+@RegisterInfo( sId = "minecraft:item.reeds" )
 public class ItemReedsBlock extends ItemStack<ItemReedsBlock>  {
 
     @Override

@@ -18,7 +18,7 @@ import io.gomint.world.block.BlockType;
 public class Lectern extends Block implements BlockLectern {
 
     @Override
-    public String getBlockId() {
+    public String blockId() {
         return "minecraft:lectern";
     }
 
@@ -33,7 +33,7 @@ public class Lectern extends Block implements BlockLectern {
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 12.5f;
     }
 
@@ -43,7 +43,7 @@ public class Lectern extends Block implements BlockLectern {
     }
 
     @Override
-    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] toolInterfaces() {
         return ToolPresets.AXE;
     }
 

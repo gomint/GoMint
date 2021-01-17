@@ -14,7 +14,7 @@ import io.gomint.taglib.NBTTagCompound;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:record_wait", id = 511 )
+@RegisterInfo( sId = "minecraft:record_wait" )
 public class ItemRecordWait extends ItemStack< io.gomint.inventory.item.ItemRecordWait> implements io.gomint.inventory.item.ItemRecordWait {
 
 

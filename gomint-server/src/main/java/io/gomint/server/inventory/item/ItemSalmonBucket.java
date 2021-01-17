@@ -14,7 +14,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:salmon_bucket", id = 365 )
+@RegisterInfo( sId = "minecraft:salmon_bucket" )
 public class ItemSalmonBucket extends ItemStack< io.gomint.inventory.item.ItemSalmonBucket> implements io.gomint.inventory.item.ItemSalmonBucket {
 
     @Override

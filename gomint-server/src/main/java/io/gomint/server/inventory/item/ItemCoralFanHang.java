@@ -18,9 +18,9 @@ import io.gomint.world.block.data.Direction;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo(sId = "minecraft:coral_fan_hang", id = -135, def = true)
-@RegisterInfo(sId = "minecraft:coral_fan_hang2", id = -136)
-@RegisterInfo(sId = "minecraft:coral_fan_hang3", id = -137)
+@RegisterInfo(sId = "minecraft:coral_fan_hang", def = true)
+@RegisterInfo(sId = "minecraft:coral_fan_hang2")
+@RegisterInfo(sId = "minecraft:coral_fan_hang3")
 public class ItemCoralFanHang extends ItemStack<io.gomint.inventory.item.ItemCoralFanHang> implements io.gomint.inventory.item.ItemCoralFanHang {
 
     private enum DirectionMagic {

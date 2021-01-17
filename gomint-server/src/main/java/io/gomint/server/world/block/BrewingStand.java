@@ -15,7 +15,7 @@ import io.gomint.server.registry.RegisterInfo;
 public class BrewingStand extends Block implements BlockBrewingStand {
 
     @Override
-    public String getBlockId() {
+    public String blockId() {
         return "minecraft:brewing_stand";
     }
 
@@ -30,7 +30,7 @@ public class BrewingStand extends Block implements BlockBrewingStand {
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 2.5f;
     }
 
@@ -45,7 +45,7 @@ public class BrewingStand extends Block implements BlockBrewingStand {
     }
 
     @Override
-    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] toolInterfaces() {
         return ToolPresets.PICKAXE;
     }
 

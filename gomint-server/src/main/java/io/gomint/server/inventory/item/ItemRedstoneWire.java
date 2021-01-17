@@ -8,7 +8,7 @@ import io.gomint.taglib.NBTTagCompound;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo(sId = "minecraft:redstone_wire", id = 55)
+@RegisterInfo(sId = "minecraft:redstone_wire")
 public class ItemRedstoneWire extends ItemStack<ItemRedstoneWire> {
 
     @Override

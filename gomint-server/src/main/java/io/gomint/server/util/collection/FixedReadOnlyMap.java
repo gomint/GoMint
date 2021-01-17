@@ -10,7 +10,9 @@ package io.gomint.server.util.collection;
 import io.gomint.taglib.NBTTagCompound;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -121,6 +123,11 @@ public class FixedReadOnlyMap extends ReadOnlyMap<String, Object> {
     @Override
     public int hashCode() {
         return Objects.hash(hashKey, hashValue);
+    }
+
+    @Override
+    public Set<String> keySet() {
+        return new HashSet<>(Arrays.asList(this.keys));
     }
 
     public NBTTagCompound toNBT(String name) {

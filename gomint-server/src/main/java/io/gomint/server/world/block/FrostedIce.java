@@ -19,7 +19,7 @@ import io.gomint.world.block.BlockType;
 public class FrostedIce extends Block implements BlockFrostedIce {
 
     @Override
-    public String getBlockId() {
+    public String blockId() {
         return "minecraft:frosted_ice";
     }
 
@@ -29,7 +29,7 @@ public class FrostedIce extends Block implements BlockFrostedIce {
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 2.5f;
     }
 

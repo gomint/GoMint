@@ -14,7 +14,7 @@ import io.gomint.world.block.BlockType;
 public class PolishedBlackStoneBricks extends Block implements BlockPolishedBlackStoneBricks {
 
     @Override
-    public String getBlockId() {
+    public String blockId() {
         return "minecraft:polished_blackstone_bricks";
     }
 
@@ -24,7 +24,7 @@ public class PolishedBlackStoneBricks extends Block implements BlockPolishedBlac
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 10.0f;
     }
 
@@ -39,7 +39,7 @@ public class PolishedBlackStoneBricks extends Block implements BlockPolishedBlac
     }
 
     @Override
-    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] toolInterfaces() {
         return ToolPresets.PICKAXE;
     }
 }

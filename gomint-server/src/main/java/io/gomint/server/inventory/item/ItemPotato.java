@@ -14,8 +14,8 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo(sId = "minecraft:potato", id = 392, def = true)
-@RegisterInfo(sId = "minecraft:potatoes", id = 142)
+@RegisterInfo(sId = "minecraft:potato", def = true)
+@RegisterInfo(sId = "minecraft:potatoes")
 public class ItemPotato extends ItemStack< io.gomint.inventory.item.ItemPotato> implements io.gomint.inventory.item.ItemPotato {
 
     @Override

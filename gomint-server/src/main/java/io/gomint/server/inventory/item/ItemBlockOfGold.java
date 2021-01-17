@@ -9,7 +9,7 @@ import io.gomint.taglib.NBTTagCompound;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo(sId = "minecraft:gold_block", id = 41)
+@RegisterInfo(sId = "minecraft:gold_block")
 public class ItemBlockOfGold extends ItemStack< io.gomint.inventory.item.ItemBlockOfGold> implements io.gomint.inventory.item.ItemBlockOfGold {
 
     @Override

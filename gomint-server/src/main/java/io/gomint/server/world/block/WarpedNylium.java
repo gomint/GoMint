@@ -14,7 +14,7 @@ import io.gomint.world.block.BlockWarpedNylium;
 public class WarpedNylium extends Block implements BlockWarpedNylium {
 
     @Override
-    public String getBlockId() {
+    public String blockId() {
         return "minecraft:warped_nylium";
     }
 
@@ -24,7 +24,7 @@ public class WarpedNylium extends Block implements BlockWarpedNylium {
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 5.0f;
     }
 
@@ -39,7 +39,7 @@ public class WarpedNylium extends Block implements BlockWarpedNylium {
     }
 
     @Override
-    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] toolInterfaces() {
         return ToolPresets.PICKAXE;
     }
 }

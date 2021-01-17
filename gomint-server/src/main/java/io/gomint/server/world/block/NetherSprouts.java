@@ -14,12 +14,12 @@ import io.gomint.world.block.BlockType;
 public class NetherSprouts extends Block implements BlockNetherSprouts {
 
     @Override
-    public String getBlockId() {
+    public String blockId() {
         return "minecraft:nether_sprouts";
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 0;
     }
 
@@ -34,7 +34,7 @@ public class NetherSprouts extends Block implements BlockNetherSprouts {
     }
 
     @Override
-    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] toolInterfaces() {
         return new Class[]{
             ItemShears.class
         };

@@ -13,7 +13,7 @@ import io.gomint.server.registry.RegisterInfo;
 public class BlockMovedByPiston extends Block implements BlockBlockMovedByPiston {
 
     @Override
-    public String getBlockId() {
+    public String blockId() {
         return "minecraft:movingBlock";
     }
 
@@ -23,7 +23,7 @@ public class BlockMovedByPiston extends Block implements BlockBlockMovedByPiston
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 0.0f;
     }
 

@@ -7,7 +7,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @author Kaooot
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:dried_kelp", id = 464 )
+@RegisterInfo( sId = "minecraft:dried_kelp" )
 public class ItemDriedKelp extends ItemStack< io.gomint.inventory.item.ItemDriedKelp> implements io.gomint.inventory.item.ItemDriedKelp {
 
     @Override

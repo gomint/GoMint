@@ -15,7 +15,7 @@ import io.gomint.server.registry.RegisterInfo;
 public class SnowLayer extends Block implements BlockSnowLayer {
 
     @Override
-    public String getBlockId() {
+    public String blockId() {
         return "minecraft:snow_layer";
     }
 
@@ -30,7 +30,7 @@ public class SnowLayer extends Block implements BlockSnowLayer {
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 0.5f;
     }
 
@@ -45,7 +45,7 @@ public class SnowLayer extends Block implements BlockSnowLayer {
     }
 
     @Override
-    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] toolInterfaces() {
         return ToolPresets.SHOVEL;
     }
 

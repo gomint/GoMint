@@ -7,7 +7,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo(sId = "minecraft:item.hopper", id = 154)
+@RegisterInfo(sId = "minecraft:item.hopper")
 public class ItemHopperBlock extends ItemStack<ItemHopperBlock> {
 
     @Override

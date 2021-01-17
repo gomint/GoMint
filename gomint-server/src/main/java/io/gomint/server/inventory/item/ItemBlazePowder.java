@@ -7,7 +7,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:blaze_powder", id = 377 )
+@RegisterInfo( sId = "minecraft:blaze_powder" )
 public class ItemBlazePowder extends ItemStack< io.gomint.inventory.item.ItemBlazePowder> implements io.gomint.inventory.item.ItemBlazePowder {
 
     @Override

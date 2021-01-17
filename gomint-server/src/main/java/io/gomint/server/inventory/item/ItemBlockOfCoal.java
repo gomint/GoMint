@@ -11,7 +11,7 @@ import java.time.Duration;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo(sId = "minecraft:coal_block", id = 173)
+@RegisterInfo(sId = "minecraft:coal_block")
 public class ItemBlockOfCoal extends ItemStack< io.gomint.inventory.item.ItemBlockOfCoal> implements io.gomint.inventory.item.ItemBlockOfCoal {
 
     @Override

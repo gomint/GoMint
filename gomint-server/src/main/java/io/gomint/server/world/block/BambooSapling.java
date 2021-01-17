@@ -19,7 +19,7 @@ import io.gomint.world.block.BlockType;
 public class BambooSapling extends Block implements BlockBambooSapling {
 
     @Override
-    public String getBlockId() {
+    public String blockId() {
         return "minecraft:bamboo_sapling";
     }
 
@@ -29,7 +29,7 @@ public class BambooSapling extends Block implements BlockBambooSapling {
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 0;
     }
 

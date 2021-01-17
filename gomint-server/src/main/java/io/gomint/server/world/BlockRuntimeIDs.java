@@ -52,16 +52,16 @@ public class BlockRuntimeIDs {
 
         RUNTIME_TO_BLOCK = new BlockIdentifier[blockPalette.size()];
         for (BlockIdentifier identifier : blockPalette) {
-            int runtime = identifier.getRuntimeId();
+            int runtime = identifier.runtimeId();
 
             RUNTIME_TO_BLOCK[runtime] = identifier;
-            BLOCK_ID_TO_NUMERIC.put(identifier.getBlockId(), identifier.getBlockNumericId());
+            BLOCK_ID_TO_NUMERIC.put(identifier.blockId(), identifier.numericId());
 
             NBTTagCompound compound = new NBTTagCompound("");
             NBTTagCompound block = new NBTTagCompound("block");
 
-            block.addValue("name", identifier.getBlockId());
-            block.addValue("states", identifier.getNbt());
+            block.addValue("name", identifier.blockId());
+            block.addValue("states", identifier.nbt());
             compound.addValue("block", block);
             compounds.add(compound);
         }
@@ -101,12 +101,12 @@ public class BlockRuntimeIDs {
     public static BlockIdentifier change(BlockIdentifier oldState, String newBlockId, String[] changingKey, Object newValue) {
         Map<String, Object> changed;
         if (changingKey != null) {
-            changed = new SingleKeyChangeMap(oldState.getStates(), changingKey, newValue);
+            changed = new SingleKeyChangeMap(oldState.states(), changingKey, newValue);
         } else {
-            changed = oldState.getStates();
+            changed = oldState.states();
         }
 
-        BlockStateMapper mapper = MAPPER_REGISTRY.get(newBlockId != null ? BLOCK_ID_TO_NUMERIC.getInt(newBlockId) : oldState.getBlockNumericId());
+        BlockStateMapper mapper = MAPPER_REGISTRY.get(newBlockId != null ? BLOCK_ID_TO_NUMERIC.getInt(newBlockId) : oldState.numericId());
         int runeTimeId = mapper.map(changed);
         if (runeTimeId == -1) {
             LOGGER.warn("No usable block state found for: {} -> {} -> {}", oldState, changingKey, newValue);

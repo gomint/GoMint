@@ -14,7 +14,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:item.soul_campfire", id = -290 )
+@RegisterInfo( sId = "minecraft:item.soul_campfire" )
 public class ItemSoulCampfireBlock extends ItemStack<ItemSoulCampfireBlock> {
 
     @Override

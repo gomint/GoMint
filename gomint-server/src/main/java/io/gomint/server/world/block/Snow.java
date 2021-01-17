@@ -13,7 +13,7 @@ import io.gomint.server.registry.RegisterInfo;
 public class Snow extends Block implements BlockSnow {
 
     @Override
-    public String getBlockId() {
+    public String blockId() {
         return "minecraft:snow";
     }
 
@@ -23,7 +23,7 @@ public class Snow extends Block implements BlockSnow {
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 1.0f;
     }
 

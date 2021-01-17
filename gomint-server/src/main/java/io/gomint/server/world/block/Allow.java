@@ -12,7 +12,7 @@ import io.gomint.world.block.BlockType;
 public class Allow extends Block implements BlockAllow {
 
     @Override
-    public String getBlockId() {
+    public String blockId() {
         return "minecraft:allow";
     }
 
@@ -27,7 +27,7 @@ public class Allow extends Block implements BlockAllow {
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 1.8E7f;
     }
 

@@ -9,7 +9,7 @@ import io.gomint.taglib.NBTTagCompound;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo(sId = "minecraft:web", id = 30)
+@RegisterInfo(sId = "minecraft:web")
 public class ItemCobweb extends ItemStack< io.gomint.inventory.item.ItemCobweb> implements io.gomint.inventory.item.ItemCobweb {
 
     @Override

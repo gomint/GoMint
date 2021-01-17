@@ -16,7 +16,7 @@ import java.time.Duration;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:dark_oak_pressure_plate", id = -152 )
+@RegisterInfo( sId = "minecraft:dark_oak_pressure_plate" )
 public class ItemDarkOakPressurePlate extends ItemStack<io.gomint.inventory.item.ItemDarkOakPressurePlate> implements io.gomint.inventory.item.ItemDarkOakPressurePlate {
 
     @Override

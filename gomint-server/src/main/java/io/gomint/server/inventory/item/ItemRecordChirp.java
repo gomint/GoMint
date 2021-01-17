@@ -14,7 +14,7 @@ import io.gomint.taglib.NBTTagCompound;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:record_chirp", id = 503 )
+@RegisterInfo( sId = "minecraft:record_chirp" )
 public class ItemRecordChirp extends ItemStack< io.gomint.inventory.item.ItemRecordChirp> implements io.gomint.inventory.item.ItemRecordChirp {
 
 

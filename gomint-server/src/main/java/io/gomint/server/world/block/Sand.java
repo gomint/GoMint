@@ -55,12 +55,12 @@ public class Sand extends Fallable implements BlockSand {
     }
 
     @Override
-    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] toolInterfaces() {
         return ToolPresets.SHOVEL;
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 2.5f;
     }
 
@@ -72,13 +72,13 @@ public class Sand extends Fallable implements BlockSand {
     @Override
     public BlockSand type(SandType type) {
         SandTypeMagic newState = SandTypeMagic.valueOf(type.name());
-        TYPE.setState(this, newState);
+        TYPE.state(this, newState);
         return this;
     }
 
     @Override
     public SandType type() {
-        return SandType.valueOf(TYPE.getState(this).name());
+        return SandType.valueOf(TYPE.state(this).name());
     }
 
     @Override

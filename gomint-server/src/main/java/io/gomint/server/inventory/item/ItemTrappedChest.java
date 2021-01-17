@@ -11,7 +11,7 @@ import java.time.Duration;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo(sId = "minecraft:trapped_chest", id = 146)
+@RegisterInfo(sId = "minecraft:trapped_chest")
 public class ItemTrappedChest extends ItemStack< io.gomint.inventory.item.ItemTrappedChest> implements io.gomint.inventory.item.ItemTrappedChest {
 
     @Override

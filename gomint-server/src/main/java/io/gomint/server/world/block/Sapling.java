@@ -59,7 +59,7 @@ public class Sapling extends Block implements BlockSapling {
 
     @Override
     public boolean beforePlacement(EntityLiving<?> entity, ItemStack<?> item, Facing face, Location location) {
-        AGE.setState(this, false);
+        AGE.state(this, false);
 
         Block down = this.side(Facing.DOWN);
         return down.solid();
@@ -76,7 +76,7 @@ public class Sapling extends Block implements BlockSapling {
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 0.0f;
     }
 
@@ -97,13 +97,13 @@ public class Sapling extends Block implements BlockSapling {
 
     @Override
     public BlockSapling type(LogType type) {
-        TYPE.setState(this, LogTypeMagic.valueOf(type.name()));
+        TYPE.state(this, LogTypeMagic.valueOf(type.name()));
         return this;
     }
 
     @Override
     public LogType type() {
-        return LogType.valueOf(TYPE.getState(this).name());
+        return LogType.valueOf(TYPE.state(this).name());
     }
 
     @Override

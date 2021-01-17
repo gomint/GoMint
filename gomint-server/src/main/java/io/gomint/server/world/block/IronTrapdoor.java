@@ -25,7 +25,7 @@ public class IronTrapdoor extends Trapdoor<BlockIronTrapdoor> implements BlockIr
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 25.0f;
     }
 
@@ -40,7 +40,7 @@ public class IronTrapdoor extends Trapdoor<BlockIronTrapdoor> implements BlockIr
     }
 
     @Override
-    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] toolInterfaces() {
         return ToolPresets.PICKAXE;
     }
 

@@ -14,7 +14,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:evoker_spawn_egg", id = 473 )
+@RegisterInfo( sId = "minecraft:evoker_spawn_egg" )
 public class ItemEvokerSpawnEgg extends ItemStack< io.gomint.inventory.item.ItemEvokerSpawnEgg> implements io.gomint.inventory.item.ItemEvokerSpawnEgg {
 
     @Override

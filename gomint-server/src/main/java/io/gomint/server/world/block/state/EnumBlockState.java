@@ -33,17 +33,17 @@ public class EnumBlockState<E extends Enum<E>, T> extends BlockState<E, T> {
 
     @Override
     protected void calculateValueFromState(Block block, E state) {
-        this.setValue(block, this.valueResolver.apply(state));
+        this.value(block, this.valueResolver.apply(state));
     }
 
     @Override
     public void detectFromPlacement(Block newBlock, EntityLiving<?> player, ItemStack<?> placedItem, Facing face) {
-        this.setState(newBlock, this.enumValues[placedItem == null ? 0 : ((io.gomint.server.inventory.item.ItemStack<?>) placedItem).data()]);
+        this.state(newBlock, this.enumValues[placedItem == null ? 0 : ((io.gomint.server.inventory.item.ItemStack<?>) placedItem).data()]);
     }
 
     @Override
-    public E getState(Block block) {
-        return this.stateResolver.apply(this.getValue(block));
+    public E state(Block block) {
+        return this.stateResolver.apply(this.value(block));
     }
 
 }

@@ -27,7 +27,7 @@ public class ChemistryTable extends Block {
     private static final DirectionBlockState DIRECTION = new DirectionBlockState(() -> new String[]{"direction"});
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 0;
     }
 

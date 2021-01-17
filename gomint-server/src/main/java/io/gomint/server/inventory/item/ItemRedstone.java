@@ -8,7 +8,7 @@ import io.gomint.taglib.NBTTagCompound;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:redstone", id = 331 )
+@RegisterInfo( sId = "minecraft:redstone" )
  public class ItemRedstone extends ItemStack< io.gomint.inventory.item.ItemRedstone> implements io.gomint.inventory.item.ItemRedstone {
 
 

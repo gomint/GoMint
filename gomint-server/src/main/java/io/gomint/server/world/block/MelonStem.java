@@ -13,7 +13,7 @@ import io.gomint.server.registry.RegisterInfo;
 public class MelonStem extends Growable implements BlockMelonStem {
 
     @Override
-    public String getBlockId() {
+    public String blockId() {
         return "minecraft:melon_stem";
     }
 
@@ -28,7 +28,7 @@ public class MelonStem extends Growable implements BlockMelonStem {
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 0.0f;
     }
 

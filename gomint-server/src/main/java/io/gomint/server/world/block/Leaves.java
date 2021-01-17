@@ -91,7 +91,7 @@ public class Leaves extends Block implements BlockLeaves {
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 1.0f;
     }
 
@@ -144,7 +144,7 @@ public class Leaves extends Block implements BlockLeaves {
     }
 
     @Override
-    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] toolInterfaces() {
         return new Class[]{
             ItemShears.class
         };
@@ -157,14 +157,14 @@ public class Leaves extends Block implements BlockLeaves {
         }
 
         LeaveTypeMagic newState = LeaveTypeMagic.valueOf(type.name());
-        this.setBlockIdOnStateChange(newState.blockId); // We ignore the two keys here to get a known wrong value, the set state below will select the correct runtime id
-        VARIANT.setState(this, newState);
+        this.blockIdOnStateChange(newState.blockId); // We ignore the two keys here to get a known wrong value, the set state below will select the correct runtime id
+        VARIANT.state(this, newState);
         return this;
     }
 
     @Override
     public LogType type() {
-        return LogType.valueOf(VARIANT.getState(this).name());
+        return LogType.valueOf(VARIANT.state(this).name());
     }
 
 }

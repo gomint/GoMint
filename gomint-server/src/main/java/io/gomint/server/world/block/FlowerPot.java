@@ -13,7 +13,7 @@ import io.gomint.server.registry.RegisterInfo;
 public class FlowerPot extends Block implements BlockFlowerPot {
 
     @Override
-    public String getBlockId() {
+    public String blockId() {
         return "minecraft:flower_pot";
     }
 
@@ -23,7 +23,7 @@ public class FlowerPot extends Block implements BlockFlowerPot {
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 0.0f;
     }
 

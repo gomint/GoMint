@@ -19,7 +19,7 @@ import java.util.List;
 public class Podzol extends Block implements BlockPodzol {
 
     @Override
-    public String getBlockId() {
+    public String blockId() {
         return "minecraft:podzol";
     }
 
@@ -29,7 +29,7 @@ public class Podzol extends Block implements BlockPodzol {
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 2.5f;
     }
 
@@ -51,7 +51,7 @@ public class Podzol extends Block implements BlockPodzol {
     }
 
     @Override
-    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] toolInterfaces() {
         return ToolPresets.SHOVEL;
     }
 

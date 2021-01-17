@@ -19,7 +19,7 @@ import io.gomint.server.registry.RegisterInfo;
 public class Dropper extends Block implements BlockDropper {
 
     @Override
-    public String getBlockId() {
+    public String blockId() {
         return "minecraft:dropper";
     }
 
@@ -29,12 +29,12 @@ public class Dropper extends Block implements BlockDropper {
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 17.5f;
     }
 
     @Override
-    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] toolInterfaces() {
         return ToolPresets.PICKAXE;
     }
 

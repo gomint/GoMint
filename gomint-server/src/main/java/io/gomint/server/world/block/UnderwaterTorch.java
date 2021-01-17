@@ -12,7 +12,7 @@ import io.gomint.world.block.BlockUnderwaterTorch;
 public class UnderwaterTorch extends Torch implements BlockUnderwaterTorch {
 
     @Override
-    public String getBlockId() {
+    public String blockId() {
         return "minecraft:underwater_torch";
     }
 

@@ -25,7 +25,7 @@ import io.gomint.world.block.BlockType;
 public class Jukebox extends Block implements BlockJukebox {
 
     @Override
-    public String getBlockId() {
+    public String blockId() {
         return "minecraft:jukebox";
     }
 
@@ -40,7 +40,7 @@ public class Jukebox extends Block implements BlockJukebox {
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 30.0f;
     }
 
@@ -50,7 +50,7 @@ public class Jukebox extends Block implements BlockJukebox {
     }
 
     @Override
-    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] toolInterfaces() {
         return ToolPresets.AXE;
     }
 

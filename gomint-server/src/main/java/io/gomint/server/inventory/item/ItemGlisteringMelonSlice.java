@@ -14,7 +14,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:glistering_melon_slice", id = 432 )
+@RegisterInfo( sId = "minecraft:glistering_melon_slice" )
 public class ItemGlisteringMelonSlice extends ItemStack< io.gomint.inventory.item.ItemGlisteringMelonSlice> implements io.gomint.inventory.item.ItemGlisteringMelonSlice {
 
     @Override

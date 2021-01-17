@@ -28,7 +28,7 @@ public class Stone extends Block implements BlockStone {
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 10.0f;
     }
 
@@ -45,29 +45,29 @@ public class Stone extends Block implements BlockStone {
     }
 
     @Override
-    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] toolInterfaces() {
         return ToolPresets.PICKAXE;
     }
 
     @Override
     public BlockStone type(Type type) {
         if (type == Type.STONE_SMOOTH) {
-            this.setBlockId("minecraft:smooth_stone");
+            this.blockId("minecraft:smooth_stone");
             return this;
         }
 
-        this.setBlockId("minecraft:stone");
-        VARIANT.setState(this, type);
+        this.blockId("minecraft:stone");
+        VARIANT.state(this, type);
         return this;
     }
 
     @Override
     public Type type() {
-        if ("minecraft:smooth_stone".equals(this.getBlockId())) {
+        if ("minecraft:smooth_stone".equals(this.blockId())) {
             return Type.STONE_SMOOTH;
         }
 
-        return VARIANT.getState(this);
+        return VARIANT.state(this);
     }
 
 }

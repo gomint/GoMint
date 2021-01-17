@@ -15,7 +15,7 @@ import io.gomint.world.block.BlockType;
 public class ShroomLight extends Block implements BlockShroomLight {
 
     @Override
-    public String getBlockId() {
+    public String blockId() {
         return "minecraft:shroomlight";
     }
 
@@ -25,14 +25,14 @@ public class ShroomLight extends Block implements BlockShroomLight {
     }
 
     @Override
-    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] toolInterfaces() {
         return new Class[]{
             ItemHoe.class
         };
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 5.0f;
     }
 

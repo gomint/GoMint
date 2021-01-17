@@ -14,7 +14,7 @@ import io.gomint.world.block.BlockType;
 public class Loom extends Block implements BlockLoom {
 
     @Override
-    public String getBlockId() {
+    public String blockId() {
         return "minecraft:loom";
     }
 
@@ -24,12 +24,12 @@ public class Loom extends Block implements BlockLoom {
     }
 
     @Override
-    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] toolInterfaces() {
         return ToolPresets.AXE;
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 12.5f;
     }
 

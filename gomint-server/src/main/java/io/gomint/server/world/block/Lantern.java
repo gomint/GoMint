@@ -24,12 +24,12 @@ public class Lantern extends Block implements BlockLantern {
     }
 
     @Override
-    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] toolInterfaces() {
         return ToolPresets.PICKAXE;
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 3.5f;
     }
 
@@ -42,10 +42,10 @@ public class Lantern extends Block implements BlockLantern {
     public BlockLantern type(LanternType type) {
         switch (type) {
             case NORMAL:
-                this.setBlockId("minecraft:lantern");
+                this.blockId("minecraft:lantern");
                 return this;
             default:
-                this.setBlockId("minecraft:soul_lantern");
+                this.blockId("minecraft:soul_lantern");
         }
 
         return this;
@@ -53,7 +53,7 @@ public class Lantern extends Block implements BlockLantern {
 
     @Override
     public LanternType type() {
-        switch (this.getBlockId()) {
+        switch (this.blockId()) {
             case "minecraft:lantern":
                 return LanternType.NORMAL;
             default:
@@ -63,12 +63,12 @@ public class Lantern extends Block implements BlockLantern {
 
     @Override
     public boolean hanging() {
-        return HANGING.getState(this);
+        return HANGING.state(this);
     }
 
     @Override
     public BlockLantern hanging(boolean hanging) {
-        HANGING.setState(this, hanging);
+        HANGING.state(this, hanging);
         return this;
     }
 

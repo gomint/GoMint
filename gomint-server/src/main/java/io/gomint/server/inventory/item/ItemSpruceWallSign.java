@@ -14,7 +14,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:spruce_wall_sign", id = -182 )
+@RegisterInfo( sId = "minecraft:spruce_wall_sign" )
 public class ItemSpruceWallSign extends ItemStack< io.gomint.inventory.item.ItemSpruceWallSign> implements io.gomint.inventory.item.ItemSpruceWallSign {
 
     @Override

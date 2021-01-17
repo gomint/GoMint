@@ -19,7 +19,7 @@ import io.gomint.world.block.BlockNoteblock;
 public class NoteBlock extends Block implements BlockNoteblock {
 
     @Override
-    public String getBlockId() {
+    public String blockId() {
         return "minecraft:noteblock";
     }
 
@@ -49,7 +49,7 @@ public class NoteBlock extends Block implements BlockNoteblock {
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 4.0f;
     }
 
@@ -64,7 +64,7 @@ public class NoteBlock extends Block implements BlockNoteblock {
     }
 
     @Override
-    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] toolInterfaces() {
         return ToolPresets.PICKAXE;
     }
 

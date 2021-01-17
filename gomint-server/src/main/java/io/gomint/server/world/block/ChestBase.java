@@ -45,7 +45,7 @@ public abstract class ChestBase<B> extends ContainerBlock<B> {
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 12.5f;
     }
 
@@ -107,7 +107,7 @@ public abstract class ChestBase<B> extends ContainerBlock<B> {
     }
 
     @Override
-    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] toolInterfaces() {
         return ToolPresets.AXE;
     }
 

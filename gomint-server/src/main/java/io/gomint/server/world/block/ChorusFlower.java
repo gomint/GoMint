@@ -15,7 +15,7 @@ import io.gomint.world.block.BlockChorusFlower;
 public class ChorusFlower extends Block implements BlockChorusFlower {
 
     @Override
-    public String getBlockId() {
+    public String blockId() {
         return "minecraft:chorus_flower";
     }
 
@@ -30,12 +30,12 @@ public class ChorusFlower extends Block implements BlockChorusFlower {
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 2f;
     }
 
     @Override
-    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] toolInterfaces() {
         return ToolPresets.AXE;
     }
 

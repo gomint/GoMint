@@ -14,7 +14,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:music_disc_11", id = 534 )
+@RegisterInfo( sId = "minecraft:music_disc_11" )
 public class ItemMusicDisc11 extends ItemStack< io.gomint.inventory.item.ItemMusicDisc11> implements io.gomint.inventory.item.ItemMusicDisc11 {
 
     @Override

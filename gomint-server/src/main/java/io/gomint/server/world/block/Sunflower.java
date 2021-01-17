@@ -33,7 +33,7 @@ public class Sunflower extends Block implements BlockSunflower {
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 0.0f;
     }
 

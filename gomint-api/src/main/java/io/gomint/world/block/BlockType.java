@@ -300,5 +300,6 @@ public enum BlockType {
     BLUE_ICE,
     SCAFFOLDING,
     LIGHT_BLOCK,
+    PRISMARINE_SLAB,
 
 }

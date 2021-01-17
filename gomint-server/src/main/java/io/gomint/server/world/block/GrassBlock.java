@@ -20,7 +20,7 @@ import java.util.List;
 public class GrassBlock extends Block implements BlockGrassBlock {
 
     @Override
-    public String getBlockId() {
+    public String blockId() {
         return "minecraft:grass";
     }
 
@@ -42,7 +42,7 @@ public class GrassBlock extends Block implements BlockGrassBlock {
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 3.0f;
     }
 
@@ -64,7 +64,7 @@ public class GrassBlock extends Block implements BlockGrassBlock {
     }
 
     @Override
-    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] toolInterfaces() {
         return ToolPresets.SHOVEL;
     }
 

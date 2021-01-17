@@ -14,7 +14,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:iron_horse_armor", id = 521 )
+@RegisterInfo( sId = "minecraft:iron_horse_armor" )
 public class ItemIronHorseArmor extends ItemStack< io.gomint.inventory.item.ItemIronHorseArmor> implements io.gomint.inventory.item.ItemIronHorseArmor {
 
     @Override

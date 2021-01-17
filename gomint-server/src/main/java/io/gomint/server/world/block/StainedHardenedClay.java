@@ -17,7 +17,7 @@ public class StainedHardenedClay extends Block implements BlockStainedHardenedCl
     private static final EnumBlockState<BlockColor, String> COLOR = new EnumBlockState<>( v -> new String[]{"color"}, BlockColor.values(), e -> e.name().toLowerCase(), v -> BlockColor.valueOf(v.toUpperCase()) );
 
     @Override
-    public String getBlockId() {
+    public String blockId() {
         return "minecraft:stained_hardened_clay";
     }
 
@@ -27,7 +27,7 @@ public class StainedHardenedClay extends Block implements BlockStainedHardenedCl
     }
 
     @Override
-    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] toolInterfaces() {
         return new Class[]{
             ItemWoodenPickaxe.class,
             ItemIronPickaxe.class,
@@ -38,7 +38,7 @@ public class StainedHardenedClay extends Block implements BlockStainedHardenedCl
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 0.75f;
     }
 
@@ -49,12 +49,12 @@ public class StainedHardenedClay extends Block implements BlockStainedHardenedCl
 
     @Override
     public BlockColor color() {
-        return COLOR.getState(this);
+        return COLOR.state(this);
     }
 
     @Override
     public BlockStainedHardenedClay color(BlockColor color ) {
-        COLOR.setState(this, color );
+        COLOR.state(this, color );
         return this;
     }
 

@@ -25,13 +25,13 @@ public class AxisBlockState extends BlockState<Axis, String> {
     protected void calculateValueFromState(Block block, Axis state) {
         switch (state) {
             case X:
-                this.setValue(block, "x");
+                this.value(block, "x");
                 break;
             case Y:
-                this.setValue(block, "y");
+                this.value(block, "y");
                 break;
             case Z:
-                this.setValue(block, "z");
+                this.value(block, "z");
                 break;
         }
     }
@@ -39,30 +39,30 @@ public class AxisBlockState extends BlockState<Axis, String> {
     @Override
     public void detectFromPlacement(Block newBlock, EntityLiving<?> player, ItemStack<?> placedItem, Facing face) {
         if (face == null) {
-            this.setState(newBlock, Axis.Z);
+            this.state(newBlock, Axis.Z);
             return;
         }
 
         switch (face) {
             case UP:
             case DOWN:
-                this.setState(newBlock, Axis.Y);
+                this.state(newBlock, Axis.Y);
                 break;
 
             case NORTH:
             case SOUTH:
-                this.setState(newBlock, Axis.X);
+                this.state(newBlock, Axis.X);
                 break;
 
             default:
-                this.setState(newBlock, Axis.Z);
+                this.state(newBlock, Axis.Z);
                 break;
         }
     }
 
     @Override
-    public Axis getState(Block block) {
-        switch (this.getValue(block)) {
+    public Axis state(Block block) {
+        switch (this.value(block)) {
             case "x":
                 return Axis.X;
             case "z":

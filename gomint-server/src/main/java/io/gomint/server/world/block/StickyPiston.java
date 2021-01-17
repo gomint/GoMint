@@ -29,7 +29,7 @@ public class StickyPiston extends Block implements BlockStickyPiston {
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 2.5f;
     }
 
@@ -44,19 +44,19 @@ public class StickyPiston extends Block implements BlockStickyPiston {
     }
 
     @Override
-    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] toolInterfaces() {
         return ToolPresets.PICKAXE;
     }
 
     @Override
     public BlockStickyPiston facing(Facing facing) {
-        FACING.setState(this, facing);
+        FACING.state(this, facing);
         return this;
     }
 
     @Override
     public Facing facing() {
-        return FACING.getState(this);
+        return FACING.state(this);
     }
 
 }

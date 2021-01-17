@@ -23,7 +23,7 @@ import java.util.List;
 public class BlockOfBones extends Block implements io.gomint.world.block.BlockOfBones {
 
     @Override
-    public String getBlockId() {
+    public String blockId() {
         return "minecraft:bone_block";
     }
 
@@ -33,7 +33,7 @@ public class BlockOfBones extends Block implements io.gomint.world.block.BlockOf
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 10f;
     }
 
@@ -43,7 +43,7 @@ public class BlockOfBones extends Block implements io.gomint.world.block.BlockOf
     }
 
     @Override
-    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] toolInterfaces() {
         return ToolPresets.PICKAXE;
     }
 

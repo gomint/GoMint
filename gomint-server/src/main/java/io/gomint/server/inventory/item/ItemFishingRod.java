@@ -18,7 +18,7 @@ import java.time.Duration;
  * @version 1.0
  */
 @CanBeDamaged
-@RegisterInfo( sId = "minecraft:fishing_rod", id = 346 )
+@RegisterInfo( sId = "minecraft:fishing_rod" )
 public class ItemFishingRod extends ItemStack< io.gomint.inventory.item.ItemFishingRod> implements io.gomint.inventory.item.ItemFishingRod {
 
     @Override

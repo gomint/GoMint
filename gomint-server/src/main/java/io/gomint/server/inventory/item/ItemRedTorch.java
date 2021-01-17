@@ -7,7 +7,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @author Kaooot
  * @version 1.0
  */
-@RegisterInfo(sId = "minecraft:colored_torch_rg", id = 202)
+@RegisterInfo(sId = "minecraft:colored_torch_rg")
 public class ItemRedTorch extends ItemStack< io.gomint.inventory.item.ItemRedTorch> implements io.gomint.inventory.item.ItemRedTorch {
 
     @Override

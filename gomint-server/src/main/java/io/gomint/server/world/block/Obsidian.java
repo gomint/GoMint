@@ -15,7 +15,7 @@ import io.gomint.server.registry.RegisterInfo;
 public class Obsidian extends Block implements BlockObsidian {
 
     @Override
-    public String getBlockId() {
+    public String blockId() {
         return "minecraft:obsidian";
     }
 
@@ -25,7 +25,7 @@ public class Obsidian extends Block implements BlockObsidian {
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 6000.0f;
     }
 
@@ -40,7 +40,7 @@ public class Obsidian extends Block implements BlockObsidian {
     }
 
     @Override
-    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] toolInterfaces() {
         return new Class[]{
             ItemDiamondPickaxe.class
         };

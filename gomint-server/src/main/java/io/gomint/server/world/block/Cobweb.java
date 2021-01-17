@@ -19,7 +19,7 @@ import java.util.List;
 public class Cobweb extends Block implements BlockCobweb {
 
     @Override
-    public String getBlockId() {
+    public String blockId() {
         return "minecraft:web";
     }
 
@@ -39,7 +39,7 @@ public class Cobweb extends Block implements BlockCobweb {
     }
 
     @Override
-    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] toolInterfaces() {
         return ToolPresets.SWORD;
     }
 
@@ -55,7 +55,7 @@ public class Cobweb extends Block implements BlockCobweb {
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 20.0f;
     }
 

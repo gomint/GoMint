@@ -15,7 +15,7 @@ import io.gomint.server.registry.RegisterInfo;
 public class Lever extends Block implements BlockLever {
 
     @Override
-    public String getBlockId() {
+    public String blockId() {
         return "minecraft:lever";
     }
 
@@ -35,7 +35,7 @@ public class Lever extends Block implements BlockLever {
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 2.5f;
     }
 
@@ -50,7 +50,7 @@ public class Lever extends Block implements BlockLever {
     }
 
     @Override
-    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] toolInterfaces() {
         return ToolPresets.PICKAXE;
     }
 

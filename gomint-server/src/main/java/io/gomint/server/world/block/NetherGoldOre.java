@@ -14,7 +14,7 @@ import io.gomint.world.block.BlockType;
 public class NetherGoldOre extends Block implements BlockNetherGoldOre {
 
     @Override
-    public String getBlockId() {
+    public String blockId() {
         return "minecraft:nether_gold_ore";
     }
 
@@ -24,7 +24,7 @@ public class NetherGoldOre extends Block implements BlockNetherGoldOre {
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 15.0f;
     }
 
@@ -39,7 +39,7 @@ public class NetherGoldOre extends Block implements BlockNetherGoldOre {
     }
 
     @Override
-    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] toolInterfaces() {
         return ToolPresets.PICKAXE;
     }
 }

@@ -16,7 +16,7 @@ import java.time.Duration;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:jukebox", id = 84 )
+@RegisterInfo( sId = "minecraft:jukebox" )
 public class ItemJukebox extends ItemStack< io.gomint.inventory.item.ItemJukebox> implements io.gomint.inventory.item.ItemJukebox {
 
     @Override

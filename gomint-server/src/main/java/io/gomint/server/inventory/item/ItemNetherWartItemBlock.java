@@ -14,7 +14,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:item.nether_wart", id = 115 )
+@RegisterInfo( sId = "minecraft:item.nether_wart" )
 public class ItemNetherWartItemBlock extends ItemStack<ItemNetherWartItemBlock> {
 
     @Override

@@ -20,7 +20,7 @@ import java.util.concurrent.ThreadLocalRandom;
 public class DiamondOre extends Block implements BlockDiamondOre {
 
     @Override
-    public String getBlockId() {
+    public String blockId() {
         return "minecraft:diamond_ore";
     }
 
@@ -30,7 +30,7 @@ public class DiamondOre extends Block implements BlockDiamondOre {
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 15.0f;
     }
 
@@ -56,7 +56,7 @@ public class DiamondOre extends Block implements BlockDiamondOre {
     }
 
     @Override
-    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] toolInterfaces() {
         return ToolPresets.PICKAXE;
     }
 

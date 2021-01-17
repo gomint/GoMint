@@ -14,7 +14,7 @@ import io.gomint.world.block.BlockType;
 public class Campfire extends Block implements BlockCampfire {
 
     @Override
-    public String getBlockId() {
+    public String blockId() {
         return "minecraft:campfire";
     }
 
@@ -29,12 +29,12 @@ public class Campfire extends Block implements BlockCampfire {
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 10.0f;
     }
 
     @Override
-    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] toolInterfaces() {
         return ToolPresets.AXE;
     }
 

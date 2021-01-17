@@ -11,7 +11,7 @@ import java.time.Duration;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo(sId = "minecraft:birch_fence_gate", id = 184)
+@RegisterInfo(sId = "minecraft:birch_fence_gate")
 public class ItemBirchWoodFenceGate extends ItemStack<io.gomint.inventory.item.ItemBirchWoodFenceGate> implements io.gomint.inventory.item.ItemBirchWoodFenceGate {
 
     @Override

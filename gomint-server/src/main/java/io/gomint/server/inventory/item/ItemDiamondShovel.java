@@ -16,7 +16,7 @@ import io.gomint.world.block.data.Facing;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:diamond_shovel", id = 277 )
+@RegisterInfo( sId = "minecraft:diamond_shovel" )
 public class ItemDiamondShovel extends ItemReduceTierDiamond<io.gomint.inventory.item.ItemDiamondShovel> implements io.gomint.inventory.item.ItemDiamondShovel {
 
     @Override

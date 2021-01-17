@@ -13,7 +13,7 @@ import io.gomint.server.registry.RegisterInfo;
 public class RedstoneRepeaterActive extends Block implements BlockRedstoneRepeaterActive {
 
     @Override
-    public String getBlockId() {
+    public String blockId() {
         return "minecraft:powered_repeater";
     }
 
@@ -23,7 +23,7 @@ public class RedstoneRepeaterActive extends Block implements BlockRedstoneRepeat
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 0.0f;
     }
 

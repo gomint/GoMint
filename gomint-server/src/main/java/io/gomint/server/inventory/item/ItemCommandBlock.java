@@ -8,7 +8,7 @@ import io.gomint.taglib.NBTTagCompound;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:command_block", id = 137 )
+@RegisterInfo( sId = "minecraft:command_block" )
 public class ItemCommandBlock extends ItemStack<ItemCommandBlock> {
 
     @Override

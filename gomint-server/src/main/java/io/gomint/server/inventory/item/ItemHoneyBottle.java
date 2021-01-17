@@ -7,7 +7,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @author KingAli
  * @version 1.0
  */
-@RegisterInfo( id = 737, sId = "minecraft:honey_bottle")
+@RegisterInfo( sId = "minecraft:honey_bottle")
 public class ItemHoneyBottle extends ItemFood<io.gomint.inventory.item.ItemHoneyBottle> implements io.gomint.inventory.item.ItemHoneyBottle {
 
     @Override

@@ -74,7 +74,7 @@ public class Vines extends Block implements BlockVines {
 
     @Override
     public List<AxisAlignedBB> boundingBoxes() {
-        if (ATTACHED_SIDES.getState(this) == 0) {
+        if (ATTACHED_SIDES.state(this) == 0) {
             return Collections.singletonList(UP_AABB);
         }
 
@@ -99,7 +99,7 @@ public class Vines extends Block implements BlockVines {
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 1.0f;
     }
 
@@ -120,7 +120,7 @@ public class Vines extends Block implements BlockVines {
     }
 
     @Override
-    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] toolInterfaces() {
         return new Class[]{
             ItemShears.class
         };

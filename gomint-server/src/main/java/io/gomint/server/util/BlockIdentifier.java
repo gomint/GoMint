@@ -31,23 +31,23 @@ public class BlockIdentifier {
         }
     }
 
-    public String getBlockId() {
+    public String blockId() {
         return blockId;
     }
 
-    public int getBlockNumericId() {
+    public int numericId() {
         return blockNumericId;
     }
 
-    public FixedReadOnlyMap getStates() {
+    public FixedReadOnlyMap states() {
         return states;
     }
 
-    public short getRuntimeId() {
+    public short runtimeId() {
         return runtimeId;
     }
 
-    public NBTTagCompound getNbt() {
+    public NBTTagCompound nbt() {
         if (this.states == null) {
             return new NBTTagCompound("states");
         }

@@ -7,7 +7,7 @@ import io.gomint.taglib.NBTTagCompound;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:shulker_shell", id = 445 )
+@RegisterInfo( sId = "minecraft:shulker_shell" )
 public class ItemShulkerShell extends ItemStack< io.gomint.inventory.item.ItemShulkerShell> implements io.gomint.inventory.item.ItemShulkerShell {
 
 

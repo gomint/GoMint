@@ -53,7 +53,7 @@ public class BlockQuartzBlock extends Block implements io.gomint.world.block.Blo
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 4.0f;
     }
 
@@ -64,26 +64,26 @@ public class BlockQuartzBlock extends Block implements io.gomint.world.block.Blo
 
     @Override
     public QuartzType type() {
-        if ("minecraft:quartz_bricks".equals(this.getBlockId())) {
+        if ("minecraft:quartz_bricks".equals(this.blockId())) {
             return QuartzType.BRICKS;
         }
 
-        return QuartzType.valueOf(VARIANT.getState(this).name());
+        return QuartzType.valueOf(VARIANT.state(this).name());
     }
 
     @Override
     public BlockQuartzBlock type(QuartzType variant) {
         if (variant == QuartzType.BRICKS) {
-            this.setBlockId("minecraft:quartz_bricks");
+            this.blockId("minecraft:quartz_bricks");
             return this;
         }
 
-        VARIANT.setState(this, VariantMagic.valueOf(variant.name()));
+        VARIANT.state(this, VariantMagic.valueOf(variant.name()));
         return this;
     }
 
     @Override
-    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] toolInterfaces() {
         return ToolPresets.PICKAXE;
     }
 
@@ -98,13 +98,13 @@ public class BlockQuartzBlock extends Block implements io.gomint.world.block.Blo
 
     @Override
     public BlockQuartzBlock axis(Axis axis) {
-        AXIS.setState(this, axis);
+        AXIS.state(this, axis);
         return this;
     }
 
     @Override
     public Axis axis() {
-        return AXIS.getState(this);
+        return AXIS.state(this);
     }
 
 }

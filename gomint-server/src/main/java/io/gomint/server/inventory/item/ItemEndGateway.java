@@ -9,7 +9,7 @@ import io.gomint.taglib.NBTTagCompound;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo(sId = "minecraft:end_gateway", id = 209)
+@RegisterInfo(sId = "minecraft:end_gateway")
 public class ItemEndGateway extends ItemStack< io.gomint.inventory.item.ItemEndGateway> implements io.gomint.inventory.item.ItemEndGateway {
 
     @Override

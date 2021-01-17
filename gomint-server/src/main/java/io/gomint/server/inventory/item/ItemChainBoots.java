@@ -11,7 +11,7 @@ import io.gomint.world.block.data.Facing;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:chainmail_boots", id = 305 )
+@RegisterInfo( sId = "minecraft:chainmail_boots" )
 public class ItemChainBoots extends ItemChainArmor<io.gomint.inventory.item.ItemChainBoots> implements io.gomint.inventory.item.ItemChainBoots {
 
     @Override

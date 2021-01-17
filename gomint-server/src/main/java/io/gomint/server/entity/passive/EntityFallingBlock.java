@@ -92,7 +92,7 @@ public class EntityFallingBlock extends Entity<io.gomint.entity.passive.EntityFa
         Block block1 = (Block) block;
 
         this.block = block1;
-        this.metadataContainer.putInt(MetadataContainer.DATA_VARIANT, block1.getRuntimeId());
+        this.metadataContainer.putInt(MetadataContainer.DATA_VARIANT, block1.runtimeId());
         return this;
     }
 

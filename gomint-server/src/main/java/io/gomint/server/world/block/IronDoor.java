@@ -21,7 +21,7 @@ public class IronDoor extends Door<BlockIronDoor> implements BlockIronDoor {
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 25.0f;
     }
 
@@ -46,7 +46,7 @@ public class IronDoor extends Door<BlockIronDoor> implements BlockIronDoor {
     }
 
     @Override
-    public Class<? extends ItemStack<?>>[] getToolInterfaces() {
+    public Class<? extends ItemStack<?>>[] toolInterfaces() {
         return ToolPresets.PICKAXE;
     }
 

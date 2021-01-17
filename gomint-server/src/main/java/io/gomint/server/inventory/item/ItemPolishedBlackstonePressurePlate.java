@@ -14,7 +14,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:polished_blackstone_pressure_plate", id = -295 )
+@RegisterInfo( sId = "minecraft:polished_blackstone_pressure_plate" )
 public class ItemPolishedBlackstonePressurePlate extends ItemStack< io.gomint.inventory.item.ItemPolishedBlackstonePressurePlate> implements io.gomint.inventory.item.ItemPolishedBlackstonePressurePlate {
 
     @Override

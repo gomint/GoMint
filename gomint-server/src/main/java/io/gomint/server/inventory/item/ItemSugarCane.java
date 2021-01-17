@@ -14,7 +14,7 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:sugar_cane", id = 383 )
+@RegisterInfo( sId = "minecraft:sugar_cane" )
 public class ItemSugarCane extends ItemStack< io.gomint.inventory.item.ItemSugarCane> implements io.gomint.inventory.item.ItemSugarCane {
 
     @Override

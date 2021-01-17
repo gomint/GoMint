@@ -39,7 +39,7 @@ public class StationaryWater extends Liquid<BlockStationaryWater> implements Blo
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 500.0f;
     }
 

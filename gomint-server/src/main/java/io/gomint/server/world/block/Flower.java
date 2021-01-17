@@ -53,7 +53,7 @@ public class Flower extends Block implements BlockFlower {
     }
 
     @Override
-    public float getBlastResistance() {
+    public float blastResistance() {
         return 0.0f;
     }
 

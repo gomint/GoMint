@@ -43,7 +43,7 @@ public class StandingSign extends Sign<BlockStandingSign> implements BlockStandi
     @Override
     public LogType type() {
         for (LogTypeMagic value : LogTypeMagic.values()) {
-            if (value.blockId.equals(this.getBlockId())) {
+            if (value.blockId.equals(this.blockId())) {
                 return LogType.valueOf(value.name());
             }
         }
@@ -54,18 +54,18 @@ public class StandingSign extends Sign<BlockStandingSign> implements BlockStandi
     @Override
     public BlockStandingSign type(LogType logType) {
         LogTypeMagic newState = LogTypeMagic.valueOf(logType.name());
-        this.setBlockId(newState.blockId);
+        this.blockId(newState.blockId);
         return this;
     }
 
     @Override
     public SignDirection direction() {
-        return DIRECTION.getState(this);
+        return DIRECTION.state(this);
     }
 
     @Override
     public BlockStandingSign direction(SignDirection direction) {
-        DIRECTION.setState(this, direction);
+        DIRECTION.state(this, direction);
         return this;
     }
 
