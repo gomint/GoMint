@@ -1,6 +1,9 @@
 package io.gomint.server.world.block;
 
+import io.gomint.inventory.item.ItemBeetroot;
+import io.gomint.inventory.item.ItemSeeds;
 import io.gomint.inventory.item.ItemStack;
+import io.gomint.inventory.item.ItemWheat;
 import io.gomint.server.registry.RegisterInfo;
 import io.gomint.world.block.BlockType;
 
@@ -43,19 +46,19 @@ public class Crops extends Growable {
     public List<ItemStack<?>> drops(ItemStack<?> itemInHand) {
         if (GROWTH.maxed(this)) {
             List<ItemStack<?>> drops = new ArrayList<>() {{
-                add(world.getServer().items().create(296, (short) 0, (byte) 1, null)); // Beetroot
+                add(ItemWheat.create(1)); // Beetroot
             }};
 
             // Randomize seeds
             int amountOfSeeds = SEED_RANDOMIZER.next();
             if (amountOfSeeds > 0) {
-                drops.add(world.getServer().items().create(295, (short) 0, (byte) amountOfSeeds, null)); // Seeds
+                drops.add(ItemSeeds.create(amountOfSeeds)); // Seeds
             }
 
             return drops;
         } else {
             return new ArrayList<>() {{
-                add(world.getServer().items().create(295, (short) 0, (byte) 1, null)); // Seeds
+                add(ItemSeeds.create(1)); // Seeds
             }};
         }
     }

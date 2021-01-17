@@ -11,6 +11,7 @@ import io.gomint.server.util.ClassPath;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -28,7 +29,7 @@ public class StringRegistry<R> {
         private final String id;
         private final int arguments;
 
-        public Lookup(String id, int arguments) {
+        public Lookup(@Nonnull String id, int arguments) {
             this.id = id;
             this.arguments = arguments;
         }

@@ -1,5 +1,7 @@
 package io.gomint.server.world.block;
 
+import io.gomint.inventory.item.ItemPoisonousPotato;
+import io.gomint.inventory.item.ItemPotato;
 import io.gomint.inventory.item.ItemStack;
 import io.gomint.server.registry.RegisterInfo;
 import io.gomint.world.block.BlockPotato;
@@ -45,17 +47,17 @@ public class Potato extends Growable implements BlockPotato {
     public List<ItemStack<?>> drops(ItemStack<?> itemInHand) {
         if (GROWTH.maxed(this)) {
             List<ItemStack<?>> drops = new ArrayList<>() {{
-                add(world.getServer().items().create(392, (short) 0, (byte) (1 + SEED_RANDOMIZER.next().byteValue()), null)); // Potato
+                add(ItemPotato.create(1 + SEED_RANDOMIZER.next().byteValue())); // Potato
             }};
 
             if (ThreadLocalRandom.current().nextDouble() > 0.98) {
-                drops.add(world.getServer().items().create(394, (short) 0, (byte) 1, null)); // Poison potato on top!
+                drops.add(ItemPoisonousPotato.create(1)); // Poison potato on top!
             }
 
             return drops;
         } else {
             return new ArrayList<>() {{
-                add(world.getServer().items().create(392, (short) 0, (byte) 1, null)); // Potato
+                add(ItemPotato.create(1)); // Potato
             }};
         }
     }
