@@ -51,11 +51,11 @@ public class AxisBlockState extends BlockState<Axis, String> {
 
             case NORTH:
             case SOUTH:
-                this.state(newBlock, Axis.X);
+                this.state(newBlock, Axis.Z);
                 break;
 
             default:
-                this.state(newBlock, Axis.Z);
+                this.state(newBlock, Axis.X);
                 break;
         }
     }

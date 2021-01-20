@@ -2,6 +2,8 @@ package io.gomint.server.inventory.item;
 
 import io.gomint.inventory.item.ItemType;
 import io.gomint.server.registry.RegisterInfo;
+import io.gomint.world.block.Block;
+import io.gomint.world.block.BlockLog;
 import io.gomint.world.block.data.Axis;
 import io.gomint.world.block.data.LogType;
 
@@ -81,7 +83,9 @@ public class ItemLog extends ItemStack<io.gomint.inventory.item.ItemLog> impleme
     public boolean stripped() {
         for (LogTypeMagic value : LogTypeMagic.values()) {
             if (value.strippedLogBlockId.equals(this.material()) ||
-                (value.strippedWoodDataValue > -1 && value.woodBlockId.equals(this.material()) && (this.data() & value.strippedWoodDataValue) == value.strippedWoodDataValue) ||
+                (value.strippedWoodDataValue > -1 &&
+                    value.woodBlockId.equals(this.material()) &&
+                    this.data() == value.strippedWoodDataValue) ||
                 this.material().equals(value.strippedWoodBlockId)) {
                 return true;
             }
@@ -103,10 +107,10 @@ public class ItemLog extends ItemStack<io.gomint.inventory.item.ItemLog> impleme
     @Override
     public LogType type() {
         for (LogTypeMagic value : LogTypeMagic.values()) {
-            if ((value.logBlockId.equals(this.material()) && (this.data() & value.dataValue) == value.dataValue) ||
-                (value.strippedLogBlockId.equals(this.material()) && (this.data() & value.dataValue) == value.dataValue) ||
-                (value.woodBlockId.equals(this.material()) && (value.woodDataValue == -1 || (this.data() & value.woodDataValue) == value.woodDataValue)) ||
-                (value.woodBlockId.equals(this.material()) && (value.strippedWoodDataValue == -1 || (this.data() & value.strippedWoodDataValue) == value.strippedWoodDataValue)) ||
+            if ((value.logBlockId.equals(this.material()) && (this.data() & 3) == value.dataValue) ||
+                (value.strippedLogBlockId.equals(this.material()))||
+                (value.woodBlockId.equals(this.material()) && (value.woodDataValue == -1 || this.data() == value.woodDataValue)) ||
+                (value.woodBlockId.equals(this.material()) && (value.strippedWoodDataValue == -1 || this.data() == value.strippedWoodDataValue)) ||
                 this.material().equals(value.strippedWoodBlockId)) {
                 return LogType.valueOf(value.name());
             }
@@ -123,7 +127,8 @@ public class ItemLog extends ItemStack<io.gomint.inventory.item.ItemLog> impleme
     @Override
     public boolean barkOnAllSides() {
         for (LogTypeMagic value : LogTypeMagic.values()) {
-            if (value.woodBlockId.equals(this.material()) || value.strippedWoodBlockId.equals(this.material())) {
+            if (this.material().equals(value.woodBlockId) ||
+                this.material().equals(value.strippedWoodBlockId)) {
                 return true;
             }
         }
@@ -138,11 +143,10 @@ public class ItemLog extends ItemStack<io.gomint.inventory.item.ItemLog> impleme
 
     @Override
     public Axis axis() {
-        if (this.data() == 1 || (this.data() & 4) == 4) {
+        if ((this.stripped() && this.data() == 1) || (this.data() & 5) == 5) {
             return Axis.X;
         }
-
-        if (this.data() == 2 || (this.data() & 5) == 5) {
+        if ((this.stripped() && this.data() == 2) || (this.data() & 6) == 6) {
             return Axis.Z;
         }
 
@@ -181,6 +185,9 @@ public class ItemLog extends ItemStack<io.gomint.inventory.item.ItemLog> impleme
         if (!bark) {
             if (stripped) {
                 switch (axis) {
+                    case Y:
+                        this.data((short) 0);
+                        break;
                     case X:
                         this.data((short) 1);
                         break;
@@ -190,11 +197,13 @@ public class ItemLog extends ItemStack<io.gomint.inventory.item.ItemLog> impleme
                 }
             } else {
                 switch (axis) {
+                    case Y:
+                        break;
                     case X:
-                        this.data((short) (this.data() + 4));
+                        this.data((short) (this.data() + 5));
                         break;
                     case Z:
-                        this.data((short) (this.data() + 5));
+                        this.data((short) (this.data() + 6));
                         break;
                 }
             }
@@ -203,4 +212,12 @@ public class ItemLog extends ItemStack<io.gomint.inventory.item.ItemLog> impleme
         return this;
     }
 
+    @Override
+    public Block block() {
+        BlockLog block = (BlockLog) super.block();
+        block.type(this.type());
+        block.barkOnAllSides(this.barkOnAllSides());
+        block.stripped(this.stripped());
+        return block;
+    }
 }

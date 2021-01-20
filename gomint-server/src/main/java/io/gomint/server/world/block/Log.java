@@ -2,8 +2,10 @@ package io.gomint.server.world.block;
 
 import io.gomint.inventory.item.ItemLog;
 import io.gomint.inventory.item.ItemStack;
+import io.gomint.math.Location;
 import io.gomint.math.Vector;
 import io.gomint.server.entity.Entity;
+import io.gomint.server.entity.EntityLiving;
 import io.gomint.server.entity.EntityPlayer;
 import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.world.block.helper.ToolPresets;
@@ -85,6 +87,13 @@ public class Log extends Block implements BlockLog {
 
     private static final AxisBlockState AXIS = new AxisBlockState(() -> new String[]{"pillar_axis"});
     private static final BooleanBlockState STRIPPED = new BooleanBlockState(() -> new String[]{"stripped_bit"});
+
+    @Override
+    public boolean beforePlacement(EntityLiving<?> entity, ItemStack<?> item, Facing face, Location location) {
+        super.beforePlacement(entity, item, face, location);
+        AXIS.detectFromPlacement(this, entity, item, face);
+        return true;
+    }
 
     @Override
     public long breakTime() {
@@ -244,9 +253,9 @@ public class Log extends Block implements BlockLog {
     @Override
     public List<ItemStack<?>> drops(ItemStack<?> itemInHand) {
         ItemLog item = ItemLog.create(1);
-        item.barkOnAllSides(this.barkOnAllSides());
         item.type(this.type());
         item.stripped(this.stripped());
+        item.barkOnAllSides(this.barkOnAllSides());
         return Collections.singletonList(item);
     }
 
