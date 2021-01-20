@@ -91,8 +91,6 @@ public class Log extends Block implements BlockLog {
     @Override
     public boolean beforePlacement(EntityLiving<?> entity, ItemStack<?> item, Facing face, Location location) {
         super.beforePlacement(entity, item, face, location);
-        STRIPPED.detectFromPlacement(this, entity, item, face);
-        VARIANT.detectFromPlacement(this, entity, item, face);
         AXIS.detectFromPlacement(this, entity, item, face);
         return true;
     }
@@ -255,9 +253,9 @@ public class Log extends Block implements BlockLog {
     @Override
     public List<ItemStack<?>> drops(ItemStack<?> itemInHand) {
         ItemLog item = ItemLog.create(1);
-        item.barkOnAllSides(this.barkOnAllSides());
         item.type(this.type());
         item.stripped(this.stripped());
+        item.barkOnAllSides(this.barkOnAllSides());
         return Collections.singletonList(item);
     }
 
