@@ -101,6 +101,16 @@ mvnw clean install
 mvn clean install
 ```
 
+## 🚀 Developer setup
+You need to run compilation at least once since there is a code generator configured. Once you have done that you can add `io.gomint.server.Bootstrap` as a runner. That runner needs custom options for Netty `--add-opens java.base/java.nio=io.netty.common --add-exports java.base/jdk.internal.misc=io.netty.common`.
+
+If not properly configured you will see this error when the first connection arrives:
+
+```
+[jRaknet events] WARN  io.netty.channel.DefaultChannelPipeline - An exceptionCaught() event was fired, and it reached at the tail of the pipeline. It usually means the last handler in the pipeline did not handle the exception.
+java.lang.UnsupportedOperationException: sun.misc.Unsafe or java.nio.DirectByteBuffer.<init>(long, int) not available
+```
+
 ## 👥 Contributors
 #### 📝 Code Contributors
 This project exists thanks to all the people who contribute. [[Contribute](CONTRIBUTING.md)].
