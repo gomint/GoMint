@@ -3,7 +3,9 @@ package io.gomint.server.inventory.item;
 import io.gomint.inventory.item.ItemType;
 
 import io.gomint.server.registry.RegisterInfo;
-import io.gomint.taglib.NBTTagCompound;
+import io.gomint.world.block.Block;
+import io.gomint.world.block.BlockStainedGlass;
+import io.gomint.world.block.data.BlockColor;
 
 /**
  * @author geNAZt
@@ -17,4 +19,21 @@ public class ItemStainedGlass extends ItemStack< io.gomint.inventory.item.ItemSt
         return ItemType.STAINED_GLASS;
     }
 
+    @Override
+    public BlockColor color() {
+        return BlockColor.values()[this.data()];
+    }
+
+    @Override
+    public io.gomint.inventory.item.ItemStainedGlass color(BlockColor color) {
+        this.data((short) color.ordinal());
+        return this;
+    }
+
+    @Override
+    public Block block() {
+        BlockStainedGlass block = (BlockStainedGlass) super.block();
+        block.color(this.color());
+        return block;
+    }
 }
