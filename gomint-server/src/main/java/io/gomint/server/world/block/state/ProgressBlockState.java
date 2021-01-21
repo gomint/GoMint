@@ -9,6 +9,7 @@ package io.gomint.server.world.block.state;
 
 import io.gomint.inventory.item.ItemStack;
 import io.gomint.math.MathUtils;
+import io.gomint.math.Vector;
 import io.gomint.server.entity.EntityLiving;
 import io.gomint.server.world.block.Block;
 import io.gomint.world.block.data.Facing;
@@ -49,7 +50,7 @@ public class ProgressBlockState extends BlockState<Float, Integer> {
     }
 
     @Override
-    public void detectFromPlacement(Block newBlock, EntityLiving<?> player, ItemStack<?> placedItem, Facing face) {
+    public void detectFromPlacement(Block newBlock, EntityLiving<?> player, ItemStack<?> placedItem, Facing face, Vector clickVector) {
         this.state(newBlock, 0f);
     }
 

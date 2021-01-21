@@ -3,6 +3,7 @@ package io.gomint.server.world.block;
 import io.gomint.inventory.item.ItemStack;
 import io.gomint.math.AxisAlignedBB;
 import io.gomint.math.Location;
+import io.gomint.math.Vector;
 import io.gomint.server.entity.EntityLiving;
 import io.gomint.server.world.block.state.BooleanBlockState;
 import io.gomint.server.world.block.state.CrossDirectionBlockState;
@@ -41,12 +42,12 @@ public abstract class Stair<B> extends Block implements BlockStair<B> {
     }
 
     @Override
-    public boolean beforePlacement(EntityLiving<?> entity, ItemStack<?> item, Facing face, Location location) {
-        DIRECTION.detectFromPlacement(this, entity, item, face);
+    public boolean beforePlacement(EntityLiving<?> entity, ItemStack<?> item, Facing face, Location location, Vector clickVector) {
+        DIRECTION.detectFromPlacement(this, entity, item, face, clickVector);
 
         TOP.state(this, face == Facing.DOWN);
 
-        return super.beforePlacement(entity, item, face, location);
+        return super.beforePlacement(entity, item, face, location, clickVector);
     }
 
     @Override

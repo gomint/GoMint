@@ -2,6 +2,7 @@ package io.gomint.server.world.block;
 
 import io.gomint.inventory.item.ItemStack;
 import io.gomint.math.Location;
+import io.gomint.math.Vector;
 import io.gomint.server.entity.EntityLiving;
 import io.gomint.server.entity.tileentity.CommandBlockTileEntity;
 import io.gomint.server.entity.tileentity.TileEntity;
@@ -24,10 +25,10 @@ public class CommandBlock extends ContainerBlock<BlockCommandBlock> implements B
     private static final BlockfaceBlockState FACING = new BlockfaceBlockState( () -> new String[]{"facing_direction"});
 
     @Override
-    public boolean beforePlacement(EntityLiving<?> entity, ItemStack<?> item, Facing face, Location location) {
-        FACING.detectFromPlacement(this, entity, item, face);
+    public boolean beforePlacement(EntityLiving<?> entity, ItemStack<?> item, Facing face, Location location, Vector clickVector) {
+        FACING.detectFromPlacement(this, entity, item, face, clickVector);
         CONDITIONAL.state(this, false);
-        return super.beforePlacement(entity, item, face, location);
+        return super.beforePlacement(entity, item, face, location, clickVector);
     }
 
     @Override

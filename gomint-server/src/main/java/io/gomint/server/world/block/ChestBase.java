@@ -61,9 +61,9 @@ public abstract class ChestBase<B> extends ContainerBlock<B> {
     }
 
     @Override
-    public boolean beforePlacement(EntityLiving<?> entity, ItemStack<?> item, Facing face, Location location) {
-        boolean ok = super.beforePlacement(entity, item, face, location);
-        DIRECTION.detectFromPlacement(this, entity, item, face);
+    public boolean beforePlacement(EntityLiving<?> entity, ItemStack<?> item, Facing face, Location location, Vector clickVector) {
+        boolean ok = super.beforePlacement(entity, item, face, location, clickVector);
+        DIRECTION.detectFromPlacement(this, entity, item, face, clickVector);
         return ok;
     }
 

@@ -431,9 +431,9 @@ public abstract class Liquid<B> extends Block implements BlockLiquid<B> {
     }
 
     @Override
-    public boolean beforePlacement(EntityLiving<?> entity, ItemStack<?> item, Facing face, Location location) {
-        LIQUID_DEPTH.detectFromPlacement(this, entity, item, face);
-        return super.beforePlacement(entity, item, face, location);
+    public boolean beforePlacement(EntityLiving<?> entity, ItemStack<?> item, Facing face, Location location, Vector clickVector) {
+        LIQUID_DEPTH.detectFromPlacement(this, entity, item, face, clickVector);
+        return super.beforePlacement(entity, item, face, location, clickVector);
     }
 
 }

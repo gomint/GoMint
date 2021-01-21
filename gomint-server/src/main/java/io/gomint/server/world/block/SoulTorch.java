@@ -3,6 +3,7 @@ package io.gomint.server.world.block;
 import io.gomint.inventory.item.ItemStack;
 import io.gomint.math.AxisAlignedBB;
 import io.gomint.math.Location;
+import io.gomint.math.Vector;
 import io.gomint.server.entity.EntityLiving;
 import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.world.block.state.BlockfaceBlockState;
@@ -117,7 +118,7 @@ public class SoulTorch extends Block implements BlockSoulTorch {
     }
 
     @Override
-    public boolean beforePlacement(EntityLiving<?> entity, ItemStack<?> item, Facing face, Location location) {
+    public boolean beforePlacement(EntityLiving<?> entity, ItemStack<?> item, Facing face, Location location, Vector clickVector) {
         Facing[] toCheck = new Facing[]{
             Facing.DOWN,
             Facing.SOUTH,
@@ -139,7 +140,7 @@ public class SoulTorch extends Block implements BlockSoulTorch {
             return false;
         }
 
-        return super.beforePlacement(entity, item, face, location);
+        return super.beforePlacement(entity, item, face, location, clickVector);
     }
 
 }
