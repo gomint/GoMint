@@ -221,6 +221,7 @@ public class Client implements ConnectionWithState {
         }
     }
 
+    @Override
     public void send(Packet packet) {
         if (this.connection == null) {
             return;

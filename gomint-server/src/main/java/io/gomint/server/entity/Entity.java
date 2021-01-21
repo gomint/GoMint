@@ -288,6 +288,7 @@ public abstract class Entity<E extends io.gomint.entity.Entity<E>> implements io
     /**
      * Despawns this entity if it is currently spawned into any world.
      */
+    @Override
     public void despawn() {
         this.dead = true;
     }
@@ -778,6 +779,7 @@ public abstract class Entity<E extends io.gomint.entity.Entity<E>> implements io
      *
      * @return The position of the entity on the x axis
      */
+    @Override
     public float positionX() {
         return this.transform.positionX();
     }
@@ -787,6 +789,7 @@ public abstract class Entity<E extends io.gomint.entity.Entity<E>> implements io
      *
      * @return The position of the entity on the y axis
      */
+    @Override
     public float positionY() {
         return this.transform.positionY();
     }
@@ -796,6 +799,7 @@ public abstract class Entity<E extends io.gomint.entity.Entity<E>> implements io
      *
      * @return The position of the entity on the z axis
      */
+    @Override
     public float positionZ() {
         return this.transform.positionZ();
     }
@@ -825,6 +829,7 @@ public abstract class Entity<E extends io.gomint.entity.Entity<E>> implements io
      *
      * @return The yaw angle of the entity's body
      */
+    @Override
     public float yaw() {
         return this.transform.yaw();
     }
@@ -834,6 +839,7 @@ public abstract class Entity<E extends io.gomint.entity.Entity<E>> implements io
      *
      * @param yaw The yaw angle to set
      */
+    @Override
     public E yaw(float yaw ) {
         this.transform.yaw( yaw );
         return (E) this;
@@ -844,6 +850,7 @@ public abstract class Entity<E extends io.gomint.entity.Entity<E>> implements io
      *
      * @return The yaw angle of the entity's head
      */
+    @Override
     public float headYaw() {
         return this.transform.headYaw();
     }
@@ -853,6 +860,7 @@ public abstract class Entity<E extends io.gomint.entity.Entity<E>> implements io
      *
      * @param headYaw The yaw angle to set
      */
+    @Override
     public E headYaw(float headYaw ) {
         this.transform.headYaw( headYaw );
         return (E) this;
@@ -863,6 +871,7 @@ public abstract class Entity<E extends io.gomint.entity.Entity<E>> implements io
      *
      * @return The pitch angle of the entity's head
      */
+    @Override
     public float pitch() {
         return this.transform.pitch();
     }
@@ -872,6 +881,7 @@ public abstract class Entity<E extends io.gomint.entity.Entity<E>> implements io
      *
      * @param pitch The pitch angle to set.
      */
+    @Override
     public E pitch(float pitch ) {
         this.transform.pitch( pitch );
         return (E) this;
@@ -985,6 +995,7 @@ public abstract class Entity<E extends io.gomint.entity.Entity<E>> implements io
      *
      * @return the current bounding box of this entity
      */
+    @Override
     public AxisAlignedBB boundingBox() {
         return this.boundingBox;
     }
@@ -1200,6 +1211,7 @@ public abstract class Entity<E extends io.gomint.entity.Entity<E>> implements io
         return !damageEvent.cancelled();
     }
 
+    @Override
     public E interact( io.gomint.entity.EntityPlayer player, Vector clickVector ) {
         return (E) this;
     }

@@ -21,6 +21,7 @@ public class EnumConverterFromSoundMagicNumbers implements EnumConverter {
         this.values = io.gomint.server.world.SoundMagicNumbers.values();
     }
 
+    @Override
     public Enum convert( Enum value ) {
         int id = value.ordinal();
         if ( id >= this.values.length ) {

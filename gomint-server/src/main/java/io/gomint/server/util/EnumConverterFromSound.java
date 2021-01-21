@@ -15,6 +15,7 @@ import io.gomint.world.Sound;
  */
 public class EnumConverterFromSound implements EnumConverter {
 
+    @Override
     public Enum convert( Enum value ) {
         int id = value.ordinal();
         switch ( id ) {

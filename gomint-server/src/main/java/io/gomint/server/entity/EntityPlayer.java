@@ -1442,6 +1442,7 @@ public class EntityPlayer extends EntityHuman<io.gomint.entity.EntityPlayer> imp
         return this;
     }
 
+    @Override
     protected boolean shouldTickHunger() {
         return this.gamemode == Gamemode.SURVIVAL;
     }
@@ -1742,10 +1743,12 @@ public class EntityPlayer extends EntityHuman<io.gomint.entity.EntityPlayer> imp
         return this.connection.knowsChunk(CoordinateUtils.toLong(posX, posZ));
     }
 
+    @Override
     public io.gomint.permission.PermissionManager permissionManager() {
         return permissionManager;
     }
 
+    @Override
     public EntityPlayer permissionManager(io.gomint.permission.PermissionManager permissionManager) {
         Class<? extends Plugin> plugin = CallerDetectorUtil.getCallerPlugin();
         LOGGER.warn("Plugin {} swapped out permission manager with {}", plugin.getName(), permissionManager.getClass().getName());

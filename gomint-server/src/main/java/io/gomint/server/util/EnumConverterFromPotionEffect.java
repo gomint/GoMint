@@ -13,6 +13,7 @@ package io.gomint.server.util;
  */
 public class EnumConverterFromPotionEffect implements EnumConverter {
 
+    @Override
     public Enum convert( Enum value ) {
         int id = value.ordinal();
         switch ( id ) {

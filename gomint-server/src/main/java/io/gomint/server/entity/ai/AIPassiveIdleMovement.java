@@ -41,6 +41,7 @@ public class AIPassiveIdleMovement extends AIMovementAndLookingState {
      *
      * @return The generated goal
      */
+    @Override
     protected Location generateGoal() {
         // Generates a new random goal inside a 5 block circle around the entity:
         double t = 2 * Math.PI * ThreadLocalRandom.current().nextDouble();

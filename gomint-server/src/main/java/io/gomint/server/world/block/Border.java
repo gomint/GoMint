@@ -36,6 +36,7 @@ public class Border extends Block implements BlockBorder {
         return BlockType.BORDER;
     }
 
+    @Override
     public boolean canBeBrokenWithHand() {
         return false;
     }
