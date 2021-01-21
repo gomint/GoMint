@@ -11,4 +11,9 @@ import io.gomint.plugin.Version;
 @Startup(StartupPriority.STARTUP)
 public class PluginEntry extends Plugin {
 
+    @Override
+    public void onInstall() {
+
+    }
+    
 }
