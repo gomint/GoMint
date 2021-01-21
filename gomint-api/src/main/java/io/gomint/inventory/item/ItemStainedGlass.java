@@ -1,7 +1,7 @@
 package io.gomint.inventory.item;
 
 import io.gomint.GoMint;
-import io.gomint.world.block.data.BlockColor;
+import io.gomint.world.block.data.GlassColor;
 
 /**
  * @author geNAZt
@@ -26,12 +26,12 @@ public interface ItemStainedGlass extends ItemStack<ItemStainedGlass> {
      *
      * @return color of this stained glass
      */
-    BlockColor color();
+    GlassColor color();
 
     /**
      * Set the color of this stained glass
      *
      * @param color which this stained glass should have
      */
-    ItemStainedGlass color(BlockColor color);
+    ItemStainedGlass color(GlassColor color);
 }

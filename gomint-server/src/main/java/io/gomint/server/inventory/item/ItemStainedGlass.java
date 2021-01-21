@@ -5,7 +5,7 @@ import io.gomint.inventory.item.ItemType;
 import io.gomint.server.registry.RegisterInfo;
 import io.gomint.world.block.Block;
 import io.gomint.world.block.BlockStainedGlass;
-import io.gomint.world.block.data.BlockColor;
+import io.gomint.world.block.data.GlassColor;
 
 /**
  * @author geNAZt
@@ -20,12 +20,12 @@ public class ItemStainedGlass extends ItemStack< io.gomint.inventory.item.ItemSt
     }
 
     @Override
-    public BlockColor color() {
-        return BlockColor.values()[this.data()];
+    public GlassColor color() {
+        return GlassColor.values()[this.data()];
     }
 
     @Override
-    public io.gomint.inventory.item.ItemStainedGlass color(BlockColor color) {
+    public io.gomint.inventory.item.ItemStainedGlass color(GlassColor color) {
         this.data((short) color.ordinal());
         return this;
     }
