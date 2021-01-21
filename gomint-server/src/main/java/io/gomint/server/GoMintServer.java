@@ -954,7 +954,7 @@ public class GoMintServer implements GoMint, InventoryHolder {
         try {
             this.serverConfig.init(new File("server.yml"));
         } catch (InvalidConfigurationException e) {
-            LOGGER.error("server.cfg is corrupted: ", e);
+            LOGGER.error("server.yml is corrupted: ", e);
             System.exit(-1);
         }
 
