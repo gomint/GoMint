@@ -12,10 +12,13 @@ import io.gomint.world.block.data.GlassColor;
  * @version 1.0
  */
 @RegisterInfo(sId = "minecraft:stained_glass")
+@RegisterInfo(sId = "minecraft:glass")
 public class ItemStainedGlass extends ItemStack< io.gomint.inventory.item.ItemStainedGlass> implements io.gomint.inventory.item.ItemStainedGlass {
 
     @Override
     public ItemType itemType() {
+        if (this.color()==GlassColor.TRANSPARENT)
+            return ItemType.GLASS;
         return ItemType.STAINED_GLASS;
     }
 

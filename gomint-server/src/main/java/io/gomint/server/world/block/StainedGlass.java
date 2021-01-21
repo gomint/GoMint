@@ -1,6 +1,7 @@
 package io.gomint.server.world.block;
 
 import io.gomint.inventory.item.ItemStack;
+import io.gomint.inventory.item.ItemType;
 import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.world.block.state.EnumBlockState;
 import io.gomint.world.block.BlockStainedGlass;
@@ -15,14 +16,15 @@ import java.util.List;
  * @version 1.0
  */
 @RegisterInfo(sId = "minecraft:stained_glass")
+@RegisterInfo(sId = "minecraft:glass")
 public class StainedGlass extends Block implements BlockStainedGlass {
 
     private static final EnumBlockState<GlassColor, String> COLOR = new EnumBlockState<>(v -> new String[]{"color"}, GlassColor.values(), e -> e.name().toLowerCase(), v -> GlassColor.valueOf(v.toUpperCase()));
 
-    @Override
-    public String blockId() {
-        return "minecraft:stained_glass";
-    }
+//    @Override
+//    public String blockId() {
+//        return "minecraft:stained_glass";
+//    }
 
     @Override
     public long breakTime() {
@@ -51,6 +53,8 @@ public class StainedGlass extends Block implements BlockStainedGlass {
 
     @Override
     public BlockType blockType() {
+        if (this.color()==GlassColor.TRANSPARENT)
+            return BlockType.GLASS;
         return BlockType.STAINED_GLASS;
     }
 
