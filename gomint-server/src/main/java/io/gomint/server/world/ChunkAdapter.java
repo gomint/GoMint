@@ -126,6 +126,7 @@ public class ChunkAdapter implements Chunk {
         return chunkSlices;
     }
 
+    @Override
     public WorldAdapter world() {
         return world;
     }
@@ -344,6 +345,7 @@ public class ChunkAdapter implements Chunk {
      *
      * @return The chunk's x-coordinate
      */
+    @Override
     public int x() {
         return this.x;
     }
@@ -353,6 +355,7 @@ public class ChunkAdapter implements Chunk {
      *
      * @return The chunk's z-coordinate
      */
+    @Override
     public int z() {
         return this.z;
     }

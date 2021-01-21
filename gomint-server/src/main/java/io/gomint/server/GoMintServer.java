@@ -668,6 +668,7 @@ public class GoMintServer implements GoMint, InventoryHolder {
         return true;
     }
 
+    @Override
     public GoMint changeDefaultWorld(World world) {
         if (world == null) {
             LOGGER.warn("Can't set default world to null");
@@ -678,15 +679,18 @@ public class GoMintServer implements GoMint, InventoryHolder {
         return this;
     }
 
+    @Override
     public SimpleChunkGeneratorRegistry chunkGeneratorRegistry() {
         return chunkGeneratorRegistry;
     }
 
+    @Override
     public GoMint motd(String motd) {
         this.networkManager.setMotd(motd);
         return this;
     }
 
+    @Override
     public int currentPlayerCount() {
         return this.playersByUUID.size();
     }
@@ -746,6 +750,7 @@ public class GoMintServer implements GoMint, InventoryHolder {
         return this.worldManager.createWorld(name, options);
     }
 
+    @Override
     public WorldAdapter defaultWorld() {
         return this.worldManager.getWorld(this.defaultWorld);
     }
@@ -756,6 +761,7 @@ public class GoMintServer implements GoMint, InventoryHolder {
         return this;
     }
 
+    @Override
     public PlayerSkin emptyPlayerSkin() {
         return io.gomint.server.player.PlayerSkin.emptySkin();
     }
@@ -778,6 +784,7 @@ public class GoMintServer implements GoMint, InventoryHolder {
         return this.playersByUUID.get(target);
     }
 
+    @Override
     public GroupManager groupManager() {
         return this.permissionGroupManager;
     }
@@ -787,24 +794,29 @@ public class GoMintServer implements GoMint, InventoryHolder {
         return GoMintServer.mainThread == Thread.currentThread().getId();
     }
 
+    @Override
     public int maxPlayerCount() {
         return this.serverConfig.maxPlayers();
     }
 
+    @Override
     public String motd() {
         return this.networkManager.getMotd();
     }
 
+    @Override
     public Collection<EntityPlayer> onlinePlayers() {
         var playerList = new ArrayList<EntityPlayer>();
         worldManager.getWorlds().forEach(world -> playerList.addAll(world.onlinePlayers()));
         return playerList;
     }
 
+    @Override
     public SimplePluginManager pluginManager() {
         return pluginManager;
     }
 
+    @Override
     public int port() {
         return this.networkManager.getPort();
     }
@@ -815,10 +827,12 @@ public class GoMintServer implements GoMint, InventoryHolder {
         return this;
     }
 
+    @Override
     public double tps() {
         return this.tps;
     }
 
+    @Override
     public String version() {
         return "GoMint 1.0.0 (MC:BE "
             + Protocol.MINECRAFT_PE_NETWORK_VERSION
@@ -828,6 +842,7 @@ public class GoMintServer implements GoMint, InventoryHolder {
             + this.gitHash;
     }
 
+    @Override
     public World world(String name) {
         World world = this.worldManager.getWorld(name);
         if (world == null) {
@@ -846,6 +861,7 @@ public class GoMintServer implements GoMint, InventoryHolder {
         return world;
     }
 
+    @Override
     public Collection<World> worlds() {
         return Collections.unmodifiableCollection(this.worldManager.getWorlds());
     }

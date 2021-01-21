@@ -674,6 +674,7 @@ public abstract class Block implements io.gomint.world.block.Block {
      * @param itemInHand which was used to destroy this blockId
      * @return a list of drops
      */
+    @Override
     public List<ItemStack<?>> drops(ItemStack<?> itemInHand) {
         // TODO: New system
         ItemStack<?> drop = this.items.create(this.identifier.blockId(), (short) 0, (byte) 1, null);
@@ -713,6 +714,7 @@ public abstract class Block implements io.gomint.world.block.Block {
         return pushedByBlocks;
     }
 
+    @Override
     public boolean intersectsWith(AxisAlignedBB boundingBox) {
         List<AxisAlignedBB> bbs = boundingBoxes();
         if (bbs == null) {
