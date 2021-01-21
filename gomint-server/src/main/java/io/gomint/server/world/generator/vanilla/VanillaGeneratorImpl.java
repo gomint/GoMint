@@ -291,8 +291,8 @@ public class VanillaGeneratorImpl extends VanillaGenerator {
     private int getRandomPort() {
         try(DatagramSocket datagramSocket = new DatagramSocket(0)) {
             return datagramSocket.getLocalPort();
-        } catch(SocketException ex) {
-            throw new RuntimeException("Could not open socket to find next free port", ex);
+        } catch(SocketException e) {
+            throw new RuntimeException("Could not open socket to find next free port", e);
         }
     }
 
