@@ -26,5 +26,4 @@ public interface ItemAcaciaTrapdoor extends ItemStack<ItemAcaciaTrapdoor>, ItemB
         return GoMint.instance().createItemStack( ItemAcaciaTrapdoor.class, amount );
     }
 
-
 }
