@@ -215,6 +215,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
      *
      * @return collection of all players online on this world
      */
+    @Override
     public Collection<EntityPlayer> onlinePlayers() {
         return Collections.unmodifiableSet(this.players.keySet());
     }

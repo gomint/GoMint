@@ -93,7 +93,7 @@ public class PluginClassloader extends URLClassLoader {
     private Class<?> loadClass0(String name, boolean resolve, boolean checkOther) throws ClassNotFoundException {
         try {
             return super.loadClass(name, resolve);
-        } catch (ClassNotFoundException ex) {
+        } catch (ClassNotFoundException e) {
             // Ignored
         }
 
@@ -102,7 +102,7 @@ public class PluginClassloader extends URLClassLoader {
                 if (loader != this) {
                     try {
                         return loader.loadClass0(name, resolve, false);
-                    } catch (ClassNotFoundException ex) {
+                    } catch (ClassNotFoundException e) {
                         // Ignored
                     }
                 }
@@ -110,7 +110,7 @@ public class PluginClassloader extends URLClassLoader {
 
             try {
                 return applicationClassloader.loadClass(name);
-            } catch (ClassNotFoundException ex) {
+            } catch (ClassNotFoundException e) {
                 // Ignored
             }
         }
