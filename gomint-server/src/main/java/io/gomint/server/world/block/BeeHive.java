@@ -2,6 +2,7 @@ package io.gomint.server.world.block;
 
 import io.gomint.inventory.item.ItemStack;
 import io.gomint.math.Location;
+import io.gomint.math.Vector;
 import io.gomint.server.entity.EntityLiving;
 import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.world.block.helper.ToolPresets;
@@ -48,10 +49,10 @@ public class BeeHive extends Block implements BlockBeeHive {
     }
 
     @Override
-    public boolean beforePlacement(EntityLiving<?> entity, ItemStack<?> item, Facing face, Location location) {
-        FACING.detectFromPlacement(this, entity, item, face);
-        HONEY_LEVEL.detectFromPlacement(this, entity, item, face);
-        return super.beforePlacement(entity, item, face, location);
+    public boolean beforePlacement(EntityLiving<?> entity, ItemStack<?> item, Facing face, Location location, Vector clickVector) {
+        FACING.detectFromPlacement(this, entity, item, face, clickVector);
+        HONEY_LEVEL.detectFromPlacement(this, entity, item, face, clickVector);
+        return super.beforePlacement(entity, item, face, location, clickVector);
     }
 
     @Override

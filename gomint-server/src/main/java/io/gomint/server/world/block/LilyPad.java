@@ -2,6 +2,7 @@ package io.gomint.server.world.block;
 
 import io.gomint.inventory.item.ItemStack;
 import io.gomint.math.Location;
+import io.gomint.math.Vector;
 import io.gomint.server.entity.EntityLiving;
 import io.gomint.server.registry.RegisterInfo;
 import io.gomint.world.block.BlockLilyPad;
@@ -51,7 +52,7 @@ public class LilyPad extends Block implements BlockLilyPad {
     }
 
     @Override
-    public boolean beforePlacement(EntityLiving<?> entity, ItemStack<?> item, Facing face, Location location) {
+    public boolean beforePlacement(EntityLiving<?> entity, ItemStack<?> item, Facing face, Location location, Vector clickVector) {
         Block block = (Block) location.world().blockAt(location.toBlockPosition()).side(Facing.UP);
         return block instanceof StationaryWater;
     }

@@ -15,6 +15,7 @@ import io.gomint.server.entity.Entity;
 import io.gomint.server.entity.EntityLiving;
 import io.gomint.server.world.block.state.BooleanBlockState;
 import io.gomint.server.world.block.state.DirectionBlockState;
+import io.gomint.server.world.block.state.HalfBlockState;
 import io.gomint.world.block.BlockTrapdoor;
 import io.gomint.world.block.data.Direction;
 import io.gomint.world.block.data.Facing;
@@ -24,9 +25,44 @@ import java.util.List;
 
 public abstract class Trapdoor<B> extends Block implements BlockTrapdoor<B> {
 
-    private static final DirectionBlockState DIRECTION = new DirectionBlockState( () -> new String[]{"direction"});
-    private static final BooleanBlockState TOP = new BooleanBlockState( () -> new String[]{"upside_down_bit"});
-    private static final BooleanBlockState OPEN = new BooleanBlockState( () -> new String[]{"open_bit"});
+    private static final DirectionBlockState DIRECTION = new DirectionBlockState(() -> new String[]{"direction"}) {
+
+        @Override
+        protected void calculateValueFromState(Block block, Direction state) {
+            switch (state) {
+                case NORTH:
+                    this.value(block, 0);
+                    break;
+                case EAST:
+                    this.value(block, 2);
+                    break;
+                case WEST:
+                    this.value(block, 3);
+                    break;
+                case SOUTH:
+                default:
+                    this.value(block, 1);
+                    break;
+            }
+        }
+
+        @Override
+        public Direction state(Block block) {
+            switch (this.value(block)) {
+                case 3:
+                default:
+                    return Direction.WEST;
+                case 0:
+                    return Direction.NORTH;
+                case 1:
+                    return Direction.SOUTH;
+                case 2:
+                    return Direction.EAST;
+            }
+        }
+    };
+    private static final BooleanBlockState TOP = new HalfBlockState(() -> new String[]{"upside_down_bit"});
+    private static final BooleanBlockState OPEN = new BooleanBlockState(() -> new String[]{"open_bit"});
 
     @Override
     public boolean open() {
@@ -46,9 +82,11 @@ public abstract class Trapdoor<B> extends Block implements BlockTrapdoor<B> {
     }
 
     @Override
-    public boolean beforePlacement(EntityLiving<?> entity, ItemStack<?> item, Facing face, Location location) {
-        DIRECTION.detectFromPlacement(this, entity, item, face);
-        return super.beforePlacement(entity, item, face, location);
+    public boolean beforePlacement(EntityLiving<?> entity, ItemStack<?> item, Facing face, Location location, Vector clickVector) {
+        DIRECTION.detectFromPlacement(this, entity, item, face, clickVector);
+        OPEN.detectFromPlacement(this, entity, item, face, clickVector);
+        TOP.detectFromPlacement(this,entity,item,face,clickVector);
+        return super.beforePlacement(entity, item, face, location, clickVector);
     }
 
     @Override

@@ -253,7 +253,7 @@ public abstract class Block implements io.gomint.world.block.Block {
     /**
      * Create a tile entity at the blocks location
      *
-     * @param compound which has been prebuilt by {@link #beforePlacement(EntityLiving, ItemStack, Facing, Location)}
+     * @param compound which has been prebuilt by {@link #beforePlacement(EntityLiving, ItemStack, Facing, Location, Vector)}
      * @return new tile entity or null if there is none
      */
     TileEntity createTileEntity(NBTTagCompound compound) {
@@ -542,9 +542,10 @@ public abstract class Block implements io.gomint.world.block.Block {
      * @param item     which has been used to generate this block
      * @param face     against which this block has been placed
      * @param location of the placement
+     * @param clickVector click position
      * @return true when placement can happen, false otherwise
      */
-    public boolean beforePlacement(EntityLiving<?> entity, ItemStack<?> item, Facing face, Location location) {
+    public boolean beforePlacement(EntityLiving<?> entity, ItemStack<?> item, Facing face, Location location, Vector clickVector) {
         return true;
     }
 

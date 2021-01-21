@@ -3,6 +3,7 @@ package io.gomint.server.world.block;
 import io.gomint.inventory.item.ItemSapling;
 import io.gomint.inventory.item.ItemStack;
 import io.gomint.math.Location;
+import io.gomint.math.Vector;
 import io.gomint.server.entity.EntityLiving;
 import io.gomint.server.world.block.state.BooleanBlockState;
 import io.gomint.server.world.block.state.EnumBlockState;
@@ -58,7 +59,7 @@ public class Sapling extends Block implements BlockSapling {
     private static final BooleanBlockState AGE = new BooleanBlockState(() -> new String[]{"age_bit"});
 
     @Override
-    public boolean beforePlacement(EntityLiving<?> entity, ItemStack<?> item, Facing face, Location location) {
+    public boolean beforePlacement(EntityLiving<?> entity, ItemStack<?> item, Facing face, Location location, Vector clickVector) {
         AGE.state(this, false);
 
         Block down = this.side(Facing.DOWN);

@@ -59,9 +59,9 @@ public class Cake extends Block implements BlockCake {
     }
 
     @Override
-    public boolean beforePlacement(EntityLiving<?> entity, ItemStack<?> item, Facing face, Location location) {
-        CAKE_EATEN.detectFromPlacement(this, entity, item, face);
-        return super.beforePlacement(entity, item, face, location);
+    public boolean beforePlacement(EntityLiving<?> entity, ItemStack<?> item, Facing face, Location location, Vector clickVector) {
+        CAKE_EATEN.detectFromPlacement(this, entity, item, face, clickVector);
+        return super.beforePlacement(entity, item, face, location, clickVector);
     }
 
     @Override

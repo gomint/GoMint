@@ -4,6 +4,7 @@ import io.gomint.inventory.item.ItemSkull;
 import io.gomint.inventory.item.ItemStack;
 import io.gomint.math.AxisAlignedBB;
 import io.gomint.math.Location;
+import io.gomint.math.Vector;
 import io.gomint.server.entity.EntityLiving;
 import io.gomint.server.entity.tileentity.SkullTileEntity;
 import io.gomint.server.entity.tileentity.TileEntity;
@@ -61,8 +62,8 @@ public class Skull extends Block implements BlockSkull {
     }
 
     @Override
-    public boolean beforePlacement(EntityLiving<?> entity, ItemStack<?> item, Facing face, Location location) {
-        DIRECTION.detectFromPlacement(this, entity, item, face);
+    public boolean beforePlacement(EntityLiving<?> entity, ItemStack<?> item, Facing face, Location location, Vector clickVector) {
+        DIRECTION.detectFromPlacement(this, entity, item, face, clickVector);
 
         // We skip downwards facing
         if (face == Facing.DOWN || face == Facing.UP) {
@@ -71,7 +72,7 @@ public class Skull extends Block implements BlockSkull {
 
         SkullTileEntity tileEntity = this.tileEntity();
         tileEntity.setRotation(entity.yaw());
-        return super.beforePlacement(entity, item, face, location);
+        return super.beforePlacement(entity, item, face, location, clickVector);
     }
 
     @Override
