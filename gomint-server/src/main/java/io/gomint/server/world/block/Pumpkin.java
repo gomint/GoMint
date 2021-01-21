@@ -2,6 +2,7 @@ package io.gomint.server.world.block;
 
 import io.gomint.inventory.item.ItemStack;
 import io.gomint.math.Location;
+import io.gomint.math.Vector;
 import io.gomint.server.entity.EntityLiving;
 import io.gomint.server.world.block.state.DirectionBlockState;
 import io.gomint.world.block.BlockPumpkin;
@@ -23,9 +24,9 @@ public class Pumpkin extends Block implements BlockPumpkin {
     private static final DirectionBlockState DIRECTION = new DirectionBlockState(() -> new String[]{"direction"}); // Rotation is always clockwise
 
     @Override
-    public boolean beforePlacement(EntityLiving<?> entity, ItemStack<?> item, Facing face, Location location) {
-        super.beforePlacement(entity, item, face, location);
-        DIRECTION.detectFromPlacement(this, entity, item, face);
+    public boolean beforePlacement(EntityLiving<?> entity, ItemStack<?> item, Facing face, Location location, Vector clickVector) {
+        super.beforePlacement(entity, item, face, location, clickVector);
+        DIRECTION.detectFromPlacement(this, entity, item, face, clickVector);
         return true;
     }
 

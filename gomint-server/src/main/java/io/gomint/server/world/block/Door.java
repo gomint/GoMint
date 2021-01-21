@@ -67,10 +67,10 @@ public abstract class Door<B extends BlockDoor<B>> extends Block implements Bloc
     }
 
     @Override
-    public boolean beforePlacement(EntityLiving<?> entity, ItemStack<?> item, Facing face, Location location) {
+    public boolean beforePlacement(EntityLiving<?> entity, ItemStack<?> item, Facing face, Location location, Vector clickVector) {
         Block above = this.world.blockAt(this.position.add(BlockPosition.UP));
         if (above.canBeReplaced(item)) {
-            DIRECTION.detectFromPlacement(this, entity, item, face);
+            DIRECTION.detectFromPlacement(this, entity, item, face, clickVector);
             TOP.state(this, false);
             OPEN.state(this, false);
             return true;

@@ -38,8 +38,8 @@ public abstract class Button<B> extends Block implements BlockButton<B> {
     }
 
     @Override
-    public boolean beforePlacement(EntityLiving<?> entity, ItemStack<?> item, Facing face, Location location) {
-        FACING.detectFromPlacement(this, entity, item, face);
+    public boolean beforePlacement(EntityLiving<?> entity, ItemStack<?> item, Facing face, Location location, Vector clickVector) {
+        FACING.detectFromPlacement(this, entity, item, face, clickVector);
         return true;
     }
 

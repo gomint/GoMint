@@ -8,7 +8,11 @@
 package io.gomint.server.inventory.item;
 
 import io.gomint.inventory.item.ItemType;
+import io.gomint.math.Vector;
+import io.gomint.server.entity.EntityPlayer;
 import io.gomint.server.registry.RegisterInfo;
+import io.gomint.world.block.Block;
+import io.gomint.world.block.data.Facing;
 
 import java.time.Duration;
 

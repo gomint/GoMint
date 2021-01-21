@@ -89,9 +89,9 @@ public class Log extends Block implements BlockLog {
     private static final BooleanBlockState STRIPPED = new BooleanBlockState(() -> new String[]{"stripped_bit"});
 
     @Override
-    public boolean beforePlacement(EntityLiving<?> entity, ItemStack<?> item, Facing face, Location location) {
-        super.beforePlacement(entity, item, face, location);
-        AXIS.detectFromPlacement(this, entity, item, face);
+    public boolean beforePlacement(EntityLiving<?> entity, ItemStack<?> item, Facing face, Location location, Vector clickVector) {
+        super.beforePlacement(entity, item, face, location, clickVector);
+        AXIS.detectFromPlacement(this, entity, item, face, clickVector);
         return true;
     }
 

@@ -40,9 +40,9 @@ public class TNT extends Block implements BlockTNT {
     }
 
     @Override
-    public boolean beforePlacement(EntityLiving<?> entity, ItemStack<?> item, Facing face, Location location) {
+    public boolean beforePlacement(EntityLiving<?> entity, ItemStack<?> item, Facing face, Location location, Vector clickVector) {
         EXPLODE.state(this, false); // Don't explode on breakage
-        return super.beforePlacement(entity, item, face, location);
+        return super.beforePlacement(entity, item, face, location, clickVector);
     }
 
     @Override

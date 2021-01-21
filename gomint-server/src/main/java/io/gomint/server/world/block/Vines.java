@@ -3,10 +3,7 @@ package io.gomint.server.world.block;
 import io.gomint.inventory.item.ItemShears;
 import io.gomint.inventory.item.ItemStack;
 import io.gomint.inventory.item.ItemVines;
-import io.gomint.math.AxisAlignedBB;
-import io.gomint.math.BlockPosition;
-import io.gomint.math.Location;
-import io.gomint.math.MathUtils;
+import io.gomint.math.*;
 import io.gomint.server.entity.Entity;
 import io.gomint.server.entity.EntityLiving;
 import io.gomint.server.registry.RegisterInfo;
@@ -127,10 +124,10 @@ public class Vines extends Block implements BlockVines {
     }
 
     @Override
-    public boolean beforePlacement(EntityLiving<?> entity, ItemStack<?> item, Facing face, Location location) {
+    public boolean beforePlacement(EntityLiving<?> entity, ItemStack<?> item, Facing face, Location location, Vector clickVector) {
         boolean ok = face != Facing.UP && face != Facing.DOWN;
         if (ok) {
-            ATTACHED_SIDES.detectFromPlacement(this, entity, item, face);
+            ATTACHED_SIDES.detectFromPlacement(this, entity, item, face, clickVector);
         }
 
         return ok;

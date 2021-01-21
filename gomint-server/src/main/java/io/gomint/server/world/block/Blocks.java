@@ -119,7 +119,7 @@ public class Blocks {
         newBlock.position = block.position;
         newBlock.world = adapter;
 
-        if (!newBlock.beforePlacement(entity, item, face, block.location)) {
+        if (!newBlock.beforePlacement(entity, item, face, block.location, clickVector)) {
             return false;
         }
 

@@ -26,7 +26,7 @@ public class Flower extends Block implements BlockFlower {
     }};
 
     @Override
-    public boolean beforePlacement(EntityLiving<?> entity, ItemStack<?> item, Facing face, Location location) {
+    public boolean beforePlacement(EntityLiving<?> entity, ItemStack<?> item, Facing face, Location location, Vector clickVector) {
         // Check if downwards block is valid
         Block block = entity.world().blockAt(location.toBlockPosition().add(Vector.DOWN.toBlockPosition()));
         return ALLOWED_PLACED_ON.contains(block.blockType());

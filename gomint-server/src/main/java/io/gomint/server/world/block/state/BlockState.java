@@ -8,6 +8,7 @@
 package io.gomint.server.world.block.state;
 
 import io.gomint.inventory.item.ItemStack;
+import io.gomint.math.Vector;
 import io.gomint.server.entity.EntityLiving;
 import io.gomint.server.world.block.Block;
 import io.gomint.world.block.data.Facing;
@@ -42,8 +43,9 @@ public abstract class BlockState<T, S> {
      * @param entity        from which we generate data
      * @param placedItem    which has been used to get this block
      * @param face          which the client has clicked on
+     * @param clickVector
      */
-    public abstract void detectFromPlacement(Block newBlock, EntityLiving<?> entity, ItemStack<?> placedItem, Facing face);
+    public abstract void detectFromPlacement(Block newBlock, EntityLiving<?> entity, ItemStack<?> placedItem, Facing face, Vector clickVector);
 
     /**
      * Store new value for this block state
