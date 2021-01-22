@@ -36,6 +36,7 @@ public class PlayerInventory extends ContainerInventory<io.gomint.inventory.Play
      *
      * @return the itemstack the player is holding
      */
+    @Override
     public ItemStack<?> itemInHand() {
         return this.contents[this.itemInHandSlot];
     }
@@ -99,6 +100,7 @@ public class PlayerInventory extends ContainerInventory<io.gomint.inventory.Play
      * @param player   to add
      * @param windowId to use for this player
      */
+    @Override
     public void addViewer(EntityPlayer player, byte windowId) {
         // Sent ContainerOpen first
         PacketContainerOpen containerOpen = new PacketContainerOpen();
@@ -173,6 +175,7 @@ public class PlayerInventory extends ContainerInventory<io.gomint.inventory.Play
      *
      * @return the slot number for the in hand item
      */
+    @Override
     public byte itemInHandSlot() {
         return this.itemInHandSlot;
     }

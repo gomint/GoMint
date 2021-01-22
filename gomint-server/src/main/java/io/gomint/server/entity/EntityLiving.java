@@ -613,10 +613,12 @@ public abstract class EntityLiving<E extends io.gomint.entity.Entity<E>> extends
         return attachedEntities;
     }
 
+    @Override
     public EntityDamageEvent.DamageSource lastDamageSource() {
         return lastDamageSource;
     }
 
+    @Override
     public io.gomint.entity.Entity<?> lastDamageEntity() {
         return lastDamageEntity;
     }

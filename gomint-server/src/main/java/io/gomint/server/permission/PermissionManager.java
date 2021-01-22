@@ -183,6 +183,7 @@ public class PermissionManager implements io.gomint.permission.PermissionManager
     /**
      * Notify about op toggle
      */
+    @Override
     public PermissionManager toggleOp() {
         this.dirty = true;
         return this;

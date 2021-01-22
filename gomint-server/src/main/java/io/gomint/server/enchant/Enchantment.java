@@ -77,6 +77,7 @@ public abstract class Enchantment implements io.gomint.enchant.Enchantment {
         return 1;
     }
 
+    @Override
     public abstract Rarity rarity();
 
     public boolean collidesWith(Enchantment enchantment) {

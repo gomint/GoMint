@@ -621,8 +621,8 @@ public class SimplePluginManager implements PluginManager, EventCaller {
                 LOGGER.warn("Could not load Plugin. File " + file + " is corrupted", e);
                 return null;
             }
-        } catch (Exception ex) {
-            LOGGER.warn("Could not load plugin from file " + file, ex);
+        } catch (Exception e) {
+            LOGGER.warn("Could not load plugin from file " + file, e);
             return null;
         }
     }

@@ -31,18 +31,22 @@ public class InventoryTransaction<I, S, T> implements Transaction<I, S, T> {
         return owner;
     }
 
+    @Override
     public Inventory<I> inventory() {
         return inventory;
     }
 
+    @Override
     public int slot() {
         return slot;
     }
 
+    @Override
     public ItemStack<S> sourceItem() {
         return sourceItem;
     }
 
+    @Override
     public ItemStack<T> targetItem() {
         return targetItem;
     }
