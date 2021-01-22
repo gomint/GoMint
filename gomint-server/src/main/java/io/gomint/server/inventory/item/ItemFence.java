@@ -3,7 +3,10 @@ package io.gomint.server.inventory.item;
 import io.gomint.inventory.item.ItemType;
 
 import io.gomint.server.registry.RegisterInfo;
-import io.gomint.taglib.NBTTagCompound;
+import io.gomint.server.world.block.Fence;
+import io.gomint.server.world.block.Leaves;
+import io.gomint.world.block.Block;
+import io.gomint.world.block.data.LogType;
 
 import java.time.Duration;
 
@@ -13,7 +16,24 @@ import java.time.Duration;
  */
 @RegisterInfo(sId = "minecraft:fence")
 public class ItemFence extends ItemStack<io.gomint.inventory.item.ItemFence> implements io.gomint.inventory.item.ItemFence {
+    private enum FenceType {
+        OAK("minecraft:fence", (short) 0),
+        SPRUCE("minecraft:fence", (short) 1),
+        BIRCH("minecraft:fence", (short) 2),
+        JUNGLE("minecraft:fence", (short) 3),
+        ACACIA("minecraft:fence", (short) 4),
+        DARK_OAK("minecraft:fence", (short) 5),
+        CRIMSON("", (short) -1),
+        WARPED("", (short) -1);
 
+        public String id;
+        public short data;
+
+        FenceType(String id, short data) {
+            this.data = data;
+            this.id = id;
+        }
+    }
     @Override
     public ItemType itemType() {
         return ItemType.FENCE;
@@ -24,4 +44,28 @@ public class ItemFence extends ItemStack<io.gomint.inventory.item.ItemFence> imp
         return Duration.ofMillis(15000);
     }
 
+    @Override
+    public io.gomint.inventory.item.ItemFence type(LogType type) {
+        FenceType type1 = FenceType.valueOf(type.name());
+        this.material(type.name());
+        this.data(type1.data);
+      return this;
+    }
+
+    @Override
+    public LogType type() {
+        for (FenceType value : FenceType.values()) {
+            if ((value.id.equals(this.material()) && this.data() == value.data)) {
+                return LogType.valueOf(value.name());
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public Block block() {
+        Fence block = (Fence) super.block();
+        block.type(this.type());
+        return block;
+    }
 }
