@@ -79,8 +79,6 @@ public class Wall extends Block implements BlockWall {
         MOSSY_STONE_BRICK(STONE_SLAB_ID, STONE_TYPE, "mossy_stone_brick"),
         SMOOTH_QUARTZ("", "", ""),
         STONE("", "", ""),
-        CUT_SANDSTONE("", "", ""),
-        CUT_RED_STONE("", "", ""),
 
         // Additional slabs (new ones)
         BLACKSTONE("minecraft:blackstone_wall", "", ""),

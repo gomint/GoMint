@@ -39,7 +39,6 @@ public class DoubleStoneSlab extends Block implements BlockDoubleStoneSlab {
 
         // Slab types 1
         SMOOTH_STONE(STONE_SLAB_ID, STONE_TYPE, "smooth_stone"),
-        SANDSTONE(STONE_SLAB_ID, STONE_TYPE, "sandstone"),
         // This is intended so that creative given "wooden" stone slabs don't break the server
         WOODEN("minecraft:double_wooden_slab", "wood_type", "oak"),
         COBBLESTONE(STONE_SLAB_ID, STONE_TYPE, "cobblestone"),
@@ -49,16 +48,12 @@ public class DoubleStoneSlab extends Block implements BlockDoubleStoneSlab {
         NETHER_BRICK(STONE_SLAB_ID, STONE_TYPE, "nether_brick"),
 
         // Slab types 2
-        RED_SANDSTONE(STONE_SLAB2_ID, STONE_TYPE_2, "red_sandstone"),
         PURPUR(STONE_SLAB2_ID, STONE_TYPE_2, "purpur"),
-
         MOSSY_COBBLESTONE(STONE_SLAB2_ID, STONE_TYPE_2, "mossy_cobblestone"),
-        SMOOTH_SANDSTONE(STONE_SLAB2_ID, STONE_TYPE_2, "smooth_sandstone"),
         RED_NETHER_BRICK(STONE_SLAB2_ID, STONE_TYPE_2, "red_nether_brick"),
 
         // Slab types 3
         END_STONE_BRICK(STONE_SLAB3_ID, STONE_TYPE_3, "end_stone_brick"),
-        SMOOTH_RED_SANDSTONE(STONE_SLAB3_ID, STONE_TYPE_3, "smooth_red_sandstone"),
         POLISHED_ANDESITE(STONE_SLAB3_ID, STONE_TYPE_3, "polished_andesite"),
         ANDESITE(STONE_SLAB3_ID, STONE_TYPE_3, "andesite"),
         DIORITE(STONE_SLAB3_ID, STONE_TYPE_3, "diorite"),
@@ -70,8 +65,6 @@ public class DoubleStoneSlab extends Block implements BlockDoubleStoneSlab {
         MOSSY_STONE_BRICK(STONE_SLAB4_ID, STONE_TYPE_4, "mossy_stone_brick"),
         SMOOTH_QUARTZ(STONE_SLAB4_ID, STONE_TYPE_4, "smooth_quartz"),
         STONE(STONE_SLAB4_ID, STONE_TYPE_4, "stone"),
-        CUT_SANDSTONE(STONE_SLAB4_ID, STONE_TYPE_4, "cut_sandstone"),
-        CUT_RED_STONE(STONE_SLAB4_ID, STONE_TYPE_4, "cut_red_sandstone"),
 
         // Additional slabs (new ones)
         BLACKSTONE("minecraft:blackstone_double_slab", "", ""),
@@ -89,7 +82,7 @@ public class DoubleStoneSlab extends Block implements BlockDoubleStoneSlab {
         }
     }
 
-    private static final BooleanBlockState TOP = new BooleanBlockState( () -> new String[]{"top_slot_bit"} );
+    private static final BooleanBlockState TOP = new BooleanBlockState( () -> new String[]{"top_slot_bit"} ); // This is stupid and shouldn't be calculated, this is only there because vanilla extends double slabs from slabs
 
     private static final EnumBlockState<StoneTypeMagic, String> VARIANT = new EnumBlockState<>(v -> {
         if (v == null) {

@@ -1,6 +1,12 @@
-package io.gomint.inventory.item;
+/*
+ * Copyright (c) 2020 Gomint team
+ *
+ * This code is licensed under the BSD license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 
-import io.gomint.GoMint;
+package io.gomint.world.block;
+
 import io.gomint.world.block.data.RoughnessType;
 import io.gomint.world.block.data.Sandcolor;
 
@@ -9,17 +15,7 @@ import io.gomint.world.block.data.Sandcolor;
  * @version 1.0
  * @stability 3
  */
-public interface ItemSandstoneStairs extends ItemStack<ItemSandstoneStairs> {
-
-    /**
-     * Create a new item stack with given class and amount
-     *
-     * @param amount which is used for the creation
-	 * @return freshly generated item
-     */
-    static ItemSandstoneStairs create( int amount ) {	
-        return GoMint.instance().createItemStack( ItemSandstoneStairs.class, amount );
-    }
+public interface BlockSandstoneStair extends Block {
 
     /**
      * Set the color of this item
@@ -27,7 +23,7 @@ public interface ItemSandstoneStairs extends ItemStack<ItemSandstoneStairs> {
      * @param color of this item
      * @return item for chaining
      */
-    ItemSandstoneStairs color(Sandcolor color);
+    BlockSandstoneStair color(Sandcolor color);
 
     /**
      * Get the color of this item
@@ -42,7 +38,7 @@ public interface ItemSandstoneStairs extends ItemStack<ItemSandstoneStairs> {
      * @param type of this item
      * @return item for chaining
      */
-    ItemSandstoneStairs type(RoughnessType type);
+    BlockSandstoneStair type(RoughnessType type);
 
     /**
      * Get the type of this item

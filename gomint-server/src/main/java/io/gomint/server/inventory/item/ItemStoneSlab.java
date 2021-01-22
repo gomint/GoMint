@@ -30,7 +30,6 @@ public class ItemStoneSlab extends ItemSlab<io.gomint.inventory.item.ItemStoneSl
 
         // Slab types 1
         SMOOTH_STONE(STONE_SLAB_ID, (short) 0),
-        SANDSTONE(STONE_SLAB_ID, (short) 1),
         WOODEN("minecraft:wooden_slab", (short) 0), // This is intended so that creative given "wooden" stone slabs don't break the server
         COBBLESTONE(STONE_SLAB_ID, (short) 3),
         BRICK(STONE_SLAB_ID, (short) 4),
@@ -39,16 +38,12 @@ public class ItemStoneSlab extends ItemSlab<io.gomint.inventory.item.ItemStoneSl
         NETHER_BRICK(STONE_SLAB_ID, (short) 7),
 
         // Slab types 2
-        RED_SANDSTONE(STONE_SLAB2_ID, (short) 0),
         PURPUR(STONE_SLAB2_ID, (short) 1),
-
         MOSSY_COBBLESTONE(STONE_SLAB2_ID, (short) 5),
-        SMOOTH_SANDSTONE(STONE_SLAB2_ID, (short) 6),
         RED_NETHER_BRICK(STONE_SLAB2_ID, (short) 7),
 
         // Slab types 3
         END_STONE_BRICK(STONE_SLAB3_ID, (short) 0),
-        SMOOTH_RED_SANDSTONE(STONE_SLAB3_ID, (short) 1),
         POLISHED_ANDESITE(STONE_SLAB3_ID, (short) 2),
         ANDESITE(STONE_SLAB3_ID, (short) 3),
         DIORITE(STONE_SLAB3_ID, (short) 4),
@@ -60,8 +55,6 @@ public class ItemStoneSlab extends ItemSlab<io.gomint.inventory.item.ItemStoneSl
         MOSSY_STONE_BRICK(STONE_SLAB4_ID, (short) 0),
         SMOOTH_QUARTZ(STONE_SLAB4_ID, (short) 1),
         STONE(STONE_SLAB4_ID, (short) 2),
-        CUT_SANDSTONE(STONE_SLAB4_ID, (short) 3),
-        CUT_RED_STONE(STONE_SLAB4_ID, (short) 4),
 
         // Additional slabs (new ones)
         BLACKSTONE("minecraft:blackstone_slab", (short) 0),

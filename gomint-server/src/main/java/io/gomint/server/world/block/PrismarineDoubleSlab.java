@@ -8,6 +8,7 @@
 package io.gomint.server.world.block;
 
 import io.gomint.server.registry.RegisterInfo;
+import io.gomint.server.world.block.state.BooleanBlockState;
 import io.gomint.server.world.block.state.EnumBlockState;
 import io.gomint.world.block.BlockPrismarineDoubleSlab;
 import io.gomint.world.block.BlockPrismarineSlab;
@@ -15,7 +16,7 @@ import io.gomint.world.block.BlockType;
 import io.gomint.world.block.data.PrismarineType;
 
 @RegisterInfo(sId = "minecraft:double_stone_slab2[stone_slab_type_2=prismarine_rough,prismarine_dark,prismarine_brick]")
-public class PrismarineDoubleSlab extends Slab<BlockPrismarineDoubleSlab> implements BlockPrismarineDoubleSlab {
+public class PrismarineDoubleSlab extends Block implements BlockPrismarineDoubleSlab {
 
     private enum PrismarineMagicType {
         NORMAL("prismarine_rough"),
@@ -29,6 +30,7 @@ public class PrismarineDoubleSlab extends Slab<BlockPrismarineDoubleSlab> implem
         }
     }
 
+    private static final BooleanBlockState TOP = new BooleanBlockState( () -> new String[]{"top_slot_bit"} ); // This is stupid and shouldn't be calculated, this is only there because vanilla extends double slabs from slabs
     private static final EnumBlockState<PrismarineMagicType, String> VARIANT = new EnumBlockState<>(v -> {
         return new String[]{"stone_slab_type_2"};
     }, PrismarineMagicType.values(), v -> v.type, v -> {

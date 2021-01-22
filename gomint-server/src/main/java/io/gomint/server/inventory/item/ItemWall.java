@@ -45,8 +45,6 @@ public class ItemWall extends ItemStack< io.gomint.inventory.item.ItemWall> impl
         STONE(WALL_ID, (short) 0),
         MOSSY_STONE_BRICK(WALL_ID, (short) 1),
         SMOOTH_QUARTZ(WALL_ID, (short) 0),
-        CUT_RED_STONE(WALL_ID, (short) 12),
-        CUT_SANDSTONE(WALL_ID, (short) 5),
 
         BLACKSTONE("minecraft:blackstone_wall", (short) 0),
         POLISHED_BLACKSTONE("minecraft:polished_blackstone_wall", (short) 0),

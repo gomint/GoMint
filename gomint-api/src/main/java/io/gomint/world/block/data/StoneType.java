@@ -14,7 +14,6 @@ package io.gomint.world.block.data;
  */
 public enum StoneType {
 
-    SANDSTONE,
     COBBLESTONE,
     BRICK,
     STONE_BRICK,
@@ -23,8 +22,6 @@ public enum StoneType {
     SMOOTH_STONE,
 
     MOSSY_COBBLESTONE,
-    RED_SANDSTONE,
-    SMOOTH_SANDSTONE,
     PURPUR,
     RED_NETHER_BRICK,
 
@@ -35,13 +32,10 @@ public enum StoneType {
     END_STONE_BRICK,
     GRANITE,
     POLISHED_ANDESITE,
-    SMOOTH_RED_SANDSTONE,
 
     STONE,
     MOSSY_STONE_BRICK,
     SMOOTH_QUARTZ,
-    CUT_RED_STONE,
-    CUT_SANDSTONE,
 
     BLACKSTONE,
     POLISHED_BLACKSTONE,

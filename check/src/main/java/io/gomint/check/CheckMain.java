@@ -90,10 +90,6 @@ public class CheckMain {
         AtomicInteger missingStates = new AtomicInteger(0);
 
         knownBlockKeys.forEach((block, stateKeys) -> {
-            if (block.equals("minecraft:carved_pumpkin")) {
-                System.out.println("YE");
-            }
-
             for (String content : contents) {
                 if (content.contains("\"" + block + "\"")) {
                     for (String stateKey : stateKeys.keySet()) {
@@ -101,7 +97,15 @@ public class CheckMain {
                             // Check for extends (we only have one level nesting here)
                             if (content.contains("extends")) {
                                 int extendsIndex = content.indexOf("extends");
-                                String parentClass = content.substring(extendsIndex + 7, content.indexOf(" ", extendsIndex + 9));
+
+                                int hasGenerics = content.indexOf("<", extendsIndex + 9);
+                                int spacer = content.indexOf(" ", extendsIndex + 9);
+
+                                if (hasGenerics > -1 && hasGenerics < spacer) {
+                                    spacer = hasGenerics;
+                                }
+
+                                String parentClass = content.substring(extendsIndex + 7, spacer);
 
                                 boolean found = false;
                                 for (String s : contents) {
