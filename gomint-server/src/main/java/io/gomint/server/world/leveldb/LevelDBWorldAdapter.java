@@ -9,7 +9,7 @@ package io.gomint.server.world.leveldb;
 
 import com.google.common.io.Files;
 import io.gomint.leveldb.DB;
-import io.gomint.leveldb.NativeLoader;
+import io.gomint.leveldb.LibraryLoader;
 import io.gomint.leveldb.WriteBatch;
 import io.gomint.math.BlockPosition;
 import io.gomint.math.Location;
@@ -66,7 +66,7 @@ public class LevelDBWorldAdapter extends WorldAdapter {
     private static final Logger LOGGER = LoggerFactory.getLogger(LevelDBWorldAdapter.class);
 
     static {
-        if (!NativeLoader.load()) {
+        if (!LibraryLoader.load()) {
             System.out.println("Could not load native leveldb. Please be sure you have a supported OS installed");
             System.exit(-1);
         }
