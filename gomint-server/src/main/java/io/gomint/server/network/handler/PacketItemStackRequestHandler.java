@@ -314,7 +314,11 @@ public class PacketItemStackRequestHandler implements PacketHandler<PacketItemSt
             case WindowMagicNumbers.ENCHANTMENT_TABLE_MATERIAL:
                 return 1;
             case WindowMagicNumbers.CRAFTING_INPUT:
-                return (byte) (info.getSlot() - Values.CRAFTING_INPUT_OFFSET);
+                if (info.getSlot() >= Values.CRAFTING_INPUT_OFFSET) {
+                    return (byte) (info.getSlot() - Values.CRAFTING_INPUT_OFFSET);
+                }
+
+                return (byte) (info.getSlot() - Values.CRAFTING_INPUT_SMALL_OFFSET);
             case WindowMagicNumbers.CREATED_OUTPUT:
                 return (byte) (info.getSlot() - Values.OUTPUT_OFFSET);
         }
@@ -329,6 +333,10 @@ public class PacketItemStackRequestHandler implements PacketHandler<PacketItemSt
             case WindowMagicNumbers.ENCHANTMENT_TABLE_MATERIAL:
                 return 15;
             case WindowMagicNumbers.CRAFTING_INPUT:
+                if (info.inventory().size() == 4) {
+                    return (byte) (info.slot() + Values.CRAFTING_INPUT_SMALL_OFFSET);
+                }
+
                 return (byte) (info.slot() + Values.CRAFTING_INPUT_OFFSET);
             case WindowMagicNumbers.CREATED_OUTPUT:
                 return (byte) (info.slot() + Values.OUTPUT_OFFSET);
