@@ -102,7 +102,8 @@ mvn clean install
 ```
 
 ## 🚀 Developer setup
-You need to run compilation at least once since there is a code generator configured. Once you have done that you can add `io.gomint.server.Bootstrap` as a runner. That runner needs custom options for Netty `--add-opens java.base/java.nio=io.netty.common --add-exports java.base/jdk.internal.misc=io.netty.common`.
+You need to run compilation at least once since there is a code generator configured. Once you have done that you can add `io.gomint.server.Bootstrap` as a runner. 
+That runner needs custom options for Netty `--add-opens java.base/java.nio=io.netty.common --add-exports java.base/jdk.internal.misc=io.netty.common --add-modules ALL-DEFAULT`.
 
 If not properly configured you will see this error when the first connection arrives:
 
