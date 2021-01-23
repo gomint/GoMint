@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -68,6 +69,17 @@ public class CheckMain {
                 }
             }
         }
+
+        knownBlockKeys.forEach((block, stateKeys) -> {
+            System.out.println("[X] Block: " + block);
+
+            for (String stateKey : stateKeys.keySet()) {
+                if (!stateKey.equals("deprecated")) {
+                    System.out.println("[X]  State " + stateKey + " (" + stateKeys.get(stateKey).getClass().getSimpleName() + ") in block " + block);
+                    System.out.println("[X]      " + StringUtils.join(additionalData.get(block + "/" + stateKey), ","));
+                }
+            }
+        });
 
         // Now we iterate over block implementations to find out whats missing
         List<String> contents = Files

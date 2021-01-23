@@ -16,7 +16,7 @@ import io.gomint.world.block.BlockType;
 import java.util.Collections;
 import java.util.List;
 
-@RegisterInfo(sId = "minecraft:double:stone_slab[stone_slab_type=brick]")
+@RegisterInfo(sId = "minecraft:double_stone_slab[stone_slab_type=brick]")
 public class BrickDoubleSlab extends Block implements BlockBrickDoubleSlab {
 
     @Override

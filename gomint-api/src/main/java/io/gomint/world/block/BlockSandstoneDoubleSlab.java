@@ -7,7 +7,6 @@
 
 package io.gomint.world.block;
 
-import io.gomint.world.block.data.RoughnessType;
 import io.gomint.world.block.data.Sandcolor;
 import io.gomint.world.block.data.SandstoneSlabType;
 

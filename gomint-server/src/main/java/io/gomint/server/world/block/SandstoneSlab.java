@@ -18,8 +18,9 @@ import io.gomint.world.block.data.Sandcolor;
 import io.gomint.world.block.data.SandstoneSlabType;
 
 @RegisterInfo( sId = "minecraft:stone_slab[stone_slab_type=sandstone]", def = true )
-@RegisterInfo( sId = "minecraft:stone_slab2[stone_slab_type2=red_sandstone,smooth_sandstone]" )
-@RegisterInfo( sId = "minecraft:stone_slab3[stone_slab_type3=smooth_red_sandstone]" )
+@RegisterInfo( sId = "minecraft:stone_slab2[stone_slab_type_2=red_sandstone,smooth_sandstone]" )
+@RegisterInfo( sId = "minecraft:stone_slab3[stone_slab_type_3=smooth_red_sandstone]" )
+@RegisterInfo( sId = "minecraft:stone_slab4[stone_slab_type_4=cut_sandstone,cut_red_sandstone]" )
 public class SandstoneSlab extends Slab<BlockSandstoneSlab> implements BlockSandstoneSlab {
 
     private static final String STONE_SLAB_ID = "minecraft:stone_slab";
@@ -82,7 +83,7 @@ public class SandstoneSlab extends Slab<BlockSandstoneSlab> implements BlockSand
             }
         }
 
-        return null;
+        return SandstoneTypeMagic.SANDSTONE;
     });
 
 
@@ -135,8 +136,8 @@ public class SandstoneSlab extends Slab<BlockSandstoneSlab> implements BlockSand
             }
         }
 
-        VARIANT.state(this, newState);
         this.blockId(newState.blockId);
+        VARIANT.state(this, newState);
 
         return this;
     }

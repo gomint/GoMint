@@ -7,6 +7,8 @@
 
 package io.gomint.server.world.block;
 
+import io.gomint.inventory.item.ItemSandstoneDoubleSlab;
+import io.gomint.inventory.item.ItemStack;
 import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.world.block.state.BooleanBlockState;
 import io.gomint.server.world.block.state.EnumBlockState;
@@ -15,9 +17,13 @@ import io.gomint.world.block.BlockType;
 import io.gomint.world.block.data.Sandcolor;
 import io.gomint.world.block.data.SandstoneSlabType;
 
+import java.util.Collections;
+import java.util.List;
+
 @RegisterInfo( sId = "minecraft:double_stone_slab[stone_slab_type=sandstone]", def = true )
-@RegisterInfo( sId = "minecraft:double_stone_slab2[stone_slab_type2=red_sandstone,smooth_sandstone]" )
-@RegisterInfo( sId = "minecraft:double_stone_slab3[stone_slab_type3=smooth_red_sandstone]" )
+@RegisterInfo( sId = "minecraft:double_stone_slab2[stone_slab_type_2=red_sandstone,smooth_sandstone]" )
+@RegisterInfo( sId = "minecraft:double_stone_slab3[stone_slab_type_3=smooth_red_sandstone]" )
+@RegisterInfo( sId = "minecraft:double_stone_slab4[stone_slab_type_4=cut_sandstone,cut_red_sandstone]" )
 public class SandstoneDoubleSlab extends Block implements BlockSandstoneDoubleSlab {
 
     private static final String STONE_SLAB_ID = "minecraft:double_stone_slab";
@@ -80,7 +86,7 @@ public class SandstoneDoubleSlab extends Block implements BlockSandstoneDoubleSl
             }
         }
 
-        return null;
+        return SandstoneTypeMagic.SANDSTONE;
     });
 
     @Override
@@ -132,8 +138,8 @@ public class SandstoneDoubleSlab extends Block implements BlockSandstoneDoubleSl
             }
         }
 
-        VARIANT.state(this, newState);
         this.blockId(newState.blockId);
+        VARIANT.state(this, newState);
 
         return this;
     }
@@ -154,6 +160,11 @@ public class SandstoneDoubleSlab extends Block implements BlockSandstoneDoubleSl
     @Override
     public float blastResistance() {
         return 30.0f;
+    }
+
+    @Override
+    public List<ItemStack<?>> drops(ItemStack<?> itemInHand) {
+        return Collections.singletonList(ItemSandstoneDoubleSlab.create(1).color(this.color()).type(this.type()));
     }
 
 }
