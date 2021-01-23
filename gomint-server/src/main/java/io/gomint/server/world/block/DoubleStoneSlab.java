@@ -41,7 +41,6 @@ public class DoubleStoneSlab extends Block implements BlockDoubleStoneSlab {
         SMOOTH_STONE(STONE_SLAB_ID, STONE_TYPE, "smooth_stone"),
         // This is intended so that creative given "wooden" stone slabs don't break the server
         WOODEN("minecraft:double_wooden_slab", "wood_type", "oak"),
-        BRICK(STONE_SLAB_ID, STONE_TYPE, "brick"),
         STONE_BRICK(STONE_SLAB_ID, STONE_TYPE, "stone_brick"),
         QUARTZ(STONE_SLAB_ID, STONE_TYPE, "quartz"),
         NETHER_BRICK(STONE_SLAB_ID, STONE_TYPE, "nether_brick"),

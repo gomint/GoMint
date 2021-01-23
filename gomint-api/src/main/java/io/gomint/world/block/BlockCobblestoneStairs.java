@@ -14,7 +14,7 @@ import io.gomint.world.block.data.CobblestoneType;
  * @version 1.0
  * @stability 3
  */
-public interface BlockCobblestoneStairs extends BlockStair<BlockCobblestoneStairs> {
+public interface BlockCobblestoneStairs extends BlockStairs<BlockCobblestoneStairs> {
 
     /**
      * Set the type of cobble stone

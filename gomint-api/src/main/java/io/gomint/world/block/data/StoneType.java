@@ -14,7 +14,6 @@ package io.gomint.world.block.data;
  */
 public enum StoneType {
 
-    BRICK,
     STONE_BRICK,
     NETHER_BRICK,
     QUARTZ,

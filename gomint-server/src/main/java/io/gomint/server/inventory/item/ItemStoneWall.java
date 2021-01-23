@@ -21,7 +21,6 @@ public class ItemStoneWall extends ItemStack<io.gomint.inventory.item.ItemStoneW
 
     private enum StoneTypeMagic {
 
-        BRICK(WALL_ID, (short) 6),
         STONE_BRICK(WALL_ID, (short) 7),
         NETHER_BRICK(WALL_ID, (short) 10),
         QUARTZ(WALL_ID, (short) 0),

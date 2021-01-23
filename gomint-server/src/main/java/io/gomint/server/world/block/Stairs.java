@@ -6,7 +6,7 @@ import io.gomint.math.Location;
 import io.gomint.server.entity.EntityLiving;
 import io.gomint.server.world.block.state.BooleanBlockState;
 import io.gomint.server.world.block.state.CrossDirectionBlockState;
-import io.gomint.world.block.BlockStair;
+import io.gomint.world.block.BlockStairs;
 import io.gomint.world.block.data.Direction;
 import io.gomint.world.block.data.Facing;
 
@@ -17,7 +17,7 @@ import java.util.List;
  * @author geNAZt
  * @version 1.0
  */
-public abstract class Stair<B> extends Block implements BlockStair<B> {
+public abstract class Stairs<B> extends Block implements BlockStairs<B> {
 
     private static final CrossDirectionBlockState DIRECTION = new CrossDirectionBlockState(() -> new String[]{"weirdo_direction"});
     private static final BooleanBlockState TOP = new BooleanBlockState(() -> new String[]{"upside_down_bit"});

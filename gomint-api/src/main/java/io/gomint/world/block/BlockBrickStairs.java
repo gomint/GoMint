@@ -12,5 +12,5 @@ package io.gomint.world.block;
  * @version 1.0
  * @stability 3
  */
-public interface BlockBrickBlock extends Block {
+public interface BlockBrickStairs extends BlockStairs<BlockBrickStairs> {
 }

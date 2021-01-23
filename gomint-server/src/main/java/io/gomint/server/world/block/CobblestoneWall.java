@@ -7,6 +7,8 @@
 
 package io.gomint.server.world.block;
 
+import io.gomint.inventory.item.ItemCobblestoneWall;
+import io.gomint.inventory.item.ItemStack;
 import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.world.block.state.EnumBlockState;
 import io.gomint.world.block.BlockCobblestoneWall;
@@ -14,6 +16,9 @@ import io.gomint.world.block.BlockStoneWall;
 import io.gomint.world.block.BlockType;
 import io.gomint.world.block.data.CobblestoneType;
 import io.gomint.world.block.data.StoneType;
+
+import java.util.Collections;
+import java.util.List;
 
 @RegisterInfo(sId = "minecraft:cobblestone_wall[wall_block_type=cobblestone,mossy_cobblestone]", def = true)
 public class CobblestoneWall extends Wall<BlockCobblestoneWall> implements BlockCobblestoneWall {
@@ -68,6 +73,11 @@ public class CobblestoneWall extends Wall<BlockCobblestoneWall> implements Block
         this.blockId(newState.blockId);
         VARIANT.state(this, newState);
         return this;
+    }
+
+    @Override
+    public List<ItemStack<?>> drops(ItemStack<?> itemInHand) {
+        return Collections.singletonList(ItemCobblestoneWall.create(1).type(this.type()));
     }
 
 }

@@ -14,7 +14,7 @@ import io.gomint.world.block.data.LogType;
  * @version 1.0
  * @stability 3
  */
-public interface BlockWoodenStair extends BlockStair<BlockWoodenStair> {
+public interface BlockWoodenStairs extends BlockStairs<BlockWoodenStairs> {
 
     /**
      * Get the type of wood from which this button has been made
@@ -29,6 +29,6 @@ public interface BlockWoodenStair extends BlockStair<BlockWoodenStair> {
      * @param logType type of wood
      * @return block for chaining
      */
-    BlockWoodenStair type(LogType logType);
+    BlockWoodenStairs type(LogType logType);
 
 }

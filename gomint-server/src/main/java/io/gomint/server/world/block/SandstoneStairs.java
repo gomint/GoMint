@@ -8,9 +8,6 @@
 package io.gomint.server.world.block;
 
 import io.gomint.server.registry.RegisterInfo;
-import io.gomint.server.world.block.state.BooleanBlockState;
-import io.gomint.server.world.block.state.EnumBlockState;
-import io.gomint.world.block.BlockSandstoneDoubleSlab;
 import io.gomint.world.block.BlockSandstoneStair;
 import io.gomint.world.block.BlockType;
 import io.gomint.world.block.data.RoughnessType;
@@ -20,7 +17,7 @@ import io.gomint.world.block.data.Sandcolor;
 @RegisterInfo(sId = "minecraft:sandstone_stairs")
 @RegisterInfo(sId = "minecraft:smooth_red_sandstone_stairs")
 @RegisterInfo(sId = "minecraft:smooth_sandstone_stairs")
-public class SandstoneStair extends Stair<BlockSandstoneStair> implements BlockSandstoneStair {
+public class SandstoneStairs extends Stairs<BlockSandstoneStair> implements BlockSandstoneStair {
 
     @Override
     public BlockType blockType() {

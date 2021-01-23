@@ -5,7 +5,7 @@ import io.gomint.world.block.BlockType;
 
 import io.gomint.inventory.item.*;
 import io.gomint.server.registry.RegisterInfo;
-import io.gomint.world.block.BlockWoodenStair;
+import io.gomint.world.block.BlockWoodenStairs;
 import io.gomint.world.block.data.LogType;
 
 /**
@@ -20,7 +20,7 @@ import io.gomint.world.block.data.LogType;
 @RegisterInfo( sId = "minecraft:jungle_stairs" )
 @RegisterInfo( sId = "minecraft:crimson_stairs" )
 @RegisterInfo( sId = "minecraft:warped_stairs" )
-public class WoodenStair extends Stair<BlockWoodenStair> implements BlockWoodenStair {
+public class WoodenStairs extends Stairs<BlockWoodenStairs> implements BlockWoodenStairs {
 
     private enum LogTypeMagic {
         OAK("minecraft:oak_stairs"),
@@ -75,7 +75,7 @@ public class WoodenStair extends Stair<BlockWoodenStair> implements BlockWoodenS
     }
 
     @Override
-    public BlockWoodenStair type(LogType logType) {
+    public BlockWoodenStairs type(LogType logType) {
         LogTypeMagic newState = LogTypeMagic.valueOf(logType.name());
         this.blockId(newState.blockId);
         return this;

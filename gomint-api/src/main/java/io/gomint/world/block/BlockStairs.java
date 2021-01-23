@@ -12,7 +12,7 @@ package io.gomint.world.block;
  * @version 1.0
  * @stability 3
  */
-public interface BlockStair<B> extends BlockDirection<B> {
+public interface BlockStairs<B> extends BlockDirection<B> {
 
     /**
      * Get if the base of the stair on the top or not

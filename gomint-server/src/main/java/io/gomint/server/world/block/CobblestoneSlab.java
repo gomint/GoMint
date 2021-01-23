@@ -7,6 +7,7 @@
 
 package io.gomint.server.world.block;
 
+import io.gomint.inventory.item.ItemCobblestoneSlab;
 import io.gomint.inventory.item.ItemStack;
 import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.world.block.helper.ToolPresets;
@@ -15,6 +16,9 @@ import io.gomint.world.block.BlockCobblestone;
 import io.gomint.world.block.BlockCobblestoneSlab;
 import io.gomint.world.block.BlockType;
 import io.gomint.world.block.data.CobblestoneType;
+
+import java.util.Collections;
+import java.util.List;
 
 /**
  * @author geNAZt
@@ -87,6 +91,11 @@ public class CobblestoneSlab extends Slab<BlockCobblestoneSlab> implements Block
     @Override
     public CobblestoneType type() {
         return VARIANT.state(this) == StoneTypeMagic.COBBLESTONE ? CobblestoneType.NORMAL : CobblestoneType.MOSSY;
+    }
+
+    @Override
+    public List<ItemStack<?>> drops(ItemStack<?> itemInHand) {
+        return Collections.singletonList(ItemCobblestoneSlab.create(1).type(this.type()));
     }
 
 }

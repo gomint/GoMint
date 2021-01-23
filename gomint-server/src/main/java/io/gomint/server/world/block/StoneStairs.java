@@ -2,7 +2,7 @@ package io.gomint.server.world.block;
 
 import io.gomint.inventory.item.ItemStack;
 import io.gomint.server.world.block.helper.ToolPresets;
-import io.gomint.world.block.BlockStoneStair;
+import io.gomint.world.block.BlockStoneStairs;
 import io.gomint.world.block.BlockType;
 
 import io.gomint.server.registry.RegisterInfo;
@@ -13,11 +13,10 @@ import io.gomint.world.block.data.StoneType;
  * @version 1.0
  */
 
-@RegisterInfo(sId = "minecraft:brick_stairs")
 @RegisterInfo(sId = "minecraft:red_nether_brick_stairs")
 @RegisterInfo(sId = "minecraft:mossy_stone_brick_stairs")
 @RegisterInfo(sId = "minecraft:polished_andesite_stairs")
-@RegisterInfo(sId = "minecraft:prismarine_bricks_stairs")
+
 @RegisterInfo(sId = "minecraft:end_brick_stairs")
 @RegisterInfo(sId = "minecraft:quartz_stairs")
 @RegisterInfo(sId = "minecraft:normal_stone_stairs")
@@ -27,8 +26,6 @@ import io.gomint.world.block.data.StoneType;
 @RegisterInfo(sId = "minecraft:diorite_stairs")
 @RegisterInfo(sId = "minecraft:purpur_stairs")
 
-@RegisterInfo(sId = "minecraft:prismarine_stairs")
-@RegisterInfo(sId = "minecraft:dark_prismarine_stairs")
 @RegisterInfo(sId = "minecraft:brick_stairs")
 @RegisterInfo(sId = "minecraft:polished_diorite_stairs")
 @RegisterInfo(sId = "minecraft:nether_brick_stairs")
@@ -38,11 +35,10 @@ import io.gomint.world.block.data.StoneType;
 
 @RegisterInfo(sId = "minecraft:smooth_quartz_stairs")
 @RegisterInfo(sId = "minecraft:polished_blackstone_stairs")
-public class StoneStair extends Stair<BlockStoneStair> implements BlockStoneStair {
+public class StoneStairs extends Stairs<BlockStoneStairs> implements BlockStoneStairs {
 
     private enum StoneTypeMagic {
 
-        BRICK("minecraft:brick_stairs"),
         STONE_BRICK("minecraft:stone_brick_stairs"),
         NETHER_BRICK("minecraft:nether_brick_stairs"),
         QUARTZ("minecraft:quartz_stairs"),
@@ -119,7 +115,7 @@ public class StoneStair extends Stair<BlockStoneStair> implements BlockStoneStai
     }
 
     @Override
-    public BlockStoneStair type(StoneType stoneType) {
+    public BlockStoneStairs type(StoneType stoneType) {
         StoneTypeMagic newState = StoneTypeMagic.valueOf(stoneType.name());
         if (newState.blockId != null) {
             this.blockId(newState.blockId);

@@ -27,7 +27,6 @@ public class StoneWall extends Wall<BlockStoneWall> implements BlockStoneWall {
         // Slab types 1
         SMOOTH_STONE("", "", ""),
         SANDSTONE(STONE_SLAB_ID, STONE_TYPE, "sandstone"),
-        BRICK("", "", ""),
         STONE_BRICK(STONE_SLAB_ID, STONE_TYPE, "stone_brick"),
         QUARTZ("", "", ""),
         NETHER_BRICK(STONE_SLAB_ID, STONE_TYPE, "nether_brick"),

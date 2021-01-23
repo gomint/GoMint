@@ -8,27 +8,21 @@
 package io.gomint.server.world.block;
 
 import io.gomint.inventory.item.ItemStack;
-import io.gomint.server.world.block.helper.ToolPresets;
-import io.gomint.world.block.BlockBrickBlock;
-import io.gomint.world.block.BlockType;
-
 import io.gomint.server.registry.RegisterInfo;
+import io.gomint.server.world.block.helper.ToolPresets;
+import io.gomint.world.block.BlockBrick;
+import io.gomint.world.block.BlockType;
 
 /**
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:brick_block" )
-public class BrickBlock extends Block implements BlockBrickBlock {
-
-    @Override
-    public String blockId() {
-        return "minecraft:brick_block";
-    }
+@RegisterInfo(sId = "minecraft:brick_block")
+public class Brick extends Block implements BlockBrick {
 
     @Override
     public long breakTime() {
-        return 3000;
+        return 10000;
     }
 
     @Override

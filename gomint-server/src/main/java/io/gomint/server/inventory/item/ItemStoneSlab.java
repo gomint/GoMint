@@ -31,7 +31,6 @@ public class ItemStoneSlab extends ItemSlab<io.gomint.inventory.item.ItemStoneSl
         // Slab types 1
         SMOOTH_STONE(STONE_SLAB_ID, (short) 0),
         WOODEN("minecraft:wooden_slab", (short) 0), // This is intended so that creative given "wooden" stone slabs don't break the server
-        BRICK(STONE_SLAB_ID, (short) 4),
         STONE_BRICK(STONE_SLAB_ID, (short) 5),
         QUARTZ(STONE_SLAB_ID, (short) 6),
         NETHER_BRICK(STONE_SLAB_ID, (short) 7),
