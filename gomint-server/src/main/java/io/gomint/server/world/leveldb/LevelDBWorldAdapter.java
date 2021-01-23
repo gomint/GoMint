@@ -438,21 +438,6 @@ public class LevelDBWorldAdapter extends WorldAdapter {
         if (chunk == null) {
             DB.Snapshot snapshot = this.db.getSnapshot();
 
-            // Get version bit
-            /*ByteBuf key = this.getKey(x, z, (byte) 0x76);
-            byte[] version = this.db.get(snapshot, key);
-            key.release();
-
-            if (version == null) {
-                if (generate) {
-                    snapshot.close();
-                    return this.generate(x, z, false);
-                } else {
-                    snapshot.close();
-                    return null;
-                }
-            }*/
-
             // Get the finalized value, only needed for vanilla though, other implementations don't use this (null = true)
             ByteBuf key = this.getKey(x, z, (byte) 0x36);
             byte[] finalized = this.db.get(snapshot, key);
@@ -461,7 +446,7 @@ public class LevelDBWorldAdapter extends WorldAdapter {
             // byte v = version[0];
             boolean populated = finalized == null || finalized[0] == 2;
 
-            LevelDBChunkAdapter loadingChunk = new LevelDBChunkAdapter(this, x, z, (byte) 19, populated);
+            LevelDBChunkAdapter loadingChunk = new LevelDBChunkAdapter(this, x, z, populated);
 
             for (int sectionY = 0; sectionY < 16; sectionY++) {
                 key = this.getKeySubChunk(x, z, (byte) 0x2f, (byte) sectionY);
