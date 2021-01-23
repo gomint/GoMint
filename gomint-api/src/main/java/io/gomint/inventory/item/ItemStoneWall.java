@@ -8,15 +8,15 @@ import io.gomint.world.block.data.StoneType;
  * @version 1.0
  * @stability 3
  */
-public interface ItemWall extends ItemStack<ItemWall> {
+public interface ItemStoneWall extends ItemStack<ItemStoneWall> {
 
     /**
      * Create a new item stack with given class and amount
      *
      * @param amount which is used for the creation
      */
-    static ItemWall create(int amount ) {
-        return GoMint.instance().createItemStack( ItemWall.class, amount );
+    static ItemStoneWall create(int amount ) {
+        return GoMint.instance().createItemStack( ItemStoneWall.class, amount );
     }
 
     /**
@@ -31,6 +31,6 @@ public interface ItemWall extends ItemStack<ItemWall> {
      *
      * @param stoneType type of stone
      */
-    ItemWall type(StoneType stoneType);
+    ItemStoneWall type(StoneType stoneType);
 
 }

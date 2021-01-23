@@ -16,22 +16,7 @@ import io.gomint.world.block.data.StoneType;
  * @version 1.0
  * @stability 3
  */
-public interface BlockWall extends Block {
-
-    /**
-     * Get the type of stone from which this wall has been made
-     *
-     * @return type of stone
-     */
-    StoneType type();
-
-    /**
-     * Set the type of stone for this wall
-     *
-     * @param stoneType type of stone
-     * @return block for chaining
-     */
-    BlockWall type(StoneType stoneType);
+public interface BlockWall<B> extends Block {
 
     /**
      * Does this wall have a center pole
@@ -46,7 +31,7 @@ public interface BlockWall extends Block {
      * @param pole true when it should, false otherwise
      * @return block for chaining
      */
-    BlockWall pole(boolean pole);
+    B pole(boolean pole);
 
     /**
      * Set connection type for this direction
@@ -55,7 +40,7 @@ public interface BlockWall extends Block {
      * @param connectionType to set
      * @return block for chaining
      */
-    BlockWall connection(Direction direction, ConnectionType connectionType);
+    B connection(Direction direction, ConnectionType connectionType);
 
     /**
      * Get the connection type for the given directions

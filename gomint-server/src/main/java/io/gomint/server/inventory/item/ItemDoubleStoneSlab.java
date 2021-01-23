@@ -36,7 +36,6 @@ public class ItemDoubleStoneSlab extends ItemStack< io.gomint.inventory.item.Ite
         // Slab types 1
         SMOOTH_STONE(STONE_SLAB_ID, (short) 0),
         WOODEN("minecraft:double_wooden_slab", (short) 0), // This is intended so that creative given "wooden" stone slabs don't break the server
-        COBBLESTONE(STONE_SLAB_ID, (short) 3),
         BRICK(STONE_SLAB_ID, (short) 4),
         STONE_BRICK(STONE_SLAB_ID, (short) 5),
         QUARTZ(STONE_SLAB_ID, (short) 6),
@@ -44,7 +43,6 @@ public class ItemDoubleStoneSlab extends ItemStack< io.gomint.inventory.item.Ite
 
         // Slab types 2
         PURPUR(STONE_SLAB2_ID, (short) 1),
-        MOSSY_COBBLESTONE(STONE_SLAB2_ID, (short) 5),
         RED_NETHER_BRICK(STONE_SLAB2_ID, (short) 7),
 
         // Slab types 3

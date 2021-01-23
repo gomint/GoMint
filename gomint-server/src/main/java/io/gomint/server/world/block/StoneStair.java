@@ -14,14 +14,12 @@ import io.gomint.world.block.data.StoneType;
  */
 
 @RegisterInfo(sId = "minecraft:brick_stairs")
-@RegisterInfo(sId = "minecraft:mossy_cobblestone_stairs")
 @RegisterInfo(sId = "minecraft:red_nether_brick_stairs")
 @RegisterInfo(sId = "minecraft:mossy_stone_brick_stairs")
 @RegisterInfo(sId = "minecraft:polished_andesite_stairs")
 @RegisterInfo(sId = "minecraft:prismarine_bricks_stairs")
 @RegisterInfo(sId = "minecraft:end_brick_stairs")
 @RegisterInfo(sId = "minecraft:quartz_stairs")
-@RegisterInfo(sId = "minecraft:stone_stairs")
 @RegisterInfo(sId = "minecraft:normal_stone_stairs")
 @RegisterInfo(sId = "minecraft:stone_brick_stairs")
 @RegisterInfo(sId = "minecraft:andesite_stairs")
@@ -44,14 +42,12 @@ public class StoneStair extends Stair<BlockStoneStair> implements BlockStoneStai
 
     private enum StoneTypeMagic {
 
-        COBBLESTONE("minecraft:stone_stairs"),
         BRICK("minecraft:brick_stairs"),
         STONE_BRICK("minecraft:stone_brick_stairs"),
         NETHER_BRICK("minecraft:nether_brick_stairs"),
         QUARTZ("minecraft:quartz_stairs"),
         SMOOTH_STONE,
 
-        MOSSY_COBBLESTONE("minecraft:mossy_cobblestone_stairs"),
         PURPUR("minecraft:purpur_stairs"),
         RED_NETHER_BRICK("minecraft:red_nether_brick_stairs"),
 

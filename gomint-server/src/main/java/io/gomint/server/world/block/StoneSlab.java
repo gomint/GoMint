@@ -39,7 +39,6 @@ public class StoneSlab extends Slab<BlockStoneSlab> implements BlockStoneSlab {
         // Slab types 1
         SMOOTH_STONE(STONE_SLAB_ID, STONE_TYPE, "smooth_stone"),
         WOODEN("minecraft:wooden_slab", "wood_type", "oak"), // This is intended so that creative given "wooden" stone slabs don't break the server
-        COBBLESTONE(STONE_SLAB_ID, STONE_TYPE, "cobblestone"),
         BRICK(STONE_SLAB_ID, STONE_TYPE, "brick"),
         STONE_BRICK(STONE_SLAB_ID, STONE_TYPE, "stone_brick"),
         QUARTZ(STONE_SLAB_ID, STONE_TYPE, "quartz"),
@@ -47,7 +46,7 @@ public class StoneSlab extends Slab<BlockStoneSlab> implements BlockStoneSlab {
 
         // Slab types 2
         PURPUR(STONE_SLAB2_ID, STONE_TYPE_2, "purpur"),
-        MOSSY_COBBLESTONE(STONE_SLAB2_ID, STONE_TYPE_2, "mossy_cobblestone"),
+
         RED_NETHER_BRICK(STONE_SLAB2_ID, STONE_TYPE_2, "red_nether_brick"),
 
         // Slab types 3

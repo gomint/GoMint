@@ -8,7 +8,7 @@ import io.gomint.world.block.data.CobblestoneType;
  * @version 1.0
  * @stability 3
  */
-public interface ItemCobblestone extends ItemStack<ItemCobblestone> {
+public interface ItemCobblestoneDoubleSlab extends ItemStack<ItemCobblestoneDoubleSlab> {
 
     /**
      * Create a new item stack with given class and amount
@@ -16,8 +16,8 @@ public interface ItemCobblestone extends ItemStack<ItemCobblestone> {
      * @param amount which is used for the creation
 	 * @return freshly generated item
      */
-    static ItemCobblestone create( int amount ) {
-        return GoMint.instance().createItemStack( ItemCobblestone.class, amount );
+    static ItemCobblestoneDoubleSlab create(int amount ) {
+        return GoMint.instance().createItemStack( ItemCobblestoneDoubleSlab.class, amount );
     }
 
     /**
@@ -25,7 +25,7 @@ public interface ItemCobblestone extends ItemStack<ItemCobblestone> {
      *
      * @param type of cobble stone
      */
-    ItemCobblestone type(CobblestoneType type);
+    ItemCobblestoneDoubleSlab type(CobblestoneType type);
 
     /**
      * Get the type of cobble stone

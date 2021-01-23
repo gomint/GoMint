@@ -3,6 +3,7 @@ package io.gomint.server.inventory.item;
 import io.gomint.inventory.item.ItemType;
 import io.gomint.server.registry.RegisterInfo;
 import io.gomint.world.block.Block;
+import io.gomint.world.block.BlockStoneWall;
 import io.gomint.world.block.BlockWall;
 import io.gomint.world.block.data.StoneType;
 
@@ -14,20 +15,18 @@ import io.gomint.world.block.data.StoneType;
 @RegisterInfo( sId = "minecraft:polished_blackstone_brick_wall" )
 @RegisterInfo( sId = "minecraft:polished_blackstone_wall" )
 @RegisterInfo( sId = "minecraft:blackstone_wall" )
-public class ItemWall extends ItemStack< io.gomint.inventory.item.ItemWall> implements io.gomint.inventory.item.ItemWall {
+public class ItemStoneWall extends ItemStack<io.gomint.inventory.item.ItemStoneWall> implements io.gomint.inventory.item.ItemStoneWall {
 
     private static final String WALL_ID = "minecraft:cobblestone_wall";
 
     private enum StoneTypeMagic {
         SANDSTONE(WALL_ID, (short) 5),
-        COBBLESTONE(WALL_ID, (short) 0),
         BRICK(WALL_ID, (short) 6),
         STONE_BRICK(WALL_ID, (short) 7),
         NETHER_BRICK(WALL_ID, (short) 10),
         QUARTZ(WALL_ID, (short) 0),
         SMOOTH_STONE(WALL_ID, (short) 0),
 
-        MOSSY_COBBLESTONE(WALL_ID, (short) 1),
         RED_SANDSTONE(WALL_ID, (short) 12),
         SMOOTH_SANDSTONE(WALL_ID, (short) 5),
         PURPUR(WALL_ID, (short) 0),
@@ -75,7 +74,7 @@ public class ItemWall extends ItemStack< io.gomint.inventory.item.ItemWall> impl
     }
 
     @Override
-    public ItemWall type(StoneType stoneType) {
+    public ItemStoneWall type(StoneType stoneType) {
         StoneTypeMagic state = StoneTypeMagic.valueOf(stoneType.name());
         this.material(state.wallId);
         this.data(state.data);
@@ -84,9 +83,9 @@ public class ItemWall extends ItemStack< io.gomint.inventory.item.ItemWall> impl
 
     @Override
     public Block block() {
-        BlockWall block = (BlockWall) super.block();
-        block.type(this.type());
-        return block;
+        return this.blocks
+            .get(BlockStoneWall.class)
+            .type(this.type());
     }
 
 }

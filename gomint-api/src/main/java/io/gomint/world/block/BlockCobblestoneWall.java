@@ -14,14 +14,14 @@ import io.gomint.world.block.data.CobblestoneType;
  * @version 1.0
  * @stability 3
  */
-public interface BlockCobblestone extends Block {
+public interface BlockCobblestoneWall extends BlockWall<BlockCobblestoneWall> {
 
     /**
      * Set the type of cobble stone
      *
      * @param type of cobble stone
      */
-    BlockCobblestone type(CobblestoneType type);
+    BlockCobblestoneWall type(CobblestoneType type);
 
     /**
      * Get the type of cobble stone
@@ -29,5 +29,6 @@ public interface BlockCobblestone extends Block {
      * @return type of cobble stone
      */
     CobblestoneType type();
+
 
 }

@@ -14,14 +14,12 @@ package io.gomint.world.block.data;
  */
 public enum StoneType {
 
-    COBBLESTONE,
     BRICK,
     STONE_BRICK,
     NETHER_BRICK,
     QUARTZ,
     SMOOTH_STONE,
 
-    MOSSY_COBBLESTONE,
     PURPUR,
     RED_NETHER_BRICK,
 

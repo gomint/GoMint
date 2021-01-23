@@ -17,7 +17,6 @@ import io.gomint.server.registry.RegisterInfo;
 @RegisterInfo( sId = "minecraft:smooth_red_sandstone_stairs")
 @RegisterInfo( sId = "minecraft:smooth_sandstone_stairs")
 @RegisterInfo( sId = "minecraft:end_brick_stairs")
-@RegisterInfo( sId = "minecraft:mossy_cobblestone_stairs")
 @RegisterInfo( sId = "minecraft:normal_stone_stairs", def = true)
 @RegisterInfo( sId = "minecraft:red_nether_brick_stairs")
 @RegisterInfo( sId = "minecraft:smooth_quartz_stairs")

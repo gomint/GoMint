@@ -5,12 +5,16 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-package io.gomint.world.block;
+package io.gomint.world.block.data;
 
 /**
  * @author geNAZt
  * @version 1.0
- * @stability 1
+ * @stability 3
  */
-public interface BlockMossyCobblestone extends Block {
+public enum CobblestoneType {
+
+    NORMAL,
+    MOSSY,
+
 }

@@ -8,20 +8,20 @@
 package io.gomint.server.world.block;
 
 import io.gomint.inventory.item.ItemStack;
+import io.gomint.server.registry.RegisterInfo;
 import io.gomint.server.world.block.helper.ToolPresets;
 import io.gomint.world.block.BlockCobblestone;
+import io.gomint.world.block.BlockCobblestoneStairs;
 import io.gomint.world.block.BlockType;
-
-import io.gomint.server.registry.RegisterInfo;
 import io.gomint.world.block.data.CobblestoneType;
 
 /**
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:cobblestone", def = true )
-@RegisterInfo( sId = "minecraft:mossy_cobblestone" )
-public class Cobblestone extends Block implements BlockCobblestone {
+@RegisterInfo( sId = "minecraft:stone_stairs", def = true )
+@RegisterInfo( sId = "minecraft:mossy_cobblestone_stairs" )
+public class CobblestoneStairs extends Stair<BlockCobblestoneStairs> implements BlockCobblestoneStairs {
 
     @Override
     public long breakTime() {
@@ -35,7 +35,7 @@ public class Cobblestone extends Block implements BlockCobblestone {
 
     @Override
     public BlockType blockType() {
-        return BlockType.COBBLESTONE;
+        return BlockType.COBBLESTONE_STAIRS;
     }
 
     @Override
@@ -49,11 +49,11 @@ public class Cobblestone extends Block implements BlockCobblestone {
     }
 
     @Override
-    public BlockCobblestone type(CobblestoneType type) {
+    public BlockCobblestoneStairs type(CobblestoneType type) {
         if ( type == CobblestoneType.NORMAL ) {
-            this.blockId("minecraft:cobblestone");
+            this.blockId("minecraft:stone_stairs");
         } else {
-            this.blockId("minecraft:mossy_cobblestone");
+            this.blockId("minecraft:mossy_cobblestone_stairs");
         }
 
         return this;
@@ -61,7 +61,7 @@ public class Cobblestone extends Block implements BlockCobblestone {
 
     @Override
     public CobblestoneType type() {
-        return "minecraft:cobblestone".equals(this.blockId()) ? CobblestoneType.NORMAL : CobblestoneType.MOSSY;
+        return "minecraft:stone_stairs".equals(this.blockId()) ? CobblestoneType.NORMAL : CobblestoneType.MOSSY;
     }
 
 }
