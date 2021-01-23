@@ -14,7 +14,6 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:crimson_fence_gate" )
 public class ItemCrimsonFenceGate extends ItemStack< io.gomint.inventory.item.ItemCrimsonFenceGate> implements io.gomint.inventory.item.ItemCrimsonFenceGate {
 
     @Override
