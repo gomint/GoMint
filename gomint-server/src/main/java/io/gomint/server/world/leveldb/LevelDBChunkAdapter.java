@@ -52,7 +52,6 @@ public class LevelDBChunkAdapter extends ChunkAdapter {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LevelDBChunkAdapter.class);
     private static final int BLOCK_VERSION = 17760256;
-    private int chunkVersion;
 
     /**
      * Create a new level db backed chunk
@@ -60,20 +59,16 @@ public class LevelDBChunkAdapter extends ChunkAdapter {
      * @param worldAdapter which loaded this chunk
      * @param x            position of chunk
      * @param z            position of chunk
-     * @param chunkVersion version of this chunk
      * @param populated    true when chunk is already populated, false when not
      */
-    public LevelDBChunkAdapter(WorldAdapter worldAdapter, int x, int z, byte chunkVersion, boolean populated) {
+    public LevelDBChunkAdapter(WorldAdapter worldAdapter, int x, int z, boolean populated) {
         super(worldAdapter, x, z);
-        this.chunkVersion = chunkVersion;
         this.setPopulated(populated);
         this.loadedTime = this.lastSavedTimestamp = worldAdapter.getServer().currentTickTime();
     }
 
     public LevelDBChunkAdapter(WorldAdapter worldAdapter, int x, int z) {
         super(worldAdapter, x, z);
-        this.chunkVersion = 19;
-
         this.loadedTime = worldAdapter.getServer().currentTickTime();
     }
 
@@ -90,12 +85,8 @@ public class LevelDBChunkAdapter extends ChunkAdapter {
         }
 
         // Save metadata
-        ByteBuf key = ((LevelDBWorldAdapter) this.world).getKey(this.x, this.z, (byte) 0x76);
-        ByteBuf val = PooledByteBufAllocator.DEFAULT.directBuffer(1).writeByte(this.chunkVersion);
-        writeBatch.put(key, val);
-
-        key = ((LevelDBWorldAdapter) this.world).getKey(this.x, this.z, (byte) 0x36);
-        val = PooledByteBufAllocator.DEFAULT.directBuffer(1).writeByte(isPopulated() ? 2 : 0)
+        ByteBuf key = ((LevelDBWorldAdapter) this.world).getKey(this.x, this.z, (byte) 0x36);
+        ByteBuf val = PooledByteBufAllocator.DEFAULT.directBuffer(1).writeByte(isPopulated() ? 2 : 0)
             .writeByte(0).writeByte(0).writeByte(0);
         writeBatch.put(key, val);
 
@@ -117,6 +108,8 @@ public class LevelDBChunkAdapter extends ChunkAdapter {
             key = ((LevelDBWorldAdapter) this.world).getKey(this.x, this.z, (byte) 0x31);
             writeBatch.put(key, out);
         }
+
+        // TODO: Store entities
 
         // Save biome and height
         ByteBuf outHB = PooledByteBufAllocator.DEFAULT.directBuffer(768);
@@ -292,7 +285,7 @@ public class LevelDBChunkAdapter extends ChunkAdapter {
     void loadTileEntities(byte[] tileEntityData) {
         ByteBuf data = Allocator.allocate(tileEntityData);
         NBTReader nbtReader = new NBTReader(data, ByteOrder.LITTLE_ENDIAN);
-        while (data.readableBytes() > 0 && data.getByte(data.readerIndex() + 1) != 0) {
+        while (data.readableBytes() > 0) {
             TileEntity tileEntity = null;
 
             try {
