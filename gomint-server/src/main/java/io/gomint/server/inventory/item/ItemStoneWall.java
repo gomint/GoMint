@@ -20,14 +20,14 @@ public class ItemStoneWall extends ItemStack<io.gomint.inventory.item.ItemStoneW
     private static final String WALL_ID = "minecraft:cobblestone_wall";
 
     private enum StoneTypeMagic {
-        SANDSTONE(WALL_ID, (short) 5),
+
         BRICK(WALL_ID, (short) 6),
         STONE_BRICK(WALL_ID, (short) 7),
         NETHER_BRICK(WALL_ID, (short) 10),
         QUARTZ(WALL_ID, (short) 0),
         SMOOTH_STONE(WALL_ID, (short) 0),
 
-        RED_SANDSTONE(WALL_ID, (short) 12),
+
         SMOOTH_SANDSTONE(WALL_ID, (short) 5),
         PURPUR(WALL_ID, (short) 0),
         RED_NETHER_BRICK(WALL_ID, (short) 13),

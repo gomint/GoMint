@@ -19,7 +19,6 @@ public class ItemPrismarineWall extends ItemStack< io.gomint.inventory.item.Item
         return ItemType.PRISMARINE_WALL;
     }
 
-
     @Override
     public Block block() {
         return this.blocks.get(BlockPrismarineWall.class);
