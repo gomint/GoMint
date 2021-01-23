@@ -29,7 +29,7 @@ public class ItemPrismarineSlab extends ItemStack<io.gomint.inventory.item.ItemP
                 return PrismarineType.BRICK;
         }
 
-        return null;
+        return PrismarineType.NORMAL;
     }
 
     @Override
