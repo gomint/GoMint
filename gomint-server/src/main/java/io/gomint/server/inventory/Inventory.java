@@ -296,7 +296,7 @@ public abstract class Inventory<I> implements io.gomint.inventory.Inventory<I> {
             return ItemAir.create(0);
         }
 
-        return this.items.create(itemId, data, amount, null);
+        return this.items.create(itemId, data, amount, compound.getCompound("tag", false));
     }
 
     protected NBTTagCompound persistItem(io.gomint.server.inventory.item.ItemStack<?> itemStack) {
@@ -304,6 +304,11 @@ public abstract class Inventory<I> implements io.gomint.inventory.Inventory<I> {
         compound.addValue("Damage", itemStack.data());
         compound.addValue("Count", itemStack.amount());
         compound.addValue("Name", itemStack.material());
+
+        if (itemStack.nbtData() != null) {
+            compound.addValue("tag", itemStack.nbtData());
+        }
+
         return compound;
     }
 

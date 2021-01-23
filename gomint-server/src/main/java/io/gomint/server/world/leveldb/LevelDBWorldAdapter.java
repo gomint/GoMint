@@ -9,6 +9,7 @@ package io.gomint.server.world.leveldb;
 
 import com.google.common.io.Files;
 import io.gomint.leveldb.DB;
+import io.gomint.leveldb.Iterator;
 import io.gomint.leveldb.LibraryLoader;
 import io.gomint.leveldb.WriteBatch;
 import io.gomint.math.BlockPosition;
@@ -17,6 +18,7 @@ import io.gomint.server.GoMintServer;
 import io.gomint.server.entity.EntityPlayer;
 import io.gomint.server.plugin.PluginClassloader;
 import io.gomint.server.util.Allocator;
+import io.gomint.server.util.DumpUtil;
 import io.gomint.server.world.BlockRuntimeIDs;
 import io.gomint.server.world.ChunkAdapter;
 import io.gomint.server.world.ChunkCache;
@@ -437,7 +439,7 @@ public class LevelDBWorldAdapter extends WorldAdapter {
             DB.Snapshot snapshot = this.db.getSnapshot();
 
             // Get version bit
-            ByteBuf key = this.getKey(x, z, (byte) 0x76);
+            /*ByteBuf key = this.getKey(x, z, (byte) 0x76);
             byte[] version = this.db.get(snapshot, key);
             key.release();
 
@@ -449,17 +451,17 @@ public class LevelDBWorldAdapter extends WorldAdapter {
                     snapshot.close();
                     return null;
                 }
-            }
+            }*/
 
             // Get the finalized value, only needed for vanilla though, other implementations don't use this (null = true)
-            key = this.getKey(x, z, (byte) 0x36);
+            ByteBuf key = this.getKey(x, z, (byte) 0x36);
             byte[] finalized = this.db.get(snapshot, key);
             key.release();
 
-            byte v = version[0];
+            // byte v = version[0];
             boolean populated = finalized == null || finalized[0] == 2;
 
-            LevelDBChunkAdapter loadingChunk = new LevelDBChunkAdapter(this, x, z, v, populated);
+            LevelDBChunkAdapter loadingChunk = new LevelDBChunkAdapter(this, x, z, (byte) 19, populated);
 
             for (int sectionY = 0; sectionY < 16; sectionY++) {
                 key = this.getKeySubChunk(x, z, (byte) 0x2f, (byte) sectionY);
