@@ -432,6 +432,9 @@ public class EntityPlayer extends EntityHuman<io.gomint.entity.EntityPlayer> imp
 
     @Override
     public EntityPlayer teleport(Location to, EntityTeleportEvent.Cause cause) {
+        if (this.world != null && !this.world.mainThread()) {
+            LOGGER.warn("Teleporting an entity not from the thread of its current world. This is not safe", new Exception());
+        }
         // Only teleport when online
         if (!online()) {
             return this;
@@ -448,6 +451,8 @@ public class EntityPlayer extends EntityHuman<io.gomint.entity.EntityPlayer> imp
         // Reset chunks
         this.connection.resetQueuedChunks();
 
+        Chunk fromChunk = this.chunk();
+
         // Check if we need to change worlds
         if (!to.world().equals(from.world())) {
             // Despawn entities first
@@ -456,32 +461,43 @@ public class EntityPlayer extends EntityHuman<io.gomint.entity.EntityPlayer> imp
             // Change worlds
             world().removePlayer(this);
             this.world((WorldAdapter) to.world());
-            this.world.spawnEntityAt(this, to.x(), to.y(), to.z(), to.yaw(), to.pitch());
 
-            // Be sure to get rid of all loaded chunks
-            this.connection.resetPlayerChunks();
+            // Set the new location
+            this.setAndRecalcPosition(to);
 
-            // Send all packets needed for a world switch
-            this.world.playerSwitched(this);
+            this.world.syncScheduler().execute(() -> {
+                this.world.spawnEntityAt(this, to.x(), to.y(), to.z(), to.yaw(), to.pitch());
+
+                // Be sure to get rid of all loaded chunks
+                this.connection.resetPlayerChunks();
+
+                // Send all packets needed for a world switch
+                this.world.playerSwitched(this);
+                teleport0(fromChunk, from, to);
+            });
+        } else {
+            // Set the new location
+            this.setAndRecalcPosition(to);
+
+            teleport0(fromChunk, from, to);
         }
-
+        return this;
+    }
+    
+    private void teleport0(Chunk fromChunk, Location from, Location to) {
         // Check for attached entities
         if (!this.getAttachedEntities().isEmpty()) {
-            Chunk chunk = this.chunk();
             for (Entity<?> entity : new HashSet<>(this.getAttachedEntities())) {
                 if (entity instanceof EntityPlayer) {
                     EntityPlayer player = (EntityPlayer) entity;
                     Chunk playerChunk = player.chunk();
-                    if (Math.abs(playerChunk.x() - chunk.x()) > player.viewDistance() &&
-                        Math.abs(playerChunk.z() - chunk.z()) > player.viewDistance()) {
+                    if (Math.abs(playerChunk.x() - fromChunk.x()) > player.viewDistance() &&
+                        Math.abs(playerChunk.z() - fromChunk.z()) > player.viewDistance()) {
                         player.entityVisibilityManager().removeEntity(this);
                     }
                 }
             }
         }
-
-        // Set the new location
-        this.setAndRecalcPosition(to);
 
         // Force load the new spawn chunk
         this.chunk(); // This getChunk uses loadChunk so it will generate or load from disc if needed
@@ -495,8 +511,6 @@ public class EntityPlayer extends EntityHuman<io.gomint.entity.EntityPlayer> imp
 
         // Tell the movement handler to force this position to the client
         this.teleportPosition = to;
-
-        return this;
     }
 
     @Override
