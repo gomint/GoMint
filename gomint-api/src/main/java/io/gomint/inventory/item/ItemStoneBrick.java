@@ -1,11 +1,12 @@
 package io.gomint.inventory.item;
 
 import io.gomint.GoMint;
+import io.gomint.world.block.data.StoneBrickType;
 
 /**
  * @author geNAZt
  * @version 1.0
- * @stability 1
+ * @stability 3
  */
 public interface ItemStoneBrick extends ItemStack<ItemStoneBrick> {
 
@@ -18,5 +19,19 @@ public interface ItemStoneBrick extends ItemStack<ItemStoneBrick> {
     static ItemStoneBrick create( int amount ) {
         return GoMint.instance().createItemStack( ItemStoneBrick.class, amount );
     }
+
+    /**
+     * Set the type of stone brick
+     *
+     * @param type of stone brick
+     */
+    ItemStoneBrick type(StoneBrickType type);
+
+    /**
+     * Get the type of stone brick
+     *
+     * @return type of stone brick
+     */
+    StoneBrickType type();
 
 }

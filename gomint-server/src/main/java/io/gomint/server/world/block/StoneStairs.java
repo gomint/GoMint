@@ -14,13 +14,11 @@ import io.gomint.world.block.data.StoneType;
  */
 
 @RegisterInfo(sId = "minecraft:red_nether_brick_stairs")
-@RegisterInfo(sId = "minecraft:mossy_stone_brick_stairs")
 @RegisterInfo(sId = "minecraft:polished_andesite_stairs")
 
 @RegisterInfo(sId = "minecraft:end_brick_stairs")
 @RegisterInfo(sId = "minecraft:quartz_stairs")
 @RegisterInfo(sId = "minecraft:normal_stone_stairs")
-@RegisterInfo(sId = "minecraft:stone_brick_stairs")
 @RegisterInfo(sId = "minecraft:andesite_stairs")
 @RegisterInfo(sId = "minecraft:granite_stairs")
 @RegisterInfo(sId = "minecraft:diorite_stairs")
