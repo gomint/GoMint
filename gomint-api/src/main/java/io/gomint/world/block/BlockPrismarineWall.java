@@ -12,5 +12,7 @@ package io.gomint.world.block;
  * @version 1.0
  * @stability 3
  */
-public interface BlockPrismarineWall extends Block {
+public interface BlockPrismarineWall extends BlockWall<BlockPrismarineWall> {
+
+
 }
