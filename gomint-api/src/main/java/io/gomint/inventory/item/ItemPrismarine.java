@@ -1,6 +1,7 @@
 package io.gomint.inventory.item;
 
 import io.gomint.GoMint;
+import io.gomint.world.block.data.PrismarineType;
 
 /**
  * @author geNAZt
@@ -18,5 +19,19 @@ public interface ItemPrismarine extends ItemStack<ItemPrismarine> {
     static ItemPrismarine create( int amount ) {	
         return GoMint.instance().createItemStack( ItemPrismarine.class, amount );
     }
+
+    /**
+     * Set the type of prismarine
+     *
+     * @param type of prismarine
+     */
+    ItemPrismarine type(PrismarineType type);
+
+    /**
+     * Get the type of prismarine
+     *
+     * @return type of prismarine
+     */
+    PrismarineType type();
 
 }
