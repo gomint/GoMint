@@ -46,8 +46,7 @@ GoMint is a modern Minecraft Bedrock Edition server enabling you to make your vi
 - [🟡 Latest build](https://gomint-artifacts.s3.amazonaws.com/latest.zip)
 
 ⚠ **The following one-liner scripts download the latest build, not the latest tag!**
-
-⚠ **If GoMint doesn't start check if you have installed java 11, java 8 will not work!**
+⚠ **GoMint requires Java version 11 or higher!**
 
 #### Windows Command Line
 ```bash
