@@ -28,4 +28,32 @@ public class PermissionTest {
         Assertions.assertFalse(permissionManager.has("test1"));
     }
 
+    @Test
+    public void wildcardTest() {
+        PermissionGroupManager manager = new PermissionGroupManager();
+        PermissionGroup group = (PermissionGroup) manager.group("test");
+        group.permission("test*", true);
+
+        PermissionManager permissionManager = new PermissionManager(null);
+        permissionManager.addGroup(group);
+
+        Assertions.assertTrue(permissionManager.has("test"));
+        Assertions.assertTrue(permissionManager.has("test1"));
+    }
+
+    @Test
+    public void wildcardNegateTest() {
+        PermissionGroupManager manager = new PermissionGroupManager();
+        PermissionGroup group = (PermissionGroup) manager.group("test");
+        group.permission("test*", true);
+
+        PermissionManager permissionManager = new PermissionManager(null);
+        permissionManager.addGroup(group);
+        permissionManager.permission("test2", false);
+
+        Assertions.assertTrue(permissionManager.has("test"));
+        Assertions.assertTrue(permissionManager.has("test1"));
+        Assertions.assertFalse(permissionManager.has("test2"));
+    }
+
 }
