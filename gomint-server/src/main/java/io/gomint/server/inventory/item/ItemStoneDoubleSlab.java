@@ -10,7 +10,7 @@ package io.gomint.server.inventory.item;
 import io.gomint.inventory.item.ItemType;
 import io.gomint.server.registry.RegisterInfo;
 import io.gomint.world.block.Block;
-import io.gomint.world.block.BlockDoubleStoneSlab;
+import io.gomint.world.block.BlockStoneDoubleSlab;
 import io.gomint.world.block.data.StoneType;
 
 /**
@@ -24,7 +24,7 @@ import io.gomint.world.block.data.StoneType;
 @RegisterInfo(sId = "minecraft:blackstone_double_slab")
 @RegisterInfo(sId = "minecraft:polished_blackstone_double_slab")
 @RegisterInfo(sId = "minecraft:polished_blackstone_brick_double_slab")
-public class ItemDoubleStoneSlab extends ItemStack< io.gomint.inventory.item.ItemDoubleStoneSlab> implements io.gomint.inventory.item.ItemDoubleStoneSlab {
+public class ItemStoneDoubleSlab extends ItemStack<io.gomint.inventory.item.ItemStoneDoubleSlab> implements io.gomint.inventory.item.ItemStoneDoubleSlab {
 
     private static final String STONE_SLAB_ID = "minecraft:real_double_stone_slab";
     private static final String STONE_SLAB2_ID = "minecraft:real_double_stone_slab2";
@@ -36,7 +36,6 @@ public class ItemDoubleStoneSlab extends ItemStack< io.gomint.inventory.item.Ite
         // Slab types 1
         SMOOTH_STONE(STONE_SLAB_ID, (short) 0),
         WOODEN("minecraft:double_wooden_slab", (short) 0), // This is intended so that creative given "wooden" stone slabs don't break the server
-        STONE_BRICK(STONE_SLAB_ID, (short) 5),
         QUARTZ(STONE_SLAB_ID, (short) 6),
         NETHER_BRICK(STONE_SLAB_ID, (short) 7),
 
@@ -54,7 +53,6 @@ public class ItemDoubleStoneSlab extends ItemStack< io.gomint.inventory.item.Ite
         POLISHED_GRANITE(STONE_SLAB3_ID, (short) 7),
 
         // Slab types 4
-        MOSSY_STONE_BRICK(STONE_SLAB4_ID, (short) 0),
         SMOOTH_QUARTZ(STONE_SLAB4_ID, (short) 1),
         STONE(STONE_SLAB4_ID, (short) 2),
 
@@ -79,7 +77,7 @@ public class ItemDoubleStoneSlab extends ItemStack< io.gomint.inventory.item.Ite
 
     @Override
     public Block block() {
-        BlockDoubleStoneSlab slab = this.blocks.get(BlockDoubleStoneSlab.class);
+        BlockStoneDoubleSlab slab = this.blocks.get(BlockStoneDoubleSlab.class);
         slab.type(this.type());
         return slab;
     }
@@ -96,7 +94,7 @@ public class ItemDoubleStoneSlab extends ItemStack< io.gomint.inventory.item.Ite
     }
 
     @Override
-    public ItemDoubleStoneSlab type(StoneType type) {
+    public ItemStoneDoubleSlab type(StoneType type) {
         StoneTypeMagic state = StoneTypeMagic.valueOf(type.name());
         this.material(state.id);
         this.data(state.data);

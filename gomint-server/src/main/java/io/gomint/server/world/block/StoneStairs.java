@@ -37,7 +37,6 @@ public class StoneStairs extends Stairs<BlockStoneStairs> implements BlockStoneS
 
     private enum StoneTypeMagic {
 
-        STONE_BRICK("minecraft:stone_brick_stairs"),
         NETHER_BRICK("minecraft:nether_brick_stairs"),
         QUARTZ("minecraft:quartz_stairs"),
         SMOOTH_STONE,
@@ -54,7 +53,6 @@ public class StoneStairs extends Stairs<BlockStoneStairs> implements BlockStoneS
         POLISHED_ANDESITE("minecraft:polished_andesite_stairs"),
 
         STONE("minecraft:normal_stone_stairs"),
-        MOSSY_STONE_BRICK("minecraft:mossy_stone_brick_stairs"),
         SMOOTH_QUARTZ("minecraft:smooth_quartz_stairs"),
 
         BLACKSTONE("minecraft:blackstone_stairs"),

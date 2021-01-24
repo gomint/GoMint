@@ -7,28 +7,27 @@
 
 package io.gomint.world.block;
 
-import io.gomint.world.block.data.StoneType;
+import io.gomint.world.block.data.StoneBrickSlabType;
 
 /**
  * @author geNAZt
  * @version 1.0
  * @stability 3
  */
-public interface BlockDoubleStoneSlab extends Block {
+public interface BlockStoneBrickSlab extends BlockSlab<BlockStoneBrickSlab> {
 
     /**
      * Get the type of stone this slab has
      *
      * @return type of stone
      */
-    StoneType type();
+    StoneBrickSlabType type();
 
     /**
-     * Set the type of stone for this block
+     * Set the type of stone for this slab
      *
-     * @param stoneType for this block
-     * @return block for chaining
+     * @param type which this slab should have
      */
-    BlockDoubleStoneSlab type(StoneType stoneType);
+    BlockStoneBrickSlab type(StoneBrickSlabType type);
 
 }

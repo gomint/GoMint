@@ -25,33 +25,16 @@ public class StoneWall extends Wall<BlockStoneWall> implements BlockStoneWall {
     private enum StoneTypeMagic {
 
         // Slab types 1
-        SMOOTH_STONE("", "", ""),
-        SANDSTONE(STONE_SLAB_ID, STONE_TYPE, "sandstone"),
-        STONE_BRICK(STONE_SLAB_ID, STONE_TYPE, "stone_brick"),
-        QUARTZ("", "", ""),
         NETHER_BRICK(STONE_SLAB_ID, STONE_TYPE, "nether_brick"),
 
         // Slab types 2
-        RED_SANDSTONE(STONE_SLAB_ID, STONE_TYPE, "red_sandstone"),
-        PURPUR("", "", ""),
-
-        SMOOTH_SANDSTONE("", "", ""),
         RED_NETHER_BRICK(STONE_SLAB_ID, STONE_TYPE, "red_nether_brick"),
 
         // Slab types 3
         END_STONE_BRICK(STONE_SLAB_ID, STONE_TYPE, "end_brick"),
-        SMOOTH_RED_SANDSTONE("", "", ""),
-        POLISHED_ANDESITE("", "", ""),
         ANDESITE(STONE_SLAB_ID, STONE_TYPE, "andesite"),
         DIORITE(STONE_SLAB_ID, STONE_TYPE, "diorite"),
-        POLISHED_DIORITE("", "", ""),
         GRANITE(STONE_SLAB_ID, STONE_TYPE, "granite"),
-        POLISHED_GRANITE("", "", ""),
-
-        // Slab types 4
-        MOSSY_STONE_BRICK(STONE_SLAB_ID, STONE_TYPE, "mossy_stone_brick"),
-        SMOOTH_QUARTZ("", "", ""),
-        STONE("", "", ""),
 
         // Additional slabs (new ones)
         BLACKSTONE("minecraft:blackstone_wall", "", ""),

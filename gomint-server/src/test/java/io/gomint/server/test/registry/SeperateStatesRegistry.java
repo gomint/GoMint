@@ -7,7 +7,7 @@
 
 package io.gomint.server.test.registry;
 
-import io.gomint.inventory.item.ItemDoubleStoneSlab;
+import io.gomint.inventory.item.ItemStoneDoubleSlab;
 import io.gomint.inventory.item.ItemPrismarineDoubleSlab;
 import io.gomint.inventory.item.ItemStack;
 import io.gomint.server.test.IntegrationTest;
@@ -53,7 +53,7 @@ public class SeperateStatesRegistry extends IntegrationTest {
         Assertions.assertTrue(ItemPrismarineDoubleSlab.class.isAssignableFrom(item.getClass()));
 
         item = this.server.items().create("minecraft:real_double_stone_slab2", (short) 0, (byte) 1, null);
-        Assertions.assertTrue(ItemDoubleStoneSlab.class.isAssignableFrom(item.getClass()));
+        Assertions.assertTrue(ItemStoneDoubleSlab.class.isAssignableFrom(item.getClass()));
     }
 
 }

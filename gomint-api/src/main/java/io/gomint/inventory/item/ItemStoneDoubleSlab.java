@@ -15,7 +15,7 @@ import io.gomint.world.block.data.StoneType;
  * @version 1.0
  * @stability 3
  */
-public interface ItemDoubleStoneSlab extends ItemStack<ItemDoubleStoneSlab> {
+public interface ItemStoneDoubleSlab extends ItemStack<ItemStoneDoubleSlab> {
 
     /**
      * Create a new item stack with given class and amount
@@ -23,8 +23,8 @@ public interface ItemDoubleStoneSlab extends ItemStack<ItemDoubleStoneSlab> {
      * @param amount which is used for the creation
 	 * @return freshly generated item
      */
-    static ItemDoubleStoneSlab create( int amount ) {	
-        return GoMint.instance().createItemStack( ItemDoubleStoneSlab.class, amount );
+    static ItemStoneDoubleSlab create(int amount ) {
+        return GoMint.instance().createItemStack( ItemStoneDoubleSlab.class, amount );
     }
 
     /**
@@ -40,6 +40,6 @@ public interface ItemDoubleStoneSlab extends ItemStack<ItemDoubleStoneSlab> {
      * @param type which this slab should have
      * @return item for chaining
      */
-    ItemDoubleStoneSlab type(StoneType type);
+    ItemStoneDoubleSlab type(StoneType type);
 
 }

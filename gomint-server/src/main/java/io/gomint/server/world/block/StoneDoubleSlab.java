@@ -4,7 +4,7 @@ import io.gomint.inventory.item.ItemStack;
 import io.gomint.server.world.block.helper.ToolPresets;
 import io.gomint.server.world.block.state.BooleanBlockState;
 import io.gomint.server.world.block.state.EnumBlockState;
-import io.gomint.world.block.BlockDoubleStoneSlab;
+import io.gomint.world.block.BlockStoneDoubleSlab;
 import io.gomint.world.block.BlockType;
 
 import io.gomint.server.registry.RegisterInfo;
@@ -21,7 +21,7 @@ import io.gomint.world.block.data.StoneType;
 @RegisterInfo(sId = "minecraft:blackstone_double_slab")
 @RegisterInfo(sId = "minecraft:polished_blackstone_double_slab")
 @RegisterInfo(sId = "minecraft:polished_blackstone_brick_double_slab")
-public class DoubleStoneSlab extends Block implements BlockDoubleStoneSlab {
+public class StoneDoubleSlab extends Block implements BlockStoneDoubleSlab {
 
     private static final String STONE_SLAB_ID = "minecraft:double_stone_slab";
     private static final String STONE_TYPE = "stone_slab_type";
@@ -41,7 +41,6 @@ public class DoubleStoneSlab extends Block implements BlockDoubleStoneSlab {
         SMOOTH_STONE(STONE_SLAB_ID, STONE_TYPE, "smooth_stone"),
         // This is intended so that creative given "wooden" stone slabs don't break the server
         WOODEN("minecraft:double_wooden_slab", "wood_type", "oak"),
-        STONE_BRICK(STONE_SLAB_ID, STONE_TYPE, "stone_brick"),
         QUARTZ(STONE_SLAB_ID, STONE_TYPE, "quartz"),
         NETHER_BRICK(STONE_SLAB_ID, STONE_TYPE, "nether_brick"),
 
@@ -59,7 +58,6 @@ public class DoubleStoneSlab extends Block implements BlockDoubleStoneSlab {
         POLISHED_GRANITE(STONE_SLAB3_ID, STONE_TYPE_3, "polished_granite"),
 
         // Slab types 4
-        MOSSY_STONE_BRICK(STONE_SLAB4_ID, STONE_TYPE_4, "mossy_stone_brick"),
         SMOOTH_QUARTZ(STONE_SLAB4_ID, STONE_TYPE_4, "smooth_quartz"),
         STONE(STONE_SLAB4_ID, STONE_TYPE_4, "stone"),
 
@@ -119,7 +117,7 @@ public class DoubleStoneSlab extends Block implements BlockDoubleStoneSlab {
 
     @Override
     public BlockType blockType() {
-        return BlockType.DOUBLE_STONE_SLAB;
+        return BlockType.STONE_DOUBLE_SLAB;
     }
 
     @Override
@@ -145,7 +143,7 @@ public class DoubleStoneSlab extends Block implements BlockDoubleStoneSlab {
     }
 
     @Override
-    public BlockDoubleStoneSlab type(StoneType stoneType) {
+    public BlockStoneDoubleSlab type(StoneType stoneType) {
         StoneTypeMagic newState = StoneTypeMagic.valueOf(stoneType.name());
         this.blockId(newState.blockId);
         VARIANT.state(this, newState);

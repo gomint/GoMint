@@ -21,11 +21,9 @@ public class ItemStoneWall extends ItemStack<io.gomint.inventory.item.ItemStoneW
 
     private enum StoneTypeMagic {
 
-        STONE_BRICK(WALL_ID, (short) 7),
         NETHER_BRICK(WALL_ID, (short) 10),
         QUARTZ(WALL_ID, (short) 0),
         SMOOTH_STONE(WALL_ID, (short) 0),
-
 
         SMOOTH_SANDSTONE(WALL_ID, (short) 5),
         PURPUR(WALL_ID, (short) 0),
@@ -41,7 +39,6 @@ public class ItemStoneWall extends ItemStack<io.gomint.inventory.item.ItemStoneW
         SMOOTH_RED_SANDSTONE(WALL_ID, (short) 12),
 
         STONE(WALL_ID, (short) 0),
-        MOSSY_STONE_BRICK(WALL_ID, (short) 1),
         SMOOTH_QUARTZ(WALL_ID, (short) 0),
 
         BLACKSTONE("minecraft:blackstone_wall", (short) 0),
