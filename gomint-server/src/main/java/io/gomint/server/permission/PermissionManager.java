@@ -68,28 +68,27 @@ public class PermissionManager implements io.gomint.permission.PermissionManager
     @Override
     public boolean has(String permission, boolean defaultValue ) {
         // Check if player is op
-        if ( this.player.op() ) {
+        if ( this.player != null && this.player.op() ) {
             return true;
         }
 
         // Check if we have a cached copy
-        String permissionIntern = permission.intern();
-        Boolean val = this.cache.get( permissionIntern );
+        Boolean val = this.cache.get( permission );
         if ( val == null ) {
             // Check player permissions first
             String wildCardFound = null;
             for ( Object2BooleanMap.Entry<String> entry : this.permissions.object2BooleanEntrySet() ) {
                 // Did we find a full permission match?
                 String currentChecking = entry.getKey();
-                if ( permissionIntern == currentChecking ) {
-                    this.cache.put( permissionIntern, entry.getBooleanValue() );
+                if ( permission.equals(currentChecking) ) {
+                    this.cache.put( permission, entry.getBooleanValue() );
                     return entry.getBooleanValue();
                 }
 
                 // Check for wildcard
                 if ( currentChecking.endsWith( "*" ) ) {
                     String wildCardChecking = currentChecking.substring( 0, currentChecking.length() - 1 );
-                    if ( permissionIntern.startsWith( wildCardChecking ) ) {
+                    if ( permission.startsWith( wildCardChecking ) ) {
                         if ( wildCardFound == null || currentChecking.length() > wildCardFound.length() ) {
                             wildCardFound = currentChecking;
                         }
@@ -100,7 +99,7 @@ public class PermissionManager implements io.gomint.permission.PermissionManager
             // Check if we found a wildcard
             if ( wildCardFound != null ) {
                 val = this.permissions.getBoolean( wildCardFound );
-                this.cache.put( permissionIntern, val );
+                this.cache.put( permission, val );
                 return val;
             }
 
@@ -117,15 +116,15 @@ public class PermissionManager implements io.gomint.permission.PermissionManager
                     for ( Object2BooleanMap.Entry<String> entry : playerCursor ) {
                         // Did we find a full permission match?
                         String currentChecking = entry.getKey();
-                        if ( permissionIntern == currentChecking ) {
-                            this.cache.put( permissionIntern, entry.getBooleanValue() );
+                        if ( permission.equals( currentChecking ) ) {
+                            this.cache.put( permission, entry.getBooleanValue() );
                             return entry.getBooleanValue();
                         }
 
                         // Check for wildcard
                         if ( currentChecking.endsWith( "*" ) ) {
                             String wildCardChecking = currentChecking.substring( 0, currentChecking.length() - 1 );
-                            if ( permissionIntern.startsWith( wildCardChecking ) ) {
+                            if ( permission.startsWith( wildCardChecking ) ) {
                                 if ( wildCardFound == null || currentChecking.length() > wildCardFound.length() ) {
                                     wildCardFound = currentChecking;
                                 }
@@ -136,12 +135,12 @@ public class PermissionManager implements io.gomint.permission.PermissionManager
 
                 if ( wildCardFound != null ) {
                     val = group.get( wildCardFound );
-                    this.cache.put( permissionIntern, val );
+                    this.cache.put( permission, val );
                     return val;
                 }
             }
 
-            this.cache.put( permissionIntern, defaultValue );
+            this.cache.put( permission, defaultValue );
             return defaultValue;
         }
 
@@ -166,7 +165,7 @@ public class PermissionManager implements io.gomint.permission.PermissionManager
 
     @Override
     public PermissionManager permission(String permission, boolean value ) {
-        this.permissions.put( permission.intern(), value );
+        this.permissions.put( permission, value );
         this.cache.clear();
         this.dirty = true;
         return this;
