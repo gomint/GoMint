@@ -52,7 +52,7 @@ public class PermissionGroup implements Group {
             this.permissions = new Object2BooleanOpenHashMap<>();
         }
 
-        this.permissions.put( permission.intern(), value );
+        this.permissions.put( permission, value );
         this.dirty = true;
         this.manager.setDirty( true );
         return this;
@@ -61,7 +61,7 @@ public class PermissionGroup implements Group {
     @Override
     public Group removePermission( String permission ) {
         if ( this.permissions != null ) {
-            this.permissions.remove( permission.intern() );
+            this.permissions.remove( permission );
         }
 
         this.dirty = true;
