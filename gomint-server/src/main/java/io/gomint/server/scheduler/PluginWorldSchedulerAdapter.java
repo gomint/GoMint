@@ -7,17 +7,11 @@
 
 package io.gomint.server.scheduler;
 
-import io.gomint.plugin.Plugin;
-import io.gomint.scheduler.Scheduler;
 import io.gomint.scheduler.Task;
 import io.gomint.scheduler.WorldScheduler;
-import io.gomint.server.world.WorldAdapter;
 import io.gomint.world.World;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
+import java.lang.ref.WeakReference;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -28,7 +22,7 @@ import java.util.concurrent.TimeUnit;
 public class PluginWorldSchedulerAdapter implements WorldScheduler {
 
     private PluginSchedulerAdapter pluginSchedulerAdapter;
-    private final World world;
+    private final WeakReference<World> worldRef;
 
     /**
      * Create a new scheduler for the given plugin
@@ -38,12 +32,12 @@ public class PluginWorldSchedulerAdapter implements WorldScheduler {
      */
     public PluginWorldSchedulerAdapter(PluginSchedulerAdapter pluginSchedulerAdapter, World world) {
         this.pluginSchedulerAdapter = pluginSchedulerAdapter;
-        this.world = world;
+        this.worldRef = new WeakReference<>(world);
     }
 
     @Override
     public World world() {
-        return this.world;
+        return this.worldRef.get();
     }
 
     @Override
@@ -63,17 +57,17 @@ public class PluginWorldSchedulerAdapter implements WorldScheduler {
 
     @Override
     public Task execute(Runnable runnable) {
-        return this.pluginSchedulerAdapter.execute(this.world, runnable);
+        return this.pluginSchedulerAdapter.execute(world(), runnable);
     }
 
     @Override
     public Task schedule(Runnable runnable, long delay, TimeUnit timeUnit) {
-        return this.pluginSchedulerAdapter.schedule(this.world, runnable, delay, timeUnit);
+        return this.pluginSchedulerAdapter.schedule(world(), runnable, delay, timeUnit);
     }
 
     @Override
     public Task schedule(Runnable runnable, long delay, long period, TimeUnit timeUnit) {
-        return this.pluginSchedulerAdapter.schedule(this.world, runnable, delay, period, timeUnit);
+        return this.pluginSchedulerAdapter.schedule(world(), runnable, delay, period, timeUnit);
     }
 
 }
