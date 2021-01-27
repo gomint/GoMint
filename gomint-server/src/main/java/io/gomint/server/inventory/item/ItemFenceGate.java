@@ -25,7 +25,7 @@ import java.time.Duration;
 
 public class ItemFenceGate extends ItemStack<io.gomint.inventory.item.ItemFenceGate> implements io.gomint.inventory.item.ItemFenceGate {
     private enum FenceType {
-        OAK("minecraft:fence"),
+        OAK("minecraft:fence_gate"),
         SPRUCE("minecraft:spruce_fence_gate"),
         BIRCH("minecraft:birch_fence_gate"),
         JUNGLE("minecraft:jungle_fence_gate"),
