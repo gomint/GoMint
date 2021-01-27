@@ -146,7 +146,7 @@ public class AttributeInstance {
                 }
 
                 int operation = nbtAmplifier.getInteger( "Operation", 0 );
-                double amount = nbtAmplifier.getDouble( "Amount", 0.0 );
+                float amount = nbtAmplifier.getFloat( "Amount", 0.0f );
 
                 if ( modifier != null && amount != 0 ) {
                     switch ( operation ) {
