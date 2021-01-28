@@ -3,11 +3,11 @@ package io.gomint.event.player;
 import io.gomint.entity.EntityPlayer;
 
 /**
+ * This event is fired when the server decides to disconnect a player.
+ *
  * @author geNAZt
  * @version 1.0
  * @stability 3
- *
- * This event is fired when the server decides to disconnect a player.
  */
 public class PlayerKickEvent extends SimplePlayerEvent {
 
