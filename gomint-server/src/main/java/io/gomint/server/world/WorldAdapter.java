@@ -142,6 +142,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
     // Scheduler
     private SyncTaskManager syncTaskManager;
     private SyncSchedulerAdapter syncSchedulerAdapter;
+    private long asyncAllowedThreadId = -1;
 
     // General ticking
     private long threadId = -1;
@@ -1042,52 +1043,57 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
         if (!this.asyncWorkerRunning.get()) {
             return;
         }
+        this.asyncAllowedThreadId = Thread.currentThread().getId();
 
-        // Fast out
-        while (!this.asyncChunkTasks.isEmpty()) {
-            try {
-                AsyncChunkTask task = this.asyncChunkTasks.poll((long) Values.CLIENT_TICK_MS, TimeUnit.MILLISECONDS);
-                if (task == null) {
-                    return;
+        try {
+            // Fast out
+            while (!this.asyncChunkTasks.isEmpty()) {
+                try {
+                    AsyncChunkTask task = this.asyncChunkTasks.poll((long) Values.CLIENT_TICK_MS, TimeUnit.MILLISECONDS);
+                    if (task == null) {
+                        return;
+                    }
+
+                    ChunkAdapter chunk;
+                    switch (task.type()) {
+                        case LOAD:
+                            AsyncChunkLoadTask load = (AsyncChunkLoadTask) task;
+                            this.logger().debug("Loading chunk {} / {}", load.x(), load.z());
+                            chunk = this.loadChunk(load.x(), load.z(), load.allowGenerate());
+
+                            load.callback().invoke(chunk);
+                            break;
+
+                        case SAVE:
+                            AsyncChunkSaveTask save = (AsyncChunkSaveTask) task;
+                            chunk = save.chunk();
+
+                            this.logger.debug("Async saving of chunk {} / {}", chunk.x(), chunk.z());
+                            this.saveChunk(chunk);
+
+                            break;
+
+                        case POPULATE:
+                            AsyncChunkPopulateTask populateTask = (AsyncChunkPopulateTask) task;
+
+                            ChunkAdapter chunkToPopulate = populateTask.chunk();
+                            chunkToPopulate.populate();
+
+                            break;
+
+                        default:
+                            // Log some error when this happens
+
+                            break;
+                    }
+                } catch (Throwable cause) {
+                    // Catching throwable in order to make sure no uncaught exceptions puts
+                    // the asynchronous worker into nirvana:
+                    this.logger.error("Error whilst doing async work: ", cause);
                 }
-
-                ChunkAdapter chunk;
-                switch (task.type()) {
-                    case LOAD:
-                        AsyncChunkLoadTask load = (AsyncChunkLoadTask) task;
-                        this.logger().debug("Loading chunk {} / {}", load.x(), load.z());
-                        chunk = this.loadChunk(load.x(), load.z(), load.allowGenerate());
-
-                        load.callback().invoke(chunk);
-                        break;
-
-                    case SAVE:
-                        AsyncChunkSaveTask save = (AsyncChunkSaveTask) task;
-                        chunk = save.chunk();
-
-                        this.logger.debug("Async saving of chunk {} / {}", chunk.x(), chunk.z());
-                        this.saveChunk(chunk);
-
-                        break;
-
-                    case POPULATE:
-                        AsyncChunkPopulateTask populateTask = (AsyncChunkPopulateTask) task;
-
-                        ChunkAdapter chunkToPopulate = populateTask.chunk();
-                        chunkToPopulate.populate();
-
-                        break;
-
-                    default:
-                        // Log some error when this happens
-
-                        break;
-                }
-            } catch (Throwable cause) {
-                // Catching throwable in order to make sure no uncaught exceptions puts
-                // the asynchronous worker into nirvana:
-                this.logger.error("Error whilst doing async work: ", cause);
             }
+        } finally {
+            this.asyncAllowedThreadId = -1;
         }
     }
 
@@ -1856,7 +1862,12 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
 
     @Override
     public boolean mainThread() {
-        return this.threadId == -1 || this.threadId == Thread.currentThread().getId();
+        if (this.threadId == -1) {
+            return true;
+        } else {
+            long id = Thread.currentThread().getId();
+            return this.threadId == id || this.asyncAllowedThreadId == id;
+        }
     }
 
     public boolean isRunning() {
