@@ -35,20 +35,6 @@ public class CancellablePlayerEvent<E> extends CancellableEvent<E> {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        if (!super.equals(o)) return false;
-        CancellablePlayerEvent<?> that = (CancellablePlayerEvent<?>) o;
-        return Objects.equals(this.player, that.player);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(super.hashCode(), this.player);
-    }
-
-    @Override
     public String toString() {
         return "CancellablePlayerEvent{" +
             "player=" + this.player +

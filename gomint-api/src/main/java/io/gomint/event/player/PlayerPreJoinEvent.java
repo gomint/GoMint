@@ -48,20 +48,6 @@ public class PlayerPreJoinEvent extends CancellablePlayerEvent<PlayerPreJoinEven
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        if (!super.equals(o)) return false;
-        PlayerPreJoinEvent that = (PlayerPreJoinEvent) o;
-        return Objects.equals(this.kickReason, that.kickReason);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(super.hashCode(), this.kickReason);
-    }
-
-    @Override
     public String toString() {
         return "PlayerPreJoinEvent{" +
             "kickReason='" + this.kickReason + '\'' +

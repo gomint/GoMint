@@ -42,20 +42,6 @@ public class PlayerLoginEvent extends CancellablePlayerEvent<PlayerLoginEvent> {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        if (!super.equals(o)) return false;
-        PlayerLoginEvent that = (PlayerLoginEvent) o;
-        return Objects.equals(this.kickMessage, that.kickMessage);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(super.hashCode(), this.kickMessage);
-    }
-
-    @Override
     public String toString() {
         return "PlayerLoginEvent{" +
             "kickMessage='" + this.kickMessage + '\'' +

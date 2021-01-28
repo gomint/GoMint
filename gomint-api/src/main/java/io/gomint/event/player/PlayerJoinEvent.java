@@ -62,21 +62,6 @@ public class PlayerJoinEvent extends CancellablePlayerEvent<PlayerJoinEvent> {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        if (!super.equals(o)) return false;
-        PlayerJoinEvent that = (PlayerJoinEvent) o;
-        return Objects.equals(this.kickReason, that.kickReason) &&
-            Objects.equals(this.joinMessage, that.joinMessage);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(super.hashCode(), this.kickReason, this.joinMessage);
-    }
-
-    @Override
     public String toString() {
         return "PlayerJoinEvent{" +
             "kickReason='" + this.kickReason + '\'' +

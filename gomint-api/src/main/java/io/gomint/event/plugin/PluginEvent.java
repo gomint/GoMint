@@ -29,17 +29,4 @@ public class PluginEvent extends Event {
             '}';
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        PluginEvent that = (PluginEvent) o;
-        return Objects.equals(this.plugin, that.plugin);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(this.plugin);
-    }
-
 }
