@@ -20,7 +20,7 @@ public class EntityHealEvent extends CancellableEntityEvent<EntityHealEvent> {
     private double healAmount;
 
     /**
-     * Create a new entity based cancellable event
+     * Create a new event for announcing an entity is healing
      *
      * @param entity     for which this event is
      * @param healAmount for which the entity should be healed

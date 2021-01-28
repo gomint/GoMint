@@ -22,6 +22,12 @@ public class SimplePlayerEvent extends Event implements PlayerEvent {
 
     private final EntityPlayer player;
 
+    /**
+     * Create a new player based event
+     *
+     * @param player for which this event is
+     */
+
     public SimplePlayerEvent(EntityPlayer player) {
         this.player = player;
     }

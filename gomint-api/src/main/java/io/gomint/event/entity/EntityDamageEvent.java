@@ -21,7 +21,7 @@ public class EntityDamageEvent extends CancellableEntityEvent<EntityDamageEvent>
     private float finalDamage;
 
     /**
-     * Create a new entity based cancellable event
+     * Create a new event for announcing an entity taking damage
      *
      * @param entity       for which this event is
      * @param damageSource where the damage comes from

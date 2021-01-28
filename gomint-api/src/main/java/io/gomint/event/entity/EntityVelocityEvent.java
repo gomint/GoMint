@@ -20,9 +20,9 @@ public class EntityVelocityEvent extends CancellableEntityEvent<EntityVelocityEv
     private Vector velocity;
 
     /**
-     * Create a new entity based cancellable event
+     * Create a new event for announcing an entity recieving velocity
      *
-     * @param entity for which this event is
+     * @param entity   for which this event is
      * @param velocity which should be applied to the given entity
      */
     public EntityVelocityEvent( Entity<?> entity, Vector velocity ) {

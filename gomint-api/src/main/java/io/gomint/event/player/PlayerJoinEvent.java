@@ -51,7 +51,7 @@ public class PlayerJoinEvent extends CancellablePlayerEvent<PlayerJoinEvent> {
     }
 
     /**
-     * Get the reason which the player will get then this event has been cancelled
+     * Get the reason which the player will get when this event has been cancelled
      *
      * @return reason for kick
      */

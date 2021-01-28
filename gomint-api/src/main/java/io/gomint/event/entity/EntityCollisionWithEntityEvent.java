@@ -19,7 +19,7 @@ public class EntityCollisionWithEntityEvent extends CancellableEntityEvent<Entit
     private final Entity<?> collidesWith;
 
     /**
-     * Create a new entity based cancellable event
+     * Create a new event for announcing an entity colliding with another entity
      *
      * @param entity       for which this event is
      * @param collidesWith which collides with the other entity

@@ -12,6 +12,8 @@ import io.gomint.event.Event;
 import io.gomint.event.interfaces.EntityEvent;
 
 /**
+ * Represents a not cancellable event with an entity involved
+ * 
  * @author geNAZt
  * @version 1.0
  * @stability 3
@@ -21,7 +23,7 @@ public class SimpleEntityEvent extends Event implements EntityEvent {
     private final Entity<?> entity;
 
     /**
-     * Create a new entity based cancellable event
+     * Create a new entity based event
      *
      * @param entity for which this event is
      */

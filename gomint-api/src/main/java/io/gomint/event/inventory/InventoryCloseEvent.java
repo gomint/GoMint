@@ -16,7 +16,7 @@ public class InventoryCloseEvent extends SimplePlayerEvent {
     /**
      * Create a new inventory close event
      *
-     * @param player which closed the inventory
+     * @param player    which closed the inventory
      * @param inventory which has been closed
      */
     public InventoryCloseEvent( EntityPlayer player, Inventory<?> inventory ) {

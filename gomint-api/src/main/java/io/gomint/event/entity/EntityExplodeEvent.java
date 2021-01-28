@@ -23,7 +23,7 @@ public class EntityExplodeEvent extends CancellableEntityEvent<EntityExplodeEven
     private float randomDropChance;
 
     /**
-     * Create a new entity based cancellable event
+     * Create a new event for announcing an entity is exploding
      *
      * @param entity           for which this event is
      * @param affectedBlocks   which will be destroyed during this explosion

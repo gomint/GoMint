@@ -17,9 +17,9 @@ import io.gomint.entity.Entity;
 public class EntitySpawnEvent extends CancellableEntityEvent<EntitySpawnEvent> {
 
     /**
-     * Create a new entity based cancellable event
+     * Create a new event for announcing an entity spawn
      *
-     * @param entity for which this event is
+     * @param entity entity which is about to spawn
      */
     public EntitySpawnEvent( Entity<?> entity ) {
         super( entity );

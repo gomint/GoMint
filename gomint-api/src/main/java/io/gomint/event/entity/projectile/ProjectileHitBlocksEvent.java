@@ -23,7 +23,7 @@ public class ProjectileHitBlocksEvent extends CancellableEntityEvent<ProjectileH
     private final Set<Block> blocks;
 
     /**
-     * Create a new entity based cancellable event
+     * Create a new event to announce a projectile entity hitting blocks
      *
      * @param blocks     which got hit by the projectile
      * @param projectile which hit the entity
@@ -34,9 +34,9 @@ public class ProjectileHitBlocksEvent extends CancellableEntityEvent<ProjectileH
     }
 
     /**
-     * Get the projectile which hit the entity
+     * Get the projectile which hit the blocks
      *
-     * @return projectile which hit the entity
+     * @return projectile which hit the blocks
      */
     @Override
     public EntityProjectile<?> entity() {
@@ -44,9 +44,9 @@ public class ProjectileHitBlocksEvent extends CancellableEntityEvent<ProjectileH
     }
 
     /**
-     * Get the projectile which hit the entity
+     * Get the projectile which hit the blocks
      *
-     * @return projectile which hit the entity
+     * @return projectile which hit the blocks
      * @deprecated Use {@link #entity()} instead
      */
     @Deprecated(forRemoval = true)

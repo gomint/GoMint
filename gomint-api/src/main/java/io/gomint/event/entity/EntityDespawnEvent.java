@@ -17,7 +17,7 @@ import io.gomint.entity.Entity;
 public class EntityDespawnEvent extends SimpleEntityEvent {
 
     /**
-     * Create a new event for announcing a entity despawn
+     * Create a new event for announcing an entity despawned
      *
      * @param entity for which this event is
      */

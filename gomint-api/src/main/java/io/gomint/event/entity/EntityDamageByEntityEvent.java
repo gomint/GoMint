@@ -19,7 +19,7 @@ public class EntityDamageByEntityEvent extends EntityDamageEvent {
     private final Entity<?> attacker;
 
     /**
-     * Create a new entity based cancellable event
+     * Create a new event for announcing an entity taking damage from another entity
      *
      * @param entity for which this event is
      * @param attacker which attacked this entity
