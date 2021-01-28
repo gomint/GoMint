@@ -18,6 +18,7 @@ import io.gomint.math.BlockPosition;
 import io.gomint.math.Location;
 import io.gomint.math.MathUtils;
 import io.gomint.math.Vector;
+import io.gomint.scheduler.Task;
 import io.gomint.scheduler.WorldScheduler;
 import io.gomint.server.GoMintServer;
 import io.gomint.server.async.Delegate;
@@ -134,6 +135,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
 
     // I/O
     private AtomicBoolean asyncWorkerRunning;
+    private Task asyncWorkerTask;
     private BlockingQueue<AsyncChunkTask> asyncChunkTasks;
     private Queue<AsyncChunkPackageTask> chunkPackageTasks;
 
@@ -604,7 +606,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
             }
 
         }
-        
+
         // Clear scheduler
         this.syncTaskManager.clear();
 
@@ -1030,7 +1032,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
     private void startAsyncWorker(AsyncScheduler scheduler) {
         this.asyncWorkerRunning = new AtomicBoolean(true);
 
-        scheduler.scheduleAsync(WorldAdapter.this::asyncWorkerLoop, 5, 5, TimeUnit.MILLISECONDS);
+        this.asyncWorkerTask = scheduler.scheduleAsync(WorldAdapter.this::asyncWorkerLoop, 5, 5, TimeUnit.MILLISECONDS);
     }
 
     /**
@@ -1399,6 +1401,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
     public void close() {
         // Stop async worker
         this.asyncWorkerRunning.set(false);
+        this.asyncWorkerTask.cancel();
     }
 
     public TemporaryStorage getTemporaryBlockStorage(BlockPosition position, int layer) {
