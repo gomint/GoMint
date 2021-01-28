@@ -52,14 +52,11 @@ import io.gomint.server.network.handler.PacketTileEntityDataHandler;
 import io.gomint.server.network.handler.PacketViolationWarningHandler;
 import io.gomint.server.network.handler.PacketWorldSoundEventHandler;
 import io.gomint.server.network.packet.Packet;
-import io.gomint.server.world.WorldAdapter;
 import io.netty.util.ResourceLeakDetector;
 import io.netty.util.ThreadDeathWatcher;
 import io.netty.util.concurrent.GlobalEventExecutor;
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
-import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
-import it.unimi.dsi.fastutil.longs.LongSet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -87,9 +84,12 @@ public class NetworkManager {
     private final PacketHandler<? extends Packet>[] packetHandlers = new PacketHandler[256];
 
     // Connections which were closed and should be removed during next tick:
-    private final LongSet closedConnections = new LongOpenHashSet();
+    private final Queue<Long> closedConnections = new ConcurrentLinkedQueue<>();
     private ServerSocket socket;
     private Long2ObjectMap<PlayerConnection> playersByGuid = new Long2ObjectOpenHashMap<>();
+
+    private Long2ObjectMap<PlayerConnection> tickingPlayers = new Long2ObjectOpenHashMap<>();
+    private final Queue<Long> untickQueue = new ConcurrentLinkedQueue<>();
 
     // Incoming connections to be added to the player map during next tick:
     private Queue<PlayerConnection> incomingConnections = new ConcurrentLinkedQueue<>();
@@ -222,33 +222,37 @@ public class NetworkManager {
             if (connection != null) {
                 LOGGER.debug("Adding new connection to the server: {}", connection);
                 this.playersByGuid.put(connection.id(), connection);
+                this.tickingPlayers.put(connection.id(), connection);
             }
         }
 
-        synchronized (this.closedConnections) {
-            if (!this.closedConnections.isEmpty()) {
-                for (long guid : this.closedConnections) {
-                    PlayerConnection connection = this.playersByGuid.remove(guid);
-                    if (connection != null) {
-                        final EntityPlayer entity = connection.entity();
-                        if (entity != null) {
-                            final WorldAdapter world = entity.world();
-                            if (world != null) {
-                                world.syncScheduler().execute(connection::close);
-                                continue;
-                            }
-                        }
+        if (!this.closedConnections.isEmpty()) {
+            for (long guid : this.closedConnections) {
+                PlayerConnection connection = this.playersByGuid.remove(guid);
+                this.tickingPlayers.remove(guid);
+                if (connection != null) {
+                    final EntityPlayer entity = connection.entity();
+                    if (entity != null && entity.world() != null) {
+                        entity.world().syncScheduler().execute(connection::close);
+                    } else {
                         connection.close();
                     }
                 }
-
-                this.closedConnections.clear();
             }
+
+            this.closedConnections.clear();
+        }
+
+        if (!this.untickQueue.isEmpty()) {
+            for (long guid : this.untickQueue) {
+                this.tickingPlayers.remove(guid);
+            }
+            this.untickQueue.clear();
         }
 
         // Tick all player connections in order to receive all incoming packets:
-        for (PlayerConnection connection : this.playersByGuid.values()) {
-            connection.globalUpdate(currentMillis, lastTickTime);
+        for (PlayerConnection connection : this.tickingPlayers.values()) {
+            connection.update(currentMillis, lastTickTime);
         }
     }
 
@@ -266,6 +270,10 @@ public class NetworkManager {
             LOGGER.error("Could not shutdown netty loops", e);
             Thread.currentThread().interrupt();
         }
+    }
+    
+    public void untickPlayer(long guid) {
+        this.untickQueue.add(guid);
     }
 
     // ======================================= INTERNALS ======================================= //
@@ -365,9 +373,7 @@ public class NetworkManager {
      * @param id of the connection being closed
      */
     private void handleConnectionClosed(long id) {
-        synchronized (this.closedConnections) {
-            this.closedConnections.add(id);
-        }
+        this.closedConnections.add(id);
     }
 
     private void dumpPacket(int packetId, PacketBuffer buffer) {

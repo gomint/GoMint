@@ -282,20 +282,6 @@ public class PlayerConnection implements ConnectionWithState {
     }
 
     /**
-     * Performs a global network tick on this player connection. All incoming packets are received and handled
-     * accordingly if the player is not yet sorted to a world.
-     *
-     * @param currentMillis Time when the tick started
-     * @param dT            The delta from the full second which has been calculated in the last tick
-     */
-
-    public void globalUpdate(long currentMillis, float dT) {
-        if (this.entity == null || this.entity.world() == null) {
-            update(currentMillis, dT);
-        }
-    }
-
-    /**
      * Performs a network tick on this player connection. All incoming packets are received and handled
      * accordingly.
      *

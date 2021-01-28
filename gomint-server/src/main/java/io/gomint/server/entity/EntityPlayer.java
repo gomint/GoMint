@@ -1545,15 +1545,16 @@ public class EntityPlayer extends EntityHuman<io.gomint.entity.EntityPlayer> imp
     }
 
     public void firstSpawn() {
+        this.connection.server().networkManager().untickPlayer(this.id);
         // Set location
-        this.connection().sendMovePlayer(this.location());
+        this.connection.sendMovePlayer(this.location());
 
         // Set simulation speed
         PacketWorldEvent worldEvent = new PacketWorldEvent();
         worldEvent.setData(0);
         worldEvent.setEventId(LevelEvent.SIM_SPEED);
         worldEvent.setPosition(new Vector(1f, 1f, 1f));
-        this.connection().addToSendQueue(worldEvent);
+        this.connection.addToSendQueue(worldEvent);
 
         // Spawn for others
         this.world().spawnEntityAt(this, this.positionX(), this.positionY(), this.positionZ(), this.yaw(), this.pitch());
