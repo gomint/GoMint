@@ -158,45 +158,45 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         WorldAdapter that = (WorldAdapter) o;
-        return Objects.equals(worldDir, that.worldDir);
+        return Objects.equals(this.worldDir, that.worldDir);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(worldDir);
+        return Objects.hash(this.worldDir);
     }
 
     @Override
     public String toString() {
         return "WorldAdapter{" +
-            "worldDir=" + worldDir +
-            ", levelName='" + levelName + '\'' +
+            "worldDir=" + this.worldDir +
+            ", levelName='" + this.levelName + '\'' +
             '}';
     }
 
     public GoMintServer getServer() {
-        return server;
+        return this.server;
     }
 
     public Logger getLogger() {
-        return logger;
+        return this.logger;
     }
 
     public File getWorldDir() {
-        return worldDir;
+        return this.worldDir;
     }
 
     public Map<Gamerule<?>, Object> getGamerules() {
-        return gamerules;
+        return this.gamerules;
     }
 
     public WorldConfig getConfig() {
-        return config;
+        return this.config;
     }
 
     @Override
     public Difficulty difficulty() {
-        return difficulty;
+        return this.difficulty;
     }
 
     // ==================================== GENERAL ACCESSORS ==================================== //
@@ -522,7 +522,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
                         this.tickQueue.add(next, blockToUpdate);
                     }
                 } catch (Exception e) {
-                    logger.error("Error whilst ticking block @ " + blockToUpdate, e);
+                    this.logger.error("Error whilst ticking block @ " + blockToUpdate, e);
                 }
                 // CHECKSTYLE:ON
             }
@@ -924,7 +924,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
             } catch (Throwable cause) {
                 // Catching throwable in order to make sure no uncaught exceptions puts
                 // the asynchronous worker into nirvana:
-                logger.error("Error whilst doing async work: ", cause);
+                this.logger.error("Error whilst doing async work: ", cause);
             }
         }
     }
@@ -1007,7 +1007,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
      * @return amount of players online on this world
      */
     public int getAmountOfPlayers() {
-        return players.size();
+        return this.players.size();
     }
 
     /**

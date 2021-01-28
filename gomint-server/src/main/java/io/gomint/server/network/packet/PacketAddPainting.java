@@ -44,7 +44,7 @@ public class PacketAddPainting extends Packet {
     }
 
     public long getEntityId() {
-        return entityId;
+        return this.entityId;
     }
 
     public void setEntityId(long entityId) {
@@ -52,7 +52,7 @@ public class PacketAddPainting extends Packet {
     }
 
     public float getX() {
-        return x;
+        return this.x;
     }
 
     public void setX(float x) {
@@ -60,7 +60,7 @@ public class PacketAddPainting extends Packet {
     }
 
     public float getY() {
-        return y;
+        return this.y;
     }
 
     public void setY(float y) {
@@ -68,7 +68,7 @@ public class PacketAddPainting extends Packet {
     }
 
     public float getZ() {
-        return z;
+        return this.z;
     }
 
     public void setZ(float z) {
@@ -76,7 +76,7 @@ public class PacketAddPainting extends Packet {
     }
 
     public int getDirection() {
-        return direction;
+        return this.direction;
     }
 
     public void setDirection(int direction) {
@@ -84,7 +84,7 @@ public class PacketAddPainting extends Packet {
     }
 
     public String getTitle() {
-        return title;
+        return this.title;
     }
 
     public void setTitle(String title) {

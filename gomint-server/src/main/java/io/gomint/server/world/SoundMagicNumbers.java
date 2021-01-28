@@ -196,7 +196,7 @@ public enum SoundMagicNumbers {
     }
 
     public int getSoundId() {
-        return soundId;
+        return this.soundId;
     }
 
     public static SoundMagicNumbers valueOf(int id ) {

@@ -502,7 +502,7 @@ public abstract class Packet {
     @Override
     public String toString() {
         return "Packet{" +
-            "id=" + id +
+            "id=" + this.id +
             '}';
     }
 

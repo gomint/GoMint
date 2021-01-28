@@ -170,7 +170,7 @@ public class AdventureSettings {
     }
 
     public CommandPermission getCommandPermission() {
-        return commandPermission;
+        return this.commandPermission;
     }
 
     public void setCommandPermission(CommandPermission commandPermission) {
@@ -178,7 +178,7 @@ public class AdventureSettings {
     }
 
     public PlayerPermission getPlayerPermission() {
-        return playerPermission;
+        return this.playerPermission;
     }
 
     public void setPlayerPermission(PlayerPermission playerPermission) {
@@ -186,7 +186,7 @@ public class AdventureSettings {
     }
 
     public boolean isWorldImmutable() {
-        return worldImmutable;
+        return this.worldImmutable;
     }
 
     public void setWorldImmutable(boolean worldImmutable) {
@@ -194,7 +194,7 @@ public class AdventureSettings {
     }
 
     public boolean isNoPvP() {
-        return noPvP;
+        return this.noPvP;
     }
 
     public void setNoPvP(boolean noPvP) {
@@ -202,7 +202,7 @@ public class AdventureSettings {
     }
 
     public boolean isAutoJump() {
-        return autoJump;
+        return this.autoJump;
     }
 
     public void setAutoJump(boolean autoJump) {
@@ -210,7 +210,7 @@ public class AdventureSettings {
     }
 
     public boolean isCanFly() {
-        return canFly;
+        return this.canFly;
     }
 
     public void setCanFly(boolean canFly) {
@@ -218,7 +218,7 @@ public class AdventureSettings {
     }
 
     public boolean isNoClip() {
-        return noClip;
+        return this.noClip;
     }
 
     public void setNoClip(boolean noClip) {
@@ -226,7 +226,7 @@ public class AdventureSettings {
     }
 
     public boolean isWorldBuilder() {
-        return worldBuilder;
+        return this.worldBuilder;
     }
 
     public void setWorldBuilder(boolean worldBuilder) {
@@ -234,7 +234,7 @@ public class AdventureSettings {
     }
 
     public boolean isFlying() {
-        return flying;
+        return this.flying;
     }
 
     public void setFlying(boolean flying) {
@@ -242,7 +242,7 @@ public class AdventureSettings {
     }
 
     public boolean isMuted() {
-        return muted;
+        return this.muted;
     }
 
     public void setMuted(boolean muted) {
@@ -250,7 +250,7 @@ public class AdventureSettings {
     }
 
     public boolean isBuildAndMine() {
-        return buildAndMine;
+        return this.buildAndMine;
     }
 
     public void setBuildAndMine(boolean buildAndMine) {
@@ -258,7 +258,7 @@ public class AdventureSettings {
     }
 
     public boolean isUseDoorsAndSwitches() {
-        return useDoorsAndSwitches;
+        return this.useDoorsAndSwitches;
     }
 
     public void setUseDoorsAndSwitches(boolean useDoorsAndSwitches) {
@@ -266,7 +266,7 @@ public class AdventureSettings {
     }
 
     public boolean isOpenContainers() {
-        return openContainers;
+        return this.openContainers;
     }
 
     public void setOpenContainers(boolean openContainers) {
@@ -274,7 +274,7 @@ public class AdventureSettings {
     }
 
     public boolean isAttackPlayers() {
-        return attackPlayers;
+        return this.attackPlayers;
     }
 
     public void setAttackPlayers(boolean attackPlayers) {
@@ -282,7 +282,7 @@ public class AdventureSettings {
     }
 
     public boolean isAttackMobs() {
-        return attackMobs;
+        return this.attackMobs;
     }
 
     public void setAttackMobs(boolean attackMobs) {
@@ -290,7 +290,7 @@ public class AdventureSettings {
     }
 
     public boolean isOperator() {
-        return operator;
+        return this.operator;
     }
 
     public void setOperator(boolean operator) {
@@ -298,7 +298,7 @@ public class AdventureSettings {
     }
 
     public boolean isTeleport() {
-        return teleport;
+        return this.teleport;
     }
 
     public void setTeleport(boolean teleport) {
@@ -306,7 +306,7 @@ public class AdventureSettings {
     }
 
     public EntityPlayer getPlayer() {
-        return player;
+        return this.player;
     }
 
     public void setPlayer(EntityPlayer player) {

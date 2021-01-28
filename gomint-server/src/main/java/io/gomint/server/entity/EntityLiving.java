@@ -610,17 +610,17 @@ public abstract class EntityLiving<E extends io.gomint.entity.Entity<E>> extends
     }
 
     public Set<io.gomint.entity.Entity<?>> getAttachedEntities() {
-        return attachedEntities;
+        return this.attachedEntities;
     }
 
     @Override
     public EntityDamageEvent.DamageSource lastDamageSource() {
-        return lastDamageSource;
+        return this.lastDamageSource;
     }
 
     @Override
     public io.gomint.entity.Entity<?> lastDamageEntity() {
-        return lastDamageEntity;
+        return this.lastDamageEntity;
     }
 
 }

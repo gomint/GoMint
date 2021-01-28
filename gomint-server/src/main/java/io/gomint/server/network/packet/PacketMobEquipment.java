@@ -43,7 +43,7 @@ public class PacketMobEquipment extends Packet {
     }
 
     public long getEntityId() {
-        return entityId;
+        return this.entityId;
     }
 
     public void setEntityId(long entityId) {
@@ -51,7 +51,7 @@ public class PacketMobEquipment extends Packet {
     }
 
     public ItemStack<?> getStack() {
-        return stack;
+        return this.stack;
     }
 
     public void setStack(ItemStack<?> stack) {
@@ -59,7 +59,7 @@ public class PacketMobEquipment extends Packet {
     }
 
     public byte getSlot() {
-        return slot;
+        return this.slot;
     }
 
     public void setSlot(byte slot) {
@@ -67,7 +67,7 @@ public class PacketMobEquipment extends Packet {
     }
 
     public byte getSelectedSlot() {
-        return selectedSlot;
+        return this.selectedSlot;
     }
 
     public void setSelectedSlot(byte selectedSlot) {
@@ -75,7 +75,7 @@ public class PacketMobEquipment extends Packet {
     }
 
     public byte getWindowId() {
-        return windowId;
+        return this.windowId;
     }
 
     public void setWindowId(byte windowId) {

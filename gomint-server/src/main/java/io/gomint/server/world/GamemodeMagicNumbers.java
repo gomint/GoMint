@@ -21,7 +21,7 @@ public enum GamemodeMagicNumbers {
     }
 
     public int getMagicNumber() {
-        return magicNumber;
+        return this.magicNumber;
     }
 }
 // CHECKSTYLE:ON

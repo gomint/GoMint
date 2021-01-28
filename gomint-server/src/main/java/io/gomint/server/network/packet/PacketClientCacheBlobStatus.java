@@ -39,7 +39,7 @@ public class PacketClientCacheBlobStatus extends Packet {
     }
 
     public long[] getHit() {
-        return hit;
+        return this.hit;
     }
 
     public void setHit(long[] hit) {
@@ -47,7 +47,7 @@ public class PacketClientCacheBlobStatus extends Packet {
     }
 
     public long[] getMiss() {
-        return miss;
+        return this.miss;
     }
 
     public void setMiss(long[] miss) {

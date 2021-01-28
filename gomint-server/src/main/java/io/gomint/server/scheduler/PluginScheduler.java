@@ -45,13 +45,13 @@ public class PluginScheduler implements Scheduler {
             throw new IllegalStateException( "This PluginScheduler has been cleaned and closed. No new Tasks can be scheduled" );
         }
 
-        Task task = coreScheduler.executeAsync( runnable );
+        Task task = this.coreScheduler.executeAsync( runnable );
         task.onException( e -> {
-            plugin.logger().warn( "A task thrown a Exception", e );
+            this.plugin.logger().warn( "A task thrown a Exception", e );
             return true;
         } );
 
-        task.onComplete( () -> runningTasks.remove( task ) );
+        task.onComplete( () -> this.runningTasks.remove( task ) );
 
         this.runningTasks.add( task );
         return task;
@@ -63,13 +63,13 @@ public class PluginScheduler implements Scheduler {
             throw new IllegalStateException( "This PluginScheduler has been cleaned and closed. No new Tasks can be scheduled" );
         }
 
-        Task task = coreScheduler.scheduleAsync( runnable, delay, timeUnit );
+        Task task = this.coreScheduler.scheduleAsync( runnable, delay, timeUnit );
         task.onException( e -> {
-            plugin.logger().warn( "A task thrown a Exception", e );
+            this.plugin.logger().warn( "A task thrown a Exception", e );
             return true;
         } );
 
-        task.onComplete( () -> runningTasks.remove( task ) );
+        task.onComplete( () -> this.runningTasks.remove( task ) );
 
         this.runningTasks.add( task );
         return task;
@@ -81,13 +81,13 @@ public class PluginScheduler implements Scheduler {
             throw new IllegalStateException( "This PluginScheduler has been cleaned and closed. No new Tasks can be scheduled" );
         }
 
-        Task task = coreScheduler.scheduleAsync( runnable, delay, period, timeUnit );
+        Task task = this.coreScheduler.scheduleAsync( runnable, delay, period, timeUnit );
         task.onException( e -> {
-            plugin.logger().warn( "A task thrown a Exception", e );
+            this.plugin.logger().warn( "A task thrown a Exception", e );
             return true;
         } );
 
-        task.onComplete( () -> runningTasks.remove( task ) );
+        task.onComplete( () -> this.runningTasks.remove( task ) );
 
         this.runningTasks.add( task );
         return task;
@@ -99,13 +99,13 @@ public class PluginScheduler implements Scheduler {
             throw new IllegalStateException( "This PluginScheduler has been cleaned and closed. No new Tasks can be scheduled" );
         }
 
-        Task task = coreScheduler.execute( runnable );
+        Task task = this.coreScheduler.execute( runnable );
         task.onException( e -> {
-            plugin.logger().warn( "A task thrown a Exception", e );
+            this.plugin.logger().warn( "A task thrown a Exception", e );
             return true;
         } );
 
-        task.onComplete( () -> runningTasks.remove( task ) );
+        task.onComplete( () -> this.runningTasks.remove( task ) );
 
         this.runningTasks.add( task );
         return task;
@@ -117,13 +117,13 @@ public class PluginScheduler implements Scheduler {
             throw new IllegalStateException( "This PluginScheduler has been cleaned and closed. No new Tasks can be scheduled" );
         }
 
-        Task task = coreScheduler.schedule( runnable, delay, timeUnit );
+        Task task = this.coreScheduler.schedule( runnable, delay, timeUnit );
         task.onException( e -> {
-            plugin.logger().warn( "A task thrown a Exception", e );
+            this.plugin.logger().warn( "A task thrown a Exception", e );
             return true;
         } );
 
-        task.onComplete( () -> runningTasks.remove( task ) );
+        task.onComplete( () -> this.runningTasks.remove( task ) );
 
         this.runningTasks.add( task );
         return task;
@@ -135,13 +135,13 @@ public class PluginScheduler implements Scheduler {
             throw new IllegalStateException( "This PluginScheduler has been cleaned and closed. No new Tasks can be scheduled" );
         }
 
-        Task task = coreScheduler.schedule( runnable, delay, period, timeUnit );
+        Task task = this.coreScheduler.schedule( runnable, delay, period, timeUnit );
         task.onException( e -> {
-            plugin.logger().warn( "A task thrown a Exception", e );
+            this.plugin.logger().warn( "A task thrown a Exception", e );
             return true;
         } );
 
-        task.onComplete( () -> runningTasks.remove( task ) );
+        task.onComplete( () -> this.runningTasks.remove( task ) );
 
         this.runningTasks.add( task );
         return task;

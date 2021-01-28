@@ -50,8 +50,8 @@ public class CoreScheduler implements Scheduler {
         this.executorService.scheduleWithFixedDelay( () -> {
             long current = System.currentTimeMillis();
 
-            synchronized ( threads ) {
-                Object2LongMap.FastEntrySet<Thread> threadSet = (Object2LongMap.FastEntrySet<Thread>) threads.object2LongEntrySet();
+            synchronized (this.threads) {
+                Object2LongMap.FastEntrySet<Thread> threadSet = (Object2LongMap.FastEntrySet<Thread>) this.threads.object2LongEntrySet();
                 ObjectIterator<Object2LongMap.Entry<Thread>> threadIterator = threadSet.fastIterator();
                 while ( threadIterator.hasNext() ) {
                     Object2LongMap.Entry<Thread> entry = threadIterator.next();
@@ -60,15 +60,15 @@ public class CoreScheduler implements Scheduler {
                     if ( diff > TimeUnit.SECONDS.toMillis( 10 ) ) {
                         ThreadInfo threadInfo = mxBean.getThreadInfo( entry.getKey().getId() );
                         Thread.State state = threadInfo.getThreadState();
-                        if ( !alreadyAlerted.contains( entry.getKey() ) && ( state == Thread.State.WAITING || state == Thread.State.TIMED_WAITING || state == Thread.State.BLOCKED ) ) {
-                            LOGGER.warn( "Following runnable is blocking the scheduler loops: {}", threadRunnables.get( entry.getKey() ).getClass().getName() );
+                        if ( !this.alreadyAlerted.contains( entry.getKey() ) && ( state == Thread.State.WAITING || state == Thread.State.TIMED_WAITING || state == Thread.State.BLOCKED ) ) {
+                            LOGGER.warn( "Following runnable is blocking the scheduler loops: {}", this.threadRunnables.get( entry.getKey() ).getClass().getName() );
 
                             threadInfo = mxBean.getThreadInfo( entry.getKey().getId(), Integer.MAX_VALUE );
                             for ( StackTraceElement element : threadInfo.getStackTrace() ) {
                                 LOGGER.warn( "  {}", element );
                             }
 
-                            alreadyAlerted.add( entry.getKey() );
+                            this.alreadyAlerted.add( entry.getKey() );
                         }
                     }
                 }
@@ -90,17 +90,17 @@ public class CoreScheduler implements Scheduler {
         return () -> {
             long val = System.currentTimeMillis();
 
-            synchronized ( threads ) {
-                threadRunnables.put( Thread.currentThread(), task.runnable() );
-                threads.put( Thread.currentThread(), val );
+            synchronized (this.threads) {
+                this.threadRunnables.put( Thread.currentThread(), task.runnable() );
+                this.threads.put( Thread.currentThread(), val );
             }
 
             task.run();
 
-            synchronized ( threads ) {
-                threads.remove( Thread.currentThread(), val );
-                threadRunnables.remove( Thread.currentThread(), task.runnable() );
-                alreadyAlerted.remove( Thread.currentThread() );
+            synchronized (this.threads) {
+                this.threads.remove( Thread.currentThread(), val );
+                this.threadRunnables.remove( Thread.currentThread(), task.runnable() );
+                this.alreadyAlerted.remove( Thread.currentThread() );
             }
         };
     }

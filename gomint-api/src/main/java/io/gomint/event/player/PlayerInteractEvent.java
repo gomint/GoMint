@@ -32,7 +32,7 @@ public class PlayerInteractEvent extends CancellablePlayerEvent<PlayerInteractEv
      * @return enum value of the click type
      */
     public ClickType clickType() {
-        return clickType;
+        return this.clickType;
     }
 
     /**
@@ -41,14 +41,14 @@ public class PlayerInteractEvent extends CancellablePlayerEvent<PlayerInteractEv
      * @return block which the player interacted with
      */
     public Block block() {
-        return block;
+        return this.block;
     }
 
     @Override
     public String toString() {
         return "PlayerInteractEvent{" +
-            "clickType=" + clickType +
-            ", block=" + block +
+            "clickType=" + this.clickType +
+            ", block=" + this.block +
             '}';
     }
 

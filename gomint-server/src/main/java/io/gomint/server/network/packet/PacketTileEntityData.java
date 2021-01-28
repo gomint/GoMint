@@ -47,7 +47,7 @@ public class PacketTileEntityData extends Packet {
     }
 
     public BlockPosition getPosition() {
-        return position;
+        return this.position;
     }
 
     public void setPosition(BlockPosition position) {
@@ -55,7 +55,7 @@ public class PacketTileEntityData extends Packet {
     }
 
     public NBTTagCompound getCompound() {
-        return compound;
+        return this.compound;
     }
 
     public void setCompound(NBTTagCompound compound) {

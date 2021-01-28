@@ -51,11 +51,11 @@ public class PlayerSkin implements io.gomint.player.PlayerSkin {
         }
 
         public String getPieceType() {
-            return pieceType;
+            return this.pieceType;
         }
 
         public List<String> getColors() {
-            return colors;
+            return this.colors;
         }
     }
 
@@ -75,23 +75,23 @@ public class PlayerSkin implements io.gomint.player.PlayerSkin {
         }
 
         public String getPieceId() {
-            return pieceId;
+            return this.pieceId;
         }
 
         public String getPieceType() {
-            return pieceType;
+            return this.pieceType;
         }
 
         public String getPackId() {
-            return packId;
+            return this.packId;
         }
 
         public boolean isDefaultValue() {
-            return defaultValue;
+            return this.defaultValue;
         }
 
         public String getProductId() {
-            return productId;
+            return this.productId;
         }
     }
 
@@ -142,27 +142,27 @@ public class PlayerSkin implements io.gomint.player.PlayerSkin {
         }
 
         public float getFrames() {
-            return frames;
+            return this.frames;
         }
 
         public int getType() {
-            return type;
+            return this.type;
         }
 
         public int getHeight() {
-            return height;
+            return this.height;
         }
 
         public int getWidth() {
-            return width;
+            return this.width;
         }
 
         public byte[] getData() {
-            return data;
+            return this.data;
         }
 
         public SoftReference<BufferedImage> getImage() {
-            return image;
+            return this.image;
         }
 
         public int getExpression() {
@@ -352,90 +352,90 @@ public class PlayerSkin implements io.gomint.player.PlayerSkin {
     }
 
     public String getId() {
-        return id;
+        return this.id;
     }
 
     public String getResourcePatch() {
-        return resourcePatch;
+        return this.resourcePatch;
     }
 
     public int getImageWidth() {
-        return imageWidth;
+        return this.imageWidth;
     }
 
     public int getImageHeight() {
-        return imageHeight;
+        return this.imageHeight;
     }
 
     public byte[] getData() {
-        return data;
+        return this.data;
     }
 
     public List<AnimationFrame> getAnimations() {
-        return animations;
+        return this.animations;
     }
 
     public int getCapeImageWidth() {
-        return capeImageWidth;
+        return this.capeImageWidth;
     }
 
     public int getCapeImageHeight() {
-        return capeImageHeight;
+        return this.capeImageHeight;
     }
 
     public byte[] getCapeData() {
-        return capeData;
+        return this.capeData;
     }
 
     public String getGeometry() {
-        return geometry;
+        return this.geometry;
     }
 
     public String getAnimationData() {
-        return animationData;
+        return this.animationData;
     }
 
     public boolean isPremium() {
-        return premium;
+        return this.premium;
     }
 
     public boolean isPersona() {
-        return persona;
+        return this.persona;
     }
 
     public boolean isPersonaCapeOnClassic() {
-        return personaCapeOnClassic;
+        return this.personaCapeOnClassic;
     }
 
     public String getCapeId() {
-        return capeId;
+        return this.capeId;
     }
 
     public String getFullId() {
-        return fullId;
+        return this.fullId;
     }
 
     public String getColour() {
-        return colour;
+        return this.colour;
     }
 
     public String getArmSize() {
-        return armSize;
+        return this.armSize;
     }
 
     public List<PersonaPiece> getPersonaPieces() {
-        return personaPieces;
+        return this.personaPieces;
     }
 
     public List<PieceTintColor> getPieceTintColours() {
-        return pieceTintColours;
+        return this.pieceTintColours;
     }
 
     public boolean isTrusted() {
-        return trusted;
+        return this.trusted;
     }
 
     public SoftReference<BufferedImage> getImage() {
-        return image;
+        return this.image;
     }
 }

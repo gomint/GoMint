@@ -74,7 +74,7 @@ public abstract class Recipe implements io.gomint.crafting.Recipe {
     public abstract int[] isCraftable(Inventory<?> inputInventory );
 
     public int getPriority() {
-        return priority;
+        return this.priority;
     }
 
 }

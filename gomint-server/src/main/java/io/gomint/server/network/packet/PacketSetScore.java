@@ -59,7 +59,7 @@ public class PacketSetScore extends Packet {
     }
 
     public byte getType() {
-        return type;
+        return this.type;
     }
 
     public void setType(byte type) {
@@ -67,7 +67,7 @@ public class PacketSetScore extends Packet {
     }
 
     public List<ScoreEntry> getEntries() {
-        return entries;
+        return this.entries;
     }
 
     public void setEntries(List<ScoreEntry> entries) {
@@ -100,27 +100,27 @@ public class PacketSetScore extends Packet {
         }
 
         public long getScoreId() {
-            return scoreId;
+            return this.scoreId;
         }
 
         public String getObjective() {
-            return objective;
+            return this.objective;
         }
 
         public int getScore() {
-            return score;
+            return this.score;
         }
 
         public byte getEntityType() {
-            return entityType;
+            return this.entityType;
         }
 
         public String getFakeEntity() {
-            return fakeEntity;
+            return this.fakeEntity;
         }
 
         public long getEntityId() {
-            return entityId;
+            return this.entityId;
         }
     }
 

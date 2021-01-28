@@ -61,23 +61,23 @@ public class EncryptionHandler {
     }
 
     public byte[] getClientSalt() {
-        return clientSalt;
+        return this.clientSalt;
     }
 
     public byte[] getKey() {
-        return key;
+        return this.key;
     }
 
     public byte[] getIv() {
-        return iv;
+        return this.iv;
     }
 
     public byte[] getServerKey() {
-        return serverKey;
+        return this.serverKey;
     }
 
     public byte[] getServerIv() {
-        return serverIv;
+        return this.serverIv;
     }
 
     /**

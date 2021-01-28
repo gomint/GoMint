@@ -40,7 +40,7 @@ public class PlayerQuitEvent extends PlayerEvent {
      * @return the message that will be displayed
      */
     public String quitMessage() {
-        return quitMessage;
+        return this.quitMessage;
     }
 
 }

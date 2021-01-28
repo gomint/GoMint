@@ -15,10 +15,10 @@ public class ResourcePack {
     }
 
     public PackIdVersion getVersion() {
-        return version;
+        return this.version;
     }
 
     public long getSize() {
-        return size;
+        return this.size;
     }
 }

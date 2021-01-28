@@ -55,20 +55,20 @@ public class PropertiesResourceLoader extends FileResourceLoader implements Reso
         InputStreamReader stream = null;
         try {
             //Get the correct InputStreamReader for this file
-            stream = fileInputStreamReader(file);
+            stream = fileInputStreamReader(this.file);
 
             //Try to parse the properties
-            pro = new Properties();
-            pro.load(stream);
+            this.pro = new Properties();
+            this.pro.load(stream);
 
             //Get the keys
-            keys = new ArrayList<>();
+            this.keys = new ArrayList<>();
 
-            for (Object o : pro.keySet()) {
-                keys.add((String) o);
+            for (Object o : this.pro.keySet()) {
+                this.keys.add((String) o);
             }
         } catch (IOException e) {
-            pro = null;
+            this.pro = null;
             throw new ResourceLoadFailedException(e);
         } catch (ResourceLoadFailedException e) {
             throw e;
@@ -90,7 +90,7 @@ public class PropertiesResourceLoader extends FileResourceLoader implements Reso
      */
     @Override
     public List<String> keys() {
-        return keys;
+        return this.keys;
     }
 
     /**
@@ -101,7 +101,7 @@ public class PropertiesResourceLoader extends FileResourceLoader implements Reso
      */
     @Override
     public String get(String key) {
-        return pro != null ? (String) pro.get(key) : null;
+        return this.pro != null ? (String) this.pro.get(key) : null;
     }
 
     /**
@@ -130,8 +130,8 @@ public class PropertiesResourceLoader extends FileResourceLoader implements Reso
      */
     @Override
     public void cleanup() {
-        pro = null;
-        file = null;
+        this.pro = null;
+        this.file = null;
 
         super.cleanup();
     }

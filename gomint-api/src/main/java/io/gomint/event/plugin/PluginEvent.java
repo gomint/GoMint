@@ -19,13 +19,13 @@ public class PluginEvent extends Event {
     }
 
     public Plugin plugin() {
-        return plugin;
+        return this.plugin;
     }
 
     @Override
     public String toString() {
         return "PluginEvent{" +
-            "plugin=" + plugin +
+            "plugin=" + this.plugin +
             '}';
     }
 
@@ -34,12 +34,12 @@ public class PluginEvent extends Event {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         PluginEvent that = (PluginEvent) o;
-        return Objects.equals(plugin, that.plugin);
+        return Objects.equals(this.plugin, that.plugin);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(plugin);
+        return Objects.hash(this.plugin);
     }
 
 }

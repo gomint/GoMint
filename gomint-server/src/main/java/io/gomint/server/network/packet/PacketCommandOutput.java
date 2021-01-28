@@ -46,7 +46,7 @@ public class PacketCommandOutput extends Packet {
     }
 
     public CommandOrigin getOrigin() {
-        return origin;
+        return this.origin;
     }
 
     public void setOrigin(CommandOrigin origin) {
@@ -54,7 +54,7 @@ public class PacketCommandOutput extends Packet {
     }
 
     public boolean isSuccess() {
-        return success;
+        return this.success;
     }
 
     public void setSuccess(boolean success) {
@@ -62,7 +62,7 @@ public class PacketCommandOutput extends Packet {
     }
 
     public List<OutputMessage> getOutputs() {
-        return outputs;
+        return this.outputs;
     }
 
     public void setOutputs(List<OutputMessage> outputs) {

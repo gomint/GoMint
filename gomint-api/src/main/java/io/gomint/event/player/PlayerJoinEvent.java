@@ -39,7 +39,7 @@ public class PlayerJoinEvent extends CancellablePlayerEvent<PlayerJoinEvent> {
      * @return the message that will be displayed
      */
     public String joinMessage() {
-        return joinMessage;
+        return this.joinMessage;
     }
 
     /**
@@ -58,7 +58,7 @@ public class PlayerJoinEvent extends CancellablePlayerEvent<PlayerJoinEvent> {
      * @return reason for kick
      */
     public String kickReason() {
-        return kickReason;
+        return this.kickReason;
     }
 
     @Override
@@ -67,20 +67,20 @@ public class PlayerJoinEvent extends CancellablePlayerEvent<PlayerJoinEvent> {
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
         PlayerJoinEvent that = (PlayerJoinEvent) o;
-        return Objects.equals(kickReason, that.kickReason) &&
-            Objects.equals(joinMessage, that.joinMessage);
+        return Objects.equals(this.kickReason, that.kickReason) &&
+            Objects.equals(this.joinMessage, that.joinMessage);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), kickReason, joinMessage);
+        return Objects.hash(super.hashCode(), this.kickReason, this.joinMessage);
     }
 
     @Override
     public String toString() {
         return "PlayerJoinEvent{" +
-            "kickReason='" + kickReason + '\'' +
-            ", joinMessage='" + joinMessage + '\'' +
+            "kickReason='" + this.kickReason + '\'' +
+            ", joinMessage='" + this.joinMessage + '\'' +
             '}';
     }
 

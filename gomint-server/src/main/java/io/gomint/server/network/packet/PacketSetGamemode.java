@@ -26,7 +26,7 @@ public class PacketSetGamemode extends Packet {
     }
 
     public int getGameMode() {
-        return gameMode;
+        return this.gameMode;
     }
 
     public void setGameMode(int gameMode) {

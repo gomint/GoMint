@@ -93,9 +93,9 @@ public class ChunkAdapter implements Chunk {
     @Override
     public String toString() {
         return "ChunkAdapter{" +
-            "world=" + world +
-            ", x=" + x +
-            ", z=" + z +
+            "world=" + this.world +
+            ", x=" + this.x +
+            ", z=" + this.z +
             '}';
     }
 
@@ -104,14 +104,14 @@ public class ChunkAdapter implements Chunk {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ChunkAdapter adapter = (ChunkAdapter) o;
-        return x == adapter.x &&
-            z == adapter.z &&
-            Objects.equals(world, adapter.world);
+        return this.x == adapter.x &&
+                this.z == adapter.z &&
+            Objects.equals(this.world, adapter.world);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(world, x, z);
+        return Objects.hash(this.world, this.x, this.z);
     }
 
     public void setPopulated(boolean populated) {
@@ -119,16 +119,16 @@ public class ChunkAdapter implements Chunk {
     }
 
     public boolean isPopulated() {
-        return populated;
+        return this.populated;
     }
 
     public ChunkSlice[] getChunkSlices() {
-        return chunkSlices;
+        return this.chunkSlices;
     }
 
     @Override
     public WorldAdapter world() {
-        return world;
+        return this.world;
     }
 
     /**
@@ -719,11 +719,11 @@ public class ChunkAdapter implements Chunk {
     }
 
     public void retainForConnection() {
-        LOGGER.debug("Incrementing on send ref count: {}", refCount.incrementAndGet());
+        LOGGER.debug("Incrementing on send ref count: {}", this.refCount.incrementAndGet());
     }
 
     public void releaseForConnection() {
-        LOGGER.debug("Decrementing on send ref count: {}", refCount.decrementAndGet());
+        LOGGER.debug("Decrementing on send ref count: {}", this.refCount.decrementAndGet());
     }
 
 }

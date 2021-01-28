@@ -37,27 +37,27 @@ public class CommandData {
     }
 
     public String getName() {
-        return name;
+        return this.name;
     }
 
     public String getDescription() {
-        return description;
+        return this.description;
     }
 
     public byte getFlags() {
-        return flags;
+        return this.flags;
     }
 
     public byte getPermission() {
-        return permission;
+        return this.permission;
     }
 
     public int getAliasIndex() {
-        return aliasIndex;
+        return this.aliasIndex;
     }
 
     public List<List<Parameter>> getParameters() {
-        return parameters;
+        return this.parameters;
     }
 
     public static class Parameter {
@@ -72,15 +72,15 @@ public class CommandData {
         }
 
         public String getName() {
-            return name;
+            return this.name;
         }
 
         public int getType() {
-            return type;
+            return this.type;
         }
 
         public boolean isOptional() {
-            return optional;
+            return this.optional;
         }
     }
 

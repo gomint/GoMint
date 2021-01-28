@@ -40,7 +40,7 @@ public class CancellableEntityEvent<E> extends CancellableEvent<E> {
     @Override
     public String toString() {
         return "CancellableEntityEvent{" +
-            "entity=" + entity +
+            "entity=" + this.entity +
             '}';
     }
 

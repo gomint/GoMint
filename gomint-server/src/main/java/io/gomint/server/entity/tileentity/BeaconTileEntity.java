@@ -54,7 +54,7 @@ public class BeaconTileEntity extends TileEntity {
     }
 
     public int getPrimary() {
-        return primary;
+        return this.primary;
     }
 
     public void setPrimary(int primary) {
@@ -62,7 +62,7 @@ public class BeaconTileEntity extends TileEntity {
     }
 
     public int getSecondary() {
-        return secondary;
+        return this.secondary;
     }
 
     public void setSecondary(int secondary) {

@@ -41,7 +41,7 @@ public enum Attribute {
     }
 
     public String getKey() {
-        return key;
+        return this.key;
     }
 
 }

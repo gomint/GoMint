@@ -62,7 +62,7 @@ public class Blocks {
     }
 
     public PacketBuffer packetCache() {
-        return packetCache;
+        return this.packetCache;
     }
 
     public <T extends Block> T get(BlockIdentifier identifier, byte skyLightLevel, byte blockLightLevel,

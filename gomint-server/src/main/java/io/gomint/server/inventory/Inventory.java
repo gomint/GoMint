@@ -98,7 +98,7 @@ public abstract class Inventory<I> implements io.gomint.inventory.Inventory<I> {
 
     @Override
     public int size() {
-        return size;
+        return this.size;
     }
 
     @Override

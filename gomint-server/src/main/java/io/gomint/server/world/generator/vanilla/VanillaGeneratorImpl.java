@@ -272,11 +272,11 @@ public class VanillaGeneratorImpl extends VanillaGenerator {
 
         try {
             this.processWrapper = new ProcessWrapper(builder, line -> {
-                if (line.contains("IPv4 supported, port:") && firstSeen) {
+                if (line.contains("IPv4 supported, port:") && this.firstSeen) {
                     String[] split = line.split(" ");
-                    port = Integer.parseInt(split[split.length - 1]);
-                    LOGGER.info("Server {} bound to {}", tempServer, port);
-                    firstSeen = false;
+                    this.port = Integer.parseInt(split[split.length - 1]);
+                    LOGGER.info("Server {} bound to {}", tempServer, this.port);
+                    this.firstSeen = false;
                 }
 
                 if (line.contains("Server started.")) {
@@ -313,11 +313,11 @@ public class VanillaGeneratorImpl extends VanillaGenerator {
 
     private void ensureSeed() {
         // Check if we have a seed
-        if (context.contains("seed")) {
-            this.seed = context.get("seed");
+        if (this.context.contains("seed")) {
+            this.seed = this.context.get("seed");
         } else {
             this.seed = ThreadLocalRandom.current().nextLong();
-            context.put("seed", this.seed);
+            this.context.put("seed", this.seed);
         }
     }
 

@@ -13,6 +13,6 @@ public class VanillaConfig extends YamlConfig {
     private boolean disableSprintReset = false;
 
     public boolean disableSprintReset() {
-        return disableSprintReset;
+        return this.disableSprintReset;
     }
 }

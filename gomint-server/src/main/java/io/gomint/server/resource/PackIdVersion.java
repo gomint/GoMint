@@ -17,10 +17,10 @@ public class PackIdVersion {
     }
 
     public UUID getId() {
-        return id;
+        return this.id;
     }
 
     public String getVersion() {
-        return version;
+        return this.version;
     }
 }

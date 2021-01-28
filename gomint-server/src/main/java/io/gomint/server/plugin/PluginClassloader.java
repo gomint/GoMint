@@ -132,7 +132,7 @@ public class PluginClassloader extends URLClassLoader {
     }
 
     public PluginMeta getMeta() {
-        return meta;
+        return this.meta;
     }
 
 }

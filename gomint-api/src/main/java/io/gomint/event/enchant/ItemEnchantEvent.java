@@ -42,7 +42,7 @@ public class ItemEnchantEvent extends CancellablePlayerEvent<ItemEnchantEvent> {
      * @return amount of levels this enchantment operation costs
      */
     public int levelCost() {
-        return levelCost;
+        return this.levelCost;
     }
 
     /**
@@ -62,7 +62,7 @@ public class ItemEnchantEvent extends CancellablePlayerEvent<ItemEnchantEvent> {
      * @return amount of material this enchantment operation costs
      */
     public int materialCost() {
-        return materialCost;
+        return this.materialCost;
     }
 
     /**
@@ -71,7 +71,7 @@ public class ItemEnchantEvent extends CancellablePlayerEvent<ItemEnchantEvent> {
      * @return item stack which should be enchanted
      */
     public ItemStack<?> itemToEnchant() {
-        return itemToEnchant;
+        return this.itemToEnchant;
     }
 
     /**
@@ -81,7 +81,7 @@ public class ItemEnchantEvent extends CancellablePlayerEvent<ItemEnchantEvent> {
      * @return list of enchantments
      */
     public List<Enchantment> enchantments() {
-        return enchantments;
+        return this.enchantments;
     }
 
     /**
@@ -90,7 +90,7 @@ public class ItemEnchantEvent extends CancellablePlayerEvent<ItemEnchantEvent> {
      * @return minimum level the player needs
      */
     public int levelRequirement() {
-        return levelRequirement;
+        return this.levelRequirement;
     }
 
     /**

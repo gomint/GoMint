@@ -19,14 +19,14 @@ public class OutputMessage {
     }
 
     public String getFormat() {
-        return format;
+        return this.format;
     }
 
     public boolean isSuccess() {
-        return success;
+        return this.success;
     }
 
     public List<String> getParameters() {
-        return parameters;
+        return this.parameters;
     }
 }

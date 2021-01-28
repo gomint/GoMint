@@ -33,7 +33,7 @@ public class PacketRequestChunkRadius extends Packet {
     }
 
     public int getChunkRadius() {
-        return chunkRadius;
+        return this.chunkRadius;
     }
 
     public void setChunkRadius(int chunkRadius) {

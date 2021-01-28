@@ -25,7 +25,7 @@ public class PacketAvailableEntityIdentifiers extends Packet {
                 throw new AssertionError( "Could not find entity_identifiers.dat" );
             }
             // noinspection UnstableApiUsage
-            nbt = ByteStreams.toByteArray( inputStream );
+            this.nbt = ByteStreams.toByteArray( inputStream );
         } catch ( Exception e ) {
             throw new AssertionError( "Error whilst loading entity_identifiers.dat", e );
         }
@@ -43,7 +43,7 @@ public class PacketAvailableEntityIdentifiers extends Packet {
     }
 
     public byte[] getNbt() {
-        return nbt;
+        return this.nbt;
     }
 
     public void setNbt(byte[] nbt) {

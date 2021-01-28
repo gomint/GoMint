@@ -66,20 +66,20 @@ public class PlayerMoveEvent extends CancellablePlayerEvent<PlayerMoveEvent> {
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
         PlayerMoveEvent that = (PlayerMoveEvent) o;
-        return Objects.equals(from, that.from) &&
-            Objects.equals(to, that.to);
+        return Objects.equals(this.from, that.from) &&
+            Objects.equals(this.to, that.to);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), from, to);
+        return Objects.hash(super.hashCode(), this.from, this.to);
     }
 
     @Override
     public String toString() {
         return "PlayerMoveEvent{" +
-            "from=" + from +
-            ", to=" + to +
+            "from=" + this.from +
+            ", to=" + this.to +
             '}';
     }
 

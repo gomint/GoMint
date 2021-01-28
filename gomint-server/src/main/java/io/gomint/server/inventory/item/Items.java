@@ -56,7 +56,7 @@ public class Items {
 
                 io.gomint.server.inventory.item.ItemStack<?> sStack = (io.gomint.server.inventory.item.ItemStack<?>) itemStack;
                 sStack.items(this);
-                sStack.blocks(blocks);
+                sStack.blocks(this.blocks);
                 sStack.material(id);
                 return itemStack;
             };
@@ -180,7 +180,7 @@ public class Items {
     }
 
     public PacketBuffer getPacketCache() {
-        return packetCache;
+        return this.packetCache;
     }
 
     public int getRuntimeId(String material) {

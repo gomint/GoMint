@@ -44,7 +44,7 @@ public class PacketBiomeDefinitionList extends Packet {
     }
 
     public byte[] getNbt() {
-        return nbt;
+        return this.nbt;
     }
 
 }

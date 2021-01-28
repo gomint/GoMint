@@ -30,7 +30,7 @@ public abstract class AsyncChunkTask {
      * @return type of task
      */
     public Type getType() {
-        return type;
+        return this.type;
     }
 
     public enum Type {

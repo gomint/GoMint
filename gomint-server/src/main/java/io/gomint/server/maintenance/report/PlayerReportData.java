@@ -28,10 +28,10 @@ public class PlayerReportData {
     @Override
     public String toString() {
         return "PlayerReportData{" +
-            "world='" + world + '\'' +
-            ", x=" + x +
-            ", y=" + y +
-            ", z=" + z +
+            "world='" + this.world + '\'' +
+            ", x=" + this.x +
+            ", y=" + this.y +
+            ", z=" + this.z +
             '}';
     }
 

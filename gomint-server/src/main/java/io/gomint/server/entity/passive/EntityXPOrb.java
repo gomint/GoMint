@@ -51,8 +51,8 @@ public class EntityXPOrb extends Entity<io.gomint.entity.passive.EntityXPOrb> im
         this.collision(false);
         this.size(0.25f, 0.25f);
 
-        GRAVITY = 0.04f;
-        DRAG = 0.02f;
+        this.GRAVITY = 0.04f;
+        this.DRAG = 0.02f;
 
         this.xpAmount = xpAmount;
         pickupDelay(1250, TimeUnit.MILLISECONDS);
@@ -66,13 +66,13 @@ public class EntityXPOrb extends Entity<io.gomint.entity.passive.EntityXPOrb> im
         this.collision(false);
         this.size(0.25f, 0.25f);
 
-        GRAVITY = 0.04f;
-        DRAG = 0.02f;
+        this.GRAVITY = 0.04f;
+        this.DRAG = 0.02f;
     }
 
     @Override
     public int xpAmount() {
-        return xpAmount;
+        return this.xpAmount;
     }
 
     @Override
@@ -83,7 +83,7 @@ public class EntityXPOrb extends Entity<io.gomint.entity.passive.EntityXPOrb> im
 
     @Override
     public Instant pickupTime() {
-        return Instant.ofEpochMilli(pickupTime);
+        return Instant.ofEpochMilli(this.pickupTime);
     }
 
     @Override

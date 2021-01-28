@@ -37,7 +37,7 @@ public class PacketCraftingEvent extends Packet {
     }
 
     public byte getWindowId() {
-        return windowId;
+        return this.windowId;
     }
 
     public void setWindowId(byte windowId) {
@@ -45,7 +45,7 @@ public class PacketCraftingEvent extends Packet {
     }
 
     public int getRecipeType() {
-        return recipeType;
+        return this.recipeType;
     }
 
     public void setRecipeType(int recipeType) {
@@ -53,7 +53,7 @@ public class PacketCraftingEvent extends Packet {
     }
 
     public UUID getRecipeId() {
-        return recipeId;
+        return this.recipeId;
     }
 
     public void setRecipeId(UUID recipeId) {
@@ -61,7 +61,7 @@ public class PacketCraftingEvent extends Packet {
     }
 
     public ItemStack<?>[] getInput() {
-        return input;
+        return this.input;
     }
 
     public void setInput(ItemStack<?>[] input) {
@@ -69,7 +69,7 @@ public class PacketCraftingEvent extends Packet {
     }
 
     public ItemStack<?>[] getOutput() {
-        return output;
+        return this.output;
     }
 
     public void setOutput(ItemStack<?>[] output) {

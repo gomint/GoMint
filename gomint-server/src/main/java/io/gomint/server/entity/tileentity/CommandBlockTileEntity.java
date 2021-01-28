@@ -107,46 +107,46 @@ public class CommandBlockTileEntity extends ContainerTileEntity {
     }
 
     public String getCommand() {
-        return command;
+        return this.command;
     }
 
     public int getSuccessCount() {
-        return successCount;
+        return this.successCount;
     }
 
     public String getOutput() {
-        return output;
+        return this.output;
     }
 
     public boolean isTrackOutput() {
-        return trackOutput;
+        return this.trackOutput;
     }
 
     public List<String> getParameter() {
-        return parameter;
+        return this.parameter;
     }
 
     public boolean isAuto() {
-        return auto;
+        return this.auto;
     }
 
     public boolean isPowered() {
-        return powered;
+        return this.powered;
     }
 
     public boolean isRedstoneMode() {
-        return redstoneMode;
+        return this.redstoneMode;
     }
 
     public boolean isConditionalMode() {
-        return conditionalMode;
+        return this.conditionalMode;
     }
 
     public int getCommandMode() {
-        return commandMode;
+        return this.commandMode;
     }
 
     public int getVersion() {
-        return version;
+        return this.version;
     }
 }

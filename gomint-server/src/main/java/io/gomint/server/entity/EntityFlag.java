@@ -110,7 +110,7 @@ public enum EntityFlag {
     }
 
     public int getId() {
-        return id;
+        return this.id;
     }
 
 }

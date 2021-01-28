@@ -49,18 +49,18 @@ public class InventoryTransactionEvent extends CancellablePlayerEvent<InventoryT
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
         InventoryTransactionEvent that = (InventoryTransactionEvent) o;
-        return Objects.equals(transactions, that.transactions);
+        return Objects.equals(this.transactions, that.transactions);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), transactions);
+        return Objects.hash(super.hashCode(), this.transactions);
     }
 
     @Override
     public String toString() {
         return "InventoryTransactionEvent{" +
-            "transactions=" + transactions +
+            "transactions=" + this.transactions +
             '}';
     }
 

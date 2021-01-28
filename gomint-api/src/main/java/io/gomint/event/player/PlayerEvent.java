@@ -37,7 +37,7 @@ public class PlayerEvent extends Event {
     @Override
     public String toString() {
         return "PlayerEvent{" +
-            "player=" + player +
+            "player=" + this.player +
             '}';
     }
 
@@ -46,12 +46,12 @@ public class PlayerEvent extends Event {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         PlayerEvent that = (PlayerEvent) o;
-        return Objects.equals(player, that.player);
+        return Objects.equals(this.player, that.player);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(player);
+        return Objects.hash(this.player);
     }
 
 }

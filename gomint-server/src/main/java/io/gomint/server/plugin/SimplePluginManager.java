@@ -145,7 +145,7 @@ public class SimplePluginManager implements PluginManager, EventCaller {
     }
 
     public CommandManager getCommandManager() {
-        return commandManager;
+        return this.commandManager;
     }
 
     /**
@@ -652,7 +652,7 @@ public class SimplePluginManager implements PluginManager, EventCaller {
         // Check for plugins with hard depends
         new HashMap<>(this.metadata).forEach((name, meta) -> {
             if (meta.getDepends() != null && meta.getDepends().contains(plugin.name())) {
-                Plugin pluginToUninstall = installedPlugins.get(name);
+                Plugin pluginToUninstall = this.installedPlugins.get(name);
                 if (pluginToUninstall != null) {
                     uninstallPlugin0(pluginToUninstall);
                 }

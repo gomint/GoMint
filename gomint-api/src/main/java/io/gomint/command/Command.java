@@ -244,27 +244,27 @@ public abstract class Command {
     }
 
     public String getName() {
-        return name;
+        return this.name;
     }
 
     public String getDescription() {
-        return description;
+        return this.description;
     }
 
     public List<CommandOverload> getOverload() {
-        return overload;
+        return this.overload;
     }
 
     public Set<String> getAlias() {
-        return alias;
+        return this.alias;
     }
 
     public String getPermission() {
-        return permission;
+        return this.permission;
     }
 
     public boolean isPermissionDefault() {
-        return permissionDefault;
+        return this.permissionDefault;
     }
 
 }

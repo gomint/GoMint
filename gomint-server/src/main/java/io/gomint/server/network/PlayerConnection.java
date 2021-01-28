@@ -163,16 +163,16 @@ public class PlayerConnection implements ConnectionWithState {
     }
 
     public Processor getInputProcessor() {
-        return inputProcessor;
+        return this.inputProcessor;
     }
 
     @Override
     public Processor getOutputProcessor() {
-        return outputProcessor;
+        return this.outputProcessor;
     }
 
     public Set<PacketInventoryTransaction> getTransactionsHandled() {
-        return transactionsHandled;
+        return this.transactionsHandled;
     }
 
     public void setStartBreakResult(boolean startBreakResult) {
@@ -180,7 +180,7 @@ public class PlayerConnection implements ConnectionWithState {
     }
 
     public boolean isStartBreakResult() {
-        return startBreakResult;
+        return this.startBreakResult;
     }
 
     public void setHadStartBreak(boolean hadStartBreak) {
@@ -188,7 +188,7 @@ public class PlayerConnection implements ConnectionWithState {
     }
 
     public boolean isHadStartBreak() {
-        return hadStartBreak;
+        return this.hadStartBreak;
     }
 
     public void setDeviceInfo(DeviceInfo deviceInfo) {
@@ -196,7 +196,7 @@ public class PlayerConnection implements ConnectionWithState {
     }
 
     public DeviceInfo getDeviceInfo() {
-        return deviceInfo;
+        return this.deviceInfo;
     }
 
     public void setEntity(EntityPlayer entity) {
@@ -204,7 +204,7 @@ public class PlayerConnection implements ConnectionWithState {
     }
 
     public EntityPlayer getEntity() {
-        return entity;
+        return this.entity;
     }
 
     public void setState(PlayerConnectionState state) {
@@ -213,7 +213,7 @@ public class PlayerConnection implements ConnectionWithState {
 
     @Override
     public PlayerConnectionState getState() {
-        return state;
+        return this.state;
     }
 
     public void setProtocolID(int protocolID) {
@@ -222,23 +222,23 @@ public class PlayerConnection implements ConnectionWithState {
 
     @Override
     public int getProtocolID() {
-        return protocolID;
+        return this.protocolID;
     }
 
     public GoMintServer getServer() {
-        return server;
+        return this.server;
     }
 
     public LongSet getLoadingChunks() {
-        return loadingChunks;
+        return this.loadingChunks;
     }
 
     public LongSet getPlayerChunks() {
-        return playerChunks;
+        return this.playerChunks;
     }
 
     public Cache getCache() {
-        return cache;
+        return this.cache;
     }
 
     public void setCachingSupported(boolean cachingSupported) {
@@ -246,7 +246,7 @@ public class PlayerConnection implements ConnectionWithState {
     }
 
     public Connection getConnection() {
-        return connection;
+        return this.connection;
     }
 
     /**

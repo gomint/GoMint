@@ -60,8 +60,8 @@ public class ResourceManager {
      * @param loader New loader which can be used to load Resources
      */
     public synchronized ResourceManager registerLoader( ResourceLoader<?> loader ) {
-        synchronized ( sharedLock ) {
-            registerdLoaders.add( loader );
+        synchronized (this.sharedLock) {
+            this.registerdLoaders.add( loader );
         }
 
         return this;
@@ -76,13 +76,13 @@ public class ResourceManager {
      */
     private synchronized ResourceManager loadLocale( Locale locale, String param ) throws ResourceLoadFailedException {
         //Get the correct loader for this param
-        for ( ResourceLoader<?> loader : registerdLoaders ) {
+        for ( ResourceLoader<?> loader : this.registerdLoaders) {
             for ( String ending : loader.formats() ) {
                 if ( param.endsWith( ending ) ) {
                     try {
-                        synchronized ( sharedLock ) {
-                            loadedLocales.put( locale, new SoftReference<>( buildNewResourceLoader( loader, param ) ) );
-                            loadedLocaleLoadStrings.put( locale, param );
+                        synchronized (this.sharedLock) {
+                            this.loadedLocales.put( locale, new SoftReference<>( buildNewResourceLoader( loader, param ) ) );
+                            this.loadedLocaleLoadStrings.put( locale, param );
                         }
                     } catch ( RuntimeException e ) {
                         throw new ResourceLoadFailedException( e );
@@ -105,16 +105,16 @@ public class ResourceManager {
      */
     public synchronized ResourceManager load( Locale locale, String param ) throws ResourceLoadFailedException {
         //Check if locale has already been loaded
-        if ( loadedLocales.containsKey( locale ) ) {
-            synchronized ( sharedLock ) {
+        if (this.loadedLocales.containsKey( locale ) ) {
+            synchronized (this.sharedLock) {
                 //Unload the locale and get the new one
-                ResourceLoader<?> loader = loadedLocales.get( locale ).get();
+                ResourceLoader<?> loader = this.loadedLocales.get( locale ).get();
                 if ( loader != null ) {
                     loader.cleanup();
                 }
 
-                loadedLocales.remove( locale );
-                loadedLocaleLoadStrings.remove( locale );
+                this.loadedLocales.remove( locale );
+                this.loadedLocaleLoadStrings.remove( locale );
             }
         }
 
@@ -128,9 +128,9 @@ public class ResourceManager {
      * @throws ResourceLoadFailedException
      */
     private synchronized void reloadIfGCCleared( Locale locale ) throws ResourceLoadFailedException {
-        if ( loadedLocales.get( locale ).get() == null ) {
-            synchronized ( sharedLock ) {
-                loadLocale( locale, loadedLocaleLoadStrings.get( locale ) );
+        if (this.loadedLocales.get( locale ).get() == null ) {
+            synchronized (this.sharedLock) {
+                loadLocale( locale, this.loadedLocaleLoadStrings.get( locale ) );
             }
         }
     }
@@ -147,12 +147,12 @@ public class ResourceManager {
      */
     public String get( Locale locale, String key ) throws ResourceLoadFailedException {
         //If Locale is not loaded throw a ResourceNotLoadedException
-        if ( loadedLocales.containsKey( locale ) ) {
+        if (this.loadedLocales.containsKey( locale ) ) {
             //Check if this Locale contains the key searched for
             reloadIfGCCleared( locale );
 
-            if ( loadedLocales.get( locale ).get().keys().contains( key ) ) {
-                return loadedLocales.get( locale ).get().get( key );
+            if (this.loadedLocales.get( locale ).get().keys().contains( key ) ) {
+                return this.loadedLocales.get( locale ).get().get( key );
             }
         }
 
@@ -160,12 +160,12 @@ public class ResourceManager {
         Locale baseLocale = new Locale( locale.getLanguage() );
 
         //If Locale is not loaded throw a ResourceNotLoadedException
-        if ( loadedLocales.containsKey( baseLocale ) ) {
+        if (this.loadedLocales.containsKey( baseLocale ) ) {
             //Check if this Locale contains the key searched for
             reloadIfGCCleared( baseLocale );
 
-            if ( loadedLocales.get( baseLocale ).get().keys().contains( key ) ) {
-                return loadedLocales.get( baseLocale ).get().get( key );
+            if (this.loadedLocales.get( baseLocale ).get().keys().contains( key ) ) {
+                return this.loadedLocales.get( baseLocale ).get().get( key );
             }
         }
 
@@ -179,7 +179,7 @@ public class ResourceManager {
      * @return true if loaded / false if not
      */
     public boolean isLoaded( Locale locale ) {
-        return loadedLocales.containsKey( locale );
+        return this.loadedLocales.containsKey( locale );
     }
 
     /**
@@ -206,7 +206,7 @@ public class ResourceManager {
      */
     public synchronized ResourceManager reload() {
         //Reload all ResourceLoaders
-        for ( SoftReference<ResourceLoader<?>> loader : loadedLocales.values() ) {
+        for ( SoftReference<ResourceLoader<?>> loader : this.loadedLocales.values() ) {
             try {
                 if ( loader != null && loader.get() != null ) {
                     loader.get().reload();
@@ -224,14 +224,14 @@ public class ResourceManager {
      */
     public synchronized void cleanup() {
         // Cleanup all ResourceLoaders
-        for ( SoftReference<ResourceLoader<?>> loader : loadedLocales.values() ) {
+        for ( SoftReference<ResourceLoader<?>> loader : this.loadedLocales.values() ) {
             if ( loader != null && loader.get() != null ) {
                 loader.get().cleanup();
             }
         }
 
         // Remove all refs
-        classLoader = null;
+        this.classLoader = null;
     }
 
     /**
@@ -240,7 +240,7 @@ public class ResourceManager {
      * @return ArrayList of Locales
      */
     public List<Locale> getLoadedLocales() {
-        return new ArrayList<>( loadedLocales.keySet() );
+        return new ArrayList<>(this.loadedLocales.keySet() );
     }
 
 }

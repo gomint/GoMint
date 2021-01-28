@@ -35,7 +35,7 @@ public class PacketViolationWarning extends Packet {
     }
 
     public int getType() {
-        return type;
+        return this.type;
     }
 
     public void setType(int type) {
@@ -43,7 +43,7 @@ public class PacketViolationWarning extends Packet {
     }
 
     public int getSeverity() {
-        return severity;
+        return this.severity;
     }
 
     public void setSeverity(int severity) {
@@ -51,7 +51,7 @@ public class PacketViolationWarning extends Packet {
     }
 
     public int getPacketId() {
-        return packetId;
+        return this.packetId;
     }
 
     public void setPacketId(int packetId) {
@@ -59,7 +59,7 @@ public class PacketViolationWarning extends Packet {
     }
 
     public String getMessage() {
-        return message;
+        return this.message;
     }
 
     public void setMessage(String message) {

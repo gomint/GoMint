@@ -18,7 +18,7 @@ public enum CommandPermission {
     }
 
     public int getId() {
-        return id;
+        return this.id;
     }
 
 }

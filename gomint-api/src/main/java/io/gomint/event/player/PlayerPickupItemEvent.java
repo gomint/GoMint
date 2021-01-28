@@ -53,20 +53,20 @@ public class PlayerPickupItemEvent extends CancellablePlayerEvent<PlayerPickupIt
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
         PlayerPickupItemEvent that = (PlayerPickupItemEvent) o;
-        return Objects.equals(holdingEntity, that.holdingEntity) &&
-            Objects.equals(itemStack, that.itemStack);
+        return Objects.equals(this.holdingEntity, that.holdingEntity) &&
+            Objects.equals(this.itemStack, that.itemStack);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), holdingEntity, itemStack);
+        return Objects.hash(super.hashCode(), this.holdingEntity, this.itemStack);
     }
 
     @Override
     public String toString() {
         return "PlayerPickupItemEvent{" +
-            "holdingEntity=" + holdingEntity +
-            ", itemStack=" + itemStack +
+            "holdingEntity=" + this.holdingEntity +
+            ", itemStack=" + this.itemStack +
             '}';
     }
 

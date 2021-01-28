@@ -28,7 +28,7 @@ public class PacketPickupItemEntity extends Packet {
     }
 
     public long getItemEntityId() {
-        return itemEntityId;
+        return this.itemEntityId;
     }
 
     public void setItemEntityId(long itemEntityId) {
@@ -36,7 +36,7 @@ public class PacketPickupItemEntity extends Packet {
     }
 
     public long getPlayerEntityId() {
-        return playerEntityId;
+        return this.playerEntityId;
     }
 
     public void setPlayerEntityId(long playerEntityId) {

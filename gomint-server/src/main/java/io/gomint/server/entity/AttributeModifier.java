@@ -33,7 +33,7 @@ public enum AttributeModifier {
     }
 
     public String getName() {
-        return name;
+        return this.name;
     }
 
 }

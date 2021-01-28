@@ -40,7 +40,7 @@ public class PacketRespawnPosition extends Packet {
     }
 
     public Vector getPosition() {
-        return position;
+        return this.position;
     }
 
     public void setPosition(Vector position) {
@@ -48,7 +48,7 @@ public class PacketRespawnPosition extends Packet {
     }
 
     public RespawnState getState() {
-        return state;
+        return this.state;
     }
 
     public void setState(RespawnState state) {
@@ -56,7 +56,7 @@ public class PacketRespawnPosition extends Packet {
     }
 
     public long getEntityId() {
-        return entityId;
+        return this.entityId;
     }
 
     public void setEntityId(long entityId) {

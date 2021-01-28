@@ -248,7 +248,7 @@ public class PacketStartGame extends Packet {
     }
 
     public long getEntityId() {
-        return entityId;
+        return this.entityId;
     }
 
     public void setEntityId(long entityId) {
@@ -256,7 +256,7 @@ public class PacketStartGame extends Packet {
     }
 
     public long getRuntimeEntityId() {
-        return runtimeEntityId;
+        return this.runtimeEntityId;
     }
 
     public void setRuntimeEntityId(long runtimeEntityId) {
@@ -264,7 +264,7 @@ public class PacketStartGame extends Packet {
     }
 
     public int getGamemode() {
-        return gamemode;
+        return this.gamemode;
     }
 
     public void setGamemode(int gamemode) {
@@ -272,7 +272,7 @@ public class PacketStartGame extends Packet {
     }
 
     public Location getSpawn() {
-        return spawn;
+        return this.spawn;
     }
 
     public void setSpawn(Location spawn) {
@@ -280,7 +280,7 @@ public class PacketStartGame extends Packet {
     }
 
     public int getSeed() {
-        return seed;
+        return this.seed;
     }
 
     public void setSeed(int seed) {
@@ -288,7 +288,7 @@ public class PacketStartGame extends Packet {
     }
 
     public short getBiomeType() {
-        return biomeType;
+        return this.biomeType;
     }
 
     public void setBiomeType(short biomeType) {
@@ -296,7 +296,7 @@ public class PacketStartGame extends Packet {
     }
 
     public String getBiomeName() {
-        return biomeName;
+        return this.biomeName;
     }
 
     public void setBiomeName(String biomeName) {
@@ -304,7 +304,7 @@ public class PacketStartGame extends Packet {
     }
 
     public int getDimension() {
-        return dimension;
+        return this.dimension;
     }
 
     public void setDimension(int dimension) {
@@ -312,7 +312,7 @@ public class PacketStartGame extends Packet {
     }
 
     public int getGenerator() {
-        return generator;
+        return this.generator;
     }
 
     public void setGenerator(int generator) {
@@ -320,7 +320,7 @@ public class PacketStartGame extends Packet {
     }
 
     public int getWorldGamemode() {
-        return worldGamemode;
+        return this.worldGamemode;
     }
 
     public void setWorldGamemode(int worldGamemode) {
@@ -328,7 +328,7 @@ public class PacketStartGame extends Packet {
     }
 
     public int getDifficulty() {
-        return difficulty;
+        return this.difficulty;
     }
 
     public void setDifficulty(int difficulty) {
@@ -336,7 +336,7 @@ public class PacketStartGame extends Packet {
     }
 
     public boolean isHasAchievementsDisabled() {
-        return hasAchievementsDisabled;
+        return this.hasAchievementsDisabled;
     }
 
     public void setHasAchievementsDisabled(boolean hasAchievementsDisabled) {
@@ -344,7 +344,7 @@ public class PacketStartGame extends Packet {
     }
 
     public int getDayCycleStopTime() {
-        return dayCycleStopTime;
+        return this.dayCycleStopTime;
     }
 
     public void setDayCycleStopTime(int dayCycleStopTime) {
@@ -352,7 +352,7 @@ public class PacketStartGame extends Packet {
     }
 
     public int getEduEditionOffer() {
-        return eduEditionOffer;
+        return this.eduEditionOffer;
     }
 
     public void setEduEditionOffer(int eduEditionOffer) {
@@ -360,7 +360,7 @@ public class PacketStartGame extends Packet {
     }
 
     public float getRainLevel() {
-        return rainLevel;
+        return this.rainLevel;
     }
 
     public void setRainLevel(float rainLevel) {
@@ -368,7 +368,7 @@ public class PacketStartGame extends Packet {
     }
 
     public float getLightningLevel() {
-        return lightningLevel;
+        return this.lightningLevel;
     }
 
     public void setLightningLevel(float lightningLevel) {
@@ -376,15 +376,15 @@ public class PacketStartGame extends Packet {
     }
 
     public boolean isMultiplayerGame() {
-        return isMultiplayerGame;
+        return this.isMultiplayerGame;
     }
 
     public void setMultiplayerGame(boolean multiplayerGame) {
-        isMultiplayerGame = multiplayerGame;
+        this.isMultiplayerGame = multiplayerGame;
     }
 
     public boolean isHasLANBroadcast() {
-        return hasLANBroadcast;
+        return this.hasLANBroadcast;
     }
 
     public void setHasLANBroadcast(boolean hasLANBroadcast) {
@@ -392,7 +392,7 @@ public class PacketStartGame extends Packet {
     }
 
     public boolean isHasXboxLiveBroadcast() {
-        return hasXboxLiveBroadcast;
+        return this.hasXboxLiveBroadcast;
     }
 
     public void setHasXboxLiveBroadcast(boolean hasXboxLiveBroadcast) {
@@ -400,7 +400,7 @@ public class PacketStartGame extends Packet {
     }
 
     public boolean isCommandsEnabled() {
-        return commandsEnabled;
+        return this.commandsEnabled;
     }
 
     public void setCommandsEnabled(boolean commandsEnabled) {
@@ -408,15 +408,15 @@ public class PacketStartGame extends Packet {
     }
 
     public boolean isTexturePacksRequired() {
-        return isTexturePacksRequired;
+        return this.isTexturePacksRequired;
     }
 
     public void setTexturePacksRequired(boolean texturePacksRequired) {
-        isTexturePacksRequired = texturePacksRequired;
+        this.isTexturePacksRequired = texturePacksRequired;
     }
 
     public Map<Gamerule<?>, Object> getGamerules() {
-        return gamerules;
+        return this.gamerules;
     }
 
     public void setGamerules(Map<Gamerule<?>, Object> gamerules) {
@@ -424,7 +424,7 @@ public class PacketStartGame extends Packet {
     }
 
     public boolean isHasBonusChestEnabled() {
-        return hasBonusChestEnabled;
+        return this.hasBonusChestEnabled;
     }
 
     public void setHasBonusChestEnabled(boolean hasBonusChestEnabled) {
@@ -432,7 +432,7 @@ public class PacketStartGame extends Packet {
     }
 
     public boolean isHasStartWithMapEnabled() {
-        return hasStartWithMapEnabled;
+        return this.hasStartWithMapEnabled;
     }
 
     public void setHasStartWithMapEnabled(boolean hasStartWithMapEnabled) {
@@ -440,7 +440,7 @@ public class PacketStartGame extends Packet {
     }
 
     public boolean isHasTrustPlayersEnabled() {
-        return hasTrustPlayersEnabled;
+        return this.hasTrustPlayersEnabled;
     }
 
     public void setHasTrustPlayersEnabled(boolean hasTrustPlayersEnabled) {
@@ -448,7 +448,7 @@ public class PacketStartGame extends Packet {
     }
 
     public int getDefaultPlayerPermission() {
-        return defaultPlayerPermission;
+        return this.defaultPlayerPermission;
     }
 
     public void setDefaultPlayerPermission(int defaultPlayerPermission) {
@@ -456,7 +456,7 @@ public class PacketStartGame extends Packet {
     }
 
     public int getXboxLiveBroadcastMode() {
-        return xboxLiveBroadcastMode;
+        return this.xboxLiveBroadcastMode;
     }
 
     public void setXboxLiveBroadcastMode(int xboxLiveBroadcastMode) {
@@ -464,7 +464,7 @@ public class PacketStartGame extends Packet {
     }
 
     public boolean isHasPlatformBroadcast() {
-        return hasPlatformBroadcast;
+        return this.hasPlatformBroadcast;
     }
 
     public void setHasPlatformBroadcast(boolean hasPlatformBroadcast) {
@@ -472,7 +472,7 @@ public class PacketStartGame extends Packet {
     }
 
     public int getPlatformBroadcastMode() {
-        return platformBroadcastMode;
+        return this.platformBroadcastMode;
     }
 
     public void setPlatformBroadcastMode(int platformBroadcastMode) {
@@ -480,7 +480,7 @@ public class PacketStartGame extends Packet {
     }
 
     public boolean isXboxLiveBroadcastIntent() {
-        return xboxLiveBroadcastIntent;
+        return this.xboxLiveBroadcastIntent;
     }
 
     public void setXboxLiveBroadcastIntent(boolean xboxLiveBroadcastIntent) {
@@ -488,7 +488,7 @@ public class PacketStartGame extends Packet {
     }
 
     public String getLevelId() {
-        return levelId;
+        return this.levelId;
     }
 
     public void setLevelId(String levelId) {
@@ -496,7 +496,7 @@ public class PacketStartGame extends Packet {
     }
 
     public String getWorldName() {
-        return worldName;
+        return this.worldName;
     }
 
     public void setWorldName(String worldName) {
@@ -504,7 +504,7 @@ public class PacketStartGame extends Packet {
     }
 
     public String getTemplateId() {
-        return templateId;
+        return this.templateId;
     }
 
     public void setTemplateId(String templateId) {
@@ -512,15 +512,15 @@ public class PacketStartGame extends Packet {
     }
 
     public boolean isTrial() {
-        return isTrial;
+        return this.isTrial;
     }
 
     public void setTrial(boolean trial) {
-        isTrial = trial;
+        this.isTrial = trial;
     }
 
     public boolean isMovementServerAuthoritative() {
-        return movementServerAuthoritative;
+        return this.movementServerAuthoritative;
     }
 
     public void setMovementServerAuthoritative(boolean movementServerAuthoritative) {
@@ -528,7 +528,7 @@ public class PacketStartGame extends Packet {
     }
 
     public long getCurrentTick() {
-        return currentTick;
+        return this.currentTick;
     }
 
     public void setCurrentTick(long currentTick) {
@@ -536,7 +536,7 @@ public class PacketStartGame extends Packet {
     }
 
     public int getEnchantmentSeed() {
-        return enchantmentSeed;
+        return this.enchantmentSeed;
     }
 
     public void setEnchantmentSeed(int enchantmentSeed) {
@@ -544,7 +544,7 @@ public class PacketStartGame extends Packet {
     }
 
     public String getCorrelationId() {
-        return correlationId;
+        return this.correlationId;
     }
 
     public void setCorrelationId(String correlationId) {
@@ -552,7 +552,7 @@ public class PacketStartGame extends Packet {
     }
 
     public PacketBuffer getBlockPalette() {
-        return blockPalette;
+        return this.blockPalette;
     }
 
     public void setBlockPalette(PacketBuffer blockPalette) {
@@ -560,7 +560,7 @@ public class PacketStartGame extends Packet {
     }
 
     public PacketBuffer getItemPalette() {
-        return itemPalette;
+        return this.itemPalette;
     }
 
     public void setItemPalette(PacketBuffer itemPalette) {
@@ -568,7 +568,7 @@ public class PacketStartGame extends Packet {
     }
 
     public Location getLocation() {
-        return location;
+        return this.location;
     }
 
     public void setLocation(Location location) {

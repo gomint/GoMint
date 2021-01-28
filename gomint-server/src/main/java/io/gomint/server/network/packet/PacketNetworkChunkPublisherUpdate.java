@@ -40,7 +40,7 @@ public class PacketNetworkChunkPublisherUpdate extends Packet {
     }
 
     public BlockPosition getBlockPosition() {
-        return blockPosition;
+        return this.blockPosition;
     }
 
     public void setBlockPosition(BlockPosition blockPosition) {
@@ -48,7 +48,7 @@ public class PacketNetworkChunkPublisherUpdate extends Packet {
     }
 
     public int getRadius() {
-        return radius;
+        return this.radius;
     }
 
     public void setRadius(int radius) {

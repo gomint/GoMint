@@ -41,7 +41,7 @@ public class PacketEntityMetadata extends Packet {
     }
 
     public long getTick() {
-        return tick;
+        return this.tick;
     }
 
     public void setTick(long tick) {
@@ -49,7 +49,7 @@ public class PacketEntityMetadata extends Packet {
     }
 
     public long getEntityId() {
-        return entityId;
+        return this.entityId;
     }
 
     public void setEntityId(long entityId) {
@@ -57,7 +57,7 @@ public class PacketEntityMetadata extends Packet {
     }
 
     public MetadataContainer getMetadata() {
-        return metadata;
+        return this.metadata;
     }
 
     public void setMetadata(MetadataContainer metadata) {

@@ -44,7 +44,7 @@ public class PlayerPreJoinEvent extends CancellablePlayerEvent<PlayerPreJoinEven
      * @return reason for kick
      */
     public String kickReason() {
-        return kickReason;
+        return this.kickReason;
     }
 
     @Override
@@ -53,18 +53,18 @@ public class PlayerPreJoinEvent extends CancellablePlayerEvent<PlayerPreJoinEven
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
         PlayerPreJoinEvent that = (PlayerPreJoinEvent) o;
-        return Objects.equals(kickReason, that.kickReason);
+        return Objects.equals(this.kickReason, that.kickReason);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), kickReason);
+        return Objects.hash(super.hashCode(), this.kickReason);
     }
 
     @Override
     public String toString() {
         return "PlayerPreJoinEvent{" +
-            "kickReason='" + kickReason + '\'' +
+            "kickReason='" + this.kickReason + '\'' +
             '}';
     }
 

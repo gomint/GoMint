@@ -61,8 +61,7 @@ public class EntityItem extends Entity<EntityItemDrop> implements EntityItemDrop
         this.size( 0.25f, 0.25f );
         pickupDelay( 500, TimeUnit.MILLISECONDS );
 
-
-        GRAVITY = 0.04f;
+        this.GRAVITY = 0.04f;
         this.offsetY = 0.125f;
     }
 
@@ -189,16 +188,16 @@ public class EntityItem extends Entity<EntityItemDrop> implements EntityItemDrop
 
     @Override
     public long pickupTime() {
-        return pickupTime;
+        return this.pickupTime;
     }
 
     @Override
     public String toString() {
         return "EntityItem{" +
-            "itemStack=" + itemStack +
-            ", pickupTime=" + pickupTime +
-            ", isReset=" + isReset +
-            ", lastUpdateDT=" + lastUpdateDT +
+            "itemStack=" + this.itemStack +
+            ", pickupTime=" + this.pickupTime +
+            ", isReset=" + this.isReset +
+            ", lastUpdateDT=" + this.lastUpdateDT +
             '}';
     }
 

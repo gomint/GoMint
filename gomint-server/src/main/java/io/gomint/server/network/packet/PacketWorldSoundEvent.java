@@ -45,7 +45,7 @@ public class PacketWorldSoundEvent extends Packet {
     }
 
     public SoundMagicNumbers getType() {
-        return type;
+        return this.type;
     }
 
     public void setType(SoundMagicNumbers type) {
@@ -53,7 +53,7 @@ public class PacketWorldSoundEvent extends Packet {
     }
 
     public Vector getPosition() {
-        return position;
+        return this.position;
     }
 
     public void setPosition(Vector position) {
@@ -61,7 +61,7 @@ public class PacketWorldSoundEvent extends Packet {
     }
 
     public int getExtraData() {
-        return extraData;
+        return this.extraData;
     }
 
     public void setExtraData(int extraData) {
@@ -69,7 +69,7 @@ public class PacketWorldSoundEvent extends Packet {
     }
 
     public String getEntityId() {
-        return entityId;
+        return this.entityId;
     }
 
     public void setEntityId(String entityId) {
@@ -77,15 +77,15 @@ public class PacketWorldSoundEvent extends Packet {
     }
 
     public boolean isBabyMob() {
-        return isBabyMob;
+        return this.isBabyMob;
     }
 
     public void setBabyMob(boolean babyMob) {
-        isBabyMob = babyMob;
+        this.isBabyMob = babyMob;
     }
 
     public boolean isDisableRelativeVolume() {
-        return disableRelativeVolume;
+        return this.disableRelativeVolume;
     }
 
     public void setDisableRelativeVolume(boolean disableRelativeVolume) {

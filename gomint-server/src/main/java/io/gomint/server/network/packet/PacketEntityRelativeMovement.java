@@ -129,7 +129,7 @@ public class PacketEntityRelativeMovement extends Packet {
     }
 
     public long getEntityId() {
-        return entityId;
+        return this.entityId;
     }
 
     public void setEntityId(long entityId) {
@@ -137,7 +137,7 @@ public class PacketEntityRelativeMovement extends Packet {
     }
 
     public short getFlags() {
-        return flags;
+        return this.flags;
     }
 
     public void setFlags(short flags) {
@@ -145,7 +145,7 @@ public class PacketEntityRelativeMovement extends Packet {
     }
 
     public float getOldX() {
-        return oldX;
+        return this.oldX;
     }
 
     public void setOldX(float oldX) {
@@ -153,7 +153,7 @@ public class PacketEntityRelativeMovement extends Packet {
     }
 
     public float getOldY() {
-        return oldY;
+        return this.oldY;
     }
 
     public void setOldY(float oldY) {
@@ -161,7 +161,7 @@ public class PacketEntityRelativeMovement extends Packet {
     }
 
     public float getOldZ() {
-        return oldZ;
+        return this.oldZ;
     }
 
     public void setOldZ(float oldZ) {
@@ -169,7 +169,7 @@ public class PacketEntityRelativeMovement extends Packet {
     }
 
     public float getX() {
-        return x;
+        return this.x;
     }
 
     public void setX(float x) {
@@ -177,7 +177,7 @@ public class PacketEntityRelativeMovement extends Packet {
     }
 
     public float getY() {
-        return y;
+        return this.y;
     }
 
     public void setY(float y) {
@@ -185,7 +185,7 @@ public class PacketEntityRelativeMovement extends Packet {
     }
 
     public float getZ() {
-        return z;
+        return this.z;
     }
 
     public void setZ(float z) {
@@ -193,7 +193,7 @@ public class PacketEntityRelativeMovement extends Packet {
     }
 
     public float getOldPitch() {
-        return oldPitch;
+        return this.oldPitch;
     }
 
     public void setOldPitch(float oldPitch) {
@@ -201,7 +201,7 @@ public class PacketEntityRelativeMovement extends Packet {
     }
 
     public float getOldYaw() {
-        return oldYaw;
+        return this.oldYaw;
     }
 
     public void setOldYaw(float oldYaw) {
@@ -209,7 +209,7 @@ public class PacketEntityRelativeMovement extends Packet {
     }
 
     public float getOldHeadYaw() {
-        return oldHeadYaw;
+        return this.oldHeadYaw;
     }
 
     public void setOldHeadYaw(float oldHeadYaw) {
@@ -217,7 +217,7 @@ public class PacketEntityRelativeMovement extends Packet {
     }
 
     public float getPitch() {
-        return pitch;
+        return this.pitch;
     }
 
     public void setPitch(float pitch) {
@@ -225,7 +225,7 @@ public class PacketEntityRelativeMovement extends Packet {
     }
 
     public float getYaw() {
-        return yaw;
+        return this.yaw;
     }
 
     public void setYaw(float yaw) {
@@ -233,7 +233,7 @@ public class PacketEntityRelativeMovement extends Packet {
     }
 
     public float getHeadYaw() {
-        return headYaw;
+        return this.headYaw;
     }
 
     public void setHeadYaw(float headYaw) {

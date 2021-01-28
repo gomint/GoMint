@@ -39,9 +39,9 @@ public class BlockSetBenchmark {
 
     @Setup
     public void init() throws IOException {
-        server = new GoMintServer();
+        this.server = new GoMintServer();
 
-        this.world = server.createWorld("test", new CreateOptions().worldType(WorldType.IN_MEMORY));
+        this.world = this.server.createWorld("test", new CreateOptions().worldType(WorldType.IN_MEMORY));
 
         Block block = this.world.blockAt(50,5,50);
         this.log = block.blockType(BlockDirt.class);
@@ -59,7 +59,7 @@ public class BlockSetBenchmark {
 
     @TearDown
     public void teardown() {
-        server.shutdown();
+        this.server.shutdown();
     }
 
 }

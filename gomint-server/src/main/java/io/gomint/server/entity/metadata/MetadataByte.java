@@ -71,7 +71,7 @@ public class MetadataByte extends MetadataValue {
     @Override
     public String toString() {
         return "MetadataByte{" +
-            "value=" + value +
+            "value=" + this.value +
             '}';
     }
 

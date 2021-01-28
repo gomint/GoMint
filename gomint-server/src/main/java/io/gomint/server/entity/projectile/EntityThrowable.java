@@ -39,8 +39,8 @@ public abstract class EntityThrowable<E extends Entity<E>> extends EntityProject
         super.applyCustomProperties();
 
         // Gravity
-        GRAVITY = 0.03f;
-        DRAG = 0.01f;
+        this.GRAVITY = 0.03f;
+        this.DRAG = 0.01f;
 
         // Set size
         this.size(0.25f, 0.25f);

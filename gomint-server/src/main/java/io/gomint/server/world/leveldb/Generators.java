@@ -28,7 +28,7 @@ public enum Generators {
     }
 
     public int getId() {
-        return id;
+        return this.id;
     }
 
     /**

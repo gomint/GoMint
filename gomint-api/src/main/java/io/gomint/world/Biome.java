@@ -389,7 +389,7 @@ public enum Biome {
     public int colorRGB(boolean grass, int height ) {
         // Calculate temperature and downfall rate:
         double temperature = MathUtils.clamp( this.temperature() - ( height > 64 ? ( height - 64 ) * 0.00166667D : 0.0D ), 0.0D, 1.0D );
-        double tempDownfall = downfall * temperature;
+        double tempDownfall = this.downfall * temperature;
 
         // Interpolate on triangle:
         double r = 0.0D, g = 0.0D, b = 0.0D;

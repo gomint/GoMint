@@ -39,7 +39,7 @@ public class PlayerPreLoginEvent extends CancellableEvent<PlayerPreLoginEvent> {
     @Override
     public String toString() {
         return "PlayerPreLoginEvent{" +
-            "clientAddress=" + clientAddress +
+            "clientAddress=" + this.clientAddress +
             '}';
     }
 
@@ -49,12 +49,12 @@ public class PlayerPreLoginEvent extends CancellableEvent<PlayerPreLoginEvent> {
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
         PlayerPreLoginEvent that = (PlayerPreLoginEvent) o;
-        return Objects.equals(clientAddress, that.clientAddress);
+        return Objects.equals(this.clientAddress, that.clientAddress);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), clientAddress);
+        return Objects.hash(super.hashCode(), this.clientAddress);
     }
 
 }

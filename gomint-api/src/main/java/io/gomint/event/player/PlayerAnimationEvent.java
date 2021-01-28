@@ -16,7 +16,7 @@ public class PlayerAnimationEvent extends CancellablePlayerEvent<PlayerAnimation
         this.animation = animation;
     }
 
-    public Animation animation() { return animation; }
+    public Animation animation() { return this.animation; }
 
     public enum Animation {
 

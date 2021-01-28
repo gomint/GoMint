@@ -31,17 +31,17 @@ public class ScoreboardDisplay implements io.gomint.scoreboard.ScoreboardDisplay
 
     @Override
     public String objective() {
-        return objectiveName;
+        return this.objectiveName;
     }
 
     @Override
     public String display() {
-        return displayName;
+        return this.displayName;
     }
 
     @Override
     public SortOrder sortOrder() {
-        return sortOrder;
+        return this.sortOrder;
     }
 
     @Override

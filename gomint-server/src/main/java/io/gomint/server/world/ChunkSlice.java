@@ -76,15 +76,15 @@ public class ChunkSlice {
     }
 
     public Short2ObjectOpenHashMap<TileEntity> getTileEntities() {
-        return tileEntities;
+        return this.tileEntities;
     }
 
     public int getSectionY() {
-        return sectionY;
+        return this.sectionY;
     }
 
     public ChunkAdapter getChunk() {
-        return chunk;
+        return this.chunk;
     }
 
     private short getIndex(int x, int y, int z) {

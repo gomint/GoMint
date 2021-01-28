@@ -42,7 +42,7 @@ public class AsyncChunkLoadTask extends AsyncChunkTask {
      * @return x coordinate
      */
     public int getX() {
-        return x;
+        return this.x;
     }
 
     /**
@@ -51,7 +51,7 @@ public class AsyncChunkLoadTask extends AsyncChunkTask {
      * @return z coordinate
      */
     public int getZ() {
-        return z;
+        return this.z;
     }
 
     /**
@@ -60,7 +60,7 @@ public class AsyncChunkLoadTask extends AsyncChunkTask {
      * @return allowed to generate
      */
     boolean isGenerate() {
-        return generate;
+        return this.generate;
     }
 
     /**
@@ -69,7 +69,7 @@ public class AsyncChunkLoadTask extends AsyncChunkTask {
      * @return the callback which should be invoked on completion
      */
     Delegate<ChunkAdapter> getCallback() {
-        return callback;
+        return this.callback;
     }
 
     public void setGenerate(boolean generate) {

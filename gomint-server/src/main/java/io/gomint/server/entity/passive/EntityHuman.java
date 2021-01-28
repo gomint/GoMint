@@ -114,8 +114,8 @@ public class EntityHuman<E extends Entity<E>> extends EntityCreature<E> implemen
     @Override
     public String toString() {
         return "{\"_class\":\"EntityHuman\", " +
-            "\"username\":" + (username == null ? "null" : "\"" + username + "\"") + ", " +
-            "\"uuid\":" + (uuid == null ? "null" : uuid) +
+            "\"username\":" + (this.username == null ? "null" : "\"" + this.username + "\"") + ", " +
+            "\"uuid\":" + (this.uuid == null ? "null" : this.uuid) +
             "}";
     }
 
@@ -544,7 +544,7 @@ public class EntityHuman<E extends Entity<E>> extends EntityCreature<E> implemen
 
     @Override
     public PlayerInventory inventory() {
-        return inventory;
+        return this.inventory;
     }
 
     /**
@@ -670,18 +670,18 @@ public class EntityHuman<E extends Entity<E>> extends EntityCreature<E> implemen
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         EntityHuman<?> that = (EntityHuman<?>) o;
-        return uuid.getMostSignificantBits() == that.uuid.getMostSignificantBits() &&
-            uuid.getLeastSignificantBits() == that.uuid.getLeastSignificantBits();
+        return this.uuid.getMostSignificantBits() == that.uuid.getMostSignificantBits() &&
+                this.uuid.getLeastSignificantBits() == that.uuid.getLeastSignificantBits();
     }
 
     @Override
     public int hashCode() {
-        return uuid.hashCode();
+        return this.uuid.hashCode();
     }
 
     @Override
     public String playerListName() {
-        return playerListName;
+        return this.playerListName;
     }
 
     /**
@@ -690,7 +690,7 @@ public class EntityHuman<E extends Entity<E>> extends EntityCreature<E> implemen
      * @return device information from this player
      */
     public DeviceInfo deviceInfo() {
-        return deviceInfo;
+        return this.deviceInfo;
     }
 
     @Override

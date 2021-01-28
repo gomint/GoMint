@@ -39,23 +39,23 @@ public class InventoryTransferAction implements InventoryAction {
     }
 
     public byte getAmount() {
-        return amount;
+        return this.amount;
     }
 
     public boolean hasAmount() {
-        return hasAmount;
+        return this.hasAmount;
     }
 
     public ItemStackRequestSlotInfo getSource() {
-        return source;
+        return this.source;
     }
 
     public ItemStackRequestSlotInfo getDestination() {
-        return destination;
+        return this.destination;
     }
 
     public boolean hasDestination() {
-        return hasDestination;
+        return this.hasDestination;
     }
 
     @Override
@@ -66,11 +66,11 @@ public class InventoryTransferAction implements InventoryAction {
     @Override
     public String toString() {
         return "{\"InventoryTransferAction\":{"
-            + "\"hasAmount\":\"" + hasAmount + "\""
-            + ", \"hasDestination\":\"" + hasDestination + "\""
-            + ", \"amount\":\"" + amount + "\""
-            + ", \"source\":" + source
-            + ", \"destination\":" + destination
+            + "\"hasAmount\":\"" + this.hasAmount + "\""
+            + ", \"hasDestination\":\"" + this.hasDestination + "\""
+            + ", \"amount\":\"" + this.amount + "\""
+            + ", \"source\":" + this.source
+            + ", \"destination\":" + this.destination
             + "}}";
     }
 

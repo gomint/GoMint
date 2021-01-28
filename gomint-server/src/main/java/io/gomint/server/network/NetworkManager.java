@@ -114,7 +114,7 @@ public class NetworkManager {
     }
 
     public PostProcessExecutorService getPostProcessService() {
-        return postProcessService;
+        return this.postProcessService;
     }
 
     public void setMotd(String motd) {
@@ -122,7 +122,7 @@ public class NetworkManager {
     }
 
     public String getMotd() {
-        return motd;
+        return this.motd;
     }
 
     private void initPacketHandlers() {

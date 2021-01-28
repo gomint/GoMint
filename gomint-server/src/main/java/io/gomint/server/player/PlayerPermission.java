@@ -17,6 +17,6 @@ public enum PlayerPermission {
     }
 
     public int getId() {
-        return id;
+        return this.id;
     }
 }

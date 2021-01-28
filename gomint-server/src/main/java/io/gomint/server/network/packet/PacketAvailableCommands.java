@@ -108,7 +108,7 @@ public class PacketAvailableCommands extends Packet {
     }
 
     public List<String> getEnumValues() {
-        return enumValues;
+        return this.enumValues;
     }
 
     public void setEnumValues(List<String> enumValues) {
@@ -116,7 +116,7 @@ public class PacketAvailableCommands extends Packet {
     }
 
     public List<String> getPostFixes() {
-        return postFixes;
+        return this.postFixes;
     }
 
     public void setPostFixes(List<String> postFixes) {
@@ -124,7 +124,7 @@ public class PacketAvailableCommands extends Packet {
     }
 
     public IndexedHashMap<String, List<Integer>> getEnums() {
-        return enums;
+        return this.enums;
     }
 
     public void setEnums(IndexedHashMap<String, List<Integer>> enums) {
@@ -132,7 +132,7 @@ public class PacketAvailableCommands extends Packet {
     }
 
     public List<CommandData> getCommandData() {
-        return commandData;
+        return this.commandData;
     }
 
     public void setCommandData(List<CommandData> commandData) {

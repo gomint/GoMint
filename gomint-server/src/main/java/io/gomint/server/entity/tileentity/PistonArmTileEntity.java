@@ -112,13 +112,13 @@ public class PistonArmTileEntity extends TileEntity {
     @Override
     public String toString() {
         return "PistonArmTileEntity{" +
-            "state=" + state +
-            ", newState=" + newState +
-            ", progess=" + progess +
-            ", lastProgress=" + lastProgress +
-            ", attachedBlocks=" + attachedBlocks +
-            ", breakBlocks=" + breakBlocks +
-            ", sticky=" + sticky +
+            "state=" + this.state +
+            ", newState=" + this.newState +
+            ", progess=" + this.progess +
+            ", lastProgress=" + this.lastProgress +
+            ", attachedBlocks=" + this.attachedBlocks +
+            ", breakBlocks=" + this.breakBlocks +
+            ", sticky=" + this.sticky +
             '}';
     }
 

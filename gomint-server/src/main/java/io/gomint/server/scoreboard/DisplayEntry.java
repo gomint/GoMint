@@ -22,7 +22,7 @@ public class DisplayEntry implements io.gomint.scoreboard.DisplayEntry {
     }
 
     public long getScoreId() {
-        return scoreId;
+        return this.scoreId;
     }
 
     @Override

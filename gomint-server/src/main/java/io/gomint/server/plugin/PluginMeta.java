@@ -51,7 +51,7 @@ public class PluginMeta {
     }
 
     public String getName() {
-        return name;
+        return this.name;
     }
 
     public void setName(String name) {
@@ -59,7 +59,7 @@ public class PluginMeta {
     }
 
     public PluginVersion getVersion() {
-        return version;
+        return this.version;
     }
 
     public void setVersion(PluginVersion version) {
@@ -67,7 +67,7 @@ public class PluginMeta {
     }
 
     public StartupPriority getPriority() {
-        return priority;
+        return this.priority;
     }
 
     public void setPriority(StartupPriority priority) {
@@ -75,7 +75,7 @@ public class PluginMeta {
     }
 
     public Set<String> getDepends() {
-        return depends;
+        return this.depends;
     }
 
     public void setDepends(Set<String> depends) {
@@ -83,7 +83,7 @@ public class PluginMeta {
     }
 
     public Set<String> getSoftDepends() {
-        return softDepends;
+        return this.softDepends;
     }
 
     public void setSoftDepends(Set<String> softDepends) {
@@ -91,7 +91,7 @@ public class PluginMeta {
     }
 
     public String getMainClass() {
-        return mainClass;
+        return this.mainClass;
     }
 
     public void setMainClass(String mainClass) {
@@ -99,7 +99,7 @@ public class PluginMeta {
     }
 
     public Set<String> getInjectionCommands() {
-        return injectionCommands;
+        return this.injectionCommands;
     }
 
     public void setInjectionCommands(Set<String> injectionCommands) {
@@ -107,7 +107,7 @@ public class PluginMeta {
     }
 
     public String getModuleName() {
-        return moduleName;
+        return this.moduleName;
     }
 
     public void setModuleName(String moduleName) {
@@ -115,7 +115,7 @@ public class PluginMeta {
     }
 
     public boolean hasModuleInfo() {
-        return hasModuleInfo;
+        return this.hasModuleInfo;
     }
 
     public void setHasModuleInfo(boolean hasModuleInfo) {
@@ -123,7 +123,7 @@ public class PluginMeta {
     }
 
     public Set<String> getPackages() {
-        return packages;
+        return this.packages;
     }
 
     public void setPackages(Set<String> packages) {
@@ -131,7 +131,7 @@ public class PluginMeta {
     }
 
     public Set<File> getModuleDependencies() {
-        return moduleDependencies;
+        return this.moduleDependencies;
     }
 
     public void setModuleDependencies(Set<File> moduleDependencies) {
@@ -139,6 +139,6 @@ public class PluginMeta {
     }
 
     public File getPluginFile() {
-        return pluginFile;
+        return this.pluginFile;
     }
 }

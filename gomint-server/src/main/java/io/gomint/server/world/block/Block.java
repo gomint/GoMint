@@ -107,25 +107,25 @@ public abstract class Block implements io.gomint.world.block.Block {
 
     @Override
     public byte blockLightLevel() {
-        return blockLightLevel;
+        return this.blockLightLevel;
     }
 
     @Override
     public byte skyLightLevel() {
-        return skyLightLevel;
+        return this.skyLightLevel;
     }
 
     public int layer() {
-        return layer;
+        return this.layer;
     }
 
     @Override
     public Location location() {
-        return location;
+        return this.location;
     }
 
     public BlockIdentifier identifier() {
-        return identifier;
+        return this.identifier;
     }
 
     @Override

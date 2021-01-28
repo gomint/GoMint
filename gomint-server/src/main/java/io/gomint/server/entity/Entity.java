@@ -180,21 +180,21 @@ public abstract class Entity<E extends io.gomint.entity.Entity<E>> implements io
 
     @Override
     public float fallDistance() {
-        return fallDistance;
+        return this.fallDistance;
     }
 
     @Override
     public float eyeHeight() {
-        return eyeHeight;
+        return this.eyeHeight;
     }
 
     public float offsetY() {
-        return offsetY;
+        return this.offsetY;
     }
 
     @Override
     public boolean ticking() {
-        return ticking;
+        return this.ticking;
     }
 
     @Override
@@ -204,12 +204,12 @@ public abstract class Entity<E extends io.gomint.entity.Entity<E>> implements io
     }
 
     public float width() {
-        return width;
+        return this.width;
     }
 
     @Override
     public boolean dead() {
-        return dead;
+        return this.dead;
     }
 
     public E dead(boolean dead) {
@@ -218,15 +218,15 @@ public abstract class Entity<E extends io.gomint.entity.Entity<E>> implements io
     }
 
     public List<EntityLink> links() {
-        return links;
+        return this.links;
     }
 
     public Location oldPosition() {
-        return oldPosition;
+        return this.oldPosition;
     }
 
     public float height() {
-        return height;
+        return this.height;
     }
 
     @Override
@@ -234,18 +234,18 @@ public abstract class Entity<E extends io.gomint.entity.Entity<E>> implements io
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Entity<?> entity = (Entity<?>) o;
-        return id == entity.id;
+        return this.id == entity.id;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id);
+        return Objects.hash(this.id);
     }
 
     @Override
     public String toString() {
         return "Entity{" +
-            "id=" + id +
+            "id=" + this.id +
             '}';
     }
 
@@ -325,7 +325,7 @@ public abstract class Entity<E extends io.gomint.entity.Entity<E>> implements io
                     this.transform.manipulateMotion( 0, -this.GRAVITY, 0 );
 
                     // Calculate friction
-                    float friction = 1 - DRAG;
+                    float friction = 1 - this.DRAG;
                     if ( this.onGround && ( Math.abs( this.getMotionX() ) > 0.00001 || Math.abs( this.getMotionZ() ) > 0.00001 ) ) {
                         friction = this.world.blockAt( (int) this.positionX(),
                             (int) ( this.positionY() - 1 ),
@@ -334,7 +334,7 @@ public abstract class Entity<E extends io.gomint.entity.Entity<E>> implements io
 
                     // Calculate new motion
                     float newMovX = this.transform.motionX() * friction;
-                    float newMovY = this.transform.motionY() * ( 1 - DRAG );
+                    float newMovY = this.transform.motionY() * ( 1 - this.DRAG);
                     float newMovZ = this.transform.motionZ() * friction;
 
                     this.transform.motion( newMovX, newMovY, newMovZ );

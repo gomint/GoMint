@@ -35,7 +35,7 @@ public class MojangLoginForger {
     private String xuid;
 
     public UUID getUuid() {
-        return uuid;
+        return this.uuid;
     }
 
     public void setUsername(String username) {

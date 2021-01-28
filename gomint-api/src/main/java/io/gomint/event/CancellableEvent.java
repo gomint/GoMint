@@ -42,18 +42,18 @@ public class CancellableEvent<E> extends Event {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         CancellableEvent<?> that = (CancellableEvent<?>) o;
-        return cancelled == that.cancelled;
+        return this.cancelled == that.cancelled;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(cancelled);
+        return Objects.hash(this.cancelled);
     }
 
     @Override
     public String toString() {
         return "CancellableEvent{" +
-            "cancelled=" + cancelled +
+            "cancelled=" + this.cancelled +
             '}';
     }
 

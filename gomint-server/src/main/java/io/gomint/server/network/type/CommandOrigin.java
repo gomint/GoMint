@@ -21,19 +21,19 @@ public class CommandOrigin {
     }
 
     public byte getUnknown1() {
-        return unknown1;
+        return this.unknown1;
     }
 
     public UUID getUuid() {
-        return uuid;
+        return this.uuid;
     }
 
     public byte getUnknown2() {
-        return unknown2;
+        return this.unknown2;
     }
 
     public byte getType() {
-        return type;
+        return this.type;
     }
 
     public CommandOrigin setUnknown1(byte unknown1) {

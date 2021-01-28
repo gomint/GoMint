@@ -51,68 +51,68 @@ public class WorldConfig extends YamlConfig {
     private boolean disableChunkGC = false;
 
     public String name() {
-        return name;
+        return this.name;
     }
 
     public String chunkGenerator() {
-        return chunkGenerator;
+        return this.chunkGenerator;
     }
 
     public int randomUpdatesPerTick() {
-        return randomUpdatesPerTick;
+        return this.randomUpdatesPerTick;
     }
 
     public int amountOfChunksForSpawnArea() {
-        return amountOfChunksForSpawnArea;
+        return this.amountOfChunksForSpawnArea;
     }
 
     public int viewDistance() {
-        return viewDistance;
+        return this.viewDistance;
     }
 
     public int secondsUntilGCAfterLastPlayerLeft() {
-        return secondsUntilGCAfterLastPlayerLeft;
+        return this.secondsUntilGCAfterLastPlayerLeft;
     }
 
     public int waitAfterLoadForGCSeconds() {
-        return waitAfterLoadForGCSeconds;
+        return this.waitAfterLoadForGCSeconds;
     }
 
     public boolean autoSave() {
-        return autoSave;
+        return this.autoSave;
     }
 
     public boolean saveOnUnload() {
-        return saveOnUnload;
+        return this.saveOnUnload;
     }
 
     public int autoSaveInterval() {
-        return autoSaveInterval;
+        return this.autoSaveInterval;
     }
 
     public boolean disableRandomTicking() {
-        return disableRandomTicking;
+        return this.disableRandomTicking;
     }
 
     public boolean disableChunkGC() {
-        return disableChunkGC;
+        return this.disableChunkGC;
     }
 
     @Override
     public String toString() {
         return "WorldConfig{" +
-            "name='" + name + '\'' +
-            ", chunkGenerator='" + chunkGenerator + '\'' +
-            ", randomUpdatesPerTick=" + randomUpdatesPerTick +
-            ", amountOfChunksForSpawnArea=" + amountOfChunksForSpawnArea +
-            ", viewDistance=" + viewDistance +
-            ", secondsUntilGCAfterLastPlayerLeft=" + secondsUntilGCAfterLastPlayerLeft +
-            ", waitAfterLoadForGCSeconds=" + waitAfterLoadForGCSeconds +
-            ", autoSave=" + autoSave +
-            ", saveOnUnload=" + saveOnUnload +
-            ", autoSaveInterval=" + autoSaveInterval +
-            ", disableRandomTicking=" + disableRandomTicking +
-            ", disableChunkGC=" + disableChunkGC +
+            "name='" + this.name + '\'' +
+            ", chunkGenerator='" + this.chunkGenerator + '\'' +
+            ", randomUpdatesPerTick=" + this.randomUpdatesPerTick +
+            ", amountOfChunksForSpawnArea=" + this.amountOfChunksForSpawnArea +
+            ", viewDistance=" + this.viewDistance +
+            ", secondsUntilGCAfterLastPlayerLeft=" + this.secondsUntilGCAfterLastPlayerLeft +
+            ", waitAfterLoadForGCSeconds=" + this.waitAfterLoadForGCSeconds +
+            ", autoSave=" + this.autoSave +
+            ", saveOnUnload=" + this.saveOnUnload +
+            ", autoSaveInterval=" + this.autoSaveInterval +
+            ", disableRandomTicking=" + this.disableRandomTicking +
+            ", disableChunkGC=" + this.disableChunkGC +
             '}';
     }
 

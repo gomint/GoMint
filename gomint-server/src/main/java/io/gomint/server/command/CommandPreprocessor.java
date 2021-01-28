@@ -226,7 +226,7 @@ public class CommandPreprocessor {
     }
 
     public PacketAvailableCommands getCommandsPacket() {
-        return commandsPacket;
+        return this.commandsPacket;
     }
 
 }

@@ -29,13 +29,13 @@ public class PlayerInteractWithEntityEvent extends CancellablePlayerEvent<Player
      * @return entity which was interacted
      */
     public Entity<?> entity() {
-        return entity;
+        return this.entity;
     }
 
     @Override
     public String toString() {
         return "PlayerInteractWithEntityEvent{" +
-            "entity=" + entity +
+            "entity=" + this.entity +
             '}';
     }
 

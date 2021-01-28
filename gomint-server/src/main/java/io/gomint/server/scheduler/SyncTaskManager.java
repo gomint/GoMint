@@ -92,7 +92,7 @@ public class SyncTaskManager {
         }
 
         public long getExecution() {
-            return execution;
+            return this.execution;
         }
 
         @Override
@@ -100,12 +100,12 @@ public class SyncTaskManager {
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
             SyncScheduledTaskHolder that = (SyncScheduledTaskHolder) o;
-            return Objects.equals(task, that.task);
+            return Objects.equals(this.task, that.task);
         }
 
         @Override
         public int hashCode() {
-            return Objects.hash(task);
+            return Objects.hash(this.task);
         }
     }
 

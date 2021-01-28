@@ -651,8 +651,8 @@ public class MetadataContainer extends Observable {
     @Override
     public String toString() {
         return "MetadataContainer{" +
-            "entries=" + entries +
-            ", dirty=" + dirty +
+            "entries=" + this.entries +
+            ", dirty=" + this.dirty +
             '}';
     }
 

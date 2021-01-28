@@ -83,7 +83,7 @@ public class PacketResourcePacksInfo extends Packet {
     }
 
     public boolean isMustAccept() {
-        return mustAccept;
+        return this.mustAccept;
     }
 
     public void setMustAccept(boolean mustAccept) {
@@ -91,7 +91,7 @@ public class PacketResourcePacksInfo extends Packet {
     }
 
     public boolean isHasScripts() {
-        return hasScripts;
+        return this.hasScripts;
     }
 
     public void setHasScripts(boolean hasScripts) {
@@ -99,7 +99,7 @@ public class PacketResourcePacksInfo extends Packet {
     }
 
     public List<ResourcePack> getBehaviourPackEntries() {
-        return behaviourPackEntries;
+        return this.behaviourPackEntries;
     }
 
     public void setBehaviourPackEntries(List<ResourcePack> behaviourPackEntries) {
@@ -107,7 +107,7 @@ public class PacketResourcePacksInfo extends Packet {
     }
 
     public List<ResourcePack> getResourcePackEntries() {
-        return resourcePackEntries;
+        return this.resourcePackEntries;
     }
 
     public void setResourcePackEntries(List<ResourcePack> resourcePackEntries) {

@@ -71,7 +71,7 @@ public class FurnaceTileEntity extends ContainerTileEntity implements InventoryH
     }
 
     public FurnaceInventory getInventory() {
-        return inventory;
+        return this.inventory;
     }
 
 }

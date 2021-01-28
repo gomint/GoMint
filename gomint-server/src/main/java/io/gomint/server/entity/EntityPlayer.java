@@ -640,7 +640,7 @@ public class EntityPlayer extends EntityHuman<io.gomint.entity.EntityPlayer> imp
     private void updateAttributes() {
         PacketUpdateAttributes updateAttributes = null;
 
-        for (AttributeInstance instance : attributes.values()) {
+        for (AttributeInstance instance : this.attributes.values()) {
             if (instance.isDirty()) {
                 if (updateAttributes == null) {
                     updateAttributes = new PacketUpdateAttributes();
@@ -665,7 +665,7 @@ public class EntityPlayer extends EntityHuman<io.gomint.entity.EntityPlayer> imp
         updateAttributes.setEntityId(this.id());
         updateAttributes.setTick(this.world().getServer().currentTickTime() / (int) Values.CLIENT_TICK_MS);
 
-        for (AttributeInstance instance : attributes.values()) {
+        for (AttributeInstance instance : this.attributes.values()) {
             updateAttributes.addAttributeInstance(instance);
         }
 
@@ -1745,7 +1745,7 @@ public class EntityPlayer extends EntityHuman<io.gomint.entity.EntityPlayer> imp
 
     @Override
     public io.gomint.permission.PermissionManager permissionManager() {
-        return permissionManager;
+        return this.permissionManager;
     }
 
     @Override
@@ -1759,15 +1759,15 @@ public class EntityPlayer extends EntityHuman<io.gomint.entity.EntityPlayer> imp
     }
 
     public EntityVisibilityManager entityVisibilityManager() {
-        return entityVisibilityManager;
+        return this.entityVisibilityManager;
     }
 
     public AdventureSettings adventureSettings() {
-        return adventureSettings;
+        return this.adventureSettings;
     }
 
     public Entity<?> hoverEntity() {
-        return hoverEntity;
+        return this.hoverEntity;
     }
 
     public void hoverEntity(Entity <?>hoverEntity) {
@@ -1775,31 +1775,31 @@ public class EntityPlayer extends EntityHuman<io.gomint.entity.EntityPlayer> imp
     }
 
     public Inventory<?> craftingInventory() {
-        return craftingInventory;
+        return this.craftingInventory;
     }
 
     public CraftingInputInventory craftingInputInventory() {
-        return craftingInputInventory;
+        return this.craftingInputInventory;
     }
 
     public BlockPosition breakVector() {
-        return breakVector;
+        return this.breakVector;
     }
 
     public long startBreak() {
-        return startBreak;
+        return this.startBreak;
     }
 
     public long breakTime() {
-        return breakTime;
+        return this.breakTime;
     }
 
     public Set<BlockPosition> blockUpdates() {
-        return blockUpdates;
+        return this.blockUpdates;
     }
 
     public Location teleportPosition() {
-        return teleportPosition;
+        return this.teleportPosition;
     }
 
     public void breakVector(BlockPosition breakVector) {
@@ -1831,38 +1831,38 @@ public class EntityPlayer extends EntityHuman<io.gomint.entity.EntityPlayer> imp
     }
 
     public EntityFishingHook getFishingHook() {
-        return fishingHook;
+        return this.fishingHook;
     }
 
     @Override
     public Location spawnLocation() {
-        return spawnLocation;
+        return this.spawnLocation;
     }
 
     public long actionStart() {
-        return actionStart;
+        return this.actionStart;
     }
 
     public LoginPerformance loginPerformance() {
-        return loginPerformance;
+        return this.loginPerformance;
     }
 
     public Location getNextMovement() {
-        return nextMovement;
+        return this.nextMovement;
     }
 
     public boolean isSpawnPlayers() {
-        return spawnPlayers;
+        return this.spawnPlayers;
     }
 
     @Override
     public Scoreboard scoreboard() {
-        return scoreboard;
+        return this.scoreboard;
     }
 
     @Override
     public EnderChestInventory enderChestInventory() {
-        return enderChestInventory;
+        return this.enderChestInventory;
     }
 
     public boolean hasCompletedLogin() {
@@ -1883,7 +1883,7 @@ public class EntityPlayer extends EntityHuman<io.gomint.entity.EntityPlayer> imp
     }
 
     public long enchantmentSeed() {
-        return enchantmentSeed;
+        return this.enchantmentSeed;
     }
 
     public void generateNewEnchantmentSeed() {

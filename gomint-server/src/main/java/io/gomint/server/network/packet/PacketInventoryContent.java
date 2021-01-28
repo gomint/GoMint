@@ -29,7 +29,7 @@ public class PacketInventoryContent extends Packet {
     }
 
     public int getWindowId() {
-        return windowId;
+        return this.windowId;
     }
 
     public void setWindowId(int windowId) {
@@ -37,7 +37,7 @@ public class PacketInventoryContent extends Packet {
     }
 
     public ItemStack<?>[] getItems() {
-        return items;
+        return this.items;
     }
 
     public void setItems(ItemStack<?>[] items) {

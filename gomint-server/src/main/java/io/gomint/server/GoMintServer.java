@@ -173,7 +173,7 @@ public class GoMintServer implements GoMint, InventoryHolder {
             @Override
             public Thread newThread(Runnable r) {
                 Thread thread = new Thread(r);
-                thread.setName("GoMint Thread #" + counter.incrementAndGet());
+                thread.setName("GoMint Thread #" + this.counter.incrementAndGet());
                 return thread;
             }
         }));
@@ -273,7 +273,7 @@ public class GoMintServer implements GoMint, InventoryHolder {
                 .appName("GoMint")
                 .terminal(terminal)
                 .completer((lineReader, parsedLine, list) -> {
-                    List<String> suggestions = pluginManager.getCommandManager().completeSystem(parsedLine.line());
+                    List<String> suggestions = this.pluginManager.getCommandManager().completeSystem(parsedLine.line());
                     for (String suggestion : suggestions) {
                         LOGGER.info(suggestion);
                     }
@@ -321,7 +321,7 @@ public class GoMintServer implements GoMint, InventoryHolder {
 
         this.readerThread = new Thread(() -> {
             String line;
-            while (running.get()) {
+            while (this.running.get()) {
                 // Read jLine
                 reading.set(true);
                 try {
@@ -448,8 +448,8 @@ public class GoMintServer implements GoMint, InventoryHolder {
             e.printStackTrace();
         }
 
-        init.set(false);
-        LOGGER.info("Done in {} ms", (System.currentTimeMillis() - start));
+        this.init.set(false);
+        LOGGER.info("Done in {} ms", (System.currentTimeMillis() - this.start));
         this.watchdog.done();
 
         if (args.has("exit-after-boot")) {
@@ -681,7 +681,7 @@ public class GoMintServer implements GoMint, InventoryHolder {
 
     @Override
     public SimpleChunkGeneratorRegistry chunkGeneratorRegistry() {
-        return chunkGeneratorRegistry;
+        return this.chunkGeneratorRegistry;
     }
 
     @Override
@@ -768,7 +768,7 @@ public class GoMintServer implements GoMint, InventoryHolder {
 
     @Override
     public EntityPlayer findPlayerByName(String target) {
-        for (WorldAdapter adapter : worldManager.getWorlds()) {
+        for (WorldAdapter adapter : this.worldManager.getWorlds()) {
             for (EntityPlayer player : adapter.onlinePlayers()) {
                 if (player.name().equalsIgnoreCase(target)) {
                     return player;
@@ -807,13 +807,13 @@ public class GoMintServer implements GoMint, InventoryHolder {
     @Override
     public Collection<EntityPlayer> onlinePlayers() {
         var playerList = new ArrayList<EntityPlayer>();
-        worldManager.getWorlds().forEach(world -> playerList.addAll(world.onlinePlayers()));
+        this.worldManager.getWorlds().forEach(world -> playerList.addAll(world.onlinePlayers()));
         return playerList;
     }
 
     @Override
     public SimplePluginManager pluginManager() {
-        return pluginManager;
+        return this.pluginManager;
     }
 
     @Override
@@ -897,71 +897,71 @@ public class GoMintServer implements GoMint, InventoryHolder {
     }
 
     public ServerConfig serverConfig() {
-        return serverConfig;
+        return this.serverConfig;
     }
 
     public NetworkManager networkManager() {
-        return networkManager;
+        return this.networkManager;
     }
 
     public EncryptionKeyFactory encryptionKeyFactory() {
-        return encryptionKeyFactory;
+        return this.encryptionKeyFactory;
     }
 
     public Map<UUID, EntityPlayer> uuidMappedPlayers() {
-        return playersByUUID;
+        return this.playersByUUID;
     }
 
     public SyncTaskManager syncTaskManager() {
-        return syncTaskManager;
+        return this.syncTaskManager;
     }
 
     public ListeningScheduledExecutorService executorService() {
-        return executorService;
+        return this.executorService;
     }
 
     public CoreScheduler scheduler() {
-        return scheduler;
+        return this.scheduler;
     }
 
     public WorldManager worldManager() {
-        return worldManager;
+        return this.worldManager;
     }
 
     public Watchdog watchdog() {
-        return watchdog;
+        return this.watchdog;
     }
 
     public Blocks blocks() {
-        return blocks;
+        return this.blocks;
     }
 
     public Items items() {
-        return items;
+        return this.items;
     }
 
     public Enchantments enchantments() {
-        return enchantments;
+        return this.enchantments;
     }
 
     public Entities entities() {
-        return entities;
+        return this.entities;
     }
 
     public Effects effects() {
-        return effects;
+        return this.effects;
     }
 
     public TileEntities tileEntities() {
-        return tileEntities;
+        return this.tileEntities;
     }
 
     public UUID serverUniqueID() {
-        return serverUniqueID;
+        return this.serverUniqueID;
     }
 
     public String gitHash() {
-        return gitHash;
+        return this.gitHash;
     }
 
     private void loadConfig() {

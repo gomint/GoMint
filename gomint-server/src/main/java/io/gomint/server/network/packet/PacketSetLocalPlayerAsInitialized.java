@@ -31,7 +31,7 @@ public class PacketSetLocalPlayerAsInitialized extends Packet {
     }
 
     public long getEntityId() {
-        return entityId;
+        return this.entityId;
     }
 
     public void setEntityId(long entityId) {

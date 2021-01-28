@@ -74,7 +74,7 @@ public class PlayerDeathEvent extends PlayerEvent {
      * @return list of items
      */
     public List<ItemStack<?>> drops() {
-        return drops;
+        return this.drops;
     }
 
 }

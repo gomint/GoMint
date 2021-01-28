@@ -39,15 +39,15 @@ public class StringRegistry<R> {
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
             Lookup lookup = (Lookup) o;
-            return arguments == lookup.arguments &&
-                Objects.equals(id, lookup.id);
+            return this.arguments == lookup.arguments &&
+                Objects.equals(this.id, lookup.id);
         }
 
         @Override
         public int hashCode() {
             int h = 1;
-            h = 31 * h + id.hashCode();
-            h = 31 * h + arguments;
+            h = 31 * h + this.id.hashCode();
+            h = 31 * h + this.arguments;
             return h;
         }
     }

@@ -26,7 +26,7 @@ public class PacketEncryptionRequest extends Packet {
     }
 
     public String getJwt() {
-        return jwt;
+        return this.jwt;
     }
 
     public void setJwt(String jwt) {

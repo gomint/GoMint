@@ -349,13 +349,13 @@ public class Client implements ConnectionWithState {
             mojangLoginForger.setUsername(this.name = "GoBot_" + CLIENT_IDS.incrementAndGet());
             mojangLoginForger.setUuid(UUID.randomUUID());
             mojangLoginForger.setSkinData(new JSONObject(new HashMap<>() {{
-                put("ServerAddress", "127.0.0.1:" + connection.getAddress().getPort());
+                put("ServerAddress", "127.0.0.1:" + Client.this.connection.getAddress().getPort());
                 put("CurrentInputMode", 1);
                 put("DefaultInputMode", 1);
                 put("ClientRandomId", ThreadLocalRandom.current().nextInt());
                 put("GuiScale", 0);
                 put("GameVersion", "1.16.100");
-                put("ThirdPartyName", name);
+                put("ThirdPartyName", Client.this.name);
                 put("DeviceModel", "");
                 put("DeviceOS", 1);
                 put("CapeData", "");
@@ -582,8 +582,8 @@ public class Client implements ConnectionWithState {
                 this.encryptionHandler.setServerPublicKey(key);
                 if (this.encryptionHandler.beginServersideEncryption(Base64.getDecoder().decode((String) token.getClaim("salt")))) {
                     // We need every packet to be encrypted from now on
-                    this.outputProcessor.enableCrypto(encryptionHandler.getServerKey(), encryptionHandler.getServerIv());
-                    this.inputProcessor.enableCrypto(encryptionHandler.getServerKey(), encryptionHandler.getServerIv());
+                    this.outputProcessor.enableCrypto(this.encryptionHandler.getServerKey(), this.encryptionHandler.getServerIv());
+                    this.inputProcessor.enableCrypto(this.encryptionHandler.getServerKey(), this.encryptionHandler.getServerIv());
                 }
 
                 // Tell the server that we are ready to receive encrypted packets from now on:

@@ -68,7 +68,7 @@ public class DropperTileEntity extends ContainerTileEntity implements InventoryH
     }
 
     public DropperInventory getInventory() {
-        return inventory;
+        return this.inventory;
     }
 
 }
