@@ -26,8 +26,8 @@ public class ProjectileHitEntityEvent extends CancellableEntityEvent<ProjectileH
      * @param entity     for which this event is
      * @param projectile which hit the entity
      */
-    public ProjectileHitEntityEvent( Entity<?> entity, EntityProjectile<?> projectile ) {
-        super( entity );
+    public ProjectileHitEntityEvent(Entity<?> entity, EntityProjectile<?> projectile) {
+        super(entity);
         this.projectile = projectile;
     }
 

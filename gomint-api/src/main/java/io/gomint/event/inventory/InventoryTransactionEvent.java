@@ -28,8 +28,8 @@ public class InventoryTransactionEvent extends CancellablePlayerEvent<InventoryT
      * @param player       which has executed this transaction
      * @param transactions which should be executed
      */
-    public InventoryTransactionEvent( EntityPlayer player, List<Transaction<?, ?, ?>> transactions ) {
-        super( player );
+    public InventoryTransactionEvent(EntityPlayer player, List<Transaction<?, ?, ?>> transactions) {
+        super(player);
         this.transactions = transactions;
     }
 

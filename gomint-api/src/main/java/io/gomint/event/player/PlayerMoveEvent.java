@@ -3,8 +3,6 @@ package io.gomint.event.player;
 import io.gomint.entity.EntityPlayer;
 import io.gomint.math.Location;
 
-import java.util.Objects;
-
 /**
  * @author geNAZt
  * @version 1.0
@@ -24,8 +22,8 @@ public class PlayerMoveEvent extends CancellablePlayerEvent<PlayerMoveEvent> {
      * @param from   The location from where it wants to move
      * @param to     The location to which it wants to move
      */
-    public PlayerMoveEvent( EntityPlayer player, Location from, Location to ) {
-        super( player );
+    public PlayerMoveEvent(EntityPlayer player, Location from, Location to) {
+        super(player);
 
         this.from = from;
         this.to = to;
@@ -55,7 +53,7 @@ public class PlayerMoveEvent extends CancellablePlayerEvent<PlayerMoveEvent> {
      *
      * @param to the new to location
      */
-    public PlayerMoveEvent to(Location to ) {
+    public PlayerMoveEvent to(Location to) {
         this.to = to;
         return this;
     }

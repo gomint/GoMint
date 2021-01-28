@@ -15,11 +15,11 @@ public class PlayerInteractWithEntityEvent extends CancellablePlayerEvent<Player
     /**
      * Create a new interaction event
      *
-     * @param player    which interacted with the entity
-     * @param entity    the entity with which the player interacted
+     * @param player which interacted with the entity
+     * @param entity the entity with which the player interacted
      */
-    public PlayerInteractWithEntityEvent( EntityPlayer player, Entity<?> entity ) {
-        super( player );
+    public PlayerInteractWithEntityEvent(EntityPlayer player, Entity<?> entity) {
+        super(player);
         this.entity = entity;
     }
 

@@ -2,8 +2,6 @@ package io.gomint.event.player;
 
 import io.gomint.entity.EntityPlayer;
 
-import java.util.Objects;
-
 /**
  * This event is fired when the login stage begins, way before any data will be sent to the client. If you cancel
  * this event to kick someone the player will have no impact on performance, chunk loading, etc.
@@ -16,8 +14,8 @@ public class PlayerLoginEvent extends CancellablePlayerEvent<PlayerLoginEvent> {
 
     private String kickMessage;
 
-    public PlayerLoginEvent( EntityPlayer player ) {
-        super( player );
+    public PlayerLoginEvent(EntityPlayer player) {
+        super(player);
     }
 
     /**
@@ -36,7 +34,7 @@ public class PlayerLoginEvent extends CancellablePlayerEvent<PlayerLoginEvent> {
      *
      * @param kickMessage The custom kick message
      */
-    public PlayerLoginEvent kickMessage(String kickMessage ) {
+    public PlayerLoginEvent kickMessage(String kickMessage) {
         this.kickMessage = kickMessage;
         return this;
     }

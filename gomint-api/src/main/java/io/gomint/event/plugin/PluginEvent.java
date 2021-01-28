@@ -12,7 +12,7 @@ public class PluginEvent extends Event {
 
     private final Plugin plugin;
 
-    public PluginEvent( Plugin plugin ) {
+    public PluginEvent(Plugin plugin) {
         this.plugin = plugin;
     }
 

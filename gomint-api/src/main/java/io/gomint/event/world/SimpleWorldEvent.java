@@ -12,7 +12,7 @@ import io.gomint.world.World;
  * @stability 2
  */
 public class SimpleWorldEvent extends Event implements WorldEvent {
-    
+
     private final World world;
 
     /**
@@ -29,4 +29,5 @@ public class SimpleWorldEvent extends Event implements WorldEvent {
     public World world() {
         return this.world;
     }
+
 }

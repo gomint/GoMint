@@ -18,8 +18,8 @@ public class PlayerToggleFlyEvent extends CancellablePlayerEvent<PlayerToggleFly
 
     private final boolean newStatus;
 
-    public PlayerToggleFlyEvent( EntityPlayer player, boolean newStatus ) {
-        super( player );
+    public PlayerToggleFlyEvent(EntityPlayer player, boolean newStatus) {
+        super(player);
         this.newStatus = newStatus;
     }
 

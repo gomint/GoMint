@@ -18,8 +18,8 @@ public class PlayerToggleGlideEvent extends CancellablePlayerEvent<PlayerToggleF
 
     private final boolean newStatus;
 
-    public PlayerToggleGlideEvent( EntityPlayer player, boolean newStatus ) {
-        super( player );
+    public PlayerToggleGlideEvent(EntityPlayer player, boolean newStatus) {
+        super(player);
         this.newStatus = newStatus;
     }
 

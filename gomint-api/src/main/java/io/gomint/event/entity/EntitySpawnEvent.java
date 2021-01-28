@@ -21,8 +21,8 @@ public class EntitySpawnEvent extends CancellableEntityEvent<EntitySpawnEvent> {
      *
      * @param entity entity which is about to spawn
      */
-    public EntitySpawnEvent( Entity<?> entity ) {
-        super( entity );
+    public EntitySpawnEvent(Entity<?> entity) {
+        super(entity);
     }
 
 }

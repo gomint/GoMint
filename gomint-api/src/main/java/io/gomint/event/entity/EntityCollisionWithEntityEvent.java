@@ -24,8 +24,8 @@ public class EntityCollisionWithEntityEvent extends CancellableEntityEvent<Entit
      * @param entity       for which this event is
      * @param collidesWith which collides with the other entity
      */
-    public EntityCollisionWithEntityEvent( Entity<?> entity, Entity<?> collidesWith ) {
-        super( entity );
+    public EntityCollisionWithEntityEvent(Entity<?> entity, Entity<?> collidesWith) {
+        super(entity);
         this.collidesWith = collidesWith;
     }
 

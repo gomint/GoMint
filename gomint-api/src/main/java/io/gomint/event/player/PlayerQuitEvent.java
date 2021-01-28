@@ -19,8 +19,8 @@ public class PlayerQuitEvent extends SimplePlayerEvent {
      *
      * @param player The player which disconnected
      */
-    public PlayerQuitEvent( EntityPlayer player, String quitMessage ) {
-        super( player );
+    public PlayerQuitEvent(EntityPlayer player, String quitMessage) {
+        super(player);
         this.quitMessage = quitMessage;
     }
 
@@ -29,7 +29,7 @@ public class PlayerQuitEvent extends SimplePlayerEvent {
      *
      * @param quitMessage the message to display
      */
-    public PlayerQuitEvent quitMessage(String quitMessage ) {
+    public PlayerQuitEvent quitMessage(String quitMessage) {
         this.quitMessage = quitMessage;
         return this;
     }

@@ -13,7 +13,7 @@ import io.gomint.event.interfaces.EntityEvent;
 
 /**
  * Represents a not cancellable event with an entity involved
- * 
+ *
  * @author geNAZt
  * @version 1.0
  * @stability 3

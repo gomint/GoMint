@@ -25,8 +25,8 @@ public class EntityVelocityEvent extends CancellableEntityEvent<EntityVelocityEv
      * @param entity   for which this event is
      * @param velocity which should be applied to the given entity
      */
-    public EntityVelocityEvent( Entity<?> entity, Vector velocity ) {
-        super( entity );
+    public EntityVelocityEvent(Entity<?> entity, Vector velocity) {
+        super(entity);
         this.velocity = velocity;
     }
 
@@ -44,7 +44,7 @@ public class EntityVelocityEvent extends CancellableEntityEvent<EntityVelocityEv
      *
      * @param velocity which should be applied to the entity
      */
-    public EntityVelocityEvent velocity(Vector velocity ) {
+    public EntityVelocityEvent velocity(Vector velocity) {
         this.velocity = velocity;
         return this;
     }

@@ -9,8 +9,6 @@ package io.gomint.event.player;
 
 import io.gomint.entity.EntityPlayer;
 
-import java.util.Objects;
-
 /**
  * This event gets called when the login has been completed and the server decides to start loading world data
  * into the client. This event can be used when you need to be sure the play status has been reached (like redirecting
@@ -24,8 +22,8 @@ public class PlayerPreJoinEvent extends CancellablePlayerEvent<PlayerPreJoinEven
 
     private String kickReason;
 
-    public PlayerPreJoinEvent( EntityPlayer player ) {
-        super( player );
+    public PlayerPreJoinEvent(EntityPlayer player) {
+        super(player);
     }
 
     /**
@@ -33,7 +31,7 @@ public class PlayerPreJoinEvent extends CancellablePlayerEvent<PlayerPreJoinEven
      *
      * @param kickReason which is used to kick the player
      */
-    public PlayerPreJoinEvent kickReason(String kickReason ) {
+    public PlayerPreJoinEvent kickReason(String kickReason) {
         this.kickReason = kickReason;
         return this;
     }

@@ -12,8 +12,8 @@ public class PlayerCraftingEvent extends CancellablePlayerEvent<PlayerCraftingEv
 
     private final Recipe recipe;
 
-    public PlayerCraftingEvent( EntityPlayer player, Recipe recipe ) {
-        super( player );
+    public PlayerCraftingEvent(EntityPlayer player, Recipe recipe) {
+        super(player);
         this.recipe = recipe;
     }
 

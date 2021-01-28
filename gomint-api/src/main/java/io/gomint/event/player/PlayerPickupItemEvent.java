@@ -11,8 +11,6 @@ import io.gomint.entity.Entity;
 import io.gomint.entity.EntityPlayer;
 import io.gomint.inventory.item.ItemStack;
 
-import java.util.Objects;
-
 /**
  * @author geNAZt
  * @version 1.0
@@ -23,8 +21,8 @@ public class PlayerPickupItemEvent extends CancellablePlayerEvent<PlayerPickupIt
     private final Entity<?> holdingEntity;
     private final ItemStack<?> itemStack;
 
-    public PlayerPickupItemEvent( EntityPlayer player, Entity<?> holdingEntity, ItemStack<?> itemStack ) {
-        super( player );
+    public PlayerPickupItemEvent(EntityPlayer player, Entity<?> holdingEntity, ItemStack<?> itemStack) {
+        super(player);
         this.itemStack = itemStack;
         this.holdingEntity = holdingEntity;
     }

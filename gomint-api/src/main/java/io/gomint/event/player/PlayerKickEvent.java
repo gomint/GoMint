@@ -16,11 +16,11 @@ public class PlayerKickEvent extends SimplePlayerEvent {
     /**
      * Construct a new player kick event
      *
-     * @param player    The player which is going to be kicked
-     * @param message   The message with which the player is going to be kicked
+     * @param player  The player which is going to be kicked
+     * @param message The message with which the player is going to be kicked
      */
-    public PlayerKickEvent( EntityPlayer player, String message ) {
-        super( player );
+    public PlayerKickEvent(EntityPlayer player, String message) {
+        super(player);
         this.message = message;
     }
 

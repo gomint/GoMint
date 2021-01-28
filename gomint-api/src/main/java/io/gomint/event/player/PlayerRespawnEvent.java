@@ -19,8 +19,8 @@ public class PlayerRespawnEvent extends CancellablePlayerEvent<PlayerRespawnEven
 
     private Location respawnLocation;
 
-    public PlayerRespawnEvent( EntityPlayer player, Location location ) {
-        super( player );
+    public PlayerRespawnEvent(EntityPlayer player, Location location) {
+        super(player);
         this.respawnLocation = location;
     }
 
@@ -38,7 +38,7 @@ public class PlayerRespawnEvent extends CancellablePlayerEvent<PlayerRespawnEven
      *
      * @param respawnLocation which should be used to this respawn
      */
-    public PlayerRespawnEvent respawnLocation(Location respawnLocation ) {
+    public PlayerRespawnEvent respawnLocation(Location respawnLocation) {
         this.respawnLocation = respawnLocation;
         return this;
     }

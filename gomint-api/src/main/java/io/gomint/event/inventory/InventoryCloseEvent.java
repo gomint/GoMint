@@ -19,8 +19,8 @@ public class InventoryCloseEvent extends SimplePlayerEvent {
      * @param player    which closed the inventory
      * @param inventory which has been closed
      */
-    public InventoryCloseEvent( EntityPlayer player, Inventory<?> inventory ) {
-        super( player );
+    public InventoryCloseEvent(EntityPlayer player, Inventory<?> inventory) {
+        super(player);
         this.inventory = inventory;
     }
 

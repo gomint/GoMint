@@ -16,7 +16,7 @@ import java.util.List;
 
 /**
  * This event gets called when a player has mined a block long enough for it to break
- * 
+ *
  * @author geNAZt
  * @version 1.0
  * @stability 3
@@ -31,10 +31,10 @@ public class BlockBreakEvent extends CancellablePlayerEvent<BlockBreakEvent> {
      *
      * @param player     which breaks the block
      * @param breakBlock which should be broken
-     * @param drops   which should be dropped
+     * @param drops      which should be dropped
      */
-    public BlockBreakEvent( EntityPlayer player, Block breakBlock, List<ItemStack<?>> drops ) {
-        super( player );
+    public BlockBreakEvent(EntityPlayer player, Block breakBlock, List<ItemStack<?>> drops) {
+        super(player);
         this.breakBlock = breakBlock;
         this.drops = drops;
     }

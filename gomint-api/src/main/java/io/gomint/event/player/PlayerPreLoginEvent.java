@@ -1,8 +1,8 @@
 package io.gomint.event.player;
 
 import io.gomint.event.CancellableEvent;
+
 import java.net.InetSocketAddress;
-import java.util.Objects;
 
 /**
  * This event is fired when RakNet (the networking) decided to accept a connection. This is before any MC:PE packets
@@ -23,7 +23,7 @@ public class PlayerPreLoginEvent extends CancellableEvent<PlayerPreLoginEvent> {
      *
      * @param clientAddress The address of the client which wants to login
      */
-    public PlayerPreLoginEvent( InetSocketAddress clientAddress ) {
+    public PlayerPreLoginEvent(InetSocketAddress clientAddress) {
         this.clientAddress = clientAddress;
     }
 

@@ -29,8 +29,8 @@ public class EntityExplodeEvent extends CancellableEntityEvent<EntityExplodeEven
      * @param affectedBlocks   which will be destroyed during this explosion
      * @param randomDropChance which will be used to determinate if a affected block will drop
      */
-    public EntityExplodeEvent( Entity<?> entity, Set<Block> affectedBlocks, float randomDropChance ) {
-        super( entity );
+    public EntityExplodeEvent(Entity<?> entity, Set<Block> affectedBlocks, float randomDropChance) {
+        super(entity);
         this.affectedBlocks = affectedBlocks;
         this.randomDropChance = randomDropChance;
     }
@@ -58,7 +58,7 @@ public class EntityExplodeEvent extends CancellableEntityEvent<EntityExplodeEven
      *
      * @param randomDropChance which will be used instead of the old value
      */
-    public EntityExplodeEvent randomDropChance(float randomDropChance ) {
+    public EntityExplodeEvent randomDropChance(float randomDropChance) {
         this.randomDropChance = randomDropChance;
         return this;
     }

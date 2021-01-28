@@ -11,7 +11,7 @@ import java.util.List;
  * This event gets fired when a enchantment table needs to select new enchants (due to a player
  * putting a item in it for example). You can modify the list of enchants, this also alters the
  * output of the enchantment being applied later when the {@link ItemEnchantEvent} gets fired.
- * 
+ *
  * @author geNAZt
  * @version 1.0
  * @stability 1
@@ -19,6 +19,7 @@ import java.util.List;
 public class EnchantmentSelectionEvent extends SimplePlayerEvent {
 
     public static class Option {
+
         private final List<Enchantment> enchantments;
         private int minimumRequirement;
 

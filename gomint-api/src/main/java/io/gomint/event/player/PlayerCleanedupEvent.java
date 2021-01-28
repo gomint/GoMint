@@ -24,8 +24,8 @@ public class PlayerCleanedupEvent extends SimplePlayerEvent {
      *
      * @param player The player which disconnected
      */
-    public PlayerCleanedupEvent( EntityPlayer player ) {
-        super( player );
+    public PlayerCleanedupEvent(EntityPlayer player) {
+        super(player);
     }
 
 }
