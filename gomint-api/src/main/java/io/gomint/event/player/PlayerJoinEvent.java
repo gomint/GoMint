@@ -2,8 +2,6 @@ package io.gomint.event.player;
 
 import io.gomint.entity.EntityPlayer;
 
-import java.util.Objects;
-
 /**
  * @author geNAZt
  * @version 1.0

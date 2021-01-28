@@ -7,8 +7,6 @@
 
 package io.gomint.event;
 
-import java.util.Objects;
-
 /**
  * @author geNAZt
  * @version 1.0

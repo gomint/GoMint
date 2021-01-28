@@ -12,7 +12,6 @@ import io.gomint.event.player.CancellablePlayerEvent;
 import io.gomint.inventory.transaction.Transaction;
 
 import java.util.List;
-import java.util.Objects;
 
 /**
  * @author geNAZt

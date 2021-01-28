@@ -3,8 +3,6 @@ package io.gomint.event.plugin;
 import io.gomint.event.Event;
 import io.gomint.plugin.Plugin;
 
-import java.util.Objects;
-
 /**
  * @author theminecoder
  * @version 1.0
