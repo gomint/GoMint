@@ -15,6 +15,7 @@ import io.gomint.world.World;
  * @author Janmm14
  * @version 2.0
  * @stability 1
+ * @see #world() 
  */
 public interface WorldEvent {
 
