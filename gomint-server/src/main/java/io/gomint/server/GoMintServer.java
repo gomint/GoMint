@@ -9,38 +9,6 @@ package io.gomint.server;
 
 import com.google.common.util.concurrent.ListeningScheduledExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
-import joptsimple.OptionSet;
-import org.jline.reader.LineReader;
-import org.jline.reader.LineReaderBuilder;
-import org.jline.reader.UserInterruptException;
-import org.jline.terminal.Terminal;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.Executors;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicLong;
-import java.util.concurrent.locks.LockSupport;
-import java.util.function.Supplier;
-import java.util.jar.Manifest;
-
 import io.gomint.GoMint;
 import io.gomint.GoMintInstanceHolder;
 import io.gomint.config.InvalidConfigurationException;
@@ -76,8 +44,8 @@ import io.gomint.server.plugin.SimplePluginManager;
 import io.gomint.server.scheduler.CoreScheduler;
 import io.gomint.server.scheduler.SyncTaskManager;
 import io.gomint.server.util.ClassPath;
-import io.gomint.server.util.Watchdog;
 import io.gomint.server.util.Values;
+import io.gomint.server.util.Watchdog;
 import io.gomint.server.world.WorldAdapter;
 import io.gomint.server.world.WorldLoadException;
 import io.gomint.server.world.WorldManager;
@@ -93,6 +61,37 @@ import io.gomint.world.generator.integrated.LayeredGenerator;
 import io.gomint.world.generator.integrated.NormalGenerator;
 import io.gomint.world.generator.integrated.VanillaGenerator;
 import io.gomint.world.generator.integrated.VoidGenerator;
+import joptsimple.OptionSet;
+import org.jline.reader.LineReader;
+import org.jline.reader.LineReaderBuilder;
+import org.jline.reader.UserInterruptException;
+import org.jline.terminal.Terminal;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.Executors;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicLong;
+import java.util.concurrent.locks.LockSupport;
+import java.util.function.Supplier;
+import java.util.jar.Manifest;
 
 /**
  * @author BlackyPaw
@@ -365,7 +364,7 @@ public class GoMintServer implements GoMint, InventoryHolder {
         // ------------------------------------ //
         // Networking Initialization
         // ------------------------------------ //
-        int    port = args.has("lp") ?    (int) args.valueOf("lp") : this.serverConfig.listener().port();
+        int port = args.has("lp") ? (int) args.valueOf("lp") : this.serverConfig.listener().port();
         String host = args.has("lh") ? (String) args.valueOf("lh") : this.serverConfig.listener().ip();
 
         this.encryptionKeyFactory = new EncryptionKeyFactory(this.serverConfig.connection().jwtRoot());
@@ -523,7 +522,7 @@ public class GoMintServer implements GoMint, InventoryHolder {
                 long sleptFor = endSleep - startSleep;
                 diff = skipNanos;
 
-                if ( sleptFor > sleepNeeded ) {
+                if (sleptFor > sleepNeeded) {
                     this.sleepBalance = sleptFor - sleepNeeded;
                 }
             } else {
@@ -534,7 +533,7 @@ public class GoMintServer implements GoMint, InventoryHolder {
             this.tps = (1 / (double) lastTickTime);
 
             // Due to the fact that we
-            if ( this.tps > this.serverConfig.targetTPS() ) {
+            if (this.tps > this.serverConfig.targetTPS()) {
                 this.tps = this.serverConfig.targetTPS();
             }
 
@@ -699,7 +698,7 @@ public class GoMintServer implements GoMint, InventoryHolder {
     public <T extends Block> T createBlock(Class<T> blockClass) {
         return (T) this.blocks.get(blockClass);
     }
-    
+
     @Override
     public ButtonList createButtonList(String title) {
         return new io.gomint.server.gui.ButtonList(title);
