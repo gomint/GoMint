@@ -83,15 +83,6 @@ public class EntityDamageEvent extends CancellableEntityEvent<EntityDamageEvent>
         return this.damageSource;
     }
 
-    @Override
-    public String toString() {
-        return "EntityDamageEvent{" +
-            "damageSource=" + this.damageSource +
-            ", damage=" + this.damage +
-            ", finalDamage=" + this.finalDamage +
-            '}';
-    }
-
     public enum DamageSource {
 
         /**

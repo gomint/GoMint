@@ -44,14 +44,6 @@ public class PlayerInteractEvent extends CancellablePlayerEvent<PlayerInteractEv
         return this.block;
     }
 
-    @Override
-    public String toString() {
-        return "PlayerInteractEvent{" +
-            "clickType=" + this.clickType +
-            ", block=" + this.block +
-            '}';
-    }
-
     public enum ClickType {
         /**
          * Right click

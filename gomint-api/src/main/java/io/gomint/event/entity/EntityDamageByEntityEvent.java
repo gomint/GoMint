@@ -40,11 +40,4 @@ public class EntityDamageByEntityEvent extends EntityDamageEvent {
         return this.attacker;
     }
 
-    @Override
-    public String toString() {
-        return "EntityDamageByEntityEvent{" +
-            "attacker=" + this.attacker +
-            '}';
-    }
-
 }

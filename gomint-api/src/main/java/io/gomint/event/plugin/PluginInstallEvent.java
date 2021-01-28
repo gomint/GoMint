@@ -13,9 +13,4 @@ public class PluginInstallEvent extends PluginEvent {
         super(plugin);
     }
 
-    @Override
-    public String toString() {
-        return super.toString();
-    }
-
 }

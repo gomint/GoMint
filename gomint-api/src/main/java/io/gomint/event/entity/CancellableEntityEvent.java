@@ -37,11 +37,4 @@ public class CancellableEntityEvent<E> extends CancellableEvent<E> {
         return this.entity;
     }
 
-    @Override
-    public String toString() {
-        return "CancellableEntityEvent{" +
-            "entity=" + this.entity +
-            '}';
-    }
-
 }

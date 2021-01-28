@@ -47,11 +47,4 @@ public class PlayerPreJoinEvent extends CancellablePlayerEvent<PlayerPreJoinEven
         return this.kickReason;
     }
 
-    @Override
-    public String toString() {
-        return "PlayerPreJoinEvent{" +
-            "kickReason='" + this.kickReason + '\'' +
-            '}';
-    }
-
 }

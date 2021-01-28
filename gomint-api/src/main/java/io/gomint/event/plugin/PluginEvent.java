@@ -22,11 +22,4 @@ public class PluginEvent extends Event {
         return this.plugin;
     }
 
-    @Override
-    public String toString() {
-        return "PluginEvent{" +
-            "plugin=" + this.plugin +
-            '}';
-    }
-
 }

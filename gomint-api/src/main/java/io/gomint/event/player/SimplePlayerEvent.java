@@ -34,11 +34,4 @@ public class PlayerEvent extends Event {
         return this.player;
     }
 
-    @Override
-    public String toString() {
-        return "PlayerEvent{" +
-            "player=" + this.player +
-            '}';
-    }
-
 }

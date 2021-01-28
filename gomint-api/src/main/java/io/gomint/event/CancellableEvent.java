@@ -37,11 +37,4 @@ public class CancellableEvent<E> extends Event {
         return (E) this;
     }
 
-    @Override
-    public String toString() {
-        return "CancellableEvent{" +
-            "cancelled=" + this.cancelled +
-            '}';
-    }
-
 }

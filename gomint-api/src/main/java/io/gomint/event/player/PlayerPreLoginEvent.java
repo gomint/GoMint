@@ -36,11 +36,4 @@ public class PlayerPreLoginEvent extends CancellableEvent<PlayerPreLoginEvent> {
         return this.clientAddress;
     }
 
-    @Override
-    public String toString() {
-        return "PlayerPreLoginEvent{" +
-            "clientAddress=" + this.clientAddress +
-            '}';
-    }
-
 }

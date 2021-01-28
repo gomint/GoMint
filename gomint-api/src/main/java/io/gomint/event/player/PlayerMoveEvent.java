@@ -60,12 +60,4 @@ public class PlayerMoveEvent extends CancellablePlayerEvent<PlayerMoveEvent> {
         return this;
     }
 
-    @Override
-    public String toString() {
-        return "PlayerMoveEvent{" +
-            "from=" + this.from +
-            ", to=" + this.to +
-            '}';
-    }
-
 }

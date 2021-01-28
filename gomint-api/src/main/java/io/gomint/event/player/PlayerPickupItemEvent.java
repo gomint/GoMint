@@ -47,12 +47,4 @@ public class PlayerPickupItemEvent extends CancellablePlayerEvent<PlayerPickupIt
         return this.holdingEntity;
     }
 
-    @Override
-    public String toString() {
-        return "PlayerPickupItemEvent{" +
-            "holdingEntity=" + this.holdingEntity +
-            ", itemStack=" + this.itemStack +
-            '}';
-    }
-
 }
