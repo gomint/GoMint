@@ -9,11 +9,11 @@ import io.gomint.inventory.item.ItemStack;
 import java.util.List;
 
 /**
+ * This event gets fired when the player has selected the enchantments it wants on given item.
+ *
  * @author geNAZt
  * @version 1.0
  * @stability 1
- *
- * This event gets fired when the player has selected the enchantments it wants on given item.
  */
 public class ItemEnchantEvent extends CancellablePlayerEvent<ItemEnchantEvent> {
 
@@ -34,6 +34,7 @@ public class ItemEnchantEvent extends CancellablePlayerEvent<ItemEnchantEvent> {
         this.enchantments = enchantments;
         this.levelCost = levelCost;
         this.materialCost = materialCost;
+        this.levelRequirement = levelRequirement;
     }
 
     /**
