@@ -176,7 +176,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
         this.startAsyncWorker(server.asyncScheduler());
         this.initGamerules();
         this.thread = new Thread(this::tickLoop, "GoMint World Thread " + worldDir.getName());
-        this.threadId = Thread.currentThread().getId();
+        this.threadId = this.thread.getId();
     }
 
     @Override
