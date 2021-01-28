@@ -8,9 +8,7 @@
 package io.gomint.server.world.generator.vanilla;
 
 import com.google.common.util.concurrent.SettableFuture;
-import io.gomint.GoMint;
 import io.gomint.math.BlockPosition;
-import io.gomint.server.GoMintServer;
 import io.gomint.server.async.Future;
 import io.gomint.server.network.NetworkManager;
 import io.gomint.server.network.PostProcessExecutor;
@@ -36,7 +34,6 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.DatagramSocket;
-import java.net.InetSocketAddress;
 import java.net.SocketException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
@@ -53,7 +50,6 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -115,7 +111,7 @@ public class VanillaGeneratorImpl extends VanillaGenerator {
             System.exit(-1);
         }
 
-        this.networkManager = ((WorldAdapter) world).getServer().networkManager();
+        this.networkManager = ((WorldAdapter) world).server().networkManager();
 
         this.ensureSeed();
 
@@ -327,26 +323,26 @@ public class VanillaGeneratorImpl extends VanillaGenerator {
         this.client = new CopyOnWriteArrayList<>();
         for (int i = 0; i < 2; i++) {
             this.networkManager
-                .getServer()
+                .server()
                 .executorService()
                 .schedule(() -> this.connectClient(worldAdapter), Duration.ofMillis((i + 1) * 2000));
         }
     }
 
     private Client connectClient(WorldAdapter worldAdapter) {
-        PostProcessExecutor executor = this.networkManager.getPostProcessService().getExecutor();
-        Client newClient = new Client(worldAdapter, worldAdapter.getServer().encryptionKeyFactory(),
+        PostProcessExecutor executor = this.networkManager.postProcessService().getExecutor();
+        Client newClient = new Client(worldAdapter, worldAdapter.server().encryptionKeyFactory(),
             this.queue, executor, null);
 
         newClient.onDisconnect(aVoid -> {
-            this.networkManager.getPostProcessService().releaseExecutor(executor);
+            this.networkManager.postProcessService().releaseExecutor(executor);
             if (this.manualClose.get()) {
                 return;
             }
 
             LOGGER.debug("Bot disconnected");
 
-            ChunkRequest request = newClient.getCurrentRequest();
+            ChunkRequest request = newClient.currentRequest();
             if (request != null) {
                 LOGGER.debug("There was a request attached: {} / {}", request.getX(), request.getZ());
                 this.queue.offer(request);
@@ -354,14 +350,14 @@ public class VanillaGeneratorImpl extends VanillaGenerator {
 
             this.client.remove(newClient);
 
-            this.networkManager.getServer().executorService().schedule(() -> {
+            this.networkManager.server().executorService().schedule(() -> {
                 Client client = this.connectClient(worldAdapter);
                 this.client.add(client);
             }, Duration.ofMillis(500));
         });
 
         // Accept the spawn point
-        newClient.setSpawnPointConsumer(blockPosition -> this.spawnPointFuture.set(blockPosition));
+        newClient.spawnPointConsumer(blockPosition -> this.spawnPointFuture.set(blockPosition));
         newClient.connect("127.0.0.1", this.port);
 
         this.client.add(newClient);

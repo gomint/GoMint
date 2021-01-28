@@ -26,7 +26,7 @@ public class PacketResourcePackResponseHandler implements PacketHandler<PacketRe
         // TODO: Implement resource pack sending
         switch (packet.getStatus()) {
             case HAVE_ALL_PACKS:
-                LOGGER.info("Login state: HAVE_ALL_PACKS reached: {}", connection.getEntity());
+                LOGGER.info("Login state: HAVE_ALL_PACKS reached: {}", connection.entity());
 
                 PacketResourcePackStack packetResourcePackStack = new PacketResourcePackStack();
 
@@ -41,7 +41,7 @@ public class PacketResourcePackResponseHandler implements PacketHandler<PacketRe
                 break;
 
             case COMPLETED:
-                LOGGER.info("Login state: COMPLETED reached: {}", connection.getEntity());
+                LOGGER.info("Login state: COMPLETED reached: {}", connection.entity());
 
                 // Proceed with login
                 this.switchToLogin(connection, currentTimeMillis);
@@ -52,15 +52,15 @@ public class PacketResourcePackResponseHandler implements PacketHandler<PacketRe
 
     private void switchToLogin(PlayerConnection connection, long currentTimeMillis) {
         // Proceed with login
-        connection.setState(PlayerConnectionState.LOGIN);
-        LOGGER.info("Logging in as " + connection.getEntity().name() + " with id " + connection.getEntity().id());
+        connection.state(PlayerConnectionState.LOGIN);
+        LOGGER.info("Logging in as " + connection.entity().name() + " with id " + connection.entity().id());
 
-        connection.getEntity().loginPerformance().setResourceEnd(currentTimeMillis);
+        connection.entity().loginPerformance().setResourceEnd(currentTimeMillis);
 
-        PlayerPreJoinEvent playerPreJoinEvent = new PlayerPreJoinEvent(connection.getEntity());
-        connection.getServer().pluginManager().callEvent(playerPreJoinEvent);
+        PlayerPreJoinEvent playerPreJoinEvent = new PlayerPreJoinEvent(connection.entity());
+        connection.server().pluginManager().callEvent(playerPreJoinEvent);
         if (!playerPreJoinEvent.cancelled()) {
-            connection.getEntity().prepareEntity();
+            connection.entity().prepareEntity();
         }
     }
 

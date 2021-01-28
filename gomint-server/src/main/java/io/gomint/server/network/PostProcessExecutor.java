@@ -42,11 +42,11 @@ public class PostProcessExecutor implements Runnable {
         this.future = executorService.submit( this );
     }
 
-    public float getLoad() {
+    public float load() {
         return this.load;
     }
 
-    public AtomicInteger getConnectionsInUse() {
+    public AtomicInteger connectionsInUse() {
         return this.connectionsInUse;
     }
 

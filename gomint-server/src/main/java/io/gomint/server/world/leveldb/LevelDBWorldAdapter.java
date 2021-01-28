@@ -276,7 +276,7 @@ public class LevelDBWorldAdapter extends WorldAdapter {
             try {
                 constructGenerator(this.generatorClass, this.generatorContext);
             } catch (WorldCreateException e) {
-                this.getLogger().error("Could not reconstruct generator class", e);
+                this.logger().error("Could not reconstruct generator class", e);
             }
         } else {
             Generators generators = Generators.valueOf(this.generatorType);

@@ -97,8 +97,8 @@ public final class ReportUploader {
      */
     public ReportUploader includeWorlds() {
         GoMintServer server = (GoMintServer) GoMint.instance();
-        for (WorldAdapter adapter : server.worldManager().getWorlds()) {
-            this.worlds.put(adapter.folder(), new WorldData(adapter.getChunkCache().size()));
+        for (WorldAdapter adapter : server.worldManager().worlds()) {
+            this.worlds.put(adapter.folder(), new WorldData(adapter.chunkCache().size()));
         }
 
         return this;

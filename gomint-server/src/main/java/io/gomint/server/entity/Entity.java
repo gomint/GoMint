@@ -719,7 +719,7 @@ public abstract class Entity<E extends io.gomint.entity.Entity<E>> implements io
      */
     public E velocity(Vector velocity, boolean send ) {
         EntityVelocityEvent event = new EntityVelocityEvent( this, velocity );
-        this.world.getServer().pluginManager().callEvent( event );
+        this.world.server().pluginManager().callEvent( event );
         if ( event.cancelled() ) {
             return (E) this;
         }
@@ -1133,7 +1133,7 @@ public abstract class Entity<E extends io.gomint.entity.Entity<E>> implements io
         PacketEntityMetadata metadataPacket = new PacketEntityMetadata();
         metadataPacket.setEntityId( this.id() );
         metadataPacket.setMetadata( this.metadataContainer );
-        metadataPacket.setTick( this.world.getServer().currentTickTime() / (int) Values.CLIENT_TICK_MS );
+        metadataPacket.setTick( this.world.server().currentTickTime() / (int) Values.CLIENT_TICK_MS );
         player.connection().addToSendQueue( metadataPacket );
     }
 
@@ -1207,7 +1207,7 @@ public abstract class Entity<E extends io.gomint.entity.Entity<E>> implements io
         }
 
         // First of all we call the event
-        this.world.getServer().pluginManager().callEvent( damageEvent );
+        this.world.server().pluginManager().callEvent( damageEvent );
         return !damageEvent.cancelled();
     }
 
@@ -1288,7 +1288,7 @@ public abstract class Entity<E extends io.gomint.entity.Entity<E>> implements io
 
     public E teleport( Location to, EntityTeleportEvent.Cause cause ) {
         EntityTeleportEvent entityTeleportEvent = new EntityTeleportEvent( this, this.location(), to, cause );
-        this.world.getServer().pluginManager().callEvent( entityTeleportEvent );
+        this.world.server().pluginManager().callEvent( entityTeleportEvent );
         if ( entityTeleportEvent.cancelled() ) {
             return (E) this;
         }

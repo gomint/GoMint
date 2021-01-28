@@ -127,7 +127,7 @@ public class PlayerConnection implements ConnectionWithState {
         this.networkManager = networkManager;
         this.connection = connection;
         this.state = PlayerConnectionState.HANDSHAKE;
-        this.server = networkManager.getServer();
+        this.server = networkManager.server();
         this.playerChunks = new LongOpenHashSet();
         this.loadingChunks = new LongOpenHashSet();
 
@@ -136,7 +136,7 @@ public class PlayerConnection implements ConnectionWithState {
 
         // Attach data processor if needed
         if (this.connection != null) {
-            this.postProcessorExecutor = networkManager.getPostProcessService().getExecutor();
+            this.postProcessorExecutor = networkManager.postProcessService().getExecutor();
             this.connection.addDataProcessor(packetData -> {
                 if (packetData.getPacketData().readableBytes() <= 0) {
                     // Malformed packet:
@@ -162,90 +162,90 @@ public class PlayerConnection implements ConnectionWithState {
         }
     }
 
-    public Processor getInputProcessor() {
+    public Processor inputProcessor() {
         return this.inputProcessor;
     }
 
     @Override
-    public Processor getOutputProcessor() {
+    public Processor outputProcessor() {
         return this.outputProcessor;
     }
 
-    public Set<PacketInventoryTransaction> getTransactionsHandled() {
+    public Set<PacketInventoryTransaction> transactionsHandled() {
         return this.transactionsHandled;
     }
 
-    public void setStartBreakResult(boolean startBreakResult) {
+    public void startBreakResult(boolean startBreakResult) {
         this.startBreakResult = startBreakResult;
     }
 
-    public boolean isStartBreakResult() {
+    public boolean startBreakResult() {
         return this.startBreakResult;
     }
 
-    public void setHadStartBreak(boolean hadStartBreak) {
+    public void hadStartBreak(boolean hadStartBreak) {
         this.hadStartBreak = hadStartBreak;
     }
 
-    public boolean isHadStartBreak() {
+    public boolean hadStartBreak() {
         return this.hadStartBreak;
     }
 
-    public void setDeviceInfo(DeviceInfo deviceInfo) {
+    public void deviceInfo(DeviceInfo deviceInfo) {
         this.deviceInfo = deviceInfo;
     }
 
-    public DeviceInfo getDeviceInfo() {
+    public DeviceInfo deviceInfo() {
         return this.deviceInfo;
     }
 
-    public void setEntity(EntityPlayer entity) {
+    public void entity(EntityPlayer entity) {
         this.entity = entity;
     }
 
-    public EntityPlayer getEntity() {
+    public EntityPlayer entity() {
         return this.entity;
     }
 
-    public void setState(PlayerConnectionState state) {
+    public void state(PlayerConnectionState state) {
         this.state = state;
     }
 
     @Override
-    public PlayerConnectionState getState() {
+    public PlayerConnectionState state() {
         return this.state;
     }
 
-    public void setProtocolID(int protocolID) {
+    public void protocolID(int protocolID) {
         this.protocolID = protocolID;
     }
 
     @Override
-    public int getProtocolID() {
+    public int protocolID() {
         return this.protocolID;
     }
 
-    public GoMintServer getServer() {
+    public GoMintServer server() {
         return this.server;
     }
 
-    public LongSet getLoadingChunks() {
+    public LongSet loadingChunks() {
         return this.loadingChunks;
     }
 
-    public LongSet getPlayerChunks() {
+    public LongSet playerChunks() {
         return this.playerChunks;
     }
 
-    public Cache getCache() {
+    public Cache cache() {
         return this.cache;
     }
 
-    public void setCachingSupported(boolean cachingSupported) {
+    public void cachingSupported(boolean cachingSupported) {
         this.cachingSupported = cachingSupported;
     }
 
-    public Connection getConnection() {
+    public Connection connection() {
         return this.connection;
     }
 
@@ -277,7 +277,7 @@ public class PlayerConnection implements ConnectionWithState {
      * result in several packets and chunks to be sent in order to account for the change.
      */
     public void onViewDistanceChanged() {
-        LOGGER.info("View distance changed to {}", this.getEntity().viewDistance());
+        LOGGER.info("View distance changed to {}", this.entity().viewDistance());
         this.checkForNewChunks(null, false);
         this.sendChunkRadiusUpdate();
     }
@@ -453,11 +453,11 @@ public class PlayerConnection implements ConnectionWithState {
             WorldAdapter worldAdapter = this.entity.world();
             worldAdapter.movePlayerToChunk(spawnXChunk, spawnZChunk, this.entity);
 
-            this.getEntity().firstSpawn();
+            this.entity().firstSpawn();
 
             this.state = PlayerConnectionState.PLAYING;
 
-            this.entity.loginPerformance().setChunkEnd(this.entity.world().getServer().currentTickTime());
+            this.entity.loginPerformance().setChunkEnd(this.entity.world().server().currentTickTime());
             this.entity.loginPerformance().print();
         }
     }
@@ -803,7 +803,7 @@ public class PlayerConnection implements ConnectionWithState {
      * @param message The message with which the player is going to be kicked
      */
     public void disconnect(String message) {
-        this.networkManager.getServer().pluginManager().callEvent(new PlayerKickEvent(this.entity, message));
+        this.networkManager.server().pluginManager().callEvent(new PlayerKickEvent(this.entity, message));
 
         if (message != null && message.length() > 0) {
             PacketDisconnect packet = new PacketDisconnect();
@@ -857,9 +857,9 @@ public class PlayerConnection implements ConnectionWithState {
         move.setYaw(location.yaw());
         move.setPitch(location.pitch());
         move.setMode(MovePlayerMode.TELEPORT);
-        move.setOnGround(this.getEntity().onGround());
+        move.setOnGround(this.entity().onGround());
         move.setRidingEntityId(0);    // TODO: Implement riding entities correctly
-        move.setTick(this.entity.world().getServer().currentTickTime() / (int) Values.CLIENT_TICK_MS);
+        move.setTick(this.entity.world().server().currentTickTime() / (int) Values.CLIENT_TICK_MS);
         this.addToSendQueue(move);
     }
 
@@ -894,7 +894,7 @@ public class PlayerConnection implements ConnectionWithState {
         packet.setSpawn(spawn);
 
         packet.setWorldGamemode(0);
-        packet.setDayCycleStopTime(world.getTimeAsTicks());
+        packet.setDayCycleStopTime(world.timeAsTicks());
 
         Biome biome = world.getBiome(spawn.toBlockPosition());
         packet.setBiomeType(PacketStartGame.BIOME_TYPE_DEFAULT);
@@ -907,7 +907,7 @@ public class PlayerConnection implements ConnectionWithState {
         packet.setLevelId(Base64.getEncoder().encodeToString(StringUtil.getUTF8Bytes(world.name())));
         packet.setWorldName(world.name());
         packet.setTemplateId("");
-        packet.setGamerules(world.getGamerules());
+        packet.setGamerules(world.gamerules());
         packet.setTexturePacksRequired(false);
         packet.setCommandsEnabled(true);
         packet.setEnchantmentSeed(ThreadLocalRandom.current().nextInt());
@@ -927,16 +927,16 @@ public class PlayerConnection implements ConnectionWithState {
         LOGGER.info("Player {} disconnected", this.entity);
 
         if (this.entity != null && this.entity.world() != null) {
-            PlayerQuitEvent event = this.networkManager.getServer().pluginManager().callEvent(new PlayerQuitEvent(this.entity, ChatColor.YELLOW + this.entity.displayName() + " left the game."));
+            PlayerQuitEvent event = this.networkManager.server().pluginManager().callEvent(new PlayerQuitEvent(this.entity, ChatColor.YELLOW + this.entity.displayName() + " left the game."));
             if (event.quitMessage() != null && !event.quitMessage().isEmpty()) {
-                this.getServer().onlinePlayers().forEach((player) -> {
+                this.server().onlinePlayers().forEach((player) -> {
                     player.sendMessage(event.quitMessage());
                 });
             }
             this.entity.world().removePlayer(this.entity);
             this.entity.cleanup();
             this.entity.dead(true);
-            this.networkManager.getServer().pluginManager().callEvent(new PlayerCleanedupEvent(this.entity));
+            this.networkManager.server().pluginManager().callEvent(new PlayerCleanedupEvent(this.entity));
 
             if (this.entity.hasCompletedLogin()) {
                 this.entity.world().persistPlayer(this.entity);
@@ -946,7 +946,7 @@ public class PlayerConnection implements ConnectionWithState {
         }
 
         if (this.postProcessorExecutor != null) {
-            this.networkManager.getPostProcessService().releaseExecutor(this.postProcessorExecutor);
+            this.networkManager.postProcessService().releaseExecutor(this.postProcessorExecutor);
         }
     }
 
@@ -963,11 +963,11 @@ public class PlayerConnection implements ConnectionWithState {
      *
      * @return ping of UDP connection
      */
-    public int getPing() {
+    public int ping() {
         return (int) this.connection.getPing();
     }
 
-    public long getId() {
+    public long id() {
         return this.connection.getGuid();
     }
 
@@ -979,18 +979,18 @@ public class PlayerConnection implements ConnectionWithState {
     public void sendPlayerSpawnPosition() {
         PacketSetSpawnPosition spawnPosition = new PacketSetSpawnPosition();
         spawnPosition.setSpawnType(PacketSetSpawnPosition.SpawnType.PLAYER);
-        spawnPosition.setPlayerPosition(this.getEntity().position().toBlockPosition());
-        spawnPosition.setDimension(this.entity.world().getDimension());
-        spawnPosition.setWorldSpawn(this.getEntity().world().spawnLocation().toBlockPosition());
+        spawnPosition.setPlayerPosition(this.entity().position().toBlockPosition());
+        spawnPosition.setDimension(this.entity.world().dimension());
+        spawnPosition.setWorldSpawn(this.entity().world().spawnLocation().toBlockPosition());
         addToSendQueue(spawnPosition);
     }
 
     public void sendSpawnPosition() {
         PacketSetSpawnPosition spawnPosition = new PacketSetSpawnPosition();
         spawnPosition.setSpawnType(PacketSetSpawnPosition.SpawnType.WORLD);
-        spawnPosition.setPlayerPosition(this.getEntity().position().toBlockPosition());
-        spawnPosition.setDimension(this.entity.world().getDimension());
-        spawnPosition.setWorldSpawn(this.getEntity().world().spawnLocation().toBlockPosition());
+        spawnPosition.setPlayerPosition(this.entity().position().toBlockPosition());
+        spawnPosition.setDimension(this.entity.world().dimension());
+        spawnPosition.setWorldSpawn(this.entity().world().spawnLocation().toBlockPosition());
         addToSendQueue(spawnPosition);
     }
 
@@ -1024,7 +1024,7 @@ public class PlayerConnection implements ConnectionWithState {
 
         // Send player list for all online players
         List<PacketPlayerlist.Entry> listEntry = null;
-        for (io.gomint.entity.EntityPlayer player : this.getServer().onlinePlayers()) {
+        for (io.gomint.entity.EntityPlayer player : this.server().onlinePlayers()) {
             if (!this.entity.isHidden(player) && !this.entity.equals(player)) {
                 if (listEntry == null) {
                     listEntry = new ArrayList<>();

@@ -50,67 +50,67 @@ public class PluginMeta {
         this.packages.add(packageName);
     }
 
-    public String getName() {
+    public String name() {
         return this.name;
     }
 
-    public void setName(String name) {
+    public void name(String name) {
         this.name = name;
     }
 
-    public PluginVersion getVersion() {
+    public PluginVersion version() {
         return this.version;
     }
 
-    public void setVersion(PluginVersion version) {
+    public void version(PluginVersion version) {
         this.version = version;
     }
 
-    public StartupPriority getPriority() {
+    public StartupPriority priority() {
         return this.priority;
     }
 
-    public void setPriority(StartupPriority priority) {
+    public void priority(StartupPriority priority) {
         this.priority = priority;
     }
 
-    public Set<String> getDepends() {
+    public Set<String> depends() {
         return this.depends;
     }
 
-    public void setDepends(Set<String> depends) {
+    public void depends(Set<String> depends) {
         this.depends = depends;
     }
 
-    public Set<String> getSoftDepends() {
+    public Set<String> softDepends() {
         return this.softDepends;
     }
 
-    public void setSoftDepends(Set<String> softDepends) {
+    public void softDepends(Set<String> softDepends) {
         this.softDepends = softDepends;
     }
 
-    public String getMainClass() {
+    public String mainClass() {
         return this.mainClass;
     }
 
-    public void setMainClass(String mainClass) {
+    public void mainClass(String mainClass) {
         this.mainClass = mainClass;
     }
 
-    public Set<String> getInjectionCommands() {
+    public Set<String> injectionCommands() {
         return this.injectionCommands;
     }
 
-    public void setInjectionCommands(Set<String> injectionCommands) {
+    public void injectionCommands(Set<String> injectionCommands) {
         this.injectionCommands = injectionCommands;
     }
 
-    public String getModuleName() {
+    public String moduleName() {
         return this.moduleName;
     }
 
-    public void setModuleName(String moduleName) {
+    public void moduleName(String moduleName) {
         this.moduleName = moduleName;
     }
 
@@ -118,27 +118,27 @@ public class PluginMeta {
         return this.hasModuleInfo;
     }
 
-    public void setHasModuleInfo(boolean hasModuleInfo) {
+    public void hasModuleInfo(boolean hasModuleInfo) {
         this.hasModuleInfo = hasModuleInfo;
     }
 
-    public Set<String> getPackages() {
+    public Set<String> packages() {
         return this.packages;
     }
 
-    public void setPackages(Set<String> packages) {
+    public void packages(Set<String> packages) {
         this.packages = packages;
     }
 
-    public Set<File> getModuleDependencies() {
+    public Set<File> moduleDependencies() {
         return this.moduleDependencies;
     }
 
-    public void setModuleDependencies(Set<File> moduleDependencies) {
+    public void moduleDependencies(Set<File> moduleDependencies) {
         this.moduleDependencies = moduleDependencies;
     }
 
-    public File getPluginFile() {
+    public File pluginFile() {
         return this.pluginFile;
     }
 }

@@ -23,7 +23,7 @@ public class PacketCommandRequestHandler implements PacketHandler<PacketCommandR
             return;
         }
 
-        CommandOutput commandOutput = connection.getEntity().dispatchCommand( packet.getInputCommand() );
+        CommandOutput commandOutput = connection.entity().dispatchCommand( packet.getInputCommand() );
         if ( commandOutput != null ) {
 
             PacketCommandOutput packetCommandOutput = new PacketCommandOutput();

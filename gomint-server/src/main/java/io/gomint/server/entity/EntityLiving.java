@@ -266,7 +266,7 @@ public abstract class EntityLiving<E extends io.gomint.entity.Entity<E>> extends
     @Override
     public E heal(float amount, EntityHealEvent.Cause cause) {
         EntityHealEvent event = new EntityHealEvent(this, amount, cause);
-        this.world.getServer().pluginManager().callEvent(event);
+        this.world.server().pluginManager().callEvent(event);
 
         if (!event.cancelled()) {
             this.health(this.health() + amount);
@@ -503,8 +503,8 @@ public abstract class EntityLiving<E extends io.gomint.entity.Entity<E>> extends
     @Override
     public io.gomint.entity.potion.Effect effect(PotionEffect effect, int amplifier, long duration, TimeUnit timeUnit) {
         byte effectId = (byte) EnumConnectors.POTION_EFFECT_CONNECTOR.convert(effect).getId();
-        Effect effectInstance = this.world.getServer().effects().generate(effectId, amplifier,
-            this.world.getServer().currentTickTime() + timeUnit.toMillis(duration), this.effectManager);
+        Effect effectInstance = this.world.server().effects().generate(effectId, amplifier,
+            this.world.server().currentTickTime() + timeUnit.toMillis(duration), this.effectManager);
 
         if (effectInstance != null) {
             this.effectManager.addEffect(effectId, effectInstance);

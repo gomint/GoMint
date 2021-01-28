@@ -6,13 +6,9 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.module.Configuration;
-import java.lang.module.ModuleFinder;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.nio.file.Path;
-import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 
@@ -36,7 +32,7 @@ public class PluginClassloader extends URLClassLoader {
         for (PluginClassloader loader : ALL_LOADERS) {
             try {
                 loader.loadClass(name, true);
-                return loader.meta.getName() + " v" + loader.meta.getVersion().toString();
+                return loader.meta.name() + " v" + loader.meta.version().toString();
             } catch (ClassNotFoundException e) {
                 // Ignored
             }
@@ -73,11 +69,11 @@ public class PluginClassloader extends URLClassLoader {
     }
 
     private static URL[] resolveURLs(PluginMeta meta) throws MalformedURLException {
-        URL[] loaderURLs = new URL[meta.getModuleDependencies() != null ? meta.getModuleDependencies().size() + 1 : 1];
-        loaderURLs[0] = meta.getPluginFile().toURI().toURL();
-        if (meta.getModuleDependencies() != null) {
+        URL[] loaderURLs = new URL[meta.moduleDependencies() != null ? meta.moduleDependencies().size() + 1 : 1];
+        loaderURLs[0] = meta.pluginFile().toURI().toURL();
+        if (meta.moduleDependencies() != null) {
             int index = 1;
-            for (File moduleDependency : meta.getModuleDependencies()) {
+            for (File moduleDependency : meta.moduleDependencies()) {
                 loaderURLs[index++] = moduleDependency.toURI().toURL();
             }
         }

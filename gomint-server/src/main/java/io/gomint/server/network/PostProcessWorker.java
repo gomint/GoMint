@@ -38,7 +38,7 @@ public class PostProcessWorker implements Runnable {
         }
 
         PacketBatch batch = new PacketBatch();
-        batch.setPayload(this.connection.getOutputProcessor().process(inBuf));
+        batch.setPayload(this.connection.outputProcessor().process(inBuf));
         this.connection.send(batch);
 
         if (this.callback != null) {
@@ -61,7 +61,7 @@ public class PostProcessWorker implements Runnable {
                 currentPosition = buffer.getWritePosition();
 
                 packet.serializeHeader(buffer);
-                packet.serialize(buffer, this.connection.getProtocolID());
+                packet.serialize(buffer, this.connection.protocolID());
 
                 int writtenBytes = buffer.getWritePosition() - currentPosition;
                 writeVarInt(lengthPosition, writtenBytes, buffer.getBuffer());

@@ -146,7 +146,7 @@ public class ChunkAdapter implements Chunk {
     }
 
     private void tickRandomBlocksForSlice(ChunkSlice chunkSlice, long currentTimeMS, float dT) {
-        this.iterateRandomBlocks(chunkSlice, currentTimeMS, dT, this.world.getConfig().randomUpdatesPerTick());
+        this.iterateRandomBlocks(chunkSlice, currentTimeMS, dT, this.world.config().randomUpdatesPerTick());
     }
 
     private void iterateRandomBlocks(ChunkSlice chunkSlice, long currentTimeMS, float dT, int randomUpdatesPerTick) {
@@ -322,8 +322,8 @@ public class ChunkAdapter implements Chunk {
      * @return true when it can be gced, false when not
      */
     boolean canBeGCed(long currentTimeMillis) {
-        int secondsAfterLeft = this.world.getConfig().secondsUntilGCAfterLastPlayerLeft();
-        int waitAfterLoad = this.world.getConfig().waitAfterLoadForGCSeconds();
+        int secondsAfterLeft = this.world.config().secondsUntilGCAfterLastPlayerLeft();
+        int waitAfterLoad = this.world.config().waitAfterLoadForGCSeconds();
 
         return this.refCount.get() == 0 &&
             this.populated && currentTimeMillis - this.loadedTime > TimeUnit.SECONDS.toMillis(waitAfterLoad) &&
@@ -634,7 +634,7 @@ public class ChunkAdapter implements Chunk {
             compound.addValue("z", fullZ);
 
             // Create new tile entity
-            TileEntity tileEntity = this.world.getServer().tileEntities().construct(compound,
+            TileEntity tileEntity = this.world.server().tileEntities().construct(compound,
                 this.blockAt(compound.getInteger("x", 0) & 0xF, compound.getInteger("y", 0), compound.getInteger("z", 0) & 0xF));
             this.setTileEntity(x, y, z, tileEntity);
         }
@@ -714,7 +714,7 @@ public class ChunkAdapter implements Chunk {
             this.calculateHeightmap(240);
             this.setPopulated(true);
 
-            this.setLastSavedTimestamp(this.world.getServer().currentTickTime());
+            this.setLastSavedTimestamp(this.world.server().currentTickTime());
         }
     }
 

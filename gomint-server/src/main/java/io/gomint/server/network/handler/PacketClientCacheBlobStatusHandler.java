@@ -3,7 +3,6 @@ package io.gomint.server.network.handler;
 import io.gomint.server.network.PlayerConnection;
 import io.gomint.server.network.packet.PacketClientCacheBlobStatus;
 import io.gomint.server.network.packet.PacketClientCacheMissResponse;
-import io.gomint.server.network.packet.PacketClientCacheStatus;
 import io.netty.buffer.ByteBuf;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import org.slf4j.Logger;
@@ -28,14 +27,14 @@ public class PacketClientCacheBlobStatusHandler implements PacketHandler<PacketC
         response.setData(new Long2ObjectOpenHashMap<>());
 
         for (long miss : packet.getMiss()) {
-            ByteBuf buf = connection.getCache().get(miss);
+            ByteBuf buf = connection.cache().get(miss);
             if ( buf != null ) {
                 response.getData().put(miss, buf);
             }
         }
 
         for (long hit : packet.getHit()) {
-            connection.getCache().remove(hit);
+            connection.cache().remove(hit);
         }
 
         if (response.getData().size() > 0) {

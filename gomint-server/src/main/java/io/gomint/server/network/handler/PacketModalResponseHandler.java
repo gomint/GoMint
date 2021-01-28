@@ -11,7 +11,7 @@ public class PacketModalResponseHandler implements PacketHandler<PacketModalResp
 
     @Override
     public void handle( PacketModalResponse packet, long currentTimeMillis, PlayerConnection connection ) {
-        connection.getEntity().parseGUIResponse( packet.getFormId(), packet.getJson() );
+        connection.entity().parseGUIResponse( packet.getFormId(), packet.getJson() );
     }
 
 }

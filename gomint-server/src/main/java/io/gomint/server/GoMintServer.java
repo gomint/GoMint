@@ -657,8 +657,8 @@ public class GoMintServer implements GoMint, InventoryHolder {
                     return false;
                 }
 
-                this.networkManager.setDumpingEnabled(true);
-                this.networkManager.setDumpDirectory(dumpDirectory);
+                this.networkManager.dumpingEnabled(true);
+                this.networkManager.dumpDirectory(dumpDirectory);
             }
         } catch (Exception e) {
             LOGGER.error("Failed to initialize networking", e);
@@ -686,7 +686,7 @@ public class GoMintServer implements GoMint, InventoryHolder {
 
     @Override
     public GoMint motd(String motd) {
-        this.networkManager.setMotd(motd);
+        this.networkManager.motd(motd);
         return this;
     }
 
@@ -752,7 +752,7 @@ public class GoMintServer implements GoMint, InventoryHolder {
 
     @Override
     public WorldAdapter defaultWorld() {
-        return this.worldManager.getWorld(this.defaultWorld);
+        return this.worldManager.world(this.defaultWorld);
     }
 
     @Override
@@ -768,7 +768,7 @@ public class GoMintServer implements GoMint, InventoryHolder {
 
     @Override
     public EntityPlayer findPlayerByName(String target) {
-        for (WorldAdapter adapter : this.worldManager.getWorlds()) {
+        for (WorldAdapter adapter : this.worldManager.worlds()) {
             for (EntityPlayer player : adapter.onlinePlayers()) {
                 if (player.name().equalsIgnoreCase(target)) {
                     return player;
@@ -801,13 +801,13 @@ public class GoMintServer implements GoMint, InventoryHolder {
 
     @Override
     public String motd() {
-        return this.networkManager.getMotd();
+        return this.networkManager.motd();
     }
 
     @Override
     public Collection<EntityPlayer> onlinePlayers() {
         var playerList = new ArrayList<EntityPlayer>();
-        this.worldManager.getWorlds().forEach(world -> playerList.addAll(world.onlinePlayers()));
+        this.worldManager.worlds().forEach(world -> playerList.addAll(world.onlinePlayers()));
         return playerList;
     }
 
@@ -818,7 +818,7 @@ public class GoMintServer implements GoMint, InventoryHolder {
 
     @Override
     public int port() {
-        return this.networkManager.getPort();
+        return this.networkManager.port();
     }
 
     @Override
@@ -844,7 +844,7 @@ public class GoMintServer implements GoMint, InventoryHolder {
 
     @Override
     public World world(String name) {
-        World world = this.worldManager.getWorld(name);
+        World world = this.worldManager.world(name);
         if (world == null) {
             // Try to load the world
 
@@ -863,7 +863,7 @@ public class GoMintServer implements GoMint, InventoryHolder {
 
     @Override
     public Collection<World> worlds() {
-        return Collections.unmodifiableCollection(this.worldManager.getWorlds());
+        return Collections.unmodifiableCollection(this.worldManager.worlds());
     }
 
     public CreativeInventory creativeInventory() {

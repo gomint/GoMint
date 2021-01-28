@@ -174,23 +174,23 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
             '}';
     }
 
-    public GoMintServer getServer() {
+    public GoMintServer server() {
         return this.server;
     }
 
-    public Logger getLogger() {
+    public Logger logger() {
         return this.logger;
     }
 
-    public File getWorldDir() {
+    public File worldDir() {
         return this.worldDir;
     }
 
-    public Map<Gamerule<?>, Object> getGamerules() {
+    public Map<Gamerule<?>, Object> gamerules() {
         return this.gamerules;
     }
 
-    public WorldConfig getConfig() {
+    public WorldConfig config() {
         return this.config;
     }
 
@@ -893,7 +893,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
                 switch (task.getType()) {
                     case LOAD:
                         AsyncChunkLoadTask load = (AsyncChunkLoadTask) task;
-                        this.getLogger().debug("Loading chunk {} / {}", load.getX(), load.getZ());
+                        this.logger().debug("Loading chunk {} / {}", load.getX(), load.getZ());
                         chunk = this.loadChunk(load.getX(), load.getZ(), load.isGenerate());
 
                         load.getCallback().invoke(chunk);
@@ -1006,7 +1006,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
      *
      * @return amount of players online on this world
      */
-    public int getAmountOfPlayers() {
+    public int amountOfPlayers() {
         return this.players.size();
     }
 
@@ -1562,7 +1562,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
         return this;
     }
 
-    public ChunkCache getChunkCache() {
+    public ChunkCache chunkCache() {
         return this.chunkCache;
     }
 
@@ -1613,7 +1613,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
         }
     }
 
-    public int getDimension() {
+    public int dimension() {
         return 0; // TODO: Implement proper dimensions
     }
 
@@ -1656,14 +1656,14 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
     }
 
     private void sendTime() {
-        int ticks = this.getTimeAsTicks();
+        int ticks = this.timeAsTicks();
 
         for (io.gomint.server.entity.EntityPlayer player : this.players.keySet()) {
             player.connection().sendWorldTime(ticks);
         }
     }
 
-    public int getTimeAsTicks() {
+    public int timeAsTicks() {
         return this.worldTime;
     }
 

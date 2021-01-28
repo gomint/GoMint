@@ -140,7 +140,7 @@ public class EntityItem extends Entity<EntityItemDrop> implements EntityItemDrop
     @Override
     public void onCollideWithPlayer( EntityPlayer player ) {
         // Check if we can pick it up
-        if ( this.world.getServer().currentTickTime() > this.pickupTime() && !this.dead() ) {
+        if ( this.world.server().currentTickTime() > this.pickupTime() && !this.dead() ) {
             // Check if we have place in out inventory to store this item
             if ( !player.inventory().hasPlaceFor( this.itemStack() ) ) {
                 return;
@@ -152,7 +152,7 @@ public class EntityItem extends Entity<EntityItemDrop> implements EntityItemDrop
                 event.cancelled( true );
             }
 
-            this.world.getServer().pluginManager().callEvent( event );
+            this.world.server().pluginManager().callEvent( event );
 
             if ( !event.cancelled() ) {
                 // Consume the item

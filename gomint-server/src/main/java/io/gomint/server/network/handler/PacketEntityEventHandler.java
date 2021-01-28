@@ -27,7 +27,7 @@ public class PacketEntityEventHandler implements PacketHandler<PacketEntityEvent
         LOGGER.debug("Got event id: {}", packet.getEntityId());
         switch (packet.getEventId()) {
             default:
-                for (Entity<?> entity : connection.getEntity().getAttachedEntities()) {
+                for (Entity<?> entity : connection.entity().getAttachedEntities()) {
                     if (entity instanceof EntityPlayer) {
                         ((EntityPlayer) entity).connection().addToSendQueue(packet);
                     }

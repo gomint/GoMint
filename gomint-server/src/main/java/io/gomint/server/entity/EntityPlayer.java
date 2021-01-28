@@ -212,15 +212,15 @@ public class EntityPlayer extends EntityHuman<io.gomint.entity.EntityPlayer> imp
      * @param viewDistance The view distance to set
      */
     public void setViewDistance(int viewDistance) {
-        int tempViewDistance = Math.min(viewDistance, this.world.getConfig().viewDistance());
+        int tempViewDistance = Math.min(viewDistance, this.world.config().viewDistance());
         if (this.viewDistance != tempViewDistance) {
             this.viewDistance = tempViewDistance;
         }
 
-        if (this.connection.getState() == PlayerConnectionState.LOGIN) {
+        if (this.connection.state() == PlayerConnectionState.LOGIN) {
             this.connection.addToSendQueue(new PacketBiomeDefinitionList());
             this.connection.sendPlayState(PacketPlayState.PlayState.SPAWN);
-            this.loginPerformance().setChunkStart(this.world.getServer().currentTickTime());
+            this.loginPerformance().setChunkStart(this.world.server().currentTickTime());
         }
 
         this.connection.onViewDistanceChanged();
@@ -237,7 +237,7 @@ public class EntityPlayer extends EntityHuman<io.gomint.entity.EntityPlayer> imp
 
     @Override
     public int ping() {
-        return this.connection.getPing();
+        return this.connection.ping();
     }
 
     /**
@@ -393,7 +393,7 @@ public class EntityPlayer extends EntityHuman<io.gomint.entity.EntityPlayer> imp
         }
 
         EntityTeleportEvent entityTeleportEvent = new EntityTeleportEvent(this, this.location(), to, cause);
-        this.world.getServer().pluginManager().callEvent(entityTeleportEvent);
+        this.world.server().pluginManager().callEvent(entityTeleportEvent);
         if (entityTeleportEvent.cancelled()) {
             return this;
         }
@@ -459,7 +459,7 @@ public class EntityPlayer extends EntityHuman<io.gomint.entity.EntityPlayer> imp
         PlayerFoodLevelChangeEvent foodLevelChangeEvent = new PlayerFoodLevelChangeEvent(
             this, amount
         );
-        this.world.getServer().pluginManager().callEvent(foodLevelChangeEvent);
+        this.world.server().pluginManager().callEvent(foodLevelChangeEvent);
 
         if (!foodLevelChangeEvent.cancelled()) {
             super.addHunger(amount);
@@ -582,7 +582,7 @@ public class EntityPlayer extends EntityHuman<io.gomint.entity.EntityPlayer> imp
     public boolean openInventory(io.gomint.inventory.Inventory<?> inventory) {
         if (inventory instanceof ContainerInventory) {
             InventoryOpenEvent event = new InventoryOpenEvent(this, inventory);
-            this.world().getServer().pluginManager().callEvent(event);
+            this.world().server().pluginManager().callEvent(event);
 
             if (event.cancelled()) {
                 return false;
@@ -652,7 +652,7 @@ public class EntityPlayer extends EntityHuman<io.gomint.entity.EntityPlayer> imp
         }
 
         if (updateAttributes != null) {
-            updateAttributes.setTick(this.world().getServer().currentTickTime() / (int) Values.CLIENT_TICK_MS);
+            updateAttributes.setTick(this.world().server().currentTickTime() / (int) Values.CLIENT_TICK_MS);
             this.connection.addToSendQueue(updateAttributes);
         }
     }
@@ -663,7 +663,7 @@ public class EntityPlayer extends EntityHuman<io.gomint.entity.EntityPlayer> imp
     public void resendAttributes() {
         PacketUpdateAttributes updateAttributes = new PacketUpdateAttributes();
         updateAttributes.setEntityId(this.id());
-        updateAttributes.setTick(this.world().getServer().currentTickTime() / (int) Values.CLIENT_TICK_MS);
+        updateAttributes.setTick(this.world().server().currentTickTime() / (int) Values.CLIENT_TICK_MS);
 
         for (AttributeInstance instance : this.attributes.values()) {
             updateAttributes.addAttributeInstance(instance);
@@ -677,16 +677,16 @@ public class EntityPlayer extends EntityHuman<io.gomint.entity.EntityPlayer> imp
      */
     public void prepareEntity() {
         // Inventories
-        this.inventory = new PlayerInventory(this.world.getServer().items(), this);
-        this.armorInventory = new ArmorInventory(this.world.getServer().items(), this);
+        this.inventory = new PlayerInventory(this.world.server().items(), this);
+        this.armorInventory = new ArmorInventory(this.world.server().items(), this);
 
-        this.cursorInventory = new CursorInventory(this.world.getServer().items(), this);
-        this.offhandInventory = new OffhandInventory(this.world.getServer().items(), this);
-        this.enderChestInventory = new EnderChestInventory(this.world.getServer().items(), this);
+        this.cursorInventory = new CursorInventory(this.world.server().items(), this);
+        this.offhandInventory = new OffhandInventory(this.world.server().items(), this);
+        this.enderChestInventory = new EnderChestInventory(this.world.server().items(), this);
 
-        this.craftingInventory = new CraftingInputInventory(this.world.getServer().items(), this);
-        this.craftingInputInventory = new CraftingInputInventory(this.world.getServer().items(), this);
-        this.craftingResultInventory = new OneSlotInventory(this.world.getServer().items(), this);
+        this.craftingInventory = new CraftingInputInventory(this.world.server().items(), this);
+        this.craftingInputInventory = new CraftingInputInventory(this.world.server().items(), this);
+        this.craftingResultInventory = new OneSlotInventory(this.world.server().items(), this);
 
         // Load from world
         if (!this.world.loadPlayer(this)) {
@@ -695,7 +695,7 @@ public class EntityPlayer extends EntityHuman<io.gomint.entity.EntityPlayer> imp
         }
 
         // Send world init data
-        this.connection.sendWorldTime(this.world.getTimeAsTicks());
+        this.connection.sendWorldTime(this.world.timeAsTicks());
         this.connection.sendWorldInitialization(this.id());
         this.connection.addToSendQueue(new PacketItemComponent());
         this.connection.sendSpawnPosition();
@@ -706,8 +706,8 @@ public class EntityPlayer extends EntityHuman<io.gomint.entity.EntityPlayer> imp
         this.connection.sendCommandsEnabled();
 
         // Set spawn
-        if (this.connection.getEntity().spawnLocation() == null) {
-            this.connection.getEntity().spawnLocation(this.connection.getEntity().world().spawnLocation());
+        if (this.connection.entity().spawnLocation() == null) {
+            this.connection.entity().spawnLocation(this.connection.entity().world().spawnLocation());
         }
 
         // Send adventure settings
@@ -730,7 +730,7 @@ public class EntityPlayer extends EntityHuman<io.gomint.entity.EntityPlayer> imp
         // Send entity metadata
         this.sendData(this);
 
-        this.connection.getServer().creativeInventory().addViewer(this);
+        this.connection.server().creativeInventory().addViewer(this);
 
         PacketPlayerlist playerlist = new PacketPlayerlist();
         playerlist.setMode((byte) 0);
@@ -740,7 +740,7 @@ public class EntityPlayer extends EntityHuman<io.gomint.entity.EntityPlayer> imp
         this.connection().addToSendQueue(playerlist);
 
         // Send all recipes
-        this.connection.addToSendQueue(this.world.getServer().recipeManager().getCraftingRecipesBatch());
+        this.connection.addToSendQueue(this.world.server().recipeManager().getCraftingRecipesBatch());
 
         LOGGER.debug("Did send all prepare entity data");
     }
@@ -776,8 +776,8 @@ public class EntityPlayer extends EntityHuman<io.gomint.entity.EntityPlayer> imp
      * Remove player from PlayerList and remove from global inventories etc.
      */
     public void cleanup() {
-        this.connection.getServer().creativeInventory().removeViewer(this);
-        this.connection.getServer().uuidMappedPlayers().remove(this.uuid());
+        this.connection.server().creativeInventory().removeViewer(this);
+        this.connection.server().uuidMappedPlayers().remove(this.uuid());
 
         Block block = this.world.blockAt(this.position().toBlockPosition());
         block.gotOff(this);
@@ -793,7 +793,7 @@ public class EntityPlayer extends EntityHuman<io.gomint.entity.EntityPlayer> imp
         this.entityVisibilityManager.clear();
 
         // Check all entities
-        for (WorldAdapter worldAdapter : this.connection.getServer().worldManager().getWorlds()) {
+        for (WorldAdapter worldAdapter : this.connection.server().worldManager().worlds()) {
             worldAdapter.iterateEntities(Entity.class, entity -> {
                 if (entity instanceof EntityPlayer) {
                     EntityPlayer entityPlayer = (EntityPlayer) entity;
@@ -829,7 +829,7 @@ public class EntityPlayer extends EntityHuman<io.gomint.entity.EntityPlayer> imp
             this.currentOpenContainer.removeViewer(this);
 
             InventoryCloseEvent inventoryCloseEvent = new InventoryCloseEvent(this, this.currentOpenContainer);
-            this.world().getServer().pluginManager().callEvent(inventoryCloseEvent);
+            this.world().server().pluginManager().callEvent(inventoryCloseEvent);
 
             PacketContainerClose packetContainerClose = new PacketContainerClose();
             packetContainerClose.setWindowId(windowId);
@@ -910,7 +910,7 @@ public class EntityPlayer extends EntityHuman<io.gomint.entity.EntityPlayer> imp
     @Override
     public EntityPlayer sendCommands() {
         // Send commands
-        PacketAvailableCommands packetAvailableCommands = this.connection.getServer().
+        PacketAvailableCommands packetAvailableCommands = this.connection.server().
             pluginManager().getCommandManager().createPacket(this);
         this.connection.addToSendQueue(packetAvailableCommands);
         return this;
@@ -926,7 +926,7 @@ public class EntityPlayer extends EntityHuman<io.gomint.entity.EntityPlayer> imp
     public EntityPlayer exhaust(float amount, PlayerExhaustEvent.Cause cause) {
         if (this.gamemode == Gamemode.SURVIVAL) {
             PlayerExhaustEvent exhaustEvent = new PlayerExhaustEvent(this, amount, cause);
-            this.world.getServer().pluginManager().callEvent(exhaustEvent);
+            this.world.server().pluginManager().callEvent(exhaustEvent);
 
             if (exhaustEvent.cancelled()) {
                 this.resendAttributes();
@@ -1013,7 +1013,7 @@ public class EntityPlayer extends EntityHuman<io.gomint.entity.EntityPlayer> imp
                             ownVelo.z(ownVelo.z() * 0.6F);
                             this.velocity(ownVelo);
 
-                            if (!this.world.getServer().serverConfig().vanilla().disableSprintReset()) {
+                            if (!this.world.server().serverConfig().vanilla().disableSprintReset()) {
                                 this.sprinting(false);
                             }
                         }
@@ -1079,7 +1079,7 @@ public class EntityPlayer extends EntityHuman<io.gomint.entity.EntityPlayer> imp
     public void respawn() {
         // Event first
         PlayerRespawnEvent event = new PlayerRespawnEvent(this, this.respawnPosition);
-        this.connection.getServer().pluginManager().callEvent(event);
+        this.connection.server().pluginManager().callEvent(event);
 
         if (event.cancelled()) {
             PacketEntityEvent entityEvent = new PacketEntityEvent();
@@ -1205,7 +1205,7 @@ public class EntityPlayer extends EntityHuman<io.gomint.entity.EntityPlayer> imp
         List<io.gomint.inventory.item.ItemStack<?>> drops = this.getDrops();
 
         PlayerDeathEvent event = new PlayerDeathEvent(this, deathMessage, true, drops);
-        this.connection.getServer().pluginManager().callEvent(event);
+        this.connection.server().pluginManager().callEvent(event);
 
         if (event.dropInventory()) {
             for (io.gomint.inventory.item.ItemStack<?> drop : event.drops()) {
@@ -1276,7 +1276,7 @@ public class EntityPlayer extends EntityHuman<io.gomint.entity.EntityPlayer> imp
 
     @Override
     public boolean online() {
-        return this.connection.getEntity() != null;
+        return this.connection.entity() != null;
     }
 
     @Override
@@ -1394,7 +1394,7 @@ public class EntityPlayer extends EntityHuman<io.gomint.entity.EntityPlayer> imp
      * @param xpAmount which should be added
      */
     public void addXP(int xpAmount) {
-        this.lastPickupXP = this.world.getServer().currentTickTime();
+        this.lastPickupXP = this.world.server().currentTickTime();
         this.xp(this.xp + xpAmount);
     }
 
@@ -1404,7 +1404,7 @@ public class EntityPlayer extends EntityHuman<io.gomint.entity.EntityPlayer> imp
      * @return
      */
     public boolean canPickupXP() {
-        return this.world.getServer().currentTickTime() - this.lastPickupXP >= Values.CLIENT_TICK_MS;
+        return this.world.server().currentTickTime() - this.lastPickupXP >= Values.CLIENT_TICK_MS;
     }
 
     private int calculateRequiredExperienceForLevel(int level) {
@@ -1573,7 +1573,7 @@ public class EntityPlayer extends EntityHuman<io.gomint.entity.EntityPlayer> imp
         this.hasCompletedLogin = true;
 
         // Send network chunk publisher packet after join
-        this.world.getServer().scheduler().schedule(() -> {
+        this.world.server().scheduler().schedule(() -> {
             if (online()) {
                 connection().sendNetworkChunkPublisher();
             }
@@ -1632,12 +1632,12 @@ public class EntityPlayer extends EntityHuman<io.gomint.entity.EntityPlayer> imp
 
     @Override
     public DeviceInfo deviceInfo() {
-        return this.connection.getDeviceInfo();
+        return this.connection.deviceInfo();
     }
 
     @Override
     public InetSocketAddress address() {
-        return this.connection.getConnection().getAddress();
+        return this.connection.connection().getAddress();
     }
 
     @Override
@@ -1664,7 +1664,7 @@ public class EntityPlayer extends EntityHuman<io.gomint.entity.EntityPlayer> imp
 
     @Override
     public CommandOutput dispatchCommand(String command) {
-        return this.connection().getServer().pluginManager().getCommandManager().dispatchCommand(this, command);
+        return this.connection().server().pluginManager().getCommandManager().dispatchCommand(this, command);
     }
 
     @Override

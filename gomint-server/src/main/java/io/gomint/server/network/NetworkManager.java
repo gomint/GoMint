@@ -113,15 +113,15 @@ public class NetworkManager {
         this.initPacketHandlers();
     }
 
-    public PostProcessExecutorService getPostProcessService() {
+    public PostProcessExecutorService postProcessService() {
         return this.postProcessService;
     }
 
-    public void setMotd(String motd) {
+    public void motd(String motd) {
         this.motd = motd;
     }
 
-    public String getMotd() {
+    public String motd() {
         return this.motd;
     }
 
@@ -194,7 +194,7 @@ public class NetworkManager {
      *
      * @param dump Whether or not to enable packet dumping
      */
-    public void setDumpingEnabled(boolean dump) {
+    public void dumpingEnabled(boolean dump) {
         this.dump = dump;
     }
 
@@ -203,7 +203,7 @@ public class NetworkManager {
      *
      * @param dumpDirectory The directory to write packet dumps into
      */
-    public void setDumpDirectory(File dumpDirectory) {
+    public void dumpDirectory(File dumpDirectory) {
         this.dumpDirectory = dumpDirectory;
     }
 
@@ -220,7 +220,7 @@ public class NetworkManager {
             PlayerConnection connection = this.incomingConnections.poll();
             if (connection != null) {
                 LOGGER.debug("Adding new connection to the server: {}", connection);
-                this.playersByGuid.put(connection.getId(), connection);
+                this.playersByGuid.put(connection.id(), connection);
             }
         }
 
@@ -266,7 +266,7 @@ public class NetworkManager {
      *
      * @return The GoMint server instance that created this network manager
      */
-    public GoMintServer getServer() {
+    public GoMintServer server() {
         return this.server;
     }
 
@@ -298,7 +298,7 @@ public class NetworkManager {
     private void handleSocketEvent(SocketEvent event) {
         switch (event.getType()) {
             case NEW_INCOMING_CONNECTION:
-                PlayerPreLoginEvent playerPreLoginEvent = this.getServer().pluginManager().callEvent(
+                PlayerPreLoginEvent playerPreLoginEvent = this.server().pluginManager().callEvent(
                     new PlayerPreLoginEvent(event.getConnection().getAddress())
                 );
 
@@ -420,7 +420,7 @@ public class NetworkManager {
      *
      * @return bound port
      */
-    public int getPort() {
+    public int port() {
         return this.socket.getBindAddress().getPort();
     }
 

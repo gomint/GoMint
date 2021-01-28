@@ -139,7 +139,7 @@ public class Client implements ConnectionWithState {
         this.debugUI = debugUI;
         this.queue = queue;
 
-        this.networkUpdater = this.world.getServer().executorService().scheduleAtFixedRate(this::update, (int) Values.CLIENT_TICK_MS, (int) Values.CLIENT_TICK_MS, TimeUnit.MILLISECONDS);
+        this.networkUpdater = this.world.server().executorService().scheduleAtFixedRate(this::update, (int) Values.CLIENT_TICK_MS, (int) Values.CLIENT_TICK_MS, TimeUnit.MILLISECONDS);
 
         this.socket = new ClientSocket(LoggerFactory.getLogger(NetworkManager.class));
 
@@ -185,7 +185,7 @@ public class Client implements ConnectionWithState {
         }
     }
 
-    public void setSpawnPointConsumer(Consumer<BlockPosition> spawnPointConsumer) {
+    public void spawnPointConsumer(Consumer<BlockPosition> spawnPointConsumer) {
         this.spawnPointConsumer = spawnPointConsumer;
     }
 
@@ -246,7 +246,7 @@ public class Client implements ConnectionWithState {
         this.updateNetwork();
 
         if (this.current != null) {
-            ChunkAdapter chunkAdapter = this.world.getChunkCache().getChunk(this.current.getX(), this.current.getZ());
+            ChunkAdapter chunkAdapter = this.world.chunkCache().getChunk(this.current.getX(), this.current.getZ());
             if (chunkAdapter != null) {
                 LOGGER.debug("Resolving current request {} / {} with a already cached chunk", this.current.getX(), this.current.getZ());
 
@@ -259,7 +259,7 @@ public class Client implements ConnectionWithState {
         if (this.spawned.get() && this.current == null) {
             this.current = this.queue.poll();
             if (this.current != null) {
-                ChunkAdapter adapter = this.world.getChunkCache().getChunk(this.current.getX(), this.current.getZ());
+                ChunkAdapter adapter = this.world.chunkCache().getChunk(this.current.getX(), this.current.getZ());
                 if (adapter != null) {
                     LOGGER.debug("Resolving current request {} / {} with a already cached chunk", this.current.getX(), this.current.getZ());
 
@@ -304,7 +304,7 @@ public class Client implements ConnectionWithState {
     }
 
     @Override
-    public PlayerConnectionState getState() {
+    public PlayerConnectionState state() {
         return this.state;
     }
 
@@ -314,12 +314,12 @@ public class Client implements ConnectionWithState {
     }
 
     @Override
-    public int getProtocolID() {
+    public int protocolID() {
         return Protocol.MINECRAFT_PE_PROTOCOL_VERSION;
     }
 
     @Override
-    public Processor getOutputProcessor() {
+    public Processor outputProcessor() {
         return this.outputProcessor;
     }
 
@@ -391,7 +391,7 @@ public class Client implements ConnectionWithState {
             this.send(login);
 
             // Check for termination if server did not respond
-            this.world.getServer().executorService().schedule(() -> {
+            this.world.server().executorService().schedule(() -> {
                 if (this.state == PlayerConnectionState.LOGIN) {
                     this.disconnect("Not logged in");
                 }
@@ -471,7 +471,7 @@ public class Client implements ConnectionWithState {
             int x = chunk.getX();
             int z = chunk.getZ();
 
-            ChunkAdapter chunkAdapter = this.world.getChunkCache().getChunk(x, z);
+            ChunkAdapter chunkAdapter = this.world.chunkCache().getChunk(x, z);
 
             // Check if generator needs the chunk
             if (chunkAdapter == null) {
@@ -527,7 +527,7 @@ public class Client implements ConnectionWithState {
                     while (true) {
                         try {
                             NBTTagCompound compound = reader.parse();
-                            TileEntity tileEntity = this.world.getServer().tileEntities().construct(compound, chunkAdapter.blockAt(compound.getInteger("x", 0) & 0xF, compound.getInteger("y", 0), compound.getInteger("z", 0) & 0xF));
+                            TileEntity tileEntity = this.world.server().tileEntities().construct(compound, chunkAdapter.blockAt(compound.getInteger("x", 0) & 0xF, compound.getInteger("y", 0), compound.getInteger("z", 0) & 0xF));
                             if (tileEntity != null) {
                                 chunkAdapter.setTileEntity(compound.getInteger("x", 0) & 0xF, compound.getInteger("y", 0), compound.getInteger("z", 0) & 0xF, tileEntity);
                             }
@@ -541,7 +541,7 @@ public class Client implements ConnectionWithState {
 
                 chunkAdapter.setPopulated(true);
                 chunkAdapter.calculateHeightmap(240);
-                this.world.getChunkCache().putChunk(chunkAdapter);
+                this.world.chunkCache().putChunk(chunkAdapter);
 
                 chunk.release();
 
@@ -689,7 +689,7 @@ public class Client implements ConnectionWithState {
         this.disconnectConsumer = disconnectConsumer;
     }
 
-    public ChunkRequest getCurrentRequest() {
+    public ChunkRequest currentRequest() {
         return this.current;
     }
 
