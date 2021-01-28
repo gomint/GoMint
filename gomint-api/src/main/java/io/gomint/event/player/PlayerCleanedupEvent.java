@@ -17,7 +17,7 @@ import io.gomint.entity.EntityPlayer;
  * This event gets called once the entity has been cleaned up and despawned. There is NO data left in the server except
  * the object copy in this event.
  */
-public class PlayerCleanedupEvent extends PlayerEvent {
+public class PlayerCleanedupEvent extends SimplePlayerEvent {
 
     /**
      * Construct a quit event with the player who disconnected

@@ -8,33 +8,21 @@
 package io.gomint.event.entity;
 
 import io.gomint.entity.Entity;
-import io.gomint.event.Event;
 
 /**
  * @author geNAZt
  * @version 1.0
  * @stability 3
  */
-public class EntityDespawnEvent extends Event {
-
-    private final Entity<?> entity;
+public class EntityDespawnEvent extends SimpleEntityEvent {
 
     /**
      * Create a new event for announcing a entity despawn
      *
      * @param entity for which this event is
      */
-    public EntityDespawnEvent( Entity<?> entity ) {
-        this.entity = entity;
-    }
-
-    /**
-     * Get the player which is affected by this event
-     *
-     * @return the player which is affected by this event
-     */
-    public Entity<?> entity() {
-        return this.entity;
+    public EntityDespawnEvent(Entity<?> entity) {
+        super(entity);
     }
 
 }

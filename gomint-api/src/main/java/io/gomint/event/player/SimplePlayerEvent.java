@@ -9,25 +9,24 @@ package io.gomint.event.player;
 
 import io.gomint.entity.EntityPlayer;
 import io.gomint.event.Event;
+import io.gomint.event.interfaces.PlayerEvent;
 
 /**
+ * Represents a not cancellable event with a player involved
+ *
  * @author geNAZt
- * @version 1.0
- * @stability 3
+ * @version 2.0
+ * @stability 2
  */
-public class PlayerEvent extends Event {
+public class SimplePlayerEvent extends Event implements PlayerEvent {
 
     private final EntityPlayer player;
 
-    public PlayerEvent( EntityPlayer player ) {
+    public SimplePlayerEvent(EntityPlayer player) {
         this.player = player;
     }
 
-    /**
-     * Get the player which is affected by this event
-     *
-     * @return the player which is affected by this event
-     */
+    @Override
     public EntityPlayer player() {
         return this.player;
     }

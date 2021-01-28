@@ -8,7 +8,7 @@
 package io.gomint.event.entity;
 
 import io.gomint.entity.Entity;
-import io.gomint.event.CancellableEvent;
+import io.gomint.event.Event;
 import io.gomint.event.interfaces.EntityEvent;
 
 /**
@@ -16,7 +16,7 @@ import io.gomint.event.interfaces.EntityEvent;
  * @version 1.0
  * @stability 3
  */
-public class CancellableEntityEvent<E> extends CancellableEvent<E> implements EntityEvent {
+public class SimpleEntityEvent extends Event implements EntityEvent {
 
     private final Entity<?> entity;
 
@@ -25,7 +25,7 @@ public class CancellableEntityEvent<E> extends CancellableEvent<E> implements En
      *
      * @param entity for which this event is
      */
-    public CancellableEntityEvent(Entity<?> entity) {
+    public SimpleEntityEvent(Entity<?> entity) {
         this.entity = entity;
     }
 

@@ -8,20 +8,19 @@
 package io.gomint.event.entity.projectile;
 
 import io.gomint.entity.projectile.EntityProjectile;
-import io.gomint.event.CancellableEvent;
+import io.gomint.event.entity.CancellableEntityEvent;
 import io.gomint.world.block.Block;
 
 import java.util.Set;
 
 /**
  * @author geNAZt
- * @version 1.0
- * @stability 3
+ * @version 2.0
+ * @stability 2
  */
-public class ProjectileHitBlocksEvent extends CancellableEvent<ProjectileHitBlocksEvent> {
+public class ProjectileHitBlocksEvent extends CancellableEntityEvent<ProjectileHitBlocksEvent> {
 
     private final Set<Block> blocks;
-    private final EntityProjectile<?> projectile;
 
     /**
      * Create a new entity based cancellable event
@@ -29,9 +28,9 @@ public class ProjectileHitBlocksEvent extends CancellableEvent<ProjectileHitBloc
      * @param blocks     which got hit by the projectile
      * @param projectile which hit the entity
      */
-    public ProjectileHitBlocksEvent( Set<Block> blocks, EntityProjectile<?> projectile ) {
+    public ProjectileHitBlocksEvent(Set<Block> blocks, EntityProjectile<?> projectile) {
+        super(projectile);
         this.blocks = blocks;
-        this.projectile = projectile;
     }
 
     /**
@@ -39,8 +38,20 @@ public class ProjectileHitBlocksEvent extends CancellableEvent<ProjectileHitBloc
      *
      * @return projectile which hit the entity
      */
+    @Override
+    public EntityProjectile<?> entity() {
+        return (EntityProjectile<?>) super.entity();
+    }
+
+    /**
+     * Get the projectile which hit the entity
+     *
+     * @return projectile which hit the entity
+     * @deprecated Use {@link #entity()} instead
+     */
+    @Deprecated(forRemoval = true)
     public EntityProjectile<?> projectile() {
-        return this.projectile;
+        return (EntityProjectile<?>) super.entity();
     }
 
     /**

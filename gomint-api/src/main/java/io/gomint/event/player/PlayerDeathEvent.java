@@ -17,7 +17,7 @@ import java.util.List;
  * @version 1.0
  * @stability 3
  */
-public class PlayerDeathEvent extends PlayerEvent {
+public class PlayerDeathEvent extends SimplePlayerEvent {
 
     private String deathMessage;
     private boolean dropInventory;

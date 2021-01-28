@@ -9,13 +9,14 @@ package io.gomint.event.player;
 
 import io.gomint.entity.EntityPlayer;
 import io.gomint.event.CancellableEvent;
+import io.gomint.event.interfaces.PlayerEvent;
 
 /**
  * @author geNAZt
  * @version 1.0
  * @stability 3
  */
-public class CancellablePlayerEvent<E> extends CancellableEvent<E> {
+public class CancellablePlayerEvent<E> extends CancellableEvent<E> implements PlayerEvent {
 
     private final EntityPlayer player;
 
@@ -23,11 +24,7 @@ public class CancellablePlayerEvent<E> extends CancellableEvent<E> {
         this.player = player;
     }
 
-    /**
-     * Get the player which is affected by this event
-     *
-     * @return the player which is affected by this event
-     */
+    @Override
     public EntityPlayer player() {
         return this.player;
     }
