@@ -10,7 +10,9 @@ package io.gomint.plugin;
 import io.gomint.command.Command;
 import io.gomint.event.Event;
 import io.gomint.event.EventListener;
+import io.gomint.world.World;
 
+import java.util.Collection;
 import java.util.Map;
 
 /**
@@ -72,11 +74,32 @@ public interface PluginManager {
     /**
      * Register a new event listener for the given plugin. This only works when you call it from a plugin class.
      *
+     * The listener will be informaed of all events regardless of the world they take place in.
+     *
      * @param plugin   The plugin which wants to register this listener
      * @param listener The listener which we want to register
      * @throws SecurityException when somebody else except the plugin registers the listener
+     * @see #registerListener(Plugin, EventListener, Collection)
+     * @since 2.0
      */
     PluginManager registerListener(Plugin plugin, EventListener listener);
+
+    /**
+     * Register a new event listener for the given plugin. This only works when you call it from a plugin class.
+     *
+     * Events implementing {@linkplain io.gomint.event.interfaces.WorldEvent WorldEvent} will be filtered for this
+     * listener, it will only be called for events taking place in worlds which {@linkplain World#folder() folder name}
+     * is present in the {@code worlds} collection.
+     *
+     * @param plugin   The plugin which wants to register this listener
+     * @param listener The listener which we want to register
+     * @param worlds   A whitelist of world {@linkplain World#folder() folder name}. Empty collection or {@code null}
+     *                 means all worlds.
+     * @throws SecurityException when somebody else except the plugin registers the listener
+     * @see #registerListener(Plugin, EventListener)
+     * @since 2.0
+     */
+    PluginManager registerListener(Plugin plugin, EventListener listener, Collection<String> worlds);
 
     /**
      * Unregister a listener. This listener does not get any more events after this
@@ -90,8 +113,8 @@ public interface PluginManager {
     /**
      * Register a new command for the given plugin. This only works when you call it from a plugin class.
      *
-     * @param plugin
-     * @param command
+     * @param plugin  The plugin which wants to register this command
+     * @param command The command to register
      */
     PluginManager registerCommand(Plugin plugin, Command command);
 

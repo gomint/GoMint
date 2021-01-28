@@ -741,6 +741,16 @@ public class SimplePluginManager implements PluginManager, EventCaller {
     }
 
     @Override
+    public PluginManager registerListener(Plugin plugin, EventListener listener, Collection<String> worlds) {
+        if (!plugin.getClass().getClassLoader().equals(listener.getClass().getClassLoader())) {
+            throw new SecurityException("Wanted to register listener for another plugin");
+        }
+
+        this.eventManager.registerListener(listener, worlds);
+        return this;
+    }
+
+    @Override
     public PluginManager unregisterListener(Plugin plugin, EventListener listener) {
         if (!plugin.getClass().getClassLoader().equals(listener.getClass().getClassLoader())) {
             throw new SecurityException("Wanted to unregister listener for another plugin");

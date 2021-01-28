@@ -10,8 +10,10 @@ package io.gomint.server.event;
 import io.gomint.event.Event;
 import io.gomint.event.EventHandler;
 import io.gomint.event.EventListener;
+import io.gomint.event.interfaces.WorldEvent;
 import io.gomint.server.maintenance.ReportUploader;
 import io.gomint.server.plugin.PluginClassloader;
+import it.unimi.dsi.fastutil.ints.IntSet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,6 +34,7 @@ class EventHandlerMethod implements Comparable<EventHandlerMethod> {
 
     private final EventHandler annotation;
     private EventProxy proxy;
+    private final IntSet worlds;
 
     // For toString reference
     private final EventListener instance;
@@ -42,10 +45,12 @@ class EventHandlerMethod implements Comparable<EventHandlerMethod> {
      * @param instance   The instance of the EventHandler which should be used to invoke the EventHandler Method
      * @param method     The method which should be invoked when the event arrives
      * @param annotation The annotation which holds additional information about this EventHandler Method
+     * @param worlds     The set of string hashCodes of whitelisted worlds or {@code null} for all worlds
      */
-    EventHandlerMethod(final EventListener instance, final Method method, final EventHandler annotation) {
+    EventHandlerMethod(final EventListener instance, final Method method, final EventHandler annotation, IntSet worlds) {
         this.annotation = annotation;
         this.instance = instance;
+        this.worlds = worlds;
 
         // Build up proxy
         try {
@@ -94,6 +99,9 @@ class EventHandlerMethod implements Comparable<EventHandlerMethod> {
      * @param event Event which should be handled in this handler
      */
     public void invoke(Event event) {
+        if (event instanceof WorldEvent && this.worlds != null && !this.worlds.contains(((WorldEvent) event).world().folder().hashCode())) {
+            return;
+        }
         try {
             this.proxy.call(event);
         } catch (Throwable cause) {

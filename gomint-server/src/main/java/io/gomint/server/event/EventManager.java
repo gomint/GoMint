@@ -12,9 +12,12 @@ import io.gomint.event.EventHandler;
 import io.gomint.event.EventListener;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
+import it.unimi.dsi.fastutil.ints.IntSet;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.util.Collection;
 
 /**
  * @author BlackyPaw
@@ -44,13 +47,18 @@ public class EventManager {
         eventHandlerList.triggerEvent( event );
     }
 
+    public <T extends EventListener> void registerListener(T listener) {
+        registerListener(listener, null);
+    }
+
     /**
      * Registers all event handler methods found on the specified listener.
      *
      * @param listener The listener to register
      * @param <T>      The generic type of the listener
+     * @param worlds   World folder names whitelist, defensive copy done
      */
-    public <T extends EventListener> void registerListener( T listener ) {
+    public <T extends EventListener> void registerListener(T listener, Collection<String> worlds) {
         Class<? extends EventListener> listenerClass = listener.getClass();
         for ( Method listenerMethod: listenerClass.getDeclaredMethods() ) {
             if ( !listenerMethod.isAnnotationPresent( EventHandler.class ) ||
@@ -61,12 +69,18 @@ public class EventManager {
             }
 
             listenerMethod.setAccessible( true );
-            this.registerListener0( listener, listenerMethod );
+            final IntSet worldsSet;
+            if (worlds == null || worlds.isEmpty()) {
+                worldsSet = null;
+            } else {
+                worldsSet = new IntOpenHashSet(worlds.stream().mapToInt(Object::hashCode).iterator());
+            }
+            this.registerListener0(listener, listenerMethod, worldsSet);
         }
     }
 
     /**
-     * Registers all event handler methods found on the specified listener.
+     * Unregister a listener. This listener does not get any more events after this
      *
      * @param listener The listener to register
      * @param <T>      The generic type of the listener
@@ -85,7 +99,7 @@ public class EventManager {
         }
     }
 
-    private <T extends EventListener> void registerListener0( T listener, Method listenerMethod ) {
+    private <T extends EventListener> void registerListener0(T listener, Method listenerMethod, IntSet worlds) {
         int eventHash = listenerMethod.getParameterTypes()[0].getName().hashCode();
         EventHandler annotation = listenerMethod.getAnnotation( EventHandler.class );
         EventHandlerList eventHandlerList = this.eventHandlers.get( eventHash );
@@ -94,8 +108,8 @@ public class EventManager {
             this.eventHandlers.put( eventHash, eventHandlerList );
         }
 
-        eventHandlerList.addHandler( listener.getClass().getName() + "#" + listenerMethod.getName() + "_" + eventHash + "_" + listener.hashCode(),
-            new EventHandlerMethod( listener, listenerMethod, annotation ) );
+        eventHandlerList.addHandler(listener.getClass().getName() + "#" + listenerMethod.getName() + "_" + eventHash + "_" + listener.hashCode(),
+            new EventHandlerMethod(listener, listenerMethod, annotation, worlds));
     }
 
     private <T extends EventListener> void unregisterListener0( T listener, Method listenerMethod ) {
