@@ -15,6 +15,7 @@ import io.gomint.jraknet.PacketBuffer;
 import io.gomint.jraknet.ServerSocket;
 import io.gomint.jraknet.SocketEvent;
 import io.gomint.server.GoMintServer;
+import io.gomint.server.entity.EntityPlayer;
 import io.gomint.server.maintenance.ReportUploader;
 import io.gomint.server.network.handler.PacketAdventureSettingsHandler;
 import io.gomint.server.network.handler.PacketAnimateHandler;
@@ -51,6 +52,7 @@ import io.gomint.server.network.handler.PacketTileEntityDataHandler;
 import io.gomint.server.network.handler.PacketViolationWarningHandler;
 import io.gomint.server.network.handler.PacketWorldSoundEventHandler;
 import io.gomint.server.network.packet.Packet;
+import io.gomint.server.world.WorldAdapter;
 import io.netty.util.ResourceLeakDetector;
 import io.netty.util.ThreadDeathWatcher;
 import io.netty.util.concurrent.GlobalEventExecutor;
@@ -103,9 +105,9 @@ public class NetworkManager {
     private PostProcessExecutorService postProcessService;
 
     /**
-     * Init a new NetworkManager for accepting new connections and read incoming data
+     * Init a new NetworkManager for accepting new connections and reading incoming data
      *
-     * @param server  server instance which should be used
+     * @param server server instance which should be used
      */
     public NetworkManager(GoMintServer server) {
         this.server = server;
@@ -229,6 +231,14 @@ public class NetworkManager {
                 for (long guid : this.closedConnections) {
                     PlayerConnection connection = this.playersByGuid.remove(guid);
                     if (connection != null) {
+                        final EntityPlayer entity = connection.entity();
+                        if (entity != null) {
+                            final WorldAdapter world = entity.world();
+                            if (world != null) {
+                                world.syncScheduler().execute(connection::close);
+                                continue;
+                            }
+                        }
                         connection.close();
                     }
                 }
@@ -238,8 +248,8 @@ public class NetworkManager {
         }
 
         // Tick all player connections in order to receive all incoming packets:
-        for (Long2ObjectMap.Entry<PlayerConnection> entry : this.playersByGuid.long2ObjectEntrySet()) {
-            entry.getValue().update(currentMillis, lastTickTime);
+        for (PlayerConnection connection : this.playersByGuid.values()) {
+            connection.globalUpdate(currentMillis, lastTickTime);
         }
     }
 

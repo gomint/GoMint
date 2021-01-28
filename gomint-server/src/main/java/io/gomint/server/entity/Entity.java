@@ -109,6 +109,7 @@ public abstract class Entity<E extends io.gomint.entity.Entity<E>> implements io
     protected float offsetY;
     protected int age;
     protected WorldAdapter world;
+    private final Object worldSyncObject = new Object();
     protected boolean ticking = true;
     private float width;
     private boolean stuckInBlock = false;
@@ -267,11 +268,15 @@ public abstract class Entity<E extends io.gomint.entity.Entity<E>> implements io
 
     @Override
     public WorldAdapter world() {
-        return this.world;
+        synchronized (this.worldSyncObject) {
+            return this.world;
+        }
     }
 
     public void world(WorldAdapter world ) {
-        this.world = world;
+        synchronized (this.worldSyncObject) {
+            this.world = world;
+        }
     }
 
     /**

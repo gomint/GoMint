@@ -15,6 +15,8 @@ import io.gomint.math.AxisAlignedBB;
 import io.gomint.math.BlockPosition;
 import io.gomint.math.Location;
 import io.gomint.math.Vector;
+import io.gomint.scheduler.Scheduler;
+import io.gomint.scheduler.WorldScheduler;
 import io.gomint.world.block.Block;
 
 import java.time.Duration;
@@ -184,14 +186,15 @@ public interface World {
     /**
      * Create a entity drop in the given world
      *
-     * @param vector    for the item drop
+     * @param vector    position of the item drop
      * @param itemStack which is stored inside the drop
      * @return the created and spawned entity
      */
     EntityItemDrop createItemDrop(Vector vector, ItemStack<?> itemStack);
 
     /**
-     * Unload this world. All remaining players in this world get called through the consumer
+     * Schedules unloading of this world. Unloading will happen at end of current world tick or at start of next world
+     * tick. All remaining players in this world get called through the consumer when unloading happens.
      *
      * @param playerConsumer which gets called for every player in this world
      */
@@ -314,4 +317,30 @@ public interface World {
      */
     Set<Entity<?>> entitiesByTag(String tag);
 
+    /**
+     * Check if current thread is this world's main thread
+     *
+     * @return true if main thread, false if not
+     */
+    boolean mainThread();
+
+    /**
+     * Get current tickrate (ticks per second)
+     *
+     * @return tickrate of this world
+     */
+    double tps();
+
+    /**
+     * Get target tickrate (ticks per second)
+     *
+     * @return target tickrate of this world
+     */
+    int targetTPS();
+
+    /**
+     * Get scheduler of the calling plugin for this world
+     * @return scheduler 
+     */
+    WorldScheduler scheduler();
 }

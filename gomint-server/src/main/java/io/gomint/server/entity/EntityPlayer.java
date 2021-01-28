@@ -1573,7 +1573,7 @@ public class EntityPlayer extends EntityHuman<io.gomint.entity.EntityPlayer> imp
         this.hasCompletedLogin = true;
 
         // Send network chunk publisher packet after join
-        this.world.server().scheduler().schedule(() -> {
+        this.world.syncScheduler().schedule(() -> {
             if (online()) {
                 connection().sendNetworkChunkPublisher();
             }

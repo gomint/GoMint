@@ -7,7 +7,6 @@
 
 package io.gomint.server.world;
 
-import io.gomint.GoMint;
 import io.gomint.entity.Entity;
 import io.gomint.entity.EntityPlayer;
 import io.gomint.event.player.PlayerInteractEvent;
@@ -19,6 +18,7 @@ import io.gomint.math.BlockPosition;
 import io.gomint.math.Location;
 import io.gomint.math.MathUtils;
 import io.gomint.math.Vector;
+import io.gomint.scheduler.WorldScheduler;
 import io.gomint.server.GoMintServer;
 import io.gomint.server.async.Delegate;
 import io.gomint.server.async.Delegate2;
@@ -36,7 +36,11 @@ import io.gomint.server.network.packet.PacketTileEntityData;
 import io.gomint.server.network.packet.PacketUpdateBlock;
 import io.gomint.server.network.packet.PacketWorldEvent;
 import io.gomint.server.network.packet.PacketWorldSoundEvent;
-import io.gomint.server.scheduler.CoreScheduler;
+import io.gomint.server.plugin.PluginClassloader;
+import io.gomint.server.scheduler.AsyncScheduler;
+import io.gomint.server.scheduler.SyncSchedulerAdapter;
+import io.gomint.server.scheduler.SyncTaskManager;
+import io.gomint.server.util.CallerDetectorUtil;
 import io.gomint.server.util.EnumConnectors;
 import io.gomint.server.util.Values;
 import io.gomint.server.util.tick.ClientTickable;
@@ -86,6 +90,8 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.concurrent.locks.LockSupport;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
@@ -133,6 +139,21 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
     private BlockingQueue<AsyncChunkTask> asyncChunkTasks;
     private Queue<AsyncChunkPackageTask> chunkPackageTasks;
 
+    // Scheduler
+    private SyncTaskManager syncTaskManager;
+    private SyncSchedulerAdapter syncSchedulerAdapter;
+
+    // General ticking
+    private long threadId;
+    private Thread thread;
+    private final AtomicBoolean running = new AtomicBoolean(true);
+    private long currentTickTime;
+    private long sleepBalance;
+    private AtomicReference<Consumer<EntityPlayer>> unloadPlayerConsumer = new AtomicReference<>();
+
+    // Additional informations for API usage
+    private double tps;
+
     // EntityPlayer handling
     private Object2ObjectMap<io.gomint.server.entity.EntityPlayer, ChunkAdapter> players;
 
@@ -149,8 +170,12 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
         this.asyncChunkTasks = new LinkedBlockingQueue<>();
         this.chunkPackageTasks = new ConcurrentLinkedQueue<>();
         this.entitySpawner = new EntitySpawner(this);
-        this.startAsyncWorker(server.scheduler());
+        this.syncTaskManager = new SyncTaskManager();
+        this.syncSchedulerAdapter = new SyncSchedulerAdapter(this.syncTaskManager);
+        this.startAsyncWorker(server.asyncScheduler());
         this.initGamerules();
+        this.thread = new Thread(this::tickLoop, "GoMint World Thread " + worldDir.getName());
+        this.threadId = Thread.currentThread().getId();
     }
 
     @Override
@@ -488,8 +513,112 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
 
     // ==================================== UPDATING ==================================== //
 
+    public void startThread() {
+        this.thread.start();
+    }
+
+    private void tickLoop() {
+        // Calculate the nanoseconds we need for the tick loop
+        int targetTPS = targetTPS();
+        if (targetTPS > 1000) {
+            this.logger.warn("Setting target TPS above 1k is not supported, target TPS has been set to 1k");
+            targetTPS = 1000;
+        }
+
+        long skipNanos = TimeUnit.SECONDS.toNanos(1) / targetTPS;
+        this.logger.info("Setting skipNanos to: {}", skipNanos);
+
+        // Tick loop
+        float lastTickTime = Float.MIN_NORMAL;
+
+        while (this.running.get()) {
+            // Tick all major subsystems:
+            this.currentTickTime = System.currentTimeMillis();
+            long internalDiffTime = System.nanoTime();
+            this.server.watchdog().add(this.currentTickTime, 30, TimeUnit.SECONDS);
+
+            // Tick networking at every tick
+            for (io.gomint.server.entity.EntityPlayer player : this.players.keySet()) {
+                player.connection().update(this.currentTickTime, lastTickTime);
+            }
+
+            this.syncTaskManager.update(this.currentTickTime);
+            this.update(this.currentTickTime, lastTickTime);
+
+            this.server.watchdog().done();
+
+            // Check if we got shutdown
+            if (!this.running.get()) {
+                break;
+            }
+
+            long startSleep = System.nanoTime();
+            long diff = startSleep - internalDiffTime;
+            boolean warn = false;
+            if (diff <= skipNanos) {
+                long sleepNeeded = (skipNanos - diff) - this.sleepBalance;
+                this.sleepBalance = 0;
+
+                LockSupport.parkNanos(sleepNeeded);
+
+                long endSleep = System.nanoTime();
+                long sleptFor = endSleep - startSleep;
+                diff = skipNanos;
+
+                if (sleptFor > sleepNeeded) {
+                    this.sleepBalance = sleptFor - sleepNeeded;
+                }
+            } else {
+                warn = true;
+            }
+
+            lastTickTime = (float) diff / TimeUnit.SECONDS.toNanos(1);
+            this.tps = (1 / (double) lastTickTime);
+
+            // Due to the fact that we
+            if (this.tps > this.targetTPS()) {
+                this.tps = this.targetTPS();
+            }
+
+            if (warn) {
+                this.logger.warn("Running behind: {} / {} tps", this.tps, (1 / (skipNanos / (float) TimeUnit.SECONDS.toNanos(1))));
+            }
+
+        }
+
+        // Unload all players via API
+        final Consumer<EntityPlayer> playerConsumer = this.unloadPlayerConsumer.get();
+        if (playerConsumer != null) {
+            Set<EntityPlayer> playerCopy = new HashSet<>(this.players.keySet());
+            playerCopy.forEach(playerConsumer);
+        }
+
+        // Stop this world
+        this.close();
+
+        if (this.config.saveOnUnload()) {
+            // Save this world
+            this.chunkCache.saveAll();
+        }
+
+        // Unload all chunks
+        this.chunkCache.unloadAll();
+
+        // Close the generator
+        this.chunkGenerator.close();
+
+        // Drop all FDs
+        this.closeFDs();
+
+        // Remove world from manager
+        this.server.worldManager().unloadWorld(this);
+    }
+
     @Override
     public void update(long currentTimeMS, float dT) {
+        for (io.gomint.server.entity.EntityPlayer player : this.players.keySet()) {
+            player.update(currentTimeMS, dT);
+        }
         // ---------------------------------------
         // Tick the chunk cache to get rid of Chunks
         if (!this.config.disableChunkGC()) {
@@ -867,7 +996,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
     /**
      * Starts the asynchronous worker thread used by the world to perform I/O operations for chunks.
      */
-    private void startAsyncWorker(CoreScheduler scheduler) {
+    private void startAsyncWorker(AsyncScheduler scheduler) {
         this.asyncWorkerRunning = new AtomicBoolean(true);
 
         scheduler.scheduleAsync(WorldAdapter.this::asyncWorkerLoop, 5, 5, TimeUnit.MILLISECONDS);
@@ -942,8 +1071,8 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
             return;
         }
 
-        if (!GoMint.instance().mainThread()) {
-            this.server.addToMainThread(() -> {
+        if (!mainThread()) {
+            syncScheduler().execute(() -> {
                 updateBlock0(adapter, pos);
             });
         } else {
@@ -1198,7 +1327,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
     }
 
     public <T extends Block> T scheduleNeighbourUpdates(T block) {
-        if (!GoMint.instance().mainThread()) {
+        if (!mainThread()) {
             // We don't update from async
             return block;
         }
@@ -1437,35 +1566,8 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
 
     @Override
     public void unload(Consumer<EntityPlayer> playerConsumer) {
-        if (!GoMint.instance().mainThread()) {
-            this.logger.warn("Unloading worlds from an async thread. This is not safe and can lead to CME");
-        }
-
-        // Unload all players via API
-        if (playerConsumer != null) {
-            Set<EntityPlayer> playerCopy = new HashSet<>(this.players.keySet());
-            playerCopy.forEach(playerConsumer);
-        }
-
-        // Stop this world
-        this.close();
-
-        if (this.config.saveOnUnload()) {
-            // Save this world
-            this.chunkCache.saveAll();
-        }
-
-        // Unload all chunks
-        this.chunkCache.unloadAll();
-
-        // Close the generator
-        this.chunkGenerator.close();
-
-        // Drop all FDs
-        this.closeFDs();
-
-        // Remove world from manager
-        this.server.worldManager().unloadWorld(this);
+        this.unloadPlayerConsumer.set(playerConsumer);
+        this.running.set(false);
     }
 
     protected abstract void closeFDs();
@@ -1670,6 +1772,35 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
     @Override
     public Set<Entity<?>> entitiesByTag(String tag) {
         return this.entityManager.findEntities(tag);
+    }
+
+    public SyncSchedulerAdapter syncScheduler() {
+        return this.syncSchedulerAdapter;
+    }
+
+    @Override
+    public WorldScheduler scheduler() {
+        final PluginClassloader classLoader = CallerDetectorUtil.getCallerPluginLoader();
+        return classLoader.instance.scheduler().withWorld(this);
+    }
+
+    @Override
+    public boolean mainThread() {
+        return this.threadId == Thread.currentThread().getId();
+    }
+
+    public boolean isRunning() {
+        return this.running.get();
+    }
+
+    @Override
+    public double tps() {
+        return this.tps;
+    }
+
+    @Override
+    public int targetTPS() {
+        return this.server.serverConfig().targetTPS();
     }
 
 }

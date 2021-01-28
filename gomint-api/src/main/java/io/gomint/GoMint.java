@@ -31,8 +31,9 @@ import java.util.UUID;
 /**
  * @author BlackyPaw
  * @author geNAZt
- * @version 1.0
- * @stability 3
+ * @author Janmm14
+ * @version 2.0
+ * @stability 2
  */
 public interface GoMint {
     
@@ -204,13 +205,6 @@ public interface GoMint {
      * @return permission group manager
      */
     GroupManager groupManager();
-
-    /**
-     * Check if current thread is GoMints main thread
-     *
-     * @return true if main thread, false if not
-     */
-    boolean mainThread();
 
     /**
      * Get the amount of player which will fit on this server before it start declining logins

@@ -22,8 +22,8 @@ import io.gomint.server.GoMintServer;
 import io.gomint.server.command.CommandManager;
 import io.gomint.server.event.EventManager;
 import io.gomint.server.maintenance.ReportUploader;
-import io.gomint.server.scheduler.CoreScheduler;
-import io.gomint.server.scheduler.PluginScheduler;
+import io.gomint.server.scheduler.AsyncScheduler;
+import io.gomint.server.scheduler.PluginSchedulerAdapter;
 import io.gomint.server.util.CallerDetectorUtil;
 import org.objectweb.asm.AnnotationVisitor;
 import org.objectweb.asm.ClassReader;
@@ -67,7 +67,7 @@ public class SimplePluginManager implements PluginManager, EventCaller {
     private static final Logger LOGGER = LoggerFactory.getLogger(SimplePluginManager.class);
 
     private final GoMintServer server;
-    private final CoreScheduler scheduler;
+    private final AsyncScheduler scheduler;
     private final File pluginFolder;
 
     private final List<PluginMeta> detectedPlugins = new ArrayList<>();
@@ -93,7 +93,7 @@ public class SimplePluginManager implements PluginManager, EventCaller {
      */
     public SimplePluginManager(GoMintServer server) {
         this.server = server;
-        this.scheduler = server.scheduler();
+        this.scheduler = server.asyncScheduler();
         this.pluginFolder = new File("plugins");
         this.commandManager = new CommandManager();
 
@@ -285,11 +285,12 @@ public class SimplePluginManager implements PluginManager, EventCaller {
             if (clazz == null) {
                 return;
             }
+            loader.instance = clazz;
 
             // Reflect the logger and stuff in
             this.loggerField.set(clazz, LoggerFactory.getLogger(loader.loadClass(pluginMeta.mainClass())));
             this.pluginManagerField.set(clazz, this);
-            this.schedulerField.set(clazz, new PluginScheduler(clazz, this.scheduler));
+            this.schedulerField.set(clazz, new PluginSchedulerAdapter(clazz, this.scheduler));
             this.nameField.set(clazz, pluginMeta.name());
             this.versionField.set(clazz, pluginMeta.version());
             this.serverField.set(clazz, this.server);
@@ -673,8 +674,8 @@ public class SimplePluginManager implements PluginManager, EventCaller {
 
         // Cancel all tasks and cleanup scheduler
         try {
-            PluginScheduler pluginScheduler = (PluginScheduler) this.schedulerField.get(plugin);
-            pluginScheduler.cleanup();
+            PluginSchedulerAdapter pluginSchedulerAdapter = (PluginSchedulerAdapter) this.schedulerField.get(plugin);
+            pluginSchedulerAdapter.cleanup();
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         }

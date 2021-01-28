@@ -63,7 +63,7 @@ public class DebugScoreboard {
         this.format.setMinimumFractionDigits( 2 );
 
         // Schedule updated for this scoreboard
-        plugin.scheduler().schedule( this::update, 1, 1, TimeUnit.MILLISECONDS );
+        plugin.scheduler().scheduleAsync( this::update, 50, 50, TimeUnit.MILLISECONDS );
 
         // Add player to scoreboard
         player.scoreboard( scoreboard );

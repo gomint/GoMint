@@ -12,49 +12,49 @@ import io.gomint.world.World;
 import java.util.concurrent.TimeUnit;
 
 /**
- * @author BlackyPaw
  * @author Janmm14
  * @version 2.0
  * @stability 2
  */
-public interface Scheduler extends AsyncScheduler {
+public interface WorldScheduler extends AsyncScheduler {
+
+    /**
+     * Gets the world this scheduler will submit synchronized tasks to
+     *
+     * @return the world synchronized tasks will be associated to
+     */
+    World world();
 
     /**
      * Execute the given runnable on the next tick of the given world.
      *
-     * @param world    world
      * @param runnable which should be executed
      * @return the created and scheduled Task
      */
-    Task execute(World world, Runnable runnable);
+    Task execute(Runnable runnable);
 
     /**
      * Executes a runnable with a delay. It gets scheduled to run on the given world's main thread. The time given is
      * not exactly taken, the task will run on the next tick of the given world after the delay time has elapsed.
      *
-     * @param world    world
      * @param runnable which should be executed
      * @param delay    amount of timeUnit which should be used for waiting
      * @param timeUnit which should be used to multiply the delay
      * @return the created and scheduled Task
      */
-    Task schedule(World world, Runnable runnable, long delay, TimeUnit timeUnit);
+    Task schedule(Runnable runnable, long delay, TimeUnit timeUnit);
 
     /**
      * Executes a runnable repeatedly with a delay. It gets scheduled to run on the given world's main thread. The
      * time given is not exactly taken, the task will run on the next tick of the given world after the delay time has
      * elapsed.
      *
-     * @param world    world
      * @param runnable which should be executed
      * @param delay    amount of timeUnit which should be used for waiting
      * @param period   amount of timeUnit which should be used for rescheduling the runnable
      * @param timeUnit which should be used to multiply the delay / period
      * @return the created and scheduled Task
      */
-    Task schedule(World world, Runnable runnable, long delay, long period, TimeUnit timeUnit);
-
-    
-    WorldScheduler withWorld(World world);
+    Task schedule(Runnable runnable, long delay, long period, TimeUnit timeUnit);
 
 }

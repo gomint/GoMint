@@ -41,8 +41,7 @@ import io.gomint.server.network.Protocol;
 import io.gomint.server.network.upnp.UPNPClient;
 import io.gomint.server.permission.PermissionGroupManager;
 import io.gomint.server.plugin.SimplePluginManager;
-import io.gomint.server.scheduler.CoreScheduler;
-import io.gomint.server.scheduler.SyncTaskManager;
+import io.gomint.server.scheduler.AsyncScheduler;
 import io.gomint.server.util.ClassPath;
 import io.gomint.server.util.Values;
 import io.gomint.server.util.Watchdog;
@@ -97,7 +96,8 @@ import java.util.jar.Manifest;
  * @author BlackyPaw
  * @author Clockw1seLrd
  * @author geNAZt
- * @version 1.1
+ * @author Janmm14
+ * @version 2.0
  */
 public class GoMintServer implements GoMint, InventoryHolder {
 
@@ -128,15 +128,13 @@ public class GoMintServer implements GoMint, InventoryHolder {
     private SimplePluginManager pluginManager;
 
     // Task Scheduling
-    private SyncTaskManager syncTaskManager;
     private final AtomicBoolean running = new AtomicBoolean(true);
     private final AtomicBoolean init = new AtomicBoolean(true);
     private ListeningScheduledExecutorService executorService;
     private Thread readerThread;
     private long currentTickTime;
-    private long internalDiffTime;
     private long sleepBalance;
-    private CoreScheduler scheduler;
+    private AsyncScheduler scheduler;
 
     // Additional informations for API usage
     private double tps;
@@ -250,8 +248,7 @@ public class GoMintServer implements GoMint, InventoryHolder {
         // ------------------------------------ //
         // Scheduler + WorldManager
         // ------------------------------------ //
-        this.syncTaskManager = new SyncTaskManager();
-        this.scheduler = new CoreScheduler(this.executorService(), this.syncTaskManager());
+        this.scheduler = new AsyncScheduler(this.executorService());
         this.worldManager = new WorldManager(this);
 
         // PluginManager Initialization
@@ -476,7 +473,7 @@ public class GoMintServer implements GoMint, InventoryHolder {
         while (this.running.get()) {
             // Tick all major subsystems:
             this.currentTickTime = System.currentTimeMillis();
-            this.internalDiffTime = System.nanoTime();
+            long internalDiffTime = System.nanoTime();
             this.watchdog.add(this.currentTickTime, 30, TimeUnit.SECONDS);
 
             // Drain input lines
@@ -498,8 +495,6 @@ public class GoMintServer implements GoMint, InventoryHolder {
             // Tick networking at every tick
             this.networkManager.update(this.currentTickTime, lastTickTime);
 
-            this.syncTaskManager.update(this.currentTickTime);
-            this.worldManager.update(this.currentTickTime, lastTickTime);
             this.permissionGroupManager.update(this.currentTickTime, lastTickTime);
 
             this.watchdog.done();
@@ -510,7 +505,7 @@ public class GoMintServer implements GoMint, InventoryHolder {
             }
 
             long startSleep = System.nanoTime();
-            long diff = startSleep - this.internalDiffTime;
+            long diff = startSleep - internalDiffTime;
             boolean warn = false;
             if (diff <= skipNanos) {
                 long sleepNeeded = (skipNanos - diff) - this.sleepBalance;
@@ -789,11 +784,6 @@ public class GoMintServer implements GoMint, InventoryHolder {
     }
 
     @Override
-    public boolean mainThread() {
-        return GoMintServer.mainThread == Thread.currentThread().getId();
-    }
-
-    @Override
     public int maxPlayerCount() {
         return this.serverConfig.maxPlayers();
     }
@@ -911,15 +901,11 @@ public class GoMintServer implements GoMint, InventoryHolder {
         return this.playersByUUID;
     }
 
-    public SyncTaskManager syncTaskManager() {
-        return this.syncTaskManager;
-    }
-
     public ListeningScheduledExecutorService executorService() {
         return this.executorService;
     }
 
-    public CoreScheduler scheduler() {
+    public AsyncScheduler asyncScheduler() {
         return this.scheduler;
     }
 

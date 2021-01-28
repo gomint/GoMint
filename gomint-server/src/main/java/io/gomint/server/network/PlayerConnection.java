@@ -8,7 +8,6 @@
 package io.gomint.server.network;
 
 import io.gomint.ChatColor;
-import io.gomint.GoMint;
 import io.gomint.crypto.Processor;
 import io.gomint.event.player.PlayerCleanedupEvent;
 import io.gomint.event.player.PlayerKickEvent;
@@ -255,7 +254,7 @@ public class PlayerConnection implements ConnectionWithState {
      * @param packet The packet which should be queued
      */
     public void addToSendQueue(Packet packet) {
-        if (!GoMint.instance().mainThread()) {
+        if (!this.entity.world().mainThread()) {
             LOGGER.warn("Add packet async to send queue - canceling sending", new Exception());
             return;
         }
@@ -280,6 +279,20 @@ public class PlayerConnection implements ConnectionWithState {
         LOGGER.info("View distance changed to {}", this.entity().viewDistance());
         this.checkForNewChunks(null, false);
         this.sendChunkRadiusUpdate();
+    }
+
+    /**
+     * Performs a global network tick on this player connection. All incoming packets are received and handled
+     * accordingly if the player is not yet sorted to a world.
+     *
+     * @param currentMillis Time when the tick started
+     * @param dT            The delta from the full second which has been calculated in the last tick
+     */
+
+    public void globalUpdate(long currentMillis, float dT) {
+        if (this.entity == null || this.entity.world() == null) {
+            update(currentMillis, dT);
+        }
     }
 
     /**
@@ -805,7 +818,7 @@ public class PlayerConnection implements ConnectionWithState {
     public void disconnect(String message) {
         this.networkManager.server().pluginManager().callEvent(new PlayerKickEvent(this.entity, message));
 
-        if (message != null && message.length() > 0) {
+        if (message != null && !message.isEmpty()) {
             PacketDisconnect packet = new PacketDisconnect();
             packet.setMessage(message);
             this.send(packet);
