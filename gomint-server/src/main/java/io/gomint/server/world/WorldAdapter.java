@@ -101,8 +101,6 @@ import java.util.function.Predicate;
  */
 public abstract class WorldAdapter extends ClientTickable implements World, Tickable {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(WorldAdapter.class);
-
     // Shared objects
     protected final GoMintServer server;
     protected final Logger logger;
@@ -144,7 +142,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
     private SyncSchedulerAdapter syncSchedulerAdapter;
 
     // General ticking
-    private long threadId;
+    private long threadId = -1;
     private Thread thread;
     private final AtomicBoolean running = new AtomicBoolean(true);
     private long currentTickTime;
@@ -243,7 +241,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
     @Override
     public Collection<EntityPlayer> onlinePlayers() {
         if (!mainThread()) {
-            LOGGER.warn("Getting players not from world's thread. This is not safe", new Exception());
+            this.logger.warn("Getting players not from world's thread. This is not safe", new Exception());
         }
         return Collections.unmodifiableSet(this.players.keySet());
     }
@@ -345,7 +343,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
 
                 if (player == null) {
                     if (!mainThread()) {
-                        LOGGER.warn("Getting players not from world's thread. This is not safe", new Exception());
+                        this.logger.warn("Getting players not from world's thread. This is not safe", new Exception());
                     }
                     sendToVisible(vector.toBlockPosition(), soundPacket, entity -> true);
                 } else {
@@ -372,7 +370,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
     @Override
     public WorldAdapter spawnLocation(Location location) {
         if (!mainThread()) {
-            LOGGER.warn("Changing world spawn postion not from its thread. This is not safe", new Exception());
+            this.logger.warn("Changing world spawn postion not from its thread. This is not safe", new Exception());
         }
         this.spawn = Objects.requireNonNull(location, "Failed reassigning spawn location: Param 'location' is null");
 
@@ -395,7 +393,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
     @Override
     public WorldAdapter difficulty(Difficulty difficulty) {
         if (!mainThread()) {
-            LOGGER.warn("Changing world difficulty not from its thread. This is not safe", new Exception());
+            this.logger.warn("Changing world difficulty not from its thread. This is not safe", new Exception());
         }
         this.difficulty = difficulty;
 
@@ -433,7 +431,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
     @Override
     public <T extends Block> T blockAt(int x, int y, int z, WorldLayer layer) {
         if (!mainThread()) {
-            LOGGER.warn("Retrieving world block not from world's thread. This is not safe", new Exception());
+            this.logger.warn("Retrieving world block not from world's thread. This is not safe", new Exception());
         }
         // Secure location
         if (y < 0 || y > 255) {
@@ -517,7 +515,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
     @Override
     public WorldAdapter gamerule(Gamerule<?> gamerule, Object value) {
         if (!mainThread()) {
-            LOGGER.warn("Changing world gamerule not from world's thread. This is not safe", new Exception());
+            this.logger.warn("Changing world gamerule not from world's thread. This is not safe", new Exception());
         }
         this.gamerules.put(gamerule, value);
         return this;
@@ -527,7 +525,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
     @SuppressWarnings("unchecked")
     public <T> T gamerule(Gamerule<T> gamerule) {
         if (!mainThread()) {
-            LOGGER.warn("Getting world gamerule not from world's thread. This is not safe", new Exception());
+            this.logger.warn("Getting world gamerule not from world's thread. This is not safe", new Exception());
         }
         return (T) this.gamerules.get(gamerule);
     }
@@ -799,7 +797,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
     @Override
     public ChunkAdapter getChunk(int x, int z) {
         if (!mainThread()) {
-            LOGGER.warn("Getting world chunk not from world's thread. This is not safe", new Exception());
+            this.logger.warn("Getting world chunk not from world's thread. This is not safe", new Exception());
         }
         return this.chunkCache.getChunk(x, z);
     }
@@ -811,7 +809,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
     @Override
     public Chunk getOrGenerateChunk(int x, int z) {
         if (!mainThread()) {
-            LOGGER.warn("Getting/creating world chunk not from world's thread. This is not safe", new Exception());
+            this.logger.warn("Getting/creating world chunk not from world's thread. This is not safe", new Exception());
         }
         Chunk chunk = this.getChunk(x, z);
         if (chunk == null) {
@@ -833,7 +831,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
      */
     public void getOrLoadChunk(int x, int z, boolean generate, Delegate<ChunkAdapter> callback) {
         if (!mainThread()) {
-            LOGGER.warn("Getting world chunk not from world's thread. This is not safe", new Exception());
+            this.logger.warn("Getting world chunk not from world's thread. This is not safe", new Exception());
         }
         // Early out:
         ChunkAdapter chunk = this.chunkCache.getChunk(x, z);
@@ -1065,7 +1063,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
                         AsyncChunkSaveTask save = (AsyncChunkSaveTask) task;
                         chunk = save.chunk();
 
-                        LOGGER.debug("Async saving of chunk {} / {}", chunk.x(), chunk.z());
+                        this.logger.debug("Async saving of chunk {} / {}", chunk.x(), chunk.z());
                         this.saveChunk(chunk);
 
                         break;
@@ -1265,7 +1263,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
     public List<AxisAlignedBB> collisionCubes(io.gomint.entity.Entity<?> entity, AxisAlignedBB bb,
                                               boolean includeEntities) {
         if (!mainThread()) {
-            LOGGER.warn("Getting collision cubes not from world's thread. This is not safe", new Exception());
+            this.logger.warn("Getting collision cubes not from world's thread. This is not safe", new Exception());
         }
         int minX = MathUtils.fastFloor(bb.minX());
         int minY = MathUtils.fastFloor(bb.minY());
@@ -1391,7 +1389,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
     @Override
     public EntityItem createItemDrop(Vector vector, ItemStack<?> item) {
         if (!mainThread()) {
-            LOGGER.warn("Spawning entity not from world's thread. This is not safe", new Exception());
+            this.logger.warn("Spawning entity not from world's thread. This is not safe", new Exception());
         }
         EntityItem entityItem = new EntityItem(item, this);
         spawnEntityAt(entityItem, vector);
@@ -1419,7 +1417,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
      */
     public ChunkAdapter generate(int x, int z, boolean syncPopulation) {
         if (this.chunkGenerator != null) {
-            LOGGER.debug("Generating chunk {} / {}", x, z);
+            this.logger.debug("Generating chunk {} / {}", x, z);
 
             ChunkAdapter chunk = (ChunkAdapter) this.chunkGenerator.generate(x, z);
             if (chunk != null) {
@@ -1461,7 +1459,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
             ((io.gomint.server.entity.EntityPlayer) player).connection().addToSendQueue(worldEvent);
         } else {
             if (!mainThread()) {
-                LOGGER.warn("Getting players not from world's thread. This is not safe", new Exception());
+                this.logger.warn("Getting players not from world's thread. This is not safe", new Exception());
             }
             sendToVisible(position.toBlockPosition(), worldEvent, entity -> true);
         }
@@ -1617,7 +1615,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
     @Override
     public <T extends Block> WorldAdapter iterateBlocks(Class<T> blockClass, Consumer<T> blockConsumer) {
         if (!mainThread()) {
-            LOGGER.warn("Getting blocks not from world's thread. This is not safe", new Exception());
+            this.logger.warn("Getting blocks not from world's thread. This is not safe", new Exception());
         }
         // Get the id of the block which we search
         String blockId = this.server.blocks().getID(blockClass);
@@ -1648,7 +1646,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
     @Override
     public WorldAdapter iterateChunks(Consumer<Chunk> chunkConsumer) {
         if (!mainThread()) {
-            LOGGER.warn("Getting chunks not from world's thread. This is not safe", new Exception());
+            this.logger.warn("Getting chunks not from world's thread. This is not safe", new Exception());
         }
         // Iterate over all chunks
         this.chunkCache.iterateAll(chunkConsumer::accept);
@@ -1658,7 +1656,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
     @Override
     public <T extends Entity<T>> WorldAdapter iterateEntities(Class<T> entityClass, Consumer<T> entityConsumer) {
         if (!mainThread()) {
-            LOGGER.warn("Getting entities not from world's thread. This is not safe", new Exception());
+            this.logger.warn("Getting entities not from world's thread. This is not safe", new Exception());
         }
         // Iterate over all chunks
         this.chunkCache.iterateAll(chunkAdapter -> chunkAdapter.iterateEntities(entityClass, entityConsumer));
@@ -1712,7 +1710,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
     @Override
     public WorldAdapter save() {
         if (!mainThread()) {
-            LOGGER.warn("Saving chunks not from world's thread. This is not safe", new Exception());
+            this.logger.warn("Saving chunks not from world's thread. This is not safe", new Exception());
         }
         this.chunkCache.saveAll();
         return this;
@@ -1751,7 +1749,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
     @Override
     public Block highestBlockAt(int x, int z) {
         if (!mainThread()) {
-            LOGGER.warn("Getting block not from world's thread. This is not safe", new Exception());
+            this.logger.warn("Getting block not from world's thread. This is not safe", new Exception());
         }
         ChunkAdapter chunk = this.loadChunk(x >> 4, z >> 4, true);
         int y = chunk.getHeight(x & 0xF, z & 0xF);
@@ -1761,7 +1759,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
     @Override
     public Block highestBlockAt(int x, int z, WorldLayer layer) {
         if (!mainThread()) {
-            LOGGER.warn("Getting block not from world's thread. This is not safe", new Exception());
+            this.logger.warn("Getting block not from world's thread. This is not safe", new Exception());
         }
         ChunkAdapter chunk = this.loadChunk(x >> 4, z >> 4, true);
         int y = chunk.getHeight(x & 0xF, z & 0xF);
@@ -1782,7 +1780,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
     @Override
     public WorldAdapter unloadChunk(int x, int z) {
         if (!mainThread()) {
-            LOGGER.warn("Unloading chunk not from its thread. This is not safe", new Exception());
+            this.logger.warn("Unloading chunk not from its thread. This is not safe", new Exception());
         }
         this.chunkCache.unload(x, z);
         return this;
@@ -1791,7 +1789,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
     @Override
     public WorldAdapter time(Duration time) {
         if (!mainThread()) {
-            LOGGER.warn("Changing time not from world's thread. This is not safe", new Exception());
+            this.logger.warn("Changing time not from world's thread. This is not safe", new Exception());
         }
         // Since 0 is not 0 ticks in MC we need to shift a little bit
         float tickAt0 = Values.TICKS_ON_ZERO;
@@ -1838,7 +1836,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
     @Override
     public Set<Entity<?>> entitiesByTag(String tag) {
         if (!mainThread()) {
-            LOGGER.warn("Getting entities not from world's thread. This is not safe", new Exception());
+            this.logger.warn("Getting entities not from world's thread. This is not safe", new Exception());
         }
         return this.entityManager.findEntities(tag);
     }
@@ -1855,7 +1853,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
 
     @Override
     public boolean mainThread() {
-        return this.threadId == Thread.currentThread().getId();
+        return this.threadId == -1 || this.threadId == Thread.currentThread().getId();
     }
 
     public boolean isRunning() {
