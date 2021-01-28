@@ -7,7 +7,6 @@
 
 package io.gomint.server.world;
 
-import io.gomint.GoMint;
 import io.gomint.server.GoMintServer;
 import io.gomint.server.world.generator.vanilla.VanillaGeneratorImpl;
 import io.gomint.server.world.inmemory.InMemoryWorldAdapter;
@@ -16,14 +15,14 @@ import io.gomint.server.world.leveldb.ZippedLevelDBWorldAdapter;
 import io.gomint.world.World;
 import io.gomint.world.generator.CreateOptions;
 import io.gomint.world.generator.integrated.VanillaGenerator;
-import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
-import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author BlackyPaw
@@ -34,7 +33,7 @@ public class WorldManager {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(WorldManager.class);
     private final GoMintServer server;
-    private Object2ObjectMap<String, WorldAdapter> loadedWorlds;
+    private Map<String, WorldAdapter> loadedWorlds;
 
     /**
      * Constructs a new world manager that does not yet hold any worlds.
@@ -43,19 +42,7 @@ public class WorldManager {
      */
     public WorldManager(GoMintServer server) {
         this.server = server;
-        this.loadedWorlds = new Object2ObjectOpenHashMap<>();
-    }
-
-    /**
-     * Ticks all worlds that are currently loaded.
-     *
-     * @param currentTimeMS The current time in milliseconds. Used to reduce the number of calls to System#currentTimeMillis()
-     * @param dT            The delta from the full second which has been calculated in the last tick
-     */
-    public void update(long currentTimeMS, float dT) {
-        for (WorldAdapter world : this.worlds()) {
-            world.update(currentTimeMS, dT);
-        }
+        this.loadedWorlds = new ConcurrentHashMap<>();
     }
 
     /**
@@ -64,10 +51,6 @@ public class WorldManager {
      * @return A collection of all worlds held by the world manager
      */
     public Collection<WorldAdapter> worlds() {
-        if (!GoMint.instance().mainThread()) {
-            LOGGER.warn("Getting worlds from an async thread. This is not safe and can lead to CME", new Exception());
-        }
-
         return this.loadedWorlds.values();
     }
 
@@ -79,10 +62,6 @@ public class WorldManager {
      * @return The world if found or null otherwise
      */
     public WorldAdapter world(String name) {
-        if (!GoMint.instance().mainThread()) {
-            LOGGER.warn("Getting a world from an async thread. This is not safe and can lead to CME", new Exception());
-        }
-
         return this.loadedWorlds.get(name);
     }
 
@@ -94,6 +73,7 @@ public class WorldManager {
      */
     private void addWorld(WorldAdapter world) {
         this.loadedWorlds.put(world.folder(), world);
+        world.startThread();
     }
 
     /**
@@ -106,10 +86,6 @@ public class WorldManager {
      * @throws WorldLoadException Thrown in case the world could not be loaded
      */
     public World loadWorld(String path) throws WorldLoadException {
-        if (!GoMint.instance().mainThread()) {
-            LOGGER.warn("Loading worlds from an async thread. This is not safe and can lead to CME", new Exception());
-        }
-
         File file = new File(path);
 
         // Check if we already loaded
@@ -161,10 +137,6 @@ public class WorldManager {
      * Close and save all worlds
      */
     public void close() {
-        if (!GoMint.instance().mainThread()) {
-            LOGGER.warn("Closing worlds from an async thread. This is not safe and can lead to CME", new Exception());
-        }
-
         LOGGER.info("Closing all worlds");
         for (WorldAdapter loadedWorld : new ArrayList<>(this.worlds())) {
             loadedWorld.unload(null);
@@ -189,10 +161,6 @@ public class WorldManager {
      * @return generated world
      */
     public World createWorld(String name, CreateOptions options) {
-        if (!GoMint.instance().mainThread()) {
-            LOGGER.warn("Creating worlds from an async thread. This is not safe and can lead to CME", new Exception());
-        }
-
         // Check if we need to cascade a generator
         if (options.generator() == VanillaGenerator.class) {
             options.generator(VanillaGeneratorImpl.class);
@@ -224,8 +192,7 @@ public class WorldManager {
             default:
                 return null;
         }
-
-        this.loadedWorlds.put(world.folder(), world);
+        this.addWorld(world);
         return world;
     }
 

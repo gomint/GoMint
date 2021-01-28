@@ -58,16 +58,6 @@ public class PacketLoginHandler implements PacketHandler<PacketLogin> {
     private static final EncryptionRequestForger FORGER = new EncryptionRequestForger();
     private static final Pattern NAME_PATTERN = Pattern.compile("[a-zA-z0-9_\\. ]{1,16}");
 
-    private final EncryptionKeyFactory keyFactory;
-    private final ServerConfig serverConfig;
-    private final GoMintServer server;
-
-    public PacketLoginHandler(EncryptionKeyFactory keyFactory, ServerConfig serverConfig, GoMintServer server) {
-        this.keyFactory = keyFactory;
-        this.serverConfig = serverConfig;
-        this.server = server;
-    }
-
     @Override
     public void handle(PacketLogin packet, long currentTimeMillis, PlayerConnection connection) {
         // We set the decompression limit to 500kb
@@ -96,7 +86,8 @@ public class PacketLoginHandler implements PacketHandler<PacketLogin> {
         connection.protocolID(packet.getProtocol());
 
         // Async login sequence
-        connection.server().executorService().execute(() -> {
+        GoMintServer server = connection.server();
+        server.executorService().execute(() -> {
             // More data please
             ByteBuffer byteBuffer = ByteBuffer.wrap(packet.getPayload());
             byteBuffer.order(ByteOrder.LITTLE_ENDIAN);
@@ -118,7 +109,8 @@ public class PacketLoginHandler implements PacketHandler<PacketLogin> {
                 return;
             }
 
-            MojangChainValidator chainValidator = new MojangChainValidator(this.keyFactory);
+            EncryptionKeyFactory keyFactory = server.encryptionKeyFactory();
+            MojangChainValidator chainValidator = new MojangChainValidator(keyFactory);
             JSONArray jsonChain = (JSONArray) jsonChainRaw;
             for (Object jsonTokenRaw : jsonChain) {
                 if (jsonTokenRaw instanceof String) {
@@ -147,171 +139,170 @@ public class PacketLoginHandler implements PacketHandler<PacketLogin> {
                 validSkin = false;
             }
 
-            // Sync up for disconnecting etc.
-            boolean finalValidSkin = validSkin;
-            connection.server().syncTaskManager().addTask(new SyncScheduledTask(connection.server().syncTaskManager(), () -> {
-                // Invalid skin
-                if (!finalValidSkin) {
-                    connection.disconnect("Skin is invalid or corrupted");
-                    return;
-                }
+            // Invalid skin
+            if (!validSkin) {
+                connection.disconnect("Skin is invalid or corrupted");
+                return;
+            }
 
-                // Check if valid user (xbox live)
-                if (!valid) {
-                    connection.disconnect("Only valid XBOX Logins are allowed");
-                    return;
-                }
+            // Check if valid user (xbox live)
+            if (!valid) {
+                connection.disconnect("Only valid XBOX Logins are allowed");
+                return;
+            }
 
-                // Check for names
-                String name = chainValidator.getUsername();
-                if (name.length() >= 1 && name.length() <= 16) {
-                    if (!NAME_PATTERN.matcher(name).matches()) {
-                        connection.disconnect("disconnectionScreen.invalidName");
-                        return;
-                    }
-                } else {
+            // Check for names
+            String name = chainValidator.getUsername();
+            if (name.length() >= 1 && name.length() <= 16) {
+                if (!NAME_PATTERN.matcher(name).matches()) {
                     connection.disconnect("disconnectionScreen.invalidName");
                     return;
                 }
+            } else {
+                connection.disconnect("disconnectionScreen.invalidName");
+                return;
+            }
 
-                // Check for name / uuid collision
-                for (io.gomint.entity.EntityPlayer player : this.server.onlinePlayers()) {
-                    if (player.name().equals(name) ||
-                        player.uuid().equals(chainValidator.getUuid())) {
-                        connection.disconnect("Player already logged in on this server");
-                        return;
-                    }
-                }
-
-                List<JSONObject> animationList = new ArrayList<>();
-                JSONArray animatedImageData = skinToken.getClaim("AnimatedImageData");
-                for (Object animationObj : animatedImageData) {
-                    JSONObject animation = (JSONObject) animationObj;
-                    animationList.add(animation);
-                }
-
-                List<JSONObject> personaPieceList = new ArrayList<>();
-                JSONArray personaPieces = skinToken.getClaim("PersonaPieces");
-                for (Object personaPieceObj : personaPieces) {
-                    JSONObject personaPiece = (JSONObject) personaPieceObj;
-                    personaPieceList.add(personaPiece);
-                }
-
-                List<JSONObject> pieceTintColorList = new ArrayList<>();
-                JSONArray pieceTintColors = skinToken.getClaim("PieceTintColors");
-                for (Object pieceTintColorObj : pieceTintColors) {
-                    JSONObject pieceTintColor = (JSONObject) pieceTintColorObj;
-                    pieceTintColorList.add(pieceTintColor);
-                }
-
-                PlayerSkin playerSkin = new PlayerSkin(skinToken.getClaim("SkinId"),
-                    new String(Base64.getDecoder().decode((String) skinToken.getClaim("SkinResourcePatch"))),
-                    Math.toIntExact(skinToken.getClaim("SkinImageWidth")),
-                    Math.toIntExact(skinToken.getClaim("SkinImageHeight")),
-                    Base64.getDecoder().decode((String) skinToken.getClaim("SkinData")),
-                    animationList,
-                    Math.toIntExact(skinToken.getClaim("CapeImageWidth")),
-                    Math.toIntExact(skinToken.getClaim("CapeImageHeight")),
-                    Base64.getDecoder().decode((String) skinToken.getClaim("CapeData")),
-                    new String(Base64.getDecoder().decode((String) skinToken.getClaim("SkinGeometryData"))),
-                    new String(Base64.getDecoder().decode((String) skinToken.getClaim("SkinAnimationData"))),
-                    skinToken.getClaim("PremiumSkin"),
-                    skinToken.getClaim("PersonaSkin"),
-                    skinToken.getClaim("CapeOnClassicSkin"),
-                    skinToken.getClaim("CapeId"),
-                    skinToken.getClaim("SkinColor"),
-                    skinToken.getClaim("ArmSize"),
-                    personaPieceList,
-                    pieceTintColorList
-                );
-
-                // Create needed device info
-                DeviceInfo deviceInfo = new DeviceInfo(
-                    getDeviceOSFrom(Math.toIntExact(skinToken.getClaim("DeviceOS"))),
-                    skinToken.getClaim("DeviceModel"),
-                    skinToken.getClaim("DeviceId"),
-                    getUIFrom(Math.toIntExact(skinToken.getClaim("UIProfile"))));
-                connection.deviceInfo(deviceInfo);
-
-                // Detect language
-                String languageCode = skinToken.getClaim("LanguageCode");
-                Locale locale;
-                if (languageCode != null) {
-                    locale = Locale.forLanguageTag(languageCode.replace("_", "-"));
-                } else {
-                    locale = Locale.US;
-                }
-
-                // Create entity:
-                WorldAdapter world = this.server.defaultWorld();
-
-                EntityPlayer player = new EntityPlayer(world, connection, chainValidator.getUsername(),
-                    chainValidator.getXboxId(), chainValidator.getUuid(), locale, this.server.pluginManager());
-
-                connection.entity(player);
-                connection.entity().skin(playerSkin);
-                connection.entity().nameTagVisible(true);
-                connection.entity().nameTagAlwaysVisible(true);
-                connection.entity().loginPerformance().setLoginPacket(currentTimeMillis);
-                connection.entity().loginPerformance().setEncryptionStart(currentTimeMillis);
-
-                // Fill in fast access maps
-                connection.server().uuidMappedPlayers().put(chainValidator.getUuid(), connection.entity());
-
-                // Post login event
-                PlayerLoginEvent event = new PlayerLoginEvent(connection.entity());
-
-                // Default deny for maximum amount of players
-                if (connection.server().onlinePlayers().size() >= connection.server().serverConfig().maxPlayers()) {
-                    event.cancelled(true);
-                    event.kickMessage("Server is full");
-                }
-
-                this.server.pluginManager().callEvent(event);
-                if (event.cancelled()) {
-                    connection.disconnect(event.kickMessage());
+            // Check for name / uuid collision
+            for (io.gomint.entity.EntityPlayer player : server.onlinePlayers()) {
+                if (player.name().equals(name) ||
+                    player.uuid().equals(chainValidator.getUuid())) {
+                    connection.disconnect("Player already logged in on this server");
                     return;
                 }
+            }
 
-                if (this.keyFactory.keyPair() == null) {
-                    // No encryption
-                    connection.sendPlayState(PacketPlayState.PlayState.LOGIN_SUCCESS);
-                    connection.state(PlayerConnectionState.RESOURCE_PACK);
-                    connection.initWorldAndResourceSend();
-                } else {
-                    // Generating EDCH secrets can take up huge amount of time
-                    connection.server().executorService().execute(() -> {
-                        connection.server().watchdog().add(2, TimeUnit.SECONDS);
+            List<JSONObject> animationList = new ArrayList<>();
+            JSONArray animatedImageData = skinToken.getClaim("AnimatedImageData");
+            for (Object animationObj : animatedImageData) {
+                JSONObject animation = (JSONObject) animationObj;
+                animationList.add(animation);
+            }
 
-                        // Enable encryption
-                        EncryptionHandler encryptionHandler = new EncryptionHandler(this.keyFactory);
-                        encryptionHandler.supplyClientKey(chainValidator.getClientPublicKey());
-                        if (encryptionHandler.beginClientsideEncryption()) {
-                            // Get the needed data for the encryption start
-                            connection.state(PlayerConnectionState.ENCRPYTION_INIT);
+            List<JSONObject> personaPieceList = new ArrayList<>();
+            JSONArray personaPieces = skinToken.getClaim("PersonaPieces");
+            for (Object personaPieceObj : personaPieces) {
+                JSONObject personaPiece = (JSONObject) personaPieceObj;
+                personaPieceList.add(personaPiece);
+            }
 
-                            byte[] key = encryptionHandler.key();
-                            byte[] iv = encryptionHandler.iv();
+            List<JSONObject> pieceTintColorList = new ArrayList<>();
+            JSONArray pieceTintColors = skinToken.getClaim("PieceTintColors");
+            for (Object pieceTintColorObj : pieceTintColors) {
+                JSONObject pieceTintColor = (JSONObject) pieceTintColorObj;
+                pieceTintColorList.add(pieceTintColor);
+            }
 
-                            // We need every packet to be encrypted from now on
-                            connection.inputProcessor().enableCrypto(key, iv);
+            PlayerSkin playerSkin = new PlayerSkin(skinToken.getClaim("SkinId"),
+                new String(Base64.getDecoder().decode((String) skinToken.getClaim("SkinResourcePatch"))),
+                Math.toIntExact(skinToken.getClaim("SkinImageWidth")),
+                Math.toIntExact(skinToken.getClaim("SkinImageHeight")),
+                Base64.getDecoder().decode((String) skinToken.getClaim("SkinData")),
+                animationList,
+                Math.toIntExact(skinToken.getClaim("CapeImageWidth")),
+                Math.toIntExact(skinToken.getClaim("CapeImageHeight")),
+                Base64.getDecoder().decode((String) skinToken.getClaim("CapeData")),
+                new String(Base64.getDecoder().decode((String) skinToken.getClaim("SkinGeometryData"))),
+                new String(Base64.getDecoder().decode((String) skinToken.getClaim("SkinAnimationData"))),
+                skinToken.getClaim("PremiumSkin"),
+                skinToken.getClaim("PersonaSkin"),
+                skinToken.getClaim("CapeOnClassicSkin"),
+                skinToken.getClaim("CapeId"),
+                skinToken.getClaim("SkinColor"),
+                skinToken.getClaim("ArmSize"),
+                personaPieceList,
+                pieceTintColorList
+            );
 
-                            // Forge a JWT
-                            String encryptionRequestJWT = FORGER.forge(encryptionHandler.serverPublic(), encryptionHandler.serverPrivate(), encryptionHandler.clientSalt());
+            // Create needed device info
+            DeviceInfo deviceInfo = new DeviceInfo(
+                getDeviceOSFrom(Math.toIntExact(skinToken.getClaim("DeviceOS"))),
+                skinToken.getClaim("DeviceModel"),
+                skinToken.getClaim("DeviceId"),
+                getUIFrom(Math.toIntExact(skinToken.getClaim("UIProfile"))));
+            connection.deviceInfo(deviceInfo);
 
-                            // Tell the client to enable encryption after sending that packet we also enable it
-                            PacketEncryptionRequest packetEncryptionRequest = new PacketEncryptionRequest();
-                            packetEncryptionRequest.setJwt(encryptionRequestJWT);
-                            connection.send(packetEncryptionRequest, aVoid -> {
-                                connection.outputProcessor().enableCrypto(key, iv);
-                            });
-                        }
+            // Detect language
+            String languageCode = skinToken.getClaim("LanguageCode");
+            Locale locale;
+            if (languageCode != null) {
+                locale = Locale.forLanguageTag(languageCode.replace("_", "-"));
+            } else {
+                locale = Locale.US;
+            }
 
-                        connection.server().watchdog().done();
-                    });
+            // Create entity:
+            WorldAdapter world = server.defaultWorld();
 
-                }
-            }, 1, -1, TimeUnit.MILLISECONDS));
+            EntityPlayer player = new EntityPlayer(world, connection, chainValidator.getUsername(),
+                chainValidator.getXboxId(), chainValidator.getUuid(), locale, server.pluginManager());
+
+            connection.entity(player);
+            connection.entity().skin(playerSkin);
+            connection.entity().nameTagVisible(true);
+            connection.entity().nameTagAlwaysVisible(true);
+            connection.entity().loginPerformance().setLoginPacket(currentTimeMillis);
+            connection.entity().loginPerformance().setEncryptionStart(currentTimeMillis);
+
+            // Fill in fast access maps
+            server.uuidMappedPlayers().put(chainValidator.getUuid(), connection.entity());
+
+            // Post login event
+            PlayerLoginEvent event = new PlayerLoginEvent(connection.entity());
+
+            // Default deny for maximum amount of players
+            if (server.onlinePlayers().size() >= server.serverConfig().maxPlayers()) {
+                event.cancelled(true);
+                event.kickMessage("Server is full");
+            }
+
+            server.pluginManager().callEvent(event);
+            if (event.cancelled()) {
+                connection.disconnect(event.kickMessage());
+                return;
+            }
+
+            // Update player world
+            player.world((WorldAdapter) player.spawnLocation().world());
+
+            if (keyFactory.keyPair() == null) {
+                // No encryption
+                connection.sendPlayState(PacketPlayState.PlayState.LOGIN_SUCCESS);
+                connection.state(PlayerConnectionState.RESOURCE_PACK);
+                connection.initWorldAndResourceSend();
+            } else {
+                // Generating EDCH secrets can take up huge amount of time
+                server.executorService().execute(() -> {
+                    server.watchdog().add(2, TimeUnit.SECONDS);
+
+                    // Enable encryption
+                    EncryptionHandler encryptionHandler = new EncryptionHandler(keyFactory);
+                    encryptionHandler.supplyClientKey(chainValidator.getClientPublicKey());
+                    if (encryptionHandler.beginClientsideEncryption()) {
+                        // Get the needed data for the encryption start
+                        connection.state(PlayerConnectionState.ENCRPYTION_INIT);
+
+                        byte[] key = encryptionHandler.key();
+                        byte[] iv = encryptionHandler.iv();
+
+                        // We need every packet to be encrypted from now on
+                        connection.inputProcessor().enableCrypto(key, iv);
+
+                        // Forge a JWT
+                        String encryptionRequestJWT = FORGER.forge(encryptionHandler.serverPublic(), encryptionHandler.serverPrivate(), encryptionHandler.clientSalt());
+
+                        // Tell the client to enable encryption after sending that packet we also enable it
+                        PacketEncryptionRequest packetEncryptionRequest = new PacketEncryptionRequest();
+                        packetEncryptionRequest.setJwt(encryptionRequestJWT);
+                        connection.send(packetEncryptionRequest, aVoid -> {
+                            connection.outputProcessor().enableCrypto(key, iv);
+                        });
+                    }
+
+                    server.watchdog().done();
+                });
+
+            }
         });
     }
 
@@ -334,7 +325,6 @@ public class PacketLoginHandler implements PacketHandler<PacketLogin> {
             throw new ParseException(ParseException.ERROR_UNEXPECTED_TOKEN);
         }
     }
-
 
     private DeviceInfo.DeviceOS getDeviceOSFrom(int value) {
         switch (value) {

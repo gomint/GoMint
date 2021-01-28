@@ -83,9 +83,9 @@ public class NetworkManager {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(NetworkManager.class);
     private final GoMintServer server;
-    
+
     private final PacketHandler<? extends Packet>[] packetHandlers = new PacketHandler[256];
-    
+
     // Connections which were closed and should be removed during next tick:
     private final LongSet closedConnections = new LongOpenHashSet();
     private ServerSocket socket;
@@ -135,12 +135,12 @@ public class NetworkManager {
         this.packetHandlers[Protocol.PACKET_MOB_ARMOR_EQUIPMENT & 0xff] = new PacketMobArmorEquipmentHandler();
         this.packetHandlers[Protocol.PACKET_ADVENTURE_SETTINGS & 0xff] = new PacketAdventureSettingsHandler();
         this.packetHandlers[Protocol.PACKET_RESOURCEPACK_RESPONSE & 0xff] = new PacketResourcePackResponseHandler();
-        this.packetHandlers[Protocol.PACKET_LOGIN & 0xff] = new PacketLoginHandler(this.server.encryptionKeyFactory(), this.server.serverConfig(), this.server);
+        this.packetHandlers[Protocol.PACKET_LOGIN & 0xff] = new PacketLoginHandler();
         this.packetHandlers[Protocol.PACKET_MOB_EQUIPMENT & 0xff] = new PacketMobEquipmentHandler();
         this.packetHandlers[Protocol.PACKET_INTERACT & 0xff] = new PacketInteractHandler();
         this.packetHandlers[Protocol.PACKET_BLOCK_PICK_REQUEST & 0xff] = new PacketBlockPickRequestHandler();
         this.packetHandlers[Protocol.PACKET_ENCRYPTION_RESPONSE & 0xff] = new PacketEncryptionResponseHandler();
-        this.packetHandlers[Protocol.PACKET_INVENTORY_TRANSACTION & 0xff] = new PacketInventoryTransactionHandler(this.server.pluginManager());
+        this.packetHandlers[Protocol.PACKET_INVENTORY_TRANSACTION & 0xff] = new PacketInventoryTransactionHandler();
         this.packetHandlers[Protocol.PACKET_CONTAINER_CLOSE & 0xff] = new PacketContainerCloseHandler();
         this.packetHandlers[Protocol.PACKET_HOTBAR & 0xff] = new PacketHotbarHandler();
         this.packetHandlers[Protocol.PACKET_TEXT & 0xff] = new PacketTextHandler();
@@ -179,7 +179,6 @@ public class NetworkManager {
         System.setProperty("java.net.preferIPv4Stack", "true");               // We currently don't use ipv6
         System.setProperty("io.netty.selectorAutoRebuildThreshold", "0");     // Never rebuild selectors
         ResourceLeakDetector.setLevel(ResourceLeakDetector.Level.DISABLED);   // Eats performance
-
 
         if (this.socket != null) {
             throw new IllegalStateException("Cannot re-initialize network manager");
