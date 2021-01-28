@@ -344,7 +344,7 @@ public class VanillaGeneratorImpl extends VanillaGenerator {
 
             ChunkRequest request = newClient.currentRequest();
             if (request != null) {
-                LOGGER.debug("There was a request attached: {} / {}", request.getX(), request.getZ());
+                LOGGER.debug("There was a request attached: {} / {}", request.x(), request.z());
                 this.queue.offer(request);
             }
 
@@ -413,7 +413,7 @@ public class VanillaGeneratorImpl extends VanillaGenerator {
             this.queue.offer(request);
 
             try {
-                return request.getFuture().get();
+                return request.future().get();
             } catch (InterruptedException | ExecutionException e) {
                 e.printStackTrace();
             }
@@ -423,7 +423,7 @@ public class VanillaGeneratorImpl extends VanillaGenerator {
             for (ChunkRequest chunkRequest : this.queue) {
                 if (chunkRequest.equals(request)) {
                     try {
-                        return chunkRequest.getFuture().get();
+                        return chunkRequest.future().get();
                     } catch (InterruptedException | ExecutionException e) {
                         e.printStackTrace();
                     }

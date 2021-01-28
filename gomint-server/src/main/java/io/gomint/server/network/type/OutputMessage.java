@@ -18,15 +18,15 @@ public class OutputMessage {
         this.parameters = parameters;
     }
 
-    public String getFormat() {
+    public String format() {
         return this.format;
     }
 
-    public boolean isSuccess() {
+    public boolean success() {
         return this.success;
     }
 
-    public List<String> getParameters() {
+    public List<String> parameters() {
         return this.parameters;
     }
 }

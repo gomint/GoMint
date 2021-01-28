@@ -25,15 +25,15 @@ public class ChunkRequest {
         this.future = future;
     }
 
-    public int getX() {
+    public int x() {
         return this.x;
     }
 
-    public int getZ() {
+    public int z() {
         return this.z;
     }
 
-    public Future<ChunkAdapter> getFuture() {
+    public Future<ChunkAdapter> future() {
         return this.future;
     }
 

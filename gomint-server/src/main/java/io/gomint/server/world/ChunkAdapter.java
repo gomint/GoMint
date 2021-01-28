@@ -114,15 +114,15 @@ public class ChunkAdapter implements Chunk {
         return Objects.hash(this.world, this.x, this.z);
     }
 
-    public void setPopulated(boolean populated) {
+    public void populated(boolean populated) {
         this.populated = populated;
     }
 
-    public boolean isPopulated() {
+    public boolean populated() {
         return this.populated;
     }
 
-    public ChunkSlice[] getChunkSlices() {
+    public ChunkSlice[] chunkSlices() {
         return this.chunkSlices;
     }
 
@@ -139,7 +139,7 @@ public class ChunkAdapter implements Chunk {
      */
     final void tickRandomBlocks(long currentTimeMS, float dT) {
         for (ChunkSlice chunkSlice : this.chunkSlices) {
-            if (chunkSlice != null && !chunkSlice.isAllAir()) {
+            if (chunkSlice != null && !chunkSlice.allAir()) {
                 this.tickRandomBlocksForSlice(chunkSlice, currentTimeMS, dT);
             }
         }
@@ -280,7 +280,7 @@ public class ChunkAdapter implements Chunk {
      *
      * @return The timestamp this chunk was last written out at
      */
-    public long getLastSavedTimestamp() {
+    public long lastSavedTimestamp() {
         return this.lastSavedTimestamp;
     }
 
@@ -289,7 +289,7 @@ public class ChunkAdapter implements Chunk {
      *
      * @param timestamp The timestamp to set
      */
-    void setLastSavedTimestamp(long timestamp) {
+    void lastSavedTimestamp(long timestamp) {
         this.lastSavedTimestamp = timestamp;
 
         // Unflag all chunk slices
@@ -336,7 +336,7 @@ public class ChunkAdapter implements Chunk {
      *
      * @return non modifiable collection of players on this chunk
      */
-    public Collection<EntityPlayer> getPlayers() {
+    public Collection<EntityPlayer> players() {
         return Collections.unmodifiableCollection(this.players);
     }
 
@@ -372,7 +372,7 @@ public class ChunkAdapter implements Chunk {
         int zPos = tileEntityLocation.z() & 0xF;
 
         ChunkSlice slice = ensureSlice(yPos >> 4);
-        slice.addTileEntity(xPos, yPos - slice.getSectionY() * 16, zPos, tileEntity);
+        slice.addTileEntity(xPos, yPos - slice.sectionY() * 16, zPos, tileEntity);
     }
 
     /**
@@ -498,7 +498,7 @@ public class ChunkAdapter implements Chunk {
         int topEmpty = 15;
         for (int i = 15; i >= 0; i--) {
             ChunkSlice slice = this.chunkSlices[i];
-            if (slice == null || slice.isAllAir()) {
+            if (slice == null || slice.allAir()) {
                 topEmpty = i;
             } else {
                 break;
@@ -572,8 +572,8 @@ public class ChunkAdapter implements Chunk {
         List<TileEntity> tileEntities = new ArrayList<>();
 
         for (ChunkSlice chunkSlice : this.chunkSlices) {
-            if (chunkSlice != null && chunkSlice.getTileEntities() != null) {
-                tileEntities.addAll(chunkSlice.getTileEntities().values());
+            if (chunkSlice != null && chunkSlice.tileEntities() != null) {
+                tileEntities.addAll(chunkSlice.tileEntities().values());
             }
         }
 
@@ -656,14 +656,14 @@ public class ChunkAdapter implements Chunk {
         return CoordinateUtils.toLong(this.x, this.z);
     }
 
-    public Long2ObjectMap<io.gomint.entity.Entity<?>> getEntities() {
+    public Long2ObjectMap<io.gomint.entity.Entity<?>> entities() {
         return this.entities;
     }
 
     public void tickTiles(long currentTimeMS, float dT) {
         for (ChunkSlice chunkSlice : this.chunkSlices) {
-            if (chunkSlice != null && chunkSlice.getTileEntities() != null) {
-                ObjectIterator<Short2ObjectMap.Entry<TileEntity>> iterator = chunkSlice.getTileEntities().short2ObjectEntrySet().fastIterator();
+            if (chunkSlice != null && chunkSlice.tileEntities() != null) {
+                ObjectIterator<Short2ObjectMap.Entry<TileEntity>> iterator = chunkSlice.tileEntities().short2ObjectEntrySet().fastIterator();
                 while (iterator.hasNext()) {
                     TileEntity tileEntity = iterator.next().getValue();
                     tileEntity.update(currentTimeMS, dT);
@@ -677,7 +677,7 @@ public class ChunkAdapter implements Chunk {
         return slice.getRuntimeID(x, y - 16 * (y >> 4), z, layer);
     }
 
-    public void setHeightMap(short[] height) {
+    public void heightMap(short[] height) {
         this.height = height;
     }
 
@@ -707,14 +707,14 @@ public class ChunkAdapter implements Chunk {
     }
 
     public void populate() {
-        if (!this.isPopulated()) {
+        if (!this.populated()) {
             LOGGER.debug("Starting populating chunk {} / {}", this.x(), this.z());
 
             this.world.chunkGenerator.populate(this);
             this.calculateHeightmap(240);
-            this.setPopulated(true);
+            this.populated(true);
 
-            this.setLastSavedTimestamp(this.world.server().currentTickTime());
+            this.lastSavedTimestamp(this.world.server().currentTickTime());
         }
     }
 

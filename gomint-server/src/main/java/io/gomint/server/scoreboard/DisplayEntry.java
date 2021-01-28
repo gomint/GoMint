@@ -21,7 +21,7 @@ public class DisplayEntry implements io.gomint.scoreboard.DisplayEntry {
         this.scoreId = scoreId;
     }
 
-    public long getScoreId() {
+    public long scoreId() {
         return this.scoreId;
     }
 

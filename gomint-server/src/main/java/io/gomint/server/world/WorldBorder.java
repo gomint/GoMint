@@ -58,7 +58,7 @@ public class WorldBorder {
      *
      * @return Whether or not the world boarder is active
      */
-    public boolean isActive() {
+    public boolean active() {
         return this.active;
     }
 
@@ -67,7 +67,7 @@ public class WorldBorder {
      *
      * @return The world the world border belongs to
      */
-    public World getWorld() {
+    public World world() {
         return this.world;
     }
 
@@ -76,7 +76,7 @@ public class WorldBorder {
      *
      * @return The center of the world border on the x-axis
      */
-    public double getCenterX() {
+    public double centerX() {
         return this.centerX;
     }
 
@@ -85,7 +85,7 @@ public class WorldBorder {
      *
      * @return The center of the world border on the z-axis
      */
-    public double getCenterZ() {
+    public double centerZ() {
         return this.centerZ;
     }
 
@@ -94,7 +94,7 @@ public class WorldBorder {
      *
      * @return The size of the world border
      */
-    public double getSize() {
+    public double size() {
         return this.size;
     }
 
@@ -103,7 +103,7 @@ public class WorldBorder {
      *
      * @return The safe-zone radius of the world border
      */
-    public double getSafeZone() {
+    public double safeZone() {
         return this.safeZone;
     }
 
@@ -113,7 +113,7 @@ public class WorldBorder {
      *
      * @return The number of warning blocks of the border
      */
-    public double getWarningBlocks() {
+    public double warningBlocks() {
         return this.warningBlocks;
     }
 
@@ -123,7 +123,7 @@ public class WorldBorder {
      *
      * @return The warning time of the border
      */
-    public double getWarningTime() {
+    public double warningTime() {
         return this.warningTime;
     }
 
@@ -132,7 +132,7 @@ public class WorldBorder {
      *
      * @return The target size of the world border
      */
-    public double getSizeLerpTarget() {
+    public double sizeLerpTarget() {
         return this.sizeLerpTarget;
     }
 
@@ -141,7 +141,7 @@ public class WorldBorder {
      *
      * @return The time in which the border will reach its target size
      */
-    public long getSizeLerpTime() {
+    public long sizeLerpTime() {
         return this.sizeLerpTime;
     }
 
@@ -151,7 +151,7 @@ public class WorldBorder {
      *
      * @return The damage the player should take per block outside the safe-zone per second
      */
-    public double getDamagePerBlock() {
+    public double damagePerBlock() {
         return this.damagePerBlock;
     }
 

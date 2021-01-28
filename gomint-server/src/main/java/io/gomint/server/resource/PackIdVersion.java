@@ -16,11 +16,11 @@ public class PackIdVersion {
         this.version = version;
     }
 
-    public UUID getId() {
+    public UUID id() {
         return this.id;
     }
 
-    public String getVersion() {
+    public String version() {
         return this.version;
     }
 }

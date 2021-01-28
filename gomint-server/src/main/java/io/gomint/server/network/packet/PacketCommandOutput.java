@@ -30,10 +30,10 @@ public class PacketCommandOutput extends Packet {
         buffer.writeBoolean( this.success );
         buffer.writeUnsignedVarInt( this.outputs.size() );
         for ( OutputMessage output : this.outputs ) {
-            buffer.writeBoolean( output.isSuccess() );
-            buffer.writeString( output.getFormat() );
-            buffer.writeUnsignedVarInt( output.getParameters().size() );
-            for ( String s : output.getParameters() ) {
+            buffer.writeBoolean( output.success() );
+            buffer.writeString( output.format() );
+            buffer.writeUnsignedVarInt( output.parameters().size() );
+            for ( String s : output.parameters() ) {
                 buffer.writeString( s );
             }
         }

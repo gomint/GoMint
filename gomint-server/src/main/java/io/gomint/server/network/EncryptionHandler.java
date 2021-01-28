@@ -60,23 +60,23 @@ public class EncryptionHandler {
         this.keyFactory = keyFactory;
     }
 
-    public byte[] getClientSalt() {
+    public byte[] clientSalt() {
         return this.clientSalt;
     }
 
-    public byte[] getKey() {
+    public byte[] key() {
         return this.key;
     }
 
-    public byte[] getIv() {
+    public byte[] iv() {
         return this.iv;
     }
 
-    public byte[] getServerKey() {
+    public byte[] serverKey() {
         return this.serverKey;
     }
 
-    public byte[] getServerIv() {
+    public byte[] serverIv() {
         return this.serverIv;
     }
 
@@ -106,7 +106,7 @@ public class EncryptionHandler {
         ThreadLocalRandom.current().nextBytes( this.clientSalt );
 
         // Generate shared secret from ECDH keys:
-        byte[] secret = this.generateECDHSecret( this.keyFactory.getKeyPair().getPrivate(), this.clientPublicKey );
+        byte[] secret = this.generateECDHSecret( this.keyFactory.keyPair().getPrivate(), this.clientPublicKey );
         if ( secret == null ) {
             return false;
         }
@@ -131,7 +131,7 @@ public class EncryptionHandler {
      *
      * @param key the key from the server
      */
-    public void setServerPublicKey( PublicKey key ) {
+    public void serverPublicKey(PublicKey key ) {
         this.serverPublicKey = key;
     }
 
@@ -149,7 +149,7 @@ public class EncryptionHandler {
         }
 
         // Generate shared secret from ECDH keys:
-        byte[] secret = this.generateECDHSecret( this.keyFactory.getKeyPair().getPrivate(), this.serverPublicKey );
+        byte[] secret = this.generateECDHSecret( this.keyFactory.keyPair().getPrivate(), this.serverPublicKey );
         if ( secret == null ) {
             return false;
         }
@@ -172,8 +172,8 @@ public class EncryptionHandler {
      *
      * @return BASE64 encoded public key
      */
-    public String getServerPublic() {
-        return Base64.getEncoder().encodeToString( this.keyFactory.getKeyPair().getPublic().getEncoded() );
+    public String serverPublic() {
+        return Base64.getEncoder().encodeToString( this.keyFactory.keyPair().getPublic().getEncoded() );
     }
 
     /**
@@ -181,8 +181,8 @@ public class EncryptionHandler {
      *
      * @return the private key
      */
-    public Key getServerPrivate() {
-        return this.keyFactory.getKeyPair().getPrivate();
+    public Key serverPrivate() {
+        return this.keyFactory.keyPair().getPrivate();
     }
 
     private MessageDigest getSHA256() throws NoSuchAlgorithmException {

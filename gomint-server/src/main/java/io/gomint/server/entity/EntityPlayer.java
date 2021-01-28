@@ -250,7 +250,7 @@ public class EntityPlayer extends EntityHuman<io.gomint.entity.EntityPlayer> imp
     }
 
     private void updateGamemode() {
-        int gameModeNumber = EnumConnectors.GAMEMODE_CONNECTOR.convert(this.gamemode).getMagicNumber();
+        int gameModeNumber = EnumConnectors.GAMEMODE_CONNECTOR.convert(this.gamemode).magicNumber();
 
         PacketSetGamemode packetSetGamemode = new PacketSetGamemode();
         packetSetGamemode.setGameMode(gameModeNumber == 1 ? 1 : 0);
@@ -277,7 +277,7 @@ public class EntityPlayer extends EntityHuman<io.gomint.entity.EntityPlayer> imp
      * Send adventure settings based on the gamemode
      */
     public void sendAdventureSettings() {
-        int gameModeNumber = EnumConnectors.GAMEMODE_CONNECTOR.convert(this.gamemode).getMagicNumber();
+        int gameModeNumber = EnumConnectors.GAMEMODE_CONNECTOR.convert(this.gamemode).magicNumber();
 
         // Recalc adventure settings
         this.adventureSettings.setWorldImmutable(gameModeNumber == 0x03);
@@ -911,7 +911,7 @@ public class EntityPlayer extends EntityHuman<io.gomint.entity.EntityPlayer> imp
     public EntityPlayer sendCommands() {
         // Send commands
         PacketAvailableCommands packetAvailableCommands = this.connection.server().
-            pluginManager().getCommandManager().createPacket(this);
+            pluginManager().commandManager().createPacket(this);
         this.connection.addToSendQueue(packetAvailableCommands);
         return this;
     }
@@ -1664,7 +1664,7 @@ public class EntityPlayer extends EntityHuman<io.gomint.entity.EntityPlayer> imp
 
     @Override
     public CommandOutput dispatchCommand(String command) {
-        return this.connection().server().pluginManager().getCommandManager().dispatchCommand(this, command);
+        return this.connection().server().pluginManager().commandManager().dispatchCommand(this, command);
     }
 
     @Override

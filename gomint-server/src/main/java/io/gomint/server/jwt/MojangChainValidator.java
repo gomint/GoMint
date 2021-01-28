@@ -58,7 +58,7 @@ public class MojangChainValidator {
         this.trustedKeys = new HashMap<>();
 
         if (this.encryptionKeyFactory.isKeyGiven()) {
-            this.trustedKeys.put(this.encryptionKeyFactory.getRootKeyBase64(), this.encryptionKeyFactory.getRootKey());
+            this.trustedKeys.put(this.encryptionKeyFactory.rootKeyBase64(), this.encryptionKeyFactory.rootKey());
         }
 
         List<JwtToken> unverified = new ArrayList<>( this.chain );

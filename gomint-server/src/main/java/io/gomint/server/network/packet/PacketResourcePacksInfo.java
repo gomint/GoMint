@@ -29,9 +29,9 @@ public class PacketResourcePacksInfo extends Packet {
         buffer.writeLShort( (short) ( this.behaviourPackEntries == null ? 0 : this.behaviourPackEntries.size() ) );
         if ( this.behaviourPackEntries != null ) {
             for ( ResourcePack entry : this.behaviourPackEntries ) {
-                buffer.writeString( entry.getVersion().getId().toString() );
-                buffer.writeString( entry.getVersion().getVersion() );
-                buffer.writeLLong( entry.getSize() );
+                buffer.writeString( entry.version().id().toString() );
+                buffer.writeString( entry.version().version() );
+                buffer.writeLLong( entry.size() );
                 buffer.writeString( "" );
                 buffer.writeString( "" );
                 buffer.writeString( "" );
@@ -42,9 +42,9 @@ public class PacketResourcePacksInfo extends Packet {
         buffer.writeLShort( (short) ( this.resourcePackEntries == null ? 0 : this.resourcePackEntries.size() ) );
         if ( this.resourcePackEntries != null ) {
             for ( ResourcePack entry : this.resourcePackEntries ) {
-                buffer.writeString( entry.getVersion().getId().toString() );
-                buffer.writeString( entry.getVersion().getVersion() );
-                buffer.writeLLong( entry.getSize() );
+                buffer.writeString( entry.version().id().toString() );
+                buffer.writeString( entry.version().version() );
+                buffer.writeLLong( entry.size() );
                 buffer.writeString( "" );
                 buffer.writeString( "" );
                 buffer.writeString( "" );

@@ -49,7 +49,7 @@ public enum WindowType {
         this.id = (byte) id;
     }
 
-    public byte getId() {
+    public byte id() {
         return this.id;
     }
 

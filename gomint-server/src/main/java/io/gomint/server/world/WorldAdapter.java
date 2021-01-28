@@ -539,13 +539,13 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
         while (!this.chunkPackageTasks.isEmpty()) {
             // One chunk per tick at max:
             AsyncChunkPackageTask task = this.chunkPackageTasks.poll();
-            ChunkAdapter chunk = this.getChunk(task.getX(), task.getZ());
+            ChunkAdapter chunk = this.getChunk(task.x(), task.z());
             if (chunk == null) {
-                chunk = this.loadChunk(task.getX(), task.getZ(), false);
+                chunk = this.loadChunk(task.x(), task.z(), false);
             }
 
             if (chunk != null) {
-                packageChunk(chunk, task.getCallback());
+                packageChunk(chunk, task.callback());
             }
         }
 
@@ -686,21 +686,21 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
             this.logger.debug("Found loader for chunk {} {}", x, z);
 
             // Set generating if needed
-            if (!oldTask.isGenerate() && generate) {
-                oldTask.setGenerate(true);
+            if (!oldTask.allowGenerate() && generate) {
+                oldTask.allowGenerate(true);
             }
 
             // Check for multi callback
             MultiOutputDelegate<ChunkAdapter> multiOutputDelegate;
-            if (oldTask.getCallback() instanceof MultiOutputDelegate) {
-                multiOutputDelegate = (MultiOutputDelegate<ChunkAdapter>) oldTask.getCallback();
+            if (oldTask.callback() instanceof MultiOutputDelegate) {
+                multiOutputDelegate = (MultiOutputDelegate<ChunkAdapter>) oldTask.callback();
                 multiOutputDelegate.getOutputs().offer(callback);
             } else {
-                Delegate<ChunkAdapter> delegate = oldTask.getCallback();
+                Delegate<ChunkAdapter> delegate = oldTask.callback();
                 multiOutputDelegate = new MultiOutputDelegate<>();
                 multiOutputDelegate.getOutputs().offer(delegate);
                 multiOutputDelegate.getOutputs().offer(callback);
-                oldTask.setCallback(multiOutputDelegate);
+                oldTask.callback(multiOutputDelegate);
             }
 
             return;
@@ -715,7 +715,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
         for (AsyncChunkTask task : this.asyncChunkTasks) {
             if (task instanceof AsyncChunkLoadTask) {
                 AsyncChunkLoadTask loadTask = (AsyncChunkLoadTask) task;
-                if (loadTask.getX() == x && loadTask.getZ() == z) {
+                if (loadTask.x() == x && loadTask.z() == z) {
                     return loadTask;
                 }
             }
@@ -890,18 +890,18 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
                 }
 
                 ChunkAdapter chunk;
-                switch (task.getType()) {
+                switch (task.type()) {
                     case LOAD:
                         AsyncChunkLoadTask load = (AsyncChunkLoadTask) task;
-                        this.logger().debug("Loading chunk {} / {}", load.getX(), load.getZ());
-                        chunk = this.loadChunk(load.getX(), load.getZ(), load.isGenerate());
+                        this.logger().debug("Loading chunk {} / {}", load.x(), load.z());
+                        chunk = this.loadChunk(load.x(), load.z(), load.allowGenerate());
 
-                        load.getCallback().invoke(chunk);
+                        load.callback().invoke(chunk);
                         break;
 
                     case SAVE:
                         AsyncChunkSaveTask save = (AsyncChunkSaveTask) task;
-                        chunk = save.getChunk();
+                        chunk = save.chunk();
 
                         LOGGER.debug("Async saving of chunk {} / {}", chunk.x(), chunk.z());
                         this.saveChunk(chunk);
@@ -911,7 +911,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
                     case POPULATE:
                         AsyncChunkPopulateTask populateTask = (AsyncChunkPopulateTask) task;
 
-                        ChunkAdapter chunkToPopulate = populateTask.getChunk();
+                        ChunkAdapter chunkToPopulate = populateTask.chunk();
                         chunkToPopulate.populate();
 
                         break;
@@ -938,7 +938,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
     public void updateBlock(BlockPosition pos) {
         // Players can't see unpopulated chunks
         ChunkAdapter adapter = this.getChunk(pos.x() >> 4, pos.z() >> 4);
-        if (!adapter.isPopulated()) {
+        if (!adapter.populated()) {
             return;
         }
 
@@ -1028,8 +1028,8 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
         for (int x = minX; x <= maxX; ++x) {
             for (int z = minZ; z <= maxZ; ++z) {
                 ChunkAdapter chunk = this.getChunk(x, z);
-                if (chunk != null && chunk.getEntities() != null) {
-                    for (Long2ObjectMap.Entry<io.gomint.entity.Entity<?>> entry : chunk.getEntities().long2ObjectEntrySet()) {
+                if (chunk != null && chunk.entities() != null) {
+                    for (Long2ObjectMap.Entry<io.gomint.entity.Entity<?>> entry : chunk.entities().long2ObjectEntrySet()) {
                         Entity<?> entity = entry.getValue();
                         if (!entity.equals(exception)) {
                             AxisAlignedBB entityBB = entity.boundingBox();
@@ -1374,7 +1374,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
                 eventId = LevelEvent.PARTICLE_DESTROY;
                 break;
             default:
-                eventId = LevelEvent.ADD_PARTICLE_MASK | EnumConnectors.PARTICLE_CONNECTOR.convert(particle).getId();
+                eventId = LevelEvent.ADD_PARTICLE_MASK | EnumConnectors.PARTICLE_CONNECTOR.convert(particle).id();
         }
 
         return sendLevelEvent(player, location, eventId, data);

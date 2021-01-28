@@ -105,7 +105,7 @@ public class PlayerInventory extends ContainerInventory<io.gomint.inventory.Play
         // Sent ContainerOpen first
         PacketContainerOpen containerOpen = new PacketContainerOpen();
         containerOpen.setWindowId(windowId);
-        containerOpen.setType(this.getType().getId());
+        containerOpen.setType(this.getType().id());
         containerOpen.setLocation(Vector.ZERO.toBlockPosition());
         player.connection().addToSendQueue(containerOpen);
 

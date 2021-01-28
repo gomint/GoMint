@@ -357,14 +357,14 @@ public abstract class Packet {
     }
 
     void writeSerializedSkin(PlayerSkin skin, PacketBuffer buffer) {
-        buffer.writeString(skin.getId());
-        buffer.writeString(skin.getResourcePatch());
-        writeSkinImageData(buffer, skin.getImageWidth(), skin.getImageHeight(), skin.getData());
+        buffer.writeString(skin.id());
+        buffer.writeString(skin.resourcePatch());
+        writeSkinImageData(buffer, skin.imageWidth(), skin.imageHeight(), skin.data());
 
-        if (skin.getAnimations() != null) {
-            buffer.writeLInt(skin.getAnimations().size());
+        if (skin.animations() != null) {
+            buffer.writeLInt(skin.animations().size());
 
-            for (PlayerSkin.AnimationFrame animationObj : skin.getAnimations()) {
+            for (PlayerSkin.AnimationFrame animationObj : skin.animations()) {
                 writeSkinImageData(buffer, animationObj.getWidth(), animationObj.getHeight(), animationObj.getData());
                 buffer.writeLInt(animationObj.getType());
                 buffer.writeLFloat(animationObj.getFrames());
@@ -374,21 +374,21 @@ public abstract class Packet {
             buffer.writeLInt(0);
         }
 
-        writeSkinImageData(buffer, skin.getCapeImageWidth(), skin.getCapeImageHeight(), skin.getCapeData());
-        buffer.writeString(skin.getGeometry());
-        buffer.writeString(skin.getAnimationData());
-        buffer.writeBoolean(skin.isPremium());
-        buffer.writeBoolean(skin.isPersona());
-        buffer.writeBoolean(skin.isPersonaCapeOnClassic());
-        buffer.writeString(skin.getCapeId());
-        buffer.writeString(skin.getFullId());
-        buffer.writeString(skin.getArmSize());
-        buffer.writeString(skin.getColour());
+        writeSkinImageData(buffer, skin.capeImageWidth(), skin.capeImageHeight(), skin.capeData());
+        buffer.writeString(skin.geometry());
+        buffer.writeString(skin.animationData());
+        buffer.writeBoolean(skin.premium());
+        buffer.writeBoolean(skin.persona());
+        buffer.writeBoolean(skin.personaCapeOnClassic());
+        buffer.writeString(skin.capeId());
+        buffer.writeString(skin.fullId());
+        buffer.writeString(skin.armSize());
+        buffer.writeString(skin.colour());
 
-        if (skin.getPersonaPieces() != null) {
-            buffer.writeLInt(skin.getPersonaPieces().size());
+        if (skin.personaPieces() != null) {
+            buffer.writeLInt(skin.personaPieces().size());
 
-            for (PlayerSkin.PersonaPiece personaPieceObj : skin.getPersonaPieces()) {
+            for (PlayerSkin.PersonaPiece personaPieceObj : skin.personaPieces()) {
                 buffer.writeString(personaPieceObj.getPieceId());
                 buffer.writeString(personaPieceObj.getPieceType());
                 buffer.writeString(personaPieceObj.getPackId());
@@ -399,10 +399,10 @@ public abstract class Packet {
             buffer.writeLInt(0);
         }
 
-        if (skin.getPieceTintColours() != null) {
-            buffer.writeLInt(skin.getPieceTintColours().size());
+        if (skin.pieceTintColours() != null) {
+            buffer.writeLInt(skin.pieceTintColours().size());
 
-            for (PlayerSkin.PieceTintColor pieceTintColorObj : skin.getPieceTintColours()) {
+            for (PlayerSkin.PieceTintColor pieceTintColorObj : skin.pieceTintColours()) {
                 buffer.writeString(pieceTintColorObj.getPieceType());
 
                 if (pieceTintColorObj.getColors() != null) {
@@ -476,10 +476,10 @@ public abstract class Packet {
     }
 
     void writeCommandOrigin(CommandOrigin commandOrigin, PacketBuffer buffer) {
-        buffer.writeByte(commandOrigin.getUnknown1());
-        buffer.writeUUID(commandOrigin.getUuid());
-        buffer.writeByte(commandOrigin.getUnknown2());
-        buffer.writeByte(commandOrigin.getType());
+        buffer.writeByte(commandOrigin.unknown1());
+        buffer.writeUUID(commandOrigin.uuid());
+        buffer.writeByte(commandOrigin.unknown2());
+        buffer.writeByte(commandOrigin.type());
     }
 
     Facing readBlockFace(PacketBuffer buffer) {

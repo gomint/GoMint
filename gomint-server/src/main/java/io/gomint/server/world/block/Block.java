@@ -271,7 +271,7 @@ public abstract class Block implements io.gomint.world.block.Block {
 
         // Update the chunk slice
         this.chunkSlice.setRuntimeIdInternal(this.index, this.layer, this.identifier.runtimeId());
-        this.world.updateBlock0(this.chunkSlice.getChunk(), this.position);
+        this.world.updateBlock0(this.chunkSlice.chunk(), this.position);
     }
 
     @Override

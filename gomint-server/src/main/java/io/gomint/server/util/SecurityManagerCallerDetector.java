@@ -40,7 +40,7 @@ public class SecurityManagerCallerDetector implements CallerDetector {
             if (cls instanceof PluginClassloader) {
                 PluginClassloader cl = (PluginClassloader) cls;
                 try {
-                    return (Class<? extends Plugin>) cl.loadClass(cl.getMeta().mainClass());
+                    return (Class<? extends Plugin>) cl.loadClass(cl.meta().mainClass());
                 } catch (ClassNotFoundException e) {
                     LOGGER.error("Plugin class could not be found in its own classloader", e);
                 }
@@ -54,7 +54,7 @@ public class SecurityManagerCallerDetector implements CallerDetector {
                     PluginClassloader cl = (PluginClassloader) aClass.getClassLoader();
 
                     try {
-                        return (Class<? extends Plugin>) cl.loadClass(cl.getMeta().mainClass());
+                        return (Class<? extends Plugin>) cl.loadClass(cl.meta().mainClass());
                     } catch (ClassNotFoundException e) {
                         LOGGER.error("Plugin class could not be found in its own classloader", e);
                     }

@@ -16,7 +16,7 @@ public enum PlayerPermission {
         this.id = id;
     }
 
-    public int getId() {
+    public int id() {
         return this.id;
     }
 }

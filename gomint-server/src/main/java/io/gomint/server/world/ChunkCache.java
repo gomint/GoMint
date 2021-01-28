@@ -74,9 +74,9 @@ public class ChunkCache {
             Long2ObjectMap.Entry<ChunkAdapter> entry = iterator.next();
             ChunkAdapter chunk = entry.getValue();
             if ( checkChunkSave &&
-                currentTimeMS - chunk.getLastSavedTimestamp() >= this.autoSaveInterval &&
+                currentTimeMS - chunk.lastSavedTimestamp() >= this.autoSaveInterval &&
                 chunk.isNeedsPersistence() ) {
-                chunk.setLastSavedTimestamp( currentTimeMS );
+                chunk.lastSavedTimestamp( currentTimeMS );
                 this.world.saveChunkAsynchronously( chunk );
             }
 
@@ -128,7 +128,7 @@ public class ChunkCache {
 
                 if (this.world.config().saveOnUnload() &&
                     adapter.isNeedsPersistence()) {
-                    adapter.setLastSavedTimestamp( currentTimeMS );
+                    adapter.lastSavedTimestamp( currentTimeMS );
                     this.world.saveChunk(adapter);
 
                     LOGGER.debug("Persisting chunk {} / {}", adapter.x(), adapter.z());
@@ -282,7 +282,7 @@ public class ChunkCache {
             ChunkAdapter chunkAdapter = this.cachedChunks.get( l );
             if (chunkAdapter.isNeedsPersistence()) {
                 this.world.saveChunk(chunkAdapter);
-                chunkAdapter.setLastSavedTimestamp(this.world.server().currentTickTime());
+                chunkAdapter.lastSavedTimestamp(this.world.server().currentTickTime());
             }
         }
     }
@@ -302,7 +302,7 @@ public class ChunkCache {
         if (adapter != null) {
             if (this.world.config().saveOnUnload() &&
                 adapter.isNeedsPersistence()) {
-                adapter.setLastSavedTimestamp( this.world.server.currentTickTime() );
+                adapter.lastSavedTimestamp( this.world.server.currentTickTime() );
                 this.world.saveChunk(adapter);
                 adapter.release();
             } else {

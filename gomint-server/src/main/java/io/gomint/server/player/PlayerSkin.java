@@ -351,91 +351,91 @@ public class PlayerSkin implements io.gomint.player.PlayerSkin {
         // return new PlayerSkin( "Gomint_Skin", new byte[8192], new byte[0], "geometry.humanoid.custom", GEOMETRY_CACHE.get( "geometry.humanoid.custom" ) );
     }
 
-    public String getId() {
+    public String id() {
         return this.id;
     }
 
-    public String getResourcePatch() {
+    public String resourcePatch() {
         return this.resourcePatch;
     }
 
-    public int getImageWidth() {
+    public int imageWidth() {
         return this.imageWidth;
     }
 
-    public int getImageHeight() {
+    public int imageHeight() {
         return this.imageHeight;
     }
 
-    public byte[] getData() {
+    public byte[] data() {
         return this.data;
     }
 
-    public List<AnimationFrame> getAnimations() {
+    public List<AnimationFrame> animations() {
         return this.animations;
     }
 
-    public int getCapeImageWidth() {
+    public int capeImageWidth() {
         return this.capeImageWidth;
     }
 
-    public int getCapeImageHeight() {
+    public int capeImageHeight() {
         return this.capeImageHeight;
     }
 
-    public byte[] getCapeData() {
+    public byte[] capeData() {
         return this.capeData;
     }
 
-    public String getGeometry() {
+    public String geometry() {
         return this.geometry;
     }
 
-    public String getAnimationData() {
+    public String animationData() {
         return this.animationData;
     }
 
-    public boolean isPremium() {
+    public boolean premium() {
         return this.premium;
     }
 
-    public boolean isPersona() {
+    public boolean persona() {
         return this.persona;
     }
 
-    public boolean isPersonaCapeOnClassic() {
+    public boolean personaCapeOnClassic() {
         return this.personaCapeOnClassic;
     }
 
-    public String getCapeId() {
+    public String capeId() {
         return this.capeId;
     }
 
-    public String getFullId() {
+    public String fullId() {
         return this.fullId;
     }
 
-    public String getColour() {
+    public String colour() {
         return this.colour;
     }
 
-    public String getArmSize() {
+    public String armSize() {
         return this.armSize;
     }
 
-    public List<PersonaPiece> getPersonaPieces() {
+    public List<PersonaPiece> personaPieces() {
         return this.personaPieces;
     }
 
-    public List<PieceTintColor> getPieceTintColours() {
+    public List<PieceTintColor> pieceTintColours() {
         return this.pieceTintColours;
     }
 
-    public boolean isTrusted() {
+    public boolean trusted() {
         return this.trusted;
     }
 
-    public SoftReference<BufferedImage> getImage() {
+    public SoftReference<BufferedImage> image() {
         return this.image;
     }
 }

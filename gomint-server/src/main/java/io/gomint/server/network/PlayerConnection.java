@@ -327,7 +327,7 @@ public class PlayerConnection implements ConnectionWithState {
                         }
 
                         // Check if chunk has been populated
-                        if (!chunk.isPopulated()) {
+                        if (!chunk.populated()) {
                             LOGGER.debug("Chunk not populated");
                             break;
                         }
@@ -886,7 +886,7 @@ public class PlayerConnection implements ConnectionWithState {
         PacketStartGame packet = new PacketStartGame();
         packet.setEntityId(entityId);
         packet.setRuntimeEntityId(entityId);
-        packet.setGamemode(EnumConnectors.GAMEMODE_CONNECTOR.convert(this.entity.gamemode()).getMagicNumber());
+        packet.setGamemode(EnumConnectors.GAMEMODE_CONNECTOR.convert(this.entity.gamemode()).magicNumber());
 
         Location spawn = this.entity.spawnLocation() != null ? this.entity.spawnLocation() : world.spawnLocation();
 

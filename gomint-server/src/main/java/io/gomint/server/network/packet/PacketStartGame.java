@@ -50,7 +50,7 @@ public class PacketStartGame extends Packet {
     private boolean hasBonusChestEnabled;
     private boolean hasStartWithMapEnabled;
     private boolean hasTrustPlayersEnabled;
-    private int defaultPlayerPermission = PlayerPermission.MEMBER.getId();
+    private int defaultPlayerPermission = PlayerPermission.MEMBER.id();
     private int xboxLiveBroadcastMode = 0;
     private boolean hasPlatformBroadcast = false;
     private int platformBroadcastMode = 0;

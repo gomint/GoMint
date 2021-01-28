@@ -75,15 +75,15 @@ public class ChunkSlice {
         this.shiftedMinZ = this.chunk.z << 4;
     }
 
-    public Short2ObjectOpenHashMap<TileEntity> getTileEntities() {
+    public Short2ObjectOpenHashMap<TileEntity> tileEntities() {
         return this.tileEntities;
     }
 
-    public int getSectionY() {
+    public int sectionY() {
         return this.sectionY;
     }
 
-    public ChunkAdapter getChunk() {
+    public ChunkAdapter chunk() {
         return this.chunk;
     }
 
@@ -219,11 +219,11 @@ public class ChunkSlice {
         }
     }
 
-    boolean isAllAir() {
+    boolean allAir() {
         return this.blocks[0] == null;
     }
 
-    public int getAmountOfLayers() {
+    public int amountOfLayers() {
         return this.blocks[1] != null ? 2 : 1;
     }
 
@@ -265,7 +265,7 @@ public class ChunkSlice {
         buffer.writeByte((byte) 8);
 
         // Check how many layers we have
-        int amountOfLayers = this.getAmountOfLayers();
+        int amountOfLayers = this.amountOfLayers();
         buffer.writeByte((byte) amountOfLayers);
 
         for (int layer = 0; layer < amountOfLayers; layer++) {
@@ -362,8 +362,8 @@ public class ChunkSlice {
         }
 
         // Check for tile entity changes
-        if (this.getTileEntities() != null) {
-            ObjectIterator<Short2ObjectMap.Entry<TileEntity>> iterator = this.getTileEntities().short2ObjectEntrySet().fastIterator();
+        if (this.tileEntities() != null) {
+            ObjectIterator<Short2ObjectMap.Entry<TileEntity>> iterator = this.tileEntities().short2ObjectEntrySet().fastIterator();
             while (iterator.hasNext()) {
                 TileEntity tileEntity = iterator.next().getValue();
                 if (tileEntity.isNeedsPersistence()) {
@@ -378,8 +378,8 @@ public class ChunkSlice {
     public void resetPersistenceFlag() {
         this.needsPersistence = false;
 
-        if (this.getTileEntities() != null) {
-            ObjectIterator<Short2ObjectMap.Entry<TileEntity>> iterator = this.getTileEntities().short2ObjectEntrySet().fastIterator();
+        if (this.tileEntities() != null) {
+            ObjectIterator<Short2ObjectMap.Entry<TileEntity>> iterator = this.tileEntities().short2ObjectEntrySet().fastIterator();
             while (iterator.hasNext()) {
                 TileEntity tileEntity = iterator.next().getValue();
                 tileEntity.resetPersistenceFlag();

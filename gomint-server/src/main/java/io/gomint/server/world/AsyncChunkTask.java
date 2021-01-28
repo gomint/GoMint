@@ -29,7 +29,7 @@ public abstract class AsyncChunkTask {
      *
      * @return type of task
      */
-    public Type getType() {
+    public Type type() {
         return this.type;
     }
 

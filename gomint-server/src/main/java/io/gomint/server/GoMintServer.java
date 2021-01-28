@@ -273,7 +273,7 @@ public class GoMintServer implements GoMint, InventoryHolder {
                 .appName("GoMint")
                 .terminal(terminal)
                 .completer((lineReader, parsedLine, list) -> {
-                    List<String> suggestions = this.pluginManager.getCommandManager().completeSystem(parsedLine.line());
+                    List<String> suggestions = this.pluginManager.commandManager().completeSystem(parsedLine.line());
                     for (String suggestion : suggestions) {
                         LOGGER.info(suggestion);
                     }
@@ -484,7 +484,7 @@ public class GoMintServer implements GoMint, InventoryHolder {
             while (!inputLines.isEmpty()) {
                 String line = inputLines.poll();
                 if (line != null) {
-                    this.pluginManager.getCommandManager().executeSystem(line);
+                    this.pluginManager.commandManager().executeSystem(line);
                 }
             }
 
@@ -757,7 +757,7 @@ public class GoMintServer implements GoMint, InventoryHolder {
 
     @Override
     public GoMint dispatchCommand(String line) {
-        this.pluginManager.getCommandManager().executeSystem(line);
+        this.pluginManager.commandManager().executeSystem(line);
         return this;
     }
 

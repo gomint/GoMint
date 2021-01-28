@@ -27,8 +27,8 @@ public class PacketResourcePackStack extends Packet {
         buffer.writeUnsignedVarInt( ( this.behaviourPackEntries == null ? 0 : this.behaviourPackEntries.size() ) );
         if ( this.behaviourPackEntries != null ) {
             for ( ResourcePack entry : this.behaviourPackEntries ) {
-                buffer.writeString( entry.getVersion().getId().toString() );
-                buffer.writeString( entry.getVersion().getVersion() );
+                buffer.writeString( entry.version().id().toString() );
+                buffer.writeString( entry.version().version() );
                 buffer.writeString( "" );
             }
         }
@@ -36,8 +36,8 @@ public class PacketResourcePackStack extends Packet {
         buffer.writeUnsignedVarInt( (short) ( this.resourcePackEntries == null ? 0 : this.resourcePackEntries.size() ) );
         if ( this.resourcePackEntries != null ) {
             for ( ResourcePack entry : this.resourcePackEntries ) {
-                buffer.writeString( entry.getVersion().getId().toString() );
-                buffer.writeString( entry.getVersion().getVersion() );
+                buffer.writeString( entry.version().id().toString() );
+                buffer.writeString( entry.version().version() );
                 buffer.writeString( "" );
             }
         }

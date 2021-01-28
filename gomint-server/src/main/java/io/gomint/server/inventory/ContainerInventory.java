@@ -72,7 +72,7 @@ public abstract class ContainerInventory<I> extends Inventory<I> implements io.g
         // Sent ContainerOpen first
         PacketContainerOpen containerOpen = new PacketContainerOpen();
         containerOpen.setWindowId(windowId);
-        containerOpen.setType(this.getType().getId());
+        containerOpen.setType(this.getType().id());
         containerOpen.setLocation(this.containerPosition());
         player.connection().addToSendQueue(containerOpen);
 

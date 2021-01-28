@@ -144,7 +144,7 @@ public class SimplePluginManager implements PluginManager, EventCaller {
         }
     }
 
-    public CommandManager getCommandManager() {
+    public CommandManager commandManager() {
         return this.commandManager;
     }
 

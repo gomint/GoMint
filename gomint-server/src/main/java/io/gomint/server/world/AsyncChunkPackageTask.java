@@ -35,15 +35,15 @@ class AsyncChunkPackageTask extends AsyncChunkTask {
         this.callback = callback;
     }
 
-    public int getX() {
+    public int x() {
         return this.x;
     }
 
-    public int getZ() {
+    public int z() {
         return this.z;
     }
 
-    public Delegate2<Long, ChunkAdapter> getCallback() {
+    public Delegate2<Long, ChunkAdapter> callback() {
         return this.callback;
     }
 }
