@@ -7,6 +7,7 @@
 
 package io.gomint.server.world;
 
+import io.gomint.entity.EntityPlayer;
 import io.gomint.server.GoMintServer;
 import io.gomint.server.world.generator.vanilla.VanillaGeneratorImpl;
 import io.gomint.server.world.inmemory.InMemoryWorldAdapter;
@@ -21,8 +22,10 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Consumer;
 
 /**
  * @author BlackyPaw
@@ -138,8 +141,34 @@ public class WorldManager {
      */
     public void close() {
         LOGGER.info("Closing all worlds");
-        for (WorldAdapter loadedWorld : new ArrayList<>(this.worlds())) {
-            loadedWorld.unload(null);
+        ArrayList<WorldAdapter> worlds = new ArrayList<>(this.worlds());
+        class UnloadListener implements Consumer<io.gomint.entity.EntityPlayer> {
+
+            private volatile boolean done = false;
+
+            @Override
+            public synchronized void accept(EntityPlayer entityPlayer) {
+                this.done = true;
+                this.notifyAll();
+            }
+
+        }
+        List<UnloadListener> unloadListeners = new ArrayList<>(worlds.size());
+
+        for (WorldAdapter loadedWorld : worlds) {
+            UnloadListener listener = new UnloadListener();
+            unloadListeners.add(listener);
+            loadedWorld.unload(listener);
+        }
+        for (UnloadListener unloadListener : unloadListeners) {
+            synchronized (unloadListener) {
+                if (!unloadListener.done) {
+                    try {
+                        unloadListener.wait();
+                    } catch (InterruptedException ignored) {
+                    }
+                }
+            }
         }
         LOGGER.info("All worlds closed");
     }
