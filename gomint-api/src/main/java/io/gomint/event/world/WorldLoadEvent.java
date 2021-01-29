@@ -9,7 +9,10 @@ package io.gomint.event.world;
 import io.gomint.world.World;
 
 /**
- * Event is called when a world is loaded. Event is called in world's thread.
+ * Event is called when a world is loaded.
+ * 
+ * Event is called in world's thread.
+ * 
  * @author Janmm14
  * @version 2.0
  * @stability 2
@@ -17,7 +20,7 @@ import io.gomint.world.World;
 public class WorldLoadEvent extends SimpleWorldEvent {
 
     /**
-     * Create a event for announcing world loading
+     * Create an event for announcing world loading
      *
      * @param world for which this event is
      */

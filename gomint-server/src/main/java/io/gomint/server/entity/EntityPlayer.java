@@ -26,6 +26,8 @@ import io.gomint.event.player.PlayerFoodLevelChangeEvent;
 import io.gomint.event.player.PlayerJoinEvent;
 import io.gomint.event.player.PlayerMoveEvent;
 import io.gomint.event.player.PlayerRespawnEvent;
+import io.gomint.event.player.PlayerWorldJoinEvent;
+import io.gomint.event.player.PlayerWorldLeaveEvent;
 import io.gomint.gui.Form;
 import io.gomint.gui.FormListener;
 import io.gomint.math.AxisAlignedBB;
@@ -455,6 +457,9 @@ public class EntityPlayer extends EntityHuman<io.gomint.entity.EntityPlayer> imp
 
         // Check if we need to change worlds
         if (!to.world().equals(from.world())) {
+            if (this.world != null) {
+                this.world.server().pluginManager().callEvent(new PlayerWorldLeaveEvent(this));
+            }
             // Despawn entities first
             this.entityVisibilityManager.clear();
 
@@ -466,6 +471,7 @@ public class EntityPlayer extends EntityHuman<io.gomint.entity.EntityPlayer> imp
             this.setAndRecalcPosition(to);
 
             this.world.syncScheduler().execute(() -> {
+                this.world.server().pluginManager().callEvent(new PlayerWorldJoinEvent(this));
                 this.world.spawnEntityAt(this, to.x(), to.y(), to.z(), to.yaw(), to.pitch());
 
                 // Be sure to get rid of all loaded chunks
@@ -1635,6 +1641,7 @@ public class EntityPlayer extends EntityHuman<io.gomint.entity.EntityPlayer> imp
         // Send network chunk publisher packet after join
         this.world.syncScheduler().schedule(() -> {
             if (online()) {
+                this.world.server().pluginManager().callEvent(new PlayerWorldJoinEvent(this));
                 connection().sendNetworkChunkPublisher();
             }
         }, 250, TimeUnit.MILLISECONDS);
