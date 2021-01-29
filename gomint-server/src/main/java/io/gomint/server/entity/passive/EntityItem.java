@@ -61,7 +61,7 @@ public class EntityItem extends Entity<EntityItemDrop> implements EntityItemDrop
         this.size( 0.25f, 0.25f );
         pickupDelay( 500, TimeUnit.MILLISECONDS );
 
-        this.GRAVITY = 0.04f;
+        this.gravity = 0.04f;
         this.offsetY = 0.125f;
     }
 

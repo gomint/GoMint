@@ -72,8 +72,8 @@ public abstract class Entity<E extends io.gomint.entity.Entity<E>> implements io
      */
     protected final MetadataContainer metadataContainer;
     // Useful stuff for movement. Those are values for per client tick
-    protected float GRAVITY = 0.08f;
-    protected float DRAG = 0.02f;
+    protected float gravity = 0.08f;
+    protected float drag = 0.02f;
 
     /**
      * Bounding Box
@@ -322,10 +322,10 @@ public abstract class Entity<E extends io.gomint.entity.Entity<E>> implements io
 
                 if ( this.affectedByGravity() ) {
                     // Calc motion
-                    this.transform.manipulateMotion( 0, -this.GRAVITY, 0 );
+                    this.transform.manipulateMotion( 0, -this.gravity, 0 );
 
                     // Calculate friction
-                    float friction = 1 - this.DRAG;
+                    float friction = 1 - this.drag;
                     if ( this.onGround && ( Math.abs( this.getMotionX() ) > 0.00001 || Math.abs( this.getMotionZ() ) > 0.00001 ) ) {
                         friction = this.world.blockAt( (int) this.positionX(),
                             (int) ( this.positionY() - 1 ),
@@ -334,7 +334,7 @@ public abstract class Entity<E extends io.gomint.entity.Entity<E>> implements io
 
                     // Calculate new motion
                     float newMovX = this.transform.motionX() * friction;
-                    float newMovY = this.transform.motionY() * ( 1 - this.DRAG);
+                    float newMovY = this.transform.motionY() * ( 1 - this.drag);
                     float newMovZ = this.transform.motionZ() * friction;
 
                     this.transform.motion( newMovX, newMovY, newMovZ );
