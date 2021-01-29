@@ -11,6 +11,7 @@ import com.google.common.collect.ImmutableMap;
 import io.gomint.command.Command;
 import io.gomint.event.Event;
 import io.gomint.event.EventListener;
+import io.gomint.event.interfaces.WorldEvent;
 import io.gomint.event.plugin.PluginInstallEvent;
 import io.gomint.event.plugin.PluginUninstallEvent;
 import io.gomint.plugin.Plugin;
@@ -53,6 +54,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.jar.JarEntry;
@@ -741,12 +743,14 @@ public class SimplePluginManager implements PluginManager, EventCaller {
     }
 
     @Override
-    public PluginManager registerListener(Plugin plugin, EventListener listener, Collection<String> worlds) {
+    public PluginManager registerListener(Plugin plugin, EventListener listener, ConcurrentHashMap.KeySetView<String, Boolean> worlds) {
         if (!plugin.getClass().getClassLoader().equals(listener.getClass().getClassLoader())) {
             throw new SecurityException("Wanted to register listener for another plugin");
         }
 
-        this.eventManager.registerListener(listener, worlds);
+        this.eventManager.registerListener(listener, event -> {
+            return !(event instanceof WorldEvent) || worlds == null || worlds.contains(((WorldEvent) event).world().folder());
+        });
         return this;
     }
 

@@ -10,10 +10,8 @@ package io.gomint.server.event;
 import io.gomint.event.Event;
 import io.gomint.event.EventHandler;
 import io.gomint.event.EventListener;
-import io.gomint.event.interfaces.WorldEvent;
 import io.gomint.server.maintenance.ReportUploader;
 import io.gomint.server.plugin.PluginClassloader;
-import it.unimi.dsi.fastutil.ints.IntSet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,6 +19,8 @@ import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Method;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Predicate;
+import javax.annotation.Nullable;
 
 /**
  * @author BlackyPaw
@@ -34,7 +34,8 @@ class EventHandlerMethod implements Comparable<EventHandlerMethod> {
 
     private final EventHandler annotation;
     private EventProxy proxy;
-    private final IntSet worlds;
+    @Nullable
+    private final Predicate<Event> predicate;
 
     // For toString reference
     private final EventListener instance;
@@ -45,12 +46,12 @@ class EventHandlerMethod implements Comparable<EventHandlerMethod> {
      * @param instance   The instance of the EventHandler which should be used to invoke the EventHandler Method
      * @param method     The method which should be invoked when the event arrives
      * @param annotation The annotation which holds additional information about this EventHandler Method
-     * @param worlds     The set of string hashCodes of whitelisted worlds or {@code null} for all worlds
+     * @param predicate  The predicate to check if the method should recieve certain events
      */
-    EventHandlerMethod(final EventListener instance, final Method method, final EventHandler annotation, IntSet worlds) {
+    EventHandlerMethod(final EventListener instance, final Method method, final EventHandler annotation, @Nullable Predicate<Event> predicate) {
         this.annotation = annotation;
         this.instance = instance;
-        this.worlds = worlds;
+        this.predicate = predicate;
 
         // Build up proxy
         try {
@@ -99,7 +100,7 @@ class EventHandlerMethod implements Comparable<EventHandlerMethod> {
      * @param event Event which should be handled in this handler
      */
     public void invoke(Event event) {
-        if (event instanceof WorldEvent && this.worlds != null && !this.worlds.contains(((WorldEvent) event).world().folder().hashCode())) {
+        if (this.predicate != null && !this.predicate.test(event)) {
             return;
         }
         try {

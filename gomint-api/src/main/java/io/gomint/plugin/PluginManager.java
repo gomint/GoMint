@@ -12,8 +12,8 @@ import io.gomint.event.Event;
 import io.gomint.event.EventListener;
 import io.gomint.world.World;
 
-import java.util.Collection;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author geNAZt
@@ -79,7 +79,7 @@ public interface PluginManager {
      * @param plugin   The plugin which wants to register this listener
      * @param listener The listener which we want to register
      * @throws SecurityException when somebody else except the plugin registers the listener
-     * @see #registerListener(Plugin, EventListener, Collection)
+     * @see #registerListener(Plugin, EventListener, ConcurrentHashMap.KeySetView)
      * @since 2.0
      */
     PluginManager registerListener(Plugin plugin, EventListener listener);
@@ -99,7 +99,7 @@ public interface PluginManager {
      * @see #registerListener(Plugin, EventListener)
      * @since 2.0
      */
-    PluginManager registerListener(Plugin plugin, EventListener listener, Collection<String> worlds);
+    PluginManager registerListener(Plugin plugin, EventListener listener, ConcurrentHashMap.KeySetView<String, Boolean> worlds);
 
     /**
      * Unregister a listener. This listener does not get any more events after this

@@ -12,12 +12,10 @@ import io.gomint.event.EventHandler;
 import io.gomint.event.EventListener;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
-import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
-import it.unimi.dsi.fastutil.ints.IntSet;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.util.Collection;
+import java.util.function.Predicate;
 
 /**
  * @author BlackyPaw
@@ -54,11 +52,11 @@ public class EventManager {
     /**
      * Registers all event handler methods found on the specified listener.
      *
-     * @param listener The listener to register
-     * @param <T>      The generic type of the listener
-     * @param worlds   World folder names whitelist, defensive copy done
+     * @param listener  The listener to register
+     * @param <T>       The generic type of the listener
+     * @param predicate The predicate to check if methods of the listener should recieve certain events
      */
-    public <T extends EventListener> void registerListener(T listener, Collection<String> worlds) {
+    public <T extends EventListener> void registerListener(T listener, Predicate<Event> predicate) {
         Class<? extends EventListener> listenerClass = listener.getClass();
         for ( Method listenerMethod: listenerClass.getDeclaredMethods() ) {
             if ( !listenerMethod.isAnnotationPresent( EventHandler.class ) ||
@@ -69,13 +67,7 @@ public class EventManager {
             }
 
             listenerMethod.setAccessible( true );
-            final IntSet worldsSet;
-            if (worlds == null || worlds.isEmpty()) {
-                worldsSet = null;
-            } else {
-                worldsSet = new IntOpenHashSet(worlds.stream().mapToInt(Object::hashCode).iterator());
-            }
-            this.registerListener0(listener, listenerMethod, worldsSet);
+            this.registerListener0(listener, listenerMethod, predicate);
         }
     }
 
@@ -99,7 +91,7 @@ public class EventManager {
         }
     }
 
-    private <T extends EventListener> void registerListener0(T listener, Method listenerMethod, IntSet worlds) {
+    private <T extends EventListener> void registerListener0(T listener, Method listenerMethod, Predicate<Event> predicate) {
         int eventHash = listenerMethod.getParameterTypes()[0].getName().hashCode();
         EventHandler annotation = listenerMethod.getAnnotation( EventHandler.class );
         EventHandlerList eventHandlerList = this.eventHandlers.get( eventHash );
@@ -109,7 +101,7 @@ public class EventManager {
         }
 
         eventHandlerList.addHandler(listener.getClass().getName() + "#" + listenerMethod.getName() + "_" + eventHash + "_" + listener.hashCode(),
-            new EventHandlerMethod(listener, listenerMethod, annotation, worlds));
+            new EventHandlerMethod(listener, listenerMethod, annotation, predicate));
     }
 
     private <T extends EventListener> void unregisterListener0( T listener, Method listenerMethod ) {
