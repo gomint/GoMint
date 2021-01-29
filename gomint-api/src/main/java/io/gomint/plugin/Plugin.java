@@ -11,12 +11,15 @@ import io.gomint.GoMint;
 import io.gomint.command.Command;
 import io.gomint.event.EventListener;
 import io.gomint.scheduler.Scheduler;
+import io.gomint.world.World;
 import org.slf4j.Logger;
 
 import java.io.File;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
+import javax.annotation.Nullable;
 
 /**
  * Base class for any plugin to be created for use with the GoMint system. Below you will find an in-depth
@@ -81,6 +84,12 @@ public class Plugin {
      * Server which is running
      */
     GoMint server;
+
+    /**
+     * Configured active worlds
+     */
+    @Nullable
+    ConcurrentHashMap.KeySetView<String, Boolean> activeWorlds;
 
     /**
      * List which contains all listeners this plugin has registered
@@ -204,6 +213,33 @@ public class Plugin {
 
     public GoMint server() {
         return this.server;
+    }
+
+    /**
+     * Get loaded worlds (by {@linkplain World#folder()} name) set based on {@code worlds.yml} configuration file in
+     * this plugin's data folder.
+     * Returns {@code null} if plugin should run in all worlds.
+     * Returned set is actively updated on world (un-)load (if not {@code null}).
+     *
+     * @return The set of worlds (by {@linkplain World#folder()} name) the given plugin should be active in. Returns
+     * {@code null} if plugin should run in all worlds.
+     * @see #activeInWorld(World)
+     */
+    @Nullable
+    public ConcurrentHashMap.KeySetView<String, Boolean> activeWorlds() {
+        return this.activeWorlds;
+    }
+
+    /**
+     * Checks whether the plugin should be active in the given world. Based on {@code worlds.yml} configuration file in
+     * this plugin's data folder.
+     *
+     * @param world The world to check
+     * @return whether the plugin should be active in the given world
+     * @see #activeWorlds()
+     */
+    public boolean activeInWorld(World world) {
+        return this.activeWorlds == null || this.activeWorlds.contains(world.folder());
     }
 
 }

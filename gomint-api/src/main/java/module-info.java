@@ -6,6 +6,7 @@ open module gomint.api {
     requires org.yaml.snakeyaml;
     requires org.slf4j;
     requires commons.math3;
+    requires jsr305;
 
     exports io.gomint;
     exports io.gomint.command;

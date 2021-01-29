@@ -14,6 +14,7 @@ import io.gomint.world.World;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import javax.annotation.Nullable;
 
 /**
  * @author geNAZt
@@ -99,7 +100,7 @@ public interface PluginManager {
      * @see #registerListener(Plugin, EventListener)
      * @since 2.0
      */
-    PluginManager registerListener(Plugin plugin, EventListener listener, ConcurrentHashMap.KeySetView<String, Boolean> worlds);
+    PluginManager registerListener(Plugin plugin, EventListener listener, @Nullable ConcurrentHashMap.KeySetView<String, Boolean> worlds);
 
     /**
      * Unregister a listener. This listener does not get any more events after this

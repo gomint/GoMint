@@ -10,6 +10,8 @@ package io.gomint.server.world;
 import io.gomint.entity.Entity;
 import io.gomint.entity.EntityPlayer;
 import io.gomint.event.player.PlayerInteractEvent;
+import io.gomint.event.world.WorldLoadEvent;
+import io.gomint.event.world.WorldUnloadEvent;
 import io.gomint.inventory.item.ItemAir;
 import io.gomint.inventory.item.ItemStack;
 import io.gomint.inventory.item.ItemType;
@@ -540,6 +542,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
     }
 
     private void tickLoop() {
+        this.server.pluginManager().callEvent(new WorldLoadEvent(this));
         // Calculate the nanoseconds we need for the tick loop
         int targetTPS = targetTPS();
         if (targetTPS > 1000) {
@@ -617,6 +620,8 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
             Set<EntityPlayer> playerCopy = new HashSet<>(this.players.keySet());
             playerCopy.forEach(playerConsumer);
         }
+
+        this.server.pluginManager().callEvent(new WorldUnloadEvent(this));
 
         // Stop this world
         this.close();
@@ -1404,7 +1409,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
         return entityItem;
     }
 
-    public void close() {
+    private void close() {
         // Stop async worker
         this.asyncWorkerRunning.set(false);
         this.asyncWorkerTask.cancel();
