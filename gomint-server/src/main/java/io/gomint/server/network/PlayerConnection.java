@@ -456,7 +456,7 @@ public class PlayerConnection implements ConnectionWithState {
 
             this.state = PlayerConnectionState.PLAYING;
 
-            this.entity.loginPerformance().setChunkEnd(this.entity.world().server().currentTickTime());
+            this.entity.loginPerformance().setChunkEnd(this.entity.world().currentTickTime());
             this.entity.loginPerformance().print();
         }
     }
@@ -858,7 +858,7 @@ public class PlayerConnection implements ConnectionWithState {
         move.setMode(MovePlayerMode.TELEPORT);
         move.setOnGround(this.entity().onGround());
         move.setRidingEntityId(0);    // TODO: Implement riding entities correctly
-        move.setTick(this.entity.world().server().currentTickTime() / (int) Values.CLIENT_TICK_MS);
+        move.setTick(this.entity.world().currentTickTime() / (int) Values.CLIENT_TICK_MS);
         this.addToSendQueue(move);
     }
 

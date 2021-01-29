@@ -504,7 +504,7 @@ public abstract class EntityLiving<E extends io.gomint.entity.Entity<E>> extends
     public io.gomint.entity.potion.Effect effect(PotionEffect effect, int amplifier, long duration, TimeUnit timeUnit) {
         byte effectId = (byte) EnumConnectors.POTION_EFFECT_CONNECTOR.convert(effect).getId();
         Effect effectInstance = this.world.server().effects().generate(effectId, amplifier,
-            this.world.server().currentTickTime() + timeUnit.toMillis(duration), this.effectManager);
+            this.world.currentTickTime() + timeUnit.toMillis(duration), this.effectManager);
 
         if (effectInstance != null) {
             this.effectManager.addEffect(effectId, effectInstance);

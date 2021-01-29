@@ -132,12 +132,8 @@ public class GoMintServer implements GoMint, InventoryHolder {
     private final AtomicBoolean init = new AtomicBoolean(true);
     private ListeningScheduledExecutorService executorService;
     private Thread readerThread;
-    private long currentTickTime;
     private long sleepBalance;
     private AsyncScheduler scheduler;
-
-    // Additional informations for API usage
-    private double tps;
 
     // Watchdog
     private Watchdog watchdog;
@@ -345,7 +341,6 @@ public class GoMintServer implements GoMint, InventoryHolder {
         }
 
         this.defaultWorld = this.serverConfig.defaultWorld();
-        this.currentTickTime = System.currentTimeMillis();
 
         if (!this.isRunning()) {
             this.internalShutdown();
@@ -472,9 +467,9 @@ public class GoMintServer implements GoMint, InventoryHolder {
 
         while (this.running.get()) {
             // Tick all major subsystems:
-            this.currentTickTime = System.currentTimeMillis();
+            long currentTickTime = System.currentTimeMillis();
             long internalDiffTime = System.nanoTime();
-            this.watchdog.add(this.currentTickTime, 30, TimeUnit.SECONDS);
+            this.watchdog.add(currentTickTime, 30, TimeUnit.SECONDS);
 
             // Drain input lines
             while (!inputLines.isEmpty()) {
@@ -493,9 +488,9 @@ public class GoMintServer implements GoMint, InventoryHolder {
             }
 
             // Tick networking at every tick
-            this.networkManager.update(this.currentTickTime, lastTickTime);
+            this.networkManager.update(currentTickTime, lastTickTime);
 
-            this.permissionGroupManager.update(this.currentTickTime, lastTickTime);
+            this.permissionGroupManager.update(currentTickTime, lastTickTime);
 
             this.watchdog.done();
 
@@ -525,15 +520,15 @@ public class GoMintServer implements GoMint, InventoryHolder {
             }
 
             lastTickTime = (float) diff / TimeUnit.SECONDS.toNanos(1);
-            this.tps = (1 / (double) lastTickTime);
+            double tps = (1 / (double) lastTickTime);
 
             // Due to the fact that we
-            if (this.tps > this.serverConfig.targetTPS()) {
-                this.tps = this.serverConfig.targetTPS();
+            if (tps > this.serverConfig.targetTPS()) {
+                tps = this.serverConfig.targetTPS();
             }
 
             if (warn) {
-                LOGGER.warn("Running behind: {} / {} tps", this.tps, (1 / (skipNanos / (float) TimeUnit.SECONDS.toNanos(1))));
+                LOGGER.warn("Running behind: {} / {} tps", tps, (1 / (skipNanos / (float) TimeUnit.SECONDS.toNanos(1))));
             }
         }
 
@@ -817,11 +812,6 @@ public class GoMintServer implements GoMint, InventoryHolder {
     }
 
     @Override
-    public double tps() {
-        return this.tps;
-    }
-
-    @Override
     public String version() {
         return "GoMint 1.0.0 (MC:BE "
             + Protocol.MINECRAFT_PE_NETWORK_VERSION
@@ -857,10 +847,6 @@ public class GoMintServer implements GoMint, InventoryHolder {
 
     public CreativeInventory creativeInventory() {
         return this.creativeInventory;
-    }
-
-    public long currentTickTime() {
-        return this.currentTickTime;
     }
 
     public WorldConfig worldConfigOf(String name) {

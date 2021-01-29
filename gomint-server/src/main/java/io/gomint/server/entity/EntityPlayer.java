@@ -265,7 +265,7 @@ public class EntityPlayer extends EntityHuman<io.gomint.entity.EntityPlayer> imp
         if (this.connection.state() == PlayerConnectionState.LOGIN) {
             this.connection.addToSendQueue(new PacketBiomeDefinitionList());
             this.connection.sendPlayState(PacketPlayState.PlayState.SPAWN);
-            this.loginPerformance().setChunkStart(this.world.server().currentTickTime());
+            this.loginPerformance().setChunkStart(this.world.currentTickTime());
         }
 
         this.connection.onViewDistanceChanged();
@@ -711,7 +711,7 @@ public class EntityPlayer extends EntityHuman<io.gomint.entity.EntityPlayer> imp
         }
 
         if (updateAttributes != null) {
-            updateAttributes.setTick(this.world().server().currentTickTime() / (int) Values.CLIENT_TICK_MS);
+            updateAttributes.setTick(this.world.currentTickTime() / (int) Values.CLIENT_TICK_MS);
             this.connection.addToSendQueue(updateAttributes);
         }
     }
@@ -722,7 +722,7 @@ public class EntityPlayer extends EntityHuman<io.gomint.entity.EntityPlayer> imp
     public void resendAttributes() {
         PacketUpdateAttributes updateAttributes = new PacketUpdateAttributes();
         updateAttributes.setEntityId(this.id());
-        updateAttributes.setTick(this.world().server().currentTickTime() / (int) Values.CLIENT_TICK_MS);
+        updateAttributes.setTick(this.world.currentTickTime() / (int) Values.CLIENT_TICK_MS);
 
         for (AttributeInstance instance : this.attributes.values()) {
             updateAttributes.addAttributeInstance(instance);
@@ -1453,7 +1453,7 @@ public class EntityPlayer extends EntityHuman<io.gomint.entity.EntityPlayer> imp
      * @param xpAmount which should be added
      */
     public void addXP(int xpAmount) {
-        this.lastPickupXP = this.world.server().currentTickTime();
+        this.lastPickupXP = this.world.currentTickTime();
         this.xp(this.xp + xpAmount);
     }
 
@@ -1463,7 +1463,7 @@ public class EntityPlayer extends EntityHuman<io.gomint.entity.EntityPlayer> imp
      * @return
      */
     public boolean canPickupXP() {
-        return this.world.server().currentTickTime() - this.lastPickupXP >= Values.CLIENT_TICK_MS;
+        return this.world.currentTickTime() - this.lastPickupXP >= Values.CLIENT_TICK_MS;
     }
 
     private int calculateRequiredExperienceForLevel(int level) {
@@ -1755,7 +1755,7 @@ public class EntityPlayer extends EntityHuman<io.gomint.entity.EntityPlayer> imp
 
     public void setUsingItem(boolean value) {
         if (value) {
-            this.actionStart = ((GoMintServer) GoMint.instance()).currentTickTime();
+            this.actionStart = this.world.currentTickTime();
             this.metadataContainer.setDataFlag(MetadataContainer.DATA_INDEX, EntityFlag.ACTION, true);
         } else {
             this.actionStart = -1;
@@ -1930,7 +1930,7 @@ public class EntityPlayer extends EntityHuman<io.gomint.entity.EntityPlayer> imp
     }
 
     public void resetActionStart() {
-        this.actionStart = ((GoMintServer) GoMint.instance()).currentTickTime();
+        this.actionStart = this.world.currentTickTime();
     }
 
     @Override

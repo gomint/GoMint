@@ -714,7 +714,7 @@ public class ChunkAdapter implements Chunk {
             this.calculateHeightmap(240);
             this.populated(true);
 
-            this.lastSavedTimestamp(this.world.server().currentTickTime());
+            this.lastSavedTimestamp(this.world.currentTickTime());
         }
     }
 

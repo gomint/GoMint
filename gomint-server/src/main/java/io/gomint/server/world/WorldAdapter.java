@@ -1380,8 +1380,8 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
 
             // CHECKSTYLE:OFF
             try {
-                long next = neighbourBlock.update(UpdateReason.NEIGHBOUR_UPDATE, this.server.currentTickTime(), 0f);
-                if (next > this.server.currentTickTime()) {
+                long next = neighbourBlock.update(UpdateReason.NEIGHBOUR_UPDATE, this.currentTickTime, 0f);
+                if (next > this.currentTickTime) {
                     BlockPosition position = neighbourBlock.position();
                     this.tickQueue.add(next, position);
                 }
@@ -1521,7 +1521,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
 
     public void scheduleBlockUpdate(Location location, long delay, TimeUnit unit) {
         BlockPosition position = location.toBlockPosition();
-        long key = this.server.currentTickTime() + unit.toMillis(delay);
+        long key = this.currentTickTime + unit.toMillis(delay);
         this.tickQueue.add(key, position);
     }
 
@@ -1882,6 +1882,10 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
     @Override
     public int targetTPS() {
         return this.server.serverConfig().targetTPS();
+    }
+
+    public long currentTickTime() {
+        return this.currentTickTime;
     }
 
 }
