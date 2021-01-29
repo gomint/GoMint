@@ -93,7 +93,7 @@ public interface PluginManager {
      *
      * @param plugin   The plugin which wants to register this listener
      * @param listener The listener which we want to register
-     * @param worlds   A whitelist of world {@linkplain World#folder() folder name}. Empty collection or {@code null}
+     * @param worlds   A whitelist of world {@linkplain World#folder() folder name}. Edits to the set are honored. Empty collection or {@code null}
      *                 means all worlds.
      * @throws SecurityException when somebody else except the plugin registers the listener
      * @see #registerListener(Plugin, EventListener)
