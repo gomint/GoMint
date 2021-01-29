@@ -28,8 +28,21 @@ public class PlayerInteractWithEntityEvent extends CancellablePlayerEvent<Player
      *
      * @return entity which was interacted
      */
-    public Entity<?> entity() {
+    public Entity<?> interactEntity() {
         return this.entity;
+    }
+
+    /**
+     * Get the player which is affected by this event.
+     * 
+     * <b>Be careful! This method used to return the entity interacted with before 2.0</b>
+     * 
+     * @return the player which is affected by this event
+     */
+    @Override
+    @Deprecated(since = "2.0")
+    public EntityPlayer entity() {
+        return super.entity();
     }
 
 }

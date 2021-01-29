@@ -49,7 +49,7 @@ public class ProjectileHitBlocksEvent extends CancellableEntityEvent<ProjectileH
      * @return projectile which hit the blocks
      * @deprecated Use {@link #entity()} instead
      */
-    @Deprecated(forRemoval = true)
+    @Deprecated(since = "2.0", forRemoval = true)
     public EntityProjectile<?> projectile() {
         return (EntityProjectile<?>) super.entity();
     }
