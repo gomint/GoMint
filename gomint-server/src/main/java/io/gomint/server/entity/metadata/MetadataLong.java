@@ -71,7 +71,7 @@ public class MetadataLong extends MetadataValue {
     @Override
     public String toString() {
         return "MetadataLong{" +
-            "value=" + value +
+            "value=" + this.value +
             '}';
     }
 }

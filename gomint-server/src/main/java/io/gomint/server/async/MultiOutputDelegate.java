@@ -32,7 +32,7 @@ public class MultiOutputDelegate<T> implements Delegate<T> {
     }
 
     public Queue<Delegate<T>> getOutputs() {
-        return outputs;
+        return this.outputs;
     }
 
 }

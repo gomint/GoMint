@@ -100,7 +100,7 @@ public class Vector {
     }
 
     public float distanceSquared( Vector position ) {
-        return MathUtils.square( x - position.x ) + MathUtils.square( y - position.y ) + MathUtils.square( z - position.z );
+        return MathUtils.square(this.x - position.x ) + MathUtils.square(this.y - position.y ) + MathUtils.square(this.z - position.z );
     }
 
     public float distance( Vector position ) {
@@ -108,7 +108,7 @@ public class Vector {
     }
 
     public BlockPosition toBlockPosition() {
-        return new BlockPosition( MathUtils.fastFloor( x ), MathUtils.fastFloor( y ), MathUtils.fastFloor( z ) );
+        return new BlockPosition( MathUtils.fastFloor(this.x), MathUtils.fastFloor(this.y), MathUtils.fastFloor(this.z) );
     }
 
     /**
@@ -163,15 +163,15 @@ public class Vector {
     }
 
     public float x() {
-        return x;
+        return this.x;
     }
 
     public float y() {
-        return y;
+        return this.y;
     }
 
     public float z() {
-        return z;
+        return this.z;
     }
 
     public Vector x(float x) {
@@ -194,22 +194,22 @@ public class Vector {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Vector vector = (Vector) o;
-        return Float.compare(vector.x, x) == 0 &&
-            Float.compare(vector.y, y) == 0 &&
-            Float.compare(vector.z, z) == 0;
+        return Float.compare(vector.x, this.x) == 0 &&
+            Float.compare(vector.y, this.y) == 0 &&
+            Float.compare(vector.z, this.z) == 0;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(x, y, z);
+        return Objects.hash(this.x, this.y, this.z);
     }
 
     @Override
     public String toString() {
         return "{\"_class\":\"Vector\", " +
-            "\"x\":\"" + x + "\"" + ", " +
-            "\"y\":\"" + y + "\"" + ", " +
-            "\"z\":\"" + z + "\"" +
+            "\"x\":\"" + this.x + "\"" + ", " +
+            "\"y\":\"" + this.y + "\"" + ", " +
+            "\"z\":\"" + this.z + "\"" +
             "}";
     }
 }

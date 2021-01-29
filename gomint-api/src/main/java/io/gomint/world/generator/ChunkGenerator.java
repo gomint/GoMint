@@ -34,7 +34,7 @@ public abstract class ChunkGenerator {
     }
 
     public GeneratorContext context() {
-        return context;
+        return this.context;
     }
 
     /**

@@ -9,13 +9,8 @@ import io.gomint.plugin.Plugin;
  */
 public class PluginInstallEvent extends PluginEvent {
 
-    public PluginInstallEvent( Plugin plugin ) {
+    public PluginInstallEvent(Plugin plugin) {
         super(plugin);
-    }
-
-    @Override
-    public String toString() {
-        return super.toString();
     }
 
 }

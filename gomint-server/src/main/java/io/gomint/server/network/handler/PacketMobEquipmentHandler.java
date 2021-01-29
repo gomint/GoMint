@@ -22,14 +22,14 @@ public class PacketMobEquipmentHandler implements PacketHandler<PacketMobEquipme
         }
 
         // Ok the client wants to switch hotbar slot (itemInHand)
-        ItemStack<?> wanted = connection.getEntity().inventory().item( packet.getSelectedSlot() );
+        ItemStack<?> wanted = connection.entity().inventory().item( packet.getSelectedSlot() );
         if ( wanted != null && wanted.equals( packet.getStack() ) && wanted.amount() == packet.getStack().amount() ) {
-            connection.getEntity().inventory().setItemInHand( packet.getSelectedSlot() );
-            connection.getEntity().setUsingItem( false );
+            connection.entity().inventory().setItemInHand( packet.getSelectedSlot() );
+            connection.entity().setUsingItem( false );
         } else {
             // Reset client
             LOGGER.debug("Item mismatch: {} / {}", packet.getStack(), wanted);
-            connection.getEntity().inventory().sendItemInHand();
+            connection.entity().inventory().sendItemInHand();
         }
     }
 

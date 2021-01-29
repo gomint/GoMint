@@ -56,7 +56,7 @@ public class YamlResourceLoader extends FileResourceLoader implements ResourceLo
         InputStreamReader stream = null;
         try {
             // Get the correct InputStreamReader for this file
-            stream = fileInputStreamReader( file );
+            stream = fileInputStreamReader(this.file);
 
             // Read from the InputStreamReader till he is empty
             BufferedReader br = new BufferedReader( stream );
@@ -69,9 +69,9 @@ public class YamlResourceLoader extends FileResourceLoader implements ResourceLo
 
             //Try to read the YamlConfiguration
             Yaml yaml = new Yaml();
-            lookup = yaml.load( sb.toString() );
+            this.lookup = yaml.load( sb.toString() );
         } catch ( IOException e ) {
-            lookup = null;
+            this.lookup = null;
             throw new ResourceLoadFailedException( e );
         } catch ( ResourceLoadFailedException e ) {
             throw e;
@@ -117,7 +117,7 @@ public class YamlResourceLoader extends FileResourceLoader implements ResourceLo
     @Override
     public String get( String key ) {
         // Fast out when parsing the YML did fail
-        if ( lookup == null ) {
+        if (this.lookup == null ) {
             return null;
         }
 
@@ -127,7 +127,7 @@ public class YamlResourceLoader extends FileResourceLoader implements ResourceLo
         if ( key.contains( "." ) ) {
             String[] keyParts = key.split( "\\." );
 
-            Map<String, Object> current = (Map<String, Object>) lookup.get( keyParts[0] );
+            Map<String, Object> current = (Map<String, Object>) this.lookup.get( keyParts[0] );
             if ( current == null ) {
                 return null;
             }
@@ -141,7 +141,7 @@ public class YamlResourceLoader extends FileResourceLoader implements ResourceLo
 
             finalData = current.get( keyParts[keyParts.length - 1] );
         } else {
-            finalData = lookup.get( key );
+            finalData = this.lookup.get( key );
         }
 
         return finalData instanceof String ? (String) finalData : finalData == null ? null : String.valueOf( finalData );
@@ -173,8 +173,8 @@ public class YamlResourceLoader extends FileResourceLoader implements ResourceLo
      */
     @Override
     public void cleanup() {
-        lookup = null;
-        file = null;
+        this.lookup = null;
+        this.file = null;
 
         super.cleanup();
     }

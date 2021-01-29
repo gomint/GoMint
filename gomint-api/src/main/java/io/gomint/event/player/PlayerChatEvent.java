@@ -21,8 +21,8 @@ public class PlayerChatEvent extends CancellablePlayerEvent<PlayerChatEvent> {
      * @param player which chatted
      * @param text   which has been sent
      */
-    public PlayerChatEvent( EntityPlayer player, String sender, String text, List<EntityPlayer> recipients ) {
-        super( player );
+    public PlayerChatEvent(EntityPlayer player, String sender, String text, List<EntityPlayer> recipients) {
+        super(player);
         this.text = text;
         this.recipients = recipients;
         this.sender = sender;
@@ -42,7 +42,7 @@ public class PlayerChatEvent extends CancellablePlayerEvent<PlayerChatEvent> {
      *
      * @param text to display as a result of this chat event
      */
-    public PlayerChatEvent text(String text ) {
+    public PlayerChatEvent text(String text) {
         this.text = text;
         return this;
     }
@@ -70,7 +70,7 @@ public class PlayerChatEvent extends CancellablePlayerEvent<PlayerChatEvent> {
      *
      * @param sender which will be used to display in the client
      */
-    public PlayerChatEvent sender(String sender ) {
+    public PlayerChatEvent sender(String sender) {
         this.sender = sender;
         return this;
     }

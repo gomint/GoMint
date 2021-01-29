@@ -80,67 +80,67 @@ public class ServerConfig extends YamlConfig {
     private boolean enableClientCache = true;
 
     public ListenerConfig listener() {
-        return listener;
+        return this.listener;
     }
 
     public ConnectionConfig connection() {
-        return connection;
+        return this.connection;
     }
 
     public int maxPlayers() {
-        return maxPlayers;
+        return this.maxPlayers;
     }
 
     public String motd() {
-        return motd;
+        return this.motd;
     }
 
     public boolean enablePacketDumping() {
-        return enablePacketDumping;
+        return this.enablePacketDumping;
     }
 
     public String dumpDirectory() {
-        return dumpDirectory;
+        return this.dumpDirectory;
     }
 
     public String defaultWorld() {
-        return defaultWorld;
+        return this.defaultWorld;
     }
 
     public boolean loadAllWorldsAtStart() {
-        return loadAllWorldsAtStart;
+        return this.loadAllWorldsAtStart;
     }
 
     public List<WorldConfig> worlds() {
-        return worlds;
+        return this.worlds;
     }
 
     public VanillaConfig vanilla() {
-        return vanilla;
+        return this.vanilla;
     }
 
     public int targetTPS() {
-        return targetTPS;
+        return this.targetTPS;
     }
 
     public boolean disableGomintReports() {
-        return disableGomintReports;
+        return this.disableGomintReports;
     }
 
     public boolean loadChunksForEntities() {
-        return loadChunksForEntities;
+        return this.loadChunksForEntities;
     }
 
     public int sendChunksPerTick() {
-        return sendChunksPerTick;
+        return this.sendChunksPerTick;
     }
 
     public boolean enableFastJoin() {
-        return enableFastJoin;
+        return this.enableFastJoin;
     }
 
     public boolean enableClientCache() {
-        return enableClientCache;
+        return this.enableClientCache;
     }
 
     @Override
@@ -154,21 +154,21 @@ public class ServerConfig extends YamlConfig {
     @Override
     public String toString() {
         return "ServerConfig{" +
-            "listener=" + listener +
-            ", connection=" + connection +
-            ", maxPlayers=" + maxPlayers +
-            ", motd='" + motd + '\'' +
-            ", enablePacketDumping=" + enablePacketDumping +
-            ", dumpDirectory='" + dumpDirectory + '\'' +
-            ", defaultWorld='" + defaultWorld + '\'' +
-            ", loadAllWorldsAtStart=" + loadAllWorldsAtStart +
-            ", worlds=" + worlds +
-            ", vanilla=" + vanilla +
-            ", targetTPS=" + targetTPS +
-            ", disableGomintReports=" + disableGomintReports +
-            ", loadChunksForEntities=" + loadChunksForEntities +
-            ", sendChunksPerTick=" + sendChunksPerTick +
-            ", enableFastJoin=" + enableFastJoin +
+            "listener=" + this.listener +
+            ", connection=" + this.connection +
+            ", maxPlayers=" + this.maxPlayers +
+            ", motd='" + this.motd + '\'' +
+            ", enablePacketDumping=" + this.enablePacketDumping +
+            ", dumpDirectory='" + this.dumpDirectory + '\'' +
+            ", defaultWorld='" + this.defaultWorld + '\'' +
+            ", loadAllWorldsAtStart=" + this.loadAllWorldsAtStart +
+            ", worlds=" + this.worlds +
+            ", vanilla=" + this.vanilla +
+            ", targetTPS=" + this.targetTPS +
+            ", disableGomintReports=" + this.disableGomintReports +
+            ", loadChunksForEntities=" + this.loadChunksForEntities +
+            ", sendChunksPerTick=" + this.sendChunksPerTick +
+            ", enableFastJoin=" + this.enableFastJoin +
             '}';
     }
 }

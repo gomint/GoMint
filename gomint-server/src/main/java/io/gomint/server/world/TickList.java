@@ -149,7 +149,7 @@ public class TickList {
         }
 
         public long getKey() {
-            return key;
+            return this.key;
         }
 
         public void setKey(long key) {
@@ -157,7 +157,7 @@ public class TickList {
         }
 
         public LongElement getNext() {
-            return next;
+            return this.next;
         }
 
         public void setNext(LongElement next) {
@@ -165,7 +165,7 @@ public class TickList {
         }
 
         public Queue<BlockPosition> getValues() {
-            return values;
+            return this.values;
         }
 
         public void setValues(Queue<BlockPosition> values) {

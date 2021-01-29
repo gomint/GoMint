@@ -35,13 +35,13 @@ public class InventoryCraftingResultAction implements InventoryAction {
     @Override
     public String toString() {
         return "{\"_class\":\"InventoryCraftingResultAction\", " +
-            "\"resultItems\":" + Arrays.toString(resultItems) + ", " +
-            "\"amount\":\"" + amount + "\"" +
+            "\"resultItems\":" + Arrays.toString(this.resultItems) + ", " +
+            "\"amount\":\"" + this.amount + "\"" +
             "}";
     }
 
     public byte getAmount() {
-        return amount;
+        return this.amount;
     }
 
 }

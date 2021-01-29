@@ -32,7 +32,7 @@ public class PacketCommandRequest extends Packet {
     }
 
     public String getInputCommand() {
-        return inputCommand;
+        return this.inputCommand;
     }
 
     public void setInputCommand(String inputCommand) {
@@ -40,7 +40,7 @@ public class PacketCommandRequest extends Packet {
     }
 
     public CommandOrigin getCommandOrigin() {
-        return commandOrigin;
+        return this.commandOrigin;
     }
 
     public void setCommandOrigin(CommandOrigin commandOrigin) {

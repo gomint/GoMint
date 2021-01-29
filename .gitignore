@@ -1,6 +1,7 @@
 ### GoMint generated files
 gomint-server/src/main/java/io/gomint/server/world/block/mapper/**/*.java
 gomint-server/src/main/java/io/gomint/server/registry/SwitchBlockStateMapper.java
+gomint-server/src/main/java/io/gomint/server/entity/tileentity/Registry.java
 
 ### GoMint Debug Files START #############################
 plugins/

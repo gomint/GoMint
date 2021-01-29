@@ -45,7 +45,7 @@ public class PacketCraftingRecipes extends Packet {
     }
 
     public Collection<Recipe> getRecipes() {
-        return recipes;
+        return this.recipes;
     }
 
     public void setRecipes(Collection<Recipe> recipes) {
@@ -62,12 +62,12 @@ public class PacketCraftingRecipes extends Packet {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         PacketCraftingRecipes that = (PacketCraftingRecipes) o;
-        return Objects.equals(recipes, that.recipes);
+        return Objects.equals(this.recipes, that.recipes);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(recipes);
+        return Objects.hash(this.recipes);
     }
 
     public void cache() {

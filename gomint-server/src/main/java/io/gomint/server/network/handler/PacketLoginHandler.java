@@ -71,7 +71,7 @@ public class PacketLoginHandler implements PacketHandler<PacketLogin> {
     @Override
     public void handle(PacketLogin packet, long currentTimeMillis, PlayerConnection connection) {
         // We set the decompression limit to 500kb
-        connection.getInputProcessor().preallocSize(500 * 1024);
+        connection.inputProcessor().preallocSize(500 * 1024);
 
         // Check versions
         LOGGER.debug("Trying to login with protocol version: " + packet.getProtocol());
@@ -93,10 +93,10 @@ public class PacketLoginHandler implements PacketHandler<PacketLogin> {
         }
 
         // Set the protocol id into the connection
-        connection.setProtocolID(packet.getProtocol());
+        connection.protocolID(packet.getProtocol());
 
         // Async login sequence
-        connection.getServer().executorService().execute(() -> {
+        connection.server().executorService().execute(() -> {
             // More data please
             ByteBuffer byteBuffer = ByteBuffer.wrap(packet.getPayload());
             byteBuffer.order(ByteOrder.LITTLE_ENDIAN);
@@ -149,7 +149,7 @@ public class PacketLoginHandler implements PacketHandler<PacketLogin> {
 
             // Sync up for disconnecting etc.
             boolean finalValidSkin = validSkin;
-            connection.getServer().syncTaskManager().addTask(new SyncScheduledTask(connection.getServer().syncTaskManager(), () -> {
+            connection.server().syncTaskManager().addTask(new SyncScheduledTask(connection.server().syncTaskManager(), () -> {
                 // Invalid skin
                 if (!finalValidSkin) {
                     connection.disconnect("Skin is invalid or corrupted");
@@ -231,7 +231,7 @@ public class PacketLoginHandler implements PacketHandler<PacketLogin> {
                     skinToken.getClaim("DeviceModel"),
                     skinToken.getClaim("DeviceId"),
                     getUIFrom(Math.toIntExact(skinToken.getClaim("UIProfile"))));
-                connection.setDeviceInfo(deviceInfo);
+                connection.deviceInfo(deviceInfo);
 
                 // Detect language
                 String languageCode = skinToken.getClaim("LanguageCode");
@@ -248,21 +248,21 @@ public class PacketLoginHandler implements PacketHandler<PacketLogin> {
                 EntityPlayer player = new EntityPlayer(world, connection, chainValidator.getUsername(),
                     chainValidator.getXboxId(), chainValidator.getUuid(), locale, this.server.pluginManager());
 
-                connection.setEntity(player);
-                connection.getEntity().skin(playerSkin);
-                connection.getEntity().nameTagVisible(true);
-                connection.getEntity().nameTagAlwaysVisible(true);
-                connection.getEntity().loginPerformance().setLoginPacket(currentTimeMillis);
-                connection.getEntity().loginPerformance().setEncryptionStart(currentTimeMillis);
+                connection.entity(player);
+                connection.entity().skin(playerSkin);
+                connection.entity().nameTagVisible(true);
+                connection.entity().nameTagAlwaysVisible(true);
+                connection.entity().loginPerformance().setLoginPacket(currentTimeMillis);
+                connection.entity().loginPerformance().setEncryptionStart(currentTimeMillis);
 
                 // Fill in fast access maps
-                connection.getServer().uuidMappedPlayers().put(chainValidator.getUuid(), connection.getEntity());
+                connection.server().uuidMappedPlayers().put(chainValidator.getUuid(), connection.entity());
 
                 // Post login event
-                PlayerLoginEvent event = new PlayerLoginEvent(connection.getEntity());
+                PlayerLoginEvent event = new PlayerLoginEvent(connection.entity());
 
                 // Default deny for maximum amount of players
-                if (connection.getServer().onlinePlayers().size() >= connection.getServer().serverConfig().maxPlayers()) {
+                if (connection.server().onlinePlayers().size() >= connection.server().serverConfig().maxPlayers()) {
                     event.cancelled(true);
                     event.kickMessage("Server is full");
                 }
@@ -273,41 +273,41 @@ public class PacketLoginHandler implements PacketHandler<PacketLogin> {
                     return;
                 }
 
-                if (this.keyFactory.getKeyPair() == null) {
+                if (this.keyFactory.keyPair() == null) {
                     // No encryption
                     connection.sendPlayState(PacketPlayState.PlayState.LOGIN_SUCCESS);
-                    connection.setState(PlayerConnectionState.RESOURCE_PACK);
+                    connection.state(PlayerConnectionState.RESOURCE_PACK);
                     connection.initWorldAndResourceSend();
                 } else {
                     // Generating EDCH secrets can take up huge amount of time
-                    connection.getServer().executorService().execute(() -> {
-                        connection.getServer().watchdog().add(2, TimeUnit.SECONDS);
+                    connection.server().executorService().execute(() -> {
+                        connection.server().watchdog().add(2, TimeUnit.SECONDS);
 
                         // Enable encryption
                         EncryptionHandler encryptionHandler = new EncryptionHandler(this.keyFactory);
                         encryptionHandler.supplyClientKey(chainValidator.getClientPublicKey());
                         if (encryptionHandler.beginClientsideEncryption()) {
                             // Get the needed data for the encryption start
-                            connection.setState(PlayerConnectionState.ENCRPYTION_INIT);
+                            connection.state(PlayerConnectionState.ENCRPYTION_INIT);
 
-                            byte[] key = encryptionHandler.getKey();
-                            byte[] iv = encryptionHandler.getIv();
+                            byte[] key = encryptionHandler.key();
+                            byte[] iv = encryptionHandler.iv();
 
                             // We need every packet to be encrypted from now on
-                            connection.getInputProcessor().enableCrypto(key, iv);
+                            connection.inputProcessor().enableCrypto(key, iv);
 
                             // Forge a JWT
-                            String encryptionRequestJWT = FORGER.forge(encryptionHandler.getServerPublic(), encryptionHandler.getServerPrivate(), encryptionHandler.getClientSalt());
+                            String encryptionRequestJWT = FORGER.forge(encryptionHandler.serverPublic(), encryptionHandler.serverPrivate(), encryptionHandler.clientSalt());
 
                             // Tell the client to enable encryption after sending that packet we also enable it
                             PacketEncryptionRequest packetEncryptionRequest = new PacketEncryptionRequest();
                             packetEncryptionRequest.setJwt(encryptionRequestJWT);
                             connection.send(packetEncryptionRequest, aVoid -> {
-                                connection.getOutputProcessor().enableCrypto(key, iv);
+                                connection.outputProcessor().enableCrypto(key, iv);
                             });
                         }
 
-                        connection.getServer().watchdog().done();
+                        connection.server().watchdog().done();
                     });
 
                 }

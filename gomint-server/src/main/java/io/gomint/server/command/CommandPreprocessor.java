@@ -120,14 +120,14 @@ public class CommandPreprocessor {
         for (CommandHolder command : commands) {
             // Construct new data helper for the packet
             CommandData commandData = new CommandData(command.getName(), command.getDescription());
-            commandData.setFlags((byte) 0);
-            commandData.setPermission((byte) command.getCommandPermission().getId());
+            commandData.flags((byte) 0);
+            commandData.permission((byte) command.getCommandPermission().getId());
 
             // Put in alias index
             if (command.getAlias() != null) {
-                commandData.setAliasIndex(this.aliasIndex.get(command));
+                commandData.aliasIndex(this.aliasIndex.get(command));
             } else {
-                commandData.setAliasIndex(-1);
+                commandData.aliasIndex(-1);
             }
 
             // Do we need to hack a bit here?
@@ -198,7 +198,7 @@ public class CommandPreprocessor {
                 }
             }
 
-            commandData.setParameters(overloads);
+            commandData.parameters(overloads);
             commandDataList.add(commandData);
         }
 
@@ -226,7 +226,7 @@ public class CommandPreprocessor {
     }
 
     public PacketAvailableCommands getCommandsPacket() {
-        return commandsPacket;
+        return this.commandsPacket;
     }
 
 }

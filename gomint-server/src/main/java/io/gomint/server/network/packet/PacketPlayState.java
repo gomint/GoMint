@@ -35,7 +35,7 @@ public class PacketPlayState extends Packet {
     }
 
     public PlayState getState() {
-        return state;
+        return this.state;
     }
 
     public void setState(PlayState state) {
@@ -47,12 +47,12 @@ public class PacketPlayState extends Packet {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         PacketPlayState that = (PacketPlayState) o;
-        return state == that.state;
+        return this.state == that.state;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(state);
+        return Objects.hash(this.state);
     }
 
     /**

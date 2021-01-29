@@ -97,8 +97,8 @@ public final class ReportUploader {
      */
     public ReportUploader includeWorlds() {
         GoMintServer server = (GoMintServer) GoMint.instance();
-        for (WorldAdapter adapter : server.worldManager().getWorlds()) {
-            this.worlds.put(adapter.folder(), new WorldData(adapter.getChunkCache().size()));
+        for (WorldAdapter adapter : server.worldManager().worlds()) {
+            this.worlds.put(adapter.folder(), new WorldData(adapter.chunkCache().size()));
         }
 
         return this;
@@ -157,11 +157,11 @@ public final class ReportUploader {
         this.context.addExtra("config.server", server.serverConfig());
 
         if (this.worlds.size() > 0) {
-            this.worlds.forEach((worldName, worldData) -> context.addExtra("world." + worldName, worldData));
+            this.worlds.forEach((worldName, worldData) -> this.context.addExtra("world." + worldName, worldData));
         }
 
         if (this.players.size() > 0) {
-            this.players.forEach((playerName, playerData) -> context.addExtra("player." + playerName, playerData));
+            this.players.forEach((playerName, playerData) -> this.context.addExtra("player." + playerName, playerData));
         }
 
         // Check for plugin crashes

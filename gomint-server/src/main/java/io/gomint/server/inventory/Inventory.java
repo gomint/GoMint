@@ -98,7 +98,7 @@ public abstract class Inventory<I> implements io.gomint.inventory.Inventory<I> {
 
     @Override
     public int size() {
-        return size;
+        return this.size;
     }
 
     @Override
@@ -240,7 +240,7 @@ public abstract class Inventory<I> implements io.gomint.inventory.Inventory<I> {
         Set<Entity<?>> viewers = new HashSet<>();
 
         for (PlayerConnection playerConnection : this.viewer) {
-            viewers.add(playerConnection.getEntity());
+            viewers.add(playerConnection.entity());
         }
 
         return viewers;

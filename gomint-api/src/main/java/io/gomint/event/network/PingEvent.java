@@ -3,12 +3,12 @@ package io.gomint.event.network;
 import io.gomint.event.Event;
 
 /**
+ * This event gets fired when a unconnected Client pings the server. This can happen very often so care about putting
+ * heavy calculation on this event since it may slow down other connections by a huge amount.
+ *
  * @author geNAZt
  * @version 1.0
  * @stability 3
- * <p>
- * This event gets fired when a unconnected Client pings the server. This can happen very often so care about putting
- * heavy calculation on this event since it may slow down other connections by a huge amount.
  */
 public class PingEvent extends Event {
 

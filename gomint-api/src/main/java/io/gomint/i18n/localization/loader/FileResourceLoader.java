@@ -52,7 +52,7 @@ public abstract class FileResourceLoader {
     protected InputStreamReader fileInputStreamReader(String path ) throws ResourceLoadFailedException {
         try {
             if ( !path.startsWith( "file://" ) ) {
-                InputStream resourceAsStream = module.getResourceAsStream( path );
+                InputStream resourceAsStream = this.module.getResourceAsStream( path );
 
                 if ( resourceAsStream != null ) {
                     //If the file is not on the Disk read it from the JAR

@@ -61,7 +61,7 @@ public class EnchantTableTileEntity extends ContainerTileEntity implements Inven
 
     private void selectAndSendEnchantments(EntityPlayer player, ItemStack<?> slotItem) {
         FastRandom random = new FastRandom(player.enchantmentSeed());
-        Pair<int[], List<List<Enchantment>>> selectedEnchantments = EnchantmentSelector.determineAvailable(this.getBlock().world().getServer().enchantments(),
+        Pair<int[], List<List<Enchantment>>> selectedEnchantments = EnchantmentSelector.determineAvailable(this.getBlock().world().server().enchantments(),
             random, this.getBlock().location(), (io.gomint.server.inventory.item.ItemStack<?>) slotItem);
 
         if (selectedEnchantments == null) {
@@ -73,7 +73,7 @@ public class EnchantTableTileEntity extends ContainerTileEntity implements Inven
         eventOptions.add(new EnchantmentSelectionEvent.Option(selectedEnchantments.getSecond().get(1).stream().map(e -> (io.gomint.enchant.Enchantment) e).collect(Collectors.toList()), selectedEnchantments.getFirst()[1]));
         eventOptions.add(new EnchantmentSelectionEvent.Option(selectedEnchantments.getSecond().get(2).stream().map(e -> (io.gomint.enchant.Enchantment) e).collect(Collectors.toList()), selectedEnchantments.getFirst()[2]));
 
-        EnchantmentSelectionEvent event = this.getBlock().world().getServer().pluginManager().callEvent(new EnchantmentSelectionEvent(
+        EnchantmentSelectionEvent event = this.getBlock().world().server().pluginManager().callEvent(new EnchantmentSelectionEvent(
             player,
             eventOptions
         ));
@@ -86,7 +86,7 @@ public class EnchantTableTileEntity extends ContainerTileEntity implements Inven
             List<PacketPlayerEnchantmentOptions.Enchantment> packetEnchantments = new ArrayList<>();
 
             for (io.gomint.enchant.Enchantment enchantment : enchantments) {
-                short id = this.block.world().getServer().enchantments().idOf(enchantment.getClass());
+                short id = this.block.world().server().enchantments().idOf(enchantment.getClass());
                 PacketPlayerEnchantmentOptions.Enchantment ench = new PacketPlayerEnchantmentOptions.Enchantment((byte) id, (byte) enchantment.level());
                 packetEnchantments.add(ench);
             }

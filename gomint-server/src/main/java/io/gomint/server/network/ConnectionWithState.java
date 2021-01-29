@@ -17,9 +17,9 @@ import io.gomint.server.network.packet.Packet;
 public interface ConnectionWithState {
 
     void send( Packet packet );
-    PlayerConnectionState getState();
+    PlayerConnectionState state();
     boolean isPlayer();
-    int getProtocolID();
-    Processor getOutputProcessor();
+    int protocolID();
+    Processor outputProcessor();
 
 }

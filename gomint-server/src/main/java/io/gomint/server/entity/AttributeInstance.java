@@ -193,39 +193,39 @@ public class AttributeInstance {
     }
 
     public String getKey() {
-        return key;
+        return this.key;
     }
 
     public float getMinValue() {
-        return minValue;
+        return this.minValue;
     }
 
     public float getMaxValue() {
-        return maxValue;
+        return this.maxValue;
     }
 
     public float getDefaultValue() {
-        return defaultValue;
+        return this.defaultValue;
     }
 
     public float getValue() {
-        return value;
+        return this.value;
     }
 
     public Map<AttributeModifierType, Map<AttributeModifier, Double>> getModifiers() {
-        return modifiers;
+        return this.modifiers;
     }
 
     @Override
     public String toString() {
         return "AttributeInstance{" +
-            "key='" + key + '\'' +
-            ", minValue=" + minValue +
-            ", maxValue=" + maxValue +
-            ", defaultValue=" + defaultValue +
-            ", value=" + value +
-            ", dirty=" + dirty +
-            ", modifiers=" + modifiers +
+            "key='" + this.key + '\'' +
+            ", minValue=" + this.minValue +
+            ", maxValue=" + this.maxValue +
+            ", defaultValue=" + this.defaultValue +
+            ", value=" + this.value +
+            ", dirty=" + this.dirty +
+            ", modifiers=" + this.modifiers +
             '}';
     }
 }

@@ -43,7 +43,7 @@ public class PacketInteract extends Packet {
     }
 
     public InteractAction getAction() {
-        return action;
+        return this.action;
     }
 
     public void setAction(InteractAction action) {
@@ -51,7 +51,7 @@ public class PacketInteract extends Packet {
     }
 
     public long getEntityId() {
-        return entityId;
+        return this.entityId;
     }
 
     public void setEntityId(long entityId) {
@@ -59,7 +59,7 @@ public class PacketInteract extends Packet {
     }
 
     public Vector getPosition() {
-        return position;
+        return this.position;
     }
 
     public void setPosition(Vector position) {
@@ -81,7 +81,7 @@ public class PacketInteract extends Packet {
         }
 
         public byte getId() {
-            return id;
+            return this.id;
         }
 
         public static InteractAction valueOf(byte actionId ) {

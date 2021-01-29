@@ -119,7 +119,7 @@ public class ItemBow extends ItemStack< io.gomint.inventory.item.ItemBow> implem
         // Create arrow
         EntityArrow arrow = new EntityArrow( player, player.world(), force, powerModifier, punchModifier, flameModifier );
         ProjectileLaunchEvent event = new ProjectileLaunchEvent( arrow, ProjectileLaunchEvent.Cause.BOW_SHOT );
-        player.world().getServer().pluginManager().callEvent( event );
+        player.world().server().pluginManager().callEvent( event );
         if ( !event.cancelled() ) {
             // Use the bow
             this.calculateUsageAndUpdate( 1 );
@@ -128,7 +128,7 @@ public class ItemBow extends ItemStack< io.gomint.inventory.item.ItemBow> implem
     }
 
     private float calculateForce( EntityPlayer player ) {
-        long currentDraw = player.world().getServer().currentTickTime() - player.actionStart();
+        long currentDraw = player.world().server().currentTickTime() - player.actionStart();
         float force = (float) currentDraw / 1000f;
         if ( force < 0.1f ) {
             return -1f;

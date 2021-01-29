@@ -33,7 +33,7 @@ public class PacketInventorySetSlot extends Packet {
     }
 
     public int getWindowId() {
-        return windowId;
+        return this.windowId;
     }
 
     public void setWindowId(int windowId) {
@@ -41,7 +41,7 @@ public class PacketInventorySetSlot extends Packet {
     }
 
     public int getSlot() {
-        return slot;
+        return this.slot;
     }
 
     public void setSlot(int slot) {
@@ -49,7 +49,7 @@ public class PacketInventorySetSlot extends Packet {
     }
 
     public ItemStack<?> getItemStack() {
-        return itemStack;
+        return this.itemStack;
     }
 
     public void setItemStack(ItemStack<?> itemStack) {

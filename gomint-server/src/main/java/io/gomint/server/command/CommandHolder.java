@@ -35,34 +35,34 @@ public class CommandHolder {
     }
 
     public String getName() {
-        return name;
+        return this.name;
     }
 
     public String getDescription() {
-        return description;
+        return this.description;
     }
 
     public Set<String> getAlias() {
-        return alias;
+        return this.alias;
     }
 
     public CommandPermission getCommandPermission() {
-        return commandPermission;
+        return this.commandPermission;
     }
 
     public String getPermission() {
-        return permission;
+        return this.permission;
     }
 
     public boolean isPermissionDefault() {
-        return permissionDefault;
+        return this.permissionDefault;
     }
 
     public Command getExecutor() {
-        return executor;
+        return this.executor;
     }
 
     public List<CommandOverload> getOverload() {
-        return overload;
+        return this.overload;
     }
 }

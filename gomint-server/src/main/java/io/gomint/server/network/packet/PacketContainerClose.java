@@ -32,7 +32,7 @@ public class PacketContainerClose extends Packet {
     }
 
     public byte getWindowId() {
-        return windowId;
+        return this.windowId;
     }
 
     public void setWindowId(byte windowId) {
@@ -40,7 +40,7 @@ public class PacketContainerClose extends Packet {
     }
 
     public boolean isServerSided() {
-        return serverSided;
+        return this.serverSided;
     }
 
     public void setServerSided(boolean serverSided) {

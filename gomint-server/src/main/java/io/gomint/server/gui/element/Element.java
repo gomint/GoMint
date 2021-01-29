@@ -17,11 +17,11 @@ public abstract class Element {
     }
 
     public String getId() {
-        return id;
+        return this.id;
     }
 
     public String getText() {
-        return text;
+        return this.text;
     }
 
     /**

@@ -34,7 +34,7 @@ public class PacketClientCacheMissResponse extends Packet {
     }
 
     public Long2ObjectMap<ByteBuf> getData() {
-        return data;
+        return this.data;
     }
 
     public void setData(Long2ObjectMap<ByteBuf> data) {

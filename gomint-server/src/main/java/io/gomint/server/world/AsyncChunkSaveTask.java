@@ -30,7 +30,7 @@ public class AsyncChunkSaveTask extends AsyncChunkTask {
      *
      * @return chunk which should be saved
      */
-    public ChunkAdapter getChunk() {
+    public ChunkAdapter chunk() {
         return this.chunk;
     }
 

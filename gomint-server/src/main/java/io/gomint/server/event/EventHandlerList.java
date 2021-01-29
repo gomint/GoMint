@@ -93,7 +93,7 @@ class EventHandlerList {
                 }
 
                 this.sortedHandlerList = newArr;
-                this.insertIndex = sortedHandlerList.length;
+                this.insertIndex = this.sortedHandlerList.length;
 
                 this.dirty = true;
             }

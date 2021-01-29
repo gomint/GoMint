@@ -298,11 +298,11 @@ public class AssetsLibrary {
     }
 
     public CreativeInventory creativeInventory() {
-        return creativeInventory;
+        return this.creativeInventory;
     }
 
     public List<BlockIdentifier> getBlockPalette() {
-        return blockPalette;
+        return this.blockPalette;
     }
 
 }

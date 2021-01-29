@@ -39,7 +39,7 @@ public enum StartupPriority implements Comparable<StartupPriority> {
     }
 
     public int order() {
-        return order;
+        return this.order;
     }
 
 }

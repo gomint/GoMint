@@ -68,13 +68,13 @@ public class FenceGate extends Block implements BlockFenceGate {
 
     @Override
     public BlockFenceGate toggle() {
-        OPEN.state(this, !this.open());
+        this.OPEN.state(this, !this.open());
         return this;
     }
 
     @Override
     public boolean open() {
-        return OPEN.state(this);
+        return this.OPEN.state(this);
     }
 
     @Override
@@ -135,13 +135,13 @@ public class FenceGate extends Block implements BlockFenceGate {
 
     @Override
     public BlockFenceGate direction(Direction direction) {
-        DIRECTION.state(this, direction);
+        this.DIRECTION.state(this, direction);
         return this;
     }
 
     @Override
     public Direction direction() {
-        return DIRECTION.state(this);
+        return this.DIRECTION.state(this);
     }
 
 }

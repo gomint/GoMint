@@ -40,7 +40,7 @@ public class PacketEntityFall extends Packet {
     }
 
     public long getEntityId() {
-        return entityId;
+        return this.entityId;
     }
 
     public void setEntityId(long entityId) {
@@ -48,7 +48,7 @@ public class PacketEntityFall extends Packet {
     }
 
     public float getFallDistance() {
-        return fallDistance;
+        return this.fallDistance;
     }
 
     public void setFallDistance(float fallDistance) {
@@ -56,7 +56,7 @@ public class PacketEntityFall extends Packet {
     }
 
     public boolean isInVoid() {
-        return inVoid;
+        return this.inVoid;
     }
 
     public void setInVoid(boolean inVoid) {

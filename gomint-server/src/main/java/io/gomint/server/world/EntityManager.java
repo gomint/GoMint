@@ -173,7 +173,7 @@ public class EntityManager {
                     // The entity moved in a not loaded chunk. We have two options now:
                     // 1. Load the chunk
                     // 2. Don't move the entity
-                    if (this.world.getServer().serverConfig().loadChunksForEntities()) {
+                    if (this.world.server().serverConfig().loadChunksForEntities()) {
                         chunk = this.world.loadChunk(chunkX, chunkZ, true);
                     } else {
                         // "Revert" movement
@@ -249,7 +249,7 @@ public class EntityManager {
 
                 // Check which player we need to inform about this movement
                 for (io.gomint.server.entity.EntityPlayer player : this.world.getPlayers0().keySet()) {
-                    if (player.connection().getState() != PlayerConnectionState.PLAYING ||
+                    if (player.connection().state() != PlayerConnectionState.PLAYING ||
                         (movedEntity instanceof io.gomint.server.entity.EntityPlayer &&
                             (player.isHidden((io.gomint.server.entity.EntityPlayer) movedEntity) || player.equals(movedEntity)))) {
                         continue;
@@ -286,7 +286,7 @@ public class EntityManager {
 
                 // Send to all players
                 for (io.gomint.server.entity.EntityPlayer entityPlayer : this.world.getPlayers0().keySet()) {
-                    if (entityPlayer.connection().getState() != PlayerConnectionState.PLAYING ||
+                    if (entityPlayer.connection().state() != PlayerConnectionState.PLAYING ||
                         (entity instanceof io.gomint.server.entity.EntityPlayer &&
                             entityPlayer.isHidden((io.gomint.server.entity.EntityPlayer) entity))) {
                         continue;
@@ -351,7 +351,7 @@ public class EntityManager {
      */
     public synchronized void spawnEntityAt(Entity<?> entity, float positionX, float positionY, float positionZ, float yaw, float pitch) {
         // Give a entity spawn event around
-        EntitySpawnEvent event = this.world.getServer().pluginManager().callEvent(new EntitySpawnEvent(entity));
+        EntitySpawnEvent event = this.world.server().pluginManager().callEvent(new EntitySpawnEvent(entity));
         if (event.cancelled()) {
             return;
         }
@@ -397,7 +397,7 @@ public class EntityManager {
             PacketPlayerlist playerlist = null;
 
             // Remap all current living entities
-            for (EntityPlayer player : entityPlayer.world().getServer().onlinePlayers()) {
+            for (EntityPlayer player : entityPlayer.world().server().onlinePlayers()) {
                 if (!player.isHidden(entityPlayer) && !player.equals(entityPlayer)) {
                     if (playerlist == null) {
                         playerlist = new PacketPlayerlist();
@@ -449,7 +449,7 @@ public class EntityManager {
 
         // Inform all others
         EntityDespawnEvent entityDespawnEvent = new EntityDespawnEvent(entity);
-        this.world.getServer().pluginManager().callEvent(entityDespawnEvent);
+        this.world.server().pluginManager().callEvent(entityDespawnEvent);
 
         // Remove from chunk
         Chunk chunk = cEntity.chunk();

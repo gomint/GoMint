@@ -26,7 +26,7 @@ public class PacketSetDifficulty extends Packet {
     }
 
     public int getDifficulty() {
-        return difficulty;
+        return this.difficulty;
     }
 
     public void setDifficulty(int difficulty) {

@@ -25,19 +25,19 @@ public class PacketEncryptionResponseHandler implements PacketHandler<PacketEncr
 
     @Override
     public void handle( PacketEncryptionResponse packet, long currentTimeMillis, PlayerConnection connection ) {
-        connection.getEntity().loginPerformance().setEncryptionEnd( currentTimeMillis );
+        connection.entity().loginPerformance().setEncryptionEnd( currentTimeMillis );
 
-        LOGGER.info("We got encryption response: {}", connection.getEntity());
+        LOGGER.info("We got encryption response: {}", connection.entity());
 
         PacketNetworkSettings networkSettings = new PacketNetworkSettings();
         networkSettings.setCompressionThreshold((short) 1);
         connection.addToSendQueue(networkSettings);
 
-        connection.setState( PlayerConnectionState.LOGIN );
+        connection.state( PlayerConnectionState.LOGIN );
         connection.sendPlayState( PacketPlayState.PlayState.LOGIN_SUCCESS );
 
         // Track performance
-        connection.getEntity().loginPerformance().setResourceStart( currentTimeMillis );
+        connection.entity().loginPerformance().setResourceStart( currentTimeMillis );
 
         connection.initWorldAndResourceSend();
     }

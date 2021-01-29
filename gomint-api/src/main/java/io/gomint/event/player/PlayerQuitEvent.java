@@ -3,14 +3,14 @@ package io.gomint.event.player;
 import io.gomint.entity.EntityPlayer;
 
 /**
+ * This event is fired when a client has disconnected. Its called before entity cleanup so you can access all data loaded
+ * associated with the entity or alter data in it before its persisted.
+ *
  * @author geNAZt
  * @version 1.0
  * @stability 3
- *
- * This event is fired when a client has disconnected. Its called before entity cleanup so you can access all data loaded
- * associated with the entity or alter data in it before its persisted.
  */
-public class PlayerQuitEvent extends PlayerEvent {
+public class PlayerQuitEvent extends SimplePlayerEvent {
 
     private String quitMessage;
 
@@ -19,8 +19,8 @@ public class PlayerQuitEvent extends PlayerEvent {
      *
      * @param player The player which disconnected
      */
-    public PlayerQuitEvent( EntityPlayer player, String quitMessage ) {
-        super( player );
+    public PlayerQuitEvent(EntityPlayer player, String quitMessage) {
+        super(player);
         this.quitMessage = quitMessage;
     }
 
@@ -29,7 +29,7 @@ public class PlayerQuitEvent extends PlayerEvent {
      *
      * @param quitMessage the message to display
      */
-    public PlayerQuitEvent quitMessage(String quitMessage ) {
+    public PlayerQuitEvent quitMessage(String quitMessage) {
         this.quitMessage = quitMessage;
         return this;
     }
@@ -40,7 +40,7 @@ public class PlayerQuitEvent extends PlayerEvent {
      * @return the message that will be displayed
      */
     public String quitMessage() {
-        return quitMessage;
+        return this.quitMessage;
     }
 
 }

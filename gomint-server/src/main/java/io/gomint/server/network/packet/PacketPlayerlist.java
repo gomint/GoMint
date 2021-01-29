@@ -71,7 +71,7 @@ public class PacketPlayerlist extends Packet {
     }
 
     public byte getMode() {
-        return mode;
+        return this.mode;
     }
 
     public void setMode(byte mode) {
@@ -79,7 +79,7 @@ public class PacketPlayerlist extends Packet {
     }
 
     public List<Entry> getEntries() {
-        return entries;
+        return this.entries;
     }
 
     public void setEntries(List<Entry> entries) {
@@ -108,11 +108,11 @@ public class PacketPlayerlist extends Packet {
         }
 
         public UUID getUuid() {
-            return uuid;
+            return this.uuid;
         }
 
         public long getEntityId() {
-            return entityId;
+            return this.entityId;
         }
 
         public void setEntityId(long entityId) {
@@ -120,7 +120,7 @@ public class PacketPlayerlist extends Packet {
         }
 
         public String getName() {
-            return name;
+            return this.name;
         }
 
         public void setName(String name) {
@@ -128,7 +128,7 @@ public class PacketPlayerlist extends Packet {
         }
 
         public DeviceInfo getDeviceInfo() {
-            return deviceInfo;
+            return this.deviceInfo;
         }
 
         public void setDeviceInfo(DeviceInfo deviceInfo) {
@@ -136,7 +136,7 @@ public class PacketPlayerlist extends Packet {
         }
 
         public String getXboxId() {
-            return xboxId;
+            return this.xboxId;
         }
 
         public void setXboxId(String xboxId) {
@@ -144,7 +144,7 @@ public class PacketPlayerlist extends Packet {
         }
 
         public PlayerSkin getSkin() {
-            return skin;
+            return this.skin;
         }
 
         public void setSkin(PlayerSkin skin) {

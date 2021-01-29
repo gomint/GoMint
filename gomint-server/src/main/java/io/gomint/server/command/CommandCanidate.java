@@ -30,28 +30,28 @@ public class CommandCanidate {
     }
 
     public CommandOverload getOverload() {
-        return overload;
+        return this.overload;
     }
 
     public Map<String, Object> getArguments() {
-        return arguments;
+        return this.arguments;
     }
 
     public boolean isCompletedOptionals() {
-        return completedOptionals;
+        return this.completedOptionals;
     }
 
     public boolean isReadCompleted() {
-        return readCompleted;
+        return this.readCompleted;
     }
 
     @Override
     public String toString() {
         return "CommandCanidate{" +
-            "overload=" + overload +
-            ", arguments=" + arguments +
-            ", completedOptionals=" + completedOptionals +
-            ", readCompleted=" + readCompleted +
+            "overload=" + this.overload +
+            ", arguments=" + this.arguments +
+            ", completedOptionals=" + this.completedOptionals +
+            ", readCompleted=" + this.readCompleted +
             '}';
     }
 

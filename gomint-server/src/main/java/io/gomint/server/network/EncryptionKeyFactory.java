@@ -69,7 +69,7 @@ public class EncryptionKeyFactory {
         this.keyPair = generator.generateKeyPair();
     }
 
-    public KeyPair getKeyPair() {
+    public KeyPair keyPair() {
         return this.keyPair;
     }
 
@@ -82,11 +82,11 @@ public class EncryptionKeyFactory {
         }
     }
 
-    public String getRootKeyBase64() {
+    public String rootKeyBase64() {
         return this.rootKeyBase64;
     }
 
-    public Key getRootKey() {
+    public Key rootKey() {
         return this.rootKey;
     }
 

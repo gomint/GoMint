@@ -40,7 +40,7 @@ public class PacketSetScoreboardIdentity extends Packet {
     }
 
     public byte getType() {
-        return type;
+        return this.type;
     }
 
     public void setType(byte type) {
@@ -48,7 +48,7 @@ public class PacketSetScoreboardIdentity extends Packet {
     }
 
     public List<ScoreboardIdentity> getEntries() {
-        return entries;
+        return this.entries;
     }
 
     public void setEntries(List<ScoreboardIdentity> entries) {
@@ -65,11 +65,11 @@ public class PacketSetScoreboardIdentity extends Packet {
         }
 
         public long getScoreId() {
-            return scoreId;
+            return this.scoreId;
         }
 
         public long getEntityId() {
-            return entityId;
+            return this.entityId;
         }
     }
 

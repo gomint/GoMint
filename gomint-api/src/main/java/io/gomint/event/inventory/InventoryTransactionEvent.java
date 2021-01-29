@@ -12,7 +12,6 @@ import io.gomint.event.player.CancellablePlayerEvent;
 import io.gomint.inventory.transaction.Transaction;
 
 import java.util.List;
-import java.util.Objects;
 
 /**
  * @author geNAZt
@@ -29,8 +28,8 @@ public class InventoryTransactionEvent extends CancellablePlayerEvent<InventoryT
      * @param player       which has executed this transaction
      * @param transactions which should be executed
      */
-    public InventoryTransactionEvent( EntityPlayer player, List<Transaction<?, ?, ?>> transactions ) {
-        super( player );
+    public InventoryTransactionEvent(EntityPlayer player, List<Transaction<?, ?, ?>> transactions) {
+        super(player);
         this.transactions = transactions;
     }
 
@@ -41,27 +40,6 @@ public class InventoryTransactionEvent extends CancellablePlayerEvent<InventoryT
      */
     public List<Transaction<?, ?, ?>> transactions() {
         return this.transactions;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        if (!super.equals(o)) return false;
-        InventoryTransactionEvent that = (InventoryTransactionEvent) o;
-        return Objects.equals(transactions, that.transactions);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(super.hashCode(), transactions);
-    }
-
-    @Override
-    public String toString() {
-        return "InventoryTransactionEvent{" +
-            "transactions=" + transactions +
-            '}';
     }
 
 }

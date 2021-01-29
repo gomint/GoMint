@@ -36,7 +36,7 @@ public class PacketRemoveObjective extends Packet {
     }
 
     public String getObjectiveName() {
-        return objectiveName;
+        return this.objectiveName;
     }
 
     public void setObjectiveName(String objectiveName) {

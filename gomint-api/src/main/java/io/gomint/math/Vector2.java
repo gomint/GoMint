@@ -54,7 +54,7 @@ public class Vector2 {
     }
 
     public float x() {
-        return x;
+        return this.x;
     }
 
     public Vector2 x(float x) {
@@ -63,7 +63,7 @@ public class Vector2 {
     }
 
     public float z() {
-        return z;
+        return this.z;
     }
 
     public Vector2 z(float z) {
@@ -74,8 +74,8 @@ public class Vector2 {
     @Override
     public String toString() {
         return "Vector2{" +
-            "x=" + x +
-            ", z=" + z +
+            "x=" + this.x +
+            ", z=" + this.z +
             '}';
     }
 

@@ -60,7 +60,7 @@ public class UI {
             int x = ( SIZE / 2 ) + chunk.x();
             int z = ( SIZE / 2 ) + chunk.z();
 
-            CellPane pane = panes.get( new Pair<>( x, z ) );
+            CellPane pane = this.panes.get( new Pair<>( x, z ) );
             if ( pane != null ) {
                 pane.setBackground( Color.GREEN );
             }
@@ -70,7 +70,7 @@ public class UI {
     public void reset() {
         // Reset UI
         EventQueue.invokeLater(() -> {
-            for ( CellPane pane : panes.values() ) {
+            for ( CellPane pane : this.panes.values() ) {
                 pane.setBackground( Color.WHITE );
             }
         });
@@ -93,7 +93,7 @@ public class UI {
                     CellPane cellPane = new CellPane();
                     Border border = new MatteBorder( 1, 1, ( row == this.height ? 1 : 0 ), ( col == this.width ? 1 : 0 ), Color.GRAY );
 
-                    panes.put( new Pair<>( col, row ), cellPane );
+                    UI.this.panes.put( new Pair<>( col, row ), cellPane );
 
                     cellPane.setBorder( border );
                     this.add( cellPane, gbc );

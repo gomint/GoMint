@@ -58,7 +58,7 @@ public class MojangChainValidator {
         this.trustedKeys = new HashMap<>();
 
         if (this.encryptionKeyFactory.isKeyGiven()) {
-            this.trustedKeys.put(this.encryptionKeyFactory.getRootKeyBase64(), this.encryptionKeyFactory.getRootKey());
+            this.trustedKeys.put(this.encryptionKeyFactory.rootKeyBase64(), this.encryptionKeyFactory.rootKey());
         }
 
         List<JwtToken> unverified = new ArrayList<>( this.chain );
@@ -192,31 +192,31 @@ public class MojangChainValidator {
     }
 
     public List<JwtToken> getChain() {
-        return chain;
+        return this.chain;
     }
 
     public String getUsername() {
-        return username;
+        return this.username;
     }
 
     public UUID getUuid() {
-        return uuid;
+        return this.uuid;
     }
 
     public String getXboxId() {
-        return xboxId;
+        return this.xboxId;
     }
 
     public ECPublicKey getClientPublicKey() {
-        return clientPublicKey;
+        return this.clientPublicKey;
     }
 
     public Map<String, Key> getTrustedKeys() {
-        return trustedKeys;
+        return this.trustedKeys;
     }
 
     public EncryptionKeyFactory getEncryptionKeyFactory() {
-        return encryptionKeyFactory;
+        return this.encryptionKeyFactory;
     }
 
 }

@@ -62,7 +62,7 @@ public class Blocks {
     }
 
     public PacketBuffer packetCache() {
-        return packetCache;
+        return this.packetCache;
     }
 
     public <T extends Block> T get(BlockIdentifier identifier, byte skyLightLevel, byte blockLightLevel,
@@ -139,7 +139,7 @@ public class Blocks {
 
         // We decided that the block would fit
         BlockPlaceEvent blockPlaceEvent = new BlockPlaceEvent(entity, clickedBlock, block, item, newBlock);
-        block.world.getServer().pluginManager().callEvent(blockPlaceEvent);
+        block.world.server().pluginManager().callEvent(blockPlaceEvent);
 
         if (blockPlaceEvent.cancelled()) {
             return false;

@@ -44,41 +44,41 @@ public class BlockIdentifier {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         BlockIdentifier that = (BlockIdentifier) o;
-        return runtimeId == that.runtimeId &&
-            Objects.equals(blockId, that.blockId) &&
-            Objects.equals(states, that.states) &&
-            Objects.equals(nbt, that.nbt);
+        return this.runtimeId == that.runtimeId &&
+            Objects.equals(this.blockId, that.blockId) &&
+            Objects.equals(this.states, that.states) &&
+            Objects.equals(this.nbt, that.nbt);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(blockId, states, runtimeId, nbt);
+        return Objects.hash(this.blockId, this.states, this.runtimeId, this.nbt);
     }
 
     @Override
     public String toString() {
         return "BlockIdentifier{" +
-            "blockId='" + blockId + '\'' +
-            ", states=" + states +
-            ", runtimeId=" + runtimeId +
-            ", nbt=" + nbt +
+            "blockId='" + this.blockId + '\'' +
+            ", states=" + this.states +
+            ", runtimeId=" + this.runtimeId +
+            ", nbt=" + this.nbt +
             '}';
     }
 
     public String getBlockId() {
-        return blockId;
+        return this.blockId;
     }
 
     public SortedMap<String, Object> getStates() {
-        return states;
+        return this.states;
     }
 
     public int getRuntimeId() {
-        return runtimeId;
+        return this.runtimeId;
     }
 
     public NBTTagCompound getNbt() {
-        return nbt;
+        return this.nbt;
     }
 
 }

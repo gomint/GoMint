@@ -17,14 +17,14 @@ import java.util.List;
  * @version 1.0
  * @stability 3
  */
-public class PlayerDeathEvent extends PlayerEvent {
+public class PlayerDeathEvent extends SimplePlayerEvent {
 
     private String deathMessage;
     private boolean dropInventory;
     private final List<ItemStack<?>> drops;
 
-    public PlayerDeathEvent( EntityPlayer player, String deathMessage, boolean dropInventory, List<ItemStack<?>> drops ) {
-        super( player );
+    public PlayerDeathEvent(EntityPlayer player, String deathMessage, boolean dropInventory, List<ItemStack<?>> drops) {
+        super(player);
         this.deathMessage = deathMessage;
         this.dropInventory = dropInventory;
         this.drops = drops;
@@ -44,7 +44,7 @@ public class PlayerDeathEvent extends PlayerEvent {
      *
      * @param deathMessage which will be used, can be null or empty string to not display anything
      */
-    public PlayerDeathEvent deathMessage(String deathMessage ) {
+    public PlayerDeathEvent deathMessage(String deathMessage) {
         this.deathMessage = deathMessage;
         return this;
     }
@@ -63,7 +63,7 @@ public class PlayerDeathEvent extends PlayerEvent {
      *
      * @param dropInventory false will not drop the inventory, true will drop the inventory
      */
-    public PlayerDeathEvent dropInventory(boolean dropInventory ) {
+    public PlayerDeathEvent dropInventory(boolean dropInventory) {
         this.dropInventory = dropInventory;
         return this;
     }
@@ -74,7 +74,7 @@ public class PlayerDeathEvent extends PlayerEvent {
      * @return list of items
      */
     public List<ItemStack<?>> drops() {
-        return drops;
+        return this.drops;
     }
 
 }

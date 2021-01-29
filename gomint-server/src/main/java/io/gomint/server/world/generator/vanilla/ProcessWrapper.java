@@ -32,7 +32,7 @@ public class ProcessWrapper {
         this.process = builder.start();
 
         Thread stdReader = new Thread(() -> {
-            try (BufferedReader in = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
+            try (BufferedReader in = new BufferedReader(new InputStreamReader(this.process.getInputStream()))) {
                 String line;
                 while ((line = in.readLine()) != null) {
                     stdoutConsumer.accept(line);

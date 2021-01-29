@@ -26,7 +26,7 @@ public class PacketRiderJump extends Packet {
     }
 
     public int getStrength() {
-        return strength;
+        return this.strength;
     }
 
     public void setStrength(int strength) {

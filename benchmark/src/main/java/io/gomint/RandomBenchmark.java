@@ -19,18 +19,18 @@ import java.util.concurrent.ThreadLocalRandom;
 public class RandomBenchmark {
 
     private int blockHash = ThreadLocalRandom.current().nextInt();
-    private int lcg = blockHash;
+    private int lcg = this.blockHash;
 
     @Benchmark
     public int intShifted() {
-        blockHash >>= 12;
-        return blockHash & 0xfff;
+        this.blockHash >>= 12;
+        return this.blockHash & 0xfff;
     }
 
     @Benchmark
     public int intLCG() {
-        lcg = lcg * 3 + 1013904223;
-        return lcg >> 2;
+        this.lcg = this.lcg * 3 + 1013904223;
+        return this.lcg >> 2;
     }
 
     @Benchmark

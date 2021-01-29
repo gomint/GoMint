@@ -53,7 +53,7 @@ public class WorldManager {
      * @param dT            The delta from the full second which has been calculated in the last tick
      */
     public void update(long currentTimeMS, float dT) {
-        for (WorldAdapter world : this.getWorlds()) {
+        for (WorldAdapter world : this.worlds()) {
             world.update(currentTimeMS, dT);
         }
     }
@@ -63,7 +63,7 @@ public class WorldManager {
      *
      * @return A collection of all worlds held by the world manager
      */
-    public Collection<WorldAdapter> getWorlds() {
+    public Collection<WorldAdapter> worlds() {
         if (!GoMint.instance().mainThread()) {
             LOGGER.warn("Getting worlds from an async thread. This is not safe and can lead to CME", new Exception());
         }
@@ -78,7 +78,7 @@ public class WorldManager {
      * @param name The name of the world to be retrieved
      * @return The world if found or null otherwise
      */
-    public WorldAdapter getWorld(String name) {
+    public WorldAdapter world(String name) {
         if (!GoMint.instance().mainThread()) {
             LOGGER.warn("Getting a world from an async thread. This is not safe and can lead to CME", new Exception());
         }
@@ -166,7 +166,7 @@ public class WorldManager {
         }
 
         LOGGER.info("Closing all worlds");
-        for (WorldAdapter loadedWorld : new ArrayList<>(this.getWorlds())) {
+        for (WorldAdapter loadedWorld : new ArrayList<>(this.worlds())) {
             loadedWorld.unload(null);
         }
         LOGGER.info("All worlds closed");

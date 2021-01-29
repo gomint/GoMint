@@ -41,7 +41,7 @@ public class PacketBlockEvent extends Packet {
     }
 
     public BlockPosition getPosition() {
-        return position;
+        return this.position;
     }
 
     public void setPosition(BlockPosition position) {
@@ -49,7 +49,7 @@ public class PacketBlockEvent extends Packet {
     }
 
     public int getData1() {
-        return data1;
+        return this.data1;
     }
 
     public void setData1(int data1) {
@@ -57,7 +57,7 @@ public class PacketBlockEvent extends Packet {
     }
 
     public int getData2() {
-        return data2;
+        return this.data2;
     }
 
     public void setData2(int data2) {

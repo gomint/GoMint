@@ -35,7 +35,7 @@ public abstract class Enchantment implements io.gomint.enchant.Enchantment {
     }
 
     public short maxLevel() {
-        return maxLevel;
+        return this.maxLevel;
     }
 
     @Override

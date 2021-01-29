@@ -49,8 +49,8 @@ public enum WindowType {
         this.id = (byte) id;
     }
 
-    public byte getId() {
-        return id;
+    public byte id() {
+        return this.id;
     }
 
 }

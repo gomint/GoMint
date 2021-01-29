@@ -57,7 +57,7 @@ public class PacketAddItemEntity extends Packet {
     }
 
     public long getEntityId() {
-        return entityId;
+        return this.entityId;
     }
 
     public void setEntityId(long entityId) {
@@ -65,7 +65,7 @@ public class PacketAddItemEntity extends Packet {
     }
 
     public ItemStack<?> getItemStack() {
-        return itemStack;
+        return this.itemStack;
     }
 
     public void setItemStack(ItemStack<?> itemStack) {
@@ -73,7 +73,7 @@ public class PacketAddItemEntity extends Packet {
     }
 
     public float getX() {
-        return x;
+        return this.x;
     }
 
     public void setX(float x) {
@@ -81,7 +81,7 @@ public class PacketAddItemEntity extends Packet {
     }
 
     public float getY() {
-        return y;
+        return this.y;
     }
 
     public void setY(float y) {
@@ -89,7 +89,7 @@ public class PacketAddItemEntity extends Packet {
     }
 
     public float getZ() {
-        return z;
+        return this.z;
     }
 
     public void setZ(float z) {
@@ -97,7 +97,7 @@ public class PacketAddItemEntity extends Packet {
     }
 
     public float getMotionX() {
-        return motionX;
+        return this.motionX;
     }
 
     public void setMotionX(float motionX) {
@@ -105,7 +105,7 @@ public class PacketAddItemEntity extends Packet {
     }
 
     public float getMotionY() {
-        return motionY;
+        return this.motionY;
     }
 
     public void setMotionY(float motionY) {
@@ -113,7 +113,7 @@ public class PacketAddItemEntity extends Packet {
     }
 
     public float getMotionZ() {
-        return motionZ;
+        return this.motionZ;
     }
 
     public void setMotionZ(float motionZ) {
@@ -121,7 +121,7 @@ public class PacketAddItemEntity extends Packet {
     }
 
     public MetadataContainer getMetadata() {
-        return metadata;
+        return this.metadata;
     }
 
     public void setMetadata(MetadataContainer metadata) {
@@ -129,7 +129,7 @@ public class PacketAddItemEntity extends Packet {
     }
 
     public boolean isFromFishing() {
-        return fromFishing;
+        return this.fromFishing;
     }
 
     public void setFromFishing(boolean fromFishing) {

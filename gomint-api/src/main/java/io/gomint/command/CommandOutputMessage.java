@@ -27,15 +27,15 @@ public class CommandOutputMessage {
     }
 
     public boolean success() {
-        return success;
+        return this.success;
     }
 
     public String format() {
-        return format;
+        return this.format;
     }
 
     public List<String> parameters() {
-        return parameters;
+        return this.parameters;
     }
 
 }

@@ -60,7 +60,7 @@ public class PacketBossBar extends Packet {
     }
 
     public long getEntityId() {
-        return entityId;
+        return this.entityId;
     }
 
     public void setEntityId(long entityId) {
@@ -68,7 +68,7 @@ public class PacketBossBar extends Packet {
     }
 
     public Type getType() {
-        return type;
+        return this.type;
     }
 
     public void setType(Type type) {
@@ -76,7 +76,7 @@ public class PacketBossBar extends Packet {
     }
 
     public long getPlayerId() {
-        return playerId;
+        return this.playerId;
     }
 
     public void setPlayerId(long playerId) {
@@ -84,7 +84,7 @@ public class PacketBossBar extends Packet {
     }
 
     public float getHealthPercent() {
-        return healthPercent;
+        return this.healthPercent;
     }
 
     public void setHealthPercent(float healthPercent) {
@@ -92,7 +92,7 @@ public class PacketBossBar extends Packet {
     }
 
     public String getTitle() {
-        return title;
+        return this.title;
     }
 
     public void setTitle(String title) {
@@ -100,7 +100,7 @@ public class PacketBossBar extends Packet {
     }
 
     public int getColor() {
-        return color;
+        return this.color;
     }
 
     public void setColor(int color) {
@@ -108,7 +108,7 @@ public class PacketBossBar extends Packet {
     }
 
     public int getOverlay() {
-        return overlay;
+        return this.overlay;
     }
 
     public void setOverlay(int overlay) {
@@ -132,7 +132,7 @@ public class PacketBossBar extends Packet {
         }
 
         public int getId() {
-            return id;
+            return this.id;
         }
     }
 

@@ -15,7 +15,7 @@ public class PacketBlockPickRequestHandler implements PacketHandler<PacketBlockP
 
     @Override
     public void handle(PacketBlockPickRequest packet, long currentTimeMillis, PlayerConnection connection) {
-        EntityPlayer player = connection.getEntity();
+        EntityPlayer player = connection.entity();
 
         // Crash check
         float dist = player.location().distance(packet.getLocation().toVector());

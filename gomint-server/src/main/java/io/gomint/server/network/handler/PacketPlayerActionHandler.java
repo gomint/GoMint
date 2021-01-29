@@ -21,52 +21,52 @@ public class PacketPlayerActionHandler implements PacketHandler<PacketPlayerActi
     public void handle( PacketPlayerAction packet, long currentTimeMillis, PlayerConnection connection ) {
         switch ( packet.getAction() ) {
             case START_SWIMMING:
-                if ( !connection.getEntity().swimming() ) {
-                    PlayerSwimEvent playerSwimEvent = new PlayerSwimEvent( connection.getEntity(), true );
-                    connection.getServer().pluginManager().callEvent( playerSwimEvent );
+                if ( !connection.entity().swimming() ) {
+                    PlayerSwimEvent playerSwimEvent = new PlayerSwimEvent( connection.entity(), true );
+                    connection.server().pluginManager().callEvent( playerSwimEvent );
                     if ( playerSwimEvent.cancelled() ) {
-                        connection.getEntity().sendData( connection.getEntity() );
+                        connection.entity().sendData( connection.entity() );
                     } else {
-                        connection.getEntity().swimming( playerSwimEvent.newStatus() );
+                        connection.entity().swimming( playerSwimEvent.newStatus() );
                     }
                 }
 
                 break;
 
             case STOP_SWIMMING:
-                if ( connection.getEntity().swimming() ) {
-                    PlayerSwimEvent playerSwimEvent = new PlayerSwimEvent( connection.getEntity(), false );
-                    connection.getServer().pluginManager().callEvent( playerSwimEvent );
+                if ( connection.entity().swimming() ) {
+                    PlayerSwimEvent playerSwimEvent = new PlayerSwimEvent( connection.entity(), false );
+                    connection.server().pluginManager().callEvent( playerSwimEvent );
                     if ( playerSwimEvent.cancelled() ) {
-                        connection.getEntity().sendData( connection.getEntity() );
+                        connection.entity().sendData( connection.entity() );
                     } else {
-                        connection.getEntity().swimming( playerSwimEvent.newStatus() );
+                        connection.entity().swimming( playerSwimEvent.newStatus() );
                     }
                 }
 
                 break;
 
             case START_SPIN_ATTACK:
-                if ( !connection.getEntity().spinning() ) {
-                    PlayerSpinEvent playerSpinEvent = new PlayerSpinEvent( connection.getEntity(), true );
-                    connection.getServer().pluginManager().callEvent( playerSpinEvent );
+                if ( !connection.entity().spinning() ) {
+                    PlayerSpinEvent playerSpinEvent = new PlayerSpinEvent( connection.entity(), true );
+                    connection.server().pluginManager().callEvent( playerSpinEvent );
                     if ( playerSpinEvent.cancelled() ) {
-                        connection.getEntity().sendData( connection.getEntity() );
+                        connection.entity().sendData( connection.entity() );
                     } else {
-                        connection.getEntity().spinning( playerSpinEvent.newStatus() );
+                        connection.entity().spinning( playerSpinEvent.newStatus() );
                     }
                 }
 
                 break;
 
             case STOP_SPIN_ATTACK:
-                if ( connection.getEntity().spinning() ) {
-                    PlayerSpinEvent playerSpinEvent = new PlayerSpinEvent( connection.getEntity(), false );
-                    connection.getServer().pluginManager().callEvent( playerSpinEvent );
+                if ( connection.entity().spinning() ) {
+                    PlayerSpinEvent playerSpinEvent = new PlayerSpinEvent( connection.entity(), false );
+                    connection.server().pluginManager().callEvent( playerSpinEvent );
                     if ( playerSpinEvent.cancelled() ) {
-                        connection.getEntity().sendData( connection.getEntity() );
+                        connection.entity().sendData( connection.entity() );
                     } else {
-                        connection.getEntity().spinning( playerSpinEvent.newStatus() );
+                        connection.entity().spinning( playerSpinEvent.newStatus() );
                     }
                 }
 
@@ -75,7 +75,7 @@ public class PacketPlayerActionHandler implements PacketHandler<PacketPlayerActi
             case START_BREAK:
                 // TODO: MJ BUG / 1.2.13 / Client sends multiple START_BREAK -> ABORT_BREAK -> START_BREAK in the same tick
                 if ( alreadyFired( connection ) ) {
-                    if ( connection.isStartBreakResult() ) {
+                    if ( connection.startBreakResult() ) {
                         handleBreakStart( connection, currentTimeMillis, packet );
                     }
 
@@ -83,19 +83,19 @@ public class PacketPlayerActionHandler implements PacketHandler<PacketPlayerActi
                 }
 
                 // Sanity checks (against crashes)
-                if ( connection.getEntity().canInteract( packet.getPosition().toVector().add( .5f, .5f, .5f ), 13 ) ) {
-                    PlayerInteractEvent event = connection.getServer()
-                        .pluginManager().callEvent( new PlayerInteractEvent( connection.getEntity(),
-                            PlayerInteractEvent.ClickType.LEFT, connection.getEntity().world().blockAt( packet.getPosition() ) ) );
+                if ( connection.entity().canInteract( packet.getPosition().toVector().add( .5f, .5f, .5f ), 13 ) ) {
+                    PlayerInteractEvent event = connection.server()
+                        .pluginManager().callEvent( new PlayerInteractEvent( connection.entity(),
+                            PlayerInteractEvent.ClickType.LEFT, connection.entity().world().blockAt( packet.getPosition() ) ) );
 
-                    connection.setStartBreakResult( !event.cancelled() && connection.getEntity().startBreak() == 0 );
+                    connection.startBreakResult( !event.cancelled() && connection.entity().startBreak() == 0 );
 
-                    if ( !event.cancelled() && connection.getEntity().startBreak() == 0 ) {
+                    if ( !event.cancelled() && connection.entity().startBreak() == 0 ) {
                         handleBreakStart( connection, currentTimeMillis, packet );
                     }
 
                 } else {
-                    connection.setStartBreakResult( false );
+                    connection.startBreakResult( false );
                 }
 
                 break;
@@ -103,73 +103,73 @@ public class PacketPlayerActionHandler implements PacketHandler<PacketPlayerActi
             case ABORT_BREAK:
             case STOP_BREAK:
                 // Send abort break animation
-                if ( connection.getEntity().breakVector() != null ) {
-                    connection.getEntity().world().sendLevelEvent( connection.getEntity().breakVector().toVector(), LevelEvent.BLOCK_STOP_BREAK, 0 );
+                if ( connection.entity().breakVector() != null ) {
+                    connection.entity().world().sendLevelEvent( connection.entity().breakVector().toVector(), LevelEvent.BLOCK_STOP_BREAK, 0 );
                 }
 
                 // Reset when abort
                 if ( packet.getAction() == PacketPlayerAction.PlayerAction.ABORT_BREAK ) {
-                    connection.getEntity().breakVector( null );
+                    connection.entity().breakVector( null );
                 }
 
-                if ( connection.getEntity().breakVector() == null ) {
+                if ( connection.entity().breakVector() == null ) {
                     // This happens when instant break is enabled
-                    connection.getEntity().setBreakTime( 0 );
-                    connection.getEntity().setStartBreak( 0 );
+                    connection.entity().setBreakTime( 0 );
+                    connection.entity().setStartBreak( 0 );
                     return;
                 }
 
-                connection.getEntity().setBreakTime( ( currentTimeMillis - connection.getEntity().startBreak() ) );
-                connection.getEntity().setStartBreak( 0 );
+                connection.entity().setBreakTime( ( currentTimeMillis - connection.entity().startBreak() ) );
+                connection.entity().setStartBreak( 0 );
                 break;
 
             case START_SNEAK:
-                if ( !connection.getEntity().sneaking() ) {
-                    PlayerToggleSneakEvent playerToggleSneakEvent = new PlayerToggleSneakEvent( connection.getEntity(), true );
-                    connection.getServer().pluginManager().callEvent( playerToggleSneakEvent );
+                if ( !connection.entity().sneaking() ) {
+                    PlayerToggleSneakEvent playerToggleSneakEvent = new PlayerToggleSneakEvent( connection.entity(), true );
+                    connection.server().pluginManager().callEvent( playerToggleSneakEvent );
                     if ( playerToggleSneakEvent.cancelled() ) {
-                        connection.getEntity().sendData( connection.getEntity() );
+                        connection.entity().sendData( connection.entity() );
                     } else {
-                        connection.getEntity().sneaking( true );
+                        connection.entity().sneaking( true );
                     }
                 }
 
                 break;
 
             case STOP_SNEAK:
-                if ( connection.getEntity().sneaking() ) {
-                    PlayerToggleSneakEvent playerToggleSneakEvent = new PlayerToggleSneakEvent( connection.getEntity(), false );
-                    connection.getServer().pluginManager().callEvent( playerToggleSneakEvent );
+                if ( connection.entity().sneaking() ) {
+                    PlayerToggleSneakEvent playerToggleSneakEvent = new PlayerToggleSneakEvent( connection.entity(), false );
+                    connection.server().pluginManager().callEvent( playerToggleSneakEvent );
                     if ( playerToggleSneakEvent.cancelled() ) {
-                        connection.getEntity().sendData( connection.getEntity() );
+                        connection.entity().sendData( connection.entity() );
                     } else {
-                        connection.getEntity().sneaking( false );
+                        connection.entity().sneaking( false );
                     }
                 }
 
                 break;
 
             case START_SPRINT:
-                if ( !connection.getEntity().sprinting() ) {
-                    PlayerToggleSprintEvent playerToggleSprintEvent = new PlayerToggleSprintEvent( connection.getEntity(), true );
-                    connection.getServer().pluginManager().callEvent( playerToggleSprintEvent );
+                if ( !connection.entity().sprinting() ) {
+                    PlayerToggleSprintEvent playerToggleSprintEvent = new PlayerToggleSprintEvent( connection.entity(), true );
+                    connection.server().pluginManager().callEvent( playerToggleSprintEvent );
                     if ( playerToggleSprintEvent.cancelled() ) {
-                        connection.getEntity().sendData( connection.getEntity() );
+                        connection.entity().sendData( connection.entity() );
                     } else {
-                        connection.getEntity().sprinting( true );
+                        connection.entity().sprinting( true );
                     }
                 }
 
                 break;
 
             case STOP_SPRINT:
-                if ( connection.getEntity().sprinting() ) {
-                    PlayerToggleSprintEvent playerToggleSprintEvent = new PlayerToggleSprintEvent( connection.getEntity(), false );
-                    connection.getServer().pluginManager().callEvent( playerToggleSprintEvent );
+                if ( connection.entity().sprinting() ) {
+                    PlayerToggleSprintEvent playerToggleSprintEvent = new PlayerToggleSprintEvent( connection.entity(), false );
+                    connection.server().pluginManager().callEvent( playerToggleSprintEvent );
                     if ( playerToggleSprintEvent.cancelled() ) {
-                        connection.getEntity().sendData( connection.getEntity() );
+                        connection.entity().sendData( connection.entity() );
                     } else {
-                        connection.getEntity().sprinting( false );
+                        connection.entity().sprinting( false );
                     }
                 }
 
@@ -177,12 +177,12 @@ public class PacketPlayerActionHandler implements PacketHandler<PacketPlayerActi
 
             case CONTINUE_BREAK:
                 // Broadcast break effects
-                if ( connection.getEntity().breakVector() != null ) {
-                    Block block = connection.getEntity().world().blockAt( connection.getEntity().breakVector() );
+                if ( connection.entity().breakVector() != null ) {
+                    Block block = connection.entity().world().blockAt( connection.entity().breakVector() );
                     int runtimeId = block.runtimeId();
 
-                    connection.getEntity().world().sendLevelEvent(
-                        connection.getEntity().breakVector().toVector(),
+                    connection.entity().world().sendLevelEvent(
+                        connection.entity().breakVector().toVector(),
                         LevelEvent.PARTICLE_PUNCH_BLOCK,
                         runtimeId | ( packet.getFace().ordinal() << 24 ) );
                 }
@@ -190,35 +190,35 @@ public class PacketPlayerActionHandler implements PacketHandler<PacketPlayerActi
                 break;
 
             case JUMP:
-                connection.getEntity().jump();
+                connection.entity().jump();
                 break;
 
             case RESPAWN:
-                connection.getEntity().respawn();
+                connection.entity().respawn();
                 break;
 
             case START_GLIDE:
                 // Accept client value (to get the dirty state in the metadata)
-                if ( !connection.getEntity().gliding() ) {
-                    PlayerToggleGlideEvent playerToggleGlideEvent = new PlayerToggleGlideEvent( connection.getEntity(), true );
-                    connection.getEntity().world().getServer().pluginManager().callEvent( playerToggleGlideEvent );
+                if ( !connection.entity().gliding() ) {
+                    PlayerToggleGlideEvent playerToggleGlideEvent = new PlayerToggleGlideEvent( connection.entity(), true );
+                    connection.entity().world().server().pluginManager().callEvent( playerToggleGlideEvent );
                     if ( playerToggleGlideEvent.cancelled() ) {
-                        connection.getEntity().sendData( connection.getEntity() );
+                        connection.entity().sendData( connection.entity() );
                     } else {
-                        connection.getEntity().gliding( true );
+                        connection.entity().gliding( true );
                     }
                 }
 
                 break;
 
             case STOP_GLIDE:
-                if ( connection.getEntity().gliding() ) {
-                    PlayerToggleGlideEvent playerToggleGlideEvent = new PlayerToggleGlideEvent( connection.getEntity(), false );
-                    connection.getEntity().world().getServer().pluginManager().callEvent( playerToggleGlideEvent );
+                if ( connection.entity().gliding() ) {
+                    PlayerToggleGlideEvent playerToggleGlideEvent = new PlayerToggleGlideEvent( connection.entity(), false );
+                    connection.entity().world().server().pluginManager().callEvent( playerToggleGlideEvent );
                     if ( playerToggleGlideEvent.cancelled() ) {
-                        connection.getEntity().sendData( connection.getEntity() );
+                        connection.entity().sendData( connection.entity() );
                     } else {
-                        connection.getEntity().gliding( false );
+                        connection.entity().gliding( false );
                     }
                 }
 
@@ -231,29 +231,29 @@ public class PacketPlayerActionHandler implements PacketHandler<PacketPlayerActi
     }
 
     private void handleBreakStart( PlayerConnection connection, long currentTimeMillis, PacketPlayerAction packet ) {
-        connection.getEntity().breakVector( packet.getPosition() );
-        connection.getEntity().setStartBreak( currentTimeMillis );
+        connection.entity().breakVector( packet.getPosition() );
+        connection.entity().setStartBreak( currentTimeMillis );
 
-        Block block = connection.getEntity().world().blockAt( packet.getPosition() );
+        Block block = connection.entity().world().blockAt( packet.getPosition() );
 
-        if ( !block.side(packet.getFace()).punch( connection.getEntity() ) ) {
-            long breakTime = block.finalBreakTime( connection.getEntity().inventory().itemInHand(), connection.getEntity() );
+        if ( !block.side(packet.getFace()).punch( connection.entity() ) ) {
+            long breakTime = block.finalBreakTime( connection.entity().inventory().itemInHand(), connection.entity() );
             LOGGER.debug( "Sending break time {} ms", breakTime );
 
             // Tell the client which break time we want
             if ( breakTime > 0 ) {
-                connection.getEntity().world().sendLevelEvent( packet.getPosition().toVector(),
+                connection.entity().world().sendLevelEvent( packet.getPosition().toVector(),
                     LevelEvent.BLOCK_START_BREAK, (int) ( 65536 / ( breakTime / Values.CLIENT_TICK_MS ) ) );
             }
         }
     }
 
     private boolean alreadyFired( PlayerConnection connection ) {
-        if ( connection.isHadStartBreak() ) {
+        if ( connection.hadStartBreak() ) {
             return true;
         }
 
-        connection.setHadStartBreak( true );
+        connection.hadStartBreak( true );
         return false;
     }
 

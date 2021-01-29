@@ -32,19 +32,19 @@ public class BlockIdentifier {
     }
 
     public String blockId() {
-        return blockId;
+        return this.blockId;
     }
 
     public int numericId() {
-        return blockNumericId;
+        return this.blockNumericId;
     }
 
     public FixedReadOnlyMap states() {
-        return states;
+        return this.states;
     }
 
     public short runtimeId() {
-        return runtimeId;
+        return this.runtimeId;
     }
 
     public NBTTagCompound nbt() {
@@ -60,21 +60,21 @@ public class BlockIdentifier {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         BlockIdentifier that = (BlockIdentifier) o;
-        return runtimeId == that.runtimeId;
+        return this.runtimeId == that.runtimeId;
     }
 
     @Override
     public int hashCode() {
-        return runtimeId;
+        return this.runtimeId;
     }
 
     @Override
     public String toString() {
         return "BlockIdentifier{" +
-            "blockId='" + blockId + '\'' +
-            ", blockNumericId=" + blockNumericId +
-            ", states=" + states +
-            ", runtimeId=" + runtimeId +
+            "blockId='" + this.blockId + '\'' +
+            ", blockNumericId=" + this.blockNumericId +
+            ", states=" + this.states +
+            ", runtimeId=" + this.runtimeId +
             '}';
     }
 

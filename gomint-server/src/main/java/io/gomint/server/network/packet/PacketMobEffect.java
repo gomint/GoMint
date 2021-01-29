@@ -52,7 +52,7 @@ public class PacketMobEffect extends Packet {
     }
 
     public long getEntityId() {
-        return entityId;
+        return this.entityId;
     }
 
     public void setEntityId(long entityId) {
@@ -60,7 +60,7 @@ public class PacketMobEffect extends Packet {
     }
 
     public byte getAction() {
-        return action;
+        return this.action;
     }
 
     public void setAction(byte action) {
@@ -68,7 +68,7 @@ public class PacketMobEffect extends Packet {
     }
 
     public int getEffectId() {
-        return effectId;
+        return this.effectId;
     }
 
     public void setEffectId(int effectId) {
@@ -76,7 +76,7 @@ public class PacketMobEffect extends Packet {
     }
 
     public int getAmplifier() {
-        return amplifier;
+        return this.amplifier;
     }
 
     public void setAmplifier(int amplifier) {
@@ -84,7 +84,7 @@ public class PacketMobEffect extends Packet {
     }
 
     public boolean isVisible() {
-        return visible;
+        return this.visible;
     }
 
     public void setVisible(boolean visible) {
@@ -92,7 +92,7 @@ public class PacketMobEffect extends Packet {
     }
 
     public int getDuration() {
-        return duration;
+        return this.duration;
     }
 
     public void setDuration(int duration) {

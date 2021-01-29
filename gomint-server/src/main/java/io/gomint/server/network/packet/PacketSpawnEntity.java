@@ -78,7 +78,7 @@ public class PacketSpawnEntity extends Packet {
     }
 
     public long getEntityId() {
-        return entityId;
+        return this.entityId;
     }
 
     public void setEntityId(long entityId) {
@@ -86,7 +86,7 @@ public class PacketSpawnEntity extends Packet {
     }
 
     public EntityType getEntityType() {
-        return entityType;
+        return this.entityType;
     }
 
     public void setEntityType(EntityType entityType) {
@@ -94,7 +94,7 @@ public class PacketSpawnEntity extends Packet {
     }
 
     public float getX() {
-        return x;
+        return this.x;
     }
 
     public void setX(float x) {
@@ -102,7 +102,7 @@ public class PacketSpawnEntity extends Packet {
     }
 
     public float getY() {
-        return y;
+        return this.y;
     }
 
     public void setY(float y) {
@@ -110,7 +110,7 @@ public class PacketSpawnEntity extends Packet {
     }
 
     public float getZ() {
-        return z;
+        return this.z;
     }
 
     public void setZ(float z) {
@@ -118,7 +118,7 @@ public class PacketSpawnEntity extends Packet {
     }
 
     public float getVelocityX() {
-        return velocityX;
+        return this.velocityX;
     }
 
     public void setVelocityX(float velocityX) {
@@ -126,7 +126,7 @@ public class PacketSpawnEntity extends Packet {
     }
 
     public float getVelocityY() {
-        return velocityY;
+        return this.velocityY;
     }
 
     public void setVelocityY(float velocityY) {
@@ -134,7 +134,7 @@ public class PacketSpawnEntity extends Packet {
     }
 
     public float getVelocityZ() {
-        return velocityZ;
+        return this.velocityZ;
     }
 
     public void setVelocityZ(float velocityZ) {
@@ -142,7 +142,7 @@ public class PacketSpawnEntity extends Packet {
     }
 
     public float getPitch() {
-        return pitch;
+        return this.pitch;
     }
 
     public void setPitch(float pitch) {
@@ -150,7 +150,7 @@ public class PacketSpawnEntity extends Packet {
     }
 
     public float getHeadYaw() {
-        return headYaw;
+        return this.headYaw;
     }
 
     public void setHeadYaw(float headYaw) {
@@ -158,7 +158,7 @@ public class PacketSpawnEntity extends Packet {
     }
 
     public float getYaw() {
-        return yaw;
+        return this.yaw;
     }
 
     public void setYaw(float yaw) {
@@ -166,7 +166,7 @@ public class PacketSpawnEntity extends Packet {
     }
 
     public Collection<AttributeInstance> getAttributes() {
-        return attributes;
+        return this.attributes;
     }
 
     public void setAttributes(Collection<AttributeInstance> attributes) {
@@ -174,7 +174,7 @@ public class PacketSpawnEntity extends Packet {
     }
 
     public MetadataContainer getMetadata() {
-        return metadata;
+        return this.metadata;
     }
 
     public void setMetadata(MetadataContainer metadata) {

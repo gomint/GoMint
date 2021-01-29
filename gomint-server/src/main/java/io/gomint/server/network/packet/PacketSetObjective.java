@@ -44,7 +44,7 @@ public class PacketSetObjective extends Packet {
     }
 
     public String getDisplaySlot() {
-        return displaySlot;
+        return this.displaySlot;
     }
 
     public void setDisplaySlot(String displaySlot) {
@@ -52,7 +52,7 @@ public class PacketSetObjective extends Packet {
     }
 
     public String getObjectiveName() {
-        return objectiveName;
+        return this.objectiveName;
     }
 
     public void setObjectiveName(String objectiveName) {
@@ -60,7 +60,7 @@ public class PacketSetObjective extends Packet {
     }
 
     public String getDisplayName() {
-        return displayName;
+        return this.displayName;
     }
 
     public void setDisplayName(String displayName) {
@@ -68,7 +68,7 @@ public class PacketSetObjective extends Packet {
     }
 
     public String getCriteriaName() {
-        return criteriaName;
+        return this.criteriaName;
     }
 
     public void setCriteriaName(String criteriaName) {
@@ -76,7 +76,7 @@ public class PacketSetObjective extends Packet {
     }
 
     public int getSortOrder() {
-        return sortOrder;
+        return this.sortOrder;
     }
 
     public void setSortOrder(int sortOrder) {

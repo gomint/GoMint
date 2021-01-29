@@ -60,8 +60,8 @@ public class EntityExpBottle extends EntityThrowable<io.gomint.entity.projectile
         super.applyCustomProperties();
 
         // Gravity
-        GRAVITY = 0.07f;
-        DRAG = 0.01f;
+        this.gravity = 0.07f;
+        this.drag = 0.01f;
     }
 
     @Override

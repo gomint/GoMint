@@ -86,18 +86,18 @@ public class PacketItemStackRequest extends Packet {
         }
 
         public int getRequestId() {
-            return requestId;
+            return this.requestId;
         }
 
         public List<InventoryAction> getActions() {
-            return actions;
+            return this.actions;
         }
 
         @Override
         public String toString() {
             return "{\"_class\":\"Request\", " +
-                "\"requestId\":\"" + requestId + "\"" + ", " +
-                "\"actions\":" + (actions == null ? "null" : Arrays.toString(actions.toArray())) +
+                "\"requestId\":\"" + this.requestId + "\"" + ", " +
+                "\"actions\":" + (this.actions == null ? "null" : Arrays.toString(this.actions.toArray())) +
                 "}";
         }
     }
@@ -128,13 +128,13 @@ public class PacketItemStackRequest extends Packet {
     }
 
     public List<Request> getRequests() {
-        return requests;
+        return this.requests;
     }
 
     @Override
     public String toString() {
         return "{\"_class\":\"PacketItemStackRequest\", " +
-            "\"requests\":" + (requests == null ? "null" : Arrays.toString(requests.toArray())) +
+            "\"requests\":" + (this.requests == null ? "null" : Arrays.toString(this.requests.toArray())) +
             "}";
     }
 

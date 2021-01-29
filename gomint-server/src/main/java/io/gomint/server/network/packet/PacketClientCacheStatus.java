@@ -26,7 +26,7 @@ public class PacketClientCacheStatus extends Packet {
     }
 
     public boolean isEnabled() {
-        return enabled;
+        return this.enabled;
     }
 
     public void setEnabled(boolean enabled) {

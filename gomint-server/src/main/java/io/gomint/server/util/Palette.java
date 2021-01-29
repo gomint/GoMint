@@ -42,15 +42,15 @@ public class Palette {
         }
 
         public byte getVersionId() {
-            return versionId;
+            return this.versionId;
         }
 
         public byte getAmountOfWords() {
-            return amountOfWords;
+            return this.amountOfWords;
         }
 
         public byte getAmountOfPadding() {
-            return amountOfPadding;
+            return this.amountOfPadding;
         }
     }
 
@@ -169,22 +169,22 @@ public class Palette {
     }
 
     public ByteBuf getData() {
-        return data;
+        return this.data;
     }
 
     public PaletteVersion getPaletteVersion() {
-        return paletteVersion;
+        return this.paletteVersion;
     }
 
     public short[] getOutput() {
-        return output;
+        return this.output;
     }
 
     public int getBits() {
-        return bits;
+        return this.bits;
     }
 
     public int getWordsWritten() {
-        return wordsWritten;
+        return this.wordsWritten;
     }
 }

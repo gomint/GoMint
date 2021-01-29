@@ -19,8 +19,8 @@ public class PlayerDropItemEvent extends CancellablePlayerEvent<PlayerDropItemEv
 
     private final ItemStack<?> itemStack;
 
-    public PlayerDropItemEvent( EntityPlayer player, ItemStack<?> itemStack ) {
-        super( player );
+    public PlayerDropItemEvent(EntityPlayer player, ItemStack<?> itemStack) {
+        super(player);
         this.itemStack = itemStack;
     }
 

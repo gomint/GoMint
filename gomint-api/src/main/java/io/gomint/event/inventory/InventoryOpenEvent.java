@@ -26,8 +26,8 @@ public class InventoryOpenEvent extends CancellablePlayerEvent<InventoryOpenEven
      * @param player    who opened the inventory
      * @param inventory which should be opened
      */
-    public InventoryOpenEvent( EntityPlayer player, Inventory<?> inventory ) {
-        super( player );
+    public InventoryOpenEvent(EntityPlayer player, Inventory<?> inventory) {
+        super(player);
         this.inventory = inventory;
     }
 

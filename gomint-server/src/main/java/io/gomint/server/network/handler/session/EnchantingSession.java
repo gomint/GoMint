@@ -37,8 +37,8 @@ public class EnchantingSession implements Session {
 
     public EnchantingSession(PlayerConnection connection) {
         this.connection = connection;
-        this.inputInventory = new SessionInventory(connection.getServer().items(), connection.getEntity(), 2);
-        this.outputInventory = new SessionInventory(connection.getServer().items(), connection.getEntity(), 1);
+        this.inputInventory = new SessionInventory(connection.server().items(), connection.entity(), 2);
+        this.outputInventory = new SessionInventory(connection.server().items(), connection.entity(), 1);
     }
 
     @Override
@@ -51,23 +51,23 @@ public class EnchantingSession implements Session {
         // Sanity check
         if (this.selectedEnchantment < 0 ||
             this.selectedEnchantment > 2 ||
-            this.connection.getEntity().gamemode() == Gamemode.SPECTATOR) {
+            this.connection.entity().gamemode() == Gamemode.SPECTATOR) {
             LOGGER.debug("Selected enchantment out of range or player is spectator");
             return false;
         }
 
         // Get enchantment table
-        EnchantmentTableInventory inv = (EnchantmentTableInventory) this.connection.getEntity().currentOpenContainer();
+        EnchantmentTableInventory inv = (EnchantmentTableInventory) this.connection.entity().currentOpenContainer();
         Location location = new Location(inv.world(), inv.containerPosition());
 
         // Generate enchantments from helper and get them
-        Pair<int[], List<List<Enchantment>>> enchantments = EnchantmentSelector.determineAvailable(this.connection.getServer().enchantments(),
-            new FastRandom(this.connection.getEntity().enchantmentSeed()), location,
+        Pair<int[], List<List<Enchantment>>> enchantments = EnchantmentSelector.determineAvailable(this.connection.server().enchantments(),
+            new FastRandom(this.connection.entity().enchantmentSeed()), location,
             (ItemStack<?>) this.inputInventory.item(0));
 
         // Item is not enchantable => return
         if (enchantments == null) {
-            LOGGER.warn("Got enchantment request from {} on a non enchantable item {}", this.connection.getEntity(),
+            LOGGER.warn("Got enchantment request from {} on a non enchantable item {}", this.connection.entity(),
                 this.inputInventory.item(0));
             return false;
         }
@@ -76,8 +76,8 @@ public class EnchantingSession implements Session {
         List<Enchantment> ench = enchantments.getSecond().get(this.selectedEnchantment);
         int pay = this.selectedEnchantment + 1;
 
-        ItemEnchantEvent event = this.connection.getEntity().world().getServer().pluginManager().callEvent(new ItemEnchantEvent(
-            this.connection.getEntity(),
+        ItemEnchantEvent event = this.connection.entity().world().server().pluginManager().callEvent(new ItemEnchantEvent(
+            this.connection.entity(),
             this.inputInventory.item(0),
             pay,
             pay,
@@ -90,33 +90,33 @@ public class EnchantingSession implements Session {
         }
 
         // Player does not have enough levels to cover "costs"
-        if (this.connection.getEntity().gamemode() != Gamemode.CREATIVE &&
-            this.connection.getEntity().level() < event.levelRequirement()) {
-            LOGGER.info("Got enchantment request from {} but has not enough levels, needs {} to cover requirements", this.connection.getEntity(),
+        if (this.connection.entity().gamemode() != Gamemode.CREATIVE &&
+            this.connection.entity().level() < event.levelRequirement()) {
+            LOGGER.info("Got enchantment request from {} but has not enough levels, needs {} to cover requirements", this.connection.entity(),
                 cost);
             return false;
         }
 
         // Check if the player has enough levels for paying
-        if (this.connection.getEntity().gamemode() != Gamemode.CREATIVE &&
-            this.connection.getEntity().level() < event.levelCost()) {
-            LOGGER.info("Got enchantment request from {} but has not enough levels, needs {} to cover costs", this.connection.getEntity(),
+        if (this.connection.entity().gamemode() != Gamemode.CREATIVE &&
+            this.connection.entity().level() < event.levelCost()) {
+            LOGGER.info("Got enchantment request from {} but has not enough levels, needs {} to cover costs", this.connection.entity(),
                 pay);
             return false;
         }
 
         // Check if the enchantment table contains enough lapis
         ItemStack<?> lapis = (ItemStack<?>) this.inputInventory.item(1);
-        if (this.connection.getEntity().gamemode() != Gamemode.CREATIVE &&
+        if (this.connection.entity().gamemode() != Gamemode.CREATIVE &&
             (lapis.itemType() != ItemType.LAPIS_LAZULI || lapis.amount() < event.materialCost())) {
-            LOGGER.info("Got enchantment request from {} but has not enough lapis, needs {} to cover costs", this.connection.getEntity(),
+            LOGGER.info("Got enchantment request from {} but has not enough lapis, needs {} to cover costs", this.connection.entity(),
                 pay);
             return false;
         }
 
         // Modify player level and lapis amound if needed
-        if (this.connection.getEntity().gamemode() != Gamemode.CREATIVE) {
-            this.connection.getEntity().level(this.connection.getEntity().level() - event.levelCost());
+        if (this.connection.entity().gamemode() != Gamemode.CREATIVE) {
+            this.connection.entity().level(this.connection.entity().level() - event.levelCost());
             lapis.amount(lapis.amount() - event.materialCost());
         }
 
@@ -130,7 +130,7 @@ public class EnchantingSession implements Session {
         this.outputInventory.item(0, toEnchant);
 
         // Generate new enchant seed
-        this.connection.getEntity().generateNewEnchantmentSeed();
+        this.connection.entity().generateNewEnchantmentSeed();
 
         return true;
     }
@@ -146,7 +146,7 @@ public class EnchantingSession implements Session {
         // Due to a bug in 1.16.200+ the client displays the enchantment one level to high (you tell it to enchant level
         // 1 and it displays level 2). To fix this we simply "correct" the client view by forcing the enchanted item
         // over after the transaction completes
-        this.connection.getEntity().currentOpenContainer().sendContents(0, this.connection);
+        this.connection.entity().currentOpenContainer().sendContents(0, this.connection);
     }
 
     public Session selectOption(int selection) {

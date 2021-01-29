@@ -41,7 +41,7 @@ public class PacketBatch extends Packet {
     }
 
     public boolean isCompressed() {
-        return compressed;
+        return this.compressed;
     }
 
     public void setCompressed(boolean compressed) {
@@ -49,7 +49,7 @@ public class PacketBatch extends Packet {
     }
 
     public ByteBuf getPayload() {
-        return payload;
+        return this.payload;
     }
 
     public void setPayload(ByteBuf payload) {

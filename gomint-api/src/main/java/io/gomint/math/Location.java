@@ -139,19 +139,19 @@ public class Location extends Vector {
     }
 
     public World world() {
-        return world;
+        return this.world;
     }
 
     public float yaw() {
-        return yaw;
+        return this.yaw;
     }
 
     public float headYaw() {
-        return headYaw;
+        return this.headYaw;
     }
 
     public float pitch() {
-        return pitch;
+        return this.pitch;
     }
 
     @Override
@@ -160,27 +160,27 @@ public class Location extends Vector {
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
         Location location = (Location) o;
-        return Float.compare(location.yaw, yaw) == 0 &&
-            Float.compare(location.headYaw, headYaw) == 0 &&
-            Float.compare(location.pitch, pitch) == 0 &&
-            Objects.equals(world, location.world);
+        return Float.compare(location.yaw, this.yaw) == 0 &&
+            Float.compare(location.headYaw, this.headYaw) == 0 &&
+            Float.compare(location.pitch, this.pitch) == 0 &&
+            Objects.equals(this.world, location.world);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), world, yaw, headYaw, pitch);
+        return Objects.hash(super.hashCode(), this.world, this.yaw, this.headYaw, this.pitch);
     }
 
     @Override
     public String toString() {
         return "{\"_class\":\"Location\", " +
-            "\"world\":" + (world == null ? "null" : world) + ", " +
-            "\"yaw\":\"" + yaw + "\"" + ", " +
-            "\"headYaw\":\"" + headYaw + "\"" + ", " +
-            "\"pitch\":\"" + pitch + "\"" + ", " +
-            "\"x\":\"" + x + "\"" + ", " +
-            "\"y\":\"" + y + "\"" + ", " +
-            "\"z\":\"" + z + "\"" +
+            "\"world\":" + (this.world == null ? "null" : this.world) + ", " +
+            "\"yaw\":\"" + this.yaw + "\"" + ", " +
+            "\"headYaw\":\"" + this.headYaw + "\"" + ", " +
+            "\"pitch\":\"" + this.pitch + "\"" + ", " +
+            "\"x\":\"" + this.x + "\"" + ", " +
+            "\"y\":\"" + this.y + "\"" + ", " +
+            "\"z\":\"" + this.z + "\"" +
             "}";
     }
 

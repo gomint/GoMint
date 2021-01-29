@@ -26,8 +26,8 @@ public class PlayerExhaustEvent extends CancellablePlayerEvent<PlayerExhaustEven
      * @param additionalAmount which gets added to the exhaust amount when this event is not cancelled
      * @param cause            of this exhaustion
      */
-    public PlayerExhaustEvent( EntityPlayer player, float additionalAmount, Cause cause ) {
-        super( player );
+    public PlayerExhaustEvent(EntityPlayer player, float additionalAmount, Cause cause) {
+        super(player);
         this.additionalAmount = additionalAmount;
         this.cause = cause;
     }
@@ -46,7 +46,7 @@ public class PlayerExhaustEvent extends CancellablePlayerEvent<PlayerExhaustEven
      *
      * @param additionalAmount which should be added to the exhaustion
      */
-    public PlayerExhaustEvent additionalAmount(float additionalAmount ) {
+    public PlayerExhaustEvent additionalAmount(float additionalAmount) {
         this.additionalAmount = additionalAmount;
         return this;
     }

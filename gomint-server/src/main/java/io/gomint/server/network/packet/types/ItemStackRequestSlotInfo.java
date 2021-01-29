@@ -22,23 +22,23 @@ public class ItemStackRequestSlotInfo {
     }
 
     public byte getWindowId() {
-        return windowId;
+        return this.windowId;
     }
 
     public byte getSlot() {
-        return slot;
+        return this.slot;
     }
 
     public int getItemStackId() {
-        return itemStackId;
+        return this.itemStackId;
     }
 
     @Override
     public String toString() {
         return "{\"_class\":\"ItemStackRequestSlotInfo\", " +
-            "\"windowId\":\"" + windowId + "\"" + ", " +
-            "\"slot\":\"" + slot + "\"" + ", " +
-            "\"itemStackId\":\"" + itemStackId + "\"" +
+            "\"windowId\":\"" + this.windowId + "\"" + ", " +
+            "\"slot\":\"" + this.slot + "\"" + ", " +
+            "\"itemStackId\":\"" + this.itemStackId + "\"" +
             "}";
     }
 

@@ -73,7 +73,7 @@ public class PacketWorldChunk extends Packet {
     }
 
     public int getX() {
-        return x;
+        return this.x;
     }
 
     public void setX(int x) {
@@ -81,7 +81,7 @@ public class PacketWorldChunk extends Packet {
     }
 
     public int getZ() {
-        return z;
+        return this.z;
     }
 
     public void setZ(int z) {
@@ -89,7 +89,7 @@ public class PacketWorldChunk extends Packet {
     }
 
     public boolean isCached() {
-        return cached;
+        return this.cached;
     }
 
     public void setCached(boolean cached) {
@@ -97,7 +97,7 @@ public class PacketWorldChunk extends Packet {
     }
 
     public long[] getHashes() {
-        return hashes;
+        return this.hashes;
     }
 
     public void setHashes(long[] hashes) {
@@ -105,7 +105,7 @@ public class PacketWorldChunk extends Packet {
     }
 
     public int getSubChunkCount() {
-        return subChunkCount;
+        return this.subChunkCount;
     }
 
     public void setSubChunkCount(int subChunkCount) {
@@ -113,7 +113,7 @@ public class PacketWorldChunk extends Packet {
     }
 
     public ByteBuf getData() {
-        return data;
+        return this.data;
     }
 
     public void setData(ByteBuf data) {
@@ -125,18 +125,18 @@ public class PacketWorldChunk extends Packet {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         PacketWorldChunk that = (PacketWorldChunk) o;
-        return x == that.x &&
-            z == that.z &&
-            cached == that.cached &&
-            subChunkCount == that.subChunkCount &&
-            Arrays.equals(hashes, that.hashes) &&
-            Objects.equals(data, that.data);
+        return this.x == that.x &&
+                this.z == that.z &&
+                this.cached == that.cached &&
+                this.subChunkCount == that.subChunkCount &&
+            Arrays.equals(this.hashes, that.hashes) &&
+            Objects.equals(this.data, that.data);
     }
 
     @Override
     public int hashCode() {
-        int result = Objects.hash(x, z, cached, subChunkCount, data);
-        result = 31 * result + Arrays.hashCode(hashes);
+        int result = Objects.hash(this.x, this.z, this.cached, this.subChunkCount, this.data);
+        result = 31 * result + Arrays.hashCode(this.hashes);
         return result;
     }
 }

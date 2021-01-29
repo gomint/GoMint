@@ -25,16 +25,16 @@ public class ChunkRequest {
         this.future = future;
     }
 
-    public int getX() {
-        return x;
+    public int x() {
+        return this.x;
     }
 
-    public int getZ() {
-        return z;
+    public int z() {
+        return this.z;
     }
 
-    public Future<ChunkAdapter> getFuture() {
-        return future;
+    public Future<ChunkAdapter> future() {
+        return this.future;
     }
 
     @Override
@@ -42,13 +42,13 @@ public class ChunkRequest {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ChunkRequest that = (ChunkRequest) o;
-        return x == that.x &&
-            z == that.z;
+        return this.x == that.x &&
+                this.z == that.z;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(x, z);
+        return Objects.hash(this.x, this.z);
     }
 
     /**

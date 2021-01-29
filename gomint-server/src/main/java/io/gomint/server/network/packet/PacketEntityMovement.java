@@ -61,7 +61,7 @@ public class PacketEntityMovement extends Packet {
     }
 
     public long getEntityId() {
-        return entityId;
+        return this.entityId;
     }
 
     public void setEntityId(long entityId) {
@@ -69,7 +69,7 @@ public class PacketEntityMovement extends Packet {
     }
 
     public float getX() {
-        return x;
+        return this.x;
     }
 
     public void setX(float x) {
@@ -77,7 +77,7 @@ public class PacketEntityMovement extends Packet {
     }
 
     public float getY() {
-        return y;
+        return this.y;
     }
 
     public void setY(float y) {
@@ -85,7 +85,7 @@ public class PacketEntityMovement extends Packet {
     }
 
     public float getZ() {
-        return z;
+        return this.z;
     }
 
     public void setZ(float z) {
@@ -93,7 +93,7 @@ public class PacketEntityMovement extends Packet {
     }
 
     public float getYaw() {
-        return yaw;
+        return this.yaw;
     }
 
     public void setYaw(float yaw) {
@@ -101,7 +101,7 @@ public class PacketEntityMovement extends Packet {
     }
 
     public float getHeadYaw() {
-        return headYaw;
+        return this.headYaw;
     }
 
     public void setHeadYaw(float headYaw) {
@@ -109,7 +109,7 @@ public class PacketEntityMovement extends Packet {
     }
 
     public float getPitch() {
-        return pitch;
+        return this.pitch;
     }
 
     public void setPitch(float pitch) {
@@ -117,7 +117,7 @@ public class PacketEntityMovement extends Packet {
     }
 
     public boolean isOnGround() {
-        return onGround;
+        return this.onGround;
     }
 
     public void setOnGround(boolean onGround) {
@@ -125,7 +125,7 @@ public class PacketEntityMovement extends Packet {
     }
 
     public boolean isTeleported() {
-        return teleported;
+        return this.teleported;
     }
 
     public void setTeleported(boolean teleported) {

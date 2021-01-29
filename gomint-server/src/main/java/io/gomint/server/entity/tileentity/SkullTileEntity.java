@@ -48,7 +48,7 @@ public class SkullTileEntity extends TileEntity {
     }
 
     public float getRotation() {
-        return rotation;
+        return this.rotation;
     }
 
     public void setRotation(float rotation) {

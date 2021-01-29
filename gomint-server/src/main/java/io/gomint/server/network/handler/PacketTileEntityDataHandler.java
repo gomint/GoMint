@@ -19,9 +19,9 @@ public class PacketTileEntityDataHandler implements PacketHandler<PacketTileEnti
 
     @Override
     public void handle( PacketTileEntityData packet, long currentTimeMillis, PlayerConnection connection ) throws Exception {
-        Block block = connection.getEntity().world().blockAt( packet.getPosition() );
+        Block block = connection.entity().world().blockAt( packet.getPosition() );
         if ( block.tileEntity() != null ) {
-            block.tileEntity().applyClientData( connection.getEntity(), packet.getCompound() );
+            block.tileEntity().applyClientData( connection.entity(), packet.getCompound() );
         }
     }
 

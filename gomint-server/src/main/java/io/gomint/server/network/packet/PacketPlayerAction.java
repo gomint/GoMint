@@ -42,7 +42,7 @@ public class PacketPlayerAction extends Packet {
     }
 
     public long getEntityId() {
-        return entityId;
+        return this.entityId;
     }
 
     public void setEntityId(long entityId) {
@@ -50,7 +50,7 @@ public class PacketPlayerAction extends Packet {
     }
 
     public PlayerAction getAction() {
-        return action;
+        return this.action;
     }
 
     public void setAction(PlayerAction action) {
@@ -58,7 +58,7 @@ public class PacketPlayerAction extends Packet {
     }
 
     public BlockPosition getPosition() {
-        return position;
+        return this.position;
     }
 
     public void setPosition(BlockPosition position) {
@@ -66,7 +66,7 @@ public class PacketPlayerAction extends Packet {
     }
 
     public Facing getFace() {
-        return face;
+        return this.face;
     }
 
     public void setFace(Facing face) {
@@ -76,10 +76,10 @@ public class PacketPlayerAction extends Packet {
     @Override
     public String toString() {
         return "PacketPlayerAction{" +
-            "entityId=" + entityId +
-            ", action=" + action +
-            ", position=" + position +
-            ", face=" + face +
+            "entityId=" + this.entityId +
+            ", action=" + this.action +
+            ", position=" + this.position +
+            ", face=" + this.face +
             '}';
     }
 

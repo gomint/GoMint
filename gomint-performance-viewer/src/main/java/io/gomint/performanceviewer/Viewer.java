@@ -59,10 +59,10 @@ public class Viewer extends Application {
                 startFXChecking();
 
                 for ( int i = 0; i < 3 * 60 * 60 * 128; i++ ) {
-                    queue.add( ThreadLocalRandom.current().nextLong( (long) ( 7812500 * 1.2 ) ) );
+                    this.queue.add( ThreadLocalRandom.current().nextLong( (long) ( 7812500 * 1.2 ) ) );
                 }
 
-                chartDone.set( true );
+                this.chartDone.set( true );
             }
 
             private void startFXChecking() {
