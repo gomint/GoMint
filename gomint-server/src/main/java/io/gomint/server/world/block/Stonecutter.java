@@ -11,13 +11,9 @@ import io.gomint.server.registry.RegisterInfo;
  * @author geNAZt
  * @version 1.0
  */
-@RegisterInfo( sId = "minecraft:stonecutter" )
+@RegisterInfo( sId = "minecraft:stonecutter")
+@RegisterInfo( sId = "minecraft:stonecutter_block" )
 public class Stonecutter extends Block implements BlockStonecutter {
-
-    @Override
-    public String blockId() {
-        return "minecraft:stonecutter";
-    }
 
     @Override
     public long breakTime() {
