@@ -39,7 +39,7 @@ public class PacketContainerOpen extends Packet {
     }
 
     public byte getWindowId() {
-        return windowId;
+        return this.windowId;
     }
 
     public void setWindowId(byte windowId) {
@@ -47,7 +47,7 @@ public class PacketContainerOpen extends Packet {
     }
 
     public byte getType() {
-        return type;
+        return this.type;
     }
 
     public void setType(byte type) {
@@ -55,7 +55,7 @@ public class PacketContainerOpen extends Packet {
     }
 
     public BlockPosition getLocation() {
-        return location;
+        return this.location;
     }
 
     public void setLocation(BlockPosition location) {
@@ -63,7 +63,7 @@ public class PacketContainerOpen extends Packet {
     }
 
     public long getEntityId() {
-        return entityId;
+        return this.entityId;
     }
 
     public void setEntityId(long entityId) {

@@ -39,7 +39,7 @@ public class PacketEmoteList extends Packet {
     }
 
     public long getRuntimeId() {
-        return runtimeId;
+        return this.runtimeId;
     }
 
     public void setRuntimeId(long runtimeId) {
@@ -47,7 +47,7 @@ public class PacketEmoteList extends Packet {
     }
 
     public List<UUID> getEmoteIds() {
-        return emoteIds;
+        return this.emoteIds;
     }
 
     public void setEmoteIds(List<UUID> emoteIds) {

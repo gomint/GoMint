@@ -29,7 +29,7 @@ public class PacketNetworkSettings extends Packet {
     }
 
     public short getCompressionThreshold() {
-        return compressionThreshold;
+        return this.compressionThreshold;
     }
 
     public void setCompressionThreshold(short compressionThreshold) {

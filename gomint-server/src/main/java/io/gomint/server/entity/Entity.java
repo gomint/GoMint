@@ -72,8 +72,8 @@ public abstract class Entity<E extends io.gomint.entity.Entity<E>> implements io
      */
     protected final MetadataContainer metadataContainer;
     // Useful stuff for movement. Those are values for per client tick
-    protected float GRAVITY = 0.08f;
-    protected float DRAG = 0.02f;
+    protected float gravity = 0.08f;
+    protected float drag = 0.02f;
 
     /**
      * Bounding Box
@@ -180,21 +180,21 @@ public abstract class Entity<E extends io.gomint.entity.Entity<E>> implements io
 
     @Override
     public float fallDistance() {
-        return fallDistance;
+        return this.fallDistance;
     }
 
     @Override
     public float eyeHeight() {
-        return eyeHeight;
+        return this.eyeHeight;
     }
 
     public float offsetY() {
-        return offsetY;
+        return this.offsetY;
     }
 
     @Override
     public boolean ticking() {
-        return ticking;
+        return this.ticking;
     }
 
     @Override
@@ -204,12 +204,12 @@ public abstract class Entity<E extends io.gomint.entity.Entity<E>> implements io
     }
 
     public float width() {
-        return width;
+        return this.width;
     }
 
     @Override
     public boolean dead() {
-        return dead;
+        return this.dead;
     }
 
     public E dead(boolean dead) {
@@ -218,15 +218,15 @@ public abstract class Entity<E extends io.gomint.entity.Entity<E>> implements io
     }
 
     public List<EntityLink> links() {
-        return links;
+        return this.links;
     }
 
     public Location oldPosition() {
-        return oldPosition;
+        return this.oldPosition;
     }
 
     public float height() {
-        return height;
+        return this.height;
     }
 
     @Override
@@ -234,18 +234,18 @@ public abstract class Entity<E extends io.gomint.entity.Entity<E>> implements io
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Entity<?> entity = (Entity<?>) o;
-        return id == entity.id;
+        return this.id == entity.id;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id);
+        return Objects.hash(this.id);
     }
 
     @Override
     public String toString() {
         return "Entity{" +
-            "id=" + id +
+            "id=" + this.id +
             '}';
     }
 
@@ -322,10 +322,10 @@ public abstract class Entity<E extends io.gomint.entity.Entity<E>> implements io
 
                 if ( this.affectedByGravity() ) {
                     // Calc motion
-                    this.transform.manipulateMotion( 0, -this.GRAVITY, 0 );
+                    this.transform.manipulateMotion( 0, -this.gravity, 0 );
 
                     // Calculate friction
-                    float friction = 1 - DRAG;
+                    float friction = 1 - this.drag;
                     if ( this.onGround && ( Math.abs( this.getMotionX() ) > 0.00001 || Math.abs( this.getMotionZ() ) > 0.00001 ) ) {
                         friction = this.world.blockAt( (int) this.positionX(),
                             (int) ( this.positionY() - 1 ),
@@ -334,7 +334,7 @@ public abstract class Entity<E extends io.gomint.entity.Entity<E>> implements io
 
                     // Calculate new motion
                     float newMovX = this.transform.motionX() * friction;
-                    float newMovY = this.transform.motionY() * ( 1 - DRAG );
+                    float newMovY = this.transform.motionY() * ( 1 - this.drag);
                     float newMovZ = this.transform.motionZ() * friction;
 
                     this.transform.motion( newMovX, newMovY, newMovZ );
@@ -719,7 +719,7 @@ public abstract class Entity<E extends io.gomint.entity.Entity<E>> implements io
      */
     public E velocity(Vector velocity, boolean send ) {
         EntityVelocityEvent event = new EntityVelocityEvent( this, velocity );
-        this.world.getServer().pluginManager().callEvent( event );
+        this.world.server().pluginManager().callEvent( event );
         if ( event.cancelled() ) {
             return (E) this;
         }
@@ -1133,7 +1133,7 @@ public abstract class Entity<E extends io.gomint.entity.Entity<E>> implements io
         PacketEntityMetadata metadataPacket = new PacketEntityMetadata();
         metadataPacket.setEntityId( this.id() );
         metadataPacket.setMetadata( this.metadataContainer );
-        metadataPacket.setTick( this.world.getServer().currentTickTime() / (int) Values.CLIENT_TICK_MS );
+        metadataPacket.setTick( this.world.server().currentTickTime() / (int) Values.CLIENT_TICK_MS );
         player.connection().addToSendQueue( metadataPacket );
     }
 
@@ -1207,7 +1207,7 @@ public abstract class Entity<E extends io.gomint.entity.Entity<E>> implements io
         }
 
         // First of all we call the event
-        this.world.getServer().pluginManager().callEvent( damageEvent );
+        this.world.server().pluginManager().callEvent( damageEvent );
         return !damageEvent.cancelled();
     }
 
@@ -1288,7 +1288,7 @@ public abstract class Entity<E extends io.gomint.entity.Entity<E>> implements io
 
     public E teleport( Location to, EntityTeleportEvent.Cause cause ) {
         EntityTeleportEvent entityTeleportEvent = new EntityTeleportEvent( this, this.location(), to, cause );
-        this.world.getServer().pluginManager().callEvent( entityTeleportEvent );
+        this.world.server().pluginManager().callEvent( entityTeleportEvent );
         if ( entityTeleportEvent.cancelled() ) {
             return (E) this;
         }

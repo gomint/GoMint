@@ -38,7 +38,7 @@ public abstract class Sign<B> extends Block implements BlockSign<B> {
 
     @Override
     protected TileEntity createTileEntity(NBTTagCompound compound) {
-        return this.tileEntities.construct(SignTileEntity.class, compound, this, this.items);
+        return this.tileEntities.construct(SignTileEntity.class, compound, this, this.items, this.world.server().pluginManager());
     }
 
     @Override

@@ -20,8 +20,8 @@ public class PlayerInteractEvent extends CancellablePlayerEvent<PlayerInteractEv
      * @param clickType which has been used
      * @param block     on which the player interacted
      */
-    public PlayerInteractEvent( EntityPlayer player, ClickType clickType, Block block ) {
-        super( player );
+    public PlayerInteractEvent(EntityPlayer player, ClickType clickType, Block block) {
+        super(player);
         this.clickType = clickType;
         this.block = block;
     }
@@ -32,7 +32,7 @@ public class PlayerInteractEvent extends CancellablePlayerEvent<PlayerInteractEv
      * @return enum value of the click type
      */
     public ClickType clickType() {
-        return clickType;
+        return this.clickType;
     }
 
     /**
@@ -41,15 +41,7 @@ public class PlayerInteractEvent extends CancellablePlayerEvent<PlayerInteractEv
      * @return block which the player interacted with
      */
     public Block block() {
-        return block;
-    }
-
-    @Override
-    public String toString() {
-        return "PlayerInteractEvent{" +
-            "clickType=" + clickType +
-            ", block=" + block +
-            '}';
+        return this.block;
     }
 
     public enum ClickType {

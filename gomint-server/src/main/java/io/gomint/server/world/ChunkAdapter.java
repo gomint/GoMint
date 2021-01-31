@@ -93,9 +93,9 @@ public class ChunkAdapter implements Chunk {
     @Override
     public String toString() {
         return "ChunkAdapter{" +
-            "world=" + world +
-            ", x=" + x +
-            ", z=" + z +
+            "world=" + this.world +
+            ", x=" + this.x +
+            ", z=" + this.z +
             '}';
     }
 
@@ -104,31 +104,31 @@ public class ChunkAdapter implements Chunk {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ChunkAdapter adapter = (ChunkAdapter) o;
-        return x == adapter.x &&
-            z == adapter.z &&
-            Objects.equals(world, adapter.world);
+        return this.x == adapter.x &&
+                this.z == adapter.z &&
+            Objects.equals(this.world, adapter.world);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(world, x, z);
+        return Objects.hash(this.world, this.x, this.z);
     }
 
-    public void setPopulated(boolean populated) {
+    public void populated(boolean populated) {
         this.populated = populated;
     }
 
-    public boolean isPopulated() {
-        return populated;
+    public boolean populated() {
+        return this.populated;
     }
 
-    public ChunkSlice[] getChunkSlices() {
-        return chunkSlices;
+    public ChunkSlice[] chunkSlices() {
+        return this.chunkSlices;
     }
 
     @Override
     public WorldAdapter world() {
-        return world;
+        return this.world;
     }
 
     /**
@@ -139,14 +139,14 @@ public class ChunkAdapter implements Chunk {
      */
     final void tickRandomBlocks(long currentTimeMS, float dT) {
         for (ChunkSlice chunkSlice : this.chunkSlices) {
-            if (chunkSlice != null && !chunkSlice.isAllAir()) {
+            if (chunkSlice != null && !chunkSlice.allAir()) {
                 this.tickRandomBlocksForSlice(chunkSlice, currentTimeMS, dT);
             }
         }
     }
 
     private void tickRandomBlocksForSlice(ChunkSlice chunkSlice, long currentTimeMS, float dT) {
-        this.iterateRandomBlocks(chunkSlice, currentTimeMS, dT, this.world.getConfig().randomUpdatesPerTick());
+        this.iterateRandomBlocks(chunkSlice, currentTimeMS, dT, this.world.config().randomUpdatesPerTick());
     }
 
     private void iterateRandomBlocks(ChunkSlice chunkSlice, long currentTimeMS, float dT, int randomUpdatesPerTick) {
@@ -280,7 +280,7 @@ public class ChunkAdapter implements Chunk {
      *
      * @return The timestamp this chunk was last written out at
      */
-    public long getLastSavedTimestamp() {
+    public long lastSavedTimestamp() {
         return this.lastSavedTimestamp;
     }
 
@@ -289,7 +289,7 @@ public class ChunkAdapter implements Chunk {
      *
      * @param timestamp The timestamp to set
      */
-    void setLastSavedTimestamp(long timestamp) {
+    void lastSavedTimestamp(long timestamp) {
         this.lastSavedTimestamp = timestamp;
 
         // Unflag all chunk slices
@@ -322,8 +322,8 @@ public class ChunkAdapter implements Chunk {
      * @return true when it can be gced, false when not
      */
     boolean canBeGCed(long currentTimeMillis) {
-        int secondsAfterLeft = this.world.getConfig().secondsUntilGCAfterLastPlayerLeft();
-        int waitAfterLoad = this.world.getConfig().waitAfterLoadForGCSeconds();
+        int secondsAfterLeft = this.world.config().secondsUntilGCAfterLastPlayerLeft();
+        int waitAfterLoad = this.world.config().waitAfterLoadForGCSeconds();
 
         return this.refCount.get() == 0 &&
             this.populated && currentTimeMillis - this.loadedTime > TimeUnit.SECONDS.toMillis(waitAfterLoad) &&
@@ -336,7 +336,7 @@ public class ChunkAdapter implements Chunk {
      *
      * @return non modifiable collection of players on this chunk
      */
-    public Collection<EntityPlayer> getPlayers() {
+    public Collection<EntityPlayer> players() {
         return Collections.unmodifiableCollection(this.players);
     }
 
@@ -372,7 +372,7 @@ public class ChunkAdapter implements Chunk {
         int zPos = tileEntityLocation.z() & 0xF;
 
         ChunkSlice slice = ensureSlice(yPos >> 4);
-        slice.addTileEntity(xPos, yPos - slice.getSectionY() * 16, zPos, tileEntity);
+        slice.addTileEntity(xPos, yPos - slice.sectionY() * 16, zPos, tileEntity);
     }
 
     /**
@@ -498,7 +498,7 @@ public class ChunkAdapter implements Chunk {
         int topEmpty = 15;
         for (int i = 15; i >= 0; i--) {
             ChunkSlice slice = this.chunkSlices[i];
-            if (slice == null || slice.isAllAir()) {
+            if (slice == null || slice.allAir()) {
                 topEmpty = i;
             } else {
                 break;
@@ -572,8 +572,8 @@ public class ChunkAdapter implements Chunk {
         List<TileEntity> tileEntities = new ArrayList<>();
 
         for (ChunkSlice chunkSlice : this.chunkSlices) {
-            if (chunkSlice != null && chunkSlice.getTileEntities() != null) {
-                tileEntities.addAll(chunkSlice.getTileEntities().values());
+            if (chunkSlice != null && chunkSlice.tileEntities() != null) {
+                tileEntities.addAll(chunkSlice.tileEntities().values());
             }
         }
 
@@ -634,7 +634,7 @@ public class ChunkAdapter implements Chunk {
             compound.addValue("z", fullZ);
 
             // Create new tile entity
-            TileEntity tileEntity = this.world.getServer().tileEntities().construct(compound,
+            TileEntity tileEntity = this.world.server().tileEntities().construct(compound,
                 this.blockAt(compound.getInteger("x", 0) & 0xF, compound.getInteger("y", 0), compound.getInteger("z", 0) & 0xF));
             this.setTileEntity(x, y, z, tileEntity);
         }
@@ -656,14 +656,14 @@ public class ChunkAdapter implements Chunk {
         return CoordinateUtils.toLong(this.x, this.z);
     }
 
-    public Long2ObjectMap<io.gomint.entity.Entity<?>> getEntities() {
+    public Long2ObjectMap<io.gomint.entity.Entity<?>> entities() {
         return this.entities;
     }
 
     public void tickTiles(long currentTimeMS, float dT) {
         for (ChunkSlice chunkSlice : this.chunkSlices) {
-            if (chunkSlice != null && chunkSlice.getTileEntities() != null) {
-                ObjectIterator<Short2ObjectMap.Entry<TileEntity>> iterator = chunkSlice.getTileEntities().short2ObjectEntrySet().fastIterator();
+            if (chunkSlice != null && chunkSlice.tileEntities() != null) {
+                ObjectIterator<Short2ObjectMap.Entry<TileEntity>> iterator = chunkSlice.tileEntities().short2ObjectEntrySet().fastIterator();
                 while (iterator.hasNext()) {
                     TileEntity tileEntity = iterator.next().getValue();
                     tileEntity.update(currentTimeMS, dT);
@@ -677,7 +677,7 @@ public class ChunkAdapter implements Chunk {
         return slice.getRuntimeID(x, y - 16 * (y >> 4), z, layer);
     }
 
-    public void setHeightMap(short[] height) {
+    public void heightMap(short[] height) {
         this.height = height;
     }
 
@@ -707,23 +707,23 @@ public class ChunkAdapter implements Chunk {
     }
 
     public void populate() {
-        if (!this.isPopulated()) {
+        if (!this.populated()) {
             LOGGER.debug("Starting populating chunk {} / {}", this.x(), this.z());
 
             this.world.chunkGenerator.populate(this);
             this.calculateHeightmap(240);
-            this.setPopulated(true);
+            this.populated(true);
 
-            this.setLastSavedTimestamp(this.world.getServer().currentTickTime());
+            this.lastSavedTimestamp(this.world.server().currentTickTime());
         }
     }
 
     public void retainForConnection() {
-        LOGGER.debug("Incrementing on send ref count: {}", refCount.incrementAndGet());
+        LOGGER.debug("Incrementing on send ref count: {}", this.refCount.incrementAndGet());
     }
 
     public void releaseForConnection() {
-        LOGGER.debug("Decrementing on send ref count: {}", refCount.decrementAndGet());
+        LOGGER.debug("Decrementing on send ref count: {}", this.refCount.decrementAndGet());
     }
 
 }

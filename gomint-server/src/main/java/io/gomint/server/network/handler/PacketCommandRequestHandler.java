@@ -23,12 +23,12 @@ public class PacketCommandRequestHandler implements PacketHandler<PacketCommandR
             return;
         }
 
-        CommandOutput commandOutput = connection.getEntity().dispatchCommand( packet.getInputCommand() );
+        CommandOutput commandOutput = connection.entity().dispatchCommand( packet.getInputCommand() );
         if ( commandOutput != null ) {
 
             PacketCommandOutput packetCommandOutput = new PacketCommandOutput();
             packetCommandOutput.setSuccess(commandOutput.success());
-            packetCommandOutput.setOrigin(packet.getCommandOrigin().setType((byte) 3));
+            packetCommandOutput.setOrigin(packet.getCommandOrigin().type((byte) 3));
 
             // Remap outputs
             List<OutputMessage> outputMessages = new ArrayList<>();

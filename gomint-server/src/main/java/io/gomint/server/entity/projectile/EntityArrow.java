@@ -145,7 +145,7 @@ public class EntityArrow extends EntityProjectile<io.gomint.entity.projectile.En
                 // Remap
                 Set<Block> blocks = new HashSet<>(this.collidedWith);
                 ProjectileHitBlocksEvent hitBlockEvent = new ProjectileHitBlocksEvent(blocks, this);
-                this.world.getServer().pluginManager().callEvent(hitBlockEvent);
+                this.world.server().pluginManager().callEvent(hitBlockEvent);
                 if (!hitBlockEvent.cancelled()) {
                     this.canBePickedup = true;
                 }
@@ -176,7 +176,7 @@ public class EntityArrow extends EntityProjectile<io.gomint.entity.projectile.En
             }
 
             PlayerPickupItemEvent pickupItemEvent = new PlayerPickupItemEvent(player, this, arrow);
-            player.world().getServer().pluginManager().callEvent(pickupItemEvent);
+            player.world().server().pluginManager().callEvent(pickupItemEvent);
             if (pickupItemEvent.cancelled()) {
                 return;
             }

@@ -34,23 +34,23 @@ public class MojangLoginForger {
     private JSONObject skinData;
     private String xuid;
 
-    public UUID getUuid() {
-        return uuid;
+    public UUID uuid() {
+        return this.uuid;
     }
 
-    public void setUsername(String username) {
+    public void username(String username) {
         this.username = username;
     }
 
-    public void setUuid(UUID uuid) {
+    public void uuid(UUID uuid) {
         this.uuid = uuid;
     }
 
-    public void setPublicKey(PublicKey publicKey) {
+    public void publicKey(PublicKey publicKey) {
         this.publicKey = publicKey;
     }
 
-    public void setXuid(String xuid) {
+    public void xuid(String xuid) {
         this.xuid = xuid;
     }
 
@@ -139,7 +139,7 @@ public class MojangLoginForger {
         return builder.toString();
     }
 
-    public void setSkinData( JSONObject skinData ) {
+    public void skinData(JSONObject skinData ) {
         this.skinData = skinData;
     }
 

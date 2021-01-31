@@ -39,27 +39,27 @@ public class PostProcessExecutorService implements Runnable {
 
         // Select anything under the given threshold
         for ( PostProcessExecutor executor : this.executors ) {
-            if ( executor.getLoad() < 85 ) {
-                if ( executor.getConnectionsInUse().get() > amountOfConnections ) {
+            if ( executor.load() < 85 ) {
+                if ( executor.connectionsInUse().get() > amountOfConnections ) {
                     selectedExecutor = executor;
-                    amountOfConnections = executor.getConnectionsInUse().get();
+                    amountOfConnections = executor.connectionsInUse().get();
                 }
             }
         }
 
         if ( selectedExecutor == null ) {
             PostProcessExecutor executor = new PostProcessExecutor( this.executorService );
-            executor.getConnectionsInUse().incrementAndGet();
+            executor.connectionsInUse().incrementAndGet();
             this.executors.add( executor );
             return executor;
         } else {
-            selectedExecutor.getConnectionsInUse().incrementAndGet();
+            selectedExecutor.connectionsInUse().incrementAndGet();
             return selectedExecutor;
         }
     }
 
     public void releaseExecutor( PostProcessExecutor executor ) {
-        executor.getConnectionsInUse().decrementAndGet();
+        executor.connectionsInUse().decrementAndGet();
     }
 
     @Override
@@ -71,7 +71,7 @@ public class PostProcessExecutorService implements Runnable {
 
         // Check if we can get rid of some old unused post process workers
         for ( PostProcessExecutor executor : this.executors ) {
-            if ( executor.getConnectionsInUse().get() == 0 && canKill-- > 0 ) {
+            if ( executor.connectionsInUse().get() == 0 && canKill-- > 0 ) {
                 executor.stop();
             }
         }

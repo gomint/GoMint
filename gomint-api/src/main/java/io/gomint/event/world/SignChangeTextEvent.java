@@ -10,7 +10,6 @@ package io.gomint.event.world;
 import com.google.common.base.Preconditions;
 import io.gomint.entity.EntityPlayer;
 import io.gomint.event.player.CancellablePlayerEvent;
-import io.gomint.world.block.Block;
 import io.gomint.world.block.BlockSign;
 import io.gomint.world.block.BlockStandingSign;
 import io.gomint.world.block.BlockWallSign;

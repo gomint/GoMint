@@ -34,7 +34,7 @@ public class PacketWorldEvent extends Packet {
     }
 
     public int getEventId() {
-        return eventId;
+        return this.eventId;
     }
 
     public void setEventId(int eventId) {
@@ -42,7 +42,7 @@ public class PacketWorldEvent extends Packet {
     }
 
     public Vector getPosition() {
-        return position;
+        return this.position;
     }
 
     public void setPosition(Vector position) {
@@ -50,7 +50,7 @@ public class PacketWorldEvent extends Packet {
     }
 
     public int getData() {
-        return data;
+        return this.data;
     }
 
     public void setData(int data) {

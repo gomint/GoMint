@@ -99,7 +99,7 @@ public class AsyncScheduledTask implements Task, Runnable {
     }
 
     public Runnable runnable() {
-        return runnable;
+        return this.runnable;
     }
 
 }

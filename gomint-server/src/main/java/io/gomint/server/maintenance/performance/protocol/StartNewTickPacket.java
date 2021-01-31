@@ -23,7 +23,7 @@ public class StartNewTickPacket extends Packet {
     }
 
     public long getStartInNanos() {
-        return startInNanos;
+        return this.startInNanos;
     }
 
     public void setStartInNanos(long startInNanos) {

@@ -41,7 +41,7 @@ public class PacketLogin extends Packet {
     }
 
     public int getProtocol() {
-        return protocol;
+        return this.protocol;
     }
 
     public void setProtocol(int protocol) {
@@ -49,7 +49,7 @@ public class PacketLogin extends Packet {
     }
 
     public byte[] getPayload() {
-        return payload;
+        return this.payload;
     }
 
     public void setPayload(byte[] payload) {

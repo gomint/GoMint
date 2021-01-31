@@ -535,11 +535,11 @@ public enum EntityType {
     }
 
     public String getPersistantId() {
-        return persistantId;
+        return this.persistantId;
     }
 
     public int getNetworkId() {
-        return networkId;
+        return this.networkId;
     }
 
 }

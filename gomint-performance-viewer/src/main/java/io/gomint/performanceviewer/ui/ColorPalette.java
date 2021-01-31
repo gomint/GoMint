@@ -21,7 +21,7 @@ public enum ColorPalette {
     }
 
     public String getHexValue() {
-        return hexValue;
+        return this.hexValue;
     }
 
     public Paint getPaint() {

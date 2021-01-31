@@ -41,10 +41,10 @@ public class ChunkPackageBenchmark {
 
     @Setup
     public void init() throws IOException {
-        server = new GoMintServer();
+        this.server = new GoMintServer();
         // server.startAfterRegistryInit(options);
 
-        this.world = server.createWorld("test", new CreateOptions().worldType(WorldType.IN_MEMORY));
+        this.world = this.server.createWorld("test", new CreateOptions().worldType(WorldType.IN_MEMORY));
 
         this.chunk = (ChunkAdapter) this.world.getChunk(1,1);
         for (int i = 0; i < 16; i++) {
@@ -64,7 +64,7 @@ public class ChunkPackageBenchmark {
 
     @TearDown
     public void teardown() {
-        server.shutdown();
+        this.server.shutdown();
     }
 
 }

@@ -62,7 +62,7 @@ public class LayeredGenerator extends ChunkGenerator {
     }
 
     public List<Block> layers() {
-        return layers;
+        return this.layers;
     }
 
     @Override

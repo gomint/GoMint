@@ -36,7 +36,7 @@ public class PacketResourcePackResponse extends Packet {
     }
 
     public ResourceResponseStatus getStatus() {
-        return status;
+        return this.status;
     }
 
     public void setStatus(ResourceResponseStatus status) {
@@ -44,7 +44,7 @@ public class PacketResourcePackResponse extends Packet {
     }
 
     public ResourcePackInfo getInfo() {
-        return info;
+        return this.info;
     }
 
     public void setInfo(ResourcePackInfo info) {

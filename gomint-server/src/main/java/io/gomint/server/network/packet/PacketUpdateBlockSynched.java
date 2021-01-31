@@ -46,7 +46,7 @@ public class PacketUpdateBlockSynched extends Packet {
     }
 
     public BlockPosition getPosition() {
-        return position;
+        return this.position;
     }
 
     public void setPosition(BlockPosition position) {
@@ -54,7 +54,7 @@ public class PacketUpdateBlockSynched extends Packet {
     }
 
     public int getBlockId() {
-        return blockId;
+        return this.blockId;
     }
 
     public void setBlockId(int blockId) {
@@ -62,7 +62,7 @@ public class PacketUpdateBlockSynched extends Packet {
     }
 
     public int getFlags() {
-        return flags;
+        return this.flags;
     }
 
     public void setFlags(int flags) {
@@ -70,7 +70,7 @@ public class PacketUpdateBlockSynched extends Packet {
     }
 
     public int getLayer() {
-        return layer;
+        return this.layer;
     }
 
     public void setLayer(int layer) {
@@ -78,7 +78,7 @@ public class PacketUpdateBlockSynched extends Packet {
     }
 
     public long getEntityId() {
-        return entityId;
+        return this.entityId;
     }
 
     public void setEntityId(long entityId) {
@@ -86,7 +86,7 @@ public class PacketUpdateBlockSynched extends Packet {
     }
 
     public long getAction() {
-        return action;
+        return this.action;
     }
 
     public void setAction(long action) {

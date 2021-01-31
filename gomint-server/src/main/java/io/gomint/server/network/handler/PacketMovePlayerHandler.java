@@ -17,7 +17,7 @@ public class PacketMovePlayerHandler implements PacketHandler<PacketMovePlayer> 
 
     @Override
     public void handle( PacketMovePlayer packet, long currentTimeMillis, PlayerConnection connection ) {
-        EntityPlayer entity = connection.getEntity();
+        EntityPlayer entity = connection.entity();
         Location to = entity.location();
         to.x( packet.getX() );
         to.y( packet.getY() - entity.eyeHeight() ); // Subtract eye height since client sends it at the eyes
@@ -27,13 +27,13 @@ public class PacketMovePlayerHandler implements PacketHandler<PacketMovePlayer> 
         to.pitch( packet.getPitch() );
 
         // Does the entity have a teleport open?
-        if ( connection.getEntity().teleportPosition() != null ) {
-            if ( connection.getEntity().teleportPosition().distanceSquared( to ) > 0.2 ) {
-                LOGGER.warn( "Player {} did not teleport to {}", connection.getEntity().name(), connection.getEntity().teleportPosition(), to );
-                connection.sendMovePlayer( connection.getEntity().teleportPosition() );
+        if ( connection.entity().teleportPosition() != null ) {
+            if ( connection.entity().teleportPosition().distanceSquared( to ) > 0.2 ) {
+                LOGGER.warn( "Player {} did not teleport to {}", connection.entity().name(), connection.entity().teleportPosition(), to );
+                connection.sendMovePlayer( connection.entity().teleportPosition() );
                 return;
             } else {
-                connection.getEntity().setTeleportPosition( null );
+                connection.entity().setTeleportPosition( null );
             }
         }
 
@@ -49,7 +49,7 @@ public class PacketMovePlayerHandler implements PacketHandler<PacketMovePlayer> 
             return;
         }
 
-        connection.getEntity().setNextMovement( to );
+        connection.entity().setNextMovement( to );
     }
 
 }

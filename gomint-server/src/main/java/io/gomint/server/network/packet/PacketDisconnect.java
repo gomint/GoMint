@@ -29,7 +29,7 @@ public class PacketDisconnect extends Packet {
     }
 
     public boolean isHideDisconnectionScreen() {
-        return hideDisconnectionScreen;
+        return this.hideDisconnectionScreen;
     }
 
     public void setHideDisconnectionScreen(boolean hideDisconnectionScreen) {
@@ -37,7 +37,7 @@ public class PacketDisconnect extends Packet {
     }
 
     public String getMessage() {
-        return message;
+        return this.message;
     }
 
     public void setMessage(String message) {

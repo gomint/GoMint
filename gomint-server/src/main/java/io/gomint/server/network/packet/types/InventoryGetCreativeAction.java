@@ -27,13 +27,13 @@ public class InventoryGetCreativeAction implements InventoryAction {
     }
 
     public int getCreativeItemId() {
-        return creativeItemId;
+        return this.creativeItemId;
     }
 
     @Override
     public String toString() {
         return "{\"_class\":\"InventoryGetCreativeAction\", " +
-            "\"creativeItemId\":\"" + creativeItemId + "\"" +
+            "\"creativeItemId\":\"" + this.creativeItemId + "\"" +
             "}";
     }
 

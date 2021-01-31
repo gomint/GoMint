@@ -63,13 +63,13 @@ public class LevelDBChunkAdapter extends ChunkAdapter {
      */
     public LevelDBChunkAdapter(WorldAdapter worldAdapter, int x, int z, boolean populated) {
         super(worldAdapter, x, z);
-        this.setPopulated(populated);
-        this.loadedTime = this.lastSavedTimestamp = worldAdapter.getServer().currentTickTime();
+        this.populated(populated);
+        this.loadedTime = this.lastSavedTimestamp = worldAdapter.server().currentTickTime();
     }
 
     public LevelDBChunkAdapter(WorldAdapter worldAdapter, int x, int z) {
         super(worldAdapter, x, z);
-        this.loadedTime = worldAdapter.getServer().currentTickTime();
+        this.loadedTime = worldAdapter.server().currentTickTime();
     }
 
     void save(DB db) {
@@ -86,7 +86,7 @@ public class LevelDBChunkAdapter extends ChunkAdapter {
 
         // Save metadata
         ByteBuf key = ((LevelDBWorldAdapter) this.world).getKey(this.x, this.z, (byte) 0x36);
-        ByteBuf val = PooledByteBufAllocator.DEFAULT.directBuffer(1).writeByte(isPopulated() ? 2 : 0)
+        ByteBuf val = PooledByteBufAllocator.DEFAULT.directBuffer(1).writeByte(populated() ? 2 : 0)
             .writeByte(0).writeByte(0).writeByte(0);
         writeBatch.put(key, val);
 
@@ -134,9 +134,9 @@ public class LevelDBChunkAdapter extends ChunkAdapter {
         ByteBuf buffer = PooledByteBufAllocator.DEFAULT.directBuffer();
 
         buffer.writeByte((byte) 8);
-        buffer.writeByte((byte) slice.getAmountOfLayers());
+        buffer.writeByte((byte) slice.amountOfLayers());
 
-        for (int layer = 0; layer < slice.getAmountOfLayers(); layer++) {
+        for (int layer = 0; layer < slice.amountOfLayers(); layer++) {
             List<BlockIdentifier> blocks = slice.getBlocks(layer);
 
             // Count how many unique blocks we have in this chunk
@@ -293,7 +293,7 @@ public class LevelDBChunkAdapter extends ChunkAdapter {
 
                 Block block = this.blockAt(compound.getInteger("x", 0) & 0xF, compound.getInteger("y", 0), compound.getInteger("z", 0) & 0xF);
 
-                tileEntity = this.world.getServer().tileEntities().construct(compound, block);
+                tileEntity = this.world.server().tileEntities().construct(compound, block);
                 if (tileEntity != null) {
                     this.addTileEntity(tileEntity);
                 }
@@ -314,7 +314,7 @@ public class LevelDBChunkAdapter extends ChunkAdapter {
                 NBTTagCompound compound = nbtReader.parse();
                 String identifier = compound.getString("identifier", null);
 
-                var entity = this.world.getServer().entities().create(identifier);
+                var entity = this.world.server().entities().create(identifier);
                 if (entity != null) {
                     ((Entity<?>) entity).initFromNBT(compound);
                     Location location = entity.location();
@@ -340,7 +340,7 @@ public class LevelDBChunkAdapter extends ChunkAdapter {
         byte[] biomes = new byte[16 * 16];
         buf.readBytes(biomes);
 
-        this.setHeightMap(height);
+        this.heightMap(height);
         this.setBiomes(biomes);
     }
 

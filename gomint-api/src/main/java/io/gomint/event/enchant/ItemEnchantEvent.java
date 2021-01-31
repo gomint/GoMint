@@ -9,11 +9,11 @@ import io.gomint.inventory.item.ItemStack;
 import java.util.List;
 
 /**
+ * This event gets fired when the player has selected the enchantments it wants on given item.
+ *
  * @author geNAZt
  * @version 1.0
  * @stability 1
- *
- * This event gets fired when the player has selected the enchantments it wants on given item.
  */
 public class ItemEnchantEvent extends CancellablePlayerEvent<ItemEnchantEvent> {
 
@@ -34,6 +34,7 @@ public class ItemEnchantEvent extends CancellablePlayerEvent<ItemEnchantEvent> {
         this.enchantments = enchantments;
         this.levelCost = levelCost;
         this.materialCost = materialCost;
+        this.levelRequirement = levelRequirement;
     }
 
     /**
@@ -42,7 +43,7 @@ public class ItemEnchantEvent extends CancellablePlayerEvent<ItemEnchantEvent> {
      * @return amount of levels this enchantment operation costs
      */
     public int levelCost() {
-        return levelCost;
+        return this.levelCost;
     }
 
     /**
@@ -62,7 +63,7 @@ public class ItemEnchantEvent extends CancellablePlayerEvent<ItemEnchantEvent> {
      * @return amount of material this enchantment operation costs
      */
     public int materialCost() {
-        return materialCost;
+        return this.materialCost;
     }
 
     /**
@@ -71,7 +72,7 @@ public class ItemEnchantEvent extends CancellablePlayerEvent<ItemEnchantEvent> {
      * @return item stack which should be enchanted
      */
     public ItemStack<?> itemToEnchant() {
-        return itemToEnchant;
+        return this.itemToEnchant;
     }
 
     /**
@@ -81,7 +82,7 @@ public class ItemEnchantEvent extends CancellablePlayerEvent<ItemEnchantEvent> {
      * @return list of enchantments
      */
     public List<Enchantment> enchantments() {
-        return enchantments;
+        return this.enchantments;
     }
 
     /**
@@ -90,7 +91,7 @@ public class ItemEnchantEvent extends CancellablePlayerEvent<ItemEnchantEvent> {
      * @return minimum level the player needs
      */
     public int levelRequirement() {
-        return levelRequirement;
+        return this.levelRequirement;
     }
 
     /**

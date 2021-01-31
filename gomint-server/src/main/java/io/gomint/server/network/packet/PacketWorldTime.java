@@ -33,7 +33,7 @@ public class PacketWorldTime extends Packet {
     }
 
     public int getTicks() {
-        return ticks;
+        return this.ticks;
     }
 
     public void setTicks(int ticks) {

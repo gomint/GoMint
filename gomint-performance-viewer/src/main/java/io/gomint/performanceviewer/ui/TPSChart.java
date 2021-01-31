@@ -38,7 +38,7 @@ public class TPSChart {
         this.xAxis = new NumberAxis( 0, 512, 1000 );
         this.xAxis.setAutoRanging( false );
 
-        this.chart = new LineChart<>( xAxis, yAxis );
+        this.chart = new LineChart<>(this.xAxis, yAxis );
         this.chart.setAnimated( false );
         this.chart.setCreateSymbols( false );
         this.chart.setLegendVisible( false );
@@ -51,7 +51,7 @@ public class TPSChart {
         this.scrollBar.valueProperty().addListener( new ChangeListener<Number>() {
             @Override
             public void changed( ObservableValue<? extends Number> observable, Number oldValue, Number newValue ) {
-                currentDataStart = (int) ( newValue.floatValue() * ( TimeUnit.SECONDS.toNanos( 1 ) / tickNanos ) * 60 );
+                TPSChart.this.currentDataStart = (int) ( newValue.floatValue() * ( TimeUnit.SECONDS.toNanos( 1 ) / TPSChart.this.tickNanos) * 60 );
                 updateChart();
             }
         } );

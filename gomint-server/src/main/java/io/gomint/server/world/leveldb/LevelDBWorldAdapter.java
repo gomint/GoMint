@@ -276,7 +276,7 @@ public class LevelDBWorldAdapter extends WorldAdapter {
             try {
                 constructGenerator(this.generatorClass, this.generatorContext);
             } catch (WorldCreateException e) {
-                this.getLogger().error("Could not reconstruct generator class", e);
+                this.logger().error("Could not reconstruct generator class", e);
             }
         } else {
             Generators generators = Generators.valueOf(this.generatorType);
@@ -544,7 +544,7 @@ public class LevelDBWorldAdapter extends WorldAdapter {
                 return serverId;
             }
         } catch (IOException | AllocationLimitReachedException e) {
-            logger.warn("Could not load player information for loading", e);
+            this.logger.warn("Could not load player information for loading", e);
         }
 
         return null;
@@ -581,7 +581,7 @@ public class LevelDBWorldAdapter extends WorldAdapter {
             batch.clear();
             batch.close();
         } catch (IOException e) {
-            logger.warn("Could not persist player information", e);
+            this.logger.warn("Could not persist player information", e);
         }
     }
 
@@ -602,7 +602,7 @@ public class LevelDBWorldAdapter extends WorldAdapter {
                 return true;
             }
         } catch (IOException | AllocationLimitReachedException e) {
-            logger.warn("Could not load player information", e);
+            this.logger.warn("Could not load player information", e);
         }
 
         return false;

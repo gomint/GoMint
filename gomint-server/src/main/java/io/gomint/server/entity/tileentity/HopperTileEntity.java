@@ -65,7 +65,7 @@ public class HopperTileEntity extends TileEntity implements InventoryHolder {
     }
 
     public HopperInventory getInventory() {
-        return inventory;
+        return this.inventory;
     }
 
 }

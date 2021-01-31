@@ -143,7 +143,7 @@ public class UPNPClient {
                     .handler(new ChannelInitializer<NioDatagramChannel>() {
                         @Override
                         public void initChannel(NioDatagramChannel ch) {
-                            ch.pipeline().addLast(new MulticastHandler(group, pnpClientURL));
+                            ch.pipeline().addLast(new MulticastHandler(group, UPNPClient.this.pnpClientURL));
                         }
                     });
                 serverBootstrap.bind()

@@ -115,7 +115,7 @@ public class PacketText extends Packet {
     }
 
     public Type getType() {
-        return type;
+        return this.type;
     }
 
     public void setType(Type type) {
@@ -123,7 +123,7 @@ public class PacketText extends Packet {
     }
 
     public String getSender() {
-        return sender;
+        return this.sender;
     }
 
     public void setSender(String sender) {
@@ -131,7 +131,7 @@ public class PacketText extends Packet {
     }
 
     public String getMessage() {
-        return message;
+        return this.message;
     }
 
     public void setMessage(String message) {
@@ -139,7 +139,7 @@ public class PacketText extends Packet {
     }
 
     public String[] getArguments() {
-        return arguments;
+        return this.arguments;
     }
 
     public void setArguments(String[] arguments) {
@@ -147,7 +147,7 @@ public class PacketText extends Packet {
     }
 
     public String getXuid() {
-        return xuid;
+        return this.xuid;
     }
 
     public void setXuid(String xuid) {
@@ -155,7 +155,7 @@ public class PacketText extends Packet {
     }
 
     public String getDeviceId() {
-        return deviceId;
+        return this.deviceId;
     }
 
     public void setDeviceId(String deviceId) {

@@ -29,7 +29,7 @@ public class PacketTransfer extends Packet {
     }
 
     public String getAddress() {
-        return address;
+        return this.address;
     }
 
     public void setAddress(String address) {
@@ -37,7 +37,7 @@ public class PacketTransfer extends Packet {
     }
 
     public int getPort() {
-        return port;
+        return this.port;
     }
 
     public void setPort(int port) {

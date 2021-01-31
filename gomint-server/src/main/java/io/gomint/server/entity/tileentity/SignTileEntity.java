@@ -8,6 +8,7 @@
 package io.gomint.server.entity.tileentity;
 
 import com.google.common.base.Joiner;
+import io.gomint.GoMint;
 import io.gomint.event.world.SignChangeTextEvent;
 import io.gomint.server.entity.EntityPlayer;
 import io.gomint.server.inventory.item.Items;
@@ -32,16 +33,14 @@ public class SignTileEntity extends TileEntity {
     private static final Joiner CONTENT_JOINER = Joiner.on("\n").skipNulls();
 
     private final List<String> lines = new ArrayList<>(4);
-    private final EventCaller eventCaller;
 
     /**
      * Construct new tile entity from position and world data
      *
      * @param block which created this tile
      */
-    public SignTileEntity(Block block, Items items, EventCaller eventCaller) {
+    public SignTileEntity(Block block, Items items) {
         super(block, items);
-        this.eventCaller = eventCaller;
     }
 
     @Override
@@ -105,13 +104,13 @@ public class SignTileEntity extends TileEntity {
             }
         }
 
-        // Fire sign change event
-        List<String> lineList = new ArrayList<>();
-        Collections.addAll(lineList, lines);
+        if (GoMint.instance().pluginManager() != null) {
+            // Fire sign change event
+            List<String> lineList = new ArrayList<>();
+            Collections.addAll(lineList, lines);
 
-        if (this.eventCaller != null) {
             SignChangeTextEvent event = new SignChangeTextEvent(player, this.getBlock(), lineList);
-            this.eventCaller.callEvent(event);
+            GoMint.instance().pluginManager().callEvent(event);
 
             if (event.cancelled()) {
                 return;

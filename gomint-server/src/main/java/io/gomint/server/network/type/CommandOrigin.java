@@ -20,38 +20,38 @@ public class CommandOrigin {
         this.type = type;
     }
 
-    public byte getUnknown1() {
-        return unknown1;
+    public byte unknown1() {
+        return this.unknown1;
     }
 
-    public UUID getUuid() {
-        return uuid;
+    public UUID uuid() {
+        return this.uuid;
     }
 
-    public byte getUnknown2() {
-        return unknown2;
+    public byte unknown2() {
+        return this.unknown2;
     }
 
-    public byte getType() {
-        return type;
+    public byte type() {
+        return this.type;
     }
 
-    public CommandOrigin setUnknown1(byte unknown1) {
+    public CommandOrigin unknown1(byte unknown1) {
         this.unknown1 = unknown1;
         return this;
     }
 
-    public CommandOrigin setUuid(UUID uuid) {
+    public CommandOrigin uuid(UUID uuid) {
         this.uuid = uuid;
         return this;
     }
 
-    public CommandOrigin setUnknown2(byte unknown2) {
+    public CommandOrigin unknown2(byte unknown2) {
         this.unknown2 = unknown2;
         return this;
     }
 
-    public CommandOrigin setType(byte type) {
+    public CommandOrigin type(byte type) {
         this.type = type;
         return this;
     }

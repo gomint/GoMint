@@ -92,7 +92,7 @@ public class Registry<R> {
 
     public Generator<R> getGenerator(Class<?> clazz) {
         // Get the internal ID
-        int id = apiReferences.getOrDefault(clazz, -1);
+        int id = this.apiReferences.getOrDefault(clazz, -1);
         if (id == -1) {
             return null;
         }

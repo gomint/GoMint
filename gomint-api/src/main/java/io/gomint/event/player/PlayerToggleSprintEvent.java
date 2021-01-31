@@ -24,4 +24,5 @@ public class PlayerToggleSprintEvent extends CancellablePlayerEvent<PlayerToggle
     public boolean newStatus() {
         return this.newStatus;
     }
+
 }

@@ -51,8 +51,8 @@ public class EntityXPOrb extends Entity<io.gomint.entity.passive.EntityXPOrb> im
         this.collision(false);
         this.size(0.25f, 0.25f);
 
-        GRAVITY = 0.04f;
-        DRAG = 0.02f;
+        this.gravity = 0.04f;
+        this.drag = 0.02f;
 
         this.xpAmount = xpAmount;
         pickupDelay(1250, TimeUnit.MILLISECONDS);
@@ -66,13 +66,13 @@ public class EntityXPOrb extends Entity<io.gomint.entity.passive.EntityXPOrb> im
         this.collision(false);
         this.size(0.25f, 0.25f);
 
-        GRAVITY = 0.04f;
-        DRAG = 0.02f;
+        this.gravity = 0.04f;
+        this.drag = 0.02f;
     }
 
     @Override
     public int xpAmount() {
-        return xpAmount;
+        return this.xpAmount;
     }
 
     @Override
@@ -83,7 +83,7 @@ public class EntityXPOrb extends Entity<io.gomint.entity.passive.EntityXPOrb> im
 
     @Override
     public Instant pickupTime() {
-        return Instant.ofEpochMilli(pickupTime);
+        return Instant.ofEpochMilli(this.pickupTime);
     }
 
     @Override
@@ -107,7 +107,7 @@ public class EntityXPOrb extends Entity<io.gomint.entity.passive.EntityXPOrb> im
 
         this.lastUpdateDT += dT;
         if (Values.CLIENT_TICK_RATE - this.lastUpdateDT < MathUtils.EPSILON) {
-            if (this.world.getServer().currentTickTime() > this.pickupTime().toEpochMilli() && !this.dead()) {
+            if (this.world.server().currentTickTime() > this.pickupTime().toEpochMilli() && !this.dead()) {
                 if (this.closestPlayer == null || this.closestPlayer.gamemode() == Gamemode.SPECTATOR ||
                     this.closestPlayer.dead() || this.closestPlayer.health() <= 0 ||
                     this.closestPlayer.location().distanceSquared(this.location()) > 64) {
@@ -158,7 +158,7 @@ public class EntityXPOrb extends Entity<io.gomint.entity.passive.EntityXPOrb> im
     @Override
     public void onCollideWithPlayer(EntityPlayer player) {
         // Check if we can pick it up
-        if (this.world.getServer().currentTickTime() > this.pickupTime().toEpochMilli() && !this.dead()) {
+        if (this.world.server().currentTickTime() > this.pickupTime().toEpochMilli() && !this.dead()) {
             if (player.canPickupXP()) {
                 player.addXP(this.xpAmount);
                 this.despawn();

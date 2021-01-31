@@ -27,7 +27,7 @@ public abstract class ItemFood<I extends io.gomint.inventory.item.ItemStack<I>> 
             if (entity.actionStart() > -1) {
                 // Call event
                 PlayerConsumeItemEvent consumeItemEvent = new PlayerConsumeItemEvent(entity, this);
-                entity.world().getServer().pluginManager().callEvent(consumeItemEvent);
+                entity.world().server().pluginManager().callEvent(consumeItemEvent);
 
                 if (consumeItemEvent.cancelled()) {
                     return false;

@@ -22,7 +22,7 @@ public class WorldData {
     @Override
     public String toString() {
         return "WorldData{" +
-            "chunkAmount=" + chunkAmount +
+            "chunkAmount=" + this.chunkAmount +
             '}';
     }
 

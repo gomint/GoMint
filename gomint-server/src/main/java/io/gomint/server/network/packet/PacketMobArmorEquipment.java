@@ -39,7 +39,7 @@ public class PacketMobArmorEquipment extends Packet {
     }
 
     public long getEntityId() {
-        return entityId;
+        return this.entityId;
     }
 
     public void setEntityId(long entityId) {
@@ -47,7 +47,7 @@ public class PacketMobArmorEquipment extends Packet {
     }
 
     public ItemStack<?> getHelmet() {
-        return helmet;
+        return this.helmet;
     }
 
     public void setHelmet(ItemStack<?> helmet) {
@@ -55,7 +55,7 @@ public class PacketMobArmorEquipment extends Packet {
     }
 
     public ItemStack<?> getChestplate() {
-        return chestplate;
+        return this.chestplate;
     }
 
     public void setChestplate(ItemStack<?> chestplate) {
@@ -63,7 +63,7 @@ public class PacketMobArmorEquipment extends Packet {
     }
 
     public ItemStack<?> getLeggings() {
-        return leggings;
+        return this.leggings;
     }
 
     public void setLeggings(ItemStack<?> leggings) {
@@ -71,7 +71,7 @@ public class PacketMobArmorEquipment extends Packet {
     }
 
     public ItemStack<?> getBoots() {
-        return boots;
+        return this.boots;
     }
 
     public void setBoots(ItemStack<?> boots) {

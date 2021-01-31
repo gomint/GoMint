@@ -28,7 +28,7 @@ public enum Bearing {
     }
 
     public int getDirection() {
-        return direction;
+        return this.direction;
     }
 
     public Direction toDirection() {

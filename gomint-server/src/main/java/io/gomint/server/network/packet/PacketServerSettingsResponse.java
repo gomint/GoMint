@@ -38,7 +38,7 @@ public class PacketServerSettingsResponse extends Packet {
     }
 
     public int getFormId() {
-        return formId;
+        return this.formId;
     }
 
     public void setFormId(int formId) {
@@ -46,7 +46,7 @@ public class PacketServerSettingsResponse extends Packet {
     }
 
     public String getJson() {
-        return json;
+        return this.json;
     }
 
     public void setJson(String json) {

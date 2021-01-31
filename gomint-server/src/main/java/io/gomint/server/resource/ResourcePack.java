@@ -14,11 +14,11 @@ public class ResourcePack {
         this.size = size;
     }
 
-    public PackIdVersion getVersion() {
-        return version;
+    public PackIdVersion version() {
+        return this.version;
     }
 
-    public long getSize() {
-        return size;
+    public long size() {
+        return this.size;
     }
 }

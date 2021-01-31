@@ -38,7 +38,7 @@ public class PacketEntityMotion extends Packet {
     }
 
     public long getEntityId() {
-        return entityId;
+        return this.entityId;
     }
 
     public void setEntityId(long entityId) {
@@ -46,7 +46,7 @@ public class PacketEntityMotion extends Packet {
     }
 
     public Vector getVelocity() {
-        return velocity;
+        return this.velocity;
     }
 
     public void setVelocity(Vector velocity) {

@@ -312,7 +312,7 @@ public class Scoreboard implements io.gomint.scoreboard.Scoreboard {
 
 
         public int getScore() {
-            return score;
+            return this.score;
         }
 
         public void setScore(int score) {

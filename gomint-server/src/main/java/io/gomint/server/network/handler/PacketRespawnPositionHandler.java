@@ -15,8 +15,8 @@ public class PacketRespawnPositionHandler implements PacketHandler<PacketRespawn
         // Client ready
         if ( packet.getState() == RespawnState.CLIENT_READY_TO_SPAWN ) {
             PacketRespawnPosition packetRespawnPosition = new PacketRespawnPosition();
-            packetRespawnPosition.setPosition(connection.getEntity().spawnLocation().add(0, connection.getEntity().eyeHeight(), 0));
-            packetRespawnPosition.setEntityId(connection.getEntity().id());
+            packetRespawnPosition.setPosition(connection.entity().spawnLocation().add(0, connection.entity().eyeHeight(), 0));
+            packetRespawnPosition.setEntityId(connection.entity().id());
             packetRespawnPosition.setState( RespawnState.READY_TO_SPAWN );
             connection.addToSendQueue(packetRespawnPosition);
         }

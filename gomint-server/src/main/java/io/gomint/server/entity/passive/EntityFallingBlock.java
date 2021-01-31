@@ -83,8 +83,8 @@ public class EntityFallingBlock extends Entity<io.gomint.entity.passive.EntityFa
         this.size(0.98f, 0.98f);
         this.offsetY = 0.49f;
 
-        GRAVITY = 0.04f;
-        DRAG = 0.02f;
+        this.gravity = 0.04f;
+        this.drag = 0.02f;
     }
 
     @Override

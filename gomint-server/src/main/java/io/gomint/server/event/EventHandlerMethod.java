@@ -112,20 +112,20 @@ class EventHandlerMethod implements Comparable<EventHandlerMethod> {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         EventHandlerMethod that = (EventHandlerMethod) o;
-        return Objects.equals(annotation, that.annotation) &&
-            Objects.equals(proxy, that.proxy) &&
-            Objects.equals(instance, that.instance);
+        return Objects.equals(this.annotation, that.annotation) &&
+            Objects.equals(this.proxy, that.proxy) &&
+            Objects.equals(this.instance, that.instance);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(annotation, proxy, instance);
+        return Objects.hash(this.annotation, this.proxy, this.instance);
     }
 
     @Override
     public String toString() {
         return "EventHandlerMethod{" +
-            "instance=" + instance +
+            "instance=" + this.instance +
             '}';
     }
 

@@ -23,7 +23,7 @@ public class PacketAnimate extends Packet {
     public void serialize( PacketBuffer buffer, int protocolID ) {
         buffer.writeSignedVarInt( this.actionId );
         buffer.writeUnsignedVarLong( this.entityId );
-        if ( (actionId & 0x80) != 0 ) {
+        if ( (this.actionId & 0x80) != 0 ) {
             buffer.writeLFloat( this.boatRowingTime );
         }
     }
@@ -31,12 +31,12 @@ public class PacketAnimate extends Packet {
     @Override
     public void deserialize( PacketBuffer buffer, int protocolID ) {
         this.actionId = buffer.readSignedVarInt();
-        this.playerAnimation = PlayerAnimation.getById( actionId );
-        if ( (actionId & 0x80) != 0 ) {
+        this.playerAnimation = PlayerAnimation.getById(this.actionId);
+        if ( (this.actionId & 0x80) != 0 ) {
             this.boatRowingTime = buffer.readLFloat();
         }
 
-        switch ( playerAnimation ) {
+        switch (this.playerAnimation) {
             case SWING:
                 this.entityId = buffer.readUnsignedVarLong();
                 break;
@@ -83,7 +83,7 @@ public class PacketAnimate extends Packet {
     }
 
     public PlayerAnimation getPlayerAnimation() {
-        return playerAnimation;
+        return this.playerAnimation;
     }
 
     public void setPlayerAnimation(PlayerAnimation playerAnimation) {
@@ -91,7 +91,7 @@ public class PacketAnimate extends Packet {
     }
 
     public int getActionId() {
-        return actionId;
+        return this.actionId;
     }
 
     public void setActionId(int actionId) {
@@ -99,7 +99,7 @@ public class PacketAnimate extends Packet {
     }
 
     public long getEntityId() {
-        return entityId;
+        return this.entityId;
     }
 
     public void setEntityId(long entityId) {
@@ -107,7 +107,7 @@ public class PacketAnimate extends Packet {
     }
 
     public float getBoatRowingTime() {
-        return boatRowingTime;
+        return this.boatRowingTime;
     }
 
     public void setBoatRowingTime(float boatRowingTime) {

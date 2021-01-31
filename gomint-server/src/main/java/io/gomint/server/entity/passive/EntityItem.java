@@ -61,8 +61,7 @@ public class EntityItem extends Entity<EntityItemDrop> implements EntityItemDrop
         this.size( 0.25f, 0.25f );
         pickupDelay( 500, TimeUnit.MILLISECONDS );
 
-
-        GRAVITY = 0.04f;
+        this.gravity = 0.04f;
         this.offsetY = 0.125f;
     }
 
@@ -141,7 +140,7 @@ public class EntityItem extends Entity<EntityItemDrop> implements EntityItemDrop
     @Override
     public void onCollideWithPlayer( EntityPlayer player ) {
         // Check if we can pick it up
-        if ( this.world.getServer().currentTickTime() > this.pickupTime() && !this.dead() ) {
+        if ( this.world.server().currentTickTime() > this.pickupTime() && !this.dead() ) {
             // Check if we have place in out inventory to store this item
             if ( !player.inventory().hasPlaceFor( this.itemStack() ) ) {
                 return;
@@ -153,7 +152,7 @@ public class EntityItem extends Entity<EntityItemDrop> implements EntityItemDrop
                 event.cancelled( true );
             }
 
-            this.world.getServer().pluginManager().callEvent( event );
+            this.world.server().pluginManager().callEvent( event );
 
             if ( !event.cancelled() ) {
                 // Consume the item
@@ -189,16 +188,16 @@ public class EntityItem extends Entity<EntityItemDrop> implements EntityItemDrop
 
     @Override
     public long pickupTime() {
-        return pickupTime;
+        return this.pickupTime;
     }
 
     @Override
     public String toString() {
         return "EntityItem{" +
-            "itemStack=" + itemStack +
-            ", pickupTime=" + pickupTime +
-            ", isReset=" + isReset +
-            ", lastUpdateDT=" + lastUpdateDT +
+            "itemStack=" + this.itemStack +
+            ", pickupTime=" + this.pickupTime +
+            ", isReset=" + this.isReset +
+            ", lastUpdateDT=" + this.lastUpdateDT +
             '}';
     }
 

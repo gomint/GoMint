@@ -75,16 +75,16 @@ public class ChunkSlice {
         this.shiftedMinZ = this.chunk.z << 4;
     }
 
-    public Short2ObjectOpenHashMap<TileEntity> getTileEntities() {
-        return tileEntities;
+    public Short2ObjectOpenHashMap<TileEntity> tileEntities() {
+        return this.tileEntities;
     }
 
-    public int getSectionY() {
-        return sectionY;
+    public int sectionY() {
+        return this.sectionY;
     }
 
-    public ChunkAdapter getChunk() {
-        return chunk;
+    public ChunkAdapter chunk() {
+        return this.chunk;
     }
 
     private short getIndex(int x, int y, int z) {
@@ -147,7 +147,7 @@ public class ChunkSlice {
         }
 
         BlockIdentifier identifier = BlockRuntimeIDs.toBlockIdentifier(runtimeID);
-        return (T) this.chunk.world().getServer().blocks().get(identifier, this.skyLight != null ? this.skyLight.get(index) : 0,
+        return (T) this.chunk.world().server().blocks().get(identifier, this.skyLight != null ? this.skyLight.get(index) : 0,
             this.blockLight != null ? this.blockLight.get(index) : 0, this.tileEntities != null ? this.tileEntities.get(index) : null,
             new Location(this.chunk.world, blockLocation.x(), blockLocation.y(), blockLocation.z()), blockLocation, layer, this, index);
     }
@@ -158,7 +158,7 @@ public class ChunkSlice {
     }
 
     private Air getAirBlockInstance(BlockPosition location) {
-        return  this.chunk.world().getServer().blocks().get(AIR_RUNTIME_ID,
+        return  this.chunk.world().server().blocks().get(AIR_RUNTIME_ID,
                 (byte) 15, (byte) 15, null, new Location(this.chunk.world, location.x(), location.y(), location.z()),
             location, 0, null, (short) 0);
     }
@@ -219,11 +219,11 @@ public class ChunkSlice {
         }
     }
 
-    boolean isAllAir() {
+    boolean allAir() {
         return this.blocks[0] == null;
     }
 
-    public int getAmountOfLayers() {
+    public int amountOfLayers() {
         return this.blocks[1] != null ? 2 : 1;
     }
 
@@ -265,7 +265,7 @@ public class ChunkSlice {
         buffer.writeByte((byte) 8);
 
         // Check how many layers we have
-        int amountOfLayers = this.getAmountOfLayers();
+        int amountOfLayers = this.amountOfLayers();
         buffer.writeByte((byte) amountOfLayers);
 
         for (int layer = 0; layer < amountOfLayers; layer++) {
@@ -362,8 +362,8 @@ public class ChunkSlice {
         }
 
         // Check for tile entity changes
-        if (this.getTileEntities() != null) {
-            ObjectIterator<Short2ObjectMap.Entry<TileEntity>> iterator = this.getTileEntities().short2ObjectEntrySet().fastIterator();
+        if (this.tileEntities() != null) {
+            ObjectIterator<Short2ObjectMap.Entry<TileEntity>> iterator = this.tileEntities().short2ObjectEntrySet().fastIterator();
             while (iterator.hasNext()) {
                 TileEntity tileEntity = iterator.next().getValue();
                 if (tileEntity.isNeedsPersistence()) {
@@ -378,8 +378,8 @@ public class ChunkSlice {
     public void resetPersistenceFlag() {
         this.needsPersistence = false;
 
-        if (this.getTileEntities() != null) {
-            ObjectIterator<Short2ObjectMap.Entry<TileEntity>> iterator = this.getTileEntities().short2ObjectEntrySet().fastIterator();
+        if (this.tileEntities() != null) {
+            ObjectIterator<Short2ObjectMap.Entry<TileEntity>> iterator = this.tileEntities().short2ObjectEntrySet().fastIterator();
             while (iterator.hasNext()) {
                 TileEntity tileEntity = iterator.next().getValue();
                 tileEntity.resetPersistenceFlag();

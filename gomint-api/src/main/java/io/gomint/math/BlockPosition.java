@@ -24,7 +24,7 @@ public class BlockPosition implements Cloneable {
     }
 
     public int x() {
-        return x;
+        return this.x;
     }
 
     public BlockPosition x(int x) {
@@ -33,7 +33,7 @@ public class BlockPosition implements Cloneable {
     }
 
     public int y() {
-        return y;
+        return this.y;
     }
 
     public BlockPosition y(int y) {
@@ -42,7 +42,7 @@ public class BlockPosition implements Cloneable {
     }
 
     public int z() {
-        return z;
+        return this.z;
     }
 
     public BlockPosition z(int z) {
@@ -80,26 +80,26 @@ public class BlockPosition implements Cloneable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         BlockPosition that = (BlockPosition) o;
-        return x == that.x &&
-            y == that.y &&
-            z == that.z;
+        return this.x == that.x &&
+                this.y == that.y &&
+                this.z == that.z;
     }
 
     @Override
     public int hashCode() {
         int h = 1;
-        h = 31 * h + x;
-        h = 31 * h + y;
-        h = 31 * h + z;
+        h = 31 * h + this.x;
+        h = 31 * h + this.y;
+        h = 31 * h + this.z;
         return h;
     }
 
     @Override
     public String toString() {
         return "BlockPosition{" +
-            "x=" + x +
-            ", y=" + y +
-            ", z=" + z +
+            "x=" + this.x +
+            ", y=" + this.y +
+            ", z=" + this.z +
             '}';
     }
 

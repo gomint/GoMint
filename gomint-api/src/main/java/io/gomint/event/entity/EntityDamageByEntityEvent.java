@@ -19,15 +19,15 @@ public class EntityDamageByEntityEvent extends EntityDamageEvent {
     private final Entity<?> attacker;
 
     /**
-     * Create a new entity based cancellable event
+     * Create a new event for announcing an entity taking damage from another entity
      *
-     * @param entity for which this event is
-     * @param attacker which attacked this entity
+     * @param entity       for which this event is
+     * @param attacker     which attacked this entity
      * @param damageSource with which the entity should be attacked
-     * @param damage which should be dealt
+     * @param damage       which should be dealt
      */
-    public EntityDamageByEntityEvent( Entity<?> entity, Entity<?> attacker, DamageSource damageSource, float damage ) {
-        super( entity, damageSource, damage );
+    public EntityDamageByEntityEvent(Entity<?> entity, Entity<?> attacker, DamageSource damageSource, float damage) {
+        super(entity, damageSource, damage);
         this.attacker = attacker;
     }
 
@@ -38,13 +38,6 @@ public class EntityDamageByEntityEvent extends EntityDamageEvent {
      */
     public Entity<?> attacker() {
         return this.attacker;
-    }
-
-    @Override
-    public String toString() {
-        return "EntityDamageByEntityEvent{" +
-            "attacker=" + attacker +
-            '}';
     }
 
 }

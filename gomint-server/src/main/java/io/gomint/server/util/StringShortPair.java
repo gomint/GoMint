@@ -22,18 +22,18 @@ public class StringShortPair {
     }
 
     public String getBlockId() {
-        return blockId;
+        return this.blockId;
     }
 
     public short getData() {
-        return data;
+        return this.data;
     }
 
     @Override
     public String toString() {
         return "StringShortPair{" +
-            "blockId='" + blockId + '\'' +
-            ", data=" + data +
+            "blockId='" + this.blockId + '\'' +
+            ", data=" + this.data +
             '}';
     }
 

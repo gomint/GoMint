@@ -35,7 +35,7 @@ public class PacketHotbar extends Packet {
     }
 
     public int getSelectedHotbarSlot() {
-        return selectedHotbarSlot;
+        return this.selectedHotbarSlot;
     }
 
     public void setSelectedHotbarSlot(int selectedHotbarSlot) {
@@ -43,7 +43,7 @@ public class PacketHotbar extends Packet {
     }
 
     public byte getWindowId() {
-        return windowId;
+        return this.windowId;
     }
 
     public void setWindowId(byte windowId) {
@@ -51,7 +51,7 @@ public class PacketHotbar extends Packet {
     }
 
     public boolean isSelectHotbarSlot() {
-        return selectHotbarSlot;
+        return this.selectHotbarSlot;
     }
 
     public void setSelectHotbarSlot(boolean selectHotbarSlot) {

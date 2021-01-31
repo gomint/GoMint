@@ -64,6 +64,6 @@ public class ProgressBlockState extends BlockState<Float, Integer> {
     }
 
     public float getStep() {
-        return step;
+        return this.step;
     }
 }

@@ -29,7 +29,7 @@ public class PacketBlockPickRequest extends Packet {
     }
 
     public BlockPosition getLocation() {
-        return location;
+        return this.location;
     }
 
     public void setLocation(BlockPosition location) {
@@ -37,7 +37,7 @@ public class PacketBlockPickRequest extends Packet {
     }
 
     public boolean isAddUserData() {
-        return addUserData;
+        return this.addUserData;
     }
 
     public void setAddUserData(boolean addUserData) {
@@ -45,7 +45,7 @@ public class PacketBlockPickRequest extends Packet {
     }
 
     public byte getHotbarSlot() {
-        return hotbarSlot;
+        return this.hotbarSlot;
     }
 
     public void setHotbarSlot(byte hotbarSlot) {

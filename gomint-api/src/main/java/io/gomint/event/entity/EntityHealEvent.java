@@ -20,14 +20,14 @@ public class EntityHealEvent extends CancellableEntityEvent<EntityHealEvent> {
     private double healAmount;
 
     /**
-     * Create a new entity based cancellable event
+     * Create a new event for announcing an entity is healing
      *
      * @param entity     for which this event is
      * @param healAmount for which the entity should be healed
      * @param cause      of this heal
      */
-    public EntityHealEvent( Entity<?> entity, double healAmount, Cause cause ) {
-        super( entity );
+    public EntityHealEvent(Entity<?> entity, double healAmount, Cause cause) {
+        super(entity);
         this.cause = cause;
         this.healAmount = healAmount;
     }
@@ -55,7 +55,7 @@ public class EntityHealEvent extends CancellableEntityEvent<EntityHealEvent> {
      *
      * @param healAmount which should be added to the entity due to this event
      */
-    public EntityHealEvent healAmount(double healAmount ) {
+    public EntityHealEvent healAmount(double healAmount) {
         this.healAmount = healAmount;
         return this;
     }

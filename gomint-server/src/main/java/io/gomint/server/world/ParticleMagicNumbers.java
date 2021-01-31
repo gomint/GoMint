@@ -83,8 +83,8 @@ public enum ParticleMagicNumbers {
         this.id = id;
     }
 
-    public int getId() {
-        return id;
+    public int id() {
+        return this.id;
     }
 
 }

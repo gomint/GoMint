@@ -30,7 +30,7 @@ public class PacketSetContainerData extends Packet {
     }
 
     public byte getWindowId() {
-        return windowId;
+        return this.windowId;
     }
 
     public void setWindowId(byte windowId) {
@@ -38,7 +38,7 @@ public class PacketSetContainerData extends Packet {
     }
 
     public int getKey() {
-        return key;
+        return this.key;
     }
 
     public void setKey(int key) {
@@ -46,7 +46,7 @@ public class PacketSetContainerData extends Packet {
     }
 
     public int getValue() {
-        return value;
+        return this.value;
     }
 
     public void setValue(int value) {

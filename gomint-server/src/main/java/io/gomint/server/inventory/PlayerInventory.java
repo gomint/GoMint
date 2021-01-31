@@ -64,7 +64,7 @@ public class PlayerInventory extends ContainerInventory<io.gomint.inventory.Play
 
     @Override
     public void sendContents(int slot, PlayerConnection playerConnection) {
-        if (playerConnection.getEntity().currentOpenContainer() == this) {
+        if (playerConnection.entity().currentOpenContainer() == this) {
             PacketInventorySetSlot setSlot = new PacketInventorySetSlot();
             setSlot.setSlot(slot);
             setSlot.setWindowId(WindowMagicNumbers.OPEN_CONTAINER);
@@ -105,7 +105,7 @@ public class PlayerInventory extends ContainerInventory<io.gomint.inventory.Play
         // Sent ContainerOpen first
         PacketContainerOpen containerOpen = new PacketContainerOpen();
         containerOpen.setWindowId(windowId);
-        containerOpen.setType(this.getType().getId());
+        containerOpen.setType(this.getType().id());
         containerOpen.setLocation(Vector.ZERO.toBlockPosition());
         player.connection().addToSendQueue(containerOpen);
 
@@ -121,7 +121,7 @@ public class PlayerInventory extends ContainerInventory<io.gomint.inventory.Play
 
     @Override
     public void sendContents(PlayerConnection playerConnection) {
-        if (playerConnection.getEntity().currentOpenContainer() == this) {
+        if (playerConnection.entity().currentOpenContainer() == this) {
             PacketInventoryContent inventory = new PacketInventoryContent();
             inventory.setWindowId(WindowMagicNumbers.OPEN_CONTAINER);
             inventory.setItems(contents());

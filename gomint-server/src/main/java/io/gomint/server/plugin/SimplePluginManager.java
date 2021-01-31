@@ -138,14 +138,14 @@ public class SimplePluginManager implements PluginManager, EventCaller {
         for (File file : possiblePlugins) {
             PluginMeta metadata = getMetadata(file);
             if (metadata != null) {
-                this.metadata.put(metadata.getName(), metadata);
+                this.metadata.put(metadata.name(), metadata);
                 this.detectedPlugins.add(metadata);
             }
         }
     }
 
-    public CommandManager getCommandManager() {
-        return commandManager;
+    public CommandManager commandManager() {
+        return this.commandManager;
     }
 
     /**
@@ -164,8 +164,8 @@ public class SimplePluginManager implements PluginManager, EventCaller {
                 continue;
             }
 
-            if (pluginMeta.getPriority() == prio) {
-                LOGGER.info("Loading plugin {}", pluginMeta.getName());
+            if (pluginMeta.priority() == prio) {
+                LOGGER.info("Loading plugin {}", pluginMeta.name());
 
                 loadPlugin(pluginMeta);
 
@@ -179,19 +179,19 @@ public class SimplePluginManager implements PluginManager, EventCaller {
 
     private void loadPlugin(PluginMeta pluginMeta) {
         // Check for depends
-        if (pluginMeta.getDepends() != null && !pluginMeta.getDepends().isEmpty()) {
-            for (String dependPlugin : pluginMeta.getDepends()) {
+        if (pluginMeta.depends() != null && !pluginMeta.depends().isEmpty()) {
+            for (String dependPlugin : pluginMeta.depends()) {
                 // If the depend plugin is already loaded, skip it
                 if (this.loadedPlugins.containsKey(dependPlugin)) {
                     continue;
                 }
 
-                LOGGER.info("Searching depend for {}: {}", pluginMeta.getName(), dependPlugin);
+                LOGGER.info("Searching depend for {}: {}", pluginMeta.name(), dependPlugin);
 
                 // We need to check if the depend plugin is detected
                 boolean found = false;
                 for (PluginMeta detectedPlugin : new ArrayList<>(this.detectedPlugins)) {
-                    if (detectedPlugin.getName().equals(dependPlugin)) {
+                    if (detectedPlugin.name().equals(dependPlugin)) {
                         loadPlugin(detectedPlugin);
 
                         // Check if the plugin did shutdown the server
@@ -205,16 +205,16 @@ public class SimplePluginManager implements PluginManager, EventCaller {
                 }
 
                 if (!found) {
-                    LOGGER.warn("Could not load plugin {} since the depend {} could not be found", pluginMeta.getName(), dependPlugin);
-                    this.metadata.remove(pluginMeta.getName());
+                    LOGGER.warn("Could not load plugin {} since the depend {} could not be found", pluginMeta.name(), dependPlugin);
+                    this.metadata.remove(pluginMeta.name());
                     return;
                 }
             }
         }
 
         // Check for soft depends
-        if (pluginMeta.getSoftDepends() != null && !pluginMeta.getSoftDepends().isEmpty()) {
-            for (String dependPlugin : pluginMeta.getSoftDepends()) {
+        if (pluginMeta.softDepends() != null && !pluginMeta.softDepends().isEmpty()) {
+            for (String dependPlugin : pluginMeta.softDepends()) {
                 // If the depend plugin is already loaded, skip it
                 if (this.loadedPlugins.containsKey(dependPlugin)) {
                     continue;
@@ -222,7 +222,7 @@ public class SimplePluginManager implements PluginManager, EventCaller {
 
                 // We need to check if the depend plugin is detected
                 for (PluginMeta detectedPlugin : new ArrayList<>(this.detectedPlugins)) {
-                    if (detectedPlugin.getName().equals(dependPlugin)) {
+                    if (detectedPlugin.name().equals(dependPlugin)) {
                         loadPlugin(detectedPlugin);
 
                         // Check if the plugin did shutdown the server
@@ -239,14 +239,14 @@ public class SimplePluginManager implements PluginManager, EventCaller {
         // Ok everything is fine now, load the plugin
         PluginClassloader loader = null;
         try {
-            LOGGER.info("Starting to load plugin {}", pluginMeta.getName());
+            LOGGER.info("Starting to load plugin {}", pluginMeta.name());
             loader = new PluginClassloader(pluginMeta);
 
-            Path[] finderFiles = new Path[pluginMeta.getModuleDependencies() != null ? pluginMeta.getModuleDependencies().size() + 1 : 1];
-            finderFiles[0] = pluginMeta.getPluginFile().toPath();
-            if (pluginMeta.getModuleDependencies() != null) {
+            Path[] finderFiles = new Path[pluginMeta.moduleDependencies() != null ? pluginMeta.moduleDependencies().size() + 1 : 1];
+            finderFiles[0] = pluginMeta.pluginFile().toPath();
+            if (pluginMeta.moduleDependencies() != null) {
                 int index = 1;
-                for (File moduleDependency : pluginMeta.getModuleDependencies()) {
+                for (File moduleDependency : pluginMeta.moduleDependencies()) {
                     finderFiles[index++] = moduleDependency.toPath();
                 }
             }
@@ -256,16 +256,16 @@ public class SimplePluginManager implements PluginManager, EventCaller {
             ModuleLayer bootLayer = ModuleLayer.boot();
 
             Configuration configuration = bootLayer.configuration();
-            Configuration newConfiguration = configuration.resolve(finder, empty, Set.of(pluginMeta.getModuleName()));
+            Configuration newConfiguration = configuration.resolve(finder, empty, Set.of(pluginMeta.moduleName()));
 
             PluginClassloader finalLoader = loader;
             ModuleLayer.Controller moduleLayerController = ModuleLayer.defineModules(newConfiguration, List.of(bootLayer), s -> finalLoader);
 
             ModuleLayer moduleLayer = moduleLayerController.layer();
-            Module pluginModule = moduleLayer.findModule(pluginMeta.getModuleName()).orElseThrow();
+            Module pluginModule = moduleLayer.findModule(pluginMeta.moduleName()).orElseThrow();
             Module currentModule = SimplePluginManager.class.getModule();
 
-            for (String aPackage : pluginMeta.getPackages()) {
+            for (String aPackage : pluginMeta.packages()) {
                 moduleLayerController.addExports(pluginModule, aPackage, currentModule);
                 moduleLayerController.addOpens(pluginModule, aPackage, currentModule);
                 moduleLayerController.addReads(pluginModule, currentModule);
@@ -280,28 +280,28 @@ public class SimplePluginManager implements PluginManager, EventCaller {
                 moduleLayerController.addReads(pluginModule, module);
             }
 
-            ClassLoader mLoader = moduleLayer.findLoader(pluginMeta.getModuleName());
-            Plugin clazz = (Plugin) constructAndInject(pluginMeta.getMainClass(), mLoader);
+            ClassLoader mLoader = moduleLayer.findLoader(pluginMeta.moduleName());
+            Plugin clazz = (Plugin) constructAndInject(pluginMeta.mainClass(), mLoader);
             if (clazz == null) {
                 return;
             }
 
             // Reflect the logger and stuff in
-            this.loggerField.set(clazz, LoggerFactory.getLogger(loader.loadClass(pluginMeta.getMainClass())));
+            this.loggerField.set(clazz, LoggerFactory.getLogger(loader.loadClass(pluginMeta.mainClass())));
             this.pluginManagerField.set(clazz, this);
             this.schedulerField.set(clazz, new PluginScheduler(clazz, this.scheduler));
-            this.nameField.set(clazz, pluginMeta.getName());
-            this.versionField.set(clazz, pluginMeta.getVersion());
+            this.nameField.set(clazz, pluginMeta.name());
+            this.versionField.set(clazz, pluginMeta.version());
             this.serverField.set(clazz, this.server);
 
             clazz.onStartup();
 
-            this.loadedPlugins.put(pluginMeta.getName(), clazz);
+            this.loadedPlugins.put(pluginMeta.name(), clazz);
             this.detectedPlugins.remove(pluginMeta);
 
             // Injection stuff
-            if (pluginMeta.getInjectionCommands() != null) {
-                for (String commandClass : pluginMeta.getInjectionCommands()) {
+            if (pluginMeta.injectionCommands() != null) {
+                for (String commandClass : pluginMeta.injectionCommands()) {
                     Object maybeCommand = constructAndInject(commandClass, loader);
                     if (maybeCommand instanceof Command) {
                         Command command = (Command) maybeCommand;
@@ -310,8 +310,8 @@ public class SimplePluginManager implements PluginManager, EventCaller {
                 }
             }
         } catch (Exception e) {
-            LOGGER.warn("Error whilst starting plugin " + pluginMeta.getName(), e);
-            this.metadata.remove(pluginMeta.getName());
+            LOGGER.warn("Error whilst starting plugin " + pluginMeta.name(), e);
+            this.metadata.remove(pluginMeta.name());
 
             // Unload if needed
             if (loader != null) {
@@ -321,13 +321,13 @@ public class SimplePluginManager implements PluginManager, EventCaller {
     }
 
     private Collection<Module> collectDependantModules(PluginMeta meta) {
-        if (meta.hasModuleInfo() || (meta.getDepends() == null && meta.getSoftDepends() == null)) {
+        if (meta.hasModuleInfo() || (meta.depends() == null && meta.softDepends() == null)) {
             return Set.of();
         }
 
         Collection<Module> modules = new ArrayList<>();
-        if (meta.getDepends() != null) {
-            for (String depend : meta.getDepends()) {
+        if (meta.depends() != null) {
+            for (String depend : meta.depends()) {
                 PluginMeta pluginMeta = this.metadata.get(depend);
                 if (pluginMeta.hasModuleInfo()) {
                     // The plugin explicitly may want to deny access to some packages (or open them) so skip it
@@ -338,8 +338,8 @@ public class SimplePluginManager implements PluginManager, EventCaller {
             }
         }
 
-        if (meta.getSoftDepends() != null) {
-            for (String softDepend : meta.getSoftDepends()) {
+        if (meta.softDepends() != null) {
+            for (String softDepend : meta.softDepends()) {
                 PluginMeta pluginMeta = this.metadata.get(softDepend);
                 if (pluginMeta.hasModuleInfo()) {
                     // The plugin explicitly may want to deny access to some packages (or open them) so skip it
@@ -457,7 +457,7 @@ public class SimplePluginManager implements PluginManager, EventCaller {
 
             ModuleDetector detector = new ModuleDetector();
             ModuleDescriptor descriptor = detector.deriveModuleDescriptor(jar);
-            meta.setModuleName(descriptor.name());
+            meta.moduleName(descriptor.name());
 
             // Try to read every file in the jar
             try {
@@ -475,11 +475,11 @@ public class SimplePluginManager implements PluginManager, EventCaller {
                             jar.getInputStream(jarEntry).transferTo(toFile);
                         }
 
-                        if (meta.getModuleDependencies() == null) {
-                            meta.setModuleDependencies(new HashSet<>());
+                        if (meta.moduleDependencies() == null) {
+                            meta.moduleDependencies(new HashSet<>());
                         }
 
-                        meta.getModuleDependencies().add(jarFile);
+                        meta.moduleDependencies().add(jarFile);
                     }
 
                     // When the entry is valid and ends with a .class its a java class and we need to scan it
@@ -491,8 +491,8 @@ public class SimplePluginManager implements PluginManager, EventCaller {
                             cr.accept(new ClassVisitor(Opcodes.ASM7) {
                                 @Override
                                 public ModuleVisitor visitModule(String name, int access, String version) {
-                                    meta.setModuleName(name);
-                                    meta.setHasModuleInfo(true);
+                                    meta.moduleName(name);
+                                    meta.hasModuleInfo(true);
                                     return super.visitModule(name, access, version);
                                 }
                             }, 0);
@@ -573,12 +573,12 @@ public class SimplePluginManager implements PluginManager, EventCaller {
                                 return null;
                             }
 
-                            meta.setName(name.get());
-                            meta.setVersion(version.get());
-                            meta.setPriority(StartupPriority.valueOf(startup.get()));
-                            meta.setDepends(depends.get());
-                            meta.setSoftDepends(softDepends.get());
-                            meta.setMainClass(cr.getClassName().replace("/", "."));
+                            meta.name(name.get());
+                            meta.version(version.get());
+                            meta.priority(StartupPriority.valueOf(startup.get()));
+                            meta.depends(depends.get());
+                            meta.softDepends(softDepends.get());
+                            meta.mainClass(cr.getClassName().replace("/", "."));
                         } else {
                             AtomicInteger neededArguments = new AtomicInteger();
 
@@ -601,18 +601,18 @@ public class SimplePluginManager implements PluginManager, EventCaller {
 
                             // Do we have @Name and @Description attached?
                             if (neededArguments.get() == 2) {
-                                if (meta.getInjectionCommands() == null) {
-                                    meta.setInjectionCommands(new HashSet<>());
+                                if (meta.injectionCommands() == null) {
+                                    meta.injectionCommands(new HashSet<>());
                                 }
 
-                                meta.getInjectionCommands().add(cr.getClassName().replace("/", "."));
+                                meta.injectionCommands().add(cr.getClassName().replace("/", "."));
                             }
                         }
                     }
                 }
 
                 // Check if we found a valid plugin
-                if (meta.getMainClass() != null) {
+                if (meta.mainClass() != null) {
                     return meta;
                 }
 
@@ -651,8 +651,8 @@ public class SimplePluginManager implements PluginManager, EventCaller {
 
         // Check for plugins with hard depends
         new HashMap<>(this.metadata).forEach((name, meta) -> {
-            if (meta.getDepends() != null && meta.getDepends().contains(plugin.name())) {
-                Plugin pluginToUninstall = installedPlugins.get(name);
+            if (meta.depends() != null && meta.depends().contains(plugin.name())) {
+                Plugin pluginToUninstall = this.installedPlugins.get(name);
                 if (pluginToUninstall != null) {
                     uninstallPlugin0(pluginToUninstall);
                 }

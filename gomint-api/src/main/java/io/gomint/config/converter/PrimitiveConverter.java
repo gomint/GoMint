@@ -75,7 +75,7 @@ public class PrimitiveConverter implements Converter {
      */
     @Override
     public boolean supports(Class<?> type) {
-        return types.contains(type.getName());
+        return this.types.contains(type.getName());
     }
 
 }

@@ -21,14 +21,14 @@ public class EntityDamageEvent extends CancellableEntityEvent<EntityDamageEvent>
     private float finalDamage;
 
     /**
-     * Create a new entity based cancellable event
+     * Create a new event for announcing an entity taking damage
      *
      * @param entity       for which this event is
      * @param damageSource where the damage comes from
      * @param damage       which should be dealt
      */
-    public EntityDamageEvent( Entity<?> entity, DamageSource damageSource, float damage ) {
-        super( entity );
+    public EntityDamageEvent(Entity<?> entity, DamageSource damageSource, float damage) {
+        super(entity);
         this.damageSource = damageSource;
         this.damage = damage;
     }
@@ -38,7 +38,7 @@ public class EntityDamageEvent extends CancellableEntityEvent<EntityDamageEvent>
      *
      * @param damage which should be dealt
      */
-    public EntityDamageEvent finalDamage(float damage ) {
+    public EntityDamageEvent finalDamage(float damage) {
         this.finalDamage = damage;
         return this;
     }
@@ -59,7 +59,7 @@ public class EntityDamageEvent extends CancellableEntityEvent<EntityDamageEvent>
      *
      * @param damage which should be used to calculate the final damage
      */
-    public EntityDamageEvent damage(float damage ) {
+    public EntityDamageEvent damage(float damage) {
         this.damage = damage;
         return this;
     }
@@ -81,15 +81,6 @@ public class EntityDamageEvent extends CancellableEntityEvent<EntityDamageEvent>
      */
     public DamageSource damageSource() {
         return this.damageSource;
-    }
-
-    @Override
-    public String toString() {
-        return "EntityDamageEvent{" +
-            "damageSource=" + damageSource +
-            ", damage=" + damage +
-            ", finalDamage=" + finalDamage +
-            '}';
     }
 
     public enum DamageSource {

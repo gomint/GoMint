@@ -42,7 +42,7 @@ public class PacketEntityEvent extends Packet {
     }
 
     public long getEntityId() {
-        return entityId;
+        return this.entityId;
     }
 
     public void setEntityId(long entityId) {
@@ -50,7 +50,7 @@ public class PacketEntityEvent extends Packet {
     }
 
     public byte getEventId() {
-        return eventId;
+        return this.eventId;
     }
 
     public void setEventId(byte eventId) {
@@ -58,7 +58,7 @@ public class PacketEntityEvent extends Packet {
     }
 
     public int getEventData() {
-        return eventData;
+        return this.eventData;
     }
 
     public void setEventData(int eventData) {

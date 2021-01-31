@@ -17,7 +17,7 @@ public enum EntityEvent {
     }
 
     public byte getId() {
-        return id;
+        return this.id;
     }
 
 }

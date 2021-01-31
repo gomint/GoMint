@@ -27,19 +27,19 @@ public class DeviceInfo {
     }
 
     public String deviceName() {
-        return deviceName;
+        return this.deviceName;
     }
 
     public String deviceId() {
-        return deviceId;
+        return this.deviceId;
     }
 
     public DeviceOS OS() {
-        return os;
+        return this.os;
     }
 
     public UI UI() {
-        return ui;
+        return this.ui;
     }
 
     public enum DeviceOS {
@@ -120,7 +120,7 @@ public class DeviceInfo {
         }
 
         public int id() {
-            return id;
+            return this.id;
         }
     }
 
@@ -142,7 +142,7 @@ public class DeviceInfo {
         private final int id;
 
         public int id() {
-            return id;
+            return this.id;
         }
     }
 

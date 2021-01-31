@@ -42,12 +42,12 @@ public class PostProcessExecutor implements Runnable {
         this.future = executorService.submit( this );
     }
 
-    public float getLoad() {
-        return load;
+    public float load() {
+        return this.load;
     }
 
-    public AtomicInteger getConnectionsInUse() {
-        return connectionsInUse;
+    public AtomicInteger connectionsInUse() {
+        return this.connectionsInUse;
     }
 
     @Override
@@ -55,18 +55,18 @@ public class PostProcessExecutor implements Runnable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         PostProcessExecutor that = (PostProcessExecutor) o;
-        return Float.compare(that.load, load) == 0 &&
-            Objects.equals(connectionsInUse, that.connectionsInUse) &&
-            Objects.equals(workers, that.workers) &&
-            Objects.equals(future, that.future) &&
-            Objects.equals(running, that.running) &&
-            Objects.equals(waiter, that.waiter) &&
-            Objects.equals(executorService, that.executorService);
+        return Float.compare(that.load, this.load) == 0 &&
+            Objects.equals(this.connectionsInUse, that.connectionsInUse) &&
+            Objects.equals(this.workers, that.workers) &&
+            Objects.equals(this.future, that.future) &&
+            Objects.equals(this.running, that.running) &&
+            Objects.equals(this.waiter, that.waiter) &&
+            Objects.equals(this.executorService, that.executorService);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(connectionsInUse, workers, load, future, running, waiter, executorService);
+        return Objects.hash(this.connectionsInUse, this.workers, this.load, this.future, this.running, this.waiter, this.executorService);
     }
 
     public void addWork(ConnectionWithState connection, Packet[] packets, Consumer<Void> callback) {
