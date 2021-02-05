@@ -9,38 +9,6 @@ package io.gomint.server;
 
 import com.google.common.util.concurrent.ListeningScheduledExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
-import joptsimple.OptionSet;
-import org.jline.reader.LineReader;
-import org.jline.reader.LineReaderBuilder;
-import org.jline.reader.UserInterruptException;
-import org.jline.terminal.Terminal;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.Executors;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicLong;
-import java.util.concurrent.locks.LockSupport;
-import java.util.function.Supplier;
-import java.util.jar.Manifest;
-
 import io.gomint.GoMint;
 import io.gomint.GoMintInstanceHolder;
 import io.gomint.config.InvalidConfigurationException;
@@ -76,8 +44,8 @@ import io.gomint.server.plugin.SimplePluginManager;
 import io.gomint.server.scheduler.CoreScheduler;
 import io.gomint.server.scheduler.SyncTaskManager;
 import io.gomint.server.util.ClassPath;
-import io.gomint.server.util.Watchdog;
 import io.gomint.server.util.Values;
+import io.gomint.server.util.Watchdog;
 import io.gomint.server.world.WorldAdapter;
 import io.gomint.server.world.WorldLoadException;
 import io.gomint.server.world.WorldManager;
@@ -93,6 +61,37 @@ import io.gomint.world.generator.integrated.LayeredGenerator;
 import io.gomint.world.generator.integrated.NormalGenerator;
 import io.gomint.world.generator.integrated.VanillaGenerator;
 import io.gomint.world.generator.integrated.VoidGenerator;
+import joptsimple.OptionSet;
+import org.jline.reader.LineReader;
+import org.jline.reader.LineReaderBuilder;
+import org.jline.reader.UserInterruptException;
+import org.jline.terminal.Terminal;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.Executors;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicLong;
+import java.util.concurrent.locks.LockSupport;
+import java.util.function.Supplier;
+import java.util.jar.Manifest;
 
 /**
  * @author BlackyPaw
@@ -173,7 +172,7 @@ public class GoMintServer implements GoMint, InventoryHolder {
             @Override
             public Thread newThread(Runnable r) {
                 Thread thread = new Thread(r);
-                thread.setName("GoMint Thread #" + counter.incrementAndGet());
+                thread.setName("GoMint Thread #" + this.counter.incrementAndGet());
                 return thread;
             }
         }));
@@ -273,7 +272,7 @@ public class GoMintServer implements GoMint, InventoryHolder {
                 .appName("GoMint")
                 .terminal(terminal)
                 .completer((lineReader, parsedLine, list) -> {
-                    List<String> suggestions = pluginManager.getCommandManager().completeSystem(parsedLine.line());
+                    List<String> suggestions = this.pluginManager.commandManager().completeSystem(parsedLine.line());
                     for (String suggestion : suggestions) {
                         LOGGER.info(suggestion);
                     }
@@ -321,7 +320,7 @@ public class GoMintServer implements GoMint, InventoryHolder {
 
         this.readerThread = new Thread(() -> {
             String line;
-            while (running.get()) {
+            while (this.running.get()) {
                 // Read jLine
                 reading.set(true);
                 try {
@@ -365,7 +364,7 @@ public class GoMintServer implements GoMint, InventoryHolder {
         // ------------------------------------ //
         // Networking Initialization
         // ------------------------------------ //
-        int    port = args.has("lp") ?    (int) args.valueOf("lp") : this.serverConfig.listener().port();
+        int port = args.has("lp") ? (int) args.valueOf("lp") : this.serverConfig.listener().port();
         String host = args.has("lh") ? (String) args.valueOf("lh") : this.serverConfig.listener().ip();
 
         this.encryptionKeyFactory = new EncryptionKeyFactory(this.serverConfig.connection().jwtRoot());
@@ -448,8 +447,8 @@ public class GoMintServer implements GoMint, InventoryHolder {
             e.printStackTrace();
         }
 
-        init.set(false);
-        LOGGER.info("Done in {} ms", (System.currentTimeMillis() - start));
+        this.init.set(false);
+        LOGGER.info("Done in {} ms", (System.currentTimeMillis() - this.start));
         this.watchdog.done();
 
         if (args.has("exit-after-boot")) {
@@ -484,7 +483,7 @@ public class GoMintServer implements GoMint, InventoryHolder {
             while (!inputLines.isEmpty()) {
                 String line = inputLines.poll();
                 if (line != null) {
-                    this.pluginManager.getCommandManager().executeSystem(line);
+                    this.pluginManager.commandManager().executeSystem(line);
                 }
             }
 
@@ -523,7 +522,7 @@ public class GoMintServer implements GoMint, InventoryHolder {
                 long sleptFor = endSleep - startSleep;
                 diff = skipNanos;
 
-                if ( sleptFor > sleepNeeded ) {
+                if (sleptFor > sleepNeeded) {
                     this.sleepBalance = sleptFor - sleepNeeded;
                 }
             } else {
@@ -534,7 +533,7 @@ public class GoMintServer implements GoMint, InventoryHolder {
             this.tps = (1 / (double) lastTickTime);
 
             // Due to the fact that we
-            if ( this.tps > this.serverConfig.targetTPS() ) {
+            if (this.tps > this.serverConfig.targetTPS()) {
                 this.tps = this.serverConfig.targetTPS();
             }
 
@@ -657,8 +656,8 @@ public class GoMintServer implements GoMint, InventoryHolder {
                     return false;
                 }
 
-                this.networkManager.setDumpingEnabled(true);
-                this.networkManager.setDumpDirectory(dumpDirectory);
+                this.networkManager.dumpingEnabled(true);
+                this.networkManager.dumpDirectory(dumpDirectory);
             }
         } catch (Exception e) {
             LOGGER.error("Failed to initialize networking", e);
@@ -681,12 +680,12 @@ public class GoMintServer implements GoMint, InventoryHolder {
 
     @Override
     public SimpleChunkGeneratorRegistry chunkGeneratorRegistry() {
-        return chunkGeneratorRegistry;
+        return this.chunkGeneratorRegistry;
     }
 
     @Override
     public GoMint motd(String motd) {
-        this.networkManager.setMotd(motd);
+        this.networkManager.motd(motd);
         return this;
     }
 
@@ -699,7 +698,7 @@ public class GoMintServer implements GoMint, InventoryHolder {
     public <T extends Block> T createBlock(Class<T> blockClass) {
         return (T) this.blocks.get(blockClass);
     }
-    
+
     @Override
     public ButtonList createButtonList(String title) {
         return new io.gomint.server.gui.ButtonList(title);
@@ -752,12 +751,12 @@ public class GoMintServer implements GoMint, InventoryHolder {
 
     @Override
     public WorldAdapter defaultWorld() {
-        return this.worldManager.getWorld(this.defaultWorld);
+        return this.worldManager.world(this.defaultWorld);
     }
 
     @Override
     public GoMint dispatchCommand(String line) {
-        this.pluginManager.getCommandManager().executeSystem(line);
+        this.pluginManager.commandManager().executeSystem(line);
         return this;
     }
 
@@ -768,7 +767,7 @@ public class GoMintServer implements GoMint, InventoryHolder {
 
     @Override
     public EntityPlayer findPlayerByName(String target) {
-        for (WorldAdapter adapter : worldManager.getWorlds()) {
+        for (WorldAdapter adapter : this.worldManager.worlds()) {
             for (EntityPlayer player : adapter.onlinePlayers()) {
                 if (player.name().equalsIgnoreCase(target)) {
                     return player;
@@ -801,24 +800,24 @@ public class GoMintServer implements GoMint, InventoryHolder {
 
     @Override
     public String motd() {
-        return this.networkManager.getMotd();
+        return this.networkManager.motd();
     }
 
     @Override
     public Collection<EntityPlayer> onlinePlayers() {
         var playerList = new ArrayList<EntityPlayer>();
-        worldManager.getWorlds().forEach(world -> playerList.addAll(world.onlinePlayers()));
+        this.worldManager.worlds().forEach(world -> playerList.addAll(world.onlinePlayers()));
         return playerList;
     }
 
     @Override
     public SimplePluginManager pluginManager() {
-        return pluginManager;
+        return this.pluginManager;
     }
 
     @Override
     public int port() {
-        return this.networkManager.getPort();
+        return this.networkManager.port();
     }
 
     @Override
@@ -844,7 +843,7 @@ public class GoMintServer implements GoMint, InventoryHolder {
 
     @Override
     public World world(String name) {
-        World world = this.worldManager.getWorld(name);
+        World world = this.worldManager.world(name);
         if (world == null) {
             // Try to load the world
 
@@ -863,7 +862,7 @@ public class GoMintServer implements GoMint, InventoryHolder {
 
     @Override
     public Collection<World> worlds() {
-        return Collections.unmodifiableCollection(this.worldManager.getWorlds());
+        return Collections.unmodifiableCollection(this.worldManager.worlds());
     }
 
     public CreativeInventory creativeInventory() {
@@ -897,71 +896,71 @@ public class GoMintServer implements GoMint, InventoryHolder {
     }
 
     public ServerConfig serverConfig() {
-        return serverConfig;
+        return this.serverConfig;
     }
 
     public NetworkManager networkManager() {
-        return networkManager;
+        return this.networkManager;
     }
 
     public EncryptionKeyFactory encryptionKeyFactory() {
-        return encryptionKeyFactory;
+        return this.encryptionKeyFactory;
     }
 
     public Map<UUID, EntityPlayer> uuidMappedPlayers() {
-        return playersByUUID;
+        return this.playersByUUID;
     }
 
     public SyncTaskManager syncTaskManager() {
-        return syncTaskManager;
+        return this.syncTaskManager;
     }
 
     public ListeningScheduledExecutorService executorService() {
-        return executorService;
+        return this.executorService;
     }
 
     public CoreScheduler scheduler() {
-        return scheduler;
+        return this.scheduler;
     }
 
     public WorldManager worldManager() {
-        return worldManager;
+        return this.worldManager;
     }
 
     public Watchdog watchdog() {
-        return watchdog;
+        return this.watchdog;
     }
 
     public Blocks blocks() {
-        return blocks;
+        return this.blocks;
     }
 
     public Items items() {
-        return items;
+        return this.items;
     }
 
     public Enchantments enchantments() {
-        return enchantments;
+        return this.enchantments;
     }
 
     public Entities entities() {
-        return entities;
+        return this.entities;
     }
 
     public Effects effects() {
-        return effects;
+        return this.effects;
     }
 
     public TileEntities tileEntities() {
-        return tileEntities;
+        return this.tileEntities;
     }
 
     public UUID serverUniqueID() {
-        return serverUniqueID;
+        return this.serverUniqueID;
     }
 
     public String gitHash() {
-        return gitHash;
+        return this.gitHash;
     }
 
     private void loadConfig() {

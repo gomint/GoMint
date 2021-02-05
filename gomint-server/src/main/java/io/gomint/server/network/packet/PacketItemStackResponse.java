@@ -109,9 +109,9 @@ public class PacketItemStackResponse extends Packet {
         @Override
         public String toString() {
             return "{\"_class\":\"StackResponseSlotInfo\", " +
-                "\"slot\":\"" + slot + "\"" + ", " +
-                "\"count\":\"" + count + "\"" + ", " +
-                "\"itemStackId\":\"" + itemStackId + "\"" +
+                "\"slot\":\"" + this.slot + "\"" + ", " +
+                "\"count\":\"" + this.count + "\"" + ", " +
+                "\"itemStackId\":\"" + this.itemStackId + "\"" +
                 "}";
         }
     }
@@ -128,8 +128,8 @@ public class PacketItemStackResponse extends Packet {
         @Override
         public String toString() {
             return "{\"_class\":\"StackResponseContainerInfo\", " +
-                "\"windowId\":\"" + windowId + "\"" + ", " +
-                "\"slotInfos\":" + (slotInfos == null ? "null" : Arrays.toString(slotInfos.toArray())) +
+                "\"windowId\":\"" + this.windowId + "\"" + ", " +
+                "\"slotInfos\":" + (this.slotInfos == null ? "null" : Arrays.toString(this.slotInfos.toArray())) +
                 "}";
         }
     }
@@ -148,9 +148,9 @@ public class PacketItemStackResponse extends Packet {
         @Override
         public String toString() {
             return "{\"_class\":\"Response\", " +
-                "\"result\":" + (result == null ? "null" : result) + ", " +
-                "\"requestId\":\"" + requestId + "\"" + ", " +
-                "\"containerInfos\":" + (containerInfos == null ? "null" : Arrays.toString(containerInfos.toArray())) +
+                "\"result\":" + (this.result == null ? "null" : this.result) + ", " +
+                "\"requestId\":\"" + this.requestId + "\"" + ", " +
+                "\"containerInfos\":" + (this.containerInfos == null ? "null" : Arrays.toString(this.containerInfos.toArray())) +
                 "}";
         }
     }
@@ -202,7 +202,7 @@ public class PacketItemStackResponse extends Packet {
     @Override
     public String toString() {
         return "{\"_class\":\"PacketItemStackResponse\", " +
-            "\"responses\":" + (responses == null ? "null" : Arrays.toString(responses.toArray())) +
+            "\"responses\":" + (this.responses == null ? "null" : Arrays.toString(this.responses.toArray())) +
             "}";
     }
 }

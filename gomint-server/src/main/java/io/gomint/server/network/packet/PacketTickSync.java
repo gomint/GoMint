@@ -29,7 +29,7 @@ public class PacketTickSync extends Packet {
     }
 
     public long getClientTiming() {
-        return clientTiming;
+        return this.clientTiming;
     }
 
     public void setClientTiming(long clientTiming) {
@@ -37,7 +37,7 @@ public class PacketTickSync extends Packet {
     }
 
     public long getServerTiming() {
-        return serverTiming;
+        return this.serverTiming;
     }
 
     public void setServerTiming(long serverTiming) {

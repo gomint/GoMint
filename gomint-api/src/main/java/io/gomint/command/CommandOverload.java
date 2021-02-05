@@ -28,11 +28,11 @@ public class CommandOverload {
     }
 
     public String permission() {
-        return permission;
+        return this.permission;
     }
 
     public Map<String, ParamValidator<?>> parameters() {
-        return parameters;
+        return this.parameters;
     }
 
     /**
@@ -127,8 +127,8 @@ public class CommandOverload {
     @Override
     public String toString() {
         return "CommandOverload{" +
-            "permission='" + permission + '\'' +
-            ", parameters=" + parameters +
+            "permission='" + this.permission + '\'' +
+            ", parameters=" + this.parameters +
             '}';
     }
 

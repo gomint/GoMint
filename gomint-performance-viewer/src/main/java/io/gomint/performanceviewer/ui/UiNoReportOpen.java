@@ -14,7 +14,7 @@ import javafx.scene.text.Font;
 public class UiNoReportOpen extends StackPane {
 
     private final Image goMintLogo = new Image( getClass().getResourceAsStream( "/gomint.png" ) );
-    private final ImageView goMintLogoView = new ImageView( goMintLogo );
+    private final ImageView goMintLogoView = new ImageView(this.goMintLogo);
     private final Label performanceViewerTitle = new Label( "Performance Viewer" );
     private final Label performanceViewerSubTitle = new Label( "Neat tool to show you what is going on,\n" +
             "on your GoMint server" );

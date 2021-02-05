@@ -18,7 +18,7 @@ public class PacketServerSettingsRequestHandler implements PacketHandler<PacketS
 
     @Override
     public void handle( PacketServerSettingsRequest packet, long currentTimeMillis, PlayerConnection connection ) {
-        connection.getEntity().sendServerSettings();
+        connection.entity().sendServerSettings();
     }
 
 }

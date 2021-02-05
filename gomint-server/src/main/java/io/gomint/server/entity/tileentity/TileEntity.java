@@ -92,7 +92,7 @@ public abstract class TileEntity {
     }
 
     public Block getBlock() {
-        return block;
+        return this.block;
     }
 
 }

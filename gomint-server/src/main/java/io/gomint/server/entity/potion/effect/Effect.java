@@ -22,15 +22,15 @@ public abstract class Effect implements io.gomint.entity.potion.Effect {
     protected boolean visible = true;
 
     public int getAmplifier() {
-        return amplifier;
+        return this.amplifier;
     }
 
     public long getRunoutTimer() {
-        return runoutTimer;
+        return this.runoutTimer;
     }
 
     public boolean isVisible() {
-        return visible;
+        return this.visible;
     }
 
     public abstract byte getId();

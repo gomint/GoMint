@@ -43,7 +43,7 @@ public class ContainerTileEntity extends TileEntity {
     }
 
     public String getCustomName() {
-        return customName;
+        return this.customName;
     }
 
     public void setCustomName(String customName) {

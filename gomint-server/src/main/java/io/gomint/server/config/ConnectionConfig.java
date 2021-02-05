@@ -16,7 +16,7 @@ public class ConnectionConfig extends YamlConfig {
         + "NBuKdm8rYiXsfaz3K36x/1U26HpG0ZxK/V1V";
 
     public String jwtRoot() {
-        return jwtRoot;
+        return this.jwtRoot;
     }
 
 }

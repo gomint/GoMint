@@ -48,19 +48,19 @@ public class SyncScheduledTask implements Task, Runnable {
     }
 
     public Runnable runnable() {
-        return runnable;
+        return this.runnable;
     }
 
     public long getNextExecution() {
-        return nextExecution;
+        return this.nextExecution;
     }
 
     @Override
     public String toString() {
         return "SyncScheduledTask{" +
-            "runnable=" + runnable +
-            ", period=" + period +
-            ", nextExecution=" + nextExecution +
+            "runnable=" + this.runnable +
+            ", period=" + this.period +
+            ", nextExecution=" + this.nextExecution +
             '}';
     }
 

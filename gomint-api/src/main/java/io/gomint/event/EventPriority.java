@@ -11,21 +11,21 @@ package io.gomint.event;
  * @author geNAZt
  * @version 1.0
  * @stability 3
- *          <p>
- *          Importance of the {@link EventHandler}. When executing an Event, the handlers
- *          are called in order of their Priority.
+ * <p>
+ * Importance of the {@link EventHandler}. When executing an Event, the handlers
+ * are called in order of their Priority.
  */
 public enum EventPriority {
 
-    LOWEST( (byte) -64 ),
-    LOW( (byte) -32 ),
-    NORMAL( (byte) 0 ),
-    HIGH( (byte) 32 ),
-    HIGHEST( (byte) 64 );
+    LOWEST((byte) -64),
+    LOW((byte) -32),
+    NORMAL((byte) 0),
+    HIGH((byte) 32),
+    HIGHEST((byte) 64);
 
     private byte order;
 
-    EventPriority( final byte value ) {
+    EventPriority(final byte value) {
         this.order = value;
     }
 

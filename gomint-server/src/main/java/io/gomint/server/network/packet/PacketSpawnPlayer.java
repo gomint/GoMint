@@ -101,7 +101,7 @@ public class PacketSpawnPlayer extends Packet {
     }
 
     public UUID getUuid() {
-        return uuid;
+        return this.uuid;
     }
 
     public void setUuid(UUID uuid) {
@@ -109,7 +109,7 @@ public class PacketSpawnPlayer extends Packet {
     }
 
     public String getName() {
-        return name;
+        return this.name;
     }
 
     public void setName(String name) {
@@ -117,7 +117,7 @@ public class PacketSpawnPlayer extends Packet {
     }
 
     public long getEntityId() {
-        return entityId;
+        return this.entityId;
     }
 
     public void setEntityId(long entityId) {
@@ -125,7 +125,7 @@ public class PacketSpawnPlayer extends Packet {
     }
 
     public long getRuntimeEntityId() {
-        return runtimeEntityId;
+        return this.runtimeEntityId;
     }
 
     public void setRuntimeEntityId(long runtimeEntityId) {
@@ -133,7 +133,7 @@ public class PacketSpawnPlayer extends Packet {
     }
 
     public String getPlatformChatId() {
-        return platformChatId;
+        return this.platformChatId;
     }
 
     public void setPlatformChatId(String platformChatId) {
@@ -141,7 +141,7 @@ public class PacketSpawnPlayer extends Packet {
     }
 
     public float getX() {
-        return x;
+        return this.x;
     }
 
     public void setX(float x) {
@@ -149,7 +149,7 @@ public class PacketSpawnPlayer extends Packet {
     }
 
     public float getY() {
-        return y;
+        return this.y;
     }
 
     public void setY(float y) {
@@ -157,7 +157,7 @@ public class PacketSpawnPlayer extends Packet {
     }
 
     public float getZ() {
-        return z;
+        return this.z;
     }
 
     public void setZ(float z) {
@@ -165,7 +165,7 @@ public class PacketSpawnPlayer extends Packet {
     }
 
     public float getVelocityX() {
-        return velocityX;
+        return this.velocityX;
     }
 
     public void setVelocityX(float velocityX) {
@@ -173,7 +173,7 @@ public class PacketSpawnPlayer extends Packet {
     }
 
     public float getVelocityY() {
-        return velocityY;
+        return this.velocityY;
     }
 
     public void setVelocityY(float velocityY) {
@@ -181,7 +181,7 @@ public class PacketSpawnPlayer extends Packet {
     }
 
     public float getVelocityZ() {
-        return velocityZ;
+        return this.velocityZ;
     }
 
     public void setVelocityZ(float velocityZ) {
@@ -189,7 +189,7 @@ public class PacketSpawnPlayer extends Packet {
     }
 
     public float getPitch() {
-        return pitch;
+        return this.pitch;
     }
 
     public void setPitch(float pitch) {
@@ -197,7 +197,7 @@ public class PacketSpawnPlayer extends Packet {
     }
 
     public float getHeadYaw() {
-        return headYaw;
+        return this.headYaw;
     }
 
     public void setHeadYaw(float headYaw) {
@@ -205,7 +205,7 @@ public class PacketSpawnPlayer extends Packet {
     }
 
     public float getYaw() {
-        return yaw;
+        return this.yaw;
     }
 
     public void setYaw(float yaw) {
@@ -213,7 +213,7 @@ public class PacketSpawnPlayer extends Packet {
     }
 
     public ItemStack<?> getItemInHand() {
-        return itemInHand;
+        return this.itemInHand;
     }
 
     public void setItemInHand(ItemStack<?> itemInHand) {
@@ -221,7 +221,7 @@ public class PacketSpawnPlayer extends Packet {
     }
 
     public MetadataContainer getMetadataContainer() {
-        return metadataContainer;
+        return this.metadataContainer;
     }
 
     public void setMetadataContainer(MetadataContainer metadataContainer) {
@@ -229,7 +229,7 @@ public class PacketSpawnPlayer extends Packet {
     }
 
     public int getFlags() {
-        return flags;
+        return this.flags;
     }
 
     public void setFlags(int flags) {
@@ -237,7 +237,7 @@ public class PacketSpawnPlayer extends Packet {
     }
 
     public int getCommandPermission() {
-        return commandPermission;
+        return this.commandPermission;
     }
 
     public void setCommandPermission(int commandPermission) {
@@ -245,7 +245,7 @@ public class PacketSpawnPlayer extends Packet {
     }
 
     public int getFlags2() {
-        return flags2;
+        return this.flags2;
     }
 
     public void setFlags2(int flags2) {
@@ -253,7 +253,7 @@ public class PacketSpawnPlayer extends Packet {
     }
 
     public int getPlayerPermission() {
-        return playerPermission;
+        return this.playerPermission;
     }
 
     public void setPlayerPermission(int playerPermission) {
@@ -261,7 +261,7 @@ public class PacketSpawnPlayer extends Packet {
     }
 
     public int getCustomFlags() {
-        return customFlags;
+        return this.customFlags;
     }
 
     public void setCustomFlags(int customFlags) {
@@ -269,7 +269,7 @@ public class PacketSpawnPlayer extends Packet {
     }
 
     public List<EntityLink> getLinks() {
-        return links;
+        return this.links;
     }
 
     public void setLinks(List<EntityLink> links) {
@@ -277,7 +277,7 @@ public class PacketSpawnPlayer extends Packet {
     }
 
     public String getDeviceId() {
-        return deviceId;
+        return this.deviceId;
     }
 
     public void setDeviceId(String deviceId) {
@@ -285,7 +285,7 @@ public class PacketSpawnPlayer extends Packet {
     }
 
     public int getBuildPlatform() {
-        return buildPlatform;
+        return this.buildPlatform;
     }
 
     public void setBuildPlatform(int buildPlatform) {

@@ -18,7 +18,7 @@ public class PluginVersion implements Comparable<PluginVersion> {
     private int minor;
 
     public int major() {
-        return major;
+        return this.major;
     }
 
     public PluginVersion major(int major) {
@@ -27,7 +27,7 @@ public class PluginVersion implements Comparable<PluginVersion> {
     }
 
     public int minor() {
-        return minor;
+        return this.minor;
     }
 
     public PluginVersion minor(int minor) {

@@ -583,18 +583,18 @@ public abstract class ItemStack<I extends io.gomint.inventory.item.ItemStack<I>>
     @Override
     public String toString() {
         return "{\"_class\":\"ItemStack\", " +
-            "\"stackId\":\"" + stackId + "\"" + ", " +
-            "\"material\":" + (material == null ? "null" : "\"" + material + "\"") + ", " +
-            "\"data\":\"" + data + "\"" + ", " +
-            "\"amount\":\"" + amount + "\"" + ", " +
-            "\"nbt\":" + (nbt == null ? "null" : nbt) + ", " +
-            "\"enchantments\":" + (enchantments == null ? "null" : "\"" + enchantments + "\"") + ", " +
-            "\"dirtyEnchantments\":\"" + dirtyEnchantments + "\"" + ", " +
-            "\"itemStackPlace\":" + (itemStackPlace == null ? "null" : itemStackPlace) + ", " +
-            "\"items\":" + (items == null ? "null" : items) + ", " +
-            "\"blocks\":" + (blocks == null ? "null" : blocks) + ", " +
-            "\"isDamageableCached\":\"" + isDamageableCached + "\"" + ", " +
-            "\"isDamageable\":\"" + isDamageable + "\"" +
+            "\"stackId\":\"" + this.stackId + "\"" + ", " +
+            "\"material\":" + (this.material == null ? "null" : "\"" + this.material + "\"") + ", " +
+            "\"data\":\"" + this.data + "\"" + ", " +
+            "\"amount\":\"" + this.amount + "\"" + ", " +
+            "\"nbt\":" + (this.nbt == null ? "null" : this.nbt) + ", " +
+            "\"enchantments\":" + (this.enchantments == null ? "null" : "\"" + this.enchantments + "\"") + ", " +
+            "\"dirtyEnchantments\":\"" + this.dirtyEnchantments + "\"" + ", " +
+            "\"itemStackPlace\":" + (this.itemStackPlace == null ? "null" : this.itemStackPlace) + ", " +
+            "\"items\":" + (this.items == null ? "null" : this.items) + ", " +
+            "\"blocks\":" + (this.blocks == null ? "null" : this.blocks) + ", " +
+            "\"isDamageableCached\":\"" + this.isDamageableCached + "\"" + ", " +
+            "\"isDamageable\":\"" + this.isDamageable + "\"" +
             "}";
     }
 
@@ -608,14 +608,14 @@ public abstract class ItemStack<I extends io.gomint.inventory.item.ItemStack<I>>
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ItemStack<?> itemStack = (ItemStack<?>) o;
-        return material.equals(itemStack.material) &&
-            data == itemStack.data &&
-            Objects.equals(nbt, itemStack.nbt);
+        return this.material.equals(itemStack.material) &&
+                this.data == itemStack.data &&
+            Objects.equals(this.nbt, itemStack.nbt);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(material, data, nbt);
+        return Objects.hash(this.material, this.data, this.nbt);
     }
 
     public boolean isAir() {
@@ -628,7 +628,7 @@ public abstract class ItemStack<I extends io.gomint.inventory.item.ItemStack<I>>
     }
 
     public ItemStackPlace getItemStackPlace() {
-        return itemStackPlace;
+        return this.itemStackPlace;
     }
 
     public boolean isEnchanted() {

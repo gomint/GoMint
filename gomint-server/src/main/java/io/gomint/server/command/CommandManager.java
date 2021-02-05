@@ -415,7 +415,7 @@ public class CommandManager {
     }
 
     public Collection<CommandHolder> getCommands() {
-        return commands.values();
+        return this.commands.values();
     }
 
 }

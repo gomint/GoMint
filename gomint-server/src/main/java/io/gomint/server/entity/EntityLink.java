@@ -12,7 +12,7 @@ public class EntityLink {
     private byte unknown2;
 
     public long getFrom() {
-        return from;
+        return this.from;
     }
 
     public void setFrom(long from) {
@@ -20,7 +20,7 @@ public class EntityLink {
     }
 
     public long getTo() {
-        return to;
+        return this.to;
     }
 
     public void setTo(long to) {
@@ -28,7 +28,7 @@ public class EntityLink {
     }
 
     public byte getUnknown1() {
-        return unknown1;
+        return this.unknown1;
     }
 
     public void setUnknown1(byte unknown1) {
@@ -36,7 +36,7 @@ public class EntityLink {
     }
 
     public byte getUnknown2() {
-        return unknown2;
+        return this.unknown2;
     }
 
     public void setUnknown2(byte unknown2) {

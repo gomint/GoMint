@@ -24,11 +24,11 @@ public class FormListener<R> implements io.gomint.gui.FormListener<R> {
     }
 
     public Consumer<R> getResponseConsumer() {
-        return responseConsumer;
+        return this.responseConsumer;
     }
 
     public Consumer<Void> getCloseConsumer() {
-        return closeConsumer;
+        return this.closeConsumer;
     }
 
 }

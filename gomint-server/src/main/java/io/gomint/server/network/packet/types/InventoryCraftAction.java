@@ -27,13 +27,13 @@ public class InventoryCraftAction implements InventoryAction {
     }
 
     public int getRecipeId() {
-        return recipeId;
+        return this.recipeId;
     }
 
     @Override
     public String toString() {
         return "{\"_class\":\"InventoryCraftAction\", " +
-            "\"recipeId\":\"" + recipeId + "\"" +
+            "\"recipeId\":\"" + this.recipeId + "\"" +
             "}";
     }
 }

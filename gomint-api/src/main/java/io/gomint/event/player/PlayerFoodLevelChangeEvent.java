@@ -23,8 +23,8 @@ public class PlayerFoodLevelChangeEvent extends CancellablePlayerEvent<PlayerFoo
      * @param player for which we want to change the food level
      * @param change amount which should be applied after this event
      */
-    public PlayerFoodLevelChangeEvent( EntityPlayer player, float change ) {
-        super( player );
+    public PlayerFoodLevelChangeEvent(EntityPlayer player, float change) {
+        super(player);
         this.change = change;
     }
 

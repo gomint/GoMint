@@ -30,23 +30,23 @@ public class OreType {
     }
 
     public Block getBlock() {
-        return block;
+        return this.block;
     }
 
     public int getClusterCount() {
-        return clusterCount;
+        return this.clusterCount;
     }
 
     public int getClusterSize() {
-        return clusterSize;
+        return this.clusterSize;
     }
 
     public int getMinHeight() {
-        return minHeight;
+        return this.minHeight;
     }
 
     public int getMaxHeight() {
-        return maxHeight;
+        return this.maxHeight;
     }
 
 }

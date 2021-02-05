@@ -26,11 +26,11 @@ public class ItemStackPlace {
     }
 
     public int getSlot() {
-        return slot;
+        return this.slot;
     }
 
     public Inventory<?> getInventory() {
-        return inventory;
+        return this.inventory;
     }
 
     @Override
@@ -38,13 +38,13 @@ public class ItemStackPlace {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ItemStackPlace that = (ItemStackPlace) o;
-        return slot == that.slot &&
-            Objects.equals(inventory, that.inventory);
+        return this.slot == that.slot &&
+            Objects.equals(this.inventory, that.inventory);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(slot, inventory);
+        return Objects.hash(this.slot, this.inventory);
     }
 
 }

@@ -32,7 +32,7 @@ public class UiStatusUpdate extends Label {
     }
 
     public Paint getBorderColor() {
-        return borderColor;
+        return this.borderColor;
     }
 
     public void setBorderColor( Paint borderColor ) {
@@ -41,7 +41,7 @@ public class UiStatusUpdate extends Label {
     }
 
     public Paint getBackgroundColor() {
-        return backgroundColor;
+        return this.backgroundColor;
     }
 
     public void setBackgroundColor( Paint backgroundColor ) {
@@ -50,7 +50,7 @@ public class UiStatusUpdate extends Label {
     }
 
     public Paint getForegroundColor() {
-        return foregroundColor;
+        return this.foregroundColor;
     }
 
     public void setForegroundColor( Paint foregroundColor ) {

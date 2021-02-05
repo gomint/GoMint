@@ -183,27 +183,27 @@ public class Plugin {
     }
 
     public PluginManager pluginManager() {
-        return pluginManager;
+        return this.pluginManager;
     }
 
     public String name() {
-        return name;
+        return this.name;
     }
 
     public PluginVersion version() {
-        return version;
+        return this.version;
     }
 
     public Logger logger() {
-        return logger;
+        return this.logger;
     }
 
     public Scheduler scheduler() {
-        return scheduler;
+        return this.scheduler;
     }
 
     public GoMint server() {
-        return server;
+        return this.server;
     }
 
 }

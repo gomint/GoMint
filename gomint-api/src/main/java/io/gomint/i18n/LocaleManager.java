@@ -158,7 +158,7 @@ public class LocaleManager {
      * @throws ResourceLoadFailedException if the loading has thrown any Error
      */
     public synchronized LocaleManager load( Locale locale, String param ) throws ResourceLoadFailedException {
-        resourceManager.load( locale, param );
+        this.resourceManager.load( locale, param );
         return this;
     }
 
@@ -172,7 +172,7 @@ public class LocaleManager {
      * @throws ResourceLoadFailedException If the Resource was cleared out and could not be reloaded into the Cache
      */
     private String translation(Locale locale, String key ) throws ResourceLoadFailedException {
-        return resourceManager.get( locale, key );
+        return this.resourceManager.get( locale, key );
     }
 
     /**
@@ -182,8 +182,8 @@ public class LocaleManager {
      * @return The default locale or the param
      */
     private Locale checkForDefault( Locale locale ) {
-        if ( !resourceManager.isLoaded( locale ) ) {
-            return defaultLocale;
+        if ( !this.resourceManager.isLoaded( locale ) ) {
+            return this.defaultLocale;
         }
 
         return locale;
@@ -197,7 +197,7 @@ public class LocaleManager {
      * @return locale manager for chaining
      */
     public LocaleManager defaultLocale(Locale locale ) {
-        defaultLocale = locale;
+        this.defaultLocale = locale;
         return this;
     }
 
@@ -220,7 +220,7 @@ public class LocaleManager {
             translationString = translation( playerLocale, translationKey );
         } catch ( ResourceLoadFailedException e ) {
             try {
-                translationString = translation( playerLocale = defaultLocale, translationKey );
+                translationString = translation( playerLocale = this.defaultLocale, translationKey );
             } catch ( ResourceLoadFailedException e1 ) {
                 // Ignore .-.
             }
@@ -250,18 +250,18 @@ public class LocaleManager {
         //Get the resource and translate
         String translationString = null;
         try {
-            translationString = translation( defaultLocale, translationKey );
+            translationString = translation(this.defaultLocale, translationKey );
         } catch ( ResourceLoadFailedException e ) {
             // Ignore .-.
         }
 
         if ( translationString == null ) {
-            LOGGER.warn( "The key({}) is not present in the Locale {}", translationKey, defaultLocale );
+            LOGGER.warn( "The key({}) is not present in the Locale {}", translationKey, this.defaultLocale);
             return "N/A (" + translationKey + ")";
         }
 
         MessageFormat msgFormat = new MessageFormat( translationString );
-        msgFormat.setLocale( defaultLocale );
+        msgFormat.setLocale(this.defaultLocale);
         return msgFormat.format( args );
     }
 
@@ -271,7 +271,7 @@ public class LocaleManager {
      * @param loader which is used to load specific locale resources
      */
     public LocaleManager registerLoader( ResourceLoader<?> loader ) {
-        resourceManager.registerLoader( loader );
+        this.resourceManager.registerLoader( loader );
         return this;
     }
 
@@ -281,14 +281,14 @@ public class LocaleManager {
      * @return Unmodifiable List
      */
     public List<Locale> loadedLocales() {
-        return Collections.unmodifiableList( resourceManager.getLoadedLocales() );
+        return Collections.unmodifiableList(this.resourceManager.getLoadedLocales() );
     }
 
     /**
      * Tells the ResourceManager to reload all Locale Resources which has been loaded by this Plugin
      */
     public synchronized LocaleManager reload() {
-        resourceManager.reload();
+        this.resourceManager.reload();
         return this;
     }
 
@@ -296,12 +296,12 @@ public class LocaleManager {
      * Be sure to remove resources loaded and to remove refs
      */
     public synchronized void cleanup() {
-        resourceManager.cleanup();
-        resourceManager = null;
+        this.resourceManager.cleanup();
+        this.resourceManager = null;
     }
 
     public Locale defaultLocale() {
-        return defaultLocale;
+        return this.defaultLocale;
     }
 
 }

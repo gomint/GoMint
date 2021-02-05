@@ -20,44 +20,44 @@ public class CommandData {
         this.description = description;
     }
 
-    public void setFlags(byte flags) {
+    public void flags(byte flags) {
         this.flags = flags;
     }
 
-    public void setPermission(byte permission) {
+    public void permission(byte permission) {
         this.permission = permission;
     }
 
-    public void setAliasIndex(int aliasIndex) {
+    public void aliasIndex(int aliasIndex) {
         this.aliasIndex = aliasIndex;
     }
 
-    public void setParameters(List<List<Parameter>> parameters) {
+    public void parameters(List<List<Parameter>> parameters) {
         this.parameters = parameters;
     }
 
-    public String getName() {
-        return name;
+    public String name() {
+        return this.name;
     }
 
-    public String getDescription() {
-        return description;
+    public String description() {
+        return this.description;
     }
 
-    public byte getFlags() {
-        return flags;
+    public byte flags() {
+        return this.flags;
     }
 
-    public byte getPermission() {
-        return permission;
+    public byte permission() {
+        return this.permission;
     }
 
-    public int getAliasIndex() {
-        return aliasIndex;
+    public int aliasIndex() {
+        return this.aliasIndex;
     }
 
-    public List<List<Parameter>> getParameters() {
-        return parameters;
+    public List<List<Parameter>> parameters() {
+        return this.parameters;
     }
 
     public static class Parameter {
@@ -71,16 +71,16 @@ public class CommandData {
             this.optional = optional;
         }
 
-        public String getName() {
-            return name;
+        public String name() {
+            return this.name;
         }
 
-        public int getType() {
-            return type;
+        public int type() {
+            return this.type;
         }
 
-        public boolean isOptional() {
-            return optional;
+        public boolean optional() {
+            return this.optional;
         }
     }
 

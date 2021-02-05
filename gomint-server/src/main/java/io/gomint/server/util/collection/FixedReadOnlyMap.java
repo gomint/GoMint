@@ -117,12 +117,12 @@ public class FixedReadOnlyMap extends ReadOnlyMap<String, Object> {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         FixedReadOnlyMap that = (FixedReadOnlyMap) o;
-        return hashKey == that.hashKey && hashValue == that.hashValue;
+        return this.hashKey == that.hashKey && this.hashValue == that.hashValue;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(hashKey, hashValue);
+        return Objects.hash(this.hashKey, this.hashValue);
     }
 
     @Override

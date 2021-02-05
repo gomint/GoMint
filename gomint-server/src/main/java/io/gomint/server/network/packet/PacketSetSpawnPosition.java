@@ -48,7 +48,7 @@ public class PacketSetSpawnPosition extends Packet {
     }
 
     public SpawnType getSpawnType() {
-        return spawnType;
+        return this.spawnType;
     }
 
     public void setSpawnType(SpawnType spawnType) {
@@ -56,7 +56,7 @@ public class PacketSetSpawnPosition extends Packet {
     }
 
     public BlockPosition getPlayerPosition() {
-        return playerPosition;
+        return this.playerPosition;
     }
 
     public void setPlayerPosition(BlockPosition playerPosition) {
@@ -64,7 +64,7 @@ public class PacketSetSpawnPosition extends Packet {
     }
 
     public int getDimension() {
-        return dimension;
+        return this.dimension;
     }
 
     public void setDimension(int dimension) {
@@ -72,7 +72,7 @@ public class PacketSetSpawnPosition extends Packet {
     }
 
     public BlockPosition getWorldSpawn() {
-        return worldSpawn;
+        return this.worldSpawn;
     }
 
     public void setWorldSpawn(BlockPosition worldSpawn) {

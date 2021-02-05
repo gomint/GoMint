@@ -59,7 +59,7 @@ public class DispenserTileEntity extends TileEntity implements InventoryHolder {
     }
 
     public DispenserInventory getInventory() {
-        return inventory;
+        return this.inventory;
     }
 
 }

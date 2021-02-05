@@ -20,8 +20,8 @@ public enum GamemodeMagicNumbers {
         this.magicNumber = magicNumber;
     }
 
-    public int getMagicNumber() {
-        return magicNumber;
+    public int magicNumber() {
+        return this.magicNumber;
     }
 }
 // CHECKSTYLE:ON

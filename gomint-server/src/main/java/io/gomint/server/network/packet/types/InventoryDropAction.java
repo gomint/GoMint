@@ -29,23 +29,23 @@ public class InventoryDropAction implements InventoryAction {
     }
 
     public byte getAmount() {
-        return amount;
+        return this.amount;
     }
 
     public ItemStackRequestSlotInfo getSource() {
-        return source;
+        return this.source;
     }
 
     public boolean isRandom() {
-        return random;
+        return this.random;
     }
 
     @Override
     public String toString() {
         return "InventoryDropAction{" +
-            "amount=" + amount +
-            ", source=" + source +
-            ", random=" + random +
+            "amount=" + this.amount +
+            ", source=" + this.source +
+            ", random=" + this.random +
             '}';
     }
 

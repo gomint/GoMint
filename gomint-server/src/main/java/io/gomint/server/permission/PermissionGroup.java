@@ -38,7 +38,7 @@ public class PermissionGroup implements Group {
     }
 
     public boolean isDirty() {
-        return dirty;
+        return this.dirty;
     }
 
     @Override
@@ -100,19 +100,19 @@ public class PermissionGroup implements Group {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         PermissionGroup that = (PermissionGroup) o;
-        return Objects.equals(name, that.name);
+        return Objects.equals(this.name, that.name);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name);
+        return Objects.hash(this.name);
     }
 
     @Override
     public String toString() {
         return "PermissionGroup{" +
-            "name='" + name + '\'' +
-            ", permissions=" + permissions +
+            "name='" + this.name + '\'' +
+            ", permissions=" + this.permissions +
             '}';
     }
 

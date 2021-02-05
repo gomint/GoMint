@@ -79,7 +79,7 @@ public class PacketMovePlayer extends Packet {
     }
 
     public long getTick() {
-        return tick;
+        return this.tick;
     }
 
     public void setTick(long tick) {
@@ -87,7 +87,7 @@ public class PacketMovePlayer extends Packet {
     }
 
     public long getEntityId() {
-        return entityId;
+        return this.entityId;
     }
 
     public void setEntityId(long entityId) {
@@ -95,7 +95,7 @@ public class PacketMovePlayer extends Packet {
     }
 
     public float getX() {
-        return x;
+        return this.x;
     }
 
     public void setX(float x) {
@@ -103,7 +103,7 @@ public class PacketMovePlayer extends Packet {
     }
 
     public float getY() {
-        return y;
+        return this.y;
     }
 
     public void setY(float y) {
@@ -111,7 +111,7 @@ public class PacketMovePlayer extends Packet {
     }
 
     public float getZ() {
-        return z;
+        return this.z;
     }
 
     public void setZ(float z) {
@@ -119,7 +119,7 @@ public class PacketMovePlayer extends Packet {
     }
 
     public float getYaw() {
-        return yaw;
+        return this.yaw;
     }
 
     public void setYaw(float yaw) {
@@ -127,7 +127,7 @@ public class PacketMovePlayer extends Packet {
     }
 
     public float getHeadYaw() {
-        return headYaw;
+        return this.headYaw;
     }
 
     public void setHeadYaw(float headYaw) {
@@ -135,7 +135,7 @@ public class PacketMovePlayer extends Packet {
     }
 
     public float getPitch() {
-        return pitch;
+        return this.pitch;
     }
 
     public void setPitch(float pitch) {
@@ -143,7 +143,7 @@ public class PacketMovePlayer extends Packet {
     }
 
     public MovePlayerMode getMode() {
-        return mode;
+        return this.mode;
     }
 
     public void setMode(MovePlayerMode mode) {
@@ -151,7 +151,7 @@ public class PacketMovePlayer extends Packet {
     }
 
     public boolean isOnGround() {
-        return onGround;
+        return this.onGround;
     }
 
     public void setOnGround(boolean onGround) {
@@ -159,7 +159,7 @@ public class PacketMovePlayer extends Packet {
     }
 
     public long getRidingEntityId() {
-        return ridingEntityId;
+        return this.ridingEntityId;
     }
 
     public void setRidingEntityId(long ridingEntityId) {
@@ -167,7 +167,7 @@ public class PacketMovePlayer extends Packet {
     }
 
     public int getTeleportCause() {
-        return teleportCause;
+        return this.teleportCause;
     }
 
     public void setTeleportCause(int teleportCause) {
@@ -175,7 +175,7 @@ public class PacketMovePlayer extends Packet {
     }
 
     public int getTeleportItemId() {
-        return teleportItemId;
+        return this.teleportItemId;
     }
 
     public void setTeleportItemId(int teleportItemId) {
@@ -187,23 +187,23 @@ public class PacketMovePlayer extends Packet {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         PacketMovePlayer that = (PacketMovePlayer) o;
-        return entityId == that.entityId &&
-            Float.compare(that.x, x) == 0 &&
-            Float.compare(that.y, y) == 0 &&
-            Float.compare(that.z, z) == 0 &&
-            Float.compare(that.yaw, yaw) == 0 &&
-            Float.compare(that.headYaw, headYaw) == 0 &&
-            Float.compare(that.pitch, pitch) == 0 &&
-            onGround == that.onGround &&
-            ridingEntityId == that.ridingEntityId &&
-            teleportCause == that.teleportCause &&
-            teleportItemId == that.teleportItemId &&
-            mode == that.mode;
+        return this.entityId == that.entityId &&
+            Float.compare(that.x, this.x) == 0 &&
+            Float.compare(that.y, this.y) == 0 &&
+            Float.compare(that.z, this.z) == 0 &&
+            Float.compare(that.yaw, this.yaw) == 0 &&
+            Float.compare(that.headYaw, this.headYaw) == 0 &&
+            Float.compare(that.pitch, this.pitch) == 0 &&
+                this.onGround == that.onGround &&
+                this.ridingEntityId == that.ridingEntityId &&
+                this.teleportCause == that.teleportCause &&
+                this.teleportItemId == that.teleportItemId &&
+                this.mode == that.mode;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(entityId, x, y, z, yaw, headYaw, pitch, mode, onGround, ridingEntityId, teleportCause, teleportItemId);
+        return Objects.hash(this.entityId, this.x, this.y, this.z, this.yaw, this.headYaw, this.pitch, this.mode, this.onGround, this.ridingEntityId, this.teleportCause, this.teleportItemId);
     }
 
     public enum MovePlayerMode {
@@ -234,7 +234,7 @@ public class PacketMovePlayer extends Packet {
         }
 
         public byte getId() {
-            return id;
+            return this.id;
         }
 
     }

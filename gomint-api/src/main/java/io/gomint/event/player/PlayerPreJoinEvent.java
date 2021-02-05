@@ -9,23 +9,21 @@ package io.gomint.event.player;
 
 import io.gomint.entity.EntityPlayer;
 
-import java.util.Objects;
-
 /**
- * @author geNAZt
- * @version 1.0
- * @stability 3
- *
  * This event gets called when the login has been completed and the server decides to start loading world data
  * into the client. This event can be used when you need to be sure the play status has been reached (like redirecting
  * a player to another server without ever touching this one)
+ *
+ * @author geNAZt
+ * @version 1.0
+ * @stability 3
  */
 public class PlayerPreJoinEvent extends CancellablePlayerEvent<PlayerPreJoinEvent> {
 
     private String kickReason;
 
-    public PlayerPreJoinEvent( EntityPlayer player ) {
-        super( player );
+    public PlayerPreJoinEvent(EntityPlayer player) {
+        super(player);
     }
 
     /**
@@ -33,7 +31,7 @@ public class PlayerPreJoinEvent extends CancellablePlayerEvent<PlayerPreJoinEven
      *
      * @param kickReason which is used to kick the player
      */
-    public PlayerPreJoinEvent kickReason(String kickReason ) {
+    public PlayerPreJoinEvent kickReason(String kickReason) {
         this.kickReason = kickReason;
         return this;
     }
@@ -44,28 +42,7 @@ public class PlayerPreJoinEvent extends CancellablePlayerEvent<PlayerPreJoinEven
      * @return reason for kick
      */
     public String kickReason() {
-        return kickReason;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        if (!super.equals(o)) return false;
-        PlayerPreJoinEvent that = (PlayerPreJoinEvent) o;
-        return Objects.equals(kickReason, that.kickReason);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(super.hashCode(), kickReason);
-    }
-
-    @Override
-    public String toString() {
-        return "PlayerPreJoinEvent{" +
-            "kickReason='" + kickReason + '\'' +
-            '}';
+        return this.kickReason;
     }
 
 }

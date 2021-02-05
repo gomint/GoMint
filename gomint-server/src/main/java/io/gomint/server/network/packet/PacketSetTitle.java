@@ -17,11 +17,11 @@ public class PacketSetTitle extends Packet {
 
     @Override
     public void serialize( PacketBuffer buffer, int protocolID ) {
-        buffer.writeSignedVarInt( type );
-        buffer.writeString( text );
-        buffer.writeSignedVarInt( fadeInTime );
-        buffer.writeSignedVarInt( stayTime );
-        buffer.writeSignedVarInt( fadeOutTime );
+        buffer.writeSignedVarInt(this.type);
+        buffer.writeString(this.text);
+        buffer.writeSignedVarInt(this.fadeInTime);
+        buffer.writeSignedVarInt(this.stayTime);
+        buffer.writeSignedVarInt(this.fadeOutTime);
     }
 
     @Override
@@ -34,7 +34,7 @@ public class PacketSetTitle extends Packet {
     }
 
     public int getType() {
-        return type;
+        return this.type;
     }
 
     public void setType(int type) {
@@ -42,7 +42,7 @@ public class PacketSetTitle extends Packet {
     }
 
     public String getText() {
-        return text;
+        return this.text;
     }
 
     public void setText(String text) {
@@ -50,7 +50,7 @@ public class PacketSetTitle extends Packet {
     }
 
     public int getFadeInTime() {
-        return fadeInTime;
+        return this.fadeInTime;
     }
 
     public void setFadeInTime(int fadeInTime) {
@@ -58,7 +58,7 @@ public class PacketSetTitle extends Packet {
     }
 
     public int getStayTime() {
-        return stayTime;
+        return this.stayTime;
     }
 
     public void setStayTime(int stayTime) {
@@ -66,7 +66,7 @@ public class PacketSetTitle extends Packet {
     }
 
     public int getFadeOutTime() {
-        return fadeOutTime;
+        return this.fadeOutTime;
     }
 
     public void setFadeOutTime(int fadeOutTime) {
@@ -89,7 +89,7 @@ public class PacketSetTitle extends Packet {
         }
 
         public int getId() {
-            return id;
+            return this.id;
         }
 
     }

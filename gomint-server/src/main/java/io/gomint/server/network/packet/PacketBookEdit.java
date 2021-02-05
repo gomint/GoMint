@@ -74,7 +74,7 @@ public class PacketBookEdit extends Packet {
     }
 
     public byte getType() {
-        return type;
+        return this.type;
     }
 
     public void setType(byte type) {
@@ -82,7 +82,7 @@ public class PacketBookEdit extends Packet {
     }
 
     public byte getInventorySlot() {
-        return inventorySlot;
+        return this.inventorySlot;
     }
 
     public void setInventorySlot(byte inventorySlot) {
@@ -90,7 +90,7 @@ public class PacketBookEdit extends Packet {
     }
 
     public byte getPageNumber() {
-        return pageNumber;
+        return this.pageNumber;
     }
 
     public void setPageNumber(byte pageNumber) {
@@ -98,7 +98,7 @@ public class PacketBookEdit extends Packet {
     }
 
     public String getText() {
-        return text;
+        return this.text;
     }
 
     public void setText(String text) {
@@ -106,7 +106,7 @@ public class PacketBookEdit extends Packet {
     }
 
     public String getPhotoName() {
-        return photoName;
+        return this.photoName;
     }
 
     public void setPhotoName(String photoName) {
@@ -114,7 +114,7 @@ public class PacketBookEdit extends Packet {
     }
 
     public byte getSwapWithPageNumber() {
-        return swapWithPageNumber;
+        return this.swapWithPageNumber;
     }
 
     public void setSwapWithPageNumber(byte swapWithPageNumber) {
@@ -122,7 +122,7 @@ public class PacketBookEdit extends Packet {
     }
 
     public String getTitle() {
-        return title;
+        return this.title;
     }
 
     public void setTitle(String title) {
@@ -130,7 +130,7 @@ public class PacketBookEdit extends Packet {
     }
 
     public String getAuthor() {
-        return author;
+        return this.author;
     }
 
     public void setAuthor(String author) {
@@ -138,7 +138,7 @@ public class PacketBookEdit extends Packet {
     }
 
     public String getXuid() {
-        return xuid;
+        return this.xuid;
     }
 
     public void setXuid(String xuid) {

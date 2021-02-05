@@ -130,9 +130,9 @@ public class MetadataPosition extends MetadataValue {
     @Override
     public String toString() {
         return "MetadataPosition{" +
-            "x=" + x +
-            ", y=" + y +
-            ", z=" + z +
+            "x=" + this.x +
+            ", y=" + this.y +
+            ", z=" + this.z +
             '}';
     }
 }

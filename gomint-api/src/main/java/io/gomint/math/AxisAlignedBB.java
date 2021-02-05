@@ -428,38 +428,38 @@ public class AxisAlignedBB implements Cloneable {
     }
 
     public float minX() {
-        return minX;
+        return this.minX;
     }
 
     public float minY() {
-        return minY;
+        return this.minY;
     }
 
     public float minZ() {
-        return minZ;
+        return this.minZ;
     }
 
     public float maxX() {
-        return maxX;
+        return this.maxX;
     }
 
     public float maxY() {
-        return maxY;
+        return this.maxY;
     }
 
     public float maxZ() {
-        return maxZ;
+        return this.maxZ;
     }
 
     @Override
     public String toString() {
         return "AxisAlignedBB{" +
-            "minX=" + minX +
-            ", minY=" + minY +
-            ", minZ=" + minZ +
-            ", maxX=" + maxX +
-            ", maxY=" + maxY +
-            ", maxZ=" + maxZ +
+            "minX=" + this.minX +
+            ", minY=" + this.minY +
+            ", minZ=" + this.minZ +
+            ", maxX=" + this.maxX +
+            ", maxY=" + this.maxY +
+            ", maxZ=" + this.maxZ +
             '}';
     }
 

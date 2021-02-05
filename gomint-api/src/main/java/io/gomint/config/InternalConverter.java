@@ -50,7 +50,7 @@ public class InternalConverter {
     }
 
     public BaseConfig getConfig() {
-        return config;
+        return this.config;
     }
 
     public InternalConverter addConverters(Class<?> ... classes ) throws InvalidConverterException {
@@ -85,7 +85,7 @@ public class InternalConverter {
     }
 
     public Converter getConverter( Class<?> type ) {
-        for ( Converter converter : converters ) {
+        for ( Converter converter : this.converters) {
             if ( converter.supports( type ) ) {
                 return converter;
             }

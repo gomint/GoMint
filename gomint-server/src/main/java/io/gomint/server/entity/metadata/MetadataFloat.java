@@ -71,7 +71,7 @@ public class MetadataFloat extends MetadataValue {
     @Override
     public String toString() {
         return "MetadataFloat{" +
-            "value=" + value +
+            "value=" + this.value +
             '}';
     }
 

@@ -71,7 +71,7 @@ public class MetadataShort extends MetadataValue {
     @Override
     public String toString() {
         return "MetadataShort{" +
-            "value=" + value +
+            "value=" + this.value +
             '}';
     }
 }

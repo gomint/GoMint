@@ -33,7 +33,7 @@ public class NibbleBenchmark {
 
     @Benchmark
     public void bench() {
-        array.set(index, (byte) 255);
+        this.array.set(this.index, (byte) 255);
     }
 
 }

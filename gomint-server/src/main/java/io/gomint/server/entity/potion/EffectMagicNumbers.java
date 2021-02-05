@@ -45,7 +45,7 @@ public enum EffectMagicNumbers {
     }
 
     public int getId() {
-        return id;
+        return this.id;
     }
 
 }

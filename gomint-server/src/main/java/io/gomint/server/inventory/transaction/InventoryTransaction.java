@@ -28,27 +28,27 @@ public class InventoryTransaction<I, S, T> implements Transaction<I, S, T> {
     }
 
     public EntityPlayer getOwner() {
-        return owner;
+        return this.owner;
     }
 
     @Override
     public Inventory<I> inventory() {
-        return inventory;
+        return this.inventory;
     }
 
     @Override
     public int slot() {
-        return slot;
+        return this.slot;
     }
 
     @Override
     public ItemStack<S> sourceItem() {
-        return sourceItem;
+        return this.sourceItem;
     }
 
     @Override
     public ItemStack<T> targetItem() {
-        return targetItem;
+        return this.targetItem;
     }
 
     @Override
@@ -76,12 +76,12 @@ public class InventoryTransaction<I, S, T> implements Transaction<I, S, T> {
     @Override
     public String toString() {
         return "{\"_class\":\"InventoryTransaction\", " +
-            "\"owner\":" + (owner == null ? "null" : owner) + ", " +
-            "\"inventory\":" + (inventory == null ? "null" : inventory) + ", " +
-            "\"slot\":\"" + slot + "\"" + ", " +
-            "\"sourceItem\":" + (sourceItem == null ? "null" : sourceItem) + ", " +
-            "\"targetItem\":" + (targetItem == null ? "null" : targetItem) + ", " +
-            "\"inventoryWindowId\":\"" + inventoryWindowId + "\"" +
+            "\"owner\":" + (this.owner == null ? "null" : this.owner) + ", " +
+            "\"inventory\":" + (this.inventory == null ? "null" : this.inventory) + ", " +
+            "\"slot\":\"" + this.slot + "\"" + ", " +
+            "\"sourceItem\":" + (this.sourceItem == null ? "null" : this.sourceItem) + ", " +
+            "\"targetItem\":" + (this.targetItem == null ? "null" : this.targetItem) + ", " +
+            "\"inventoryWindowId\":\"" + this.inventoryWindowId + "\"" +
             "}";
     }
 

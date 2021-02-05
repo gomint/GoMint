@@ -41,7 +41,7 @@ public class PacketAdventureSettings extends Packet {
     }
 
     public int getFlags() {
-        return flags;
+        return this.flags;
     }
 
     public void setFlags(int flags) {
@@ -49,7 +49,7 @@ public class PacketAdventureSettings extends Packet {
     }
 
     public int getCommandPermission() {
-        return commandPermission;
+        return this.commandPermission;
     }
 
     public void setCommandPermission(int commandPermission) {
@@ -57,7 +57,7 @@ public class PacketAdventureSettings extends Packet {
     }
 
     public int getFlags2() {
-        return flags2;
+        return this.flags2;
     }
 
     public void setFlags2(int flags2) {
@@ -65,7 +65,7 @@ public class PacketAdventureSettings extends Packet {
     }
 
     public int getPlayerPermission() {
-        return playerPermission;
+        return this.playerPermission;
     }
 
     public void setPlayerPermission(int playerPermission) {
@@ -73,7 +73,7 @@ public class PacketAdventureSettings extends Packet {
     }
 
     public int getCustomFlags() {
-        return customFlags;
+        return this.customFlags;
     }
 
     public void setCustomFlags(int customFlags) {
@@ -81,7 +81,7 @@ public class PacketAdventureSettings extends Packet {
     }
 
     public long getEntityId() {
-        return entityId;
+        return this.entityId;
     }
 
     public void setEntityId(long entityId) {

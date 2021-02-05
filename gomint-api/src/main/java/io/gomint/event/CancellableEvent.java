@@ -7,8 +7,6 @@
 
 package io.gomint.event;
 
-import java.util.Objects;
-
 /**
  * @author geNAZt
  * @version 1.0
@@ -32,29 +30,9 @@ public class CancellableEvent<E> extends Event {
      *
      * @param cancelled The state of this event
      */
-    public E cancelled(boolean cancelled ) {
+    public E cancelled(boolean cancelled) {
         this.cancelled = cancelled;
         return (E) this;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        CancellableEvent<?> that = (CancellableEvent<?>) o;
-        return cancelled == that.cancelled;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(cancelled);
-    }
-
-    @Override
-    public String toString() {
-        return "CancellableEvent{" +
-            "cancelled=" + cancelled +
-            '}';
     }
 
 }

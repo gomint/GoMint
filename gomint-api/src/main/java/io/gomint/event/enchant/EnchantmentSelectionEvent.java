@@ -2,23 +2,24 @@ package io.gomint.event.enchant;
 
 import io.gomint.enchant.Enchantment;
 import io.gomint.entity.EntityPlayer;
-import io.gomint.event.player.PlayerEvent;
+import io.gomint.event.player.SimplePlayerEvent;
 
 import java.util.Collections;
 import java.util.List;
 
 /**
- * @author geNAZt
- * @version 1.0
- * @stability 1
- *
  * This event gets fired when a enchantment table needs to select new enchants (due to a player
  * putting a item in it for example). You can modify the list of enchants, this also alters the
  * output of the enchantment being applied later when the {@link ItemEnchantEvent} gets fired.
+ *
+ * @author geNAZt
+ * @version 1.0
+ * @stability 1
  */
-public class EnchantmentSelectionEvent extends PlayerEvent {
+public class EnchantmentSelectionEvent extends SimplePlayerEvent {
 
     public static class Option {
+
         private final List<Enchantment> enchantments;
         private int minimumRequirement;
 
@@ -33,7 +34,7 @@ public class EnchantmentSelectionEvent extends PlayerEvent {
          * @return minimum requirement of levels
          */
         public int minimumRequirement() {
-            return minimumRequirement;
+            return this.minimumRequirement;
         }
 
         /**
@@ -53,7 +54,7 @@ public class EnchantmentSelectionEvent extends PlayerEvent {
          * @return list of enchantments in this option
          */
         public List<Enchantment> enchantments() {
-            return enchantments;
+            return this.enchantments;
         }
 
     }
@@ -74,7 +75,7 @@ public class EnchantmentSelectionEvent extends PlayerEvent {
      * @return list of enchantment options
      */
     public List<Option> enchantmentOptions() {
-        return Collections.unmodifiableList(enchantmentOptions);
+        return Collections.unmodifiableList(this.enchantmentOptions);
     }
 
 }

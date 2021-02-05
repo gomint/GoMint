@@ -55,7 +55,7 @@ public class ConfigMapper extends BaseConfigMapper {
             }
         }
 
-        Converter mapConverter = converter.getConverter(Map.class);
+        Converter mapConverter = this.converter.getConverter(Map.class);
         return (Map<String, Object>) mapConverter.toConfig(HashMap.class, returnMap, null);
     }
 
@@ -78,7 +78,7 @@ public class ConfigMapper extends BaseConfigMapper {
             }
 
             String path = this.getPath(field);
-            converter.fromConfig((YamlConfig) this, field, ConfigSection.convertFromMap(section), path);
+            this.converter.fromConfig((YamlConfig) this, field, ConfigSection.convertFromMap(section), path);
         }
         return this;
     }
@@ -98,7 +98,7 @@ public class ConfigMapper extends BaseConfigMapper {
     private String getPath(Field field) {
         String path;
 
-        switch (configMode) {
+        switch (this.configMode) {
             case PATH_BY_UNDERSCORE:
                 path = field.getName().replace("_", ".");
                 break;

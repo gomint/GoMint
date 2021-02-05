@@ -98,8 +98,8 @@ public class WeightedRandom<V> {
             @Override
             public void remove() {
                 it.remove();
-                weights.removeDouble(current[0]);
-                removed = true;
+                WeightedRandom.this.weights.removeDouble(current[0]);
+                WeightedRandom.this.removed = true;
             }
         };
     }

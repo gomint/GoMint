@@ -102,8 +102,8 @@ public class MinecraftFormattingConverter extends LogEventPatternConverter {
     public void format( LogEvent event, StringBuilder toAppendTo ) {
         int start = toAppendTo.length();
         //noinspection ForLoopReplaceableByForEach
-        for ( int i = 0, size = formatters.size(); i < size; i++ ) {
-            formatters.get( i ).format( event, toAppendTo );
+        for ( int i = 0, size = this.formatters.size(); i < size; i++ ) {
+            this.formatters.get( i ).format( event, toAppendTo );
         }
 
         if ( toAppendTo.length() == start ) {
@@ -112,7 +112,7 @@ public class MinecraftFormattingConverter extends LogEventPatternConverter {
         }
 
         String content = toAppendTo.substring( start );
-        format( content, toAppendTo, start, ansi );
+        format( content, toAppendTo, start, this.ansi);
     }
 
     private static void format( String s, StringBuilder result, int start, boolean ansi ) {

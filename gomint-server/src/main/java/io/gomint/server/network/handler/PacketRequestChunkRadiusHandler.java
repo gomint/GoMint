@@ -1,7 +1,6 @@
 package io.gomint.server.network.handler;
 
 import io.gomint.server.network.PlayerConnection;
-import io.gomint.server.network.packet.PacketConfirmChunkRadius;
 import io.gomint.server.network.packet.PacketRequestChunkRadius;
 
 /**
@@ -13,6 +12,6 @@ public class PacketRequestChunkRadiusHandler implements PacketHandler<PacketRequ
     @Override
     public void handle(PacketRequestChunkRadius packet, long currentTimeMillis, PlayerConnection connection ) {
         // Check if the wanted View distance is under the servers setting
-        connection.getEntity().setViewDistance( packet.getChunkRadius() );
+        connection.entity().setViewDistance( packet.getChunkRadius() );
     }
 }

@@ -60,7 +60,7 @@ public abstract class CraftingRecipe extends Recipe {
     }
 
     public ItemStack<?>[] getOutcome() {
-        return outcome;
+        return this.outcome;
     }
 
 }

@@ -9,15 +9,16 @@ package io.gomint.event.player;
 
 import io.gomint.entity.EntityPlayer;
 import io.gomint.event.CancellableEvent;
-
-import java.util.Objects;
+import io.gomint.event.interfaces.PlayerEvent;
 
 /**
+ * Represents a cancellable event with a player involved
+ *
  * @author geNAZt
  * @version 1.0
  * @stability 3
  */
-public class CancellablePlayerEvent<E> extends CancellableEvent<E> {
+public class CancellablePlayerEvent<E> extends CancellableEvent<E> implements PlayerEvent {
 
     private final EntityPlayer player;
 
@@ -25,34 +26,9 @@ public class CancellablePlayerEvent<E> extends CancellableEvent<E> {
         this.player = player;
     }
 
-    /**
-     * Get the player which is affected by this event
-     *
-     * @return the player which is affected by this event
-     */
+    @Override
     public EntityPlayer player() {
         return this.player;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        if (!super.equals(o)) return false;
-        CancellablePlayerEvent<?> that = (CancellablePlayerEvent<?>) o;
-        return Objects.equals(player, that.player);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(super.hashCode(), player);
-    }
-
-    @Override
-    public String toString() {
-        return "CancellablePlayerEvent{" +
-            "player=" + player +
-            '}';
     }
 
 }

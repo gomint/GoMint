@@ -1,7 +1,7 @@
 package io.gomint.event.inventory;
 
 import io.gomint.entity.EntityPlayer;
-import io.gomint.event.player.PlayerEvent;
+import io.gomint.event.player.SimplePlayerEvent;
 import io.gomint.inventory.Inventory;
 
 /**
@@ -9,18 +9,18 @@ import io.gomint.inventory.Inventory;
  * @version 1.0
  * @stability 3
  */
-public class InventoryCloseEvent extends PlayerEvent {
+public class InventoryCloseEvent extends SimplePlayerEvent {
 
     private Inventory<?> inventory;
 
     /**
      * Create a new inventory close event
      *
-     * @param player which closed the inventory
+     * @param player    which closed the inventory
      * @param inventory which has been closed
      */
-    public InventoryCloseEvent( EntityPlayer player, Inventory<?> inventory ) {
-        super( player );
+    public InventoryCloseEvent(EntityPlayer player, Inventory<?> inventory) {
+        super(player);
         this.inventory = inventory;
     }
 

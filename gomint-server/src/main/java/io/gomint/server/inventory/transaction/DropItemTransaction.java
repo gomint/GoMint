@@ -23,16 +23,16 @@ public class DropItemTransaction<T> implements Transaction<Void, Void, T> {
     }
 
     public Location getLocation() {
-        return location;
+        return this.location;
     }
 
     public Vector getVelocity() {
-        return velocity;
+        return this.velocity;
     }
 
     @Override
     public ItemStack<T> targetItem() {
-        return targetItem;
+        return this.targetItem;
     }
 
     @Override
@@ -74,9 +74,9 @@ public class DropItemTransaction<T> implements Transaction<Void, Void, T> {
     @Override
     public String toString() {
         return "{\"_class\":\"DropItemTransaction\", " +
-            "\"location\":" + (location == null ? "null" : location) + ", " +
-            "\"velocity\":" + (velocity == null ? "null" : velocity) + ", " +
-            "\"targetItem\":" + (targetItem == null ? "null" : targetItem) +
+            "\"location\":" + (this.location == null ? "null" : this.location) + ", " +
+            "\"velocity\":" + (this.velocity == null ? "null" : this.velocity) + ", " +
+            "\"targetItem\":" + (this.targetItem == null ? "null" : this.targetItem) +
             "}";
     }
 

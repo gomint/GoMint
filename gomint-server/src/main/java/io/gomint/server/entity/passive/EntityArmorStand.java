@@ -45,12 +45,12 @@ public class EntityArmorStand extends EntityCreature<io.gomint.entity.passive.En
         this.attribute( Attribute.HEALTH );
         this.maxHealth( 20 );
         this.health( 20 );
-        this.armorInventory = new ArmorInventory(this.world == null ? null : this.world.getServer().items(), this );
+        this.armorInventory = new ArmorInventory(this.world == null ? null : this.world.server().items(), this );
     }
 
     @Override
     public boolean damage( EntityDamageEvent damageEvent ) {
-        this.world.getServer().pluginManager().callEvent( damageEvent );
+        this.world.server().pluginManager().callEvent( damageEvent );
         if( damageEvent.cancelled() || !this.isDamageEffective( damageEvent.damageSource() ) ) {
             return false;
         }

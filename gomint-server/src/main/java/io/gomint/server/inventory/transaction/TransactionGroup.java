@@ -37,7 +37,7 @@ public class TransactionGroup {
     }
 
     public List<Transaction<?, ?, ?>> getTransactions() {
-        return transactions;
+        return this.transactions;
     }
 
     /**
@@ -199,7 +199,7 @@ public class TransactionGroup {
         if ( matched ) {
             List<io.gomint.inventory.transaction.Transaction<?, ?, ?>> transactionList = new ArrayList<>( this.transactions );
             InventoryTransactionEvent transactionEvent = new InventoryTransactionEvent( this.player, transactionList );
-            this.player.world().getServer().pluginManager().callEvent( transactionEvent );
+            this.player.world().server().pluginManager().callEvent( transactionEvent );
             return !transactionEvent.cancelled();
         }
 
@@ -230,11 +230,11 @@ public class TransactionGroup {
     @Override
     public String toString() {
         return "{\"_class\":\"TransactionGroup\", " +
-            "\"player\":" + (player == null ? "null" : player) + ", " +
-            "\"transactions\":" + (transactions == null ? "null" : Arrays.toString(transactions.toArray())) + ", " +
-            "\"haveItems\":" + (haveItems == null ? "null" : Arrays.toString(transactions.toArray())) + ", " +
-            "\"needItems\":" + (needItems == null ? "null" : Arrays.toString(transactions.toArray())) + ", " +
-            "\"matchItems\":\"" + matchItems + "\"" +
+            "\"player\":" + (this.player == null ? "null" : this.player) + ", " +
+            "\"transactions\":" + (this.transactions == null ? "null" : Arrays.toString(this.transactions.toArray())) + ", " +
+            "\"haveItems\":" + (this.haveItems == null ? "null" : Arrays.toString(this.transactions.toArray())) + ", " +
+            "\"needItems\":" + (this.needItems == null ? "null" : Arrays.toString(this.transactions.toArray())) + ", " +
+            "\"matchItems\":\"" + this.matchItems + "\"" +
             "}";
     }
 }

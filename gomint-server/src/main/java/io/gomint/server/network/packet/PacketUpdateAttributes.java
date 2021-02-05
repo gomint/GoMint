@@ -59,7 +59,7 @@ public class PacketUpdateAttributes extends Packet {
     }
 
     public long getTick() {
-        return tick;
+        return this.tick;
     }
 
     public void setTick(long tick) {
@@ -75,7 +75,7 @@ public class PacketUpdateAttributes extends Packet {
     }
 
     public long getEntityId() {
-        return entityId;
+        return this.entityId;
     }
 
     public void setEntityId(long entityId) {
@@ -83,7 +83,7 @@ public class PacketUpdateAttributes extends Packet {
     }
 
     public List<AttributeInstance> getEntries() {
-        return entries;
+        return this.entries;
     }
 
     public void setEntries(List<AttributeInstance> entries) {

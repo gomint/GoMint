@@ -105,7 +105,7 @@ public class PacketPlayerEnchantmentOptions extends Packet {
     }
 
     public List<EnchantmentOption> getOptions() {
-        return options;
+        return this.options;
     }
 
     public void setOptions(List<EnchantmentOption> options) {

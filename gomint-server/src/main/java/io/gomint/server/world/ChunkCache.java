@@ -45,8 +45,8 @@ public class ChunkCache {
     public ChunkCache( WorldAdapter world ) {
         this.world = world;
         this.cachedChunks = new Long2ObjectOpenHashMap<>();
-        this.enableAutoSave = world.getConfig().autoSave();
-        this.autoSaveInterval = world.getConfig().autoSaveInterval();
+        this.enableAutoSave = world.config().autoSave();
+        this.autoSaveInterval = world.config().autoSaveInterval();
     }
     // CHECKSTYLE:ON
 
@@ -60,7 +60,7 @@ public class ChunkCache {
         int spawnXChunk = CoordinateUtils.fromBlockToChunk( (int) this.world.spawnLocation().x() );
         int spawnZChunk = CoordinateUtils.fromBlockToChunk( (int) this.world.spawnLocation().z() );
 
-        int spawnAreaSize = this.world.getConfig().amountOfChunksForSpawnArea();
+        int spawnAreaSize = this.world.config().amountOfChunksForSpawnArea();
 
         // Clear temp sets
         this.toDeleteHashes.clear();
@@ -74,9 +74,9 @@ public class ChunkCache {
             Long2ObjectMap.Entry<ChunkAdapter> entry = iterator.next();
             ChunkAdapter chunk = entry.getValue();
             if ( checkChunkSave &&
-                currentTimeMS - chunk.getLastSavedTimestamp() >= this.autoSaveInterval &&
+                currentTimeMS - chunk.lastSavedTimestamp() >= this.autoSaveInterval &&
                 chunk.isNeedsPersistence() ) {
-                chunk.setLastSavedTimestamp( currentTimeMS );
+                chunk.lastSavedTimestamp( currentTimeMS );
                 this.world.saveChunkAsynchronously( chunk );
             }
 
@@ -126,9 +126,9 @@ public class ChunkCache {
 
                 LOGGER.debug("Needs persistence? {}", adapter.isNeedsPersistence());
 
-                if (this.world.getConfig().saveOnUnload() &&
+                if (this.world.config().saveOnUnload() &&
                     adapter.isNeedsPersistence()) {
-                    adapter.setLastSavedTimestamp( currentTimeMS );
+                    adapter.lastSavedTimestamp( currentTimeMS );
                     this.world.saveChunk(adapter);
 
                     LOGGER.debug("Persisting chunk {} / {}", adapter.x(), adapter.z());
@@ -141,8 +141,8 @@ public class ChunkCache {
 
     private boolean isInAnyViewDistance( long key ) {
         for ( EntityPlayer player : this.world.getPlayers0().keySet() ) {
-            if ( player.connection().getPlayerChunks().contains( key ) ||
-                player.connection().getLoadingChunks().contains( key ) ) {
+            if ( player.connection().playerChunks().contains( key ) ||
+                player.connection().loadingChunks().contains( key ) ) {
                 return true;
             }
         }
@@ -282,7 +282,7 @@ public class ChunkCache {
             ChunkAdapter chunkAdapter = this.cachedChunks.get( l );
             if (chunkAdapter.isNeedsPersistence()) {
                 this.world.saveChunk(chunkAdapter);
-                chunkAdapter.setLastSavedTimestamp(this.world.getServer().currentTickTime());
+                chunkAdapter.lastSavedTimestamp(this.world.server().currentTickTime());
             }
         }
     }
@@ -300,9 +300,9 @@ public class ChunkCache {
     public synchronized void unload(int x, int z) {
         ChunkAdapter adapter = this.cachedChunks.remove(CoordinateUtils.toLong(x, z));
         if (adapter != null) {
-            if (this.world.getConfig().saveOnUnload() &&
+            if (this.world.config().saveOnUnload() &&
                 adapter.isNeedsPersistence()) {
-                adapter.setLastSavedTimestamp( this.world.server.currentTickTime() );
+                adapter.lastSavedTimestamp( this.world.server.currentTickTime() );
                 this.world.saveChunk(adapter);
                 adapter.release();
             } else {

@@ -93,8 +93,8 @@ public class EntityHuman<E extends Entity<E>> extends EntityCreature<E> implemen
         super(EntityType.PLAYER, null);
 
         // Init inventories
-        this.inventory = new PlayerInventory(this.world.getServer().items(), this);
-        this.armorInventory = new ArmorInventory(this.world.getServer().items(), this);
+        this.inventory = new PlayerInventory(this.world.server().items(), this);
+        this.armorInventory = new ArmorInventory(this.world.server().items(), this);
 
         // Some default values
         this.uuid = UUID.randomUUID();
@@ -114,8 +114,8 @@ public class EntityHuman<E extends Entity<E>> extends EntityCreature<E> implemen
     @Override
     public String toString() {
         return "{\"_class\":\"EntityHuman\", " +
-            "\"username\":" + (username == null ? "null" : "\"" + username + "\"") + ", " +
-            "\"uuid\":" + (uuid == null ? "null" : uuid) +
+            "\"username\":" + (this.username == null ? "null" : "\"" + this.username + "\"") + ", " +
+            "\"uuid\":" + (this.uuid == null ? "null" : this.uuid) +
             "}";
     }
 
@@ -383,7 +383,7 @@ public class EntityHuman<E extends Entity<E>> extends EntityCreature<E> implemen
                             (io.gomint.entity.EntityPlayer) this, -1
                         );
 
-                        this.world.getServer().pluginManager().callEvent(foodLevelChangeEvent);
+                        this.world.server().pluginManager().callEvent(foodLevelChangeEvent);
                         if (!foodLevelChangeEvent.cancelled()) {
                             hunger = Math.max(0, hunger - 1);
                             this.hunger(hunger);
@@ -533,7 +533,7 @@ public class EntityHuman<E extends Entity<E>> extends EntityCreature<E> implemen
             removeFromList.setEntries(singleEntry);
         }
 
-        for (io.gomint.entity.EntityPlayer player : this.world.getServer().onlinePlayers()) {
+        for (io.gomint.entity.EntityPlayer player : this.world.server().onlinePlayers()) {
             EntityPlayer other = (EntityPlayer) player;
             other.connection().addToSendQueue(packetPlayerlist);
             if (removeFromList != null) {
@@ -544,7 +544,7 @@ public class EntityHuman<E extends Entity<E>> extends EntityCreature<E> implemen
 
     @Override
     public PlayerInventory inventory() {
-        return inventory;
+        return this.inventory;
     }
 
     /**
@@ -611,7 +611,7 @@ public class EntityHuman<E extends Entity<E>> extends EntityCreature<E> implemen
         PacketEntityMetadata metadata = new PacketEntityMetadata();
         metadata.setEntityId(this.id());
         metadata.setMetadata(this.metadataContainer);
-        metadata.setTick(this.world.getServer().currentTickTime() / (int) Values.CLIENT_TICK_MS);
+        metadata.setTick(this.world.server().currentTickTime() / (int) Values.CLIENT_TICK_MS);
         connection.addToSendQueue(metadata);
 
         PacketPlayerlist packetPlayerlist = new PacketPlayerlist();
@@ -660,7 +660,7 @@ public class EntityHuman<E extends Entity<E>> extends EntityCreature<E> implemen
 
         packetMovePlayer.setOnGround(this.onGround());
         packetMovePlayer.setMode(PacketMovePlayer.MovePlayerMode.NORMAL);
-        packetMovePlayer.setTick(this.world.getServer().currentTickTime() / (int) Values.CLIENT_TICK_MS);
+        packetMovePlayer.setTick(this.world.server().currentTickTime() / (int) Values.CLIENT_TICK_MS);
 
         return packetMovePlayer;
     }
@@ -670,18 +670,18 @@ public class EntityHuman<E extends Entity<E>> extends EntityCreature<E> implemen
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         EntityHuman<?> that = (EntityHuman<?>) o;
-        return uuid.getMostSignificantBits() == that.uuid.getMostSignificantBits() &&
-            uuid.getLeastSignificantBits() == that.uuid.getLeastSignificantBits();
+        return this.uuid.getMostSignificantBits() == that.uuid.getMostSignificantBits() &&
+                this.uuid.getLeastSignificantBits() == that.uuid.getLeastSignificantBits();
     }
 
     @Override
     public int hashCode() {
-        return uuid.hashCode();
+        return this.uuid.hashCode();
     }
 
     @Override
     public String playerListName() {
-        return playerListName;
+        return this.playerListName;
     }
 
     /**
@@ -690,7 +690,7 @@ public class EntityHuman<E extends Entity<E>> extends EntityCreature<E> implemen
      * @return device information from this player
      */
     public DeviceInfo deviceInfo() {
-        return deviceInfo;
+        return this.deviceInfo;
     }
 
     @Override

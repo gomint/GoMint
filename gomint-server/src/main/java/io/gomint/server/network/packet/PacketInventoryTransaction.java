@@ -138,7 +138,7 @@ public class PacketInventoryTransaction extends Packet {
         }
 
         public byte getContainerId() {
-            return containerId;
+            return this.containerId;
         }
 
         public void setContainerId(byte containerId) {
@@ -146,7 +146,7 @@ public class PacketInventoryTransaction extends Packet {
         }
 
         public byte[] getChangedSlots() {
-            return changedSlots;
+            return this.changedSlots;
         }
 
         public void setChangedSlots(byte[] changedSlots) {
@@ -205,7 +205,7 @@ public class PacketInventoryTransaction extends Packet {
         }
 
         public int getSourceType() {
-            return sourceType;
+            return this.sourceType;
         }
 
         public void setSourceType(int sourceType) {
@@ -213,7 +213,7 @@ public class PacketInventoryTransaction extends Packet {
         }
 
         public int getWindowId() {
-            return windowId;
+            return this.windowId;
         }
 
         public void setWindowId(int windowId) {
@@ -221,7 +221,7 @@ public class PacketInventoryTransaction extends Packet {
         }
 
         public int getUnknown() {
-            return unknown;
+            return this.unknown;
         }
 
         public void setUnknown(int unknown) {
@@ -229,7 +229,7 @@ public class PacketInventoryTransaction extends Packet {
         }
 
         public int getSlot() {
-            return slot;
+            return this.slot;
         }
 
         public void setSlot(int slot) {
@@ -237,7 +237,7 @@ public class PacketInventoryTransaction extends Packet {
         }
 
         public ItemStack<?> getOldItem() {
-            return oldItem;
+            return this.oldItem;
         }
 
         public void setOldItem(ItemStack<?> oldItem) {
@@ -245,7 +245,7 @@ public class PacketInventoryTransaction extends Packet {
         }
 
         public ItemStack<?> getNewItem() {
-            return newItem;
+            return this.newItem;
         }
 
         public void setNewItem(ItemStack<?> newItem) {
@@ -253,7 +253,7 @@ public class PacketInventoryTransaction extends Packet {
         }
 
         public int getNewItemStackID() {
-            return newItemStackID;
+            return this.newItemStackID;
         }
 
         public void setNewItemStackID(int newItemStackID) {
@@ -263,19 +263,19 @@ public class PacketInventoryTransaction extends Packet {
         @Override
         public String toString() {
             return "NetworkTransaction{" +
-                "sourceType=" + sourceType +
-                ", windowId=" + windowId +
-                ", unknown=" + unknown +
-                ", slot=" + slot +
-                ", oldItem=" + oldItem +
-                ", newItem=" + newItem +
-                ", newItemStackID=" + newItemStackID +
+                "sourceType=" + this.sourceType +
+                ", windowId=" + this.windowId +
+                ", unknown=" + this.unknown +
+                ", slot=" + this.slot +
+                ", oldItem=" + this.oldItem +
+                ", newItem=" + this.newItem +
+                ", newItemStackID=" + this.newItemStackID +
                 '}';
         }
     }
 
     public int getType() {
-        return type;
+        return this.type;
     }
 
     public void setType(int type) {
@@ -283,7 +283,7 @@ public class PacketInventoryTransaction extends Packet {
     }
 
     public NetworkTransaction[] getActions() {
-        return actions;
+        return this.actions;
     }
 
     public void setActions(NetworkTransaction[] actions) {
@@ -291,7 +291,7 @@ public class PacketInventoryTransaction extends Packet {
     }
 
     public int getActionType() {
-        return actionType;
+        return this.actionType;
     }
 
     public void setActionType(int actionType) {
@@ -299,7 +299,7 @@ public class PacketInventoryTransaction extends Packet {
     }
 
     public int getHotbarSlot() {
-        return hotbarSlot;
+        return this.hotbarSlot;
     }
 
     public void setHotbarSlot(int hotbarSlot) {
@@ -307,7 +307,7 @@ public class PacketInventoryTransaction extends Packet {
     }
 
     public ItemStack<?> getItemInHand() {
-        return itemInHand;
+        return this.itemInHand;
     }
 
     public void setItemInHand(ItemStack<?> itemInHand) {
@@ -315,7 +315,7 @@ public class PacketInventoryTransaction extends Packet {
     }
 
     public BlockPosition getBlockPosition() {
-        return blockPosition;
+        return this.blockPosition;
     }
 
     public void setBlockPosition(BlockPosition blockPosition) {
@@ -323,7 +323,7 @@ public class PacketInventoryTransaction extends Packet {
     }
 
     public Facing getFace() {
-        return face;
+        return this.face;
     }
 
     public void setFace(Facing face) {
@@ -331,7 +331,7 @@ public class PacketInventoryTransaction extends Packet {
     }
 
     public Vector getPlayerPosition() {
-        return playerPosition;
+        return this.playerPosition;
     }
 
     public void setPlayerPosition(Vector playerPosition) {
@@ -339,7 +339,7 @@ public class PacketInventoryTransaction extends Packet {
     }
 
     public Vector getClickPosition() {
-        return clickPosition;
+        return this.clickPosition;
     }
 
     public void setClickPosition(Vector clickPosition) {
@@ -347,7 +347,7 @@ public class PacketInventoryTransaction extends Packet {
     }
 
     public int getBlockRuntimeID() {
-        return blockRuntimeID;
+        return this.blockRuntimeID;
     }
 
     public void setBlockRuntimeID(int blockRuntimeID) {
@@ -355,7 +355,7 @@ public class PacketInventoryTransaction extends Packet {
     }
 
     public long getEntityId() {
-        return entityId;
+        return this.entityId;
     }
 
     public void setEntityId(long entityId) {
@@ -363,7 +363,7 @@ public class PacketInventoryTransaction extends Packet {
     }
 
     public Vector getVector1() {
-        return vector1;
+        return this.vector1;
     }
 
     public void setVector1(Vector vector1) {
@@ -371,7 +371,7 @@ public class PacketInventoryTransaction extends Packet {
     }
 
     public Vector getVector2() {
-        return vector2;
+        return this.vector2;
     }
 
     public void setVector2(Vector vector2) {
@@ -379,7 +379,7 @@ public class PacketInventoryTransaction extends Packet {
     }
 
     public int getRequestId() {
-        return requestId;
+        return this.requestId;
     }
 
     public void setRequestId(int requestId) {
@@ -387,7 +387,7 @@ public class PacketInventoryTransaction extends Packet {
     }
 
     public ChangeSlot[] getChangeSlot() {
-        return changeSlot;
+        return this.changeSlot;
     }
 
     public void setChangeSlot(ChangeSlot[] changeSlot) {
@@ -395,7 +395,7 @@ public class PacketInventoryTransaction extends Packet {
     }
 
     public boolean isHasItemstackIDs() {
-        return hasItemstackIDs;
+        return this.hasItemstackIDs;
     }
 
     public void setHasItemstackIDs(boolean hasItemstackIDs) {
@@ -405,22 +405,22 @@ public class PacketInventoryTransaction extends Packet {
     @Override
     public String toString() {
         return "PacketInventoryTransaction{" +
-            "type=" + type +
-            ", actions=" + Arrays.toString(actions) +
-            ", actionType=" + actionType +
-            ", hotbarSlot=" + hotbarSlot +
-            ", itemInHand=" + itemInHand +
-            ", blockPosition=" + blockPosition +
-            ", face=" + face +
-            ", playerPosition=" + playerPosition +
-            ", clickPosition=" + clickPosition +
-            ", blockRuntimeID=" + blockRuntimeID +
-            ", entityId=" + entityId +
-            ", vector1=" + vector1 +
-            ", vector2=" + vector2 +
-            ", requestId=" + requestId +
-            ", changeSlot=" + Arrays.toString(changeSlot) +
-            ", hasItemstackIDs=" + hasItemstackIDs +
+            "type=" + this.type +
+            ", actions=" + Arrays.toString(this.actions) +
+            ", actionType=" + this.actionType +
+            ", hotbarSlot=" + this.hotbarSlot +
+            ", itemInHand=" + this.itemInHand +
+            ", blockPosition=" + this.blockPosition +
+            ", face=" + this.face +
+            ", playerPosition=" + this.playerPosition +
+            ", clickPosition=" + this.clickPosition +
+            ", blockRuntimeID=" + this.blockRuntimeID +
+            ", entityId=" + this.entityId +
+            ", vector1=" + this.vector1 +
+            ", vector2=" + this.vector2 +
+            ", requestId=" + this.requestId +
+            ", changeSlot=" + Arrays.toString(this.changeSlot) +
+            ", hasItemstackIDs=" + this.hasItemstackIDs +
             '}';
     }
 }

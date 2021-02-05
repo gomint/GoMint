@@ -54,24 +54,24 @@ public class PacketAvailableCommands extends Packet {
         buffer.writeUnsignedVarInt( this.commandData.size() );
         for ( CommandData data : this.commandData ) {
             // Command meta
-            buffer.writeString( data.getName() );
-            buffer.writeString( data.getDescription() );
+            buffer.writeString( data.name() );
+            buffer.writeString( data.description() );
 
             // Flags?
-            buffer.writeByte( data.getFlags() );
-            buffer.writeByte( data.getPermission() );
+            buffer.writeByte( data.flags() );
+            buffer.writeByte( data.permission() );
 
             // Alias enum index
-            buffer.writeLInt( data.getAliasIndex() );
+            buffer.writeLInt( data.aliasIndex() );
 
             // Write parameters and overload
-            buffer.writeUnsignedVarInt( data.getParameters().size() );
-            for ( List<CommandData.Parameter> parameters : data.getParameters() ) {
+            buffer.writeUnsignedVarInt( data.parameters().size() );
+            for ( List<CommandData.Parameter> parameters : data.parameters() ) {
                 buffer.writeUnsignedVarInt( parameters.size() );
                 for ( CommandData.Parameter parameter : parameters ) {
-                    buffer.writeString( parameter.getName() );
-                    buffer.writeLInt( parameter.getType() );
-                    buffer.writeBoolean( parameter.isOptional() );
+                    buffer.writeString( parameter.name() );
+                    buffer.writeLInt( parameter.type() );
+                    buffer.writeBoolean( parameter.optional() );
                     buffer.writeByte((byte) 0); // TODO: Find out what this really is
                 }
             }
@@ -108,7 +108,7 @@ public class PacketAvailableCommands extends Packet {
     }
 
     public List<String> getEnumValues() {
-        return enumValues;
+        return this.enumValues;
     }
 
     public void setEnumValues(List<String> enumValues) {
@@ -116,7 +116,7 @@ public class PacketAvailableCommands extends Packet {
     }
 
     public List<String> getPostFixes() {
-        return postFixes;
+        return this.postFixes;
     }
 
     public void setPostFixes(List<String> postFixes) {
@@ -124,7 +124,7 @@ public class PacketAvailableCommands extends Packet {
     }
 
     public IndexedHashMap<String, List<Integer>> getEnums() {
-        return enums;
+        return this.enums;
     }
 
     public void setEnums(IndexedHashMap<String, List<Integer>> enums) {
@@ -132,7 +132,7 @@ public class PacketAvailableCommands extends Packet {
     }
 
     public List<CommandData> getCommandData() {
-        return commandData;
+        return this.commandData;
     }
 
     public void setCommandData(List<CommandData> commandData) {

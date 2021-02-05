@@ -38,7 +38,7 @@ public class PacketCreativeContent extends Packet {
     }
 
     public ItemStack<?>[] getItems() {
-        return items;
+        return this.items;
     }
 
     public void setItems(ItemStack<?>[] items) {

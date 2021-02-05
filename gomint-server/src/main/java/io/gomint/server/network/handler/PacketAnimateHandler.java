@@ -20,15 +20,15 @@ public class PacketAnimateHandler implements PacketHandler<PacketAnimate> {
 
         switch ( packet.getPlayerAnimation() ) {
             case SWING:
-                playerAnimationEvent = new PlayerAnimationEvent( connection.getEntity(), PlayerAnimationEvent.Animation.SWING );
+                playerAnimationEvent = new PlayerAnimationEvent( connection.entity(), PlayerAnimationEvent.Animation.SWING );
                 break;
             default:
                 return;
         }
 
-        connection.getServer().pluginManager().callEvent( playerAnimationEvent );
+        connection.server().pluginManager().callEvent( playerAnimationEvent );
         if ( !playerAnimationEvent.cancelled() ) {
-            for ( Entity<?> entity : connection.getEntity().getAttachedEntities() ) {
+            for ( Entity<?> entity : connection.entity().getAttachedEntities() ) {
                 if ( entity instanceof EntityPlayer ) {
                     ( (EntityPlayer) entity ).connection().addToSendQueue( packet );
                 }
