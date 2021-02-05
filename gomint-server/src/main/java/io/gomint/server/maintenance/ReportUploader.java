@@ -67,9 +67,9 @@ public final class ReportUploader {
 
         // Ask for OS and CPU info
         SystemInfo systemInfo = new SystemInfo();
-        this.context.addExtra("system.os", systemInfo.getOperatingSystem().getFamily() + " [" + systemInfo.getOperatingSystem().getVersion().getVersion() + "]");
+        this.context.addExtra("system.os", systemInfo.getOperatingSystem().getFamily() + " [" + systemInfo.getOperatingSystem().getVersionInfo().getVersion() + "]");
         this.context.addExtra("system.memory", getCount(systemInfo.getHardware().getMemory().getTotal()));
-        this.context.addExtra("system.cpu", systemInfo.getHardware().getProcessor().getName());
+        this.context.addExtra("system.cpu", systemInfo.getHardware().getProcessor().getProcessorIdentifier().getName());
 
         // Basic process stats
         this.context.addExtra("system.process_memory_total", getCount(Runtime.getRuntime().totalMemory()));
