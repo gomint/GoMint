@@ -17,6 +17,7 @@ module gomint.server {
     requires org.apache.logging.log4j.core;
     requires java.scripting;
     requires backtrace.java;
+    requires com.google.gson;
 
     // Netty modules
     requires io.netty.codec;

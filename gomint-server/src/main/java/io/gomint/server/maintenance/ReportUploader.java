@@ -127,7 +127,7 @@ public final class ReportUploader {
         // Check if reporting has been disabled
         GoMintServer server = (GoMintServer) GoMint.instance();
         if (server.version().contains("dev/unsupported")) {
-            // return;
+            return;
         }
 
         this.context.put("config.server", server.serverConfig());
@@ -145,7 +145,6 @@ public final class ReportUploader {
         BacktraceClient client = new BacktraceClient(config);
         client.setApplicationName("GoMint");
         client.setApplicationVersion(((GoMintServer) GoMint.instance()).gitHash());
-
 
         // Check how we need to send data
         if (this.exception != null) {
