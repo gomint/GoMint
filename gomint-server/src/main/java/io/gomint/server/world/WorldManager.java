@@ -9,6 +9,7 @@ package io.gomint.server.world;
 
 import io.gomint.entity.EntityPlayer;
 import io.gomint.server.GoMintServer;
+import io.gomint.server.util.Values;
 import io.gomint.server.world.generator.vanilla.VanillaGeneratorImpl;
 import io.gomint.server.world.inmemory.InMemoryWorldAdapter;
 import io.gomint.server.world.leveldb.LevelDBWorldAdapter;
@@ -25,7 +26,13 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Consumer;
+import javax.annotation.Nonnull;
 
 /**
  * @author BlackyPaw
@@ -34,9 +41,20 @@ import java.util.function.Consumer;
  */
 public class WorldManager {
 
+    private static final String THREAD_GROUP_NAME = "gomint-worlds";
+    private static final String THREAD_PREFIX = "Gomint World Thread #";
     private static final Logger LOGGER = LoggerFactory.getLogger(WorldManager.class);
     private final GoMintServer server;
     private Map<String, WorldAdapter> loadedWorlds;
+    private ThreadGroup threadGroup = new ThreadGroup(THREAD_GROUP_NAME);
+    private ExecutorService executorService = Executors.newCachedThreadPool(new ThreadFactory() {
+        private final AtomicLong counter = new AtomicLong(1);
+
+        @Override
+        public Thread newThread(@Nonnull Runnable r) {
+            return new Thread(WorldManager.this.threadGroup, r, THREAD_PREFIX + this.counter.getAndIncrement());
+        }
+    });
 
     /**
      * Constructs a new world manager that does not yet hold any worlds.
@@ -66,6 +84,10 @@ public class WorldManager {
      */
     public WorldAdapter world(String name) {
         return this.loadedWorlds.get(name);
+    }
+
+    public ExecutorService executorService() {
+        return this.executorService;
     }
 
     /**
@@ -168,6 +190,31 @@ public class WorldManager {
                     } catch (InterruptedException ignored) {
                     }
                 }
+            }
+        }
+        int wait = (int) Values.CLIENT_TICK_MS;
+        this.executorService.shutdown();
+        while (!this.executorService.isTerminated() && wait-- > 0) {
+            try {
+                this.executorService.awaitTermination(100, TimeUnit.MILLISECONDS);
+            } catch (InterruptedException e) {
+                // Ignored .-.
+            }
+        }
+
+        LOGGER.info("Shutdown of world executor completed");
+        
+        if (wait <= 0) {
+            List<Runnable> remainRunning = this.executorService.shutdownNow();
+            for (Runnable runnable : remainRunning) {
+                LOGGER.warn("Runnable " + runnable.getClass().getName() + " has been terminated due to shutdown");
+            }
+        }
+
+        if (wait <= 0) {
+            List<Runnable> remainRunning = this.executorService.shutdownNow();
+            for (Runnable runnable : remainRunning) {
+                LOGGER.warn("Runnable " + runnable.getClass().getName() + " has been terminated due to shutdown");
             }
         }
         LOGGER.info("All worlds closed");

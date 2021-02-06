@@ -148,7 +148,6 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
 
     // General ticking
     private long threadId = -1;
-    private Thread thread;
     private final AtomicBoolean running = new AtomicBoolean(true);
     private long currentTickTime;
     private long sleepBalance;
@@ -177,8 +176,6 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
         this.syncSchedulerAdapter = new SyncSchedulerAdapter(this.syncTaskManager);
         this.startAsyncWorker(server.asyncScheduler());
         this.initGamerules();
-        this.thread = new Thread(this::tickLoop, "GoMint World Thread " + worldDir.getName());
-        this.threadId = this.thread.getId();
     }
 
     @Override
@@ -538,11 +535,36 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
     // ==================================== UPDATING ==================================== //
 
     public void startThread() {
-        this.thread.start();
+        this.server.worldManager().executorService().execute(this::tickLoop);
+    }
+
+    private String getUpdatedThreadName(String name, String newSuffix) {
+        int i = name.indexOf(':');
+        if (i == -1) {
+            name = name + ": " + newSuffix;
+        } else {
+            name = name.substring(0, i) + ": " + newSuffix;
+        }
+        return name;
+    }
+
+    private void setThreadInfo() {
+        Thread thread = Thread.currentThread();
+        this.threadId = thread.getId();
+        thread.setName(getUpdatedThreadName(thread.getName(), this.worldDir.getName()));
+    }
+
+    private void setThreadInfoEnd() {
+        this.threadId = -1;
+        Thread thread = Thread.currentThread();
+        thread.setName(getUpdatedThreadName(thread.getName(), "**prev** " + this.worldDir.getName()));
     }
 
     private void tickLoop() {
+        setThreadInfo();
+
         this.server.pluginManager().callEvent(new WorldLoadEvent(this));
+
         // Calculate the nanoseconds we need for the tick loop
         int targetTPS = targetTPS();
         if (targetTPS > 1000) {
@@ -642,6 +664,8 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
 
         // Remove world from manager
         this.server.worldManager().unloadWorld(this);
+
+        setThreadInfoEnd();
     }
 
     @Override

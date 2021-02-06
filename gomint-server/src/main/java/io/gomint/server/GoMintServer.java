@@ -91,6 +91,7 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.locks.LockSupport;
 import java.util.function.Supplier;
 import java.util.jar.Manifest;
+import javax.annotation.Nonnull;
 
 /**
  * @author BlackyPaw
@@ -161,13 +162,11 @@ public class GoMintServer implements GoMint, InventoryHolder {
         // Executor Initialization
         // ------------------------------------ //
         this.executorService = MoreExecutors.listeningDecorator(Executors.newScheduledThreadPool(4, new ThreadFactory() {
-            private final AtomicLong counter = new AtomicLong(0);
+            private final AtomicLong counter = new AtomicLong(1);
 
             @Override
-            public Thread newThread(Runnable r) {
-                Thread thread = new Thread(r);
-                thread.setName("GoMint Thread #" + this.counter.incrementAndGet());
-                return thread;
+            public Thread newThread(@Nonnull Runnable r) {
+                return new Thread(r, "GoMint Thread #" + this.counter.getAndIncrement());
             }
         }));
 
