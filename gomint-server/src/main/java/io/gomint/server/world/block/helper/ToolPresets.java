@@ -12,12 +12,22 @@ public final class ToolPresets {
 
     }
 
+    public static final Class<? extends ItemStack<?>>[] HOE = new Class[]{
+        ItemDiamondHoe.class,
+        ItemGoldenHoe.class,
+        ItemIronHoe.class,
+        ItemStoneHoe.class,
+        ItemWoodenHoe.class,
+        ItemNetheriteHoe.class
+    };
+
     public static final Class<? extends ItemStack<?>>[] AXE = new Class[]{
         ItemDiamondAxe.class,
         ItemGoldenAxe.class,
         ItemIronAxe.class,
         ItemStoneAxe.class,
-        ItemWoodenAxe.class
+        ItemWoodenAxe.class,
+        ItemNetheriteAxe.class
     };
 
     public static final Class<? extends ItemStack<?>>[] PICKAXE = new Class[]{
@@ -34,7 +44,8 @@ public final class ToolPresets {
         ItemIronShovel.class,
         ItemDiamondShovel.class,
         ItemGoldenShovel.class,
-        ItemStoneShovel.class
+        ItemStoneShovel.class,
+        ItemNetheriteShovel.class
     };
 
     public static final Class<? extends ItemStack<?>>[] SWORD = new Class[]{
@@ -42,7 +53,8 @@ public final class ToolPresets {
         ItemIronSword.class,
         ItemGoldenSword.class,
         ItemStoneSword.class,
-        ItemWoodenSword.class
+        ItemWoodenSword.class,
+        ItemNetheriteSword.class
     };
 
 }

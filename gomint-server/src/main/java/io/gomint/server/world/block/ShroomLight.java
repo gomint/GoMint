@@ -11,13 +11,8 @@ import io.gomint.world.block.BlockType;
  * @author KingAli
  * @version 1.0
  */
-@RegisterInfo(sId = "minecraft:shroomligh")
+@RegisterInfo(sId = "minecraft:shroomlight")
 public class ShroomLight extends Block implements BlockShroomLight {
-
-    @Override
-    public String blockId() {
-        return "minecraft:shroomlight";
-    }
 
     @Override
     public long breakTime() {
