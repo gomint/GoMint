@@ -11,7 +11,6 @@ import com.google.common.collect.ImmutableMap;
 import io.gomint.command.Command;
 import io.gomint.event.Event;
 import io.gomint.event.EventListener;
-import io.gomint.event.interfaces.WorldEvent;
 import io.gomint.event.plugin.PluginInstallEvent;
 import io.gomint.event.plugin.PluginUninstallEvent;
 import io.gomint.plugin.Plugin;
@@ -57,8 +56,10 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Predicate;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
+import javax.annotation.Nullable;
 
 /**
  * @author geNAZt
@@ -87,7 +88,7 @@ public class SimplePluginManager implements PluginManager, EventCaller {
     private Field versionField;
     private Field schedulerField;
     private Field serverField;
-    private Field activeWorldsField;
+    private Field activeLoadedWorldsField;
     private Field listenerListField;
 
     /**
@@ -126,8 +127,8 @@ public class SimplePluginManager implements PluginManager, EventCaller {
             this.serverField = Plugin.class.getDeclaredField("server");
             this.serverField.setAccessible(true);
 
-            this.activeWorldsField = Plugin.class.getDeclaredField("activeWorlds");
-            this.activeWorldsField.setAccessible(true);
+            this.activeLoadedWorldsField = Plugin.class.getDeclaredField("activeLoadedWorlds");
+            this.activeLoadedWorldsField.setAccessible(true);
 
             this.listenerListField = Plugin.class.getDeclaredField("listeners");
             this.listenerListField.setAccessible(true);
@@ -316,7 +317,7 @@ public class SimplePluginManager implements PluginManager, EventCaller {
             this.serverField.set(clazz, this.server);
 
             this.pluginWorldConfigManager.onPluginLoad(pluginMeta, clazz);
-            this.activeWorldsField.set(clazz, pluginMeta.activeWorlds());
+            this.activeLoadedWorldsField.set(clazz, pluginMeta.activeLoadedWorlds());
 
             clazz.onStartup();
 
@@ -764,14 +765,22 @@ public class SimplePluginManager implements PluginManager, EventCaller {
     }
 
     @Override
-    public PluginManager registerListener(Plugin plugin, EventListener listener, ConcurrentHashMap.KeySetView<String, Boolean> worlds) {
+    public PluginManager registerActiveWorldsListener(Plugin plugin, EventListener listener) {
         if (!plugin.getClass().getClassLoader().equals(listener.getClass().getClassLoader())) {
             throw new SecurityException("Wanted to register listener for another plugin");
         }
 
-        this.eventManager.registerListener(listener, event -> {
-            return !(event instanceof WorldEvent) || worlds == null || worlds.contains(((WorldEvent) event).world().folder());
-        });
+        this.eventManager.registerListener(listener, plugin::eventInActiveWorlds);
+        return this;
+    }
+
+    @Override
+    public PluginManager registerListener(Plugin plugin, EventListener listener, @Nullable Predicate<Event> predicate) {
+        if (!plugin.getClass().getClassLoader().equals(listener.getClass().getClassLoader())) {
+            throw new SecurityException("Wanted to register listener for another plugin");
+        }
+
+        this.eventManager.registerListener(listener, predicate);
         return this;
     }
 

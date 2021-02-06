@@ -13,7 +13,7 @@ import io.gomint.event.EventListener;
 import io.gomint.world.World;
 
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Predicate;
 import javax.annotation.Nullable;
 
 /**
@@ -75,32 +75,47 @@ public interface PluginManager {
     /**
      * Register a new event listener for the given plugin. This only works when you call it from a plugin class.
      *
-     * The listener will be informaed of all events regardless of the world they take place in.
-     *
      * @param plugin   The plugin which wants to register this listener
      * @param listener The listener which we want to register
      * @throws SecurityException when somebody else except the plugin registers the listener
-     * @see #registerListener(Plugin, EventListener, ConcurrentHashMap.KeySetView)
+     * @see #registerActiveWorldsListener(Plugin, EventListener)
+     * @see #registerListener(Plugin, EventListener, Predicate)
      * @since 2.0
      */
     PluginManager registerListener(Plugin plugin, EventListener listener);
 
     /**
-     * Register a new event listener for the given plugin. This only works when you call it from a plugin class.
-     *
-     * Events implementing {@linkplain io.gomint.event.interfaces.WorldEvent WorldEvent} will be filtered for this
+     * Register a new event listener for the given plugin with the filter predicate
+     * {@linkplain Plugin#eventInActiveWorlds(Event)}. This only works when you call it from a plugin class.
+     * <br><br>
+     * Events implementing {@linkplain io.gomint.event.interfaces.WorldEvent WorldEvent} will be filtered for the given
      * listener, it will only be called for events taking place in worlds which {@linkplain World#folder() folder name}
-     * is present in the {@code worlds} collection.
+     * is present in the {@code worlds.yml} configuration.
      *
-     * @param plugin   The plugin which wants to register this listener
-     * @param listener The listener which we want to register
-     * @param worlds   A whitelist of world {@linkplain World#folder() folder name}. Edits to the set are honored. Empty collection or {@code null}
-     *                 means all worlds.
+     * @param listener The listener which should be registered
+     * @see #registerListener(Plugin, EventListener)
+     * @see #registerListener(Plugin, EventListener, Predicate)
+     * @since 2.0
+     */
+    PluginManager registerActiveWorldsListener(Plugin plugin, EventListener listener);
+
+    /**
+     * Register a new event listener for the given plugin. This only works when you call it from a plugin class.
+     * <br><br>
+     * The predicate allows you to filter events. Events where the predicate returns {@code false} are not forwarded to
+     * the actual listener. Plugins should use {@linkplain Plugin#eventInActiveWorlds(Event)} to restrict themself to
+     * the worlds they should be active in.
+     *
+     * @param plugin    The plugin which wants to register this listener
+     * @param listener  The listener which we want to register
+     * @param predicate A function called to determine if the event should be forwarded to the given listener.
+     *                  {@code null} means that prefiltering of events will not happen (listener will get called for every event).
      * @throws SecurityException when somebody else except the plugin registers the listener
+     * @see #registerActiveWorldsListener(Plugin, EventListener)
      * @see #registerListener(Plugin, EventListener)
      * @since 2.0
      */
-    PluginManager registerListener(Plugin plugin, EventListener listener, @Nullable ConcurrentHashMap.KeySetView<String, Boolean> worlds);
+    PluginManager registerListener(Plugin plugin, EventListener listener, @Nullable Predicate<Event> predicate);
 
     /**
      * Unregister a listener. This listener does not get any more events after this

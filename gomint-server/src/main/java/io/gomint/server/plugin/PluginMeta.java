@@ -43,7 +43,7 @@ public class PluginMeta {
     // World stuff
     private PluginWorldConfig pluginWorldConfig;
     @Nullable
-    private ConcurrentHashMap.KeySetView<String, Boolean> activeWorlds;
+    private ConcurrentHashMap.KeySetView<String, Boolean> activeLoadedWorlds;
 
     public PluginMeta(File pluginFile) {
         this.pluginFile = pluginFile;
@@ -158,12 +158,12 @@ public class PluginMeta {
     }
 
     @Nullable
-    public ConcurrentHashMap.KeySetView<String, Boolean> activeWorlds() {
-        return this.activeWorlds;
+    public ConcurrentHashMap.KeySetView<String, Boolean> activeLoadedWorlds() {
+        return this.activeLoadedWorlds;
     }
 
-    public void activeWorlds(ConcurrentHashMap.KeySetView<String, Boolean> activeWorlds) {
-        this.activeWorlds = activeWorlds;
+    public void activeLoadedWorlds(ConcurrentHashMap.KeySetView<String, Boolean> activeWorlds) {
+        this.activeLoadedWorlds = activeWorlds;
     }
 
 }
