@@ -152,6 +152,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
     private long currentTickTime;
     private long sleepBalance;
     private AtomicReference<Consumer<EntityPlayer>> unloadPlayerConsumer = new AtomicReference<>();
+    private AtomicReference<Runnable> unloadInternalListener = new AtomicReference<>();
 
     // Additional informations for API usage
     private double tps;
@@ -664,6 +665,11 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
 
         // Remove world from manager
         this.server.worldManager().unloadWorld(this);
+
+        Runnable unloadListener = this.unloadInternalListener.get();
+        if (unloadListener != null) {
+            unloadListener.run();
+        }
 
         setThreadInfoEnd();
     }
@@ -1645,6 +1651,11 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
     @Override
     public void unload(Consumer<EntityPlayer> playerConsumer) {
         this.unloadPlayerConsumer.set(playerConsumer);
+        this.running.set(false);
+    }
+
+    public void unloadInternal(Runnable unloadedListener) {
+        this.unloadInternalListener.set(unloadedListener);
         this.running.set(false);
     }
 

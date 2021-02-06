@@ -7,7 +7,6 @@
 
 package io.gomint.server.world;
 
-import io.gomint.entity.EntityPlayer;
 import io.gomint.server.GoMintServer;
 import io.gomint.server.util.Values;
 import io.gomint.server.world.generator.vanilla.VanillaGeneratorImpl;
@@ -26,12 +25,12 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
-import java.util.function.Consumer;
 import javax.annotation.Nonnull;
 
 /**
@@ -164,34 +163,17 @@ public class WorldManager {
     public void close() {
         LOGGER.info("Closing all worlds");
         ArrayList<WorldAdapter> worlds = new ArrayList<>(this.worlds());
-        class UnloadListener implements Consumer<io.gomint.entity.EntityPlayer> {
-
-            private volatile boolean done = false;
-
-            @Override
-            public synchronized void accept(EntityPlayer entityPlayer) {
-                this.done = true;
-                this.notifyAll();
-            }
-
-        }
-        List<UnloadListener> unloadListeners = new ArrayList<>(worlds.size());
+        CountDownLatch countDownLatch = new CountDownLatch(worlds.size());
 
         for (WorldAdapter loadedWorld : worlds) {
-            UnloadListener listener = new UnloadListener();
-            unloadListeners.add(listener);
-            loadedWorld.unload(listener);
+            loadedWorld.unloadInternal(countDownLatch::countDown);
         }
-        for (UnloadListener unloadListener : unloadListeners) {
-            synchronized (unloadListener) {
-                if (!unloadListener.done) {
-                    try {
-                        unloadListener.wait();
-                    } catch (InterruptedException ignored) {
-                    }
-                }
-            }
+        try {
+            countDownLatch.await(2, TimeUnit.MINUTES);
+        } catch (InterruptedException e) {
+            // Ignored .-.
         }
+
         int wait = (int) Values.CLIENT_TICK_MS;
         this.executorService.shutdown();
         while (!this.executorService.isTerminated() && wait-- > 0) {
