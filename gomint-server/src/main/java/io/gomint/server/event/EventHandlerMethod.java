@@ -55,7 +55,7 @@ class EventHandlerMethod implements Comparable<EventHandlerMethod> {
 
         // Build up proxy
         try {
-            if (instance.getClass().getClassLoader() instanceof PluginClassloader) {
+            if (instance.getClass().getClassLoader() instanceof PluginClassloader || instance.getClass().getClassLoader() == ClassLoader.getSystemClassLoader()) {
                 byte[] data = EventCallerClassCreator.createClass(instance, method, PROXY_COUNT.incrementAndGet());
 
                 MethodHandles.Lookup lookup = MethodHandles.lookup();

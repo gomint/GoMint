@@ -40,12 +40,12 @@ public class PluginWorldConfigManager implements EventListener {
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
-    private void onWorldLoad(WorldLoadEvent event) {
+    void onWorldLoad(WorldLoadEvent event) {
         this.pluginManager.pluginMetadatas().values().forEach(meta -> handleWorldLoad(event.world(), meta));
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
-    private void onWorldUnload(WorldUnloadEvent event) {
+    void onWorldUnload(WorldUnloadEvent event) {
         this.pluginManager.pluginMetadatas().values().forEach(meta -> handleWorldUnload(event.world(), meta));
     }
 
