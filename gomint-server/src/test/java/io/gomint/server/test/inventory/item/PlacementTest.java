@@ -41,15 +41,16 @@ public class PlacementTest extends IntegrationTest {
     @Order(1)
     public void generateNonExisting() {
         this.world = (WorldAdapter) this.server.createWorld("test", new CreateOptions().worldType(WorldType.IN_MEMORY));
+        WorldTestUtil.blockUntilWorldRuns(this.world);
     }
 
     @Test
     @Order(2)
-    public void placeAll() throws IOException {
+    public void placeAll() {
         WorldTestUtil.runInWorldThread(this.world, this::placeAll0);
     }
 
-    public void placeAll0() throws IOException {
+    private void placeAll0() throws IOException {
         Block block = this.world.blockAt(50, 50, 50);
         Block downBlock = block.side(Facing.DOWN);
 

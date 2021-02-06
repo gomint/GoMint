@@ -18,6 +18,10 @@ import java.util.concurrent.atomic.AtomicReference;
  */
 public class WorldTestUtil {
     
+    private WorldTestUtil() {
+        throw new UnsupportedOperationException();
+    }
+    
     public interface ThrowingRunnable {
         void run() throws Throwable;
     }
@@ -59,6 +63,27 @@ public class WorldTestUtil {
                     if (throwable != null) {
                         throw new RuntimeException(throwable);
                     }
+                }
+            }
+        }
+    }
+    
+    public static void blockUntilWorldRuns(World w) {
+        WorldAdapter world = (WorldAdapter) w;
+        Object waitObj = new Object();
+        AtomicBoolean done = new AtomicBoolean();
+        world.syncScheduler().execute(() -> {
+            synchronized (waitObj) {
+                done.set(true);
+                waitObj.notify();
+            }
+        });
+        synchronized (waitObj) {
+            if (!done.get()) {
+                try {
+                    waitObj.wait();
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
                 }
             }
         }

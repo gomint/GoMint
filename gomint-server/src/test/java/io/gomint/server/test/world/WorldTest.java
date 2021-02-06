@@ -37,6 +37,7 @@ public class WorldTest extends IntegrationTest {
     @Order(1)
     public void generateNonExisting() {
         this.world = this.server.createWorld("test", new CreateOptions().worldType(WorldType.IN_MEMORY));
+        WorldTestUtil.blockUntilWorldRuns(this.world);
     }
 
     @Test
