@@ -34,7 +34,7 @@ module gomint.server {
     requires com.google.common;
     requires org.apache.commons.io;
     requires json.simple;
-    requires oshi.core;
+    requires com.github.oshi;
     requires jsr305;
     requires jline.reader;
     requires jline.terminal;
