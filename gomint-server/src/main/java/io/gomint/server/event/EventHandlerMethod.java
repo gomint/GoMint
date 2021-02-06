@@ -137,7 +137,7 @@ class EventHandlerMethod implements Comparable<EventHandlerMethod> {
     public void invoke(Event event) {
         try {
             this.proxy.call(event);
-        } catch (Throwable cause) {
+        } catch (Exception cause) {
             LOGGER.warn("Event handler has thrown a exception: ", cause);
             ReportUploader.create().exception(cause).upload();
         }

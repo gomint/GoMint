@@ -15,8 +15,9 @@ module gomint.server {
     // Logging modules
     requires org.apache.logging.log4j;
     requires org.apache.logging.log4j.core;
-    requires io.sentry;
     requires java.scripting;
+    requires backtrace.java;
+    requires com.google.gson;
 
     // Netty modules
     requires io.netty.codec;
@@ -25,7 +26,6 @@ module gomint.server {
     requires io.netty.common;
 
     // Compile modules
-    requires com.fasterxml.jackson.core;
     requires org.objectweb.asm;
 
     // Automatic modules (libs without module-info)
