@@ -457,9 +457,8 @@ public class EntityPlayer extends EntityHuman<io.gomint.entity.EntityPlayer> imp
 
         // Check if we need to change worlds
         if (!to.world().equals(from.world())) {
-            if (this.world != null) {
-                this.world.server().pluginManager().callEvent(new PlayerWorldLeaveEvent(this));
-            }
+            this.world.server().pluginManager().callEvent(new PlayerWorldLeaveEvent(this));
+
             // Despawn entities first
             this.entityVisibilityManager.clear();
 
