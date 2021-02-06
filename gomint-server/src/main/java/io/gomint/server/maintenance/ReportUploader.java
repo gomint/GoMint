@@ -7,6 +7,8 @@
 
 package io.gomint.server.maintenance;
 
+import backtrace.io.BacktraceClient;
+import backtrace.io.BacktraceConfig;
 import io.gomint.GoMint;
 import io.gomint.entity.EntityPlayer;
 import io.gomint.math.Location;
@@ -15,18 +17,8 @@ import io.gomint.server.maintenance.report.PlayerReportData;
 import io.gomint.server.maintenance.report.WorldData;
 import io.gomint.server.plugin.PluginClassloader;
 import io.gomint.server.world.WorldAdapter;
-import io.sentry.SentryClient;
-import io.sentry.SentryClientFactory;
-import io.sentry.context.Context;
-import io.sentry.event.interfaces.ExceptionInterface;
-import io.sentry.event.interfaces.SentryException;
-import io.sentry.event.interfaces.SentryStackTraceElement;
-import io.sentry.event.interfaces.StackTraceInterface;
 import oshi.SystemInfo;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-import java.util.Deque;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -36,46 +28,26 @@ import java.util.Map;
  */
 public final class ReportUploader {
 
-    private static String HOST;
-
-    static {
-        try {
-            HOST = InetAddress.getLocalHost().getCanonicalHostName();
-        } catch (UnknownHostException e) {
-            HOST = "UNKNOWN";
-        }
-    }
-
-    private final SentryClient client;
-    private final Context context;
+    private final Map<String, Object> context = new HashMap<>();
 
     private Map<String, WorldData> worlds = new HashMap<>();
     private Map<String, PlayerReportData> players = new HashMap<>();
-    private Throwable exception = null;
-    private StackTraceElement[] stacktrace = null;
+    private Exception exception = null;
 
     private ReportUploader() {
-        // Setup sentry
-        System.setProperty("stacktrace.app.packages", "");
-
-        this.client = SentryClientFactory.sentryClient("https://e5fb5572f7e849b8b4a6fd80e3fa0ebc@o219027.ingest.sentry.io/1362506?async=true");
-        this.client.setRelease(((GoMintServer) GoMint.instance()).gitHash());
-        this.client.setServerName(HOST);
-
-        this.context = this.client.getContext();
-        this.context.addTag("java_version", System.getProperty("java.vm.name") + " (" + System.getProperty("java.runtime.version") + ")");
+        this.context.put("java_version", System.getProperty("java.vm.name") + " (" + System.getProperty("java.runtime.version") + ")");
 
         // Ask for OS and CPU info
         SystemInfo systemInfo = new SystemInfo();
-        this.context.addExtra("system.os", systemInfo.getOperatingSystem().getFamily() + " [" + systemInfo.getOperatingSystem().getVersionInfo().getVersion() + "]");
-        this.context.addExtra("system.memory", getCount(systemInfo.getHardware().getMemory().getTotal()));
-        this.context.addExtra("system.cpu", systemInfo.getHardware().getProcessor().getProcessorIdentifier().getName());
+        this.context.put("system.os", systemInfo.getOperatingSystem().getFamily() + " [" + systemInfo.getOperatingSystem().getVersionInfo().getVersion() + "]");
+        this.context.put("system.memory", getCount(systemInfo.getHardware().getMemory().getTotal()));
+        this.context.put("system.cpu", systemInfo.getHardware().getProcessor().getProcessorIdentifier().getName());
 
         // Basic process stats
-        this.context.addExtra("system.process_memory_total", getCount(Runtime.getRuntime().totalMemory()));
-        this.context.addExtra("system.process_memory_free", getCount(Runtime.getRuntime().freeMemory()));
+        this.context.put("system.process_memory_total", getCount(Runtime.getRuntime().totalMemory()));
+        this.context.put("system.process_memory_free", getCount(Runtime.getRuntime().freeMemory()));
 
-        this.context.addExtra("system.current_thread", Thread.currentThread().getName());
+        this.context.put("system.current_thread", Thread.currentThread().getName());
     }
 
     private static String getCount(long bytes) {
@@ -125,7 +97,7 @@ public final class ReportUploader {
      * @param exception which should be reported
      * @return the report uploader for chaining
      */
-    public ReportUploader exception(Throwable exception) {
+    public ReportUploader exception(Exception exception) {
         this.exception = exception;
         return this;
     }
@@ -138,7 +110,7 @@ public final class ReportUploader {
      * @return the report uploader for chaining
      */
     public ReportUploader property(String key, String value) {
-        this.context.addExtra("property." + key, value);
+        this.context.put("property." + key, value);
         return this;
     }
 
@@ -154,43 +126,44 @@ public final class ReportUploader {
     public void upload(String message) {
         // Check if reporting has been disabled
         GoMintServer server = (GoMintServer) GoMint.instance();
-        this.context.addExtra("config.server", server.serverConfig());
+        if (server.version().contains("dev/unsupported")) {
+            // return;
+        }
+
+        this.context.put("config.server", server.serverConfig());
 
         if (this.worlds.size() > 0) {
-            this.worlds.forEach((worldName, worldData) -> this.context.addExtra("world." + worldName, worldData));
+            this.worlds.forEach((worldName, worldData) -> context.put("world." + worldName, worldData));
         }
 
         if (this.players.size() > 0) {
-            this.players.forEach((playerName, playerData) -> this.context.addExtra("player." + playerName, playerData));
+            this.players.forEach((playerName, playerData) -> context.put("player." + playerName, playerData));
         }
 
         // Check for plugin crashes
-        this.client.addBuilderHelper(eventBuilder -> eventBuilder.getEvent().getSentryInterfaces().values().forEach(sentryInterface -> {
-            if (sentryInterface instanceof ExceptionInterface) {
-                Deque<SentryException> throwables = ((ExceptionInterface) sentryInterface).getExceptions();
-                for (SentryException throwable : throwables) {
-                    for (SentryStackTraceElement traceElement : throwable.getStackTraceInterface().getStackTrace()) {
-                        String plugin = PluginClassloader.getPluginWhichLoaded(traceElement.getModule());
-                        if (plugin != null) {
-                            eventBuilder.withTag("plugin.crash", "true");
-                            eventBuilder.withExtra("plugin", plugin);
-                            return;
-                        }
+        BacktraceConfig config = new BacktraceConfig("https://submit.backtrace.io/gomint/f66ad8232bdb6e07049c878ceb95b9d8bc74a2eeba663de5135d73d8b0db91ff/json");
+        BacktraceClient client = new BacktraceClient(config);
+        client.setApplicationName("GoMint");
+        client.setApplicationVersion(((GoMintServer) GoMint.instance()).gitHash());
+
+
+        // Check how we need to send data
+        if (this.exception != null) {
+            client.setBeforeSendEvent(data -> {
+                for (StackTraceElement traceElement : this.exception.getStackTrace()) {
+                    String plugin = PluginClassloader.getPluginWhichLoaded(traceElement.getClassName());
+                    if (plugin != null) {
+                        data.getAttributes().put("tag.plugin.crash", "true");
+                        data.getAttributes().put("plugin", plugin);
                     }
                 }
-            }
-        }));
 
-        // Only send with supported release
-        this.client.addShouldSendEventCallback(event -> !event.getRelease().equals("dev/unsupported"));
+                return data;
+            });
 
-        if (this.exception != null) {
-            this.client.sendException(this.exception);
-        } else if (this.stacktrace != null) {
-            this.client.addBuilderHelper(eventBuilder -> eventBuilder.withSentryInterface(new StackTraceInterface(this.stacktrace)));
-            this.client.sendMessage(message == null ? "Nulled message" : message);
+            client.send(this.exception);
         } else {
-            this.client.sendMessage(message == null ? "Nulled message" : message);
+            client.send(message == null ? "Nulled message" : message);
         }
     }
 
@@ -204,12 +177,7 @@ public final class ReportUploader {
     }
 
     public ReportUploader tag(String tag) {
-        this.context.addTag(tag, "true");
-        return this;
-    }
-
-    public ReportUploader stacktrace(StackTraceElement[] stackTrace) {
-        this.stacktrace = stackTrace;
+        this.context.put("tag." + tag, "true");
         return this;
     }
 
