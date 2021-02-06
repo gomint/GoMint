@@ -24,6 +24,8 @@ import java.util.function.Predicate;
  */
 public class EventManager {
 
+    private static final int DISALLOWED_MODIFIERS = Modifier.PRIVATE | Modifier.PROTECTED | Modifier.STATIC;
+
     // All event handlers that have been registered
     private final Int2ObjectMap<EventHandlerList> eventHandlers = new Int2ObjectOpenHashMap<>();
 
@@ -32,17 +34,17 @@ public class EventManager {
      *
      * @param event The event to be triggered
      */
-    public void triggerEvent( Event event ) {
+    public void triggerEvent(Event event) {
         // Assume we already acquired a readLock:
         Class<? extends Event> eventClass = event.getClass();
         int eventHash = eventClass.getName().hashCode();
 
-        EventHandlerList eventHandlerList = this.eventHandlers.get( eventHash );
-        if ( eventHandlerList == null ) {
+        EventHandlerList eventHandlerList = this.eventHandlers.get(eventHash);
+        if (eventHandlerList == null) {
             return;
         }
 
-        eventHandlerList.triggerEvent( event );
+        eventHandlerList.triggerEvent(event);
     }
 
     public <T extends EventListener> void registerListener(T listener) {
@@ -58,16 +60,11 @@ public class EventManager {
      */
     public <T extends EventListener> void registerListener(T listener, Predicate<Event> predicate) {
         Class<? extends EventListener> listenerClass = listener.getClass();
-        for ( Method listenerMethod: listenerClass.getDeclaredMethods() ) {
-            if ( !listenerMethod.isAnnotationPresent( EventHandler.class ) ||
-                listenerMethod.getParameterCount() != 1 ||
-                !Event.class.isAssignableFrom( listenerMethod.getParameterTypes()[0] ) ||
-                Modifier.isStatic( listenerMethod.getModifiers() ) ) {
-                continue;
+        for (Method method : listenerClass.getDeclaredMethods()) {
+            if (isListenerMethod(method)) {
+                method.setAccessible(true);
+                this.registerListener0(listener, method, predicate);
             }
-
-            listenerMethod.setAccessible( true );
-            this.registerListener0(listener, listenerMethod, predicate);
         }
     }
 
@@ -77,41 +74,52 @@ public class EventManager {
      * @param listener The listener to register
      * @param <T>      The generic type of the listener
      */
-    public <T extends EventListener> void unregisterListener( T listener ) {
+    public <T extends EventListener> void unregisterListener(T listener) {
         Class<? extends EventListener> listenerClass = listener.getClass();
-        for ( Method listenerMethod: listenerClass.getDeclaredMethods() ) {
-            if ( !listenerMethod.isAnnotationPresent( EventHandler.class ) ||
-                listenerMethod.getParameterCount() != 1 ||
-                !Event.class.isAssignableFrom( listenerMethod.getParameterTypes()[0] ) ||
-                Modifier.isStatic( listenerMethod.getModifiers() ) ) {
-                continue;
+        for (Method method : listenerClass.getDeclaredMethods()) {
+            if (isListenerMethod(method)) {
+                this.unregisterListener0(listener, method);
             }
-
-            this.unregisterListener0( listener, listenerMethod );
         }
+    }
+
+    /**
+     * Determines if the given method is an event listener method.
+     * 
+     * An event listener method must be annotated with {@linkplain EventHandler @EventHandler}, have one parameter
+     * with a class extending {@linkplain Event} and may not be {@code private}, {@code protected} or {@code static}
+     * 
+     * @param method the method to check
+     * @return whether the given method is a listener method
+     */
+    private boolean isListenerMethod(Method method) {
+        return method.isAnnotationPresent(EventHandler.class) &&
+            method.getParameterCount() == 1 &&
+            Event.class.isAssignableFrom(method.getParameterTypes()[0]) &&
+            (method.getModifiers() & DISALLOWED_MODIFIERS) == 0;
     }
 
     private <T extends EventListener> void registerListener0(T listener, Method listenerMethod, Predicate<Event> predicate) {
         int eventHash = listenerMethod.getParameterTypes()[0].getName().hashCode();
-        EventHandler annotation = listenerMethod.getAnnotation( EventHandler.class );
-        EventHandlerList eventHandlerList = this.eventHandlers.get( eventHash );
-        if ( eventHandlerList == null ) {
+        EventHandler annotation = listenerMethod.getAnnotation(EventHandler.class);
+        EventHandlerList eventHandlerList = this.eventHandlers.get(eventHash);
+        if (eventHandlerList == null) {
             eventHandlerList = new EventHandlerList();
-            this.eventHandlers.put( eventHash, eventHandlerList );
+            this.eventHandlers.put(eventHash, eventHandlerList);
         }
 
         eventHandlerList.addHandler(listener.getClass().getName() + "#" + listenerMethod.getName() + "_" + eventHash + "_" + listener.hashCode(),
             new EventHandlerMethod(listener, listenerMethod, annotation, predicate));
     }
 
-    private <T extends EventListener> void unregisterListener0( T listener, Method listenerMethod ) {
+    private <T extends EventListener> void unregisterListener0(T listener, Method listenerMethod) {
         int eventHash = listenerMethod.getParameterTypes()[0].getName().hashCode();
-        EventHandlerList eventHandlerList = this.eventHandlers.get( eventHash );
-        if ( eventHandlerList == null ) {
+        EventHandlerList eventHandlerList = this.eventHandlers.get(eventHash);
+        if (eventHandlerList == null) {
             return;
         }
 
-        eventHandlerList.removeHandler( listener.getClass().getName() + "#" + listenerMethod.getName() + "_" + eventHash + "_" + listener.hashCode() );
+        eventHandlerList.removeHandler(listener.getClass().getName() + "#" + listenerMethod.getName() + "_" + eventHash + "_" + listener.hashCode());
     }
 
 }
