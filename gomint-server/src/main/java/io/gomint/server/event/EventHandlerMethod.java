@@ -113,9 +113,10 @@ class EventHandlerMethod implements Comparable<EventHandlerMethod> {
     }
 
     /**
-     * Returns true when this EventHandler accepts cancelled events
+     * Returns true when this method ignores cancelled events
      *
-     * @return true when it wants to accept events when cancelled, false if not
+     * @return true when this listener method wants to ignore events when cancelled, false if it wants to get events
+     * regardless of its cancelled state
      */
     boolean ignoreCancelled() {
         return this.annotation.ignoreCancelled();

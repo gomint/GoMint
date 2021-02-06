@@ -85,9 +85,10 @@ public class EventManager {
 
     /**
      * Determines if the given method is an event listener method.
-     * 
+     * <br><br>
      * An event listener method must be annotated with {@linkplain EventHandler @EventHandler}, have one parameter
-     * with a class extending {@linkplain Event} and may not be {@code private}, {@code protected} or {@code static}
+     * with a class extending {@linkplain Event}, must return void and may not be {@code private}, {@code protected} or
+     * {@code static}.
      * 
      * @param method the method to check
      * @return whether the given method is a listener method
@@ -96,7 +97,8 @@ public class EventManager {
         return method.isAnnotationPresent(EventHandler.class) &&
             method.getParameterCount() == 1 &&
             Event.class.isAssignableFrom(method.getParameterTypes()[0]) &&
-            (method.getModifiers() & DISALLOWED_MODIFIERS) == 0;
+            (method.getModifiers() & DISALLOWED_MODIFIERS) == 0 &&
+            method.getReturnType() == Void.TYPE;
     }
 
     private <T extends EventListener> void registerListener0(T listener, Method listenerMethod, Predicate<Event> predicate) {
