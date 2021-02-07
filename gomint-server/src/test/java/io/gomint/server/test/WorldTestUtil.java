@@ -9,7 +9,7 @@ package io.gomint.server.test;
 import io.gomint.server.world.WorldAdapter;
 import io.gomint.world.World;
 
-import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
@@ -35,57 +35,37 @@ public class WorldTestUtil {
                 throw new RuntimeException(t);
             }
         } else {
-            Object waitObj = new Object();
-            AtomicBoolean done = new AtomicBoolean();
+            CountDownLatch countDownLatch = new CountDownLatch(1);
             AtomicReference<Throwable> exception = new AtomicReference<>();
             world.syncScheduler().execute(() -> {
                 try {
                     runnable.run();
                 } catch (Throwable t) {
-                    synchronized (waitObj) {
-                        exception.set(t);
-                    }
+                    exception.set(t);
                 } finally {
-                    synchronized (waitObj) {
-                        done.set(true);
-                        waitObj.notify();
-                    }
+                    countDownLatch.countDown();
                 }
             });
-            synchronized (waitObj) {
-                if (!done.get()) {
-                    try {
-                        waitObj.wait();
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
-                    }
-                    final Throwable throwable = exception.get();
-                    if (throwable != null) {
-                        throw new RuntimeException(throwable);
-                    }
-                }
+            try {
+                countDownLatch.await();
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+            final Throwable throwable = exception.get();
+            if (throwable != null) {
+                throw new RuntimeException(throwable);
             }
         }
     }
     
     public static void blockUntilWorldRuns(World w) {
         WorldAdapter world = (WorldAdapter) w;
-        Object waitObj = new Object();
-        AtomicBoolean done = new AtomicBoolean();
-        world.syncScheduler().execute(() -> {
-            synchronized (waitObj) {
-                done.set(true);
-                waitObj.notify();
-            }
-        });
-        synchronized (waitObj) {
-            if (!done.get()) {
-                try {
-                    waitObj.wait();
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
-            }
+        CountDownLatch countDownLatch = new CountDownLatch(1);
+        world.syncScheduler().execute(countDownLatch::countDown);
+        try {
+            countDownLatch.await();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
         }
     }
 }
