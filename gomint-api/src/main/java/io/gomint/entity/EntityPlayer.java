@@ -364,19 +364,11 @@ public interface EntityPlayer extends EntityHuman<EntityPlayer> {
     InetSocketAddress address();
 
     /**
-     * Dispatch a command for this player
-     *
-     * @param command which should be dispatched
-     * @return the output of this command
-     */
-    CommandOutput dispatchCommand(String command);
-
-    /**
      * Dispatch a command for this player. Will be scheduled in world's thread, if the current thread is not the world's
      * thread.
      *
-     * @param command        which should be dispatched
-     * @param outputConsumer the command output consumer
+     * @param command        which should be dispatched (includes leading {@code /})
+     * @param outputConsumer the command output consumer, no guarantee is given in which thread it is executed
      * @return the output of this command
      */
     EntityPlayer dispatchCommand(String command, @Nullable Consumer<CommandOutput> outputConsumer);

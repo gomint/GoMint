@@ -11,122 +11,81 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.function.Consumer;
 
 /**
+ * All output from a command should be collected in the provided {@link CommandOutput} instance so the client can
+ * process it in the proper manner. Sending chat messages for the command result is NOT recommended and should NEVER be
+ * done.
+ * <br><br>
+ * <b>You need to call {@linkplain #markFinished()} when your command has finished.</b>
+ *
  * @author geNAZt, derklaro
  * @version 1.0
  * @stability 3
+ * @see #markFinished()
  */
 public class CommandOutput {
 
-    /**
-     * Creates a new command output which indicates that the command was processed successfully. By default
-     * this command output has no result messages - if you want to add a success message you should use
-     * {@link #successful(String, Object...)} instead.
-     *
-     * @return A new successful command output
-     * @since 1.0.0-RC4
-     */
-    public static CommandOutput successful() {
-        return new CommandOutput(true);
-    }
-
-    /**
-     * Creates a new command output which indicates that the command was processed successfully. By default
-     * this command output has a result message created with the given string pattern provided by {@code message}
-     * and formatted using the given {@code params} parameters.
-     *
-     * @param message The string format of the success result message.
-     *                See <a href="https://docs.oracle.com/javase/7/docs/api/java/util/Formatter.html">Formatter documentation</a> for more details.
-     * @param params  The parameters for the string format in the correct order
-     * @return A new successful command output with the given formatted result message in it
-     * @since 1.0.0-RC4
-     */
-    public static CommandOutput successful(String message, Object... params) {
-        return new CommandOutput(true).success(message, params);
-    }
-
-    /**
-     * Creates a new command output which indicates that the command was processed with a failure. By default
-     * this command output has no result messages - if you want to add a message why the command execution failed exactly
-     * you should use {@link #failure(String, Object...)} or {@link #failure(Throwable)} instead.
-     *
-     * @return A new failed command output
-     * @since 1.0.0-RC4
-     */
-    public static CommandOutput failure() {
-        return new CommandOutput(false);
-    }
-
-    /**
-     * Creates a new command output which indicates that the command was processed with a failure. By default
-     * this command output has a result message created with the given string pattern provided by {@code message}
-     * and formatted using the given {@code params} parameters. If you want to submit a stack trace of an exception
-     * you should use {@link #failure(Throwable)}.
-     *
-     * @param message The string format of the success result message.
-     *                See <a href="https://docs.oracle.com/javase/7/docs/api/java/util/Formatter.html">Formatter documentation</a> for more details.
-     * @param params  The parameters for the string format in the correct order
-     * @return A new failed command output with the given formatted result message in it
-     * @since 1.0.0-RC4
-     */
-    public static CommandOutput failure(String message, Object... params) {
-        return new CommandOutput(true).fail(message, params);
-    }
-
-    /**
-     * Creates a new command output which indicates that the command was processed with a failure. By default
-     * this command output has a message in it created from the given throwable which is formatted in the following
-     * way: {@code ExceptionClassName: ExceptionMessage} followed by nothing if the exception has no stack trace elements
-     * or the first trace element formatted like: {@code @ TraceClassName:TraceLineNumber}.
-     *
-     * @param throwable The exception which occurred during the command execution
-     * @return A new failed command output with the formatted throwable as it's failure reason message
-     * @since 1.0.0-RC4
-     */
-    public static CommandOutput failure(Throwable throwable) {
-        StackTraceElement[] trace = throwable.getStackTrace();
-        String firstLine = trace.length > 0 ? " @ " + trace[0].getClassName() + ":" + trace[0].getLineNumber() : "";
-        return new CommandOutput(false).fail("%s: %s%s", throwable.getClass().getSimpleName(), throwable.getMessage(), firstLine);
-    }
-
-    /**
-     * Creates a new command output. Will be private in a further release
-     *
-     * @deprecated Use {@link #successful()}, {@link #successful(String, Object...)}, {@link #failure()} or {@link #failure(String, Object...)} instead.
-     */
-    @Deprecated(since = "1.0.0-RC4")
-    public CommandOutput() {
-    }
-
-    private CommandOutput(boolean success) {
-        this.success = success;
-    }
-
     private boolean success = true;
-    private final Collection<CommandOutputMessage> messages = new ArrayList<>();
+    private final Collection<CommandOutputMessage> messages = Collections.synchronizedCollection(new ArrayList<>());
+    private final Consumer<CommandOutput> outputConsumer;
+    private volatile boolean done = false;
+
+    private CommandOutput(Consumer<CommandOutput> outputConsumer) {
+        this.outputConsumer = outputConsumer;
+    }
 
     /**
-     * When the execution of a command failed you can execute this and must provide a reason why it failed
+     * When the execution of a command failed you can execute this. This adds a result message created with the given
+     * string pattern provided by {@code message} and formatted using the given {@code params} parameters. If you want
+     * to submit a stack trace of an exception you should use {@link #fail(Throwable)}.
+     * <br><br>
+     * <b>You need to call {@linkplain #markFinished()} when your command has finished.</b>
      *
-     * @param format of the fail reason
-     * @param params which should be filled into the given reason
+     * @param format The string format of the fail result message.
+     *               See <a href="https://docs.oracle.com/javase/7/docs/api/java/util/Formatter.html">Formatter documentation</a> for more details.
+     * @param params The parameters for the string format in the correct order
      * @return this command output instance for chaining
+     * @see #fail(Throwable)
      */
     public CommandOutput fail(String format, Object... params) {
+        this.success = false;
         String[] output = this.remap(params);
         this.messages.add(new CommandOutputMessage(false, format, Arrays.asList(output)));
-        this.success = false;
         return this;
     }
 
     /**
-     * When the execution of the command resulted in a success operation you can append a message here. All
-     * output from a command should be collected in a {@link CommandOutput} instance so the client can process it
-     * in the proper manner. Sending chat messages for the command result is NOT recommended and should NEVER be done
+     * When the execution of a command failed you can execute this. This adds a result message created from the given
+     * throwable which is formatted in the following way: {@code ExceptionClassName: ExceptionMessage} followed by
+     * nothing if the exception has no stack trace elements or the first trace element formatted like:
+     * {@code @ TraceClassName:TraceLineNumber}.
+     * <br><br>
+     * <b>You need to call {@linkplain #markFinished()} when your command has finished.</b>
      *
-     * @param format of the success message
-     * @param params to pass into the given format
+     * @param throwable The exception which occurred during the command execution
+     * @return this command output instance for chaining
+     * @see #fail(String, Object...)
+     * @since 1.0.0-RC4
+     */
+    public CommandOutput fail(Throwable throwable) {
+        this.success = false;
+        StackTraceElement[] trace = throwable.getStackTrace();
+        String firstLine = trace.length > 0 ? " @ " + trace[0].getClassName() + ":" + trace[0].getLineNumber() : "";
+        return fail("%s: %s%s", throwable.getClass().getSimpleName(), throwable.getMessage(), firstLine);
+    }
+
+    /**
+     * When the execution of the command resulted in a success, you can append a message here. This adds a result
+     * message created with the given string pattern provided by {@code message} and formatted using the given
+     * {@code params} parameters
+     * <br><br>
+     * <b>You need to call {@linkplain #markFinished()} when your command has finished.</b>
+     *
+     * @param format The string format of the success result message.
+     *               See <a href="https://docs.oracle.com/javase/7/docs/api/java/util/Formatter.html">Formatter documentation</a> for more details.
+     * @param params The parameters for the string format in the correct order
      * @return this command output instance for chaining
      */
     public CommandOutput success(String format, Object... params) {
@@ -145,9 +104,10 @@ public class CommandOutput {
     }
 
     /**
-     * Contains all messages which are sent to the command sender. This will result in an
-     * unmodifiable copy of the collection - you should use {@link #success(String, Object...)} or
-     * {@link #fail(String, Object...)} for adding messages to the collection instead.
+     * Contains all messages which are sent to the command sender. The returned collection is not modifiable.
+     *
+     * Use @linkplain #success(String, Object...)}, {@linkplain #fail(String, Object...)} or
+     * {@linkplain #fail(Throwable)} to add messages to the output.
      *
      * @return all messages which are sent to the command sender.
      */
@@ -162,6 +122,25 @@ public class CommandOutput {
         }
 
         return stringParams;
+    }
+
+    /**
+     * You need to call this method when command execution is finished.
+     */
+    public synchronized void markFinished() {
+        if (!this.done) {
+            this.done = true;
+            this.outputConsumer.accept(this);
+        }
+    }
+
+    /**
+     * Checks whether the command execution has finished
+     *
+     * @return whether the command execution has finished
+     */
+    public boolean isFinished() {
+        return this.done;
     }
 
 }

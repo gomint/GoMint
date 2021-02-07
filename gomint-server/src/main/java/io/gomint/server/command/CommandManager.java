@@ -29,11 +29,11 @@ import io.gomint.server.command.vanilla.TimeSetCommand;
 import io.gomint.server.entity.CommandPermission;
 import io.gomint.server.entity.EntityPlayer;
 import io.gomint.server.network.packet.PacketAvailableCommands;
-import io.gomint.server.util.UnsafeWorldAsyncAccessException;
 import io.gomint.server.world.WorldAdapter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -54,6 +54,24 @@ import javax.annotation.Nullable;
 public class CommandManager {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CommandManager.class);
+    private static final Constructor<CommandOutput> COMMAND_OUTPUT_CONSTRUCTOR;
+
+    static {
+        try {
+            COMMAND_OUTPUT_CONSTRUCTOR = CommandOutput.class.getDeclaredConstructor(Consumer.class);
+            COMMAND_OUTPUT_CONSTRUCTOR.setAccessible(true);
+        } catch (ReflectiveOperationException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static CommandOutput newCommandOutput(Consumer<CommandOutput> outputConsumer) {
+        try {
+            return COMMAND_OUTPUT_CONSTRUCTOR.newInstance(outputConsumer);
+        } catch (ReflectiveOperationException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     private Map<String, CommandHolder> commands = new HashMap<>();
     private Map<String, Plugin> commandPlugins = new HashMap<>();
@@ -107,7 +125,7 @@ public class CommandManager {
     /**
      * Execute a system command
      *
-     * @param line which the user has put in
+     * @param line which the user has put in (without leading {@code /})
      */
     public void executeSystem(String line) {
         ConsoleCommandSender consoleCommandSender = new ConsoleCommandSender(line);
@@ -129,29 +147,21 @@ public class CommandManager {
      * world's thread, if the current thread is not the world's thread.
      *
      * @param sender         of the command
-     * @param command        which should be executed
-     * @param outputConsumer the command output consumer
+     * @param command        which should be executed (includes leading {@code /})
+     * @param outputConsumer the command output consumer, no guarantee is given in which thread it is executed
      * @return CommandManager for chaining
      */
     public CommandManager dispatchCommand(CommandSender<?> sender, String command, @Nullable Consumer<CommandOutput> outputConsumer) {
+        CommandOutput output = newCommandOutput(outputConsumer);
         if (sender instanceof io.gomint.command.ConsoleCommandSender) {
-            CommandOutput commandOutput = dispatchCommand0(sender, command);
-            if (outputConsumer != null) {
-                outputConsumer.accept(commandOutput);
-            }
+            dispatchCommand0(sender, command, output);
         } else if (sender instanceof EntityPlayer) {
             WorldAdapter world = ((EntityPlayer) sender).world();
             if (world.mainThread()) {
-                CommandOutput commandOutput = dispatchCommand0(sender, command);
-                if (outputConsumer != null) {
-                    outputConsumer.accept(commandOutput);
-                }
+                dispatchCommand0(sender, command, output);
             } else {
                 world.syncScheduler().execute(() -> {
-                    CommandOutput commandOutput = dispatchCommand0(sender, command);
-                    if (outputConsumer != null) {
-                        outputConsumer.accept(commandOutput);
-                    }
+                    dispatchCommand0(sender, command, output);
                 });
             }
         } else {
@@ -160,29 +170,7 @@ public class CommandManager {
         return this;
     }
 
-    /**
-     * Dispatch a command, will be executed in current thread. Fails if executing on behalf of an
-     * {@linkplain io.gomint.entity.EntityPlayer} and not in its world's thread.
-     *
-     * @param sender  of the command
-     * @param command which should be executed
-     * @return CommandManager for chaining
-     */
-    public CommandOutput dispatchCommand(CommandSender<?> sender, String command) {
-        if (sender instanceof io.gomint.command.ConsoleCommandSender) {
-            return dispatchCommand0(sender, command);
-        } else if (sender instanceof EntityPlayer) {
-            WorldAdapter world = ((EntityPlayer) sender).world();
-            if (world != null && !world.mainThread()) {
-                throw new UnsafeWorldAsyncAccessException();
-            }
-            return dispatchCommand0(sender, command);
-        } else {
-            throw new UnsupportedOperationException("Unsupported command sender " + sender.getClass().getName() + " - " + sender);
-        }
-    }
-
-    private CommandOutput dispatchCommand0(CommandSender<?> sender, String command) {
+    private void dispatchCommand0(CommandSender<?> sender, String command, CommandOutput output) {
         // Search for correct command holder
         String[] commandParts = command.substring(1).split(" ");
         int consumed = 0;
@@ -212,11 +200,11 @@ public class CommandManager {
         // Check if we selected a command
         if (selected == null) {
             // Send CommandOutput with failure
-            return CommandOutput.failure("Command for input '%%s' could not be found", command);
+            output.fail("Command for input '%%s' could not be found", command).markFinished();
         } else {
             // Check for permission
             if (selected.getPermission() != null && !sender.hasPermission(selected.getPermission())) {
-                return CommandOutput.failure("No permission for this command");
+                output.fail("No permission for this command").markFinished();
             } else {
                 // Now we need to parse all additional parameters
                 String[] params;
@@ -286,24 +274,25 @@ public class CommandManager {
                         });
 
                         CommandCanidate canidate = commandCanidates.get(0);
-                        return tryCommandDispatch(sender, selected, canidate.getArguments());
+                        tryCommandDispatch(sender, selected, canidate.getArguments(), output);
+                        return;
                     }
 
-                    return CommandOutput.failure("Command for input '%%s' could not be found", command);
+                    output.fail("Command for input '%%s' could not be found", command).markFinished();
                 } else {
-                    return tryCommandDispatch(sender, selected, new HashMap<>());
+                    tryCommandDispatch(sender, selected, new HashMap<>(), output);
                 }
             }
         }
     }
 
-    private CommandOutput tryCommandDispatch(CommandSender<?> sender, CommandHolder command, Map<String, Object> arguments) {
+    private void tryCommandDispatch(CommandSender<?> sender, CommandHolder command, Map<String, Object> arguments, CommandOutput output) {
         // CHECKSTYLE:OFF
         try {
-            return command.getExecutor().execute(sender, command.getName(), arguments);
+            command.getExecutor().execute(sender, command.getName(), arguments, output);
         } catch (Exception e) {
             LOGGER.warn("Command '{}' failed", command.getName(), e);
-            return CommandOutput.failure(e);
+            output.fail(e).markFinished();
         }
         // CHECKSTYLE:ON
     }

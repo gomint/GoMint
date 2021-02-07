@@ -18,8 +18,8 @@ import io.gomint.permission.GroupManager;
 import io.gomint.player.PlayerSkin;
 import io.gomint.plugin.PluginManager;
 import io.gomint.scoreboard.Scoreboard;
-import io.gomint.world.World;
 import io.gomint.world.Chunk;
+import io.gomint.world.World;
 import io.gomint.world.block.Block;
 import io.gomint.world.generator.ChunkGeneratorRegistry;
 import io.gomint.world.generator.CreateOptions;
@@ -175,7 +175,7 @@ public interface GoMint {
     /**
      * Dispatch a command as console. Will be scheduled on console thread if current thread is not console thread.
      *
-     * @param command which should be executed (without the /)
+     * @param command which should be executed (without the leading {@code /})
      * @return GoMint for chaining
      */
     GoMint dispatchCommand(String command);

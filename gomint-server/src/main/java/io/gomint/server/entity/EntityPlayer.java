@@ -1732,14 +1732,6 @@ public class EntityPlayer extends EntityHuman<io.gomint.entity.EntityPlayer> imp
     }
 
     @Override
-    public CommandOutput dispatchCommand(String command) {
-        if (this.world != null && !this.world.mainThread()) {
-            LOGGER.warn("Async world access", new UnsafeWorldAsyncAccessWarning());
-        }
-        return this.connection().server().pluginManager().commandManager().dispatchCommand(this, command);
-    }
-
-    @Override
     public EntityPlayer dispatchCommand(String command, Consumer<CommandOutput> outputConsumer) {
         this.connection().server().pluginManager().commandManager().dispatchCommand(this, command, outputConsumer);
         return this;
