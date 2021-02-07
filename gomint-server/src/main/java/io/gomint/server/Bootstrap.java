@@ -40,13 +40,13 @@ public class Bootstrap {
     public static void main(String[] args) throws InterruptedException {
         try {
             bootstrap(args);
-        } catch (Throwable cause) {
+        } catch (Exception cause) {
             LOGGER.error("GoMint crashed: ", cause);
             reportExceptionToSentry(cause);
         } 
     }
 
-    private static void reportExceptionToSentry(Throwable cause) {
+    private static void reportExceptionToSentry(Exception cause) {
         ReportUploader.create()
             .exception(cause)
             .property("crash", "true")

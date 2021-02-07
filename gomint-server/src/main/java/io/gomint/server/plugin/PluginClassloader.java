@@ -32,7 +32,7 @@ public class PluginClassloader extends URLClassLoader {
     public static String getPluginWhichLoaded(String name) {
         for (PluginClassloader loader : ALL_LOADERS) {
             try {
-                loader.loadClass(name, true);
+                loader.loadClass0(name, false, false);
                 return loader.meta.name() + " v" + loader.meta.version().toString();
             } catch (ClassNotFoundException e) {
                 // Ignored
