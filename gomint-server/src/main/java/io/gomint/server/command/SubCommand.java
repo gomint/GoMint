@@ -48,26 +48,28 @@ public class SubCommand extends Command {
     }
 
     @Override
-    public CommandOutput execute(CommandSender<?> sender, String alias, Map<String, Object> arguments ) {
+    public void execute(CommandSender<?> sender, String alias, Map<String, Object> arguments, CommandOutput output) {
         // Look out for subCmd# keys
-        for ( Map.Entry<String, Object> entry : arguments.entrySet() ) {
-            if ( entry.getKey().equals( entry.getValue() ) && this.subCommands.containsKey( entry.getKey() ) ) {
+        for (Map.Entry<String, Object> entry : arguments.entrySet()) {
+            if (entry.getKey().equals(entry.getValue()) && this.subCommands.containsKey(entry.getKey())) {
                 String subCommand = (String) entry.getValue();
-                CommandHolder commandHolder = this.subCommands.get( subCommand );
-                if ( commandHolder != null ) {
-                    if ( commandHolder.getPermission() == null || sender.hasPermission( commandHolder.getPermission() ) ) {
-                        Map<String, Object> arg = new HashMap<>( arguments );
-                        arg.remove( entry.getKey() );
+                CommandHolder commandHolder = this.subCommands.get(subCommand);
+                if (commandHolder != null) {
+                    if (commandHolder.getPermission() == null || sender.hasPermission(commandHolder.getPermission())) {
+                        Map<String, Object> arg = new HashMap<>(arguments);
+                        arg.remove(entry.getKey());
 
-                        return commandHolder.getExecutor().execute( sender, alias + " " + entry.getValue(), arg );
+                        commandHolder.getExecutor().execute(sender, alias + " " + entry.getValue(), arg, output);
+                        return;
                     } else {
-                        return CommandOutput.failure( "No permission for this command" );
+                        output.fail("No permission for this command").markFinished();
+                        return;
                     }
                 }
             }
         }
 
-        return CommandOutput.failure( "Command for input '%s' could not be found", this.getName() );
+        output.fail("Command for input '%s' could not be found", this.getName()).markFinished();
     }
 
     /**

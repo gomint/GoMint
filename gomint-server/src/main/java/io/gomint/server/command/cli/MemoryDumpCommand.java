@@ -28,7 +28,7 @@ import java.util.Map;
 public class MemoryDumpCommand extends Command {
 
     @Override
-    public CommandOutput execute(CommandSender<?> commandSender, String alias, Map<String, Object> arguments) {
+    public void execute(CommandSender<?> commandSender, String alias, Map<String, Object> arguments, CommandOutput output) {
         //
         System.out.println("==========================================");
         System.out.println("BufferPoolMXBean");
@@ -40,8 +40,7 @@ public class MemoryDumpCommand extends Command {
                 mbean.getTotalCapacity(),
                 mbean.getMemoryUsed());
         }
-
-        return null;
+        output.markFinished();
     }
 
 }
