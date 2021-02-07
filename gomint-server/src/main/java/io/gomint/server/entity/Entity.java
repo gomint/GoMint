@@ -24,6 +24,7 @@ import io.gomint.server.network.packet.PacketEntityMetadata;
 import io.gomint.server.network.packet.PacketEntityMotion;
 import io.gomint.server.network.packet.PacketEntityMovement;
 import io.gomint.server.network.packet.PacketSpawnEntity;
+import io.gomint.server.util.UnsafeWorldAsyncAccessWarning;
 import io.gomint.server.util.Values;
 import io.gomint.server.world.CoordinateUtils;
 import io.gomint.server.world.WorldAdapter;
@@ -1277,6 +1278,9 @@ public abstract class Entity<E extends io.gomint.entity.Entity<E>> implements io
         if ( this.world != null ) {
             throw new IllegalStateException( "Entity already spawned" );
         }
+        if (!location.world().mainThread()) {
+            LOGGER.warn("Async world access", new UnsafeWorldAsyncAccessWarning());
+        }
 
         this.world = (WorldAdapter) location.world();
         this.world.spawnEntityAt( this, location.x(), location.y(), location.z(), location.yaw(), location.pitch() );
@@ -1290,6 +1294,9 @@ public abstract class Entity<E extends io.gomint.entity.Entity<E>> implements io
     }
 
     public E teleport(Location to, EntityTeleportEvent.Cause cause) {
+        if (this.world != null && !this.world.mainThread()) {
+            LOGGER.warn("Async world access", new UnsafeWorldAsyncAccessWarning());
+        }
         EntityTeleportEvent entityTeleportEvent = new EntityTeleportEvent(this, this.location(), to, cause);
         this.world.server().pluginManager().callEvent(entityTeleportEvent);
         if (entityTeleportEvent.cancelled()) {
