@@ -31,10 +31,8 @@ public class TestCommand extends Command {
     public void execute(CommandSender<?> commandSender, String alias, Map<String, Object> arguments, CommandOutput output) {
         World world = this.plugin.server().createWorld(String.valueOf(ThreadLocalRandom.current().nextInt()), new CreateOptions());
         EntityPlayer player = (EntityPlayer) commandSender;
-        world.scheduler().execute(() -> {
-            player.teleport(world.spawnLocation());
-            output.success("Did teleport to %%s", world.name()).markFinished();
-        });
+        player.teleport(world.spawnLocation());
+        output.success("Did teleport to %%s", world.name()).markFinished();
     }
 
 }

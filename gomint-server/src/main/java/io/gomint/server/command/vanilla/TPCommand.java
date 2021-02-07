@@ -62,9 +62,9 @@ public class TPCommand extends Command {
         // Check for entity teleportation
         if (arguments.containsKey("toTarget")) {
             EntityPlayer entity = (EntityPlayer) arguments.get("toTarget");
-            if (source.world() != entity.world()) {
+            if (source.world() != sender.world()) {
                 EntityPlayer finalSource = source;
-                ((WorldAdapter) entity.world()).syncScheduler().execute(() -> {
+                ((WorldAdapter) source.world()).syncScheduler().execute(() -> {
                     finalSource.teleport(entity.location());
                     output.success("%%s has been teleported to %%s", finalSource.name(), entity.name()).markFinished();
                 });
@@ -92,9 +92,9 @@ public class TPCommand extends Command {
         to.y(position.y());
         to.z(position.z());
 
-        if (source.world() != to.world()) {
+        if (source.world() != sender.world()) {
             EntityPlayer finalSource = source;
-            ((WorldAdapter) to.world()).syncScheduler().execute(() -> {
+            ((WorldAdapter) source.world()).syncScheduler().execute(() -> {
                 finalSource.teleport(to);
                 output.success("%%s has been teleported to %%s, %%s, %%s, %%s", finalSource.name(), to.world().name(), to.x(), to.y(), to.z()).markFinished();
             });
