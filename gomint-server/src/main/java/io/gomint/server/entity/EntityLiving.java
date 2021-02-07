@@ -19,6 +19,7 @@ import io.gomint.server.network.packet.PacketEntityEvent;
 import io.gomint.server.network.packet.PacketSpawnEntity;
 import io.gomint.server.player.EffectManager;
 import io.gomint.server.util.EnumConnectors;
+import io.gomint.server.util.UnsafeWorldAsyncAccessWarning;
 import io.gomint.server.util.Values;
 import io.gomint.server.world.WorldAdapter;
 import io.gomint.taglib.NBTTagCompound;
@@ -451,7 +452,7 @@ public abstract class EntityLiving<E extends io.gomint.entity.Entity<E>> extends
     @Override
     public void attach(EntityPlayer player) {
         if (!this.world.mainThread()) {
-            LOGGER.warn("Attaching entities from another thread than the main one can cause crashes", new Exception());
+            LOGGER.warn("Async world access", new UnsafeWorldAsyncAccessWarning());
         }
 
         this.attachedEntities.add(player);
@@ -461,7 +462,7 @@ public abstract class EntityLiving<E extends io.gomint.entity.Entity<E>> extends
     @Override
     public void detach(EntityPlayer player) {
         if (!this.world.mainThread()) {
-            LOGGER.warn("Detaching entities from another thread than the main one can cause crashes", new Exception());
+            LOGGER.warn("Async world access", new UnsafeWorldAsyncAccessWarning());
         }
 
         this.attachedEntities.remove(player);

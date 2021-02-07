@@ -16,6 +16,7 @@ import io.gomint.server.entity.tileentity.SerializationReason;
 import io.gomint.server.entity.tileentity.TileEntity;
 import io.gomint.server.network.packet.PacketWorldChunk;
 import io.gomint.server.util.Cache;
+import io.gomint.server.util.UnsafeWorldAsyncAccessWarning;
 import io.gomint.server.world.storage.TemporaryStorage;
 import io.gomint.taglib.NBTTagCompound;
 import io.gomint.taglib.NBTWriter;
@@ -429,12 +430,18 @@ public class ChunkAdapter implements Chunk {
 
     @Override
     public ChunkAdapter biome(int x, int z, Biome biome) {
+        if (!this.world.mainThread()) {
+            this.world.logger().warn("Async world access", new UnsafeWorldAsyncAccessWarning());
+        }
         this.biomes.setByte((x << 4) + z, (byte) biome.id());
         return this;
     }
 
     @Override
     public Biome biome(int x, int z) {
+        if (!this.world.mainThread()) {
+            this.world.logger().warn("Async world access", new UnsafeWorldAsyncAccessWarning());
+        }
         return Biome.byId(this.biomes.getByte((x << 4) + z));
     }
 
@@ -444,6 +451,9 @@ public class ChunkAdapter implements Chunk {
     }
 
     public <T extends Block> T blockAt(int x, int y, int z, int layer) {
+        if (!this.world.mainThread()) {
+            this.world.logger().warn("Async world access", new UnsafeWorldAsyncAccessWarning());
+        }
         ChunkSlice slice = ensureSlice(y >> 4);
         return slice.getBlockInstance(x, y & 0x000000F, z, layer);
     }
@@ -592,7 +602,9 @@ public class ChunkAdapter implements Chunk {
 
     @Override
     public ChunkAdapter iterateAllEntities(Consumer<io.gomint.entity.Entity<?>> entityConsumer) {
-        // Iterate over all chunks
+        if (!this.world.mainThread()) {
+            this.world.logger().warn("Async world access", new UnsafeWorldAsyncAccessWarning());
+        }
         if (this.entities != null) {
             for (Long2ObjectMap.Entry<io.gomint.entity.Entity<?>> entry : this.entities.long2ObjectEntrySet()) {
                 entityConsumer.accept(entry.getValue());
@@ -604,7 +616,9 @@ public class ChunkAdapter implements Chunk {
 
     @Override
     public <T extends io.gomint.entity.Entity<?>> ChunkAdapter iterateEntities(Class<T> entityClass, Consumer<T> entityConsumer) {
-        // Iterate over all chunks
+        if (!this.world.mainThread()) {
+            this.world.logger().warn("Async world access", new UnsafeWorldAsyncAccessWarning());
+        }
         if (this.entities != null) {
             for (Long2ObjectMap.Entry<io.gomint.entity.Entity<?>> entry : this.entities.long2ObjectEntrySet()) {
                 if (entityClass.isAssignableFrom(entry.getValue().getClass())) {
@@ -623,6 +637,9 @@ public class ChunkAdapter implements Chunk {
 
     @Override
     public ChunkAdapter block(int x, int y, int z, WorldLayer layer, Block block) {
+        if (!this.world.mainThread()) {
+            this.world.logger().warn("Async world access", new UnsafeWorldAsyncAccessWarning());
+        }
         int layerID = layer.ordinal();
 
         io.gomint.server.world.block.Block implBlock = (io.gomint.server.world.block.Block) block;
