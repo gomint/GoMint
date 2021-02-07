@@ -213,6 +213,14 @@ public interface World {
     <T extends Block> World iterateBlocks(Class<T> blockClass, Consumer<T> blockConsumer);
 
     /**
+     * Iterate over all loaded chunks and find all entities.
+     *
+     * @param entityConsumer which gets called for every found entity
+     * @return world for chaining
+     */
+     World iterateAllEntities(Consumer<Entity<?>> entityConsumer);
+
+    /**
      * Iterate over all loaded chunks and find the entities specified for the entityClass.
      *
      * @param entityClass    for which we search

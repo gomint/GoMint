@@ -1703,6 +1703,11 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
     }
 
     @Override
+    public WorldAdapter iterateAllEntities(Consumer<Entity<?>> entityConsumer) {
+        return this.iterateEntities(Entity.class, (Consumer) entityConsumer);
+    }
+
+    @Override
     public <T extends Entity<T>> WorldAdapter iterateEntities(Class<T> entityClass, Consumer<T> entityConsumer) {
         if (!mainThread()) {
             this.logger.warn("Getting entities not from world's thread. This is not safe", new Exception());
