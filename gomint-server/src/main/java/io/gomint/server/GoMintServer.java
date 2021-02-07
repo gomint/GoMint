@@ -13,8 +13,6 @@ import io.gomint.GoMint;
 import io.gomint.GoMintInstanceHolder;
 import io.gomint.config.InvalidConfigurationException;
 import io.gomint.enchant.Enchantment;
-import io.gomint.entity.Entity;
-import io.gomint.entity.EntityPlayer;
 import io.gomint.gui.ButtonList;
 import io.gomint.gui.CustomForm;
 import io.gomint.gui.Modal;
@@ -29,6 +27,7 @@ import io.gomint.server.config.WorldConfig;
 import io.gomint.server.crafting.RecipeManager;
 import io.gomint.server.enchant.Enchantments;
 import io.gomint.server.entity.Entities;
+import io.gomint.server.entity.EntityPlayer;
 import io.gomint.server.entity.potion.Effects;
 import io.gomint.server.entity.tileentity.TileEntities;
 import io.gomint.server.inventory.CreativeInventory;
@@ -705,7 +704,7 @@ public class GoMintServer implements GoMint, InventoryHolder {
     }
 
     @Override
-    public <T extends Entity<T>> T createEntity(Class<T> entityClass) {
+    public <T extends io.gomint.entity.Entity<T>> T createEntity(Class<T> entityClass) {
         return this.entities.create(entityClass);
     }
 
@@ -791,12 +790,12 @@ public class GoMintServer implements GoMint, InventoryHolder {
     }
 
     @Override
-    public Collection<EntityPlayer> onlinePlayers() {
+    public Collection<io.gomint.entity.EntityPlayer> onlinePlayers() {
         return new ArrayList<>(this.playersByUUID.values());
     }
 
     @Override
-    public GoMintServer onlinePlayersIterate(Consumer<EntityPlayer> playerConsumer) {
+    public GoMintServer onlinePlayersIterate(Consumer<io.gomint.entity.EntityPlayer> playerConsumer) {
         for (WorldAdapter world : this.worldManager.worlds()) {
             world.syncScheduler().execute(() -> world.onlinePlayers().forEach(playerConsumer));
         }
@@ -830,8 +829,8 @@ public class GoMintServer implements GoMint, InventoryHolder {
     }
 
     @Override
-    public World world(String name) {
-        World world = this.worldManager.world(name);
+    public WorldAdapter world(String name) {
+        WorldAdapter world = this.worldManager.world(name);
         if (world == null) {
             // Try to load the world
 

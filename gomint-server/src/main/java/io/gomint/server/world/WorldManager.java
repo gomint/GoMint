@@ -13,7 +13,6 @@ import io.gomint.server.world.generator.vanilla.VanillaGeneratorImpl;
 import io.gomint.server.world.inmemory.InMemoryWorldAdapter;
 import io.gomint.server.world.leveldb.LevelDBWorldAdapter;
 import io.gomint.server.world.leveldb.ZippedLevelDBWorldAdapter;
-import io.gomint.world.World;
 import io.gomint.world.generator.CreateOptions;
 import io.gomint.world.generator.integrated.VanillaGenerator;
 import org.slf4j.Logger;
@@ -109,7 +108,7 @@ public class WorldManager {
      * @return the world which has been loaded
      * @throws WorldLoadException Thrown in case the world could not be loaded
      */
-    public World loadWorld(String path) throws WorldLoadException {
+    public WorldAdapter loadWorld(String path) throws WorldLoadException {
         File file = new File(path);
 
         // Check if we already loaded
@@ -143,14 +142,14 @@ public class WorldManager {
         throw new WorldLoadException("Could not detect world format");
     }
 
-    private World loadZippedLevelDBWorld(File path, String name) throws WorldLoadException {
+    private WorldAdapter loadZippedLevelDBWorld(File path, String name) throws WorldLoadException {
         LevelDBWorldAdapter world = ZippedLevelDBWorldAdapter.load(this.server, path, name);
         this.addWorld(world);
         LOGGER.info("Successfully loaded world '{}'", name);
         return world;
     }
 
-    private World loadLevelDBWorld(File path) throws WorldLoadException {
+    private WorldAdapter loadLevelDBWorld(File path) throws WorldLoadException {
         LevelDBWorldAdapter world = LevelDBWorldAdapter.load(this.server, path);
         this.addWorld(world);
         LOGGER.info("Successfully loaded world '{}'", path.getName());
@@ -185,7 +184,7 @@ public class WorldManager {
         }
 
         LOGGER.info("Shutdown of world executor completed");
-        
+
         if (wait <= 0) {
             List<Runnable> remainRunning = this.executorService.shutdownNow();
             for (Runnable runnable : remainRunning) {
@@ -218,7 +217,7 @@ public class WorldManager {
      * @param options with which this world should be generated
      * @return generated world
      */
-    public World createWorld(String name, CreateOptions options) {
+    public WorldAdapter createWorld(String name, CreateOptions options) {
         // Check if we need to cascade a generator
         if (options.generator() == VanillaGenerator.class) {
             options.generator(VanillaGeneratorImpl.class);
