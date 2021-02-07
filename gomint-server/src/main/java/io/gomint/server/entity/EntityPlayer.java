@@ -39,7 +39,6 @@ import io.gomint.math.Vector2;
 import io.gomint.player.ChatType;
 import io.gomint.player.DeviceInfo;
 import io.gomint.plugin.Plugin;
-import io.gomint.server.GoMintServer;
 import io.gomint.server.entity.metadata.MetadataContainer;
 import io.gomint.server.entity.passive.EntityHuman;
 import io.gomint.server.entity.projectile.EntityFishingHook;
@@ -462,14 +461,16 @@ public class EntityPlayer extends EntityHuman<io.gomint.entity.EntityPlayer> imp
             // Despawn entities first
             this.entityVisibilityManager.clear();
 
-            // Change worlds
+            // Remove from old world
             world().removePlayer(this);
-            this.world((WorldAdapter) to.world());
-
-            // Set the new location
-            this.setAndRecalcPosition(to);
 
             this.world.syncScheduler().execute(() -> {
+                //Add to new world
+                this.world((WorldAdapter) to.world());
+
+                // Set the new location
+                this.setAndRecalcPosition(to);
+
                 this.world.server().pluginManager().callEvent(new PlayerWorldJoinEvent(this));
                 this.world.spawnEntityAt(this, to.x(), to.y(), to.z(), to.yaw(), to.pitch());
 

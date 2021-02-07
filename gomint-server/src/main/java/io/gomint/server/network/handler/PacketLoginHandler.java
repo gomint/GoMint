@@ -10,7 +10,6 @@ package io.gomint.server.network.handler;
 import io.gomint.event.player.PlayerLoginEvent;
 import io.gomint.player.DeviceInfo;
 import io.gomint.server.GoMintServer;
-import io.gomint.server.config.ServerConfig;
 import io.gomint.server.entity.EntityPlayer;
 import io.gomint.server.jwt.EncryptionRequestForger;
 import io.gomint.server.jwt.JwtAlgorithm;
@@ -26,7 +25,6 @@ import io.gomint.server.network.packet.PacketEncryptionRequest;
 import io.gomint.server.network.packet.PacketLogin;
 import io.gomint.server.network.packet.PacketPlayState;
 import io.gomint.server.player.PlayerSkin;
-import io.gomint.server.scheduler.SyncScheduledTask;
 import io.gomint.server.world.WorldAdapter;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -234,15 +232,15 @@ public class PacketLoginHandler implements PacketHandler<PacketLogin> {
             // Create entity:
             WorldAdapter world = server.defaultWorld();
 
-            EntityPlayer player = new EntityPlayer(world, connection, chainValidator.getUsername(),
-                chainValidator.getXboxId(), chainValidator.getUuid(), locale, server.pluginManager());
+            EntityPlayer player = (EntityPlayer) new EntityPlayer(world, connection, chainValidator.getUsername(),
+                chainValidator.getXboxId(), chainValidator.getUuid(), locale, server.pluginManager())
+                .skin(playerSkin)
+                .nameTagVisible(true)
+                .nameTagAlwaysVisible(true);
 
             connection.entity(player);
-            connection.entity().skin(playerSkin);
-            connection.entity().nameTagVisible(true);
-            connection.entity().nameTagAlwaysVisible(true);
-            connection.entity().loginPerformance().setLoginPacket(currentTimeMillis);
-            connection.entity().loginPerformance().setEncryptionStart(currentTimeMillis);
+            player.loginPerformance().setLoginPacket(currentTimeMillis);
+            player.loginPerformance().setEncryptionStart(currentTimeMillis);
 
             // Fill in fast access maps
             server.uuidMappedPlayers().put(chainValidator.getUuid(), connection.entity());
@@ -251,58 +249,63 @@ public class PacketLoginHandler implements PacketHandler<PacketLogin> {
             PlayerLoginEvent event = new PlayerLoginEvent(connection.entity());
 
             // Default deny for maximum amount of players
-            if (server.onlinePlayers().size() >= server.serverConfig().maxPlayers()) {
+            if (server.currentPlayerCount() >= server.serverConfig().maxPlayers()) {
                 event.cancelled(true);
                 event.kickMessage("Server is full");
             }
 
             server.pluginManager().callEvent(event);
             if (event.cancelled()) {
-                connection.disconnect(event.kickMessage());
+                player.world().syncScheduler().execute(() -> {
+                    connection.disconnect(event.kickMessage());
+                });
                 return;
             }
 
             // Update player world
-            player.world((WorldAdapter) player.spawnLocation().world());
+            WorldAdapter worldAdapter = (WorldAdapter) player.spawnLocation().world();
+            worldAdapter.syncScheduler().execute(() -> {
+                player.world((WorldAdapter) player.spawnLocation().world());
 
-            if (keyFactory.keyPair() == null) {
-                // No encryption
-                connection.sendPlayState(PacketPlayState.PlayState.LOGIN_SUCCESS);
-                connection.state(PlayerConnectionState.RESOURCE_PACK);
-                connection.initWorldAndResourceSend();
-            } else {
-                // Generating EDCH secrets can take up huge amount of time
-                server.executorService().execute(() -> {
-                    server.watchdog().add(2, TimeUnit.SECONDS);
+                if (keyFactory.keyPair() == null) {
+                    // No encryption
+                    connection.sendPlayState(PacketPlayState.PlayState.LOGIN_SUCCESS);
+                    connection.state(PlayerConnectionState.RESOURCE_PACK);
+                    connection.initWorldAndResourceSend();
+                } else {
+                    // Generating EDCH secrets can take up huge amount of time
+                    server.executorService().execute(() -> {
+                        server.watchdog().add(2, TimeUnit.SECONDS);
 
-                    // Enable encryption
-                    EncryptionHandler encryptionHandler = new EncryptionHandler(keyFactory);
-                    encryptionHandler.supplyClientKey(chainValidator.getClientPublicKey());
-                    if (encryptionHandler.beginClientsideEncryption()) {
-                        // Get the needed data for the encryption start
-                        connection.state(PlayerConnectionState.ENCRPYTION_INIT);
+                        // Enable encryption
+                        EncryptionHandler encryptionHandler = new EncryptionHandler(keyFactory);
+                        encryptionHandler.supplyClientKey(chainValidator.getClientPublicKey());
+                        if (encryptionHandler.beginClientsideEncryption()) {
+                            // Get the needed data for the encryption start
+                            connection.state(PlayerConnectionState.ENCRPYTION_INIT);
 
-                        byte[] key = encryptionHandler.key();
-                        byte[] iv = encryptionHandler.iv();
+                            byte[] key = encryptionHandler.key();
+                            byte[] iv = encryptionHandler.iv();
 
-                        // We need every packet to be encrypted from now on
-                        connection.inputProcessor().enableCrypto(key, iv);
+                            // We need every packet to be encrypted from now on
+                            connection.inputProcessor().enableCrypto(key, iv);
 
-                        // Forge a JWT
-                        String encryptionRequestJWT = FORGER.forge(encryptionHandler.serverPublic(), encryptionHandler.serverPrivate(), encryptionHandler.clientSalt());
+                            // Forge a JWT
+                            String encryptionRequestJWT = FORGER.forge(encryptionHandler.serverPublic(), encryptionHandler.serverPrivate(), encryptionHandler.clientSalt());
 
-                        // Tell the client to enable encryption after sending that packet we also enable it
-                        PacketEncryptionRequest packetEncryptionRequest = new PacketEncryptionRequest();
-                        packetEncryptionRequest.setJwt(encryptionRequestJWT);
-                        connection.send(packetEncryptionRequest, aVoid -> {
-                            connection.outputProcessor().enableCrypto(key, iv);
-                        });
-                    }
+                            // Tell the client to enable encryption after sending that packet we also enable it
+                            PacketEncryptionRequest packetEncryptionRequest = new PacketEncryptionRequest();
+                            packetEncryptionRequest.setJwt(encryptionRequestJWT);
+                            connection.send(packetEncryptionRequest, aVoid -> {
+                                connection.outputProcessor().enableCrypto(key, iv);
+                            });
+                        }
 
-                    server.watchdog().done();
-                });
+                        server.watchdog().done();
+                    });
 
-            }
+                }
+            });
         });
     }
 

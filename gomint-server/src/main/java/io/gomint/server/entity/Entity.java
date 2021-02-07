@@ -108,8 +108,7 @@ public abstract class Entity<E extends io.gomint.entity.Entity<E>> implements io
     // CHECKSTYLE:ON
     protected float offsetY;
     protected int age;
-    protected WorldAdapter world;
-    private final Object worldSyncObject = new Object();
+    protected volatile WorldAdapter world;
     protected boolean ticking = true;
     private float width;
     private boolean stuckInBlock = false;
@@ -268,15 +267,14 @@ public abstract class Entity<E extends io.gomint.entity.Entity<E>> implements io
 
     @Override
     public WorldAdapter world() {
-        synchronized (this.worldSyncObject) {
-            return this.world;
-        }
+        return this.world;
     }
 
-    public void world(WorldAdapter world ) {
-        synchronized (this.worldSyncObject) {
-            this.world = world;
+    public void world(WorldAdapter world) {
+        if (!world.mainThread()) {
+            throw new IllegalStateException("Cannot set world if not on new world's thread");
         }
+        this.world = world;
     }
 
     /**
@@ -1291,21 +1289,26 @@ public abstract class Entity<E extends io.gomint.entity.Entity<E>> implements io
 
     }
 
-    public E teleport( Location to, EntityTeleportEvent.Cause cause ) {
-        EntityTeleportEvent entityTeleportEvent = new EntityTeleportEvent( this, this.location(), to, cause );
-        this.world.server().pluginManager().callEvent( entityTeleportEvent );
-        if ( entityTeleportEvent.cancelled() ) {
+    public E teleport(Location to, EntityTeleportEvent.Cause cause) {
+        EntityTeleportEvent entityTeleportEvent = new EntityTeleportEvent(this, this.location(), to, cause);
+        this.world.server().pluginManager().callEvent(entityTeleportEvent);
+        if (entityTeleportEvent.cancelled()) {
             return (E) this;
         }
 
-        WorldAdapter actualWorld = this.world();
+        WorldAdapter currentWorld = this.world();
 
-        this.setAndRecalcPosition( to );
 
-        if ( !to.world().equals( actualWorld ) ) {
-            actualWorld.removeEntity( this );
-            this.world( (WorldAdapter) to.world() );
-            ( (WorldAdapter) to.world() ).spawnEntityAt( this, to.x(), to.y(), to.z(), to.yaw(), to.pitch() );
+        if (!to.world().equals(currentWorld)) {
+            currentWorld.removeEntity(this);
+            WorldAdapter newWorld = (WorldAdapter) to.world();
+            newWorld.syncScheduler().execute(() -> {
+                this.world(newWorld);
+                this.setAndRecalcPosition(to);
+                newWorld.spawnEntityAt(this, to.x(), to.y(), to.z(), to.yaw(), to.pitch());
+            });
+        } else {
+            this.setAndRecalcPosition(to);
         }
 
         this.fallDistance = 0;

@@ -254,10 +254,12 @@ public class PlayerConnection implements ConnectionWithState {
      * @param packet The packet which should be queued
      */
     public void addToSendQueue(Packet packet) {
-        WorldAdapter world = this.entity.world();
-        if (world != null && !world.mainThread()) {
-            LOGGER.warn("Add packet async to send queue - canceling sending", new Exception());
-            return;
+        if (this.entity != null) {
+            WorldAdapter world = this.entity.world();
+            if (world != null && !world.mainThread()) {
+                LOGGER.warn("Add packet async to send queue - canceling sending", new Exception());
+                return;
+            }
         }
 
         if (!this.connection.isConnected()) {
