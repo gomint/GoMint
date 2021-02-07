@@ -591,6 +591,18 @@ public class ChunkAdapter implements Chunk {
     }
 
     @Override
+    public ChunkAdapter iterateAllEntities(Consumer<io.gomint.entity.Entity<?>> entityConsumer) {
+        // Iterate over all chunks
+        if (this.entities != null) {
+            for (Long2ObjectMap.Entry<io.gomint.entity.Entity<?>> entry : this.entities.long2ObjectEntrySet()) {
+                entityConsumer.accept(entry.getValue());
+            }
+        }
+
+        return this;
+    }
+
+    @Override
     public <T extends io.gomint.entity.Entity<?>> ChunkAdapter iterateEntities(Class<T> entityClass, Consumer<T> entityConsumer) {
         // Iterate over all chunks
         if (this.entities != null) {

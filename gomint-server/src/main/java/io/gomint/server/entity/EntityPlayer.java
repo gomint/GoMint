@@ -859,7 +859,7 @@ public class EntityPlayer extends EntityHuman<io.gomint.entity.EntityPlayer> imp
 
         // Check all entities
         for (WorldAdapter worldAdapter : this.connection.server().worldManager().worlds()) {
-            worldAdapter.iterateEntities(Entity.class, entity -> {
+            worldAdapter.syncScheduler().execute(() -> worldAdapter.iterateAllEntities(entity -> {
                 if (entity instanceof EntityPlayer) {
                     EntityPlayer entityPlayer = (EntityPlayer) entity;
                     if (!entityPlayer.equals(EntityPlayer.this)) {
@@ -880,7 +880,7 @@ public class EntityPlayer extends EntityHuman<io.gomint.entity.EntityPlayer> imp
                 } else {
                     entity.hideFor(EntityPlayer.this);
                 }
-            });
+            }));
         }
     }
 

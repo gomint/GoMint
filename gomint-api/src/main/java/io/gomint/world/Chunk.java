@@ -57,6 +57,14 @@ public interface Chunk {
     <T extends Block> T blockAt(int x, int y, int z, WorldLayer layer );
 
     /**
+     * Iterate over all entities in this chunk and run entityConsumer on every entity.
+     *
+     * @param entityConsumer which gets called for every found entity
+     * @return world for chaining
+     */
+    Chunk iterateAllEntities(Consumer<Entity<?>> entityConsumer);
+
+    /**
      * Iterate over all entities in this chunk and run entityConsumer on every correct one.
      *
      * @param entityClass    for which we search

@@ -1704,7 +1704,12 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
 
     @Override
     public WorldAdapter iterateAllEntities(Consumer<Entity<?>> entityConsumer) {
-        return this.iterateEntities(Entity.class, (Consumer) entityConsumer);
+        if (!mainThread()) {
+            this.logger.warn("Getting entities not from world's thread. This is not safe", new Exception());
+        }
+        // Iterate over all chunks
+        this.chunkCache.iterateAll(chunkAdapter -> chunkAdapter.iterateAllEntities(entityConsumer));
+        return this;
     }
 
     @Override
