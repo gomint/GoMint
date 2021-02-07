@@ -89,6 +89,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.locks.LockSupport;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.jar.Manifest;
 import javax.annotation.Nonnull;
@@ -657,7 +658,7 @@ public class GoMintServer implements GoMint, InventoryHolder {
     }
 
     @Override
-    public GoMint changeDefaultWorld(World world) {
+    public GoMintServer changeDefaultWorld(World world) {
         if (world == null) {
             LOGGER.warn("Can't set default world to null");
             return this;
@@ -673,7 +674,7 @@ public class GoMintServer implements GoMint, InventoryHolder {
     }
 
     @Override
-    public GoMint motd(String motd) {
+    public GoMintServer motd(String motd) {
         this.networkManager.motd(motd);
         return this;
     }
@@ -744,7 +745,7 @@ public class GoMintServer implements GoMint, InventoryHolder {
     }
 
     @Override
-    public GoMint dispatchCommand(String line) {
+    public GoMintServer dispatchCommand(String line) {
         this.pluginManager.commandManager().executeSystem(line);
         return this;
     }
@@ -756,11 +757,9 @@ public class GoMintServer implements GoMint, InventoryHolder {
 
     @Override
     public EntityPlayer findPlayerByName(String target) {
-        for (WorldAdapter adapter : this.worldManager.worlds()) {
-            for (EntityPlayer player : adapter.onlinePlayers()) {
-                if (player.name().equalsIgnoreCase(target)) {
-                    return player;
-                }
+        for (EntityPlayer player : this.playersByUUID.values()) {
+            if (player.name().equalsIgnoreCase(target)) {
+                return player;
             }
         }
 
@@ -789,9 +788,15 @@ public class GoMintServer implements GoMint, InventoryHolder {
 
     @Override
     public Collection<EntityPlayer> onlinePlayers() {
-        var playerList = new ArrayList<EntityPlayer>();
-        this.worldManager.worlds().forEach(world -> playerList.addAll(world.onlinePlayers()));
-        return playerList;
+        return new ArrayList<>(this.playersByUUID.values());
+    }
+
+    @Override
+    public GoMintServer onlinePlayersIterate(Consumer<EntityPlayer> playerConsumer) {
+        for (WorldAdapter world : this.worldManager.worlds()) {
+            world.syncScheduler().execute(() -> world.onlinePlayers().forEach(playerConsumer));
+        }
+        return this;
     }
 
     @Override
@@ -805,7 +810,7 @@ public class GoMintServer implements GoMint, InventoryHolder {
     }
 
     @Override
-    public GoMint shutdown() {
+    public GoMintServer shutdown() {
         this.running.set(false);
         return this;
     }

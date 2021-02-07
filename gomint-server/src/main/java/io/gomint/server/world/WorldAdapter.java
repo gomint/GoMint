@@ -243,7 +243,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
      * @return collection of all players online on this world
      */
     @Override
-    public Collection<EntityPlayer> onlinePlayers() {
+    public Set<EntityPlayer> onlinePlayers() {
         if (!mainThread()) {
             this.logger.warn("Async world access", new UnsafeWorldAsyncAccessWarning());
         }

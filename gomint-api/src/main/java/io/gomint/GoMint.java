@@ -27,6 +27,7 @@ import io.gomint.world.generator.CreateOptions;
 import java.io.InputStream;
 import java.util.Collection;
 import java.util.UUID;
+import java.util.function.Consumer;
 
 /**
  * @author BlackyPaw
@@ -50,6 +51,7 @@ public interface GoMint {
      * Set a new default world for this server
      *
      * @param world which should be used as default one
+     * @return GoMint for chaining
      */
     GoMint changeDefaultWorld(World world);
 
@@ -64,6 +66,7 @@ public interface GoMint {
      * Sets the server's message of the day (MOTD)
      *
      * @param motd The MOTD to be set
+     * @return GoMint for chaining
      */
     GoMint motd(String motd);
 
@@ -173,6 +176,7 @@ public interface GoMint {
      * Dispatch a command as console
      *
      * @param command which should be executed (without the /)
+     * @return GoMint for chaining
      */
     GoMint dispatchCommand(String command);
 
@@ -228,6 +232,13 @@ public interface GoMint {
     Collection<EntityPlayer> onlinePlayers();
 
     /**
+     * Schedules iteration of all players in their world's thread.
+     * @param playerConsumer the consumer which will get called on each world's thread with every player of the world
+     * @return GoMint for chaining
+     */
+    GoMint onlinePlayersIterate(Consumer<EntityPlayer> playerConsumer);
+
+    /**
      * Get the plugin manager
      *
      * @return the plugin manager
@@ -243,6 +254,7 @@ public interface GoMint {
 
     /**
      * Shutdown this server
+     * @return GoMint for chaining
      */
     GoMint shutdown();
 
