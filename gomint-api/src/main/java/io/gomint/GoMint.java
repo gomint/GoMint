@@ -173,7 +173,7 @@ public interface GoMint {
     World defaultWorld();
 
     /**
-     * Dispatch a command as console
+     * Dispatch a command as console. Will be scheduled on console thread if current thread is not console thread.
      *
      * @param command which should be executed (without the /)
      * @return GoMint for chaining

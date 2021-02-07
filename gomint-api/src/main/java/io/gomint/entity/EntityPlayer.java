@@ -28,6 +28,8 @@ import io.gomint.world.SoundData;
 import java.net.InetSocketAddress;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
+import javax.annotation.Nullable;
 
 /**
  * @author BlackyPaw
@@ -362,12 +364,22 @@ public interface EntityPlayer extends EntityHuman<EntityPlayer> {
     InetSocketAddress address();
 
     /**
-     * Disptach a command for this player
+     * Dispatch a command for this player
      *
      * @param command which should be dispatched
      * @return the output of this command
      */
-    CommandOutput dispatchCommand( String command );
+    CommandOutput dispatchCommand(String command);
+
+    /**
+     * Dispatch a command for this player. Will be scheduled in world's thread, if the current thread is not the world's
+     * thread.
+     *
+     * @param command        which should be dispatched
+     * @param outputConsumer the command output consumer
+     * @return the output of this command
+     */
+    EntityPlayer dispatchCommand(String command, @Nullable Consumer<CommandOutput> outputConsumer);
 
     /**
      * Update the players spawn position. It will be used in sending first chunks (when set in {@link io.gomint.event.player.PlayerPreJoinEvent}.

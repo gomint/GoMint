@@ -29,6 +29,8 @@ import io.gomint.server.command.vanilla.TimeSetCommand;
 import io.gomint.server.entity.CommandPermission;
 import io.gomint.server.entity.EntityPlayer;
 import io.gomint.server.network.packet.PacketAvailableCommands;
+import io.gomint.server.util.UnsafeWorldAsyncAccessException;
+import io.gomint.server.world.WorldAdapter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,7 +43,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 import java.util.function.Function;
+import javax.annotation.Nullable;
 
 /**
  * @author geNAZt
@@ -107,26 +111,78 @@ public class CommandManager {
      */
     public void executeSystem(String line) {
         ConsoleCommandSender consoleCommandSender = new ConsoleCommandSender(line);
-        CommandOutput output = this.dispatchCommand(consoleCommandSender, "/" + line);
-        if (output != null) {
-            for (CommandOutputMessage message : output.messages()) {
-                if (message.success()) {
-                    consoleCommandSender.sendMessage(CommandOutputParser.parse(message.format(), message.parameters()));
-                } else {
-                    consoleCommandSender.sendMessage(ChatColor.RED + CommandOutputParser.parse(message.format(), message.parameters()));
+        this.dispatchCommand(consoleCommandSender, "/" + line, output -> {
+            if (output != null) {
+                for (CommandOutputMessage message : output.messages()) {
+                    if (message.success()) {
+                        consoleCommandSender.sendMessage(CommandOutputParser.parse(message.format(), message.parameters()));
+                    } else {
+                        consoleCommandSender.sendMessage(ChatColor.RED + CommandOutputParser.parse(message.format(), message.parameters()));
+                    }
                 }
             }
-        }
+        });
     }
 
     /**
-     * Dispatch a command
+     * Dispatch a command, will be executed in current thread for console command sender, otherwise will be scheduled in
+     * world's thread, if the current thread is not the world's thread.
+     *
+     * @param sender         of the command
+     * @param command        which should be executed
+     * @param outputConsumer the command output consumer
+     * @return CommandManager for chaining
+     */
+    public CommandManager dispatchCommand(CommandSender<?> sender, String command, @Nullable Consumer<CommandOutput> outputConsumer) {
+        if (sender instanceof io.gomint.command.ConsoleCommandSender) {
+            CommandOutput commandOutput = dispatchCommand0(sender, command);
+            if (outputConsumer != null) {
+                outputConsumer.accept(commandOutput);
+            }
+        } else if (sender instanceof EntityPlayer) {
+            WorldAdapter world = ((EntityPlayer) sender).world();
+            if (world.mainThread()) {
+                CommandOutput commandOutput = dispatchCommand0(sender, command);
+                if (outputConsumer != null) {
+                    outputConsumer.accept(commandOutput);
+                }
+            } else {
+                world.syncScheduler().execute(() -> {
+                    CommandOutput commandOutput = dispatchCommand0(sender, command);
+                    if (outputConsumer != null) {
+                        outputConsumer.accept(commandOutput);
+                    }
+                });
+            }
+        } else {
+            throw new UnsupportedOperationException("Unsupported command sender " + sender.getClass().getName() + " - " + sender);
+        }
+        return this;
+    }
+
+    /**
+     * Dispatch a command, will be executed in current thread. Fails if executing on behalf of an
+     * {@linkplain io.gomint.entity.EntityPlayer} and not in its world's thread.
      *
      * @param sender  of the command
      * @param command which should be executed
-     * @return command output
+     * @return CommandManager for chaining
      */
     public CommandOutput dispatchCommand(CommandSender<?> sender, String command) {
+        if (sender instanceof io.gomint.command.ConsoleCommandSender) {
+            return dispatchCommand0(sender, command);
+        } else if (sender instanceof EntityPlayer) {
+            WorldAdapter world = ((EntityPlayer) sender).world();
+            if (world != null && !world.mainThread()) {
+                throw new UnsafeWorldAsyncAccessException();
+            }
+            return dispatchCommand0(sender, command);
+        } else {
+            throw new UnsupportedOperationException("Unsupported command sender " + sender.getClass().getName() + " - " + sender);
+        }
+    }
+
+    private CommandOutput dispatchCommand0(CommandSender<?> sender, String command) {
         // Search for correct command holder
         String[] commandParts = command.substring(1).split(" ");
         int consumed = 0;

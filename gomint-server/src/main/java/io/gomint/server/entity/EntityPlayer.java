@@ -116,6 +116,7 @@ import java.util.UUID;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
 import javax.annotation.Nonnull;
 
 /**
@@ -128,7 +129,7 @@ import javax.annotation.Nonnull;
  * @author BlackyPaw
  * @version 1.0
  */
-public class EntityPlayer extends EntityHuman<io.gomint.entity.EntityPlayer> implements io.gomint.entity.EntityPlayer, InventoryHolder, PlayerCommandSender<EntityPlayer> {
+public class EntityPlayer extends EntityHuman<io.gomint.entity.EntityPlayer> implements io.gomint.entity.EntityPlayer, InventoryHolder, PlayerCommandSender {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(EntityPlayer.class);
 
@@ -1732,7 +1733,16 @@ public class EntityPlayer extends EntityHuman<io.gomint.entity.EntityPlayer> imp
 
     @Override
     public CommandOutput dispatchCommand(String command) {
+        if (this.world != null && !this.world.mainThread()) {
+            LOGGER.warn("Async world access", new UnsafeWorldAsyncAccessWarning());
+        }
         return this.connection().server().pluginManager().commandManager().dispatchCommand(this, command);
+    }
+
+    @Override
+    public EntityPlayer dispatchCommand(String command, Consumer<CommandOutput> outputConsumer) {
+        this.connection().server().pluginManager().commandManager().dispatchCommand(this, command, outputConsumer);
+        return this;
     }
 
     @Override

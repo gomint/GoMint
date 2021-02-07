@@ -746,7 +746,11 @@ public class GoMintServer implements GoMint, InventoryHolder {
 
     @Override
     public GoMintServer dispatchCommand(String line) {
-        this.pluginManager.commandManager().executeSystem(line);
+        if (Thread.currentThread().getId() == mainThread) {
+            this.pluginManager.commandManager().executeSystem(line);
+        } else {
+            addToMainThread(() -> this.pluginManager.commandManager().executeSystem(line));
+        }
         return this;
     }
 
