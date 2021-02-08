@@ -30,7 +30,7 @@ public class DifficultyCommand extends Command {
     @Override
     public void execute(CommandSender<?> sender, String alias, Map<String, Object> arguments, CommandOutput output) {
         if (!(sender instanceof PlayerCommandSender)) {
-            output.fail("Executor is required to be a player").markFinished();
+            output.fail("Executor is required to be a player");
             return;
         }
 
@@ -55,14 +55,14 @@ public class DifficultyCommand extends Command {
                 difficulty = Difficulty.HARD;
                 break;
             default:
-                output.fail(String.format("No such difficulty degree: %s", difficultyDegree)).markFinished();
+                output.fail(String.format("No such difficulty degree: %s", difficultyDegree));
                 return;
         }
 
         EntityPlayer executor = (EntityPlayer) sender;
         executor.world().difficulty(difficulty);
 
-        output.success(String.format("Set game difficulty to %s", difficulty.name())).markFinished();
+        output.success(String.format("Set game difficulty to %s", difficulty.name()));
     }
 
 }

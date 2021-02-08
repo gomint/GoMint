@@ -30,7 +30,5 @@ public class SayCommand extends Command {
 
         GoMint.instance().onlinePlayers().forEach(players ->
             players.sendMessage(ChatColor.LIGHT_PURPLE + "[" + (sender instanceof ConsoleCommandSender ? "CONSOLE" : ((EntityPlayer) sender).name()) + "] " + message));
-
-        output.markFinished();
     }
 }

@@ -107,8 +107,9 @@ public abstract class Command {
     /**
      * Execute a command for a command sender with the given parameters.
      * <br><br>
-     * <b>You have to call {@linkplain CommandOutput#markFinished() output.markFinished()} at the end to indicate command
-     *  * execution finished.</b>
+     * When you want to asynchroniously finish command execution and then send messages to the executor, you need to
+     * call {@linkplain CommandOutput#markAsync()} synchroniously and when your async processing is done, call
+     * {@linkplain CommandOutput#markFinished()} asynchroniously.
      *
      * @param commandSender which has executed the command
      * @param alias         which the user used to execute this command

@@ -30,7 +30,7 @@ public class ListCommand extends Command {
         StringJoiner joiner = new StringJoiner(", ");
         players.forEach((player1) -> joiner.add(player1.displayName()));
 
-        output.success(joiner.toString()).markFinished();
+        output.success(joiner.toString());
     }
 
 }

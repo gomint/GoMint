@@ -290,6 +290,9 @@ public class CommandManager {
         // CHECKSTYLE:OFF
         try {
             command.getExecutor().execute(sender, command.getName(), arguments, output);
+            if (!output.isAsync()) {
+                output.markFinished();
+            }
         } catch (Exception e) {
             LOGGER.warn("Command '{}' failed", command.getName(), e);
             output.fail(e).markFinished();

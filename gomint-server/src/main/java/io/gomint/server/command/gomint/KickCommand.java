@@ -33,20 +33,21 @@ public class KickCommand extends Command {
         EntityPlayer target = (EntityPlayer) arguments.get("player");
 
         if (target == null) {
-            output.fail("You must provide a player!").markFinished();
+            output.fail("You must provide a player!");
             return;
         }
 
         String reason = (String) arguments.getOrDefault("reason", "Kicked by an operator.");
 
         if (sender.world() != target.world()) {
+            output.markAsync();
             target.world().syncScheduler().execute(() -> {
                 target.disconnect(reason);
                 output.fail("Kicked %%s from the server", target.displayName()).markFinished();
             });
         } else {
             target.disconnect(reason);
-            output.fail("Kicked %%s from the server", target.displayName()).markFinished();
+            output.fail("Kicked %%s from the server", target.displayName());
         }
     }
 }

@@ -28,7 +28,7 @@ public class SetWorldSpawnCommand extends Command {
     @Override
     public void execute(CommandSender<?> sender, String alias, Map<String, Object> arguments, CommandOutput output) {
         if (!(sender instanceof PlayerCommandSender)) {
-            output.fail("Executor is required to be a player").markFinished();
+            output.fail("Executor is required to be a player");
             return;
         }
 
@@ -50,7 +50,7 @@ public class SetWorldSpawnCommand extends Command {
         output.success(String.format("Set the world spawn point to (%.1f, %.1f, %.1f)",
             worldSpawnLocation.x(),
             worldSpawnLocation.y(),
-            worldSpawnLocation.z())).markFinished();
+            worldSpawnLocation.z()));
     }
 
     private void floorLocation(Location location) {

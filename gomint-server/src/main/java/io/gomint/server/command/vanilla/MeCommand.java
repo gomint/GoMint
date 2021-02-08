@@ -27,6 +27,5 @@ public class MeCommand extends Command {
     public void execute(CommandSender<?> sender, String alias, Map<String, Object> arguments, CommandOutput output) {
         String message = (String) arguments.get("message");
         GoMint.instance().onlinePlayers().forEach(players -> players.sendMessage("* " + (sender instanceof ConsoleCommandSender ? "CONSOLE" : ((EntityPlayer) sender).name()) + " " + (message != null ? message : "")));
-        output.markFinished();
     }
 }

@@ -28,7 +28,7 @@ public class PluginsCommand extends Command {
         Map<String, Plugin> plugins = GoMint.instance().pluginManager().plugins();
 
         if (plugins.isEmpty()) {
-            output.fail("No plugins were loaded.").markFinished();
+            output.fail("No plugins were loaded.");
             return;
         }
 
@@ -40,6 +40,6 @@ public class PluginsCommand extends Command {
 
         stringBuilder.setLength(stringBuilder.length() - 4);
 
-        output.success(stringBuilder.toString()).markFinished();
+        output.success(stringBuilder.toString());
     }
 }

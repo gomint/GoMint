@@ -29,7 +29,7 @@ public class SpawnPointCommand extends Command {
     @Override
     public void execute(CommandSender<?> sender, String alias, Map<String, Object> arguments, CommandOutput output) {
         if (!(sender instanceof PlayerCommandSender)) {
-            output.fail("Executor is required to be a player").markFinished();
+            output.fail("Executor is required to be a player");
             return;
         }
 
@@ -44,6 +44,6 @@ public class SpawnPointCommand extends Command {
         }
 
         player.spawnLocation(location);
-        output.success(String.format("Set %s's spawn point to (%.1f, %.1f, %.1f)", player.name(), location.x(), location.y(), location.z())).markFinished();
+        output.success(String.format("Set %s's spawn point to (%.1f, %.1f, %.1f)", player.name(), location.x(), location.y(), location.z()));
     }
 }

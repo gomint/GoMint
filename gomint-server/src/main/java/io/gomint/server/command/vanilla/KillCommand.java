@@ -32,18 +32,19 @@ public class KillCommand extends Command {
         EntityPlayer target = (EntityPlayer) arguments.getOrDefault("target", sender);
 
         if (target == null) {
-            output.fail("No targets matched selector.").markFinished();
+            output.fail("No targets matched selector.");
             return;
         }
 
         if (sender.world() != target.world()) {
+            output.markAsync();
             ((WorldAdapter) target.world()).syncScheduler().execute(() -> {
                 target.attack(target.maxHealth(), EntityDamageEvent.DamageSource.COMMAND);
                 output.success("Killed " + target.name()).markFinished();
             });
         } else {
             target.attack(target.maxHealth(), EntityDamageEvent.DamageSource.COMMAND);
-            output.success("Killed " + target.name()).markFinished();
+            output.success("Killed " + target.name());
         }
     }
 }

@@ -29,18 +29,18 @@ public class OpCommand extends Command {
             if (sender instanceof PlayerCommandSender) {
                 target = (EntityPlayer) sender;
             } else {
-                output.fail("Please provide a player to op").markFinished();
+                output.fail("Please provide a player to op");
                 return;
             }
         }
 
         if (target.op()) {
-            output.fail("Could not op (already op or higher): " + target.name()).markFinished();
+            output.fail("Could not op (already op or higher): " + target.name());
             return;
         }
 
         target.op(true);
         target.sendMessage("You have been opped");
-        output.success("Opped: " + target.name()).markFinished();
+        output.success("Opped: " + target.name());
     }
 }

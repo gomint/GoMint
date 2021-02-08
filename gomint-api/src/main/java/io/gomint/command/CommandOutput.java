@@ -18,7 +18,9 @@ import java.util.function.Consumer;
  * process it in the proper manner. Sending chat messages for the command result is NOT recommended and should NEVER be
  * done.
  * <br><br>
- * <b>You need to call {@linkplain #markFinished()} when your command has finished.</b>
+ * When you want to asynchroniously finish command execution and then send messages to the executor, you need to call
+ * {@linkplain #markAsync()} synchroniously and when your async processing is done, call {@linkplain #markFinished()}
+ * asynchroniously.
  *
  * @author geNAZt, derklaro
  * @version 1.0
@@ -30,6 +32,7 @@ public class CommandOutput {
     private boolean success = true;
     private final Collection<CommandOutputMessage> messages = Collections.synchronizedCollection(new ArrayList<>());
     private final Consumer<CommandOutput> outputConsumer;
+    private volatile boolean async = false;
     private volatile boolean done = false;
 
     private CommandOutput(Consumer<CommandOutput> outputConsumer) {
@@ -40,8 +43,6 @@ public class CommandOutput {
      * When the execution of a command failed you can execute this. This adds a result message created with the given
      * string pattern provided by {@code message} and formatted using the given {@code params} parameters. If you want
      * to submit a stack trace of an exception you should use {@link #fail(Throwable)}.
-     * <br><br>
-     * <b>You need to call {@linkplain #markFinished()} when your command has finished.</b>
      *
      * @param format The string format of the fail result message.
      *               See <a href="https://docs.oracle.com/javase/7/docs/api/java/util/Formatter.html">Formatter documentation</a> for more details.
@@ -61,8 +62,6 @@ public class CommandOutput {
      * throwable which is formatted in the following way: {@code ExceptionClassName: ExceptionMessage} followed by
      * nothing if the exception has no stack trace elements or the first trace element formatted like:
      * {@code @ TraceClassName:TraceLineNumber}.
-     * <br><br>
-     * <b>You need to call {@linkplain #markFinished()} when your command has finished.</b>
      *
      * @param throwable The exception which occurred during the command execution
      * @return this command output instance for chaining
@@ -80,8 +79,6 @@ public class CommandOutput {
      * When the execution of the command resulted in a success, you can append a message here. This adds a result
      * message created with the given string pattern provided by {@code message} and formatted using the given
      * {@code params} parameters
-     * <br><br>
-     * <b>You need to call {@linkplain #markFinished()} when your command has finished.</b>
      *
      * @param format The string format of the success result message.
      *               See <a href="https://docs.oracle.com/javase/7/docs/api/java/util/Formatter.html">Formatter documentation</a> for more details.
@@ -125,7 +122,22 @@ public class CommandOutput {
     }
 
     /**
-     * You need to call this method when command execution is finished.
+     * When the command will finish asynchroniously, you need to call this method so the CommandOUtput will wait for
+     * {@linkplain #markFinished()} call and only then send the CommandOutput to the executor.
+     * @return this command output instance for chaining
+     * @see #markFinished() 
+     * @see #isAsync() 
+     */
+    public CommandOutput markAsync() {
+        this.async = true;
+        return this;
+    }
+
+    /**
+     * When {@linkplain #markAsync()} has been called on this CommandOutput, you need to call this method to mark the
+     * end of the command execution
+     * @see #markAsync() 
+     * @see #isFinished() 
      */
     public synchronized void markFinished() {
         if (!this.done) {
@@ -135,9 +147,20 @@ public class CommandOutput {
     }
 
     /**
+     * Checks whether the command execution will finish asynchroniously
+     *
+     * @return whether the command execution will finish asynchroniously
+     * @see #markAsync() 
+     */
+    public boolean isAsync() {
+        return this.async;
+    }
+
+    /**
      * Checks whether the command execution has finished
      *
      * @return whether the command execution has finished
+     * @see #markFinished() 
      */
     public boolean isFinished() {
         return this.done;

@@ -55,7 +55,7 @@ public class TPCommand extends Command {
         }
 
         if (source == null) {
-            output.fail("No source for teleport given").markFinished();
+            output.fail("No source for teleport given");
             return;
         }
 
@@ -63,6 +63,7 @@ public class TPCommand extends Command {
         if (arguments.containsKey("toTarget")) {
             EntityPlayer entity = (EntityPlayer) arguments.get("toTarget");
             if (source.world() != sender.world()) {
+                output.markAsync();
                 EntityPlayer finalSource = source;
                 ((WorldAdapter) source.world()).syncScheduler().execute(() -> {
                     finalSource.teleport(entity.location());
@@ -70,7 +71,7 @@ public class TPCommand extends Command {
                 });
             } else {
                 source.teleport(entity.location());
-                output.success("%%s has been teleported to %%s", source.name(), entity.name()).markFinished();
+                output.success("%%s has been teleported to %%s", source.name(), entity.name());
             }
             return;
         }
@@ -80,7 +81,7 @@ public class TPCommand extends Command {
         if (arguments.containsKey("world")) {
             World world = GoMint.instance().world((String) arguments.get("world"));
             if (world == null) {
-                output.fail("World %%s could not be found", arguments.get("world")).markFinished();
+                output.fail("World %%s could not be found", arguments.get("world"));
                 return;
             } else {
                 to.world(world);
@@ -93,6 +94,7 @@ public class TPCommand extends Command {
         to.z(position.z());
 
         if (source.world() != sender.world()) {
+            output.markAsync();
             EntityPlayer finalSource = source;
             ((WorldAdapter) source.world()).syncScheduler().execute(() -> {
                 finalSource.teleport(to);
@@ -100,7 +102,7 @@ public class TPCommand extends Command {
             });
         } else {
             source.teleport(to);
-            output.success("%%s has been teleported to %%s, %%s, %%s, %%s", source.name(), to.world().name(), to.x(), to.y(), to.z()).markFinished();
+            output.success("%%s has been teleported to %%s, %%s, %%s, %%s", source.name(), to.world().name(), to.x(), to.y(), to.z());
         }
     }
 }

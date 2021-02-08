@@ -31,16 +31,16 @@ public class TellCommand extends Command {
 
         String message = (String) arguments.get("message");
         if (target == null) {
-            output.fail("You must provide a player!").markFinished();
+            output.fail("You must provide a player!");
             return;
         }
 
         if (message == null) {
-            output.fail("You must provide a message!").markFinished();
+            output.fail("You must provide a message!");
             return;
         }
 
         target.sendMessage(String.format("<%s> %s whispers to you: %s", sender.name(), sender.name(), message));
-        output.success("You whisper to %%s: %%s", target.name(), message).markFinished();
+        output.success("You whisper to %%s: %%s", target.name(), message);
     }
 }

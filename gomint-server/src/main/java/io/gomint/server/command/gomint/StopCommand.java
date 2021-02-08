@@ -23,7 +23,7 @@ public class StopCommand extends Command {
     @Override
     public void execute(CommandSender<?> server, String alias, Map<String, Object> arguments, CommandOutput output) {
         GoMint.instance().shutdown();
-        output.success("§7[§aSYSTEM§7] §fServer will be stopped").markFinished();
+        output.success("§7[§aSYSTEM§7] §fServer will be stopped");
     }
 
 }

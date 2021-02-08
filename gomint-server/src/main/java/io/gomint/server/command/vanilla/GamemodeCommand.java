@@ -37,7 +37,7 @@ public class GamemodeCommand extends Command {
 
         if (arguments.containsKey("player") || sender instanceof ConsoleCommandSender) {
             if (arguments.get("player") == null) {
-                output.fail("No targets matched selector.").markFinished();
+                output.fail("No targets matched selector.");
                 return;
             }
             target = (EntityPlayer) arguments.get("player");
@@ -67,7 +67,7 @@ public class GamemodeCommand extends Command {
                 mode = Gamemode.SPECTATOR;
                 break;
             default:
-                output.fail("Unknown game mode").markFinished();
+                output.fail("Unknown game mode");
                 return;
         }
 
@@ -75,9 +75,9 @@ public class GamemodeCommand extends Command {
         target.sendMessage("Your game mode has been updated to " + this.getGamemodeName(mode));
 
         if (target == sender) {
-            output.success("Set own game mode to %%s", this.getGamemodeName(mode)).markFinished();
+            output.success("Set own game mode to %%s", this.getGamemodeName(mode));
         } else {
-            output.success("Set %%s's game mode to %%s", target.displayName(), this.getGamemodeName(mode)).markFinished();
+            output.success("Set %%s's game mode to %%s", target.displayName(), this.getGamemodeName(mode));
         }
     }
 

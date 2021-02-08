@@ -29,18 +29,18 @@ public class DeopCommand extends Command {
             if (sender instanceof PlayerCommandSender) {
                 target = (EntityPlayer) sender;
             } else {
-                output.fail("Please provide a player to deop").markFinished();
+                output.fail("Please provide a player to deop");
                 return;
             }
         }
 
         if (!target.op()) {
-            output.fail("Could not deop (already not op): " + target.name()).markFinished();
+            output.fail("Could not deop (already not op): " + target.name());
             return;
         }
 
         target.op(false);
         target.sendMessage("You have been de-opped");
-        output.success("De-opped: " + target.name()).markFinished();
+        output.success("De-opped: " + target.name());
     }
 }
