@@ -539,7 +539,6 @@ public class GoMintServer implements GoMint, InventoryHolder {
 
             if (warn) {
                 LOGGER.warn("Running behind: {} / {} tps", this.tps, (1 / (skipNanos / (float) TimeUnit.SECONDS.toNanos(1))));
-                throw new RuntimeException("TEST");
             }
         }
 
