@@ -1,6 +1,5 @@
 package io.gomint.server.entity;
 
-import io.gomint.GoMint;
 import io.gomint.entity.passive.EntityHuman;
 import io.gomint.entity.potion.PotionEffect;
 import io.gomint.entity.projectile.EntityProjectile;
@@ -19,14 +18,19 @@ import io.gomint.server.network.packet.PacketEntityEvent;
 import io.gomint.server.network.packet.PacketSpawnEntity;
 import io.gomint.server.player.EffectManager;
 import io.gomint.server.util.EnumConnectors;
-import io.gomint.server.util.UnsafeWorldAsyncAccessWarning;
+import io.gomint.server.util.Precondition;
 import io.gomint.server.util.Values;
 import io.gomint.server.world.WorldAdapter;
 import io.gomint.taglib.NBTTagCompound;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -451,9 +455,7 @@ public abstract class EntityLiving<E extends io.gomint.entity.Entity<E>> extends
 
     @Override
     public void attach(EntityPlayer player) {
-        if (!this.world.mainThread()) {
-            LOGGER.warn("Async world access", new UnsafeWorldAsyncAccessWarning());
-        }
+        Precondition.safeWorldAccess(this.world);
 
         this.attachedEntities.add(player);
         this.effectManager.sendForPlayer(player);
@@ -461,9 +463,7 @@ public abstract class EntityLiving<E extends io.gomint.entity.Entity<E>> extends
 
     @Override
     public void detach(EntityPlayer player) {
-        if (!this.world.mainThread()) {
-            LOGGER.warn("Async world access", new UnsafeWorldAsyncAccessWarning());
-        }
+        Precondition.safeWorldAccess(this.world);
 
         this.attachedEntities.remove(player);
     }

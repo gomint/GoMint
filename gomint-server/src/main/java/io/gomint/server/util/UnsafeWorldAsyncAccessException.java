@@ -8,8 +8,8 @@ package io.gomint.server.util;
 
 public class UnsafeWorldAsyncAccessException extends RuntimeException {
 
-    public UnsafeWorldAsyncAccessException() {
-        super("Accessing or editing world data not from world's thread.");
+    public UnsafeWorldAsyncAccessException(String world) {
+        super("Accessing or editing world data not from world's thread. Affected world: " + world);
     }
 
 }

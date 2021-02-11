@@ -84,7 +84,7 @@ import io.gomint.server.plugin.EventCaller;
 import io.gomint.server.scoreboard.Scoreboard;
 import io.gomint.server.util.CallerDetectorUtil;
 import io.gomint.server.util.EnumConnectors;
-import io.gomint.server.util.UnsafeWorldAsyncAccessWarning;
+import io.gomint.server.util.Precondition;
 import io.gomint.server.util.Values;
 import io.gomint.server.world.ChunkAdapter;
 import io.gomint.server.world.CoordinateUtils;
@@ -435,9 +435,7 @@ public class EntityPlayer extends EntityHuman<io.gomint.entity.EntityPlayer> imp
 
     @Override
     public EntityPlayer teleport(Location to, EntityTeleportEvent.Cause cause) {
-        if (this.world != null && !this.world.mainThread()) {
-            LOGGER.warn("Async world access", new UnsafeWorldAsyncAccessWarning());
-        }
+        Precondition.safeWorldAccess(this.world);
         // Only teleport when online
         if (!online()) {
             return this;
