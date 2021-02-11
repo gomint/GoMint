@@ -795,7 +795,7 @@ public class GoMintServer implements GoMint, InventoryHolder {
     }
 
     @Override
-    public GoMintServer onlinePlayersIterate(Consumer<io.gomint.entity.EntityPlayer> playerConsumer) {
+    public GoMintServer onlinePlayers(Consumer<io.gomint.entity.EntityPlayer> playerConsumer) {
         for (WorldAdapter world : this.worldManager.worlds()) {
             world.syncScheduler().execute(() -> world.onlinePlayers().forEach(playerConsumer));
         }

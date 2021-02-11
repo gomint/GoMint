@@ -236,7 +236,7 @@ public interface GoMint {
      * @param playerConsumer the consumer which will get called on each world's thread with every player of the world
      * @return GoMint for chaining
      */
-    GoMint onlinePlayersIterate(Consumer<EntityPlayer> playerConsumer);
+    GoMint onlinePlayers(Consumer<EntityPlayer> playerConsumer);
 
     /**
      * Get the plugin manager
