@@ -663,9 +663,6 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
 
     @Override
     public void update(long currentTimeMS, float dT) {
-        for (io.gomint.server.entity.EntityPlayer player : this.players.keySet()) {
-            player.update(currentTimeMS, dT);
-        }
         // ---------------------------------------
         // Tick the chunk cache to get rid of Chunks
         if (!this.config.disableChunkGC()) {

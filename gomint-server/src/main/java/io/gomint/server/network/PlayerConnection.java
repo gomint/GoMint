@@ -47,6 +47,7 @@ import io.gomint.server.network.packet.PacketWorldTime;
 import io.gomint.server.util.Cache;
 import io.gomint.server.util.EnumConnectors;
 import io.gomint.server.util.Pair;
+import io.gomint.server.util.Precondition;
 import io.gomint.server.util.StringUtil;
 import io.gomint.server.util.Values;
 import io.gomint.server.world.ChunkAdapter;
@@ -255,11 +256,7 @@ public class PlayerConnection implements ConnectionWithState {
      */
     public void addToSendQueue(Packet packet) {
         if (this.entity != null) {
-            WorldAdapter world = this.entity.world();
-            if (world != null && !world.mainThread()) {
-                LOGGER.warn("Add packet async to send queue - canceling sending", new Exception());
-                return;
-            }
+            Precondition.safeWorldAccess(this.entity.world());
         }
 
         if (!this.connection.isConnected()) {

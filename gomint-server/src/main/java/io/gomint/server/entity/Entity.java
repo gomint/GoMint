@@ -7,6 +7,7 @@
 
 package io.gomint.server.entity;
 
+import com.google.common.base.Preconditions;
 import io.gomint.entity.BossBar;
 import io.gomint.event.entity.EntityDamageEvent;
 import io.gomint.event.entity.EntityTeleportEvent;
@@ -272,9 +273,8 @@ public abstract class Entity<E extends io.gomint.entity.Entity<E>> implements io
     }
 
     public void world(WorldAdapter world) {
-        if (!world.mainThread()) {
-            throw new IllegalStateException("Cannot set world if not on new world's thread");
-        }
+        Preconditions.checkNotNull(world, "world");
+        Precondition.safeWorldAccess(world);
         this.world = world;
     }
 
