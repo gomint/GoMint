@@ -489,8 +489,6 @@ public class GoMintServer implements GoMint, InventoryHolder {
             // Tick networking at every tick
             this.networkManager.update(currentTickTime, lastTickTime);
 
-            this.permissionGroupManager.update(currentTickTime, lastTickTime);
-
             this.watchdog.done();
 
             // Check if we got shutdown
