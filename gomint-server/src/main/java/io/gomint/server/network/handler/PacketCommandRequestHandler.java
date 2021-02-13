@@ -37,12 +37,7 @@ public class PacketCommandRequestHandler implements PacketHandler<PacketCommandR
                 }
 
                 packetCommandOutput.setOutputs(outputMessages);
-                WorldAdapter world = connection.entity().world();
-                if (world == null || world.mainThread()) {
-                    connection.addToSendQueue(packetCommandOutput);
-                } else {
-                    world.syncScheduler().execute(() -> connection.addToSendQueue(packetCommandOutput));
-                }
+                connection.addToSendQueue(packetCommandOutput);
             }
         });
     }
