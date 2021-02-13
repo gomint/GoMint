@@ -1744,6 +1744,7 @@ public class EntityPlayer extends EntityHuman<io.gomint.entity.EntityPlayer> imp
 
     @Override
     public EntityPlayer scoreboard(io.gomint.scoreboard.Scoreboard scoreboard) {
+        Precondition.safeWorldAccess(this.world);
         this.removeScoreboard();
 
         this.scoreboard = (Scoreboard) scoreboard;
@@ -1753,6 +1754,7 @@ public class EntityPlayer extends EntityHuman<io.gomint.entity.EntityPlayer> imp
 
     @Override
     public EntityPlayer removeScoreboard() {
+        Precondition.safeWorldAccess(this.world);
         if (this.scoreboard != null) {
             this.scoreboard.hideFor(this);
             this.scoreboard = null;
