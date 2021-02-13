@@ -255,11 +255,7 @@ public class PlayerConnection implements ConnectionWithState {
      *
      * @param packet The packet which should be queued
      */
-    public void addToSendQueue(Packet packet) {
-        if (this.entity != null) {
-            Precondition.safeWorldAccess(this.entity.world());
-        }
-
+    public synchronized void addToSendQueue(Packet packet) {
         if (!this.connection.isConnected()) {
             return;
         }
@@ -358,7 +354,7 @@ public class PlayerConnection implements ConnectionWithState {
         }
     }
 
-    private void releaseSendQueue() {
+    private synchronized void releaseSendQueue() {
         // Send all queued packets
 
         if (this.sendQueue != null && !this.sendQueue.isEmpty()) {
