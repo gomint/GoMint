@@ -12,6 +12,7 @@ import io.gomint.crypto.Processor;
 import io.gomint.event.player.PlayerCleanedupEvent;
 import io.gomint.event.player.PlayerKickEvent;
 import io.gomint.event.player.PlayerQuitEvent;
+import io.gomint.event.player.PlayerWorldLeaveEvent;
 import io.gomint.jraknet.Connection;
 import io.gomint.jraknet.EncapsulatedPacket;
 import io.gomint.jraknet.PacketBuffer;
@@ -926,6 +927,7 @@ public class PlayerConnection implements ConnectionWithState {
         LOGGER.info("Player {} disconnected", this.entity);
 
         if (this.entity != null && this.entity.world() != null) {
+            this.networkManager.server().pluginManager().callEvent(new PlayerWorldLeaveEvent(this.entity, null));
             PlayerQuitEvent event = this.networkManager.server().pluginManager().callEvent(new PlayerQuitEvent(this.entity, ChatColor.YELLOW + this.entity.displayName() + " left the game."));
             if (event.quitMessage() != null && !event.quitMessage().isEmpty()) {
                 this.server().onlinePlayers().forEach((player) -> {
