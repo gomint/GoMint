@@ -438,8 +438,21 @@ public class LevelDBWorldAdapter extends WorldAdapter {
         if (chunk == null) {
             DB.Snapshot snapshot = this.db.getSnapshot();
 
+            // Check if this chunk exists (by getting the 0th subchunk)
+            ByteBuf key = this.getKeySubChunk(x, z, (byte) 0x2f, (byte) 0);
+            byte[] checkExists = this.db.get(snapshot, key);
+            key.release();
+
+            if (checkExists == null) {
+                if (generate) {
+                    return this.generate(x, z, false);
+                } else {
+                    return (ChunkAdapter) this.generateEmptyChunk(x, z);
+                }
+            }
+
             // Get the finalized value, only needed for vanilla though, other implementations don't use this (null = true)
-            ByteBuf key = this.getKey(x, z, (byte) 0x36);
+            key = this.getKey(x, z, (byte) 0x36);
             byte[] finalized = this.db.get(snapshot, key);
             key.release();
 
