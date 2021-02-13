@@ -18,6 +18,7 @@ import io.gomint.server.maintenance.ReportUploader;
 import io.gomint.server.util.Allocator;
 import io.gomint.server.util.BlockIdentifier;
 import io.gomint.server.util.Palette;
+import io.gomint.server.util.Values;
 import io.gomint.server.util.collection.FixedReadOnlyMap;
 import io.gomint.server.world.BlockRuntimeIDs;
 import io.gomint.server.world.ChunkAdapter;
@@ -84,9 +85,14 @@ public class LevelDBChunkAdapter extends ChunkAdapter {
             saveChunkSlice(i, writeBatch);
         }
 
+        // Write version
+        ByteBuf key = ((LevelDBWorldAdapter) this.world).getKey(this.x, this.z, (byte) 0x2c);
+        ByteBuf val = PooledByteBufAllocator.DEFAULT.directBuffer(1).writeByte(Values.LATEST_CHUNK_VERSION);
+        writeBatch.put(key, val);
+
         // Save metadata
-        ByteBuf key = ((LevelDBWorldAdapter) this.world).getKey(this.x, this.z, (byte) 0x36);
-        ByteBuf val = PooledByteBufAllocator.DEFAULT.directBuffer(1).writeByte(populated() ? 2 : 0)
+        key = ((LevelDBWorldAdapter) this.world).getKey(this.x, this.z, (byte) 0x36);
+        val = PooledByteBufAllocator.DEFAULT.directBuffer(4).writeByte(populated() ? 2 : 0)
             .writeByte(0).writeByte(0).writeByte(0);
         writeBatch.put(key, val);
 
@@ -313,13 +319,14 @@ public class LevelDBChunkAdapter extends ChunkAdapter {
             try {
                 NBTTagCompound compound = nbtReader.parse();
                 String identifier = compound.getString("identifier", null);
-
-                var entity = this.world.server().entities().create(identifier);
-                if (entity != null) {
-                    ((Entity<?>) entity).initFromNBT(compound);
-                    Location location = entity.location();
-                    location.world(this.world);
-                    entity.spawn(location);
+                if (identifier != null) {
+                    var entity = this.world.server().entities().create(identifier);
+                    if (entity != null) {
+                        ((Entity<?>) entity).initFromNBT(compound);
+                        Location location = entity.location();
+                        location.world(this.world);
+                        entity.spawn(location);
+                    }
                 }
             } catch (IOException | AllocationLimitReachedException e) {
                 LOGGER.error("Error in loading entities", e);
@@ -342,6 +349,15 @@ public class LevelDBChunkAdapter extends ChunkAdapter {
 
         this.heightMap(height);
         this.setBiomes(biomes);
+    }
+
+    /**
+     * Prepare maybe needed converters
+     *
+     * @param version
+     */
+    public void prepareVersion(byte version) {
+
     }
 
 }

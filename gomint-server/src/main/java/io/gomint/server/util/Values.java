@@ -25,4 +25,6 @@ public class Values {
     public static final int CRAFTING_INPUT_OFFSET = 32;
     public static final int OUTPUT_OFFSET = 50;
 
+    public static final int LATEST_CHUNK_VERSION = 21;
+
 }
