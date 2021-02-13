@@ -8,11 +8,13 @@
 package io.gomint.server.permission;
 
 import io.gomint.permission.Group;
-import it.unimi.dsi.fastutil.objects.Object2BooleanMap;
-import it.unimi.dsi.fastutil.objects.Object2BooleanOpenHashMap;
-import it.unimi.dsi.fastutil.objects.ObjectSet;
 
+import java.util.Collections;
+import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
+import java.util.WeakHashMap;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author geNAZt
@@ -23,8 +25,8 @@ public class PermissionGroup implements Group {
     private final PermissionGroupManager manager;
     private final String name;
 
-    private boolean dirty;
-    private Object2BooleanMap<String> permissions;
+    private Map<String, Boolean> permissions;
+    private final Set<PermissionManager> attachedTo = Collections.newSetFromMap(new WeakHashMap<>());
 
     /**
      * Create a new permission group. This needs to be configured via
@@ -32,13 +34,9 @@ public class PermissionGroup implements Group {
      * @param manager which created this group
      * @param name    of the group
      */
-    PermissionGroup( PermissionGroupManager manager, String name ) {
+    PermissionGroup(PermissionGroupManager manager, String name) {
         this.name = name;
         this.manager = manager;
-    }
-
-    public boolean isDirty() {
-        return this.dirty;
     }
 
     @Override
@@ -47,42 +45,47 @@ public class PermissionGroup implements Group {
     }
 
     @Override
-    public Group permission(String permission, boolean value ) {
-        if ( this.permissions == null ) {
-            this.permissions = new Object2BooleanOpenHashMap<>();
+    public Group permission(String permission, boolean value) {
+        if (this.permissions == null) {
+            this.permissions = new ConcurrentHashMap<>();
         }
 
-        this.permissions.put( permission, value );
-        this.dirty = true;
-        this.manager.setDirty( true );
+        this.permissions.put(permission, value);
+        markDirty();
         return this;
     }
 
     @Override
-    public Group removePermission( String permission ) {
-        if ( this.permissions != null ) {
-            this.permissions.remove( permission );
+    public Group removePermission(String permission) {
+        if (this.permissions != null) {
+            this.permissions.remove(permission);
         }
 
-        this.dirty = true;
-        this.manager.setDirty( true );
+        markDirty();
         return this;
     }
 
     @Override
-    public ObjectSet<Object2BooleanMap.Entry<String>> cursor() {
-        if ( this.permissions == null ) {
+    public Set<Map.Entry<String, Boolean>> cursor() {
+        if (this.permissions == null) {
             return null;
         }
 
-        return this.permissions.object2BooleanEntrySet();
+        return this.permissions.entrySet();
     }
 
-    /**
-     * Reset dirty state
-     */
-    void resetDirty() {
-        this.dirty = false;
+    private synchronized void markDirty() {
+        for (PermissionManager attached : this.attachedTo) {
+            attached.markDirty(this);
+        }
+    }
+
+    synchronized void addAttached(PermissionManager attached) {
+        this.attachedTo.add(attached);
+    }
+
+    synchronized void removeAttached(PermissionManager attached) {
+        this.attachedTo.remove(attached);
     }
 
     /**
@@ -91,8 +94,8 @@ public class PermissionGroup implements Group {
      * @param permission which we need the setting for
      * @return true or false
      */
-    public Boolean get( String permission ) {
-        return this.permissions.get( permission );
+    public Boolean get(String permission) {
+        return this.permissions.get(permission);
     }
 
     @Override

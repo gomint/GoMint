@@ -7,8 +7,8 @@
 
 package io.gomint.permission;
 
-import it.unimi.dsi.fastutil.objects.Object2BooleanMap;
-import it.unimi.dsi.fastutil.objects.ObjectSet;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * @author geNAZt
@@ -31,20 +31,20 @@ public interface Group {
      * @param permission which should be set
      * @param value      of this permission, true when granted, false when revoked
      */
-    Group permission(String permission, boolean value );
+    Group permission(String permission, boolean value);
 
     /**
      * Remove a permission completely
      *
      * @param permission which should be removed
      */
-    Group removePermission( String permission );
+    Group removePermission(String permission);
 
     /**
      * Get a iterator for all configured permissions
      *
      * @return new iterator for this group
      */
-    ObjectSet<Object2BooleanMap.Entry<String>> cursor();
+    Set<Map.Entry<String, Boolean>> cursor();
 
 }
