@@ -182,7 +182,7 @@ public class CommandManager {
         while (selected == null) {
             for (CommandHolder commandHolder : this.getCommands()) {
                 String cmd = commandName.toString();
-                if (cmd.equalsIgnoreCase(commandHolder.getName()) || (commandHolder.getAlias() != null && commandHolder.getAlias().contains(cmd))) {
+                if (cmd.equalsIgnoreCase(commandHolder.name()) || (commandHolder.alias() != null && commandHolder.alias().contains(cmd))) {
                     selected = commandHolder;
                     break;
                 }
@@ -214,7 +214,7 @@ public class CommandManager {
                 output.fail("Command for input '%%s' is not registered for console", command).markFinished();
             }
             // Check for permission
-            if (selected.getPermission() != null && !sender.hasPermission(selected.getPermission())) {
+            if (selected.permission() != null && !sender.hasPermission(selected.permission())) {
                 output.fail("No permission for this command").markFinished();
             } else {
                 // Now we need to parse all additional parameters
@@ -226,9 +226,9 @@ public class CommandManager {
                     params = new String[0];
                 }
 
-                if (selected.getOverload() != null && params.length > 0) {
+                if (selected.overloads() != null && params.length > 0) {
                     List<CommandCanidate> commandCanidates = new ArrayList<>();
-                    for (CommandOverload overload : selected.getOverload()) {
+                    for (CommandOverload overload : selected.overloads()) {
                         if (overload.permission().isEmpty() || sender.hasPermission(overload.permission())) {
                             Iterator<String> paramIterator = Arrays.asList(params).iterator();
 
@@ -300,12 +300,12 @@ public class CommandManager {
     private void tryCommandDispatch(CommandSender<?> sender, CommandHolder command, Map<String, Object> arguments, CommandOutput output) {
         // CHECKSTYLE:OFF
         try {
-            command.getExecutor().execute(sender, command.getName(), arguments, output);
+            command.executor().execute(sender, command.name(), arguments, output);
             if (!output.isAsync()) {
                 output.markFinished();
             }
         } catch (Exception e) {
-            LOGGER.warn("Command '{}' failed", command.getName(), e);
+            LOGGER.warn("Command '{}' failed", command.name(), e);
             output.fail(e).markFinished();
         }
         // CHECKSTYLE:ON
@@ -328,7 +328,7 @@ public class CommandManager {
         while (selected == null) {
             for (CommandHolder commandHolder : this.commands.values()) {
                 String cmd = commandName.toString();
-                if (cmd.equalsIgnoreCase(commandHolder.getName()) || (commandHolder.getAlias() != null && commandHolder.getAlias().contains(cmd))) {
+                if (cmd.equalsIgnoreCase(commandHolder.name()) || (commandHolder.alias() != null && commandHolder.alias().contains(cmd))) {
                     selected = commandHolder;
                     break;
                 }
@@ -352,8 +352,8 @@ public class CommandManager {
 
             List<String> commandNames = new ArrayList<>();
             for (CommandHolder commandHolder : this.commands.values()) {
-                if (commandHolder.getName().startsWith(line)) {
-                    commandNames.add(commandHolder.getName() + " - " + commandHolder.getDescription());
+                if (commandHolder.name().startsWith(line)) {
+                    commandNames.add(commandHolder.name() + " - " + commandHolder.description());
                 }
             }
 
@@ -361,15 +361,15 @@ public class CommandManager {
         }
 
         List<String> commandNames = new ArrayList<>();
-        for (CommandOverload overload : selected.getOverload()) {
-            StringBuilder help = new StringBuilder(selected.getName()).append(" ");
+        for (CommandOverload overload : selected.overloads()) {
+            StringBuilder help = new StringBuilder(selected.name()).append(" ");
             if (overload.parameters() != null) {
                 for (Map.Entry<String, ParamValidator<?>> entry : overload.parameters().entrySet()) {
                     help.append(entry.getKey()).append(entry.getValue().optional() ? "<" : " [").append(entry.getValue().helpText()).append(entry.getValue().optional() ? ">" : "]").append(" ");
                 }
             }
 
-            commandNames.add(help.append("- ").append(selected.getDescription()).toString());
+            commandNames.add(help.append("- ").append(selected.description()).toString());
         }
 
         return commandNames;
@@ -377,12 +377,12 @@ public class CommandManager {
 
     public void register(Plugin plugin, Command commandBuilder) {
         // Check if command is complete
-        if (commandBuilder.getName() == null ||
-            commandBuilder.getDescription() == null) {
+        if (commandBuilder.name() == null ||
+            commandBuilder.description() == null) {
             throw new IllegalStateException("Name or Description can't be null");
         }
 
-        this.internalRegister(plugin, commandBuilder.getName(), commandBuilder);
+        this.internalRegister(plugin, commandBuilder.name(), commandBuilder);
     }
 
     private void internalRegister(Plugin plugin, String name, Command commandBuilder) {
@@ -401,15 +401,15 @@ public class CommandManager {
             CommandHolder commandHolder = new CommandHolder(
                 holder.plugin(),
                 cmdName,
-                holder.getDescription(),
-                holder.getAlias(),
+                holder.description(),
+                holder.alias(),
                 holder.activeWorldsOnly(),
                 holder.console(),
-                holder.getCommandPermission(),
-                holder.getPermission(),
+                holder.commandPermission(),
+                holder.permission(),
                 holder.isPermissionDefault(),
-                holder.getExecutor(),
-                holder.getOverload()
+                holder.executor(),
+                holder.overloads()
             );
 
             this.commands.put(cmdName, commandHolder);
@@ -420,15 +420,15 @@ public class CommandManager {
         holder = new CommandHolder(
             plugin,
             name,
-            commandBuilder.getDescription(),
-            commandBuilder.getAlias(),
+            commandBuilder.description(),
+            commandBuilder.alias(),
             commandBuilder.activeWorldsOnly(),
             commandBuilder.console(),
             CommandPermission.NORMAL,
-            commandBuilder.getPermission(),
+            commandBuilder.permission(),
             commandBuilder.isPermissionDefault(),
             commandBuilder,
-            commandBuilder.getOverload());
+            commandBuilder.overloads());
 
         // Store the command for usage
         this.commands.put(name, holder);
@@ -437,7 +437,7 @@ public class CommandManager {
         }
 
         // Check for sub command
-        if (holder.getName().contains(" ")) {
+        if (holder.name().contains(" ")) {
             String[] split = name.split(" ");
 
             // We only support one deep sub commands. For the rest using the CommandValidator is recommended
@@ -468,9 +468,9 @@ public class CommandManager {
 
         // NormalGenerator commands
         for (CommandHolder holder : this.commands.values()) {
-            if (!holder.getName().contains(" ") &&
-                (holder.getPermission() == null || 
-                    player.hasPermission(holder.getPermission(), holder.isPermissionDefault())) &&
+            if (!holder.name().contains(" ") &&
+                (holder.permission() == null || 
+                    player.hasPermission(holder.permission(), holder.isPermissionDefault())) &&
                 (!holder.activeWorldsOnly() || holder.plugin().activeInWorld(player.world()))) {
                 holders.add(holder);
             }

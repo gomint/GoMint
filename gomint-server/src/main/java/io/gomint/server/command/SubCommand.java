@@ -67,11 +67,11 @@ public class SubCommand extends Command {
                         break;
                     }
                     // Check permission
-                    if (commandHolder.getPermission() == null || sender.hasPermission(commandHolder.getPermission())) {
+                    if (commandHolder.permission() == null || sender.hasPermission(commandHolder.permission())) {
                         Map<String, Object> arg = new HashMap<>(arguments);
                         arg.remove(entry.getKey());
 
-                        commandHolder.getExecutor().execute(sender, alias + " " + entry.getValue(), arg, output);
+                        commandHolder.executor().execute(sender, alias + " " + entry.getValue(), arg, output);
                         return;
                     } else {
                         output.fail("No permission for this command").markFinished();
@@ -81,7 +81,7 @@ public class SubCommand extends Command {
             }
         }
 
-        output.fail("Command for input '%s' could not be found", this.getName()).markFinished();
+        output.fail("Command for input '%s' could not be found", this.name()).markFinished();
     }
 
     /**
@@ -94,36 +94,41 @@ public class SubCommand extends Command {
         List<CommandOverload> overloads = new ArrayList<>();
 
         for (Map.Entry<String, CommandHolder> entry : this.subCommands.entrySet()) {
-            if (entry.getValue().getPermission() == null || player.hasPermission(entry.getValue().getPermission())) {
-                if (entry.getValue().getOverload() != null) {
-                    for (CommandOverload commandOverload : entry.getValue().getOverload()) {
-                        CommandOverload overload = new CommandOverload();
-                        CommandValidator commandValidator = new CommandValidator();
-                        overload.param(entry.getKey(), commandValidator);
-
-                        for (Map.Entry<String, ParamValidator<?>> validatorEntry : commandOverload.parameters().entrySet()) {
-                            overload.param(validatorEntry.getKey(), validatorEntry.getValue());
-                        }
-
-                        overloads.add(overload);
-                    }
-                } else {
+            CommandHolder holder = entry.getValue();
+            if (holder.activeWorldsOnly() && !holder.plugin().activeInWorld(player.world())) {
+                continue;
+            }
+            if (holder.permission() != null && !player.hasPermission(holder.permission())) {
+                continue;
+            }
+            if (holder.overloads() != null) {
+                for (CommandOverload commandOverload : holder.overloads()) {
                     CommandOverload overload = new CommandOverload();
                     CommandValidator commandValidator = new CommandValidator();
                     overload.param(entry.getKey(), commandValidator);
+
+                    for (Map.Entry<String, ParamValidator<?>> validatorEntry : commandOverload.parameters().entrySet()) {
+                        overload.param(validatorEntry.getKey(), validatorEntry.getValue());
+                    }
+
                     overloads.add(overload);
                 }
+            } else {
+                CommandOverload overload = new CommandOverload();
+                CommandValidator commandValidator = new CommandValidator();
+                overload.param(entry.getKey(), commandValidator);
+                overloads.add(overload);
             }
         }
 
         if (!overloads.isEmpty()) {
             return new CommandHolder(
                 this.plugin,
-                this.getName(),
-                "Subcommands for command '" + this.getName() + "'",
+                this.name(),
+                "Subcommands for command '" + this.name() + "'",
                 null,
-                this.activeWorldsOnly(),
-                this.console(),
+                false,
+                true,
                 CommandPermission.NORMAL,
                 null,
                 false,

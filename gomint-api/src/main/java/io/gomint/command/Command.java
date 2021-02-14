@@ -50,7 +50,7 @@ public abstract class Command {
     private String description;
     private boolean activeWorldsOnly = true;
     private boolean console = true;
-    private List<CommandOverload> overload;
+    private List<CommandOverload> overloads;
     private Set<String> alias;
     private String permission;
     private boolean permissionDefault;
@@ -196,12 +196,12 @@ public abstract class Command {
      * @return overload storage for parameter definition
      */
     public final CommandOverload overload() {
-        if (this.overload == null) {
-            this.overload = new ArrayList<>();
+        if (this.overloads == null) {
+            this.overloads = new ArrayList<>();
         }
 
         CommandOverload commandOverload = new CommandOverload();
-        this.overload.add(commandOverload);
+        this.overloads.add(commandOverload);
         return commandOverload;
     }
 
@@ -283,11 +283,11 @@ public abstract class Command {
         }
     }
 
-    public final String getName() {
+    public final String name() {
         return this.name;
     }
 
-    public final String getDescription() {
+    public final String description() {
         return this.description;
     }
 
@@ -299,15 +299,15 @@ public abstract class Command {
         return this.console;
     }
 
-    public final List<CommandOverload> getOverload() {
-        return this.overload;
+    public final List<CommandOverload> overloads() {
+        return this.overloads;
     }
 
-    public final Set<String> getAlias() {
+    public final Set<String> alias() {
         return this.alias;
     }
 
-    public final String getPermission() {
+    public final String permission() {
         return this.permission;
     }
 

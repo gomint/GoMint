@@ -25,9 +25,11 @@ public class CommandHolder {
     private final String permission;
     private final boolean permissionDefault;
     private final Command executor;
-    private final List<CommandOverload> overload;
+    private final List<CommandOverload> overloads;
 
-    public CommandHolder(Plugin plugin, String name, String description, Set<String> alias, boolean activeWorldsOnly, boolean console, CommandPermission commandPermission, String permission, boolean permissionDefault, Command executor, List<CommandOverload> overload) {
+    public CommandHolder(Plugin plugin, String name, String description, Set<String> alias, boolean activeWorldsOnly,
+                         boolean console, CommandPermission commandPermission, String permission,
+                         boolean permissionDefault, Command executor, List<CommandOverload> overloads) {
         this.plugin = plugin;
         this.name = name;
         this.description = description;
@@ -38,22 +40,22 @@ public class CommandHolder {
         this.permission = permission;
         this.permissionDefault = permissionDefault;
         this.executor = executor;
-        this.overload = overload;
+        this.overloads = overloads;
     }
 
     public Plugin plugin() {
         return this.plugin;
     }
 
-    public String getName() {
+    public String name() {
         return this.name;
     }
 
-    public String getDescription() {
+    public String description() {
         return this.description;
     }
 
-    public Set<String> getAlias() {
+    public Set<String> alias() {
         return this.alias;
     }
 
@@ -65,11 +67,11 @@ public class CommandHolder {
         return this.console;
     }
 
-    public CommandPermission getCommandPermission() {
+    public CommandPermission commandPermission() {
         return this.commandPermission;
     }
 
-    public String getPermission() {
+    public String permission() {
         return this.permission;
     }
 
@@ -77,11 +79,12 @@ public class CommandHolder {
         return this.permissionDefault;
     }
 
-    public Command getExecutor() {
+    public Command executor() {
         return this.executor;
     }
 
-    public List<CommandOverload> getOverload() {
-        return this.overload;
+    public List<CommandOverload> overloads() {
+        return this.overloads;
     }
+
 }
