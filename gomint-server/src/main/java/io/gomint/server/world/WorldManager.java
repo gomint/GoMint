@@ -8,6 +8,7 @@
 package io.gomint.server.world;
 
 import io.gomint.server.GoMintServer;
+import io.gomint.server.util.SimpleUncaughtExceptionHandler;
 import io.gomint.server.util.Values;
 import io.gomint.server.world.generator.vanilla.VanillaGeneratorImpl;
 import io.gomint.server.world.inmemory.InMemoryWorldAdapter;
@@ -50,7 +51,9 @@ public class WorldManager {
 
         @Override
         public Thread newThread(@Nonnull Runnable r) {
-            return new Thread(WorldManager.this.threadGroup, r, THREAD_PREFIX + this.counter.getAndIncrement());
+            Thread thread = new Thread(WorldManager.this.threadGroup, r, THREAD_PREFIX + this.counter.getAndIncrement());
+            thread.setUncaughtExceptionHandler(SimpleUncaughtExceptionHandler.INSTANCE);
+            return thread;
         }
     });
 

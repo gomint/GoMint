@@ -43,6 +43,7 @@ import io.gomint.server.permission.PermissionGroupManager;
 import io.gomint.server.plugin.SimplePluginManager;
 import io.gomint.server.scheduler.AsyncScheduler;
 import io.gomint.server.util.ClassPath;
+import io.gomint.server.util.SimpleUncaughtExceptionHandler;
 import io.gomint.server.util.Values;
 import io.gomint.server.util.Watchdog;
 import io.gomint.server.world.WorldAdapter;
@@ -167,7 +168,9 @@ public class GoMintServer implements GoMint, InventoryHolder {
 
             @Override
             public Thread newThread(@Nonnull Runnable r) {
-                return new Thread(r, "GoMint Thread #" + this.counter.getAndIncrement());
+                Thread thread = new Thread(r, "GoMint Thread #" + this.counter.getAndIncrement());
+                thread.setUncaughtExceptionHandler(SimpleUncaughtExceptionHandler.INSTANCE);
+                return thread;
             }
         }));
 
@@ -328,6 +331,7 @@ public class GoMintServer implements GoMint, InventoryHolder {
                 }
             }
         });
+        this.readerThread.setUncaughtExceptionHandler(SimpleUncaughtExceptionHandler.INSTANCE);
 
         this.readerThread.setName("GoMint CLI reader");
         this.readerThread.start();
