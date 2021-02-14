@@ -67,6 +67,8 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.SocketException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.TimeUnit;
@@ -89,7 +91,7 @@ public class NetworkManager {
     private Long2ObjectMap<PlayerConnection> playersByGuid = new Long2ObjectOpenHashMap<>();
 
     private Long2ObjectMap<PlayerConnection> tickingPlayers = new Long2ObjectOpenHashMap<>();
-    private final Queue<Long> untickQueue = new ConcurrentLinkedQueue<>();
+    private final List<Long> untickQueue = new ArrayList<>();
 
     // Incoming connections to be added to the player map during next tick:
     private Queue<PlayerConnection> incomingConnections = new ConcurrentLinkedQueue<>();
@@ -111,7 +113,7 @@ public class NetworkManager {
      */
     public NetworkManager(GoMintServer server) {
         this.server = server;
-        this.postProcessService = new PostProcessExecutorService(server.executorService());
+        this.postProcessService = new PostProcessExecutorService(server.asyncScheduler());
         this.initPacketHandlers();
     }
 
@@ -257,9 +259,15 @@ public class NetworkManager {
     }
 
     /**
-     * Closes the network manager and all player connections.
+     * Closes the network handling
      */
     public void close() {
+        LOGGER.info("Shutting down networking - socket and event loops");
+
+        if (this.socket != null) {
+            this.socket.close();
+            this.socket = null;
+        }
         // Close the jRaknet EventLoops, we don't need them anymore
         try {
             EventLoops.cleanup();
@@ -270,8 +278,15 @@ public class NetworkManager {
             LOGGER.error("Could not shutdown netty loops", e);
             Thread.currentThread().interrupt();
         }
+        LOGGER.info("Shutdown of network completed");
     }
-    
+
+    /**
+     * Removes player connection from {@code GoMint Main Thread} ticking.<br>
+     * Should only be called from {@code GoMint Main Thread}.
+     *
+     * @param guid player id (guid)
+     */
     public void untickPlayer(long guid) {
         this.untickQueue.add(guid);
     }
@@ -315,6 +330,10 @@ public class NetworkManager {
     private void handleSocketEvent(SocketEvent event) {
         switch (event.getType()) {
             case NEW_INCOMING_CONNECTION:
+                if (!this.server.isRunning()) {
+                    event.getConnection().disconnect(null);
+                    return;
+                }
                 PlayerPreLoginEvent playerPreLoginEvent = this.server().pluginManager().callEvent(
                     new PlayerPreLoginEvent(event.getConnection().getAddress())
                 );
@@ -335,6 +354,10 @@ public class NetworkManager {
                 break;
 
             case UNCONNECTED_PING:
+                if (!this.server.isRunning()) {
+                    event.getConnection().disconnect(null);
+                    return;
+                }
                 this.handleUnconnectedPing(event);
                 break;
 
@@ -439,23 +462,14 @@ public class NetworkManager {
         return this.socket.getBindAddress().getPort();
     }
 
-    /**
-     * Shut all network listeners down
-     */
-    public void shutdown() {
-        LOGGER.info("Shutting down networking");
-        if (this.socket != null) {
-            this.socket.close();
-            this.socket = null;
+    public void stopNewConnections() {
+        LOGGER.info("Shutting down new connections");
 
-            for (Long2ObjectMap.Entry<PlayerConnection> entry : this.playersByGuid.long2ObjectEntrySet()) {
-                entry.getValue().close();
-            }
-
-            this.close();
+        for (Long2ObjectMap.Entry<PlayerConnection> entry : this.tickingPlayers.long2ObjectEntrySet()) {
+            entry.getValue().close();
         }
 
-        LOGGER.info("Shutdown of network completed");
+        LOGGER.info("Shutdown of new connections");
     }
 
     public <T extends Packet> PacketHandler<T> getPacketHandler(int packetId) {

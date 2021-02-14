@@ -8,6 +8,7 @@
 package io.gomint.server.world;
 
 import io.gomint.server.GoMintServer;
+import io.gomint.server.entity.EntityPlayer;
 import io.gomint.server.util.SimpleUncaughtExceptionHandler;
 import io.gomint.server.util.Values;
 import io.gomint.server.world.generator.vanilla.VanillaGeneratorImpl;
@@ -168,13 +169,24 @@ public class WorldManager {
         CountDownLatch countDownLatch = new CountDownLatch(worlds.size());
 
         for (WorldAdapter loadedWorld : worlds) {
-            loadedWorld.unloadInternal(countDownLatch::countDown);
+            if (!loadedWorld.isRunning()) {
+                LOGGER.warn("World {} is not running, but still registered", loadedWorld);
+                countDownLatch.countDown();
+            } else {
+                loadedWorld.unloadInternal(player -> ((EntityPlayer) player).disconnect("Server closed"),
+                    () -> {
+                        LOGGER.debug("World {} closed.", loadedWorld);
+                        countDownLatch.countDown();
+                    });
+            }
         }
+        LOGGER.debug("Waiting for worlds to close...");
         try {
             countDownLatch.await(2, TimeUnit.MINUTES);
         } catch (InterruptedException e) {
             // Ignored .-.
         }
+        LOGGER.debug("Shutting down world executor...");
 
         int wait = (int) Values.CLIENT_TICK_MS;
         this.executorService.shutdown();

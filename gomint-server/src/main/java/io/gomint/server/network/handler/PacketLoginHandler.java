@@ -8,6 +8,7 @@
 package io.gomint.server.network.handler;
 
 import io.gomint.event.player.PlayerLoginEvent;
+import io.gomint.math.Location;
 import io.gomint.player.DeviceInfo;
 import io.gomint.server.GoMintServer;
 import io.gomint.server.entity.EntityPlayer;
@@ -85,7 +86,7 @@ public class PacketLoginHandler implements PacketHandler<PacketLogin> {
 
         // Async login sequence
         GoMintServer server = connection.server();
-        server.executorService().execute(() -> {
+        server.asyncScheduler().executeAsync(() -> {
             // More data please
             ByteBuffer byteBuffer = ByteBuffer.wrap(packet.getPayload());
             byteBuffer.order(ByteOrder.LITTLE_ENDIAN);
@@ -263,9 +264,20 @@ public class PacketLoginHandler implements PacketHandler<PacketLogin> {
             }
 
             // Update player world
-            WorldAdapter worldAdapter = (WorldAdapter) player.spawnLocation().world();
+            Location spawnLocation;
+            if (player.spawnLocation() != null) {
+                spawnLocation = player.spawnLocation();
+            } else {
+                spawnLocation = player.world().spawnLocation();
+            }
+            WorldAdapter worldAdapter = (WorldAdapter) spawnLocation.world();
+            
+            // Move network ticking to player world
+            connection.server().networkManager().untickPlayer(connection.id());
+
             worldAdapter.syncScheduler().execute(() -> {
-                player.world((WorldAdapter) player.spawnLocation().world());
+                world.addNewConnection(connection);
+                player.world((WorldAdapter) spawnLocation.world());
 
                 if (keyFactory.keyPair() == null) {
                     // No encryption
@@ -274,7 +286,7 @@ public class PacketLoginHandler implements PacketHandler<PacketLogin> {
                     connection.initWorldAndResourceSend();
                 } else {
                     // Generating EDCH secrets can take up huge amount of time
-                    server.executorService().execute(() -> {
+                    server.asyncScheduler().executeAsync(() -> {
                         server.watchdog().add(2, TimeUnit.SECONDS);
 
                         // Enable encryption

@@ -1613,7 +1613,6 @@ public class EntityPlayer extends EntityHuman<io.gomint.entity.EntityPlayer> imp
     }
 
     public void firstSpawn() {
-        this.connection.server().networkManager().untickPlayer(this.id);
         // Set location
         this.connection.sendMovePlayer(this.location());
 

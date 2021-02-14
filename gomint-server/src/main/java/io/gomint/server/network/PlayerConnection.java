@@ -806,7 +806,7 @@ public class PlayerConnection implements ConnectionWithState {
             packet.setMessage(message);
             this.send(packet);
 
-            this.server.executorService().schedule(() -> PlayerConnection.this.internalClose(message), 3, TimeUnit.SECONDS);
+            this.server.asyncScheduler().scheduleAsync(() -> PlayerConnection.this.internalClose(message), 3, TimeUnit.SECONDS);
         } else {
             this.internalClose(message);
         }
@@ -919,7 +919,7 @@ public class PlayerConnection implements ConnectionWithState {
     /**
      * The underlying RakNet Connection closed. Cleanup
      */
-    void close() {
+    public void close() {
         LOGGER.info("Player {} disconnected", this.entity);
 
         if (this.entity != null && this.entity.world() != null) {

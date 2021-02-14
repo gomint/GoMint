@@ -49,6 +49,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
@@ -323,8 +324,8 @@ public class VanillaGeneratorImpl extends VanillaGenerator {
 
         this.client = new CopyOnWriteArrayList<>();
         for (int i = 0; i < 2; i++) {
-            this.server.executorService()
-                .schedule(() -> this.connectClient(worldAdapter), Duration.ofMillis((i + 1) * 2000));
+            this.server.asyncScheduler()
+                .scheduleAsync(() -> this.connectClient(worldAdapter), (i + 1) * 2, TimeUnit.SECONDS);
         }
     }
 
@@ -350,10 +351,10 @@ public class VanillaGeneratorImpl extends VanillaGenerator {
 
             this.client.remove(newClient);
 
-            this.server.executorService().schedule(() -> {
+            this.server.asyncScheduler().scheduleAsync(() -> {
                 Client client = this.connectClient(worldAdapter);
                 this.client.add(client);
-            }, Duration.ofMillis(500));
+            }, 500, TimeUnit.MILLISECONDS);
         });
 
         // Accept the spawn point

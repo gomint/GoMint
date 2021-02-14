@@ -205,7 +205,7 @@ public class CommandManager {
         } else {
             // Check for world
             if (selected.activeWorldsOnly() && sender instanceof PlayerCommandSender) {
-                if (!selected.plugin().activeInWorld(sender.world())) {
+                if (selected.plugin() !=null && !selected.plugin().activeInWorld(sender.world())) {
                     output.fail("Command for input '%%s' could not be found", command).markFinished();
                 }
             }
@@ -471,7 +471,7 @@ public class CommandManager {
             if (!holder.name().contains(" ") &&
                 (holder.permission() == null || 
                     player.hasPermission(holder.permission(), holder.isPermissionDefault())) &&
-                (!holder.activeWorldsOnly() || holder.plugin().activeInWorld(player.world()))) {
+                (!holder.activeWorldsOnly() || holder.plugin() == null || holder.plugin().activeInWorld(player.world()))) {
                 holders.add(holder);
             }
         }

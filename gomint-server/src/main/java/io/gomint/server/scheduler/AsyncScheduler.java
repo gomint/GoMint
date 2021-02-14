@@ -117,4 +117,8 @@ public class AsyncScheduler {
         return task;
     }
 
+    public boolean isShutdown() {
+        return this.executorService.isShutdown();
+    }
+
 }

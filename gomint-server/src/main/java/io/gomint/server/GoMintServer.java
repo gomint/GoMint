@@ -173,6 +173,7 @@ public class GoMintServer implements GoMint, InventoryHolder {
                 return thread;
             }
         }));
+        this.scheduler = new AsyncScheduler(this.executorService);
 
         this.watchdog = new Watchdog(this);
         this.watchdog.add(30, TimeUnit.SECONDS);
@@ -245,9 +246,8 @@ public class GoMintServer implements GoMint, InventoryHolder {
         this.loadConfig();
 
         // ------------------------------------ //
-        // Scheduler + WorldManager
+        // WorldManager
         // ------------------------------------ //
-        this.scheduler = new AsyncScheduler(this.executorService());
         this.worldManager = new WorldManager(this);
 
         // PluginManager Initialization
@@ -546,11 +546,15 @@ public class GoMintServer implements GoMint, InventoryHolder {
         LOGGER.info("Uninstalled all plugins");
 
         if (this.networkManager != null) {
-            this.networkManager.shutdown();
+            this.networkManager.stopNewConnections();
         }
 
         if (this.worldManager != null) {
             this.worldManager.close();
+        }
+        
+        if (this.networkManager != null) {
+            this.networkManager.close();
         }
 
         LOGGER.info("Starting shutdown of the main executor");
@@ -917,10 +921,6 @@ public class GoMintServer implements GoMint, InventoryHolder {
 
     public Map<UUID, EntityPlayer> uuidMappedPlayers() {
         return this.playersByUUID;
-    }
-
-    public ListeningScheduledExecutorService executorService() {
-        return this.executorService;
     }
 
     public AsyncScheduler asyncScheduler() {

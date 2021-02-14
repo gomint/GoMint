@@ -20,7 +20,7 @@ public class SimpleUncaughtExceptionHandler implements Thread.UncaughtExceptionH
 
     @Override
     public void uncaughtException(Thread t, Throwable e) {
-        LOGGER.error("Uncaught exception occurred", e);
+        LOGGER.error("Uncaught exception occurred in thread #" + t.getId(), e);
     }
 
 }

@@ -58,7 +58,7 @@ public class SubCommand extends Command {
                 if (commandHolder != null) {
                     // Check for world
                     if (activeWorldsOnly() && sender instanceof PlayerCommandSender) {
-                        if (!this.plugin.activeInWorld(sender.world())) {
+                        if (this.plugin != null && !this.plugin.activeInWorld(sender.world())) {
                             break;
                         }
                     }
@@ -95,7 +95,7 @@ public class SubCommand extends Command {
 
         for (Map.Entry<String, CommandHolder> entry : this.subCommands.entrySet()) {
             CommandHolder holder = entry.getValue();
-            if (holder.activeWorldsOnly() && !holder.plugin().activeInWorld(player.world())) {
+            if (holder.activeWorldsOnly() && holder.plugin() != null && !holder.plugin().activeInWorld(player.world())) {
                 continue;
             }
             if (holder.permission() != null && !player.hasPermission(holder.permission())) {
