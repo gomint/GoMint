@@ -19,6 +19,7 @@ import io.gomint.server.entity.EntityPlayer;
 import io.gomint.server.plugin.PluginClassloader;
 import io.gomint.server.util.Allocator;
 import io.gomint.server.util.DumpUtil;
+import io.gomint.server.util.Values;
 import io.gomint.server.world.BlockRuntimeIDs;
 import io.gomint.server.world.ChunkAdapter;
 import io.gomint.server.world.ChunkCache;
@@ -438,12 +439,18 @@ public class LevelDBWorldAdapter extends WorldAdapter {
         if (chunk == null) {
             DB.Snapshot snapshot = this.db.getSnapshot();
 
-            // Check if this chunk exists (by getting the 0th subchunk)
-            ByteBuf key = this.getKeySubChunk(x, z, (byte) 0x2f, (byte) 0);
-            byte[] checkExists = this.db.get(snapshot, key);
+            // Check if we have a version
+            ByteBuf key = this.getKey(x, z, (byte) 0x2c);
+            byte[] version = this.db.get(snapshot, key);
             key.release();
 
-            if (checkExists == null) {
+            if (version == null) {
+                key = this.getKey(x, z, (byte) 0x76);
+                version = this.db.get(snapshot, key);
+                key.release();
+            }
+
+            if (version == null) {
                 if (generate) {
                     return this.generate(x, z, false);
                 } else {
@@ -460,6 +467,7 @@ public class LevelDBWorldAdapter extends WorldAdapter {
             boolean populated = finalized == null || finalized[0] == 2;
 
             LevelDBChunkAdapter loadingChunk = new LevelDBChunkAdapter(this, x, z, populated);
+            loadingChunk.prepareVersion(version[0]);
 
             for (int sectionY = 0; sectionY < 16; sectionY++) {
                 key = this.getKeySubChunk(x, z, (byte) 0x2f, (byte) sectionY);
