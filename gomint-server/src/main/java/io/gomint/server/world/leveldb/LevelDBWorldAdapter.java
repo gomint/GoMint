@@ -19,6 +19,7 @@ import io.gomint.server.entity.EntityPlayer;
 import io.gomint.server.plugin.PluginClassloader;
 import io.gomint.server.util.Allocator;
 import io.gomint.server.util.DumpUtil;
+import io.gomint.server.util.Values;
 import io.gomint.server.world.BlockRuntimeIDs;
 import io.gomint.server.world.ChunkAdapter;
 import io.gomint.server.world.ChunkCache;
@@ -438,8 +439,27 @@ public class LevelDBWorldAdapter extends WorldAdapter {
         if (chunk == null) {
             DB.Snapshot snapshot = this.db.getSnapshot();
 
+            // Check if we have a version
+            ByteBuf key = this.getKey(x, z, (byte) 0x2c);
+            byte[] version = this.db.get(snapshot, key);
+            key.release();
+
+            if (version == null) {
+                key = this.getKey(x, z, (byte) 0x76);
+                version = this.db.get(snapshot, key);
+                key.release();
+            }
+
+            if (version == null) {
+                if (generate) {
+                    return this.generate(x, z, false);
+                } else {
+                    return (ChunkAdapter) this.generateEmptyChunk(x, z);
+                }
+            }
+
             // Get the finalized value, only needed for vanilla though, other implementations don't use this (null = true)
-            ByteBuf key = this.getKey(x, z, (byte) 0x36);
+            key = this.getKey(x, z, (byte) 0x36);
             byte[] finalized = this.db.get(snapshot, key);
             key.release();
 
@@ -447,6 +467,7 @@ public class LevelDBWorldAdapter extends WorldAdapter {
             boolean populated = finalized == null || finalized[0] == 2;
 
             LevelDBChunkAdapter loadingChunk = new LevelDBChunkAdapter(this, x, z, populated);
+            loadingChunk.prepareVersion(version[0]);
 
             for (int sectionY = 0; sectionY < 16; sectionY++) {
                 key = this.getKeySubChunk(x, z, (byte) 0x2f, (byte) sectionY);

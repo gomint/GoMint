@@ -51,6 +51,7 @@ import java.util.function.Consumer;
 public class ChunkAdapter implements Chunk {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ChunkAdapter.class);
+    private static final byte[] EMPTY_BIOMES = new byte[256];
 
     // CHECKSTYLE:OFF
     // World
@@ -88,7 +89,8 @@ public class ChunkAdapter implements Chunk {
         this.x = x;
         this.z = z;
 
-        this.biomes.writerIndex(255);
+        // Write zeros
+        this.biomes.writeBytes(EMPTY_BIOMES);
     }
 
     @Override
