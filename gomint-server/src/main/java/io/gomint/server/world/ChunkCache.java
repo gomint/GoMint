@@ -10,7 +10,10 @@ package io.gomint.server.world;
 import io.gomint.math.MathUtils;
 import io.gomint.server.entity.EntityPlayer;
 import io.gomint.server.util.Values;
+import it.unimi.dsi.fastutil.Hash;
+import it.unimi.dsi.fastutil.HashCommon;
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
+import it.unimi.dsi.fastutil.longs.Long2ObjectOpenCustomHashMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.longs.LongIterator;
 import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
@@ -44,7 +47,9 @@ public class ChunkCache {
 
     public ChunkCache( WorldAdapter world ) {
         this.world = world;
-        this.cachedChunks = new Long2ObjectOpenHashMap<>();
+        this.cachedChunks = new Long2ObjectOpenHashMap<>(
+            world.config().amountOfChunksForSpawnArea() * world.config().amountOfChunksForSpawnArea(),
+            Hash.VERY_FAST_LOAD_FACTOR);
         this.enableAutoSave = world.config().autoSave();
         this.autoSaveInterval = world.config().autoSaveInterval();
     }
