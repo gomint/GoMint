@@ -19,6 +19,7 @@ import io.gomint.gui.Modal;
 import io.gomint.inventory.item.ItemStack;
 import io.gomint.permission.GroupManager;
 import io.gomint.player.PlayerSkin;
+import io.gomint.plugin.Plugin;
 import io.gomint.plugin.StartupPriority;
 import io.gomint.scoreboard.Scoreboard;
 import io.gomint.server.assets.AssetsLibrary;
@@ -796,6 +797,28 @@ public class GoMintServer implements GoMint, InventoryHolder {
     public GoMintServer onlinePlayers(Consumer<io.gomint.entity.EntityPlayer> playerConsumer) {
         for (WorldAdapter world : this.worldManager.worlds()) {
             world.syncScheduler().execute(() -> world.onlinePlayers().forEach(playerConsumer));
+        }
+        return this;
+    }
+
+    @Override
+    public Collection<io.gomint.entity.EntityPlayer> activeWorldsPlayers(Plugin plugin) {
+        ArrayList<io.gomint.entity.EntityPlayer> list = new ArrayList<>(currentPlayerCount());
+        for (EntityPlayer player : this.playersByUUID.values()) {
+            WorldAdapter world = player.world();
+            if (world != null && plugin.activeInWorld(world)) {
+                list.add(player);
+            }
+        }
+        return list;
+    }
+
+    @Override
+    public GoMint activeWorldsPlayers(Plugin plugin, Consumer<io.gomint.entity.EntityPlayer> playerConsumer) {
+        for (WorldAdapter world : this.worldManager.worlds()) {
+            if (plugin.activeInWorld(world)) {
+                world.syncScheduler().execute(() -> world.onlinePlayers().forEach(playerConsumer));
+            }
         }
         return this;
     }

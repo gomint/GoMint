@@ -10,6 +10,7 @@ package io.gomint.plugin;
 import com.google.common.collect.ImmutableSet;
 import io.gomint.GoMint;
 import io.gomint.command.Command;
+import io.gomint.entity.EntityPlayer;
 import io.gomint.event.Event;
 import io.gomint.event.EventListener;
 import io.gomint.event.interfaces.WorldEvent;
@@ -20,9 +21,11 @@ import org.slf4j.Logger;
 import java.io.File;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 import javax.annotation.Nullable;
 
@@ -223,8 +226,8 @@ public class Plugin {
      * @return the stream for getting this resource, or null if it does not
      * exist
      */
-    public final InputStream resourceAsStream(String name ) {
-        return getClass().getClassLoader().getResourceAsStream( name );
+    public final InputStream resourceAsStream(String name) {
+        return getClass().getClassLoader().getResourceAsStream(name);
     }
 
     /**
@@ -233,7 +236,7 @@ public class Plugin {
      * @return the data folder of this plugin
      */
     public final File dataFolder() {
-        return new File( pluginManager().baseDirectory(), name() );
+        return new File(pluginManager().baseDirectory(), name());
     }
 
     public final PluginManager pluginManager() {
@@ -310,6 +313,28 @@ public class Plugin {
             return true;
         }
         return activeInWorld(((WorldEvent) event).world());
+    }
+
+    /**
+     * Get a collection of all players in worlds this plugin is active in
+     *
+     * @return collection of players in plugin's active worlds
+     * @see GoMint#activeWorldsPlayers(Plugin)
+     */
+    public final Collection<EntityPlayer> activeWorldsPlayers() {
+        return this.server.activeWorldsPlayers(this);
+    }
+
+    /**
+     * Schedules iteration of players in this plugin's active worlds in their world's thread.
+     *
+     * @param playerConsumer the consumer which will get called on each world's thread with every player of the world
+     * @return this plugin for chaining
+     * @see GoMint#activeWorldsPlayers(Plugin, Consumer)
+     */
+    public final Plugin activeWorldsPlayers(Consumer<EntityPlayer> playerConsumer) {
+        this.server.activeWorldsPlayers(this, playerConsumer);
+        return this;
     }
 
 }

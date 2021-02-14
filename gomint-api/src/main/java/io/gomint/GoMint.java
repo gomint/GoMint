@@ -16,6 +16,7 @@ import io.gomint.gui.Modal;
 import io.gomint.inventory.item.ItemStack;
 import io.gomint.permission.GroupManager;
 import io.gomint.player.PlayerSkin;
+import io.gomint.plugin.Plugin;
 import io.gomint.plugin.PluginManager;
 import io.gomint.scoreboard.Scoreboard;
 import io.gomint.world.Chunk;
@@ -37,7 +38,7 @@ import java.util.function.Consumer;
  * @stability 2
  */
 public interface GoMint {
-    
+
     /**
      * Get the GoMint server instance currently running
      *
@@ -107,8 +108,8 @@ public interface GoMint {
      * Create a new enchantment with the given level
      *
      * @param enchantmentClass which should be used to create
-     * @param level which the enchantment should have
-     * @param <T> generic type of the enchantment
+     * @param level            which the enchantment should have
+     * @param <T>              generic type of the enchantment
      * @return fresh generated enchantment with the level given
      */
     <T extends Enchantment> T createEnchantment(Class<T> enchantmentClass, int level);
@@ -121,7 +122,7 @@ public interface GoMint {
      * @return fresh generated entity
      */
     <T extends Entity<T>> T createEntity(Class<T> entityClass);
-    
+
     /**
      * Create a new itemstack with the given item in it
      *
@@ -202,7 +203,7 @@ public interface GoMint {
      * @return the player or null if not found
      */
     EntityPlayer findPlayerByUUID(UUID target);
-    
+
     /**
      * Get the manager which manages permission groups
      *
@@ -228,15 +229,47 @@ public interface GoMint {
      * Get a collection of all players on this server
      *
      * @return collection of online players
+     * @see #onlinePlayers(Consumer)
+     * @see #activeWorldsPlayers(Plugin)
+     * @see #activeWorldsPlayers(Plugin, Consumer)
      */
     Collection<EntityPlayer> onlinePlayers();
 
     /**
      * Schedules iteration of all players in their world's thread.
+     *
      * @param playerConsumer the consumer which will get called on each world's thread with every player of the world
      * @return GoMint for chaining
+     * @see #onlinePlayers()
+     * @see #activeWorldsPlayers(Plugin)
+     * @see #activeWorldsPlayers(Plugin, Consumer)
      */
     GoMint onlinePlayers(Consumer<EntityPlayer> playerConsumer);
+
+    /**
+     * Get a collection of all players in worlds the given plugin is active
+     *
+     * @param plugin the plugin those active worlds to use
+     * @return collection of players in plugin's active worlds
+     * @see Plugin#activeWorldsPlayers()
+     * @see #onlinePlayers()
+     * @see #onlinePlayers(Consumer)
+     * @see #activeWorldsPlayers(Plugin, Consumer)
+     */
+    Collection<EntityPlayer> activeWorldsPlayers(Plugin plugin);
+
+    /**
+     * Schedules iteration of players in plugin's active worlds in their world's thread.
+     *
+     * @param plugin         the plugin those active worlds to use
+     * @param playerConsumer the consumer which will get called on each world's thread with every player of the world
+     * @return GoMint for chaining
+     * @see Plugin#activeWorldsPlayers(Consumer)
+     * @see #onlinePlayers()
+     * @see #onlinePlayers(Consumer)
+     * @see #activeWorldsPlayers(Plugin)
+     */
+    GoMint activeWorldsPlayers(Plugin plugin, Consumer<EntityPlayer> playerConsumer);
 
     /**
      * Get the plugin manager
@@ -254,6 +287,7 @@ public interface GoMint {
 
     /**
      * Shutdown this server
+     *
      * @return GoMint for chaining
      */
     GoMint shutdown();
@@ -272,7 +306,7 @@ public interface GoMint {
      * @return the world or null if there was a error loading it
      */
     World world(String name);
-    
+
     /**
      * Get a collection of all worlds on this server
      *
