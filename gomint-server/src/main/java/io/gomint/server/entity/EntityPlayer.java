@@ -470,6 +470,9 @@ public class EntityPlayer extends EntityHuman<io.gomint.entity.EntityPlayer> imp
 
                 // Set the new location
                 this.setAndRecalcPosition(to);
+                
+                // Resend commands (world-restrictions)
+                this.sendCommands();
 
                 this.world.server().pluginManager().callEvent(new PlayerWorldJoinEvent(this, from.world()));
                 this.world.spawnEntityAt(this, to.x(), to.y(), to.z(), to.yaw(), to.pitch());

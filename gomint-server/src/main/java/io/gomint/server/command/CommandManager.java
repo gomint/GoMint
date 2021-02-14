@@ -7,6 +7,7 @@ import io.gomint.command.CommandOutputMessage;
 import io.gomint.command.CommandOverload;
 import io.gomint.command.CommandSender;
 import io.gomint.command.ParamValidator;
+import io.gomint.command.PlayerCommandSender;
 import io.gomint.plugin.Plugin;
 import io.gomint.server.command.cli.MemoryDumpCommand;
 import io.gomint.server.command.gomint.KickCommand;
@@ -202,6 +203,16 @@ public class CommandManager {
             // Send CommandOutput with failure
             output.fail("Command for input '%%s' could not be found", command).markFinished();
         } else {
+            // Check for world
+            if (selected.activeWorldsOnly() && sender instanceof PlayerCommandSender) {
+                if (!selected.plugin().activeInWorld(sender.world())) {
+                    output.fail("Command for input '%%s' could not be found", command).markFinished();
+                }
+            }
+            // Check if allowed for console
+            if (!selected.console() && sender instanceof io.gomint.command.ConsoleCommandSender) {
+                output.fail("Command for input '%%s' is not registered for console", command).markFinished();
+            }
             // Check for permission
             if (selected.getPermission() != null && !sender.hasPermission(selected.getPermission())) {
                 output.fail("No permission for this command").markFinished();
@@ -388,9 +399,12 @@ public class CommandManager {
             }
 
             CommandHolder commandHolder = new CommandHolder(
+                holder.plugin(),
                 cmdName,
                 holder.getDescription(),
                 holder.getAlias(),
+                holder.activeWorldsOnly(),
+                holder.console(),
                 holder.getCommandPermission(),
                 holder.getPermission(),
                 holder.isPermissionDefault(),
@@ -404,9 +418,12 @@ public class CommandManager {
 
         // Create a new holder
         holder = new CommandHolder(
+            plugin,
             name,
             commandBuilder.getDescription(),
             commandBuilder.getAlias(),
+            commandBuilder.activeWorldsOnly(),
+            commandBuilder.console(),
             CommandPermission.NORMAL,
             commandBuilder.getPermission(),
             commandBuilder.isPermissionDefault(),
@@ -452,8 +469,9 @@ public class CommandManager {
         // NormalGenerator commands
         for (CommandHolder holder : this.commands.values()) {
             if (!holder.getName().contains(" ") &&
-                (holder.getPermission() == null ||
-                    player.hasPermission(holder.getPermission(), holder.isPermissionDefault()))) {
+                (holder.getPermission() == null || 
+                    player.hasPermission(holder.getPermission(), holder.isPermissionDefault())) &&
+                (!holder.activeWorldsOnly() || holder.plugin().activeInWorld(player.world()))) {
                 holders.add(holder);
             }
         }

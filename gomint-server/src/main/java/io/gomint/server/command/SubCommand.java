@@ -12,6 +12,7 @@ import io.gomint.command.CommandOutput;
 import io.gomint.command.CommandOverload;
 import io.gomint.command.CommandSender;
 import io.gomint.command.ParamValidator;
+import io.gomint.command.PlayerCommandSender;
 import io.gomint.command.validator.CommandValidator;
 import io.gomint.plugin.Plugin;
 import io.gomint.server.entity.CommandPermission;
@@ -36,14 +37,14 @@ public class SubCommand extends Command {
      * @param plugin   which created this sub command
      * @param baseName of the command
      */
-    SubCommand( Plugin plugin, String baseName ) {
-        super( baseName );
+    SubCommand(Plugin plugin, String baseName) {
+        super(baseName);
         this.plugin = plugin;
     }
 
-    public void addCommand( Plugin plugin, String subCommandName, CommandHolder holder ) {
-        if ( plugin == null || this.plugin.equals( plugin ) ) {
-            this.subCommands.put( subCommandName, holder );
+    public void addCommand(Plugin plugin, String subCommandName, CommandHolder holder) {
+        if (plugin == null || this.plugin.equals(plugin)) {
+            this.subCommands.put(subCommandName, holder);
         }
     }
 
@@ -55,6 +56,17 @@ public class SubCommand extends Command {
                 String subCommand = (String) entry.getValue();
                 CommandHolder commandHolder = this.subCommands.get(subCommand);
                 if (commandHolder != null) {
+                    // Check for world
+                    if (activeWorldsOnly() && sender instanceof PlayerCommandSender) {
+                        if (!this.plugin.activeInWorld(sender.world())) {
+                            break;
+                        }
+                    }
+                    // Check if allowed for console
+                    if (!console() && sender instanceof io.gomint.command.ConsoleCommandSender) {
+                        break;
+                    }
+                    // Check permission
                     if (commandHolder.getPermission() == null || sender.hasPermission(commandHolder.getPermission())) {
                         Map<String, Object> arg = new HashMap<>(arguments);
                         arg.remove(entry.getKey());
@@ -78,41 +90,45 @@ public class SubCommand extends Command {
      * @param player for which we need this sub command
      * @return null when no sub commands apply, a holder when they apply
      */
-    CommandHolder createHolder( io.gomint.server.entity.EntityPlayer player ) {
+    CommandHolder createHolder(io.gomint.server.entity.EntityPlayer player) {
         List<CommandOverload> overloads = new ArrayList<>();
 
-        for ( Map.Entry<String, CommandHolder> entry : this.subCommands.entrySet() ) {
-            if ( entry.getValue().getPermission() == null || player.hasPermission( entry.getValue().getPermission() ) ) {
-                if ( entry.getValue().getOverload() != null ) {
-                    for ( CommandOverload commandOverload : entry.getValue().getOverload() ) {
+        for (Map.Entry<String, CommandHolder> entry : this.subCommands.entrySet()) {
+            if (entry.getValue().getPermission() == null || player.hasPermission(entry.getValue().getPermission())) {
+                if (entry.getValue().getOverload() != null) {
+                    for (CommandOverload commandOverload : entry.getValue().getOverload()) {
                         CommandOverload overload = new CommandOverload();
                         CommandValidator commandValidator = new CommandValidator();
-                        overload.param( entry.getKey(), commandValidator );
+                        overload.param(entry.getKey(), commandValidator);
 
-                        for ( Map.Entry<String, ParamValidator<?>> validatorEntry : commandOverload.parameters().entrySet() ) {
-                            overload.param( validatorEntry.getKey(), validatorEntry.getValue() );
+                        for (Map.Entry<String, ParamValidator<?>> validatorEntry : commandOverload.parameters().entrySet()) {
+                            overload.param(validatorEntry.getKey(), validatorEntry.getValue());
                         }
 
-                        overloads.add( overload );
+                        overloads.add(overload);
                     }
                 } else {
                     CommandOverload overload = new CommandOverload();
                     CommandValidator commandValidator = new CommandValidator();
-                    overload.param( entry.getKey(), commandValidator );
-                    overloads.add( overload );
+                    overload.param(entry.getKey(), commandValidator);
+                    overloads.add(overload);
                 }
             }
         }
 
-        if ( !overloads.isEmpty() ) {
-            return new CommandHolder( this.getName(),
+        if (!overloads.isEmpty()) {
+            return new CommandHolder(
+                this.plugin,
+                this.getName(),
                 "Subcommands for command '" + this.getName() + "'",
                 null,
+                this.activeWorldsOnly(),
+                this.console(),
                 CommandPermission.NORMAL,
                 null,
                 false,
                 this,
-                overloads );
+                overloads);
         }
 
         return null;
