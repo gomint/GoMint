@@ -34,7 +34,7 @@ import java.util.function.Consumer;
  * @author BlackyPaw
  * @author geNAZt
  * @author Janmm14
- * @version 2.0
+ * @version 1.0
  * @stability 2
  */
 public interface GoMint {

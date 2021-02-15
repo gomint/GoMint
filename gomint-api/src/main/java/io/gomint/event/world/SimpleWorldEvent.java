@@ -8,7 +8,7 @@ import io.gomint.world.World;
  * Represents a not cancellable event with a world mainly involved
  *
  * @author geNAZt
- * @version 2.0
+ * @version 1.0
  * @stability 2
  */
 public class SimpleWorldEvent extends Event implements WorldEvent {

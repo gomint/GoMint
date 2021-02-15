@@ -14,7 +14,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * @author Janmm14
- * @version 2.0
+ * @version 1.0
  */
 public class WorldTestUtil {
     

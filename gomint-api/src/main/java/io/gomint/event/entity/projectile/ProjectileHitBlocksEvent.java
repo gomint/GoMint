@@ -15,7 +15,7 @@ import java.util.Set;
 
 /**
  * @author geNAZt
- * @version 2.0
+ * @version 1.0
  * @stability 2
  */
 public class ProjectileHitBlocksEvent extends CancellableEntityEvent<ProjectileHitBlocksEvent> {
@@ -49,7 +49,7 @@ public class ProjectileHitBlocksEvent extends CancellableEntityEvent<ProjectileH
      * @return projectile which hit the blocks
      * @deprecated Use {@link #entity()} instead
      */
-    @Deprecated(since = "2.0", forRemoval = true)
+    @Deprecated(forRemoval = true)
     public EntityProjectile<?> projectile() {
         return (EntityProjectile<?>) super.entity();
     }

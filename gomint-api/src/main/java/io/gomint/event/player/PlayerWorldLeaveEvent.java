@@ -19,7 +19,7 @@ import javax.annotation.Nullable;
  * {@linkplain io.gomint.event.entity.EntityTeleportEvent EntityTeleportEvent}.
  * 
  * @author Janmm14
- * @version 2.0
+ * @version 1.0
  * @stability 2
  */
 public class PlayerWorldLeaveEvent extends SimplePlayerEvent {

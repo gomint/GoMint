@@ -15,7 +15,7 @@ import io.gomint.event.interfaces.PlayerEvent;
  * Represents a not cancellable event with a player involved
  *
  * @author geNAZt
- * @version 2.0
+ * @version 1.0
  * @stability 2
  */
 public class SimplePlayerEvent extends Event implements PlayerEvent {
