@@ -32,7 +32,7 @@ public class TestCommand extends Command {
         World world = this.plugin.server().createWorld(String.valueOf(ThreadLocalRandom.current().nextInt()), new CreateOptions());
         EntityPlayer player = (EntityPlayer) commandSender;
         player.teleport(world.spawnLocation());
-        output.success("Did teleport to %%s", world.name()).markFinished();
+        output.success("Did teleport to %%s", world.name());
     }
 
 }
