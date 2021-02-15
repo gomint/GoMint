@@ -11,6 +11,10 @@ import io.gomint.world.World;
 
 import javax.annotation.Nullable;
 
+/**
+ * @author Janmm14
+ * @version 1.0
+ */
 public class Precondition {
 
     private Precondition() {
@@ -20,6 +24,7 @@ public class Precondition {
     /**
      * Throws {@linkplain UnsafeWorldAsyncAccessException} when given {@code world} is not null and its
      * {@linkplain World#mainThread()} method returns false.
+     *
      * @param world the world to enforce sync access to
      */
     public static void safeWorldAccess(@Nullable World world) {
@@ -31,6 +36,7 @@ public class Precondition {
     /**
      * Throws {@linkplain UnsafeWorldAsyncAccessException} when given {@code world} is not null and its
      * {@linkplain WorldAdapter#hardMainThreadCheck()} method returns false.
+     *
      * @param world the world to enforce sync access to
      */
     public static void safeWorldAccessHard(@Nullable WorldAdapter world) {

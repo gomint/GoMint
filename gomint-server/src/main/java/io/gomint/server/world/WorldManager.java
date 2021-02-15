@@ -37,6 +37,7 @@ import javax.annotation.Nonnull;
 /**
  * @author BlackyPaw
  * @author geNAZt
+ * @author Janmm14
  * @version 1.0
  */
 public class WorldManager {

@@ -11,6 +11,12 @@ import io.gomint.config.annotation.Comment;
 
 import java.util.Set;
 
+/**
+ * {@code worlds.yml} config file of each plugin for plugin's active worlds
+ *
+ * @author Janmm14
+ * @version 1.0
+ */
 public class PluginWorldConfig extends YamlConfig {
 
     @Comment("List of world folder names the plugin is active in")

@@ -22,7 +22,9 @@ import java.util.function.Consumer;
  * {@linkplain #markAsync()} synchroniously and when your async processing is done, call {@linkplain #markFinished()}
  * asynchroniously.
  *
- * @author geNAZt, derklaro
+ * @author geNAZt
+ * @author derklaro
+ * @author Janmm14
  * @version 1.0
  * @stability 3
  * @see #markFinished()

@@ -2,6 +2,14 @@ package io.gomint.scheduler;
 
 import java.util.concurrent.TimeUnit;
 
+/**
+ * Async scheduling
+ *
+ * @author BlackyPaw
+ * @author Janmm14
+ * @version 1.0
+ * @stability 2
+ */
 public interface AsyncScheduler {
 
     /**

@@ -6,6 +6,10 @@
  */
 package io.gomint.server.util;
 
+/**
+ * @author Janmm14
+ * @version 1.0
+ */
 public class UnsafeWorldAsyncAccessException extends RuntimeException {
 
     public UnsafeWorldAsyncAccessException(String world) {

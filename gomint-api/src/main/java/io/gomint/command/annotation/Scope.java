@@ -11,6 +11,13 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+ * Define the scope of a command
+ * 
+ * @author Janmm14
+ * @version 1.0
+ * @stability 2
+ */
 @Target( ElementType.TYPE )
 @Retention( RetentionPolicy.RUNTIME )
 public @interface Scope {

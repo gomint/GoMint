@@ -20,6 +20,7 @@ import java.util.function.Predicate;
 /**
  * @author BlackyPaw
  * @author geNAZt
+ * @author Janmm14
  * @version 2.0
  */
 public class EventManager {

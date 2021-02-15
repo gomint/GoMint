@@ -103,6 +103,7 @@ import java.util.function.Predicate;
 
 /**
  * @author BlackyPaw
+ * @author Janmm14
  * @version 1.0
  */
 public abstract class WorldAdapter extends ClientTickable implements World, Tickable {

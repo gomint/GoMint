@@ -20,6 +20,12 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * Manage plugin's active worlds configs
+ *
+ * @author Janmm14
+ * @version 1.0
+ */
 public class PluginWorldConfigManager implements EventListener {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PluginWorldConfigManager.class);

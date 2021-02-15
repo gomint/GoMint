@@ -50,6 +50,7 @@ import javax.annotation.Nullable;
 
 /**
  * @author geNAZt
+ * @author Janmm14
  * @version 1.0
  */
 public class CommandManager {

@@ -9,6 +9,10 @@ package io.gomint.server.util;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * @author Janmm14
+ * @version 1.0
+ */
 public class SimpleUncaughtExceptionHandler implements Thread.UncaughtExceptionHandler {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SimpleUncaughtExceptionHandler.class);
