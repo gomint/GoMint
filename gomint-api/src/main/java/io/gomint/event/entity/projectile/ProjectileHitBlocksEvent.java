@@ -63,4 +63,13 @@ public class ProjectileHitBlocksEvent extends CancellableEntityEvent<ProjectileH
         return this.blocks;
     }
 
+    @Override
+    public String toString() {
+        return "ProjectileHitBlocksEvent{" +
+            "cancelled=" + this.cancelled() +
+            ", entity=" + this.entity() +
+            ", blocks=" + this.blocks +
+            '}';
+    }
+
 }

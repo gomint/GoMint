@@ -61,4 +61,14 @@ public class PlayerJoinEvent extends CancellablePlayerEvent<PlayerJoinEvent> {
         return this.kickReason;
     }
 
+    @Override
+    public String toString() {
+        return "PlayerJoinEvent{" +
+            "cancelled=" + this.cancelled() +
+            ", player=" + this.player() +
+            ", kickReason='" + this.kickReason + '\'' +
+            ", joinMessage='" + this.joinMessage + '\'' +
+            '}';
+    }
+
 }

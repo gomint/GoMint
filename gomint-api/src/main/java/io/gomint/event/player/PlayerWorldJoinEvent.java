@@ -47,4 +47,13 @@ public class PlayerWorldJoinEvent extends SimplePlayerEvent {
         return this.fromWorld;
     }
 
+    @Override
+    public String toString() {
+        return "PlayerWorldJoinEvent{" +
+            "player=" + this.player() +
+            ", world=" + this.world() +
+            ", from=" + this.fromWorld +
+            '}';
+    }
+
 }

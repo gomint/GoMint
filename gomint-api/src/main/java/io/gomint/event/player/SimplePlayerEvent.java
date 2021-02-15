@@ -37,4 +37,11 @@ public class SimplePlayerEvent extends Event implements PlayerEvent {
         return this.player;
     }
 
+    @Override
+    public String toString() {
+        return "SimplePlayerEvent{" +
+            "player=" + this.player +
+            '}';
+    }
+
 }

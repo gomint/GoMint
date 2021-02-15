@@ -47,4 +47,13 @@ public class PlayerWorldLeaveEvent extends SimplePlayerEvent {
         return this.toWorld;
     }
 
+    @Override
+    public String toString() {
+        return "PlayerWorldLeaveEvent{" +
+            "player=" + this.player() +
+            ", world=" + this.world() +
+            ", to=" + this.toWorld +
+            '}';
+    }
+
 }

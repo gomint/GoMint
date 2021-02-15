@@ -30,4 +30,11 @@ public class SimpleWorldEvent extends Event implements WorldEvent {
         return this.world;
     }
 
+    @Override
+    public String toString() {
+        return "SimpleWorldEvent{" +
+            "world=" + this.world +
+            '}';
+    }
+
 }

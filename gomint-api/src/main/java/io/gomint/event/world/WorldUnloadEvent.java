@@ -28,4 +28,11 @@ public class WorldUnloadEvent extends SimpleWorldEvent {
         super(world);
     }
 
+    @Override
+    public String toString() {
+        return "WorldUnloadEvent{" +
+            "world=" + this.world() +
+            '}';
+    }
+
 }
