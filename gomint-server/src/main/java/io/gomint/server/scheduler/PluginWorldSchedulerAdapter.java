@@ -7,6 +7,7 @@
 
 package io.gomint.server.scheduler;
 
+import com.google.common.base.Preconditions;
 import io.gomint.scheduler.Task;
 import io.gomint.scheduler.WorldScheduler;
 import io.gomint.world.World;
@@ -40,6 +41,13 @@ public class PluginWorldSchedulerAdapter implements WorldScheduler {
         return this.worldRef.get();
     }
 
+    private World checkAndGetWorld() {
+        World world = world();
+        Preconditions.checkNotNull(world, "world");
+        Preconditions.checkState(world.isRunning(), "world is shutting down, cannot schedule anymore");
+        return world;
+    }
+
     @Override
     public Task executeAsync(Runnable runnable) {
         return this.pluginSchedulerAdapter.executeAsync(runnable);
@@ -57,17 +65,17 @@ public class PluginWorldSchedulerAdapter implements WorldScheduler {
 
     @Override
     public Task execute(Runnable runnable) {
-        return this.pluginSchedulerAdapter.execute(world(), runnable);
+        return this.pluginSchedulerAdapter.execute(checkAndGetWorld(), runnable);
     }
 
     @Override
     public Task schedule(Runnable runnable, long delay, TimeUnit timeUnit) {
-        return this.pluginSchedulerAdapter.schedule(world(), runnable, delay, timeUnit);
+        return this.pluginSchedulerAdapter.schedule(checkAndGetWorld(), runnable, delay, timeUnit);
     }
 
     @Override
     public Task schedule(Runnable runnable, long delay, long period, TimeUnit timeUnit) {
-        return this.pluginSchedulerAdapter.schedule(world(), runnable, delay, period, timeUnit);
+        return this.pluginSchedulerAdapter.schedule(checkAndGetWorld(), runnable, delay, period, timeUnit);
     }
 
 }

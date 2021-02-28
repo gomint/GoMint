@@ -32,7 +32,7 @@ import java.util.Set;
  * <br>
  * Quick notes on the API design idea:
  * <br>
- * Command cmd = new Command( "test" );
+ * Command cmd = new Command("test");
  * cmd.description("This is just a test command");
  * <br><br>
  * <b>Please see {@linkplain #execute(CommandSender, String, Map, CommandOutput)} method for how to properly implement a

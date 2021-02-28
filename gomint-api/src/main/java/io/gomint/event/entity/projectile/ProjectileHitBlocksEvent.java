@@ -44,17 +44,6 @@ public class ProjectileHitBlocksEvent extends CancellableEntityEvent<ProjectileH
     }
 
     /**
-     * Get the projectile which hit the blocks
-     *
-     * @return projectile which hit the blocks
-     * @deprecated Use {@link #entity()} instead
-     */
-    @Deprecated(forRemoval = true)
-    public EntityProjectile<?> projectile() {
-        return (EntityProjectile<?>) super.entity();
-    }
-
-    /**
      * Get the blocks which got hit by the projectile
      *
      * @return blocks which got hit

@@ -23,24 +23,13 @@ public class Precondition {
 
     /**
      * Throws {@linkplain UnsafeWorldAsyncAccessException} when given {@code world} is not null and its
-     * {@linkplain World#mainThread()} method returns false.
+     * {@linkplain WorldAdapter#mainThread(boolean)} method returns false.
      *
-     * @param world the world to enforce sync access to
+     * @param world            the world to enforce sync access to
+     * @param allowForIOThread whether to allow async world io thread
      */
-    public static void safeWorldAccess(@Nullable World world) {
-        if (world != null && !world.mainThread()) {
-            throw new UnsafeWorldAsyncAccessException(world.folder());
-        }
-    }
-
-    /**
-     * Throws {@linkplain UnsafeWorldAsyncAccessException} when given {@code world} is not null and its
-     * {@linkplain WorldAdapter#hardMainThreadCheck()} method returns false.
-     *
-     * @param world the world to enforce sync access to
-     */
-    public static void safeWorldAccessHard(@Nullable WorldAdapter world) {
-        if (world != null && !world.hardMainThreadCheck()) {
+    public static void safeWorldAccess(@Nullable World world, boolean allowForIOThread) {
+        if (world != null && !((WorldAdapter) world).mainThread(allowForIOThread)) {
             throw new UnsafeWorldAsyncAccessException(world.folder());
         }
     }

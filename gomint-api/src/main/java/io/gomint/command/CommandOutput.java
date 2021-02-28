@@ -4,14 +4,9 @@
  * This code is licensed under the BSD license found in the
  * LICENSE file in the root directory of this source tree.
  */
-
 package io.gomint.command;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.function.Consumer;
 
 /**
  * All output from a command should be collected in the provided {@link CommandOutput} instance so the client can
@@ -29,17 +24,7 @@ import java.util.function.Consumer;
  * @stability 3
  * @see #markFinished()
  */
-public class CommandOutput {
-
-    private boolean success = true;
-    private final Collection<CommandOutputMessage> messages = Collections.synchronizedCollection(new ArrayList<>());
-    private final Consumer<CommandOutput> outputConsumer;
-    private volatile boolean async = false;
-    private volatile boolean done = false;
-
-    private CommandOutput(Consumer<CommandOutput> outputConsumer) {
-        this.outputConsumer = outputConsumer;
-    }
+public interface CommandOutput {
 
     /**
      * When the execution of a command failed you can execute this. This adds a result message created with the given
@@ -52,12 +37,7 @@ public class CommandOutput {
      * @return this command output instance for chaining
      * @see #fail(Throwable)
      */
-    public CommandOutput fail(String format, Object... params) {
-        this.success = false;
-        String[] output = this.remap(params);
-        this.messages.add(new CommandOutputMessage(false, format, Arrays.asList(output)));
-        return this;
-    }
+    CommandOutput fail(String format, Object... params);
 
     /**
      * When the execution of a command failed you can execute this. This adds a result message created from the given
@@ -70,12 +50,7 @@ public class CommandOutput {
      * @see #fail(String, Object...)
      * @since 1.0.0-RC4
      */
-    public CommandOutput fail(Throwable throwable) {
-        this.success = false;
-        StackTraceElement[] trace = throwable.getStackTrace();
-        String firstLine = trace.length > 0 ? " @ " + trace[0].getClassName() + ":" + trace[0].getLineNumber() : "";
-        return fail("%s: %s%s", throwable.getClass().getSimpleName(), throwable.getMessage(), firstLine);
-    }
+    CommandOutput fail(Throwable throwable);
 
     /**
      * When the execution of the command resulted in a success, you can append a message here. This adds a result
@@ -87,20 +62,14 @@ public class CommandOutput {
      * @param params The parameters for the string format in the correct order
      * @return this command output instance for chaining
      */
-    public CommandOutput success(String format, Object... params) {
-        String[] output = this.remap(params);
-        this.messages.add(new CommandOutputMessage(true, format, Arrays.asList(output)));
-        return this;
-    }
+    CommandOutput success(String format, Object... params);
 
     /**
      * Indicates if the current output is successful or not.
      *
      * @return if the current output is successful or not.
      */
-    public boolean success() {
-        return this.success;
-    }
+    boolean success();
 
     /**
      * Contains all messages which are sent to the command sender. The returned collection is not modifiable.
@@ -110,11 +79,9 @@ public class CommandOutput {
      *
      * @return all messages which are sent to the command sender.
      */
-    public Collection<CommandOutputMessage> messages() {
-        return Collections.unmodifiableCollection(this.messages);
-    }
+    Collection<CommandOutputMessage> messages();
 
-    private String[] remap(Object[] params) {
+    default String[] remap(Object[] params) {
         String[] stringParams = new String[params.length];
         for (int i = 0; i < params.length; i++) {
             stringParams[i] = String.valueOf(params[i]);
@@ -126,46 +93,38 @@ public class CommandOutput {
     /**
      * When the command will finish asynchroniously, you need to call this method so the CommandOUtput will wait for
      * {@linkplain #markFinished()} call and only then send the CommandOutput to the executor.
+     *
      * @return this command output instance for chaining
-     * @see #markFinished() 
-     * @see #isAsync() 
+     * @see #markFinished()
+     * @see #isAsync()
      */
-    public CommandOutput markAsync() {
-        this.async = true;
-        return this;
-    }
+    CommandOutput markAsync();
 
     /**
      * When {@linkplain #markAsync()} has been called on this CommandOutput, you need to call this method to mark the
-     * end of the command execution
-     * @see #markAsync() 
-     * @see #isFinished() 
+     * end of the command execution.
+     * <br><br>
+     * Do not add messages to this CommandOutput after you called this method. They will be ignored.
+     *
+     * @see #markAsync()
+     * @see #isFinished()
      */
-    public synchronized void markFinished() {
-        if (!this.done) {
-            this.done = true;
-            this.outputConsumer.accept(this);
-        }
-    }
+    void markFinished();
 
     /**
      * Checks whether the command execution will finish asynchroniously
      *
      * @return whether the command execution will finish asynchroniously
-     * @see #markAsync() 
+     * @see #markAsync()
      */
-    public boolean isAsync() {
-        return this.async;
-    }
+    boolean isAsync();
 
     /**
      * Checks whether the command execution has finished
      *
      * @return whether the command execution has finished
-     * @see #markFinished() 
+     * @see #markFinished()
      */
-    public boolean isFinished() {
-        return this.done;
-    }
+    boolean isFinished();
 
 }

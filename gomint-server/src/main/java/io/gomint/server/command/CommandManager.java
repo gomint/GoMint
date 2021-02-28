@@ -30,11 +30,11 @@ import io.gomint.server.command.vanilla.TimeSetCommand;
 import io.gomint.server.entity.CommandPermission;
 import io.gomint.server.entity.EntityPlayer;
 import io.gomint.server.network.packet.PacketAvailableCommands;
+import io.gomint.server.util.Precondition;
 import io.gomint.server.world.WorldAdapter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -56,24 +56,6 @@ import javax.annotation.Nullable;
 public class CommandManager {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CommandManager.class);
-    private static final Constructor<CommandOutput> COMMAND_OUTPUT_CONSTRUCTOR;
-
-    static {
-        try {
-            COMMAND_OUTPUT_CONSTRUCTOR = CommandOutput.class.getDeclaredConstructor(Consumer.class);
-            COMMAND_OUTPUT_CONSTRUCTOR.setAccessible(true);
-        } catch (ReflectiveOperationException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public static CommandOutput newCommandOutput(Consumer<CommandOutput> outputConsumer) {
-        try {
-            return COMMAND_OUTPUT_CONSTRUCTOR.newInstance(outputConsumer);
-        } catch (ReflectiveOperationException e) {
-            throw new RuntimeException(e);
-        }
-    }
 
     private Map<String, CommandHolder> commands = new HashMap<>();
     private Map<String, Plugin> commandPlugins = new HashMap<>();
@@ -154,18 +136,13 @@ public class CommandManager {
      * @return CommandManager for chaining
      */
     public CommandManager dispatchCommand(CommandSender<?> sender, String command, @Nullable Consumer<CommandOutput> outputConsumer) {
-        CommandOutput output = newCommandOutput(outputConsumer);
+        CommandOutput output = new CommandOutputImpl(outputConsumer);
         if (sender instanceof io.gomint.command.ConsoleCommandSender) {
             dispatchCommand0(sender, command, output);
         } else if (sender instanceof EntityPlayer) {
             WorldAdapter world = ((EntityPlayer) sender).world();
-            if (world.mainThread()) {
-                dispatchCommand0(sender, command, output);
-            } else {
-                world.syncScheduler().execute(() -> {
-                    dispatchCommand0(sender, command, output);
-                });
-            }
+            Precondition.safeWorldAccess(world, false);
+            dispatchCommand0(sender, command, output);
         } else {
             throw new UnsupportedOperationException("Unsupported command sender " + sender.getClass().getName() + " - " + sender);
         }

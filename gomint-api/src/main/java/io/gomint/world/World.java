@@ -333,6 +333,13 @@ public interface World {
     boolean mainThread();
 
     /**
+     * Check is this world is running or if its unload has been initiated.
+     * 
+     * @return <ul><li>{@code true} - world is running</li><li>{@code false} - world unload initiated</li></ul>
+     */
+    boolean isRunning();
+
+    /**
      * Get current tickrate (ticks per second)
      *
      * @return tickrate of this world

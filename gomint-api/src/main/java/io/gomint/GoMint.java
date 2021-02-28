@@ -286,11 +286,25 @@ public interface GoMint {
     int port();
 
     /**
-     * Shutdown this server
+     * Schedule shutdown of this server
      *
      * @return GoMint for chaining
      */
     GoMint shutdown();
+
+    /**
+     * Get if this server is running or if a shutdown was initiated
+     *
+     * @return <ul><li>{@code true} - server is running</li><li>{@code false} - server shutdown initiated</li></ul>
+     */
+    boolean isRunning();
+
+    /**
+     * Get curent tickrate of server list status, login and console commands thread
+     *
+     * @return tickrate of server list status, login and console commands thread
+     */
+    double tps();
 
     /**
      * Get the internal version of this server. This contains a git hash so its different on each build

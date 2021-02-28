@@ -46,9 +46,9 @@ public class WorldManager {
     private static final String THREAD_PREFIX = "Gomint World Thread #";
     private static final Logger LOGGER = LoggerFactory.getLogger(WorldManager.class);
     private final GoMintServer server;
-    private Map<String, WorldAdapter> loadedWorlds;
-    private ThreadGroup threadGroup = new ThreadGroup(THREAD_GROUP_NAME);
-    private ExecutorService executorService = Executors.newCachedThreadPool(new ThreadFactory() {
+    private final Map<String, WorldAdapter> loadedWorlds;
+    private final ThreadGroup threadGroup = new ThreadGroup(THREAD_GROUP_NAME);
+    private final ExecutorService executorService = Executors.newCachedThreadPool(new ThreadFactory() {
         private final AtomicLong counter = new AtomicLong(1);
 
         @Override

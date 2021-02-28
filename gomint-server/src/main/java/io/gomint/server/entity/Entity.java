@@ -274,7 +274,7 @@ public abstract class Entity<E extends io.gomint.entity.Entity<E>> implements io
 
     public void world(WorldAdapter world) {
         Preconditions.checkNotNull(world, "world");
-        Precondition.safeWorldAccess(world);
+        Precondition.safeWorldAccess(world, false);
         this.world = world;
     }
 
@@ -1278,7 +1278,7 @@ public abstract class Entity<E extends io.gomint.entity.Entity<E>> implements io
         if ( this.world != null ) {
             throw new IllegalStateException( "Entity already spawned" );
         }
-        Precondition.safeWorldAccess(location.world());
+        Precondition.safeWorldAccess(location.world(), false);
 
         this.world = (WorldAdapter) location.world();
         this.world.spawnEntityAt( this, location.x(), location.y(), location.z(), location.yaw(), location.pitch() );
@@ -1292,7 +1292,7 @@ public abstract class Entity<E extends io.gomint.entity.Entity<E>> implements io
     }
 
     public E teleport(Location to, EntityTeleportEvent.Cause cause) {
-        Precondition.safeWorldAccess(this.world);
+        Precondition.safeWorldAccess(this.world, false);
         EntityTeleportEvent entityTeleportEvent = new EntityTeleportEvent(this, this.location(), to, cause);
         this.world.server().pluginManager().callEvent(entityTeleportEvent);
         if (entityTeleportEvent.cancelled()) {

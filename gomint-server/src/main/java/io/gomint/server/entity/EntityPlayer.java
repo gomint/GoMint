@@ -435,7 +435,7 @@ public class EntityPlayer extends EntityHuman<io.gomint.entity.EntityPlayer> imp
 
     @Override
     public EntityPlayer teleport(Location to, EntityTeleportEvent.Cause cause) {
-        Precondition.safeWorldAccess(this.world);
+        Precondition.safeWorldAccess(this.world, false);
         // Only teleport when online
         if (!online()) {
             return this;
@@ -1746,7 +1746,7 @@ public class EntityPlayer extends EntityHuman<io.gomint.entity.EntityPlayer> imp
 
     @Override
     public EntityPlayer scoreboard(io.gomint.scoreboard.Scoreboard scoreboard) {
-        Precondition.safeWorldAccess(this.world);
+        Precondition.safeWorldAccess(this.world, false);
         this.removeScoreboard();
 
         this.scoreboard = (Scoreboard) scoreboard;
@@ -1756,7 +1756,7 @@ public class EntityPlayer extends EntityHuman<io.gomint.entity.EntityPlayer> imp
 
     @Override
     public EntityPlayer removeScoreboard() {
-        Precondition.safeWorldAccess(this.world);
+        Precondition.safeWorldAccess(this.world, false);
         if (this.scoreboard != null) {
             this.scoreboard.hideFor(this);
             this.scoreboard = null;

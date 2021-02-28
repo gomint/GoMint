@@ -455,7 +455,7 @@ public abstract class EntityLiving<E extends io.gomint.entity.Entity<E>> extends
 
     @Override
     public void attach(EntityPlayer player) {
-        Precondition.safeWorldAccess(this.world);
+        Precondition.safeWorldAccess(this.world, false);
 
         this.attachedEntities.add(player);
         this.effectManager.sendForPlayer(player);
@@ -463,7 +463,7 @@ public abstract class EntityLiving<E extends io.gomint.entity.Entity<E>> extends
 
     @Override
     public void detach(EntityPlayer player) {
-        Precondition.safeWorldAccess(this.world);
+        Precondition.safeWorldAccess(this.world, false);
 
         this.attachedEntities.remove(player);
     }

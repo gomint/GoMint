@@ -54,7 +54,15 @@ public interface Scheduler extends AsyncScheduler {
      */
     Task schedule(World world, Runnable runnable, long delay, long period, TimeUnit timeUnit);
 
-    
+    /**
+     * Get a {@linkplain WorldScheduler} with the world predefined for non-asynchronous schedule methods.
+     * <br><br>
+     * Do <b>not</b> safe the returned WorldScheduler, as worlds might get unloaded and then world scheduler will be
+     * invalid.
+     *
+     * @param world the world
+     * @return {@linkplain WorldScheduler} with the world predefined
+     */
     WorldScheduler withWorld(World world);
 
 }

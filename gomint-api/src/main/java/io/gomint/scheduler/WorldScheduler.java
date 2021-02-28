@@ -12,8 +12,10 @@ import io.gomint.world.World;
 import java.util.concurrent.TimeUnit;
 
 /**
+ * Do <b>not</b> safe instances of this class in your plugin. Worlds might get unloaded and make the instance invalid.
+ *
  * @author Janmm14
- * @version 2.0
+ * @version 1.0
  * @stability 2
  */
 public interface WorldScheduler extends AsyncScheduler {
@@ -21,7 +23,7 @@ public interface WorldScheduler extends AsyncScheduler {
     /**
      * Gets the world this scheduler will submit synchronized tasks to
      *
-     * @return the world synchronized tasks will be associated to
+     * @return the world synchronized tasks will be associated to, might be null if the given world has been unloaded
      */
     World world();
 

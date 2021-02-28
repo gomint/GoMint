@@ -253,7 +253,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
      */
     @Override
     public Set<EntityPlayer> onlinePlayers() {
-        Precondition.safeWorldAccess(this);
+        Precondition.safeWorldAccess(this, false);
         return Collections.unmodifiableSet(this.players.keySet());
     }
 
@@ -353,7 +353,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
                 soundPacket.setPosition(vector);
 
                 if (player == null) {
-                    Precondition.safeWorldAccess(this);
+                    Precondition.safeWorldAccess(this, false);
                     sendToVisible(vector.toBlockPosition(), soundPacket, entity -> true);
                 } else {
                     io.gomint.server.entity.EntityPlayer implPlayer = (io.gomint.server.entity.EntityPlayer) player;
@@ -378,7 +378,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
 
     @Override
     public WorldAdapter spawnLocation(Location location) {
-        Precondition.safeWorldAccess(this);
+        Precondition.safeWorldAccess(this, false);
         this.spawn = Objects.requireNonNull(location, "Failed reassigning spawn location: Param 'location' is null");
 
         for (io.gomint.server.entity.EntityPlayer player : this.players.keySet()) {
@@ -399,7 +399,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
 
     @Override
     public WorldAdapter difficulty(Difficulty difficulty) {
-        Precondition.safeWorldAccess(this);
+        Precondition.safeWorldAccess(this, false);
         this.difficulty = difficulty;
 
         PacketSetDifficulty packet = new PacketSetDifficulty();
@@ -435,7 +435,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
 
     @Override
     public <T extends Block> T blockAt(int x, int y, int z, WorldLayer layer) {
-        Precondition.safeWorldAccess(this);
+        Precondition.safeWorldAccess(this, true);
         // Secure location
         if (y < 0 || y > 255) {
             return (T) this.server.blocks().get(BlockRuntimeIDs.toBlockIdentifier("minecraft:air", null),
@@ -517,7 +517,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
 
     @Override
     public WorldAdapter gamerule(Gamerule<?> gamerule, Object value) {
-        Precondition.safeWorldAccess(this);
+        Precondition.safeWorldAccess(this, false);
         this.gamerules.put(gamerule, value);
         return this;
     }
@@ -525,7 +525,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
     @Override
     @SuppressWarnings("unchecked")
     public <T> T gamerule(Gamerule<T> gamerule) {
-        Precondition.safeWorldAccess(this);
+        Precondition.safeWorldAccess(this, false);
         return (T) this.gamerules.get(gamerule);
     }
 
@@ -857,7 +857,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
 
     @Override
     public ChunkAdapter getChunk(int x, int z) {
-        Precondition.safeWorldAccess(this);
+        Precondition.safeWorldAccess(this, false);
         return this.chunkCache.getChunk(x, z);
     }
 
@@ -867,7 +867,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
 
     @Override
     public Chunk getOrGenerateChunk(int x, int z) {
-        Precondition.safeWorldAccess(this);
+        Precondition.safeWorldAccess(this, false);
         Chunk chunk = this.getChunk(x, z);
         if (chunk == null) {
             return this.generate(x, z, true);
@@ -887,7 +887,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
      * @param callback The callback to be invoked once the chunk is available
      */
     public void getOrLoadChunk(int x, int z, boolean generate, Delegate<ChunkAdapter> callback) {
-        Precondition.safeWorldAccess(this);
+        Precondition.safeWorldAccess(this, false);
         // Early out:
         ChunkAdapter chunk = this.chunkCache.getChunk(x, z);
         if (chunk != null) {
@@ -959,7 +959,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
      * @param player The player which should be set into the chunk
      */
     public void movePlayerToChunk(int x, int z, io.gomint.server.entity.EntityPlayer player) {
-        Precondition.safeWorldAccess(this);
+        Precondition.safeWorldAccess(this, false);
         ChunkAdapter oldChunk = this.players.get(player);
         ChunkAdapter newChunk = this.loadChunk(x, z, true);
 
@@ -1072,8 +1072,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
         for (EntityPlayer player : this.onlinePlayers()) {
             io.gomint.server.entity.EntityPlayer p = (io.gomint.server.entity.EntityPlayer) player;
 
-            if (p.knowsChunk(posX, posZ) &&
-                predicate.test(player)) {
+            if (p.knowsChunk(posX, posZ) && predicate.test(player)) {
                 ((io.gomint.server.entity.EntityPlayer) player).connection().addToSendQueue(packet);
             }
         }
@@ -1173,7 +1172,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
      * @param pos     of the block which changes
      */
     public void updateBlock0(ChunkAdapter adapter, BlockPosition pos) {
-        if (!hardMainThreadCheck()) {
+        if (!mainThread(true)) {
             syncScheduler().execute(() -> {
                 updateBlock1(adapter, pos);
             });
@@ -1189,7 +1188,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
      * @param pos     of the block which changes
      */
     private void updateBlock1(ChunkAdapter adapter, BlockPosition pos) {
-        Precondition.safeWorldAccessHard(this);
+        Precondition.safeWorldAccess(this, false);
         if (!this.players.isEmpty()) {
             var iterator = Object2ObjectMaps.fastIterator(this.players);
             while (iterator.hasNext()) {
@@ -1334,7 +1333,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
     @Override
     public List<AxisAlignedBB> collisionCubes(io.gomint.entity.Entity<?> entity, AxisAlignedBB bb,
                                               boolean includeEntities) {
-        Precondition.safeWorldAccess(this);
+        Precondition.safeWorldAccess(this, false);
         int minX = MathUtils.fastFloor(bb.minX());
         int minY = MathUtils.fastFloor(bb.minY());
         int minZ = MathUtils.fastFloor(bb.minZ());
@@ -1431,7 +1430,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
     }
 
     public <T extends Block> T scheduleNeighbourUpdates(T block) {
-        if (!mainThread()) {
+        if (!mainThread(true)) {
             // We don't update from async
             return block;
         }
@@ -1458,7 +1457,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
 
     @Override
     public EntityItem createItemDrop(Vector vector, ItemStack<?> item) {
-        Precondition.safeWorldAccess(this);
+        Precondition.safeWorldAccess(this, false);
         EntityItem entityItem = new EntityItem(item, this);
         spawnEntityAt(entityItem, vector);
         return entityItem;
@@ -1519,7 +1518,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
     }
 
     public WorldAdapter sendLevelEvent(EntityPlayer player, Vector position, int levelEvent, int data) {
-        Precondition.safeWorldAccess(this);
+        Precondition.safeWorldAccess(this, false);
         PacketWorldEvent worldEvent = new PacketWorldEvent();
         worldEvent.setData(data);
         worldEvent.setEventId(levelEvent);
@@ -1687,7 +1686,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
 
     @Override
     public <T extends Block> WorldAdapter iterateBlocks(Class<T> blockClass, Consumer<T> blockConsumer) {
-        Precondition.safeWorldAccess(this);
+        Precondition.safeWorldAccess(this, false);
         // Get the id of the block which we search
         String blockId = this.server.blocks().getID(blockClass);
 
@@ -1716,7 +1715,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
 
     @Override
     public WorldAdapter iterateChunks(Consumer<Chunk> chunkConsumer) {
-        Precondition.safeWorldAccess(this);
+        Precondition.safeWorldAccess(this, false);
         // Iterate over all chunks
         this.chunkCache.iterateAll(chunkConsumer::accept);
         return this;
@@ -1724,7 +1723,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
 
     @Override
     public WorldAdapter iterateAllEntities(Consumer<Entity<?>> entityConsumer) {
-        Precondition.safeWorldAccess(this);
+        Precondition.safeWorldAccess(this, false);
         // Iterate over all chunks
         this.chunkCache.iterateAll(chunkAdapter -> chunkAdapter.iterateAllEntities(entityConsumer));
         return this;
@@ -1732,7 +1731,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
 
     @Override
     public <T extends Entity<T>> WorldAdapter iterateEntities(Class<T> entityClass, Consumer<T> entityConsumer) {
-        Precondition.safeWorldAccess(this);
+        Precondition.safeWorldAccess(this, false);
         // Iterate over all chunks
         this.chunkCache.iterateAll(chunkAdapter -> chunkAdapter.iterateEntities(entityClass, entityConsumer));
         return this;
@@ -1784,7 +1783,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
 
     @Override
     public WorldAdapter save() {
-        Precondition.safeWorldAccess(this);
+        Precondition.safeWorldAccess(this, false);
         this.chunkCache.saveAll();
         return this;
     }
@@ -1821,7 +1820,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
 
     @Override
     public Block highestBlockAt(int x, int z) {
-        Precondition.safeWorldAccess(this);
+        Precondition.safeWorldAccess(this, false);
         ChunkAdapter chunk = this.loadChunk(x >> 4, z >> 4, true);
         int y = chunk.getHeight(x & 0xF, z & 0xF);
         return chunk.blockAt(x & 0xF, y - 1, z & 0xF);
@@ -1829,7 +1828,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
 
     @Override
     public Block highestBlockAt(int x, int z, WorldLayer layer) {
-        Precondition.safeWorldAccess(this);
+        Precondition.safeWorldAccess(this, false);
         ChunkAdapter chunk = this.loadChunk(x >> 4, z >> 4, true);
         int y = chunk.getHeight(x & 0xF, z & 0xF);
         return chunk.blockAt(x & 0xF, y - 1, z & 0xF, layer);
@@ -1848,14 +1847,14 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
 
     @Override
     public WorldAdapter unloadChunk(int x, int z) {
-        Precondition.safeWorldAccess(this);
+        Precondition.safeWorldAccess(this, false);
         this.chunkCache.unload(x, z);
         return this;
     }
 
     @Override
     public WorldAdapter time(Duration time) {
-        Precondition.safeWorldAccess(this);
+        Precondition.safeWorldAccess(this, false);
         // Since 0 is not 0 ticks in MC we need to shift a little bit
         float tickAt0 = Values.TICKS_ON_ZERO;
 
@@ -1900,7 +1899,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
 
     @Override
     public Set<Entity<?>> entitiesByTag(String tag) {
-        Precondition.safeWorldAccess(this);
+        Precondition.safeWorldAccess(this, false);
         return this.entityManager.findEntities(tag);
     }
 
@@ -1916,23 +1915,25 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
 
     @Override
     public boolean mainThread() {
+        return mainThread(false);
+    }
+
+    /**
+     * Check if current thread is this world's main thread
+     *
+     * @param allowForIOThread whether to allow async world io thread
+     * @return true if main thread, false if not
+     */
+    public boolean mainThread(boolean allowForIOThread) {
         if (this.threadId == -1) {
             return true;
         } else {
             long id = Thread.currentThread().getId();
-            return this.threadId == id || this.asyncAllowedThreadId == id;
+            return this.threadId == id || allowForIOThread && this.asyncAllowedThreadId == id;
         }
     }
 
-    public boolean hardMainThreadCheck() {
-        if (this.threadId == -1) {
-            return true;
-        } else {
-            long id = Thread.currentThread().getId();
-            return this.threadId == id;
-        }
-    }
-
+    @Override
     public boolean isRunning() {
         return this.running.get();
     }

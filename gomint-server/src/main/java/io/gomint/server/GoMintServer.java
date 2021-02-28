@@ -105,6 +105,7 @@ import javax.annotation.Nonnull;
 public class GoMintServer implements GoMint, InventoryHolder {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(GoMintServer.class);
+    private static final long ONE_SECOND_IN_NANOS = TimeUnit.SECONDS.toNanos(1);
     private static long mainThread;
 
     // Configuration
@@ -136,6 +137,7 @@ public class GoMintServer implements GoMint, InventoryHolder {
     private ListeningScheduledExecutorService executorService;
     private Thread readerThread;
     private long sleepBalance;
+    private double tps;
     private AsyncScheduler scheduler;
 
     // Watchdog
@@ -463,7 +465,7 @@ public class GoMintServer implements GoMint, InventoryHolder {
             targetTPS = 1000;
         }
 
-        long skipNanos = TimeUnit.SECONDS.toNanos(1) / targetTPS;
+        long skipNanos = ONE_SECOND_IN_NANOS / targetTPS;
         LOGGER.info("Setting skipNanos to: {}", skipNanos);
 
         // Tick loop
@@ -521,16 +523,16 @@ public class GoMintServer implements GoMint, InventoryHolder {
                 warn = true;
             }
 
-            lastTickTime = (float) diff / TimeUnit.SECONDS.toNanos(1);
-            double tps = (1 / (double) lastTickTime);
+            lastTickTime = (float) diff / ONE_SECOND_IN_NANOS;
+            this.tps = (1 / (double) lastTickTime);
 
             // Due to the fact that we
-            if (tps > this.serverConfig.targetTPS()) {
-                tps = this.serverConfig.targetTPS();
+            if (this.tps > this.serverConfig.targetTPS()) {
+                this.tps = this.serverConfig.targetTPS();
             }
 
             if (warn) {
-                LOGGER.warn("Running behind: {} / {} tps", tps, (1 / (skipNanos / (float) TimeUnit.SECONDS.toNanos(1))));
+                LOGGER.warn("Running behind: {} / {} tps", this.tps, (1 / (skipNanos / (float) ONE_SECOND_IN_NANOS)));
             }
         }
 
@@ -848,6 +850,11 @@ public class GoMintServer implements GoMint, InventoryHolder {
     }
 
     @Override
+    public double tps() {
+        return this.tps;
+    }
+
+    @Override
     public String version() {
         return "GoMint 1.0.0 (MC:BE "
             + Protocol.MINECRAFT_PE_NETWORK_VERSION
@@ -899,6 +906,7 @@ public class GoMintServer implements GoMint, InventoryHolder {
         return this.recipeManager;
     }
 
+    @Override
     public boolean isRunning() {
         return this.running.get();
     }

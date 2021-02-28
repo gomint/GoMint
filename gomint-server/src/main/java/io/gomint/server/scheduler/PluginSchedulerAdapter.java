@@ -7,6 +7,7 @@
 
 package io.gomint.server.scheduler;
 
+import com.google.common.base.Preconditions;
 import io.gomint.plugin.Plugin;
 import io.gomint.scheduler.Scheduler;
 import io.gomint.scheduler.Task;
@@ -99,11 +100,17 @@ public class PluginSchedulerAdapter implements Scheduler {
         return task;
     }
 
+    private static void checkWorld(World world) {
+        Preconditions.checkNotNull(world, "world");
+        Preconditions.checkState(world.isRunning(), "world is shutting down, cannot schedule anymore");
+    }
+
     @Override
     public Task execute(World world, Runnable runnable) {
         if (this.asyncScheduler == null) {
             throw new IllegalStateException("This PluginScheduler has been cleaned and closed. No new Tasks can be scheduled");
         }
+        checkWorld(world);
 
         Task task = ((WorldAdapter) world).syncScheduler().execute(runnable);
         task.onException(e -> {
@@ -122,6 +129,7 @@ public class PluginSchedulerAdapter implements Scheduler {
         if (this.asyncScheduler == null) {
             throw new IllegalStateException("This PluginScheduler has been cleaned and closed. No new Tasks can be scheduled");
         }
+        checkWorld(world);
 
         Task task = ((WorldAdapter) world).syncScheduler().schedule(runnable, delay, timeUnit);
         task.onException(e -> {
@@ -140,6 +148,7 @@ public class PluginSchedulerAdapter implements Scheduler {
         if (this.asyncScheduler == null) {
             throw new IllegalStateException("This PluginScheduler has been cleaned and closed. No new Tasks can be scheduled");
         }
+        checkWorld(world);
 
         Task task = ((WorldAdapter) world).syncScheduler().schedule(runnable, delay, period, timeUnit);
         task.onException(e -> {
@@ -158,6 +167,7 @@ public class PluginSchedulerAdapter implements Scheduler {
         if (this.asyncScheduler == null) {
             throw new IllegalStateException("This PluginScheduler has been cleaned and closed. No new Tasks can be scheduled");
         }
+        checkWorld(world);
         return this.worldSchedulerAdapterCache.computeIfAbsent(world, w -> new PluginWorldSchedulerAdapter(this, w));
     }
 
