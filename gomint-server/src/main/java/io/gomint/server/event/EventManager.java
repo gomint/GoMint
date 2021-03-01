@@ -16,6 +16,7 @@ import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.function.Predicate;
+import javax.annotation.Nullable;
 
 /**
  * @author BlackyPaw
@@ -48,6 +49,12 @@ public class EventManager {
         eventHandlerList.triggerEvent(event);
     }
 
+    /**
+     * Registers all event handler methods found on the specified listener without a filtering predicate.
+     *
+     * @param listener The listener to register
+     * @param <T>      The generic type of the listener
+     */
     public <T extends EventListener> void registerListener(T listener) {
         registerListener(listener, null);
     }
@@ -59,7 +66,7 @@ public class EventManager {
      * @param <T>       The generic type of the listener
      * @param predicate The predicate to check if methods of the listener should recieve certain events
      */
-    public <T extends EventListener> void registerListener(T listener, Predicate<Event> predicate) {
+    public <T extends EventListener> void registerListener(T listener, @Nullable Predicate<Event> predicate) {
         Class<? extends EventListener> listenerClass = listener.getClass();
         for (Method method : listenerClass.getDeclaredMethods()) {
             if (isListenerMethod(method)) {
@@ -90,7 +97,7 @@ public class EventManager {
      * An event listener method must be annotated with {@linkplain EventHandler @EventHandler}, have one parameter
      * with a class extending {@linkplain Event}, must return void and may not be {@code private}, {@code protected} or
      * {@code static}.
-     * 
+     *
      * @param method the method to check
      * @return whether the given method is a listener method
      */
@@ -102,7 +109,7 @@ public class EventManager {
             method.getReturnType() == Void.TYPE;
     }
 
-    private <T extends EventListener> void registerListener0(T listener, Method listenerMethod, Predicate<Event> predicate) {
+    private <T extends EventListener> void registerListener0(T listener, Method listenerMethod, @Nullable Predicate<Event> predicate) {
         int eventHash = listenerMethod.getParameterTypes()[0].getName().hashCode();
         EventHandler annotation = listenerMethod.getAnnotation(EventHandler.class);
         EventHandlerList eventHandlerList = this.eventHandlers.get(eventHash);

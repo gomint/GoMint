@@ -149,10 +149,14 @@ public class Plugin {
 
     /**
      * Register a new event listener for this plugin.
+     * <br><br>
+     * Events implementing {@linkplain io.gomint.event.interfaces.WorldEvent WorldEvent} will be filtered, it will only
+     * be called for events taking place in worlds which {@linkplain World#folder() folder name} is present in the
+     * {@code worlds.yml} configuration.
      *
      * @param listener The listener which should be registered
+     * @see #eventInActiveWorlds(Event)
      * @see #registerListener(EventListener, Predicate)
-     * @see #registerActiveWorldsListener(EventListener)
      * @since 2.0
      */
     public final Plugin registerListener(EventListener listener) {
@@ -162,34 +166,17 @@ public class Plugin {
     }
 
     /**
-     * Register a new event listener for this plugin with the filter predicate
-     * {@linkplain #eventInActiveWorlds(Event)}.
+     * Register a new event listener for this plugin with an additional event filter.
      * <br><br>
-     * Events implementing {@linkplain io.gomint.event.interfaces.WorldEvent WorldEvent} will be filtered for the given
-     * listener, it will only be called for events taking place in worlds which {@linkplain World#folder() folder name}
-     * is present in the {@code worlds.yml} configuration.
+     * Events implementing {@linkplain io.gomint.event.interfaces.WorldEvent WorldEvent} will be filtered, it will only
+     * be called for events taking place in worlds which {@linkplain World#folder() folder name} is present in the
+     * {@code worlds.yml} configuration.
      *
-     * @param listener The listener which should be registered
+     * @param listener  The listener which should be registered
+     * @param predicate The predicate allows you to filter events. Events where the predicate returns {@code false} are
+     *                  not forwarded to the actual listener. {@code null} means that only the default active world
+     *                  filtering will be done.
      * @see #registerListener(EventListener)
-     * @see #registerListener(EventListener, Predicate)
-     * @since 2.0
-     */
-    public final Plugin registerActiveWorldsListener(EventListener listener) {
-        this.pluginManager.registerListener(this, listener, this::eventInActiveWorlds);
-        this.listeners.add(listener);
-        return this;
-    }
-
-    /**
-     * Register a new event listener for this plugin.
-     * <br><br>
-     * The predicate allows you to filter events. Events where the predicate returns {@code false} are not forwarded to
-     * the actual listener. Plugins should use {@linkplain Plugin#eventInActiveWorlds(Event)} to restrict themself to
-     * the worlds they should be active in.
-     *
-     * @param listener The listener which should be registered
-     * @see #registerListener(EventListener)
-     * @see #registerActiveWorldsListener(EventListener)
      * @since 2.0
      */
     public final Plugin registerListener(EventListener listener, Predicate<Event> predicate) {

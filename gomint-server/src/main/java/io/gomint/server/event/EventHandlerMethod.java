@@ -101,7 +101,7 @@ class EventHandlerMethod implements Comparable<EventHandlerMethod> {
      */
     public void invoke(Event event) {
         if (this.predicate != null && !this.predicate.test(event)) {
-            LOGGER.debug( "Handler predicate wants to ignore event {}: {}", this, event );
+            LOGGER.debug("Handler predicate wants to ignore event {}: {}", this, event);
             return;
         }
         try {

@@ -760,16 +760,6 @@ public class SimplePluginManager implements PluginManager, EventCaller {
             throw new SecurityException("Wanted to register listener for another plugin");
         }
 
-        this.eventManager.registerListener(listener);
-        return this;
-    }
-
-    @Override
-    public PluginManager registerActiveWorldsListener(Plugin plugin, EventListener listener) {
-        if (!plugin.getClass().getClassLoader().equals(listener.getClass().getClassLoader())) {
-            throw new SecurityException("Wanted to register listener for another plugin");
-        }
-
         this.eventManager.registerListener(listener, plugin::eventInActiveWorlds);
         return this;
     }
@@ -780,7 +770,11 @@ public class SimplePluginManager implements PluginManager, EventCaller {
             throw new SecurityException("Wanted to register listener for another plugin");
         }
 
-        this.eventManager.registerListener(listener, predicate);
+        Predicate<Event> eventPredicate = plugin::eventInActiveWorlds;
+        if (predicate != null) {
+            eventPredicate = eventPredicate.and(predicate);
+        }
+        this.eventManager.registerListener(listener, eventPredicate);
         return this;
     }
 

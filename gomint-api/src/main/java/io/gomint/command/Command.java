@@ -15,7 +15,6 @@ import io.gomint.command.annotation.Overload;
 import io.gomint.command.annotation.Overloads;
 import io.gomint.command.annotation.Parameter;
 import io.gomint.command.annotation.Permission;
-import io.gomint.command.annotation.Scope;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -49,8 +48,6 @@ public abstract class Command {
 
     private final String name;
     private String description;
-    private boolean activeWorldsOnly = true;
-    private boolean console = true;
     private List<CommandOverload> overloads;
     private Set<String> alias;
     private String permission;
@@ -69,12 +66,6 @@ public abstract class Command {
 
         this.name = clazz.getAnnotation(Name.class).value();
         this.description = clazz.getAnnotation(Description.class).value();
-
-        if (clazz.isAnnotationPresent(Scope.class)) {
-            Scope scope = clazz.getAnnotation(Scope.class);
-            this.activeWorldsOnly = scope.activeWorldsOnly();
-            this.console = scope.console();
-        }
 
         // Setup permission
         if (clazz.isAnnotationPresent(Permission.class)) {
@@ -146,31 +137,6 @@ public abstract class Command {
      */
     public final Command permission(String permission) {
         this.permission = permission;
-        return this;
-    }
-
-    /**
-     * Set whether this command should be available to players only in plugin's active worlds or globally.<br>
-     * Default: {@code true} - only active in plugin's active worlds
-     * 
-     * @param activeWorldsOnly <ul><li>{@code true} - available to players only in plugin's active worlds</li>
-     *                         <li>{@code false} - available to players in all worlds</li></ul>
-     * @return the command currently build
-     */
-    public final Command activeWorldsOnly(boolean activeWorldsOnly) {
-        this.activeWorldsOnly = activeWorldsOnly;
-        return this;
-    }
-
-    /**
-     * Set whether this command should be available to the console<br>
-     * Default: {@code true} - available to console
-     * @param console <ul><li>{@code true} - available to console</li>
-     *                <li>{@code false} - not available to console</li></ul> 
-     * @return the command currently build
-     */
-    public final Command console(boolean console) {
-        this.console = console;
         return this;
     }
 
@@ -290,14 +256,6 @@ public abstract class Command {
 
     public final String description() {
         return this.description;
-    }
-
-    public final boolean activeWorldsOnly() {
-        return this.activeWorldsOnly;
-    }
-
-    public final boolean console() {
-        return this.console;
     }
 
     public final List<CommandOverload> overloads() {

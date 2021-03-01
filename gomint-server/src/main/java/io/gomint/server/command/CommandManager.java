@@ -91,7 +91,8 @@ public class CommandManager {
 
                 // CLI
                 MemoryDumpCommand.class,
-            }) {
+                }
+            ) {
                 // Check for system only commands
                 Command commandObject;
 
@@ -179,100 +180,99 @@ public class CommandManager {
         // Check if we selected a command
         if (selected == null) {
             // Send CommandOutput with failure
-            output.fail("Command for input '%%s' could not be found", command).markFinished();
+            output.fail("Command for input '%%s' could not be found", command);
+            return;
+        }
+        // Check for world
+        if (sender instanceof PlayerCommandSender) {
+            if (!selected.activeInWorld(sender.world())) {
+                output.fail("Command for input '%%s' could not be found", command);
+                return;
+            }
+        }
+        // Check for permission
+        if (selected.permission() != null && !sender.hasPermission(selected.permission())) {
+            output.fail("No permission for this command");
+            return;
+        }
+        // Now we need to parse all additional parameters
+        String[] params;
+        if (commandParts.length > consumed) {
+            params = new String[commandParts.length - consumed];
+            System.arraycopy(commandParts, consumed, params, 0, commandParts.length - consumed);
         } else {
-            // Check for world
-            if (selected.activeWorldsOnly() && sender instanceof PlayerCommandSender) {
-                if (selected.plugin() !=null && !selected.plugin().activeInWorld(sender.world())) {
-                    output.fail("Command for input '%%s' could not be found", command).markFinished();
-                }
+            params = new String[0];
+        }
+
+        if (selected.overloads() == null || params.length <= 0) {
+            tryCommandDispatch(sender, selected, new HashMap<>(), output);
+            return;
+        }
+        List<CommandCanidate> commandCanidates = new ArrayList<>();
+        for (CommandOverload overload : selected.overloads()) {
+            if (!overload.permission().isEmpty() && !sender.hasPermission(overload.permission())) {
+                continue;
             }
-            // Check if allowed for console
-            if (!selected.console() && sender instanceof io.gomint.command.ConsoleCommandSender) {
-                output.fail("Command for input '%%s' is not registered for console", command).markFinished();
-            }
-            // Check for permission
-            if (selected.permission() != null && !sender.hasPermission(selected.permission())) {
-                output.fail("No permission for this command").markFinished();
+            Iterator<String> paramIterator = Arrays.asList(params).iterator();
+
+            if (!paramIterator.hasNext() && overload.parameters() == null) {
+                commandCanidates.add(new CommandCanidate(overload, new HashMap<>(), true, true));
             } else {
-                // Now we need to parse all additional parameters
-                String[] params;
-                if (commandParts.length > consumed) {
-                    params = new String[commandParts.length - consumed];
-                    System.arraycopy(commandParts, consumed, params, 0, commandParts.length - consumed);
-                } else {
-                    params = new String[0];
-                }
+                Map<String, Object> commandInput = new HashMap<>();
 
-                if (selected.overloads() != null && params.length > 0) {
-                    List<CommandCanidate> commandCanidates = new ArrayList<>();
-                    for (CommandOverload overload : selected.overloads()) {
-                        if (overload.permission().isEmpty() || sender.hasPermission(overload.permission())) {
-                            Iterator<String> paramIterator = Arrays.asList(params).iterator();
+                boolean completed = true;
+                boolean completedOptionals = true;
 
-                            if (!paramIterator.hasNext() && overload.parameters() == null) {
-                                commandCanidates.add(new CommandCanidate(overload, new HashMap<>(), true, true));
+                if (overload.parameters() != null) {
+                    for (Map.Entry<String, ParamValidator<?>> entry : overload.parameters().entrySet()) {
+                        ParamValidator<?> validator = entry.getValue();
+
+                        String forValidator = validator.consume(paramIterator);
+                        if (forValidator == null) {
+                            if (!validator.optional()) {
+                                completed = false;
+                                break;
                             } else {
-                                Map<String, Object> commandInput = new HashMap<>();
-
-                                boolean completed = true;
-                                boolean completedOptionals = true;
-
-                                if (overload.parameters() != null) {
-                                    for (Map.Entry<String, ParamValidator<?>> entry : overload.parameters().entrySet()) {
-                                        ParamValidator<?> validator = entry.getValue();
-
-                                        String forValidator = validator.consume(paramIterator);
-                                        if (forValidator == null) {
-                                            if (!validator.optional()) {
-                                                completed = false;
-                                                break;
-                                            } else {
-                                                completedOptionals = false;
-                                            }
-                                        }
-
-                                        if (forValidator != null) {
-                                            Object result = validator.validate(forValidator, sender);
-                                            if (result == null) {
-                                                completed = false;
-                                            }
-
-                                            commandInput.put(entry.getKey(), result);
-                                        }
-                                    }
-                                }
-
-                                if (completed) {
-                                    commandCanidates.add(new CommandCanidate(overload, commandInput, completedOptionals, !paramIterator.hasNext() && completedOptionals));
-                                }
+                                completedOptionals = false;
                             }
                         }
-                    }
 
-                    if (!commandCanidates.isEmpty()) {
-                        // Select best canidate
-                        commandCanidates.sort((o1, o2) -> {
-                            if (o1.isReadCompleted() && !o2.isReadCompleted()) {
-                                return -1;
-                            } else if (!o1.isReadCompleted() && o2.isReadCompleted()) {
-                                return 1;
+                        if (forValidator != null) {
+                            Object result = validator.validate(forValidator, sender);
+                            if (result == null) {
+                                completed = false;
                             }
 
-                            return 0;
-                        });
-
-                        CommandCanidate canidate = commandCanidates.get(0);
-                        tryCommandDispatch(sender, selected, canidate.getArguments(), output);
-                        return;
+                            commandInput.put(entry.getKey(), result);
+                        }
                     }
+                }
 
-                    output.fail("Command for input '%%s' could not be found", command).markFinished();
-                } else {
-                    tryCommandDispatch(sender, selected, new HashMap<>(), output);
+                if (completed) {
+                    commandCanidates.add(new CommandCanidate(overload, commandInput, completedOptionals,
+                        !paramIterator.hasNext() && completedOptionals));
                 }
             }
         }
+
+        if (!commandCanidates.isEmpty()) {
+            // Select best canidate
+            commandCanidates.sort((o1, o2) -> {
+                if (o1.isReadCompleted() && !o2.isReadCompleted()) {
+                    return -1;
+                } else if (!o1.isReadCompleted() && o2.isReadCompleted()) {
+                    return 1;
+                }
+
+                return 0;
+            });
+
+            CommandCanidate canidate = commandCanidates.get(0);
+            tryCommandDispatch(sender, selected, canidate.getArguments(), output);
+            return;
+        }
+
+        output.fail("Command for input '%%s' could not be found", command);
     }
 
     private void tryCommandDispatch(CommandSender<?> sender, CommandHolder command, Map<String, Object> arguments, CommandOutput output) {
@@ -381,8 +381,6 @@ public class CommandManager {
                 cmdName,
                 holder.description(),
                 holder.alias(),
-                holder.activeWorldsOnly(),
-                holder.console(),
                 holder.commandPermission(),
                 holder.permission(),
                 holder.isPermissionDefault(),
@@ -400,8 +398,6 @@ public class CommandManager {
             name,
             commandBuilder.description(),
             commandBuilder.alias(),
-            commandBuilder.activeWorldsOnly(),
-            commandBuilder.console(),
             CommandPermission.NORMAL,
             commandBuilder.permission(),
             commandBuilder.isPermissionDefault(),
@@ -447,9 +443,10 @@ public class CommandManager {
         // NormalGenerator commands
         for (CommandHolder holder : this.commands.values()) {
             if (!holder.name().contains(" ") &&
-                (holder.permission() == null || 
+                (holder.permission() == null ||
                     player.hasPermission(holder.permission(), holder.isPermissionDefault())) &&
-                (!holder.activeWorldsOnly() || holder.plugin() == null || holder.plugin().activeInWorld(player.world()))) {
+                holder.activeInWorld(player.world())
+            ) {
                 holders.add(holder);
             }
         }

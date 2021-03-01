@@ -52,36 +52,34 @@ public class SubCommand extends Command {
     public void execute(CommandSender<?> sender, String alias, Map<String, Object> arguments, CommandOutput output) {
         // Look out for subCmd# keys
         for (Map.Entry<String, Object> entry : arguments.entrySet()) {
-            if (entry.getKey().equals(entry.getValue()) && this.subCommands.containsKey(entry.getKey())) {
-                String subCommand = (String) entry.getValue();
-                CommandHolder commandHolder = this.subCommands.get(subCommand);
-                if (commandHolder != null) {
-                    // Check for world
-                    if (activeWorldsOnly() && sender instanceof PlayerCommandSender) {
-                        if (this.plugin != null && !this.plugin.activeInWorld(sender.world())) {
-                            break;
-                        }
-                    }
-                    // Check if allowed for console
-                    if (!console() && sender instanceof io.gomint.command.ConsoleCommandSender) {
-                        break;
-                    }
-                    // Check permission
-                    if (commandHolder.permission() == null || sender.hasPermission(commandHolder.permission())) {
-                        Map<String, Object> arg = new HashMap<>(arguments);
-                        arg.remove(entry.getKey());
-
-                        commandHolder.executor().execute(sender, alias + " " + entry.getValue(), arg, output);
-                        return;
-                    } else {
-                        output.fail("No permission for this command").markFinished();
-                        return;
-                    }
+            if (!entry.getKey().equals(entry.getValue()) || !this.subCommands.containsKey(entry.getKey())) {
+                continue;
+            }
+            String subCommand = (String) entry.getValue();
+            CommandHolder commandHolder = this.subCommands.get(subCommand);
+            if (commandHolder == null) {
+                continue;
+            }
+            // Check for world
+            if (sender instanceof PlayerCommandSender) {
+                if (!commandHolder.activeInWorld(sender.world())) {
+                    continue;
                 }
+            }
+            // Check permission
+            if (commandHolder.permission() == null || sender.hasPermission(commandHolder.permission())) {
+                Map<String, Object> arg = new HashMap<>(arguments);
+                arg.remove(entry.getKey());
+
+                commandHolder.executor().execute(sender, alias + " " + entry.getValue(), arg, output);
+                return;
+            } else {
+                output.fail("No permission for this command");
+                return;
             }
         }
 
-        output.fail("Command for input '%s' could not be found", this.name()).markFinished();
+        output.fail("Command for input '%s' could not be found", this.name());
     }
 
     /**
@@ -95,7 +93,7 @@ public class SubCommand extends Command {
 
         for (Map.Entry<String, CommandHolder> entry : this.subCommands.entrySet()) {
             CommandHolder holder = entry.getValue();
-            if (holder.activeWorldsOnly() && holder.plugin() != null && !holder.plugin().activeInWorld(player.world())) {
+            if (!holder.activeInWorld(player.world())) {
                 continue;
             }
             if (holder.permission() != null && !player.hasPermission(holder.permission())) {
@@ -127,9 +125,7 @@ public class SubCommand extends Command {
                 this.name(),
                 "Subcommands for command '" + this.name() + "'",
                 null,
-                false,
-                true,
-                CommandPermission.NORMAL,
+                    CommandPermission.NORMAL,
                 null,
                 false,
                 this,
