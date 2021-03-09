@@ -174,7 +174,7 @@ public class WorldManager {
                 LOGGER.warn("World {} is not running, but still registered", loadedWorld);
                 countDownLatch.countDown();
             } else {
-                loadedWorld.unloadInternal(player -> ((EntityPlayer) player).disconnect("Server closed"),
+                loadedWorld.unloadInternal(player -> player.disconnect("Server closed"),
                     () -> {
                         LOGGER.debug("World {} closed.", loadedWorld);
                         countDownLatch.countDown();
