@@ -128,8 +128,7 @@ public class CommandManager {
     }
 
     /**
-     * Dispatch a command, will be executed in current thread for console command sender, otherwise will be scheduled in
-     * world's thread, if the current thread is not the world's thread.
+     * Dispatch a command. Will fail if command sender is not console and current thread is not sender's world thread.
      *
      * @param sender         of the command
      * @param command        which should be executed (includes leading {@code /})
