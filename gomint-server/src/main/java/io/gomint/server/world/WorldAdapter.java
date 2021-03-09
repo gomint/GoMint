@@ -634,7 +634,7 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
                     this.logger.warn("Running behind: {} / {} tps", this.tps, (1 / (skipNanos / (float) TimeUnit.SECONDS.toNanos(1))));
                 }
             } catch (Throwable t) {
-                this.logger.error("Error during world tick, shutting down server", t);
+                this.logger.error("Error during world tick, shutting down world", t);
                 ReportUploader.create()
                     .exception(ExceptionUtil.wrap(t))
                     .tag("world-tick")
@@ -642,13 +642,12 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
                     .includeWorlds()
                     .upload();
                 this.running.set(false);
-                this.server.shutdown();
             }
         }
         this.logger.info("Stopping world");
 
-        this.logger.debug("Clearing sync tasks");
         // Clear scheduler
+        this.logger.debug("Clearing sync tasks");
         this.syncTaskManager.clear();
 
         // Unload all players via API
@@ -661,6 +660,17 @@ public abstract class WorldAdapter extends ClientTickable implements World, Tick
 
         this.logger.debug("Calling WorldUnloadEvent");
         this.server.pluginManager().callEvent(new WorldUnloadEvent(this));
+        
+        // Kick all remaining players from the server
+        // Plugins had the chance to use unloadPlayerConsumer and WorldUnloadEvent to teleport players away
+        if (!this.players.isEmpty()) {
+            this.logger.debug("Kicking remaining players");
+            String reason = "World " + folder() + " closed";
+            Set<EntityPlayer> playerCopy = new HashSet<>(this.players.keySet());
+            for (EntityPlayer plr : playerCopy) {
+                plr.disconnect(reason);
+            }
+        }
 
         // Stop this world
         this.logger.debug("Closing world's internal async tasks");
