@@ -1,3 +1,5 @@
+<img src=".github/ASSETS/maintenance.png" width="902" alt="GoMint is no longer actively maintained.">
+
 <img src=".github/ASSETS/gomint-logo-with-text.svg" width="512" alt="GoMint">
 
 <!-- BUILD BADGE -->
